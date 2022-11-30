@@ -24,8 +24,6 @@ StateSplash.on_enter = function (self, parent, params, creation_context)
 		Managers.ui:open_view(VIEW_NAME)
 		Managers.event:register(self, "event_state_splash_continue", "_continue_cb")
 	end
-
-	Managers.presence:set_presence("splash_screen")
 end
 
 StateSplash._continue_cb = function (self)

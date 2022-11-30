@@ -111,7 +111,7 @@ ViewElementInventoryWeaponPreview._initialize_preview_world = function (self)
 	self:_register_event("event_register_item_spawn_point")
 
 	local level_name = "content/levels/ui/weapon_preview/weapon_preview"
-	local ignore_level_background = true
+	local ignore_level_background = not self._draw_background
 
 	self._world_spawner:spawn_level(level_name, nil, nil, nil, ignore_level_background)
 end
@@ -165,6 +165,11 @@ ViewElementInventoryWeaponPreview.center_align = function (self, duration, addit
 	world_spawner:set_camera_position_axis_offset("y", target_world_position.y - camera_world_position.y + extra_position_y, time, func_ptr)
 	world_spawner:set_camera_position_axis_offset("z", target_world_position.z - camera_world_position.z + extra_position_z, time, func_ptr)
 
+	self._default_camera_position_offset = {
+		target_world_position.x - camera_world_position.x + extra_position_x,
+		target_world_position.y - camera_world_position.y + extra_position_y,
+		target_world_position.z - camera_world_position.z + extra_position_z
+	}
 	local camera_world_rotation_x, camera_world_rotation_y, camera_world_rotation_z = Quaternion.to_euler_angles_xyz(camera_world_rotation)
 	local target_world_rotation_x, target_world_rotation_y, target_world_rotation_z = Quaternion.to_euler_angles_xyz(target_world_rotation)
 
@@ -241,10 +246,44 @@ ViewElementInventoryWeaponPreview._get_spawn_position = function (self)
 	return world_position_offset
 end
 
-ViewElementInventoryWeaponPreview.set_weapon_zoom = function (self, fraction)
+ViewElementInventoryWeaponPreview.set_weapon_zoom = function (self, fraction, use_custom_zoom, optional_node_name, optional_pos, optional_min_zoom, optional_max_zoom)
 	local world_spawner = self._world_spawner
+	local ui_weapon_spawner = self._ui_weapon_spawner
 	self._weapon_zoom_fraction = fraction
 	local amount = fraction * 1
+
+	if use_custom_zoom and ui_weapon_spawner then
+		local spawn_data = ui_weapon_spawner:get_spawn_data()
+
+		if spawn_data then
+			local unit = spawn_data.item_unit_3p
+			local offset_pos = nil
+
+			if optional_node_name then
+				local node_index = Unit.has_node(unit, optional_node_name) and Unit.node(unit, optional_node_name)
+
+				if node_index then
+					offset_pos = Unit.world_position(unit, node_index)
+				end
+			elseif optional_pos then
+				offset_pos = optional_pos
+			end
+
+			if offset_pos then
+				local start_position = world_spawner:boxed_camera_start_position():unbox()
+				local diff = offset_pos - start_position
+				local value = math.remap(optional_min_zoom or 0, optional_max_zoom or 1, 0, 1, amount)
+				local default_x = self._default_camera_position_offset[1]
+				local default_z = self._default_camera_position_offset[3]
+
+				world_spawner:set_camera_position_axis_offset("x", math.lerp(default_x, diff[1], value), 0, math.easeOutCubic)
+				world_spawner:set_camera_position_axis_offset("y", amount, 0, math.easeOutCubic)
+				world_spawner:set_camera_position_axis_offset("z", math.lerp(default_z, diff[3], value), 0, math.easeOutCubic)
+
+				return
+			end
+		end
+	end
 
 	world_spawner:set_camera_position_axis_offset("y", amount, 0, math.easeOutCubic)
 end
@@ -318,6 +357,16 @@ ViewElementInventoryWeaponPreview.present_item = function (self, item, disable_a
 
 	self._ui_weapon_spawner = ui_weapon_spawner
 	self._started = true
+
+	self._ui_weapon_spawner:set_force_allow_rotation(self._force_allow_rotation)
+end
+
+ViewElementInventoryWeaponPreview.set_force_allow_rotation = function (self, allow)
+	self._force_allow_rotation = allow
+
+	if self._ui_weapon_spawner then
+		self._ui_weapon_spawner:set_force_allow_rotation(self._force_allow_rotation)
+	end
 end
 
 ViewElementInventoryWeaponPreview.cb_on_preview_loaded = function (self)

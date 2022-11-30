@@ -12,6 +12,8 @@ local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_template
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local armor_types = ArmorSettings.types
 local template_types = WeaponTweakTemplateSettings.template_types
 local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
@@ -196,6 +198,9 @@ weapon_template.actions = {
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 0.55
+			},
+			wield = {
+				action_name = "action_unwield"
 			}
 		},
 		conditional_state_to_action_input = {
@@ -1248,15 +1253,17 @@ weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
-weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
+weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_gauntlet
 weapon_template.overclocks = {}
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	ogryn_gauntlet_p1_m1_ammo = {
 		display_name = "loc_stats_display_ammo_stat",
 		is_stat_trait = true,
 		ammo = {
 			base = {
-				ammo_trait_templates.default_explosive_ammo_stat
+				ammo_trait_templates.default_explosive_ammo_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
@@ -1273,7 +1280,17 @@ weapon_template.base_stats = {
 		},
 		damage = {
 			action_shoot_zoomed = {
-				damage_trait_templates.ogryn_gauntlet_p1_m1_explosion_damage_stat
+				damage_trait_templates.ogryn_gauntlet_p1_m1_explosion_damage_stat,
+				display_data = {
+					display_stats = {
+						__all_basic_stats = true,
+						power_distribution = {
+							attack = {
+								display_name = "loc_weapon_stats_display_base_damage"
+							}
+						}
+					}
+				}
 			},
 			action_execute_special = {
 				damage_trait_templates.ogryn_gauntlet_p1_m1_explosion_damage_stat
@@ -1285,16 +1302,32 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		explosion = {
 			action_shoot_zoomed = {
-				explosion_trait_templates.default_explosion_size_stat
+				explosion_trait_templates.default_explosion_size_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
 	ogryn_gauntlet_p1_m1_dps_stat = {
-		display_name = "loc_stats_display_damage_stat",
+		description = "loc_stats_display_damage_stat_desc",
+		display_name = "loc_glossary_term_melee_damage",
 		is_stat_trait = true,
 		damage = {
 			action_swing = {
-				damage_trait_templates.default_melee_dps_stat
+				damage_trait_templates.default_melee_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_melee_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_swing_right = {
 				damage_trait_templates.default_melee_dps_stat
@@ -1303,7 +1336,21 @@ weapon_template.base_stats = {
 				damage_trait_templates.default_melee_dps_stat
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_melee_dps_stat
+				damage_trait_templates.default_melee_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_right_heavy = {
 				damage_trait_templates.default_melee_dps_stat
@@ -1318,7 +1365,20 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_shoot_zoomed = {
-				damage_trait_templates.ogryn_gauntlet_p1_m1_explosion_antiarmor_stat
+				damage_trait_templates.ogryn_gauntlet_p1_m1_explosion_antiarmor_stat,
+				display_data = {
+					display_stats = {
+						armor_damage_modifier_ranged = {
+							near = {
+								attack = {
+									[armor_types.armored] = {},
+									[armor_types.super_armor] = {},
+									[armor_types.resistant] = {}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_execute_special = {
 				damage_trait_templates.ogryn_gauntlet_p1_m1_explosion_antiarmor_stat
@@ -1328,7 +1388,6 @@ weapon_template.base_stats = {
 }
 weapon_template.perks = {
 	ogryn_gauntlet_p1_m1_ammo_perk = {
-		description = "loc_trait_description_ogryn_gauntlet_p1_m1_ammo_perk",
 		display_name = "loc_trait_display_ogryn_gauntlet_p1_m1_ammo_perk",
 		ammo = {
 			base = {
@@ -1337,7 +1396,6 @@ weapon_template.perks = {
 		}
 	},
 	ogryn_gauntlet_p1_m1_explosion_damage_perk = {
-		description = "loc_trait_description_ogryn_gauntlet_p1_m1_explosion_damage_perk",
 		display_name = "loc_trait_display_ogryn_gauntlet_p1_m1_explosion_damage_perk",
 		explosion = {
 			action_shoot_zoomed = {
@@ -1351,7 +1409,6 @@ weapon_template.perks = {
 		}
 	},
 	ogryn_gauntlet_p1_m1_explosion_size_perk = {
-		description = "loc_trait_description_ogryn_gauntlet_p1_m1_explosion_size_perk",
 		display_name = "loc_trait_display_ogryn_gauntlet_p1_m1_explosion_size_perk",
 		explosion = {
 			action_shoot_zoomed = {
@@ -1360,7 +1417,6 @@ weapon_template.perks = {
 		}
 	},
 	ogryn_gauntlet_p1_m1_dps_perk = {
-		description = "loc_trait_description_ogryn_gauntlet_p1_m1_dps_perk",
 		display_name = "loc_trait_display_ogryn_gauntlet_p1_m1_dps_perk",
 		damage = {
 			action_swing = {
@@ -1384,7 +1440,6 @@ weapon_template.perks = {
 		}
 	},
 	ogryn_gauntlet_p1_m1_explosion_antiarmor_perk = {
-		description = "loc_trait_description_ogryn_gauntlet_p1_m1_explosion_antiarmor_perk",
 		display_name = "loc_trait_display_ogryn_gauntlet_p1_m1_explosion_antiarmor_perk",
 		damage = {
 			action_shoot_zoomed = {
@@ -1403,18 +1458,33 @@ weapon_template.displayed_keywords = {
 }
 weapon_template.displayed_attacks = {
 	primary = {
-		display_name = "loc_ranged_attack_gauntlet_melee",
-		type = "melee"
+		display_name = "loc_weapon_action_title_light",
+		type = "melee",
+		attack_chain = {
+			"tank",
+			"tank",
+			"tank"
+		}
 	},
 	secondary = {
+		display_name = "loc_weapon_action_title_heavy",
+		type = "melee",
+		attack_chain = {
+			"tank",
+			"tank"
+		}
+	},
+	extra = {
 		fire_mode = "projectile",
 		display_name = "loc_ranged_attack_secondary_braced",
 		type = "brace"
 	},
 	special = {
+		desc = "loc_stats_special_action_special_attack_ogryn_gauntlet_p1m1_desc",
 		display_name = "loc_weapon_special_fist_attack_gauntlet",
 		type = "special_attack"
 	}
 }
+weapon_template.displayed_weapon_stats = "ogryn_gauntlet"
 
 return weapon_template

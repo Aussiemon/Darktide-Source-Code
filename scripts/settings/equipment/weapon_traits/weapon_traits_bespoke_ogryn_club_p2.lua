@@ -58,6 +58,12 @@ local templates = {
 		weapon_trait_bespoke_ogryn_club_p2_toughness_recovery_on_multiple_hits = {
 			{
 				buff_data = {
+					replenish_percentage = 0.075,
+					required_num_hits = 3
+				}
+			},
+			{
+				buff_data = {
 					replenish_percentage = 0.1,
 					required_num_hits = 3
 				}
@@ -65,12 +71,6 @@ local templates = {
 			{
 				buff_data = {
 					replenish_percentage = 0.125,
-					required_num_hits = 3
-				}
-			},
-			{
-				buff_data = {
-					replenish_percentage = 0.14,
 					required_num_hits = 3
 				}
 			},
@@ -155,17 +155,17 @@ local templates = {
 		weapon_trait_bespoke_ogryn_club_p2_increased_crit_chance_on_staggered_weapon_special_hit_parent = {
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.05
+					[stat_buffs.critical_strike_chance] = 0.04
 				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.075
+					[stat_buffs.critical_strike_chance] = 0.06
 				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.09
+					[stat_buffs.critical_strike_chance] = 0.08
 				}
 			},
 			{

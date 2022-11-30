@@ -71,6 +71,15 @@ FxSystem.on_add_extension = function (self, world, unit, extension_name, extensi
 		self.unit_to_particle_group_lookup[unit] = player_particle_group_id
 	end
 
+	if extension_name == "ProjectileFxExtension" then
+		local owner_unit = extension_init_data.owner_unit
+		local player_particle_group_id = owner_unit and self.unit_to_particle_group_lookup[owner_unit]
+
+		if player_particle_group_id then
+			self.unit_to_particle_group_lookup[unit] = player_particle_group_id
+		end
+	end
+
 	return FxSystem.super.on_add_extension(self, world, unit, extension_name, extension_init_data, ...)
 end
 
@@ -87,8 +96,18 @@ FxSystem.on_remove_extension = function (self, unit, extension_name)
 		end
 	end
 
+	local unit_to_particle_group_lookup = self.unit_to_particle_group_lookup
+
 	if extension_name == "PlayerUnitFxExtension" then
-		self.unit_to_particle_group_lookup[unit] = nil
+		local unit_to_particle_group_id = unit_to_particle_group_lookup[unit]
+
+		self:delete_units_beloniong_to_particle_group(unit_to_particle_group_id)
+
+		unit_to_particle_group_lookup[unit] = nil
+	end
+
+	if extension_name == "ProjectileFxExtension" then
+		unit_to_particle_group_lookup[unit] = nil
 	end
 
 	FxSystem.super.on_remove_extension(self, unit, extension_name)
@@ -473,6 +492,18 @@ FxSystem.trigger_ground_impact_fx = function (self, ground_impact_fx_template, i
 		local rotation = Quaternion.look(impact_normal)
 
 		self:trigger_vfx(particle_name, impact_position, rotation)
+	end
+end
+
+FxSystem.delete_units_beloniong_to_particle_group = function (self, particle_group_id)
+	local spawned_impact_fx_units = self._spawned_impact_fx_units
+
+	for unit, unit_particle_group_id in pairs(spawned_impact_fx_units) do
+		if particle_group_id == unit_particle_group_id then
+			World.destroy_unit(self._world, unit)
+
+			spawned_impact_fx_units[unit] = nil
+		end
 	end
 end
 
@@ -899,7 +930,7 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 				Unit.flow_event(fx_unit, flow_event)
 			end
 
-			spawned_impact_fx_units[fx_unit] = true
+			spawned_impact_fx_units[fx_unit] = optional_particle_group_id or 0
 		end
 	end
 end

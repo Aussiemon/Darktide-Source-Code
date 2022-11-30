@@ -3758,6 +3758,10 @@ params.debug_chain_lightning = {
 	value = false,
 	category = "Weapon"
 }
+params.debug_looping_sound_components = {
+	value = false,
+	category = "Dialogue"
+}
 params.debug_aim_assist = {
 	value = false,
 	category = "Weapon Aim Assist"

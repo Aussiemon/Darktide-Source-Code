@@ -72,6 +72,12 @@ AchievementTracker.track_player = function (self, player)
 		self._tracked_stats[stat_id] = account_id
 
 		self._saving_strategy:track_player(account_id, tracked_table)
+
+		for trigger_id, value in pairs(achievement_data.stats) do
+			if self._triggered_by[AchievementTypes.stat][trigger_id] then
+				self:_on_stat_trigger(stat_id, trigger_id, value)
+			end
+		end
 	end):catch(function (error)
 		self._tracked_players[account_id] = nil
 

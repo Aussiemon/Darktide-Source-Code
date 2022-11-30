@@ -1443,6 +1443,10 @@ weapon_template.actions = {
 				action_name = "action_melee_start_right_2",
 				chain_time = 0.45
 			},
+			special_action = {
+				action_name = "action_toggle_special",
+				chain_time = 0.4
+			},
 			block = {
 				action_name = "action_block",
 				chain_time = 0.5
@@ -1897,7 +1901,6 @@ weapon_template.perks = {
 		}
 	},
 	chainaxe_mobility_perk = {
-		description = "loc_trait_description_chainsword_p1_m1_mobility_perk",
 		display_name = "loc_trait_display_mobility_perk",
 		dodge = {
 			base = {
@@ -1921,7 +1924,8 @@ weapon_template.displayed_keywords = {
 		display_name = "loc_weapon_keyword_high_damage"
 	},
 	{
-		display_name = "loc_weapon_keyword_sawing"
+		display_name = "loc_weapon_keyword_sawing",
+		description = "loc_weapon_stats_display_sawing_desc"
 	}
 }
 weapon_template.displayed_attacks = {
@@ -1944,6 +1948,7 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	special = {
+		desc = "loc_stats_special_action_powerup_desc",
 		display_name = "loc_weapon_special_activate",
 		type = "activate"
 	}

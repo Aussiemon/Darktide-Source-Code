@@ -6,12 +6,15 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local PowerLevel = require("scripts/utilities/attack/power_level")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local Weakspot = require("scripts/utilities/attack/weakspot")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local WeakspotSettings = require("scripts/settings/damage/weakspot_settings")
 local armor_damage_modifier_to_damage_efficiency = AttackSettings.armor_damage_modifier_to_damage_efficiency
 local attack_types = AttackSettings.attack_types
 local damage_types = DamageSettings.damage_types
 local far_range = DamageSettings.ranged_far
 local close_range = DamageSettings.ranged_close
 local damage_output = PowerLevelSettings.damage_output
+local stagger_strength_output = PowerLevelSettings.stagger_strength_output
 local keywords = BuffSettings.keywords
 local melee_attack_strengths = AttackSettings.melee_attack_strength
 local DamageCalculation = {}
@@ -64,6 +67,56 @@ DamageCalculation.calculate = function (damage_profile, target_settings, lerp_va
 	local damage_efficiency = is_push and "push" or armor_damage_modifier_to_damage_efficiency(armor_damage_modifier, armor_type)
 
 	return damage, damage_efficiency, base_damage, base_buff_damage, rending_damage, finesse_boost_damage, backstab_damage, flanking_damage, armor_damage_modifier, hit_zone_damage_multiplier
+end
+
+DamageCalculation.base_ui_damage = function (damage_profile, target_settings, power_level, charge_level, dropoff_scalar, lerp_values)
+	local scaled_power_level = PowerLevel.scale_by_charge_level(power_level, charge_level, damage_profile.charge_level_scaler)
+	local is_critical_strike = false
+	local armor_type = ArmorSettings.types.unarmored
+	local dmg_table = damage_output[armor_type]
+	local dmg_min = dmg_table.min
+	local dmg_max = dmg_table.max
+	local dmg_range = dmg_max - dmg_min
+	local attack_power_level = DamageProfile.power_distribution_from_power_level(scaled_power_level, "attack", damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, lerp_values)
+	local base_attack = dmg_min + dmg_range * PowerLevel.power_level_percentage(attack_power_level)
+	local imp_table = stagger_strength_output[armor_type]
+	local imp_min = imp_table.min
+	local imp_max = imp_table.max
+	local imp_range = imp_max - imp_min
+	local impact_power_level = DamageProfile.power_distribution_from_power_level(scaled_power_level, "impact", damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, lerp_values)
+	local base_impact = imp_min + imp_range * PowerLevel.power_level_percentage(impact_power_level)
+
+	return base_attack, base_impact
+end
+
+DamageCalculation.ui_finesse_multiplier = function (damage_profile, target_settings, armor_type, hit_weakspot, is_critical_strike, lerp_values)
+	local weakspot_type = WeakspotSettings.types.headshot
+	local finesse_boost_amount = 0
+	local use_finesse_boost = not damage_profile.no_finesse_boost and hit_weakspot
+
+	if use_finesse_boost then
+		local boost_table = target_settings.finesse_boost
+		finesse_boost_amount = finesse_boost_amount + (boost_table and boost_table[armor_type] or PowerLevelSettings.default_finesse_boost_amount[armor_type])
+		finesse_boost_amount = WeakspotSettings.finesse_boost_modifers[weakspot_type](finesse_boost_amount)
+	end
+
+	local use_crit_boost = not damage_profile.no_crit_boost and is_critical_strike
+
+	if use_crit_boost then
+		local crit_boost_amount = damage_profile.crit_boost or PowerLevelSettings.default_crit_boost_amount
+		finesse_boost_amount = finesse_boost_amount + crit_boost_amount
+	end
+
+	if finesse_boost_amount > 0 then
+		local boost_curve = target_settings.boost_curve or PowerLevelSettings.boost_curves.default
+		finesse_boost_amount = math.min(finesse_boost_amount, 1)
+		local boost_curve_multiplier_finesse = DamageProfile.boost_curve_multiplier(target_settings, "boost_curve_multiplier_finesse", lerp_values)
+		local finesse_boost_multiplier = _boost_curve_multiplier(boost_curve, finesse_boost_amount) * boost_curve_multiplier_finesse
+
+		return finesse_boost_multiplier + 1
+	end
+
+	return 1
 end
 
 function _apply_damage_type_buffs_to_damage(damage, attack_type, stat_buffs)

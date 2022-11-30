@@ -140,6 +140,9 @@ local ErrorCodesLookup = {
 	failed_no_instances_available = {
 		code = 5002
 	},
+	failed_character_too_low_level = {
+		code = 5003
+	},
 	unknown_error = {
 		code = 9999
 	}

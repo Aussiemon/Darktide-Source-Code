@@ -12,7 +12,7 @@ ChargeEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._action_module_charge_component = unit_data_extension:read_component("action_module_charge")
-	self._is_charge_done_sound_playe = true
+	self._is_charge_done_sound_played = true
 end
 
 ChargeEffects.fixed_update = function (self, unit, dt, t, frame)
@@ -62,15 +62,17 @@ ChargeEffects.update_first_person_mode = function (self, first_person_mode)
 end
 
 ChargeEffects.wield = function (self)
-	self._is_charge_done_sound_playe = true
+	self._is_charge_done_sound_played = true
 end
 
 ChargeEffects.unwield = function (self)
-	self._is_charge_done_sound_playe = true
+	self._is_charge_done_sound_played = true
+
+	self:_stop_effects()
 end
 
 ChargeEffects.destroy = function (self)
-	return
+	self:_stop_effects()
 end
 
 ChargeEffects._start_effects = function (self, t)
@@ -101,7 +103,7 @@ ChargeEffects._start_effects = function (self, t)
 			fx_extension:spawn_looping_particles(looping_effect_alias, vfx_source)
 
 			self._looping_effect_alias = looping_effect_alias
-			self._should_fade_kill = true
+			self._should_fade_kill = not not charge_effects.should_fade_kill
 		end
 
 		self._played_start_effects = true
@@ -110,7 +112,7 @@ ChargeEffects._start_effects = function (self, t)
 	return true
 end
 
-ChargeEffects._stop_effects = function (self, t)
+ChargeEffects._stop_effects = function (self)
 	local fx_extension = self._fx_extension
 	local looping_sound_alias = self._looping_sound_alias
 	local looping_sound_is_playing = looping_sound_alias and fx_extension:is_looping_wwise_event_playing(looping_sound_alias)

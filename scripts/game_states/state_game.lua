@@ -95,7 +95,13 @@ StateGame.on_enter = function (self, parent, params)
 	local start_state = nil
 	start_state = StateSplash
 	start_params.is_booting = true
-	self._sm = GameStateMachine:new(self, start_state, start_params, creation_context)
+	local state_change_callbacks = {}
+
+	if not DEDICATED_SERVER then
+		state_change_callbacks.PresenceManager = callback(Managers.presence, "cb_on_game_state_change")
+	end
+
+	self._sm = GameStateMachine:new(self, start_state, start_params, creation_context, state_change_callbacks)
 
 	if Managers.ui then
 		self._sm:register_on_state_change_callback("UIManager", callback(Managers.ui, "cb_on_game_state_change"))
@@ -245,6 +251,10 @@ StateGame.on_exit = function (self)
 
 	if Managers.ui then
 		self._sm:unregister_on_state_change_callback("UIManager")
+	end
+
+	if not DEDICATED_SERVER then
+		self._sm:unregister_on_state_change_callback("PresenceManager")
 	end
 
 	self._sm:delete()

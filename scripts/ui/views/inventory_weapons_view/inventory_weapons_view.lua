@@ -144,7 +144,7 @@ InventoryWeaponsView._setup_input_legend = function (self)
 		local legend_input = legend_inputs[i]
 		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
 
-		self._input_legend_element:add_entry(legend_input.display_name, legend_input.input_action, legend_input.visibility_function, on_pressed_callback, legend_input.alignment)
+		self._input_legend_element:add_entry(legend_input.display_name, legend_input.input_action, legend_input.visibility_function, on_pressed_callback, legend_input.alignment, nil, legend_input.use_mouse_hold)
 	end
 end
 
@@ -675,13 +675,11 @@ InventoryWeaponsView._discard_items = function (self, item)
 
 		if rewards then
 			local credits_amount = rewards[1] and rewards[1].amount or 0
-			local credits_amount_text = TextUtilities.format_currency(credits_amount) .. " "
-			local localization_key = "loc_notification_title_credits_added"
-			local localized_text = Localize(localization_key, true, {
-				credits_amount = credits_amount_text
-			})
 
-			Managers.event:trigger("event_add_notification_message", "default", localized_text)
+			Managers.event:trigger("event_add_notification_message", "currency", {
+				currency = "credits",
+				amount = credits_amount
+			})
 		end
 	end)
 end

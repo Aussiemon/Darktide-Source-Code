@@ -5,6 +5,10 @@ local ItemUtils = require("scripts/utilities/items")
 local PortraitUI = require("scripts/ui/portrait_ui")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local Archetypes = require("scripts/settings/archetype/archetypes")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
+local CraftingSettings = require("scripts/settings/item/crafting_settings")
+local WeaponStats = require("scripts/utilities/weapon_stats")
 local ViewElementWeaponStats = class("ViewElementWeaponStats", "ViewElementGrid")
 
 ViewElementWeaponStats.init = function (self, parent, draw_layer, start_scale, optional_menu_settings)
@@ -34,7 +38,9 @@ ViewElementWeaponStats.init = function (self, parent, draw_layer, start_scale, o
 		world_layer = world_layer or 800,
 		viewport_layer = viewport_layer or 900
 	}
-	self._weapon_icon_renderer = WeaponIconUI:new(weapons_render_settings)
+	local icon_render_type = "weapon"
+	self._weapon_icon_renderer_id = "ViewElementWeaponStats_weapons_" .. math.uuid()
+	self._weapon_icon_renderer = Managers.ui:create_single_icon_renderer(icon_render_type, self._weapon_icon_renderer_id, weapons_render_settings)
 	local weapon_icon_size = UISettings.weapon_icon_size
 	local cosmetics_render_settings = {
 		viewport_layer = 900,
@@ -50,25 +56,50 @@ ViewElementWeaponStats.init = function (self, parent, draw_layer, start_scale, o
 		target_resolution_height = weapon_icon_size[2] * 4 * 10,
 		world_name = self._unique_id .. "_cosmetics_portrait_world"
 	}
-	self._cosmetics_icon_renderer = PortraitUI:new(cosmetics_render_settings)
+	local cosmetics_icon_render_type = "portrait"
+	self._cosmetics_icon_renderer_id = "ViewElementWeaponStats_cosmetics_" .. math.uuid()
+	self._cosmetics_icon_renderer = Managers.ui:create_single_icon_renderer(cosmetics_icon_render_type, self._cosmetics_icon_renderer_id, cosmetics_render_settings)
 
 	self:_register_event("event_item_icon_updated", "item_icon_updated")
+end
+
+ViewElementWeaponStats._replace_border = function (self)
+	local grid_divider_top = self:widget_by_name("grid_divider_top")
+	grid_divider_top.content.texture = "content/ui/materials/frames/item_info_upper_slots"
+	local style = grid_divider_top.style.texture
+	local scale = self._default_grid_size[1] / 1060
+	style.size = {
+		[2] = 116 * scale
+	}
 end
 
 ViewElementWeaponStats.destroy = function (self)
 	ViewElementWeaponStats.super.destroy(self)
 
 	if self._weapon_icon_renderer then
-		self._weapon_icon_renderer:destroy()
-
 		self._weapon_icon_renderer = nil
+
+		Managers.ui:destroy_single_icon_renderer(self._weapon_icon_renderer_id)
+
+		self._weapon_icon_renderer_id = nil
 	end
 
 	if self._cosmetics_icon_renderer then
-		self._cosmetics_icon_renderer:destroy()
-
 		self._cosmetics_icon_renderer = nil
+
+		Managers.ui:destroy_single_icon_renderer(self._cosmetics_icon_renderer_id)
+
+		self._cosmetics_icon_renderer_id = nil
 	end
+end
+
+local function add_base_rating(item, layout, grid_size)
+	local base_stats_rating = ItemUtils.calculate_stats_rating(item)
+	layout[#layout + 1] = {
+		header = "Modifiers",
+		widget_type = "rating_info",
+		rating = base_stats_rating
+	}
 end
 
 local function add_presentation_perks(item, layout, grid_size, perks_selectable)
@@ -76,6 +107,7 @@ local function add_presentation_perks(item, layout, grid_size, perks_selectable)
 	local perks = item.perks
 	local num_perks = perks and #perks or 0
 	local add_end_margin = false
+	local has_modification = nil
 
 	if num_perks > 0 then
 		layout[#layout + 1] = {
@@ -86,6 +118,26 @@ local function add_presentation_perks(item, layout, grid_size, perks_selectable)
 			}
 		}
 		add_end_margin = true
+		local rating = 0
+		local rating_per_perk_rank = CraftingSettings.rating_per_perk_rank
+
+		for i = 1, num_perks do
+			local perk = perks[i]
+			rating = rating + (rating_per_perk_rank[perk.rarity] or 0)
+		end
+
+		layout[#layout + 1] = {
+			widget_type = "rating_info",
+			rating = rating,
+			header = Localize("loc_item_type_perk")
+		}
+		layout[#layout + 1] = {
+			widget_type = "dynamic_spacing",
+			size = {
+				grid_size[1],
+				40
+			}
+		}
 	end
 
 	for i = 1, num_perks do
@@ -96,19 +148,31 @@ local function add_presentation_perks(item, layout, grid_size, perks_selectable)
 		local perk_item = MasterItems.get_item(perk_id)
 
 		if perk_item then
+			local is_locked = has_modification and not perk.modified
 			layout[#layout + 1] = {
 				widget_type = "weapon_perk",
 				perk_item = perk_item,
 				perk_value = perk_value,
 				perk_rarity = perk_rarity,
 				perk_index = i,
-				is_selectable = perks_selectable
+				is_selectable = perks_selectable,
+				is_locked = is_locked
 			}
 		end
 
 		if i < num_perks then
 			-- Nothing
 		end
+	end
+
+	if num_perks > 0 then
+		layout[#layout + 1] = {
+			widget_type = "dynamic_spacing",
+			size = {
+				grid_size[1],
+				10
+			}
+		}
 	end
 
 	return add_end_margin
@@ -119,9 +183,41 @@ local function add_presentation_traits(item, layout, grid_size)
 	local add_end_margin = false
 	local traits = item.traits
 	local num_traits = traits and #traits or 0
+	local has_modification = nil
 
 	if num_traits > 0 then
+		local rating = 0
+		local rating_per_trait_rank = CraftingSettings.rating_per_trait_rank
+
+		if item_type == "GADGET" then
+			local rating_value = 100
+
+			for i = 1, num_traits do
+				local trait = traits[i]
+				rating = rating + math.floor(trait.value * rating_value + 0.5)
+			end
+		else
+			for i = 1, num_traits do
+				local trait = traits[i]
+				rating = rating + (rating_per_trait_rank[trait.rarity] or 0)
+			end
+		end
+
 		layout[#layout + 1] = {
+			widget_type = "rating_info",
+			rating = rating,
+			header = Localize("loc_weapon_inventory_traits_title_text")
+		}
+		layout[#layout + 1] = {
+			add_background = true,
+			widget_type = "dynamic_spacing",
+			size = {
+				grid_size[1],
+				30
+			}
+		}
+		layout[#layout + 1] = {
+			add_background = true,
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
@@ -140,15 +236,19 @@ local function add_presentation_traits(item, layout, grid_size)
 
 		if trait_item then
 			local widget_type = item_type == "GADGET" and "gadget_trait" or "weapon_trait"
+			local is_locked = has_modification and not trait.modified
 			layout[#layout + 1] = {
+				add_background = true,
 				widget_type = widget_type,
 				trait_item = trait_item,
 				trait_value = trait_value,
-				trait_rarity = trait_rarity
+				trait_rarity = trait_rarity,
+				is_locked = is_locked
 			}
 
 			if i < num_traits then
 				layout[#layout + 1] = {
+					add_background = true,
 					widget_type = "dynamic_spacing",
 					size = {
 						grid_size[1],
@@ -161,6 +261,7 @@ local function add_presentation_traits(item, layout, grid_size)
 
 	if num_traits > 0 and item_type == "GADGET" then
 		layout[#layout + 1] = {
+			add_background = true,
 			widget_type = "dynamic_spacing",
 			size = {
 				grid_size[1],
@@ -200,6 +301,33 @@ ViewElementWeaponStats.present_item = function (self, item, is_equipped, on_pres
 			item = item
 		}
 		layout[#layout + 1] = {
+			widget_type = "dynamic_spacing",
+			size = {
+				grid_size[1],
+				20
+			}
+		}
+		layout[#layout + 1] = {
+			widget_type = "weapon_attack_data",
+			item = item,
+			size = {
+				grid_size[1],
+				60
+			}
+		}
+
+		add_base_rating(item, layout, grid_size)
+
+		layout[#layout + 1] = {
+			add_background = true,
+			widget_type = "dynamic_spacing",
+			size = {
+				grid_size[1],
+				30
+			}
+		}
+		layout[#layout + 1] = {
+			add_background = true,
 			widget_type = "weapon_stats",
 			item = item
 		}
@@ -209,7 +337,15 @@ ViewElementWeaponStats.present_item = function (self, item, is_equipped, on_pres
 		end
 
 		if add_presentation_traits(item, layout, grid_size) then
-			add_end_margin = true
+			layout[#layout + 1] = {
+				add_background = true,
+				widget_type = "dynamic_spacing",
+				size = {
+					grid_size[1],
+					30
+				}
+			}
+			add_end_margin = false
 		end
 	elseif item_type == "GADGET" then
 		layout[#layout + 1] = {
@@ -266,7 +402,15 @@ ViewElementWeaponStats.present_item = function (self, item, is_equipped, on_pres
 				widget_type = "description",
 				item = item
 			}
-			add_end_margin = true
+			layout[#layout + 1] = {
+				add_background = true,
+				widget_type = "dynamic_spacing",
+				size = {
+					grid_size[1],
+					30
+				}
+			}
+			add_end_margin = false
 		else
 			add_end_margin = false
 		end
@@ -360,7 +504,7 @@ ViewElementWeaponStats.present_item = function (self, item, is_equipped, on_pres
 		}
 	end
 
-	self:present_grid_layout(layout, on_present_callback)
+	self:present_grid_layout(layout, on_present_callback, item)
 end
 
 ViewElementWeaponStats.stop_presenting = function (self)
@@ -368,7 +512,7 @@ ViewElementWeaponStats.stop_presenting = function (self)
 	self:_destroy_grid()
 end
 
-ViewElementWeaponStats.present_grid_layout = function (self, layout, on_present_callback)
+ViewElementWeaponStats.present_grid_layout = function (self, layout, on_present_callback, item)
 	local grid_display_name = self._grid_display_name
 	local left_click_callback = callback(self, "cb_on_grid_entry_left_pressed")
 	local right_click_callback = callback(self, "cb_on_grid_entry_right_pressed")
@@ -376,7 +520,7 @@ ViewElementWeaponStats.present_grid_layout = function (self, layout, on_present_
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size
 	local mask_size = menu_settings.mask_size
-	local ContentBlueprints = generate_blueprints_function(grid_size)
+	local ContentBlueprints = generate_blueprints_function(grid_size, item)
 	local default_grid_height = self._default_grid_size[2]
 	grid_size[2] = default_grid_height
 	mask_size[2] = default_grid_height

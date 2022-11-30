@@ -12,6 +12,8 @@ local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_trai
 local WeaponTraitsBespokeAutopistolP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_autopistol_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local armor_types = ArmorSettings.types
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
@@ -518,6 +520,7 @@ weapon_template.actions = {
 		kind = "toogle_special",
 		anim_event = "toggle_flashlight",
 		start_input = "weapon_special",
+		allowed_during_sprint = true,
 		activation_time = 0,
 		skip_3p_anims = true,
 		total_time = 0.2,
@@ -673,12 +676,32 @@ weapon_template.movement_curve_modifier_template = "autopistol_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.base_stats = {
 	autopistol_p1_m1_dps_stat = {
-		description = "loc_trait_description_autopistol_p1_m1_dps_stat",
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.default_dps_stat
+				damage_trait_templates.default_dps_stat,
+				display_data = {
+					display_stats = {
+						armor_damage_modifier_ranged = {
+							near = {
+								attack = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {}
+								}
+							},
+							far = {
+								attack = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {}
+								}
+							}
+						},
+						power_distribution = {
+							attack = {}
+						}
+					}
+				}
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.default_dps_stat
@@ -686,32 +709,69 @@ weapon_template.base_stats = {
 		}
 	},
 	autopistol_p1_m1_mobility_stat = {
-		description = "loc_trait_description_autopistol_p1_m1_mobility_stat",
 		display_name = "loc_stats_display_mobility_stat",
 		is_stat_trait = true,
 		dodge = {
 			base = {
-				dodge_trait_templates.default_dodge_stat
+				dodge_trait_templates.default_dodge_stat,
+				display_data = {
+					display_stats = {
+						diminishing_return_start = {},
+						distance_scale = {},
+						speed_modifier = {}
+					}
+				}
 			}
 		},
 		sprint = {
 			base = {
-				sprint_trait_templates.default_sprint_stat
+				sprint_trait_templates.default_sprint_stat,
+				display_data = {
+					display_stats = {
+						sprint_speed_mod = {}
+					}
+				}
 			}
 		},
 		movement_curve_modifier = {
 			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
+				display_data = {
+					display_stats = {
+						modifier = {}
+					}
+				}
 			}
 		}
 	},
 	autopistol_p1_m1_power_stat = {
-		description = "loc_trait_description_autopistol_p1_m1_dps_stat",
 		display_name = "loc_stats_display_power_stat",
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.autopistol_power_stat
+				damage_trait_templates.autopistol_power_stat,
+				display_data = {
+					display_stats = {
+						armor_damage_modifier_ranged = {
+							near = {
+								attack = {
+									[armor_types.armored] = {},
+									[armor_types.super_armor] = {},
+									[armor_types.resistant] = {},
+									[armor_types.berserker] = {}
+								}
+							},
+							far = {
+								attack = {
+									[armor_types.armored] = {},
+									[armor_types.super_armor] = {},
+									[armor_types.resistant] = {},
+									[armor_types.berserker] = {}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.autopistol_power_stat
@@ -719,12 +779,42 @@ weapon_template.base_stats = {
 		}
 	},
 	autopistol_p1_m1_control_stat = {
-		description = "loc_trait_description_autopistol_p1_m1_dps_stat",
 		display_name = "loc_stats_display_control_stat_ranged",
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.autopistol_control_stat
+				damage_trait_templates.autopistol_control_stat,
+				display_data = {
+					display_stats = {
+						armor_damage_modifier_ranged = {
+							near = {
+								impact = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {},
+									[armor_types.resistant] = {},
+									[armor_types.berserker] = {}
+								}
+							},
+							far = {
+								impact = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {},
+									[armor_types.resistant] = {},
+									[armor_types.berserker] = {}
+								}
+							}
+						},
+						power_distribution = {
+							impact = {}
+						},
+						suppression_value = {},
+						on_kill_area_suppression = {
+							suppression_value = {},
+							distance = {}
+						},
+						accumulative_stagger_strength_multiplier = {}
+					}
+				}
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.autopistol_control_stat
@@ -732,12 +822,19 @@ weapon_template.base_stats = {
 		}
 	},
 	autopistol_p1_m1_ammo_stat = {
-		description = "loc_trait_description_autogun_p1_m1_ammo_stat",
 		display_name = "loc_stats_display_ammo_stat",
 		is_stat_trait = true,
 		ammo = {
 			base = {
-				ammo_trait_templates.default_ammo_stat
+				ammo_trait_templates.default_ammo_stat,
+				display_data = {
+					display_stats = {
+						ammo = {
+							ammunition_clip = {},
+							ammunition_reserve = {}
+						}
+					}
+				}
 			}
 		}
 	}
@@ -772,6 +869,7 @@ weapon_template.displayed_attacks = {
 		type = "ads"
 	},
 	special = {
+		desc = "loc_stats_special_action_flashlight_desc",
 		display_name = "loc_weapon_special_flashlight",
 		type = "flashlight"
 	}

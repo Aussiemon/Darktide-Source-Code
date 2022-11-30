@@ -35,6 +35,14 @@ local husk_hud_data_component_config = {
 	movement_state = {
 		"is_crouching"
 	},
+	grenade_ability = {
+		"cooldown",
+		"num_charges"
+	},
+	combat_ability = {
+		"cooldown",
+		"num_charges"
+	},
 	weapon_lock_view = {
 		"state",
 		"pitch",

@@ -46,7 +46,7 @@ Stagger.apply_stagger = function (unit, damage_profile, damage_profile_lerp_valu
 	local attacker_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system") or attacking_unit_owner_unit and ScriptUnit.has_extension(attacking_unit_owner_unit, "buff_system")
 	local attacker_stat_buffs = attacker_buff_extension and attacker_buff_extension:stat_buffs() or EMPTY_STAT_BUFFS
 	local is_burning = MinionState.is_burning(unit)
-	local stagger_reduction_override_or_nil, action_controlled_stagger = _get_action_data_overrides(unit, breed, damage_profile)
+	local stagger_reduction_override_or_nil, action_controlled_stagger = _get_action_data_overrides(unit, breed, damage_profile, attacking_unit)
 	local stagger_type, duration_scale, length_scale, stagger_strength, current_hit_stagger_strength = StaggerCalculation.calculate(damage_profile, target_settings, damage_profile_lerp_values, power_level, charge_level, breed, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, stagger_count, attack_type, armor_type, stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs, hit_shield, is_burning)
 	local accumulative_multiplier = damage_profile.accumulative_stagger_strength_multiplier or DEFAULT_ACCUMULATIVE_MULTIPLIER
 
@@ -147,10 +147,11 @@ end
 
 local RUNNING_STAGGER_DEFAULT_MIN_DISTANCE = 5
 local CONTROLLED_STAGGER_IGNORED_STAGGER_TYPES = {
-	sticky = true
+	sticky = true,
+	explosion = true
 }
 
-function _get_action_data_overrides(unit, breed, damage_profile)
+function _get_action_data_overrides(unit, breed, damage_profile, attacking_unit)
 	local stagger_reduction, action_controlled_stagger = nil
 	local stagger_type = damage_profile.stagger_category
 	local behavior_ext = ScriptUnit.has_extension(unit, "behavior_system")
@@ -192,6 +193,14 @@ function _get_action_data_overrides(unit, breed, damage_profile)
 					within_speed_threshold = min_speed <= move_speed
 				end
 
+				local within_distance_threshold = true
+				local max_distance = action_data.controlled_stagger_max_distance
+
+				if max_distance and HEALTH_ALIVE[attacking_unit] then
+					local distance = Vector3.distance(POSITION_LOOKUP[unit], POSITION_LOOKUP[attacking_unit])
+					within_distance_threshold = max_distance <= distance
+				end
+
 				local not_in_ignored_combat_range = true
 				local ignored_combat_range = action_data.controlled_stagger_ignored_combat_range
 
@@ -202,7 +211,7 @@ function _get_action_data_overrides(unit, breed, damage_profile)
 					not_in_ignored_combat_range = combat_range ~= ignored_combat_range
 				end
 
-				action_controlled_stagger = within_speed_threshold and not_in_ignored_combat_range
+				action_controlled_stagger = within_distance_threshold and within_speed_threshold and not_in_ignored_combat_range
 			end
 		end
 	end

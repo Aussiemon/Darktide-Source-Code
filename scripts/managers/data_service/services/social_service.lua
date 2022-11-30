@@ -2,6 +2,7 @@ local PartyConstants = require("scripts/settings/network/party_constants")
 local PlayerCompositions = require("scripts/utilities/players/player_compositions")
 local PlayerInfo = require("scripts/managers/data_service/services/social/player_info")
 local PresenceEntryMyself = require("scripts/managers/presence/presence_entry_myself")
+local PresenceSettings = require("scripts/settings/presence/presence_settings")
 local Promise = require("scripts/foundation/utilities/promise")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local PartyState = PartyConstants.State
@@ -11,6 +12,7 @@ local PartyStatus = SocialConstants.PartyStatus
 local FriendStatus = SocialConstants.FriendStatus
 local HOST_TYPE_HUB_SERVER = "hub_server"
 local HOST_TYPE_MISSION_SERVER = "mission_server"
+local HOST_TYPE_SINGLEPLAY = "singleplay"
 local SocialService = class("SocialService")
 
 local function _warning(...)
@@ -89,6 +91,7 @@ SocialService.update = function (self, dt, t)
 	end
 
 	self._invites:update()
+	self:_check_split_party()
 end
 
 SocialService.platform = function (self)
@@ -113,10 +116,22 @@ SocialService.is_in_hub = function (self)
 	return host_type == HOST_TYPE_HUB_SERVER
 end
 
+SocialService.is_in_training_grounds = function (self)
+	local game_mode_name = Managers.state.game_mode and Managers.state.game_mode:game_mode_name()
+
+	return game_mode_name == "shooting_range"
+end
+
 SocialService.is_in_mission = function (self)
 	local host_type = Managers.connection:host_type()
 
 	return host_type == HOST_TYPE_MISSION_SERVER
+end
+
+SocialService.is_in_singleplay = function (self)
+	local host_type = Managers.connection:host_type()
+
+	return host_type == HOST_TYPE_SINGLEPLAY
 end
 
 SocialService.is_in_matchmaking = function (self)
@@ -439,40 +454,51 @@ SocialService.can_join_party = function (self, player_info)
 	end
 
 	local player_activity = player_info:player_activity_id()
+	local presence_settings = PresenceSettings.settings[player_activity]
 
-	if player_activity == "matchmaking" then
-		local reason = "loc_social_party_join_rejection_reason_player_in_matchmaking"
-
-		return false, reason
+	if not presence_settings.can_be_joined then
+		return false, presence_settings.fail_reason_other
 	end
 
 	local local_player_can_join, fail_reason = self:local_player_can_join_party()
 
 	if not local_player_can_join then
-		local reason = "unknown_reason"
-
-		if fail_reason == "in_mission" then
-			reason = "loc_social_party_join_rejection_reason_you_are_in_mission"
-		elseif fail_reason == "in_matchmaking" then
-			reason = "loc_social_party_join_rejection_reason_you_are_in_matchmaking"
-		end
-
-		return false, reason
+		return false, fail_reason
 	end
 
 	return true
 end
 
 SocialService.local_player_can_join_party = function (self)
-	if self:is_in_mission() then
-		return false, "in_mission"
-	end
+	local activity_id = Managers.presence:presence()
+	local presence_settings = PresenceSettings.settings[activity_id]
 
-	if self:is_in_matchmaking() then
-		return false, "in_matchmaking"
+	if not presence_settings.can_be_invited then
+		local reason = presence_settings.fail_reason_myself
+
+		return false, reason, activity_id
 	end
 
 	return true
+end
+
+SocialService.local_player_is_joinable = function (self)
+	local activity_id = Managers.presence:presence()
+	local presence_settings = PresenceSettings.settings[activity_id]
+	local can_be_joined = presence_settings.can_be_joined
+
+	return can_be_joined
+end
+
+SocialService._check_split_party = function (self)
+	if GameParameters.prod_like_backend and Managers.party_immaterium and Managers.party_immaterium:num_other_members() > 0 then
+		local activity_id = Managers.presence:presence()
+		local presence_settings = PresenceSettings.settings[activity_id]
+
+		if presence_settings.split_party then
+			Managers.party_immaterium:leave_party()
+		end
+	end
 end
 
 SocialService.can_invite_to_party = function (self, player_info)
@@ -503,23 +529,17 @@ SocialService.can_invite_to_party = function (self, player_info)
 	end
 
 	local player_activity = player_info:player_activity_id()
+	local presence_settings = PresenceSettings.settings[player_activity]
 
-	if player_activity == "mission" then
-		local reason = "loc_social_party_join_rejection_reason_player_in_mission"
-
-		return false, reason
+	if not presence_settings.can_be_invited then
+		return false, presence_settings.fail_reason_other
 	end
 
-	if player_activity == "matchmaking" then
-		local reason = "loc_social_party_join_rejection_reason_player_in_matchmaking"
+	local my_activity = Managers.presence:presence()
+	local my_presence_settings = PresenceSettings.settings[my_activity]
 
-		return false, reason
-	end
-
-	if self:is_in_matchmaking() then
-		local reason = "loc_social_party_join_rejection_reason_you_are_in_matchmaking"
-
-		return false, reason
+	if not my_presence_settings.can_be_joined then
+		return false, my_presence_settings.fail_reason_myself
 	end
 
 	return true

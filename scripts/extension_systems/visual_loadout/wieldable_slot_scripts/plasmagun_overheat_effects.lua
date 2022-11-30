@@ -1,3 +1,4 @@
+local Component = require("scripts/utilities/component")
 local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local PlasmagunOverheatEffects = class("PlasmagunOverheatEffects")
 local SFX_ALIAS = "weapon_overload"
@@ -40,12 +41,12 @@ PlasmagunOverheatEffects.init = function (self, context, slot, weapon_template, 
 	self._looping_sound_parameter_name = overheat_fx.looping_sound_parameter_name
 	self._looping_playing_id = nil
 	self._looping_critical_playing_id = nil
-	self._material_variable_name = overheat_fx.material_variable_name
-	self._material_name = overheat_fx.material_name
 	self._on_screen_effect = overheat_fx.on_screen_effect
 	self._on_screen_cloud_name = overheat_fx.on_screen_cloud_name
 	self._on_screen_variable_name = overheat_fx.on_screen_variable_name
 	self._on_screen_effect_id = nil
+	self._plasma_coil_components_1p = _slot_components(slot.attachments_1p)
+	self._plasma_coil_components_3p = _slot_components(slot.attachments_3p)
 end
 
 PlasmagunOverheatEffects.destroy = function (self)
@@ -155,22 +156,21 @@ PlasmagunOverheatEffects._update_sfx_loop = function (self, overheat_percentage,
 end
 
 PlasmagunOverheatEffects._update_material = function (self, overheat_percentage)
-	local material_variable_name = self._material_variable_name
-	local material_name = self._material_name
-	local slot = self._slot
-	local attachments_1p = slot.attachments_1p
-	local attachments_3p = slot.attachments_3p
+	local components_1p = self._plasma_coil_components_1p
+	local components_3p = self._plasma_coil_components_3p
 
-	for i = 1, #attachments_1p do
-		local attachment_unit = attachments_1p[i]
+	for ii = 1, #components_1p do
+		local plasma_coil = components_1p[ii]
+		local unit = plasma_coil.unit
 
-		Unit.set_scalar_for_material(attachment_unit, material_name, material_variable_name, math.lerp(0, 0.2, overheat_percentage))
+		plasma_coil.component:set_overheat(unit, overheat_percentage)
 	end
 
-	for i = 1, #attachments_3p do
-		local attachment_unit = attachments_3p[i]
+	for ii = 1, #components_3p do
+		local plasma_coil = components_3p[ii]
+		local unit = plasma_coil.unit
 
-		Unit.set_scalar_for_material(attachment_unit, material_name, material_variable_name, math.lerp(0, 0.2, overheat_percentage))
+		plasma_coil.component:set_overheat(unit, overheat_percentage)
 	end
 end
 
@@ -280,6 +280,26 @@ PlasmagunOverheatEffects._stop_sfx_loop = function (self, stage)
 
 	self._looping_playing_ids[stage] = nil
 	self._looping_stop_events[stage] = nil
+end
+
+function _slot_components(attachments)
+	local component_list = {}
+
+	for ii = 1, #attachments do
+		local attachment_unit = attachments[ii]
+		local components = Component.get_components_by_name(attachment_unit, "PlasmaCoil")
+
+		for _, component in ipairs(components) do
+			Unit.set_unit_objects_visibility(attachment_unit, true, false)
+
+			component_list[#component_list + 1] = {
+				unit = attachment_unit,
+				component = component
+			}
+		end
+	end
+
+	return component_list
 end
 
 return PlasmagunOverheatEffects

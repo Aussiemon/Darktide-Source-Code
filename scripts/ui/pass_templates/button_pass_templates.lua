@@ -567,7 +567,10 @@ ButtonPassTemplates.aquila_button = {
 	{
 		pass_type = "hotspot",
 		content_id = "hotspot",
-		content = default_button_content
+		content = {
+			on_hover_sound = UISoundEvents.default_mouse_hover,
+			on_pressed_sound = UISoundEvents.default_click
+		}
 	},
 	{
 		value = "content/ui/materials/backgrounds/terminal_basic",

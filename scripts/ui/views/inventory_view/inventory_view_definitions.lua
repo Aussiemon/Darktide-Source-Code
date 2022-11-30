@@ -5,11 +5,34 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local ItemPassTemplates = require("scripts/ui/pass_templates/item_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local item_stats_grid_settings = nil
+local padding = 12
+local width = 530
+local height = 920
+item_stats_grid_settings = {
+	scrollbar_width = 7,
+	ignore_blur = true,
+	title_height = 70,
+	grid_spacing = {
+		0,
+		0
+	},
+	grid_size = {
+		width - padding,
+		height
+	},
+	mask_size = {
+		width + 40,
+		height
+	},
+	edge_padding = padding
+}
 local scrollbar_width = InventoryViewSettings.scrollbar_width
 local grid_size = InventoryViewSettings.grid_size
 local mask_size = InventoryViewSettings.mask_size
 local grid_start_offset_x = 180
 local gear_icon_size = ItemPassTemplates.gear_icon_size
+local weapon_item_size = ItemPassTemplates.weapon_item_size
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
@@ -120,12 +143,12 @@ local scenegraph_definition = {
 		parent = "grid_background",
 		horizontal_alignment = "center",
 		size = {
-			grid_size[1] + 2,
-			36
+			840,
+			840
 		},
 		position = {
 			0,
-			-36,
+			-50,
 			12
 		}
 	},
@@ -251,6 +274,98 @@ local scenegraph_definition = {
 			9
 		}
 	},
+	loadout_frame = {
+		vertical_alignment = "top",
+		parent = "canvas",
+		horizontal_alignment = "left",
+		size = {
+			840,
+			840
+		},
+		position = {
+			60,
+			166,
+			30
+		}
+	},
+	loadout_background_1 = {
+		vertical_alignment = "top",
+		parent = "loadout_frame",
+		horizontal_alignment = "left",
+		size = {
+			0,
+			0
+		},
+		position = {
+			100,
+			80,
+			-16
+		}
+	},
+	loadout_background_2 = {
+		vertical_alignment = "top",
+		parent = "loadout_frame",
+		horizontal_alignment = "left",
+		size = {
+			0,
+			0
+		},
+		position = {
+			70,
+			490,
+			-16
+		}
+	},
+	slot_primary_header = {
+		vertical_alignment = "top",
+		parent = "loadout_frame",
+		horizontal_alignment = "center",
+		size = {
+			840,
+			50
+		},
+		position = {
+			0,
+			38,
+			1
+		}
+	},
+	slot_secondary_header = {
+		vertical_alignment = "top",
+		parent = "loadout_frame",
+		horizontal_alignment = "center",
+		size = {
+			840,
+			50
+		},
+		position = {
+			0,
+			243,
+			1
+		}
+	},
+	slot_primary = {
+		vertical_alignment = "top",
+		parent = "loadout_frame",
+		horizontal_alignment = "center",
+		size = weapon_item_size,
+		position = {
+			0,
+			110,
+			-15
+		}
+	},
+	slot_secondary = {
+		vertical_alignment = "top",
+		parent = "loadout_frame",
+		horizontal_alignment = "center",
+		size = weapon_item_size,
+		position = {
+			0,
+			315,
+			-15
+		}
+	},
 	button_skin_sets = {
 		vertical_alignment = "bottom",
 		parent = "canvas",
@@ -277,6 +392,67 @@ local scenegraph_definition = {
 			-620,
 			-140,
 			0
+		}
+	},
+	item_stats_pivot = {
+		vertical_alignment = "top",
+		parent = "loadout_frame",
+		horizontal_alignment = "left",
+		size = {
+			0,
+			0
+		},
+		position = {
+			840,
+			0,
+			3
+		}
+	},
+	slot_attachments_header = {
+		vertical_alignment = "top",
+		parent = "loadout_frame",
+		horizontal_alignment = "center",
+		size = {
+			840,
+			50
+		},
+		position = {
+			0,
+			450,
+			1
+		}
+	},
+	slot_attachment_1 = {
+		vertical_alignment = "bottom",
+		parent = "loadout_frame",
+		horizontal_alignment = "center",
+		size = ItemPassTemplates.gear_icon_size,
+		position = {
+			-33 - (ItemPassTemplates.gear_icon_size[1] + 102),
+			-187,
+			-15
+		}
+	},
+	slot_attachment_2 = {
+		vertical_alignment = "bottom",
+		parent = "loadout_frame",
+		horizontal_alignment = "center",
+		size = ItemPassTemplates.gear_icon_size,
+		position = {
+			-33,
+			-187,
+			-15
+		}
+	},
+	slot_attachment_3 = {
+		vertical_alignment = "bottom",
+		parent = "loadout_frame",
+		horizontal_alignment = "center",
+		size = ItemPassTemplates.gear_icon_size,
+		position = {
+			-33 + ItemPassTemplates.gear_icon_size[1] + 102,
+			-187,
+			-15
 		}
 	}
 }
@@ -322,7 +498,7 @@ local widget_definitions = {
 			}
 		},
 		{
-			value = "content/ui/materials/dividers/horizontal_frame_big_upper",
+			value = "content/ui/materials/frames/loadout_main",
 			pass_type = "texture",
 			style = {
 				scenegraph_id = "grid_divider_top"
@@ -514,9 +690,20 @@ local animations = {
 			end_time = 0.6,
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, parent)
+				parent.loadout_alpha_multiplier = 0
+
 				for i = 1, #widgets do
 					local widget = widgets[i]
 					widget.alpha_multiplier = 0
+				end
+
+				local loadout_widgets = parent._loadout_widgets
+
+				if loadout_widgets then
+					for i = 1, #loadout_widgets do
+						local widget = loadout_widgets[i]
+						widget.alpha_multiplier = 0
+					end
 				end
 			end
 		},
@@ -529,6 +716,12 @@ local animations = {
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, parent)
 				local anim_progress = math.easeOutCubic(progress)
+				local loadout_widgets = parent._loadout_widgets
+
+				for i = 1, #loadout_widgets do
+					local widget = loadout_widgets[i]
+					widget.alpha_multiplier = anim_progress
+				end
 
 				for i = 1, #widgets do
 					local widget = widgets[i]
@@ -537,8 +730,9 @@ local animations = {
 
 				local x_anim_distance_max = 50
 				local x_anim_distance = x_anim_distance_max - x_anim_distance_max * anim_progress
+				local extra_amount = math.clamp(15 - 15 * anim_progress * 1.2, 0, 15)
 
-				parent:_set_scenegraph_position("grid_background", scenegraph_definition.grid_background.position[1] - x_anim_distance)
+				parent:_set_scenegraph_position("loadout_frame", scenegraph_definition.loadout_frame.position[1] - x_anim_distance)
 			end
 		}
 	}
@@ -546,6 +740,7 @@ local animations = {
 
 return {
 	animations = animations,
+	item_stats_grid_settings = item_stats_grid_settings,
 	wallet_entry_definition = wallet_entry_definition,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition

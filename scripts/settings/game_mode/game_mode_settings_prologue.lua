@@ -1,9 +1,8 @@
 local settings = {
 	use_prologue_profile = true,
 	bot_backfilling_allowed = false,
-	host_singleplay = true,
 	name = "prologue",
-	presence_name = "prologue",
+	host_singleplay = true,
 	class_file_name = "scripts/managers/game_mode/game_modes/game_mode_prologue",
 	cache_local_player_profile = true,
 	use_side_color = false,

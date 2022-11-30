@@ -21,7 +21,7 @@ ChainLightningTargetingActionModule.start = function (self, action_settings, t)
 end
 
 local RADIUS = 20
-local MAX_Z_DIFF = 4
+local MAX_Z_DIFF = RADIUS
 local MAX_ANGLE = math.pi * 0.1
 local BROADPHASE_RESULTS = {}
 local hit_units = {}
@@ -42,13 +42,17 @@ ChainLightningTargetingActionModule.fixed_update = function (self, dt, t)
 	table.clear(hit_units)
 
 	local num_results = broadphase:query(query_position, RADIUS, BROADPHASE_RESULTS, enemy_side_names)
+
+	if DevParameters.draw_chain_lightning_targeting_action_module then
+		QuickDrawer:sphere(query_position, RADIUS, Color.magenta())
+	end
+
 	local num_targets = 0
 
 	for i = 1, num_results do
 		local target_unit = BROADPHASE_RESULTS[i]
 
 		if target_unit and not hit_units[target_unit] then
-			local direction = Vector3_normalize(Vector3_flat(POSITION_LOOKUP[target_unit] - query_position))
 			local valid_target = ChainLightning.is_valid_target(self._physics_world, player_unit, target_unit, query_position, -forward_direction, MAX_ANGLE, MAX_Z_DIFF)
 
 			if valid_target then

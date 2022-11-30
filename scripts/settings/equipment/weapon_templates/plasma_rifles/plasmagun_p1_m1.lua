@@ -14,6 +14,8 @@ local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_trai
 local WeaponTraitsRangedOverheat = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_overheat")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
@@ -682,7 +684,28 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_shoot = {
-				damage_trait_templates.default_dps_stat
+				damage_trait_templates.default_dps_stat,
+				display_data = {
+					display_stats = {
+						armor_damage_modifier_ranged = {
+							near = {
+								attack = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {}
+								}
+							},
+							far = {
+								attack = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {}
+								}
+							}
+						},
+						power_distribution = {
+							attack = {}
+						}
+					}
+				}
 			},
 			action_shoot_charged = {
 				damage_trait_templates.default_dps_stat
@@ -694,7 +717,32 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_shoot = {
-				damage_trait_templates.default_power_stat
+				damage_trait_templates.default_power_stat,
+				display_data = {
+					display_stats = {
+						armor_damage_modifier_ranged = {
+							near = {
+								attack = {
+									[armor_types.armored] = {},
+									[armor_types.super_armor] = {},
+									[armor_types.resistant] = {},
+									[armor_types.berserker] = {}
+								}
+							},
+							far = {
+								attack = {
+									[armor_types.armored] = {},
+									[armor_types.super_armor] = {},
+									[armor_types.resistant] = {},
+									[armor_types.berserker] = {}
+								}
+							}
+						},
+						power_distribution = {
+							impact = {}
+						}
+					}
+				}
 			},
 			action_shoot_charged = {
 				damage_trait_templates.default_power_stat
@@ -712,10 +760,26 @@ weapon_template.base_stats = {
 				charge_trait_templates.plasmagun_charge_cost_stat
 			},
 			action_shoot = {
-				charge_trait_templates.plasmagun_charge_cost_stat
+				charge_trait_templates.plasmagun_charge_cost_stat,
+				display_data = {
+					prefix = "loc_ranged_attack_primary",
+					display_stats = {
+						overheat_percent = {
+							display_name = "loc_weapon_stats_display_heat_generation"
+						}
+					}
+				}
 			},
 			action_shoot_charged = {
-				charge_trait_templates.plasmagun_charge_cost_stat
+				charge_trait_templates.plasmagun_charge_cost_stat,
+				display_data = {
+					prefix = "loc_ranged_attack_secondary_braced",
+					display_stats = {
+						overheat_percent = {
+							display_name = "loc_weapon_stats_display_heat_generation"
+						}
+					}
+				}
 			}
 		}
 	},
@@ -724,10 +788,22 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		charge = {
 			action_charge_direct = {
-				charge_trait_templates.plasmagun_charge_speed_stat
+				charge_trait_templates.plasmagun_charge_speed_stat,
+				display_data = {
+					prefix = "loc_ranged_attack_primary",
+					display_stats = {
+						charge_duration = {}
+					}
+				}
 			},
 			action_charge = {
-				charge_trait_templates.plasmagun_charge_speed_stat
+				charge_trait_templates.plasmagun_charge_speed_stat,
+				display_data = {
+					prefix = "loc_ranged_attack_secondary_braced",
+					display_stats = {
+						charge_duration = {}
+					}
+				}
 			},
 			action_shoot = {
 				charge_trait_templates.plasmagun_charge_speed_stat
@@ -742,7 +818,13 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		ammo = {
 			base = {
-				ammo_trait_templates.default_ammo_stat
+				ammo_trait_templates.default_ammo_stat,
+				display_data = {
+					display_stats = {
+						ammunition_clip = {},
+						ammunition_reserve = {}
+					}
+				}
 			}
 		}
 	}
@@ -808,9 +890,7 @@ weapon_template.overheat_configuration = {
 		on_screen_cloud_name = "plasma",
 		vfx_source_name = "_overheat",
 		looping_sound_parameter_name = "overheat_plasma_gun",
-		on_screen_variable_name = "plasma_radius",
-		material_name = "coil_emissive_01",
-		material_variable_name = "external_overheat_glow"
+		on_screen_variable_name = "plasma_radius"
 	}
 }
 weapon_template.displayed_keywords = {
@@ -833,8 +913,9 @@ weapon_template.displayed_attacks = {
 		type = "charge"
 	},
 	special = {
+		type = "vent",
 		display_name = "loc_weapon_special_weapon_vent",
-		type = "vent"
+		desc = "loc_stats_special_action_venting_desc"
 	}
 }
 weapon_template.displayed_attack_ranges = {
@@ -865,5 +946,7 @@ table.append(weapon_template.traits, ranged_overheat_traits)
 local bespoke_plasmagun_p1_traits = table.keys(WeaponTraitsBespokePlasmagunP1)
 
 table.append(weapon_template.traits, bespoke_plasmagun_p1_traits)
+
+weapon_template.displayed_weapon_stats = "plasmagun_p1_m1"
 
 return weapon_template

@@ -258,9 +258,8 @@ StatsManager.record_help_ally = function (self, player, target_player)
 	self:_trigger_hook(player, "hook_help_ally", 1, target_player:session_id(), player:profile().specialization)
 end
 
-StatsManager.record_collect_material = function (self, type, size)
+StatsManager.record_collect_material = function (self, type, amount)
 	type = type or "unknown"
-	local amount = size == "large" and 10 or size == "small" and 5 or 0
 
 	self:_trigger_global_hook("hook_collect_material", amount, type)
 end
@@ -325,8 +324,8 @@ StatsManager.record_boss_death = function (self, max_health, id, breed_name, tim
 	self:_trigger_global_hook("hook_boss_kill", 1, breed_name, max_health, id, time_since_first_damage, action)
 end
 
-StatsManager.record_coherency_exit = function (self, player, is_exiter_alive)
-	self:_trigger_hook(player, "hook_coherency_exit", 1, is_exiter_alive, player:profile().specialization)
+StatsManager.record_coherency_exit = function (self, player, is_exiter_alive, num_units_in_coherency)
+	self:_trigger_hook(player, "hook_coherency_exit", 1, is_exiter_alive, num_units_in_coherency, player:profile().specialization)
 end
 
 StatsManager.record_health_update = function (self, player, current_health_percentage, is_knocked_down)

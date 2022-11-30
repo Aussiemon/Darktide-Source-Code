@@ -12,6 +12,8 @@ local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_trai
 local WeaponTraitsRangedWarpCharge = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_warp_charge")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local armor_types = ArmorSettings.types
 local template_types = WeaponTweakTemplateSettings.template_types
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local charge_trait_templates = WeaponTraitTemplates[template_types.charge]
@@ -155,11 +157,13 @@ weapon_template.action_input_hierarchy = {
 		charge_release = "base",
 		wield = "base",
 		grenade_ability = "base",
+		vent = "base",
 		combat_ability = "base",
 		shoot_charged = {
 			shoot_charged_release = "base",
 			wield = "base",
-			combat_ability = "base"
+			combat_ability = "base",
+			grenade_ability = "base"
 		}
 	},
 	vent = {
@@ -172,12 +176,9 @@ weapon_template.action_input_hierarchy = {
 		special_action = "base",
 		special_action_light = "base",
 		special_action_heavy = "base",
-		vent = "base",
-		grenade_ability = "base",
-		combat_ability = "base",
 		wield = "base",
-		charge = "base",
-		shoot_pressed = "base"
+		grenade_ability = "base",
+		combat_ability = "base"
 	}
 }
 
@@ -250,6 +251,12 @@ weapon_template.actions = {
 			start_modifier = 0.8
 		},
 		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
 			wield = {
 				action_name = "action_unwield"
 			},
@@ -263,7 +270,12 @@ weapon_template.actions = {
 				action_name = "action_stab_start"
 			},
 			charge = {
-				action_name = "action_charge"
+				action_name = "action_charge",
+				chain_time = 0.45
+			},
+			vent = {
+				action_name = "action_vent",
+				chain_time = 0.3
 			}
 		},
 		fx = {
@@ -325,7 +337,8 @@ weapon_template.actions = {
 				chain_time = 0.5
 			},
 			vent = {
-				action_name = "action_vent"
+				action_name = "action_vent",
+				chain_time = 0.3
 			}
 		},
 		fx = {
@@ -1013,16 +1026,55 @@ weapon_template.charge_effects = {
 	sfx_source_name = "_left"
 }
 weapon_template.overclocks = {}
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	forcestaff_p3_m1_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
 			rapid_left = {
-				damage_trait_templates.forcestaff_p3_m1_dps_stat
+				damage_trait_templates.forcestaff_p3_m1_dps_stat,
+				display_data = {
+					prefix = "loc_ingame_action_one",
+					display_stats = {
+						power_distribution = {
+							attack = {
+								display_name = "loc_weapon_stats_display_base_damage"
+							}
+						},
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_shoot_charged = {
-				damage_trait_templates.forcestaff_p3_m1_dps_stat
+				damage_trait_templates.forcestaff_p3_m1_dps_stat,
+				display_data = {
+					prefix = "loc_ingame_action_two",
+					display_stats = {
+						power_distribution = {
+							attack = {
+								display_name = "loc_weapon_stats_display_base_damage"
+							}
+						},
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	},
@@ -1031,7 +1083,8 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		warp_charge = {
 			base = {
-				warp_charge_trait_templates.forcestaff_p3_m1_vent_speed_stat
+				warp_charge_trait_templates.forcestaff_p3_m1_vent_speed_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
@@ -1043,7 +1096,13 @@ weapon_template.base_stats = {
 				charge_trait_templates.forcestaff_p3_m1_charge_speed_stat
 			},
 			action_charge = {
-				charge_trait_templates.forcestaff_p3_m1_charge_speed_stat
+				charge_trait_templates.forcestaff_p3_m1_charge_speed_stat,
+				display_data = {
+					prefix = "loc_ingame_action_two",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_shoot_charged = {
 				charge_trait_templates.forcestaff_p3_m1_charge_speed_stat
@@ -1055,10 +1114,22 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		charge = {
 			rapid_left = {
-				charge_trait_templates.forcestaff_p3_m1_warp_charge_cost_stat
+				charge_trait_templates.forcestaff_p3_m1_warp_charge_cost_stat,
+				display_data = {
+					prefix = "loc_ingame_action_one",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_charge = {
-				charge_trait_templates.forcestaff_p3_m1_warp_charge_cost_stat
+				charge_trait_templates.forcestaff_p3_m1_warp_charge_cost_stat,
+				display_data = {
+					prefix = "loc_ingame_action_two",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_shoot_charged = {
 				charge_trait_templates.forcestaff_p3_m1_warp_charge_cost_stat
@@ -1070,18 +1141,42 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		weapon_handling = {
 			rapid_left = {
-				weapon_handling_trait_templates.forcestaff_p3_m1_crit_stat
+				weapon_handling_trait_templates.forcestaff_p3_m1_crit_stat,
+				display_data = {
+					prefix = "loc_ingame_action_one",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_shoot_charged = {
-				weapon_handling_trait_templates.forcestaff_p3_m1_crit_stat
+				weapon_handling_trait_templates.forcestaff_p3_m1_crit_stat,
+				display_data = {
+					prefix = "loc_ingame_action_two",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			}
 		},
 		damage = {
 			rapid_left = {
-				damage_trait_templates.forcestaff_p3_m1_crit_stat
+				damage_trait_templates.forcestaff_p3_m1_crit_stat,
+				display_data = {
+					prefix = "loc_ingame_action_one",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_shoot_charged = {
-				damage_trait_templates.forcestaff_p3_m1_crit_stat
+				damage_trait_templates.forcestaff_p3_m1_crit_stat,
+				display_data = {
+					prefix = "loc_ingame_action_two",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			}
 		}
 	}
@@ -1121,9 +1216,11 @@ weapon_template.displayed_attacks = {
 		type = "charge"
 	},
 	special = {
+		desc = "loc_stats_special_action_melee_weapon_bash_forcestaff_desc",
 		display_name = "loc_forcestaff_p1_m1_attack_special",
 		type = "melee_hand"
 	}
 }
+weapon_template.special_action_name = "action_stab"
 
 return weapon_template

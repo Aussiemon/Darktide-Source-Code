@@ -684,6 +684,11 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/impacts/generic_dust_unarmored"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			}
 		},
 		died = {
@@ -700,6 +705,11 @@ local disgustingly_resilient = {
 			{
 				effects = {
 					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			}
 		},
@@ -723,6 +733,11 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/impacts/generic_dust_unarmored"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			}
 		},
 		damage = {
@@ -740,6 +755,11 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/impacts/generic_dust_unarmored"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			}
 		},
 		damage_reduced = {
@@ -751,6 +771,11 @@ local disgustingly_resilient = {
 			{
 				effects = {
 					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			}
 		},
@@ -770,6 +795,11 @@ local disgustingly_resilient = {
 			{
 				effects = {
 					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			}
 		}

@@ -31,7 +31,7 @@ Factory.add_to_group(AchievementStats, Factory.ping_on_any("death_or_down", nil,
 Factory.add_to_group(AchievementStats, Factory.create_flag("has_died", Hooks.definitions.hook_death))
 Factory.add_to_group(AchievementStats, Factory.create_flag("has_been_downed", AchievementStats.definitions.death_or_down))
 Factory.add_to_group(AchievementStats, Factory.create_flag("has_taken_damage", Hooks.definitions.hook_damage_taken))
-Factory.add_to_group(AchievementStats, Factory.create_echo("dash_dodges", Hooks.definitions.hook_dodge, Conditions.param_has_value(Hooks.definitions.hook_dodge, "reason", "dodge")))
+Factory.add_to_group(AchievementStats, Factory.create_echo("dash_dodges", Hooks.definitions.hook_dodge, Conditions.all(Conditions.param_has_value(Hooks.definitions.hook_dodge, "reason", "dodge"), Conditions.inverse(Conditions.param_has_value(Hooks.definitions.hook_dodge, "attack_type", "ranged")))))
 Factory.add_to_group(AchievementStats, Factory.create_simple("progression_when_player_joined", Hooks.definitions.hook_player_joined, Activations.min, nil, 1))
 Factory.add_to_group(AchievementStats, Factory.create_echo("flawless_mission", Hooks.definitions.hook_mission, Conditions.all(Conditions.param_has_value(Hooks.definitions.hook_mission, "win", true), Conditions.inverse(Conditions.flag_is_set(AchievementStats.definitions.has_been_downed)), Conditions.stat_is_less_then(AchievementStats.definitions.progression_when_player_joined, FROM_START_OF_MISSION_PROGRESSION_CUTOFF))))
 Factory.add_to_group(AchievementStats, Factory.create_echo("flawless_mission_difficult", AchievementStats.definitions.flawless_mission, Conditions.param_is_greater_then(AchievementStats.definitions.flawless_mission, "difficulty", 2)))
@@ -41,7 +41,7 @@ Factory.add_to_group(AchievementStats, Factory.create_dynamic_reducer("boss_dama
 Factory.add_to_group(AchievementStats, Factory.create_flag("used_range_weapon_flag", Hooks.definitions.hook_ranged_attack_concluded))
 Factory.add_to_group(AchievementStats, Factory.create_flag_switch("alternate_fire_active", Hooks.definitions.hook_alternate_fire_start, Hooks.definitions.hook_alternate_fire_stop))
 Factory.add_to_group(AchievementStats, Factory.create_flag_switch("lunge_active", Hooks.definitions.hook_lunge_start, Hooks.definitions.hook_lunge_stop))
-Factory.add_to_group(AchievementStats, Factory.create_echo("off_ledge_kills", Hooks.definitions.hook_kill, Conditions.param_has_value(Hooks.definitions.hook_kill, "damage_profile_name", "kill_volume_and_ofF_navmesh")))
+Factory.add_to_group(AchievementStats, Factory.create_echo("off_ledge_kills", Hooks.definitions.hook_kill, Conditions.param_has_value(Hooks.definitions.hook_kill, "damage_profile_name", "kill_volume_and_off_navmesh")))
 Factory.add_to_group(AchievementStats, Factory.create_echo("hit_weakspot", Hooks.definitions.hook_ranged_attack_concluded, Conditions.param_has_value(Hooks.definitions.hook_ranged_attack_concluded, "hit_weakspot", true)))
 Factory.add_to_group(AchievementStats, Factory.create_echo("missed_weakspot", Hooks.definitions.hook_ranged_attack_concluded, Conditions.param_has_value(Hooks.definitions.hook_ranged_attack_concluded, "hit_weakspot", false)))
 Factory.add_to_group(AchievementStats, Factory.create_echo("head_shot_kill", Hooks.definitions.hook_kill, _weakspot_condition))
@@ -270,18 +270,18 @@ Factory.add_to_group(AchievementStats, Factory.create_simple("total_deployables_
 
 local ogryn_2_specialization = "ogryn_2"
 
-Factory.add_to_group(AchievementStats, Factory.create_sum_over_time("ogryn_2_lunge_distance_last_25_seconds", Hooks.definitions.hook_lunge_distance, 25, Conditions.all(Conditions.difficulty_is_at_least(4), Conditions.param_has_value(Hooks.definitions.hook_lunge_distance, "player_class", ogryn_2_specialization))))
-Factory.add_to_group(AchievementStats, Factory.create_simple("max_ogryn_2_lunge_distance_last_25_seconds", AchievementStats.definitions.ogryn_2_lunge_distance_last_25_seconds, Activations.clamp(Activations.max, 0, 70), {
+Factory.add_to_group(AchievementStats, Factory.create_sum_over_time("ogryn_2_lunge_distance_last_x_seconds", Hooks.definitions.hook_lunge_distance, 20, Conditions.all(Conditions.difficulty_is_at_least(4), Conditions.param_has_value(Hooks.definitions.hook_lunge_distance, "player_class", ogryn_2_specialization))))
+Factory.add_to_group(AchievementStats, Factory.create_simple("max_ogryn_2_lunge_distance_last_x_seconds", AchievementStats.definitions.ogryn_2_lunge_distance_last_x_seconds, Activations.clamp(Activations.max, 0, 40), {
 	Flags.save_to_backend
 }))
-Factory.add_to_group(AchievementStats, Factory.create_simple("max_ogryn_2_lunge_number_of_enemies_hit", Hooks.definitions.hook_lunge_stop, Activations.on_condition(Conditions.all(Conditions.difficulty_is_at_least(3), Conditions.param_has_value(Hooks.definitions.hook_lunge_stop, "player_class", ogryn_2_specialization)), Activations.clamp(Activations.max, 0, 100)), {
+Factory.add_to_group(AchievementStats, Factory.create_simple("max_ogryn_2_lunge_number_of_enemies_hit", Hooks.definitions.hook_lunge_stop, Activations.on_condition(Conditions.all(Conditions.difficulty_is_at_least(3), Conditions.param_has_value(Hooks.definitions.hook_lunge_stop, "player_class", ogryn_2_specialization)), Activations.clamp(Activations.max, 0, 70)), {
 	Flags.save_to_backend
 }))
 Factory.add_to_group(AchievementStats, Factory.create_flag("ogryn_2_killed_corruptor_with_grenade_impact", Hooks.definitions.hook_kill, Conditions.all(Conditions.param_has_value(Hooks.definitions.hook_kill, "player_class", ogryn_2_specialization), Conditions.is_breed(Hooks.definitions.hook_kill, "corruptor_body"), Conditions.param_has_value(Hooks.definitions.hook_kill, "weapon_template_name", "ogryn_grenade_box"))))
 
 local coherency_exit_flag = "ogryn_2_exit_without_death_flag"
 
-Factory.add_to_group(AchievementStats, Factory.create_flag(coherency_exit_flag, Hooks.definitions.hook_coherency_exit, Conditions.all(Conditions.param_has_value(Hooks.definitions.hook_coherency_exit, "player_class", ogryn_2_specialization), Conditions.param_has_value(Hooks.definitions.hook_coherency_exit, "is_alive", true))))
+Factory.add_to_group(AchievementStats, Factory.create_flag(coherency_exit_flag, Hooks.definitions.hook_coherency_exit, Conditions.all(Conditions.param_has_value(Hooks.definitions.hook_coherency_exit, "player_class", ogryn_2_specialization), Conditions.param_has_value(Hooks.definitions.hook_coherency_exit, "is_alive", true), Conditions.param_has_value(Hooks.definitions.hook_coherency_exit, "num_units_in_coherency", 1))))
 Factory.add_to_group(AchievementStats, Factory.create_flag("ogryn_2_win_with_coherency_all_alive_units", Hooks.definitions.hook_mission, Conditions.all(Conditions.param_has_value(Hooks.definitions.hook_mission, "player_class", ogryn_2_specialization), Conditions.difficulty_is_at_least(3), Conditions.param_has_value(Hooks.definitions.hook_mission, "win", true), Conditions.stat_is_less_then(AchievementStats.definitions.progression_when_player_joined, FROM_START_OF_MISSION_PROGRESSION_CUTOFF), Conditions.inverse(Conditions.flag_is_set(AchievementStats.definitions[coherency_exit_flag])))))
 
 local zealot_2_specialization = "zealot_2"
@@ -295,7 +295,7 @@ Factory.add_to_group(AchievementStats, Factory.create_simple("zealot_2_health_on
 end), function (_, current_value, _, ...)
 	return 0, current_value + HEALTH_REPORT_TIME
 end)))
-Factory.add_to_group(AchievementStats, Factory.create_flag("zealot_2_health_on_last_segment_enough_mission_end", Hooks.definitions.hook_mission, Conditions.all(Conditions.difficulty_is_at_least(4), Conditions.param_has_value(Hooks.definitions.hook_mission, "player_class", zealot_2_specialization), Conditions.param_is_less_then(Hooks.definitions.hook_mission, "mission_time", 600), function (stat_table, _, _, ...)
+Factory.add_to_group(AchievementStats, Factory.create_flag("zealot_2_health_on_last_segment_enough_mission_end", Hooks.definitions.hook_mission, Conditions.all(Conditions.difficulty_is_at_least(4), Conditions.param_has_value(Hooks.definitions.hook_mission, "win", true), Conditions.param_has_value(Hooks.definitions.hook_mission, "player_class", zealot_2_specialization), Conditions.param_is_less_then(Hooks.definitions.hook_mission, "mission_time", 1200), function (stat_table, _, _, ...)
 	local time_with_one_segement = AchievementStats.definitions.zealot_2_health_on_last_segment_time:get_value(stat_table)
 	local mission_time = _get_parameter_value(Hooks.definitions.hook_mission, "mission_time", ...)
 	local percentage_under_one_segement = time_with_one_segement / mission_time
@@ -307,11 +307,11 @@ Factory.add_to_group(AchievementStats, Factory.create_simple("zealot_2_stagger_s
 Factory.add_to_group(AchievementStats, Factory.create_simple("max_zealot_2_stagger_sniper_with_grenade_distance", AchievementStats.definitions.zealot_2_stagger_sniper_with_grenade_distance, Activations.clamp(Activations.max, 0, 40), {
 	Flags.save_to_backend
 }))
-Factory.add_to_group(AchievementStats, Factory.create_simple("max_zealot_2_health_healed_with_leech_during_resist_death", Hooks.definitions.hook_zealot_2_health_healed_with_leech_during_resist_death, Activations.on_condition(Conditions.all(Conditions.difficulty_is_at_least(4), Conditions.param_has_value(Hooks.definitions.hook_zealot_2_health_healed_with_leech_during_resist_death, "player_class", zealot_2_specialization)), Activations.clamp(Activations.max, 0, 100)), {
+Factory.add_to_group(AchievementStats, Factory.create_simple("max_zealot_2_health_healed_with_leech_during_resist_death", Hooks.definitions.hook_zealot_2_health_healed_with_leech_during_resist_death, Activations.on_condition(Conditions.all(Conditions.difficulty_is_at_least(4), Conditions.param_has_value(Hooks.definitions.hook_zealot_2_health_healed_with_leech_during_resist_death, "player_class", zealot_2_specialization)), Activations.clamp(Activations.max, 0, 75)), {
 	Flags.save_to_backend
 }))
-Factory.add_to_group(AchievementStats, Factory.create_sum_over_time("zealot_2_kills_of_shocked_enemies_last_15", Hooks.definitions.hook_kill, 10, Conditions.all(Conditions.difficulty_is_at_least(4), Conditions.param_has_value(Hooks.definitions.hook_kill, "player_class", zealot_2_specialization), Conditions.param_table_has_value(Hooks.definitions.hook_kill, "buff_keywords", "shock_grenade_shock", true))))
-Factory.add_to_group(AchievementStats, Factory.create_simple("max_zealot_2_kills_of_shocked_enemies_last_15", AchievementStats.definitions.zealot_2_kills_of_shocked_enemies_last_15, Activations.clamp(Activations.max, 0, 50), {
+Factory.add_to_group(AchievementStats, Factory.create_sum_over_time("zealot_2_kills_of_shocked_enemies_last_15", Hooks.definitions.hook_kill, 10, Conditions.all(Conditions.difficulty_is_at_least(3), Conditions.param_has_value(Hooks.definitions.hook_kill, "player_class", zealot_2_specialization), Conditions.param_table_has_value(Hooks.definitions.hook_kill, "buff_keywords", "shock_grenade_shock", true))))
+Factory.add_to_group(AchievementStats, Factory.create_simple("max_zealot_2_kills_of_shocked_enemies_last_15", AchievementStats.definitions.zealot_2_kills_of_shocked_enemies_last_15, Activations.clamp(Activations.max, 0, 40), {
 	Flags.save_to_backend
 }))
 Factory.add_to_group(AchievementStats, Factory.create_flag("zealot_2_not_use_ranged_attacks", Hooks.definitions.hook_mission, Conditions.all(Conditions.param_has_value(Hooks.definitions.hook_mission, "player_class", zealot_2_specialization), Conditions.difficulty_is_at_least(3), Conditions.param_has_value(Hooks.definitions.hook_mission, "win", true), Conditions.stat_is_less_then(AchievementStats.definitions.progression_when_player_joined, FROM_START_OF_MISSION_PROGRESSION_CUTOFF), Conditions.inverse(Conditions.flag_is_set(AchievementStats.definitions.used_range_weapon_flag)))))
@@ -336,7 +336,7 @@ Factory.add_to_group(AchievementStats, Factory.create_simple("max_elite_weakspot
 }))
 Factory.add_to_group(AchievementStats, Factory.create_echo("melee_damage_taken", Hooks.definitions.hook_damage_taken, Conditions.param_has_value(Hooks.definitions.hook_damage_taken, "attack_type", AttackSettings.attack_types.melee)))
 Factory.add_to_group(AchievementStats, Factory.create_flag("has_taken_melee_damage", AchievementStats.definitions.melee_damage_taken))
-Factory.add_to_group(AchievementStats, Factory.create_simple("veteran_2_mission_no_melee_damage_taken", Hooks.definitions.hook_mission, Activations.on_condition(Conditions.all(Conditions.param_has_value(Hooks.definitions.hook_mission, "win", true), Conditions.inverse(Conditions.flag_is_set(AchievementStats.definitions.has_taken_melee_damage)), Conditions.difficulty_is_at_least(3), Conditions.param_has_value(Hooks.definitions.hook_mission, "player_class", veteran_2_specialization)), Activations.set(1))))
+Factory.add_to_group(AchievementStats, Factory.create_simple("veteran_2_mission_no_melee_damage_taken", Hooks.definitions.hook_mission, Activations.on_condition(Conditions.all(Conditions.param_has_value(Hooks.definitions.hook_mission, "win", true), Conditions.inverse(Conditions.flag_is_set(AchievementStats.definitions.has_taken_melee_damage)), Conditions.difficulty_is_at_least(3), Conditions.param_has_value(Hooks.definitions.hook_mission, "player_class", veteran_2_specialization), Conditions.stat_is_less_then(AchievementStats.definitions.progression_when_player_joined, FROM_START_OF_MISSION_PROGRESSION_CUTOFF)), Activations.set(1))))
 Factory.add_to_group(AchievementStats, Factory.create_echo("veteran_2_kills_with_last_round_in_mag", Hooks.definitions.hook_ranged_attack_concluded, Conditions.all(Conditions.difficulty_is_at_least(3), Conditions.param_has_value(Hooks.definitions.hook_ranged_attack_concluded, "player_class", veteran_2_specialization), Conditions.param_has_value(Hooks.definitions.hook_ranged_attack_concluded, "last_round_in_mag", true), Conditions.param_has_value(Hooks.definitions.hook_ranged_attack_concluded, "kill", true))))
 Factory.add_to_group(AchievementStats, Factory.create_simple("max_veteran_2_kills_with_last_round_in_mag", AchievementStats.definitions.veteran_2_kills_with_last_round_in_mag, Activations.clamp(Activations.increment, 0, 5), {
 	Flags.save_to_backend
@@ -346,31 +346,31 @@ Factory.add_to_group(AchievementStats, Factory.create_simple("remaining_ammo_cli
 Factory.add_to_group(AchievementStats, Factory.create_simple("remaining_ammo_clip_slot_secondary", Hooks.definitions.hook_ammo_consumed, Activations.on_condition(Conditions.param_has_value(Hooks.definitions.hook_ammo_consumed, "slot_name", "slot_secondary"), Activations.use_parameter_value(Hooks.definitions.hook_ammo_consumed, "remaining_clip")), nil, 1))
 Factory.add_to_group(AchievementStats, Factory.create_simple("remaining_ammo_reserve_slot_primary", Hooks.definitions.hook_ammo_consumed, Activations.on_condition(Conditions.param_has_value(Hooks.definitions.hook_ammo_consumed, "slot_name", "slot_primary"), Activations.use_parameter_value(Hooks.definitions.hook_ammo_consumed, "remaining_reserve")), nil, 1))
 Factory.add_to_group(AchievementStats, Factory.create_simple("remaining_ammo_reserve_slot_secondary", Hooks.definitions.hook_ammo_consumed, Activations.on_condition(Conditions.param_has_value(Hooks.definitions.hook_ammo_consumed, "slot_name", "slot_secondary"), Activations.use_parameter_value(Hooks.definitions.hook_ammo_consumed, "remaining_reserve")), nil, 1))
-Factory.add_to_group(AchievementStats, Factory.create_simple("veteran_2_mission_no_missed_shots_empty_ammo", Hooks.definitions.hook_mission, Activations.on_condition(Conditions.all(Conditions.difficulty_is_at_least(4), Conditions.param_has_value(Hooks.definitions.hook_mission, "win", true), Conditions.inverse(Conditions.flag_is_set(AchievementStats.definitions.has_missed_shot)), Conditions.any(Conditions.all(Conditions.stat_is_equal_to(AchievementStats.definitions.remaining_ammo_clip_slot_primary, 0), Conditions.stat_is_equal_to(AchievementStats.definitions.remaining_ammo_reserve_slot_primary, 0)), Conditions.all(Conditions.stat_is_equal_to(AchievementStats.definitions.remaining_ammo_clip_slot_secondary, 0), Conditions.stat_is_equal_to(AchievementStats.definitions.remaining_ammo_reserve_slot_secondary, 0)))), Activations.set(1))))
+Factory.add_to_group(AchievementStats, Factory.create_simple("veteran_2_mission_no_missed_shots_empty_ammo", Hooks.definitions.hook_mission, Activations.on_condition(Conditions.all(Conditions.difficulty_is_at_least(4), Conditions.param_has_value(Hooks.definitions.hook_mission, "player_class", veteran_2_specialization), Conditions.param_has_value(Hooks.definitions.hook_mission, "win", true), Conditions.inverse(Conditions.flag_is_set(AchievementStats.definitions.has_missed_shot)), Conditions.any(Conditions.all(Conditions.stat_is_equal_to(AchievementStats.definitions.remaining_ammo_clip_slot_primary, 0), Conditions.stat_is_equal_to(AchievementStats.definitions.remaining_ammo_reserve_slot_primary, 0)), Conditions.all(Conditions.stat_is_equal_to(AchievementStats.definitions.remaining_ammo_clip_slot_secondary, 0), Conditions.stat_is_equal_to(AchievementStats.definitions.remaining_ammo_reserve_slot_secondary, 0)))), Activations.set(1))))
 
 local psyker_2_specialization = "psyker_2"
 
 Factory.add_to_group(AchievementStats, Factory.create_simple("smite_hound_mid_leap", Hooks.definitions.hook_kill, Activations.on_condition(Conditions.all(Conditions.param_has_value(Hooks.definitions.hook_kill, "breed_name", "chaos_hound"), Conditions.param_has_value(Hooks.definitions.hook_kill, "weapon_template_name", "psyker_smite"), Conditions.param_has_value(Hooks.definitions.hook_kill, "action", "leap")), Activations.set(1))))
 Factory.add_to_group(AchievementStats, Factory.create_echo("elite_or_special_kill_with_smite", Hooks.definitions.hook_kill, Conditions.all(Conditions.param_has_value(Hooks.definitions.hook_kill, "weapon_template_name", "psyker_smite"), Conditions.any(Conditions.breed_has_tag(Hooks.definitions.hook_kill, "elite"), Conditions.breed_has_tag(Hooks.definitions.hook_kill, "special")))))
-Factory.add_to_group(AchievementStats, Factory.create_sum_over_time("elite_or_special_kills_with_smite_last_10_sec", AchievementStats.definitions.elite_or_special_kill_with_smite, 10))
-Factory.add_to_group(AchievementStats, Factory.create_simple("max_elite_or_special_kills_with_smite_last_10_sec", AchievementStats.definitions.elite_or_special_kills_with_smite_last_10_sec, Activations.on_condition(Conditions.difficulty_is_at_least(4), Activations.clamp(Activations.max, 0, 5)), {
+Factory.add_to_group(AchievementStats, Factory.create_sum_over_time("elite_or_special_kills_with_smite_last_12_sec", AchievementStats.definitions.elite_or_special_kill_with_smite, 12))
+Factory.add_to_group(AchievementStats, Factory.create_simple("max_elite_or_special_kills_with_smite_last_12_sec", AchievementStats.definitions.elite_or_special_kills_with_smite_last_12_sec, Activations.on_condition(Conditions.difficulty_is_at_least(4), Activations.clamp(Activations.max, 0, 5)), {
 	Flags.save_to_backend
 }))
-Factory.add_to_group(AchievementStats, Factory.create_simple("max_psyker_2_time_at_max_souls", Hooks.definitions.hook_psyker_2_max_souls_hook, Activations.on_condition(Conditions.difficulty_is_at_least(4), Activations.clamp(Activations.max, 0, 300)), {
+Factory.add_to_group(AchievementStats, Factory.create_simple("max_psyker_2_time_at_max_souls", Hooks.definitions.hook_psyker_2_max_souls_hook, Activations.on_condition(Conditions.difficulty_is_at_least(3), Activations.clamp(Activations.max, 0, 300)), {
 	Flags.save_to_backend
 }))
 Factory.add_to_group(AchievementStats, Factory.create_sum_over_time("psyker_2_edge_kills_last_2_sec", AchievementStats.definitions.off_ledge_kills, 2, Conditions.param_has_value(Hooks.definitions.hook_kill, "player_class", psyker_2_specialization)))
-Factory.add_to_group(AchievementStats, Factory.create_simple("max_psyker_2_edge_kills_last_2_sec", AchievementStats.definitions.psyker_2_edge_kills_last_2_sec, Activations.clamp(Activations.max, 0, 20), {
+Factory.add_to_group(AchievementStats, Factory.create_simple("max_psyker_2_edge_kills_last_2_sec", AchievementStats.definitions.psyker_2_edge_kills_last_2_sec, Activations.clamp(Activations.max, 0, 7), {
 	Flags.save_to_backend
 }))
 Factory.add_to_group(AchievementStats, Factory.create_dynamic_reducer("smite_boss_damage_by_id", Hooks.definitions.hook_damage, {
 	"id"
 }, Activations.on_condition(Conditions.all(Conditions.breed_is_boss(Hooks.definitions.hook_damage), Conditions.param_has_value(Hooks.definitions.hook_damage, "damage_type", "smite")), Activations.sum)))
-Factory.add_to_group(AchievementStats, Factory.create_simple("kill_boss_solo_with_smite", Hooks.definitions.hook_kill, Activations.on_condition(Conditions.all(Conditions.param_has_value(Hooks.definitions.hook_kill, "player_class", psyker_2_specialization), Conditions.difficulty_is_at_least(4), Conditions.breed_is_boss(Hooks.definitions.hook_kill), Conditions.param_has_value(Hooks.definitions.hook_kill, "solo_kill", true), Conditions.calculated_value_comparasions(Values.stat(Hooks.definitions.hook_kill, AchievementStats.definitions.smite_boss_damage_by_id, {
+Factory.add_to_group(AchievementStats, Factory.create_simple("kill_boss_solo_with_smite", Hooks.definitions.hook_kill, Activations.on_condition(Conditions.all(Conditions.param_has_value(Hooks.definitions.hook_kill, "player_class", psyker_2_specialization), Conditions.difficulty_is_at_least(4), Conditions.breed_is_boss(Hooks.definitions.hook_kill), Conditions.calculated_value_comparasions(Values.stat(Hooks.definitions.hook_kill, AchievementStats.definitions.smite_boss_damage_by_id, {
 	id = "id"
-}, {}), Values.stat(Hooks.definitions.hook_kill, AchievementStats.definitions.boss_damage_by_id, {
-	id = "id"
-}, {}), Comparators.equals)), Activations.set(1))))
+}, {}), Values.breed_health(Hooks.definitions.hook_kill), function (left_hand, right_hand)
+	return left_hand > right_hand * 0.9
+end)), Activations.set(1))))
 Factory.add_to_group(AchievementStats, Factory.create_simple("total_hacks", Hooks.definitions.hook_hacked_terminal, Activations.clamp(Activations.increment, 0, 200), {
 	Flags.save_to_backend
 }))

@@ -45,16 +45,48 @@ MissionServerUtils.set_mission_mechanism = function (mission_data)
 	Managers.mechanism:change_mechanism(mechanism_name, mechanism_context)
 end
 
-local function _get_collected_materials()
+local function _get_collected_materials(session_won)
+	local session_materials = {
+		plasteel = {
+			small = 0,
+			large = 0
+		},
+		diamantine = {
+			small = 0,
+			large = 0
+		}
+	}
 	local extension_manager = Managers.state.extension
 
-	if not extension_manager then
-		return {}
+	if extension_manager then
+		local pickup_system = extension_manager:system("pickup_system")
+		local collected_materials = pickup_system:get_collected_materials()
+		local collected_plasteel = collected_materials.plasteel
+		local collected_diamantine = collected_materials.diamantine
+
+		if collected_plasteel then
+			local session_plasteel = session_materials.plasteel
+			session_plasteel.small = collected_plasteel.small or session_plasteel.small
+			session_plasteel.large = collected_plasteel.large or session_plasteel.large
+		end
+
+		if collected_diamantine then
+			local session_diamantine = session_materials.diamantine
+			session_diamantine.small = collected_diamantine.small or session_diamantine.small
+			session_diamantine.large = collected_diamantine.large or session_diamantine.large
+		end
 	end
 
-	local pickup_system = extension_manager:system("pickup_system")
+	if not session_won then
+		local session_plasteel = session_materials.plasteel
+		session_plasteel.small = session_plasteel.large + math.floor(session_plasteel.small / 2)
+		session_plasteel.large = 0
+		local session_diamantine = session_materials.diamantine
+		session_diamantine.small = session_diamantine.large + math.floor(session_diamantine.small / 2)
+		session_diamantine.large = 0
+	end
 
-	return pickup_system:get_collected_materials()
+	return session_materials
 end
 
 local function _get_travel_ratio()
@@ -98,7 +130,7 @@ end
 
 MissionServerUtils.get_mission_result = function (mission_data, game_mode_result)
 	local win = game_mode_result == "won"
-	local materials = _get_collected_materials()
+	local materials = _get_collected_materials(win)
 	local travel_ratio = _get_travel_ratio()
 	local percentage_complete = math.clamp(travel_ratio, 0, 1) * 100
 	local mission_result = {
@@ -111,16 +143,7 @@ MissionServerUtils.get_mission_result = function (mission_data, game_mode_result
 		sideMissions = {
 			_get_side_mission_result()
 		},
-		resources = {
-			plasteel = materials.plasteel or {
-				small = 0,
-				large = 0
-			},
-			diamantine = materials.diamantine or {
-				small = 0,
-				large = 0
-			}
-		}
+		resources = materials
 	}
 
 	return mission_result
@@ -175,37 +198,12 @@ end
 MissionServerUtils.update_stats = function (mission_data, team_stats, mission_result, mission_start_time)
 	local mission_play_time = Managers.time:time("main") - mission_start_time
 	local human_players = Managers.player:human_players()
-	local all_players = Managers.player:players()
-	local alive_players = Managers.state.player_unit_spawn:alive_players()
-	local unique_survivor = #alive_players == 1 and table.size(all_players) == 4 and alive_players[1] or false
+	local collected_materials = _get_collected_materials(mission_result.win)
 
-	if table.size(all_players) == 4 then
-		local all_players_same_class = true
-		local class_name_of_all_players = nil
+	Managers.stats:record_collect_material("plasteel", 10 * collected_materials.plasteel.small + 25 * collected_materials.plasteel.large)
+	Managers.stats:record_collect_material("diamantine", 10 * collected_materials.diamantine.small + 25 * collected_materials.diamantine.large)
 
-		for _, player in pairs(all_players) do
-			if class_name_of_all_players == nil then
-				class_name_of_all_players = player:archetype_name()
-			end
-
-			all_players_same_class = all_players_same_class and class_name_of_all_players == player:archetype_name()
-		end
-
-		local should_trigger_event = all_players_same_class and class_name_of_all_players ~= nil
-
-		if should_trigger_event then
-			local win = mission_result.win
-
-			for _, player in pairs(human_players) do
-				Managers.achievements:trigger_event(player:account_id(), player:character_id(), "party_of_same_class", {
-					win = win,
-					class_name = class_name_of_all_players
-				})
-			end
-		end
-	end
-
-	for id, player in pairs(human_players) do
+	for _, player in pairs(human_players) do
 		local difficulty = Managers.state.difficulty:get_difficulty()
 		local win = mission_result.win
 		local map_type = Managers.state.mission:main_objective_type()
@@ -220,12 +218,6 @@ MissionServerUtils.update_stats = function (mission_data, team_stats, mission_re
 		local side_mission_name = mission_result.sideMissions[1] and mission_result.sideMissions[1].missionName or "default"
 
 		Managers.stats:record_mission_end(player, mission_name, map_type, circumstance, difficulty, win, mission_play_time, team_kills, team_downs, team_deaths, side_mission_progress, side_mission_complete, side_mission_name, is_flash_mission)
-
-		if unique_survivor and unique_survivor:unique_id() == id then
-			Managers.achievements:trigger_event(player:account_id(), player:character_id(), "unique_survivor", {
-				win = win
-			})
-		end
 	end
 end
 

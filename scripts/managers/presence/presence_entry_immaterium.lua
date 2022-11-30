@@ -128,7 +128,7 @@ PresenceEntryImmaterium.activity_id = function (self)
 end
 
 PresenceEntryImmaterium.activity_localized = function (self)
-	local hud_localization = PresenceSettings[self:activity_id()].hud_localization
+	local hud_localization = PresenceSettings.settings[self:activity_id()].hud_localization
 
 	return Managers.localization:localize(hud_localization)
 end

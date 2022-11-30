@@ -29,7 +29,7 @@ template.damage_number_settings = {
 	has_taken_damage_timer_y_offset = 34,
 	weakspot_color = "orange",
 	fade_delay = 0.35,
-	add_numbers_together_timer = 0.5,
+	add_numbers_together_timer = 0.2,
 	shrink_duration = 1,
 	duration = 3,
 	x_offset_between_numbers = 38,
@@ -41,6 +41,7 @@ template.damage_number_settings = {
 	max_float_y = 100,
 	dps_font_size = 14.4,
 	x_offset = 1,
+	dps_y_offset = -24,
 	y_offset = 15
 }
 template.bar_settings = {
@@ -53,10 +54,18 @@ template.bar_settings = {
 	alpha_fade_min_value = 50,
 	alpha_fade_duration = 0.4
 }
+local armor_type_string_lookup = {
+	disgustingly_resilient = "loc_weapon_stats_display_disgustingly_resilient",
+	super_armor = "loc_weapon_stats_display_super_armor",
+	armored = "loc_weapon_stats_display_armored",
+	resistant = "loc_glossary_armour_type_resistant",
+	berserker = "loc_weapon_stats_display_berzerker",
+	unarmored = "loc_weapon_stats_display_unarmored"
+}
 template.fade_settings = {
 	fade_to = 1,
-	fade_from = 0,
-	default_fade = 1,
+	fade_from = 0.5,
+	default_fade = 0.5,
 	distance_max = template.max_distance,
 	distance_min = template.max_distance * 0.5,
 	easing_function = math.ease_exp
@@ -173,16 +182,15 @@ template.create_widget_defintion = function (template, scenegraph_id)
 						ui_content.damage_has_started_timer = ui_content.damage_has_started_timer + ui_renderer.dt
 					end
 
-					if ui_content.dead and ui_content.damage_has_started_timer > 0.09 then
-						local damage_has_started_position = Vector3(x_position, y_position - damage_number_settings.has_taken_damage_timer_y_offset, z_position)
+					if ui_content.dead then
+						local damage_has_started_position = Vector3(x_position, y_position - damage_number_settings.dps_y_offset, z_position)
 						local dps = ui_content.damage_has_started_timer > 1 and ui_content.damage_taken / ui_content.damage_has_started_timer or ui_content.damage_taken
 						local text = string.format("%d DPS", dps)
-						dps_font_size = dps_font_size * damage_number_settings.first_hit_size_scale
 
 						UIRenderer.draw_text(ui_renderer, text, dps_font_size, font_type, damage_has_started_position, size, ui_style.text_color, {})
 					end
 
-					if not ui_content.dead and ui_content.last_hit_zone_name then
+					if ui_content.last_hit_zone_name then
 						local hit_zone_name = ui_content.last_hit_zone_name
 						local breed = ui_content.breed
 						local armor_type = breed.armor_type
@@ -191,7 +199,8 @@ template.create_widget_defintion = function (template, scenegraph_id)
 							armor_type = breed.hitzone_armor_override[hit_zone_name]
 						end
 
-						local armor_type_text = Localize("loc_glossary_armour_type_" .. armor_type)
+						local armor_type_loc_string = armor_type and armor_type_string_lookup[armor_type] or ""
+						local armor_type_text = Localize(armor_type_loc_string)
 						local armor_type_position = Vector3(x_position, y_position - damage_number_settings.has_taken_damage_timer_y_offset, z_position)
 
 						UIRenderer.draw_text(ui_renderer, armor_type_text, dps_font_size, font_type, armor_type_position, size, ui_style.text_color, {})
@@ -354,17 +363,21 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	end
 
 	if health_extension then
-		content.last_hit_zone_name = health_extension:last_hit_zone_name()
-		local breed = content.breed
-		local hit_zone_weakspot_types = breed.hit_zone_weakspot_types
+		local last_damaging_unit = health_extension:last_damaging_unit()
 
-		if hit_zone_weakspot_types and hit_zone_weakspot_types[content.last_hit_zone_name] then
-			content.hit_weakspot = true
-		else
-			content.hit_weakspot = false
+		if last_damaging_unit then
+			content.last_hit_zone_name = health_extension:last_hit_zone_name() or "center_mass"
+			local breed = content.breed
+			local hit_zone_weakspot_types = breed.hit_zone_weakspot_types
+
+			if hit_zone_weakspot_types and hit_zone_weakspot_types[content.last_hit_zone_name] then
+				content.hit_weakspot = true
+			else
+				content.hit_weakspot = false
+			end
+
+			content.last_hit_was_critical = health_extension:last_hit_was_critical()
 		end
-
-		content.last_hit_was_critical = health_extension:last_hit_was_critical()
 	end
 
 	if ALIVE[unit] and damage_taken > 0 then

@@ -15,6 +15,8 @@ WeaponLockViewPlayerOrientation.init = function (self, player, orientation)
 	self._delta_y = 0
 	self._look_delta_x = 0
 	self._look_delta_y = 0
+	self._min_pitch = settings.min_pitch
+	self._max_pitch = settings.max_pitch
 end
 
 WeaponLockViewPlayerOrientation.destroy = function (self)
@@ -25,9 +27,12 @@ WeaponLockViewPlayerOrientation.destroy = function (self)
 	self._delta_y = nil
 	self._look_delta_x = nil
 	self._look_delta_y = nil
+	self._min_pitch = nil
+	self._max_pitch = nil
 end
 
 local PI = math.pi
+local PI_2 = PI * 2
 local context = {}
 local INPUT_MODIFIER = 0.05
 local MAX_DELTA = 0.01
@@ -42,6 +47,8 @@ WeaponLockViewPlayerOrientation.pre_update = function (self, main_t, main_dt, in
 	local sensitivity = player.sensitivity * sensitivity_modifier * current_fov * INPUT_MODIFIER
 	local mouse_scale = self._mouse_scale
 	local orientation = self._orientation
+	local min_pitch = self._min_pitch
+	local max_pitch = self._max_pitch
 
 	table.clear(context)
 
@@ -55,6 +62,7 @@ WeaponLockViewPlayerOrientation.pre_update = function (self, main_t, main_dt, in
 	local pitch_origin = weapon_lock_view.pitch
 	local yaw = Orientation.clamp_from_origin(orientation.yaw, look_delta_x, yaw_origin, YAW_CONSTRAINT)
 	local pitch = Orientation.clamp_from_origin(orientation.pitch, -look_delta_y, pitch_origin, PITCH_CONSTRAINT)
+	pitch = math.clamp((pitch + PI) % PI_2 - PI, min_pitch, max_pitch) % PI_2
 	orientation.yaw = math.mod_two_pi(yaw)
 	orientation.pitch = math.mod_two_pi(pitch)
 	orientation.roll = 0

@@ -297,7 +297,7 @@ MinionMovement.update_anim_driven_change_target_rotation = function (unit, scrat
 	end
 end
 
-MinionMovement.update_running_stagger = function (unit, t, dt, scratchpad, action_data)
+MinionMovement.update_running_stagger = function (unit, t, dt, scratchpad, action_data, optional_reset_stagger_immune_time)
 	local stagger_component = scratchpad.stagger_component
 	local locomotion_extension = scratchpad.locomotion_extension
 	local animation_extension = scratchpad.animation_extension
@@ -342,6 +342,11 @@ MinionMovement.update_running_stagger = function (unit, t, dt, scratchpad, actio
 
 		scratchpad.original_movement_speed = scratchpad.navigation_extension:max_speed()
 		behavior_component.lock_combat_range_switch = true
+
+		if optional_reset_stagger_immune_time then
+			stagger_component.immune_time = 0
+			stagger_component.controlled_stagger = false
+		end
 	end
 
 	local running_stagger_min_duration = scratchpad.stagger_min_duration
@@ -442,7 +447,7 @@ MinionMovement.find_ranged_position = function (unit, t, scratchpad, action_data
 		local wanted_position = target_position_on_navmesh + wanted_direction * math.random_range(min_distance, max_distance_to_target)
 		goal_position = NavQueries.position_on_mesh(nav_world, wanted_position, above, below, traverse_logic)
 
-		if not goal_position or not scratchpad.perception_component.has_line_of_sight then
+		if not goal_position or not scratchpad.perception_component.has_line_of_sight or action_data.move_to_navmesh_raycast then
 			local _, hit_position = GwNavQueries.raycast(nav_world, target_position_on_navmesh, wanted_position, traverse_logic)
 			local target_to_hit_position_distance = Vector3.distance(target_position_on_navmesh, hit_position)
 
@@ -471,7 +476,13 @@ MinionMovement.find_ranged_position = function (unit, t, scratchpad, action_data
 
 	if goal_position then
 		scratchpad.find_move_position_attempts = 0
-		scratchpad.move_to_cooldown = t + action_data.move_to_cooldown
+		local move_to_cooldown = action_data.move_to_cooldown
+
+		if type(move_to_cooldown) == "table" then
+			move_to_cooldown = math.random_range(move_to_cooldown[1], move_to_cooldown[2])
+		end
+
+		scratchpad.move_to_cooldown = t + move_to_cooldown
 	end
 
 	return goal_position

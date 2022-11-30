@@ -134,6 +134,8 @@ BtChaosHoundApproachAction.run = function (self, unit, breed, blackboard, scratc
 
 			if distance_to_target <= too_close_distance then
 				self:_set_pounce_cooldown(unit, breed, scratchpad, target_unit, blackboard, t)
+
+				behavior_component.move_state = "idle"
 			end
 
 			return "done"

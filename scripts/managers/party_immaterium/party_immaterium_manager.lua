@@ -89,6 +89,14 @@ PartyImmateriumManager.destroy = function (self)
 end
 
 PartyImmateriumManager._resolve_join_permission = function (self, presence_entry, context)
+	if not Managers.data_service.social:local_player_is_joinable() then
+		local context_suffix = context and "_" .. context or ""
+
+		return Promise.rejected({
+			error_details = "NOT_JOINABLE" .. context_suffix
+		})
+	end
+
 	if not presence_entry:is_online() then
 		return Promise.resolved(nil)
 	end
@@ -347,11 +355,14 @@ PartyImmateriumManager._fetch_cached_debug_get_parties = function (self, dt, for
 end
 
 PartyImmateriumManager.leave_party = function (self)
+	if self._leave_party_promise then
+		return self._leave_party_promise
+	end
+
 	local leaving_party_connection = self._party_connection
 	self._party_connection = nil
 	local default_party_id = ""
-
-	return Managers.grpc:leave_party(self:party_id() or ""):next(function ()
+	self._leave_party_promise = Managers.grpc:leave_party(self:party_id() or ""):next(function ()
 		if leaving_party_connection then
 			leaving_party_connection:abort()
 		end
@@ -365,7 +376,17 @@ PartyImmateriumManager.leave_party = function (self)
 		Log.error("PartyImmateriumManager", "failed to leave party %s", table.tostring(error, 3))
 
 		return self:join_party(default_party_id)
+	end):next(function (join_party_result)
+		self._leave_party_promise = nil
+
+		return Promise.resolved(join_party_result)
+	end):catch(function (error)
+		self._leave_party_promise = nil
+
+		return Promise.rejected(error)
 	end)
+
+	return self._leave_party_promise
 end
 
 PartyImmateriumManager._can_join_new_party_check = function (self, join_parameter)
@@ -374,14 +395,14 @@ PartyImmateriumManager._can_join_new_party_check = function (self, join_paramete
 	if join_parameter == "" then
 		can_join_party_promise:resolve()
 	else
-		local local_player_can_join_party, fail_reason = Managers.data_service.social:local_player_can_join_party()
+		local local_player_can_join_party, _, denied_activity_id = Managers.data_service.social:local_player_can_join_party()
 
 		if local_player_can_join_party then
 			can_join_party_promise:resolve()
 		else
 			local error_code = "UNKNOWN"
 
-			if fail_reason == "in_mission" then
+			if denied_activity_id == "mission" then
 				if type(join_parameter) == "table" and join_parameter.stay_in_party_join then
 					can_join_party_promise:resolve()
 
@@ -389,7 +410,7 @@ PartyImmateriumManager._can_join_new_party_check = function (self, join_paramete
 				else
 					error_code = "YOU_ARE_IN_MISSION"
 				end
-			elseif fail_reason == "in_matchmaking" then
+			elseif denied_activity_id == "matchmaking" then
 				error_code = "YOU_ARE_IN_MATCHMAKING"
 			end
 
@@ -610,7 +631,7 @@ PartyImmateriumManager._handle_request_to_join = function (self, joiner_account_
 
 	inviteePresencePromise:next(function (requester_presence)
 		if popup and (context_account_id == "" or context_account_id == self._myself:account_id()) then
-			if self:current_state() == PartyConstants.State.in_mission or self:current_state() == PartyConstants.State.matchmaking_acceptance_vote then
+			if self:current_state() == PartyConstants.State.in_mission then
 				Managers.grpc:answer_request_to_join(party_id, joiner_account_id, "OK_POPUP")
 			else
 				self:_request_to_join_popup(joiner_account_id)

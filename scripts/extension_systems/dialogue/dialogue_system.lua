@@ -175,7 +175,6 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 		self._vo_rule_queue = {}
 	end
 
-	self._dialog_sequence_events = {}
 	self._next_player_level_check = 0
 	self._next_local_events_queue_process = 0
 	self._next_audible_check = 0
@@ -376,10 +375,6 @@ DialogueSystem._update_currently_playing_dialogues = function (self, t, dt)
 					extension:set_currently_playing_dialogue(nil)
 					self:_remove_stopped_dialogue(currently_playing_dialogue)
 
-					currently_playing_dialogue.currently_playing_event_id = nil
-					currently_playing_dialogue.currently_playing_unit = nil
-					currently_playing_dialogue.used_query = nil
-					currently_playing_dialogue.concurrent_wwise_event_id = nil
 					self._playing_units[unit] = nil
 
 					if not self._is_server then
@@ -481,14 +476,18 @@ DialogueSystem._update_currently_playing_dialogues = function (self, t, dt)
 						local playing = self._dialogue_system_wwise:is_playing(currently_playing_dialogue.currently_playing_event_id)
 
 						if not playing then
-							table.remove(self._dialog_sequence_events, 1)
+							local sequence_table = currently_playing_dialogue.dialogue_sequence
 
-							if self._dialog_sequence_events[1] ~= nil and self._dialog_sequence_events[1].type == "vorbis_external" then
-								self._dialogue_system_subtitle:add_playing_localized_dialogue(currently_playing_dialogue.speaker_name, currently_playing_dialogue)
-							end
+							if sequence_table then
+								table.remove(sequence_table, 1)
 
-							if table.size(self._dialog_sequence_events) > 0 then
-								currently_playing_dialogue.currently_playing_event_id = extension:play_event(self._dialog_sequence_events[1])
+								if sequence_table[1] ~= nil and sequence_table[1].type == "vorbis_external" then
+									self._dialogue_system_subtitle:add_playing_localized_dialogue(currently_playing_dialogue.speaker_name, currently_playing_dialogue)
+								end
+
+								if table.size(sequence_table) > 0 then
+									currently_playing_dialogue.currently_playing_event_id = extension:play_event(sequence_table[1])
+								end
 							end
 						end
 
@@ -505,10 +504,6 @@ DialogueSystem._update_currently_playing_dialogues = function (self, t, dt)
 				end
 			end
 		until true
-	end
-
-	if #table.keys(self._playing_units) == 0 then
-		table.clear(self._playing_dialogues_array)
 	end
 end
 
@@ -1053,6 +1048,20 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 		return
 	end
 
+	local playing_dialogue_to_discard = extension:get_currently_playing_dialogue()
+
+	if playing_dialogue_to_discard then
+		local animation_event = "stop_talking"
+
+		self:_trigger_face_animation_event(dialogue_actor_unit, animation_event)
+		extension:stop_currently_playing_wwise_event(playing_dialogue_to_discard.concurrent_wwise_event_id)
+		self._dialogue_system_wwise:stop_if_playing(playing_dialogue_to_discard.currently_playing_event_id)
+		extension:set_currently_playing_dialogue(nil)
+		self:_remove_stopped_dialogue(playing_dialogue_to_discard)
+
+		self._playing_units[dialogue_actor_unit] = nil
+	end
+
 	local sound_event, subtitles_event, sound_event_duration = extension:get_dialogue_event(dialogue_name, dialogue_index)
 	local rule = self._tagquery_database:get_rule(dialogue_rule_index)
 	local is_sequence = nil
@@ -1077,8 +1086,8 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 
 		if sound_event then
 			if rule.pre_wwise_event or rule.post_wwise_event then
-				self._dialog_sequence_events = self:_create_sequence_events_table(rule.pre_wwise_event, wwise_route, sound_event, rule.post_wwise_event)
-				dialogue.currently_playing_event_id = extension:play_event(self._dialog_sequence_events[1])
+				dialogue.dialogue_sequence = self:_create_sequence_events_table(rule.pre_wwise_event, wwise_route, sound_event, rule.post_wwise_event)
+				dialogue.currently_playing_event_id = extension:play_event(dialogue.dialogue_sequence[1])
 				is_sequence = true
 			else
 				local vo_event = {
@@ -1131,7 +1140,9 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 
 	table.insert(self._playing_dialogues_array, 1, dialogue)
 
-	if self._dialog_sequence_events[1] ~= nil and self._dialog_sequence_events[1].type == "vorbis_external" or not is_sequence then
+	local sequence_table = dialogue.dialogue_sequence
+
+	if sequence_table ~= nil and sequence_table[1].type == "vorbis_external" or not is_sequence then
 		self._dialogue_system_subtitle:add_playing_localized_dialogue(speaker_name, dialogue)
 	end
 
@@ -1249,6 +1260,10 @@ DialogueSystem._remove_stopped_dialogue = function (self, dialogue)
 	table.remove(self._playing_dialogues_array, index)
 
 	dialogue.currently_playing_event_id = nil
+	dialogue.currently_playing_unit = nil
+	dialogue.used_query = nil
+	dialogue.concurrent_wwise_event_id = nil
+	dialogue.dialogue_sequence = nil
 	self._playing_dialogues[dialogue] = nil
 
 	self._dialogue_system_subtitle:remove_localized_dialogue(dialogue)
@@ -1265,7 +1280,6 @@ DialogueSystem._interrupt_dialogue_event_implementation = function (self, unit, 
 
 	self:_remove_stopped_dialogue(dialogue)
 
-	dialogue.currently_playing_event_id = nil
 	local extension = self._unit_extension_data[unit]
 
 	extension:set_currently_playing_dialogue(nil)

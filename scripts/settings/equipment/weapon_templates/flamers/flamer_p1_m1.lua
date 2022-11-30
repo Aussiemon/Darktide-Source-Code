@@ -291,7 +291,7 @@ weapon_template.actions = {
 			pre_shoot_abort_sfx_alias = "ranged_abort",
 			looping_3d_sound_effect = "wwise/events/weapon/play_flamethrower_fire_loop_3d",
 			stream_effect = {
-				speed = 25,
+				speed = 45,
 				name = "content/fx/particles/weapons/rifles/player_flamer/flamer_code_control",
 				name_3p = "content/fx/particles/weapons/rifles/player_flamer/flamer_code_control_3p"
 			}
@@ -436,9 +436,10 @@ weapon_template.actions = {
 		}
 	},
 	push = {
-		block_duration = 0.5,
+		crosshair_type = "dot",
 		push_radius = 1.5,
 		start_input = "special_action",
+		block_duration = 0.5,
 		kind = "push",
 		damage_time = 0.2,
 		anim_event = "attack_push",
@@ -613,13 +614,15 @@ weapon_template.overclocks = {
 		flamer_p1_m1_mobility_stat = -0.1
 	}
 }
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	flamer_p1_m1_ammo_stat = {
 		display_name = "loc_stats_display_ammo_stat",
 		is_stat_trait = true,
 		ammo = {
 			base = {
-				ammo_trait_templates.flamer_p1_m1_ammo_stat
+				ammo_trait_templates.flamer_p1_m1_ammo_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
@@ -628,17 +631,20 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		dodge = {
 			base = {
-				dodge_trait_templates.default_dodge_stat
+				dodge_trait_templates.default_dodge_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		sprint = {
 			base = {
-				sprint_trait_templates.default_sprint_stat
+				sprint_trait_templates.default_sprint_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		movement_curve_modifier = {
 			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
@@ -647,7 +653,8 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		burninating = {
 			base = {
-				burninating_trait_templates.flamer_p1_m1_burninating_stat
+				burninating_trait_templates.flamer_p1_m1_burninating_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
@@ -656,18 +663,62 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		weapon_handling = {
 			action_shoot = {
-				weapon_handling_trait_templates.flamer_p1_m1_ramp_up_stat
+				weapon_handling_trait_templates.flamer_p1_m1_ramp_up_stat,
+				display_data = {
+					prefix = "loc_ingame_action_one",
+					display_stats = {
+						__all_basic_stats = true
+					},
+					display_group_stats = {
+						flamer_ramp_up_times = {}
+					}
+				}
 			},
 			action_shoot_braced = {
-				weapon_handling_trait_templates.flamer_p1_m1_ramp_up_stat
+				weapon_handling_trait_templates.flamer_p1_m1_ramp_up_stat,
+				display_data = {
+					prefix = "loc_weapon_stats_display_braced",
+					display_stats = {
+						__all_basic_stats = true
+					},
+					display_group_stats = {
+						flamer_ramp_up_times = {}
+					}
+				}
 			}
 		},
 		damage = {
 			action_shoot = {
-				damage_trait_templates.flamer_p1_m1_braced_dps_stat
+				damage_trait_templates.flamer_p1_m1_braced_dps_stat,
+				display_data = {
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_hip_fire"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_shoot_braced = {
-				damage_trait_templates.flamer_p1_m1_braced_dps_stat
+				damage_trait_templates.flamer_p1_m1_braced_dps_stat,
+				display_data = {
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_braced_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	},
@@ -676,7 +727,8 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		size_of_flame = {
 			base = {
-				size_of_flame_trait_templates.flamer_p1_m1_size_of_flame_stat
+				size_of_flame_trait_templates.flamer_p1_m1_size_of_flame_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	}
@@ -692,7 +744,6 @@ table.append(weapon_template.traits, bespoke_forcestaff_p1_traits)
 
 weapon_template.perks = {
 	flamer_p1_m1_ammo_perk = {
-		description = "loc_trait_description_flamer_p1_m1_ammo_perk",
 		display_name = "loc_trait_display_flamer_p1_m1_ammo_perk",
 		ammo = {
 			base = {
@@ -701,7 +752,6 @@ weapon_template.perks = {
 		}
 	},
 	flamer_p1_m1_mobility_perk = {
-		description = "loc_trait_description_flamer_p1_m1_mobility_perk",
 		display_name = "loc_trait_display_flamer_p1_m1_mobility_perk",
 		dodge = {
 			base = {
@@ -720,7 +770,6 @@ weapon_template.perks = {
 		}
 	},
 	flamer_p1_m1_burninating_perk = {
-		description = "loc_trait_description_flamer_p1_m1_burninating_perk",
 		display_name = "loc_trait_display_flamer_p1_m1_burninating_perk",
 		burninating = {
 			base = {
@@ -729,7 +778,6 @@ weapon_template.perks = {
 		}
 	},
 	flamer_p1_m1_damage_perk = {
-		description = "loc_trait_description_flamer_p1_m1_damage_perk",
 		display_name = "loc_trait_display_flamer_p1_m1_damage_perk",
 		weapon_handling = {
 			action_shoot_braced = {
@@ -743,7 +791,6 @@ weapon_template.perks = {
 		}
 	},
 	flamer_p1_m1_range_perk = {
-		description = "loc_trait_description_flamer_p1_m1_range_perk",
 		display_name = "loc_trait_display_flamer_p1_m1_range_perk",
 		size_of_flame = {
 			base = {
@@ -752,7 +799,6 @@ weapon_template.perks = {
 		}
 	},
 	flamer_p1_m1_spread_angle_perk = {
-		description = "loc_trait_description_flamer_p1_m1_spread_angle_perk",
 		display_name = "loc_trait_display_flamer_p1_m1_spread_angle_perk",
 		size_of_flame = {
 			base = {
@@ -781,13 +827,11 @@ weapon_template.displayed_attacks = {
 		type = "brace"
 	},
 	special = {
+		desc = "loc_stats_special_action_melee_weapon_bash_desc",
 		display_name = "loc_weapon_special_weapon_bash",
 		type = "melee"
 	}
 }
-weapon_template.displayed_attack_ranges = {
-	max = 20,
-	min = 5
-}
+weapon_template.special_action_name = "push"
 
 return weapon_template

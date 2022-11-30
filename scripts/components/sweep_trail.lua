@@ -26,8 +26,6 @@ SweepTrail.init = function (self, unit)
 end
 
 SweepTrail.editor_init = function (self, unit)
-	self._in_editor = true
-
 	self:init(unit)
 end
 

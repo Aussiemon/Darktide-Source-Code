@@ -17,11 +17,13 @@ local WeaponToughnessTemplates = require("scripts/settings/toughness/weapon_toug
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_traits/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WeaponWarpChargeTemplates = require("scripts/settings/warp_charge/weapon_warp_charge_templates")
+local WeaponTweakStatsUIData = require("scripts/settings/equipment/weapon_tweak_stats_ui_data")
 local template_types = WeaponTweakTemplateSettings.template_types
 local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local DEFAULT_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_LERP_VALUE
 local DEFAULT_STAT_TRAIT_VALUE = WeaponTweakTemplateSettings.DEFAULT_STAT_TRAIT_VALUE
 local DEFALT_FALLBACK_LERP_VALUE = WeaponTweakTemplateSettings.DEFALT_FALLBACK_LERP_VALUE
+local WeaponTweakStatsUIDataStats = WeaponTweakStatsUIData.stats
 local WeaponTweakTemplates = {}
 local math_lerp = math.lerp
 local math_clamp = math.clamp
@@ -514,6 +516,141 @@ function _build_templates(source_templates, base_template_lookup, lerp_values, o
 	end
 
 	return templates
+end
+
+local BASE_TEMPLATES = {
+	[template_types.recoil] = RecoilTemplates,
+	[template_types.spread] = SpreadTemplates,
+	[template_types.sway] = SwayTemplates,
+	[template_types.suppression] = SuppressionTemplates,
+	[template_types.dodge] = WeaponDodgeTemplates,
+	[template_types.sprint] = WeaponSprintTemplates,
+	[template_types.stamina] = WeaponStaminaTemplates,
+	[template_types.toughness] = WeaponToughnessTemplates,
+	[template_types.ammo] = WeaponAmmoTemplates,
+	[template_types.burninating] = WeaponBurninatingTemplates,
+	[template_types.size_of_flame] = WeaponSizeOfFlameTemplates,
+	[template_types.weapon_handling] = WeaponHandlingTemplates,
+	[template_types.movement_curve_modifier] = WeaponMovementCurveModifierTemplates,
+	[template_types.stagger_duration_modifier] = WeaponStaggerDurationModifierTemplates,
+	[template_types.charge] = WeaponChargeTemplates,
+	[template_types.warp_charge] = WeaponWarpChargeTemplates
+}
+
+WeaponTweakTemplates.get_base_stats = function (weapon_template, template_type, target)
+	local base_template = BASE_TEMPLATES[template_type]
+
+	if not base_template then
+		ferror("no such template '%s' in BASE_TEMPLATES", template_type)
+
+		return
+	end
+
+	local base_identifier = WeaponTweakTemplates.get_template_identifiers(weapon_template, template_type, target)
+	local base_stats = base_identifier and base_template[base_identifier]
+
+	return base_stats
+end
+
+WeaponTweakTemplates.get_template_identifiers = function (weapon_template, template_type, target)
+	local base_template_lookup = weapon_template.__base_template_lookup
+	local lookup_entry = base_template_lookup[template_type]
+
+	if lookup_entry then
+		local identifier_lookup = lookup_entry[target]
+
+		if identifier_lookup then
+			return identifier_lookup.base_identifier, identifier_lookup.new_identifier
+		end
+	end
+
+	return nil, nil
+end
+
+WeaponTweakTemplates.get_base_stats_values = function (base_stats, stat_data)
+	local path_len = #stat_data
+	local resolved_table = base_stats
+	local real_value_range = stat_data[path_len]
+
+	for i = 1, path_len - 1 do
+		local path_name = stat_data[i]
+		resolved_table = resolved_table[path_name]
+
+		if not resolved_table then
+			return nil
+		end
+	end
+
+	local lerp_basic, lerp_perfect = nil
+
+	if type(resolved_table) == "table" then
+		lerp_perfect = resolved_table.lerp_perfect
+		lerp_basic = resolved_table.lerp_basic
+	else
+		lerp_perfect = resolved_table
+		lerp_basic = resolved_table
+	end
+
+	local real_min_lerp, real_max_lerp = nil
+
+	if type(real_value_range) == "table" then
+		real_max_lerp = real_value_range.max
+		real_min_lerp = real_value_range.min
+	else
+		real_max_lerp = real_value_range
+		real_min_lerp = real_value_range
+	end
+
+	local min = math.lerp(lerp_basic, lerp_perfect, real_min_lerp)
+	local max = math.lerp(lerp_basic, lerp_perfect, real_max_lerp)
+
+	return min, max
+end
+
+WeaponTweakTemplates.get_base_stats_lerp_values = function (stat_data)
+	local path_len = #stat_data
+	local lerp_value_range = stat_data[path_len]
+
+	if type(lerp_value_range) == "table" then
+		return lerp_value_range.min, lerp_value_range.max
+	else
+		return lerp_value_range, lerp_value_range
+	end
+end
+
+WeaponTweakTemplates.get_stat_ui_data = function (template_type, stat_data, path_length_offset)
+	local base_template_ui_data = WeaponTweakStatsUIDataStats[template_type]
+
+	if not base_template_ui_data then
+		return nil
+	end
+
+	local resolved_table = base_template_ui_data
+
+	if resolved_table then
+		for i = 1, #stat_data - (path_length_offset or 1) do
+			local path_name = stat_data[i]
+
+			if resolved_table._array_range then
+				local array_range = resolved_table._array_range
+				local path_index = tonumber(path_name)
+
+				if array_range[1] <= path_index and path_index <= array_range[2] then
+					resolved_table = array_range
+				else
+					return nil
+				end
+			else
+				resolved_table = resolved_table[path_name]
+
+				if not resolved_table then
+					return nil
+				end
+			end
+		end
+	end
+
+	return resolved_table
 end
 
 return WeaponTweakTemplates

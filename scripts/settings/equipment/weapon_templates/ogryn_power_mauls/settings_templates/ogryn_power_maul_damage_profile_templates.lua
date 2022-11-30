@@ -345,10 +345,6 @@ overrides.powermaul_2h_heavy_smiter_active = {
 			{
 				"gibbing_type",
 				GibbingTypes.explosion
-			},
-			{
-				"damage_type",
-				damage_types.blunt_powermaul_active
 			}
 		}
 	}
@@ -604,10 +600,6 @@ overrides.ogryn_powermaul_heavy_tank_active = {
 			GibbingTypes.explosion
 		},
 		{
-			"damage_type",
-			damage_types.blunt_powermaul_active
-		},
-		{
 			"wounds_template",
 			WoundsTemplates.ogryn_power_maul_activated
 		},
@@ -712,10 +704,6 @@ overrides.ogryn_powermaul_heavy_smiter_active = {
 		{
 			"gibbing_type",
 			GibbingTypes.explosion
-		},
-		{
-			"damage_type",
-			damage_types.blunt_powermaul_active
 		},
 		{
 			"cleave_distribution",

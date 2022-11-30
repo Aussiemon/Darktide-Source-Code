@@ -148,13 +148,14 @@ weapon_template.actions = {
 		weapon_handling_template = "time_scale_1_2",
 		first_person_hit_anim = "hit_left_shake",
 		kind = "sweep",
-		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.25,
+		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
-		damage_window_end = 0.6,
-		attack_direction_override = "left",
-		anim_end_event = "attack_finished",
 		uninterruptible = true,
+		damage_window_end = 0.6,
+		anim_end_event = "attack_finished",
+		attack_direction_override = "left",
+		anim_event_3p = "attack_swing_down_slow",
 		anim_event = "attack_swing_down_left",
 		hit_stop_anim = "attack_hit",
 		total_time = 2,
@@ -317,6 +318,7 @@ weapon_template.actions = {
 	},
 	action_melee_start_right = {
 		allowed_during_sprint = true,
+		anim_event_3p = "attack_swing_charge_down_right",
 		anim_end_event = "attack_finished",
 		kind = "windup",
 		uninterruptible = true,
@@ -374,13 +376,14 @@ weapon_template.actions = {
 	action_right_light = {
 		damage_window_start = 0.5,
 		hit_armor_anim = "attack_hit_shield",
-		stagger_duration_modifier_template = "default",
+		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
 		first_person_hit_stop_anim = "attack_hit",
+		stagger_duration_modifier_template = "default",
 		range_mod = 1.25,
 		weapon_handling_template = "time_scale_1_1",
-		kind = "sweep",
 		damage_window_end = 0.6,
+		anim_event_3p = "attack_swing_right_slow",
 		attack_direction_override = "right",
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
@@ -601,13 +604,14 @@ weapon_template.actions = {
 	action_left_light_2 = {
 		damage_window_start = 0.43333333333333335,
 		hit_armor_anim = "attack_hit_shield",
-		stagger_duration_modifier_template = "default",
+		kind = "sweep",
 		first_person_hit_anim = "hit_left_shake",
 		first_person_hit_stop_anim = "attack_hit",
+		stagger_duration_modifier_template = "default",
 		range_mod = 1.25,
 		weapon_handling_template = "time_scale_1",
-		kind = "sweep",
 		damage_window_end = 0.5333333333333333,
+		anim_event_3p = "attack_swing_left_slow",
 		attack_direction_override = "left",
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
@@ -1081,6 +1085,7 @@ weapon_template.base_stats = {
 		}
 	},
 	ogryn_club_p1_m1_control_stat = {
+		description = "loc_stats_display_control_stat_melee_mouseover",
 		display_name = "loc_stats_display_control_stat_melee",
 		is_stat_trait = true,
 		damage = {
@@ -1189,7 +1194,7 @@ weapon_template.displayed_keywords = {
 		display_name = "loc_weapon_keyword_crowd_control"
 	},
 	{
-		display_name = "loc_weapon_keyword_versatile_new"
+		display_name = "loc_weapon_keyword_versatile"
 	}
 }
 weapon_template.displayed_attacks = {
@@ -1211,10 +1216,12 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	special = {
+		desc = "loc_stats_special_action_special_attack_ogryn_club_p1m1_desc",
 		display_name = "loc_weapon_special_fist_attack",
 		type = "melee_hand"
 	}
 }
+weapon_template.special_action_name = "action_special_uppercut"
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 
 return weapon_template

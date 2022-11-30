@@ -4,7 +4,8 @@ local action_handler_settings = {
 		"reload_state",
 		"reload_shotgun",
 		"vent_overheat",
-		"vent_warp_charge"
+		"vent_warp_charge",
+		"inspect"
 	},
 	prevent_sprint = {
 		"block",
@@ -13,11 +14,13 @@ local action_handler_settings = {
 		"vent_warp_charge",
 		"throw_grenade",
 		"throw",
-		"aim_projectile"
+		"aim_projectile",
+		"inspect"
 	},
 	sprint_requires_press_to_interrupt = {
 		"reload_state",
-		"reload_shotgun"
+		"reload_shotgun",
+		"inspect"
 	},
 	allowed_action_kinds_during_sprint = {
 		"block",
@@ -25,7 +28,8 @@ local action_handler_settings = {
 		"reload_shotgun",
 		"unwield_to_previous",
 		"unwield_to_specific",
-		"unwield"
+		"unwield",
+		"inspect"
 	},
 	disallowed_action_kinds_during_lunge = {
 		"reload_shotgun",

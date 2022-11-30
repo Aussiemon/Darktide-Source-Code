@@ -467,7 +467,11 @@ conditions.can_shoot_net = function (unit, blackboard, scratchpad, condition_arg
 	local shoot_net_cooldown = behavior_component.shoot_net_cooldown
 	local t = Managers.time:time("gameplay")
 
-	return shoot_net_cooldown <= t
+	if t < shoot_net_cooldown then
+		return false
+	end
+
+	return behavior_component.net_is_ready
 end
 
 conditions.netgunner_is_on_cooldown = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
@@ -486,14 +490,14 @@ conditions.netgunner_hit_target = function (unit, blackboard, scratchpad, condit
 end
 
 conditions.daemonhost_can_warp_grab = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
-	if is_running then
-		return true
-	end
-
 	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 
 	if not is_aggroed then
 		return
+	end
+
+	if is_running then
+		return true
 	end
 
 	local perception_component = blackboard.perception

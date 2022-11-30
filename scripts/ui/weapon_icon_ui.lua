@@ -1,7 +1,7 @@
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local UIWeaponSpawner = require("scripts/managers/ui/ui_weapon_spawner")
 local UISettings = require("scripts/settings/ui/ui_settings")
-local PREVIEWER_FRAME_DELAY = 1
+local PREVIEWER_FRAME_DELAY = 5
 local WeaponIconUI = class("WeaponIconUI")
 
 WeaponIconUI.init = function (self, render_settings)
@@ -216,14 +216,16 @@ WeaponIconUI._handle_request_queue = function (self)
 					local size_scale_y = uvs[2][2] - uvs[1][2]
 					local position_scale_x = uvs[1][1]
 					local position_scale_y = uvs[1][2]
-
-					Renderer.copy_render_target_rect(self._capture_render_target, 0, 0, 1, 1, self._icon_render_target, position_scale_x, position_scale_y, size_scale_x, size_scale_y)
-
 					local callbacks = active_request.callbacks
-					local grid_index = active_request.grid_index
 
-					for id, on_load_callback in pairs(callbacks) do
-						on_load_callback(grid_index, self._num_rows, self._num_columns, self._icon_render_target)
+					if self._capture_render_target and self._icon_render_target and not self._shutting_down then
+						Renderer.copy_render_target_rect(self._capture_render_target, 0, 0, 1, 1, self._icon_render_target, position_scale_x, position_scale_y, size_scale_x, size_scale_y)
+
+						local grid_index = active_request.grid_index
+
+						for id, on_load_callback in pairs(callbacks) do
+							on_load_callback(grid_index, self._num_rows, self._num_columns, self._icon_render_target)
+						end
 					end
 
 					table.clear(callbacks)
@@ -251,7 +253,7 @@ WeaponIconUI._handle_next_request_in_queue = function (self)
 		self:_initialize_world()
 
 		self._icon_render_target = Renderer.create_resource("render_target", "R8G8B8A8", nil, self._target_resolution_width, self._target_resolution_height, self._unique_id)
-		self._capture_render_target = Renderer.create_resource("render_target", "R8G8B8A8", nil, self._weapon_width * 8, self._weapon_height * 8, self._unique_id .. "_2")
+		self._capture_render_target = Renderer.create_resource("render_target", "R8G8B8A8", nil, self._weapon_width * 4, self._weapon_height * 4, self._unique_id .. "_2")
 		local render_targets = {
 			back_buffer = self._capture_render_target
 		}
@@ -402,6 +404,10 @@ WeaponIconUI._pause_rendering = function (self)
 	world_spawner:set_world_disabled(true)
 end
 
+WeaponIconUI.prepare_for_destruction = function (self)
+	self._shutting_down = true
+end
+
 WeaponIconUI.destroy = function (self)
 	if self._icon_render_target then
 		Renderer.destroy_resource(self._icon_render_target)
@@ -457,11 +463,7 @@ WeaponIconUI.update = function (self, dt, t)
 	end
 
 	if update_world then
-		local uv_grid = self._uv_grid
-
-		for i = 1, #uv_grid do
-			world_spawner:update(dt, t)
-		end
+		world_spawner:update(dt, t)
 	end
 
 	if ui_weapon_spawner then

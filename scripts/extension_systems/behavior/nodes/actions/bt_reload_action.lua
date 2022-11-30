@@ -1,6 +1,7 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
+local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local Vo = require("scripts/utilities/vo")
 local BtReloadAction = class("BtReloadAction", "BtNode")
@@ -15,6 +16,8 @@ BtReloadAction.enter = function (self, unit, breed, blackboard, scratchpad, acti
 
 	animation_extension:anim_event(anim_event)
 
+	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+	behavior_component.move_state = "idle"
 	local anim_durations = action_data.anim_durations
 	local duration = anim_durations[anim_event]
 	scratchpad.reload_exit_t = t + duration

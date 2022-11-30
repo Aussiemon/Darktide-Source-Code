@@ -18,6 +18,8 @@ local wield_inputs = PlayerCharacterConstants.wield_inputs
 local template_types = WeaponTweakTemplateSettings.template_types
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local armor_types = ArmorSettings.types
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
@@ -41,8 +43,9 @@ local weapon_template = {
 			buffer_time = 0.2,
 			input_sequence = {
 				{
-					value = true,
-					input = "action_one_release"
+					value = false,
+					input = "action_one_hold",
+					time_window = math.huge
 				}
 			}
 		},
@@ -111,10 +114,16 @@ table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inp
 
 weapon_template.action_input_hierarchy = {
 	wield = "stay",
-	reload = "stay",
 	special_action = "base",
-	shoot_pressed = "stay",
-	shoot_release = "stay",
+	reload = "stay",
+	shoot_pressed = {
+		zoom = "base",
+		wield = "base",
+		grenade_ability = "base",
+		reload = "base",
+		combat_ability = "base",
+		shoot_release = "base"
+	},
 	zoom = {
 		special_action = "base",
 		wield = "base",
@@ -433,12 +442,13 @@ weapon_template.actions = {
 		}
 	},
 	action_push = {
+		allowed_during_sprint = true,
 		push_radius = 2.4,
 		start_input = "special_action",
 		block_duration = 0.5,
 		kind = "push",
+		crosshair_type = "dot",
 		continue_sprinting = true,
-		allowed_during_sprint = true,
 		damage_time = 0.122,
 		unaim = true,
 		anim_event = "attack_push",
@@ -508,13 +518,15 @@ weapon_template.actions = {
 		total_time = math.huge
 	}
 }
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	bolter_p1_m1_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.default_dps_stat
+				damage_trait_templates.default_dps_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.default_dps_stat
@@ -526,20 +538,24 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		recoil = {
 			base = {
-				recoil_trait_templates.lasgun_p1_m1_recoil_stat
+				recoil_trait_templates.lasgun_p1_m1_recoil_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_recoil", "loc_weapon_stats_display_hip_fire")
 			},
 			alternate_fire = {
-				recoil_trait_templates.lasgun_p1_m1_recoil_stat
+				recoil_trait_templates.lasgun_p1_m1_recoil_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_recoil", "loc_weapon_stats_display_ads")
 			}
 		},
 		spread = {
 			base = {
-				spread_trait_templates.default_spread_stat
+				spread_trait_templates.default_spread_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_spread")
 			}
 		},
 		sway = {
 			alternate_fire = {
-				sway_trait_templates.default_sway_stat
+				sway_trait_templates.default_sway_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_sway")
 			}
 		}
 	},
@@ -548,30 +564,36 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		dodge = {
 			base = {
-				dodge_trait_templates.default_dodge_stat
+				dodge_trait_templates.default_dodge_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		sprint = {
 			base = {
-				sprint_trait_templates.default_sprint_stat
+				sprint_trait_templates.default_sprint_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		movement_curve_modifier = {
 			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		recoil = {
 			base = {
-				recoil_trait_templates.default_mobility_recoil_stat
+				recoil_trait_templates.default_mobility_recoil_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_recoil", "loc_weapon_stats_display_hip_fire")
 			},
 			alternate_fire = {
-				recoil_trait_templates.default_mobility_recoil_stat
+				recoil_trait_templates.default_mobility_recoil_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_recoil", "loc_weapon_stats_display_ads")
 			}
 		},
 		spread = {
 			base = {
-				spread_trait_templates.default_mobility_spread_stat
+				spread_trait_templates.default_mobility_spread_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_spread")
 			}
 		}
 	},
@@ -580,7 +602,15 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		weapon_handling = {
 			action_reload = {
-				weapon_handling_trait_templates.max_reload_speed_modify
+				weapon_handling_trait_templates.max_reload_speed_modify,
+				display_data = {
+					display_stats = {
+						__all_basic_stats = true,
+						time_scale = {
+							display_name = "loc_weapon_stats_display_reload_speed"
+						}
+					}
+				}
 			}
 		}
 	},
@@ -589,7 +619,8 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.autopistol_control_stat
+				damage_trait_templates.autopistol_control_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.autopistol_control_stat
@@ -725,13 +756,11 @@ weapon_template.displayed_attacks = {
 		type = "ads"
 	},
 	special = {
+		desc = "loc_stats_special_action_melee_weapon_bash_desc",
 		display_name = "loc_weapon_special_weapon_bash",
 		type = "melee"
 	}
 }
-weapon_template.displayed_attack_ranges = {
-	max = 0,
-	min = 0
-}
+weapon_template.special_action_name = "action_push"
 
 return weapon_template

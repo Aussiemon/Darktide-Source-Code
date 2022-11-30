@@ -483,49 +483,50 @@ PlayerUnitFxExtension._update_moving_sfx = function (self, dt, t)
 		local new_position = position + direction * distance_this_frame
 		local remove = false
 
-		if source_id and not WwiseWorld.has_source(wwise_world, source_id) then
+		if not source_id or range <= travelled_distance then
+			remove = true
+		elseif not WwiseWorld.has_source(wwise_world, source_id) then
 			Log.warning("FxExtension", "Removing moving sound as the source_id has been deleted from some other place.")
 
 			remove = true
 		end
 
-		if source_id then
-			if travelled_distance < range then
-				data.position:store(new_position)
+		if remove then
+			if playing_id then
+				WwiseWorld.stop_event(self._wwise_world, playing_id)
 
-				data.distance = travelled_distance
-
-				WwiseWorld.set_source_position(wwise_world, source_id, new_position)
-
-				index = index + 1
-			else
-				remove = true
+				data.playing_id = nil
 			end
 
-			if remove then
+			if source_id then
 				if wwise_stop_event then
 					WwiseWorld.trigger_resource_event(wwise_world, wwise_stop_event, source_id)
 				end
 
-				WwiseWorld.stop_event(self._wwise_world, playing_id)
-
-				data.playing_id = nil
-
 				WwiseWorld.destroy_manual_source(wwise_world, source_id)
 
 				data.source_id = nil
-				buffer[index].playing_id = buffer[size].playing_id
-				buffer[index].source_id = buffer[size].source_id
-				buffer[index].speed = buffer[size].speed
-				buffer[index].distance = buffer[size].distance
-				buffer[index].range = buffer[size].range
-				buffer[index].wwise_stop_event = buffer[size].wwise_stop_event
-
-				buffer[index].position:store(buffer[size].position:unbox())
-				buffer[index].direction:store(buffer[size].direction:unbox())
-
-				size = size - 1
 			end
+
+			buffer[index].playing_id = buffer[size].playing_id
+			buffer[index].source_id = buffer[size].source_id
+			buffer[index].speed = buffer[size].speed
+			buffer[index].distance = buffer[size].distance
+			buffer[index].range = buffer[size].range
+			buffer[index].wwise_stop_event = buffer[size].wwise_stop_event
+
+			buffer[index].position:store(buffer[size].position:unbox())
+			buffer[index].direction:store(buffer[size].direction:unbox())
+
+			size = size - 1
+		else
+			data.position:store(new_position)
+
+			data.distance = travelled_distance
+
+			WwiseWorld.set_source_position(wwise_world, source_id, new_position)
+
+			index = index + 1
 		end
 	end
 

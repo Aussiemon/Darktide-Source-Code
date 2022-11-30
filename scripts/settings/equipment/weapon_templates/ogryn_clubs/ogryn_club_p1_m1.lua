@@ -1025,16 +1025,45 @@ weapon_template.stamina_template = "tank"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "ogryn_club_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_club
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	ogryn_club_p1_m1_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
 			action_left_light = {
-				damage_trait_templates.default_melee_dps_stat
+				damage_trait_templates.default_melee_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_melee_dps_stat
+				damage_trait_templates.default_melee_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.default_melee_dps_stat
@@ -1058,10 +1087,34 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_light = {
-				damage_trait_templates.default_armor_pierce_stat
+				damage_trait_templates.default_armor_pierce_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								armor_damage_modifier = {
+									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
+								}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_armor_pierce_stat
+				damage_trait_templates.default_armor_pierce_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								armor_damage_modifier = {
+									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
+								}
+							}
+						}
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.default_armor_pierce_stat
@@ -1081,14 +1134,53 @@ weapon_template.base_stats = {
 		}
 	},
 	ogryn_club_p1_m1_control_stat = {
+		description = "loc_stats_display_control_stat_melee_mouseover",
 		display_name = "loc_stats_display_control_stat_melee",
 		is_stat_trait = true,
 		damage = {
 			action_left_light = {
-				damage_trait_templates.ogryn_club_control_stat
+				damage_trait_templates.ogryn_club_control_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									impact = {
+										display_name = "loc_weapon_stats_display_stagger"
+									}
+								}
+							}
+						},
+						cleave_distribution = {
+							attack = {},
+							impact = {}
+						},
+						stagger_duration_modifier = {}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.ogryn_club_control_stat
+				damage_trait_templates.ogryn_club_control_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									impact = {
+										display_name = "loc_weapon_stats_display_stagger"
+									}
+								}
+							}
+						},
+						cleave_distribution = {
+							attack = {},
+							impact = {}
+						},
+						stagger_duration_modifier = {}
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.ogryn_club_control_stat
@@ -1111,10 +1203,22 @@ weapon_template.base_stats = {
 		},
 		stagger_duration_modifier = {
 			action_left_light = {
-				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
+				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_left_heavy = {
-				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
+				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_right_light = {
 				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
@@ -1138,10 +1242,30 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_light = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.default_first_target_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								power_level_multiplier = {}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.default_first_target_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								power_level_multiplier = {}
+							}
+						}
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.default_first_target_stat
@@ -1165,12 +1289,14 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		stamina = {
 			base = {
-				stamina_trait_templates.ogryn_club_p1_m1_defence_stat
+				stamina_trait_templates.ogryn_club_p1_m1_defence_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		dodge = {
 			base = {
-				dodge_trait_templates.ogryn_dodge_stat
+				dodge_trait_templates.ogryn_dodge_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	}
@@ -1189,7 +1315,7 @@ weapon_template.displayed_keywords = {
 		display_name = "loc_weapon_keyword_crowd_control"
 	},
 	{
-		display_name = "loc_weapon_keyword_versatile_new"
+		display_name = "loc_weapon_keyword_versatile"
 	}
 }
 weapon_template.displayed_attacks = {
@@ -1211,10 +1337,12 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	special = {
+		desc = "loc_stats_special_action_special_attack_ogryn_club_p1m1_desc",
 		display_name = "loc_weapon_special_fist_attack",
 		type = "melee_hand"
 	}
 }
+weapon_template.special_action_name = "action_special_uppercut"
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 
 return weapon_template

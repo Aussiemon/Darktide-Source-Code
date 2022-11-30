@@ -418,8 +418,8 @@ wounds_templates.blunt = {
 			[shapes.default] = {
 				shape_scaling = false,
 				radius = {
-					2,
-					2
+					2.25,
+					2.5
 				},
 				color_brightness = standard_melee,
 				duration = flash_quick
@@ -427,8 +427,8 @@ wounds_templates.blunt = {
 			[shapes.left_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
-					2,
-					2
+					2.5,
+					3
 				},
 				color_brightness = standard_melee,
 				duration = flash_quick
@@ -436,8 +436,8 @@ wounds_templates.blunt = {
 			[shapes.right_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
-					2,
-					2
+					2.5,
+					3
 				},
 				color_brightness = standard_melee,
 				duration = flash_quick
@@ -445,8 +445,8 @@ wounds_templates.blunt = {
 			[shapes.horizontal_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
-					2,
-					2
+					2.5,
+					3
 				},
 				color_brightness = standard_melee,
 				duration = flash_quick
@@ -454,8 +454,8 @@ wounds_templates.blunt = {
 			[shapes.vertical_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
-					2,
-					2
+					2.5,
+					3
 				},
 				color_brightness = standard_melee,
 				duration = flash_quick
@@ -468,8 +468,8 @@ wounds_templates.blunt = {
 			[shapes.default] = {
 				shape_scaling = false,
 				radius = {
-					2,
-					2
+					2.25,
+					2.5
 				},
 				color_brightness = standard_melee,
 				duration = flash_quick
@@ -477,8 +477,8 @@ wounds_templates.blunt = {
 			[shapes.left_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
-					2,
-					2
+					2.5,
+					3
 				},
 				color_brightness = standard_melee,
 				duration = flash_quick
@@ -486,8 +486,8 @@ wounds_templates.blunt = {
 			[shapes.right_45_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
-					2,
-					2
+					2.5,
+					3
 				},
 				color_brightness = standard_melee,
 				duration = flash_quick
@@ -495,8 +495,8 @@ wounds_templates.blunt = {
 			[shapes.horizontal_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
-					2,
-					2
+					2.5,
+					3
 				},
 				color_brightness = standard_melee,
 				duration = flash_quick
@@ -504,8 +504,8 @@ wounds_templates.blunt = {
 			[shapes.vertical_slash_coarse] = {
 				shape_scaling = false,
 				radius = {
-					2,
-					2
+					2.5,
+					3
 				},
 				color_brightness = standard_melee,
 				duration = flash_quick
@@ -1322,6 +1322,7 @@ wounds_templates.gauntlet_melee = table.clone(wounds_templates.blunt)
 wounds_templates.ogryn_shovel = table.clone(wounds_templates.blunt)
 wounds_templates.ogryn_club = table.clone(wounds_templates.blunt)
 wounds_templates.heavy_stubber = table.clone(wounds_templates.stubber)
+wounds_templates.shovel = table.clone(wounds_templates.blunt)
 
 for template_name, template in pairs(wounds_templates) do
 	template.name = template_name

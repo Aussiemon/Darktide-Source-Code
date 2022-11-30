@@ -124,6 +124,11 @@ local BtLeaveHooks = {
 			local cooldown = cooldowns.consume
 			behavior_component.consume_cooldown = t + cooldown
 		end
+	end,
+	netgunner_reset_cooldown = function (unit, breed, blackboard, scratchpad, action_data, t, args)
+		local behavior_component = Blackboard.write_component(blackboard, "behavior")
+		behavior_component.net_is_ready = true
+		behavior_component.shoot_net_cooldown = 0
 	end
 }
 

@@ -13,13 +13,13 @@ templates.weapon_trait_bespoke_ogryn_gauntlet_p1_power_bonus_on_continuous_fire 
 templates.weapon_trait_bespoke_ogryn_gauntlet_p1_toughness_on_elite_kills = {
 	weapon_trait_bespoke_ogryn_gauntlet_p1_toughness_on_elite_kills = {
 		{
-			toughness_fixed_percentage = 0.05
+			toughness_fixed_percentage = 0.04
 		},
 		{
-			toughness_fixed_percentage = 0.065
+			toughness_fixed_percentage = 0.06
 		},
 		{
-			toughness_fixed_percentage = 0.085
+			toughness_fixed_percentage = 0.08
 		},
 		{
 			toughness_fixed_percentage = 0.1
@@ -29,13 +29,13 @@ templates.weapon_trait_bespoke_ogryn_gauntlet_p1_toughness_on_elite_kills = {
 templates.weapon_trait_bespoke_ogryn_gauntlet_p1_toughness_on_crit_kills = {
 	weapon_trait_bespoke_ogryn_gauntlet_p1_toughness_on_crit_kills = {
 		{
-			toughness_fixed_percentage = 0.05
+			toughness_fixed_percentage = 0.04
 		},
 		{
-			toughness_fixed_percentage = 0.065
+			toughness_fixed_percentage = 0.06
 		},
 		{
-			toughness_fixed_percentage = 0.085
+			toughness_fixed_percentage = 0.08
 		},
 		{
 			toughness_fixed_percentage = 0.1

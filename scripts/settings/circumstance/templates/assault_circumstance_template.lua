@@ -15,18 +15,18 @@ local circumstance_templates = {
 				rubberband_pool = {
 					ammo = {
 						small_clip = {
-							4,
-							4,
-							3,
-							3,
-							2
+							0,
+							0,
+							0,
+							0,
+							0
 						},
 						large_clip = {
-							3,
-							3,
-							3,
-							2,
-							2
+							300,
+							300,
+							300,
+							200,
+							200
 						},
 						ammo_cache_pocketable = {
 							2,
@@ -58,18 +58,25 @@ local circumstance_templates = {
 				mid_event = {
 					ammo = {
 						small_clip = {
+							0,
+							0,
+							0,
+							0,
+							0
+						},
+						large_clip = {
+							300,
+							300,
+							300,
+							200,
+							200
+						},
+						ammo_cache_pocketable = {
 							2,
 							2,
 							2,
 							2,
 							2
-						},
-						large_clip = {
-							1,
-							1,
-							1,
-							1,
-							1
 						}
 					},
 					health = {
@@ -85,18 +92,25 @@ local circumstance_templates = {
 				end_event = {
 					ammo = {
 						small_clip = {
+							0,
+							0,
+							0,
+							0,
+							0
+						},
+						large_clip = {
+							300,
+							300,
+							300,
+							200,
+							200
+						},
+						ammo_cache_pocketable = {
 							2,
 							2,
 							2,
 							2,
 							2
-						},
-						large_clip = {
-							1,
-							1,
-							1,
-							1,
-							1
 						}
 					},
 					health = {
@@ -112,18 +126,25 @@ local circumstance_templates = {
 				primary = {
 					ammo = {
 						small_clip = {
-							3,
-							3,
-							3,
-							3,
-							3
+							0,
+							0,
+							0,
+							0,
+							0
 						},
 						large_clip = {
-							1,
-							1,
-							1,
-							1,
-							1
+							300,
+							300,
+							300,
+							200,
+							200
+						},
+						ammo_cache_pocketable = {
+							2,
+							2,
+							2,
+							2,
+							2
 						}
 					},
 					grenade = {
@@ -148,18 +169,18 @@ local circumstance_templates = {
 				secondary = {
 					ammo = {
 						small_clip = {
-							3,
-							3,
-							3,
-							3,
-							3
+							0,
+							0,
+							0,
+							0,
+							0
 						},
 						large_clip = {
-							2,
-							2,
-							2,
-							2,
-							2
+							300,
+							300,
+							300,
+							200,
+							200
 						},
 						ammo_cache_pocketable = {
 							2,

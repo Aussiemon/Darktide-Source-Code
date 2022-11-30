@@ -14,7 +14,6 @@ StateExitToMainMenu.on_enter = function (self, parent, params, creation_context)
 
 	Managers.player:on_game_state_enter(self, player_game_state_mapping, game_state_context)
 	self:_start_loading()
-	Managers.presence:set_presence("main_menu")
 end
 
 StateExitToMainMenu._start_loading = function (self)

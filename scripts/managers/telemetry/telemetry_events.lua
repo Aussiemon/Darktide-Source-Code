@@ -339,7 +339,7 @@ TelemetryEvents.player_died = function (self, player, data)
 
 	local damage_profile = data.damage_profile or ""
 
-	if damage_profile == "kill_volume_and_ofF_navmesh" then
+	if damage_profile == "kill_volume_and_off_navmesh" then
 		Log.debug("TelemetryEvents", "Skipping 'player_died' event due to damage profile = '%s'", damage_profile)
 
 		return

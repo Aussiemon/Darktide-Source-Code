@@ -42,6 +42,19 @@ local main_menu_list = {
 		end
 	},
 	{
+		text = "loc_store_view_display_name",
+		icon = "content/ui/materials/icons/system/escape/premium_store",
+		type = "large_button",
+		trigger_function = function ()
+			local context = {
+				can_exit = true
+			}
+			local view_name = "store_view"
+
+			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
+		end
+	},
+	{
 		type = "spacing_vertical"
 	},
 	{

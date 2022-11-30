@@ -175,6 +175,10 @@ UnitSpawnerManager.set_deletion_state = function (self, state)
 	self._deletion_state = state
 end
 
+UnitSpawnerManager.deletion_state = function (self)
+	return self._deletion_state
+end
+
 UnitSpawnerManager.spawn_unit = function (self, unit_name, ...)
 	local unit = World.spawn_unit_ex(self._world, unit_name, nil, ...)
 

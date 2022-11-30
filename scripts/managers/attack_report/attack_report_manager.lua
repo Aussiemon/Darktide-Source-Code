@@ -4,6 +4,7 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
 local attack_results = AttackSettings.attack_results
 local attack_types = AttackSettings.attack_types
+local damage_efficiencies = AttackSettings.damage_efficiencies
 local mood_types = MoodSettings.mood_types
 local AttackReportManager = class("AttackReportManager")
 local _trigger_hit_report, _trigger_damage_indicator, _play_camera_effect_shake_event = nil
@@ -41,7 +42,8 @@ AttackReportManager.init = function (self, is_server, network_event_delegate)
 			attack_direction = Vector3Box(),
 			hit_world_position = Vector3Box(),
 			attack_result = attack_results.died,
-			attack_type = attack_types.melee
+			attack_type = attack_types.melee,
+			damage_efficiency = damage_efficiencies.full
 		}
 	end
 
@@ -81,13 +83,13 @@ AttackReportManager.update = function (self, dt, t)
 	self._read_index = read_index
 end
 
-AttackReportManager.add_attack_result = function (self, damage_profile, attacked_unit, attacking_unit, attack_direction, hit_world_position, hit_weakspot, damage, attack_result, attack_type)
+AttackReportManager.add_attack_result = function (self, damage_profile, attacked_unit, attacking_unit, attack_direction, hit_world_position, hit_weakspot, damage, attack_result, attack_type, damage_efficiency)
 	local ring_buffer = self._ring_buffer
 	local read_index = self._read_index
 	local write_index = self._write_index
 	local size = self._buffer_size
 
-	Log.debug("AttackReportManager", "Added attack result damage_profile: %q attacked_unit: %q attacking_unit: %q attack_direction: %q hit_weakspot: %q damage: %q attack_result: %q attack_type: %q", damage_profile.name, attacked_unit, attacking_unit, attack_direction, hit_weakspot, damage, attack_result, attack_type)
+	Log.debug("AttackReportManager", "Added attack result damage_profile: %q attacked_unit: %q attacking_unit: %q attack_direction: %q hit_weakspot: %q damage: %q attack_result: %q attack_type: %q damage_efficiency: %q", damage_profile.name, attacked_unit, attacking_unit, attack_direction, hit_weakspot, damage, attack_result, attack_type, damage_efficiency)
 
 	if RING_BUFFER_SIZE < size + 1 then
 		local buffer_data = ring_buffer[read_index]
@@ -119,21 +121,23 @@ AttackReportManager.add_attack_result = function (self, damage_profile, attacked
 	buffer_data.damage = damage
 	buffer_data.attack_result = attack_result
 	buffer_data.attack_type = attack_type
+	buffer_data.damage_efficiency = damage_efficiency
 	self._buffer_size = size + 1
 	self._write_index = write_index % RING_BUFFER_SIZE + 1
 	self._read_index = read_index
 end
 
-AttackReportManager.rpc_add_attack_result = function (self, channel_id, damage_profile_id, attacked_unit_id, attacked_unit_is_level_unit, attacking_unit_id, attack_direction, hit_world_position, hit_weakspot, damage, attack_result_id, attack_type_id)
+AttackReportManager.rpc_add_attack_result = function (self, channel_id, damage_profile_id, attacked_unit_id, attacked_unit_is_level_unit, attacking_unit_id, attack_direction, hit_world_position, hit_weakspot, damage, attack_result_id, attack_type_id, damage_efficiency_id)
 	local unit_spawner_manager = Managers.state.unit_spawner
 	local attacked_unit = attacked_unit_id and unit_spawner_manager:unit(attacked_unit_id, attacked_unit_is_level_unit)
 	local attacking_unit = attacking_unit_id and unit_spawner_manager:unit(attacking_unit_id)
 	local attack_result = NetworkLookup.attack_results[attack_result_id]
 	local attack_type = attack_type_id and NetworkLookup.attack_types[attack_type_id]
+	local damage_efficiency = damage_efficiency_id and NetworkLookup.damage_efficiencies[damage_efficiency_id]
 	local damage_profile_name = NetworkLookup.damage_profile_templates[damage_profile_id]
 	local damage_profile = DamageProfileTemplates[damage_profile_name]
 
-	self:add_attack_result(damage_profile, attacked_unit, attacking_unit, attack_direction, hit_world_position, hit_weakspot, damage, attack_result, attack_type)
+	self:add_attack_result(damage_profile, attacked_unit, attacking_unit, attack_direction, hit_world_position, hit_weakspot, damage, attack_result, attack_type, damage_efficiency)
 end
 
 AttackReportManager._process_attack_result = function (self, buffer_data)
@@ -146,6 +150,7 @@ AttackReportManager._process_attack_result = function (self, buffer_data)
 	local attack_result = buffer_data.attack_result
 	local attack_type = buffer_data.attack_type
 	local damage_profile = buffer_data.damage_profile
+	local damage_efficiency = buffer_data.damage_efficiency
 	local did_damage = damage > 0
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local attacking_player = attacking_unit and player_unit_spawn_manager:owner(attacking_unit)
@@ -172,7 +177,7 @@ AttackReportManager._process_attack_result = function (self, buffer_data)
 		local is_in_first_person_mode = first_person_extension:is_in_first_person_mode()
 
 		if local_human or is_in_first_person_mode then
-			_trigger_hit_report(attacking_unit, attack_result, did_damage, hit_weakspot, hit_world_position)
+			_trigger_hit_report(attacking_unit, attack_result, did_damage, hit_weakspot, hit_world_position, damage_efficiency)
 			_play_camera_effect_shake_event(attacking_unit, damage_profile)
 		end
 
@@ -212,16 +217,17 @@ AttackReportManager._process_attack_result = function (self, buffer_data)
 		local attack_result_id = NetworkLookup.attack_results[attack_result]
 		local attack_type_id = attack_type and NetworkLookup.attack_types[attack_type]
 		local damage_profile_id = NetworkLookup.damage_profile_templates[damage_profile.name]
+		local damage_efficiency_id = damage_efficiency and NetworkLookup.damage_efficiencies[damage_efficiency]
 
-		Managers.state.game_session:send_rpc_clients("rpc_add_attack_result", damage_profile_id, attacked_unit_id, not not attacked_unit_is_level_unit, attacking_unit_id, attack_direction, hit_world_position, hit_weakspot, damage, attack_result_id, attack_type_id)
+		Managers.state.game_session:send_rpc_clients("rpc_add_attack_result", damage_profile_id, attacked_unit_id, not not attacked_unit_is_level_unit, attacking_unit_id, attack_direction, hit_world_position, hit_weakspot, damage, attack_result_id, attack_type_id, damage_efficiency_id)
 	end
 end
 
-function _trigger_hit_report(attacking_unit, attack_result, did_damage, hit_weakspot, hit_world_position)
+function _trigger_hit_report(attacking_unit, attack_result, did_damage, hit_weakspot, hit_world_position, damage_efficiency)
 	local hud_extension = ScriptUnit.has_extension(attacking_unit, "hud_system")
 
 	if hit_world_position then
-		Managers.event:trigger("event_crosshair_hit_report", hit_weakspot, attack_result, did_damage, hit_world_position)
+		Managers.event:trigger("event_crosshair_hit_report", hit_weakspot, attack_result, did_damage, hit_world_position, damage_efficiency)
 	end
 
 	if hud_extension and hit_world_position then

@@ -510,22 +510,33 @@ weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.overclocks = {}
 weapon_template.base_stats = {
 	forcestaff_p1_m1_dps_stat = {
-		description = "loc_trait_description_forcestaff_p1_m1_dps_stat",
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
 			rapid_left = {
-				damage_trait_templates.forcestaff_p1_m1_dps_stat
+				damage_trait_templates.forcestaff_p1_m1_dps_stat,
+				display_data = {
+					display_stats = {
+						power_distribution = {
+							attack = {}
+						}
+					}
+				}
 			}
 		}
 	},
 	forcestaff_p1_m1_explosion_size_stat = {
-		description = "loc_trait_description_forcestaff_p1_m1_explosion_size_stat",
 		display_name = "loc_stats_display_explosion_stat",
 		is_stat_trait = true,
 		explosion = {
 			action_trigger_explosion = {
-				explosion_trait_templates.forcestaff_p1_m1_explosion_size_stat
+				explosion_trait_templates.forcestaff_p1_m1_explosion_size_stat,
+				display_data = {
+					display_stats = {
+						radius = {},
+						close_radius = {}
+					}
+				}
 			}
 		}
 	},
@@ -534,33 +545,61 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		warp_charge = {
 			base = {
-				warp_charge_trait_templates.forcestaff_p1_m1_vent_speed_stat
+				warp_charge_trait_templates.forcestaff_p1_m1_vent_speed_stat,
+				display_data = {
+					display_stats = {
+						vent_duration_modifier = {},
+						auto_vent_duration_modifier = {}
+					}
+				}
 			}
 		}
 	},
 	forcestaff_p1_m1_charge_speed_stat = {
-		description = "loc_trait_description_forcestaff_p1_m1_charge_speed_stat",
 		display_name = "loc_stats_display_charge_speed",
 		is_stat_trait = true,
 		charge = {
 			rapid_left = {
-				charge_trait_templates.forcestaff_p1_m1_charge_speed_stat
+				charge_trait_templates.forcestaff_p1_m1_charge_speed_stat,
+				display_data = {
+					prefix = "loc_ingame_action_one",
+					display_stats = {
+						charge_duration = {}
+					}
+				}
 			},
 			action_charge_explosion = {
-				charge_trait_templates.forcestaff_p1_m1_charge_speed_stat
+				charge_trait_templates.forcestaff_p1_m1_charge_speed_stat,
+				display_data = {
+					prefix = "loc_ingame_action_two",
+					display_stats = {
+						charge_duration = {}
+					}
+				}
 			}
 		}
 	},
 	forcestaff_p1_m1_warp_charge_cost_stat = {
-		description = "loc_trait_description_forcestaff_p1_m1_warp_charge_cost_stat",
 		display_name = "loc_stats_display_warp_resist_stat",
 		is_stat_trait = true,
 		charge = {
 			rapid_left = {
-				charge_trait_templates.forcestaff_p1_m1_warp_charge_cost_stat
+				charge_trait_templates.forcestaff_p1_m1_warp_charge_cost_stat,
+				display_data = {
+					prefix = "loc_ingame_action_one",
+					display_stats = {
+						warp_charge_percent = {}
+					}
+				}
 			},
 			action_charge_explosion = {
-				charge_trait_templates.forcestaff_p1_m1_warp_charge_cost_stat
+				charge_trait_templates.forcestaff_p1_m1_warp_charge_cost_stat,
+				display_data = {
+					prefix = "loc_ingame_action_two",
+					display_stats = {
+						warp_charge_percent = {}
+					}
+				}
 			}
 		}
 	}
@@ -577,7 +616,6 @@ table.append(weapon_template.traits, ranged_warp_charge_traits)
 
 weapon_template.perks = {
 	forcestaff_p1_m1_dps_perk = {
-		description = "loc_trait_description_forcestaff_p1_m1_dps_perk",
 		display_name = "loc_trait_display_forcestaff_p1_m1_dps_perk",
 		damage = {
 			rapid_left = {
@@ -586,7 +624,6 @@ weapon_template.perks = {
 		}
 	},
 	forcestaff_p1_m1_explosion_size_perk = {
-		description = "loc_trait_description_forcestaff_p1_m1_explosion_size_perk",
 		display_name = "loc_trait_display_forcestaff_p1_m1_explosion_size_perk",
 		explosion = {
 			action_trigger_explosion = {
@@ -602,7 +639,6 @@ weapon_template.perks = {
 		}
 	},
 	forcestaff_p1_m1_charge_speed_perk = {
-		description = "loc_trait_description_forcestaff_p1_m1_charge_speed_perk",
 		display_name = "loc_trait_display_forcestaff_p1_m1_charge_speed_perk",
 		charge = {
 			rapid_left = {
@@ -614,7 +650,6 @@ weapon_template.perks = {
 		}
 	},
 	forcestaff_p1_m1_warp_charge_cost_perk = {
-		description = "loc_trait_description_forcestaff_p1_m1_warp_charge_cost_perk",
 		display_name = "loc_trait_display_forcestaff_p1_m1_warp_charge_cost_perk",
 		charge = {
 			rapid_left = {
@@ -650,8 +685,9 @@ weapon_template.displayed_attacks = {
 		type = "ninja_fencer"
 	},
 	special = {
+		desc = "loc_stats_special_action_melee_weapon_bash_forcestaff_desc",
 		display_name = "loc_forcestaff_p1_m1_attack_special",
-		type = "ninja_fencer"
+		type = "melee_hand"
 	}
 }
 

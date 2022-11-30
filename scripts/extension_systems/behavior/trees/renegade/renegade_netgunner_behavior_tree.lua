@@ -75,40 +75,27 @@ local behavior_tree = {
 			{
 				"BtRunAwayAction",
 				name = "run_away",
-				action_data = action_data.run_away,
-				leave_hook = {
-					hook = "set_component_value",
-					args = {
-						value = 0,
-						field = "shoot_net_cooldown",
-						component_name = "behavior"
-					}
-				}
+				leave_hook = "netgunner_reset_cooldown",
+				action_data = action_data.run_away
 			},
 			condition = "netgunner_hit_target",
 			name = "reload_then_run_sequence"
 		},
 		{
-			"BtSequenceNode",
+			"BtSelectorNode",
 			{
 				"BtRunAwayAction",
 				name = "run_away",
+				condition = "netgunner_is_on_cooldown",
 				action_data = action_data.run_away
 			},
 			{
 				"BtReloadAction",
 				name = "reload",
-				action_data = action_data.reload,
-				leave_hook = {
-					hook = "set_component_value",
-					args = {
-						value = 0,
-						field = "shoot_net_cooldown",
-						component_name = "behavior"
-					}
-				}
+				leave_hook = "netgunner_reset_cooldown",
+				action_data = action_data.reload
 			},
-			name = "run_then_reload_sequence"
+			name = "run_then_reload"
 		},
 		condition = "is_aggroed",
 		name = "attack_target"

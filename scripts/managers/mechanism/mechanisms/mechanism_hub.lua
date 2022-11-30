@@ -39,25 +39,6 @@ local function _fetch_client_data()
 	return Promise.resolved()
 end
 
-local function _update_hub_presence()
-	local wanted_presence = nil
-
-	if not wanted_presence then
-		local in_matchmaking = Managers.data_service.social:is_in_matchmaking()
-
-		if in_matchmaking then
-			wanted_presence = "matchmaking"
-		end
-	end
-
-	wanted_presence = wanted_presence or "hub"
-	local current_presence = Managers.presence:presence()
-
-	if wanted_presence ~= current_presence then
-		Managers.presence:set_presence(wanted_presence)
-	end
-end
-
 MechanismHub.wanted_transition = function (self)
 	local state = self._state
 
@@ -166,21 +147,6 @@ MechanismHub.wanted_transition = function (self)
 			end
 
 			return false
-		end
-
-		if not DEDICATED_SERVER then
-			if not self._player_unit_spawned then
-				local local_player_id = 1
-				local player = Managers.player:local_player(local_player_id)
-
-				if player:unit_is_alive() then
-					self._player_unit_spawned = true
-				end
-			end
-
-			if self._player_unit_spawned then
-				_update_hub_presence()
-			end
 		end
 
 		if self._refresh_vo_story_stage then

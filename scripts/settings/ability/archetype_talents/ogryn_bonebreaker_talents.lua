@@ -337,7 +337,7 @@ local archetype_talents = {
 			},
 			passive = {
 				buff_template_name = "ogryn_bonebreaker_bull_rush_hits_replenish_toughness",
-				identifier = "combat_ability"
+				identifier = "combat_ability_toughness"
 			}
 		}
 	}

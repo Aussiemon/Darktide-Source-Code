@@ -14,7 +14,7 @@ end
 templates.light_stun_movement_slow = {
 	unique_buff_id = "hit_reaction_movement_slow",
 	unique_buff_priority = 3,
-	duration = 0.75,
+	duration = 0.3,
 	class_name = "buff",
 	lerped_stat_buffs = {
 		[buff_stat_buffs.movement_speed] = {
@@ -27,7 +27,7 @@ templates.light_stun_movement_slow = {
 templates.medium_stun_movement_slow = {
 	unique_buff_id = "hit_reaction_movement_slow",
 	unique_buff_priority = 3,
-	duration = 0.75,
+	duration = 0.5,
 	class_name = "buff",
 	lerped_stat_buffs = {
 		[buff_stat_buffs.movement_speed] = {
@@ -178,7 +178,7 @@ templates.stun_immune_ultra_short = {
 }
 templates.stun_immune_short = {
 	unique_buff_id = "stun_immunity",
-	duration = 0.7,
+	duration = 1,
 	class_name = "buff",
 	keywords = {
 		buff_keywords.stun_immune
@@ -187,7 +187,7 @@ templates.stun_immune_short = {
 }
 templates.stun_immune_medium = {
 	unique_buff_id = "stun_immunity",
-	duration = 1.25,
+	duration = 1.5,
 	class_name = "buff",
 	keywords = {
 		buff_keywords.stun_immune
@@ -205,7 +205,7 @@ templates.stun_immune_long = {
 }
 templates.stun_immune_very_long = {
 	unique_buff_id = "stun_immunity",
-	duration = 1.5,
+	duration = 2,
 	class_name = "buff",
 	keywords = {
 		buff_keywords.stun_immune

@@ -52,7 +52,6 @@ StateLoading.on_enter = function (self, parent, params, creation_context)
 	}
 
 	Managers.player:on_game_state_enter(self, player_game_state_mapping, game_state_context)
-	Managers.presence:set_presence("loading")
 end
 
 StateLoading._start_loading = function (self)

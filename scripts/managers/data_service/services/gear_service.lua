@@ -134,9 +134,8 @@ end
 
 GearService.attach_item_as_override = function (self, item_id, attach_point, gear_id)
 	local backend_interface = self._backend_interface
-	local gear_promise = backend_interface.gear:attach_item_as_override(item_id, attach_point, gear_id)
 
-	return gear_promise:catch(function (errors)
+	return backend_interface.gear:attach_item_as_override(item_id, attach_point, gear_id):catch(function (errors)
 		local error_string = table.tostring(errors, 10)
 
 		Log.error("GearService", "Error attaching item as override: %s", error_string)

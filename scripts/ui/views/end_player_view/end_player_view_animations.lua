@@ -237,7 +237,9 @@ local function _create_count_up_animation(animation_table, value_name, value_gro
 		init = function (parent, ui_scenegraph, scenegraph_definition, widget, params)
 			params.value_name = value_name
 			local widget_style = widget.style
-			params.target_color = widget.content[value_name] > 0 and widget_style.in_focus_text_color or widget_style.dimmed_out_text_color
+			local content = widget.content
+			local content_value = content[value_name] or 0
+			params.target_color = content_value > 0 and widget_style.in_focus_text_color or widget_style.dimmed_out_text_color
 		end,
 		update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress, params)
 			local color_utils_color_lerp = _color_utils_color_lerp

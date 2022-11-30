@@ -52,6 +52,24 @@ local splash_definitions = {
 	{
 		{
 			vertical_alignment = "center",
+			type = "texture",
+			value = "content/ui/materials/backgrounds/splash_screen_partner_logos",
+			horizontal_alignment = "center",
+			position = {
+				0,
+				0,
+				11
+			},
+			size = {
+				1920,
+				1080
+			}
+		},
+		duration = 5
+	},
+	{
+		{
+			vertical_alignment = "center",
 			type = "rect",
 			horizontal_alignment = "center",
 			position = {

@@ -71,6 +71,7 @@ local create_notification_message = {
 				value = "content/ui/materials/backgrounds/terminal_notification",
 				style = {
 					vertical_alignment = "top",
+					scale_to_material = true,
 					horizontal_alignment = "right",
 					size_addition = {
 						0,
@@ -91,6 +92,7 @@ local create_notification_message = {
 				value = "content/ui/materials/base/ui_default_base",
 				style = {
 					vertical_alignment = "top",
+					scale_to_material = true,
 					horizontal_alignment = "right",
 					size = {
 						50,

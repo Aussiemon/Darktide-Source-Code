@@ -503,6 +503,10 @@ VivoxManager._handle_event = function (self, message)
 
 		local participant = self._sessions[message.session_handle].participants[message.participant_uri]
 
+		if not participant then
+			return
+		end
+
 		if participant.is_mute_status_set == true then
 			if participant.displayname_set ~= true and participant.player_info then
 				local displayname = self:_displayname_in_channel(participant, message.session_handle)

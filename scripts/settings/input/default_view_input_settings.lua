@@ -183,13 +183,13 @@ local default_view_input_settings = {
 			bindable = false
 		},
 		cycle_list_primary = {
-			"keyboard_tab",
 			"xbox_controller_left_thumb",
 			"ps4_controller_l3",
 			description = "loc_alias_view_cycle_list_primary",
 			bindable = false
 		},
 		cycle_list_secondary = {
+			"keyboard_tab",
 			"xbox_controller_right_thumb",
 			"ps4_controller_r3",
 			description = "loc_alias_view_cycle_list_secondary",
@@ -503,6 +503,10 @@ local default_view_input_settings = {
 			key_alias = "navigate_secondary_left",
 			type = "held"
 		},
+		navigate_secondary_left_down = {
+			key_alias = "navigate_secondary_left",
+			type = "button"
+		},
 		navigate_secondary_left_released = {
 			key_alias = "navigate_secondary_left",
 			type = "released"
@@ -514,6 +518,10 @@ local default_view_input_settings = {
 		navigate_secondary_right_held = {
 			key_alias = "navigate_secondary_right",
 			type = "held"
+		},
+		navigate_secondary_right_down = {
+			key_alias = "navigate_secondary_right",
+			type = "button"
 		},
 		navigate_secondary_right_released = {
 			key_alias = "navigate_secondary_right",

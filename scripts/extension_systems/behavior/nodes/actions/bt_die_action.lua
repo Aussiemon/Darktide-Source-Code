@@ -103,10 +103,21 @@ BtDieAction._set_dead = function (self, unit, scratchpad, breed, action_data, bl
 	end
 end
 
+local SHOOTING_RANGE_GAME_MODE_NAME = "shooting_range"
+
 BtDieAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
 	local ragdoll_timing = scratchpad.ragdoll_timing
 
 	if ragdoll_timing <= t then
+		local game_mode_name = Managers.state.game_mode:game_mode_name()
+		local game_mode_shooting_range = game_mode_name == SHOOTING_RANGE_GAME_MODE_NAME
+
+		if game_mode_shooting_range and not scratchpad.waited_one_frame then
+			scratchpad.waited_one_frame = true
+
+			return "running"
+		end
+
 		self:_set_dead(unit, scratchpad, breed, action_data, blackboard)
 	else
 		local death_component = scratchpad.death_component

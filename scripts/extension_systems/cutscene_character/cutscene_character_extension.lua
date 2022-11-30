@@ -13,6 +13,7 @@ local AnimationType = {
 }
 
 CutsceneCharacterExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
+	self._extension_manager = extension_init_context.extension_manager
 	self._unit = unit
 	self._is_server = extension_init_context.is_server
 	self._cinematic_name = CinematicSceneSettings.CINEMATIC_NAMES.none
@@ -28,11 +29,13 @@ CutsceneCharacterExtension.init = function (self, extension_init_context, unit, 
 end
 
 CutsceneCharacterExtension.destroy = function (self)
-	if Managers.state and Managers.state.extension then
-		local cutscene_character_system = Managers.state.extension:system("cutscene_character_system")
-
-		cutscene_character_system:unregister_cutscene_character(self)
+	if self._player_loadout_assigned then
+		self:unassign_player_loadout()
 	end
+
+	local cutscene_character_system = self._extension_manager:system("cutscene_character_system")
+
+	cutscene_character_system:unregister_cutscene_character(self)
 end
 
 CutsceneCharacterExtension.setup_from_component = function (self, cinematic_name, character_type, breed_name, prop_items, slot, inventory_animation_event)
@@ -46,11 +49,9 @@ CutsceneCharacterExtension.setup_from_component = function (self, cinematic_name
 		self._inventory_animation_event = inventory_animation_event
 	end
 
-	if Managers.state and Managers.state.extension then
-		local cutscene_character_system = Managers.state.extension:system("cutscene_character_system")
+	local cutscene_character_system = self._extension_manager:system("cutscene_character_system")
 
-		cutscene_character_system:register_cutscene_character(self)
-	end
+	cutscene_character_system:register_cutscene_character(self)
 end
 
 CutsceneCharacterExtension.cinematic_name = function (self)
@@ -111,12 +112,9 @@ local function _check_component_amount(unit, components, component_name)
 end
 
 CutsceneCharacterExtension._clear_loadout = function (self)
-	if not Managers.state or not Managers.state.extension then
-		return
-	end
-
+	local extension_manager = self._extension_manager
 	local player_character_unit = self._unit
-	local component_system = Managers.state.extension:system("component_system")
+	local component_system = extension_manager:system("component_system")
 	local player_customization_components = component_system:get_components(player_character_unit, "PlayerCustomization")
 	self._equipped_weapon = nil
 
@@ -124,22 +122,15 @@ CutsceneCharacterExtension._clear_loadout = function (self)
 		local player_customization_component = player_customization_components[1]
 
 		player_customization_component:unspawn_items()
-
-		return true
 	end
-
-	return false
 end
 
 local prop_items = {}
 
 CutsceneCharacterExtension._set_loadout = function (self, items)
-	if not Managers.state or not Managers.state.extension then
-		return
-	end
-
+	local extension_manager = self._extension_manager
 	local player_character_unit = self._unit
-	local component_system = Managers.state.extension:system("component_system")
+	local component_system = extension_manager:system("component_system")
 	local player_customization_components = component_system:get_components(player_character_unit, "PlayerCustomization")
 
 	if _check_component_amount(player_character_unit, player_customization_components, "PlayerCustomization") then
@@ -237,21 +228,25 @@ CutsceneCharacterExtension.assign_player_loadout = function (self, player_unique
 			self._packages_loading = self._packages_loading + 1
 		end
 	end
+
+	self._player_loadout_assigned = true
 end
 
 CutsceneCharacterExtension.unassign_player_loadout = function (self)
-	if self:_clear_loadout() then
-		local package_manager = Managers.package
+	self._player_loadout_assigned = false
 
-		for id, _ in pairs(self._resource_list) do
-			package_manager:release(id)
-		end
+	self:_clear_loadout()
 
-		table.clear(self._resource_list)
+	local package_manager = Managers.package
 
-		self._player_unique_id = nil
-		self._packages_loading = 0
+	for id, _ in pairs(self._resource_list) do
+		package_manager:release(id)
 	end
+
+	table.clear(self._resource_list)
+
+	self._player_unique_id = nil
+	self._packages_loading = 0
 end
 
 CutsceneCharacterExtension.set_equipped_weapon = function (self, weapon)

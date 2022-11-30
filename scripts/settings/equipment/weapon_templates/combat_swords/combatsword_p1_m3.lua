@@ -1117,16 +1117,45 @@ weapon_template.overclocks = {
 		combatsword_p1_m1_mobility_stat = -0.1
 	}
 }
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	combatsword_p1_m1_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
 			action_left_light = {
-				damage_trait_templates.combatsword_dps_stat
+				damage_trait_templates.combatsword_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.combatsword_dps_stat
+				damage_trait_templates.combatsword_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.combatsword_dps_stat
@@ -1150,7 +1179,24 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_light = {
-				damage_trait_templates.combatsword_cleave_damage_stat
+				damage_trait_templates.combatsword_cleave_damage_stat,
+				display_data = {
+					display_stats = {
+						armor_damage_modifier = {
+							attack = {
+								[armor_types.armored] = {
+									display_name = "loc_weapon_stats_display_cleave_armored"
+								},
+								[armor_types.unarmored] = {
+									display_name = "loc_weapon_stats_display_cleave_unarmored"
+								},
+								[armor_types.disgustingly_resilient] = {
+									display_name = "loc_weapon_stats_display_cleave_disgustingly_resilient"
+								}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
 				damage_trait_templates.combatsword_cleave_damage_stat
@@ -1177,10 +1223,30 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_light = {
-				damage_trait_templates.combatsword_finesse_stat
+				damage_trait_templates.combatsword_finesse_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								boost_curve_multiplier_finesse = {}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.combatsword_finesse_stat
+				damage_trait_templates.combatsword_finesse_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								boost_curve_multiplier_finesse = {}
+							}
+						}
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.combatsword_finesse_stat
@@ -1200,10 +1266,22 @@ weapon_template.base_stats = {
 		},
 		weapon_handling = {
 			action_left_light = {
-				weapon_handling_trait_templates.default_finesse_stat
+				weapon_handling_trait_templates.default_finesse_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_left_heavy = {
-				weapon_handling_trait_templates.default_finesse_stat
+				weapon_handling_trait_templates.default_finesse_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_right_light = {
 				weapon_handling_trait_templates.default_finesse_stat
@@ -1227,10 +1305,22 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_light = {
-				damage_trait_templates.combatsword_cleave_targets_stat
+				damage_trait_templates.combatsword_cleave_targets_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.combatsword_cleave_targets_stat
+				damage_trait_templates.combatsword_cleave_targets_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.combatsword_cleave_targets_stat
@@ -1254,17 +1344,20 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		dodge = {
 			base = {
-				dodge_trait_templates.default_dodge_stat
+				dodge_trait_templates.default_dodge_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		sprint = {
 			base = {
-				sprint_trait_templates.default_sprint_stat
+				sprint_trait_templates.default_sprint_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		movement_curve_modifier = {
 			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	}
@@ -1280,7 +1373,6 @@ table.append(weapon_template.traits, bespoke_combatsword_p1_traits)
 
 weapon_template.perks = {
 	combatsword_p1_m1_dps_perk = {
-		description = "loc_trait_description_combatsword_p1_m1_dps_perk",
 		display_name = "loc_stats_display_damage_stat",
 		damage = {
 			action_left_light = {
@@ -1301,7 +1393,6 @@ weapon_template.perks = {
 		}
 	},
 	combatsword_p1_m1_cleave_damage_perk = {
-		description = "loc_trait_description_combatsword_p1_m1_cleave_damage_perk",
 		display_name = "loc_trait_display_combatsword_p1_m1_cleave_damage_perk",
 		damage = {
 			action_left_light = {
@@ -1322,7 +1413,6 @@ weapon_template.perks = {
 		}
 	},
 	combatsword_p1_m1_finesse_perk = {
-		description = "loc_trait_description_combatsword_p1_m1_finesse_perk",
 		display_name = "loc_trait_display_combatsword_p1_m1_finesse_perk",
 		damage = {
 			action_left_light = {
@@ -1360,7 +1450,6 @@ weapon_template.perks = {
 		}
 	},
 	combatsword_p1_m1_cleave_targets_perk = {
-		description = "loc_trait_description_combatsword_p1_m1_cleave_targets_perk",
 		display_name = "loc_trait_display_combatsword_p1_m1_cleave_targets_perk",
 		damage = {
 			action_left_light = {
@@ -1381,7 +1470,6 @@ weapon_template.perks = {
 		}
 	},
 	combatsword_p1_m1_mobility_perk = {
-		description = "loc_trait_description_combatsword_p1_m1_mobility_perk",
 		display_name = "loc_trait_display_combatsword_p1_m1_mobility_perk",
 		dodge = {
 			base = {
@@ -1427,9 +1515,11 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	special = {
+		desc = "loc_weapon_special_parry_desc",
 		display_name = "loc_weapon_special_parry",
 		type = "defence"
 	}
 }
+weapon_template.special_action_name = "action_attack_special"
 
 return weapon_template

@@ -27,7 +27,7 @@ local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {
-	smart_targeting_template = SmartTargetingTemplates.force_staff_single_target,
+	smart_targeting_template = SmartTargetingTemplates.default_melee,
 	action_inputs = {
 		shoot_pressed = {
 			buffer_time = 0.15,
@@ -39,7 +39,7 @@ local weapon_template = {
 				}
 			}
 		},
-		charge_flame = {
+		charge = {
 			buffer_time = 0.1,
 			input_sequence = {
 				{
@@ -48,7 +48,7 @@ local weapon_template = {
 				}
 			}
 		},
-		charge_flame_release = {
+		charge_release = {
 			buffer_time = 0.417,
 			input_sequence = {
 				{
@@ -161,12 +161,12 @@ table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inp
 weapon_template.action_input_hierarchy = {
 	wield = "stay",
 	shoot_pressed = "stay",
-	charge_flame = {
-		grenade_ability = "base",
+	charge = {
+		charge_release = "base",
 		wield = "base",
+		grenade_ability = "base",
 		vent = "base",
 		combat_ability = "base",
-		charge_flame_release = "base",
 		trigger_charge_flame = {
 			vent = "base",
 			cancel_flame = "base"
@@ -182,12 +182,9 @@ weapon_template.action_input_hierarchy = {
 		special_action = "base",
 		special_action_light = "base",
 		special_action_heavy = "base",
-		charge_flame = "base",
-		vent = "base",
-		grenade_ability = "base",
-		combat_ability = "base",
 		wield = "base",
-		shoot_pressed = "base"
+		grenade_ability = "base",
+		combat_ability = "base"
 	}
 }
 weapon_template.burninating_template = "forcestaff_p2_m1"
@@ -277,7 +274,7 @@ weapon_template.actions = {
 				action_name = "action_shoot_flame",
 				chain_time = 0.65
 			},
-			charge_flame = {
+			charge = {
 				action_name = "action_charge_flame",
 				chain_time = 0.65
 			},
@@ -317,7 +314,7 @@ weapon_template.actions = {
 	action_charge_flame = {
 		crosshair_type = "charge_up",
 		overload_module_class_name = "warp_charge",
-		start_input = "charge_flame",
+		start_input = "charge",
 		kind = "overload_charge",
 		keep_combo_on_start = true,
 		sprint_ready_up_time = 0.25,
@@ -328,7 +325,7 @@ weapon_template.actions = {
 		charge_template = "forcestaff_p2_m1_charge",
 		anim_event_3p = "attack_charge_flame_start",
 		anim_event = "attack_charge_flame_start",
-		stop_input = "charge_flame_release",
+		stop_input = "charge_release",
 		total_time = math.huge,
 		action_movement_curve = {
 			{
@@ -500,7 +497,7 @@ weapon_template.actions = {
 				reset_combo = true,
 				action_name = "action_shoot_flame"
 			},
-			charge_flame = {
+			charge = {
 				action_name = "action_charge_flame",
 				chain_time = 1
 			},
@@ -630,7 +627,7 @@ weapon_template.actions = {
 				reset_combo = true,
 				action_name = "action_shoot_flame"
 			},
-			charge_flame = {
+			charge = {
 				action_name = "action_charge_flame",
 				chain_time = 0.5
 			},
@@ -720,7 +717,7 @@ weapon_template.actions = {
 				reset_combo = true,
 				action_name = "action_shoot_flame"
 			},
-			charge_flame = {
+			charge = {
 				action_name = "action_charge_flame",
 				chain_time = 0.5
 			},
@@ -814,7 +811,7 @@ weapon_template.actions = {
 				reset_combo = true,
 				action_name = "action_shoot_flame"
 			},
-			charge_flame = {
+			charge = {
 				action_name = "action_charge_flame",
 				chain_time = 1
 			},
@@ -905,7 +902,7 @@ weapon_template.actions = {
 				reset_combo = true,
 				action_name = "action_shoot_flame"
 			},
-			charge_flame = {
+			charge = {
 				action_name = "action_charge_flame",
 				chain_time = 0.7
 			},
@@ -1029,24 +1026,67 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.warp_charge_template = "forcestaff_p2_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	forcestaff_p2_m1_damage_stat = {
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		weapon_handling = {
 			action_shoot_flame = {
-				weapon_handling_trait_templates.forcestaff_p2_m1_ramp_up_stat
+				weapon_handling_trait_templates.forcestaff_p2_m1_ramp_up_stat,
+				display_data = {
+					prefix = "loc_ingame_action_one",
+					display_stats = {
+						__all_basic_stats = true
+					},
+					display_group_stats = {
+						flamer_ramp_up_times = {}
+					}
+				}
 			},
 			action_shoot_charged_flame = {
-				weapon_handling_trait_templates.forcestaff_p2_m1_ramp_up_stat
+				weapon_handling_trait_templates.forcestaff_p2_m1_ramp_up_stat,
+				display_data = {
+					prefix = "loc_ingame_action_two",
+					display_stats = {
+						__all_basic_stats = true
+					},
+					display_group_stats = {
+						flamer_ramp_up_times = {}
+					}
+				}
 			}
 		},
 		damage = {
 			action_shoot_flame = {
-				damage_trait_templates.forcestaff_p2_m1_braced_dps_stat
+				damage_trait_templates.forcestaff_p2_m1_braced_dps_stat,
+				display_data = {
+					prefix = "loc_ingame_action_one",
+					display_stats = {
+						targets = {
+							default_target = {
+								power_distribution = {
+									attack = {}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_shoot_charged_flame = {
-				damage_trait_templates.forcestaff_p2_m1_braced_dps_stat
+				damage_trait_templates.forcestaff_p2_m1_braced_dps_stat,
+				display_data = {
+					prefix = "loc_ingame_action_two",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	},
@@ -1055,7 +1095,8 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		burninating = {
 			base = {
-				burninating_trait_templates.forcestaff_p2_m1_burninating_stat
+				burninating_trait_templates.forcestaff_p2_m1_burninating_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
@@ -1064,7 +1105,8 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		warp_charge = {
 			base = {
-				warp_charge_trait_templates.forcestaff_p2_m1_vent_speed_stat
+				warp_charge_trait_templates.forcestaff_p2_m1_vent_speed_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
@@ -1073,20 +1115,32 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		size_of_flame = {
 			base = {
-				size_of_flame_trait_templates.forcestaff_p2_m1_size_of_flame_stat
+				size_of_flame_trait_templates.forcestaff_p2_m1_size_of_flame_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
 	forcestaff_p2_m1_warp_charge_cost_stat = {
-		description = "loc_trait_description_forcestaff_p1_m1_warp_charge_cost_stat",
 		display_name = "loc_stats_display_warp_resist_stat",
 		is_stat_trait = true,
 		charge = {
 			action_shoot_flame = {
-				charge_trait_templates.forcestaff_p2_m1_warp_charge_cost_stat
+				charge_trait_templates.forcestaff_p2_m1_warp_charge_cost_stat,
+				display_data = {
+					prefix = "loc_ingame_action_one",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_charge_flame = {
-				charge_trait_templates.forcestaff_p2_m1_warp_charge_cost_stat
+				charge_trait_templates.forcestaff_p2_m1_warp_charge_cost_stat,
+				display_data = {
+					prefix = "loc_ingame_action_two",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_shoot_charged_flame = {
 				charge_trait_templates.forcestaff_p2_m1_warp_charge_cost_stat
@@ -1129,9 +1183,11 @@ weapon_template.displayed_attacks = {
 		type = "charge"
 	},
 	special = {
+		desc = "loc_stats_special_action_melee_weapon_bash_forcestaff_desc",
 		display_name = "loc_forcestaff_p1_m1_attack_special",
 		type = "melee_hand"
 	}
 }
+weapon_template.special_action_name = "action_stab"
 
 return weapon_template

@@ -146,7 +146,8 @@ MissionIntroView._initialize_background_world = function (self)
 	local world_name = MissionIntroViewSettings.world_name
 	local world_layer = MissionIntroViewSettings.world_layer
 	local world_timer_name = MissionIntroViewSettings.timer_name
-	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
+	local optional_flags = MissionIntroViewSettings.world_custom_flags
+	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name, optional_flags)
 	local level_name = MissionIntroViewSettings.level_name
 
 	self._world_spawner:spawn_level(level_name)

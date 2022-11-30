@@ -140,12 +140,29 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	self._player = player
 
 	if supported_features.name then
-		local my_player = parent:player()
-		local profile = my_player and my_player:profile()
-		local current_level = profile.current_level or 1
+		self:_update_player_name_prefix(player)
 
-		if current_level ~= self._current_level then
-			local player_name = player:name()
+		local profile = player and player:profile()
+		local current_level = profile and profile.current_level
+		local update_name = false
+
+		if supported_features.level and current_level ~= self._current_level then
+			update_name = true
+		end
+
+		local player_name = player and player:name()
+
+		if player_name ~= self._current_player_name then
+			update_name = true
+		end
+
+		if self._current_used_player_name_prefix ~= self._player_name_prefix then
+			update_name = true
+		end
+
+		if update_name then
+			self._current_player_name = player_name
+			self._current_used_player_name_prefix = self._player_name_prefix
 
 			if self._player_name_prefix then
 				player_name = self._player_name_prefix .. player_name
@@ -156,6 +173,8 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 			end
 
 			self:_set_player_name(player_name, current_level)
+
+			self._current_level = current_level
 		end
 	end
 
@@ -392,8 +411,6 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 			self:_update_pocketable_presentation(pocketable_hud_icon, pocketable_visible, ui_renderer)
 		end
 	end
-
-	self:_update_player_name_prefix()
 
 	local player_status = false
 	local player_status_changed = false
@@ -657,7 +674,7 @@ HudElementPlayerPanelBase._get_weapon_throwables_status = function (self, abilit
 	end
 
 	local equipped_abilities = ability_extension:equipped_abilities()
-	local ability_id = "combat_ability"
+	local ability_id = "grenade_ability"
 
 	if not equipped_abilities[ability_id] then
 		return max_status
@@ -1253,15 +1270,14 @@ end
 
 local temp_player_color = UIHudSettings.color_tint_0
 
-HudElementPlayerPanelBase._update_player_name_prefix = function (self)
-	local my_player = self._data.player
-	local player_slot = my_player and my_player.slot and my_player:slot()
+HudElementPlayerPanelBase._update_player_name_prefix = function (self, player)
+	local player_slot = player and player.slot and player:slot()
 
-	if player_slot ~= self._my_player_slot then
+	if player_slot ~= self._player_slot then
 		local player_slot_colors = UISettings.player_slot_colors
 		local color = player_slot_colors[player_slot] or temp_player_color
-		self._my_player_slot = player_slot
-		local profile = my_player and my_player:profile()
+		self._player_slot = player_slot
+		local profile = player and player:profile()
 		local archetype = profile and profile.archetype
 		local string_symbol = archetype.string_symbol
 		local supported_features = self._supported_features

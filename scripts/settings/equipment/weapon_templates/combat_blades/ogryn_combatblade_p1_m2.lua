@@ -9,6 +9,7 @@ local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WeaponTraitsBespokeOgrynCombatbladeP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_combatblade_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
@@ -18,6 +19,7 @@ local default_hit_zone_priority = ActionSweepSettings.default_hit_zone_priority
 local buff_stat_buffs = BuffSettings.stat_buffs
 local template_types = WeaponTweakTemplateSettings.template_types
 local wounds_shapes = WoundsSettings.shapes
+local armor_types = ArmorSettings.types
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
@@ -148,48 +150,48 @@ weapon_template.actions = {
 		end
 	},
 	action_left_light = {
-		damage_window_start = 0.4,
+		damage_window_start = 0.3,
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
 		first_person_hit_anim = "hit_left_shake",
 		range_mod = 1.25,
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
-		weapon_handling_template = "time_scale_1_3",
-		damage_window_end = 0.6,
+		weapon_handling_template = "time_scale_1",
+		damage_window_end = 0.4666666666666667,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_left_diagonal",
 		anim_event = "attack_swing_left",
 		power_level = 500,
-		total_time = 1.5,
+		total_time = 1.15,
 		action_movement_curve = {
 			{
 				modifier = 1,
-				t = 0.15
+				t = 0.11
 			},
 			{
 				modifier = 0.8,
-				t = 0.2
+				t = 0.15
 			},
 			{
 				modifier = 1.5,
-				t = 0.25
+				t = 0.19
 			},
 			{
 				modifier = 1.4,
-				t = 0.4
+				t = 0.31
 			},
 			{
 				modifier = 1,
-				t = 0.5
+				t = 0.38
 			},
 			{
 				modifier = 0.5,
-				t = 0.6
+				t = 0.46
 			},
 			{
 				modifier = 1,
-				t = 1
+				t = 0.77
 			},
 			start_modifier = 0.2
 		},
@@ -205,15 +207,15 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.55
+				chain_time = 0.42
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.85
+				chain_time = 0.65
 			},
 			special_action = {
 				action_name = "action_special_uppercut",
-				chain_time = 0.3
+				chain_time = 0.23
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -468,17 +470,17 @@ weapon_template.actions = {
 	},
 	action_right_heavy = {
 		damage_window_start = 0.23333333333333334,
-		hit_armor_anim = "attack_hit",
+		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
 		range_mod = 1.25,
-		first_person_hit_stop_anim = "hit_right_shake",
+		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
 		weapon_handling_template = "time_scale_1",
 		damage_window_end = 0.3333333333333333,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_heavy_down_left",
-		anim_event = "attack_swing_heavy_down",
+		anim_event = "attack_swing_heavy_down_left",
 		power_level = 500,
 		total_time = 2,
 		action_movement_curve = {
@@ -530,9 +532,9 @@ weapon_template.actions = {
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = default_weapon_box,
 		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/heavy_swing_down_left",
+			matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/heavy_swing_down_left",
 			anchor_point_offset = {
-				0,
+				0.32,
 				0,
 				0
 			}
@@ -752,40 +754,40 @@ weapon_template.actions = {
 		}
 	},
 	action_right_light_pushfollow = {
-		damage_window_start = 0.5333333333333333,
+		damage_window_start = 0.3,
 		hit_armor_anim = "attack_hit_shield",
 		anim_end_event = "attack_finished",
 		kind = "sweep",
 		first_person_hit_anim = "hit_left_shake",
 		range_mod = 1.4,
 		first_person_hit_stop_anim = "hit_left_shake",
-		weapon_handling_template = "time_scale_1_75",
+		weapon_handling_template = "time_scale_1",
 		attack_direction_override = "push",
-		damage_window_end = 0.6333333333333333,
+		damage_window_end = 0.36666666666666664,
 		anim_event_3p = "attack_swing_left_diagonal",
 		anim_event = "attack_swing_up_left",
 		power_level = 500,
-		total_time = 2.5,
+		total_time = 1.42,
 		action_movement_curve = {
 			{
 				modifier = 1.2,
-				t = 0.2
+				t = 0.1
 			},
 			{
 				modifier = 1.15,
-				t = 0.4
+				t = 0.2
 			},
 			{
 				modifier = 0.45,
-				t = 0.45
+				t = 0.24
 			},
 			{
 				modifier = 0.6,
-				t = 0.65
+				t = 0.32
 			},
 			{
 				modifier = 1,
-				t = 1
+				t = 0.6
 			},
 			start_modifier = 1.4
 		},
@@ -801,15 +803,15 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.7
+				chain_time = 0.4
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 1.85
+				chain_time = 1.05
 			},
 			special_action = {
 				action_name = "action_special_uppercut",
-				chain_time = 0.75
+				chain_time = 0.43
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1029,9 +1031,9 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_combat_blade
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	ogryn_combatblade_p1_m1_dps_stat = {
-		description = "loc_trait_description_ogryn_combatblade_p1_m1_dps_stat",
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
@@ -1039,10 +1041,38 @@ weapon_template.base_stats = {
 				damage_trait_templates.default_melee_dps_stat
 			},
 			action_right_heavy = {
-				damage_trait_templates.default_melee_dps_stat
+				damage_trait_templates.default_melee_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_left_light = {
-				damage_trait_templates.default_melee_dps_stat
+				damage_trait_templates.default_melee_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.default_melee_dps_stat
@@ -1056,7 +1086,6 @@ weapon_template.base_stats = {
 		}
 	},
 	ogryn_combatblade_p1_m1_armor_pierce_stat = {
-		description = "loc_trait_description_ogryn_combatblade_p1_m1_armor_pierce_stat",
 		display_name = "loc_stats_display_ap_stat",
 		is_stat_trait = true,
 		damage = {
@@ -1064,10 +1093,34 @@ weapon_template.base_stats = {
 				damage_trait_templates.default_armor_pierce_stat
 			},
 			action_right_heavy = {
-				damage_trait_templates.default_armor_pierce_stat
+				damage_trait_templates.default_armor_pierce_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								armor_damage_modifier = {
+									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
+								}
+							}
+						}
+					}
+				}
 			},
 			action_left_light = {
-				damage_trait_templates.default_armor_pierce_stat
+				damage_trait_templates.default_armor_pierce_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								armor_damage_modifier = {
+									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
+								}
+							}
+						}
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.default_armor_pierce_stat
@@ -1081,7 +1134,6 @@ weapon_template.base_stats = {
 		}
 	},
 	ogryn_combatblade_p1_m1_first_target_stat = {
-		description = "loc_trait_description_ogryn_combatblade_p1_m1_first_target_stat",
 		display_name = "loc_stats_display_first_target_stat",
 		is_stat_trait = true,
 		damage = {
@@ -1089,10 +1141,22 @@ weapon_template.base_stats = {
 				damage_trait_templates.default_first_target_stat
 			},
 			action_right_heavy = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.default_first_target_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_left_light = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.default_first_target_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.default_first_target_stat
@@ -1106,7 +1170,6 @@ weapon_template.base_stats = {
 		}
 	},
 	ogryn_combatblade_p1_m1_cleave_stat = {
-		description = "loc_trait_description_ogryn_combatblade_p1_m1_cleave_stat",
 		display_name = "loc_stats_display_cleave_damage_stat",
 		is_stat_trait = true,
 		damage = {
@@ -1114,10 +1177,22 @@ weapon_template.base_stats = {
 				damage_trait_templates.ogryn_combatblade_p1_m1_cleave_stat
 			},
 			action_right_heavy = {
-				damage_trait_templates.ogryn_combatblade_p1_m1_cleave_stat
+				damage_trait_templates.ogryn_combatblade_p1_m1_cleave_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_left_light = {
-				damage_trait_templates.ogryn_combatblade_p1_m1_cleave_stat
+				damage_trait_templates.ogryn_combatblade_p1_m1_cleave_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.ogryn_combatblade_p1_m1_cleave_stat
@@ -1128,22 +1203,24 @@ weapon_template.base_stats = {
 		}
 	},
 	ogryn_combatblade_p1_m1_mobility_stat = {
-		description = "loc_trait_description_ogryn_combatblade_p1_m1_mobility_stat",
 		display_name = "loc_stats_display_mobility_stat",
 		is_stat_trait = true,
 		dodge = {
 			base = {
-				dodge_trait_templates.default_dodge_stat
+				dodge_trait_templates.default_dodge_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		sprint = {
 			base = {
-				sprint_trait_templates.default_sprint_stat
+				sprint_trait_templates.default_sprint_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		movement_curve_modifier = {
 			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	}
@@ -1162,7 +1239,8 @@ weapon_template.displayed_keywords = {
 		display_name = "loc_weapon_keyword_fast_attack"
 	},
 	{
-		display_name = "loc_weapon_keyword_high_cleave"
+		display_name = "loc_weapon_keyword_high_cleave",
+		description = "loc_weapon_stats_display_high_cleave_desc"
 	}
 }
 weapon_template.displayed_attacks = {
@@ -1172,7 +1250,7 @@ weapon_template.displayed_attacks = {
 		attack_chain = {
 			"linesman",
 			"linesman",
-			"smiter"
+			"linesman"
 		}
 	},
 	secondary = {
@@ -1184,6 +1262,7 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	special = {
+		desc = "loc_stats_special_action_special_attack_ogryn_combatblade_p1m1_desc",
 		display_name = "loc_weapon_special_fist_attack",
 		type = "melee_hand"
 	}
@@ -1199,5 +1278,7 @@ weapon_template.weapon_special_action_none_screen_ui_validation = function (wiel
 
 	return correct_scenario and not special_active and (not current_action_name or current_action_name == "none")
 end
+
+weapon_template.special_action_name = "action_special_uppercut"
 
 return weapon_template

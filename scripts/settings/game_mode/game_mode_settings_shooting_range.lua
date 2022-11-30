@@ -6,7 +6,6 @@ local settings = {
 	bot_backfilling_allowed = false,
 	class_file_name = "scripts/managers/game_mode/game_modes/game_mode_training_grounds",
 	disable_hologram = true,
-	presence_name = "training_grounds",
 	use_side_color = false,
 	states = {
 		"loading",
@@ -35,7 +34,7 @@ local settings = {
 		}
 	},
 	hud_settings = {
-		player_composition = "players"
+		player_composition = "party"
 	},
 	hotkeys = {
 		hotkey_system = "system_view"

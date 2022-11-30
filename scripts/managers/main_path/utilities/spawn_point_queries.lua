@@ -174,6 +174,8 @@ local function _remove_invalid_occluded_positions(valid_enemy_player_units_posit
 	end
 end
 
+local MIN_WANTED_OCCLUDED_POSITIONS = 3
+
 SpawnPointQueries.get_occluded_positions = function (nav_world, nav_spawn_points, from_position, side, offset_range, num_groups, optional_min_distance, optional_max_distance, optional_initial_offset, optional_only_search_forward)
 	local valid_enemy_player_units_positions = side.valid_enemy_player_units_positions
 	local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, from_position)
@@ -219,17 +221,20 @@ SpawnPointQueries.get_occluded_positions = function (nav_world, nav_spawn_points
 		end
 
 		for i = end_index, start_index, -1 do
-			occluded_positions = SpawnPointQueries.occluded_positions_in_group(nav_world, nav_spawn_points, i, valid_enemy_player_units_positions)
+			if occluded_positions then
+				table.append(occluded_positions, SpawnPointQueries.occluded_positions_in_group(nav_world, nav_spawn_points, i, valid_enemy_player_units_positions))
+			else
+				occluded_positions = SpawnPointQueries.occluded_positions_in_group(nav_world, nav_spawn_points, i, valid_enemy_player_units_positions)
+			end
+
 			num_occluded_positions = #occluded_positions
 
 			if occluded_positions and num_occluded_positions > 0 then
 				if optional_min_distance or optional_max_distance then
 					_remove_invalid_occluded_positions(valid_enemy_player_units_positions, occluded_positions, num_occluded_positions, optional_min_distance, optional_max_distance)
+				end
 
-					if #occluded_positions > 0 then
-						break
-					end
-				else
+				if MIN_WANTED_OCCLUDED_POSITIONS <= #occluded_positions then
 					break
 				end
 			elseif i == 1 or i == num_groups then

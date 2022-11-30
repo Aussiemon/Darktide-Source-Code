@@ -156,7 +156,9 @@ ProgressionManager.fetch_session_report_server = function (self, session_id)
 		Log.error("ProgressionManager", "Error fetching session_report_server: %s", error)
 
 		self._session_report_state = SESSION_REPORT_STATES.fail
-		self._game_score_end_time = EndViewSettings.max_duration
+		local t = Managers.time:time("main")
+		local server_time = math.floor(Managers.backend:get_server_time(t) / 1000)
+		self._game_score_end_time = server_time + EndViewSettings.max_duration
 
 		self:_sync_game_score_end_time()
 	end)
@@ -598,11 +600,11 @@ ProgressionManager._level_up = function (self, stats, target_level)
 
 		return self:_check_level_up(progression_info)
 	end):catch(function (error)
-		self._session_report_state = SESSION_REPORT_STATES.fail
+		self._session_report_state = SESSION_REPORT_STATES.success
 
 		_info("Failed level_up, error: %s", error)
 
-		return Promise.rejected(error)
+		return Promise.resolved()
 	end)
 end
 
@@ -977,6 +979,64 @@ ProgressionManager.update = function (self, dt, t)
 
 		self._fetch_session_report_at = nil
 	end
+end
+
+ProgressionManager.check_level_up_pending = function (self)
+	local local_player_id = 1
+	local local_player = Managers.player:local_player(local_player_id)
+	local character_id = local_player:character_id()
+
+	self._backend_interface.progression:get_entity_type_progression("character"):next(function (characters_progression)
+		for i, stats in ipairs(characters_progression) do
+			local id = stats.id
+
+			if id == character_id and self:_have_level_up_pending(stats) then
+				self:_do_level_up_pending(stats)
+			end
+		end
+	end):catch(function (error)
+		_info("Failed check_level_up_pending, error: %s", error)
+	end)
+end
+
+ProgressionManager._have_level_up_pending = function (self, stats)
+	local needed_xp_for_next_level = stats.neededXpForNextLevel
+	local have_level_up_pending = needed_xp_for_next_level == 0
+
+	return have_level_up_pending
+end
+
+ProgressionManager._do_level_up_pending = function (self, stats)
+	local current_level = stats.currentLevel
+	local target_level = current_level + 1
+
+	_info("Leveling up pending level " .. stats.type .. " to %s ...", target_level)
+
+	return self._progression:level_up(stats.type, stats.id, target_level):next(function (data)
+		_info("level_up pending level %s: %s", stats.type, table.tostring(data, 6))
+
+		local progression_info = data.progressionInfo
+
+		if self:_have_level_up_pending(progression_info) then
+			self:_do_level_up_pending(progression_info)
+		else
+			self:_refresh_profiles()
+		end
+	end):catch(function (error)
+		_info("Failed level_up pending level, error: %s", error)
+	end)
+end
+
+ProgressionManager._refresh_profiles = function (self)
+	Managers.data_service.profiles:fetch_all_profiles():next(function (profile_data)
+		local selected_profile = profile_data.selected_profile
+		local local_player_id = 1
+		local local_player = Managers.player:local_player(local_player_id)
+
+		local_player:set_profile(selected_profile)
+	end):catch(function (error)
+		_info("Failed refresh_profiles, error: %s", error)
+	end)
 end
 
 return ProgressionManager

@@ -50,6 +50,8 @@ UIManager.init = function (self)
 	local shading_environment = nil
 	self._viewport = self:create_viewport(self._world, viewport_name, viewport_type, viewport_layer, shading_environment)
 	self._viewport_name = viewport_name
+	self._single_icon_renderers = {}
+	self._single_icon_renderers_marked_for_destruction_array = {}
 
 	self:_setup_icon_renderers()
 
@@ -132,6 +134,54 @@ UIManager._setup_icon_renderers = function (self)
 	back_buffer_render_handlers.weapons = WeaponIconUI:new()
 	back_buffer_render_handlers.icon = ItemIconLoaderUI:new()
 	self._back_buffer_render_handlers = back_buffer_render_handlers
+end
+
+UIManager.create_single_icon_renderer = function (self, render_type, id, settings)
+	local single_icon_renderers = self._single_icon_renderers
+	local instance = nil
+
+	if render_type == "weapon" then
+		instance = WeaponIconUI:new(settings)
+	else
+		instance = PortraitUI:new(settings)
+	end
+
+	single_icon_renderers[id] = instance
+
+	return instance
+end
+
+UIManager.destroy_single_icon_renderer = function (self, id)
+	local single_icon_renderers = self._single_icon_renderers
+	local instance = single_icon_renderers[id]
+	local single_icon_renderers_marked_for_destruction_array = self._single_icon_renderers_marked_for_destruction_array
+	single_icon_renderers_marked_for_destruction_array[#single_icon_renderers_marked_for_destruction_array + 1] = instance
+	self._single_icon_renderers_destruction_frame_counter = 2
+
+	instance:prepare_for_destruction()
+
+	single_icon_renderers[id] = nil
+end
+
+UIManager._handle_single_icon_renderer_destruction = function (self, dt)
+	if not self._single_icon_renderers_destruction_frame_counter then
+		return
+	elseif self._single_icon_renderers_destruction_frame_counter > 0 then
+		self._single_icon_renderers_destruction_frame_counter = self._single_icon_renderers_destruction_frame_counter - 1
+
+		return
+	end
+
+	local single_icon_renderers_marked_for_destruction_array = self._single_icon_renderers_marked_for_destruction_array
+
+	for i = #single_icon_renderers_marked_for_destruction_array, 1, -1 do
+		local instance = single_icon_renderers_marked_for_destruction_array[i]
+		single_icon_renderers_marked_for_destruction_array[i] = nil
+
+		instance:destroy()
+	end
+
+	self._single_icon_renderers_destruction_frame_counter = nil
 end
 
 UIManager.renderer_by_name = function (self, name)
@@ -664,6 +714,12 @@ UIManager.destroy = function (self)
 	self._viewport_name = nil
 	self._world = nil
 
+	if self._single_icon_renderers_destruction_frame_counter then
+		self._single_icon_renderers_destruction_frame_counter = 0
+
+		self:_handle_single_icon_renderer_destruction()
+	end
+
 	Managers.time:unregister_timer(self._timer_name)
 
 	self._timer_name = nil
@@ -720,6 +776,8 @@ UIManager._handle_resolution_modified = function (self)
 end
 
 UIManager.update = function (self, dt, t)
+	self:_handle_single_icon_renderer_destruction()
+
 	if self._update_hotkeys then
 		self:_update_view_hotkeys()
 
@@ -1011,7 +1069,14 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 	end
 
 	local presence = Managers.presence:presence()
-	local presence_info = string.format("Presence: %s", presence)
+	local num_mission_members = "n/a"
+
+	if GameParameters.prod_like_backend then
+		local myself = Managers.presence:presence_entry_myself()
+		num_mission_members = myself:num_mission_members()
+	end
+
+	local presence_info = string.format("Presence: %s, num_mission_members: %s", presence, num_mission_members)
 	local difficulty_info = nil
 	local difficulty_manager = Managers.state.difficulty
 
@@ -1574,6 +1639,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 		item = table.clone_instance(real_item)
 	end
 
+	item.gear_id = gear_id
 	local slots = item.slots or {}
 	local item_type = item.item_type
 
@@ -1827,7 +1893,7 @@ UIManager.view_is_available = function (self, view_name)
 		return true
 	end
 
-	local view_is_available = DefaultGameParameters[killswitch]
+	local view_is_available = GameParameters[killswitch]
 
 	return view_is_available
 end

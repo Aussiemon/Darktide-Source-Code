@@ -5,8 +5,6 @@ local PresenceManagerInterface = {
 	"presence_entry_myself",
 	"update",
 	"set_party",
-	"set_presence",
-	"set_num_mission_members",
 	"get_requested_platform_username"
 }
 

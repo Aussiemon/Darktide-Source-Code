@@ -33,6 +33,7 @@ PlayerCharacterStateSliding.init = function (self, character_state_init_context,
 	local unit_data = character_state_init_context.unit_data
 	local slide_character_state_component = unit_data:write_component("slide_character_state")
 	slide_character_state_component.friction_function = "default"
+	slide_character_state_component.was_in_dodge_cooldown = false
 	self._slide_character_state_component = slide_character_state_component
 	self._sway_control_component = unit_data:write_component("sway_control")
 	self._spread_control_component = unit_data:write_component("spread_control")
@@ -72,6 +73,7 @@ PlayerCharacterStateSliding.on_enter = function (self, unit, dt, t, previous_sta
 
 	table.clear(self._hit_enemy_units)
 
+	self._slide_character_state_component.was_in_dodge_cooldown = t < self._dodge_character_state_component.consecutive_dodges_cooldown
 	local buff_extension = self._buff_extension
 	local param_table = buff_extension:request_proc_event_param_table()
 
@@ -88,7 +90,7 @@ PlayerCharacterStateSliding.on_exit = function (self, unit, t, next_state)
 	local movement_state_component = self._movement_state_component
 	movement_state_component.is_dodging = false
 
-	if self._character_state_component.previous_state_name == "dodging" then
+	if self._slide_character_state_component.was_in_dodge_cooldown then
 		local specialization_dodge_template = self._specialization_dodge_template
 		local weapon_dodge_template = self._weapon_extension:dodge_template()
 		self._dodge_character_state_component.consecutive_dodges_cooldown = t + specialization_dodge_template.consecutive_dodges_reset + (weapon_dodge_template.consecutive_dodges_reset or 0)

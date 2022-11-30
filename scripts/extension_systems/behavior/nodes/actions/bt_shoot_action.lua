@@ -72,6 +72,11 @@ BtShootAction.enter = function (self, unit, breed, blackboard, scratchpad, actio
 	end
 
 	scratchpad.strafe_anim_switch_duration = 0
+
+	if action_data.cover_crouch_check then
+		local cover_system = Managers.state.extension:system("cover_system")
+		scratchpad.cover_system = cover_system
+	end
 end
 
 BtShootAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -167,6 +172,7 @@ BtShootAction.run = function (self, unit, breed, blackboard, scratchpad, action_
 	return "running", scratchpad.should_reevaluate
 end
 
+local DEFAULT_COVER_IGNORE_CROUCH_DISTANCE = 5
 local DEFAULT_NUM_AGGROED_FOR_FRIENDLY_FIRE_CALLOUT = 8
 
 BtShootAction._start_aiming = function (self, unit, t, scratchpad, action_data)
@@ -200,6 +206,15 @@ BtShootAction._start_aiming = function (self, unit, t, scratchpad, action_data)
 	if not triggered_turn_anim then
 		local aim_anim_events = action_data.aim_anim_events or "aim"
 		local aim_event = Animation.random_event(aim_anim_events)
+
+		if scratchpad.cover_system and aim_event == "aim_crouching" then
+			local nearby_cover_slots = scratchpad.cover_system:find_cover_slots(POSITION_LOOKUP[unit], DEFAULT_COVER_IGNORE_CROUCH_DISTANCE)
+
+			if #nearby_cover_slots > 0 then
+				aim_event = action_data.cover_crouch_check_replacement_anim_event
+			end
+		end
+
 		local current_aim_anim_event = scratchpad.current_aim_anim_event
 
 		if not current_aim_anim_event or aim_event ~= current_aim_anim_event then

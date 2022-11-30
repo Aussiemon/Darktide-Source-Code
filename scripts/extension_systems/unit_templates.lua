@@ -644,6 +644,7 @@ local unit_templates = {
 					package_synchronizer_client = package_synchronizer_client,
 					mission = mission
 				})
+				config:add("PlayerHuskAbilityExtension")
 
 				if Managers.state.game_mode:use_hub_aim_extension() then
 					config:add("PlayerHuskHubAimExtension", {
@@ -1040,12 +1041,12 @@ local unit_templates = {
 				breed = breed,
 				random_seed = animation_seed
 			})
-			config:add("MinionFxExtension")
 			config:add("MinionVisualLoadoutExtension", {
 				breed = breed,
 				random_seed = inventory_seed,
 				inventory = inventory
 			})
+			config:add("MinionFxExtension")
 			config:add("MinionLocomotionExtension", {
 				breed = breed
 			})
@@ -1277,12 +1278,12 @@ local unit_templates = {
 				breed = breed,
 				random_seed = animation_seed
 			})
-			config:add("MinionFxExtension")
 			config:add("MinionVisualLoadoutExtension", {
 				breed = breed,
 				random_seed = inventory_seed,
 				inventory = inventory
 			})
+			config:add("MinionFxExtension")
 			config:add("MinionHuskLocomotionExtension", {
 				breed = breed
 			})
@@ -1689,6 +1690,8 @@ local unit_templates = {
 					Managers.state.player_unit_spawn:assign_unit_ownership(unit, owner)
 				end
 
+				local owner_game_object_id = owner_unit and Managers.state.unit_spawner:game_object_id(owner_unit) or NetworkConstants.invalid_game_object_id
+				game_object_data.owner_unit_id = owner_game_object_id
 				local owner_weapon_extension = ScriptUnit.has_extension(owner_unit, "weapon_system")
 
 				if owner_weapon_extension then
@@ -1719,7 +1722,8 @@ local unit_templates = {
 
 			config:add("ProjectileFxExtension", {
 				projectile_template_name = projectile_template_name,
-				charge_level = charge_level
+				charge_level = charge_level,
+				owner_unit = owner_unit
 			})
 			config:add("ProjectileUnitLocomotionExtension", {
 				handle_oob_despawning = true,
@@ -1747,6 +1751,19 @@ local unit_templates = {
 			local go_field = GameSession.game_object_field
 			local projectile_template_name_id = go_field(game_session, game_object_id, "projectile_template_id")
 			local projectile_template_name = NetworkLookup.projectile_template_names[projectile_template_name_id]
+			local owner_unit_id = go_field(game_session, game_object_id, "owner_unit_id")
+			local owner_unit = nil
+
+			if owner_unit_id ~= NetworkConstants.invalid_game_object_id then
+				owner_unit = Managers.state.unit_spawner:unit(owner_unit_id)
+			end
+
+			local owner = owner_unit and Managers.state.player_unit_spawn:owner(owner_unit)
+
+			if owner then
+				Managers.state.player_unit_spawn:assign_unit_ownership(unit, owner)
+			end
+
 			local item_definitions = MasterItems.get_cached()
 			local item_id = go_field(game_session, game_object_id, "item_id")
 			local item_name = NetworkLookup.player_item_names[item_id]
@@ -1755,7 +1772,8 @@ local unit_templates = {
 
 			config:add("ProjectileFxExtension", {
 				projectile_template_name = projectile_template_name,
-				charge_level = charge_level
+				charge_level = charge_level,
+				owner_unit = owner_unit
 			})
 			config:add("ProjectileHuskLocomotionExtension", {
 				hide_until_initial_interpolation_start = true,

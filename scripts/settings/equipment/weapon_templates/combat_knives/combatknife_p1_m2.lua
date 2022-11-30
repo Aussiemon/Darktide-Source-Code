@@ -1246,10 +1246,38 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_light = {
-				damage_trait_templates.default_melee_dps_stat
+				damage_trait_templates.default_melee_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_power"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_melee_dps_stat
+				damage_trait_templates.default_melee_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_power"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.default_melee_dps_stat
@@ -1276,10 +1304,40 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_light = {
-				damage_trait_templates.default_armor_pierce_stat
+				damage_trait_templates.default_armor_pierce_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								armor_damage_modifier = {
+									attack = {
+										[armor_types.armored] = {},
+										[armor_types.super_armor] = {}
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_armor_pierce_stat
+				damage_trait_templates.default_armor_pierce_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								armor_damage_modifier = {
+									attack = {
+										[armor_types.armored] = {},
+										[armor_types.super_armor] = {}
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.default_armor_pierce_stat
@@ -1306,10 +1364,30 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_light = {
-				damage_trait_templates.default_melee_finesse_stat
+				damage_trait_templates.default_melee_finesse_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								boost_curve_multiplier_finesse = {}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_melee_finesse_stat
+				damage_trait_templates.default_melee_finesse_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								boost_curve_multiplier_finesse = {}
+							}
+						}
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.default_melee_finesse_stat
@@ -1332,10 +1410,22 @@ weapon_template.base_stats = {
 		},
 		weapon_handling = {
 			action_left_light = {
-				weapon_handling_trait_templates.default_finesse_stat
+				weapon_handling_trait_templates.default_finesse_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						time_scale = {}
+					}
+				}
 			},
 			action_left_heavy = {
-				weapon_handling_trait_templates.default_finesse_stat
+				weapon_handling_trait_templates.default_finesse_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						time_scale = {}
+					}
+				}
 			},
 			action_right_light = {
 				weapon_handling_trait_templates.default_finesse_stat
@@ -1362,10 +1452,30 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_light = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.default_first_target_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								power_level_multiplier = {}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.default_first_target_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								power_level_multiplier = {}
+							}
+						}
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.default_first_target_stat
@@ -1392,17 +1502,34 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		dodge = {
 			base = {
-				dodge_trait_templates.default_dodge_stat
+				dodge_trait_templates.default_dodge_stat,
+				display_data = {
+					display_stats = {
+						diminishing_return_start = {},
+						distance_scale = {},
+						speed_modifier = {}
+					}
+				}
 			}
 		},
 		sprint = {
 			base = {
-				sprint_trait_templates.default_sprint_stat
+				sprint_trait_templates.default_sprint_stat,
+				display_data = {
+					display_stats = {
+						sprint_speed_mod = {}
+					}
+				}
 			}
 		},
 		movement_curve_modifier = {
 			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
+				display_data = {
+					display_stats = {
+						modifier = {}
+					}
+				}
 			}
 		}
 	}
@@ -1418,7 +1545,6 @@ table.append(weapon_template.traits, bespoke_combatknife_p1_traits)
 
 weapon_template.perks = {
 	combatknife_p1_m1_dps_perk = {
-		description = "loc_trait_description_combatknife_p1_m1_dps_perk",
 		display_name = "loc_trait_display_combatknife_p1_m1_dps_perk",
 		damage = {
 			action_left_light = {
@@ -1448,7 +1574,6 @@ weapon_template.perks = {
 		}
 	},
 	combatknife_p1_m1_armor_pierce_perk = {
-		description = "loc_trait_description_combatknife_p1_m1_armor_pierce_perk",
 		display_name = "loc_trait_display_combatknife_p1_m1_armor_pierce_perk",
 		damage = {
 			action_left_light = {
@@ -1478,7 +1603,6 @@ weapon_template.perks = {
 		}
 	},
 	combatknife_p1_m1_finesse_perk = {
-		description = "loc_trait_description_combatknife_p1_m1_finesse_perk",
 		display_name = "loc_trait_display_combatknife_p1_m1_finesse_perk",
 		damage = {
 			action_left_light = {
@@ -1534,7 +1658,6 @@ weapon_template.perks = {
 		}
 	},
 	combatknife_p1_m1_first_target_perk = {
-		description = "loc_trait_description_combatknife_p1_m1_first_target_perk",
 		display_name = "loc_trait_display_combatknife_p1_m1_first_target_perk",
 		damage = {
 			action_left_light = {
@@ -1564,7 +1687,6 @@ weapon_template.perks = {
 		}
 	},
 	combatknife_p1_m1_mobility_perk = {
-		description = "loc_trait_description_combatknife_p1_m1_mobility_perk",
 		display_name = "loc_trait_display_combatknife_p1_m1_mobility_perk",
 		dodge = {
 			base = {
@@ -1585,10 +1707,12 @@ weapon_template.perks = {
 }
 weapon_template.displayed_keywords = {
 	{
-		display_name = "loc_weapon_keyword_very_fast_attack"
+		display_name = "loc_weapon_keyword_very_fast_attack",
+		description = "loc_weapon_stats_display_very_fast_attack_desc"
 	},
 	{
-		display_name = "loc_weapon_keyword_ninja_fencer"
+		display_name = "loc_weapon_keyword_ninja_fencer",
+		description = "loc_weapon_stats_display_ninja_fencer_desc"
 	}
 }
 weapon_template.displayed_attacks = {
@@ -1611,9 +1735,11 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	special = {
+		desc = "loc_stats_special_action_special_attack_combatknife_p1m1_desc",
 		display_name = "loc_weapon_special_fist_attack",
-		type = "melee"
+		type = "melee_hand"
 	}
 }
+weapon_template.special_action_name = "action_special_jab"
 
 return weapon_template

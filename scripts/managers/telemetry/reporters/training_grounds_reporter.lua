@@ -25,8 +25,7 @@ TrainingGroundsReporter.report = function (self)
 	end
 
 	local duration = Managers.time:time("training_grounds_timer")
-	local singleplay_type = Managers.mechanism:singleplay_type()
-	local is_onboarding = singleplay_type == SINGLEPLAY_TYPES.onboarding
+	local is_onboarding = not Managers.narrative:is_story_complete("onboarding")
 	local latest_started_scenario = self._latest_started_scenario or ""
 	local num_scenarios_started = self._num_scenarios_started or 0
 

@@ -13,6 +13,8 @@ local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_trai
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local LineEffects = require("scripts/settings/effects/line_effects")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
@@ -22,94 +24,94 @@ local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
 local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
 local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
-local weapon_template = {
-	action_inputs = {
-		shoot = {
-			buffer_time = 0.25,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_pressed"
-				}
+local weapon_template = {}
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
+weapon_template.action_inputs = {
+	shoot = {
+		buffer_time = 0.25,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_pressed"
 			}
-		},
-		shoot_release = {
-			buffer_time = 0.52,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_one_hold",
-					time_window = math.huge
-				}
+		}
+	},
+	shoot_release = {
+		buffer_time = 0.52,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_one_hold",
+				time_window = math.huge
 			}
-		},
-		zoom_shoot = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					value = true,
-					hold_input = "action_two_hold",
-					input = "action_one_hold"
-				}
+		}
+	},
+	zoom_shoot = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				value = true,
+				hold_input = "action_two_hold",
+				input = "action_one_hold"
 			}
-		},
-		zoom = {
-			buffer_time = 0.4,
-			max_queue = 1,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_two_hold"
-				}
+		}
+	},
+	zoom = {
+		buffer_time = 0.4,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_hold"
 			}
-		},
-		zoom_release = {
-			buffer_time = 0.3,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_two_hold",
-					time_window = math.huge
-				}
+		}
+	},
+	zoom_release = {
+		buffer_time = 0.3,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_two_hold",
+				time_window = math.huge
 			}
-		},
-		reload = {
-			buffer_time = 0.2,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_reload"
-				}
+		}
+	},
+	reload = {
+		buffer_time = 0.2,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_reload"
 			}
-		},
-		brace_reload = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_reload"
-				}
+		}
+	},
+	brace_reload = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_reload"
 			}
-		},
-		wield = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					inputs = wield_inputs
-				}
+		}
+	},
+	wield = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				inputs = wield_inputs
 			}
-		},
-		stab = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_extra_pressed"
-				}
+		}
+	},
+	stab = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_extra_pressed"
 			}
 		}
 	}
@@ -774,13 +776,35 @@ weapon_template.alternate_fire_settings = {
 		}
 	}
 }
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	ogryn_heavystubber_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.default_dps_stat
+				damage_trait_templates.default_dps_stat,
+				display_data = {
+					display_stats = {
+						armor_damage_modifier_ranged = {
+							near = {
+								attack = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {}
+								}
+							},
+							far = {
+								attack = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {}
+								}
+							}
+						},
+						power_distribution = {
+							attack = {}
+						}
+					}
+				}
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.default_dps_stat
@@ -792,20 +816,24 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		recoil = {
 			base = {
-				recoil_trait_templates.default_recoil_stat
+				recoil_trait_templates.default_recoil_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_recoil", "loc_weapon_stats_display_hip_fire")
 			},
 			alternate_fire = {
-				recoil_trait_templates.default_recoil_stat
+				recoil_trait_templates.default_recoil_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_recoil", "loc_weapon_stats_display_braced")
 			}
 		},
 		spread = {
 			base = {
-				spread_trait_templates.default_spread_stat
+				spread_trait_templates.default_spread_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_spread")
 			}
 		},
 		sway = {
 			alternate_fire = {
-				sway_trait_templates.default_sway_stat
+				sway_trait_templates.default_sway_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_sway")
 			}
 		}
 	},
@@ -814,7 +842,26 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.shotgun_default_range_stat
+				damage_trait_templates.shotgun_default_range_stat,
+				display_data = {
+					display_stats = {
+						armor_damage_modifier_ranged = {
+							far = {
+								attack = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {},
+									[armor_types.armored] = {},
+									[armor_types.resistant] = {},
+									[armor_types.berserker] = {}
+								}
+							}
+						},
+						ranges = {
+							min = {},
+							max = {}
+						}
+					}
+				}
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.shotgun_default_range_stat
@@ -826,7 +873,13 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		ammo = {
 			base = {
-				ammo_trait_templates.default_ammo_stat
+				ammo_trait_templates.default_ammo_stat,
+				display_data = {
+					display_stats = {
+						ammunition_clip = {},
+						ammunition_reserve = {}
+					}
+				}
 			}
 		}
 	},
@@ -835,7 +888,37 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.shotgun_control_stat
+				damage_trait_templates.shotgun_control_stat,
+				display_data = {
+					display_stats = {
+						armor_damage_modifier_ranged = {
+							near = {
+								impact = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {},
+									[armor_types.resistant] = {},
+									[armor_types.berserker] = {}
+								}
+							},
+							far = {
+								impact = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {},
+									[armor_types.resistant] = {},
+									[armor_types.berserker] = {}
+								}
+							}
+						},
+						power_distribution = {
+							impact = {}
+						},
+						suppression_value = {},
+						on_kill_area_suppression = {
+							suppression_value = {},
+							distance = {}
+						}
+					}
+				}
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.shotgun_control_stat
@@ -883,6 +966,7 @@ weapon_template.displayed_attacks = {
 		type = "brace"
 	},
 	special = {
+		desc = "loc_stats_special_action_melee_weapon_bash_desc",
 		display_name = "loc_weapon_special_weapon_bash",
 		type = "melee"
 	}
@@ -891,5 +975,6 @@ weapon_template.displayed_attack_ranges = {
 	max = 0,
 	min = 0
 }
+weapon_template.special_action_name = "action_stab"
 
 return weapon_template

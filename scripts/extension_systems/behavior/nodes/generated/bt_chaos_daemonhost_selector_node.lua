@@ -133,44 +133,44 @@ BtChaosDaemonhostSelectorNode.evaluate = function (self, unit, blackboard, scrat
 	local condition_result = nil
 
 	repeat
-		if is_running then
-			condition_result = true
-		else
+		local sub_condition_result_01, condition_result = nil
+
+		repeat
 			local sub_condition_result_01, condition_result = nil
 
 			repeat
-				local sub_condition_result_01, condition_result = nil
+				local perception_component = blackboard.perception
 
-				repeat
-					local perception_component = blackboard.perception
-
-					if not is_running and perception_component.lock_target then
-						condition_result = false
-					else
-						local target_unit = perception_component.target_unit
-						condition_result = HEALTH_ALIVE[target_unit]
-					end
-				until true
-
-				sub_condition_result_01 = condition_result
-				local has_target_unit = sub_condition_result_01
-
-				if not has_target_unit then
+				if not is_running and perception_component.lock_target then
 					condition_result = false
 				else
-					local perception_component = blackboard.perception
-					local is_aggroed = perception_component.aggro_state == "aggroed"
-					condition_result = is_aggroed
+					local target_unit = perception_component.target_unit
+					condition_result = HEALTH_ALIVE[target_unit]
 				end
 			until true
 
 			sub_condition_result_01 = condition_result
-			local is_aggroed = sub_condition_result_01
+			local has_target_unit = sub_condition_result_01
 
-			if not is_aggroed then
-				break
+			if not has_target_unit then
+				condition_result = false
+			else
+				local perception_component = blackboard.perception
+				local is_aggroed = perception_component.aggro_state == "aggroed"
+				condition_result = is_aggroed
 			end
+		until true
 
+		sub_condition_result_01 = condition_result
+		local is_aggroed = sub_condition_result_01
+
+		if not is_aggroed then
+			break
+		end
+
+		if is_running then
+			condition_result = true
+		else
 			local perception_component = blackboard.perception
 			local target_unit = perception_component.target_unit
 			local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")

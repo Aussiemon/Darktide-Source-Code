@@ -264,13 +264,6 @@ PlayerCharacterStateConsumed.fixed_update = function (self, unit, dt, t, next_st
 		self._consumed_timing = nil
 	end
 
-	local is_server = self._is_server
-
-	if is_server and ALIVE[disabling_unit] and self._consumed_timing and t < self._consumed_timing and not self._consumed_effect_id and self._follow_consumed_camera_timing and self._follow_consumed_camera_timing <= t then
-		local link_node = Unit.node(disabling_unit, DISABLING_UNIT_LINK_NODE)
-		local teleport_position = Unit.world_position(disabling_unit, link_node)
-	end
-
 	return self:_check_transition(unit, t, next_state_params)
 end
 

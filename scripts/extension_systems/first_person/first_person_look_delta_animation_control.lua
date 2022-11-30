@@ -90,7 +90,7 @@ FirstPersonLookDeltaAnimationControl.update = function (self, dt, t)
 			previous_rotation = Quaternion.look(player_to_interact_unit_dir, Quaternion.up(rotation))
 		else
 			settings = look_delta_template.idle
-			previous_rotation = first_person_component.previous_rotation
+			previous_rotation = self._previous_rotation and self._previous_rotation:unbox() or first_person_component.previous_rotation
 		end
 
 		local rot_right = Quaternion.right(rotation)
@@ -126,6 +126,7 @@ FirstPersonLookDeltaAnimationControl.update = function (self, dt, t)
 
 	self._look_delta_x = look_delta_x
 	self._look_delta_y = look_delta_y
+	self._previous_rotation = QuaternionBox(rotation)
 	local first_person_unit = self._first_person_unit
 	local look_delta_x_variable = Unit.animation_find_variable(first_person_unit, "look_delta_x")
 

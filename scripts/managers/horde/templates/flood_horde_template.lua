@@ -156,13 +156,14 @@ local function _spawn_flood_minions(horde, target_unit, nav_world, nav_spawn_poi
 
 	local side = horde.side
 	local side_id = side.side_id
+	local optional_only_search_forward = true
 
 	if num_spawn_locations < max_spawn_locations then
 		local spawn_locations_left = max_spawn_locations - num_spawn_locations
 
 		for i = 1, #minion_spawner_radius_checks do
 			local radius = minion_spawner_radius_checks[i]
-			local occluded_positions = SpawnPointQueries.get_occluded_positions(nav_world, nav_spawn_points, path_position, side, radius, num_groups, MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS, INITIAL_GROUP_OFFSET)
+			local occluded_positions = SpawnPointQueries.get_occluded_positions(nav_world, nav_spawn_points, path_position, side, radius, num_groups, MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS, INITIAL_GROUP_OFFSET, optional_only_search_forward)
 
 			if occluded_positions then
 				for j = 1, #occluded_positions do

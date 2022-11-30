@@ -191,7 +191,7 @@ UnitCoherencyExtension.on_coherency_exit = function (self, coherency_unit, coher
 	if Managers.stats and Managers.stats.can_record_stats() and self._player then
 		local target_is_alive = HEALTH_ALIVE[coherency_unit]
 
-		Managers.stats:record_coherency_exit(self._player, target_is_alive)
+		Managers.stats:record_coherency_exit(self._player, target_is_alive, self._num_units_in_coherence)
 	end
 end
 

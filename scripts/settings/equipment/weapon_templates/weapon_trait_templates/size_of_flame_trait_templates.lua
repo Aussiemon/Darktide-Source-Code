@@ -17,7 +17,7 @@ local size_of_flame_trait_templates = {
 			}
 		},
 		{
-			"suppression",
+			"suppression_cone_radius",
 			{
 				max = 1,
 				min = 0
@@ -56,7 +56,7 @@ local size_of_flame_trait_templates = {
 			}
 		},
 		{
-			"suppression",
+			"suppression_cone_radius",
 			{
 				max = 1,
 				min = 0

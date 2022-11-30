@@ -92,7 +92,8 @@ StoreFront._decorate_offer = function (self, offer, is_personal)
 			priceId = price_id,
 			offerId = offer_id,
 			characterId = store_front.character_id,
-			latestTransactionId = wallet.lastTransactionId
+			latestTransactionId = wallet.lastTransactionId,
+			ownedSkus = offer.owned_skus
 		}
 		local builder = BackendUtilities.url_builder():path("/store/"):path(store_front.account_id):path("/wallets/"):path(store_front.wallet_owner):path("/purchases")
 
@@ -216,6 +217,25 @@ end
 
 Store.get_ogryn_marks_store = function (self, t, character_id)
 	return self:_get_storefront(t, "marks_store_ogryn", character_id, character_id, true)
+end
+
+Store.get_premium_storefront = function (self, storefront, t)
+	return self:_get_storefront(t, storefront, nil):next(function (store)
+		return store:get_config():next(function (config)
+			return Promise.resolved({
+				wallet_owner = store.wallet_owner,
+				public_filtered = store.data.public_filtered,
+				layout_config = config,
+				decorate_offer = store._decorate_offer,
+				is_personal = store.is_personal,
+				storefront = store
+			})
+		end)
+	end)
+end
+
+Store.get_premium_store = function (self, t)
+	return self:_get_storefront(t, "premium_store", nil)
 end
 
 Store.get_debug_store = function (self, t, character_id)

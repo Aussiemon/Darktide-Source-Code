@@ -42,10 +42,11 @@ local abilities = {
 	},
 	psyker_smite = {
 		inventory_item_name = "content/items/weapons/player/psyker_smite",
+		can_be_previously_wielded_to = true,
 		hud_icon = "content/ui/materials/icons/abilities/throwables/default",
 		exclude_from_persistant_player_data = true,
-		icon = "content/ui/materials/icons/abilities/combat/default",
 		ability_type = "grenade_ability",
+		icon = "content/ui/materials/icons/abilities/combat/default",
 		max_charges = biomancer_talent_settings.grenade.max_charges,
 		cooldown = biomancer_talent_settings.grenade.cooldown,
 		archetypes = {

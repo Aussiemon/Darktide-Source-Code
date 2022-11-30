@@ -204,6 +204,10 @@ PlayerCharacterStateDodging.on_exit = function (self, unit, t, next_state)
 	animation_extension:anim_event(dodge_animation)
 	animation_extension:anim_event_1p(dodge_animation)
 
+	if next_state == "sliding" and _calculate_dodge_diminishing_return(dodge_character_state_component, weapon_dodge_template, self._buff_extension) == 1 then
+		dodge_character_state_component.consecutive_dodges = dodge_character_state_component.consecutive_dodges + 1
+	end
+
 	local param_table = buff_extension:request_proc_event_param_table()
 
 	if param_table then

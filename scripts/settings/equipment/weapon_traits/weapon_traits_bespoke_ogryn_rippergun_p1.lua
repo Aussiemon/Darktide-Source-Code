@@ -15,7 +15,7 @@ local templates = {
 				suppression_settings = {
 					suppression_falloff = true,
 					instant_aggro = true,
-					distance = 5,
+					distance = 6,
 					suppression_value = 15
 				}
 			},
@@ -23,7 +23,7 @@ local templates = {
 				suppression_settings = {
 					suppression_falloff = true,
 					instant_aggro = true,
-					distance = 5,
+					distance = 7,
 					suppression_value = 20
 				}
 			},
@@ -31,7 +31,7 @@ local templates = {
 				suppression_settings = {
 					suppression_falloff = true,
 					instant_aggro = true,
-					distance = 5,
+					distance = 8,
 					suppression_value = 25
 				}
 			}
@@ -41,17 +41,17 @@ local templates = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close_kill = {
 			{
 				stat_buffs = {
-					[stat_buffs.damage_near] = 0.05
+					[stat_buffs.damage_near] = 0.04
 				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.damage_near] = 0.075
+					[stat_buffs.damage_near] = 0.06
 				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.damage_near] = 0.9
+					[stat_buffs.damage_near] = 0.8
 				}
 			},
 			{

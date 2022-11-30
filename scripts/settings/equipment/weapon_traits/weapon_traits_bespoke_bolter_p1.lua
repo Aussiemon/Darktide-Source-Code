@@ -31,19 +31,19 @@ templates.weapon_trait_bespoke_bolter_p1_stacking_power_bonus_on_staggering_enem
 		{
 			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.06
+				[stat_buffs.power_level_modifier] = 0.05
 			}
 		},
 		{
 			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.12
+				[stat_buffs.power_level_modifier] = 0.1
 			}
 		},
 		{
 			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.17
+				[stat_buffs.power_level_modifier] = 0.15
 			}
 		},
 		{
@@ -81,13 +81,13 @@ templates.weapon_trait_bespoke_bolter_p1_crit_chance_based_on_aim_time = {
 templates.weapon_trait_bespoke_bolter_p1_toughness_on_elite_kills = {
 	weapon_trait_bespoke_bolter_p1_toughness_on_elite_kills = {
 		{
-			toughness_fixed_percentage = 0.05
+			toughness_fixed_percentage = 0.04
 		},
 		{
-			toughness_fixed_percentage = 0.065
+			toughness_fixed_percentage = 0.06
 		},
 		{
-			toughness_fixed_percentage = 0.085
+			toughness_fixed_percentage = 0.08
 		},
 		{
 			toughness_fixed_percentage = 0.1

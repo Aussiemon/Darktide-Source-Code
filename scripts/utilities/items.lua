@@ -10,6 +10,7 @@ local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_traits/weapon_trait_templates")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
+local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local unit_alive = Unit.alive
 local ItemUtils = {}
 
@@ -22,6 +23,39 @@ local function _character_save_data()
 	local character_data = character_id and save_manager and save_manager:character_data(character_id)
 
 	return character_data
+end
+
+ItemUtils.calculate_stats_rating = function (item)
+	local item_level = item.itemLevel or 0
+
+	if item_level == 0 or type(item_level) == "string" then
+		return item_level
+	end
+
+	local rating_budget = item_level
+	local rating_contribution = 0
+	local perks = item.perks
+	local num_perks = perks and #perks or 0
+
+	if num_perks > 0 then
+		local rating_per_perk_rank = CraftingSettings.rating_per_perk_rank
+
+		for i = 1, num_perks do
+			local perk = perks[i]
+			rating_contribution = rating_contribution + (rating_per_perk_rank[perk.rarity] or 0)
+		end
+	end
+
+	local traits = item.traits
+	local num_traits = traits and #traits or 0
+	local rating_per_trait_rank = CraftingSettings.rating_per_trait_rank
+
+	for i = 1, num_traits do
+		local trait = traits[i]
+		rating_contribution = rating_contribution + (rating_per_trait_rank[trait.rarity] or 0)
+	end
+
+	return rating_budget - rating_contribution
 end
 
 ItemUtils.mark_item_id_as_new = function (gear_id, item_type)
@@ -635,6 +669,20 @@ ItemUtils.equip_item_in_slot = function (slot_name, item)
 		end):catch(function (errors)
 			Log.error("ItemUtils", "Equipping %s (ID: %s) to %s failed. User should be shown some error message! %s", item.name, item.gear_id, slot_name, errors)
 		end)
+	end
+end
+
+ItemUtils.refresh_equipped_items = function ()
+	local peer_id = Network.peer_id()
+	local local_player_id = 1
+	local is_server = Managers.state.game_session and Managers.state.game_session:is_server()
+
+	if is_server then
+		local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
+
+		profile_synchronizer_host:profile_changed(peer_id, local_player_id)
+	else
+		Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
 	end
 end
 

@@ -34,13 +34,13 @@ templates.weapon_trait_bespoke_lasgun_p3_increase_power_on_close_kill = {
 templates.weapon_trait_bespoke_lasgun_p3_count_as_dodge_vs_ranged_on_close_kill = {
 	weapon_trait_bespoke_lasgun_p3_count_as_dodge_vs_ranged_on_close_kill = {
 		{
-			active_duration = 0.3
+			active_duration = 0.4
 		},
 		{
 			active_duration = 0.5
 		},
 		{
-			active_duration = 0.65
+			active_duration = 0.6
 		},
 		{
 			active_duration = 0.7
@@ -51,17 +51,17 @@ templates.weapon_trait_bespoke_lasgun_p3_reload_speed_on_slide = {
 	weapon_trait_bespoke_lasgun_p3_reload_speed_on_slide = {
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.05
+				[stat_buffs.reload_speed] = 0.04
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.075
+				[stat_buffs.reload_speed] = 0.06
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.09
+				[stat_buffs.reload_speed] = 0.08
 			}
 		},
 		{
@@ -75,22 +75,22 @@ templates.weapon_trait_bespoke_lasgun_p3_increased_sprint_speed = {
 	weapon_trait_bespoke_lasgun_p3_increased_sprint_speed = {
 		{
 			stat_buffs = {
+				[stat_buffs.sprint_movement_speed] = 1.03
+			}
+		},
+		{
+			stat_buffs = {
 				[stat_buffs.sprint_movement_speed] = 1.05
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.sprint_movement_speed] = 1.1
+				[stat_buffs.sprint_movement_speed] = 1.07
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.sprint_movement_speed] = 1.13
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.sprint_movement_speed] = 1.15
+				[stat_buffs.sprint_movement_speed] = 1.09
 			}
 		}
 	}
@@ -99,17 +99,17 @@ templates.weapon_trait_bespoke_lasgun_p3_followup_shots_ranged_damage = {
 	weapon_trait_bespoke_lasgun_p3_followup_shots_ranged_damage = {
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.05
+				[stat_buffs.ranged_damage] = 0.06
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.1
+				[stat_buffs.ranged_damage] = 0.09
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.13
+				[stat_buffs.ranged_damage] = 0.12
 			}
 		},
 		{
@@ -123,17 +123,17 @@ templates.weapon_trait_bespoke_lasgun_p3_followup_shots_ranged_weakspot_damage =
 	weapon_trait_bespoke_lasgun_p3_followup_shots_ranged_weakspot_damage = {
 		{
 			conditional_stat_buffs = {
+				[stat_buffs.ranged_weakspot_damage] = 0.05
+			}
+		},
+		{
+			conditional_stat_buffs = {
 				[stat_buffs.ranged_weakspot_damage] = 0.1
 			}
 		},
 		{
 			conditional_stat_buffs = {
 				[stat_buffs.ranged_weakspot_damage] = 0.15
-			}
-		},
-		{
-			conditional_stat_buffs = {
-				[stat_buffs.ranged_weakspot_damage] = 0.175
 			}
 		},
 		{
@@ -199,12 +199,14 @@ templates.weapon_trait_bespoke_lasgun_p3_burninating_on_crit = {
 	weapon_trait_bespoke_lasgun_p3_burninating_on_crit = {
 		{
 			dot_data = {
-				num_stacks_on_proc = 2
+				max_stacks = 6,
+				num_stacks_on_proc = 1
 			}
 		},
 		{
 			dot_data = {
-				num_stacks_on_proc = 4
+				max_stacks = 9,
+				num_stacks_on_proc = 2
 			}
 		}
 	}

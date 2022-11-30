@@ -46,7 +46,7 @@ templates.weapon_trait_bespoke_combatsword_p2_increased_melee_damage_on_multiple
 				required_num_hits = 3
 			},
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.1
+				[stat_buffs.melee_damage] = 0.125
 			}
 		},
 		{
@@ -79,7 +79,7 @@ templates.weapon_trait_bespoke_combatsword_p2_chained_hits_increases_melee_cleav
 	weapon_trait_bespoke_combatsword_p2_chained_hits_increases_melee_cleave_parent = {
 		{
 			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 0.1
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.125
 			}
 		},
 		{
@@ -103,17 +103,17 @@ templates.weapon_trait_bespoke_combatsword_p2_increase_power_on_hit = {
 	weapon_trait_bespoke_combatsword_p2_increase_power_on_hit_parent = {
 		{
 			stat_buffs = {
+				[stat_buffs.power_level_modifier] = 0.075
+			}
+		},
+		{
+			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.13
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.145
+				[stat_buffs.power_level_modifier] = 0.125
 			}
 		},
 		{
@@ -126,16 +126,16 @@ templates.weapon_trait_bespoke_combatsword_p2_increase_power_on_hit = {
 templates.weapon_trait_bespoke_combatsword_p2_infinite_melee_cleave_on_weakspot_kill = {
 	weapon_trait_bespoke_combatsword_p2_infinite_melee_cleave_on_weakspot_kill = {
 		{
-			active_duration = 2
+			active_duration = 1.5
 		},
 		{
-			active_duration = 3
+			active_duration = 2.5
 		},
 		{
 			active_duration = 3.5
 		},
 		{
-			active_duration = 4
+			active_duration = 4.5
 		}
 	}
 }

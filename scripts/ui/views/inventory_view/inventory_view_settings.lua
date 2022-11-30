@@ -1,9 +1,9 @@
 local grid_size = {
-	620,
+	690,
 	350
 }
 grid_size = {
-	620,
+	690,
 	640
 }
 local grid_width = grid_size[1]

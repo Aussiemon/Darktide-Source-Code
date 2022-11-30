@@ -72,8 +72,8 @@ local scenegraph_definition = {
 			62
 		}
 	},
-	weapon_stats_pivot = {
-		vertical_alignment = "bottom",
+	weapon_info_pivot = {
+		vertical_alignment = "top",
 		parent = "canvas",
 		horizontal_alignment = "left",
 		size = {
@@ -82,12 +82,12 @@ local scenegraph_definition = {
 		},
 		position = {
 			100,
-			-100,
+			50,
 			3
 		}
 	},
-	weapon_actions_pivot = {
-		vertical_alignment = "bottom",
+	weapon_actions_extended_pivot = {
+		vertical_alignment = "top",
 		parent = "canvas",
 		horizontal_alignment = "right",
 		size = {
@@ -95,8 +95,22 @@ local scenegraph_definition = {
 			0
 		},
 		position = {
-			-520,
-			-100,
+			-560,
+			50,
+			3
+		}
+	},
+	attack_patterns_pivot = {
+		vertical_alignment = "top",
+		parent = "canvas",
+		horizontal_alignment = "right",
+		size = {
+			0,
+			0
+		},
+		position = {
+			-950,
+			50,
 			3
 		}
 	},
@@ -222,6 +236,15 @@ local legend_inputs = {
 		on_pressed_callback = "_cb_on_close_pressed",
 		display_name = "loc_settings_menu_close_menu",
 		alignment = "left_alignment"
+	},
+	{
+		input_action = "cycle_list_secondary",
+		display_name = "loc_menu_show_attack_patterns",
+		alignment = "right_alignment",
+		on_pressed_callback = "_toggle_view",
+		visibility_function = function (parent, id)
+			return parent._visibility_toggled_on
+		end
 	},
 	{
 		on_pressed_callback = "_cb_on_ui_visibility_toggled",

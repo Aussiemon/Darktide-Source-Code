@@ -277,6 +277,12 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				}
 			}
 		else
+			if item_type == "WEAPON_SKIN" then
+				enter_sound_event = UISoundEvents.notification_weapon_skin_received
+			elseif item_type == "GEAR_EXTRA_COSMETIC" or item_type == "GEAR_HEAD" or item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" then
+				enter_sound_event = UISoundEvents.notification_cosmetic_received
+			end
+
 			texts = {
 				{
 					display_name = ItemUtils.display_name(item)
@@ -375,6 +381,12 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				frame = "content/ui/textures/icons/achievements/frames/achieved",
 				icon = data:icon(),
 				icon_color = Color.ui_achievement_icon_completed(255, true)
+			},
+			line_color = {
+				255,
+				200,
+				182,
+				149
 			},
 			color = {
 				255 * ConstantElementNotificationFeedSettings.default_alpha_value,

@@ -387,7 +387,7 @@ local default_ingame_input_settings = {
 		},
 		wield_4 = {
 			key_alias = "wield_4",
-			type = "released"
+			type = "pressed"
 		},
 		keyboard_move_left = {
 			key_alias = "keyboard_move_left",

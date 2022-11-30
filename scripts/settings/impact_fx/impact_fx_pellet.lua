@@ -364,6 +364,11 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/weapons/rifles/ripper_gun/ripper_gun_impact_01"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			}
 		},
 		died = {
@@ -375,6 +380,11 @@ local disgustingly_resilient = {
 			{
 				effects = {
 					"content/fx/particles/weapons/rifles/ripper_gun/ripper_gun_impact_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			}
 		},
@@ -388,12 +398,22 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/weapons/rifles/ripper_gun/ripper_gun_impact_01"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			}
 		},
 		damage = {
 			{
 				effects = {
 					"content/fx/particles/impacts/flesh/blood_splatter_ranged_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			},
 			{

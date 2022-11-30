@@ -240,7 +240,9 @@ templates.zealot_maniac_critical_strike_toughness_defense_buff = {
 }
 local range = talent_settings.toughness_3.range
 templates.zealot_maniac_toughness_regen_in_melee = {
+	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_tier_4_1",
 	predicted = false,
+	hud_priority = 4,
 	class_name = "buff",
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -255,10 +257,6 @@ templates.zealot_maniac_toughness_regen_in_melee = {
 		template_data.current_tick = 0
 	end,
 	update_func = function (template_data, template_context, dt, t, template)
-		if not template_context.is_server then
-			return
-		end
-
 		local next_regen_t = template_data.next_regen_t
 
 		if not next_regen_t then
@@ -282,16 +280,23 @@ templates.zealot_maniac_toughness_regen_in_melee = {
 				template_data.current_tick = template_data.current_tick + 1
 
 				if talent_settings.toughness_3.num_ticks_to_trigger <= template_data.current_tick then
-					Toughness.replenish_percentage(template_context.unit, talent_settings.toughness_3.toughness, false, "talent_toughness_3")
+					if template_context.is_server then
+						Toughness.replenish_percentage(template_context.unit, talent_settings.toughness_3.toughness, false, "talent_toughness_3")
+					end
 
 					template_data.current_tick = 0
 				end
 
 				template_data.next_regen_t = t + talent_settings.toughness_3.time
+				template_data.is_active = true
 			else
 				template_data.current_tick = 0
+				template_data.is_active = false
 			end
 		end
+	end,
+	conditional_stat_buffs_func = function (template_data, template_context)
+		return template_data.is_active
 	end
 }
 templates.zelaot_maniac_melee_critical_strike_chance_increased = {
@@ -543,6 +548,9 @@ templates.zealot_maniac_dash_grants_toughness = {
 }
 templates.zealot_maniac_resist_death_improved_with_leech = {
 	predicted = false,
+	hud_priority = 2,
+	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_base_2",
+	always_show_in_hud = true,
 	class_name = "proc_buff",
 	active_duration = talent_settings.defensive_1.active_duration,
 	cooldown_duration = talent_settings.defensive_1.cooldown_duration,

@@ -40,8 +40,5 @@ _create_task("KillMinions", SessionStats.definitions.contract_team_kills, {
 	enemyType = "name",
 	weaponType = "type"
 })
-_create_task("CollectResource", SessionStats.definitions.collect_resource, {
-	resourceType = "type"
-})
 
 return settings("LocalContractTasks", local_tasks)

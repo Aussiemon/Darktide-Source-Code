@@ -7,7 +7,7 @@ BotGameplay.init = function (self, player, game_state_context)
 end
 
 BotGameplay.destroy = function (self)
-	if self._is_server then
+	if self._is_server and ALIVE[self._player.player_unit] then
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn
 
 		player_unit_spawn_manager:despawn(self._player)

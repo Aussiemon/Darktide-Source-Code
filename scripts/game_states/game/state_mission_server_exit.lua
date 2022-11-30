@@ -15,8 +15,6 @@ StateMissionServerExit.on_enter = function (self, parent, params, creation_conte
 
 		self._timeout = 0
 	end
-
-	Managers.presence:set_presence("end_of_round")
 end
 
 StateMissionServerExit.on_exit = function (self)

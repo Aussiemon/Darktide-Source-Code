@@ -57,6 +57,8 @@ AdaptiveClockHandlerServer.frame_received = function (self, frame)
 			offset = 0.5
 		end
 
+		self._synced_offset = offset
+
 		RPC.rpc_sync_clock_offset(self._channel_id, offset, Managers.time:time("gameplay"))
 	end
 

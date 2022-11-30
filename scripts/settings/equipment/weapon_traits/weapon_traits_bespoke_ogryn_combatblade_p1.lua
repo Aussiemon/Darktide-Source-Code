@@ -29,17 +29,17 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill = {
 	weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill_parent = {
 		{
 			stat_buffs = {
+				[stat_buffs.power_level_modifier] = 0.075
+			}
+		},
+		{
+			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.13
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.145
+				[stat_buffs.power_level_modifier] = 0.125
 			}
 		},
 		{
@@ -89,17 +89,17 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_power_on_weapon_sp
 	weapon_trait_bespoke_ogryn_combatblade_p1_increased_power_on_weapon_special_follow_up_hits = {
 		{
 			stat_buffs = {
+				[stat_buffs.power_level_modifier] = 0.075
+			}
+		},
+		{
+			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.13
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.145
+				[stat_buffs.power_level_modifier] = 0.125
 			}
 		},
 		{
@@ -117,16 +117,16 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_pass_past_armor_on_heavy_att
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_crit = {
 	weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_crit = {
 		{
-			active_duration = 2
+			active_duration = 1.5
 		},
 		{
-			active_duration = 3
+			active_duration = 2.5
 		},
 		{
 			active_duration = 3.5
 		},
 		{
-			active_duration = 4
+			active_duration = 4.5
 		}
 	}
 }
@@ -150,6 +150,12 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_multip
 	weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_multiple_hits = {
 		{
 			buff_data = {
+				replenish_percentage = 0.075,
+				required_num_hits = 5
+			}
+		},
+		{
+			buff_data = {
 				replenish_percentage = 0.1,
 				required_num_hits = 5
 			}
@@ -157,12 +163,6 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_multip
 		{
 			buff_data = {
 				replenish_percentage = 0.125,
-				required_num_hits = 5
-			}
-		},
-		{
-			buff_data = {
-				replenish_percentage = 0.14,
 				required_num_hits = 5
 			}
 		},

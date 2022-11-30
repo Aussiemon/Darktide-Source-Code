@@ -37,6 +37,7 @@ _check_network_lookup_boundaries("mood_type", "moods_types")
 _check_network_lookup_boundaries("optional_party_membership_denied_reason_id", "party_membership_denied_reasons")
 _check_network_lookup_boundaries("optional_sound_switch_name_id", "sound_switches")
 _check_network_lookup_boundaries("optional_sound_switch_value_id", "sound_switch_values")
+_check_network_lookup_boundaries("player_ability_id", "player_abilities")
 _check_network_lookup_boundaries("player_character_fx_source_id", "player_character_fx_sources")
 _check_network_lookup_boundaries("player_character_particle_id", "player_character_particles")
 _check_network_lookup_boundaries("player_character_sound_event_id", "player_character_sounds")
@@ -158,7 +159,7 @@ NetworkConstants.action_time_scale = action_time_scale
 local player_anim_state = Network.type_info("player_anim_state")
 NetworkConstants.invalid_player_anim_state = player_anim_state.max
 local player_anim = Network.type_info("player_anim")
-NetworkConstants.invalid_player_anim = player_anim.max
+NetworkConstants.invalid_player_anim = player_anim.min
 local player_anim_time = Network.type_info("player_anim_time")
 NetworkConstants.invalid_player_anim_time = player_anim_time.max
 local time_offset = Network.type_info("time_offset")
@@ -187,9 +188,15 @@ NetworkConstants.fixed_frame_offset_end_t_4bit = Network.type_info("fixed_frame_
 NetworkConstants.fixed_frame_offset_end_t_6bit = Network.type_info("fixed_frame_offset_end_t_6bit")
 NetworkConstants.fixed_frame_offset_end_t_7bit = Network.type_info("fixed_frame_offset_end_t_7bit")
 local ability_charges = Network.type_info("ability_charges")
+local ability_cooldown = Network.type_info("ability_cooldown")
 
 for name, ability in pairs(PlayerAbilities) do
 	local max_charges = ability.max_charges
+	local max_cooldown = ability.cooldown
+
+	if max_cooldown then
+		-- Nothing
+	end
 end
 
 local dialogue_rule_index = Network.type_info("dialogue_rule_index")

@@ -89,6 +89,7 @@ local sound_events = {
 	"wwise/events/weapon/play_minion_plasmapistol_charge",
 	"wwise/events/weapon/play_minion_plasmapistol",
 	"wwise/events/weapon/play_minion_shotgun_pump",
+	"wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
 	"wwise/events/weapon/play_shared_combat_weapon_bolter_bullet_flyby_husk",
 	"wwise/events/weapon/play_shared_combat_weapon_bolter_bullet_flyby",
 	"wwise/events/weapon/play_shared_combat_weapon_bullet_flyby_small_fast_husk",

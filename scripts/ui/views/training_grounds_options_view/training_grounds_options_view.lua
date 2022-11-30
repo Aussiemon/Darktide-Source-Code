@@ -63,22 +63,33 @@ TrainingGroundsOptionsView._load_reward_item_icons = function (self)
 	local render_context = {
 		camera_focus_slot_name = slot_name
 	}
-	local reward_1 = self._widgets_by_name.reward_1
-	local cb = callback(_apply_live_item_icon_cb_func, reward_1)
 	local primary_item = loadout.slot_primary
-	local load_icon_id = Managers.ui:load_item_icon(primary_item, cb, render_context)
-	reward_1.content.icon_load_id = load_icon_id
-	reward_1.content.text = Localize(primary_item.display_name)
-	self._icons_load_ids[#self._icons_load_ids + 1] = load_icon_id
+	local reward_1 = self._widgets_by_name.reward_1
+
+	if primary_item then
+		local cb = callback(_apply_live_item_icon_cb_func, reward_1)
+		local load_icon_id = Managers.ui:load_item_icon(primary_item, cb, render_context)
+		reward_1.content.icon_load_id = load_icon_id
+		reward_1.content.text = Localize(primary_item.display_name)
+		self._icons_load_ids[#self._icons_load_ids + 1] = load_icon_id
+	else
+		reward_1.content.text = "n/a"
+	end
+
 	local slot_name = "slot_secondary"
-	render_context.camera_focus_slot_name = slot_name
-	local reward_2 = self._widgets_by_name.reward_2
-	local cb = callback(_apply_live_item_icon_cb_func, reward_2)
 	local secondary_item = loadout.slot_secondary
-	local load_icon_id = Managers.ui:load_item_icon(secondary_item, cb, render_context)
-	reward_2.content.icon_load_id = load_icon_id
-	reward_2.content.text = Localize(secondary_item.display_name)
-	self._icons_load_ids[#self._icons_load_ids + 1] = load_icon_id
+	local reward_2 = self._widgets_by_name.reward_2
+
+	if secondary_item then
+		render_context.camera_focus_slot_name = slot_name
+		local cb = callback(_apply_live_item_icon_cb_func, reward_2)
+		local load_icon_id = Managers.ui:load_item_icon(secondary_item, cb, render_context)
+		reward_2.content.icon_load_id = load_icon_id
+		reward_2.content.text = Localize(secondary_item.display_name)
+		self._icons_load_ids[#self._icons_load_ids + 1] = load_icon_id
+	else
+		reward_2.content.text = "n/a"
+	end
 end
 
 TrainingGroundsOptionsView._on_navigation_input_changed = function (self)

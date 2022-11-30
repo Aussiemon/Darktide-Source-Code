@@ -445,8 +445,7 @@ local template = {
 				points = 12,
 				breed_tags = {
 					{
-						"special",
-						"disabler"
+						"special"
 					}
 				}
 			},

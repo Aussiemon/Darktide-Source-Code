@@ -5,17 +5,17 @@ templates.weapon_trait_bespoke_powersword_p1_chained_hits_increases_melee_cleave
 	weapon_trait_bespoke_powersword_p1_chained_hits_increases_melee_cleave_parent = {
 		{
 			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.05
+			}
+		},
+		{
+			stat_buffs = {
 				[stat_buffs.max_hit_mass_attack_modifier] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
 				[stat_buffs.max_hit_mass_attack_modifier] = 0.15
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 0.175
 			}
 		},
 		{
@@ -32,7 +32,7 @@ templates.weapon_trait_bespoke_powersword_p1_increased_melee_damage_on_multiple_
 				required_num_hits = 3
 			},
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.1
+				[stat_buffs.melee_damage] = 0.125
 			}
 		},
 		{
@@ -64,16 +64,16 @@ templates.weapon_trait_bespoke_powersword_p1_increased_melee_damage_on_multiple_
 templates.weapon_trait_bespoke_powersword_p1_infinite_melee_cleave_on_weakspot_kill = {
 	weapon_trait_bespoke_powersword_p1_infinite_melee_cleave_on_weakspot_kill = {
 		{
-			active_duration = 2
+			active_duration = 1.5
 		},
 		{
-			active_duration = 3
+			active_duration = 2.5
 		},
 		{
 			active_duration = 3.5
 		},
 		{
-			active_duration = 4
+			active_duration = 4.5
 		}
 	}
 }
@@ -81,22 +81,22 @@ templates.weapon_trait_bespoke_powersword_p1_increase_power_on_kill = {
 	weapon_trait_bespoke_powersword_p1_increase_power_on_kill_parent = {
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.02
+				[stat_buffs.power_level_modifier] = 0.075
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.03
+				[stat_buffs.power_level_modifier] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.04
+				[stat_buffs.power_level_modifier] = 0.125
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.05
+				[stat_buffs.power_level_modifier] = 0.15
 			}
 		}
 	}

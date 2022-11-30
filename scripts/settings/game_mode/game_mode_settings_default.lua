@@ -6,7 +6,6 @@ local settings = {
 	vaulting_allowed = true,
 	bot_backfilling_allowed = false,
 	class_file_name = "scripts/managers/game_mode/game_modes/game_mode_coop_complete_objective",
-	presence_name = "mission",
 	states = {
 		"start_state",
 		"second_state",

@@ -324,6 +324,15 @@ local explosion_templates = {
 				20,
 				50
 			}
+		},
+		vfx = {
+			"content/fx/particles/weapons/power_maul/power_maul_push_shockwave"
+		},
+		sfx = {
+			{
+				event_name = "wwise/events/weapon/play_ogryn_powermaul_1h_hit_sparks",
+				has_husk_events = true
+			}
 		}
 	},
 	buff_explosion = {

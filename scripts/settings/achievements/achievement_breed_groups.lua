@@ -1,6 +1,5 @@
 local AchievementBreedGroups = {
 	all = {
-		"chaos_beast_of_nurgle",
 		"chaos_hound",
 		"chaos_newly_infected",
 		"chaos_ogryn_bulwark",
@@ -27,7 +26,6 @@ local AchievementBreedGroups = {
 		"renegade_sniper"
 	},
 	chaos = {
-		"chaos_beast_of_nurgle",
 		"chaos_hound",
 		"chaos_newly_infected",
 		"chaos_ogryn_bulwark",
@@ -49,7 +47,6 @@ local AchievementBreedGroups = {
 		"cultist_assault",
 		"cultist_berzerker",
 		"cultist_flamer",
-		"cultist_grenadier",
 		"cultist_gunner",
 		"cultist_melee",
 		"cultist_mutant",
@@ -57,7 +54,6 @@ local AchievementBreedGroups = {
 	},
 	cultist_special = {
 		"cultist_flamer",
-		"cultist_grenadier",
 		"cultist_mutant"
 	},
 	cultist_elite = {

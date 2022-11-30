@@ -29,7 +29,7 @@ templates.weapon_trait_bespoke_combataxe_p1_chained_hits_increases_power = {
 	weapon_trait_bespoke_combataxe_p1_chained_hits_increases_power_parent = {
 		{
 			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 0.1
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.125
 			}
 		},
 		{
@@ -58,12 +58,12 @@ templates.weapon_trait_bespoke_combataxe_p1_chained_hits_increases_crit_chance =
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.035
+				[stat_buffs.critical_strike_chance] = 0.03
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.045
+				[stat_buffs.critical_strike_chance] = 0.04
 			}
 		},
 		{
@@ -76,16 +76,16 @@ templates.weapon_trait_bespoke_combataxe_p1_chained_hits_increases_crit_chance =
 templates.weapon_trait_bespoke_combataxe_p1_infinite_melee_cleave_on_weakspot_kill = {
 	weapon_trait_bespoke_combataxe_p1_infinite_melee_cleave_on_weakspot_kill = {
 		{
-			active_duration = 2
+			active_duration = 1.5
 		},
 		{
-			active_duration = 3
+			active_duration = 2.5
 		},
 		{
 			active_duration = 3.5
 		},
 		{
-			active_duration = 4
+			active_duration = 4.5
 		}
 	}
 }

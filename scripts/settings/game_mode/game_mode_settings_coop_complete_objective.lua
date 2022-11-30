@@ -9,7 +9,6 @@ local settings = {
 	max_bots = 3,
 	vaulting_allowed = true,
 	default_player_side_name = "heroes",
-	presence_name = "mission",
 	states = {
 		"running",
 		"about_to_fail_disabled",

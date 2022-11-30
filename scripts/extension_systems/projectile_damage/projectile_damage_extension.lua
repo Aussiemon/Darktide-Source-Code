@@ -282,7 +282,9 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 
 				local damage_dealt, attack_result, damage_efficiency, stagger_result = Attack.execute(hit_unit, impact_damage_profile, "attack_direction", hit_direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "target_index", 1, "charge_level", impact_charge_level, "is_critical_strike", is_critical_strike, "hit_actor", hit_actor, "hit_world_position", hit_position, "attack_type", AttackSettings.attack_types.ranged, "damage_type", impact_damage_type, "attacking_unit", projectile_unit, "item", weapon_item_or_nil)
 
-				ImpactEffect.play(hit_unit, hit_actor, damage_dealt, impact_damage_type, hit_zone_name, attack_result, hit_position, hit_normal, hit_direction, projectile_unit, IMPACT_FX_DATA, false, AttackSettings.attack_types.ranged, damage_efficiency, impact_damage_profile)
+				if impact_damage_type then
+					ImpactEffect.play(hit_unit, hit_actor, damage_dealt, impact_damage_type, hit_zone_name, attack_result, hit_position, hit_normal, hit_direction, projectile_unit, IMPACT_FX_DATA, false, AttackSettings.attack_types.ranged, damage_efficiency, impact_damage_profile)
+				end
 
 				if impact_suppression_settings then
 					Suppression.apply_area_minion_suppression(owner_unit, impact_suppression_settings, hit_position)
@@ -393,8 +395,8 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 				mark_for_deletion = true
 			end
 
-			if not health_extension then
-				ImpactEffect.play_surface_effect(physics_world, owner_unit, hit_position, hit_normal, hit_direction, impact_damage_type, surface_hit_types.stop, IMPACT_FX_DATA)
+			if not health_extension and impact_damage_type then
+				ImpactEffect.play_surface_effect(physics_world, projectile_unit, hit_position, hit_normal, hit_direction, impact_damage_type, surface_hit_types.stop, IMPACT_FX_DATA)
 			end
 		elseif have_unit_been_hit and (health_extension or is_ragdolled) then
 			impact_result = "continue_straight"
@@ -516,13 +518,11 @@ ProjectileDamageExtension._handle_explosion_achivements = function (self, player
 		local count = 0
 
 		for _, attack_result in pairs(explosion_attack_result_table) do
-			if attack_result == attack_results.died then
-				count = count + 1
-			end
+			count = count + 1
 		end
 
-		if count >= 3 then
-			Managers.achievements:trigger_event(player:account_id(), player:character_id(), "veteran_2_unbounced_grenade_kills_event")
+		if count >= 5 then
+			Managers.achievements:trigger_event(player:account_id(), player:character_id(), "veteran_2_unbounced_grenade_hits_event")
 		end
 	end
 end

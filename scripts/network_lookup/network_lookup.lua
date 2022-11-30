@@ -38,6 +38,7 @@ local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
 local PackagePrioritizationTemplates = require("scripts/loading/package_prioritization_templates")
 local PartyConstants = require("scripts/settings/network/party_constants")
 local Pickups = require("scripts/settings/pickup/pickups")
+local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerCharacterFxSourceNames = require("scripts/settings/fx/player_character_fx_source_names")
 local PlayerCharacterLoopingParticleAliases = require("scripts/settings/particles/player_character_looping_particle_aliases")
@@ -111,6 +112,7 @@ NetworkLookup.chest_states = {
 NetworkLookup.cinematic_scene_names = _create_lookup({}, CinematicSceneSettings.CINEMATIC_NAMES)
 NetworkLookup.circumstance_templates = _create_lookup({}, CircumstanceTemplates)
 NetworkLookup.corruptor_arm_animation_speed_types = _create_lookup({}, CorruptorSettings.animation_speed_multiplier)
+NetworkLookup.damage_efficiencies = _create_lookup({}, AttackSettings.damage_efficiencies)
 NetworkLookup.damage_profile_templates = _create_lookup({}, DamageProfileTemplates)
 NetworkLookup.damage_types = _create_lookup({
 	"nil"
@@ -284,8 +286,11 @@ NetworkLookup.player_character_voices = {
 	"ogryn_a",
 	"ogryn_b"
 }
+NetworkLookup.player_abilities = _create_lookup({
+	"not_equipped"
+}, PlayerAbilities)
 NetworkLookup.player_inventory_slot_names = _create_lookup({}, PlayerCharacterConstants.slot_configuration)
-NetworkLookup.presence_names = _create_lookup({}, PresenceSettings)
+NetworkLookup.presence_names = _create_lookup({}, PresenceSettings.settings)
 NetworkLookup.projectile_locomotion_states = _create_lookup({}, ProjectileLocomotionSettings.states)
 NetworkLookup.projectile_template_names = _create_lookup({}, ProjectileTemplates)
 local projectile_template_effects = {}

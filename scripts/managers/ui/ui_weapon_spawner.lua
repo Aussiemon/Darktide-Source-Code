@@ -1,6 +1,7 @@
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local MasterItems = require("scripts/backend/master_items")
 local UICharacterProfilePackageLoader = require("scripts/managers/ui/ui_character_profile_package_loader")
+local InputDevice = require("scripts/managers/input/input_device")
 local UIWeaponSpawner = class("UIWeaponSpawner")
 
 UIWeaponSpawner.init = function (self, reference_name, world, camera, unit_spawner)
@@ -10,7 +11,16 @@ UIWeaponSpawner.init = function (self, reference_name, world, camera, unit_spawn
 	self._unit_spawner = unit_spawner
 	self._item_definitions = MasterItems.get_cached()
 	self._default_rotation_angle = 0
+	self._force_allow_rotation = false
 	self._rotation_angle = self._default_rotation_angle
+end
+
+UIWeaponSpawner.set_force_allow_rotation = function (self, allow)
+	self._force_allow_rotation = allow
+end
+
+UIWeaponSpawner.force_allow_rotation = function (self)
+	return self._force_allow_rotation
 end
 
 UIWeaponSpawner.node_world_position = function (self, node_name)
@@ -221,6 +231,17 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, loader, po
 	local complete_callback = callback(self, "cb_on_unit_3p_streaming_complete", item_unit_3p)
 
 	Unit.force_stream_meshes(item_unit_3p, complete_callback, true)
+
+	local node_index = Unit.has_node(item_unit_3p, "p_rotation") and Unit.node(item_unit_3p, "p_rotation") or 1
+	local node_pos = Unit.local_position(item_unit_3p, node_index)
+
+	Unit.set_local_position(item_unit_3p, 1, -node_pos)
+
+	local link_unit_rot = Unit.local_rotation(link_unit, 1)
+	local rotated_pos = Quaternion.rotate(link_unit_rot, node_pos)
+	local link_unit_pos = Unit.local_position(link_unit, 1)
+
+	Unit.set_local_position(link_unit, 1, link_unit_pos + rotated_pos)
 end
 
 UIWeaponSpawner.cb_on_unit_3p_streaming_complete = function (self, item_unit_3p)
@@ -231,6 +252,10 @@ UIWeaponSpawner.cb_on_unit_3p_streaming_complete = function (self, item_unit_3p)
 
 		Unit.set_unit_visibility(item_unit_3p, true, true)
 	end
+end
+
+UIWeaponSpawner.get_spawn_data = function (self)
+	return self._weapon_spawn_data
 end
 
 UIWeaponSpawner.spawned = function (self)
@@ -245,7 +270,7 @@ UIWeaponSpawner._update_input_rotation = function (self, dt)
 	end
 
 	if not self._is_rotating and self._rotation_angle ~= self._default_rotation_angle then
-		local rotation_angle = math.lerp(self._default_rotation_angle, self._rotation_angle, 0.05)
+		local rotation_angle = math.lerp(self._rotation_angle, self._default_rotation_angle, dt)
 
 		self:_set_rotation(rotation_angle)
 	end
@@ -260,14 +285,19 @@ local mouse_pos_temp = {}
 UIWeaponSpawner._mouse_rotation_input = function (self, input_service, dt)
 	local mouse = input_service and input_service:get("cursor")
 
-	if not mouse then
+	if not input_service then
 		return
 	end
 
-	local can_rotate = self._is_rotating or self:_is_pressed(input_service)
+	local can_rotate = self._is_rotating or self._force_allow_rotation or self:_is_pressed(input_service) or self._always_allow_rotation
 
 	if can_rotate then
 		if input_service:get("left_pressed") then
+			self._is_rotating = true
+			self._last_mouse_position = nil
+		end
+
+		if input_service:get("navigate_secondary_left_pressed") or input_service:get("navigate_secondary_right_pressed") then
 			self._is_rotating = true
 			self._last_mouse_position = nil
 		end
@@ -278,18 +308,29 @@ UIWeaponSpawner._mouse_rotation_input = function (self, input_service, dt)
 	end
 
 	local is_moving_camera = self._is_rotating
-	local mouse_hold = input_service:get("left_hold")
 
-	if is_moving_camera and mouse_hold then
-		if self._last_mouse_position then
-			local angle = self._rotation_angle - (mouse.x - self._last_mouse_position[1]) * 0.01
+	if is_moving_camera then
+		local mouse_hold = input_service:get("left_hold")
+		local navigate_secondary_left_down = input_service:get("navigate_secondary_left_down")
+		local navigate_secondary_right_down = input_service:get("navigate_secondary_right_down")
+
+		if InputDevice.gamepad_active and (navigate_secondary_left_down > 0 or navigate_secondary_right_down > 0) then
+			local angle = self._rotation_angle + (navigate_secondary_left_down and navigate_secondary_left_down * navigate_secondary_left_down * navigate_secondary_left_down * dt * 4 or 0) + (navigate_secondary_right_down and navigate_secondary_right_down * navigate_secondary_right_down * navigate_secondary_right_down * -dt * 4 or 0)
 
 			self:_set_rotation(angle)
-		end
+		elseif mouse_hold then
+			if self._last_mouse_position then
+				local angle = self._rotation_angle - (mouse.x - self._last_mouse_position[1]) * 0.01
 
-		mouse_pos_temp[1] = mouse.x
-		mouse_pos_temp[2] = mouse.y
-		self._last_mouse_position = mouse_pos_temp
+				self:_set_rotation(angle)
+			end
+
+			mouse_pos_temp[1] = mouse.x
+			mouse_pos_temp[2] = mouse.y
+			self._last_mouse_position = mouse_pos_temp
+		else
+			self._is_rotating = false
+		end
 	elseif is_moving_camera then
 		self._is_rotating = false
 	end

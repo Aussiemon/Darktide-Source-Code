@@ -212,11 +212,11 @@ CheckProcFunctions.on_block_broken = function (params)
 end
 
 CheckProcFunctions.on_crit = function (params)
-	if not params.is_critical_strike then
-		return false
-	end
+	return params.is_critical_strike
+end
 
-	return true
+CheckProcFunctions.on_crit_ranged = function (params)
+	return params.is_critical_strike and params.attack_type == attack_types.ranged
 end
 
 CheckProcFunctions.on_crit_kills = function (params)
@@ -276,6 +276,14 @@ end
 
 CheckProcFunctions.on_non_weakspot_hit = function (params)
 	return not params.hit_weakspot
+end
+
+CheckProcFunctions.on_non_weakspot_hit_melee = function (params)
+	return not params.hit_weakspot and params.attack_type == attack_types.melee
+end
+
+CheckProcFunctions.on_non_weakspot_hit_ranged = function (params)
+	return not params.hit_weakspot and params.attack_type == attack_types.ranged
 end
 
 CheckProcFunctions.on_weakspot_crit = function (params)

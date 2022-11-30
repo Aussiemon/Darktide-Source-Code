@@ -293,6 +293,7 @@ local legend_inputs = {
 		input_action = "hotkey_item_discard",
 		display_name = "loc_inventory_item_discard",
 		alignment = "right_alignment",
+		use_mouse_hold = true,
 		on_pressed_callback = "cb_on_discard_held",
 		visibility_function = function (parent)
 			local is_item_equipped = parent:is_selected_item_equipped()

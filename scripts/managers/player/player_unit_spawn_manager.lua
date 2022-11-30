@@ -1,5 +1,7 @@
 local Breeds = require("scripts/settings/breed/breeds")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local UnitSpawnerManager = require("scripts/foundation/managers/unit_spawner/unit_spawner_manager")
+local DELETION_STATES = UnitSpawnerManager.DELETION_STATES
 local PlayerUnitSpawnManager = class("PlayerUnitSpawnManager")
 local CLIENT_RPCS = {
 	"rpc_register_player_unit_ragdoll"
@@ -15,6 +17,7 @@ PlayerUnitSpawnManager.init = function (self, is_server, level_seed, game_mode_n
 	self._seed = level_seed
 	self._frozen_ragdolls = {}
 	self._soft_cap_out_of_bounds_units = soft_cap_out_of_bounds_units
+	self._queued_despawns = {}
 
 	if not self._is_server then
 		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
@@ -57,6 +60,19 @@ PlayerUnitSpawnManager.update = function (self, dt, t)
 	end
 
 	self:_update_ragdolls(self._frozen_ragdolls, self._soft_cap_out_of_bounds_units)
+end
+
+PlayerUnitSpawnManager.process_queued_despawns = function (self)
+	local player_manager = Managers.player
+	local queued_despawns = self._queued_despawns
+
+	for unique_id, _ in pairs(queued_despawns) do
+		local player = player_manager:player_from_unique_id(unique_id)
+
+		self:despawn(player)
+
+		queued_despawns[unique_id] = nil
+	end
 end
 
 PlayerUnitSpawnManager._update_ragdolls = function (self, frozen_ragdolls, soft_cap_out_of_bounds_units)
@@ -177,6 +193,14 @@ PlayerUnitSpawnManager._spawn = function (self, player, position, rotation, pare
 	return player_unit
 end
 
+PlayerUnitSpawnManager.despawn_safe = function (self, player)
+	if Managers.state.unit_spawner:deletion_state() == DELETION_STATES.during_extension_update then
+		self._queued_despawns[player:unique_id()] = true
+	else
+		self:despawn(player)
+	end
+end
+
 PlayerUnitSpawnManager.despawn = function (self, player)
 	local game_mode_manager = Managers.state.game_mode
 
@@ -288,7 +312,7 @@ PlayerUnitSpawnManager._on_player_soft_oob = function (self, unit)
 		Managers.state.out_of_bounds:unregister_soft_oob_unit(unit, self)
 		Managers.state.unit_spawner:mark_for_deletion(unit)
 	else
-		self:despawn(unit_owner)
+		self:despawn_safe(unit_owner)
 	end
 end
 

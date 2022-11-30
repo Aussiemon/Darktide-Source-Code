@@ -35,7 +35,7 @@ local weapon_template = {
 				}
 			}
 		},
-		charge_explosion = {
+		charge = {
 			buffer_time = 0.1,
 			input_sequence = {
 				{
@@ -44,7 +44,7 @@ local weapon_template = {
 				}
 			}
 		},
-		charge_explosion_release = {
+		charge_release = {
 			buffer_time = 0.31,
 			input_sequence = {
 				{
@@ -148,11 +148,11 @@ table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inp
 weapon_template.action_input_hierarchy = {
 	wield = "stay",
 	shoot_pressed = "stay",
-	charge_explosion = {
-		grenade_ability = "base",
+	charge = {
+		charge_release = "base",
 		wield = "base",
 		trigger_explosion = "base",
-		charge_explosion_release = "base",
+		grenade_ability = "base",
 		vent = "base",
 		combat_ability = "base"
 	},
@@ -166,12 +166,9 @@ weapon_template.action_input_hierarchy = {
 		special_action = "base",
 		special_action_light = "base",
 		special_action_heavy = "base",
-		vent = "base",
-		shoot_pressed = "base",
-		grenade_ability = "base",
-		combat_ability = "base",
 		wield = "base",
-		charge_explosion = "base"
+		grenade_ability = "base",
+		combat_ability = "base"
 	}
 }
 
@@ -270,8 +267,9 @@ weapon_template.actions = {
 				action_name = "action_vent",
 				chain_time = 0.3
 			},
-			charge_explosion = {
-				action_name = "action_charge_explosion"
+			charge = {
+				action_name = "action_charge",
+				chain_time = 0.45
 			}
 		},
 		fx = {
@@ -282,10 +280,10 @@ weapon_template.actions = {
 			buff_keywords.allow_hipfire_during_sprint
 		}
 	},
-	action_charge_explosion = {
+	action_charge = {
 		position_finder_module_class_name = "ballistic_raycast_position_finder",
 		overload_module_class_name = "warp_charge",
-		start_input = "charge_explosion",
+		start_input = "charge",
 		kind = "overload_charge_position_finder",
 		sprint_ready_up_time = 0.25,
 		min_scale = 0,
@@ -297,7 +295,7 @@ weapon_template.actions = {
 		minimum_hold_time = 0.3,
 		charge_template = "forcestaff_p1_m1_charge_aoe",
 		anim_event = "explosion_start",
-		stop_input = "charge_explosion_release",
+		stop_input = "charge_release",
 		total_time = math.huge,
 		action_movement_curve = {
 			{
@@ -418,8 +416,8 @@ weapon_template.actions = {
 				reset_combo = true,
 				action_name = "rapid_left"
 			},
-			charge_explosion = {
-				action_name = "action_charge_explosion",
+			charge = {
+				action_name = "action_charge",
 				chain_time = 0.6
 			},
 			special_action_hold = {
@@ -461,8 +459,8 @@ weapon_template.actions = {
 				reset_combo = true,
 				action_name = "rapid_left"
 			},
-			charge_explosion = {
-				action_name = "action_charge_explosion",
+			charge = {
+				action_name = "action_charge",
 				chain_time = 0.5
 			},
 			vent = {
@@ -509,8 +507,8 @@ weapon_template.actions = {
 				reset_combo = true,
 				action_name = "rapid_left"
 			},
-			charge_explosion = {
-				action_name = "action_charge_explosion",
+			charge = {
+				action_name = "action_charge",
 				chain_time = 1
 			},
 			vent = {
@@ -595,8 +593,8 @@ weapon_template.actions = {
 				reset_combo = true,
 				action_name = "rapid_left"
 			},
-			charge_explosion = {
-				action_name = "action_charge_explosion",
+			charge = {
+				action_name = "action_charge",
 				chain_time = 0.5
 			},
 			vent = {
@@ -686,8 +684,8 @@ weapon_template.actions = {
 				reset_combo = true,
 				action_name = "rapid_left"
 			},
-			charge_explosion = {
-				action_name = "action_charge_explosion",
+			charge = {
+				action_name = "action_charge",
 				chain_time = 0.5
 			},
 			vent = {
@@ -781,8 +779,8 @@ weapon_template.actions = {
 				reset_combo = true,
 				action_name = "rapid_left"
 			},
-			charge_explosion = {
-				action_name = "action_charge_explosion",
+			charge = {
+				action_name = "action_charge",
 				chain_time = 1
 			},
 			vent = {
@@ -873,8 +871,8 @@ weapon_template.actions = {
 				reset_combo = true,
 				action_name = "rapid_left"
 			},
-			charge_explosion = {
-				action_name = "action_charge_explosion",
+			charge = {
+				action_name = "action_charge",
 				chain_time = 0.7
 			},
 			vent = {
@@ -995,34 +993,59 @@ weapon_template.toughness_template = "default"
 weapon_template.warp_charge_template = "forcestaff_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.overclocks = {}
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	forcestaff_p1_m1_dps_stat = {
-		description = "loc_trait_description_forcestaff_p1_m1_dps_stat",
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
 			rapid_left = {
-				damage_trait_templates.forcestaff_p1_m1_dps_stat
+				damage_trait_templates.forcestaff_p1_m1_dps_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_trigger_explosion = {
 				overrides = {
 					default_force_staff_demolition = {
-						damage_trait_templates.forcestaff_p1_m1_dps_stat
+						damage_trait_templates.forcestaff_p1_m1_dps_stat,
+						display_data = {
+							prefix = "loc_weapon_stats_display_radius",
+							damage_profile_path = {
+								"explosion_template",
+								"damage_profile"
+							},
+							display_stats = {
+								power_distribution = {
+									attack = {}
+								}
+							}
+						}
 					},
 					close_force_staff_demolition = {
-						damage_trait_templates.forcestaff_p1_m1_dps_stat
+						damage_trait_templates.forcestaff_p1_m1_dps_stat,
+						display_data = {
+							prefix = "loc_weapon_stats_display_radius",
+							damage_profile_path = {
+								"explosion_template",
+								"close_damage_profile"
+							},
+							display_stats = {
+								power_distribution = {
+									attack = {}
+								}
+							}
+						}
 					}
 				}
 			}
 		}
 	},
 	forcestaff_p1_m1_explosion_size_stat = {
-		description = "loc_trait_description_forcestaff_p1_m1_explosion_size_stat",
 		display_name = "loc_stats_display_explosion_stat",
 		is_stat_trait = true,
 		explosion = {
 			action_trigger_explosion = {
-				explosion_trait_templates.forcestaff_p1_m1_explosion_size_stat
+				explosion_trait_templates.forcestaff_p1_m1_explosion_size_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
@@ -1031,33 +1054,45 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		warp_charge = {
 			base = {
-				warp_charge_trait_templates.forcestaff_p1_m1_vent_speed_stat
+				warp_charge_trait_templates.forcestaff_p1_m1_vent_speed_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
 	forcestaff_p1_m1_charge_speed_stat = {
-		description = "loc_trait_description_forcestaff_p1_m1_charge_speed_stat",
 		display_name = "loc_stats_display_charge_speed",
 		is_stat_trait = true,
 		charge = {
 			rapid_left = {
 				charge_trait_templates.forcestaff_p1_m1_charge_speed_stat
 			},
-			action_charge_explosion = {
-				charge_trait_templates.forcestaff_p1_m1_charge_speed_stat
+			action_charge = {
+				charge_trait_templates.forcestaff_p1_m1_charge_speed_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
 	forcestaff_p1_m1_warp_charge_cost_stat = {
-		description = "loc_trait_description_forcestaff_p1_m1_warp_charge_cost_stat",
 		display_name = "loc_stats_display_warp_resist_stat",
 		is_stat_trait = true,
 		charge = {
 			rapid_left = {
-				charge_trait_templates.forcestaff_p1_m1_warp_charge_cost_stat
+				charge_trait_templates.forcestaff_p1_m1_warp_charge_cost_stat,
+				display_data = {
+					prefix = "loc_ingame_action_one",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
-			action_charge_explosion = {
-				charge_trait_templates.forcestaff_p1_m1_warp_charge_cost_stat
+			action_charge = {
+				charge_trait_templates.forcestaff_p1_m1_warp_charge_cost_stat,
+				display_data = {
+					prefix = "loc_ingame_action_two",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			}
 		}
 	}
@@ -1098,9 +1133,11 @@ weapon_template.displayed_attacks = {
 		type = "charge"
 	},
 	special = {
+		desc = "loc_stats_special_action_melee_weapon_bash_forcestaff_desc",
 		display_name = "loc_forcestaff_p1_m1_attack_special",
 		type = "melee_hand"
 	}
 }
+weapon_template.special_action_name = "action_stab"
 
 return weapon_template

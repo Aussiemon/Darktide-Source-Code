@@ -14,6 +14,8 @@ local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_trai
 local WeaponTraitsRangedAimed = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_aimed")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local armor_types = ArmorSettings.types
 local damage_types = DamageSettings.damage_types
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
@@ -938,13 +940,15 @@ weapon_template.alternate_fire_settings = {
 		start_modifier = 0.8
 	}
 }
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	stubrevolver_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.stubrevolver_dps_stat
+				damage_trait_templates.stubrevolver_dps_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.stubrevolver_dps_stat
@@ -959,7 +963,14 @@ weapon_template.base_stats = {
 				weapon_handling_trait_templates.default_reload_speed_modify
 			},
 			action_reload_loop = {
-				weapon_handling_trait_templates.default_reload_speed_modify
+				weapon_handling_trait_templates.default_reload_speed_modify,
+				display_data = {
+					display_stats = {
+						time_scale = {
+							display_name = "loc_weapon_stats_display_reload_speed"
+						}
+					}
+				}
 			}
 		}
 	},
@@ -968,30 +979,36 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		dodge = {
 			base = {
-				dodge_trait_templates.default_dodge_stat
+				dodge_trait_templates.default_dodge_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_dodge")
 			}
 		},
 		sprint = {
 			base = {
-				sprint_trait_templates.default_sprint_stat
+				sprint_trait_templates.default_sprint_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_sprint")
 			}
 		},
 		movement_curve_modifier = {
 			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_curve")
 			}
 		},
 		recoil = {
 			base = {
-				recoil_trait_templates.default_mobility_recoil_stat
+				recoil_trait_templates.default_mobility_recoil_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_recoil", "loc_weapon_stats_display_hip_fire")
 			},
 			alternate_fire = {
-				recoil_trait_templates.default_mobility_recoil_stat
+				recoil_trait_templates.default_mobility_recoil_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_recoil", "loc_weapon_stats_display_ads")
 			}
 		},
 		spread = {
 			base = {
-				spread_trait_templates.default_mobility_spread_stat
+				spread_trait_templates.default_mobility_spread_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_spread")
 			}
 		}
 	},
@@ -1000,7 +1017,8 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.stubrevolver_armor_piercing_stat
+				damage_trait_templates.stubrevolver_armor_piercing_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.stubrevolver_armor_piercing_stat
@@ -1012,7 +1030,8 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		weapon_handling = {
 			action_shoot_hip = {
-				weapon_handling_trait_templates.stubrevolver_crit_stat
+				weapon_handling_trait_templates.stubrevolver_crit_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
 				weapon_handling_trait_templates.stubrevolver_crit_stat
@@ -1020,7 +1039,8 @@ weapon_template.base_stats = {
 		},
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.stubrevolver_crit_stat
+				damage_trait_templates.stubrevolver_crit_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.stubrevolver_crit_stat
@@ -1077,9 +1097,11 @@ weapon_template.displayed_attacks = {
 		type = "ads"
 	},
 	special = {
+		desc = "loc_stats_special_action_melee_weapon_bash_desc",
 		display_name = "loc_weapon_special_weapon_bash",
-		type = "melee_hand"
+		type = "melee"
 	}
 }
+weapon_template.special_action_name = "action_pistol_whip"
 
 return weapon_template

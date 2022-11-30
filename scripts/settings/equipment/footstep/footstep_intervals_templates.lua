@@ -27,7 +27,7 @@ local footstep_intervals_templates = {
 	},
 	combat_axe = {
 		crouch_walking = 0.4,
-		walking = 0.33,
+		walking = 0.4,
 		sprinting = 0.37
 	},
 	combat_knife = {
@@ -53,7 +53,12 @@ local footstep_intervals_templates = {
 	ogryn_heavy_stubber = {
 		crouch_walking = 0.9,
 		walking = 0.61,
-		sprinting = 0.55
+		sprinting = 0.47
+	},
+	ogryn_gauntlet = {
+		crouch_walking = 0.9,
+		walking = 0.4,
+		sprinting = 0.5
 	},
 	ogryn_powermaul = {
 		crouch_walking = 0.61,
@@ -69,6 +74,11 @@ local footstep_intervals_templates = {
 		crouch_walking = 0.73,
 		walking = 0.58,
 		sprinting = 0.53
+	},
+	ogryn_thumper_shotgun = {
+		crouch_walking = 0.73,
+		walking = 0.58,
+		sprinting = 0.47
 	},
 	ogryn_thumper_p1_m2 = {
 		crouch_walking = 0.7,

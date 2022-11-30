@@ -704,7 +704,8 @@ ActionShoot._check_for_auto_critical_strike = function (self)
 	local is_critical_strike = critical_strike_component.is_active
 	local num_critical_shots = critical_strike_component.num_critical_shots
 	local weapon_handling_template = self._weapon_extension:weapon_handling_template() or EMPTY_TABLE
-	local max_critical_shots = weapon_handling_template.max_critical_shots or 1
+	local critical_strike = weapon_handling_template.critical_strike or EMPTY_TABLE
+	local max_critical_shots = critical_strike.max_critical_shots or 1
 	local auto_crits_left = num_critical_shots < max_critical_shots
 
 	if auto_fire and is_critical_strike and auto_crits_left then
@@ -733,8 +734,9 @@ ActionShoot._check_for_auto_critical_strike_end = function (self, t)
 
 	local critical_strike_component = self._critical_strike_component
 	local weapon_handling_template = self._weapon_extension:weapon_handling_template() or EMPTY_TABLE
+	local critical_strike = weapon_handling_template.critical_strike or EMPTY_TABLE
 	local num_critical_shots = critical_strike_component.num_critical_shots
-	local max_critical_shots = weapon_handling_template.max_critical_shots or 1
+	local max_critical_shots = critical_strike.max_critical_shots or 1
 	local auto_crits_left = num_critical_shots < max_critical_shots
 
 	if not auto_crits_left then

@@ -251,6 +251,9 @@ local weapon_handling_templates = {
 				lerp_perfect = 0.3,
 				lerp_basic = 0.6
 			}
+		},
+		critical_strike = {
+			max_critical_shots = 3
 		}
 	},
 	forcestaff_p2_m1_burst = {
@@ -293,6 +296,9 @@ local weapon_handling_templates = {
 				lerp_perfect = 0.3,
 				lerp_basic = 0.6
 			}
+		},
+		critical_strike = {
+			max_critical_shots = 3
 		}
 	},
 	forcestaff_p3_m1_single_shot = {

@@ -5,7 +5,7 @@ local templates = {
 		weapon_trait_bespoke_combataxe_p3_chained_hits_increases_power_parent = {
 			{
 				stat_buffs = {
-					[stat_buffs.max_hit_mass_attack_modifier] = 0.1
+					[stat_buffs.max_hit_mass_attack_modifier] = 0.125
 				}
 			},
 			{
@@ -29,17 +29,17 @@ local templates = {
 		weapon_trait_bespoke_combataxe_p3_consecutive_hits_increases_stagger_parent = {
 			{
 				stat_buffs = {
+					[stat_buffs.melee_impact_modifier] = 0.075
+				}
+			},
+			{
+				stat_buffs = {
 					[stat_buffs.melee_impact_modifier] = 0.1
 				}
 			},
 			{
 				stat_buffs = {
 					[stat_buffs.melee_impact_modifier] = 0.125
-				}
-			},
-			{
-				stat_buffs = {
-					[stat_buffs.melee_impact_modifier] = 0.14
 				}
 			},
 			{
@@ -182,19 +182,19 @@ local templates = {
 			{
 				max_stacks = 5,
 				stat_buffs = {
-					[stat_buffs.rending_multiplier] = 0.06
+					[stat_buffs.rending_multiplier] = 0.05
 				}
 			},
 			{
 				max_stacks = 5,
 				stat_buffs = {
-					[stat_buffs.rending_multiplier] = 0.12
+					[stat_buffs.rending_multiplier] = 0.1
 				}
 			},
 			{
 				max_stacks = 5,
 				stat_buffs = {
-					[stat_buffs.rending_multiplier] = 0.17
+					[stat_buffs.rending_multiplier] = 0.15
 				}
 			},
 			{
@@ -233,17 +233,17 @@ local templates = {
 		weapon_trait_bespoke_combataxe_p3_increased_weakspot_damage_on_push = {
 			{
 				proc_stat_buffs = {
+					[stat_buffs.weakspot_damage] = 0.075
+				}
+			},
+			{
+				proc_stat_buffs = {
 					[stat_buffs.weakspot_damage] = 0.1
 				}
 			},
 			{
 				proc_stat_buffs = {
 					[stat_buffs.weakspot_damage] = 0.125
-				}
-			},
-			{
-				proc_stat_buffs = {
-					[stat_buffs.weakspot_damage] = 0.14
 				}
 			},
 			{

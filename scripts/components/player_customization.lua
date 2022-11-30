@@ -11,6 +11,7 @@ PlayerCustomization.editor_init = function (self, unit)
 	self._in_editor = in_editor
 	self._attach_settings = self:_construct_attach_settings(unit, world, in_editor)
 	self._units_by_slot_name = {}
+	self._total_num_attachments = 0
 end
 
 PlayerCustomization.init = function (self, unit)
@@ -25,6 +26,7 @@ PlayerCustomization.init = function (self, unit)
 	self._in_editor = in_editor
 	self._attach_settings = self:_construct_attach_settings(unit, world, in_editor)
 	self._units_by_slot_name = {}
+	self._total_num_attachments = 0
 
 	if not DEDICATED_SERVER then
 		self:_customize(unit)
@@ -86,8 +88,7 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 
 	self:spawn_items(item_table)
 
-	local face_item_index = #item_table + 1
-	local face_unit = self:_spawn_facial_items(face_item_name, face_attachment_items, face_item_index)
+	local face_unit = self:_spawn_facial_items(face_item_name, face_attachment_items)
 
 	if face_unit then
 		local face_sm_override = self:get_data(unit, "face_sm_override")
@@ -164,6 +165,7 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 	local attach_settings = self._attach_settings
 	local is_first_person = attach_settings.is_first_person
 	local in_editor = self._in_editor
+	local attachment_count = self._total_num_attachments
 
 	for i = 1, #items do
 		local item = items[i]
@@ -175,7 +177,9 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 				local item_unit, attachment_units = VisualLoadoutCustomization.spawn_item(item_data_clone, attach_settings, unit, nil, optional_mission_template)
 
 				if item_unit then
-					Unit.set_data(unit, "attached_items", i, item_unit)
+					attachment_count = attachment_count + 1
+
+					Unit.set_data(unit, "attached_items", attachment_count, item_unit)
 				end
 
 				local slots = item_data_clone.slots
@@ -192,8 +196,10 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 				if attachment_units then
 					local num_attachments = #attachment_units
 
-					for j = 1, num_attachments do
-						Unit.set_data(item_unit, "attached_items", num_attachments - j + 1, attachment_units[j])
+					for j = num_attachments, 1, -1 do
+						attachment_count = attachment_count + 1
+
+						Unit.set_data(item_unit, "attached_items", attachment_count, attachment_units[j])
 					end
 				end
 
@@ -214,9 +220,11 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 			end
 		end
 	end
+
+	self._total_num_attachments = attachment_count
 end
 
-PlayerCustomization._spawn_facial_items = function (self, face_item_name, face_attachment_items, face_item_index)
+PlayerCustomization._spawn_facial_items = function (self, face_item_name, face_attachment_items)
 	local face_unit, face_attachment_units = nil
 
 	if self._attach_settings.is_first_person then
@@ -224,6 +232,7 @@ PlayerCustomization._spawn_facial_items = function (self, face_item_name, face_a
 	end
 
 	local face_item_data = rawget(self._attach_settings.item_definitions, face_item_name)
+	local attachment_count = self._total_num_attachments
 
 	if face_item_data then
 		local face_item_data_clone = table.clone(face_item_data)
@@ -241,14 +250,18 @@ PlayerCustomization._spawn_facial_items = function (self, face_item_name, face_a
 		face_unit, face_attachment_units = VisualLoadoutCustomization.spawn_item(face_item_data_clone, self._attach_settings, self._unit)
 
 		if face_unit then
-			Unit.set_data(self._unit, "attached_items", face_item_index, face_unit)
+			attachment_count = attachment_count + 1
+
+			Unit.set_data(self._unit, "attached_items", attachment_count, face_unit)
 		end
 
 		if face_attachment_units then
 			local num_attachments = #face_attachment_units
 
-			for j = 1, num_attachments do
-				Unit.set_data(face_unit, "attached_items", num_attachments - j + 1, face_attachment_units[j])
+			for j = num_attachments, 1, -1 do
+				attachment_count = attachment_count + 1
+
+				Unit.set_data(face_unit, "attached_items", attachment_count, face_attachment_units[j])
 			end
 		end
 
@@ -266,6 +279,8 @@ PlayerCustomization._spawn_facial_items = function (self, face_item_name, face_a
 			VisualLoadoutCustomization.apply_material_override(face_unit, self._unit, false, face_material_overrides[i], self._in_editor)
 		end
 	end
+
+	self._total_num_attachments = attachment_count
 
 	return face_unit
 end
@@ -303,8 +318,8 @@ end
 PlayerCustomization.destroy = function (self, unit, is_editor)
 	local world = self._world
 	local i = 1
-	local array_size = 0
 	local attachment = Unit.get_data(unit, "attached_items", i)
+	local array_size = 0
 	local unit_array_size = Unit.data_table_size(unit, "attached_items") or 0
 
 	while array_size < unit_array_size do
@@ -319,6 +334,7 @@ PlayerCustomization.destroy = function (self, unit, is_editor)
 				end
 			end
 
+			World.unlink_unit(world, attachment)
 			World.destroy_unit(world, attachment)
 			Unit.set_data(unit, "attached_items", i, nil)
 
@@ -328,6 +344,8 @@ PlayerCustomization.destroy = function (self, unit, is_editor)
 		i = i + 1
 		attachment = Unit.get_data(unit, "attached_items", i)
 	end
+
+	self._total_num_attachments = 0
 end
 
 PlayerCustomization.unit_in_slot = function (self, slot_name)
