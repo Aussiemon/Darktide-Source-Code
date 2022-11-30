@@ -518,8 +518,9 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 	local sticky_t = t - start_t
 	local duration = hit_stickyness_settings.duration
 	local extra_duration = hit_stickyness_settings.extra_duration or 0
+	local min_sticky_time = hit_stickyness_settings.min_sticky_time or 0.5
 
-	if sticky_target_unit_alive and sticky_t >= duration + extra_duration or not sticky_target_unit_alive and sticky_t >= duration * 0.5 then
+	if sticky_target_unit_alive and sticky_t >= duration + extra_duration or not sticky_target_unit_alive and sticky_t >= duration * min_sticky_time then
 		self:_stop_hit_stickyness(hit_stickyness_settings)
 	end
 end
@@ -733,7 +734,6 @@ ActionSweep._process_sweep_results = function (self, t, sweep_results, num_sweep
 	local unit_best_result, actor_to_unit = self:_pick_best_sweep_result_per_unit(sweep_results, num_sweep_results, hit_units)
 	local ordered_units = self:_order_by_significance(unit_best_result, sweep_results, actor_to_unit, action_settings)
 	local num_ordered_units = #ordered_units
-	local special_was_active_before_processing_hits = self._inventory_slot_component.special_active
 	local abort_attack = false
 	local armor_aborted_attack = false
 
@@ -765,10 +765,10 @@ ActionSweep._process_sweep_results = function (self, t, sweep_results, num_sweep
 	local special_active_at_start = self._weapon_action_component.special_active_at_start
 	local hit_stickyness_settings = special_active_at_start and action_settings.hit_stickyness_settings_special_active or action_settings.hit_stickyness_settings
 
-	if self:_can_start_stickyness(hit_stickyness_settings, abort_attack, special_was_active_before_processing_hits) then
+	if self:_can_start_stickyness(hit_stickyness_settings, abort_attack, special_active_at_start) then
 		self:_start_hit_stickyness(hit_stickyness_settings, t, attack_direction)
 	else
-		self:_play_hit_animations(action_settings, abort_attack, armor_aborted_attack, special_was_active_before_processing_hits)
+		self:_play_hit_animations(action_settings, abort_attack, armor_aborted_attack, special_active_at_start)
 	end
 end
 
@@ -945,8 +945,8 @@ ActionSweep._context_aware_sweep_order = function (self, unit_table, sweep_units
 	return unit_table
 end
 
-ActionSweep._current_max_hit_mass = function (self, inventory_slot_component)
-	if inventory_slot_component.special_active then
+ActionSweep._current_max_hit_mass = function (self, weapon_action_component)
+	if weapon_action_component.special_active_at_start then
 		return self._max_hit_mass_special
 	else
 		return self._max_hit_mass
@@ -989,13 +989,14 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 		AimAssist.reset_ramp_multiplier(self._aim_assist_ramp_component)
 	end
 
-	local max_hit_mass = self:_current_max_hit_mass(inventory_slot_component)
+	local weapon_action_component = self._weapon_action_component
+	local max_hit_mass = self:_current_max_hit_mass(weapon_action_component)
 	ignore_armor_aborts_attack = ignore_armor_aborts_attack or buff_extension:has_keyword(buff_keywords.use_reduced_hit_mass)
 	local hit_ragdoll = Health.is_ragdolled(hit_unit)
 	local armor_aborts_attack = not ignore_armor_aborts_attack and not hit_ragdoll and target_is_alive and Armor.aborts_attack(hit_unit, target_breed_or_nil, hit_zone_name_or_nil)
 	local max_mass_hit = max_hit_mass <= amount_of_mass_hit
 	local abort_attack = max_mass_hit or armor_aborts_attack
-	local is_special_active = inventory_slot_component.special_active
+	local is_special_active = weapon_action_component.special_active_at_start
 	local is_critical_strike = critical_strike_component.is_active
 	local damage_profile, damage_type = nil
 
@@ -1072,7 +1073,7 @@ ActionSweep._do_damage_to_unit = function (self, damage_profile, hit_unit, hit_a
 	local player_unit = self._player_unit
 	local instakill = false
 	local source_parameters = impact_fx_data.source_parameters
-	local max_hit_mass = self:_current_max_hit_mass(self._inventory_slot_component)
+	local max_hit_mass = self:_current_max_hit_mass(self._weapon_action_component)
 	local hit_mass_percentage = max_hit_mass == 0 and 1 or 1 - math.clamp01(amount_of_mass_hit / max_hit_mass)
 	source_parameters.hit_mass_percentage = hit_mass_percentage
 	source_parameters.num_melee_hits = math.min(num_hit_enemies, 10)
@@ -1277,7 +1278,7 @@ ActionSweep._play_hit_effects = function (self, damage_profile, hit_position, at
 		table.clear(external_properties)
 
 		external_properties.is_critical_strike = self._critical_strike_component.is_active and "true" or "false"
-		external_properties.special_active = self._inventory_slot_component.special_active and "true" or "false"
+		external_properties.special_active = self._weapon_action_component.special_active_at_start and "true" or "false"
 
 		self._fx_extension:trigger_gear_wwise_event_with_source(sweep_hit_alias, external_properties, sweep_fx_source_name, sync_to_clients)
 		self._fx_extension:trigger_gear_wwise_event_with_source(crit_hit_alias, external_properties, sweep_fx_source_name, sync_to_clients)

@@ -29,22 +29,22 @@ templates.weapon_trait_bespoke_powermaul_p1_consecutive_hits_increases_stagger =
 	weapon_trait_bespoke_powermaul_p1_consecutive_hits_increases_stagger_parent = {
 		{
 			stat_buffs = {
-				[stat_buffs.melee_impact_modifier] = 0.05
-			}
-		},
-		{
-			stat_buffs = {
 				[stat_buffs.melee_impact_modifier] = 0.075
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.melee_impact_modifier] = 0.09
+				[stat_buffs.melee_impact_modifier] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.melee_impact_modifier] = 0.1
+				[stat_buffs.melee_impact_modifier] = 0.125
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_impact_modifier] = 0.15
 			}
 		}
 	}

@@ -451,6 +451,11 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_small"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			}
 		},
 		died = {
@@ -467,6 +472,11 @@ local disgustingly_resilient = {
 			{
 				effects = {
 					"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_small"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			}
 		},
@@ -485,6 +495,11 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_small"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			}
 		},
 		damage = {
@@ -502,6 +517,11 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_small"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			}
 		},
 		damage_negated = {
@@ -513,6 +533,11 @@ local disgustingly_resilient = {
 			{
 				effects = {
 					"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_small"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			}
 		}

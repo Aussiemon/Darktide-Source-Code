@@ -128,19 +128,19 @@ local template = {
 				points = 12,
 				breed_tags = {
 					{
-						"melee",
-						"horde"
+						"close",
+						"roamer"
 					}
 				}
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_resurgence_upper",
+				spawner_group = "spawner_resurgence_right",
 				limit_spawners = 2,
 				points = 6,
 				breed_tags = {
 					{
-						"far",
+						"close",
 						"elite"
 					}
 				}
@@ -176,8 +176,8 @@ local template = {
 				end
 			},
 			{
-				"start_terror_event",
-				start_event_name = "event_luggable_resurgence_a"
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_wave_1"
 			}
 		},
 		event_luggable_resurgence_b = {
@@ -200,13 +200,14 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_resurgence_upper",
-				limit_spawners = 2,
-				points = 6,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_resurgence_right",
+				limit_spawners = 3,
+				points = 12,
 				breed_tags = {
 					{
-						"far",
-						"roamer"
+						"melee",
+						"horde"
 					}
 				}
 			},
@@ -241,8 +242,8 @@ local template = {
 				end
 			},
 			{
-				"start_terror_event",
-				start_event_name = "event_luggable_resurgence_b"
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_wave_1"
 			}
 		},
 		event_luggable_resurgence_c = {
@@ -250,7 +251,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_resurgence_upper",
 				limit_spawners = 1,
-				points = 10,
+				points = 12,
 				breed_tags = {
 					{
 						"close",
@@ -261,12 +262,88 @@ local template = {
 			{
 				"spawn_by_points",
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_resurgence_right",
+				spawner_group = "spawner_resurgence_upper",
 				limit_spawners = 1,
 				points = 6,
 				breed_tags = {
 					{
-						"far",
+						"close",
+						"elite"
+					}
+				}
+			},
+			{
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 12,
+				breed_tags = {
+					{
+						"special"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 7
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "spawner_resurgence_right",
+				limit_spawners = 2,
+				points = 20,
+				breed_tags = {
+					{
+						"melee",
+						"horde"
+					}
+				}
+			},
+			{
+				"start_terror_trickle",
+				delay = 8,
+				spawner_group = "spawner_resurgence_upper",
+				template_name = "standard_melee"
+			},
+			{
+				"continue_when",
+				duration = 35,
+				condition = function ()
+					return TerrorEventQueries.num_alive_minions() < 3
+				end
+			},
+			{
+				"continue_when",
+				condition = function ()
+					return TerrorEventQueries.num_alive_minions() < 10
+				end
+			},
+			{
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_wave_2"
+			}
+		},
+		event_luggable_resurgence_d = {
+			{
+				"spawn_by_points",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_resurgence_left",
+				limit_spawners = 1,
+				points = 10,
+				breed_tags = {
+					{
+						"melee",
+						"roamer"
+					}
+				}
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "spawner_resurgence_left",
+				limit_spawners = 1,
+				points = 6,
+				breed_tags = {
+					{
+						"melee",
 						"elite"
 					}
 				}
@@ -288,9 +365,9 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_resurgence_right",
+				spawner_group = "spawner_resurgence_upper",
 				limit_spawners = 2,
-				points = 12,
+				points = 20,
 				breed_tags = {
 					{
 						"melee",
@@ -302,7 +379,7 @@ local template = {
 				"start_terror_trickle",
 				delay = 8,
 				spawner_group = "spawner_resurgence_upper",
-				template_name = "low_melee"
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
@@ -318,85 +395,8 @@ local template = {
 				end
 			},
 			{
-				"start_terror_event",
-				start_event_name = "event_luggable_resurgence_c"
-			}
-		},
-		event_luggable_resurgence_d = {
-			{
-				"spawn_by_points",
-				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_resurgence_left",
-				limit_spawners = 1,
-				points = 10,
-				breed_tags = {
-					{
-						"close",
-						"roamer"
-					}
-				}
-			},
-			{
-				"spawn_by_points",
-				spawner_group = "spawner_resurgence_left",
-				limit_spawners = 1,
-				points = 6,
-				breed_tags = {
-					{
-						"far",
-						"roamer"
-					}
-				}
-			},
-			{
-				"try_inject_special_minion",
-				max_breed_amount = 1,
-				points = 6,
-				breed_tags = {
-					{
-						"special",
-						"scrambler"
-					}
-				}
-			},
-			{
-				"delay",
-				duration = 7
-			},
-			{
-				"spawn_by_points",
-				spawner_group = "spawner_resurgence_upper",
-				limit_spawners = 2,
-				points = 12,
-				breed_tags = {
-					{
-						"melee",
-						"horde"
-					}
-				}
-			},
-			{
-				"start_terror_trickle",
-				delay = 8,
-				spawner_group = "spawner_resurgence_upper",
-				template_name = "low_melee"
-			},
-			{
-				"continue_when",
-				duration = 35,
-				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 3
-				end
-			},
-			{
-				"continue_when",
-				condition = function ()
-					return TerrorEventQueries.num_alive_minions() < 10
-				end
-			},
-			{
-				"start_terror_event",
-				start_event_name = "event_luggable_resurgence_d"
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_wave_2"
 			}
 		},
 		event_luggable_resurgence_e = {
@@ -415,7 +415,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_resurgence_left",
+				spawner_group = "spawner_resurgence_right",
 				limit_spawners = 1,
 				points = 6,
 				breed_tags = {
@@ -452,7 +452,7 @@ local template = {
 				"start_terror_trickle",
 				delay = 8,
 				spawner_group = "spawner_resurgence_upper",
-				template_name = "low_melee"
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
@@ -468,8 +468,8 @@ local template = {
 				end
 			},
 			{
-				"start_terror_event",
-				start_event_name = "event_luggable_resurgence_e"
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_wave_3"
 			}
 		},
 		event_luggable_resurgence_f = {
@@ -481,7 +481,7 @@ local template = {
 				points = 12,
 				breed_tags = {
 					{
-						"far",
+						"close",
 						"roamer"
 					}
 				}
@@ -493,19 +493,19 @@ local template = {
 				points = 6,
 				breed_tags = {
 					{
-						"melee",
+						"close",
 						"elite"
 					}
 				}
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_resurgence_right",
+				spawner_group = "spawner_resurgence_left",
 				limit_spawners = 1,
 				points = 6,
 				breed_tags = {
 					{
-						"melee",
+						"close",
 						"elite"
 					}
 				}
@@ -525,7 +525,7 @@ local template = {
 				"start_terror_trickle",
 				delay = 8,
 				spawner_group = "spawner_resurgence_upper",
-				template_name = "low_melee"
+				template_name = "standard_melee"
 			},
 			{
 				"continue_when",
@@ -541,8 +541,8 @@ local template = {
 				end
 			},
 			{
-				"start_terror_event",
-				start_event_name = "event_luggable_resurgence_f"
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_wave_3"
 			}
 		},
 		event_luggable_finale = {
@@ -554,11 +554,11 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_resurgence_left",
 				limit_spawners = 1,
-				points = 10,
+				points = 15,
 				breed_tags = {
 					{
-						"far",
-						"roamer"
+						"melee",
+						"horde"
 					}
 				}
 			},
@@ -566,7 +566,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_resurgence_right",
 				limit_spawners = 1,
-				points = 10,
+				points = 15,
 				breed_tags = {
 					{
 						"melee",
@@ -584,11 +584,11 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_resurgence_bridge_left",
 				limit_spawners = 3,
-				points = 18,
+				points = 10,
 				breed_tags = {
 					{
 						"roamer",
-						"close"
+						"melee"
 					}
 				}
 			},
@@ -596,7 +596,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_resurgence_bridge_right",
 				limit_spawners = 3,
-				points = 18,
+				points = 10,
 				breed_tags = {
 					{
 						"roamer",
@@ -612,6 +612,10 @@ local template = {
 				breed_tags = {
 					{
 						"melee",
+						"elite"
+					},
+					{
+						"far",
 						"elite"
 					}
 				}
@@ -655,7 +659,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_fort_event_right",
 				limit_spawners = 2,
-				points = 16,
+				points = 18,
 				breed_tags = {
 					{
 						"melee",
@@ -688,8 +692,8 @@ local template = {
 				end
 			},
 			{
-				"start_terror_event",
-				start_event_name = "event_fort_resurgence_a"
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_fort_wave_1"
 			}
 		},
 		event_fort_resurgence_b = {
@@ -714,7 +718,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_fort_event_left",
 				limit_spawners = 2,
-				points = 16,
+				points = 18,
 				breed_tags = {
 					{
 						"melee",
@@ -736,17 +740,17 @@ local template = {
 				end
 			},
 			{
-				"start_terror_event",
-				start_event_name = "event_fort_resurgence_b"
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_fort_wave_1"
 			}
 		},
 		event_fort_resurgence_c = {
 			{
 				"spawn_by_points",
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				spawner_group = "spawner_fort_event_upper",
+				spawner_group = "spawner_fort_event_wall",
 				limit_spawners = 1,
-				points = 12,
+				points = 14,
 				breed_tags = {
 					{
 						"close",
@@ -758,10 +762,10 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_fort_event_wall",
 				limit_spawners = 1,
-				points = 6,
+				points = 8,
 				breed_tags = {
 					{
-						"far",
+						"close",
 						"elite"
 					}
 				}
@@ -801,8 +805,8 @@ local template = {
 				end
 			},
 			{
-				"start_terror_event",
-				start_event_name = "event_fort_resurgence_c"
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_fort_wave_2"
 			}
 		},
 		event_fort_resurgence_d = {
@@ -820,9 +824,9 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_fort_event_wall",
+				spawner_group = "spawner_fort_event_upper",
 				limit_spawners = 1,
-				points = 6,
+				points = 8,
 				breed_tags = {
 					{
 						"far",
@@ -832,12 +836,13 @@ local template = {
 			},
 			{
 				"try_inject_special_minion",
+				spawner_group = "spawner_fort_event_wall",
 				max_breed_amount = 1,
-				points = 6,
+				points = 8,
 				breed_tags = {
 					{
 						"special",
-						"scrambler"
+						"sniper"
 					}
 				}
 			},
@@ -862,7 +867,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_fort_event_right",
 				limit_spawners = 2,
-				points = 16,
+				points = 18,
 				breed_tags = {
 					{
 						"melee",
@@ -875,6 +880,17 @@ local template = {
 				delay = 8,
 				spawner_group = "spawner_fort_event_wall",
 				template_name = "standard_melee"
+			},
+			{
+				"try_inject_special_minion",
+				max_breed_amount = 1,
+				points = 6,
+				breed_tags = {
+					{
+						"special",
+						"scrambler"
+					}
+				}
 			},
 			{
 				"continue_when",
@@ -890,8 +906,8 @@ local template = {
 				end
 			},
 			{
-				"start_terror_event",
-				start_event_name = "event_fort_resurgence_d"
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_fort_wave_2"
 			}
 		},
 		event_fort_resurgence_e = {
@@ -899,7 +915,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_fort_event_wall",
 				limit_spawners = 2,
-				points = 8,
+				points = 10,
 				breed_tags = {
 					{
 						"melee",
@@ -912,7 +928,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_fort_event_left",
 				limit_spawners = 2,
-				points = 12,
+				points = 16,
 				breed_tags = {
 					{
 						"melee",
@@ -937,13 +953,36 @@ local template = {
 				}
 			},
 			{
-				"try_inject_special_minion",
-				max_breed_amount = 1,
-				points = 6,
+				"delay",
+				duration = 7
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "spawner_fort_event_left",
+				limit_spawners = 1,
+				points = 8,
 				breed_tags = {
 					{
-						"special",
-						"scrambler"
+						"melee",
+						"elite"
+					}
+				}
+			},
+			{
+				"continue_when",
+				condition = function ()
+					return TerrorEventQueries.num_alive_minions() < 10
+				end
+			},
+			{
+				"try_inject_special_minion",
+				limit_spawners = 1,
+				max_breed_amount = 1,
+				spawner_group = "spawner_fort_event_upper",
+				points = 12,
+				breed_tags = {
+					{
+						"special"
 					}
 				}
 			},
@@ -988,8 +1027,8 @@ local template = {
 				end
 			},
 			{
-				"start_terror_event",
-				start_event_name = "event_fort_resurgence_e"
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_fort_wave_3"
 			}
 		},
 		event_fort_resurgence_f = {
@@ -997,7 +1036,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_fort_event_wall",
 				limit_spawners = 2,
-				points = 8,
+				points = 10,
 				breed_tags = {
 					{
 						"melee",
@@ -1026,7 +1065,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_fort_event_right",
 				limit_spawners = 1,
-				points = 6,
+				points = 8,
 				breed_tags = {
 					{
 						"melee",
@@ -1035,13 +1074,18 @@ local template = {
 				}
 			},
 			{
+				"continue_when",
+				condition = function ()
+					return TerrorEventQueries.num_alive_minions() < 10
+				end
+			},
+			{
 				"try_inject_special_minion",
 				max_breed_amount = 1,
-				points = 6,
+				points = 12,
 				breed_tags = {
 					{
-						"special",
-						"scrambler"
+						"special"
 					}
 				}
 			},
@@ -1086,8 +1130,8 @@ local template = {
 				end
 			},
 			{
-				"start_terror_event",
-				start_event_name = "event_fort_resurgence_f"
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_fort_wave_3"
 			}
 		},
 		event_fort_finale = {
@@ -1099,7 +1143,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_fort_event_right",
 				limit_spawners = 1,
-				points = 8,
+				points = 15,
 				breed_tags = {
 					{
 						"melee",
@@ -1108,10 +1152,14 @@ local template = {
 				}
 			},
 			{
+				"delay",
+				duration = 5
+			},
+			{
 				"spawn_by_points",
 				spawner_group = "spawner_fort_event_left",
 				limit_spawners = 1,
-				points = 8,
+				points = 15,
 				breed_tags = {
 					{
 						"melee",

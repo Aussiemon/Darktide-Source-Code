@@ -101,6 +101,12 @@ templates.weapon_trait_bespoke_thunderhammer_2h_p1_toughness_recovery_on_multipl
 	weapon_trait_bespoke_thunderhammer_2h_p1_toughness_recovery_on_multiple_hits = {
 		{
 			buff_data = {
+				replenish_percentage = 0.075,
+				required_num_hits = 5
+			}
+		},
+		{
+			buff_data = {
 				replenish_percentage = 0.1,
 				required_num_hits = 5
 			}
@@ -108,12 +114,6 @@ templates.weapon_trait_bespoke_thunderhammer_2h_p1_toughness_recovery_on_multipl
 		{
 			buff_data = {
 				replenish_percentage = 0.125,
-				required_num_hits = 5
-			}
-		},
-		{
-			buff_data = {
-				replenish_percentage = 0.14,
 				required_num_hits = 5
 			}
 		},
@@ -201,17 +201,17 @@ templates.weapon_trait_bespoke_thunderhammer_2h_p1_increase_power_on_kill = {
 	weapon_trait_bespoke_thunderhammer_2h_p1_increase_power_on_kill_parent = {
 		{
 			stat_buffs = {
+				[stat_buffs.power_level_modifier] = 0.075
+			}
+		},
+		{
+			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.13
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.145
+				[stat_buffs.power_level_modifier] = 0.125
 			}
 		},
 		{
@@ -230,22 +230,22 @@ templates.weapon_trait_bespoke_thunderhammer_2h_p1_consecutive_hits_increases_st
 	weapon_trait_bespoke_thunderhammer_2h_p1_consecutive_hits_increases_stagger_parent = {
 		{
 			stat_buffs = {
-				[stat_buffs.melee_impact_modifier] = 0.05
-			}
-		},
-		{
-			stat_buffs = {
 				[stat_buffs.melee_impact_modifier] = 0.075
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.melee_impact_modifier] = 0.09
+				[stat_buffs.melee_impact_modifier] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.melee_impact_modifier] = 0.1
+				[stat_buffs.melee_impact_modifier] = 0.125
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_impact_modifier] = 0.15
 			}
 		}
 	}

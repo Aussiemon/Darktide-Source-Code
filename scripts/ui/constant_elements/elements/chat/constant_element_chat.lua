@@ -133,6 +133,7 @@ end
 ConstantElementChat.set_visible = function (self, visible, optional_visibility_parameters)
 	ConstantElementChat.super.set_visible(self, visible, optional_visibility_parameters)
 	self:_cancel_animations_if_necessary(true)
+	self:_enable_mouse_cursor(false)
 
 	local need_to_update_scenegraph = self:_apply_visibility_parameters(optional_visibility_parameters)
 	local active_state = self._active_state
@@ -390,6 +391,14 @@ ConstantElementChat._handle_active_chat_input = function (self, input_service, u
 		is_input_field_active = false
 	elseif input_service:get("hotkey_system") then
 		is_input_field_active = false
+	else
+		local keystrokes = Keyboard.keystrokes()
+
+		for _, keystroke in ipairs(keystrokes) do
+			if type(keystroke) == "number" and keystroke == Keyboard.BACKSPACE and input_widget.content.input_text == "" then
+				is_input_field_active = false
+			end
+		end
 	end
 
 	if not is_input_field_active then

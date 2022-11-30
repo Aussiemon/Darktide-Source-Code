@@ -9,6 +9,8 @@ WwiseStateGroupObjective.init = function (self, wwise_world, wwise_state_group_n
 	self._mission_objective_system = nil
 	self._player_unit = nil
 	self._music_parameter_extension = nil
+	self._old_objecitve_state = nil
+	self._music_reset_timer = 0
 end
 
 WwiseStateGroupObjective.on_gameplay_post_init = function (self, level)
@@ -44,7 +46,22 @@ WwiseStateGroupObjective.update = function (self, dt, t)
 	end
 
 	if not wwise_state and mission_objective_system then
-		wwise_state = mission_objective_system:get_objective_event_music()
+		local objective_event_music = mission_objective_system:get_objective_event_music()
+
+		if objective_event_music then
+			wwise_state = objective_event_music
+			self._old_objecitve_state = objective_event_music
+			self._music_reset_timer = WwiseGameSyncSettings.music_state_reset_time
+		else
+			self._music_reset_timer = self._music_reset_timer - dt
+
+			if self._music_reset_timer <= 0 then
+				self._old_objecitve_state = nil
+				wwise_state = nil
+			else
+				wwise_state = self._old_objecitve_state
+			end
+		end
 	end
 
 	wwise_state = wwise_state or WwiseGameSyncSettings.default_group_state

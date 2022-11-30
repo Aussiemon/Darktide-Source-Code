@@ -16,6 +16,8 @@ local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local template_types = WeaponTweakTemplateSettings.template_types
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local armor_types = ArmorSettings.types
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
@@ -413,10 +415,54 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.default_dps_stat
+				damage_trait_templates.default_dps_stat,
+				display_data = {
+					prefix = "Hip Fire",
+					display_stats = {
+						armor_damage_modifier_ranged = {
+							near = {
+								attack = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {}
+								}
+							},
+							far = {
+								attack = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {}
+								}
+							}
+						},
+						power_distribution = {
+							attack = {}
+						}
+					}
+				}
 			},
 			action_shoot_zoomed = {
-				damage_trait_templates.default_dps_stat
+				damage_trait_templates.default_dps_stat,
+				display_data = {
+					prefix = "Zoomed Fire",
+					display_stats = {
+						armor_damage_modifier_ranged = {
+							near = {
+								attack = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {}
+								}
+							},
+							far = {
+								attack = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {}
+								}
+							}
+						},
+						power_distribution = {
+							attack = {}
+						}
+					}
+				}
 			}
 		}
 	},
@@ -447,17 +493,34 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		dodge = {
 			base = {
-				dodge_trait_templates.default_dodge_stat
+				dodge_trait_templates.default_dodge_stat,
+				display_data = {
+					display_stats = {
+						diminishing_return_start = {},
+						distance_scale = {},
+						speed_modifier = {}
+					}
+				}
 			}
 		},
 		sprint = {
 			base = {
-				sprint_trait_templates.default_sprint_stat
+				sprint_trait_templates.default_sprint_stat,
+				display_data = {
+					display_stats = {
+						sprint_speed_mod = {}
+					}
+				}
 			}
 		},
 		movement_curve_modifier = {
 			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
+				display_data = {
+					display_stats = {
+						modifier = {}
+					}
+				}
 			}
 		},
 		recoil = {
@@ -479,7 +542,15 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		weapon_handling = {
 			action_reload = {
-				weapon_handling_trait_templates.max_reload_speed_modify
+				weapon_handling_trait_templates.max_reload_speed_modify,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						time_scale = {
+							display_name = "loc_weapon_stats_display_reload_speed"
+						}
+					}
+				}
 			}
 		}
 	},
@@ -488,10 +559,74 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.autopistol_control_stat
+				damage_trait_templates.autopistol_control_stat,
+				display_data = {
+					prefix = "Hip Fire",
+					display_stats = {
+						armor_damage_modifier_ranged = {
+							near = {
+								impact = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {},
+									[armor_types.resistant] = {},
+									[armor_types.berserker] = {}
+								}
+							},
+							far = {
+								impact = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {},
+									[armor_types.resistant] = {},
+									[armor_types.berserker] = {}
+								}
+							}
+						},
+						power_distribution = {
+							impact = {}
+						},
+						suppression_value = {},
+						on_kill_area_suppression = {
+							suppression_value = {},
+							distance = {}
+						},
+						accumulative_stagger_strength_multiplier = {}
+					}
+				}
 			},
 			action_shoot_zoomed = {
-				damage_trait_templates.autopistol_control_stat
+				damage_trait_templates.autopistol_control_stat,
+				display_data = {
+					prefix = "Zoomed Fire",
+					display_stats = {
+						armor_damage_modifier_ranged = {
+							near = {
+								impact = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {},
+									[armor_types.resistant] = {},
+									[armor_types.berserker] = {}
+								}
+							},
+							far = {
+								impact = {
+									[armor_types.unarmored] = {},
+									[armor_types.disgustingly_resilient] = {},
+									[armor_types.resistant] = {},
+									[armor_types.berserker] = {}
+								}
+							}
+						},
+						power_distribution = {
+							impact = {}
+						},
+						suppression_value = {},
+						on_kill_area_suppression = {
+							suppression_value = {},
+							distance = {}
+						},
+						accumulative_stagger_strength_multiplier = {}
+					}
+				}
 			}
 		}
 	}

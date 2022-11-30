@@ -7,6 +7,7 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewSettings = require("scripts/ui/views/end_player_view/end_player_view_settings")
 local ViewStyles = require("scripts/ui/views/end_player_view/end_player_view_styles")
+local WeaponIconUI = require("scripts/ui/weapon_icon_ui")
 local CARD_CAROUSEL_SCENEGRAPH_ID = "card_carousel"
 local CARD_TYPES = table.enum("xp", "levelUp", "salary", "weaponDrop", "weapon_unlock", "talents_unlock")
 local item_type_group_lookup = UISettings.item_type_group_lookup
@@ -50,6 +51,18 @@ EndPlayerView.on_enter = function (self)
 	EndPlayerView.super.on_enter(self)
 	Managers.event:trigger("end_of_round_blur_background_world", 0.5)
 	self:_register_event("event_trigger_current_end_presentation_skip")
+
+	local weapon_preview_size = ViewStyles.blueprints.pass_styles.item_icon_landscape.size
+	local weapons_render_settings = {
+		weapon_width = weapon_preview_size[1],
+		weapon_height = weapon_preview_size[2],
+		target_resolution_width = weapon_preview_size[1] * 4,
+		target_resolution_height = weapon_preview_size[2] * 4
+	}
+	local icon_render_type = "weapon"
+	self._weapon_icon_renderer_id = "EndPlayerView_weapons_" .. math.uuid()
+	self._weapon_icon_renderer = Managers.ui:create_single_icon_renderer(icon_render_type, self._weapon_icon_renderer_id, weapons_render_settings)
+
 	self:_setup_progress_bar()
 
 	local player = self:_player()
@@ -81,6 +94,14 @@ EndPlayerView.on_exit = function (self)
 	Managers.event:trigger("end_of_round_blur_background_world", 0)
 	EndPlayerView.super.on_exit(self)
 	Managers.data_service.talents:release_icons(self._talent_icons_package_id)
+
+	if self._weapon_icon_renderer then
+		self._weapon_icon_renderer = nil
+
+		Managers.ui:destroy_single_icon_renderer(self._weapon_icon_renderer_id)
+
+		self._weapon_icon_renderer_id = nil
+	end
 end
 
 EndPlayerView.can_exit = function (self)
@@ -128,6 +149,12 @@ EndPlayerView.update = function (self, dt, t, input_service)
 	end
 
 	self:_update_timed_visibility_widgets(dt)
+
+	local weapon_icon_renderer = self._weapon_icon_renderer
+
+	if weapon_icon_renderer then
+		weapon_icon_renderer:update(dt, t)
+	end
 
 	return EndPlayerView.super.update(self, dt, t, input_service)
 end
@@ -184,6 +211,26 @@ end
 
 EndPlayerView.set_sound_parameter = function (self, parameter_id, value)
 	EndPlayerView.super._set_sound_parameter(self, parameter_id, value)
+end
+
+EndPlayerView.load_weapon_pattern_icon = function (self, item, cb, render_context)
+	local item_type = item.item_type
+
+	if item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "GADGET" then
+		local weapon_icon_renderer = self._weapon_icon_renderer
+
+		if weapon_icon_renderer then
+			return weapon_icon_renderer:load_weapon_icon(item, cb, render_context)
+		end
+	end
+end
+
+EndPlayerView.unload_weapon_pattern_icon = function (self, id)
+	local weapon_icon_renderer = self._weapon_icon_renderer
+
+	if weapon_icon_renderer and weapon_icon_renderer:has_request(id) then
+		weapon_icon_renderer:unload_weapon_icon(id)
+	end
 end
 
 EndPlayerView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
@@ -327,6 +374,7 @@ EndPlayerView._create_card_widget = function (self, index, card_type, card_data)
 	elseif card_type == CARD_TYPES.weapon_unlock then
 		blueprint_name = "weapon_unlock"
 		card_data.reward_item = self:_get_item(card_data)
+		card_data.item_group = "weapon_skin"
 	elseif card_type == CARD_TYPES.talents_unlock then
 		blueprint_name = "talents_unlocked"
 		card_data.talent_group_name, card_data.unlocked_talents = self:_get_unlocked_talents(card_data)

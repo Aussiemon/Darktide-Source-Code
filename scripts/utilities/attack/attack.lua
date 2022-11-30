@@ -265,7 +265,7 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 
 		if is_server then
 			_handle_result(attacking_unit_owner_unit, attacked_unit, attack_result, attack_type, attacker_breed_or_nil, target_breed_or_nil, damage_dealt, damage_absorbed, damage_profile, damage_type, actual_damage_dealt)
-			Managers.state.attack_report:add_attack_result(damage_profile, attacked_unit, attacking_unit_owner_unit, attack_direction, hit_world_position, hit_weakspot, damage_dealt, attack_result, attack_type)
+			Managers.state.attack_report:add_attack_result(damage_profile, attacked_unit, attacking_unit_owner_unit, attack_direction, hit_world_position, hit_weakspot, damage_dealt, attack_result, attack_type, damage_efficiency)
 
 			if Managers.stats.can_record_stats() then
 				_record_stats(attack_result, attack_type, attacked_unit, attacking_unit_owner_unit, damage_absorbed, damage_dealt, hit_zone_name, damage_profile, item, attacked_action, target_breed_or_nil, damage_type, target_buff_extension)
@@ -452,6 +452,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 			attacker_param_table.attack_type = attack_type
 			attacker_param_table.attacked_unit = attacked_unit
 			attacker_param_table.attacking_unit = attacking_owner_unit
+			attacker_param_table.breed_name = target_breed_or_nil and target_breed_or_nil.name
 			attacker_param_table.damage = damage
 			attacker_param_table.damage_efficiency = damage_efficiency
 			attacker_param_table.damage_type = damage_type or damage_profile.damage_type

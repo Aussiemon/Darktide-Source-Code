@@ -1,4 +1,5 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local FixedFrame = require("scripts/utilities/fixed_frame")
 local SharedFunctions = require("scripts/utilities/shared_overheat_and_warp_charge_functions")
 local buff_keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
@@ -66,6 +67,13 @@ WarpCharge.decrease_immediate = function (remove_percentage, warp_charge_compone
 	local new_percentage, new_state = SharedFunctions.remove_immediate(remove_percentage, current_percentage)
 
 	_set_current_percentage(warp_charge_component, new_percentage, buff_extension)
+
+	if warp_charge_component.state == "exploding" then
+		local t = FixedFrame.get_latest_fixed_time()
+		local Interrupt = require("scripts/utilities/attack/interrupt")
+
+		Interrupt.action(t, unit, "psyker_ability", nil, true)
+	end
 
 	warp_charge_component.state = new_state or current_state
 end
@@ -189,7 +197,7 @@ WarpCharge.can_vent = function (warp_charge_component)
 	local warp_charge_state = warp_charge_component.state
 	local warp_charge_current_percentage = warp_charge_component.current_percentage
 
-	return warp_charge_state == "idle" and warp_charge_current_percentage > 0
+	return warp_charge_state ~= "exploding" and warp_charge_current_percentage > 0
 end
 
 WarpCharge.start_venting = function (t, player, warp_charge_component)

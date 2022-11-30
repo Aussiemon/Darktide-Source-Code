@@ -1063,10 +1063,16 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				damage_trait_templates.default_melee_dps_stat
+				damage_trait_templates.default_melee_dps_stat,
+				display_data = {
+					prefix = "[light]"
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_melee_dps_stat
+				damage_trait_templates.default_melee_dps_stat,
+				display_data = {
+					prefix = "[heavy]"
+				}
 			},
 			action_right_diagonal_light = {
 				damage_trait_templates.default_melee_dps_stat
@@ -1090,10 +1096,16 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				damage_trait_templates.default_armor_pierce_stat
+				damage_trait_templates.default_armor_pierce_stat,
+				display_data = {
+					prefix = "[light]"
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_armor_pierce_stat
+				damage_trait_templates.default_armor_pierce_stat,
+				display_data = {
+					prefix = "[heavy]"
+				}
 			},
 			action_right_diagonal_light = {
 				damage_trait_templates.default_armor_pierce_stat
@@ -1117,10 +1129,16 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				damage_trait_templates.combatsword_cleave_targets_stat
+				damage_trait_templates.combatsword_cleave_targets_stat,
+				display_data = {
+					prefix = "[light]"
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.combatsword_cleave_targets_stat
+				damage_trait_templates.combatsword_cleave_targets_stat,
+				display_data = {
+					prefix = "[heavy]"
+				}
 			},
 			action_right_diagonal_light = {
 				damage_trait_templates.combatsword_cleave_targets_stat
@@ -1144,10 +1162,16 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.default_first_target_stat,
+				display_data = {
+					prefix = "[light]"
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.default_first_target_stat,
+				display_data = {
+					prefix = "[heavy]"
+				}
 			},
 			action_right_diagonal_light = {
 				damage_trait_templates.default_first_target_stat
@@ -1171,17 +1195,20 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		dodge = {
 			base = {
-				dodge_trait_templates.default_dodge_stat
+				dodge_trait_templates.default_dodge_stat,
+				display_data = {}
 			}
 		},
 		sprint = {
 			base = {
-				sprint_trait_templates.default_sprint_stat
+				sprint_trait_templates.default_sprint_stat,
+				display_data = {}
 			}
 		},
 		movement_curve_modifier = {
 			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
+				display_data = {}
 			}
 		}
 	}
@@ -1197,7 +1224,6 @@ table.append(weapon_template.traits, bespoke_combataxe_p1_traits)
 
 weapon_template.perks = {
 	combataxe_p1_m1_dps_perk = {
-		description = "loc_trait_description_combataxe_p1_m1_dps_perk",
 		display_name = "loc_trait_display_combataxe_p1_m1_dps_perk",
 		damage = {
 			action_left_down_light = {
@@ -1224,7 +1250,6 @@ weapon_template.perks = {
 		}
 	},
 	default_armor_pierce_perk = {
-		description = "loc_trait_description_combataxe_p1_m1_armor_pierce_perk",
 		display_name = "loc_trait_display_combataxe_p1_m1_armor_pierce_perk",
 		damage = {
 			action_left_down_light = {
@@ -1251,7 +1276,6 @@ weapon_template.perks = {
 		}
 	},
 	combataxe_p1_m1_finesse_perk = {
-		description = "loc_trait_description_combataxe_p1_m1_finesse_perk",
 		display_name = "loc_trait_display_combataxe_p1_m1_finesse_perk",
 		damage = {
 			action_left_down_light = {
@@ -1301,7 +1325,6 @@ weapon_template.perks = {
 		}
 	},
 	combataxe_p1_m1_first_target_perk = {
-		description = "loc_trait_description_combataxe_p1_m1_first_target_perk",
 		display_name = "loc_trait_display_combataxe_p1_m1_first_target_perk",
 		damage = {
 			action_left_down_light = {
@@ -1328,7 +1351,6 @@ weapon_template.perks = {
 		}
 	},
 	combataxe_p1_m1_mobility_perk = {
-		description = "loc_trait_description_combataxe_p1_m1_mobility_perk",
 		display_name = "loc_trait_display_combataxe_p1_m1_mobility_perk",
 		dodge = {
 			base = {

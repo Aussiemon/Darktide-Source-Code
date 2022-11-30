@@ -707,7 +707,6 @@ table.append(weapon_template.traits, ranged_aimed_traits)
 
 weapon_template.perks = {
 	lasgun_p1_m3_stability_perk = {
-		description = "loc_trait_description_lasgun_p1_m1_stability_perk",
 		display_name = "loc_trait_display_lasgun_p1_m1_stability_perk",
 		recoil = {
 			base = {
@@ -729,7 +728,6 @@ weapon_template.perks = {
 		}
 	},
 	lasgun_p1_m3_ammo_perk = {
-		description = "loc_trait_description_lasgun_p1_m1_ammo_perk",
 		display_name = "loc_trait_display_lasgun_p1_m1_ammo_perk",
 		ammo = {
 			base = {
@@ -738,7 +736,6 @@ weapon_template.perks = {
 		}
 	},
 	lasgun_p1_m3_dps_perk = {
-		description = "loc_trait_description_lasgun_p1_m1_dps_perk",
 		display_name = "loc_trait_display_lasgun_p1_m1_dps_perk",
 		damage = {
 			action_shoot_hip = {
@@ -750,7 +747,6 @@ weapon_template.perks = {
 		}
 	},
 	lasgun_p1_m3_power_perk = {
-		description = "loc_trait_description_lasgun_p1_m1_power_perk",
 		display_name = "loc_trait_display_lasgun_p1_m1_power_perk",
 		damage = {
 			action_shoot_hip = {
@@ -762,7 +758,6 @@ weapon_template.perks = {
 		}
 	},
 	lasgun_p1_m3_mobility_perk = {
-		description = "loc_trait_description_lasgun_p1_m1_mobility_perk",
 		display_name = "loc_trait_display_lasgun_p1_m1_mobility_perk",
 		dodge = {
 			base = {

@@ -170,7 +170,7 @@ local function _get_stat_pass_template(pass_template, stat, label, row_type, off
 		offset_y = previous_row_style.offset[2] + previous_row_style.size[2]
 	end
 
-	local next_index = pass_template[last_index].pass_type == "empty_row" and last_index or last_index + 1
+	local next_index = pass_template[last_index].is_empty_row and last_index or last_index + 1
 	local label_style = row_type == "small" and table.clone(card_content_styles.text_small) or table.clone(card_content_styles.text_normal)
 	label_style.offset[2] = offset_y
 	pass_template[next_index] = {
@@ -373,7 +373,6 @@ local function _reward_load_icon_func(parent, widget, config)
 			cb = callback(_apply_live_nameplate_icon_cb_func, widget)
 		elseif item_group == "weapon_skin" then
 			cb = callback(_apply_live_item_icon_cb_func, widget)
-			reward_item = ItemUtils.weapon_skin_preview_item(reward_item)
 		else
 			cb = callback(_apply_live_item_icon_cb_func, widget)
 		end
@@ -425,15 +424,23 @@ local function _insert_empty_row(pass_template)
 	local size = {
 		[2] = ViewStyles.card_content_empty_row_height
 	}
+	local pass_type = "rect"
 	pass_template[#pass_template + 1] = {
-		pass_type = "empty_row",
+		is_empty_row = true,
+		pass_type = pass_type,
 		style = {
 			offset = {
-				nil,
+				0,
 				offset_y,
 				0
 			},
-			size = size
+			size = size,
+			color = {
+				0,
+				0,
+				0,
+				0
+			}
 		}
 	}
 end

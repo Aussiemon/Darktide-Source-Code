@@ -41,6 +41,7 @@ local interactions = {
 	moveable_platform = MoveablePlatformInteraction,
 	pickup = PickupInteraction,
 	pocketable = PocketableInteraction,
+	premium_vendor = ViewInteraction,
 	pull_up = PullUpInteraction,
 	remove_net = RemoveNetInteraction,
 	rescue = RescueInteraction,

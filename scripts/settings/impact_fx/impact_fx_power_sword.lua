@@ -661,6 +661,11 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/impacts/weapons/power_sword/power_sword_1h_impact"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			}
 		},
 		died = {
@@ -678,6 +683,11 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/impacts/weapons/power_sword/power_sword_1h_impact"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			}
 		},
 		weakspot_damage = {
@@ -689,6 +699,11 @@ local disgustingly_resilient = {
 			{
 				effects = {
 					"content/fx/particles/impacts/weapons/power_sword/power_sword_1h_impact"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			}
 		},
@@ -707,6 +722,11 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/impacts/weapons/power_sword/power_sword_1h_impact"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			}
 		},
 		damage_reduced = {
@@ -718,6 +738,11 @@ local disgustingly_resilient = {
 			{
 				effects = {
 					"content/fx/particles/impacts/weapons/power_sword/power_sword_1h_impact"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			}
 		},
@@ -766,6 +791,11 @@ local disgustingly_resilient = {
 			{
 				effects = {
 					"content/fx/particles/impacts/weapons/power_sword/power_sword_1h_impact"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			}
 		}

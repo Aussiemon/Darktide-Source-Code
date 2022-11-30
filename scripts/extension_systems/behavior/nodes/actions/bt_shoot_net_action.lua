@@ -56,6 +56,7 @@ BtShootNetAction.init_values = function (self, blackboard, action_data, node_dat
 	behavior_component.is_dragging = false
 	behavior_component.shoot_net_cooldown = 0
 	behavior_component.hit_target = false
+	behavior_component.net_is_ready = true
 end
 
 BtShootNetAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -64,6 +65,7 @@ BtShootNetAction.leave = function (self, unit, breed, blackboard, scratchpad, ac
 	if scratchpad.num_shots_fired > 0 then
 		local shoot_net_cooldown = action_data.shoot_net_cooldown or Managers.state.difficulty:get_table_entry_by_challenge(MinionDifficultySettings.cooldowns.shoot_net_cooldown)
 		behavior_component.shoot_net_cooldown = t + shoot_net_cooldown
+		behavior_component.net_is_ready = false
 	end
 
 	if behavior_component.is_dragging then
@@ -127,8 +129,9 @@ BtShootNetAction._update_aiming = function (self, unit, t, scratchpad, action_da
 	local aim_target_node = scratchpad.aim_target_node
 	local target_node = Unit.node(target_unit, aim_target_node)
 	local aim_position = Unit.world_position(target_unit, target_node)
+	local wanted_aim_position = aim_position
 
-	scratchpad.current_aim_position:store(aim_position)
+	scratchpad.current_aim_position:store(wanted_aim_position)
 
 	if scratchpad.aoe_bot_threat_timing and scratchpad.aoe_bot_threat_timing <= t then
 		local group_extension = ScriptUnit.extension(target_unit, "group_system")

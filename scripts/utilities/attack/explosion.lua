@@ -114,7 +114,7 @@ Explosion.create_explosion = function (world, physics_world, source_position, im
 								number_of_hit_units = number_of_hit_units + 1
 							end
 
-							local _, attack_result = Attack.execute(hit_unit, damage_profile, "power_level", power_level, "charge_level", charge_level, "attack_direction", direction, "dropoff_scalar", dropoff_scalar, "hit_zone_name", hit_zone_name_or_nil, "hit_actor", hit_actor, "attack_type", attack_type, "attacking_unit", attacking_unit, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", item_or_nil)
+							local _, attack_result = Attack.execute(hit_unit, damage_profile, "power_level", power_level, "charge_level", charge_level, "attack_direction", direction, "dropoff_scalar", dropoff_scalar, "hit_zone_name", hit_zone_name_or_nil, "hit_actor", hit_actor, "attack_type", attack_type, "attacking_unit", attacking_unit, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", item_or_nil, "hit_world_position", source_position)
 
 							if optional_attack_result_table then
 								optional_attack_result_table[hit_unit] = attack_result

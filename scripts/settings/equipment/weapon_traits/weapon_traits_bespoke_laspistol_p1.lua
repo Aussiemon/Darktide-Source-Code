@@ -12,17 +12,17 @@ templates.weapon_trait_bespoke_laspistol_p1_reload_speed_on_slide = {
 	weapon_trait_bespoke_laspistol_p1_reload_speed_on_slide = {
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.05
+				[stat_buffs.reload_speed] = 0.04
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.075
+				[stat_buffs.reload_speed] = 0.06
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.09
+				[stat_buffs.reload_speed] = 0.08
 			}
 		},
 		{
@@ -36,12 +36,14 @@ templates.weapon_trait_bespoke_laspistol_p1_burninating_on_crit = {
 	weapon_trait_bespoke_laspistol_p1_burninating_on_crit = {
 		{
 			dot_data = {
+				max_stacks = 6,
 				num_stacks_on_proc = 2
 			}
 		},
 		{
 			dot_data = {
-				num_stacks_on_proc = 4
+				max_stacks = 9,
+				num_stacks_on_proc = 3
 			}
 		}
 	}
@@ -55,12 +57,12 @@ templates.weapon_trait_bespoke_laspistol_p1_allow_flanking_and_increased_damage_
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.flanking_damage] = 0.225
+				[stat_buffs.flanking_damage] = 0.2
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.flanking_damage] = 0.275
+				[stat_buffs.flanking_damage] = 0.25
 			}
 		},
 		{
@@ -73,13 +75,13 @@ templates.weapon_trait_bespoke_laspistol_p1_allow_flanking_and_increased_damage_
 templates.weapon_trait_bespoke_laspistol_p1_suppression_negation_on_weakspot = {
 	weapon_trait_bespoke_laspistol_p1_suppression_negation_on_weakspot = {
 		{
-			active_duration = 0.5
+			active_duration = 0.6
 		},
 		{
 			active_duration = 0.7
 		},
 		{
-			active_duration = 0.85
+			active_duration = 0.8
 		},
 		{
 			active_duration = 0.9
@@ -89,13 +91,13 @@ templates.weapon_trait_bespoke_laspistol_p1_suppression_negation_on_weakspot = {
 templates.weapon_trait_bespoke_laspistol_p1_count_as_dodge_vs_ranged_on_weakspot = {
 	weapon_trait_bespoke_laspistol_p1_count_as_dodge_vs_ranged_on_weakspot = {
 		{
-			active_duration = 0.5
+			active_duration = 0.4
 		},
 		{
-			active_duration = 0.75
+			active_duration = 0.6
 		},
 		{
-			active_duration = 0.9
+			active_duration = 0.8
 		},
 		{
 			active_duration = 1
@@ -129,13 +131,13 @@ templates.weapon_trait_bespoke_laspistol_p1_consecutive_hits_increases_close_dam
 templates.weapon_trait_bespoke_laspistol_p1_toughness_on_crit_kills = {
 	weapon_trait_bespoke_laspistol_p1_toughness_on_crit_kills = {
 		{
-			toughness_fixed_percentage = 0.05
+			toughness_fixed_percentage = 0.04
 		},
 		{
-			toughness_fixed_percentage = 0.065
+			toughness_fixed_percentage = 0.06
 		},
 		{
-			toughness_fixed_percentage = 0.085
+			toughness_fixed_percentage = 0.08
 		},
 		{
 			toughness_fixed_percentage = 0.1

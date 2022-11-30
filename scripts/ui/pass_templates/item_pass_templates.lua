@@ -12,6 +12,10 @@ local gadget_size = UISettings.gadget_size
 local gadget_item_size = UISettings.gadget_item_size
 local gadget_icon_size = UISettings.gadget_icon_size
 local item_icon_size = UISettings.item_icon_size
+ItemPassTemplates.store_item_goods_size = {
+	weapon_item_size[1],
+	weapon_item_size[2] + 40
+}
 ItemPassTemplates.store_item_size = {
 	weapon_item_size[1],
 	weapon_item_size[2] + 40
@@ -109,6 +113,21 @@ item_level_text_style.text_color = Color.white(255, true)
 item_level_text_style.default_color = Color.white(255, true)
 item_level_text_style.hover_color = Color.white(255, true)
 item_level_text_style.material = "content/ui/materials/font_gradients/slug_font_gradient_item_level"
+local gadget_item_level_text_style = table.clone(UIFontSettings.body_small)
+gadget_item_level_text_style.text_horizontal_alignment = "center"
+gadget_item_level_text_style.text_vertical_alignment = "top"
+gadget_item_level_text_style.horizontal_alignment = "center"
+gadget_item_level_text_style.vertical_alignment = "top"
+gadget_item_level_text_style.font_size = 26
+gadget_item_level_text_style.offset = {
+	0,
+	10,
+	7
+}
+gadget_item_level_text_style.text_color = Color.white(255, true)
+gadget_item_level_text_style.default_color = Color.white(255, true)
+gadget_item_level_text_style.hover_color = Color.white(255, true)
+gadget_item_level_text_style.material = "content/ui/materials/font_gradients/slug_font_gradient_item_level"
 local required_level_text_style = table.clone(UIFontSettings.body_small)
 required_level_text_style.text_horizontal_alignment = "center"
 required_level_text_style.text_vertical_alignment = "center"
@@ -173,12 +192,12 @@ ui_item_slot_title_text_style.default_color = Color.ui_brown_light(255, true)
 ui_item_slot_title_text_style.hover_color = Color.ui_brown_super_light(255, true)
 local item_owned_text_style = table.clone(UIFontSettings.header_2)
 item_owned_text_style.text_horizontal_alignment = "right"
-item_owned_text_style.text_vertical_alignment = "bottom"
+item_owned_text_style.text_vertical_alignment = "top"
 item_owned_text_style.horizontal_alignment = "right"
 item_owned_text_style.vertical_alignment = "center"
 item_owned_text_style.offset = {
 	-10,
-	-5,
+	5,
 	5
 }
 local item_price_style = table.clone(UIFontSettings.body)
@@ -314,7 +333,16 @@ ItemPassTemplates.gear_item = {
 				2
 			},
 			color = Color.white(255, true)
-		}
+		},
+		visibility_function = function (content, style)
+			local use_placeholder_texture = content.use_placeholder_texture
+
+			if use_placeholder_texture and use_placeholder_texture == 0 then
+				return true
+			end
+
+			return false
+		end
 	},
 	{
 		value_id = "owned",
@@ -324,6 +352,45 @@ ItemPassTemplates.gear_item = {
 		style = item_owned_text_style,
 		visibility_function = function (content, style)
 			return content.owned
+		end
+	},
+	{
+		pass_type = "rotated_texture",
+		value = "content/ui/materials/loading/loading_small",
+		style_id = "loading",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			angle = 0,
+			size = {
+				80,
+				80
+			},
+			color = {
+				60,
+				160,
+				160,
+				160
+			},
+			offset = {
+				0,
+				0,
+				2
+			}
+		},
+		visibility_function = function (content, style)
+			local use_placeholder_texture = content.use_placeholder_texture
+
+			if not use_placeholder_texture or use_placeholder_texture == 1 then
+				return true
+			end
+
+			return false
+		end,
+		change_function = function (content, style, _, dt)
+			local add = -0.5 * dt
+			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
+			style.angle = style.rotation_progress * math.pi * 2
 		end
 	},
 	{
@@ -345,6 +412,68 @@ ItemPassTemplates.gear_item = {
 		},
 		visibility_function = function (content, style)
 			return content.equipped
+		end
+	},
+	{
+		pass_type = "rect",
+		style = {
+			vertical_alignment = "bottom",
+			offset = {
+				0,
+				0,
+				3
+			},
+			color = {
+				150,
+				0,
+				0,
+				0
+			},
+			size = {
+				nil,
+				40
+			}
+		},
+		visibility_function = function (content, style)
+			return content.has_price_tag
+		end
+	},
+	{
+		value_id = "price_text",
+		style_id = "price_text",
+		pass_type = "text",
+		value = "n/a",
+		style = item_price_style,
+		visibility_function = function (content, style)
+			return content.has_price_tag and not content.sold
+		end
+	},
+	{
+		value_id = "wallet_icon",
+		style_id = "wallet_icon",
+		pass_type = "texture",
+		value = "content/ui/materials/base/ui_default_base",
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "right",
+			size = {
+				20,
+				20
+			},
+			offset = {
+				0,
+				-10,
+				12
+			},
+			color = {
+				255,
+				255,
+				255,
+				255
+			}
+		},
+		visibility_function = function (content, style)
+			return content.has_price_tag and not content.sold
 		end
 	}
 }
@@ -466,7 +595,55 @@ ItemPassTemplates.gear_item_slot = {
 				3
 			},
 			color = Color.white(255, true)
-		}
+		},
+		visibility_function = function (content, style)
+			local use_placeholder_texture = content.use_placeholder_texture
+
+			if use_placeholder_texture and use_placeholder_texture == 0 then
+				return true
+			end
+
+			return false
+		end
+	},
+	{
+		pass_type = "rotated_texture",
+		value = "content/ui/materials/loading/loading_small",
+		style_id = "loading",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			angle = 0,
+			size = {
+				80,
+				80
+			},
+			color = {
+				60,
+				160,
+				160,
+				160
+			},
+			offset = {
+				0,
+				0,
+				2
+			}
+		},
+		visibility_function = function (content, style)
+			local use_placeholder_texture = content.use_placeholder_texture
+
+			if not use_placeholder_texture or use_placeholder_texture == 1 then
+				return true
+			end
+
+			return false
+		end,
+		change_function = function (content, style, _, dt)
+			local add = -0.5 * dt
+			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
+			style.angle = style.rotation_progress * math.pi * 2
+		end
 	},
 	{
 		pass_type = "texture",
@@ -606,6 +783,45 @@ ItemPassTemplates.ui_item = {
 			local parent_style = style.parent
 
 			return parent_style.icon.material_values.use_placeholder_texture == 0
+		end
+	},
+	{
+		pass_type = "rotated_texture",
+		value = "content/ui/materials/loading/loading_small",
+		style_id = "loading",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			angle = 0,
+			size = {
+				80,
+				80
+			},
+			color = {
+				60,
+				160,
+				160,
+				160
+			},
+			offset = {
+				0,
+				0,
+				2
+			}
+		},
+		visibility_function = function (content, style)
+			local use_placeholder_texture = content.use_placeholder_texture
+
+			if not use_placeholder_texture or use_placeholder_texture == 1 then
+				return true
+			end
+
+			return false
+		end,
+		change_function = function (content, style, _, dt)
+			local add = -0.5 * dt
+			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
+			style.angle = style.rotation_progress * math.pi * 2
 		end
 	},
 	{
@@ -810,6 +1026,45 @@ ItemPassTemplates.ui_item_slot = {
 		end
 	},
 	{
+		pass_type = "rotated_texture",
+		value = "content/ui/materials/loading/loading_small",
+		style_id = "loading",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			angle = 0,
+			size = {
+				80,
+				80
+			},
+			color = {
+				60,
+				160,
+				160,
+				160
+			},
+			offset = {
+				0,
+				0,
+				3
+			}
+		},
+		visibility_function = function (content, style)
+			local use_placeholder_texture = content.use_placeholder_texture
+
+			if (not use_placeholder_texture or use_placeholder_texture == 1) and content.item then
+				return true
+			end
+
+			return false
+		end,
+		change_function = function (content, style, _, dt)
+			local add = -0.5 * dt
+			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
+			style.angle = style.rotation_progress * math.pi * 2
+		end
+	},
+	{
 		pass_type = "texture",
 		style_id = "inner_highlight",
 		value = "content/ui/materials/frames/inner_shadow_medium",
@@ -990,6 +1245,45 @@ ItemPassTemplates.ui_item_emote_slot = {
 		end
 	},
 	{
+		pass_type = "rotated_texture",
+		value = "content/ui/materials/loading/loading_small",
+		style_id = "loading",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			angle = 0,
+			size = {
+				80,
+				80
+			},
+			color = {
+				60,
+				160,
+				160,
+				160
+			},
+			offset = {
+				0,
+				0,
+				3
+			}
+		},
+		visibility_function = function (content, style)
+			local use_placeholder_texture = content.use_placeholder_texture
+
+			if (not use_placeholder_texture or use_placeholder_texture == 1) and content.item then
+				return true
+			end
+
+			return false
+		end,
+		change_function = function (content, style, _, dt)
+			local add = -0.5 * dt
+			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
+			style.angle = style.rotation_progress * math.pi * 2
+		end
+	},
+	{
 		pass_type = "texture",
 		style_id = "inner_highlight",
 		value = "content/ui/materials/frames/inner_shadow_medium",
@@ -1137,7 +1431,55 @@ ItemPassTemplates.item_slot = {
 					1 - (weapon_icon_size[2] - weapon_item_size[2]) * 0.5 / weapon_icon_size[2]
 				}
 			}
-		}
+		},
+		visibility_function = function (content, style)
+			local use_placeholder_texture = content.use_placeholder_texture
+
+			if use_placeholder_texture and use_placeholder_texture == 0 then
+				return true
+			end
+
+			return false
+		end
+	},
+	{
+		pass_type = "rotated_texture",
+		value = "content/ui/materials/loading/loading_small",
+		style_id = "loading",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "right",
+			angle = 0,
+			size = {
+				80,
+				80
+			},
+			color = {
+				60,
+				160,
+				160,
+				160
+			},
+			offset = {
+				-90,
+				0,
+				4
+			}
+		},
+		visibility_function = function (content, style)
+			local use_placeholder_texture = content.use_placeholder_texture
+
+			if (not use_placeholder_texture or use_placeholder_texture == 1) and content.item then
+				return true
+			end
+
+			return false
+		end,
+		change_function = function (content, style, _, dt)
+			local add = -0.5 * dt
+			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
+			style.angle = style.rotation_progress * math.pi * 2
+		end
 	},
 	{
 		style_id = "display_name",
@@ -1462,7 +1804,55 @@ ItemPassTemplates.item = {
 					1 - (weapon_icon_size[2] - weapon_item_size[2]) * 0.5 / weapon_icon_size[2]
 				}
 			}
-		}
+		},
+		visibility_function = function (content, style)
+			local use_placeholder_texture = content.use_placeholder_texture
+
+			if use_placeholder_texture and use_placeholder_texture == 0 then
+				return true
+			end
+
+			return false
+		end
+	},
+	{
+		pass_type = "rotated_texture",
+		value = "content/ui/materials/loading/loading_small",
+		style_id = "loading",
+		style = {
+			vertical_alignment = "top",
+			horizontal_alignment = "right",
+			angle = 0,
+			size = {
+				80,
+				80
+			},
+			color = {
+				60,
+				160,
+				160,
+				160
+			},
+			offset = {
+				-85,
+				20,
+				4
+			}
+		},
+		visibility_function = function (content, style)
+			local use_placeholder_texture = content.use_placeholder_texture
+
+			if not use_placeholder_texture or use_placeholder_texture == 1 then
+				return true
+			end
+
+			return false
+		end,
+		change_function = function (content, style, _, dt)
+			local add = -0.5 * dt
+			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
+			style.angle = style.rotation_progress * math.pi * 2
+		end
 	},
 	{
 		style_id = "display_name",
@@ -1752,7 +2142,7 @@ ItemPassTemplates.item = {
 			vertical_alignment = "bottom",
 			horizontal_alignment = "right",
 			size = {
-				28,
+				20,
 				20
 			},
 			offset = {
@@ -2101,7 +2491,7 @@ ItemPassTemplates.general_goods_item = {
 			vertical_alignment = "bottom",
 			horizontal_alignment = "right",
 			size = {
-				28,
+				20,
 				20
 			},
 			offset = {
@@ -2164,7 +2554,55 @@ ItemPassTemplates.item_icon = {
 					1 - (weapon_icon_size[2] - item_icon_size[2]) * 0.5 / weapon_icon_size[2]
 				}
 			}
-		}
+		},
+		visibility_function = function (content, style)
+			local use_placeholder_texture = content.use_placeholder_texture
+
+			if use_placeholder_texture and use_placeholder_texture == 0 then
+				return true
+			end
+
+			return false
+		end
+	},
+	{
+		pass_type = "rotated_texture",
+		value = "content/ui/materials/loading/loading_small",
+		style_id = "loading",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			angle = 0,
+			size = {
+				80,
+				80
+			},
+			color = {
+				60,
+				160,
+				160,
+				160
+			},
+			offset = {
+				0,
+				0,
+				4
+			}
+		},
+		visibility_function = function (content, style)
+			local use_placeholder_texture = content.use_placeholder_texture
+
+			if not use_placeholder_texture or use_placeholder_texture == 1 then
+				return true
+			end
+
+			return false
+		end,
+		change_function = function (content, style, _, dt)
+			local add = -0.5 * dt
+			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
+			style.angle = style.rotation_progress * math.pi * 2
+		end
 	},
 	{
 		value = "content/ui/materials/backgrounds/default_square",
@@ -2285,6 +2723,68 @@ ItemPassTemplates.item_icon = {
 		style = item_owned_text_style,
 		visibility_function = function (content, style)
 			return content.owned
+		end
+	},
+	{
+		pass_type = "rect",
+		style = {
+			vertical_alignment = "bottom",
+			offset = {
+				0,
+				0,
+				3
+			},
+			color = {
+				150,
+				0,
+				0,
+				0
+			},
+			size = {
+				nil,
+				40
+			}
+		},
+		visibility_function = function (content, style)
+			return content.has_price_tag
+		end
+	},
+	{
+		value_id = "price_text",
+		style_id = "price_text",
+		pass_type = "text",
+		value = "n/a",
+		style = item_price_style,
+		visibility_function = function (content, style)
+			return content.has_price_tag and not content.sold
+		end
+	},
+	{
+		value_id = "wallet_icon",
+		style_id = "wallet_icon",
+		pass_type = "texture",
+		value = "content/ui/materials/base/ui_default_base",
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "right",
+			size = {
+				20,
+				20
+			},
+			offset = {
+				0,
+				-10,
+				12
+			},
+			color = {
+				255,
+				255,
+				255,
+				255
+			}
+		},
+		visibility_function = function (content, style)
+			return content.has_price_tag and not content.sold
 		end
 	}
 }
@@ -2601,20 +3101,6 @@ ItemPassTemplates.gadget_item_slot = {
 		end
 	},
 	{
-		value = "content/ui/materials/backgrounds/default_square",
-		style_id = "background",
-		pass_type = "texture",
-		style = {
-			color = Color.terminal_background_dark(nil, true),
-			selected_color = Color.terminal_background_selected(nil, true),
-			offset = {
-				0,
-				0,
-				3
-			}
-		}
-	},
-	{
 		value = "content/ui/materials/gradients/gradient_vertical",
 		style_id = "background_gradient",
 		pass_type = "texture",
@@ -2667,7 +3153,7 @@ ItemPassTemplates.gadget_item_slot = {
 			},
 			offset = {
 				0,
-				20,
+				35,
 				6
 			},
 			uvs = {
@@ -2682,8 +3168,88 @@ ItemPassTemplates.gadget_item_slot = {
 			}
 		},
 		visibility_function = function (content, style)
-			return content.item and content.unlocked
+			local use_placeholder_texture = content.use_placeholder_texture
+
+			if use_placeholder_texture and use_placeholder_texture == 0 then
+				return content.item and content.unlocked
+			end
+
+			return false
 		end
+	},
+	{
+		pass_type = "rotated_texture",
+		value = "content/ui/materials/loading/loading_small",
+		style_id = "loading",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			angle = 0,
+			size = {
+				80,
+				80
+			},
+			color = {
+				60,
+				160,
+				160,
+				160
+			},
+			offset = {
+				0,
+				-20,
+				6
+			}
+		},
+		visibility_function = function (content, style)
+			local use_placeholder_texture = content.use_placeholder_texture
+
+			if (not use_placeholder_texture or use_placeholder_texture == 1) and content.item and content.unlocked then
+				return true
+			end
+
+			return false
+		end,
+		change_function = function (content, style, _, dt)
+			local add = -0.5 * dt
+			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
+			style.angle = style.rotation_progress * math.pi * 2
+		end
+	},
+	{
+		style_id = "item_level",
+		pass_type = "text",
+		value = "",
+		value_id = "item_level",
+		style = gadget_item_level_text_style,
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			local default_text_color = style.default_color
+			local hover_color = style.hover_color
+			local text_color = style.text_color
+			local progress = math.max(math.max(hotspot.anim_hover_progress or 0, hotspot.anim_select_progress or 0), hotspot.anim_focus_progress or 0)
+
+			ColorUtilities.color_lerp(default_text_color, hover_color, progress, text_color)
+		end
+	},
+	{
+		pass_type = "texture",
+		style_id = "inner_frame",
+		value = "content/ui/materials/frames/line_thin_detailed_03",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			color = Color.terminal_frame(nil, true),
+			default_color = Color.terminal_frame(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			hover_color = Color.terminal_frame_hover(nil, true),
+			offset = {
+				0,
+				0,
+				6
+			}
+		},
+		change_function = item_change_function
 	},
 	{
 		pass_type = "texture",

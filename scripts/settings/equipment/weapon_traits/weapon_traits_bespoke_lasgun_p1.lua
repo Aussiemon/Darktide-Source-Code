@@ -58,13 +58,13 @@ templates.weapon_trait_bespoke_lasgun_p1_first_shot_ammo_cost_reduction = {
 templates.weapon_trait_bespoke_lasgun_p1_suppression_negation_on_weakspot = {
 	weapon_trait_bespoke_lasgun_p1_suppression_negation_on_weakspot = {
 		{
-			active_duration = 0.5
+			active_duration = 0.6
 		},
 		{
 			active_duration = 0.7
 		},
 		{
-			active_duration = 0.85
+			active_duration = 0.8
 		},
 		{
 			active_duration = 0.9
@@ -102,13 +102,13 @@ templates.weapon_trait_bespoke_lasgun_p1_stacking_crit_chance_on_weakspot = {
 templates.weapon_trait_bespoke_lasgun_p1_count_as_dodge_vs_ranged_on_weakspot = {
 	weapon_trait_bespoke_lasgun_p1_count_as_dodge_vs_ranged_on_weakspot = {
 		{
-			active_duration = 0.5
+			active_duration = 0.4
 		},
 		{
-			active_duration = 0.75
+			active_duration = 0.6
 		},
 		{
-			active_duration = 0.9
+			active_duration = 0.8
 		},
 		{
 			active_duration = 1
@@ -143,7 +143,7 @@ templates.weapon_trait_bespoke_lasgun_p1_stagger_count_bonus_damage = {
 	weapon_trait_bespoke_lasgun_p1_stagger_count_bonus_damage = {
 		{
 			stat_buffs = {
-				[stat_buffs.stagger_count_damage] = 0.1
+				[stat_buffs.stagger_count_damage] = 0.125
 			}
 		},
 		{
@@ -153,7 +153,7 @@ templates.weapon_trait_bespoke_lasgun_p1_stagger_count_bonus_damage = {
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.stagger_count_damage] = 0.18
+				[stat_buffs.stagger_count_damage] = 0.175
 			}
 		},
 		{
@@ -167,12 +167,14 @@ templates.weapon_trait_bespoke_lasgun_p1_burninating_on_crit = {
 	weapon_trait_bespoke_lasgun_p1_burninating_on_crit = {
 		{
 			dot_data = {
+				max_stacks = 6,
 				num_stacks_on_proc = 2
 			}
 		},
 		{
 			dot_data = {
-				num_stacks_on_proc = 4
+				max_stacks = 9,
+				num_stacks_on_proc = 3
 			}
 		}
 	}
@@ -181,17 +183,17 @@ templates.weapon_trait_bespoke_lasgun_p1_crit_weakspot_finesse = {
 	weapon_trait_bespoke_lasgun_p1_crit_weakspot_finesse = {
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_weakspot_damage] = 0.3
+				[stat_buffs.critical_strike_weakspot_damage] = 0.275
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_weakspot_damage] = 0.4
+				[stat_buffs.critical_strike_weakspot_damage] = 0.35
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_weakspot_damage] = 0.475
+				[stat_buffs.critical_strike_weakspot_damage] = 0.425
 			}
 		},
 		{
@@ -205,7 +207,7 @@ templates.weapon_trait_bespoke_lasgun_p1_power_bonus_on_first_shot = {
 	weapon_trait_bespoke_lasgun_p1_power_bonus_on_first_shot = {
 		{
 			stat_buffs = {
-				[stat_buffs.ranged_power_level_modifier] = 0.05
+				[stat_buffs.ranged_power_level_modifier] = 0.075
 			}
 		},
 		{
@@ -215,7 +217,7 @@ templates.weapon_trait_bespoke_lasgun_p1_power_bonus_on_first_shot = {
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.ranged_power_level_modifier] = 0.13
+				[stat_buffs.ranged_power_level_modifier] = 0.125
 			}
 		},
 		{

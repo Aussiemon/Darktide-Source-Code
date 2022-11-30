@@ -8,15 +8,7 @@ PresenceManagerDummy.init = function (self)
 	self._myself = PresenceEntryMyself:new()
 end
 
-PresenceManagerDummy.set_presence = function (self, presence_name)
-	return
-end
-
 PresenceManagerDummy.set_party = function (self, party_id, num_party_members)
-	return
-end
-
-PresenceManagerDummy.set_num_mission_members = function (self, num_mission_members)
 	return
 end
 

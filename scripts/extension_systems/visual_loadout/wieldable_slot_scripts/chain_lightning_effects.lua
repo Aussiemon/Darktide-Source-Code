@@ -442,6 +442,8 @@ ChainLightningEffects._reset = function (self)
 	self._target_3_left_particle_id = self:_stop_vfx(self._world, self._target_3_left_particle_id)
 	self._right_hand_particle_id = self:_stop_vfx(self._world, self._right_hand_particle_id)
 	self._left_hand_particle_id = self:_stop_vfx(self._world, self._left_hand_particle_id)
+	self._no_target_particle_right_id = self:_stop_vfx(self._world, self._no_target_particle_right_id)
+	self._no_target_particle_left_id = self:_stop_vfx(self._world, self._no_target_particle_left_id)
 	local chain_targets = self._chain_targets
 
 	for ii = 1, #chain_targets do

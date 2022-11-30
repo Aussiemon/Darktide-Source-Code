@@ -68,16 +68,16 @@ local templates = {
 	weapon_trait_bespoke_ogryn_club_p1_infinite_melee_cleave_on_weakspot_kill = {
 		weapon_trait_bespoke_ogryn_club_p1_infinite_melee_cleave_on_weakspot_kill = {
 			{
-				active_duration = 2
+				active_duration = 1.5
 			},
 			{
-				active_duration = 3
+				active_duration = 2.5
 			},
 			{
 				active_duration = 3.5
 			},
 			{
-				active_duration = 4
+				active_duration = 4.5
 			}
 		}
 	},

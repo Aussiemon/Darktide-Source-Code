@@ -4,13 +4,13 @@ local templates = {
 	weapon_trait_bespoke_ogryn_thumper_p2_toughness_on_elite_kills = {
 		weapon_trait_bespoke_ogryn_thumper_p2_toughness_on_elite_kills = {
 			{
-				toughness_fixed_percentage = 0.05
+				toughness_fixed_percentage = 0.04
 			},
 			{
-				toughness_fixed_percentage = 0.065
+				toughness_fixed_percentage = 0.06
 			},
 			{
-				toughness_fixed_percentage = 0.085
+				toughness_fixed_percentage = 0.08
 			},
 			{
 				toughness_fixed_percentage = 0.1

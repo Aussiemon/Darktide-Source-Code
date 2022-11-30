@@ -782,10 +782,6 @@ PickupSystem.register_material_collected = function (self, pickup_unit, interact
 	else
 		type_list[size] = type_list[size] + 1
 	end
-
-	if Managers.stats.can_record_stats() then
-		Managers.stats:record_collect_material(type, size)
-	end
 end
 
 PickupSystem.get_collected_materials = function (self)

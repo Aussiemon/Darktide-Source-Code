@@ -38,13 +38,27 @@ BtChaosHoundLeapAction.enter = function (self, unit, breed, blackboard, scratchp
 		scratchpad.aoe_bot_threat_timing = t + action_data.aoe_bot_threat_timing
 	end
 
-	local start_duration = action_data.start_duration or 0
-	scratchpad.start_duration = t + start_duration
+	local target_distance = perception_component.target_distance
+	local min_velocity = action_data.long_leap_min_velocity
+	local current_velocity = Vector3.length(locomotion_extension:current_velocity())
+
+	if current_velocity < min_velocity or target_distance < action_data.short_distance then
+		local start_duration = action_data.start_duration_short or 0
+		scratchpad.start_duration = t + start_duration
+		local start_leap_anim = action_data.start_leap_anim_event_short
+
+		animation_extension:anim_event(start_leap_anim)
+
+		scratchpad.short_leap = true
+	else
+		local start_duration = action_data.start_duration or 0
+		scratchpad.start_duration = t + start_duration
+		local start_leap_anim = action_data.start_leap_anim_event
+
+		animation_extension:anim_event(start_leap_anim)
+	end
+
 	scratchpad.state = "starting"
-	local start_leap_anim = action_data.start_leap_anim_event
-
-	animation_extension:anim_event(start_leap_anim)
-
 	behavior_component.move_state = "moving"
 	scratchpad.broadphase_system = Managers.state.extension:system("broadphase_system")
 	scratchpad.pushed_minions = {}
@@ -82,8 +96,6 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 	local target_unit = scratchpad.perception_component.target_unit
 
 	if state == "starting" then
-		self:_update_ground_normal_rotation(unit, target_unit, scratchpad, false)
-
 		local wanted_velocity = nil
 		local leap_velocity = self:_calculate_wanted_velocity(unit, t, scratchpad, action_data)
 
@@ -96,7 +108,12 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 			wanted_velocity = Vector3(wanted_velocity.x, wanted_velocity.y, 0)
 		end
 
-		locomotion_extension:set_wanted_velocity(wanted_velocity)
+		if scratchpad.short_leap then
+			self:_update_ground_normal_rotation(unit, target_unit, scratchpad, true)
+		else
+			self:_update_ground_normal_rotation(unit, target_unit, scratchpad, false)
+			locomotion_extension:set_wanted_velocity(wanted_velocity)
+		end
 
 		local start_duration = scratchpad.start_duration
 
@@ -160,7 +177,7 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 			local player = player_unit_spawn_manager:owner(hit_player_unit)
 
 			if player and player.remote then
-				extra_timing = player:lag_compensation_rewind_s()
+				extra_timing = player:lag_compensation_rewind_s() * 0.5
 				scratchpad.lag_compensation_rewind_s = extra_timing
 			end
 
@@ -225,9 +242,6 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 
 		if wall_land_duration and wall_land_duration <= t then
 			locomotion_extension:set_anim_driven(false)
-
-			behavior_component.move_state = "moving"
-
 			self:_set_pounce_cooldown(blackboard, t)
 
 			return "done"
@@ -294,7 +308,7 @@ BtChaosHoundLeapAction._calculate_wanted_velocity = function (self, unit, t, scr
 		return
 	end
 
-	angle_to_hit_target = math.min(angle_to_hit_target, 0.3)
+	angle_to_hit_target = math.min(angle_to_hit_target, 0.5)
 	local velocity, time_in_flight = Trajectory.get_trajectory_velocity(self_position, est_pos, gravity, speed, angle_to_hit_target)
 	time_in_flight = math.min(time_in_flight, MAX_TIME_IN_FLIGHT)
 	local debug = nil
@@ -379,7 +393,7 @@ BtChaosHoundLeapAction._check_wall_collision = function (self, unit, scratchpad,
 	local physics_world = scratchpad.physics_world
 	local wall_raycast_distance = action_data.wall_raycast_distance
 	local rotation = Unit.local_rotation(unit, 1)
-	local direction = Vector3.flat(Quaternion.forward(rotation))
+	local direction = Quaternion.forward(rotation)
 	local collision_filter = "filter_minion_line_of_sight_check"
 	local _, hit_position, _, hit_normal_1, _ = PhysicsWorld.raycast(physics_world, from, direction, wall_raycast_distance, "closest", "collision_filter", collision_filter)
 
@@ -420,8 +434,11 @@ BtChaosHoundLeapAction._check_wall_collision = function (self, unit, scratchpad,
 	end
 end
 
+local LEAP_NODE = "j_head"
+local TARGET_LEAP_NODE = "j_spine"
+
 BtChaosHoundLeapAction._check_colliding_players = function (self, unit, scratchpad, action_data, ignore_dot_check)
-	local attacking_unit_pos = POSITION_LOOKUP[unit]
+	local attacking_unit_pos = Unit.world_position(unit, Unit.node(unit, LEAP_NODE))
 	local direction = Quaternion.forward(Unit.world_rotation(unit, 1))
 	local physics_world = scratchpad.physics_world
 	local radius = action_data.collision_radius
@@ -432,7 +449,7 @@ BtChaosHoundLeapAction._check_colliding_players = function (self, unit, scratchp
 		repeat
 			local hit_actor = hit_actors[i]
 			local hit_unit = Actor.unit(hit_actor)
-			local hit_unit_pos = POSITION_LOOKUP[hit_unit]
+			local hit_unit_pos = Unit.world_position(hit_unit, Unit.node(hit_unit, TARGET_LEAP_NODE))
 			local is_dodging = Dodge.is_dodging(hit_unit)
 
 			if is_dodging then

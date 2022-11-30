@@ -21,6 +21,16 @@ local wallet_settings = {
 		font_gradient_material_insufficient_funds = "content/ui/materials/font_gradients/slug_font_gradient_insufficient_funds",
 		show_in_character_menu = true
 	},
+	aquilas = {
+		icon_texture_big = "content/ui/materials/icons/currencies/premium_big",
+		icon_texture_small = "content/ui/materials/icons/currencies/premium_small",
+		font_gradient_material = "content/ui/materials/font_gradients/slug_font_gradient_premium",
+		display_name = "loc_currency_name_premium",
+		sort_order = 5,
+		string_symbol = "",
+		font_gradient_material_insufficient_funds = "content/ui/materials/font_gradients/slug_font_gradient_insufficient_funds",
+		backend_index = 1
+	},
 	plasteel = {
 		sort_order = 3,
 		icon_texture_small = "content/ui/materials/icons/currencies/plasteel_small",

@@ -33,11 +33,18 @@ local function generate_settings(entries)
 		local reset_function = config.reset_function
 		local category_display_name = config.display_name or "n/a"
 		local category_icon = config.icon
+		local can_be_reset = config.can_be_reset
+
+		if can_be_reset == nil then
+			can_be_reset = true
+		end
+
 		categories[#categories + 1] = {
 			display_name = category_display_name,
 			icon = category_icon,
 			reset_function = reset_function,
-			validation_function = entry.validation_function
+			validation_function = entry.validation_function,
+			can_be_reset = can_be_reset
 		}
 		local latest_group_name = nil
 

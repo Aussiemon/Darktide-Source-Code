@@ -32,7 +32,8 @@ local catapulting_templates = {
 	barrel_explosion = {
 		force = 12,
 		z_force = 6,
-		direction_from_node = "j_spine"
+		direction_from_node = "j_spine",
+		use_hit_position = true
 	},
 	corruptor_emerge_explosion = {
 		force = 12,

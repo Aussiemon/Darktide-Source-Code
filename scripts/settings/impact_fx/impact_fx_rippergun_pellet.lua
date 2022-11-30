@@ -416,7 +416,12 @@ local disgustingly_resilient = {
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01"
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_weakspot_ranged_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			},
 			{
@@ -428,7 +433,12 @@ local disgustingly_resilient = {
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01"
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			},
 			{
@@ -440,7 +450,12 @@ local disgustingly_resilient = {
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_ranged_01"
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_weakspot_ranged_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			},
 			{
@@ -452,7 +467,12 @@ local disgustingly_resilient = {
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_small_01"
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_small_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			},
 			{
@@ -464,7 +484,12 @@ local disgustingly_resilient = {
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_small_01"
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_small_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			},
 			{
@@ -481,6 +506,16 @@ local disgustingly_resilient = {
 			}
 		},
 		dead = {
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_small_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
+			},
 			{
 				effects = {
 					"content/fx/particles/weapons/rifles/ripper_gun/ripper_gun_impact_01"

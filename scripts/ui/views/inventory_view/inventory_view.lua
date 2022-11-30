@@ -2,18 +2,19 @@ local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templ
 local ContentBlueprints = require("scripts/ui/views/inventory_view/inventory_view_content_blueprints")
 local Definitions = require("scripts/ui/views/inventory_view/inventory_view_definitions")
 local InventoryViewSettings = require("scripts/ui/views/inventory_view/inventory_view_settings")
+local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local MasterItems = require("scripts/backend/master_items")
 local Personalities = require("scripts/settings/character/personalities")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
+local TextUtilities = require("scripts/utilities/ui/text")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
+local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
 local Vo = require("scripts/utilities/vo")
 local WalletSettings = require("scripts/settings/wallet_settings")
-local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local TextUtilities = require("scripts/utilities/ui/text")
 local VIEW_BY_SLOT = {
 	slot_gear_lowerbody = "inventory_cosmetics_view",
 	slot_primary = "inventory_weapons_view",
@@ -71,7 +72,49 @@ InventoryView.on_enter = function (self)
 		self:_request_wallets_update()
 	end
 
+	self._item_stats = self:_setup_item_stats("item_stats", "item_stats_pivot")
+
 	self:_register_event("event_inventory_view_set_camera_focus")
+end
+
+InventoryView._setup_item_stats = function (self, reference_name, scenegraph_id)
+	local layer = 10
+	local context = self._definitions.item_stats_grid_settings
+	local item_stats = self:_add_element(ViewElementWeaponStats, reference_name, layer, context)
+
+	self:_update_item_stats_position(scenegraph_id, item_stats)
+
+	return item_stats
+end
+
+InventoryView._update_item_stats_position = function (self, scenegraph_id, item_stats)
+	local position = self:_scenegraph_world_position(scenegraph_id)
+
+	item_stats:set_pivot_offset(position[1], position[2])
+end
+
+InventoryView._on_item_hover_start = function (self, item)
+	if self._currently_hovered_item then
+		if self._item_stats then
+			self._item_stats:stop_presenting()
+		end
+
+		self._currently_hovered_item = nil
+	end
+
+	self._currently_hovered_item = item
+
+	if self._item_stats then
+		self._item_stats:present_item(item)
+	end
+end
+
+InventoryView._on_item_hover_stop = function (self)
+	self._currently_hovered_item = nil
+
+	if self._item_stats then
+		self._item_stats:stop_presenting()
+	end
 end
 
 InventoryView._display_title_text = function (self, text)
@@ -96,12 +139,8 @@ InventoryView._set_active_layout_by_index = function (self, index)
 	end
 
 	local tab_context = active_context_tabs[index]
-	local tab_layout = tab_context.layout
-	local is_grid_layout = tab_context.is_grid_layout
-	local camera_settings = tab_context.camera_settings
-	local ui_animation = tab_context.ui_animation
 
-	self:_switch_active_layout(tab_layout, is_grid_layout, camera_settings, ui_animation)
+	self:_switch_active_layout(tab_context)
 
 	self._selected_tab_index = index
 
@@ -110,11 +149,15 @@ InventoryView._set_active_layout_by_index = function (self, index)
 	end
 end
 
-InventoryView._switch_active_layout = function (self, layout, is_grid_layout, camera_settings, ui_animation)
-	self._active_category_layout = layout
-	self._active_category_camera_settings = camera_settings
-	self._active_category_ui_animation = ui_animation
-	self._is_grid_layout = is_grid_layout
+InventoryView._switch_active_layout = function (self, tab_context)
+	local layout = tab_context.layout
+	local is_grid_layout = tab_context.is_grid_layout
+	local camera_settings = tab_context.camera_settings
+	local ui_animation = tab_context.ui_animation
+	local allow_item_hover_information = tab_context.allow_item_hover_information
+	local item_hover_information_offset = tab_context.item_hover_information_offset
+	self._active_category_tab_context = tab_context
+	self._allow_item_hover_information = allow_item_hover_information
 
 	if is_grid_layout then
 		self:_destroy_loadout_widgets(self._ui_renderer)
@@ -134,15 +177,30 @@ InventoryView._switch_active_layout = function (self, layout, is_grid_layout, ca
 		self._entry_animation_id = nil
 	end
 
+	local definitions = self._definitions
+	local default_scenegraph_definition = definitions.scenegraph_definition
+	local scenegraph_id = "item_stats_pivot"
+	local default_scenegraph = default_scenegraph_definition[scenegraph_id]
+	local default_scenegraph_position = default_scenegraph.position
+
+	if item_hover_information_offset then
+		self:_set_scenegraph_position("item_stats_pivot", item_hover_information_offset[1] or default_scenegraph_position[1], item_hover_information_offset[2] or default_scenegraph_position[2], item_hover_information_offset[3] or default_scenegraph_position[3])
+	else
+		self:_set_scenegraph_position("item_stats_pivot", default_scenegraph_position[1], default_scenegraph_position[2], default_scenegraph_position[3])
+	end
+
 	if ui_animation then
 		self._entry_animation_id = self:_start_animation(ui_animation, self._widgets, self)
 	end
 end
 
 InventoryView.on_back_pressed = function (self)
-	if self._active_category_layout ~= self._visible_grid_layout then
-		self:_setup_grid_layout(self._active_category_layout)
-		self:_switch_active_layout(self._active_category_layout, self._is_grid_layout, self._active_category_camera_settings, self._active_category_ui_animation)
+	local active_category_tab_context = self._active_category_tab_context
+	local active_category_layout = active_category_tab_context and active_category_tab_context.layout
+
+	if active_category_layout ~= self._visible_grid_layout then
+		self:_setup_grid_layout(active_category_layout)
+		self:_switch_active_layout(active_category_tab_context)
 		self:_display_title_text(nil)
 
 		return true
@@ -152,6 +210,12 @@ InventoryView.on_back_pressed = function (self)
 end
 
 InventoryView.on_exit = function (self)
+	if self._item_stats then
+		self:_remove_element("item_stats")
+
+		self._item_stats = nil
+	end
+
 	self:_destroy_loadout_widgets(self._ui_renderer)
 	self:_destroy_grid_widgets(self._ui_offscreen_renderer)
 
@@ -445,7 +509,7 @@ end
 InventoryView._setup_individual_layout = function (self, layout)
 	self._widgets_by_name.grid_background.content.visible = false
 
-	self:_destroy_loadout_widgets()
+	self:_destroy_loadout_widgets(self._ui_renderer)
 
 	local widgets = {}
 	local loadout_widget_navigation_grid = {}
@@ -740,7 +804,9 @@ end
 
 InventoryView._update_blueprint_widgets = function (self, widgets, dt, t, input_service, ui_renderer)
 	if widgets then
+		local allow_item_hover_information = self._allow_item_hover_information
 		local handle_input = false
+		local hovered_item = nil
 
 		for i = 1, #widgets do
 			local widget = widgets[i]
@@ -751,6 +817,25 @@ InventoryView._update_blueprint_widgets = function (self, widgets, dt, t, input_
 			if update then
 				update(self, widget, input_service, dt, t, ui_renderer)
 			end
+
+			if allow_item_hover_information and not hovered_item then
+				local content = widget.content
+				local hotspot = content.hotspot
+				local is_hover = hotspot and hotspot.is_hover
+
+				if is_hover then
+					local item = content.item
+					hovered_item = item
+				end
+			end
+		end
+
+		if hovered_item then
+			if not self._currently_hovered_item or hovered_item.gear_id ~= self._currently_hovered_item.gear_id then
+				self:_on_item_hover_start(hovered_item)
+			end
+		else
+			self:_on_item_hover_stop()
 		end
 
 		if handle_input and self._focused_settings_widget and self._close_focused_setting then
@@ -892,7 +977,12 @@ InventoryView._select_individual_widget_index = function (self, index)
 		for i = 1, #loadout_widgets do
 			local is_selected = i == index
 			local widget = loadout_widgets[i]
-			widget.content.hotspot.is_selected = is_selected
+			local content = widget.content
+			local hotspot = content.hotspot
+
+			if hotspot then
+				hotspot.is_selected = is_selected
+			end
 		end
 	end
 
@@ -909,6 +999,10 @@ InventoryView.on_resolution_modified = function (self, scale)
 	end
 
 	self:_update_tab_bar_position()
+
+	if self._item_stats then
+		self:_update_item_stats_position("item_stats_pivot", self._item_stats)
+	end
 end
 
 InventoryView.update = function (self, dt, t, input_service)

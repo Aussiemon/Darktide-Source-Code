@@ -12,6 +12,8 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local WeaponTraitsBespokeThumperP2 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_thumper_p2")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local armor_types = ArmorSettings.types
 local template_types = WeaponTweakTemplateSettings.template_types
 local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
@@ -721,13 +723,15 @@ weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "thumper_p1_m2"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_thumper_p1_m2
 weapon_template.overclocks = {}
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	ogryn_thumper_p1_m2_ammo_stat = {
 		display_name = "loc_stats_display_ammo_stat",
 		is_stat_trait = true,
 		ammo = {
 			base = {
-				ammo_trait_templates.default_explosive_ammo_stat
+				ammo_trait_templates.default_explosive_ammo_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
@@ -736,7 +740,8 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.ogryn_thumper_p1_m2_explosion_damage_stat
+				damage_trait_templates.ogryn_thumper_p1_m2_explosion_damage_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.ogryn_thumper_p1_m2_explosion_damage_stat
@@ -748,7 +753,8 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		explosion = {
 			action_shoot_hip = {
-				explosion_trait_templates.default_explosion_size_stat
+				explosion_trait_templates.default_explosion_size_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
 				explosion_trait_templates.default_explosion_size_stat
@@ -760,17 +766,20 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		dodge = {
 			base = {
-				dodge_trait_templates.default_dodge_stat
+				dodge_trait_templates.default_dodge_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		sprint = {
 			base = {
-				sprint_trait_templates.default_sprint_stat
+				sprint_trait_templates.default_sprint_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		movement_curve_modifier = {
 			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
@@ -779,7 +788,8 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.ogryn_thumper_p1_m2_explosion_antiarmor_stat
+				damage_trait_templates.ogryn_thumper_p1_m2_explosion_antiarmor_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.ogryn_thumper_p1_m2_explosion_antiarmor_stat
@@ -794,7 +804,6 @@ table.append(weapon_template.traits, bespoke_traits)
 
 weapon_template.perks = {
 	ogryn_thumper_p1_m2_ammo_perk = {
-		description = "loc_trait_description_ogryn_thumper_p1_m2_ammo_perk",
 		display_name = "loc_trait_display_ogryn_thumper_p1_m2_ammo_perk",
 		ammo = {
 			base = {
@@ -803,7 +812,6 @@ weapon_template.perks = {
 		}
 	},
 	ogryn_thumper_p1_m2_explosion_damage_perk = {
-		description = "loc_trait_description_ogryn_thumper_p1_m2_explosion_damage_perk",
 		display_name = "loc_trait_display_ogryn_thumper_p1_m2_explosion_damage_perk",
 		explosion = {
 			action_shoot_hip = {
@@ -823,7 +831,6 @@ weapon_template.perks = {
 		}
 	},
 	ogryn_thumper_p1_m2_explosion_size_perk = {
-		description = "loc_trait_description_ogryn_thumper_p1_m2_explosion_size_perk",
 		display_name = "loc_trait_display_ogryn_thumper_p1_m2_explosion_size_perk",
 		explosion = {
 			action_shoot_hip = {
@@ -835,7 +842,6 @@ weapon_template.perks = {
 		}
 	},
 	thumper_p1_m2_mobility_perk = {
-		description = "loc_trait_description_thumper_p1_m2_mobility_perk",
 		display_name = "loc_trait_display_thumper_p1_m2_mobility_perk",
 		dodge = {
 			base = {
@@ -854,7 +860,6 @@ weapon_template.perks = {
 		}
 	},
 	ogryn_thumper_p1_m2_explosion_antiarmor_perk = {
-		description = "loc_trait_description_ogryn_thumper_p1_m2_explosion_antiarmor_perk",
 		display_name = "loc_trait_display_ogryn_thumper_p1_m2_explosion_antiarmor_perk",
 		damage = {
 			action_shoot_hip = {
@@ -886,9 +891,11 @@ weapon_template.displayed_attacks = {
 		type = "brace"
 	},
 	special = {
+		desc = "loc_stats_special_action_melee_weapon_bash_desc",
 		display_name = "loc_weapon_special_weapon_bash",
 		type = "melee"
 	}
 }
+weapon_template.displayed_weapon_stats = "ogryn_thumper_p1_m2"
 
 return weapon_template

@@ -205,10 +205,15 @@ Characters.get_data = function (self, character_id, section, part)
 end
 
 Characters.check_name = function (self, name)
-	local path = BackendUtilities.url_builder():path("/data/characters/name/" .. name .. "/check"):to_string()
-
-	return Managers.backend:title_request(path):next(function (data)
-		return data.body
+	return Managers.backend:title_request("/data/characters/names/check", {
+		method = "POST",
+		body = {
+			names = {
+				name
+			}
+		}
+	}):next(function (data)
+		return data.body.results[1]
 	end)
 end
 

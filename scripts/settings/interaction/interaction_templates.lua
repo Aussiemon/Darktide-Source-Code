@@ -151,6 +151,15 @@ local interaction_templates = {
 		interaction_class_name = "marks_vendor",
 		ui_view_name = "marks_vendor_view"
 	},
+	premium_vendor = {
+		action_text = "loc_action_interaction_view",
+		ui_interaction_type = "point_of_interest",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/premium_store",
+		description = "loc_premium_vendor_view_title",
+		duration = 0,
+		interaction_class_name = "premium_vendor",
+		ui_view_name = "store_view"
+	},
 	training_ground = {
 		action_text = "loc_action_interaction_view",
 		ui_interaction_type = "point_of_interest",

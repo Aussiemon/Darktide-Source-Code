@@ -729,7 +729,7 @@ overrides.falling_heavy = {
 		}
 	}
 }
-damage_templates.kill_volume_and_ofF_navmesh = {
+damage_templates.kill_volume_and_off_navmesh = {
 	stagger_category = "melee",
 	armor_damage_modifier = {
 		attack = default_armor_mod,

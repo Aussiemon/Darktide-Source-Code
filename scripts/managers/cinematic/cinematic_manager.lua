@@ -36,6 +36,12 @@ CinematicManager.init = function (self, world, is_server, network_event_delegate
 end
 
 CinematicManager.destroy = function (self)
+	if self._next_pot_popup_id then
+		Managers.event:trigger("event_remove_ui_popup", self._next_pot_popup_id)
+
+		self._next_pot_popup_id = nil
+	end
+
 	self:_unload_all_levels()
 
 	if self._is_server then
@@ -206,12 +212,51 @@ CinematicManager.update = function (self, dt, t)
 			end
 		end
 	else
-		self:_play_next_in_queue()
+		local next_story = self._queued_stories[1]
+
+		if next_story then
+			if next_story.wait_for_player_input then
+				if not self._next_pot_popup_id then
+					local popup_info = next_story.popup_info
+					local popup_header = popup_info and popup_info.header_text or "loc_popup_header_path_of_trust_cutscene_waiting"
+					local popup_desc = popup_info and popup_info.description_text or "loc_popup_description_path_of_trust_cutscene_waiting"
+					local popup_button = popup_info and popup_info.button_text or "loc_popup_button_path_of_trust_accept_cutscene"
+					local context = {
+						title_text = popup_header,
+						description_text = popup_desc,
+						options = {
+							{
+								close_on_pressed = true,
+								text = popup_button,
+								callback = callback(function ()
+									self._next_pot_popup_id = nil
+
+									self:_play_next_in_queue()
+								end)
+							}
+						}
+					}
+
+					Managers.event:trigger("event_show_ui_popup", context, function (id)
+						self._next_pot_popup_id = id
+					end)
+				end
+			else
+				self:_play_next_in_queue()
+			end
+		end
 	end
 
 	if GameParameters.testify then
 		Testify:poll_requests_through_handler(CinematicManagerTestify, self)
 	end
+end
+
+CinematicManager.waiting_for_player_input = function (self)
+	local next_story = self._queued_stories[1]
+	local is_waiting = next_story and next_story.wait_for_player_input
+
+	return is_waiting
 end
 
 CinematicManager._check_last_played_on_client = function (self, cinematic_scene_name)

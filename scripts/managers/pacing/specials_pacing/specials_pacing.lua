@@ -39,15 +39,13 @@ SpecialsPacing.on_spawn_points_generated = function (self, template)
 	self._destroy_special_distance_sq = template.destroy_special_distance^2
 end
 
-local function _setup_specials_slot(specials_slot, template, timer_modifier, optional_breed_name, optional_spawn_timer, optional_injected, optional_coordinated_strike, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group, optional_is_prevention)
-	local breed_name = optional_breed_name
+local MIN_TIMER_DIFF_RANGE = {
+	3,
+	5
+}
+local USED_BREEDS = {}
 
-	if optional_breed_name == nil then
-		local breeds = optional_coordinated_strike and template.coordinated_strike_breeds or template.breeds.all
-		breed_name = breeds[math.random(1, #breeds)]
-	end
-
-	specials_slot.breed_name = breed_name
+local function _setup_specials_slot(specials_slots, specials_slot, template, timer_modifier, optional_breed_name, optional_spawn_timer, optional_injected, optional_coordinated_strike, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group, optional_is_prevention)
 	local spawn_timer = optional_spawn_timer
 
 	if optional_spawn_timer == nil then
@@ -56,7 +54,68 @@ local function _setup_specials_slot(specials_slot, template, timer_modifier, opt
 	end
 
 	spawn_timer = spawn_timer * timer_modifier
+
+	table.clear(USED_BREEDS)
+
+	specials_slot.breed_name = nil
+
+	for i = 1, #specials_slots do
+		local other_special_slot = specials_slots[i]
+
+		if not optional_spawn_timer then
+			local other_special_slot_timer = other_special_slot.spawn_timer
+			local min_timer_diff = math.random_range(MIN_TIMER_DIFF_RANGE[1], MIN_TIMER_DIFF_RANGE[2])
+
+			if other_special_slot_timer and math.abs(spawn_timer - other_special_slot_timer) < min_timer_diff then
+				spawn_timer = spawn_timer + min_timer_diff
+			end
+
+			local other_breed_name = other_special_slot.breed_name
+
+			if other_breed_name then
+				USED_BREEDS[other_breed_name] = USED_BREEDS[other_breed_name] and USED_BREEDS[other_breed_name] + 1 or 1
+			end
+		end
+	end
+
 	specials_slot.spawn_timer = spawn_timer
+	local breed_name = optional_breed_name
+
+	if optional_breed_name == nil then
+		local breeds = optional_coordinated_strike and template.coordinated_strike_breeds or template.breeds.all
+		breed_name = breeds[math.random(1, #breeds)]
+		local max_of_same = template.max_of_same[breed_name]
+		local num_used_breeds = USED_BREEDS[breed_name]
+
+		if num_used_breeds and max_of_same and max_of_same <= num_used_breeds then
+			local tags = Breeds[breed_name].tags
+			local new_breeds = nil
+
+			if tags.disabler then
+				new_breeds = template.breeds.disablers
+			elseif tags.scrambler then
+				new_breeds = template.breeds.scramblers
+			else
+				new_breeds = template.breeds.all
+			end
+
+			local breeds_copy = table.clone(new_breeds)
+
+			table.shuffle(breeds_copy)
+
+			for i = 1, #breeds_copy do
+				local other_breed_name = breeds_copy[i]
+
+				if not USED_BREEDS[other_breed_name] or USED_BREEDS[other_breed_name] < max_of_same then
+					breed_name = other_breed_name
+
+					break
+				end
+			end
+		end
+	end
+
+	specials_slot.breed_name = breed_name
 	local prefered_spawn_direction = optional_prefered_spawn_direction or template.optional_prefered_spawn_direction and template.optional_prefered_spawn_direction[breed_name]
 	specials_slot.optional_prefered_spawn_direction = prefered_spawn_direction
 	local optional_mainpath_offset = template.optional_mainpath_offset
@@ -95,7 +154,7 @@ SpecialsPacing._setup = function (self, template, optional_first_spawn_modifier)
 	for i = 1, max_alive_specials do
 		local specials_slot = {}
 
-		_setup_specials_slot(specials_slot, template, optional_first_spawn_modifier or self._timer_modifier)
+		_setup_specials_slot(specials_slots, specials_slot, template, optional_first_spawn_modifier or self._timer_modifier)
 
 		specials_slots[i] = specials_slot
 	end
@@ -150,7 +209,7 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 				local activated_coordinated_strike = self:_check_and_activate_coordinated_strike(template, specials_slot)
 
 				if not activated_coordinated_strike then
-					_setup_specials_slot(specials_slot, template, self._timer_modifier)
+					_setup_specials_slot(specials_slots, specials_slot, template, self._timer_modifier)
 				end
 			end
 		elseif specials_slot.spawner_queue_id then
@@ -258,10 +317,11 @@ SpecialsPacing._spawn_special = function (self, specials_slot, side_id, target_s
 		return true, nil, spawner_queue_id, spawner
 	end
 
-	local spawn_position, closest_target_unit = self:_find_spawn_position(side_id, breed_name, target_side_id, check_ahead, optional_mainpath_offset)
+	local randomize = specials_slot.coordinated_strike
+	local spawn_position, closest_target_unit = self:_find_spawn_position(side_id, breed_name, target_side_id, check_ahead, optional_mainpath_offset, randomize)
 
 	if not spawn_position then
-		spawn_position, closest_target_unit = self:_find_spawn_position(side_id, breed_name, target_side_id, not check_ahead)
+		spawn_position, closest_target_unit = self:_find_spawn_position(side_id, breed_name, target_side_id, not check_ahead, nil, randomize)
 
 		if not spawn_position then
 			local nearby_spawner = self:_find_nearby_spawner(target_side_id)
@@ -326,25 +386,90 @@ local ABOVE = 1
 local BELOW = 1.5
 local LATERAL = 1
 
-SpecialsPacing._find_spawn_position = function (self, side_id, breed_name, target_side_id, check_ahead, optional_mainpath_offset)
-	local main_path_manager = Managers.state.main_path
-	local target_unit, travel_distance = nil
+local function _find_travel_distance(nav_world, target_unit, nav_spawn_points)
+	local target_navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, POSITION_LOOKUP[target_unit], ABOVE, BELOW, LATERAL)
 
-	if check_ahead then
-		target_unit, travel_distance = main_path_manager:ahead_unit(target_side_id)
-	else
-		target_unit, travel_distance = main_path_manager:behind_unit(target_side_id)
-	end
-
-	if not target_unit then
+	if not target_navmesh_position then
 		return
 	end
 
+	local spawn_point_group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, target_navmesh_position)
+	local start_index = Managers.state.main_path:node_index_by_nav_group_index(spawn_point_group_index or 1)
+	local end_index = start_index + 1
+	local _, target_travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(target_navmesh_position, start_index, end_index)
+
+	if target_travel_distance then
+		return target_travel_distance
+	end
+end
+
+local ALONE_TARGETS = {}
+
+SpecialsPacing._find_spawn_position = function (self, side_id, breed_name, target_side_id, check_ahead, optional_mainpath_offset, optional_randomize)
+	local template = self._template
+	local disabler_target_alone_player_chance = template.disabler_target_alone_player_chance and template.disabler_target_alone_player_chance[breed_name]
+	local breed = Breeds[breed_name]
+	local target_unit, travel_distance = nil
+	local side_system = Managers.state.extension:system("side_system")
+
+	if not optional_randomize and disabler_target_alone_player_chance and breed.tags.disabler and math.random() <= disabler_target_alone_player_chance then
+		local side = side_system:get_side(target_side_id)
+		local target_units = side.valid_player_units
+		local num_target_units = #target_units
+
+		table.clear(ALONE_TARGETS)
+
+		for i = 1, num_target_units do
+			local possible_target = target_units[i]
+			local coherency_extension = ScriptUnit.has_extension(possible_target, "coherency_system")
+			local num_units_in_coherency = coherency_extension:num_units_in_coherency()
+
+			if num_units_in_coherency == 1 then
+				ALONE_TARGETS[#ALONE_TARGETS + 1] = possible_target
+			end
+		end
+
+		if #ALONE_TARGETS > 0 then
+			target_unit = ALONE_TARGETS[math.random(1, #ALONE_TARGETS)]
+		end
+	end
+
 	local nav_world = self._nav_world
+	local main_path_manager = Managers.state.main_path
+
+	if not target_unit then
+		if optional_randomize then
+			local side = side_system:get_side(target_side_id)
+			local target_units = side.valid_player_units
+			local num_target_units = #target_units
+			local random_target_unit = target_units[math.random(1, num_target_units)]
+			travel_distance = _find_travel_distance(nav_world, random_target_unit, self._nav_spawn_points)
+			target_unit = random_target_unit
+		elseif check_ahead then
+			target_unit, travel_distance = main_path_manager:ahead_unit(target_side_id)
+		else
+			target_unit, travel_distance = main_path_manager:behind_unit(target_side_id)
+		end
+
+		if not target_unit then
+			return
+		end
+	end
+
 	local target_position = POSITION_LOOKUP[target_unit]
 	local navmesh_position = nil
 
 	if optional_mainpath_offset then
+		if not travel_distance then
+			local target_travel_distance = _find_travel_distance(nav_world, target_unit, self._nav_spawn_points)
+
+			if target_travel_distance then
+				travel_distance = target_travel_distance
+			else
+				return
+			end
+		end
+
 		navmesh_position = MainPathQueries.position_from_distance(travel_distance + optional_mainpath_offset)
 	else
 		navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, target_position, ABOVE, BELOW, LATERAL)
@@ -365,9 +490,7 @@ SpecialsPacing._find_spawn_position = function (self, side_id, breed_name, targe
 	end
 
 	local nav_spawn_points = self._nav_spawn_points
-	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system:get_side(side_id)
-	local template = self._template
 	local max_spawn_group_offset_range = template.max_spawn_group_offset_range
 	local num_spawn_point_groups = self._num_spawn_point_groups
 	local min_distance_from_target = template.min_distances_from_target[breed_name]
@@ -568,13 +691,23 @@ end
 
 local MIN_COORDINATED_TIMER = 20
 local COORDINATED_STRIKE_TIMER_OFFSET_RANGE = {
-	2,
-	4
+	3,
+	6
 }
 
 SpecialsPacing._check_and_activate_coordinated_strike = function (self, template, current_special_slot)
-	if self._num_spawned_specials > 0 or current_special_slot.coordinated_strike then
+	if self._num_spawned_specials > 0 then
 		return false
+	end
+
+	local specials_slots = self._specials_slots
+
+	for i = 1, self._max_alive_specials do
+		local specials_slot = specials_slots[i]
+
+		if specials_slot.coordinated_strike then
+			return false
+		end
 	end
 
 	local chance_for_coordinated_strike = template.chance_for_coordinated_strike
@@ -593,7 +726,6 @@ SpecialsPacing._check_and_activate_coordinated_strike = function (self, template
 	local coordinated_strike_timer_range = template.coordinated_strike_timer_range
 	local min_timer_range = coordinated_strike_timer_range[1]
 	local max_timer_range = coordinated_strike_timer_range[2]
-	local specials_slots = self._specials_slots
 	local lowest_spawn_timer = math.huge
 
 	for i = 1, self._max_alive_specials do
@@ -617,11 +749,13 @@ SpecialsPacing._check_and_activate_coordinated_strike = function (self, template
 
 	Log.info("SpecialsPacing", "Coordinated strike in %.02f", coordinated_strike_timer)
 
-	for i = 1, self._max_alive_specials do
+	local coordinated_strike_num_breeds = template.coordinated_strike_num_breeds
+
+	for i = 1, coordinated_strike_num_breeds do
 		local specials_slot = specials_slots[i]
 		local optional_coordinated_strike = true
 
-		_setup_specials_slot(specials_slot, template, self._timer_modifier, nil, coordinated_strike_timer, nil, optional_coordinated_strike)
+		_setup_specials_slot(specials_slots, specials_slot, template, self._timer_modifier, nil, coordinated_strike_timer, nil, optional_coordinated_strike)
 
 		coordinated_strike_timer = coordinated_strike_timer + math.random_range(COORDINATED_STRIKE_TIMER_OFFSET_RANGE[1], COORDINATED_STRIKE_TIMER_OFFSET_RANGE[2])
 	end
@@ -817,7 +951,7 @@ SpecialsPacing.try_inject_special = function (self, breed_name, optional_prefere
 	local spawn_timer = foreshadow_stinger_timer or 0
 	local injected = true
 
-	_setup_specials_slot(chosen_slot, template, self._timer_modifier, breed_name, spawn_timer, injected, nil, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group, optional_is_prevention)
+	_setup_specials_slot(specials_slots, chosen_slot, template, self._timer_modifier, breed_name, spawn_timer, injected, nil, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group, optional_is_prevention)
 
 	return true
 end

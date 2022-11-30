@@ -1356,18 +1356,22 @@ base_templates.stagger_count_bonus_damage = {
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
-base_templates.burninating_on_crit = {
+base_templates.burninating_on_crit_ranged = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
 		[proc_events.on_hit] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.on_crit,
+	check_proc_func = function (params, template_data, template_context)
+		local damage = params.damage
+
+		return CheckProcFunctions.on_crit_ranged(params, template_data, template_context) and damage > 0
+	end,
 	dot_data = {
+		max_stacks = 10,
 		dot_buff_name = "flamer_assault",
-		num_stacks_on_proc = 1,
-		max_stacks = math.huge
+		num_stacks_on_proc = 1
 	},
 	start_func = function (template_data, template_context)
 		local template = template_context.template
@@ -1824,7 +1828,7 @@ base_templates.dodge_grants_critical_strike_chance = {
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded
 }
-base_templates.bleed_on_crit = {
+base_templates.bleed_on_crit_melee = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
@@ -1846,7 +1850,7 @@ base_templates.bleed_on_crit = {
 		template_data.num_stacks_on_proc = override_target_buff_data and override_target_buff_data.num_stacks_on_proc or target_buff_data.num_stacks_on_proc
 		template_data.max_stacks = override_target_buff_data and override_target_buff_data.max_stacks or target_buff_data.max_stacks
 	end,
-	check_proc_func = CheckProcFunctions.on_crit,
+	check_proc_func = CheckProcFunctions.on_melee_crit_hit,
 	proc_func = function (params, template_data, template_context, t)
 		local attacked_unit = params.attacked_unit
 
@@ -1883,7 +1887,7 @@ base_templates.bleed_on_crit = {
 		end
 	end
 }
-base_templates.bleed_on_non_weakspot_hit = {
+base_templates.bleed_on_non_weakspot_hit_melee = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
@@ -1904,7 +1908,7 @@ base_templates.bleed_on_non_weakspot_hit = {
 		template_data.num_stacks_on_proc = override_target_buff_data and override_target_buff_data.num_stacks_on_proc or target_buff_data.num_stacks_on_proc
 		template_data.max_stacks = override_target_buff_data and override_target_buff_data.max_stacks or target_buff_data.max_stacks
 	end,
-	check_proc_func = CheckProcFunctions.on_non_weakspot_hit,
+	check_proc_func = CheckProcFunctions.on_non_weakspot_hit_melee,
 	proc_func = function (params, template_data, template_context, t)
 		local attacked_unit = params.attacked_unit
 

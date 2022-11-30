@@ -152,7 +152,7 @@ minion_difficulty_settings.power_level = {
 	renegade_default_shot = _step_dmg(400),
 	renegade_executor_melee = _step_dmg(500),
 	renegade_gunner_shot = _step_dmg(300),
-	renegade_shotgun_shot = _step_dmg(250),
+	renegade_shotgun_shot = _step_dmg(300),
 	renegade_assault_shot = _step_dmg(225),
 	cultist_assault_shot = _step_dmg(270),
 	cultist_flamer_default = _step_dmg(50),
@@ -164,11 +164,11 @@ minion_difficulty_settings.power_level = {
 		125
 	},
 	cultist_flamer_fire = {
-		75,
 		100,
 		125,
 		150,
-		175
+		175,
+		200
 	},
 	renegade_flamer_default = _step_dmg(50),
 	renegade_flamer_on_hit_fire = {
@@ -179,11 +179,11 @@ minion_difficulty_settings.power_level = {
 		125
 	},
 	renegade_flamer_fire = {
-		75,
 		100,
 		125,
 		150,
-		175
+		175,
+		200
 	},
 	renegade_grenadier_fire = _step_dmg(100),
 	renegade_sniper_shot = {

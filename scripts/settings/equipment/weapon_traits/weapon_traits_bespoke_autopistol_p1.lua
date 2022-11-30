@@ -54,17 +54,17 @@ templates.weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide = {
 	weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide = {
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.05
+				[stat_buffs.reload_speed] = 0.04
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.075
+				[stat_buffs.reload_speed] = 0.06
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.09
+				[stat_buffs.reload_speed] = 0.08
 			}
 		},
 		{
@@ -88,7 +88,7 @@ templates.weapon_trait_bespoke_autopistol_p1_suppression_on_close_kill = {
 			suppression_settings = {
 				suppression_falloff = true,
 				instant_aggro = true,
-				distance = 5,
+				distance = 6,
 				suppression_value = 15
 			}
 		},
@@ -96,7 +96,7 @@ templates.weapon_trait_bespoke_autopistol_p1_suppression_on_close_kill = {
 			suppression_settings = {
 				suppression_falloff = true,
 				instant_aggro = true,
-				distance = 5,
+				distance = 7,
 				suppression_value = 20
 			}
 		},
@@ -104,7 +104,7 @@ templates.weapon_trait_bespoke_autopistol_p1_suppression_on_close_kill = {
 			suppression_settings = {
 				suppression_falloff = true,
 				instant_aggro = true,
-				distance = 5,
+				distance = 8,
 				suppression_value = 25
 			}
 		}
@@ -119,12 +119,12 @@ templates.weapon_trait_bespoke_autopistol_p1_allow_flanking_and_increased_damage
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.flanking_damage] = 0.225
+				[stat_buffs.flanking_damage] = 0.2
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.flanking_damage] = 0.275
+				[stat_buffs.flanking_damage] = 0.25
 			}
 		},
 		{
@@ -138,17 +138,17 @@ templates.weapon_trait_bespoke_autopistol_p1_followup_shots_ranged_damage = {
 	weapon_trait_bespoke_autopistol_p1_followup_shots_ranged_damage = {
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.05
+				[stat_buffs.ranged_damage] = 0.06
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.1
+				[stat_buffs.ranged_damage] = 0.09
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.13
+				[stat_buffs.ranged_damage] = 0.12
 			}
 		},
 		{
@@ -191,19 +191,19 @@ templates.weapon_trait_bespoke_autopistol_p1_stacking_power_bonus_on_staggering_
 		{
 			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.06
+				[stat_buffs.power_level_modifier] = 0.05
 			}
 		},
 		{
 			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.12
+				[stat_buffs.power_level_modifier] = 0.1
 			}
 		},
 		{
 			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.17
+				[stat_buffs.power_level_modifier] = 0.15
 			}
 		},
 		{

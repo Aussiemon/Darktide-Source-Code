@@ -20,7 +20,7 @@ local templates = {
 				suppression_settings = {
 					suppression_falloff = true,
 					instant_aggro = true,
-					distance = 5,
+					distance = 6,
 					suppression_value = 15
 				}
 			},
@@ -28,7 +28,7 @@ local templates = {
 				suppression_settings = {
 					suppression_falloff = true,
 					instant_aggro = true,
-					distance = 5,
+					distance = 7,
 					suppression_value = 20
 				}
 			},
@@ -36,7 +36,7 @@ local templates = {
 				suppression_settings = {
 					suppression_falloff = true,
 					instant_aggro = true,
-					distance = 5,
+					distance = 8,
 					suppression_value = 25
 				}
 			}
@@ -144,14 +144,6 @@ local templates = {
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.ranged_power_level_modifier] = 0.03
-				},
-				buff_data = {
-					required_num_hits = 2
-				}
-			},
-			{
-				proc_stat_buffs = {
 					[stat_buffs.ranged_power_level_modifier] = 0.04
 				},
 				buff_data = {
@@ -160,7 +152,15 @@ local templates = {
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.ranged_power_level_modifier] = 0.05
+					[stat_buffs.ranged_power_level_modifier] = 0.06
+				},
+				buff_data = {
+					required_num_hits = 2
+				}
+			},
+			{
+				proc_stat_buffs = {
+					[stat_buffs.ranged_power_level_modifier] = 0.08
 				},
 				buff_data = {
 					required_num_hits = 2

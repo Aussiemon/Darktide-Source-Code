@@ -1,9 +1,9 @@
 require("scripts/foundation/utilities/color")
 
 local ui_settings = {
-	insignia_default_texture = "content/ui/textures/nameplates/insignias/default",
 	double_click_threshold = 0.2,
 	portrait_frame_default_texture = "content/ui/textures/nameplates/portrait_frames/default",
+	insignia_default_texture = "content/ui/textures/nameplates/insignias/default",
 	item_icon_size = {
 		128,
 		128
@@ -53,6 +53,14 @@ local ui_settings = {
 		gamepad_view_cooldown = 0.2,
 		view_min_fast_speed_multiplier = 0.1,
 		view_analog_deadzone = 0.5
+	},
+	bonus_aquila_values = {
+		0,
+		0,
+		100,
+		500,
+		1000,
+		2000
 	},
 	ITEM_TYPES = table.enum("BODY_TATTOO", "BOON", "CHARACTER_INSIGNIA", "DEVICE", "EMOTE", "END_OF_ROUND", "EYE_COLOR", "FACE", "FACE_HAIR", "FACE_SCAR", "FACE_TATTOO", "GADGET", "GEAR_EXTRA_COSMETIC", "GEAR_HEAD", "GEAR_LOWERBODY", "GEAR_UPPERBODY", "HAIR", "HAIR_COLOR", "LUGGABLE", "PERK", "POCKETABLE", "PORTRAIT_FRAME", "SET", "SKIN_COLOR", "TRAIT", "WEAPON_MELEE", "WEAPON_RANGED", "WEAPON_SKIN", "WEAPON_TRINKET"),
 	item_type_group_lookup = {
@@ -199,22 +207,57 @@ local ui_settings = {
 	weapon_action_title_display_names = {
 		secondary = "loc_weapon_action_title_secondary",
 		primary = "loc_weapon_action_title_primary",
-		special = "loc_weapon_action_title_special"
+		special = "loc_weapon_action_title_special",
+		extra = "loc_glossary_term_ranged_attacks"
 	},
 	weapon_action_title_display_names_melee = {
 		secondary = "loc_weapon_action_title_heavy",
 		primary = "loc_weapon_action_title_light",
-		special = "loc_weapon_action_title_special"
+		special = "loc_weapon_action_title_special",
+		extra = "loc_weapon_action_title_secondary"
 	},
 	weapon_action_display_order = {
 		secondary = 2,
 		primary = 1,
-		special = 3
+		special = 3,
+		extra = 4
 	},
 	weapon_action_display_order_array = {
 		"primary",
 		"secondary",
-		"special"
+		"special",
+		"extra"
+	},
+	weapon_stats_armor_types = {
+		disgustingly_resilient = "loc_weapon_stats_display_disgustingly_resilient",
+		super_armor = "loc_weapon_stats_display_super_armor",
+		armored = "loc_weapon_stats_display_armored",
+		resistant = "loc_glossary_armour_type_resistant",
+		berserker = "loc_weapon_stats_display_berzerker",
+		unarmored = "loc_weapon_stats_display_unarmored"
+	},
+	weapon_action_extended_display_order_array = {
+		"special",
+		"primary",
+		"secondary",
+		"extra"
+	},
+	attack_type_lookup = {
+		ninja_fencer = "loc_gestalt_ninja_fencer",
+		linesman = "loc_gestalt_linesman",
+		tank = "loc_gestalt_tank",
+		smiter = "loc_gestalt_smiter"
+	},
+	attack_type_desc_lookup = {
+		brace = "loc_stats_fire_mode_brace_desc",
+		vent = "loc_stats_special_action_venting_desc",
+		ninja_fencer = "loc_stats_gestalt_ninjafencer_desc",
+		tank = "loc_stats_gestalt_tank_desc",
+		linesman = "loc_stats_gestalt_linesman_desc",
+		charge = "loc_stats_fire_mode_chargeup_desc",
+		smiter = "loc_stats_gestalt_smite_desc",
+		hipfire = "loc_stats_fire_mode_hip_fire_desc",
+		ads = "loc_stats_fire_mode_ads_desc"
 	},
 	weapon_action_type_icons = {
 		tank = "content/ui/materials/icons/weapons/actions/tank",

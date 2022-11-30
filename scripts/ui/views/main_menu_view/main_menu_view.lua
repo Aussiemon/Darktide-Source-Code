@@ -502,18 +502,25 @@ MainMenuView._on_delete_selected_character_pressed = function (self)
 					local character_id = profile.character_id
 
 					Managers.event:trigger("event_request_delete_character", character_id)
+
+					self._delete_popup_id = nil
 				end)
 			},
 			{
 				text = "loc_main_menu_delete_character_popup_cancel",
 				template_type = "terminal_button_small",
 				close_on_pressed = true,
-				hotkey = "back"
+				hotkey = "back",
+				callback = callback(function ()
+					self._delete_popup_id = nil
+				end)
 			}
 		}
 	}
 
-	Managers.event:trigger("event_show_ui_popup", popup_params)
+	Managers.event:trigger("event_show_ui_popup", popup_params, function (id)
+		self._delete_popup_id = id
+	end)
 end
 
 MainMenuView._destroy_character_list_renderer = function (self)
@@ -533,6 +540,12 @@ MainMenuView.on_exit = function (self)
 		self._input_legend_element = nil
 
 		self:_remove_element("input_legend")
+	end
+
+	if self._delete_popup_id then
+		Managers.event:trigger("event_remove_ui_popup", self._delete_popup_id)
+
+		self._delete_popup_id = nil
 	end
 
 	self:_destroy_character_grid()

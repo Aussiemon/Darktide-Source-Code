@@ -243,6 +243,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_attack_special",
 				chain_time = 0.47
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -731,6 +734,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_attack_special",
 				chain_time = 0.47
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -963,9 +969,6 @@ weapon_template.actions = {
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
-			},
-			grenade_ability = {
-				action_name = "grenade_ability"
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -1211,16 +1214,45 @@ weapon_template.stamina_template = "ninjafencer"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "combataxe_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	combatsword_p3_m1_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
 			action_left_light = {
-				damage_trait_templates.combatsword_dps_stat
+				damage_trait_templates.combatsword_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.combatsword_dps_stat
+				damage_trait_templates.combatsword_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.combatsword_dps_stat
@@ -1247,10 +1279,30 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_light = {
-				damage_trait_templates.combatsword_finesse_stat
+				damage_trait_templates.combatsword_finesse_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								boost_curve_multiplier_finesse = {}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.combatsword_finesse_stat
+				damage_trait_templates.combatsword_finesse_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								boost_curve_multiplier_finesse = {}
+							}
+						}
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.combatsword_finesse_stat
@@ -1273,10 +1325,22 @@ weapon_template.base_stats = {
 		},
 		weapon_handling = {
 			action_left_light = {
-				weapon_handling_trait_templates.default_finesse_stat
+				weapon_handling_trait_templates.default_finesse_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_left_heavy = {
-				weapon_handling_trait_templates.default_finesse_stat
+				weapon_handling_trait_templates.default_finesse_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_right_light = {
 				weapon_handling_trait_templates.default_finesse_stat
@@ -1303,10 +1367,34 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_light = {
-				damage_trait_templates.default_armor_pierce_stat
+				damage_trait_templates.default_armor_pierce_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								armor_damage_modifier = {
+									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
+								}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_armor_pierce_stat
+				damage_trait_templates.default_armor_pierce_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								armor_damage_modifier = {
+									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
+								}
+							}
+						}
+					}
+				}
 			},
 			action_right_light = {
 				damage_trait_templates.default_armor_pierce_stat
@@ -1333,7 +1421,24 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_light = {
-				damage_trait_templates.combatsword_cleave_damage_stat
+				damage_trait_templates.combatsword_cleave_damage_stat,
+				display_data = {
+					display_stats = {
+						armor_damage_modifier = {
+							attack = {
+								[armor_types.armored] = {
+									display_name = "loc_weapon_stats_display_cleave_armored"
+								},
+								[armor_types.unarmored] = {
+									display_name = "loc_weapon_stats_display_cleave_unarmored"
+								},
+								[armor_types.disgustingly_resilient] = {
+									display_name = "loc_weapon_stats_display_cleave_disgustingly_resilient"
+								}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
 				damage_trait_templates.combatsword_cleave_damage_stat
@@ -1363,17 +1468,20 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		dodge = {
 			base = {
-				dodge_trait_templates.default_dodge_stat
+				dodge_trait_templates.default_dodge_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		sprint = {
 			base = {
-				sprint_trait_templates.default_sprint_stat
+				sprint_trait_templates.default_sprint_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		movement_curve_modifier = {
 			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	}
@@ -1389,10 +1497,12 @@ table.append(weapon_template.traits, bespoke_combatsword_p3_traits)
 
 weapon_template.displayed_keywords = {
 	{
-		display_name = "loc_weapon_keyword_very_fast_attack"
+		display_name = "loc_weapon_keyword_very_fast_attack",
+		description = "loc_weapon_stats_display_very_fast_attack_desc"
 	},
 	{
-		display_name = "loc_weapon_keyword_ninja_fencer"
+		display_name = "loc_weapon_keyword_ninja_fencer",
+		description = "loc_weapon_stats_display_ninja_fencer_desc"
 	}
 }
 weapon_template.displayed_attacks = {
@@ -1415,9 +1525,11 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	special = {
+		desc = "loc_stats_special_action_special_attack_combatsword_p3m1_desc",
 		display_name = "loc_weapon_special_special_attack",
-		type = "melee"
+		type = "special_attack"
 	}
 }
+weapon_template.special_action_name = "action_attack_special"
 
 return weapon_template

@@ -639,7 +639,13 @@ EndView._assign_player_to_slot = function (self, player_info, slot, more_than_on
 	local profile = player_info:profile()
 
 	if not profile then
-		Log.warning("EndView", "Cannot show player model for %s, %s in EoR; no valid profile.", player_info:character_name(), tostring(account_id))
+		if not slot.player_info then
+			Log.warning("EndView", "Cannot show player model for %s, %s in EoR; no valid profile.", player_info:character_name(), tostring(account_id))
+		end
+
+		slot.player_info = player_info
+		slot.account_id = account_id
+		slot.more_than_one_party = more_than_one_party
 
 		return
 	end
@@ -749,6 +755,8 @@ EndView._update_player_slots = function (self, dt, t, input_service)
 				local profile_spawner = slot.profile_spawner
 
 				profile_spawner:update(dt, t, input_service)
+			elseif slot.player_info then
+				self:_assign_player_to_slot(slot.player_info, slot, slot.more_than_one_party)
 			end
 		end
 	end
@@ -780,21 +788,24 @@ EndView._set_character_names = function (self)
 			local report = self:_get_participant_progression(participant_reports, account_id)
 			local player_info = slot.player_info
 			local widget = slot.widget
-			local widget_content = widget.content
-			local character_name = player_info:character_name()
 
-			if not report then
-				widget_content.character_name = character_name
-			elseif not self._has_shown_summary_view then
-				local character_level = report.currentLevel
-				widget_content.character_name = TextUtilities.formatted_character_name(character_name, character_level)
-			elseif player_info:is_own_player() then
-				local character_level = player_info:character_level()
-				widget_content.character_name = TextUtilities.formatted_character_name(character_name, character_level)
-			else
-				local xp = report.currentXp
-				local level_after_mission = self:_level_from_xp(experience_settings, xp)
-				widget_content.character_name = TextUtilities.formatted_character_name(character_name, level_after_mission)
+			if widget then
+				local widget_content = widget.content
+				local character_name = player_info:character_name()
+
+				if not report then
+					widget_content.character_name = character_name
+				elseif not self._has_shown_summary_view then
+					local character_level = report.currentLevel
+					widget_content.character_name = TextUtilities.formatted_character_name(character_name, character_level)
+				elseif player_info:is_own_player() then
+					local character_level = player_info:character_level()
+					widget_content.character_name = TextUtilities.formatted_character_name(character_name, character_level)
+				else
+					local xp = report.currentXp
+					local level_after_mission = self:_level_from_xp(experience_settings, xp)
+					widget_content.character_name = TextUtilities.formatted_character_name(character_name, level_after_mission)
+				end
 			end
 		end
 	end

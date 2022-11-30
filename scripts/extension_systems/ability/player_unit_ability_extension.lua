@@ -11,7 +11,7 @@ local MasterItems = require("scripts/backend/master_items")
 local ability_configuration = PlayerCharacterConstants.ability_configuration
 local PlayerUnitAbilityExtension = class("PlayerUnitAbilityExtension")
 
-PlayerUnitAbilityExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
+PlayerUnitAbilityExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	self._unit = unit
 	local player = extension_init_data.player
 	self._player = player
@@ -53,6 +53,10 @@ PlayerUnitAbilityExtension.init = function (self, extension_init_context, unit, 
 		is_local_unit = is_local_unit,
 		is_server = is_server
 	}
+
+	if is_server then
+		self:_init_sync_data(game_object_data_or_game_session)
+	end
 end
 
 PlayerUnitAbilityExtension._init_action_components = function (self, unit_data_extension)
@@ -74,6 +78,25 @@ PlayerUnitAbilityExtension._init_action_components = function (self, unit_data_e
 		combat_ability = combat_ability_component,
 		grenade_ability = grenade_ability_component
 	}
+end
+
+PlayerUnitAbilityExtension._init_sync_data = function (self, game_object_data)
+	local init_equipped_value = "not_equipped"
+	game_object_data.combat_ability_equipped = NetworkLookup.player_abilities[init_equipped_value]
+	game_object_data.grenade_ability_equipped = NetworkLookup.player_abilities[init_equipped_value]
+	local init_enabled_value = true
+	game_object_data.combat_ability_enabled = init_enabled_value
+	game_object_data.grenade_ability_enabled = init_enabled_value
+	local init_max_charges_value = 0
+	self._combat_ability_max_charges_sync_value = init_max_charges_value
+	game_object_data.combat_ability_max_charges = init_max_charges_value
+	self._grenade_ability_max_charges_sync_value = init_max_charges_value
+	game_object_data.grenade_ability_max_charges = init_max_charges_value
+	local init_max_cooldown_value = 0
+	self._combat_ability_max_cooldown_sync_value = init_max_cooldown_value
+	game_object_data.combat_ability_max_cooldown = init_max_cooldown_value
+	self._grenade_ability_max_cooldown_sync_value = init_max_cooldown_value
+	game_object_data.grenade_ability_max_cooldown = init_max_cooldown_value
 end
 
 PlayerUnitAbilityExtension.extensions_ready = function (self, world, unit)
@@ -110,6 +133,11 @@ PlayerUnitAbilityExtension.extensions_ready = function (self, world, unit)
 	action_context.movement_state_component = unit_data_extension:read_component("movement_state")
 
 	action_handler:set_action_context(action_context)
+end
+
+PlayerUnitAbilityExtension.game_object_initialized = function (self, session, object_id)
+	self._game_session = session
+	self._game_object_id = object_id
 end
 
 PlayerUnitAbilityExtension.on_player_unit_spawn = function (self, spawn_grenade_percentage)
@@ -181,6 +209,20 @@ PlayerUnitAbilityExtension._equip_ability = function (self, ability_type, abilit
 		local component = self._ability_components[ability_type]
 		component.num_charges = self:_ability_max_charges(ability)
 	end
+
+	if self._is_server then
+		local game_object_field = nil
+
+		if ability_type == "combat_ability" then
+			game_object_field = "combat_ability_equipped"
+		elseif ability_type == "grenade_ability" then
+			game_object_field = "grenade_ability_equipped"
+		end
+
+		if game_object_field then
+			GameSession.set_game_object_field(self._game_session, self._game_object_id, game_object_field, NetworkLookup.player_abilities[ability.name])
+		end
+	end
 end
 
 PlayerUnitAbilityExtension._unequip_ability = function (self, ability_type, ability, fixed_t, from_server_correction)
@@ -211,6 +253,20 @@ PlayerUnitAbilityExtension._unequip_ability = function (self, ability_type, abil
 	end
 
 	self._equipped_abilities[ability_type] = nil
+
+	if self._is_server then
+		local game_object_field = nil
+
+		if ability_type == "combat_ability" then
+			game_object_field = "combat_ability_equipped"
+		elseif ability_type == "grenade_ability" then
+			game_object_field = "grenade_ability_equipped"
+		end
+
+		if game_object_field then
+			GameSession.set_game_object_field(self._game_session, self._game_object_id, game_object_field, NetworkLookup.player_abilities.not_equipped)
+		end
+	end
 end
 
 PlayerUnitAbilityExtension.equipped_abilities = function (self)
@@ -241,6 +297,40 @@ end
 PlayerUnitAbilityExtension.post_update = function (self, unit, dt, t, fixed_frame)
 	for ability_type, ability_effect_scripts in pairs(self._equiped_ability_effect_scripts) do
 		EquippedAbilityEffectScripts.post_update(ability_effect_scripts, unit, dt, t)
+	end
+
+	if self._is_server then
+		self:_handle_sync()
+	end
+end
+
+PlayerUnitAbilityExtension._handle_sync = function (self)
+	if self:ability_is_equipped("grenade_ability") then
+		local max_ability_charges = self:max_ability_charges("grenade_ability")
+
+		if max_ability_charges ~= self._grenade_ability_max_charges_sync_value then
+			GameSession.set_game_object_field(self._game_session, self._game_object_id, "grenade_ability_max_charges", max_ability_charges)
+		end
+
+		local max_ability_cooldown = self:max_ability_cooldown("grenade_ability")
+
+		if max_ability_cooldown ~= self._grenade_ability_max_cooldown_sync_value then
+			GameSession.set_game_object_field(self._game_session, self._game_object_id, "grenade_ability_max_cooldown", max_ability_cooldown)
+		end
+	end
+
+	if self:ability_is_equipped("combat_ability") then
+		local max_ability_charges = self:max_ability_charges("combat_ability")
+
+		if max_ability_charges ~= self._combat_ability_max_charges_sync_value then
+			GameSession.set_game_object_field(self._game_session, self._game_object_id, "combat_ability_max_charges", max_ability_charges)
+		end
+
+		local max_ability_cooldown = self:max_ability_cooldown("combat_ability")
+
+		if max_ability_cooldown ~= self._combat_ability_max_cooldown_sync_value then
+			GameSession.set_game_object_field(self._game_session, self._game_object_id, "combat_ability_max_cooldown", max_ability_cooldown)
+		end
 	end
 end
 
@@ -363,6 +453,20 @@ PlayerUnitAbilityExtension.set_ability_enabled = function (self, ability_type, e
 	local ability_components = self._ability_components
 	local component = ability_components[ability_type]
 	component.enabled = enable
+
+	if self._is_server then
+		local game_object_field = nil
+
+		if ability_type == "combat_ability" then
+			game_object_field = "combat_ability_enabled"
+		elseif ability_type == "grenade_ability" then
+			game_object_field = "grenade_ability_enabled"
+		end
+
+		if game_object_field then
+			GameSession.set_game_object_field(self._game_session, self._game_object_id, game_object_field, enable)
+		end
+	end
 end
 
 PlayerUnitAbilityExtension.ability_enabled = function (self, ability_type)
@@ -437,10 +541,16 @@ end
 PlayerUnitAbilityExtension.max_ability_cooldown = function (self, ability_type)
 	local abilities = self._equipped_abilities
 	local ability = abilities[ability_type]
+	local base_cooldown = ability.cooldown
+
+	if not base_cooldown then
+		return 0
+	end
+
 	local stat_buffs = self._buff_extension:stat_buffs()
 	local ability_cooldown_flat_reduction = stat_buffs.ability_cooldown_flat_reduction or 0
 	local ability_cooldown_modifier = stat_buffs.ability_cooldown_modifier or 1
-	local max_ability_cooldown = math.max(0, ability.cooldown * ability_cooldown_modifier - ability_cooldown_flat_reduction)
+	local max_ability_cooldown = math.max(0, base_cooldown * ability_cooldown_modifier - ability_cooldown_flat_reduction)
 
 	return max_ability_cooldown
 end

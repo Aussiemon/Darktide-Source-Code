@@ -6,7 +6,7 @@ local function _system_require(dir, ...)
 	end
 end
 
-_system_require("ability", "player_unit_ability_extension")
+_system_require("ability", "player_unit_ability_extension", "player_husk_ability_extension")
 _system_require("action_input", "player_unit_action_input_extension")
 _system_require("aim", "player_unit_aim_extension", "player_unit_hub_aim_extension", "player_husk_hub_aim_extension", "player_husk_aim_extension", "minion_ranged_aim_extension", "minion_ranged_husk_aim_extension")
 _system_require("hologram", "player_unit_hologram_extension")
@@ -425,7 +425,8 @@ local systems = {
 		true,
 		false,
 		{
-			"PlayerUnitAbilityExtension"
+			"PlayerUnitAbilityExtension",
+			"PlayerHuskAbilityExtension"
 		}
 	},
 	{

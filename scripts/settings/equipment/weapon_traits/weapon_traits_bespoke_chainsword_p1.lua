@@ -44,7 +44,7 @@ templates.weapon_trait_bespoke_chainsword_p1_increased_melee_damage_on_multiple_
 				required_num_hits = 3
 			},
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.1
+				[stat_buffs.melee_damage] = 0.125
 			}
 		},
 		{
@@ -76,21 +76,26 @@ templates.weapon_trait_bespoke_chainsword_p1_increased_melee_damage_on_multiple_
 templates.weapon_trait_bespoke_chainsword_p1_infinite_melee_cleave_on_crit = {
 	weapon_trait_bespoke_chainsword_p1_infinite_melee_cleave_on_crit = {
 		{
-			active_duration = 2
+			active_duration = 1.5
 		},
 		{
-			active_duration = 3
+			active_duration = 2.5
 		},
 		{
 			active_duration = 3.5
 		},
 		{
-			active_duration = 4
+			active_duration = 4.5
 		}
 	}
 }
 templates.weapon_trait_bespoke_chainsword_p1_chained_hits_increases_melee_cleave = {
 	weapon_trait_bespoke_chainsword_p1_chained_hits_increases_melee_cleave_parent = {
+		{
+			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.05
+			}
+		},
 		{
 			stat_buffs = {
 				[stat_buffs.max_hit_mass_attack_modifier] = 0.1
@@ -99,11 +104,6 @@ templates.weapon_trait_bespoke_chainsword_p1_chained_hits_increases_melee_cleave
 		{
 			stat_buffs = {
 				[stat_buffs.max_hit_mass_attack_modifier] = 0.15
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 0.175
 			}
 		},
 		{
@@ -122,12 +122,12 @@ templates.weapon_trait_bespoke_chainsword_p1_chained_hits_increases_crit_chance 
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.035
+				[stat_buffs.critical_strike_chance] = 0.03
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.045
+				[stat_buffs.critical_strike_chance] = 0.04
 			}
 		},
 		{
@@ -160,7 +160,7 @@ templates.weapon_trait_bespoke_chainsword_p1_movement_speed_on_activation = {
 	weapon_trait_bespoke_chainsword_p1_movement_speed_on_activation = {
 		{
 			stat_buffs = {
-				[stat_buffs.movement_speed] = 1.05
+				[stat_buffs.movement_speed] = 1.075
 			}
 		},
 		{
@@ -184,7 +184,7 @@ templates.weapon_trait_bespoke_chainsword_p1_movement_speed_on_activated_hit = {
 	weapon_trait_bespoke_chainsword_p1_movement_speed_on_activated_hit = {
 		{
 			stat_buffs = {
-				[stat_buffs.movement_speed] = 1.1
+				[stat_buffs.movement_speed] = 1.125
 			}
 		},
 		{

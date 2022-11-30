@@ -7,10 +7,10 @@ templates.weapon_trait_bespoke_forcestaff_p1_vents_warpcharge_on_weakspot_hits =
 			vent_percentage = 0.02
 		},
 		{
-			vent_percentage = 0.035
+			vent_percentage = 0.03
 		},
 		{
-			vent_percentage = 0.045
+			vent_percentage = 0.04
 		},
 		{
 			vent_percentage = 0.05
@@ -31,7 +31,7 @@ templates.weapon_trait_bespoke_forcestaff_p1_suppression_on_close_kill = {
 			suppression_settings = {
 				suppression_falloff = true,
 				instant_aggro = true,
-				distance = 5,
+				distance = 6,
 				suppression_value = 15
 			}
 		},
@@ -39,7 +39,7 @@ templates.weapon_trait_bespoke_forcestaff_p1_suppression_on_close_kill = {
 			suppression_settings = {
 				suppression_falloff = true,
 				instant_aggro = true,
-				distance = 5,
+				distance = 7,
 				suppression_value = 20
 			}
 		},
@@ -47,7 +47,7 @@ templates.weapon_trait_bespoke_forcestaff_p1_suppression_on_close_kill = {
 			suppression_settings = {
 				suppression_falloff = true,
 				instant_aggro = true,
-				distance = 5,
+				distance = 8,
 				suppression_value = 25
 			}
 		}
@@ -62,7 +62,7 @@ templates.weapon_trait_bespoke_forcestaff_p1_followup_shots_ranged_damage = {
 	weapon_trait_bespoke_forcestaff_p1_followup_shots_ranged_damage = {
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.charge_level_modifier] = 0.05
+				[stat_buffs.charge_level_modifier] = 0.075
 			}
 		},
 		{
@@ -72,7 +72,7 @@ templates.weapon_trait_bespoke_forcestaff_p1_followup_shots_ranged_damage = {
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.charge_level_modifier] = 0.13
+				[stat_buffs.charge_level_modifier] = 0.125
 			}
 		},
 		{

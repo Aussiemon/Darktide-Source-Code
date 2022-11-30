@@ -645,10 +645,11 @@ OptionsView._setup_category_config = function (self, config)
 		local valid = self._validation_mapping[category_display_name].validation_result
 
 		if valid then
-			entries[#entries + 1] = {
+			local entry = {
 				widget_type = "settings_button",
 				display_name = category_display_name,
 				icon = category_icon,
+				can_be_reset = category_config.can_be_reset,
 				pressed_function = function (parent, widget, entry)
 					self._category_content_grid:select_widget(widget)
 
@@ -666,7 +667,8 @@ OptionsView._setup_category_config = function (self, config)
 					self:present_category_widgets(category_display_name)
 				end
 			}
-			categories_by_display_name[category_display_name] = config_categories
+			entries[#entries + 1] = entry
+			categories_by_display_name[category_display_name] = entry
 			reset_functions_by_category[category_display_name] = category_reset_function
 		end
 	end
@@ -870,7 +872,7 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 			local get_function = config.get_function
 
 			if get_function then
-				local value = get_function()
+				local value = get_function(config)
 				local value_type = value ~= nil and type(value) or default_value_type
 
 				if value_type == "boolean" then
@@ -978,7 +980,7 @@ OptionsView.show_keybind_popup = function (self, widget, entry)
 			self._keybind_popup:set_description_text(description_text)
 		end
 
-		local value = entry.get_function()
+		local value = entry:get_function()
 		local devices = entry.devices
 		local value_text = value and InputUtils.localized_string_from_key_info(value) or self:_localize("loc_keybind_unassigned")
 

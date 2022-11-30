@@ -81,14 +81,14 @@ local function _add_party_management_items(parent, player_info, is_own_player)
 		local list_item = _get_next_list_item()
 		list_item.blueprint = cannot_invite_reason and "disabled_button_with_explanation" or "button"
 		list_item.label = Localize("loc_social_menu_invite_to_party")
-		list_item.reason_for_disabled = cannot_invite_reason and Localize(cannot_invite_reason)
+		list_item.reason_for_disabled = cannot_invite_reason and Localize(cannot_invite_reason) or ""
 		list_item.callback = callback(parent, "cb_invite_player_to_party", player_info)
 		list_item.is_disabled = not can_invite
 		list_item.on_pressed_sound = UISoundEvents.social_menu_send_invite
 		list_item = _get_next_list_item()
 		list_item.blueprint = cannot_join_reason and "disabled_button_with_explanation" or "button"
 		list_item.label = Localize("loc_social_menu_join_party")
-		list_item.reason_for_disabled = cannot_join_reason and Localize(cannot_join_reason)
+		list_item.reason_for_disabled = cannot_join_reason and Localize(cannot_join_reason) or ""
 		list_item.callback = callback(parent, "cb_join_players_party", player_info)
 		list_item.is_disabled = not can_join
 		list_item.on_pressed_sound = UISoundEvents.social_menu_send_invite

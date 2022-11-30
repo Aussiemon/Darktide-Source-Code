@@ -1062,7 +1062,6 @@ weapon_template.base_stats = {
 		}
 	},
 	forcestaff_p2_m1_warp_charge_cost_stat = {
-		description = "loc_trait_description_forcestaff_p1_m1_warp_charge_cost_stat",
 		display_name = "loc_stats_display_warp_resist_stat",
 		is_stat_trait = true,
 		charge = {
@@ -1113,9 +1112,11 @@ weapon_template.displayed_attacks = {
 		type = "charge"
 	},
 	special = {
+		desc = "loc_stats_special_action_melee_weapon_bash_forcestaff_desc",
 		display_name = "loc_forcestaff_p2_m1_attack_special",
 		type = "melee_hand"
 	}
 }
+weapon_template.special_action_name = "action_stab"
 
 return weapon_template

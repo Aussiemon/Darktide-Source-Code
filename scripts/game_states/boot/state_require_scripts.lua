@@ -42,13 +42,13 @@ StateRequireScripts._init_crashify = function (self)
 
 	if PLATFORM == "win32" then
 		if HAS_STEAM then
+			Crashify.print_property("steam", true)
 			Crashify.print_property("steam_id", Steam.user_id())
 			Crashify.print_property("steam_user_name", Steam.user_name())
 			Crashify.print_property("steam_app_id", Steam.app_id())
 		elseif IS_GDK then
-			local device_type = XboxLive.get_device_type()
-
-			Crashify.print_property("device_type", device_type)
+			Crashify.print_property("ms_store", true)
+			Crashify.print_property("device_type", XboxLive.get_device_type())
 		end
 
 		Crashify.print_property("machine_id", Application.machine_id())

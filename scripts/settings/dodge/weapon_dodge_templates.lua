@@ -1,6 +1,6 @@
 local weapon_dodge_templates = {
 	default = {
-		consecutive_dodges_reset = 0.15,
+		consecutive_dodges_reset = 0,
 		distance_scale = {
 			lerp_perfect = 1.1,
 			lerp_basic = 0.9
@@ -23,7 +23,7 @@ local weapon_dodge_templates = {
 		}
 	},
 	smiter = {
-		consecutive_dodges_reset = 0.15,
+		consecutive_dodges_reset = 0,
 		distance_scale = {
 			lerp_perfect = 0.95,
 			lerp_basic = 0.75
@@ -68,7 +68,7 @@ local weapon_dodge_templates = {
 		}
 	},
 	default_ranged = {
-		consecutive_dodges_reset = 0.15,
+		consecutive_dodges_reset = 0,
 		distance_scale = {
 			lerp_perfect = 0.85,
 			lerp_basic = 0.7
@@ -113,7 +113,7 @@ local weapon_dodge_templates = {
 		}
 	},
 	support = {
-		consecutive_dodges_reset = 0.15,
+		consecutive_dodges_reset = 0,
 		distance_scale = {
 			lerp_perfect = 0.95,
 			lerp_basic = 0.75
@@ -137,7 +137,7 @@ local weapon_dodge_templates = {
 	},
 	plasma_rifle = {
 		speed_modifier = 1.2,
-		consecutive_dodges_reset = 0.15,
+		consecutive_dodges_reset = 0,
 		distance_scale = {
 			lerp_perfect = 0.75,
 			lerp_basic = 0.65
@@ -156,7 +156,7 @@ local weapon_dodge_templates = {
 		}
 	},
 	killshot = {
-		consecutive_dodges_reset = 0.15,
+		consecutive_dodges_reset = 0,
 		distance_scale = {
 			lerp_perfect = 0.85,
 			lerp_basic = 0.65
@@ -261,7 +261,7 @@ local ninja_knife_speed_curve = {
 	}
 }
 weapon_dodge_templates.ninja_knife = {
-	consecutive_dodges_reset = 0.15,
+	consecutive_dodges_reset = 0,
 	base_distance = 3,
 	distance_scale = {
 		lerp_perfect = 1.2,
@@ -323,7 +323,7 @@ local ninjafencer_speed_curve = {
 	}
 }
 weapon_dodge_templates.ninjafencer = {
-	consecutive_dodges_reset = 0.15,
+	consecutive_dodges_reset = 0,
 	base_distance = 2.75,
 	distance_scale = {
 		lerp_perfect = 1.15,

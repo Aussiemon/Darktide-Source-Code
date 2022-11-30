@@ -58,6 +58,7 @@ local hit_stickyness_settings_light = {
 	start_anim_event = "attack_hit_stick",
 	stop_anim_event = "yank_out",
 	sensitivity_modifier = 0.9,
+	min_sticky_time = 0.25,
 	disallow_chain_actions = true,
 	duration = 0.45,
 	always_sticky = true,
@@ -97,6 +98,7 @@ local hit_stickyness_settings_light_special = {
 	start_anim_event = "attack_hit_stick",
 	stop_anim_event = "yank_out",
 	sensitivity_modifier = 0.1,
+	min_sticky_time = 0.25,
 	disallow_chain_actions = true,
 	duration = 1,
 	always_sticky = true,
@@ -136,6 +138,7 @@ local hit_stickyness_settings_heavy = {
 	start_anim_event = "attack_hit_stick",
 	stop_anim_event = "yank_out",
 	sensitivity_modifier = 0.5,
+	min_sticky_time = 0.25,
 	disallow_chain_actions = true,
 	duration = 0.3,
 	always_sticky = true,
@@ -176,6 +179,7 @@ local hit_stickyness_settings_heavy_smiter = {
 	start_anim_event = "attack_hit_stick",
 	stop_anim_event = "yank_out",
 	sensitivity_modifier = 0.5,
+	min_sticky_time = 0.25,
 	disallow_chain_actions = true,
 	duration = 0.3,
 	always_sticky = true,
@@ -216,6 +220,7 @@ local hit_stickyness_settings_heavy_special = {
 	start_anim_event = "attack_hit_stick",
 	stop_anim_event = "yank_out",
 	sensitivity_modifier = 0.9,
+	min_sticky_time = 0.25,
 	disallow_chain_actions = true,
 	duration = 1,
 	damage = {
@@ -255,6 +260,7 @@ local hit_stickyness_settings_heavy_smiter_special = {
 	start_anim_event = "attack_hit_stick",
 	stop_anim_event = "yank_out",
 	sensitivity_modifier = 0.9,
+	min_sticky_time = 0.25,
 	disallow_chain_actions = true,
 	duration = 1,
 	damage = {
@@ -1669,16 +1675,45 @@ weapon_template.stamina_template = "smiter"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "chainsword_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	chainsword_2h_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				damage_trait_templates.default_melee_dps_stat
+				damage_trait_templates.default_melee_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_melee_dps_stat
+				damage_trait_templates.default_melee_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_right_diagonal_light = {
 				damage_trait_templates.default_melee_dps_stat
@@ -1702,10 +1737,34 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				damage_trait_templates.default_armor_pierce_stat
+				damage_trait_templates.default_armor_pierce_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								armor_damage_modifier = {
+									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
+								}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_armor_pierce_stat
+				damage_trait_templates.default_armor_pierce_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								armor_damage_modifier = {
+									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
+								}
+							}
+						}
+					}
+				}
 			},
 			action_right_diagonal_light = {
 				damage_trait_templates.default_armor_pierce_stat
@@ -1729,10 +1788,22 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				damage_trait_templates.combatsword_cleave_targets_stat
+				damage_trait_templates.combatsword_cleave_targets_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.combatsword_cleave_targets_stat
+				damage_trait_templates.combatsword_cleave_targets_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_right_diagonal_light = {
 				damage_trait_templates.combatsword_cleave_targets_stat
@@ -1758,17 +1829,74 @@ weapon_template.base_stats = {
 			action_left_down_light = {
 				overrides = {
 					light_chainsword_sticky_2h = {
-						damage_trait_templates.default_melee_dps_stat
+						damage_trait_templates.default_melee_dps_stat,
+						display_data = {
+							prefix = "loc_weapon_action_title_light",
+							damage_profile_path = {
+								"hit_stickyness_settings_special_active",
+								"damage",
+								"damage_profile"
+							},
+							display_stats = {
+								targets = {
+									{
+										power_distribution = {
+											attack = {
+												display_name = "loc_weapon_stats_display_sawing"
+											}
+										}
+									}
+								}
+							}
+						}
 					},
 					light_chainsword_sticky_last_2h = {
-						damage_trait_templates.default_melee_dps_stat
+						damage_trait_templates.default_melee_dps_stat,
+						display_data = {
+							prefix = "loc_weapon_action_title_light",
+							damage_profile_path = {
+								"hit_stickyness_settings_special_active",
+								"damage",
+								"last_damage_profile"
+							},
+							display_stats = {
+								targets = {
+									{
+										power_distribution = {
+											attack = {
+												display_name = "loc_weapon_stats_display_sawing_final"
+											}
+										}
+									}
+								}
+							}
+						}
 					}
 				}
 			},
 			action_left_heavy = {
 				overrides = {
 					heavy_chainsword_sticky_2h = {
-						damage_trait_templates.default_melee_dps_stat
+						damage_trait_templates.default_melee_dps_stat,
+						display_data = {
+							prefix = "loc_weapon_action_title_heavy",
+							damage_profile_path = {
+								"hit_stickyness_settings_special_active",
+								"damage",
+								"damage_profile"
+							},
+							display_stats = {
+								targets = {
+									{
+										power_distribution = {
+											attack = {
+												display_name = "loc_weapon_stats_display_sawing"
+											}
+										}
+									}
+								}
+							}
+						}
 					},
 					heavy_chainsword_sticky_quick_last_2h = {
 						damage_trait_templates.default_melee_dps_stat
@@ -1777,7 +1905,26 @@ weapon_template.base_stats = {
 						damage_trait_templates.default_melee_dps_stat
 					},
 					heavy_chainsword_sticky_last_2h = {
-						damage_trait_templates.default_melee_dps_stat
+						damage_trait_templates.default_melee_dps_stat,
+						display_data = {
+							prefix = "loc_weapon_action_title_heavy",
+							damage_profile_path = {
+								"hit_stickyness_settings_special_active",
+								"damage",
+								"last_damage_profile"
+							},
+							display_stats = {
+								targets = {
+									{
+										power_distribution = {
+											attack = {
+												display_name = "loc_weapon_stats_display_sawing_final"
+											}
+										}
+									}
+								}
+							}
+						}
 					},
 					heavy_chainsword_smiter_sticky_quick_2h = {
 						damage_trait_templates.default_melee_dps_stat
@@ -1853,17 +2000,20 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		dodge = {
 			base = {
-				dodge_trait_templates.default_dodge_stat
+				dodge_trait_templates.default_dodge_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		sprint = {
 			base = {
-				sprint_trait_templates.default_sprint_stat
+				sprint_trait_templates.default_sprint_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		movement_curve_modifier = {
 			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	}
@@ -1873,7 +2023,8 @@ weapon_template.displayed_keywords = {
 		display_name = "loc_weapon_keyword_heavy_charge"
 	},
 	{
-		display_name = "loc_weapon_keyword_sawing"
+		display_name = "loc_weapon_keyword_sawing",
+		description = "loc_weapon_stats_display_sawing_desc"
 	}
 }
 weapon_template.displayed_attacks = {
@@ -1883,7 +2034,7 @@ weapon_template.displayed_attacks = {
 		attack_chain = {
 			"smiter",
 			"linesman",
-			"tank",
+			"linesman",
 			"smiter"
 		}
 	},
@@ -1896,6 +2047,7 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	special = {
+		desc = "loc_stats_special_action_powerup_desc",
 		display_name = "loc_weapon_special_activate",
 		type = "activate"
 	}

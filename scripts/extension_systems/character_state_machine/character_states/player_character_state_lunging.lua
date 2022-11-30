@@ -663,8 +663,8 @@ function _record_stat_on_lunge_complete(player, hit_units, lunge_template)
 		end
 	end
 
-	if specialization == "ogryn_2" and number_of_hit_ogryns >= 4 and difficulty >= 4 then
-		Managers.achievements:trigger_event(account_id, character_id, "ogryn_2_bull_rushed_4_ogryns_event")
+	if specialization == "ogryn_2" and number_of_hit_ogryns >= 6 and difficulty >= 4 then
+		Managers.achievements:trigger_event(account_id, character_id, "ogryn_2_bull_rushed_x_ogryns_event")
 	end
 
 	Managers.stats:record_lunge_stop(player, number_of_hit_units)

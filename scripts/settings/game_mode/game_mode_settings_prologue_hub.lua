@@ -9,10 +9,9 @@ local settings = {
 	use_third_person_hub_camera = true,
 	use_foot_ik = true,
 	cache_local_player_profile = false,
-	presence_name = "prologue",
 	bot_backfilling_allowed = false,
-	use_side_color = false,
 	default_player_orientation = "HubPlayerOrientation",
+	use_side_color = false,
 	disable_hologram = true,
 	vaulting_allowed = false,
 	default_player_side_name = "heroes",
@@ -42,7 +41,7 @@ local settings = {
 		}
 	},
 	hud_settings = {
-		player_composition = "party"
+		player_composition = "players"
 	},
 	hotkeys = {
 		hotkey_inventory = "inventory_background_view",

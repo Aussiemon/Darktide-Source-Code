@@ -7,12 +7,14 @@ templates.weapon_trait_bespoke_lasgun_p2_burninating_on_crit = {
 	weapon_trait_bespoke_lasgun_p2_burninating_on_crit = {
 		{
 			dot_data = {
+				max_stacks = 6,
 				num_stacks_on_proc = 2
 			}
 		},
 		{
 			dot_data = {
-				num_stacks_on_proc = 4
+				max_stacks = 9,
+				num_stacks_on_proc = 3
 			}
 		}
 	}
@@ -69,17 +71,17 @@ templates.weapon_trait_bespoke_lasgun_p2_followup_shots_ranged_damage = {
 	weapon_trait_bespoke_lasgun_p2_followup_shots_ranged_damage = {
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.05
+				[stat_buffs.ranged_damage] = 0.06
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.1
+				[stat_buffs.ranged_damage] = 0.09
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.13
+				[stat_buffs.ranged_damage] = 0.12
 			}
 		},
 		{
@@ -93,7 +95,7 @@ templates.weapon_trait_bespoke_lasgun_p2_stagger_count_bonus_damage = {
 	weapon_trait_bespoke_lasgun_p2_stagger_count_bonus_damage = {
 		{
 			stat_buffs = {
-				[stat_buffs.stagger_count_damage] = 0.1
+				[stat_buffs.stagger_count_damage] = 0.125
 			}
 		},
 		{
@@ -103,7 +105,7 @@ templates.weapon_trait_bespoke_lasgun_p2_stagger_count_bonus_damage = {
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.stagger_count_damage] = 0.18
+				[stat_buffs.stagger_count_damage] = 0.175
 			}
 		},
 		{

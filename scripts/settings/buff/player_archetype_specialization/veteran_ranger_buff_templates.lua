@@ -1,10 +1,12 @@
 local Action = require("scripts/utilities/weapon/action")
 local Ammo = require("scripts/utilities/ammo")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Breeds = require("scripts/settings/breed/breeds")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
 local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local FixedFrame = require("scripts/utilities/fixed_frame")
+local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local Stamina = require("scripts/utilities/attack/stamina")
@@ -85,6 +87,14 @@ local templates = {
 				local missing_ammo_in_clip = max_ammo_in_clip - current_ammo_in_clip
 
 				Ammo.transfer_from_reserve_to_clip(inventory_slot_component, missing_ammo_in_clip)
+
+				local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+				local weapon_template = visual_loadout_extension:weapon_template_from_slot("slot_secondary")
+				local reload_template = weapon_template.reload_template
+
+				if reload_template then
+					ReloadStates.reset(reload_template, inventory_slot_component)
+				end
 			end
 
 			local replenish_toughness = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_replenishes_toughness)
@@ -141,9 +151,8 @@ local templates = {
 					return
 				end
 
-				local enemy_unit = params.attacked_unit
-				local enemy_unit_data_extension = ScriptUnit.has_extension(enemy_unit, "unit_data_system")
-				local breed = enemy_unit_data_extension and enemy_unit_data_extension:breed()
+				local breed_name = params.breed_name
+				local breed = breed_name and Breeds[breed_name]
 				local is_volley_fire_target = breed and breed.volley_fire_target
 
 				if has_headhunter_talent and not is_volley_fire_target then
@@ -395,7 +404,9 @@ templates.veteran_ranger_toughness_on_elite_kill_buff = {
 }
 local range = talent_settings.toughness_3.range
 templates.veteran_ranger_toughness_regen_out_of_melee = {
+	hud_icon = "content/ui/textures/icons/talents/veteran_2/hud/veteran_2_tier_3_3",
 	predicted = false,
+	hud_priority = 4,
 	class_name = "buff",
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -409,10 +420,6 @@ templates.veteran_ranger_toughness_regen_out_of_melee = {
 		template_data.enemy_side_names = enemy_side_names
 	end,
 	update_func = function (template_data, template_context, dt, t, template)
-		if not template_context.is_server then
-			return
-		end
-
 		local next_regen_t = template_data.next_regen_t
 
 		if not next_regen_t then
@@ -433,11 +440,19 @@ templates.veteran_ranger_toughness_regen_out_of_melee = {
 			local num_hits = broadphase:query(player_position, range, broadphase_results, enemy_side_names)
 
 			if num_hits == 0 then
-				Toughness.replenish_percentage(template_context.unit, talent_settings.toughness_3.toughness, false, "talent_toughness_3")
+				if template_context.is_server then
+					Toughness.replenish_percentage(template_context.unit, talent_settings.toughness_3.toughness, false, "talent_toughness_3")
+				end
 
 				template_data.next_regen_t = t + talent_settings.toughness_3.time
+				template_data.is_active = true
+			else
+				template_data.is_active = false
 			end
 		end
+	end,
+	conditional_stat_buffs_func = function (template_data, template_context)
+		return template_data.is_active
 	end
 }
 templates.veteran_ranger_ranged_weakspot_toughness_recovery = {

@@ -1276,6 +1276,7 @@ local template = {
 			},
 			{
 				"try_inject_special_minion",
+				max_breed_amount = 1,
 				points = 6,
 				breed_tags = {
 					{

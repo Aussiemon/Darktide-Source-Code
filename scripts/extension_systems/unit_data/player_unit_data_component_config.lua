@@ -432,6 +432,7 @@ local PlayerComponentConfig = {
 		is_sprint_jumping = "bool"
 	},
 	slide_character_state = {
+		was_in_dodge_cooldown = "bool",
 		friction_function = {
 			"default",
 			"sprint"

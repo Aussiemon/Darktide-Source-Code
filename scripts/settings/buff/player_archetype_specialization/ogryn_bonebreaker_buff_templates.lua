@@ -43,6 +43,12 @@ local templates = {
 		conditional_stat_buffs_func = ConditionalFunctions.is_lunging
 	}
 }
+local valid_help_interactions = {
+	rescue = true,
+	pull_up = true,
+	revive = true,
+	remove_net = true
+}
 
 local function _passive_revive_conditional(template_data, template_context)
 	local is_interacting = template_data.interactor_extension:is_interacting()
@@ -50,9 +56,9 @@ local function _passive_revive_conditional(template_data, template_context)
 	if is_interacting then
 		local interaction = template_data.interactor_extension:interaction()
 		local interaction_type = interaction:type()
-		local is_reviving = interaction_type == "revive" or interaction_type == "rescue"
+		local is_helping = valid_help_interactions[interaction_type]
 
-		return is_reviving
+		return is_helping
 	end
 end
 

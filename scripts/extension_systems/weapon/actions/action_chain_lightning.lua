@@ -219,6 +219,7 @@ ActionChainLightning._validate_targets = function (self, t)
 		local target_unit = target:value("unit")
 
 		if not HEALTH_ALIVE[target_unit] then
+			ChainLightningTarget.remove_all_child_nodes(target, _on_delete_func, self._hit_units)
 			table.swap_delete(chain_targets, ii)
 
 			hit_units[target_unit] = nil

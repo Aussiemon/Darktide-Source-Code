@@ -12,6 +12,8 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local WeaponTraitsBespokeAutogunP2 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_autogun_p2")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local template_types = WeaponTweakTemplateSettings.template_types
@@ -154,7 +156,7 @@ weapon_template.actions = {
 	},
 	action_wield = {
 		allowed_during_sprint = true,
-		wield_anim_event = "equip",
+		wield_anim_event = "equip_ak",
 		wield_reload_anim_event = "equip_reload",
 		kind = "ranged_wield",
 		continue_sprinting = true,
@@ -465,7 +467,7 @@ weapon_template.actions = {
 		block_duration = 0.5,
 		kind = "push",
 		allow_conditional_chain = true,
-		crosshair_type = "none",
+		crosshair_type = "dot",
 		stop_alternate_fire = true,
 		damage_time = 0.15,
 		anim_event_3p = "attack_left_diagonal_up",
@@ -626,14 +628,15 @@ weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.smart_targeting_template = SmartTargetingTemplates.killshot
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	autogun_p2_m1_dps_stat = {
-		description = "loc_trait_description_autogun_p2_m1_dps_stat",
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.default_dps_stat
+				damage_trait_templates.default_dps_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.default_dps_stat
@@ -644,40 +647,42 @@ weapon_template.base_stats = {
 		}
 	},
 	autogun_p2_m1_ammo_stat = {
-		description = "loc_trait_description_autogun_p2_m1_ammo_stat",
 		display_name = "loc_stats_display_ammo_stat",
 		is_stat_trait = true,
 		ammo = {
 			base = {
-				ammo_trait_templates.default_ammo_stat
+				ammo_trait_templates.default_ammo_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
 	autogun_p2_m1_stability_stat = {
-		description = "loc_trait_description_autogun_p2_m1_stability_stat",
 		display_name = "loc_stats_display_stability_stat",
 		is_stat_trait = true,
 		recoil = {
 			base = {
-				recoil_trait_templates.default_recoil_stat
+				recoil_trait_templates.default_recoil_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_recoil", "loc_weapon_stats_display_hip_fire")
 			},
 			alternate_fire = {
-				recoil_trait_templates.default_recoil_stat
+				recoil_trait_templates.default_recoil_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_recoil", "loc_weapon_stats_display_braced")
 			}
 		},
 		spread = {
 			base = {
-				spread_trait_templates.default_spread_stat
+				spread_trait_templates.default_spread_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_spread")
 			}
 		}
 	},
 	autogun_p2_m1_control_stat = {
-		description = "loc_trait_description_autogun_p2_m1_dps_stat",
 		display_name = "loc_stats_display_control_stat_ranged",
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.autopistol_control_stat
+				damage_trait_templates.autopistol_control_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.autopistol_control_stat
@@ -685,27 +690,30 @@ weapon_template.base_stats = {
 		}
 	},
 	autogun_p2_m1_mobility_stat = {
-		description = "loc_trait_description_autogun_p2_m1_mobility_stat",
 		display_name = "loc_stats_display_mobility_stat",
 		is_stat_trait = true,
 		dodge = {
 			base = {
-				dodge_trait_templates.default_dodge_stat
+				dodge_trait_templates.default_dodge_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		sprint = {
 			base = {
-				sprint_trait_templates.default_sprint_stat
+				sprint_trait_templates.default_sprint_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		movement_curve_modifier = {
 			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		spread = {
 			base = {
-				spread_trait_templates.mobility_spread_stat
+				spread_trait_templates.mobility_spread_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_spread")
 			}
 		}
 	}
@@ -735,13 +743,10 @@ weapon_template.displayed_attacks = {
 		type = "brace"
 	},
 	special = {
+		desc = "loc_stats_special_action_melee_weapon_bash_desc",
 		display_name = "loc_weapon_special_weapon_bash",
 		type = "melee"
 	}
-}
-weapon_template.displayed_attack_ranges = {
-	max = 100,
-	min = 10
 }
 
 return weapon_template

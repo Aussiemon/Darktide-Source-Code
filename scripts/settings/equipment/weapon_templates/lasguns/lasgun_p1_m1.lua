@@ -6,6 +6,7 @@ local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local HoloSightTemplates = require("scripts/settings/equipment/holo_sight_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
@@ -15,12 +16,15 @@ local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_trai
 local WeaponTraitsRangedMediumFireRate = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_medium_fire_rate")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_proc_events = BuffSettings.proc_events
 local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local damage_types = DamageSettings.damage_types
 local template_types = WeaponTweakTemplateSettings.template_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
+local armor_types = ArmorSettings.types
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
@@ -459,6 +463,7 @@ weapon_template.actions = {
 		kind = "toogle_special",
 		anim_event = "toggle_flashlight",
 		start_input = "weapon_special",
+		allowed_during_sprint = true,
 		activation_time = 0,
 		skip_3p_anims = true,
 		total_time = 0.2,
@@ -617,13 +622,33 @@ weapon_template.movement_curve_modifier_template = "lasgun_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.smart_targeting_template = SmartTargetingTemplates.killshot
 weapon_template.holo_sight_template = HoloSightTemplates.lasgun
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	lasgun_p1_m1_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.default_dps_stat
+				damage_trait_templates.default_dps_stat,
+				display_data = {
+					display_stats = {
+						power_distribution = {
+							attack = {}
+						},
+						armor_damage_modifier_ranged = {
+							near = {
+								attack = {
+									[armor_types.unarmored] = {
+										display_name = "loc_weapon_stats_display_dmg_vs_unarmored"
+									},
+									[armor_types.disgustingly_resilient] = {
+										display_name = "loc_weapon_stats_display_dmg_vs_disgustingly_resilient"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.default_dps_stat
@@ -635,7 +660,8 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		ammo = {
 			base = {
-				ammo_trait_templates.default_ammo_stat
+				ammo_trait_templates.default_ammo_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
@@ -644,20 +670,24 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		recoil = {
 			base = {
-				recoil_trait_templates.lasgun_p1_m1_recoil_stat
+				recoil_trait_templates.lasgun_p1_m1_recoil_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_recoil", "loc_weapon_stats_display_hip_fire")
 			},
 			alternate_fire = {
-				recoil_trait_templates.lasgun_p1_m1_recoil_stat
+				recoil_trait_templates.lasgun_p1_m1_recoil_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_recoil", "loc_weapon_stats_display_ads")
 			}
 		},
 		spread = {
 			base = {
-				spread_trait_templates.default_spread_stat
+				spread_trait_templates.default_spread_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_spread")
 			}
 		},
 		sway = {
 			alternate_fire = {
-				sway_trait_templates.default_sway_stat
+				sway_trait_templates.default_sway_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_sway")
 			}
 		}
 	},
@@ -666,32 +696,36 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		dodge = {
 			base = {
-				dodge_trait_templates.default_dodge_stat
+				dodge_trait_templates.default_dodge_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		sprint = {
 			base = {
-				sprint_trait_templates.default_sprint_stat
+				sprint_trait_templates.default_sprint_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		movement_curve_modifier = {
 			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		spread = {
 			base = {
-				spread_trait_templates.mobility_spread_stat
+				spread_trait_templates.mobility_spread_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_spread")
 			}
 		}
 	},
 	lasgun_p1_m1_power_stat = {
-		description = "loc_trait_description_lasgun_p1_m1_power_stat",
 		display_name = "loc_stats_display_power_stat",
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.default_power_stat
+				damage_trait_templates.default_power_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.default_power_stat
@@ -718,7 +752,6 @@ table.append(weapon_template.traits, bespoke_lasgun_p1_traits)
 
 weapon_template.perks = {
 	lasgun_p1_m1_stability_perk = {
-		description = "loc_trait_description_lasgun_p1_m1_stability_perk",
 		display_name = "loc_trait_display_lasgun_p1_m1_stability_perk",
 		recoil = {
 			base = {
@@ -740,7 +773,6 @@ weapon_template.perks = {
 		}
 	},
 	lasgun_p1_m1_ammo_perk = {
-		description = "loc_trait_description_lasgun_p1_m1_ammo_perk",
 		display_name = "loc_trait_display_lasgun_p1_m1_ammo_perk",
 		ammo = {
 			base = {
@@ -749,7 +781,6 @@ weapon_template.perks = {
 		}
 	},
 	lasgun_p1_m1_dps_perk = {
-		description = "loc_trait_description_lasgun_p1_m1_dps_perk",
 		display_name = "loc_trait_display_lasgun_p1_m1_dps_perk",
 		damage = {
 			action_shoot_hip = {
@@ -761,7 +792,6 @@ weapon_template.perks = {
 		}
 	},
 	lasgun_p1_m1_power_perk = {
-		description = "loc_trait_description_lasgun_p1_m1_power_perk",
 		display_name = "loc_trait_display_lasgun_p1_m1_power_perk",
 		damage = {
 			action_shoot_hip = {
@@ -773,7 +803,6 @@ weapon_template.perks = {
 		}
 	},
 	lasgun_p1_m1_mobility_perk = {
-		description = "loc_trait_description_lasgun_p1_m1_mobility_perk",
 		display_name = "loc_trait_display_lasgun_p1_m1_mobility_perk",
 		dodge = {
 			base = {
@@ -807,7 +836,7 @@ weapon_template.perks = {
 }
 weapon_template.displayed_keywords = {
 	{
-		display_name = "loc_weapon_keyword_versatile_new"
+		display_name = "loc_weapon_keyword_versatile"
 	},
 	{
 		display_name = "loc_weapon_keyword_high_ammo_count"
@@ -825,13 +854,10 @@ weapon_template.displayed_attacks = {
 		type = "ads"
 	},
 	special = {
+		desc = "loc_stats_special_action_flashlight_desc",
 		display_name = "loc_weapon_special_flashlight",
 		type = "flashlight"
 	}
-}
-weapon_template.displayed_attack_ranges = {
-	max = 100,
-	min = 7
 }
 
 return weapon_template

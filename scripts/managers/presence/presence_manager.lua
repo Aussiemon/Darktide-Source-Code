@@ -1,11 +1,13 @@
 local PresenceEntryMyself = require("scripts/managers/presence/presence_entry_myself")
 local PresenceEntryImmaterium = require("scripts/managers/presence/presence_entry_immaterium")
 local PresenceManagerInterface = require("scripts/managers/presence/presence_manager_interface")
+local PresenceSettings = require("scripts/settings/presence/presence_settings")
 local LoggedInFromAnotherLocationError = require("scripts/managers/error/errors/logged_in_from_another_location_error")
 local Promise = require("scripts/foundation/utilities/promise")
 local XboxLiveUtilities = require("scripts/foundation/utilities/xbox_live")
 local PresenceManager = class("PresenceManager")
 local PRESENCE_UPDATE_INTERVAL = 30
+local ACTIVITY_CHECK_INTERVAL = 0.5
 
 local function _info(...)
 	Log.info("PresenceManager", ...)
@@ -37,6 +39,7 @@ PresenceManager.init = function (self)
 	self._presences_by_platform_id = {}
 	self._character_name_update_interval = 0
 	self._update_interval = 0
+	self._next_activity_check = 0
 
 	self:_init_immaterium_presence()
 	self:_init_batched_get_presence()
@@ -51,7 +54,11 @@ PresenceManager.init = function (self)
 end
 
 PresenceManager.destroy = function (self)
-	return
+	if self._advertise_playing then
+		self:_delete_platform_presence()
+
+		self._advertise_playing = false
+	end
 end
 
 PresenceManager.presence = function (self)
@@ -70,41 +77,8 @@ PresenceManager.set_party = function (self, party_id, num_party_members)
 		num_party_members = true
 	})
 
-	if HAS_STEAM then
-		Presence.advertise_immaterium_party(party_id)
-	end
-
-	if XboxLiveUtilities.available() then
-		Managers.party_immaterium:get_your_standing_invite_code():next(function (party_id_with_invite_code)
-			local num_mission_members = self._myself:num_mission_members()
-
-			if num_mission_members > 0 then
-				XboxLiveUtilities.set_activity(party_id_with_invite_code, party_id, num_mission_members - 1)
-			else
-				XboxLiveUtilities.set_activity(party_id_with_invite_code, party_id, num_party_members - 1)
-			end
-		end)
-	end
-end
-
-PresenceManager.set_num_mission_members = function (self, num_mission_members)
-	self._myself:set_num_mission_members(num_mission_members)
-	self:_update_my_presence({
-		num_mission_members = true
-	})
-
-	if XboxLiveUtilities.available() then
-		local party_id = self._myself:party_id()
-
-		if party_id then
-			Managers.party_immaterium:get_your_standing_invite_code():next(function (party_id_with_invite_code)
-				if num_mission_members then
-					XboxLiveUtilities.set_activity(party_id_with_invite_code, party_id, num_mission_members - 1)
-				else
-					XboxLiveUtilities.set_activity(party_id_with_invite_code, party_id, self._myself:num_party_members() - 1)
-				end
-			end)
-		end
+	if self._advertise_playing then
+		self:_update_platform_presence()
 	end
 end
 
@@ -112,13 +86,6 @@ PresenceManager.set_character_profile = function (self, character_profile)
 	self._myself:set_character_profile(character_profile)
 	self:_update_my_presence({
 		character_profile = true
-	})
-end
-
-PresenceManager.set_presence = function (self, activity_id)
-	self._myself:set_activity_id(activity_id)
-	self:_update_my_presence({
-		activity_id = true
 	})
 end
 
@@ -387,6 +354,99 @@ PresenceManager.update = function (self, dt, t)
 			self._last_request_xbox_gamertag = 0
 		end
 	end
+
+	if self._next_activity_check <= t then
+		self:_check_activity()
+
+		self._next_activity_check = t + ACTIVITY_CHECK_INTERVAL
+	end
+end
+
+PresenceManager._check_activity = function (self)
+	local myself = self._myself
+	local activity_id = PresenceSettings.evaluate_presence(self._current_game_state_name)
+	local old_activity_id = myself:activity_id()
+	local updated_presence_keys = {}
+
+	if activity_id ~= old_activity_id then
+		Log.info("PresenceManager", "Activity changed %s -> %s", old_activity_id, activity_id)
+		myself:set_activity_id(activity_id)
+
+		updated_presence_keys.activity_id = true
+
+		if activity_id == "mission" then
+			local num_mission_members = Managers.connection:num_members()
+
+			myself:set_num_mission_members(num_mission_members)
+
+			updated_presence_keys.num_mission_members = true
+		elseif old_activity_id == "mission" then
+			myself:set_num_mission_members(nil)
+
+			updated_presence_keys.num_mission_members = true
+		end
+
+		local advertise_playing = PresenceSettings.settings[activity_id].advertise_playing
+
+		if advertise_playing ~= self._advertise_playing then
+			if advertise_playing then
+				self._advertise_playing = self:_update_platform_presence()
+			else
+				self:_delete_platform_presence()
+
+				self._advertise_playing = false
+			end
+		end
+	elseif activity_id == "mission" then
+		local num_mission_members = Managers.connection:num_members()
+
+		if num_mission_members ~= myself:num_mission_members() then
+			myself:set_num_mission_members(num_mission_members)
+
+			updated_presence_keys.num_mission_members = true
+
+			if self._advertise_playing and (IS_XBS or IS_GDK) then
+				self:_update_platform_presence()
+			end
+		end
+	end
+
+	if not table.is_empty(updated_presence_keys) then
+		self:_update_my_presence(updated_presence_keys)
+	end
+end
+
+PresenceManager._update_platform_presence = function (self)
+	local myself = self._myself
+	local party_id = myself:party_id()
+
+	if not party_id then
+		return false
+	end
+
+	if HAS_STEAM then
+		Presence.advertise_immaterium_party(party_id)
+	elseif IS_XBS or IS_GDK then
+		Managers.party_immaterium:get_your_standing_invite_code():next(function (party_id_with_invite_code)
+			local num_other_members = (myself:activity_id() == "mission" and myself:num_mission_members() or myself:num_party_members()) - 1
+
+			XboxLiveUtilities.set_activity(party_id_with_invite_code, party_id, num_other_members)
+		end)
+	end
+
+	return true
+end
+
+PresenceManager._delete_platform_presence = function (self)
+	if HAS_STEAM then
+		Presence.stop_advertise_playing()
+	elseif IS_XBS or IS_GDK then
+		XboxLiveUtilities.delete_activity()
+	end
+end
+
+PresenceManager.cb_on_game_state_change = function (self, previous_state_name, next_state_name)
+	self._current_game_state_name = next_state_name
 end
 
 implements(PresenceManager, PresenceManagerInterface)

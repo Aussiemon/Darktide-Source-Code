@@ -253,7 +253,8 @@ weapon_template.actions = {
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
-		}
+		},
+		wounds_shape = wounds_shapes.vertical_slash_coarse
 	},
 	action_left_heavy = {
 		damage_window_start = 0.13333333333333333,
@@ -333,7 +334,8 @@ weapon_template.actions = {
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
-		}
+		},
+		wounds_shape = wounds_shapes.horizontal_slash_coarse
 	},
 	action_melee_start_right = {
 		anim_end_event = "attack_finished",
@@ -567,7 +569,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.horizontal_slash
+		wounds_shape = wounds_shapes.horizontal_slash_coarse
 	},
 	action_melee_start_left_2 = {
 		anim_end_event = "attack_finished",
@@ -722,7 +724,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.left_45_slash
+		wounds_shape = wounds_shapes.left_45_slash_coarse
 	},
 	action_block = {
 		minimum_hold_time = 0.3,
@@ -859,7 +861,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.default_light_shovel_smack,
 		damage_type = damage_types.shovel_smack,
-		wounds_shape = wounds_shapes.vertical_slash,
+		wounds_shape = wounds_shapes.vertical_slash_coarse,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
@@ -1363,9 +1365,11 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	special = {
+		desc = "loc_stats_special_action_special_attack_combataxe_p3m1_desc",
 		display_name = "loc_weapon_special_special_attack",
 		type = "special_attack"
 	}
 }
+weapon_template.special_action_name = "action_special_uppercut"
 
 return weapon_template

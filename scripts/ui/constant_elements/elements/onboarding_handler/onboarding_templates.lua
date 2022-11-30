@@ -663,9 +663,6 @@ local templates = {
 
 			Managers.event:trigger("event_player_hide_onboarding_message", player)
 		end,
-		close_condition = function (self)
-			return Managers.ui:view_active("mission_board_view")
-		end,
 		sync_on_events = {}
 	},
 	{

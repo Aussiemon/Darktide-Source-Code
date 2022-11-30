@@ -524,7 +524,6 @@ weapon_template.movement_curve_modifier_template = "lasgun_p1_m1"
 weapon_template.smart_targeting_template = SmartTargetingTemplates.killshot
 weapon_template.base_stats = {
 	lasgun_p1_m1_stability_stat = {
-		description = "loc_trait_description_lasgun_p1_m1_stability_stat",
 		display_name = "loc_trait_display_lasgun_p1_m1_stability_stat",
 		is_stat_trait = true,
 		recoil = {
@@ -547,7 +546,6 @@ weapon_template.base_stats = {
 		}
 	},
 	lasgun_p1_m1_ammo_stat = {
-		description = "loc_trait_description_lasgun_p1_m1_ammo_stat",
 		display_name = "loc_trait_display_lasgun_p1_m1_ammo_stat",
 		is_stat_trait = true,
 		ammo = {
@@ -557,7 +555,6 @@ weapon_template.base_stats = {
 		}
 	},
 	lasgun_p1_m1_dps_stat = {
-		description = "loc_trait_description_lasgun_p1_m1_dps_stat",
 		display_name = "loc_trait_display_lasgun_p1_m1_dps_stat",
 		is_stat_trait = true,
 		damage = {
@@ -570,7 +567,6 @@ weapon_template.base_stats = {
 		}
 	},
 	lasgun_p1_m1_power_stat = {
-		description = "loc_trait_description_lasgun_p1_m1_power_stat",
 		display_name = "loc_trait_display_lasgun_p1_m1_power_stat",
 		is_stat_trait = true,
 		damage = {
@@ -583,7 +579,6 @@ weapon_template.base_stats = {
 		}
 	},
 	lasgun_p1_m1_mobility_stat = {
-		description = "loc_trait_description_lasgun_p1_m1_mobility_stat",
 		display_name = "loc_trait_display_lasgun_p1_m1_mobility_stat",
 		is_stat_trait = true,
 		dodge = {
@@ -619,7 +614,6 @@ weapon_template.base_stats = {
 weapon_template.traits = {}
 weapon_template.perks = {
 	lasgun_p1_m1_stability_perk = {
-		description = "loc_trait_description_lasgun_p1_m1_stability_perk",
 		display_name = "loc_trait_display_lasgun_p1_m1_stability_perk",
 		recoil = {
 			base = {
@@ -641,7 +635,6 @@ weapon_template.perks = {
 		}
 	},
 	lasgun_p1_m1_ammo_perk = {
-		description = "loc_trait_description_lasgun_p1_m1_ammo_perk",
 		display_name = "loc_trait_display_lasgun_p1_m1_ammo_perk",
 		ammo = {
 			base = {
@@ -650,7 +643,6 @@ weapon_template.perks = {
 		}
 	},
 	lasgun_p1_m1_dps_perk = {
-		description = "loc_trait_description_lasgun_p1_m1_dps_perk",
 		display_name = "loc_trait_display_lasgun_p1_m1_dps_perk",
 		damage = {
 			action_shoot_hip = {
@@ -662,7 +654,6 @@ weapon_template.perks = {
 		}
 	},
 	lasgun_p1_m1_power_perk = {
-		description = "loc_trait_description_lasgun_p1_m1_power_perk",
 		display_name = "loc_trait_display_lasgun_p1_m1_power_perk",
 		damage = {
 			action_shoot_hip = {
@@ -674,7 +665,6 @@ weapon_template.perks = {
 		}
 	},
 	lasgun_p1_m1_mobility_perk = {
-		description = "loc_trait_description_lasgun_p1_m1_mobility_perk",
 		display_name = "loc_trait_display_lasgun_p1_m1_mobility_perk",
 		dodge = {
 			base = {

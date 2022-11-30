@@ -308,6 +308,7 @@ weapon_template.actions = {
 			start_anim_event = "attack_hit_stick",
 			stop_anim_event = "yank_out",
 			sensitivity_modifier = 0.1,
+			min_sticky_time = 0.2,
 			disallow_chain_actions = true,
 			duration = 1,
 			damage = {
@@ -434,6 +435,7 @@ weapon_template.actions = {
 			start_anim_event = "attack_hit_stick",
 			stop_anim_event = "yank_out",
 			sensitivity_modifier = 0.1,
+			min_sticky_time = 0.2,
 			disallow_chain_actions = true,
 			duration = 1,
 			damage = {
@@ -684,6 +686,7 @@ weapon_template.actions = {
 			start_anim_event = "attack_hit_stick",
 			stop_anim_event = "yank_out",
 			sensitivity_modifier = 0.1,
+			min_sticky_time = 0.2,
 			disallow_chain_actions = true,
 			duration = 1,
 			damage = {
@@ -808,6 +811,7 @@ weapon_template.actions = {
 			start_anim_event = "attack_hit_stick",
 			stop_anim_event = "yank_out",
 			sensitivity_modifier = 0.1,
+			min_sticky_time = 0.2,
 			disallow_chain_actions = true,
 			duration = 1,
 			damage = {
@@ -1066,6 +1070,7 @@ weapon_template.actions = {
 			start_anim_event = "attack_hit_stick",
 			stop_anim_event = "yank_out",
 			sensitivity_modifier = 0.1,
+			min_sticky_time = 0.2,
 			disallow_chain_actions = true,
 			duration = 1,
 			damage = {
@@ -1315,6 +1320,7 @@ weapon_template.actions = {
 			start_anim_event = "attack_hit_stick",
 			stop_anim_event = "yank_out",
 			sensitivity_modifier = 0.1,
+			min_sticky_time = 0.2,
 			disallow_chain_actions = true,
 			duration = 1,
 			damage = {
@@ -1516,6 +1522,7 @@ weapon_template.actions = {
 			start_anim_event = "attack_hit_stick",
 			stop_anim_event = "yank_out",
 			sensitivity_modifier = 0.1,
+			min_sticky_time = 0.2,
 			disallow_chain_actions = true,
 			duration = 1,
 			damage = {
@@ -1726,7 +1733,6 @@ weapon_template.overclocks = {
 }
 weapon_template.base_stats = {
 	chainsword_p1_m1_dps_stat = {
-		description = "loc_trait_description_chainsword_p1_m1_dps_stat",
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
@@ -1754,7 +1760,6 @@ weapon_template.base_stats = {
 		}
 	},
 	chainsword_p1_m1_armor_pierce_stat = {
-		description = "loc_trait_description_chainsword_p1_m1_armor_pierce_stat",
 		display_name = "loc_stats_display_ap_stat",
 		is_stat_trait = true,
 		damage = {
@@ -1782,7 +1787,6 @@ weapon_template.base_stats = {
 		}
 	},
 	chainsword_p1_m1_finesse_stat = {
-		description = "loc_trait_description_chainsword_p1_m1_finesse_stat",
 		display_name = "loc_stats_display_finesse_stat",
 		is_stat_trait = true,
 		damage = {
@@ -1833,7 +1837,6 @@ weapon_template.base_stats = {
 		}
 	},
 	chainsword_p1_m1_mobility_stat = {
-		description = "loc_trait_description_chainsword_p1_m1_mobility_stat",
 		display_name = "loc_stats_display_mobility_stat",
 		is_stat_trait = true,
 		dodge = {
@@ -1944,7 +1947,6 @@ table.append(weapon_template.traits, bespoke_chainsword_p1_traits)
 
 weapon_template.perks = {
 	chainsword_p1_m1_dps_perk = {
-		description = "loc_trait_description_chainsword_p1_m1_dps_perk",
 		display_name = "loc_trait_display_chainsword_p1_m1_dps_perk",
 		damage = {
 			action_left_down_light = {
@@ -1971,7 +1973,6 @@ weapon_template.perks = {
 		}
 	},
 	chainsword_p1_m1_armor_pierce_perk = {
-		description = "loc_trait_description_chainsword_p1_m1_armor_pierce_perk",
 		display_name = "loc_trait_display_chainsword_p1_m1_armor_pierce_perk",
 		damage = {
 			action_left_down_light = {
@@ -1998,7 +1999,6 @@ weapon_template.perks = {
 		}
 	},
 	chainsword_p1_m1_finesse_perk = {
-		description = "loc_trait_description_chainsword_p1_m1_finesse_perk",
 		display_name = "loc_trait_display_chainsword_p1_m1_finesse_perk",
 		damage = {
 			action_left_down_light = {
@@ -2048,7 +2048,6 @@ weapon_template.perks = {
 		}
 	},
 	chainsword_p1_m3_first_target_perk = {
-		description = "loc_trait_description_chainsword_p1_m1_first_target_perk",
 		display_name = "loc_trait_display_chainsword_p1_m1_first_target_perk",
 		damage = {
 			action_left_down_light = {
@@ -2075,7 +2074,6 @@ weapon_template.perks = {
 		}
 	},
 	chainsword_p1_m3_mobility_perk = {
-		description = "loc_trait_description_chainsword_p1_m1_mobility_perk",
 		display_name = "loc_trait_display_chainsword_p1_m1_mobility_perk",
 		dodge = {
 			base = {
@@ -2096,10 +2094,11 @@ weapon_template.perks = {
 }
 weapon_template.displayed_keywords = {
 	{
-		display_name = "loc_weapon_keyword_versatile_new"
+		display_name = "loc_weapon_keyword_versatile"
 	},
 	{
-		display_name = "loc_weapon_keyword_sawing"
+		display_name = "loc_weapon_keyword_sawing",
+		description = "loc_weapon_stats_display_sawing_desc"
 	}
 }
 weapon_template.displayed_attacks = {
@@ -2122,6 +2121,7 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	special = {
+		desc = "loc_stats_special_action_powerup_desc",
 		display_name = "loc_weapon_special_activate",
 		type = "activate"
 	}

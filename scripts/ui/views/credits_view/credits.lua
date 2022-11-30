@@ -3728,27 +3728,13 @@ local Credits = {
 				type = "header"
 			},
 			{
-				text = "loc_credits_view_tencent_title",
+				text = "loc_credits_view_level_infinite_title",
 				localized = true,
 				type = "header"
 			},
 			{
 				text = " ",
 				type = "person"
-			},
-			{
-				text = "loc_credits_view_tencent_thanks_title",
-				localized = true,
-				type = "title"
-			},
-			{
-				text = " ",
-				type = "person"
-			},
-			{
-				text = "loc_credits_view_level_infinite_title",
-				localized = true,
-				type = "title"
 			},
 			{
 				text = "Steven Ma",

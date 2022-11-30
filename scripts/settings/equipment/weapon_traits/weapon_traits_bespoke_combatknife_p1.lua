@@ -6,19 +6,19 @@ templates.weapon_trait_bespoke_combatknife_p1_stacking_rending_on_weakspot = {
 		{
 			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.rending_multiplier] = 0.06
+				[stat_buffs.rending_multiplier] = 0.05
 			}
 		},
 		{
 			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.rending_multiplier] = 0.12
+				[stat_buffs.rending_multiplier] = 0.1
 			}
 		},
 		{
 			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.rending_multiplier] = 0.17
+				[stat_buffs.rending_multiplier] = 0.15
 			}
 		},
 		{
@@ -38,12 +38,12 @@ templates.weapon_trait_bespoke_combatknife_p1_chained_weakspot_hits_increases_po
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.035
+				[stat_buffs.power_level_modifier] = 0.03
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.045
+				[stat_buffs.power_level_modifier] = 0.04
 			}
 		},
 		{
@@ -86,12 +86,12 @@ templates.weapon_trait_bespoke_combatknife_p1_dodge_grants_finesse_bonus = {
 		},
 		{
 			proc_stat_buffs = {
-				[stat_buffs.finesse_modifier_bonus] = 0.035
+				[stat_buffs.finesse_modifier_bonus] = 0.03
 			}
 		},
 		{
 			proc_stat_buffs = {
-				[stat_buffs.finesse_modifier_bonus] = 0.045
+				[stat_buffs.finesse_modifier_bonus] = 0.04
 			}
 		},
 		{
@@ -110,12 +110,12 @@ templates.weapon_trait_bespoke_combatknife_p1_dodge_grants_critical_strike_chanc
 		},
 		{
 			proc_stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.035
+				[stat_buffs.critical_strike_chance] = 0.03
 			}
 		},
 		{
 			proc_stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.045
+				[stat_buffs.critical_strike_chance] = 0.04
 			}
 		},
 		{
@@ -182,12 +182,12 @@ templates.weapon_trait_bespoke_combatknife_p1_rending_on_backstab = {
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.backstab_rending_multiplier] = 0.35
+				[stat_buffs.backstab_rending_multiplier] = 0.3
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.backstab_rending_multiplier] = 0.45
+				[stat_buffs.backstab_rending_multiplier] = 0.4
 			}
 		},
 		{
@@ -206,12 +206,12 @@ templates.weapon_trait_bespoke_combatknife_p1_increased_weakspot_damage_against_
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.melee_weakspot_damage_vs_bleeding] = 0.35
+				[stat_buffs.melee_weakspot_damage_vs_bleeding] = 0.3
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.melee_weakspot_damage_vs_bleeding] = 0.45
+				[stat_buffs.melee_weakspot_damage_vs_bleeding] = 0.4
 			}
 		},
 		{
@@ -225,17 +225,17 @@ templates.weapon_trait_bespoke_combatknife_p1_increased_crit_chance_on_staggered
 	weapon_trait_bespoke_combatknife_p1_increased_crit_chance_on_staggered_weapon_special_hit_parent = {
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.05
+				[stat_buffs.critical_strike_chance] = 0.04
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.075
+				[stat_buffs.critical_strike_chance] = 0.06
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.09
+				[stat_buffs.critical_strike_chance] = 0.08
 			}
 		},
 		{

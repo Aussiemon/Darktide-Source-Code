@@ -17,8 +17,6 @@ StateVictoryDefeat.on_enter = function (self, parent, params, creation_context)
 	end
 
 	self._end_result = params.mechanism_data.end_result
-
-	Managers.presence:set_presence("end_of_round")
 end
 
 StateVictoryDefeat.update = function (self, main_dt, main_t)

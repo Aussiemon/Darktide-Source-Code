@@ -516,6 +516,9 @@ weapon_action_data.conditional_state_functions = {
 	end
 }
 weapon_action_data.action_kind_to_running_action_chain_event = {
+	aim = {
+		has_charge = true
+	},
 	block = {
 		has_blocked = true
 	},

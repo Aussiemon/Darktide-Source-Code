@@ -70,7 +70,7 @@ PlayerCharacterStateDead.fixed_update = function (self, unit, dt, t, next_state_
 	end
 
 	if self._time_to_despawn and self._time_to_despawn < t then
-		Managers.state.player_unit_spawn:despawn(self._player)
+		Managers.state.player_unit_spawn:despawn_safe(self._player)
 
 		self._time_to_despawn = nil
 	end

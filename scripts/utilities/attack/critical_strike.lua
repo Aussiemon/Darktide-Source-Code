@@ -26,7 +26,7 @@ CriticalStrike.chance = function (player, weapon_handling_template, is_ranged, i
 
 	local critical_strike = weapon_handling_template.critical_strike
 
-	if critical_strike then
+	if critical_strike and critical_strike.chance_modifier then
 		additional_chance = additional_chance + critical_strike.chance_modifier
 	end
 

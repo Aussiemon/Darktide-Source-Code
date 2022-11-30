@@ -865,6 +865,11 @@ local disgustingly_resilient = {
 			},
 			{
 				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
+			},
+			{
+				effects = {
 					"content/fx/particles/impacts/weapons/force_staff/force_impact_01"
 				}
 			}
@@ -878,6 +883,11 @@ local disgustingly_resilient = {
 			{
 				effects = {
 					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			},
 			{
@@ -896,6 +906,11 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/impacts/weapons/force_staff/force_impact_01"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			}
 		},
 		damage = {
@@ -908,12 +923,22 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/impacts/weapons/force_staff/force_impact_01"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
 			}
 		},
 		damage_reduced = {
 			{
 				effects = {
 					"content/fx/particles/impacts/weapons/force_staff/force_impact_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			}
 		},
@@ -933,6 +958,11 @@ local disgustingly_resilient = {
 			{
 				effects = {
 					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			},
 			{

@@ -1091,6 +1091,7 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	special = {
+		desc = "loc_stats_special_action_special_attack_powermaul_p1m1_desc",
 		display_name = "loc_weapon_special_activate",
 		type = "activate"
 	}

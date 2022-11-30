@@ -1374,16 +1374,45 @@ weapon_template.overclocks = {
 		thunderhammer_p1_m1_dps_stat = 0.1
 	}
 }
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	thunderhammer_p1_m1_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				damage_trait_templates.thunderhammer_dps_stat
+				damage_trait_templates.thunderhammer_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.thunderhammer_dps_stat
+				damage_trait_templates.thunderhammer_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_right_down_light = {
 				damage_trait_templates.thunderhammer_dps_stat
@@ -1407,10 +1436,34 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				damage_trait_templates.thunderhammer_armor_pierce_stat
+				damage_trait_templates.thunderhammer_armor_pierce_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								armor_damage_modifier = {
+									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
+								}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.thunderhammer_armor_pierce_stat
+				damage_trait_templates.thunderhammer_armor_pierce_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								armor_damage_modifier = {
+									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
+								}
+							}
+						}
+					}
+				}
 			},
 			action_right_down_light = {
 				damage_trait_templates.thunderhammer_armor_pierce_stat
@@ -1430,14 +1483,51 @@ weapon_template.base_stats = {
 		}
 	},
 	thunderhammer_p1_m1_control_stat = {
+		description = "loc_stats_display_control_stat_melee_mouseover",
 		display_name = "loc_stats_display_control_stat_melee",
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				damage_trait_templates.thunderhammer_control_stat
+				damage_trait_templates.thunderhammer_control_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									impact = {
+										display_name = "loc_weapon_stats_display_stagger"
+									}
+								}
+							}
+						},
+						cleave_distribution = {
+							attack = {},
+							impact = {}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.thunderhammer_control_stat
+				damage_trait_templates.thunderhammer_control_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									impact = {
+										display_name = "loc_weapon_stats_display_stagger"
+									}
+								}
+							}
+						},
+						cleave_distribution = {
+							attack = {},
+							impact = {}
+						}
+					}
+				}
 			},
 			action_right_down_light = {
 				damage_trait_templates.thunderhammer_control_stat
@@ -1457,10 +1547,22 @@ weapon_template.base_stats = {
 		},
 		weapon_handling = {
 			action_left_down_light = {
-				weapon_handling_trait_templates.default_finesse_stat
+				weapon_handling_trait_templates.default_finesse_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_left_heavy = {
-				weapon_handling_trait_templates.default_finesse_stat
+				weapon_handling_trait_templates.default_finesse_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_right_down_light = {
 				weapon_handling_trait_templates.default_finesse_stat
@@ -1507,10 +1609,30 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.default_first_target_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								power_level_multiplier = {}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.default_first_target_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								power_level_multiplier = {}
+							}
+						}
+					}
+				}
 			},
 			action_right_down_light = {
 				damage_trait_templates.default_first_target_stat
@@ -1534,12 +1656,14 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		stamina = {
 			base = {
-				stamina_trait_templates.thunderhammer_p1_m1_defence_stat
+				stamina_trait_templates.thunderhammer_p1_m1_defence_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		dodge = {
 			base = {
-				dodge_trait_templates.default_dodge_stat
+				dodge_trait_templates.default_dodge_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	}
@@ -1562,7 +1686,8 @@ weapon_template.displayed_keywords = {
 		display_name = "loc_weapon_keyword_crowd_control"
 	},
 	{
-		display_name = "loc_weapon_keyword_thunder_hammer"
+		display_name = "loc_weapon_keyword_thunder_hammer",
+		description = "loc_weapon_stats_display_thunder_hammer_desc"
 	}
 }
 weapon_template.displayed_attacks = {
@@ -1572,7 +1697,7 @@ weapon_template.displayed_attacks = {
 		attack_chain = {
 			"smiter",
 			"smiter",
-			"tank"
+			"smiter"
 		}
 	},
 	secondary = {
@@ -1584,6 +1709,7 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	special = {
+		desc = "loc_stats_special_action_powerup_desc",
 		display_name = "loc_weapon_special_activate",
 		type = "activate"
 	}

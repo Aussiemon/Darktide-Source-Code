@@ -6,9 +6,9 @@ local WorldRenderUtils = require("scripts/utilities/world_render")
 local VOSourcesCache = require("scripts/extension_systems/dialogue/vo_sources_cache")
 local UIWorldSpawner = class("UIWorldSpawner")
 
-UIWorldSpawner.init = function (self, world_name, world_layer, timer_name, optional_view_name)
+UIWorldSpawner.init = function (self, world_name, world_layer, timer_name, optional_view_name, optional_flags)
 	self._world_name = world_name
-	local world = self:_create_world(world_name, world_layer, timer_name, optional_view_name)
+	local world = self:_create_world(world_name, world_layer, timer_name, optional_view_name, optional_flags)
 	self._storyteller = World.storyteller(world)
 
 	World.set_data(world, "__world_name", world_name)

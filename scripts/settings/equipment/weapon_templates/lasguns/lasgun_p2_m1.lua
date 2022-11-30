@@ -15,6 +15,8 @@ local WeaponTraitsRangedMediumFireRate = require("scripts/settings/equipment/wea
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_proc_events = BuffSettings.proc_events
 local buff_targets = WeaponTweakTemplateSettings.buff_targets
@@ -54,17 +56,6 @@ local weapon_template = {
 					value = false,
 					input = "action_one_hold",
 					time_window = math.huge
-				}
-			}
-		},
-		zoom_shoot_hold = {
-			buffer_time = 0.52,
-			max_queue = 2,
-			input_sequence = {
-				{
-					value = true,
-					hold_input = "action_two_hold",
-					input = "action_one_hold"
 				}
 			}
 		},
@@ -215,21 +206,12 @@ weapon_template.action_input_hierarchy = {
 		shoot_release_charged = "base"
 	},
 	zoom = {
-		wield = "base",
 		zoom_release = "base",
+		wield = "base",
 		grenade_ability = "base",
 		reload = "previous",
 		combat_ability = "base",
 		zoom_weapon_special = "stay",
-		zoom_shoot_hold = {
-			wield = "base",
-			grenade_ability = "base",
-			zoom_release = "base",
-			zoom_shoot_release_charged = "previous",
-			reload = "base",
-			combat_ability = "stay",
-			zoom_weapon_special = "stay"
-		},
 		zoom_shoot_pressed = {
 			wield = "base",
 			grenade_ability = "base",
@@ -528,16 +510,13 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		charge_extra_hold_time = 1,
 		keep_charge = true,
-		recoil_template = "lasgun_p2_m1_ads_killshot",
 		crosshair_type = "charge_up_ads",
 		allowed_during_sprint = true,
+		recoil_template = "lasgun_p2_m1_ads_killshot",
 		charge_template = "lasgun_p2_m1_charge_up",
 		spread_template = "default_lasgun_killshot",
 		anim_event = "attack_charge",
 		total_time = 1.2,
-		fully_charged = {
-			input_name = "zoom_shoot_release_charged"
-		},
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -707,10 +686,10 @@ weapon_template.actions = {
 				reset_combo = true,
 				action_name = "action_unzoom"
 			},
-			special_action_hold = {
+			zoom_weapon_special = {
 				chain_time = 0.35,
 				reset_combo = true,
-				action_name = "action_stab_start"
+				action_name = "action_stab_zoom"
 			}
 		},
 		time_scale_stat_buffs = {
@@ -720,10 +699,10 @@ weapon_template.actions = {
 	},
 	action_zoom = {
 		hold_combo = false,
-		crosshair_type = "charge_up_ads",
 		start_input = "zoom",
 		kind = "aim",
 		increase_combo = false,
+		crosshair_type = "charge_up_ads",
 		total_time = 0.3,
 		smart_targeting_template = SmartTargetingTemplates.alternate_fire_killshot,
 		allowed_chain_actions = {
@@ -739,9 +718,14 @@ weapon_template.actions = {
 			reload = {
 				action_name = "action_reload"
 			},
-			zoom_shoot_hold = {
+			zoom_shoot_pressed = {
 				action_name = "action_shoot_zoomed_start",
 				chain_time = 0.05
+			}
+		},
+		running_action_state_to_action_input = {
+			has_charge = {
+				input_name = "zoom_shoot_pressed"
 			}
 		}
 	},
@@ -843,9 +827,10 @@ weapon_template.actions = {
 		}
 	},
 	action_stab_start = {
-		start_input = "special_action_hold",
 		anim_end_event = "attack_finished",
+		start_input = "special_action_hold",
 		kind = "windup",
+		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		anim_event = "attack_charge_stab",
 		total_time = math.huge,
@@ -902,15 +887,16 @@ weapon_template.actions = {
 	action_stab = {
 		damage_window_start = 0.3,
 		hit_armor_anim = "attack_hit_shield",
-		allow_conditional_chain = true,
+		crosshair_type = "dot",
 		range_mod = 1.15,
 		kind = "sweep",
 		first_person_hit_anim = "attack_hit",
+		anim_event = "attack_stab",
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
 		damage_window_end = 0.36666666666666664,
 		uninterruptible = true,
-		anim_event = "attack_stab",
+		allow_conditional_chain = true,
 		total_time = 1.1,
 		action_movement_curve = {
 			{
@@ -988,15 +974,16 @@ weapon_template.actions = {
 	action_stab_heavy = {
 		damage_window_start = 0.1,
 		hit_armor_anim = "attack_hit_shield",
-		allow_conditional_chain = true,
+		crosshair_type = "dot",
 		range_mod = 1.15,
 		kind = "sweep",
 		first_person_hit_anim = "attack_hit",
+		anim_event = "attack_stab_heavy",
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
 		damage_window_end = 0.23333333333333334,
 		uninterruptible = true,
-		anim_event = "attack_stab_heavy",
+		allow_conditional_chain = true,
 		total_time = 1.1,
 		action_movement_curve = {
 			{
@@ -1082,7 +1069,7 @@ weapon_template.actions = {
 		first_person_hit_anim = "attack_hit",
 		range_mod = 1.6,
 		first_person_hit_stop_anim = "attack_hit",
-		crosshair_type = "charge_up_ads",
+		crosshair_type = "ironsight",
 		allowed_during_sprint = true,
 		damage_window_end = 0.23333333333333334,
 		uninterruptible = true,
@@ -1132,7 +1119,7 @@ weapon_template.actions = {
 			reload = {
 				action_name = "action_reload"
 			},
-			zoom_shoot_hold = {
+			zoom_shoot_pressed = {
 				chain_time = 0.575,
 				reset_combo = true,
 				action_name = "action_shoot_zoomed_start"
@@ -1285,14 +1272,15 @@ weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "lasgun_p1_m1"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.smart_targeting_template = SmartTargetingTemplates.killshot
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	lasgun_p2_m1_dps_stat = {
-		description = "loc_trait_description_lasgun_p2_m1_damage_stat",
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip_charged = {
-				damage_trait_templates.default_dps_stat
+				damage_trait_templates.default_dps_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_zoom_shoot_charged = {
 				damage_trait_templates.default_dps_stat
@@ -1306,58 +1294,72 @@ weapon_template.base_stats = {
 		}
 	},
 	lasgun_p2_m1_stability_stat = {
-		description = "loc_trait_description_lasgun_p2_m1_stability_stat",
 		display_name = "loc_stats_display_stability_stat",
 		is_stat_trait = true,
 		recoil = {
 			base = {
-				recoil_trait_templates.lasgun_p1_m1_recoil_stat
+				recoil_trait_templates.lasgun_p1_m1_recoil_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_recoil", "loc_weapon_stats_display_hip_fire")
 			},
 			alternate_fire = {
-				recoil_trait_templates.lasgun_p1_m1_recoil_stat
+				recoil_trait_templates.lasgun_p1_m1_recoil_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_recoil", "loc_weapon_stats_display_ads")
 			}
 		},
 		spread = {
 			base = {
-				spread_trait_templates.default_spread_stat
+				spread_trait_templates.default_spread_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_spread")
 			}
 		},
 		sway = {
 			alternate_fire = {
-				sway_trait_templates.default_sway_stat
+				sway_trait_templates.default_sway_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_sway")
 			}
 		}
 	},
 	lasgun_p2_m1_ammo_stat = {
-		description = "loc_trait_description_lasgun_p2_m1_ammo_stat",
 		display_name = "loc_stats_display_ammo_stat",
 		is_stat_trait = true,
 		ammo = {
 			base = {
-				ammo_trait_templates.default_ammo_stat
+				ammo_trait_templates.default_ammo_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
 	lasgun_p2_m1_charge_speed_stat = {
-		description = "loc_trait_description_lasgun_p2_m1_charge_speed_stat",
 		display_name = "loc_stats_display_charge_speed",
 		is_stat_trait = true,
 		charge = {
 			action_shoot_hip_start = {
-				charge_trait_templates.plasmagun_charge_speed_stat
+				charge_trait_templates.plasmagun_charge_speed_stat,
+				display_data = {
+					prefix = "loc_ranged_attack_primary",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			},
 			action_shoot_zoomed_start = {
-				charge_trait_templates.plasmagun_charge_speed_stat
+				charge_trait_templates.plasmagun_charge_speed_stat,
+				display_data = {
+					prefix = "loc_ranged_attack_secondary_ads",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			}
 		}
 	},
 	lasgun_p2_m1_power_stat = {
-		description = "loc_trait_description_lasgun_p2_m1_power_stat",
 		display_name = "loc_stats_display_power_stat",
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip_charged = {
-				damage_trait_templates.default_power_stat
+				damage_trait_templates.default_power_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_zoom_shoot_charged = {
 				damage_trait_templates.default_power_stat
@@ -1393,22 +1395,21 @@ weapon_template.displayed_keywords = {
 weapon_template.displayed_attacks = {
 	primary = {
 		fire_mode = "semi_auto",
+		desc = "loc_stats_fire_mode_hip_fire_desc",
 		display_name = "loc_ranged_attack_primary",
 		type = "charge"
 	},
 	secondary = {
 		fire_mode = "semi_auto",
-		display_name = "loc_ranged_attack_secondary_ads",
+		display_name = "loc_weapon_keyword_charged_attack",
 		type = "charge"
 	},
 	special = {
+		desc = "loc_stats_special_action_melee_bayonette_desc",
 		display_name = "loc_weapon_special_bayonet",
 		type = "melee"
 	}
 }
-weapon_template.displayed_attack_ranges = {
-	max = 100,
-	min = 7
-}
+weapon_template.displayed_weapon_stats = "lasgun_p2"
 
 return weapon_template

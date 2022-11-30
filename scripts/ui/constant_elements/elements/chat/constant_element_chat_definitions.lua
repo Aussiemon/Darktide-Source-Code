@@ -102,7 +102,7 @@ local widget_definitions = {
 		}
 	}, "chat_window"),
 	input_field = UIWidget.create_definition(TextInputPassTemplates.chat_input_field, "input_field", {
-		close_on_backspace = true
+		close_on_backspace = false
 	}),
 	chat_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.simple_scrollbar, "chat_scrollbar"),
 	chat_window_mask = UIWidget.create_definition({

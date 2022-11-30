@@ -35,10 +35,11 @@ DialogueEventQueue.update_new_events = function (self, dt, t)
 
 			local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
 			local breed_data = unit_data_extension and unit_data_extension:breed() or Unit.get_data(unit, "breed")
+			local breed_name = breed_data and breed_data.name
 			local source_name = nil
 
-			if breed_data and not breed_data.is_player then
-				source_name = DialogueBreedSettings[breed_data.name].vo_class_name
+			if breed_name and not breed_data.is_player then
+				source_name = DialogueBreedSettings[breed_name].vo_class_name
 			else
 				local extension_data = self._unit_extension_data[unit]
 

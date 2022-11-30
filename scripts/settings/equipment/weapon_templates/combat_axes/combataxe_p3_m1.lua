@@ -258,7 +258,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.left_45_slash
+		wounds_shape = wounds_shapes.left_45_slash_coarse
 	},
 	action_left_heavy = {
 		damage_window_start = 0.16666666666666666,
@@ -339,7 +339,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.horizontal_slash
+		wounds_shape = wounds_shapes.horizontal_slash_coarse
 	},
 	action_melee_start_right = {
 		anim_end_event = "attack_finished",
@@ -492,7 +492,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.vertical_slash
+		wounds_shape = wounds_shapes.vertical_slash_coarse
 	},
 	action_right_heavy = {
 		damage_window_start = 0.13333333333333333,
@@ -573,7 +573,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.horizontal_slash
+		wounds_shape = wounds_shapes.horizontal_slash_coarse
 	},
 	action_melee_start_left_2 = {
 		anim_end_event = "attack_finished",
@@ -728,7 +728,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.left_45_slash
+		wounds_shape = wounds_shapes.left_45_slash_coarse
 	},
 	action_block = {
 		minimum_hold_time = 0.3,
@@ -866,7 +866,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.default_light_shovel_smack,
 		damage_type = damage_types.shovel_smack,
-		wounds_shape = wounds_shapes.vertical_slash,
+		wounds_shape = wounds_shapes.vertical_slash_coarse,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
@@ -1055,16 +1055,45 @@ weapon_template.overclocks = {
 		combataxe_p1_m1_dps_stat = 0.1
 	}
 }
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	combataxe_p3_m1_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				damage_trait_templates.default_melee_dps_stat
+				damage_trait_templates.default_melee_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_melee_dps_stat
+				damage_trait_templates.default_melee_dps_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								power_distribution = {
+									attack = {
+										display_name = "loc_weapon_stats_display_base_damage"
+									}
+								}
+							}
+						}
+					}
+				}
 			},
 			action_right_diagonal_light = {
 				damage_trait_templates.default_melee_dps_stat
@@ -1088,12 +1117,14 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		stamina = {
 			base = {
-				stamina_trait_templates.thunderhammer_p1_m1_defence_stat
+				stamina_trait_templates.thunderhammer_p1_m1_defence_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		dodge = {
 			base = {
-				dodge_trait_templates.default_dodge_stat
+				dodge_trait_templates.default_dodge_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
@@ -1102,10 +1133,34 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				damage_trait_templates.default_armor_pierce_stat
+				damage_trait_templates.default_armor_pierce_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								armor_damage_modifier = {
+									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
+								}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_armor_pierce_stat
+				damage_trait_templates.default_armor_pierce_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								armor_damage_modifier = {
+									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
+								}
+							}
+						}
+					}
+				}
 			},
 			action_right_diagonal_light = {
 				damage_trait_templates.default_armor_pierce_stat
@@ -1129,10 +1184,30 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_left_down_light = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.default_first_target_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						targets = {
+							{
+								power_level_multiplier = {}
+							}
+						}
+					}
+				}
 			},
 			action_left_heavy = {
-				damage_trait_templates.default_first_target_stat
+				damage_trait_templates.default_first_target_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						targets = {
+							{
+								power_level_multiplier = {}
+							}
+						}
+					}
+				}
 			},
 			action_right_diagonal_light = {
 				damage_trait_templates.default_first_target_stat
@@ -1156,17 +1231,20 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		dodge = {
 			base = {
-				dodge_trait_templates.default_dodge_stat
+				dodge_trait_templates.default_dodge_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		sprint = {
 			base = {
-				sprint_trait_templates.default_sprint_stat
+				sprint_trait_templates.default_sprint_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		movement_curve_modifier = {
 			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	}
@@ -1207,9 +1285,11 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	special = {
+		desc = "loc_stats_special_action_special_attack_combataxe_p3m1_desc",
 		display_name = "loc_weapon_special_special_attack",
 		type = "special_attack"
 	}
 }
+weapon_template.special_action_name = "action_special_uppercut"
 
 return weapon_template

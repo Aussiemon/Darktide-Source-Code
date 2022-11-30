@@ -258,4 +258,41 @@ StoreService.character_wallets = function (self, character_id)
 	end)
 end
 
+StoreService.get_premium_store = function (self, storefront_key)
+	if storefront_key == "hard_currency_store" then
+		return Managers.backend.interfaces.external_payment:get_options():catch(function (error)
+			Log.error("StoreService", "Failed to fetch external payment options %s", error)
+		end)
+	end
+
+	local local_player_id = 1
+	local player = Managers.player:local_player(local_player_id)
+	local character_id = player:character_id()
+	local time_since_launch = Application.time_since_launch()
+	local promise = Managers.backend.interfaces.store:get_premium_storefront(storefront_key, time_since_launch, character_id)
+
+	return promise:catch(function (error)
+		Log.error("StoreService", "Failed to fetch premium storefront %s %s", storefront_key, error)
+	end):next(function (store_catalogue)
+		local offers, current_rotation_end, layout_config, decorate_offer = nil
+
+		if store_catalogue then
+			local store_data = store_catalogue.data
+			offers = store_catalogue.public_filtered
+			layout_config = store_catalogue.layout_config
+			current_rotation_end = store_data and store_data.currentRotationEnd
+			decorate_offer = store_catalogue.decorate_offer
+		end
+
+		return {
+			offers = offers or {},
+			layout_config = layout_config or {},
+			current_rotation_end = current_rotation_end,
+			decorate_offer = decorate_offer and function (self, test, is_personal)
+				decorate_offer(store_catalogue.storefront, test, is_personal)
+			end or nil
+		}
+	end)
+end
+
 return StoreService

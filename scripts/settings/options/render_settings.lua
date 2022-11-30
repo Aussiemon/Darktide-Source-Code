@@ -1,8 +1,58 @@
 local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local OptionsUtilities = require("scripts/utilities/ui/options")
+local render_settings = {}
+local render_settings_by_id = {}
 
 local function print_func(format, ...)
 	print(string.format("[RenderSettings] " .. format, ...))
+end
+
+local function _is_same(current, new)
+	if current == new then
+		return true
+	elseif type(current) == "table" and type(new) == "table" then
+		for k, v in pairs(current) do
+			if new[k] ~= v then
+				return false
+			end
+		end
+
+		for k, v in pairs(new) do
+			if current[k] ~= v then
+				return false
+			end
+		end
+
+		return true
+	else
+		return false
+	end
+end
+
+local function get_user_setting(location, key)
+	if location then
+		return Application.user_setting(location, key)
+	else
+		return Application.user_setting(key)
+	end
+end
+
+local function set_user_setting(location, key, value)
+	local perf_counter = Application.query_performance_counter()
+
+	if location then
+		Application.set_user_setting(location, key, value)
+
+		if location == "render_settings" and type(value) ~= "table" then
+			Application.set_render_setting(key, tostring(value))
+		end
+	else
+		Application.set_user_setting(key, value)
+	end
+
+	local settings_parse_duration = Application.time_since_query(perf_counter)
+
+	print_func("Time to parse setting [%s] with new value (%s): %.1fms.", key, value, settings_parse_duration)
 end
 
 local function apply_user_settings()
@@ -32,6 +82,253 @@ local function save_user_settings()
 	print_func("Time to save settings: %.1fms", user_settings_save_duration)
 end
 
+local function remove_repeated_entries(changes_list, start_index)
+	if not changes_list or #changes_list < 1 then
+		return {}
+	end
+
+	local start_index = start_index or 1
+
+	if start_index >= #changes_list then
+		return changes_list
+	else
+		local occurences = {}
+		local entry = changes_list[start_index]
+
+		for i = start_index + 1, #changes_list do
+			local stored_change = changes_list[i]
+
+			if stored_change and stored_change.id == entry.id then
+				occurences[#occurences + 1] = i
+			end
+		end
+
+		local new_table = {}
+
+		if #occurences > 0 then
+			local count = #changes_list
+
+			for i = 1, #occurences do
+				local index = occurences[i]
+				changes_list[index] = nil
+			end
+
+			for i = 1, count do
+				if changes_list[i] then
+					new_table[#new_table + 1] = changes_list[i]
+				end
+			end
+		else
+			new_table = changes_list
+		end
+
+		return remove_repeated_entries(new_table, start_index + 1)
+	end
+end
+
+local function verify_and_apply_changes(changed_setting, new_value, affected_settings, origin_id)
+	local changes_list = {}
+	local first_level = not affected_settings
+
+	if first_level then
+		changes_list[#changes_list + 1] = {
+			id = changed_setting.id,
+			value = new_value,
+			save_location = changed_setting.save_location,
+			require_apply = changed_setting.require_apply
+		}
+	end
+
+	local settings_list = affected_settings or {}
+
+	if not changed_setting.disabled or changed_setting.disabled and changed_setting.disabled_origin == origin_id then
+		if changed_setting.disable_rules then
+			for i = 1, #changed_setting.disable_rules do
+				local disabled_rule = changed_setting.disable_rules[i]
+				local disabled_setting = render_settings_by_id[disabled_rule.id]
+
+				if disabled_setting and (not disabled_setting.validation_function or disabled_setting.validation_function and disabled_setting.validation_function()) then
+					local previously_enabled = false
+
+					if disabled_rule.validation_function(new_value) then
+						disabled_setting.disabled_by = disabled_setting.disabled_by or {}
+
+						if table.is_empty(disabled_setting.disabled_by) then
+							previously_enabled = true
+							disabled_setting.value_on_enabled = disabled_setting:get_function()
+							disabled_setting.disabled_origin = changed_setting.id
+						end
+
+						disabled_setting.disabled_by[changed_setting.id] = disabled_rule.reason
+						disabled_setting.disabled = true
+					elseif not disabled_rule.validation_function(new_value) and disabled_setting.disabled_by and disabled_setting.disabled_by[changed_setting.id] then
+						disabled_setting.disabled_by[changed_setting.id] = nil
+						disabled_setting.disabled = not table.is_empty(disabled_setting.disabled_by)
+
+						if disabled_setting.disabled == false then
+							disabled_setting.disabled_origin = nil
+						end
+					end
+
+					if previously_enabled or disabled_setting.disabled == false then
+						local disabled_setting_value = nil
+
+						if disabled_setting.disabled == true then
+							disabled_setting_value = disabled_rule.disable_value
+						else
+							disabled_setting_value = disabled_setting.value_on_enabled
+						end
+
+						changes_list[#changes_list + 1] = {
+							id = disabled_rule.id,
+							value = disabled_setting_value,
+							save_location = disabled_setting.save_location,
+							require_apply = disabled_setting.require_apply
+						}
+					end
+				end
+			end
+		end
+
+		if changed_setting.options then
+			for i = 1, #changed_setting.options do
+				local option = changed_setting.options[i]
+
+				if option.id == new_value then
+					if option.values then
+						for id, value in pairs(option.values) do
+							if type(value) == "table" then
+								for inner_id, inner_value in pairs(value) do
+									if render_settings_by_id[inner_id] and (not render_settings_by_id[inner_id].validation_function or render_settings_by_id[inner_id].validation_function and render_settings_by_id[inner_id].validation_function()) then
+										if not render_settings_by_id[inner_id].disabled then
+											changes_list[#changes_list + 1] = {
+												id = inner_id,
+												value = inner_value,
+												save_location = render_settings_by_id[inner_id].save_location,
+												require_apply = render_settings_by_id[inner_id].require_apply
+											}
+										elseif render_settings_by_id[inner_id].disabled then
+											render_settings_by_id[inner_id].value_on_enabled = inner_value
+										end
+									elseif not render_settings_by_id[inner_id] then
+										changes_list[#changes_list + 1] = {
+											id = inner_id,
+											value = inner_value,
+											save_location = id
+										}
+									end
+								end
+							elseif render_settings_by_id[id] and (not render_settings_by_id[id].validation_function or render_settings_by_id[id].validation_function and render_settings_by_id[id].validation_function()) then
+								if not render_settings_by_id[id].disabled then
+									changes_list[#changes_list + 1] = {
+										id = id,
+										value = value,
+										save_location = render_settings_by_id[id].save_location
+									}
+								elseif render_settings_by_id[id].disabled then
+									render_settings_by_id[id].value_on_enabled = value
+								end
+							elseif not render_settings_by_id[id] then
+								changes_list[#changes_list + 1] = {
+									id = id,
+									value = value
+								}
+							end
+						end
+					end
+
+					if option.apply_values_on_edited then
+						for id, value in pairs(option.apply_values_on_edited) do
+							if render_settings_by_id[id] and (not render_settings_by_id[id].validation_function or render_settings_by_id[id].validation_function and render_settings_by_id[id].validation_function()) then
+								if not render_settings_by_id[id].disabled then
+									changes_list[#changes_list + 1] = {
+										id = id,
+										value = value,
+										save_location = render_settings_by_id[id].save_location,
+										require_apply = render_settings_by_id[id].require_apply
+									}
+								elseif render_settings_by_id[id] and render_settings_by_id[id].disabled then
+									render_settings_by_id[id].value_on_enabled = value
+								end
+							end
+						end
+					end
+
+					break
+				end
+			end
+		end
+
+		if changed_setting.apply_values_on_edited then
+			for id, value in pairs(changed_setting.apply_values_on_edited) do
+				if render_settings_by_id[id] and (not render_settings_by_id[id].validation_function or render_settings_by_id[id].validation_function and render_settings_by_id[id].validation_function()) then
+					if not render_settings_by_id[id].disabled then
+						changes_list[#changes_list + 1] = {
+							id = id,
+							value = value,
+							save_location = render_settings_by_id[id].save_location
+						}
+					elseif render_settings_by_id[id].disabled then
+						render_settings_by_id[id].value_on_enabled = value
+					end
+				end
+			end
+		end
+
+		for i = 1, #changes_list do
+			local change = changes_list[i]
+			settings_list[#settings_list + 1] = change
+
+			if render_settings_by_id[change.id] then
+				local should_verifiy = first_level and i > 1 or not first_level
+
+				if should_verifiy then
+					verify_and_apply_changes(render_settings_by_id[change.id], change.value, settings_list, changed_setting.id)
+				end
+			end
+		end
+	end
+
+	if first_level then
+		local filtered_changes = remove_repeated_entries(settings_list)
+		local dirty = true
+		local require_apply = nil
+
+		for i = 1, #filtered_changes do
+			local setting_changed = filtered_changes[i]
+			local id = setting_changed.id
+			local new_value = setting_changed.value
+
+			if render_settings_by_id[id] and render_settings_by_id[id].on_changed then
+				local saved, needs_apply = render_settings_by_id[id].on_changed(new_value, render_settings_by_id[id])
+				dirty = dirty or saved
+
+				if not require_apply then
+					require_apply = needs_apply
+				end
+			else
+				local save_location = setting_changed.save_location
+				local current_value = get_user_setting(save_location, id)
+
+				if not _is_same(current_value, new_value) then
+					set_user_setting(save_location, id, new_value)
+
+					dirty = true
+					require_apply = require_apply or setting_changed.require_apply
+				end
+			end
+		end
+
+		if dirty then
+			if require_apply then
+				apply_user_settings()
+			end
+
+			save_user_settings()
+		end
+	end
+end
+
 local brightness_options = {
 	{
 		display_name = "loc_brightness_gamma_title",
@@ -49,28 +346,33 @@ local brightness_options = {
 				end
 			},
 			{
-				apply_on_drag = true,
-				step_size_value = 0.01,
-				min_value = -1,
-				num_decimals = 2,
+				apply_on_startup = true,
+				widget_type = "value_slider",
 				focusable = true,
+				num_decimals = 2,
 				max_value = 1,
 				default_value = 0,
-				widget_type = "value_slider",
-				apply_on_startup = true,
+				min_value = -1,
+				step_size_value = 0.01,
+				apply_on_drag = true,
 				id = "min_brightness_value",
 				get_function = function (template)
 					return Application.user_setting("gamma") or template.default_value
 				end,
 				on_value_changed = function (value, template)
 					if template.min_value > value or value > template.max_value then
-						return Application.set_user_setting("gamma", template.default_value)
+						Application.set_user_setting("gamma", template.default_value)
+					else
+						Application.set_user_setting("gamma", value)
 					end
 
-					Application.set_user_setting("gamma", value)
+					save_user_settings()
 				end,
 				on_activated = function (value, template)
-					template.on_value_changed(value, template)
+					template.on_changed(value, template)
+				end,
+				on_changed = function (value, template)
+					return template.on_value_changed(value, template)
 				end,
 				explode_function = function (normalized_value, template)
 					local value_range = template.max_value - template.min_value
@@ -196,7 +498,6 @@ local RENDER_TEMPLATES = {
 						dlss_enabled = true
 					},
 					master_render_settings = {
-						anti_aliasing_solution = 0,
 						fsr = 0,
 						fsr2 = 0
 					}
@@ -213,7 +514,6 @@ local RENDER_TEMPLATES = {
 						dlss_enabled = true
 					},
 					master_render_settings = {
-						anti_aliasing_solution = 0,
 						fsr = 0,
 						fsr2 = 0
 					}
@@ -230,7 +530,6 @@ local RENDER_TEMPLATES = {
 						dlss_enabled = true
 					},
 					master_render_settings = {
-						anti_aliasing_solution = 0,
 						fsr = 0,
 						fsr2 = 0
 					}
@@ -247,7 +546,6 @@ local RENDER_TEMPLATES = {
 						dlss_enabled = true
 					},
 					master_render_settings = {
-						anti_aliasing_solution = 0,
 						fsr = 0,
 						fsr2 = 0
 					}
@@ -264,7 +562,6 @@ local RENDER_TEMPLATES = {
 						dlss_enabled = true
 					},
 					master_render_settings = {
-						anti_aliasing_solution = 0,
 						fsr = 0,
 						fsr2 = 0
 					}
@@ -446,11 +743,11 @@ local RENDER_TEMPLATES = {
 		}
 	},
 	{
-		default_value = 0,
-		require_apply = true,
-		display_name = "loc_setting_fsr2",
-		apply_on_startup = true,
 		id = "fsr2",
+		display_name = "loc_setting_fsr2",
+		require_apply = true,
+		default_value = 0,
+		apply_on_startup = true,
 		tooltip_text = "loc_setting_fsr2_mouseover",
 		save_location = "master_render_settings",
 		options = {
@@ -476,7 +773,6 @@ local RENDER_TEMPLATES = {
 						fsr2_enabled = true
 					},
 					master_render_settings = {
-						anti_aliasing_solution = 0,
 						fsr = 0,
 						dlss = 0
 					}
@@ -493,7 +789,6 @@ local RENDER_TEMPLATES = {
 						fsr2_enabled = true
 					},
 					master_render_settings = {
-						anti_aliasing_solution = 0,
 						fsr = 0,
 						dlss = 0
 					}
@@ -510,7 +805,6 @@ local RENDER_TEMPLATES = {
 						fsr2_enabled = true
 					},
 					master_render_settings = {
-						anti_aliasing_solution = 0,
 						fsr = 0,
 						dlss = 0
 					}
@@ -527,11 +821,20 @@ local RENDER_TEMPLATES = {
 						fsr2_enabled = true
 					},
 					master_render_settings = {
-						anti_aliasing_solution = 0,
 						fsr = 0,
 						dlss = 0
 					}
 				}
+			}
+		},
+		disable_rules = {
+			{
+				id = "anti_aliasing_solution",
+				reason = "loc_disable_rule_fsr_aa",
+				disable_value = 0,
+				validation_function = function (value)
+					return value > 0
+				end
 			}
 		}
 	},
@@ -568,7 +871,8 @@ local RENDER_TEMPLATES = {
 					},
 					master_render_settings = {
 						dlss = 0,
-						anti_aliasing_solution = 2
+						anti_aliasing_solution = 2,
+						fsr2 = 0
 					}
 				}
 			},
@@ -584,7 +888,7 @@ local RENDER_TEMPLATES = {
 					},
 					master_render_settings = {
 						dlss = 0,
-						anti_aliasing_solution = 2
+						fsr2 = 0
 					}
 				}
 			},
@@ -600,7 +904,7 @@ local RENDER_TEMPLATES = {
 					},
 					master_render_settings = {
 						dlss = 0,
-						anti_aliasing_solution = 2
+						fsr2 = 0
 					}
 				}
 			},
@@ -616,7 +920,7 @@ local RENDER_TEMPLATES = {
 					},
 					master_render_settings = {
 						dlss = 0,
-						anti_aliasing_solution = 2
+						fsr2 = 0
 					}
 				}
 			}
@@ -657,9 +961,6 @@ local RENDER_TEMPLATES = {
 					render_settings = {
 						taa_enabled = false,
 						fxaa_enabled = false
-					},
-					master_render_settings = {
-						fsr = 0
 					}
 				}
 			},
@@ -672,10 +973,6 @@ local RENDER_TEMPLATES = {
 					render_settings = {
 						taa_enabled = false,
 						fxaa_enabled = true
-					},
-					master_render_settings = {
-						fsr = 0,
-						dlss = 0
 					}
 				}
 			},
@@ -688,10 +985,6 @@ local RENDER_TEMPLATES = {
 					render_settings = {
 						taa_enabled = true,
 						fxaa_enabled = false
-					},
-					master_render_settings = {
-						fsr2 = 0,
-						dlss = 0
 					}
 				}
 			}
@@ -971,6 +1264,7 @@ local RENDER_TEMPLATES = {
 						lens_flare_quality = "off",
 						dof_quality = "off",
 						volumetric_fog_quality = "low",
+						gi_quality = "low",
 						light_quality = "low",
 						ambient_occlusion_quality = "low"
 					},
@@ -1001,6 +1295,7 @@ local RENDER_TEMPLATES = {
 						lens_flare_quality = "sun_light_only",
 						dof_quality = "medium",
 						volumetric_fog_quality = "medium",
+						gi_quality = "high",
 						light_quality = "medium",
 						ambient_occlusion_quality = "medium"
 					},
@@ -1031,6 +1326,7 @@ local RENDER_TEMPLATES = {
 						lens_flare_quality = "all_lights",
 						dof_quality = "high",
 						volumetric_fog_quality = "high",
+						gi_quality = "high",
 						light_quality = "high",
 						ambient_occlusion_quality = "high"
 					},
@@ -1805,28 +2101,6 @@ for _, template in ipairs(RENDER_TEMPLATES) do
 	template.supported_platforms = template.supported_platforms or default_supported_platforms
 end
 
-local function _is_same(current, new)
-	if current == new then
-		return true
-	elseif type(current) == "table" and type(new) == "table" then
-		for k, v in pairs(current) do
-			if new[k] ~= v then
-				return false
-			end
-		end
-
-		for k, v in pairs(new) do
-			if current[k] ~= v then
-				return false
-			end
-		end
-
-		return true
-	else
-		return false
-	end
-end
-
 local function create_render_settings_entry(template)
 	local entry = nil
 	local id = template.id
@@ -1839,131 +2113,18 @@ local function create_render_settings_entry(template)
 	local options = template.options
 	local save_location = template.save_location
 
-	local function get_user_setting(location, key)
-		if location then
-			return Application.user_setting(location, key)
-		else
-			return Application.user_setting(key)
-		end
-	end
-
-	local function set_user_setting(location, key, value)
-		local perf_counter = Application.query_performance_counter()
-
-		if location then
-			Application.set_user_setting(location, key, value)
-
-			if location == "render_settings" and type(value) ~= "table" then
-				Application.set_render_setting(key, tostring(value))
-			end
-		else
-			Application.set_user_setting(key, value)
-		end
-
-		local settings_parse_duration = Application.time_since_query(perf_counter)
-
-		print_func("Time to parse setting [%s] with new value (%s): %.1fms.", key, value, settings_parse_duration)
-	end
-
-	local apply_values = nil
-
-	local function parse_settings_for_option_values(setting_id, option_id)
-		local dirty = false
-
-		for i = 1, #RENDER_TEMPLATES do
-			local template = RENDER_TEMPLATES[i]
-
-			if template.id == setting_id then
-				local options = template.options
-
-				if options then
-					for j = 1, #options do
-						local option = options[j]
-
-						if option.id == option_id then
-							local values = option.values
-
-							if values then
-								dirty = apply_values(values)
-
-								return dirty
-							end
-						end
-					end
-				end
-
-				break
-			end
-		end
-	end
-
-	local function on_setting_edited_function(values)
-		for value_id, value in pairs(values) do
-			for i = 1, #RENDER_TEMPLATES do
-				local template = RENDER_TEMPLATES[i]
-
-				if template.id == value_id then
-					local save_location = template.save_location
-
-					if save_location then
-						set_user_setting(save_location, value_id, value)
-
-						break
-					end
-
-					set_user_setting(nil, value_id, value)
-
-					break
-				end
-			end
-		end
-	end
-
-	function apply_values(values)
-		local dirty = false
-
-		for value_save_location, location_values in pairs(values) do
-			if type(location_values) == "table" then
-				for location_value_id, location_value in pairs(location_values) do
-					local current_value = get_user_setting(value_save_location, location_value_id)
-
-					if not _is_same(current_value, location_value) then
-						set_user_setting(value_save_location, location_value_id, location_value)
-
-						dirty = true
-					end
-
-					if parse_settings_for_option_values(location_value_id, location_value) then
-						dirty = true
-					end
-				end
-			else
-				local current_value = get_user_setting(nil, value_save_location)
-
-				if not _is_same(current_value, location_values) then
-					set_user_setting(nil, value_save_location, location_values)
-
-					dirty = true
-				end
-
-				if parse_settings_for_option_values(value_save_location, location_values) then
-					dirty = true
-				end
-			end
-		end
-
-		return dirty
-	end
-
 	if options then
 		entry = {
 			options = options,
 			display_name = display_name,
-			on_activated = function (new_value)
+			on_activated = function (value, template)
+				verify_and_apply_changes(template, value)
+			end,
+			on_changed = function (value, template)
 				local option = nil
 
 				for i = 1, #options do
-					if options[i].id == new_value then
+					if options[i].id == value then
 						option = options[i]
 
 						break
@@ -1984,41 +2145,19 @@ local function create_render_settings_entry(template)
 					end
 				end
 
-				local apply_values_on_edited = option.apply_values_on_edited
-
-				if apply_values_on_edited then
-					on_setting_edited_function(apply_values_on_edited)
-				end
-
 				local dirty = false
-				local current_value = get_user_setting(save_location, id) or default_value
+				local current_value = template:get_function()
 
-				if not _is_same(current_value, new_value) then
-					set_user_setting(save_location, id, new_value)
+				if not _is_same(current_value, value) then
+					set_user_setting(template.save_location, template.id, value)
 
 					dirty = true
 				end
 
-				local values = option.values
-
-				if values and apply_values(values) then
-					dirty = true
-				end
-
-				if dirty then
-					save_user_settings()
-
-					if option.require_apply then
-						apply_user_settings()
-					end
-				end
+				return dirty, option.require_apply
 			end,
-			get_function = function ()
-				if template.get_function then
-					return template:get_function()
-				end
-
-				local old_value = get_user_setting(save_location, id)
+			get_function = function (template)
+				local old_value = get_user_setting(template.save_location, template.id)
 
 				if old_value == nil then
 					return default_value
@@ -2028,43 +2167,27 @@ local function create_render_settings_entry(template)
 			end
 		}
 	elseif default_value_type == "number" then
-		local function change_function(new_value)
+		local function change_function(value, template)
 			local dirty = false
-			local apply_values_on_value = template.apply_values_on_value
-			local values_to_apply = apply_values_on_value and apply_values_on_value[tostring(new_value)]
+			local current_value = template:get_function()
 
-			if values_to_apply and apply_values(values_to_apply) then
-				dirty = true
-			end
-
-			local apply_values_on_edited = template.apply_values_on_edited
-
-			if apply_values_on_edited then
-				on_setting_edited_function(apply_values_on_edited)
-			end
-
-			local current_value = get_user_setting(save_location, id) or default_value
-
-			if not _is_same(current_value, new_value) then
+			if not _is_same(current_value, value) then
 				dirty = true
 			end
 
 			if dirty then
-				set_user_setting(save_location, id, new_value)
-				save_user_settings()
+				set_user_setting(template.save_location, template.id, value)
 
 				if template.require_apply then
 					apply_user_settings()
 				end
+
+				save_user_settings()
 			end
 		end
 
-		local function get_function()
-			if template.get_function then
-				return template:get_function()
-			end
-
-			return get_user_setting(save_location, id) or default_value
+		local function get_function(template)
+			return get_user_setting(template.save_location, template.id) or default_value
 		end
 
 		local slider_params = {
@@ -2075,53 +2198,39 @@ local function create_render_settings_entry(template)
 			step_size_value = template.step_size,
 			num_decimals = template.num_decimals,
 			value_get_function = get_function,
-			on_value_changed_function = change_function,
-			disable_rules = template.disable_rules
+			on_value_changed_function = change_function
 		}
 		entry = OptionsUtilities.create_value_slider_template(slider_params)
+
+		entry.on_activated = function (value, template)
+			verify_and_apply_changes(template, value)
+		end
+
+		entry.type = "slider"
 	elseif default_value_type == "boolean" then
 		entry = {
 			display_name = display_name,
-			on_activated = function (new_value)
+			on_activated = function (value, template)
+				verify_and_apply_changes(template, value)
+			end,
+			on_changed = function (value, template)
 				local dirty = false
-				local apply_values_on_value = template.apply_values_on_value
-				local values_to_apply = apply_values_on_value and apply_values_on_value[tostring(new_value)]
-
-				if values_to_apply and apply_values(values_to_apply) then
-					dirty = true
-				end
-
-				local apply_values_on_edited = template.apply_values_on_edited
-
-				if apply_values_on_edited then
-					on_setting_edited_function(apply_values_on_edited)
-				end
-
-				local current_value = get_user_setting(save_location, id)
+				local current_value = template:get_function()
 
 				if current_value == nil then
-					current_value = default_value
+					current_value = template.default_value
 				end
 
-				if not _is_same(current_value, new_value) then
+				if not _is_same(current_value, value) then
+					set_user_setting(template.save_location, template.id, value)
+
 					dirty = true
 				end
 
-				if dirty then
-					set_user_setting(save_location, id, new_value)
-					save_user_settings()
-
-					if template.require_apply then
-						apply_user_settings()
-					end
-				end
+				return dirty, template.require_apply
 			end,
-			get_function = function ()
-				if template.get_function then
-					return template:get_function()
-				end
-
-				local old_value = get_user_setting(save_location, id)
+			get_function = function (template)
+				local old_value = get_user_setting(template.save_location, template.id)
 
 				if old_value == nil then
 					return default_value
@@ -2141,16 +2250,16 @@ local function create_render_settings_entry(template)
 	entry.tooltip_text = tooltip_text
 	entry.disable_rules = template.disable_rules
 	entry.id = template.id
+	entry.save_location = save_location
+	entry.apply_values_on_edited = template.apply_values_on_edited
 
 	return entry
 end
 
-local new_settings = {
-	[#new_settings + 1] = {
-		group_name = "display",
-		display_name = "loc_settings_menu_group_display",
-		widget_type = "group_header"
-	}
+render_settings[#render_settings + 1] = {
+	group_name = "display",
+	display_name = "loc_settings_menu_group_display",
+	widget_type = "group_header"
 }
 
 local function generate_resolution_options()
@@ -2220,31 +2329,35 @@ local _fov_format_params = {}
 local min_value = IS_XBS and DefaultGameParameters.min_console_vertical_fov or DefaultGameParameters.min_vertical_fov
 local max_value = IS_XBS and DefaultGameParameters.max_console_vertical_fov or DefaultGameParameters.max_vertical_fov
 local default_value = DefaultGameParameters.vertical_fov
-new_settings[#new_settings + 1] = {
+render_settings[#render_settings + 1] = {
+	apply_on_startup = false,
 	display_name = "loc_settings_gameplay_fov",
 	focusable = true,
-	num_decimals = 0,
-	widget_type = "value_slider",
-	step_size_value = 1,
 	apply_on_drag = false,
-	apply_on_startup = false,
+	widget_type = "value_slider",
+	num_decimals = 0,
+	step_size_value = 1,
 	mark_default_value = true,
 	id = "gameplay_fov",
 	tooltip_text = "loc_settings_gameplay_fov_mouseover",
 	default_value = default_value,
 	min_value = min_value,
 	max_value = max_value,
-	on_activated = function (value, data)
+	on_activated = function (value, template)
+		verify_and_apply_changes(template, value)
+	end,
+	on_changed = function (value, template)
 		Application.set_user_setting("render_settings", "vertical_fov", value)
-		Application.save_user_settings()
 
 		local camera_manager = rawget(_G, "Managers") and Managers.state.camera
 
 		if camera_manager then
-			local fov_multiplier = value / data.default_value
+			local fov_multiplier = value / template.default_value
 
 			camera_manager:set_fov_multiplier(fov_multiplier)
 		end
+
+		return true, template.require_apply
 	end,
 	get_function = function (template)
 		local vertical_fov = Application.user_setting("render_settings", "vertical_fov") or DefaultGameParameters.vertical_fov
@@ -2271,16 +2384,20 @@ local resolution_options = generate_resolution_options()
 local resolution_undefiend_return_value = {
 	display_name = "loc_setting_resolution_undefined"
 }
-new_settings[#new_settings + 1] = {
-	display_name = "loc_setting_resolution",
+render_settings[#render_settings + 1] = {
 	id = "resolution",
+	display_name = "loc_setting_resolution",
+	require_apply = true,
 	tooltip_text = "loc_setting_resolution_mouseover",
 	options = resolution_options,
 	validation_function = function ()
 		return IS_WINDOWS and DisplayAdapter.num_adapters() > 0
 	end,
-	on_activated = function (new_value)
-		local option = resolution_options[new_value]
+	on_activated = function (value, template)
+		verify_and_apply_changes(template, value)
+	end,
+	on_changed = function (value, template)
+		local option = resolution_options[value]
 		local output_screen = option.output_screen
 		local adapter_index = option.adapter_index
 		local width = option.width
@@ -2293,10 +2410,10 @@ new_settings[#new_settings + 1] = {
 		Application.set_user_setting("adapter_index", adapter_index - 1)
 		Application.set_user_setting("fullscreen_output", output_screen - 1)
 		Application.set_user_setting("screen_resolution", resolution)
-		Application.save_user_settings()
-		apply_user_settings()
+
+		return true, template.require_apply
 	end,
-	get_function = function ()
+	get_function = function (template)
 		local resolution = Application.user_setting("screen_resolution")
 		local resolution_width = resolution[1]
 		local resolution_height = resolution[2]
@@ -2325,7 +2442,7 @@ local screen_mode_setting = {
 	validation_function = function ()
 		return IS_WINDOWS and DisplayAdapter.num_adapters() > 0
 	end,
-	get_function = function (data)
+	get_function = function (template)
 		local screen_mode = Application.user_setting("screen_mode")
 		local fullscreen = Application.user_setting("fullscreen")
 		local borderless_fullscreen = Application.user_setting("borderless_fullscreen")
@@ -2334,9 +2451,11 @@ local screen_mode_setting = {
 			screen_mode = "borderless_fullscreen"
 		elseif fullscreen then
 			screen_mode = "fullscreen"
+		elseif not borderless_fullscreen and not fullscreen then
+			screen_mode = "window"
 		end
 
-		return screen_mode or data.default_value
+		return screen_mode or template.default_value
 	end,
 	options = {
 		{
@@ -2371,19 +2490,28 @@ local screen_mode_setting = {
 		}
 	}
 }
-new_settings[#new_settings + 1] = create_render_settings_entry(screen_mode_setting)
+render_settings[#render_settings + 1] = create_render_settings_entry(screen_mode_setting)
 local platform = PLATFORM
 
 for i = 1, #RENDER_TEMPLATES do
 	local template = RENDER_TEMPLATES[i]
 
 	if template.supported_platforms[platform] then
-		new_settings[#new_settings + 1] = create_render_settings_entry(template)
+		render_settings[#render_settings + 1] = create_render_settings_entry(template)
+	end
+end
+
+for i = 1, #render_settings do
+	local render_setting = render_settings[i]
+
+	if render_setting.id then
+		render_settings_by_id[render_setting.id] = render_setting
 	end
 end
 
 return {
 	icon = "content/ui/materials/icons/system/settings/category_video",
 	display_name = "loc_settings_menu_category_render",
-	settings = new_settings
+	can_be_reset = false,
+	settings = render_settings
 }

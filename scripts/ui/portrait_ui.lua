@@ -209,10 +209,12 @@ PortraitUI._handle_request_queue = function (self)
 					local position_scale_x = uvs[1][1]
 					local position_scale_y = uvs[1][2]
 
-					Renderer.copy_render_target_rect(self._capture_render_target, 0, 0, 1, 1, self._icon_render_target, position_scale_x, position_scale_y, size_scale_x, size_scale_y)
+					if self._capture_render_target and self._icon_render_target and not self._shutting_down then
+						Renderer.copy_render_target_rect(self._capture_render_target, 0, 0, 1, 1, self._icon_render_target, position_scale_x, position_scale_y, size_scale_x, size_scale_y)
 
-					for id, on_load_callback in pairs(callbacks) do
-						on_load_callback(grid_index, self._num_rows, self._num_columns, self._icon_render_target)
+						for id, on_load_callback in pairs(callbacks) do
+							on_load_callback(grid_index, self._num_rows, self._num_columns, self._icon_render_target)
+						end
 					end
 
 					table.clear(callbacks)
@@ -395,6 +397,10 @@ PortraitUI._pause_rendering = function (self)
 	local world_spawner = self._world_spawner
 
 	world_spawner:set_world_disabled(true)
+end
+
+PortraitUI.prepare_for_destruction = function (self)
+	self._shutting_down = true
 end
 
 PortraitUI.destroy = function (self)

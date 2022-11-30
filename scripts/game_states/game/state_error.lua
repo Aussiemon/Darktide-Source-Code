@@ -15,7 +15,6 @@ StateError.on_enter = function (self, parent, params, creation_context)
 	Managers.error:show_errors():next(function ()
 		self._continue = true
 	end)
-	Managers.presence:set_presence("title_screen")
 end
 
 StateError._cleanup = function (self)

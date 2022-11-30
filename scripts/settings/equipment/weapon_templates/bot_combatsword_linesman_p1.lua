@@ -1277,7 +1277,6 @@ table.append(weapon_template.traits, bespoke_combatsword_p1_traits)
 
 weapon_template.perks = {
 	combatsword_p1_m1_dps_perk = {
-		description = "loc_trait_description_combatsword_p1_m1_dps_perk",
 		display_name = "loc_trait_display_combatsword_p1_m1_dps_perk",
 		damage = {
 			action_left_light = {
@@ -1298,7 +1297,6 @@ weapon_template.perks = {
 		}
 	},
 	combatsword_p1_m1_cleave_damage_perk = {
-		description = "loc_trait_description_combatsword_p1_m1_cleave_damage_perk",
 		display_name = "loc_trait_display_combatsword_p1_m1_cleave_damage_perk",
 		damage = {
 			action_left_light = {
@@ -1319,7 +1317,6 @@ weapon_template.perks = {
 		}
 	},
 	combatsword_p1_m1_finesse_perk = {
-		description = "loc_trait_description_combatsword_p1_m1_finesse_perk",
 		display_name = "loc_trait_display_combatsword_p1_m1_finesse_perk",
 		damage = {
 			action_left_light = {
@@ -1357,7 +1354,6 @@ weapon_template.perks = {
 		}
 	},
 	combatsword_p1_m1_cleave_targets_perk = {
-		description = "loc_trait_description_combatsword_p1_m1_cleave_targets_perk",
 		display_name = "loc_trait_display_combatsword_p1_m1_cleave_targets_perk",
 		damage = {
 			action_left_light = {
@@ -1378,7 +1374,6 @@ weapon_template.perks = {
 		}
 	},
 	combatsword_p1_m1_mobility_perk = {
-		description = "loc_trait_description_combatsword_p1_m1_mobility_perk",
 		display_name = "loc_trait_display_combatsword_p1_m1_mobility_perk",
 		dodge = {
 			base = {

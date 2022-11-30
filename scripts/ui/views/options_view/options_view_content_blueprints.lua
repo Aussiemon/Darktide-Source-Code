@@ -29,197 +29,130 @@ description_font_style.offset = {
 }
 local header_font_style = table.clone(UIFontSettings.header_2)
 header_font_style.text_vertical_alignment = "bottom"
-local blueprints = {}
-
-local function disabling_rules_check(changed_entry, new_value, settings)
-	local disable_rules = changed_entry.disable_rules
-	local settings_changed = {}
-
-	for i = 1, #disable_rules do
-		local disable_rule = disable_rules[i]
-		local disabled = disable_rule.validation_function and disable_rule.validation_function(new_value) or false
-		local id = disable_rule.id
-		local tooltip_text = disable_rule.reason
-		local disabled_new_value = disable_rule.disable_value
-
-		for f = 1, #settings do
-			local setting = settings[f]
-
-			if setting.id == id then
-				setting.disabled_by = setting.disabled_by or {}
-
-				if setting.disabled_by[changed_entry.id] and not disabled then
-					settings_changed[#settings_changed + 1] = setting
-					setting.disabled_by[changed_entry.id] = nil
-
-					break
-				end
-
-				if disabled then
-					setting.on_activated(disabled_new_value, setting)
-
-					setting.disabled_by[changed_entry.id] = tooltip_text
-					settings_changed[#settings_changed + 1] = setting
-
-					if setting.disable_rules then
-						disabling_rules_check(setting, disabled_new_value, settings)
-					end
-				end
-
-				break
-			end
-		end
-	end
-
-	for i = 1, #settings_changed do
-		local setting = settings_changed[i]
-		setting.disabled = not table.is_empty(setting.disabled_by)
-	end
-end
-
-blueprints.spacing_vertical = {
-	size = {
-		grid_width,
-		20
-	}
-}
-blueprints.settings_button = {
-	size = {
-		grid_width,
-		settings_value_height
-	},
-	pass_template = ButtonPassTemplates.list_button_with_icon,
-	init = function (parent, widget, entry, callback_name)
-		local content = widget.content
-		local hotspot = content.hotspot
-		hotspot.use_is_focused = false
-
-		hotspot.pressed_callback = function ()
-			local is_disabled = entry.disabled or false
-
-			if is_disabled then
-				return
-			end
-
-			callback(parent, callback_name, widget, entry)()
-		end
-
-		local display_name = entry.display_name
-		content.text = Managers.localization:localize(display_name)
-		content.icon = entry.icon
-		content.entry = entry
-	end
-}
-blueprints.button = {
-	size = {
-		settings_grid_width,
-		settings_value_height
-	},
-	pass_template = ButtonPassTemplates.settings_button(settings_grid_width, settings_value_height, settings_value_width, true),
-	init = function (parent, widget, entry, callback_name)
-		local content = widget.content
-
-		content.hotspot.pressed_callback = function ()
-			local is_disabled = entry.disabled or false
-
-			if is_disabled then
-				return
-			end
-
-			callback(parent, callback_name, widget, entry)()
-		end
-
-		local display_name = entry.display_name
-		content.text = Managers.localization:localize(display_name)
-		content.button_text = Localize("loc_settings_change")
-		content.entry = entry
-	end
-}
-blueprints.group_header = {
-	size = {
-		settings_grid_width,
-		group_header_height
-	},
-	pass_template = {
-		{
-			pass_type = "text",
-			value_id = "text",
-			style = header_font_style,
-			value = Localize("loc_settings_option_unavailable")
+local blueprints = {
+	spacing_vertical = {
+		size = {
+			grid_width,
+			20
 		}
 	},
-	init = function (parent, widget, entry, callback_name)
-		local content = widget.content
-		local display_name = entry.display_name
-		content.text = Managers.localization:localize(display_name)
-	end
-}
-blueprints.checkbox = {
-	size = {
-		settings_grid_width,
-		settings_value_height
+	settings_button = {
+		size = {
+			grid_width,
+			settings_value_height
+		},
+		pass_template = ButtonPassTemplates.list_button_with_icon,
+		init = function (parent, widget, entry, callback_name)
+			local content = widget.content
+			local hotspot = content.hotspot
+			hotspot.use_is_focused = false
+
+			hotspot.pressed_callback = function ()
+				local is_disabled = entry.disabled or false
+
+				if is_disabled then
+					return
+				end
+
+				callback(parent, callback_name, widget, entry)()
+			end
+
+			local display_name = entry.display_name
+			content.text = Managers.localization:localize(display_name)
+			content.icon = entry.icon
+			content.entry = entry
+		end
 	},
-	pass_template_function = function (parent, config, size)
-		return CheckboxPassTemplates.settings_checkbox(size[1], settings_value_height, settings_value_width, 2, true)
-	end,
-	init = function (parent, widget, entry, callback_name)
-		local content = widget.content
-		local display_name = entry.display_name or "loc_settings_option_unavailable"
-		content.text = Managers.localization:localize(display_name)
-		content.entry = entry
+	button = {
+		size = {
+			settings_grid_width,
+			settings_value_height
+		},
+		pass_template = ButtonPassTemplates.settings_button(settings_grid_width, settings_value_height, settings_value_width, true),
+		init = function (parent, widget, entry, callback_name)
+			local content = widget.content
 
-		for i = 1, 2 do
-			local widget_option_id = "option_" .. i
-			content[widget_option_id] = i == 1 and Managers.localization:localize("loc_setting_checkbox_on") or Managers.localization:localize("loc_setting_checkbox_off")
-		end
+			content.hotspot.pressed_callback = function ()
+				local is_disabled = entry.disabled or false
 
-		local value = entry.get_function and entry.get_function() or entry.default_value
-		entry.previous_value = value
+				if is_disabled then
+					return
+				end
 
-		if entry.disable_rules then
-			disabling_rules_check(entry, value, parent._options_templates.settings)
-		end
-	end,
-	update = function (parent, widget, input_service, dt, t)
-		local content = widget.content
-		local entry = content.entry
-		local value = entry.get_function()
-		local on_activated = entry.on_activated
-		local pass_input = true
-		local hotspot = content.hotspot
-		content.disabled = entry.disabled or content.disabled
-		local is_disabled = entry.disabled or false
-		local new_value = nil
-
-		if hotspot.on_pressed and not is_disabled then
-			new_value = not value
-		end
-
-		for i = 1, 2 do
-			local widget_option_id = "option_hotspot_" .. i
-			local option_hotspot = content[widget_option_id]
-			local is_selected = value and i == 1 or not value and i == 2
-			option_hotspot.is_selected = is_selected
-		end
-
-		if new_value ~= nil and new_value ~= value then
-			on_activated(new_value, value)
-
-			entry.previous_value = new_value
-
-			if entry.disable_rules then
-				disabling_rules_check(entry, new_value, parent._options_templates.settings)
+				callback(parent, callback_name, widget, entry)()
 			end
-		elseif entry.previous_value ~= value then
-			on_activated(value, entry)
 
-			entry.previous_value = value
+			local display_name = entry.display_name
+			content.text = Managers.localization:localize(display_name)
+			content.button_text = Localize("loc_settings_change")
+			content.entry = entry
+		end
+	},
+	group_header = {
+		size = {
+			settings_grid_width,
+			group_header_height
+		},
+		pass_template = {
+			{
+				pass_type = "text",
+				value_id = "text",
+				style = header_font_style,
+				value = Localize("loc_settings_option_unavailable")
+			}
+		},
+		init = function (parent, widget, entry, callback_name)
+			local content = widget.content
+			local display_name = entry.display_name
+			content.text = Managers.localization:localize(display_name)
+		end
+	},
+	checkbox = {
+		size = {
+			settings_grid_width,
+			settings_value_height
+		},
+		pass_template_function = function (parent, config, size)
+			return CheckboxPassTemplates.settings_checkbox(size[1], settings_value_height, settings_value_width, 2, true)
+		end,
+		init = function (parent, widget, entry, callback_name)
+			local content = widget.content
+			local display_name = entry.display_name or "loc_settings_option_unavailable"
+			content.text = Managers.localization:localize(display_name)
+			content.entry = entry
 
-			if entry.disable_rules then
-				disabling_rules_check(entry, value, parent._options_templates.settings)
+			for i = 1, 2 do
+				local widget_option_id = "option_" .. i
+				content[widget_option_id] = i == 1 and Managers.localization:localize("loc_setting_checkbox_on") or Managers.localization:localize("loc_setting_checkbox_off")
+			end
+		end,
+		update = function (parent, widget, input_service, dt, t)
+			local content = widget.content
+			local entry = content.entry
+			local value = entry:get_function()
+			local on_activated = entry.on_activated
+			local pass_input = true
+			local hotspot = content.hotspot
+			local is_disabled = entry.disabled or false
+			content.disabled = is_disabled
+			local new_value = nil
+
+			if hotspot.on_pressed and not is_disabled then
+				new_value = not value
+			end
+
+			for i = 1, 2 do
+				local widget_option_id = "option_hotspot_" .. i
+				local option_hotspot = content[widget_option_id]
+				local is_selected = value and i == 1 or not value and i == 2
+				option_hotspot.is_selected = is_selected
+			end
+
+			if new_value ~= nil and new_value ~= value then
+				on_activated(new_value, entry)
 			end
 		end
-	end
+	}
 }
 
 local function slider_init_function(parent, widget, entry, callback_name)
@@ -262,20 +195,13 @@ blueprints.percent_slider = {
 	end,
 	init = function (parent, widget, entry, callback_name)
 		slider_init_function(parent, widget, entry, callback_name)
-
-		local value = entry.get_function and entry.get_function() or entry.default_value
-		entry.previous_value = value
-
-		if entry.disable_rules then
-			disabling_rules_check(entry, value, parent._options_templates.settings)
-		end
 	end,
 	update = function (parent, widget, input_service, dt, t)
 		local content = widget.content
 		local entry = content.entry
 		local pass_input = true
-		content.disabled = entry.disabled or content.disabled
 		local is_disabled = entry.disabled or false
+		content.disabled = is_disabled
 		local using_gamepad = not parent:using_cursor_navigation()
 		local get_function = entry.get_function
 		local value = get_function(entry) / 100
@@ -339,26 +265,11 @@ blueprints.percent_slider = {
 		end
 
 		if new_value then
-			on_activated(new_value * 100)
+			on_activated(new_value * 100, entry)
 
 			content.slider_value = new_value
 			content.previous_slider_value = new_value
 			content.scroll_add = nil
-			entry.previous_value = new_value * 100
-
-			if entry.disable_rules then
-				disabling_rules_check(entry, new_value, parent._options_templates.settings)
-			end
-		elseif entry.previous_value ~= value * 100 then
-			local value_to_store = value * 100
-
-			on_activated(value_to_store, entry)
-
-			entry.previous_value = value_to_store
-
-			if entry.disable_rules then
-				disabling_rules_check(entry, value_to_store, parent._options_templates.settings)
-			end
 		end
 
 		return pass_input
@@ -374,20 +285,13 @@ blueprints.value_slider = {
 	end,
 	init = function (parent, widget, entry, callback_name)
 		slider_init_function(parent, widget, entry, callback_name)
-
-		local value = entry.get_function and entry:get_function() or entry.default_value
-		entry.previous_value = value
-
-		if entry.disable_rules then
-			disabling_rules_check(entry, value, parent._options_templates.settings)
-		end
 	end,
 	update = function (parent, widget, input_service, dt, t)
 		local content = widget.content
 		local entry = content.entry
 		local pass_input = true
-		content.disabled = entry.disabled or content.disabled
 		local is_disabled = entry.disabled or false
+		content.disabled = is_disabled
 		local using_gamepad = not parent:using_cursor_navigation()
 		local min_value = entry.min_value
 		local max_value = entry.max_value
@@ -463,19 +367,6 @@ blueprints.value_slider = {
 			content.slider_value = new_normalized_value
 			content.previous_slider_value = new_normalized_value
 			content.scroll_add = nil
-			entry.previous_value = new_value
-
-			if entry.disable_rules then
-				disabling_rules_check(entry, new_value, parent._options_templates.settings)
-			end
-		elseif entry.previous_value ~= value then
-			on_activated(value, entry, entry)
-
-			entry.previous_value = value
-
-			if entry.disable_rules then
-				disabling_rules_check(entry, value, parent._options_templates.settings)
-			end
 		end
 
 		return pass_input
@@ -502,18 +393,13 @@ blueprints.slider = {
 		content.previous_slider_value = value_fraction
 		content.slider_value = value_fraction
 		content.pressed_callback = callback(parent, callback_name, widget, entry)
-		entry.previous_value = value
-
-		if entry.disable_rules then
-			disabling_rules_check(entry, value, parent._options_templates.settings)
-		end
 	end,
 	update = function (parent, widget, input_service, dt, t)
 		local content = widget.content
 		local entry = content.entry
 		local pass_input = true
-		content.disabled = entry.disabled or content.disabled
 		local is_disabled = entry.disabled or false
+		content.disabled = is_disabled
 		local using_gamepad = not parent:using_cursor_navigation()
 		local get_function = entry.get_function
 		local value, value_fraction = get_function(entry)
@@ -586,19 +472,6 @@ blueprints.slider = {
 			content.slider_value = new_value_fraction
 			content.previous_slider_value = new_value_fraction
 			content.scroll_add = nil
-			entry.previous_value = new_value
-
-			if entry.disable_rules then
-				disabling_rules_check(entry, new_value, parent._options_templates.settings)
-			end
-		elseif entry.previous_value ~= value then
-			on_activated(value, entry)
-
-			entry.previous_value = value
-
-			if entry.disable_rules then
-				disabling_rules_check(entry, value, parent._options_templates.settings)
-			end
 		end
 
 		return pass_input
@@ -662,19 +535,14 @@ blueprints.dropdown = {
 		local spacing = 0
 		local scroll_amount = scroll_length > 0 and (size[2] + spacing) / scroll_length or 0
 		content.scroll_amount = scroll_amount
-		local value = entry.get_function and entry.get_function() or entry.default_value
-		entry.previous_value = value
-
-		if entry.disable_rules then
-			disabling_rules_check(entry, value, parent._options_templates.settings)
-		end
+		local value = entry.get_function and entry:get_function() or entry.default_value
 	end,
 	update = function (parent, widget, input_service, dt, t)
 		local content = widget.content
 		local entry = content.entry
 		local pass_input = true
-		content.disabled = entry.disabled or content.disabled
 		local is_disabled = entry.disabled or false
+		content.disabled = is_disabled
 		local using_gamepad = not parent:using_cursor_navigation()
 		local offset = widget.offset
 		local style = widget.style
@@ -705,7 +573,7 @@ blueprints.dropdown = {
 			hotspot_style.on_pressed_sound = hotspot_style.on_pressed_fold_out_sound
 		end
 
-		value = entry.get_function and entry.get_function() or content.internal_value or "<not selected>"
+		value = entry.get_function and entry:get_function() or content.internal_value or "<not selected>"
 		local localization_manager = Managers.localization
 		local preview_option = options_by_id[value]
 		local preview_option_id = preview_option and preview_option.id
@@ -817,23 +685,7 @@ blueprints.dropdown = {
 		if value_changed and new_value ~= value then
 			local on_activated = entry.on_activated
 
-			on_activated(new_value, value)
-
-			entry.previous_value = new_value
-
-			if entry.disable_rules then
-				disabling_rules_check(entry, new_value, parent._options_templates.settings)
-			end
-		elseif entry.previous_value ~= value then
-			local on_activated = entry.on_activated
-
-			on_activated(value, value)
-
-			entry.previous_value = value
-
-			if entry.disable_rules then
-				disabling_rules_check(entry, value, parent._options_templates.settings)
-			end
+			on_activated(new_value, entry)
 		end
 
 		local scrollbar_hotspot = content.scrollbar_hotspot
@@ -859,7 +711,7 @@ blueprints.keybind = {
 	update = function (parent, widget, input_service, dt, t)
 		local content = widget.content
 		local entry = content.entry
-		local value = entry.get_function()
+		local value = entry:get_function()
 		local preview_value = value and InputUtils.localized_string_from_key_info(value) or content.key_unassigned_string
 		content.value_text = preview_value
 		local hotspot = content.hotspot

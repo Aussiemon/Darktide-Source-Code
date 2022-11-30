@@ -132,6 +132,7 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_team_death"))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_team_knock_down"))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_coherency_exit", {
 	"is_alive",
+	"num_units_in_coherency",
 	"player_class"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_health_update", {

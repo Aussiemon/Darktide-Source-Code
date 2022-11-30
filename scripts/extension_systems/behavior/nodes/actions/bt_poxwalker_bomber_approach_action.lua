@@ -70,6 +70,8 @@ BtPoxwalkerBomberApproachAction.leave = function (self, unit, breed, blackboard,
 	if scratchpad.global_effect_id then
 		scratchpad.fx_system:stop_template_effect(scratchpad.global_effect_id)
 	end
+
+	scratchpad.stagger_component.immune_time = 0
 end
 
 BtPoxwalkerBomberApproachAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
@@ -90,7 +92,8 @@ BtPoxwalkerBomberApproachAction.run = function (self, unit, breed, blackboard, s
 	local behavior_component = scratchpad.behavior_component
 
 	if action_data.running_stagger_duration then
-		local done_with_running_stagger = MinionMovement.update_running_stagger(unit, t, dt, scratchpad, action_data)
+		local optional_reset_stagger_immune_time = true
+		local done_with_running_stagger = MinionMovement.update_running_stagger(unit, t, dt, scratchpad, action_data, optional_reset_stagger_immune_time)
 
 		if done_with_running_stagger then
 			self:_start_move_anim(unit, breed, t, scratchpad, action_data)

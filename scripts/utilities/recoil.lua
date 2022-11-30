@@ -134,7 +134,7 @@ end
 
 Recoil.aim_assist_multiplier = function (recoil_template, recoil_control_component, recoil_component, movement_state_component)
 	if not recoil_template then
-		return
+		return 1
 	end
 
 	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)

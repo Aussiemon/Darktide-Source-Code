@@ -88,8 +88,6 @@ StateTitle.on_enter = function (self, parent, params, creation_context)
 		Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
 		Managers.event:register(self, "event_state_title_continue", "_continue_cb")
 	end
-
-	Managers.presence:set_presence("title_screen")
 end
 
 StateTitle._set_state = function (self, state)

@@ -55,6 +55,7 @@ DefaultGameParameters.steam_branch = ""
 DefaultGameParameters.svn_branch = ""
 DefaultGameParameters.skip_gamertag_popup = false
 DefaultGameParameters.nvidia_ai_agent = true
+DefaultGameParameters.show_premium_store = true
 DefaultGameParameters.show_marks_store = true
 DefaultGameParameters.show_contracts = true
 DefaultGameParameters.show_crafting = true
@@ -66,7 +67,7 @@ DefaultGameParameters.debug_disable_xbox_live = false
 DefaultGameParameters.show_watermark_overlay = false
 DefaultGameParameters.watermark_overlay_alpha_multiplier = 0.0196078431372549
 DefaultGameParameters.watermark_overlay_text = "CLOSED ALPHA TEST"
-DefaultGameParameters.show_beta_label_overlay = true
+DefaultGameParameters.show_beta_label_overlay = false
 DefaultGameParameters.beta_label_overlay_text = "Pre-Order Beta Test November 17-29"
 DefaultGameParameters.enable_string_tags = false
 DefaultGameParameters.vertical_fov = 65
@@ -105,6 +106,5 @@ slot0.gibbing_enabled = true
 DefaultGameParameters.enable_afk_check = BUILD == "release"
 DefaultGameParameters.prod_like_backend = true
 DefaultGameParameters.backend_fetch_master_items = true
-DefaultGameParameters.show_beta_label_overlay = true
 
 return DefaultGameParameters

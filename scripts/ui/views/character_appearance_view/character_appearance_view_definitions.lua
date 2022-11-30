@@ -1161,7 +1161,11 @@ local choice_descriptions = {
 local randomize_button_definition = UIWidget.create_definition({
 	{
 		pass_type = "hotspot",
-		content_id = "hotspot"
+		content_id = "hotspot",
+		content = {
+			on_hover_sound = UISoundEvents.default_mouse_hover,
+			on_pressed_sound = UISoundEvents.default_click
+		}
 	},
 	{
 		style_id = "icon",

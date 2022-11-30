@@ -12,17 +12,17 @@ templates.weapon_trait_bespoke_stubrevolver_p1_reload_speed_on_slide = {
 	weapon_trait_bespoke_stubrevolver_p1_reload_speed_on_slide = {
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.05
+				[stat_buffs.reload_speed] = 0.04
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.075
+				[stat_buffs.reload_speed] = 0.06
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.09
+				[stat_buffs.reload_speed] = 0.08
 			}
 		},
 		{
@@ -46,7 +46,7 @@ templates.weapon_trait_bespoke_stubrevolver_p1_suppression_on_close_kill = {
 			suppression_settings = {
 				suppression_falloff = true,
 				instant_aggro = true,
-				distance = 5,
+				distance = 6,
 				suppression_value = 15
 			}
 		},
@@ -54,7 +54,7 @@ templates.weapon_trait_bespoke_stubrevolver_p1_suppression_on_close_kill = {
 			suppression_settings = {
 				suppression_falloff = true,
 				instant_aggro = true,
-				distance = 5,
+				distance = 7,
 				suppression_value = 20
 			}
 		},
@@ -62,7 +62,7 @@ templates.weapon_trait_bespoke_stubrevolver_p1_suppression_on_close_kill = {
 			suppression_settings = {
 				suppression_falloff = true,
 				instant_aggro = true,
-				distance = 5,
+				distance = 8,
 				suppression_value = 25
 			}
 		}
@@ -125,12 +125,12 @@ templates.weapon_trait_bespoke_stubrevolver_p1_chained_weakspot_hits_increases_p
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.035
+				[stat_buffs.power_level_modifier] = 0.03
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.045
+				[stat_buffs.power_level_modifier] = 0.04
 			}
 		},
 		{
@@ -167,13 +167,13 @@ templates.weapon_trait_bespoke_stubrevolver_p1_crit_chance_bonus_on_melee_kills 
 templates.weapon_trait_bespoke_stubrevolver_p1_toughness_on_elite_kills = {
 	weapon_trait_bespoke_stubrevolver_p1_toughness_on_elite_kills = {
 		{
-			toughness_fixed_percentage = 0.05
+			toughness_fixed_percentage = 0.04
 		},
 		{
-			toughness_fixed_percentage = 0.065
+			toughness_fixed_percentage = 0.06
 		},
 		{
-			toughness_fixed_percentage = 0.085
+			toughness_fixed_percentage = 0.08
 		},
 		{
 			toughness_fixed_percentage = 0.1
@@ -184,17 +184,17 @@ templates.weapon_trait_bespoke_stubrevolver_p1_followup_shots_ranged_damage = {
 	weapon_trait_bespoke_stubrevolver_p1_followup_shots_ranged_damage = {
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.05
+				[stat_buffs.ranged_damage] = 0.06
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.1
+				[stat_buffs.ranged_damage] = 0.09
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.13
+				[stat_buffs.ranged_damage] = 0.12
 			}
 		},
 		{
@@ -213,12 +213,12 @@ templates.weapon_trait_bespoke_stubrevolver_p1_rending_on_crit = {
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.critical_strike_rending_multiplier] = 0.35
+				[stat_buffs.critical_strike_rending_multiplier] = 0.3
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.critical_strike_rending_multiplier] = 0.45
+				[stat_buffs.critical_strike_rending_multiplier] = 0.4
 			}
 		},
 		{

@@ -28,8 +28,8 @@ local big_cleave = DamageProfileSettings.big_cleave
 damage_templates.force_staff_ball = {
 	force_weapon_damage = true,
 	stagger_override = "medium",
-	stagger_category = "melee",
 	suppression_attack_delay = 0.6,
+	stagger_category = "melee",
 	ragdoll_push_force = 600,
 	ignore_stagger_reduction = true,
 	armor_damage_modifier = {
@@ -59,6 +59,10 @@ damage_templates.force_staff_ball = {
 	cleave_distribution = {
 		attack = 0.25,
 		impact = 0.25
+	},
+	crit_mod = {
+		attack = crit_armor_mod,
+		impact = crit_impact_armor_mod
 	},
 	power_distribution = {
 		attack = {
@@ -812,6 +816,10 @@ damage_templates.default_chain_lighting_attack = {
 			200,
 			200
 		}
+	},
+	crit_mod = {
+		attack = crit_armor_mod,
+		impact = crit_impact_armor_mod
 	},
 	random_damage = {
 		{

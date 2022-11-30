@@ -64,7 +64,7 @@ LocomotionSystem._update_units_to_kill = function (self, units_to_kill)
 	end
 
 	local attack_direction = Vector3.down()
-	local damage_profile = DamageProfileTemplates.kill_volume_and_ofF_navmesh
+	local damage_profile = DamageProfileTemplates.kill_volume_and_off_navmesh
 
 	for i = 1, #units_to_kill do
 		local unit = units_to_kill[i]

@@ -1,5 +1,6 @@
 local CraftingUpgradeItemViewDefinitions = require("scripts/ui/views/crafting_upgrade_item_view/crafting_upgrade_item_view_definitions")
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
+local ItemUtils = require("scripts/utilities/items")
 local Promise = require("scripts/foundation/utilities/promise")
 local ViewElementCraftingRecipe = require("scripts/ui/view_elements/view_element_crafting_recipe/view_element_crafting_recipe")
 local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
@@ -35,6 +36,16 @@ CraftingUpgradeItemView.on_enter = function (self)
 
 	self._crafting_recipe:set_overlay_texture(self._recipe.overlay_texture)
 	self:_present_item_upgrade(self._item)
+end
+
+CraftingUpgradeItemView.on_exit = function (self)
+	if self._craft_promise then
+		self._craft_promise:cancel()
+
+		self._craft_promise = nil
+	end
+
+	CraftingUpgradeItemView.super.on_exit(self)
 end
 
 CraftingUpgradeItemView._update_weapon_stats_position = function (self, scenegraph_id, weapon_stats)
@@ -109,6 +120,22 @@ CraftingUpgradeItemView.cb_on_main_button_pressed = function (self, recipe)
 		self._ingredients.item = new_item
 
 		self:_present_item_upgrade(new_item)
+
+		local slots = new_item.slots
+
+		if slots then
+			local parent = self._parent
+
+			for i = 1, #slots do
+				local slot_name = slots[i]
+				local equipped_item = parent:equipped_item_in_slot(slot_name)
+
+				if equipped_item and equipped_item.gear_id == new_item.gear_id then
+					ItemUtils.refresh_equipped_items()
+				end
+			end
+		end
+
 		Managers.event:trigger("event_add_notification_message", "default", Localize("loc_crafting_upgrade_success"))
 	end):catch(function (err)
 		self._craft_promise = nil

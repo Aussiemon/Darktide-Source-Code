@@ -10,8 +10,10 @@ local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_trait
 local WeaponTraitsBespokeOgrynPowerMaulP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_powermaul_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local damage_types = DamageSettings.damage_types
 local template_types = WeaponTweakTemplateSettings.template_types
+local armor_types = ArmorSettings.types
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
@@ -193,7 +195,6 @@ local weapon_template = {
 			damage_profile = DamageProfileTemplates.ogryn_powermaul_light_smiter,
 			damage_type = damage_types.ogryn_pipe_club,
 			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_smiter_active,
-			damage_type_special_active = damage_types.blunt_powermaul_active,
 			herding_template = HerdingTemplates.ogryn_punch
 		},
 		action_left_heavy = {
@@ -263,7 +264,6 @@ local weapon_template = {
 			damage_profile = DamageProfileTemplates.ogryn_powermaul_heavy_tank,
 			damage_type = damage_types.ogryn_pipe_club,
 			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_heavy_tank_active,
-			damage_type_special_active = damage_types.blunt_powermaul_active,
 			herding_template = HerdingTemplates.linesman_left_heavy
 		},
 		action_melee_start_right = {
@@ -400,8 +400,7 @@ local weapon_template = {
 			},
 			damage_profile = DamageProfileTemplates.ogryn_powermaul_light_smiter,
 			damage_type = damage_types.ogryn_pipe_club,
-			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_smiter_active,
-			damage_type_special_active = damage_types.blunt_powermaul_active
+			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_smiter_active
 		},
 		action_right_heavy = {
 			damage_window_start = 0.4,
@@ -470,7 +469,6 @@ local weapon_template = {
 			damage_profile = DamageProfileTemplates.ogryn_powermaul_heavy_tank,
 			damage_type = damage_types.ogryn_pipe_club,
 			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_heavy_tank_active,
-			damage_type_special_active = damage_types.blunt_powermaul_active,
 			herding_template = HerdingTemplates.linesman_right_heavy
 		},
 		action_melee_start_left_2 = {
@@ -606,7 +604,6 @@ local weapon_template = {
 			damage_profile = DamageProfileTemplates.ogryn_powermaul_light_linesman,
 			damage_type = damage_types.ogryn_pipe_club,
 			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_linesman_active,
-			damage_type_special_active = damage_types.blunt_powermaul_active,
 			herding_template = HerdingTemplates.linesman_left_heavy
 		},
 		action_melee_start_right_2 = {
@@ -743,7 +740,6 @@ local weapon_template = {
 			damage_profile = DamageProfileTemplates.ogryn_powermaul_light_linesman,
 			damage_type = damage_types.ogryn_pipe_club,
 			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_linesman_active,
-			damage_type_special_active = damage_types.blunt_powermaul_active,
 			herding_template = HerdingTemplates.linesman_right_heavy
 		},
 		action_melee_start_heavy_follow_up_part_1 = {
@@ -880,7 +876,6 @@ local weapon_template = {
 			damage_profile = DamageProfileTemplates.ogryn_powermaul_light_linesman,
 			damage_type = damage_types.ogryn_pipe_club,
 			damage_profile_special_active = DamageProfileTemplates.ogryn_powermaul_light_linesman_active,
-			damage_type_special_active = damage_types.blunt_powermaul_active,
 			herding_template = HerdingTemplates.linesman_right_heavy
 		},
 		action_weapon_special = {
@@ -1172,10 +1167,38 @@ local weapon_template = {
 			is_stat_trait = true,
 			damage = {
 				action_left_light = {
-					damage_trait_templates.default_melee_dps_stat
+					damage_trait_templates.default_melee_dps_stat,
+					display_data = {
+						prefix = "loc_weapon_action_title_light",
+						display_stats = {
+							targets = {
+								{
+									power_distribution = {
+										attack = {
+											display_name = "loc_weapon_stats_display_base_damage"
+										}
+									}
+								}
+							}
+						}
+					}
 				},
 				action_left_heavy = {
-					damage_trait_templates.default_melee_dps_stat
+					damage_trait_templates.default_melee_dps_stat,
+					display_data = {
+						prefix = "loc_weapon_action_title_heavy",
+						display_stats = {
+							targets = {
+								{
+									power_distribution = {
+										attack = {
+											display_name = "loc_weapon_stats_display_base_damage"
+										}
+									}
+								}
+							}
+						}
+					}
 				},
 				action_right_light = {
 					damage_trait_templates.default_melee_dps_stat
@@ -1202,10 +1225,36 @@ local weapon_template = {
 			is_stat_trait = true,
 			damage = {
 				action_left_light = {
-					damage_trait_templates.default_armor_pierce_stat
+					damage_trait_templates.default_armor_pierce_stat,
+					display_data = {
+						prefix = "loc_weapon_action_title_light",
+						display_stats = {
+							targets = {
+								armor_damage_modifier = {
+									attack = {
+										[armor_types.armored] = {},
+										[armor_types.super_armor] = {}
+									}
+								}
+							}
+						}
+					}
 				},
 				action_left_heavy = {
-					damage_trait_templates.default_armor_pierce_stat
+					damage_trait_templates.default_armor_pierce_stat,
+					display_data = {
+						prefix = "loc_weapon_action_title_heavy",
+						display_stats = {
+							targets = {
+								armor_damage_modifier = {
+									attack = {
+										[armor_types.armored] = {},
+										[armor_types.super_armor] = {}
+									}
+								}
+							}
+						}
+					}
 				},
 				action_right_light = {
 					damage_trait_templates.default_armor_pierce_stat
@@ -1228,6 +1277,7 @@ local weapon_template = {
 			}
 		},
 		ogryn_powermaul_control_stat = {
+			description = "loc_stats_display_control_stat_melee_mouseover",
 			display_name = "loc_stats_display_control_stat_melee",
 			is_stat_trait = true,
 			damage = {
@@ -1380,6 +1430,7 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	special = {
+		desc = "loc_stats_special_action_powerup_desc",
 		display_name = "loc_weapon_special_activate",
 		type = "activate"
 	}

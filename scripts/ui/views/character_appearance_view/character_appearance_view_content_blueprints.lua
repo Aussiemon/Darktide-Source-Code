@@ -3,6 +3,7 @@ local UIResolution = require("scripts/managers/ui/ui_resolution")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local CharacterAppearanceViewFontStyle = require("scripts/ui/views/character_appearance_view/character_appearance_view_font_style")
 local TextInputPassTemplates = require("scripts/ui/pass_templates/text_input_pass_templates")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local grid_size = CharacterAppearanceViewSettings.grid_size
 local grid_width = grid_size[1]
 
@@ -93,7 +94,11 @@ local blueprints = {
 		pass_template = {
 			{
 				pass_type = "hotspot",
-				content_id = "hotspot"
+				content_id = "hotspot",
+				content = {
+					on_hover_sound = UISoundEvents.default_mouse_hover,
+					on_pressed_sound = UISoundEvents.character_appearence_option_pressed
+				}
 			},
 			{
 				pass_type = "texture",
@@ -273,7 +278,11 @@ local blueprints = {
 		pass_template = {
 			{
 				pass_type = "hotspot",
-				content_id = "hotspot"
+				content_id = "hotspot",
+				content = {
+					on_hover_sound = UISoundEvents.default_mouse_hover,
+					on_pressed_sound = UISoundEvents.character_appearence_option_pressed
+				}
 			},
 			{
 				pass_type = "texture",
@@ -505,7 +514,11 @@ local blueprints = {
 		pass_template = {
 			{
 				pass_type = "hotspot",
-				content_id = "hotspot"
+				content_id = "hotspot",
+				content = {
+					on_hover_sound = UISoundEvents.default_mouse_hover,
+					on_pressed_sound = UISoundEvents.character_appearance_change
+				}
 			},
 			{
 				pass_type = "texture",
@@ -604,7 +617,11 @@ local blueprints = {
 		pass_template = {
 			{
 				pass_type = "hotspot",
-				content_id = "hotspot"
+				content_id = "hotspot",
+				content = {
+					on_hover_sound = UISoundEvents.default_mouse_hover,
+					on_pressed_sound = UISoundEvents.character_appearance_change
+				}
 			},
 			{
 				value = "content/ui/materials/base/ui_portrait_base",
@@ -723,7 +740,11 @@ local blueprints = {
 		pass_template = {
 			{
 				pass_type = "hotspot",
-				content_id = "hotspot"
+				content_id = "hotspot",
+				content = {
+					on_hover_sound = UISoundEvents.default_mouse_hover,
+					on_pressed_sound = UISoundEvents.character_appearance_change
+				}
 			},
 			{
 				style_id = "rect",
@@ -887,7 +908,11 @@ local blueprints = {
 		pass_template = {
 			{
 				pass_type = "hotspot",
-				content_id = "hotspot"
+				content_id = "hotspot",
+				content = {
+					on_hover_sound = UISoundEvents.default_mouse_hover,
+					on_pressed_sound = UISoundEvents.character_appearance_change
+				}
 			},
 			{
 				value_id = "texture",
@@ -992,7 +1017,11 @@ local blueprints = {
 		pass_template = {
 			{
 				pass_type = "hotspot",
-				content_id = "hotspot"
+				content_id = "hotspot",
+				content = {
+					on_hover_sound = UISoundEvents.default_mouse_hover,
+					on_pressed_sound = UISoundEvents.character_appearance_change
+				}
 			},
 			{
 				value_id = "texture",
@@ -1383,7 +1412,11 @@ local blueprints = {
 		pass_template = {
 			{
 				pass_type = "hotspot",
-				content_id = "hotspot"
+				content_id = "hotspot",
+				content = {
+					on_hover_sound = UISoundEvents.default_mouse_hover,
+					on_pressed_sound = UISoundEvents.character_appearence_option_pressed
+				}
 			},
 			{
 				pass_type = "hotspot",
@@ -1867,7 +1900,11 @@ local blueprints = {
 		pass_template = {
 			{
 				pass_type = "hotspot",
-				content_id = "hotspot"
+				content_id = "hotspot",
+				content = {
+					on_hover_sound = UISoundEvents.default_mouse_hover,
+					on_pressed_sound = UISoundEvents.character_appearence_option_pressed
+				}
 			},
 			{
 				style_id = "title",

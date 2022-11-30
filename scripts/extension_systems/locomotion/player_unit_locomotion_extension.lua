@@ -414,7 +414,7 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 	local wanted_z_velocity = velocity_wanted.z
 
 	if wanted_z_velocity <= 0 then
-		if mover_z_velocity > 0 then
+		if mover_z_velocity > 0.01 then
 			final_velocity.z = wanted_z_velocity
 		end
 	elseif mover_z_velocity > 0 and dragged_z_velocity >= 0 then
@@ -701,9 +701,6 @@ PlayerUnitLocomotionExtension.post_update = function (self, unit, dt, t)
 
 	if moveable_platform_extension then
 		simulated_pos = simulated_pos + moveable_platform_extension:movement_since_last_fixed_update()
-		local mover = Unit.mover(unit)
-
-		Mover.set_position(mover, locomotion_component.position)
 	end
 
 	Unit.set_local_position(unit, 1, simulated_pos)

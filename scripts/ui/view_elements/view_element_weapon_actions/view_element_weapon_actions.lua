@@ -31,7 +31,9 @@ ViewElementWeaponActions.init = function (self, parent, draw_layer, start_scale,
 		target_resolution_width = grid_size[1] * 4,
 		world_name = self._unique_id
 	}
-	self._weapon_icon_renderer = WeaponIconUI:new(weapons_render_settings)
+	local icon_render_type = "weapon"
+	self._weapon_icon_renderer_id = "ViewElementWeaponActions_" .. math.uuid()
+	self._weapon_icon_renderer = Managers.ui:create_single_icon_renderer(icon_render_type, self._weapon_icon_renderer_id, weapons_render_settings)
 
 	self:_hide_dividers()
 end
@@ -49,9 +51,11 @@ ViewElementWeaponActions.destroy = function (self)
 	ViewElementWeaponActions.super.destroy(self)
 
 	if self._weapon_icon_renderer then
-		self._weapon_icon_renderer:destroy()
-
 		self._weapon_icon_renderer = nil
+
+		Managers.ui:destroy_single_icon_renderer(self._weapon_icon_renderer_id)
+
+		self._weapon_icon_renderer_id = nil
 	end
 end
 

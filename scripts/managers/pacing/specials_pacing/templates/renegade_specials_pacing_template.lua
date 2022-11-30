@@ -57,6 +57,16 @@ local DEFAULT_SPEED_RUNNING_PREVENTION_BREEDS = {
 	"cultist_mutant",
 	"renegade_netgunner"
 }
+local DEFAULT_MAX_OF_SAME = {
+	cultist_mutant = 3,
+	chaos_hound = 2,
+	renegade_grenadier = 3,
+	chaos_poxwalker_bomber = 2,
+	renegade_netgunner = 2,
+	renegade_sniper = 2,
+	renegade_flamer = 2,
+	cultist_flamer = 2
+}
 local FACTION_BOUND_BREEDS = {
 	flamer = {
 		cultist = "cultist_flamer",
@@ -70,7 +80,7 @@ local DEFAULT_MIN_DISTANCES_FROM_TARGET = {
 	chaos_poxwalker_bomber = 35,
 	renegade_netgunner = 20,
 	renegade_sniper = 30,
-	renegade_flamer = 20,
+	renegade_flamer = 15,
 	cultist_flamer = 20
 }
 local DEFAULT_MIN_SPAWNERS_RANGES = {
@@ -116,23 +126,31 @@ local DEFAULT_DISABLER_OVERRIDE_DURATION = {
 	100,
 	80
 }
+local DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE = {
+	renegade_netgunner = 0.5,
+	chaos_hound = 0.75,
+	cultist_mutant = 0.25
+}
 local specials_pacing_template = {
 	name = "renegade_specials",
 	resistance_templates = {
 		{
-			destroy_special_distance = 100,
 			max_spawn_group_offset_range = 6,
-			max_alive_specials = 3,
+			destroy_special_distance = 100,
 			first_spawn_timer_modifer = 0.6,
 			chance_for_coordinated_strike = 0.1,
+			max_alive_specials = 3,
 			rushing_distance = 80,
+			coordinated_strike_num_breeds = 2,
 			spawn_failed_wait_time = 5,
 			timer_range = {
 				140,
 				300
 			},
+			max_of_same = DEFAULT_MAX_OF_SAME,
 			min_distances_from_target = DEFAULT_MIN_DISTANCES_FROM_TARGET,
 			breeds = DEFAULT_BREEDS,
+			disabler_target_alone_player_chance = DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE,
 			num_allowed_disablers_per_alive_targets = DEFAULT_NUM_ALLOWED_DISABLED_PER_ALIVE_TARGETS,
 			disabler_override_duration = DEFAULT_DISABLER_OVERRIDE_DURATION,
 			foreshadow_stingers = DEFAULT_FORESHADOW_STINGERS,
@@ -159,23 +177,26 @@ local specials_pacing_template = {
 			faction_bound_breeds = FACTION_BOUND_BREEDS
 		},
 		{
-			max_spawn_group_offset_range = 6,
-			max_alive_specials = 3,
-			first_spawn_timer_modifer = 0.5,
-			chance_for_coordinated_strike = 0.1,
-			rushing_distance = 60,
-			speed_running_check_frequency = 5,
-			speed_running_required_challenge_rating = 50,
-			num_required_speed_running_checks = 4,
-			speed_running_required_distance = 12,
 			destroy_special_distance = 100,
+			max_spawn_group_offset_range = 6,
+			first_spawn_timer_modifer = 0.5,
+			speed_running_required_challenge_rating = 50,
+			rushing_distance = 60,
+			coordinated_strike_num_breeds = 2,
+			num_required_speed_running_checks = 4,
+			chance_for_coordinated_strike = 0.1,
+			speed_running_required_distance = 12,
+			max_alive_specials = 3,
+			speed_running_check_frequency = 5,
 			spawn_failed_wait_time = 5,
 			timer_range = {
 				120,
 				280
 			},
+			max_of_same = DEFAULT_MAX_OF_SAME,
 			min_distances_from_target = DEFAULT_MIN_DISTANCES_FROM_TARGET,
 			breeds = DEFAULT_BREEDS,
+			disabler_target_alone_player_chance = DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE,
 			num_allowed_disablers_per_alive_targets = DEFAULT_NUM_ALLOWED_DISABLED_PER_ALIVE_TARGETS,
 			disabler_override_duration = DEFAULT_DISABLER_OVERRIDE_DURATION,
 			foreshadow_stingers = DEFAULT_FORESHADOW_STINGERS,
@@ -211,23 +232,26 @@ local specials_pacing_template = {
 			}
 		},
 		{
-			max_spawn_group_offset_range = 6,
-			max_alive_specials = 4,
-			first_spawn_timer_modifer = 0.5,
-			chance_for_coordinated_strike = 0.125,
-			rushing_distance = 50,
-			speed_running_check_frequency = 5,
-			speed_running_required_challenge_rating = 50,
-			num_required_speed_running_checks = 4,
-			speed_running_required_distance = 12,
 			destroy_special_distance = 100,
+			max_spawn_group_offset_range = 6,
+			first_spawn_timer_modifer = 0.5,
+			speed_running_required_challenge_rating = 50,
+			rushing_distance = 50,
+			coordinated_strike_num_breeds = 3,
+			num_required_speed_running_checks = 4,
+			chance_for_coordinated_strike = 0.125,
+			speed_running_required_distance = 12,
+			max_alive_specials = 4,
+			speed_running_check_frequency = 5,
 			spawn_failed_wait_time = 5,
 			timer_range = {
 				110,
 				250
 			},
+			max_of_same = DEFAULT_MAX_OF_SAME,
 			min_distances_from_target = DEFAULT_MIN_DISTANCES_FROM_TARGET,
 			breeds = DEFAULT_BREEDS,
+			disabler_target_alone_player_chance = DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE,
 			num_allowed_disablers_per_alive_targets = DEFAULT_NUM_ALLOWED_DISABLED_PER_ALIVE_TARGETS,
 			disabler_override_duration = DEFAULT_DISABLER_OVERRIDE_DURATION,
 			foreshadow_stingers = DEFAULT_FORESHADOW_STINGERS,
@@ -263,23 +287,26 @@ local specials_pacing_template = {
 			}
 		},
 		{
-			max_spawn_group_offset_range = 6,
-			max_alive_specials = 5,
-			first_spawn_timer_modifer = 0.35,
-			chance_for_coordinated_strike = 0.15,
-			rushing_distance = 45,
-			speed_running_check_frequency = 5,
-			speed_running_required_challenge_rating = 40,
-			num_required_speed_running_checks = 4,
-			speed_running_required_distance = 10,
 			destroy_special_distance = 100,
+			max_spawn_group_offset_range = 6,
+			first_spawn_timer_modifer = 0.4,
+			speed_running_required_challenge_rating = 40,
+			rushing_distance = 45,
+			coordinated_strike_num_breeds = 4,
+			num_required_speed_running_checks = 4,
+			chance_for_coordinated_strike = 0.15,
+			speed_running_required_distance = 10,
+			max_alive_specials = 5,
+			speed_running_check_frequency = 5,
 			spawn_failed_wait_time = 5,
 			timer_range = {
 				90,
 				230
 			},
+			max_of_same = DEFAULT_MAX_OF_SAME,
 			min_distances_from_target = DEFAULT_MIN_DISTANCES_FROM_TARGET,
 			breeds = DEFAULT_BREEDS,
+			disabler_target_alone_player_chance = DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE,
 			num_allowed_disablers_per_alive_targets = DEFAULT_NUM_ALLOWED_DISABLED_PER_ALIVE_TARGETS,
 			disabler_override_duration = DEFAULT_DISABLER_OVERRIDE_DURATION,
 			foreshadow_stingers = DEFAULT_FORESHADOW_STINGERS,
@@ -291,7 +318,7 @@ local specials_pacing_template = {
 			spawners_max_range = DEFAULT_MIN_SPAWNERS_RANGES.max,
 			coordinated_strike_timer_range = {
 				80,
-				100
+				160
 			},
 			coordinated_strike_breeds = DEFAULT_COORDINATED_STRIKE_BREEDS,
 			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
@@ -315,23 +342,26 @@ local specials_pacing_template = {
 			}
 		},
 		{
-			max_spawn_group_offset_range = 6,
-			max_alive_specials = 6,
-			first_spawn_timer_modifer = 0.25,
-			chance_for_coordinated_strike = 0.2,
-			rushing_distance = 40,
-			speed_running_check_frequency = 5,
-			speed_running_required_challenge_rating = 40,
-			num_required_speed_running_checks = 4,
-			speed_running_required_distance = 12,
 			destroy_special_distance = 100,
+			max_spawn_group_offset_range = 6,
+			first_spawn_timer_modifer = 0.4,
+			speed_running_required_challenge_rating = 40,
+			rushing_distance = 40,
+			coordinated_strike_num_breeds = 4,
+			num_required_speed_running_checks = 4,
+			chance_for_coordinated_strike = 0.15,
+			speed_running_required_distance = 12,
+			max_alive_specials = 6,
+			speed_running_check_frequency = 5,
 			spawn_failed_wait_time = 5,
 			timer_range = {
 				70,
-				190
+				200
 			},
+			max_of_same = DEFAULT_MAX_OF_SAME,
 			min_distances_from_target = DEFAULT_MIN_DISTANCES_FROM_TARGET,
 			breeds = DEFAULT_BREEDS,
+			disabler_target_alone_player_chance = DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE,
 			num_allowed_disablers_per_alive_targets = DEFAULT_NUM_ALLOWED_DISABLED_PER_ALIVE_TARGETS,
 			disabler_override_duration = DEFAULT_DISABLER_OVERRIDE_DURATION,
 			foreshadow_stingers = DEFAULT_FORESHADOW_STINGERS,
@@ -342,8 +372,8 @@ local specials_pacing_template = {
 			spawners_min_range = DEFAULT_MIN_SPAWNERS_RANGES.min,
 			spawners_max_range = DEFAULT_MIN_SPAWNERS_RANGES.max,
 			coordinated_strike_timer_range = {
-				50,
-				80
+				70,
+				140
 			},
 			coordinated_strike_breeds = DEFAULT_COORDINATED_STRIKE_BREEDS,
 			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,

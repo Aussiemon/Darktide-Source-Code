@@ -56,14 +56,15 @@ ranged_cover_user.cover = {
 }
 local netgunner = table.clone(ranged_base)
 netgunner.behavior = {
-	enter_combat_range_flag = "boolean",
-	combat_range_sticky_time = "number",
-	hit_target = "boolean",
 	is_dragging = "boolean",
-	combat_range = "string",
-	lock_combat_range_switch = "boolean",
+	combat_range_sticky_time = "number",
 	move_state = "string",
-	shoot_net_cooldown = "number"
+	enter_combat_range_flag = "boolean",
+	combat_range = "string",
+	net_is_ready = "boolean",
+	shoot_net_cooldown = "number",
+	hit_target = "boolean",
+	lock_combat_range_switch = "boolean"
 }
 netgunner.slot = nil
 netgunner.blocked = nil

@@ -15,7 +15,7 @@ templates.weapon_trait_bespoke_forcestaff_p2_suppression_on_close_kill = {
 			suppression_settings = {
 				suppression_falloff = true,
 				instant_aggro = true,
-				distance = 5,
+				distance = 6,
 				suppression_value = 15
 			}
 		},
@@ -23,7 +23,7 @@ templates.weapon_trait_bespoke_forcestaff_p2_suppression_on_close_kill = {
 			suppression_settings = {
 				suppression_falloff = true,
 				instant_aggro = true,
-				distance = 5,
+				distance = 7,
 				suppression_value = 20
 			}
 		},
@@ -31,7 +31,7 @@ templates.weapon_trait_bespoke_forcestaff_p2_suppression_on_close_kill = {
 			suppression_settings = {
 				suppression_falloff = true,
 				instant_aggro = true,
-				distance = 5,
+				distance = 8,
 				suppression_value = 25
 			}
 		}

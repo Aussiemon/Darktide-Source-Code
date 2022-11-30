@@ -262,8 +262,6 @@ MultiplayerSession.joined_host = function (self, channel_id, host_peer_id, host_
 	Log.info("MultiplayerSession", "Joined Server: %s", server_name)
 
 	if host_type == HOST_TYPES.mission_server then
-		Managers.presence:set_num_mission_members(Managers.connection:num_members())
-
 		local my_presence = Managers.presence:presence_entry_myself()
 		local my_account_id = my_presence:account_id()
 
@@ -322,10 +320,6 @@ MultiplayerSession.disconnected_from_host = function (self, is_error, source, re
 		end
 	end
 
-	if self._host_type == HOST_TYPES.mission_server and Managers.presence then
-		Managers.presence:set_num_mission_members(nil)
-	end
-
 	if Managers.boons then
 		Managers.boons:delete()
 
@@ -365,8 +359,6 @@ MultiplayerSession.other_client_joined = function (self, peer_id, player_sync_da
 	package_synchronizer_client:add_peer(peer_id)
 
 	if self._host_type == HOST_TYPES.mission_server then
-		Managers.presence:set_num_mission_members(Managers.connection:num_members())
-
 		for _, player in pairs(Managers.player:players_at_peer(peer_id)) do
 			local account_id = player:account_id()
 
@@ -388,10 +380,6 @@ MultiplayerSession.other_client_left = function (self, peer_id)
 		local package_synchronizer_client = Managers.package_synchronization:synchronizer_client()
 
 		package_synchronizer_client:remove_peer(peer_id)
-	end
-
-	if self._host_type == HOST_TYPES.mission_server and not self:is_dead() and Managers.presence then
-		Managers.presence:set_num_mission_members(Managers.connection:num_members())
 	end
 end
 

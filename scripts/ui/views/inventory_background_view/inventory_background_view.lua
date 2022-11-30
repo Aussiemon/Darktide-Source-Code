@@ -480,8 +480,9 @@ InventoryBackgroundView._setup_top_panel = function (self)
 			view_context = {
 				tabs = {
 					{
-						is_grid_layout = true,
+						is_grid_layout = false,
 						ui_animation = "loadout_on_enter",
+						allow_item_hover_information = true,
 						camera_settings = {
 							{
 								"event_inventory_set_camera_position_axis_offset",
@@ -528,71 +529,141 @@ InventoryBackgroundView._setup_top_panel = function (self)
 						},
 						layout = {
 							{
-								display_name = "loc_inventory_loadout_group_primary_weapon",
-								widget_type = "item_sub_header",
-								item_type = UISettings.ITEM_TYPES.WEAPON_MELEE
-							},
-							{
 								slot_title = "loc_inventory_title_slot_primary",
 								loadout_slot = true,
+								scenegraph_id = "slot_primary",
 								default_icon = "content/ui/materials/icons/items/weapons/melee/empty",
 								widget_type = "item_slot",
-								slot = ItemSlotSettings.slot_primary
-							},
-							{
-								widget_type = "dynamic_spacing",
-								size = {
-									300,
-									10
+								slot = ItemSlotSettings.slot_primary,
+								navigation_grid_indices = {
+									1,
+									1
 								}
-							},
-							{
-								display_name = "loc_inventory_loadout_group_secondary_weapon",
-								widget_type = "item_sub_header",
-								item_type = UISettings.ITEM_TYPES.WEAPON_RANGED
 							},
 							{
 								slot_title = "loc_inventory_title_slot_secondary",
 								loadout_slot = true,
+								scenegraph_id = "slot_secondary",
 								default_icon = "content/ui/materials/icons/items/weapons/ranged/empty",
 								widget_type = "item_slot",
-								slot = ItemSlotSettings.slot_secondary
-							},
-							{
-								widget_type = "dynamic_spacing",
-								size = {
-									300,
-									20
+								slot = ItemSlotSettings.slot_secondary,
+								navigation_grid_indices = {
+									2,
+									1
 								}
 							},
 							{
+								scenegraph_id = "slot_attachments_header",
 								display_name = "loc_inventory_loadout_group_attachments",
 								widget_type = "item_sub_header",
-								item_type = UISettings.ITEM_TYPES.GADGET
+								item_type = UISettings.ITEM_TYPES.GADGET,
+								size = {
+									840,
+									50
+								},
+								new_indicator_width_offset = {
+									225,
+									-10,
+									4
+								}
 							},
 							{
 								slot_title = "loc_inventory_title_slot_attachment_1",
 								loadout_slot = true,
 								default_icon = "content/ui/materials/icons/items/attachments/defensive/empty",
+								scenegraph_id = "slot_attachment_1",
 								widget_type = "gadget_item_slot",
 								slot = ItemSlotSettings.slot_attachment_1,
-								required_level = PlayerProgressionUnlocks.gadget_slot_1
+								required_level = PlayerProgressionUnlocks.gadget_slot_1,
+								navigation_grid_indices = {
+									3,
+									1
+								}
 							},
 							{
 								slot_title = "loc_inventory_title_slot_attachment_2",
 								loadout_slot = true,
 								default_icon = "content/ui/materials/icons/items/attachments/tactical/empty",
+								scenegraph_id = "slot_attachment_2",
 								widget_type = "gadget_item_slot",
 								slot = ItemSlotSettings.slot_attachment_2,
-								required_level = PlayerProgressionUnlocks.gadget_slot_2
+								required_level = PlayerProgressionUnlocks.gadget_slot_2,
+								navigation_grid_indices = {
+									3,
+									2
+								}
 							},
 							{
 								slot_title = "loc_inventory_title_slot_attachment_3",
 								loadout_slot = true,
 								default_icon = "content/ui/materials/icons/items/attachments/utility/empty",
+								scenegraph_id = "slot_attachment_3",
 								widget_type = "gadget_item_slot",
 								slot = ItemSlotSettings.slot_attachment_3,
-								required_level = PlayerProgressionUnlocks.gadget_slot_3
+								required_level = PlayerProgressionUnlocks.gadget_slot_3,
+								navigation_grid_indices = {
+									3,
+									3
+								}
+							},
+							{
+								scenegraph_id = "slot_primary_header",
+								display_name = "loc_inventory_loadout_group_primary_weapon",
+								widget_type = "item_sub_header",
+								item_type = UISettings.ITEM_TYPES.WEAPON_MELEE,
+								size = {
+									840,
+									50
+								},
+								new_indicator_width_offset = {
+									285,
+									-10,
+									4
+								}
+							},
+							{
+								scenegraph_id = "slot_secondary_header",
+								display_name = "loc_inventory_loadout_group_secondary_weapon",
+								widget_type = "item_sub_header",
+								item_type = UISettings.ITEM_TYPES.WEAPON_RANGED,
+								size = {
+									840,
+									50
+								},
+								new_indicator_width_offset = {
+									256,
+									-10,
+									4
+								}
+							},
+							{
+								texture = "content/ui/materials/frames/loadout_main",
+								scenegraph_id = "loadout_frame",
+								widget_type = "texture",
+								size = {
+									840,
+									840
+								}
+							},
+							{
+								texture = "content/ui/materials/backgrounds/terminal_basic",
+								scenegraph_id = "loadout_background_1",
+								widget_type = "texture",
+								size = {
+									640,
+									380
+								},
+								color = Color.terminal_grid_background(nil, true)
+							},
+							{
+								texture = "content/ui/materials/backgrounds/terminal_basic",
+								scenegraph_id = "loadout_background_2",
+								widget_type = "texture",
+								size = {
+									700,
+									320
+								},
+								color = Color.terminal_grid_background(nil, true)
 							}
 						}
 					}
@@ -625,6 +696,7 @@ InventoryBackgroundView._setup_top_panel = function (self)
 						is_grid_layout = false,
 						ui_animation = "cosmetics_on_enter",
 						display_name = "tab1",
+						allow_item_hover_information = true,
 						icon = "content/ui/materials/icons/item_types/outfits",
 						camera_settings = {
 							{
@@ -669,6 +741,9 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								0.5,
 								math.easeCubic
 							}
+						},
+						item_hover_information_offset = {
+							657
 						},
 						layout = {
 							{

@@ -158,6 +158,9 @@ ClassSelectionView._register_button_callbacks = function (self)
 	self._widgets_by_name.details_button.content.hotspot.pressed_callback = function ()
 		self:_on_details_pressed()
 	end
+
+	self._widgets_by_name.details_button.content.hotspot.on_pressed_sound = UISoundEvents.character_create_toggle_class_description
+	self._widgets_by_name.continue_button.content.hotspot.on_pressed_sound = UISoundEvents.character_create_class_confirm
 end
 
 ClassSelectionView._setup_background_world = function (self, level_name)
@@ -291,7 +294,7 @@ end
 ClassSelectionView._on_choose_pressed = function (self)
 	if self._classes_visible then
 		self._character_create:set_specialization(self._selected_class.name)
-		self:_play_sound(UISoundEvents.character_create_confirm)
+		self:_play_sound(UISoundEvents.character_create_class_confirm)
 		Managers.event:trigger("event_create_new_character_continue")
 	else
 		self:_on_class_pressed(self._selected_class.name)
@@ -300,7 +303,6 @@ end
 
 ClassSelectionView._on_continue_pressed = function (self)
 	self._character_create:set_specialization(self._selected_class.name)
-	self:_play_sound(UISoundEvents.character_create_confirm)
 	Managers.event:trigger("event_create_new_character_continue")
 end
 

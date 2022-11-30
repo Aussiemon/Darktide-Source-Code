@@ -15,7 +15,7 @@ local ui_sound_events = {
 	character_create_exit = "wwise/events/ui/play_ui_character_create_exit",
 	social_menu_popup_button_pressed = "wwise/events/ui/play_ui_click",
 	default_dropdown_minimize = "wwise/events/ui/play_ui_dropdown_minimize",
-	crafting_view_on_fuse_traits = "wwise/events/ui/play_ui_silence",
+	crafting_view_on_fuse_traits = "wwise/events/ui/play_ui_npc_interacts_forge_upgrade_item",
 	notification_item_received_rarity_1 = "wwise/events/ui/play_hud_notifications_item_tier_1",
 	notification_warning = "wwise/events/ui/play_hud_notifications_warning",
 	credits_vendor_on_enter = "wwise/events/ui/play_ui_npc_interacts_credits_vendor_enter",
@@ -45,25 +45,25 @@ local ui_sound_events = {
 	options_slider_music_click = "wwise/events/ui/play_ui_click",
 	character_create_archetype_zealot = "wwise/events/ui/play_ui_zealot_amb",
 	mark_vendor_on_purchase = "wwise/events/ui/play_ui_stores_shared_buy",
-	crafting_view_on_extract_trait = "wwise/events/ui/play_ui_silence",
+	crafting_view_on_extract_trait = "wwise/events/ui/play_ui_npc_interacts_forge_upgrade_item",
 	apparel_zoom_out = "wwise/events/ui/play_ui_character_loadout_cosmetics_zoom_out",
 	default_menu_exit = "wwise/events/ui/play_ui_back_short",
 	notification_player_leave_party = "wwise/events/ui/play_hud_player_leave_party",
 	apparel_exit = "wwise/events/ui/play_ui_back_short",
 	mark_vendor_replace_contract = "wwise/events/ui/play_ui_npc_interacts_marks_vendor_replace_contract",
-	crafting_view_on_replace_trait = "wwise/events/ui/play_ui_silence",
+	crafting_view_on_replace_trait = "wwise/events/ui/play_ui_npc_interacts_forge_upgrade_item",
 	character_create_class_confirm = "wwise/events/ui/play_ui_character_create_class_confirm",
 	social_menu_mute_player_text = "wwise/events/ui/play_ui_social_block",
 	social_menu_popup_button_hovered = "wwise/events/ui/play_ui_mouseover",
 	mission_board_receiving_soon = "wwise/events/ui/play_ui_mission_board_countdown",
 	weapons_enter = "wwise/events/ui/play_ui_enter_short",
-	crafting_view_on_reroll_perk = "wwise/events/ui/play_ui_silence",
+	crafting_view_on_reroll_perk = "wwise/events/ui/play_ui_npc_interacts_forge_reroll_perk",
 	mission_board_show_icon = "wwise/events/ui/play_ui_mission_board_node_appear",
 	mission_vote_popup_enter = "wwise/events/ui/play_ui_mission_request",
 	main_menu_enter = "wwise/events/ui/play_ui_character_select_ambience",
 	mission_vote_popup_hide_details = "wwise/events/ui/play_ui_hide_details",
 	mission_lobby_abort = "wwise/events/ui/play_ui_back",
-	crafting_view_on_upgrade_item = "wwise/events/ui/play_ui_stores_shared_buy",
+	crafting_view_on_upgrade_item = "wwise/events/ui/play_ui_npc_interacts_forge_upgrade_item",
 	character_create_archetype_confirm = "wwise/events/ui/play_ui_character_create_archetype_confirm",
 	notification_player_join_party = "wwise/events/ui/play_hud_player_join_party",
 	mission_board_hide_icon = "wwise/events/ui/play_ui_mission_board_node_disappear",
@@ -137,7 +137,7 @@ local ui_sound_events = {
 	aquilas_vendor_on_enter = "wwise/events/ui/play_ui_npc_interacts_premium_vendor_enter",
 	title_screen_continue = "wwise/events/ui/play_ui_press_key_to_continue",
 	character_create_archetype_ogryn = "wwise/events/ui/play_ui_ogryn_amb",
-	crafting_view_on_enter = "wwise/events/ui/play_ui_stores_shared_enter",
+	crafting_view_on_enter = "wwise/events/ui/play_ui_npc_interacts_forge_enter",
 	main_menu_select_character = "wwise/events/ui/play_ui_character_select_select",
 	mission_briefing_stop = "wwise/events/ui/stop_amb_valkyrie_interior",
 	system_menu_exit = "wwise/events/ui/play_ui_back",
@@ -203,6 +203,7 @@ local ui_sound_events = {
 	default_select = "wwise/events/ui/play_ui_silence",
 	end_screen_summary_credits_zero = "wwise/events/ui/play_ui_eor_currency_credits_0",
 	area_notification_popup_enter = "wwise/events/ui/play_hud_new_zone",
+	notification_cosmetic_received = "wwise/events/ui/play_hud_notifications_item_tier_3",
 	mission_board_exit = "wwise/events/ui/play_ui_mission_board_exit",
 	credits_vendor_on_exit = "wwise/events/ui/play_ui_npc_interacts_default_exit",
 	social_menu_friend_request_reject = "wwise/events/ui/play_ui_click",
@@ -226,6 +227,7 @@ local ui_sound_events = {
 	options_slider_vo_click = "wwise/events/ui/play_ui_click",
 	title_screen_enter = "wwise/events/ui/play_ui_silence",
 	weapons_equip_weapon = "wwise/events/ui/play_ui_character_loadout_equip_weapon",
+	notification_weapon_skin_received = "wwise/events/ui/play_hud_notifications_item_tier_3",
 	notification_default_exit = "wwise/events/ui/play_hud_notifications_default_exit",
 	options_slider_music_release = "wwise/events/ui/play_ui_click"
 }
@@ -235,5 +237,7 @@ local function _append_sound_events(sound_events)
 		ui_sound_events[key] = value
 	end
 end
+
+_append_sound_events(require("scripts/ui/views/store_view/store_view_sound_events"))
 
 return settings("UISoundEvents", ui_sound_events)

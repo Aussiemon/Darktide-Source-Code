@@ -1867,12 +1867,6 @@ CharacterAppearanceView._on_entry_pressed = function (self, current_widget, opti
 		WwiseWorld.stop_event(wwise_world, self._current_sound_id)
 	end
 
-	if self._active_page_name == "home_planet" then
-		self:_play_sound(UISoundEvents.character_create_planet_select)
-	else
-		self:_play_sound(UISoundEvents.character_appearence_option_pressed)
-	end
-
 	for i = 1, #self._page_grids[grid_index].widgets do
 		local widget = self._page_grids[grid_index].widgets[i]
 		widget.content.element_selected = current_widget.index == i
@@ -2057,14 +2051,16 @@ CharacterAppearanceView._unload_appearance_icon = function (self, widget)
 end
 
 CharacterAppearanceView._unload_all_appearance_icons = function (self)
-	for i = 1, #self._page_grids do
-		local grid = self._page_grids[i]
+	if self._page_grids then
+		for i = 1, #self._page_grids do
+			local grid = self._page_grids[i]
 
-		for j = 1, #grid.widgets do
-			local widget = grid.widgets[j]
+			for j = 1, #grid.widgets do
+				local widget = grid.widgets[j]
 
-			if widget.content.icon_load_id then
-				self:_unload_appearance_icon(widget)
+				if widget.content.icon_load_id then
+					self:_unload_appearance_icon(widget)
+				end
 			end
 		end
 	end
@@ -3843,6 +3839,15 @@ CharacterAppearanceView._get_pages = function (self)
 			show_character = false,
 			enter = function (page)
 				self:_populate_page_grid(1, page.content)
+
+				for i = 1, #self._page_grids[1].widgets do
+					local widget = self._page_grids[1].widgets[i]
+
+					if widget.content.hotspot then
+						widget.content.hotspot.on_pressed_sound = UISoundEvents.character_create_planet_select
+					end
+				end
+
 				self:_show_default_page(page)
 				self:_setup_planets_widgets()
 

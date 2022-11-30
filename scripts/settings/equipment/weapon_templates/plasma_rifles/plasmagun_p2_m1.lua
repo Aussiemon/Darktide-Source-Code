@@ -764,9 +764,7 @@ weapon_template.overheat_configuration = {
 		on_screen_cloud_name = "plasma",
 		vfx_source_name = "_overheat",
 		looping_sound_parameter_name = "overheat_plasma_gun",
-		on_screen_variable_name = "plasma_radius",
-		material_name = "coil_emissive_01",
-		material_variable_name = "external_overheat_glow"
+		on_screen_variable_name = "plasma_radius"
 	}
 }
 weapon_template.keywords = {

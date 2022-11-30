@@ -39,9 +39,6 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 	local locomotion_position = locomotion_component.position
 	local player_position = locomotion_position
 	local player_unit = self._player_unit
-
-	Interrupt.action(t, player_unit, "psyker_ability", nil, true)
-
 	local rotation = self._first_person_component.rotation
 	local forward = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
 	self._shout_direction = forward

@@ -11,11 +11,11 @@ local reload_template = {
 		state_transitions = {
 			eject_mag = 2.5,
 			cock_weapon = 1.7,
-			fit_new_mag = 0.35
+			fit_new_mag = 0.51
 		},
 		functionality = {
 			refill_ammunition = 2.5,
-			remove_ammunition = 0.35
+			remove_ammunition = 0.51
 		}
 	},
 	fit_new_mag = {

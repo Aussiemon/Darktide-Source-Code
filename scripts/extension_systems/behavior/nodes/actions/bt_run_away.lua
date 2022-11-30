@@ -64,6 +64,10 @@ BtRunAwayAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 		scratchpad.pushed_enemies = {}
 		scratchpad.push_nearby_players_frequency = action_data.push_nearby_players_frequency
 	end
+
+	local self_flat_fwd = Vector3.flat(Quaternion.forward(Unit.local_rotation(unit, 1)))
+
+	Unit.set_local_rotation(unit, 1, Quaternion.look(self_flat_fwd))
 end
 
 BtRunAwayAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)

@@ -649,8 +649,12 @@ LobbyView._assign_player_to_slot = function (self, player, slot)
 	local breed_name = selected_archetype and selected_archetype.breed or profile.breed
 	local breed_settings = Breeds[breed_name]
 	local inventory_state_machine = breed_settings.inventory_state_machine
+	local slot_name = slot.default_slot
+	local slot_item = profile.loadout[slot_name]
+	local item_inventory_animation_event = slot_item and slot_item.inventory_animation_event or "inventory_idle_default"
 
-	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, spawn_scale, inventory_state_machine)
+	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, spawn_scale, inventory_state_machine, item_inventory_animation_event)
+	profile_spawner:wield_slot(slot_name)
 
 	local panel_widget = slot.panel_widget
 	local panel_content = panel_widget.content
@@ -1208,9 +1212,12 @@ LobbyView._setup_loadout_widgets = function (self, spawn_slot)
 	local breed_name = selected_archetype and selected_archetype.breed or profile.breed
 	local breed_settings = Breeds[breed_name]
 	local inventory_state_machine = breed_settings.inventory_state_machine
+	local slot_name = spawn_slot.default_slot
+	local slot_item = spawn_slot.profile.loadout[slot_name]
+	local item_inventory_animation_event = slot_item and slot_item.inventory_animation_event or "inventory_idle_default"
 
-	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, spawn_scale, inventory_state_machine)
-	self:_update_presentation_wield_item(spawn_slot)
+	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, spawn_scale, inventory_state_machine, item_inventory_animation_event)
+	spawn_slot.profile_spawner:wield_slot(slot_name)
 end
 
 LobbyView._set_loadout_visibility = function (self)
@@ -1282,23 +1289,6 @@ end
 
 LobbyView.on_exit_animation_done = function (self)
 	return not self._is_animating_on_exit and self:triggered_on_exit_animation()
-end
-
-LobbyView._update_presentation_wield_item = function (self, spawn_slot)
-	if not spawn_slot.profile_spawner then
-		return
-	end
-
-	local slot_name = spawn_slot.default_slot
-	local slot_item = spawn_slot[slot_name]
-
-	spawn_slot.profile_spawner:wield_slot(slot_name)
-
-	local item_inventory_animation_event = slot_item and slot_item.inventory_animation_event or "inventory_idle_default"
-
-	if item_inventory_animation_event then
-		spawn_slot.profile_spawner:assign_animation_event(item_inventory_animation_event)
-	end
 end
 
 LobbyView._start_animation_ready = function (self, spawn_slot)

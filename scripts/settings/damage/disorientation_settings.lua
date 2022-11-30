@@ -100,10 +100,10 @@ local disorientation_settings = {
 				end_anim_3p = "hit_stun_finished",
 				interrupt_delay = 0.05,
 				end_anim = "hit_stun_finished",
-				end_stun_early_time = 0.4,
+				end_stun_early_time = 0.35,
 				stun_immunity_time_buff = "stun_immune_short",
-				stun_duration = 0.5,
-				action_delay = 0.2
+				stun_duration = 0.6,
+				action_delay = 0.3
 			}
 		},
 		medium = {

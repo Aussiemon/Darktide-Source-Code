@@ -238,6 +238,7 @@ GameplayStateRun.post_update = function (self, main_dt, main_t)
 
 	Managers.player:state_post_update(main_dt, main_t)
 	Managers.state.unit_spawner:set_deletion_state(DELETION_STATES.default)
+	Managers.state.player_unit_spawn:process_queued_despawns()
 
 	if self._fixed_frame_parsed or not self._gameplay_timer_registered then
 		shared_state.network_transmit_function()

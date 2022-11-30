@@ -124,6 +124,7 @@ local function generate_blueprints_function(grid_size)
 		local material_values = widget.style.icon.material_values
 		material_values.texture_icon = icon
 		material_values.use_placeholder_texture = 0
+		widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 	end
 
 	local function _remove_package_item_icon_cb_func(widget, ui_renderer)
@@ -133,6 +134,7 @@ local function generate_blueprints_function(grid_size)
 		local material_values = widget.style.icon.material_values
 		material_values.texture_icon = nil
 		material_values.use_placeholder_texture = 1
+		widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 	end
 
 	local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
@@ -143,12 +145,14 @@ local function generate_blueprints_function(grid_size)
 		material_values.columns = columns
 		material_values.grid_index = grid_index - 1
 		material_values.render_target = render_target
+		widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 	end
 
 	local function _remove_live_item_icon_cb_func(widget)
 		local material_values = widget.style.icon.material_values
 		material_values.use_placeholder_texture = 1
 		material_values.render_target = nil
+		widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 	end
 
 	local blueprints = {
@@ -261,6 +265,7 @@ local function generate_blueprints_function(grid_size)
 		pass_template = ItemPassTemplates.gear_item,
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
 			local content = widget.content
+			local style = widget.style
 			content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
 			content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
 			content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
@@ -276,6 +281,29 @@ local function generate_blueprints_function(grid_size)
 					content.display_name = ItemUtils.display_name(item)
 					content.sub_display_name = ItemUtils.sub_display_name(item)
 				end
+			end
+
+			local offer = element.offer
+
+			if offer and offer.price then
+				local price_data = offer.price.amount
+				local type = price_data.type
+				local price = price_data.amount
+				local price_text = tostring(price)
+				content.has_price_tag = true
+				content.price_text = price_text
+				local wallet_settings = WalletSettings[type]
+				content.wallet_icon = wallet_settings.icon_texture_small
+				local price_text_style = style.price_text
+				price_text_style.horizontal_alignment = "right"
+				local initial_margin = -15
+				local icon_margin = 5
+				price_text_style.offset[1] = initial_margin
+				local price_text_size = UIRenderer.text_size(ui_renderer, price_text, price_text_style.font_type, price_text_style.font_size) or 0
+				local wallet_icon_style = style.wallet_icon
+				wallet_icon_style.offset[1] = initial_margin - price_text_size - icon_margin
+				local can_afford = true
+				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 			end
 
 			local owned_count = element.owned_count
@@ -349,7 +377,7 @@ local function generate_blueprints_function(grid_size)
 			local rarity = item.rarity
 			local offer = element.offer
 
-			if offer then
+			if offer and offer.price then
 				local price_data = offer.price.amount
 				local type = price_data.type
 				local price = price_data.amount
@@ -359,10 +387,14 @@ local function generate_blueprints_function(grid_size)
 				local wallet_settings = WalletSettings[type]
 				content.wallet_icon = wallet_settings.icon_texture_small
 				local price_text_style = style.price_text
+				price_text_style.horizontal_alignment = "right"
+				local initial_margin = -15
+				local icon_margin = 5
+				price_text_style.offset[1] = initial_margin
 				local price_text_size = UIRenderer.text_size(ui_renderer, price_text, price_text_style.font_type, price_text_style.font_size) or 0
 				local wallet_icon_style = style.wallet_icon
-				wallet_icon_style.offset[1] = ItemPassTemplates.icon_size[1] - wallet_icon_style.size[1] - (price_text_size + 10) + style.price_text.offset[1]
-				local can_afford = false
+				wallet_icon_style.offset[1] = initial_margin - price_text_size - icon_margin
+				local can_afford = true
 				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 			end
 
@@ -386,18 +418,6 @@ local function generate_blueprints_function(grid_size)
 				local slot_name = element.slot_name or slots and slots[1]
 				local is_equipped = slot_name and is_item_equipped_in_slot(view_instance, item, slot_name)
 				content.equipped = is_equipped
-			end
-
-			local offer = element.offer
-
-			if offer then
-				local price_data = offer.price.amount
-				local type = price_data.type
-				local price = price_data.amount
-				local wallet_settings = WalletSettings[type]
-				local price_text_style = style.price_text
-				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
-				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 			end
 		end,
 		load_icon = function (parent, widget, element, ui_renderer, dummy_profile)
@@ -452,7 +472,7 @@ local function generate_blueprints_function(grid_size)
 
 			local offer = element.offer
 
-			if offer then
+			if offer and offer.price then
 				local price_data = offer.price.amount
 				local type = price_data.type
 				local price = price_data.amount
@@ -563,7 +583,7 @@ local function generate_blueprints_function(grid_size)
 
 			local offer = element.offer
 
-			if offer then
+			if offer and offer.price then
 				local price_data = offer.price.amount
 				local type = price_data.type
 				local price = price_data.amount
@@ -626,7 +646,7 @@ local function generate_blueprints_function(grid_size)
 
 			local offer = element.offer
 
-			if offer then
+			if offer and offer.price then
 				local price_data = offer.price.amount
 				local type = price_data.type
 				local price = price_data.amount
@@ -720,7 +740,7 @@ local function generate_blueprints_function(grid_size)
 			local element = content.element
 			local offer = element.offer
 
-			if offer then
+			if offer and offer.price then
 				local price_data = offer.price.amount
 				local type = price_data.type
 				local price = price_data.amount
@@ -820,7 +840,7 @@ local function generate_blueprints_function(grid_size)
 
 			local offer = element.offer
 
-			if offer then
+			if offer and offer.price then
 				local price_data = offer.price.amount
 				local type = price_data.type
 				local price = price_data.amount
@@ -841,7 +861,7 @@ local function generate_blueprints_function(grid_size)
 			local element = content.element
 			local offer = element.offer
 
-			if offer then
+			if offer and offer.price then
 				local price_data = offer.price.amount
 				local type = price_data.type
 				local price = price_data.amount

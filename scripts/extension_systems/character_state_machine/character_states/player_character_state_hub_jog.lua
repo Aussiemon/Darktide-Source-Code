@@ -23,6 +23,7 @@ PlayerCharacterStateHubJog.init = function (self, character_state_init_context, 
 	hub_jog_character_state_component.force_old_input_start_t = 0
 	hub_jog_character_state_component.move_start_delay_t = 0
 	self._hub_jog_character_state_component = hub_jog_character_state_component
+	self._movement_method = hub_jog_character_state_component.method
 	local hub_movement = self._constants.hub_movement
 	self._move_method_anims = hub_movement.move_method_anims
 	self._idle_timer = 0
@@ -54,6 +55,10 @@ PlayerCharacterStateHubJog.on_exit = function (self, unit, t, next_state)
 end
 
 PlayerCharacterStateHubJog.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
+	if self._unit_data_extension.is_resimulating then
+		return
+	end
+
 	local anim_extension = self._animation_extension
 	local locomotion_steering = self._locomotion_steering_component
 	local locomotion = self._locomotion_component
@@ -75,7 +80,7 @@ PlayerCharacterStateHubJog.fixed_update = function (self, unit, dt, t, next_stat
 
 	if wants_turn_on_spot then
 		locomotion_steering.target_rotation = Quaternion.look(move_direction)
-	elseif hub_jog_character_state.method == "idle" then
+	elseif self._movement_method == "idle" then
 		local current_speed_sq = Vector3.length_squared(velocity_current)
 
 		if current_speed_sq > 0.01 then
@@ -90,7 +95,7 @@ PlayerCharacterStateHubJog.fixed_update = function (self, unit, dt, t, next_stat
 	self:_update_mini_emotes(input_extension)
 
 	if not DEDICATED_SERVER then
-		self:_update_camera(unit, dt, t, move_state, hub_jog_character_state.method, first_person, locomotion)
+		self:_update_camera(unit, dt, t, move_state, self._movement_method, first_person, locomotion)
 	end
 
 	local next_state = self:_check_transition(unit, t, next_state_params, input_extension)
@@ -107,7 +112,7 @@ local move_state_anim_events = {
 PlayerCharacterStateHubJog._update_move_state = function (self, hub_jog_character_state, input_extension, anim_extension, move_speed, wants_to_stop, dt, t)
 	local hub_movement_settings = HubMovementLocomotion.fetch_movement_settings(self._unit, self._constants, hub_jog_character_state)
 	local shared_movement_settings = hub_movement_settings.shared
-	local current_movement_method = hub_jog_character_state.method
+	local current_movement_method = self._movement_method
 	local current_move_state = hub_jog_character_state.move_state
 	local move_state_start_t = hub_jog_character_state.move_state_start_t
 	local time_in_move_state = t - move_state_start_t
@@ -286,7 +291,7 @@ local STOP_VARIATION_VARIABLE_NAME = "stop_variation"
 local NUM_STOP_VARIATIONS = 3
 
 PlayerCharacterStateHubJog._update_move_method = function (self, move_state, hub_jog_character_state, locomotion, locomotion_steering, stopping, wants_move, wants_turn_on_spot, anim_extension, velocity_wanted, velocity_current, t)
-	local old_method = hub_jog_character_state.method
+	local old_method = self._movement_method
 	local move_method = nil
 
 	if wants_turn_on_spot then
@@ -327,6 +332,8 @@ PlayerCharacterStateHubJog._update_move_method = function (self, move_state, hub
 			angle = Vector3.flat_angle(velocity_wanted, character_forward)
 			anim = _anims_from_angle(angle, from_still_turn_anims)
 		end
+
+		self._movement_method = move_method
 
 		if anim then
 			if variable_name then

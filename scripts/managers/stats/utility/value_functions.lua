@@ -57,4 +57,15 @@ ValueFunctions.param = function (triggering_stat, param_name)
 	end
 end
 
+ValueFunctions.breed_health = function (triggering_stat)
+	local index_of_breed_name = table.index_of(triggering_stat:get_parameters(), "breed_name")
+
+	return function (_, _, _, ...)
+		local breed_name = select(index_of_breed_name, ...)
+		local max_health = Managers.state and Managers.state.difficulty and Managers.state.difficulty:get_minion_max_health(breed_name) or 100
+
+		return max_health
+	end
+end
+
 return ValueFunctions

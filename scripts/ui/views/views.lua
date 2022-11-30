@@ -833,6 +833,8 @@ local function _declare_view(name, settings)
 	views[name] = settings
 end
 
+_declare_view("store_view", require("scripts/ui/views/store_view/store_view_declaration_settings"))
+_declare_view("store_item_detail_view", require("scripts/ui/views/store_item_detail_view/store_item_detail_view_declaration_settings"))
 _declare_view("crafting_view", require("scripts/ui/views/crafting_view/crafting_view_declaration_settings"))
 _declare_view("crafting_modify_view", require("scripts/ui/views/crafting_modify_view/crafting_modify_view_declaration_settings"))
 _declare_view("crafting_upgrade_item_view", require("scripts/ui/views/crafting_upgrade_item_view/crafting_upgrade_item_view_declaration_settings"))

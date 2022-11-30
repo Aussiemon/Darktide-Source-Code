@@ -24,7 +24,7 @@ templates.weapon_trait_bespoke_chainaxe_p1_movement_speed_on_activation = {
 	weapon_trait_bespoke_chainaxe_p1_movement_speed_on_activation = {
 		{
 			stat_buffs = {
-				[stat_buffs.movement_speed] = 1.05
+				[stat_buffs.movement_speed] = 1.075
 			}
 		},
 		{
@@ -72,17 +72,17 @@ templates.weapon_trait_bespoke_chainaxe_p1_increase_power_on_kill = {
 	weapon_trait_bespoke_chainaxe_p1_increase_power_on_kill_parent = {
 		{
 			stat_buffs = {
+				[stat_buffs.power_level_modifier] = 0.075
+			}
+		},
+		{
+			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.13
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.145
+				[stat_buffs.power_level_modifier] = 0.125
 			}
 		},
 		{

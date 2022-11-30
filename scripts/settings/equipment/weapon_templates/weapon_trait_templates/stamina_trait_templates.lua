@@ -20,7 +20,16 @@ local stamina_trait_templates = {
 			}
 		},
 		{
-			"block_cost",
+			"block_cost_default",
+			"inner",
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"block_cost_default",
+			"outer",
 			{
 				max = 1,
 				min = 0
@@ -43,7 +52,16 @@ local stamina_trait_templates = {
 			}
 		},
 		{
-			"block_cost",
+			"block_cost_default",
+			"inner",
+			{
+				max = 1,
+				min = 0
+			}
+		},
+		{
+			"block_cost_default",
+			"outer",
 			{
 				max = 1,
 				min = 0

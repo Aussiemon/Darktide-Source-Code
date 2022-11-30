@@ -23,7 +23,6 @@ StateMainMenu.on_enter = function (self, parent, params, creation_context)
 	self._selected_profile = nil
 	self._character_is_syncing = false
 
-	Managers.presence:set_presence("main_menu")
 	self:_register_menu_events()
 
 	if has_created_first_character or #profiles > 0 then

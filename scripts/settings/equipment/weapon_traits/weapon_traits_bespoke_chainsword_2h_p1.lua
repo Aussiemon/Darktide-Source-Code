@@ -24,7 +24,7 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_movement_speed_on_activation = {
 	weapon_trait_bespoke_chainsword_2h_p1_movement_speed_on_activation = {
 		{
 			stat_buffs = {
-				[stat_buffs.movement_speed] = 1.05
+				[stat_buffs.movement_speed] = 1.075
 			}
 		},
 		{
@@ -48,6 +48,12 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_toughness_recovery_on_multiple_h
 	weapon_trait_bespoke_chainsword_2h_p1_toughness_recovery_on_multiple_hits = {
 		{
 			buff_data = {
+				replenish_percentage = 0.075,
+				required_num_hits = 3
+			}
+		},
+		{
+			buff_data = {
 				replenish_percentage = 0.1,
 				required_num_hits = 3
 			}
@@ -55,12 +61,6 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_toughness_recovery_on_multiple_h
 		{
 			buff_data = {
 				replenish_percentage = 0.125,
-				required_num_hits = 3
-			}
-		},
-		{
-			buff_data = {
-				replenish_percentage = 0.14,
 				required_num_hits = 3
 			}
 		},
@@ -79,7 +79,7 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_increased_melee_damage_on_multip
 				required_num_hits = 3
 			},
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.1
+				[stat_buffs.melee_damage] = 0.125
 			}
 		},
 		{
@@ -148,17 +148,17 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_chained_hits_increases_melee_cle
 	weapon_trait_bespoke_chainsword_2h_p1_chained_hits_increases_melee_cleave_parent = {
 		{
 			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.05
+			}
+		},
+		{
+			stat_buffs = {
 				[stat_buffs.max_hit_mass_attack_modifier] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
 				[stat_buffs.max_hit_mass_attack_modifier] = 0.15
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 0.175
 			}
 		},
 		{
@@ -177,12 +177,12 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_chained_hits_increases_crit_chan
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.035
+				[stat_buffs.critical_strike_chance] = 0.03
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.045
+				[stat_buffs.critical_strike_chance] = 0.04
 			}
 		},
 		{

@@ -12,12 +12,12 @@ templates.weapon_trait_bespoke_combatsword_p3_chained_hits_increases_crit_chance
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.035
+				[stat_buffs.critical_strike_chance] = 0.03
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.045
+				[stat_buffs.critical_strike_chance] = 0.04
 			}
 		},
 		{
@@ -32,19 +32,19 @@ templates.weapon_trait_bespoke_combatsword_p3_stacking_rending_on_weakspot = {
 		{
 			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.rending_multiplier] = 0.06
+				[stat_buffs.rending_multiplier] = 0.05
 			}
 		},
 		{
 			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.rending_multiplier] = 0.12
+				[stat_buffs.rending_multiplier] = 0.1
 			}
 		},
 		{
 			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.rending_multiplier] = 0.17
+				[stat_buffs.rending_multiplier] = 0.15
 			}
 		},
 		{
@@ -64,12 +64,12 @@ templates.weapon_trait_bespoke_combatsword_p3_dodge_grants_finesse_bonus = {
 		},
 		{
 			proc_stat_buffs = {
-				[stat_buffs.finesse_modifier_bonus] = 0.035
+				[stat_buffs.finesse_modifier_bonus] = 0.03
 			}
 		},
 		{
 			proc_stat_buffs = {
-				[stat_buffs.finesse_modifier_bonus] = 0.045
+				[stat_buffs.finesse_modifier_bonus] = 0.04
 			}
 		},
 		{
@@ -88,12 +88,12 @@ templates.weapon_trait_bespoke_combatsword_p3_dodge_grants_critical_strike_chanc
 		},
 		{
 			proc_stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.035
+				[stat_buffs.critical_strike_chance] = 0.03
 			}
 		},
 		{
 			proc_stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.045
+				[stat_buffs.critical_strike_chance] = 0.04
 			}
 		},
 		{
@@ -110,7 +110,7 @@ templates.weapon_trait_bespoke_combatsword_p3_increased_melee_damage_on_multiple
 				required_num_hits = 3
 			},
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.1
+				[stat_buffs.melee_damage] = 0.125
 			}
 		},
 		{

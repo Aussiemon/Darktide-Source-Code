@@ -296,7 +296,7 @@ ActionFlamerGas._damage_target = function (self, target_unit)
 	local penetrated = false
 	local instakill = false
 	local damage_type = damage_types.burning
-	local is_critical_strike = false
+	local is_critical_strike = self._critical_strike_component.is_active
 	local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, player_unit, target_index)
 	local charge_level = 1
 	local weapon_item = self._weapon.item
@@ -309,6 +309,9 @@ ActionFlamerGas._burn_targets = function (self, dt, t)
 	local player_unit = self._player_unit
 	local weapon_item = self._weapon.item
 	local burn_time = self._burn_time - dt
+	local is_critical_strike = self._critical_strike_component.is_active
+	local max_stacks = self._dot_max_stacks
+	local number_of_stacks = is_critical_strike and 2 or 1
 
 	if burn_time <= 0 then
 		local targets = self._dot_targets
@@ -325,9 +328,9 @@ ActionFlamerGas._burn_targets = function (self, dt, t)
 						local current_stacks = buff_extension:current_stacks(dot_buff_name)
 						local start_time_with_offset = t + math.random() * 0.3
 
-						if current_stacks < self._dot_max_stacks then
-							buff_extension:add_internally_controlled_buff(dot_buff_name, start_time_with_offset, "owner_unit", player_unit, "source_item", weapon_item)
-						elseif current_stacks == self._dot_max_stacks then
+						if current_stacks < max_stacks then
+							buff_extension:add_internally_controlled_buff_with_stacks(dot_buff_name, number_of_stacks, start_time_with_offset, "owner_unit", player_unit, "source_item", weapon_item)
+						elseif current_stacks == max_stacks then
 							buff_extension:refresh_duration_of_stacking_buff(dot_buff_name, start_time_with_offset)
 						end
 					end

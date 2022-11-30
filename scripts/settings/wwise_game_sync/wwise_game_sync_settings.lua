@@ -1,9 +1,10 @@
 local wwise_game_sync_settings = {
-	boss_trigger_distance = 80,
-	combat_state_horde_low_minimum_aggroed_minions = 5,
-	vector_horde_trigger_distance = 80,
+	music_state_reset_time = 2,
 	combat_state_horde_high_minimum_aggroed_minions = 10,
 	ambush_horde_trigger_distance = 80,
+	combat_state_horde_low_minimum_aggroed_minions = 5,
+	vector_horde_trigger_distance = 80,
+	boss_trigger_distance = 80,
 	default_group_state = "None",
 	minion_aggro_intensity_settings = {
 		num_threshold_high = 15,

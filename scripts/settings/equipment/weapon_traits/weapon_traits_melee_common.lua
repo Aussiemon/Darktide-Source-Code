@@ -424,17 +424,17 @@ weapon_traits_melee_common.weapon_trait_increase_damage_elites = {
 	weapon_trait_increase_damage_elites = {
 		{
 			stat_buffs = {
-				[buff_stat_buffs.damage_vs_elites] = 0.4
+				[buff_stat_buffs.damage_vs_elites] = 0.04
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.damage_vs_elites] = 0.6
+				[buff_stat_buffs.damage_vs_elites] = 0.06
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.damage_vs_elites] = 0.8
+				[buff_stat_buffs.damage_vs_elites] = 0.08
 			}
 		},
 		{
@@ -448,17 +448,17 @@ weapon_traits_melee_common.weapon_trait_increase_damage_hordes = {
 	weapon_trait_increase_damage_hordes = {
 		{
 			stat_buffs = {
-				[buff_stat_buffs.damage_vs_horde] = 0.4
+				[buff_stat_buffs.damage_vs_horde] = 0.04
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.damage_vs_horde] = 0.6
+				[buff_stat_buffs.damage_vs_horde] = 0.06
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.damage_vs_horde] = 0.8
+				[buff_stat_buffs.damage_vs_horde] = 0.08
 			}
 		},
 		{
@@ -472,17 +472,17 @@ weapon_traits_melee_common.weapon_trait_increase_damage_specials = {
 	weapon_trait_increase_damage_specials = {
 		{
 			stat_buffs = {
-				[buff_stat_buffs.damage_vs_specials] = 0.4
+				[buff_stat_buffs.damage_vs_specials] = 0.04
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.damage_vs_specials] = 0.6
+				[buff_stat_buffs.damage_vs_specials] = 0.06
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.damage_vs_specials] = 0.8
+				[buff_stat_buffs.damage_vs_specials] = 0.08
 			}
 		},
 		{

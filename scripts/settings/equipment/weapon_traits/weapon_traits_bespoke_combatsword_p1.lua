@@ -5,17 +5,17 @@ templates.weapon_trait_bespoke_combatsword_p1_chained_hits_increases_melee_cleav
 	weapon_trait_bespoke_combatsword_p1_chained_hits_increases_melee_cleave_parent = {
 		{
 			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.05
+			}
+		},
+		{
+			stat_buffs = {
 				[stat_buffs.max_hit_mass_attack_modifier] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
 				[stat_buffs.max_hit_mass_attack_modifier] = 0.15
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 0.175
 			}
 		},
 		{
@@ -34,12 +34,12 @@ templates.weapon_trait_bespoke_combatsword_p1_chained_hits_increases_crit_chance
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.035
+				[stat_buffs.critical_strike_chance] = 0.03
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.045
+				[stat_buffs.critical_strike_chance] = 0.04
 			}
 		},
 		{
@@ -92,7 +92,7 @@ templates.weapon_trait_bespoke_combatsword_p1_increased_melee_damage_on_multiple
 				required_num_hits = 3
 			},
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.1
+				[stat_buffs.melee_damage] = 0.125
 			}
 		},
 		{
@@ -124,16 +124,16 @@ templates.weapon_trait_bespoke_combatsword_p1_increased_melee_damage_on_multiple
 templates.weapon_trait_bespoke_combatsword_p1_infinite_melee_cleave_on_crit = {
 	weapon_trait_bespoke_combatsword_p1_infinite_melee_cleave_on_crit = {
 		{
-			active_duration = 2
+			active_duration = 1.5
 		},
 		{
-			active_duration = 3
+			active_duration = 2.5
 		},
 		{
 			active_duration = 3.5
 		},
 		{
-			active_duration = 4
+			active_duration = 4.5
 		}
 	}
 }
@@ -237,17 +237,17 @@ templates.weapon_trait_bespoke_combatsword_p1_consecutive_hits_increases_stagger
 	weapon_trait_bespoke_combatsword_p1_consecutive_hits_increases_stagger_parent = {
 		{
 			stat_buffs = {
+				[stat_buffs.melee_impact_modifier] = 0.075
+			}
+		},
+		{
+			stat_buffs = {
 				[stat_buffs.melee_impact_modifier] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
 				[stat_buffs.melee_impact_modifier] = 0.125
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.melee_impact_modifier] = 0.14
 			}
 		},
 		{

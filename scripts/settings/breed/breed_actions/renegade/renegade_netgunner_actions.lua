@@ -101,7 +101,7 @@ local action_data = {
 		is_assaulting = true,
 		move_type = "combat_vector",
 		vo_event = "seen_netgunner_flee",
-		run_speed = 5,
+		run_speed = 5.7,
 		move_anim_event = "assault_fwd"
 	},
 	reload = {
@@ -182,7 +182,7 @@ local action_data = {
 	shoot_net = {
 		aim_wwise_event = "wwise/events/minions/play_weapon_netgunner_wind_up",
 		drag_wwise_event = "wwise/events/weapon/play_enemy_netgunner_net_pull",
-		net_dodge_sweep_radius = 0.25,
+		net_dodge_sweep_radius = 0.35,
 		vo_event = "throwing_net",
 		drag_anim_exit_delay = 3,
 		fx_source_name = "muzzle",

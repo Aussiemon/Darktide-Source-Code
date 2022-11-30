@@ -34,13 +34,13 @@ templates.weapon_trait_bespoke_shotgun_p1_increase_power_on_close_kill = {
 templates.weapon_trait_bespoke_shotgun_p1_count_as_dodge_vs_ranged_on_close_kill = {
 	weapon_trait_bespoke_shotgun_p1_count_as_dodge_vs_ranged_on_close_kill = {
 		{
-			active_duration = 0.3
+			active_duration = 0.4
 		},
 		{
 			active_duration = 0.5
 		},
 		{
-			active_duration = 0.65
+			active_duration = 0.6
 		},
 		{
 			active_duration = 0.7
@@ -61,7 +61,7 @@ templates.weapon_trait_bespoke_shotgun_p1_suppression_on_close_kill = {
 			suppression_settings = {
 				suppression_falloff = true,
 				instant_aggro = true,
-				distance = 5,
+				distance = 6,
 				suppression_value = 15
 			}
 		},
@@ -69,7 +69,7 @@ templates.weapon_trait_bespoke_shotgun_p1_suppression_on_close_kill = {
 			suppression_settings = {
 				suppression_falloff = true,
 				instant_aggro = true,
-				distance = 5,
+				distance = 7,
 				suppression_value = 20
 			}
 		},
@@ -77,7 +77,7 @@ templates.weapon_trait_bespoke_shotgun_p1_suppression_on_close_kill = {
 			suppression_settings = {
 				suppression_falloff = true,
 				instant_aggro = true,
-				distance = 5,
+				distance = 8,
 				suppression_value = 25
 			}
 		}
@@ -111,17 +111,17 @@ templates.weapon_trait_bespoke_shotgun_p1_increase_close_damage_on_close_kill = 
 	weapon_trait_bespoke_shotgun_p1_increase_close_damage_on_close_kill = {
 		{
 			stat_buffs = {
-				[stat_buffs.damage_near] = 0.05
+				[stat_buffs.damage_near] = 0.04
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.damage_near] = 0.075
+				[stat_buffs.damage_near] = 0.06
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.damage_near] = 0.9
+				[stat_buffs.damage_near] = 0.8
 			}
 		},
 		{
@@ -164,7 +164,7 @@ templates.weapon_trait_bespoke_shotgun_p1_stagger_count_bonus_damage = {
 	weapon_trait_bespoke_shotgun_p1_stagger_count_bonus_damage = {
 		{
 			stat_buffs = {
-				[stat_buffs.stagger_count_damage] = 0.1
+				[stat_buffs.stagger_count_damage] = 0.125
 			}
 		},
 		{
@@ -174,7 +174,7 @@ templates.weapon_trait_bespoke_shotgun_p1_stagger_count_bonus_damage = {
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.stagger_count_damage] = 0.18
+				[stat_buffs.stagger_count_damage] = 0.175
 			}
 		},
 		{

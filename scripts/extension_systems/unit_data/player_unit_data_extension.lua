@@ -244,6 +244,7 @@ PlayerUnitDataExtension.init = function (self, extension_init_context, unit, ext
 	self._network_max_time_offset = NetworkConstants.max_time_offset
 	self._in_panic = false
 	self._in_panic_at_t = 0
+	self._panic_is_behind = false
 end
 
 PlayerUnitDataExtension.game_object_initialized = function (self, session, object_id)
@@ -868,9 +869,16 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 
 			self._in_panic = true
 			self._in_panic_at_t = t
+			self._panic_is_behind = true
 
 			input_handler:set_in_panic(true)
+		elseif not self._panic_is_behind then
+			info("Panic switched to being behind.")
+
+			self._panic_is_behind = true
 		end
+
+		self._last_received_frame = frame_index
 
 		return
 	elseif frame_index <= self._last_fixed_frame - state_cache_size then
@@ -881,9 +889,16 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 
 			self._in_panic = true
 			self._in_panic_at_t = t
+			self._panic_is_behind = false
 
 			input_handler:set_in_panic(true)
+		elseif self._panic_is_behind then
+			info("Panic switched to being ahead.")
+
+			self._panic_is_behind = false
 		end
+
+		self._last_received_frame = frame_index
 
 		return
 	end
@@ -893,6 +908,7 @@ PlayerUnitDataExtension._read_server_unit_data_state = function (self, t)
 
 		self._in_panic = false
 		self._in_panic_at_t = 0
+		self._panic_is_behind = false
 
 		input_handler:set_in_panic(false)
 	end

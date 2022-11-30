@@ -8,7 +8,6 @@ local settings = {
 	class_file_name = "scripts/managers/game_mode/game_modes/game_mode_training_grounds",
 	disable_hologram = true,
 	cache_local_player_profile = true,
-	presence_name = "training_grounds",
 	use_side_color = false,
 	states = {
 		"loading",

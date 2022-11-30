@@ -7,8 +7,8 @@ end
 
 local PartyManagerDummy = class("PartyManagerDummy")
 
-PartyManagerDummy.init = function (self, network_hash, platform, event_delegate, approve_channel_delegate, initial_presence_name)
-	self:set_presence(initial_presence_name)
+PartyManagerDummy.init = function (self, network_hash, platform, event_delegate, approve_channel_delegate)
+	return
 end
 
 PartyManagerDummy.destroy = function (self)
@@ -177,7 +177,7 @@ PartyManagerDummy.set_presence = function (self, presence_name)
 		return
 	end
 
-	local settings = PresenceSettings[presence_name]
+	local settings = PresenceSettings.settings[presence_name]
 	self._presence_name = presence_name
 	self._presence_id = NetworkLookup.presence_names[presence_name]
 	local hud_localization = settings.hud_localization

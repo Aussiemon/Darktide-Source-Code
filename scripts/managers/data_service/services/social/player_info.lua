@@ -207,7 +207,7 @@ PlayerInfo.player_activity_loc_string = function (self)
 	local activity_id = self:player_activity_id()
 
 	if activity_id then
-		return PresenceSettings[activity_id].hud_localization
+		return PresenceSettings.settings[activity_id].hud_localization
 	end
 
 	return nil

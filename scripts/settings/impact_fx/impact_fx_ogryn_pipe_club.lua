@@ -598,35 +598,70 @@ local disgustingly_resilient = {
 		weakspot_died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/gib_head_bits_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			}
 		},
 		died = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01"
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			}
 		},
 		weakspot_damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_weakspot_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			}
 		},
 		damage = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01"
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_small_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01"
+					"content/fx/particles/impacts/flesh/blood_squirt_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
 				}
 			}
 		},
@@ -640,7 +675,33 @@ local disgustingly_resilient = {
 		shield_blocked = {
 			{
 				effects = {
-					"content/fx/particles/impacts/armor_ricochet"
+					"content/fx/particles/impacts/damage_blocked"
+				}
+			}
+		},
+		blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/damage_blocked"
+				}
+			}
+		},
+		dead = {
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_small_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_maggots_small_01"
+				}
+			}
+		},
+		shove = {
+			{
+				effects = {
+					"content/fx/particles/impacts/generic_dust_unarmored"
 				}
 			}
 		}

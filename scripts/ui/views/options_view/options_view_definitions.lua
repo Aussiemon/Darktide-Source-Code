@@ -430,7 +430,7 @@ local legend_inputs = {
 		display_name = "loc_settings_menu_reset_to_default",
 		on_pressed_callback = "cb_reset_category_to_default",
 		visibility_function = function (parent)
-			return not not parent._selected_category
+			return not not parent._selected_category and parent._categories_by_display_name[parent._selected_category].can_be_reset
 		end
 	}
 }

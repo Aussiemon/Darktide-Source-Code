@@ -30,6 +30,22 @@ sub_header_font_style.font_size = 18
 sub_header_font_style.text_horizontal_alignment = "center"
 sub_header_font_style.text_vertical_alignment = "center"
 sub_header_font_style.text_color = Color.ui_grey_medium(255, true)
+local item_sub_header_font_style = table.clone(UIFontSettings.header_1)
+item_sub_header_font_style.offset = {
+	0,
+	0,
+	3
+}
+item_sub_header_font_style.font_size = 32
+item_sub_header_font_style.text_color = {
+	255,
+	255,
+	255,
+	255
+}
+item_sub_header_font_style.text_horizontal_alignment = "center"
+item_sub_header_font_style.text_vertical_alignment = "center"
+item_sub_header_font_style.material = "content/ui/materials/font_gradients/slug_font_gradient_rust"
 local cosmetic_item_display_name_text_style = table.clone(UIFontSettings.header_3)
 cosmetic_item_display_name_text_style.text_horizontal_alignment = "left"
 cosmetic_item_display_name_text_style.text_vertical_alignment = "center"
@@ -47,8 +63,10 @@ cosmetic_item_display_name_text_style.size = {
 
 local function _apply_package_item_icon_cb_func(widget, item)
 	local icon = item.icon
-	widget.style.icon.material_values.texture_icon = icon
-	widget.style.icon.material_values.use_placeholder_texture = 0
+	local material_values = widget.style.icon.material_values
+	material_values.texture_icon = icon
+	material_values.use_placeholder_texture = 0
+	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 end
 
 local function _remove_package_item_icon_cb_func(widget, ui_renderer)
@@ -58,6 +76,7 @@ local function _remove_package_item_icon_cb_func(widget, ui_renderer)
 	local material_values = widget.style.icon.material_values
 	widget.style.icon.material_values.texture_icon = nil
 	material_values.use_placeholder_texture = 1
+	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 end
 
 local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
@@ -68,11 +87,13 @@ local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, 
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
 	material_values.render_target = render_target
+	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 end
 
 local function _remove_live_item_icon_cb_func(widget)
 	local material_values = widget.style.icon.material_values
 	material_values.use_placeholder_texture = 1
+	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 	material_values.render_target = nil
 end
 
@@ -866,6 +887,10 @@ local blueprints = {
 					style.display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
 					style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
 					style.inner_highlight.color = table.clone(ItemUtils.rarity_color(equipped_item))
+
+					if style.item_level then
+						content.item_level = ItemUtils.item_level(equipped_item)
+					end
 				end
 			end
 		end,
@@ -905,6 +930,10 @@ local blueprints = {
 						local cb = callback(_apply_live_item_icon_cb_func, widget)
 						content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
 					end
+
+					if style.item_level then
+						content.item_level = ItemUtils.item_level(equipped_item)
+					end
 				end
 			end
 		end,
@@ -916,6 +945,52 @@ local blueprints = {
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
+			end
+		end
+	},
+	texture = {
+		size = {
+			64,
+			64
+		},
+		size_function = function (parent, element, ui_renderer)
+			local size = element.size
+
+			return {
+				size[1],
+				size[2]
+			}
+		end,
+		pass_template = {
+			{
+				style_id = "texture",
+				value_id = "texture",
+				pass_type = "texture",
+				style = {
+					vertical_alignment = "center",
+					horizontal_alignment = "center",
+					offset = {
+						0,
+						0,
+						0
+					},
+					color = Color.white(255, true)
+				}
+			}
+		},
+		init = function (parent, widget, element, callback_name)
+			local style = widget.style
+			local content = widget.content
+			local texture = element.texture
+			content.texture = texture
+			local color = element.color
+
+			if color then
+				local texture_color = style.texture.color
+				texture_color[1] = color[1]
+				texture_color[2] = color[2]
+				texture_color[3] = color[3]
+				texture_color[4] = color[4]
 			end
 		end
 	},
@@ -993,23 +1068,35 @@ local blueprints = {
 	},
 	item_sub_header = {
 		size = {
-			grid_width,
+			600,
 			20
 		},
+		size_function = function (parent, element, ui_renderer)
+			local size = element.size
+
+			return size and {
+				size[1],
+				size[2]
+			} or {
+				grid_width,
+				20
+			}
+		end,
 		pass_template = {
 			{
-				value = "content/ui/materials/symbols/new_item_indicator",
+				style_id = "new_indicator",
 				pass_type = "texture",
+				value = "content/ui/materials/symbols/new_item_indicator",
 				style = {
 					vertical_alignment = "top",
-					horizontal_alignment = "right",
+					horizontal_alignment = "center",
 					size = {
 						24,
 						24
 					},
 					offset = {
-						-20,
-						0,
+						285,
+						-10,
 						4
 					},
 					color = Color.terminal_corner_selected(255, true)
@@ -1022,13 +1109,23 @@ local blueprints = {
 				value = "n/a",
 				pass_type = "text",
 				value_id = "text",
-				style = sub_header_font_style
+				style = item_sub_header_font_style
 			}
 		},
 		init = function (parent, widget, element, callback_name)
+			local style = widget.style
 			local content = widget.content
 			local display_name = element.display_name
 			local text = Utf8.upper(Localize(display_name))
+			local new_indicator_width_offset = element.new_indicator_width_offset
+
+			if new_indicator_width_offset then
+				local offset = style.new_indicator.offset
+				offset[1] = new_indicator_width_offset[1]
+				offset[2] = new_indicator_width_offset[2]
+				offset[3] = new_indicator_width_offset[3]
+			end
+
 			content.element = element
 			content.localized_display_name = text
 			content.text = text

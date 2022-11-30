@@ -8,7 +8,21 @@ local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local attack_results = AttackSettings.attack_results
 local HudElementCrosshair = class("HudElementCrosshair", "HudElementBase")
+local attack_result_priority = {
+	weakspot = 2,
+	[attack_results.died] = 1,
+	[attack_results.damaged] = 3,
+	[attack_results.blocked] = 4,
+	[attack_results.shield_blocked] = 5,
+	[attack_results.dodged] = 6,
+	[attack_results.toughness_absorbed] = 6,
+	[attack_results.toughness_absorbed_melee] = 6,
+	[attack_results.toughness_broken] = 6,
+	[attack_results.knock_down] = 6,
+	[attack_results.friendly_fire] = 6
+}
 
 HudElementCrosshair.init = function (self, parent, draw_layer, start_scale, definitions)
 	local definitions = require(definition_path)
@@ -43,15 +57,30 @@ HudElementCrosshair.destroy = function (self)
 	HudElementCrosshair.super.destroy(self)
 end
 
-HudElementCrosshair.event_crosshair_hit_report = function (self, hit_weakspot, attack_result, did_damage, hit_world_position)
+HudElementCrosshair.event_crosshair_hit_report = function (self, hit_weakspot, attack_result, did_damage, hit_world_position, damage_efficiency)
 	local hit_report_array = self._hit_report_array
+	local last_result = hit_report_array[3]
+
+	if last_result then
+		if last_result == attack_results.damaged and hit_weakspot then
+			last_result = "weakspot"
+		end
+
+		local new_result = attack_result == attack_results.damaged and hit_weakspot and "weakspot" or attack_result
+		local new_prio = attack_result_priority[new_result] or math.huge
+
+		if last_result and attack_result_priority[last_result] < new_prio then
+			return
+		end
+	end
 
 	table.clear(hit_report_array)
 
+	local blocked = not did_damage and damage_efficiency ~= "push"
 	hit_report_array[1] = HudElementCrosshairSettings.hit_duration
 	hit_report_array[2] = hit_weakspot
 	hit_report_array[3] = attack_result
-	hit_report_array[4] = did_damage
+	hit_report_array[4] = not blocked
 	hit_report_array[5] = hit_world_position
 end
 
@@ -68,15 +97,15 @@ HudElementCrosshair.hit_indicator = function (self)
 		local did_damage = hit_report_array[4]
 		local color = nil
 
-		if attack_result == AttackSettings.attack_results.blocked or not did_damage then
+		if attack_result == attack_results.blocked or not did_damage then
 			color = hit_indicator_colors.blocked
-		elseif attack_result == AttackSettings.attack_results.damaged then
+		elseif attack_result == attack_results.damaged then
 			if hit_weakspot then
 				color = hit_indicator_colors.damage_weakspot
 			else
 				color = hit_indicator_colors.damage_normal
 			end
-		elseif attack_result == AttackSettings.attack_results.died then
+		elseif attack_result == attack_results.died then
 			color = hit_indicator_colors.death
 		else
 			progress = 0
@@ -146,12 +175,12 @@ HudElementCrosshair.update = function (self, dt, t, ui_renderer, render_settings
 	HudElementCrosshair.super.update(self, dt, t, ui_renderer, render_settings, input_service)
 
 	local hit_report_array = self._hit_report_array
-	local hit_report_deration = hit_report_array[1]
+	local hit_report_duration = hit_report_array[1]
 
-	if hit_report_deration then
-		if hit_report_deration > 0 then
-			hit_report_deration = hit_report_deration - dt
-			hit_report_array[1] = hit_report_deration
+	if hit_report_duration then
+		if hit_report_duration > 0 then
+			hit_report_duration = hit_report_duration - dt
+			hit_report_array[1] = hit_report_duration
 		else
 			table.clear(hit_report_array)
 		end

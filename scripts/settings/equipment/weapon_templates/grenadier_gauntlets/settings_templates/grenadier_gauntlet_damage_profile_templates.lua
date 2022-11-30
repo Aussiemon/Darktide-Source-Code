@@ -35,7 +35,7 @@ damage_templates.light_grenadier_gauntlet_tank = {
 	gibbing_type = GibbingTypes.default,
 	gibbing_power = GibbingPower.always,
 	wounds_template = WoundsTemplates.gauntlet_melee,
-	melee_attack_strength = melee_attack_strengths.heavy,
+	melee_attack_strength = melee_attack_strengths.light,
 	targets = {
 		{
 			boost_curve_multiplier_finesse = 0.25,
@@ -170,7 +170,7 @@ damage_templates.special_grenadier_gauntlet_tank = {
 				}
 			},
 			power_distribution = {
-				attack = 5,
+				attack = 50,
 				impact = 50
 			}
 		},
