@@ -25,7 +25,7 @@ end
 
 local XboxLiveUtils = {
 	available = function ()
-		local connection_verified = Managers.account:verify_connection()
+		local connection_verified = Managers.account and Managers.account:verify_connection()
 		local is_available = connection_verified and Application.xbox_live and Application.xbox_live() == true and not DevParameters.debug_disable_xbox_live
 
 		if is_available then

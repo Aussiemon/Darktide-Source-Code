@@ -92,7 +92,7 @@ WeaponStats.init = function (self, item)
 	if self._weapon_statistics then
 		local bar_breakdown = {}
 		local bar_stats = item.base_stats or EMPTY_TABLE
-		local bar_stats_template = weapon_template.base_stats
+		local bar_stats_template = weapon_template.base_stats or {}
 
 		for base_stat_idx = 1, #bar_stats do
 			local bar_def = bar_stats[base_stat_idx]

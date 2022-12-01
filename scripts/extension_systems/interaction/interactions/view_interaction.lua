@@ -38,7 +38,7 @@ ViewInteraction.start = function (self, world, interactor_unit, unit_data_compon
 		local ui_interaction = interactee_extension:ui_interaction()
 		local ui_manager = Managers.ui
 
-		if not ui_manager:view_active(ui_interaction) and not ui_manager:is_view_closing(ui_interaction) then
+		if not ui_manager:view_active(ui_interaction) and not ui_manager:is_view_closing(ui_interaction) and not ui_manager:has_active_view() then
 			local context = {
 				hub_interaction = true
 			}

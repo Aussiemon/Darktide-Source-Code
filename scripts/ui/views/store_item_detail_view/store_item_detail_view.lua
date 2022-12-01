@@ -781,7 +781,7 @@ StoreItemDetailView._extract_item = function (self, description)
 		return
 	end
 
-	local visual_item = item
+	local visual_item = nil
 	local item_type = item.item_type
 
 	if item_type == "WEAPON_SKIN" then
@@ -789,12 +789,14 @@ StoreItemDetailView._extract_item = function (self, description)
 	elseif item_type == "WEAPON_TRINKET" then
 		visual_item = ItemUtils.weapon_trinket_preview_item(item)
 
-		if not visual_item.slots then
+		if visual_item and not visual_item.slots then
 			visual_item.slots = {
 				"slot_trinket_1"
 			}
 		end
 	end
+
+	visual_item = visual_item or item
 
 	return item, visual_item
 end

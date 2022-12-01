@@ -7,6 +7,11 @@ local RPCS = {
 	"rpc_profile_sync_peer_disconnected"
 }
 local ProfileSynchronizerClient = class("ProfileSynchronizerClient")
+ProfileSynchronizerClient.DEBUG_TAG = "Profile Sync Client"
+
+local function _debug_print(str, ...)
+	Log.info(ProfileSynchronizerClient.DEBUG_TAG, str, ...)
+end
 
 ProfileSynchronizerClient.init = function (self, event_delegate)
 	self._event_delegate = event_delegate
@@ -88,6 +93,8 @@ ProfileSynchronizerClient.rpc_profile_synced_by_all = function (self, channel_id
 	end
 
 	if player then
+		_debug_print("rpc_profile_synced_by_all, player:set_profile()", peer_id, local_player_id)
+
 		local profile_json = player_profiles_json[local_player_id]
 		local profile = ProfileUtils.unpack_profile(profile_json)
 

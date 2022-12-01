@@ -1333,8 +1333,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 			local statistics_template = weapon_template.displayed_weapon_stats and WeaponUIStatsTemplates[weapon_template.displayed_weapon_stats] or weapon_template.displayed_weapon_stats_table
 			local damage_actions = statistics_template.damage
 			local action_table = damage_actions[attack_index]
-			local action_name = action_table[chain_index] and action_table[chain_index].action_name
-			local action = weapon_template.actions[action_name]
+			local action_name = action_table and action_table[chain_index] and action_table[chain_index].action_name
+			local action = action_name and weapon_template.actions[action_name]
 			local explosion_template = action and Action.explosion_template(action)
 			content.extra_information = explosion_template and Localize("loc_weapon_stats_display_explosions_vary") or ""
 			local is_ranged_weapon = Item.is_weapon_template_ranged(item)
@@ -1398,10 +1398,15 @@ local function generate_blueprints_function(grid_size, optional_item)
 		local weapon_template = WeaponTemplate.weapon_template_from_item(optional_item)
 
 		if not weapon_template then
-			return
+			return pass_templates
 		end
 
 		local displayed_attacks = weapon_template.displayed_attacks
+
+		if not displayed_attacks then
+			return pass_templates
+		end
+
 		local weapon_action_type_icons = UISettings.weapon_action_type_icons
 		local weapon_action_display_order_array = UISettings.weapon_action_display_order_array
 		local weapon_stats = WeaponStats:new(optional_item)

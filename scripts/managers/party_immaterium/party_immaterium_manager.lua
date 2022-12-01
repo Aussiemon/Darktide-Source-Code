@@ -89,7 +89,7 @@ PartyImmateriumManager.destroy = function (self)
 end
 
 PartyImmateriumManager._resolve_join_permission = function (self, presence_entry, context)
-	if not Managers.data_service.social:local_player_is_joinable() then
+	if not Managers.data_service.social:local_player_is_joinable() and context == "JOIN_REQUEST" then
 		local context_suffix = context and "_" .. context or ""
 
 		return Promise.rejected({

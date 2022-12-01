@@ -273,6 +273,26 @@ local function add_presentation_traits(item, layout, grid_size)
 	return add_end_margin
 end
 
+ViewElementWeaponStats._verify_weapon = function (self, item)
+	if not item then
+		return false
+	end
+
+	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
+
+	if not weapon_template then
+		return false
+	end
+
+	local displayed_attacks = weapon_template.displayed_attacks
+
+	if not displayed_attacks then
+		return false
+	end
+
+	return true
+end
+
 ViewElementWeaponStats.present_item = function (self, item, is_equipped, on_present_callback)
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size
@@ -280,6 +300,11 @@ ViewElementWeaponStats.present_item = function (self, item, is_equipped, on_pres
 	local item_name = item.name
 	local item_type = item.item_type
 	local is_weapon = item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED"
+
+	if is_weapon and not self:_verify_weapon(item) then
+		return
+	end
+
 	local add_end_margin = true
 	local layout = {
 		[#layout + 1] = {

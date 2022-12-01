@@ -865,20 +865,50 @@ StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
 		local w, h = self:_scenegraph_size("grid_background")
 		local start_pos = self:_scenegraph_world_position("grid_background", 1)
 		local offers = data.offers
+		local valid_offers = {}
 
 		for i = 1, #offers do
 			local offer = offers[i]
 
 			if offer.bundleInfo then
+				local offer_valid = true
 				local is_personal = offer.is_personal()
 
 				for j = 1, #offer.bundleInfo do
 					local bundle_offer = offer.bundleInfo[j]
-					bundle_offer.offerId = bundle_offer.price and bundle_offer.price.id
+					local is_item = bundle_offer.sku and bundle_offer.sku.category == "item_instance"
+					local item = nil
 
-					if bundle_offer.offerId then
-						data:decorate_offer(bundle_offer, is_personal)
+					if is_item then
+						item = MasterItems.get_store_item_instance(bundle_offer.description)
+
+						if not item then
+							offer_valid = false
+						end
 					end
+
+					if not is_item or is_item and item then
+						bundle_offer.offerId = bundle_offer.price and bundle_offer.price.id
+
+						if bundle_offer.offerId then
+							data:decorate_offer(bundle_offer, is_personal)
+						end
+					end
+				end
+
+				if offer_valid then
+					valid_offers[#valid_offers + 1] = offer
+				end
+			else
+				local is_item = offer.sku and offer.sku.category == "item_instance"
+				local item = nil
+
+				if is_item then
+					item = MasterItems.get_store_item_instance(offer.description)
+				end
+
+				if not is_item or is_item and item then
+					valid_offers[#valid_offers + 1] = offer
 				end
 			end
 		end
@@ -983,7 +1013,7 @@ StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
 		table.remove_sequence(category_pages_layout_data, last_index + 1, #category_pages_layout_data)
 
 		self._category_pages_layout_data = category_pages_layout_data
-		self._store_promise = Promise.all(unpack(self:_fill_layout_with_offers(category_pages_layout_data, offers))):next(function (elements)
+		self._store_promise = Promise.all(unpack(self:_fill_layout_with_offers(category_pages_layout_data, valid_offers))):next(function (elements)
 			if self._destroyed or not self._store_promise then
 				return
 			end

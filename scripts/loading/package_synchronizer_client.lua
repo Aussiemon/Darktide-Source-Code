@@ -85,6 +85,9 @@ PackageSynchronizerClient.add_peer = function (self, peer_id)
 		local profile_packages = self:resolve_profile_packages(profile)
 		packages[local_player_id] = profile_packages
 		local profile_clone = table.clone_instance(profile)
+
+		_debug_print("Player Profile Initial Cache", peer_id, local_player_id)
+
 		self._player_profile_cache[peer_id][local_player_id] = profile_clone
 	end
 
@@ -128,6 +131,9 @@ PackageSynchronizerClient.add_bot = function (self, peer_id, local_player_id)
 		local peer_packages = data.peer_packages
 		peer_packages[local_player_id] = profile_packages
 		local profile_clone = table.clone_instance(profile)
+
+		_debug_print("Player Profile Initial Cache", peer_id, local_player_id)
+
 		self._player_profile_cache[peer_id][local_player_id] = profile_clone
 	end
 end
@@ -741,12 +747,19 @@ end
 PackageSynchronizerClient.rpc_cache_player_profile = function (self, channel_id, peer_id, local_player_id)
 	local data = self._packages[peer_id]
 
+	_debug_print("rpc_cache_player_profile", peer_id, local_player_id)
+
 	if data then
 		local player_profile_cache = self._player_profile_cache
 		local player = Managers.player:player(peer_id, local_player_id)
 		local profile = player:profile()
 		local profile_clone = table.clone_instance(profile)
+
+		_debug_print("rpc_cache_player_profile Player Profile Cached", peer_id, local_player_id)
+
 		player_profile_cache[peer_id][local_player_id] = profile_clone
+	else
+		_debug_print("rpc_cache_player_profile No data for player when caching profile", peer_id, local_player_id)
 	end
 end
 

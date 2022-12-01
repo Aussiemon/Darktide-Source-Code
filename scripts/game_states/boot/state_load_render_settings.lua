@@ -3,10 +3,26 @@ require("scripts/game_states/boot/state_boot_sub_state_base")
 local render_settings = require("scripts/settings/options/render_settings")
 local StateLoadRenderSettings = class("StateLoadRenderSettings", "StateBootSubStateBase")
 
+local function sort_function(setting_a, setting_b)
+	local prio_a = setting_a.startup_prio or math.huge
+	local prio_b = setting_b.startup_prio or math.huge
+
+	return prio_a < prio_b
+end
+
 StateLoadRenderSettings._state_update = function (self, dt)
 	local settings = render_settings.settings
+	local settings_to_run = {}
 
-	self:_apply_render_settings(settings)
+	self:_check_render_settings(settings, settings_to_run)
+	table.sort(settings_to_run, sort_function)
+
+	for i = 1, #settings_to_run do
+		local setting = settings_to_run[i]
+		local value = setting:get_function()
+
+		setting.on_activated(value, setting)
+	end
 
 	local error = false
 	local done = true
@@ -14,14 +30,14 @@ StateLoadRenderSettings._state_update = function (self, dt)
 	return done, error
 end
 
-StateLoadRenderSettings._apply_render_settings = function (self, settings)
+StateLoadRenderSettings._check_render_settings = function (self, settings, settings_to_run)
 	if not DEDICATED_SERVER then
 		for _, setting in ipairs(settings) do
 			if setting.pages then
 				for i = 1, #setting.pages do
 					local page_setting = setting.pages[i].entries
 
-					self:_apply_render_settings(page_setting)
+					self:_check_render_settings(page_setting, settings_to_run)
 				end
 			end
 
@@ -40,7 +56,7 @@ StateLoadRenderSettings._apply_render_settings = function (self, settings)
 							local on_activated = setting.on_activated
 
 							if on_activated then
-								on_activated(value, setting)
+								settings_to_run[#settings_to_run + 1] = setting
 							end
 						end
 					end

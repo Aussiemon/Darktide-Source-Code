@@ -223,7 +223,8 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 									changes_list[#changes_list + 1] = {
 										id = id,
 										value = value,
-										save_location = render_settings_by_id[id].save_location
+										save_location = render_settings_by_id[id].save_location,
+										require_apply = render_settings_by_id[id].require_apply
 									}
 								elseif render_settings_by_id[id].disabled then
 									render_settings_by_id[id].value_on_enabled = value
@@ -266,7 +267,8 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 						changes_list[#changes_list + 1] = {
 							id = id,
 							value = value,
-							save_location = render_settings_by_id[id].save_location
+							save_location = render_settings_by_id[id].save_location,
+							require_apply = render_settings_by_id[id].require_apply
 						}
 					elseif render_settings_by_id[id].disabled then
 						render_settings_by_id[id].value_on_enabled = value
@@ -296,6 +298,11 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 
 		for i = 1, #filtered_changes do
 			local setting_changed = filtered_changes[i]
+
+			if setting_changed.require_apply then
+				require_apply = true
+			end
+
 			local id = setting_changed.id
 			local new_value = setting_changed.value
 
@@ -999,9 +1006,10 @@ local RENDER_TEMPLATES = {
 		end
 	},
 	{
-		apply_on_startup = true,
-		display_name = "loc_setting_ray_tracing_quality",
 		id = "ray_tracing_quality",
+		startup_prio = 2,
+		display_name = "loc_setting_ray_tracing_quality",
+		apply_on_startup = true,
 		tooltip_text = "loc_setting_ray_tracing_quality_mouseover",
 		save_location = "master_render_settings",
 		default_value = DefaultGameParameters.default_ray_tracing_quality_quality,
@@ -1242,6 +1250,7 @@ local RENDER_TEMPLATES = {
 	{
 		apply_on_startup = true,
 		display_name = "loc_setting_graphics_quality",
+		startup_prio = 1,
 		id = "graphics_quality",
 		tooltip_text = "loc_setting_graphics_quality_mouseover",
 		save_location = "master_render_settings",
@@ -2252,6 +2261,8 @@ local function create_render_settings_entry(template)
 	entry.id = template.id
 	entry.save_location = save_location
 	entry.apply_values_on_edited = template.apply_values_on_edited
+	entry.startup_prio = template.startup_prio
+	entry.require_apply = template.require_apply
 
 	return entry
 end
