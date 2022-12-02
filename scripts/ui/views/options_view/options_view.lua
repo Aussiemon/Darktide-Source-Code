@@ -1107,7 +1107,8 @@ OptionsView._change_navigation_column = function (self, column_index)
 		end
 	end
 
-	local widgets = navigation_widgets[column_index]
+	local navigation_grid = self._navigation_grids[column_index]
+	local scrollbar_progress = navigation_grid:scrollbar_progress()
 
 	for i = 1, #widgets do
 		local widget = widgets[i]
@@ -1115,9 +1116,13 @@ OptionsView._change_navigation_column = function (self, column_index)
 		local hotspot = content.hotspot or content.button_hotspot
 
 		if hotspot then
-			self:_set_selected_navigation_widget(widget)
+			local scroll_position = navigation_grid:get_scrollbar_percentage_by_index(i) or 0
 
-			return success
+			if scrollbar_progress <= scroll_position then
+				self:_set_selected_navigation_widget(widget)
+
+				return success
+			end
 		end
 	end
 end

@@ -328,9 +328,11 @@ local default_list = {
 				return false
 			end
 
+			local is_disabled = game_mode_manager:game_mode_state() == "leaving_game"
 			local game_mode_name = game_mode_manager:game_mode_name()
+			local can_show = game_mode_name == "training_grounds" or game_mode_name == "shooting_range"
 
-			return game_mode_name == "training_grounds" or game_mode_name == "shooting_range"
+			return can_show, is_disabled
 		end,
 		trigger_function = function ()
 			local context = {

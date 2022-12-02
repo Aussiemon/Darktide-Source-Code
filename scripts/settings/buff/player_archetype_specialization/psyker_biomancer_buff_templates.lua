@@ -776,6 +776,11 @@ templates.psyker_biomancer_smite_on_hit = {
 		local hit_unit_pos = POSITION_LOOKUP[smite_target]
 		local player_pos = POSITION_LOOKUP[player_unit]
 		local attack_direction = Vector3.normalize(hit_unit_pos - player_pos)
+
+		if Vector3.length(attack_direction) == 0 then
+			attack_direction = Vector3.up()
+		end
+
 		local damage_profile = DamageProfileTemplates.psyker_smite_kill
 		local damage_type = damage_types.smite
 		local hit_world_position = hit_unit_pos

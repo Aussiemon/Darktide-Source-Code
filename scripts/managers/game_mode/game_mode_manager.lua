@@ -424,6 +424,10 @@ GameModeManager.hot_join_sync = function (self, sender, channel)
 	self._game_mode:hot_join_sync(sender, channel)
 end
 
+GameModeManager.game_mode_state = function (self)
+	return self._game_mode:state()
+end
+
 GameModeManager.mission_outro_played = function (self)
 	local game_mode = self._game_mode
 	local state = self._game_mode:state()

@@ -1705,7 +1705,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 					end
 				end
 			else
-				item_archetype = profile.archetype.name
+				item_archetype = profile.archetype
 			end
 
 			local compatible_profile = item_gender and item_breed and item_archetype

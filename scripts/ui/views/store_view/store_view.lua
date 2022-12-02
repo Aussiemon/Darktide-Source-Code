@@ -679,11 +679,16 @@ StoreView._fill_layout_with_offers = function (self, pages, offers)
 			end
 
 			if imageURL then
-				promises[#promises + 1] = Managers.url_loader:load_texture(imageURL):next(function (data)
+				local url_load_promise = Promise:new()
+				promises[#promises + 1] = url_load_promise
+
+				Managers.url_loader:load_texture(imageURL):next(function (data)
 					element.texture_map = data.texture
 					self._url_textures[#self._url_textures + 1] = data
 
-					return element
+					url_load_promise:resolve(element)
+				end):catch(function (error)
+					url_load_promise:resolve(element)
 				end)
 			elseif offer.sku then
 				if offer.sku.category == "item_instance" and offer.description.type == "weapon" then
@@ -747,8 +752,10 @@ StoreView._create_aquilas_presentation = function (self, offers)
 		platform = "steam"
 	end
 
-	for i = 1, #offers do
-		local offer = offers[i]
+	local i = 1
+
+	for offerIdx = 1, #offers do
+		local offer = offers[offerIdx]
 		local element = {}
 
 		if offer[platform] then
@@ -762,7 +769,7 @@ StoreView._create_aquilas_presentation = function (self, offers)
 
 			element.title = offer.value.amount
 			local description = ""
-			local bonus_aquila = UISettings.bonus_aquila_values[i]
+			local bonus_aquila = offer.bonus or UISettings.bonus_aquila_values[offerIdx] or 0
 
 			if bonus_aquila and bonus_aquila > 0 then
 				local aquilas = offer.value.amount
@@ -776,24 +783,24 @@ StoreView._create_aquilas_presentation = function (self, offers)
 			element.item_types = {
 				"currency"
 			}
+			local name = "currency_widget_" .. i
+			local widget = self:_create_widget(name, widget_definition)
+			widget.type = "aquila_button"
+			widget.offset = {
+				offset,
+				0,
+				0
+			}
+			offset = offset + size[1] + spacing[1]
+			local init = template.init
+
+			if init then
+				init(self, widget, element, "cb_on_grid_entry_left_pressed")
+			end
+
+			widgets[#widgets + 1] = widget
+			i = i + 1
 		end
-
-		local name = "currency_widget_" .. i
-		local widget = self:_create_widget(name, widget_definition)
-		widget.type = "aquila_button"
-		widget.offset = {
-			offset,
-			0,
-			0
-		}
-		offset = offset + size[1] + spacing[1]
-		local init = template.init
-
-		if init then
-			init(self, widget, element, "cb_on_grid_entry_left_pressed")
-		end
-
-		widgets[#widgets + 1] = widget
 	end
 
 	local total_width = offset - spacing[1]
@@ -1164,9 +1171,11 @@ StoreView.on_exit = function (self)
 end
 
 StoreView._unload_url_textures = function (self)
-	if #self._url_textures > 0 then
-		for i = 1, #self._url_textures do
-			local texture_data = self._url_textures[i]
+	local url_textures = self._url_textures
+
+	if url_textures and #url_textures > 0 then
+		for i = 1, #url_textures do
+			local texture_data = url_textures[i]
 
 			Managers.url_loader:unload_texture(texture_data)
 		end

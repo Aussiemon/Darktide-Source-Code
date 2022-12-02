@@ -48,8 +48,8 @@ templates.weapon_trait_bespoke_plasmagun_p1_lower_overheat_gives_faster_charge =
 		if slot_type == "weapon" and not ConditionalFunctions.is_reloading(template_data, template_context) then
 			local slot_inventory_component = unit_data_extension:read_component(wielded_slot)
 			local overheat_current_percentage = slot_inventory_component.overheat_current_percentage
-			overheat_current_percentage = 1 - (overheat_current_percentage - 0.1) / 0.9
-			local steps = math.floor(overheat_current_percentage * 5)
+			overheat_current_percentage = 1 - math.clamp01((overheat_current_percentage - 0.1) / 0.9)
+			local steps = math.round(overheat_current_percentage * 5)
 
 			return steps
 		end
@@ -75,13 +75,19 @@ templates.weapon_trait_bespoke_plasmagun_p1_crit_chance_scaled_on_heat = {
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local inventory_component = unit_data_extension:read_component("inventory")
 		local wielded_slot = inventory_component.wielded_slot
-		local slot_type = slot_configuration[wielded_slot].slot_type
+
+		if wielded_slot == "none" or not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
+			return 0
+		end
+
+		local wielded_slot_configuration = slot_configuration[wielded_slot]
+		local slot_type = wielded_slot_configuration and wielded_slot_configuration.slot_type
 
 		if slot_type == "weapon" and not ConditionalFunctions.is_reloading(template_data, template_context) then
 			local slot_inventory_component = unit_data_extension:read_component(wielded_slot)
 			local overheat_current_percentage = slot_inventory_component.overheat_current_percentage
-			overheat_current_percentage = (overheat_current_percentage - 0.1) / 0.9
-			local steps = math.floor(overheat_current_percentage * 5)
+			overheat_current_percentage = math.clamp01((overheat_current_percentage - 0.1) / 0.9)
+			local steps = math.round(overheat_current_percentage * 5)
 
 			return steps
 		end

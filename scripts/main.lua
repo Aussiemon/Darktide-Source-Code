@@ -94,7 +94,10 @@ end
 
 Main.shutdown = function (self)
 	Application.force_silent_exit_policy()
-	Crashify.print_property("shutdown", true)
+
+	if rawget(_G, "Crashify") then
+		Crashify.print_property("shutdown", true)
+	end
 
 	local owns_package_manager = true
 

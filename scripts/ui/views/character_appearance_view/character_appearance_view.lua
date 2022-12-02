@@ -2214,7 +2214,11 @@ CharacterAppearanceView.on_exit = function (self)
 	self:_unload_all_appearance_icons()
 	self:_destroy_background()
 	self:_destroy_renderer()
-	self._character_create:set_name("")
+
+	if self._character_create then
+		self._character_create:set_name("")
+	end
+
 	Managers.event:unregister(self, "update_character_sync_state")
 end
 
@@ -4887,41 +4891,45 @@ CharacterAppearanceView.on_resolution_modified = function (self)
 end
 
 CharacterAppearanceView._align_background = function (self)
-	local screen_width = RESOLUTION_LOOKUP.width
-	local screen_height = RESOLUTION_LOOKUP.height
-	local inverse_scale = RESOLUTION_LOOKUP.inverse_scale
-	local parent_size_x = screen_width * inverse_scale
-	local parent_size_y = screen_height * inverse_scale
-	local reference_size = self._pages[self._active_page_number].background and self._pages[self._active_page_number].background.size or {
-		1920,
-		1080
-	}
-	local width_reference_ratio = reference_size[1] / reference_size[2]
-	local height_reference_ratio = reference_size[2] / reference_size[1]
-	local screen_ratio = screen_width / screen_height
-	local size = {
-		parent_size_x,
-		parent_size_y
-	}
-
-	if width_reference_ratio < screen_ratio then
-		size = {
-			parent_size_x,
-			parent_size_x * height_reference_ratio
+	if self._pages and self._pages[self._active_page_number] and self._pages[self._active_page_number].background then
+		local screen_width = RESOLUTION_LOOKUP.width
+		local screen_height = RESOLUTION_LOOKUP.height
+		local inverse_scale = RESOLUTION_LOOKUP.inverse_scale
+		local parent_size_x = screen_width * inverse_scale
+		local parent_size_y = screen_height * inverse_scale
+		local reference_size = self._pages[self._active_page_number].background and self._pages[self._active_page_number].background.size or {
+			1920,
+			1080
 		}
-	elseif screen_ratio < width_reference_ratio then
-		size = {
-			parent_size_y * width_reference_ratio,
+		local width_reference_ratio = reference_size[1] / reference_size[2]
+		local height_reference_ratio = reference_size[2] / reference_size[1]
+		local screen_ratio = screen_width / screen_height
+		local size = {
+			parent_size_x,
 			parent_size_y
 		}
-	end
 
-	self._widgets_by_name.background.content.size = size
-	self._widgets_by_name.background.offset = {
-		parent_size_x / 2 - size[1] / 2,
-		parent_size_y / 2 - size[2] / 2,
-		0
-	}
+		if width_reference_ratio < screen_ratio then
+			size = {
+				parent_size_x,
+				parent_size_x * height_reference_ratio
+			}
+		elseif screen_ratio < width_reference_ratio then
+			size = {
+				parent_size_y * width_reference_ratio,
+				parent_size_y
+			}
+		end
+
+		if self._widgets_by_name and self._widgets_by_name.background then
+			self._widgets_by_name.background.content.size = size
+			self._widgets_by_name.background.offset = {
+				parent_size_x / 2 - size[1] / 2,
+				parent_size_y / 2 - size[2] / 2,
+				0
+			}
+		end
+	end
 end
 
 CharacterAppearanceView.dialogue_system = function (self)

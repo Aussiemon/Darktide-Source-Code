@@ -306,8 +306,9 @@ HudElementInteraction._update_target_interaction_hold_progress = function (self,
 	local interactor_extension = active_presentation_data.interactor_extension
 	local interactee_extension = active_presentation_data.interactee_extension
 	local player_unit = active_presentation_data.player_unit
+	local interactee_unit = active_presentation_data.interactee_unit
 	local hold_progress = 0
-	local can_interact = interactee_extension and interactee_extension:can_interact(player_unit)
+	local can_interact = ALIVE[interactee_unit] and interactee_extension and interactee_extension:can_interact(player_unit)
 
 	if can_interact then
 		hold_progress = interactor_extension and interactor_extension:interaction_progress()

@@ -456,7 +456,7 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 	local start_t = action_sweep_component.sweep_aborted_t
 	local damage = hit_stickyness_settings.damage
 
-	if not self._unit_data_extension.is_resimulating and damage and sticky_target_unit_alive then
+	if not self._unit_data_extension.is_resimulating and damage and stick_to_actor then
 		local num_damage_instances_this_frame, is_last_damage_instance, is_first_damage_instance = SweepStickyness.num_damage_instances_this_frame(hit_stickyness_settings, start_t, t)
 
 		if num_damage_instances_this_frame > 0 then

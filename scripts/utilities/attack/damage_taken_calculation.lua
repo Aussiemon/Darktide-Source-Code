@@ -160,7 +160,7 @@ function _calculate_toughness_damage_player(damage_amount, damage_profile, attac
 		local melee_max_toughness = override_max_toughness or real_max_toughness
 		local toughness_melee_spillover_modifier = toughness_template.melee_spillover_modifier or 1
 		local current_toughness_percent = 1 - current_toughness_damage / real_max_toughness or 0
-		local toughness_factor = current_toughness_percent * 100 / real_max_toughness
+		local toughness_factor = current_toughness_percent * real_max_toughness / real_max_toughness
 		remaining_damage = math.lerp(damage_amount * 1, damage_amount * 0, math.min(toughness_factor, 1) * toughness_melee_spillover_modifier)
 		toughness_damage = math.clamp(melee_toughness_multiplier * damage_amount * toughness_melee_damage_modifier, 0, melee_max_toughness)
 		absorbed_attack = melee_max_toughness > current_toughness_damage + toughness_damage

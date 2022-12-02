@@ -45,7 +45,6 @@ local blueprints = {
 		init = function (parent, widget, entry, callback_name)
 			local content = widget.content
 			local hotspot = content.hotspot
-			hotspot.use_is_focused = false
 
 			hotspot.pressed_callback = function ()
 				local is_disabled = entry.disabled or false
@@ -490,7 +489,7 @@ blueprints.dropdown = {
 		local options = entry.options_function and entry.options_function() or entry.options
 		local num_visible_options = math.min(#options, max_visible_options)
 
-		return DropdownPassTemplates.settings_dropdown(size[1], settings_value_height, settings_value_width, num_visible_options)
+		return DropdownPassTemplates.settings_dropdown(size[1], settings_value_height, settings_value_width, num_visible_options, true)
 	end,
 	init = function (parent, widget, entry, callback_name)
 		local content = widget.content

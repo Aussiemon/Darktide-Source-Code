@@ -2150,9 +2150,10 @@ StoreItemDetailView._create_aquilas_presentation = function (self)
 		local cost = self._selected_offer.price.amount.amount
 		local currency = self._selected_offer.price.amount.type
 		local money_required = cost - self._current_balance[currency]
+		local i = 1
 
-		for i = 1, #available_aquilas do
-			local offer = available_aquilas[i]
+		for offerIdx = 1, #available_aquilas do
+			local offer = available_aquilas[offerIdx]
 			local element = {}
 
 			if offer[platform] then
@@ -2166,7 +2167,7 @@ StoreItemDetailView._create_aquilas_presentation = function (self)
 
 				element.title = offer.value.amount
 				local description = ""
-				local bonus_aquila = UISettings.bonus_aquila_values[i]
+				local bonus_aquila = offer.bonus or UISettings.bonus_aquila_values[offerIdx] or 0
 
 				if bonus_aquila and bonus_aquila > 0 then
 					local aquilas = offer.value.amount
@@ -2178,28 +2179,28 @@ StoreItemDetailView._create_aquilas_presentation = function (self)
 				element.texture_map = string.format("content/ui/textures/icons/offer_cards/premium_currency_%02d", i)
 				element.offer = offer
 				element.description = description
-			end
+				element.offer = offer
+				local amount = element.offer.value.amount
 
-			element.offer = offer
-			local amount = element.offer.value.amount
+				if money_required <= amount then
+					local name = "currency_widget_" .. i
+					local widget = self:_create_widget(name, widget_definition)
+					widget.type = "aquila_button"
+					widget.offset = {
+						offset,
+						0,
+						0
+					}
+					offset = offset + size[1] + spacing[1]
+					local init = template.init
 
-			if money_required <= amount then
-				local name = "currency_widget_" .. i
-				local widget = self:_create_widget(name, widget_definition)
-				widget.type = "aquila_button"
-				widget.offset = {
-					offset,
-					0,
-					0
-				}
-				offset = offset + size[1] + spacing[1]
-				local init = template.init
+					if init then
+						init(self, widget, element, "cb_on_aquila_pressed")
+					end
 
-				if init then
-					init(self, widget, element, "cb_on_aquila_pressed")
+					widgets[#widgets + 1] = widget
+					i = i + 1
 				end
-
-				widgets[#widgets + 1] = widget
 			end
 		end
 

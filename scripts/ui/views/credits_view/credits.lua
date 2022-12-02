@@ -1,8 +1,8 @@
 local Credits = {
 	settings = {
-		speed = 0.015,
+		speed = 100,
 		carousel_interval = 30,
-		ffw_speed = 0.15,
+		ffw_speed = 1000,
 		entries = {
 			{
 				text = "Warhammer 40,000: Darktide",

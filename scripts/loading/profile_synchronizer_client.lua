@@ -93,7 +93,7 @@ ProfileSynchronizerClient.rpc_profile_synced_by_all = function (self, channel_id
 	end
 
 	if player then
-		_debug_print("rpc_profile_synced_by_all, player:set_profile()", peer_id, local_player_id)
+		_debug_print("rpc_profile_synced_by_all, player:set_profile(), peer_id: %s, local_player_id: %s", peer_id, local_player_id)
 
 		local profile_json = player_profiles_json[local_player_id]
 		local profile = ProfileUtils.unpack_profile(profile_json)

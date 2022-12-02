@@ -382,6 +382,14 @@ PlayerHuskVisualLoadoutExtension.rpc_player_equip_item_from_profile_to_slot = fu
 	local optional_existing_unit_3p = nil
 	local item_name = NetworkLookup.player_item_names[item_id]
 
+	if item then
+		local client_item_name = item.name
+
+		if client_item_name ~= item_name then
+			Crashify.print_exception("PlayerHuskVisualLoadoutExtension", "Client has a different item cached than server has in player profile.")
+		end
+	end
+
 	self:_equip_item_to_slot(slot_name, item, optional_existing_unit_3p)
 end
 
