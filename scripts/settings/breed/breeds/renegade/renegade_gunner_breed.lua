@@ -440,24 +440,9 @@ local breed_data = {
 		}
 	},
 	wounds_config = {
-		apply_threshold_filtering = true,
 		always_show_killing_blow = true,
-		thresholds = {
-			[damage_types.blunt] = 0.5,
-			[damage_types.blunt_heavy] = 0.4,
-			[damage_types.blunt_thunder] = 0.4,
-			[damage_types.plasma] = 0.4,
-			[damage_types.rippergun_pellet] = 0.35,
-			[damage_types.auto_bullet] = 0.35,
-			[damage_types.pellet] = 0.35,
-			[damage_types.laser] = 0.85,
-			[damage_types.boltshell] = 0.45,
-			[damage_types.power_sword] = 0.5,
-			[damage_types.sawing_stuck] = 0.1,
-			[damage_types.sawing] = 0.05,
-			[damage_types.slashing_force_stuck] = 0.5,
-			[damage_types.combat_blade] = 0.5
-		}
+		apply_threshold_filtering = false,
+		health_percent_throttle = 0.2
 	},
 	hit_zone_weakspot_types = {
 		[hit_zone_names.head] = weakspot_types.headshot

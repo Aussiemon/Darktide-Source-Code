@@ -2029,8 +2029,8 @@ weapon_template.displayed_keywords = {
 }
 weapon_template.displayed_attacks = {
 	primary = {
-		display_name = "loc_gestalt_linesman",
-		type = "linesman",
+		display_name = "loc_gestalt_smiter",
+		type = "smiter",
 		attack_chain = {
 			"smiter",
 			"linesman",
@@ -2039,10 +2039,10 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	secondary = {
-		display_name = "loc_gestalt_smiter",
-		type = "smiter",
+		display_name = "loc_gestalt_linesman",
+		type = "linesman",
 		attack_chain = {
-			"smiter",
+			"linesman",
 			"smiter"
 		}
 	},

@@ -6,6 +6,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
 local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local FixedFrame = require("scripts/utilities/fixed_frame")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
@@ -17,6 +18,7 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local attack_types = AttackSettings.attack_types
 local keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
+local slot_configuration = PlayerCharacterConstants.slot_configuration
 local special_rules = SpecialRulesSetting.special_rules
 local stat_buffs = BuffSettings.stat_buffs
 local talent_settings = TalentSettings.veteran_2
@@ -214,6 +216,8 @@ local HIGHLIGHT_OFFSET_TOTAL_MAX_TIME = talent_settings.combat_ability.outline_h
 local HIGHLIGHT_SOUND_ALIAS = "veteran_ranger_highlight"
 
 local function _start_outline(template_data, template_context)
+	local outlined_units = template_data.outlined_units or {}
+	template_data.outlined_units = outlined_units
 	local unit = template_context.unit
 	local fx_extension = ScriptUnit.has_extension(unit, "fx_system")
 	template_data.fx_extension = fx_extension
@@ -230,7 +234,7 @@ local function _start_outline(template_data, template_context)
 		local is_special_or_elite = breed and breed.tags and (breed.tags.elite or breed.tags.special)
 		local is_ogryn_or_monster = breed and breed.tags and (breed.tags.ogryn or breed.tags.monster)
 		local is_volley_fire_target = breed and breed.volley_fire_target
-		local should_get_outlined = template_data.headhunter and is_volley_fire_target and not is_ogryn_or_monster or template_data.big_game_hunter and is_ogryn_or_monster or is_special_or_elite and not is_ogryn_or_monster
+		local should_get_outlined = not outlined_units[enemy_unit] and (template_data.headhunter and is_volley_fire_target and not is_ogryn_or_monster or template_data.big_game_hunter and is_ogryn_or_monster or is_special_or_elite and not is_ogryn_or_monster)
 
 		if should_get_outlined then
 			local special_position = POSITION_LOOKUP[enemy_unit]
@@ -256,7 +260,6 @@ local function _start_outline(template_data, template_context)
 	end)
 
 	template_data.alive_specials = alive_specials
-	template_data.outlined_units = {}
 	template_data.time_in_buff = 0
 end
 
@@ -376,7 +379,7 @@ templates.veteran_ranger_toughness_on_elite_kill = {
 	predicted = false,
 	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = 1
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_elite_or_special_kill,
 	proc_func = function (params, template_data, template_context, t)
@@ -549,7 +552,7 @@ templates.veteran_ranger_elites_replenish_ammo = {
 	max_stacks = 1,
 	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = 1
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_elite_or_special_kill,
 	start_func = function (template_data, template_context)
@@ -577,7 +580,7 @@ templates.veteran_ranger_elites_replenish_grenades = {
 	max_stacks = 1,
 	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = talent_settings.coop_2.proc_chance
+		[proc_events.on_kill] = talent_settings.coop_2.proc_chance
 	},
 	check_proc_func = CheckProcFunctions.on_elite_or_special_kill,
 	start_func = function (template_data, template_context)
@@ -713,6 +716,37 @@ templates.veteran_ranger_frag_grenade_bleed = {
 		end
 	end
 }
+
+local function is_in_weapon_alternate_fire_with_stammina(template_data, template_context)
+	local wielded_slot = template_data.inventory_component.wielded_slot
+
+	if wielded_slot == "none" then
+		return false
+	end
+
+	local wielded_slot_configuration = slot_configuration[wielded_slot]
+	local slot_type = wielded_slot_configuration and wielded_slot_configuration.slot_type
+	local is_weapon = slot_type == "weapon"
+
+	if not is_weapon then
+		return false
+	end
+
+	local is_alternate_fire_active = template_data.alternate_fire_component.is_active
+
+	if not is_alternate_fire_active then
+		return false
+	end
+
+	local has_stamina = template_data.stamina_component.current_fraction > 0
+
+	if not has_stamina then
+		return false
+	end
+
+	return true
+end
+
 templates.veteran_ranger_ads_stamina_boost = {
 	predicted = true,
 	class_name = "proc_buff",
@@ -730,30 +764,23 @@ templates.veteran_ranger_ads_stamina_boost = {
 		template_data.alternate_fire_component = unit_data_extension:read_component("alternate_fire")
 		template_data.stamina_component = unit_data_extension:read_component("stamina")
 		template_data.sway_component = unit_data_extension:write_component("sway_control")
-		local specialization = unit_data_extension:specialization()
-		local specialization_stamina_template = specialization.stamina
-		local current_value, max_value = Stamina.current_and_max_value(template_context.unit, template_data.stamina_component, specialization_stamina_template)
-		template_data.to_remove = talent_settings.offensive_2_2.stamina * max_value
-		template_data.shoot_to_remove = talent_settings.offensive_2_2.shot_stamina_percent * max_value
+		template_data.inventory_component = unit_data_extension:read_component("inventory")
+		template_data.percentage_to_remove = talent_settings.offensive_2_2.stamina
+		template_data.percentage_shoot_to_remove = talent_settings.offensive_2_2.shot_stamina_percent
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
-		local has_stamina = template_data.stamina_component.current_fraction > 0
-
-		if not has_stamina then
-			return false
-		end
-
-		return template_data.alternate_fire_component.is_active
+		return template_data.is_active
 	end,
 	update_func = function (template_data, template_context, dt, t)
-		if not template_data.alternate_fire_component.is_active then
-			template_data.applied_end_sway = nil
+		local is_active = is_in_weapon_alternate_fire_with_stammina(template_data, template_context)
+		template_data.is_active = is_active
 
+		if not is_active then
 			return
 		end
 
-		local cost_per_second = template_data.to_remove
-		local remaining_stamina = Stamina.drain(template_context.unit, cost_per_second * dt, t)
+		local percentage_cost_per_second = template_data.percentage_to_remove
+		local remaining_stamina = Stamina.drain_pecentage(template_context.unit, percentage_cost_per_second * dt, t)
 
 		if remaining_stamina == 0 and not template_data.applied_end_sway then
 			template_data.applied_end_sway = true
@@ -768,16 +795,16 @@ templates.veteran_ranger_ads_stamina_boost = {
 			return
 		end
 
-		local shoot_cost = template_data.shoot_to_remove
+		local shoot_cost = template_data.percentage_shoot_to_remove
 
-		Stamina.drain(template_context.unit, shoot_cost, t)
+		Stamina.drain_pecentage(template_context.unit, shoot_cost, t)
 	end
 }
 templates.veteran_ranger_elite_kills_reload_speed = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = 1
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_elite_or_special_kill,
 	proc_stat_buffs = {

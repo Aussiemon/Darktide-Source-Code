@@ -1001,14 +1001,21 @@ weapon_template.base_stats = {
 		damage = {
 			rapid_left = {
 				damage_trait_templates.forcestaff_p1_m1_dps_stat,
-				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+				display_data = {
+					prefix = "loc_weapon_action_title_primary",
+					display_stats = {
+						power_distribution = {
+							attack = {}
+						}
+					}
+				}
 			},
 			action_trigger_explosion = {
 				overrides = {
 					default_force_staff_demolition = {
 						damage_trait_templates.forcestaff_p1_m1_dps_stat,
 						display_data = {
-							prefix = "loc_weapon_stats_display_radius",
+							prefix = "loc_weapon_stats_display_outer_blast",
 							damage_profile_path = {
 								"explosion_template",
 								"damage_profile"
@@ -1023,7 +1030,7 @@ weapon_template.base_stats = {
 					close_force_staff_demolition = {
 						damage_trait_templates.forcestaff_p1_m1_dps_stat,
 						display_data = {
-							prefix = "loc_weapon_stats_display_radius",
+							prefix = "loc_weapon_stats_display_inner_blast",
 							damage_profile_path = {
 								"explosion_template",
 								"close_damage_profile"

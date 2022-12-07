@@ -378,7 +378,7 @@ ViewElementWeaponInfo._value_to_text = function (self, value, is_signed)
 		return Localize("loc_weapon_stats_display_unlimited")
 	end
 
-	if is_signed and value > 0 then
+	if is_signed and value >= 0 then
 		return string.format("+%0.2f", value)
 	end
 

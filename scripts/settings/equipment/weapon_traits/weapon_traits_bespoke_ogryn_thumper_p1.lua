@@ -139,7 +139,7 @@ local templates = {
 					[stat_buffs.ranged_power_level_modifier] = 0.02
 				},
 				buff_data = {
-					required_num_hits = 2
+					required_num_hits = 3
 				}
 			},
 			{
@@ -147,7 +147,7 @@ local templates = {
 					[stat_buffs.ranged_power_level_modifier] = 0.04
 				},
 				buff_data = {
-					required_num_hits = 2
+					required_num_hits = 3
 				}
 			},
 			{
@@ -155,7 +155,7 @@ local templates = {
 					[stat_buffs.ranged_power_level_modifier] = 0.06
 				},
 				buff_data = {
-					required_num_hits = 2
+					required_num_hits = 3
 				}
 			},
 			{
@@ -163,7 +163,7 @@ local templates = {
 					[stat_buffs.ranged_power_level_modifier] = 0.08
 				},
 				buff_data = {
-					required_num_hits = 2
+					required_num_hits = 3
 				}
 			}
 		}

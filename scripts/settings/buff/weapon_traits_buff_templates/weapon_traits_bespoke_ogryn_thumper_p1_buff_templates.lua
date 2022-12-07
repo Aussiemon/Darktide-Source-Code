@@ -47,7 +47,7 @@ local templates = {
 			[proc_events.on_hit] = 1
 		},
 		buff_data = {
-			required_num_hits = 2
+			required_num_hits = 3
 		},
 		proc_stat_buffs = {
 			[stat_buffs.ranged_power_level_modifier] = 0.05

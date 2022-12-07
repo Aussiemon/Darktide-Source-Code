@@ -101,6 +101,10 @@ InventoryWeaponCosmeticsView.init = function (self, settings, context)
 
 	self._grow_direction = "down"
 	self._always_visible_widget_names = Definitions.always_visible_widget_names
+	self._weapon_zoom_fraction = -0.45
+	self._weapon_zoom_target = -0.45
+	self._min_zoom = -0.45
+	self._max_zoom = 4
 	self._pass_input = false
 	self._pass_draw = false
 end
@@ -390,9 +394,13 @@ InventoryWeaponCosmeticsView._setup_weapon_preview = function (self)
 		local layer = 10
 		local context = {
 			ignore_blur = false,
-			draw_background = false
+			draw_background = true
 		}
 		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, context)
+		local allow_rotation = true
+
+		self._weapon_preview:set_force_allow_rotation(allow_rotation)
+		self:_set_weapon_zoom(self._weapon_zoom_fraction)
 	end
 end
 
@@ -705,6 +713,23 @@ end
 
 InventoryWeaponCosmeticsView._set_weapon_zoom = function (self, fraction)
 	self._weapon_zoom_fraction = fraction
+
+	self:_update_weapon_preview_viewport()
+end
+
+InventoryWeaponCosmeticsView._update_weapon_preview_viewport = function (self)
+	local weapon_preview = self._weapon_preview
+
+	if weapon_preview then
+		local weapon_zoom_fraction = self._weapon_zoom_fraction or 1
+		local use_custom_zoom = true
+		local optional_node_name = "p_zoom"
+		local optional_pos = nil
+		local min_zoom = self._min_zoom
+		local max_zoom = self._max_zoom
+
+		weapon_preview:set_weapon_zoom(weapon_zoom_fraction, use_custom_zoom, optional_node_name, optional_pos, min_zoom, max_zoom)
+	end
 end
 
 InventoryWeaponCosmeticsView._cb_on_ui_visibility_toggled = function (self, id)
@@ -714,14 +739,18 @@ InventoryWeaponCosmeticsView._cb_on_ui_visibility_toggled = function (self, id)
 	self._input_legend_element:set_display_name(id, display_name)
 end
 
-InventoryWeaponCosmeticsView._handle_input = function (self, input_service)
+InventoryWeaponCosmeticsView._handle_input = function (self, input_service, dt, t)
 	local scroll_axis = input_service:get("scroll_axis")
 
 	if scroll_axis then
 		local scroll = scroll_axis[2]
+		local scroll_speed = 0.25
+		self._weapon_zoom_target = math.clamp(self._weapon_zoom_target + scroll * scroll_speed, self._min_zoom, self._max_zoom)
 
-		if scroll_axis ~= 0 then
-			local weapon_zoom_fraction = (self._weapon_zoom_fraction or 1) + scroll * 0.01
+		if math.abs(self._weapon_zoom_target - self._weapon_zoom_fraction) > 0.01 then
+			local weapon_zoom_fraction = math.lerp(self._weapon_zoom_fraction, self._weapon_zoom_target, dt * 2)
+
+			self:_set_weapon_zoom(weapon_zoom_fraction)
 		end
 	end
 end

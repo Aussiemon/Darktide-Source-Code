@@ -478,7 +478,7 @@ damage_templates.plasma_vent_damage = {
 }
 damage_templates.plasma_overheat = {
 	ignore_shield = true,
-	ignore_toughness = true,
+	ignore_toughness = false,
 	shield_override_stagger_strength = 120,
 	stagger_category = "ranged",
 	armor_damage_modifier = {

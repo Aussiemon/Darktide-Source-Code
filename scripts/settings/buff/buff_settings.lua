@@ -100,6 +100,56 @@ buff_settings.proc_event_validation = {
 		is_critical_strike = "bool",
 		attack_direction = "Vector3"
 	},
+	on_kill = {
+		one_hit_kill = "bool",
+		hit_weakspot = "bool",
+		charge_level = "number",
+		hit_world_position = "Vector3",
+		attack_instigator_unit = "unit",
+		attack_result = "string",
+		attack_type = "string",
+		target_index = "number",
+		sticky_attack = "bool",
+		stagger_result = "string",
+		weapon_special = "bool",
+		damage_type = "string",
+		damage_efficiency = "string",
+		attacking_unit = "unit",
+		attacked_unit = "unit",
+		is_backstab = "bool",
+		damage = "number",
+		tags = "table",
+		alternative_fire = "bool",
+		melee_attack_strength = "string",
+		breed_name = "string",
+		is_critical_strike = "bool",
+		attack_direction = "Vector3"
+	},
+	on_damage_dealt = {
+		one_hit_kill = "bool",
+		hit_weakspot = "bool",
+		charge_level = "number",
+		hit_world_position = "Vector3",
+		attack_instigator_unit = "unit",
+		attack_result = "string",
+		attack_type = "string",
+		target_index = "number",
+		sticky_attack = "bool",
+		stagger_result = "string",
+		weapon_special = "bool",
+		damage_type = "string",
+		damage_efficiency = "string",
+		attacking_unit = "unit",
+		attacked_unit = "unit",
+		is_backstab = "bool",
+		damage = "number",
+		tags = "table",
+		alternative_fire = "bool",
+		melee_attack_strength = "string",
+		breed_name = "string",
+		is_critical_strike = "bool",
+		attack_direction = "Vector3"
+	},
 	on_player_hit_recieved = {
 		attack_instigator_unit = "unit",
 		hit_weakspot = "bool",
@@ -178,6 +228,9 @@ buff_settings.proc_event_validation = {
 	},
 	on_weapon_special = {
 		t = "number"
+	},
+	on_wield = {
+		weapon_template = "table"
 	},
 	on_wield_ranged = {
 		weapon_template = "table"

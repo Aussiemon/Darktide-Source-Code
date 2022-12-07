@@ -91,37 +91,6 @@ MonsterPacing._generate_spawns = function (self, template)
 
 	local monsters = {}
 	local breed_names = table.clone(template.breed_names)
-	local backend_controlled_beast_of_nurgle = Managers.state.pacing:get_backend_pacing_control_flag("activate_beast_of_nurgle")
-
-	if not backend_controlled_beast_of_nurgle then
-		for i = #breed_names.monsters, 1, -1 do
-			if breed_names.monsters[i] == "chaos_beast_of_nurgle" then
-				table.remove(breed_names.monsters, i)
-				Log.info("MonsterPacing", "Disabled Beast of nurgle through backend control pacing flag")
-			end
-		end
-	else
-		Log.info("MonsterPacing", "Enabled Beast of nurgle through backend control pacing flag")
-	end
-
-	for i = #valid_spawn_types, 1, -1 do
-		local spawn_type = valid_spawn_types[i]
-
-		if spawn_type == "witches" then
-			local backend_controlled_daemonhost = Managers.state.pacing:get_backend_pacing_control_flag("activate_daemonhost")
-
-			if not backend_controlled_daemonhost then
-				table.remove(valid_spawn_types, i)
-
-				num_valid_spawn_types = num_valid_spawn_types - 1
-
-				Log.info("MonsterPacing", "Disabled Daemonhost through backend control pacing flag")
-			else
-				Log.info("MonsterPacing", "Enabled Daemonhost through backend control pacing flag")
-			end
-		end
-	end
-
 	local boss_patrols = nil
 
 	for i = 1, num_valid_spawn_types do
@@ -197,12 +166,6 @@ end
 MonsterPacing.fill_spawns_by_travel_distance = function (self, breed_name, spawn_type, monster_per_travel_distance)
 	if type(monster_per_travel_distance) == "table" then
 		monster_per_travel_distance = math.random_range(monster_per_travel_distance[1], monster_per_travel_distance[2])
-	end
-
-	local backend_controlled_daemonhost = Managers.state.pacing:get_backend_pacing_control_flag("activate_daemonhost")
-
-	if spawn_type == "witches" and not backend_controlled_daemonhost then
-		return
 	end
 
 	local monsters = self._monsters

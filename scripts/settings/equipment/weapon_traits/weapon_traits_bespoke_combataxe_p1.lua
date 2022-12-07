@@ -28,23 +28,27 @@ templates.weapon_trait_bespoke_combataxe_p1_increase_power_on_hit = {
 templates.weapon_trait_bespoke_combataxe_p1_chained_hits_increases_power = {
 	weapon_trait_bespoke_combataxe_p1_chained_hits_increases_power_parent = {
 		{
+			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 0.125
+				[stat_buffs.power_level_modifier] = 0.04
 			}
 		},
 		{
+			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 0.15
+				[stat_buffs.power_level_modifier] = 0.06
 			}
 		},
 		{
+			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 0.175
+				[stat_buffs.power_level_modifier] = 0.08
 			}
 		},
 		{
+			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 0.2
+				[stat_buffs.power_level_modifier] = 0.1
 			}
 		}
 	}

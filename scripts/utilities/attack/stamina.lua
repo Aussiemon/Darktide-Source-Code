@@ -32,6 +32,27 @@ Stamina.drain = function (unit, amount, t)
 	return max_value * new_fraction, stamina_depleted
 end
 
+Stamina.drain_pecentage = function (unit, ammoun_percentage, t)
+	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
+	local stamina_write_component = unit_data_ext:write_component("stamina")
+	local current_fraction = stamina_write_component.current_fraction
+	local stamina_depleted = current_fraction <= ammoun_percentage
+	local new_fraction = math.clamp01(math.max(0, current_fraction - ammoun_percentage))
+	stamina_write_component.last_drain_time = t
+	stamina_write_component.current_fraction = new_fraction
+	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+	if buff_extension and stamina_depleted then
+		local param_table = buff_extension:request_proc_event_param_table()
+
+		if param_table then
+			buff_extension:add_proc_event(proc_events.on_stamina_depleted, param_table)
+		end
+	end
+
+	return new_fraction, stamina_depleted
+end
+
 Stamina.add_stamina = function (unit, amount)
 	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
 	local stamina_write_component = unit_data_ext:write_component("stamina")

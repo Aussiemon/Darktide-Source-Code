@@ -35,10 +35,37 @@ local function _compose_spawn_list(composition)
 	return TEMP_BREED_NAMES, #TEMP_BREED_NAMES
 end
 
+local function _position_has_line_of_sight_to_any_enemy_player(physics_world, from_position, side, collision_filter)
+	local Vector3_length_squared = Vector3.length_squared
+	local Vector3_normalize = Vector3.normalize
+	local PhysicsWorld_raycast = PhysicsWorld.raycast
+	local offset = Vector3.up()
+	local valid_enemy_player_units_positions = side.valid_enemy_player_units_positions
+
+	for i = 1, #valid_enemy_player_units_positions do
+		local target_position = valid_enemy_player_units_positions[i] + offset
+		local to_target = target_position - from_position
+		local distance_sq = Vector3_length_squared(to_target)
+
+		if distance_sq > 0 then
+			local direction = Vector3_normalize(to_target)
+			local distance = math.sqrt(distance_sq)
+			local hit, _, _, _, _ = PhysicsWorld_raycast(physics_world, from_position, direction, distance, "closest", "collision_filter", collision_filter)
+
+			if not hit then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
 local MIN_DISTANCE_FROM_PLAYERS = 25
 local DEFAULT_MAIN_PATH_OFFSET = 35
+local OCCLUDED_POINTS_COLLISION_FILTER = "filter_ray_aim_assist_line_of_sight"
 
-local function _try_find_occluded_position(nav_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, try_find_on_main_path, optional_main_path_offset)
+local function _try_find_occluded_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, try_find_on_main_path, optional_main_path_offset)
 	local target_side_id = target_side.side_id
 	local main_path_manager = Managers.state.main_path
 	local target_unit, travel_distance, path_position = main_path_manager:ahead_unit(target_side_id)
@@ -64,21 +91,30 @@ local function _try_find_occluded_position(nav_world, nav_spawn_points, side, ta
 		return false, nil, nil, nil
 	end
 
+	local group_index = SpawnPointQueries.group_from_position(nav_world, nav_spawn_points, random_occluded_position)
+	local start_index = main_path_manager:node_index_by_nav_group_index(group_index or 1)
+	local end_index = start_index + 1
+	local closest_mainpath_position = MainPathQueries.closest_position_between_nodes(random_occluded_position, start_index, end_index)
+
+	if _position_has_line_of_sight_to_any_enemy_player(physics_world, closest_mainpath_position + Vector3.up(), side, OCCLUDED_POINTS_COLLISION_FILTER) then
+		return false, nil, nil, nil
+	end
+
 	local to_target = wanted_position - random_occluded_position
 	local target_direction = Vector3.normalize(to_target)
 
 	return true, random_occluded_position, target_direction, target_unit
 end
 
-local function _try_find_horde_position(nav_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, optional_main_path_offset)
+local function _try_find_horde_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, optional_main_path_offset)
 	local try_find_on_main_path = true
-	local success, horde_position, target_direction, target_unit = _try_find_occluded_position(nav_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, try_find_on_main_path, optional_main_path_offset)
+	local success, horde_position, target_direction, target_unit = _try_find_occluded_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, try_find_on_main_path, optional_main_path_offset)
 
 	if success then
 		return horde_position, target_direction, target_unit
 	end
 
-	success, horde_position, target_direction, target_unit = _try_find_occluded_position(nav_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, not try_find_on_main_path)
+	success, horde_position, target_direction, target_unit = _try_find_occluded_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, not try_find_on_main_path)
 
 	if success then
 		return horde_position, target_direction, target_unit
@@ -101,7 +137,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local nav_spawn_points = main_path_manager:nav_spawn_points()
 	local num_groups = GwNavSpawnPoints.get_count(nav_spawn_points)
 	local occluded_spawn_range = horde_template.occluded_spawn_range
-	local horde_position, horde_direction, target_unit = _try_find_horde_position(nav_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_groups, optional_main_path_offset)
+	local horde_position, horde_direction, target_unit = _try_find_horde_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_groups, optional_main_path_offset)
 
 	if not horde_position then
 		return nil, nil, nil

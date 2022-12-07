@@ -3151,7 +3151,7 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_on_heavy_attack_kill_
 			cooldown_duration = 6.25,
 			active_duration = 2,
 			proc_events = {
-				[buff_proc_events.on_hit] = 1
+				[buff_proc_events.on_kill] = 1
 			},
 			stat_buffs = {
 				[buff_stat_buffs.melee_damage] = 0.125
@@ -3161,7 +3161,7 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_on_heavy_attack_kill_
 			cooldown_duration = 6,
 			active_duration = 2,
 			proc_events = {
-				[buff_proc_events.on_hit] = 1
+				[buff_proc_events.on_kill] = 1
 			},
 			stat_buffs = {
 				[buff_stat_buffs.melee_damage] = 0.15
@@ -3171,7 +3171,7 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_on_heavy_attack_kill_
 			cooldown_duration = 5.75,
 			active_duration = 2,
 			proc_events = {
-				[buff_proc_events.on_hit] = 1
+				[buff_proc_events.on_kill] = 1
 			},
 			stat_buffs = {
 				[buff_stat_buffs.melee_damage] = 0.175
@@ -3181,7 +3181,7 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_on_heavy_attack_kill_
 			cooldown_duration = 5.5,
 			active_duration = 2.5,
 			proc_events = {
-				[buff_proc_events.on_hit] = 1
+				[buff_proc_events.on_kill] = 1
 			},
 			stat_buffs = {
 				[buff_stat_buffs.melee_damage] = 0.2
@@ -3191,7 +3191,7 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_on_heavy_attack_kill_
 			cooldown_duration = 5.25,
 			active_duration = 2.5,
 			proc_events = {
-				[buff_proc_events.on_hit] = 1
+				[buff_proc_events.on_kill] = 1
 			},
 			stat_buffs = {
 				[buff_stat_buffs.melee_damage] = 0.225
@@ -3201,7 +3201,7 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_on_heavy_attack_kill_
 			cooldown_duration = 5,
 			active_duration = 3,
 			proc_events = {
-				[buff_proc_events.on_hit] = 1
+				[buff_proc_events.on_kill] = 1
 			},
 			stat_buffs = {
 				[buff_stat_buffs.melee_damage] = 0.25
@@ -3215,7 +3215,7 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_on_heavy_attack_kill_
 			cooldown_duration = 5,
 			active_duration = 1.5,
 			proc_events = {
-				[buff_proc_events.on_hit] = 1
+				[buff_proc_events.on_kill] = 1
 			},
 			stat_buffs = {
 				[buff_stat_buffs.melee_attack_speed] = 0.1
@@ -3225,7 +3225,7 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_on_heavy_attack_kill_
 			cooldown_duration = 5,
 			active_duration = 2,
 			proc_events = {
-				[buff_proc_events.on_hit] = 1
+				[buff_proc_events.on_kill] = 1
 			},
 			stat_buffs = {
 				[buff_stat_buffs.melee_attack_speed] = 0.1
@@ -3235,7 +3235,7 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_on_heavy_attack_kill_
 			cooldown_duration = 5,
 			active_duration = 2.25,
 			proc_events = {
-				[buff_proc_events.on_hit] = 1
+				[buff_proc_events.on_kill] = 1
 			},
 			stat_buffs = {
 				[buff_stat_buffs.melee_attack_speed] = 0.1
@@ -3245,7 +3245,7 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_on_heavy_attack_kill_
 			cooldown_duration = 5,
 			active_duration = 2.5,
 			proc_events = {
-				[buff_proc_events.on_hit] = 1
+				[buff_proc_events.on_kill] = 1
 			},
 			stat_buffs = {
 				[buff_stat_buffs.melee_attack_speed] = 0.1
@@ -3255,7 +3255,7 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_on_heavy_attack_kill_
 			cooldown_duration = 5,
 			active_duration = 2.75,
 			proc_events = {
-				[buff_proc_events.on_hit] = 1
+				[buff_proc_events.on_kill] = 1
 			},
 			stat_buffs = {
 				[buff_stat_buffs.melee_attack_speed] = 0.1
@@ -3265,7 +3265,7 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_on_heavy_attack_kill_
 			cooldown_duration = 5,
 			active_duration = 3,
 			proc_events = {
-				[buff_proc_events.on_hit] = 1
+				[buff_proc_events.on_kill] = 1
 			},
 			stat_buffs = {
 				[buff_stat_buffs.melee_attack_speed] = 0.1

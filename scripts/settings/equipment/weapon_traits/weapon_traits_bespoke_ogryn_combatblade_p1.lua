@@ -151,25 +151,25 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_multip
 		{
 			buff_data = {
 				replenish_percentage = 0.075,
-				required_num_hits = 5
+				required_num_hits = 3
 			}
 		},
 		{
 			buff_data = {
 				replenish_percentage = 0.1,
-				required_num_hits = 5
+				required_num_hits = 3
 			}
 		},
 		{
 			buff_data = {
 				replenish_percentage = 0.125,
-				required_num_hits = 5
+				required_num_hits = 3
 			}
 		},
 		{
 			buff_data = {
 				replenish_percentage = 0.15,
-				required_num_hits = 4
+				required_num_hits = 3
 			}
 		}
 	}

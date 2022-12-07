@@ -2366,8 +2366,8 @@ overrides.heavy_chainsword_active_abort_2h = {
 			"power_distribution",
 			"attack",
 			{
-				0,
-				0
+				0.01,
+				0.01
 			}
 		},
 		{
@@ -2918,8 +2918,8 @@ overrides.heavy_chainsword_smiter_active_abort_2h = {
 			"power_distribution",
 			"attack",
 			{
-				0,
-				0
+				0.01,
+				0.01
 			}
 		},
 		{

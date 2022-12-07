@@ -46,8 +46,12 @@ WeaponTraitActivatedParentProcBuff.update_proc_events = function (self, t, proc_
 					if active then
 						local num_wanted_stacks_to_add = template_add_child_proc_events[proc_event_name]
 
-						if num_wanted_stacks_to_add then
-							local max_child_stacks = child_template.max_stacks or 1
+						if num_wanted_stacks_to_add and type(num_wanted_stacks_to_add) == "function" then
+							num_wanted_stacks_to_add = num_wanted_stacks_to_add(params, template_data, template_context)
+						end
+
+						if num_wanted_stacks_to_add and num_wanted_stacks_to_add > 0 then
+							local max_child_stacks = (self._template_override_data.max_stacks or child_template.max_stacks or 1 or 1) + math.abs(child_template.stack_offset or 0)
 							local stacks_to_max = max_child_stacks - self._num_child_stacks
 							local num_stacks_to_add = math.min(num_wanted_stacks_to_add, stacks_to_max)
 
@@ -58,6 +62,12 @@ WeaponTraitActivatedParentProcBuff.update_proc_events = function (self, t, proc_
 					end
 				end
 			end
+		end
+
+		local clear_child_stacks_proc_events = template.clear_child_stacks_proc_events
+
+		if clear_child_stacks_proc_events and clear_child_stacks_proc_events[proc_event_name] then
+			self:_remove_child_buff_stack(self._num_child_stacks - 1)
 		end
 	end
 

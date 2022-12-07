@@ -171,7 +171,7 @@ templates.weakspot_kill_reload_speed = {
 	class_name = "proc_buff",
 	active_duration = 5,
 	proc_events = {
-		[buff_proc_events.on_hit] = 0.5
+		[buff_proc_events.on_kill] = 0.5
 	},
 	proc_stat_buffs = {
 		[buff_stat_buffs.reload_speed] = 0.5

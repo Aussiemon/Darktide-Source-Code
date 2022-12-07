@@ -16,11 +16,7 @@ local function _get_pacing_control_data(flags)
 		return
 	end
 
-	local pacing_control = {
-		activate_daemonhost = flags.activate_daemonhost,
-		activate_cultists = flags.activate_cultists,
-		activate_beast_of_nurgle = flags.activate_beast_of_nurgle
-	}
+	local pacing_control = {}
 
 	return pacing_control
 end

@@ -72,7 +72,7 @@ local templates = {
 		class_name = "proc_buff",
 		active_duration = 5,
 		proc_events = {
-			[buff_proc_events.on_hit] = 1
+			[buff_proc_events.on_kill] = 1
 		},
 		proc_stat_buffs = {
 			[buff_stat_buffs.reload_speed] = 0.5
@@ -84,7 +84,7 @@ local templates = {
 		class_name = "proc_buff",
 		active_duration = 5,
 		proc_events = {
-			[buff_proc_events.on_hit] = 1
+			[buff_proc_events.on_kill] = 1
 		},
 		proc_stat_buffs = {
 			[buff_stat_buffs.movement_speed] = 1.25
@@ -97,7 +97,7 @@ local templates = {
 		class_name = "proc_buff",
 		active_duration = 3,
 		proc_events = {
-			[buff_proc_events.on_hit] = 1
+			[buff_proc_events.on_kill] = 1
 		},
 		proc_stat_buffs = {
 			[buff_stat_buffs.attack_speed] = 0.25
@@ -110,7 +110,7 @@ local templates = {
 		class_name = "proc_buff",
 		active_duration = 5,
 		proc_events = {
-			[buff_proc_events.on_hit] = 1
+			[buff_proc_events.on_kill] = 1
 		},
 		proc_stat_buffs = {
 			[buff_stat_buffs.attack_speed] = 0.2

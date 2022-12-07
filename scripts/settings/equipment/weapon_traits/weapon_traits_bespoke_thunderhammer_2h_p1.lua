@@ -102,25 +102,25 @@ templates.weapon_trait_bespoke_thunderhammer_2h_p1_toughness_recovery_on_multipl
 		{
 			buff_data = {
 				replenish_percentage = 0.075,
-				required_num_hits = 5
+				required_num_hits = 3
 			}
 		},
 		{
 			buff_data = {
 				replenish_percentage = 0.1,
-				required_num_hits = 5
+				required_num_hits = 3
 			}
 		},
 		{
 			buff_data = {
 				replenish_percentage = 0.125,
-				required_num_hits = 5
+				required_num_hits = 3
 			}
 		},
 		{
 			buff_data = {
 				replenish_percentage = 0.15,
-				required_num_hits = 4
+				required_num_hits = 3
 			}
 		}
 	}

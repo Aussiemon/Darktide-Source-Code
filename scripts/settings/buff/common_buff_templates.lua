@@ -50,7 +50,7 @@ templates.heavy_stun_movement_slow = {
 	},
 	lerp_t_func = smoothstep_lerp_t_func
 }
-templates.ogryn_stun_movement_seed_up = {
+templates.ogryn_stun_movement_speed_up = {
 	unique_buff_id = "hit_reaction_movement_slow",
 	unique_buff_priority = 2,
 	duration = 0.5,

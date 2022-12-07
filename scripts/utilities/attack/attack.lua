@@ -474,6 +474,70 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 		end
 	end
 
+	if attack_result == attack_results.died and attacker_buff_extension_or_nil then
+		local attacker_param_table = attacker_buff_extension_or_nil:request_proc_event_param_table()
+
+		if attacker_param_table then
+			attacker_param_table.alternative_fire = alternative_fire
+			attacker_param_table.attack_direction = Vector3Box(attack_direction)
+			attacker_param_table.attack_instigator_unit = attacking_unit
+			attacker_param_table.attack_type = attack_type
+			attacker_param_table.attacked_unit = attacked_unit
+			attacker_param_table.attacking_unit = attacking_owner_unit
+			attacker_param_table.breed_name = target_breed_or_nil and target_breed_or_nil.name
+			attacker_param_table.damage = damage
+			attacker_param_table.damage_efficiency = damage_efficiency
+			attacker_param_table.damage_type = damage_type or damage_profile.damage_type
+			attacker_param_table.hit_weakspot = hit_weakspot
+			attacker_param_table.hit_world_position = hit_world_position_or_nil and Vector3Box(hit_world_position_or_nil)
+			attacker_param_table.is_backstab = is_backstab
+			attacker_param_table.is_critical_strike = is_critical_strike
+			attacker_param_table.melee_attack_strength = damage_profile.melee_attack_strength
+			attacker_param_table.one_hit_kill = one_hit_kill
+			attacker_param_table.attack_result = attack_result
+			attacker_param_table.stagger_result = stagger_result
+			attacker_param_table.sticky_attack = damage_profile.sticky_attack
+			attacker_param_table.tags = target_breed_or_nil and target_breed_or_nil.tags
+			attacker_param_table.target_index = target_index
+			attacker_param_table.weapon_special = damage_profile.weapon_special
+			attacker_param_table.charge_level = charge_level
+
+			attacker_buff_extension_or_nil:add_proc_event(proc_events.on_kill, attacker_param_table)
+		end
+	end
+
+	if damage > 0 and attacker_buff_extension_or_nil then
+		local attacker_param_table = attacker_buff_extension_or_nil:request_proc_event_param_table()
+
+		if attacker_param_table then
+			attacker_param_table.alternative_fire = alternative_fire
+			attacker_param_table.attack_direction = Vector3Box(attack_direction)
+			attacker_param_table.attack_instigator_unit = attacking_unit
+			attacker_param_table.attack_type = attack_type
+			attacker_param_table.attacked_unit = attacked_unit
+			attacker_param_table.attacking_unit = attacking_owner_unit
+			attacker_param_table.breed_name = target_breed_or_nil and target_breed_or_nil.name
+			attacker_param_table.damage = damage
+			attacker_param_table.damage_efficiency = damage_efficiency
+			attacker_param_table.damage_type = damage_type or damage_profile.damage_type
+			attacker_param_table.hit_weakspot = hit_weakspot
+			attacker_param_table.hit_world_position = hit_world_position_or_nil and Vector3Box(hit_world_position_or_nil)
+			attacker_param_table.is_backstab = is_backstab
+			attacker_param_table.is_critical_strike = is_critical_strike
+			attacker_param_table.melee_attack_strength = damage_profile.melee_attack_strength
+			attacker_param_table.one_hit_kill = one_hit_kill
+			attacker_param_table.attack_result = attack_result
+			attacker_param_table.stagger_result = stagger_result
+			attacker_param_table.sticky_attack = damage_profile.sticky_attack
+			attacker_param_table.tags = target_breed_or_nil and target_breed_or_nil.tags
+			attacker_param_table.target_index = target_index
+			attacker_param_table.weapon_special = damage_profile.weapon_special
+			attacker_param_table.charge_level = charge_level
+
+			attacker_buff_extension_or_nil:add_proc_event(proc_events.on_damage_dealt, attacker_param_table)
+		end
+	end
+
 	if is_server and should_proc then
 		local target_is_player = Breed.is_player(target_breed_or_nil)
 

@@ -288,7 +288,7 @@ local templates = {
 		class_name = "proc_buff",
 		active_duration = 5,
 		proc_events = {
-			[buff_proc_events.on_hit] = 0.33
+			[buff_proc_events.on_kill] = 0.33
 		},
 		proc_stat_buffs = {
 			[buff_stat_buffs.melee_damage] = 0.3
@@ -301,7 +301,7 @@ local templates = {
 		class_name = "proc_buff",
 		active_duration = 5,
 		proc_events = {
-			[buff_proc_events.on_hit] = 0.33
+			[buff_proc_events.on_kill] = 0.33
 		},
 		proc_stat_buffs = {
 			[buff_stat_buffs.melee_impact_modifier] = 0.5
@@ -314,7 +314,7 @@ local templates = {
 		class_name = "proc_buff",
 		active_duration = 5,
 		proc_events = {
-			[buff_proc_events.on_hit] = 0.33
+			[buff_proc_events.on_kill] = 0.33
 		},
 		proc_stat_buffs = {
 			[buff_stat_buffs.toughness_damage_taken_modifier] = 0.66
@@ -327,7 +327,7 @@ local templates = {
 		class_name = "proc_buff",
 		active_duration = 5,
 		proc_events = {
-			[buff_proc_events.on_hit] = 0.33
+			[buff_proc_events.on_kill] = 0.33
 		},
 		proc_stat_buffs = {
 			[buff_stat_buffs.finesse_modifier_bonus] = 0.33
@@ -339,7 +339,7 @@ local templates = {
 		class_name = "proc_buff",
 		predicted = false,
 		proc_events = {
-			[buff_proc_events.on_hit] = 0.33
+			[buff_proc_events.on_kill] = 0.33
 		},
 		conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 		check_proc_func = CheckProcFunctions.on_weapon_special_kill,
@@ -354,7 +354,7 @@ local templates = {
 		class_name = "proc_buff",
 		predicted = false,
 		proc_events = {
-			[buff_proc_events.on_hit] = 0.33
+			[buff_proc_events.on_kill] = 0.33
 		},
 		conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 		check_proc_func = CheckProcFunctions.on_weapon_special_kill,

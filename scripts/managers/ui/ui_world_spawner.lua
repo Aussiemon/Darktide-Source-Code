@@ -116,6 +116,11 @@ UIWorldSpawner.spawn_level = function (self, level_name, object_sets, position, 
 
 	self._extension_manager:add_and_register_units(world, level_units, nil, category_name)
 	Level.trigger_level_spawned(level)
+
+	if ignore_level_background then
+		Level.trigger_event(level, "disable_background")
+	end
+
 	self._extension_manager:on_gameplay_post_init(level)
 end
 

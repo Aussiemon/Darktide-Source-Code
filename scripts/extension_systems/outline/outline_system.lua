@@ -112,12 +112,17 @@ OutlineSystem.add_outline = function (self, unit, outline_name)
 	end
 
 	local outlines = extension.outlines
+	local outline_index = _find_outline(outlines, outline_name)
 
-	if _find_outline(outlines, outline_name) then
+	if outline_index then
+		local outline = outlines[outline_index]
+		outline.stack_count = outline.stack_count + 1
+
 		return
 	end
 
 	local outline = {
+		stack_count = 1,
 		name = outline_name,
 		priority = setting.priority,
 		material_layers = setting.material_layers,
@@ -171,6 +176,15 @@ OutlineSystem.remove_outline = function (self, unit, outline_name)
 	local remove_index = _find_outline(outlines, outline_name)
 
 	if not remove_index then
+		return
+	end
+
+	local outline = outlines[remove_index]
+	local stack_count = outline.stack_count
+
+	if stack_count > 1 then
+		outline.stack_count = stack_count - 1
+
 		return
 	end
 

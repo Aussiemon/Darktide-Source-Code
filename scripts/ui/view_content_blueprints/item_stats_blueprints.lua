@@ -38,7 +38,7 @@ local function _stat_value_to_text(stat, is_int)
 
 	if math.huge <= value then
 		return Localize("loc_weapon_stats_display_unlimited")
-	elseif type_data.signed and value > 0 then
+	elseif type_data.signed and value >= 0 then
 		if is_int then
 			return string.format("+%.0f%s", value, type_data.display_units or "")
 		else
@@ -545,13 +545,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 	local damage_stat_style = table.clone(UIFontSettings.header_2)
 	damage_stat_style.offset = {
 		0,
-		0,
+		5,
 		3
 	}
 	damage_stat_style.size = {
 		150
 	}
-	damage_stat_style.font_size = 25
+	damage_stat_style.font_size = 20
 	damage_stat_style.horizontal_alignment = "right"
 	damage_stat_style.vertical_alignment = "top"
 	damage_stat_style.text_horizontal_alignment = "center"
@@ -4541,7 +4541,11 @@ local function generate_blueprints_function(grid_size, optional_item)
 			size_function = function (parent, element, ui_renderer)
 				local trait_item = element.trait_item
 				local description = trait_item.description
-				local description_height = get_style_text_height(Localize(description), weapon_traits_description_style, ui_renderer)
+				local trait_item = element.trait_item
+				local trait_value = element.trait_value
+				local trait_rarity = element.trait_rarity
+				local description = ItemUtils.trait_description(trait_item, trait_rarity, trait_value)
+				local description_height = get_style_text_height(description, weapon_traits_description_style, ui_renderer)
 				local entry_height = math.max(68, description_height + 25)
 
 				return {
@@ -5561,7 +5565,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						style.text_stat_1.text_color[1] = 255
 						local rate_of_fire = main_stats.rate_of_fire
 						content.text_stat_header_2_value = Localize("loc_weapon_stats_display_rate_of_fire")
-						content.text_stat_2_value = string.format("%.2f/s", rate_of_fire)
+						content.text_stat_2_value = string.format("%.2f/s", 1 / rate_of_fire)
 						style.text_stat_header_2.text_color[1] = 255
 						style.text_stat_2.text_color[1] = 255
 						local charge_duration = main_stats.charge_duration or 0
@@ -5582,7 +5586,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						style.text_stat_1.text_color[1] = 255
 						local rate_of_fire = main_stats.rate_of_fire
 						content.text_stat_header_2_value = Localize("loc_weapon_stats_display_rate_of_fire")
-						content.text_stat_2_value = string.format("%.2f/s", rate_of_fire)
+						content.text_stat_2_value = string.format("%.2f/s", 1 / rate_of_fire)
 						style.text_stat_header_2.text_color[1] = 255
 						style.text_stat_2.text_color[1] = 255
 						local reload_time = main_stats.reload_time
@@ -5687,7 +5691,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 				if math.huge <= value then
 					value = Localize("loc_weapon_stats_display_unlimited")
-				elseif signed and value > 0 then
+				elseif signed and value >= 0 then
 					value = string.format("+%.2f", value) .. display_units
 				else
 					value = string.format("%.2f", value) .. display_units

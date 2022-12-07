@@ -7,7 +7,7 @@ local disorientation_settings = {
 			stun = {
 				end_stun_early_time = 0,
 				start_anim_3p = "hit_react",
-				stun_immunity_time_buff = "stun_immune_medium",
+				stun_immunity_time_buff = "stun_immune_short",
 				start_anim = "hit_react",
 				intoxication_level = 0,
 				stun_duration = 0,
@@ -395,58 +395,63 @@ local disorientation_settings = {
 		},
 		ogryn_toughness = {
 			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
-			movement_speed_buff = "ogryn_stun_movement_seed_up",
+			movement_speed_buff = "ogryn_stun_movement_speed_up",
 			hit_react_anim_1p = "shake_light",
 			hit_react_anim_3p = "hit_react",
 			stun = {
 				intoxication_level = 0,
 				stun_duration = 0,
+				stun_immunity_time_buff = "stun_immune_short",
 				action_delay = 0
 			}
 		},
 		ogryn_toughness_melee = {
 			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
-			movement_speed_buff = "ogryn_stun_movement_seed_up",
+			movement_speed_buff = "ogryn_stun_movement_speed_up",
 			hit_react_anim_3p = "hit_react",
 			stun = {
 				intoxication_level = 0,
 				stun_duration = 0,
+				stun_immunity_time_buff = "stun_immune_short",
 				action_delay = 0
 			}
 		},
 		ogryn_light = {
 			sound_event = "wwise/events/player/play_player_get_hit_light_2d",
-			movement_speed_buff = "ogryn_stun_movement_seed_up",
+			movement_speed_buff = "ogryn_stun_movement_speed_up",
 			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
 			hit_react_anim_1p = "shake_light",
 			hit_react_anim_3p = "hit_react",
 			stun = {
 				intoxication_level = 0,
 				stun_duration = 0,
+				stun_immunity_time_buff = "stun_immune_short",
 				action_delay = 0
 			}
 		},
 		ogryn_medium = {
 			sound_event = "wwise/events/player/play_player_get_hit_light_2d",
-			movement_speed_buff = "ogryn_stun_movement_seed_up",
+			movement_speed_buff = "ogryn_stun_movement_speed_up",
 			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
 			hit_react_anim_1p = "shake_medium",
 			hit_react_anim_3p = "hit_react",
 			stun = {
 				intoxication_level = 0,
 				stun_duration = 0,
+				stun_immunity_time_buff = "stun_immune_short",
 				action_delay = 0
 			}
 		},
 		ogryn_heavy = {
 			sound_event = "wwise/events/player/play_player_get_hit_heavy_2d",
-			movement_speed_buff = "ogryn_stun_movement_seed_up",
+			movement_speed_buff = "ogryn_stun_movement_speed_up",
 			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_heavy",
 			hit_react_anim_1p = "shake_heavy",
 			hit_react_anim_3p = "hit_react",
 			stun = {
 				end_stun_early_time = 0.4,
 				intoxication_level = 4,
+				stun_immunity_time_buff = "stun_immune_medium",
 				stun_duration = 0.5,
 				interrupt_delay = 0.05,
 				action_delay = 0.2

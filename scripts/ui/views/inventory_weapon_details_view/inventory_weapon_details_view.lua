@@ -579,7 +579,7 @@ function _scale_value_by_type(value, display_type)
 end
 
 function _value_to_text(value, is_signed)
-	if is_signed and value > 0 then
+	if is_signed and value >= 0 then
 		return string.format("+%0.2f", value)
 	end
 

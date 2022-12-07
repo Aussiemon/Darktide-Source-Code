@@ -17,7 +17,7 @@ WeaponTraitParentProcBuff.init = function (self, context, template, start_time, 
 		self._child_buff_template = child_buff_template
 		local child_template = BuffTemplates[child_buff_template]
 		self._buff_extension = template_context.buff_extension
-		local max_child_stacks = child_template.max_stacks or 1
+		local max_child_stacks = (self._template_override_data.max_stacks or child_template.max_stacks or 1 or 1) + math.abs(child_template.stack_offset or 0)
 		self._num_child_stacks = 0
 		self._child_buff_indicies = Script.new_array(max_child_stacks)
 		self._remove_child_stack_start_t = 0
@@ -50,7 +50,7 @@ WeaponTraitParentProcBuff.update_proc_events = function (self, t, proc_events, n
 
 		for add_child_event, num_wanted_stacks_to_add in pairs(template.add_child_proc_events) do
 			if procced_proc_events[add_child_event] then
-				local max_child_stacks = (child_template.max_stacks or 1) + math.abs(child_template.stack_offset or 0)
+				local max_child_stacks = (self._template_override_data.max_stacks or child_template.max_stacks or 1 or 1) + math.abs(child_template.stack_offset or 0)
 				local stacks_to_max = max_child_stacks - self._num_child_stacks
 				local num_stacks_to_add = math.min(num_wanted_stacks_to_add, stacks_to_max)
 
@@ -89,7 +89,8 @@ WeaponTraitParentProcBuff.update = function (self, dt, t, ...)
 				local template = self._template
 				local leftover_time = t - remove_t
 				local leftover_through_child_duration = leftover_time / duration
-				local num_stacks_to_remove = math.min(math.ceil(leftover_through_child_duration) * template.stacks_to_remove, num_child_stacks - 1)
+				local stacks_to_remove = template.stacks_to_remove or 1
+				local num_stacks_to_remove = math.min(math.ceil(leftover_through_child_duration) * stacks_to_remove, num_child_stacks - 1)
 
 				self:_remove_child_buff_stack(num_stacks_to_remove)
 

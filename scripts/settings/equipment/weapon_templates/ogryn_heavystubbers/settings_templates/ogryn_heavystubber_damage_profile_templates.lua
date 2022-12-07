@@ -42,7 +42,7 @@ damage_templates.default_ogryn_heavystubber_assault_snp = {
 				[armor_types.armored] = damage_lerp_values.lerp_0_5,
 				[armor_types.resistant] = damage_lerp_values.lerp_0_6,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_8,
@@ -66,7 +66,7 @@ damage_templates.default_ogryn_heavystubber_assault_snp = {
 				[armor_types.armored] = damage_lerp_values.lerp_0_3,
 				[armor_types.resistant] = damage_lerp_values.lerp_0_3,
 				[armor_types.player] = damage_lerp_values.lerp_0_5,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_8,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
@@ -87,12 +87,12 @@ damage_templates.default_ogryn_heavystubber_assault_snp = {
 	},
 	power_distribution = {
 		attack = {
-			75,
-			150
+			100,
+			200
 		},
 		impact = {
-			8,
-			16
+			10,
+			20
 		}
 	},
 	shield_override_stagger_strength = default_shield_override_stagger_strength,

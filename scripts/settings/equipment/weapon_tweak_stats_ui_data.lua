@@ -338,7 +338,7 @@ local stat_descriptions = {
 		},
 		power_distribution = {
 			attack = {
-				display_name = "loc_weapon_stats_display_power",
+				display_name = "loc_weapon_stats_display_base_damage",
 				display_type = "default"
 			},
 			impact = {
@@ -349,7 +349,7 @@ local stat_descriptions = {
 		power_distribution_ranged = {
 			near = {
 				attack = {
-					display_name = "loc_weapon_stats_display_power",
+					display_name = "loc_weapon_stats_display_base_damage",
 					display_type = "default",
 					suffix = "loc_weapon_stats_display_near"
 				},
@@ -361,7 +361,7 @@ local stat_descriptions = {
 			},
 			far = {
 				attack = {
-					display_name = "loc_weapon_stats_display_power",
+					display_name = "loc_weapon_stats_display_base_damage",
 					display_type = "default",
 					suffix = "loc_weapon_stats_display_far"
 				},
@@ -420,7 +420,7 @@ local stat_descriptions = {
 			default_target = {
 				power_distribution = {
 					attack = {
-						display_name = "loc_weapon_stats_display_power",
+						display_name = "loc_weapon_stats_display_base_damage",
 						display_type = "default"
 					},
 					impact = {

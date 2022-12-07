@@ -1151,7 +1151,7 @@ local templates = {
 		class_name = "proc_buff",
 		active_duration = 2.5,
 		proc_events = {
-			[buff_proc_events.on_hit] = 1
+			[buff_proc_events.on_kill] = 1
 		},
 		proc_stat_buffs = {
 			[buff_stat_buffs.melee_damage] = 0.5
@@ -1171,7 +1171,7 @@ local templates = {
 		class_name = "proc_buff",
 		active_duration = 2.5,
 		proc_events = {
-			[buff_proc_events.on_hit] = 1
+			[buff_proc_events.on_kill] = 1
 		},
 		proc_stat_buffs = {
 			[buff_stat_buffs.melee_attack_speed] = 0.1

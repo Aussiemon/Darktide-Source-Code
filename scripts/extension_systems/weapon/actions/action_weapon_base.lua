@@ -183,6 +183,18 @@ ActionWeaponBase._setup_charge_template = function (self, action_settings)
 	weapon_tweak_templates_component.charge_template_name = action_settings.charge_template or weapon_template.charge_template or "none"
 end
 
+ActionWeaponBase._start_warp_charge_action = function (self, t)
+	local charge_template = self._weapon_extension:charge_template()
+
+	if not charge_template then
+		return
+	end
+
+	local warp_charge_component = self._warp_charge_component
+
+	WarpCharge.start_warp_action(t, warp_charge_component)
+end
+
 ActionWeaponBase._pay_warp_charge_cost = function (self, t, charge_level)
 	local charge_template = self._weapon_extension:charge_template()
 
@@ -192,6 +204,7 @@ ActionWeaponBase._pay_warp_charge_cost = function (self, t, charge_level)
 
 	local warp_charge_component = self._warp_charge_component
 	local player_unit = self._player_unit
+	local action_settings = self._action_settings
 	local prevent_explosion = self._prevent_explosion
 
 	WarpCharge.increase_immediate(t, charge_level, warp_charge_component, charge_template, player_unit, nil, prevent_explosion)

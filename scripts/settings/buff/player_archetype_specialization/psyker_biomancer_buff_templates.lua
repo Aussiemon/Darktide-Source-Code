@@ -374,7 +374,7 @@ templates.psyker_biomancer_base_passive = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_hit] = talent_settings.passive_2.on_hit_proc_chance
+		[proc_events.on_kill] = talent_settings.passive_2.on_hit_proc_chance
 	},
 	check_proc_func = CheckProcFunctions.on_kill,
 	start_func = function (template_data, template_context)
@@ -579,7 +579,7 @@ templates.psyker_biomancer_coherency_souls_on_kill = {
 	max_stacks = 1,
 	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = 1
+		[proc_events.on_kill] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_kill,
 	start_func = function (template_data, template_context)
@@ -632,9 +632,9 @@ templates.psyker_biomancer_cooldown_reduction_on_elite_kill_for_coherency = {
 	class_name = "proc_buff",
 	stat_buffs = {},
 	proc_events = {
-		[proc_events.on_hit] = 1
+		[proc_events.on_kill] = 1
 	},
-	check_proc_func = CheckProcFunctions.on_elite_kill,
+	check_proc_func = CheckProcFunctions.on_elite_or_special_kill,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		template_data.coherency_extension = ScriptUnit.has_extension(unit, "coherency_system")

@@ -25,13 +25,19 @@ end
 
 WarpCharge.check_and_set_state = function (t, warp_charge_component, prevent_explosion)
 	local state = warp_charge_component.state
+	local starting_percentage = warp_charge_component.starting_percentage
 	local current_percentage = warp_charge_component.current_percentage
 
-	if not prevent_explosion and current_percentage >= 1 then
+	if not prevent_explosion and current_percentage >= 1 and starting_percentage >= 1 then
 		state = "exploding"
 	end
 
 	warp_charge_component.state = state
+end
+
+WarpCharge.start_warp_action = function (t, warp_charge_component)
+	local starting_percentage = warp_charge_component.current_percentage
+	warp_charge_component.starting_percentage = starting_percentage
 end
 
 WarpCharge.increase_immediate = function (t, charge_level, warp_charge_component, charge_template, owner_unit, warp_charge_modifier, prevent_explosion)

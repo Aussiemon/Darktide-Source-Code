@@ -9,6 +9,8 @@ MissionObjectiveZoneScannableExtension.init = function (self, extension_init_con
 	local box = Unit.box(unit, false)
 	local center_position = Matrix4x4.translation(box)
 	self._center_poisition_box = Vector3Box(center_position)
+	self._has_outline = false
+	self._has_highlight = false
 end
 
 MissionObjectiveZoneScannableExtension.on_gameplay_post_init = function (self, level)
@@ -42,10 +44,14 @@ MissionObjectiveZoneScannableExtension.set_scanning_highlight = function (self, 
 	if has_outline_system then
 		local outline_system = Managers.state.extension:system("outline_system")
 
-		if active then
+		if active and not self._has_outline then
 			outline_system:add_outline(self._unit, "scanning_confirm")
-		else
+
+			self._has_outline = true
+		elseif not active and self._has_outline then
 			outline_system:remove_outline(self._unit, "scanning_confirm")
+
+			self._has_outline = false
 		end
 	end
 end
@@ -56,10 +62,14 @@ MissionObjectiveZoneScannableExtension.set_scanning_outline = function (self, ac
 	if has_outline_system then
 		local outline_system = Managers.state.extension:system("outline_system")
 
-		if active then
+		if active and not self._has_highlight then
 			outline_system:add_outline(self._unit, "scanning")
-		else
+
+			self._has_highlight = true
+		elseif not active and self._has_highlight then
 			outline_system:remove_outline(self._unit, "scanning")
+
+			self._has_highlight = false
 		end
 	end
 end

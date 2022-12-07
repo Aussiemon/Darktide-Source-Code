@@ -27,10 +27,10 @@ templates.weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill_par
 	predicted = false,
 	stacks_to_remove = 5,
 	proc_events = {
-		[proc_events.on_hit] = 1
+		[proc_events.on_kill] = 1
 	},
 	add_child_proc_events = {
-		[proc_events.on_hit] = 1
+		[proc_events.on_kill] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.on_one_hit_kill

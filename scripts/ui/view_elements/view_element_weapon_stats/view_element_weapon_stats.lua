@@ -337,7 +337,7 @@ ViewElementWeaponStats.present_item = function (self, item, is_equipped, on_pres
 			item = item,
 			size = {
 				grid_size[1],
-				60
+				65
 			}
 		}
 

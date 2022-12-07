@@ -1467,6 +1467,11 @@ end
 DialogueSystem._execute_targeted_dialogue_event = function (self, target_unit, query, dialogue_id, dialogue_index, is_level_unit, go_id, level_name_hash)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local targeted_player = player_unit_spawn_manager:owner(target_unit)
+
+	if not targeted_player then
+		return
+	end
+
 	local peer_id = targeted_player:peer_id()
 	local is_remote_player = targeted_player.remote
 

@@ -363,7 +363,7 @@ local weapon_traits_melee_activated = {
 				cooldown_duration = 0,
 				active_duration = 5,
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
+					[buff_proc_events.on_kill] = 0.33
 				},
 				stat_buffs = {
 					[buff_stat_buffs.melee_damage] = 0.1
@@ -373,7 +373,7 @@ local weapon_traits_melee_activated = {
 				cooldown_duration = 0,
 				active_duration = 5,
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
+					[buff_proc_events.on_kill] = 0.33
 				},
 				stat_buffs = {
 					[buff_stat_buffs.melee_damage] = 0.2
@@ -383,7 +383,7 @@ local weapon_traits_melee_activated = {
 				cooldown_duration = 0,
 				active_duration = 5,
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
+					[buff_proc_events.on_kill] = 0.33
 				},
 				stat_buffs = {
 					[buff_stat_buffs.melee_damage] = 0.3
@@ -393,7 +393,7 @@ local weapon_traits_melee_activated = {
 				cooldown_duration = 0,
 				active_duration = 5,
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
+					[buff_proc_events.on_kill] = 0.33
 				},
 				stat_buffs = {
 					[buff_stat_buffs.melee_damage] = 0.4
@@ -407,7 +407,7 @@ local weapon_traits_melee_activated = {
 				cooldown_duration = 0,
 				active_duration = 5,
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
+					[buff_proc_events.on_kill] = 0.33
 				},
 				stat_buffs = {
 					[buff_stat_buffs.melee_impact_modifier] = 0.1
@@ -417,7 +417,7 @@ local weapon_traits_melee_activated = {
 				cooldown_duration = 0,
 				active_duration = 5,
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
+					[buff_proc_events.on_kill] = 0.33
 				},
 				stat_buffs = {
 					[buff_stat_buffs.melee_impact_modifier] = 0.2
@@ -427,7 +427,7 @@ local weapon_traits_melee_activated = {
 				cooldown_duration = 0,
 				active_duration = 5,
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
+					[buff_proc_events.on_kill] = 0.33
 				},
 				stat_buffs = {
 					[buff_stat_buffs.melee_impact_modifier] = 0.3
@@ -437,7 +437,7 @@ local weapon_traits_melee_activated = {
 				cooldown_duration = 0,
 				active_duration = 5,
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
+					[buff_proc_events.on_kill] = 0.33
 				},
 				stat_buffs = {
 					[buff_stat_buffs.melee_impact_modifier] = 0.4
@@ -451,7 +451,7 @@ local weapon_traits_melee_activated = {
 				cooldown_duration = 0,
 				active_duration = 5,
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
+					[buff_proc_events.on_kill] = 0.33
 				},
 				stat_buffs = {
 					[buff_stat_buffs.finesse_modifier_bonus] = 0.1
@@ -461,7 +461,7 @@ local weapon_traits_melee_activated = {
 				cooldown_duration = 0,
 				active_duration = 5,
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
+					[buff_proc_events.on_kill] = 0.33
 				},
 				stat_buffs = {
 					[buff_stat_buffs.finesse_modifier_bonus] = 0.2
@@ -471,7 +471,7 @@ local weapon_traits_melee_activated = {
 				cooldown_duration = 0,
 				active_duration = 5,
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
+					[buff_proc_events.on_kill] = 0.33
 				},
 				stat_buffs = {
 					[buff_stat_buffs.finesse_modifier_bonus] = 0.3
@@ -481,7 +481,7 @@ local weapon_traits_melee_activated = {
 				cooldown_duration = 0,
 				active_duration = 5,
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.33
+					[buff_proc_events.on_kill] = 0.33
 				},
 				stat_buffs = {
 					[buff_stat_buffs.finesse_modifier_bonus] = 0.4
@@ -493,22 +493,22 @@ local weapon_traits_melee_activated = {
 		weapon_trait_melee_activated_wield_on_weapon_special_kill_chance_to_replenish_toughness = {
 			{
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.175
+					[buff_proc_events.on_kill] = 0.175
 				}
 			},
 			{
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.2
+					[buff_proc_events.on_kill] = 0.2
 				}
 			},
 			{
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.225
+					[buff_proc_events.on_kill] = 0.225
 				}
 			},
 			{
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.25
+					[buff_proc_events.on_kill] = 0.25
 				}
 			}
 		}
@@ -517,22 +517,22 @@ local weapon_traits_melee_activated = {
 		weapon_trait_melee_activated_wield_on_weapon_special_kill_chance_to_remove_corruption = {
 			{
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.175
+					[buff_proc_events.on_kill] = 0.175
 				}
 			},
 			{
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.2
+					[buff_proc_events.on_kill] = 0.2
 				}
 			},
 			{
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.225
+					[buff_proc_events.on_kill] = 0.225
 				}
 			},
 			{
 				proc_events = {
-					[buff_proc_events.on_hit] = 0.25
+					[buff_proc_events.on_kill] = 0.25
 				}
 			}
 		}

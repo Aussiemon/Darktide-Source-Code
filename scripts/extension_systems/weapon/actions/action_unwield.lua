@@ -33,6 +33,9 @@ ActionUnwield.start = function (self, action_settings, t, time_scale, action_sta
 
 	if param_table then
 		param_table.weapon_template = next_weapon_template
+
+		buff_extension:add_proc_event(buff_proc_events.on_wield, param_table)
+
 		local keywords = next_weapon_template.keywords
 
 		if table.array_contains(keywords, "ranged") then

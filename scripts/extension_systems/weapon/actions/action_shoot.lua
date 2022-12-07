@@ -85,6 +85,8 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 	local combo_count = params.combo_count
 	self._combo_count = combo_count
 
+	self:_start_warp_charge_action(t)
+
 	if not self._is_auto_fire_weapon then
 		self:_check_for_critical_strike()
 	end

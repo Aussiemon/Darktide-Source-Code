@@ -35,24 +35,6 @@ RoamerPacing.init = function (self, nav_world, level_path, seed, pacing_control)
 	self._roamer_pack_probabilities = roamer_pack_probabilities
 	self._faction_travel_distances = {}
 	self._density_type_travel_distances = {}
-	local backend_controlled_cultists = pacing_control and pacing_control.activate_cultists
-	local should_disable_cultists = not backend_controlled_cultists
-
-	if should_disable_cultists then
-		for i = #RoamerSettings.faction_types, 1, -1 do
-			local faction_type = RoamerSettings.faction_types[i]
-
-			if faction_type == "cultist" then
-				table.remove(RoamerSettings.faction_types, i)
-				Log.info("RoamerPacing", "Disabled Cultists through backend control pacing flag")
-
-				break
-			end
-		end
-	else
-		Log.info("RoamerPacing", "Enabled Cultists through backend control pacing flag")
-	end
-
 	local faction_index = self:_random(1, #RoamerSettings.faction_types)
 	local current_faction = RoamerSettings.faction_types[faction_index]
 	self._current_faction = current_faction

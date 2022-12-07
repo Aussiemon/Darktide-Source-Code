@@ -100,6 +100,12 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 	self._latest_simulated_position = Vector3Box(pos)
 	self._player_unit_linker = PlayerUnitLinker:new(self._world, unit)
 	self._network_max_mover_frames = NetworkConstants.max_mover_frames
+	local out_of_bounds_manager = Managers.state.out_of_bounds
+	local soft_cap_extents = out_of_bounds_manager:soft_cap_extents()
+	local soft_cap_x, soft_cap_y, soft_cap_z = Vector3.to_elements(soft_cap_extents)
+	self._soft_cap_z = soft_cap_z
+	self._soft_cap_y = soft_cap_y
+	self._soft_cap_x = soft_cap_x
 end
 
 PlayerUnitLocomotionExtension.game_object_initialized = function (self, session, object_id)
@@ -120,15 +126,16 @@ PlayerUnitLocomotionExtension.destroy = function (self)
 	Managers.state.out_of_bounds:unregister_soft_oob_unit(self._unit, self)
 end
 
-PlayerUnitLocomotionExtension._update_soft_oob = function (self, dt, locomotion_component)
-	local out_of_bounds_manager = Managers.state.out_of_bounds
-	local soft_cap_extents = out_of_bounds_manager:soft_cap_extents()
-	local position = locomotion_component.position
-	local velocity_current = locomotion_component.velocity_current
-	local projected_position = position + velocity_current * dt
+PlayerUnitLocomotionExtension._handle_oob = function (self, position, velocity)
+	local x, y, z = Vector3.to_elements(position)
+	local soft_x = self._soft_cap_x
+	local soft_y = self._soft_cap_y
+	local soft_z = self._soft_cap_z
 
-	if soft_cap_extents.x <= math.abs(projected_position.x) or soft_cap_extents.y <= math.abs(projected_position.y) or soft_cap_extents.z <= math.abs(projected_position.z) then
+	if soft_x <= math.abs(x) or soft_y <= math.abs(y) or soft_z <= math.abs(z) then
 		self:_on_soft_oob()
+		Vector3.set_xyz(position, math.clamp(x, -soft_x, soft_x), math.clamp(y, -soft_y, soft_y), math.clamp(z, -soft_z, soft_z))
+		Vector3.set_xyz(velocity, 0, 0, 0)
 	end
 end
 
@@ -423,6 +430,8 @@ PlayerUnitLocomotionExtension._update_script_driven_movement = function (self, u
 		final_velocity.z = math.max(mover_z_velocity, dragged_z_velocity)
 	end
 
+	self:_handle_oob(final_position, final_velocity)
+
 	locomotion_component.position = final_position
 
 	if force_stop then
@@ -461,6 +470,9 @@ PlayerUnitLocomotionExtension._update_script_driven_hub_movement = function (sel
 	end
 
 	local position, velocity = HubMovementLocomotion.update_movement(mover, dt, velocity_current, velocity_wanted, current_position, calculate_fall_velocity, constants, movement_settings, movement_settings_override, hub_active_stopping)
+
+	self:_handle_oob(position, velocity)
+
 	locomotion_component.position = position
 	locomotion_component.velocity_current = velocity
 
@@ -604,7 +616,6 @@ PlayerUnitLocomotionExtension.fixed_update = function (self, unit, dt, t, frame)
 	local inair_component = self._inair_state_component
 	local force_rotation_component = self._locomotion_force_rotation_component
 
-	self:_update_soft_oob(dt, locomotion_component)
 	self:_update_movement(unit, dt, t, locomotion_component, steering_component, inair_component)
 	self:_update_rotation(unit, dt, t, locomotion_component, steering_component, force_rotation_component)
 

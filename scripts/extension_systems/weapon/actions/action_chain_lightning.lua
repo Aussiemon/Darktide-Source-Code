@@ -163,6 +163,7 @@ ActionChainLightning.start = function (self, action_settings, t, ...)
 
 	local charge_level = charge_component.charge_level
 
+	self:_start_warp_charge_action(t)
 	self:_pay_warp_charge_cost(t, charge_level)
 	self._targeting_module:start(t)
 end

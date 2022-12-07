@@ -12,8 +12,10 @@ local DEFAULT_BLOCK_BREAK_DISORIENTATION_TYPE = "block_broken"
 local _block_buff_modifier, _calculate_block_angle, _get_block_angles, _get_block_cost = nil
 local Block = {}
 local auto_block_interactions = {
+	rescue = true,
+	pull_up = true,
 	revive = true,
-	rescue = true
+	remove_net = true
 }
 local default_block_types = {
 	[attack_types.melee] = true

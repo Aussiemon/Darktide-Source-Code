@@ -523,6 +523,20 @@ ClassSelectionView._update_domain_info = function (self)
 		zealot = "loc_class_zealot-preacher_title",
 		ogryn = "loc_class_ogryn-skullbreaker_title"
 	}
+	local min_width = 600
+	local title_margin = 100
+	local title = Localize(domain_titles[selected_domain.name])
+	local title_style = widget.style.title
+	local title_style_options = UIFonts.get_font_options_by_style(title_style)
+	local title_width, title_height = self:_text_size(title, title_style.font_type, title_style.font_size, {
+		2000,
+		100
+	}, title_style_options)
+	local width = math.max(min_width, title_width + title_margin)
+
+	self:_set_scenegraph_size("domain_info", width, nil)
+	self:_force_update_scenegraph()
+
 	widget.content.title = Localize(domain_titles[selected_domain.name])
 	widget.content.description = Localize(selected_domain.archetype_description)
 	widgets_by_name.corners.content.left_upper = UISettings.inventory_frames_by_archetype[selected_domain.name].right_upper

@@ -418,6 +418,12 @@ weapon_template.actions = {
 			bash = {
 				action_name = "action_bash",
 				reset_combo = true
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		time_scale_stat_buffs = {
