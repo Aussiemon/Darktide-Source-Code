@@ -97,7 +97,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 		4
 	}
 	weapon_display_name_style.size = {
-		grid_width,
+		grid_width - 40,
 		500
 	}
 	weapon_display_name_style.text_horizontal_alignment = "left"
@@ -111,7 +111,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 	}
 	weapon_type_name_style.font_size = 20
 	weapon_type_name_style.size = {
-		grid_width,
+		grid_width - 40,
 		500
 	}
 	weapon_type_name_style.text_horizontal_alignment = "left"
@@ -234,7 +234,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 	modification_lock_style.offset = {
 		10,
 		-2,
-		3
+		7
 	}
 	modification_lock_style.font_size = 24
 	modification_lock_style.text_vertical_alignment = "bottom"
@@ -244,7 +244,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_perk_style.offset = {
 		98,
 		0,
-		3
+		6
 	}
 	weapon_perk_style.size = {
 		grid_width - 106,
@@ -1556,7 +1556,12 @@ local function generate_blueprints_function(grid_size, optional_item)
 		widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 	end
 
-	local function _remove_live_item_icon_cb_func(widget)
+	local function _remove_live_item_icon_cb_func(widget, ui_renderer)
+		if widget.content.visible then
+			UIWidget.set_visible(widget, ui_renderer, false)
+			UIWidget.set_visible(widget, ui_renderer, true)
+		end
+
 		local material_values = widget.style.icon.material_values
 		material_values.use_placeholder_texture = 1
 		material_values.texture_icon = nil
@@ -1808,7 +1813,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 				local displayed_attacks = weapon_template.displayed_attacks
 				local is_ranged_weapon = ItemUtils.is_weapon_template_ranged(item)
-				local item_level = ItemUtils.item_level(item)
+				local item_level = item.override_item_rating_string or ItemUtils.item_level(item)
 				content.rating_value = item_level
 				local value_width = get_style_text_width(item_level, style.rating_value, ui_renderer)
 				local text_width = get_style_text_width(item_level, style.rating_text, ui_renderer)
@@ -1838,7 +1843,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 
 				if content.icon_load_id then
-					_remove_live_item_icon_cb_func(widget)
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
 					parent:unload_item_icon(content.icon_load_id)
 
 					content.icon_load_id = nil
@@ -1848,7 +1853,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 
 				if content.icon_load_id then
-					_remove_live_item_icon_cb_func(widget)
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
 					parent:unload_item_icon(content.icon_load_id)
 
 					content.icon_load_id = nil
@@ -2248,7 +2253,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 
 				if content.icon_load_id then
-					_remove_live_item_icon_cb_func(widget)
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
 					parent:unload_item_icon(content.icon_load_id)
 
 					content.icon_load_id = nil
@@ -2258,7 +2263,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 
 				if content.icon_load_id then
-					_remove_live_item_icon_cb_func(widget)
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
 					parent:unload_item_icon(content.icon_load_id)
 
 					content.icon_load_id = nil
@@ -2506,7 +2511,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 
 				if content.icon_load_id then
-					_remove_live_item_icon_cb_func(widget)
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
 					parent:unload_item_icon(content.icon_load_id)
 
 					content.icon_load_id = nil
@@ -2516,7 +2521,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 
 				if content.icon_load_id then
-					_remove_live_item_icon_cb_func(widget)
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
 					parent:unload_item_icon(content.icon_load_id)
 
 					content.icon_load_id = nil
@@ -2796,7 +2801,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 
 				if content.icon_load_id then
-					_remove_live_item_icon_cb_func(widget)
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
 					parent:unload_item_icon(content.icon_load_id)
 
 					content.icon_load_id = nil
@@ -2806,7 +2811,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local content = widget.content
 
 				if content.icon_load_id then
-					_remove_live_item_icon_cb_func(widget)
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
 					parent:unload_item_icon(content.icon_load_id)
 
 					content.icon_load_id = nil
@@ -3057,6 +3062,162 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local type_name_style = style.type_name
 				local display_name_text_height = get_style_text_height(display_name, weapon_display_name_style, ui_renderer)
 				type_name_style.offset[2] = type_name_style.offset[2] + display_name_text_height
+			end,
+			load_icon = function (parent, widget, element)
+				local content = widget.content
+
+				if not content.icon_load_id then
+					local item = element.item
+					local slots = item.slots
+					local slot_name = slots[1]
+					local cb = callback(_apply_package_item_icon_cb_func, widget, item, "texture_map")
+					local render_context = {
+						camera_focus_slot_name = slot_name
+					}
+					content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context)
+				end
+			end,
+			unload_icon = function (parent, widget, element, ui_renderer)
+				local content = widget.content
+
+				if content.icon_load_id then
+					_remove_package_item_icon_cb_func(widget, ui_renderer, "texture_map")
+					Managers.ui:unload_item_icon(content.icon_load_id)
+
+					content.icon_load_id = nil
+				end
+			end,
+			destroy = function (parent, widget, element, ui_renderer)
+				local content = widget.content
+
+				if content.icon_load_id then
+					_remove_package_item_icon_cb_func(widget, ui_renderer, "texture_map")
+					Managers.ui:unload_item_icon(content.icon_load_id)
+
+					content.icon_load_id = nil
+				end
+			end
+		},
+		emote_header = {
+			size = {
+				grid_width,
+				280
+			},
+			pass_template = {
+				{
+					value_id = "icon",
+					style_id = "icon",
+					pass_type = "texture",
+					value = "content/ui/materials/base/ui_default_base",
+					style = {
+						vertical_alignment = "center",
+						horizontal_alignment = "center",
+						size = {
+							128,
+							128
+						},
+						offset = {
+							0,
+							45,
+							2
+						},
+						color = Color.white(255, true),
+						material_values = {
+							use_placeholder_texture = 1
+						}
+					},
+					visibility_function = function (content, style)
+						local use_placeholder_texture = content.use_placeholder_texture
+
+						if use_placeholder_texture and use_placeholder_texture == 0 then
+							return true
+						end
+
+						return false
+					end
+				},
+				{
+					pass_type = "rotated_texture",
+					value = "content/ui/materials/loading/loading_small",
+					style_id = "loading",
+					style = {
+						vertical_alignment = "center",
+						horizontal_alignment = "center",
+						angle = 0,
+						size = {
+							80,
+							80
+						},
+						color = {
+							60,
+							160,
+							160,
+							160
+						},
+						offset = {
+							0,
+							0,
+							3
+						}
+					},
+					visibility_function = function (content, style)
+						local use_placeholder_texture = content.use_placeholder_texture
+
+						if not use_placeholder_texture or use_placeholder_texture == 1 then
+							return true
+						end
+
+						return false
+					end,
+					change_function = function (content, style, _, dt)
+						local add = -0.5 * dt
+						style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
+						style.angle = style.rotation_progress * math.pi * 2
+					end
+				},
+				{
+					style_id = "display_name",
+					pass_type = "text",
+					value_id = "display_name",
+					value = "n/a",
+					style = weapon_display_name_style
+				},
+				{
+					style_id = "type_name",
+					pass_type = "text",
+					value_id = "type_name",
+					value = "n/a",
+					style = weapon_type_name_style
+				}
+			},
+			init = function (parent, widget, element, callback_name, _, ui_renderer)
+				local content = widget.content
+				local style = widget.style
+				content.element = element
+				local item = element.item
+				local display_name = ItemUtils.display_name(item)
+				local type_name = ItemUtils.sub_display_name(item)
+				content.display_name = display_name
+				content.type_name = type_name
+				local type_name_style = style.type_name
+				local display_name_text_height = get_style_text_height(display_name, weapon_display_name_style, ui_renderer)
+				type_name_style.offset[2] = type_name_style.offset[2] + display_name_text_height
+				local slots = item.slots
+				local slot_name = slots and slots[1]
+				local slot = slot_name and ItemSlotSettings[slot_name]
+
+				if slot then
+					local slot_name = slot.name
+					local icon_color = slot.icon_color
+
+					if icon_color then
+						local color = style.icon.color
+						color[1] = icon_color[1]
+						color[2] = icon_color[2]
+						color[3] = icon_color[3]
+						color[4] = icon_color[4]
+					end
+				end
 			end,
 			load_icon = function (parent, widget, element)
 				local content = widget.content
@@ -4393,13 +4554,12 @@ local function generate_blueprints_function(grid_size, optional_item)
 		},
 		weapon_perk = {
 			size_function = function (parent, element, ui_renderer)
-				local item = element.item
 				local perk_item = element.perk_item
 				local perk_value = element.perk_value
 				local perk_rarity = element.perk_rarity
 				local description = ItemUtils.perk_description(perk_item, perk_rarity, perk_value)
 				local text_height = get_style_text_height(description, weapon_perk_style, ui_renderer)
-				local entry_height = math.max(0, text_height + 10)
+				local entry_height = math.max(weapon_perk_style.font_size + 8, text_height + 10)
 
 				return {
 					grid_width,
@@ -4415,22 +4575,14 @@ local function generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							0,
-							0
+							5
 						},
 						color = Color.terminal_frame(50, true)
 					}
 				},
 				{
-					pass_type = "hotspot",
-					content_id = "hotspot",
-					content = {
-						disabled = true,
-						on_hover_sound = UISoundEvents.default_mouse_hover,
-						on_pressed_sound = UISoundEvents.default_select
-					}
-				},
-				{
 					value = "content/ui/materials/icons/perks/perk_level_01",
+					value_id = "rank",
 					pass_type = "texture",
 					style = {
 						vertical_alignment = "center",
@@ -4441,7 +4593,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							42,
 							0,
-							0
+							6
 						},
 						color = Color.terminal_icon(255, true)
 					}
@@ -4454,31 +4606,34 @@ local function generate_blueprints_function(grid_size, optional_item)
 					style = weapon_perk_style
 				},
 				{
-					value = "content/ui/materials/frames/frame_corner_2px",
-					style_id = "button_corner",
-					pass_type = "texture",
-					style = {
-						vertical_alignment = "center",
-						horizontal_alignment = "center",
-						scale_to_material = true,
-						offset = {
-							0,
-							0,
-							6
-						},
-						color = Color.terminal_corner(nil, true),
-						size_addition = {
-							-50,
-							0
-						}
-					}
-				},
-				{
 					style_id = "locked",
 					value_id = "locked",
 					pass_type = "text",
 					value = "",
 					style = modification_lock_style
+				},
+				{
+					pass_type = "texture",
+					style_id = "glow",
+					value = "content/ui/materials/frames/frame_glow_01",
+					style = {
+						vertical_alignment = "center",
+						scale_to_material = true,
+						horizontal_alignment = "center",
+						offset = {
+							0,
+							-3,
+							14
+						},
+						size_addition = {
+							8,
+							25
+						},
+						color = Color.ui_blue_light(nil, true)
+					},
+					change_function = function (content, style)
+						style.color[1] = 200 + 55 * math.cos(3 * Application.time_since_launch())
+					end
 				},
 				{
 					value = "",
@@ -4506,24 +4661,12 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local perk_rarity = element.perk_rarity
 				local description = ItemUtils.perk_description(perk_item, perk_rarity, perk_value)
 				content.text = description
-				local is_selectable = element.is_selectable and not element.is_locked
+				content.rank = ItemUtils.perk_textures(perk_item, perk_rarity)
 				style.locked.visible = element.is_locked or false
-				style.button_corner.visible = not not is_selectable
-
-				if is_selectable then
-					content.perk_index = element.perk_index
-					local hotspot = content.hotspot
-					hotspot.disabled = false
-					local view_instance = parent._parent
-
-					if view_instance and view_instance.on_perk_selected then
-						hotspot.pressed_callback = callback(view_instance, "on_perk_selected", element.perk_index, description)
-					end
-				end
+				style.glow.visible = element.show_glow or false
 
 				if element.show_rating then
-					local rating_value = CraftingSettings.rating_per_perk_rank[perk_rarity] or "?"
-					content.rating = " " .. rating_value
+					content.rating = " " .. ItemUtils.perk_rating(perk_item, perk_rarity)
 					local description_size = element.description_size or {}
 					style.description.size[1] = description_size[1] or style.description.size[1]
 					style.description.size[2] = description_size[2] or style.description.size[2]
@@ -4619,6 +4762,29 @@ local function generate_blueprints_function(grid_size, optional_item)
 					pass_type = "text",
 					value = "n/a",
 					style = weapon_traits_description_style
+				},
+				{
+					pass_type = "texture",
+					style_id = "glow",
+					value = "content/ui/materials/frames/frame_glow_01",
+					style = {
+						vertical_alignment = "center",
+						scale_to_material = true,
+						horizontal_alignment = "center",
+						offset = {
+							0,
+							0,
+							10
+						},
+						size_addition = {
+							8,
+							32
+						},
+						color = Color.ui_blue_light(nil, true)
+					},
+					change_function = function (content, style)
+						style.color[1] = 200 + 55 * math.cos(3 * Application.time_since_launch())
+					end
 				}
 			},
 			init = function (parent, widget, element, callback_name)
@@ -4638,9 +4804,10 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local description = ItemUtils.trait_description(trait_item, trait_rarity, trait_value)
 				content.description = description
 				style.locked.visible = element.is_locked or false
+				style.glow.visible = element.show_glow or false
 
 				if element.show_rating then
-					local rating_value = CraftingSettings.rating_per_trait_rank[trait_rarity] or "?"
+					local rating_value = ItemUtils.trait_rating(trait_item, trait_rarity, trait_value)
 					content.rating = " " .. rating_value
 					local description_size = element.description_size or {}
 					style.description.size[1] = description_size[1] or style.description.size[1]

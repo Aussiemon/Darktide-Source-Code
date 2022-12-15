@@ -664,7 +664,7 @@ local volume_data = {
 	},
 	{
 		height = 2,
-		type = "content/volume_types/nav_tag_volumes/minion_instakill_high_cost",
+		type = "content/volume_types/minion_instakill_no_cost",
 		name = "minion_instakill_003",
 		alt_max_vector = {
 			169.49989318847656,
@@ -705,9 +705,9 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			0,
-			0,
-			0.3244610130786896
+			[1.0] = 0,
+			[3.0] = 0.3244610130786896,
+			[2] = -0
 		}
 	},
 	{
@@ -813,33 +813,33 @@ local volume_data = {
 		alt_max_vector = {
 			168.99989318847656,
 			-122.00000762939453,
-			-43.49197006225586
+			-41.82005310058594
 		},
 		alt_min_vector = {
 			168.99989318847656,
 			-122.00000762939453,
-			-44.140892028808594
+			-43.640892028808594
 		},
 		bottom_points = {
 			{
 				152.55056762695312,
 				-103.96902465820312,
-				-44.140892028808594
+				-43.640892028808594
 			},
 			{
 				152.55056762695312,
 				-140.03099060058594,
-				-44.140892028808594
+				-43.640892028808594
 			},
 			{
 				185.44921875,
 				-140.03099060058594,
-				-44.140892028808594
+				-43.640892028808594
 			},
 			{
 				185.44921875,
 				-103.96902465820312,
-				-44.140892028808594
+				-43.640892028808594
 			}
 		},
 		color = {
@@ -851,7 +851,7 @@ local volume_data = {
 		up_vector = {
 			0,
 			0,
-			0.3244610130786896
+			0.9104200005531311
 		}
 	},
 	{
@@ -952,7 +952,7 @@ local volume_data = {
 	},
 	{
 		height = 2,
-		type = "content/volume_types/nav_tag_volumes/minion_instakill_high_cost",
+		type = "content/volume_types/minion_instakill_no_cost",
 		name = "volume_instakill",
 		alt_max_vector = {
 			255.49989318847656,
@@ -993,9 +993,9 @@ local volume_data = {
 			0
 		},
 		up_vector = {
-			0,
-			0,
-			1
+			[1.0] = 0,
+			[3.0] = 1,
+			[2] = -0
 		}
 	},
 	{

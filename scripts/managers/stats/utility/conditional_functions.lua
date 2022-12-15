@@ -156,6 +156,52 @@ ConditionalFunctions.is_weakspot = function (stat_to_check)
 	end
 end
 
+ConditionalFunctions.is_finesse_hit = function (stat_to_check)
+	local index_of_breed_name = table.index_of(stat_to_check:get_parameters(), "breed_name")
+	local index_of_is_critical_hit = table.index_of(stat_to_check:get_parameters(), "is_critical_hit")
+	local index_of_hit_zone_name = table.index_of(stat_to_check:get_parameters(), "hit_zone_name")
+	local index_of_weapon_attack_type = table.index_of(stat_to_check:get_parameters(), "weapon_attack_type")
+
+	return function (_, _, _, ...)
+		local breed_name = select(index_of_breed_name, ...)
+		local breed_data = Breeds[breed_name]
+		local hit_zone_name = select(index_of_hit_zone_name, ...)
+		local weapon_attack_type = select(index_of_weapon_attack_type, ...)
+		local hit_weakspot = Weakspot.hit_weakspot(breed_data, hit_zone_name, weapon_attack_type)
+		local is_critical_hit = select(index_of_is_critical_hit, ...)
+
+		return hit_weakspot or is_critical_hit
+	end
+end
+
+ConditionalFunctions.is_staggering_hit = function (stat_to_check)
+	local index_of_stagger_result = table.index_of(stat_to_check:get_parameters(), "stagger_result")
+
+	return function (_, _, _, ...)
+		local stagger_result = select(index_of_stagger_result, ...)
+		local staggered = stagger_result == "stagger"
+
+		return staggered
+	end
+end
+
+ConditionalFunctions.is_initial_buff_application = function (stat_to_check, buff_name)
+	local index_of_buff_template_name = table.index_of(stat_to_check:get_parameters(), "buff_template_name")
+	local index_of_stack_count = table.index_of(stat_to_check:get_parameters(), "stack_count")
+
+	return function (_, _, _, ...)
+		local buff_template_name = select(index_of_buff_template_name, ...)
+
+		if buff_template_name ~= buff_name then
+			return false
+		end
+
+		local stack_count = select(index_of_stack_count, ...)
+
+		return stack_count == 1
+	end
+end
+
 ConditionalFunctions.weapon_has_keywords = function (stat_to_check, keywords)
 	local _weapon_templates = {}
 

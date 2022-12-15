@@ -1,4 +1,5 @@
 local TestifySnippets = require("scripts/tests/testify_snippets")
+local FlythroughCoordinates = require("scripts/tests/test_cases/config/flythrough_coordinates")
 PerformanceTestCases = {
 	performance_memory_usage = function (mission_key)
 		Testify:run_case(function (dt, t)
@@ -10,7 +11,7 @@ PerformanceTestCases = {
 				return result
 			end
 
-			if TestifySnippets.is_debug_stripped() and Testify:make_request("current_state_name") ~= "StateGameplay" then
+			if (TestifySnippets.is_debug_stripped() or BUILD == "release") and Testify:make_request("current_state_name") ~= "StateGameplay" then
 				TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			end
 
@@ -22,7 +23,9 @@ PerformanceTestCases = {
 				TestifySnippets.spawn_bot()
 			end
 
-			Testify:make_request("memory_usage", 0)
+			local memory_usage_data = Testify:make_request("memory_usage")
+
+			Testify:make_request("create_telemetry_event", "memory_usage", mission_key, 0, memory_usage_data)
 			TestifySnippets.send_telemetry_batch()
 		end)
 	end,
@@ -31,6 +34,7 @@ PerformanceTestCases = {
 			Log.set_category_log_level("Telemetry", Log.DEBUG)
 
 			local measure_time = 2
+			local time_before_measuring = 5
 			local flag = TestifySnippets.mission_flag_of_type(mission_key, "performance")
 
 			if flag == false then
@@ -39,7 +43,7 @@ PerformanceTestCases = {
 				return result
 			end
 
-			if TestifySnippets.is_debug_stripped() and Testify:make_request("current_state_name") ~= "StateGameplay" then
+			if (TestifySnippets.is_debug_stripped() or BUILD == "release") and Testify:make_request("current_state_name") ~= "StateGameplay" then
 				TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			end
 
@@ -52,13 +56,19 @@ PerformanceTestCases = {
 				condition = not table.is_empty(cameras),
 				message = mission_key .. "'s performance flag is set to true, but there are no performance cameras. Please set the flag to false until cameras have been added."
 			}
+			local performance_measurements = {}
+			local telemetry_event_name = "camera_performance_measurements"
 
 			for index, camera in pairs(cameras) do
 				Testify:make_request("set_active_testify_camera", camera.unit)
-				TestifySnippets.wait(3)
+				TestifySnippets.wait(time_before_measuring)
 				Testify:make_request("start_measuring_performance")
 				TestifySnippets.wait(measure_time)
-				Testify:make_request("stop_measuring_performance", camera)
+
+				performance_measurements = Testify:make_request("stop_measuring_performance")
+				local mission_name = Testify:make_request("current_mission")
+
+				Testify:make_request("create_telemetry_event", telemetry_event_name, mission_name, camera, performance_measurements)
 			end
 
 			Testify:make_request("deactivate_testify_camera")
@@ -70,18 +80,25 @@ PerformanceTestCases = {
 			Log.set_category_log_level("Telemetry", Log.DEBUG)
 
 			local measure_time = 2
+			local time_before_measuring = 5
 			local cameras = Testify:make_request("all_cameras_of_type", "performance")
 			local assert_data = {
 				condition = not table.is_empty(cameras),
 				message = mission_key .. "'s performance flag is set to true, but there are no performance cameras. Please set the flag to false until cameras have been added."
 			}
+			local performance_measurements = {}
+			local telemetry_event_name = "camera_performance_measurements"
 
 			for index, camera in pairs(cameras) do
 				Testify:make_request("set_active_testify_camera", camera.unit)
-				TestifySnippets.wait(3)
+				TestifySnippets.wait(time_before_measuring)
 				Testify:make_request("start_measuring_performance")
 				TestifySnippets.wait(measure_time)
-				Testify:make_request("stop_measuring_performance", camera)
+
+				performance_measurements = Testify:make_request("stop_measuring_performance")
+				local mission_name = Testify:make_request("current_mission")
+
+				Testify:make_request("create_telemetry_event", telemetry_event_name, mission_name, camera, performance_measurements)
 			end
 
 			Testify:make_request("deactivate_testify_camera")

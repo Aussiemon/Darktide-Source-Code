@@ -2120,8 +2120,6 @@ local function _reset_dev_parameters()
 	local ParameterResolver = require("scripts/foundation/utilities/parameters/parameter_resolver")
 
 	ParameterResolver.reset_defaults()
-	Application.set_user_setting("development_settings", DevParameters)
-	Application.save_user_settings()
 end
 
 functions.reset_dev_parameters = {

@@ -54,7 +54,7 @@ ItemGridViewBase.on_enter = function (self)
 	end
 end
 
-local function comparator(definition)
+ItemGridViewBase.sort_comparator = function (self, definition)
 	return function (a, b)
 		local a_item = a.item
 		local b_item = b.item
@@ -81,7 +81,7 @@ ItemGridViewBase._setup_sort_options = function (self)
 	self._sort_options = {
 		{
 			display_name = Localize("loc_inventory_item_grid_sort_title_rarity") .. " ",
-			sort_function = comparator({
+			sort_function = self:sort_comparator({
 				">",
 				ItemUtils.compare_item_rarity,
 				">",
@@ -92,7 +92,7 @@ ItemGridViewBase._setup_sort_options = function (self)
 		},
 		{
 			display_name = Localize("loc_inventory_item_grid_sort_title_rarity") .. " ",
-			sort_function = comparator({
+			sort_function = self:sort_comparator({
 				"<",
 				ItemUtils.compare_item_rarity,
 				"<",
@@ -103,7 +103,7 @@ ItemGridViewBase._setup_sort_options = function (self)
 		},
 		{
 			display_name = Localize("loc_inventory_item_grid_sort_title_name") .. " ",
-			sort_function = comparator({
+			sort_function = self:sort_comparator({
 				">",
 				ItemUtils.compare_item_name,
 				">",
@@ -114,7 +114,7 @@ ItemGridViewBase._setup_sort_options = function (self)
 		},
 		{
 			display_name = Localize("loc_inventory_item_grid_sort_title_name") .. " ",
-			sort_function = comparator({
+			sort_function = self:sort_comparator({
 				"<",
 				ItemUtils.compare_item_name,
 				">",
@@ -302,7 +302,7 @@ ItemGridViewBase._stop_previewing = function (self)
 end
 
 ItemGridViewBase._preview_element = function (self, element)
-	local item = element.real_item or element.item
+	local item = element and (element.real_item or element.item)
 
 	self:_preview_item(item)
 end
@@ -310,14 +310,20 @@ end
 ItemGridViewBase._preview_item = function (self, item)
 	self:_stop_previewing()
 
-	self._previewed_item = item
-	local item_display_name = item.display_name
+	if item and item.display_name and string.match(item.display_name, "unarmed") then
+		item = nil
+	end
 
-	if string.match(item_display_name, "unarmed") then
+	local visible = item ~= nil
+
+	self:_set_preview_widgets_visibility(visible)
+
+	self._previewed_item = item
+
+	if not item then
 		return
 	end
 
-	local slots = item.slots or {}
 	local item_type = item.item_type
 	local is_weapon = item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED"
 	local can_compare = is_weapon or item_type == "GADGET"
@@ -342,9 +348,9 @@ ItemGridViewBase._preview_item = function (self, item)
 				self._previewed_equipped_item = nil
 			end
 
-			local visible = can_compare and equipped_item and self._item_compare_toggled or false
+			local compare_stats_visible = can_compare and equipped_item and self._item_compare_toggled or false
 
-			self._weapon_compare_stats:set_visibility(visible)
+			self._weapon_compare_stats:set_visibility(compare_stats_visible)
 		end
 	elseif item_type == "WEAPON_SKIN" then
 		local visual_item = ItemUtils.weapon_skin_preview_item(item)
@@ -363,9 +369,6 @@ ItemGridViewBase._preview_item = function (self, item)
 	widgets_by_name.sub_display_name.content.text = sub_display_name
 	widgets_by_name.display_name.content.text = display_name
 	widgets_by_name.display_name_divider_glow.style.texture.color = table.clone(rarity_color)
-	local visible = true
-
-	self:_set_preview_widgets_visibility(visible)
 end
 
 ItemGridViewBase._fetch_item_compare_slot_name = function (self, item)
@@ -476,6 +479,8 @@ ItemGridViewBase.on_exit = function (self)
 		self._weapon_compare_stats = nil
 	end
 
+	self:_destroy_weapon_preview()
+
 	if self._ui_default_renderer then
 		self._ui_default_renderer = nil
 
@@ -496,7 +501,6 @@ ItemGridViewBase.on_exit = function (self)
 		end
 	end
 
-	self:_destroy_weapon_preview()
 	ItemGridViewBase.super.on_exit(self)
 end
 
@@ -519,6 +523,46 @@ ItemGridViewBase.cb_on_sort_button_pressed = function (self, option)
 	self:_sort_grid_layout(sort_function)
 end
 
+ItemGridViewBase._cb_on_present = function (self)
+	local new_selection_index = nil
+	local grid_widgets = self._item_grid:widgets()
+	local selected_gear_id = self._selected_gear_id
+
+	for i = 1, #grid_widgets do
+		local widget = grid_widgets[i]
+		local content = widget.content
+		local element = content.element
+
+		if element then
+			local item = element.item
+
+			if item then
+				if item.gear_id == selected_gear_id then
+					new_selection_index = i
+
+					break
+				elseif not new_selection_index then
+					new_selection_index = i
+
+					if not selected_gear_id then
+						break
+					end
+				end
+			end
+		end
+	end
+
+	self._selected_gear_id = nil
+
+	if new_selection_index then
+		self._item_grid:focus_grid_index(new_selection_index)
+	else
+		self._item_grid:select_first_index()
+	end
+
+	self._synced_grid_index = nil
+end
+
 ItemGridViewBase._sort_grid_layout = function (self, sort_function)
 	if not self._filtered_offer_items_layout then
 		return
@@ -535,32 +579,7 @@ ItemGridViewBase._sort_grid_layout = function (self, sort_function)
 	local selected_element = widget_index and item_grid:element_by_index(widget_index)
 	local selected_item = selected_element and selected_element.item
 	self._selected_gear_id = self._selected_gear_id or selected_item and selected_item.gear_id
-	local on_present_callback = self._selected_gear_id and callback(function ()
-		local new_selection_index = nil
-		local grid_widgets = item_grid:widgets()
-
-		for i = 1, #grid_widgets do
-			local widget = grid_widgets[i]
-			local content = widget.content
-			local element = content.element
-
-			if element then
-				local item = element.item
-
-				if item and item.gear_id == self._selected_gear_id then
-					new_selection_index = i
-
-					break
-				end
-			end
-		end
-
-		self._selected_gear_id = nil
-
-		if new_selection_index then
-			self._item_grid:focus_grid_index(new_selection_index)
-		end
-	end)
+	local on_present_callback = callback(self, "_cb_on_present")
 
 	self:present_grid_layout(layout, on_present_callback)
 end

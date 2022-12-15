@@ -102,7 +102,8 @@ local widget_definitions = {
 		}
 	}, "chat_window"),
 	input_field = UIWidget.create_definition(TextInputPassTemplates.chat_input_field, "input_field", {
-		close_on_backspace = false
+		close_on_backspace = ChatSettings.close_on_backspace,
+		max_length = ChatSettings.message_limit_in_characters
 	}),
 	chat_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.simple_scrollbar, "chat_scrollbar"),
 	chat_window_mask = UIWidget.create_definition({
@@ -126,7 +127,7 @@ local message_widget_blueprints = {
 			style_id = "message",
 			value_id = "message",
 			pass_type = "text",
-			style = UIFontSettings.chat_message
+			style = table.clone(UIFontSettings.chat_message)
 		}
 	}, "chat_message_area"),
 	notification = UIWidget.create_definition({
@@ -134,7 +135,7 @@ local message_widget_blueprints = {
 			style_id = "message",
 			value_id = "message",
 			pass_type = "text",
-			style = UIFontSettings.chat_notification
+			style = table.clone(UIFontSettings.chat_notification)
 		}
 	}, "chat_message_area")
 }

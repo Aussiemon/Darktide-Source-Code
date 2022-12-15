@@ -92,7 +92,7 @@ Gear.attach_item_as_override = function (self, item_id, attach_point, gear_id)
 	end
 
 	return BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("/gear/"):path(item_id):path("/overrides/"):path(attach_point), string_path):next(function (data)
-		return nil
+		return data.body
 	end)
 end
 

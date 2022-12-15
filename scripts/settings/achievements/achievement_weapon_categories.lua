@@ -27,6 +27,10 @@ local AchievementWeaponCategories = {
 		"chain_sword",
 		"p1"
 	},
+	chain_sword_2h_p1 = {
+		"chain_sword_2h",
+		"p1"
+	},
 	combat_axe_p1 = {
 		"combat_axe",
 		"p1"
@@ -70,6 +74,14 @@ local AchievementWeaponCategories = {
 	force_staff_p2 = {
 		"force_staff",
 		"p2"
+	},
+	force_staff_p3 = {
+		"force_staff",
+		"p3"
+	},
+	force_staff_p4 = {
+		"force_staff",
+		"p4"
 	},
 	force_sword_p1 = {
 		"force_sword",
@@ -121,6 +133,10 @@ local AchievementWeaponCategories = {
 	},
 	power_maul_p1 = {
 		"power_maul",
+		"p1"
+	},
+	power_maul_2h_p1 = {
+		"power_maul_2h",
 		"p1"
 	},
 	power_sword_p1 = {

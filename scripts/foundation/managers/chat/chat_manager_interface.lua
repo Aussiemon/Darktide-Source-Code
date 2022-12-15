@@ -10,6 +10,7 @@ local Interface = {
 	"join_chat_channel",
 	"leave_channel",
 	"send_channel_message",
+	"sessions",
 	"connected_chat_channels",
 	"connected_voip_channels",
 	"channel_text_mute_participant",

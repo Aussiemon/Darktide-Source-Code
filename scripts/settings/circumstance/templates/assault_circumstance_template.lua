@@ -208,9 +208,10 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_assault_description",
-			icon = "content/ui/materials/icons/circumstances/assault_01",
 			display_name = "loc_circumstance_assault_title",
-			favourable_to_players = true
+			happening_display_name = "loc_happening_assault",
+			favourable_to_players = true,
+			icon = "content/ui/materials/icons/circumstances/assault_01"
 		}
 	}
 }

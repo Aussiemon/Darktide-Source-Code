@@ -119,6 +119,32 @@ local conversations_disabled_ogryn_c = {
 			[2.0] = 7.170688
 		},
 		randomize_indexes = {}
+	},
+	lore_enemy_within_one_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_ogryn_c__lore_enemy_within_one_b_01",
+			[2.0] = "loc_ogryn_c__lore_enemy_within_one_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.078896,
+			[2.0] = 2.723938
+		},
+		randomize_indexes = {}
+	},
+	lore_enemy_within_one_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_ogryn_c__lore_enemy_within_one_c_01",
+			[2.0] = "loc_ogryn_c__lore_enemy_within_one_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 3.680458,
+			[2.0] = 1.990719
+		},
+		randomize_indexes = {}
 	}
 }
 

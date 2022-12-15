@@ -128,6 +128,34 @@ local scenegraph_definition = {
 			1
 		}
 	},
+	item_restrictions_background = {
+		vertical_alignment = "bottom",
+		parent = "canvas",
+		horizontal_alignment = "left",
+		size = {
+			800,
+			0
+		},
+		position = {
+			grid_width + 100,
+			-90,
+			1
+		}
+	},
+	item_restrictions = {
+		vertical_alignment = "center",
+		parent = "item_restrictions_background",
+		horizontal_alignment = "left",
+		size = {
+			500,
+			0
+		},
+		position = {
+			50,
+			0,
+			1
+		}
+	},
 	promo = {
 		vertical_alignment = "bottom",
 		parent = "left_side",
@@ -532,7 +560,6 @@ item_sub_title_style.text_horizontal_alignment = "right"
 item_sub_title_style.horizontal_alignment = "right"
 item_sub_title_style.text_vertical_alignment = "top"
 item_sub_title_style.vertical_alignment = "bottom"
-item_sub_title_style.horizontal_alignment = "right"
 item_sub_title_style.offset = {
 	0,
 	10,
@@ -550,6 +577,17 @@ owned_title_style.offset = {
 	3
 }
 owned_title_style.font_size = 20
+local item_restrictions_title_style = table.clone(UIFontSettings.terminal_header_3)
+item_restrictions_title_style.text_horizontal_alignment = "left"
+item_restrictions_title_style.horizontal_alignment = "left"
+item_restrictions_title_style.text_vertical_alignment = "top"
+item_restrictions_title_style.vertical_alignment = "top"
+item_restrictions_title_style.offset = {
+	0,
+	0,
+	1
+}
+item_restrictions_title_style.font_size = 20
 local set_text_font_style = table.clone(UIFontSettings.currency_title)
 set_text_font_style.text_horizontal_alignment = "left"
 set_text_font_style.text_vertical_alignment = "top"
@@ -1056,6 +1094,24 @@ local widget_definitions = {
 			end
 		}
 	}, "item_title"),
+	item_restrictions = UIWidget.create_definition({
+		{
+			value_id = "title",
+			style_id = "title",
+			pass_type = "text",
+			value = Localize("loc_item_equippable_on_header"),
+			style = item_restrictions_title_style
+		},
+		{
+			value_id = "text",
+			style_id = "text",
+			pass_type = "text",
+			value = "",
+			style = item_restrictions_title_style
+		}
+	}, "item_restrictions", {
+		visible = false
+	}),
 	price_text = UIWidget.create_definition({
 		{
 			value_id = "price_icon",
@@ -1415,7 +1471,7 @@ local legend_inputs = {
 		display_name = "loc_rotate",
 		alignment = "right_alignment",
 		visibility_function = function (parent)
-			return not parent._using_cursor_navigation and parent._is_dummy_showing
+			return not parent._using_cursor_navigation and (parent._is_dummy_showing or parent._is_weapon_showing)
 		end
 	},
 	{

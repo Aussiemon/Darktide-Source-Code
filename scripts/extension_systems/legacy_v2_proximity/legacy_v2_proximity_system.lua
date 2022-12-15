@@ -57,22 +57,11 @@ end
 
 local EMPTY_TABLE = {}
 
-local function _average_local_human_player_position(side)
-	local units = side.player_units or EMPTY_TABLE
-	local num = #units
+local function _camera_position()
+	local local_player = Managers.player:local_player(1)
+	local position = local_player and Managers.state.camera:camera_position(local_player.viewport_name)
 
-	if num <= 0 then
-		return
-	end
-
-	local avg_pos = Vector3(0, 0, 0)
-
-	for i = 1, num do
-		local d = units[i]
-		avg_pos = avg_pos + Unit.local_position(d, 1)
-	end
-
-	return avg_pos / num
+	return position
 end
 
 LegacyV2ProximitySystem._spread_start_times = function (self)
@@ -176,8 +165,8 @@ LegacyV2ProximitySystem.on_add_extension = function (self, world, unit, extensio
 			if DEDICATED_SERVER then
 				extension.is_proximity_fx_enabled = false
 			else
-				local avg_pos = _average_local_human_player_position(self._player_side)
-				local distance_sq = avg_pos and Vector3.distance_squared(position, avg_pos)
+				local camera_position = _camera_position()
+				local distance_sq = camera_position and Vector3.distance_squared(position, camera_position)
 
 				if distance_sq and distance_sq <= SPECIAL_PROXIMITY_DISTANCE_HEARD_SQ then
 					extension.is_proximity_fx_enabled = true
@@ -422,7 +411,6 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 	self:_process_distance_based_vo_query()
 end
 
-local Unit_flow_event = Unit.flow_event
 local MAX_ALLOWED_FX = 12
 
 LegacyV2ProximitySystem._update_nearby_enemies = function (self, side)
@@ -430,12 +418,12 @@ LegacyV2ProximitySystem._update_nearby_enemies = function (self, side)
 		return
 	end
 
-	local avg_pos = _average_local_human_player_position(side)
+	local camera_position = _camera_position()
 
-	if avg_pos then
+	if camera_position then
 		local max_allowed = MAX_ALLOWED_FX
 		local broadphase_result = self._broadphase_result
-		local num_units_in_broadphase = Broadphase.query(self._enemy_broadphase, avg_pos, PROXIMITY_DISTANCE_ENEMIES, broadphase_result)
+		local num_units_in_broadphase = Broadphase.query(self._enemy_broadphase, camera_position, PROXIMITY_DISTANCE_ENEMIES, broadphase_result)
 		local num_units = math.min(max_allowed, num_units_in_broadphase)
 
 		for i = 1, num_units do

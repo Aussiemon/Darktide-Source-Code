@@ -222,7 +222,7 @@ weapon_template.actions = {
 		fire_configuration = {
 			anim_event = "attack_shoot",
 			flamer_gas_template = FlamerGasTemplates.burst,
-			damage_type = damage_types.plasma
+			damage_type = damage_types.burning
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -298,7 +298,7 @@ weapon_template.actions = {
 		},
 		fire_configuration = {
 			flamer_gas_template = FlamerGasTemplates.auto,
-			damage_type = damage_types.plasma
+			damage_type = damage_types.burning
 		},
 		running_action_state_to_action_input = {
 			clip_empty = {

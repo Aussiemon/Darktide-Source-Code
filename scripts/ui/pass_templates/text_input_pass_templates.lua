@@ -15,6 +15,8 @@ local _ellipsis_length = _utf8_string_length(_ellipsis)
 local TextInputPassTemplates = {}
 
 local function _crop_text_width(ui_renderer, text, max_width, last_start_position, caret_position, font_type, font_size)
+	text = text or ""
+	max_width = max_width > 0 and max_width or 0
 	local original_text_length = _utf8_string_length(text)
 	caret_position = caret_position or original_text_length + 1
 	local prefix = ""
@@ -27,7 +29,7 @@ local function _crop_text_width(ui_renderer, text, max_width, last_start_positio
 	local ellipsis_width, _2, _3, ellipsis_caret = _ui_renderer_text_size(ui_renderer, _ellipsis, font_type, scaled_font_size)
 	local actual_text_width = caret_offset[1]
 
-	if max_width < actual_text_width then
+	if actual_text_width > 0 and max_width < actual_text_width then
 		start_index = last_start_position or start_index
 
 		if caret_position <= start_index then
@@ -110,10 +112,22 @@ local function _find_prev_word(text, caret_position)
 	return result
 end
 
-local function _insert_text(target, caret_position, text_to_insert)
-	target = Utf8.string_insert(target, caret_position, text_to_insert)
+local function _insert_text(target, caret_position, text_to_insert, max_length)
 	local text_length = _utf8_string_length(text_to_insert)
-	caret_position = caret_position + text_length
+
+	if max_length then
+		local target_length = _utf8_string_length(target)
+
+		if max_length < target_length + text_length then
+			text_length = max_length - target_length
+			text_to_insert = Utf8.sub_string(text_to_insert, 1, _math_max(text_length, 0))
+		end
+	end
+
+	if text_length > 0 then
+		target = Utf8.string_insert(target, caret_position, text_to_insert)
+		caret_position = caret_position + text_length
+	end
 
 	return target, caret_position
 end
@@ -345,7 +359,7 @@ local text_input_base = {
 						input_text, caret_position = _remove_text(input_text, selection_start, selection_end, caret_position)
 						deselect = true
 					end
-				elseif last_input then
+				elseif last_input and selection_start ~= selection_end then
 					input_text, caret_position = _remove_text(old_input_text, selection_start, selection_end, old_caret_position)
 					input_text, caret_position = _insert_text(input_text, caret_position, last_input)
 					deselect = true
@@ -413,12 +427,17 @@ local text_input_base = {
 		value = function (pass, ui_renderer, ui_style, content, position, size)
 			local old_input_text = content._input_text
 			local new_input_text = content.input_text
-			local text_has_changed = new_input_text ~= old_input_text
+			local old_active_placeholder_text = content._active_placeholder_text
+			local new_active_placeholder_text = content.active_placeholder_text
 			local old_caret_position = content._caret_position
 			local new_caret_position = content.caret_position
+			local force_caret_update = content.force_caret_update
+			local text_has_changed = new_input_text ~= old_input_text
+			local placeholder_text_has_changed = new_active_placeholder_text ~= old_active_placeholder_text
+			local caret_position_has_changed = new_caret_position ~= old_caret_position
 			local text_length = new_input_text and _utf8_string_length(new_input_text) or 0
 
-			if not text_has_changed and new_caret_position == old_caret_position then
+			if not text_has_changed and not placeholder_text_has_changed and not caret_position_has_changed and not force_caret_update then
 				return
 			elseif content.max_length and content.max_length < text_length then
 				content.input_text = old_input_text
@@ -441,6 +460,8 @@ local text_input_base = {
 			content.display_text = display_text
 			content._caret_position = new_caret_position
 			content._input_text_first_visible_pos = first_pos
+			content._active_placeholder_text = new_active_placeholder_text
+			content.force_caret_update = nil
 			caret_style.offset[1] = display_text_style.offset[1] + caret_offset
 		end
 	}
@@ -834,7 +855,7 @@ table.append(TextInputPassTemplates.chat_input_field, {
 		value_id = "to_channel",
 		style_id = "to_channel",
 		pass_type = "text",
-		value = "To [Local]",
+		value = "",
 		style = table.clone(input_text_style)
 	},
 	{

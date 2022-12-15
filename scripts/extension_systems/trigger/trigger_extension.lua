@@ -148,6 +148,10 @@ TriggerExtension.filter_passed = function (self, filter_unit)
 	return filter_passed
 end
 
+TriggerExtension.is_active = function (self)
+	return self._is_active
+end
+
 TriggerExtension.set_active = function (self, is_active)
 	self._is_active = is_active
 end

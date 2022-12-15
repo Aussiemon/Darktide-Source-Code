@@ -3,7 +3,7 @@ local VOQueryConstants = require("scripts/settings/dialogue/vo_query_constants")
 AudioTestCases = {
 	play_all_vo_lines = function ()
 		Testify:run_case(function (dt, t)
-			if TestifySnippets.is_debug_stripped() then
+			if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 				TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 				TestifySnippets.load_mission("spawn_all_enemies")
 			end
@@ -51,7 +51,7 @@ local common_missions_look_at_tag = {
 
 AudioTestCases.vo_rules_dm_forge = function ()
 	Testify:run_case(function (dt, t)
-		if TestifySnippets.is_debug_stripped() then
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			TestifySnippets.load_mission("dm_forge")
 		end
@@ -101,7 +101,7 @@ end
 
 AudioTestCases.vo_rules_dm_propaganda = function ()
 	Testify:run_case(function (dt, t)
-		if TestifySnippets.is_debug_stripped() then
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			TestifySnippets.load_mission("dm_propaganda")
 		end
@@ -152,7 +152,7 @@ end
 
 AudioTestCases.vo_rules_dm_stockpile = function ()
 	Testify:run_case(function (dt, t)
-		if TestifySnippets.is_debug_stripped() then
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			TestifySnippets.load_mission("dm_stockpile")
 		end
@@ -198,7 +198,7 @@ end
 
 AudioTestCases.vo_rules_event_kill = function ()
 	Testify:run_case(function (dt, t)
-		if TestifySnippets.is_debug_stripped() then
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			TestifySnippets.load_mission("km_station")
 		end
@@ -231,7 +231,7 @@ end
 
 AudioTestCases.vo_rules_fm_cargo = function ()
 	Testify:run_case(function (dt, t)
-		if TestifySnippets.is_debug_stripped() then
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			TestifySnippets.load_mission("fm_cargo")
 		end
@@ -275,7 +275,7 @@ end
 
 AudioTestCases.vo_rules_hm_cartel = function ()
 	Testify:run_case(function (dt, t)
-		if TestifySnippets.is_debug_stripped() then
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			TestifySnippets.load_mission("hm_cartel")
 		end
@@ -323,7 +323,7 @@ end
 
 AudioTestCases.vo_rules_hm_strain = function ()
 	Testify:run_case(function (dt, t)
-		if TestifySnippets.is_debug_stripped() then
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			TestifySnippets.load_mission("hm_strain")
 		end
@@ -376,7 +376,7 @@ end
 
 AudioTestCases.vo_rules_km_enforcer = function ()
 	Testify:run_case(function (dt, t)
-		if TestifySnippets.is_debug_stripped() then
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			TestifySnippets.load_mission("km_enforcer")
 		end
@@ -426,7 +426,7 @@ end
 
 AudioTestCases.vo_rules_km_station = function ()
 	Testify:run_case(function (dt, t)
-		if TestifySnippets.is_debug_stripped() then
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			TestifySnippets.load_mission("km_station")
 		end
@@ -476,7 +476,7 @@ end
 
 AudioTestCases.vo_rules_lm_rails = function ()
 	Testify:run_case(function (dt, t)
-		if TestifySnippets.is_debug_stripped() then
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			TestifySnippets.load_mission("lm_rails")
 		end
@@ -524,7 +524,7 @@ end
 
 AudioTestCases.vo_rules_smart_tag_com_wheel = function ()
 	Testify:run_case(function (dt, t)
-		if TestifySnippets.is_debug_stripped() then
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			TestifySnippets.load_mission("spawn_all_enemies")
 		end

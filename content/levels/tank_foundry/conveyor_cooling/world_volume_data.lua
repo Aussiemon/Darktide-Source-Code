@@ -384,6 +384,92 @@ local volume_data = {
 		}
 	},
 	{
+		height = 4,
+		type = "content/volume_types/player_mover_blocker",
+		name = "volume_player_blocker_001",
+		alt_max_vector = {
+			-32.67236328125,
+			-171.09375,
+			-19
+		},
+		alt_min_vector = {
+			-32.67236328125,
+			-171.09375,
+			-23
+		},
+		bottom_points = {
+			{
+				-33.67236328125,
+				-170.84375,
+				-23
+			},
+			{
+				-32.92236328125,
+				-170.09375,
+				-23
+			},
+			{
+				-33.67236328125,
+				-170.09375,
+				-23
+			}
+		},
+		color = {
+			255,
+			255,
+			125,
+			0
+		},
+		up_vector = {
+			0,
+			0,
+			1
+		}
+	},
+	{
+		height = 4,
+		type = "content/volume_types/player_mover_blocker",
+		name = "volume_player_blocker_002",
+		alt_max_vector = {
+			-32.75,
+			-172.75,
+			-19
+		},
+		alt_min_vector = {
+			-32.75,
+			-172.75,
+			-23
+		},
+		bottom_points = {
+			{
+				-33,
+				-173.75,
+				-23
+			},
+			{
+				-33.75,
+				-173,
+				-23
+			},
+			{
+				-33.75,
+				-173.75,
+				-23
+			}
+		},
+		color = {
+			255,
+			255,
+			125,
+			0
+		},
+		up_vector = {
+			0,
+			0,
+			1
+		}
+	},
+	{
 		height = 1,
 		type = "content/volume_types/player_mover_blocker",
 		name = "volume_player_blocker",

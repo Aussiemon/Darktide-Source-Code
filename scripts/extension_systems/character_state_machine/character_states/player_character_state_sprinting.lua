@@ -132,9 +132,9 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 	local old_y = locomotion_steering.local_move_y
 	local decreasing_speed = new_y < old_y
 	local action_move_speed_modifier = weapon_extension:move_speed_modifier(t)
-	local actual_move_speed = move_speed * action_move_speed_modifier
-	actual_move_speed = actual_move_speed * stat_buffs.movement_speed * stat_buffs.sprint_movement_speed
-	locomotion_steering.velocity_wanted = move_direction * actual_move_speed
+	local move_speed_without_weapon_actions = move_speed * stat_buffs.sprint_movement_speed * stat_buffs.movement_speed
+	local move_speed_with_weapon_actions = move_speed_without_weapon_actions * action_move_speed_modifier
+	locomotion_steering.velocity_wanted = move_direction * move_speed_with_weapon_actions
 	locomotion_steering.local_move_x = new_x
 	locomotion_steering.local_move_y = new_y
 	local movement_state = self._movement_state_component
@@ -177,10 +177,10 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 	local sprint_momentum = math.max((move_speed - run_move_speed) / (sprint_move_speed - run_move_speed), 0)
 	local wants_slide = self._movement_state_component.is_crouching
 
-	return self:_check_transition(unit, t, next_state_params, input_extension, decreasing_speed, actual_move_speed, action_move_speed_modifier, sprint_momentum, wants_slide, wants_to_stop, has_input)
+	return self:_check_transition(unit, t, next_state_params, input_extension, decreasing_speed, action_move_speed_modifier, sprint_momentum, wants_slide, wants_to_stop, has_input, move_direction, move_speed_without_weapon_actions)
 end
 
-PlayerCharacterStateSprinting._check_transition = function (self, unit, t, next_state_params, input_source, decreasing_speed, move_speed, action_move_speed_modifier, sprint_momentum, wants_slide, wants_to_stop, has_input)
+PlayerCharacterStateSprinting._check_transition = function (self, unit, t, next_state_params, input_source, decreasing_speed, action_move_speed_modifier, sprint_momentum, wants_slide, wants_to_stop, has_input, move_direction, move_speed_without_weapon_actions)
 	local unit_data_extension = self._unit_data_extension
 	local health_transition = HealthStateTransitions.poll(unit_data_extension, next_state_params)
 
@@ -234,6 +234,7 @@ PlayerCharacterStateSprinting._check_transition = function (self, unit, t, next_
 	end
 
 	if wants_slide then
+		self._locomotion_steering_component.velocity_wanted = move_direction * move_speed_without_weapon_actions
 		next_state_params.friction_function = "sprint"
 
 		return "sliding"

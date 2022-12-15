@@ -6,7 +6,7 @@ table.make_unique(hitscan_templates)
 table.make_unique(overrides)
 
 hitscan_templates.default_stub_pistol_bfg = {
-	range = 75,
+	range = 100,
 	damage = {
 		impact = {
 			damage_profile = DamageProfileTemplates.default_stub_pistol_bfg

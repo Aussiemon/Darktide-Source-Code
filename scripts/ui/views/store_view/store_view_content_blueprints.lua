@@ -98,9 +98,9 @@ timer_text_style.hover_color = {
 	255
 }
 timer_text_style.offset = {
-	10,
-	-10,
-	2
+	30,
+	-15,
+	5
 }
 timer_text_style.horizontal_alignment = "center"
 timer_text_style.vertical_alignment = "center"
@@ -131,7 +131,12 @@ local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, 
 	material_values.texture_icon = render_target
 end
 
-local function _remove_live_item_icon_cb_func(widget)
+local function _remove_live_item_icon_cb_func(widget, ui_renderer)
+	if widget.content.visible then
+		UIWidget.set_visible(widget, ui_renderer, false)
+		UIWidget.set_visible(widget, ui_renderer, true)
+	end
+
 	local material_values = widget.style.icon.material_values
 	material_values.use_placeholder_texture = 1
 end
@@ -798,7 +803,7 @@ local blueprints = {
 			local content = widget.content
 
 			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget)
+				_remove_live_item_icon_cb_func(widget, ui_renderer)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
@@ -808,7 +813,7 @@ local blueprints = {
 			local content = widget.content
 
 			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget)
+				_remove_live_item_icon_cb_func(widget, ui_renderer)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
@@ -890,6 +895,10 @@ local blueprints = {
 				style = {
 					vertical_alignment = "bottom",
 					horizontal_alignment = "center",
+					size_addition = {
+						-2,
+						0
+					},
 					size = {
 						nil,
 						50
@@ -951,7 +960,11 @@ local blueprints = {
 				style = {
 					vertical_alignment = "top",
 					scale_to_material = true,
-					horizontal_alignment = "top",
+					horizontal_alignment = "center",
+					size_addition = {
+						-2,
+						0
+					},
 					color = Color.black(153, true),
 					size = {
 						nil,
@@ -1144,13 +1157,14 @@ local blueprints = {
 			style.price.material = not element.owned and font_gradient_material
 			style.price.text_color = element.owned and Color.terminal_text_header(255, true) or Color.white(255, true)
 			style.texture.material_values.main_texture = element.texture_map
+			style.texture.offset[2] = element.description and element.description ~= "" and -25 or 0
 			content.icon = icon_texture_small
 			style.icon.offset[1] = 30
 			title_style.offset[1] = style.icon.offset[1] + style.icon.size[1] + icon_margin
 			title_style.size = {
 				widget.content.size[1] - style.icon.size[1] - icon_margin
 			}
-			style.icon.offset[2] = title_style.offset[2]
+			style.icon.offset[2] = title_style.offset[2] - 5
 		end
 	}
 }

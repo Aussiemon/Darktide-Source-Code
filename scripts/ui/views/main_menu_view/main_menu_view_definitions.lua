@@ -653,18 +653,18 @@ local widget_definitions = {
 			style_id = "background_gradient",
 			value = "content/ui/materials/gradients/gradient_vertical",
 			style = {
-				horizontal_alignment = "center",
 				vertical_alignment = "center",
+				horizontal_alignment = "center",
 				size_addition = {
 					20,
 					20
 				},
-				color = Color.terminal_background_gradient(nil, true)
-			},
-			offset = {
-				0,
-				0,
-				1
+				color = Color.terminal_background_gradient(nil, true),
+				offset = {
+					0,
+					0,
+					1
+				}
 			},
 			change_function = function (content, style)
 				local hotspot = content.hotspot

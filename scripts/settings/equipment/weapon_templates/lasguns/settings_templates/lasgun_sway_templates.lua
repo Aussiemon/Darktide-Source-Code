@@ -1725,12 +1725,12 @@ sway_templates.lasgun_p2_m1_killshot = {
 		},
 		continuous_sway = {
 			pitch = {
-				lerp_perfect = 0.3,
-				lerp_basic = 1.1
+				lerp_perfect = 0.01,
+				lerp_basic = 0.6
 			},
 			yaw = {
-				lerp_perfect = 0.3,
-				lerp_basic = 1.1
+				lerp_perfect = 0.01,
+				lerp_basic = 0.6
 			}
 		},
 		immediate_sway = {
@@ -1878,12 +1878,12 @@ sway_templates.lasgun_p2_m1_killshot = {
 		},
 		continuous_sway = {
 			pitch = {
-				lerp_perfect = 0.4,
-				lerp_basic = 1.2
+				lerp_perfect = 0.1,
+				lerp_basic = 0.8
 			},
 			yaw = {
-				lerp_perfect = 0.4,
-				lerp_basic = 1.2
+				lerp_perfect = 0.1,
+				lerp_basic = 0.8
 			}
 		},
 		decay = {
@@ -1937,12 +1937,12 @@ sway_templates.lasgun_p2_m1_killshot = {
 		},
 		continuous_sway = {
 			pitch = {
-				lerp_perfect = 0.225,
-				lerp_basic = 0.8
+				lerp_perfect = 0.01,
+				lerp_basic = 0.4
 			},
 			yaw = {
-				lerp_perfect = 0.225,
-				lerp_basic = 0.8
+				lerp_perfect = 0.01,
+				lerp_basic = 0.4
 			}
 		},
 		decay = {
@@ -1993,12 +1993,12 @@ sway_templates.lasgun_p2_m1_killshot = {
 		},
 		continuous_sway = {
 			pitch = {
-				lerp_perfect = 0.1,
-				lerp_basic = 1.05
+				lerp_perfect = 0.05,
+				lerp_basic = 0.6
 			},
 			yaw = {
-				lerp_perfect = 0.1,
-				lerp_basic = 1.05
+				lerp_perfect = 0.05,
+				lerp_basic = 0.6
 			}
 		},
 		decay = {

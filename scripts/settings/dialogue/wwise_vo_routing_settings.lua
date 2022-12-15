@@ -279,6 +279,24 @@ local wwise_vo_routing_settings = {
 		wwise_event_path = "wwise/events/vo/play_sfx_es_medicae_servitor_vo",
 		display_name = "Medicae Servitor VO",
 		wwise_sound_source = "es_medicae_servitor_vo"
+	},
+	{
+		is_default = false,
+		wwise_event_path = "wwise/events/vo/play_sfx_es_cultist_berzerker_assault_vo",
+		display_name = "Elite Cultist Berzerker Assault",
+		wwise_sound_source = "es_cultist_berzerker_assault_vo"
+	},
+	{
+		is_default = false,
+		wwise_event_path = "wwise/events/vo/play_sfx_es_traitor_berzerker_vo",
+		display_name = "Elite Traitor Berzerker VO",
+		wwise_sound_source = "es_traitor_berzerker_vo"
+	},
+	{
+		is_default = false,
+		wwise_event_path = "wwise/events/vo/play_sfx_es_traitor_berzerker_assault_vo",
+		display_name = "Elite Traitor Berzerker Assault",
+		wwise_sound_source = "es_traitor_berzerker_assault_vo"
 	}
 }
 

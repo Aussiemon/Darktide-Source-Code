@@ -179,6 +179,12 @@ Characters.set_narrative_event_completed = function (self, character_id, event_n
 	})
 end
 
+Characters.get_narrative_event = function (self, character_id, event_name, optional_account_id)
+	return self:get_data(character_id, "narrative|events", event_name, optional_account_id):next(function (value)
+		return value == "true" or value == true
+	end)
+end
+
 Characters.set_data = function (self, character_id, section, data)
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/data/" .. section), {
 		method = "PUT",
@@ -190,8 +196,8 @@ Characters.set_data = function (self, character_id, section, data)
 	end)
 end
 
-Characters.get_data = function (self, character_id, section, part)
-	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/data/" .. section)):next(function (data)
+Characters.get_data = function (self, character_id, section, part, optional_account_id)
+	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/data/" .. section), nil, optional_account_id):next(function (data)
 		if part then
 			if #data.body.data > 0 then
 				return data.body.data[1].value[part]

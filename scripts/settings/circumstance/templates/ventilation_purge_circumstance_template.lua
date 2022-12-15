@@ -5,7 +5,8 @@ local circumstance_templates = {
 		ui = {
 			description = "loc_circumstance_ventilation_purge_description",
 			icon = "content/ui/materials/icons/circumstances/ventilation_purge_01",
-			display_name = "loc_circumstance_ventilation_purge_title"
+			display_name = "loc_circumstance_ventilation_purge_title",
+			happening_display_name = "loc_happening_ventilation_purge"
 		}
 	},
 	ventilation_purge_with_snipers_01 = {
@@ -17,7 +18,8 @@ local circumstance_templates = {
 		ui = {
 			description = "loc_circumstance_ventilation_purge_with_snipers_description",
 			icon = "content/ui/materials/icons/circumstances/ventilation_purge_with_snipers_01",
-			display_name = "loc_circumstance_ventilation_purge_with_snipers_title"
+			display_name = "loc_circumstance_ventilation_purge_with_snipers_title",
+			happening_display_name = "loc_happening_ventilation_purge"
 		}
 	}
 }

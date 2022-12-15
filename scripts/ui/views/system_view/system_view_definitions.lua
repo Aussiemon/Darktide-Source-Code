@@ -157,12 +157,12 @@ local widget_definitions = {
 		{
 			value = "content/ui/vector_textures/symbols/cog_skull_01",
 			pass_type = "slug_icon",
-			offset = {
-				0,
-				0,
-				2
-			},
 			style = {
+				offset = {
+					0,
+					0,
+					2
+				},
 				color = {
 					40,
 					0,

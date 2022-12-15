@@ -861,16 +861,16 @@ weapon_template.fx_sources = {
 weapon_template.crosshair_type = "bfg"
 weapon_template.hit_marker_type = "center"
 weapon_template.overheat_configuration = {
-	vent_duration = 4,
-	low_threshold_decay_rate_modifier = 0.5,
-	vent_interval = 0.8,
+	vent_duration = 3,
+	low_threshold_decay_rate_modifier = 0.8,
+	vent_interval = 0.6,
 	auto_vent_delay = 1,
 	explode_action = "action_overheat_explode",
-	high_threshold_decay_rate_modifier = 1,
-	auto_vent_duration = 20,
+	high_threshold_decay_rate_modifier = 0.5,
+	auto_vent_duration = 15,
 	critical_threshold_decay_rate_modifier = 0.25,
 	thresholds = {
-		high = 0.7,
+		high = 0.6,
 		critical = 0.9,
 		low = 0.3
 	},
@@ -878,8 +878,8 @@ weapon_template.overheat_configuration = {
 		remove_canister = 1
 	},
 	vent_power_level = {
-		20,
-		40
+		125,
+		500
 	},
 	vent_damage_profile = DamageProfileTemplates.plasma_vent_damage,
 	vent_damage_type = damage_types.overheat,

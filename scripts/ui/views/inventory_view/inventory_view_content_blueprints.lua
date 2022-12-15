@@ -90,7 +90,12 @@ local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, 
 	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 end
 
-local function _remove_live_item_icon_cb_func(widget)
+local function _remove_live_item_icon_cb_func(widget, ui_renderer)
+	if widget.content.visible then
+		UIWidget.set_visible(widget, ui_renderer, false)
+		UIWidget.set_visible(widget, ui_renderer, true)
+	end
+
 	local material_values = widget.style.icon.material_values
 	material_values.use_placeholder_texture = 1
 	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
@@ -285,7 +290,19 @@ local blueprints = {
 				end
 
 				local item_icon_size = slot.item_icon_size
-				style.icon.material_values.icon_size = item_icon_size
+				style.icon.material_values.icon_size = {
+					item_icon_size[1] * 0.5,
+					item_icon_size[2] * 0.5
+				}
+				local icon_color = slot.icon_color
+
+				if icon_color then
+					local color = style.icon.color
+					color[1] = icon_color[1]
+					color[2] = icon_color[2]
+					color[3] = icon_color[3]
+					color[4] = icon_color[4]
+				end
 
 				if equipped_item then
 					local cb = callback(_apply_package_item_icon_cb_func, widget, equipped_item)
@@ -593,7 +610,7 @@ local blueprints = {
 			local content = widget.content
 
 			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget)
+				_remove_live_item_icon_cb_func(widget, ui_renderer)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
@@ -603,7 +620,7 @@ local blueprints = {
 			local content = widget.content
 
 			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget)
+				_remove_live_item_icon_cb_func(widget, ui_renderer)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
@@ -664,7 +681,7 @@ local blueprints = {
 					end
 
 					if content.icon_load_id then
-						_remove_live_item_icon_cb_func(widget)
+						_remove_live_item_icon_cb_func(widget, ui_renderer)
 						Managers.ui:unload_item_icon(content.icon_load_id)
 
 						content.icon_load_id = nil
@@ -684,26 +701,94 @@ local blueprints = {
 			local content = widget.content
 
 			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget)
+				_remove_live_item_icon_cb_func(widget, ui_renderer)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
 			end
 		end
-	},
-	item_slot = {
-		size = ItemPassTemplates.weapon_item_size,
-		pass_template = ItemPassTemplates.item_slot,
-		init = function (parent, widget, element, callback_name)
-			local content = widget.content
-			local style = widget.style
-			content.hotspot.pressed_callback = callback(parent, callback_name, widget, element)
-			content.element = element
-			local slot = element.slot
+	}
+}
+blueprints.item_slot = {
+	size = ItemPassTemplates.weapon_item_size,
+	pass_template = ItemPassTemplates.item_slot,
+	init = function (parent, widget, element, callback_name)
+		local content = widget.content
+		local style = widget.style
+		content.hotspot.pressed_callback = callback(parent, callback_name, widget, element)
+		content.element = element
+		local slot = element.slot
 
-			if slot then
-				local slot_name = slot.name
-				local equipped_item = parent:equipped_item_in_slot(slot_name)
+		if slot then
+			local slot_name = slot.name
+			local equipped_item = parent:equipped_item_in_slot(slot_name)
+			content.item = equipped_item
+			local display_name = equipped_item and equipped_item.display_name
+
+			if display_name then
+				content.display_name = ItemUtils.display_name(equipped_item)
+				content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
+			end
+
+			if content.item_power then
+				content.item_power = ItemUtils.item_power(equipped_item)
+			end
+
+			if equipped_item then
+				local cb = callback(_apply_live_item_icon_cb_func, widget)
+				content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
+				style.sub_display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
+				style.display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
+				style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
+				style.rarity_tag.color = table.clone(ItemUtils.rarity_color(equipped_item))
+				style.inner_highlight.color = table.clone(ItemUtils.rarity_color(equipped_item))
+
+				if style.item_level then
+					content.item_level = ItemUtils.item_level(equipped_item)
+				end
+
+				local traits = equipped_item.traits
+
+				if traits then
+					for i = 1, 3 do
+						local pass_id = "trait_" .. i
+						local trait = traits[i]
+
+						if trait then
+							local trait_id = trait.id
+							local rarity = trait.rarity
+							local trait_item = MasterItems.get_item(trait_id)
+							local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
+							local trait_style = style[pass_id]
+
+							if trait_style then
+								local material_values = trait_style.material_values
+								material_values.icon = texture_icon
+								material_values.frame = texture_frame
+							end
+
+							content[pass_id] = trait_id
+						else
+							content[pass_id] = nil
+						end
+					end
+				end
+			end
+		end
+	end,
+	update = function (parent, widget, input_service, dt, t, ui_renderer)
+		local content = widget.content
+		local style = widget.style
+		local element = content.element
+		local slot = element.slot
+
+		if slot then
+			local slot_name = slot.name
+			local previous_item = content.item
+			local equipped_item = parent:equipped_item_in_slot(slot_name)
+			local update = equipped_item and not previous_item or not equipped_item and previous_item or previous_item and previous_item.gear_id ~= equipped_item.gear_id
+
+			if update then
 				content.item = equipped_item
 				local display_name = equipped_item and equipped_item.display_name
 
@@ -716,163 +801,126 @@ local blueprints = {
 					content.item_power = ItemUtils.item_power(equipped_item)
 				end
 
+				style.sub_display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
+				style.display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
+				style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
+				style.rarity_tag.color = table.clone(ItemUtils.rarity_color(equipped_item))
+				style.inner_highlight.color = table.clone(ItemUtils.rarity_color(equipped_item))
+
+				if style.item_level then
+					content.item_level = ItemUtils.item_level(equipped_item)
+				end
+
+				local traits = equipped_item.traits
+
+				if traits then
+					for i = 1, 3 do
+						local pass_id = "trait_" .. i
+						local trait = traits[i]
+
+						if trait then
+							local trait_id = trait.id
+							local rarity = trait.rarity
+							local trait_item = MasterItems.get_item(trait_id)
+							local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
+							local trait_style = style[pass_id]
+
+							if trait_style then
+								local material_values = trait_style.material_values
+								material_values.icon = texture_icon
+								material_values.frame = texture_frame
+							end
+
+							content[pass_id] = trait_id
+						else
+							content[pass_id] = nil
+						end
+					end
+				end
+
+				if content.icon_load_id then
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
+					Managers.ui:unload_item_icon(content.icon_load_id)
+
+					content.icon_load_id = nil
+				end
+
 				if equipped_item then
 					local cb = callback(_apply_live_item_icon_cb_func, widget)
 					content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
-					style.sub_display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
-					style.display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
-					style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
-					style.rarity_tag.color = table.clone(ItemUtils.rarity_color(equipped_item))
-					style.inner_highlight.color = table.clone(ItemUtils.rarity_color(equipped_item))
-
-					if style.item_level then
-						content.item_level = ItemUtils.item_level(equipped_item)
-					end
-
-					local traits = equipped_item.traits
-
-					if traits then
-						local item_trait_frame_texture_lookup = UISettings.item_trait_frame_texture_lookup
-
-						for i = 1, 3 do
-							local pass_id = "trait_" .. i
-							local trait = traits[i]
-
-							if trait then
-								local trait_id = trait.id
-								local rarity = trait.rarity
-								local trait_item = MasterItems.get_item(trait_id)
-								local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
-								local trait_style = style[pass_id]
-
-								if trait_style then
-									local material_values = trait_style.material_values
-									material_values.icon = texture_icon
-									material_values.frame = texture_frame
-								end
-
-								content[pass_id] = trait_id
-							else
-								content[pass_id] = nil
-							end
-						end
-					end
 				end
-			end
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local content = widget.content
-			local style = widget.style
-			local element = content.element
-			local slot = element.slot
-
-			if slot then
-				local slot_name = slot.name
-				local previous_item = content.item
-				local equipped_item = parent:equipped_item_in_slot(slot_name)
-				local update = equipped_item and not previous_item or not equipped_item and previous_item or previous_item and previous_item.gear_id ~= equipped_item.gear_id
-
-				if update then
-					content.item = equipped_item
-					local display_name = equipped_item and equipped_item.display_name
-
-					if display_name then
-						content.display_name = ItemUtils.display_name(equipped_item)
-						content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
-					end
-
-					if content.item_power then
-						content.item_power = ItemUtils.item_power(equipped_item)
-					end
-
-					style.sub_display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
-					style.display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
-					style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
-					style.rarity_tag.color = table.clone(ItemUtils.rarity_color(equipped_item))
-					style.inner_highlight.color = table.clone(ItemUtils.rarity_color(equipped_item))
-
-					if style.item_level then
-						content.item_level = ItemUtils.item_level(equipped_item)
-					end
-
-					local traits = equipped_item.traits
-
-					if traits then
-						local item_trait_frame_texture_lookup = UISettings.item_trait_frame_texture_lookup
-
-						for i = 1, 3 do
-							local pass_id = "trait_" .. i
-							local trait = traits[i]
-
-							if trait then
-								local trait_id = trait.id
-								local rarity = trait.rarity
-								local trait_item = MasterItems.get_item(trait_id)
-								local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
-								local trait_style = style[pass_id]
-
-								if trait_style then
-									local material_values = trait_style.material_values
-									material_values.icon = texture_icon
-									material_values.frame = texture_frame
-								end
-
-								content[pass_id] = trait_id
-							else
-								content[pass_id] = nil
-							end
-						end
-					end
-
-					if content.icon_load_id then
-						_remove_live_item_icon_cb_func(widget)
-						Managers.ui:unload_item_icon(content.icon_load_id)
-
-						content.icon_load_id = nil
-					end
-
-					if equipped_item then
-						local cb = callback(_apply_live_item_icon_cb_func, widget)
-						content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
-					end
-				end
-			end
-		end,
-		destroy = function (parent, widget, element, ui_renderer)
-			local content = widget.content
-
-			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget)
-				Managers.ui:unload_item_icon(content.icon_load_id)
-
-				content.icon_load_id = nil
 			end
 		end
-	},
-	gadget_item_slot = {
-		size = ItemPassTemplates.gadget_size,
-		pass_template = ItemPassTemplates.gadget_item_slot,
-		init = function (parent, widget, element, callback_name)
-			local content = widget.content
-			local style = widget.style
-			content.hotspot.pressed_callback = callback(parent, callback_name, widget, element)
-			content.element = element
-			local required_level = element.required_level
+	end,
+	destroy = function (parent, widget, element, ui_renderer)
+		local content = widget.content
 
-			if required_level then
-				local current_level = parent.profile_level and parent:profile_level()
-				local unlocked = required_level <= current_level
-				content.unlock_text = Localize("loc_hub_vendor_unlocks_at", true, {
-					level = required_level
-				})
-				content.unlocked = unlocked
+		if content.icon_load_id then
+			_remove_live_item_icon_cb_func(widget, ui_renderer)
+			Managers.ui:unload_item_icon(content.icon_load_id)
+
+			content.icon_load_id = nil
+		end
+	end
+}
+blueprints.gadget_item_slot = {
+	size = ItemPassTemplates.gadget_size,
+	pass_template = ItemPassTemplates.gadget_item_slot,
+	init = function (parent, widget, element, callback_name)
+		local content = widget.content
+		local style = widget.style
+		content.hotspot.pressed_callback = callback(parent, callback_name, widget, element)
+		content.element = element
+		local required_level = element.required_level
+
+		if required_level then
+			local current_level = parent.profile_level and parent:profile_level()
+			local unlocked = required_level <= current_level
+			content.unlock_text = Localize("loc_hub_vendor_unlocks_at", true, {
+				level = required_level
+			})
+			content.unlocked = unlocked
+		end
+
+		local slot = element.slot
+
+		if slot and content.unlocked then
+			local slot_name = slot.name
+			local equipped_item = parent:equipped_item_in_slot(slot_name)
+			content.item = equipped_item
+			local display_name = equipped_item and equipped_item.display_name
+
+			if display_name then
+				content.display_name = ItemUtils.display_name(equipped_item)
+				content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
 			end
 
-			local slot = element.slot
+			if equipped_item then
+				local cb = callback(_apply_live_item_icon_cb_func, widget)
+				content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
+				style.display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
+				style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
+				style.inner_highlight.color = table.clone(ItemUtils.rarity_color(equipped_item))
 
-			if slot and content.unlocked then
-				local slot_name = slot.name
-				local equipped_item = parent:equipped_item_in_slot(slot_name)
+				if style.item_level then
+					content.item_level = ItemUtils.item_level(equipped_item)
+				end
+			end
+		end
+	end,
+	update = function (parent, widget, input_service, dt, t, ui_renderer)
+		local content = widget.content
+		local style = widget.style
+		local element = content.element
+		local slot = element.slot
+
+		if slot then
+			local slot_name = slot.name
+			local previous_item = content.item
+			local equipped_item = parent:equipped_item_in_slot(slot_name)
+			local update = equipped_item and not previous_item or not equipped_item and previous_item or previous_item and previous_item.gear_id ~= equipped_item.gear_id
+
+			if update and content.unlocked then
 				content.item = equipped_item
 				local display_name = equipped_item and equipped_item.display_name
 
@@ -881,263 +929,228 @@ local blueprints = {
 					content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
 				end
 
+				style.display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
+				style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
+				style.inner_highlight.color = table.clone(ItemUtils.rarity_color(equipped_item))
+
+				if content.icon_load_id then
+					_remove_live_item_icon_cb_func(widget, ui_renderer)
+					Managers.ui:unload_item_icon(content.icon_load_id)
+
+					content.icon_load_id = nil
+				end
+
 				if equipped_item then
 					local cb = callback(_apply_live_item_icon_cb_func, widget)
 					content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
-					style.display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
-					style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
-					style.inner_highlight.color = table.clone(ItemUtils.rarity_color(equipped_item))
+				end
 
-					if style.item_level then
-						content.item_level = ItemUtils.item_level(equipped_item)
-					end
+				if style.item_level then
+					content.item_level = ItemUtils.item_level(equipped_item)
 				end
 			end
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local content = widget.content
-			local style = widget.style
-			local element = content.element
-			local slot = element.slot
-
-			if slot then
-				local slot_name = slot.name
-				local previous_item = content.item
-				local equipped_item = parent:equipped_item_in_slot(slot_name)
-				local update = equipped_item and not previous_item or not equipped_item and previous_item or previous_item and previous_item.gear_id ~= equipped_item.gear_id
-
-				if update and content.unlocked then
-					content.item = equipped_item
-					local display_name = equipped_item and equipped_item.display_name
-
-					if display_name then
-						content.display_name = ItemUtils.display_name(equipped_item)
-						content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
-					end
-
-					style.display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
-					style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
-					style.inner_highlight.color = table.clone(ItemUtils.rarity_color(equipped_item))
-
-					if content.icon_load_id then
-						_remove_live_item_icon_cb_func(widget)
-						Managers.ui:unload_item_icon(content.icon_load_id)
-
-						content.icon_load_id = nil
-					end
-
-					if equipped_item then
-						local cb = callback(_apply_live_item_icon_cb_func, widget)
-						content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
-					end
-
-					if style.item_level then
-						content.item_level = ItemUtils.item_level(equipped_item)
-					end
-				end
-			end
-		end,
-		destroy = function (parent, widget, element, ui_renderer)
-			local content = widget.content
-
-			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget)
-				Managers.ui:unload_item_icon(content.icon_load_id)
-
-				content.icon_load_id = nil
-			end
 		end
-	},
-	texture = {
-		size = {
-			64,
-			64
-		},
-		size_function = function (parent, element, ui_renderer)
-			local size = element.size
+	end,
+	destroy = function (parent, widget, element, ui_renderer)
+		local content = widget.content
 
-			return {
-				size[1],
-				size[2]
-			}
-		end,
-		pass_template = {
-			{
-				style_id = "texture",
-				value_id = "texture",
-				pass_type = "texture",
-				style = {
-					vertical_alignment = "center",
-					horizontal_alignment = "center",
-					offset = {
-						0,
-						0,
-						0
-					},
-					color = Color.white(255, true)
-				}
-			}
-		},
-		init = function (parent, widget, element, callback_name)
-			local style = widget.style
-			local content = widget.content
-			local texture = element.texture
-			content.texture = texture
-			local color = element.color
+		if content.icon_load_id then
+			_remove_live_item_icon_cb_func(widget, ui_renderer)
+			Managers.ui:unload_item_icon(content.icon_load_id)
 
-			if color then
-				local texture_color = style.texture.color
-				texture_color[1] = color[1]
-				texture_color[2] = color[2]
-				texture_color[3] = color[3]
-				texture_color[4] = color[4]
-			end
+			content.icon_load_id = nil
 		end
+	end
+}
+blueprints.texture = {
+	size = {
+		64,
+		64
 	},
-	group_header = {
-		size = {
-			grid_width,
-			70
-		},
-		pass_template = {
-			{
-				value = "n/a",
-				pass_type = "text",
-				value_id = "text",
-				style = group_header_font_style
-			}
-		},
-		init = function (parent, widget, element, callback_name)
-			local content = widget.content
-			local display_name = element.display_name
-			local text = Utf8.upper(Localize(display_name))
-			content.element = element
-			content.localized_display_name = text
-			content.text = text
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local content = widget.content
-			local element = content.element
-			local display_name = element.display_name
-			local group_header = content.group_header
-			local suffix_text = nil
-			local text = content.localized_display_name
+	size_function = function (parent, element, ui_renderer)
+		local size = element.size
 
-			if suffix_text then
-				text = "{#color(194,154,116)}" .. text .. " {#color(255,242,230)}" .. Localize(suffix_text)
-			end
-
-			content.text = text
-		end
-	},
-	sub_header = {
-		size = {
-			grid_width,
-			20
-		},
-		pass_template = {
-			{
-				value = "n/a",
-				pass_type = "text",
-				value_id = "text",
-				style = sub_header_font_style
-			}
-		},
-		init = function (parent, widget, element, callback_name)
-			local content = widget.content
-			local display_name = element.display_name
-			local text = Utf8.upper(Localize(display_name))
-			content.element = element
-			content.localized_display_name = text
-			content.text = text
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local content = widget.content
-			local element = content.element
-			local display_name = element.display_name
-			local group_header = content.group_header
-			local suffix_text = nil
-			local text = content.localized_display_name
-
-			if suffix_text then
-				text = "{#color(194,154,116)}" .. text .. " {#color(255,242,230)}" .. Localize(suffix_text)
-			end
-
-			content.text = text
-		end
-	},
-	item_sub_header = {
-		size = {
-			600,
-			20
-		},
-		size_function = function (parent, element, ui_renderer)
-			local size = element.size
-
-			return size and {
-				size[1],
-				size[2]
-			} or {
-				grid_width,
-				20
-			}
-		end,
-		pass_template = {
-			{
-				style_id = "new_indicator",
-				pass_type = "texture",
-				value = "content/ui/materials/symbols/new_item_indicator",
-				style = {
-					vertical_alignment = "top",
-					horizontal_alignment = "center",
-					size = {
-						24,
-						24
-					},
-					offset = {
-						285,
-						-10,
-						4
-					},
-					color = Color.terminal_corner_selected(255, true)
+		return {
+			size[1],
+			size[2]
+		}
+	end,
+	pass_template = {
+		{
+			style_id = "texture",
+			value_id = "texture",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					0,
+					0,
+					0
 				},
-				visibility_function = function (content, style)
-					return content.has_new_items
-				end
-			},
-			{
-				value = "n/a",
-				pass_type = "text",
-				value_id = "text",
-				style = item_sub_header_font_style
+				color = Color.white(255, true)
 			}
-		},
-		init = function (parent, widget, element, callback_name)
-			local style = widget.style
-			local content = widget.content
-			local display_name = element.display_name
-			local text = Utf8.upper(Localize(display_name))
-			local new_indicator_width_offset = element.new_indicator_width_offset
+		}
+	},
+	init = function (parent, widget, element, callback_name)
+		local style = widget.style
+		local content = widget.content
+		local texture = element.texture
+		content.texture = texture
+		local color = element.color
 
-			if new_indicator_width_offset then
-				local offset = style.new_indicator.offset
-				offset[1] = new_indicator_width_offset[1]
-				offset[2] = new_indicator_width_offset[2]
-				offset[3] = new_indicator_width_offset[3]
-			end
-
-			content.element = element
-			content.localized_display_name = text
-			content.text = text
-		end,
-		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local content = widget.content
-			local element = content.element
-			local item_type = element.item_type
-			local has_new_items = item_type and ItemUtils.has_new_items_by_type(item_type) or false
-			content.has_new_items = has_new_items
+		if color then
+			local texture_color = style.texture.color
+			texture_color[1] = color[1]
+			texture_color[2] = color[2]
+			texture_color[3] = color[3]
+			texture_color[4] = color[4]
 		end
-	}
+	end
+}
+blueprints.group_header = {
+	size = {
+		grid_width,
+		70
+	},
+	pass_template = {
+		{
+			value = "n/a",
+			pass_type = "text",
+			value_id = "text",
+			style = group_header_font_style
+		}
+	},
+	init = function (parent, widget, element, callback_name)
+		local content = widget.content
+		local display_name = element.display_name
+		local text = Utf8.upper(Localize(display_name))
+		content.element = element
+		content.localized_display_name = text
+		content.text = text
+	end,
+	update = function (parent, widget, input_service, dt, t, ui_renderer)
+		local content = widget.content
+		local element = content.element
+		local display_name = element.display_name
+		local group_header = content.group_header
+		local suffix_text = nil
+		local text = content.localized_display_name
+
+		if suffix_text then
+			text = "{#color(194,154,116)}" .. text .. " {#color(255,242,230)}" .. Localize(suffix_text)
+		end
+
+		content.text = text
+	end
+}
+blueprints.sub_header = {
+	size = {
+		grid_width,
+		20
+	},
+	pass_template = {
+		{
+			value = "n/a",
+			pass_type = "text",
+			value_id = "text",
+			style = sub_header_font_style
+		}
+	},
+	init = function (parent, widget, element, callback_name)
+		local content = widget.content
+		local display_name = element.display_name
+		local text = Utf8.upper(Localize(display_name))
+		content.element = element
+		content.localized_display_name = text
+		content.text = text
+	end,
+	update = function (parent, widget, input_service, dt, t, ui_renderer)
+		local content = widget.content
+		local element = content.element
+		local display_name = element.display_name
+		local group_header = content.group_header
+		local suffix_text = nil
+		local text = content.localized_display_name
+
+		if suffix_text then
+			text = "{#color(194,154,116)}" .. text .. " {#color(255,242,230)}" .. Localize(suffix_text)
+		end
+
+		content.text = text
+	end
+}
+blueprints.item_sub_header = {
+	size = {
+		600,
+		20
+	},
+	size_function = function (parent, element, ui_renderer)
+		local size = element.size
+
+		return size and {
+			size[1],
+			size[2]
+		} or {
+			grid_width,
+			20
+		}
+	end,
+	pass_template = {
+		{
+			style_id = "new_indicator",
+			pass_type = "texture",
+			value = "content/ui/materials/symbols/new_item_indicator",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				size = {
+					24,
+					24
+				},
+				offset = {
+					285,
+					-10,
+					4
+				},
+				color = Color.terminal_corner_selected(255, true)
+			},
+			visibility_function = function (content, style)
+				return content.has_new_items
+			end
+		},
+		{
+			value = "n/a",
+			pass_type = "text",
+			value_id = "text",
+			style = item_sub_header_font_style
+		}
+	},
+	init = function (parent, widget, element, callback_name)
+		local style = widget.style
+		local content = widget.content
+		local display_name = element.display_name
+		local text = Utf8.upper(Localize(display_name))
+		local new_indicator_width_offset = element.new_indicator_width_offset
+
+		if new_indicator_width_offset then
+			local offset = style.new_indicator.offset
+			offset[1] = new_indicator_width_offset[1]
+			offset[2] = new_indicator_width_offset[2]
+			offset[3] = new_indicator_width_offset[3]
+		end
+
+		content.element = element
+		content.localized_display_name = text
+		content.text = text
+	end,
+	update = function (parent, widget, input_service, dt, t, ui_renderer)
+		local content = widget.content
+		local element = content.element
+		local item_type = element.item_type
+		local has_new_items = item_type and ItemUtils.has_new_items_by_type(item_type) or false
+		content.has_new_items = has_new_items
+	end
 }
 
 return blueprints

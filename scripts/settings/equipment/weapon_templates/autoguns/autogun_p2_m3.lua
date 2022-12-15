@@ -451,7 +451,7 @@ weapon_template.actions = {
 				chain_time = 2.95
 			},
 			special_action = {
-				chain_time = 2.5,
+				chain_time = 0.2,
 				action_name = "action_push",
 				chain_until = 0.4
 			}

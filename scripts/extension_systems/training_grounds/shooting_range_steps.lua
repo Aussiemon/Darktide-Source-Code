@@ -108,10 +108,9 @@ ShootingRangeSteps.portal_loop = {
 		step_data.wants_leave = true
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
-		local player_pos = POSITION_LOOKUP[player.player_unit]
-		local distance_to_portal = Vector3.distance(Vector3.flat(player_pos), Vector3.flat(step_data.end_position:unbox()))
+		local wants_leave = step_data.wants_leave
 
-		if distance_to_portal < 1.2 or step_data.wants_leave then
+		if wants_leave then
 			Managers.ui:play_2d_sound(TrainingGroundsSoundEvents.tg_end_portal_entered)
 
 			local local_player = Managers.player:local_player(1)
@@ -158,13 +157,13 @@ ShootingRangeSteps.enemies_loop = {
 		local level = profile.current_level
 		local enemy_spawners = scenario_system:get_spawn_group("shooting_range_enemies")
 		local spawned_units = {}
-		local level_locked_breeds = PlayerProgressionUnlocks.shooting_range_breed_unlocks
+		local breed_unlocks = PlayerProgressionUnlocks.shooting_range_breed_unlocks
 		local fake_unit = 1
 
 		for unit, directional_unit_extension in pairs(enemy_spawners) do
 			local identifier = directional_unit_extension:identifier()
 			local breed_name = string.sub(identifier, 1, string.find(identifier, ":") - 1)
-			local min_level = level_locked_breeds[breed_name]
+			local min_level = breed_unlocks[breed_name]
 
 			if not min_level or min_level <= level then
 				spawned_units[fake_unit] = {

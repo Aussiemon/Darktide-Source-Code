@@ -371,35 +371,15 @@ local function _reward_load_icon_func(parent, widget, config)
 
 		if item_group == "nameplates" then
 			cb = callback(_apply_live_nameplate_icon_cb_func, widget)
+			content.icon_load_id = Managers.ui:load_item_icon(reward_item, cb, render_context)
 		elseif item_group == "weapon_skin" then
 			cb = callback(_apply_live_item_icon_cb_func, widget)
+			local preview_item = ItemUtils.weapon_skin_preview_item(reward_item)
+			content.icon_load_id = parent:load_weapon_pattern_icon(preview_item or reward_item, cb, render_context)
 		else
 			cb = callback(_apply_live_item_icon_cb_func, widget)
+			content.icon_load_id = Managers.ui:load_item_icon(reward_item, cb, render_context)
 		end
-
-		content.icon_load_id = Managers.ui:load_item_icon(reward_item, cb, render_context)
-	end
-end
-
-local function _reward_unload_icon_func(parent, widget, element, ui_renderer)
-	local content = widget.content
-
-	if content.icon_load_id then
-		_remove_live_item_icon_cb_func(widget, ui_renderer)
-		Managers.ui:unload_item_icon(content.icon_load_id)
-
-		content.icon_load_id = nil
-	end
-end
-
-local function _reward_destroy_icon_func(parent, widget, element, ui_renderer)
-	local content = widget.content
-
-	if content.icon_load_id then
-		_remove_live_item_icon_cb_func(widget, ui_renderer)
-		Managers.ui:unload_item_icon(content.icon_load_id)
-
-		content.icon_load_id = nil
 	end
 end
 
@@ -542,7 +522,7 @@ end_player_view_blueprints.salary = {
 			local details = reward.details
 			local from_circumstance = details.from_circumstance
 			local from_side_mission = details.from_side_mission
-			local previous_amount = reward.current_amount - reward.amount_gained
+			local previous_amount = reward.current_amount
 			local base_gained_amount = details.total
 
 			if from_side_mission then
@@ -596,8 +576,26 @@ end_player_view_blueprints.level_up = {
 		content.dim_out_animation = "level_up_dim_out_content"
 	end,
 	load_icon = _reward_load_icon_func,
-	unload_icon = _reward_unload_icon_func,
-	destroy = _reward_destroy_icon_func
+	unload_icon = function (parent, widget, element, ui_renderer)
+		local content = widget.content
+
+		if content.icon_load_id then
+			_remove_live_item_icon_cb_func(widget, ui_renderer)
+			Managers.ui:unload_item_icon(content.icon_load_id)
+
+			content.icon_load_id = nil
+		end
+	end,
+	destroy = function (parent, widget, element, ui_renderer)
+		local content = widget.content
+
+		if content.icon_load_id then
+			_remove_live_item_icon_cb_func(widget, ui_renderer)
+			Managers.ui:unload_item_icon(content.icon_load_id)
+
+			content.icon_load_id = nil
+		end
+	end
 }
 end_player_view_blueprints.weapon_unlock = {
 	pass_template_function = function (parent, config)
@@ -653,8 +651,26 @@ end_player_view_blueprints.weapon_unlock = {
 		content.talents_unlocked_text = Localize("loc_eor_weapon_unlocked_desc")
 	end,
 	load_icon = _reward_load_icon_func,
-	unload_icon = _reward_unload_icon_func,
-	destroy = _reward_destroy_icon_func
+	unload_icon = function (parent, widget, element, ui_renderer)
+		local content = widget.content
+
+		if content.icon_load_id then
+			_remove_live_item_icon_cb_func(widget, ui_renderer)
+			parent:unload_weapon_pattern_icon(content.icon_load_id)
+
+			content.icon_load_id = nil
+		end
+	end,
+	destroy = function (parent, widget, element, ui_renderer)
+		local content = widget.content
+
+		if content.icon_load_id then
+			_remove_live_item_icon_cb_func(widget, ui_renderer)
+			parent:unload_weapon_pattern_icon(content.icon_load_id)
+
+			content.icon_load_id = nil
+		end
+	end
 }
 end_player_view_blueprints.talents_unlocked = {
 	pass_template_function = function (parent, config)
@@ -710,10 +726,7 @@ end_player_view_blueprints.talents_unlocked = {
 			local material_values = icon_style.material_values
 			material_values.icon_texture = unlocked_talents[i]
 		end
-	end,
-	load_icon = _reward_load_icon_func,
-	unload_icon = _reward_unload_icon_func,
-	destroy = _reward_destroy_icon_func
+	end
 }
 end_player_view_blueprints.item_reward = {
 	pass_template_function = function (parent, config)
@@ -792,8 +805,26 @@ end_player_view_blueprints.item_reward = {
 		content.dim_out_animation = "item_reward_dim_out_content"
 	end,
 	load_icon = _reward_load_icon_func,
-	unload_icon = _reward_unload_icon_func,
-	destroy = _reward_destroy_icon_func
+	unload_icon = function (parent, widget, element, ui_renderer)
+		local content = widget.content
+
+		if content.icon_load_id then
+			_remove_live_item_icon_cb_func(widget, ui_renderer)
+			Managers.ui:unload_item_icon(content.icon_load_id)
+
+			content.icon_load_id = nil
+		end
+	end,
+	destroy = function (parent, widget, element, ui_renderer)
+		local content = widget.content
+
+		if content.icon_load_id then
+			_remove_live_item_icon_cb_func(widget, ui_renderer)
+			Managers.ui:unload_item_icon(content.icon_load_id)
+
+			content.icon_load_id = nil
+		end
+	end
 }
 end_player_view_blueprints.empty_test_card = {
 	pass_template_function = function (parent, config)

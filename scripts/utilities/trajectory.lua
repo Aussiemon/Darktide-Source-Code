@@ -179,4 +179,26 @@ Trajectory.ballistic_raycast = function (physics_world, collision_filter, origin
 	return false, SEGMENTS, total_length
 end
 
+Trajectory.test_throw_trajectory = function (unit, hit_unit_breed_name, physics_world, force, z_force, test_direction, to, gravity, offset_up_human, offset_up_ogryn, max_steps, max_time)
+	local unit_position = POSITION_LOOKUP[unit]
+	local is_human = hit_unit_breed_name == "human"
+	local up = Vector3.up() * (is_human and offset_up_human or offset_up_ogryn)
+	local from = unit_position + test_direction + up
+	local direction = Vector3.normalize(test_direction)
+	local catapult_velocity = direction * force
+	catapult_velocity.z = z_force
+	local speed = Vector3.length(catapult_velocity)
+	local target_velocity = Vector3(0, 0, 0)
+	local angle, estimated_position = Trajectory.angle_to_hit_moving_target(from, to, speed, target_velocity, gravity, 1)
+
+	if angle == nil then
+		return false
+	end
+
+	local velocity = Trajectory.get_trajectory_velocity(from, estimated_position, gravity, speed, angle)
+	local hit, segment_list, _, hit_position = Trajectory.ballistic_raycast(physics_world, "filter_player_mover", from, velocity, angle, gravity, max_steps or MAX_STEPS, max_time or MAX_TIME)
+
+	return hit, segment_list, hit_position
+end
+
 return Trajectory

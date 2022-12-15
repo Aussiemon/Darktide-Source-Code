@@ -1,5 +1,5 @@
 local WeaponTweakTemplateSettings = {
-	template_types = table.enum("recoil", "sway", "spread", "suppression", "dodge", "sprint", "stamina", "toughness", "damage", "weapon_handling", "explosion", "ammo", "burninating", "size_of_flame", "movement_curve_modifier", "stagger_duration_modifier", "charge", "warp_charge"),
+	template_types = table.enum("recoil", "sway", "spread", "suppression", "dodge", "sprint", "stamina", "toughness", "damage", "weapon_handling", "explosion", "ammo", "burninating", "size_of_flame", "movement_curve_modifier", "charge", "warp_charge"),
 	ALL_WEAPON_MOVEMENT_STATES = {},
 	DEFAULT_LERP_VALUE = {},
 	DEFAULT_STAT_TRAIT_VALUE = 0.5,

@@ -49,7 +49,8 @@ local WeaponBarUIDescriptionTemplates = {
 					}
 				}
 			}
-		}
+		},
+		new_influence_percent = {}
 	},
 	spread = {
 		continuous_spread = {

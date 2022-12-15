@@ -2,6 +2,10 @@ local Blackboard = require("scripts/extension_systems/blackboard/utilities/black
 local Catapulted = require("scripts/extension_systems/character_state_machine/character_states/utilities/catapulted")
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
+local NavQueries = require("scripts/utilities/nav_queries")
+local Trajectory = require("scripts/utilities/trajectory")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local PlayerMovement = require("scripts/utilities/player_movement")
 local LIQUID_PAINT_ID = "movement_liquid_paint_id"
 local LIQUID_TEMPLATE = LiquidAreaTemplates.beast_of_nurgle_slime
 local LIQUID_BRUSH_SIZE = 1
@@ -9,7 +13,21 @@ local MAX_LIQUID_PAINT_DISTANCE = 6
 local PAINT_UPDATE_FREQ = 0.2
 local TARGET_CHANGED_MAX_NEARBY_ENEMIES_RADIUS = 12
 local TARGET_CHANGED_MAX_DISTANCE = 20
+local MATERIAL_VARIABLE = "emissive_color_intensity"
+local WEAKSPOT_COLOR = {
+	0.104,
+	0.036,
+	0,
+	0.2
+}
 local _num_nearby_enemies = nil
+local FORCE = 12
+local Z_FORCE = 4
+local THROW_TELEPORT_UP_OFFSET_HUMAN = 1.5
+local THROW_TELEPORT_UP_OFFSET_OGRYN = 1.5
+local MAX_STEPS = 20
+local MAX_TIME = 1.75
+local THROW_TEST_DISTANCE = 8
 local template = {
 	name = "chaos_beast_of_nurgle",
 	start = function (template_data, template_context)
@@ -26,9 +44,14 @@ local template = {
 		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 		local nav_world = navigation_extension:nav_world()
 		template_data.nav_world = nav_world
+		template_data.navigation_extension = navigation_extension
 		template_data.next_paint_update_t = 0
 		behavior_component[LIQUID_PAINT_ID] = LiquidArea.start_paint()
 		template_data.has_first_line_of_sight = false
+		local spawn_component = blackboard.spawn
+		template_data.physics_world = spawn_component.physics_world
+
+		Unit.set_vector4_for_materials(unit, MATERIAL_VARIABLE, Color(WEAKSPOT_COLOR[1], WEAKSPOT_COLOR[2], WEAKSPOT_COLOR[3], WEAKSPOT_COLOR[4]), true)
 	end,
 	update = function (template_data, template_context, dt, t)
 		if not template_context.is_server then
@@ -65,14 +88,35 @@ local template = {
 				local is_disabled = disabled_character_state_component.is_disabled
 
 				if not is_disabled then
-					local catapult_force = 13
-					local catapult_z_force = 3
-					local direction = Vector3.normalize(Quaternion.forward(Unit.local_rotation(unit, 1)))
-					local velocity = direction * catapult_force
-					velocity.z = catapult_z_force
-					local catapulted_state_input = consumed_unit_data_extension:write_component("catapulted_state_input")
+					local hit_unit_breed_name = consumed_unit_data_extension:breed().name
+					local gravity = PlayerCharacterConstants.gravity
+					local physics_world = template_data.physics_world
+					local test_direction = Quaternion.forward(Unit.local_rotation(unit, 1))
+					local to = POSITION_LOOKUP[unit] + test_direction * THROW_TEST_DISTANCE
+					local hit, segment_list, hit_position = Trajectory.test_throw_trajectory(unit, hit_unit_breed_name, physics_world, FORCE, Z_FORCE, test_direction, to, gravity, THROW_TELEPORT_UP_OFFSET_HUMAN, THROW_TELEPORT_UP_OFFSET_OGRYN, MAX_STEPS, MAX_TIME)
 
-					Catapulted.apply(catapulted_state_input, velocity)
+					if hit then
+						local navigation_extension = template_data.navigation_extension
+						local nav_world = template_data.nav_world
+						local traverse_logic = navigation_extension:traverse_logic()
+						local spawn_navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, POSITION_LOOKUP[unit], 1, 1, 1)
+
+						if spawn_navmesh_position then
+							local player_unit_spawn_manager = Managers.state.player_unit_spawn
+							local player = player_unit_spawn_manager:owner(consumed_unit)
+
+							PlayerMovement.teleport(player, spawn_navmesh_position, Unit.local_rotation(unit, 1))
+
+							local new_direction = Vector3.normalize(Vector3.flat(hit_position - POSITION_LOOKUP[unit]))
+							local catapult_force = FORCE
+							local catapult_z_force = Z_FORCE
+							local velocity = new_direction * catapult_force
+							velocity.z = catapult_z_force
+							local catapulted_state_input = consumed_unit_data_extension:write_component("catapulted_state_input")
+
+							Catapulted.apply(catapulted_state_input, velocity)
+						end
+					end
 
 					behavior_component.wants_to_catapult_consumed_unit = nil
 					behavior_component.consumed_unit = nil

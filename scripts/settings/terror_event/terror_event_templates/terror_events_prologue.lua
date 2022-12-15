@@ -555,7 +555,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 120,
+				duration = 90,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
 				end

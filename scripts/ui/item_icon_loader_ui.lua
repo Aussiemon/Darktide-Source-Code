@@ -6,6 +6,7 @@ ItemIconLoaderUI.init = function (self)
 	self._reference_name = self.__class_name
 	self._requests_queue_order = {}
 	self._requests = {}
+	self._requests_to_unload = {}
 	self._id_counter = 0
 	self._id_prefix = "ItemIconLoaderUI"
 	self._active_request = nil
@@ -55,6 +56,32 @@ ItemIconLoaderUI.load_icon = function (self, item, on_load_callback)
 end
 
 ItemIconLoaderUI.unload_icon = function (self, id)
+	local data = self:_request_by_id(id)
+	data.callbacks[id] = nil
+	self._requests_to_unload[#self._requests_to_unload + 1] = {
+		frame_delay_counter = 2,
+		id = id
+	}
+end
+
+ItemIconLoaderUI._handle_icon_unloads = function (self, force_unload)
+	local requests_to_unload = self._requests_to_unload
+
+	for i = #requests_to_unload, 1, -1 do
+		local data = requests_to_unload[i]
+		local id = data.id
+		local frame_delay_counter = data.frame_delay_counter
+
+		if force_unload or frame_delay_counter <= 0 then
+			self:_unload_icon(id)
+			table.remove(requests_to_unload, i)
+		else
+			data.frame_delay_counter = frame_delay_counter - 1
+		end
+	end
+end
+
+ItemIconLoaderUI._unload_icon = function (self, id)
 	local data = self:_request_by_id(id)
 	local gear_id = data.gear_id
 	local references_array = data.references_array
@@ -126,10 +153,20 @@ ItemIconLoaderUI.has_request = function (self, id)
 end
 
 ItemIconLoaderUI.destroy = function (self)
-	return
+	local force_unload = true
+
+	self:_handle_icon_unloads(force_unload)
+end
+
+ItemIconLoaderUI.prepare_for_destruction = function (self)
+	self._shutting_down = true
 end
 
 ItemIconLoaderUI.load_request = function (self, request)
+	if self._shutting_down then
+		return
+	end
+
 	local gear_id = request.gear_id
 	local packages_to_load = request.packages_to_load
 	local num_packages_to_load = #packages_to_load
@@ -212,6 +249,7 @@ ItemIconLoaderUI._handle_next_request_in_queue = function (self)
 end
 
 ItemIconLoaderUI.update = function (self, dt, t)
+	self:_handle_icon_unloads()
 	self:_handle_request_queue()
 end
 

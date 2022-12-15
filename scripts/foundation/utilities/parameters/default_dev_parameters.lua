@@ -455,6 +455,20 @@ params.show_spawned_pickups = {
 	value = false,
 	category = "Pickups"
 }
+params.show_spawned_pickups_location = {
+	value = false,
+	category = "Pickups"
+}
+params.debug_fill_pickup_spawners = {
+	value = false,
+	category = "Pickups",
+	options = {
+		false,
+		"all",
+		"distributed",
+		"side_mission"
+	}
+}
 params.projectile_aim_disable_aim_offset = {
 	value = false,
 	category = "Projectile Locomotion"
@@ -638,11 +652,10 @@ params.physics_debug_filter = {
 		"filter_debug_unit_selector",
 		"filter_ground_material_check",
 		"filter_hang_ledge_collision",
+		"filter_interactable_overlap",
 		"filter_ladder_climb_collision",
 		"filter_minion_line_of_sight_check",
 		"filter_minion_shooting_geometry",
-		"filter_player_character_interactable_line_of_sight_check",
-		"filter_player_character_interactable_overlap",
 		"filter_player_character_melee_sweep",
 		"filter_player_character_ballistic_raycast",
 		"filter_player_character_shooting_projectile",
@@ -2043,6 +2056,10 @@ params.debug_smooth_force_view_orientation = {
 	value = false,
 	category = "Misc"
 }
+params.debug_disable_vertical_smooth_force_view_orientation = {
+	value = false,
+	category = "Misc"
+}
 params.allow_server_control_from_client = {
 	value = false,
 	category = "Misc"
@@ -2136,6 +2153,10 @@ params.debug_print_stripped_items = {
 	category = "Item"
 }
 params.show_gear_ids = {
+	value = false,
+	category = "Item"
+}
+params.only_fallback_items = {
 	value = false,
 	category = "Item"
 }
@@ -2779,6 +2800,10 @@ params.ui_use_local_inventory = {
 	value = false,
 	category = "UI"
 }
+params.ui_always_enable_inventory_access = {
+	value = false,
+	category = "UI"
+}
 params.ui_hide_hud = {
 	value = false,
 	category = "UI"
@@ -2886,6 +2911,10 @@ params.ui_enable_mission_board_debug = {
 }
 params.ui_show_social_menu = {
 	value = true,
+	category = "UI"
+}
+params.ui_enable_debug_view = {
+	value = false,
 	category = "UI"
 }
 params.ui_debug_news_screen = {
@@ -3391,6 +3420,10 @@ params.gameplay_timer_base_time_scale = {
 	num_decimals = 2,
 	category = "Gameplay State"
 }
+params.debug_grow_queue_callstacks = {
+	value = false,
+	category = "Gameplay State"
+}
 params.debug_respawn_beacon = {
 	value = false,
 	category = "Respawn"
@@ -3593,6 +3626,23 @@ params.debug_package_loading = {
 	value = false,
 	category = "Loading"
 }
+params.delay_packages_on_profile_changed = {
+	value = false,
+	num_decimals = 1,
+	category = "Loading",
+	options = {
+		false,
+		0.1,
+		0.2,
+		0.5,
+		1,
+		2,
+		4,
+		8,
+		16,
+		32
+	}
+}
 params.debug_language_override = {
 	name = "Language Override",
 	category = "Localization",
@@ -3679,6 +3729,10 @@ params.debug_reload_state = {
 	category = "Weapon"
 }
 params.debug_draw_hit_scan = {
+	value = false,
+	category = "Weapon"
+}
+params.debug_draw_flamer_scan = {
 	value = false,
 	category = "Weapon"
 }

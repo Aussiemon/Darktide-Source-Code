@@ -513,6 +513,21 @@ weapon_action_data.conditional_state_functions = {
 		local no_running_action = current_action == "none"
 
 		return no_running_action
+	end,
+	auto_block = function (condition_func_params, action_params, remaining_time)
+		local Managers = Managers
+
+		if Managers.input:cursor_active() then
+			return true
+		end
+
+		if IS_WINDOWS and not Window.has_focus() then
+			return true
+		end
+
+		if HAS_STEAM and Managers.steam:is_overlay_active() then
+			return true
+		end
 	end
 }
 weapon_action_data.action_kind_to_running_action_chain_event = {

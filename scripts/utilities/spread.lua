@@ -1,7 +1,6 @@
 local WeaponMovementState = require("scripts/extension_systems/weapon/utilities/weapon_movement_state")
 local Spread = {}
 local _spread_values = nil
-local PI = math.pi
 local PI_2 = math.pi * 2
 
 Spread.add_immediate_spread = function (t, spread_template, spread_control_component, movement_state_component, spread_type, optional_num_hits)
@@ -35,7 +34,9 @@ function _spread_values(movement_state_settings, spread_control_component, sprea
 
 	if movement_state_settings.immediate_spread[spread_type] then
 		local spread_type_settings = movement_state_settings.immediate_spread[spread_type]
-		local spread_settings = spread_type_settings[math.min(num_shots or 1, spread_type_settings.num_spreads)]
+		local num_spreads = spread_type_settings.num_spreads
+		local spread_index = math.min(num_shots or 1, num_spreads)
+		local spread_settings = spread_type_settings[spread_index]
 		local added_pitch = spread_settings.pitch
 		local added_yaw = spread_settings.yaw
 
@@ -105,6 +106,23 @@ Spread.target_style_spread = function (current_rotation, num_shots_fired, num_sh
 	local final_rotation = _combine_spread_rotations(rolled_rotation, pitch_rotation, current_rotation)
 
 	return final_rotation, seed
+end
+
+Spread.uniform_circle = function (rotation, spread_angle, seed)
+	spread_angle = math.degrees_to_radians(spread_angle)
+	local random_value_1, random_value_2, random_value_3 = nil
+	seed, random_value_1 = math.next_random(seed)
+	seed, random_value_2 = math.next_random(seed)
+	seed, random_value_3 = math.next_random(seed)
+	local k = PI_2 * random_value_1
+	local u = random_value_2 + random_value_3
+	local r = u > 1 and 2 - u or u
+	local pitch = math.cos(k) * r * spread_angle
+	local yaw = math.sin(k) * r * spread_angle
+	local spread = Quaternion.from_yaw_pitch_roll(yaw, pitch, 0)
+	local spread_rotation = Quaternion.multiply(rotation, spread)
+
+	return spread_rotation, seed
 end
 
 return Spread

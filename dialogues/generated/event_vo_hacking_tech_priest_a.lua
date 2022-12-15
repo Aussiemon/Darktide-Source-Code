@@ -195,27 +195,24 @@ local event_vo_hacking_tech_priest_a = {
 	},
 	vox_introduction_hacking_event = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 4,
 		sound_events = {
 			"loc_tech_priest_a__vox_introduction_tech_priest_01",
 			"loc_tech_priest_a__vox_introduction_tech_priest_02",
 			"loc_tech_priest_a__vox_introduction_tech_priest_03",
-			"loc_tech_priest_a__vox_introduction_tech_priest_04",
-			"loc_tech_priest_a__vox_introduction_tech_priest_05"
+			"loc_tech_priest_a__vox_introduction_tech_priest_04"
 		},
 		sound_events_duration = {
 			3.640979,
 			1.934979,
 			2.363979,
-			3.045979,
-			1.585979
+			3.045979
 		},
 		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
+			0.25,
+			0.25,
+			0.25,
+			0.25
 		},
 		randomize_indexes = {}
 	}

@@ -26,7 +26,6 @@ local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
-local stagger_duration_modifier_trait_templates = WeaponTraitTemplates[template_types.stagger_duration_modifier]
 local weapon_template = {
 	action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs),
 	action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
@@ -200,15 +199,14 @@ weapon_template.actions = {
 	action_left_light = {
 		damage_window_start = 0.28,
 		hit_armor_anim = "attack_hit_shield",
-		anim_event_3p = "attack_swing_down_left",
-		range_mod = 1,
-		stagger_duration_modifier_template = "default",
+		kind = "sweep",
+		weapon_handling_template = "time_scale_0_85",
 		attack_direction_override = "push",
 		first_person_hit_stop_anim = "hit_stop",
-		weapon_handling_template = "time_scale_0_85",
+		anim_event_3p = "attack_swing_down_left",
 		allowed_during_sprint = true,
+		range_mod = 1,
 		damage_window_end = 0.45,
-		kind = "sweep",
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_left_down",
@@ -291,14 +289,13 @@ weapon_template.actions = {
 	action_left_heavy = {
 		damage_window_start = 0.1,
 		hit_armor_anim = "attack_hit_shield",
-		kind = "sweep",
-		attack_direction_override = "left",
-		stagger_duration_modifier_template = "default",
-		first_person_hit_stop_anim = "attack_hit",
-		allowed_during_sprint = true,
-		range_mod = 1,
-		damage_window_end = 0.3,
 		weapon_handling_template = "time_scale_1",
+		attack_direction_override = "left",
+		range_mod = 1,
+		allowed_during_sprint = true,
+		first_person_hit_stop_anim = "attack_hit",
+		kind = "sweep",
+		damage_window_end = 0.3,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_heavy_left",
 		anim_event = "heavy_attack_left",
@@ -433,13 +430,12 @@ weapon_template.actions = {
 	action_right_light = {
 		damage_window_start = 0.32,
 		hit_armor_anim = "attack_hit_shield",
-		anim_event_3p = "attack_swing_down_right",
-		weapon_handling_template = "time_scale_1",
 		kind = "sweep",
+		weapon_handling_template = "time_scale_1",
 		attack_direction_override = "push",
-		first_person_hit_stop_anim = "hit_stop",
-		stagger_duration_modifier_template = "default",
 		range_mod = 1,
+		first_person_hit_stop_anim = "hit_stop",
+		anim_event_3p = "attack_swing_down_right",
 		damage_window_end = 0.49,
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
@@ -526,14 +522,13 @@ weapon_template.actions = {
 	action_right_heavy = {
 		damage_window_start = 0.15,
 		hit_armor_anim = "attack_hit_shield",
-		kind = "sweep",
-		attack_direction_override = "right",
-		stagger_duration_modifier_template = "default",
-		first_person_hit_stop_anim = "attack_hit",
-		range_mod = 1,
-		weapon_handling_template = "time_scale_1",
-		damage_window_end = 0.27,
 		anim_end_event = "attack_finished",
+		weapon_handling_template = "time_scale_1",
+		attack_direction_override = "right",
+		range_mod = 1,
+		first_person_hit_stop_anim = "attack_hit",
+		kind = "sweep",
+		damage_window_end = 0.27,
 		anim_event_3p = "attack_swing_heavy_down_right",
 		anim_event = "heavy_attack_right_diagonal_down",
 		total_time = 1,
@@ -666,18 +661,17 @@ weapon_template.actions = {
 	action_left_light_2 = {
 		damage_window_start = 0.32,
 		hit_armor_anim = "attack_hit_shield",
+		weapon_handling_template = "time_scale_1",
 		kind = "sweep",
-		stagger_duration_modifier_template = "default",
 		max_num_saved_entries = 20,
 		first_person_hit_stop_anim = "hit_stop",
-		weapon_handling_template = "time_scale_1",
-		num_frames_before_process = 0,
 		range_mod = 1,
+		num_frames_before_process = 0,
+		anim_event_3p = "attack_swing_down",
 		damage_window_end = 0.48,
 		attack_direction_override = "push",
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
-		anim_event_3p = "attack_swing_down",
 		anim_event = "attack_right_down",
 		total_time = 1.5,
 		action_movement_curve = {
@@ -818,16 +812,15 @@ weapon_template.actions = {
 	action_right_light_pushfollow = {
 		damage_window_start = 0.32,
 		hit_armor_anim = "attack_hit",
-		range_mod = 1.35,
 		weapon_handling_template = "time_scale_1",
 		max_num_saved_entries = 20,
-		kind = "sweep",
+		range_mod = 1.35,
 		first_person_hit_stop_anim = "hit_stop",
 		num_frames_before_process = 0,
-		stagger_duration_modifier_template = "default",
-		damage_window_end = 0.5,
-		anim_end_event = "attack_finished",
 		attack_direction_override = "right",
+		damage_window_end = 0.5,
+		kind = "sweep",
+		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_right",
 		anim_event = "attack_right",
 		total_time = 1.5,
@@ -959,15 +952,14 @@ weapon_template.actions = {
 		start_input = "special_action",
 		kind = "sweep",
 		max_num_saved_entries = 20,
-		stagger_duration_modifier_template = "default",
+		range_mod = 1.1,
 		num_frames_before_process = 0,
 		allowed_during_sprint = true,
-		first_person_hit_stop_anim = "hit_stop",
-		damage_window_end = 0.8333333333333334,
-		attack_direction_override = "up",
-		range_mod = 1.1,
-		anim_end_event = "attack_finished",
 		weapon_handling_template = "time_scale_1",
+		damage_window_end = 0.8333333333333334,
+		first_person_hit_stop_anim = "hit_stop",
+		anim_end_event = "attack_finished",
+		attack_direction_override = "push",
 		anim_event_3p = "attack_swing_up_left",
 		anim_event = "attack_special",
 		power_level = 30,
@@ -1069,8 +1061,10 @@ weapon_template.damage_window_start_sweep_trail_offset = -0.45
 weapon_template.damage_window_end_sweep_trail_offset = 0.45
 weapon_template.ammo_template = "no_ammo"
 weapon_template.fx_sources = {
+	_sticky = "fx_special_active",
+	_sweep = "fx_sweep",
 	_special_active = "fx_special_active",
-	_sweep = "fx_sweep"
+	_melee_ideling = "fx_special_active"
 }
 weapon_template.crosshair_type = "dot"
 weapon_template.hit_marker_type = "center"
@@ -1251,29 +1245,6 @@ weapon_template.base_stats = {
 			},
 			action_special_action = {
 				damage_trait_templates.thunderhammer_control_stat
-			}
-		},
-		stagger_duration_modifier = {
-			action_left_light = {
-				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
-			},
-			action_left_heavy = {
-				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
-			},
-			action_right_light = {
-				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
-			},
-			action_right_heavy = {
-				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
-			},
-			action_left_light_2 = {
-				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
-			},
-			action_right_light_pushfollow = {
-				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
-			},
-			action_special_action = {
-				stagger_duration_modifier_trait_templates.thunderhammer_p1_m1_control_stat
 			}
 		}
 	},

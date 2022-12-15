@@ -14,6 +14,7 @@ local Spread = require("scripts/utilities/spread")
 local proc_events = BuffSettings.proc_events
 local damage_types = DamageSettings.damage_types
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
+local DEFAULT_DAMAGE_TYPE = damage_types.burning
 local ActionFlamerGasBurst = class("ActionFlamerGasBurst", "ActionShoot")
 
 ActionFlamerGasBurst.init = function (self, action_context, action_params, action_settings)
@@ -24,6 +25,8 @@ ActionFlamerGasBurst.init = function (self, action_context, action_params, actio
 	self._killing_blow = false
 	self._action_module_position_finder_component = action_context.unit_data_extension:write_component("action_module_position_finder")
 	self._action_flamer_gas_component = action_context.unit_data_extension:write_component("action_flamer_gas")
+	local fire_config = action_settings.fire_configuration
+	self._damage_type = fire_config and fire_config.damage_type or DEFAULT_DAMAGE_TYPE
 end
 
 ActionFlamerGasBurst._setup_flame_data = function (self, action_settings)
@@ -32,7 +35,7 @@ ActionFlamerGasBurst._setup_flame_data = function (self, action_settings)
 	self._flamer_gas_template = flamer_gas_template
 	local weapon_extension = self._weapon_extension
 	local burninating_template = weapon_extension:burninating_template()
-	self._dot_max_stacks = burninating_template.max_stacks
+	self._dot_max_stacks = math.ceil(burninating_template.max_stacks)
 	local size_of_flame_template = weapon_extension:size_of_flame_template()
 	self._spread_angle = size_of_flame_template.spread_angle
 	self._suppression_cone_radius = size_of_flame_template.suppression_cone_radius
@@ -259,7 +262,7 @@ ActionFlamerGasBurst._damage_target = function (self, target_unit)
 	local hit_normal, hit_zone_name = nil
 	local penetrated = false
 	local instakill = false
-	local damage_type = damage_types.burning
+	local damage_type = self._damage_type
 	local is_critical_strike = self._critical_strike_component.is_active
 	local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, player_unit, target_index)
 	local charge_level = 1

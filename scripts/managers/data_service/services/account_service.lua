@@ -1,12 +1,14 @@
 local AchievementData = require("scripts/managers/achievements/achievement_data")
+local AchievementStats = require("scripts/managers/stats/groups/achievement_stats")
 local AchievementUITypes = require("scripts/settings/achievements/achievement_ui_types")
 local BackendError = require("scripts/managers/error/errors/backend_error")
+local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local GameVersionError = require("scripts/managers/error/errors/game_version_error")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local Promise = require("scripts/foundation/utilities/promise")
-local SignInError = require("scripts/managers/error/errors/sign_in_error")
 local ServiceUnavailableError = require("scripts/managers/error/errors/service_unavailable_error")
+local SignInError = require("scripts/managers/error/errors/sign_in_error")
 local XboxLiveUtilities = require("scripts/foundation/utilities/xbox_live")
 local AccountService = class("AccountService")
 
@@ -29,11 +31,19 @@ AccountService.signin = function (self)
 		local account_id = auth_data.sub
 
 		_init_network_client(account_id)
-		Managers.backend.interfaces.external_payment:update_account_store_status():next(function ()
-			return Managers.backend.interfaces.external_payment:reconcile_pending_txns()
-		end):catch(function (error)
-			Log.error("AccountService", "Failed setting up platform commerce: %s", table.tostring(error, 10))
-		end)
+
+		local store_account_verified = Managers.account:verify_gdk_store_account(nil, true)
+
+		if store_account_verified then
+			Log.debug("AccountService", "Store account update")
+			Managers.backend.interfaces.external_payment:update_account_store_status():next(function ()
+				return Managers.backend.interfaces.external_payment:reconcile_pending_txns()
+			end):catch(function (error)
+				Log.error("AccountService", "Failed setting up platform commerce: %s", table.tostring(error, 10))
+			end)
+		else
+			Log.warning("AccountService", "Store account mismatch detected")
+		end
 
 		local status_promise = Managers.backend.interfaces.version_check:status()
 		local settings_promise = Managers.backend.interfaces.game_settings:resolve_backend_game_settings()
@@ -41,8 +51,9 @@ AccountService.signin = function (self)
 		local auth_data_promise = Promise.resolved(auth_data)
 		local immaterium_connection_info = Managers.backend.interfaces.immaterium:fetch_connection_info()
 		local sync_achievement_rewards_promise = Managers.achievements:sync_achievement_data(account_id)
+		local crafting_settings_promise = CraftingSettings.refresh()
 
-		return Promise.all(status_promise, settings_promise, items_promise, auth_data_promise, immaterium_connection_info, sync_achievement_rewards_promise)
+		return Promise.all(status_promise, settings_promise, items_promise, auth_data_promise, immaterium_connection_info, sync_achievement_rewards_promise, crafting_settings_promise)
 	end):next(function (results)
 		local status, _, _, auth_data, immaterium_connection_info = unpack(results, 1, 5)
 
@@ -226,6 +237,12 @@ AccountService.unlock_achievement = function (self, achievement_id)
 	return Managers.backend.interfaces.commendations:bulk_update_commendations({
 		update
 	})
+end
+
+AccountService.read_stat = function (self, achievement_data, stat_id, ...)
+	local stat_definition = AchievementStats.definitions[stat_id]
+
+	return stat_definition:get_value(achievement_data.stats, ...)
 end
 
 return AccountService

@@ -128,8 +128,8 @@ local lasgun_p2_armor_mod_low_charged = {
 	near = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
-			[armor_types.armored] = damage_lerp_values.lerp_0_4,
-			[armor_types.resistant] = damage_lerp_values.lerp_0_4,
+			[armor_types.armored] = damage_lerp_values.lerp_0_5,
+			[armor_types.resistant] = damage_lerp_values.lerp_0_5,
 			[armor_types.player] = damage_lerp_values.lerp_1,
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
@@ -152,8 +152,8 @@ local lasgun_p2_armor_mod_low_charged = {
 	far = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
-			[armor_types.armored] = damage_lerp_values.lerp_0_5,
-			[armor_types.resistant] = damage_lerp_values.lerp_0_5,
+			[armor_types.armored] = damage_lerp_values.lerp_0_6,
+			[armor_types.resistant] = damage_lerp_values.lerp_0_6,
 			[armor_types.player] = damage_lerp_values.lerp_1,
 			[armor_types.berserker] = damage_lerp_values.lerp_1_5,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
@@ -435,7 +435,7 @@ overrides.lasgun_p2_m1_charge_killshot = {
 		{
 			"charge_level_scaler",
 			"min",
-			0.3
+			0.4
 		},
 		{
 			"charge_level_scaler",
@@ -962,7 +962,7 @@ damage_templates.bayonette_weapon_special_stab = {
 	stagger_category = "melee",
 	cleave_distribution = double_cleave,
 	damage_type = damage_types.combat_blade,
-	gibbing_power = gibbing_power.light,
+	gibbing_power = gibbing_power.always,
 	gibbing_type = gibbing_types.sawing,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.bayonet,

@@ -870,9 +870,25 @@ ViewElementGrid.grid = function (self)
 	return self._grid
 end
 
-ViewElementGrid.destroy = function (self)
+ViewElementGrid.destroy = function (self, ui_renderer)
 	if self._present_grid_layout then
 		self._present_grid_layout = nil
+	end
+
+	local ui_grid_renderer = self._ui_grid_renderer
+
+	if ui_grid_renderer then
+		local widgets = self._widgets
+		local num_widgets = #widgets
+
+		for i = 1, num_widgets do
+			local widget = widgets[i]
+			local widget_name = widget.name
+
+			if widget_name ~= "grid_background" then
+				UIWidget.destroy(ui_grid_renderer, widget)
+			end
+		end
 	end
 
 	self:_destroy_grid_widgets()

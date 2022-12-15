@@ -939,7 +939,7 @@ return function ()
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"alerted_idle"
+				"do_not_play"
 			},
 			{
 				"query_context",
@@ -1869,7 +1869,7 @@ return function ()
 	define_rule({
 		name = "enemy_cultist_berzerker_assault",
 		category = "enemy_vo_prio_1",
-		wwise_route = 28,
+		wwise_route = 46,
 		response = "enemy_cultist_berzerker_assault",
 		database = "enemy_vo",
 		criterias = {
@@ -1896,14 +1896,14 @@ return function ()
 				"cultist_berzerker_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				8
+				2
 			},
 			{
 				"faction_memory",
 				"faction_memory_cultist_berzerker_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				4
+				1
 			}
 		},
 		on_done = {
@@ -2333,6 +2333,59 @@ return function ()
 			{
 				"faction_memory",
 				"faction_memory_renegade_grenadier_skulking",
+				OP.TIMESET
+			}
+		}
+	})
+	define_rule({
+		name = "traitor_berzerker_assault",
+		category = "enemy_vo_prio_1",
+		wwise_route = 48,
+		response = "traitor_berzerker_assault",
+		database = "enemy_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_enemy_vo_event"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"assault"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"renegade_berzerker"
+			},
+			{
+				"user_memory",
+				"traitor_berzerker_assault",
+				OP.TIMEDIFF,
+				OP.GT,
+				2
+			},
+			{
+				"faction_memory",
+				"faction_memory_traitor_berzerker_assault",
+				OP.TIMEDIFF,
+				OP.GT,
+				1
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"traitor_berzerker_assault",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"faction_memory_traitor_berzerker_assault",
 				OP.TIMESET
 			}
 		}

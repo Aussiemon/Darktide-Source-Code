@@ -271,7 +271,7 @@ weapon_template.actions = {
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0,
 		weapon_handling_template = "autogun_p2_m2",
-		crosshair_type = "assault",
+		crosshair_type = "spray_n_pray",
 		ammunition_usage = 1,
 		uninterruptible = true,
 		stop_input = "shoot_release",
@@ -430,6 +430,11 @@ weapon_template.actions = {
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 2.95
+			},
+			special_action = {
+				chain_time = 0.2,
+				action_name = "action_push",
+				chain_until = 0.4
 			}
 		},
 		time_scale_stat_buffs = {
@@ -565,7 +570,7 @@ weapon_template.alternate_fire_settings = {
 	stop_anim_event = "to_unaim_braced",
 	spread_template = "autogun_p2_m2_ads",
 	start_anim_event_3p = "to_ironsight",
-	crosshair_type = "assault",
+	crosshair_type = "spray_n_pray",
 	stop_anim_event_3p = "to_unaim_braced",
 	start_anim_event = "to_braced",
 	look_delta_template = "autogun",

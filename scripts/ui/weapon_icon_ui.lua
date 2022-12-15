@@ -6,15 +6,15 @@ local WeaponIconUI = class("WeaponIconUI")
 
 WeaponIconUI.init = function (self, render_settings)
 	self._unique_id = "WeaponIconUI" .. "_" .. string.gsub(tostring(self), "table: ", "")
-	self._render_settings = render_settings or {
-		viewport_layer = 900,
-		level_name = "content/levels/ui/weapon_icon/weapon_icon",
-		viewport_name = "weapon_viewport",
-		timer_name = "ui",
-		viewport_type = "default_with_alpha",
-		shading_environment = "content/shading_environments/ui/weapon_icons",
-		world_layer = 800,
-		world_name = "weapon_icon_world_" .. self._unique_id
+	self._render_settings = {
+		world_name = render_settings and render_settings.world_name or "weapon_icon_world_" .. self._unique_id,
+		world_layer = render_settings and render_settings.world_layer or 800,
+		timer_name = render_settings and render_settings.timer_name or "ui",
+		viewport_layer = render_settings and render_settings.viewport_layer or 900,
+		viewport_type = render_settings and render_settings.viewport_type or "default_with_alpha",
+		viewport_name = render_settings and render_settings.viewport_name or "weapon_viewport",
+		level_name = render_settings and render_settings.level_name or "content/levels/ui/weapon_icon/weapon_icon",
+		shading_environment = render_settings and render_settings.shading_environment or "content/shading_environments/ui/weapon_icons"
 	}
 	local weapon_icon_size = UISettings.weapon_icon_size
 	self._weapon_width = render_settings and render_settings.weapon_width or weapon_icon_size[1]

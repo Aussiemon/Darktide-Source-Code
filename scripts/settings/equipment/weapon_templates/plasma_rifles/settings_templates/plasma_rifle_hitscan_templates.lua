@@ -81,8 +81,8 @@ hitscan_templates.default_plasma_rifle_demolition = {
 		penetration = {
 			target_index_increase = 2,
 			depth = 2,
-			destroy_on_exit = true,
-			exit_explosion_template = ExplosionTemplates.plasma_rifle_exit
+			destroy_on_exit = false,
+			exit_explosion_template = ExplosionTemplates.plasma_rifle
 		}
 	},
 	collision_tests = {

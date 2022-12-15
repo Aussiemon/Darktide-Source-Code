@@ -7,14 +7,19 @@ local BatchedSavingStrategy = class("BatchedSavingStrategy")
 
 BatchedSavingStrategy.init = function (self, achievement_definitions)
 	self._definitions = achievement_definitions
-	self._promise = Promise.resolved()
+	self._pushing = Promise.resolved()
+	self._pending = Promise.resolved()
 	self._players = {}
 	self._updates = {}
 end
 
 BatchedSavingStrategy.destroy = function (self)
-	if self._promise:is_pending() then
-		self._promise:cancel()
+	if self._pending:is_pending() then
+		self._pending:reject("Failed to push data to the backend.")
+	end
+
+	if self._pushing:is_pending() then
+		self._pushing:cancel()
 	end
 end
 
@@ -67,24 +72,29 @@ BatchedSavingStrategy._add_to_push = function (self, account_id)
 		local updates = self._updates
 		updates[#updates + 1] = update
 	end
+
+	if self._pending:is_fulfilled() then
+		self._pending = Promise:new()
+	end
 end
 
 BatchedSavingStrategy._push_all = function (self)
-	if self._promise:is_pending() then
+	if self._pushing:is_pending() then
 		return
 	end
 
-	if #self._updates == 0 then
-		self._promise = Promise.resolved()
-
+	if self._pending:is_fulfilled() then
 		return
 	end
 
-	local updates = self._updates
-	self._updates = {}
-	self._promise = Managers.backend.interfaces.commendations:bulk_update_commendations(updates):next(function ()
+	self._pushing = Managers.backend.interfaces.commendations:bulk_update_commendations(self._updates)
+
+	self._pushing:next(function ()
 		self:_push_all()
 	end)
+	self._pending:resolve(nil)
+
+	self._updates = {}
 end
 
 BatchedSavingStrategy.track_player = function (self, account_id, constant_player_data)
@@ -99,7 +109,7 @@ BatchedSavingStrategy.save_on_player_exit = function (self, account_id)
 	self:_add_to_push(account_id)
 	self:_push_all()
 
-	return self._promise
+	return self._pending
 end
 
 BatchedSavingStrategy.save_on_all_exit = function (self)
@@ -111,7 +121,7 @@ BatchedSavingStrategy.save_on_all_exit = function (self)
 
 	self:_push_all()
 
-	return self._promise
+	return self._pending
 end
 
 BatchedSavingStrategy.save_on_stat_change = function (self, account_id, trigger_id, trigger_value, ...)

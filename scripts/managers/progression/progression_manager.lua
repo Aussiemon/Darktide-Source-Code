@@ -88,10 +88,11 @@ ProgressionManager.fetch_session_report = function (self, session_id)
 	local session_report_promise = self._backend_interface.gameplay_session:poll_for_end_of_round(session_id, participant)
 	local character_xp_settings_promise = self._progression:get_xp_table("character")
 	local account_xp_settings_promise = self._progression:get_xp_table("account")
+	local account_wallet_promise = self._backend_interface.wallet:combined_wallets(player:character_id())
 
 	_info("Fetching session report for session %s...", session_id)
-	Promise.all(session_report_promise, character_xp_settings_promise, account_xp_settings_promise):next(function (results)
-		local session_report, character_xp_settings, account_xp_settings = unpack(results, 1, 3)
+	Promise.all(session_report_promise, character_xp_settings_promise, account_xp_settings_promise, account_wallet_promise):next(function (results)
+		local session_report, character_xp_settings, account_xp_settings, account_wallets = unpack(results, 1, 4)
 		local eor = session_report.eor
 		self._session_report.eor = eor
 
@@ -102,13 +103,7 @@ ProgressionManager.fetch_session_report = function (self, session_id)
 		self._session_report.character.experience_settings_unparsed = character_xp_settings
 		self._session_report.account.experience_settings_unparsed = account_xp_settings
 
-		self:_parse_report(eor)
-
-		return self._backend_interface.wallet:combined_wallets(player:character_id())
-	end):next(function (wallets)
-		self._session_report.character.wallets = wallets
-
-		self:_parse_wallets(wallets)
+		self:_parse_report(eor, account_wallets)
 	end):catch(function (errors)
 		local error_string = nil
 
@@ -201,7 +196,7 @@ ProgressionManager._parse_experience_settings = function (self, unparsed_xp_sett
 	return experience_settings
 end
 
-ProgressionManager._parse_report = function (self, eor)
+ProgressionManager._parse_report = function (self, eor, account_wallets)
 	local player = Managers.player:player(Network.peer_id(), 1)
 	local my_account_id = player:account_id()
 	local account_data = self:_get_account_data(eor, my_account_id)
@@ -263,6 +258,13 @@ ProgressionManager._parse_report = function (self, eor)
 
 	local credits_reward = self:_get_credits_reward(account_data.missionRewards)
 	self._session_report.credits_reward = credits_reward
+
+	if account_wallets then
+		self._session_report.character.wallets = account_wallets
+
+		self:_parse_wallets(account_wallets)
+	end
+
 	local promise_list = {}
 	local character_level_up_promise = self:_check_level_up(character_stats)
 
@@ -902,10 +904,6 @@ ProgressionManager._fetch_dummy_session_report = function (self)
 	self._session_report.character.inventory = inventory
 	self._session_report.character.experience_settings = self:_parse_experience_settings(character_xp)
 	self._session_report.account.experience_settings = self:_parse_experience_settings(account_xp)
-
-	self:_parse_report(session_report)
-
-	self._session_report_state = SESSION_REPORT_STATES.success
 	local dummy_wallet = {
 		wallets = {
 			{
@@ -937,9 +935,8 @@ ProgressionManager._fetch_dummy_session_report = function (self)
 			end
 		end
 	}
-	self._session_report.character.wallets = dummy_wallet
 
-	self:_parse_wallets(dummy_wallet)
+	self:_parse_report(session_report, dummy_wallet)
 
 	if self._dummy_session_promise then
 		self._dummy_session_promise:resolve()

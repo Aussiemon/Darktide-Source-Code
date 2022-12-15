@@ -856,7 +856,7 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		kind = "windup",
 		anim_event_3p = "attack_swing_charge_right",
-		anim_event = "heavy_charge_right_diagonal",
+		anim_event = "heavy_charge_right",
 		hit_stop_anim = "attack_hit",
 		stop_input = "attack_cancel",
 		total_time = 3,
@@ -1410,6 +1410,10 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
+				chain_time = 0.25
+			},
+			special_action = {
+				action_name = "action_attack_special",
 				chain_time = 0.25
 			}
 		},

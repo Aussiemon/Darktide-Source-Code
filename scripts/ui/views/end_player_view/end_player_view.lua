@@ -431,8 +431,8 @@ EndPlayerView._setup_wallets = function (self, wallet_data, salary_rewards)
 
 		if wallet_widget then
 			local widget_content = wallet_widget.content
-			local total_amount = salary_reward.current_amount
-			local current_amount = total_amount - salary_reward.amount_gained
+			local total_amount = salary_reward.current_amount + salary_reward.amount_gained
+			local current_amount = salary_reward.current_amount
 			widget_content.start_amount = current_amount
 			widget_content.current_amount = current_amount
 			widget_content.total_amount = total_amount

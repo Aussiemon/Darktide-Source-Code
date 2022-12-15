@@ -3679,30 +3679,6 @@ local conversations_core_zealot_female_a = {
 		},
 		randomize_indexes = {}
 	},
-	lore_enemy_within_one_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1.0] = "loc_zealot_female_a__lore_enemy_within_one_b_01",
-			[2.0] = "loc_zealot_female_a__lore_enemy_within_one_b_02"
-		},
-		sound_events_duration = {
-			[1.0] = 7.336396,
-			[2.0] = 7.755896
-		},
-		randomize_indexes = {}
-	},
-	lore_enemy_within_one_c = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_zealot_female_a__lore_enemy_within_one_c_01"
-		},
-		sound_events_duration = {
-			[1.0] = 8.410854
-		},
-		randomize_indexes = {}
-	},
 	lore_enemy_within_three_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

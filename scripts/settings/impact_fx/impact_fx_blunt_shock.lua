@@ -16,11 +16,19 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		died = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
 				append_husk_to_event_name = true
 			}
 		},
@@ -32,11 +40,23 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_sharp",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		damage = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_gen",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
 				append_husk_to_event_name = true
 			}
 		},
@@ -44,17 +64,29 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_reduced_damage",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		damage_negated = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		shield_blocked = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_shield",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
 				append_husk_to_event_name = true
 			}
 		},
@@ -200,6 +232,10 @@ local armored = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		died = {
@@ -209,6 +245,10 @@ local armored = {
 			},
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_armor_break",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
 				append_husk_to_event_name = true
 			}
 		},
@@ -224,6 +264,10 @@ local armored = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_armor",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		damage = {
@@ -233,6 +277,10 @@ local armored = {
 			},
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_armor",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
 				append_husk_to_event_name = true
 			}
 		},
@@ -244,17 +292,29 @@ local armored = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_armor",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		damage_negated = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		shield_blocked = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_shield",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
 				append_husk_to_event_name = true
 			}
 		},
@@ -415,6 +475,10 @@ local super_armor = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		died = {
@@ -429,6 +493,10 @@ local super_armor = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		weakspot_damage = {
@@ -443,6 +511,10 @@ local super_armor = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_armor",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		damage = {
@@ -452,6 +524,10 @@ local super_armor = {
 			},
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_armor",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
 				append_husk_to_event_name = true
 			}
 		},
@@ -463,17 +539,29 @@ local super_armor = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_armor",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		damage_negated = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_melee_super_armor_no_damage",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		shield_blocked = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_shield",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
 				append_husk_to_event_name = true
 			}
 		},
@@ -609,6 +697,10 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		died = {
@@ -623,6 +715,10 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_combat_weapon_hit_addon_bone",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		weakspot_damage = {
@@ -633,6 +729,10 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		damage = {
@@ -642,6 +742,10 @@ local disgustingly_resilient = {
 			},
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_resilient",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
 				append_husk_to_event_name = true
 			}
 		},
@@ -653,17 +757,29 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_resilient",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		damage_negated = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		shield_blocked = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_shield",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
 				append_husk_to_event_name = true
 			}
 		},
@@ -673,7 +789,12 @@ local disgustingly_resilient = {
 				append_husk_to_event_name = true
 			}
 		},
-		shove = {}
+		shove = {
+			{
+				event = "wwise/events/weapon/play_player_push_resilient",
+				append_husk_to_event_name = true
+			}
+		}
 	},
 	vfx = {
 		weakspot_died = {
@@ -815,11 +936,19 @@ local resistant = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		died = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
 				append_husk_to_event_name = true
 			}
 		},
@@ -831,11 +960,19 @@ local resistant = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		damage = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
 				append_husk_to_event_name = true
 			}
 		},
@@ -843,17 +980,29 @@ local resistant = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_gen",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		damage_negated = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
+				append_husk_to_event_name = true
 			}
 		},
 		shield_blocked = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_shield",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_hit",
 				append_husk_to_event_name = true
 			}
 		},

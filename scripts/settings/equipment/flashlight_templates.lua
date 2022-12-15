@@ -45,7 +45,7 @@ local flashlight_templates = {
 					min = 0
 				},
 				falloff = {
-					far = 25,
+					far = 30,
 					near = 0
 				}
 			}
@@ -83,7 +83,7 @@ local flashlight_templates = {
 					min = 0
 				},
 				falloff = {
-					far = 25,
+					far = 30,
 					near = 0
 				},
 				flicker = default_flicker
@@ -118,7 +118,7 @@ local flashlight_templates = {
 				ies_profile = "content/environment/ies_profiles/narrow/narrow_05",
 				volumetric_intensity = 0.6,
 				spot_angle = {
-					max = 0.8,
+					max = 1.1,
 					min = 0
 				},
 				falloff = {

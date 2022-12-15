@@ -1,6 +1,7 @@
 local SteamManager = class("SteamManager")
 
 SteamManager.init = function (self)
+	self._overlay_active = false
 	self.callbacks = {}
 	self.micro_txn_data = {}
 end
@@ -13,6 +14,12 @@ end
 
 SteamManager.on_overlay_activated = function (self, enabled)
 	Log.info("SteamManager", "on_overlay_activated %s", enabled)
+
+	self._overlay_active = enabled
+end
+
+SteamManager.is_overlay_active = function (self)
+	return self._overlay_active
 end
 
 SteamManager.on_micro_txn = function (self, authorized, order_id)

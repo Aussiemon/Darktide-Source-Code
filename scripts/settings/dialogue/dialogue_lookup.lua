@@ -33,6 +33,7 @@ _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_dm_sto
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_fm_cargo")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_fm_resurgence")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_hm_cartel")
+_add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_hm_complex")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_hm_strain")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_km_enforcer")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_mission_vo_km_station")

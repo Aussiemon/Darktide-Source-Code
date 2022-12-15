@@ -108,7 +108,7 @@ weapon_template.action_input_hierarchy = {
 	wield = "stay",
 	reload = "stay",
 	shoot_pressed = "stay",
-	special_action_push = "stay",
+	special_action_push = "base",
 	zoom = {
 		zoom_shoot = "stay",
 		wield = "base",
@@ -116,7 +116,7 @@ weapon_template.action_input_hierarchy = {
 		grenade_ability = "base",
 		reload = "base",
 		combat_ability = "base",
-		special_action_push = "stay"
+		special_action_push = "base"
 	}
 }
 
@@ -165,6 +165,14 @@ weapon_template.actions = {
 			},
 			reload = {
 				action_name = "action_reload"
+			},
+			special_action_push = {
+				action_name = "action_normal_push",
+				chain_time = 0.05
+			},
+			special_action_push = {
+				action_name = "action_psyker_push",
+				chain_time = 0.05
 			}
 		}
 	},
@@ -240,6 +248,10 @@ weapon_template.actions = {
 			},
 			special_action_push = {
 				action_name = "action_normal_push",
+				chain_time = 0.2
+			},
+			special_action_push = {
+				action_name = "action_psyker_push",
 				chain_time = 0.2
 			}
 		},
@@ -319,6 +331,10 @@ weapon_template.actions = {
 			special_action_push = {
 				action_name = "action_normal_push",
 				chain_time = 0.2
+			},
+			special_action_push = {
+				action_name = "action_psyker_push",
+				chain_time = 0.2
 			}
 		}
 	},
@@ -387,6 +403,9 @@ weapon_template.actions = {
 			},
 			special_action_push = {
 				action_name = "action_normal_push"
+			},
+			special_action_push = {
+				action_name = "action_psyker_push"
 			}
 		}
 	},
@@ -451,21 +470,29 @@ weapon_template.actions = {
 			special_action_push = {
 				action_name = "action_normal_push",
 				chain_time = 2
+			},
+			special_action_push = {
+				action_name = "action_psyker_push",
+				chain_time = 2
 			}
 		}
 	},
 	action_normal_push = {
+		crosshair_type = "dot",
 		push_radius = 2.5,
 		start_input = "special_action_push",
 		block_duration = 0.5,
+		sprint_requires_press_to_interrupt = true,
 		kind = "push",
-		priority = 0,
-		ability_type = "grenade_ability",
 		ability_keyword = "grenade",
-		crosshair_type = "ironsight",
+		allowed_during_sprint = true,
 		activation_cooldown = 0.1,
+		ability_type = "grenade_ability",
+		priority = 0,
 		activate_special = true,
 		damage_time = 0.1,
+		abort_sprint = true,
+		unaim = true,
 		uninterruptible = true,
 		anim_event = "weapon_special",
 		total_time = 1,
@@ -513,7 +540,7 @@ weapon_template.actions = {
 			},
 			zoom = {
 				action_name = "action_zoom",
-				chain_time = 0.5
+				chain_time = 0.65
 			}
 		},
 		inner_push_rad = math.pi * 0.04,
@@ -524,18 +551,22 @@ weapon_template.actions = {
 		outer_damage_type = damage_types.physical
 	},
 	action_psyker_push = {
+		crosshair_type = "dot",
 		push_radius = 10,
 		start_input = "special_action_push",
 		block_duration = 0.5,
+		sprint_requires_press_to_interrupt = true,
 		kind = "push",
-		priority = 1,
-		charge_template = "handgun_push_charge",
 		ability_keyword = "psyker",
-		crosshair_type = "ironsight",
+		allowed_during_sprint = true,
+		activation_cooldown = 0.1,
+		charge_template = "handgun_push_charge",
 		ability_type = "grenade_ability",
-		activation_cooldown = 2.3,
+		priority = 1,
 		activate_special = true,
 		damage_time = 0.4,
+		abort_sprint = true,
+		unaim = true,
 		uninterruptible = true,
 		anim_event = "weapon_special_psyker",
 		total_time = 1,
@@ -583,7 +614,7 @@ weapon_template.actions = {
 			},
 			zoom = {
 				action_name = "action_zoom",
-				chain_time = 0.5
+				chain_time = 0.65
 			}
 		},
 		inner_push_rad = math.pi * 0.04,

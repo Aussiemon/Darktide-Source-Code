@@ -1253,8 +1253,8 @@ ItemPassTemplates.ui_item_emote_slot = {
 			horizontal_alignment = "center",
 			angle = 0,
 			size = {
-				80,
-				80
+				40,
+				40
 			},
 			color = {
 				60,
@@ -2172,13 +2172,13 @@ ItemPassTemplates.item = {
 		end
 	},
 	{
-		value_id = "sold_text",
-		style_id = "sold_text",
+		value_id = "owned_text",
+		style_id = "owned_text",
 		pass_type = "text",
-		value = Localize("loc_sold"),
+		value = Localize("loc_item_owned"),
 		style = item_sold_style,
 		visibility_function = function (content, style)
-			return content.sold
+			return content.sold or content.owned
 		end
 	},
 	{
@@ -2197,7 +2197,7 @@ ItemPassTemplates.item = {
 			}
 		},
 		visibility_function = function (content, style)
-			return content.sold
+			return content.sold or content.owned
 		end
 	},
 	{

@@ -220,27 +220,30 @@ WeaponStats.init = function (self, item)
 
 						local overrides = target_data.overrides
 
-						if overrides and template_name == template_types.damage then
+						if overrides and (template_name == template_types.damage or template_name == template_types.explosion) then
 							for override_name, stat_override_data in pairs(overrides) do
 								local override_display_data = stat_override_data.display_data
 								local override_display_stats = override_display_data and override_display_data.display_stats
 
 								if override_display_stats then
+									local all_basic_stats = override_display_stats.__all_basic_stats
+
 									for stat_group_idx = 1, #stat_override_data do
 										local stat_group = stat_override_data[stat_group_idx]
 
 										for modified_stat_idx = 1, #stat_group do
 											local stat_data = stat_group[modified_stat_idx]
-											local stat_display_data = _get_display_data_from_path(override_display_stats, stat_data)
+											local stat_display_data = _get_display_data_from_path(override_display_stats, stat_data) or all_basic_stats and EMPTY_TABLE
 
 											if stat_display_data then
 												local ui_data = WeaponTweakTemplates.get_stat_ui_data(template_name, stat_data)
 
 												if ui_data then
 													local damage_profile_path = override_display_data.damage_profile_path
+													local from_weapon_template = damage_profile_path.from_weapon_template
 													local actions = weapon_template.actions
 													local action = actions and actions[target_name]
-													local damage_profile = action
+													local damage_profile = from_weapon_template and weapon_template or action
 
 													for i = 1, #damage_profile_path do
 														local path_segment = damage_profile_path[i]
@@ -252,8 +255,15 @@ WeaponStats.init = function (self, item)
 													end
 
 													if damage_profile then
-														local min, max = WeaponTweakTemplates.get_base_stats_lerp_values(stat_data)
-														min, max = _resolve_damage_template_lerps(weapon_template, target_name, stat_data, min, max, nil, damage_profile)
+														local min, max = nil
+
+														if template_name == template_types.damage then
+															min, max = WeaponTweakTemplates.get_base_stats_lerp_values(stat_data)
+															min, max = _resolve_damage_template_lerps(weapon_template, target_name, stat_data, min, max, nil, damage_profile)
+														elseif template_name == template_types.explosion then
+															min, max = WeaponTweakTemplates.get_base_stats_lerp_values(stat_data)
+															min, max = _resolve_explosion_template_lerps(weapon_template, target_name, stat_data, min, max, nil, damage_profile)
+														end
 
 														if min ~= max then
 															local current = math.lerp(min, max, bar_lerp_value)
@@ -1021,12 +1031,12 @@ function _resolve_damage_template_lerps(weapon_template, target_name, stat_data,
 	return min, max
 end
 
-function _resolve_explosion_template_lerps(weapon_template, target_name, stat_data, min, max, path_length_offset)
+function _resolve_explosion_template_lerps(weapon_template, target_name, stat_data, min, max, path_length_offset, optional_explosion_template)
 	local actions = weapon_template.actions
 	local action = actions and actions[target_name]
 
-	if action then
-		local explosion_template = Action.explosion_template(action)
+	if action or optional_explosion_template then
+		local explosion_template = optional_explosion_template or Action.explosion_template(action)
 
 		if explosion_template then
 			local resolved_table = explosion_template

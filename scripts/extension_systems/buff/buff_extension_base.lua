@@ -4,6 +4,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local PortableRandom = require("scripts/foundation/utilities/portable_random")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local BUFF_TARGETS = BuffSettings.targets
 local MIN_PROC_EVENTS_SIZE = BuffSettings.min_proc_events_size
 local MAX_PROC_EVENTS = BuffSettings.max_proc_events
@@ -430,6 +431,23 @@ BuffExtensionBase._add_buff = function (self, template, t, ...)
 	end
 
 	self._buffs_by_index[local_index] = buff_instance
+
+	if self._is_server and Managers.stats.can_record_stats() then
+		local template_context = buff_instance:template_context()
+		local owner_unit = template_context.owner_unit
+		local source_player = owner_unit and Managers.state.player_unit_spawn:owner(owner_unit)
+
+		if source_player then
+			local attacker_data_extension = ScriptUnit.has_extension(owner_unit, "unit_data_system")
+			local weapon_action_component = attacker_data_extension and attacker_data_extension:read_component("weapon_action")
+			local target_weapon_template = weapon_action_component and WeaponTemplate.current_weapon_template(weapon_action_component)
+			local weapon_template_name = target_weapon_template and target_weapon_template.name
+			local breed_name = self._buff_context.breed.name
+			local stack_count = template_context.stack_count
+
+			Managers.stats:record_buff(source_player, breed_name, template_name, stack_count, weapon_template_name)
+		end
+	end
 
 	return local_index
 end

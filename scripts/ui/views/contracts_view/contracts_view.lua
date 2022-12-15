@@ -30,6 +30,7 @@ ContractsView.on_enter = function (self)
 	self._backend_interfaces = Managers.backend.interfaces
 	self._contract_expiry_time = nil
 	self._wallet_promise = nil
+	self._popup_id = nil
 	self._task_grid = nil
 	self._task_list = {}
 
@@ -43,6 +44,10 @@ end
 ContractsView.on_exit = function (self)
 	if self._offscreen_renderer then
 		self:_destroy_renderer()
+	end
+
+	if self._popup_id then
+		Managers.event:trigger("event_remove_ui_popup", self._popup_id)
 	end
 
 	self._backend_interfaces = nil
@@ -135,6 +140,10 @@ ContractsView.cb_reroll_task_confirmed = function (self, task_id, wallet)
 	local promise = self._backend_interfaces.contracts:reroll_task(character_id, task_id, last_transaction_id)
 
 	promise:next(function (data)
+		if self._destroyed then
+			return
+		end
+
 		self._parent:play_vo_events(ViewSettings.vo_event_replacing_task, "contract_vendor_a", nil, 1.4)
 		self:_play_sound(UISoundEvents.mark_vendor_replace_contract)
 		self:_hide_task_info()
@@ -156,7 +165,7 @@ ContractsView._cb_reroll_task_pressed = function (self, task_info)
 	promise:next(callback(self, "_display_confirmation_popup", task_id))
 end
 
-_text_extra_options = {}
+local _text_extra_options = {}
 
 ContractsView._display_task_info = function (self, task_widget, task_info)
 	local task_info_widget = self._widgets_by_name.task_info
@@ -293,8 +302,10 @@ ContractsView._fetch_task_list = function (self)
 	local promise = self._backend_interfaces.contracts:get_current_contract(character_id)
 
 	promise:next(function (data)
-		self._contract_data = data
-		self._update_tasks_list = true
+		if not self._destroyed then
+			self._contract_data = data
+			self._update_tasks_list = true
+		end
 	end)
 end
 
@@ -338,14 +349,18 @@ ContractsView._set_contract_info = function (self, contract_data)
 		local character_id = player:character_id()
 
 		local function on_completed_callback()
-			if not self._destroyed then
-				contract_info_widget_content.label = Localize("loc_contracts_contract_fulfilled") .. " "
-
-				self:_update_wallets()
+			if self._destroyed then
+				return
 			end
+
+			contract_info_widget_content.label = Localize("loc_contracts_contract_fulfilled") .. " "
+
+			self:_update_wallets()
 		end
 
-		self._backend_interfaces.contracts:complete_contract(character_id):next(on_completed_callback, on_completed_callback)
+		local promise = self._backend_interfaces.contracts:complete_contract(character_id)
+
+		promise:next(on_completed_callback, on_completed_callback)
 	end
 end
 
@@ -510,8 +525,7 @@ end
 
 ContractsView._update_wallets = function (self)
 	local store_service = Managers.data_service.store
-	local promise = store_service:combined_wallets()
-	self._wallet_promise = promise
+	self._wallet_promise = store_service:combined_wallets()
 
 	if self._parent then
 		self._parent:update_wallets()
@@ -519,6 +533,10 @@ ContractsView._update_wallets = function (self)
 end
 
 ContractsView._display_confirmation_popup = function (self, task_id, wallet)
+	if self._destroyed then
+		return
+	end
+
 	local reroll_cost = self._contract_data.rerollCost
 	local reroll_cost_amount = reroll_cost.amount
 	local balance_amount = wallet and wallet.balance.amount or 0
@@ -561,7 +579,9 @@ ContractsView._display_confirmation_popup = function (self, task_id, wallet)
 		}
 	end
 
-	Managers.event:trigger("event_show_ui_popup", popup_params)
+	Managers.event:trigger("event_show_ui_popup", popup_params, function (id)
+		self._popup_id = id
+	end)
 end
 
 ContractsView._update_task_grid_position = function (self)

@@ -9,6 +9,7 @@ local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_in
 local ViewElementInventoryWeaponPreview = require("scripts/ui/view_elements/view_element_inventory_weapon_preview/view_element_inventory_weapon_preview")
 local WeaponStats = require("scripts/utilities/weapon_stats")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local InputDevice = require("scripts/managers/input/input_device")
 local ViewElementWeaponInfo = require("scripts/ui/view_elements/view_element_weapon_info/view_element_weapon_info")
 local ViewElementWeaponActionsExtended = require("scripts/ui/view_elements/view_element_weapon_actions/view_element_weapon_actions_extended")
 local ViewElementWeaponPatterns = require("scripts/ui/view_elements/view_element_weapon_patterns/view_element_weapon_patterns")
@@ -431,6 +432,12 @@ InventoryWeaponDetailsView._handle_input = function (self, input_service, dt, t)
 	if scroll_axis then
 		local scroll = scroll_axis[2]
 		local scroll_speed = 0.25
+
+		if InputDevice.gamepad_active then
+			scroll = math.abs(scroll_axis[1]) < math.abs(scroll) and scroll or 0
+			scroll_speed = 0.1
+		end
+
 		self._weapon_zoom_target = math.clamp(self._weapon_zoom_target + scroll * scroll_speed, self._min_zoom, self._max_zoom)
 
 		if math.abs(self._weapon_zoom_target - self._weapon_zoom_fraction) > 0.01 then

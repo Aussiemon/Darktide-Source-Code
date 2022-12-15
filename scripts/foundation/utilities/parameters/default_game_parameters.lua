@@ -32,6 +32,7 @@ DefaultGameParameters.backend_fetch_master_items = false
 DefaultGameParameters.aws_matchmaking = false
 DefaultGameParameters.aws_matchmaking_mission_server_alias = "mission-v1"
 DefaultGameParameters.aws_matchmaking_hub_server_alias = "hub-v1"
+DefaultGameParameters.default_lod_object_multiplier = 1
 DefaultGameParameters.default_max_ragdolls = DEDICATED_SERVER and 0 or 10
 DefaultGameParameters.default_max_impact_decals = DEDICATED_SERVER and 0 or 30
 DefaultGameParameters.default_max_blood_decals = DEDICATED_SERVER and 0 or 30
@@ -68,7 +69,7 @@ DefaultGameParameters.show_watermark_overlay = false
 DefaultGameParameters.watermark_overlay_alpha_multiplier = 0.0196078431372549
 DefaultGameParameters.watermark_overlay_text = "CLOSED ALPHA TEST"
 DefaultGameParameters.show_beta_label_overlay = false
-DefaultGameParameters.beta_label_overlay_text = "Pre-Order Beta Test November 17-29"
+DefaultGameParameters.beta_label_overlay_text = "Closed Beta Test October 14-16 2022"
 DefaultGameParameters.enable_string_tags = false
 DefaultGameParameters.vertical_fov = 65
 DefaultGameParameters.min_vertical_fov = 45
@@ -104,6 +105,11 @@ end
 
 slot0.gibbing_enabled = true
 DefaultGameParameters.enable_afk_check = BUILD == "release"
+DefaultGameParameters.afk_warning_time_hub = 10
+DefaultGameParameters.afk_kick_time_hub = 15
+DefaultGameParameters.afk_warning_time_mission = 5
+DefaultGameParameters.afk_kick_time_mission = 10
+DefaultGameParameters.reset_keybind_on_start = false
 DefaultGameParameters.prod_like_backend = true
 DefaultGameParameters.backend_fetch_master_items = true
 

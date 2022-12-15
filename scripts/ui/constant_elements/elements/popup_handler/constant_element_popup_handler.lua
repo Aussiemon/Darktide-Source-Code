@@ -163,7 +163,7 @@ end
 ConstantElementPopupHandler._cb_on_button_pressed = function (self, widget)
 	local active_popup = self._active_popup
 
-	if active_popup.closing then
+	if active_popup and active_popup.closing then
 		return
 	end
 

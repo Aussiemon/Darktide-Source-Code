@@ -58,14 +58,16 @@ Recoil.add_recoil = function (t, recoil_template, read_recoil_component, recoil_
 
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
 	local buff_keywords = BuffSettings.keywords
-	local num_shots = recoil_control_component.num_shots + 1
+	local num_shots = recoil_control_component.num_shots
+	local new_num_shots = num_shots + 1
 	local seed = recoil_control_component.seed
 	local weapon_movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
 	local random_pitch, random_yaw = nil
 	local movement_state_settings = recoil_template[weapon_movement_state]
 	local deterministic_recoil = buff_extension:has_keyword(buff_keywords.deterministic_recoil)
 	local pitch_range, yaw_range = nil
-	local offset_index = math.min(num_shots, movement_state_settings.num_offset_ranges)
+	local num_offset_ranges = movement_state_settings.num_offset_ranges
+	local offset_index = math.min(new_num_shots, num_offset_ranges)
 	local offset_table = movement_state_settings.offset
 
 	if offset_table then
@@ -110,7 +112,7 @@ Recoil.add_recoil = function (t, recoil_template, read_recoil_component, recoil_
 	recoil_control_component.target_pitch = base_target_pitch
 	recoil_control_component.target_yaw = base_target_yaw
 	recoil_control_component.rise_end_time = t + movement_state_settings.rise_duration
-	recoil_control_component.num_shots = num_shots
+	recoil_control_component.num_shots = new_num_shots
 	recoil_control_component.seed = seed
 end
 

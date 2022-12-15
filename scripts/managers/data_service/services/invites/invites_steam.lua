@@ -45,6 +45,11 @@ InvitesSteam.send_invite = function (self, invitee_id, immaterium_party_id)
 	Friends.invite_immaterium_party(invitee_id, immaterium_party_id)
 end
 
+InvitesSteam.reset = function (self)
+	self._invite_address = nil
+	self._has_invite = false
+end
+
 InvitesSteam.destroy = function (self)
 	return
 end

@@ -8,11 +8,12 @@ PickupSpawner.init = function (self, unit, is_server)
 	local pickup_spawner_extension = ScriptUnit.fetch_component_extension(unit, "pickup_system")
 
 	if pickup_spawner_extension then
+		local ignore_item_list = self:get_data(unit, "ignore_item_list")
 		local items = self:get_data(unit, "items")
 		local item_spawn_selection = self:get_data(unit, "item_spawn_selection")
 		local spawn_nodes = self:get_data(unit, "spawn_nodes")
 
-		pickup_spawner_extension:setup_from_component(self, spawn_method, items, item_spawn_selection, spawn_nodes)
+		pickup_spawner_extension:setup_from_component(self, spawn_method, ignore_item_list, items, item_spawn_selection, spawn_nodes)
 
 		self._pickup_spawner_extension = pickup_spawner_extension
 	end
@@ -68,6 +69,12 @@ PickupSpawner.component_data = {
 			"side_mission",
 			"flow_spawn"
 		}
+	},
+	ignore_item_list = {
+		ui_type = "check_box",
+		value = true,
+		ui_name = "Accept any pool items",
+		category = "Items"
 	},
 	items = {
 		category = "Items",

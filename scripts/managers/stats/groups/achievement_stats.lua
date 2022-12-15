@@ -38,6 +38,9 @@ Factory.add_to_group(AchievementStats, Factory.create_echo("flawless_mission_dif
 Factory.add_to_group(AchievementStats, Factory.create_dynamic_reducer("boss_damage_by_id", Hooks.definitions.hook_damage, {
 	"id"
 }, Activations.on_condition(Conditions.breed_is_boss(Hooks.definitions.hook_damage), Activations.sum)))
+Factory.add_to_group(AchievementStats, Factory.create_dynamic_reducer("weakspot_by_id", Hooks.definitions.hook_damage, {
+	"id"
+}, Activations.on_condition(Conditions.is_weakspot(Hooks.definitions.hook_damage), Activations.set(1))))
 Factory.add_to_group(AchievementStats, Factory.create_flag("used_range_weapon_flag", Hooks.definitions.hook_ranged_attack_concluded))
 Factory.add_to_group(AchievementStats, Factory.create_flag_switch("alternate_fire_active", Hooks.definitions.hook_alternate_fire_start, Hooks.definitions.hook_alternate_fire_stop))
 Factory.add_to_group(AchievementStats, Factory.create_flag_switch("lunge_active", Hooks.definitions.hook_lunge_start, Hooks.definitions.hook_lunge_stop))
@@ -67,6 +70,150 @@ local function _add_generic_weapon_stats(category_name)
 	Factory.add_to_group(AchievementStats, Factory.create_simple(missions_won_with_weapon_id, Hooks.definitions.hook_mission, Activations.on_condition(Conditions.all(Conditions.param_has_value(Hooks.definitions.hook_mission, "win", true), Conditions.flag_is_set(AchievementStats.definitions[kill_flag_id])), Activations.clamp(Activations.increment, 0, 250)), {
 		Flags.save_to_backend
 	}))
+end
+
+local function _add_weakspot_kill_weapon_stat(category_name)
+	local echo_id = string.format("weakspot_kill_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_echo(echo_id, Hooks.definitions.hook_kill, Conditions.all(Conditions.weapon_has_keywords(Hooks.definitions.hook_kill, WeaponCategories[category_name]), Conditions.is_weakspot(Hooks.definitions.hook_kill))))
+
+	local total_stat_id = string.format("total_weakspot_kill_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_simple(total_stat_id, AchievementStats.definitions[echo_id], Activations.clamp(Activations.increment, 0, 10000), {
+		Flags.save_to_backend
+	}))
+
+	local stat_flag_id = string.format("_flag_%s_weakspot_kill", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_flag(stat_flag_id, AchievementStats.definitions[echo_id]))
+end
+
+local function _add_horde_kill_weapon_stat(category_name)
+	local echo_id = string.format("horde_kill_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_echo(echo_id, Hooks.definitions.hook_kill, Conditions.all(Conditions.weapon_has_keywords(Hooks.definitions.hook_kill, WeaponCategories[category_name]), Conditions.breed_has_tag(Hooks.definitions.hook_kill, "horde"))))
+
+	local total_stat_id = string.format("total_horde_kill_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_simple(total_stat_id, AchievementStats.definitions[echo_id], Activations.clamp(Activations.increment, 0, 10000), {
+		Flags.save_to_backend
+	}))
+
+	local stat_flag_id = string.format("_flag_%s_horde_kill", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_flag(stat_flag_id, AchievementStats.definitions[echo_id]))
+end
+
+local function _add_elite_kill_weapon_stat(category_name)
+	local echo_id = string.format("elite_kill_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_echo(echo_id, Hooks.definitions.hook_kill, Conditions.all(Conditions.weapon_has_keywords(Hooks.definitions.hook_kill, WeaponCategories[category_name]), Conditions.breed_has_tag(Hooks.definitions.hook_kill, "elite"))))
+
+	local total_stat_id = string.format("total_elite_kill_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_simple(total_stat_id, AchievementStats.definitions[echo_id], Activations.clamp(Activations.increment, 0, 2500), {
+		Flags.save_to_backend
+	}))
+
+	local stat_flag_id = string.format("_flag_%s_elite_kill", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_flag(stat_flag_id, AchievementStats.definitions[echo_id]))
+end
+
+local function _add_horde_damage_weapon_stat(category_name)
+	local echo_id = string.format("horde_damage_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_echo(echo_id, Hooks.definitions.hook_damage, Conditions.all(Conditions.weapon_has_keywords(Hooks.definitions.hook_damage, WeaponCategories[category_name]), Conditions.breed_has_tag(Hooks.definitions.hook_damage, "horde"))))
+
+	local total_stat_id = string.format("total_horde_damage_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_simple(total_stat_id, AchievementStats.definitions[echo_id], Activations.clamp(Activations.increment, 0, 5000000), {
+		Flags.save_to_backend
+	}))
+
+	local stat_flag_id = string.format("_flag_%s_horde_damage", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_flag(stat_flag_id, AchievementStats.definitions[echo_id]))
+end
+
+local function _add_monster_damage_weapon_stat(category_name)
+	local echo_id = string.format("monster_damage_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_echo(echo_id, Hooks.definitions.hook_damage, Conditions.all(Conditions.weapon_has_keywords(Hooks.definitions.hook_damage, WeaponCategories[category_name]), Conditions.breed_has_tag(Hooks.definitions.hook_damage, "monster"))))
+
+	local total_stat_id = string.format("total_monster_damage_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_simple(total_stat_id, AchievementStats.definitions[echo_id], Activations.clamp(Activations.increment, 0, 2000000), {
+		Flags.save_to_backend
+	}))
+
+	local stat_flag_id = string.format("_flag_%s_monster_damage", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_flag(stat_flag_id, AchievementStats.definitions[echo_id]))
+end
+
+local function _add_finesse_damage_weapon_stat(category_name)
+	local echo_id = string.format("finesse_damage_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_echo(echo_id, Hooks.definitions.hook_damage, Conditions.all(Conditions.weapon_has_keywords(Hooks.definitions.hook_damage, WeaponCategories[category_name]), Conditions.is_finesse_hit(Hooks.definitions.hook_damage))))
+
+	local total_stat_id = string.format("total_finesse_damage_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_simple(total_stat_id, AchievementStats.definitions[echo_id], Activations.clamp(Activations.increment, 0, 2000000), {
+		Flags.save_to_backend
+	}))
+
+	local stat_flag_id = string.format("_flag_%s_finesse_damage", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_flag(stat_flag_id, AchievementStats.definitions[echo_id]))
+end
+
+local function _add_enemy_staggers_weapon_stat(category_name)
+	local echo_id = string.format("enemy_staggers_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_echo(echo_id, Hooks.definitions.hook_damage, Conditions.all(Conditions.weapon_has_keywords(Hooks.definitions.hook_damage, WeaponCategories[category_name]), Conditions.is_staggering_hit(Hooks.definitions.hook_damage))))
+
+	local total_stat_id = string.format("total_enemy_staggers_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_simple(total_stat_id, AchievementStats.definitions[echo_id], Activations.clamp(Activations.increment, 0, 100000), {
+		Flags.save_to_backend
+	}))
+
+	local stat_flag_id = string.format("_flag_%s_enemy_staggers", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_flag(stat_flag_id, AchievementStats.definitions[echo_id]))
+end
+
+local function _add_apply_burn_weapon_stat(category_name)
+	local echo_id = string.format("apply_burn_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_echo(echo_id, Hooks.definitions.hook_buff, Conditions.all(Conditions.weapon_has_keywords(Hooks.definitions.hook_buff, WeaponCategories[category_name]), Conditions.is_initial_buff_application(Hooks.definitions.hook_buff, "flamer_assault"))))
+
+	local total_stat_id = string.format("total_apply_burn_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_simple(total_stat_id, AchievementStats.definitions[echo_id], Activations.clamp(Activations.increment, 0, 100000), {
+		Flags.save_to_backend
+	}))
+
+	local stat_flag_id = string.format("_flag_%s_apply_burn", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_flag(stat_flag_id, AchievementStats.definitions[echo_id]))
+end
+
+local function _add_apply_warpfire_weapon_stat(category_name)
+	local echo_id = string.format("apply_warpfire_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_echo(echo_id, Hooks.definitions.hook_buff, Conditions.all(Conditions.weapon_has_keywords(Hooks.definitions.hook_buff, WeaponCategories[category_name]), Conditions.is_initial_buff_application(Hooks.definitions.hook_buff, "warp_fire"))))
+
+	local total_stat_id = string.format("total_apply_warpfire_%s", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_simple(total_stat_id, AchievementStats.definitions[echo_id], Activations.clamp(Activations.increment, 0, 100000), {
+		Flags.save_to_backend
+	}))
+
+	local stat_flag_id = string.format("_flag_%s_apply_warpfire", category_name)
+
+	Factory.add_to_group(AchievementStats, Factory.create_flag(stat_flag_id, AchievementStats.definitions[echo_id]))
 end
 
 for i = 1, #_specializations do
@@ -189,7 +336,9 @@ _kill_group("renegade_killed", 1, BreedGroups.renegade)
 Factory.add_to_group(AchievementStats, Factory.create_simple("total_renegade_grenadier_melee", AchievementStats.definitions._echo_renegade_grenadier_kills, Activations.on_condition(Conditions.param_has_value(AchievementStats.definitions._echo_renegade_grenadier_kills, "weapon_attack_type", "melee"), Activations.clamp(Activations.increment, 0, 10)), {
 	Flags.save_to_backend
 }))
-Factory.add_to_group(AchievementStats, Factory.create_simple("total_renegade_executors_non_headshot", AchievementStats.definitions._echo_renegade_executor_kills, Activations.on_condition(Conditions.inverse(_weakspot_condition), Activations.clamp(Activations.increment, 0, 10)), {
+Factory.add_to_group(AchievementStats, Factory.create_simple("total_renegade_executors_non_headshot", AchievementStats.definitions._echo_renegade_executor_kills, Activations.on_condition(Conditions.inverse(Conditions.any(Conditions.is_weakspot(AchievementStats.definitions._echo_renegade_executor_kills), Conditions.calculated_value_comparasions(Values.stat(AchievementStats.definitions._echo_renegade_executor_kills, AchievementStats.definitions.weakspot_by_id, {
+	id = "id"
+}, {}), Values.constant(1), Comparators.equals))), Activations.clamp(Activations.increment, 0, 10)), {
 	Flags.save_to_backend
 }))
 Factory.add_to_group(AchievementStats, Factory.create_simple("total_cultist_berzerker_head", AchievementStats.definitions._echo_cultist_berzerker_kills, Activations.on_condition(Conditions.param_has_value(AchievementStats.definitions._echo_cultist_berzerker_kills, "hit_zone_name", "head"), Activations.clamp(Activations.increment, 0, 10)), {
@@ -380,5 +529,13 @@ Factory.add_to_group(AchievementStats, Factory.create_simple("perfect_hacks", Ho
 Factory.add_to_group(AchievementStats, Factory.create_simple("total_scans", Hooks.definitions.hook_scanned_objects, Activations.clamp(Activations.sum, 0, 200), {
 	Flags.save_to_backend
 }))
+
+local MissionTemplates = require("scripts/settings/mission/mission_templates")
+
+for name, _ in pairs(MissionTemplates) do
+	Factory.add_to_group(AchievementStats, Factory.create_simple(string.format("__m_%s_md", name), Hooks.definitions.hook_mission, Activations.on_condition(Conditions.all(Conditions.param_has_value(Hooks.definitions.hook_mission, "mission_name", name), Conditions.param_has_value(Hooks.definitions.hook_mission, "win", true)), Activations.replace_trigger_value(Activations.max, Values.param(Hooks.definitions.hook_mission, "difficulty"))), {
+		Flags.save_to_backend
+	}))
+end
 
 return AchievementStats

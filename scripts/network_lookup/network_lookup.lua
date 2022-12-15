@@ -119,6 +119,11 @@ NetworkLookup.damage_types = _create_lookup({
 }, DamageSettings.damage_types)
 NetworkLookup.dialogues = DialogueLookup
 NetworkLookup.dialogues_all_concepts = table.clone(DialogueLookupConcepts.all_concepts)
+NetworkLookup.dynamic_smart_tag = {
+	"aggroed",
+	"renegade_netgunner",
+	"seen_netgunner_flee"
+}
 NetworkLookup.door_control_panel_states = {
 	"active",
 	"inactive"
@@ -141,6 +146,7 @@ NetworkLookup.game_object_types = {
 	"unit_template",
 	"music_parameters",
 	"scanning_device",
+	"materials_collected",
 	"server_unit_data_state",
 	"server_husk_data_state",
 	"server_husk_hud_data_state"
@@ -160,6 +166,14 @@ NetworkLookup.level_props_names = _create_lookup({}, LevelProps)
 NetworkLookup.light_controller_flicker_settings = _create_lookup({}, LightControllerFlickerSettings)
 NetworkLookup.line_effects = _create_lookup({}, LineEffects)
 NetworkLookup.liquid_area_template_names = _create_lookup({}, LiquidAreaTemplates)
+NetworkLookup.material_type_lookup = {
+	"diamantine",
+	"plasteel"
+}
+NetworkLookup.material_size_lookup = {
+	"large",
+	"small"
+}
 NetworkLookup.moveable_platform_direction = {
 	"none",
 	"forward",

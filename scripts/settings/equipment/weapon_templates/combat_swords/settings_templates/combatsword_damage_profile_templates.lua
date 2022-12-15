@@ -52,22 +52,22 @@ local cutting_am = {
 local p2_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
-		[armor_types.armored] = damage_lerp_values.lerp_0_3,
+		[armor_types.armored] = damage_lerp_values.lerp_0_5,
 		[armor_types.resistant] = damage_lerp_values.lerp_0_5,
 		[armor_types.player] = damage_lerp_values.no_damage,
 		[armor_types.berserker] = damage_lerp_values.lerp_1,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
-		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 		[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 		[armor_types.prop_armor] = damage_lerp_values.lerp_0_5
 	},
 	impact = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
-		[armor_types.armored] = damage_lerp_values.lerp_0_5,
+		[armor_types.armored] = damage_lerp_values.lerp_0_75,
 		[armor_types.resistant] = damage_lerp_values.lerp_1,
 		[armor_types.player] = damage_lerp_values.lerp_1,
-		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 		[armor_types.void_shield] = damage_lerp_values.lerp_1,
 		[armor_types.prop_armor] = damage_lerp_values.lerp_1
@@ -196,6 +196,18 @@ damage_templates.light_combatsword_linesman_p2 = {
 			},
 			power_distribution = {
 				attack = {
+					40,
+					80
+				},
+				impact = {
+					3,
+					6
+				}
+			}
+		},
+		{
+			power_distribution = {
+				attack = {
 					35,
 					70
 				},
@@ -212,8 +224,8 @@ damage_templates.light_combatsword_linesman_p2 = {
 					60
 				},
 				impact = {
-					3,
-					6
+					2,
+					4
 				}
 			}
 		},
@@ -241,23 +253,11 @@ damage_templates.light_combatsword_linesman_p2 = {
 				}
 			}
 		},
-		{
-			power_distribution = {
-				attack = {
-					15,
-					30
-				},
-				impact = {
-					2,
-					4
-				}
-			}
-		},
 		default_target = {
 			power_distribution = {
 				attack = {
-					8,
-					12
+					20,
+					40
 				},
 				impact = {
 					2,
@@ -295,8 +295,8 @@ damage_templates.light_combatsword_linesman_tank_p2 = {
 			},
 			power_distribution = {
 				attack = {
-					25,
-					50
+					35,
+					70
 				},
 				impact = {
 					6,
@@ -307,8 +307,8 @@ damage_templates.light_combatsword_linesman_tank_p2 = {
 		{
 			power_distribution = {
 				attack = {
-					20,
-					40
+					30,
+					60
 				},
 				impact = {
 					5,
@@ -319,8 +319,8 @@ damage_templates.light_combatsword_linesman_tank_p2 = {
 		{
 			power_distribution = {
 				attack = {
-					20,
-					40
+					30,
+					60
 				},
 				impact = {
 					4.5,
@@ -331,8 +331,8 @@ damage_templates.light_combatsword_linesman_tank_p2 = {
 		{
 			power_distribution = {
 				attack = {
-					15,
-					30
+					25,
+					50
 				},
 				impact = {
 					4,
@@ -343,8 +343,8 @@ damage_templates.light_combatsword_linesman_tank_p2 = {
 		{
 			power_distribution = {
 				attack = {
-					15,
-					30
+					25,
+					50
 				},
 				impact = {
 					3,
@@ -355,8 +355,8 @@ damage_templates.light_combatsword_linesman_tank_p2 = {
 		default_target = {
 			power_distribution = {
 				attack = {
-					8,
-					12
+					20,
+					40
 				},
 				impact = {
 					3,

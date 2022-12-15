@@ -1,5 +1,73 @@
 local volume_data = {
 	{
+		height = 6,
+		type = "content/volume_types/player_mover_blocker",
+		name = "volume_player_blocker_habs_a_001",
+		alt_max_vector = {
+			135,
+			-220.5,
+			10
+		},
+		alt_min_vector = {
+			135,
+			-220.5,
+			4
+		},
+		bottom_points = {
+			{
+				132.5,
+				-221.5,
+				4
+			},
+			{
+				136,
+				-221.5,
+				4
+			},
+			{
+				136.25,
+				-221,
+				4
+			},
+			{
+				136.25,
+				-219.75,
+				4
+			},
+			{
+				136,
+				-219.5,
+				4
+			},
+			{
+				132.5,
+				-219.5,
+				4
+			},
+			{
+				132.25,
+				-219.75,
+				4
+			},
+			{
+				132.25,
+				-221.25,
+				4
+			}
+		},
+		color = {
+			255,
+			255,
+			125,
+			0
+		},
+		up_vector = {
+			0,
+			0,
+			1
+		}
+	},
+	{
 		height = 5,
 		type = "content/volume_types/player_mover_blocker",
 		name = "volume",

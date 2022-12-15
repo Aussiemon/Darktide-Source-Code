@@ -23,16 +23,21 @@ local function _set_current_percentage(warp_charge_component, new_percentage, bu
 	warp_charge_component.current_percentage = new_percentage
 end
 
-WarpCharge.check_and_set_state = function (t, warp_charge_component, prevent_explosion)
+WarpCharge.check_new_state = function (warp_charge_component, prevent_explosion)
 	local state = warp_charge_component.state
 	local starting_percentage = warp_charge_component.starting_percentage
 	local current_percentage = warp_charge_component.current_percentage
 
 	if not prevent_explosion and current_percentage >= 1 and starting_percentage >= 1 then
-		state = "exploding"
+		return "exploding"
 	end
 
-	warp_charge_component.state = state
+	return state
+end
+
+WarpCharge.check_and_set_state = function (t, warp_charge_component, prevent_explosion)
+	local new_state = WarpCharge.check_new_state(warp_charge_component, prevent_explosion)
+	warp_charge_component.state = new_state
 end
 
 WarpCharge.start_warp_action = function (t, warp_charge_component)
@@ -201,15 +206,20 @@ end
 
 WarpCharge.can_vent = function (warp_charge_component)
 	local warp_charge_state = warp_charge_component.state
+	local new_state = WarpCharge.check_new_state(warp_charge_component)
 	local warp_charge_current_percentage = warp_charge_component.current_percentage
 
-	return warp_charge_state ~= "exploding" and warp_charge_current_percentage > 0
+	return warp_charge_state ~= "exploding" and new_state ~= "exploding" and warp_charge_current_percentage > 0
 end
 
 WarpCharge.start_venting = function (t, player, warp_charge_component)
 	local specialization_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
 
 	if not specialization_warp_charge_template then
+		return
+	end
+
+	if warp_charge_component.state == "exploding" then
 		return
 	end
 
@@ -271,6 +281,10 @@ WarpCharge.update_venting = function (dt, t, player, warp_charge_component)
 end
 
 WarpCharge.stop_venting = function (warp_charge_component)
+	if warp_charge_component.state == "exploding" then
+		return
+	end
+
 	warp_charge_component.state = "idle"
 end
 

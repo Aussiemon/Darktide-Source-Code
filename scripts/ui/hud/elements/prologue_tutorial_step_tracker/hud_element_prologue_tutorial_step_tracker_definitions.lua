@@ -99,12 +99,10 @@ local widget_definitions = {
 			}
 		},
 		{
-			vertical_alignment = "center",
+			value_id = "description_text",
 			pass_type = "text",
 			style_id = "description_text",
 			value = "",
-			value_id = "description_text",
-			horizontal_alignment = "center",
 			style = description_text_style
 		}
 	}, "entry_pivot")

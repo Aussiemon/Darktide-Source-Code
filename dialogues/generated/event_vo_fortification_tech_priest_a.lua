@@ -35,24 +35,18 @@ local event_vo_fortification_tech_priest_a = {
 	},
 	event_fortification_kill_stragglers = {
 		randomize_indexes_n = 0,
-		sound_events_n = 4,
+		sound_events_n = 2,
 		sound_events = {
-			"loc_tech_priest_a__info_event_demolition_corruptors_almost_done_01",
-			"loc_tech_priest_a__info_event_demolition_corruptors_almost_done_02",
-			"loc_tech_priest_a__info_event_demolition_corruptors_almost_done_03",
-			"loc_tech_priest_a__info_event_demolition_corruptors_almost_done_04"
+			[1.0] = "loc_tech_priest_a__info_event_demolition_corruptors_almost_done_03",
+			[2.0] = "loc_tech_priest_a__info_event_demolition_corruptors_almost_done_04"
 		},
 		sound_events_duration = {
-			6.539417,
-			4.304729,
-			5.930875,
-			4.937187
+			[1.0] = 5.930875,
+			[2.0] = 4.937187
 		},
 		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
+			[1.0] = 0.5,
+			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},

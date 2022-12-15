@@ -12,7 +12,13 @@ WarpChargeActionModule.init = function (self, player_unit, action_settings, inve
 end
 
 WarpChargeActionModule.start = function (self, action_settings, t)
-	self._warp_charge_component.state = "increasing"
+	local warp_charge_component = self._warp_charge_component
+
+	if warp_charge_component.state == "exploding" then
+		return
+	end
+
+	warp_charge_component.state = "increasing"
 	self._first_charge = true
 end
 
@@ -28,7 +34,13 @@ WarpChargeActionModule.fixed_update = function (self, dt, t)
 end
 
 WarpChargeActionModule.finish = function (self, reason, data, t)
-	self._warp_charge_component.state = "idle"
+	local warp_charge_component = self._warp_charge_component
+
+	if warp_charge_component.state == "exploding" then
+		return
+	end
+
+	warp_charge_component.state = "idle"
 end
 
 WarpChargeActionModule.running_action_state = function (self, t, time_in_action)

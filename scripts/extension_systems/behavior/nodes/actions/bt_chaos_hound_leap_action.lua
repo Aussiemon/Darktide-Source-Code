@@ -353,15 +353,17 @@ end
 BtChaosHoundLeapAction._start_landing = function (self, scratchpad, action_data, current_velocity, t)
 	scratchpad.state = "landing"
 	scratchpad.landing_duration = t + action_data.landing_duration
+	local animation_extension = scratchpad.animation_extension
 	local land_anim_event = action_data.land_anim_event
 
-	scratchpad.animation_extension:anim_event(land_anim_event)
+	animation_extension:anim_event(land_anim_event)
 
+	local locomotion_extension = scratchpad.locomotion_extension
 	local anim_driven = true
 	local affected_by_gravity = true
 
-	scratchpad.locomotion_extension:set_anim_driven(anim_driven, affected_by_gravity)
-	scratchpad.locomotion_extension:use_lerp_rotation(false)
+	locomotion_extension:set_anim_driven(anim_driven, affected_by_gravity, nil, OVERRIDE_SPEED_Z)
+	locomotion_extension:use_lerp_rotation(false)
 end
 
 BtChaosHoundLeapAction._start_wall_jump = function (self, unit, scratchpad, action_data, wall_normal)

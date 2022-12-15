@@ -584,6 +584,7 @@ weapon_template.alternate_fire_settings = {
 	crosshair_type = "none",
 	stop_anim_event_3p = "to_unaim_ironsight",
 	start_anim_event = "to_ironsight",
+	look_delta_template = "default_aiming",
 	camera = {
 		custom_vertical_fov = 40,
 		vertical_fov = 54,

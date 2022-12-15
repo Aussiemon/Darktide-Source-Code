@@ -99,7 +99,7 @@ SideMissionPickupSynchronizerExtension.grant_grimoire = function (self, player_u
 	local slot_pocketable = "slot_pocketable"
 	local item_name = inventory_component[slot_pocketable]
 
-	if not item_name == "not_equipped" then
+	if item_name ~= "not_equipped" then
 		return
 	end
 

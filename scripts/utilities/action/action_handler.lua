@@ -287,20 +287,20 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 	local player_unit = self._unit
 	local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
 	local weapon_handling_template = weapon_extension:weapon_handling_template() or EMPTY_TABLE
-	local time_scale = weapon_handling_template.time_scale or 1
+	local weapon_handling_time_scale = weapon_handling_template.time_scale or 1
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local stat_buffs = buff_extension:stat_buffs()
 	local action_time_scale_stat_buffs = action_settings.time_scale_stat_buffs
 
 	if not action_time_scale_stat_buffs then
-		return time_scale
+		return weapon_handling_time_scale
 	end
 
 	local num_applied_stat_buffs = 0
 	local total_modifier = 0
 
-	for i = 1, #action_time_scale_stat_buffs do
-		local keyword = action_time_scale_stat_buffs[i]
+	for ii = 1, #action_time_scale_stat_buffs do
+		local keyword = action_time_scale_stat_buffs[ii]
 		local stat_buff_value = stat_buffs[keyword]
 
 		if stat_buff_value then
@@ -310,9 +310,10 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 	end
 
 	total_modifier = total_modifier - (num_applied_stat_buffs - 1)
+	local time_scale = weapon_handling_time_scale * total_modifier
 	local min = NetworkConstants.action_time_scale.min
-	local max = NetworkConstants.action_time_scale.max
-	time_scale = math.clamp(time_scale * total_modifier, min, max)
+	local max = 2
+	time_scale = math.clamp(time_scale, min, max)
 
 	return time_scale
 end
@@ -504,7 +505,7 @@ ActionHandler.update_actions = function (self, fixed_frame, id, condition_func_p
 
 		self:start_action(id, action_objects, action_name, action_params, action_settings, used_input, t, transition_type, condition_func_params, automatic_input, reset_combo)
 	else
-		automatic_input = self:_update_stop_input(id, handler_data, t)
+		automatic_input = self:_update_stop_input(id, handler_data, t, condition_func_params, action_params)
 
 		if automatic_input then
 			self._action_input_extension:action_transitioned_with_automatic_input(id, automatic_input, t)
@@ -766,7 +767,7 @@ ActionHandler._check_new_actions = function (self, handler_data, actions, condit
 	return nil
 end
 
-ActionHandler._update_stop_input = function (self, id, handler_data, t)
+ActionHandler._update_stop_input = function (self, id, handler_data, t, condition_func_params, action_params)
 	local running_action = handler_data.running_action
 	local has_running_action = running_action ~= nil
 
@@ -788,6 +789,20 @@ ActionHandler._update_stop_input = function (self, id, handler_data, t)
 
 	if minimum_hold_time and t < start_t + minimum_hold_time then
 		return
+	end
+
+	local conditional_states_to_hold = action_settings.conditional_states_to_hold
+
+	if conditional_states_to_hold then
+		for i = 1, #conditional_states_to_hold do
+			local condition_key = conditional_states_to_hold[i]
+			local func = self._conditional_state_functions[condition_key]
+			local remaining_time = component.end_t - t
+
+			if func(condition_func_params, action_params, remaining_time, t) then
+				return
+			end
+		end
 	end
 
 	local action_input_extension = self._action_input_extension

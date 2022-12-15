@@ -675,7 +675,7 @@ local talent_settings = {
 			damage = 0.15
 		},
 		offensive_1_2 = {
-			vent_speed = 0.64,
+			vent_speed = 1,
 			warp_charge_capacity = 0.64
 		},
 		offensive_1_3 = {

@@ -1008,6 +1008,7 @@ weapon_template.sprint_template = "killshot"
 weapon_template.stamina_template = "lasrifle"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
+weapon_template.smart_targeting_template = SmartTargetingTemplates.killshot
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.overclocks = {
 	stability_up_ammo_down = {

@@ -236,8 +236,8 @@ local smart_targeting_templates = {
 	smite = {
 		precision_target = {
 			max_range = 100,
-			hit_dot_check = 0.995,
 			min_range = 1,
+			hit_dot_check = 0.995,
 			breed_weights = {
 				chaos_poxwalker_bomber = 20,
 				chaos_ogryn_executor = 10,
@@ -263,7 +263,8 @@ local smart_targeting_templates = {
 			},
 			min_angle = _degrees_to_radians(0.05),
 			max_angle = _degrees_to_radians(0.1),
-			wanted_target = TORSO
+			wanted_target = TORSO,
+			wanted_target_fallback = HEAD
 		},
 		aim_assist = {
 			base_multiplier = 0.07,
@@ -286,7 +287,8 @@ local smart_targeting_templates = {
 			breed_weights = {},
 			min_angle = _degrees_to_radians(0.05),
 			max_angle = _degrees_to_radians(0.1),
-			wanted_target = TORSO
+			wanted_target = TORSO,
+			wanted_target_fallback = HEAD
 		},
 		aim_assist = {
 			base_multiplier = 0.07,
@@ -314,9 +316,9 @@ local smart_targeting_templates = {
 	smart_tag_target = {
 		precision_target = {
 			max_range = 100,
-			max_unit_range = 100,
 			min_range = 1,
 			smart_tagging = true,
+			max_unit_range = 100,
 			breed_weights = {
 				chaos_poxwalker_bomber = 60,
 				chaos_ogryn_executor = 10,
@@ -342,7 +344,8 @@ local smart_targeting_templates = {
 			},
 			min_angle = _degrees_to_radians(0.05),
 			max_angle = _degrees_to_radians(0.1),
-			wanted_target = TORSO
+			wanted_target = TORSO,
+			wanted_target_fallback = HEAD
 		}
 	}
 }

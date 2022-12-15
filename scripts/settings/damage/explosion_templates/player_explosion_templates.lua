@@ -304,11 +304,17 @@ local explosion_templates = {
 	},
 	powermaul_activated_impact = {
 		static_power_level = 500,
-		radius = 5,
-		min_radius = 5,
-		close_radius = 2.5,
+		min_radius = 2,
 		collision_filter = "filter_player_character_explosion",
-		min_close_radius = 2.5,
+		min_close_radius = 1,
+		radius = {
+			4,
+			8
+		},
+		close_radius = {
+			1,
+			3
+		},
 		close_damage_profile = DamageProfileTemplates.powermaul_explosion,
 		close_damage_type = damage_types.blunt_thunder,
 		damage_profile = DamageProfileTemplates.powermaul_explosion_outer,

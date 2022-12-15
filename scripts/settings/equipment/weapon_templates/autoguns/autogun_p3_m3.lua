@@ -832,7 +832,7 @@ weapon_template.alternate_fire_settings = {
 	start_anim_event = "to_ironsight",
 	look_delta_template = "default_aiming",
 	camera = {
-		custom_vertical_fov = 40,
+		custom_vertical_fov = 45,
 		vertical_fov = 54,
 		near_range = 0.025
 	},

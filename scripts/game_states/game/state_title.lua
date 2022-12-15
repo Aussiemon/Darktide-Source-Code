@@ -494,8 +494,7 @@ StateTitle._signin = function (self)
 			Managers.dlc:initialize()
 		end
 
-		Managers.account:refresh_communcation_restrictions()
-		Managers.account:fetch_crossplay_restrictions()
+		Managers.data_service.social:refresh_communication_restrictions()
 	end)
 end
 

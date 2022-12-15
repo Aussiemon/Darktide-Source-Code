@@ -82,57 +82,17 @@ suppression_templates.default_autogun_assault = {
 }
 suppression_templates.fullauto_autogun_killshot = {
 	still = {
-		delay = 0.8,
-		decay_time = 0.25,
+		delay = 0.2,
+		decay_time = 0.6,
 		immediate_sway = {
 			{
 				pitch = {
-					lerp_perfect = 3,
-					lerp_basic = 6
+					lerp_perfect = 4,
+					lerp_basic = 8
 				},
 				yaw = {
-					lerp_perfect = 3,
-					lerp_basic = 6
-				}
-			},
-			{
-				pitch = {
-					lerp_perfect = 2.5,
-					lerp_basic = 5.5
-				},
-				yaw = {
-					lerp_perfect = 2.5,
-					lerp_basic = 5.5
-				}
-			},
-			{
-				pitch = {
-					lerp_perfect = 2,
-					lerp_basic = 5
-				},
-				yaw = {
-					lerp_perfect = 2,
-					lerp_basic = 5
-				}
-			},
-			{
-				pitch = {
-					lerp_perfect = 1.5,
-					lerp_basic = 4.5
-				},
-				yaw = {
-					lerp_perfect = 1.5,
-					lerp_basic = 4.5
-				}
-			},
-			{
-				pitch = {
-					lerp_perfect = 1,
-					lerp_basic = 4
-				},
-				yaw = {
-					lerp_perfect = 1,
-					lerp_basic = 4
+					lerp_perfect = 4,
+					lerp_basic = 8
 				}
 			}
 		}

@@ -2024,7 +2024,13 @@ FlowCallbacks.minion_check_velocity_threshold = function (params)
 end
 
 FlowCallbacks.render_static_shadows = function (params)
-	Renderer.bake_static_shadows()
+	local world_name = "level_world"
+
+	if Managers.world:has_world(world_name) then
+		local world = Managers.world:world(world_name)
+
+		World.set_data(world, "shadow_baked", false)
+	end
 end
 
 FlowCallbacks.light_controller_set_light_flicker_config = function (params)

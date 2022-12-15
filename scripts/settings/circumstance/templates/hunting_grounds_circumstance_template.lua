@@ -9,7 +9,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_hunting_grounds_description",
 			icon = "content/ui/materials/icons/circumstances/hunting_grounds_01",
 			display_name = "loc_circumstance_hunting_grounds_title",
-			favourable_to_players = true
+			happening_display_name = "loc_happening_hunting_grounds"
 		}
 	}
 }

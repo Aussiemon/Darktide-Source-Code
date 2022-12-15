@@ -3378,32 +3378,6 @@ local conversations_core_psyker_male_c = {
 		},
 		randomize_indexes = {}
 	},
-	lore_enemy_within_one_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1.0] = "loc_psyker_male_c__lore_enemy_within_one_b_01",
-			[2.0] = "loc_psyker_male_c__lore_enemy_within_one_b_02"
-		},
-		sound_events_duration = {
-			[1.0] = 3.991917,
-			[2.0] = 5.357615
-		},
-		randomize_indexes = {}
-	},
-	lore_enemy_within_one_c = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1.0] = "loc_psyker_male_c__lore_enemy_within_one_c_01",
-			[2.0] = "loc_psyker_male_c__lore_enemy_within_one_c_02"
-		},
-		sound_events_duration = {
-			[1.0] = 3.60549,
-			[2.0] = 5.64924
-		},
-		randomize_indexes = {}
-	},
 	lore_enemy_within_three_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 3,

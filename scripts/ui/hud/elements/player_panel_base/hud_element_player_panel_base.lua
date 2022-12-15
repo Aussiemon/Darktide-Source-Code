@@ -1291,7 +1291,7 @@ HudElementPlayerPanelBase._update_player_name_prefix = function (self, player)
 end
 
 HudElementPlayerPanelBase._chat_manager_participant_update = function (self, channel_handle, participant)
-	if not participant.is_current_user and self._player and not self._player.__deleted and self._player._peer_id == participant.peer_id then
+	if self._player and not self._player.__deleted and self._player._peer_id == participant.peer_id then
 		self._is_player_speaking = participant.is_speaking
 	end
 end

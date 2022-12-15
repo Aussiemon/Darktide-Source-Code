@@ -14,7 +14,6 @@ local template_type_paths = {
 	[template_types.size_of_flame] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/size_of_flame_trait_templates",
 	[template_types.spread] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/spread_trait_templates",
 	[template_types.sprint] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/sprint_trait_templates",
-	[template_types.stagger_duration_modifier] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/stagger_duration_modifier_trait_templates",
 	[template_types.stamina] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/stamina_trait_templates",
 	[template_types.sway] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/sway_trait_templates",
 	[template_types.warp_charge] = "scripts/settings/equipment/weapon_templates/weapon_trait_templates/warp_charge_trait_templates",

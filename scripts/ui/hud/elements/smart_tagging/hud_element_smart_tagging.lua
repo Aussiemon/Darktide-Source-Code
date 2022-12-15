@@ -278,12 +278,11 @@ HudElementSmartTagging._on_com_wheel_stop_callback = function (self, t, ui_rende
 
 			if chat_message_data then
 				local text = chat_message_data.text
-				local text_localized = Localize(text)
 				local channel_tag = chat_message_data.channel
-				local channel, channel_handle = self:_get_chat_channe_by_tag(channel_tag)
+				local channel, channel_handle = self:_get_chat_channel_by_tag(channel_tag)
 
 				if channel then
-					Managers.chat:send_channel_message(channel_handle, text_localized)
+					Managers.chat:send_loc_channel_message(channel_handle, text, nil)
 				end
 			end
 
@@ -338,7 +337,7 @@ HudElementSmartTagging._on_com_wheel_stop_callback = function (self, t, ui_rende
 	Managers.event:trigger("event_set_communication_wheel_state", "inactive")
 end
 
-HudElementSmartTagging._get_chat_channe_by_tag = function (self, channel_tag)
+HudElementSmartTagging._get_chat_channel_by_tag = function (self, channel_tag)
 	local channels = Managers.chat:connected_chat_channels()
 
 	if channels then

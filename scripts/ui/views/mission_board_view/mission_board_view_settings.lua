@@ -175,6 +175,13 @@ local MissionBoardViewSettings = {
 				return true
 			end
 		}
+	},
+	mission_difficulty_complete_icons = {
+		"content/ui/materials/icons/mission_difficulty_complete/difficulty_completed_1",
+		"content/ui/materials/icons/mission_difficulty_complete/difficulty_completed_2",
+		"content/ui/materials/icons/mission_difficulty_complete/difficulty_completed_3",
+		"content/ui/materials/icons/mission_difficulty_complete/difficulty_completed_4",
+		"content/ui/materials/icons/mission_difficulty_complete/difficulty_completed_5"
 	}
 }
 

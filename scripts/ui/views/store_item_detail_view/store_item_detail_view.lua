@@ -276,6 +276,8 @@ StoreItemDetailView._is_owned = function (self, items)
 end
 
 StoreItemDetailView._setup_item_presentation = function (self, offer)
+	local description_text = nil
+
 	if #self._items == 1 then
 		local entry = self._items[1]
 		entry.offer = offer
@@ -304,6 +306,8 @@ StoreItemDetailView._setup_item_presentation = function (self, offer)
 					items[#items + 1] = item.item
 				end
 			end
+
+			description_text = Localize(entry.skin_set.description)
 		else
 			total_count = 1
 			items[1] = entry.item
@@ -321,6 +325,8 @@ StoreItemDetailView._setup_item_presentation = function (self, offer)
 					owned_count = owned_count + 1
 				end
 			end
+
+			description_text = Localize(entry.visual_item.description)
 		end
 
 		if items[1] then
@@ -370,6 +376,7 @@ StoreItemDetailView._setup_item_presentation = function (self, offer)
 		local item_type_localization_key = UISettings.item_type_localization_lookup[item_type]
 		local item_type_display_name_localized = item_type_localization_key and Localize(item_type_localization_key) or "<undefined item_type>"
 		self._widgets_by_name.title.content.sub_text = item_type_display_name_localized
+		description_text = offer.sku.description
 	end
 
 	local title_style = self._widgets_by_name.title.style.text
@@ -390,7 +397,7 @@ StoreItemDetailView._setup_item_presentation = function (self, offer)
 	local title_total_size = sub_title_style.offset[2] + sub_title_height
 	local title_scenegraph_position = self._ui_scenegraph.title.position
 	local margin = 30
-	local max_height = 300
+	local max_height = self._grid_widgets and 300 or 630
 	local grid_height = max_height - (title_scenegraph_position[2] + title_total_size + margin)
 
 	self:_set_scenegraph_size("title", nil, title_total_size)
@@ -398,7 +405,7 @@ StoreItemDetailView._setup_item_presentation = function (self, offer)
 	self:_set_scenegraph_size("description_grid", nil, grid_height)
 	self:_set_scenegraph_size("description_mask", nil, grid_height + 20)
 	self:_set_scenegraph_size("description_scrollbar", nil, grid_height)
-	self:_setup_description_grid(offer.sku.description)
+	self:_setup_description_grid(description_text)
 end
 
 StoreItemDetailView._update_weapon_actions_position = function (self)
@@ -650,6 +657,7 @@ StoreItemDetailView._present_single_item = function (self, element)
 		title = self._items[element.item_index].skin_set.display_name and Localize(self._items[element.item_index].skin_set.display_name) or ""
 		sub_type = self._items[element.item_index].skin_set.item_type
 		self._is_dummy_showing = true
+		self._is_weapon_showing = false
 	elseif element.visual_item.item_type == "WEAPON_RANGED" or element.visual_item.item_type == "WEAPON_MELEE" or element.visual_item.item_type == "WEAPON_SKIN" or element.visual_item.item_type == "WEAPON_TRINKET" then
 		self:_set_camera_focus(element.dummy_profile.breed)
 		self:_setup_weapon_preview()
@@ -658,12 +666,14 @@ StoreItemDetailView._present_single_item = function (self, element)
 		title = element.visual_item.display_name and element.visual_item.item_type and Localize(element.visual_item.display_name) or ""
 		sub_type = element.visual_item.item_type
 		self._is_dummy_showing = false
+		self._is_weapon_showing = true
 	else
 		self:_spawn_profile(element.dummy_profile, self._items[element.item_index].item)
 
 		title = element.visual_item.display_name and element.visual_item.item_type and Localize(element.visual_item.display_name) or ""
 		sub_type = element.visual_item.item_type
 		self._is_dummy_showing = true
+		self._is_weapon_showing = false
 	end
 
 	self._widgets_by_name.item_title.content.text = title
@@ -691,6 +701,39 @@ StoreItemDetailView._present_single_item = function (self, element)
 
 	self:_set_scenegraph_size("item_title_background", nil, sub_title_height + sub_title_style.offset[2] + margin_compensation)
 	self:_set_scenegraph_size("item_title", nil, sub_title_height + sub_title_style.offset[2] + margin_compensation)
+
+	local restrictions_text, present_text = nil
+
+	if element.visual_item.item_type == "WEAPON_SKIN" then
+		restrictions_text, present_text = ItemUtils.weapon_skin_requirement_text(element.visual_item)
+	elseif element.visual_item.item_type == "GEAR_UPPERBODY" or element.visual_item.item_type == "GEAR_EXTRA_COSMETIC" or element.visual_item.item_type == "GEAR_HEAD" or element.visual_item.item_type == "GEAR_LOWERBODY" then
+		restrictions_text, present_text = ItemUtils.class_requirement_text(element.visual_item)
+	end
+
+	if present_text then
+		self._widgets_by_name.item_restrictions.content.text = restrictions_text
+		local restriction_title_style = self._widgets_by_name.item_restrictions.style.title
+		local restriction_text_style = self._widgets_by_name.item_restrictions.style.text
+		local restriction_title_options = UIFonts.get_font_options_by_style(restriction_title_style)
+		local restriction_text_options = UIFonts.get_font_options_by_style(restriction_text_style)
+		local restriction_title_width, restriction_title_height = self:_text_size(self._widgets_by_name.item_restrictions.content.title, restriction_title_style.font_type, restriction_title_style.font_size, {
+			max_width,
+			math.huge
+		}, restriction_title_options)
+		local restriction_text_width, title_restriction_text_height = self:_text_size(self._widgets_by_name.item_restrictions.content.text, restriction_text_style.font_type, restriction_text_style.font_size, {
+			max_width,
+			math.huge
+		}, restriction_text_options)
+		local text_height = restriction_title_height + title_restriction_text_height + sub_title_margin
+
+		self:_set_scenegraph_size("item_restrictions_background", nil, text_height + margin_compensation * 2)
+		self:_set_scenegraph_size("item_restrictions", nil, text_height)
+
+		self._widgets_by_name.item_restrictions.style.text.offset[2] = restriction_title_height + sub_title_margin
+		self._widgets_by_name.item_restrictions.content.visible = true
+	else
+		self._widgets_by_name.item_restrictions.content.visible = false
+	end
 end
 
 StoreItemDetailView._destroy_grid = function (self)
@@ -1042,12 +1085,6 @@ StoreItemDetailView._set_camera_focus = function (self, breed_name, slot_name, t
 end
 
 StoreItemDetailView.on_exit = function (self)
-	if self._ui_weapon_spawner then
-		self._ui_weapon_spawner:destroy()
-
-		self._ui_weapon_spawner = nil
-	end
-
 	self:_destroy_profile()
 
 	if self._world_spawner then
@@ -1220,7 +1257,7 @@ StoreItemDetailView._update_grid_widgets_visibility = function (self)
 
 	if widgets then
 		local num_widgets = #widgets
-		local ui_renderer = self._ui_renderer
+		local ui_renderer = self._ui_offscreen_renderer
 
 		for i = 1, num_widgets do
 			local widget = widgets[i]
@@ -1306,12 +1343,6 @@ StoreItemDetailView._spawn_profile = function (self, profile, items)
 	self._spawned_profile = profile
 end
 
-StoreItemDetailView.set_item_position = function (self, position)
-	if self._ui_weapon_spawner then
-		self._ui_weapon_spawner:set_position(position)
-	end
-end
-
 StoreItemDetailView.cb_on_close_pressed = function (self)
 	if self._aquilas_showing then
 		self:_update_wallets()
@@ -1363,6 +1394,10 @@ StoreItemDetailView._hide_elements = function (self)
 	self._widgets_by_name.title.content.visible = false
 	self._widgets_by_name.title.content.visible = false
 	self._widgets_by_name.background.content.visible = false
+	self._widgets_by_name.grid_scrollbar.content.visible = false
+	self._widgets_by_name.description_scrollbar.content.visible = false
+	self._widgets_by_name.item_restrictions.content.visible = false
+	self._widgets_by_name.timer_widget.content.visible = false
 
 	self:_destroy_weapon()
 	self:_destroy_profile()
@@ -1375,6 +1410,9 @@ StoreItemDetailView._show_elements = function (self)
 	self._widgets_by_name.title.content.visible = true
 	self._widgets_by_name.title.content.visible = true
 	self._widgets_by_name.background.content.visible = true
+	self._widgets_by_name.grid_scrollbar.content.visible = true
+	self._widgets_by_name.item_restrictions.content.visible = true
+	self._widgets_by_name.timer_widget.content.visible = true
 end
 
 StoreItemDetailView._hide_item_offer = function (self)
@@ -1385,8 +1423,6 @@ StoreItemDetailView._hide_item_offer = function (self)
 	self._widgets_by_name.item_title.content.visible = false
 	self._widgets_by_name.item_title_background.content.visible = false
 	self._widgets_by_name.purchase_button.content.visible = false
-	self._widgets_by_name.grid_scrollbar.content.visible = false
-	self._widgets_by_name.description_scrollbar.content.visible = false
 	self._widgets_by_name.price_text.content.visible = false
 	self._widgets_by_name.owned_info_text.content.visible = false
 end
@@ -1395,8 +1431,6 @@ StoreItemDetailView._show_item_offer = function (self)
 	self._selected_offer = self._context.store_item.offer
 	self._widgets_by_name.item_title.content.visible = true
 	self._widgets_by_name.item_title_background.content.visible = true
-	self._widgets_by_name.description_scrollbar.content.visible = true
-	self._widgets_by_name.grid_scrollbar.content.visible = true
 	self._widgets_by_name.grid_title.content.visible = true
 
 	self:_setup_item_presentation(self._selected_offer)
@@ -1482,18 +1516,18 @@ StoreItemDetailView._show_single_item = function (self, entry)
 	local title_total_size = sub_title_style.offset[2] + sub_title_height
 	local title_scenegraph_position = self._ui_scenegraph.title.position
 	local margin = 20
-	local max_height = 300
+	local max_height = self._grid_widgets and 300 or 630
 	local grid_height = max_height - (title_scenegraph_position[2] + title_total_size + margin)
 
 	self:_set_scenegraph_size("title", nil, title_total_size)
 	self:_set_scenegraph_position("description_grid", nil, title_scenegraph_position[2] + title_total_size + margin)
 	self:_set_scenegraph_size("description_grid", nil, grid_height)
-	self:_set_scenegraph_size("description_mask", nil, grid_height)
+	self:_set_scenegraph_size("description_mask", nil, grid_height + 20)
 	self:_set_scenegraph_size("description_scrollbar", nil, grid_height)
+	self:_setup_description_grid(description_text)
 
 	self._selected_offer = entry.offer
 
-	self:_setup_description_grid(description_text)
 	self:_update_purchase_button(self._selected_offer)
 end
 
@@ -1718,8 +1752,9 @@ StoreItemDetailView._present_weapon = function (self, item)
 	self._weapon_preview:center_align(0, {
 		-0.5,
 		-2,
-		-0.1
+		-0.2
 	})
+	self._weapon_preview:set_force_allow_rotation(true)
 end
 
 StoreItemDetailView._destroy_weapon = function (self)
@@ -1749,7 +1784,12 @@ end
 StoreItemDetailView._update_price_presentation = function (self, offer)
 	local total_width = 0
 	local price_widget = self._widgets_by_name.price_text
-	local price = offer.price.amount
+	local price = offer.price and offer.price.amount
+
+	if not price then
+		return
+	end
+
 	local content = price_widget.content
 	local style = price_widget.style
 	local texture_width = price_widget.style.price_icon.size[1]
@@ -1904,11 +1944,19 @@ StoreItemDetailView._update_purchase_button = function (self, offer)
 		store_offer.owned_skus = not table.is_empty(owned_skus) and owned_skus or nil
 	end
 
-	self._widgets_by_name.background.content.force_show_price = false
+	self._widgets_by_name.background.content.force_show_price = self._should_expire
 	self._widgets_by_name.purchase_button.content.visible = not is_owned
 	self._widgets_by_name.background.content.owned = is_owned
 	price_widget.content.visible = not is_owned
 	self._widgets_by_name.owned_info_text.content.visible = is_owned
+
+	if not offer.price then
+		price_widget.content.visible = false
+		self._widgets_by_name.background.content.owned = true
+		self._widgets_by_name.purchase_button.content.visible = false
+
+		return
+	end
 
 	if not is_owned then
 		self:_update_price_presentation(offer)
@@ -2255,13 +2303,7 @@ StoreItemDetailView.cb_on_aquila_pressed = function (self, widget, element)
 			currency = currency,
 			amount = amount
 		})
-		self:_update_wallets()
-		self:_destroy_aquilas_presentation()
-		self:_show_elements()
-
-		self._aquilas_showing = false
-
-		self._context.parent:_update_store_page()
+		self:cb_on_close_pressed()
 	end):catch(function (error)
 		local notification_string = Localize("loc_premium_store_notification_fail")
 

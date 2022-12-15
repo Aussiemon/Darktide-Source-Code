@@ -100,8 +100,9 @@ end
 ContractsManager._pull_contracts = function (self, character_id)
 	local player_data = self._tracking[character_id]
 	local account_id = player_data.account_id
-
-	return Managers.backend.interfaces.contracts:get_current_contract(character_id, account_id, false):next(function (data)
+	local promise = Managers.backend.interfaces.characters:get_narrative_event(character_id, Managers.narrative.EVENTS.level_unlock_contract_store_visited, account_id):next(function (vendor_visited)
+		return Managers.backend.interfaces.contracts:get_current_contract(character_id, account_id, vendor_visited)
+	end):next(function (data)
 		player_data.contracts_loaded = true
 		local tasks_left = self:_parse_backend_contract(data)
 
@@ -116,6 +117,8 @@ ContractsManager._pull_contracts = function (self, character_id)
 		Log.warning("ContractsManager", "Failed to download contracts for '%s'. Untracking contrackts for player.", character_id)
 		self:untrack_player(character_id)
 	end)
+
+	return promise
 end
 
 ContractsManager.track_player = function (self, player)
@@ -234,6 +237,8 @@ end
 ContractsManager.notify_contract_task_complete = function (self, task_id)
 	Managers.backend.interfaces.contracts:get_current_task(_get_character_id(), task_id):next(function (data)
 		Managers.event:trigger("event_add_notification_message", "contract", data)
+	end):catch(function (error)
+		Log.warning("ContractsManager", "Failed to find contract task with id '%s'. Error: %s", task_id, table.tostring(error, 3))
 	end)
 end
 

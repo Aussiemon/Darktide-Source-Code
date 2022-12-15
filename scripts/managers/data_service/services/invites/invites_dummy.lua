@@ -20,6 +20,10 @@ InvitesDummy.send_invite = function (self)
 	return
 end
 
+InvitesDummy.reset = function (self)
+	return
+end
+
 InvitesDummy.destroy = function (self)
 	return
 end

@@ -93,6 +93,10 @@ CombatTestCases.run_through_mission = function (case_settings)
 		local lua_trace = settings.lua_trace
 		local mission_key = settings.mission_key
 		local num_peers = settings.num_peers or 0
+		local telemetry_events = {
+			memory_usage = "memory_usage",
+			lua_trace = "lua_trace_stats"
+		}
 
 		if lua_trace then
 			Testify:make_request_to_runner("monitor_lua_trace")
@@ -113,7 +117,7 @@ CombatTestCases.run_through_mission = function (case_settings)
 			memory_usage = false
 		end
 
-		if TestifySnippets.is_debug_stripped() and Testify:make_request("current_state_name") ~= "StateGameplay" then
+		if (TestifySnippets.is_debug_stripped() or BUILD == "release") and Testify:make_request("current_state_name") ~= "StateGameplay" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 		end
 
@@ -170,7 +174,9 @@ CombatTestCases.run_through_mission = function (case_settings)
 			assert_data.condition = Testify:make_request("players_are_alive")
 
 			if memory_usage and next_memory_measure_point < main_path_point and memory_usage_measurement_count < num_memory_usage_measurements then
-				Testify:make_request("memory_usage", memory_usage_measurement_count)
+				local memory_usage_data = Testify:make_request("memory_usage")
+
+				Testify:make_request("create_telemetry_event", telemetry_events.memory_usage, mission_key, memory_usage_measurement_count, memory_usage_data)
 
 				memory_usage_measurement_count = memory_usage_measurement_count + 1
 				next_memory_measure_point = next_memory_measure_point + memory_usage_main_path_increments
@@ -178,12 +184,8 @@ CombatTestCases.run_through_mission = function (case_settings)
 
 			if lua_trace and next_lua_trace_measure_point < main_path_point and lua_trace_measurement_count < num_lua_trace_measurements then
 				local lua_trace_statistics = TestifySnippets.lua_trace_statistics()
-				local lua_trace_data = {
-					index = lua_trace_measurement_count,
-					stats = lua_trace_statistics
-				}
 
-				Testify:make_request("send_lua_trace_statistics_to_telemetry", lua_trace_data)
+				Testify:make_request("create_telemetry_event", telemetry_events.lua_trace, mission_key, lua_trace_measurement_count, lua_trace_statistics)
 
 				lua_trace_measurement_count = lua_trace_measurement_count + 1
 				next_lua_trace_measure_point = next_lua_trace_measure_point + lua_trace_main_path_increments
@@ -228,7 +230,7 @@ CombatTestCases.spawn_all_enemies = function (case_settings)
 			challenge = 2
 		}
 
-		if TestifySnippets.is_debug_stripped() then
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			if not Testify:make_request("current_state_name") ~= "StateGameplay" then
 				TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			end
@@ -387,7 +389,7 @@ CombatTestCases.ensure_breed_ragdoll_actors = function (case_settings)
 		local wait_timer = settings.wait_timer or 0.2
 		local specific_breed = string.value_or_nil(settings.specific_breed or nil)
 
-		if TestifySnippets.is_debug_stripped() then
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			TestifySnippets.load_mission("spawn_all_enemies")
 		end
@@ -477,7 +479,7 @@ CombatTestCases.gib_all_minions = function (case_settings)
 		local wait_timer = settings.wait_timer or 1
 		local specific_breed = type(settings.specific_breed) == "string" and string.value_or_nil(settings.specific_breed) or settings.specific_breed
 
-		if TestifySnippets.is_debug_stripped() then
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			TestifySnippets.load_mission("spawn_all_enemies")
 		end

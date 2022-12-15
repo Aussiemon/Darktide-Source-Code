@@ -169,41 +169,49 @@ GameplaySession.get_config = function (self)
 	end)
 end
 
-GameplaySession.events = function (self, session_id, events, position)
-	position = position or 1
+local function _events_batched(session_id, events, from)
+	return function ()
+		local to = from + #events - 1
 
-	if #events and position <= #events then
-		local remaining_size = math.min(#events - position + 1, max_events_per_batch)
-		local batched = table.slice(events, position, remaining_size)
-		local new_position = position + remaining_size
+		Log.info("GameplaySession", "Sending events: %d - %d", from, to)
 
-		Log.info("GameplaySession", "Sending events: %i - %i", position, remaining_size)
+		local url = string.format("/gameplay/sessions/%s", session_id)
 
-		local promise = self:_events_batched(session_id, batched)
+		return Managers.backend:title_request(url, {
+			method = "POST",
+			body = {
+				updates = events
+			}
+		}):next(function (data)
+			return data.body
+		end)
+	end
+end
 
-		if new_position <= #events then
-			promise:next(function ()
-				return self:events(session_id, events, new_position)
-			end)
-		end
-
-		return promise
-	else
+GameplaySession.events = function (self, session_id, events)
+	if #events == 0 then
 		return Promise.resolved({
 			sessionId = session_id
 		})
 	end
-end
 
-GameplaySession._events_batched = function (self, session_id, events)
-	return Managers.backend:title_request("/gameplay/sessions/" .. session_id, {
-		method = "POST",
-		body = {
-			updates = events
-		}
-	}):next(function (data)
-		return data.body
-	end)
+	local batches = {}
+	local from = {}
+
+	for position = 1, #events, max_events_per_batch do
+		local remaining_size = math.min(#events - position + 1, max_events_per_batch)
+		local batch = table.slice(events, position, remaining_size)
+		batches[#batches + 1] = batch
+		from[#from + 1] = position
+	end
+
+	local promise = _events_batched(session_id, batches[1], 1)()
+
+	for i = 2, #batches do
+		promise = promise:next(_events_batched(session_id, batches[i], from[i]))
+	end
+
+	return promise
 end
 
 implements(GameplaySession, Interface)

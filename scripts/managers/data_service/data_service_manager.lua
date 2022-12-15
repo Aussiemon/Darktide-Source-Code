@@ -26,4 +26,12 @@ DataServiceManager.destroy = function (self)
 	end
 end
 
+DataServiceManager.reset = function (self)
+	for service_name, _ in pairs(SERVICES) do
+		if self[service_name].reset then
+			self[service_name]:reset()
+		end
+	end
+end
+
 return DataServiceManager

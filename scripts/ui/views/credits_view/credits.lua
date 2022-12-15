@@ -341,6 +341,10 @@ local Credits = {
 				type = "person"
 			},
 			{
+				text = "Radu Bogos",
+				type = "person"
+			},
+			{
 				text = "Reza Hedayati",
 				type = "person"
 			},
@@ -2945,7 +2949,7 @@ local Credits = {
 				type = "person"
 			},
 			{
-				text = "Emma Stanard",
+				text = "Emma Stannard",
 				type = "person"
 			},
 			{
@@ -2982,7 +2986,7 @@ local Credits = {
 				type = "person"
 			},
 			{
-				text = "Ashleigh Lobb",
+				text = "Ashleigh Loeb",
 				type = "person"
 			},
 			{
@@ -3374,6 +3378,10 @@ local Credits = {
 				type = "person"
 			},
 			{
+				text = "William Choo",
+				type = "person"
+			},
+			{
 				text = " ",
 				type = "person"
 			},
@@ -3480,7 +3488,7 @@ local Credits = {
 				type = "person"
 			},
 			{
-				text = "Luke Elliot",
+				text = "Luke Elliott",
 				type = "person"
 			},
 			{
@@ -6101,163 +6109,83 @@ local Credits = {
 				type = "title"
 			},
 			{
-				text = "Wright",
+				text = "Tomos Hywel Evans",
 				type = "person"
 			},
 			{
-				text = "Valdeviezo",
+				text = "Cedrick Valdeviezo",
 				type = "person"
 			},
 			{
-				text = "Tonks",
+				text = "Chris Hircock",
 				type = "person"
 			},
 			{
-				text = "Tomos Hywel",
+				text = "Eleanor Booth",
 				type = "person"
 			},
 			{
-				text = "Stuart",
+				text = "Evan Clark",
 				type = "person"
 			},
 			{
-				text = "Scubli",
+				text = "Hamish Bryant",
 				type = "person"
 			},
 			{
-				text = "Renaud",
+				text = "James Anthony Forrest",
 				type = "person"
 			},
 			{
-				text = "Raluca",
+				text = "Luke Marchese",
 				type = "person"
 			},
 			{
-				text = "Quaid",
+				text = "Manuel Capitani",
 				type = "person"
 			},
 			{
-				text = "Petcu",
+				text = "Raluca Petcu",
 				type = "person"
 			},
 			{
-				text = "Pérez",
+				text = "Renaud Hance",
 				type = "person"
 			},
 			{
-				text = "Nash",
+				text = "Stuart Counter",
 				type = "person"
 			},
 			{
-				text = "Moldovan",
+				text = "Florence Crawshaw",
 				type = "person"
 			},
 			{
-				text = "McEwen",
+				text = "Andreea Scubli",
 				type = "person"
 			},
 			{
-				text = "Matt",
+				text = "Nicolas Rajohnson",
 				type = "person"
 			},
 			{
-				text = "Marchese",
+				text = "Aitor Perez",
 				type = "person"
 			},
 			{
-				text = "Manuel",
+				text = "Ana Moldovan",
 				type = "person"
 			},
 			{
-				text = "Luke",
+				text = "Leah McEwen",
 				type = "person"
 			},
 			{
-				text = "Leah",
+				text = "Chris Wright",
 				type = "person"
 			},
 			{
-				text = "James",
-				type = "person"
-			},
-			{
-				text = "Hircock",
-				type = "person"
-			},
-			{
-				text = "Hance",
-				type = "person"
-			},
-			{
-				text = "Hamish",
-				type = "person"
-			},
-			{
-				text = "Forrest",
-				type = "person"
-			},
-			{
-				text = "Florence",
-				type = "person"
-			},
-			{
-				text = "Evans",
-				type = "person"
-			},
-			{
-				text = "Evan",
-				type = "person"
-			},
-			{
-				text = "Eleanor",
-				type = "person"
-			},
-			{
-				text = "Crawshaw",
-				type = "person"
-			},
-			{
-				text = "Counter",
-				type = "person"
-			},
-			{
-				text = "Clark",
-				type = "person"
-			},
-			{
-				text = "Chris",
-				type = "person"
-			},
-			{
-				text = "Chris",
-				type = "person"
-			},
-			{
-				text = "Cedrick",
-				type = "person"
-			},
-			{
-				text = "Capitani",
-				type = "person"
-			},
-			{
-				text = "Bryant",
-				type = "person"
-			},
-			{
-				text = "Booth",
-				type = "person"
-			},
-			{
-				text = "Andreea",
-				type = "person"
-			},
-			{
-				text = "Ana",
-				type = "person"
-			},
-			{
-				text = "Aitor",
+				text = "Matt Tonks",
 				type = "person"
 			},
 			{
@@ -6270,11 +6198,7 @@ local Credits = {
 				type = "title"
 			},
 			{
-				text = "Edwards",
-				type = "person"
-			},
-			{
-				text = "Chris",
+				text = "Chris Edwards",
 				type = "person"
 			},
 			{
@@ -6287,11 +6211,7 @@ local Credits = {
 				type = "title"
 			},
 			{
-				text = "Tim",
-				type = "person"
-			},
-			{
-				text = "Griffiths",
+				text = "Tim Griffiths",
 				type = "person"
 			},
 			{
@@ -6304,11 +6224,7 @@ local Credits = {
 				type = "title"
 			},
 			{
-				text = "Paul",
-				type = "person"
-			},
-			{
-				text = "Declan",
+				text = "Paul Declan",
 				type = "person"
 			},
 			{
@@ -6321,11 +6237,7 @@ local Credits = {
 				type = "title"
 			},
 			{
-				text = "Joseph",
-				type = "person"
-			},
-			{
-				text = "Harford",
+				text = "Joe Harford",
 				type = "person"
 			},
 			{
@@ -6415,7 +6327,7 @@ local Credits = {
 				type = "header"
 			},
 			{
-				text = "Teebo, Qui Gon, Freja, Lera, Maggan, Astrid, Chichi, Alfie, Zansi, Eira, Pira, Siri, Asta, Nero, Nisa, Motya, Kosmos, Buffy, Flora, Nairobi, Reeva, Xheva, Molly, Harry, Dexter, Jason, Krueger, Jammy, Ginger & Bourbon, Morja's Cat, Kida, Mochi, Muffin & Norah, Stinky, Gizmo, Doris, Elvis, Sune, Rune, Goshi, Neon, Moss, Otis, Siri, Selma, Scully, Cookie, Dante, Meiko, Zeratul, Zombie, Onyxia, Knorren, Svante, Goofy, Missie, Frodo, Quick, Omera, ZemZem, Motya, Lexi, Leroy Jenkins & Zoe, Tage, Deku, Ginger, Prince, Hunden, Dexter & Bruce, Kosmos, Buffy & Kimchi, Blue, Bulbasaur & Calcifer, Ascii, Theo & Milo, Mika, Louise & Gullis, Mi-Go von Yuggoth & Sienna Fuegonasus, Sune & Rune, Chewie, Nova & Daisy & Scarlet & Skrållan & Cordi & Gizmo & Ana & Elsa & Astrid & Isabella & Lulu & Gullan & Mirabell & Teodora & Madicken & Skye & Tango & Morgana & Nimue, Grobou & Hector, Fatshark",
+				text = "Teebo, Qui Gon, Freja, Lera, Maggan, Astrid, Chichi, Alfie, Zansi, Eira, Pira, Siri, Asta, Nero, Nisa, Motya, Kosmos, Buffy, Flora, Nairobi, Reeva, Xheva, Molly, Harry, Dexter, Jason, Krueger, Jammy, Ginger & Bourbon, Morja's Cat, Kida, Mochi, Muffin & Norah, Stinky, Gizmo, Doris, Elvis, Sune, Rune, Goshi, Neon, Moss, Otis, Siri, Selma, Scully, Cookie, Dante, Meiko, Zeratul, Zombie, Onyxia, Knorren, Svante, Goofy, Missie, Frodo, Quick, Omera, ZemZem, Motya, Lexi, Leroy Jenkins & Zoe, Tage, Deku, Ginger, Prince, Hunden, Dexter & Bruce, Kosmos, Buffy & Kimchi, Blue, Bulbasaur & Calcifer, Ascii, Theo & Milo, Mika, Louise & Gullis, Mi-Go von Yuggoth & Sienna Fuegonasus, Sune & Rune, Chewie, Nova & Daisy & Scarlet & Skrållan & Cordi & Gizmo & Ana & Elsa & Astrid & Isabella & Lulu & Gullan & Mirabell & Teodora & Madicken & Skye & Tango & Morgana & Nimue, Grobou & Hector, Hamish & Maple, Theramin & Marco & Ceinwyn & Zathras, Fatshark",
 				type = "person"
 			},
 			{

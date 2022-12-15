@@ -9,6 +9,8 @@ local elements = {
 			"mission_lobby",
 			"end_of_round",
 			"in_view",
+			"in_loading",
+			"skippable_cinematic",
 			"default"
 		}
 	},
@@ -21,6 +23,8 @@ local elements = {
 			"mission_lobby",
 			"end_of_round",
 			"in_view",
+			"in_loading",
+			"skippable_cinematic",
 			"default"
 		}
 	},
@@ -89,6 +93,8 @@ local elements = {
 		visibility_groups = {
 			"mission_lobby",
 			"end_of_round",
+			"in_loading",
+			"cutscene",
 			"default"
 		},
 		visibility_group_parameters = {

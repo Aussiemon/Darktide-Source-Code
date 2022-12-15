@@ -702,7 +702,12 @@ local disgustingly_resilient = {
 				append_husk_to_event_name = true
 			}
 		},
-		damage_negated = {},
+		damage_negated = {
+			{
+				event = "wwise/events/weapon/melee_hits_sword_shield",
+				append_husk_to_event_name = true
+			}
+		},
 		shield_blocked = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_melee_slashing_super_armor_no_damage",

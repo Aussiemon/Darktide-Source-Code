@@ -191,7 +191,8 @@ end
 local function _item_plus_overrides(gear, gear_id, is_preview_item)
 	local item_instance = {
 		__gear = gear,
-		__gear_id = is_preview_item and gear_id .. math.uuid() or gear_id,
+		__gear_id = is_preview_item and math.uuid() or gear_id,
+		__original_gear_id = is_preview_item and gear_id,
 		__is_preview_item = is_preview_item and true or false
 	}
 

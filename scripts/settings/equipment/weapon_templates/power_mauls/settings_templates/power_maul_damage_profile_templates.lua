@@ -172,7 +172,6 @@ damage_templates.powermaul_light_smiter = {
 	armor_damage_modifier = smiter_light_default_am,
 	targets = {
 		{
-			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					50,
@@ -193,10 +192,13 @@ damage_templates.powermaul_light_smiter = {
 				[armor_types.disgustingly_resilient] = 0.25,
 				[armor_types.void_shield] = 0.25,
 				[armor_types.prop_armor] = 0.25
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5
 			}
 		},
 		{
-			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					30,
@@ -206,6 +208,10 @@ damage_templates.powermaul_light_smiter = {
 					7,
 					10
 				}
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5
 			}
 		},
 		default_target = {
@@ -317,7 +323,6 @@ damage_templates.powermaul_light_linesman = {
 	armor_damage_modifier = linesman_light_default_am,
 	targets = {
 		{
-			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					0,
@@ -327,10 +332,13 @@ damage_templates.powermaul_light_linesman = {
 					15,
 					20
 				}
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5
 			}
 		},
 		{
-			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					80,
@@ -340,10 +348,13 @@ damage_templates.powermaul_light_linesman = {
 					6,
 					13
 				}
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5
 			}
 		},
 		{
-			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					5,
@@ -353,15 +364,22 @@ damage_templates.powermaul_light_linesman = {
 					3,
 					8
 				}
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5
 			}
 		},
 		default_target = {
-			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = 0,
 				impact = 5
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5
+			}
 		}
 	},
 	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
@@ -383,7 +401,6 @@ damage_templates.powermaul_heavy_tank = {
 	armor_damage_modifier = tank_heavy_default_am,
 	targets = {
 		{
-			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					60,
@@ -393,10 +410,13 @@ damage_templates.powermaul_heavy_tank = {
 					30,
 					35
 				}
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5
 			}
 		},
 		{
-			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					30,
@@ -406,10 +426,13 @@ damage_templates.powermaul_heavy_tank = {
 					20,
 					25
 				}
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5
 			}
 		},
 		{
-			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					20,
@@ -419,10 +442,13 @@ damage_templates.powermaul_heavy_tank = {
 					15,
 					20
 				}
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5
 			}
 		},
 		{
-			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					10,
@@ -432,10 +458,13 @@ damage_templates.powermaul_heavy_tank = {
 					10,
 					15
 				}
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5
 			}
 		},
 		default_target = {
-			boost_curve_multiplier_finesse = 0.25,
 			armor_damage_modifier = tank_heavy_default_am,
 			power_distribution = {
 				attack = {
@@ -447,7 +476,11 @@ damage_templates.powermaul_heavy_tank = {
 					15
 				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5
+			}
 		}
 	},
 	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
@@ -469,7 +502,6 @@ damage_templates.powermaul_light_tank = {
 	armor_damage_modifier = tank_heavy_default_am,
 	targets = {
 		{
-			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					30,
@@ -479,10 +511,13 @@ damage_templates.powermaul_light_tank = {
 					7,
 					10
 				}
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5
 			}
 		},
 		{
-			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					20,
@@ -492,10 +527,13 @@ damage_templates.powermaul_light_tank = {
 					6,
 					9
 				}
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5
 			}
 		},
 		{
-			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					20,
@@ -505,10 +543,13 @@ damage_templates.powermaul_light_tank = {
 					5,
 					8
 				}
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5
 			}
 		},
 		{
-			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					10,
@@ -518,10 +559,13 @@ damage_templates.powermaul_light_tank = {
 					3,
 					8
 				}
+			},
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5
 			}
 		},
 		default_target = {
-			boost_curve_multiplier_finesse = 0.25,
 			armor_damage_modifier = tank_heavy_default_am,
 			power_distribution = {
 				attack = {
@@ -533,7 +577,11 @@ damage_templates.powermaul_light_tank = {
 					10
 				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve_multiplier_finesse = {
+				0.5,
+				1.5
+			}
 		}
 	},
 	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy

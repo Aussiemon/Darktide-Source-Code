@@ -307,7 +307,7 @@ weapon_template.actions = {
 		damage_window_end = 0.26666666666666666,
 		anim_end_event = "attack_finished",
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
-		anim_event_3p = "attack_swing_down",
+		anim_event_3p = "attack_swing_stab",
 		uninterruptible = true,
 		anim_event = "attack_stab_01",
 		total_time = 1,
@@ -473,13 +473,14 @@ weapon_template.actions = {
 			buff_stat_buffs.melee_attack_speed
 		},
 		wounds_shape = wounds_shapes.left_45_slash_clean,
-		wounds_shape_special_active = wounds_shapes.left_45_slash_clean
+		wounds_shape_special_active = wounds_shapes.default
 	},
 	action_melee_start_right = {
 		kind = "windup",
+		anim_event_3p = "attack_swing_charge_right",
 		anim_end_event = "attack_finished",
 		weapon_handling_template = "time_scale_1",
-		anim_event_3p = "attack_swing_charge_right",
+		allowed_during_sprint = true,
 		anim_event = "heavy_charge_right_diagonal_down",
 		stop_input = "attack_cancel",
 		total_time = 3,
@@ -543,20 +544,21 @@ weapon_template.actions = {
 		end
 	},
 	action_right_diagonal_light = {
-		damage_window_start = 0.15,
-		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1",
-		max_num_saved_entries = 20,
 		range_mod = 1.25,
-		num_frames_before_process = 0,
+		kind = "sweep",
+		max_num_saved_entries = 20,
 		first_person_hit_stop_anim = "hit_stop",
+		num_frames_before_process = 0,
+		allowed_during_sprint = true,
+		hit_armor_anim = "attack_hit_shield",
+		damage_window_start = 0.15,
 		damage_window_end = 0.25,
 		anim_end_event = "attack_finished",
-		charge_template = "forcesword_p1_m1_weapon_special_hit",
-		anim_event_3p = "attack_swing_right_diagonal",
-		kind = "sweep",
-		uninterruptible = true,
+		anim_event_3p = "attack_swing_up",
 		anim_event = "attack_right_diagonal_down",
+		weapon_handling_template = "time_scale_1",
+		charge_template = "forcesword_p1_m1_weapon_special_hit",
+		uninterruptible = true,
 		total_time = 1.5,
 		action_movement_curve = {
 			{
@@ -638,20 +640,21 @@ weapon_template.actions = {
 			buff_stat_buffs.melee_attack_speed
 		},
 		wounds_shape = wounds_shapes.right_45_slash_clean,
-		wounds_shape_special_active = wounds_shapes.right_45_slash_clean
+		wounds_shape_special_active = wounds_shapes.default
 	},
 	action_right_heavy = {
 		damage_window_start = 0.18333333333333332,
 		hit_armor_anim = "attack_hit_shield",
+		range_mod = 1.25,
 		kind = "sweep",
 		weapon_handling_template = "time_scale_1",
 		max_num_saved_entries = 20,
-		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		num_frames_before_process = 0,
-		range_mod = 1.25,
+		allowed_during_sprint = true,
+		charge_template = "forcesword_p1_m1_weapon_special_hit",
+		first_person_hit_stop_anim = "hit_stop",
 		damage_window_end = 0.25,
 		anim_end_event = "attack_finished",
-		first_person_hit_stop_anim = "hit_stop",
 		anim_event_3p = "attack_swing_heavy_right",
 		anim_event = "heavy_attack_right_diagonal_down",
 		total_time = 1,
@@ -723,14 +726,15 @@ weapon_template.actions = {
 			buff_stat_buffs.melee_attack_speed
 		},
 		wounds_shape = wounds_shapes.right_45_slash_clean,
-		wounds_shape_special_active = wounds_shapes.right_45_slash_clean
+		wounds_shape_special_active = wounds_shapes.default
 	},
 	action_melee_start_left_2 = {
 		sprint_enabled_time = 0.5,
+		anim_event_3p = "attack_swing_charge_left",
 		anim_end_event = "attack_finished",
 		kind = "windup",
 		sprint_ready_up_time = 0,
-		anim_event_3p = "attack_swing_charge_left",
+		allowed_during_sprint = true,
 		anim_event = "heavy_charge_left",
 		stop_input = "attack_cancel",
 		total_time = 3,
@@ -795,20 +799,21 @@ weapon_template.actions = {
 		end
 	},
 	action_left_down_light = {
-		damage_window_start = 0.15,
-		hit_armor_anim = "hit_stop",
-		weapon_handling_template = "time_scale_1",
+		range_mod = 1.25,
+		kind = "sweep",
 		max_num_saved_entries = 20,
 		first_person_hit_stop_anim = "hit_stop",
 		num_frames_before_process = 0,
-		range_mod = 1.25,
+		allowed_during_sprint = true,
+		hit_armor_anim = "hit_stop",
+		damage_window_start = 0.15,
 		damage_window_end = 0.25,
 		anim_end_event = "attack_finished",
-		charge_template = "forcesword_p1_m1_weapon_special_hit",
-		anim_event_3p = "attack_stab_01",
-		kind = "sweep",
-		uninterruptible = true,
+		anim_event_3p = "attack_swing_left_diagonal",
 		anim_event = "attack_left_diagonal_down",
+		weapon_handling_template = "time_scale_1",
+		charge_template = "forcesword_p1_m1_weapon_special_hit",
+		uninterruptible = true,
 		total_time = 0.9,
 		action_movement_curve = {
 			{
@@ -890,7 +895,7 @@ weapon_template.actions = {
 			buff_stat_buffs.melee_attack_speed
 		},
 		wounds_shape = wounds_shapes.vertical_slash_clean,
-		wounds_shape_special_active = wounds_shapes.vertical_slash_clean
+		wounds_shape_special_active = wounds_shapes.default
 	},
 	action_melee_start_right_2 = {
 		kind = "windup",
@@ -960,20 +965,21 @@ weapon_template.actions = {
 		end
 	},
 	action_right_diagonal_light_2 = {
-		damage_window_start = 0.18333333333333332,
-		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1",
-		max_num_saved_entries = 20,
 		range_mod = 1.25,
-		num_frames_before_process = 0,
+		kind = "sweep",
+		max_num_saved_entries = 20,
 		first_person_hit_stop_anim = "hit_stop",
+		num_frames_before_process = 0,
+		allowed_during_sprint = true,
+		hit_armor_anim = "attack_hit_shield",
+		damage_window_start = 0.18333333333333332,
 		damage_window_end = 0.25,
 		anim_end_event = "attack_finished",
-		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		anim_event_3p = "attack_swing_right_diagonal",
-		kind = "sweep",
-		uninterruptible = true,
 		anim_event = "attack_right_down",
+		weapon_handling_template = "time_scale_1",
+		charge_template = "forcesword_p1_m1_weapon_special_hit",
+		uninterruptible = true,
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -1055,7 +1061,7 @@ weapon_template.actions = {
 			buff_stat_buffs.melee_attack_speed
 		},
 		wounds_shape = wounds_shapes.right_45_slash_clean,
-		wounds_shape_special_active = wounds_shapes.right_45_slash_clean
+		wounds_shape_special_active = wounds_shapes.default
 	},
 	action_block = {
 		weapon_handling_template = "time_scale_1_65",
@@ -1774,18 +1780,18 @@ weapon_template.displayed_attacks = {
 		display_name = "loc_gestalt_ninja_fencer",
 		type = "ninja_fencer",
 		attack_chain = {
-			"smiter",
 			"ninja_fencer",
 			"ninja_fencer",
-			"smiter"
+			"ninja_fencer",
+			"ninja_fencer"
 		}
 	},
 	secondary = {
-		display_name = "loc_gestalt_smiter",
-		type = "smiter",
+		display_name = "loc_gestalt_linesman",
+		type = "linesman",
 		attack_chain = {
 			"linesman",
-			"smiter"
+			"linesman"
 		}
 	},
 	special = {

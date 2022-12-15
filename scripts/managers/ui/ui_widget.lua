@@ -114,6 +114,20 @@ UIWidget.create_definition = function (pass_definitions, scenegraph_id, content_
 	return definition
 end
 
+local PASS_INTERFACE = table.set({
+	"pass_type",
+	"content",
+	"content_id",
+	"style",
+	"style_id",
+	"value",
+	"value_id",
+	"change_function",
+	"visibility_function",
+	"scenegraph_id",
+	"retained_mode"
+})
+
 UIWidget.add_definition_pass = function (destination, pass_info)
 	local passes = destination.passes
 
@@ -503,7 +517,7 @@ UIWidget.set_visible = function (widget, ui_renderer, visible)
 			local visible_previous = pass_data.visible
 			pass_data.visible = visible
 
-			if visible_previous and not visible or pass_data.material then
+			if not visible or pass_data.material then
 				local pass_type = pass_info.pass_type
 				local ui_pass = UIPasses[pass_type]
 				local destroy_function = ui_pass.destroy
@@ -511,7 +525,7 @@ UIWidget.set_visible = function (widget, ui_renderer, visible)
 				if destroy_function then
 					destroy_function(pass_info, ui_renderer)
 				end
-			elseif not visible_previous and visible then
+			elseif visible then
 				pass_data.dirty = true
 			end
 		end

@@ -24,6 +24,7 @@ BaseView.init = function (self, definitions, settings, context)
 	self._event_list = {}
 	self._elements = {}
 	self._elements_array = {}
+	self._element_to_pivot = {}
 	self._local_player_id = 1
 	self._loading = true
 	local view_name = settings.name
@@ -352,6 +353,13 @@ BaseView._scenegraph_world_position = function (self, id, scale)
 	return UIScenegraph.world_position(ui_scenegraph, id, scale)
 end
 
+BaseView._update_element_position = function (self, scenegraph_id, element)
+	local position = self:_scenegraph_world_position(scenegraph_id)
+
+	element:set_pivot_offset(position[1], position[2])
+	self:_set_scenegraph_size(scenegraph_id, nil, element:grid_height())
+end
+
 BaseView._force_update_scenegraph = function (self)
 	UIScenegraph.update_scenegraph(self._ui_scenegraph, self._render_scale)
 end
@@ -526,7 +534,7 @@ BaseView._set_sound_parameter = function (self, parameter_id, value)
 	ui_manager:set_2d_sound_parameter(parameter_id, value)
 end
 
-BaseView._add_element = function (self, class, reference_name, layer, context)
+BaseView._add_element = function (self, class, reference_name, layer, context, pivot)
 	local elements = self._elements
 	local elements_array = self._elements_array
 	local draw_layer = layer or 0
@@ -538,6 +546,10 @@ BaseView._add_element = function (self, class, reference_name, layer, context)
 	elements[reference_name] = element
 	local id = #elements_array + 1
 	elements_array[id] = element
+
+	if pivot then
+		self._element_to_pivot[element] = pivot
+	end
 
 	return element
 end
@@ -585,6 +597,10 @@ BaseView._on_resolution_modified_elements = function (self, scale)
 			element:set_render_scale(scale)
 			element:on_resolution_modified(scale)
 		end
+	end
+
+	for element, scenegraph_id in pairs(self._element_to_pivot) do
+		self:_update_element_position(scenegraph_id, element)
 	end
 end
 

@@ -35,24 +35,21 @@ local event_vo_fortification_pilot_a = {
 	},
 	event_fortification_kill_stragglers = {
 		randomize_indexes_n = 0,
-		sound_events_n = 4,
+		sound_events_n = 3,
 		sound_events = {
 			"loc_pilot_a__info_event_demolition_corruptors_almost_done_01",
-			"loc_pilot_a__info_event_demolition_corruptors_almost_done_02",
 			"loc_pilot_a__info_event_demolition_corruptors_almost_done_03",
 			"loc_pilot_a__info_event_demolition_corruptors_almost_done_04"
 		},
 		sound_events_duration = {
 			2.1745,
-			3.443146,
 			2.792167,
 			3.160646
 		},
 		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
+			0.3333333,
+			0.3333333,
+			0.3333333
 		},
 		randomize_indexes = {}
 	},

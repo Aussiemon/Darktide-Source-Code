@@ -3659,49 +3659,6 @@ local conversations_core_veteran_female_b = {
 		},
 		randomize_indexes = {}
 	},
-	lore_enemy_within_one_a = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_veteran_female_b__lore_enemy_within_one_a_01",
-			"loc_veteran_female_b__lore_enemy_within_one_a_02",
-			"loc_veteran_female_b__lore_enemy_within_one_a_03",
-			"loc_veteran_female_b__lore_enemy_within_one_a_04"
-		},
-		sound_events_duration = {
-			2.742438,
-			1.792479,
-			2.671375,
-			2.631833
-		},
-		randomize_indexes = {}
-	},
-	lore_enemy_within_one_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1.0] = "loc_veteran_female_b__lore_enemy_within_one_b_01",
-			[2.0] = "loc_veteran_female_b__lore_enemy_within_one_b_02"
-		},
-		sound_events_duration = {
-			[1.0] = 3.047688,
-			[2.0] = 2.028896
-		},
-		randomize_indexes = {}
-	},
-	lore_enemy_within_one_c = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1.0] = "loc_veteran_female_b__lore_enemy_within_one_c_01",
-			[2.0] = "loc_veteran_female_b__lore_enemy_within_one_c_02"
-		},
-		sound_events_duration = {
-			[1.0] = 5.075083,
-			[2.0] = 2.854104
-		},
-		randomize_indexes = {}
-	},
 	lore_enemy_within_three_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

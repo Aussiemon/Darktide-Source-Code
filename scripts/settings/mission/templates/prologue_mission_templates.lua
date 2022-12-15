@@ -21,8 +21,8 @@ local mission_templates = {
 			mission_server = false
 		},
 		cinematics = {
-			intro_abc = {
-				"c_cam"
+			cutscene_1 = {
+				"cs_intro"
 			},
 			cutscene_2 = {
 				"cs_02_part_1",

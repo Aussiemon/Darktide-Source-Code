@@ -4,6 +4,8 @@ local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadou
 local PowerWeaponEffects = class("PowerWeaponEffects")
 local _set_start_time, _set_stop_time, _unit_components = nil
 local sfx_external_properties = {}
+local vfx_external_properties = {}
+local SPECIAL_ACTIVE_LOOPING_VFX_ALIAS = "weapon_special_loop"
 local SPECIAL_ACTIVE_LOOPING_SFX_ALIAS = "weapon_special_loop"
 local SPECIAL_ACTIVE_LOOPING_SFX_CONFIG = PlayerCharacterLoopingSoundAliases[SPECIAL_ACTIVE_LOOPING_SFX_ALIAS]
 local SPECIAL_OFF_SOUND_ALIAS = "weapon_special_end"
@@ -32,6 +34,7 @@ PowerWeaponEffects.init = function (self, context, slot, weapon_template, fx_sou
 	self._is_active = false
 	self._looping_playing_id = nil
 	self._looping_stop_event_name = nil
+	self._looping_effect_id = nil
 
 	_unit_components(self._weapon_material_variables_1p, slot.attachments_1p)
 	_unit_components(self._weapon_material_variables_3p, slot.attachments_3p)
@@ -40,6 +43,7 @@ end
 PowerWeaponEffects.destroy = function (self)
 	PlayerUnitVisualLoadout.slot_flow_event(self._first_person_extension, self._visual_loadout_extension, self._slot_name, INVENTORY_EVENT_POWER_OFF)
 	self:_stop_sfx_loop()
+	self:_stop_vfx_loop()
 
 	if self._is_playing and not self._is_husk then
 		self._fx_extension:trigger_gear_wwise_event_with_source(SPECIAL_OFF_SOUND_ALIAS, nil, self._special_active_fx_source_name, true)
@@ -52,6 +56,7 @@ end
 
 PowerWeaponEffects.unwield = function (self)
 	self:_stop_sfx_loop()
+	self:_stop_vfx_loop()
 
 	local t = World.time(self._world)
 
@@ -82,11 +87,13 @@ PowerWeaponEffects._update_active = function (self)
 
 	if should_start then
 		self:_start_sfx_loop()
+		self:_start_vfx_loop()
 		PlayerUnitVisualLoadout.slot_flow_event(self._first_person_extension, self._visual_loadout_extension, self._slot_name, INVENTORY_EVENT_POWER_ON)
 		_set_start_time(t, self._weapon_material_variables_1p)
 		_set_start_time(t, self._weapon_material_variables_3p)
 	elseif should_stop then
 		self:_stop_sfx_loop()
+		self:_stop_vfx_loop()
 
 		if not self._is_husk then
 			fx_extension:trigger_gear_wwise_event_with_source(SPECIAL_OFF_SOUND_ALIAS, nil, self._special_active_fx_source_name, true)
@@ -153,6 +160,34 @@ PowerWeaponEffects._stop_sfx_loop = function (self)
 
 	self._looping_playing_id = nil
 	self._looping_stop_event_name = nil
+end
+
+PowerWeaponEffects._start_vfx_loop = function (self)
+	local resolved, effect_name = self._visual_loadout_extension:resolve_gear_particle(SPECIAL_ACTIVE_LOOPING_VFX_ALIAS, vfx_external_properties)
+
+	if resolved then
+		local world = self._world
+		local new_effect_id = World.create_particles(world, effect_name, Vector3.zero())
+		local vfx_link_unit, vfx_link_node = self._fx_extension:vfx_spawner_unit_and_node(self._special_active_fx_source_name)
+
+		World.link_particles(world, new_effect_id, vfx_link_unit, vfx_link_node, Matrix4x4.identity(), "stop")
+
+		self._looping_effect_id = new_effect_id
+	end
+end
+
+PowerWeaponEffects._stop_vfx_loop = function (self, destroy)
+	local current_effect_id = self._looping_effect_id
+
+	if current_effect_id then
+		if destroy then
+			World.destroy_particles(self._world, current_effect_id)
+		else
+			World.stop_spawning_particles(self._world, current_effect_id)
+		end
+	end
+
+	self._looping_effect_id = nil
 end
 
 function _set_start_time(t, weapon_material_variables)

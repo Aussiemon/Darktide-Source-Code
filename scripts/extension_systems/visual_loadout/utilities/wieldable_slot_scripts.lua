@@ -20,6 +20,7 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/lasgun_
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/lasgun_iron_sight")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/luggable")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/magazine_ammo")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/melee_ideling_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/overheat_display")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/plasmagun_overheat_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/power_weapon_effects")

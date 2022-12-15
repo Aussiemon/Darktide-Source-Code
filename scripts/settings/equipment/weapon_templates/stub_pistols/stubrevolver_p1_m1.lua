@@ -117,7 +117,7 @@ weapon_template.action_input_hierarchy = {
 	wield = "stay",
 	reload = "stay",
 	shoot_pressed = "stay",
-	special_action_pistol_whip = "stay",
+	special_action_pistol_whip = "base",
 	zoom = {
 		zoom_shoot = "stay",
 		wield = "base",
@@ -125,7 +125,7 @@ weapon_template.action_input_hierarchy = {
 		grenade_ability = "base",
 		reload = "base",
 		combat_ability = "base",
-		special_action_pistol_whip = "stay"
+		special_action_pistol_whip = "base"
 	}
 }
 
@@ -553,6 +553,10 @@ weapon_template.actions = {
 			reload = {
 				action_name = "action_reload_loop",
 				chain_time = 0.5
+			},
+			special_action_pistol_whip = {
+				action_name = "action_pistol_whip",
+				chain_time = 0.5
 			}
 		},
 		time_scale_stat_buffs = {
@@ -688,15 +692,18 @@ weapon_template.actions = {
 	},
 	action_pistol_whip = {
 		damage_window_start = 0.25,
-		first_person_hit_stop_anim = "attack_hit",
-		start_input = "special_action_pistol_whip",
 		range_mod = 1,
-		kind = "sweep",
+		start_input = "special_action_pistol_whip",
+		sprint_requires_press_to_interrupt = true,
 		first_person_hit_anim = "attack_hit",
+		first_person_hit_stop_anim = "attack_hit",
 		allow_conditional_chain = true,
+		crosshair_type = "dot",
+		kind = "sweep",
 		allowed_during_sprint = true,
 		damage_window_end = 0.31666666666666665,
-		uninterruptible = true,
+		abort_sprint = true,
+		unaim = true,
 		anim_event = "attack_stab_01",
 		power_level = 300,
 		total_time = 1.2,
@@ -750,7 +757,7 @@ weapon_template.actions = {
 			},
 			zoom = {
 				action_name = "action_zoom",
-				chain_time = 0.75
+				chain_time = 0.95
 			}
 		},
 		weapon_box = {
@@ -771,14 +778,17 @@ weapon_template.actions = {
 	},
 	action_pistol_whip_followup = {
 		damage_window_start = 0.25,
-		first_person_hit_stop_anim = "attack_hit",
-		allow_conditional_chain = true,
 		range_mod = 1,
+		allow_conditional_chain = true,
+		crosshair_type = "dot",
 		kind = "sweep",
 		first_person_hit_anim = "attack_hit",
+		first_person_hit_stop_anim = "attack_hit",
+		sprint_requires_press_to_interrupt = true,
 		allowed_during_sprint = true,
 		damage_window_end = 0.31666666666666665,
-		uninterruptible = true,
+		abort_sprint = true,
+		unaim = true,
 		anim_event = "attack_stab_02",
 		power_level = 300,
 		total_time = 1.2,
@@ -840,7 +850,7 @@ weapon_template.actions = {
 			},
 			zoom = {
 				action_name = "action_zoom",
-				chain_time = 0.55
+				chain_time = 0.85
 			}
 		},
 		weapon_box = {

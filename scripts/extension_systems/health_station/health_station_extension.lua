@@ -80,17 +80,22 @@ HealthStationExtension.fixed_update = function (self, unit, dt, t)
 			self:_spawn_socket()
 
 			local battery_spawning_mode = self._battery_spawning_mode
-			local should_plug_after_distribution = battery_spawning_mode == "plugged_with_charge" and self._use_distribution_pool and self._charge_amount > 0
-			local should_plug = battery_spawning_mode == "pickup_location" or battery_spawning_mode == "plugged"
+			local should_plug = battery_spawning_mode == "plugged"
+			local should_spawn = should_plug or battery_spawning_mode == "pickup_location"
 
-			if should_plug or should_plug_after_distribution then
+			if self._use_distribution_pool then
+				should_plug = battery_spawning_mode == "plugged_with_charge" and self._plug_from_distribution
+				should_spawn = true
+			end
+
+			if should_spawn then
 				self:spawn_battery()
+			end
 
-				if battery_spawning_mode == "plugged" or battery_spawning_mode == "plugged_with_charge" then
-					self:_teleport_battery_to_socket()
-					self:socket_luggable(self._battery_unit)
-					self:_update_indicators()
-				end
+			if should_plug then
+				self:_teleport_battery_to_socket()
+				self:socket_luggable(self._battery_unit)
+				self:_update_indicators()
 			end
 
 			self._first_frame_setup = true
@@ -170,6 +175,11 @@ HealthStationExtension.max_amount_charges = function (self)
 	return self._max_amount_charges
 end
 
+HealthStationExtension.assign_distributed_charge = function (self, charges, plug)
+	self._distributed_charges = charges
+	self._plug_from_distribution = plug
+end
+
 HealthStationExtension.set_charge_amount = function (self, charges)
 	self._charge_amount = charges
 
@@ -178,8 +188,13 @@ HealthStationExtension.set_charge_amount = function (self, charges)
 	local point_of_interest_ext = self._point_of_interest_extension
 
 	if self._charge_amount <= 0 then
-		self:_set_block_text("loc_health_station_missing_battery")
-		point_of_interest_ext:set_tag("chargeable_health_station")
+		if self:battery_in_slot() then
+			self:_set_block_text(nil)
+			point_of_interest_ext:set_tag("empty_health_station")
+		else
+			self:_set_block_text("loc_health_station_missing_battery")
+			point_of_interest_ext:set_tag("chargeable_health_station")
+		end
 	else
 		self:_set_block_text(nil)
 		point_of_interest_ext:set_tag("charged_health_station")
@@ -270,11 +285,8 @@ end
 HealthStationExtension.socket_luggable = function (self, luggable_unit)
 	self._luggable_socket_extension:socket_luggable(luggable_unit)
 
-	local battery_spawning_mode = self._battery_spawning_mode
-	local has_plugged_after_distribution = battery_spawning_mode == "plugged_with_charge" and self._use_distribution_pool and self._charge_amount > 0
-
-	if battery_spawning_mode ~= "plugged" and not has_plugged_after_distribution then
-		self:set_charge_amount(HealthStationExtension.MAX_CHARGES)
+	if self._battery_spawning_mode ~= "plugged" then
+		self:set_charge_amount(self._use_distribution_pool and self._distributed_charges or HealthStationExtension.MAX_CHARGES)
 		self:sync_charge_amount()
 	end
 
@@ -300,7 +312,11 @@ HealthStationExtension.spawn_battery = function (self)
 		local point_of_interest_ext = self._point_of_interest_extension
 
 		if self._charge_amount <= 0 then
-			point_of_interest_ext:set_tag("chargeable_health_station")
+			if self:battery_in_slot() then
+				point_of_interest_ext:set_tag("empty_health_station")
+			else
+				point_of_interest_ext:set_tag("chargeable_health_station")
+			end
 		else
 			point_of_interest_ext:set_tag("charged_health_station")
 		end

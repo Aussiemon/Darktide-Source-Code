@@ -679,6 +679,14 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 			end
 		end
 
+		if item and item.stabilize_neck ~= nil then
+			local variable_index = Unit.animation_find_variable(unit_3p, "psyker_headgear")
+
+			if variable_index then
+				Unit.animation_set_variable(unit_3p, variable_index, item.stabilize_neck * 0.01)
+			end
+		end
+
 		_set_slot_hidden(slot, is_hidden_3p, is_hidden_1p)
 	end
 

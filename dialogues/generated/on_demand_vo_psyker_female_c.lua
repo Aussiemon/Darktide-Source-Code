@@ -388,12 +388,6 @@ local on_demand_vo_psyker_female_c = {
 			1.120135,
 			0.706448
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_mutant_charger = {
@@ -411,12 +405,6 @@ local on_demand_vo_psyker_female_c = {
 			0.710969,
 			0.867771
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_ogryn_armored_executor = {
@@ -431,11 +419,6 @@ local on_demand_vo_psyker_female_c = {
 			1.000167,
 			0.72576,
 			0.778354
-		},
-		sound_event_weights = {
-			0.3333333,
-			0.3333333,
-			0.3333333
 		},
 		randomize_indexes = {}
 	},

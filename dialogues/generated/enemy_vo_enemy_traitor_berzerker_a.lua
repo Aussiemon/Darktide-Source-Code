@@ -1,0 +1,72 @@
+local enemy_vo_enemy_traitor_berzerker_a = {
+	traitor_berzerker_assault = {
+		randomize_indexes_n = 0,
+		sound_events_n = 19,
+		sound_events = {
+			"loc_enemy_traitor_berzerker_a__assault_01",
+			"loc_enemy_traitor_berzerker_a__assault_02",
+			"loc_enemy_traitor_berzerker_a__assault_03",
+			"loc_enemy_traitor_berzerker_a__assault_04",
+			"loc_enemy_traitor_berzerker_a__assault_05",
+			"loc_enemy_traitor_berzerker_a__assault_06",
+			"loc_enemy_traitor_berzerker_a__assault_07",
+			"loc_enemy_traitor_berzerker_a__assault_08",
+			"loc_enemy_traitor_berzerker_a__assault_09",
+			"loc_enemy_traitor_berzerker_a__assault_10",
+			"loc_enemy_traitor_berzerker_a__assault_11",
+			"loc_enemy_traitor_berzerker_a__assault_12",
+			"loc_enemy_traitor_berzerker_a__assault_14",
+			"loc_enemy_traitor_berzerker_a__assault_15",
+			"loc_enemy_traitor_berzerker_a__assault_16",
+			"loc_enemy_traitor_berzerker_a__assault_17",
+			"loc_enemy_traitor_berzerker_a__assault_18",
+			"loc_enemy_traitor_berzerker_a__assault_19",
+			"loc_enemy_traitor_berzerker_a__assault_20"
+		},
+		sound_events_duration = {
+			2.011979,
+			2.956833,
+			1.341563,
+			3.164042,
+			2.660208,
+			2.905354,
+			2.367333,
+			3.840521,
+			3.195313,
+			2.901896,
+			2.187313,
+			1.870771,
+			4.488792,
+			2.472542,
+			1.957625,
+			2.887292,
+			2.540146,
+			2.577125,
+			2.561667
+		},
+		sound_event_weights = {
+			0.05263158,
+			0.05263158,
+			0.05263158,
+			0.05263158,
+			0.05263158,
+			0.05263158,
+			0.05263158,
+			0.05263158,
+			0.05263158,
+			0.05263158,
+			0.05263158,
+			0.05263158,
+			0.05263158,
+			0.05263158,
+			0.05263158,
+			0.05263158,
+			0.05263158,
+			0.05263158,
+			0.05263158
+		},
+		randomize_indexes = {}
+	}
+}
+
+return settings("enemy_vo_enemy_traitor_berzerker_a", enemy_vo_enemy_traitor_berzerker_a)

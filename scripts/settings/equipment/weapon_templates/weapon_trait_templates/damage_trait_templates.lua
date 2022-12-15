@@ -1014,7 +1014,7 @@ local damage_trait_templates = {
 			}
 		},
 		{
-			"power_distribution_ranged",
+			"power_distribution",
 			"impact",
 			{
 				max = 0.75,
@@ -1738,6 +1738,13 @@ local damage_trait_templates = {
 				max = 0.75,
 				min = 0.25
 			}
+		},
+		{
+			"stagger_duration_modifier",
+			{
+				max = 0.75,
+				min = 0.25
+			}
 		}
 	},
 	ogryn_club_control_stat = {
@@ -1812,6 +1819,13 @@ local damage_trait_templates = {
 		{
 			"cleave_distribution",
 			"impact",
+			{
+				max = 0.75,
+				min = 0.25
+			}
+		},
+		{
+			"stagger_duration_modifier",
 			{
 				max = 0.75,
 				min = 0.25

@@ -20,14 +20,14 @@ local LightControllerUtilities = {
 			if Unit.has_visibility_group(unit, shadow_caster_group) then
 				Unit.set_visibility(unit, "shadow_caster", not light_source_enabled)
 			end
+		end
 
-			if is_enabled then
-				Unit.set_scalar_for_materials(unit, "emissive_multiplier", 1, true)
-				Unit.flow_event(unit, "lights_enabled")
-			else
-				Unit.set_scalar_for_materials(unit, "emissive_multiplier", 0, true)
-				Unit.flow_event(unit, "lights_disabled")
-			end
+		if is_enabled then
+			Unit.set_scalar_for_materials(unit, "emissive_multiplier", 1, true)
+			Unit.flow_event(unit, "lights_enabled")
+		else
+			Unit.set_scalar_for_materials(unit, "emissive_multiplier", 0, true)
+			Unit.flow_event(unit, "lights_disabled")
 		end
 	end,
 	set_intensity = function (unit)

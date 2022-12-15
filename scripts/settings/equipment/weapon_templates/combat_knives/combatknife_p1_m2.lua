@@ -1240,6 +1240,7 @@ weapon_template.overclocks = {
 		combatknife_p1_m1_dps_stat = 0.1
 	}
 }
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	combatknife_p1_m1_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
@@ -1296,6 +1297,9 @@ weapon_template.base_stats = {
 			},
 			action_special_jab = {
 				damage_trait_templates.default_melee_dps_stat
+			},
+			action_left_heavy_jab_combo = {
+				damage_trait_templates.default_melee_dps_stat
 			}
 		}
 	},
@@ -1311,10 +1315,7 @@ weapon_template.base_stats = {
 						targets = {
 							{
 								armor_damage_modifier = {
-									attack = {
-										[armor_types.armored] = {},
-										[armor_types.super_armor] = {}
-									}
+									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
 								}
 							}
 						}
@@ -1324,15 +1325,12 @@ weapon_template.base_stats = {
 			action_left_heavy = {
 				damage_trait_templates.default_armor_pierce_stat,
 				display_data = {
-					prefix = "loc_weapon_action_title_light",
+					prefix = "loc_weapon_action_title_heavy",
 					display_stats = {
 						targets = {
 							{
 								armor_damage_modifier = {
-									attack = {
-										[armor_types.armored] = {},
-										[armor_types.super_armor] = {}
-									}
+									attack = WeaponBarUIDescriptionTemplates.armor_damage_modifiers
 								}
 							}
 						}
@@ -1355,6 +1353,9 @@ weapon_template.base_stats = {
 				damage_trait_templates.default_armor_pierce_stat
 			},
 			action_special_jab = {
+				damage_trait_templates.default_armor_pierce_stat
+			},
+			action_left_heavy_jab_combo = {
 				damage_trait_templates.default_armor_pierce_stat
 			}
 		}
@@ -1406,6 +1407,9 @@ weapon_template.base_stats = {
 			},
 			action_special_jab = {
 				damage_trait_templates.default_melee_finesse_stat
+			},
+			action_left_heavy_jab_combo = {
+				damage_trait_templates.default_melee_finesse_stat
 			}
 		},
 		weapon_handling = {
@@ -1414,7 +1418,7 @@ weapon_template.base_stats = {
 				display_data = {
 					prefix = "loc_weapon_action_title_light",
 					display_stats = {
-						time_scale = {}
+						__all_basic_stats = true
 					}
 				}
 			},
@@ -1423,7 +1427,7 @@ weapon_template.base_stats = {
 				display_data = {
 					prefix = "loc_weapon_action_title_heavy",
 					display_stats = {
-						time_scale = {}
+						__all_basic_stats = true
 					}
 				}
 			},
@@ -1443,6 +1447,9 @@ weapon_template.base_stats = {
 				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_special_jab = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_left_heavy_jab_combo = {
 				weapon_handling_trait_templates.default_finesse_stat
 			}
 		}
@@ -1494,6 +1501,9 @@ weapon_template.base_stats = {
 			},
 			action_special_jab = {
 				damage_trait_templates.default_first_target_stat
+			},
+			action_left_heavy_jab_combo = {
+				damage_trait_templates.default_first_target_stat
 			}
 		}
 	},
@@ -1503,33 +1513,19 @@ weapon_template.base_stats = {
 		dodge = {
 			base = {
 				dodge_trait_templates.default_dodge_stat,
-				display_data = {
-					display_stats = {
-						diminishing_return_start = {},
-						distance_scale = {},
-						speed_modifier = {}
-					}
-				}
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		sprint = {
 			base = {
 				sprint_trait_templates.default_sprint_stat,
-				display_data = {
-					display_stats = {
-						sprint_speed_mod = {}
-					}
-				}
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		movement_curve_modifier = {
 			base = {
 				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
-				display_data = {
-					display_stats = {
-						modifier = {}
-					}
-				}
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	}

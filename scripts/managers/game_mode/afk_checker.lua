@@ -5,7 +5,8 @@ local SERVER_RPCS = {
 	"rpc_report_menu_activity"
 }
 local CLIENT_RPCS = {
-	"rpc_inactivity_warning"
+	"rpc_enable_inactivity_warning",
+	"rpc_disable_inactivity_warning"
 }
 local MENU_ACTIVITY_REPORT_INTERVAL = 30
 
@@ -14,8 +15,17 @@ AFKChecker.init = function (self, is_server, settings, network_event_delegate)
 	self._network_event_delegate = network_event_delegate
 
 	if is_server then
-		local warning_time_minutes = settings.warning_time_minutes
-		local kick_time_minutes = settings.kick_time_minutes
+		local warning_time_minutes, kick_time_minutes = nil
+		local location = settings.location
+
+		if location == "hub" then
+			warning_time_minutes = GameParameters.afk_warning_time_hub
+			kick_time_minutes = GameParameters.afk_kick_time_hub
+		elseif location == "mission" then
+			warning_time_minutes = GameParameters.afk_warning_time_mission
+			kick_time_minutes = GameParameters.afk_kick_time_mission
+		end
+
 		self._ignore_disabled_players = settings.ignore_disabled_players
 		self._minutes_from_warning_to_kick = kick_time_minutes - warning_time_minutes
 		self._warning_time = warning_time_minutes * 60
@@ -107,10 +117,10 @@ AFKChecker.server_update = function (self, dt, t)
 					self:_kick(player_id)
 				elseif t > last_input_time + self._warning_time then
 					if not self._warned_players[player_id] then
-						self:_warning(player_id, true)
+						self:_enable_warning(player_id)
 					end
 				elseif self._warned_players[player_id] then
-					self:_warning(player_id, false)
+					self:_disable_warning(player_id)
 				end
 			end
 		end
@@ -125,15 +135,26 @@ AFKChecker.server_update = function (self, dt, t)
 	end
 end
 
-AFKChecker._warning = function (self, player_id, enabled)
+AFKChecker._enable_warning = function (self, player_id)
 	local player = Managers.player:player_from_unique_id(player_id)
 	local peer_id = player:peer_id()
 
-	Managers.state.game_session:send_rpc_client("rpc_inactivity_warning", peer_id, enabled)
+	Managers.state.game_session:send_rpc_client("rpc_enable_inactivity_warning", peer_id, self._minutes_from_warning_to_kick)
 
-	self._warned_players[player:unique_id()] = enabled or nil
+	self._warned_players[player:unique_id()] = true
 
-	Log.info("AFKChecker", "Updated inactivity warning for player %s at peer %s, warning enabled: %s", player_id, peer_id, enabled)
+	Log.info("AFKChecker", "Enabled inactivity warning for player %s at peer %s, will be kicked in %s minutes", player_id, peer_id, self._minutes_from_warning_to_kick)
+end
+
+AFKChecker._disable_warning = function (self, player_id)
+	local player = Managers.player:player_from_unique_id(player_id)
+	local peer_id = player:peer_id()
+
+	Managers.state.game_session:send_rpc_client("rpc_disable_inactivity_warning", peer_id)
+
+	self._warned_players[player:unique_id()] = nil
+
+	Log.info("AFKChecker", "Disabled inactivity warning for player %s at peer %s", player_id, peer_id)
 end
 
 AFKChecker._kick = function (self, player_id)
@@ -160,23 +181,29 @@ AFKChecker.rpc_report_menu_activity = function (self, channel_id)
 	end
 end
 
-AFKChecker.rpc_inactivity_warning = function (self, channel_id, enable_warning)
-	if enable_warning then
-		if not self._warning_popup_id then
-			self:_show_warning_popup()
-		end
-	elseif self._warning_popup_id then
+AFKChecker.rpc_enable_inactivity_warning = function (self, channel_id, minutes_to_kick)
+	Log.info("AFKChecker", "Enabled inactivity warning, getting kicked in %s minutes", minutes_to_kick)
+
+	if not self._warning_popup_id then
+		self:_show_warning_popup(minutes_to_kick)
+	end
+end
+
+AFKChecker.rpc_disable_inactivity_warning = function (self, channel_id)
+	Log.info("AFKChecker", "Disabled inactivity warning")
+
+	if self._warning_popup_id then
 		self:_hide_warning_popup()
 	end
 end
 
-AFKChecker._show_warning_popup = function (self)
+AFKChecker._show_warning_popup = function (self, minutes_to_kick)
 	local context = {
 		title_text = "loc_popup_header_afk_kick_warning",
-		description_text = "loc_popup_description_afk_kick_warning",
+		description_text = "loc_popup_description_afk_kick_warning_dynamic",
 		priority_order = 10,
 		description_text_params = {
-			time = self._minutes_from_warning_to_kick
+			time = minutes_to_kick
 		},
 		options = {
 			{

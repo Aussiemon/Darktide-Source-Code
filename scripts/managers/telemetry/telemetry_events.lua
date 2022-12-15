@@ -579,6 +579,19 @@ TelemetryEvents.camera_performance_measurements = function (self, map, camera, m
 	self._manager:register_event(event)
 end
 
+TelemetryEvents.cutscene_performance_measurements = function (self, map, cutscene, measurements)
+	local event = self:_create_event("cutscene_performance_measurements")
+
+	event:set_data({
+		map = map,
+		cutscene = cutscene,
+		ms_per_frame = measurements.ms_per_frame,
+		batchcount = measurements.batchcount,
+		primitives_count = measurements.primitives_count
+	})
+	self._manager:register_event(event)
+end
+
 TelemetryEvents.performance_measurements = function (self, map, measurements)
 	local event = self:_create_event("performance_measurements")
 
@@ -797,6 +810,13 @@ TelemetryEvents.chat_message_sent = function (self, message_body)
 	event:set_data({
 		message_length = message_body:len()
 	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.breed_info = function (self, breed_info)
+	local event = self:_create_event("breed_info")
+
+	event:set_data(breed_info)
 	self._manager:register_event(event)
 end
 

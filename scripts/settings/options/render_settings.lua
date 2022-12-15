@@ -593,6 +593,7 @@ local RENDER_TEMPLATES = {
 		default_value = 0,
 		apply_on_startup = true,
 		id = "dlss_g",
+		tooltip_text = "loc_setting_dlss_g_mouseover",
 		save_location = "master_render_settings",
 		validation_function = function ()
 			return Application.render_caps("dlss_g_supported")
@@ -1272,6 +1273,7 @@ local RENDER_TEMPLATES = {
 						ssr_quality = "off",
 						lens_flare_quality = "off",
 						dof_quality = "off",
+						texture_quality = "low",
 						volumetric_fog_quality = "low",
 						gi_quality = "low",
 						light_quality = "low",
@@ -1279,11 +1281,12 @@ local RENDER_TEMPLATES = {
 					},
 					render_settings = {
 						lens_quality_enabled = false,
-						skin_material_enabled = false,
-						lod_scatter_density = 0.25,
 						motion_blur_enabled = false,
+						bloom_enabled = true,
+						lod_scatter_density = 0.25,
+						skin_material_enabled = false,
 						rough_transparency_enabled = false,
-						bloom_enabled = true
+						lod_object_multiplier = 0.7
 					}
 				}
 			},
@@ -1303,6 +1306,7 @@ local RENDER_TEMPLATES = {
 						ssr_quality = "medium",
 						lens_flare_quality = "sun_light_only",
 						dof_quality = "medium",
+						texture_quality = "medium",
 						volumetric_fog_quality = "medium",
 						gi_quality = "high",
 						light_quality = "medium",
@@ -1310,11 +1314,12 @@ local RENDER_TEMPLATES = {
 					},
 					render_settings = {
 						lens_quality_enabled = true,
-						skin_material_enabled = false,
-						lod_scatter_density = 0.5,
 						motion_blur_enabled = true,
+						bloom_enabled = true,
+						lod_scatter_density = 0.5,
+						skin_material_enabled = false,
 						rough_transparency_enabled = true,
-						bloom_enabled = true
+						lod_object_multiplier = 1
 					}
 				}
 			},
@@ -1334,6 +1339,7 @@ local RENDER_TEMPLATES = {
 						ssr_quality = "high",
 						lens_flare_quality = "all_lights",
 						dof_quality = "high",
+						texture_quality = "high",
 						volumetric_fog_quality = "high",
 						gi_quality = "high",
 						light_quality = "high",
@@ -1341,11 +1347,12 @@ local RENDER_TEMPLATES = {
 					},
 					render_settings = {
 						lens_quality_enabled = true,
-						skin_material_enabled = true,
-						lod_scatter_density = 1,
 						motion_blur_enabled = true,
+						bloom_enabled = true,
+						lod_scatter_density = 1,
+						skin_material_enabled = true,
 						rough_transparency_enabled = true,
-						bloom_enabled = true
+						lod_object_multiplier = 2
 					}
 				}
 			},
@@ -1359,6 +1366,127 @@ local RENDER_TEMPLATES = {
 		group_name = "render_settings",
 		display_name = "loc_settings_menu_group_graphics_advanced",
 		widget_type = "group_header"
+	},
+	{
+		display_name = "loc_setting_texture_quality",
+		id = "texture_quality",
+		tooltip_text = "loc_setting_texture_quality_mouseover",
+		save_location = "master_render_settings",
+		options = {
+			{
+				id = "low",
+				display_name = "loc_settings_menu_low",
+				require_apply = true,
+				require_restart = true,
+				apply_values_on_edited = {
+					graphics_quality = "custom"
+				},
+				values = {
+					texture_settings = {
+						["content/texture_categories/character_nm"] = 2,
+						["content/texture_categories/weapon_bc"] = 2,
+						["content/texture_categories/weapon_bca"] = 2,
+						["content/texture_categories/environment_bc"] = 2,
+						["content/texture_categories/character_mask"] = 2,
+						["content/texture_categories/character_orm"] = 2,
+						["content/texture_categories/character_bc"] = 2,
+						["content/texture_categories/environment_hm"] = 2,
+						["content/texture_categories/character_mask2"] = 2,
+						["content/texture_categories/environment_orm"] = 2,
+						["content/texture_categories/character_bcm"] = 2,
+						["content/texture_categories/character_bca"] = 2,
+						["content/texture_categories/weapon_nm"] = 2,
+						["content/texture_categories/environment_bca"] = 2,
+						["content/texture_categories/environment_nm"] = 2,
+						["content/texture_categories/character_hm"] = 2,
+						["content/texture_categories/weapon_hm"] = 2,
+						["content/texture_categories/weapon_mask"] = 2,
+						["content/texture_categories/weapon_orm"] = 2
+					}
+				}
+			},
+			{
+				id = "medium",
+				display_name = "loc_settings_menu_medium",
+				require_apply = true,
+				require_restart = true,
+				apply_values_on_edited = {
+					graphics_quality = "custom"
+				},
+				values = {
+					texture_settings = {
+						["content/texture_categories/character_nm"] = 1,
+						["content/texture_categories/weapon_bc"] = 1,
+						["content/texture_categories/weapon_bca"] = 1,
+						["content/texture_categories/environment_bc"] = 1,
+						["content/texture_categories/character_mask"] = 1,
+						["content/texture_categories/character_orm"] = 1,
+						["content/texture_categories/character_bc"] = 1,
+						["content/texture_categories/environment_hm"] = 1,
+						["content/texture_categories/character_mask2"] = 1,
+						["content/texture_categories/environment_orm"] = 1,
+						["content/texture_categories/character_bcm"] = 1,
+						["content/texture_categories/character_bca"] = 1,
+						["content/texture_categories/weapon_nm"] = 1,
+						["content/texture_categories/environment_bca"] = 1,
+						["content/texture_categories/environment_nm"] = 1,
+						["content/texture_categories/character_hm"] = 1,
+						["content/texture_categories/weapon_hm"] = 1,
+						["content/texture_categories/weapon_mask"] = 1,
+						["content/texture_categories/weapon_orm"] = 1
+					}
+				}
+			},
+			{
+				id = "high",
+				display_name = "loc_settings_menu_high",
+				require_apply = true,
+				require_restart = true,
+				apply_values_on_edited = {
+					graphics_quality = "custom"
+				},
+				values = {
+					texture_settings = {
+						["content/texture_categories/character_nm"] = 0,
+						["content/texture_categories/weapon_bc"] = 0,
+						["content/texture_categories/weapon_bca"] = 0,
+						["content/texture_categories/environment_bc"] = 0,
+						["content/texture_categories/character_mask"] = 0,
+						["content/texture_categories/character_orm"] = 0,
+						["content/texture_categories/character_bc"] = 0,
+						["content/texture_categories/environment_hm"] = 0,
+						["content/texture_categories/character_mask2"] = 0,
+						["content/texture_categories/environment_orm"] = 0,
+						["content/texture_categories/character_bcm"] = 0,
+						["content/texture_categories/character_bca"] = 0,
+						["content/texture_categories/weapon_nm"] = 0,
+						["content/texture_categories/environment_bca"] = 0,
+						["content/texture_categories/environment_nm"] = 0,
+						["content/texture_categories/character_hm"] = 0,
+						["content/texture_categories/weapon_hm"] = 0,
+						["content/texture_categories/weapon_mask"] = 0,
+						["content/texture_categories/weapon_orm"] = 0
+					}
+				}
+			}
+		}
+	},
+	{
+		value_type = "number",
+		id = "lod_object_multiplier",
+		display_name = "loc_setting_lod_object_multiplier",
+		num_decimals = 1,
+		max = 5,
+		require_restart = false,
+		min = 0.5,
+		step_size = 0.1,
+		require_apply = true,
+		tooltip_text = "loc_setting_lod_object_multiplier_mouseover",
+		save_location = "render_settings",
+		apply_values_on_edited = {
+			graphics_quality = "custom"
+		},
+		default_value = DefaultGameParameters.default_lod_object_multiplier
 	},
 	{
 		display_name = "loc_setting_ambient_occlusion_quality",

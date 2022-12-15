@@ -167,6 +167,47 @@ local conversations_disabled_veteran_male_c = {
 			[2.0] = 2.613563
 		},
 		randomize_indexes = {}
+	},
+	lore_enemy_within_one_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_veteran_male_c__lore_enemy_within_one_a_01",
+			"loc_veteran_male_c__lore_enemy_within_one_a_03",
+			"loc_veteran_male_c__lore_enemy_within_one_a_04"
+		},
+		sound_events_duration = {
+			3.390688,
+			2.75251,
+			2.655823
+		},
+		randomize_indexes = {}
+	},
+	lore_enemy_within_one_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_veteran_male_c__lore_enemy_within_one_b_01",
+			[2.0] = "loc_veteran_male_c__lore_enemy_within_one_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 3.645854,
+			[2.0] = 1.537406
+		},
+		randomize_indexes = {}
+	},
+	lore_enemy_within_one_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_veteran_male_c__lore_enemy_within_one_c_01",
+			[2.0] = "loc_veteran_male_c__lore_enemy_within_one_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 3.116719,
+			[2.0] = 3.132833
+		},
+		randomize_indexes = {}
 	}
 }
 

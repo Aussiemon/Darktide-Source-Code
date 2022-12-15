@@ -44,7 +44,7 @@ end
 ActionTargetedDashAim._find_target = function (self, time_in_action)
 	local new_target = nil
 
-	if self._aim_ready_up_time < time_in_action then
+	if self._aim_ready_up_time <= time_in_action then
 		local lunge_template = self:get_lunge_template()
 		local smart_targeting_data = self._smart_targeting_extension:targeting_data()
 		local smart_target_unit = smart_targeting_data.unit

@@ -39,11 +39,12 @@ local mission_templates = {
 		}
 	},
 	om_basic_combat_01 = {
-		mechanism_name = "onboarding",
-		game_mode_name = "training_grounds",
-		mission_name = "loc_mission_name_tg_basic_combat_01",
-		objectives = "training_grounds",
 		zone_id = "training_grounds",
+		mission_name = "loc_mission_name_tg_basic_combat_01",
+		hud_elements = "scripts/ui/hud/hud_elements_player_onboarding",
+		objectives = "training_grounds",
+		game_mode_name = "training_grounds",
+		mechanism_name = "onboarding",
 		level = "content/levels/training_grounds/missions/mission_tg_basic_combat_01",
 		terror_event_templates = {
 			"terror_events_training_ground"
@@ -56,11 +57,12 @@ local mission_templates = {
 		}
 	},
 	tg_shooting_range = {
-		mechanism_name = "onboarding",
-		game_mode_name = "shooting_range",
-		mission_name = "loc_sg_enter_sg",
-		objectives = "training_grounds",
 		zone_id = "training_grounds",
+		mission_name = "loc_sg_enter_sg",
+		hud_elements = "scripts/ui/hud/hud_elements_player_onboarding",
+		objectives = "training_grounds",
+		game_mode_name = "shooting_range",
+		mechanism_name = "onboarding",
 		level = "content/levels/training_grounds/missions/mission_tg_basic_combat_01",
 		terror_event_templates = {
 			"terror_events_training_ground"

@@ -108,7 +108,7 @@ SocialXboxLive.fetch_blocked_list = function (self)
 
 	self._blocked_promise = Promise:new()
 
-	XboxLiveUtils.get_avoid_list():next(function (xuids)
+	XboxLiveUtils.get_block_list():next(function (xuids)
 		if #xuids > 0 then
 			return XboxLiveUtils.get_user_profiles(xuids)
 		else

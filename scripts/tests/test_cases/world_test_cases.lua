@@ -10,7 +10,7 @@ WorldTestCases = {
 			local mission_key = settings.mission_key
 			local num_peers = settings.num_peers or 0
 
-			if TestifySnippets.is_debug_stripped() and Testify:make_request("current_state_name") ~= "StateGameplay" then
+			if (TestifySnippets.is_debug_stripped() or BUILD == "release") and Testify:make_request("current_state_name") ~= "StateGameplay" then
 				TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			end
 

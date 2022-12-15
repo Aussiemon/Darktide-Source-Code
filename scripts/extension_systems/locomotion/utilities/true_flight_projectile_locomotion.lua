@@ -142,7 +142,6 @@ local function _check_collisions(physics_world, integration_data, previus_positi
 		local is_valid_collision = is_valid_true_flight and ProjectileLocomotionUtility.check_collision(hit_unit, hit_position, integration_data)
 
 		if is_valid_collision then
-			integration_data.hits = hits
 			integration_data.has_hit = true
 			local on_impact_func = _find_true_flight_function(true_flight_template, "on_impact")
 			local force_delete = false
@@ -161,7 +160,6 @@ local function _check_collisions(physics_world, integration_data, previus_positi
 			end
 		else
 			integration_data.has_hit = false
-			integration_data.hits = nil
 
 			return new_position
 		end
@@ -169,7 +167,6 @@ local function _check_collisions(physics_world, integration_data, previus_positi
 		return hit.position
 	else
 		integration_data.has_hit = false
-		integration_data.hits = nil
 	end
 
 	return new_position

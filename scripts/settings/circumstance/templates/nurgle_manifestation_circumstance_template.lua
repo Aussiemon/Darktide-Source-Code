@@ -7,7 +7,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_nurgle_manifestation_description",
 			icon = "content/ui/materials/icons/circumstances/nurgle_manifestation_01",
 			display_name = "loc_circumstance_nurgle_manifestation_title",
-			favourable_to_players = true
+			happening_display_name = "loc_happening_nurgle_manifestation"
 		},
 		mutators = {
 			"mutator_minion_nurgle_blessing"
@@ -22,7 +22,7 @@ local circumstance_templates = {
 			description = "loc_circumstance_nurgle_manifestation_description",
 			icon = "content/ui/materials/icons/circumstances/nurgle_manifestation_01",
 			display_name = "loc_circumstance_nurgle_manifestation_title",
-			favourable_to_players = true
+			happening_display_name = "loc_happening_nurgle_manifestation"
 		},
 		mutators = {
 			"mutator_corruption_over_time"

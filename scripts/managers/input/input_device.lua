@@ -153,7 +153,7 @@ InputDevice.buttons_held = function (self)
 
 	for i = 0, num - 1 do
 		if raw_device.button(i) > 0 then
-			local raw_name = raw_device.button_name(i)
+			local raw_name = raw_device.button_name(i) or "oem_" .. i
 			local global_name = self:local_to_global_name(raw_name)
 
 			table.insert(button_list, global_name)

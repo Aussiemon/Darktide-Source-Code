@@ -39,6 +39,7 @@ local interactions = {
 	marks_vendor = ViewInteraction,
 	mission_board = ViewInteraction,
 	moveable_platform = MoveablePlatformInteraction,
+	penances = ViewInteraction,
 	pickup = PickupInteraction,
 	pocketable = PocketableInteraction,
 	premium_vendor = ViewInteraction,

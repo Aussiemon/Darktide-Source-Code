@@ -148,7 +148,10 @@ local function generate_blueprints_function(grid_size)
 		widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 	end
 
-	local function _remove_live_item_icon_cb_func(widget)
+	local function _remove_live_item_icon_cb_func(widget, ui_renderer)
+		UIWidget.set_visible(widget, ui_renderer, false)
+		UIWidget.set_visible(widget, ui_renderer, true)
+
 		local material_values = widget.style.icon.material_values
 		material_values.use_placeholder_texture = 1
 		material_values.render_target = nil
@@ -213,6 +216,15 @@ local function generate_blueprints_function(grid_size)
 
 				local item_icon_size = slot.item_icon_size
 				style.icon.material_values.icon_size = item_icon_size
+				local icon_color = slot.icon_color
+
+				if icon_color then
+					local color = style.icon.color
+					color[1] = icon_color[1]
+					color[2] = icon_color[2]
+					color[3] = icon_color[3]
+					color[4] = icon_color[4]
+				end
 			end
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -346,7 +358,7 @@ local function generate_blueprints_function(grid_size)
 			local content = widget.content
 
 			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget)
+				_remove_live_item_icon_cb_func(widget, ui_renderer)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
@@ -356,7 +368,7 @@ local function generate_blueprints_function(grid_size)
 			local content = widget.content
 
 			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget)
+				_remove_live_item_icon_cb_func(widget, ui_renderer)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
@@ -433,7 +445,7 @@ local function generate_blueprints_function(grid_size)
 			local content = widget.content
 
 			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget)
+				_remove_live_item_icon_cb_func(widget, ui_renderer)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
@@ -443,7 +455,7 @@ local function generate_blueprints_function(grid_size)
 			local content = widget.content
 
 			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget)
+				_remove_live_item_icon_cb_func(widget, ui_renderer)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
@@ -509,7 +521,6 @@ local function generate_blueprints_function(grid_size)
 				local traits = item.traits
 
 				if traits then
-					local item_trait_frame_texture_lookup = UISettings.item_trait_frame_texture_lookup
 					local trait_index = 1
 
 					for i = 1, #traits do
@@ -606,7 +617,7 @@ local function generate_blueprints_function(grid_size)
 			local content = widget.content
 
 			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget)
+				_remove_live_item_icon_cb_func(widget, ui_renderer)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
@@ -616,7 +627,7 @@ local function generate_blueprints_function(grid_size)
 			local content = widget.content
 
 			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget)
+				_remove_live_item_icon_cb_func(widget, ui_renderer)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
@@ -660,6 +671,8 @@ local function generate_blueprints_function(grid_size)
 				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 				local is_active = offer.state == "active"
 				content.sold = not is_active
+				local is_owned = offer.state == "owned"
+				content.owned = is_owned
 			end
 
 			local item_type = item.item_type
@@ -789,7 +802,7 @@ local function generate_blueprints_function(grid_size)
 			local content = widget.content
 
 			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget)
+				_remove_live_item_icon_cb_func(widget, ui_renderer)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
@@ -799,7 +812,7 @@ local function generate_blueprints_function(grid_size)
 			local content = widget.content
 
 			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget)
+				_remove_live_item_icon_cb_func(widget, ui_renderer)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil

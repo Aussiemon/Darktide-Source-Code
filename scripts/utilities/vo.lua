@@ -1146,8 +1146,9 @@ Vo.set_dynamic_smart_tag = function (unit, tag)
 
 			local unit_spawner_manager = Managers.state.unit_spawner
 			local go_id = unit_spawner_manager:game_object_id(unit)
+			local tag_id = DialogueSettings.dynamic_smart_tag[tag]
 
-			Managers.state.game_session:send_rpc_clients("rpc_set_dynamic_smart_tag", go_id, tag)
+			Managers.state.game_session:send_rpc_clients("rpc_set_dynamic_smart_tag", go_id, tag_id)
 		end
 	end
 end

@@ -86,7 +86,6 @@ local insertion_caret_size = {
 	2,
 	input_field_height - (input_field_margins[2] + input_field_margins[4])
 }
-local scrub_formatting_directives_from_message = true
 local slug_formatted_message_color = message_color[2] .. "," .. message_color[3] .. "," .. message_color[4]
 local message_presentation_format = "{# color([channel_color],255);}[author_name]:  {# color(" .. slug_formatted_message_color .. ",255)}[message_text]"
 local no_leading_space_languages = table.enum("ja", "ko", "zh-cn", "zh-tw")
@@ -99,11 +98,12 @@ local idle_text_alpha = 255
 local idle_background_alpha = 0
 local history_limit = 500
 local message_limit_in_characters = 200
+local close_on_backspace = false
 local ChannelTags = ChatManagerConstants.ChannelTag
 local channel_metadata = {
 	[ChannelTags.PARTY] = {
 		name = "loc_chat_channel_mission",
-		color = local_message_color
+		color = mission_channel_color
 	},
 	[ChannelTags.MISSION] = {
 		name = "loc_chat_channel_mission",
@@ -124,11 +124,11 @@ local channel_metadata = {
 	}
 }
 local channel_priority = {
-	ChannelTags.MISSION,
-	ChannelTags.PARTY,
-	ChannelTags.HUB,
-	ChannelTags.CLAN,
-	ChannelTags.PRIVATE
+	[ChannelTags.MISSION] = 1,
+	[ChannelTags.PARTY] = 2,
+	[ChannelTags.HUB] = 3,
+	[ChannelTags.CLAN] = 4,
+	[ChannelTags.PRIVATE] = 5
 }
 local constant_element_chat_settings = {
 	chat_window_size = chat_window_size,
@@ -165,8 +165,8 @@ local constant_element_chat_settings = {
 	idle_background_alpha = idle_background_alpha,
 	history_limit = history_limit,
 	message_limit_in_characters = message_limit_in_characters,
+	close_on_backspace = close_on_backspace,
 	message_presentation_format = message_presentation_format,
-	scrub_formatting_directives_from_message = scrub_formatting_directives_from_message,
 	channel_metadata = channel_metadata,
 	channel_priority = channel_priority
 }

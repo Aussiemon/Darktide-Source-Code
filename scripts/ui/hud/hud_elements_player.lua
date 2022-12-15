@@ -170,41 +170,6 @@ local elements = {
 		}
 	},
 	{
-		package = "packages/ui/hud/prologue_tutorial_step_tracker/prologue_tutorial_step_tracker",
-		use_hud_scale = true,
-		class_name = "HudElementPrologueStepTracker",
-		filename = "scripts/ui/hud/elements/prologue_tutorial_step_tracker/hud_element_prologue_tutorial_step_tracker",
-		visibility_groups = {
-			"dead",
-			"alive",
-			"communication_wheel",
-			"onboarding"
-		}
-	},
-	{
-		use_hud_scale = true,
-		class_name = "HudElementPrologueTutorialSequenceTransitionEnd",
-		filename = "scripts/ui/hud/elements/prologue_tutorial_sequence_transition_end/hud_element_prologue_tutorial_sequence_transition_end",
-		visibility_groups = {
-			"dead",
-			"alive",
-			"communication_wheel",
-			"onboarding"
-		}
-	},
-	{
-		package = "packages/ui/hud/prologue_tutorial_info_box/prologue_tutorial_info_box",
-		use_hud_scale = true,
-		class_name = "HudElementPrologueTutorialInfoBox",
-		filename = "scripts/ui/hud/elements/prologue_tutorial_info_box/hud_element_prologue_tutorial_info_box",
-		visibility_groups = {
-			"dead",
-			"alive",
-			"communication_wheel",
-			"onboarding"
-		}
-	},
-	{
 		customizable_scenegraph_id = "background",
 		use_hud_scale = true,
 		class_name = "HudElementCombatFeed",
@@ -304,6 +269,17 @@ local elements = {
 			"testify",
 			"dead",
 			"alive"
+		}
+	},
+	{
+		package = "packages/ui/hud/prologue_tutorial_info_box/prologue_tutorial_info_box",
+		use_hud_scale = true,
+		class_name = "HudElementPrologueTutorialInfoBox",
+		filename = "scripts/ui/hud/elements/prologue_tutorial_info_box/hud_element_prologue_tutorial_info_box",
+		visibility_groups = {
+			"dead",
+			"alive",
+			"communication_wheel"
 		}
 	}
 }

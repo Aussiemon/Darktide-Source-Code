@@ -679,7 +679,7 @@ ClassSelectionView._destroy_class_abilities_info = function (self)
 			local template = ContentBlueprints[widget.element.type]
 
 			if template and template.destroy then
-				template.destroy(self, widget)
+				template.destroy(self, widget, self._ui_renderer)
 			end
 
 			self:_unregister_widget_name(widget.name)

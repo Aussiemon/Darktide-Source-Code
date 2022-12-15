@@ -1208,7 +1208,8 @@ DialogueSystem.rpc_interrupt_dialogue_event = function (self, channel_id, go_id,
 	end
 end
 
-DialogueSystem.rpc_set_dynamic_smart_tag = function (self, channel_id, go_id, smart_tag)
+DialogueSystem.rpc_set_dynamic_smart_tag = function (self, channel_id, go_id, tag_id)
+	local smart_tag = NetworkLookup.dynamic_smart_tag[tag_id]
 	local enemy_unit = Managers.state.unit_spawner:unit(go_id)
 
 	if not enemy_unit then

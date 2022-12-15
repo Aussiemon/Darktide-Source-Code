@@ -6754,16 +6754,19 @@ return function ()
 	define_rule({
 		name = "tech_priest_distance",
 		concurrent_wwise_event = "play_vox_static_loop",
-		category = "npc_prio_0",
+		wwise_route = 19,
 		response = "tech_priest_distance",
 		database = "conversations_hub",
-		wwise_route = 1,
+		category = "npc_prio_0",
+		speaker_routing = {
+			target = "dialogist"
+		},
 		criterias = {
 			{
 				"query_context",
 				"concept",
 				OP.EQ,
-				"npc_vo"
+				"npc_interacting_vo"
 			},
 			{
 				"query_context",
@@ -6772,15 +6775,64 @@ return function ()
 				"tech_priest_distance"
 			},
 			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"zealot_female_a",
+					"zealot_female_b",
+					"zealot_female_c",
+					"zealot_male_a",
+					"zealot_male_b",
+					"zealot_male_c"
+				}
+			},
+			{
 				"user_context",
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
+					"tech_priest"
+				}
+			},
+			{
+				"query_context",
+				"player_level_string",
+				OP.SET_INCLUDES,
+				args = {
 					""
 				}
+			},
+			{
+				"user_memory",
+				"last_t",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
 			}
 		},
-		on_done = {}
+		on_done = {
+			{
+				"user_memory",
+				"last_",
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		name = "tech_priest_goodbye",

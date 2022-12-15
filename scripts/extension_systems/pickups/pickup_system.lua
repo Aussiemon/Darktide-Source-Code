@@ -32,6 +32,10 @@ PickupSystem.init = function (self, context, system_init_data, ...)
 	self._rubberband_pool_special_spawned = {}
 end
 
+PickupSystem.destroy = function (self)
+	return
+end
+
 PickupSystem._fetch_settings = function (self)
 	local difficulty = Managers.state.difficulty:get_difficulty()
 	local distribution_pool = PickupSettings.distribution_pool
@@ -69,6 +73,8 @@ PickupSystem._fetch_settings = function (self)
 end
 
 PickupSystem.extensions_ready = function (self, world, unit)
+	self._game_session = Managers.state.game_session:game_session()
+
 	if self._is_server then
 		local extension = self._unit_to_extension_map[unit]
 
@@ -275,7 +281,7 @@ end
 
 local weights = {}
 
-PickupSystem.get_rubberband_pickup = function (self, distribution_type, percentage_through_level, pickup_options)
+PickupSystem.get_rubberband_pickup = function (self, distribution_type, percentage_through_level)
 	local AMMO = 1
 	local GRENADE = 2
 	local HEALTH = 3
@@ -472,49 +478,50 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_p
 		pickup_spawners[i]:register_spawn_locations(usable_spawners, distribution_type, pickup_pool)
 	end
 
-	local chest_spawners = 0
+	local pickup_count = 0
 
-	for i = 1, #usable_spawners do
-		if usable_spawners[i].chest then
-			chest_spawners = chest_spawners + 1
+	for pickup_type, value in pairs(pickup_pool) do
+		for pickup_name, amount in pairs(value) do
+			pickup_count = pickup_count + amount
 		end
 	end
 
-	local chest_spawner_ratio = chest_spawners / #usable_spawners
+	local spawn_ratio = pickup_count / #usable_spawners
 	local min_chest_spawner_ratio = PickupSettings.min_chest_spawner_ratio[distribution_type] or 0
 
-	if chest_spawners > 2 and chest_spawner_ratio < min_chest_spawner_ratio then
-		local pickup_count = 0
+	if spawn_ratio < min_chest_spawner_ratio then
+		local chest_spawners = 0
 
-		for pickup_type, value in pairs(pickup_pool) do
-			for pickup_name, amount in pairs(value) do
-				pickup_count = pickup_count + amount
+		for i = 1, #usable_spawners do
+			if usable_spawners[i].chest then
+				chest_spawners = chest_spawners + 1
 			end
 		end
 
-		local initial_usable_spawners = #usable_spawners
-		local direct_spawners_allowed = math.floor(chest_spawners * 1 / min_chest_spawner_ratio)
-		local direct_spawners = initial_usable_spawners - chest_spawners
-		local max_removable = initial_usable_spawners - pickup_count
-		local direct_spawners_to_remove = math.min(#usable_spawners - direct_spawners_allowed, direct_spawners, max_removable)
-		local removal_options = {}
+		if chest_spawners > 0 then
+			local initial_usable_spawners = #usable_spawners
+			local spawners_allowed = math.floor(pickup_count / min_chest_spawner_ratio)
+			local max_removable = initial_usable_spawners - pickup_count
+			local direct_spawners_to_remove = math.min(initial_usable_spawners - spawners_allowed, max_removable)
+			local removal_options = {}
 
-		for i = 1, initial_usable_spawners do
-			if not usable_spawners[i].chest then
-				removal_options[#removal_options + 1] = i
+			for i = 1, initial_usable_spawners do
+				if not usable_spawners[i].chest then
+					removal_options[#removal_options + 1] = i
+				end
 			end
-		end
 
-		self:_shuffle(removal_options)
+			self:_shuffle(removal_options)
 
-		for i = direct_spawners_to_remove + 1, initial_usable_spawners do
-			removal_options[i] = nil
-		end
+			for i = direct_spawners_to_remove + 1, initial_usable_spawners do
+				removal_options[i] = nil
+			end
 
-		table.sort(removal_options)
+			table.sort(removal_options)
 
-		for i = #removal_options, 1, -1 do
-			table.remove(usable_spawners, removal_options[i])
+			for i = #removal_options, 1, -1 do
+				table.remove(usable_spawners, removal_options[i])
+			end
 		end
 	end
 

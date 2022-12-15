@@ -90,6 +90,12 @@ local unarmored = {
 				event = "wwise/events/weapon/play_bullet_hits_laser_damage_negated",
 				append_husk_to_event_name = true
 			}
+		},
+		dead = {
+			{
+				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
+				append_husk_to_event_name = true
+			}
 		}
 	},
 	vfx = {

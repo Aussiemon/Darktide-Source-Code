@@ -36,6 +36,8 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_damage", {
 	"action",
 	"id",
 	"damage_type",
+	"is_critical_hit",
+	"stagger_result",
 	"player_class"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_blocked_damage", {
@@ -43,6 +45,13 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_blocked_damage", {
 	"player_class"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_team_blocked_damage"))
+Factory.add_to_group(HookStats, Factory.create_hook("hook_buff", {
+	"breed_name",
+	"buff_template_name",
+	"stack_count",
+	"weapon_template_name",
+	"player_class"
+}))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_kill", {
 	"breed_name",
 	"weapon_template_name",

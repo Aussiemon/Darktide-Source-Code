@@ -404,6 +404,10 @@ local default_debug_input_settings = {
 		trigger_stagger_dwn = {
 			raw = "keyboard_left shift+keyboard_down",
 			type = "pressed"
+		},
+		disconnect_lost_session = {
+			raw = "keyboard_left shift+keyboard_0",
+			type = "pressed"
 		}
 	}
 }

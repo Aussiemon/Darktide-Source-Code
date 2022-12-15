@@ -51,6 +51,7 @@ PlayerCharacterStateLunging.init = function (self, character_state_init_context,
 	self._number_of_units_hit = 0
 	self._last_hit_unit = nil
 	self._moving_backwards = nil
+	self._has_pushback = nil
 	self._played_timing_anims = {}
 end
 
@@ -68,6 +69,7 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 	self._locomotion_push_component.new_velocity = Vector3.zero()
 	self._push_sfx_cooldown = 0
 	self._moving_backwards = self._input_extension:get("move").y < -0.1
+	self._has_pushback = false
 	local lunge_template_name = params.lunge_template_name
 	local lunge_template = LungeTemplates[lunge_template_name]
 
@@ -193,6 +195,7 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 	local lunge_character_state_component = self._lunge_character_state_component
 	lunge_character_state_component.is_lunging = false
 	self._moving_backwards = false
+	self._has_pushback = false
 	self._locomotion_steering_component.disable_minion_collision = false
 
 	if next_state == "sprinting" then
@@ -392,13 +395,24 @@ PlayerCharacterStateLunging._update_lunge = function (self, unit, dt, time_in_lu
 	local locomotion_steering_component = self._locomotion_steering_component
 	local prev_wanted_velocity = locomotion_steering_component.velocity_wanted
 	local velocity_current = self._locomotion_component.velocity_current
+
+	if not self._has_pushback then
+		local lunge_direction = self._lunge_character_state_component.direction
+		local dot = Vector3.dot(lunge_direction, Vector3.normalize(velocity_current))
+
+		if dot < 0 then
+			self._has_pushback = true
+		end
+	end
+
 	local prev_velocity_wanted_flat = Vector3.flat(prev_wanted_velocity)
 	local velocity_current_flat = Vector3.flat(velocity_current)
 	local prev_length_sq = Vector3.length_squared(prev_velocity_wanted_flat)
 	local current_length_sq = Vector3.length_squared(velocity_current_flat)
 	local amount_progressed_from_wanted = current_length_sq / prev_length_sq
+	local velocity_time_in_lunge = self._has_pushback and 1 or 0.3
 
-	if amount_progressed_from_wanted < 0.1 and time_in_lunge > 0.3 then
+	if amount_progressed_from_wanted < 0.1 and velocity_time_in_lunge < time_in_lunge then
 		return false
 	end
 
@@ -503,10 +517,13 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 				local add_debuff_on_hit = lunge_template.add_debuff_on_hit
 
 				if add_debuff_on_hit then
+					local stacks = lunge_template.add_debuff_on_hit_stacks or 1
 					local buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
 
 					if buff_extension then
-						buff_extension:add_internally_controlled_buff(add_debuff_on_hit, t, "owner_unit", unit)
+						for i = 1, stacks do
+							buff_extension:add_internally_controlled_buff(add_debuff_on_hit, t, "owner_unit", unit)
+						end
 					end
 				end
 			end

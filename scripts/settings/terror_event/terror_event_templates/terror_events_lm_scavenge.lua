@@ -154,7 +154,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_security_office_west",
 				limit_spawners = 3,
-				points = 25,
+				points = 30,
 				breed_tags = {
 					{
 						"melee",
@@ -213,7 +213,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_security_office_north",
 				limit_spawners = 3,
-				points = 12,
+				points = 16,
 				breed_tags = {
 					{
 						"far",
@@ -257,7 +257,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_security_office_east",
 				limit_spawners = 3,
-				points = 7,
+				points = 8,
 				breed_tags = {
 					{
 						"melee",
@@ -273,7 +273,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_security_office_east",
 				limit_spawners = 3,
-				points = 7,
+				points = 8,
 				breed_tags = {
 					{
 						"melee",
@@ -289,11 +289,11 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_security_office_east",
 				limit_spawners = 3,
-				points = 7,
+				points = 10,
 				breed_tags = {
 					{
 						"melee",
-						"roamer"
+						"elite"
 					}
 				}
 			},
@@ -403,7 +403,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_security_office_south",
 				limit_spawners = 3,
-				points = 25,
+				points = 30,
 				breed_tags = {
 					{
 						"melee",
@@ -461,7 +461,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_security_office_east",
 				limit_spawners = 3,
-				points = 6,
+				points = 8,
 				breed_tags = {
 					{
 						"melee",
@@ -477,7 +477,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_security_office_east",
 				limit_spawners = 3,
-				points = 6,
+				points = 8,
 				breed_tags = {
 					{
 						"melee",
@@ -493,7 +493,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_security_office_east",
 				limit_spawners = 3,
-				points = 6,
+				points = 10,
 				breed_tags = {
 					{
 						"melee",

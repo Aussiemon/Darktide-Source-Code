@@ -162,13 +162,14 @@ local CheckProcFunctions = {
 	end
 }
 local warp_damage_types = {
-	electrocution = true,
-	force_staff_bfg = true,
-	smite = true,
-	warp = true,
-	psyker_biomancer_discharge = true,
-	biomancer_soul = true,
-	force_staff_single_target = true
+	[damage_types.biomancer_soul] = true,
+	[damage_types.smite] = true,
+	[damage_types.electrocution] = true,
+	[damage_types.force_staff_single_target] = true,
+	[damage_types.force_staff_bfg] = true,
+	[damage_types.psyker_biomancer_discharge] = true,
+	[damage_types.warp] = true,
+	[damage_types.warpfire] = true
 }
 
 CheckProcFunctions.on_warp_kill = function (params)

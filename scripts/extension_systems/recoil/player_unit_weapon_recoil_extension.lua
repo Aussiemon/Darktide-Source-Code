@@ -85,9 +85,9 @@ PlayerUnitWeaponRecoilExtension._update_unsteadiness = function (self, dt, t, re
 	local decay_grace = recoil_settings.decay_grace or 0
 	local stat_buffs = self._buff_extension:stat_buffs()
 	local recoil_modifier = stat_buffs.recoil_modifier or 1
+	local num_shots = recoil_control_component.num_shots
 
 	if t <= rise_end_time then
-		local num_shots = recoil_control_component.num_shots
 		local rise_index = math.min(num_shots, recoil_settings.num_rises)
 		local rise_percent = recoil_settings.rise[rise_index]
 		local unsteadiness_increase = rise_percent / recoil_settings.rise_duration * dt
@@ -99,8 +99,8 @@ PlayerUnitWeaponRecoilExtension._update_unsteadiness = function (self, dt, t, re
 		local unsteadiness_decay = decay_percent * dt
 		unsteadiness = unsteadiness - unsteadiness_decay * 1 / recoil_modifier
 
-		if self._recoil_control_component.num_shots > 1 and unsteadiness < 0.75 then
-			local override_shot_count = math.min(self._recoil_control_component.num_shots, math.floor(math.max(unsteadiness, 0) * 5))
+		if num_shots > 1 and unsteadiness < 0.75 then
+			local override_shot_count = math.min(num_shots, math.floor(math.max(unsteadiness, 0) * 5))
 			self._recoil_control_component.num_shots = override_shot_count
 		end
 	end

@@ -143,7 +143,7 @@ MoveablePlatformExtension.can_move = function (self)
 
 	local hostiles_onboard = self:_check_hostile_onboard()
 
-	if hostiles_onboard then
+	if self._require_all_players_onboard and hostiles_onboard then
 		self:_set_block_text("loc_action_interaction_inactive_platform_hostiles_onboard")
 
 		return false

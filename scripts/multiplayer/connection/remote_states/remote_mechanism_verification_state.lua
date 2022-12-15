@@ -1,5 +1,6 @@
 local JwtTicketUtils = require("scripts/multiplayer/utilities/jwt_ticket_utils")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
+local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 local RPCS = {
 	"rpc_check_mechanism"
@@ -136,6 +137,12 @@ RemoteMechanismVerificationState._check_mechanism = function (self, jwt_ticket)
 			local client_mission_data = verified_jwt_payload.sessionSettings.missionJson
 
 			if client_mission_data then
+				local mission_name = client_mission_data.map
+
+				if not MissionTemplates[mission_name] then
+					return self:_failed("Unknown mission %s", mission_name)
+				end
+
 				server_manager:allocate_session(client_session_id, client_mission_data)
 			else
 				return self:_failed("Mission server requires mission data from first connecting client")

@@ -364,12 +364,6 @@ local on_demand_vo_veteran_female_c = {
 			0.755573,
 			0.861781
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_mutant_charger = {
@@ -387,12 +381,6 @@ local on_demand_vo_veteran_female_c = {
 			1.059552,
 			1.550875
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_ogryn_armored_executor = {
@@ -409,12 +397,6 @@ local on_demand_vo_veteran_female_c = {
 			1.028302,
 			1.111969,
 			1.355271
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},

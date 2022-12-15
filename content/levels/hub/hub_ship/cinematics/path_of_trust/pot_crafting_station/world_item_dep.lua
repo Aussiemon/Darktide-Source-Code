@@ -112,7 +112,6 @@ local item_dependencies = {
 		["content/items/characters/player/human/hair/hair_short_reverse_mohawk_a"] = 1,
 		["content/items/characters/player/human/gear_head/cadian_command_02_a"] = 1,
 		["content/items/characters/player/human/gear_legs/astra_pants_a"] = 1,
-		["content/items/weapons/npc/ogryn_rippergun_npc_01"] = 1,
 		["content/items/characters/player/human/faces/female_caucasian_face_01"] = 2,
 		["content/items/characters/player/ogryn/hair/ogryn_hair_short_mohawk_a"] = 1,
 		["content/items/characters/player/human/gear_legs/frateris_militia_pants_b"] = 1,

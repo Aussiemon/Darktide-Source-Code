@@ -75,6 +75,7 @@ InventoryView.on_enter = function (self)
 	self._item_stats = self:_setup_item_stats("item_stats", "item_stats_pivot")
 
 	self:_register_event("event_inventory_view_set_camera_focus")
+	self:_register_event("event_force_wallet_update")
 end
 
 InventoryView._setup_item_stats = function (self, reference_name, scenegraph_id)
@@ -211,6 +212,7 @@ end
 
 InventoryView.on_exit = function (self)
 	if self._item_stats then
+		self._item_stats:stop_presenting()
 		self:_remove_element("item_stats")
 
 		self._item_stats = nil
@@ -348,6 +350,10 @@ InventoryView._set_camera_focus_by_slot_name = function (self, slot_name, option
 		Managers.event:trigger("event_inventory_set_camera_rotation_axis_offset", "y", 0, 1, func_ptr)
 		Managers.event:trigger("event_inventory_set_camera_rotation_axis_offset", "z", 0, 1, func_ptr)
 	end
+end
+
+InventoryView.event_force_wallet_update = function (self)
+	self:_request_wallets_update()
 end
 
 InventoryView.cb_on_grid_entry_right_pressed = function (self, widget, element)

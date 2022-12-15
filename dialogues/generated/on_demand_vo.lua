@@ -527,7 +527,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_berserker",
+				"seen_enemy_berserker",
 				OP.TIMESET
 			}
 		},
@@ -862,7 +862,7 @@ return function ()
 	define_rule({
 		name = "smart_tag_vo_enemy_cultist_flamer",
 		category = "player_on_demand_vo",
-		wwise_route = 13,
+		wwise_route = 0,
 		response = "smart_tag_vo_enemy_cultist_flamer",
 		database = "on_demand_vo",
 		criterias = {
@@ -1261,7 +1261,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_berserker",
+				"seen_enemy_berserker",
 				OP.TIMESET
 			}
 		},

@@ -21,6 +21,16 @@ local function save_account_settings(location_name, settings_name, value)
 	return false
 end
 
+local function save_local_settings(settings_name, value)
+	Application.set_user_setting("interface_settings", settings_name, value)
+	Application.save_user_settings()
+	Application.apply_user_settings()
+end
+
+local function get_local_settings(settings_name)
+	return Application.user_setting("interface_settings", settings_name)
+end
+
 local function get_account_settings(location_name, settings_name)
 	local player = Managers.player:local_player(1)
 	local save_manager = Managers.save
@@ -72,7 +82,13 @@ local function construct_interface_settings_boolean(template)
 	local default_value = template.default_value
 
 	entry.get_function = function ()
-		local old_value = get_account_settings(save_location, id)
+		local old_value = nil
+
+		if template.use_local_save then
+			old_value = get_local_settings(id)
+		else
+			old_value = get_account_settings(save_location, id)
+		end
 
 		if old_value == nil then
 			return default_value
@@ -82,14 +98,24 @@ local function construct_interface_settings_boolean(template)
 	end
 
 	entry.on_activated = function (new_value)
-		local current_value = get_account_settings(save_location, id)
+		local current_value = nil
+
+		if template.use_local_save then
+			current_value = get_local_settings(id)
+		else
+			current_value = get_account_settings(save_location, id)
+		end
 
 		if current_value == nil then
 			current_value = default_value
 		end
 
 		if not _is_same(current_value, new_value) then
-			save_account_settings(save_location, id, new_value)
+			if template.use_local_save then
+				save_local_settings(id, new_value)
+			else
+				save_account_settings(save_location, id, new_value)
+			end
 
 			if entry.on_value_changed then
 				entry.on_value_changed(new_value)
@@ -123,7 +149,11 @@ local function construct_interface_settings_percent_slider(template)
 	local function on_value_changed_function(percent_value)
 		local exploded_value = explode_value(percent_value)
 
-		save_account_settings(save_location, id, exploded_value)
+		if template.use_local_save then
+			save_local_settings(id, exploded_value)
+		else
+			save_account_settings(save_location, id, exploded_value)
+		end
 
 		if on_value_changed then
 			on_value_changed(exploded_value)
@@ -131,7 +161,13 @@ local function construct_interface_settings_percent_slider(template)
 	end
 
 	local value_get_function = template.get_function or function ()
-		local exploded_value = get_account_settings(save_location, id)
+		local exploded_value = nil
+
+		if template.use_local_save then
+			exploded_value = get_local_settings(id)
+		else
+			exploded_value = get_account_settings(save_location, id)
+		end
 
 		if exploded_value == nil then
 			exploded_value = default_value
@@ -174,7 +210,11 @@ local function construct_interface_settings_value_slider(template)
 	local save_location = template.save_location
 
 	local function on_value_changed_function(value)
-		save_account_settings(save_location, id, value)
+		if template.use_local_save then
+			save_local_settings(id, value)
+		else
+			save_account_settings(save_location, id, value)
+		end
 
 		if on_value_changed then
 			on_value_changed(value)
@@ -182,7 +222,15 @@ local function construct_interface_settings_value_slider(template)
 	end
 
 	local function value_get_function()
-		return get_account_settings(save_location, id) or default_value
+		local value = nil
+
+		if template.use_local_save then
+			value = get_local_settings(id)
+		else
+			value = get_account_settings(save_location, id)
+		end
+
+		return value or default_value
 	end
 
 	local params = {
@@ -303,12 +351,33 @@ local settings_definitions = {
 	},
 	{
 		save_location = "interface_settings",
+		display_name = "loc_interface_setting_player_outlines_enabled",
+		id = "player_outlines",
+		default_value = false,
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			return
+		end
+	},
+	{
+		save_location = "interface_settings",
 		display_name = "loc_interface_setting_profanity_filter_enabled",
 		id = "profanity_filter_enabled",
 		default_value = true,
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			Managers.event:trigger("event_update_profanity_filter_enabled", value)
+		end
+	},
+	{
+		save_location = "interface_settings",
+		display_name = "loc_interface_setting_intro_cinematic_enabled",
+		id = "intro_cinematic_enabled",
+		use_local_save = true,
+		default_value = true,
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			return
 		end
 	}
 }

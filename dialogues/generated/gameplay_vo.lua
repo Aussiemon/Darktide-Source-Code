@@ -1707,7 +1707,7 @@ return function ()
 	})
 	define_rule({
 		name = "event_one_down",
-		category = "player_prio_0",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "event_one_down",
 		database = "gameplay_vo",
@@ -1725,21 +1725,19 @@ return function ()
 				"event_one_down"
 			},
 			{
-				"faction_memory",
-				"event_one_down",
-				OP.TIMEDIFF,
-				OP.GT,
-				60
-			}
-		},
-		on_done = {
+				"user_context",
+				"friends_close",
+				OP.GTEQ,
+				0
+			},
 			{
-				"faction_memory",
-				"event_one_down",
-				OP.TIMESET,
+				"user_context",
+				"enemies_close",
+				OP.GTEQ,
 				0
 			}
 		},
+		on_done = {},
 		heard_speak_routing = {
 			target = "all"
 		}
@@ -13475,16 +13473,16 @@ return function ()
 				"exploding_barrel"
 			},
 			{
-				"faction_memory",
+				"user_memory",
 				"exploding_barrel",
 				OP.TIMEDIFF,
 				OP.GT,
-				10
+				3
 			}
 		},
 		on_done = {
 			{
-				"faction_memory",
+				"user_memory",
 				"exploding_barrel",
 				OP.TIMESET
 			}

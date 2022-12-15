@@ -1,6 +1,6 @@
 local CraftingModifyViewDefinitions = require("scripts/ui/views/crafting_modify_view/crafting_modify_view_definitions")
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
-local Promise = require("scripts/foundation/utilities/promise")
+local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ViewElementCraftingRecipe = require("scripts/ui/view_elements/view_element_crafting_recipe/view_element_crafting_recipe")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
@@ -13,6 +13,7 @@ CraftingModifyView.init = function (self, settings, context)
 	self._parent = context.parent
 	self._preselected_item = context.item
 	self._selected_grid = "item_grid"
+	self._wanted_grid = self._preselected_item and "crafting_recipe"
 
 	CraftingModifyView.super.init(self, CraftingModifyViewDefinitions, settings, context)
 end
@@ -40,17 +41,8 @@ CraftingModifyView.on_enter = function (self)
 		"GADGET"
 	}
 	self._inventory_promise = Managers.data_service.gear:fetch_inventory(character_id, nil, item_type_filter_list)
-	local crafting_costs_promise = Managers.backend.interfaces.crafting:get_crafting_costs()
 
-	Promise.all(self._inventory_promise, crafting_costs_promise):next(function (results)
-		self._parent:set_crafting_costs(results[2])
-
-		return self:_cb_fetch_inventory_items(results[1])
-	end)
-end
-
-CraftingModifyView.crafting_costs = function (self)
-	return self._crafting_costs
+	self._inventory_promise:next(callback(self, "_cb_fetch_inventory_items"))
 end
 
 CraftingModifyView._setup_crafting_recipe = function (self, reference_name, scenegraph_id)
@@ -195,9 +187,11 @@ CraftingModifyView._cb_fetch_inventory_items = function (self, items)
 
 	for item_id, item in pairs(items) do
 		if not item.no_crafting then
+			local slot_name = item.slots[1]
 			layout[#layout + 1] = {
 				widget_type = "item",
-				item = item
+				item = item,
+				slot = ItemSlotSettings[slot_name]
 			}
 		end
 	end
@@ -226,6 +220,15 @@ CraftingModifyView._cb_fetch_inventory_items = function (self, items)
 	end
 
 	self:cb_switch_tab(tab_index)
+end
+
+CraftingModifyView.equipped_item_in_slot = function (self, slot_name)
+	local player = self:_player()
+	local profile = player:profile()
+	local loadout = profile.loadout
+	local slot_item = loadout[slot_name]
+
+	return slot_item
 end
 
 CraftingModifyView._setup_menu_tabs = function (self, content)

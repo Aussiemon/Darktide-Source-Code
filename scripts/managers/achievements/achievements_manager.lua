@@ -100,7 +100,6 @@ AchievementsManager.sync_achievement_data = function (self, account_id)
 	return Promise.all(backend_promise, platform_promise):next(function (promise_result)
 		self._backend_data = promise_result[1]
 		local commendations = self._backend_data.commendations
-		local no_rewards = {}
 
 		for _, commendation in ipairs(commendations) do
 			repeat
@@ -112,12 +111,7 @@ AchievementsManager.sync_achievement_data = function (self, account_id)
 				end
 
 				achievement:set_score(commendation.score or achievement:score())
-
-				local rewards = commendation.rewards or no_rewards
-
-				for _, reward in ipairs(rewards) do
-					achievement:add_reward(reward)
-				end
+				achievement:set_rewards(commendation.rewards)
 			until true
 		end
 
@@ -237,6 +231,14 @@ AchievementsManager.unlock_achievement = function (self, achievement_id)
 	end):catch(function (error)
 		Log.warning("AchievementsManager", "Failed to unlock achievement '%s' with error '%s'.", achievement_id, table.tostring(error, 99))
 	end)
+end
+
+AchievementsManager.is_unlocked = function (self, achievement_id)
+	if self._is_client and self._unlocked[achievement_id] then
+		return true
+	end
+
+	return false
 end
 
 AchievementsManager._notify_achievement_unlock = function (self, achievement_definition)

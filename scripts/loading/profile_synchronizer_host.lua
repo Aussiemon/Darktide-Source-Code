@@ -190,6 +190,16 @@ ProfileSynchronizerHost.override_singleplay_profile = function (self, peer_id, l
 	self._profile_updates[peer_id] = profile_updates
 end
 
+ProfileSynchronizerHost.profile_updates_profile = function (self, peer_id, local_player_id)
+	local profile_updates = self._profile_updates[peer_id]
+
+	if not profile_updates then
+		return nil
+	end
+
+	return profile_updates[local_player_id]
+end
+
 ProfileSynchronizerHost.profiles_synced = function (self, peer_ids)
 	for i = 1, #peer_ids do
 		local peer_id = peer_ids[i]

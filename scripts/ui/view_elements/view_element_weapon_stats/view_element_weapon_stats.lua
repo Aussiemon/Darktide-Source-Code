@@ -6,9 +6,10 @@ local PortraitUI = require("scripts/ui/portrait_ui")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
-local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local WeaponStats = require("scripts/utilities/weapon_stats")
+
+require("scripts/ui/view_elements/view_element_grid/view_element_grid")
+
 local ViewElementWeaponStats = class("ViewElementWeaponStats", "ViewElementGrid")
 
 ViewElementWeaponStats.init = function (self, parent, draw_layer, start_scale, optional_menu_settings)
@@ -73,8 +74,8 @@ ViewElementWeaponStats._replace_border = function (self)
 	}
 end
 
-ViewElementWeaponStats.destroy = function (self)
-	ViewElementWeaponStats.super.destroy(self)
+ViewElementWeaponStats.destroy = function (self, ui_renderer)
+	ViewElementWeaponStats.super.destroy(self, ui_renderer)
 
 	if self._weapon_icon_renderer then
 		self._weapon_icon_renderer = nil
@@ -102,12 +103,12 @@ local function add_base_rating(item, layout, grid_size)
 	}
 end
 
-local function add_presentation_perks(item, layout, grid_size, perks_selectable)
+local function add_presentation_perks(item, layout, grid_size)
 	local item_type = item.item_type
 	local perks = item.perks
 	local num_perks = perks and #perks or 0
 	local add_end_margin = false
-	local has_modification = nil
+	local has_perk_modification, _ = ItemUtils.has_crafting_modification(item)
 
 	if num_perks > 0 then
 		layout[#layout + 1] = {
@@ -118,14 +119,7 @@ local function add_presentation_perks(item, layout, grid_size, perks_selectable)
 			}
 		}
 		add_end_margin = true
-		local rating = 0
-		local rating_per_perk_rank = CraftingSettings.rating_per_perk_rank
-
-		for i = 1, num_perks do
-			local perk = perks[i]
-			rating = rating + (rating_per_perk_rank[perk.rarity] or 0)
-		end
-
+		local rating = item.override_perk_rating_string or ItemUtils.item_perk_rating(item)
 		layout[#layout + 1] = {
 			widget_type = "rating_info",
 			rating = rating,
@@ -148,14 +142,15 @@ local function add_presentation_perks(item, layout, grid_size, perks_selectable)
 		local perk_item = MasterItems.get_item(perk_id)
 
 		if perk_item then
-			local is_locked = has_modification and not perk.modified
+			local is_locked = has_perk_modification and not perk.modified
+			local show_glow = perk.is_fake
 			layout[#layout + 1] = {
 				widget_type = "weapon_perk",
 				perk_item = perk_item,
 				perk_value = perk_value,
 				perk_rarity = perk_rarity,
 				perk_index = i,
-				is_selectable = perks_selectable,
+				show_glow = show_glow,
 				is_locked = is_locked
 			}
 		end
@@ -183,26 +178,10 @@ local function add_presentation_traits(item, layout, grid_size)
 	local add_end_margin = false
 	local traits = item.traits
 	local num_traits = traits and #traits or 0
-	local has_modification = nil
+	local _, has_trait_modification = ItemUtils.has_crafting_modification(item)
 
 	if num_traits > 0 then
-		local rating = 0
-		local rating_per_trait_rank = CraftingSettings.rating_per_trait_rank
-
-		if item_type == "GADGET" then
-			local rating_value = 100
-
-			for i = 1, num_traits do
-				local trait = traits[i]
-				rating = rating + math.floor(trait.value * rating_value + 0.5)
-			end
-		else
-			for i = 1, num_traits do
-				local trait = traits[i]
-				rating = rating + (rating_per_trait_rank[trait.rarity] or 0)
-			end
-		end
-
+		local rating = item.override_trait_rating_string or ItemUtils.item_trait_rating(item)
 		layout[#layout + 1] = {
 			widget_type = "rating_info",
 			rating = rating,
@@ -236,13 +215,16 @@ local function add_presentation_traits(item, layout, grid_size)
 
 		if trait_item then
 			local widget_type = item_type == "GADGET" and "gadget_trait" or "weapon_trait"
-			local is_locked = has_modification and not trait.modified
+			local is_locked = has_trait_modification and not trait.modified
+			local show_glow = trait.is_fake
 			layout[#layout + 1] = {
 				add_background = true,
 				widget_type = widget_type,
 				trait_item = trait_item,
 				trait_value = trait_value,
 				trait_rarity = trait_rarity,
+				trait_index = i,
+				show_glow = show_glow,
 				is_locked = is_locked
 			}
 
@@ -296,7 +278,6 @@ end
 ViewElementWeaponStats.present_item = function (self, item, is_equipped, on_present_callback)
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size
-	local perks_selectable = menu_settings.perks_selectable
 	local item_name = item.name
 	local item_type = item.item_type
 	local is_weapon = item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED"
@@ -357,7 +338,7 @@ ViewElementWeaponStats.present_item = function (self, item, is_equipped, on_pres
 			item = item
 		}
 
-		if add_presentation_perks(item, layout, grid_size, perks_selectable) then
+		if add_presentation_perks(item, layout, grid_size) then
 			add_end_margin = true
 		end
 
@@ -382,7 +363,7 @@ ViewElementWeaponStats.present_item = function (self, item, is_equipped, on_pres
 			add_end_margin = false
 		end
 
-		if add_presentation_perks(item, layout, grid_size, perks_selectable) then
+		if add_presentation_perks(item, layout, grid_size) then
 			add_end_margin = true
 		end
 	elseif item_type == "WEAPON_SKIN" then
@@ -497,6 +478,22 @@ ViewElementWeaponStats.present_item = function (self, item, is_equipped, on_pres
 	elseif item_type == "CHARACTER_INSIGNIA" then
 		layout[#layout + 1] = {
 			widget_type = "insignia_header",
+			item = item
+		}
+		layout[#layout + 1] = {
+			widget_type = "description",
+			item = item
+		}
+		layout[#layout + 1] = {
+			widget_type = "dynamic_spacing",
+			size = {
+				grid_size[1],
+				30
+			}
+		}
+	elseif item_type == "EMOTE" then
+		layout[#layout + 1] = {
+			widget_type = "emote_header",
 			item = item
 		}
 		layout[#layout + 1] = {
@@ -758,6 +755,30 @@ ViewElementWeaponStats.item_icon_updated = function (self, item)
 
 		if cosmetics_icon_renderer then
 			cosmetics_icon_renderer:profile_updated(profile)
+		end
+	end
+end
+
+ViewElementWeaponStats.select_perk = function (self, index)
+	local widgets = self:widgets()
+
+	for i = 1, #widgets do
+		local widget = widgets[i]
+
+		if widget.type == "weapon_perk" then
+			widget.style.glow.visible = widget.content.entry.perk_index == index
+		end
+	end
+end
+
+ViewElementWeaponStats.select_trait = function (self, index)
+	local widgets = self:widgets()
+
+	for i = 1, #widgets do
+		local widget = widgets[i]
+
+		if widget.type == "weapon_trait" then
+			widget.style.glow.visible = widget.content.entry.trait_index == index
 		end
 	end
 end

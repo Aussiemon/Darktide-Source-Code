@@ -11,8 +11,8 @@ local interaction_states = InteractionSettings.states
 local MAX_INTERACTION_DISTANCE = InteractionSettings.max_interaction_distance
 local MAX_INTERACTION_COS_ANGLE = math.cos(InteractionSettings.max_interaction_angle)
 local ONGOING_INTERACTION_LEEWAY = InteractionSettings.ongoing_interaction_leeway
-local INTERACTABLE_FILTER = "filter_player_character_interactable_overlap"
-local LINE_OF_SIGHT_FILTER = "filter_player_character_interactable_line_of_sight_check"
+local INTERACTABLE_FILTER = "filter_interactable_overlap"
+local LINE_OF_SIGHT_FILTER = "filter_interactable_line_of_sight_check"
 local _distance_to_actor = nil
 
 InteractorExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data, ...)

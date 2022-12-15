@@ -237,13 +237,6 @@ CinematicSceneSystem._cinematic_played = function (self, cinematic_name, cinemat
 			end
 		end
 	end
-
-	if cinematic_name == "intro_abc" then
-		local world = Managers.world:world("level_world")
-		local current_time = Managers.time:time("main")
-
-		World.set_data(world, "bake_shadows_at", current_time + 1)
-	end
 end
 
 CinematicSceneSystem._send_cinematic_played_flow_event = function (self, cinematic_name)

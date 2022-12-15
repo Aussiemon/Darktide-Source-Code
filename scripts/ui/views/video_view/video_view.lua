@@ -3,6 +3,9 @@ local VideoViewSettings = require("scripts/ui/views/video_view/video_view_settin
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local InputUtils = require("scripts/managers/input/input_utils")
+local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
+local UISettings = require("scripts/settings/ui/ui_settings")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local device_list = {
 	Keyboard,
 	Mouse,
@@ -22,6 +25,11 @@ VideoView.init = function (self, settings, context)
 	self._time_for_next_subtitle = nil
 	self._active_subtitle_end_time = nil
 	self._video_start_time = nil
+	self._show_skip = false
+	self._skip_pressed = false
+	self._hold_timer = 0
+	self._legend_active = 0
+	self._input_legend_element = nil
 
 	VideoView.super.init(self, Definitions, settings)
 end
@@ -114,6 +122,7 @@ VideoView.on_exit = function (self)
 	end
 
 	self:_remove_subtitles()
+	self:_remove_input_legend()
 	VideoView.super.on_exit(self)
 	self:_unload_packages()
 
@@ -156,16 +165,16 @@ VideoView._update_input = function (self)
 		for i = 1, #xbox_controllers do
 			local xbox_controller = xbox_controllers[i]
 
-			if xbox_controller.active() and xbox_controller.any_pressed() then
-				self:_on_skip_pressed()
+			if xbox_controller.active() and xbox_controller.any_pressed() and not self._show_skip then
+				self._show_skip = true
 			end
 		end
 	else
 		for i = 1, #device_list do
 			local device = device_list[i]
 
-			if device and device.active and device.any_pressed() then
-				self:_on_skip_pressed()
+			if device and device.active and device.any_pressed() and not self._show_skip then
+				self._show_skip = true
 			end
 		end
 	end
@@ -181,6 +190,38 @@ VideoView.update = function (self, dt, t, input_service)
 		if allow_skip_input then
 			self:_update_input()
 		end
+
+		if self._show_skip and not self._input_legend_element then
+			self:_setup_input_legend()
+		elseif not self._show_skip and self._input_legend_element then
+			self:_remove_input_legend()
+		end
+
+		if self._input_legend_element then
+			if input_service:get("skip_cinematic_hold") or input_service:get("left_hold") and self._skip_pressed == true then
+				self._hold_timer = self._hold_timer + dt
+				self._legend_active = 0
+			elseif self._skip_pressed == true then
+				self._skip_pressed = false
+				self._legend_active = 0
+				self._hold_timer = 0
+			elseif self._show_skip then
+				self._legend_active = self._legend_active + dt
+			end
+		end
+
+		if UISettings.cutscenes_skip.hold_time < self._hold_timer then
+			self._legend_active = 0
+			self._hold_timer = 0
+
+			self:_on_skip_pressed()
+
+			self._show_skip = false
+		elseif UISettings.cutscenes_skip.fade_inactivity_time < self._legend_active then
+			self._show_skip = false
+			self._legend_active = 0
+			self._hold_timer = 0
+		end
 	end
 
 	local pass_input, pass_draw = VideoView.super.update(self, dt, t, input_service)
@@ -192,6 +233,10 @@ VideoView.update = function (self, dt, t, input_service)
 	self:_update_subtitles(dt, t)
 
 	return pass_input, pass_draw
+end
+
+VideoView.on_skip_pressed = function (self)
+	self._skip_pressed = true
 end
 
 VideoView.can_exit = function (self)
@@ -313,6 +358,103 @@ VideoView._remove_subtitles = function (self)
 
 	self._subtitles = nil
 	self._current_subtitle_index = 0
+end
+
+VideoView._setup_input_legend = function (self)
+	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 100)
+	local legend_inputs = Definitions.legend_inputs
+	local input_legends_by_key = {}
+
+	for i = 1, #legend_inputs do
+		local legend_input = legend_inputs[i]
+		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
+		local id = self._input_legend_element:add_entry(legend_input.display_name, legend_input.input_action, legend_input.visibility_function, on_pressed_callback, legend_input.alignment, nil, legend_input.use_mouse_hold)
+		local key = legend_input.key
+
+		if key then
+			input_legends_by_key[key] = {
+				id = id,
+				settings = legend_input
+			}
+		end
+	end
+
+	self._input_legends_by_key = input_legends_by_key
+	local id = self._input_legends_by_key.hold_skip.id
+	local entry = self._input_legend_element:_get_entry_by_id(id)
+	local entry_widget = entry.widget
+	local widget_definition = UIWidget.create_definition({
+		{
+			style_id = "background",
+			pass_type = "rect",
+			style = {
+				color = Color.ui_grey_medium(255, true)
+			}
+		},
+		{
+			style_id = "fill",
+			pass_type = "rect",
+			style = {
+				color = Color.ui_terminal(255, true),
+				size = {
+					0
+				}
+			}
+		}
+	}, entry_widget.scenegraph_id)
+	self._skip_bar_widget = self:_create_widget("skip", widget_definition)
+end
+
+VideoView._remove_input_legend = function (self)
+	if self._input_legend_element then
+		self:_remove_element("input_legend")
+
+		self._input_legend_element = nil
+	end
+
+	if self._skip_bar_widget then
+		self:_unregister_widget_name(self._skip_bar_widget.name)
+
+		self._skip_bar_widget = nil
+	end
+end
+
+VideoView.draw = function (self, dt, t, input_service, layer)
+	VideoView.super.draw(self, dt, t, input_service, layer)
+
+	if self._input_legend_element then
+		local render_scale = self._render_scale
+		local render_settings = self._render_settings
+		local id = self._input_legends_by_key.hold_skip.id
+		local entry = self._input_legend_element:_get_entry_by_id(id)
+		local entry_widget = entry.widget
+		local ui_renderer = self._ui_renderer
+		local ui_scenegraph = self._input_legend_element._ui_scenegraph
+		local bar_margin = 10
+		local position = self._input_legend_element:scenegraph_position(entry_widget.scenegraph_id)
+		local width = 100
+		local z_offset = render_settings.draw_layer or 0
+		z_offset = z_offset + self._input_legend_element._draw_layer + 1
+		self._skip_bar_widget.offset = {
+			position[1] + entry_widget.offset[1] + (entry_widget.content.size[1] - width) * 0.5,
+			position[2] + entry_widget.offset[2] + entry_widget.content.size[2] - bar_margin,
+			z_offset
+		}
+		self._skip_bar_widget.content.size = {
+			width,
+			5
+		}
+		local progress = UISettings.cutscenes_skip.hold_time and math.min(self._hold_timer / UISettings.cutscenes_skip.hold_time, 1) or 1
+		self._skip_bar_widget.style.fill.size[1] = width * progress
+
+		UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
+
+		if self._skip_bar_widget then
+			UIWidget.draw(self._skip_bar_widget, ui_renderer)
+		end
+
+		UIRenderer.end_pass(ui_renderer)
+	end
 end
 
 return VideoView

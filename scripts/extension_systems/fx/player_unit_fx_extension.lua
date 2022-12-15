@@ -256,7 +256,6 @@ PlayerUnitFxExtension.destroy = function (self, unit)
 			local should_fade_kill = false
 
 			self:_stop_looping_particles(looping_particles_alias, should_fade_kill)
-			Log.info("PlayerUnitFxExtension", "STOPPING LOOPING PARTICLES IN DESTROY %q", looping_particles_alias)
 		end
 	end
 
@@ -267,18 +266,15 @@ PlayerUnitFxExtension.destroy = function (self, unit)
 			local force_stop = true
 
 			self:_stop_looping_wwise_event(looping_sounds_alias, force_stop)
-			Log.info("PlayerUnitFxExtension", "STOPPING LOOPING SOUNDS IN DESTROY %q", looping_sounds_alias)
 		end
 	end
 
 	for sound_source, _ in pairs(self._sources) do
 		self:_unregister_sound_source(sound_source)
-		Log.info("PlayerUnitFxExtension", "UNREGISTERING SOUND SOURCE IN DESTROY %q", sound_source)
 	end
 
 	for spawner, _ in pairs(self._vfx_spawners) do
 		self:unregister_vfx_spawner(spawner)
-		Log.info("PlayerUnitFxExtension", "UNREGISTERING VFX SPAWNER IN DESTROY %q", spawner)
 	end
 
 	local moving_sfx = self._moving_sfx

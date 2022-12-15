@@ -59,6 +59,9 @@ local DialogueSettings = {
 		fm_resurgence = {
 			"mission_vo_fm_resurgence"
 		},
+		hm_complex = {
+			"mission_vo_hm_complex"
+		},
 		km_station = {
 			"mission_vo_km_station"
 		},
@@ -105,7 +108,7 @@ local DialogueSettings = {
 	friends_close_distance = 25,
 	friends_distant_distance = 40,
 	enemies_close_distance = 10,
-	enemies_distant_distance = 30,
+	enemies_distant_distance = 40,
 	knocked_down_broadcast_range = 40,
 	pounced_down_broadcast_range = 40,
 	suicide_run_broadcast_range = 40,
@@ -165,5 +168,10 @@ DialogueSettings.max_hear_distance = math.max(DialogueSettings.heard_speak_defau
 DialogueSettings.default_voice_switch_group = "voice_profile"
 DialogueSettings.player_vce_light_damage_threshold = 55
 DialogueSettings.surrounded_vo_slot_percent = 0.3
+DialogueSettings.dynamic_smart_tag = {
+	renegade_netgunner = 2,
+	seen_netgunner_flee = 3,
+	aggroed = 1
+}
 
 return DialogueSettings

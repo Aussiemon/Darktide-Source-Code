@@ -366,7 +366,7 @@ weapon_template.actions = {
 	action_shoot_charged = {
 		kind = "chain_lightning",
 		stop_time_critical_strike = 1.2,
-		sprint_requires_press_to_interrupt = true,
+		prevent_sprint = true,
 		weapon_handling_template = "forcestaff_p3_m1_chain_lightning",
 		shoot_at_time = 0.2,
 		increase_combo = true,
@@ -744,6 +744,7 @@ weapon_template.actions = {
 		damage_window_end = 0.7,
 		uninterruptible = true,
 		allow_conditional_chain = true,
+		power_level = 650,
 		total_time = 1.1,
 		action_movement_curve = {
 			{

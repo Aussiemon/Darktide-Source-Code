@@ -51,6 +51,12 @@ InvitesXboxLive.send_invite = function (self, xuid, invite_address)
 	end
 end
 
+InvitesXboxLive.reset = function (self)
+	table.clear(self._invites)
+
+	self._has_invite = false
+end
+
 InvitesXboxLive.destroy = function (self)
 	return
 end

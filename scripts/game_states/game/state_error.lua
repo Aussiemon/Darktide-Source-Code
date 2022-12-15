@@ -41,6 +41,8 @@ StateError._cleanup = function (self)
 	if GameParameters.prod_like_backend then
 		Managers.party_immaterium:reset()
 	end
+
+	Managers.data_service:reset()
 end
 
 StateError.update = function (self, main_dt, main_t)

@@ -58,8 +58,9 @@ end
 function _push_ragdoll(ragdoll_unit, hit_zone_name, attack_direction, damage_profile, herding_template_or_nil)
 	local minion_death_manager = Managers.state.minion_death
 	local minion_ragdoll = minion_death_manager:minion_ragdoll()
+	local on_dead_ragdoll = true
 
-	minion_ragdoll:push_ragdoll(ragdoll_unit, attack_direction, damage_profile, hit_zone_name, herding_template_or_nil)
+	minion_ragdoll:push_ragdoll(ragdoll_unit, attack_direction, damage_profile, hit_zone_name, herding_template_or_nil, on_dead_ragdoll)
 end
 
 function _gib(ragdoll_unit, hit_zone_name_or_nil, attack_direction, damage_profile, is_critical_strike_or_nil)

@@ -35,7 +35,9 @@ PartyImmateriumHubSessionBoot.init = function (self, event_object, current_hub_s
 end
 
 PartyImmateriumHubSessionBoot._fetch_server_details = function (self)
-	self._server_details_promise = self._backend_interface.hub_session:fetch_server_details(self._matched_hub_session_id):next(function (response)
+	self._server_details_promise = self._backend_interface.hub_session:fetch_server_details(self._matched_hub_session_id)
+
+	self._server_details_promise:next(function (response)
 		_info("Got server details: %s", table.tostring(response, 3))
 
 		if response.vivoxToken then
@@ -68,7 +70,6 @@ PartyImmateriumHubSessionBoot._fetch_server_details = function (self)
 			self:_start_hot_joining_party_hub_server()
 		end
 	end)
-
 	self:_set_state(STATES.fetchingserverdetails)
 end
 

@@ -327,6 +327,7 @@ LoadingView.init = function (self, settings, context)
 
 	self._can_exit = context and context.can_exit
 	self._pass_draw = false
+	self._no_cursor = true
 end
 
 LoadingView.on_enter = function (self)

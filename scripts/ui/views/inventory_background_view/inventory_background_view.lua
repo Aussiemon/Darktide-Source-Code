@@ -58,7 +58,9 @@ InventoryBackgroundView.on_enter = function (self)
 	self:_register_event("event_inventory_view_equip_item", "event_inventory_view_equip_item")
 	self:_register_event("event_equip_local_changes", "event_equip_local_changes")
 	self:_register_event("event_change_wield_slot", "event_change_wield_slot")
+	self:_register_event("event_discard_item", "event_discard_item")
 	self:_register_event("event_player_profile_updated", "event_player_profile_updated")
+	self:_register_event("event_item_icon_updated", "event_item_icon_updated")
 	self:_setup_top_panel()
 	self:_setup_input_legend()
 	self:_setup_background_world()
@@ -207,16 +209,23 @@ InventoryBackgroundView._load_insignia = function (self, item)
 	}
 end
 
-InventoryBackgroundView._unload_insignia = function (self)
+InventoryBackgroundView._unload_insignia = function (self, ui_renderer)
 	local insignia_loaded_info = self._insignia_loaded_info
 
 	if not insignia_loaded_info then
 		return
 	end
 
+	local widget = self._widgets_by_name.character_insigna
+
 	if not self.destroyed then
-		local material_values = self._widgets_by_name.character_insigna.style.texture.material_values
+		local material_values = widget.style.texture.material_values
 		material_values.texture_map = "content/ui/textures/nameplates/insignias/default"
+	end
+
+	if ui_renderer then
+		UIWidget.set_visible(widget, ui_renderer, false)
+		UIWidget.set_visible(widget, ui_renderer, true)
 	end
 
 	local icon_load_id = insignia_loaded_info.icon_load_id
@@ -224,7 +233,7 @@ InventoryBackgroundView._unload_insignia = function (self)
 	Managers.ui:unload_item_icon(icon_load_id)
 
 	self._insignia_loaded_info = nil
-	self._widgets_by_name.character_insigna.content.visible = false
+	widget.content.visible = false
 end
 
 InventoryBackgroundView._cb_set_player_insignia = function (self, item)
@@ -366,8 +375,51 @@ InventoryBackgroundView.event_change_wield_slot = function (self, slot_name)
 	self:_update_presentation_wield_item()
 end
 
+InventoryBackgroundView.event_discard_item = function (self, item)
+	local gear_id = item.gear_id
+	local backend_interface = Managers.backend.interfaces
+	local local_changes_promise = self:_equip_local_changes()
+	local delete_promise = nil
+
+	if local_changes_promise then
+		delete_promise = local_changes_promise:next(function ()
+			return backend_interface.gear:delete_gear(gear_id)
+		end)
+	else
+		delete_promise = backend_interface.gear:delete_gear(gear_id)
+	end
+
+	delete_promise:next(function (result)
+		local rewards = result and result.rewards
+
+		if rewards then
+			local credits_amount = rewards[1] and rewards[1].amount or 0
+
+			Managers.event:trigger("event_force_wallet_update")
+			Managers.event:trigger("event_add_notification_message", "currency", {
+				currency = "credits",
+				amount = credits_amount
+			})
+		end
+	end)
+end
+
 InventoryBackgroundView.event_player_profile_updated = function (self)
 	self:_update_has_empty_talents_groups()
+end
+
+InventoryBackgroundView.event_item_icon_updated = function (self, item)
+	local presentation_loadout = self._preview_profile_equipped_items
+
+	for slot_name, slot_item in pairs(presentation_loadout) do
+		if slot_item and item and slot_item.gear_id == item.gear_id then
+			local force_update = true
+
+			self:_equip_slot_item(slot_name, item, force_update)
+
+			break
+		end
+	end
 end
 
 InventoryBackgroundView._equip_slot_item = function (self, slot_name, item, force_update)
@@ -413,7 +465,7 @@ InventoryBackgroundView._equip_local_changes = function (self)
 	end
 
 	if equip_items then
-		ItemUtils.equip_slot_items(equip_items_by_slot)
+		return ItemUtils.equip_slot_items(equip_items_by_slot)
 	end
 end
 
@@ -1183,6 +1235,7 @@ end
 InventoryBackgroundView.on_exit = function (self)
 	self:_unload_portrait_icon()
 	self:_unload_portrait_frame(self._ui_renderer)
+	self:_unload_insignia(self._ui_renderer)
 	Managers.data_service.talents:release_icons(self._talent_icons_package_id)
 
 	if self._active_view then

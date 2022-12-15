@@ -228,10 +228,10 @@ local constants = {
 				"slot_body_face_scar",
 				"slot_body_face_hair",
 				"slot_body_eye_color",
+				"slot_gear_head",
 				"slot_body_skin_color",
 				"slot_body_hair_color",
-				"slot_body_hair",
-				"slot_gear_head"
+				"slot_body_hair"
 			}
 		},
 		slot_body_face_hair = {

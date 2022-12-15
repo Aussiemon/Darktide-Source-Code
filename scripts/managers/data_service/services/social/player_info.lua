@@ -138,12 +138,18 @@ PlayerInfo.is_blocked = function (self)
 	return self._is_blocked or self._friend_status == FriendStatus.ignored or platform_social and platform_social:is_blocked() or false
 end
 
+PlayerInfo.is_platform_blocked = function (self)
+	local platform_social = self._platform_social
+
+	return platform_social and platform_social:is_blocked() or false
+end
+
 PlayerInfo.set_is_blocked = function (self, is_blocked)
 	self._is_blocked = is_blocked
 	self._is_text_muted = is_blocked
 	self._is_voice_muted = is_blocked
 
-	Managers.event:trigger("player_mute_status_changed")
+	Managers.event:trigger("player_mute_status_changed", self._account_id)
 end
 
 PlayerInfo.is_text_muted = function (self)
@@ -153,7 +159,7 @@ end
 PlayerInfo.set_is_text_muted = function (self, is_muted)
 	self._is_text_muted = is_muted
 
-	Managers.event:trigger("player_mute_status_changed")
+	Managers.event:trigger("player_mute_status_changed", self._account_id)
 end
 
 PlayerInfo.is_voice_muted = function (self)
@@ -166,7 +172,7 @@ end
 PlayerInfo.set_is_voice_muted = function (self, is_muted)
 	self._is_voice_muted = is_muted
 
-	Managers.event:trigger("player_mute_status_changed")
+	Managers.event:trigger("player_mute_status_changed", self._account_id)
 end
 
 PlayerInfo.last_time_played_with = function (self)
@@ -223,6 +229,12 @@ PlayerInfo.character_level = function (self)
 	local profile = self:profile()
 
 	return profile and profile.current_level or 0
+end
+
+PlayerInfo.character_id = function (self)
+	local profile = self:profile()
+
+	return profile and profile.character_id or ""
 end
 
 PlayerInfo.is_own_player = function (self)

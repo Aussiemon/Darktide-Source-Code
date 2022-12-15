@@ -86,6 +86,15 @@ VisualLoadoutCustomization.spawn_item_attachments = function (item_data, overrid
 
 		table.sort(attachment_names)
 
+		local skin_color_slot_name = "slot_body_skin_color"
+		local skin_color_slot_index = table.find(attachment_names, skin_color_slot_name)
+
+		if skin_color_slot_index then
+			table.remove(attachment_names, skin_color_slot_index)
+
+			attachment_names[#attachment_names + 1] = skin_color_slot_name
+		end
+
 		for i = 1, #attachment_names do
 			local name = attachment_names[i]
 			local attachment_slot_data = attachments[name]

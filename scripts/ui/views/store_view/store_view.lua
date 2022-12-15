@@ -17,7 +17,6 @@ local InputUtils = require("scripts/managers/input/input_utils")
 local TextUtils = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local Vo = require("scripts/utilities/vo")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local DIRECTION = {
 	RIGHT = 4,
 	UP = 1,
@@ -869,6 +868,7 @@ StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
 			return
 		end
 
+		self._catalog_timer = data.catalog_validity
 		local w, h = self:_scenegraph_size("grid_background")
 		local start_pos = self:_scenegraph_world_position("grid_background", 1)
 		local offers = data.offers
@@ -1003,12 +1003,11 @@ StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
 
 		local count = 0
 		local target = #offers
-		local pages = 0
 		local last_index = 1
 
 		for i = 1, #category_pages_layout_data do
 			local page = category_pages_layout_data[i]
-			local count = count + #page.elements
+			count = count + #page.elements
 
 			if target <= count then
 				last_index = i
@@ -1098,15 +1097,39 @@ StoreView._setup_navigation_arrows = function (self, layout_pages)
 	end
 end
 
+StoreView._set_catalog_expire_time = function (self, catalog_timer)
+	local t = Managers.time:time("main")
+	local server_time = nil
+	server_time = Managers.backend:get_server_time(t)
+	local start_time = catalog_timer.valid_from
+	local end_time = catalog_timer.valid_to
+	local valid_start_time = start_time and start_time <= server_time
+	local valid_end_time = end_time and server_time <= end_time
+
+	if valid_start_time and valid_end_time then
+		return end_time - server_time > 0
+	elseif not valid_start_time and start_time then
+		return true
+	elseif not valid_end_time and end_time then
+		return false
+	else
+		return true
+	end
+end
+
 StoreView._set_expire_time = function (self, offer)
 	local t = Managers.time:time("main")
-	local server_time = Managers.backend:get_server_time(t)
+	local server_time = nil
+	server_time = Managers.backend:get_server_time(t)
 	local time = offer:seconds_remaining(server_time)
+	local min_time_to_disply_timer = StoreViewSettings.min_time_to_disply_timer
 
 	if time and time > 0 then
 		local timer_text = time and Text.format_time_span_long_form_localized(time) or ""
 
-		return timer_text
+		if min_time_to_disply_timer and min_time_to_disply_timer <= time or not min_time_to_disply_timer then
+			return timer_text
+		end
 	end
 end
 
@@ -1259,6 +1282,15 @@ end
 
 StoreView._update_timers = function (self)
 	local should_refresh_offers = false
+
+	if self._catalog_timer then
+		local time_remaining = self:_set_catalog_expire_time(self._catalog_timer)
+
+		if not time_remaining then
+			self._catalog_timer = nil
+			should_refresh_offers = true
+		end
+	end
 
 	if self._grid_widgets then
 		for i = 1, #self._grid_widgets do

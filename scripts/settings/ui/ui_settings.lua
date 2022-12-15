@@ -54,6 +54,10 @@ local ui_settings = {
 		view_min_fast_speed_multiplier = 0.1,
 		view_analog_deadzone = 0.5
 	},
+	cutscenes_skip = {
+		hold_time = 1,
+		fade_inactivity_time = 5
+	},
 	bonus_aquila_values = {
 		0,
 		0,
@@ -154,13 +158,6 @@ local ui_settings = {
 		mars = "loc_item_pattern_mars",
 		cadia = "loc_item_pattern_cadia",
 		graia = "loc_item_pattern_graia"
-	},
-	item_trait_frame_texture_lookup = {
-		"content/ui/textures/icons/traits/trait_icon_frame_01_large",
-		"content/ui/textures/icons/traits/trait_icon_frame_02_large",
-		"content/ui/textures/icons/traits/trait_icon_frame_03_large",
-		"content/ui/textures/icons/traits/trait_icon_frame_04_large",
-		"content/ui/textures/icons/traits/trait_icon_frame_05_large"
 	},
 	item_store_categories = {
 		"outfits",

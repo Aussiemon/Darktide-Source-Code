@@ -4,7 +4,7 @@ local destroyed_mt = {
 	__index = function (t, k)
 		local message = string.format("Cannot access property %q on destroyed object of type %s", tostring(k), rawget(t, "__class_name") or "<unknown>")
 
-		error(message, 3)
+		error(message, 2)
 	end
 }
 local special_functions = {

@@ -544,10 +544,12 @@ PlayerManager.create_sync_data = function (self, peer_id, include_profile_chunks
 		sync_data.local_player_id_array[i] = local_player_id
 		sync_data.is_human_controlled_array[i] = is_human_controlled
 		sync_data.account_id_array[i] = player:account_id()
-		local profile = player:profile()
 		sync_data.character_id_array[i] = player:character_id()
 
 		if include_profile_chunks then
+			local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
+			local profile_updating = profile_synchronizer_host:profile_updates_profile(player:peer_id(), local_player_id)
+			local profile = profile_updating or player:profile()
 			local profile_json = ProfileUtils.pack_profile(profile)
 			local profile_chunks = {}
 

@@ -119,6 +119,8 @@ VendorViewBase._preview_element = function (self, element)
 	self:_set_display_price(price)
 
 	self._previewed_offer = offer
+
+	self:_update_button_disable_state()
 end
 
 VendorViewBase.on_exit = function (self)
@@ -414,6 +416,12 @@ VendorViewBase.update = function (self, dt, t, input_service)
 		end
 	end
 
+	self:_update_button_disable_state()
+
+	return VendorViewBase.super.update(self, dt, t, input_service)
+end
+
+VendorViewBase._update_button_disable_state = function (self)
 	if self._previewed_offer then
 		local offer = self._previewed_offer
 		local is_active = offer.state == "active"
@@ -428,8 +436,6 @@ VendorViewBase.update = function (self, dt, t, input_service)
 			button_widget.content.hotspot.disabled = not can_afford or not is_active or processing_purchase or updating_store
 		end
 	end
-
-	return VendorViewBase.super.update(self, dt, t, input_service)
 end
 
 VendorViewBase._set_display_price = function (self, price_data)

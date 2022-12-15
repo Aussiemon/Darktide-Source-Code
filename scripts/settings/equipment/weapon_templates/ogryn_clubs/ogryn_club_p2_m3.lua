@@ -128,6 +128,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.7
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -145,7 +148,7 @@ weapon_template.actions = {
 		allowed_during_sprint = true,
 		damage_window_end = 0.5666666666666667,
 		kind = "sweep",
-		attack_direction_override = "down",
+		attack_direction_override = "right",
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_swing_heavy_right_diagonal",
@@ -183,6 +186,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -256,6 +262,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -275,7 +284,7 @@ weapon_template.actions = {
 		attack_direction_override = "right",
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
-		anim_event = "attack_swing_down_right",
+		anim_event = "attack_swing_right",
 		total_time = 2,
 		action_movement_curve = {
 			{
@@ -323,6 +332,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -335,14 +347,14 @@ weapon_template.actions = {
 			1.2
 		},
 		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_down_right",
+			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_right",
 			anchor_point_offset = {
 				0,
 				0,
 				0
 			}
 		},
-		damage_profile = DamageProfileTemplates.ogryn_club_light_linesman,
+		damage_profile = DamageProfileTemplates.ogryn_club_light_tank,
 		damage_type = damage_types.ogryn_pipe_club,
 		herding_template = HerdingTemplates.thunder_hammer_right_heavy
 	},
@@ -397,6 +409,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.1
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -467,6 +482,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -534,6 +552,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -553,7 +574,7 @@ weapon_template.actions = {
 				0
 			}
 		},
-		damage_profile = DamageProfileTemplates.ogryn_club_light_linesman,
+		damage_profile = DamageProfileTemplates.ogryn_club_light_tank,
 		damage_type = damage_types.ogryn_pipe_club,
 		herding_template = HerdingTemplates.thunder_hammer_left_heavy
 	},
@@ -617,6 +638,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -690,6 +714,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -757,6 +784,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -844,6 +874,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special_2",
 				chain_time = 0.7
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -931,6 +964,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 1.2
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1002,6 +1038,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1069,6 +1108,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1194,6 +1236,9 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.65
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1213,7 +1258,7 @@ weapon_template.actions = {
 				0
 			}
 		},
-		damage_profile = DamageProfileTemplates.ogryn_club_smiter_pushfollow,
+		damage_profile = DamageProfileTemplates.ogryn_club_light_smiter,
 		damage_type = damage_types.ogryn_pipe_club
 	},
 	action_push = {
@@ -1585,8 +1630,8 @@ weapon_template.displayed_attacks = {
 		display_name = "loc_gestalt_tank",
 		type = "tank",
 		attack_chain = {
-			"linesman",
-			"linesman",
+			"tank",
+			"tank",
 			"smiter",
 			"linesman"
 		}

@@ -322,14 +322,14 @@ sway_templates.fullauto_autogun_killshot = {
 			},
 			suppression_hit = {
 				{
-					yaw = 0.2,
-					pitch = 0.2
+					yaw = 1.52,
+					pitch = 1.52
 				}
 			},
 			damage_hit = {
 				{
-					yaw = 0.25,
-					pitch = 0.25
+					yaw = 2.25,
+					pitch = 2.25
 				}
 			},
 			shooting = {

@@ -95,6 +95,7 @@ local weapon_unlock_settings = {
 			"content/items/weapons/player/ranged/autogun_p1_m2"
 		},
 		{
+			"content/items/weapons/player/melee/powermaul_2h_p1_m1",
 			"content/items/weapons/player/ranged/stubrevolver_p1_m1",
 			"content/items/weapons/player/melee/combatsword_p2_m2"
 		},
@@ -160,6 +161,7 @@ local weapon_unlock_settings = {
 			"content/items/weapons/player/melee/ogryn_combatblade_p1_m2"
 		},
 		{
+			"content/items/weapons/player/melee/ogryn_powermaul_p1_m1",
 			"content/items/weapons/player/ranged/ogryn_rippergun_p1_m2"
 		},
 		{

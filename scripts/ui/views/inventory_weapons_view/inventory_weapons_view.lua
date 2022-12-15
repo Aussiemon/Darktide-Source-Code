@@ -45,6 +45,7 @@ InventoryWeaponsView.on_enter = function (self)
 		self:_fetch_inventory_items(selected_slot)
 	end
 
+	self:_register_event("event_replace_list_item", "event_replace_list_item")
 	self:_register_button_callbacks()
 	self:_setup_input_legend()
 	self:_setup_background_world()
@@ -168,7 +169,7 @@ end
 InventoryWeaponsView.cb_on_discard_held = function (self)
 	local selected_grid_widget = self:selected_grid_widget()
 
-	if selected_grid_widget and not selected_grid_widget.content.equipped then
+	if selected_grid_widget and not selected_grid_widget.content.equipped and (self._hotkey_item_discard_pressed or self._discard_item_timer) then
 		self._update_item_discard = true
 
 		if not self._discard_item_timer then
@@ -236,6 +237,8 @@ InventoryWeaponsView.update = function (self, dt, t, input_service)
 end
 
 InventoryWeaponsView._handle_input = function (self, input_service)
+	self._hotkey_item_discard_pressed = input_service:get("hotkey_item_discard_pressed")
+
 	if input_service:get("confirm_pressed") then
 		self:cb_on_equip_pressed()
 	end
@@ -466,6 +469,41 @@ InventoryWeaponsView._calc_text_size = function (self, widget, text_and_style_id
 	return UIRenderer.text_size(self._ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
 end
 
+InventoryWeaponsView.event_replace_list_item = function (self, item)
+	self:replace_item_instance(item)
+
+	if self._previewed_item and item and self._previewed_item.gear_id == item.gear_id then
+		self._previewed_item = item
+	end
+end
+
+InventoryWeaponsView.replace_item_instance = function (self, item)
+	local gear_id = item.gear_id
+	local inventory_items = self._inventory_items
+
+	if inventory_items then
+		for i = 1, #inventory_items do
+			if inventory_items[i].gear_id == gear_id then
+				inventory_items[i] = item
+
+				break
+			end
+		end
+	end
+
+	local offer_items_layout = self._offer_items_layout
+
+	if offer_items_layout then
+		for i = 1, #offer_items_layout do
+			if offer_items_layout[i].item.gear_id == gear_id then
+				offer_items_layout[i].item = item
+
+				break
+			end
+		end
+	end
+end
+
 InventoryWeaponsView._get_item_from_inventory = function (self, wanted_item)
 	local inventory_items = self._inventory_items
 	local wanted_item_gear_id = wanted_item and wanted_item.gear_id
@@ -507,6 +545,10 @@ InventoryWeaponsView._on_double_click = function (self, widget, element)
 	local previewed_item = self._previewed_item
 
 	if not previewed_item then
+		return
+	end
+
+	if widget.content.discarded then
 		return
 	end
 
@@ -665,25 +707,6 @@ InventoryWeaponsView._update_grid_widgets = function (self, dt, t, input_service
 	end
 end
 
-InventoryWeaponsView._discard_items = function (self, item)
-	local gear_id = item.gear_id
-	local backend_interface = Managers.backend.interfaces
-	local delete_promise = backend_interface.gear:delete_gear(gear_id)
-
-	delete_promise:next(function (result)
-		local rewards = result and result.rewards
-
-		if rewards then
-			local credits_amount = rewards[1] and rewards[1].amount or 0
-
-			Managers.event:trigger("event_add_notification_message", "currency", {
-				currency = "credits",
-				amount = credits_amount
-			})
-		end
-	end)
-end
-
 InventoryWeaponsView._mark_item_for_discard = function (self, grid_index)
 	local grid_widgets = self:grid_widgets()
 	local widget = grid_widgets[grid_index]
@@ -740,7 +763,7 @@ InventoryWeaponsView._mark_item_for_discard = function (self, grid_index)
 		self:update_grid_widgets_visibility()
 	end
 
-	self:_discard_items(item)
+	Managers.event:trigger("event_discard_item", item)
 end
 
 InventoryWeaponsView._stop_previewing = function (self)
@@ -769,6 +792,24 @@ InventoryWeaponsView._update_equip_button_status = function (self)
 	end
 
 	local disable_button = not previewed_item
+	local discard_item = self._update_item_discard
+
+	if discard_item then
+		disable_button = true
+	end
+
+	if not disable_button then
+		local grid_index = self:selected_grid_index()
+		local grid_widgets = self:grid_widgets()
+		local widget = grid_widgets[grid_index]
+		local content = widget.content
+
+		if content.discarded then
+			disable_button = true
+			discard_item = true
+		end
+	end
+
 	local level_requirement_met = true
 
 	if not disable_button then
@@ -803,7 +844,7 @@ InventoryWeaponsView._update_equip_button_status = function (self)
 		local button_content = button.content
 		button_content.hotspot.disabled = disable_button
 
-		if level_requirement_met then
+		if level_requirement_met and not discard_item then
 			button_content.text = Utf8.upper(disable_button and Localize("loc_weapon_inventory_equipped_button") or Localize("loc_weapon_inventory_equip_button"))
 		else
 			button_content.text = Utf8.upper(Localize("loc_weapon_inventory_equip_button"))

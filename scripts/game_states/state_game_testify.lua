@@ -7,7 +7,7 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local world_create_particles = World.create_particles
 local world_set_particles_life_time = World.set_particles_life_time
 
-local function get_items_for_archetype(archetype, filtered_slots, workflow_states)
+local function retrieve_items_for_archetype(archetype, filtered_slots, workflow_states)
 	local WORKFLOW_STATES = {
 		"SHIPPABLE",
 		"RELEASABLE",
@@ -122,11 +122,11 @@ local StateGameTestify = {
 			return Testify.RETRY
 		end
 
-		local weapons_slots = {
+		local weapon_slots = {
 			"slot_primary",
 			"slot_secondary"
 		}
-		local weapons = get_items_for_archetype(archetype, weapons_slots)
+		local weapons = retrieve_items_for_archetype(archetype, weapon_slots)
 
 		return weapons
 	end,
@@ -141,18 +141,9 @@ local StateGameTestify = {
 			"slot_gear_upperbody",
 			"slot_gear_extra_cosmetic"
 		}
-		local gears = get_items_for_archetype(archetype, gears_slots)
+		local gears = retrieve_items_for_archetype(archetype, gears_slots)
 
 		return gears
-	end,
-	slot_fallback_item = function (slot, _)
-		if not MasterItems.has_data() then
-			return Testify.RETRY
-		end
-
-		local fallback_item = MasterItems.find_fallback_item_id(slot)
-
-		return fallback_item
 	end,
 	all_items = function (_, _)
 		if not MasterItems.has_data() then
@@ -196,6 +187,11 @@ local StateGameTestify = {
 
 		return particle_id
 	end,
+	create_telemetry_event = function (event_name, ...)
+		local telemetry_events_manager = Managers.telemetry_events
+
+		telemetry_events_manager[event_name](telemetry_events_manager, ...)
+	end,
 	display_and_graphics_presets_settings = function ()
 		local settings = RenderSettings.settings
 		local render_settings = {}
@@ -231,6 +227,28 @@ local StateGameTestify = {
 
 		return cutscenes
 	end,
+	output_to_file = function (performance_measurements)
+		local output_directory = "c:/performance_measurements"
+		local date_and_time = os.date("%y_%m_%d-%H%M%S")
+		local filename = "performance_measurements-" .. date_and_time .. ".txt"
+
+		os.execute("mkdir -p " .. "\"" .. output_directory .. "\"")
+
+		local filepath = output_directory .. "/" .. filename
+		local filehandle = io.open(filepath, "w")
+
+		for measurement_type, measurements in pairs(performance_measurements) do
+			filehandle:write(measurement_type .. ":\n")
+
+			for key, value in pairs(measurements) do
+				filehandle:write(key .. ": " .. value .. "\n")
+			end
+
+			filehandle:write("\n")
+		end
+
+		filehandle:close()
+	end,
 	player_profile = function (player)
 		local profile = player:profile()
 
@@ -241,10 +259,10 @@ local StateGameTestify = {
 	end,
 	setting_on_activated = function (option_data)
 		Log.info("StateGameTestify", "Changing render settings for %s, old value: %s, new value: %s", option_data.setting.display_name, option_data.old_value, option_data.new_value)
-		option_data.setting.on_activated(option_data.new_value)
+		option_data.setting.on_activated(option_data.new_value, option_data.setting)
 	end,
 	setting_value = function (setting)
-		return setting.get_function()
+		return setting:get_function()
 	end,
 	skip_splash_screen = function (_, state_game)
 		local current_state_name = state_game:current_state_name()
@@ -260,6 +278,15 @@ local StateGameTestify = {
 
 			return Testify.RETRY
 		end
+	end,
+	slot_fallback_item = function (slot, _)
+		if not MasterItems.has_data() then
+			return Testify.RETRY
+		end
+
+		local fallback_item = MasterItems.find_fallback_item_id(slot)
+
+		return fallback_item
 	end,
 	skip_title_screen = function (_, state_game)
 		local current_state_name = state_game:current_state_name()

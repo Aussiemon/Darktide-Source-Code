@@ -691,17 +691,17 @@ local dialogue_breed_settings = {
 		trigger_seen_vo = true,
 		is_network_synced = false,
 		trigger_heard_vo = true,
-		vo_class_name = "cultist_berzerker",
+		vo_class_name = "renegade_berzerker",
 		has_dialogue_extension = true,
 		vo_triggers_enemy_kill_query = true,
 		dialogue_memory_faction_name = "enemy",
 		follow_vo_interval_t = 2,
 		assault_vo_interval_t = 2,
-		dialogue_source_name = "cultist_berzerker",
+		dialogue_source_name = "renegade_berzerker",
 		can_trigger_vo = true,
-		wwise_voice_switch_group = "switch_enemy_cultist_berzerker",
+		wwise_voice_switch_group = "switch_voice_enemy_traitor_berzerker",
 		wwise_voices = {
-			"enemy_cultist_berzerker_a"
+			"enemy_traitor_berzerker_a"
 		}
 	},
 	contract_vendor = {

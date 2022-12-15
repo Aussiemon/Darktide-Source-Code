@@ -269,22 +269,9 @@ return function ()
 					"explicator",
 					"tech_priest"
 				}
-			},
-			{
-				"user_memory",
-				"info_hacking_decoding_in_progress",
-				OP.LT,
-				3
 			}
 		},
-		on_done = {
-			{
-				"user_memory",
-				"info_hacking_decoding_in_progress",
-				OP.ADD,
-				1
-			}
-		},
+		on_done = {},
 		heard_speak_routing = {
 			target = "players"
 		}
@@ -366,22 +353,9 @@ return function ()
 					"tech_priest",
 					"sergeant"
 				}
-			},
-			{
-				"user_memory",
-				"info_hacking_mission_almost_done",
-				OP.EQ,
-				0
 			}
 		},
-		on_done = {
-			{
-				"user_memory",
-				"info_hacking_mission_almost_done",
-				OP.ADD,
-				1
-			}
-		}
+		on_done = {}
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",

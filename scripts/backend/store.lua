@@ -116,13 +116,21 @@ StoreFront._decorate_offer = function (self, offer, is_personal)
 	end
 end
 
-StoreFront.get_config = function (self)
+StoreFront.get_config = function (self, catalog)
 	return Managers.backend:title_request(self.data._links.config.href):next(function (data)
 		local config = data.body
+		local layout_ref = catalog.layoutRef
+		local layout_link = nil
 
-		if data.body._links.layout then
-			return Managers.backend:title_request(data.body._links.layout.href):next(function (data)
-				config.layout = data.body
+		if layout_ref then
+			layout_link = "/store/storefront/layouts/" .. layout_ref
+		elseif data.body._links.layout then
+			layout_link = data.body._links.layout.href
+		end
+
+		if layout_link then
+			return Managers.backend:title_request(layout_link):next(function (layout_data)
+				config.layout = layout_data.body
 				config._links = nil
 				config.layout._links = nil
 
@@ -221,14 +229,23 @@ end
 
 Store.get_premium_storefront = function (self, storefront, t)
 	return self:_get_storefront(t, storefront, nil):next(function (store)
-		return store:get_config():next(function (config)
+		local catalog = store.data.catalog
+
+		return store:get_config(catalog):next(function (config)
+			local catalog_valid_from = catalog and catalog.validFrom
+			local catalog_valid_to = catalog and catalog.validTo
+
 			return Promise.resolved({
 				wallet_owner = store.wallet_owner,
 				public_filtered = store.data.public_filtered,
 				layout_config = config,
 				decorate_offer = store._decorate_offer,
 				is_personal = store.is_personal,
-				storefront = store
+				storefront = store,
+				catalog = {
+					valid_from = catalog_valid_from and tonumber(catalog_valid_from),
+					valid_to = catalog_valid_to and tonumber(catalog_valid_to)
+				}
 			})
 		end)
 	end)

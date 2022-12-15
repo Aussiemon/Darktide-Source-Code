@@ -27,7 +27,7 @@ damage_templates.default_stub_pistol_bfg = {
 	ignore_stagger_reduction = true,
 	cleave_distribution = medium_cleave,
 	ranges = {
-		max = 23,
+		max = 35,
 		min = 13
 	},
 	armor_damage_modifier_ranged = {
@@ -128,7 +128,7 @@ damage_templates.default_stub_pistol_bfg = {
 	power_distribution = {
 		attack = {
 			200,
-			350
+			400
 		},
 		impact = {
 			10,

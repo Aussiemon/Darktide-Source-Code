@@ -306,7 +306,7 @@ weapon_template.actions = {
 			anim_event = "attack_burst",
 			anim_event_3p = "orb_shoot",
 			flamer_gas_template = FlamerGasTemplates.warp_fire_burst,
-			damage_type = damage_types.force_staff_single_target
+			damage_type = damage_types.warpfire
 		},
 		buff_keywords = {
 			buff_keywords.allow_hipfire_during_sprint
@@ -444,7 +444,7 @@ weapon_template.actions = {
 		fire_configuration = {
 			charge_cost = true,
 			flamer_gas_template = FlamerGasTemplates.warp_fire_auto,
-			damage_type = damage_types.force_staff_single_target
+			damage_type = damage_types.warpfire
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -760,6 +760,7 @@ weapon_template.actions = {
 		damage_window_end = 0.7,
 		uninterruptible = true,
 		anim_event = "attack_special_swipe",
+		power_level = 650,
 		total_time = 1.1,
 		action_movement_curve = {
 			{
@@ -1019,7 +1020,7 @@ weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"ranged",
 	"force_staff",
-	"p1"
+	"p2"
 }
 weapon_template.dodge_template = "killshot"
 weapon_template.sprint_template = "support"

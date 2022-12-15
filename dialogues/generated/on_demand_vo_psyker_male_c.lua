@@ -388,12 +388,6 @@ local on_demand_vo_psyker_male_c = {
 			0.503031,
 			0.584771
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_mutant_charger = {
@@ -411,12 +405,6 @@ local on_demand_vo_psyker_male_c = {
 			0.702625,
 			1.050271
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_ogryn_armored_executor = {
@@ -433,12 +421,6 @@ local on_demand_vo_psyker_male_c = {
 			0.611615,
 			0.874479,
 			0.88026
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},

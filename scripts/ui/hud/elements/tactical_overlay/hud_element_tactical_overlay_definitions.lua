@@ -39,17 +39,6 @@ local scenegraph_definition = {
 			0
 		}
 	},
-	right_panel = {
-		vertical_alignment = "center",
-		parent = "background",
-		horizontal_alignment = "right",
-		size = details_panel_size,
-		position = {
-			0,
-			0,
-			0
-		}
-	},
 	mission_info_panel = {
 		vertical_alignment = "center",
 		parent = "left_panel",
@@ -138,12 +127,7 @@ local left_panel_widgets_definitions = {
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "left",
-				color = {
-					255,
-					169,
-					191,
-					153
-				},
+				color = Color.terminal_text_header(255, true),
 				offset = {
 					0,
 					25,
@@ -333,52 +317,54 @@ local left_panel_widgets_definitions = {
 		}
 	}, "circumstance_info_panel")
 }
-local right_panel_widgets_definitions = {}
-local animations = {}
-animations.enter_left = {
-	{
-		name = "reset",
-		end_time = 0,
-		start_time = 0,
-		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-			for _, widget in ipairs(widgets) do
-				widget.alpha_multiplier = 0
+local animations = {
+	enter = {
+		{
+			name = "reset",
+			end_time = 0,
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				local left_panel_widgets = parent._left_panel_widgets
+
+				for _, widget in ipairs(left_panel_widgets) do
+					widget.alpha_multiplier = 0
+				end
 			end
-		end
+		},
+		{
+			name = "left_panel_enter",
+			end_time = 0.5,
+			start_time = 0,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local new_pos = details_panel_size[1] * math.easeOutCubic(progress)
+				local left_panel_widgets = parent._left_panel_widgets
+
+				for _, widget in ipairs(left_panel_widgets) do
+					widget.alpha_multiplier = progress
+					widget.offset[1] = new_pos
+				end
+
+				return true
+			end
+		}
 	},
-	{
-		name = "slide_right",
-		end_time = 0.5,
-		start_time = 0,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local new_pos = details_panel_size[1] * math.easeOutCubic(progress)
-			local left_panel_widgets = parent._left_panel_widgets
+	exit = {
+		{
+			name = "left_panel_exit",
+			end_time = 0.5,
+			start_time = 0,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local new_pos = -details_panel_size[1] * math.easeOutCubic(progress)
+				local left_panel_widgets = parent._left_panel_widgets
 
-			for _, widget in ipairs(left_panel_widgets) do
-				widget.alpha_multiplier = progress
-				widget.offset[1] = new_pos
+				for _, widget in ipairs(left_panel_widgets) do
+					widget.alpha_multiplier = 1 - progress
+					widget.offset[1] = new_pos
+				end
+
+				return true
 			end
-
-			return true
-		end
-	}
-}
-animations.exit_left = {
-	{
-		name = "slide_right",
-		end_time = 0.5,
-		start_time = 0,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local new_pos = -details_panel_size[1] * math.easeOutCubic(progress)
-			local left_panel_widgets = parent._left_panel_widgets
-
-			for _, widget in ipairs(left_panel_widgets) do
-				widget.alpha_multiplier = 1 - progress
-				widget.offset[1] = new_pos
-			end
-
-			return true
-		end
+		}
 	}
 }
 
@@ -386,6 +372,5 @@ return {
 	animations = animations,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	left_panel_widgets_definitions = left_panel_widgets_definitions,
-	right_panel_widgets_definitions = right_panel_widgets_definitions
+	left_panel_widgets_definitions = left_panel_widgets_definitions
 }

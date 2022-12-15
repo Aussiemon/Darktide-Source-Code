@@ -161,7 +161,7 @@ InputUtils.key_axis_locale = function (global_name)
 	local dummy_device = InputUtils.get_first_device_of_type(device_type)
 
 	if not dummy_device then
-		return nil
+		return "[]"
 	end
 
 	local index = InputUtils.button_index(global_name, dummy_device, device_type)
@@ -175,6 +175,8 @@ InputUtils.key_axis_locale = function (global_name)
 	if index then
 		return InputUtils.localized_axis_name(index, dummy_device), device_type
 	end
+
+	return "[]"
 end
 
 InputUtils.localized_string_from_key_info = function (key_info, color_tint_text)

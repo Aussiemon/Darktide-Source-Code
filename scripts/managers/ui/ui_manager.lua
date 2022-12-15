@@ -72,6 +72,7 @@ UIManager.init = function (self)
 	Managers.event:register(self, "event_player_profile_updated", "event_player_profile_updated")
 	Managers.event:register(self, "event_player_appearance_updated", "event_player_appearance_updated")
 	Managers.event:register(self, "event_on_render_settings_applied", "event_on_render_settings_applied")
+	Managers.event:register(self, "event_cinematic_skip_state", "event_cinematic_skip_state")
 end
 
 UIManager.get_delta_time = function (self)
@@ -83,7 +84,6 @@ UIManager.get_delta_time = function (self)
 end
 
 UIManager._setup_icon_renderers = function (self)
-	local back_buffer_render_handlers = {}
 	local item_icon_size = UISettings.item_icon_size
 	local cosmetics_icon_size = UISettings.item_icon_size
 	local portrait_render_settings = {
@@ -128,11 +128,13 @@ UIManager._setup_icon_renderers = function (self)
 		portrait_height = 192,
 		timer_name = "ui"
 	}
-	back_buffer_render_handlers.portraits = PortraitUI:new(portrait_render_settings)
-	back_buffer_render_handlers.appearance = PortraitUI:new(appearance_render_settings)
-	back_buffer_render_handlers.cosmetics = PortraitUI:new(cosmetics_render_settings)
-	back_buffer_render_handlers.weapons = WeaponIconUI:new()
-	back_buffer_render_handlers.icon = ItemIconLoaderUI:new()
+	local back_buffer_render_handlers = {
+		portraits = self:create_single_icon_renderer("portrait", "portraits", portrait_render_settings),
+		appearance = self:create_single_icon_renderer("portrait", "appearance", appearance_render_settings),
+		cosmetics = self:create_single_icon_renderer("portrait", "cosmetics", cosmetics_render_settings),
+		weapons = self:create_single_icon_renderer("weapon", "weapons"),
+		icon = self:create_single_icon_renderer("icon", "icon")
+	}
 	self._back_buffer_render_handlers = back_buffer_render_handlers
 end
 
@@ -142,6 +144,8 @@ UIManager.create_single_icon_renderer = function (self, render_type, id, setting
 
 	if render_type == "weapon" then
 		instance = WeaponIconUI:new(settings)
+	elseif render_type == "icon" then
+		instance = ItemIconLoaderUI:new(settings)
 	else
 		instance = PortraitUI:new(settings)
 	end
@@ -676,6 +680,7 @@ UIManager.destroy = function (self)
 	Managers.event:unregister(self, "event_player_profile_updated")
 	Managers.event:unregister(self, "event_player_appearance_updated")
 	Managers.event:unregister(self, "event_on_render_settings_applied")
+	Managers.event:unregister(self, "event_cinematic_skip_state")
 	self._view_handler:destroy()
 
 	self._view_handler = nil
@@ -697,14 +702,6 @@ UIManager.destroy = function (self)
 		self._ui_loading_icon_renderer = nil
 	end
 
-	if self._back_buffer_render_handlers then
-		for _, back_buffer_renderer in pairs(self._back_buffer_render_handlers) do
-			back_buffer_renderer:destroy()
-		end
-
-		self._back_buffer_render_handlers = nil
-	end
-
 	local world = self._world
 	local viewport_name = self._viewport_name
 
@@ -713,6 +710,12 @@ UIManager.destroy = function (self)
 
 	self._viewport_name = nil
 	self._world = nil
+
+	for id, instance in pairs(self._back_buffer_render_handlers) do
+		self:destroy_single_icon_renderer(id)
+	end
+
+	self._back_buffer_render_handlers = nil
 
 	if self._single_icon_renderers_destruction_frame_counter then
 		self._single_icon_renderers_destruction_frame_counter = 0
@@ -1878,7 +1881,7 @@ UIManager.item_icon_updated = function (self, item)
 end
 
 UIManager.event_on_render_settings_applied = function (self)
-	for _, instance in pairs(self._back_buffer_render_handlers) do
+	for _, instance in pairs(self._single_icon_renderers) do
 		if instance.update_all then
 			instance:update_all()
 		end
@@ -1900,6 +1903,36 @@ end
 
 UIManager.ui_constant_elements = function (self)
 	return self._ui_constant_elements
+end
+
+UIManager.event_cinematic_skip_state = function (self, show_skip, can_skip)
+	if not self._cinematic_skip_state then
+		self._cinematic_skip_state = {}
+	end
+
+	local show_skip = show_skip ~= nil and show_skip
+	local can_skip = can_skip ~= nil and can_skip
+
+	if show_skip == nil then
+		show_skip = self._cinematic_skip_state.show_skip
+	end
+
+	if can_skip == nil then
+		can_skip = self._cinematic_skip_state.can_skip
+	end
+
+	self._cinematic_skip_state = {
+		show_skip = show_skip,
+		can_skip = can_skip
+	}
+end
+
+UIManager.cinematic_skip_state = function (self)
+	if self._cinematic_skip_state then
+		return self._cinematic_skip_state.show_skip, self._cinematic_skip_state.can_skip
+	else
+		return false, false
+	end
 end
 
 UIManager.get_hud = function (self)

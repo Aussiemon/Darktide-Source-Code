@@ -199,13 +199,15 @@ EACClientManager._update_session = function (self, dt, t)
 	local session_state = self._session_state
 
 	if session_state == EAC_SESSION_STATES.in_session then
-		local user_id = self._user_id
-
-		if user_id then
-			self:_validate_user_id()
-		end
+		-- Nothing
 	elseif session_state == EAC_SESSION_STATES.end_session_requested then
 		self:end_session()
+	end
+
+	local user_id = self._user_id
+
+	if user_id then
+		self:_validate_user_id()
 	end
 end
 

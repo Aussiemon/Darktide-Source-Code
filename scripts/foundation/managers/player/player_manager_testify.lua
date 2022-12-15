@@ -13,6 +13,12 @@ local PlayerManagerTestify = {
 
 		return local_player
 	end,
+	local_player_archetype_name = function (id, player_manager)
+		local local_player_id = id
+		local local_player = player_manager:local_player(local_player_id)
+
+		return local_player:archetype_name()
+	end,
 	make_players_invulnerable = function (_, player_manager)
 		for _, player in pairs(player_manager._players) do
 			if player:unit_is_alive() then
@@ -189,10 +195,10 @@ PlayerManagerTestify.wait_for_bots_to_reach_position = function (wait_for_bots_p
 	end
 end
 
-PlayerManagerTestify.wait_for_item_equipped = function (data, time)
-	local TIMEOUT = 1
+PlayerManagerTestify.wait_for_item_equipped = function (data, time, timeout)
+	local TIMEOUT = type(timeout) == "number" and timeout or 1
 
-	if TIMEOUT < os.clock() - time then
+	if type(time) == "number" and TIMEOUT < os.clock() - time then
 		return
 	end
 

@@ -98,5 +98,6 @@ ogryn_lunge_templates.ogryn_charge_damage.damage_settings = {
 ogryn_lunge_templates.ogryn_charge_damage.on_finish_explosion.explosion_template = ExplosionTemplates.ogryn_charge_impact_damage
 ogryn_lunge_templates.ogryn_charge_bleed = table.clone(ogryn_lunge_templates.ogryn_charge)
 ogryn_lunge_templates.ogryn_charge_bleed.add_debuff_on_hit = "bleed"
+ogryn_lunge_templates.ogryn_charge_bleed.add_debuff_on_hit_stacks = talent_settings.combat_ability_1.stacks
 
 return ogryn_lunge_templates

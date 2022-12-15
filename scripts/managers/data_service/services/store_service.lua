@@ -274,7 +274,7 @@ StoreService.get_premium_store = function (self, storefront_key)
 	return promise:catch(function (error)
 		Log.error("StoreService", "Failed to fetch premium storefront %s %s", storefront_key, error)
 	end):next(function (store_catalogue)
-		local offers, current_rotation_end, layout_config, decorate_offer = nil
+		local offers, current_rotation_end, layout_config, decorate_offer, catalog_validity = nil
 
 		if store_catalogue then
 			local store_data = store_catalogue.data
@@ -282,6 +282,7 @@ StoreService.get_premium_store = function (self, storefront_key)
 			layout_config = store_catalogue.layout_config
 			current_rotation_end = store_data and store_data.currentRotationEnd
 			decorate_offer = store_catalogue.decorate_offer
+			catalog_validity = store_catalogue.catalog
 		end
 
 		return {
@@ -290,7 +291,8 @@ StoreService.get_premium_store = function (self, storefront_key)
 			current_rotation_end = current_rotation_end,
 			decorate_offer = decorate_offer and function (self, test, is_personal)
 				decorate_offer(store_catalogue.storefront, test, is_personal)
-			end or nil
+			end or nil,
+			catalog_validity = catalog_validity
 		}
 	end)
 end

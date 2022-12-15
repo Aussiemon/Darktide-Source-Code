@@ -428,6 +428,21 @@ local audio_teammate_ping_setting = {
 		end
 	end
 }
+local audio_voice_fx_setting = {
+	display_name = "loc_settings_audio_headgear_voice_effect",
+	id = "voice_fx_setting",
+	default_value = true,
+	save_location = "sound_settings",
+	commit = function (value)
+		local options_audio_parameter_name = "options_voice_fx"
+
+		if value then
+			Wwise.set_state(options_audio_parameter_name, "on")
+		else
+			Wwise.set_state(options_audio_parameter_name, "off")
+		end
+	end
+}
 settings[#settings + 1] = {
 	group_name = "audio_settings",
 	display_name = "loc_settings_menu_group_audio_settings",
@@ -439,6 +454,7 @@ settings[#settings + 1] = dialogue_volume_template
 settings[#settings + 1] = construct_audio_settings_boolean(game_interface_setting)
 settings[#settings + 1] = construct_audio_settings_boolean(audio_backstab_sound_setting)
 settings[#settings + 1] = construct_audio_settings_boolean(audio_teammate_ping_setting)
+settings[#settings + 1] = construct_audio_settings_boolean(audio_voice_fx_setting)
 settings[#settings + 1] = {
 	group_name = "voice_chat_settings",
 	display_name = "loc_settings_menu_group_voice_chat_settings",
@@ -482,7 +498,7 @@ settings[#settings + 1] = chat_volume_template
 local voice_chat_settings = {
 	display_name = "loc_setting_voice_chat_presets",
 	id = "voice_chat",
-	default_value = 0,
+	default_value = 2,
 	save_location = "sound_settings",
 	options = {
 		{

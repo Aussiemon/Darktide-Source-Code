@@ -180,7 +180,7 @@ _add_achievement("psyker_2_stay_at_max_souls_for_duration", UITypes.increasing_s
 _add_achievement("psyker_2_perils_of_the_warp_elite_kills", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0025", specialization, EventTrigger:new("psyker_2_perils_of_the_warp_elite_kills_event"), nil, {
 	target = 3
 })
-_add_achievement("psyker_2_elite_or_special_kills_with_smite_last_10_sec", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0026", specialization, IncreasingStatTrigger:new(AchievementStats.definitions.elite_or_special_kills_with_smite_last_12_sec, 5), nil, {
+_add_achievement("psyker_2_elite_or_special_kills_with_smite_last_10_sec", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0026", specialization, IncreasingStatTrigger:new(AchievementStats.definitions.max_elite_or_special_kills_with_smite_last_12_sec, 5), nil, {
 	time_window = 12
 })
 _add_achievement("psyker_2_kill_boss_solo_with_smite", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0029", specialization, IncreasingStatTrigger:new(AchievementStats.definitions.kill_boss_solo_with_smite, 1))

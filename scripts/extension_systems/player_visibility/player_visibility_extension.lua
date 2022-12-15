@@ -4,10 +4,16 @@ PlayerVisibilityExtension.init = function (self, extension_init_context, unit, e
 	self._is_visible = true
 	self._unit = unit
 	self._first_person_unit = nil
+	self._unit_tbl = {
+		unit
+	}
 	local first_person_extension = ScriptUnit.has_extension(unit, "first_person_system")
 
 	if first_person_extension then
 		self._first_person_unit = first_person_extension:first_person_unit()
+		self._first_person_unit_tbl = {
+			self._first_person_unit
+		}
 	end
 end
 
@@ -37,26 +43,18 @@ PlayerVisibilityExtension.show = function (self)
 end
 
 PlayerVisibilityExtension._take_snapshot = function (self)
-	Unit.take_visibility_snapshot({
-		self._unit
-	})
+	Unit.take_visibility_snapshot(self._unit_tbl)
 
 	if self._first_person_unit then
-		Unit.take_visibility_snapshot({
-			self._first_person_unit
-		})
+		Unit.take_visibility_snapshot(self._first_person_unit_tbl)
 	end
 end
 
 PlayerVisibilityExtension._restore_snapshot = function (self)
-	Unit.restore_visibility_snapshot({
-		self._unit
-	})
+	Unit.restore_visibility_snapshot(self._unit_tbl)
 
 	if self._first_person_unit then
-		Unit.restore_visibility_snapshot({
-			self._first_person_unit
-		})
+		Unit.restore_visibility_snapshot(self._first_person_unit_tbl)
 	end
 end
 

@@ -105,7 +105,7 @@ HealthStationSystem._distribute_charges_to_stations = function (self)
 			charges_to_distribute = mission_settings_health_station.charges_to_distribute
 		end
 
-		if station_count > 0 and charges_to_distribute > 0 then
+		if station_count > 0 then
 			local max_charges_per_station = HealthStationExtension.MAX_CHARGES
 			local max_total_charges = max_charges_per_station * station_count
 			charges_to_distribute = math.min(charges_to_distribute, max_total_charges)
@@ -130,13 +130,9 @@ HealthStationSystem._distribute_charges_to_stations = function (self)
 
 			for i = 1, station_count do
 				local station = stations[i]
+				local plug = station.charges < 4
 
-				if station.charges == 4 then
-					station.extension:spawn_battery()
-					station.extension:set_charge_amount(0)
-				else
-					station.extension:set_charge_amount(station.charges)
-				end
+				station.extension:assign_distributed_charge(station.charges, plug)
 			end
 		end
 	end

@@ -48,7 +48,7 @@ HudElementWorldMarkers.init = function (self, parent, draw_layer, start_scale)
 	event_manager:register(self, "request_world_markers_list", "event_request_world_markers_list")
 
 	self._safe_raycast_cb = callback(self, "_async_raycast_result_cb")
-	self._raycast_object = Managers.state.game_mode:create_safe_raycast_object("closest", "types", "both", "collision_filter", "filter_player_character_interactable_line_of_sight_check")
+	self._raycast_object = Managers.state.game_mode:create_safe_raycast_object("closest", "types", "both", "collision_filter", "filter_interactable_line_of_sight_marker_check")
 end
 
 HudElementWorldMarkers.destroy = function (self)

@@ -115,6 +115,15 @@ local interaction_templates = {
 		interaction_class_name = "crafting",
 		ui_view_name = "crafting_view"
 	},
+	penances = {
+		action_text = "loc_action_interaction_view",
+		ui_interaction_type = "point_of_interest",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/penances",
+		description = "loc_penances_view",
+		duration = 0,
+		interaction_class_name = "penances",
+		ui_view_name = "account_profile_view"
+	},
 	inbox = {
 		action_text = "loc_action_interaction_view",
 		ui_interaction_type = "point_of_interest",

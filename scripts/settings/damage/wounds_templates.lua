@@ -896,7 +896,7 @@ wounds_templates.energy_blunt = {
 		default = {
 			default_shape = shapes.default,
 			[shapes.default] = {
-				shape_scaling = false,
+				shape_scaling = true,
 				radius = {
 					4,
 					5
@@ -905,7 +905,7 @@ wounds_templates.energy_blunt = {
 				duration = linger_light
 			},
 			[shapes.left_45_slash_coarse] = {
-				shape_scaling = false,
+				shape_scaling = true,
 				radius = {
 					4,
 					5
@@ -914,7 +914,7 @@ wounds_templates.energy_blunt = {
 				duration = linger_light
 			},
 			[shapes.right_45_slash_coarse] = {
-				shape_scaling = false,
+				shape_scaling = true,
 				radius = {
 					4,
 					5
@@ -923,7 +923,7 @@ wounds_templates.energy_blunt = {
 				duration = linger_light
 			},
 			[shapes.horizontal_slash_coarse] = {
-				shape_scaling = false,
+				shape_scaling = true,
 				radius = {
 					4,
 					5
@@ -932,7 +932,7 @@ wounds_templates.energy_blunt = {
 				duration = linger_light
 			},
 			[shapes.vertical_slash_coarse] = {
-				shape_scaling = false,
+				shape_scaling = true,
 				radius = {
 					4,
 					5
@@ -946,7 +946,7 @@ wounds_templates.energy_blunt = {
 		default = {
 			default_shape = shapes.default,
 			[shapes.default] = {
-				shape_scaling = false,
+				shape_scaling = true,
 				radius = {
 					4,
 					5
@@ -955,7 +955,7 @@ wounds_templates.energy_blunt = {
 				duration = linger_light
 			},
 			[shapes.left_45_slash_coarse] = {
-				shape_scaling = false,
+				shape_scaling = true,
 				radius = {
 					4,
 					5
@@ -964,7 +964,7 @@ wounds_templates.energy_blunt = {
 				duration = linger_light
 			},
 			[shapes.right_45_slash_coarse] = {
-				shape_scaling = false,
+				shape_scaling = true,
 				radius = {
 					4,
 					5
@@ -973,7 +973,7 @@ wounds_templates.energy_blunt = {
 				duration = linger_light
 			},
 			[shapes.horizontal_slash_coarse] = {
-				shape_scaling = false,
+				shape_scaling = true,
 				radius = {
 					4,
 					5
@@ -982,7 +982,7 @@ wounds_templates.energy_blunt = {
 				duration = linger_light
 			},
 			[shapes.vertical_slash_coarse] = {
-				shape_scaling = false,
+				shape_scaling = true,
 				radius = {
 					4,
 					5
@@ -1102,47 +1102,47 @@ wounds_templates.slash_force = {
 			[shapes.default] = {
 				shape_scaling = false,
 				radius = {
-					1,
-					1.5
+					5,
+					5.5
 				},
 				color_brightness = force_teal,
-				duration = flash_slow
+				duration = linger_heavy
 			},
 			[shapes.left_45_slash_clean] = {
 				shape_scaling = false,
 				radius = {
-					2,
-					2.5
+					3,
+					3.5
 				},
 				color_brightness = force_teal,
-				duration = flash_slow
+				duration = linger_heavy
 			},
 			[shapes.right_45_slash_clean] = {
 				shape_scaling = false,
 				radius = {
-					2,
-					2.5
+					3,
+					3.5
 				},
 				color_brightness = force_teal,
-				duration = flash_slow
+				duration = linger_heavy
 			},
 			[shapes.horizontal_slash_clean] = {
 				shape_scaling = false,
 				radius = {
-					2,
-					2.5
+					3,
+					3.5
 				},
 				color_brightness = force_teal,
-				duration = flash_slow
+				duration = linger_heavy
 			},
 			[shapes.vertical_slash_clean] = {
 				shape_scaling = false,
 				radius = {
-					2,
-					2.5
+					3,
+					3.5
 				},
 				color_brightness = force_teal,
-				duration = flash_slow
+				duration = linger_heavy
 			}
 		}
 	},
@@ -1152,47 +1152,47 @@ wounds_templates.slash_force = {
 			[shapes.default] = {
 				shape_scaling = false,
 				radius = {
-					1,
-					1.5
+					5,
+					5.5
 				},
 				color_brightness = force_teal,
-				duration = flash_slow
+				duration = linger_heavy
 			},
 			[shapes.left_45_slash_clean] = {
 				shape_scaling = false,
 				radius = {
-					3,
-					3.5
+					4,
+					4.5
 				},
 				color_brightness = force_teal,
-				duration = flash_slow
+				duration = linger_heavy
 			},
 			[shapes.right_45_slash_clean] = {
 				shape_scaling = false,
 				radius = {
-					3,
-					3.5
+					4,
+					4.5
 				},
 				color_brightness = force_teal,
-				duration = flash_slow
+				duration = linger_heavy
 			},
 			[shapes.horizontal_slash_clean] = {
 				shape_scaling = false,
 				radius = {
-					3,
-					3.5
+					4,
+					4.5
 				},
 				color_brightness = force_teal,
-				duration = flash_slow
+				duration = linger_heavy
 			},
 			[shapes.vertical_slash_clean] = {
 				shape_scaling = false,
 				radius = {
-					3,
-					3.5
+					4,
+					4.5
 				},
 				color_brightness = force_teal,
-				duration = flash_slow
+				duration = linger_heavy
 			}
 		}
 	}
@@ -1308,7 +1308,7 @@ wounds_templates.ogryn_power_maul_activated = table.clone(wounds_templates.energ
 wounds_templates.combat_sword = table.clone(wounds_templates.slash)
 wounds_templates.power_sword = table.clone(wounds_templates.slash)
 wounds_templates.power_sword_active = table.clone(wounds_templates.energy_slash)
-wounds_templates.force_sword = table.clone(wounds_templates.slash_force)
+wounds_templates.force_sword = table.clone(wounds_templates.slash)
 wounds_templates.force_sword_active = table.clone(wounds_templates.slash_force)
 wounds_templates.combat_knife = table.clone(wounds_templates.slash)
 wounds_templates.combat_axe = table.clone(wounds_templates.slash)

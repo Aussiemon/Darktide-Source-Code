@@ -135,8 +135,11 @@ MechanismHub.wanted_transition = function (self)
 			}
 		}
 	elseif state == "in_hub" then
-		if Managers.party_immaterium and Managers.party_immaterium:game_session_in_progress() then
-			local game_session_id = Managers.party_immaterium:current_game_session_id()
+		local party_immaterium = Managers.party_immaterium
+		local session_in_progress = party_immaterium and party_immaterium:game_session_in_progress()
+
+		if session_in_progress then
+			local game_session_id = party_immaterium:current_game_session_id()
 
 			if self._last_auto_joined_game_session_id ~= game_session_id then
 				self._last_auto_joined_game_session_id = game_session_id

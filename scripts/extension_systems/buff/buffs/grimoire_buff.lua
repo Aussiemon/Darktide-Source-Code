@@ -81,13 +81,17 @@ end
 GrimoireBuff._calculate_tick_time_and_power_level = function (self, num_grims)
 	local health_extension = ScriptUnit.extension(self._unit, "health_system")
 	local permanent_damage_taken = health_extension:permanent_damage_taken()
-	local grimoire_chunk = num_grims * 40
+	local buff_extension = ScriptUnit.extension(self._unit, "buff_system")
+	local stat_buffs = buff_extension:stat_buffs()
+	local corruption_taken_multiplier = stat_buffs.corruption_taken_multiplier or 1
+	local grimoire_chunk = num_grims * 40 * corruption_taken_multiplier
 
 	if permanent_damage_taken < grimoire_chunk then
 		local diff = grimoire_chunk - permanent_damage_taken
 		local scalar = 1 - diff / grimoire_chunk
+		local power_level = math.lerp(500, 300, scalar)
 
-		return math.lerp(0.4, 1.6, scalar), math.lerp(500, 300, scalar)
+		return math.lerp(0.4, 1.6, scalar), power_level
 	end
 
 	return 10, 60

@@ -3259,6 +3259,12 @@ for name, template in pairs(spread_templates) do
 				end
 			end
 		end
+
+		local num_shots_clear_time = move_state_settings.immediate_spread.num_shots_clear_time
+
+		if type(num_shots_clear_time) == "table" then
+			-- Nothing
+		end
 	end
 end
 

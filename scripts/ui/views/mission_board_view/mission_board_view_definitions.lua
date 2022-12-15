@@ -305,7 +305,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		parent = "canvas",
 		horizontal_alignment = "left",
 		size = {
-			650,
+			800,
 			40
 		},
 		position = {
@@ -404,7 +404,7 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 		horizontal_alignment = "left",
 		size = {
 			563,
-			75
+			100
 		},
 		position = {
 			0,
@@ -981,6 +981,10 @@ local function _has_difficulty(content)
 	return content.danger
 end
 
+local function _has_completed_on_difficulty(content)
+	return content.completed_danger
+end
+
 local function _has_timer(content)
 	return content.start_game_time
 end
@@ -1494,6 +1498,10 @@ MissionBoardViewDefinitions.widget_definitions.play_team_button = UIWidget.creat
 	hotspot = {
 		on_pressed_sound = UISoundEvents.mission_board_start_mission
 	}
+}, nil, {
+	text = {
+		line_spacing = 0.7
+	}
 })
 local mission_widget_hotspot_content = {
 	on_hover_sound = UISoundEvents.mission_board_node_hover,
@@ -1702,6 +1710,14 @@ MissionBoardViewDefinitions.mission_small_widget_template = UIWidget.create_defi
 		value_id = "mission_line",
 		value = "content/ui/materials/mission_board/mission_line",
 		change_function = MissionBoardViewStyles.update_mission_line
+	},
+	{
+		style_id = "mission_completed_icon",
+		pass_type = "texture",
+		value_id = "mission_completed_icon",
+		value = "content/ui/materials/icons/mission_difficulty_complete/difficulty_completed_1",
+		change_function = MissionBoardViewStyles.update_mission_line,
+		visibility_function = _has_completed_on_difficulty
 	}
 }, "mission_small", nil, nil, MissionBoardViewStyles.mission_widget_style)
 MissionBoardViewDefinitions.mission_medium_widget_template = UIWidget.create_definition({
@@ -2122,6 +2138,12 @@ MissionBoardViewDefinitions.legend_inputs = {
 		visibility_function = function (mission_board_view)
 			return mission_board_view.can_start_mission
 		end
+	},
+	{
+		on_pressed_callback = "_callback_toggle_private_matchmaking",
+		input_action = "toggle_private_match",
+		display_name = "loc_mission_board_play_private",
+		alignment = "right_alignment"
 	}
 }
 

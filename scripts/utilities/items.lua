@@ -10,7 +10,8 @@ local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_traits/weapon_trait_templates")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
-local CraftingSettings = require("scripts/settings/item/crafting_settings")
+local Archetypes = require("scripts/settings/archetype/archetypes")
+local RankSettings = require("scripts/settings/item/rank_settings")
 local unit_alive = Unit.alive
 local ItemUtils = {}
 
@@ -26,39 +27,13 @@ local function _character_save_data()
 end
 
 ItemUtils.calculate_stats_rating = function (item)
-	local item_level = item.itemLevel or 0
+	local rating_budget = item.itemLevel or 0
+	local rating_contribution = ItemUtils.item_perk_rating(item) + ItemUtils.item_trait_rating(item)
 
-	if item_level == 0 or type(item_level) == "string" then
-		return item_level
-	end
-
-	local rating_budget = item_level
-	local rating_contribution = 0
-	local perks = item.perks
-	local num_perks = perks and #perks or 0
-
-	if num_perks > 0 then
-		local rating_per_perk_rank = CraftingSettings.rating_per_perk_rank
-
-		for i = 1, num_perks do
-			local perk = perks[i]
-			rating_contribution = rating_contribution + (rating_per_perk_rank[perk.rarity] or 0)
-		end
-	end
-
-	local traits = item.traits
-	local num_traits = traits and #traits or 0
-	local rating_per_trait_rank = CraftingSettings.rating_per_trait_rank
-
-	for i = 1, num_traits do
-		local trait = traits[i]
-		rating_contribution = rating_contribution + (rating_per_trait_rank[trait.rarity] or 0)
-	end
-
-	return rating_budget - rating_contribution
+	return math.max(0, rating_budget - rating_contribution)
 end
 
-ItemUtils.mark_item_id_as_new = function (gear_id, item_type)
+ItemUtils.mark_item_id_as_new = function (gear_id, item_type, skip_notification)
 	local character_data = _character_save_data()
 
 	if not character_data then
@@ -76,7 +51,10 @@ ItemUtils.mark_item_id_as_new = function (gear_id, item_type)
 	local new_items = character_data.new_items
 	new_items[gear_id] = true
 	local new_item_notifications = character_data.new_item_notifications
-	new_item_notifications[gear_id] = true
+	local show_notification = skip_notification and not skip_notification or true
+	new_item_notifications[gear_id] = {
+		show_notification = show_notification
+	}
 
 	if item_type then
 		if not character_data.new_items_by_type then
@@ -256,12 +234,15 @@ ItemUtils.sub_display_name = function (item, required_level, no_color)
 end
 
 ItemUtils.trait_textures = function (trait_item, rarity)
-	local item_trait_frame_texture_lookup = UISettings.item_trait_frame_texture_lookup
-	local icon = trait_item.icon and trait_item.icon ~= "" and trait_item.icon
+	local icon = trait_item.icon ~= "" and trait_item.icon
 	local texture_icon = icon or "content/ui/textures/icons/traits/weapon_trait_default"
-	local texture_frame = rarity and item_trait_frame_texture_lookup[rarity] or "content/ui/textures/icons/traits/trait_icon_frame_large"
+	local texture_frame = RankSettings[rarity or 0].trait_frame_texture
 
 	return texture_icon, texture_frame
+end
+
+ItemUtils.perk_textures = function (perk_item, rarity)
+	return RankSettings[rarity or 0].perk_icon
 end
 
 ItemUtils.character_level = function (item)
@@ -476,6 +457,31 @@ ItemUtils.weapon_skin_requirement_text = function (item)
 	return text, true
 end
 
+ItemUtils.class_requirement_text = function (item)
+	local archetype_restrictions = item.archetypes
+	local text = ""
+
+	if not archetype_restrictions or table.is_empty(archetype_restrictions) then
+		return text, false
+	end
+
+	for i = 1, #archetype_restrictions do
+		local archetype_name = archetype_restrictions[i]
+		local archetype = Archetypes[archetype_name]
+		local display_name_localized = archetype and Localize(archetype.archetype_name)
+
+		if display_name_localized then
+			text = text .. "• " .. display_name_localized
+
+			if i < #archetype_restrictions then
+				text = text .. "\n"
+			end
+		end
+	end
+
+	return text, true
+end
+
 ItemUtils.perk_item_by_id = function (perk_id)
 	return MasterItems.get_item(perk_id)
 end
@@ -570,7 +576,7 @@ ItemUtils.equip_slot_items = function (items)
 			end
 		end
 
-		Managers.backend.interfaces.characters:equip_items_in_slots(character_id, item_gear_ids_by_slots):next(function (v)
+		return Managers.backend.interfaces.characters:equip_items_in_slots(character_id, item_gear_ids_by_slots):next(function (v)
 			Log.debug("ItemUtils", "Items equipped in loadout slots")
 
 			if is_server then
@@ -835,6 +841,96 @@ end
 
 ItemUtils.trait_description = function (item, rarity, lerp_value)
 	return ItemUtils.perk_description(item, rarity, lerp_value)
+end
+
+ItemUtils.perk_rating = function (perk_item, perk_rarity, perk_value)
+	return RankSettings[perk_rarity or 0].perk_rating
+end
+
+ItemUtils.trait_rating = function (trait_item, trait_rarity, trait_value)
+	return RankSettings[trait_rarity or 0].trait_rating
+end
+
+ItemUtils.item_perk_rating = function (item)
+	local rating = 0
+	local perks = item.perks
+	local num_perks = perks and #perks or 0
+
+	for i = 1, num_perks do
+		local perk = perks[i]
+		rating = rating + RankSettings[perk.rarity or 0].perk_rating
+	end
+
+	return rating
+end
+
+ItemUtils.item_trait_rating = function (item)
+	local rating = 0
+	local traits = item.traits
+	local num_traits = traits and #traits or 0
+
+	if item.item_type == "GADGET" then
+		for i = 1, num_traits do
+			local trait = traits[i]
+			rating = rating + math.round(trait.value * 100)
+		end
+	else
+		local fake_perk_count = 0
+
+		for i = 1, num_traits do
+			local trait = traits[i]
+			rating = rating + RankSettings[trait.rarity or 0].trait_rating
+
+			if trait.is_fake then
+				fake_perk_count = fake_perk_count + 1
+			end
+		end
+	end
+
+	return rating
+end
+
+ItemUtils.trait_category = function (item)
+	local trait_category = nil
+
+	if item.item_type == "TRAIT" then
+		local trait_name = item.name
+		trait_category = string.match(trait_name, "^content/items/traits/([%w_]+)/")
+	elseif item.weapon_template then
+		trait_category = string.gsub(item.weapon_template, "_m%d$", "")
+	end
+
+	return trait_category
+end
+
+ItemUtils.has_crafting_modification = function (item)
+	local perks = item.perks
+	local has_perk_modification = false
+
+	if perks then
+		for i = 1, #perks do
+			if perks[i].modified then
+				has_perk_modification = true
+
+				break
+			end
+		end
+	end
+
+	local traits = item.traits
+	local has_trait_modification = false
+
+	if traits then
+		for i = 1, #traits do
+			if traits[i].modified then
+				has_trait_modification = true
+
+				break
+			end
+		end
+	end
+
+	return has_perk_modification, has_trait_modification
 end
 
 return ItemUtils

@@ -153,7 +153,7 @@ AccountManagerWinGDK.xuid = function (self)
 	return self._xuid
 end
 
-AccountManagerWinGDK.refresh_communcation_restrictions = function (self)
+AccountManagerWinGDK.refresh_communication_restrictions = function (self)
 	XboxLiveUtils.get_mute_list():next(function (mute_list)
 		self._mute_list = mute_list
 
@@ -191,7 +191,7 @@ AccountManagerWinGDK.leaving_game = function (self)
 	return self._leave_game
 end
 
-AccountManagerWinGDK.verify_gdk_store_account = function (self, optional_callback)
+AccountManagerWinGDK.verify_gdk_store_account = function (self, optional_callback, hide_dialog)
 	local xuid = XboxLive.xuid_hex_to_dec(self._xuid)
 	local success, error_code = XboxLive.verify_ms_store_account(xuid)
 
@@ -203,14 +203,16 @@ AccountManagerWinGDK.verify_gdk_store_account = function (self, optional_callbac
 		return true
 	end
 
-	if error_code == GDKStoreErrors.MISMATCHED_ACCOUNTS then
-		self:_show_store_account_error("loc_ms_store_popup_header_error", "loc_ms_store_mismatched_accounts", optional_callback)
-	elseif error_code == GDKStoreErrors.MISMATCHED_XUID then
-		self:_show_store_account_error("loc_ms_store_popup_header_error", "loc_ms_store_mismatched_xuid", optional_callback)
-	elseif error_code == GDKStoreErrors.MISSING_STORE_ACCOUNT_ID then
-		self:_show_store_account_error("loc_ms_store_popup_header_error", "loc_ms_store_missing_store_id", optional_callback)
-	elseif error_code == GDKStoreErrors.READ_ERROR then
-		self:_show_store_account_error("loc_ms_store_popup_header_error", "loc_ms_store_read_error", optional_callback)
+	if not hide_dialog then
+		if error_code == GDKStoreErrors.MISMATCHED_ACCOUNTS then
+			self:_show_store_account_error("loc_ms_store_popup_header_error", "loc_ms_store_mismatched_accounts", optional_callback)
+		elseif error_code == GDKStoreErrors.MISMATCHED_XUID then
+			self:_show_store_account_error("loc_ms_store_popup_header_error", "loc_ms_store_mismatched_xuid", optional_callback)
+		elseif error_code == GDKStoreErrors.MISSING_STORE_ACCOUNT_ID then
+			self:_show_store_account_error("loc_ms_store_popup_header_error", "loc_ms_store_missing_store_id", optional_callback)
+		elseif error_code == GDKStoreErrors.READ_ERROR then
+			self:_show_store_account_error("loc_ms_store_popup_header_error", "loc_ms_store_read_error", optional_callback)
+		end
 	end
 
 	return false

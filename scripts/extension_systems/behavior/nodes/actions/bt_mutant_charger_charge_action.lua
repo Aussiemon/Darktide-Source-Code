@@ -767,33 +767,14 @@ BtMutantChargerChargeAction._update_ray_can_go = function (self, unit, scratchpa
 	end
 end
 
-local THROW_TELEPORT_UP_OFFSET_HUMAN = 0.75
-local THROW_TELEPORT_UP_OFFSET_OGRYN = 0
 local MAX_STEPS = 20
 local MAX_TIME = 1.25
 
 BtMutantChargerChargeAction._test_throw_trajectory = function (self, unit, scratchpad, action_data, test_direction, to)
-	local unit_position = POSITION_LOOKUP[unit]
-	local is_human = scratchpad.hit_unit_breed_name == "human"
-	local up = Vector3.up() * (is_human and THROW_TELEPORT_UP_OFFSET_HUMAN or THROW_TELEPORT_UP_OFFSET_OGRYN)
-	local from = unit_position + test_direction + up
-	local catapult_force = action_data.catapult_force[scratchpad.hit_unit_breed_name]
-	local catapult_z_force = action_data.catapult_z_force[scratchpad.hit_unit_breed_name]
-	local direction = Vector3.normalize(test_direction)
-	local catapult_velocity = direction * catapult_force
-	catapult_velocity.z = catapult_z_force
-	local speed = Vector3.length(catapult_velocity)
-	local target_velocity = Vector3(0, 0, 0)
-	local gravity = PlayerCharacterConstants.gravity
-	local angle, estimated_position = Trajectory.angle_to_hit_moving_target(from, to, speed, target_velocity, gravity, 1)
-
-	if angle == nil then
-		return false
-	end
-
-	local physics_world = scratchpad.physics_world
-	local velocity = Trajectory.get_trajectory_velocity(from, estimated_position, gravity, speed, angle)
-	local hit, segment_list, _, hit_position = Trajectory.ballistic_raycast(physics_world, "filter_player_mover", from, velocity, angle, gravity, MAX_STEPS, MAX_TIME)
+	local hit_unit_breed_name = scratchpad.hit_unit_breed_name
+	local force = action_data.catapult_force[hit_unit_breed_name]
+	local z_force = action_data.catapult_z_force[hit_unit_breed_name]
+	local hit, segment_list, hit_position = Trajectory.test_throw_trajectory(unit, hit_unit_breed_name, scratchpad.physics_world, force, z_force, test_direction, to, PlayerCharacterConstants.gravity, THROW_TELEPORT_UP_OFFSET_HUMAN, THROW_TELEPORT_UP_OFFSET_OGRYN, MAX_STEPS, MAX_TIME)
 
 	if hit then
 		local navigation_extension = scratchpad.navigation_extension
@@ -802,7 +783,7 @@ BtMutantChargerChargeAction._test_throw_trajectory = function (self, unit, scrat
 		local navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, hit_position, ABOVE, BELOW, LATERAL)
 
 		if navmesh_position then
-			local new_direction = Vector3.normalize(Vector3.flat(navmesh_position - unit_position))
+			local new_direction = Vector3.normalize(Vector3.flat(navmesh_position - POSITION_LOOKUP[unit]))
 
 			return true, new_direction
 		else

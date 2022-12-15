@@ -78,7 +78,15 @@ UIFontManager._setup_font_definitions = function (self, locale_fonts)
 		if locale_fonts and locale_fonts[font_name] then
 			paths[#paths + 1] = locale_fonts[font_name]
 		elseif locale_fonts then
-			paths[#paths + 1] = locale_fonts[font_kind]
+			local font_fallback = locale_fonts[font_kind]
+
+			if type(font_fallback) == "table" then
+				for i = 1, #font_fallback do
+					paths[#paths + 1] = font_fallback[i]
+				end
+			else
+				paths[#paths + 1] = font_fallback
+			end
 		end
 
 		paths[#paths + 1] = FontDefinitions.custom_font

@@ -1,6 +1,6 @@
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitOutlineExtension = class("PlayerUnitOutlineExtension")
-local UPDATE_WAITING_PERIOD = 0.25
+local UPDATE_WAITING_PERIOD = 0.5
 
 PlayerUnitOutlineExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	local is_server = extension_init_context.is_server
@@ -15,7 +15,7 @@ PlayerUnitOutlineExtension.init = function (self, extension_init_context, unit, 
 	self._world = Unit.world(unit)
 	self._unit = unit
 	self._timer = 0
-	self._is_disabled = false
+	self._added_disabled_outline = false
 end
 
 PlayerUnitOutlineExtension.game_object_initialized = function (self, session, object_id)
@@ -30,19 +30,15 @@ PlayerUnitOutlineExtension.extensions_ready = function (self, world, unit)
 	self._character_state_component = unit_data_extension:read_component("character_state")
 	self._outline_system = outline_system
 	self._smart_tag_system = smart_tag_system
-	local player_outline_mode = DevParameters.player_outlines_mode
-	local player_outline_type = DevParameters.player_outlines_type
+	local save_data = Managers.save:account_data()
+	local interface_settings = save_data.interface_settings
+	local player_outlines_enabled = interface_settings.player_outlines
 
-	if player_outline_mode ~= "off" and player_outline_mode ~= "skeleton" then
-		self._current_outline = "default_" .. player_outline_type .. "_" .. player_outline_mode
-
-		if not self._is_local_unit then
-			self._outline_system:add_outline(unit, self._current_outline)
-		end
+	if player_outlines_enabled and not self._is_local_unit then
+		self._outline_system:add_outline(unit, "default_outlines_obscured")
 	end
 
-	self._player_outline_mode = player_outline_mode
-	self._player_outline_type = player_outline_type
+	self._player_outlines_enabled = player_outlines_enabled
 end
 
 PlayerUnitOutlineExtension.destroy = function (self)
@@ -55,6 +51,28 @@ local IGNORED_DISABLED_OUTLINE_STATES = {
 }
 
 PlayerUnitOutlineExtension.update = function (self, unit, dt, t)
+	local added_outline = self._added_disabled_outline
+
+	if self._player_outlines_enabled then
+		local character_state_component = self._character_state_component
+		local state_name = character_state_component.state_name
+		local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
+
+		if is_disabled and not added_outline and not IGNORED_DISABLED_OUTLINE_STATES[state_name] then
+			self._outline_system:add_outline(unit, "knocked_down")
+
+			self._added_disabled_outline = true
+		elseif added_outline and not is_disabled then
+			self._outline_system:remove_outline(unit, "knocked_down")
+
+			self._added_disabled_outline = false
+		end
+	elseif added_outline then
+		self._outline_system:remove_outline(unit, "knocked_down")
+
+		self._added_disabled_outline = false
+	end
+
 	self._timer = self._timer + dt
 
 	if self._timer < UPDATE_WAITING_PERIOD then
@@ -62,48 +80,18 @@ PlayerUnitOutlineExtension.update = function (self, unit, dt, t)
 	end
 
 	self._timer = 0
-	local player_outline_mode = DevParameters.player_outlines_mode
+	local save_data = Managers.save:account_data()
+	local interface_settings = save_data.interface_settings
+	local player_outlines_enabled = interface_settings.player_outlines
 
-	if not self._is_local_unit then
-		local player_outline_type = DevParameters.player_outlines_type
-
-		if player_outline_mode ~= self._player_outline_mode or player_outline_type ~= self._player_outline_type then
-			local previous_player_outline = self._current_outline
-
-			self._outline_system:remove_outline(unit, previous_player_outline)
-
-			if player_outline_mode ~= "off" and player_outline_mode ~= "skeleton" then
-				local new_outline = "default_" .. player_outline_type .. "_" .. player_outline_mode
-
-				self._outline_system:add_outline(unit, new_outline)
-
-				self._current_outline = new_outline
-
-				Log.info("OutlineSystem", "Swap: " .. (previous_player_outline or "nil") .. " to: " .. new_outline)
-			else
-				Log.info("OutlineSystem", "Swap: " .. (previous_player_outline or "nil") .. " to: " .. player_outline_mode)
-			end
-
-			self._player_outline_mode = player_outline_mode
-			self._player_outline_type = player_outline_type
+	if not self._is_local_unit and player_outlines_enabled ~= self._player_outlines_enabled then
+		if not player_outlines_enabled then
+			self._outline_system:remove_outline(unit, "default_outlines_obscured")
+		else
+			self._outline_system:add_outline(unit, "default_outlines_obscured")
 		end
-	end
 
-	if player_outline_mode ~= "off" and player_outline_mode ~= "skeleton" then
-		local character_state_component = self._character_state_component
-		local state_name = character_state_component.state_name
-		local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
-		local was_disabled = self._is_disabled
-
-		if is_disabled and not was_disabled and not IGNORED_DISABLED_OUTLINE_STATES[state_name] then
-			self._outline_system:add_outline(unit, "knocked_down")
-
-			self._is_disabled = is_disabled
-		elseif was_disabled and not is_disabled then
-			self._outline_system:remove_outline(unit, "knocked_down")
-
-			self._is_disabled = is_disabled
-		end
+		self._player_outlines_enabled = player_outlines_enabled
 	end
 end
 

@@ -351,7 +351,14 @@ SocialMenuRosterView.update = function (self, dt, t, input_service)
 		end
 
 		self:_check_can_exit()
-		self:_update_list_refreshes(dt)
+
+		local scrollbar_widget = self._widgets_by_name.roster_scrollbar
+		local scrollbar_content = scrollbar_widget.content
+		local is_scrolling = scrollbar_content.drag_active or scrollbar_content.scroll_add ~= nil
+
+		if not is_scrolling then
+			self:_update_list_refreshes(dt)
+		end
 	end
 
 	if next_list_index then
@@ -656,49 +663,8 @@ SocialMenuRosterView.cb_update_roster = function (self, results)
 		return
 	end
 
-	self:_fetch_platform_player_data(results)
-end
-
-local XUIDS = {}
-
-SocialMenuRosterView._fetch_platform_player_data = function (self, results)
-	if IS_XBS or IS_GDK then
-		table.clear(XUIDS)
-
-		for i = 1, #results do
-			local entries = results[i]
-
-			for j = 1, #entries do
-				local entry = entries[j]
-				local platform = entry:platform()
-
-				if platform == "xbox" then
-					local xuid = entry:platform_user_id()
-
-					if not self._platform_id_to_display_name_lut[xuid] then
-						XUIDS[#XUIDS + 1] = xuid
-					end
-				end
-			end
-		end
-
-		if table.size(XUIDS) > 0 then
-			XboxLive.get_user_profiles(XUIDS):next(function (profiles)
-				for _, profile in ipairs(profiles) do
-					self._platform_id_to_display_name_lut[profile.xuid] = profile
-				end
-
-				self._new_list_data = results
-				self._refresh_list_delay = SocialMenuSettings.list_refresh_time
-			end)
-		else
-			self._new_list_data = results
-			self._refresh_list_delay = SocialMenuSettings.list_refresh_time
-		end
-	else
-		self._new_list_data = results
-		self._refresh_list_delay = SocialMenuSettings.list_refresh_time
-	end
+	self._new_list_data = results
+	self._refresh_roster_delay = SocialMenuSettings.roster_list_refresh_time
 end
 
 SocialMenuRosterView.cb_show_popup_menu_for_player = function (self, player_info)
@@ -777,17 +743,26 @@ SocialMenuRosterView._cb_set_player_frame = function (self, widget, item)
 end
 
 SocialMenuRosterView._update_list_refreshes = function (self, dt)
-	local delay = self._refresh_list_delay or 0
-	delay = delay - dt
+	local refresh_party_delay = self._refresh_party_delay or 0
+	refresh_party_delay = refresh_party_delay - dt
 
-	if delay < 0 then
+	if refresh_party_delay <= 0 then
 		self:_refresh_party_list()
-		self:_refresh_roster_lists()
 
-		delay = SocialMenuSettings.list_refresh_time
+		refresh_party_delay = SocialMenuSettings.party_list_refresh_time
 	end
 
-	self._refresh_list_delay = delay
+	self._refresh_party_delay = refresh_party_delay
+	local refresh_roster_delay = self._refresh_roster_delay or 0
+	refresh_roster_delay = refresh_roster_delay - dt
+
+	if refresh_roster_delay <= 0 then
+		self:_refresh_roster_lists()
+
+		refresh_roster_delay = SocialMenuSettings.roster_list_refresh_time
+	end
+
+	self._refresh_roster_delay = refresh_roster_delay
 end
 
 SocialMenuRosterView._update_portraits = function (self)
@@ -1063,18 +1038,16 @@ SocialMenuRosterView._unload_widget_portrait = function (self, widget)
 
 	self:_update_portrait_frame(widget, nil)
 
-	local portrait_load_id = widget_content.portrait_load_id
-
-	if not portrait_load_id then
-		return
-	end
-
 	local material_values = portrait_style.material_values
 	material_values.use_placeholder_texture = 1
+	local portrait_load_id = widget_content.portrait_load_id
 
-	Managers.ui:unload_profile_portrait(portrait_load_id)
+	if portrait_load_id then
+		Managers.ui:unload_profile_portrait(portrait_load_id)
 
-	widget_content.portrait_load_id = nil
+		widget_content.portrait_load_id = nil
+	end
+
 	local widgets_with_portraits = self._widgets_with_portraits
 
 	for i = #widgets_with_portraits, 1, -1 do
@@ -1104,6 +1077,7 @@ end
 
 SocialMenuRosterView._assign_roster_grid_scrollbar = function (self, roster_grid, widgets)
 	local scrollbar_widget = self._widgets_by_name.roster_scrollbar
+	scrollbar_widget.content.scroll_speed = 50
 	local interaction_scenegraph_id = "roster_grid"
 
 	roster_grid:assign_scrollbar(scrollbar_widget, ROSTER_GRID_SCENEGRAPH_ID, interaction_scenegraph_id)
@@ -1562,7 +1536,7 @@ SocialMenuRosterView._refresh_roster_lists = function (self, force_refresh)
 	local blocked_promise = social_service:fetch_blocked_players()
 	local player = self:_player()
 	local character_id = player:character_id()
-	local invites_promise = social_service:fetch_friend_invites():next(function (response)
+	local invites_promise = social_service:fetch_friend_invites(force_refresh):next(function (response)
 		local num_invites = 0
 
 		for i = 1, #response do

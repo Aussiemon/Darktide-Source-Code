@@ -516,7 +516,7 @@ weapon_template.actions = {
 		num_frames_before_process = 2,
 		range_mod = 1.25,
 		damage_window_end = 0.2,
-		attack_direction_override = "up",
+		attack_direction_override = "push",
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_heavy_up_right",
 		anim_event = "heavy_attack_right_up",
@@ -928,6 +928,10 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
+				chain_time = 0.35
+			},
+			special_action = {
+				action_name = "action_special_down_right",
 				chain_time = 0.35
 			}
 		},

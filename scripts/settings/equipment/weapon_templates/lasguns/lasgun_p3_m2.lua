@@ -732,6 +732,13 @@ local bespoke_lasgun_p3_traits = table.keys(WeaponTraitsBespokeLasgunP3)
 
 table.append(weapon_template.traits, bespoke_lasgun_p3_traits)
 
+weapon_template.weapon_temperature_settings = {
+	increase_rate = 0.08,
+	decay_rate = 0.2,
+	grace_time = 1.4,
+	use_charge = false,
+	barrel_threshold = 0.2
+}
 weapon_template.displayed_keywords = {
 	{
 		display_name = "loc_weapon_keyword_spray_n_pray"

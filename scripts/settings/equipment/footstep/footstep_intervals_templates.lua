@@ -57,13 +57,13 @@ local footstep_intervals_templates = {
 	},
 	ogryn_gauntlet = {
 		crouch_walking = 0.9,
-		walking = 0.4,
+		walking = 0.66,
 		sprinting = 0.5
 	},
 	ogryn_powermaul = {
-		crouch_walking = 0.61,
-		walking = 0.6,
-		sprinting = 0.37
+		crouch_walking = 0.85,
+		walking = 0.66,
+		sprinting = 0.51
 	},
 	ogryn_rippergun = {
 		crouch_walking = 0.9,

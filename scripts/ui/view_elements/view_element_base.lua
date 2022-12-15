@@ -273,7 +273,19 @@ ViewElementBase._unregister_events = function (self)
 	self._event_list = {}
 end
 
-ViewElementBase.destroy = function (self)
+ViewElementBase.destroy = function (self, ui_renderer)
+	local widgets = self._widgets
+
+	if widgets and ui_renderer then
+		local num_widgets = #widgets
+
+		for i = 1, num_widgets do
+			local widget = widgets[i]
+
+			UIWidget.destroy(ui_renderer, widget)
+		end
+	end
+
 	self:_unregister_events()
 end
 

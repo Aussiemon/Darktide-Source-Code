@@ -93,7 +93,7 @@ local templates = {
 				local owner_unit = template_context.is_server and template_context.owner_unit or nil
 				local source_item = template_context.is_server and template_context.source_item or nil
 
-				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.burning, "attacking_unit", owner_unit, "item", source_item)
+				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.warpfire, "attacking_unit", owner_unit, "item", source_item)
 			end
 		end,
 		minion_effects = {

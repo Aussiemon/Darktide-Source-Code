@@ -1,6 +1,7 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
+local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local NavQueries = require("scripts/utilities/nav_queries")
 local BtWarpTeleportAction = class("BtWarpTeleportAction", "BtNode")
 
@@ -27,6 +28,8 @@ BtWarpTeleportAction.enter = function (self, unit, breed, blackboard, scratchpad
 	fx_system:trigger_wwise_event(wwise_in_event, position)
 
 	scratchpad.fx_system = fx_system
+	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+	behavior_component.move_state = "idle"
 end
 
 BtWarpTeleportAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)

@@ -575,13 +575,6 @@ function _validate_tweak_template_existence(weapon_template)
 		success = false
 	end
 
-	template_success, template_error_msg = _check_tweak_template_existence(weapon_template, template_types.stagger_duration_modifier, WeaponHandlingTemplates)
-
-	if not template_success then
-		error_msg = string.format("%s%s", error_msg, template_error_msg)
-		success = false
-	end
-
 	template_success, template_error_msg = _check_tweak_template_existence(weapon_template, template_types.charge, WeaponHandlingTemplates)
 
 	if not template_success then

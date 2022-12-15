@@ -463,7 +463,7 @@ damage_templates.plasma_vent_damage = {
 		}
 	},
 	power_distribution = {
-		attack = 0.25,
+		attack = 8,
 		impact = 0
 	},
 	cleave_distribution = {

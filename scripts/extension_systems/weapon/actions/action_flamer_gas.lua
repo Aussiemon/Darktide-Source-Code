@@ -16,6 +16,7 @@ local proc_events = BuffSettings.proc_events
 local template_types = WeaponTweakTemplateSettings.template_types
 local damage_types = DamageSettings.damage_types
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
+local DEFAULT_DAMAGE_TYPE = damage_types.burning
 local ActionFlamerGas = class("ActionFlamerGas", "ActionShoot")
 
 ActionFlamerGas.init = function (self, action_context, action_params, action_settings)
@@ -33,6 +34,8 @@ ActionFlamerGas.init = function (self, action_context, action_params, action_set
 	if fire_config.charge_duration then
 		self._action_module_charge_component = unit_data_extension:write_component("action_module_charge")
 	end
+
+	self._damage_type = fire_config and fire_config.damage_type or DEFAULT_DAMAGE_TYPE
 end
 
 ActionFlamerGas._setup_flame_data = function (self, action_settings)
@@ -41,7 +44,7 @@ ActionFlamerGas._setup_flame_data = function (self, action_settings)
 	self._flamer_gas_template = flamer_gas_template
 	local weapon_extension = self._weapon_extension
 	local burninating_template = weapon_extension:burninating_template()
-	self._dot_max_stacks = burninating_template.max_stacks
+	self._dot_max_stacks = math.ceil(burninating_template.max_stacks)
 	self._dot_stack_application_rate = burninating_template.stack_application_rate
 	local size_of_flame_template = weapon_extension:size_of_flame_template()
 	self._spread_angle = size_of_flame_template.spread_angle
@@ -156,8 +159,12 @@ ActionFlamerGas._process_hit = function (self, hit, player_unit, player_pos, sid
 end
 
 ActionFlamerGas._do_raycast = function (self, i, position, rotation, max_range, num_rays_this_frame, spread_angle, player_unit, player_pos, side_system, t, hit_units_this_frame, is_server)
-	local bullseye = true
-	local ray_rotation = Spread.target_style_spread(rotation, i, num_rays_this_frame, 2, bullseye, spread_angle, spread_angle, nil, false, nil, math.random_seed())
+	local ray_rotation = rotation
+
+	if i > 1 then
+		ray_rotation = Spread.uniform_circle(rotation, spread_angle, math.random_seed())
+	end
+
 	local direction = Quaternion.forward(ray_rotation)
 	local rewind_ms = self:_rewind_ms(self._is_local_unit, self._player, position, direction, max_range)
 	local hits = HitScan.raycast(self._physics_world, position, direction, max_range, nil, "filter_player_character_shooting_raycast", rewind_ms)
@@ -233,7 +240,7 @@ ActionFlamerGas._hit_target = function (self, hit_unit, hit_pos)
 	self._target_indexes[hit_unit] = index
 end
 
-ActionFlamerGas._damage_targets = function (self, dt, t)
+ActionFlamerGas._damage_targets = function (self, dt, t, force_damage)
 	local damage_times = self._damage_times
 	local target_damage_times = self._target_damage_times
 	local target_frame_counts = self._target_frame_counts
@@ -249,7 +256,7 @@ ActionFlamerGas._damage_targets = function (self, dt, t)
 				target_damage_times[target_unit] = nil
 				target_frame_counts[target_unit] = nil
 				target_indexes[target_unit] = nil
-			elseif current_damage_time <= 0 then
+			elseif current_damage_time <= 0 or force_damage then
 				local damage_time_index = math.min(current_index, #damage_times)
 				local damage_time = damage_times[damage_time_index]
 				local aim_at_percent = frame_count / (damage_time / GameParameters.fixed_time_step)
@@ -295,7 +302,7 @@ ActionFlamerGas._damage_target = function (self, target_unit)
 	local hit_normal, hit_zone_name = nil
 	local penetrated = false
 	local instakill = false
-	local damage_type = damage_types.burning
+	local damage_type = self._damage_type
 	local is_critical_strike = self._critical_strike_component.is_active
 	local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, player_unit, target_index)
 	local charge_level = 1
@@ -305,7 +312,7 @@ ActionFlamerGas._damage_target = function (self, target_unit)
 	self._killing_blow = self._killing_blow or killing_blow
 end
 
-ActionFlamerGas._burn_targets = function (self, dt, t)
+ActionFlamerGas._burn_targets = function (self, dt, t, force_burn)
 	local player_unit = self._player_unit
 	local weapon_item = self._weapon.item
 	local burn_time = self._burn_time - dt
@@ -313,7 +320,7 @@ ActionFlamerGas._burn_targets = function (self, dt, t)
 	local max_stacks = self._dot_max_stacks
 	local number_of_stacks = is_critical_strike and 2 or 1
 
-	if burn_time <= 0 then
+	if burn_time <= 0 or force_burn then
 		local targets = self._dot_targets
 		local dot_buff_name = self._flamer_gas_template.dot_buff_name
 
@@ -437,6 +444,11 @@ ActionFlamerGas.finish = function (self, reason, data, t, time_in_action)
 
 	if fire_config.charge_cost then
 		self._action_module_charge_component.charge_level = 0
+	end
+
+	if self._is_server then
+		self:_damage_targets(0, t, true)
+		self:_burn_targets(0, t, true)
 	end
 end
 

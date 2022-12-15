@@ -24,6 +24,8 @@ ProjectileFxExtension.init = function (self, extension_init_context, unit, exten
 	self._wwise_world = wwise_world
 	self._is_server = is_server
 	self._charge_level = extension_init_data.charge_level
+	local owner_unit = extension_init_data.owner_unit
+	self._owner_unit = owner_unit
 	local projectile_template_name = extension_init_data.projectile_template_name
 	local projectile_template = ProjectileTemplates[projectile_template_name]
 	local effects = projectile_template.effects
@@ -36,6 +38,9 @@ ProjectileFxExtension.init = function (self, extension_init_context, unit, exten
 	self._effect_ids = {}
 	self._source_id = WwiseWorld.make_manual_source(wwise_world, unit)
 	self._speed_parameter_value = 0
+	local fx_system = Managers.state.extension:system("fx_system")
+	local owner_particle_group_id = fx_system.unit_to_particle_group_lookup[owner_unit]
+	self._optional_particle_group_id = owner_particle_group_id
 end
 
 ProjectileFxExtension.extensions_ready = function (self, world, unit)
@@ -251,7 +256,8 @@ ProjectileFxExtension.start_fx = function (self, effect_type)
 			local node_index = node_name and Unit.node(unit, node_name) or 1
 			local position = Unit.world_position(unit, node_index)
 			local rotation = Quaternion.identity()
-			local effect_id = World.create_particles(world, particle_name, position, rotation)
+			local optional_particle_group_id = self._optional_particle_group_id
+			local effect_id = World.create_particles(world, particle_name, position, rotation, nil, optional_particle_group_id)
 			self._effect_ids[effect_type] = effect_id
 
 			if vfx.link then
@@ -311,12 +317,13 @@ ProjectileFxExtension._stop_fx = function (self, effect_type)
 		self._looping_playing_ids[effect_type] = nil
 	end
 
-	local particle_id = self._effect_ids[effect_type]
+	local effect_ids = self._effect_ids
+	local particle_id = effect_ids[effect_type]
 
 	if particle_id then
 		World.destroy_particles(self._world, particle_id)
 
-		self._effect_ids[effect_type] = nil
+		effect_ids[effect_type] = nil
 	end
 end
 
@@ -327,7 +334,8 @@ ProjectileFxExtension.start_and_link_vfx = function (self, effect_name, orphaned
 	local position = Unit.world_position(unit, node_index)
 	local rotation = Unit.world_rotation(unit, node_index)
 	local scale = Vector3.one()
-	local effect_id = World.create_particles(world, effect_name, position, rotation, scale)
+	local optional_particle_group_id = self._optional_particle_group_id
+	local effect_id = World.create_particles(world, effect_name, position, rotation, scale, optional_particle_group_id)
 	local pose = Matrix4x4.identity()
 
 	World.link_particles(world, effect_id, unit, node_index, pose, orphaned_policy)

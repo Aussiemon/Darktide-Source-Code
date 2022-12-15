@@ -1266,6 +1266,7 @@ CharacterAppearanceView._populate_page_grid = function (self, index, entry)
 	}
 
 	self:_update_appearance_background(added_spacing)
+	self:_force_update_scenegraph()
 
 	self._updated_scenegraph = true
 end
@@ -2439,6 +2440,7 @@ CharacterAppearanceView._populate_backstory_info = function (self, settings)
 	local size = self._ui_scenegraph.backstory_selection_pivot_background.size
 
 	self:_set_scenegraph_position("choice_detail", pos[1], pos[2] + list_pos[2] + background_size[2] + choice_margin)
+	self:_force_update_scenegraph()
 end
 
 CharacterAppearanceView._generate_reward_widgets = function (self, settings, start_pos, background_size)
@@ -2675,6 +2677,7 @@ CharacterAppearanceView._update_final_page_text = function (self)
 
 	self:_set_scenegraph_size("backstory_background", reference_width + margin[1], full_height + margin[2])
 	self:_set_scenegraph_position("backstory_background", -margin[1] * 0.5, -margin[2] * 0.5)
+	self:_force_update_scenegraph()
 end
 
 CharacterAppearanceView._show_final_page = function (self, page)
@@ -2724,6 +2727,12 @@ CharacterAppearanceView._show_final_page = function (self, page)
 			randomize_button_widget
 		}
 	}
+
+	for i = 1, #params.widgets do
+		local param_widget = params.widgets[i]
+		param_widget.alpha_multiplier = 0
+	end
+
 	local animation_id = self:_start_animation("on_enter", nil, params)
 	backstory_text_widget.content.animation_id = animation_id
 	backstory_text_widget.content.visible = true
@@ -2932,7 +2941,7 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 						end
 
 						if current_index then
-							self:_open_appearance_options(current_index)
+							self:_open_appearance_options(current_index, true)
 						end
 
 						self:_update_appearance_selection()
@@ -3814,7 +3823,12 @@ CharacterAppearanceView._get_crime_content = function (self)
 	}
 end
 
-CharacterAppearanceView._open_appearance_options = function (self, index)
+CharacterAppearanceView._open_appearance_options = function (self, index, force_refresh)
+	if index == self._selected_appearance_option_index and not force_refresh then
+		return
+	end
+
+	self._selected_appearance_option_index = index
 	local options = self._pages[self._active_page_number].content.options[index].options
 	local camera_focus = self._pages[self._active_page_number].content.options[index].camera_focus
 	local gear_visible = self._pages[self._active_page_number].content.options[index].gear_visible
@@ -4128,6 +4142,9 @@ CharacterAppearanceView._get_pages = function (self)
 			content = {},
 			get_value_function = function ()
 				return 1
+			end,
+			leave = function ()
+				self._selected_appearance_option_index = nil
 			end
 		},
 		{

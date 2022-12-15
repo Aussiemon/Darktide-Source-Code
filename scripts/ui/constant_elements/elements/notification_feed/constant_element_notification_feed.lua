@@ -255,17 +255,19 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 	elseif message_type == MESSAGE_TYPES.item_granted then
 		local item = data
 		local item_type = item.item_type
-		local has_rarity = not not item.rarity
+		local visual_item = item
+		local has_rarity = not not visual_item.rarity
 		local texts, rarity_color = nil
 		local enter_sound_event = UISoundEvents.notification_item_received_rarity_1
+		local icon_material_values = nil
 
 		if has_rarity then
-			local sound_event_name = string.format("notification_item_received_rarity_%d", item.rarity)
+			local sound_event_name = string.format("notification_item_received_rarity_%d", visual_item.rarity)
 			enter_sound_event = UISoundEvents[sound_event_name] or enter_sound_event
-			rarity_color = ItemUtils.rarity_color(item)
+			rarity_color = ItemUtils.rarity_color(visual_item)
 			texts = {
 				{
-					display_name = ItemUtils.display_name(item),
+					display_name = ItemUtils.display_name(visual_item),
 					color = rarity_color
 				},
 				{
@@ -285,10 +287,10 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 
 			texts = {
 				{
-					display_name = ItemUtils.display_name(item)
+					display_name = ItemUtils.display_name(visual_item)
 				},
 				{
-					display_name = Localize(UISettings.item_type_localization_lookup[item.item_type]),
+					display_name = Localize(UISettings.item_type_localization_lookup[visual_item.item_type]),
 					color = Color.terminal_frame(255, true)
 				},
 				{
@@ -311,6 +313,14 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		elseif item_type == "GADGET" then
 			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
 			icon_size = "large_gadget"
+		elseif item_type == "TRAIT" then
+			icon = "content/ui/materials/icons/traits/traits_container"
+			icon_size = "medium"
+			local texture_icon, texture_frame = ItemUtils.trait_textures(visual_item, visual_item.rarity)
+			icon_material_values = {
+				icon = texture_icon,
+				frame = texture_frame
+			}
 		else
 			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
 			icon_size = "large_cosmetic"
@@ -328,8 +338,9 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			scale_icon = true,
 			texts = texts,
 			icon = icon,
-			item = item,
+			item = visual_item,
 			icon_size = icon_size,
+			icon_material_values = icon_material_values,
 			color = background_rarity_color,
 			line_color = rarity_color,
 			enter_sound_event = enter_sound_event
@@ -342,7 +353,10 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		if wallet_settings then
 			local icon_texture_large = wallet_settings and wallet_settings.icon_texture_big
 			local selected_color = Color.terminal_corner_selected(255, true)
-			local text = string.format("{#color(%d,%d,%d)}%s %s{#reset()} added", selected_color[2], selected_color[3], selected_color[4], TextUtils.format_currency(amount), Localize(wallet_settings.display_name))
+			local amount = string.format("{#color(%d,%d,%d)}%s %s{#reset()}", selected_color[2], selected_color[3], selected_color[4], TextUtils.format_currency(amount), Localize(wallet_settings.display_name))
+			local text = Localize("loc_notification_feed_currency_acquired", true, {
+				amount = amount
+			})
 			notification_data = {
 				icon_size = "medium",
 				texts = {

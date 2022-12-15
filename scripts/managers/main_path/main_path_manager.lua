@@ -17,7 +17,7 @@ local SPAWN_POINT_FORBIDDEN_NAV_TAG_VOLUME_TYPES = {
 	"content/volume_types/nav_tag_volumes/no_spawn"
 }
 local NUM_SPAWNPOINTS_PER_SUBGROUP = 20
-local OCCLUDED_POINTS_COLLISION_FILTER = "filter_minion_line_of_sight_check"
+local OCCLUDED_POINTS_COLLISION_FILTER = "filter_ray_aim_assist_line_of_sight"
 
 MainPathManager.init = function (self, world, nav_world, level_name, level_seed, num_sides, is_server, use_nav_point_time_slice)
 	self._is_server = is_server

@@ -282,6 +282,10 @@ end
 
 MiscTestCases.check_logs_size = function (max_messages_per_minute)
 	Testify:run_case(function (dt, t)
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
+			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
+		end
+
 		Testify:make_request("wait_for_state_gameplay_reached")
 		TestifySnippets.wait(5)
 
@@ -377,8 +381,11 @@ MiscTestCases.play_all_cutscenes = function (case_settings)
 		local cutscenes_to_skip = settings.cutscenes_to_skip or {
 			"intro_abc"
 		}
+		local measure_performance = settings.measure_performance or false
+		local performance_measurements = measure_performance and {} or nil
+		local event_name = measure_performance and "cutscene_performance_measurements" or nil
 
-		if TestifySnippets.is_debug_stripped() and Testify:make_request("current_state_name") ~= "StateGameplay" then
+		if (TestifySnippets.is_debug_stripped() or BUILD == "release") and Testify:make_request("current_state_name") ~= "StateGameplay" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 		end
 
@@ -392,16 +399,30 @@ MiscTestCases.play_all_cutscenes = function (case_settings)
 		Testify:make_request("wait_for_state_gameplay_reached")
 
 		for _, cutscene_name in ipairs(intro_cutscenes) do
+			Testify:make_request("wait_for_cutscene_to_start", cutscene_name)
+
+			if measure_performance then
+				Testify:make_request("start_measuring_performance")
+			end
+
 			Testify:make_request("wait_for_cutscene_to_finish", cutscene_name)
+
+			if measure_performance then
+				performance_measurements = Testify:make_request("stop_measuring_performance")
+
+				Testify:make_request("create_telemetry_event", event_name, mission_key, cutscene_name, performance_measurements)
+			end
+
 			TestifySnippets.wait(2)
 		end
 
-		local temp_keys = {}
 		local cutscenes = Testify:make_request("mission_cutscenes", mission_key)
 
 		for _, cutscene_name in ipairs(cutscenes_to_skip) do
 			cutscenes[cutscene_name] = nil
 		end
+
+		local temp_keys = {}
 
 		for cutscene_name, _ in table.sorted(cutscenes, temp_keys) do
 			if hide_players then
@@ -415,15 +436,30 @@ MiscTestCases.play_all_cutscenes = function (case_settings)
 				Testify:make_request("wait_for_cutscene_to_start", cutscene_name)
 			else
 				Testify:make_request("play_cutscene", cutscene_name)
+				Testify:make_request("wait_for_cutscene_to_start", cutscene_name)
+			end
+
+			if measure_performance then
+				Testify:make_request("start_measuring_performance")
 			end
 
 			Testify:make_request("wait_for_cutscene_to_finish", cutscene_name)
+
+			if measure_performance then
+				performance_measurements = Testify:make_request("stop_measuring_performance")
+
+				Testify:make_request("create_telemetry_event", event_name, mission_key, cutscene_name, performance_measurements)
+			end
 
 			if hide_players then
 				Testify:make_request("show_players")
 			end
 
 			TestifySnippets.wait(2)
+		end
+
+		if measure_performance then
+			TestifySnippets.send_telemetry_batch()
 		end
 
 		table.clear(temp_keys)
@@ -449,7 +485,7 @@ MiscTestCases.karls_awesome_vfx_test = function (particle_effect)
 			"content/fx/particles/weapons/swords/powersword_1h_activate_mesh"
 		}
 
-		if TestifySnippets.is_debug_stripped() then
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			TestifySnippets.load_mission("spawn_all_enemies")
 		end
@@ -492,7 +528,7 @@ MiscTestCases.play_all_vfx = function (case_settings)
 			"content/fx/particles/weapons/swords/powersword_1h_activate_mesh"
 		}
 
-		if TestifySnippets.is_debug_stripped() then
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			TestifySnippets.load_mission("spawn_all_enemies")
 		end
@@ -508,22 +544,88 @@ MiscTestCases.play_all_vfx = function (case_settings)
 			include_properties = false
 		})
 		local particles = Testify:make_request("metadata_wait_for_query_results", query_handle)
+		local total_num_particles = table.size(particles)
 		local particle_ids = {}
+		local i = 0
 
 		for particle_name, _ in pairs(particles) do
 			if not table.contains(PARTICLES_TO_SKIP, particle_name) then
+				Log.info("Testify", "%s/%s Playing vfx %s", i, total_num_particles, particle_name)
+
 				local particle_id = Testify:make_request("create_particles", world, particle_name, boxed_spawn_position, particle_life_time)
 				particle_ids[particle_name] = particle_id
 			end
+
+			i = i + 1
 		end
 
 		TestifySnippets.wait(particle_life_time)
 	end)
 end
 
+MiscTestCases.spawn_all_units = function (case_settings)
+	Testify:run_case(function (dt, t)
+		local settings = cjson.decode(case_settings or "{}")
+		local interval = settings.interval or 0
+		local UNITS_TO_SKIP = {
+			"content/characters/enemy/chaos_hound/third_person/base",
+			"content/characters/npc/human/attachments_base/face_emora_brahms/face_emora_brahms",
+			"content/characters/player/human/first_person/preview",
+			"content/environment/artsets/debug/events_test/test_decoder_server_02",
+			"content/environment/artsets/debug/events_test/test_spinny_thing",
+			"content/environment/artsets/debug/events_test/test_vox_array",
+			"content/fx/meshes/shells/crossarc_circle",
+			"content/fx/meshes/shells/cylinder",
+			"content/fx/meshes/shells/cylinder_02",
+			"content/fx/meshes/shells/lightning_pipe_discharge_tube",
+			"content/fx/meshes/vfx_plane",
+			"content/fx/units/weapons/small_caliber_plastic_large_01"
+		}
+
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
+			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
+			TestifySnippets.load_mission("spawn_all_enemies")
+		end
+
+		TestifySnippets.wait_for_gameplay_ready()
+		Testify:make_request("set_autoload_enabled", true)
+
+		local boxed_spawn_position = Vector3Box(-2, 11.76, 2)
+		local query_handle = Testify:make_request("metadata_execute_query_deferred", {
+			type = "unit"
+		}, {
+			include_properties = false
+		})
+		local units = Testify:make_request("metadata_wait_for_query_results", query_handle)
+		local total_num_units = table.size(units)
+
+		TestifySnippets.wait(1)
+
+		local i = 1
+
+		for unit_name, _ in pairs(units) do
+			if not table.contains(UNITS_TO_SKIP, unit_name) then
+				Log.info("Testify", "%s/%s Spawning unit %s", i, total_num_units, unit_name)
+
+				local unit = Testify:make_request("spawn_unit", unit_name, boxed_spawn_position)
+
+				if interval == 0 then
+					TestifySnippets.wait_frames(1)
+				else
+					TestifySnippets.wait(interval)
+				end
+
+				Testify:make_request("delete_unit", unit)
+			end
+
+			i = i + 1
+		end
+	end)
+end
+
 MiscTestCases.smoke = function ()
 	Testify:run_case(function (dt, t)
-		if TestifySnippets.is_debug_stripped() then
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 		end
 

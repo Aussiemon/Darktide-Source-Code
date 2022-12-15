@@ -562,7 +562,7 @@ function _scale_node(unit, hit_zone_gib_template)
 	end
 end
 
-local DEFAULT_PUSH_FORCE = 15
+local DEFAULT_PUSH_FORCE = 1
 local MAX_FORCE_PER_MASS_UNIT = 500
 
 function _apply_push_forces(gib_actor, attack_direction, damage_profile, hit_zone_name, optional_override_gib_forces, optional_override_force)

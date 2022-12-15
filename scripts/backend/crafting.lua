@@ -18,6 +18,28 @@ Crafting.get_crafting_costs = function (self)
 	end)
 end
 
+Crafting.trait_sticker_book = function (self, trait_category_id)
+	return BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("/traits/"):path(trait_category_id)):next(function (data)
+		local body = data.body
+		local sticker_book = {}
+		local num_ranks = body.numRanks
+
+		for trait_name, trait_bitmask in pairs(body.stickerBook) do
+			local status = {}
+
+			for i = 1, num_ranks do
+				if bit.band(bit.rshift(trait_bitmask, i + 4), 1) == 1 then
+					status[i] = bit.band(bit.rshift(trait_bitmask, i - 1), 1) == 1
+				end
+			end
+
+			sticker_book[trait_name] = status
+		end
+
+		return sticker_book
+	end)
+end
+
 Crafting.upgrade_weapon_rarity = function (self, gear_id)
 	return _send_crafting_operation({
 		op = "upgradeWeaponRarity",

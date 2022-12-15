@@ -247,21 +247,6 @@ local function _check_shadow_baking(world, shading_environment)
 		Renderer.bake_static_shadows()
 		chunk_lod_manager:enable()
 		World.set_data(world, "shadow_baked", true)
-
-		return
-	end
-
-	local bake_shadows_at = World.get_data(world, "bake_shadows_at")
-
-	if chunk_lod_manager and bake_shadows_at then
-		local current_time = Managers.time:time("main")
-
-		if bake_shadows_at < current_time then
-			chunk_lod_manager:disable()
-			Renderer.bake_static_shadows()
-			chunk_lod_manager:enable()
-			World.set_data(world, "bake_shadows_at", nil)
-		end
 	end
 end
 

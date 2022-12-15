@@ -10,12 +10,12 @@ end
 
 SocialMenuView.on_enter = function (self)
 	SocialMenuView.super.on_enter(self)
-	Managers.account:refresh_communcation_restrictions()
+	Managers.data_service.social:refresh_communication_restrictions()
 end
 
 SocialMenuView.on_exit = function (self)
 	SocialMenuView.super.on_exit(self)
-	Managers.account:refresh_communcation_restrictions()
+	Managers.data_service.social:refresh_communication_restrictions()
 end
 
 return SocialMenuView

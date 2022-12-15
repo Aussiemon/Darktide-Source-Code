@@ -35,10 +35,10 @@ HudElementTacticalOverlay.update = function (self, dt, t, ui_renderer, render_se
 		Managers.event:trigger("event_set_tactical_overlay_state", true)
 		self:_sync_mission_info()
 		self:_sync_circumstance_info()
-		self:_start_animation("enter_left", self._left_panel_widgets)
+		self:_start_animation("enter", self._left_panel_widgets)
 	elseif self._active and not active then
 		Managers.event:trigger("event_set_tactical_overlay_state", false)
-		self:_start_animation("exit_left", self._left_panel_widgets)
+		self:_start_animation("exit", self._left_panel_widgets)
 	end
 
 	self._active = active
@@ -83,18 +83,6 @@ end
 HudElementTacticalOverlay._sync_circumstance_info = function (self)
 	local circumstance_name = self._circumstance_manager:circumstance_name()
 	local circumstance_info_widget = self._widgets_by_name.circumstance_info
-	local resistance = self._difficulty_manager:get_resistance()
-	local challenge = self._difficulty_manager:get_challenge()
-	local danger = DangerSettings.calculate_danger(challenge, resistance)
-	local danger_settings = DangerSettings.by_index[danger]
-
-	if resistance ~= danger_settings.expected_resistance and circumstance_name == "default" then
-		if danger_settings.expected_resistance < resistance then
-			circumstance_name = "dummy_more_resistance_01"
-		else
-			circumstance_name = "dummy_less_resistance_01"
-		end
-	end
 
 	if circumstance_name ~= "default" then
 		local circumstance_info_content = circumstance_info_widget.content

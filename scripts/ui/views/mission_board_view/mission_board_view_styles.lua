@@ -432,11 +432,12 @@ MissionBoardViewStyles.detail_widget_style = {
 	circumstance_label = {
 		font_type = "proxima_nova_bold",
 		font_size = 18,
+		text_vertical_alignment = "bottom",
 		text_horizontal_alignment = "right",
-		text_color = MissionBoardViewSettings.color_text_body,
+		text_color = MissionBoardViewSettings.color_gray,
 		offset = {
 			-12,
-			5,
+			-5,
 			5
 		}
 	},
@@ -1163,6 +1164,24 @@ MissionBoardViewStyles.mission_widget_style = {
 		size = {
 			2,
 			300
+		},
+		size_addition = {
+			0,
+			0
+		}
+	},
+	mission_completed_icon = {
+		vertical_alignment = "top",
+		horizontal_alignment = "center",
+		color = Color.terminal_frame(255, true),
+		offset = {
+			0,
+			130,
+			4
+		},
+		size = {
+			82,
+			52
 		},
 		size_addition = {
 			0,

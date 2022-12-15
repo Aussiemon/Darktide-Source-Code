@@ -648,8 +648,8 @@ overrides.autogun_p3_m1 = {
 			"power_distribution",
 			"attack",
 			{
-				70,
-				140
+				80,
+				160
 			}
 		},
 		{
@@ -680,8 +680,8 @@ overrides.autogun_p3_m2 = {
 			"power_distribution",
 			"attack",
 			{
-				80,
-				160
+				100,
+				200
 			}
 		},
 		{
@@ -717,8 +717,8 @@ overrides.autogun_p3_m3 = {
 			"power_distribution",
 			"attack",
 			{
-				75,
-				150
+				90,
+				180
 			}
 		},
 		{

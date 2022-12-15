@@ -1357,7 +1357,7 @@ overrides.light_chainsword_active_2h = {
 			1,
 			"power_distribution",
 			"attack",
-			0
+			0.01
 		},
 		{
 			"targets",
@@ -1700,7 +1700,7 @@ overrides.smiter_light_chainsword_2h_active = {
 			1,
 			"power_distribution",
 			"attack",
-			0
+			0.01
 		},
 		{
 			"targets",

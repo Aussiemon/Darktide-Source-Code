@@ -104,13 +104,19 @@ AchievementTracker.untrack_player = function (self, account_id)
 		return Promise.resolved()
 	end
 
+	local promise = Promise.resolved()
+
+	if self._tracked_players[account_id].stat_id then
+		promise = self._saving_strategy:save_on_player_exit(account_id):next(function (_)
+			Log.debug("AchievementTracker", "Sending achievement update complete.")
+		end):catch(function (error)
+			Log.error("AchievementTracker", "Sending achievement update failed %s.", tostring(error))
+		end)
+	end
+
 	self:_stop_tracking(account_id)
 
-	return self._saving_strategy:save_on_player_exit(account_id):next(function (_)
-		Log.debug("AchievementTracker", "Sending achievement update complete.")
-	end):catch(function (error)
-		Log.error("AchievementTracker", "Sending achievement update failed %s.", tostring(error))
-	end)
+	return promise
 end
 
 AchievementTracker.untrack_all = function (self)

@@ -210,7 +210,6 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 	weapon_tweak_templates.toughness_template_name = "none"
 	weapon_tweak_templates.ammo_template_name = "none"
 	weapon_tweak_templates.movement_curve_modifier_template_name = "none"
-	weapon_tweak_templates.stagger_duration_modifier_template_name = "none"
 	weapon_tweak_templates.charge_template_name = "none"
 	weapon_tweak_templates.warp_charge_template_name = "none"
 	weapon_tweak_templates.burninating_template_name = "none"
@@ -357,14 +356,7 @@ PlayerUnitWeaponExtension.fixed_update = function (self, unit, dt, t, fixed_fram
 		AlternateFire.stop(alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, weapon_template, false, self._unit)
 	end
 
-	if wielded_slot ~= "none" then
-		local slot_type = slot_configuration[wielded_slot].slot_type
-
-		if slot_type == "weapon" then
-			self:_update_overheat(dt, t)
-		end
-	end
-
+	self:_update_overheat(dt, t)
 	self:_update_stamina(dt, t, fixed_frame)
 	self:_update_ammo()
 	self._sway_weapon_module:fixed_update(dt, t)
@@ -472,8 +464,8 @@ PlayerUnitWeaponExtension.on_wieldable_slot_unequipped = function (self, slot_na
 	if not from_server_correction_occurred then
 		local buffs = weapon.buffs
 
-		self:_remove_buffs(buffs, buff_targets.on_equip, inventory_slot_component)
-		self:_remove_buffs(buffs, buff_targets.on_unwield, inventory_slot_component)
+		self:_remove_buffs(buffs, buff_targets.on_equip, slot_name, inventory_slot_component)
+		self:_remove_buffs(buffs, buff_targets.on_unwield, slot_name, inventory_slot_component)
 	end
 
 	local config = slot_configuration[slot_name]
@@ -494,7 +486,7 @@ PlayerUnitWeaponExtension.on_slot_wielded = function (self, slot_name, t)
 	local inventory_slot_component = weapon.inventory_slot_component
 	local buffs = weapon.buffs
 
-	self:_remove_buffs(buffs, buff_targets.on_unwield, inventory_slot_component)
+	self:_remove_buffs(buffs, buff_targets.on_unwield, slot_name, inventory_slot_component)
 	self:_apply_buffs(buffs, buff_targets.on_wield, slot_name, inventory_slot_component, t, weapon_item)
 
 	local weapon_template = weapon.weapon_template
@@ -512,7 +504,6 @@ PlayerUnitWeaponExtension.on_slot_wielded = function (self, slot_name, t)
 	weapon_tweak_templates_component.suppression_template_name = weapon_template.suppression_template or "none"
 	weapon_tweak_templates_component.spread_template_name = weapon_template.spread_template or "none"
 	weapon_tweak_templates_component.movement_curve_modifier_template_name = weapon_template.movement_curve_modifier_template or "none"
-	weapon_tweak_templates_component.stagger_duration_modifier_template_name = weapon_template.stagger_duration_modifier_template or "none"
 	weapon_tweak_templates_component.charge_template_name = weapon_template.charge_template or "none"
 	weapon_tweak_templates_component.warp_charge_template_name = weapon_template.warp_charge_template or "none"
 	weapon_tweak_templates_component.burninating_template_name = weapon_template.burninating_template or "none"
@@ -546,7 +537,6 @@ PlayerUnitWeaponExtension.on_slot_unwielded = function (self, slot_name, t)
 	weapon_tweak_templates_component.suppression_template_name = "none"
 	weapon_tweak_templates_component.spread_template_name = "none"
 	weapon_tweak_templates_component.movement_curve_modifier_template_name = "none"
-	weapon_tweak_templates_component.stagger_duration_modifier_template_name = "none"
 	weapon_tweak_templates_component.charge_template_name = "none"
 	weapon_tweak_templates_component.warp_charge_template_name = "none"
 	weapon_tweak_templates_component.burninating_template_name = "none"
@@ -557,7 +547,7 @@ PlayerUnitWeaponExtension.on_slot_unwielded = function (self, slot_name, t)
 	local inventory_slot_component = weapon.inventory_slot_component
 	local buffs = weapon.buffs
 
-	self:_remove_buffs(buffs, buff_targets.on_wield, inventory_slot_component)
+	self:_remove_buffs(buffs, buff_targets.on_wield, slot_name, inventory_slot_component)
 	self:_apply_buffs(buffs, buff_targets.on_unwield, slot_name, inventory_slot_component, t, weapon_item)
 end
 
@@ -830,6 +820,7 @@ end
 
 PlayerUnitWeaponExtension._apply_buffs = function (self, buffs, buff_target, slot_name, inventory_slot_component, t, weapon_item)
 	local player_unit = self._unit
+	local is_server = self._is_server
 	local buff_list = buffs[buff_target]
 	local num_buffs = #buff_list
 
@@ -839,6 +830,13 @@ PlayerUnitWeaponExtension._apply_buffs = function (self, buffs, buff_target, slo
 
 	local lookup = buff_target_component_lookups[buff_target]
 	local buff_extension = self._buff_extension
+	local server_buff_indexes = self._server_buff_indexes
+	local server_slot_buff_indexes = server_buff_indexes and server_buff_indexes[slot_name]
+
+	if is_server and server_slot_buff_indexes == nil then
+		server_slot_buff_indexes = {}
+		self._server_buff_indexes[slot_name] = server_slot_buff_indexes
+	end
 
 	for i = 1, num_buffs do
 		local buff_template_name = buff_list[i]
@@ -850,22 +848,22 @@ PlayerUnitWeaponExtension._apply_buffs = function (self, buffs, buff_target, slo
 			if not client_tried_adding_rpc_buff then
 				if component_index then
 					inventory_slot_component[component_name] = component_index
-				else
-					local server_buff_indexes = self._server_buff_indexes[buff_target]
+				elseif is_server then
+					local serler_slot_buff_target_indexes = server_slot_buff_indexes[buff_target]
 
-					if not server_buff_indexes then
-						server_buff_indexes = {}
-						self._server_buff_indexes[buff_target] = server_buff_indexes
+					if not serler_slot_buff_target_indexes then
+						serler_slot_buff_target_indexes = {}
+						server_slot_buff_indexes[buff_target] = serler_slot_buff_target_indexes
 					end
 
-					server_buff_indexes[#server_buff_indexes + 1] = local_index
+					serler_slot_buff_target_indexes[#serler_slot_buff_target_indexes + 1] = local_index
 				end
 			end
 		end
 	end
 end
 
-PlayerUnitWeaponExtension._remove_buffs = function (self, buffs, buff_target, inventory_slot_component)
+PlayerUnitWeaponExtension._remove_buffs = function (self, buffs, buff_target, slot_name, inventory_slot_component)
 	local buff_list = buffs[buff_target]
 	local num_buffs = #buff_list
 
@@ -886,16 +884,18 @@ PlayerUnitWeaponExtension._remove_buffs = function (self, buffs, buff_target, in
 		end
 	end
 
-	local server_buff_indexes = self._server_buff_indexes and self._server_buff_indexes[buff_target]
+	local server_buff_indexes = self._server_buff_indexes
+	local server_slot_buff_indexes = server_buff_indexes and server_buff_indexes[slot_name]
+	local server_slot_buff_target_indexes = server_slot_buff_indexes and server_slot_buff_indexes[buff_target]
 
-	if server_buff_indexes then
-		for i = 1, #server_buff_indexes do
-			local local_index = server_buff_indexes[i]
+	if server_slot_buff_target_indexes then
+		for i = 1, #server_slot_buff_target_indexes do
+			local local_index = server_slot_buff_target_indexes[i]
 
 			buff_extension:remove_externally_controlled_buff(local_index, nil)
 		end
 
-		self._server_buff_indexes[buff_target] = nil
+		server_slot_buff_indexes[buff_target] = nil
 	end
 end
 
@@ -915,8 +915,11 @@ PlayerUnitWeaponExtension._apply_stat_buffs = function (self, inventory_slot_com
 end
 
 PlayerUnitWeaponExtension._update_overheat = function (self, dt, t)
+	local unit = self._unit
+	local first_person_unit = self._first_person_unit
+
 	for _, slot in pairs(self._weapons) do
-		Overheat.update(dt, t, slot.inventory_slot_component, slot.weapon_template.overheat_configuration, self._unit, self._first_person_unit)
+		Overheat.update(dt, t, slot.inventory_slot_component, slot.weapon_template.overheat_configuration, unit, first_person_unit)
 	end
 end
 
@@ -1117,16 +1120,6 @@ PlayerUnitWeaponExtension.movement_curve_modifier_template = function (self)
 	end
 
 	return self:_weapon_tweak_template(template_types.movement_curve_modifier, template_name)
-end
-
-PlayerUnitWeaponExtension.stagger_duration_modifier_template = function (self)
-	local template_name = self._weapon_tweak_templates_component.stagger_duration_modifier_template_name
-
-	if template_name == "none" then
-		return
-	end
-
-	return self:_weapon_tweak_template(template_types.stagger_duration_modifier, template_name)
 end
 
 PlayerUnitWeaponExtension.charge_template = function (self)

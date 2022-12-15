@@ -19,13 +19,13 @@ local definitions = {
 			package = "packages/ui/fonts/slug_ja",
 			machine_medium = "noto_sans_jp_black",
 			[FONT_TYPES.sans_serif] = "noto_sans_jp_bold",
-			[FONT_TYPES.serif] = "noto_serif_jp_bold"
+			[FONT_TYPES.serif] = "noto_sans_jp_black"
 		},
 		ko = {
 			package = "packages/ui/fonts/slug_ko",
 			machine_medium = "noto_sans_kr_black",
 			[FONT_TYPES.sans_serif] = "noto_sans_kr_bold",
-			[FONT_TYPES.serif] = "noto_serif_kr_bold"
+			[FONT_TYPES.serif] = "noto_sans_kr_black"
 		},
 		ru = {
 			[FONT_TYPES.serif] = "friz_quadrata"
@@ -34,13 +34,19 @@ local definitions = {
 			package = "packages/ui/fonts/slug_zh_cn",
 			machine_medium = "noto_sans_sc_black",
 			[FONT_TYPES.sans_serif] = "noto_sans_sc_bold",
-			[FONT_TYPES.serif] = "noto_serif_sc_bold"
+			[FONT_TYPES.serif] = "noto_sans_sc_black"
 		},
 		["zh-tw"] = {
 			package = "packages/ui/fonts/slug_zh_tw",
 			machine_medium = "noto_sans_tc_black",
-			[FONT_TYPES.sans_serif] = "noto_sans_tc_bold",
-			[FONT_TYPES.serif] = "noto_sans_tc_black"
+			[FONT_TYPES.sans_serif] = {
+				"noto_sans_tc_bold",
+				"noto_sans_sc_bold"
+			},
+			[FONT_TYPES.serif] = {
+				"noto_sans_tc_black",
+				"noto_sans_sc_black"
+			}
 		}
 	}
 }

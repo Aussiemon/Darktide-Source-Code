@@ -22,6 +22,7 @@ MainMenuView.init = function (self, settings, context)
 	self._context = context
 	self._parent = context and context.parent
 	self._pass_draw = true
+	self._keybind_is_reset_on_start = false
 end
 
 MainMenuView.on_enter = function (self)
@@ -45,6 +46,14 @@ MainMenuView.on_enter = function (self)
 		self._widgets_by_name.gamertag.content.gamertag = Managers.account:gamertag()
 	end
 
+	if GameParameters.reset_keybind_on_start and not self._keybind_is_reset_on_start then
+		local keybind_settings = require("scripts/settings/options/keybind_settings")
+
+		keybind_settings.reset_function()
+
+		self._keybind_is_reset = true
+	end
+
 	self:_register_event("event_main_menu_profiles_changed", "_event_profiles_changed")
 	self:_register_event("event_main_menu_selected_profile_changed", "_event_selected_profile_changed")
 	self:_register_event("update_character_sync_state", "_event_profile_sync_changed")
@@ -65,21 +74,26 @@ MainMenuView._setup_input_legend = function (self)
 	end
 end
 
-MainMenuView._update_counts_refreshes = function (self, dt)
-	local delay = self._refresh_party_list_delay or 0
-	local list_refresh_time = 0.5
-	delay = delay - dt
-
-	if delay < 0 and not Managers.account:user_detached() then
-		local social_service = Managers.data_service.social
-
-		social_service:fetch_party_members():next(callback(self, "cb_update_strike_team_count"))
-		social_service:fetch_friends():next(callback(self, "cb_update_friends_count"))
-
-		delay = list_refresh_time
+MainMenuView._update_counts_refreshes = function (self, dt, t)
+	if Managers.account:user_detached() then
+		return
 	end
 
-	self._refresh_party_list_delay = delay
+	local party_time = self._refresh_party_time or 0
+
+	if t >= party_time then
+		Managers.data_service.social:fetch_party_members():next(callback(self, "cb_update_strike_team_count"))
+
+		self._refresh_party_time = t + 0.5
+	end
+
+	local friends_time = self._refresh_friends_time or 0
+
+	if t >= friends_time then
+		Managers.data_service.social:fetch_friends():next(callback(self, "cb_update_friends_count"))
+
+		self._refresh_friends_time = t + 30
+	end
 end
 
 MainMenuView.cb_on_open_main_menu_pressed = function (self)
@@ -348,7 +362,7 @@ MainMenuView.update = function (self, dt, t, input_service)
 	if self._character_wait_overlay_active then
 		input_service = input_service:null_service()
 	else
-		self:_update_counts_refreshes(dt)
+		self:_update_counts_refreshes(dt, t)
 	end
 
 	self._is_main_menu_open = Managers.ui:view_active("system_view")

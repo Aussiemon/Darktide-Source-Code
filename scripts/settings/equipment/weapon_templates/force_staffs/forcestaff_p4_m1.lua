@@ -720,6 +720,7 @@ weapon_template.actions = {
 		damage_window_end = 0.7,
 		uninterruptible = true,
 		allow_conditional_chain = true,
+		power_level = 650,
 		total_time = 1.1,
 		action_movement_curve = {
 			{

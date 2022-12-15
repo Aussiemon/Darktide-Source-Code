@@ -112,6 +112,12 @@ weapon_template.actions = {
 			start_modifier = 1
 		},
 		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
 			wield = {
 				action_name = "action_unwield"
 			},
@@ -129,12 +135,6 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.7
-			},
-			combat_ability = {
-				action_name = "combat_ability"
-			},
-			grenade_ability = {
-				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -526,7 +526,7 @@ weapon_template.actions = {
 			1.25
 		},
 		spline_settings = {
-			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/heavy_swing_down_left",
+			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/heavy_swing_down",
 			anchor_point_offset = {
 				0,
 				0,
@@ -737,6 +737,12 @@ weapon_template.actions = {
 			start_modifier = 0.2
 		},
 		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
 			wield = {
 				action_name = "action_unwield"
 			},
@@ -751,12 +757,6 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special_2",
 				chain_time = 0.7
-			},
-			combat_ability = {
-				action_name = "combat_ability"
-			},
-			grenade_ability = {
-				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -830,6 +830,12 @@ weapon_template.actions = {
 			start_modifier = 0.2
 		},
 		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
 			wield = {
 				action_name = "action_unwield"
 			},
@@ -843,13 +849,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_weapon_special",
-				chain_time = 1.2
-			},
-			combat_ability = {
-				action_name = "combat_ability"
-			},
-			grenade_ability = {
-				action_name = "grenade_ability"
+				chain_time = 1
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -874,6 +874,7 @@ weapon_template.actions = {
 		herding_template = HerdingTemplates.thunder_hammer_left_heavy
 	},
 	action_block = {
+		minimum_hold_time = 0.3,
 		start_input = "block",
 		anim_end_event = "parry_finished",
 		kind = "block",
@@ -942,7 +943,7 @@ weapon_template.actions = {
 		attack_direction_override = "right",
 		damage_window_end = 0.4666666666666667,
 		anim_event_3p = "attack_swing_right",
-		anim_event = "push_follow_up",
+		anim_event = "push_follow_up_01",
 		total_time = 2,
 		action_movement_curve = {
 			{

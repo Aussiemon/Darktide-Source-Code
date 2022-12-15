@@ -430,6 +430,12 @@ TestifySnippets.wait = function (seconds)
 	end
 end
 
+TestifySnippets.wait_frames = function (num_frames)
+	for i = 1, num_frames do
+		coroutine.yield()
+	end
+end
+
 TestifySnippets.is_debug_stripped = function ()
 	local is_debug_stripped = true
 

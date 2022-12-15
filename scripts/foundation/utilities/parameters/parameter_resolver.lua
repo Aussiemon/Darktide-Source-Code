@@ -191,27 +191,33 @@ ParameterResolver.resolve_dev_parameters = function ()
 	end
 
 	if BUILD ~= "release" then
-		local loaded_parameters = Application.user_setting("development_settings") or {}
+		local loaded_parameters = Application.user_setting("development_settings")
 
-		for param, value in pairs(loaded_parameters) do
-			if dev_parameters[param] ~= nil then
-				local default_config = DefaultDevParameters[param]
+		if loaded_parameters then
+			if table.is_empty(loaded_parameters) then
+				Application.set_user_setting("development_settings", nil)
+			else
+				for param, value in pairs(loaded_parameters) do
+					if dev_parameters[param] ~= nil then
+						local default_config = DefaultDevParameters[param]
 
-				if default_config.user_setting == false then
-					debug("User independent development parameter [%s] read from user settings, parameter skipped!", param)
-				else
-					local options = default_config.options
+						if default_config.user_setting == false then
+							debug("User independent development parameter [%s] read from user settings, parameter skipped!", param)
+						else
+							local options = default_config.options
 
-					if options and not _find_value_in_options(value, options) then
-						debug("Trying to set param [%s] from user settings. Value [%s] not found in parameter options, keeping default value [%s]", param, tostring(value), dev_parameters[param])
+							if options and not _find_value_in_options(value, options) then
+								debug("Trying to set param [%s] from user settings. Value [%s] not found in parameter options, keeping default value [%s]", param, tostring(value), dev_parameters[param])
+							else
+								debug("Overriding param [%s] from user settings, setting it to [%s]", param, tostring(value))
+
+								dev_parameters[param] = value
+							end
+						end
 					else
-						debug("Overriding param [%s] from user settings, setting it to [%s]", param, tostring(value))
-
-						dev_parameters[param] = value
+						debug("Undecleared development parameter [%s] read from user settings, parameter skipped!", param)
 					end
 				end
-			else
-				debug("Undecleared development parameter [%s] read from user settings, parameter skipped!", param)
 			end
 		end
 
@@ -338,6 +344,9 @@ ParameterResolver.resolve_dev_parameters = function ()
 
 			dev_parameters[param] = def
 		end
+
+		Application.set_user_setting("development_settings", nil)
+		Application.save_user_settings()
 	end
 end
 

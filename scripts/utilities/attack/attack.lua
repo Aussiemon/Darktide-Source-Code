@@ -268,7 +268,7 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 			Managers.state.attack_report:add_attack_result(damage_profile, attacked_unit, attacking_unit_owner_unit, attack_direction, hit_world_position, hit_weakspot, damage_dealt, attack_result, attack_type, damage_efficiency)
 
 			if Managers.stats.can_record_stats() then
-				_record_stats(attack_result, attack_type, attacked_unit, attacking_unit_owner_unit, damage_absorbed, damage_dealt, hit_zone_name, damage_profile, item, attacked_action, target_breed_or_nil, damage_type, target_buff_extension)
+				_record_stats(attack_result, attack_type, attacked_unit, attacking_unit_owner_unit, damage_absorbed, damage_dealt, hit_zone_name, damage_profile, item, attacked_action, target_breed_or_nil, damage_type, target_buff_extension, is_critical_strike, stagger_result)
 			end
 
 			_record_telemetry(attacking_unit_owner_unit, attacked_unit, attack_result, attack_type, damage_dealt, damage_profile, damage_type, damage, permanent_damage, actual_damage_dealt, damage_absorbed, attacker_breed_or_nil, target_breed_or_nil, instakill)
@@ -569,7 +569,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 	end
 end
 
-function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit, damage_absorbed, damage_dealt, hit_zone_name, damage_profile, attacking_item, attacked_action, target_breed_or_nil, damage_type, target_buff_extension)
+function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit, damage_absorbed, damage_dealt, hit_zone_name, damage_profile, attacking_item, attacked_action, target_breed_or_nil, damage_type, target_buff_extension, is_critical_hit, stagger_result)
 	local did_damage = damage_dealt > 0
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local attacked_player = player_unit_spawn_manager:owner(attacked_unit)
@@ -603,7 +603,7 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 		end
 
 		if attacking_is_human then
-			Managers.stats:record_damage(attacking_player, target_breed_name_or_nil, weapon_template_name, attack_type, hit_zone_name, damage_profile_name, rounded_distance_between_units, attacking_health_percent, attacked_action, attacked_unit_id, damage_dealt, damage_type)
+			Managers.stats:record_damage(attacking_player, target_breed_name_or_nil, weapon_template_name, attack_type, hit_zone_name, damage_profile_name, rounded_distance_between_units, attacking_health_percent, attacked_action, attacked_unit_id, damage_type, damage_dealt, is_critical_hit, stagger_result)
 		end
 
 		if attack_result == attack_results.died then

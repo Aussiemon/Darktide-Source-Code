@@ -146,8 +146,18 @@ local splash_definitions = {
 				0
 			}
 		},
+		hold_to_skip = true,
+		duration = 165,
 		two_step_skip = true,
-		duration = 165
+		visibility_function = function (parent)
+			local value = Application.user_setting("interface_settings", "intro_cinematic_enabled")
+
+			if value ~= nil then
+				return value
+			end
+
+			return true
+		end
 	},
 	{
 		duration = 1
@@ -155,12 +165,14 @@ local splash_definitions = {
 }
 local legend_inputs = {
 	{
-		input_action = "skip_cinematic",
-		display_name = "loc_continue",
+		input_action = "skip_cinematic_hold",
+		display_name = "loc_cutscene_skip_hold_no_input",
 		alignment = "left_alignment",
-		on_pressed_callback = "on_skip_pressed",
+		use_mouse_hold = true,
+		on_pressed_callback = "on_hold_skip_pressed",
+		key = "hold_skip",
 		visibility_function = function (parent)
-			return parent._show_skip
+			return parent._hold_to_skip
 		end
 	}
 }

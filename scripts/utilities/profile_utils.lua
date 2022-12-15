@@ -223,7 +223,7 @@ end
 
 local _combine_item = nil
 
-function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair)
+function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck)
 	for child_slot_name, child_entry in pairs(entry) do
 		if child_slot_name ~= "parent_slot_names" then
 			local child_attachments = {}
@@ -246,6 +246,10 @@ function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_pre
 
 			if data.item.hide_beard then
 				hide_facial_hair.hide_beard = hide_facial_hair.hide_beard or data.item.hide_beard
+			end
+
+			if data.item.stabilize_neck then
+				stabilize_neck[1] = stabilize_neck[1] or data.item.stabilize_neck
 			end
 		end
 	end
@@ -302,8 +306,9 @@ local function _generate_visual_loadout(visual_items)
 				hide_beard = false,
 				hide_eyebrows = false
 			}
+			local stabilize_neck = {}
 
-			_combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair)
+			_combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck)
 
 			local data = visual_items[slot_name]
 			local gear = data.gear
@@ -343,6 +348,11 @@ local function _generate_visual_loadout(visual_items)
 			if hide_facial_hair.hide_beard then
 				overrides = overrides or {}
 				overrides.hide_beard = hide_facial_hair.hide_beard
+			end
+
+			if stabilize_neck[1] then
+				overrides = overrides or {}
+				overrides.stabilize_neck = stabilize_neck[1]
 			end
 
 			gear.masterDataInstance.overrides = overrides

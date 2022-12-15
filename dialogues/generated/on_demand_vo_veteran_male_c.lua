@@ -361,12 +361,6 @@ local on_demand_vo_veteran_male_c = {
 			0.820198,
 			0.844583
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_mutant_charger = {
@@ -384,12 +378,6 @@ local on_demand_vo_veteran_male_c = {
 			1.024427,
 			1.028667
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_ogryn_armored_executor = {
@@ -406,12 +394,6 @@ local on_demand_vo_veteran_male_c = {
 			0.971594,
 			0.965094,
 			0.972479
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},

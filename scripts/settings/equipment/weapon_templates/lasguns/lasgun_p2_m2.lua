@@ -175,17 +175,6 @@ local weapon_template = {
 					input = "weapon_extra_hold"
 				}
 			}
-		},
-		zoom_weapon_special = {
-			buffer_time = 0.26,
-			max_queue = 2,
-			input_sequence = {
-				{
-					value = true,
-					hold_input = "action_two_hold",
-					input = "weapon_extra_pressed"
-				}
-			}
 		}
 	}
 }
@@ -206,31 +195,30 @@ weapon_template.action_input_hierarchy = {
 		shoot_release_charged = "base"
 	},
 	zoom = {
-		zoom_release = "base",
+		special_action = "base",
 		wield = "base",
 		grenade_ability = "base",
+		zoom_release = "base",
 		reload = "previous",
 		combat_ability = "base",
-		zoom_weapon_special = "stay",
+		special_action_hold = "base",
 		zoom_shoot_pressed = {
 			wield = "base",
 			grenade_ability = "base",
 			zoom_release = "base",
 			zoom_shoot_release_charged = "previous",
 			reload = "base",
-			combat_ability = "stay",
-			zoom_weapon_special = "stay"
+			combat_ability = "stay"
 		}
 	},
 	special_action_hold = {
 		special_action = "base",
 		special_action_light = "base",
 		special_action_heavy = "base",
-		zoom = "base",
 		wield = "base",
+		grenade_ability = "base",
 		reload = "base",
-		combat_ability = "base",
-		grenade_ability = "base"
+		combat_ability = "base"
 	}
 }
 
@@ -298,18 +286,18 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_hip_start = {
-		anim_end_event = "attack_finished",
-		start_input = "shoot_pressed",
 		hold_combo = true,
+		start_input = "shoot_pressed",
 		kind = "charge_ammo",
-		charge_extra_hold_time = 0.3,
+		charge_extra_hold_time = 2.5,
 		allowed_during_sprint = false,
+		anim_end_event = "attack_finished",
 		charge_template = "lasgun_p2_m2_charge_up",
 		spread_template = "hip_lasgun_killshot_p2_m1",
 		abort_sprint = true,
 		anim_event = "attack_charge",
 		prevent_sprint = true,
-		total_time = 1.2,
+		total_time = 3.7,
 		action_movement_curve = {
 			{
 				t = 0.3,
@@ -352,6 +340,11 @@ weapon_template.actions = {
 				input_name = "shoot_release_charged"
 			}
 		},
+		finish_reason_to_action_input = {
+			stunned = {
+				input_name = "shoot_release_charged"
+			}
+		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
@@ -359,7 +352,7 @@ weapon_template.actions = {
 	},
 	action_shoot_hip_charged = {
 		ammunition_usage_min = 2,
-		ammunition_usage_max = 6,
+		ammunition_usage_max = 4,
 		sprint_requires_press_to_interrupt = true,
 		kind = "shoot_hit_scan",
 		weapon_handling_template = "immediate_single_shot",
@@ -508,7 +501,7 @@ weapon_template.actions = {
 		start_input = "zoom_shoot_pressed",
 		kind = "charge_ammo",
 		anim_end_event = "attack_finished",
-		charge_extra_hold_time = 1,
+		charge_extra_hold_time = 2.5,
 		keep_charge = true,
 		crosshair_type = "charge_up_ads",
 		allowed_during_sprint = true,
@@ -516,7 +509,7 @@ weapon_template.actions = {
 		charge_template = "lasgun_p2_m2_charge_up",
 		spread_template = "default_lasgun_killshot",
 		anim_event = "attack_charge",
-		total_time = 1.2,
+		total_time = 3.7,
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -552,6 +545,11 @@ weapon_template.actions = {
 				input_name = "zoom_shoot_release_charged"
 			}
 		},
+		finish_reason_to_action_input = {
+			stunned = {
+				input_name = "zoom_shoot_release_charged"
+			}
+		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
@@ -559,7 +557,7 @@ weapon_template.actions = {
 	},
 	action_zoom_shoot_charged = {
 		use_charge = true,
-		ammunition_usage_max = 6,
+		ammunition_usage_max = 4,
 		weapon_handling_template = "immediate_single_shot",
 		sprint_ready_up_time = 0.5,
 		kind = "shoot_hit_scan",
@@ -685,11 +683,6 @@ weapon_template.actions = {
 				chain_time = 0.25,
 				reset_combo = true,
 				action_name = "action_unzoom"
-			},
-			zoom_weapon_special = {
-				chain_time = 0.35,
-				reset_combo = true,
-				action_name = "action_stab_zoom"
 			}
 		},
 		time_scale_stat_buffs = {
@@ -827,12 +820,17 @@ weapon_template.actions = {
 		}
 	},
 	action_stab_start = {
-		anim_end_event = "attack_finished",
-		start_input = "special_action_hold",
 		kind = "windup",
+		uninterruptible = true,
+		start_input = "special_action_hold",
+		sprint_requires_press_to_interrupt = true,
+		unaim = true,
+		anim_end_event = "attack_finished",
+		abort_sprint = true,
 		crosshair_type = "dot",
 		allowed_during_sprint = true,
 		anim_event = "attack_charge_stab",
+		prevent_sprint = true,
 		total_time = math.huge,
 		action_movement_curve = {
 			{
@@ -887,16 +885,20 @@ weapon_template.actions = {
 	action_stab = {
 		damage_window_start = 0.3,
 		hit_armor_anim = "attack_hit_shield",
-		crosshair_type = "dot",
-		range_mod = 1.15,
 		kind = "sweep",
+		sprint_requires_press_to_interrupt = true,
 		first_person_hit_anim = "attack_hit",
-		anim_event = "attack_stab",
 		first_person_hit_stop_anim = "attack_hit",
+		range_mod = 1.15,
+		crosshair_type = "dot",
+		allow_conditional_chain = true,
 		allowed_during_sprint = true,
 		damage_window_end = 0.36666666666666664,
+		abort_sprint = true,
+		unaim = true,
 		uninterruptible = true,
-		allow_conditional_chain = true,
+		anim_event = "attack_stab",
+		prevent_sprint = true,
 		total_time = 1.1,
 		action_movement_curve = {
 			{
@@ -974,16 +976,20 @@ weapon_template.actions = {
 	action_stab_heavy = {
 		damage_window_start = 0.1,
 		hit_armor_anim = "attack_hit_shield",
-		crosshair_type = "dot",
-		range_mod = 1.15,
 		kind = "sweep",
+		sprint_requires_press_to_interrupt = true,
 		first_person_hit_anim = "attack_hit",
-		anim_event = "attack_stab_heavy",
 		first_person_hit_stop_anim = "attack_hit",
+		range_mod = 1.15,
+		crosshair_type = "dot",
+		allow_conditional_chain = true,
 		allowed_during_sprint = true,
 		damage_window_end = 0.23333333333333334,
+		abort_sprint = true,
+		unaim = true,
 		uninterruptible = true,
-		allow_conditional_chain = true,
+		anim_event = "attack_stab_heavy",
+		prevent_sprint = true,
 		total_time = 1.1,
 		action_movement_curve = {
 			{
@@ -1060,92 +1066,6 @@ weapon_template.actions = {
 		damage_profile = DamageProfileTemplates.bayonette_weapon_special_stab,
 		wounds_shape = wounds_shapes.default
 	},
-	action_stab_zoom = {
-		damage_window_start = 0.13333333333333333,
-		hit_armor_anim = "attack_hit_shield",
-		start_input = "zoom_weapon_special",
-		allow_conditional_chain = true,
-		kind = "sweep",
-		first_person_hit_anim = "attack_hit",
-		range_mod = 1.6,
-		first_person_hit_stop_anim = "attack_hit",
-		crosshair_type = "ironsight",
-		allowed_during_sprint = true,
-		damage_window_end = 0.23333333333333334,
-		uninterruptible = true,
-		anim_event = "attack_stab",
-		total_time = 1.1,
-		action_movement_curve = {
-			{
-				t = 0.1,
-				modifier = 1.3 * action_movement_curve_mark_modifier
-			},
-			{
-				t = 0.25,
-				modifier = 0.3 * action_movement_curve_mark_modifier
-			},
-			{
-				t = 0.3,
-				modifier = 0.5 * action_movement_curve_mark_modifier
-			},
-			{
-				t = 0.35,
-				modifier = 1.5 * action_movement_curve_mark_modifier
-			},
-			{
-				t = 0.4,
-				modifier = 1.5 * action_movement_curve_mark_modifier
-			},
-			{
-				t = 0.6,
-				modifier = 1.05 * action_movement_curve_mark_modifier
-			},
-			{
-				t = 1,
-				modifier = 0.75 * action_movement_curve_mark_modifier
-			},
-			start_modifier = 1.1 * action_movement_curve_mark_modifier
-		},
-		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability"
-			},
-			grenade_ability = {
-				action_name = "grenade_ability"
-			},
-			wield = {
-				action_name = "action_unwield"
-			},
-			reload = {
-				action_name = "action_reload"
-			},
-			zoom_shoot_pressed = {
-				chain_time = 0.575,
-				reset_combo = true,
-				action_name = "action_shoot_zoomed_start"
-			},
-			zoom_weapon_special = {
-				action_name = "action_stab_zoom",
-				chain_time = 0.575
-			}
-		},
-		weapon_box = {
-			0.08,
-			1.2,
-			0.08
-		},
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/lasgun_rifle_krieg/animations/ironsight_attack_stab_01",
-			anchor_point_offset = {
-				0,
-				0.8,
-				0
-			}
-		},
-		damage_type = damage_types.knife,
-		damage_profile = DamageProfileTemplates.bayonette_weapon_special_stab,
-		wounds_shape = wounds_shapes.default
-	},
 	action_inspect = {
 		skip_3p_anims = false,
 		lock_view = true,
@@ -1171,7 +1091,7 @@ weapon_template.anim_state_machine_1p = "content/characters/player/human/first_p
 weapon_template.reload_template = ReloadTemplates.lasgun
 weapon_template.spread_template = "hip_lasgun_killshot_p2_m1"
 weapon_template.recoil_template = "hip_lasgun_p2_killshot"
-weapon_template.suppression_template = "hip_lasgun_killshot"
+weapon_template.suppression_template = "krieg_lasgun_killshot"
 weapon_template.look_delta_template = "lasgun_rifle"
 weapon_template.ammo_template = "lasgun_p2_m2"
 weapon_template.conditional_state_to_action_input = {
@@ -1210,12 +1130,12 @@ weapon_template.alternate_fire_settings = {
 	recoil_template = "lasgun_p2_m1_ads_killshot",
 	stop_anim_event = "to_unaim_ironsight",
 	spread_template = "default_lasgun_killshot",
-	suppression_template = "default_lasgun_killshot",
+	suppression_template = "krieg_lasgun_killshot",
 	toughness_template = "killshot_zoomed",
 	start_anim_event = "to_ironsight",
 	look_delta_template = "lasgun_holo_aiming",
 	camera = {
-		custom_vertical_fov = 45,
+		custom_vertical_fov = 65,
 		vertical_fov = 45,
 		near_range = 0.025
 	},
@@ -1258,6 +1178,9 @@ weapon_template.charge_effects = {
 	sfx_source_name = "_muzzle",
 	charge_done_source_name = "_muzzle",
 	charge_done_effect_alias = "ranged_charging_done"
+}
+weapon_template.weapon_temperature_settings = {
+	use_charge = true
 }
 weapon_template.keywords = {
 	"ranged",

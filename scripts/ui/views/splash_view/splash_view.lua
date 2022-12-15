@@ -5,6 +5,8 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local InputUtils = require("scripts/managers/input/input_utils")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
+local UIWidget = require("scripts/managers/ui/ui_widget")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local device_list = {
 	Keyboard,
 	Mouse,
@@ -18,6 +20,9 @@ SplashView.init = function (self, settings, context)
 	self._current_time = 0
 	self._time_between_pages = SplashPageDefinitions.time_between_pages
 	self._show_skip = false
+	self._skip_pressed = false
+	self._legend_active = 0
+	self._hold_timer = 0
 	self._total_duration = SplashPageDefinitions.duration
 	self._page_definitions = table.clone(SplashPageDefinitions.pages)
 	self._pass_draw = false
@@ -27,20 +32,53 @@ end
 
 SplashView.on_enter = function (self)
 	SplashView.super.on_enter(self)
-	self:_setup_input_legend()
 end
 
 SplashView._setup_input_legend = function (self)
 	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", 100)
 	local legend_inputs = SplashPageDefinitions.legend_inputs
+	local input_legends_by_key = {}
 
 	for i = 1, #legend_inputs do
 		local legend_input = legend_inputs[i]
 		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
+		local id = self._input_legend_element:add_entry(legend_input.display_name, legend_input.input_action, legend_input.visibility_function, on_pressed_callback, legend_input.alignment, nil, legend_input.use_mouse_hold)
+		local key = legend_input.key
 
-		self._input_legend_element:add_entry(legend_input.display_name, legend_input.input_action, function ()
-			return legend_input.visibility_function(self)
-		end, on_pressed_callback, legend_input.alignment)
+		if key then
+			input_legends_by_key[key] = {
+				id = id,
+				settings = legend_input
+			}
+		end
+	end
+
+	self._input_legends_by_key = input_legends_by_key
+
+	if self._hold_to_skip then
+		local id = self._input_legends_by_key.hold_skip.id
+		local entry = self._input_legend_element:_get_entry_by_id(id)
+		local entry_widget = entry.widget
+		local widget_definition = UIWidget.create_definition({
+			{
+				style_id = "background",
+				pass_type = "rect",
+				style = {
+					color = Color.ui_grey_medium(255, true)
+				}
+			},
+			{
+				style_id = "fill",
+				pass_type = "rect",
+				style = {
+					color = Color.ui_terminal(255, true),
+					size = {
+						0
+					}
+				}
+			}
+		}, entry_widget.scenegraph_id)
+		self._skip_bar_widget = self:_create_widget("skip", widget_definition)
 	end
 end
 
@@ -95,6 +133,44 @@ local function _get_entry_color(entry, alpha_multiplier)
 	return temp_color
 end
 
+SplashView.draw = function (self, dt, t, input_service, layer)
+	SplashView.super.draw(self, dt, t, input_service, layer)
+
+	if self._input_legend_element then
+		local render_scale = self._render_scale
+		local render_settings = self._render_settings
+		local id = self._input_legends_by_key.hold_skip.id
+		local entry = self._input_legend_element:_get_entry_by_id(id)
+		local entry_widget = entry.widget
+		local ui_renderer = self._ui_renderer
+		local ui_scenegraph = self._input_legend_element._ui_scenegraph
+		local bar_margin = 10
+		local position = self._input_legend_element:scenegraph_position(entry_widget.scenegraph_id)
+		local width = 100
+		local z_offset = render_settings.draw_layer or 0
+		z_offset = z_offset + self._input_legend_element._draw_layer + 1
+		self._skip_bar_widget.offset = {
+			position[1] + entry_widget.offset[1] + (entry_widget.content.size[1] - width) * 0.5,
+			position[2] + entry_widget.offset[2] + entry_widget.content.size[2] - bar_margin,
+			z_offset
+		}
+		self._skip_bar_widget.content.size = {
+			width,
+			5
+		}
+		local progress = UISettings.cutscenes_skip.hold_time and math.min(self._hold_timer / UISettings.cutscenes_skip.hold_time, 1) or 1
+		self._skip_bar_widget.style.fill.size[1] = width * progress
+
+		UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
+
+		if self._skip_bar_widget then
+			UIWidget.draw(self._skip_bar_widget, ui_renderer)
+		end
+
+		UIRenderer.end_pass(ui_renderer)
+	end
+end
+
 local temp_position = {
 	0,
 	0,
@@ -127,6 +203,22 @@ SplashView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 			local draw = page_duration >= local_time
 
 			if draw then
+				if not page.initialized then
+					page.initialized = true
+
+					if page.visibility_function and page.visibility_function() ~= true then
+						self:_on_skip_pressed()
+
+						return
+					end
+
+					self._two_step_skip = page.two_step_skip or false
+					self._hold_to_skip = page.hold_to_skip or false
+					self._show_skip = false
+					self._legend_active = 0
+					self._hold_timer = 0
+				end
+
 				if local_time < time_between_pages then
 					local pause_progress = math.clamp(local_time / time_between_pages, 0, 1)
 					alpha_multiplier = math.easeInCubic(pause_progress)
@@ -144,8 +236,6 @@ SplashView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 
 					if not entry.initialized then
 						entry.initialized = true
-						self._two_step_skip = page.two_step_skip or false
-						self._show_skip = false
 					end
 
 					if entry_type ~= "video" then
@@ -204,8 +294,6 @@ SplashView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 
 						if entry.initialized then
 							entry.initialized = nil
-							self._two_step_skip = false
-							self._show_skip = false
 
 							if entry_type == "video" and self._splash_video_view_opened then
 								local view_name = "splash_video_view"
@@ -214,6 +302,15 @@ SplashView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 
 								self._splash_video_view_opened = nil
 							end
+						end
+
+						if page.initialized then
+							self._two_step_skip = false
+							self._show_skip = false
+							self._hold_to_skip = false
+							self._legend_active = 0
+							self._hold_timer = 0
+							page.initialized = nil
 						end
 					end
 				end
@@ -243,11 +340,46 @@ SplashView._on_skip_pressed = function (self)
 	end
 end
 
+SplashView.on_hold_skip_pressed = function (self)
+	self._skip_pressed = true
+end
+
 SplashView.on_skip_pressed = function (self)
 	self:_on_skip_pressed()
 end
 
 SplashView.update = function (self, dt, t, input_service)
+	if self._show_skip and not self._input_legend_element then
+		self:_setup_input_legend()
+	elseif not self._show_skip and self._input_legend_element then
+		self:_remove_input_legend()
+	end
+
+	if self._input_legend_element then
+		if input_service:get("skip_cinematic_hold") or input_service:get("left_hold") and self._skip_pressed == true and self._hold_to_skip == true then
+			self._hold_timer = self._hold_timer + dt
+			self._legend_active = 0
+		elseif self._skip_pressed == true and self._hold_to_skip == true then
+			self._skip_pressed = false
+			self._legend_active = 0
+			self._hold_timer = 0
+		elseif self._show_skip and self._hold_to_skip == true then
+			self._legend_active = self._legend_active + dt
+		end
+	end
+
+	if UISettings.cutscenes_skip.hold_time < self._hold_timer then
+		self._legend_active = 0
+		self._hold_timer = 0
+		self._show_skip = false
+
+		self:_on_skip_pressed()
+	elseif UISettings.cutscenes_skip.fade_inactivity_time < self._legend_active then
+		self._show_skip = false
+		self._legend_active = 0
+		self._hold_timer = 0
+	end
+
 	if IS_XBS then
 		local input_device_list = InputUtils.input_device_list
 		local xbox_controllers = input_device_list.xbox_controller
@@ -297,13 +429,22 @@ SplashView.on_exit = function (self)
 		self._splash_video_view_opened = false
 	end
 
-	if self._input_legend_element then
-		self._input_legend_element = nil
+	self:_remove_input_legend()
+	SplashView.super.on_exit(self)
+end
 
+SplashView._remove_input_legend = function (self)
+	if self._input_legend_element then
 		self:_remove_element("input_legend")
+
+		self._input_legend_element = nil
 	end
 
-	SplashView.super.on_exit(self)
+	if self._skip_bar_widget then
+		self:_unregister_widget_name(self._skip_bar_widget.name)
+
+		self._skip_bar_widget = nil
+	end
 end
 
 return SplashView

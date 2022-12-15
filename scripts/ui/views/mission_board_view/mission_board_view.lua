@@ -14,6 +14,7 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
+local Promise = require("scripts/foundation/utilities/promise")
 local MissionBoardView = class("MissionBoardView", "BaseView")
 
 MissionBoardView.init = function (self, settings)
@@ -91,20 +92,23 @@ MissionBoardView.on_enter = function (self)
 	self._quickplay_difficulty = save_data.mission_board.quickplay_difficulty
 	self._widgets_by_name.difficulty_stepper.content.danger = save_data.mission_board.quickplay_difficulty
 	self._widgets_by_name.difficulty_stepper.content.on_changed_callback = callback(self, "_callback_on_danger_changed")
+	save_data.mission_board.private_matchmaking = save_data.mission_board.private_matchmaking or false
+	self._private_match = save_data.mission_board.private_matchmaking
 	local gamepad_cursor = self._widgets_by_name.gamepad_cursor
 	gamepad_cursor.visible = InputDevice.gamepad_active
 	self._widgets_by_name.game_settings.visible = false
 	self._widgets_by_name.play_team_button.content.hotspot.pressed_callback = callback(self, "_callback_start_selected_mission")
 
 	self:_set_selected_quickplay(true)
+	self:_set_play_button_game_mode_text(self._solo_play, self._private_match)
 end
 
 MissionBoardView.on_exit = function (self)
 	local mission_board_save_data = self._mission_board_save_data
 
-	if self._quickplay_difficulty ~= mission_board_save_data.quickplay_difficulty then
+	if self._quickplay_difficulty ~= mission_board_save_data.quickplay_difficulty or self._private_match ~= mission_board_save_data.private_matchmaking then
 		mission_board_save_data.quickplay_difficulty = self._quickplay_difficulty
-		mission_board_save_data.solo_play = self._solo_play
+		mission_board_save_data.private_matchmaking = self._private_match
 
 		Managers.save:queue_save()
 	end
@@ -313,6 +317,12 @@ MissionBoardView._update_can_start_mission = function (self)
 		self:_set_info_text("warning", Localize("loc_mission_board_team_mate_not_available"))
 
 		is_locked = true
+	elseif self._private_match then
+		if self._party_manager:num_other_members() < 1 then
+			self:_set_info_text("warning", Localize("loc_mission_board_cannot_private_match"))
+
+			is_locked = true
+		end
 	else
 		self:_set_info_text("info", nil)
 	end
@@ -433,6 +443,13 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 		content.circumstance_name = Localize(circumstance_ui_data.display_name)
 		content.circumstance_description = Localize(circumstance_ui_data.description)
 		content.circumstance_icon = circumstance_ui_data.icon
+		local style = widget.style
+		local description_text_box_size = self._ui_scenegraph.detail_circumstance.size
+		local text_height = UIRenderer.text_height(self._ui_renderer, Localize(circumstance_ui_data.description), style.circumstance_description.font_type, style.circumstance_description.font_size, description_text_box_size)
+
+		if text_height > 30 then
+			self:_set_scenegraph_size("detail_circumstance", nil, text_height + 60)
+		end
 	else
 		content.circumstance_icon = nil
 	end
@@ -605,7 +622,8 @@ MissionBoardView._get_free_position = function (self, preferred_index)
 end
 
 MissionBoardView._populate_mission_widget = function (self, widget, mission, position, is_medium_widget)
-	local mission_template = MissionTemplates[mission.map]
+	local map = mission.map
+	local mission_template = MissionTemplates[map]
 
 	if not mission_template then
 		return false
@@ -626,6 +644,18 @@ MissionBoardView._populate_mission_widget = function (self, widget, mission, pos
 	local danger = DangerSettings.calculate_danger(mission.challenge, mission.resistance)
 	content.danger = danger
 	content.is_locked = is_locked
+	local completed_danger = self:_mission_highest_completed_danger(map)
+
+	if completed_danger and completed_danger > 0 then
+		local mission_difficulty_complete_icons = MissionBoardViewSettings.mission_difficulty_complete_icons
+		local material = mission_difficulty_complete_icons[completed_danger]
+
+		if material then
+			content.completed_danger = completed_danger
+			content.mission_completed_icon = material
+		end
+	end
+
 	local circumstance = mission.circumstance
 
 	if circumstance ~= "default" then
@@ -654,6 +684,15 @@ MissionBoardView._populate_mission_widget = function (self, widget, mission, pos
 	content.fluff_frame = math.random_array_entry(MissionBoardViewSettings.fluff_frames, seed)
 
 	return true
+end
+
+MissionBoardView._mission_highest_completed_danger = function (self, mission_name)
+	local key = "__m_" .. mission_name .. "_md"
+	local achievements_data = self._achievements_data
+
+	if achievements_data then
+		return Managers.data_service.account:read_stat(achievements_data, key)
+	end
 end
 
 MissionBoardView.on_resolution_modified = function (self, scale)
@@ -689,7 +728,15 @@ MissionBoardView._update_fetch_missions = function (self, t)
 	self._is_fetching_missions = true
 	local missions_future = Managers.data_service.mission_board:fetch(nil, 1)
 
-	missions_future:next(self._cb_fetch_success):catch(self._cb_fetch_failure)
+	missions_future:next(function (mission_data)
+		local achievement_data_promise = Managers.data_service.account:pull_achievement_data()
+
+		return achievement_data_promise:next(function (achievements_data)
+			self._achievements_data = achievements_data
+
+			return Promise.resolved(mission_data)
+		end)
+	end):next(self._cb_fetch_success):catch(self._cb_fetch_failure)
 end
 
 MissionBoardView._fetch_success = function (self, data)
@@ -714,17 +761,36 @@ local _time_table = {
 MissionBoardView._update_happening = function (self, t)
 	local happening = self._backend_data and self._backend_data.happening
 	local widget = self._widgets_by_name.happening
-	widget.visible = not not happening
 
-	if not happening then
-		return
+	if happening then
+		local circumstance_name = happening.circumstances[1]
+
+		if circumstance_name then
+			local circumstance_template = CircumstanceTemplates[circumstance_name]
+			local circumstance_ui = circumstance_template and circumstance_template.ui
+			local happening_display_name = circumstance_ui and circumstance_ui.happening_display_name
+
+			if happening_display_name then
+				widget.content.subtitle = Localize(happening_display_name)
+				widget.visible = true
+
+				return
+			end
+		end
+
+		local time_left = math.max(0, happening.expiry_game_time - t)
+
+		if time_left <= 3600 then
+			_time_table.seconds = time_left % 60
+			_time_table.minutes = math.floor(time_left / 60)
+			widget.content.subtitle = Localize("loc_mission_board_view_time_til_next_sync", true, _time_table)
+			widget.visible = true
+
+			return
+		end
 	end
 
-	local time_left = math.max(0, happening.expiry_game_time - t)
-	_time_table.seconds = time_left % 60
-	_time_table.minutes = math.floor(time_left / 60)
-	local content = widget.content
-	content.subtitle = Localize("loc_mission_board_view_time_til_next_sync", true, _time_table)
+	widget.visible = false
 end
 
 MissionBoardView._callback_close_view = function (self)
@@ -746,9 +812,9 @@ MissionBoardView._callback_start_selected_mission = function (self)
 	local quickplay_difficulty = self._quickplay_difficulty
 
 	if self._selected_mission then
-		self._party_manager:wanted_mission_selected(self._selected_mission.id)
+		self._party_manager:wanted_mission_selected(self._selected_mission.id, self._private_match)
 	else
-		self._party_manager:wanted_mission_selected("qp:challenge=" .. quickplay_difficulty)
+		self._party_manager:wanted_mission_selected("qp:challenge=" .. quickplay_difficulty, self._private_match)
 	end
 end
 
@@ -767,6 +833,30 @@ end
 
 MissionBoardView._callback_on_danger_changed = function (self)
 	self._quickplay_difficulty = self._widgets_by_name.difficulty_stepper.content.danger
+end
+
+MissionBoardView._callback_toggle_private_matchmaking = function (self)
+	self._private_match = not self._private_match
+
+	if self._solo_play then
+		self._solo_play = false
+	end
+
+	self:_set_play_button_game_mode_text(self._solo_play, self._private_match)
+end
+
+MissionBoardView._set_play_button_game_mode_text = function (self, is_solo_play, is_private_match)
+	local play_button_content = self._widgets_by_name.play_team_button.content
+	local play_button_text = Utf8.upper(Localize("loc_mission_board_view_accept_mission"))
+	local sub_text_color = Color.terminal_text_body_sub_header(255, true)
+
+	if not is_solo_play and not is_private_match then
+		play_button_content.text = string.format("%s\n{#color(%d,%d,%d);size(15)}[%s]{#reset()}", play_button_text, sub_text_color[2], sub_text_color[3], sub_text_color[4], Utf8.upper(Localize("loc_mission_board_play_public")))
+	elseif is_solo_play then
+		play_button_content.text = string.format("%s\n{#color(%d,%d,%d);size(15)}[%s]{#reset()}", play_button_text, sub_text_color[2], sub_text_color[3], sub_text_color[4], Utf8.upper(Localize("loc_mission_board_toggle_solo_play")))
+	else
+		play_button_content.text = string.format("%s\n{#color(%d,%d,%d);size(15)}[%s]{#reset()}", play_button_text, sub_text_color[2], sub_text_color[3], sub_text_color[4], Utf8.upper(Localize("loc_mission_board_play_private")))
+	end
 end
 
 MissionBoardView._callback_mission_widget_exit_done = function (self, widget)

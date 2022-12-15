@@ -675,7 +675,7 @@ recoil_templates.hip_lasgun_p2_killshot = {
 	},
 	moving = {
 		inherits = {
-			"hip_lasgun_killshot",
+			"hip_lasgun_p2_killshot",
 			"still"
 		},
 		new_influence_percent = {
@@ -685,7 +685,7 @@ recoil_templates.hip_lasgun_p2_killshot = {
 	},
 	crouch_still = {
 		inherits = {
-			"hip_lasgun_killshot",
+			"hip_lasgun_p2_killshot",
 			"still"
 		},
 		new_influence_percent = {
@@ -695,7 +695,7 @@ recoil_templates.hip_lasgun_p2_killshot = {
 	},
 	crouch_moving = {
 		inherits = {
-			"hip_lasgun_killshot",
+			"hip_lasgun_p2_killshot",
 			"still"
 		},
 		new_influence_percent = {

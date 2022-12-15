@@ -372,39 +372,18 @@ local on_demand_vo_zealot_male_b = {
 	},
 	smart_tag_vo_enemy_chaos_hound = {
 		randomize_indexes_n = 0,
-		sound_events_n = 9,
+		sound_events_n = 4,
 		sound_events = {
-			"loc_zealot_male_b__heard_enemy_chaos_hound_01",
-			"loc_zealot_male_b__heard_enemy_chaos_hound_02",
-			"loc_zealot_male_b__heard_enemy_chaos_hound_03",
-			"loc_zealot_male_b__heard_enemy_chaos_hound_04",
-			"loc_zealot_male_b__heard_enemy_chaos_hound_08",
 			"loc_zealot_male_b__smart_tag_vo_enemy_chaos_hound_01",
 			"loc_zealot_male_b__smart_tag_vo_enemy_chaos_hound_02",
 			"loc_zealot_male_b__smart_tag_vo_enemy_chaos_hound_03",
 			"loc_zealot_male_b__smart_tag_vo_enemy_chaos_hound_04"
 		},
 		sound_events_duration = {
-			0.673333,
-			1.041438,
-			1.14875,
-			1.265646,
-			0.882604,
 			0.644271,
 			0.589479,
 			0.652458,
 			0.808688
-		},
-		sound_event_weights = {
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111
 		},
 		randomize_indexes = {}
 	},
@@ -423,12 +402,6 @@ local on_demand_vo_zealot_male_b = {
 			0.658146,
 			1.156042
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_ogryn_armored_executor = {
@@ -445,12 +418,6 @@ local on_demand_vo_zealot_male_b = {
 			0.928229,
 			1.121333,
 			0.958625
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},

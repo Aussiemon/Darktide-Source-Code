@@ -153,6 +153,9 @@ UIPasses.texture_uv = {
 
 		if gui_material then
 			UIRenderer.destroy_material(ui_renderer, gui_material, retained_mode)
+
+			pass_data.material_value = nil
+			pass_data.material = nil
 		end
 	end,
 	draw = function (pass, ui_renderer, ui_style, ui_content, position, size)
@@ -467,6 +470,9 @@ UIPasses.rotated_texture = {
 
 		if gui_material then
 			UIRenderer.destroy_material(ui_renderer, gui_material, retained_mode)
+
+			pass_data.material_value = nil
+			pass_data.material = nil
 		end
 	end,
 	draw = function (pass, ui_renderer, ui_style, ui_content, position, size)

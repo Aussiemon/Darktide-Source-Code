@@ -891,7 +891,7 @@ weapon_template.alternate_fire_settings = {
 	start_anim_event = "to_ironsight",
 	look_delta_template = "lasgun_holo_aiming",
 	camera = {
-		custom_vertical_fov = 30,
+		custom_vertical_fov = 40,
 		vertical_fov = 35,
 		near_range = 0.025
 	},

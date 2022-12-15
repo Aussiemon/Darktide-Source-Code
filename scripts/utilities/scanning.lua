@@ -32,8 +32,8 @@ end
 
 local INDEX_DISTANCE = 2
 local INDEX_ACTOR = 4
-local INTERACTABLE_FILTER = "filter_player_character_interactable_overlap"
-local LINE_OF_SIGHT_FILTER = "filter_player_character_interactable_line_of_sight_check"
+local INTERACTABLE_FILTER = "filter_interactable_overlap"
+local LINE_OF_SIGHT_FILTER = "filter_interactable_line_of_sight_check"
 
 Scanning.check_direct_line_of_sight = function (physics_world, first_person_component, scan_distance)
 	local rotation = first_person_component.rotation

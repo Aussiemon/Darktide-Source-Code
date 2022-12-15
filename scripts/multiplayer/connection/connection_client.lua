@@ -290,7 +290,7 @@ ConnectionClient.rpc_kicked = function (self, channel_id, reason, optional_detai
 	self._host_connection:disconnect(reason, optional_details)
 
 	if reason == "EAC_KICK" then
-		Managers.error:report_error(EACError:new("loc_popup_description_eac_kick", optional_info))
+		Managers.error:report_error(EACError:new("loc_popup_description_eac_kick", optional_details))
 	end
 end
 

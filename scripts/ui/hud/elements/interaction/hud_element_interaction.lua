@@ -112,37 +112,38 @@ HudElementInteraction._update_can_interact_target = function (self)
 	local player_unit = player.player_unit
 
 	if not ALIVE[player_unit] then
+		self._show_interaction_hud = false
+
 		return
 	end
 
 	local interactor_extension = ScriptUnit.has_extension(player_unit, "interactor_system")
 
 	if not interactor_extension then
+		self._show_interaction_hud = false
+
 		return
 	end
 
-	local update_target = false
+	local update_target = nil
 	local interactee_unit = interactor_extension:target_unit()
 
-	if not interactee_unit then
+	if interactee_unit then
+		update_target = interactor_extension:can_interact(interactee_unit)
+	else
 		local focus_target = interactor_extension:focus_unit()
 
-		if ALIVE[focus_target] then
-			if interactor_extension:hud_block_text() then
-				interactee_unit = focus_target
-				update_target = true
-			end
-		else
-			update_target = true
+		if ALIVE[focus_target] and interactor_extension:hud_block_text() then
+			interactee_unit = focus_target
 		end
-	else
-		update_target = interactor_extension:can_interact(interactee_unit)
+
+		update_target = true
 	end
 
-	local previous_interactee_unit = self._previous_interactee_unit
-
 	if update_target then
-		if interactee_unit == self._previous_interactee_unit then
+		local previous_interactee_unit = self._previous_interactee_unit
+
+		if interactee_unit == previous_interactee_unit then
 			if ALIVE[interactee_unit] and not self:is_synchronized_with_interactee(interactee_unit, interactor_extension) then
 				local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
 
@@ -196,14 +197,12 @@ HudElementInteraction._update_can_interact_target = function (self)
 		self:_update_tag_input_information(interactee_unit)
 
 		local marker = active_presentation_data.marker
-		local show_interaction_ui = interactor_extension and interactor_extension:show_interaction_ui()
-		local show_counter_ui = interactor_extension and interactor_extension:show_counter_ui()
-		local show_block_ui = interactor_extension and interactor_extension:hud_block_text()
+		local show_interaction_ui = interactor_extension:show_interaction_ui()
+		local show_counter_ui = interactor_extension:show_counter_ui()
+		local show_block_ui = interactor_extension:hud_block_text()
 		self._show_interaction_hud = marker and (show_interaction_ui or show_counter_ui or show_block_ui)
-		self._show_interaction_counter_hud = self._show_interaction_hud and show_counter_ui
-	elseif self._show_interaction_hud then
+	else
 		self._show_interaction_hud = false
-		self._show_interaction_counter_hud = false
 	end
 end
 

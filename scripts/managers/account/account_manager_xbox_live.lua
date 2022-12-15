@@ -226,7 +226,7 @@ AccountManagerXboxLive.xuid = function (self)
 	return self._xuid
 end
 
-AccountManagerXboxLive.refresh_communcation_restrictions = function (self)
+AccountManagerXboxLive.refresh_communication_restrictions = function (self)
 	XboxLiveUtils.get_mute_list():next(function (mute_list)
 		self._mute_list = mute_list
 

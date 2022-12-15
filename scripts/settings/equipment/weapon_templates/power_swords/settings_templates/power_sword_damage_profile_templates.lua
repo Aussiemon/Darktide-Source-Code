@@ -224,10 +224,7 @@ damage_templates.light_powersword = {
 	finesse_ability_damage_multiplier = 2,
 	weapon_special = true,
 	stagger_category = "melee",
-	cleave_distribution = {
-		attack = math.huge,
-		impact = math.huge
-	},
+	cleave_distribution = big_cleave,
 	damage_type = damage_types.power_sword,
 	gibbing_power = GibbingPower.heavy,
 	gibbing_type = GibbingTypes.sawing,
@@ -372,10 +369,7 @@ damage_templates.light_powersword_smiter = {
 	finesse_ability_damage_multiplier = 2,
 	weapon_special = true,
 	stagger_category = "melee",
-	cleave_distribution = {
-		attack = math.huge,
-		impact = math.huge
-	},
+	cleave_distribution = big_cleave,
 	damage_type = damage_types.power_sword,
 	gibbing_power = GibbingPower.heavy,
 	gibbing_type = GibbingTypes.sawing,
@@ -519,10 +513,7 @@ damage_templates.heavy_powersword = {
 	ragdoll_push_force = 100,
 	gibbing_power = 10,
 	stagger_category = "melee",
-	cleave_distribution = {
-		attack = math.huge,
-		impact = math.huge
-	},
+	cleave_distribution = big_cleave,
 	damage_type = damage_types.power_sword,
 	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.heavy,
@@ -585,8 +576,8 @@ damage_templates.heavy_powersword = {
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
-					130,
-					260
+					100,
+					200
 				},
 				impact = {
 					6,
@@ -598,8 +589,8 @@ damage_templates.heavy_powersword = {
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
-					130,
-					260
+					90,
+					180
 				},
 				impact = {
 					6,
@@ -611,8 +602,8 @@ damage_templates.heavy_powersword = {
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
-					130,
-					260
+					80,
+					160
 				},
 				impact = {
 					6,
@@ -624,8 +615,8 @@ damage_templates.heavy_powersword = {
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
-					130,
-					260
+					70,
+					140
 				},
 				impact = {
 					6,
@@ -637,8 +628,8 @@ damage_templates.heavy_powersword = {
 			armor_damage_modifier = power_am,
 			power_distribution = {
 				attack = {
-					130,
-					260
+					50,
+					100
 				},
 				impact = {
 					6,

@@ -39,8 +39,19 @@ local widget_definitions = {
 		}
 	}, "screen")
 }
+local legend_inputs = {
+	{
+		input_action = "skip_cinematic_hold",
+		display_name = "loc_cutscene_skip_hold_no_input",
+		alignment = "left_alignment",
+		use_mouse_hold = true,
+		on_pressed_callback = "on_skip_pressed",
+		key = "hold_skip"
+	}
+}
 
 return {
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition
+	scenegraph_definition = scenegraph_definition,
+	legend_inputs = legend_inputs
 }

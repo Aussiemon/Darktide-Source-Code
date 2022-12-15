@@ -118,7 +118,8 @@ Overheat.update_venting = function (dt, t, player, inventory_slot_component, ven
 	local stat_buffs = buff_extension:stat_buffs()
 	local vent_duration = vent_configuration.vent_duration * stat_buffs.vent_overheat_speed
 	local vent_interval = vent_configuration.vent_interval * stat_buffs.vent_overheat_speed
-	local next_remove_t, new_percentage = SharedOverheatAndWarpChargeFunctions.update_venting(t, current_percentage, starting_percentage, vent_interval, vent_duration)
+	local fixed_starting_percentage = vent_configuration.fixed_starting_percentage or starting_percentage
+	local next_remove_t, new_percentage = SharedOverheatAndWarpChargeFunctions.update_venting(t, current_percentage, fixed_starting_percentage, vent_interval, vent_duration)
 	inventory_slot_component.overheat_remove_at_t = next_remove_t
 	inventory_slot_component.overheat_current_percentage = new_percentage
 

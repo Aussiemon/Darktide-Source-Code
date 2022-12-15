@@ -16,6 +16,15 @@ Pocketable.drop_pocketable = function (t, is_server, player_unit, inventory_comp
 	if is_server then
 		local position = Unit.world_position(player_unit, 1)
 		local rotation = Unit.world_rotation(player_unit, 1)
+		local navigation_extension = ScriptUnit.has_extension(player_unit, "navigation_system")
+
+		if navigation_extension then
+			local nav_position = navigation_extension:latest_position_on_nav_mesh()
+
+			if nav_position then
+				position = nav_position
+			end
+		end
 
 		_drop_pickup(item_name, position, rotation)
 	end

@@ -28,9 +28,9 @@ local mission_templates = {
 			}
 		},
 		hazard_prop_settings = {
-			explosion = 0.3,
+			explosion = 0.2,
 			fire = 0.2,
-			none = 0.4
+			none = 0.5
 		},
 		pickup_settings = {},
 		terror_event_templates = {
@@ -45,6 +45,55 @@ local mission_templates = {
 				"mission_resurgence_brief_a",
 				"mission_resurgence_brief_b",
 				"mission_resurgence_brief_c"
+			}
+		}
+	},
+	hm_complex = {
+		mission_name = "loc_mission_name_hm_complex",
+		wwise_state = "zone_5",
+		zone_id = "throneside",
+		texture_small = "content/ui/textures/missions/hm_complex_small",
+		mission_brief_material = "content/environment/cinematic/mission_briefing/mission_briefing_hologram_hm_complex_01",
+		texture_medium = "content/ui/textures/missions/hm_complex_medium",
+		face_state_machine_key = "state_machine_missions",
+		mechanism_name = "adventure",
+		texture_big = "content/ui/textures/missions/hm_complex_big",
+		coordinates = "loc_mission_coordinates_hm_complex",
+		mission_type = "06",
+		level = "content/levels/throneside/missions/mission_hm_complex",
+		game_mode_name = "coop_complete_objective",
+		mission_intro_minimum_time = 25,
+		objectives = "hm_complex",
+		mission_description = "loc_mission_board_main_objective_complex_description",
+		cinematics = {
+			intro_abc = {
+				"c_cam"
+			},
+			outro_fail = {
+				"outro_fail"
+			},
+			outro_win = {
+				"outro_win"
+			}
+		},
+		hazard_prop_settings = {
+			explosion = 0.2,
+			fire = 0.2,
+			none = 0.5
+		},
+		pickup_settings = {},
+		terror_event_templates = {
+			"terror_events_hm_complex"
+		},
+		testify_flags = {},
+		health_station = {},
+		mission_brief_vo = {
+			vo_profile = "sergeant_a",
+			wwise_route_key = 1,
+			vo_events = {
+				"mission_complex_brief_a",
+				"mission_complex_brief_b",
+				"mission_complex_brief_c"
 			}
 		}
 	}

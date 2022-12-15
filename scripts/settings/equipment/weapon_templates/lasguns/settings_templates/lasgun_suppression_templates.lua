@@ -80,6 +80,82 @@ suppression_templates.default_lasgun_killshot = {
 		}
 	}
 }
+suppression_templates.krieg_lasgun_killshot = {
+	still = {
+		delay = 0.2,
+		decay_time = 0.6,
+		immediate_sway = {
+			{
+				pitch = {
+					lerp_perfect = 0.05,
+					lerp_basic = 0.1
+				},
+				yaw = {
+					lerp_perfect = 0.05,
+					lerp_basic = 0.1
+				}
+			},
+			{
+				pitch = {
+					lerp_perfect = 0.1,
+					lerp_basic = 0.2
+				},
+				yaw = {
+					lerp_perfect = 0.1,
+					lerp_basic = 0.2
+				}
+			},
+			{
+				pitch = {
+					lerp_perfect = 0.2,
+					lerp_basic = 0.3
+				},
+				yaw = {
+					lerp_perfect = 0.2,
+					lerp_basic = 0.3
+				}
+			},
+			{
+				pitch = {
+					lerp_perfect = 0.3,
+					lerp_basic = 0.4
+				},
+				yaw = {
+					lerp_perfect = 0.3,
+					lerp_basic = 0.4
+				}
+			},
+			{
+				pitch = {
+					lerp_perfect = 0.4,
+					lerp_basic = 0.5
+				},
+				yaw = {
+					lerp_perfect = 0.4,
+					lerp_basic = 0.5
+				}
+			}
+		}
+	},
+	moving = {
+		inherits = {
+			"krieg_lasgun_killshot",
+			"still"
+		}
+	},
+	crouch_still = {
+		inherits = {
+			"krieg_lasgun_killshot",
+			"still"
+		}
+	},
+	crouch_moving = {
+		inherits = {
+			"krieg_lasgun_killshot",
+			"still"
+		}
+	}
+}
 suppression_templates.hip_lasgun_killshot = {
 	still = {
 		delay = 0.2,

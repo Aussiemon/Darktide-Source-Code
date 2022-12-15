@@ -145,6 +145,30 @@ local conversations_disabled_zealot_male_a = {
 			[2.0] = 5.788875
 		},
 		randomize_indexes = {}
+	},
+	lore_enemy_within_one_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_male_a__lore_enemy_within_one_b_01",
+			[2.0] = "loc_zealot_male_a__lore_enemy_within_one_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 7.04025,
+			[2.0] = 8.292146
+		},
+		randomize_indexes = {}
+	},
+	lore_enemy_within_one_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_male_a__lore_enemy_within_one_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 9.638333
+		},
+		randomize_indexes = {}
 	}
 }
 

@@ -654,6 +654,10 @@ local stat_descriptions = {
 						}
 					}
 				}
+			},
+			new_influence_percent = {
+				stat_group_rule = "average",
+				stat_group_key = "recoil_influence"
 			}
 		},
 		moving = {
@@ -704,6 +708,10 @@ local stat_descriptions = {
 						}
 					}
 				}
+			},
+			new_influence_percent = {
+				stat_group_rule = "average",
+				stat_group_key = "moving_recoil_influence"
 			}
 		}
 	},
@@ -865,9 +873,9 @@ local group_descriptions = {
 			local yaw_min = yaw.min + immediate_spread_yaw.min / 2
 			local yaw_max = yaw.max + immediate_spread_yaw.max / 2
 			local yaw_current = yaw.current + immediate_spread_yaw.current / 2
-			local min = math.sqrt(pitch_min * pitch_min + yaw_min * yaw_min) * 100
-			local max = math.sqrt(pitch_max * pitch_max + yaw_max * yaw_max) * 100
-			local current = math.sqrt(pitch_current * pitch_current + yaw_current * yaw_current) * 100
+			local min = math.sqrt(pitch_min * pitch_min + yaw_min * yaw_min) * 10
+			local max = math.sqrt(pitch_max * pitch_max + yaw_max * yaw_max) * 10
+			local current = math.sqrt(pitch_current * pitch_current + yaw_current * yaw_current) * 10
 
 			return min, max, current
 		end
@@ -918,9 +926,9 @@ local group_descriptions = {
 			local yaw_min = yaw.min + immediate_spread_yaw.min / 2
 			local yaw_max = yaw.max + immediate_spread_yaw.max / 2
 			local yaw_current = yaw.current + immediate_spread_yaw.current / 2
-			local min = math.sqrt(pitch_min * pitch_min + yaw_min * yaw_min) * 100
-			local max = math.sqrt(pitch_max * pitch_max + yaw_max * yaw_max) * 100
-			local current = math.sqrt(pitch_current * pitch_current + yaw_current * yaw_current) * 100
+			local min = math.sqrt(pitch_min * pitch_min + yaw_min * yaw_min) * 10
+			local max = math.sqrt(pitch_max * pitch_max + yaw_max * yaw_max) * 10
+			local current = math.sqrt(pitch_current * pitch_current + yaw_current * yaw_current) * 10
 
 			return min, max, current
 		end
@@ -996,12 +1004,17 @@ local group_descriptions = {
 				},
 				"yaw",
 				2
+			},
+			recoil_influence = {
+				"still",
+				"new_influence_percent"
 			}
 		},
 		func = function (stat_groups)
 			local recoil_rise = stat_groups.recoil_rise
 			local recoil_pitch = stat_groups.recoil_pitch
 			local recoil_yaw = stat_groups.recoil_yaw
+			local influence = stat_groups.recoil_influence or STAT_GROUP_ONE
 			local pitch_min, pitch_max, pitch_current = nil
 
 			if recoil_pitch then
@@ -1014,6 +1027,9 @@ local group_descriptions = {
 				pitch_current = (stat_groups.recoil_pitch_range_min.current + stat_groups.recoil_pitch_range_max.current) / 2
 			end
 
+			pitch_min = pitch_min * influence.min
+			pitch_max = pitch_max * influence.max
+			pitch_current = pitch_current * influence.current
 			local yaw_min, yaw_max, yaw_current = nil
 
 			if recoil_yaw then
@@ -1026,6 +1042,9 @@ local group_descriptions = {
 				yaw_current = (stat_groups.recoil_yaw_range_min.current + stat_groups.recoil_yaw_range_max.current) / 2
 			end
 
+			yaw_min = yaw_min * influence.min
+			yaw_max = yaw_max * influence.max
+			yaw_current = yaw_current * influence.current
 			local min = math.sqrt(pitch_min * pitch_min + yaw_min * yaw_min) * recoil_rise.min * 1000
 			local max = math.sqrt(pitch_max * pitch_max + yaw_max * yaw_max) * recoil_rise.max * 1000
 			local current = math.sqrt(pitch_current * pitch_current + yaw_current * yaw_current) * recoil_rise.current * 1000
@@ -1104,12 +1123,17 @@ local group_descriptions = {
 				},
 				"yaw",
 				2
+			},
+			moving_recoil_influence = {
+				"moving",
+				"new_influence_percent"
 			}
 		},
 		func = function (stat_groups)
 			local moving_recoil_rise = stat_groups.moving_recoil_rise
 			local moving_recoil_pitch = stat_groups.moving_recoil_pitch
 			local moving_recoil_yaw = stat_groups.moving_recoil_yaw
+			local influence = stat_groups.moving_recoil_influence or STAT_GROUP_ONE
 			local pitch_min, pitch_max, pitch_current = nil
 
 			if moving_recoil_pitch then
@@ -1122,6 +1146,9 @@ local group_descriptions = {
 				pitch_current = (stat_groups.moving_recoil_pitch_range_min.current + stat_groups.moving_recoil_pitch_range_max.current) / 2
 			end
 
+			pitch_min = pitch_min * influence.min
+			pitch_max = pitch_max * influence.max
+			pitch_current = pitch_current * influence.current
 			local yaw_min, yaw_max, yaw_current = nil
 
 			if moving_recoil_yaw then
@@ -1134,6 +1161,9 @@ local group_descriptions = {
 				yaw_current = (stat_groups.moving_recoil_yaw_range_min.current + stat_groups.moving_recoil_yaw_range_max.current) / 2
 			end
 
+			yaw_min = yaw_min * influence.min
+			yaw_max = yaw_max * influence.max
+			yaw_current = yaw_current * influence.current
 			local min = math.sqrt(pitch_min * pitch_min + yaw_min * yaw_min) * moving_recoil_rise.min * 1000
 			local max = math.sqrt(pitch_max * pitch_max + yaw_max * yaw_max) * moving_recoil_rise.max * 1000
 			local current = math.sqrt(pitch_current * pitch_current + yaw_current * yaw_current) * moving_recoil_rise.current * 1000

@@ -260,9 +260,9 @@ local default_view_input_settings = {
 			bindable = false
 		},
 		skip_cinematic = {
-			"keyboard_esc",
-			"xbox_controller_start",
-			"ps4_controller_options",
+			"keyboard_space",
+			"xbox_controller_a",
+			"ps4_controller_cross",
 			description = "",
 			bindable = false
 		},
@@ -303,6 +303,20 @@ local default_view_input_settings = {
 			"mouse_right",
 			"xbox_controller_a",
 			"ps4_controller_cross",
+			description = "",
+			bindable = false
+		},
+		toggle_private_match = {
+			"keyboard_p",
+			"xbox_controller_y",
+			"ps4_controller_triangle",
+			description = "",
+			bindable = false
+		},
+		toggle_solo_play = {
+			"keyboard_s",
+			"xbox_controller_left_thumb",
+			"ps4_controller_l3",
 			description = "",
 			bindable = false
 		},
@@ -347,6 +361,10 @@ local default_view_input_settings = {
 			key_alias = "hotkey_item_discard",
 			type = "held"
 		},
+		hotkey_item_discard_pressed = {
+			key_alias = "hotkey_item_discard",
+			type = "pressed"
+		},
 		hotkey_item_compare = {
 			key_alias = "hotkey_item_compare",
 			type = "pressed"
@@ -377,7 +395,7 @@ local default_view_input_settings = {
 		},
 		title_screen_start = {
 			key_alias = "title_screen_start",
-			type = "pressed"
+			type = "released"
 		},
 		hotkey_start_game = {
 			key_alias = "hotkey_start_game",
@@ -633,6 +651,10 @@ local default_view_input_settings = {
 		},
 		skip_cinematic = {
 			key_alias = "skip_cinematic",
+			type = "released"
+		},
+		skip_cinematic_hold = {
+			key_alias = "skip_cinematic",
 			type = "held"
 		},
 		credits_pause = {
@@ -645,6 +667,14 @@ local default_view_input_settings = {
 		},
 		talent_unequip = {
 			key_alias = "talent_unequip",
+			type = "pressed"
+		},
+		toggle_private_match = {
+			key_alias = "toggle_private_match",
+			type = "pressed"
+		},
+		toggle_solo_play = {
+			key_alias = "toggle_solo_play",
 			type = "pressed"
 		},
 		cancel_matchmaking = {

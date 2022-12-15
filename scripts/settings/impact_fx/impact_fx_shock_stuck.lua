@@ -10,7 +10,7 @@ local unarmored = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
 				append_husk_to_event_name = true
 			},
 			{
@@ -20,13 +20,13 @@ local unarmored = {
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact_died",
 				append_husk_to_event_name = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
 				append_husk_to_event_name = true
 			},
 			{
@@ -36,13 +36,13 @@ local unarmored = {
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
 				append_husk_to_event_name = true
 			}
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
 				append_husk_to_event_name = true
 			}
 		}
@@ -88,7 +88,7 @@ local armored = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
 				append_husk_to_event_name = true
 			},
 			{
@@ -98,7 +98,7 @@ local armored = {
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact_died",
 				append_husk_to_event_name = true
 			},
 			{
@@ -108,7 +108,7 @@ local armored = {
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
 				append_husk_to_event_name = true
 			},
 			{
@@ -118,7 +118,7 @@ local armored = {
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
 				append_husk_to_event_name = true
 			},
 			{
@@ -128,7 +128,7 @@ local armored = {
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
 				append_husk_to_event_name = true
 			},
 			{
@@ -138,7 +138,7 @@ local armored = {
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
 				append_husk_to_event_name = true
 			},
 			{
@@ -148,7 +148,7 @@ local armored = {
 		},
 		shield_blocked = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
 				append_husk_to_event_name = true
 			},
 			{
@@ -158,7 +158,7 @@ local armored = {
 		},
 		blocked = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
 				append_husk_to_event_name = true
 			},
 			{
@@ -168,7 +168,7 @@ local armored = {
 		},
 		dead = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
 				append_husk_to_event_name = true
 			},
 			{
@@ -178,7 +178,7 @@ local armored = {
 		},
 		shove = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
 				append_husk_to_event_name = true
 			},
 			{
@@ -316,9 +316,29 @@ local armored = {
 local super_armor = table.clone(armored)
 local disgustingly_resilient = {
 	sfx = {
+		weakspot_died = {
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_weakspot_blood",
+				append_husk_to_event_name = true
+			}
+		},
+		died = {
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact_died",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_weakspot_blood",
+				append_husk_to_event_name = true
+			}
+		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_res",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
 				append_husk_to_event_name = true
 			},
 			{
@@ -328,13 +348,71 @@ local disgustingly_resilient = {
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_impact",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_weakspot_blood",
+				append_husk_to_event_name = true
+			}
+		},
+		damage_reduced = {
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_weakspot_blood",
 				append_husk_to_event_name = true
 			}
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/play_combat_weapon_chainsword_hit_res",
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_weakspot_blood",
+				append_husk_to_event_name = true
+			}
+		},
+		shield_blocked = {
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_weakspot_blood",
+				append_husk_to_event_name = true
+			}
+		},
+		blocked = {
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_weakspot_blood",
+				append_husk_to_event_name = true
+			}
+		},
+		dead = {
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_weakspot_blood",
+				append_husk_to_event_name = true
+			}
+		},
+		shove = {
+			{
+				event = "wwise/events/weapon/play_powermaul_1h_stuck_impact",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_weakspot_blood",
 				append_husk_to_event_name = true
 			}
 		}

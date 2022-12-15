@@ -4,6 +4,7 @@ local CinematicManager = class("CinematicManager")
 local CinematicManagerTestify = GameParameters.testify and require("scripts/managers/cinematic/cinematic_manager_testify")
 local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinematic_scene_settings")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
+local InputUtils = require("scripts/managers/input/input_utils")
 local CINEMATIC_NAMES = CinematicSceneSettings.CINEMATIC_NAMES
 local CLIENT_RPCS = {
 	"rpc_cinematic_story_sync",
@@ -11,6 +12,11 @@ local CLIENT_RPCS = {
 }
 local SERVER_RPCS = {
 	"rpc_cinematic_loaded"
+}
+local device_list = {
+	Keyboard,
+	Mouse,
+	Pad1
 }
 
 CinematicManager.init = function (self, world, is_server, network_event_delegate)
@@ -170,16 +176,51 @@ CinematicManager.update = function (self, dt, t)
 		local story_time = self._storyteller:time(story_id)
 		local length = self._storyteller:length(story_id)
 		local story_done = length < story_time
+		local skip_all = false
 
 		if not DEDICATED_SERVER and not GameParameters.testify and story.is_skippable then
-			local input_service = Managers.ui:input_service()
+			local show_skip, can_skip = Managers.ui:cinematic_skip_state()
 
-			if input_service:get("skip_cinematic") then
-				story_done = true
+			if show_skip then
+				if can_skip then
+					skip_all = true
+					story_done = true
+				end
+			elseif IS_XBS then
+				local input_device_list = InputUtils.input_device_list
+				local xbox_controllers = input_device_list.xbox_controller
+
+				for i = 1, #xbox_controllers do
+					local xbox_controller = xbox_controllers[i]
+
+					if xbox_controller.active() and xbox_controller.any_released() then
+						if story.popup_info and self._count_released < 1 then
+							self._count_released = self._count_released + 1
+						else
+							Managers.event:trigger("event_cinematic_skip_state", true)
+						end
+					end
+				end
+			else
+				for i = 1, #device_list do
+					local device = device_list[i]
+
+					if device and device.active and device.any_released() then
+						if story.popup_info and self._count_released < 1 then
+							self._count_released = self._count_released + 1
+						else
+							Managers.event:trigger("event_cinematic_skip_state", true)
+						end
+					end
+				end
 			end
 		end
 
 		if story_done then
+			if not DEDICATED_SERVER and (not self._queued_stories[1] or skip_all) then
+				Managers.event:trigger("event_cinematic_skip_state", false, false)
+			end
+
 			self._storyteller:stop(story_id)
 
 			if not self._is_server and table.is_empty(self._queued_stories) then
@@ -202,13 +243,40 @@ CinematicManager.update = function (self, dt, t)
 				Managers.telemetry_events:end_cutscene(cinematics_name, cinematic_scene_name, percent_viewed, character_level)
 			end
 
-			local cinematic_scene_name = self._active_story.cinematic_scene_name
-			self._active_story = nil
+			if skip_all then
+				for i = 1, #self._queued_stories do
+					local queued_story = self._queued_stories[i]
+					local story_level = queued_story.level
+					local story_id = self._storyteller:play_level_story(story_level, queued_story.name)
 
-			self:_play_next_in_queue()
+					self._storyteller:stop(story_id)
 
-			if not self._is_server then
-				self:_check_last_played_on_client(cinematic_scene_name)
+					if queued_story.played_callback then
+						queued_story.played_callback()
+					end
+
+					if not self._is_server then
+						local cinematics_name = queued_story.name
+						local cinematic_scene_name = queued_story.cinematic_scene_name
+						local percent_viewed = 0
+						local player = Managers.player:local_player(1)
+						local profile = player and player:profile()
+						local character_level = profile and profile.current_level or 0
+
+						Managers.telemetry_events:end_cutscene(cinematics_name, cinematic_scene_name, percent_viewed, character_level)
+					end
+				end
+
+				self:stop_all_stories()
+			else
+				local cinematic_scene_name = self._active_story.cinematic_scene_name
+				self._active_story = nil
+
+				self:_play_next_in_queue()
+
+				if not self._is_server then
+					self:_check_last_played_on_client(cinematic_scene_name)
+				end
 			end
 		end
 	else
@@ -230,6 +298,7 @@ CinematicManager.update = function (self, dt, t)
 								text = popup_button,
 								callback = callback(function ()
 									self._next_pot_popup_id = nil
+									self._count_released = 0
 
 									self:_play_next_in_queue()
 								end)

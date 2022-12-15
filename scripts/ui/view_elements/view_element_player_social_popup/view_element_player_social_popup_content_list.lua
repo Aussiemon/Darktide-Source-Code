@@ -125,13 +125,6 @@ local function _add_friend_management_items(parent, player_info)
 	elseif friend_status == FriendStatus.invite then
 		local can_accept, cannot_befriend_reason = Managers.data_service.social:can_befriend()
 		local user_display_name = player_info:user_display_name()
-
-		if (IS_XBS or IS_GDK) and player_info:platform() == "xbox" then
-			local xuid = player_info:platform_user_id()
-			local platform_profile = parent:get_platform_profile(xuid)
-			user_display_name = platform_profile and platform_profile.gamertag or "N/A"
-		end
-
 		local request_header_params = {
 			player = user_display_name
 		}
@@ -181,7 +174,7 @@ local function _add_communication_management_items(parent, player_info, is_block
 	list_item.is_disabled = not can_toggle_mute_voice
 	list_item.reason_for_disabled = cannot_mute_voice_reason and Localize(cannot_mute_voice_reason)
 	list_item.on_pressed_sound = is_voice_muted and UISoundEvents.social_menu_unmute_player_voice or UISoundEvents.social_menu_mute_player_voice
-	local platform_blocked = Managers.account:is_blocked(platform_user_id)
+	local platform_blocked = player_info:is_platform_blocked()
 
 	if is_blocked or platform_blocked then
 		list_item = _get_next_list_item()

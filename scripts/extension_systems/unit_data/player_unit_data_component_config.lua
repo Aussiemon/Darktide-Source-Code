@@ -69,6 +69,8 @@ for name, _ in pairs(PlayerCharacterStates) do
 	CHARACTER_STATES[#CHARACTER_STATES + 1] = name
 end
 
+Managers.backend.interfaces.master_data:refresh_network_lookup()
+
 local PLAYER_ITEMS = {
 	network_type = "player_item_name",
 	use_network_lookup = "player_item_names"
@@ -189,12 +191,6 @@ local MOVEMENT_CURVE_MODIFIER_TEMPLATES = {
 }
 
 _extract_weapon_tweak_template_names(MOVEMENT_CURVE_MODIFIER_TEMPLATES, tweak_template_types.movement_curve_modifier)
-
-local STAGGER_DURATION_MODIFIER_TEMPLATES = {
-	"none"
-}
-
-_extract_weapon_tweak_template_names(STAGGER_DURATION_MODIFIER_TEMPLATES, tweak_template_types.stagger_duration_modifier)
 
 local CHARGE_TEMPLATES = {
 	"none"
@@ -877,7 +873,6 @@ local PlayerComponentConfig = {
 		size_of_flame_template_name = SIZE_OF_FLAME_TEMPLATES,
 		spread_template_name = SPREAD_TEMPLATES,
 		sprint_template_name = SPRINT_TEMPLATES,
-		stagger_duration_modifier_template_name = STAGGER_DURATION_MODIFIER_TEMPLATES,
 		stamina_template_name = STAMINA_TEMPLATES,
 		sway_template_name = SWAY_TEMPLATES,
 		suppression_template_name = SUPPRESSION_TEMPLATES,

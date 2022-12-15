@@ -245,12 +245,12 @@ local weapon_ammo_templates = {
 	},
 	plasmagun_p1_m1 = {
 		ammunition_clip = {
-			lerp_perfect = 100,
-			lerp_basic = 60
+			lerp_perfect = 150,
+			lerp_basic = 75
 		},
 		ammunition_reserve = {
-			lerp_perfect = 100,
-			lerp_basic = 60
+			lerp_perfect = 150,
+			lerp_basic = 75
 		}
 	},
 	ogryn_rippergun_p1_m1 = {
@@ -329,8 +329,8 @@ local weapon_ammo_templates = {
 			lerp_basic = 5
 		},
 		ammunition_reserve = {
-			lerp_perfect = 40,
-			lerp_basic = 25
+			lerp_perfect = 70,
+			lerp_basic = 35
 		}
 	},
 	stubrifle_p1_m1 = {

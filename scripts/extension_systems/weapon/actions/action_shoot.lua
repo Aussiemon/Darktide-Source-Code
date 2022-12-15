@@ -266,11 +266,12 @@ ActionShoot._prepare_shooting = function (self, dt, t)
 	self:_play_muzzle_flash_vfx(rotation, charge_level)
 	self:_update_sound_reflection()
 
-	local num_shots = shooting_status_component.num_shots + 1
-	shooting_status_component.num_shots = num_shots
+	local num_shots = shooting_status_component.num_shots
+	local new_num_shots = num_shots + 1
+	shooting_status_component.num_shots = new_num_shots
 	local spread_template = weapon_extension:spread_template()
 
-	Sway.add_immediate_sway(sway_template, self._sway_control_component, sway_component, movement_state_component, "shooting", num_shots, player_unit)
+	Sway.add_immediate_sway(sway_template, self._sway_control_component, sway_component, movement_state_component, "shooting", new_num_shots, player_unit)
 	Spread.add_immediate_spread_from_shooting(t, spread_template, self._spread_control_component, movement_state_component, shooting_status_component, "shooting", player_unit)
 	Recoil.add_recoil(t, recoil_template, recoil_component, self._recoil_control_component, movement_state_component, first_person_component.rotation, player_unit)
 

@@ -824,7 +824,7 @@ UIProfileSpawner._controller_rotation_input = function (self, input_service, dt)
 	end
 
 	if camera_move and Vector3.length(camera_move) > 0.01 then
-		local angle = self._rotation_angle + camera_move.x * dt * 5
+		local angle = self._rotation_angle + -camera_move.x * dt * 5
 
 		self:_set_character_rotation(angle)
 

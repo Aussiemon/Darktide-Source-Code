@@ -203,7 +203,7 @@ end
 
 local DEFAULT_PUSH_FORCE = 250
 
-MinionRagdoll.push_ragdoll = function (self, unit, attack_direction, damage_profile, hit_zone_name, herding_template_or_nil)
+MinionRagdoll.push_ragdoll = function (self, unit, attack_direction, damage_profile, hit_zone_name, herding_template_or_nil, on_dead_ragdoll)
 	if self._removed_ragdolls[unit] then
 		return
 	end
@@ -234,6 +234,12 @@ MinionRagdoll.push_ragdoll = function (self, unit, attack_direction, damage_prof
 		current_cache_index = current_cache_index + 1
 		local push_multiplier = breed.push_multiplier or 1
 		push_force = push_force * push_multiplier
+
+		if on_dead_ragdoll then
+			local dead_ragdoll_mod = damage_profile.dead_ragdoll_mod or 1
+			push_force = push_force * dead_ragdoll_mod
+		end
+
 		local delayed_ragdoll_push_cache = self._delayed_ragdoll_push_cache
 		local data = delayed_ragdoll_push_cache[current_cache_index]
 		data.unit = unit

@@ -61,9 +61,8 @@ local settings = {
 		}
 	},
 	afk_check = {
-		warning_time_minutes = 10,
-		kick_time_minutes = 15,
-		include_menu_activity = true
+		include_menu_activity = true,
+		location = "hub"
 	}
 }
 

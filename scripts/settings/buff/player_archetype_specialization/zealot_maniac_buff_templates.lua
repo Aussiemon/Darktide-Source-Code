@@ -613,7 +613,7 @@ templates.zealot_maniac_resist_death_healing = {
 	class_name = "proc_buff",
 	allow_proc_while_active = true,
 	proc_events = {
-		[proc_events.on_hit] = talent_settings.defensive_1.on_hit_proc_chance
+		[proc_events.on_damage_dealt] = talent_settings.defensive_1.on_hit_proc_chance
 	},
 	duration = talent_settings.defensive_1.duration,
 	start_func = function (template_data, template_context)

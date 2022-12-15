@@ -355,6 +355,8 @@ PartyImmateriumManager._fetch_cached_debug_get_parties = function (self, dt, for
 end
 
 PartyImmateriumManager.leave_party = function (self)
+	Managers.event:trigger("party_immaterium_left")
+
 	if self._leave_party_promise then
 		return self._leave_party_promise
 	end
@@ -630,10 +632,38 @@ PartyImmateriumManager._handle_request_to_join = function (self, joiner_account_
 	local party_id = self:party_id()
 
 	inviteePresencePromise:next(function (requester_presence)
-		if popup and (context_account_id == "" or context_account_id == self._myself:account_id()) then
+		if popup then
 			if self:current_state() == PartyConstants.State.in_mission then
-				Managers.grpc:answer_request_to_join(party_id, joiner_account_id, "OK_POPUP")
-			else
+				if self:is_in_private_session() then
+					Managers.data_service.social:fetch_friends():next(function (friends)
+						local found = false
+
+						for i = 1, #friends do
+							local player_info = friends[i]
+
+							if player_info:account_id() == joiner_account_id or player_info:platform() == requester_presence:platform() and player_info:platform_user_id() == requester_presence:platform_user_id() then
+								_info("Is friend, answer OK_POPUP")
+
+								found = true
+
+								Managers.grpc:answer_request_to_join(party_id, joiner_account_id, "OK_POPUP")
+
+								break
+							end
+						end
+
+						if not found then
+							_info("Not friend, answer NEUTRAL_POPUP_PRIVATE_SESSION_NOT_FRIEND")
+							Managers.grpc:answer_request_to_join(party_id, joiner_account_id, "NEUTRAL_POPUP_PRIVATE_SESSION_NOT_FRIEND")
+						end
+					end):catch(function (error)
+						_error("could not fetch friends for resolving private session permission, defaulting to OK")
+						Managers.grpc:answer_request_to_join(party_id, joiner_account_id, "OK_POPUP")
+					end)
+				else
+					Managers.grpc:answer_request_to_join(party_id, joiner_account_id, "OK_POPUP")
+				end
+			elseif context_account_id == "" or context_account_id == self._myself:account_id() then
 				self:_request_to_join_popup(joiner_account_id)
 			end
 		else
@@ -775,6 +805,16 @@ PartyImmateriumManager._execute_triggers_for_game_state = function (self)
 
 		self._triggered_game_state_status = game_state_status
 	end
+end
+
+PartyImmateriumManager.is_in_private_session = function (self)
+	local game_state = self:party_game_state()
+
+	if game_state.status == "GAME_SESSION_IN_PROGRESS" then
+		return game_state.params and game_state.params.private_session == "true"
+	end
+
+	return false
 end
 
 PartyImmateriumManager.current_state = function (self)

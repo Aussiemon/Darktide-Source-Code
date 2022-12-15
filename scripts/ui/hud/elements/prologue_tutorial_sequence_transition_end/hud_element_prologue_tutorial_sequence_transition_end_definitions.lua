@@ -77,12 +77,10 @@ local widget_definitions = {
 	}, "transition_text_bg"),
 	text = UIWidget.create_definition({
 		{
-			vertical_alignment = "center",
+			value_id = "transition_text",
 			pass_type = "text",
 			style_id = "transition_text",
 			value = "",
-			value_id = "transition_text",
-			horizontal_alignment = "center",
 			style = {
 				font_size = 60,
 				text_vertical_alignment = "center",

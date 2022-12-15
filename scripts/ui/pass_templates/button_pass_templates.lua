@@ -452,12 +452,12 @@ ButtonPassTemplates.ready_button = {
 				-40 + ready_button_small_button_size_addition[1],
 				-30 + ready_button_small_button_size_addition[2]
 			},
-			color = Color.terminal_background_gradient(nil, true)
-		},
-		offset = {
-			0,
-			-8,
-			2
+			color = Color.terminal_background_gradient(nil, true),
+			offset = {
+				0,
+				-8,
+				2
+			}
 		},
 		change_function = terminal_button_hover_change_function,
 		visibility_function = function (content, style)
@@ -1110,12 +1110,12 @@ ButtonPassTemplates.terminal_button_small = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = Color.terminal_background_gradient(nil, true)
-		},
-		offset = {
-			0,
-			0,
-			1
+			color = Color.terminal_background_gradient(nil, true),
+			offset = {
+				0,
+				0,
+				1
+			}
 		},
 		change_function = terminal_button_hover_change_function
 	},
@@ -1201,12 +1201,12 @@ ButtonPassTemplates.terminal_button_hold_small = {
 		style = {
 			vertical_alignment = "top",
 			horizontal_alignment = "center",
-			color = Color.terminal_background_gradient(nil, true)
-		},
-		offset = {
-			0,
-			0,
-			1
+			color = Color.terminal_background_gradient(nil, true),
+			offset = {
+				0,
+				0,
+				1
+			}
 		},
 		change_function = terminal_button_hover_change_function
 	},
@@ -1452,12 +1452,12 @@ ButtonPassTemplates.list_button_with_background = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = Color.terminal_background_gradient(nil, true)
-		},
-		offset = {
-			0,
-			0,
-			1
+			color = Color.terminal_background_gradient(nil, true),
+			offset = {
+				0,
+				0,
+				1
+			}
 		},
 		change_function = terminal_button_hover_change_function
 	},
@@ -1573,12 +1573,12 @@ ButtonPassTemplates.terminal_list_button_with_background_and_icon = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = Color.terminal_background_gradient(nil, true)
-		},
-		offset = {
-			0,
-			0,
-			1
+			color = Color.terminal_background_gradient(nil, true),
+			offset = {
+				0,
+				0,
+				1
+			}
 		},
 		change_function = terminal_button_hover_change_function
 	},
@@ -1682,7 +1682,7 @@ ButtonPassTemplates.terminal_list_button_with_background_and_icon = {
 			offset = {
 				9,
 				0,
-				3
+				6
 			}
 		},
 		change_function = ButtonPassTemplates.list_button_label_change_function
@@ -2451,12 +2451,12 @@ ButtonPassTemplates.terminal_tab_menu_button = {
 				0,
 				0
 			},
-			color = Color.terminal_background_gradient(nil, true)
-		},
-		offset = {
-			0,
-			0,
-			1
+			color = Color.terminal_background_gradient(nil, true),
+			offset = {
+				0,
+				0,
+				1
+			}
 		},
 		change_function = terminal_button_hover_change_function,
 		visibility_function = function (content, style)
@@ -2534,12 +2534,12 @@ ButtonPassTemplates.terminal_tab_menu_with_divider_button = {
 				0,
 				0
 			},
-			color = Color.terminal_background_gradient(nil, true)
-		},
-		offset = {
-			0,
-			0,
-			1
+			color = Color.terminal_background_gradient(nil, true),
+			offset = {
+				0,
+				0,
+				1
+			}
 		},
 		change_function = terminal_button_hover_change_function,
 		visibility_function = function (content, style)

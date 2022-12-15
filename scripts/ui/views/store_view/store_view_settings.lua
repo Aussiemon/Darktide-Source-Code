@@ -1,7 +1,8 @@
 local store_view_settings = {
 	shading_environment = "content/shading_environments/ui/store",
-	world_layer = 1,
+	min_time_to_disply_timer = 86400,
 	timer_name = "ui",
+	world_layer = 1,
 	viewport_type = "default",
 	wallet_sync_delay = 60,
 	viewport_name = "ui_store_world_viewport",

@@ -12,7 +12,7 @@ local AchievementUIHelper = {
 		local reward_item, item_group = nil
 		local rewards = achievement.rewards
 
-		if rewards then
+		if rewards and #rewards > 0 then
 			local reward_id = rewards[1].masterId
 			reward_item = MasterItems.get_item(reward_id)
 			local item_type = reward_item and reward_item.item_type

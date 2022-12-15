@@ -388,12 +388,6 @@ local on_demand_vo_zealot_male_c = {
 			0.610948,
 			0.550083
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_mutant_charger = {
@@ -411,12 +405,6 @@ local on_demand_vo_zealot_male_c = {
 			0.703667,
 			1.366031
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_ogryn_armored_executor = {
@@ -433,12 +421,6 @@ local on_demand_vo_zealot_male_c = {
 			0.904104,
 			0.556635,
 			0.68199
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},

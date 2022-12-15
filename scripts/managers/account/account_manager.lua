@@ -19,7 +19,7 @@ local interface = {
 	"get_friends",
 	"friends_list_has_changes",
 	"xuid",
-	"refresh_communcation_restrictions",
+	"refresh_communication_restrictions",
 	"is_muted",
 	"is_blocked",
 	"fetch_crossplay_restrictions",
@@ -105,7 +105,7 @@ NullAccountManager.xuid = function (self)
 	return
 end
 
-NullAccountManager.refresh_communcation_restrictions = function (self)
+NullAccountManager.refresh_communication_restrictions = function (self)
 	return
 end
 

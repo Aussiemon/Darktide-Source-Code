@@ -388,7 +388,7 @@ local templates = {
 			local localization_key = "loc_objective_hub_mission_board_header"
 			local interaction_type = "mission_board"
 			local marker_units = _get_interaction_units_by_type(interaction_type)
-			local objective = _create_objective(objective_name, localization_key, marker_units)
+			local objective = _create_objective(objective_name, localization_key, marker_units, nil, true)
 			self.objective = objective
 
 			Managers.event:trigger("event_add_mission_objective", objective)
@@ -742,7 +742,7 @@ local templates = {
 		sync_on_events = {}
 	},
 	{
-		name = "Reach next progression step",
+		name = "Narrative main objective",
 		valid_states = {
 			"GameplayStateRun"
 		},

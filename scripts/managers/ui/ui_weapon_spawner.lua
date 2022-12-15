@@ -297,7 +297,10 @@ UIWeaponSpawner._mouse_rotation_input = function (self, input_service, dt)
 			self._last_mouse_position = nil
 		end
 
-		if input_service:get("navigate_secondary_left_pressed") or input_service:get("navigate_secondary_right_pressed") then
+		local scroll_axis = input_service:get("scroll_axis")
+		local rotation = scroll_axis and scroll_axis[1] or 0
+
+		if math.abs(rotation) > 0.1 then
 			self._is_rotating = true
 			self._last_mouse_position = nil
 		end
@@ -311,13 +314,19 @@ UIWeaponSpawner._mouse_rotation_input = function (self, input_service, dt)
 
 	if is_moving_camera then
 		local mouse_hold = input_service:get("left_hold")
-		local navigate_secondary_left_down = input_service:get("navigate_secondary_left_down")
-		local navigate_secondary_right_down = input_service:get("navigate_secondary_right_down")
 
-		if InputDevice.gamepad_active and (navigate_secondary_left_down > 0 or navigate_secondary_right_down > 0) then
-			local angle = self._rotation_angle + (navigate_secondary_left_down and navigate_secondary_left_down * navigate_secondary_left_down * navigate_secondary_left_down * dt * 4 or 0) + (navigate_secondary_right_down and navigate_secondary_right_down * navigate_secondary_right_down * navigate_secondary_right_down * -dt * 4 or 0)
+		if InputDevice.gamepad_active then
+			local scroll_axis = input_service:get("scroll_axis")
+			local rotation = scroll_axis and scroll_axis[1] or 0
+			rotation = math.abs(scroll_axis[2]) < math.abs(rotation) and rotation or 0
 
-			self:_set_rotation(angle)
+			if math.abs(rotation) > 0.1 then
+				local angle = self._rotation_angle + -rotation * dt * 4
+
+				self:_set_rotation(angle)
+			else
+				self._is_rotating = false
+			end
 		elseif mouse_hold then
 			if self._last_mouse_position then
 				local angle = self._rotation_angle - (mouse.x - self._last_mouse_position[1]) * 0.01

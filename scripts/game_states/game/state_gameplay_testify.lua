@@ -102,6 +102,11 @@ local StateGameplayTestify = {
 
 		return cameras
 	end,
+	delete_unit = function (unit, _)
+		local spawner_manager = Managers.state.unit_spawner
+
+		spawner_manager:mark_for_deletion(unit)
+	end,
 	fetch_weapon_traits = function (params)
 		local traits = {
 			melee_traits = {},
@@ -323,11 +328,10 @@ local StateGameplayTestify = {
 			mission_name = mission_key
 		})
 	end,
-	memory_usage = function (index, state_gameplay)
-		local mission_name = Managers.state.mission:mission_name()
+	memory_usage = function ()
 		local memory_usage = Memory.usage()
 
-		Managers.telemetry_events:memory_usage(mission_name, index, memory_usage)
+		return memory_usage
 	end,
 	play_cutscene = function (cutscene_name)
 		Log.info("StateGameplayTestify", "Playing cutscene %s", cutscene_name)
@@ -336,21 +340,20 @@ local StateGameplayTestify = {
 
 		cinematic_scene_system:play_cutscene(cutscene_name)
 	end,
-	send_lua_trace_statistics_to_telemetry = function (lua_trace_data, state_gameplay)
-		local mission_name = Managers.state.mission:mission_name()
-		local index = lua_trace_data.index
-		local lua_trace_stats = lua_trace_data.stats
-
-		Managers.telemetry_events:lua_trace_stats(mission_name, index, lua_trace_stats)
-	end,
 	show_players = function ()
 		Log.info("StateGameplayTestify", "Showing players")
 		PlayerVisibility.show_players()
 	end,
+	spawn_unit = function (unit_name, position, _)
+		local spawner_manager = Managers.state.unit_spawner
+		local unit = spawner_manager:spawn_unit(unit_name, position:unbox())
+
+		return unit
+	end,
 	start_measuring_performance = function (_, state_gameplay)
 		state_gameplay:init_performance_reporter()
 	end,
-	stop_measuring_performance = function (camera, state_gameplay)
+	stop_measuring_performance = function (_, state_gameplay)
 		local performance_reporter = state_gameplay:performance_reporter()
 		local ms_per_frame = {
 			min = performance_reporter:min_ms_per_frame(),
@@ -378,13 +381,7 @@ local StateGameplayTestify = {
 
 		state_gameplay:destroy_performance_reporter()
 
-		local mission_name = Managers.state.mission:mission_name()
-
-		if camera then
-			Managers.telemetry_events:camera_performance_measurements(mission_name, camera, performance_measurements)
-		else
-			Managers.telemetry_events:performance_measurements(mission_name, performance_measurements)
-		end
+		return performance_measurements
 	end,
 	take_a_screenshot = function (screenshot_settings, state_gameplay)
 		local type = "file_system"

@@ -23,7 +23,7 @@ local single_cleave = DamageProfileSettings.single_cleave
 local double_cleave = DamageProfileSettings.double_cleave
 local medium_cleave = DamageProfileSettings.medium_cleave
 damage_templates.light_grenadier_gauntlet_tank = {
-	ragdoll_push_force = 400,
+	ragdoll_push_force = 500,
 	ragdoll_only = true,
 	ignore_stagger_reduction = true,
 	stagger_category = "melee",
@@ -230,7 +230,7 @@ damage_templates.special_grenadier_gauntlet_tank = {
 	}
 }
 damage_templates.heavy_grenadier_gauntlet_tank = {
-	ragdoll_push_force = 400,
+	ragdoll_push_force = 500,
 	ragdoll_only = true,
 	ignore_stagger_reduction = true,
 	stagger_category = "melee",

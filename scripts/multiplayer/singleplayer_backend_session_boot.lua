@@ -16,7 +16,7 @@ SingleplayerBackendSessionBoot.init = function (self, event_object, backend_miss
 
 		self:_set_state(STATES.waiting_for_view)
 	else
-		self:_create_backend_session(backend_mission_data)
+		self:_create_backend_session()
 	end
 end
 
@@ -25,8 +25,9 @@ SingleplayerBackendSessionBoot._create_backend_session = function (self)
 
 	local backend_mission_data = self._backend_mission_data
 	local mission_id = backend_mission_data.id
+	self._promise = Managers.party_immaterium:create_single_player_game(mission_id)
 
-	Managers.party_immaterium:create_single_player_game(mission_id):next(function (response)
+	self._promise:next(function (response)
 		local session_id = response.game_session_id
 
 		Log.info("SingleplayerBackendSessionBoot", "Created backend session %s", session_id)
@@ -35,11 +36,15 @@ SingleplayerBackendSessionBoot._create_backend_session = function (self)
 		self._connection_singleplayer = ConnectionSingleplayer:new(event_delegate, HOST_TYPES.singleplay_backend_session, session_id, backend_mission_data)
 
 		self:_set_state(STATES.ready)
+
+		self._promise = nil
 	end):catch(function (error)
 		local is_error = true
 
 		self._event_object:failed_to_boot(is_error, "game", "FAILED_CREATING_BACKEND_SESSION", error)
 		self:_set_state(STATES.failed)
+
+		self._promise = nil
 	end)
 end
 
@@ -65,6 +70,10 @@ SingleplayerBackendSessionBoot.destroy = function (self)
 		self._connection_singleplayer:delete()
 
 		self._connection_singleplayer = nil
+	end
+
+	if self._promise then
+		self._promise:cancel()
 	end
 end
 

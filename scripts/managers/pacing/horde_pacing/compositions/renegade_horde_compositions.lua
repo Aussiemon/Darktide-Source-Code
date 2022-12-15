@@ -49,8 +49,8 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						40,
-						44
+						38,
+						40
 					}
 				}
 			}
@@ -106,8 +106,8 @@ local horde_compositions = {
 				{
 					name = "chaos_newly_infected",
 					amount = {
-						40,
-						44
+						38,
+						40
 					}
 				}
 			}
@@ -163,8 +163,8 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						65,
-						70
+						60,
+						65
 					}
 				}
 			}
@@ -220,8 +220,8 @@ local horde_compositions = {
 				{
 					name = "chaos_newly_infected",
 					amount = {
-						75,
-						80
+						70,
+						75
 					}
 				}
 			}

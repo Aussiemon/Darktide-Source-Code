@@ -201,7 +201,7 @@ StatsManager.record_objective_complete = function (self, player, mission_name, o
 	self:_trigger_hook(player, "hook_objective", 1, mission_name, objective_name, objective_type, objective_time, player:profile().specialization)
 end
 
-StatsManager.record_damage = function (self, player, breed_name, weapon_template_name, damage_profile_name, weapon_attack_type, hit_zone_name, distance, player_health, action_name, id, damage, damage_type)
+StatsManager.record_damage = function (self, player, breed_name, weapon_template_name, weapon_attack_type, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, damage_type, damage, is_critical_hit, stagger_result)
 	breed_name = breed_name or "unknown"
 	weapon_template_name = weapon_template_name or "unknown"
 	weapon_attack_type = weapon_attack_type or "unknown"
@@ -209,8 +209,10 @@ StatsManager.record_damage = function (self, player, breed_name, weapon_template
 	action_name = action_name or "unknown"
 	damage_profile_name = damage_profile_name or "unknown"
 	damage_type = damage_type or "unknown"
+	is_critical_hit = is_critical_hit or "unknown"
+	stagger_result = stagger_result or "unknown"
 
-	self:_trigger_hook(player, "hook_damage", damage, breed_name, weapon_template_name, weapon_attack_type, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, damage_type, player:profile().specialization)
+	self:_trigger_hook(player, "hook_damage", damage, breed_name, weapon_template_name, weapon_attack_type, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, damage_type, is_critical_hit, stagger_result, player:profile().specialization)
 end
 
 StatsManager.record_kill = function (self, player, breed_name, weapon_template_name, weapon_attack_type, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, buff_keywords, damage_type, solo_kill)
@@ -223,6 +225,15 @@ StatsManager.record_kill = function (self, player, breed_name, weapon_template_n
 	damage_type = damage_type or "unknown"
 
 	self:_trigger_hook(player, "hook_kill", 1, breed_name, weapon_template_name, weapon_attack_type, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, buff_keywords, damage_type, solo_kill, player:profile().specialization)
+end
+
+StatsManager.record_buff = function (self, player, breed_name, buff_template_name, stack_count, weapon_buff_template_name)
+	breed_name = breed_name or "unknown"
+	buff_template_name = buff_template_name or "unknown"
+	stack_count = stack_count or "unknown"
+	weapon_buff_template_name = weapon_buff_template_name or "unknown"
+
+	self:_trigger_hook(player, "hook_buff", 1, breed_name, buff_template_name, stack_count, weapon_buff_template_name, player:profile().specialization)
 end
 
 StatsManager.record_team_blocked_damage = function (self, amount)

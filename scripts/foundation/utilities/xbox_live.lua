@@ -283,7 +283,7 @@ XboxLiveUtils.show_player_profile_card = function (xuid)
 		local h_result = XGameUI.show_player_profile_card_results(async_block)
 
 		if h_result == HRESULT.S_OK then
-			Managers.account:refresh_communcation_restrictions()
+			Managers.account:refresh_communication_restrictions()
 		end
 	end):catch(function (error_data)
 		error_data.header = "XboxLiveUtils.show_player_profile_card"
@@ -395,7 +395,9 @@ end
 
 XboxLiveUtils.get_entitlements = function ()
 	return XboxLiveUtils.available():next(function (user_id)
-		local async_job, error_code = XStore.query_entitlements_async({
+		local result_by_id = {}
+		local result, async_job, async_job_next_page, error_code = nil
+		async_job, error_code = XStore.query_entitlements_async({
 			"consumable",
 			"unmanaged"
 		})
@@ -408,7 +410,11 @@ XboxLiveUtils.get_entitlements = function ()
 		end
 
 		return Promise.until_value_is_true(function ()
-			local result, async_job, error_code = XStore.query_entitlements_async_result(async_job)
+			if async_job_next_page then
+				result, async_job_next_page, error_code = XStore.products_query_next_page_result(async_job_next_page)
+			else
+				result, async_job_next_page, error_code = XStore.query_entitlements_async_result(async_job)
+			end
 
 			if error_code then
 				Log.error("XboxLive", string.format("Failed to fetch entitlements, error_code=0x%x", error_code))
@@ -420,10 +426,14 @@ XboxLiveUtils.get_entitlements = function ()
 			end
 
 			if result ~= nil and error_code == nil then
-				local result_by_id = {}
+				result_by_id = {}
 
 				for _, v in ipairs(result) do
 					result_by_id[v.storeId] = v
+				end
+
+				if async_job_next_page then
+					return false
 				end
 
 				return {
@@ -439,7 +449,9 @@ end
 
 XboxLiveUtils.get_associated_products = function ()
 	return XboxLiveUtils.available():next(function (user_id)
-		local async_job, error_code = XStore.query_associated_products_async({
+		local result_by_id = {}
+		local result, async_job, async_job_next_page, error_code = nil
+		async_job, error_code = XStore.query_associated_products_async({
 			"consumable",
 			"unmanaged"
 		})
@@ -452,7 +464,11 @@ XboxLiveUtils.get_associated_products = function ()
 		end
 
 		return Promise.until_value_is_true(function ()
-			local result, async_job, error_code = XStore.query_associated_products_async_result(async_job)
+			if async_job_next_page then
+				result, async_job_next_page, error_code = XStore.products_query_next_page_result(async_job_next_page)
+			else
+				result, async_job_next_page, error_code = XStore.query_associated_products_async_result(async_job)
+			end
 
 			if error_code then
 				Log.error("XboxLive", string.format("Failed to fetch associated products, error_code=0x%x", error_code))
@@ -464,10 +480,14 @@ XboxLiveUtils.get_associated_products = function ()
 			end
 
 			if result ~= nil and error_code == nil then
-				local result_by_id = {}
+				result_by_id = {}
 
 				for _, v in ipairs(result) do
 					result_by_id[v.storeId] = v
+				end
+
+				if async_job_next_page then
+					return false
 				end
 
 				return {

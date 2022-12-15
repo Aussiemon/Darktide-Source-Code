@@ -67,7 +67,9 @@ ChainSwordBlur.changed = function (self, unit)
 end
 
 ChainSwordBlur.events.set_speed = function (self, speed)
-	self:_set_speed(speed)
+	if self._set_speed then
+		self:_set_speed(speed)
+	end
 end
 
 ChainSwordBlur.component_data = {

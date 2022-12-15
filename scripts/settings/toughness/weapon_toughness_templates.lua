@@ -52,8 +52,8 @@ weapon_toughness_templates.luggable = {
 	toughness_damage_modifier = 1,
 	optional_on_depleted_function_name_override = "block",
 	regeneration_delay_modifier = {
-		lerp_perfect = 100,
-		lerp_basic = 100
+		lerp_perfect = 2,
+		lerp_basic = 2
 	},
 	regeneration_speed_modifier = {
 		still = {

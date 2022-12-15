@@ -107,6 +107,7 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 	local max_range = precision_target_settings.max_range
 	local max_unit_range = precision_target_settings.max_unit_range or max_range
 	local target_node_name = precision_target_settings.wanted_target
+	local fallback_node_name = precision_target_settings.wanted_target_fallback
 	local breed_weights = precision_target_settings.breed_weights or EMPTY_TABLE
 	local smart_tagging = precision_target_settings.smart_tagging
 	local collision_filter = precision_target_settings.collision_filter or smart_tagging and "filter_player_ping_target_selection" or "filter_ray_aim_assist"
@@ -176,6 +177,7 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 					half_height = Breed.height(hit_unit, breed) * 0.5
 					local breed_name = breed.name
 					target_weight = breed_weights[breed_name] or 1
+					min_range = half_width
 				else
 					local world_extents_right = object_right * half_extents.x
 					local world_extents_forward = object_forward * half_extents.y
@@ -196,7 +198,7 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 					local visible_target, aim_position = nil
 
 					if breed then
-						visible_target, aim_position = self:_target_visibility_and_aim_position(breed, hit_unit, ray_origin, target_node_name)
+						visible_target, aim_position = self:_target_visibility_and_aim_position(breed, hit_unit, ray_origin, target_node_name, fallback_node_name)
 					else
 						aim_position = hit_unit_center_pos
 						visible_target = true
@@ -336,8 +338,9 @@ end
 
 local FALLBACK_NODE_NAME = "enemy_aim_target_02"
 
-PlayerUnitSmartTargetingExtension._target_visibility_and_aim_position = function (self, target_breed, target_unit, own_position, target_node_name)
+PlayerUnitSmartTargetingExtension._target_visibility_and_aim_position = function (self, target_breed, target_unit, own_position, target_node_name, fallback_node_name)
 	local wanted_node_name = target_node_name or FALLBACK_NODE_NAME
+	fallback_node_name = fallback_node_name or FALLBACK_NODE_NAME
 	local wanted_pos = Unit.world_position(target_unit, Unit.node(target_unit, wanted_node_name))
 	local weakspot_direction = Vector3.normalize(wanted_pos - own_position)
 	local weakspot_distance = Vector3.length(wanted_pos - own_position)
@@ -348,8 +351,8 @@ PlayerUnitSmartTargetingExtension._target_visibility_and_aim_position = function
 	if not hit then
 		visible_target = true
 		target_position = wanted_pos
-	elseif FALLBACK_NODE_NAME ~= wanted_node_name then
-		local center_mass_pos = Unit.world_position(target_unit, Unit.node(target_unit, FALLBACK_NODE_NAME))
+	elseif fallback_node_name ~= wanted_node_name then
+		local center_mass_pos = Unit.world_position(target_unit, Unit.node(target_unit, fallback_node_name))
 		local center_mass_direction = Vector3.normalize(center_mass_pos - own_position)
 		local center_mass_distance = Vector3.length(center_mass_pos - own_position)
 		hit = PhysicsWorld.raycast(physics_world, own_position, center_mass_direction, center_mass_distance, "closest", "collision_filter", "filter_ray_aim_assist_line_of_sight")

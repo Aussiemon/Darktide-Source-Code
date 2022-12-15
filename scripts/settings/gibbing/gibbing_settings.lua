@@ -15,19 +15,19 @@ local gibbing_settings = {
 		large = 2
 	},
 	gib_push_force = {
-		ranged_heavy = 800,
-		force_assault = 250,
-		force_bfg = 800,
-		sawing_light = 200,
-		force_demolition = 400,
-		sawing_heavy = 800,
-		sawing_medium = 600,
-		ranged_medium = 400,
-		blunt_light = 400,
-		force_sword = 600,
-		explosive = 800,
-		ranged_light = 200,
-		blunt_heavy = 600
+		ranged_heavy = 1.5,
+		force_assault = 1,
+		force_bfg = 1,
+		sawing_light = 0.6,
+		force_demolition = 1,
+		sawing_heavy = 1,
+		sawing_medium = 0.8,
+		ranged_medium = 1,
+		blunt_light = 0.75,
+		force_sword = 1,
+		explosive = 1,
+		ranged_light = 0.8,
+		blunt_heavy = 1
 	}
 }
 gibbing_settings.gibbing_power = gibbing_settings.gibbing_thresholds

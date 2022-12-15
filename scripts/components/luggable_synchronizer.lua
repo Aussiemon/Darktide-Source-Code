@@ -117,7 +117,7 @@ LuggableSynchronizer.component_data = {
 		ui_type = "number",
 		decimals = 1,
 		category = "Spawn settings",
-		value = 90,
+		value = 120,
 		ui_name = "Luggable Reset Timer (in sec.)",
 		step = 0.1
 	},

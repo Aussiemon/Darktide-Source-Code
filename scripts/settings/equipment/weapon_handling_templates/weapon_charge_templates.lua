@@ -5,8 +5,8 @@ local weapon_charge_templates = {
 		charge_on_action_start = true,
 		charge_delay = 0,
 		charge_duration = {
-			lerp_perfect = 0.5,
-			lerp_basic = 1
+			lerp_perfect = 0.4,
+			lerp_basic = 0.8
 		}
 	},
 	lasgun_p2_m2_charge_up = {
@@ -15,18 +15,18 @@ local weapon_charge_templates = {
 		charge_on_action_start = true,
 		charge_delay = 0,
 		charge_duration = {
-			lerp_perfect = 0.35,
-			lerp_basic = 0.75
+			lerp_perfect = 0.25,
+			lerp_basic = 0.65
 		}
 	},
 	lasgun_p2_m3_charge_up = {
-		max_ammo_charge = 12,
+		max_ammo_charge = 9,
 		limit_max_charge_to_ammo_clip = true,
 		charge_on_action_start = true,
 		charge_delay = 0,
 		charge_duration = {
-			lerp_perfect = 0.65,
-			lerp_basic = 1.25
+			lerp_perfect = 0.5,
+			lerp_basic = 1
 		}
 	},
 	plasmagun_p1_m1_charge_direct = {

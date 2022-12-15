@@ -103,7 +103,7 @@ TabbedMenuViewBase.set_active_view_instance = function (self, view)
 end
 
 TabbedMenuViewBase.set_can_navigate = function (self, value)
-	local has_tab_bar_menu = self._elements.tab_bar ~= nil
+	local has_tab_bar_menu = self._elements.tab_bar ~= nil and #self._tab_bar_views > 1
 	self._can_navigate = value and has_tab_bar_menu
 end
 
@@ -214,7 +214,7 @@ TabbedMenuViewBase._setup_tab_bar = function (self, tab_bar_params, additional_c
 
 	self._tab_bar_views = tab_bar_views
 
-	self:set_can_navigate(#tab_bar_views > 1 and not tab_bar_params.hide_tabs)
+	self:set_can_navigate(not tab_bar_params.hide_tabs)
 
 	self._next_tab_index = #tab_bar_views > 0 and 1 or nil
 end

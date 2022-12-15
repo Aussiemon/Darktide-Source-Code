@@ -12,6 +12,7 @@ local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_me
 local MasterItems = require("scripts/backend/master_items")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local Promise = require("scripts/foundation/utilities/promise")
+local InputDevice = require("scripts/managers/input/input_device")
 local trinket_slot_order = {
 	"slot_trinket_1",
 	"slot_trinket_2"
@@ -155,6 +156,12 @@ InventoryWeaponCosmeticsView._destroy_forward_gui = function (self)
 end
 
 InventoryWeaponCosmeticsView.on_exit = function (self)
+	if self._equip_promise then
+		self._equip_promise:cancel()
+
+		self._equip_promise = nil
+	end
+
 	self:_destroy_forward_gui()
 	InventoryWeaponCosmeticsView.super.on_exit(self)
 end
@@ -613,9 +620,9 @@ InventoryWeaponCosmeticsView.cb_on_equip_pressed = function (self)
 	if previewed_element then
 		local selected_item = self._selected_item
 		local update_icon = false
-		local promise = Promise:new()
+		self._equip_promise = Promise:new()
 
-		promise:next(function ()
+		self._equip_promise:next(function ()
 			if self._selected_weapon_skin_name ~= self._initial_weapon_skin_name then
 				update_icon = true
 
@@ -632,11 +639,13 @@ InventoryWeaponCosmeticsView.cb_on_equip_pressed = function (self)
 
 			return Promise.resolved(result)
 		end):next(function (result)
-			local gear = result and result.gear
-			local item = nil
+			local gear = result.item
+			local gear_id = selected_item.gear_id
+			local item = MasterItems.get_item_instance(gear, gear_id)
 
-			Managers.ui:item_icon_updated(self._selected_item)
-			Managers.event:trigger("event_item_icon_updated", self._selected_item)
+			Managers.ui:item_icon_updated(item)
+			Managers.event:trigger("event_item_icon_updated", item)
+			Managers.event:trigger("event_replace_list_item", item)
 
 			self._selected_weapon_skin = nil
 			self._selected_weapon_skin_name = nil
@@ -658,10 +667,14 @@ InventoryWeaponCosmeticsView.cb_on_equip_pressed = function (self)
 			else
 				Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
 			end
+
+			self._equip_promise = nil
 		end):catch(function (errors)
 			Log.error("InventoryWeaponCosmeticsView", "Failed equipping items in loadout slots", errors)
+
+			self._equip_promise = nil
 		end)
-		promise:resolve()
+		self._equip_promise:resolve()
 	end
 
 	Managers.ui:close_view("inventory_weapon_cosmetics_view")
@@ -745,6 +758,12 @@ InventoryWeaponCosmeticsView._handle_input = function (self, input_service, dt, 
 	if scroll_axis then
 		local scroll = scroll_axis[2]
 		local scroll_speed = 0.25
+
+		if InputDevice.gamepad_active then
+			scroll = math.abs(scroll_axis[1]) < math.abs(scroll) and scroll or 0
+			scroll_speed = 0.1
+		end
+
 		self._weapon_zoom_target = math.clamp(self._weapon_zoom_target + scroll * scroll_speed, self._min_zoom, self._max_zoom)
 
 		if math.abs(self._weapon_zoom_target - self._weapon_zoom_fraction) > 0.01 then

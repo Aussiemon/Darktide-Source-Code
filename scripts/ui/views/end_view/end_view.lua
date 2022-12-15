@@ -21,7 +21,6 @@ local _math_floor = math.floor
 local _math_max = math.max
 local _math_min = math.min
 local _continue_button_action = "next"
-local _vote_button_action = EndViewSettings.stay_in_party_vote_button
 local SUMMARY_VIEW_NAME = "end_player_view"
 local STAY_IN_PARTY = table.enum("yes", "no")
 local EndView = class("EndView", "BaseView")
@@ -41,11 +40,6 @@ EndView.init = function (self, settings, context)
 	self._delay_before_summary = EndViewSettings.delay_before_summary
 	self._end_time = nil
 	self._reference_name = "EndView_" .. tostring(self)
-	self._stay_in_party_voting_id = nil
-	self._stay_in_party_voting_active = false
-	self._stay_in_party = STAY_IN_PARTY.no
-	self._all_in_same_party = false
-	self._all_voted_yes = false
 	self._num_members_in_my_party = 1
 	self._has_shown_summary_view = false
 	self._fetch_party_done = false
@@ -87,7 +81,6 @@ EndView.on_enter = function (self)
 	local continue_button = self._widgets_by_name.continue_button
 	continue_button.content.hotspot.pressed_callback = callback(self, "_cb_on_continue_pressed")
 
-	self:_setup_stay_in_party_vote()
 	self:_setup_background_world()
 	self:_on_navigation_input_changed()
 end
@@ -129,10 +122,6 @@ EndView.on_exit = function (self)
 	end
 
 	self:_unregister_event("event_state_game_score_continue")
-	self:_unregister_event("event_stay_in_party_voting_started")
-	self:_unregister_event("event_stay_in_party_voting_completed")
-	self:_unregister_event("event_stay_in_party_voting_aborted")
-	self:_unregister_event("event_stay_in_party_vote_casted")
 	EndView.super.on_exit(self)
 end
 
@@ -164,8 +153,6 @@ EndView.update = function (self, dt, t, input_service)
 	if has_shown_summary_view ~= self._has_shown_summary_view then
 		self._has_shown_summary_view = has_shown_summary_view
 		self._skip_grace_time = EndViewSettings.skip_grace_time
-
-		self:_set_character_names()
 	end
 
 	local grace_time = self._skip_grace_time
@@ -175,8 +162,7 @@ EndView.update = function (self, dt, t, input_service)
 	end
 
 	self._skip_grace_time = grace_time
-	local is_waiting_for_vote_to_end = self._stay_in_party_voting_active and self._stay_in_party == STAY_IN_PARTY.yes
-	local can_skip = not has_shown_summary_view or not is_waiting_for_vote_to_end
+	local can_skip = true
 
 	if can_skip ~= self._can_skip and (not can_skip or grace_time == 0) then
 		self._can_skip = can_skip
@@ -197,7 +183,6 @@ EndView.update = function (self, dt, t, input_service)
 				local render_scale = self._render_scale
 
 				self:_set_mission_key(played_mission, session_report, render_scale)
-				self:_set_character_names()
 			end
 		end
 	end
@@ -231,7 +216,6 @@ EndView.update = function (self, dt, t, input_service)
 
 	self:_update_player_slots(dt, t, input_service)
 	self:_update_continue_button_time(end_time, server_time)
-	self:_update_voting_button_visibility(dt)
 
 	if GameParameters.testify then
 		Testify:poll_requests_through_handler(EndViewTestify, self)
@@ -289,64 +273,9 @@ EndView.event_state_game_score_continue = function (self)
 	end
 end
 
-EndView.event_stay_in_party_voting_started = function (self, voting_id)
-	Log.info("STAY_IN_PARTY_VOTING", "voting_id recieved: %s", voting_id)
-
-	self._stay_in_party_voting_id = voting_id
-
-	self:_set_stay_in_party_voting_init_step_done()
-end
-
-EndView._set_stay_in_party_voting_init_step_done = function (self)
-	if self._stay_in_party_voting_id and self._fetch_party_done then
-		Log.info("STAY_IN_PARTY_VOTING", "init_done")
-		self:_stay_in_party_voting_started()
-	end
-end
-
-EndView._stay_in_party_voting_started = function (self)
-	local voting_id = self._stay_in_party_voting_id
-	local all_is_same_party = self._all_in_same_party
-
-	Log.info("STAY_IN_PARTY_VOTING", "started")
-
-	if all_is_same_party and voting_id then
-		Managers.voting:cast_vote(voting_id, "no")
-		Log.info("STAY_IN_PARTY_VOTING", "everyone is same party, voting NO to merge")
-
-		return
-	end
-
-	self._stay_in_party_voting_active = true
-
-	self:_sync_votes()
-end
-
-EndView.event_stay_in_party_voting_completed = function (self)
-	self._stay_in_party_voting_active = false
-	self._stay_in_party_voting_id = nil
-end
-
-EndView.event_stay_in_party_voting_aborted = function (self)
-	self._stay_in_party_voting_active = false
-	self._stay_in_party_voting_id = nil
-end
-
-EndView.event_stay_in_party_vote_casted = function (self)
-	if not self._stay_in_party_voting_active then
-		return
-	end
-
-	self:_sync_votes()
-end
-
 EndView._handle_input = function (self, input_service, dt, t)
 	if input_service:get(_continue_button_action) then
 		self:_trigger_current_presentation_skip()
-	end
-
-	if self._stay_in_party_voting_active and input_service:get(_vote_button_action) then
-		self:_cb_on_stay_in_party_pressed()
 	end
 
 	return EndView.super._handle_input(self, input_service, dt, t)
@@ -412,29 +341,8 @@ EndView._update_continue_button_time = function (self, end_time, server_time)
 	end
 end
 
-local _voting_button_fade_time = ViewStyles.voting_button_fade_time
-
-EndView._update_voting_button_visibility = function (self, dt)
-	local voting_widget = self._widgets_by_name.stay_in_party_vote
-	local is_active = self._stay_in_party_voting_active
-	local alpha = voting_widget.alpha_multiplier or 0
-
-	if is_active and alpha < 1 then
-		alpha = _math_min(alpha + dt / _voting_button_fade_time, 1)
-	elseif not is_active and alpha > 0 then
-		alpha = _math_max(alpha - dt / _voting_button_fade_time, 0)
-	end
-
-	voting_widget.alpha_multiplier = alpha
-	voting_widget.visible = is_active or alpha > 0
-end
-
 EndView._update_buttons = function (self)
 	local service_type = DefaultViewInputSettings.service_type
-	local vote_completed = not self._stay_in_party_voting_active
-	local player_voted_yes = self._stay_in_party == STAY_IN_PARTY.yes
-	local all_voted_yes = self._all_voted_yes
-	local already_in_party = self._num_members_in_my_party > 1
 	local continue_button_widget = self._widgets_by_name.continue_button
 	local continue_button_content = continue_button_widget.content
 	local continue_button_loc_string = continue_button_content.loc_string
@@ -450,21 +358,7 @@ EndView._update_buttons = function (self)
 	end
 
 	continue_button_content.text = button_text
-	continue_button_content.vote_completed = vote_completed and all_voted_yes
 	continue_button_content.hotspot.disabled = not can_skip
-	local voting_widget = self._widgets_by_name.stay_in_party_vote
-	local voting_widget_content = voting_widget.content
-	voting_widget_content.vote_completed = vote_completed
-	voting_widget_content.voted_yes = player_voted_yes
-	voting_widget_content.can_skip = can_skip
-	voting_widget_content.already_in_party = already_in_party
-	local loc_string = EndViewSettings.stay_in_party_vote_text
-	local vote_button_action = _vote_button_action
-	local vote_button_text = TextUtilities.localize_with_button_hint(vote_button_action, loc_string, nil, service_type, input_legend_text_template)
-	voting_widget_content.vote_text = vote_button_text
-	local voting_widget_style = voting_widget.style
-	local vote_count_style = voting_widget_style.vote_count_text
-	vote_count_style.text_color = all_voted_yes and vote_count_style.voted_yes_color or vote_count_style.default_text_color
 end
 
 EndView._get_timer_text = function (self, time)
@@ -483,24 +377,6 @@ EndView._trigger_current_presentation_skip = function (self)
 	elseif not self._can_exit then
 		Managers.multiplayer_session:leave("skip_end_of_round")
 	end
-end
-
-EndView._setup_stay_in_party_vote = function (self)
-	self:_register_event("event_stay_in_party_voting_started")
-	self:_register_event("event_stay_in_party_voting_completed")
-	self:_register_event("event_stay_in_party_voting_aborted")
-	self:_register_event("event_stay_in_party_vote_casted")
-
-	local party_manager = Managers.party_immaterium
-	local active_party_vote = party_manager and party_manager:active_stay_in_party_vote()
-
-	if active_party_vote then
-		self:event_stay_in_party_voting_started(active_party_vote.voting_id)
-	end
-
-	local vote_widget = self._widgets_by_name.stay_in_party_vote
-	local hotspot = vote_widget.content.hotspot
-	hotspot.pressed_callback = callback(self, "_cb_on_stay_in_party_pressed")
 end
 
 EndView._setup_background_world = function (self)
@@ -605,9 +481,6 @@ EndView._setup_spawn_slots = function (self, players)
 	self:_set_character_names()
 
 	self._fetch_party_done = true
-
-	Log.info("STAY_IN_PARTY_VOTING", "fetch_party_done")
-	self:_set_stay_in_party_voting_init_step_done()
 end
 
 EndView._get_free_slot_id = function (self)
@@ -709,7 +582,6 @@ EndView._create_player_widget = function (self, player_info, slot, more_than_one
 	widget_content.player_info = player_info
 	widget_content.boxed_position = slot.boxed_position
 	widget_content.character_title = ProfileUtils.character_title(profile)
-	widget_content.account_name = player_info:user_display_name()
 	widget_content.peer_id = player_info:peer_id()
 	local party_status = player_info:party_status()
 
@@ -760,6 +632,8 @@ EndView._update_player_slots = function (self, dt, t, input_service)
 			end
 		end
 	end
+
+	self:_set_character_names()
 end
 
 EndView._reset_spawn_slot = function (self, slot)
@@ -806,6 +680,8 @@ EndView._set_character_names = function (self)
 					local level_after_mission = self:_level_from_xp(experience_settings, xp)
 					widget_content.character_name = TextUtilities.formatted_character_name(character_name, level_after_mission)
 				end
+
+				widget_content.account_name = player_info:user_display_name()
 			end
 		end
 	end
@@ -905,49 +781,6 @@ EndView._load_portrait_icon = function (self, widget, profile)
 	widget_content.insignia_load_id = Managers.ui:load_item_icon(insignia_item, cb)
 end
 
-EndView._sync_votes = function (self)
-	local voting_id = self._stay_in_party_voting_id
-	local num_votes = 0
-	local yes_votes = 0
-	local player_vote = STAY_IN_PARTY.no
-
-	if voting_id then
-		local votes = Managers.voting:votes(voting_id)
-		local local_player_peer_id = Network.peer_id()
-		local game_mode_condition_widgets = self._game_mode_condition_widgets
-
-		for i = 1, #game_mode_condition_widgets do
-			local widget = game_mode_condition_widgets[i]
-			local peer_id = widget.content.peer_id
-
-			if peer_id then
-				local vote = votes[peer_id]
-
-				if vote == STAY_IN_PARTY.yes then
-					yes_votes = yes_votes + 1
-
-					if peer_id == local_player_peer_id then
-						player_vote = STAY_IN_PARTY.yes
-					end
-				end
-
-				num_votes = num_votes + 1
-				local checkmark_style = widget.style.checkmark
-				checkmark_style.visible = vote == STAY_IN_PARTY.yes
-			end
-		end
-	end
-
-	local num_votes_text = string.format("%d/%d", yes_votes, num_votes)
-	local voting_widget = self._widgets_by_name.stay_in_party_vote
-	local widget_content = voting_widget.content
-	widget_content.vote_count_text = num_votes_text
-	self._all_voted_yes = yes_votes == num_votes
-	self._stay_in_party = player_vote
-
-	self:_update_buttons()
-end
-
 EndView._unload_portrait_icon = function (self, widget, ui_renderer)
 	UIWidget.set_visible(widget, ui_renderer, false)
 	UIWidget.set_visible(widget, ui_renderer, true)
@@ -1003,18 +836,6 @@ end
 
 EndView._cb_on_continue_pressed = function (self)
 	self:_trigger_current_presentation_skip()
-end
-
-EndView._cb_on_stay_in_party_pressed = function (self)
-	local voting_id = self._stay_in_party_voting_id
-	local player_vote = self._stay_in_party == STAY_IN_PARTY.no and STAY_IN_PARTY.yes or STAY_IN_PARTY.no
-	self._stay_in_party = player_vote
-
-	if voting_id then
-		Managers.voting:cast_vote(voting_id, player_vote)
-	end
-
-	self:_update_buttons()
 end
 
 EndView._cb_set_player_icon = function (self, widget, grid_index, rows, columns, render_target)

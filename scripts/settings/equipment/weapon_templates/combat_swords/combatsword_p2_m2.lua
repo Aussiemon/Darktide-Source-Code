@@ -1325,6 +1325,10 @@ weapon_template.actions = {
 			start_attack = {
 				action_name = "action_melee_start_left",
 				chain_time = 0.25
+			},
+			special_action = {
+				action_name = "action_attack_special",
+				chain_time = 0.25
 			}
 		},
 		inner_push_rad = math.pi * 0.25,

@@ -9,6 +9,6 @@ local TeamStats = Factory.create_group()
 Factory.add_to_group(TeamStats, Factory.create_simple("team_kill", Hooks.definitions.hook_team_kill, Activations.sum))
 Factory.add_to_group(TeamStats, Factory.create_simple("team_damage_taken", Hooks.definitions.hook_team_damage_taken, Activations.sum))
 Factory.add_to_group(TeamStats, Factory.create_simple("team_death", Hooks.definitions.hook_team_death, Activations.sum))
-Factory.add_to_group(TeamStats, Factory.create_simple("team_knock_down", Hooks.definitions.hook_knock_down, Activations.sum))
+Factory.add_to_group(TeamStats, Factory.create_simple("team_knock_down", Hooks.definitions.hook_team_knock_down, Activations.sum))
 
 return TeamStats

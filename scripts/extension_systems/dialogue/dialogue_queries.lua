@@ -23,7 +23,17 @@ DialogueQueries = {
 		return dialogue.sound_events[index], dialogue.localization_strings[index], dialogue.face_animations[index], dialogue.dialogue_animations[index]
 	end,
 	build_randomized_indexes = function (dialogue)
-		dialogue.randomize_indexes = table.get_random_array_indices(dialogue.sound_events_n, dialogue.sound_events_n)
+		if not dialogue.randomize_indexes[1] then
+			local i = 1
+
+			while i <= dialogue.sound_events_n do
+				dialogue.randomize_indexes[i] = i
+				i = i + 1
+			end
+		end
+
+		table.shuffle(dialogue.randomize_indexes)
+
 		dialogue.randomize_indexes_n = dialogue.sound_events_n
 	end,
 	get_dialogue_event_index = function (dialogue)
@@ -37,7 +47,15 @@ DialogueQueries = {
 		end
 
 		local current_index = dialogue.randomize_indexes_n
+		local current_variation = dialogue.randomize_indexes[current_index]
+
+		if current_variation == dialogue.last_variation then
+			dialogue.randomize_indexes_n = dialogue.randomize_indexes_n - 1
+			current_index = dialogue.randomize_indexes_n
+		end
+
 		dialogue.randomize_indexes_n = dialogue.randomize_indexes_n - 1
+		dialogue.last_variation = dialogue.randomize_indexes[current_index]
 
 		return dialogue.randomize_indexes[current_index]
 	end

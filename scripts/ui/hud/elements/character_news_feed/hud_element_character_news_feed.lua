@@ -88,12 +88,16 @@ HudElementCharacterNewsFeed._fetch_new_items = function (self)
 
 	if new_item_notifications and not table.is_empty(new_item_notifications) then
 		local new_items_by_inventory = {}
+		local show_item_notification = {}
 
-		for gear_id, _ in pairs(new_item_notifications) do
+		for gear_id, notification_data in pairs(new_item_notifications) do
 			local has_item, item = self:_has_item_in_inventory(gear_id)
 
 			if has_item then
-				new_items_by_inventory[#new_items_by_inventory + 1] = item
+				new_items_by_inventory[#new_items_by_inventory + 1] = {
+					item = item,
+					show_notification = notification_data.show_notification
+				}
 			else
 				ItemUtils.unmark_item_notification_id_as_new(gear_id)
 			end
@@ -122,13 +126,16 @@ HudElementCharacterNewsFeed._present_next_new_item = function (self, dt)
 		end
 	end
 
-	local item = table.remove(new_presentation_items, 1)
-	local event_name = "event_add_notification_message"
-	local message_type = "item_granted"
+	local item_data = table.remove(new_presentation_items, 1)
 
-	Managers.event:trigger(event_name, message_type, item)
+	if item_data.show_notification then
+		local event_name = "event_add_notification_message"
+		local message_type = "item_granted"
 
-	local gear_id = item.gear_id
+		Managers.event:trigger(event_name, message_type, item_data.item)
+	end
+
+	local gear_id = item_data.item.gear_id
 
 	ItemUtils.unmark_item_notification_id_as_new(gear_id)
 

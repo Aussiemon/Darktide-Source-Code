@@ -50,15 +50,8 @@ AchievementDefinition.get_rewards = function (self)
 	return self._rewards
 end
 
-AchievementDefinition.add_reward = function (self, reward)
-	local rewards = self._rewards
-
-	if not rewards then
-		rewards = {}
-		self._rewards = rewards
-	end
-
-	rewards[#rewards + 1] = reward
+AchievementDefinition.set_rewards = function (self, rewards)
+	self._rewards = rewards or {}
 end
 
 AchievementDefinition.label = function (self, unlocalized)

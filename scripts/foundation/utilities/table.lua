@@ -1,3 +1,5 @@
+local table = table
+
 table.is_empty = function (t)
 	return next(t) == nil
 end
@@ -475,6 +477,34 @@ table.tostring = function (t, max_depth, skip_private)
 	return table.concat(_table_tostring_array(t, 1, max_depth or 1, skip_private))
 end
 
+local _buffer = {}
+
+table.minidump = function (t, name)
+	local b = _buffer
+	local i = 1
+
+	if name then
+		b[1] = "["
+		b[2] = name
+		b[3] = "] "
+		i = 4
+	end
+
+	for key, value in pairs(t) do
+		b[i] = key
+		b[i + 1] = " = "
+		b[i + 2] = tostring(value)
+		b[i + 3] = "; "
+		i = i + 4
+	end
+
+	local result = table.concat(b, 1, i - 2)
+
+	table.clear(b)
+
+	return result
+end
+
 table.shuffle = function (source, seed)
 	if seed then
 		for ii = #source, 2, -1 do
@@ -716,7 +746,6 @@ end
 
 table.set_readonly = function (table)
 	return setmetatable({}, {
-		__metatable = false,
 		__index = table,
 		__newindex = function (_, key, value)
 			error("Attempt to modify read-only table")
@@ -905,22 +934,23 @@ table.make_strict_nil_exceptions = function (t)
 	return t
 end
 
+table.check_interface = function (data, interface_lookup, optional_error_message_interface)
+	local error_msg = optional_error_message_interface or ""
+
+	for field_name, field in pairs(data) do
+		-- Nothing
+	end
+
+	return interface_lookup
+end
+
 table.make_strict_readonly = function (data, name, optional_interface, optional_error_message_interface, optional_error_message__index, optional_error_message__newindex)
 	local interface = nil
 
 	if optional_interface then
-		interface = {}
+		interface = table.set(optional_interface, {})
 
-		for i = 1, #optional_interface do
-			local field_name = optional_interface[i]
-			interface[field_name] = true
-		end
-
-		local error_msg = optional_error_message_interface or ""
-
-		for field_name, field in pairs(data) do
-			-- Nothing
-		end
+		table.check_interface(data, interface, optional_error_message_interface)
 	end
 
 	local strict_readonly_t = {

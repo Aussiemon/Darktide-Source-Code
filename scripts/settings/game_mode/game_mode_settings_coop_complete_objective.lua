@@ -58,9 +58,8 @@ local settings = {
 		max_damage_percent = 0.75
 	},
 	afk_check = {
-		warning_time_minutes = 5,
-		kick_time_minutes = 10,
-		ignore_disabled_players = true
+		ignore_disabled_players = true,
+		location = "mission"
 	}
 }
 

@@ -59,9 +59,8 @@ local EAC_KICK_REASONS_LOOKUP = {
 }
 local EACError = class("EACError")
 
-EACError.init = function (self, error_reason, optional_info)
-	local optional_error_code = optional_info and optional_info.error_code
-	local options = optional_info and optional_info.options
+EACError.init = function (self, error_reason, optional_error_code)
+	local options = nil
 	local error_level = ErrorManager.ERROR_LEVEL.fatal
 
 	if optional_error_code then
@@ -82,6 +81,8 @@ EACError.init = function (self, error_reason, optional_info)
 	self._optional_error_code = optional_error_code
 	self._options = options
 	self._error_level = error_level
+
+	Log.info("EACError", "error_reason:%s, optional_error_code:%s", error_reason, optional_error_code)
 end
 
 EACError.level = function (self)

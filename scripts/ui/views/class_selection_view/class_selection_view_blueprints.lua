@@ -15,7 +15,12 @@ local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, 
 	material_values.render_target = render_target
 end
 
-local function _remove_live_item_icon_cb_func(widget)
+local function _remove_live_item_icon_cb_func(widget, ui_renderer)
+	if widget.content.visible then
+		UIWidget.set_visible(widget, ui_renderer, false)
+		UIWidget.set_visible(widget, ui_renderer, true)
+	end
+
 	local material_values = widget.style.icon.material_values
 	material_values.use_placeholder_texture = 1
 	material_values.render_target = nil
@@ -269,7 +274,7 @@ local class_selection_view_blueprints = {
 			local content = widget.content
 
 			if content.icon_load_id then
-				_remove_live_item_icon_cb_func(widget)
+				_remove_live_item_icon_cb_func(widget, ui_renderer)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil

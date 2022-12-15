@@ -508,13 +508,4 @@ VendorInteractionViewBase.can_afford = function (self, amount, type)
 	return amount <= (self._current_balance[type] or 0)
 end
 
-VendorInteractionViewBase.equipped_item_in_slot = function (self, slot_name)
-	local player = self:_player()
-	local profile = player:profile()
-	local loadout = profile.loadout
-	local slot_item = loadout[slot_name]
-
-	return slot_item
-end
-
 return VendorInteractionViewBase

@@ -3,14 +3,10 @@ local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_mana
 local InputUtils = require("scripts/managers/input/input_utils")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
-local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local ChatSettings = require("scripts/ui/constant_elements/elements/chat/constant_element_chat_settings")
-local ColorUtilities = require("scripts/utilities/ui/colors")
 local Promise = require("scripts/foundation/utilities/promise")
-local XboxLive = require("scripts/foundation/utilities/xbox_live")
 local StringVerification = require("scripts/managers/localization/string_verification")
 local ConstantElementChat = class("ConstantElementChat", "ConstantElementBase")
 local STATE_HIDDEN = "hidden"
@@ -21,7 +17,6 @@ ConstantElementChat.init = function (self, parent, draw_layer, start_scale, defi
 	ConstantElementChat.super.init(self, parent, draw_layer, start_scale, Definitions)
 	Managers.event:register(self, "chat_manager_connection_state_change", "cb_chat_manager_connection_state_change")
 	Managers.event:register(self, "chat_manager_login_state_change", "cb_chat_manager_login_state_change")
-	Managers.event:register(self, "chat_manager_added_channel", "cb_chat_manager_added_channel")
 	Managers.event:register(self, "chat_manager_removed_channel", "cb_chat_manager_removed_channel")
 	Managers.event:register(self, "chat_manager_updated_channel_state", "cb_chat_manager_updated_channel_state")
 	Managers.event:register(self, "chat_manager_message_recieved", "cb_chat_manager_message_recieved")
@@ -29,6 +24,7 @@ ConstantElementChat.init = function (self, parent, draw_layer, start_scale, defi
 	Managers.event:register(self, "chat_manager_participant_update", "cb_chat_manager_participant_update")
 	Managers.event:register(self, "chat_manager_participant_removed", "cb_chat_manager_participant_removed")
 
+	self._active_state = STATE_HIDDEN
 	self._message_widget_blueprints = Definitions.message_widget_blueprints
 	self._messages = {}
 	self._message_widgets = {}
@@ -40,15 +36,13 @@ ConstantElementChat.init = function (self, parent, draw_layer, start_scale, defi
 	self._message_presentation_format = ChatSettings.message_presentation_format .. "{#reset()}"
 	self._total_chat_height = 0
 	self._removed_height_since_last_frame = 0
-	self._channels = {}
-	self._connected_channels = {}
-	self._num_connected_channels = 0
+	self._selected_channel_handle = nil
 	self._is_cursor_pushed = false
 	self._is_always_visible = ChatSettings.is_always_visible
-	self._input_caret = ""
 	self._alpha = 0
 	self._time_since_last_update = ChatSettings.inactivity_timeout
 	self._input_field_widget = nil
+	self._reported_left_channel_handles = {}
 
 	self:_setup_input()
 
@@ -62,7 +56,6 @@ ConstantElementChat.destroy = function (self)
 	self:_enable_mouse_cursor(false)
 	Managers.event:unregister(self, "chat_manager_connection_state_change")
 	Managers.event:unregister(self, "chat_manager_login_state_change")
-	Managers.event:unregister(self, "chat_manager_added_channel")
 	Managers.event:unregister(self, "chat_manager_removed_channel")
 	Managers.event:unregister(self, "chat_manager_updated_channel_state")
 	Managers.event:unregister(self, "chat_manager_message_recieved")
@@ -85,6 +78,16 @@ ConstantElementChat.update = function (self, dt, t, ui_renderer, render_settings
 
 	local input_widget = self._input_field_widget
 	local is_input_field_active = input_widget.content.is_writing
+
+	if self._refresh_to_channel_text then
+		input_widget.content.force_caret_update = true
+
+		self:_update_input_field(ui_renderer, input_widget)
+		self:_setup_input_labels()
+
+		self._refresh_to_channel_text = nil
+	end
+
 	local target_state, target_alpha, target_background_alpha_full = nil
 	local time_since_last_update = is_input_field_active and 0 or self._time_since_last_update
 
@@ -133,7 +136,10 @@ end
 ConstantElementChat.set_visible = function (self, visible, optional_visibility_parameters)
 	ConstantElementChat.super.set_visible(self, visible, optional_visibility_parameters)
 	self:_cancel_animations_if_necessary(true)
-	self:_enable_mouse_cursor(false)
+
+	if not visible then
+		self:_enable_mouse_cursor(false)
+	end
 
 	local need_to_update_scenegraph = self:_apply_visibility_parameters(optional_visibility_parameters)
 	local active_state = self._active_state
@@ -165,34 +171,16 @@ ConstantElementChat.set_visible = function (self, visible, optional_visibility_p
 	self._update_scenegraph = self._update_scenegraph or need_to_update_scenegraph
 end
 
-ConstantElementChat.should_update = function (self)
-	return self._num_connected_channels > 0
-end
-
 ConstantElementChat.should_draw = function (self)
-	return (self._is_visible or self._alpha > 0) and self:should_update()
+	return self._is_visible and self._alpha > 0
 end
 
 ConstantElementChat.cb_chat_manager_login_state_change = function (self, login_state)
-	if login_state == ChatManagerConstants.LoginState.LOGGED_IN then
-		-- Nothing
-	elseif login_state == ChatManagerConstants.LoginState.LOGGED_OUT then
-		-- Nothing
-	end
-end
-
-ConstantElementChat.cb_chat_manager_added_channel = function (self, channel_handle, channel)
-	self._channels[channel_handle] = channel
+	return
 end
 
 ConstantElementChat.cb_chat_manager_removed_channel = function (self, channel_handle)
-	local channel = self._channels[channel_handle]
-
-	if self._connected_channels[channel.tag] then
-		self:_on_disconnect_from_channel(channel_handle)
-	end
-
-	self._channels[channel_handle] = nil
+	self._reported_left_channel_handles[channel_handle] = nil
 end
 
 ConstantElementChat.cb_chat_manager_updated_channel_state = function (self, channel_handle, state)
@@ -205,12 +193,16 @@ end
 
 ConstantElementChat.cb_chat_manager_message_recieved = function (self, channel_handle, participant, message)
 	StringVerification.verify(message.message_body):next(function (message_text)
-		local channel = self._channels[channel_handle]
-		local channel_tag = channel.tag or "placeholder"
+		local channel = Managers.chat:sessions()[channel_handle]
+
+		if not channel or channel.session_text_state ~= ChatManagerConstants.ChannelConnectionState.CONNECTED and channel.session_media_state ~= ChatManagerConstants.ChannelConnectionState.CONNECTED then
+			return
+		end
+
 		local sender = nil
 
 		if message.is_current_user then
-			local channel_name = self:_channel_name(channel_tag)
+			local channel_name = self:_channel_name(channel.tag, false, channel.channel_name)
 			sender = Managers.localization:localize("loc_chat_own_player", true, {
 				channel_name = channel_name
 			})
@@ -218,7 +210,7 @@ ConstantElementChat.cb_chat_manager_message_recieved = function (self, channel_h
 			sender = participant.displayname
 		end
 
-		self:_add_message(message_text, sender, channel_tag)
+		self:_add_message(message_text, sender, channel.tag)
 	end):catch(function (error)
 		Log.warning("ConstantElementChat", "Could not verify string, error: %s, string: %s", tostring(error), tostring(message.message_body))
 	end)
@@ -226,15 +218,31 @@ end
 
 ConstantElementChat.cb_chat_manager_participant_added = function (self, channel_handle, participant)
 	if not participant.is_current_user and not participant.is_text_muted_for_me then
-		local channel = self._channels[channel_handle]
-		local channel_tag = channel.tag
+		local channel = Managers.chat:sessions()[channel_handle]
 
-		if channel_tag and channel_tag ~= ChatManagerConstants.ChannelTag.HUB and self._connected_channels[channel_tag] then
-			local display_name = participant.displayname
-			local channel_name = self:_channel_name(channel_tag, true)
+		if not channel or channel.session_text_state ~= ChatManagerConstants.ChannelConnectionState.CONNECTED and channel.session_media_state ~= ChatManagerConstants.ChannelConnectionState.CONNECTED then
+			return
+		end
+
+		local show_notification = true
+
+		if channel.tag == ChatManagerConstants.ChannelTag.HUB then
+			show_notification = false
+		else
+			for _, other_channel in pairs(Managers.chat:sessions()) do
+				if channel.session_handle ~= other_channel.session_handle and (channel.tag == ChatManagerConstants.ChannelTag.MISSION or channel.tag == ChatManagerConstants.ChannelTag.PARTY) and (other_channel.tag == ChatManagerConstants.ChannelTag.MISSION or other_channel.tag == ChatManagerConstants.ChannelTag.PARTY) and other_channel.participants[participant.participant_uri] ~= nil then
+					show_notification = false
+
+					break
+				end
+			end
+		end
+
+		if show_notification and participant.displayname then
+			local channel_name = self:_channel_name(channel.tag, true, channel.channel_name)
 			local message = Managers.localization:localize("loc_chat_user_joined_channel", true, {
 				channel_name = channel_name,
-				display_name = display_name
+				display_name = participant.displayname
 			})
 
 			self:_add_notification(message)
@@ -248,21 +256,34 @@ end
 
 ConstantElementChat.cb_chat_manager_participant_removed = function (self, channel_handle, participant_uri, participant)
 	if not participant.is_current_user and not participant.is_text_muted_for_me then
-		local channel = self._channels[channel_handle]
-		local channel_tag = channel.tag
+		local channel = Managers.chat:sessions()[channel_handle]
 
-		if channel_tag and channel_tag ~= ChatManagerConstants.ChannelTag.HUB and self._connected_channels[channel_tag] then
-			local channel_name = self:_channel_name(channel_tag, true)
-			local display_name = participant.displayname
+		if not channel or channel.session_text_state ~= ChatManagerConstants.ChannelConnectionState.CONNECTED and channel.session_media_state ~= ChatManagerConstants.ChannelConnectionState.CONNECTED then
+			return
+		end
 
-			if display_name then
-				local message = Managers.localization:localize("loc_chat_user_left_channel", true, {
-					channel_name = channel_name,
-					display_name = display_name
-				})
+		local show_notification = true
 
-				self:_add_notification(message)
+		if channel.tag == ChatManagerConstants.ChannelTag.HUB then
+			show_notification = false
+		else
+			for _, other_channel in pairs(Managers.chat:sessions()) do
+				if channel.session_handle ~= other_channel.session_handle and (channel.tag == ChatManagerConstants.ChannelTag.MISSION and other_channel.tag == ChatManagerConstants.ChannelTag.MISSION or other_channel.tag == ChatManagerConstants.ChannelTag.PARTY) and other_channel.participants[participant.participant_uri] ~= nil then
+					show_notification = false
+
+					break
+				end
 			end
+		end
+
+		if show_notification and participant.displayname then
+			local channel_name = self:_channel_name(channel.tag, true, channel.channel_name)
+			local message = Managers.localization:localize("loc_chat_user_left_channel", true, {
+				channel_name = channel_name,
+				display_name = participant.displayname
+			})
+
+			self:_add_notification(message)
 		end
 	end
 end
@@ -322,7 +343,13 @@ ConstantElementChat._setup_input = function (self)
 end
 
 ConstantElementChat._setup_input_labels = function (self)
-	if self._num_connected_channels > 1 then
+	local num_sessions = 0
+
+	for _, _ in pairs(Managers.chat:sessions()) do
+		num_sessions = num_sessions + 1
+	end
+
+	if num_sessions > 1 then
 		local change_channel_input = self:_get_localized_input_text("cycle_chat_channel")
 		local active_placeholder_text = self:_localize("loc_chat_active_placeholder_text", true, {
 			input = change_channel_input
@@ -354,38 +381,38 @@ ConstantElementChat._handle_input = function (self, input_service, ui_renderer)
 
 	if is_input_field_active then
 		self:_handle_active_chat_input(input_service, ui_renderer)
-	elseif input_service:get("show_chat") and self._num_connected_channels > 0 then
+	elseif input_service:get("show_chat") then
 		input_widget.content.input_text = ""
 		input_widget.content.caret_position = 1
 		input_widget.content.is_writing = true
-		self._selected_channel = self:_next_connected_channel()
+		input_widget.content.force_caret_update = true
+
+		if not self._selected_channel_handle then
+			self._selected_channel_handle = self:_next_connected_channel_handle()
+		end
 
 		self:_cancel_animations_if_necessary()
 		self:_enable_mouse_cursor(true)
-
-		local selected_channel = self._selected_channel
-
-		self:_update_input_field_selected_channel(ui_renderer, input_widget, selected_channel)
+		self:_update_input_field(ui_renderer, input_widget)
+		self:_setup_input_labels()
 	end
 end
 
 ConstantElementChat._handle_active_chat_input = function (self, input_service, ui_renderer)
 	local input_widget = self._input_field_widget
 	local input_text = input_widget.content.input_text
-	local selected_channel = self._selected_channel
 	local is_input_field_active = true
 
 	if input_service:get("cycle_chat_channel") then
-		selected_channel = self:_next_connected_channel(selected_channel and selected_channel.priority_index)
-		self._selected_channel = selected_channel
+		self._selected_channel_handle = self:_next_connected_channel_handle()
+		input_widget.content.force_caret_update = true
 
-		self:_update_input_field_selected_channel(ui_renderer, input_widget, selected_channel)
+		self:_update_input_field(ui_renderer, input_widget)
 	elseif input_service:get("send_chat_message") then
-		if selected_channel and #input_text > 0 then
+		if self._selected_channel_handle and #input_text > 0 then
 			input_text = self:_scrub(input_text)
-			local channel_handle = selected_channel.handle
 
-			Managers.chat:send_channel_message(channel_handle, input_text)
+			Managers.chat:send_channel_message(self._selected_channel_handle, input_text)
 		end
 
 		is_input_field_active = false
@@ -402,79 +429,100 @@ ConstantElementChat._handle_active_chat_input = function (self, input_service, u
 	end
 
 	if not is_input_field_active then
-		self._input_caret_position = nil
 		input_widget.content.input_text = ""
 		input_widget.content.is_writing = false
-		self._selected_channel = nil
 
 		self:_enable_mouse_cursor(false)
 	end
 end
 
-ConstantElementChat._update_caret_position = function (self, ui_renderer, input_widget, caret_position, is_caret_visible)
-	local input_widget_style = input_widget.style
-	local input_text_style = input_widget_style.text
-	local max_text_width = input_text_style.size[1]
-	local font_type = input_text_style.font_type
-	local font_size = input_text_style.font_size
-	local input_text = input_widget.content._input_text
-	local display_text, caret_offset, first_pos = self:_crop_text_width(ui_renderer, input_text, font_type, font_size, max_text_width, self._input_text_first_visible_pos, caret_position)
-	local input_widget_content = input_widget.content
-	input_widget_content.text = display_text
-	local input_caret_style = input_widget_style.input_caret
-	input_caret_style.offset[1] = input_text_style.offset[1] + caret_offset
+ConstantElementChat._next_connected_channel_handle = function (self, current_priority_index)
+	local channels = {}
 
-	if is_caret_visible ~= nil then
-		input_widget_content.input_caret.visible = is_caret_visible
-	end
-
-	self._input_caret_position = caret_position
-	self._input_text_first_visible_pos = first_pos
-end
-
-ConstantElementChat._next_connected_channel = function (self, current_priority_index)
-	local channel_priorities = ChatSettings.channel_priority
-	current_priority_index = current_priority_index or #channel_priorities
-	local connected_channels = self._connected_channels
-	local current_tag, channel_handle = nil
-	local first_index = current_priority_index
-
-	repeat
-		current_priority_index = math.index_wrapper(current_priority_index + 1, #channel_priorities)
-		current_tag = channel_priorities[current_priority_index]
-		channel_handle = connected_channels[current_tag]
-
-		if current_tag == ChatManagerConstants.ChannelTag.PARTY and connected_channels[ChatManagerConstants.ChannelTag.MISSION] then
-			channel_handle = nil
+	for channel_handle, channel in pairs(Managers.chat:sessions()) do
+		if channel.session_text_state == ChatManagerConstants.ChannelConnectionState.CONNECTED or channel.session_media_state == ChatManagerConstants.ChannelConnectionState.CONNECTED then
+			table.insert(channels, channel)
 		end
-	until channel_handle or current_priority_index == first_index
-
-	if not channel_handle then
-		return
 	end
 
-	local next_connected_channel = {
-		tag = current_tag,
-		priority_index = current_priority_index,
-		handle = channel_handle
-	}
+	table.sort(channels, function (a, b)
+		local priority_a = ChatSettings.channel_priority[a.tag] or 0
+		local priority_b = ChatSettings.channel_priority[b.tag] or 0
 
-	return next_connected_channel
+		if priority_a == priority_b then
+			local channel_name_a = self:_channel_name(a.tag, false, a.channel_name)
+			local channel_name_b = self:_channel_name(b.tag, false, b.channel_name)
+
+			return channel_name_a < channel_name_b
+		else
+			return priority_a < priority_b
+		end
+	end)
+
+	if #channels == 0 then
+		return nil
+	end
+
+	if not self._selected_channel_handle then
+		return channels[1].session_handle
+	end
+
+	local has_mission_channel = false
+
+	for _, channel in ipairs(channels) do
+		if channel.tag == ChatManagerConstants.ChannelTag.MISSION then
+			has_mission_channel = true
+
+			break
+		end
+	end
+
+	if has_mission_channel then
+		for index = #channels, 1, -1 do
+			if channels[index].tag == ChatManagerConstants.ChannelTag.PARTY then
+				channels[index] = nil
+			end
+		end
+	end
+
+	local current_selected_channel_handle_index = nil
+
+	for i, v in ipairs(channels) do
+		if self._selected_channel_handle == v.session_handle then
+			current_selected_channel_handle_index = i
+
+			break
+		end
+	end
+
+	if not current_selected_channel_handle_index then
+		return channels[1].session_handle
+	end
+
+	return channels[math.index_wrapper(current_selected_channel_handle_index + 1, #channels)].session_handle
 end
 
-ConstantElementChat._update_input_field_selected_channel = function (self, ui_renderer, widget, selected_channel)
-	local channel_tag = selected_channel.tag
-	local channel_name = self:_channel_name(channel_tag)
-	local selected_channel_text = Managers.localization:localize("loc_chat_to_channel", true, {
-		channel_name = channel_name
-	})
-	widget.content.to_channel = selected_channel_text
+ConstantElementChat._update_input_field = function (self, ui_renderer, widget)
+	local to_channel_text = ""
 	local style = widget.style
 	local to_channel_style = style.to_channel
-	to_channel_style.text_color = self:_channel_color(channel_tag)
+
+	if self._selected_channel_handle then
+		local channel = Managers.chat:sessions()[self._selected_channel_handle]
+
+		if channel and (channel.session_text_state == ChatManagerConstants.ChannelConnectionState.CONNECTED or channel.session_media_state == ChatManagerConstants.ChannelConnectionState.CONNECTED) then
+			local channel_name = self:_channel_name(channel.tag, false, channel.channel_name)
+			to_channel_text = Managers.localization:localize("loc_chat_to_channel", true, {
+				channel_name = channel_name
+			})
+			to_channel_style.text_color = self:_channel_color(channel.tag)
+		end
+	end
+
+	widget.content.to_channel = to_channel_text
 	local field_margin_left = ChatSettings.input_field_margins[1]
 	local field_margin_right = ChatSettings.input_field_margins[4]
-	local offset = self:_text_size(ui_renderer, selected_channel_text, to_channel_style)
+	local offset = self:_text_size(ui_renderer, to_channel_text, to_channel_style)
 	offset = offset + to_channel_style.offset[1] + field_margin_left
 	local text_style = style.display_text
 	text_style.offset[1] = offset
@@ -592,9 +640,7 @@ ConstantElementChat._add_notification = function (self, message, channel_tag)
 end
 
 ConstantElementChat._add_message = function (self, message, sender, channel_tag)
-	local scrubbed_sender = self:_scrub(sender) or ""
-	local scrubbed_message = self:_scrub(message) or ""
-	local widget_name = scrubbed_sender .. "-" .. scrubbed_message
+	local widget_name = sender .. "-" .. message
 	local widget_definition = self._message_widget_blueprints.chat_message
 	local new_message_widget = UIWidget.init(widget_name, widget_definition)
 	local channel_color = self:_channel_color(channel_tag)
@@ -603,8 +649,8 @@ ConstantElementChat._add_message = function (self, message, sender, channel_tag)
 		proper_channel_color = channel_color,
 		channel_color = slug_formatted_color,
 		channel_tag = channel_tag,
-		author_name = scrubbed_sender,
-		message_text = scrubbed_message
+		author_name = sender,
+		message_text = message
 	}
 	local message_format = self:_format_chat_message(message_parameters)
 	local widget_content = new_message_widget.content
@@ -620,10 +666,6 @@ ConstantElementChat._add_message = function (self, message, sender, channel_tag)
 end
 
 ConstantElementChat._scrub = function (self, text)
-	if not ChatSettings.scrub_formatting_directives_from_message then
-		return text
-	end
-
 	local scrubbed_text = nil
 
 	while text ~= scrubbed_text do
@@ -713,67 +755,110 @@ ConstantElementChat._enable_mouse_cursor = function (self, is_mouse_cursor_enabl
 end
 
 ConstantElementChat._on_connect_to_channel = function (self, channel_handle)
-	local channel = self._channels[channel_handle]
-	local channel_tag = channel.tag
-	local connected_channels = self._connected_channels
+	local channel = Managers.chat:sessions()[channel_handle]
 
-	if not connected_channels[channel_tag] then
-		connected_channels[channel_tag] = channel_handle
-		self._num_connected_channels = self._num_connected_channels + 1
-		local channel_tags = ChatManagerConstants.ChannelTag
-		local is_redunant = channel_tag == channel_tags.PARTY and connected_channels[channel_tags.MISSION] or channel_tag == channel_tags.MISSION and connected_channels[channel_tags.PARTY]
-
-		if not is_redunant then
-			local channel_name = self:_channel_name(channel_tag, true)
-			local add_channel_message = Managers.localization:localize("loc_chat_joined_channel", true, {
-				channel_name = channel_name
-			})
-
-			self:_add_notification(add_channel_message)
-		end
-
-		self:_setup_input_labels()
+	if not channel then
+		return
 	end
-end
 
-ConstantElementChat._on_disconnect_from_channel = function (self, channel_handle)
-	local connected_channels = self._connected_channels
+	local show_notification = true
 
-	for channel_tag, connected_channel_handle in pairs(connected_channels) do
-		if connected_channel_handle == channel_handle then
-			connected_channels[channel_tag] = nil
-			self._num_connected_channels = self._num_connected_channels - 1
-			local channel_tags = ChatManagerConstants.ChannelTag
-			local is_redunant = channel_tag == channel_tags.PARTY and connected_channels[channel_tags.MISSION] or channel_tag == channel_tags.MISSION and connected_channels[channel_tags.PARTY]
-			local channel_name = self:_channel_name(channel_tag, true)
-			local remove_channel_message = Managers.localization:localize("loc_chat_left_channel", true, {
-				channel_name = channel_name
-			})
+	if channel.tag == ChatManagerConstants.ChannelTag.MISSION or channel.tag == ChatManagerConstants.ChannelTag.PARTY then
+		for _, other_channel in pairs(Managers.chat:sessions()) do
+			if channel_handle ~= other_channel.session_handle and channel.tag ~= other_channel.tag and (other_channel.tag == ChatManagerConstants.ChannelTag.MISSION or other_channel.tag == ChatManagerConstants.ChannelTag.PARTY) then
+				show_notification = false
 
-			self:_add_notification(remove_channel_message)
+				if self._selected_channel_handle then
+					local selected_channel_tag = Managers.chat:sessions()[self._selected_channel_handle].tag
+
+					if selected_channel_tag == ChatManagerConstants.ChannelTag.PARTY and channel.tag == ChatManagerConstants.ChannelTag.MISSION then
+						self._selected_channel_handle = other_channel.channel_handle
+					end
+				end
+			end
 		end
+	end
+
+	if show_notification then
+		local channel_name = self:_channel_name(channel.tag, true, channel.channel_name)
+		local add_channel_message = Managers.localization:localize("loc_chat_joined_channel", true, {
+			channel_name = channel_name
+		})
+
+		self:_add_notification(add_channel_message)
+	end
+
+	if not self._selected_channel_handle then
+		self._selected_channel_handle = channel_handle
+		self._refresh_to_channel_text = true
 	end
 
 	self:_setup_input_labels()
 end
 
-ConstantElementChat._channel_name = function (self, channel_tag, colorize)
-	local channel_metadata = ChatSettings.channel_metadata[channel_tag]
-	local channel_loc_key = channel_metadata and channel_metadata.name
+ConstantElementChat._on_disconnect_from_channel = function (self, channel_handle)
+	local channel = Managers.chat:sessions()[channel_handle]
 
-	if not channel_loc_key then
+	if not channel then
 		return
 	end
 
-	local channel_name = Managers.localization:localize(channel_loc_key)
+	if not self._reported_left_channel_handles[channel_handle] then
+		local show_notification = true
+
+		if channel.tag == ChatManagerConstants.ChannelTag.MISSION or channel.tag == ChatManagerConstants.ChannelTag.PARTY then
+			for _, other_channel in pairs(Managers.chat:sessions()) do
+				if channel_handle ~= other_channel.session_handle and channel.tag ~= other_channel.tag and (other_channel.tag == ChatManagerConstants.ChannelTag.MISSION or other_channel.tag == ChatManagerConstants.ChannelTag.PARTY) then
+					show_notification = false
+
+					if self._selected_channel_handle and self._selected_channel_handle == channel_handle then
+						local selected_channel_tag = Managers.chat:sessions()[self._selected_channel_handle].tag
+
+						if selected_channel_tag == ChatManagerConstants.ChannelTag.MISSION and other_channel.tag == ChatManagerConstants.ChannelTag.PARTY then
+							self._selected_channel_handle = other_channel.channel_handle
+						end
+					end
+				end
+			end
+		end
+
+		if show_notification then
+			local channel_name = self:_channel_name(channel.tag, true, channel.channel_name)
+			local remove_channel_message = Managers.localization:localize("loc_chat_left_channel", true, {
+				channel_name = channel_name
+			})
+
+			self:_add_notification(remove_channel_message)
+
+			self._reported_left_channel_handles[channel_handle] = true
+		end
+	end
+
+	if self._selected_channel_handle == channel_handle then
+		self._selected_channel_handle = nil
+	end
+
+	self._refresh_to_channel_text = true
+
+	self:_setup_input_labels()
+end
+
+ConstantElementChat._channel_name = function (self, channel_tag, colorize, channel_name)
+	local name = channel_name
+	local channel_metadata = ChatSettings.channel_metadata[channel_tag]
+
+	if not name then
+		local channel_loc_key = channel_metadata and channel_metadata.name
+		name = Managers.localization:localize(channel_loc_key)
+	end
 
 	if colorize then
 		local color = channel_metadata.color
 		local formatted_color = color[2] .. "," .. color[3] .. "," .. color[4] .. "," .. color[1]
-		channel_name = "{# color(" .. formatted_color .. ")}" .. channel_name .. "{#reset()}"
+		name = "{# color(" .. formatted_color .. ")}" .. name .. "{#reset()}"
 	end
 
-	return channel_name
+	return name
 end
 
 ConstantElementChat._channel_color = function (self, channel_tag)

@@ -20,9 +20,11 @@ local mission_objective_templates = {
 				mission_objective_type = "luggable"
 			},
 			objective_dm_propaganda_stop_fan = {
+				use_music_event = "collect_event",
 				description = "loc_objective_dm_propaganda_stop_fan_desc",
-				mission_objective_type = "goal",
-				header = "loc_objective_dm_propaganda_stop_fan_header"
+				header = "loc_objective_dm_propaganda_stop_fan_header",
+				event_type = "mid_event",
+				mission_objective_type = "goal"
 			},
 			objective_dm_propaganda_enter_trenches = {
 				description = "loc_objective_dm_propaganda_enter_trenches_desc",

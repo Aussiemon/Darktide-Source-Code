@@ -1,4 +1,5 @@
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
+local NarrativeStories = require("scripts/settings/narrative/narrative_stories")
 local Promise = require("scripts/foundation/utilities/promise")
 local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
@@ -36,7 +37,7 @@ local main_menu_list = {
 		text = "loc_social_view_display_name",
 		required_dev_parameter = "ui_show_social_menu",
 		type = "large_button",
-		icon = "content/ui/materials/icons/system/escape/settings",
+		icon = "content/ui/materials/icons/system/escape/social",
 		trigger_function = function (parent, widget, entry)
 			Managers.ui:open_view("social_menu_view")
 		end
@@ -120,10 +121,10 @@ local main_menu_list = {
 }
 
 if PLATFORM == "win32" then
-	main_menu_list[#main_menu_list] = {
+	main_menu_list[#main_menu_list + 1] = {
 		type = "spacing_vertical"
 	}
-	main_menu_list[#main_menu_list] = {
+	main_menu_list[#main_menu_list + 1] = {
 		text = "loc_quit_game_display_name",
 		icon = "content/ui/materials/icons/system/escape/quit",
 		type = "button",
@@ -308,6 +309,61 @@ local default_list = {
 		end
 	},
 	{
+		text = "loc_menu_skip_prologue",
+		type = "button",
+		icon = "content/ui/materials/icons/system/escape/leave_mission",
+		validation_function = function ()
+			local data_service_manager = Managers.data_service
+
+			if not data_service_manager then
+				return false
+			end
+
+			if not data_service_manager.account:has_completed_onboarding() then
+				return false
+			end
+
+			local narrative_manager = Managers.narrative
+
+			if not narrative_manager then
+				return false
+			end
+
+			local onboarding_chapters = NarrativeStories.stories.onboarding
+			local last_chapter_name = onboarding_chapters[#onboarding_chapters].name
+
+			if not narrative_manager:is_chapter_complete(Managers.narrative.STORIES.onboarding, last_chapter_name) then
+				return true
+			end
+
+			return false
+		end,
+		trigger_function = function ()
+			local context = {
+				title_text = "loc_menu_skip_prologue",
+				description_text = "loc_popup_description_leave_mission",
+				options = {
+					{
+						text = "loc_confirm",
+						close_on_pressed = true,
+						callback = callback(function ()
+							Managers.narrative:skip_story(Managers.narrative.STORIES.onboarding)
+							Managers.state.game_mode:complete_game_mode()
+						end)
+					},
+					{
+						text = "loc_popup_button_leave_continue_mission",
+						template_type = "terminal_button_small",
+						close_on_pressed = true,
+						hotkey = "back"
+					}
+				}
+			}
+
+			Managers.event:trigger("event_show_ui_popup", context)
+		end
+	},
+	{
 		text = "loc_tg_exit_training_grounds",
 		type = "button",
 		icon = "content/ui/materials/icons/system/escape/leave_training",
@@ -337,7 +393,7 @@ local default_list = {
 		trigger_function = function ()
 			local context = {
 				title_text = "loc_tg_exit_training_grounds",
-				description_text = "loc_popup_description_leave_mission",
+				description_text = "loc_popup_description_leave_psykhanium",
 				options = {
 					{
 						text = "loc_training_grounds_choice_quit",

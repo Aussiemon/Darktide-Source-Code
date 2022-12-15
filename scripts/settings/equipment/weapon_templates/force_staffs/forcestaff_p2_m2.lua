@@ -751,6 +751,7 @@ weapon_template.actions = {
 		damage_window_end = 0.7,
 		uninterruptible = true,
 		allow_conditional_chain = true,
+		power_level = 650,
 		total_time = 1.1,
 		action_movement_curve = {
 			{
@@ -1011,7 +1012,7 @@ weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"ranged",
 	"force_staff",
-	"p1"
+	"p2"
 }
 weapon_template.dodge_template = "killshot"
 weapon_template.sprint_template = "support"

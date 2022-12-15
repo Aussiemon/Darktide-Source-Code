@@ -1303,6 +1303,9 @@ weapon_template.base_stats = {
 			},
 			action_special_jab = {
 				damage_trait_templates.default_melee_dps_stat
+			},
+			action_left_heavy_jab_combo = {
+				damage_trait_templates.default_melee_dps_stat
 			}
 		}
 	},
@@ -1328,7 +1331,7 @@ weapon_template.base_stats = {
 			action_left_heavy = {
 				damage_trait_templates.default_armor_pierce_stat,
 				display_data = {
-					prefix = "loc_weapon_action_title_light",
+					prefix = "loc_weapon_action_title_heavy",
 					display_stats = {
 						targets = {
 							{
@@ -1356,6 +1359,9 @@ weapon_template.base_stats = {
 				damage_trait_templates.default_armor_pierce_stat
 			},
 			action_special_jab = {
+				damage_trait_templates.default_armor_pierce_stat
+			},
+			action_left_heavy_jab_combo = {
 				damage_trait_templates.default_armor_pierce_stat
 			}
 		}
@@ -1407,6 +1413,9 @@ weapon_template.base_stats = {
 			},
 			action_special_jab = {
 				damage_trait_templates.default_melee_finesse_stat
+			},
+			action_left_heavy_jab_combo = {
+				damage_trait_templates.default_melee_finesse_stat
 			}
 		},
 		weapon_handling = {
@@ -1444,6 +1453,9 @@ weapon_template.base_stats = {
 				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_special_jab = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_left_heavy_jab_combo = {
 				weapon_handling_trait_templates.default_finesse_stat
 			}
 		}
@@ -1494,6 +1506,9 @@ weapon_template.base_stats = {
 				damage_trait_templates.default_first_target_stat
 			},
 			action_special_jab = {
+				damage_trait_templates.default_first_target_stat
+			},
+			action_left_heavy_jab_combo = {
 				damage_trait_templates.default_first_target_stat
 			}
 		}

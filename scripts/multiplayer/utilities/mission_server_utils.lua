@@ -146,7 +146,13 @@ MissionServerUtils.get_mission_result = function (mission_data, game_mode_result
 end
 
 local function _get_reward_modifier(player)
-	local gadget_system = Managers.state.extension:system("gadget_system")
+	local extension_manager = Managers.state.extension
+
+	if not extension_manager then
+		return nil
+	end
+
+	local gadget_system = extension_manager:system("gadget_system")
 	local stat_buffs = gadget_system:stat_buffs(player)
 	local reward_modifier = {
 		mission_reward_xp_modifier = stat_buffs.mission_reward_xp_modifier,
