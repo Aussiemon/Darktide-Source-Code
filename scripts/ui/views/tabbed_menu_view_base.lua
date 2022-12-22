@@ -326,7 +326,7 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 		if self._active_view == view then
 			local view_instance = ui_manager:view_instance(self._active_view)
 
-			if view_instance:entered() then
+			if view_instance and view_instance:entered() then
 				view_instance[view_function](view_instance)
 
 				return true

@@ -204,12 +204,13 @@ WarpCharge.update = function (dt, t, warp_charge_component, player, unit, first_
 	_set_current_percentage(warp_charge_component, new_charge, buff_extension)
 end
 
-WarpCharge.can_vent = function (warp_charge_component)
+WarpCharge.can_vent = function (warp_charge_component, action_settings)
 	local warp_charge_state = warp_charge_component.state
-	local new_state = WarpCharge.check_new_state(warp_charge_component)
 	local warp_charge_current_percentage = warp_charge_component.current_percentage
+	local new_state = WarpCharge.check_new_state(warp_charge_component)
+	local will_explode = action_settings and action_settings.delay_explosion_to_finish and new_state == "exploding"
 
-	return warp_charge_state ~= "exploding" and new_state ~= "exploding" and warp_charge_current_percentage > 0
+	return warp_charge_state ~= "exploding" and warp_charge_current_percentage > 0 and not will_explode
 end
 
 WarpCharge.start_venting = function (t, player, warp_charge_component)

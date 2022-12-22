@@ -2580,6 +2580,10 @@ steps.dodge_loop = {
 			if player_unit and attacked_unit and player_unit == attacked_unit then
 				step_data.player_hit = step_data.player_hit + 1
 			end
+
+			step_data.manipulate_time = false
+
+			step_data.time_manager:set_local_scale("gameplay", 1)
 		elseif event_name == "on_dodge" then
 			step_data.manipulate_time = false
 

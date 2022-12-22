@@ -288,7 +288,18 @@ ActionSpawnProjectile._spawn_projectile_unit = function (self, is_critical_strik
 	local direction, speed, momentum = nil
 	local owner_unit = self._player_unit
 	local origin_item_slot = self._inventory_component.wielded_slot
-	local charge_level = (action_settings.use_charge and self._charge_component.charge_level or 1) * stat_buffs.charge_level_modifier
+	local charge_level = nil
+
+	if action_settings.use_charge then
+		charge_level = self._charge_component.charge_level
+	else
+		charge_level = 1
+	end
+
+	local buff_charge_level_modifier = stat_buffs.charge_level_modifier or 1
+	local min = NetworkConstants.weapon_charge_level.min
+	local max = NetworkConstants.weapon_charge_level.max
+	charge_level = math.clamp(charge_level * buff_charge_level_modifier, min, max)
 	local target_unit, target_position = nil
 	local weapon_item = self._weapon.item
 

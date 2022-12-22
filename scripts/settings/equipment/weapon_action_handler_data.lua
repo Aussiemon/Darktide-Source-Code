@@ -259,7 +259,7 @@ weapon_action_data.action_kind_condition_funcs = {
 		return Overheat.can_vent(condition_func_params.inventory_slot_component)
 	end,
 	vent_warp_charge = function (action_settings, condition_func_params, used_input)
-		return WarpCharge.can_vent(condition_func_params.warp_charge_component)
+		return WarpCharge.can_vent(condition_func_params.warp_charge_component, action_settings)
 	end,
 	throw_grenade = function (action_settings, condition_func_params, used_input)
 		local ability_has_keyword = _ability_has_keyword(action_settings, condition_func_params)

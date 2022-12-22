@@ -429,8 +429,9 @@ PresenceManager._update_platform_presence = function (self)
 	elseif IS_XBS or IS_GDK then
 		Managers.party_immaterium:get_your_standing_invite_code():next(function (party_id_with_invite_code)
 			local num_other_members = (myself:activity_id() == "mission" and myself:num_mission_members() or myself:num_party_members()) - 1
+			local join_restrictions = Managers.party_immaterium and Managers.party_immaterium:is_in_private_session() and XblMultiplayerActivityJoinRestriction.JOIN_RESTRICTION_FOLLOWED
 
-			XboxLiveUtilities.set_activity(party_id_with_invite_code, party_id, num_other_members)
+			XboxLiveUtilities.set_activity(party_id_with_invite_code, party_id, num_other_members, join_restrictions)
 		end)
 	end
 

@@ -194,16 +194,16 @@ XboxLiveUtils.get_activity = function (xuid_string_array)
 	end):catch(_handle_error)
 end
 
-XboxLiveUtils.set_activity = function (connection_string, party_id, num_other_members)
+XboxLiveUtils.set_activity = function (connection_string, party_id, num_other_members, join_restriction)
 	local num_members = num_other_members + 1
 
 	Log.info("XboxLive", "Setting activity... connection_string: %s, party_id %s, num_members %s", connection_string, party_id, num_members)
 	XboxLiveUtils.user_id():next(function (user_id)
 		local group_id = party_id
-		local join_restrictions = XblMultiplayerActivityJoinRestriction.JOIN_RESTRICTION_PUBLIC
+		join_restriction = join_restriction or XblMultiplayerActivityJoinRestriction.JOIN_RESTRICTION_PUBLIC
 		local max_num_members = 4
 		local allow_cross_platform_join = true
-		local async_block, error_code = XboxLiveMPA.set_activity(user_id, connection_string, group_id, join_restrictions, num_members, max_num_members, allow_cross_platform_join)
+		local async_block, error_code = XboxLiveMPA.set_activity(user_id, connection_string, group_id, join_restriction, num_members, max_num_members, allow_cross_platform_join)
 
 		if error_code then
 			return Promise.rejected({
@@ -426,8 +426,6 @@ XboxLiveUtils.get_entitlements = function ()
 			end
 
 			if result ~= nil and error_code == nil then
-				result_by_id = {}
-
 				for _, v in ipairs(result) do
 					result_by_id[v.storeId] = v
 				end
@@ -480,8 +478,6 @@ XboxLiveUtils.get_associated_products = function ()
 			end
 
 			if result ~= nil and error_code == nil then
-				result_by_id = {}
-
 				for _, v in ipairs(result) do
 					result_by_id[v.storeId] = v
 				end

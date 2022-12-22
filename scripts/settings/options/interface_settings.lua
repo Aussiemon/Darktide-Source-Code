@@ -351,16 +351,6 @@ local settings_definitions = {
 	},
 	{
 		save_location = "interface_settings",
-		display_name = "loc_interface_setting_player_outlines_enabled",
-		id = "player_outlines",
-		default_value = false,
-		widget_type = "boolean",
-		on_value_changed = function (value)
-			return
-		end
-	},
-	{
-		save_location = "interface_settings",
 		display_name = "loc_interface_setting_profanity_filter_enabled",
 		id = "profanity_filter_enabled",
 		default_value = true,

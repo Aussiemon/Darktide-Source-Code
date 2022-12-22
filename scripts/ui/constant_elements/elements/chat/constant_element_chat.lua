@@ -344,12 +344,28 @@ end
 
 ConstantElementChat._setup_input_labels = function (self)
 	local num_sessions = 0
+	local in_mission = false
+	local in_party = false
 
-	for _, _ in pairs(Managers.chat:sessions()) do
+	for channel_handle, channel in pairs(Managers.chat:sessions()) do
 		num_sessions = num_sessions + 1
+
+		if channel.tag == ChatManagerConstants.ChannelTag.MISSION then
+			in_mission = true
+		end
+
+		if channel.tag == ChatManagerConstants.ChannelTag.PARTY then
+			in_party = true
+		end
 	end
 
-	if num_sessions > 1 then
+	local present_tab_to_cycle = num_sessions > 1
+
+	if num_sessions == 2 and in_mission and in_party then
+		present_tab_to_cycle = false
+	end
+
+	if present_tab_to_cycle then
 		local change_channel_input = self:_get_localized_input_text("cycle_chat_channel")
 		local active_placeholder_text = self:_localize("loc_chat_active_placeholder_text", true, {
 			input = change_channel_input

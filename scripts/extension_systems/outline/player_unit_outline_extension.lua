@@ -32,7 +32,7 @@ PlayerUnitOutlineExtension.extensions_ready = function (self, world, unit)
 	self._smart_tag_system = smart_tag_system
 	local save_data = Managers.save:account_data()
 	local interface_settings = save_data.interface_settings
-	local player_outlines_enabled = interface_settings.player_outlines
+	local player_outlines_enabled = false
 
 	if player_outlines_enabled and not self._is_local_unit then
 		self._outline_system:add_outline(unit, "default_outlines_obscured")
@@ -82,7 +82,7 @@ PlayerUnitOutlineExtension.update = function (self, unit, dt, t)
 	self._timer = 0
 	local save_data = Managers.save:account_data()
 	local interface_settings = save_data.interface_settings
-	local player_outlines_enabled = interface_settings.player_outlines
+	local player_outlines_enabled = false
 
 	if not self._is_local_unit and player_outlines_enabled ~= self._player_outlines_enabled then
 		if not player_outlines_enabled then

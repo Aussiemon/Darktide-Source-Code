@@ -136,6 +136,7 @@ local game_mode_state_id = Network.type_info("game_mode_state_id")
 NetworkConstants.max_game_mode_state_id = game_mode_state_id.max
 local projectile_locomotion_snapshot_id = Network.type_info("projectile_locomotion_snapshot_id")
 NetworkConstants.max_projectile_locomotion_snapshot_id = projectile_locomotion_snapshot_id.max
+NetworkConstants.weapon_charge_level = Network.type_info("weapon_charge_level")
 NetworkConstants.weapon_input_sequence_is_running = Network.type_info("weapon_input_sequence_is_running")
 NetworkConstants.weapon_input_sequence_current_element_index = Network.type_info("weapon_input_sequence_current_element_index")
 NetworkConstants.weapon_input_sequence_element_start_t = Network.type_info("weapon_input_sequence_element_start_t")

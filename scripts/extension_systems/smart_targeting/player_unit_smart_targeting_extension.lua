@@ -21,7 +21,6 @@ PlayerUnitSmartTargetingExtension.init = function (self, extension_init_context,
 	self._target_unit = nil
 	self._smart_tag_targeting_data = {}
 	self._smart_tag_targeting_time = 0
-	self._smart_tag_targeting_updated_current_frame = false
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	self._unit_data_extension = unit_data_extension
 	self._first_person_component = unit_data_extension:read_component("first_person")
@@ -66,8 +65,6 @@ PlayerUnitSmartTargetingExtension.fixed_update = function (self, unit, dt, t, fr
 
 			self._smart_tag_targeting_time = t + SMART_TAG_TARGETING_DELAY
 		end
-
-		self._smart_tag_targeting_updated_current_frame = update_tag_targets
 	end
 end
 
@@ -372,10 +369,6 @@ PlayerUnitSmartTargetingExtension.smart_tag_targeting_data = function (self)
 end
 
 PlayerUnitSmartTargetingExtension.force_update_smart_tag_targets = function (self)
-	if self._smart_tag_targeting_updated_current_frame then
-		return
-	end
-
 	local ray_origin, forward, right, up = self:_targeting_parameters()
 
 	self:_update_precision_target(self._unit, SmartTargetingTemplates.smart_tag_target, ray_origin, forward, right, up, self._smart_tag_targeting_data)
