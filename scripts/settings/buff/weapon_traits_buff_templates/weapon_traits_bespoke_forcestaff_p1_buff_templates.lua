@@ -16,8 +16,9 @@ templates.weapon_trait_bespoke_forcestaff_p1_followup_shots_ranged_damage.condit
 	[stat_buffs.charge_level_modifier] = 0.05
 }
 templates.weapon_trait_bespoke_forcestaff_p1_warpfire_on_crits = table.clone(BaseWeaponTraitBuffTemplates.warpfire_on_crits)
+templates.weapon_trait_bespoke_forcestaff_p1_warpfire_on_crits.check_proc_func = CheckProcFunctions.all(CheckProcFunctions.any(CheckProcFunctions.on_ranged_hit, CheckProcFunctions.on_explosion_hit), CheckProcFunctions.on_crit)
 templates.weapon_trait_bespoke_forcestaff_p1_warp_charge_critical_strike_chance_bonus = table.merge({
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.critical_strike_chance] = 0.02
 	}
 }, BaseWeaponTraitBuffTemplates.warpcharge_stepped_bonus)
@@ -61,12 +62,12 @@ templates.weapon_trait_bespoke_forcestaff_p1_rend_armor_on_aoe_charge = {
 }
 templates.weapon_trait_bespoke_forcestaff_p1_uninterruptable_while_charging = table.clone(BaseWeaponTraitBuffTemplates.uninterruptable_while_charging)
 templates.weapon_trait_bespoke_forcestaff_p1_uninterruptable_while_charging.uninteruptable_actions = {
-	action_charge_explosion = true
+	action_charge = true
 }
 templates.weapon_trait_bespoke_forcestaff_p1_faster_charge_on_chained_secondary_attacks = table.clone(BaseWeaponTraitBuffTemplates.faster_charge_on_chained_secondary_attacks)
 templates.weapon_trait_bespoke_forcestaff_p1_faster_charge_on_chained_secondary_attacks.charge_actions = {
-	action_trigger_explosion = true,
-	action_charge_explosion = true
+	action_charge = true,
+	action_trigger_explosion = true
 }
 templates.weapon_trait_bespoke_forcestaff_p1_double_shot_on_crit = table.clone(BaseWeaponTraitBuffTemplates.double_shot_on_crit)
 

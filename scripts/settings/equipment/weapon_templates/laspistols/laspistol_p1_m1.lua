@@ -21,6 +21,7 @@ local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local template_types = WeaponTweakTemplateSettings.template_types
 local buff_keywords = BuffSettings.keywords
+local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
@@ -178,13 +179,13 @@ weapon_template.actions = {
 	},
 	action_shoot_hip = {
 		start_input = "shoot_pressed",
-		sprint_requires_press_to_interrupt = true,
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0.2,
 		weapon_handling_template = "immediate_single_shot_pistol",
 		allow_shots_with_less_than_required_ammo = true,
 		ammunition_usage = 2,
 		allowed_during_sprint = true,
+		sprint_requires_press_to_interrupt = true,
 		total_time = 0.5,
 		action_movement_curve = {
 			{
@@ -257,6 +258,10 @@ weapon_template.actions = {
 		},
 		buff_keywords = {
 			buff_keywords.allow_hipfire_during_sprint
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.ranged_attack_speed
 		}
 	},
 	action_shoot_zoomed = {
@@ -336,6 +341,10 @@ weapon_template.actions = {
 				action_name = "action_psyker_push",
 				chain_time = 0.2
 			}
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.ranged_attack_speed
 		}
 	},
 	action_zoom = {
@@ -411,9 +420,9 @@ weapon_template.actions = {
 	},
 	action_reload = {
 		kind = "reload_state",
-		stop_alternate_fire = true,
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
+		stop_alternate_fire = true,
 		abort_sprint = true,
 		crosshair_type = "ironsight",
 		allowed_during_sprint = true,
@@ -473,6 +482,9 @@ weapon_template.actions = {
 			special_action_push = {
 				action_name = "action_psyker_push"
 			}
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.reload_speed
 		}
 	},
 	action_normal_push = {

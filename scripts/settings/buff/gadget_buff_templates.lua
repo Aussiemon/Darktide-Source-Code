@@ -110,7 +110,8 @@ templates.gadget_toughness_regen_delay = {
 	predicted = false,
 	keywords = {},
 	stat_buffs = {
-		[stat_buffs.toughness_regen_delay_multiplier] = 0.7
+		[stat_buffs.toughness_regen_delay_multiplier] = 0.7,
+		[stat_buffs.toughness_regen_rate_modifier] = 1.3
 	},
 	localization_info = {
 		[stat_buffs.toughness_regen_delay_multiplier] = DISPLAY.percentage
@@ -262,10 +263,10 @@ templates.gadget_permanent_damage_resistance = {
 	predicted = false,
 	keywords = {},
 	stat_buffs = {
-		[stat_buffs.permanent_damage_converter_resistance] = 0.2
+		[stat_buffs.corruption_taken_grimoire_multiplier] = 0.8
 	},
 	localization_info = {
-		[stat_buffs.permanent_damage_converter_resistance] = DISPLAY.percentage
+		[stat_buffs.corruption_taken_grimoire_multiplier] = DISPLAY.percentage
 	}
 }
 templates.gadget_revive_speed_increase = {

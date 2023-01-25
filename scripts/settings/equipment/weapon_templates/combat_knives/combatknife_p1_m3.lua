@@ -827,6 +827,10 @@ weapon_template.actions = {
 			},
 			push = {
 				action_name = "action_push"
+			},
+			special_action = {
+				action_name = "action_special_jab",
+				chain_time = 0.25
 			}
 		}
 	},
@@ -1018,7 +1022,8 @@ weapon_template.actions = {
 				chain_time = 0.7
 			},
 			block = {
-				action_name = "action_block"
+				action_name = "action_block",
+				chain_time = 0.32
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)

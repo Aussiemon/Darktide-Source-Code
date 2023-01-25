@@ -13,18 +13,18 @@ templates.weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_
 templates.weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill_effect = table.clone(BaseWeaponTraitBuffTemplates.base_weapon_trait_guaranteed_melee_crit_on_activated_kill)
 templates.weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill_effect.duration = 5
 templates.weapon_trait_bespoke_forcesword_p1_can_block_ranged = {
-	class_name = "buff",
 	predicted = false,
-	keywords = {
+	class_name = "buff",
+	conditional_keywords = {
 		keywords.can_block_ranged
 	},
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.block_cost_ranged_multiplier] = 1
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_forcesword_p1_warp_charge_power_bonus = table.merge({
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.power_level_modifier] = 0.05
 	}
 }, BaseWeaponTraitBuffTemplates.warpcharge_stepped_bonus)
@@ -55,7 +55,7 @@ templates.weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_
 	max_stacks = 5,
 	duration = 5,
 	class_name = "buff",
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.power_level_modifier] = 0.05
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded

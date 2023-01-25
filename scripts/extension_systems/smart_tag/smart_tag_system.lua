@@ -650,6 +650,10 @@ SmartTagSystem.rpc_request_smart_tag_reply = function (self, channel_id, tag_id,
 
 	local replier_unit = Managers.state.unit_spawner:unit(replier_game_object_id)
 
+	if replier_unit == nil then
+		return
+	end
+
 	if tag:tagger_unit() == replier_unit then
 		_warning("Rejected request from %s to reply to tag, tag is owned by replier", Network.peer(channel_id))
 

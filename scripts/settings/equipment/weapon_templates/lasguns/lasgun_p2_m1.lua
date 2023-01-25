@@ -44,7 +44,7 @@ local weapon_template = {
 			input_sequence = {
 				{
 					value = true,
-					input = "action_one_pressed"
+					input = "action_one_hold"
 				}
 			}
 		},
@@ -295,6 +295,7 @@ weapon_template.actions = {
 		charge_template = "lasgun_p2_m1_charge_up",
 		spread_template = "hip_lasgun_killshot_p2_m1",
 		abort_sprint = true,
+		dont_clear_num_shots = true,
 		anim_event = "attack_charge",
 		prevent_sprint = true,
 		total_time = 3.7,
@@ -353,8 +354,8 @@ weapon_template.actions = {
 	action_shoot_hip_charged = {
 		ammunition_usage_min = 3,
 		ammunition_usage_max = 6,
-		sprint_requires_press_to_interrupt = true,
 		kind = "shoot_hit_scan",
+		sprint_requires_press_to_interrupt = true,
 		weapon_handling_template = "immediate_single_shot",
 		sprint_ready_up_time = 0.25,
 		allow_shots_with_less_than_required_ammo = true,
@@ -362,7 +363,8 @@ weapon_template.actions = {
 		ammunition_usage = 3,
 		use_charge = true,
 		abort_sprint = true,
-		total_time = 1.5,
+		dont_clear_num_shots = true,
+		total_time = 0.65,
 		action_movement_curve = {
 			{
 				t = 0.05,
@@ -500,14 +502,15 @@ weapon_template.actions = {
 		hold_combo = true,
 		start_input = "zoom_shoot_pressed",
 		kind = "charge_ammo",
-		anim_end_event = "attack_finished",
 		charge_extra_hold_time = 2.5,
 		keep_charge = true,
 		crosshair_type = "charge_up_ads",
 		allowed_during_sprint = true,
 		recoil_template = "lasgun_p2_m1_ads_killshot",
+		anim_end_event = "attack_finished",
 		charge_template = "lasgun_p2_m1_charge_up",
 		spread_template = "default_lasgun_killshot",
+		dont_clear_num_shots = true,
 		anim_event = "attack_charge",
 		total_time = 3.7,
 		allowed_chain_actions = {
@@ -556,17 +559,18 @@ weapon_template.actions = {
 		reset_charge_action_kinds = RESET_CHARGE_ACTION_KINDS
 	},
 	action_zoom_shoot_charged = {
-		use_charge = true,
 		ammunition_usage_max = 6,
-		weapon_handling_template = "immediate_single_shot",
-		sprint_ready_up_time = 0.5,
-		kind = "shoot_hit_scan",
-		allow_shots_with_less_than_required_ammo = true,
-		crosshair_type = "charge_up_ads",
 		charge_template = "lasgun_p2_m1_charge_up",
-		ammunition_usage = 3,
+		weapon_handling_template = "immediate_single_shot",
+		kind = "shoot_hit_scan",
+		sprint_ready_up_time = 0.5,
+		crosshair_type = "charge_up_ads",
+		allow_shots_with_less_than_required_ammo = true,
 		ammunition_usage_min = 3,
-		total_time = 1.5,
+		ammunition_usage = 3,
+		use_charge = true,
+		dont_clear_num_shots = true,
+		total_time = 0.65,
 		action_movement_curve = {
 			{
 				t = 0.05,
@@ -683,6 +687,10 @@ weapon_template.actions = {
 				chain_time = 0.25,
 				reset_combo = true,
 				action_name = "action_unzoom"
+			},
+			special_action_hold = {
+				action_name = "action_stab_start",
+				chain_time = 0.35
 			}
 		},
 		time_scale_stat_buffs = {
@@ -945,8 +953,9 @@ weapon_template.actions = {
 				action_name = "action_reload"
 			},
 			shoot_pressed = {
-				action_name = "action_shoot_hip_start",
-				chain_time = 0.575
+				chain_time = 0.575,
+				reset_combo = true,
+				action_name = "action_shoot_hip_start"
 			},
 			zoom = {
 				action_name = "action_zoom",

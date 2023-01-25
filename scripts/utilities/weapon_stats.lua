@@ -556,8 +556,9 @@ WeaponStats.calculate_stats = function (self, weapon_template, weapon_tweak_temp
 						local armor_penetrating = false
 						local auto_completed_action = false
 						local target_unit, attacker_breed_or_nil = nil
+						local hit_shield = false
 						local dropoff_scalar = DamageProfile.dropoff_scalar(distance, damage_profile, target_damage_values)
-						local damage, damage_efficiency = DamageCalculation.calculate(damage_profile, target_settings, target_damage_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action)
+						local damage, damage_efficiency = DamageCalculation.calculate(damage_profile, target_settings, target_damage_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action)
 						damage = damage * num_damage_itterations
 
 						if damage > 0 then
@@ -1137,6 +1138,27 @@ function _get_weapon_stats(weapon_template, lerp_values, damage_profile_lerp_val
 	return stats
 end
 
+local function _calculate_power_stat(action, action_name, damage_profile, power_level, damage_profile_lerp_values, target_index, charge_level, dropoff_scalar)
+	local target_settings = DamageProfile.target_settings(damage_profile, target_index)
+	local damage_profile_name = damage_profile.name
+	local cur_lerps = damage_profile_lerp_values[action_name] and damage_profile_lerp_values[action_name] or EMPTY_TABLE
+	cur_lerps = cur_lerps[damage_profile_name] or cur_lerps
+	local targets = cur_lerps.targets
+	local target_settings_lerp_values = targets and (targets[target_index] or targets.default_target) or EMPTY_TABLE
+	local old_current_target_settings_lerp_values = cur_lerps.current_target_settings_lerp_values
+	cur_lerps.current_target_settings_lerp_values = target_settings_lerp_values
+
+	if target_settings.power_level_multiplier then
+		local power_level_lerp_value = DamageProfile.lerp_value_from_path(cur_lerps, "targets", 1, "power_level_multiplier")
+		power_level = power_level * DamageProfile.lerp_damage_profile_entry(target_settings.power_level_multiplier, power_level_lerp_value)
+	end
+
+	local scaled_base_attack_power, scaled_base_impact_power = DamageCalculation.base_ui_damage(damage_profile, target_settings, power_level, charge_level, dropoff_scalar, cur_lerps)
+	cur_lerps.current_target_settings_lerp_values = old_current_target_settings_lerp_values
+
+	return scaled_base_attack_power, scaled_base_impact_power
+end
+
 local function _get_weapon_power_stats(weapon_template, damage_profile_lerp_values, actions_to_represent)
 	local weapon_actions = weapon_template.actions
 	local power_stats = {}
@@ -1150,25 +1172,23 @@ local function _get_weapon_power_stats(weapon_template, damage_profile_lerp_valu
 		local dropoff_scalar = action_data.dropoff_scalar
 		local action = weapon_actions[action_name]
 		local damage_profile, special_damage_profile = Action.damage_template(action)
+		local explosion_template = Action.explosion_template(action)
 
 		if damage_profile then
-			local target_settings = DamageProfile.target_settings(damage_profile, target_index)
 			local action_power_level = Action.power_level(action)
-			local damage_profile_name = damage_profile.name
-			local cur_lerps = damage_profile_lerp_values[action_name] and damage_profile_lerp_values[action_name] or EMPTY_TABLE
-			cur_lerps = cur_lerps[damage_profile_name] or cur_lerps
-			local targets = cur_lerps.targets
-			local target_settings_lerp_values = targets and (targets[target_index] or targets.default_target) or EMPTY_TABLE
-			local old_current_target_settings_lerp_values = cur_lerps.current_target_settings_lerp_values
-			cur_lerps.current_target_settings_lerp_values = target_settings_lerp_values
+			local scaled_base_attack_power, scaled_base_impact_power = _calculate_power_stat(action, action_name, damage_profile, action_power_level, damage_profile_lerp_values, target_index, charge_level, dropoff_scalar)
 
-			if target_settings.power_level_multiplier then
-				local power_level_lerp_value = DamageProfile.lerp_value_from_path(cur_lerps, "targets", 1, "power_level_multiplier")
-				action_power_level = action_power_level * DamageProfile.lerp_damage_profile_entry(target_settings.power_level_multiplier, power_level_lerp_value)
+			if explosion_template then
+				local inner = explosion_template.close_damage_profile
+
+				if inner and inner ~= damage_profile then
+					local explosion_power = explosion_template.static_power_level or action_power_level
+					local explosion_scaled_base_attack_power, explosion_scaled_base_impact_power = _calculate_power_stat(action, action_name, inner, explosion_power, damage_profile_lerp_values, target_index, charge_level, dropoff_scalar)
+					scaled_base_attack_power = scaled_base_attack_power + explosion_scaled_base_attack_power
+					scaled_base_impact_power = scaled_base_impact_power + explosion_scaled_base_impact_power
+				end
 			end
 
-			local scaled_base_attack_power, scaled_base_impact_power = DamageCalculation.base_ui_damage(damage_profile, target_settings, action_power_level, charge_level, dropoff_scalar, cur_lerps)
-			cur_lerps.current_target_settings_lerp_values = old_current_target_settings_lerp_values
 			power_stats_n = power_stats_n + 1
 			power_stats[power_stats_n] = {
 				attack = scaled_base_attack_power,
@@ -1179,6 +1199,46 @@ local function _get_weapon_power_stats(weapon_template, damage_profile_lerp_valu
 	end
 
 	return power_stats
+end
+
+local function _calculate_damage(weapon_template, action, action_name, action_data, damage_profile, explosion_template, damage_profile_lerp_values, lerp_values, target_index, charge_level, dropoff_scalar)
+	local action_power_level = Action.power_level(action)
+	local damage_profile_name = damage_profile.name
+	local cur_lerps = damage_profile_lerp_values[action_name] and damage_profile_lerp_values[action_name] or EMPTY_TABLE
+	cur_lerps = cur_lerps[damage_profile_name] or cur_lerps
+	local targets = cur_lerps.targets
+	local target_settings_lerp_values = targets and (targets[target_index] or targets.default_target) or EMPTY_TABLE
+	local old_current_target_settings_lerp_values = cur_lerps.current_target_settings_lerp_values
+	cur_lerps.current_target_settings_lerp_values = target_settings_lerp_values
+	local attack, impact = _calculcate_action_damage(action_power_level, damage_profile, cur_lerps, target_index, charge_level, dropoff_scalar, action_data.attack, action_data.impact)
+	cur_lerps.current_target_settings_lerp_values = old_current_target_settings_lerp_values
+
+	if explosion_template then
+		local inner = explosion_template.close_damage_profile
+
+		if inner and inner ~= damage_profile then
+			damage_profile_name = inner.name
+			cur_lerps = damage_profile_lerp_values[action_name] and damage_profile_lerp_values[action_name] or EMPTY_TABLE
+			cur_lerps = cur_lerps[damage_profile_name] or cur_lerps
+			targets = cur_lerps.targets
+			target_settings_lerp_values = targets and (targets[target_index] or targets.default_target) or EMPTY_TABLE
+			old_current_target_settings_lerp_values = cur_lerps.current_target_settings_lerp_values
+			cur_lerps.current_target_settings_lerp_values = target_settings_lerp_values
+			local explosion_power = explosion_template.static_power_level or action_power_level
+			local special_attack, special_impact = _calculcate_action_damage(explosion_power, inner, cur_lerps, target_index, charge_level, dropoff_scalar, action_data.attack, action_data.impact)
+
+			for i = 1, #special_attack do
+				attack[i] = attack[i] + special_attack[i]
+				impact[i] = impact[i] + special_impact[i]
+			end
+
+			cur_lerps.current_target_settings_lerp_values = old_current_target_settings_lerp_values
+		end
+	end
+
+	local action_stats = _calculate_action_stats(action_name, damage_profile, weapon_template, lerp_values, cur_lerps, action_data)
+
+	return attack, impact, action_stats
 end
 
 function _calculate_weapon_statistics(weapon_template, lerp_values, damage_profile_lerp_values)
@@ -1236,43 +1296,10 @@ function _calculate_weapon_statistics(weapon_template, lerp_values, damage_profi
 			local explosion_template = Action.explosion_template(action)
 
 			if damage_profile then
-				local action_power_level = Action.power_level(action)
-				local damage_profile_name = damage_profile.name
-				local cur_lerps = damage_profile_lerp_values[action_name] and damage_profile_lerp_values[action_name] or EMPTY_TABLE
-				cur_lerps = cur_lerps[damage_profile_name] or cur_lerps
-				local targets = cur_lerps.targets
-				local target_settings_lerp_values = targets and (targets[target_index] or targets.default_target) or EMPTY_TABLE
-				local old_current_target_settings_lerp_values = cur_lerps.current_target_settings_lerp_values
-				cur_lerps.current_target_settings_lerp_values = target_settings_lerp_values
-				local attack, impact = _calculcate_action_damage(action_power_level, damage_profile, cur_lerps, target_index, charge_level, dropoff_scalar, action_data.attack, action_data.impact)
-				cur_lerps.current_target_settings_lerp_values = old_current_target_settings_lerp_values
-
-				if explosion_template then
-					local inner = explosion_template.close_damage_profile
-
-					if inner then
-						damage_profile_name = inner.name
-						cur_lerps = damage_profile_lerp_values[action_name] and damage_profile_lerp_values[action_name] or EMPTY_TABLE
-						cur_lerps = cur_lerps[damage_profile_name] or cur_lerps
-						targets = cur_lerps.targets
-						target_settings_lerp_values = targets and (targets[target_index] or targets.default_target) or EMPTY_TABLE
-						old_current_target_settings_lerp_values = cur_lerps.current_target_settings_lerp_values
-						cur_lerps.current_target_settings_lerp_values = target_settings_lerp_values
-						local explosion_power = explosion_template.static_power_level or action_power_level
-						local special_attack, special_impact = _calculcate_action_damage(explosion_power, inner, cur_lerps, target_index, charge_level, dropoff_scalar, action_data.attack, action_data.impact)
-
-						for i = 1, #special_attack do
-							attack[i] = attack[i] + special_attack[i]
-							impact[i] = impact[i] + special_impact[i]
-						end
-
-						cur_lerps.current_target_settings_lerp_values = old_current_target_settings_lerp_values
-					end
-				end
-
+				local attack, impact, action_stats = _calculate_damage(weapon_template, action, action_name, action_data, damage_profile, explosion_template, damage_profile_lerp_values, lerp_values, target_index, charge_level, dropoff_scalar)
+				entry.action_stats = action_stats
 				entry.impact = impact
 				entry.attack = attack
-				entry.action_stats = _calculate_action_stats(action_name, damage_profile, weapon_template, lerp_values, cur_lerps, action_data)
 				chain_entry[#chain_entry + 1] = entry
 			end
 		end

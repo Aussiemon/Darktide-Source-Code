@@ -1,3 +1,4 @@
+local Action = require("scripts/utilities/weapon/action")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
@@ -135,7 +136,7 @@ local base_templates = {
 		stack_offset = -1,
 		max_stacks = 5,
 		class_name = "buff",
-		stat_buffs = {
+		conditional_stat_buffs = {
 			[stat_buffs.max_hit_mass_attack_modifier] = 0.5
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
@@ -162,6 +163,10 @@ local base_templates = {
 				return params.num_hit_units > 0
 			end
 		},
+		clear_child_stacks_proc_events = {
+			[proc_events.on_wield] = true,
+			[proc_events.on_push_finish] = true
+		},
 		conditional_proc_func = ConditionalFunctions.is_item_slot_wielded
 	},
 	chained_hits_increases_crit_chance_child = {
@@ -169,7 +174,7 @@ local base_templates = {
 		stack_offset = -1,
 		max_stacks = 5,
 		class_name = "buff",
-		stat_buffs = {
+		conditional_stat_buffs = {
 			[stat_buffs.critical_strike_chance] = 0.5
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
@@ -209,7 +214,7 @@ local base_templates = {
 		stack_offset = -1,
 		max_stacks = 5,
 		class_name = "buff",
-		stat_buffs = {
+		conditional_stat_buffs = {
 			[stat_buffs.power_level_modifier] = 0.05
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
@@ -262,7 +267,7 @@ local base_templates = {
 		stack_offset = -1,
 		max_stacks = 5,
 		class_name = "buff",
-		stat_buffs = {
+		conditional_stat_buffs = {
 			[stat_buffs.power_level_modifier] = 0.05
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
@@ -399,17 +404,12 @@ local base_templates = {
 	},
 	infinite_melee_cleave_on_crit = {
 		predicted = false,
-		class_name = "proc_buff",
-		active_duration = 5,
-		proc_events = {
-			[proc_events.on_critical_strike] = 1
+		class_name = "buff",
+		conditional_keywords = {
+			keywords.melee_infinite_cleave_critical_strike,
+			keywords.ignore_armor_aborts_attack_critical_strike
 		},
-		proc_keywords = {
-			keywords.melee_infinite_cleave,
-			keywords.ignore_armor_aborts_attack
-		},
-		conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-		conditional_keywords_func = ConditionalFunctions.is_item_slot_wielded
+		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 	},
 	infinite_melee_cleave_on_kill = {
 		predicted = false,
@@ -672,7 +672,7 @@ local base_templates = {
 		stack_offset = -1,
 		max_stacks = 5,
 		class_name = "buff",
-		stat_buffs = {
+		conditional_stat_buffs = {
 			[stat_buffs.melee_impact_modifier] = 0.2
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
@@ -872,7 +872,7 @@ local base_templates = {
 		stack_offset = -1,
 		max_stacks = 5,
 		class_name = "buff",
-		stat_buffs = {
+		conditional_stat_buffs = {
 			[stat_buffs.power_level_modifier] = 0.2
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
@@ -899,7 +899,7 @@ local base_templates = {
 		stack_offset = -1,
 		max_stacks = 5,
 		class_name = "buff",
-		stat_buffs = {
+		conditional_stat_buffs = {
 			[stat_buffs.power_level_modifier] = 0.2
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
@@ -993,7 +993,7 @@ local base_templates = {
 			max_stacks = math.huge
 		},
 		conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-		check_proc_func = CheckProcFunctions.on_melee_weapon_special_hit,
+		check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_melee_weapon_special_hit),
 		start_func = function (template_data, template_context)
 			local template = template_context.template
 			local dot_data = template.dot_data
@@ -1274,15 +1274,15 @@ base_templates.reload_speed_on_slide = {
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 base_templates.allow_flanking_and_increased_damage_when_flanking = {
-	class_name = "buff",
 	predicted = false,
-	keywords = {
+	class_name = "buff",
+	conditional_keywords = {
 		keywords.allow_flanking
 	},
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.flanking_damage] = 0.5
 	},
-	conditional_keyword_func = ConditionalFunctions.is_item_slot_wielded
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 base_templates.power_bonus_on_hitting_single_enemy_with_all = {
 	predicted = false,
@@ -1332,30 +1332,42 @@ base_templates.power_bonus_on_first_shot = {
 		return false
 	end
 }
+
+local function _follow_up_shots_start(template_data, template_context)
+	local unit = template_context.unit
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	template_data.shooting_status_component = unit_data_extension and unit_data_extension:read_component("shooting_status")
+end
+
+local function _follow_up_shots_conditional_stat_buff_func(template_data, template_context)
+	if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
+		return false
+	end
+
+	local shooting_status_component = template_data.shooting_status_component
+	local num_shots_fired = shooting_status_component.num_shots
+	local is_follow_up_shots = num_shots_fired == 1 or num_shots_fired == 2
+
+	return is_follow_up_shots
+end
+
 base_templates.followup_shots_ranged_damage = {
 	predicted = false,
 	class_name = "buff",
 	conditional_stat_buffs = {
 		[stat_buffs.ranged_damage] = 0.2
 	},
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		template_data.shooting_status = unit_data_extension:read_component("shooting_status")
-	end,
-	conditional_stat_buffs_func = function (template_data, template_context)
-		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
-			return false
-		end
-
-		local num_shots_fired = template_data.shooting_status.num_shots
-
-		if num_shots_fired == 1 or num_shots_fired == 2 then
-			return true
-		end
-
-		return false
-	end
+	start_func = _follow_up_shots_start,
+	conditional_stat_buffs_func = _follow_up_shots_conditional_stat_buff_func
+}
+base_templates.followup_shots_ranged_weakspot_damage = {
+	predicted = false,
+	class_name = "buff",
+	conditional_stat_buffs = {
+		[stat_buffs.ranged_weakspot_damage] = 0.2
+	},
+	start_func = _follow_up_shots_start,
+	conditional_stat_buffs_func = _follow_up_shots_conditional_stat_buff_func
 }
 base_templates.consecutive_hits_increases_close_damage_parent = {
 	child_buff_template = "consecutive_hits_increases_stagger_child",
@@ -1516,31 +1528,6 @@ base_templates.crit_weakspot_finesse = {
 		return CheckProcFunctions.on_weakspot_crit(params)
 	end
 }
-base_templates.followup_shots_ranged_weakspot_damage = {
-	predicted = false,
-	class_name = "buff",
-	conditional_stat_buffs = {
-		[stat_buffs.ranged_weakspot_damage] = 0.2
-	},
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		template_data.action_component = unit_data_extension:read_component("action_shoot")
-	end,
-	conditional_stat_buffs_func = function (template_data, template_context)
-		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
-			return false
-		end
-
-		local num_shots_fired = template_data.action_component.num_shots_fired
-
-		if num_shots_fired ~= 2 and num_shots_fired ~= 3 then
-			return false
-		end
-
-		return true
-	end
-}
 
 local function _continues_fire_start_func(template_data, template_context)
 	local unit = template_context.unit
@@ -1603,7 +1590,7 @@ base_templates.bleed_on_crit_ranged = {
 		[proc_events.on_hit] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.on_ranged_crit_hit,
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_ranged_crit_hit),
 	proc_func = function (params, template_data, template_context, t)
 		local attacked_unit = params.attacked_unit
 
@@ -1696,11 +1683,11 @@ base_templates.warpcharge_stepped_bonus = {
 	end
 }
 base_templates.faster_charge_on_chained_secondary_attacks = {
-	class_name = "stepped_stat_buff",
+	max_stacks = 1,
 	predicted = false,
 	stack_offset = -1,
-	max_stacks = 1,
-	stat_buffs = {
+	class_name = "stepped_stat_buff",
+	conditional_stat_buffs = {
 		[stat_buffs.charge_up_time] = -0.04
 	},
 	charge_actions = {
@@ -1750,12 +1737,19 @@ base_templates.vents_warpcharge_on_weakspot_hits = {
 	end,
 	check_proc_func = CheckProcFunctions.on_weakspot_hit,
 	proc_func = function (params, template_data, template_context)
-		local warp_charge_component = template_data.warp_charge_component
-		local buff_template = template_context.template
-		local override_data = template_context.template_override_data
-		local remove_percentage = override_data.vent_percentage or buff_template.vent_percentage
+		template_data.proc = true
+	end,
+	update_func = function (template_data, template_context, dt, t)
+		if template_data.proc then
+			local warp_charge_component = template_data.warp_charge_component
+			local buff_template = template_context.template
+			local override_data = template_context.template_override_data
+			local remove_percentage = override_data.vent_percentage or buff_template.vent_percentage
 
-		WarpCharge.decrease_immediate(remove_percentage, warp_charge_component, template_context.unit)
+			WarpCharge.decrease_immediate(remove_percentage, warp_charge_component, template_context.unit)
+
+			template_data.proc = nil
+		end
 	end
 }
 base_templates.warpfire_on_crits = {
@@ -1881,7 +1875,7 @@ base_templates.bleed_on_crit_melee = {
 		template_data.num_stacks_on_proc = override_target_buff_data and override_target_buff_data.num_stacks_on_proc or target_buff_data.num_stacks_on_proc
 		template_data.max_stacks = override_target_buff_data and override_target_buff_data.max_stacks or target_buff_data.max_stacks
 	end,
-	check_proc_func = CheckProcFunctions.on_melee_crit_hit,
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_melee_crit_hit),
 	proc_func = function (params, template_data, template_context, t)
 		local attacked_unit = params.attacked_unit
 
@@ -1939,7 +1933,7 @@ base_templates.bleed_on_non_weakspot_hit_melee = {
 		template_data.num_stacks_on_proc = override_target_buff_data and override_target_buff_data.num_stacks_on_proc or target_buff_data.num_stacks_on_proc
 		template_data.max_stacks = override_target_buff_data and override_target_buff_data.max_stacks or target_buff_data.max_stacks
 	end,
-	check_proc_func = CheckProcFunctions.on_non_weakspot_hit_melee,
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_non_weakspot_hit_melee),
 	proc_func = function (params, template_data, template_context, t)
 		local attacked_unit = params.attacked_unit
 
@@ -2009,7 +2003,7 @@ base_templates.increased_crit_chance_on_staggered_weapon_special_hit_child = {
 	stack_offset = -1,
 	max_stacks = 2,
 	class_name = "buff",
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.critical_strike_chance] = 0.5
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
@@ -2035,11 +2029,11 @@ base_templates.rending_on_crit = {
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 base_templates.chance_based_on_aim_time = {
+	max_stacks = 1,
 	predicted = false,
 	stack_offset = -1,
-	max_stacks = 1,
 	class_name = "stepped_stat_buff",
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.critical_strike_chance] = 0.05
 	},
 	conditional_stepped_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
@@ -2077,8 +2071,8 @@ base_templates.crit_chance_based_on_ammo_left = {
 	predicted = false,
 	stack_offset = -1,
 	class_name = "stepped_stat_buff",
-	stat_buffs = {
-		[stat_buffs.critical_strike_chance] = 0.05
+	conditional_stat_buffs = {
+		[stat_buffs.ranged_critical_strike_chance] = 0.05
 	},
 	conditional_stepped_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
@@ -2121,11 +2115,11 @@ base_templates.faster_reload_on_empty_clip = {
 	end
 }
 base_templates.power_scales_with_clip_percentage = {
+	max_stacks = 1,
 	predicted = false,
 	stack_offset = -1,
-	max_stacks = 1,
 	class_name = "stepped_stat_buff",
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.power_level_modifier] = 0.05
 	},
 	conditional_stepped_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,

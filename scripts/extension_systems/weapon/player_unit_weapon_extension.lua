@@ -231,6 +231,8 @@ PlayerUnitWeaponExtension.extensions_ready = function (self, world, unit)
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	local first_person_unit = first_person_extension:first_person_unit()
 	self._first_person_unit = first_person_unit
+	local weapon_recoil_system = ScriptUnit.extension(unit, "weapon_recoil_system")
+	self._weapon_recoil_system = weapon_recoil_system
 	local unit_data_ext = self._unit_data_extension
 	self._locomotion_component = unit_data_ext:read_component("locomotion")
 	local action_context = {
@@ -247,7 +249,7 @@ PlayerUnitWeaponExtension.extensions_ready = function (self, world, unit)
 		animation_extension = ScriptUnit.extension(unit, "animation_system"),
 		weapon_extension = ScriptUnit.extension(unit, "weapon_system"),
 		weapon_spread_extension = ScriptUnit.extension(unit, "weapon_spread_system"),
-		weapon_recoil_extension = ScriptUnit.extension(unit, "weapon_recoil_system"),
+		weapon_recoil_extension = weapon_recoil_system,
 		camera_extension = ScriptUnit.extension(unit, "camera_system"),
 		ability_extension = ability_extension,
 		visual_loadout_extension = visual_loadout_extension,
@@ -374,7 +376,11 @@ PlayerUnitWeaponExtension.fixed_update = function (self, unit, dt, t, fixed_fram
 		num_shots_clear_time = spread_settings.immediate_spread.num_shots_clear_time or 0
 	end
 
-	if shooting_status_component.num_shots > 0 and not shooting_status_component.shooting and t > shooting_status_component.shooting_end_time + num_shots_clear_time then
+	local weapon_action_component = self._weapon_action_component
+	local _, current_action_settings = Action.current_action(weapon_action_component, weapon_template)
+	local dont_clear_num_shots = current_action_settings and current_action_settings.dont_clear_num_shots
+
+	if not dont_clear_num_shots and shooting_status_component.num_shots > 0 and not shooting_status_component.shooting and t > shooting_status_component.shooting_end_time + num_shots_clear_time then
 		shooting_status_component.num_shots = 0
 	end
 
@@ -480,7 +486,7 @@ PlayerUnitWeaponExtension.on_wieldable_slot_unequipped = function (self, slot_na
 	self._weapons[slot_name] = nil
 end
 
-PlayerUnitWeaponExtension.on_slot_wielded = function (self, slot_name, t)
+PlayerUnitWeaponExtension.on_slot_wielded = function (self, slot_name, t, skip_wield_action)
 	local weapon = self._weapons[slot_name]
 	local weapon_item = weapon.item
 	local inventory_slot_component = weapon.inventory_slot_component
@@ -510,7 +516,10 @@ PlayerUnitWeaponExtension.on_slot_wielded = function (self, slot_name, t)
 	weapon_tweak_templates_component.size_of_flame_template_name = weapon_template.size_of_flame_template or "none"
 
 	action_handler:set_active_template("weapon_action", weapon_template.name)
-	self:_start_action(action_name, action_settings, t, false, "on_slot_wielded")
+
+	if not skip_wield_action then
+		self:_start_action(action_name, action_settings, t, false, "on_slot_wielded")
+	end
 end
 
 PlayerUnitWeaponExtension.on_slot_unwielded = function (self, slot_name, t)
@@ -525,6 +534,8 @@ PlayerUnitWeaponExtension.on_slot_unwielded = function (self, slot_name, t)
 	if alternate_fire.is_active then
 		AlternateFire.stop(alternate_fire, self._weapon_tweak_templates_component, self._animation_extension, weapon_template, false, self._unit)
 	end
+
+	self._weapon_recoil_system:snap_camera_and_reset_recoil()
 
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 	weapon_tweak_templates_component.dodge_template_name = "none"
@@ -541,6 +552,7 @@ PlayerUnitWeaponExtension.on_slot_unwielded = function (self, slot_name, t)
 	weapon_tweak_templates_component.warp_charge_template_name = "none"
 	weapon_tweak_templates_component.burninating_template_name = "none"
 	weapon_tweak_templates_component.size_of_flame_template_name = "none"
+	weapon_tweak_templates_component.weapon_handling_template_name = "none"
 
 	self._action_handler:set_active_template("weapon_action", "none")
 

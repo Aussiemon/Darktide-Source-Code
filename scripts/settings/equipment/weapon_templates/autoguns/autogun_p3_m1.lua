@@ -33,7 +33,7 @@ local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_ty
 local weapon_template = {
 	action_inputs = {
 		shoot = {
-			buffer_time = 0,
+			buffer_time = 0.25,
 			max_queue = 1,
 			input_sequence = {
 				{
@@ -53,7 +53,7 @@ local weapon_template = {
 			}
 		},
 		zoom_shoot = {
-			buffer_time = 0,
+			buffer_time = 0.12,
 			max_queue = 1,
 			input_sequence = {
 				{
@@ -304,7 +304,8 @@ weapon_template.actions = {
 				action_name = "action_reload"
 			},
 			zoom = {
-				action_name = "action_zoom"
+				action_name = "action_zoom",
+				chain_time = 0.33
 			},
 			shoot = {
 				action_name = "action_shoot_hip",
@@ -410,7 +411,7 @@ weapon_template.actions = {
 			},
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
-				chain_time = 0.1
+				chain_time = 0.05
 			}
 		},
 		aim_assist_ramp_template = AimAssistTemplates.killshot_aim

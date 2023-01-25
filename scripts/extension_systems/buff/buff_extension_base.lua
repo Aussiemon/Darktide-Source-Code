@@ -55,6 +55,7 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 		_modified_stats = {}
 	}, _stat_buff_lazy_mt)
 	self._keywords = {}
+	self._had_keywords = {}
 	self._active_vfx = {}
 	self._active_wwise_node_sources = {}
 	self._proc_event_param_tables = {}
@@ -263,10 +264,16 @@ BuffExtensionBase._reset_stat_buffs = function (self)
 	table.clear(stats_to_reset)
 end
 
-BuffExtensionBase._update_stat_buffs_and_keywords = function (self, t)
+BuffExtensionBase._update_stat_buffs_and_keywords = function (self, t, on_remove_buff)
 	self:_reset_stat_buffs()
 
 	local keywords = self._keywords
+
+	if on_remove_buff then
+		for keyword, _ in pairs(keywords) do
+			self._had_keywords[keyword] = true
+		end
+	end
 
 	table.clear(keywords)
 
@@ -666,6 +673,10 @@ end
 
 BuffExtensionBase.has_keyword = function (self, keyword)
 	return not not self._keywords[keyword]
+end
+
+BuffExtensionBase.had_keyword = function (self, keyword)
+	return not not self._had_keywords[keyword]
 end
 
 BuffExtensionBase.keywords = function (self)

@@ -1,8 +1,6 @@
 local Breed = require("scripts/utilities/breed")
-local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local MinionPerception = require("scripts/utilities/minion_perception")
-local proc_events = BuffSettings.proc_events
 local Suppression = {}
 local _apply_suppression_falloff, _apply_suppression_minion, _apply_suppression_player, _get_breed, _debug_draw_area_suppression_falloff = nil
 local DEFAULT_SUPPRESSION_VALUE = 1

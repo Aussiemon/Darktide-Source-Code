@@ -41,8 +41,13 @@ GrimoireBuff.update = function (self, dt, t, portable_random)
 		local diff = previous_num_grims - num_grims
 
 		for i = 1, diff do
+			local buff_extension = ScriptUnit.extension(self._unit, "buff_system")
+			local stat_buffs = buff_extension:stat_buffs()
+			local corruption_taken_multiplier = stat_buffs.corruption_taken_multiplier or 1
+			local corruption_taken_grimoire_multiplier = stat_buffs.corruption_taken_grimoire_multiplier or 1
+			local grimoire_chunk_heal = 30 * corruption_taken_multiplier * corruption_taken_grimoire_multiplier
 			local heal_type = DamageSettings.heal_types.blessing_grim
-			local health_added = Health.add(self._unit, 30, heal_type)
+			local health_added = Health.add(self._unit, grimoire_chunk_heal, heal_type)
 
 			if health_added > 0 then
 				Health.play_fx(self._unit)
@@ -84,7 +89,8 @@ GrimoireBuff._calculate_tick_time_and_power_level = function (self, num_grims)
 	local buff_extension = ScriptUnit.extension(self._unit, "buff_system")
 	local stat_buffs = buff_extension:stat_buffs()
 	local corruption_taken_multiplier = stat_buffs.corruption_taken_multiplier or 1
-	local grimoire_chunk = num_grims * 40 * corruption_taken_multiplier
+	local corruption_taken_grimoire_multiplier = stat_buffs.corruption_taken_grimoire_multiplier or 1
+	local grimoire_chunk = num_grims * 40 * corruption_taken_multiplier * corruption_taken_grimoire_multiplier
 
 	if permanent_damage_taken < grimoire_chunk then
 		local diff = grimoire_chunk - permanent_damage_taken
@@ -94,7 +100,9 @@ GrimoireBuff._calculate_tick_time_and_power_level = function (self, num_grims)
 		return math.lerp(0.4, 1.6, scalar), power_level
 	end
 
-	return 10, 60
+	local power_level = 60
+
+	return 10, power_level
 end
 
 GrimoireBuff._damage_player = function (self, power_level)

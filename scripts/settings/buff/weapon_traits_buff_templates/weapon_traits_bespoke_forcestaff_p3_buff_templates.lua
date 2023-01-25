@@ -10,7 +10,7 @@ local templates = {
 	weapon_trait_bespoke_forcestaff_p3_suppression_on_close_kill = table.clone(BaseWeaponTraitBuffTemplates.suppression_on_close_kill),
 	weapon_trait_bespoke_forcestaff_p3_hipfire_while_sprinting = table.clone(BaseWeaponTraitBuffTemplates.hipfire_while_sprinting),
 	weapon_trait_bespoke_forcestaff_p3_warp_charge_critical_strike_chance_bonus = table.merge({
-		stat_buffs = {
+		conditional_stat_buffs = {
 			[stat_buffs.critical_strike_chance] = 0.02
 		}
 	}, BaseWeaponTraitBuffTemplates.warpcharge_stepped_bonus),

@@ -18,7 +18,7 @@ LocalInSessionState.enter = function (self)
 	}
 end
 
-local CLOCK_HANDLER_PANIC_TIMER = 10
+local CLOCK_HANDLER_PANIC_TIMER = 20
 
 LocalInSessionState.update = function (self, dt)
 	local shared_state = self._shared_state

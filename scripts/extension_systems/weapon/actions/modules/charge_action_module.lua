@@ -58,13 +58,14 @@ local DEFAULT_RESET_CHARGE_ACTION_KINDS = {
 }
 local DEFAULT_INTERUPT_REASONS = {
 	stunned = true,
-	unwield = true,
+	dead = true,
 	catapulted = true,
 	hold_input_released = true,
-	interacting = true,
 	knocked_down = true,
-	dead = true,
-	ledge_hanging = true
+	ledge_hanging = true,
+	unwield = true,
+	interacting = true,
+	pounced = true
 }
 
 ChargeActionModule.finish = function (self, reason, data, t, force_reset, ignore_reset, reset_action_kinds)

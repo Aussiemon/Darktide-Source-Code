@@ -56,9 +56,10 @@ templates.weapon_trait_bespoke_combatsword_p1_increase_stagger_per_hit_in_sweep_
 	stack_offset = -1,
 	max_stacks = 5,
 	class_name = "buff",
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.melee_impact_modifier] = 1
-	}
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 templates.weapon_trait_bespoke_combatsword_p1_consecutive_hits_increases_stagger_parent = table.clone(BaseWeaponTraitBuffTemplates.consecutive_hits_increases_stagger_parent)
 templates.weapon_trait_bespoke_combatsword_p1_consecutive_hits_increases_stagger_child = table.clone(BaseWeaponTraitBuffTemplates.consecutive_hits_increases_stagger_child)

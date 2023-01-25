@@ -164,8 +164,11 @@ damage_templates.default_force_staff_bfg = {
 		suppression_value = 12
 	},
 	charge_level_scaler = {
-		max = 1,
-		min = 0.25
+		{
+			modifier = 1,
+			t = 1
+		},
+		start_modifier = 0.25
 	}
 }
 damage_templates.default_force_staff_demolition = {
@@ -633,8 +636,8 @@ damage_templates.default_warpfire_assault = {
 	duration_scale_bonus = 0.5,
 	accumulative_stagger_strength_multiplier = 0.5,
 	force_weapon_damage = true,
-	ragdoll_push_force = 10,
 	suppression_value = 10,
+	ragdoll_push_force = 10,
 	stagger_category = "flamer",
 	cleave_distribution = {
 		attack = 0.1,
@@ -645,6 +648,7 @@ damage_templates.default_warpfire_assault = {
 		min = 5
 	},
 	armor_damage_modifier_ranged = assault_warpfire_armor_mod,
+	damage_type = damage_types.warpfire,
 	gibbing_type = GibbingTypes.warp,
 	targets = {
 		{
@@ -749,7 +753,7 @@ damage_templates.default_warpfire_assault_burst = {
 		min = 5
 	},
 	armor_damage_modifier_ranged = assault_warpfire_armor_mod,
-	damage_type = damage_types.burning,
+	damage_type = damage_types.warpfire,
 	gibbing_type = GibbingTypes.warp,
 	power_distribution = {
 		attack = {
@@ -840,8 +844,11 @@ damage_templates.default_chain_lighting_attack = {
 		}
 	},
 	charge_level_scaler = {
-		max = 1,
-		min = 0
+		{
+			modifier = 1,
+			t = 1
+		},
+		start_modifier = 0
 	},
 	crit_mod = {
 		attack = {

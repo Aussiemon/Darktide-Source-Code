@@ -1,6 +1,6 @@
 local WarpCharge = require("scripts/utilities/warp_charge")
 local mood_settings = {}
-local types = table.enum("last_wound", "critical_health", "knocked_down", "toughness_broken", "no_toughness", "suppression_low", "suppression_high", "damage_taken", "toughness_absorbed", "toughness_absorbed_melee", "coruption_taken", "coruption", "sprinting", "sprinting_overtime", "stealth", "zealot_maniac_combat_ability", "ogryn_bonebreaker_combat_ability", "veteran_ranger_combat_ability", "psyker_biomancer_combat_ability", "corruptor_proximity", "warped", "warped_low_to_high", "warped_high_to_critical", "warped_critical")
+local types = table.enum("last_wound", "critical_health", "knocked_down", "toughness_broken", "no_toughness", "suppression_ongoing", "suppression_low", "suppression_high", "damage_taken", "toughness_absorbed", "toughness_absorbed_melee", "corruption_taken", "corruption", "sprinting", "sprinting_overtime", "stealth", "zealot_maniac_combat_ability", "ogryn_bonebreaker_combat_ability", "veteran_ranger_combat_ability", "psyker_biomancer_combat_ability", "corruptor_proximity", "warped", "warped_low_to_high", "warped_high_to_critical", "warped_critical")
 local status = table.enum("active", "inactive", "removing")
 mood_settings.mood_types = types
 mood_settings.status = status
@@ -15,8 +15,8 @@ mood_settings.priority = {
 	types.damage_taken,
 	types.toughness_absorbed,
 	types.toughness_absorbed_melee,
-	types.coruption_taken,
-	types.coruption,
+	types.corruption_taken,
+	types.corruption,
 	types.sprinting,
 	types.sprinting_overtime,
 	types.warped,
@@ -92,6 +92,43 @@ mood_settings.moods = {
 			return current_toughness > 0
 		end
 	},
+	[types.suppression_ongoing] = {
+		particle_effects_looping = {
+			"content/fx/particles/screenspace/screen_suppression"
+		},
+		particles_material_scalars = {
+			{
+				on_screen_cloud_name = "suppression",
+				on_screen_variable_name = "suppression_material_variable_1092fk",
+				scalar_func = function (player, last_value)
+					local camera_handler = player.camera_handler
+					local is_observing = camera_handler:is_observing()
+
+					if is_observing then
+						local observed_unit = camera_handler:camera_follow_unit()
+						player = Managers.state.player_unit_spawn:owner(observed_unit)
+					end
+
+					local suppression_extension = ScriptUnit.has_extension(player.player_unit, "suppression_system")
+
+					if suppression_extension then
+						local num_suppression_hits = suppression_extension:num_suppression_hits()
+						local max_suppression = suppression_extension:max_suppression()
+
+						if max_suppression == 0 then
+							return 0
+						end
+
+						local scalar = math.easeOutCubic(math.clamp01(num_suppression_hits / max_suppression))
+
+						return scalar
+					end
+
+					return 0
+				end
+			}
+		}
+	},
 	[types.suppression_low] = {
 		blend_in_time = 0.025,
 		blend_out_time = 0.05,
@@ -147,7 +184,7 @@ mood_settings.moods = {
 			"content/fx/particles/screenspace/toughness"
 		}
 	},
-	[types.coruption_taken] = {
+	[types.corruption_taken] = {
 		active_time = 0.05,
 		blend_in_time = 0.01,
 		blend_out_time = 0.01,
@@ -155,7 +192,7 @@ mood_settings.moods = {
 			"content/fx/particles/screenspace/screen_corruption_hit"
 		}
 	},
-	[types.coruption] = {
+	[types.corruption] = {
 		blend_in_time = 0.35,
 		blend_out_time = 0.8,
 		particle_effects_looping = {

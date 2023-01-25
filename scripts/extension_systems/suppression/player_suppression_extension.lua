@@ -36,8 +36,7 @@ PlayerSuppressionExtension.init = function (self, extension_init_context, unit, 
 	self._next_suppression_hit_clear_time = 0
 
 	if is_server then
-		self:_init_components(unit_data_extension)
-
+		self._movement_state_component = unit_data_extension:write_component("movement_state")
 		self._weapon_extension = ScriptUnit.extension(unit, "weapon_system")
 	end
 
@@ -76,19 +75,11 @@ PlayerSuppressionExtension.destroy = function (self)
 	end
 end
 
-PlayerSuppressionExtension._init_components = function (self, unit_data_extension)
-	self._movement_state_component = unit_data_extension:write_component("movement_state")
-end
-
 PlayerSuppressionExtension.fixed_update = function (self, unit, dt, t)
 	self:_update_suppression_hits(dt, t)
 
 	if self._is_server then
-		self._suppression_delay = self._suppression_delay - dt
-	end
-
-	if self._is_local_unit and not self._player:is_human_controlled() then
-		self:_update_effects(dt, t)
+		self._suppression_delay = math.max(self._suppression_delay - dt, 0)
 	end
 end
 
@@ -104,24 +95,10 @@ PlayerSuppressionExtension._update_suppression_hits = function (self, dt, t)
 	end
 end
 
-PlayerSuppressionExtension._update_effects = function (self, dt, t)
-	if self._num_suppression_hits > 0 and not self._suppression_effect then
-		self._suppression_effect = World.create_particles(self._world, "content/fx/particles/screenspace/screen_suppression", Vector3(0, 0, 1))
-	elseif self._suppression_effect and self._num_suppression_hits <= 0 then
-		World.destroy_particles(self._world, self._suppression_effect)
-
-		self._suppression_effect = nil
-	end
-
-	if self._num_suppression_hits > 0 and self._suppression_effect then
-		local modifier = math.clamp(self._num_suppression_hits / self._max_suppression, 0, self._max_suppression)
-
-		World.set_particles_material_scalar(self._world, self._suppression_effect, "suppression", "suppression_material_variable_1092fk", modifier)
-	end
-end
-
 PlayerSuppressionExtension.add_suppression = function (self, suppression_hit_cost, hit_position)
-	if not self._is_server then
+	local is_server = self._is_server
+
+	if not is_server then
 		return
 	end
 
@@ -132,8 +109,8 @@ PlayerSuppressionExtension.add_suppression = function (self, suppression_hit_cos
 	end
 
 	local t = Managers.time:time("gameplay")
-	local num_suppression_hits = math.min(self._num_suppression_hits + suppression_hit_cost, MAX_SUPPRESSION_HITS)
-	local weapon_extension = self._weapon_extension
+	local previous_num_suppression_hits = self._num_suppression_hits
+	local num_suppression_hits = math.min(previous_num_suppression_hits + suppression_hit_cost, MAX_SUPPRESSION_HITS)
 
 	if num_suppression_hits <= NUM_HITS_FOR_HIGH_SUPPRESSION then
 		local extra_clear_time_multiplier = 2 * (1 - math.min(num_suppression_hits, 5) / 5)
@@ -142,10 +119,9 @@ PlayerSuppressionExtension.add_suppression = function (self, suppression_hit_cos
 
 	local mood_extension = self._mood_extension
 
-	if self._is_server and mood_extension then
-		local current_hits = self._num_suppression_hits
-		local passed_low = current_hits < NUM_HITS_FOR_LOW_SUPPRESSION and NUM_HITS_FOR_LOW_SUPPRESSION <= num_suppression_hits
-		local passed_high = current_hits < NUM_HITS_FOR_HIGH_SUPPRESSION and NUM_HITS_FOR_HIGH_SUPPRESSION <= num_suppression_hits
+	if is_server and mood_extension then
+		local passed_low = previous_num_suppression_hits < NUM_HITS_FOR_LOW_SUPPRESSION and NUM_HITS_FOR_LOW_SUPPRESSION <= num_suppression_hits
+		local passed_high = previous_num_suppression_hits < NUM_HITS_FOR_HIGH_SUPPRESSION and NUM_HITS_FOR_HIGH_SUPPRESSION <= num_suppression_hits
 
 		if passed_low then
 			mood_extension:add_timed_mood(t, mood_types.suppression_low)
@@ -154,39 +130,38 @@ PlayerSuppressionExtension.add_suppression = function (self, suppression_hit_cos
 		end
 	end
 
-	local game_object_id = self._game_object_id
-
 	if self._is_local_unit then
 		self:_trigger_suppression_sounds(hit_position, num_suppression_hits)
 	else
-		Managers.state.game_session:send_rpc_clients("rpc_player_suppressed", game_object_id, hit_position, num_suppression_hits, self._next_suppression_hit_clear_time)
+		Managers.state.game_session:send_rpc_clients("rpc_player_suppressed", self._game_object_id, hit_position, num_suppression_hits, self._next_suppression_hit_clear_time)
 	end
 
 	if NUM_HITS_FOR_LOW_SUPPRESSION <= num_suppression_hits and self._suppression_delay <= 0 then
-		local suppression_template = weapon_extension:suppression_template()
+		local weapon_extension = self._weapon_extension
 		local movement_state_component = self._movement_state_component
-		local movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
 		local suppression_component = self._suppression_component
+		local suppression_template = weapon_extension:suppression_template()
+		local movement_state = WeaponMovementState.translate_movement_state_component(movement_state_component)
 		local suppression_movement_template = nil
 
 		if suppression_template and suppression_component then
 			suppression_movement_template = suppression_template[movement_state]
 
 			Suppression.add_immediate_suppression(t, suppression_movement_template, suppression_component, math.floor(1 + num_suppression_hits - NUM_HITS_FOR_LOW_SUPPRESSION))
+
+			self._suppression_delay = suppression_movement_template.delay
+		else
+			self._suppression_delay = 1
 		end
 
 		Vo.player_suppressed_event(self._unit)
-
-		self._suppression_delay = suppression_movement_template and suppression_movement_template.delay or 1
 	end
 
 	self._num_suppression_hits = num_suppression_hits
 end
 
 PlayerSuppressionExtension._trigger_suppression_sounds = function (self, hit_position, num_suppression_hits)
-	local first_person_extension = self._first_person_extension
-
-	if first_person_extension:is_in_first_person_mode() and num_suppression_hits > 0 then
+	if num_suppression_hits > 0 and self._first_person_extension:is_in_first_person_mode() then
 		local wwise_world = self._wwise_world
 		local auto_source_id = WwiseWorld.make_auto_source(wwise_world, hit_position)
 
@@ -199,6 +174,14 @@ PlayerSuppressionExtension.rpc_player_suppressed = function (self, channel_id, u
 
 	self._num_suppression_hits = num_suppression_hits
 	self._next_suppression_hit_clear_time = next_suppression_hit_clear_time
+end
+
+PlayerSuppressionExtension.num_suppression_hits = function (self)
+	return self._num_suppression_hits
+end
+
+PlayerSuppressionExtension.max_suppression = function (self)
+	return self._max_suppression
 end
 
 PlayerSuppressionExtension.wwise_suppression_state = function (self)

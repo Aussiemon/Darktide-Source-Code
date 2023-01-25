@@ -106,7 +106,7 @@ end
 MissionBoardView.on_exit = function (self)
 	local mission_board_save_data = self._mission_board_save_data
 
-	if self._quickplay_difficulty ~= mission_board_save_data.quickplay_difficulty or self._private_match ~= mission_board_save_data.private_matchmaking then
+	if mission_board_save_data and (self._quickplay_difficulty ~= mission_board_save_data.quickplay_difficulty or self._private_match ~= mission_board_save_data.private_matchmaking) then
 		mission_board_save_data.quickplay_difficulty = self._quickplay_difficulty
 		mission_board_save_data.private_matchmaking = self._private_match
 

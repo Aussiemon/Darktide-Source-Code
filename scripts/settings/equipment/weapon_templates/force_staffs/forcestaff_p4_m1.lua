@@ -376,7 +376,7 @@ weapon_template.actions = {
 		vfx_effect_source_name = "_muzzle",
 		use_charge = true,
 		fire_time = 0.2,
-		charge_template = "forcestaff_p1_m1_projectile",
+		charge_template = "forcestaff_p4_m1_charged_projectile",
 		anim_event_3p = "attack_shoot_big_ball",
 		anim_event = "attack_charge_shoot",
 		total_time = 1,
@@ -1072,6 +1072,15 @@ weapon_template.base_stats = {
 			},
 			action_charge = {
 				charge_trait_templates.forcestaff_p4_m1_warp_charge_cost_stat,
+				display_data = {
+					prefix = "loc_glossary_term_charge",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
+			},
+			action_shoot_charged = {
+				charge_trait_templates.forcestaff_secondary_action_charge_cost_stat,
 				display_data = {
 					prefix = "loc_ingame_action_two",
 					display_stats = {

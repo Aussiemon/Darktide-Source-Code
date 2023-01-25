@@ -143,13 +143,13 @@ Block.attempt_block_break = function (target_unit, attacking_unit, hit_world_pos
 			local _, max_stamina = Stamina.current_and_max_value(target_unit, stamina_write_component, specialization_stamina_template)
 			local current_warp_charge = warp_charge_component.current_percentage
 
-			if current_warp_charge < 0.9 then
+			if current_warp_charge < 0.97 then
 				local stat_buffs = buff_extension:stat_buffs()
 				local warp_charge_efficiency_multiplier = stat_buffs.warp_charge_block_cost
 				local percentage_of_stamina = block_cost / max_stamina
 				local sum = current_warp_charge + percentage_of_stamina * warp_charge_efficiency_multiplier
-				local new_warp_charge_percentage = math.min(sum, 0.9)
-				local excess = sum - 0.9
+				local new_warp_charge_percentage = math.min(sum, 0.97)
+				local excess = sum - 0.97
 
 				if excess > 0 then
 					block_cost = excess * 1 / warp_charge_efficiency_multiplier * max_stamina
@@ -157,6 +157,8 @@ Block.attempt_block_break = function (target_unit, attacking_unit, hit_world_pos
 					block_cost = 0
 				end
 
+				local t = Managers.state.extension:latest_fixed_t()
+				warp_charge_component.last_charge_at_t = t
 				warp_charge_component.current_percentage = new_warp_charge_percentage
 			end
 		end
@@ -164,7 +166,7 @@ Block.attempt_block_break = function (target_unit, attacking_unit, hit_world_pos
 
 	local t = Managers.state.extension:latest_fixed_t()
 	local _, stamina_depleted = Stamina.drain(target_unit, block_cost, t)
-	local block_broken = stamina_depleted
+	local block_broken = stamina_depleted and block_cost > 0
 
 	if block_broken then
 		local weapon_disorientation_type = stamina_template and stamina_template.block_break_disorientation_type or DEFAULT_BLOCK_BREAK_DISORIENTATION_TYPE

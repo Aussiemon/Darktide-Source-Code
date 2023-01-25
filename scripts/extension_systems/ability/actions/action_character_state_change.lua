@@ -94,14 +94,17 @@ ActionCharacterStateChange.finish = function (self, reason, data, t, time_in_act
 		local use_ability_charge = action_settings.use_ability_charge
 		local ability_interrupted_reasons = action_settings.ability_interrupted_reasons
 		local should_use_charge = (not ability_interrupted_reasons or not ability_interrupted_reasons[reason]) and is_in_wanted_state
-		local player_unit = self._player_unit
-		local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
-		local param_table = buff_extension:request_proc_event_param_table()
 
-		if param_table then
-			param_table.unit = player_unit
+		if is_in_wanted_state then
+			local player_unit = self._player_unit
+			local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
+			local param_table = buff_extension:request_proc_event_param_table()
 
-			buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
+			if param_table then
+				param_table.unit = player_unit
+
+				buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
+			end
 		end
 
 		if use_ability_charge and should_use_charge and valid then

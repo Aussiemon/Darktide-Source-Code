@@ -418,6 +418,10 @@ params.debug_hit_mass = {
 	value = false,
 	category = "Hit Mass"
 }
+params.debug_hit_mass_calculations = {
+	value = false,
+	category = "Hit Mass"
+}
 params.debug_lunge_hit_mass = {
 	value = false,
 	category = "Hit Mass"

@@ -484,7 +484,7 @@ damage_templates.shock_grenade = {
 }
 damage_templates.shock_grenade_stun_interval = {
 	stagger_category = "sticky",
-	shield_override_stagger_strength = 0,
+	ignore_shield = true,
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_0_5,

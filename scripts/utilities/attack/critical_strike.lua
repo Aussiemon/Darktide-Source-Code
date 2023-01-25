@@ -16,7 +16,7 @@ CriticalStrike.chance = function (player, weapon_handling_template, is_ranged, i
 	local base_chance = specialization.base_critical_strike_chance
 	local buff_extension = ScriptUnit.extension(player.player_unit, "buff_system")
 	local buffs = buff_extension:stat_buffs()
-	local additional_chance = buffs.critical_strike_chance
+	local additional_chance = buffs.critical_strike_chance or 0
 
 	if is_melee then
 		additional_chance = additional_chance + buffs.melee_critical_strike_chance

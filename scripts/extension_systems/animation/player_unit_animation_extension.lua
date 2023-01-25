@@ -11,6 +11,7 @@ local PlayerUnitAnimationExtension = class("PlayerUnitAnimationExtension")
 PlayerUnitAnimationExtension.init = function (self, extension_init_context, unit, extension_init_data)
 	self._unit = unit
 	local unit_data = ScriptUnit.extension(unit, "unit_data_system")
+	self._unit_data_extension = unit_data
 	local animation_state = unit_data:write_component("animation_state")
 
 	PlayerUnitAnimationState.init_anim_state_component(animation_state)
@@ -18,6 +19,7 @@ PlayerUnitAnimationExtension.init = function (self, extension_init_context, unit
 	self._animation_state_component = animation_state
 	self._weapon_action_component = unit_data:read_component("weapon_action")
 	self._character_state_component = unit_data:read_component("character_state")
+	self._alternate_fire_component = unit_data:read_component("alternate_fire")
 	self._alternate_fire_component = unit_data:read_component("alternate_fire")
 	self._local_wielded_weapon_template = ""
 	self._anim_variable_ids_third_person = {}
@@ -129,6 +131,10 @@ PlayerUnitAnimationExtension.fixed_update = function (self, unit, dt, t, frame)
 	PlayerUnitAnimationState.record_animation_state(self._animation_state_component, unit, self._first_person_unit)
 end
 
+PlayerUnitAnimationExtension.destroy = function (self)
+	return
+end
+
 local ALWAYS_ROLLBACK_ACTION_KINDS = {
 	reload_shotgun = true,
 	reload_state = true
@@ -194,10 +200,6 @@ PlayerUnitAnimationExtension.server_correction_occurred = function (self, unit, 
 			PlayerUnitAnimationState.override_animation_state(anim_state_component, unit, first_person_unit, simulated_time, override_3p, override_1p)
 		end
 	end
-end
-
-PlayerUnitAnimationExtension.destroy = function (self)
-	return
 end
 
 return PlayerUnitAnimationExtension

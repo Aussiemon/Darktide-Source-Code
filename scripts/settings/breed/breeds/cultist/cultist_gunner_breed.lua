@@ -42,7 +42,7 @@ local breed_data = {
 	run_speed = 5.5,
 	faction_name = "chaos",
 	base_height = 2,
-	ignore_attack_delay = true,
+	ignore_attack_delay = false,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 0,
 	player_locomotion_constrain_radius = 0.5,
@@ -133,18 +133,18 @@ local breed_data = {
 		}
 	},
 	suppress_config = {
-		disable_cover_threshold = 35,
+		max_value = 40,
 		above_threshold_decay_multiplier = 2,
 		threshold = 27.5,
-		max_value = 40,
+		disable_cover_threshold = 35,
 		decay_speeds = {
 			melee = 0.05,
 			far = 0.5,
 			close = 0.3
 		},
 		immunity_duration = {
-			2.75,
-			3.25
+			0.25,
+			0.5
 		}
 	},
 	attack_intensity_cooldowns = {

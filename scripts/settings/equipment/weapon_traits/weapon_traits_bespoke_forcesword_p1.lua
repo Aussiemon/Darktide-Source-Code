@@ -259,7 +259,7 @@ templates.weapon_trait_bespoke_forcesword_p1_warp_burninating_on_crit = {
 				num_stacks_on_proc = 2
 			}
 		},
-		{
+		[4] = {
 			dot_data = {
 				max_stacks = 12,
 				num_stacks_on_proc = 4

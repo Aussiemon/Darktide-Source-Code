@@ -1003,7 +1003,8 @@ weapon_template.actions = {
 				chain_time = 0.65
 			},
 			block = {
-				action_name = "action_block"
+				action_name = "action_block",
+				chain_time = 0.7
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1093,7 +1094,8 @@ weapon_template.actions = {
 				chain_time = 0.5
 			},
 			block = {
-				action_name = "action_block"
+				action_name = "action_block",
+				chain_time = 0.5
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1209,6 +1211,12 @@ weapon_template.base_stats = {
 			action_right_heavy = {
 				damage_trait_templates.default_melee_dps_stat
 			},
+			action_left_light = {
+				damage_trait_templates.default_melee_dps_stat
+			},
+			action_special_down_left = {
+				damage_trait_templates.default_melee_dps_stat
+			},
 			action_right_light_pushfollow = {
 				damage_trait_templates.default_melee_dps_stat
 			},
@@ -1257,6 +1265,12 @@ weapon_template.base_stats = {
 			action_right_heavy = {
 				damage_trait_templates.default_armor_pierce_stat
 			},
+			action_left_light = {
+				damage_trait_templates.default_armor_pierce_stat
+			},
+			action_special_down_left = {
+				damage_trait_templates.default_armor_pierce_stat
+			},
 			action_right_light_pushfollow = {
 				damage_trait_templates.default_armor_pierce_stat
 			},
@@ -1301,10 +1315,16 @@ weapon_template.base_stats = {
 			action_right_heavy = {
 				damage_trait_templates.default_melee_finesse_stat
 			},
+			action_left_light = {
+				damage_trait_templates.default_melee_finesse_stat
+			},
 			action_special_down_right = {
 				damage_trait_templates.default_melee_finesse_stat
 			},
 			action_right_light_pushfollow = {
+				damage_trait_templates.default_melee_finesse_stat
+			},
+			action_special_down_left = {
 				damage_trait_templates.default_melee_finesse_stat
 			}
 		},
@@ -1333,10 +1353,16 @@ weapon_template.base_stats = {
 			action_right_heavy = {
 				weapon_handling_trait_templates.default_finesse_stat
 			},
+			action_left_light = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
 			action_right_light_pushfollow = {
 				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_special_down_right = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_special_down_left = {
 				weapon_handling_trait_templates.default_finesse_stat
 			}
 		}
@@ -1358,6 +1384,12 @@ weapon_template.base_stats = {
 			action_right_heavy = {
 				weapon_handling_trait_templates.stubrevolver_crit_stat
 			},
+			action_left_light = {
+				damage_trait_templates.stubrevolver_crit_stat
+			},
+			action_special_down_left = {
+				damage_trait_templates.stubrevolver_crit_stat
+			},
 			action_right_light_pushfollow = {
 				weapon_handling_trait_templates.stubrevolver_crit_stat
 			},
@@ -1377,6 +1409,12 @@ weapon_template.base_stats = {
 				damage_trait_templates.stubrevolver_crit_stat
 			},
 			action_right_heavy = {
+				damage_trait_templates.stubrevolver_crit_stat
+			},
+			action_left_light = {
+				damage_trait_templates.stubrevolver_crit_stat
+			},
+			action_special_down_left = {
 				damage_trait_templates.stubrevolver_crit_stat
 			},
 			action_right_light_pushfollow = {

@@ -285,15 +285,21 @@ end
 
 ActionHandler._calculate_time_scale = function (self, action_settings)
 	local player_unit = self._unit
-	local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
-	local weapon_handling_template = weapon_extension:weapon_handling_template() or EMPTY_TABLE
-	local weapon_handling_time_scale = weapon_handling_template.time_scale or 1
+	local time_scale = 1
+
+	if self._tweak_component then
+		local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
+		local weapon_handling_template = weapon_extension:weapon_handling_template() or EMPTY_TABLE
+		local weapon_handling_time_scale = weapon_handling_template.time_scale or 1
+		time_scale = time_scale * weapon_handling_time_scale
+	end
+
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local stat_buffs = buff_extension:stat_buffs()
 	local action_time_scale_stat_buffs = action_settings.time_scale_stat_buffs
 
 	if not action_time_scale_stat_buffs then
-		return weapon_handling_time_scale
+		return time_scale
 	end
 
 	local num_applied_stat_buffs = 0
@@ -310,7 +316,7 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 	end
 
 	total_modifier = total_modifier - (num_applied_stat_buffs - 1)
-	local time_scale = weapon_handling_time_scale * total_modifier
+	time_scale = time_scale * total_modifier
 	local min = NetworkConstants.action_time_scale.min
 	local max = 2
 	time_scale = math.clamp(time_scale, min, max)

@@ -23,6 +23,14 @@ local material_overrides = {
 			}
 		}
 	},
+	mask_torso_keep_armpits = {
+		property_overrides = {
+			mask_top_bottom = {
+				0,
+				0.35
+			}
+		}
+	},
 	mask_arms_keep_forearms = {
 		property_overrides = {
 			mask_top_bottom = {

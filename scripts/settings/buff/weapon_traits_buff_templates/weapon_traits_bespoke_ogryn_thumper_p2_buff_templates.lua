@@ -9,7 +9,7 @@ local templates = {
 	weapon_trait_bespoke_ogryn_thumper_p2_toughness_on_elite_kills = table.clone(BaseWeaponTraitBuffTemplates.toughness_on_elite_kills),
 	weapon_trait_bespoke_ogryn_thumper_p2_power_bonus_on_continuous_fire = table.merge({
 		use_combo = true,
-		stat_buffs = {
+		conditional_stat_buffs = {
 			[stat_buffs.power_level_modifier] = 0.02
 		}
 	}, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire),

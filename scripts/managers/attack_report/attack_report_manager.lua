@@ -277,7 +277,7 @@ function _trigger_damage_indicator(attacked_unit, attacking_unit, attack_directi
 			end
 
 			if have_permanent_damage then
-				mood_extension:add_timed_mood(t, mood_types.coruption_taken, skip_rpc)
+				mood_extension:add_timed_mood(t, mood_types.corruption_taken, skip_rpc)
 			end
 		elseif attack_result == attack_results.toughness_broken then
 			mood_extension:add_timed_mood(t, mood_types.toughness_broken, skip_rpc)

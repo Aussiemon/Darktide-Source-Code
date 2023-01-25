@@ -142,9 +142,11 @@ VivoxManager.join_chat_channel = function (self, channel, host_peer_id, voice, t
 	end
 
 	Log.info("VivoxManager", "Joining channel %s peer_id: %s tag: %s enabling voice: %s", channel, tostring(host_peer_id), tag, voice and "true" or "false")
+
+	self._channel_tags[channel] = tag
+
 	self._privileges_manager:communications_privilege(false):next(function (results)
 		if results.has_privilege == true then
-			self._channel_tags[channel] = tag
 			self._channel_host_peer_id[channel] = host_peer_id
 
 			if self:is_logged_in() then
@@ -163,6 +165,8 @@ VivoxManager.join_chat_channel = function (self, channel, host_peer_id, voice, t
 			Log.error("VivoxManager", "Error joining channel %s: %s", channel, error)
 		end
 	end):catch(function (error)
+		self._channel_tags[channel] = nil
+
 		Log.error("VivoxManager", "Error joining channel %s: %s", channel, error)
 	end)
 end

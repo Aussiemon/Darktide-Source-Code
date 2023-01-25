@@ -930,6 +930,9 @@ weapon_template.actions = {
 			},
 			push = {
 				action_name = "action_push"
+			},
+			special_action = {
+				action_name = "action_activate_special"
 			}
 		}
 	},

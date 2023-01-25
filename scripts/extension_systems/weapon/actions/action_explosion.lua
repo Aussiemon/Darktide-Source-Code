@@ -26,7 +26,7 @@ ActionExplosion.start = function (self, action_settings, t, ...)
 	end
 
 	self:_pay_warp_charge_cost(t, charge_level)
-	self:_check_for_critical_strike()
+	self:_check_for_critical_strike(false, true)
 
 	if self._is_server then
 		self:_explode(charge_level)

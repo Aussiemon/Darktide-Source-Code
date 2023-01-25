@@ -1,103 +1,104 @@
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FriendlyFire = require("scripts/utilities/attack/friendly_fire")
 local Health = require("scripts/utilities/health")
 local ToughnessDepleted = require("scripts/utilities/toughness/toughness_depleted")
 local ToughnessSettings = require("scripts/settings/toughness/toughness_settings")
 local attack_results = AttackSettings.attack_results
+local damage_types = DamageSettings.damage_types
 local health_settings = AttackSettings.health_settings
 local shield_settings = AttackSettings.shield_settings
 local toughness_template_types = ToughnessSettings.template_types
 local buff_keywords = BuffSettings.keywords
 local _calculate_shield_damage, _calculate_toughness_damage, _calculate_toughness_damage_player, _calculate_toughness_damage_minion, _calculate_health_damage, _calculate_health_damage_player, _calculate_health_damage_minion = nil
-local DamageTakenCalculation = {}
+local DamageTakenCalculation = {
+	get_calculation_parameters = function (attacked_unit, attacked_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor)
+		local side_system = Managers.state.extension:system("side_system")
+		local is_ally = side_system:is_ally(attacked_unit, attacking_unit_owner_unit)
+		local damage_allowed = not is_ally or FriendlyFire.is_enabled(attacking_unit_owner_unit, attacked_unit) or damage_profile.override_allow_friendly_fire
+		local is_player = Breed.is_player(attacked_breed_or_nil)
+		local is_minion = Breed.is_minion(attacked_breed_or_nil)
+		local is_living_prop = Breed.is_living_prop(attacked_breed_or_nil)
+		local health_setting = is_player and health_settings.player or (is_minion or is_living_prop) and health_settings.minion
+		local health_extension = ScriptUnit.extension(attacked_unit, "health_system")
+		local is_invulnerable = health_extension:is_invulnerable()
+		local current_health_damage = health_extension:damage_taken()
+		local current_permanent_damage = health_extension:permanent_damage_taken()
+		local max_health = health_extension:max_health()
+		local max_wounds = health_extension:max_wounds()
+		local toughness_exension = ScriptUnit.has_extension(attacked_unit, "toughness_system")
+		local toughness_template, weapon_toughness_template = nil
 
-DamageTakenCalculation.get_calculation_parameters = function (attacked_unit, attacked_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor)
-	local side_system = Managers.state.extension:system("side_system")
-	local is_ally = side_system:is_ally(attacked_unit, attacking_unit_owner_unit)
-	local damage_allowed = not is_ally or FriendlyFire.is_enabled(attacking_unit_owner_unit, attacked_unit) or damage_profile.override_allow_friendly_fire
-	local is_player = Breed.is_player(attacked_breed_or_nil)
-	local is_minion = Breed.is_minion(attacked_breed_or_nil)
-	local is_living_prop = Breed.is_living_prop(attacked_breed_or_nil)
-	local health_setting = is_player and health_settings.player or (is_minion or is_living_prop) and health_settings.minion
-	local health_extension = ScriptUnit.extension(attacked_unit, "health_system")
-	local is_invulnerable = health_extension:is_invulnerable()
-	local current_health_damage = health_extension:damage_taken()
-	local current_permanent_damage = health_extension:permanent_damage_taken()
-	local max_health = health_extension:max_health()
-	local max_wounds = health_extension:max_wounds()
-	local toughness_exension = ScriptUnit.has_extension(attacked_unit, "toughness_system")
-	local toughness_template, weapon_toughness_template = nil
-
-	if toughness_exension then
-		toughness_template, weapon_toughness_template = toughness_exension:toughness_templates()
-	end
-
-	local current_toughness_damage = toughness_exension and toughness_exension:toughness_damage() or 0
-	local movement_state = nil
-
-	if is_player then
-		local unit_data_extension = ScriptUnit.extension(attacked_unit, "unit_data_system")
-		local movement_state_component = unit_data_extension:read_component("movement_state")
-		movement_state = movement_state_component and movement_state_component.method
-	end
-
-	local shield_extension = ScriptUnit.has_extension(attacked_unit, "shield_system")
-	local shield_setting = nil
-
-	if shield_extension then
-		local can_shield_block = shield_extension:can_block_attack(damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor)
-		shield_setting = can_shield_block and shield_settings.block_all
-	end
-
-	local buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
-	local attacked_unit_stat_buffs = buff_extension and buff_extension:stat_buffs()
-	local attacked_unit_keywords = buff_extension and buff_extension:keywords()
-
-	return is_invulnerable, damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords
-end
-
-DamageTakenCalculation.calculate_attack_result = function (damage_amount, damage_profile, attack_type, attack_direction, instakill, is_invulnerable, damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacked_unit)
-	if not damage_allowed then
-		return attack_results.friendly_fire, 0, 0, 0, damage_amount
-	end
-
-	local remaining_damage = damage_amount
-	local remaining_permanent_damage = 0
-	local damage_absorbed = 0
-	local toughness_damage = 0
-	local attack_result, shield_attack_result, shield_damage_absorbed = nil
-	shield_attack_result, remaining_damage, shield_damage_absorbed = _calculate_shield_damage(remaining_damage, damage_profile, shield_setting, instakill)
-	damage_absorbed = damage_absorbed + shield_damage_absorbed
-
-	if shield_attack_result then
-		attack_result = shield_attack_result
-	end
-
-	if remaining_damage > 0 then
-		local toughness_attack_result, toughness_damage_absorbed = nil
-		toughness_attack_result, remaining_damage, toughness_damage, toughness_damage_absorbed = _calculate_toughness_damage(remaining_damage, damage_profile, attack_type, attack_direction, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, attacked_unit_stat_buffs, attacked_unit_keywords, instakill, attacked_unit)
-		damage_absorbed = damage_absorbed + toughness_damage_absorbed
-
-		if toughness_attack_result then
-			attack_result = attack_result or toughness_attack_result
+		if toughness_exension then
+			toughness_template, weapon_toughness_template = toughness_exension:toughness_templates()
 		end
-	end
 
-	if remaining_damage > 0 then
-		local health_attack_result = nil
-		health_attack_result, remaining_damage, remaining_permanent_damage = _calculate_health_damage(remaining_damage, damage_profile, current_health_damage, current_permanent_damage, max_health, max_wounds, instakill, is_invulnerable, attacked_unit_stat_buffs, attacked_unit_keywords, health_setting)
+		local current_toughness_damage = toughness_exension and toughness_exension:toughness_damage() or 0
+		local movement_state = nil
 
-		if health_attack_result then
-			attack_result = attack_result or health_attack_result
+		if is_player then
+			local unit_data_extension = ScriptUnit.extension(attacked_unit, "unit_data_system")
+			local movement_state_component = unit_data_extension:read_component("movement_state")
+			movement_state = movement_state_component and movement_state_component.method
 		end
+
+		local shield_extension = ScriptUnit.has_extension(attacked_unit, "shield_system")
+		local shield_setting = nil
+
+		if shield_extension then
+			local can_shield_block = shield_extension:can_block_attack(damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor)
+			shield_setting = can_shield_block and shield_settings.block_all
+		end
+
+		local buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
+		local attacked_unit_stat_buffs = buff_extension and buff_extension:stat_buffs()
+		local attacked_unit_keywords = buff_extension and buff_extension:keywords()
+
+		return is_invulnerable, damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords
+	end,
+	calculate_attack_result = function (damage_amount, damage_profile, attack_type, attack_direction, instakill, is_invulnerable, damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacked_unit)
+		if not damage_allowed then
+			return attack_results.friendly_fire, 0, 0, 0, damage_amount
+		end
+
+		local remaining_damage = damage_amount
+		local remaining_permanent_damage = 0
+		local damage_absorbed = 0
+		local toughness_damage = 0
+		local attack_result, shield_attack_result, shield_damage_absorbed = nil
+		shield_attack_result, remaining_damage, shield_damage_absorbed = _calculate_shield_damage(remaining_damage, damage_profile, shield_setting, instakill)
+		damage_absorbed = damage_absorbed + shield_damage_absorbed
+
+		if shield_attack_result then
+			attack_result = shield_attack_result
+		end
+
+		if remaining_damage > 0 then
+			local toughness_attack_result, toughness_damage_absorbed = nil
+			toughness_attack_result, remaining_damage, toughness_damage, toughness_damage_absorbed = _calculate_toughness_damage(remaining_damage, damage_profile, attack_type, attack_direction, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, attacked_unit_stat_buffs, attacked_unit_keywords, instakill, attacked_unit)
+			damage_absorbed = damage_absorbed + toughness_damage_absorbed
+
+			if toughness_attack_result then
+				attack_result = attack_result or toughness_attack_result
+			end
+		end
+
+		if remaining_damage > 0 then
+			local health_attack_result = nil
+			health_attack_result, remaining_damage, remaining_permanent_damage = _calculate_health_damage(remaining_damage, damage_profile, current_health_damage, current_permanent_damage, max_health, max_wounds, instakill, is_invulnerable, attacked_unit_stat_buffs, attacked_unit_keywords, health_setting)
+
+			if health_attack_result then
+				attack_result = attack_result or health_attack_result
+			end
+		end
+
+		attack_result = attack_result or attack_results.damaged
+
+		return attack_result, remaining_damage, remaining_permanent_damage, toughness_damage, damage_absorbed
 	end
-
-	attack_result = attack_result or attack_results.damaged
-
-	return attack_result, remaining_damage, remaining_permanent_damage, toughness_damage, damage_absorbed
-end
+}
 
 function _calculate_shield_damage(damage_amount, damage_profile, shield_setting, instakill)
 	local ignore_shield = damage_profile.ignore_shield or instakill
@@ -127,7 +128,7 @@ function _calculate_toughness_damage(damage_amount, damage_profile, attack_type,
 end
 
 function _calculate_toughness_damage_player(damage_amount, damage_profile, attack_type, attack_direction, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, attacked_unit_stat_buffs, attacked_unit_keywords, instakill, attacked_unit)
-	local toughness_extra = attacked_unit_stat_buffs.toughness + attacked_unit_stat_buffs.toughness_bonus_flat
+	local toughness_extra = (attacked_unit_stat_buffs.toughness or 0) + (attacked_unit_stat_buffs.toughness_bonus_flat or 0)
 	local toughness_bonus = attacked_unit_stat_buffs.toughness_bonus or 1
 	local max_toughness = toughness_template.max * toughness_bonus + toughness_extra
 	local toughness_before_damage = max_toughness - current_toughness_damage
@@ -233,9 +234,11 @@ function _calculate_health_damage_player(damage_amount, damage_profile, current_
 	local permanent_damage_buff_ratio = attacked_unit_stat_buffs and attacked_unit_stat_buffs.permanent_damage_taken or 0
 	local permanent_damage_buff_resistance = attacked_unit_stat_buffs and attacked_unit_stat_buffs.permanent_damage_converter_resistance or 0
 	local permanent_damage_ratio = math.clamp(permanent_damage_profile_ratio + permanent_damage_buff_ratio * (1 - permanent_damage_buff_resistance), 0, 1)
+	local is_grimoire_damage = damage_profile.damage_type == damage_types.grimoire
+	local buff_corruption_taken_grimoire_multiplier = is_grimoire_damage and attacked_unit_stat_buffs and attacked_unit_stat_buffs.corruption_taken_grimoire_multiplier or 1
 	local buff_corruption_taken_multiplier = attacked_unit_stat_buffs and attacked_unit_stat_buffs.corruption_taken_multiplier or 1
 	buff_corruption_taken_multiplier = math.max(0, buff_corruption_taken_multiplier)
-	local permanent_damage = damage_amount * permanent_damage_ratio * buff_corruption_taken_multiplier
+	local permanent_damage = damage_amount * permanent_damage_ratio * buff_corruption_taken_multiplier * buff_corruption_taken_grimoire_multiplier
 	local health_damage = damage_amount * (1 - permanent_damage_ratio)
 
 	if max_health - (current_permanent_damage + permanent_damage) < 1 then

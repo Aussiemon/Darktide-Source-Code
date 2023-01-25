@@ -515,7 +515,9 @@ ConstantElementChat._next_connected_channel_handle = function (self, current_pri
 		return channels[1].session_handle
 	end
 
-	return channels[math.index_wrapper(current_selected_channel_handle_index + 1, #channels)].session_handle
+	local next_channel = channels[math.index_wrapper(current_selected_channel_handle_index + 1, #channels)]
+
+	return next_channel and next_channel.session_handle or nil
 end
 
 ConstantElementChat._update_input_field = function (self, ui_renderer, widget)
@@ -785,17 +787,21 @@ ConstantElementChat._on_connect_to_channel = function (self, channel_handle)
 				show_notification = false
 
 				if self._selected_channel_handle then
-					local selected_channel_tag = Managers.chat:sessions()[self._selected_channel_handle].tag
+					local selected_channel = Managers.chat:sessions()[self._selected_channel_handle]
 
-					if selected_channel_tag == ChatManagerConstants.ChannelTag.PARTY and channel.tag == ChatManagerConstants.ChannelTag.MISSION then
-						self._selected_channel_handle = other_channel.channel_handle
+					if selected_channel then
+						local selected_channel_tag = selected_channel.tag
+
+						if selected_channel_tag == ChatManagerConstants.ChannelTag.PARTY and channel.tag == ChatManagerConstants.ChannelTag.MISSION then
+							self._selected_channel_handle = other_channel.channel_handle
+						end
 					end
 				end
 			end
 		end
 	end
 
-	if show_notification then
+	if show_notification and channel.tag then
 		local channel_name = self:_channel_name(channel.tag, true, channel.channel_name)
 		local add_channel_message = Managers.localization:localize("loc_chat_joined_channel", true, {
 			channel_name = channel_name
@@ -838,7 +844,7 @@ ConstantElementChat._on_disconnect_from_channel = function (self, channel_handle
 			end
 		end
 
-		if show_notification then
+		if show_notification and channel.tag then
 			local channel_name = self:_channel_name(channel.tag, true, channel.channel_name)
 			local remove_channel_message = Managers.localization:localize("loc_chat_left_channel", true, {
 				channel_name = channel_name

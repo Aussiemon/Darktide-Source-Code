@@ -1407,7 +1407,7 @@ spread_templates.hip_lasgun_killshot_p2_m1 = {
 			min_ratio = 0.25
 		},
 		immediate_spread = {
-			num_shots_clear_time = 2,
+			num_shots_clear_time = 0.5,
 			suppression_hit = {
 				{
 					pitch = {

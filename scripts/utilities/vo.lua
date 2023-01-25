@@ -1095,7 +1095,7 @@ Vo.play_local_vo_event = function (unit, rule_name, wwise_route_key, seed, is_op
 			end
 		end
 
-		if is_opinion_vo then
+		if player_ext and is_opinion_vo then
 			local player_voice_profile = player_ext:get_voice_profile()
 			local npc_class = dialogue_extension._context.class_name
 			local opinion_settings = DialogueBreedSettings[npc_class].opinion_settings

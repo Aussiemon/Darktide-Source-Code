@@ -126,8 +126,8 @@ local breed_data = {
 			close = 0.3
 		},
 		immunity_duration = {
-			2.75,
-			3.25
+			1.75,
+			2.25
 		}
 	},
 	attack_intensity_cooldowns = {

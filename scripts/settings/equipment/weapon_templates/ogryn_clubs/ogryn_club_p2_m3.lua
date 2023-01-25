@@ -8,6 +8,7 @@ local HitZone = require("scripts/utilities/attack/hit_zone")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local WeaponTraitsBespokeOgrynClubP2 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_club_p2")
 local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
@@ -16,6 +17,7 @@ local damage_types = DamageSettings.damage_types
 local default_hit_zone_priority = ActionSweepSettings.default_hit_zone_priority
 local template_types = WeaponTweakTemplateSettings.template_types
 local armor_types = ArmorSettings.types
+local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
@@ -140,16 +142,16 @@ weapon_template.actions = {
 	action_left_heavy = {
 		damage_window_start = 0.4666666666666667,
 		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1",
-		first_person_hit_anim = "hit_left_shake",
 		anim_event_3p = "attack_swing_heavy_down_right_slow",
+		kind = "sweep",
+		first_person_hit_anim = "hit_left_shake",
+		weapon_handling_template = "time_scale_1",
 		first_person_hit_stop_anim = "attack_hit",
-		range_mod = 1.25,
 		allowed_during_sprint = true,
 		damage_window_end = 0.5666666666666667,
-		kind = "sweep",
-		attack_direction_override = "right",
+		range_mod = 1.25,
 		anim_end_event = "attack_finished",
+		attack_direction_override = "right",
 		uninterruptible = true,
 		anim_event = "attack_swing_heavy_right_diagonal",
 		total_time = 2,
@@ -171,6 +173,10 @@ weapon_template.actions = {
 				t = 1
 			},
 			start_modifier = 1.5
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
 		allowed_chain_actions = {
 			wield = {
@@ -274,12 +280,12 @@ weapon_template.actions = {
 	action_right_light = {
 		damage_window_start = 0.4666666666666667,
 		hit_armor_anim = "attack_hit_shield",
+		weapon_handling_template = "time_scale_1_2",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.25,
+		first_person_hit_stop_anim = "attack_hit",
 		anim_event_3p = "attack_swing_down_slow",
-		weapon_handling_template = "time_scale_1_2",
 		damage_window_end = 0.6,
 		attack_direction_override = "right",
 		anim_end_event = "attack_finished",
@@ -316,6 +322,10 @@ weapon_template.actions = {
 				t = 1
 			},
 			start_modifier = 0.2
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
 		allowed_chain_actions = {
 			wield = {
@@ -361,16 +371,16 @@ weapon_template.actions = {
 	action_right_heavy = {
 		damage_window_start = 0.23333333333333334,
 		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1",
-		first_person_hit_anim = "hit_down_shake",
 		anim_event_3p = "attack_swing_heavy_up_left",
+		kind = "sweep",
+		first_person_hit_anim = "hit_down_shake",
+		weapon_handling_template = "time_scale_1",
 		first_person_hit_stop_anim = "attack_hit",
-		range_mod = 1.25,
 		allowed_during_sprint = true,
 		damage_window_end = 0.36666666666666664,
-		kind = "sweep",
-		attack_direction_override = "left",
+		range_mod = 1.25,
 		anim_end_event = "attack_finished",
+		attack_direction_override = "left",
 		uninterruptible = true,
 		anim_event = "attack_swing_heavy_left_up",
 		total_time = 1.72,
@@ -392,6 +402,10 @@ weapon_template.actions = {
 				t = 1
 			},
 			start_modifier = 1.5
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
 		allowed_chain_actions = {
 			wield = {
@@ -494,16 +508,16 @@ weapon_template.actions = {
 	action_left_light = {
 		damage_window_start = 0.43333333333333335,
 		hit_armor_anim = "attack_hit_shield",
-		kind = "sweep",
-		first_person_hit_anim = "hit_left_down_shake",
 		anim_event_3p = "attack_swing_left_slow",
+		weapon_handling_template = "time_scale_0_9",
+		first_person_hit_anim = "hit_left_down_shake",
+		kind = "sweep",
 		first_person_hit_stop_anim = "attack_hit",
-		range_mod = 1.25,
 		allowed_during_sprint = true,
 		damage_window_end = 0.5333333333333333,
-		weapon_handling_template = "time_scale_0_9",
-		attack_direction_override = "left",
+		range_mod = 1.25,
 		anim_end_event = "attack_finished",
+		attack_direction_override = "left",
 		uninterruptible = true,
 		anim_event = "attack_swing_left",
 		total_time = 2,
@@ -537,6 +551,10 @@ weapon_template.actions = {
 				t = 1
 			},
 			start_modifier = 0.2
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
 		allowed_chain_actions = {
 			wield = {
@@ -581,12 +599,12 @@ weapon_template.actions = {
 	action_left_light_2 = {
 		damage_window_start = 0.43333333333333335,
 		hit_armor_anim = "attack_hit_shield",
+		weapon_handling_template = "time_scale_1_1",
 		kind = "sweep",
 		first_person_hit_anim = "hit_left_shake",
-		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.25,
+		first_person_hit_stop_anim = "attack_hit",
 		anim_event_3p = "attack_swing_down_slow",
-		weapon_handling_template = "time_scale_1_1",
 		damage_window_end = 0.7666666666666667,
 		attack_direction_override = "push",
 		anim_end_event = "attack_finished",
@@ -623,6 +641,10 @@ weapon_template.actions = {
 				t = 1
 			},
 			start_modifier = 0.2
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
 		allowed_chain_actions = {
 			wield = {
@@ -726,12 +748,12 @@ weapon_template.actions = {
 	action_right_light_2 = {
 		damage_window_start = 0.4666666666666667,
 		hit_armor_anim = "attack_hit_shield",
+		weapon_handling_template = "time_scale_1_2",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.25,
+		first_person_hit_stop_anim = "attack_hit",
 		anim_event_3p = "attack_swing_right_diagonal_slow",
-		weapon_handling_template = "time_scale_1_2",
 		damage_window_end = 0.6,
 		attack_direction_override = "right",
 		anim_end_event = "attack_finished",
@@ -768,6 +790,10 @@ weapon_template.actions = {
 				t = 1
 			},
 			start_modifier = 0.2
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
 		allowed_chain_actions = {
 			wield = {
@@ -814,13 +840,13 @@ weapon_template.actions = {
 		damage_window_start = 0.34,
 		hit_armor_anim = "attack_hit",
 		start_input = "special_action",
+		range_mod = 1.25,
 		kind = "sweep",
-		weapon_handling_template = "time_scale_0_9",
 		first_person_hit_anim = "hit_right_shake",
-		first_person_hit_stop_anim = "hit_right_shake",
+		weapon_handling_template = "time_scale_0_9",
 		allowed_during_sprint = true,
 		activation_cooldown = 6,
-		range_mod = 1.25,
+		first_person_hit_stop_anim = "hit_right_shake",
 		damage_window_end = 0.39,
 		anim_end_event = "attack_finished",
 		activate_special = true,
@@ -859,13 +885,17 @@ weapon_template.actions = {
 			},
 			start_modifier = 0.2
 		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed
+		},
 		allowed_chain_actions = {
 			wield = {
 				action_name = "action_unwield"
 			},
 			start_attack = {
 				action_name = "action_melee_start_punch",
-				chain_time = 0.3
+				chain_time = 0.4
 			},
 			block = {
 				action_name = "action_block",
@@ -903,17 +933,17 @@ weapon_template.actions = {
 	action_weapon_special_2 = {
 		damage_window_start = 0.3333333333333333,
 		hit_armor_anim = "attack_hit",
+		uninterruptible = true,
 		kind = "sweep",
-		weapon_handling_template = "time_scale_0_9",
 		first_person_hit_anim = "hit_left_shake",
-		first_person_hit_stop_anim = "hit_left_shake",
+		weapon_handling_template = "time_scale_0_9",
 		allowed_during_sprint = true,
 		activation_cooldown = 6,
-		uninterruptible = true,
+		first_person_hit_stop_anim = "hit_left_shake",
 		damage_window_end = 0.4,
 		anim_end_event = "attack_finished",
-		range_mod = 1.25,
 		activate_special = true,
+		range_mod = 1.25,
 		attack_direction_override = "left",
 		anim_event_3p = "attack_swing_slap_left",
 		anim_event = "attack_swing_slap_left",
@@ -948,6 +978,10 @@ weapon_template.actions = {
 				t = 1
 			},
 			start_modifier = 0.2
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
 		allowed_chain_actions = {
 			wield = {
@@ -1050,16 +1084,16 @@ weapon_template.actions = {
 	action_left_light_punch = {
 		damage_window_start = 0.43333333333333335,
 		hit_armor_anim = "attack_hit_shield",
-		kind = "sweep",
-		first_person_hit_anim = "hit_left_down_shake",
 		anim_event_3p = "attack_swing_up_left",
+		weapon_handling_template = "time_scale_1_2",
+		first_person_hit_anim = "hit_left_down_shake",
+		kind = "sweep",
 		first_person_hit_stop_anim = "attack_hit",
-		range_mod = 1.25,
 		allowed_during_sprint = true,
 		damage_window_end = 0.6,
-		weapon_handling_template = "time_scale_1_2",
-		attack_direction_override = "left",
+		range_mod = 1.25,
 		anim_end_event = "attack_finished",
+		attack_direction_override = "left",
 		uninterruptible = true,
 		anim_event = "attack_swing_up_left",
 		total_time = 2,
@@ -1093,6 +1127,10 @@ weapon_template.actions = {
 				t = 1
 			},
 			start_modifier = 0.2
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		},
 		allowed_chain_actions = {
 			wield = {

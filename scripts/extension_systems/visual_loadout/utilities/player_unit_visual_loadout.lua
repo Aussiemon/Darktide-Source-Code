@@ -6,7 +6,7 @@ local unit_flow_event = Unit.flow_event
 local PlayerUnitVisualLoadout = {}
 local _unwield_slot = nil
 
-PlayerUnitVisualLoadout.wield_slot = function (slot_to_wield, player_unit, t)
+PlayerUnitVisualLoadout.wield_slot = function (slot_to_wield, player_unit, t, skip_wield_action)
 	local visual_loadout_extension = ScriptUnit.extension(player_unit, "visual_loadout_system")
 	local weapon_extension = ScriptUnit.extension(player_unit, "weapon_system")
 	local animation_extension = ScriptUnit.extension(player_unit, "animation_system")
@@ -24,7 +24,7 @@ PlayerUnitVisualLoadout.wield_slot = function (slot_to_wield, player_unit, t)
 	local weapon_template = visual_loadout_extension:weapon_template_from_slot(slot_to_wield)
 
 	animation_extension:inventory_slot_wielded(weapon_template, t)
-	weapon_extension:on_slot_wielded(slot_to_wield, t)
+	weapon_extension:on_slot_wielded(slot_to_wield, t, skip_wield_action)
 end
 
 PlayerUnitVisualLoadout.wield_previous_slot = function (inventory_component, unit, t)

@@ -176,7 +176,9 @@ local archetype_talents = {
 			name = "Heavy melee attacks apply bleed to enemies hit",
 			display_name = "loc_talent_bonebreaker_bleed_on_multiple_hit",
 			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_2_3_b",
-			format_values = {},
+			format_values = {
+				stacks = talent_settings.offensive_3.stacks
+			},
 			passive = {
 				buff_template_name = "ogryn_bonebreaker_heavy_attacks_bleed",
 				identifier = "offensive"
@@ -244,9 +246,9 @@ local archetype_talents = {
 			format_values = {
 				damage_taken = (1 - talent_settings.defensive_2.max) / 3 * 100
 			},
-			coherency = {
+			passive = {
 				buff_template_name = "ogryn_bonebreaker_reduce_damage_taken_on_disabled_allies",
-				identifier = "increased_melee_heavy_damage"
+				identifier = "defensive"
 			}
 		},
 		ogryn_2_tier_4_name_3 = {
@@ -260,7 +262,7 @@ local archetype_talents = {
 			},
 			passive = {
 				buff_template_name = "ogryn_bonebreaker_increased_toughness_at_low_health",
-				identifier = "defense"
+				identifier = "defensive"
 			}
 		},
 		ogryn_2_tier_5_name_1 = {

@@ -1071,6 +1071,9 @@ weapon_template.base_stats = {
 			action_right_light = {
 				damage_trait_templates.default_melee_dps_stat
 			},
+			action_left_light_2 = {
+				damage_trait_templates.default_melee_dps_stat
+			},
 			action_right_light_pushfollow = {
 				damage_trait_templates.default_melee_dps_stat
 			},
@@ -1119,47 +1122,14 @@ weapon_template.base_stats = {
 			action_right_light = {
 				damage_trait_templates.default_armor_pierce_stat
 			},
+			action_left_light_2 = {
+				damage_trait_templates.default_armor_pierce_stat
+			},
 			action_right_light_pushfollow = {
 				damage_trait_templates.default_armor_pierce_stat
 			},
 			action_special_uppercut = {
 				damage_trait_templates.default_armor_pierce_stat
-			}
-		}
-	},
-	ogryn_combatblade_p1_m1_first_target_stat = {
-		display_name = "loc_stats_display_first_target_stat",
-		is_stat_trait = true,
-		damage = {
-			action_left_heavy = {
-				damage_trait_templates.default_first_target_stat
-			},
-			action_right_heavy = {
-				damage_trait_templates.default_first_target_stat,
-				display_data = {
-					prefix = "loc_weapon_action_title_heavy",
-					display_stats = {
-						__all_basic_stats = true
-					}
-				}
-			},
-			action_left_light = {
-				damage_trait_templates.default_first_target_stat,
-				display_data = {
-					prefix = "loc_weapon_action_title_light",
-					display_stats = {
-						__all_basic_stats = true
-					}
-				}
-			},
-			action_right_light = {
-				damage_trait_templates.default_first_target_stat
-			},
-			action_right_light_pushfollow = {
-				damage_trait_templates.default_first_target_stat
-			},
-			action_special_uppercut = {
-				damage_trait_templates.default_first_target_stat
 			}
 		}
 	},
@@ -1191,8 +1161,50 @@ weapon_template.base_stats = {
 			action_right_light = {
 				damage_trait_templates.ogryn_combatblade_p1_m1_cleave_stat
 			},
+			action_left_light_2 = {
+				damage_trait_templates.ogryn_combatblade_p1_m1_cleave_stat
+			},
 			action_right_light_pushfollow = {
 				damage_trait_templates.ogryn_combatblade_p1_m1_cleave_stat
+			}
+		}
+	},
+	ogryn_combatblade_p1_m1_first_target_stat = {
+		display_name = "loc_stats_display_first_target_stat",
+		is_stat_trait = true,
+		damage = {
+			action_left_heavy = {
+				damage_trait_templates.default_first_target_stat
+			},
+			action_right_heavy = {
+				damage_trait_templates.default_first_target_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_heavy",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
+			},
+			action_left_light = {
+				damage_trait_templates.default_first_target_stat,
+				display_data = {
+					prefix = "loc_weapon_action_title_light",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
+			},
+			action_right_light = {
+				damage_trait_templates.default_first_target_stat
+			},
+			action_left_light_2 = {
+				damage_trait_templates.default_first_target_stat
+			},
+			action_right_light_pushfollow = {
+				damage_trait_templates.default_first_target_stat
+			},
+			action_special_uppercut = {
+				damage_trait_templates.default_first_target_stat
 			}
 		}
 	},

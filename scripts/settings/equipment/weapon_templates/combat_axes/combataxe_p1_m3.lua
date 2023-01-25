@@ -1187,6 +1187,9 @@ weapon_template.base_stats = {
 			action_right_heavy = {
 				damage_trait_templates.default_melee_dps_stat
 			},
+			action_left_heavy_last = {
+				damage_trait_templates.default_melee_dps_stat
+			},
 			action_left_light = {
 				damage_trait_templates.default_melee_dps_stat
 			},
@@ -1238,6 +1241,9 @@ weapon_template.base_stats = {
 			action_right_heavy = {
 				damage_trait_templates.default_armor_pierce_stat
 			},
+			action_left_heavy_last = {
+				damage_trait_templates.default_armor_pierce_stat
+			},
 			action_left_light = {
 				damage_trait_templates.default_armor_pierce_stat
 			},
@@ -1285,6 +1291,9 @@ weapon_template.base_stats = {
 			action_right_heavy = {
 				damage_trait_templates.default_melee_finesse_stat
 			},
+			action_left_heavy_last = {
+				damage_trait_templates.default_melee_finesse_stat
+			},
 			action_left_light = {
 				damage_trait_templates.default_melee_finesse_stat
 			},
@@ -1318,6 +1327,9 @@ weapon_template.base_stats = {
 				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_right_heavy = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_left_heavy_last = {
 				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_left_light = {
@@ -1365,6 +1377,9 @@ weapon_template.base_stats = {
 				damage_trait_templates.default_first_target_stat
 			},
 			action_right_heavy = {
+				damage_trait_templates.default_first_target_stat
+			},
+			action_left_heavy_last = {
 				damage_trait_templates.default_first_target_stat
 			},
 			action_left_light = {
@@ -1486,6 +1501,9 @@ weapon_template.perks = {
 			},
 			action_right_light_pushfollow = {
 				damage_trait_templates.default_melee_finesse_perk
+			},
+			action_left_heavy_last = {
+				damage_trait_templates.default_melee_finesse_perk
 			}
 		},
 		weapon_handling = {
@@ -1576,10 +1594,10 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	secondary = {
-		display_name = "loc_gestalt_tank",
-		type = "tank",
+		display_name = "loc_gestalt_smiter",
+		type = "smiter",
 		attack_chain = {
-			"tank",
+			"smiter",
 			"smiter",
 			"smiter"
 		}

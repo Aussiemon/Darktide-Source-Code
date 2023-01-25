@@ -9,6 +9,36 @@ local damage_types = DamageSettings.damage_types
 local CLOSE_RANGE_RANGED = DamageSettings.ranged_close
 local CLOSE_RANGE_SQUARED = CLOSE_RANGE_RANGED * CLOSE_RANGE_RANGED
 local CheckProcFunctions = {
+	all = function (...)
+		local conditions = {
+			...
+		}
+
+		return function (...)
+			for i = 1, #conditions do
+				if not conditions[i](...) then
+					return false
+				end
+			end
+
+			return true
+		end
+	end,
+	any = function (...)
+		local conditions = {
+			...
+		}
+
+		return function (...)
+			for i = 1, #conditions do
+				if conditions[i](...) then
+					return true
+				end
+			end
+
+			return false
+		end
+	end,
 	on_kill = function (params)
 		if params.attack_result ~= attack_results.died then
 			return false
@@ -232,6 +262,10 @@ CheckProcFunctions.on_melee_hit = function (params)
 	return params.attack_type == attack_types.melee
 end
 
+CheckProcFunctions.on_exploion_hit = function (params)
+	return params.attack_type == attack_types.explosion
+end
+
 CheckProcFunctions.on_melee_weapon_special_hit = function (params)
 	return params.weapon_special and params.attack_type == attack_types.melee
 end
@@ -269,6 +303,10 @@ CheckProcFunctions.on_heavy_hit = function (params)
 	local melee_attack_strength = params.melee_attack_strength
 
 	return melee_attack_strength and melee_attack_strength == "heavy"
+end
+
+CheckProcFunctions.on_damaging_hit = function (params)
+	return params.damage > 0
 end
 
 CheckProcFunctions.on_weakspot_hit = function (params)

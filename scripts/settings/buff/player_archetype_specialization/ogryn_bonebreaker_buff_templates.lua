@@ -83,7 +83,7 @@ templates.ogryn_bonebreaker_passive_stagger = {
 	predicted = false,
 	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.impact_modifier] = talent_settings.passive_1.impact_modifier
+		[stat_buffs.melee_impact_modifier] = talent_settings.passive_1.impact_modifier
 	}
 }
 templates.ogryn_bonebreaker_increased_coherency_regen = {
@@ -406,7 +406,7 @@ templates.ogryn_bonebreaker_coherency_increased_melee_damage = {
 	max_stacks = talent_settings.coherency.max_stacks,
 	keywords = {},
 	stat_buffs = {
-		[stat_buffs.melee_damage] = talent_settings.coherency.melee_damage
+		[stat_buffs.melee_heavy_damage] = talent_settings.coherency.melee_damage
 	}
 }
 templates.ogryn_bonebreaker_cooldown_on_elite_kills_by_coherence = {

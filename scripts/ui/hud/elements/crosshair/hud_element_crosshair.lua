@@ -58,30 +58,25 @@ HudElementCrosshair.destroy = function (self)
 end
 
 HudElementCrosshair.event_crosshair_hit_report = function (self, hit_weakspot, attack_result, did_damage, hit_world_position, damage_efficiency)
+	did_damage = did_damage or damage_efficiency == "push"
 	local hit_report_array = self._hit_report_array
-	local last_result = hit_report_array[3]
+	local new_result = attack_result == attack_results.damaged and hit_weakspot and "weakspot" or attack_result
+	local new_prio = attack_result_priority[new_result] or math.huge
+	local last_prio = hit_report_array[6]
+	local last_did_damage = hit_report_array[4]
 
-	if last_result then
-		if last_result == attack_results.damaged and hit_weakspot then
-			last_result = "weakspot"
-		end
-
-		local new_result = attack_result == attack_results.damaged and hit_weakspot and "weakspot" or attack_result
-		local new_prio = attack_result_priority[new_result] or math.huge
-
-		if last_result and attack_result_priority[last_result] < new_prio then
-			return
-		end
+	if last_prio and (last_prio < new_prio or last_prio == new_prio and last_did_damage and not did_damage) then
+		return
 	end
 
 	table.clear(hit_report_array)
 
-	local blocked = not did_damage and damage_efficiency ~= "push"
 	hit_report_array[1] = HudElementCrosshairSettings.hit_duration
 	hit_report_array[2] = hit_weakspot
 	hit_report_array[3] = attack_result
-	hit_report_array[4] = not blocked
+	hit_report_array[4] = did_damage
 	hit_report_array[5] = hit_world_position
+	hit_report_array[6] = new_prio
 end
 
 local hit_indicator_colors = HudElementCrosshairSettings.hit_indicator_colors

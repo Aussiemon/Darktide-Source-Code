@@ -232,7 +232,7 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 				power_level_damage_multiplier = target_breed_or_nil.explosion_power_multiplier
 			end
 
-			calculated_damage, damage_efficiency = DamageCalculation.calculate(damage_profile, target_settings, damage_profile_lerp_values, hit_zone_name, power_level * power_level_damage_multiplier, charge_level, target_breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, attacked_unit, auto_completed_action)
+			calculated_damage, damage_efficiency = DamageCalculation.calculate(damage_profile, target_settings, damage_profile_lerp_values, hit_zone_name, power_level * power_level_damage_multiplier, charge_level, target_breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, attacked_unit, auto_completed_action)
 		end
 	end
 
@@ -659,7 +659,7 @@ local TelemetryHelper = require("scripts/managers/telemetry/telemetry_helper")
 function _record_telemetry(attacking_unit, attacked_unit, attack_result, attack_type, damage_dealt, damage_profile, damage_type, damage, permanent_damage, actual_damage_dealt, damage_absorbed, attacker_breed_or_nil, target_breed_or_nil, instakill)
 	local attacking_player = attacking_unit and Managers.state.player_unit_spawn:owner(attacking_unit)
 	local visual_loadout_extension = attacking_unit and ScriptUnit.has_extension(attacking_unit, "visual_loadout_system")
-	local attack_weapon = visual_loadout_extension and visual_loadout_extension:wielded_weapon()
+	local attack_weapon = visual_loadout_extension and visual_loadout_extension:telemetry_wielded_weapon()
 	local attack_weapon_name = attack_weapon and _format_weapon_name(attack_weapon.name)
 	local attacked_player = attacked_unit and Managers.state.player_unit_spawn:owner(attacked_unit)
 	local attacker_position = TelemetryHelper.unit_position(attacking_unit)

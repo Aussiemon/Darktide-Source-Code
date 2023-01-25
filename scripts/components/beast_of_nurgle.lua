@@ -199,6 +199,8 @@ BeastOfNurgle._set_default_spline = function (self, unit)
 	self._target_up = Vector3Box(Matrix4x4.up(self._target_transform))
 end
 
+local INVALID_VECTOR_LENGTH_SQ = 1000000
+
 BeastOfNurgle._update_spline = function (self, unit, dt)
 	self._target_transform = Unit.world_pose(unit, self._target_joint)
 	local target_translation = Matrix4x4.translation(self._target_transform)
@@ -208,13 +210,15 @@ BeastOfNurgle._update_spline = function (self, unit, dt)
 	local new_target_up = nil
 
 	if gut_hit then
-		if self._target_up and Vector3.is_valid(self._target_up:unbox()) then
-			new_target_up = Vector3.lerp(self._target_up:unbox(), gut_normal, dt * 15)
+		local unboxed_target_up = self._target_up:unbox()
+
+		if Vector3.is_valid(unboxed_target_up) and Vector3.length_squared(unboxed_target_up) < INVALID_VECTOR_LENGTH_SQ then
+			new_target_up = Vector3.normalize(Vector3.lerp(unboxed_target_up, gut_normal, dt * 15))
 		else
 			new_target_up = gut_normal
 		end
 	else
-		new_target_up = Vector3.lerp(self._target_up:unbox(), target_up, dt * 15)
+		new_target_up = Vector3.normalize(Vector3.lerp(self._target_up:unbox(), target_up, dt * 15))
 	end
 
 	if Vector3.is_valid(new_target_up) then

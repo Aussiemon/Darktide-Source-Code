@@ -278,6 +278,7 @@ damage_templates.warpfire = {
 		attack = 0.125,
 		impact = 0
 	},
+	damage_type = damage_types.warpfire,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default

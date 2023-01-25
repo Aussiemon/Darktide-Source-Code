@@ -967,6 +967,10 @@ weapon_template.actions = {
 			block = {
 				action_name = "action_block",
 				chain_time = 0.55
+			},
+			special_action = {
+				action_name = "action_parry_special",
+				chain_time = 0.45
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1036,6 +1040,10 @@ weapon_template.actions = {
 			start_attack = {
 				action_name = "action_melee_start_left",
 				chain_time = 0.35
+			},
+			special_action = {
+				action_name = "action_parry_special",
+				chain_time = 0.3
 			}
 		},
 		inner_push_rad = math.pi * 0.25,

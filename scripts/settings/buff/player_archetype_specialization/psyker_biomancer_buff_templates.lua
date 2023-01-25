@@ -1,6 +1,7 @@
 local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -232,14 +233,25 @@ local function add_soul_function(template_data, template_context, t, previous_st
 				local enemy_unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 				local enemy_breed = enemy_unit_data_extension:breed()
 
-				if i <= stop_point then
-					target_unit = unit
-				end
+				if not enemy_breed.tags.witch then
+					if i <= stop_point then
+						target_unit = unit
+					end
 
-				if enemy_breed.tags.monster or enemy_breed.tags.elite then
-					target_unit = unit
+					if enemy_breed.tags.monster or enemy_breed.tags.elite then
+						target_unit = unit
 
-					break
+						break
+					end
+				else
+					local blackboard = BLACKBOARDS[unit]
+					local perception_component = blackboard.perception
+
+					if perception_component.aggro_state == "aggroed" then
+						target_unit = unit
+
+						break
+					end
 				end
 			end
 
@@ -790,7 +802,8 @@ templates.psyker_biomancer_smite_on_hit = {
 
 		if target_breed then
 			local hit_zone_weakspot_types = target_breed.hit_zone_weakspot_types
-			local hit_zone = hit_zone_weakspot_types and next(hit_zone_weakspot_types) or hit_zone_names.center_mass
+			local preferred_hit_zone_name = "head"
+			local hit_zone = hit_zone_weakspot_types and (hit_zone_weakspot_types[preferred_hit_zone_name] and preferred_hit_zone_name or next(hit_zone_weakspot_types)) or hit_zone_names.center_mass
 			local actors = HitZone.get_actor_names(smite_target, hit_zone)
 			local hit_actor_name = actors and actors[1]
 			hit_zone_name = hit_zone
@@ -832,6 +845,18 @@ templates.psyker_biomancer_smite_on_hit = {
 			return
 		end
 
+		local breed = unit_data_extension:breed()
+
+		if not breed then
+			return
+		end
+
+		local is_living_prop = Breed.is_living_prop(breed)
+
+		if is_living_prop then
+			return
+		end
+
 		if not HEALTH_ALIVE[attacked_unit] then
 			return
 		end
@@ -869,8 +894,19 @@ templates.psyker_biomancer_warpfire_grants_souls = {
 	proc_func = function (params, template_data, template_context)
 		local killed_unit = params.dying_unit
 		local killed_unit_buff_extension = ScriptUnit.has_extension(killed_unit, "buff_system")
+		local valid_target = killed_unit_buff_extension and killed_unit_buff_extension:has_keyword(keywords.warpfire_burning)
 
-		if killed_unit_buff_extension and killed_unit_buff_extension:has_keyword(keywords.warpfire_burning) then
+		if not valid_target then
+			local own_unit = template_context.unit
+			local attacking_unit = params.attacking_unit
+
+			if own_unit == attacking_unit then
+				local damage_type = params.damage_type
+				valid_target = damage_type == damage_types.warpfire
+			end
+		end
+
+		if valid_target then
 			local buff_name = template_data.buff_name
 			local buff_extension = template_data.buff_extension
 			local t = FixedFrame.get_latest_fixed_time()

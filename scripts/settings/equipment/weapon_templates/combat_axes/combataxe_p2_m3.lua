@@ -856,7 +856,6 @@ weapon_template.actions = {
 		block_duration = 0.5,
 		kind = "push",
 		anim_event = "attack_push",
-		power_level = 400,
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -953,7 +952,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0
+				chain_time = 0.55
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1047,7 +1046,8 @@ weapon_template.actions = {
 				chain_time = 0.75
 			},
 			block = {
-				action_name = "action_block"
+				action_name = "action_block",
+				chain_time = 0.5
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)

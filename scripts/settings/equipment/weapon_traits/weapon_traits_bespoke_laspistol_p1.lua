@@ -40,7 +40,7 @@ templates.weapon_trait_bespoke_laspistol_p1_burninating_on_crit = {
 				num_stacks_on_proc = 2
 			}
 		},
-		{
+		[4] = {
 			dot_data = {
 				max_stacks = 9,
 				num_stacks_on_proc = 3

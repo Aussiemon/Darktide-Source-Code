@@ -442,16 +442,20 @@ weapon_template.actions = {
 		damage_window_start = 0.5666666666666667,
 		hit_armor_anim = "attack_hit_shield",
 		start_input = "bash",
-		allow_conditional_chain = true,
 		kind = "sweep",
+		sprint_requires_press_to_interrupt = true,
 		first_person_hit_stop_anim = "attack_hit",
-		range_mod = 1.15,
 		crosshair_type = "dot",
-		attack_direction_override = "left",
+		range_mod = 1.15,
+		allowed_during_sprint = true,
+		allow_conditional_chain = true,
 		damage_window_end = 0.7,
+		attack_direction_override = "left",
+		abort_sprint = true,
 		unaim = true,
 		uninterruptible = true,
 		anim_event = "attack_bash",
+		prevent_sprint = true,
 		total_time = 1.2,
 		action_movement_curve = {
 			{
@@ -505,10 +509,10 @@ weapon_template.actions = {
 			},
 			bash = {
 				action_name = "action_bash_right",
-				chain_time = 0.8
+				chain_time = 1
 			},
 			zoom = {
-				chain_time = 0.8,
+				chain_time = 1.2,
 				reset_combo = true,
 				action_name = "action_zoom"
 			}
@@ -533,14 +537,18 @@ weapon_template.actions = {
 	action_bash_right = {
 		damage_window_start = 0.6333333333333333,
 		hit_armor_anim = "attack_hit_shield",
-		first_person_hit_stop_anim = "attack_hit",
 		kind = "sweep",
-		range_mod = 1.15,
+		sprint_requires_press_to_interrupt = true,
 		crosshair_type = "dot",
+		first_person_hit_stop_anim = "attack_hit",
+		allowed_during_sprint = true,
+		range_mod = 1.15,
 		attack_direction_override = "right",
 		damage_window_end = 0.7333333333333333,
+		abort_sprint = true,
 		uninterruptible = true,
 		anim_event = "attack_bash_right",
+		prevent_sprint = true,
 		total_time = 1.2,
 		action_movement_curve = {
 			{
@@ -597,7 +605,7 @@ weapon_template.actions = {
 				chain_time = 1
 			},
 			zoom = {
-				chain_time = 0.8,
+				chain_time = 1,
 				reset_combo = true,
 				action_name = "action_zoom"
 			}

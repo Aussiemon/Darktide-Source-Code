@@ -10,6 +10,8 @@ local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local keywords = BuffSettings.keywords
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
+local PI = math.pi
+local PI_2 = PI * 2
 local templates = {
 	ranged_weakspot_damage = {
 		class_name = "buff",
@@ -120,7 +122,7 @@ local templates = {
 				local damage_template = DamageProfileTemplates.shock_grenade_stun_interval
 				local owner_unit = template_context.owner_unit
 				local power_level = DEFAULT_POWER_LEVEL
-				local random_radians = math.random_range(0, math.two_pi)
+				local random_radians = math.random_range(0, PI_2)
 				local attack_direction = Vector3(math.sin(random_radians), math.cos(random_radians), 0)
 				attack_direction = Vector3.normalize(attack_direction)
 

@@ -1,9 +1,11 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ForcedLookSettings = require("scripts/settings/damage/forced_look_settings")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local PushSettings = require("scripts/settings/damage/push_settings")
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local armor_types = ArmorSettings.types
+local damage_types = DamageSettings.damage_types
 local push_templates = PushSettings.push_templates
 local damage_templates = {}
 local overrides = {}
@@ -649,6 +651,7 @@ damage_templates.grimoire_tick = {
 		attack = 1,
 		impact = 0
 	},
+	damage_type = damage_types.grimoire,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default

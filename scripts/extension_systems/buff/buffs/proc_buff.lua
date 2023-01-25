@@ -112,11 +112,12 @@ ProcBuff.duration_progress = function (self)
 	end
 
 	local has_cooldown = template.cooldown_duration
+	local has_active_duration = template.active_duration
 	local t = Managers.time:time("gameplay")
 
 	if has_cooldown and self:_is_cooling_down(t) then
 		return self:_cooldown_progress(t)
-	elseif not has_cooldown and not self:_is_active(t) then
+	elseif has_active_duration and not has_cooldown and not self:_is_active(t) then
 		return 0.001
 	end
 

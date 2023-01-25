@@ -219,15 +219,15 @@ local action_data = {
 			}
 		},
 		jump_durations = {
-			suppressed_jump_bwd_02 = 3.7866666666666666,
-			suppressed_jump_bwd_03 = 4,
-			suppressed_jump_right_01 = 2.72,
-			suppressed_jump_fwd_01 = 2.933333333333333,
-			suppressed_jump_right_02 = 1.7066666666666668,
-			suppressed_jump_left_01 = 0.6,
-			suppressed_jump_fwd_02 = 2.453333333333333,
-			suppressed_jump_left_02 = 2.4,
-			suppressed_jump_bwd_01 = 2.2933333333333334
+			suppressed_jump_bwd_02 = 1.8933333333333333,
+			suppressed_jump_bwd_03 = 2,
+			suppressed_jump_right_01 = 1.0666666666666667,
+			suppressed_jump_fwd_01 = 1.1466666666666667,
+			suppressed_jump_right_02 = 0.8533333333333334,
+			suppressed_jump_left_01 = 0.88,
+			suppressed_jump_fwd_02 = 1.2266666666666666,
+			suppressed_jump_left_02 = 1.2,
+			suppressed_jump_bwd_01 = 1.0666666666666667
 		}
 	},
 	climb = {

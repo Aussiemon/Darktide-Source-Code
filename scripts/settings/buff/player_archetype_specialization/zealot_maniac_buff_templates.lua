@@ -6,6 +6,7 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local Health = require("scripts/utilities/health")
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local SpecialRulesSettings = require("scripts/settings/ability/special_rules_settings")
 local TalentSettings = require("scripts/settings/buff/talent_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
@@ -253,8 +254,11 @@ templates.zealot_maniac_toughness_regen_in_melee = {
 		local side_system = Managers.state.extension:system("side_system")
 		local side = side_system.side_by_unit[unit]
 		local enemy_side_names = side:relation_side_names("enemy")
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local character_state_component = unit_data_extension:read_component("character_state")
 		template_data.enemy_side_names = enemy_side_names
 		template_data.current_tick = 0
+		template_data.character_state_component = character_state_component
 	end,
 	update_func = function (template_data, template_context, dt, t, template)
 		local next_regen_t = template_data.next_regen_t
@@ -266,6 +270,13 @@ templates.zealot_maniac_toughness_regen_in_melee = {
 		end
 
 		if next_regen_t < t then
+			local is_disabled = PlayerUnitStatus.is_disabled(template_data.character_state_component)
+
+			if is_disabled then
+				template_data.current_tick = 0
+				template_data.is_active = false
+			end
+
 			local player_unit = template_context.unit
 			local player_position = POSITION_LOOKUP[player_unit]
 			local broadphase = template_data.broadphase
@@ -328,7 +339,7 @@ templates.zealot_maniac_bleeding_crits = {
 	proc_func = function (params, template_data, template_context)
 		local victim_unit = params.attacked_unit
 		local victim_buff_extension = ScriptUnit.has_extension(victim_unit, "buff_system")
-		local target_is_bleeding = victim_buff_extension and victim_buff_extension:has_keyword(keywords.bleeding)
+		local target_is_bleeding = victim_buff_extension and (victim_buff_extension:has_keyword(keywords.bleeding) or victim_buff_extension:had_keyword(keywords.bleeding))
 
 		if target_is_bleeding then
 			local t = FixedFrame.get_latest_fixed_time()
@@ -398,7 +409,8 @@ templates.zealot_maniac_multi_hits_impact_buff = {
 		[stat_buffs.impact_modifier] = talent_settings.offensive_2.impact_modifier
 	},
 	conditional_keywords = {
-		keywords.uninterruptible
+		keywords.uninterruptible,
+		keywords.stun_immune
 	},
 	conditional_keywords_func = function (template_data, template_context)
 		return impact_buff_max_stacks <= template_context.stack_count

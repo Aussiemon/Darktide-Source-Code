@@ -804,7 +804,7 @@ MinionVisualLoadoutExtension.rpc_minion_gib = function (self, channel_id, go_id,
 	self:gib(hit_zone_name, attack_direction, damage_profile, is_critical_strike)
 end
 
-MinionVisualLoadoutExtension.wielded_weapon = function (self)
+MinionVisualLoadoutExtension.telemetry_wielded_weapon = function (self)
 	local slots = self._slots
 	local wielded_slot_name = self._wielded_slot_name
 

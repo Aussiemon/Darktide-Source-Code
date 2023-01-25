@@ -93,11 +93,13 @@ EndView.on_exit = function (self)
 	local ui_renderer = self._ui_renderer
 	local game_mode_condition_widgets = self._game_mode_condition_widgets
 
-	for i = 1, #game_mode_condition_widgets do
-		local widget = game_mode_condition_widgets[i]
+	if game_mode_condition_widgets then
+		for i = 1, #game_mode_condition_widgets do
+			local widget = game_mode_condition_widgets[i]
 
-		if widget.content.portrait_load_id then
-			self:_unload_portrait_icon(widget, ui_renderer)
+			if widget.content.portrait_load_id then
+				self:_unload_portrait_icon(widget, ui_renderer)
+			end
 		end
 	end
 

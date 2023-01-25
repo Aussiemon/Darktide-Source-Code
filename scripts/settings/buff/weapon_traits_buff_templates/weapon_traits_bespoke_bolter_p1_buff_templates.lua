@@ -15,13 +15,13 @@ templates.weapon_trait_bespoke_bolter_p1_stacking_power_bonus_on_staggering_enem
 templates.weapon_trait_bespoke_bolter_p1_crit_chance_based_on_aim_time = table.clone(BaseWeaponTraitBuffTemplates.chance_based_on_aim_time)
 templates.weapon_trait_bespoke_bolter_p1_toughness_on_elite_kills = table.clone(BaseWeaponTraitBuffTemplates.toughness_on_elite_kills)
 templates.weapon_trait_bespoke_bolter_p1_stacking_crit_bonus_on_continuous_fire = table.merge({
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.critical_strike_chance] = 0.01
 	},
 	continuous_fire_step = bolter_continuous_fire_step
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 templates.weapon_trait_bespoke_bolter_p1_toughness_on_continuous_fire = table.merge({
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.toughness_extra_regen_rate] = 0.5
 	},
 	continuous_fire_step = bolter_continuous_fire_step

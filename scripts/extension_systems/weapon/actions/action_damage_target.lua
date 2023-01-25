@@ -151,6 +151,16 @@ ActionDamageTarget._deal_damage = function (self, charge_level)
 end
 
 ActionDamageTarget.finish = function (self, reason, data, t, time_in_action)
+	local action_settings = self._action_settings
+
+	if not self._prevent_explosion then
+		local warp_charge_time = action_settings.pay_warp_charge_time or 0.5
+
+		if time_in_action < warp_charge_time then
+			self:_pay_warp_charge_cost(t, self._charge_level)
+		end
+	end
+
 	ActionDamageTarget.super.finish(self, reason, data, t, time_in_action)
 
 	self._action_module_targeting_component.target_unit_1 = nil

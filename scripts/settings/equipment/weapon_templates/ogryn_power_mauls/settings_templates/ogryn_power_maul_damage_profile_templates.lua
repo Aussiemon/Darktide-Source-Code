@@ -350,7 +350,7 @@ overrides.powermaul_2h_light_smiter_active = {
 		},
 		{
 			"armor_damage_modifier",
-			tank_heavy_active_am
+			light_active_am
 		},
 		{
 			"targets",

@@ -209,6 +209,14 @@ local templates = {
 				end
 			end
 		end
+	},
+	debug_power_buff = {
+		predicted = false,
+		class_name = "buff",
+		keywords = {},
+		stat_buffs = {
+			[buff_stat_buffs.power_level_modifier] = 0.1
+		}
 	}
 }
 

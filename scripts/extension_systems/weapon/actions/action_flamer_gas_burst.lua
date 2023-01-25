@@ -65,34 +65,7 @@ ActionFlamerGasBurst.fixed_update = function (self, dt, t, time_in_action)
 		return
 	end
 
-	local targets = self._targets
-	local ALIVE = ALIVE
-
-	for target_unit, hit_t in pairs(targets) do
-		if ALIVE[target_unit] and ScriptUnit.has_extension(target_unit, "health_system") then
-			if hit_t < t then
-				self:_damage_target(target_unit)
-
-				targets[target_unit] = nil
-			end
-		else
-			targets[target_unit] = nil
-		end
-	end
-
-	local dot_targets = self._dot_targets
-
-	for target_unit, hit_t in pairs(dot_targets) do
-		if ALIVE[target_unit] and ScriptUnit.has_extension(target_unit, "buff_system") then
-			if hit_t < t then
-				self:_burn_target(t, target_unit)
-
-				dot_targets[target_unit] = nil
-			end
-		else
-			dot_targets[target_unit] = nil
-		end
-	end
+	self:_damage_and_burn_targets(t, false)
 end
 
 ActionFlamerGasBurst._shoot = function (self, position, rotation, power_level, charge_level, t)
@@ -248,6 +221,37 @@ ActionFlamerGasBurst._acquire_targets = function (self, t)
 	end
 end
 
+ActionFlamerGasBurst._damage_and_burn_targets = function (self, t, force_trigger)
+	local targets = self._targets
+	local ALIVE = ALIVE
+
+	for target_unit, hit_t in pairs(targets) do
+		if ALIVE[target_unit] and ScriptUnit.has_extension(target_unit, "health_system") then
+			if hit_t < t or force_trigger then
+				self:_damage_target(target_unit)
+
+				targets[target_unit] = nil
+			end
+		else
+			targets[target_unit] = nil
+		end
+	end
+
+	local dot_targets = self._dot_targets
+
+	for target_unit, hit_t in pairs(dot_targets) do
+		if ALIVE[target_unit] and ScriptUnit.has_extension(target_unit, "buff_system") then
+			if hit_t < t or force_trigger then
+				self:_burn_target(t, target_unit)
+
+				dot_targets[target_unit] = nil
+			end
+		else
+			dot_targets[target_unit] = nil
+		end
+	end
+end
+
 ActionFlamerGasBurst._damage_target = function (self, target_unit)
 	local player_unit = self._player_unit
 	local damage_config = self._flamer_gas_template.damage
@@ -335,6 +339,7 @@ ActionFlamerGasBurst._acquire_suppressed_units = function (self, t)
 end
 
 ActionFlamerGasBurst.finish = function (self, reason, data, t, time_in_action)
+	self:_damage_and_burn_targets(t, true)
 	ActionFlamerGasBurst.super.finish(self, reason, data, t, time_in_action)
 
 	local position_finder_component = self._action_module_position_finder_component

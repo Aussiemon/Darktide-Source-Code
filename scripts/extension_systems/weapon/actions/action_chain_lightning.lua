@@ -73,7 +73,7 @@ ActionChainLightning.start = function (self, action_settings, t, ...)
 	local charge_component = self._action_module_charge_component
 
 	if action_settings.can_crit then
-		self:_check_for_critical_strike()
+		self:_check_for_critical_strike(false, true)
 	end
 
 	local is_critical_strike = self._critical_strike_component.is_active

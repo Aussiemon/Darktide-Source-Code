@@ -131,8 +131,11 @@ local weapon_charge_templates = {
 		}
 	},
 	forcestaff_p1_m1_use_aoe = {
-		use_charge = true,
-		warp_charge_percent = 0.25
+		use_charge = false,
+		warp_charge_percent = {
+			lerp_perfect = 0.03,
+			lerp_basic = 0.09
+		}
 	},
 	forcestaff_p1_m1_projectile = {
 		warp_charge_percent = {
@@ -206,9 +209,11 @@ local weapon_charge_templates = {
 			lerp_basic = 0.075
 		}
 	},
-	forcestaff_p4_m1_projectile_charged = {
-		use_charge = true,
-		warp_charge_percent = 0.25
+	forcestaff_p4_m1_charged_projectile = {
+		warp_charge_percent = {
+			lerp_perfect = 0.03,
+			lerp_basic = 0.09
+		}
 	},
 	forcestaff_p4_m1_charge_projectile = {
 		charge_on_action_start = true,

@@ -113,7 +113,7 @@ local DEFAULT_MULTIPLIER = 1
 MinionShieldExtension.apply_stagger = function (self, unit, damage_profile, stagger_strength, attack_result, stagger_type, duration_scale, length_scale, attack_type)
 	local is_blocking = self._shield_component.is_blocking
 
-	if not is_blocking then
+	if not is_blocking or damage_profile.ignore_shield then
 		local stagger_component = self._stagger_component
 		local in_open_up_stagger = stagger_component.num_triggered_staggers > 0 and stagger_component.type == stagger_types.shield_heavy_block
 

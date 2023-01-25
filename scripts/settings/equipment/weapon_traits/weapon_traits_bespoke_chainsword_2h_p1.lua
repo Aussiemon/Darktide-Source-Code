@@ -13,7 +13,7 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_bleed_on_activated_hit = {
 				num_stacks_on_proc = 2
 			}
 		},
-		{
+		[4] = {
 			dot_data = {
 				num_stacks_on_proc = 4
 			}

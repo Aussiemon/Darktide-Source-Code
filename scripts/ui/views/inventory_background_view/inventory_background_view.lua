@@ -1266,7 +1266,10 @@ InventoryBackgroundView.on_exit = function (self)
 	end
 
 	InventoryBackgroundView.super.on_exit(self)
-	self:_equip_local_changes()
+
+	if self._entered then
+		self:_equip_local_changes()
+	end
 end
 
 InventoryBackgroundView._handle_input = function (self, input_service)

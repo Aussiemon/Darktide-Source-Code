@@ -261,6 +261,16 @@ spread_templates.default_bolter_spraynpray = {
 		inherits = {
 			"default_bolter_spraynpray",
 			"still"
+		},
+		continuous_spread = {
+			min_pitch = {
+				lerp_perfect = 0.1,
+				lerp_basic = 1
+			},
+			min_yaw = {
+				lerp_perfect = 0.4,
+				lerp_basic = 1.5
+			}
 		}
 	},
 	crouch_moving = {

@@ -6,7 +6,6 @@ local BackendManagerTestify = GameParameters.testify and require("scripts/founda
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live")
 local Interface = {
 	"authenticated",
-	"authentication_failed",
 	"authenticate",
 	"get_auth_method",
 	"account_id",
@@ -55,11 +54,7 @@ BackendManager.init = function (self, default_headers_ctr)
 end
 
 BackendManager.authenticated = function (self)
-	return self._auth_cache and self._auth_cache.state == "fulfilled"
-end
-
-BackendManager.authentication_failed = function (self)
-	return self._auth_cache and self._auth_cache.state == "rejected"
+	return Backend.is_authenticated()
 end
 
 local function _check_response_time(path, value)
@@ -72,10 +67,6 @@ end
 
 BackendManager.update = function (self, dt, t)
 	if self._initialized then
-		if Backend.did_update_auth_config() then
-			self._auth_cache = nil
-		end
-
 		self:sync_time(t)
 
 		local results = Backend.update(dt, t)
@@ -178,7 +169,9 @@ end
 
 BackendManager.logout = function (self)
 	if self._initialized then
-		self._auth_cache = nil
+		for _, promise in pairs(self._promises) do
+			promise:cancel()
+		end
 
 		Backend.logout()
 	end
@@ -234,37 +227,42 @@ BackendManager.authenticate = function (self)
 	end
 
 	return self._initialize_promise:next(function ()
-		if self._auth_cache and not self._auth_cache:is_rejected() then
-			return self._auth_cache
-		end
-
 		local auth_promise = Promise:new()
 		local user_id = Managers.account:user_id()
 		local operation_identifier, error_code = Backend.authenticate(user_id)
 
 		if operation_identifier then
+			local already_existing_promise = self._promises[operation_identifier]
+
+			if already_existing_promise then
+				return already_existing_promise
+			end
+
 			self._promises[operation_identifier] = auth_promise
-			self._auth_cache = auth_promise
 		else
 			error_code = error_code or "Missing backend operation identifier"
 
 			auth_promise:reject(BackendUtilities.create_error(BackendError.NoIdentifier, error_code))
 		end
 
-		auth_promise:next(function (account)
-			Managers.telemetry_events:player_authenticated(account)
-			Crashify.print_property("account_id", string.value_or_nil(account.sub))
+		if not Backend.is_authenticated() then
+			auth_promise:next(function (account)
+				Managers.telemetry_events:player_authenticated(account)
+				Crashify.print_property("account_id", string.value_or_nil(account.sub))
 
-			if Managers.event then
-				Managers.event:trigger("event_player_authenticated")
-			end
+				if Managers.event then
+					Managers.event:trigger("event_player_authenticated")
+				end
 
-			if not DEDICATED_SERVER then
-				local account_id = self:account_id()
+				if not DEDICATED_SERVER then
+					local account_id = self:account_id()
 
-				Managers.telemetry_events:system_settings(account_id)
-			end
-		end)
+					Managers.telemetry_events:system_settings(account_id)
+				end
+
+				self._should_signinerror_at_not_authenticated = true
+			end)
+		end
 
 		return auth_promise
 	end)
@@ -278,11 +276,7 @@ BackendManager.get_auth_method = function (self)
 end
 
 BackendManager.account_id = function (self)
-	if self._auth_cache and self._auth_cache.value and self._auth_cache.value.sub then
-		return self._auth_cache.value.sub
-	end
-
-	return nil
+	return Backend.authenticated_sub()
 end
 
 BackendManager.title_request = function (self, path, options)

@@ -29,6 +29,7 @@ PlayerUnitMoodExtension.init = function (self, extension_init_context, unit, ext
 	self._unit_data_extension = unit_data_extension
 	self._health_extension = ScriptUnit.has_extension(unit, "health_system")
 	self._toughness_extension = ScriptUnit.extension(unit, "toughness_system")
+	self._suppression_extension = ScriptUnit.extension(unit, "suppression_system")
 	local moods_data = Script.new_map(num_moods)
 
 	for mood_type, _ in pairs(mood_types) do
@@ -93,6 +94,7 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	local is_in_critical_health, critical_health_status = PlayerUnitStatus.is_in_critical_health(self._health_extension, self._toughness_extension)
 	local critical_health = is_in_critical_health and CRITICAL_HEALTH_LIMIT <= critical_health_status
 	local no_toughness_left = PlayerUnitStatus.no_toughness_left(self._toughness_extension)
+	local is_suppressed = self._suppression_extension:num_suppression_hits() > 0
 	local player = self._player
 	local specialization_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
 	local weapon_warp_charge_template = WarpCharge.weapon_warp_charge_template(player.player_unit)
@@ -134,7 +136,7 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	local is_sprinting = sprint_character_state_component.is_sprinting
 	local have_sprint_overtime = sprint_character_state_component.sprint_overtime > 0
 	local is_effective_sprinting = is_sprinting and not have_sprint_overtime
-	local is_overtime_spriting = is_sprinting and have_sprint_overtime
+	local is_overtime_sprinting = is_sprinting and have_sprint_overtime
 
 	if last_wound then
 		self:_add_mood(t, mood_types.last_wound)
@@ -162,15 +164,21 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 		self:_remove_mood(t, mood_types.no_toughness)
 	end
 
+	if is_suppressed then
+		self:_add_mood(t, mood_types.suppression_ongoing)
+	elseif not is_suppressed then
+		self:_remove_mood(t, mood_types.suppression_ongoing)
+	end
+
 	if is_effective_sprinting then
 		self:_add_mood(t, mood_types.sprinting)
 	elseif not is_effective_sprinting then
 		self:_remove_mood(t, mood_types.sprinting)
 	end
 
-	if is_overtime_spriting then
+	if is_overtime_sprinting then
 		self:_add_mood(t, mood_types.sprinting_overtime)
-	elseif not is_overtime_spriting then
+	elseif not is_overtime_sprinting then
 		self:_remove_mood(t, mood_types.sprinting_overtime)
 	end
 

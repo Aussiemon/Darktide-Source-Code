@@ -7,6 +7,8 @@ HealthExtension.init = function (self, extension_init_context, unit, extension_i
 	self._unit = unit
 	self._is_unkillable = not not extension_init_data.is_unkillable
 	self._is_invulnerable = not not extension_init_data.is_invulnerable
+	self._last_hit_was_critical = false
+	self._was_hit_by_critical_hit_this_render_frame = false
 	self._damage = 0
 	self._is_dead = false
 	game_object_data.health = self._health
@@ -24,6 +26,10 @@ end
 HealthExtension.game_object_initialized = function (self, session, object_id)
 	self._game_session = session
 	self._game_object_id = object_id
+end
+
+HealthExtension.pre_update = function (self, unit, dt, t)
+	self._was_hit_by_critical_hit_this_render_frame = false
 end
 
 HealthExtension.is_alive = function (self)
@@ -122,6 +128,7 @@ HealthExtension.set_last_damaging_unit = function (self, last_damaging_unit, hit
 	self._last_damaging_unit = last_damaging_unit
 	self._last_hit_zone_name = hit_zone_name
 	self._last_hit_was_critical = last_hit_was_critical
+	self._was_hit_by_critical_hit_this_render_frame = self._was_hit_by_critical_hit_this_render_frame or last_hit_was_critical
 end
 
 HealthExtension.last_damaging_unit = function (self)
@@ -134,6 +141,10 @@ end
 
 HealthExtension.last_hit_was_critical = function (self)
 	return self._last_hit_was_critical
+end
+
+HealthExtension.was_hit_by_critical_hit_this_render_frame = function (self)
+	return self._was_hit_by_critical_hit_this_render_frame
 end
 
 HealthExtension.health_depleted = function (self)

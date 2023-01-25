@@ -17,13 +17,13 @@ local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local templates = {}
 local flamer_p1_continuous_fire_step = 3
 templates.weapon_trait_bespoke_flamer_p1_toughness_on_continuous_fire = table.merge({
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.toughness_extra_regen_rate] = 0.1
 	},
 	continuous_fire_step = flamer_p1_continuous_fire_step
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 templates.weapon_trait_bespoke_flamer_p1_power_bonus_on_continuous_fire = table.merge({
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.power_level_modifier] = 0.02
 	},
 	continuous_fire_step = flamer_p1_continuous_fire_step

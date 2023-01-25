@@ -48,6 +48,7 @@ local categories = {
 	"Player Voice",
 	"Progression",
 	"Stagger",
+	"Suppression",
 	"Sweep Spline",
 	"Time",
 	"Scripted Scenarios",
@@ -2059,6 +2060,22 @@ functions.debug_stagger_selected_unit_with_animation = {
 		end
 
 		return options
+	end
+}
+functions.force_max_suppression = {
+	name = "Force max suppression to selected unit",
+	button_text = "Apply",
+	category = "Suppression",
+	on_activated = function ()
+		local selected_unit = Debug.selected_unit
+
+		if selected_unit then
+			local suppression_extension = ScriptUnit.has_extension(selected_unit, "suppression_system")
+
+			if suppression_extension then
+				suppression_extension:force_max_suppression()
+			end
+		end
 	end
 }
 

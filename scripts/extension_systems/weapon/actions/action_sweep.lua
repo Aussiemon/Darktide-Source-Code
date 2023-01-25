@@ -120,7 +120,7 @@ ActionSweep.start = function (self, action_settings, t, time_scale, params)
 	local combo_count = params.combo_count
 	self._combo_count = combo_count
 
-	self:_check_for_critical_strike()
+	self:_check_for_critical_strike(true, false)
 	table.clear(self._hit_units)
 
 	self._num_saved_entries = 0
@@ -194,6 +194,12 @@ ActionSweep._calculate_max_hit_mass = function (self, damage_profile, power_leve
 	local infinite_cleave_keyword = buff_extension:has_keyword(buff_keywords.melee_infinite_cleave)
 
 	if infinite_cleave_keyword then
+		return math.huge
+	end
+
+	local infinite_cleave_critical_strike_keyword = buff_extension:has_keyword(buff_keywords.melee_infinite_cleave_critical_strike)
+
+	if infinite_cleave_critical_strike_keyword and critical_strike then
 		return math.huge
 	end
 
@@ -309,6 +315,10 @@ ActionSweep._update_sweep = function (self, dt, t, time_in_action, action_settin
 
 		if is_final_frame or action_sweep_component.sweep_aborted then
 			self:_exit_damage_window(t, self._num_hit_enemies)
+
+			if not self:_is_currently_sticky() then
+				self:_handle_exit_procs()
+			end
 		end
 
 		action_sweep_component.sweep_position = end_position
@@ -371,6 +381,10 @@ ActionSweep._start_hit_stickyness = function (self, hit_stickyness_settings, t, 
 
 	self:_add_weapon_blood("full")
 	self:_exit_damage_window(t, self._num_hit_enemies)
+
+	if not self:_is_currently_sticky() then
+		self:_handle_exit_procs()
+	end
 end
 
 ActionSweep._stop_hit_stickyness = function (self, hit_stickyness_settings)
@@ -381,6 +395,8 @@ ActionSweep._stop_hit_stickyness = function (self, hit_stickyness_settings)
 		self._animation_extension:anim_event_1p(stop_anim_event)
 		self._animation_extension:anim_event(stop_anim_event_3p)
 	end
+
+	self:_handle_exit_procs()
 
 	self._current_sticky_armor_type = nil
 	self._action_sweep_component.is_sticky = false
@@ -586,7 +602,9 @@ ActionSweep._exit_damage_window = function (self, t, num_hit_enemies)
 	if special_implementation then
 		special_implementation:on_exit_damage_window(t, num_hit_enemies)
 	end
+end
 
+ActionSweep._handle_exit_procs = function (self)
 	local buff_extension = self._buff_extension
 	local damage_profile = self._damage_profile
 	local is_heavy = damage_profile.melee_attack_strength == melee_attack_strengths.heavy
@@ -969,6 +987,9 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	local wielded_slot = self._inventory_component.wielded_slot
 	local current_amount_of_mass_hit = self._amount_of_mass_hit
 	local buff_extension = self._buff_extension
+	local weapon_action_component = self._weapon_action_component
+	local is_special_active = weapon_action_component.special_active_at_start
+	local is_critical_strike = critical_strike_component.is_active
 	local hit_unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
 	local target_breed_or_nil = hit_unit_data_extension and hit_unit_data_extension:breed()
 	local target_is_alive = HEALTH_ALIVE[hit_unit]
@@ -977,7 +998,8 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	local target_is_environment = not target_is_character
 	num_hit_enemies = num_hit_enemies + 1
 	local use_reduced_hit_mass = buff_extension:has_keyword(buff_keywords.use_reduced_hit_mass)
-	local ignore_armor_aborts_attack = buff_extension:has_keyword(buff_keywords.ignore_armor_aborts_attack)
+	local ignore_armor_aborts_attack_ciritcal_strike = is_critical_strike and buff_extension:has_keyword(buff_keywords.ignore_armor_aborts_attack)
+	local ignore_armor_aborts_attack = ignore_armor_aborts_attack_ciritcal_strike or buff_extension:has_keyword(buff_keywords.ignore_armor_aborts_attack)
 	local target_hit_mass = HitMass.target_hit_mass(player_unit, hit_unit, use_reduced_hit_mass)
 	local attack_type = AttackSettings.attack_types.melee
 	local target_armor = Armor.armor_type(hit_unit, target_breed_or_nil, hit_zone_name_or_nil, attack_type)
@@ -989,15 +1011,12 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 		AimAssist.reset_ramp_multiplier(self._aim_assist_ramp_component)
 	end
 
-	local weapon_action_component = self._weapon_action_component
 	local max_hit_mass = self:_current_max_hit_mass(weapon_action_component)
 	ignore_armor_aborts_attack = ignore_armor_aborts_attack or buff_extension:has_keyword(buff_keywords.use_reduced_hit_mass)
 	local hit_ragdoll = Health.is_ragdolled(hit_unit)
 	local armor_aborts_attack = not ignore_armor_aborts_attack and not hit_ragdoll and target_is_alive and Armor.aborts_attack(hit_unit, target_breed_or_nil, hit_zone_name_or_nil)
 	local max_mass_hit = max_hit_mass <= amount_of_mass_hit
 	local abort_attack = max_mass_hit or armor_aborts_attack
-	local is_special_active = weapon_action_component.special_active_at_start
-	local is_critical_strike = critical_strike_component.is_active
 	local damage_profile, damage_type = nil
 
 	if is_special_active then

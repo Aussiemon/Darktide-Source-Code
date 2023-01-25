@@ -80,25 +80,6 @@ local templates = {
 			template_data.toughness_damage_reduction = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_toughness_damage_reduction)
 			template_data.headhunter = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_headhunter)
 			template_data.big_game_hunter = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_big_game_hunter)
-			local reload_weapon = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_reloads_weapon)
-
-			if reload_weapon then
-				local inventory_slot_component = unit_data_extension:write_component("slot_secondary")
-				local max_ammo_in_clip = inventory_slot_component.max_ammunition_clip
-				local current_ammo_in_clip = inventory_slot_component.current_ammunition_clip
-				local missing_ammo_in_clip = max_ammo_in_clip - current_ammo_in_clip
-
-				Ammo.transfer_from_reserve_to_clip(inventory_slot_component, missing_ammo_in_clip)
-
-				local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-				local weapon_template = visual_loadout_extension:weapon_template_from_slot("slot_secondary")
-				local reload_template = weapon_template.reload_template
-
-				if reload_template then
-					ReloadStates.reset(reload_template, inventory_slot_component)
-				end
-			end
-
 			local replenish_toughness = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_replenishes_toughness)
 
 			if replenish_toughness then
@@ -224,7 +205,7 @@ local function _start_outline(template_data, template_context)
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system and side_system.side_by_unit[unit]
 	local enemy_units = side and side.enemy_units_lookup or {}
-	local player_position = POSITION_LOOKUP[unit]
+	local player_position = Unit.world_position(unit, 1)
 	local alive_specials = {}
 	local sort_value = {}
 
@@ -237,7 +218,7 @@ local function _start_outline(template_data, template_context)
 		local should_get_outlined = not outlined_units[enemy_unit] and (template_data.headhunter and is_volley_fire_target and not is_ogryn_or_monster or template_data.big_game_hunter and is_ogryn_or_monster or is_special_or_elite and not is_ogryn_or_monster)
 
 		if should_get_outlined then
-			local special_position = POSITION_LOOKUP[enemy_unit]
+			local special_position = Unit.world_position(enemy_unit, 1)
 			local from_player = special_position - player_position
 			local distance_squared = Vector3.length_squared(from_player)
 			local is_special = breed.tags.special
@@ -308,7 +289,7 @@ local function _end_outlines(template_data, template_context)
 end
 
 templates.veteran_ranger_ranged_stance_outline_units = {
-	predicted = true,
+	predicted = false,
 	refresh_duration_on_stack = true,
 	max_stacks = 1,
 	class_name = "buff",
@@ -820,8 +801,11 @@ templates.veteran_ranger_elite_kills_reload_speed = {
 }
 templates.veteran_ranger_next_reload_buff = {
 	predicted = false,
+	hud_priority = 4,
+	hud_icon = "content/ui/textures/icons/talents/veteran_2/hud/veteran_2_tier_5_3",
 	max_stacks = 1,
 	class_name = "proc_buff",
+	always_show_in_hud = true,
 	proc_events = {
 		[proc_events.on_reload_start] = 1
 	},
@@ -843,10 +827,12 @@ templates.veteran_ranger_next_reload_buff = {
 }
 templates.veteran_ranger_reload_speed_buff = {
 	predicted = false,
-	duration = 3,
-	max_stacks = 1,
 	refresh_duration_on_stack = true,
+	hud_icon = "content/ui/textures/icons/talents/veteran_2/hud/veteran_2_tier_5_3",
+	max_stacks = 1,
+	hud_priority = 4,
 	class_name = "buff",
+	duration = 3,
 	stat_buffs = {
 		[stat_buffs.reload_speed] = talent_settings.offensive_2_3.reload_speed
 	}

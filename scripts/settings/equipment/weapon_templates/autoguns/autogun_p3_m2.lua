@@ -33,7 +33,7 @@ local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {
 	action_inputs = {
 		shoot = {
-			buffer_time = 0.2,
+			buffer_time = 0.25,
 			max_queue = 1,
 			input_sequence = {
 				{
@@ -53,7 +53,7 @@ local weapon_template = {
 			}
 		},
 		zoom_shoot = {
-			buffer_time = 0.2,
+			buffer_time = 0.12,
 			max_queue = 1,
 			input_sequence = {
 				{
@@ -433,7 +433,8 @@ weapon_template.actions = {
 				action_name = "action_reload"
 			},
 			zoom_shoot = {
-				action_name = "action_shoot_zoomed"
+				action_name = "action_shoot_zoomed",
+				chain_time = 0.05
 			}
 		},
 		aim_assist_ramp_template = AimAssistTemplates.killshot_aim
@@ -512,9 +513,17 @@ weapon_template.actions = {
 			wield = {
 				action_name = "action_unwield"
 			},
+			shoot = {
+				action_name = "action_shoot_hip",
+				chain_time = 3.1
+			},
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 3.1
+			},
+			special_action_hold = {
+				action_name = "action_bash_start",
+				chain_time = 0.2
 			}
 		},
 		time_scale_stat_buffs = {

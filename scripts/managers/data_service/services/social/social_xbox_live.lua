@@ -119,7 +119,7 @@ SocialXboxLive.fetch_blocked_list = function (self)
 
 		for i = 1, #profiles do
 			local profile = profiles[i]
-			profiles[i] = FriendXboxLive:new(profile.xuid, profile.gamertag, is_blocked)
+			profiles[i] = FriendXboxLive:new(profile, is_blocked)
 		end
 
 		self._num_blocked = #profiles

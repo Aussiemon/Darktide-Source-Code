@@ -303,6 +303,7 @@ function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_
 				param_table.attacking_unit = attacking_unit_or_nil
 				param_table.attack_type = attack_type_or_nil
 				param_table.damage_profile_name = damage_profile.name
+				param_table.damage_type = damage_profile.damage_type
 				param_table.breed_name = breed.name
 				param_table.side_name = victim_side:name()
 				param_table.position = Vector3Box(victim_position)

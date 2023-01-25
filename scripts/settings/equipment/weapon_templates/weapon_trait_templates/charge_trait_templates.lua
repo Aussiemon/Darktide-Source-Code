@@ -28,6 +28,13 @@ local charge_trait_templates = {
 				max = 0.75,
 				min = 0.25
 			}
+		},
+		{
+			"forcestaff_p1_m1_use_aoe",
+			{
+				max = 0.75,
+				min = 0.25
+			}
 		}
 	},
 	forcestaff_p1_m1_warp_charge_cost_perk = {
@@ -103,6 +110,15 @@ local charge_trait_templates = {
 			{
 				max = 0.75,
 				min = 0.25
+			}
+		}
+	},
+	forcestaff_secondary_action_charge_cost_stat = {
+		{
+			"warp_charge_percent",
+			{
+				max = 1,
+				min = 0
 			}
 		}
 	},

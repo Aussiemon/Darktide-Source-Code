@@ -8,19 +8,19 @@ local proc_events = BuffSettings.proc_events
 local templates = {}
 local autopistol_continuous_fire_step = 5
 templates.weapon_trait_bespoke_autopistol_p1_stacking_crit_bonus_on_continuous_fire = table.merge({
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.critical_strike_chance] = 0.01
 	},
 	continuous_fire_step = autopistol_continuous_fire_step
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 templates.weapon_trait_bespoke_autopistol_p1_toughness_on_continuous_fire = table.merge({
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.toughness_extra_regen_rate] = 0.5
 	},
 	continuous_fire_step = autopistol_continuous_fire_step
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 templates.weapon_trait_bespoke_autopistol_p1_power_bonus_on_continuous_fire = table.merge({
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.power_level_modifier] = 0.02
 	},
 	continuous_fire_step = autopistol_continuous_fire_step

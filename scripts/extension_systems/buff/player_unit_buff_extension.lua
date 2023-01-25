@@ -79,6 +79,7 @@ PlayerUnitBuffExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
 	self:_update_buffs(dt, t)
 	self:_move_looping_sfx_sources(unit)
 	self:_update_proc_events(t)
+	table.clear(self._had_keywords)
 	self:_update_stat_buffs_and_keywords(t)
 
 	local portable_random = self._portable_random

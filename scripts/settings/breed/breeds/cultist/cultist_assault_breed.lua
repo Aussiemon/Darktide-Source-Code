@@ -91,14 +91,14 @@ local breed_data = {
 	cover_config = {
 		max_distance_modifier_duration = 30,
 		max_distance_modifier_percentage = 0.8,
-		suppressed_max_distance_from_combat_vector = 60,
+		suppressed_max_distance_from_combat_vector = 40,
 		max_distance_from_target = 30,
 		max_distance_from_target_z_below = -10,
 		search_radius = 40,
 		max_distance_from_combat_vector = 30,
-		suppressed_max_distance_from_target = 60,
+		suppressed_max_distance_from_target = 50,
 		max_distance_from_target_z = 10,
-		suppressed_search_radius = 50,
+		suppressed_search_radius = 40,
 		cover_combat_ranges = {
 			far = true
 		},
@@ -121,28 +121,28 @@ local breed_data = {
 	suppress_config = {
 		above_threshold_decay_multiplier = 2,
 		max_value = {
-			melee = 60,
-			far = 20,
-			close = 60
+			melee = 40,
+			far = 25,
+			close = 40
 		},
 		threshold = {
-			melee = 44,
+			melee = 30,
 			far = 10,
-			close = 44
+			close = 30
 		},
 		decay_speeds = {
 			melee = 0.05,
-			far = 0.1,
-			close = 0.1
+			far = 0.5,
+			close = 0.3
 		},
 		disable_cover_threshold = {
-			melee = 55,
+			melee = 20,
 			far = 15,
-			close = 55
+			close = 20
 		},
 		immunity_duration = {
-			2.75,
-			3.25
+			0.25,
+			0.5
 		}
 	},
 	attack_intensity_cooldowns = {

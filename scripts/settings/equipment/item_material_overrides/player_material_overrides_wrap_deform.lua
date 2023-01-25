@@ -1590,7 +1590,7 @@ local material_overrides = {
 			},
 			headgear_wrap_deform_max = {
 				0.0272321414948,
-				0.0731187057495,
+				0.073118686676,
 				0.016975402832
 			}
 		}
@@ -1717,8 +1717,8 @@ local material_overrides = {
 		},
 		property_overrides = {
 			headgear_wrap_deform_min = {
-				-0.00387674093246,
-				-0.00699936389923,
+				-0.00336736440659,
+				-0.00693706274033,
 				-0.0100805664062
 			},
 			headgear_wrap_deform_max = {
@@ -1926,12 +1926,12 @@ local material_overrides = {
 		},
 		property_overrides = {
 			headgear_wrap_deform_min = {
-				-0.0128828048706,
+				-0.0128945159912,
 				-0.00447620391846,
 				-0.0134809875488
 			},
 			headgear_wrap_deform_max = {
-				0.0129725837708,
+				0.0129854822159,
 				0.00786386966705,
 				0.00460006713867
 			}
@@ -2040,12 +2040,12 @@ local material_overrides = {
 		},
 		property_overrides = {
 			headgear_wrap_deform_min = {
-				-0.00567598938942,
-				-0.01299741745,
-				-0.0108868408203
+				-0.00580089092255,
+				-0.0118431091309,
+				-0.0109130859375
 			},
 			headgear_wrap_deform_max = {
-				0.00465181827545,
+				0.00507173061371,
 				0.00680194854736,
 				0.00557891845703
 			}

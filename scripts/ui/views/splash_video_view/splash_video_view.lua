@@ -67,9 +67,11 @@ SplashVideoView.on_exit = function (self)
 
 	self._current_sound_id = nil
 
-	self:_remove_subtitle()
+	if self._entered then
+		self:_remove_subtitle()
 
-	self._current_subtitles = nil
+		self._current_subtitles = nil
+	end
 
 	SplashVideoView.super.on_exit(self)
 
@@ -132,21 +134,6 @@ SplashVideoView._setup_video = function (self, video_name, loop_video, size, pos
 	end
 
 	self:_set_background_visibility(true)
-end
-
-SplashVideoView._setup_background_world = function (self)
-	local world_name = SplashVideoViewSettings.world_name
-	local world_layer = SplashVideoViewSettings.world_layer
-	local world_timer_name = SplashVideoViewSettings.timer_name
-	self._world_spawner = UIWorldSpawner:new(world_name, world_layer, world_timer_name, self.view_name)
-
-	if self._context then
-		self._context.background_world_spawner = self._world_spawner
-	end
-
-	local level_name = SplashVideoViewSettings.level_name
-
-	self._world_spawner:spawn_level(level_name)
 end
 
 SplashVideoView._update_subtitles = function (self, dt, t)

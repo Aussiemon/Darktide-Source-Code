@@ -22,7 +22,7 @@ ActionThrowGrenade.init = function (self, action_context, action_params, action_
 end
 
 ActionThrowGrenade.start = function (self, action_settings, t, ...)
-	self:_check_for_critical_strike()
+	self:_check_for_critical_strike(false, true)
 
 	local projectile_template = ActionUtility.get_projectile_template(action_settings, self._weapon_template, self._ability_extension)
 

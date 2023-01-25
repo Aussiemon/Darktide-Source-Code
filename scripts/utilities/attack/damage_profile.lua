@@ -20,35 +20,32 @@ local DamageProfile = {
 
 		return target_settings
 	end,
-	power_distribution_from_power_level = function (power_level, power_type, damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, damage_profile_lerp_values)
-		local scaled_power_level = PowerLevel.scale_power_level_to_power_type_curve(power_level, power_type)
+	power_distribution_from_power_level = function (power_level, power_type, damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, damage_profile_lerp_values, stat_buffs_or_nil, attack_type_or_nil)
+		local scaled_power_level = PowerLevel.scale_power_level_to_power_type_curve(power_level, power_type, stat_buffs_or_nil, attack_type_or_nil)
 		local power_type_power = _distribute_power_level_to_power_type(power_type, scaled_power_level, damage_profile, target_settings, dropoff_scalar, damage_profile_lerp_values)
 
-		return power_type_power
+		return power_type_power, scaled_power_level
 	end,
-	max_hit_mass = function (damage_profile, power_level, charge_level, lerp_values, is_critical_strike, unit)
+	max_hit_mass = function (damage_profile, power_level, charge_level, lerp_values, is_critical_strike, unit, attack_type_or_nil)
+		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+		local stat_buffs_or_nil = buff_extension and buff_extension:stat_buffs()
 		local scaled_power_level = PowerLevel.scale_by_charge_level(power_level, charge_level, damage_profile.charge_level_scaler)
-		local scaled_cleave_power_level = PowerLevel.scale_power_level_to_power_type_curve(scaled_power_level, "cleave")
+		local scaled_cleave_power_level = PowerLevel.scale_power_level_to_power_type_curve(scaled_power_level, "cleave", stat_buffs_or_nil, attack_type_or_nil)
 		local cleave_output = PowerLevelSettings.cleave_output
 		local cleave_min = cleave_output.min
 		local cleave_max = cleave_output.max
 		local cleave_range = cleave_max - cleave_min
 		local cleave_distribution = damage_profile.cleave_distribution or PowerLevelSettings.default_cleave_distribution
-		local max_hit_mass_attack = _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, cleave_distribution, "attack", lerp_values)
-		local max_hit_mass_impact = _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, cleave_distribution, "impact", lerp_values)
-		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+		local max_hit_mass_attack, attack_distribution = _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, cleave_distribution, "attack", lerp_values)
+		local max_hit_mass_impact, impact_distribution = _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, cleave_distribution, "impact", lerp_values)
+		local max_hit_mass_attack_modifier = stat_buffs_or_nil and stat_buffs_or_nil.max_hit_mass_attack_modifier or 1
+		max_hit_mass_attack = max_hit_mass_attack * max_hit_mass_attack_modifier
+		local max_hit_mass_impact_modifier = stat_buffs_or_nil and stat_buffs_or_nil.max_hit_mass_impact_modifier or 1
+		max_hit_mass_impact = max_hit_mass_impact * max_hit_mass_impact_modifier
+		local crit_piercing_keyword = buff_extension and buff_extension:has_keyword(buff_keywords.critical_hit_infinite_hit_mass)
 
-		if buff_extension then
-			local stat_buffs = buff_extension:stat_buffs()
-			local max_hit_mass_attack_modifier = stat_buffs.max_hit_mass_attack_modifier or 1
-			max_hit_mass_attack = max_hit_mass_attack * max_hit_mass_attack_modifier
-			local max_hit_mass_impact_modifier = stat_buffs.max_hit_mass_impact_modifier or 1
-			max_hit_mass_impact = max_hit_mass_impact * max_hit_mass_impact_modifier
-			local crit_piercing_keyword = buff_extension:has_keyword(buff_keywords.critical_hit_infinite_hit_mass)
-
-			if is_critical_strike and crit_piercing_keyword then
-				max_hit_mass_attack = math.huge
-			end
+		if is_critical_strike and crit_piercing_keyword then
+			max_hit_mass_attack = math.huge
 		end
 
 		return max_hit_mass_attack, max_hit_mass_impact
@@ -67,7 +64,7 @@ function _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, clea
 	local attack_percentage = PowerLevel.power_level_percentage(attack_cleave_power_level)
 	local max_hit_mass = cleave_min + cleave_range * attack_percentage
 
-	return max_hit_mass
+	return max_hit_mass, distribution
 end
 
 DamageProfile.armor_damage_modifier = function (power_type, damage_profile, target_settings, damage_profile_lerp_values, armor_type, is_critical_strike, dropoff_scalar, armor_penetrating, charge_level)

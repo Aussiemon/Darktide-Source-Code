@@ -59,7 +59,10 @@ TalentsView.on_exit = function (self)
 	self._talents_modified = false
 
 	TalentsView.super.on_exit(self)
-	self._talent_service:release_icons(self._talent_icons_package_id)
+
+	if self._talent_service then
+		self._talent_service:release_icons(self._talent_icons_package_id)
+	end
 end
 
 TalentsView.update = function (self, dt, t, input_service)

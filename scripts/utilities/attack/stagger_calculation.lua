@@ -18,7 +18,7 @@ StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_v
 		power_level = power_level * power_level_multiplier
 	end
 
-	local stagger_strength = _calculate_stagger_strength(damage_profile, target_settings, power_level, charge_level, attack_type, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, breed, stagger_count, armor_type, lerp_values, optional_stagger_strength_multiplier, target_stat_buffs, attacker_stat_buffs)
+	local stagger_strength, stagger_power_level = _calculate_stagger_strength(damage_profile, target_settings, power_level, charge_level, attack_type, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, breed, stagger_count, armor_type, lerp_values, optional_stagger_strength_multiplier, target_stat_buffs, attacker_stat_buffs)
 	local stagger_reduction = _stagger_reduction(damage_profile, breed, is_finesse_hit, stagger_reduction_override_or_nil, attack_type, attacker_stat_buffs, hit_weakspot, is_burning)
 	local armor_damage_modifier = DamageProfile.armor_damage_modifier("impact", damage_profile, target_settings, lerp_values, armor_type, is_critical_strike, dropoff_scalar)
 
@@ -50,8 +50,8 @@ function _calculate_stagger_strength(damage_profile, target_settings, power_leve
 	local min = stagger_table.min
 	local max = stagger_table.max
 	local stagger_strength_range = max - min
-	local scaled_power_level = PowerLevel.scale_by_charge_level(power_level, charge_level, damage_profile.charge_level_scaler)
-	local stagger_power_level = DamageProfile.power_distribution_from_power_level(scaled_power_level, "impact", damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, lerp_values)
+	local charged_power_level = PowerLevel.scale_by_charge_level(power_level, charge_level, damage_profile.charge_level_scaler)
+	local stagger_power_level, scaled_power_level = DamageProfile.power_distribution_from_power_level(charged_power_level, "impact", damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, lerp_values, attacker_stat_buffs, attack_type)
 	local stagger_buff_modifier = _calculate_stagger_buffs(attack_type, target_stat_buffs, attacker_stat_buffs, hit_weakspot)
 	stagger_power_level = stagger_power_level * stagger_buff_modifier
 	local percentage = PowerLevel.power_level_percentage(stagger_power_level)
@@ -77,7 +77,7 @@ function _calculate_stagger_strength(damage_profile, target_settings, power_leve
 		stagger_strength = stagger_strength + additional_stagger_strength
 	end
 
-	return stagger_strength
+	return stagger_strength, scaled_power_level
 end
 
 function _stagger_reduction(damage_profile, breed, is_finesse_hit, stagger_reduction_override_or_nil, attack_type, attacker_stat_buffs, hit_weakspot, is_burning)

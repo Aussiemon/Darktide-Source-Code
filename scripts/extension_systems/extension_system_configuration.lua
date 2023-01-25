@@ -362,7 +362,7 @@ local systems = {
 	{
 		"health_system",
 		"HealthSystem",
-		false,
+		true,
 		true,
 		false,
 		true,

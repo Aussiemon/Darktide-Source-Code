@@ -494,7 +494,8 @@ weapon_template.actions = {
 				chain_time = 3
 			},
 			zoom_release = {
-				action_name = "action_unzoom"
+				action_name = "action_unzoom",
+				chain_time = 3
 			},
 			stab = {
 				action_name = "action_stab",

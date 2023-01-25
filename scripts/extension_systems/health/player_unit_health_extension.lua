@@ -247,6 +247,7 @@ PlayerUnitHealthExtension.remove_wounds = function (self, num_wounds)
 	local current_wounds = self:num_wounds()
 	local new_wounds = current_wounds - num_wounds
 	local new_permanent_damage = max_wounds > 0 and max_health * (1 - new_wounds / max_wounds) or 0
+	new_permanent_damage = math.ceil(new_permanent_damage * 10) / 10
 	local new_damage = damage
 
 	if damage < new_permanent_damage then

@@ -549,7 +549,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.powermaul_2h_light_smiter,
 		damage_type = damage_types.blunt,
-		damage_profile_special_active = DamageProfileTemplates.powermaul_2h_light_smiter_activate,
+		damage_profile_special_active = DamageProfileTemplates.powermaul_2h_light_smiter_active,
 		herding_template = HerdingTemplates.thunder_hammer_right_down_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,

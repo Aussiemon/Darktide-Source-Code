@@ -2437,8 +2437,8 @@ weapon_template.displayed_attacks = {
 		attack_chain = {
 			"smiter",
 			"smiter",
-			"tank",
-			"linesman"
+			"smiter",
+			"smiter"
 		}
 	},
 	secondary = {

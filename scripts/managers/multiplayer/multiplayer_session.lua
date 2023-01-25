@@ -158,10 +158,6 @@ MultiplayerSession.client_joined = function (self, channel_id, peer_id, player_s
 
 	package_synchronizer_host:add_peer(peer_id)
 
-	local bot_synchronizer_host = Managers.bot:synchronizer_host()
-
-	bot_synchronizer_host:add_peer(channel_id)
-
 	local server_manager = Managers.hub_server or Managers.mission_server
 
 	if server_manager then

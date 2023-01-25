@@ -28,6 +28,7 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local proc_events = BuffSettings.proc_events
 local DAMAGE_COLLISION_FILTER = "filter_player_character_lunge"
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
+local LUNGE_ATTACK_POWER_LEVEL = 1000
 local _max_hit_mass, _record_stat_on_lunge_hit, _record_stat_on_lunge_complete = nil
 local PlayerCharacterStateLunging = class("PlayerCharacterStateLunging", "PlayerCharacterStateBase")
 
@@ -503,7 +504,7 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 			local hit_world_position = Actor.position(hit_actor)
 			local behaviour_extension = ScriptUnit.has_extension(hit_unit, "behavior_system")
 			local hit_unit_action = behaviour_extension and behaviour_extension:running_action()
-			local damage_dealt, attack_result, damage_efficiency = Attack.execute(hit_unit, damage_profile, "power_level", 1000, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "attack_type", AttackSettings.attack_types.melee, "attacking_unit", unit, "damage_type", damage_type)
+			local damage_dealt, attack_result, damage_efficiency = Attack.execute(hit_unit, damage_profile, "power_level", LUNGE_ATTACK_POWER_LEVEL, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "attack_type", AttackSettings.attack_types.melee, "attacking_unit", unit, "damage_type", damage_type)
 
 			ImpactEffect.play(hit_unit, hit_actor, damage_dealt, damage_type, nil, attack_result, hit_world_position, nil, attack_direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
 

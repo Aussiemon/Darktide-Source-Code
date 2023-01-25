@@ -247,7 +247,7 @@ local archetype_talents = {
 			},
 			passive = {
 				buff_template_name = "zealot_maniac_movement_enhanced",
-				identifier = "toughness_damage_resistance"
+				identifier = "defensive"
 			}
 		},
 		zealot_2_tier_4_name_3 = {

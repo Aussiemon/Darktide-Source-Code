@@ -88,7 +88,7 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 	self:_start_warp_charge_action(t)
 
 	if not self._is_auto_fire_weapon then
-		self:_check_for_critical_strike()
+		self:_check_for_critical_strike(false, true)
 	end
 
 	self:_set_fire_state(t, "waiting_to_shoot")
@@ -721,7 +721,7 @@ ActionShoot._check_for_auto_critical_strike = function (self)
 		return
 	end
 
-	self:_check_for_critical_strike()
+	self:_check_for_critical_strike(false, true)
 
 	if critical_strike_component.is_active then
 		critical_strike_component.num_critical_shots = num_critical_shots + 1

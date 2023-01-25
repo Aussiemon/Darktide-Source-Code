@@ -384,22 +384,22 @@ local gadget_traits_common = {
 		gadget_permanent_damage_resistance = {
 			{
 				stat_buffs = {
-					[buff_stat_buffs.permanent_damage_converter_resistance] = 0.05
+					[buff_stat_buffs.corruption_taken_grimoire_multiplier] = 0.95
 				}
 			},
 			{
 				stat_buffs = {
-					[buff_stat_buffs.permanent_damage_converter_resistance] = 0.1
+					[buff_stat_buffs.corruption_taken_grimoire_multiplier] = 0.9
 				}
 			},
 			{
 				stat_buffs = {
-					[buff_stat_buffs.permanent_damage_converter_resistance] = 0.15
+					[buff_stat_buffs.corruption_taken_grimoire_multiplier] = 0.85
 				}
 			},
 			{
 				stat_buffs = {
-					[buff_stat_buffs.permanent_damage_converter_resistance] = 0.2
+					[buff_stat_buffs.corruption_taken_grimoire_multiplier] = 0.8
 				}
 			}
 		}
@@ -528,22 +528,26 @@ local gadget_traits_common = {
 		gadget_toughness_regen_delay = {
 			{
 				stat_buffs = {
-					[buff_stat_buffs.toughness_regen_delay_multiplier] = 0.95
+					[buff_stat_buffs.toughness_regen_delay_multiplier] = 0.95,
+					[buff_stat_buffs.toughness_regen_rate_modifier] = 1.05
 				}
 			},
 			{
 				stat_buffs = {
-					[buff_stat_buffs.toughness_regen_delay_multiplier] = 0.9
+					[buff_stat_buffs.toughness_regen_delay_multiplier] = 0.9,
+					[buff_stat_buffs.toughness_regen_rate_modifier] = 1.1
 				}
 			},
 			{
 				stat_buffs = {
-					[buff_stat_buffs.toughness_regen_delay_multiplier] = 0.85
+					[buff_stat_buffs.toughness_regen_delay_multiplier] = 0.85,
+					[buff_stat_buffs.toughness_regen_rate_modifier] = 1.15
 				}
 			},
 			{
 				stat_buffs = {
-					[buff_stat_buffs.toughness_regen_delay_multiplier] = 0.8
+					[buff_stat_buffs.toughness_regen_delay_multiplier] = 0.8,
+					[buff_stat_buffs.toughness_regen_rate_modifier] = 1.2
 				}
 			}
 		}

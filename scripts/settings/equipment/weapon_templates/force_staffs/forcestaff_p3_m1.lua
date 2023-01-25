@@ -1126,14 +1126,20 @@ weapon_template.base_stats = {
 			action_charge = {
 				charge_trait_templates.forcestaff_p3_m1_warp_charge_cost_stat,
 				display_data = {
-					prefix = "loc_ingame_action_two",
+					prefix = "loc_glossary_term_charge",
 					display_stats = {
 						__all_basic_stats = true
 					}
 				}
 			},
 			action_shoot_charged = {
-				charge_trait_templates.forcestaff_p3_m1_warp_charge_cost_stat
+				charge_trait_templates.forcestaff_p3_m1_warp_charge_cost_stat,
+				display_data = {
+					prefix = "loc_ingame_action_two",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			}
 		}
 	},

@@ -104,7 +104,7 @@ ActionWeaponBase.finish = function (self, reason, data, t, time_in_action)
 	end
 end
 
-ActionWeaponBase._check_for_critical_strike = function (self)
+ActionWeaponBase._check_for_critical_strike = function (self, is_melee, is_ranged)
 	local critical_strike_component = self._critical_strike_component
 	local player = self._player
 	local weapon_extension = self._weapon_extension
@@ -112,8 +112,6 @@ ActionWeaponBase._check_for_critical_strike = function (self)
 	local weapon_handling_template = weapon_extension:weapon_handling_template() or EMPTY_TABLE
 	local seed = critical_strike_component.seed
 	local prd_state = critical_strike_component.prd_state
-	local is_ranged = WeaponTemplate.is_ranged(self._weapon_template)
-	local is_melee = WeaponTemplate.is_melee(self._weapon_template)
 	local guaranteed_crit = buff_extension:has_keyword("guaranteed_critical_strike") or is_ranged and buff_extension:has_keyword("guaranteed_ranged_critical_strike") or is_melee and buff_extension:has_keyword("guaranteed_melee_critical_strike")
 	local chance = nil
 

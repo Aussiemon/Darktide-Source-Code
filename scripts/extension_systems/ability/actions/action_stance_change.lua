@@ -1,14 +1,19 @@
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local Action = require("scripts/utilities/weapon/action")
+local Ammo = require("scripts/utilities/ammo")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Interrupt = require("scripts/utilities/attack/interrupt")
 local Luggable = require("scripts/utilities/luggable")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
+local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local Vo = require("scripts/utilities/vo")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local proc_events = BuffSettings.proc_events
+local reload_kinds = ReloadStates.reload_kinds
+local special_rules = SpecialRulesSetting.special_rules
 local ActionStanceChange = class("ActionStanceChange", "ActionAbilityBase")
 
 ActionStanceChange.init = function (self, action_context, action_params, action_settings)
@@ -16,7 +21,12 @@ ActionStanceChange.init = function (self, action_context, action_params, action_
 
 	local unit_data_extension = action_context.unit_data_extension
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
+	local ability_template_tweak_data = self._ability_template_tweak_data
+	local slot_to_wield = action_settings.auto_wield_slot or ability_template_tweak_data.auto_wield_slot
+	self._inventory_slot_secondary_component = unit_data_extension:write_component(slot_to_wield)
 	self._ability_type = action_settings.ability_type or "none"
+	local player_unit = self._player_unit
+	self._specialization_extension = ScriptUnit.extension(player_unit, "specialization_system")
 end
 
 ActionStanceChange.start = function (self, action_settings, t, time_scale, action_start_params)
@@ -33,6 +43,7 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 	local ability_template_tweak_data = self._ability_template_tweak_data
 	local buff_to_add = ability_template_tweak_data.buff_to_add
 	local slot_to_wield = action_settings.auto_wield_slot or ability_template_tweak_data.auto_wield_slot
+	local skip_wield_action = action_settings.skip_wield_action
 	local inventory_component = self._inventory_component
 	local visual_loadout_extension = self._visual_loadout_extension
 
@@ -45,18 +56,15 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 	if stop_reload then
 		local weapon_action_component = self._unit_data_extension:read_component("weapon_action")
 		local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
-		local current_action_name, _ = Action.current_action(weapon_action_component, weapon_template)
+		local _, current_action_settings = Action.current_action(weapon_action_component, weapon_template)
+		local current_action_kind = current_action_settings and current_action_settings.kind
 
-		if current_action_name == "action_start_reload" or current_action_name == "action_reload" then
+		if current_action_kind and reload_kinds[current_action_kind] then
 			Interrupt.action(t, player_unit, "veteran_ability")
 		end
 	end
 
 	if stop_current_action then
-		local weapon_action_component = self._unit_data_extension:read_component("weapon_action")
-		local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
-		local current_action_name, _ = Action.current_action(weapon_action_component, weapon_template)
-
 		Interrupt.action(t, player_unit, "combat_ability", nil, true)
 	end
 
@@ -65,7 +73,7 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 		local wielded_slot = inventory_comp.wielded_slot
 
 		if slot_to_wield ~= wielded_slot then
-			PlayerUnitVisualLoadout.wield_slot(slot_to_wield, player_unit, t)
+			PlayerUnitVisualLoadout.wield_slot(slot_to_wield, player_unit, t, skip_wield_action)
 		end
 	end
 
@@ -73,6 +81,25 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 		local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 
 		buff_extension:add_internally_controlled_buff(buff_to_add, t)
+	end
+
+	local specialization_extension = self._specialization_extension
+	local reload_weapon = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_reloads_weapon)
+
+	if reload_weapon then
+		local inventory_slot_secondary_component = self._inventory_slot_secondary_component
+		local max_ammo_in_clip = inventory_slot_secondary_component.max_ammunition_clip
+		local current_ammo_in_clip = inventory_slot_secondary_component.current_ammunition_clip
+		local missing_ammo_in_clip = max_ammo_in_clip - current_ammo_in_clip
+
+		Ammo.transfer_from_reserve_to_clip(inventory_slot_secondary_component, missing_ammo_in_clip)
+
+		local weapon_template = visual_loadout_extension:weapon_template_from_slot(slot_to_wield)
+		local reload_template = weapon_template.reload_template
+
+		if reload_template then
+			ReloadStates.reset(reload_template, inventory_slot_secondary_component)
+		end
 	end
 
 	if anim then

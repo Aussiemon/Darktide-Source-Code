@@ -168,6 +168,7 @@ weapon_template.action_input_hierarchy = {
 		vent = "base",
 		combat_ability = "base",
 		trigger_charge_flame = {
+			wield = "base",
 			vent = "base",
 			cancel_flame = "base"
 		}
@@ -1138,14 +1139,20 @@ weapon_template.base_stats = {
 			action_charge_flame = {
 				charge_trait_templates.forcestaff_p2_m1_warp_charge_cost_stat,
 				display_data = {
-					prefix = "loc_ingame_action_two",
+					prefix = "loc_glossary_term_charge",
 					display_stats = {
 						__all_basic_stats = true
 					}
 				}
 			},
 			action_shoot_charged_flame = {
-				charge_trait_templates.forcestaff_p2_m1_warp_charge_cost_stat
+				charge_trait_templates.forcestaff_p2_m1_warp_charge_cost_stat,
+				display_data = {
+					prefix = "loc_ingame_action_two",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
 			}
 		}
 	}

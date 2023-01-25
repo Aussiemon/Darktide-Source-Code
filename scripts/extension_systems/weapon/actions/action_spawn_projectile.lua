@@ -42,7 +42,7 @@ end
 
 ActionSpawnProjectile.start = function (self, action_settings, t, ...)
 	ActionSpawnProjectile.super.start(self, action_settings, t, ...)
-	self:_check_for_critical_strike()
+	self:_check_for_critical_strike(false, true)
 
 	if self._targeting_module then
 		self._targeting_module:start(t)

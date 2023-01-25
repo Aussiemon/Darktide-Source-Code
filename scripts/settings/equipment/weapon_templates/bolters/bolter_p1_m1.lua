@@ -35,7 +35,7 @@ local weapon_template = {
 			input_sequence = {
 				{
 					value = true,
-					input = "action_one_pressed"
+					input = "action_one_hold"
 				}
 			}
 		},

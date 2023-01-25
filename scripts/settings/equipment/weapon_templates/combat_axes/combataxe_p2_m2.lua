@@ -887,7 +887,6 @@ weapon_template.actions = {
 		minimum_hold_time = 0.2,
 		kind = "push",
 		anim_event = "attack_push",
-		power_level = 400,
 		total_time = 1,
 		action_movement_curve = {
 			{

@@ -7,20 +7,20 @@ local proc_events = BuffSettings.proc_events
 local heavystubber_fire_step = 25
 local templates = {
 	weapon_trait_bespoke_ogryn_heavystubber_p1_toughness_on_continuous_fire = table.merge({
-		stat_buffs = {
+		conditional_stat_buffs = {
 			[stat_buffs.toughness_extra_regen_rate] = 0.1
 		},
 		continuous_fire_step = heavystubber_fire_step
 	}, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire),
 	weapon_trait_bespoke_ogryn_heavystubber_p1_power_bonus_on_continuous_fire = table.merge({
-		stat_buffs = {
+		conditional_stat_buffs = {
 			[stat_buffs.power_level_modifier] = 0.02
 		},
 		continuous_fire_step = heavystubber_fire_step
 	}, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire),
 	weapon_trait_bespoke_ogryn_heavystubber_p1_increase_power_on_close_kill = table.clone(BaseWeaponTraitBuffTemplates.increase_power_on_close_kill),
 	weapon_trait_bespoke_ogryn_heavystubber_p1_increased_suppression_on_continuous_fire = table.merge({
-		stat_buffs = {
+		conditional_stat_buffs = {
 			[stat_buffs.increased_suppression] = 0.02
 		},
 		continuous_fire_step = heavystubber_fire_step

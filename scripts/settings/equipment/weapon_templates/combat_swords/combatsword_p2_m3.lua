@@ -1342,7 +1342,11 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.8
+				chain_time = 0.5
+			},
+			special_action = {
+				action_name = "action_attack_special",
+				chain_time = 0.5
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)

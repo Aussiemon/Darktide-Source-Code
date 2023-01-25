@@ -233,8 +233,11 @@ damage_templates.default_lasgun_killshot = {
 		250
 	},
 	charge_level_scaler = {
-		max = 1,
-		min = 0
+		{
+			modifier = 1,
+			t = 1
+		},
+		start_modifier = 0
 	}
 }
 damage_templates.lasgun_p2_charge_killshot = {
@@ -297,8 +300,15 @@ damage_templates.lasgun_p2_charge_killshot = {
 		600
 	},
 	charge_level_scaler = {
-		max = 1,
-		min = 0.3
+		{
+			modifier = 0.3,
+			t = 0.1
+		},
+		{
+			modifier = 1,
+			t = 1
+		},
+		start_modifier = 0.3
 	}
 }
 overrides.lasgun_p1_m1_killshot = {
@@ -434,12 +444,19 @@ overrides.lasgun_p2_m1_charge_killshot = {
 		},
 		{
 			"charge_level_scaler",
-			"min",
+			"start_modifier",
 			0.4
 		},
 		{
 			"charge_level_scaler",
-			"max",
+			1,
+			"modifier",
+			0.4
+		},
+		{
+			"charge_level_scaler",
+			2,
+			"modifier",
 			1
 		}
 	}
@@ -465,12 +482,19 @@ overrides.lasgun_p2_m2_charge_killshot = {
 		},
 		{
 			"charge_level_scaler",
-			"min",
+			"start_modifier",
 			0.5
 		},
 		{
 			"charge_level_scaler",
-			"max",
+			1,
+			"modifier",
+			0.5
+		},
+		{
+			"charge_level_scaler",
+			2,
+			"modifier",
 			1
 		}
 	}
@@ -496,12 +520,19 @@ overrides.lasgun_p2_m3_charge_killshot = {
 		},
 		{
 			"charge_level_scaler",
-			"min",
+			"start_modifier",
 			0.3
 		},
 		{
 			"charge_level_scaler",
-			"max",
+			1,
+			"modifier",
+			0.3
+		},
+		{
+			"charge_level_scaler",
+			2,
+			"modifier",
 			1
 		},
 		{

@@ -37,7 +37,7 @@ local weapon_template = {
 			}
 		},
 		brace_pressed = {
-			buffer_time = 0,
+			buffer_time = 0.1,
 			input_sequence = {
 				{
 					value = true,

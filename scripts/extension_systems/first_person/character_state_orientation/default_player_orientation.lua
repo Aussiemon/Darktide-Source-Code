@@ -78,6 +78,12 @@ DefaultPlayerOrientation.orientation_offset = function (self)
 		pitch_offset, yaw_offset = Recoil.first_person_offset(recoil_template, recoil_component, self._movement_state_component)
 	end
 
+	local current_pitch = self._orientation.pitch
+	local min_pitch = self._min_pitch
+	local max_pitch = self._max_pitch
+	local clamped_pitch = math.clamp((current_pitch + pitch_offset + PI) % PI_2 - PI, min_pitch, max_pitch) % PI_2
+	pitch_offset = clamped_pitch - current_pitch
+
 	return yaw_offset, pitch_offset, 0
 end
 

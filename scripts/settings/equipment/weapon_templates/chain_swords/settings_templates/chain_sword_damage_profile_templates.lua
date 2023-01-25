@@ -1318,6 +1318,10 @@ overrides.light_chainsword_active_2h_push_follow = {
 		{
 			"ragdoll_push_force",
 			450
+		},
+		{
+			"cleave_distribution",
+			no_cleave
 		}
 	}
 }

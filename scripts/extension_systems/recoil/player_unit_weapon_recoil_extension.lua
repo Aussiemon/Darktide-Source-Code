@@ -147,4 +147,9 @@ PlayerUnitWeaponRecoilExtension._update_offset = function (self, recoil_componen
 	recoil_component.yaw_offset = final_yaw_offset
 end
 
+PlayerUnitWeaponRecoilExtension.snap_camera_and_reset_recoil = function (self)
+	self:_snap_camera()
+	self:_reset()
+end
+
 return PlayerUnitWeaponRecoilExtension

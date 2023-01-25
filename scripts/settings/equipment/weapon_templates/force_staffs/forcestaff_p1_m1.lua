@@ -289,7 +289,7 @@ weapon_template.actions = {
 		min_scale = 0,
 		max_scale = 5,
 		anim_end_event = "attack_finished",
-		crosshair_type = "dot",
+		crosshair_type = "charge_up",
 		hold_combo = true,
 		allowed_during_sprint = true,
 		minimum_hold_time = 0.3,
@@ -1095,6 +1095,15 @@ weapon_template.base_stats = {
 			},
 			action_charge = {
 				charge_trait_templates.forcestaff_p1_m1_warp_charge_cost_stat,
+				display_data = {
+					prefix = "loc_glossary_term_charge",
+					display_stats = {
+						__all_basic_stats = true
+					}
+				}
+			},
+			action_trigger_explosion = {
+				charge_trait_templates.forcestaff_secondary_action_charge_cost_stat,
 				display_data = {
 					prefix = "loc_ingame_action_two",
 					display_stats = {

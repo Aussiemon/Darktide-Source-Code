@@ -986,12 +986,17 @@ PlayerUnitVisualLoadoutExtension.slot_to_item = function (self, item)
 	return nil
 end
 
-PlayerUnitVisualLoadoutExtension.wielded_weapon = function (self)
+PlayerUnitVisualLoadoutExtension.telemetry_wielded_weapon = function (self)
 	local inventory = self._inventory_component
 	local equipment = self._equipment
-	local item = equipment[inventory.wielded_slot]
+	local wielded_slot = inventory.wielded_slot
+	local item = equipment[wielded_slot]
 
-	return item.item or item
+	if not item then
+		Crashify.print_exception("PlayerUnitVisualLoadoutExtension", "Wielded item is nil when fetching for telemetry")
+	end
+
+	return item and (item.item or item)
 end
 
 PlayerUnitVisualLoadoutExtension.set_force_hide_wieldable_slot = function (self, slot_name, first_person, third_person)

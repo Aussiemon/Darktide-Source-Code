@@ -79,7 +79,7 @@ templates.weapon_trait_bespoke_autogun_p1_increase_close_damage_on_close_kill = 
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.damage_near] = 0.8
+				[stat_buffs.damage_near] = 0.08
 			}
 		},
 		{

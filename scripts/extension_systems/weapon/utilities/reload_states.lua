@@ -1,6 +1,10 @@
 local Ammo = require("scripts/utilities/ammo")
 local _reset_state = nil
 local ReloadStates = {
+	reload_kinds = {
+		reload_shotgun = true,
+		reload_state = true
+	},
 	reset = function (reload_template, inventory_slot_component)
 		_reset_state(reload_template, inventory_slot_component)
 	end,

@@ -118,7 +118,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 						damage_number.time = damage_number.time + ui_renderer.dt
 					end
 
-					if damage_number.last_hit_was_critical then
+					if damage_number.was_critical then
 						text_color[2] = crit_color[2]
 						text_color[3] = crit_color[3]
 						text_color[4] = crit_color[4]
@@ -162,7 +162,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 					local current_order = num_damage_numbers - i
 
 					if current_order == 0 then
-						local scale_size = damage_number.last_hit_was_critical and damage_number_settings.crit_hit_size_scale or damage_number_settings.first_hit_size_scale
+						local scale_size = damage_number.was_critical and damage_number_settings.crit_hit_size_scale or damage_number_settings.first_hit_size_scale
 						font_size = font_size * scale_size
 					end
 
@@ -376,7 +376,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 				content.hit_weakspot = false
 			end
 
-			content.last_hit_was_critical = health_extension:last_hit_was_critical()
+			content.was_critical = health_extension:was_hit_by_critical_hit_this_render_frame()
 		end
 	end
 
@@ -409,13 +409,13 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 			local damage_diff = math.ceil(damage_taken - old_damage_taken)
 			local latest_damage_number = damage_numbers[#damage_numbers]
 			local should_add = true
-			local last_hit_was_critical = health_extension and health_extension:last_hit_was_critical()
+			local was_critical = health_extension and health_extension:was_hit_by_critical_hit_this_render_frame()
 
 			if latest_damage_number and t - latest_damage_number.start_time < damage_number_settings.add_numbers_together_timer then
 				should_add = false
 			end
 
-			if content.add_on_next_number or last_hit_was_critical or should_add then
+			if content.add_on_next_number or was_critical or should_add then
 				local damage_number = {
 					expand_time = 0,
 					time = 0,
@@ -433,14 +433,14 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 					damage_number.hit_weakspot = false
 				end
 
-				damage_number.last_hit_was_critical = last_hit_was_critical
+				damage_number.was_critical = was_critical
 				damage_numbers[#damage_numbers + 1] = damage_number
 
 				if content.add_on_next_number then
 					content.add_on_next_number = nil
 				end
 
-				if last_hit_was_critical then
+				if was_critical then
 					content.add_on_next_number = true
 				end
 			else
@@ -457,7 +457,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 					latest_damage_number.hit_weakspot = false
 				end
 
-				latest_damage_number.last_hit_was_critical = last_hit_was_critical
+				latest_damage_number.was_critical = was_critical
 			end
 		end
 

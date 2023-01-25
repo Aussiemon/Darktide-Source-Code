@@ -14,19 +14,19 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_armor_rending_bayonette = tabl
 	check_proc_func = CheckProcFunctions.on_melee_hit
 }, BaseWeaponTraitBuffTemplates.targets_receive_rending_debuff)
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_stacking_crit_bonus_on_continuous_fire = table.merge({
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.critical_strike_chance] = 0.01
 	},
 	continuous_fire_step = rippergun_continuous_fire_step
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_continuous_fire = table.merge({
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.toughness_extra_regen_rate] = 0.1
 	},
 	continuous_fire_step = rippergun_continuous_fire_step
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
 templates.weapon_trait_bespoke_ogryn_rippergun_p1_power_bonus_on_continuous_fire = table.merge({
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.power_level_modifier] = 0.02
 	},
 	continuous_fire_step = rippergun_continuous_fire_step

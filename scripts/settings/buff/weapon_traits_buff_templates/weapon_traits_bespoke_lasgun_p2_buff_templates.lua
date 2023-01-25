@@ -22,11 +22,11 @@ local _shooting_actions = {
 	action_shoot_hip_start = true
 }
 templates.weapon_trait_bespoke_lasgun_p2_faster_charge_on_chained_secondary_attacks = {
+	max_stacks = 1,
 	predicted = false,
 	stack_offset = -1,
-	max_stacks = 1,
 	class_name = "stepped_stat_buff",
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.charge_up_time] = -0.04
 	},
 	conditional_stepped_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
