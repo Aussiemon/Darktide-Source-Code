@@ -2063,17 +2063,43 @@ functions.debug_stagger_selected_unit_with_animation = {
 	end
 }
 functions.force_max_suppression = {
-	name = "Force max suppression to selected unit",
+	name = "Force max suppression to unit",
 	button_text = "Apply",
 	category = "Suppression",
 	on_activated = function ()
 		local selected_unit = Debug.selected_unit
 
+		if not selected_unit then
+			local local_player = Managers.player:local_player(1)
+			selected_unit = local_player.player_unit
+		end
+
 		if selected_unit then
 			local suppression_extension = ScriptUnit.has_extension(selected_unit, "suppression_system")
 
 			if suppression_extension then
-				suppression_extension:force_max_suppression()
+				suppression_extension:debug_force_max_suppression()
+			end
+		end
+	end
+}
+functions.add_max_suppression = {
+	name = "Add suppression to unit",
+	button_text = "Apply",
+	category = "Suppression",
+	on_activated = function ()
+		local selected_unit = Debug.selected_unit
+
+		if not selected_unit then
+			local local_player = Managers.player:local_player(1)
+			selected_unit = local_player.player_unit
+		end
+
+		if selected_unit then
+			local suppression_extension = ScriptUnit.has_extension(selected_unit, "suppression_system")
+
+			if suppression_extension then
+				suppression_extension:debug_add_suppression()
 			end
 		end
 	end

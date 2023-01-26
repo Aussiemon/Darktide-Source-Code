@@ -10,6 +10,7 @@ mood_settings.priority = {
 	types.critical_health,
 	types.knocked_down,
 	types.no_toughness,
+	types.suppression_ongoing,
 	types.suppression_low,
 	types.suppression_high,
 	types.damage_taken,
@@ -93,41 +94,10 @@ mood_settings.moods = {
 		end
 	},
 	[types.suppression_ongoing] = {
-		particle_effects_looping = {
-			"content/fx/particles/screenspace/screen_suppression"
-		},
-		particles_material_scalars = {
-			{
-				on_screen_cloud_name = "suppression",
-				on_screen_variable_name = "suppression_material_variable_1092fk",
-				scalar_func = function (player, last_value)
-					local camera_handler = player.camera_handler
-					local is_observing = camera_handler:is_observing()
-
-					if is_observing then
-						local observed_unit = camera_handler:camera_follow_unit()
-						player = Managers.state.player_unit_spawn:owner(observed_unit)
-					end
-
-					local suppression_extension = ScriptUnit.has_extension(player.player_unit, "suppression_system")
-
-					if suppression_extension then
-						local num_suppression_hits = suppression_extension:num_suppression_hits()
-						local max_suppression = suppression_extension:max_suppression()
-
-						if max_suppression == 0 then
-							return 0
-						end
-
-						local scalar = math.easeOutCubic(math.clamp01(num_suppression_hits / max_suppression))
-
-						return scalar
-					end
-
-					return 0
-				end
-			}
-		}
+		shading_environment = "content/shading_environments/moods/suppression_mood",
+		blend_in_time = 0.1,
+		blend_out_time = 1.2,
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
 	[types.suppression_low] = {
 		blend_in_time = 0.025,

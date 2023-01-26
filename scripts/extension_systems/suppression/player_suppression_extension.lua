@@ -180,6 +180,18 @@ PlayerSuppressionExtension.num_suppression_hits = function (self)
 	return self._num_suppression_hits
 end
 
+PlayerSuppressionExtension.has_suppression = function (self)
+	return self._num_suppression_hits > 0
+end
+
+PlayerSuppressionExtension.has_low_suppression = function (self)
+	return NUM_HITS_FOR_LOW_SUPPRESSION <= self._num_suppression_hits
+end
+
+PlayerSuppressionExtension.has_high_suppression = function (self)
+	return NUM_HITS_FOR_HIGH_SUPPRESSION <= self._num_suppression_hits
+end
+
 PlayerSuppressionExtension.max_suppression = function (self)
 	return self._max_suppression
 end

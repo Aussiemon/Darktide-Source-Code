@@ -94,7 +94,7 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	local is_in_critical_health, critical_health_status = PlayerUnitStatus.is_in_critical_health(self._health_extension, self._toughness_extension)
 	local critical_health = is_in_critical_health and CRITICAL_HEALTH_LIMIT <= critical_health_status
 	local no_toughness_left = PlayerUnitStatus.no_toughness_left(self._toughness_extension)
-	local is_suppressed = self._suppression_extension:num_suppression_hits() > 0
+	local is_suppressed = self._suppression_extension:has_high_suppression()
 	local player = self._player
 	local specialization_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
 	local weapon_warp_charge_template = WarpCharge.weapon_warp_charge_template(player.player_unit)
