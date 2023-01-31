@@ -90,7 +90,7 @@ templates.ogryn_bonebreaker_increased_coherency_regen = {
 	predicted = false,
 	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.toughness_coherency_regen_rate_multiplier] = talent_settings.toughness_1.toughness_bonus
+		[stat_buffs.toughness_regen_rate_modifier] = talent_settings.toughness_1.toughness_bonus
 	}
 }
 templates.ogryn_bonebreaker_heavy_hits_toughness = {

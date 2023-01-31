@@ -111,7 +111,7 @@ templates.gadget_toughness_regen_delay = {
 	keywords = {},
 	stat_buffs = {
 		[stat_buffs.toughness_regen_delay_multiplier] = 0.7,
-		[stat_buffs.toughness_regen_rate_modifier] = 1.3
+		[stat_buffs.toughness_regen_rate_modifier] = 0.3
 	},
 	localization_info = {
 		[stat_buffs.toughness_regen_delay_multiplier] = DISPLAY.percentage

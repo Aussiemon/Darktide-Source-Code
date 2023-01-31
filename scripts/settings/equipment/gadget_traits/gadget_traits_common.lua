@@ -529,25 +529,25 @@ local gadget_traits_common = {
 			{
 				stat_buffs = {
 					[buff_stat_buffs.toughness_regen_delay_multiplier] = 0.95,
-					[buff_stat_buffs.toughness_regen_rate_modifier] = 1.05
+					[buff_stat_buffs.toughness_regen_rate_modifier] = 0.075
 				}
 			},
 			{
 				stat_buffs = {
 					[buff_stat_buffs.toughness_regen_delay_multiplier] = 0.9,
-					[buff_stat_buffs.toughness_regen_rate_modifier] = 1.1
+					[buff_stat_buffs.toughness_regen_rate_modifier] = 0.15
 				}
 			},
 			{
 				stat_buffs = {
 					[buff_stat_buffs.toughness_regen_delay_multiplier] = 0.85,
-					[buff_stat_buffs.toughness_regen_rate_modifier] = 1.15
+					[buff_stat_buffs.toughness_regen_rate_modifier] = 0.225
 				}
 			},
 			{
 				stat_buffs = {
 					[buff_stat_buffs.toughness_regen_delay_multiplier] = 0.8,
-					[buff_stat_buffs.toughness_regen_rate_modifier] = 1.2
+					[buff_stat_buffs.toughness_regen_rate_modifier] = 0.3
 				}
 			}
 		}
