@@ -42,7 +42,8 @@ local ability_template = {
 			damage_profile = DamageProfileTemplates.shout_stagger,
 			power_level = talent_settings.combat_ability.power_level,
 			cone_dot = talent_settings.combat_ability.cone_dot,
-			cone_range = talent_settings.combat_ability.cone_range
+			cone_range = talent_settings.combat_ability.cone_range,
+			toughness_replenish_percent = talent_settings.combat_ability.toughness_replenish_percent
 		}
 	},
 	fx_sources = {},

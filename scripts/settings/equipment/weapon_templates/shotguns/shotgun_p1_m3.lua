@@ -869,83 +869,13 @@ weapon_template.base_stats = {
 		damage = {
 			action_shoot_hip = {
 				damage_trait_templates.shotgun_dps_stat,
-				display_data = {
-					prefix = "Hip Fire",
-					display_stats = {
-						armor_damage_modifier_ranged = {
-							near = {
-								attack = {
-									[armor_types.unarmored] = {},
-									[armor_types.disgustingly_resilient] = {}
-								}
-							}
-						},
-						power_distribution = {
-							attack = {}
-						}
-					}
-				}
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
-				damage_trait_templates.shotgun_dps_stat,
-				display_data = {
-					prefix = "Zoomed Fire",
-					display_stats = {
-						armor_damage_modifier_ranged = {
-							near = {
-								attack = {
-									[armor_types.unarmored] = {},
-									[armor_types.disgustingly_resilient] = {}
-								}
-							}
-						},
-						power_distribution = {
-							attack = {}
-						}
-					}
-				}
-			}
-		}
-	},
-	shotgun_p1_m3_mobility_stat = {
-		display_name = "loc_stats_display_mobility_stat",
-		is_stat_trait = true,
-		dodge = {
-			base = {
-				dodge_trait_templates.default_dodge_stat,
-				display_data = {
-					display_stats = {
-						diminishing_return_start = {},
-						distance_scale = {},
-						speed_modifier = {}
-					}
-				}
-			}
-		},
-		sprint = {
-			base = {
-				sprint_trait_templates.default_sprint_stat,
-				display_data = {
-					display_stats = {
-						sprint_speed_mod = {}
-					}
-				}
-			}
-		},
-		movement_curve_modifier = {
-			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
-				display_data = {
-					display_stats = {
-						modifier = {}
-					}
-				}
-			}
-		},
-		spread = {
-			base = {
-				spread_trait_templates.mobility_spread_stat,
-				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_spread")
+				damage_trait_templates.shotgun_dps_stat
+			},
+			action_shoot_hip_from_reload = {
+				damage_trait_templates.shotgun_dps_stat
 			}
 		}
 	},
@@ -955,61 +885,13 @@ weapon_template.base_stats = {
 		damage = {
 			action_shoot_hip = {
 				damage_trait_templates.default_power_stat,
-				display_data = {
-					prefix = "Hip Fire",
-					display_stats = {
-						armor_damage_modifier_ranged = {
-							near = {
-								attack = {
-									[armor_types.armored] = {},
-									[armor_types.super_armor] = {},
-									[armor_types.resistant] = {},
-									[armor_types.berserker] = {}
-								}
-							},
-							far = {
-								attack = {
-									[armor_types.armored] = {},
-									[armor_types.super_armor] = {},
-									[armor_types.resistant] = {},
-									[armor_types.berserker] = {}
-								}
-							}
-						},
-						power_distribution = {
-							impact = {}
-						}
-					}
-				}
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
-				damage_trait_templates.default_power_stat,
-				display_data = {
-					prefix = "Zoomed Fire",
-					display_stats = {
-						armor_damage_modifier_ranged = {
-							near = {
-								attack = {
-									[armor_types.armored] = {},
-									[armor_types.super_armor] = {},
-									[armor_types.resistant] = {},
-									[armor_types.berserker] = {}
-								}
-							},
-							far = {
-								attack = {
-									[armor_types.armored] = {},
-									[armor_types.super_armor] = {},
-									[armor_types.resistant] = {},
-									[armor_types.berserker] = {}
-								}
-							}
-						},
-						power_distribution = {
-							impact = {}
-						}
-					}
-				}
+				damage_trait_templates.default_power_stat
+			},
+			action_shoot_hip_from_reload = {
+				damage_trait_templates.default_power_stat
 			}
 		}
 	},
@@ -1034,7 +916,8 @@ weapon_template.base_stats = {
 		},
 		sway = {
 			alternate_fire = {
-				sway_trait_templates.default_sway_stat
+				sway_trait_templates.default_sway_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("stability_sway")
 			}
 		}
 	},
@@ -1044,14 +927,35 @@ weapon_template.base_stats = {
 		ammo = {
 			base = {
 				ammo_trait_templates.default_ammo_stat,
-				display_data = {
-					display_stats = {
-						ammo = {
-							ammunition_clip = {},
-							ammunition_reserve = {}
-						}
-					}
-				}
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+			}
+		}
+	},
+	shotgun_p1_m3_mobility_stat = {
+		display_name = "loc_stats_display_mobility_stat",
+		is_stat_trait = true,
+		dodge = {
+			base = {
+				dodge_trait_templates.default_dodge_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+			}
+		},
+		sprint = {
+			base = {
+				sprint_trait_templates.default_sprint_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+			}
+		},
+		movement_curve_modifier = {
+			base = {
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+			}
+		},
+		spread = {
+			base = {
+				spread_trait_templates.mobility_spread_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_spread")
 			}
 		}
 	}

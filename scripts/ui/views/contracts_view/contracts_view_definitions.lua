@@ -483,7 +483,7 @@ local widget_blueprints = {
 				style_id = "task_completed_text",
 				pass_type = "text",
 				value_id = "task_completed_text",
-				value = "Completed",
+				value = Localize("loc_contracts_task_completed"),
 				change_function = ViewStyles.task_list_item_task_name_change_function,
 				visibility_function = ViewStyles.task_list_completion_visibility_function
 			}

@@ -305,6 +305,12 @@ Buff.inactive = function (self)
 		return true
 	end
 
+	local check_active_func = template.check_active_func
+
+	if check_active_func then
+		return not check_active_func(self._template_data, self._template_context)
+	end
+
 	return false
 end
 

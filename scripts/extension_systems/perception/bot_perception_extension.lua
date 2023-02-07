@@ -344,7 +344,7 @@ BotPerceptionExtension._select_ally_by_utility = function (self, self_unit, self
 			local player = player_unit_spawn_manager:owner(player_unit)
 			local player_position = POSITION_LOOKUP[player_unit]
 			local is_bot = not player:is_human_controlled()
-			local in_need_type, look_at_ally, utility = self:_calculate_ally_need_type(self_position, self_health_utility, can_heal_other, can_give_healing_to_other, player_unit, player_position, target_enemy, t)
+			local in_need_type, look_at_ally, utility = self:_calculate_ally_need_type(self_position, self_health_utility, can_heal_other, can_give_healing_to_other, player_unit, player_position, target_enemy, is_bot, t)
 			local is_position_in_liquid = liquid_area_system:is_position_in_liquid(player_position)
 
 			if (in_need_type or not is_bot) and not is_position_in_liquid then
@@ -448,8 +448,9 @@ local GIVE_HEAL_TO_OTHER_BASE_UTILITY = 70
 local GIVE_HEAL_TO_OTHER_HEALTH_UTILITY_MODIFER = 10
 local STOP_BASE_UTILITY = 5
 local LOOK_AT_BASE_UTILITY = 2
+local MAX_ENEMIES_IN_PROXIMITY_TO_AID_BOT = 1
 
-BotPerceptionExtension._calculate_ally_need_type = function (self, self_position, self_health_utility, can_heal_other, can_give_healing_to_other, ally_unit, ally_position, target_enemy, t)
+BotPerceptionExtension._calculate_ally_need_type = function (self, self_position, self_health_utility, can_heal_other, can_give_healing_to_other, ally_unit, ally_position, target_enemy, ally_is_bot, t)
 	local ally_unit_data_extension = ScriptUnit.extension(ally_unit, "unit_data_system")
 	local ally_character_state_component = ally_unit_data_extension:read_component("character_state")
 	local ally_disabled_character_state_component = ally_unit_data_extension:read_component("disabled_character_state")
@@ -459,6 +460,10 @@ BotPerceptionExtension._calculate_ally_need_type = function (self, self_position
 	local in_need_type = nil
 	local look_at_ally = false
 	local utility = 0
+
+	if ally_is_bot and MAX_ENEMIES_IN_PROXIMITY_TO_AID_BOT <= self._num_enemies_in_proximity then
+		return in_need_type, look_at_ally, utility
+	end
 
 	if being_assisted and interactee_component.interactor_unit ~= self._unit then
 		return in_need_type, look_at_ally, utility

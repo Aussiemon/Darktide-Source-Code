@@ -328,6 +328,10 @@ overrides.light_chainaxe_active_sticky = {
 			chainsword_sawing
 		},
 		{
+			"weapon_special",
+			true
+		},
+		{
 			"skip_on_hit_proc",
 			true
 		}
@@ -564,7 +568,7 @@ damage_templates.heavy_chainaxe = {
 			},
 			power_distribution = {
 				attack = {
-					85,
+					102,
 					170
 				},
 				impact = {
@@ -589,8 +593,28 @@ damage_templates.heavy_chainaxe = {
 			},
 			power_distribution = {
 				attack = {
-					25,
-					35
+					55,
+					100
+				},
+				impact = {
+					6,
+					12
+				}
+			}
+		},
+		{
+			armor_damage_modifier = {
+				attack = {
+					[armor_types.armored] = damage_lerp_values.lerp_1
+				},
+				impact = {
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_65
+				}
+			},
+			power_distribution = {
+				attack = {
+					20,
+					75
 				},
 				impact = {
 					5,
@@ -610,11 +634,11 @@ damage_templates.heavy_chainaxe = {
 			power_distribution = {
 				attack = {
 					10,
-					30
+					55
 				},
 				impact = {
-					3,
-					7
+					6,
+					8
 				}
 			}
 		},
@@ -626,7 +650,7 @@ damage_templates.heavy_chainaxe = {
 					0
 				},
 				impact = {
-					3,
+					4,
 					6
 				}
 			},

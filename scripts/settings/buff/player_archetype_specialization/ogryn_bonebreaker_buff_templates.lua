@@ -90,7 +90,7 @@ templates.ogryn_bonebreaker_increased_coherency_regen = {
 	predicted = false,
 	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.toughness_regen_rate_modifier] = talent_settings.toughness_1.toughness_bonus
+		[stat_buffs.toughness_coherency_regen_rate_multiplier] = talent_settings.toughness_1.toughness_bonus
 	}
 }
 templates.ogryn_bonebreaker_heavy_hits_toughness = {
@@ -507,8 +507,11 @@ templates.ogryn_bonebreaker_reduce_damage_taken_per_bleed = {
 		return math.clamp(template_data.num_stacks, 0, bleed_dr_max_stacks)
 	end
 }
+local reduced_damage_distance = talent_settings.defensive_2.distance * talent_settings.defensive_2.distance
 templates.ogryn_bonebreaker_reduce_damage_taken_on_disabled_allies = {
 	predicted = false,
+	hud_priority = 4,
+	hud_icon = "content/ui/textures/icons/talents/ogryn_2/hud/ogryn_2_tier_2_2",
 	class_name = "buff",
 	lerped_stat_buffs = {
 		[stat_buffs.damage_taken_multiplier] = {
@@ -530,17 +533,24 @@ templates.ogryn_bonebreaker_reduce_damage_taken_on_disabled_allies = {
 			local max_players = 3
 			local player_units = template_data.side.valid_player_units
 			local valid_units = 0
+			local unit = template_context.unit
+			local pos = POSITION_LOOKUP[unit]
 
 			for i = 1, #player_units do
 				local player_unit = player_units[i]
 
-				if player_unit ~= template_context.unit then
-					local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-					local character_state_component = unit_data_extension:read_component("character_state")
-					local requires_immediate_help = PlayerUnitStatus.requires_immediate_help(character_state_component)
+				if player_unit ~= unit then
+					local player_pos = POSITION_LOOKUP[player_unit]
+					local distance = Vector3.distance_squared(pos, player_pos)
 
-					if requires_immediate_help then
-						valid_units = valid_units + 1
+					if distance < reduced_damage_distance then
+						local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+						local character_state_component = unit_data_extension:read_component("character_state")
+						local requires_help = PlayerUnitStatus.requires_help(character_state_component)
+
+						if requires_help then
+							valid_units = valid_units + 1
+						end
 					end
 				end
 			end
@@ -550,6 +560,14 @@ templates.ogryn_bonebreaker_reduce_damage_taken_on_disabled_allies = {
 		end
 
 		return template_data.lerp_t
+	end,
+	check_active_func = function (template_data, template_context)
+		return template_data.lerp_t > 0
+	end,
+	visual_stack_count = function (template_data, template_context)
+		local stack_count = math.floor(template_data.lerp_t * 3 + 0.5)
+
+		return stack_count
 	end
 }
 local increased_toughness_health_threshold = talent_settings.defensive_3.increased_toughness_health_threshold
@@ -641,8 +659,7 @@ templates.ogryn_bonebreaker_hitting_multiple_with_melee_grants_melee_damage_bonu
 	predicted = false,
 	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_sweep_finish] = talent_settings.offensive_2_3.on_sweep_finish_proc_chance,
-		[proc_events.on_hit] = talent_settings.offensive_2_3.on_hit_proc_chance
+		[proc_events.on_sweep_finish] = talent_settings.offensive_2_3.on_sweep_finish_proc_chance
 	},
 	lerped_stat_buffs = {
 		[stat_buffs.melee_damage] = {
@@ -650,43 +667,14 @@ templates.ogryn_bonebreaker_hitting_multiple_with_melee_grants_melee_damage_bonu
 			max = talent_settings.offensive_2_3.melee_damage * talent_settings.offensive_2_3.max_targets
 		}
 	},
-	conditional_stat_buffs_func = function (template_data, template_context)
-		return template_data.is_active
-	end,
 	specific_proc_func = {
 		on_sweep_finish = function (params, template_data, template_context)
-			if template_data.is_active then
-				return
-			end
-
-			if template_data.ignore_sweep then
-				template_data.ignore_sweep = nil
-
-				return
-			end
-
 			local hits = params.num_hit_units
-
-			if hits > 0 then
-				template_data.hits = hits
-				template_data.is_active = true
-			end
-		end,
-		on_hit = function (params, template_data, template_context)
-			if not template_data.is_active then
-				return
-			end
-
-			template_data.ignore_sweep = true
-			template_data.is_active = nil
+			template_data.hits = hits
 		end
 	},
 	lerp_t_func = function (t, start_time, duration, template_data, template_context)
-		if not template_data.is_active then
-			return 0
-		end
-
-		local hits = template_data.hits
+		local hits = template_data.hits or 0
 		local max_hits = talent_settings.offensive_2_3.max_targets
 
 		return math.clamp(hits / max_hits, 0, 1)

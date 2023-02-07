@@ -140,7 +140,7 @@ local archetype_talents = {
 		},
 		veteran_2_tier_2_name_3 = {
 			description = "loc_talent_ranger_replenish_grenade_desc",
-			name = "You replenish 1 grenade every 60 seconds",
+			name = "You replenish a grenade every 60 seconds",
 			display_name = "loc_talent_ranger_replenish_grenade",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_1_2",
 			format_values = {
@@ -164,7 +164,7 @@ local archetype_talents = {
 		},
 		veteran_2_tier_3_name_2 = {
 			description = "loc_talent_ranger_grenade_on_elite_kills_coop_desc",
-			name = "You and allies in coherency have 5% chance to gain a grenade whenever you or an ally in coherency kills an elite enemy.",
+			name = "You and allies in coherency have a chance to gain a grenade whenever you or an ally in coherency kills an elite enemy.",
 			display_name = "loc_talent_ranger_grenade_on_elite_kills_coop",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_4_2",
 			format_values = {
@@ -177,7 +177,7 @@ local archetype_talents = {
 		},
 		veteran_2_tier_3_name_3 = {
 			description = "loc_talent_ranger_toughness_for_allies_close_to_ranged_kills_desc",
-			name = "Replenishes 10% toughness to an ally when killing an enemy with a ranged attack that is in melee range of that ally.",
+			name = "Replenishes toughness to an ally when killing an enemy with a ranged attack that is in melee range of that ally.",
 			display_name = "loc_talent_ranger_toughness_for_allies_close_to_ranged_kills",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_4_3",
 			format_values = {
@@ -203,7 +203,7 @@ local archetype_talents = {
 		},
 		veteran_2_tier_4_name_2 = {
 			description = "loc_talent_ranger_stamina_on_ranged_dodge_desc",
-			name = "Dodging, Sprinting or Sliding to avoid ranged attacks grants 33% stamina.",
+			name = "Dodging, Sprinting or Sliding to avoid ranged attacks grants stamina.",
 			display_name = "loc_talent_ranger_stamina_on_ranged_dodge",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_3_2",
 			format_values = {
@@ -255,7 +255,7 @@ local archetype_talents = {
 		},
 		veteran_2_tier_5_name_3 = {
 			description = "loc_talent_ranger_reload_speed_on_elite_kills_desc",
-			name = "The speed of your next reload after killing an elite is increased by 50%.",
+			name = "The speed of your next reload after killing an elite is increased.",
 			display_name = "loc_talent_ranger_reload_speed_on_elite_kills",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_5_3",
 			format_values = {
@@ -268,7 +268,7 @@ local archetype_talents = {
 		},
 		veteran_2_tier_6_name_1 = {
 			description = "loc_talent_ranger_volley_fire_improved_desc",
-			name = "Activating Volley Fire reloads your weapon and replenishes X% toughness. Killing a marked enemy during Volley Fire refreshes the duration of Volley Fire",
+			name = "Activating Volley Fire reloads your weapon and replenishes toughness. Killing a marked enemy during Volley Fire refreshes the duration of Volley Fire",
 			display_name = "loc_talent_ranger_volley_fire_improved",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_6_2",
 			format_values = {
@@ -289,7 +289,7 @@ local archetype_talents = {
 		},
 		veteran_2_tier_6_name_2 = {
 			description = "loc_talent_ranger_volley_fire_headhunter_desc",
-			name = "Now outlines all ranged enemies. Gain X% weakspot damage during Volley Fire. Killing a marked enemy during Volley Fire refreshes the duration of Volley Fire",
+			name = "Now outlines all ranged enemies. Gain weakspot damage during Volley Fire. Killing a marked enemy during Volley Fire refreshes the duration of Volley Fire",
 			display_name = "loc_talent_ranger_volley_fire_headhunter",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_6_1",
 			format_values = {
@@ -312,7 +312,7 @@ local archetype_talents = {
 		},
 		veteran_2_tier_6_name_3 = {
 			description = "loc_talent_ranger_volley_fire_big_game_hunter_desc",
-			name = "Now also outlines Ogryns and Monsters. Damage vs Marked Targets increased by X% during Volley Fire. Killing a marked enemy during Volley Fire refreshes the duration of Volley Fire",
+			name = "Now also outlines Ogryns and Monsters. Damage vs Marked Targets increased by during Volley Fire. Killing a marked enemy during Volley Fire refreshes the duration of Volley Fire",
 			display_name = "loc_talent_ranger_volley_fire_big_game_hunter",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_6_3_b",
 			format_values = {

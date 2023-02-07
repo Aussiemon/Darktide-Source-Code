@@ -248,7 +248,7 @@ weapon_template.actions = {
 		first_person_hit_anim = "hit_right_shake",
 		range_mod = 1.25,
 		first_person_hit_stop_anim = "attack_hit",
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_3",
 		damage_window_end = 0.38333333333333336,
 		anim_event_3p = "attack_swing_heavy_down_right",
 		anim_event = "attack_swing_heavy_right",
@@ -300,13 +300,17 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		hit_zone_priority = hit_zone_priority,
-		weapon_box = default_weapon_box,
+		weapon_box = {
+			0.2,
+			0.5,
+			1.35
+		},
 		spline_settings = {
 			matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/heavy_swing_right",
 			anchor_point_offset = {
 				0,
-				0,
-				-0.05
+				-0.4,
+				-0.2
 			}
 		},
 		damage_profile = DamageProfileTemplates.combat_blade_heavy_linesman,
@@ -368,7 +372,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_left_heavy",
-				chain_time = 0.55
+				chain_time = 0.4
 			},
 			block = {
 				action_name = "action_block"
@@ -459,7 +463,7 @@ weapon_template.actions = {
 				-0.1
 			}
 		},
-		damage_profile = DamageProfileTemplates.combat_blade_light_smiter,
+		damage_profile = DamageProfileTemplates.combat_blade_light_smiter_stab,
 		damage_type = damage_types.combat_blade,
 		herding_template = HerdingTemplates.stab,
 		wounds_shape = wounds_shapes.default,
@@ -530,12 +534,16 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		hit_zone_priority = hit_zone_priority,
-		weapon_box = default_weapon_box,
+		weapon_box = {
+			0.2,
+			0.15,
+			1
+		},
 		spline_settings = {
 			matrices_data_location = "content/characters/player/ogryn/first_person/animations/combat_blade/heavy_swing_down_left",
 			anchor_point_offset = {
-				0.32,
-				0,
+				0.3,
+				-0.4,
 				0
 			}
 		},
@@ -690,7 +698,7 @@ weapon_template.actions = {
 				-0.1
 			}
 		},
-		damage_profile = DamageProfileTemplates.combat_blade_light_smiter,
+		damage_profile = DamageProfileTemplates.combat_blade_light_smiter_stab,
 		damage_type = damage_types.combat_blade,
 		herding_template = HerdingTemplates.stab,
 		wounds_shape = wounds_shapes.default,
@@ -750,6 +758,10 @@ weapon_template.actions = {
 			},
 			push = {
 				action_name = "action_push",
+				chain_time = 0.25
+			},
+			special_action = {
+				action_name = "action_special_uppercut",
 				chain_time = 0.25
 			}
 		}

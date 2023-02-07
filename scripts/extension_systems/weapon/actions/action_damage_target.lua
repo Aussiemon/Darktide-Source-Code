@@ -74,7 +74,7 @@ ActionDamageTarget.fixed_update = function (self, dt, t, time_in_action)
 		local should_add_warp_charge = ActionUtility.is_within_trigger_time(time_in_action, dt, warp_charge_time)
 
 		if self._dealt_damage and should_add_warp_charge then
-			self:_pay_warp_charge_cost(t, self._charge_level)
+			self:_pay_warp_charge_cost(t, self._charge_level, true)
 		end
 	end
 end
@@ -157,7 +157,7 @@ ActionDamageTarget.finish = function (self, reason, data, t, time_in_action)
 		local warp_charge_time = action_settings.pay_warp_charge_time or 0.5
 
 		if time_in_action < warp_charge_time then
-			self:_pay_warp_charge_cost(t, self._charge_level)
+			self:_pay_warp_charge_cost(t, self._charge_level or 1)
 		end
 	end
 

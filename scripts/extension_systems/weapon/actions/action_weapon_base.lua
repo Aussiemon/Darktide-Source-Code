@@ -193,10 +193,14 @@ ActionWeaponBase._start_warp_charge_action = function (self, t)
 	WarpCharge.start_warp_action(t, warp_charge_component)
 end
 
-ActionWeaponBase._pay_warp_charge_cost = function (self, t, charge_level)
+ActionWeaponBase._pay_warp_charge_cost = function (self, t, charge_level, ignore_clients)
 	local charge_template = self._weapon_extension:charge_template()
 
 	if not charge_template then
+		return
+	end
+
+	if ignore_clients and not self._is_server then
 		return
 	end
 

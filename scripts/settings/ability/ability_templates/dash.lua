@@ -44,7 +44,6 @@ local ability_template = {
 			start_input = "aim_pressed",
 			kind = "linear_aim",
 			sprint_ready_up_time = 0,
-			uninterruptible = true,
 			allowed_during_sprint = true,
 			ability_type = "combat_ability",
 			stop_input = "block_cancel",

@@ -326,7 +326,6 @@ InventoryCosmeticsView.cb_on_equip_pressed = function (self)
 	local selected_slot_name = selected_slot.name
 
 	self:_equip_item(selected_slot_name, previewed_item)
-	self:_handle_back_pressed()
 end
 
 InventoryCosmeticsView.on_exit = function (self)

@@ -177,13 +177,13 @@ damage_templates.default_ogryn_shotgun_assault = {
 	ragdoll_push_force = 100,
 	ignore_stagger_reduction = true,
 	cleave_distribution = {
-		attack = 1.5,
-		impact = 1.5
+		attack = 2.5,
+		impact = 2.5
 	},
 	ranges = {
 		min = {
-			5,
-			11
+			8,
+			15
 		},
 		max = {
 			15,
@@ -197,8 +197,8 @@ damage_templates.default_ogryn_shotgun_assault = {
 				[armor_types.armored] = damage_lerp_values.lerp_0_65,
 				[armor_types.resistant] = damage_lerp_values.lerp_0_8,
 				[armor_types.player] = damage_lerp_values.no_damage,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_9,
-				[armor_types.super_armor] = damage_lerp_values.no_damage,
+				[armor_types.berserker] = damage_lerp_values.lerp_1,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
 				[armor_types.prop_armor] = damage_lerp_values.lerp_0_65
@@ -243,7 +243,7 @@ damage_templates.default_ogryn_shotgun_assault = {
 	power_distribution = {
 		attack = {
 			750,
-			1250
+			1500
 		},
 		impact = {
 			50,

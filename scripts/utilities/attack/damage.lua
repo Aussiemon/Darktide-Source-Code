@@ -13,6 +13,7 @@ local PlayerDeath = require("scripts/utilities/player_death")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Vo = require("scripts/utilities/vo")
 local attack_results = AttackSettings.attack_results
+local buff_keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
 local TOUGHNESS_BROKEN_ATTACK_INTENSITIES = {
 	ranged = math.huge,
@@ -23,7 +24,7 @@ local TOUGHNESS_BROKEN_ATTACK_INTENSITIES = {
 local Damage = {}
 local _trigger_player_hurt_vo = nil
 
-Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_unit_owner_unit, attack_result, attack_type, damage_profile, damage, permanent_damage, tougness_damage, hit_actor, attack_direction, hit_zone_name, herding_template_or_nil, is_critical_strike, damage_type, hit_world_position_or_nil, wounds_shape_or_nil)
+Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_unit_owner_unit, attack_result, attack_type, damage_profile, damage, permanent_damage, tougness_damage, hit_actor, attack_direction, hit_zone_name, herding_template_or_nil, is_critical_strike, damage_type, hit_world_position_or_nil, wounds_shape_or_nil, instakill)
 	local health_extension = ScriptUnit.extension(unit, "health_system")
 	local toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
 	local was_alive = health_extension:is_alive()
@@ -68,7 +69,21 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 		end
 	end
 
-	if damage > 0 or permanent_damage > 0 then
+	local attacked_unit_keywords = buff_extension and buff_extension:keywords()
+	local current_health_damage = health_extension:damage_taken()
+	local max_health = health_extension:max_health()
+	local remaining_health = max_health - current_health_damage - damage
+	local will_die = remaining_health <= 0
+
+	if will_die then
+		local has_resist_death_buff = attacked_unit_keywords and attacked_unit_keywords[buff_keywords.resist_death]
+
+		if has_resist_death_buff and not instakill then
+			damage = math.max(0, max_health - current_health_damage - 1)
+		end
+	end
+
+	if will_die or damage > 0 or permanent_damage > 0 then
 		if attacking_unit_owner_unit then
 			local attacker_buff_extension = ScriptUnit.has_extension(attacking_unit_owner_unit, "buff_system")
 			local attacker_health_extension = ScriptUnit.has_extension(attacking_unit_owner_unit, "health_system")

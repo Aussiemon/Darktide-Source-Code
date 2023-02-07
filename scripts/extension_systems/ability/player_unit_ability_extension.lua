@@ -645,6 +645,10 @@ PlayerUnitAbilityExtension.use_ability_charge = function (self, ability_type)
 	component.num_charges = math.max(component.num_charges - 1, 0)
 end
 
+PlayerUnitAbilityExtension.running_action_settings = function (self)
+	return self._action_handler:running_action_settings("combat_ability_action")
+end
+
 PlayerUnitAbilityExtension.wanted_character_state_transition = function (self)
 	return self._action_handler:wanted_character_state_transition()
 end

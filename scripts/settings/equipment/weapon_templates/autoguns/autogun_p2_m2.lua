@@ -36,7 +36,7 @@ local weapon_template = {
 			input_sequence = {
 				{
 					value = true,
-					input = "action_one_pressed"
+					input = "action_one_hold"
 				}
 			}
 		},
@@ -451,6 +451,7 @@ weapon_template.actions = {
 		crosshair_type = "dot",
 		stop_alternate_fire = true,
 		damage_time = 0.15,
+		unaim = true,
 		anim_event_3p = "attack_left_diagonal_up",
 		anim_event = "attack_push",
 		total_time = 1.1,
@@ -505,6 +506,10 @@ weapon_template.actions = {
 			},
 			shoot = {
 				action_name = "action_shoot_hip",
+				chain_time = 0.9
+			},
+			zoom_release = {
+				action_name = "action_unzoom",
 				chain_time = 0.9
 			}
 		},

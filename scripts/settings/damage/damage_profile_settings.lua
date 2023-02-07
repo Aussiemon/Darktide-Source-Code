@@ -32,6 +32,10 @@ local damage_profile_settings = {
 			0.85,
 			1.65
 		},
+		lerp_1_1 = {
+			0.75,
+			1.43
+		},
 		lerp_1 = {
 			0.67,
 			1.33

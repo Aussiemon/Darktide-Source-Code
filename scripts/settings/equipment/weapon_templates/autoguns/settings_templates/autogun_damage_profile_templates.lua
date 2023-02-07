@@ -449,8 +449,8 @@ damage_templates.autogun_p3_burst_shot = {
 		near = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_0_75,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
+				[armor_types.armored] = damage_lerp_values.lerp_1,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_8,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
@@ -473,8 +473,8 @@ damage_templates.autogun_p3_burst_shot = {
 		far = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
-				[armor_types.armored] = damage_lerp_values.lerp_0_6,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_4,
+				[armor_types.armored] = damage_lerp_values.lerp_0_8,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_6,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
@@ -725,8 +725,8 @@ overrides.autogun_p3_m3 = {
 			"power_distribution",
 			"impact",
 			{
-				6,
-				12
+				14,
+				16
 			}
 		},
 		{

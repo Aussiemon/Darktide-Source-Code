@@ -8,7 +8,17 @@ LoadingHost.SPAWN_QUEUE_DELAY = 10
 LoadingHost.init = function (self, network_delegate, loaders)
 	self._network_delegate = network_delegate
 	self._loaders = loaders
-	self._spawn_queue = SpawnQueue:new(LoadingHost.SPAWN_QUEUE_DELAY)
+	local spawn_queue_delay = LoadingHost.SPAWN_QUEUE_DELAY
+	local connection_manager = Managers.connection
+	local host_type = connection_manager:host_type()
+
+	if host_type == "hub_server" then
+		spawn_queue_delay = 1
+	elseif host_type == "mission_server" then
+		spawn_queue_delay = 60
+	end
+
+	self._spawn_queue = SpawnQueue:new(spawn_queue_delay)
 	self._mission = nil
 	self._spawn_group = nil
 	self._spawn_peers = nil
@@ -208,6 +218,14 @@ LoadingHost._trigger_spawn_group = function (self)
 
 	self._spawn_group = nil
 	self._spawn_peers = nil
+	local state = self._state
+
+	if state ~= "hot_join" then
+		local spawn_queue_delay = 1
+
+		self._spawn_queue:set_delay_time(spawn_queue_delay)
+	end
+
 	self._state = "hot_join"
 end
 

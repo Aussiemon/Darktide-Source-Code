@@ -45,7 +45,7 @@ damage_templates.default_rippergun_assault = {
 				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_75,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 				[armor_types.void_shield] = damage_lerp_values.lerp_1,
 				[armor_types.prop_armor] = damage_lerp_values.lerp_0_5
@@ -161,7 +161,7 @@ damage_templates.rippergun_p1_m2_assault = {
 				[armor_types.resistant] = damage_lerp_values.lerp_0_75,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_75,
-				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 				[armor_types.void_shield] = damage_lerp_values.lerp_1,
 				[armor_types.prop_armor] = damage_lerp_values.lerp_0_5
@@ -209,8 +209,8 @@ damage_templates.rippergun_p1_m2_assault = {
 	},
 	power_distribution = {
 		attack = {
-			200,
-			400
+			250,
+			500
 		},
 		impact = {
 			20,

@@ -686,7 +686,7 @@ weapon_template.actions = {
 				-0.1
 			}
 		},
-		damage_profile = DamageProfileTemplates.combat_blade_light_smiter,
+		damage_profile = DamageProfileTemplates.combat_blade_light_smiter_stab,
 		damage_type = damage_types.combat_blade,
 		herding_template = HerdingTemplates.stab,
 		wounds_shape = wounds_shapes.default,
@@ -746,6 +746,10 @@ weapon_template.actions = {
 			},
 			push = {
 				action_name = "action_push",
+				chain_time = 0.25
+			},
+			special_action = {
+				action_name = "action_special_uppercut",
 				chain_time = 0.25
 			}
 		}

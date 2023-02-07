@@ -373,6 +373,10 @@ local brightness_options = {
 						Application.set_user_setting("gamma", value)
 					end
 
+					if template.changed_callback then
+						template.changed_callback(value)
+					end
+
 					save_user_settings()
 				end,
 				on_activated = function (value, template)
@@ -2288,6 +2292,10 @@ local function create_render_settings_entry(template)
 				if not _is_same(current_value, value) then
 					set_user_setting(template.save_location, template.id, value)
 
+					if template.changed_callback then
+						template.changed_callback(value)
+					end
+
 					dirty = true
 				end
 
@@ -2360,6 +2368,10 @@ local function create_render_settings_entry(template)
 
 				if not _is_same(current_value, value) then
 					set_user_setting(template.save_location, template.id, value)
+
+					if template.changed_callback then
+						template.changed_callback(value)
+					end
 
 					dirty = true
 				end
@@ -2496,6 +2508,10 @@ render_settings[#render_settings + 1] = {
 			camera_manager:set_fov_multiplier(fov_multiplier)
 		end
 
+		if template.changed_callback then
+			template.changed_callback(value)
+		end
+
 		return true, template.require_apply
 	end,
 	get_function = function (template)
@@ -2549,6 +2565,10 @@ render_settings[#render_settings + 1] = {
 		Application.set_user_setting("adapter_index", adapter_index - 1)
 		Application.set_user_setting("fullscreen_output", output_screen - 1)
 		Application.set_user_setting("screen_resolution", resolution)
+
+		if template.changed_callback then
+			template.changed_callback(value)
+		end
 
 		return true, template.require_apply
 	end,

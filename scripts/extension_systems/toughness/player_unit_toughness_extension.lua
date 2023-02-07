@@ -1,8 +1,10 @@
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local ToughnessSettings = require("scripts/settings/toughness/toughness_settings")
 local ToughnessOnHit = require("scripts/utilities/toughness/toughness_on_hit")
 local attack_types = AttackSettings.attack_types
+local proc_events = BuffSettings.proc_events
 local toughness_replenish_types = ToughnessSettings.replenish_types
 local STANDING_STILL_EPSILON = 0.001
 local PlayerUnitToughnessExtension = class("PlayerUnitToughnessExtension")
@@ -107,13 +109,15 @@ PlayerUnitToughnessExtension._update_toughness = function (self, dt, t)
 		local coherency_rate_multiplier = buffs.toughness_coherency_regen_rate_multiplier
 		coherency_rate_modifier = coherency_rate_modifier * coherency_rate_multiplier
 		local regen_rate = base_rate * weapon_rate_modifier * buff_rate_modifier * coherency_rate_modifier
-		local regen_amount = math.min(regen_rate * dt, self._toughness_damage)
+		local wanted_regen_amount = regen_rate * dt
+		local regen_amount = math.min(wanted_regen_amount, self._toughness_damage)
 		self._toughness_damage = self._toughness_damage - regen_amount
 
 		GameSession.set_game_object_field(self._game_session, self._game_object_id, "toughness_damage", self._toughness_damage)
 
 		if regen_amount > 0 then
 			self:_record_stat(regen_amount, "coherency")
+			self:_handle_procs(wanted_regen_amount, regen_amount, "coherency")
 		end
 	end
 end
@@ -153,7 +157,8 @@ PlayerUnitToughnessExtension.recover_toughness = function (self, recovery_type)
 	local total_toughness_replenish_stat_buff = stat_buffs.toughness_replenish_multiplier
 	local stat_buff_multiplier = toughness_melee_replenish_stat_buff + total_toughness_replenish_stat_buff - 1
 	local recovery_percentage = toughness_template.recovery_percentages[recovery_type] * stat_buff_multiplier * modifier
-	local new_toughness = math.max(0, toughness_damage - max_toughness * recovery_percentage)
+	local wanted_amount = max_toughness * recovery_percentage
+	local new_toughness = math.max(0, toughness_damage - wanted_amount)
 	local network_toughness_damage = math.min(new_toughness, NetworkConstants.toughness.max)
 	self._toughness_damage = network_toughness_damage
 
@@ -163,6 +168,7 @@ PlayerUnitToughnessExtension.recover_toughness = function (self, recovery_type)
 
 	if recovered_tougness > 0 then
 		self:_record_stat(recovered_tougness, recovery_type)
+		self:_handle_procs(wanted_amount, recovered_tougness, recovery_type)
 	end
 end
 
@@ -180,7 +186,8 @@ PlayerUnitToughnessExtension.recover_percentage_toughness = function (self, fixe
 		fixed_percentage = fixed_percentage * stat_buff_multiplier
 	end
 
-	local new_toughness = math.max(0, toughness_damage - max_toughness * fixed_percentage)
+	local wanted_amount = max_toughness * fixed_percentage
+	local new_toughness = math.max(0, toughness_damage - wanted_amount)
 	local network_toughness_damage = math.min(new_toughness, NetworkConstants.toughness.max)
 	self._toughness_damage = network_toughness_damage
 
@@ -190,6 +197,34 @@ PlayerUnitToughnessExtension.recover_percentage_toughness = function (self, fixe
 
 	if recovered_tougness > 0 then
 		self:_record_stat(recovered_tougness, reason or "unknown")
+		self:_handle_procs(wanted_amount, recovered_tougness, reason)
+	end
+end
+
+PlayerUnitToughnessExtension.recover_flat_toughness = function (self, amount, ignore_stat_buffs, reason)
+	if self:_toughness_regen_disabled() then
+		return
+	end
+
+	local toughness_damage = self._toughness_damage
+
+	if not ignore_stat_buffs then
+		local stat_buffs = self._buff_extension:stat_buffs()
+		local stat_buff_multiplier = stat_buffs.toughness_replenish_multiplier
+		amount = amount * stat_buff_multiplier
+	end
+
+	local new_toughness = math.max(0, toughness_damage - amount)
+	local network_toughness_damage = math.min(new_toughness, NetworkConstants.toughness.max)
+	self._toughness_damage = network_toughness_damage
+
+	GameSession.set_game_object_field(self._game_session, self._game_object_id, "toughness_damage", network_toughness_damage)
+
+	local recovered_tougness = toughness_damage - network_toughness_damage
+
+	if recovered_tougness > 0 then
+		self:_record_stat(recovered_tougness, reason or "unknown")
+		self:_handle_procs(amount, recovered_tougness, reason)
 	end
 end
 
@@ -207,6 +242,10 @@ PlayerUnitToughnessExtension.recover_max_toughness = function (self)
 
 	if recovered_tougness > 0 then
 		self:_record_stat(recovered_tougness, "unknown")
+
+		local max_toughness = self:max_toughness()
+
+		self:_handle_procs(max_toughness, recovered_tougness, "unknown")
 	end
 end
 
@@ -260,6 +299,19 @@ PlayerUnitToughnessExtension._toughness_regen_disabled = function (self)
 	end
 
 	return false
+end
+
+PlayerUnitToughnessExtension._handle_procs = function (self, amount, recovered_amount, reason)
+	local buff_extension = self._buff_extension
+	local param_table = buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		param_table.amount = amount
+		param_table.reason = reason
+		param_table.recovered_amount = recovered_amount
+
+		buff_extension:add_proc_event(proc_events.on_toughness_replenished, param_table)
+	end
 end
 
 PlayerUnitToughnessExtension._record_stat = function (self, amount, reason)

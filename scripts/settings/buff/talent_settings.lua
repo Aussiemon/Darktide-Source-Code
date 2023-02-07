@@ -46,7 +46,7 @@ local talent_settings = {
 			instant_toughness = 0.25
 		},
 		toughness_2 = {
-			toughness = 0.1
+			toughness = 0.15
 		},
 		toughness_3 = {
 			toughness = 0.005,
@@ -67,7 +67,7 @@ local talent_settings = {
 			toughness_damage_taken_multiplier = 0.25
 		},
 		defensive_2 = {
-			stamina_percent = 0.2
+			stamina_percent = 0.3
 		},
 		defensive_3 = {
 			threat_weight_multiplier = 0.1
@@ -79,7 +79,7 @@ local talent_settings = {
 			proc_chance = 0.05
 		},
 		coop_3 = {
-			toughness_percent = 0.1,
+			toughness_percent = 0.15,
 			range = 5
 		},
 		offensive_2_1 = {
@@ -98,7 +98,7 @@ local talent_settings = {
 		},
 		combat_ability_1 = {},
 		combat_ability_2 = {
-			weakspot_damage = 0.25
+			weakspot_damage = 0.5
 		},
 		combat_ability_3 = {
 			damage_vs_ogryn_and_monsters = 0.5
@@ -354,8 +354,9 @@ local talent_settings = {
 			max = 0.5
 		},
 		defensive_2 = {
-			max = 0.25,
-			min = 1
+			min = 1,
+			distance = 20,
+			max = 0.4
 		},
 		defensive_3 = {
 			toughness_replenish_multiplier = 1,
@@ -377,7 +378,7 @@ local talent_settings = {
 		offensive_2_3 = {
 			max_targets = 10,
 			on_hit_proc_chance = 1,
-			melee_damage = 0.05,
+			melee_damage = 0.025,
 			on_sweep_finish_proc_chance = 1
 		},
 		combat_ability_1 = {
@@ -432,10 +433,10 @@ local talent_settings = {
 			melee_attack_speed = 0.1
 		},
 		toughness_1 = {
-			toughness_melee_replenish = 0.5
+			toughness_melee_replenish = 0.75
 		},
 		toughness_2 = {
-			toughness_damage_taken_multiplier = 0.25,
+			toughness_damage_taken_multiplier = 0.5,
 			duration = 4
 		},
 		toughness_3 = {
@@ -505,7 +506,7 @@ local talent_settings = {
 			duration = 5
 		},
 		offensive_2_3 = {
-			max_stacks = 6
+			max_stacks = 8
 		},
 		combat_ability_1 = {
 			time = 1.5
@@ -647,7 +648,7 @@ local talent_settings = {
 		},
 		passive_1 = {
 			soul_duration = 25,
-			damage = 0.18,
+			damage = 0.24,
 			base_max_souls = 4,
 			on_combat_ability_proc_chance = 1,
 			on_hit_proc_chance = 1
@@ -689,7 +690,7 @@ local talent_settings = {
 			percent = 0.15
 		},
 		coop_3 = {
-			damage_taken_multiplier = 1.15,
+			damage_taken_multiplier = 1.25,
 			duration = 5
 		},
 		defensive_1 = {

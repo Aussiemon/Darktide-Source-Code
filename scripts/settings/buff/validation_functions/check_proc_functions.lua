@@ -137,7 +137,7 @@ local CheckProcFunctions = {
 			return false
 		end
 
-		if not params.attack_result == attack_results.died then
+		if params.attack_result ~= attack_results.died then
 			return false
 		end
 

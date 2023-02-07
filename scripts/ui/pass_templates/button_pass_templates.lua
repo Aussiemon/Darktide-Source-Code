@@ -1,3 +1,4 @@
+local InputUtils = require("scripts/managers/input/input_utils")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ColorUtilities = require("scripts/utilities/ui/colors")
@@ -84,6 +85,30 @@ local function default_button_hover_change_function(content, style)
 	local default_color = hotspot.disabled and style.disabled_color or style.default_color
 	local hover_color = style.hover_color
 	local color = style.text_color or style.color
+	local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+
+	color_lerp(default_color, hover_color, progress, color)
+end
+
+local function default_button_text_change_function(content, style)
+	local hotspot = content.hotspot
+	local is_disabled = hotspot.disabled
+	local gamepad_active = hotspot.gamepad_active
+	local button_text = content.text or ""
+	local gamepad_action = content.gamepad_action
+
+	if gamepad_active and gamepad_action and not is_disabled then
+		local service_type = "View"
+		local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
+		local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+		content.display_text = string.format(Localize("loc_input_legend_text_template"), input_text, button_text)
+	else
+		content.display_text = button_text
+	end
+
+	local default_color = is_disabled and style.disabled_color or style.default_color
+	local hover_color = style.hover_color
+	local color = style.text_color
 	local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 	color_lerp(default_color, hover_color, progress, color)
@@ -199,9 +224,9 @@ ButtonPassTemplates.url_button = {
 	{
 		style_id = "text",
 		pass_type = "text",
-		value_id = "text",
+		value_id = "display_text",
 		style = url_text_style,
-		change_function = default_button_hover_change_function
+		change_function = default_button_text_change_function
 	},
 	{
 		value = "content/ui/materials/frames/hover",
@@ -365,9 +390,9 @@ ButtonPassTemplates.default_button = {
 	{
 		style_id = "text",
 		pass_type = "text",
-		value_id = "text",
+		value_id = "display_text",
 		style = terminal_button_text_style,
-		change_function = default_button_hover_change_function
+		change_function = default_button_text_change_function
 	},
 	{
 		value = "content/ui/materials/buttons/primary",
@@ -542,17 +567,9 @@ ButtonPassTemplates.ready_button = {
 	{
 		style_id = "text",
 		pass_type = "text",
-		value_id = "text",
+		value_id = "display_text",
 		style = ready_button_text_style,
-		change_function = function (content, style)
-			local hotspot = content.hotspot
-			local default_color = hotspot.disabled and style.disabled_color or style.default_color
-			local hover_color = style.hover_color
-			local text_color = style.text_color
-			local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
-
-			color_lerp(default_color, hover_color, progress, text_color)
-		end
+		change_function = default_button_text_change_function
 	},
 	size = {
 		490,

@@ -120,7 +120,7 @@ local WeaponUIStatsTemplates = {
 		stats = default_stats,
 		power_stats = {
 			{
-				charge_level = 0.5,
+				charge_level = 0.516133333,
 				display_name = "loc_weapon_action_title_primary",
 				dropoff_scalar = 0,
 				action_name = "action_shoot",
@@ -139,7 +139,7 @@ local WeaponUIStatsTemplates = {
 				{
 					display_name = "action_shoot",
 					dropoff_scalar = 0,
-					charge_level = 0.5,
+					charge_level = 0.516133333,
 					action_name = "action_shoot",
 					target_index = 1,
 					attack = default_attack_settings,

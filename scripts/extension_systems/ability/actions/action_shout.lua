@@ -163,7 +163,9 @@ ActionShout.start = function (self, action_settings, t, time_scale, action_start
 						fx_extension:spawn_exclusive_particle(recover_toughness_effect, Vector3(0, 0, 1))
 					end
 
-					Toughness.recover_max_toughness(unit)
+					local toughness_percent = action_settings.toughness_replenish_percent or 1
+
+					Toughness.replenish_percentage(unit, toughness_percent, nil, "ability_shout")
 				end
 			end
 		end
@@ -228,6 +230,8 @@ ActionShout.start = function (self, action_settings, t, time_scale, action_start
 							else
 								buff_name = action_settings.special_rule_buff_enemy
 							end
+						else
+							buff_name = action_settings.special_rule_buff_enemy
 						end
 
 						buff_extension:add_internally_controlled_buff(buff_name, t)
@@ -255,7 +259,7 @@ ActionShout.start = function (self, action_settings, t, time_scale, action_start
 	local suppress_enemies = action_settings.suppress_enemies
 
 	if suppress_enemies then
-		self:_suppress_units(action_settings)
+		self:_suppress_units(action_settings, t)
 	end
 
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
@@ -278,7 +282,7 @@ end
 
 local broadphase_results = {}
 
-ActionShout._suppress_units = function (self, action_settings)
+ActionShout._suppress_units = function (self, action_settings, t)
 	table.clear(broadphase_results)
 
 	local player_unit = self._player_unit
@@ -293,6 +297,9 @@ ActionShout._suppress_units = function (self, action_settings)
 	local num_hits = broadphase:query(player_position, cone_range, broadphase_results, enemy_side_names)
 	local rotation = self._first_person_component.rotation
 	local forward = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
+	local specialization_extension = ScriptUnit.has_extension(player_unit, "specialization_system")
+	local buff_special_rule = special_rules.shout_applies_buff_to_enemies
+	local has_special_rule_to_add_buffs = specialization_extension:has_special_rule(buff_special_rule)
 
 	for i = 1, num_hits do
 		local enemy_unit = broadphase_results[i]
@@ -310,6 +317,28 @@ ActionShout._suppress_units = function (self, action_settings)
 				local damage_profile = action_settings.damage_profile
 
 				Suppression.apply_suppression(enemy_unit, player_unit, damage_profile, player_position)
+			end
+
+			if has_special_rule_to_add_buffs then
+				local buff_extension = ScriptUnit.extension(enemy_unit, "buff_system")
+				local buff_name = nil
+				local monster_buff_name = action_settings.special_rule_buff_enemy_monster
+
+				if monster_buff_name then
+					local unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
+					local breed = unit_data_extension:breed()
+					local is_monster = breed.tags.monster
+
+					if is_monster then
+						buff_name = monster_buff_name
+					else
+						buff_name = action_settings.special_rule_buff_enemy
+					end
+				else
+					buff_name = action_settings.special_rule_buff_enemy
+				end
+
+				buff_extension:add_internally_controlled_buff(buff_name, t)
 			end
 		end
 	end

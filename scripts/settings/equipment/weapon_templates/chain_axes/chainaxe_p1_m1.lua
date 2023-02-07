@@ -527,7 +527,7 @@ weapon_template.actions = {
 			anchor_point_offset = {
 				-0.15,
 				0,
-				-0.8
+				-0.44
 			}
 		},
 		damage_profile = DamageProfileTemplates.heavy_chainaxe,
@@ -1379,7 +1379,7 @@ weapon_template.actions = {
 		damage_window_start = 0.28,
 		hit_armor_anim = "attack_hit_shield",
 		uninterruptible = true,
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_2",
 		max_num_saved_entries = 20,
 		kind = "sweep",
 		range_mod = 1.35,
@@ -1446,7 +1446,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right_2",
-				chain_time = 0.45
+				chain_time = 0.5
 			},
 			special_action = {
 				action_name = "action_toggle_special",
@@ -1454,7 +1454,7 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.5
+				chain_time = 0.83
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)

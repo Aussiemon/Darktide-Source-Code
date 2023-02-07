@@ -42,9 +42,9 @@ local function _calculate_attack_direction(action_settings, start_rotation, end_
 		elseif attack_direction_override == "right" then
 			direction = Vector3.right()
 		elseif attack_direction_override == "up" then
-			direction = Vector3.up()
+			direction = Vector3.lerp(Vector3.forward(), Vector3.up(), 0.75)
 		elseif attack_direction_override == "down" then
-			direction = -Vector3.up()
+			direction = Vector3.lerp(Vector3.forward(), Vector3.down(), 0.25)
 		elseif attack_direction_override == "push" then
 			direction = Vector3.forward()
 		elseif attack_direction_override == "pull" then

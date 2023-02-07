@@ -95,22 +95,22 @@ local weapon_ammo_templates = {
 	},
 	autogun_p3_m1 = {
 		ammunition_clip = {
-			lerp_perfect = 40,
-			lerp_basic = 20
+			lerp_perfect = 50,
+			lerp_basic = 30
 		},
 		ammunition_reserve = {
-			lerp_perfect = 240,
-			lerp_basic = 120
+			lerp_perfect = 400,
+			lerp_basic = 240
 		}
 	},
 	autogun_p3_m2 = {
 		ammunition_clip = {
-			lerp_perfect = 25,
-			lerp_basic = 15
+			lerp_perfect = 35,
+			lerp_basic = 25
 		},
 		ammunition_reserve = {
-			lerp_perfect = 200,
-			lerp_basic = 90
+			lerp_perfect = 280,
+			lerp_basic = 200
 		}
 	},
 	autopistol_p1_m1 = {
@@ -234,13 +234,13 @@ local weapon_ammo_templates = {
 		}
 	},
 	laspistol_p1_m1 = {
+		ammunition_reserve = {
+			lerp_perfect = 560,
+			lerp_basic = 280
+		},
 		ammunition_clip = {
 			lerp_perfect = 60,
 			lerp_basic = 30
-		},
-		ammunition_reserve = {
-			lerp_perfect = 420,
-			lerp_basic = 210
 		}
 	},
 	plasmagun_p1_m1 = {
@@ -279,8 +279,8 @@ local weapon_ammo_templates = {
 			lerp_basic = 1
 		},
 		ammunition_reserve = {
-			lerp_perfect = 40,
-			lerp_basic = 20
+			lerp_perfect = 45,
+			lerp_basic = 25
 		}
 	},
 	ogryn_thumper_p1_m2 = {

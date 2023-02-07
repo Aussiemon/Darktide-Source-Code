@@ -692,7 +692,7 @@ weapon_template.reload_template = ReloadTemplates.rippergun
 weapon_template.spread_template = "rippergun_p1_m2_assault"
 weapon_template.recoil_template = "rippergun_p1_m2_assault"
 weapon_template.look_delta_template = "default"
-weapon_template.ammo_template = "ogryn_rippergun_p1_m2"
+weapon_template.ammo_template = "ogryn_rippergun_p1_m1"
 weapon_template.conditional_state_to_action_input = {
 	{
 		conditional_state = "no_ammo_and_started_reload_no_alternate_fire",

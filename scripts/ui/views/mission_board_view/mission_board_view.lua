@@ -416,6 +416,8 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 
 	self._quickplay_widget.content.hotspot.is_selected_mission_board = false
 	local is_locked = self._player_level < mission.requiredLevel
+	local xp = mission.xp
+	local credits = mission.credits
 	local mission_template = MissionTemplates[mission.map]
 	local danger = DangerSettings.calculate_danger(mission.challenge, mission.resistance)
 	local widget = self._widgets_by_name.detail
@@ -450,6 +452,13 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 		if text_height > 30 then
 			self:_set_scenegraph_size("detail_circumstance", nil, text_height + 60)
 		end
+
+		local extraRewards = mission.extraRewards.circumstance
+
+		if extraRewards then
+			xp = xp + extraRewards.xp
+			credits = credits + extraRewards.credits
+		end
 	else
 		content.circumstance_icon = nil
 	end
@@ -468,8 +477,8 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 	content.body_text = Localize(mission_template.mission_description)
 	content.speaker_icon = speaker_settings.material_small
 	content.speaker_text = Localize(speaker_settings.full_name)
-	content.xp = mission.xp
-	content.credits = mission.credits
+	content.xp = xp
+	content.credits = credits
 	local side_mission_template = MissionObjectiveTemplates.side_mission.objectives[mission.sideMission]
 	local widget = self._widgets_by_name.objective_2
 	widget.dirty = true
@@ -753,19 +762,15 @@ MissionBoardView._fetch_failure = function (self, error_message)
 	self._is_fetching_missions = false
 end
 
-local _time_table = {
-	minutes = 12,
-	seconds = 34
-}
-
 MissionBoardView._update_happening = function (self, t)
 	local happening = self._backend_data and self._backend_data.happening
 	local widget = self._widgets_by_name.happening
 
-	if happening then
-		local circumstance_name = happening.circumstances[1]
+	if happening and not happening.dynamic then
+		local circumstances = happening.circumstances
 
-		if circumstance_name then
+		for i = 1, #circumstances do
+			local circumstance_name = circumstances[i]
 			local circumstance_template = CircumstanceTemplates[circumstance_name]
 			local circumstance_ui = circumstance_template and circumstance_template.ui
 			local happening_display_name = circumstance_ui and circumstance_ui.happening_display_name
@@ -776,17 +781,6 @@ MissionBoardView._update_happening = function (self, t)
 
 				return
 			end
-		end
-
-		local time_left = math.max(0, happening.expiry_game_time - t)
-
-		if time_left <= 3600 then
-			_time_table.seconds = time_left % 60
-			_time_table.minutes = math.floor(time_left / 60)
-			widget.content.subtitle = Localize("loc_mission_board_view_time_til_next_sync", true, _time_table)
-			widget.visible = true
-
-			return
 		end
 	end
 

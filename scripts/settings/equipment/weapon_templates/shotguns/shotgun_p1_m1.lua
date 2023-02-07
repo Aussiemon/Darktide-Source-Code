@@ -873,34 +873,9 @@ weapon_template.base_stats = {
 			},
 			action_shoot_zoomed = {
 				damage_trait_templates.shotgun_dps_stat
-			}
-		}
-	},
-	shotgun_p1_m1_mobility_stat = {
-		display_name = "loc_stats_display_mobility_stat",
-		is_stat_trait = true,
-		dodge = {
-			base = {
-				dodge_trait_templates.default_dodge_stat,
-				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
-			}
-		},
-		sprint = {
-			base = {
-				sprint_trait_templates.default_sprint_stat,
-				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
-			}
-		},
-		movement_curve_modifier = {
-			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
-				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
-			}
-		},
-		spread = {
-			base = {
-				spread_trait_templates.mobility_spread_stat,
-				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_spread")
+			},
+			action_shoot_hip_from_reload = {
+				damage_trait_templates.shotgun_dps_stat
 			}
 		}
 	},
@@ -913,6 +888,9 @@ weapon_template.base_stats = {
 				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
+				damage_trait_templates.default_power_stat
+			},
+			action_shoot_hip_from_reload = {
 				damage_trait_templates.default_power_stat
 			}
 		}
@@ -950,6 +928,34 @@ weapon_template.base_stats = {
 			base = {
 				ammo_trait_templates.default_ammo_stat,
 				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+			}
+		}
+	},
+	shotgun_p1_m1_mobility_stat = {
+		display_name = "loc_stats_display_mobility_stat",
+		is_stat_trait = true,
+		dodge = {
+			base = {
+				dodge_trait_templates.default_dodge_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+			}
+		},
+		sprint = {
+			base = {
+				sprint_trait_templates.default_sprint_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+			}
+		},
+		movement_curve_modifier = {
+			base = {
+				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
+			}
+		},
+		spread = {
+			base = {
+				spread_trait_templates.mobility_spread_stat,
+				display_data = WeaponBarUIDescriptionTemplates.create_template("mobility_spread")
 			}
 		}
 	}

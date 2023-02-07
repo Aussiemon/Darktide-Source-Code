@@ -149,7 +149,7 @@ minion_difficulty_settings.power_level = {
 		1250
 	},
 	renegade_default_melee = _step_dmg(400),
-	renegade_default_shot = _step_dmg(400),
+	renegade_default_shot = _step_dmg(320),
 	renegade_executor_melee = _step_dmg(500),
 	renegade_gunner_shot = _step_dmg(300),
 	renegade_shotgun_shot = _step_dmg(300),
@@ -292,8 +292,8 @@ minion_difficulty_settings.shooting = {
 		}
 	},
 	renegade_rifleman = {
-		aim_durations = _shoot_steps_desc(0.2, 0.45),
-		shoot_cooldown = _shoot_steps_desc(2, 2.5),
+		aim_durations = _shoot_steps_desc(0.3, 0.5),
+		shoot_cooldown = _shoot_steps_desc(2.25, 2.75),
 		time_per_shot = _equal_difficulty_values(0.2, 0.25),
 		time_per_shot_tg_sprint = _equal_difficulty_values(0.4, 0.6),
 		num_shots = _equal_difficulty_values(2, 3),

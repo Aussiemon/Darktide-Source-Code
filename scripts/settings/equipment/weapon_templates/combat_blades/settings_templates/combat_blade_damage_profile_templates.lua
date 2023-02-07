@@ -414,6 +414,35 @@ damage_templates.combat_blade_light_smiter = {
 	},
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy
 }
+overrides.combat_blade_light_smiter_stab = {
+	parent_template_name = "combat_blade_light_smiter",
+	overrides = {
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"armored",
+			damage_lerp_values.lerp_1
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"super_armor",
+			damage_lerp_values.lerp_0_25
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"resistant",
+			damage_lerp_values.lerp_1_1
+		}
+	}
+}
 damage_templates.combat_blade_light_linesman = {
 	ragdoll_push_force = 450,
 	ragdoll_only = true,

@@ -1083,6 +1083,10 @@ overrides.default_light_chainsword_stab_sticky = {
 		{
 			"ragdoll_only",
 			false
+		},
+		{
+			"skip_on_hit_proc",
+			true
 		}
 	}
 }
@@ -1168,6 +1172,10 @@ overrides.default_light_chainsword_stab_sticky_last = {
 		{
 			"ragdoll_only",
 			false
+		},
+		{
+			"skip_on_hit_proc",
+			true
 		}
 	}
 }

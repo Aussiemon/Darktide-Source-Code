@@ -43,7 +43,6 @@ local ability_template = {
 			kind = "targeted_dash_aim",
 			sprint_ready_up_time = 0,
 			aim_ready_up_time = 0,
-			uninterruptible = true,
 			allowed_during_lunge = true,
 			allowed_during_sprint = true,
 			ability_type = "combat_ability",

@@ -839,7 +839,7 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.25,
 		allowed_during_sprint = true,
-		damage_window_end = 0.6,
+		damage_window_end = 0.5666666666666667,
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_swing_heavy_down",
@@ -888,15 +888,15 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = {
-			0.3,
-			0.9,
+			0.35,
+			1.2,
 			0.3
 		},
 		spline_settings = {
 			matrices_data_location = "content/characters/player/ogryn/first_person/animations/gauntlet/heavy_swing_down",
 			anchor_point_offset = {
-				0,
-				1.1,
+				-0,
+				0.5,
 				0
 			}
 		},
@@ -1039,14 +1039,14 @@ weapon_template.actions = {
 		end,
 		weapon_box = {
 			0.3,
-			1.25,
+			1.85,
 			0.3
 		},
 		spline_settings = {
 			matrices_data_location = "content/characters/player/ogryn/first_person/animations/gauntlet/heavy_swing_stab",
 			anchor_point_offset = {
-				0.8,
-				1,
+				0.6,
+				0.3,
 				0.3
 			}
 		},

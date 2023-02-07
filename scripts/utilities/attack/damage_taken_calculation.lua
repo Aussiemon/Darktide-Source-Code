@@ -164,7 +164,7 @@ function _calculate_toughness_damage_player(damage_amount, damage_profile, attac
 		local toughness_factor = current_toughness_percent * real_max_toughness / real_max_toughness
 		remaining_damage = math.lerp(damage_amount * 1, damage_amount * 0, math.min(toughness_factor, 1) * toughness_melee_spillover_modifier)
 		toughness_damage = math.clamp(melee_toughness_multiplier * damage_amount * toughness_melee_damage_modifier, 0, melee_max_toughness)
-		absorbed_attack = melee_max_toughness > current_toughness_damage + toughness_damage
+		absorbed_attack = real_max_toughness > current_toughness_damage + toughness_damage
 	else
 		if not ranged_attack then
 			toughness_damage = max_toughness
@@ -263,12 +263,6 @@ function _calculate_health_damage_player(damage_amount, damage_profile, current_
 	local remaining_health = max_health - current_health_damage - health_damage
 	local will_die = remaining_health <= 0
 	local attack_result = will_die and attack_results.knock_down or attack_results.damaged
-	local has_resist_death_buff = attacked_unit_keywords and attacked_unit_keywords[buff_keywords.resist_death]
-
-	if will_die and has_resist_death_buff and not instakill then
-		health_damage = math.max(0, max_health - current_health_damage - 1)
-		attack_result = attack_results.damaged
-	end
 
 	return attack_result, health_damage, permanent_damage
 end

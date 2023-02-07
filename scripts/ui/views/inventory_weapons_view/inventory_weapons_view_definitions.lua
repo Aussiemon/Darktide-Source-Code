@@ -204,6 +204,7 @@ local widget_definitions = {
 		}
 	}, "corner_bottom_right"),
 	equip_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.default_button), "equip_button", {
+		gamepad_action = "confirm_pressed",
 		text = Utf8.upper(Localize("loc_weapon_inventory_equip_button")),
 		hotspot = {}
 	}),

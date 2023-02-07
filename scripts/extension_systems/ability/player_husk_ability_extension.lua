@@ -204,6 +204,10 @@ PlayerHuskAbilityExtension.server_correction_occurred = function (self)
 	error("not allowed to call on husk")
 end
 
+PlayerHuskAbilityExtension.running_action_settings = function (self)
+	error("not allowed to call on husk")
+end
+
 PlayerHuskAbilityExtension.get_slot_name = function (self)
 	error("not implemented.")
 end

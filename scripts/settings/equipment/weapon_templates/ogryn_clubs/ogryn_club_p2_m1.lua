@@ -241,7 +241,7 @@ weapon_template.actions = {
 		damage_window_start = 0.3,
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_3",
 		first_person_hit_anim = "hit_left_shake",
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
@@ -358,7 +358,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_left_heavy",
-				chain_time = 0.65
+				chain_time = 0.5
 			},
 			block = {
 				action_name = "action_block"

@@ -1,6 +1,6 @@
 local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local critical_health = PlayerCharacterConstants.critical_health
 local HEALTH_PERCENT_LIMIT = critical_health.health_percent_limit
 local TOUGHNESS_PERCENT_LIMIT = critical_health.toughness_percent_limit
@@ -20,12 +20,6 @@ local DISABLED_STATES = {
 local REQUIRES_HELP = {
 	netted = true,
 	hogtied = true,
-	knocked_down = true,
-	pounced = true,
-	ledge_hanging = true
-}
-local REQUIRES_IMMEDIATE_HELP = {
-	netted = true,
 	knocked_down = true,
 	pounced = true,
 	ledge_hanging = true
@@ -84,12 +78,6 @@ PlayerUnitStatus.requires_help = function (character_state_component)
 	local state_name = character_state_component.state_name
 
 	return REQUIRES_HELP[state_name]
-end
-
-PlayerUnitStatus.requires_immediate_help = function (character_state_component)
-	local state_name = character_state_component.state_name
-
-	return REQUIRES_IMMEDIATE_HELP[state_name]
 end
 
 PlayerUnitStatus.requires_allied_interaction_help = function (character_state_component)

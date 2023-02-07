@@ -196,8 +196,10 @@ LobbyView._setup_menu_list = function (self)
 				text = self:_localize("loc_lobby_entry_ready")
 			end
 
-			widget.content.text = text
-			widget.content.active = current_ready_status
+			local widget_content = widget.content
+			widget_content.text = text
+			widget_content.active = current_ready_status
+			widget_content.gamepad_action = "confirm_pressed"
 			local in_preview = parent:_in_preview()
 			local hotspot = widget.content.hotspot
 			hotspot.disabled = in_preview

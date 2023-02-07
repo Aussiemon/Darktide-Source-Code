@@ -166,7 +166,11 @@ InventoryWeaponsView.cb_switch_tab = function (self, index)
 	self:_present_layout_by_slot_filter(slot_types, display_name)
 end
 
-InventoryWeaponsView.cb_on_discard_held = function (self)
+InventoryWeaponsView.cb_on_discard_held = function (self, _, input_pressed)
+	if input_pressed then
+		self._hotkey_item_discard_pressed = true
+	end
+
 	local selected_grid_widget = self:selected_grid_widget()
 
 	if selected_grid_widget and not selected_grid_widget.content.equipped and (self._hotkey_item_discard_pressed or self._discard_item_timer) then
@@ -237,7 +241,9 @@ InventoryWeaponsView.update = function (self, dt, t, input_service)
 end
 
 InventoryWeaponsView._handle_input = function (self, input_service)
-	self._hotkey_item_discard_pressed = input_service:get("hotkey_item_discard_pressed")
+	if not self._discard_item_timer then
+		self._hotkey_item_discard_pressed = input_service:get("hotkey_item_discard_pressed")
+	end
 
 	if input_service:get("confirm_pressed") then
 		self:cb_on_equip_pressed()
@@ -288,7 +294,6 @@ InventoryWeaponsView.cb_on_equip_pressed = function (self)
 	local selected_slot_name = selected_slot.name
 
 	self:_equip_item(selected_slot_name, previewed_item)
-	self:_handle_back_pressed()
 end
 
 InventoryWeaponsView._setup_background_world = function (self)

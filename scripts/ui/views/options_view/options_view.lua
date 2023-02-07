@@ -117,6 +117,8 @@ OptionsView.cb_on_back_pressed = function (self)
 		self._close_selected_setting = true
 	elseif selected_navigation_column == SETTINGS_GRID then
 		self:_change_navigation_column(selected_navigation_column - 1)
+	elseif self._require_restart then
+		self:_restart_popup_info()
 	else
 		local view_name = "options_view"
 
@@ -165,6 +167,30 @@ OptionsView.cb_reset_category_to_default = function (self)
 				callback = function ()
 					self._popup_id = nil
 				end
+			}
+		}
+	}
+
+	Managers.event:trigger("event_show_ui_popup", context, function (id)
+		self._popup_id = id
+	end)
+end
+
+OptionsView._restart_popup_info = function (self)
+	local context = {
+		title_text = "loc_popup_settings_require_restart_header",
+		description_text = "loc_popup_settings_require_restart_description",
+		options = {
+			{
+				text = "loc_confirm",
+				close_on_pressed = true,
+				callback = callback(function ()
+					self._popup_id = nil
+					local view_name = "options_view"
+					self._require_restart = false
+
+					Managers.ui:close_view(view_name)
+				end)
 			}
 		}
 	}
@@ -713,6 +739,7 @@ OptionsView._setup_settings_config = function (self, config)
 	local settings_default_values = {}
 	local aligment_list = {}
 	local callback_name = "cb_on_settings_pressed"
+	local changed_callback_name = "cb_on_settings_changed"
 
 	for setting_index, setting in ipairs(config_settings) do
 		local valid = self._validation_mapping[setting.category].settings[setting.display_name].validation_result
@@ -735,7 +762,7 @@ OptionsView._setup_settings_config = function (self, config)
 			end
 
 			local widget_suffix = "setting_" .. tostring(setting_index)
-			local widget, alignment_widget = self:_create_settings_widget_from_config(setting, category, widget_suffix, callback_name)
+			local widget, alignment_widget = self:_create_settings_widget_from_config(setting, category, widget_suffix, callback_name, changed_callback_name)
 			category_widgets[category][#widgets + 1] = {
 				widget = widget,
 				alignment_widget = alignment_widget
@@ -858,7 +885,7 @@ OptionsView._update_settings_content_widgets = function (self, dt, t, input_serv
 	end
 end
 
-OptionsView._create_settings_widget_from_config = function (self, config, category, suffix, callback_name)
+OptionsView._create_settings_widget_from_config = function (self, config, category, suffix, callback_name, changed_callback_name)
 	local scenegraph_id = "settings_grid_content_pivot"
 	local default_value = config.default_value
 	local default_value_type = type(default_value)
@@ -912,7 +939,7 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 		local init = template.init
 
 		if init then
-			init(self, widget, config, callback_name)
+			init(self, widget, config, callback_name, changed_callback_name)
 		end
 	end
 
@@ -1043,6 +1070,24 @@ OptionsView.cb_on_settings_pressed = function (self, widget, entry)
 		local widget_name = widget.name
 		local selected_widget = self:_set_exclusive_focus_on_grid_widget(widget_name)
 		selected_widget.offset[3] = selected_widget and 90 or 0
+	end
+end
+
+OptionsView.cb_on_settings_changed = function (self, widget, entry, option_id)
+	if not self._require_restart then
+		if option_id then
+			for i = 1, #entry.options do
+				local option = entry.options[i]
+
+				if option.id == option_id then
+					self._require_restart = option.require_restart
+
+					break
+				end
+			end
+		else
+			self._require_restart = entry.require_restart
+		end
 	end
 end
 

@@ -11,23 +11,27 @@ templates.weapon_trait_bespoke_laspistol_p1_hipfire_while_sprinting = {
 templates.weapon_trait_bespoke_laspistol_p1_reload_speed_on_slide = {
 	weapon_trait_bespoke_laspistol_p1_reload_speed_on_slide = {
 		{
+			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.04
+				[stat_buffs.reload_speed] = 0.14
 			}
 		},
 		{
+			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.06
+				[stat_buffs.reload_speed] = 0.16
 			}
 		},
 		{
+			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.08
+				[stat_buffs.reload_speed] = 0.18
 			}
 		},
 		{
+			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.1
+				[stat_buffs.reload_speed] = 0.2
 			}
 		}
 	}

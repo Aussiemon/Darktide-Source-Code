@@ -278,6 +278,7 @@ UIHud._apply_hud_scale = function (self)
 	local render_settings = self._render_settings
 	render_settings.scale = new_scale
 	render_settings.inverse_scale = 1 / new_scale
+	render_settings.using_hud_scale = true
 end
 
 UIHud._abort_hud_scale = function (self)
@@ -285,6 +286,7 @@ UIHud._abort_hud_scale = function (self)
 	local scale = RESOLUTION_LOOKUP.scale
 	render_settings.scale = scale
 	render_settings.inverse_scale = 1 / scale
+	render_settings.using_hud_scale = nil
 end
 
 UIHud.ui_renderer = function (self)
@@ -327,6 +329,14 @@ UIHud.update = function (self, dt, t, input_service)
 	local resolution_modified = RESOLUTION_LOOKUP[resolution_modified_key] or self._hud_scale_modified
 	self._hud_scale_modified = nil
 	self._refresh_retained = resolution_modified or self._refresh_retained
+
+	if resolution_modified then
+		local scale = RESOLUTION_LOOKUP.scale
+		render_settings.scale = scale
+		render_settings.inverse_scale = 1 / scale
+		render_settings.using_hud_scale = nil
+	end
+
 	local dragging_element = false
 	self._element_using_input = false
 

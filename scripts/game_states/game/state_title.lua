@@ -458,6 +458,9 @@ StateTitle._signin = function (self)
 		save_manager:set_save_data_account_id(account_id)
 
 		local account_data = save_manager:account_data()
+
+		Managers.event:trigger("event_player_authenticated")
+
 		local input_layout = account_data and account_data.input_settings.controller_layout or "default"
 
 		Managers.input:change_input_layout(input_layout)

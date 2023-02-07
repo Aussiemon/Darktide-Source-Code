@@ -51,7 +51,9 @@ ViewElementInputLegend.add_entry = function (self, display_name, input_action, v
 	if on_pressed_callback then
 		content.hotspot.pressed_callback = function ()
 			if not self._input_handled then
-				on_pressed_callback(id)
+				local input_pressed = true
+
+				on_pressed_callback(id, input_pressed)
 			end
 		end
 	end

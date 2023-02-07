@@ -34,6 +34,10 @@ UnitCoherencyExtension.in_coherence_units = function (self)
 	return self._in_coherence_units
 end
 
+UnitCoherencyExtension.is_unit_in_coherency = function (self, unit_to_check)
+	return self._in_coherence_units[unit_to_check]
+end
+
 UnitCoherencyExtension.num_units_in_coherency = function (self)
 	return self._num_units_in_coherence
 end

@@ -55,7 +55,7 @@ local ui_settings = {
 		view_analog_deadzone = 0.5
 	},
 	cutscenes_skip = {
-		hold_time = 1,
+		hold_time = 0.5,
 		fade_inactivity_time = 5
 	},
 	bonus_aquila_values = {

@@ -78,26 +78,7 @@ local gadget_traits_common = {
 	},
 	gadget_stamina_increase = {
 		gadget_stamina_increase = {
-			{
-				stat_buffs = {
-					[buff_stat_buffs.stamina_modifier] = 1
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.stamina_modifier] = 1
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.stamina_modifier] = 1
-				}
-			},
-			{
-				stat_buffs = {
-					[buff_stat_buffs.stamina_modifier] = 1
-				}
-			}
+			{}
 		}
 	},
 	gadget_damage_reduction_vs_flamers = {

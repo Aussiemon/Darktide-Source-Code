@@ -101,6 +101,10 @@ SpawnQueue.retire_group = function (self, group_id)
 	self._spawning_group_id = nil
 end
 
+SpawnQueue.set_delay_time = function (self, group_delay)
+	self._delay = group_delay
+end
+
 SpawnQueue.update = function (self, dt)
 	if table.is_empty(self._waiting.peers) then
 		return
@@ -110,8 +114,10 @@ SpawnQueue.update = function (self, dt)
 
 	if self._spawning_group_id == nil then
 		local wait_reached = self._delay <= self._waiting_age
+		local is_everyone_waiting = self:_is_everyone_waiting()
+		local is_game_filled = self:_is_game_filled()
 
-		if (wait_reached or self:_is_everyone_waiting() or self:_is_game_filled()) and self._waiting_group_id == nil then
+		if (wait_reached or is_everyone_waiting or is_game_filled) and self._waiting_group_id == nil then
 			self._waiting_group_id = self:_generate_group_id()
 		end
 	end

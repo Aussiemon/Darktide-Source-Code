@@ -28,7 +28,7 @@ local Stun = {
 			return
 		end
 
-		if not ignore_stun_immunity and (_is_stun_immune_from_current_action(unit_data_extension, weapon_template) or _is_stun_immune_from_buff(unit) or _is_stun_immune_from_character_state(unit_data_extension)) then
+		if not ignore_stun_immunity and (_is_stun_immune_from_current_action(unit_data_extension, weapon_template, unit) or _is_stun_immune_from_buff(unit) or _is_stun_immune_from_character_state(unit_data_extension)) then
 			return
 		end
 
@@ -36,7 +36,7 @@ local Stun = {
 	end
 }
 
-function _is_stun_immune_from_current_action(unit_data_extension, weapon_template)
+function _is_stun_immune_from_current_action(unit_data_extension, weapon_template, unit)
 	local weapon_action_component = unit_data_extension:read_component("weapon_action")
 	local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
 
@@ -45,12 +45,14 @@ function _is_stun_immune_from_current_action(unit_data_extension, weapon_templat
 	end
 
 	local current_action_name, action_settings = Action.current_action(weapon_action_component, weapon_template)
+	local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
+	local ability_action_settings = ability_extension and ability_extension:running_action_settings()
 
-	if current_action_name == "none" or not action_settings then
+	if (current_action_name == "none" or not action_settings) and not ability_action_settings then
 		return false
 	end
 
-	return action_settings.uninterruptible
+	return action_settings and action_settings.uninterruptible or ability_action_settings and ability_action_settings.uninterruptible
 end
 
 function _is_stun_immune_from_buff(unit)

@@ -344,17 +344,24 @@ SmartTagSystem._create_tag_locally = function (self, tag_id, template_name, tagg
 
 		target_extension:register_tag(tag_id)
 
-		if self._is_server then
-			local buff_extension = ScriptUnit.has_extension(tagger_unit, "buff_system")
+		if self._is_server and tagger_unit then
+			local side_system = Managers.state.extension:system("side_system")
+			local side = side_system.side_by_unit[tagger_unit]
+			local player_units = side.valid_player_units
 
-			if buff_extension then
-				local param_table = buff_extension:request_proc_event_param_table()
+			for i = 1, #player_units do
+				local player_unit = player_units[i]
+				local buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
 
-				if param_table then
-					param_table.unit = target_unit
-					param_table.tagger_unit = tagger_unit
+				if buff_extension then
+					local param_table = buff_extension:request_proc_event_param_table()
 
-					buff_extension:add_proc_event(buff_proc_events.on_tag_unit, param_table)
+					if param_table then
+						param_table.unit = target_unit
+						param_table.tagger_unit = tagger_unit
+
+						buff_extension:add_proc_event(buff_proc_events.on_tag_unit, param_table)
+					end
 				end
 			end
 		end
@@ -402,17 +409,24 @@ SmartTagSystem._remove_tag_locally = function (self, tag_id, reason)
 
 		target_extension:unregister_tag()
 
-		if self._is_server then
-			local buff_extension = ScriptUnit.has_extension(tagger_unit, "buff_system")
+		if self._is_server and tagger_unit then
+			local side_system = Managers.state.extension:system("side_system")
+			local side = side_system.side_by_unit[tagger_unit]
+			local player_units = side.valid_player_units
 
-			if buff_extension then
-				local param_table = buff_extension:request_proc_event_param_table()
+			for i = 1, #player_units do
+				local player_unit = player_units[i]
+				local buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
 
-				if param_table then
-					param_table.unit = target_unit
-					param_table.tagger_unit = tagger_unit
+				if buff_extension then
+					local param_table = buff_extension:request_proc_event_param_table()
 
-					buff_extension:add_proc_event(buff_proc_events.on_untag_unit, param_table)
+					if param_table then
+						param_table.unit = target_unit
+						param_table.tagger_unit = tagger_unit
+
+						buff_extension:add_proc_event(buff_proc_events.on_untag_unit, param_table)
+					end
 				end
 			end
 		end

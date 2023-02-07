@@ -120,7 +120,7 @@ local templates = {
 			local tags = params.tags
 			local is_special_or_elite = tags.elite or tags.special
 
-			if not is_special_or_elite then
+			if not is_special_or_elite or tags.ogryn then
 				local has_headhunter_talent = template_data.headhunter
 				local has_bgh_talent = template_data.big_game_hunter
 

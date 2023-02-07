@@ -485,12 +485,21 @@ ProgressionManager._parse_reward_cards = function (self, account_data)
 			local reward = reward_card_rewards[j]
 			reward.amount_gained = reward.amount or 0
 			reward.amount = nil
-			reward.reward_type = reward.rewardType
+			local reward_type = reward.rewardType
+			reward.reward_type = reward_type
 			reward.rewardType = nil
-			reward.master_id = reward.masterId
+			local master_id = reward.masterId
+			reward.master_id = master_id
 			reward.masterId = nil
-			reward.gear_id = reward.gearId
-			reward.gearId = nil
+			local gear_id = reward.gearId
+
+			if gear_id then
+				reward.gear_id = gear_id
+				reward.gearId = nil
+
+				ItemUtils.mark_item_id_as_new(gear_id, reward_type)
+			end
+
 			local details = reward.details
 
 			if details then

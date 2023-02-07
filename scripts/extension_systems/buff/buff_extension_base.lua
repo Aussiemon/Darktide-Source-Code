@@ -576,6 +576,16 @@ BuffExtensionBase._remove_buff = function (self, index)
 
 	if current_stack_count > 1 then
 		buff_instance:remove_stack()
+
+		if template.refresh_duration_on_remove_stack then
+			local max_stacks = buff_instance:max_stacks()
+
+			if current_stack_count <= max_stacks then
+				local t = FixedFrame.get_latest_fixed_time()
+
+				buff_instance:set_start_time(t)
+			end
+		end
 	else
 		local can_stack = template.max_stacks and true or false
 

@@ -414,7 +414,7 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 					end
 				end
 
-				actual_damage_dealt = Damage.deal_damage(attacked_unit, target_breed_or_nil, attacking_unit, attacking_unit_owner_unit, result, attack_type, damage_profile, damage, permanent_damage, tougness_damage, hit_actor, attack_direction, hit_zone_name, herding_template_or_nil, is_critical_strike, damage_type, hit_world_position_or_nil, wounds_shape)
+				actual_damage_dealt = Damage.deal_damage(attacked_unit, target_breed_or_nil, attacking_unit, attacking_unit_owner_unit, result, attack_type, damage_profile, damage, permanent_damage, tougness_damage, hit_actor, attack_direction, hit_zone_name, herding_template_or_nil, is_critical_strike, damage_type, hit_world_position_or_nil, wounds_shape, instakill)
 			end
 		end
 	end

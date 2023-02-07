@@ -54,8 +54,8 @@ damage_templates.psyker_smite_kill = {
 		impact = 100
 	},
 	power_distribution = {
-		attack = 1000,
-		impact = 50
+		attack = 1100,
+		impact = 55
 	},
 	gibbing_power = GibbingPower.heavy,
 	gibbing_type = GibbingTypes.warp,

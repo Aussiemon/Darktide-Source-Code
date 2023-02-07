@@ -169,22 +169,22 @@ templates.weapon_trait_bespoke_autogun_p1_reload_speed_on_dodge = {
 	weapon_trait_bespoke_autogun_p1_reload_speed_on_dodge = {
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.35
+				[stat_buffs.reload_speed] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.425
+				[stat_buffs.reload_speed] = 0.125
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.475
+				[stat_buffs.reload_speed] = 0.15
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.5
+				[stat_buffs.reload_speed] = 0.2
 			}
 		}
 	}
@@ -192,23 +192,27 @@ templates.weapon_trait_bespoke_autogun_p1_reload_speed_on_dodge = {
 templates.weapon_trait_bespoke_autogun_p1_reload_speed_on_slide = {
 	weapon_trait_bespoke_autogun_p1_reload_speed_on_slide = {
 		{
+			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.04
+				[stat_buffs.reload_speed] = 0.14
 			}
 		},
 		{
+			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.06
+				[stat_buffs.reload_speed] = 0.16
 			}
 		},
 		{
+			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.08
+				[stat_buffs.reload_speed] = 0.18
 			}
 		},
 		{
+			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.1
+				[stat_buffs.reload_speed] = 0.2
 			}
 		}
 	}

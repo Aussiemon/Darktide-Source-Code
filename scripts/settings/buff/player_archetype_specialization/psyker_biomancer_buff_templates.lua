@@ -230,27 +230,30 @@ local function add_soul_function(template_data, template_context, t, previous_st
 
 			for i = 1, num_results do
 				local unit = broadphase_results[i]
-				local enemy_unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-				local enemy_breed = enemy_unit_data_extension:breed()
 
-				if not enemy_breed.tags.witch then
-					if i <= stop_point then
-						target_unit = unit
-					end
+				if HEALTH_ALIVE[unit] then
+					local enemy_unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+					local enemy_breed = enemy_unit_data_extension:breed()
 
-					if enemy_breed.tags.monster or enemy_breed.tags.elite then
-						target_unit = unit
+					if not enemy_breed.tags.witch then
+						if i <= stop_point then
+							target_unit = unit
+						end
 
-						break
-					end
-				else
-					local blackboard = BLACKBOARDS[unit]
-					local perception_component = blackboard.perception
+						if enemy_breed.tags.monster or enemy_breed.tags.elite then
+							target_unit = unit
 
-					if perception_component.aggro_state == "aggroed" then
-						target_unit = unit
+							break
+						end
+					else
+						local blackboard = BLACKBOARDS[unit]
+						local perception_component = blackboard.perception
 
-						break
+						if perception_component.aggro_state == "aggroed" then
+							target_unit = unit
+
+							break
+						end
 					end
 				end
 			end
@@ -314,6 +317,14 @@ local function update_soul_function(template_data, template_context, dt, t)
 
 		template_data.repport_time = report_time % REPORT_INTERVALL
 	end
+
+	local stacks = template_context.stack_count
+	local current_stacks = template_data.specialization_resource_component.current_resource
+
+	if current_stacks ~= stacks then
+		local max_stacks = template_context.template.max_stacks
+		template_data.specialization_resource_component.current_resource = math.clamp(stacks, 0, max_stacks)
+	end
 end
 
 local function souls_stop_function(template_data, template_context)
@@ -349,6 +360,7 @@ local souls_proc_events = {
 	[proc_events.on_combat_ability] = 1
 }
 templates.psyker_biomancer_souls = {
+	refresh_duration_on_remove_stack = true,
 	refresh_duration_on_stack = true,
 	predicted = false,
 	hud_priority = 1,
@@ -366,6 +378,7 @@ templates.psyker_biomancer_souls = {
 	conditional_exit_func = souls_conditional_exit_function
 }
 templates.psyker_biomancer_souls_increased_max_stacks = {
+	refresh_duration_on_remove_stack = true,
 	hud_priority = 1,
 	predicted = false,
 	refresh_duration_on_stack = true,
@@ -534,7 +547,7 @@ templates.psyker_biomancer_smite_kills_add_warpfire = {
 	predicted = false,
 	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = 1
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -548,10 +561,19 @@ templates.psyker_biomancer_smite_kills_add_warpfire = {
 		template_data.enemy_side_names = enemy_side_names
 	end,
 	check_proc_func = function (params)
-		local smite_kill = CheckProcFunctions.on_smite_kill(params)
-		local elite_or_special_kill = CheckProcFunctions.on_elite_or_special_kill(params)
+		if params.damage_type ~= damage_types.smite then
+			return false
+		end
 
-		return smite_kill and elite_or_special_kill
+		if not params.tags then
+			return false
+		end
+
+		if not params.tags.elite and not params.tags.special then
+			return false
+		end
+
+		return true
 	end,
 	proc_func = function (params, template_data, template_context)
 		local broadphase = template_data.broadphase

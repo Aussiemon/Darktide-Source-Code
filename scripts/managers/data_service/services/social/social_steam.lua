@@ -6,6 +6,7 @@ local SocialSteam = class("SocialSteam")
 SocialSteam.init = function (self)
 	self._num_friends = 0
 	self._num_blocked = 0
+	self._updated_recent_players = {}
 end
 
 SocialSteam.destroy = function (self)
@@ -78,7 +79,25 @@ SocialSteam.fetch_blocked_list_ids_forced = function (self)
 end
 
 SocialSteam.update_recent_players = function (self, account_id)
-	return
+	if self._updated_recent_players[account_id] then
+		return
+	end
+
+	self._updated_recent_players[account_id] = true
+	local _, promise = Managers.presence:get_presence(account_id)
+
+	promise:next(function (presence)
+		if presence and presence:platform() == "steam" then
+			local steam_id = presence:platform_user_id()
+
+			if steam_id then
+				Log.info("SocialSteam", "Updating recent player (account_id: %s, steam_id: %s)", account_id, steam_id)
+				Friends.set_played_with(steam_id)
+			end
+		end
+	end):catch(function (err)
+		Log.info("SocialSteam", "Couldn't update recent player, presence error: %s", table.tostring(err))
+	end)
 end
 
 implements(SocialSteam, PlatformSocialInterface)
