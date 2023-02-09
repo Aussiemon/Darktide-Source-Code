@@ -85,7 +85,10 @@ local blueprints = {
 			content.text = Managers.localization:localize(display_name)
 			content.button_text = Localize("loc_settings_change")
 			content.entry = entry
-			entry.changed_callback = callback(parent, changed_callback_name, widget, entry)
+
+			entry.changed_callback = function (changed_value)
+				callback(parent, changed_callback_name, widget, entry)()
+			end
 		end
 	},
 	group_header = {
@@ -126,7 +129,7 @@ local blueprints = {
 				content[widget_option_id] = i == 1 and Managers.localization:localize("loc_setting_checkbox_on") or Managers.localization:localize("loc_setting_checkbox_off")
 			end
 
-			entry.changed_callback = function ()
+			entry.changed_callback = function (changed_value)
 				callback(parent, callback_name, widget, entry)()
 				callback(parent, changed_callback_name, widget, entry)()
 			end
@@ -189,7 +192,9 @@ local function slider_init_function(parent, widget, entry, callback_name, change
 		callback(parent, callback_name, widget, entry)()
 	end
 
-	entry.changed_callback = callback(parent, changed_callback_name, widget, entry)
+	entry.changed_callback = function (changed_value)
+		callback(parent, changed_callback_name, widget, entry)()
+	end
 end
 
 blueprints.percent_slider = {
@@ -258,8 +263,8 @@ blueprints.percent_slider = {
 		if hotspot.on_pressed and not is_disabled then
 			if focused then
 				new_value = content.slider_value
-			elseif using_gamepad then
-				content.pressed_callback()
+			elseif using_gamepad and entry.pressed_callback then
+				entry.pressed_callback()
 			end
 		end
 
@@ -353,8 +358,8 @@ blueprints.value_slider = {
 		if hotspot.on_pressed then
 			if focused then
 				new_normalized_value = content.slider_value
-			elseif using_gamepad then
-				content.pressed_callback()
+			elseif using_gamepad and entry.pressed_callback then
+				entry.pressed_callback()
 			end
 		end
 
@@ -400,7 +405,10 @@ blueprints.slider = {
 		content.previous_slider_value = value_fraction
 		content.slider_value = value_fraction
 		entry.pressed_callback = callback(parent, callback_name, widget, entry)
-		entry.changed_callback = callback(parent, changed_callback_name, widget, entry)
+
+		entry.changed_callback = function (changed_value)
+			callback(parent, changed_callback_name, widget, entry)()
+		end
 	end,
 	update = function (parent, widget, input_service, dt, t)
 		local content = widget.content
@@ -545,8 +553,8 @@ blueprints.dropdown = {
 		content.scroll_amount = scroll_amount
 		local value = entry.get_function and entry:get_function() or entry.default_value
 
-		entry.changed_callback = function (option)
-			callback(parent, changed_callback_name, widget, entry, option)()
+		entry.changed_callback = function (changed_value)
+			callback(parent, changed_callback_name, widget, entry, changed_value)()
 		end
 	end,
 	update = function (parent, widget, input_service, dt, t)

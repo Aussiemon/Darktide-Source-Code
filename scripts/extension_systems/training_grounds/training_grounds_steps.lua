@@ -902,7 +902,7 @@ steps.attack_chains_kill_infected_loop = {
 			local wounds_shape = event_data.wounds_shape
 			local name = damage_profile and damage_profile.name
 			local damage_type = event_data.damage_type
-			local performed_light = name == "light_combatsword_smiter" or name == "combat_blade_light_smiter" and wounds_shape == "default"
+			local performed_light = name == "light_combatsword_smiter" or name == "combat_blade_light_smiter_stab" and wounds_shape == "default"
 
 			if performed_light then
 				local enemy = step_data.enemy
