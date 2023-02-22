@@ -935,7 +935,7 @@ damage_templates.axe_stab = {
 			},
 			boost_curve_multiplier_finesse = {
 				0.2,
-				0.8
+				1.5
 			},
 			power_level_multiplier = {
 				0.5,
@@ -1551,7 +1551,7 @@ damage_templates.default_light_shovel = {
 			},
 			boost_curve_multiplier_finesse = {
 				0.4,
-				1
+				1.3
 			},
 			power_level_multiplier = {
 				0.5,

@@ -21,12 +21,11 @@ templates.weapon_trait_bespoke_stubrevolver_p1_crit_chance_bonus_on_melee_kills 
 	class_name = "proc_buff",
 	active_duration = 2,
 	proc_events = {
-		[proc_events.on_hit] = 1
+		[proc_events.on_kill] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.critical_strike_chance] = 0.05
+		[stat_buffs.ranged_critical_strike_chance] = 0.05
 	},
-	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.on_melee_kill
 }
 templates.weapon_trait_bespoke_stubrevolver_p1_toughness_on_elite_kills = table.clone(BaseWeaponTraitBuffTemplates.toughness_on_elite_kills)

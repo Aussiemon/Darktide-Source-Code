@@ -95,12 +95,15 @@ local create_notification_message = {
 					scale_to_material = true,
 					horizontal_alignment = "right",
 					size = {
-						50,
-						0
+						50
+					},
+					size_addition = {
+						0,
+						16
 					},
 					offset = {
 						0,
-						text_compensation,
+						text_compensation - 8,
 						3
 					},
 					color = Color.white(0, true),

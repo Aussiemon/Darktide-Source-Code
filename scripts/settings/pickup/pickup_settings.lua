@@ -163,32 +163,32 @@ pickup_settings.distribution_pool = {
 		},
 		forge_material = {
 			small_metal = {
-				10,
-				10,
 				11,
-				12,
-				11
+				13,
+				14,
+				19,
+				23
 			},
 			large_metal = {
-				1,
 				2,
 				3,
-				4,
-				7
+				5,
+				10,
+				23
 			},
 			small_platinum = {
 				0,
-				2,
 				4,
 				5,
-				9
+				7,
+				10
 			},
 			large_platinum = {
 				0,
 				0,
-				1,
 				3,
-				5
+				5,
+				8
 			}
 		}
 	}

@@ -75,6 +75,40 @@ MinionBuffExtension._on_remove_buff = function (self, buff_instance)
 	end
 end
 
+MinionBuffExtension._on_remove_buff_stack = function (self, buff_instance, previous_stack_count)
+	local template = buff_instance:template()
+	local minion_effects = template.minion_effects
+
+	if minion_effects then
+		local stack_node_effects = minion_effects.stack_node_effects
+
+		if stack_node_effects then
+			local current_stack_count = buff_instance:stack_count()
+
+			self:_check_stack_node_effects(stack_node_effects, current_stack_count, previous_stack_count)
+		end
+	end
+
+	MinionBuffExtension.super._on_remove_buff_stack(self, buff_instance, previous_stack_count)
+end
+
+MinionBuffExtension._on_add_buff_stack = function (self, buff_instance, previous_stack_count)
+	local template = buff_instance:template()
+	local minion_effects = template.minion_effects
+
+	if minion_effects then
+		local stack_node_effects = minion_effects.stack_node_effects
+
+		if stack_node_effects then
+			local current_stack_count = buff_instance:stack_count()
+
+			self:_check_stack_node_effects(stack_node_effects, current_stack_count, previous_stack_count)
+		end
+	end
+
+	MinionBuffExtension.super._on_add_buff_stack(self, buff_instance, previous_stack_count)
+end
+
 MinionBuffExtension._post_on_remove_buff = function (self, buff_instance)
 	local t = FixedFrame.get_latest_fixed_time()
 
@@ -198,11 +232,7 @@ MinionBuffExtension._start_fx = function (self, index, template)
 		local node_effects = minion_effects.node_effects
 
 		if node_effects then
-			local world = buff_context.world
-			local wwise_world = buff_context.wwise_world
-			local active_vfx = self._active_vfx[index]
-
-			self:_start_node_effects(node_effects, unit, world, wwise_world, active_vfx)
+			self:_start_node_effects(node_effects)
 		end
 	end
 end

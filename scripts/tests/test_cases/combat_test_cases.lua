@@ -14,8 +14,7 @@ local base_talents = {
 		veteran_3_base_2 = true,
 		veteran_3_combat = true,
 		veteran_3_base_1 = true,
-		veteran_3_grenade = true,
-		veteran_3_base_4 = true
+		veteran_3_grenade = true
 	},
 	ogryn_1 = {
 		ogryn_1_grenade = true,
@@ -80,6 +79,54 @@ local function form_trait_list(traits, existing_traits)
 	return new_traits
 end
 
+local ALREADY_EQUIPPED_GEARS = {}
+
+CombatTestCases.equip_all_gears = function (case_settings)
+	Testify:run_case(function (dt, t)
+		local settings = cjson.decode(case_settings or "{}")
+		local archetype = settings.archetype or "veteran"
+
+		TestifySnippets.skip_splash_and_title_screen()
+		Testify:make_request("wait_for_main_menu_displayed")
+		Testify:make_request("wait_for_profile_synchronization")
+		Testify:make_request("wait_for_narrative_loaded")
+		Testify:make_request("delete_character_by_name", "Testify")
+		Testify:make_request("create_character_by_archetype_and_gender", archetype, "male")
+		Testify:make_request("wait_for_state_gameplay_reached")
+		TestifySnippets.wait(1)
+
+		local local_player = Testify:make_request("local_player", 1)
+		local item_workflow_states = {
+			"SHIPPABLE",
+			"RELEASABLE"
+		}
+		local gears = Testify:make_request("all_gears", archetype, item_workflow_states)
+
+		for slot_name, slot_gears in pairs(gears) do
+			for gear_name, gear in pairs(slot_gears) do
+				if ALREADY_EQUIPPED_GEARS[gear_name] then
+					Log.info("CombatTestCases", "%s has already been equipped.", gear_name)
+				else
+					Log.info("CombatTestCases", "Equipping gear %s to archetype %s", gear_name, archetype)
+
+					local data = {
+						player = local_player,
+						slot = slot_name,
+						item = gear
+					}
+
+					Testify:make_request("equip_item_backend", data)
+
+					local time = os.clock()
+
+					Testify:make_request("wait_for_item_equipped", data, time)
+					TestifySnippets.wait(0.1)
+				end
+			end
+		end
+	end)
+end
+
 CombatTestCases.run_through_mission = function (case_settings)
 	Testify:run_case(function (dt, t)
 		Log.set_category_log_level("Telemetry", Log.DEBUG)
@@ -90,7 +137,7 @@ CombatTestCases.run_through_mission = function (case_settings)
 			"run_through_mission"
 		}
 		local memory_usage = settings.memory_usage
-		local lua_trace = settings.lua_trace
+		local lua_trace = settings.lua_trace and not BUILD == "release"
 		local mission_key = settings.mission_key
 		local num_peers = settings.num_peers or 0
 		local telemetry_events = {
@@ -171,7 +218,11 @@ CombatTestCases.run_through_mission = function (case_settings)
 		}
 
 		while not Testify:make_request("end_conditions_met") and main_path_point < total_main_path_distance do
-			assert_data.condition = Testify:make_request("players_are_alive")
+			local are_players_alive = Testify:make_request("players_are_alive")
+
+			if not Testify:make_request("players_are_alive") then
+				assert_data.condition = are_players_alive
+			end
 
 			if memory_usage and next_memory_measure_point < main_path_point and memory_usage_measurement_count < num_memory_usage_measurements then
 				local memory_usage_data = Testify:make_request("memory_usage")
@@ -193,7 +244,6 @@ CombatTestCases.run_through_mission = function (case_settings)
 
 			Testify:make_request("teleport_players_to_main_path_point", main_path_point)
 			Testify:make_request("teleport_bots_forward_on_main_path_if_blocked", bot_teleportation_data)
-			TestifySnippets.wait(2)
 
 			main_path_point = main_path_point + (os.clock() - last_player_teleportation_time) * player_teleportation_speed_factor
 			last_player_teleportation_time = os.clock()

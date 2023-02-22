@@ -95,6 +95,7 @@ BtStaggerAction.init_values = function (self, blackboard)
 	stagger_component.stagger_strength_pool = 0
 	stagger_component.stagger_pool_last_modified = 0
 	stagger_component.attacker_unit = nil
+	stagger_component.controlled_stagger_finished = false
 end
 
 BtStaggerAction._select_stagger_anim_and_rotation = function (self, unit, impact_vector, stagger_anims, blackboard, action_data)

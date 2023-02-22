@@ -166,12 +166,7 @@ local ui_font_settings = {
 		default_color = Color.terminal_text_header(255, true),
 		text_color = Color.terminal_text_header(255, true),
 		hover_color = Color.white(255, true),
-		disabled_color = {
-			255,
-			60,
-			60,
-			60
-		},
+		disabled_color = Color.ui_grey_light(255, true),
 		offset = {
 			0,
 			-2,
@@ -277,11 +272,12 @@ local ui_font_settings = {
 		default_color = Color.terminal_text_header(255, true),
 		text_color = Color.terminal_text_header(255, true),
 		hover_color = Color.terminal_text_header_selected(255, true),
+		selected_color = Color.terminal_text_header_selected(255, true),
 		disabled_color = Color.ui_grey_light(255, true),
 		offset = {
 			50,
 			0,
-			1
+			3
 		}
 	},
 	list_button_second_row = {

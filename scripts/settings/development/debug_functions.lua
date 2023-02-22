@@ -46,6 +46,7 @@ local categories = {
 	"Player Inventory",
 	"Player Profiles",
 	"Player Voice",
+	"Premium Store",
 	"Progression",
 	"Stagger",
 	"Suppression",
@@ -1135,7 +1136,7 @@ local function _equip_slot_on_value_set_function(item_name, old_item_name, slot_
 
 	if not local_player:has_placeholder_profile() then
 		if item_data then
-			Managers.backend.interfaces.characters:equip_item_slot_debug(character_id, slot_name, item_data.name):next(function (v)
+			Managers.data_service.profiles:equip_item_slot_debug(character_id, slot_name, item_data.name):next(function (v)
 				Log.debug("DebugFunctions", "Equipped!")
 
 				if is_server then
@@ -1314,7 +1315,7 @@ local function _equip_emote_on_value_set_function(item_name, slot_name)
 	local local_player_id = local_player:local_player_id()
 
 	if not local_player:has_placeholder_profile() then
-		Managers.backend.interfaces.characters:equip_item_slot_debug(character_id, slot_name, item_name):next(function (v)
+		Managers.data_service.profiles:equip_item_slot_debug(character_id, slot_name, item_name):next(function (v)
 			Log.debug("DebugFunctions", "Equipped Empote %s", item_name)
 
 			if is_server then
@@ -1378,59 +1379,6 @@ local function _init_weapons(player_items)
 		end
 	end
 
-	functions.equip_boon = {
-		name = "Equip Boon",
-		category = "Player Equipment - Boons",
-		options_function = function ()
-			local slot_name = "slot_boon"
-			local item_definitions = slot_item_definitions_lookup[slot_name] or {}
-			local optional_first_entry = nil
-
-			if item_definitions then
-				return _equip_gear_options_function(item_definitions, optional_first_entry)
-			end
-		end,
-		on_activated = function (boon_name)
-			Log.info("DebugFunctions", "Boon equipped %s", boon_name)
-
-			local player_unit_spawn_manager = Managers.state.player_unit_spawn
-
-			if not player_unit_spawn_manager then
-				return
-			end
-
-			local local_player = player_unit_spawn_manager:owner(Debug.selected_unit)
-
-			if not local_player or local_player.remote then
-				local_player = Managers.player:local_player(1)
-			end
-
-			Managers.boons:debug_equip_boon(local_player, boon_name)
-		end,
-		get_function = function ()
-			local player_unit_spawn_manager = Managers.state.player_unit_spawn
-
-			if not player_unit_spawn_manager then
-				return DebugSingleton.boon or "empty"
-			end
-
-			local local_player = Managers.player:local_player(1)
-
-			if not local_player:unit_is_alive() then
-				return DebugSingleton.boon or "empty"
-			end
-
-			local boon_item = Managers.boons:equipped_boon(local_player)
-
-			if boon_item then
-				local boon_item_name = boon_item.name
-
-				return boon_item_name
-			else
-				return DebugSingleton.boon or "empty"
-			end
-		end
-	}
 	functions.equip_emote = {
 		name = "Equip Emote",
 		category = "Player Equipment - Emotes",
@@ -1616,7 +1564,7 @@ local function _gift_equipped()
 
 			if not string.ends_with(item, "_empty") and item ~= "not_equipped" then
 				Log.info("DebugFunctions", "Gifting item %s", item)
-				Managers.backend.interfaces.gear:create(item, slot_name, nil, nil, false):next(function (v)
+				Managers.data_service.gear:create_gear(item, slot_name, nil, nil, false):next(function (v)
 					Log.info("DebugFunctions", " %s created", v.uuid)
 				end)
 			end
@@ -1636,7 +1584,7 @@ local function _clear_inventory(wrapped)
 				Log.info("DebugFunctions", "Skipping item %s", v.uuid)
 			else
 				Log.info("DebugFunctions", "Deleting item %s", v.uuid)
-				table.insert(deletes, Managers.backend.interfaces.gear:delete_gear(v.uuid):next(function (_)
+				table.insert(deletes, Managers.data_service.gear:delete_gear(v.uuid):next(function (_)
 					Log.info("DebugFunctions", " %s deleted", v.uuid)
 				end))
 			end
@@ -1743,17 +1691,6 @@ local function _is_main_menu_active()
 	return is_main_menu_active
 end
 
-if DevParameters.disable_boon_activation_at_start_of_mission then
-	functions.activate_boons = {
-		name = "Activate Boons",
-		category = "Player Equipment - Boons",
-		on_activated = function ()
-			Managers.boons:debug_activate_boons()
-			Log.info("DebugFunctions", "ACTIVATE_BOONS!")
-		end
-	}
-end
-
 functions.play_emote_animation = {
 	name = " ->",
 	button_text = "Play Emote",
@@ -1812,7 +1749,7 @@ functions.add_all_animation_items = {
 					local overrides = {}
 					local DONT_ALLOW_DUPLICATES = false
 
-					Managers.backend.interfaces.gear:create(item_name, slot_name, nil, overrides, DONT_ALLOW_DUPLICATES):next(function (v)
+					Managers.data_service.gear:create_gear(item_name, slot_name, nil, overrides, DONT_ALLOW_DUPLICATES):next(function (v)
 						local gear = v.gear
 						local gear_id = gear.uuid
 
@@ -2704,6 +2641,51 @@ functions.play_sound_event = {
 		_play_selected_sound_event()
 	end
 }
+
+local function voice_fx_options()
+	local options = {
+		"voice_fx_rtpc_none",
+		"voice_fx_rtpc_common",
+		"voice_fx_rtpc_rare",
+		"voice_fx_rtpc_epic",
+		"voice_fx_rtpc_voice_box_a"
+	}
+
+	return options
+end
+
+local function select_voice_fx(new_value)
+	local dialogue_extension = _dialogue_extension()
+
+	dialogue_extension:set_voice_fx_preset(new_value)
+end
+
+local function override_all_voice_fx(new_value)
+	local side_system = Managers.state.extension:system("side_system")
+	local side_name = side_system:get_default_player_side_name()
+	local side = side_system:get_side_from_name(side_name)
+	local players = side:added_player_units()
+
+	for i = 1, #players do
+		local unit = players[i]
+		local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
+
+		dialogue_extension:set_voice_fx_preset(new_value)
+	end
+end
+
+functions.select_voice_fx = {
+	name = "05. Select Voice FX",
+	category = "VO",
+	options_function = voice_fx_options,
+	on_activated = select_voice_fx
+}
+functions.override_all_voice_fx = {
+	name = "06. Override All Voice FX",
+	category = "VO",
+	options_function = voice_fx_options,
+	on_activated = override_all_voice_fx
+}
 functions.apply_weapon_trait_lerp_value = {
 	num_decimals = 2,
 	name = "Override Weapon Trait Lerp Value",
@@ -2833,6 +2815,23 @@ functions.force_character_state = {
 	button_text = "Activate",
 	options_function = character_state_options,
 	on_activated = force_character_state
+}
+functions.reset_premium_store_custom_time = {
+	name = "Reset Store Time",
+	button_text = "Reset",
+	category = "Premium Store",
+	on_activated = function (new_value, old_value)
+		ParameterResolver.set_dev_parameter("premium_store_custom_time", 0)
+	end
+}
+functions.premium_store_custom_time = {
+	name = "Show Store Using Custom Time (in milliseconds)",
+	category = "Premium Store",
+	button_text = "Set Time",
+	number_button = true,
+	on_activated = function (new_value, old_value)
+		ParameterResolver.set_dev_parameter("premium_store_custom_time", new_value)
+	end
 }
 
 for key, config in pairs(functions) do

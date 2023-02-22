@@ -475,7 +475,8 @@ local PlayerComponentConfig = {
 			"j_leftweaponattach",
 			"j_tongue_attach",
 			"j_spine",
-			"root_point"
+			"root_point",
+			"j_lefthand"
 		},
 		node = {
 			"none",
@@ -585,16 +586,17 @@ local PlayerComponentConfig = {
 			"pounced",
 			"warp_grabbed",
 			"mutant_charged",
-			"consumed"
+			"consumed",
+			"grabbed"
 		},
 		trigger_animation = {
 			"none",
 			"grabbed_execution",
-			"charger_smash",
-			"charger_throw",
-			"charger_throw_left",
-			"charger_throw_right",
-			"charger_throw_bwd"
+			"smash",
+			"throw",
+			"throw_left",
+			"throw_right",
+			"throw_bwd"
 		}
 	},
 	disabled_character_state = {
@@ -608,7 +610,8 @@ local PlayerComponentConfig = {
 			"pounced",
 			"warp_grabbed",
 			"mutant_charged",
-			"consumed"
+			"consumed",
+			"grabbed"
 		}
 	},
 	debug_state_input = {

@@ -35,8 +35,8 @@ local character_appearance_view_settings = {
 		90
 	},
 	planet_offset = {
-		500,
-		0
+		1400,
+		540
 	},
 	area_grid_size = {
 		480,

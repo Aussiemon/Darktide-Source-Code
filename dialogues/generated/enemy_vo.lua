@@ -253,24 +253,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				1
-			},
-			{
-				"faction_memory",
-				"faction_memory_daemonhost_mantra_low",
-				OP.TIMEDIFF,
-				OP.GT,
-				1
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_daemonhost_mantra_low",
-				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"faction_memory_daemonhost_mantra_low",
 				OP.TIMESET
 			}
 		}
@@ -306,24 +294,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				1
-			},
-			{
-				"faction_memory",
-				"faction_memory_daemonhost_mantra_medium",
-				OP.TIMEDIFF,
-				OP.GT,
-				1
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"enemy_memory_daemonhost_mantra_medium",
-				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"faction_memory_daemonhost_mantra_medium",
 				OP.TIMESET
 			}
 		}
@@ -670,14 +646,14 @@ return function ()
 				"enemy_memory_chaos_ogryn_executor_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				6
+				2
 			},
 			{
 				"faction_memory",
-				"faction_memory_chaos_ogryn_executor_alerted_idle",
+				"",
 				OP.TIMEDIFF,
 				OP.GT,
-				3
+				0
 			}
 		},
 		on_done = {
@@ -688,7 +664,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"faction_memory_chaos_ogryn_executor_alerted_idle",
+				"",
 				OP.TIMESET
 			}
 		},
@@ -698,7 +674,7 @@ return function ()
 	})
 	define_rule({
 		name = "chaos_ogryn_executor_assault",
-		category = "enemy_vo_prio_1",
+		category = "enemy_vo_prio_0",
 		wwise_route = 6,
 		response = "chaos_ogryn_executor_assault",
 		database = "enemy_vo",
@@ -726,14 +702,14 @@ return function ()
 				"chaos_ogryn_executor_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				4
+				2
 			},
 			{
 				"faction_memory",
-				"faction_memory_chaos_ogryn_executor_assault",
+				"",
 				OP.TIMEDIFF,
 				OP.GT,
-				2
+				0
 			}
 		},
 		on_done = {
@@ -744,7 +720,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"faction_memory_chaos_ogryn_executor_assault",
+				"",
 				OP.TIMESET
 			}
 		},
@@ -939,7 +915,7 @@ return function ()
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"do_not_play"
+				"alerted_idle"
 			},
 			{
 				"query_context",
@@ -948,18 +924,24 @@ return function ()
 				"cultist_berzerker"
 			},
 			{
+				"query_context",
+				"target_distance",
+				OP.GTEQ,
+				30
+			},
+			{
 				"user_memory",
 				"enemy_memory_cultist_berzerker_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				7
+				2
 			},
 			{
 				"faction_memory",
-				"faction_memory_cultist_berzerker_alerted_idle",
+				"",
 				OP.TIMEDIFF,
 				OP.GT,
-				3
+				0
 			}
 		},
 		on_done = {
@@ -970,7 +952,66 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"faction_memory_cultist_berzerker_alerted_idle",
+				"",
+				OP.TIMESET
+			}
+		}
+	})
+	define_rule({
+		name = "cultist_berzerker_alerted_idle_close",
+		category = "enemy_vo_prio_1",
+		wwise_route = 28,
+		response = "cultist_berzerker_alerted_idle_close",
+		database = "enemy_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_enemy_vo_event"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"alerted_idle"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"cultist_berzerker"
+			},
+			{
+				"query_context",
+				"target_distance",
+				OP.LT,
+				30
+			},
+			{
+				"user_memory",
+				"enemy_memory_cultist_berzerker_alerted_idle_close",
+				OP.TIMEDIFF,
+				OP.GT,
+				2
+			},
+			{
+				"faction_memory",
+				"",
+				OP.TIMEDIFF,
+				OP.GT,
+				0
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"enemy_memory_cultist_berzerker_alerted_idle_close",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"",
 				OP.TIMESET
 			}
 		}
@@ -1868,7 +1909,7 @@ return function ()
 	})
 	define_rule({
 		name = "enemy_cultist_berzerker_assault",
-		category = "enemy_vo_prio_1",
+		category = "enemy_vo_prio_0",
 		wwise_route = 46,
 		response = "enemy_cultist_berzerker_assault",
 		database = "enemy_vo",
@@ -1897,24 +1938,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				2
-			},
-			{
-				"faction_memory",
-				"faction_memory_cultist_berzerker_assault",
-				OP.TIMEDIFF,
-				OP.GT,
-				1
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"cultist_berzerker_assault",
-				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"faction_memory_cultist_berzerker_assault",
 				OP.TIMESET
 			}
 		}
@@ -2314,14 +2343,14 @@ return function ()
 				"enemy_memory_renegade_grenadier_skulking",
 				OP.TIMEDIFF,
 				OP.GT,
-				2
+				20
 			},
 			{
 				"faction_memory",
 				"faction_memory_renegade_grenadier_skulking",
 				OP.TIMEDIFF,
 				OP.GT,
-				20
+				2
 			}
 		},
 		on_done = {
@@ -2339,7 +2368,7 @@ return function ()
 	})
 	define_rule({
 		name = "traitor_berzerker_assault",
-		category = "enemy_vo_prio_1",
+		category = "enemy_vo_prio_0",
 		wwise_route = 48,
 		response = "traitor_berzerker_assault",
 		database = "enemy_vo",
@@ -2368,24 +2397,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				2
-			},
-			{
-				"faction_memory",
-				"faction_memory_traitor_berzerker_assault",
-				OP.TIMEDIFF,
-				OP.GT,
-				1
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
 				"traitor_berzerker_assault",
-				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"faction_memory_traitor_berzerker_assault",
 				OP.TIMESET
 			}
 		}
@@ -2420,14 +2437,14 @@ return function ()
 				"enemy_memory_traitor_enforcer_executor_alerted_idle",
 				OP.TIMEDIFF,
 				OP.GT,
-				6
+				2
 			},
 			{
 				"faction_memory",
-				"faction_memory_traitor_enforcer_executor_alerted_idle",
+				"",
 				OP.TIMEDIFF,
 				OP.GT,
-				3
+				0
 			}
 		},
 		on_done = {
@@ -2438,7 +2455,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"faction_memory_traitor_enforcer_executor_alerted_idle",
+				"",
 				OP.TIMESET
 			}
 		},

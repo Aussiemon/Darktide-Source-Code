@@ -56,6 +56,7 @@ PlayerUnitAttackIntensityExtension._setup_intensities = function (self)
 end
 
 local DISALLOWED_CHARACTER_STATES = {
+	grabbed = true,
 	consumed = true
 }
 

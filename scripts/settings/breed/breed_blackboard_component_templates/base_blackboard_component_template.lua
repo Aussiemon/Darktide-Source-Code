@@ -24,6 +24,7 @@ local base_template = {
 		num_triggered_staggers = "number",
 		count = "number",
 		type = "string",
+		controlled_stagger_finished = "boolean",
 		length = "number",
 		immune_time = "number",
 		stagger_pool_last_modified = "number",

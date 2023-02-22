@@ -67,9 +67,20 @@ function _gamepad_input(input, look_delta_context)
 	local targets_within_range = targeting_data and targeting_data.targets_within_range
 	local is_sticky = look_delta_context.is_sticky
 	local is_lunging = look_delta_context.is_lunging
+	local new_input_filter_method = false
 	local input_filter_name = nil
 
-	if is_lunging then
+	if new_input_filter_method then
+		if is_lunging then
+			input_filter_name = "look_controller_lunging"
+		elseif ranged_weapon_wielded and alternate_fire_is_active then
+			input_filter_name = "look_controller_ranged_alternate_fire_improved"
+		elseif ranged_weapon_wielded then
+			input_filter_name = "look_controller_ranged_improved"
+		else
+			input_filter_name = "look_controller_improved"
+		end
+	elseif is_lunging then
 		input_filter_name = "look_controller_lunging"
 	elseif ranged_weapon_wielded and alternate_fire_is_active then
 		input_filter_name = "look_controller_ranged_alternate_fire"

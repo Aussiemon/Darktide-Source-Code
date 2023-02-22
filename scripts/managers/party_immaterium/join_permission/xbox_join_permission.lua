@@ -29,8 +29,7 @@ if XblPermission then
 			XblPermission.CommunicateUsingText
 		},
 		JOIN_REQUEST = {
-			XblPermission.PlayMultiplayer,
-			XblPermission.CommunicateUsingText
+			XblPermission.PlayMultiplayer
 		}
 	}
 end

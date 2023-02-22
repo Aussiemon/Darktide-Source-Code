@@ -6,7 +6,8 @@ local SERVICES = {
 	account = require("scripts/managers/data_service/services/account_service"),
 	store = require("scripts/managers/data_service/services/store_service"),
 	gear = require("scripts/managers/data_service/services/gear_service"),
-	social = require("scripts/managers/data_service/services/social_service")
+	social = require("scripts/managers/data_service/services/social_service"),
+	crafting = require("scripts/managers/data_service/services/crafting_service")
 }
 local DataServiceManager = class("DataServiceManager")
 

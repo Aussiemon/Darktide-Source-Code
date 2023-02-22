@@ -37,8 +37,9 @@ local action_data = {
 		}
 	},
 	alerted = {
-		instant_aggro_chance = 0,
 		override_aggro_distance = 8,
+		vo_event = "alerted_idle",
+		instant_aggro_chance = 0,
 		moving_alerted_anim_events = {
 			fwd = {
 				"alerted_fwd",

@@ -170,6 +170,12 @@ local function _update_master_data(item_instance)
 			_merge_item_data_recursive(clone, overrides)
 		end
 
+		local count = gear.count
+
+		if count then
+			clone.count = count
+		end
+
 		local temp_overrides = rawget(item_instance, "__temp_overrides")
 
 		if temp_overrides then
@@ -177,8 +183,8 @@ local function _update_master_data(item_instance)
 		end
 
 		rawset(item_instance, "__master_item", clone)
-		rawset(item_instance, "set_temporary_overrides", function (self, temp_overrides)
-			rawset(item_instance, "__temp_overrides", temp_overrides)
+		rawset(item_instance, "set_temporary_overrides", function (self, new_temp_overrides)
+			rawset(item_instance, "__temp_overrides", new_temp_overrides)
 			_update_master_data(item_instance)
 		end)
 

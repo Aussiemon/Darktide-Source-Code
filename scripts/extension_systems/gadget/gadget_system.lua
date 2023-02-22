@@ -45,7 +45,7 @@ GadgetSystem.add_meta_buff = function (self, player, buff_name, start_time, lerp
 	local peer_id = player:peer_id()
 	local local_player_id = player:local_player_id()
 	local buff_template_id = NetworkLookup.buff_templates[buff_name]
-	local slot_name_id = NetworkLookup.player_inventory_slot_names[slot_name]
+	local slot_name_id = slot_name and NetworkLookup.player_inventory_slot_names[slot_name]
 
 	Managers.state.game_session:send_rpc_clients("rpc_add_meta_buff", peer_id, local_player_id, buff_template_id, buff_instance_id, lerp_value, slot_name_id)
 
@@ -56,7 +56,7 @@ GadgetSystem.rpc_add_meta_buff = function (self, channel_id, peer_id, local_play
 	local player = Managers.player:player(peer_id, local_player_id)
 	local buff_name = NetworkLookup.buff_templates[buff_template_id]
 	local start_time = FixedFrame.get_latest_fixed_time()
-	local slot_name = NetworkLookup.player_inventory_slot_names[slot_name_id]
+	local slot_name = slot_name_id and NetworkLookup.player_inventory_slot_names[slot_name_id]
 
 	self:_add_meta_buff(player, buff_name, buff_instance_id, start_time, optional_lerp_value, slot_name)
 	self:_update_meta_stat_buffs(player)
@@ -67,7 +67,14 @@ GadgetSystem._add_meta_buff = function (self, player, buff_name, buff_instance_i
 	local context = {
 		player = player
 	}
-	local meta_buff = MetaBuff:new(context, template, start_time, buff_instance_id, "buff_lerp_value", lerp_value, "item_slot_name", slot_name)
+	local meta_buff = nil
+
+	if slot_name then
+		meta_buff = MetaBuff:new(context, template, start_time, buff_instance_id, "buff_lerp_value", lerp_value, "item_slot_name", slot_name)
+	else
+		meta_buff = MetaBuff:new(context, template, start_time, buff_instance_id, "buff_lerp_value", lerp_value)
+	end
+
 	self._buffs[#self._buffs + 1] = meta_buff
 end
 

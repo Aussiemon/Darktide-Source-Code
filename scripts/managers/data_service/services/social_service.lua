@@ -109,12 +109,6 @@ SocialService.platform = function (self)
 	return self._platform
 end
 
-SocialService.refresh_communication_restrictions = function (self)
-	Managers.account:refresh_communication_restrictions()
-
-	self._blocked_accounts_list_changed = true
-end
-
 SocialService.platform_display_name = function (self)
 	local platform = self._platform
 
@@ -388,14 +382,15 @@ SocialService.fetch_players_on_server = function (self)
 
 		promise:resolve(players_on_server)
 	else
-		promise:reject(players_on_server)
+		promise:resolve(players_on_server)
 	end
 
 	return promise
 end
 
 SocialService.fetch_blocked_accounts = function (self, force_update)
-	local blocked_list_has_changed = force_update or self._blocked_accounts_list_changed
+	local communication_restriction_iteration = Managers.account:communication_restriction_iteration()
+	local blocked_list_has_changed = force_update or self._blocked_accounts_list_changed or self._current_communication_restriction_iteration ~= communication_restriction_iteration
 	local blocked_accounts_promise = self._blocked_accounts_list_promise
 
 	if not blocked_list_has_changed or blocked_accounts_promise:is_pending() then
@@ -408,6 +403,7 @@ SocialService.fetch_blocked_accounts = function (self, force_update)
 		local PLATFORM_BLOCKED_LIST = 1
 		local FATSHARK_BLOCKED_LIST = 2
 		self._blocked_accounts_list_changed = false
+		self._current_communication_restriction_iteration = Managers.account:communication_restriction_iteration()
 		local platform_blocked_data = data[PLATFORM_BLOCKED_LIST]
 		local fatshark_blocked_data = data[FATSHARK_BLOCKED_LIST]
 		local blocked_accounts = fatshark_blocked_data and fatshark_blocked_data.blockList or {}
@@ -582,11 +578,11 @@ end
 SocialService.send_party_invite = function (self, invitee_player_info)
 	local player_online_status = invitee_player_info:online_status()
 
-	if player_online_status == OnlineStatus.online then
+	if player_online_status == OnlineStatus.online and not IS_XBS then
 		Managers.party_immaterium:invite_to_party(invitee_player_info:account_id()):catch(function (error)
 			_warning("invite_to_party failed with %s", table.tostring(error, 3))
 		end)
-	elseif player_online_status == OnlineStatus.platform_online then
+	elseif player_online_status == OnlineStatus.platform_online or IS_XBS and player_online_status == OnlineStatus.online then
 		local party_id = Managers.party_immaterium:party_id()
 		local platform = invitee_player_info:platform()
 		local platform_user_id = invitee_player_info:platform_user_id()
@@ -795,12 +791,6 @@ SocialService.can_toggle_mute_in_text_chat = function (self, account_id, platfor
 
 	if player_info:is_blocked() then
 		return false
-	end
-
-	if Managers.account:is_muted(platform_user_id) then
-		local reason = "loc_social_fail_reason_platform_muted"
-
-		return false, reason
 	end
 
 	if IS_GDK or IS_XBS then

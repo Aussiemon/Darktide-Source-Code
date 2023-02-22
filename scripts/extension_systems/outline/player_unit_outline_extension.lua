@@ -46,6 +46,7 @@ PlayerUnitOutlineExtension.destroy = function (self)
 end
 
 local IGNORED_DISABLED_OUTLINE_STATES = {
+	grabbed = true,
 	catapulted = true,
 	consumed = true
 }

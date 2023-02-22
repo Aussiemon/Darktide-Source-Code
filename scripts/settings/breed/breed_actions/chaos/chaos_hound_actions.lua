@@ -11,10 +11,10 @@ local action_data = {
 		instant_ragdoll_chance = 1
 	},
 	leap = {
-		push_minions_radius = 2,
+		in_air_min_stagger_duration = 0.23333333333333334,
 		stop_duration = 0.5,
 		wall_land_anim_event = "leap_hit_wall_land",
-		leap_speed = 24.5,
+		controlled_stagger_min_distance = 0.1,
 		wall_land_duration = 0.5333333333333333,
 		wall_raycast_distance = 3,
 		collision_radius = 1,
@@ -23,11 +23,15 @@ local action_data = {
 		max_pounce_dot = 0.1,
 		wall_jump_anim_event = "leap_hit_wall",
 		aoe_bot_threat_duration = 1,
+		leap_speed = 24.5,
 		start_duration_short = 0.8,
+		in_air_stagger_duration = 0.9,
 		push_enemies_power_level = 2000,
 		start_leap_anim_event_short = "attack_leap_short",
+		push_minions_radius = 2,
 		acceptable_accuracy = 0.1,
 		landing_duration = 1.5,
+		controlled_stagger = true,
 		start_move_speed = 12,
 		z_offset = -0.1,
 		telegraph_timing = 0,
@@ -45,12 +49,15 @@ local action_data = {
 		land_anim_event = "leap_land",
 		stop_anim = "run_to_stop",
 		stagger_type_reduction = {
-			melee = -20,
+			melee = -30,
 			ranged = 20
 		},
 		push_minions_damage_profile = DamageProfileTemplates.chaos_hound_push,
 		push_enemies_damage_profile = DamageProfileTemplates.chaos_hound_push,
-		aoe_bot_threat_size = Vector3Box(1.5, 2, 2)
+		aoe_bot_threat_size = Vector3Box(1.5, 2, 2),
+		in_air_staggers = {
+			"stagger_inair_bwd"
+		}
 	},
 	approach_target = {
 		controlled_stagger = true,

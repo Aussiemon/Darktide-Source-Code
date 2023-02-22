@@ -14,7 +14,7 @@ hitscan_templates.default_autogun_bullet = {
 	}
 }
 hitscan_templates.autogun_p1_m2_bullet = {
-	power_level = 350,
+	power_level = 385,
 	range = 100,
 	damage = {
 		impact = {

@@ -577,6 +577,7 @@ weapon_template.actions = {
 	},
 	action_melee_start_left_2 = {
 		anim_end_event = "attack_finished",
+		proc_time_interval = 0.25,
 		kind = "windup",
 		anim_event_3p = "attack_swing_charge_left",
 		anim_event = "heavy_charge_left_flatside",

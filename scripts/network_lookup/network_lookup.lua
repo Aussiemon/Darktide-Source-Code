@@ -19,6 +19,7 @@ local HazardPropSettings = require("scripts/settings/hazard_prop/hazard_prop_set
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local ImpactEffectSettings = require("scripts/settings/damage/impact_effect_settings")
+local InteractionTypeStrings = require("scripts/settings/interaction/interaction_type_strings")
 local LevelProps = require("scripts/settings/level_prop/level_props")
 local LightControllerFlickerSettings = require("scripts/settings/components/light_controller_flicker")
 local LineEffects = require("scripts/settings/effects/line_effects")
@@ -136,6 +137,13 @@ NetworkLookup.door_states = {
 	"closed"
 }
 NetworkLookup.effect_templates = _create_lookup({}, EffectTemplates)
+NetworkLookup.emote_slots = {
+	"slot_animation_emote_1",
+	"slot_animation_emote_2",
+	"slot_animation_emote_3",
+	"slot_animation_emote_4",
+	"slot_animation_emote_5"
+}
 NetworkLookup.flow_events = FlowEvents
 NetworkLookup.game_mode_outcomes = {
 	"n/a",
@@ -162,6 +170,7 @@ NetworkLookup.interaction_result = {
 	"stopped_holding",
 	"interaction_cancelled"
 }
+NetworkLookup.interaction_type_strings = InteractionTypeStrings
 NetworkLookup.level_props_names = _create_lookup({}, LevelProps)
 NetworkLookup.light_controller_flicker_settings = _create_lookup({}, LightControllerFlickerSettings)
 NetworkLookup.line_effects = _create_lookup({}, LineEffects)
@@ -426,6 +435,7 @@ local function _init(name, lookup_table)
 	local index_error_print = "[NetworkLookup] Table " .. name .. " does not contain key: "
 	local meta = {
 		__index = function (_, key)
+			table.dump(lookup_table)
 			error(index_error_print .. tostring(key))
 		end
 	}

@@ -4,9 +4,10 @@ local SocialMenuSettings = require("scripts/ui/views/social_menu_view/social_men
 local PerlinNoise = require("scripts/utilities/perlin_noise")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local social_menu_roster_view_styles = {
-	roster_grid_mask_expansion = 20,
-	panel_header_height = 58,
 	default_frame_material = "content/ui/textures/nameplates/portrait_frames/default",
+	roster_grid_mask_expansion = 20,
+	default_insignia_material = "content/ui/textures/nameplates/insignias/default",
+	panel_header_height = 58,
 	roster_panel_size = {
 		1030,
 		680
@@ -25,6 +26,10 @@ local social_menu_roster_view_styles = {
 	},
 	portrait_size = {
 		72,
+		80
+	},
+	insignia_size = {
+		32,
 		80
 	}
 }
@@ -148,6 +153,16 @@ player_plaque_style.portrait_overlay = {
 		5
 	},
 	color = Color.ui_terminal(255, true)
+}
+player_plaque_style.character_insignia = {
+	horizontal_alignment = "left",
+	size = social_menu_roster_view_styles.insignia_size,
+	offset = {
+		-40,
+		0,
+		1
+	},
+	material_values = {}
 }
 player_plaque_style.name_or_activity = table.clone(UIFontSettings.body)
 local player_name_style = player_plaque_style.name_or_activity

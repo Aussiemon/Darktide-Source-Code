@@ -22,11 +22,11 @@ local circumstance_templates = {
 							0
 						},
 						large_clip = {
-							300,
-							300,
-							300,
-							200,
-							200
+							5,
+							5,
+							5,
+							5,
+							5
 						},
 						ammo_cache_pocketable = {
 							2,
@@ -65,11 +65,11 @@ local circumstance_templates = {
 							0
 						},
 						large_clip = {
-							300,
-							300,
-							300,
-							200,
-							200
+							2,
+							2,
+							2,
+							2,
+							2
 						},
 						ammo_cache_pocketable = {
 							2,
@@ -99,11 +99,11 @@ local circumstance_templates = {
 							0
 						},
 						large_clip = {
-							300,
-							300,
-							300,
-							200,
-							200
+							2,
+							2,
+							2,
+							2,
+							2
 						},
 						ammo_cache_pocketable = {
 							2,
@@ -133,18 +133,18 @@ local circumstance_templates = {
 							0
 						},
 						large_clip = {
-							300,
-							300,
-							300,
-							200,
-							200
+							35,
+							35,
+							35,
+							30,
+							30
 						},
 						ammo_cache_pocketable = {
-							2,
-							2,
-							2,
-							2,
-							2
+							5,
+							5,
+							5,
+							4,
+							4
 						}
 					},
 					grenade = {
@@ -176,18 +176,18 @@ local circumstance_templates = {
 							0
 						},
 						large_clip = {
-							300,
-							300,
-							300,
-							200,
-							200
+							8,
+							8,
+							8,
+							5,
+							5
 						},
 						ammo_cache_pocketable = {
-							2,
-							2,
-							2,
-							2,
-							2
+							5,
+							5,
+							5,
+							4,
+							4
 						}
 					},
 					grenade = {

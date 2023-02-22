@@ -118,9 +118,11 @@ PlayerCharacterStateMutantCharged.on_exit = function (self, unit, t, next_state)
 
 	FirstPersonView.enter(t, first_person_mode_component, rewind_ms)
 
-	local inventory_component = self._inventory_component
+	if next_state ~= "dead" then
+		local inventory_component = self._inventory_component
 
-	PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
+		PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
+	end
 
 	disabled_character_state_component.is_disabled = false
 	disabled_character_state_component.disabling_unit = nil
@@ -160,6 +162,17 @@ PlayerCharacterStateMutantCharged.on_exit = function (self, unit, t, next_state)
 			local time_in_captivity = t - self._entered_state_t
 
 			Managers.telemetry_events:player_exits_captivity(player, rescued_by_player, state_name, time_in_captivity)
+
+			if next_state == "catapulted" then
+				local mover = Unit.mover(unit)
+				local position = Unit.world_position(unit, 1)
+				local allowed_move_distance = 1
+				local _, non_colliding_position = Mover.fits_at(mover, position, allowed_move_distance)
+
+				if non_colliding_position then
+					PlayerMovement.teleport_fixed_update(unit, non_colliding_position)
+				end
+			end
 		end
 
 		self._entered_state_t = nil
@@ -170,12 +183,14 @@ PlayerCharacterStateMutantCharged.fixed_update = function (self, unit, dt, t, ne
 	local input_component = self._disabled_state_input
 	local trigger_animation = input_component.trigger_animation
 
-	if trigger_animation == "charger_smash" and not self._charger_throw_smash then
+	if trigger_animation == "smash" and not self._charger_throw_smash then
 		self._animation_extension:anim_event("charger_smash")
 
 		self._charger_throw_smash = true
-	elseif (trigger_animation == "charger_throw" or trigger_animation == "charger_throw_left" or trigger_animation == "charger_throw_right" or trigger_animation == "charger_throw_bwd") and not self._charger_throw_played then
-		self._animation_extension:anim_event(trigger_animation)
+	elseif (trigger_animation == "throw" or trigger_animation == "throw_left" or trigger_animation == "throw_right" or trigger_animation == "throw_bwd") and not self._charger_throw_played then
+		local animation_event = "charger_" .. trigger_animation
+
+		self._animation_extension:anim_event(animation_event)
 
 		self._charger_throw_played = true
 	end

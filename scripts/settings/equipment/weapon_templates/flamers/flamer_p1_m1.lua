@@ -807,6 +807,13 @@ weapon_template.perks = {
 		}
 	}
 }
+weapon_template.weapon_temperature_settings = {
+	use_charge = false,
+	increase_rate = 0.035,
+	grace_time = 0.4,
+	barrel_threshold = 0.4,
+	decay_rate = 0.025
+}
 weapon_template.displayed_keywords = {
 	{
 		display_name = "loc_weapon_keyword_spray_n_pray"

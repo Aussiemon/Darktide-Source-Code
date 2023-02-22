@@ -104,97 +104,6 @@ local talent_settings = {
 			damage_vs_ogryn_and_monsters = 0.5
 		}
 	},
-	veteran_3 = {
-		combat_ability = {
-			cone_dot = 0.95,
-			radius = 15,
-			cone_range = 30,
-			cooldown = 45,
-			power_level = 1000,
-			max_charges = 1
-		},
-		grenade = {
-			max_charges = 2
-		},
-		coherency = {
-			max_stacks = 1,
-			damage = 0.05
-		},
-		passive_1 = {
-			talent_cooldown_reduction = 10,
-			on_hit_proc_chance = 1,
-			cooldown_reduction = 6
-		},
-		passive_2 = {
-			on_untag_unit_proc_chance = 1,
-			damage_taken_multiplier = 1.15,
-			on_tag_unit_proc_chance = 1
-		},
-		mixed_1 = {},
-		mixed_2 = {
-			krak_damage = 0.5
-		},
-		mixed_3 = {},
-		offensive_1 = {
-			ranged_damage = 0.15,
-			duration = 8
-		},
-		offensive_2 = {
-			max_charges = 4
-		},
-		offensive_3 = {
-			suppression_dealt = 0.2,
-			on_minion_death_proc_chance = 0.05,
-			damage = 0.2,
-			active_duration = 10
-		},
-		defensive_1 = {
-			movement_speed = 1.2
-		},
-		defensive_2 = {
-			damage = -0.5,
-			damage_monsters = -0.3
-		},
-		defensive_3 = {
-			stamina_modifier = 2,
-			toughness = 100
-		},
-		coop_1 = {},
-		coop_2 = {
-			max_stacks = 1,
-			damage = 0.08
-		},
-		coop_3 = {
-			percent = 0.1
-		},
-		spec_passive_1 = {
-			damage_taken_multiplier = 1.3
-		},
-		spec_passive_2 = {
-			suppression_cooldown = 6
-		},
-		spec_passive_3 = {
-			cooldown_reduction = 2,
-			on_minion_death_proc_chance = 1
-		},
-		combat_ability_1 = {
-			spread_modifier = -0.85,
-			sway_modifier = 0.15,
-			charge_up_time = -0.25,
-			recoil_modifier = -0.85,
-			reload_speed = 0.6,
-			duration = 10
-		},
-		combat_ability_2 = {
-			impact_modifier = 0.3,
-			movement_speed = 1.1,
-			block_cost_multiplier = 0.2,
-			melee_damage = 0.1,
-			duration = 10,
-			attack_speed = 0.1
-		},
-		combat_ability_3 = {}
-	},
 	ogryn_shared = {
 		tank = {
 			toughness_damage_taken_multiplier = 0.8,
@@ -207,87 +116,6 @@ local talent_settings = {
 		},
 		radius = {
 			coherency_aura_size_increase = 0.5
-		}
-	},
-	ogryn_1 = {
-		combat_ability = {
-			cooldown = 80,
-			clip_size_visualizer = 3,
-			resistance_duration = 5,
-			max_charges = 1
-		},
-		passive_1 = {
-			free_ammo_proc_chance = 0.08
-		},
-		passive_2 = {
-			reduced_damage_while_braced = 0.75
-		},
-		passive_3 = {
-			increased_max_ammo = 0.5
-		},
-		aura = {
-			damage_vs_suppressed = 0.2
-		},
-		mixed_1 = {
-			duration = 6,
-			damage_after_reload = 0.12
-		},
-		mixed_2 = {
-			percent_toughness_ranged_kill = 0.02
-		},
-		mixed_3 = {
-			increased_clip_size = 0.25
-		},
-		offensive_1 = {
-			max_stacks = 12,
-			duration = 6,
-			crit_chance_on_kill = 0.01
-		},
-		offensive_2 = {
-			increased_suppression = 0.25
-		},
-		offensive_3 = {
-			reload_speed_on_multi_hit = 0.3,
-			duration = 5,
-			num_multi_hit = 5,
-			multi_hit_window = 0.5
-		},
-		defensive_1 = {},
-		defensive_2 = {
-			move_speed_on_ranged_kill = 1.2,
-			duration = 5
-		},
-		defensive_3 = {
-			braced_toughness_regen = 0.02
-		},
-		coop_1 = {
-			team_max_ammo_increase = 0.15
-		},
-		coop_2 = {
-			damage_vs_suppressed_aura_improved = 0.3
-		},
-		coop_3 = {
-			max_stacks = 4,
-			duration = 8,
-			reduced_ranged_damage_per_ally = 0.75
-		},
-		spec_passive_1 = {
-			duration = 8,
-			increased_cooldown_regeneration = 0.15
-		},
-		spec_passive_2 = {
-			increased_passive_proc_chance = 0.12
-		},
-		spec_passive_3 = {},
-		combat_ability_1 = {
-			increased_fire_rate = 0.15
-		},
-		combat_ability_2 = {
-			reduced_clip_visualizer = 2,
-			reduced_clip_size_modifier = -1
-		},
-		combat_ability_3 = {
-			increased_damage_vs_close = 0.25
 		}
 	},
 	ogryn_2 = {
@@ -375,6 +203,11 @@ local talent_settings = {
 			time = 5,
 			damage = 0.2
 		},
+		offensive_2_2 = {
+			max_stacks = 25,
+			duration = 10,
+			melee_heavy_damage = 0.02
+		},
 		offensive_2_3 = {
 			max_targets = 10,
 			on_hit_proc_chance = 1,
@@ -383,7 +216,7 @@ local talent_settings = {
 		},
 		combat_ability_1 = {
 			cooldown = 30,
-			stacks = 2,
+			stacks = 4,
 			max_charges = 1
 		},
 		combat_ability_2 = {
@@ -506,7 +339,7 @@ local talent_settings = {
 			duration = 5
 		},
 		offensive_2_3 = {
-			max_stacks = 8
+			max_stacks = 6
 		},
 		combat_ability_1 = {
 			time = 1.5
@@ -518,109 +351,6 @@ local talent_settings = {
 		},
 		combat_ability_3 = {
 			max_charges = 2
-		}
-	},
-	zealot_3 = {
-		combat_ability = {
-			static_power_level = 500,
-			radius = 5,
-			min_close_radius = 2,
-			min_radius = 3,
-			cooldown = 45,
-			close_radius = 2,
-			duration = 5,
-			toughness_restored = 1,
-			toughness_bonus_flat = 400,
-			power_level = 500,
-			max_charges = 1,
-			explosion_area_suppression = {
-				suppression_falloff = true,
-				instant_aggro = true,
-				distance = 15,
-				suppression_value = 20
-			}
-		},
-		grenade = {
-			max_charges = 2
-		},
-		coherency = {
-			corruption_heal_amount = 0.5,
-			interval = 1
-		},
-		passive_1 = {
-			max_dist = 25,
-			max_resource = 25,
-			duration = 8,
-			crit_chance = 0.15,
-			buff_removal_time_modifier = 0.8
-		},
-		passive_2 = {
-			damage_vs_disgusting = 0.2
-		},
-		passive_3 = {
-			corruption_taken_multiplier = 0.5
-		},
-		mixed_1 = {
-			impact_modifier = 0.3
-		},
-		mixed_2 = {
-			toughness = 75
-		},
-		mixed_3 = {
-			extra_max_amount_of_wounds = 2
-		},
-		offensive_1 = {
-			max_stacks = 5,
-			melee_damage = 0.05
-		},
-		offensive_2 = {
-			crit_share = 0.3333333333333333
-		},
-		offensive_3 = {
-			max_hit_mass_impact_modifier = 0.5
-		},
-		defensive_1 = {
-			cooldown_duration = 10,
-			push_radius = 2.75,
-			power_level = 500,
-			inner_push_rad = math.pi * 0.125,
-			outer_push_rad = math.pi * 0.25
-		},
-		defensive_2 = {
-			health_segment_damage_taken_multiplier = 0.5
-		},
-		defensive_3 = {
-			toughness_damage_taken_modifier = -0.15
-		},
-		coop_1 = {
-			toughness_percent_regenerated = 0.5,
-			duration = 5,
-			damage = 0.15
-		},
-		coop_2 = {
-			interval = 1,
-			percent_increase_visualizer = 0.5,
-			corruption_heal_amount_increased = 1.5
-		},
-		coop_3 = {
-			duration = 4,
-			cooldown_duration = 10,
-			damage_taken_multiplier = 0.25
-		},
-		spec_passive_1 = {
-			cooldown_time = 0.5
-		},
-		spec_passive_2 = {
-			crit_chance = 0.1
-		},
-		spec_passive_3 = {},
-		combat_ability_1 = {
-			max_time_per_hit = 2,
-			multiplier_per_hit = 0.9
-		},
-		combat_ability_2 = {},
-		combat_ability_3 = {
-			duration = 8
 		}
 	},
 	psyker_2 = {

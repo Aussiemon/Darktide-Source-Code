@@ -39,13 +39,13 @@ templates.weapon_trait_bespoke_laspistol_p1_reload_speed_on_slide = {
 templates.weapon_trait_bespoke_laspistol_p1_burninating_on_crit = {
 	weapon_trait_bespoke_laspistol_p1_burninating_on_crit = {
 		{
-			dot_data = {
+			target_buff_data = {
 				max_stacks = 6,
 				num_stacks_on_proc = 2
 			}
 		},
 		[4] = {
-			dot_data = {
+			target_buff_data = {
 				max_stacks = 9,
 				num_stacks_on_proc = 3
 			}
@@ -112,22 +112,22 @@ templates.weapon_trait_bespoke_laspistol_p1_consecutive_hits_increases_close_dam
 	weapon_trait_bespoke_laspistol_p1_consecutive_hits_increases_close_damage_parent = {
 		{
 			stat_buffs = {
-				[stat_buffs.damage_near] = 0.01
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.damage_near] = 0.015
-			}
-		},
-		{
-			stat_buffs = {
 				[stat_buffs.damage_near] = 0.02
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.damage_near] = 0.025
+				[stat_buffs.damage_near] = 0.03
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.damage_near] = 0.04
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.damage_near] = 0.05
 			}
 		}
 	}

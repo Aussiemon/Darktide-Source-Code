@@ -589,7 +589,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					-15,
-					0
+					1
 				}
 			}
 		},
@@ -601,7 +601,7 @@ local widget_definitions = {
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "center",
-				color = Color.black(76.5, true),
+				color = Color.black(80, true),
 				size = {
 					480,
 					480
@@ -609,7 +609,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1
+					0
 				}
 			}
 		},
@@ -628,7 +628,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					-18,
-					1
+					2
 				}
 			}
 		},
@@ -646,7 +646,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					-18,
-					1
+					2
 				}
 			},
 			visiblity_function = function (content, style)
@@ -666,7 +666,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					18,
-					1
+					2
 				}
 			}
 		}
@@ -694,7 +694,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					9,
-					1
+					2
 				}
 			}
 		},
@@ -712,7 +712,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					0,
-					1
+					2
 				}
 			},
 			visibility_function = function (content, style)
@@ -942,7 +942,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					-18,
-					1
+					2
 				}
 			}
 		},
@@ -959,7 +959,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					18,
-					1
+					2
 				}
 			}
 		}
@@ -1078,7 +1078,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					-18,
-					1
+					2
 				}
 			}
 		},
@@ -1095,7 +1095,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					18,
-					1
+					2
 				}
 			}
 		}
@@ -1413,92 +1413,151 @@ local animations = {
 				end
 			end
 		}
-	}
-}
-animations.on_planet_select = {
-	{
-		name = "move_background",
-		end_time = 2,
-		start_time = 0,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeCubic(progress)
-			local progress_uv = widgets.background.style.texture.uvs
+	},
+	on_planet_select = {
+		{
+			name = "move_background",
+			end_time = 2,
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				local target_planet_id = params.target_planet.id
+				local planets_widget = widgets.home_planets
+				local planets_widget_style = planets_widget.style
+				local in_focus_color = params.in_focus_color
 
-			for i = 1, #params.start_uv do
-				local start_uv = params.start_uv[i]
-				local end_uv = params.end_uv[i]
-				progress_uv[i][1] = math.lerp(start_uv[1], end_uv[1], anim_progress)
-				progress_uv[i][2] = math.lerp(start_uv[2], end_uv[2], anim_progress)
-			end
-		end,
-		on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-			if parent._reset_background then
-				parent._reset_background = nil
-				local page = parent._pages[parent._active_page_number]
-				widgets.background.style.texture.uvs = page.background_uv or {
-					{
-						0,
-						0
-					},
-					{
-						1,
-						1
+				if not in_focus_color then
+					in_focus_color = {
+						255,
+						255,
+						255,
+						255
 					}
-				}
+					params.in_focus_color = in_focus_color
+				end
+
+				local out_of_focus_color = params.out_of_focus_color
+
+				if not out_of_focus_color then
+					out_of_focus_color = {
+						255,
+						55,
+						55,
+						55
+					}
+					params.out_of_focus_color = out_of_focus_color
+				end
+
+				for planet_id, style in pairs(planets_widget_style) do
+					local is_target_planet = planet_id == target_planet_id
+
+					if is_target_planet then
+						style.visible = true
+					end
+
+					local planet_params = params[planet_id]
+
+					if not planet_params then
+						planet_params = {}
+						params[planet_id] = planet_params
+					end
+
+					planet_params.start_x = style.size_addition[1]
+					planet_params.start_y = style.size_addition[2]
+					planet_params.end_x = is_target_planet and 0 or math.floor(style.size[1] * -0.8)
+					planet_params.end_y = is_target_planet and 0 or math.floor(style.size[2] * -0.8)
+					planet_params.start_color = table.clone(style.color)
+					planet_params.end_color = is_target_planet and in_focus_color or out_of_focus_color
+				end
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local math_lerp = math.lerp
+				local anim_progress = math.easeCubic(progress)
+				local background_widget = widgets.background
+				local progress_uv = background_widget.style.texture.uvs
+
+				for i = 1, #params.start_uvs do
+					local start_uv = params.start_uvs[i]
+					local end_uv = params.end_uvs[i]
+					progress_uv[i][1] = math_lerp(start_uv[1], end_uv[1], anim_progress)
+					progress_uv[i][2] = math_lerp(start_uv[2], end_uv[2], anim_progress)
+				end
+
+				local start_position = params.start_position
+				local end_position = params.end_position
+				local widget_offset_x = math_lerp(start_position[1], end_position[1], anim_progress)
+				local widget_offset_y = math_lerp(start_position[2], end_position[2], anim_progress)
+				local planets_widget = widgets.home_planets
+				local planets_widget_offset = planets_widget.offset
+				planets_widget_offset[1] = -widget_offset_x
+				planets_widget_offset[2] = -widget_offset_y
+				local target_planet_id = params.target_planet.id
+				local target_planet_style = planets_widget.style[target_planet_id]
+				local planet_params = params[target_planet_id]
+				local planet_size_addition = target_planet_style.size_addition
+				planet_size_addition[1] = math_lerp(planet_params.start_x, planet_params.end_x, anim_progress)
+				planet_size_addition[2] = math_lerp(planet_params.start_y, planet_params.end_y, anim_progress)
+
+				ColorUtilities.color_lerp(planet_params.start_color, planet_params.end_color, anim_progress, target_planet_style.color)
+			end,
+			on_complete = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
+				if parent._reset_background then
+					parent._reset_background = nil
+					local page = parent._pages[parent._active_page_number]
+					widgets.background.style.texture.uvs = page.background_uv or {
+						{
+							0,
+							0
+						},
+						{
+							1,
+							1
+						}
+					}
+				end
+
+				local current_planet = params.target_planet
+				local current_planet_id = current_planet.id
+				local planets_widget = widgets.home_planets
+				local planets_widget_style = planets_widget.style
+				local in_focus_color = params.in_focus_color
+				local out_of_focus_color = params.out_of_focus_color
+
+				for planet_id, style in pairs(planets_widget_style) do
+					local is_target_planet = planet_id == current_planet_id
+					style.visible = is_target_planet
+					style.size_addition[1] = is_target_planet and 0 or -style.size[1]
+					style.size_addition[2] = is_target_planet and 0 or -style.size[2]
+
+					ColorUtilities.color_copy(is_target_planet and in_focus_color or out_of_focus_color, style.color)
+				end
+
+				planets_widget.content.current_planet = current_planet
 			end
-		end
-	},
-	{
-		name = "move_start_planet",
-		end_time = 0.5,
-		start_time = 0,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeInCubic(progress)
-			local start_position = params.start_planet_widget.content.planet_data.position
-			local end_position = params.end_planet_widget.content.planet_data.position
-			local screen_width = RESOLUTION_LOOKUP.width * RESOLUTION_LOOKUP.inverse_scale
-			local screen_height = RESOLUTION_LOOKUP.height * RESOLUTION_LOOKUP.inverse_scale
-			local image_size = params.start_planet_widget.content.planet_data.image.size
-			local screen_max_size = math.max(screen_width, screen_height)
-			local image_max_size = math.max(image_size[1], image_size[2])
-			local angle = math.angle(end_position[1], end_position[2], start_position[1], start_position[2])
-			local total_distance = screen_max_size + image_max_size
-			local start_offset = CharacterAppearanceViewSettings.planet_offset
-			local end_offset_x, end_offset_y = math.polar_to_cartesian(total_distance, angle)
-			local current_offset_x = math.lerp(start_offset[1], end_offset_x + CharacterAppearanceViewSettings.planet_offset[1], anim_progress)
-			local current_offset_y = math.lerp(start_offset[2], end_offset_y, anim_progress)
-			local end_offset = params.start_planet_widget.style.planet.offset
-			end_offset[1] = current_offset_x
-			end_offset[2] = current_offset_y
-		end
-	},
-	{
-		name = "move_end_planet",
-		end_time = 2,
-		start_time = 1,
-		init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
-			params.end_planet_widget.content.visible = true
-		end,
-		update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-			local anim_progress = math.easeOutCubic(progress)
-			local start_position = params.start_planet_widget.content.planet_data.position
-			local end_position = params.end_planet_widget.content.planet_data.position
-			local screen_width = RESOLUTION_LOOKUP.width * RESOLUTION_LOOKUP.inverse_scale
-			local screen_height = RESOLUTION_LOOKUP.height * RESOLUTION_LOOKUP.inverse_scale
-			local image_size = params.end_planet_widget.content.planet_data.image.size
-			local screen_max_size = math.max(screen_width, screen_height)
-			local image_max_size = math.max(image_size[1], image_size[2])
-			local angle = math.angle(start_position[1], start_position[2], end_position[1], end_position[2])
-			local total_distance = screen_max_size + image_max_size
-			local start_offset_x, start_offset_y = nil
-			start_offset_x, start_offset_y = math.polar_to_cartesian(total_distance, angle)
-			local end_offset = CharacterAppearanceViewSettings.planet_offset
-			local current_offset_x = math.lerp(start_offset_x, end_offset[1], anim_progress)
-			local current_offset_y = math.lerp(start_offset_y, end_offset[2], anim_progress)
-			local end_planet_offset = params.end_planet_widget.style.planet.offset
-			end_planet_offset[1] = current_offset_x
-			end_planet_offset[2] = current_offset_y
-		end
+		},
+		{
+			name = "zoom_planets",
+			end_time = 1,
+			start_time = 0,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
+				local math_lerp = math.lerp
+				local anim_progress = math.easeCubic(progress)
+				local target_planet_id = params.target_planet.id
+				local planets_widget = widgets.home_planets
+				local planets_widget_style = planets_widget.style
+
+				for planet_id, style in pairs(planets_widget_style) do
+					local planet_params = params[planet_id]
+					local planet_size_addition = style.size_addition
+
+					if planet_id ~= target_planet_id then
+						planet_size_addition[1] = math_lerp(planet_params.start_x, planet_params.end_x, anim_progress)
+						planet_size_addition[2] = math_lerp(planet_params.start_y, planet_params.end_y, anim_progress)
+
+						ColorUtilities.color_lerp(planet_params.start_color, planet_params.end_color, anim_progress, style.color)
+					end
+				end
+			end
+		}
 	}
 }
 

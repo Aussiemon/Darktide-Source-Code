@@ -197,9 +197,9 @@ BtMutantChargerChargeAction._start_throwing_target = function (self, unit, scrat
 
 		locomotion_extension:set_anim_rotation_scale(rotation_scale)
 
-		disabled_state_input.trigger_animation = "charger_throw_" .. relative_direction_name
+		disabled_state_input.trigger_animation = "throw_" .. relative_direction_name
 	else
-		disabled_state_input.trigger_animation = "charger_throw"
+		disabled_state_input.trigger_animation = "throw"
 	end
 
 	scratchpad.throw_direction = Vector3Box(throw_direction)
@@ -658,7 +658,7 @@ BtMutantChargerChargeAction._play_smash_anim = function (self, scratchpad, actio
 	scratchpad.smash_damage_timing_index = 1
 	scratchpad.initial_smash_timing = t
 	local disabled_state_input = scratchpad.hit_unit_disabled_state_input
-	disabled_state_input.trigger_animation = "charger_smash"
+	disabled_state_input.trigger_animation = "smash"
 end
 
 local THROW_TELEPORT_UP_OFFSET_HUMAN = 0.75

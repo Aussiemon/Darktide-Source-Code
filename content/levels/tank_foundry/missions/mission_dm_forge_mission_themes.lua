@@ -10,6 +10,9 @@ local mission_themes = {
 	},
 	default = {
 		"content/levels/tank_foundry/missions/dm_forge_themes/default/theme_default_dm_forge"
+	},
+	darkness = {
+		"content/levels/tank_foundry/missions/dm_forge_themes/darkness_01/theme_darkness_01_dm_forge"
 	}
 }
 

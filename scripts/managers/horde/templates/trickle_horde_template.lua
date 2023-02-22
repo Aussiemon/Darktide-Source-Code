@@ -78,7 +78,12 @@ local function _try_find_occluded_position(nav_world, physics_world, nav_spawn_p
 
 	if try_find_on_main_path then
 		local main_path_offset = optional_main_path_offset or DEFAULT_MAIN_PATH_OFFSET
-		local main_path_distance = travel_distance + main_path_offset
+
+		if type(main_path_offset) == "table" then
+			main_path_offset = math.random_range(optional_main_path_offset[1], optional_main_path_offset[2])
+		end
+
+		local main_path_distance = math.max(travel_distance + main_path_offset, 0)
 		wanted_position = MainPathQueries.position_from_distance(main_path_distance)
 	else
 		wanted_position = path_position
@@ -106,12 +111,21 @@ local function _try_find_occluded_position(nav_world, physics_world, nav_spawn_p
 	return true, random_occluded_position, target_direction, target_unit
 end
 
-local function _try_find_horde_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, optional_main_path_offset)
-	local try_find_on_main_path = true
-	local success, horde_position, target_direction, target_unit = _try_find_occluded_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, try_find_on_main_path, optional_main_path_offset)
+local DEFAULT_NUM_TRIES = 1
+local MAINPATH_OFFSET = 10
 
-	if success then
-		return horde_position, target_direction, target_unit
+local function _try_find_horde_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, optional_main_path_offset, optional_num_tries)
+	local try_find_on_main_path = true
+	local num_tries = optional_num_tries or DEFAULT_NUM_TRIES
+	local success, horde_position, target_direction, target_unit = nil
+
+	for i = 1, num_tries do
+		optional_main_path_offset = optional_main_path_offset and optional_main_path_offset + (i > 1 and i * MAINPATH_OFFSET or 0)
+		success, horde_position, target_direction, target_unit = _try_find_occluded_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, try_find_on_main_path, optional_main_path_offset)
+
+		if success then
+			return horde_position, target_direction, target_unit
+		end
 	end
 
 	success, horde_position, target_direction, target_unit = _try_find_occluded_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, not try_find_on_main_path)
@@ -125,7 +139,7 @@ end
 
 local PATROL_CHALLENGE_RAITNG_THRESHOLD = 30
 
-horde_template.execute = function (physics_world, nav_world, side, target_side, composition, towards_combat_vector, optional_main_path_offset)
+horde_template.execute = function (physics_world, nav_world, side, target_side, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries)
 	local target_side_id = target_side.side_id
 	local main_path_manager = Managers.state.main_path
 	local _, ahead_travel_distance, ahead_position = main_path_manager:ahead_unit(target_side_id)
@@ -137,7 +151,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local nav_spawn_points = main_path_manager:nav_spawn_points()
 	local num_groups = GwNavSpawnPoints.get_count(nav_spawn_points)
 	local occluded_spawn_range = horde_template.occluded_spawn_range
-	local horde_position, horde_direction, target_unit = _try_find_horde_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_groups, optional_main_path_offset)
+	local horde_position, horde_direction, target_unit = _try_find_horde_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_groups, optional_main_path_offset, optional_num_tries)
 
 	if not horde_position then
 		return nil, nil, nil
@@ -212,6 +226,27 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	end
 
 	return horde, horde_position, target_unit
+end
+
+horde_template.can_spawn = function (physics_world, nav_world, side, target_side, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries)
+	local target_side_id = target_side.side_id
+	local main_path_manager = Managers.state.main_path
+	local _, ahead_travel_distance = main_path_manager:ahead_unit(target_side_id)
+
+	if not ahead_travel_distance then
+		return false
+	end
+
+	local nav_spawn_points = main_path_manager:nav_spawn_points()
+	local num_groups = GwNavSpawnPoints.get_count(nav_spawn_points)
+	local occluded_spawn_range = horde_template.occluded_spawn_range
+	local horde_position = _try_find_horde_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_groups, optional_main_path_offset, optional_num_tries)
+
+	if not horde_position then
+		return false
+	end
+
+	return true
 end
 
 return horde_template

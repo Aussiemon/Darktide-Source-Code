@@ -7,16 +7,49 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local TextUtilities = require("scripts/utilities/ui/text")
 local ItemGridViewBase = require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
+local definition_merge_recursive = nil
+
+function definition_merge_recursive(dest, source, stop_recursive)
+	for key, value in pairs(source) do
+		local is_table = type(value) == "table"
+
+		if value == source then
+			dest[key] = dest
+		elseif is_table and type(dest[key]) == "table" then
+			if not stop_recursive then
+				definition_merge_recursive(dest[key], value, true)
+			end
+		elseif is_table then
+			dest[key] = table.clone(value)
+		else
+			dest[key] = value
+		end
+	end
+
+	return dest
+end
+
 local VendorViewBase = class("VendorViewBase", "ItemGridViewBase")
 
 VendorViewBase.init = function (self, definitions, settings, context)
-	local merged_definitions = table.clone(Definitions)
+	local merged_definitions = nil
 
 	if definitions then
-		table.merge_recursive(merged_definitions, definitions)
+		merged_definitions = table.clone(definitions)
+	else
+		merged_definitions = {}
 	end
 
+	definition_merge_recursive(merged_definitions, Definitions)
+
 	self._fetch_store_items_on_enter = context and context.fetch_store_items_on_enter
+	self._use_item_categories = context and context.use_item_categories
+	self._use_title = context and context.use_title
+	local optional_sort_options = context and context.optional_sort_options
+
+	if optional_sort_options then
+		self._sort_options = optional_sort_options
+	end
 
 	VendorViewBase.super.init(self, merged_definitions, settings, context)
 end
@@ -87,7 +120,7 @@ VendorViewBase._switch_tab = function (self, index, ignore_item_selection)
 	local tabs_content = self._tabs_content
 	local tab_content = tabs_content[index]
 	local slot_types = tab_content.slot_types
-	local display_name = tab_content.display_name
+	local display_name = self._use_title and tab_content.display_name
 
 	self:_present_layout_by_slot_filter(slot_types, display_name)
 
@@ -98,6 +131,12 @@ VendorViewBase._switch_tab = function (self, index, ignore_item_selection)
 		if first_offer then
 			self:focus_on_offer(first_offer)
 		end
+	end
+
+	local tab_menu_element = self._tab_menu_element
+
+	if tab_menu_element and index ~= tab_menu_element:selected_index() then
+		tab_menu_element:set_selected_index(index)
 	end
 end
 
@@ -192,8 +231,7 @@ VendorViewBase._fetch_store_items = function (self)
 		return
 	end
 
-	local use_item_categories = false
-	local generic_category_id = "generic"
+	local use_item_categories = self._use_item_categories or false
 
 	store_promise:next(function (data)
 		local offers = data.offers
@@ -201,42 +239,7 @@ VendorViewBase._fetch_store_items = function (self)
 		local layout = self:_convert_offers_to_layout_entries(self._offers)
 		self._offer_items_layout = layout
 		self._current_rotation_end = data.current_rotation_end
-		local menu_tab_content_by_store_category = {}
-		local menu_tab_content_array = {}
-
-		for i = 1, #layout do
-			local layout_entry = layout[i]
-			local item = layout_entry.item
-
-			if item then
-				local slots = item.slots
-
-				if slots then
-					local slot_type = slots[1]
-					local slot_settings = ItemSlotSettings[slot_type]
-					local store_category = use_item_categories and slot_settings.store_category or generic_category_id
-
-					if not menu_tab_content_by_store_category[store_category] then
-						local store_category_slot_stypes = {}
-
-						for key, settings in pairs(ItemSlotSettings) do
-							if settings.store_category == store_category then
-								store_category_slot_stypes[#store_category_slot_stypes + 1] = key
-							end
-						end
-
-						local tab_content = {
-							display_name = UISettings.display_name_by_store_category[store_category],
-							icon = UISettings.texture_by_store_category[store_category],
-							slot_types = use_item_categories and store_category_slot_stypes,
-							store_category = store_category
-						}
-						menu_tab_content_by_store_category[store_category] = tab_content
-						menu_tab_content_array[#menu_tab_content_array + 1] = tab_content
-					end
-				end
-			end
-		end
+		local menu_tab_content_array, menu_tab_content_by_store_category = self:_generate_menu_tabs(layout, offers)
 
 		if self._tab_menu_element then
 			self:_remove_element("tab_menu")
@@ -252,7 +255,15 @@ VendorViewBase._fetch_store_items = function (self)
 			local function tab_sort_function(a, b)
 				local store_category_sort_order = UISettings.store_category_sort_order
 
-				return store_category_sort_order[a.store_category] < store_category_sort_order[b.store_category]
+				if a.store_category and b.store_category then
+					return store_category_sort_order[a.store_category] < store_category_sort_order[b.store_category]
+				end
+
+				if a.display_name and b.display_name then
+					return a.display_name < b.display_name
+				end
+
+				return false
 			end
 
 			table.sort(menu_tab_content_array, tab_sort_function)
@@ -261,7 +272,7 @@ VendorViewBase._fetch_store_items = function (self)
 		elseif #menu_tab_content_array > 0 then
 			local content = menu_tab_content_array[1]
 			local slot_types = content.slot_types
-			local display_name = use_item_categories and content.display_name or nil
+			local display_name = self._use_title and use_item_categories and content.display_name or nil
 
 			self:_present_layout_by_slot_filter(slot_types, display_name)
 		else
@@ -318,8 +329,51 @@ VendorViewBase._fetch_store_items = function (self)
 	self._store_promise = store_promise
 end
 
+VendorViewBase._generate_menu_tabs = function (self, layout, offers)
+	local generic_category_id = "generic"
+	local use_item_categories = self._use_item_categories or false
+	local menu_tab_content_by_store_category = {}
+	local menu_tab_content_array = {}
+
+	for i = 1, #layout do
+		local layout_entry = layout[i]
+		local item = layout_entry.item
+
+		if item then
+			local slots = item.slots
+
+			if slots then
+				local slot_type = slots[1]
+				local slot_settings = ItemSlotSettings[slot_type]
+				local store_category = use_item_categories and slot_settings.store_category or generic_category_id
+
+				if not menu_tab_content_by_store_category[store_category] then
+					local store_category_slot_stypes = {}
+
+					for key, settings in pairs(ItemSlotSettings) do
+						if settings.store_category == store_category then
+							store_category_slot_stypes[#store_category_slot_stypes + 1] = key
+						end
+					end
+
+					local tab_content = {
+						display_name = UISettings.display_name_by_store_category[store_category],
+						icon = UISettings.texture_by_store_category[store_category],
+						slot_types = use_item_categories and store_category_slot_stypes,
+						store_category = store_category
+					}
+					menu_tab_content_by_store_category[store_category] = tab_content
+					menu_tab_content_array[#menu_tab_content_array + 1] = tab_content
+				end
+			end
+		end
+	end
+
+	return menu_tab_content_array, menu_tab_content_by_store_category
+end
+
 VendorViewBase._update_grid_height = function (self, use_tab_menu)
-	local grid_height_difference = 130
+	local grid_height_difference = self._use_title and 130 or 0
 	local item_grid_position_y = use_tab_menu and 40 + grid_height_difference or 40
 
 	self:_set_scenegraph_position("item_grid_pivot", nil, item_grid_position_y)
@@ -486,7 +540,8 @@ end
 
 VendorViewBase._on_purchase_complete = function (self, items)
 	for i, item_data in ipairs(items) do
-		local item = MasterItems.get_store_item_instance(item_data)
+		local uuid = item_data.uuid
+		local item = MasterItems.get_item_instance(item_data, uuid)
 
 		if item then
 			local gear_id = item.gear_id
@@ -561,6 +616,43 @@ VendorViewBase._handle_input = function (self, input_service)
 			end
 		end
 	end
+end
+
+VendorViewBase._setup_sort_options = function (self)
+	if not self._sort_options then
+		self._sort_options = {
+			{
+				display_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
+				sort_function = ItemUtils.sort_comparator({
+					">",
+					ItemUtils.compare_item_level,
+					">",
+					ItemUtils.compare_item_type,
+					"<",
+					ItemUtils.compare_item_name,
+					"<",
+					ItemUtils.compare_item_rarity
+				})
+			},
+			{
+				display_name = Localize("loc_inventory_item_grid_sort_title_item_type"),
+				sort_function = ItemUtils.sort_comparator({
+					">",
+					ItemUtils.compare_item_type,
+					"<",
+					ItemUtils.compare_item_name,
+					">",
+					ItemUtils.compare_item_level,
+					"<",
+					ItemUtils.compare_item_rarity
+				})
+			}
+		}
+	end
+
+	local sort_callback = callback(self, "cb_on_sort_button_pressed")
+
+	self._item_grid:setup_sort_button(self._sort_options, sort_callback, 1)
 end
 
 return VendorViewBase

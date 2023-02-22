@@ -68,6 +68,12 @@ local visibility_groups = {
 		end
 	},
 	{
+		name = "emote_wheel",
+		validation_function = function (hud)
+			return hud:emote_wheel_active()
+		end
+	},
+	{
 		name = "tactical_overlay",
 		validation_function = function (hud)
 			return hud:tactical_overlay_active()
@@ -88,7 +94,7 @@ local visibility_groups = {
 		end
 	}
 }
-visibility_groups[11] = {
+visibility_groups[12] = {
 	name = "alive",
 	validation_function = function (hud)
 		local player_extensions = hud:player_extensions()
@@ -102,7 +108,7 @@ visibility_groups[11] = {
 		return false
 	end
 }
-visibility_groups[12] = {
+visibility_groups[13] = {
 	name = "onboarding",
 	validation_function = function (hud)
 		return hud:is_onboarding()

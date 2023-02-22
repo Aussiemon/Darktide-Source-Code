@@ -42,6 +42,10 @@ BtChaosDaemonhostWarpGrabAction.leave = function (self, unit, breed, blackboard,
 	if HEALTH_ALIVE[target_unit] and scratchpad.hit_unit_disabled_state_input then
 		local disabled_state_input = scratchpad.hit_unit_disabled_state_input
 		disabled_state_input.disabling_unit = nil
+		local game_session = scratchpad.spawn_component.game_session
+		local target_unit_unit_game_object_id = Managers.state.unit_spawner:game_object_id(target_unit)
+
+		GameSession.set_game_object_field(game_session, target_unit_unit_game_object_id, "warp_grabbed_execution_time", NetworkConstants.max_fixed_frame_time)
 	end
 
 	self:_stop_effect_template(scratchpad)
@@ -136,9 +140,15 @@ BtChaosDaemonhostWarpGrabAction._start_executing = function (self, t, scratchpad
 
 	local disabled_state_input = scratchpad.hit_unit_disabled_state_input
 	disabled_state_input.trigger_animation = "grabbed_execution"
+	local execute_at_t = t + action_data.execute_timing
 	scratchpad.state = "executing"
-	scratchpad.execute_at_t = t + action_data.execute_timing
+	scratchpad.execute_at_t = execute_at_t
 	scratchpad.execute_duration = t + action_data.execute_duration
+	local hit_unit = scratchpad.hit_unit
+	local game_session = scratchpad.spawn_component.game_session
+	local hit_unit_game_object_id = Managers.state.unit_spawner:game_object_id(hit_unit)
+
+	GameSession.set_game_object_field(game_session, hit_unit_game_object_id, "warp_grabbed_execution_time", execute_at_t)
 end
 
 BtChaosDaemonhostWarpGrabAction._update_executing = function (self, unit, t, scratchpad, action_data)

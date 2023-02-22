@@ -1,4 +1,6 @@
+local ItemUtils = require("scripts/utilities/items")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
@@ -34,8 +36,16 @@ local button_options_definitions = {
 
 									if active_view then
 										local view_instance = Managers.ui:view_instance(active_view)
+										local previewed_item = view_instance and view_instance._previewed_item
 
-										return view_instance and view_instance._previewed_item ~= nil
+										if previewed_item then
+											local item_type = previewed_item.item_type
+											local ITEM_TYPES = UISettings.ITEM_TYPES
+
+											if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED or item_type == ITEM_TYPES.WEAPON_SKIN or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC or item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY or item_type == ITEM_TYPES.EMOTE then
+												return true
+											end
+										end
 									end
 
 									return false
@@ -69,6 +79,29 @@ local button_options_definitions = {
 		end
 	},
 	{
+		display_name = "loc_credits_goods_vendor_title_text",
+		callback = function (self)
+			local tab_bar_params = {
+				hide_tabs = true,
+				layer = 10,
+				tabs_params = {
+					{
+						view = "credits_goods_vendor_view",
+						display_name = "loc_credits_goods_vendor_view_title",
+						blur_background = false,
+						context = {
+							use_item_categories = true
+						}
+					}
+				}
+			}
+
+			self:_setup_tab_bar(tab_bar_params, {
+				fetch_store_items_on_enter = true
+			})
+		end
+	},
+	{
 		display_name = "loc_credits_vendor_view_option_buy_character_cosmetics",
 		callback = function (self)
 			local tab_bar_params = {
@@ -76,9 +109,53 @@ local button_options_definitions = {
 				layer = 10,
 				tabs_params = {
 					{
-						view = "credits_vendor_view",
 						display_name = "loc_credits_vendor_view_title",
-						blur_background = false
+						blur_background = false,
+						view = "credits_vendor_view",
+						context = {
+							optional_sort_options = {
+								{
+									display_name = Localize("loc_inventory_item_grid_sort_title_item_type"),
+									sort_function = ItemUtils.sort_comparator({
+										">",
+										ItemUtils.compare_item_type,
+										"<",
+										ItemUtils.compare_item_name,
+										">",
+										ItemUtils.compare_item_level,
+										"<",
+										ItemUtils.compare_item_rarity
+									})
+								}
+							}
+						},
+						input_legend_buttons = {
+							{
+								input_action = "hotkey_item_inspect",
+								display_name = "loc_weapon_inventory_inspect_button",
+								alignment = "right_alignment",
+								on_pressed_callback = "cb_on_inspect_pressed",
+								visibility_function = function (parent)
+									local active_view = parent._active_view
+
+									if active_view then
+										local view_instance = Managers.ui:view_instance(active_view)
+										local previewed_item = view_instance and view_instance._previewed_item
+
+										if previewed_item then
+											local item_type = previewed_item.item_type
+											local ITEM_TYPES = UISettings.ITEM_TYPES
+
+											if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED or item_type == ITEM_TYPES.WEAPON_SKIN or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC or item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY or item_type == ITEM_TYPES.EMOTE then
+												return true
+											end
+										end
+									end
+
+									return false
+								end
+							}
+						}
 					}
 				}
 			}
@@ -97,9 +174,53 @@ local button_options_definitions = {
 				layer = 10,
 				tabs_params = {
 					{
-						view = "credits_vendor_view",
 						display_name = "loc_credits_vendor_view_title",
-						blur_background = false
+						blur_background = false,
+						view = "credits_vendor_view",
+						context = {
+							optional_sort_options = {
+								{
+									display_name = Localize("loc_inventory_item_grid_sort_title_item_type"),
+									sort_function = ItemUtils.sort_comparator({
+										">",
+										ItemUtils.compare_item_type,
+										"<",
+										ItemUtils.compare_item_name,
+										">",
+										ItemUtils.compare_item_level,
+										"<",
+										ItemUtils.compare_item_rarity
+									})
+								}
+							}
+						},
+						input_legend_buttons = {
+							{
+								input_action = "hotkey_item_inspect",
+								display_name = "loc_weapon_inventory_inspect_button",
+								alignment = "right_alignment",
+								on_pressed_callback = "cb_on_inspect_pressed",
+								visibility_function = function (parent)
+									local active_view = parent._active_view
+
+									if active_view then
+										local view_instance = Managers.ui:view_instance(active_view)
+										local previewed_item = view_instance and view_instance._previewed_item
+
+										if previewed_item then
+											local item_type = previewed_item.item_type
+											local ITEM_TYPES = UISettings.ITEM_TYPES
+
+											if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED or item_type == ITEM_TYPES.WEAPON_SKIN or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC or item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY or item_type == ITEM_TYPES.EMOTE then
+												return true
+											end
+										end
+									end
+
+									return false
+								end
+							}
+						}
 					}
 				}
 			}

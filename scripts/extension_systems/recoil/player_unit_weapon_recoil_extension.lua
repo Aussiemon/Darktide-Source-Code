@@ -67,7 +67,7 @@ PlayerUnitWeaponRecoilExtension.fixed_update = function (self, unit, dt, t)
 	local recoil_template = self._weapon_extension:recoil_template()
 	local recoil_settings = recoil_template[weapon_movement_state]
 
-	if self._recoil_control_component.recoiling then
+	if recoil_control_component.recoiling then
 		local decay_done = self:_update_unsteadiness(dt, t, recoil_component, recoil_control_component, recoil_settings)
 
 		if decay_done then

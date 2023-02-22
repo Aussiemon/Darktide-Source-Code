@@ -14,6 +14,7 @@ _create_effect_template_entry("scripts/settings/fx/effect_templates/chaos_daemon
 _create_effect_template_entry("scripts/settings/fx/effect_templates/chaos_daemonhost_warp_grab")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/chaos_daemonhost_warp_sweep")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/chaos_hound_approach")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/chaos_hound_mutator_approach")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/chaos_ogryn_gunner_heavy_stubber")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/chaos_plague_ogryn_charge_impact")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/chaos_poxwalker_bomber_foley")

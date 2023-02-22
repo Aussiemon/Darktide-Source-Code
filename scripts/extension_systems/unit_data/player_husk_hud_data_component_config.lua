@@ -1,4 +1,3 @@
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local husk_hud_data_component_config = {
 	action_heal_target_over_time = {
@@ -31,6 +30,9 @@ local husk_hud_data_component_config = {
 		"is_disabled",
 		"disabling_type",
 		"disabling_unit"
+	},
+	ledge_hanging_character_state = {
+		"time_to_fall_down"
 	},
 	movement_state = {
 		"is_crouching"

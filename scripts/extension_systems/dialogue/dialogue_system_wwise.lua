@@ -38,10 +38,10 @@ DialogueSystemWwise.trigger_vorbis_external_event = function (self, sound_event,
 	return WwiseWorld.trigger_resource_external_event(self._wwise_world, sound_event, sound_source, file_path, 4, wwise_source_id)
 end
 
-DialogueSystemWwise.trigger_resource_event = function (self, wwise_event_name, unit)
-	self:_dedicated_server_check("trigger_resource_event", wwise_event_name, unit)
+DialogueSystemWwise.trigger_resource_event = function (self, wwise_event_name, unit_or_source_id)
+	self:_dedicated_server_check("trigger_resource_event", wwise_event_name, unit_or_source_id)
 
-	return WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name, unit)
+	return WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_name, unit_or_source_id)
 end
 
 DialogueSystemWwise.set_switch_and_vo_center = function (self, source_id, switch_group, switch_value, vo_center_percent)

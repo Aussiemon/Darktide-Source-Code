@@ -4,8 +4,7 @@ local STRING_RESOURCE_NAMES = {
 	"content/localization/ui",
 	"content/localization/subtitles",
 	"content/localization/items",
-	"content/localization/path_of_trust/ui",
-	"content/localization/loc_network_scale_test/items"
+	"content/localization/path_of_trust/ui"
 }
 local ASSERT_ON_MISSING_LOC_PREFIX = false
 local STRING_CACHE_EXPECTED_SIZE = 2048

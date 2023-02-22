@@ -1297,7 +1297,7 @@ local systems = {
 		false,
 		false,
 		{
-			"TrainingGroundsDirectionalUnitExtension"
+			"ScriptableScenarioDirectionalUnitExtension"
 		}
 	},
 	{

@@ -214,6 +214,20 @@ local default_view_input_settings = {
 			bindable = true,
 			group = "input_group_interface"
 		},
+		hotkey_item_profile_preset_input_1 = {
+			"keyboard_x",
+			"xbox_controller_right_thumb",
+			"ps4_controller_d_down",
+			description = "",
+			bindable = false
+		},
+		hotkey_item_profile_preset_input_2 = {
+			"keyboard_q",
+			"xbox_controller_y",
+			"ps4_controller_triangle",
+			description = "",
+			bindable = false
+		},
 		navigate_primary_left = {
 			"keyboard_z",
 			"xbox_controller_left_shoulder",
@@ -337,6 +351,10 @@ local default_view_input_settings = {
 			key_alias = "back",
 			type = "pressed"
 		},
+		back_released = {
+			key_alias = "back",
+			type = "released"
+		},
 		next = {
 			key_alias = "next",
 			type = "pressed"
@@ -389,9 +407,21 @@ local default_view_input_settings = {
 			key_alias = "hotkey_menu_special_1",
 			type = "pressed"
 		},
+		hotkey_menu_special_1_hold = {
+			key_alias = "hotkey_menu_special_1",
+			type = "held"
+		},
 		hotkey_menu_special_2 = {
 			key_alias = "hotkey_menu_special_2",
 			type = "pressed"
+		},
+		hotkey_menu_special_2_released = {
+			key_alias = "hotkey_menu_special_2",
+			type = "released"
+		},
+		hotkey_menu_special_2_hold = {
+			key_alias = "hotkey_menu_special_2",
+			type = "held"
 		},
 		title_screen_start = {
 			key_alias = "title_screen_start",
@@ -399,6 +429,18 @@ local default_view_input_settings = {
 		},
 		hotkey_start_game = {
 			key_alias = "hotkey_start_game",
+			type = "pressed"
+		},
+		hotkey_item_profile_preset_input_1 = {
+			key_alias = "hotkey_item_profile_preset_input_1",
+			type = "pressed"
+		},
+		hotkey_item_profile_preset_input_1_hold = {
+			key_alias = "hotkey_item_profile_preset_input_1",
+			type = "held"
+		},
+		hotkey_item_profile_preset_input_2 = {
+			key_alias = "hotkey_item_profile_preset_input_2",
 			type = "pressed"
 		},
 		confirm_pressed = {

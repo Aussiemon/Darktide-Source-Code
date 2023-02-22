@@ -1250,7 +1250,8 @@ weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",
 	"thunder_hammer",
-	"p1"
+	"p1",
+	"activated"
 }
 weapon_template.dodge_template = "support"
 weapon_template.sprint_template = "support"

@@ -4,14 +4,15 @@ local mission_objective_templates = {
 	side_mission = {
 		objectives = {
 			side_mission_test_one = {
-				is_side_mission = true,
+				description = "loc_objective_side_mission_test_one_desc",
 				unit_name = "consumable",
 				collect_amount = 3,
 				header = "loc_objective_side_mission_test_one_header",
-				side_objective_type = "collect",
-				icon = "content/ui/materials/icons/mission_types/mission_type_08",
+				is_side_mission = true,
+				is_testable = false,
 				mission_objective_type = "side",
-				description = "loc_objective_side_mission_test_one_desc"
+				side_objective_type = "collect",
+				icon = "content/ui/materials/icons/mission_types/mission_type_08"
 			},
 			side_mission_consumable = {
 				description = "loc_objective_side_mission_consumable_desc",
@@ -21,6 +22,7 @@ local mission_objective_templates = {
 				evaluate_at_level_end = true,
 				is_side_mission = true,
 				mission_objective_type = "side",
+				is_testable = true,
 				side_objective_type = "collect",
 				icon = "content/ui/materials/icons/mission_types/mission_type_08"
 			},
@@ -32,6 +34,7 @@ local mission_objective_templates = {
 				evaluate_at_level_end = true,
 				is_side_mission = true,
 				mission_objective_type = "side",
+				is_testable = true,
 				side_objective_type = "collect",
 				icon = "content/ui/materials/icons/mission_types/mission_type_08",
 				proc_event_at_max_progression = proc_events.on_all_grimoires_picked_up
@@ -44,6 +47,7 @@ local mission_objective_templates = {
 				evaluate_at_level_end = true,
 				is_side_mission = true,
 				mission_objective_type = "side",
+				is_testable = true,
 				side_objective_type = "collect",
 				icon = "content/ui/materials/icons/mission_types/mission_type_08"
 			},
@@ -54,7 +58,8 @@ local mission_objective_templates = {
 				header = "loc_objective_side_mission_luggables_header",
 				description = "loc_objective_side_mission_luggables_desc",
 				icon = "content/ui/materials/icons/mission_types/mission_type_08",
-				mission_objective_type = "side"
+				mission_objective_type = "side",
+				is_testable = false
 			}
 		}
 	}

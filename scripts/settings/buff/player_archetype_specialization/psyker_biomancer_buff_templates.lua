@@ -3,6 +3,7 @@ local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local BurningSettings = require("scripts/settings/burning/burning_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -19,6 +20,7 @@ local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local ailment_effects = AilmentSettings.effects
 local attack_results = AttackSettings.attack_results
 local hit_zone_names = HitZone.hit_zone_names
+local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local damage_types = DamageSettings.damage_types
 local keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
@@ -301,7 +303,9 @@ end
 local REPORT_INTERVALL = 1
 
 local function update_soul_function(template_data, template_context, dt, t)
-	if Managers.stats.can_record_stats() then
+	local can_record_stats = Managers.stats.can_record_stats()
+
+	if can_record_stats then
 		local stacks = template_context.stack_count
 		local max_stacks = template_context.template.max_stacks
 		local is_on_max = max_stacks <= stacks
@@ -312,7 +316,7 @@ local function update_soul_function(template_data, template_context, dt, t)
 		report_time = report_time + (is_on_max and dt or 0)
 
 		if REPORT_INTERVALL < report_time then
-			Managers.stats:record_psyker_2_at_max_stack(template_context.player, time_at_max)
+			Managers.stats:record_psyker_2_time_at_max_stacks(template_context.player, time_at_max)
 		end
 
 		template_data.repport_time = report_time % REPORT_INTERVALL
@@ -547,7 +551,7 @@ templates.psyker_biomancer_smite_kills_add_warpfire = {
 	predicted = false,
 	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_kill] = 1
+		[proc_events.on_hit] = 1
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -958,24 +962,7 @@ templates.psyker_biomancer_warpfire_debuff = {
 			local damage_dealt, attack_result = Attack.execute(unit, damage_template, "power_level", 125 * stacks, "damage_type", damage_types.warpfire, "attacking_unit", owner_unit)
 		end
 	end,
-	minion_effects = {
-		ailment_effect = ailment_effects.warpfire,
-		node_effects = {
-			{
-				node_name = "j_spine",
-				vfx = {
-					material_emission = true,
-					particle_effect = "content/fx/particles/enemies/buff_warpfire",
-					orphaned_policy = "destroy",
-					stop_type = "stop"
-				},
-				sfx = {
-					looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
-					looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
-				}
-			}
-		}
-	}
+	minion_effects = minion_burning_buff_effects.warpfire
 }
 
 return templates

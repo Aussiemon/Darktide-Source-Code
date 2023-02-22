@@ -99,7 +99,10 @@ PlayerCharacterStateCatapulted.on_exit = function (self, unit, t, next_state)
 	local inair_state_component = self._inair_state_component
 	local constants = self._constants
 
-	PlayerUnitVisualLoadout.wield_previous_slot(self._inventory_component, unit, t)
+	if next_state ~= "dead" then
+		PlayerUnitVisualLoadout.wield_previous_slot(self._inventory_component, unit, t)
+	end
+
 	fx_extension:stop_looping_wwise_event("catapulted")
 	Fall.trigger_impact_sound(unit, fx_extension, constants, locomotion_component, inair_state_component)
 	Fall.set_fall_height(self._locomotion_component, self._inair_state_component)

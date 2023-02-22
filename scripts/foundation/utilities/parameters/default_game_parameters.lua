@@ -65,6 +65,7 @@ DefaultGameParameters.save_file_name = "default"
 DefaultGameParameters.cloud_save_enabled = true
 DefaultGameParameters.enable_stay_in_party_feature = true
 DefaultGameParameters.debug_disable_xbox_live = false
+DefaultGameParameters.enable_backend_gear_cache = true
 DefaultGameParameters.show_watermark_overlay = false
 DefaultGameParameters.watermark_overlay_alpha_multiplier = 0.0196078431372549
 DefaultGameParameters.watermark_overlay_text = "CLOSED ALPHA TEST"
@@ -110,6 +111,7 @@ DefaultGameParameters.afk_kick_time_hub = 15
 DefaultGameParameters.afk_warning_time_mission = 5
 DefaultGameParameters.afk_kick_time_mission = 10
 DefaultGameParameters.reset_keybind_on_start = false
+DefaultGameParameters.is_modded_crashify_property = false
 DefaultGameParameters.prod_like_backend = true
 DefaultGameParameters.backend_fetch_master_items = true
 

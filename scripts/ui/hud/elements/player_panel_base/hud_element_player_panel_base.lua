@@ -1,13 +1,11 @@
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local HudHealthBarLogic = require("scripts/ui/hud/elements/hud_health_bar_logic")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local ProfileUtils = require("scripts/utilities/profile_utils")
 
 local function _apply_color_to_text(text, color)
 	return "{#color(" .. color[2] .. "," .. color[3] .. "," .. color[4] .. ")}" .. text .. "{#reset()}"
@@ -94,22 +92,6 @@ HudElementPlayerPanelBase.update = function (self, dt, t, ui_renderer, render_se
 	local player = self._data.player
 
 	self:_update_player_features(dt, t, player, ui_renderer)
-
-	if self._pulse_background_panel then
-		self:_update_disabled_pulse()
-	end
-end
-
-HudElementPlayerPanelBase._update_disabled_pulse = function (self, reset)
-	local speed = 7
-	local red_anim_progress = 0.5 + math.sin(Application.time_since_launch() * speed) * 0.5
-	local intesity = reset and 0 or 1
-	local red = red_anim_progress * 75 * intesity
-	local widget = self._widgets_by_name.panel_background
-
-	if widget then
-		widget.dirty = true
-	end
 end
 
 HudElementPlayerPanelBase._player_extensions = function (self, player)
@@ -249,9 +231,13 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	local ledge_hanging = false
 	local pounced = false
 	local netted = false
+	local warp_grabbed = false
+	local mutant_charged = false
+	local consumed = false
+	local grabbed = false
 
 	if not dead then
-		disabled, knocked_down, hogtied, ledge_hanging, pounced, netted = self:_is_player_disabled(unit_data_extension)
+		disabled, knocked_down, hogtied, ledge_hanging, pounced, netted, warp_grabbed, mutant_charged, consumed, grabbed = self:_is_player_disabled(unit_data_extension)
 	end
 
 	if supported_features.voip then
@@ -278,7 +264,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 		carrying_pocketable, pocketable_hud_icon = self:_has_player_pocketable(inventory_component, visual_loadout_extension)
 	end
 
-	if disabled and not hogtied then
+	if disabled and not hogtied and not consumed then
 		local my_player = parent:player()
 
 		if my_player ~= player and not self._disabled_world_marker_id then
@@ -424,6 +410,14 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 			player_status = "pounced"
 		elseif netted then
 			player_status = "netted"
+		elseif warp_grabbed then
+			player_status = "warp_grabbed"
+		elseif mutant_charged then
+			player_status = "mutant_charged"
+		elseif consumed then
+			player_status = "consumed"
+		elseif grabbed then
+			player_status = "grabbed"
 		elseif knocked_down then
 			player_status = "knocked_down"
 		elseif ledge_hanging then
@@ -449,16 +443,6 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 		self._shadow_portrait = shadow_portrait
 
 		self:_set_shadowing_portrait(shadow_portrait)
-	end
-
-	local pulse_background_panel = ledge_hanging or knocked_down
-
-	if pulse_background_panel ~= self._pulse_background_panel then
-		self._pulse_background_panel = pulse_background_panel
-
-		if not pulse_background_panel then
-			self:_update_disabled_pulse(true)
-		end
 	end
 
 	if dead ~= self._dead or show_as_dead ~= self._show_as_dead or player_status_changed then
@@ -558,20 +542,24 @@ HudElementPlayerPanelBase._is_player_carrying_luggable = function (self, invento
 end
 
 HudElementPlayerPanelBase._is_player_disabled = function (self, unit_data_extension)
-	if unit_data_extension then
-		local character_state_component = unit_data_extension:read_component("character_state")
-		local disabled_character_state_component = unit_data_extension:read_component("disabled_character_state")
-		local _, requires_help = PlayerUnitStatus.is_disabled(character_state_component)
-		local knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
-		local hogtied = PlayerUnitStatus.is_hogtied(character_state_component)
-		local pounced = PlayerUnitStatus.is_pounced(disabled_character_state_component)
-		local netted = PlayerUnitStatus.is_netted(disabled_character_state_component)
-		local ledge_hanging = PlayerUnitStatus.is_ledge_hanging(character_state_component)
-
-		return requires_help, knocked_down, hogtied, ledge_hanging, pounced, netted
+	if not unit_data_extension then
+		return false
 	end
 
-	return false
+	local character_state_component = unit_data_extension:read_component("character_state")
+	local disabled_character_state_component = unit_data_extension:read_component("disabled_character_state")
+	local _, requires_help = PlayerUnitStatus.is_disabled(character_state_component)
+	local knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
+	local hogtied = PlayerUnitStatus.is_hogtied(character_state_component)
+	local pounced = PlayerUnitStatus.is_pounced(disabled_character_state_component)
+	local netted = PlayerUnitStatus.is_netted(disabled_character_state_component)
+	local ledge_hanging = PlayerUnitStatus.is_ledge_hanging(character_state_component)
+	local warp_grabbed = PlayerUnitStatus.is_warp_grabbed(disabled_character_state_component)
+	local mutant_charged = PlayerUnitStatus.is_mutant_charged(disabled_character_state_component)
+	local consumed = PlayerUnitStatus.is_consumed(disabled_character_state_component)
+	local grabbed = PlayerUnitStatus.is_grabbed(disabled_character_state_component)
+
+	return requires_help, knocked_down, hogtied, ledge_hanging, pounced, netted, warp_grabbed, mutant_charged, consumed, grabbed
 end
 
 HudElementPlayerPanelBase._set_speaking = function (self, speaking, ui_renderer)
@@ -851,14 +839,6 @@ HudElementPlayerPanelBase._cb_set_player_frame = function (self, item)
 		return
 	end
 
-	local player = self._player
-
-	if player.__deleted then
-		return
-	end
-
-	local profile = player and player:profile()
-	local loadout = profile and profile.loadout
 	local icon = nil
 
 	if item.icon then
@@ -923,14 +903,6 @@ HudElementPlayerPanelBase._cb_set_player_insignia = function (self, item)
 		return
 	end
 
-	local player = self._player
-
-	if player.__deleted then
-		return
-	end
-
-	local profile = player and player:profile()
-	local loadout = profile and profile.loadout
 	local icon = nil
 
 	if item.icon then
@@ -1331,8 +1303,6 @@ HudElementPlayerPanelBase.set_visible = function (self, visible, ui_renderer, us
 		if visible then
 			self:set_dirty()
 		else
-			local use_retained_mode = true
-
 			self:_destroy_widgets(ui_renderer)
 		end
 	end

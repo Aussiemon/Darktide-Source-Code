@@ -1,4 +1,4 @@
-require("scripts/extension_systems/scripted_scenario/training_grounds_directional_unit_extension")
+require("scripts/extension_systems/scripted_scenario/scriptable_scenario_directional_unit_extension")
 
 local TrainingGroundsServitorHandler = require("scripts/extension_systems/training_grounds/training_grounds_servitor_handler")
 local Attack = require("scripts/utilities/attack/attack")
@@ -32,7 +32,6 @@ ScriptedScenarioSystem.init = function (self, extension_system_creation_context,
 	self._current_alias = "none"
 	self._queued_scenarios = {}
 	self._current_scenario = nil
-	self._init_scenario = nil
 	self._parallel_scenarios = {}
 	self._tracked_events = {}
 	self._time_scale_data = nil
@@ -43,7 +42,7 @@ ScriptedScenarioSystem.init = function (self, extension_system_creation_context,
 
 	self._traverse_logic = traverse_logic
 	self._nav_tag_cost_table = nav_tag_cost_table
-	self._servitor_handler = TrainingGroundsServitorHandler:new(self)
+	self._servitor_handler = TrainingGroundsServitorHandler:new(self, extension_system_creation_context.world)
 	local scenario_system = self
 	self._objective_marker_data = {
 		units = {},
@@ -53,8 +52,6 @@ ScriptedScenarioSystem.init = function (self, extension_system_creation_context,
 			scenario_system._objective_marker_data.marker_id = marker_id
 		end
 	}
-
-	Managers.event:trigger("scripted_scenario_system_initialized", self)
 end
 
 ScriptedScenarioSystem.destroy = function (self)
@@ -129,6 +126,27 @@ ScriptedScenarioSystem.update = function (self, context, dt, t)
 	self:_update_objective_marker()
 	self:_handle_minion_dissolves(t)
 	self:_update_time_scale()
+	self:_check_should_disable()
+end
+
+ScriptedScenarioSystem._check_should_disable = function (self)
+	if self._current_scenario ~= nil then
+		return
+	end
+
+	if not table.is_empty(self._queued_scenarios) then
+		return
+	end
+
+	local parallel_scenarios = self._parallel_scenarios
+
+	for alias, scenarios in pairs(parallel_scenarios) do
+		if not table.is_empty(scenarios) then
+			return
+		end
+	end
+
+	self:set_enabled(false)
 end
 
 ScriptedScenarioSystem.fixed_update = function (self, context, dt, t)
@@ -287,16 +305,6 @@ end
 ScriptedScenarioSystem.set_enabled = function (self, enable)
 	self._player = Managers.player:local_player(1)
 	self._enabled = enable
-
-	if enable then
-		local init_scenario = self._init_scenario
-
-		if init_scenario then
-			self:queue_scenario(init_scenario.alias, init_scenario.name)
-		end
-	elseif ALIVE[self._servitor_handler:unit()] then
-		self._servitor_handler:despawn_servitor()
-	end
 end
 
 ScriptedScenarioSystem.enabled = function (self)
@@ -388,6 +396,10 @@ ScriptedScenarioSystem._handle_condition_step = function (self, scenario, condit
 end
 
 ScriptedScenarioSystem.start_scenario = function (self, alias, name, t)
+	if not self._enabled then
+		self:set_enabled(true)
+	end
+
 	self:stop_scenario(t)
 
 	self._current_scenario_name = name
@@ -645,6 +657,10 @@ ScriptedScenarioSystem.traverse_logic = function (self)
 end
 
 ScriptedScenarioSystem.queue_scenario = function (self, alias, name)
+	if not self._enabled then
+		self:set_enabled(true)
+	end
+
 	local queued_scenarios = self._queued_scenarios
 	queued_scenarios[#queued_scenarios + 1] = {
 		alias = alias,
@@ -675,7 +691,7 @@ ScriptedScenarioSystem._add_directional_unit = function (self, unit, extension)
 		self._directional_unit_extensions[identifier] = extension
 	end
 
-	local spawn_group = Unit.get_data(unit, "attached_unit", "spawn_group") or ""
+	local spawn_group = Unit.get_data(unit, "attached_unit_settings", "spawn_group") or ""
 
 	if spawn_group ~= "" then
 		self._spawn_groups[spawn_group] = self._spawn_groups[spawn_group] or {}
@@ -686,7 +702,7 @@ end
 ScriptedScenarioSystem._remove_directional_unit = function (self, unit)
 	local identifier = Unit.get_data(unit, "directional_unit_identifier")
 	self._directional_unit_extensions[identifier] = nil
-	local spawn_group = Unit.get_data(unit, "attached_unit", "spawn_group")
+	local spawn_group = Unit.get_data(unit, "attached_unit_settings", "spawn_group")
 
 	if spawn_group and spawn_group ~= "" then
 		self._spawn_groups[spawn_group][unit] = nil
@@ -708,13 +724,17 @@ ScriptedScenarioSystem.get_spawn_group = function (self, spawn_group_name)
 end
 
 ScriptedScenarioSystem.spawn_attached_units_in_spawn_group = function (self, spawn_group_name)
-	for _, extension in pairs(self:get_spawn_group(spawn_group_name)) do
+	local spawn_group = self:get_spawn_group(spawn_group_name)
+
+	for _, extension in pairs(spawn_group) do
 		extension:spawn_attached_unit()
 	end
 end
 
 ScriptedScenarioSystem.unspawn_attached_units_in_spawn_group = function (self, spawn_group_name)
-	for _, extension in pairs(self:get_spawn_group(spawn_group_name)) do
+	local spawn_group = self:get_spawn_group(spawn_group_name)
+
+	for _, extension in pairs(spawn_group) do
 		extension:unspawn_attached_unit()
 	end
 end
@@ -864,13 +884,6 @@ ScriptedScenarioSystem.reset_time_scale = function (self)
 	Managers.time:set_local_scale("gameplay", 1)
 
 	self._time_scale_data = nil
-end
-
-ScriptedScenarioSystem.set_init_scenario = function (self, alias, name)
-	self._init_scenario = alias and name and {
-		alias = alias,
-		name = name
-	} or nil
 end
 
 ScriptedScenarioSystem._handle_parallel_scenarios = function (self, t)

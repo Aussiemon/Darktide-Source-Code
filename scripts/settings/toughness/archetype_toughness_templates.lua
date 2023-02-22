@@ -3,7 +3,6 @@ local ToughnessSettings = require("scripts/settings/toughness/toughness_settings
 local TalentSettings = require("scripts/settings/buff/talent_settings")
 local replenish_types = ToughnessSettings.replenish_types
 local template_types = ToughnessSettings.template_types
-local gunlugger_talent_settings = TalentSettings.ogryn_1
 local archetype_toughness_templates = {
 	veteran = {
 		regeneration_delay = 3,
@@ -75,7 +74,6 @@ local archetype_toughness_templates = {
 		on_depleted_function = ToughnessDepleted.spill_over,
 		recovery_percentages = {
 			[replenish_types.melee_kill] = 0.05,
-			[replenish_types.ogryn_braced_regen] = gunlugger_talent_settings.defensive_3.braced_toughness_regen,
 			[replenish_types.bonebreaker_heavy_hit] = 0.05
 		}
 	}

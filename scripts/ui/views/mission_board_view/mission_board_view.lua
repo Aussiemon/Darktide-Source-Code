@@ -25,7 +25,8 @@ MissionBoardView.init = function (self, settings)
 	self._free_widget_positions = table.merge({}, MissionBoardViewSettings.mission_positions)
 	self._allow_close_hotkey = true
 	self._backend_data_expiry_time = -1
-	self._has_queued_missions = true
+	self._has_queued_missions = false
+	self._queued_mission_show_time = math.huge
 	self._game_settings_visible = false
 	self._gamepad_cursor_current_pos = Vector3Box(960, 540)
 	self._gamepad_cursor_current_vel = Vector3Box()
@@ -455,9 +456,12 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 
 		local extraRewards = mission.extraRewards.circumstance
 
-		if extraRewards then
-			xp = xp + extraRewards.xp
-			credits = credits + extraRewards.credits
+		if extraRewards and extraRewards.xp then
+			xp = extraRewards.xp + xp or xp
+		end
+
+		if extraRewards and extraRewards.credits then
+			credits = extraRewards.credits + credits or credits
 		end
 	else
 		content.circumstance_icon = nil
@@ -492,8 +496,8 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 		content.body_text = Localize(side_mission_template.description)
 		content.speaker_text = nil
 		content.speaker_icon = nil
-		content.xp = extraRewards.xp
-		content.credits = extraRewards.credits
+		content.xp = extraRewards and extraRewards.xp or 0
+		content.credits = extraRewards and extraRewards.credits or 0
 	end
 
 	self._widgets_by_name.difficulty_stepper.visible = false
@@ -560,7 +564,22 @@ MissionBoardView._destroy_mission_widget = function (self, widget)
 	self:_unregister_widget_name(id)
 end
 
+MissionBoardView._clean_backend_data = function (self, backend_data)
+	local missions = self._backend_data.missions
+
+	for ii = #missions, 1, -1 do
+		local mission_config = missions[ii]
+
+		if not rawget(MissionTemplates, mission_config.map) then
+			Log.exception("MissionBoardView", "Got mission from backend that doesn't exist locally '%s'", mission_config.map)
+			table.remove(missions, ii)
+		end
+	end
+end
+
 MissionBoardView._join_mission_data = function (self)
+	self:_clean_backend_data(self._backend_data)
+
 	local missions = self._backend_data.missions
 	local widgets_by_name = self._widgets_by_name
 	local mission_widgets = self._mission_widgets
@@ -575,6 +594,7 @@ MissionBoardView._join_mission_data = function (self)
 	end
 
 	self._has_queued_missions = false
+	local earliest_queued_mission_show_time = math.huge
 	local t = Managers.time:time("main")
 	local mission_small_widget_template = MissionBoardViewDefinitions.mission_small_widget_template
 	local has_flash_mission_changed = false
@@ -586,6 +606,7 @@ MissionBoardView._join_mission_data = function (self)
 			-- Nothing
 		elseif t < mission.start_game_time then
 			self._has_queued_missions = true
+			earliest_queued_mission_show_time = math.min(mission.start_game_time, earliest_queued_mission_show_time)
 		elseif mission.flags.flash and not has_flash_mission_changed and (not self._flash_mission_widget or self._flash_mission_widget.id ~= mission.id) then
 			self:_populate_mission_widget(self._flash_mission_widget, mission, self._flash_mission_widget.offset, true)
 
@@ -609,6 +630,8 @@ MissionBoardView._join_mission_data = function (self)
 			end
 		end
 	end
+
+	self._queued_mission_show_time = earliest_queued_mission_show_time
 end
 
 MissionBoardView._get_free_position = function (self, preferred_index)
@@ -617,11 +640,11 @@ MissionBoardView._get_free_position = function (self, preferred_index)
 	local free_widget_positions_len = #free_widget_positions
 
 	for i = 0, free_widget_positions_len do
-		index = (index - 1 + 47 * i) % free_widget_positions_len + 1
-		local position = free_widget_positions[index]
+		local rand_index = (index - 1 + 47 * i) % free_widget_positions_len + 1
+		local position = free_widget_positions[rand_index]
 
 		if position then
-			free_widget_positions[index] = false
+			free_widget_positions[rand_index] = false
 
 			return position
 		end
@@ -633,11 +656,6 @@ end
 MissionBoardView._populate_mission_widget = function (self, widget, mission, position, is_medium_widget)
 	local map = mission.map
 	local mission_template = MissionTemplates[map]
-
-	if not mission_template then
-		return false
-	end
-
 	widget.offset[1] = position[1]
 	widget.offset[2] = position[2]
 	local content = widget.content
@@ -727,6 +745,10 @@ MissionBoardView._update_fetch_missions = function (self, t)
 	if self._do_widget_refresh then
 		self._do_widget_refresh = false
 
+		self:_join_mission_data()
+
+		return
+	elseif self._has_queued_missions and self._queued_mission_show_time <= t then
 		self:_join_mission_data()
 
 		return
@@ -845,11 +867,11 @@ MissionBoardView._set_play_button_game_mode_text = function (self, is_solo_play,
 	local sub_text_color = Color.terminal_text_body_sub_header(255, true)
 
 	if not is_solo_play and not is_private_match then
-		play_button_content.text = string.format("%s\n{#color(%d,%d,%d);size(15)}[%s]{#reset()}", play_button_text, sub_text_color[2], sub_text_color[3], sub_text_color[4], Utf8.upper(Localize("loc_mission_board_play_public")))
+		play_button_content.original_text = string.format("%s\n{#color(%d,%d,%d);size(15)}[%s]{#reset()}", play_button_text, sub_text_color[2], sub_text_color[3], sub_text_color[4], Utf8.upper(Localize("loc_mission_board_play_public")))
 	elseif is_solo_play then
-		play_button_content.text = string.format("%s\n{#color(%d,%d,%d);size(15)}[%s]{#reset()}", play_button_text, sub_text_color[2], sub_text_color[3], sub_text_color[4], Utf8.upper(Localize("loc_mission_board_toggle_solo_play")))
+		play_button_content.original_text = string.format("%s\n{#color(%d,%d,%d);size(15)}[%s]{#reset()}", play_button_text, sub_text_color[2], sub_text_color[3], sub_text_color[4], Utf8.upper(Localize("loc_mission_board_toggle_solo_play")))
 	else
-		play_button_content.text = string.format("%s\n{#color(%d,%d,%d);size(15)}[%s]{#reset()}", play_button_text, sub_text_color[2], sub_text_color[3], sub_text_color[4], Utf8.upper(Localize("loc_mission_board_play_private")))
+		play_button_content.original_text = string.format("%s\n{#color(%d,%d,%d);size(15)}[%s]{#reset()}", play_button_text, sub_text_color[2], sub_text_color[3], sub_text_color[4], Utf8.upper(Localize("loc_mission_board_play_private")))
 	end
 end
 

@@ -64,9 +64,6 @@ local templates = {
 	weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_close_range_kills = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_close_range_kills = {
 			{
-				toughness_fixed_percentage = 0.01
-			},
-			{
 				toughness_fixed_percentage = 0.015
 			},
 			{
@@ -74,6 +71,9 @@ local templates = {
 			},
 			{
 				toughness_fixed_percentage = 0.025
+			},
+			{
+				toughness_fixed_percentage = 0.03
 			}
 		}
 	},
@@ -138,14 +138,18 @@ local templates = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_power_bonus_on_continuous_fire = {
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.02
+					[stat_buffs.power_level_modifier] = 0.1
 				}
 			}
 		}
 	},
 	weapon_trait_bespoke_ogryn_rippergun_p1_bleed_on_crit = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_bleed_on_crit = {
-			{}
+			{
+				target_buff_data = {
+					num_stacks_on_proc = 8
+				}
+			}
 		}
 	}
 }

@@ -20,7 +20,7 @@ local pickup_data = {
 			local synchronizer_unit = mission_objective_system:get_objective_synchronizer_unit(objective_name)
 			local synchronizer_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
 
-			synchronizer_extension:update_progression(1)
+			synchronizer_extension:add_progression(1)
 		end
 	end
 }

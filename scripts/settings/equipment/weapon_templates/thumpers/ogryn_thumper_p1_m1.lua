@@ -789,6 +789,7 @@ weapon_template.alternate_fire_settings = {
 weapon_template.spread_template = "thumper_shotgun_hip_assault"
 weapon_template.recoil_template = "default_thumper_assault"
 weapon_template.reload_template = ReloadTemplates.ogryn_thumper
+weapon_template.combo_reset_duration = 0.5
 weapon_template.conditional_state_to_action_input = {
 	{
 		conditional_state = "no_ammo_with_delay",

@@ -46,11 +46,15 @@ PlayerSpawner.component_data = {
 		ui_name = "Spawn Identifier",
 		options_keys = {
 			"Default",
-			"Bots"
+			"Bots",
+			"Recent Mission",
+			"Shooting Range"
 		},
 		options_values = {
 			"default",
-			"bots"
+			"bots",
+			"recent_mission",
+			"tg_shooting_range"
 		}
 	},
 	spawn_priority = {

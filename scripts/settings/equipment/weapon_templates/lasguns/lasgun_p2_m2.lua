@@ -1189,7 +1189,12 @@ weapon_template.charge_effects = {
 	charge_done_effect_alias = "ranged_charging_done"
 }
 weapon_template.weapon_temperature_settings = {
-	use_charge = true
+	increase_rate = 0.025,
+	use_charge = true,
+	grace_time = 0.4,
+	charge_increase_rate = 0.025,
+	barrel_threshold = 0.4,
+	decay_rate = 0.025
 }
 weapon_template.keywords = {
 	"ranged",

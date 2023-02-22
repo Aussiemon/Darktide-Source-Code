@@ -1,4 +1,5 @@
 local Attack = require("scripts/utilities/attack/attack")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breeds = require("scripts/settings/breed/breeds")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -17,6 +18,7 @@ local buff_keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
 local stat_buffs = BuffSettings.stat_buffs
 local talent_settings = TalentSettings.ogryn_2
+local stagger_results = AttackSettings.stagger_results
 local damage_types = DamageSettings.damage_types
 local templates = {
 	ogryn_bonebreaker_speed_on_lunge = {
@@ -90,7 +92,7 @@ templates.ogryn_bonebreaker_increased_coherency_regen = {
 	predicted = false,
 	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.toughness_coherency_regen_rate_multiplier] = talent_settings.toughness_1.toughness_bonus
+		[stat_buffs.toughness_regen_rate_modifier] = talent_settings.toughness_1.toughness_bonus
 	}
 }
 templates.ogryn_bonebreaker_heavy_hits_toughness = {
@@ -137,7 +139,7 @@ templates.ogryn_bonebreaker_heavy_attacks_bleed = {
 	proc_events = {
 		[proc_events.on_hit] = 1
 	},
-	check_proc_func = CheckProcFunctions.on_heavy_hit,
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_heavy_hit, CheckProcFunctions.on_non_kill),
 	proc_func = function (params, template_data, template_context, t)
 		if CheckProcFunctions.on_kill(params) then
 			return
@@ -146,12 +148,10 @@ templates.ogryn_bonebreaker_heavy_attacks_bleed = {
 		local victim_unit = params.attacked_unit
 		local buff_extension = ScriptUnit.has_extension(victim_unit, "buff_system")
 
-		if buff_extension then
+		if HEALTH_ALIVE[victim_unit] and buff_extension then
 			local num_stacks = talent_settings.offensive_3.stacks
 
-			for i = 1, num_stacks do
-				buff_extension:add_internally_controlled_buff("bleed", t, "owner_unit", template_context.unit)
-			end
+			buff_extension:add_internally_controlled_buff_with_stacks("bleed", num_stacks, t, "owner_unit", template_context.unit)
 		end
 	end
 }
@@ -654,6 +654,148 @@ templates.ogryn_bonebreaker_fully_charged_attacks_infinite_cleave = {
 		buff_keywords.fully_charged_attacks_infinite_cleave,
 		buff_keywords.ignore_armor_aborts_attack
 	}
+}
+local breed_name_size = {
+	renegade_flamer = 2,
+	renegade_rifleman = 1,
+	renegade_assault = 1,
+	cultist_grenadier = 2,
+	cultist_melee = 1,
+	chaos_hound_mutator = 3,
+	chaos_beast_of_nurgle = 10,
+	cultist_flamer = 2,
+	cultist_mutant = 5,
+	chaos_poxwalker = 1,
+	chaos_poxwalker_bomber = 2,
+	cultist_shocktrooper = 2,
+	chaos_ogryn_gunner = 5,
+	renegade_shocktrooper = 2,
+	renegade_gunner = 2,
+	cultist_berzerker = 3,
+	chaos_newly_infected = 1,
+	chaos_spawn = 10,
+	renegade_melee = 1,
+	chaos_ogryn_executor = 5,
+	cultist_assault = 1,
+	renegade_grenadier = 2,
+	chaos_daemonhost = 8,
+	chaos_plague_ogryn = 10,
+	renegade_berzerker = 3,
+	renegade_sniper = 1,
+	renegade_netgunner = 2,
+	renegade_captain = 8,
+	chaos_hound = 3,
+	chaos_ogryn_bulwark = 5,
+	cultist_gunner = 2,
+	renegade_executor = 3,
+	chaos_plague_ogryn_sprayer = 10
+}
+
+local function big_bull_add_stacks(template_context, stacks)
+	local unit = template_context.unit
+	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+	if buff_extension then
+		local t = FixedFrame.get_latest_fixed_time()
+
+		for i = 1, stacks do
+			buff_extension:add_internally_controlled_buff("ogryn_bonebreaker_big_bully_heavy_hits_buff", t)
+		end
+	end
+end
+
+templates.ogryn_bonebreaker_big_bully_heavy_hits = {
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_hit] = 1,
+		[proc_events.on_sweep_start] = 1,
+		[proc_events.on_sweep_finish] = 1
+	},
+	start_func = function (template_data, template_context)
+		template_data.stacks = 0
+	end,
+	specific_proc_func = {
+		on_sweep_start = function (params, template_data, template_context)
+			template_data.in_sweep = params.is_heavy
+		end,
+		on_hit = function (params, template_data, template_context)
+			local stagger_result = params.stagger_result
+
+			if stagger_result ~= stagger_results.stagger then
+				return
+			end
+
+			local breed_name = params.breed_name
+			local stacks = breed_name_size[breed_name] or 0
+
+			if not template_data.in_sweep then
+				big_bull_add_stacks(template_context, stacks)
+
+				return
+			end
+
+			template_data.stacks = template_data.stacks + stacks
+		end,
+		on_sweep_finish = function (params, template_data, template_context)
+			template_data.sweep_done = true
+			template_data.in_sweep = nil
+		end
+	},
+	update_func = function (template_data, template_context, dt, t)
+		if template_data.sweep_done then
+			template_data.sweep_done = nil
+			template_data.delay = 0.1
+		end
+
+		if not template_data.delay then
+			return
+		end
+
+		if template_data.delay > 0 then
+			template_data.delay = template_data.delay - dt
+
+			return
+		end
+
+		if template_data.delay <= 0 then
+			local stacks = template_data.stacks or 0
+
+			big_bull_add_stacks(template_context, stacks)
+
+			template_data.stacks = 0
+			template_data.delay = nil
+		end
+	end
+}
+templates.ogryn_bonebreaker_big_bully_heavy_hits_buff = {
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 3,
+	allow_proc_while_active = true,
+	hud_icon = "content/ui/textures/icons/talents/ogryn_2/hud/ogryn_2_tier_5_2",
+	class_name = "proc_buff",
+	duration = talent_settings.offensive_2_2.duration,
+	proc_events = {
+		[proc_events.on_sweep_start] = 1,
+		[proc_events.on_sweep_finish] = 1
+	},
+	stat_buffs = {
+		[stat_buffs.melee_heavy_damage] = talent_settings.offensive_2_2.melee_heavy_damage
+	},
+	max_stacks = talent_settings.offensive_2_2.max_stacks,
+	specific_proc_func = {
+		on_sweep_start = function (params, template_data, template_context)
+			template_data.can_finish = params.is_heavy
+			template_data.finished = nil
+		end,
+		on_sweep_finish = function (params, template_data, template_context)
+			template_data.finished = true
+		end
+	},
+	conditional_exit_func = function (template_data, template_context)
+		return template_data.can_finish and template_data.finished
+	end
 }
 templates.ogryn_bonebreaker_hitting_multiple_with_melee_grants_melee_damage_bonus = {
 	predicted = false,

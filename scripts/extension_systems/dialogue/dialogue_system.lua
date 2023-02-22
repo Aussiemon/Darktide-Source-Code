@@ -715,7 +715,9 @@ DialogueSystem.force_stop_all = function (self)
 
 		if currently_playing_dialogue then
 			self._playing_dialogues[currently_playing_dialogue] = nil
+			local animation_event = "stop_talking"
 
+			self:_trigger_face_animation_event(unit, animation_event)
 			extension:stop_currently_playing_vo()
 			self:play_wwise_event(extension, "stop_vox_static_loop")
 		end
@@ -827,6 +829,10 @@ DialogueSystem._process_local_playing_dialogues = function (self, dt, t)
 
 					extension:set_currently_playing_dialogue(nil)
 					table.remove(self._vo_rule_queue, 1)
+
+					local animation_event = "stop_talking"
+
+					self:_trigger_face_animation_event(unit, animation_event)
 				else
 					currently_playing_dialogue.dialogue_timer = currently_playing_dialogue.dialogue_timer - dt
 				end
@@ -1035,10 +1041,6 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 	local dialogue = self._dialogues[dialogue_name]
 
 	if not self:is_playable_dialogue_category(dialogue) then
-		return
-	end
-
-	if dialogue.currently_playing_event_id then
 		return
 	end
 
@@ -1354,10 +1356,6 @@ DialogueSystem._process_query = function (self, query, dt, t, is_a_delayed_query
 
 		local will_play = self:_can_query_play(query, dialogue_actor_unit, interrupt_dialogue_list)
 
-		if dialogue.currently_playing_event_id then
-			will_play = false
-		end
-
 		if will_play then
 			if not table.is_empty(interrupt_dialogue_list) then
 				if dialogue.category == "vox_prio_0" then
@@ -1601,6 +1599,31 @@ DialogueSystem._trigger_face_animation_event = function (self, unit, animation_e
 				local event_index = Unit.animation_event(face_unit, animation_event)
 
 				Unit.animation_event_by_index(face_unit, event_index)
+			end
+		end
+	else
+		local extension_manager = self._extension_manager
+		local component_system = extension_manager:system("component_system")
+		local player_customization_components = component_system:get_components(unit, "PlayerCustomization")
+		local player_customization_component = player_customization_components[1]
+
+		if player_customization_component then
+			local face_unit = player_customization_component:unit_in_slot("slot_body_face")
+
+			if Unit.is_valid(face_unit) and Unit.has_animation_state_machine(face_unit) then
+				local state_machine_override = player_customization_component:get_face_sm_override()
+
+				if state_machine_override ~= nil and state_machine_override ~= "" then
+					Unit.set_animation_state_machine(face_unit, state_machine_override)
+
+					local has_animation_event = Unit.has_animation_event(face_unit, animation_event)
+
+					if has_animation_event then
+						local event_index = Unit.animation_event(face_unit, animation_event)
+
+						Unit.animation_event_by_index(face_unit, event_index)
+					end
+				end
 			end
 		end
 	end

@@ -4,6 +4,7 @@ local BuffArgs = require("scripts/extension_systems/buff/utility/buff_args")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BuffExtensionInterface = require("scripts/extension_systems/buff/buff_extension_interface")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
+local FixedFrame = require("scripts/utilities/fixed_frame")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local MAX_COMPONENT_BUFFS = PlayerCharacterConstants.max_component_buffs
 local COMPONENT_KEY_LOOKUP = PlayerCharacterConstants.buff_component_key_lookup
@@ -17,6 +18,7 @@ PlayerUnitBuffExtension.init = function (self, extension_init_context, unit, ext
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local buff_component = unit_data_extension:write_component("buff")
 	self._buff_component = buff_component
+	self._on_screen_effects = {}
 	local buff_context = self._buff_context
 	buff_context.player = extension_init_data.player
 	self._max_component_buffs = MAX_COMPONENT_BUFFS
@@ -381,7 +383,6 @@ end
 PlayerUnitBuffExtension._start_fx = function (self, index, template)
 	PlayerUnitBuffExtension.super._start_fx(self, index, template)
 
-	local active_vfx = self._active_vfx[index]
 	local buff_context = self._buff_context
 	local is_local_unit = buff_context.is_local_unit
 	local player_effects = template.player_effects
@@ -389,24 +390,28 @@ PlayerUnitBuffExtension._start_fx = function (self, index, template)
 	local is_human_controlled = player:is_human_controlled()
 
 	if player_effects and is_local_unit and is_human_controlled then
-		local world = buff_context.world
-		local wwise_world = buff_context.wwise_world
-		local unit = buff_context.unit
 		local on_screen_effect = player_effects.on_screen_effect
 
 		if on_screen_effect then
+			if not self._on_screen_effects[index] then
+				self._on_screen_effects[index] = {}
+			end
+
+			local on_screen_effects = self._on_screen_effects[index]
+			local world = buff_context.world
 			local on_screen_effect_id = World.create_particles(world, on_screen_effect, Vector3(0, 0, 1))
 			local stop_type = player_effects.stop_type or "destroy"
-
-			table.insert(active_vfx, {
+			on_screen_effects[#on_screen_effects + 1] = {
 				particle_id = on_screen_effect_id,
 				stop_type = stop_type
-			})
+			}
 		end
 
 		local player_looping_wwise_start_event = player_effects.looping_wwise_start_event
 
 		if player_looping_wwise_start_event then
+			local wwise_world = buff_context.wwise_world
+
 			WwiseWorld.trigger_resource_event(wwise_world, player_looping_wwise_start_event)
 		end
 
@@ -419,7 +424,7 @@ PlayerUnitBuffExtension._start_fx = function (self, index, template)
 		local node_effects = player_effects.node_effects
 
 		if node_effects then
-			self:_start_node_effects(node_effects, unit, world, wwise_world, active_vfx)
+			self:_start_node_effects(node_effects)
 		end
 
 		local wwise_parameters = player_effects.wwise_parameters
@@ -470,6 +475,25 @@ PlayerUnitBuffExtension._stop_fx = function (self, index, template)
 				end
 			end
 		end
+	end
+
+	local world = buff_context.world
+	local on_screen_effects = self._on_screen_effects[index]
+
+	if on_screen_effects then
+		for i = 1, #on_screen_effects do
+			local effect = on_screen_effects[i]
+			local particle_id = effect.particle_id
+			local stop_type = effect.stop_type
+
+			if stop_type == "stop" then
+				World.stop_spawning_particles(world, particle_id)
+			else
+				World.destroy_particles(world, particle_id)
+			end
+		end
+
+		self._on_screen_effects[index] = nil
 	end
 
 	PlayerUnitBuffExtension.super._stop_fx(self, index, template)

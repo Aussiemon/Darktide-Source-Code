@@ -128,7 +128,7 @@ InputFilters.scale_vector3_xy_accelerated_x_dev_params = {
 		elseif filter_data.threshold <= math_abs(val.x) and math_sign(val.x) ~= filter_data.input_x then
 			filter_data.input_x = math_sign(val.x)
 			filter_data.input_x_t = time
-		elseif math_abs(val.x) < filter_data.threshold and Vector3.length(val) < filter_data.threshold then
+		elseif math_abs(val.x) < filter_data.threshold then
 			filter_data.input_x_t = time
 		end
 

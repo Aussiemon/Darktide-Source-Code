@@ -40,7 +40,11 @@ local function apply_material_values(gui_material, material_values)
 		elseif type(value) == "number" then
 			Material.set_scalar(gui_material, key, value)
 		elseif type(value) == "string" then
-			Material.set_texture(gui_material, key, value)
+			if value == "" then
+				Material.set_texture(gui_material, key, nil)
+			else
+				Material.set_texture(gui_material, key, value)
+			end
 		elseif type(value) == "userdata" then
 			Material.set_resource(gui_material, key, value)
 		end
@@ -1010,7 +1014,7 @@ UIPasses.hotspot = {
 			double_click_timer = math.max(double_click_timer - dt, 0) or 0
 		end
 
-		if (is_hover or is_selected or force_input_pressed) and not disabled then
+		if (is_hover or gamepad_active and is_selected or force_input_pressed) and not disabled then
 			if pressed_last_frame then
 				is_held = input_hold
 

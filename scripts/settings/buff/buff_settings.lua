@@ -75,6 +75,13 @@ buff_settings.proc_event_validation = {
 		heal_amount = "number",
 		heal_type = "string"
 	},
+	on_pellet_hits = {
+		number_of_pellets_hit = "number",
+		max_number_of_pellets = "number",
+		damage = "number",
+		is_critical_strike = "bool",
+		attacked_unit = "unit"
+	},
 	on_hit = {
 		one_hit_kill = "bool",
 		hit_weakspot = "bool",
@@ -471,6 +478,7 @@ local breed_names = {
 	"chaos_beast_of_nurgle",
 	"chaos_daemonhost",
 	"chaos_hound",
+	"chaos_hound_mutator",
 	"chaos_newly_infected",
 	"chaos_ogryn_bulwark",
 	"chaos_ogryn_executor",
@@ -479,6 +487,7 @@ local breed_names = {
 	"chaos_plague_ogryn_sprayer",
 	"chaos_poxwalker_bomber",
 	"chaos_poxwalker",
+	"chaos_spawn",
 	"cultist_assault",
 	"cultist_berzerker",
 	"cultist_flamer",

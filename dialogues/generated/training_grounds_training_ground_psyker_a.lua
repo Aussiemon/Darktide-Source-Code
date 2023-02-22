@@ -215,7 +215,7 @@ local training_grounds_training_ground_psyker_a = {
 			[1.0] = "loc_training_ground_psyker_a__dodging_tutorial_desc_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 9.522
+			[1.0] = 4.580521
 		},
 		randomize_indexes = {}
 	},

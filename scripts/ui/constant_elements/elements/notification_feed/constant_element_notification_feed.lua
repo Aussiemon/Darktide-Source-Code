@@ -39,13 +39,14 @@ local function _remove_live_item_icon_cb_func(widget)
 end
 
 local ConstantElementNotificationFeed = class("ConstantElementNotificationFeed", "ConstantElementBase")
-local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "matchmaking")
+local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "crafting_material", "matchmaking")
 
 ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start_scale)
 	ConstantElementNotificationFeed.super.init(self, parent, draw_layer, start_scale, Definitions)
 
 	self._notifications = {}
 	self._queue_notifications = {}
+	self._notification_message_delay_queue = {}
 	self._num_notifications = 0
 	self._notification_id_counter = 0
 	self._notification_templates = {
@@ -77,6 +78,13 @@ ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start
 			widget_definition = Definitions.notification_message
 		},
 		currency = {
+			animation_exit = "popup_leave",
+			animation_enter = "popup_enter",
+			total_time = 5,
+			priority_order = 1,
+			widget_definition = Definitions.notification_message
+		},
+		crafting_material = {
 			animation_exit = "popup_leave",
 			animation_enter = "popup_enter",
 			total_time = 5,
@@ -134,8 +142,19 @@ ConstantElementNotificationFeed._on_item_icon_loaded = function (self, notificat
 	end
 end
 
-ConstantElementNotificationFeed.event_add_notification_message = function (self, message_type, data, callback, sound_event)
-	self:_add_notification_message(message_type, data, callback, sound_event)
+ConstantElementNotificationFeed.event_add_notification_message = function (self, message_type, data, callback, sound_event, done_callback, delay)
+	if delay then
+		self._notification_message_delay_queue[#self._notification_message_delay_queue + 1] = {
+			message_type = message_type,
+			data = data,
+			callback = callback,
+			sound_event = sound_event,
+			done_callback = done_callback,
+			delay = delay
+		}
+	else
+		self:_add_notification_message(message_type, data, callback, sound_event, done_callback)
+	end
 end
 
 ConstantElementNotificationFeed.event_update_notification_message = function (self, notification_id, texts)
@@ -316,11 +335,14 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		elseif item_type == "TRAIT" then
 			icon = "content/ui/materials/icons/traits/traits_container"
 			icon_size = "medium"
-			local texture_icon, texture_frame = ItemUtils.trait_textures(visual_item, visual_item.rarity)
+			local rarity = visual_item.rarity
+			local texture_icon, texture_frame = ItemUtils.trait_textures(visual_item, rarity)
 			icon_material_values = {
 				icon = texture_icon,
 				frame = texture_frame
 			}
+			local trait_sound_events_by_rarity = ConstantElementNotificationFeedSettings.trait_sound_events_by_rarity
+			enter_sound_event = trait_sound_events_by_rarity[rarity]
 		else
 			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
 			icon_size = "large_cosmetic"
@@ -357,6 +379,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			local text = Localize("loc_notification_feed_currency_acquired", true, {
 				amount = amount
 			})
+			local enter_sound_event = wallet_settings.notification_sound_event
 			notification_data = {
 				icon_size = "medium",
 				texts = {
@@ -364,7 +387,38 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 						display_name = text
 					}
 				},
-				icon = icon_texture_large
+				icon = icon_texture_large,
+				color = Color.terminal_grid_background(100, true),
+				enter_sound_event = enter_sound_event
+			}
+		end
+	elseif message_type == MESSAGE_TYPES.crafting_material then
+		local currency_type = data.currency
+		local amount = data.amount
+		local wallet_settings = WalletSettings[currency_type]
+
+		if wallet_settings then
+			local icon_texture_large = wallet_settings and wallet_settings.icon_texture_big
+			local selected_color = Color.terminal_corner_selected(255, true)
+			local amount = string.format("{#color(%d,%d,%d)}%s %s{#reset()}", selected_color[2], selected_color[3], selected_color[4], TextUtils.format_currency(amount), Localize(wallet_settings.display_name))
+			local text = Localize("loc_notification_feed_currency_acquired", true, {
+				amount = amount
+			})
+			notification_data = {
+				icon_size = "medium",
+				texts = {
+					{
+						display_name = text
+					}
+				},
+				icon = icon_texture_large,
+				color = {
+					0,
+					0,
+					0,
+					0
+				},
+				enter_sound_event = UISoundEvents.notification_crafting_material_recieved
 			}
 		end
 	elseif message_type == MESSAGE_TYPES.achievement then
@@ -503,7 +557,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 	return notification_data
 end
 
-ConstantElementNotificationFeed._add_notification_message = function (self, message_type, data, callback, sound_event)
+ConstantElementNotificationFeed._add_notification_message = function (self, message_type, data, callback, sound_event, done_callback)
 	local notifications = self._notifications
 	local num_notifications = #notifications
 
@@ -512,6 +566,7 @@ ConstantElementNotificationFeed._add_notification_message = function (self, mess
 			message_type = message_type,
 			data = data,
 			callback = callback,
+			done_callback = done_callback,
 			sound_event = sound_event
 		}
 
@@ -525,13 +580,14 @@ ConstantElementNotificationFeed._add_notification_message = function (self, mess
 	if notification_data then
 		local notification = self:_create_notification_entry(notification_data)
 		local notification_id = notification.id
+		notification.done_callback = done_callback
 
 		if callback then
 			callback(notification_id)
 		end
 
 		if notification.animation_enter then
-			local sound_event = sound_event or notification.enter_sound_event
+			sound_event = sound_event or notification.enter_sound_event
 
 			if sound_event then
 				Managers.ui:play_2d_sound(sound_event)
@@ -565,6 +621,12 @@ ConstantElementNotificationFeed._remove_notification = function (self, notificat
 
 			self:_unregister_widget_name(widget.name)
 			table.remove(notifications, i)
+
+			local done_callback = notification.done_callback
+
+			if done_callback then
+				done_callback()
+			end
 
 			if self._queue_notifications[1] and ConstantElementNotificationFeedSettings.max_visible_notifications > #self._notifications then
 				local notification = self._queue_notifications[1]
@@ -685,6 +747,26 @@ ConstantElementNotificationFeed.update = function (self, dt, t, ui_renderer, ren
 		DEBUG_RELOAD = false
 
 		self:clear()
+	end
+
+	local notification_message_delay_queue = self._notification_message_delay_queue
+
+	for i = #notification_message_delay_queue, 1, -1 do
+		local message_data = notification_message_delay_queue[i]
+		local delay = message_data.delay
+
+		if delay <= 0 then
+			local message_type = message_data.message_type
+			local data = message_data.data
+			local callback = message_data.callback
+			local sound_event = message_data.sound_event
+			local done_callback = message_data.done_callback
+
+			self:_add_notification_message(message_type, data, callback, sound_event, done_callback)
+			table.remove(notification_message_delay_queue, i)
+		else
+			message_data.delay = delay - dt
+		end
 	end
 
 	self:_align_notification_widgets(dt)

@@ -1,6 +1,7 @@
 local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
+local InputDevice = require("scripts/managers/input/input_device")
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	corner_top_left = {
@@ -27,7 +28,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			-50,
+			-60,
 			500
 		}
 	},
@@ -195,7 +196,55 @@ local crafting_tab_params = {
 		tabs_params = {
 			{
 				view = "crafting_modify_view",
-				display_name = "loc_crafting_modify_title"
+				background_alpha = 175,
+				display_name = "loc_crafting_modify_title",
+				input_legend_buttons = {
+					{
+						input_action = "hotkey_item_inspect",
+						display_name = "loc_weapon_inventory_inspect_button",
+						alignment = "right_alignment",
+						on_pressed_callback = "cb_on_inspect_pressed",
+						visibility_function = function (parent)
+							local active_view = parent._active_view
+
+							if not active_view then
+								return false
+							end
+
+							local view_instance = Managers.ui:view_instance(active_view)
+							local previewed_item = view_instance and view_instance._previewed_item
+
+							if not previewed_item then
+								return false
+							end
+
+							local item_type = previewed_item.item_type
+
+							return item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED"
+						end
+					},
+					{
+						input_action = "confirm_pressed",
+						display_name = "loc_continue",
+						alignment = "right_alignment",
+						visibility_function = function (parent)
+							local active_view = parent._active_view
+
+							if not active_view then
+								return false
+							end
+
+							local view_instance = Managers.ui:view_instance(active_view)
+							local previewed_item = view_instance and view_instance._previewed_item
+
+							if not previewed_item then
+								return false
+							end
+
+							return InputDevice.gamepad_active
+						end
+					}
+				}
 			}
 		}
 	}

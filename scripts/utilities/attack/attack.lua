@@ -236,7 +236,7 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 		end
 	end
 
-	local damage_dealt, attack_result, damage_absorbed, damage, permanent_damage, one_hit_kill, actual_damage_dealt, stagger_result = nil
+	local damage_dealt, attack_result, damage_absorbed, damage, permanent_damage, one_hit_kill, actual_damage_dealt, stagger_result, stagger_type = nil
 	local target_is_assisted = false
 	local target_is_hogtied = false
 
@@ -257,7 +257,7 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 	attack_result, damage_dealt, damage_absorbed, damage, permanent_damage, one_hit_kill, actual_damage_dealt = _handle_attack(is_server, instakill, target_is_assisted, target_is_hogtied, attacked_unit, target_breed_or_nil, calculated_damage, attacking_unit, attacking_unit_owner_unit, hit_zone_name, damage_profile, attack_direction, hit_actor, attack_type, herding_template, is_critical_strike, hit_world_position, damage_type, target_weapon_template, unit_data_extension, wounds_shape)
 
 	if is_server then
-		stagger_result = HitReaction.apply(damage_profile, damage_profile_lerp_values, target_weapon_template, target_breed_or_nil, target_buff_extension, attack_result, attacked_unit, attacking_unit, attack_direction, hit_world_position, target_settings, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_type, herding_template, hit_shield)
+		stagger_result, stagger_type = HitReaction.apply(damage_profile, damage_profile_lerp_values, target_weapon_template, target_breed_or_nil, target_buff_extension, attack_result, attacked_unit, attacking_unit, attack_direction, hit_world_position, target_settings, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_type, herding_template, hit_shield)
 	end
 
 	if was_alive_at_attack_start and target_breed_or_nil then
@@ -268,7 +268,7 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 			Managers.state.attack_report:add_attack_result(damage_profile, attacked_unit, attacking_unit_owner_unit, attack_direction, hit_world_position, hit_weakspot, damage_dealt, attack_result, attack_type, damage_efficiency)
 
 			if Managers.stats.can_record_stats() then
-				_record_stats(attack_result, attack_type, attacked_unit, attacking_unit_owner_unit, damage_absorbed, damage_dealt, hit_zone_name, damage_profile, item, attacked_action, target_breed_or_nil, damage_type, target_buff_extension, is_critical_strike, stagger_result)
+				_record_stats(attack_result, attack_type, attacked_unit, attacking_unit_owner_unit, damage_absorbed, damage_dealt, hit_zone_name, damage_profile, item, attacked_action, attacker_breed_or_nil, target_breed_or_nil, damage_type, target_buff_extension, is_critical_strike, stagger_result, stagger_type)
 			end
 
 			_record_telemetry(attacking_unit_owner_unit, attacked_unit, attack_result, attack_type, damage_dealt, damage_profile, damage_type, damage, permanent_damage, actual_damage_dealt, damage_absorbed, attacker_breed_or_nil, target_breed_or_nil, instakill)
@@ -569,7 +569,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 	end
 end
 
-function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit, damage_absorbed, damage_dealt, hit_zone_name, damage_profile, attacking_item, attacked_action, target_breed_or_nil, damage_type, target_buff_extension, is_critical_hit, stagger_result)
+function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit, damage_absorbed, damage_dealt, hit_zone_name, damage_profile, attacking_item, attacked_action, attacker_breed_or_nil, target_breed_or_nil, damage_type, target_buff_extension, is_critical_hit, stagger_result, stagger_type)
 	local did_damage = damage_dealt > 0
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local attacked_player = player_unit_spawn_manager:owner(attacked_unit)
@@ -578,6 +578,8 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 	local attacking_is_human = attacking_player and attacking_player:is_human_controlled()
 	local attacked_unit_id = Managers.state.unit_spawner:game_object_id(attacked_unit)
 	local damage_profile_name = damage_profile and damage_profile.name
+	local is_weapon_special = damage_profile.weapon_special
+	local attacked_unit_blackboard = BLACKBOARDS[attacked_unit]
 	local target_breed_name_or_nil = target_breed_or_nil and target_breed_or_nil.name
 
 	if attacking_player then
@@ -603,7 +605,7 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 		end
 
 		if attacking_is_human then
-			Managers.stats:record_damage(attacking_player, target_breed_name_or_nil, weapon_template_name, attack_type, hit_zone_name, damage_profile_name, rounded_distance_between_units, attacking_health_percent, attacked_action, attacked_unit_id, damage_type, damage_dealt, is_critical_hit, stagger_result)
+			Managers.stats:record_damage(attacking_player, target_breed_or_nil, weapon_template_name, attack_result, attack_type, hit_zone_name, damage_profile_name, rounded_distance_between_units, attacking_health_percent, attacked_action, attacked_unit_id, damage_type, damage_dealt, is_critical_hit, is_weapon_special, stagger_result, stagger_type)
 		end
 
 		if attack_result == attack_results.died then
@@ -612,7 +614,7 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 			Managers.stats:record_team_kill(target_breed_name_or_nil, attack_type)
 
 			if attacking_is_human then
-				Managers.stats:record_kill(attacking_player, target_breed_name_or_nil, weapon_template_name, attack_type, hit_zone_name, damage_profile_name, distance_between_units, attacking_health_percent, attacked_action, attacked_unit_id, target_buff_keywords, damage_type, solo_kill)
+				Managers.stats:record_kill(attacking_player, target_breed_or_nil, weapon_template_name, attack_type, hit_zone_name, damage_profile_name, distance_between_units, attacking_health_percent, attacked_action, attacked_unit_id, target_buff_keywords, damage_type, is_critical_hit, is_weapon_special, solo_kill, attacked_unit_blackboard)
 			end
 		end
 	end
@@ -637,7 +639,9 @@ function _record_stats(attack_result, attack_type, attacked_unit, attacking_unit
 			Managers.stats:record_team_damage_taken(damage_dealt)
 
 			if attacked_is_human then
-				Managers.stats:record_player_damage_taken(attacked_player, damage_dealt, attack_type)
+				local is_attacker_elite = attacker_breed_or_nil and attacker_breed_or_nil.tags and attacker_breed_or_nil.tags.elite
+
+				Managers.stats:record_player_damage_taken(attacked_player, damage_dealt, attack_type, is_attacker_elite)
 			end
 		end
 	end

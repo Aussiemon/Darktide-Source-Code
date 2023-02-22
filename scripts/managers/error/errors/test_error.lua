@@ -24,6 +24,10 @@ TestError.loc_description = function (self)
 	}
 end
 
+TestError.options = function (self)
+	return
+end
+
 implements(TestError, ErrorInterface)
 
 return TestError

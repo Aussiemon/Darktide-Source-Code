@@ -1,3 +1,4 @@
+local Breeds = require("scripts/settings/breed/breeds")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local Definitions = require("scripts/ui/views/item_grid_view_base/item_grid_view_base_definitions")
 local ItemUtils = require("scripts/utilities/items")
@@ -54,76 +55,38 @@ ItemGridViewBase.on_enter = function (self)
 	end
 end
 
-ItemGridViewBase.sort_comparator = function (self, definition)
-	return function (a, b)
-		local a_item = a.item
-		local b_item = b.item
-
-		for i = 1, #definition, 2 do
-			local order = definition[i]
-			local func = definition[i + 1]
-			local is_lt = func(a_item, b_item)
-
-			if is_lt ~= nil then
-				if order == "<" then
-					return is_lt
-				else
-					return not is_lt
-				end
-			end
-		end
-
-		return nil
-	end
-end
-
 ItemGridViewBase._setup_sort_options = function (self)
-	self._sort_options = {
-		{
-			display_name = Localize("loc_inventory_item_grid_sort_title_rarity") .. " ",
-			sort_function = self:sort_comparator({
-				">",
-				ItemUtils.compare_item_rarity,
-				">",
-				ItemUtils.compare_item_level,
-				"<",
-				ItemUtils.compare_item_name
-			})
-		},
-		{
-			display_name = Localize("loc_inventory_item_grid_sort_title_rarity") .. " ",
-			sort_function = self:sort_comparator({
-				"<",
-				ItemUtils.compare_item_rarity,
-				"<",
-				ItemUtils.compare_item_level,
-				"<",
-				ItemUtils.compare_item_name
-			})
-		},
-		{
-			display_name = Localize("loc_inventory_item_grid_sort_title_name") .. " ",
-			sort_function = self:sort_comparator({
-				">",
-				ItemUtils.compare_item_name,
-				">",
-				ItemUtils.compare_item_rarity,
-				">",
-				ItemUtils.compare_item_level
-			})
-		},
-		{
-			display_name = Localize("loc_inventory_item_grid_sort_title_name") .. " ",
-			sort_function = self:sort_comparator({
-				"<",
-				ItemUtils.compare_item_name,
-				">",
-				ItemUtils.compare_item_rarity,
-				">",
-				ItemUtils.compare_item_level
-			})
+	if not self._sort_options then
+		self._sort_options = {
+			{
+				display_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
+				sort_function = ItemUtils.sort_comparator({
+					">",
+					ItemUtils.compare_item_level,
+					">",
+					ItemUtils.compare_item_type,
+					"<",
+					ItemUtils.compare_item_name,
+					"<",
+					ItemUtils.compare_item_rarity
+				})
+			},
+			{
+				display_name = Localize("loc_inventory_item_grid_sort_title_item_type"),
+				sort_function = ItemUtils.sort_comparator({
+					">",
+					ItemUtils.compare_item_type,
+					"<",
+					ItemUtils.compare_item_name,
+					">",
+					ItemUtils.compare_item_level,
+					"<",
+					ItemUtils.compare_item_rarity
+				})
+			}
 		}
-	}
+	end
+
 	local sort_callback = callback(self, "cb_on_sort_button_pressed")
 
 	self._item_grid:setup_sort_button(self._sort_options, sort_callback, 1)
@@ -146,17 +109,9 @@ ItemGridViewBase._setup_default_gui = function (self)
 end
 
 ItemGridViewBase._setup_menu_tabs = function (self, content)
+	local tab_menu_settings = self._definitions.tab_menu_settings
 	local id = "tab_menu"
-	local layer = 10
-	local tab_menu_settings = {
-		fixed_button_size = true,
-		horizontal_alignment = "center",
-		button_spacing = 20,
-		button_size = {
-			200,
-			50
-		}
-	}
+	local layer = tab_menu_settings.layer or 10
 	local tab_menu_element = self:_add_element(ViewElementTabMenu, id, layer, tab_menu_settings)
 	self._tab_menu_element = tab_menu_element
 	local input_action_left = "navigate_secondary_left_pressed"
@@ -164,7 +119,7 @@ ItemGridViewBase._setup_menu_tabs = function (self, content)
 
 	tab_menu_element:set_input_actions(input_action_left, input_action_right)
 
-	local tab_button_template = table.clone(ButtonPassTemplates.tab_menu_button_icon)
+	local tab_button_template = table.clone(tab_menu_settings.button_template or ButtonPassTemplates.tab_menu_button_icon)
 	tab_button_template[1].style = {
 		on_hover_sound = UISoundEvents.tab_secondary_button_hovered,
 		on_pressed_sound = UISoundEvents.tab_secondary_button_pressed
@@ -440,6 +395,12 @@ ItemGridViewBase._setup_item_grid = function (self, optional_grid_settings)
 	self:_setup_sort_options()
 end
 
+ItemGridViewBase.set_loading_state = function (self, is_loading)
+	if self._item_grid then
+		self._item_grid:set_loading_state(is_loading)
+	end
+end
+
 ItemGridViewBase._update_item_grid_position = function (self)
 	if not self._item_grid then
 		return
@@ -460,11 +421,11 @@ end
 
 ItemGridViewBase.on_exit = function (self)
 	if self._inpect_view_opened then
-		self._inpect_view_opened = nil
-
-		if Managers.ui:view_active("inventory_weapon_details_view") then
-			Managers.ui:close_view("inventory_weapon_details_view")
+		if Managers.ui:view_active(self._inpect_view_opened) then
+			Managers.ui:close_view(self._inpect_view_opened)
 		end
+
+		self._inpect_view_opened = nil
 	end
 
 	if self._weapon_stats then
@@ -516,11 +477,13 @@ ItemGridViewBase.cb_on_sort_button_pressed = function (self, option)
 		end
 	end
 
-	self._selected_sort_option_index = option_sort_index
-	self._selected_sort_option = option
-	local sort_function = option.sort_function
+	if option_sort_index ~= self._selected_sort_option_index then
+		self._selected_sort_option_index = option_sort_index
+		self._selected_sort_option = option
+		local sort_function = option.sort_function
 
-	self:_sort_grid_layout(sort_function)
+		self:_sort_grid_layout(sort_function)
+	end
 end
 
 ItemGridViewBase._cb_on_present = function (self)
@@ -594,7 +557,7 @@ ItemGridViewBase.present_grid_layout = function (self, layout, on_present_callba
 	local grid_size = grid_settings.grid_size
 	local ContentBlueprints = generate_blueprints_function(grid_size)
 	local spacing_entry = {
-		widget_type = "spacing_vertical_small"
+		widget_type = "spacing_vertical"
 	}
 
 	table.insert(layout, 1, spacing_entry)
@@ -870,12 +833,55 @@ ItemGridViewBase.trigger_sort_index = function (self, index)
 end
 
 ItemGridViewBase.cb_on_inspect_pressed = function (self)
-	if self._previewed_item and not Managers.ui:view_active("inventory_weapon_details_view") then
-		Managers.ui:open_view("inventory_weapon_details_view", nil, nil, nil, nil, {
-			preview_item = self._previewed_item
-		})
+	local previewed_item = self._previewed_item
 
-		self._inpect_view_opened = true
+	if previewed_item then
+		local item_type = previewed_item.item_type
+		local is_weapon = item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED"
+		local view_name = "cosmetics_inspect_view"
+
+		if is_weapon or item_type == "GADGET" then
+			view_name = "inventory_weapon_details_view"
+		end
+
+		if not Managers.ui:view_active(view_name) then
+			local context = nil
+
+			if item_type == "WEAPON_SKIN" then
+				local player = self:_player()
+				local profile = table.clone_instance(player:profile())
+				local include_skin_item_texts = true
+				local visual_item = ItemUtils.weapon_skin_preview_item(previewed_item, include_skin_item_texts)
+				local slots = visual_item.slots
+				local slot_name = slots[1]
+				profile.loadout[slot_name] = visual_item
+				local archetype = profile.archetype
+				local breed_name = archetype.breed
+				local breed = Breeds[breed_name]
+				local state_machine = breed.inventory_state_machine
+				local animation_event = visual_item.inventory_animation_event or "inventory_idle_default"
+				context = {
+					disable_zoom = true,
+					preview_with_gear = false,
+					profile = profile,
+					state_machine = state_machine,
+					animation_event = animation_event,
+					wield_slot = slot_name,
+					preview_item = visual_item
+				}
+			else
+				local player = self:_player()
+				local profile = player:profile()
+				context = {
+					profile = profile,
+					preview_item = previewed_item
+				}
+			end
+
+			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
+
+			self._inpect_view_opened = view_name
+		end
 	end
 end
 

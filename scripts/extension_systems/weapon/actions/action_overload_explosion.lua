@@ -127,6 +127,7 @@ ActionOverloadExplosion._handle_exposion_stats = function (self, explosion_attac
 
 		if difficulty >= 3 then
 			local count = 0
+			local requirement = 3
 
 			for hit_unit, attack_result in pairs(explosion_attack_result_table) do
 				if attack_result == attack_results.died then
@@ -138,7 +139,7 @@ ActionOverloadExplosion._handle_exposion_stats = function (self, explosion_attac
 				end
 			end
 
-			if count >= 3 then
+			if requirement <= count then
 				Managers.achievements:trigger_event(player:account_id(), player:character_id(), "psyker_2_perils_of_the_warp_elite_kills_event")
 			end
 		end

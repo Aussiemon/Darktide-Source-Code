@@ -1,5 +1,6 @@
 local HordeSettings = require("scripts/settings/horde/horde_settings")
 local HordeTemplates = require("scripts/managers/horde/horde_templates")
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Vo = require("scripts/utilities/vo")
 local HordePacing = class("HordePacing")
 local HORDE_TYPES = HordeSettings.horde_types
@@ -62,6 +63,7 @@ HordePacing._update_horde_pacing = function (self, t, dt, side_id, target_side_i
 	local current_wave = self._current_wave
 	local horde_started = triggered_pre_stinger or current_wave > 0
 	local hordes_allowed = horde_started or not minion_spawn_limit_reached and hordes_enabled and travel_distance_allowed
+	local traveled_this_frame = furthest_travel_distance - self._old_furthest_travel_distance
 	self._old_furthest_travel_distance = furthest_travel_distance
 
 	if not hordes_allowed then
@@ -69,8 +71,13 @@ HordePacing._update_horde_pacing = function (self, t, dt, side_id, target_side_i
 	end
 
 	local ramp_up_timer_modifier = Managers.state.pacing:_get_ramp_up_frequency_modifier("hordes")
-	local traveled_this_frame = furthest_travel_distance - self._old_furthest_travel_distance
-	self._horde_timer = self._horde_timer + dt * ramp_up_timer_modifier + traveled_this_frame
+	local has_travel_distance_spawn_mutator = Managers.state.mutator:mutator("mutator_travel_distance_spawning_hordes")
+
+	if has_travel_distance_spawn_mutator and not horde_started then
+		self._horde_timer = self._horde_timer + traveled_this_frame
+	else
+		self._horde_timer = self._horde_timer + dt * ramp_up_timer_modifier
+	end
 
 	if self._next_horde_pre_stinger_at and self._next_horde_pre_stinger_at <= self._horde_timer then
 		self:_trigger_pre_stinger(template, target_side_id)
@@ -183,6 +190,7 @@ HordePacing.add_trickle_horde = function (self, template)
 	trickle_horde.next_trickle_horde_travel_distance_trigger = next_trickle_horde_travel_distance_range
 	trickle_horde.template = template
 	trickle_horde.current_travel_distance = 0
+	trickle_horde.pause_pacing_on_spawn = template.pause_pacing_on_spawn
 	self._trickle_hordes[#self._trickle_hordes + 1] = trickle_horde
 end
 
@@ -197,8 +205,8 @@ HordePacing.set_override_required_travel_distance = function (self, required_tra
 	self._override_required_travel_distance = required_travel_distance
 end
 
-HordePacing._trigger_pre_stinger = function (self, template, side_id)
-	local stinger_sound_event = template.pre_stinger_sound_events[self._current_compositions.name]
+HordePacing._trigger_pre_stinger = function (self, template, side_id, optional_stinger_event_name)
+	local stinger_sound_event = optional_stinger_event_name or template.pre_stinger_sound_events[self._current_compositions.name]
 
 	if not stinger_sound_event then
 		return
@@ -232,70 +240,198 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 	for i = 1, #trickle_hordes do
 		repeat
 			local trickle_horde = trickle_hordes[i]
-			local cooldown = trickle_horde.cooldown
+
+			if trickle_horde.stinger_duration and t < trickle_horde.stinger_duration then
+				break
+			end
+
 			local template = trickle_horde.template
-			local horde_manager = Managers.state.horde
-			local num_active_trickle_hordes = horde_manager:num_active_hordes(HORDE_TYPES.trickle_horde)
-			local should_trigger_cooldown = template.num_trickle_hordes_active_for_cooldown <= num_active_trickle_hordes
 
-			if should_trigger_cooldown and t < cooldown then
-				break
-			elseif should_trigger_cooldown then
-				trickle_horde.cooldown = t + math.random(template.trickle_horde_cooldown[1], template.trickle_horde_cooldown[2])
-
-				break
-			elseif not should_trigger_cooldown then
-				trickle_horde.cooldown = 0
-			end
-
-			local trickle_hordes_allowed = Managers.state.pacing:spawn_type_enabled("trickle_hordes")
-
-			if trickle_horde.current_travel_distance < furthest_travel_distance then
-				local diff = furthest_travel_distance - trickle_horde.current_travel_distance
-				trickle_horde.current_travel_distance = furthest_travel_distance
-
-				if trickle_hordes_allowed then
-					trickle_horde.trickle_horde_travel_distance = trickle_horde.trickle_horde_travel_distance + diff
-				else
-					trickle_horde.trickle_horde_travel_distance = trickle_horde.trickle_horde_travel_distance + diff
-					trickle_horde.next_trickle_horde_travel_distance_trigger = trickle_horde.next_trickle_horde_travel_distance_trigger + diff
-				end
-			end
-
-			if trickle_horde.next_trickle_horde_travel_distance_trigger <= trickle_horde.trickle_horde_travel_distance then
-				local success = false
-
-				if trickle_hordes_allowed then
-					local trickle_horde_template = HordeTemplates.trickle_horde
-					local trickle_horde_compositions = template.horde_compositions.trickle_horde
-					local current_faction = Managers.state.pacing:current_faction()
-					local current_density_type = Managers.state.pacing:current_density_type()
-					local faction_composition = trickle_horde_compositions[current_faction][current_density_type]
-					local chosen_compositions = faction_composition[math.random(1, #faction_composition)]
-					local resistance_scaled_composition = Managers.state.difficulty:get_table_entry_by_resistance(chosen_compositions)
+			if trickle_horde.num_waves then
+				if trickle_horde.next_wave_at_t < t then
 					local optional_main_path_offset = template.optional_main_path_offset
-					success = self:_spawn_horde(HORDE_TYPES.trickle_horde, trickle_horde_template, resistance_scaled_composition, side_id, target_side_id, optional_main_path_offset)
+					local optional_num_tries = template.optional_num_tries
+
+					self:_spawn_trickle_horde_wave(side_id, target_side_id, optional_main_path_offset, optional_num_tries, template, trickle_horde, t)
+
+					trickle_horde.num_waves = trickle_horde.num_waves - 1
+
+					if trickle_horde.num_waves > 0 then
+						trickle_horde.next_wave_at_t = t + math.random_range(template.time_between_waves[1], template.time_between_waves[2])
+					else
+						trickle_horde.num_waves = nil
+						trickle_horde.next_wave_at_t = nil
+					end
+				end
+			else
+				local cooldown = trickle_horde.cooldown
+				local horde_manager = Managers.state.horde
+				local num_active_trickle_hordes = horde_manager:num_active_hordes(HORDE_TYPES.trickle_horde)
+				local should_trigger_cooldown = template.num_trickle_hordes_active_for_cooldown <= num_active_trickle_hordes
+
+				if should_trigger_cooldown and t < cooldown then
+					break
+				elseif should_trigger_cooldown then
+					trickle_horde.cooldown = t + math.random(template.trickle_horde_cooldown[1], template.trickle_horde_cooldown[2])
+
+					break
+				elseif not should_trigger_cooldown then
+					trickle_horde.cooldown = 0
 				end
 
-				local trickle_horde_travel_distance_range = success and template.trickle_horde_travel_distance_range or FAILED_TRAVEL_RANGE
-				local next_trickle_horde_at = math.random_range(trickle_horde_travel_distance_range[1], trickle_horde_travel_distance_range[2])
-				trickle_horde.next_trickle_horde_travel_distance_trigger = next_trickle_horde_at
-				trickle_horde.trickle_horde_travel_distance = 0
+				local trickle_hordes_allowed = (Managers.state.pacing:spawn_type_enabled("trickle_hordes") or template.ignore_disallowance) and (not template.not_during_terror_events or Managers.state.terror_event:num_active_events() == 0)
+
+				if trickle_horde.current_travel_distance < furthest_travel_distance then
+					local diff = furthest_travel_distance - trickle_horde.current_travel_distance
+					trickle_horde.current_travel_distance = furthest_travel_distance
+
+					if trickle_hordes_allowed then
+						trickle_horde.trickle_horde_travel_distance = trickle_horde.trickle_horde_travel_distance + diff
+					else
+						trickle_horde.trickle_horde_travel_distance = trickle_horde.trickle_horde_travel_distance + diff
+						trickle_horde.next_trickle_horde_travel_distance_trigger = trickle_horde.next_trickle_horde_travel_distance_trigger + diff
+					end
+				end
+
+				if trickle_horde.next_trickle_horde_travel_distance_trigger <= trickle_horde.trickle_horde_travel_distance then
+					local success, horde_position, target_unit, group_id = nil
+
+					if template.min_players_alive and not trickle_horde.num_waves then
+						local side_system = Managers.state.extension:system("side_system")
+						local side = side_system:get_side(target_side_id)
+						local target_units = side.valid_player_units
+						local num_target_units = #target_units
+						local num_non_disabled_players = 0
+
+						for j = 1, num_target_units do
+							local player_unit = target_units[j]
+							local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+							local character_state_component = unit_data_extension:read_component("character_state")
+							local requires_help = PlayerUnitStatus.requires_help(character_state_component)
+
+							if not requires_help then
+								num_non_disabled_players = num_non_disabled_players + 1
+							end
+						end
+
+						trickle_hordes_allowed = template.min_players_alive <= num_non_disabled_players
+					end
+
+					if trickle_hordes_allowed then
+						local trickle_horde_template = HordeTemplates.trickle_horde
+						local trickle_horde_compositions = template.horde_compositions.trickle_horde
+						local current_faction = Managers.state.pacing:current_faction()
+						local current_density_type = Managers.state.pacing:current_density_type()
+						local faction_composition = trickle_horde_compositions[current_faction][current_density_type]
+						local chosen_compositions = faction_composition[math.random(1, #faction_composition)]
+						local resistance_scaled_composition = Managers.state.difficulty:get_table_entry_by_resistance(chosen_compositions)
+						local optional_main_path_offset = template.optional_main_path_offset
+						local optional_num_tries = template.optional_num_tries
+						local stinger = template.stinger
+
+						if stinger and not trickle_horde.stinger_duration then
+							local stinger_duration = template.stinger_duration
+							local can_spawn = self:_can_spawn(HORDE_TYPES.trickle_horde, trickle_horde_template, resistance_scaled_composition, side_id, target_side_id, optional_main_path_offset, optional_num_tries)
+
+							if can_spawn then
+								trickle_horde.stinger_duration = t + stinger_duration
+
+								self:_trigger_pre_stinger(template, target_side_id, stinger)
+
+								break
+							else
+								Log.info("HordePacing", "Failed starting trickle horde stinger")
+							end
+						else
+							success, horde_position, target_unit, group_id = self:_spawn_trickle_horde_wave(side_id, target_side_id, optional_main_path_offset, optional_num_tries, template, trickle_horde, t)
+
+							if success and template.num_trickle_waves then
+								trickle_horde.num_waves = math.random(template.num_trickle_waves[1], template.num_trickle_waves[2]) - 1
+								trickle_horde.next_wave_at_t = t + math.random_range(template.time_between_waves[1], template.time_between_waves[2])
+							end
+						end
+					end
+
+					local trickle_horde_travel_distance_range = success and template.trickle_horde_travel_distance_range or FAILED_TRAVEL_RANGE
+					local next_trickle_horde_at = math.random_range(trickle_horde_travel_distance_range[1], trickle_horde_travel_distance_range[2])
+					trickle_horde.next_trickle_horde_travel_distance_trigger = next_trickle_horde_at
+					trickle_horde.trickle_horde_travel_distance = 0
+				end
 			end
 		until true
 	end
 end
 
-HordePacing._spawn_horde = function (self, horde_type, horde_template, composition, side_id, target_side_id, optional_main_path_offset)
+HordePacing._spawn_horde = function (self, horde_type, horde_template, composition, side_id, target_side_id, optional_main_path_offset, optional_num_tries)
 	local main_path_available = Managers.state.main_path:is_main_path_available()
 
 	if horde_template.requires_main_path and main_path_available or not horde_template.requires_main_path then
 		local horde_manager = Managers.state.horde
 		local towards_combat_vector = true
-		local success, horde_position, target_unit, group_id = horde_manager:horde(horde_type, horde_template.name, side_id, target_side_id, composition, towards_combat_vector, optional_main_path_offset)
+		local success, horde_position, target_unit, group_id = horde_manager:horde(horde_type, horde_template.name, side_id, target_side_id, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries)
 
 		return success, horde_position, target_unit, group_id
 	end
+end
+
+HordePacing._spawn_trickle_horde_wave = function (self, side_id, target_side_id, optional_main_path_offset, optional_num_tries, template, trickle_horde, t)
+	local trickle_horde_template = HordeTemplates.trickle_horde
+	local trickle_horde_compositions = template.horde_compositions.trickle_horde
+	local current_faction = Managers.state.pacing:current_faction()
+	local current_density_type = Managers.state.pacing:current_density_type()
+	local faction_composition = trickle_horde_compositions[current_faction][current_density_type]
+	local chosen_compositions = faction_composition[math.random(1, #faction_composition)]
+	local resistance_scaled_composition = Managers.state.difficulty:get_table_entry_by_resistance(chosen_compositions)
+	local success, horde_position, target_unit, group_id = self:_spawn_horde(HORDE_TYPES.trickle_horde, trickle_horde_template, resistance_scaled_composition, side_id, target_side_id, optional_main_path_offset, optional_num_tries)
+
+	if success then
+		local horde_group_sound_event_names = template.group_sound_event_names
+		local group_system = Managers.state.extension:system("group_system")
+		local group = group_system:group_from_id(group_id)
+
+		if horde_group_sound_event_names then
+			local start_event = horde_group_sound_event_names.start
+			local stop_event = horde_group_sound_event_names.stop
+			group.group_start_sound_event = start_event
+			group.group_stop_sound_event = stop_event
+
+			if start_event and not group.sfx and not group.group_sound_event_started then
+				group_system:start_group_sfx(group_id, start_event, stop_event)
+			end
+		end
+
+		if trickle_horde.pause_pacing_on_spawn then
+			for spawn_type, duration in pairs(trickle_horde.pause_pacing_on_spawn) do
+				Managers.state.pacing:pause_spawn_type(spawn_type, true, "trickle_horde", duration)
+			end
+		end
+
+		local spawn_max_health_modifier = template.spawn_max_health_modifier
+
+		if spawn_max_health_modifier then
+			local members = group.members
+
+			for j = 1, #members do
+				local unit = members[j]
+				local spawned_unit_health_extension = ScriptUnit.extension(unit, "health_system")
+				local max_health = spawned_unit_health_extension:max_health()
+
+				spawned_unit_health_extension:add_damage(max_health * spawn_max_health_modifier)
+			end
+		end
+	end
+
+	trickle_horde.stinger_duration = nil
+
+	return success, horde_position, target_unit, group_id
+end
+
+HordePacing._can_spawn = function (self, horde_type, horde_template, composition, side_id, target_side_id, optional_main_path_offset, optional_num_tries)
+	local horde_manager = Managers.state.horde
+	local towards_combat_vector = true
+	local can_spawn = horde_manager:can_spawn(horde_type, horde_template.name, side_id, target_side_id, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries)
+
+	return can_spawn
 end
 
 return HordePacing

@@ -36,6 +36,18 @@ HordeManager.horde = function (self, horde_type, horde_template_name, side_id, t
 	return success, horde_position, target_unit, group_id
 end
 
+HordeManager.can_spawn = function (self, horde_type, horde_template_name, side_id, target_side_id, composition, ...)
+	local side_system = Managers.state.extension:system("side_system")
+	local side = side_system:get_side(side_id)
+	local target_side = side_system:get_side(target_side_id)
+	local horde_template = HordeTemplates[horde_template_name]
+	local physics_world = self._physics_world
+	local nav_world = self._nav_world
+	local can_spawn = horde_template.can_spawn(physics_world, nav_world, side, target_side, composition, ...)
+
+	return can_spawn
+end
+
 HordeManager.num_active_hordes = function (self, horde_type)
 	if horde_type then
 		return #self._hordes[horde_type]

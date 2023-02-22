@@ -1169,4 +1169,33 @@ conditions.beast_of_nurgle_movement = function (unit, blackboard, scratchpad, co
 	return false
 end
 
+conditions.chaos_spawn_should_leap = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+
+	if not is_running and behavior_component.move_state == "attacking" then
+		return false
+	end
+
+	return behavior_component.should_leap
+end
+
+conditions.chaos_spawn_should_grab = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local perception_component = blackboard.perception
+	local target_unit = perception_component.target_unit
+	local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+	local character_state_component = unit_data_extension:read_component("character_state")
+	local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+	local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
+
+	if is_knocked_down then
+		return false
+	end
+
+	local hit_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+	local disabled_state_input = hit_unit_data_extension:read_component("disabled_state_input")
+	local disabled_and_not_by_this_chaos_spawn = disabled_state_input.disabling_unit and disabled_state_input.disabling_unit ~= unit
+
+	return not disabled_and_not_by_this_chaos_spawn
+end
+
 return conditions

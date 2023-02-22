@@ -1,7 +1,6 @@
 local elements = {
 	{
 		package = "packages/ui/hud/mission_speaker_popup/mission_speaker_popup",
-		customizable_scenegraph_id = "background",
 		use_hud_scale = true,
 		class_name = "HudElementMissionSpeakerPopup",
 		filename = "scripts/ui/hud/elements/mission_speaker_popup/hud_element_mission_speaker_popup",

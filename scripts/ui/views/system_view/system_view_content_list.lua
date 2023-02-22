@@ -195,7 +195,7 @@ local default_list = {
 			end
 
 			local game_mode_name = game_mode_manager:game_mode_name()
-			local is_in_hub = game_mode_name == "hub"
+			local is_in_hub = game_mode_name == "hub" or game_mode_name == "shooting_range"
 
 			return is_in_hub
 		end
@@ -341,7 +341,7 @@ local default_list = {
 		trigger_function = function ()
 			local context = {
 				title_text = "loc_menu_skip_prologue",
-				description_text = "loc_popup_description_leave_mission",
+				description_text = "loc_popup_description_skip_prologue",
 				options = {
 					{
 						text = "loc_confirm",

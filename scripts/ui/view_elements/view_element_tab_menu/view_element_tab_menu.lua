@@ -54,10 +54,10 @@ ViewElementTabMenu.add_entry = function (self, display_name, on_pressed_callback
 		on_pressed_callback = on_pressed_callback,
 		update = optional_update_function
 	}
-	local display_text = no_localization == true and display_name or self:_localize(display_name)
+	local display_text = no_localization == true and display_name or display_name and self:_localize(display_name)
 	local content = widget.content
 	content.hotspot.pressed_callback = on_pressed_callback
-	content.text = display_text
+	content.text = display_text or ""
 
 	if optional_display_icon then
 		content.icon = optional_display_icon
@@ -193,7 +193,7 @@ ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_rend
 			total_width = total_width + size[1] + button_spacing
 		end
 
-		local left_size_offset = button_spacing * 0.5
+		local left_size_offset = 0
 		local horizontal_alignment = menu_settings.horizontal_alignment
 
 		if horizontal_alignment then

@@ -535,6 +535,19 @@ local material_overrides = {
 			}
 		}
 	},
+	chaos_hound_mutator = {
+		texture_overrides = {
+			bcm = {
+				resource = "content/characters/enemy/chaos_hound/attachments_base/body/textures/body_circumstance_bcm"
+			},
+			orm = {
+				resource = "content/characters/enemy/chaos_hound/attachments_base/body/textures/body_circumstance_orm"
+			},
+			nm = {
+				resource = "content/characters/enemy/chaos_hound/attachments_base/body/textures/body_circumstance_nm"
+			}
+		}
+	},
 	chaos_ogryn_melee_b_var_01 = {
 		texture_overrides = {
 			bc = {

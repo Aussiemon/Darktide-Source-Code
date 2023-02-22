@@ -8,7 +8,7 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local ActionHandler = class("ActionHandler")
 local MAX_COMBO_COUNT = NetworkConstants.action_combo_count.max
 local EMPTY_TABLE = {}
-local _get_active_template = nil
+local _get_active_template, _get_reset_combo = nil
 
 ActionHandler.init = function (self, unit, data)
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
@@ -128,12 +128,9 @@ ActionHandler.fixed_update = function (self, dt, t)
 			end
 		end
 
-		local action_end_time = component.end_t
-		local action_start_time = component.start_t
-		local time_since_end = t - action_end_time
-		local is_looping_action = action_end_time == action_start_time and current_action_name ~= nil and current_action_name ~= "none"
+		local reset_combo = _get_reset_combo(component, t)
 
-		if not is_looping_action and time_since_end > 0.2 and component.combo_count > 0 then
+		if reset_combo then
 			component.combo_count = 0
 		end
 	end
@@ -270,7 +267,7 @@ ActionHandler._calculate_action_total_time = function (self, action_settings, ac
 	local total_time_func = action_kind_total_time_funcs[action_kind]
 
 	if total_time_func then
-		return total_time_func(action_params) / time_scale
+		return total_time_func(action_settings, action_params) / time_scale
 	else
 		return action_settings.total_time / time_scale
 	end
@@ -318,7 +315,44 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 	total_modifier = total_modifier - (num_applied_stat_buffs - 1)
 	time_scale = time_scale * total_modifier
 	local min = NetworkConstants.action_time_scale.min
-	local max = 2
+	local max = NetworkConstants.action_time_scale.max
+
+	if Unit.animation_get_variable_min_max then
+		if time_scale < min or max < time_scale then
+			local active_buffs = "Buffs:"
+			local buffs = buff_extension:buffs()
+
+			for ii = 1, #buffs do
+				local template = buffs[ii]:template()
+				local template_stat_buffs = template.stat_buffs
+				local template_conditional_stat_buffs = template.conditional_stat_buffs
+				local template_lerped_stat_buffs = template.lerped_stat_buffs
+				local template_proc_stat_buffs = template.proc_stat_buffs
+
+				for jj = 1, #action_time_scale_stat_buffs do
+					local key = action_time_scale_stat_buffs[jj]
+
+					if template_stat_buffs and template_stat_buffs[key] or template_conditional_stat_buffs and template_conditional_stat_buffs[key] or template_lerped_stat_buffs and template_lerped_stat_buffs[key] or template_proc_stat_buffs and template_proc_stat_buffs[key] then
+						active_buffs = string.format("%s %s,", active_buffs, template.name)
+					end
+				end
+			end
+
+			local active_stat_buffs = "Time scales:"
+
+			for ii = 1, #action_time_scale_stat_buffs do
+				local key = action_time_scale_stat_buffs[ii]
+				local value = stat_buffs[key]
+				active_stat_buffs = string.format("%s (%s:%s),", active_stat_buffs, key, value and string.format("%.3f", value) or "n/a")
+			end
+
+			Log.exception("ActionHandler", "action time scale value of %.3f fell outside allowed %.3f-%.3f range! %s %s", time_scale, min, max, active_stat_buffs, active_buffs)
+		end
+	else
+		max = 2
+		min = NetworkConstants.action_time_scale.min
+	end
+
 	time_scale = math.clamp(time_scale, min, max)
 
 	return time_scale
@@ -915,6 +949,19 @@ function _get_active_template(component)
 	local template = weapon_template or AbilityTemplates[template_name]
 
 	return template
+end
+
+function _get_reset_combo(component, t)
+	local current_action_name = component.current_action_name
+	local action_end_time = component.end_t
+	local action_start_time = component.start_t
+	local time_since_end = t - action_end_time
+	local is_looping_action = action_end_time == action_start_time and current_action_name ~= nil and current_action_name ~= "none"
+	local template = component.template_name ~= "none" and _get_active_template(component)
+	local combo_reset_duration = template and template.combo_reset_duration or 0.2
+	local reset_combo = not is_looping_action and combo_reset_duration < time_since_end and component.combo_count > 0
+
+	return reset_combo, time_since_end, combo_reset_duration, is_looping_action
 end
 
 return ActionHandler

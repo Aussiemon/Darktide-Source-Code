@@ -1440,7 +1440,8 @@ weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",
 	"ogryn_power_maul",
-	"p1"
+	"p1",
+	"activated"
 }
 weapon_template.dodge_template = "ogryn"
 weapon_template.sprint_template = "ogryn"

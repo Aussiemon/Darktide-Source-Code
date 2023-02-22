@@ -186,8 +186,8 @@ ImguiDevParametersGui.on_activated = function (self)
 end
 
 ImguiDevParametersGui.update = function (self, dt, t)
-	self:_render()
 	self:_update_navigation()
+	self:_render()
 end
 
 ImguiDevParametersGui._render = function (self)
@@ -215,6 +215,8 @@ ImguiDevParametersGui._update_navigation = function (self)
 	if self._reset_focus then
 		self._reset_focus = nil
 
+		WidgetUtilities.focus_widget(filter_input_widget.label)
+		WidgetUtilities.set_keyboard_focus()
 		WidgetUtilities.activate_widget(filter_input_widget.label)
 	elseif auto_expand_tree and not list_is_visible and filter_input_widget.is_focused and Imgui.is_key_pressed(Imgui.KEY_DOWN_ARROW) then
 		if #widget_tree.nodes > 0 then

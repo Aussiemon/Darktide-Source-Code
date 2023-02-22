@@ -11,6 +11,9 @@ local push_settings = {
 		very_light = {
 			speed = 1.2
 		},
+		ogryn_very_light = {
+			speed = 0.25
+		},
 		light = {
 			speed = 2.5,
 			max_speed_override = 2
@@ -90,6 +93,11 @@ local push_settings = {
 			max_speed_override = 6,
 			push_through_block = true
 		},
+		renegade_grenadier_frag = {
+			speed = 8,
+			max_speed_override = 6,
+			push_through_block = true
+		},
 		chaos_hound_pounced_push = {
 			speed = 10,
 			max_speed_override = 8
@@ -109,6 +117,11 @@ local push_settings = {
 			max_speed_override = 9,
 			push_through_block = true
 		},
+		chaos_spawn_light = {
+			speed = 5.5,
+			max_speed_override = 5,
+			push_through_block = true
+		},
 		ranged_light = {
 			speed = 1,
 			max_speed_override = 2,
@@ -116,12 +129,25 @@ local push_settings = {
 		},
 		ranged_light_auto = {
 			speed = 0.25,
-			max_speed_override = 6,
+			dont_trigger_on_toughness = true
+		},
+		ogryn_ranged_light_auto = {
+			speed = 0.1,
 			dont_trigger_on_toughness = true
 		},
 		beast_of_nurgle_move_push = {
 			speed = 8,
 			max_speed_override = 7
+		},
+		chaos_spawn_tentacle = {
+			speed = 10,
+			max_speed_override = 10,
+			push_through_block = true
+		},
+		chaos_spawn_combo = {
+			speed = 7,
+			max_speed_override = 7,
+			push_through_block = true
 		}
 	}
 }

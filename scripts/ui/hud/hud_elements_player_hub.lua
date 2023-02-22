@@ -4,7 +4,8 @@ local elements = {
 		filename = "scripts/ui/hud/elements/character_news_feed/hud_element_character_news_feed",
 		visibility_groups = {
 			"in_hub_view",
-			"alive"
+			"alive",
+			"emote_wheel"
 		}
 	},
 	{
@@ -15,13 +16,8 @@ local elements = {
 		filename = "scripts/ui/hud/elements/team_panel_handler/hud_element_team_panel_handler",
 		visibility_groups = {
 			"dead",
-			"alive"
-		},
-		customizable_scenegraph_id = {
-			"local_player",
-			"player_1",
-			"player_2",
-			"player_3"
+			"alive",
+			"emote_wheel"
 		}
 	},
 	{
@@ -35,24 +31,24 @@ local elements = {
 	},
 	{
 		package = "packages/ui/hud/mission_objective_feed/mission_objective_feed",
-		customizable_scenegraph_id = "area",
 		use_hud_scale = true,
 		class_name = "HudElementMissionObjectiveFeed",
 		filename = "scripts/ui/hud/elements/mission_objective_feed/hud_element_mission_objective_feed",
 		visibility_groups = {
 			"dead",
-			"alive"
+			"alive",
+			"emote_wheel"
 		}
 	},
 	{
 		package = "packages/ui/hud/mission_objective_popup/mission_objective_popup",
-		customizable_scenegraph_id = "mission_popup",
 		use_hud_scale = true,
 		class_name = "HudElementMissionObjectivePopup",
 		filename = "scripts/ui/hud/elements/mission_objective_popup/hud_element_mission_objective_popup",
 		visibility_groups = {
 			"dead",
-			"alive"
+			"alive",
+			"emote_wheel"
 		}
 	},
 	{
@@ -62,30 +58,31 @@ local elements = {
 		filename = "scripts/ui/hud/elements/onboarding_popup/hud_element_onboarding_popup",
 		visibility_groups = {
 			"alive",
-			"dead"
+			"dead",
+			"emote_wheel"
 		}
 	},
 	{
 		package = "packages/ui/hud/area_notification_popup/area_notification_popup",
-		customizable_scenegraph_id = "area_popup",
 		use_hud_scale = true,
 		class_name = "HudElementAreaNotificationPopup",
 		filename = "scripts/ui/hud/elements/area_notification_popup/hud_element_area_notification_popup",
 		visibility_groups = {
 			"dead",
-			"alive"
+			"alive",
+			"emote_wheel"
 		}
 	},
 	{
 		package = "packages/ui/hud/mission_speaker_popup/mission_speaker_popup",
-		customizable_scenegraph_id = "background",
 		use_hud_scale = true,
 		class_name = "HudElementMissionSpeakerPopup",
 		filename = "scripts/ui/hud/elements/mission_speaker_popup/hud_element_mission_speaker_popup",
 		visibility_groups = {
 			"dead",
 			"alive",
-			"cutscene"
+			"cutscene",
+			"emote_wheel"
 		}
 	},
 	{
@@ -94,7 +91,8 @@ local elements = {
 		class_name = "HudElementWorldMarkers",
 		filename = "scripts/ui/hud/elements/world_markers/hud_element_world_markers",
 		visibility_groups = {
-			"alive"
+			"alive",
+			"emote_wheel"
 		}
 	},
 	{
@@ -102,14 +100,26 @@ local elements = {
 		class_name = "HudElementInteraction",
 		filename = "scripts/ui/hud/elements/interaction/hud_element_interaction",
 		visibility_groups = {
-			"alive"
+			"alive",
+			"emote_wheel"
+		}
+	},
+	{
+		package = "packages/ui/hud/emote_wheel/emote_wheel",
+		use_hud_scale = false,
+		class_name = "HudElementEmoteWheel",
+		filename = "scripts/ui/hud/elements/emote_wheel/hud_element_emote_wheel",
+		visibility_groups = {
+			"alive",
+			"emote_wheel"
 		}
 	},
 	{
 		class_name = "HudElementNameplates",
 		filename = "scripts/ui/hud/elements/nameplates/hud_element_nameplates",
 		visibility_groups = {
-			"alive"
+			"alive",
+			"emote_wheel"
 		}
 	},
 	{
@@ -129,6 +139,7 @@ local elements = {
 			"cutscene",
 			"in_view",
 			"tactical_overlay",
+			"emote_wheel",
 			"testify",
 			"dead",
 			"alive"

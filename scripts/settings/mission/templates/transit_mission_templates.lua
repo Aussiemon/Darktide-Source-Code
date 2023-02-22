@@ -5,16 +5,16 @@ local mission_templates = {
 		zone_id = "transit",
 		texture_small = "content/ui/textures/missions/cm_habs_small",
 		mission_brief_material = "content/environment/cinematic/mission_briefing/mission_briefing_hologram_cm_habs_01",
-		texture_medium = "content/ui/textures/missions/cm_habs_medium",
-		face_state_machine_key = "state_machine_missions",
 		mechanism_name = "adventure",
+		face_state_machine_key = "state_machine_missions",
+		texture_medium = "content/ui/textures/missions/cm_habs_medium",
 		texture_big = "content/ui/textures/missions/cm_habs_big",
+		objectives = "cm_habs",
 		coordinates = "loc_mission_coordinates_cm_habs",
-		mission_type = "03",
 		level = "content/levels/transit/missions/mission_cm_habs",
 		game_mode_name = "coop_complete_objective",
 		mission_intro_minimum_time = 25,
-		objectives = "cm_habs",
+		mission_type = "03",
 		mission_description = "loc_mission_board_main_objective_habblock_description",
 		cinematics = {
 			intro_abc = {
@@ -36,6 +36,14 @@ local mission_templates = {
 		terror_event_templates = {
 			"terror_events_cm_habs"
 		},
+		circumstances = {
+			more_resistance_01 = true,
+			hunting_grounds_01 = true,
+			less_resistance_01 = true,
+			assault_01 = true,
+			darkness_01 = true,
+			ventilation_purge_01 = true
+		},
 		testify_flags = {},
 		health_station = {},
 		mission_brief_vo = {
@@ -51,6 +59,9 @@ local mission_templates = {
 			npc_story_ticker_enabled = false,
 			short_story_ticker_enabled = true,
 			story_ticker_enabled = true
+		},
+		spawn_settings = {
+			next_mission = "recent_mission"
 		}
 	},
 	lm_rails = {
@@ -58,17 +69,17 @@ local mission_templates = {
 		wwise_state = "zone_1",
 		zone_id = "transit",
 		texture_small = "content/ui/textures/missions/lm_rails_small",
+		objectives = "lm_rails",
 		mission_brief_material = "content/environment/cinematic/mission_briefing/mission_briefing_hologram_lm_rails_01",
-		texture_medium = "content/ui/textures/missions/lm_rails_medium",
 		face_state_machine_key = "state_machine_missions",
-		mechanism_name = "adventure",
+		texture_medium = "content/ui/textures/missions/lm_rails_medium",
 		texture_big = "content/ui/textures/missions/lm_rails_big",
+		mechanism_name = "adventure",
 		coordinates = "loc_mission_coordinates_lm_rails",
-		mission_type = "01",
 		level = "content/levels/transit/missions/mission_lm_rails",
 		game_mode_name = "coop_complete_objective",
 		mission_intro_minimum_time = 5,
-		objectives = "lm_rails",
+		mission_type = "01",
 		mission_description = "loc_mission_board_main_objective_rails_description",
 		cinematics = {
 			intro_abc = {
@@ -91,6 +102,14 @@ local mission_templates = {
 			"terror_events_lm_rails"
 		},
 		health_station = {},
+		circumstances = {
+			more_resistance_01 = true,
+			hunting_grounds_01 = true,
+			less_resistance_01 = true,
+			assault_01 = true,
+			darkness_01 = true,
+			ventilation_purge_01 = true
+		},
 		testify_flags = {},
 		mission_brief_vo = {
 			vo_profile = "sergeant_a",
@@ -105,6 +124,9 @@ local mission_templates = {
 			npc_story_ticker_enabled = false,
 			short_story_ticker_enabled = true,
 			story_ticker_enabled = true
+		},
+		spawn_settings = {
+			next_mission = "recent_mission"
 		}
 	},
 	km_station = {
@@ -112,17 +134,17 @@ local mission_templates = {
 		wwise_state = "zone_1",
 		zone_id = "transit",
 		texture_small = "content/ui/textures/missions/km_station_small",
-		mission_brief_material = "content/environment/cinematic/mission_briefing/mission_briefing_hologram_km_station_01",
-		texture_medium = "content/ui/textures/missions/km_station_medium",
-		face_state_machine_key = "state_machine_missions",
 		mechanism_name = "adventure",
+		mission_brief_material = "content/environment/cinematic/mission_briefing/mission_briefing_hologram_km_station_01",
+		face_state_machine_key = "state_machine_missions",
+		texture_medium = "content/ui/textures/missions/km_station_medium",
 		texture_big = "content/ui/textures/missions/km_station_big",
+		objectives = "km_station",
 		coordinates = "loc_mission_coordinates_km_station",
-		mission_type = "02",
 		level = "content/levels/transit/missions/mission_km_station",
 		game_mode_name = "coop_complete_objective",
 		mission_intro_minimum_time = 5,
-		objectives = "km_station",
+		mission_type = "02",
 		mission_description = "loc_mission_board_main_objective_trainstation_description",
 		cinematics = {
 			intro_abc = {
@@ -148,6 +170,14 @@ local mission_templates = {
 		terror_event_templates = {
 			"terror_events_km_station"
 		},
+		circumstances = {
+			more_resistance_01 = true,
+			hunting_grounds_01 = true,
+			less_resistance_01 = true,
+			assault_01 = true,
+			darkness_01 = true,
+			ventilation_purge_01 = true
+		},
 		testify_flags = {},
 		mission_brief_vo = {
 			vo_profile = "explicator_a",
@@ -162,6 +192,9 @@ local mission_templates = {
 			npc_story_ticker_enabled = false,
 			short_story_ticker_enabled = true,
 			story_ticker_enabled = true
+		},
+		spawn_settings = {
+			next_mission = "recent_mission"
 		}
 	}
 }

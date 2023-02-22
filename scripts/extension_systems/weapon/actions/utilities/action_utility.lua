@@ -20,7 +20,7 @@ local ActionUtility = {
 }
 local EPSILON = 1e-05
 
-ActionUtility.is_within_trigger_time = function (time_in_action, dt, first_trigger_time, trigger_intervall)
+ActionUtility.is_within_trigger_time = function (time_in_action, dt, first_trigger_time, trigger_interval)
 	local first_trigger_time_fixed = FixedFrame.clamp_to_fixed_time(first_trigger_time)
 	local first_trigger_diff = math.abs(time_in_action - first_trigger_time_fixed)
 	local first_trigger_frame = first_trigger_diff < EPSILON
@@ -28,11 +28,11 @@ ActionUtility.is_within_trigger_time = function (time_in_action, dt, first_trigg
 
 	if first_trigger_frame then
 		return true
-	elseif past_first_trigger and trigger_intervall then
-		local trigger_intervall_fixed = FixedFrame.clamp_to_fixed_time(trigger_intervall)
+	elseif past_first_trigger and trigger_interval then
+		local trigger_interval_fixed = FixedFrame.clamp_to_fixed_time(trigger_interval)
 		local time_since_first_trigger_fixed = time_in_action - first_trigger_time_fixed
-		local time_since_last_trigger = time_since_first_trigger_fixed % (trigger_intervall_fixed + dt)
-		local trigger_diff = math.abs(time_since_last_trigger - trigger_intervall_fixed)
+		local time_since_last_trigger = time_since_first_trigger_fixed % (trigger_interval_fixed + dt)
+		local trigger_diff = math.abs(time_since_last_trigger - trigger_interval_fixed)
 		local intervall_trigger_frame = trigger_diff < EPSILON
 
 		if intervall_trigger_frame then

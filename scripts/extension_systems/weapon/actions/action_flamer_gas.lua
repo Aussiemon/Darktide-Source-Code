@@ -88,17 +88,6 @@ ActionFlamerGas.fixed_update = function (self, dt, t, time_in_action)
 		self:_setup_flame_data(self._action_settings)
 	end
 
-	local action_settings = self._action_settings
-	local fire_config = action_settings.fire_configuration
-
-	if fire_config.charge_cost then
-		local charge_component = self._action_module_charge_component
-		local charge_template = self._weapon_extension:charge_template()
-		local charge_cost = charge_template.charge_cost or 0
-		local new_charge = charge_component.charge_level - charge_cost * dt
-		charge_component.charge_level = math.clamp01(new_charge)
-	end
-
 	self:_acquire_targets(t)
 
 	if self._is_server then

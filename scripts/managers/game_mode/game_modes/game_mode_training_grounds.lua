@@ -10,6 +10,15 @@ end
 GameModeTrainingGrounds.init = function (self, game_mode_context, game_mode_name, network_event_delegate)
 	GameModeTrainingGrounds.super.init(self, game_mode_context, game_mode_name, network_event_delegate)
 	Managers.event:register(self, "event_loading_finished", "_on_loading_finished")
+
+	self._init_scenario = nil
+end
+
+GameModeTrainingGrounds.set_init_scenario = function (self, scenario_alias, scenario_name)
+	self._init_scenario = {
+		alias = scenario_alias,
+		name = scenario_name
+	}
 end
 
 GameModeTrainingGrounds._game_mode_state_changed = function (self, new_state, old_state)
@@ -25,19 +34,16 @@ GameModeTrainingGrounds._game_mode_state_changed = function (self, new_state, ol
 		end
 
 		local scenario_system = Managers.state.extension:system("scripted_scenario_system")
+		local init_scenario = self._init_scenario
+		local default_scenario = settings.default_init_scripted_scenario
 
-		scenario_system:set_enabled(true)
-		scenario_system:on_level_enter()
-
-		if not scenario_system:current_scenario() and not scenario_system:has_queued_scenario() then
-			local default_scenario = settings.default_init_scripted_scenario
-
-			if default_scenario then
-				local t = Managers.time:time("gameplay")
-
-				scenario_system:start_scenario(default_scenario.alias, default_scenario.name, t)
-			end
+		if init_scenario then
+			scenario_system:queue_scenario(init_scenario.alias, init_scenario.name)
+		elseif default_scenario then
+			scenario_system:queue_scenario(default_scenario.alias, default_scenario.name)
 		end
+
+		scenario_system:on_level_enter()
 	end
 end
 

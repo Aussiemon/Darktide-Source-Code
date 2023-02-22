@@ -101,7 +101,7 @@ end
 
 local SEGMENT_LIST = {}
 
-Trajectory.check_trajectory_collisions = function (physics_world, from_position, target_position, gravity, projectile_speed, angle, sections, collision_filter, time_in_flight, ignored_unit_collisions, debug_draw_trajectory)
+Trajectory.check_trajectory_collisions = function (physics_world, from_position, target_position, gravity, projectile_speed, angle, sections, collision_filter, time_in_flight, ignored_unit_collisions, debug_draw_trajectory, optional_unit)
 	table.clear(SEGMENT_LIST)
 
 	local to_target = target_position - from_position
@@ -133,6 +133,15 @@ Trajectory.check_trajectory_collisions = function (physics_world, from_position,
 				end
 			else
 				return false, hit_pos, SEGMENT_LIST
+			end
+		end
+
+		if optional_unit then
+			local mover_test_position = (segment_pos1 + segment_pos2) / 2
+			local mover_fits = Unit.mover_fits_at(optional_unit, "mover", mover_test_position)
+
+			if not mover_fits then
+				return false, nil, SEGMENT_LIST
 			end
 		end
 

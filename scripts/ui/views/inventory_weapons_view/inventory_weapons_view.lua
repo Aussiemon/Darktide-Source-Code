@@ -1,19 +1,20 @@
 local ContentBlueprints = require("scripts/ui/views/inventory_view/inventory_view_content_blueprints")
 local Definitions = require("scripts/ui/views/inventory_weapons_view/inventory_weapons_view_definitions")
 local InventoryWeaponsViewSettings = require("scripts/ui/views/inventory_weapons_view/inventory_weapons_view_settings")
+local ItemGridViewBase = require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
+local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
+local ItemUtils = require("scripts/utilities/items")
+local MasterItems = require("scripts/backend/master_items")
+local ProfileUtils = require("scripts/utilities/profile_utils")
+local TextUtilities = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
-local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
-local MasterItems = require("scripts/backend/master_items")
-local UISettings = require("scripts/settings/ui/ui_settings")
-local ItemGridViewBase = require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
 local ViewElementWeaponActions = require("scripts/ui/view_elements/view_element_weapon_actions/view_element_weapon_actions")
 local ViewElementWeaponStats = require("scripts/ui/view_elements/view_element_weapon_stats/view_element_weapon_stats")
-local ItemUtils = require("scripts/utilities/items")
-local TextUtilities = require("scripts/utilities/ui/text")
 local InventoryWeaponsView = class("InventoryWeaponsView", "ItemGridViewBase")
 
 InventoryWeaponsView.init = function (self, settings, context)
@@ -21,10 +22,11 @@ InventoryWeaponsView.init = function (self, settings, context)
 	self._preview_player = context.player or Managers.player:local_player(1)
 	self._preview_profile_equipped_items = context.preview_profile_equipped_items
 	self._is_own_player = self._preview_player == Managers.player:local_player(1)
+	self.item_type = context.item_type
 
 	InventoryWeaponsView.super.init(self, Definitions, settings, context)
 
-	self._parent = context and context.parent
+	self._parent = context.parent
 	self._pass_input = false
 	self._pass_draw = false
 end
@@ -611,6 +613,13 @@ InventoryWeaponsView._equip_item = function (self, slot_name, item)
 			self:_play_sound(UISoundEvents.weapons_equip_weapon)
 		end
 
+		local item_gear_id = item and item.gear_id
+		local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
+
+		if active_profile_preset_id then
+			ProfileUtils.save_item_id_for_profile_preset(active_profile_preset_id, slot_name, item_gear_id)
+		end
+
 		Managers.event:trigger("event_inventory_view_equip_item", slot_name, item)
 
 		self._is_equipped_weapon_changed = true
@@ -669,7 +678,6 @@ InventoryWeaponsView._update_grid_widgets = function (self, dt, t, input_service
 		local previewed_item = self._previewed_item
 		local discard_item_hold_progress = self._discard_item_hold_progress
 		local previous_widget_offset, first_discarded_item_index = nil
-		local list_discard_offset_corrected = false
 		local num_widgets = #widgets
 
 		for i = 1, num_widgets do
@@ -746,13 +754,9 @@ InventoryWeaponsView._mark_item_for_discard = function (self, grid_index)
 	self._discard_anim_duration = InventoryWeaponsViewSettings.item_discard_anim_duration
 
 	self._on_discard_anim_complete_cb = function ()
-		local length_scrolled = grid:length_scrolled()
 		local widget_to_remove = self:grid_widgets()[grid_index]
 
 		grid:remove_widget(widget_to_remove)
-
-		local new_scroll_progress = grid:scroll_progress_by_length(length_scrolled)
-
 		grid:clear_scroll_progress()
 
 		local new_element = new_grid_index and self:element_by_index(new_grid_index)

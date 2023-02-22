@@ -1,5 +1,6 @@
 local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
 local AchievementUITypes = require("scripts/settings/achievements/achievement_ui_types")
+local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local ItemUtils = require("scripts/utilities/items")
 local TextUtilities = require("scripts/utilities/ui/text")
@@ -94,35 +95,6 @@ local function _common_icon_hover_change_function(content, style)
 
 		color_lerp(style.icon_default_color, icon_target_color, hover_progress, material_values.icon_color)
 	end
-end
-
-local function _common_text_change_function(content, style)
-	local color_lerp = _color_lerp
-	local math_max = _math_max
-	local hotspot = content.hotspot
-	local select_progress = hotspot.anim_select_progress
-	local hover_progress = math_max(hotspot.anim_hover_progress - select_progress, 0)
-	local color = style.text_color or style.color
-	local default_color = style.default_color
-	local hover_color = style.hover_color
-	local focused_color = style.selected_color
-	local progress, target_color = nil
-
-	if hover_progress < select_progress then
-		progress = select_progress
-		target_color = focused_color
-	else
-		progress = hover_progress
-		target_color = hover_color
-	end
-
-	color_lerp(default_color, target_color, progress, color)
-end
-
-local function _common_selected_visibility_function(content, style)
-	local hotspot = content.hotspot
-
-	return hotspot.is_selected or hotspot.anim_select_progress > 0
 end
 
 local function _common_focus_visibility_function(content, style)
@@ -1030,134 +1002,6 @@ local _in_progress_overlay_pass_template = {
 	}
 }
 
-local function _category_frame_hover_change_function(content, style)
-	local hotspot = content.hotspot
-	local select_progress = hotspot.anim_select_progress
-	local hover_progress = _math_max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
-	local color = style.color
-	local default_color = style.default_color
-	local hover_color = style.hover_color
-	local selected_color = style.selected_color
-	local target_color, color_progress = nil
-
-	if hover_progress <= select_progress then
-		target_color = selected_color
-		color_progress = select_progress
-	else
-		target_color = hover_color
-		color_progress = hover_progress
-	end
-
-	_color_lerp(default_color, target_color, color_progress, color)
-
-	local min_alpha = style.min_alpha or color[1]
-	local max_alpha = style.max_alpha or color[1]
-
-	if min_alpha ~= max_alpha then
-		color[1] = _math_lerp(min_alpha, max_alpha, hover_progress)
-	end
-
-	local selected_layer = style.selected_layer
-
-	if selected_layer then
-		if select_progress > 0 then
-			style.offset[3] = selected_layer
-		else
-			style.offset[3] = style.hover_layer
-		end
-	end
-end
-
-local function _category_frame_hover_visibility_function(content, style)
-	local hotspot = content.hotspot
-	local is_focused = hotspot.is_hover or hotspot.is_selected or hotspot.is_focused
-	local was_focused = hotspot.anim_hover_progress > 0 or hotspot.anim_select_progress > 0 or hotspot.anim_focus_progress > 0
-
-	return is_focused or was_focused
-end
-
-local function _category_background_change_function(content, style)
-	local hotspot = content.hotspot
-	local select_progress = hotspot.anim_select_progress or 0
-	local hover_progress = _math_max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
-	local color = style.color
-	local max_alpha = style.max_alpha
-	local min_alpha = style.min_alpha
-	local alpha = _math_lerp(min_alpha, max_alpha, hover_progress)
-	color[1] = alpha * select_progress
-end
-
-local _category_common_pass_templates = {
-	{
-		style_id = "hotspot",
-		pass_type = "hotspot",
-		content_id = "hotspot",
-		content = {
-			use_is_focused = true
-		}
-	},
-	{
-		style_id = "background",
-		pass_type = "texture",
-		value_id = "background",
-		value = "content/ui/materials/backgrounds/default_square",
-		change_function = _category_background_change_function,
-		visibility_function = _common_selected_visibility_function
-	},
-	{
-		style_id = "background_gradient",
-		pass_type = "texture",
-		value_id = "background_gradient",
-		value = "content/ui/materials/masks/gradient_horizontal_sides_02",
-		change_function = _category_frame_hover_change_function,
-		visibility_function = _category_frame_hover_visibility_function
-	},
-	{
-		style_id = "frame",
-		pass_type = "texture",
-		value_id = "frame",
-		value = "content/ui/materials/frames/frame_tile_2px",
-		change_function = _category_frame_hover_change_function,
-		visibility_function = _category_frame_hover_visibility_function
-	},
-	{
-		style_id = "corner",
-		pass_type = "texture",
-		value_id = "corner",
-		value = "content/ui/materials/frames/frame_corner_2px",
-		change_function = _category_frame_hover_change_function,
-		visibility_function = _category_frame_hover_visibility_function
-	},
-	{
-		value = "content/ui/materials/dividers/divider_line_01",
-		value_id = "divider",
-		pass_type = "texture",
-		style_id = "divider"
-	},
-	{
-		style_id = "bullet",
-		pass_type = "texture",
-		value_id = "bullet",
-		value = "content/ui/materials/icons/system/page_indicator_02_idle",
-		change_function = _common_text_change_function
-	},
-	{
-		style_id = "bullet_active",
-		pass_type = "texture",
-		value_id = "bullet_active",
-		value = "content/ui/materials/icons/system/page_indicator_02_active",
-		change_function = _category_frame_hover_change_function,
-		visibility_function = _common_hover_visibility_function
-	},
-	{
-		style_id = "text",
-		pass_type = "text",
-		value_id = "text",
-		value = "",
-		change_function = _common_text_change_function
-	}
-}
-
 local function _category_common_pass_templates_init(parent, widget, config, callback_name, secondary_callback_name, ui_renderer)
 	local category = config.category
 	local content = widget.content
@@ -1180,22 +1024,14 @@ achievements_view_blueprints.list_padding = {
 }
 achievements_view_blueprints.category_list_padding_top = {
 	size = blueprint_styles.category_list_padding_top.size,
-	pass_template = {
-		{
-			value = "content/ui/materials/dividers/divider_line_01",
-			value_id = "divider",
-			pass_type = "texture",
-			style_id = "divider"
-		}
-	},
-	style = blueprint_styles.category_list_padding_top
+	pass_template = ButtonPassTemplates.terminal_list_divider
 }
 achievements_view_blueprints.category_list_padding_bottom = {
 	size = blueprint_styles.category_list_padding_bottom.size
 }
 achievements_view_blueprints.simple_category_button = {
 	size = table.clone(blueprint_styles.simple_category_button.size),
-	pass_template = table.clone(_category_common_pass_templates),
+	pass_template = table.clone(ButtonPassTemplates.terminal_list_button),
 	style = blueprint_styles.simple_category_button,
 	init = _category_common_pass_templates_init
 }
@@ -1205,13 +1041,13 @@ local _category_foldout_pass_template = {
 		pass_type = "rotated_texture",
 		value_id = "arrow",
 		value = "content/ui/materials/buttons/arrow_01",
-		change_function = _category_frame_hover_change_function
+		change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function
 	}
 }
 achievements_view_blueprints.top_category_button = {
 	size = blueprint_styles.top_category_button.size,
 	pass_template_function = function (parent, config)
-		local pass_templates = table.clone(_category_common_pass_templates)
+		local pass_templates = table.clone(ButtonPassTemplates.terminal_list_button)
 
 		table.append(pass_templates, _category_foldout_pass_template)
 
@@ -1222,7 +1058,7 @@ achievements_view_blueprints.top_category_button = {
 }
 achievements_view_blueprints.sub_category_button = {
 	size = blueprint_styles.sub_category_button.size,
-	pass_template = table.clone(_category_common_pass_templates),
+	pass_template = table.clone(ButtonPassTemplates.terminal_list_button),
 	style = blueprint_styles.sub_category_button,
 	init = function (parent, widget, config, callback_name, secondary_callback_name, ui_renderer)
 		_category_common_pass_templates_init(parent, widget, config, callback_name, secondary_callback_name, ui_renderer)
@@ -1382,9 +1218,13 @@ achievements_view_blueprints.foldout_achievement = {
 		if achievement_type == achievement_types.meta then
 			_add_meta_sub_achievements_pass_template(pass_template, config)
 			_add_reward_pass_template(pass_template, config)
-		elseif config.sub_achievements and is_completed then
-			_add_family_sub_achievements_pass_template(pass_template, config)
-			_add_family_rewards_pass_template(pass_template, config)
+		elseif config.sub_achievements then
+			local first_completed = config.sub_achievements[1] and config.sub_achievements[1].completed
+
+			if is_completed or not first_completed then
+				_add_family_sub_achievements_pass_template(pass_template, config)
+				_add_family_rewards_pass_template(pass_template, config)
+			end
 		else
 			_add_reward_pass_template(pass_template, config)
 		end
@@ -1414,9 +1254,13 @@ achievements_view_blueprints.foldout_achievement = {
 		if achievement_type == achievement_types.meta then
 			_add_meta_sub_achievements_pass_style(style, config)
 			_add_reward_pass_style(style, config)
-		elseif config.sub_achievements and is_completed then
-			_add_family_sub_achievements_pass_style(style, config)
-			_add_family_rewards_pass_style(style, config)
+		elseif config.sub_achievements then
+			local first_completed = config.sub_achievements[1] and config.sub_achievements[1].completed
+
+			if is_completed or not first_completed then
+				_add_family_sub_achievements_pass_style(style, config)
+				_add_family_rewards_pass_style(style, config)
+			end
 		else
 			_add_reward_pass_style(style, config)
 		end
@@ -1449,9 +1293,13 @@ achievements_view_blueprints.foldout_achievement = {
 		if achievement_type == achievement_types.meta then
 			unfolded_height = _sub_meta_achievements_pass_template_init(widget_content, widget_style, achievement, parent, config, unfolded_height)
 			unfolded_height = _reward_detail_pass_template_init(widget_content, widget_style, achievement, parent, config, unfolded_height, ui_renderer)
-		elseif config.sub_achievements and is_completed then
-			unfolded_height = _family_sub_achievements_pass_template_init(widget_content, widget_style, achievement, parent, config, unfolded_height)
-			unfolded_height = _family_sub_rewards_pass_template_init(widget_content, widget_style, achievement, parent, config, unfolded_height)
+		elseif config.sub_achievements then
+			local first_completed = config.sub_achievements[1] and config.sub_achievements[1].completed
+
+			if is_completed or not first_completed then
+				unfolded_height = _family_sub_achievements_pass_template_init(widget_content, widget_style, achievement, parent, config, unfolded_height)
+				unfolded_height = _family_sub_rewards_pass_template_init(widget_content, widget_style, achievement, parent, config, unfolded_height)
+			end
 		else
 			unfolded_height = _reward_detail_pass_template_init(widget_content, widget_style, achievement, parent, config, unfolded_height, ui_renderer)
 		end

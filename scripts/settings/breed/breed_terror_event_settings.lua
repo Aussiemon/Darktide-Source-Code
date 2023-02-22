@@ -1,9 +1,6 @@
 local breed_terror_event_settings = {
 	human = {},
 	ogryn = {},
-	chaos_daemonhost = {
-		point_cost = 1000
-	},
 	chaos_hound = {
 		point_cost = 12
 	},
@@ -18,12 +15,6 @@ local breed_terror_event_settings = {
 	},
 	chaos_ogryn_executor = {
 		point_cost = 12
-	},
-	chaos_plague_ogryn = {
-		point_cost = 6
-	},
-	chaos_plague_ogryn_sprayer = {
-		point_cost = 1000
 	},
 	chaos_poxwalker_bomber = {
 		point_cost = 6
@@ -91,7 +82,19 @@ local breed_terror_event_settings = {
 	cultist_berzerker = {
 		point_cost = 6
 	},
+	chaos_plague_ogryn = {
+		point_cost = 6
+	},
+	chaos_plague_ogryn_sprayer = {
+		point_cost = 1000
+	},
 	chaos_beast_of_nurgle = {
+		point_cost = 1000
+	},
+	chaos_spawn = {
+		point_cost = 1000
+	},
+	chaos_daemonhost = {
 		point_cost = 1000
 	}
 }

@@ -289,4 +289,8 @@ ViewElementBase.destroy = function (self, ui_renderer)
 	self:_unregister_events()
 end
 
+ViewElementBase.parent = function (self)
+	return self._parent
+end
+
 return ViewElementBase

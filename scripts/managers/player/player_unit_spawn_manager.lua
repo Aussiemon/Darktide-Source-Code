@@ -7,8 +7,9 @@ local CLIENT_RPCS = {
 	"rpc_register_player_unit_ragdoll"
 }
 
-PlayerUnitSpawnManager.init = function (self, is_server, level_seed, game_mode_name, network_event_delegate, soft_cap_out_of_bounds_units)
+PlayerUnitSpawnManager.init = function (self, is_server, level_seed, has_navmesh, game_mode_name, network_event_delegate, soft_cap_out_of_bounds_units)
 	self._is_server = is_server
+	self._has_navmesh = has_navmesh
 	self._unit_owners = {}
 	self._players_with_unit = {}
 	self._players_without_unit = {}
@@ -175,11 +176,15 @@ PlayerUnitSpawnManager._spawn = function (self, player, position, rotation, pare
 		player:set_orientation(yaw, pitch, 0)
 	end
 
+	local is_on_movable_platform = false
+
 	if parent then
 		local platform_extension = ScriptUnit.has_extension(parent, "moveable_platform_system")
 
 		if platform_extension then
 			platform_extension:add_passenger(player_unit, true)
+
+			is_on_movable_platform = true
 		else
 			local locomotion_extension = ScriptUnit.extension(player_unit, "locomotion_system")
 

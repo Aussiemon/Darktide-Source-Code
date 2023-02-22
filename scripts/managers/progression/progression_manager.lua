@@ -250,11 +250,13 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 		return
 	end
 
+	local item_rewards = {}
+
 	self:_parse_stats(character_stats)
 	self:_parse_stats(account_stats)
 	self:_parse_mission_stats(eor)
 	self:_parse_team_stats(account_data)
-	self:_parse_reward_cards(account_data)
+	self:_parse_reward_cards(account_data, item_rewards)
 
 	local credits_reward = self:_get_credits_reward(account_data.missionRewards)
 	self._session_report.credits_reward = credits_reward
@@ -266,11 +268,11 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 	end
 
 	local promise_list = {}
-	local character_level_up_promise = self:_check_level_up(character_stats)
+	local character_level_up_promise = self:_check_level_up(character_stats, item_rewards)
 
 	table.insert(promise_list, character_level_up_promise)
 
-	local account_level_up_promise = self:_check_level_up(account_stats)
+	local account_level_up_promise = self:_check_level_up(account_stats, item_rewards)
 
 	table.insert(promise_list, account_level_up_promise)
 	Promise.all(unpack(promise_list)):next(function (data)
@@ -279,6 +281,7 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 
 			_info("Dummmy session_report fetched and parsed successfully")
 			self:_calculate_game_score_end()
+			Managers.data_service.gear:invalidate_gear_cache()
 
 			return
 		end
@@ -286,8 +289,7 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 		local profile = self:_get_profile()
 		local character_id = profile.character_id
 
-		Promise.all(Managers.backend.interfaces.gear:fetch(), Managers.backend.interfaces.progression:get_progression("character", character_id)):next(function (results)
-			local gear_list, character_progression = unpack(results, 1, 2)
+		Managers.backend.interfaces.progression:get_progression("character", character_id):next(function (character_progression)
 			profile.current_level = character_progression.currentLevel or 1
 			self._session_report_state = SESSION_REPORT_STATES.success
 
@@ -299,6 +301,16 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 				self:_calculate_and_sync_game_score_end()
 			end
 		end)
+
+		if #item_rewards > 0 then
+			Managers.data_service.gear:invalidate_gear_cache()
+
+			for i = 1, #item_rewards do
+				local reward = item_rewards[i]
+
+				ItemUtils.mark_item_id_as_new(reward.gear_id, reward.item_type)
+			end
+		end
 	end):catch(function (errors)
 		local error_string = nil
 
@@ -311,6 +323,16 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 		Log.error("ProgressionManager", "Error parsing session_report: %s", error_string)
 
 		self._session_report_state = SESSION_REPORT_STATES.fail
+
+		if #item_rewards > 0 then
+			Managers.data_service.gear:invalidate_gear_cache()
+
+			for i = 1, #item_rewards do
+				local reward = item_rewards[i]
+
+				ItemUtils.mark_item_id_as_new(reward.gear_id, reward.item_type)
+			end
+		end
 	end)
 end
 
@@ -466,7 +488,7 @@ ProgressionManager._parse_mission_stats = function (self, eor)
 	self._session_report.team.play_time_seconds = play_time_seconds
 end
 
-ProgressionManager._parse_reward_cards = function (self, account_data)
+ProgressionManager._parse_reward_cards = function (self, account_data, item_rewards)
 	local reward_cards = account_data.rewardCards
 
 	if not reward_cards then
@@ -496,8 +518,10 @@ ProgressionManager._parse_reward_cards = function (self, account_data)
 			if gear_id then
 				reward.gear_id = gear_id
 				reward.gearId = nil
-
-				ItemUtils.mark_item_id_as_new(gear_id, reward_type)
+				item_rewards[#item_rewards + 1] = {
+					gear_id = gear_id,
+					item_type = reward_type
+				}
 			end
 
 			local details = reward.details
@@ -526,7 +550,7 @@ ProgressionManager.session_report = function (self)
 	return self._session_report
 end
 
-ProgressionManager._check_level_up = function (self, stats)
+ProgressionManager._check_level_up = function (self, stats, item_rewards)
 	if self._session_report_is_dummy then
 		_info("Dummy Session report level up completed")
 
@@ -539,7 +563,7 @@ ProgressionManager._check_level_up = function (self, stats)
 		local current_level = stats.currentLevel
 		local next_level = current_level + 1
 
-		return self:_level_up(stats, next_level)
+		return self:_level_up(stats, next_level, item_rewards)
 	end
 
 	if needed_xp_for_next_level == -1 then
@@ -597,7 +621,7 @@ ProgressionManager._add_level_up_unlocks_to_card = function (self, reward_card)
 	self:_add_unlocked_talents_to_card(reward_card, profile, specialization_name, target_level)
 end
 
-ProgressionManager._level_up = function (self, stats, target_level)
+ProgressionManager._level_up = function (self, stats, target_level, item_rewards)
 	_info("Leveling up " .. stats.type .. " to %s ...", target_level)
 
 	return self._progression:level_up(stats.type, stats.id, target_level):next(function (data)
@@ -605,11 +629,11 @@ ProgressionManager._level_up = function (self, stats, target_level)
 
 		local reward_card = self:_find_level_up_card(target_level, stats.type)
 
-		self:_parse_level_up_rewards(reward_card, stats.type, data)
+		self:_parse_level_up_rewards(reward_card, stats.type, data, item_rewards)
 
 		local progression_info = data.progressionInfo
 
-		return self:_check_level_up(progression_info)
+		return self:_check_level_up(progression_info, item_rewards)
 	end):catch(function (error)
 		self._session_report_state = SESSION_REPORT_STATES.success
 
@@ -619,7 +643,7 @@ ProgressionManager._level_up = function (self, stats, target_level)
 	end)
 end
 
-ProgressionManager._parse_level_up_rewards = function (self, reward_card, type, data)
+ProgressionManager._parse_level_up_rewards = function (self, reward_card, type, data, item_rewards)
 	local rewards = self._session_report[type].rewards
 	local reward_info = data.rewardInfo
 	local reward_list = reward_info.rewards
@@ -649,8 +673,10 @@ ProgressionManager._parse_level_up_rewards = function (self, reward_card, type, 
 
 					if gear_id then
 						local item_type = item.item_type
-
-						ItemUtils.mark_item_id_as_new(gear_id, item_type)
+						item_rewards[#item_rewards + 1] = {
+							gear_id = gear_id,
+							item_type = item_type
+						}
 					end
 				end
 			else

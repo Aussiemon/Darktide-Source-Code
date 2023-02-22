@@ -15,7 +15,7 @@ ProfileSynchronizationManagerTestify.equip_item_backend = function (data, profil
 	local local_player_id = player:local_player_id()
 	local is_server = Managers.state.game_session:is_server()
 
-	Managers.backend.interfaces.characters:equip_item_slot_debug(player:character_id(), item.slots[1], item.name):next(function (v)
+	Managers.data_service.profiles:equip_item_slot_debug(player:character_id(), item.slots[1], item.name):next(function (v)
 		if is_server then
 			local profile_synchronizer_host = profile_synchronization_manager:synchronizer_host()
 

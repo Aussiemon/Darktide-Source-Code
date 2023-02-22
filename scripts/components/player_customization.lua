@@ -12,6 +12,7 @@ PlayerCustomization.editor_init = function (self, unit)
 	self._attach_settings = self:_construct_attach_settings(unit, world, in_editor)
 	self._units_by_slot_name = {}
 	self._total_num_attachments = 0
+	self._face_sm_override = ""
 end
 
 PlayerCustomization.init = function (self, unit)
@@ -27,6 +28,7 @@ PlayerCustomization.init = function (self, unit)
 	self._attach_settings = self:_construct_attach_settings(unit, world, in_editor)
 	self._units_by_slot_name = {}
 	self._total_num_attachments = 0
+	self._face_sm_override = ""
 
 	if not DEDICATED_SERVER then
 		self:_customize(unit)
@@ -92,6 +94,7 @@ PlayerCustomization._customize = function (self, unit, item_definitions)
 
 	if face_unit then
 		local face_sm_override = self:get_data(unit, "face_sm_override")
+		self._face_sm_override = face_sm_override
 		local face_sm_init_event = self:get_data(unit, "face_sm_init_event")
 
 		self:_override_face_anim(face_unit, face_sm_override, face_sm_init_event)
@@ -352,6 +355,10 @@ PlayerCustomization.unit_in_slot = function (self, slot_name)
 	local units_by_slot_name = self._units_by_slot_name
 
 	return units_by_slot_name[slot_name]
+end
+
+PlayerCustomization.get_face_sm_override = function (self)
+	return self._face_sm_override
 end
 
 PlayerCustomization.component_config = {

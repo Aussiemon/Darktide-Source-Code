@@ -27,7 +27,6 @@ local template_names = {
 	"psyker_stance",
 	"psyker_shout",
 	"ranged_stance",
-	"squad_leader_shout",
 	"targeted_dash"
 }
 

@@ -72,10 +72,6 @@ local function _init_and_run_tests(unit_1p, breed_name, world)
 					end
 				end
 			end
-
-			if has_bounds_error then
-				Log.debug("CharacterStateAnimationStateMachineTests", "Variable bounds validation failed for %q%s", state_machine_1p, error_bounds)
-			end
 		end
 	end
 end

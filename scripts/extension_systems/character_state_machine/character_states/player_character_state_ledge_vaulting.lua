@@ -2,7 +2,6 @@ local Crouch = require("scripts/extension_systems/character_state_machine/charac
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
 local HealthStateTransitions = require("scripts/extension_systems/character_state_machine/character_states/utilities/health_state_transitions")
 local Interrupt = require("scripts/utilities/attack/interrupt")
-local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local PlayerCharacterStateLedgeVaulting = class("PlayerCharacterStateLedgeVaulting", "PlayerCharacterStateBase")

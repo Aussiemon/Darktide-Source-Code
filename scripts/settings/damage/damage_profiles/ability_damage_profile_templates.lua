@@ -651,14 +651,6 @@ damage_templates.slide_knockdown = {
 		default_target = {}
 	}
 }
-damage_templates.veteran_squad_leader_tag_suppression = {
-	suppression_type = "ability",
-	stagger_category = "ranged",
-	suppression_value = 30,
-	targets = {
-		default_target = {}
-	}
-}
 
 return {
 	base_templates = damage_templates,

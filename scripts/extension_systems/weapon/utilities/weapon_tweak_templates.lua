@@ -130,38 +130,6 @@ WeaponTweakTemplates.calculate_lerp_values = function (weapon_template, base_sta
 		end
 	end
 
-	local trait_definitions = weapon_template.traits
-
-	if trait_definitions then
-		for i = 1, #traits do
-			local modifier_data = traits[i]
-			local modifier_name = modifier_data.name
-			local modifier_definition = trait_definitions[modifier_name]
-
-			if modifier_definition then
-				_add_tweak_modifiers(weapon_tweaks, modifier_definition)
-			else
-				Log.warning("WeaponTweakTemplates", "Could not find modifier definition %s for weapon %s when fetching weapon tweaks", modifier_name, weapon_name)
-			end
-		end
-	end
-
-	local perk_definitions = weapon_template.perks
-
-	if perk_definitions then
-		for i = 1, #perks do
-			local modifier_data = perks[i]
-			local modifier_name = modifier_data.name
-			local modifier_definition = perk_definitions[modifier_name]
-
-			if modifier_definition then
-				_add_tweak_modifiers(weapon_tweaks, modifier_definition)
-			else
-				Log.warning("WeaponTweakTemplates", "Could not find modifier definition %s for weapon %s when fetching weapon tweaks", modifier_name, weapon_name)
-			end
-		end
-	end
-
 	return weapon_tweaks
 end
 

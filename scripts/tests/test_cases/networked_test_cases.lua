@@ -92,5 +92,22 @@ NetworkedTestCases = {
 			TestifySnippets.wait_for_all_peers_reach_gameplay_state()
 			TestifySnippets.wait(5)
 		end)
+	end,
+	loop_connect_disconnect_to_the_hub = function (case_settings)
+		Testify:run_case(function (dt, t)
+			local settings = cjson.decode(case_settings or "{}")
+			local num_iterations = settings.num_iterations or 12
+			local stay_in_the_hub_time = settings.stay_in_the_hub_time or 3
+			local stay_in_the_main_menu_time = settings.stay_in_the_main_menu_time or 1
+
+			for i = 1, num_iterations do
+				Testify:make_request("exit_to_main_menu")
+				Testify:make_request("wait_for_main_menu_displayed")
+				TestifySnippets.wait(stay_in_the_main_menu_time)
+				Testify:make_request("press_play_main_menu")
+				Testify:make_request("wait_for_state_gameplay_reached")
+				TestifySnippets.wait(stay_in_the_hub_time)
+			end
+		end)
 	end
 }

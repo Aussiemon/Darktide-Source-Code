@@ -66,6 +66,7 @@ templates.weapon_trait_bespoke_forcesword_p1_chained_hits_increases_crit_chance_
 templates.weapon_trait_bespoke_forcesword_p1_chained_weakspot_hits_increases_power_parent = table.clone(BaseWeaponTraitBuffTemplates.chained_weakspot_hits_increases_power_parent)
 templates.weapon_trait_bespoke_forcesword_p1_chained_weakspot_hits_increases_power_parent.child_buff_template = "weapon_trait_bespoke_forcesword_p1_chained_weakspot_hits_increases_power_child"
 templates.weapon_trait_bespoke_forcesword_p1_chained_weakspot_hits_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.chained_weakspot_hits_increases_power_child)
+templates.weapon_trait_bespoke_forcesword_p1_warp_burninating_on_crit = table.clone(BaseWeaponTraitBuffTemplates.warpfire_on_crits_melee)
 templates.weapon_trait_bespoke_forcesword_p1_chained_hits_vents_warpcharge = {
 	predicted = false,
 	vent_percentage = 0.05,
@@ -101,52 +102,6 @@ templates.weapon_trait_bespoke_forcesword_p1_chained_hits_vents_warpcharge = {
 			local remove_percentage = override_data.vent_percentage or buff_template.vent_percentage
 
 			WarpCharge.decrease_immediate(remove_percentage, warp_charge_component, template_context.unit)
-		end
-	end
-}
-templates.weapon_trait_bespoke_forcesword_p1_warp_burninating_on_crit = {
-	class_name = "proc_buff",
-	predicted = false,
-	proc_events = {
-		[proc_events.on_hit] = 1
-	},
-	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.on_crit,
-	dot_data = {
-		max_stacks = 10,
-		dot_buff_name = "warp_fire",
-		num_stacks_on_proc = 1
-	},
-	start_func = function (template_data, template_context)
-		local template = template_context.template
-		local dot_data = template.dot_data
-		local template_override_data = template_context.template_override_data
-		local override_dot_data = template_override_data.dot_data
-		template_data.dot_buff_name = override_dot_data and override_dot_data.dot_buff_name or dot_data.dot_buff_name
-		template_data.num_stacks_on_proc = override_dot_data and override_dot_data.num_stacks_on_proc or dot_data.num_stacks_on_proc
-		template_data.max_stacks = override_dot_data and override_dot_data.max_stacks or dot_data.max_stacks
-	end,
-	proc_func = function (params, template_data, template_context, t)
-		local attacked_unit = params.attacked_unit
-		local attacked_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
-
-		if attacked_buff_extension then
-			local dot_buff_name = template_data.dot_buff_name
-			local num_stacks_on_proc = template_data.num_stacks_on_proc
-			local max_stacks = template_data.max_stacks
-			local current_stacks = attacked_buff_extension:current_stacks(dot_buff_name)
-			local stacks_to_add = math.min(num_stacks_on_proc, math.max(max_stacks - current_stacks, 0))
-
-			if stacks_to_add == 0 then
-				attacked_buff_extension:refresh_duration_of_stacking_buff(dot_buff_name, t)
-			else
-				local owner_unit = template_context.owner_unit
-				local source_item = template_context.source_item
-
-				for i = 1, stacks_to_add do
-					attacked_buff_extension:add_internally_controlled_buff(dot_buff_name, t, "owner_unit", owner_unit, "source_item", source_item)
-				end
-			end
 		end
 	end
 }

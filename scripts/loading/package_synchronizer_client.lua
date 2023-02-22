@@ -185,6 +185,7 @@ PackageSynchronizerClient.resolve_profile_packages = function (self, profile)
 
 	local archetype = profile.archetype
 	local archetype_name = archetype.name
+	local selected_voice = profile.selected_voice
 	local game_mode_settings, mission = nil
 
 	if self._mission_name then
@@ -221,7 +222,7 @@ PackageSynchronizerClient.resolve_profile_packages = function (self, profile)
 		all_items[slot_name] = item
 	end
 
-	self:_resolve_profile_properties(all_items, archetype, sound_dependencies, particle_dependencies)
+	self:_resolve_profile_properties(all_items, archetype, selected_voice, sound_dependencies, particle_dependencies)
 	self:_resolve_specialization(archetype, sound_dependencies, particle_dependencies)
 	_add_package_chunk("sound_dependencies", sound_dependencies, profile_packages)
 	_add_package_chunk("particle_dependencies", particle_dependencies, profile_packages)
@@ -304,9 +305,10 @@ PackageSynchronizerClient._resolve_ability_packages = function (self, archetype,
 	return temp_abilities_items
 end
 
-PackageSynchronizerClient._resolve_profile_properties = function (self, items, archetype, sound_dependencies, particle_dependencies)
+PackageSynchronizerClient._resolve_profile_properties = function (self, items, archetype, selected_voice, sound_dependencies, particle_dependencies)
 	local profile_properties = {
-		archetype = archetype.name
+		archetype = archetype.name,
+		selected_voice = selected_voice
 	}
 
 	for slot_name, item in pairs(items) do

@@ -135,7 +135,7 @@ ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_i
 		if not player_info:is_myself() and (IS_XBS or IS_GDK) and player_info:platform() == "xbox" then
 			local xuid = player_info:platform_user_id()
 			local platform_profile = parent:get_platform_profile(xuid)
-			user_display_name = platform_profile and platform_profile.gamertag or "N/A"
+			user_display_name = platform_profile and platform_profile.gamertag or player_info:user_display_name() or "N/A"
 		else
 			user_display_name = player_info:user_display_name()
 		end
@@ -143,7 +143,7 @@ ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_i
 		if not player_info:is_myself() and (IS_XBS or IS_GDK) and player_info:platform() == "xbox" then
 			local xuid = player_info:platform_user_id()
 			local platform_profile = parent:get_platform_profile(xuid)
-			player_display_name = platform_profile and platform_profile.gamertag or "N/A"
+			player_display_name = platform_profile and platform_profile.gamertag or player_info:user_display_name() or "N/A"
 		else
 			player_display_name = player_info:user_display_name()
 		end

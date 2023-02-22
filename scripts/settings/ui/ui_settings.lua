@@ -725,9 +725,17 @@ local ui_settings = {
 			display_name_pattern = "loc_weapon_pattern_name_ogryn_combatblade_p1",
 			display_name = "loc_ogryn_combatblade_p1_m3"
 		},
+		ogryn_powermaul_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_powermaul_p1",
+			display_name = "loc_ogryn_powermaul_p1_m1"
+		},
 		ogryn_powermaul_slabshield_p1_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_ogryn_powermaul_slabshield_p1",
 			display_name = "loc_ogryn_powermaul_slabshield_p1_m1"
+		},
+		powermaul_2h_p1_m1 = {
+			display_name_pattern = "loc_weapon_pattern_name_powermaul_2h_p1",
+			display_name = "loc_powermaul_2h_p1_m1"
 		},
 		powersword_p1_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_powersword_p1",

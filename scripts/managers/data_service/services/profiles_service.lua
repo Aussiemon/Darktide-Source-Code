@@ -23,7 +23,7 @@ end
 local function _fetch_all_backend_profiles(backend_interface)
 	local characters_promise = backend_interface.characters:fetch()
 	local characters_progression_promise = backend_interface.progression:get_entity_type_progression("character")
-	local gear_list_promise = backend_interface.gear:fetch()
+	local gear_list_promise = Managers.data_service.gear:fetch_gear()
 	local selected_character_id_promise = backend_interface.account:get_selected_character()
 
 	return Promise.all(characters_promise, characters_progression_promise, gear_list_promise, selected_character_id_promise):next(function (results)
@@ -62,7 +62,7 @@ end
 local function _fetch_backend_profile(backend_interface, character_id)
 	local character_promise = backend_interface.characters:fetch(character_id)
 	local character_progression_promise = backend_interface.progression:get_progression("character", character_id)
-	local gear_list_promise = backend_interface.gear:fetch()
+	local gear_list_promise = Managers.data_service.gear:fetch_gear()
 
 	return Promise.all(character_promise, character_progression_promise, gear_list_promise):next(function (results)
 		local character, character_progression, gear_list = unpack(results, 1, 3)
@@ -73,7 +73,7 @@ local function _fetch_backend_profile(backend_interface, character_id)
 end
 
 local function _new_character_to_profile(backend_interface, character)
-	return backend_interface.gear:fetch():next(function (gear_list)
+	return Managers.data_service.gear:fetch_gear():next(function (gear_list)
 		local profile = ProfileUtils.character_to_profile(character, gear_list, nil)
 
 		return profile
@@ -108,8 +108,20 @@ ProfilesService.fetch_profile = function (self, character_id)
 	end)
 end
 
+local function _invalidate_gear_cache(promise)
+	return promise:next(function (result)
+		Managers.data_service.gear:invalidate_gear_cache()
+
+		return result
+	end):catch(function (err)
+		Managers.data_service.gear:invalidate_gear_cache()
+
+		return Promise.rejected(err)
+	end)
+end
+
 ProfilesService.create_profile = function (self, profile)
-	return self._backend_interface.characters:create(profile):catch(function (error)
+	return _invalidate_gear_cache(self._backend_interface.characters:create(profile)):catch(function (error)
 		Managers.error:report_error(BackendError:new(error))
 
 		return Promise.rejected({})
@@ -117,11 +129,30 @@ ProfilesService.create_profile = function (self, profile)
 end
 
 ProfilesService.delete_profile = function (self, character_id)
-	return self._backend_interface.characters:delete_character(character_id):catch(function (error)
+	return self._backend_interface.characters:delete_character(character_id):next(function (result)
+		Managers.data_service.gear:on_character_deleted(character_id)
+
+		return result
+	end):catch(function (error)
+		Managers.data_service.gear:invalidate_gear_cache()
 		Managers.error:report_error(BackendError:new(error))
 
-		return Promise.rejected({})
+		return Promise.rejected(error)
 	end)
+end
+
+ProfilesService.equip_items_in_slots = function (self, character_id, item_gear_ids_by_slots, item_gear_names_by_slots)
+	local promise = self._backend_interface.characters:equip_items_in_slots(character_id, item_gear_ids_by_slots, item_gear_names_by_slots)
+
+	if table.is_empty(item_gear_names_by_slots) then
+		return promise
+	else
+		return _invalidate_gear_cache(promise)
+	end
+end
+
+ProfilesService.equip_master_items_in_slots = function (self, character_id, item_master_ids_by_slots)
+	return _invalidate_gear_cache(self._backend_interface.characters:equip_master_items_in_slots(character_id, item_master_ids_by_slots))
 end
 
 ProfilesService.fetch_suggested_names_by_archetype = function (self, archetype_name, gender, planet)

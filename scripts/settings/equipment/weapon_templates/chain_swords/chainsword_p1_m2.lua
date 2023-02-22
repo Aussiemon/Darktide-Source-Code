@@ -5,18 +5,17 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local ChainSpeedTemplates = require("scripts/settings/equipment/chain_speed_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local MeleeActionInputSetupMid = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_mid")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
+local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local MeleeActionInputSetupMid = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_mid")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
-local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTraitsChainswordP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_chainsword_p1")
 local WeaponTraitsMeleeActivated = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_activated")
 local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
+local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
-local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_targets = WeaponTweakTemplateSettings.buff_targets
@@ -24,19 +23,18 @@ local damage_types = DamageSettings.damage_types
 local default_hit_zone_priority = ActionSweepSettings.default_hit_zone_priority
 local hit_zone_names = HitZone.hit_zone_names
 local template_types = WeaponTweakTemplateSettings.template_types
-local wield_inputs = PlayerCharacterConstants.wield_inputs
+local wounds_shapes = WoundsSettings.shapes
+local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
+local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
 local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
-local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
 local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
-local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
-local wounds_shapes = WoundsSettings.shapes
 local weapon_template = {
 	action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs),
 	action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
@@ -222,7 +220,7 @@ weapon_template.actions = {
 		damage_window_end = 0.4,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_left_diagonal",
-		anim_event = "attack_left",
+		anim_event = "attack_left_down",
 		weapon_handling_template = "time_scale_1",
 		attack_direction_override = "push",
 		hit_stop_anim = "hit_stop",
@@ -345,7 +343,7 @@ weapon_template.actions = {
 		},
 		hit_zone_priority = hit_zone_priority,
 		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/chain_sword/attack_left",
+			matrices_data_location = "content/characters/player/human/first_person/animations/chain_sword/attack_left_down",
 			anchor_point_offset = {
 				0.1,
 				0,
@@ -369,7 +367,7 @@ weapon_template.actions = {
 		damage_window_start = 0.25,
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
-		weapon_handling_template = "time_scale_0_9",
+		weapon_handling_template = "time_scale_1_2",
 		first_person_hit_anim = "hit_left_shake",
 		max_num_saved_entries = 20,
 		num_frames_before_process = 0,
@@ -497,7 +495,7 @@ weapon_template.actions = {
 	action_melee_start_right = {
 		anim_end_event = "attack_finished",
 		kind = "windup",
-		anim_event_3p = "attack_swing_charge_right",
+		anim_event_3p = "attack_swing_charge_down",
 		anim_event = "heavy_charge_down",
 		stop_input = "attack_cancel",
 		total_time = 3,
@@ -593,18 +591,18 @@ weapon_template.actions = {
 		end
 	},
 	action_right_diagonal_light = {
-		damage_window_start = 0.43,
+		damage_window_start = 0.43333333333333335,
 		hit_armor_anim = "attack_hit_shield",
 		range_mod = 1.25,
 		weapon_handling_template = "time_scale_1_1",
-		first_person_hit_anim = "hit_right_shake",
-		max_num_saved_entries = 20,
-		num_frames_before_process = 0,
 		kind = "sweep",
-		damage_window_end = 0.55,
+		first_person_hit_anim = "hit_right_shake",
+		num_frames_before_process = 0,
+		max_num_saved_entries = 20,
+		damage_window_end = 0.5,
 		anim_end_event = "attack_finished",
-		anim_event_3p = "attack_swing_right_diagonal",
-		anim_event = "attack_right_diagonal_down",
+		anim_event_3p = "attack_swing_up_right",
+		anim_event = "attack_right_diagonal_up",
 		hit_stop_anim = "hit_stop",
 		total_time = 1.5,
 		action_movement_curve = {
@@ -669,7 +667,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left_2",
-				chain_time = 0.5
+				chain_time = 0.56
 			},
 			block = {
 				action_name = "action_block"
@@ -723,11 +721,11 @@ weapon_template.actions = {
 		},
 		weapon_box = chain_sword_sweep_box,
 		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/chain_sword/attack_right_diagonal_down",
+			matrices_data_location = "content/characters/player/human/first_person/animations/chain_sword/attack_right_diagonal_up",
 			anchor_point_offset = {
-				0.05,
 				0,
-				-0.05
+				0,
+				0
 			}
 		},
 		damage_profile = DamageProfileTemplates.default_light_chainsword,
@@ -746,7 +744,7 @@ weapon_template.actions = {
 	action_right_heavy = {
 		damage_window_start = 0.2,
 		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_2",
 		range_mod = 1.25,
 		kind = "sweep",
 		first_person_hit_anim = "hit_left_shake",
@@ -754,7 +752,7 @@ weapon_template.actions = {
 		num_frames_before_process = 0,
 		damage_window_end = 0.45,
 		anim_end_event = "attack_finished",
-		anim_event_3p = "attack_swing_heavy_right",
+		anim_event_3p = "attack_swing_heavy_down",
 		anim_event = "heavy_attack_down",
 		hit_stop_anim = "hit_stop",
 		total_time = 1,
@@ -984,7 +982,7 @@ weapon_template.actions = {
 		kind = "sweep",
 		damage_window_end = 0.45,
 		anim_end_event = "attack_finished",
-		anim_event_3p = "attack_swing_left",
+		anim_event_3p = "attack_swing_left_diagonal",
 		anim_event = "attack_left_diagonal_down",
 		hit_stop_anim = "hit_stop",
 		total_time = 1.3,
@@ -1054,7 +1052,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right_2",
-				chain_time = 0.45
+				chain_time = 0.55
 			},
 			block = {
 				action_name = "action_block"
@@ -1108,7 +1106,7 @@ weapon_template.actions = {
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_sword_sweep_box,
 		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/chain_sword/attack_left",
+			matrices_data_location = "content/characters/player/human/first_person/animations/chain_sword/attack_left_diagonal_down",
 			anchor_point_offset = {
 				0,
 				0,
@@ -1239,7 +1237,7 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		attack_direction_override = "push",
 		anim_event_3p = "attack_swing_right_diagonal",
-		anim_event = "attack_right_diagonal_up",
+		anim_event = "attack_right_diagonal_down",
 		hit_stop_anim = "hit_stop",
 		total_time = 1.5,
 		action_movement_curve = {
@@ -1358,7 +1356,7 @@ weapon_template.actions = {
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = chain_sword_sweep_box,
 		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/chain_sword/attack_right_diagonal_up",
+			matrices_data_location = "content/characters/player/human/first_person/animations/chain_sword/attack_right_diagonal_down",
 			anchor_point_offset = {
 				0,
 				0,
@@ -1381,7 +1379,7 @@ weapon_template.actions = {
 	action_right_heavy_2 = {
 		damage_window_start = 0.2,
 		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_0_8",
+		weapon_handling_template = "time_scale_1_1",
 		range_mod = 1.25,
 		kind = "sweep",
 		first_person_hit_anim = "hit_left_shake",
@@ -1778,11 +1776,13 @@ weapon_template.actions = {
 	},
 	action_toggle_special = {
 		deactivate_anim_event = "deactivate",
+		total_time_deactivate = 0.45,
 		activate_anim_event = "activate",
-		start_input = "special_action",
-		allowed_during_sprint = true,
 		activation_time = 0.3,
-		kind = "toogle_special",
+		kind = "toggle_special",
+		start_input = "special_action",
+		deactivation_time = 0.1,
+		allowed_during_sprint = true,
 		skip_3p_anims = false,
 		total_time = 0.6
 	},
@@ -1832,7 +1832,8 @@ weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",
 	"chain_sword",
-	"p1"
+	"p1",
+	"activated"
 }
 weapon_template.dodge_template = "default"
 weapon_template.sprint_template = "default"
@@ -2271,13 +2272,13 @@ weapon_template.displayed_keywords = {
 }
 weapon_template.displayed_attacks = {
 	primary = {
-		display_name = "loc_gestalt_linesman",
+		display_name = "loc_gestalt_smiter",
 		type = "smiter",
 		attack_chain = {
-			"tank",
-			"linesman",
-			"linesman",
-			"linesman"
+			"smiter",
+			"smiter",
+			"smiter",
+			"smiter"
 		}
 	},
 	secondary = {

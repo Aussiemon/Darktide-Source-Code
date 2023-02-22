@@ -28,8 +28,9 @@ local function get_relative_position_rotation(target_unit, relative_position, ro
 	return position, target_unit_rotation
 end
 
-TrainingGroundsServitorHandler.init = function (self, scripted_scenario_system)
+TrainingGroundsServitorHandler.init = function (self, scripted_scenario_system, world)
 	self._unit = nil
+	self._physics_world = World.physics_world(world)
 	self._move_to_pos = Vector3Box()
 	self._movement_state = MOVEMENT_STATES.still
 	self._lookat_data = {
@@ -100,9 +101,82 @@ end
 
 TrainingGroundsServitorHandler._move = function (self, dt)
 	local velocity = self._velocity:unbox()
-	local servitor_pos = Unit.local_position(self._unit, 1)
 
-	Unit.set_local_position(self._unit, 1, servitor_pos + velocity * dt)
+	if Vector3.length_squared(velocity) < 0.001 then
+		return
+	end
+
+	local servitor_pos = Unit.local_position(self._unit, 1)
+	servitor_pos[3] = servitor_pos[3] - self._current_float_z_offset
+	local wanted_pos = servitor_pos + velocity * dt
+	local physics_world = self._physics_world
+	local radius = 0.5
+	local current_pos = servitor_pos
+	local wanted_distance = Vector3.length(velocity * dt)
+	local remaining_distance = wanted_distance
+	local margin = wanted_distance * dt
+	local iterations = 0
+
+	while iterations < 10 do
+		if remaining_distance <= 0 then
+			break
+		end
+
+		local hits = PhysicsWorld.linear_sphere_sweep(physics_world, current_pos, wanted_pos, radius, 10, "types", "statics", "collision_filter", "filter_simple_geometry")
+		local num_hits = hits and #hits or 0
+
+		if num_hits <= 0 then
+			break
+		end
+
+		local closest = math.huge
+		local position = Vector3.zero()
+		local normal = Vector3.zero()
+
+		for i = 1, num_hits do
+			local hit = hits[i]
+
+			if hit.distance <= closest then
+				closest = hit.distance
+			end
+		end
+
+		local parsed_hits = 0
+
+		for i = 1, num_hits do
+			local hit = hits[i]
+
+			if hit.distance <= closest then
+				closest = hit.distance
+				position = position + hit.position
+				normal = normal + hit.normal
+				parsed_hits = parsed_hits + 1
+			end
+		end
+
+		position = position / parsed_hits
+		normal = normal / parsed_hits
+		local stop_pos = position + normal * radius
+		local distance_to_stop = math.max(Vector3.length(stop_pos - current_pos) - margin, 0)
+		distance_to_stop = math.min(distance_to_stop, remaining_distance)
+		local move_direction = Vector3.normalize(wanted_pos - current_pos)
+		current_pos = current_pos + move_direction * distance_to_stop
+		remaining_distance = remaining_distance - distance_to_stop
+		move_direction = Vector3.normalize(Vector3.cross(Vector3.cross(normal, Vector3.normalize(move_direction)), normal))
+
+		if Vector3.length_squared(move_direction) < 0.001 then
+			wanted_pos = current_pos
+
+			break
+		end
+
+		wanted_pos = current_pos + move_direction * remaining_distance
+		iterations = iterations + 1
+	end
+
+	wanted_pos[3] = wanted_pos[3] + self._current_float_z_offset
+
+	Unit.set_local_position(self._unit, 1, wanted_pos)
 end
 
 TrainingGroundsServitorHandler.move_to_unit_relative_arc = function (self, relative_unit, relative_position, rotate_position_relative_to_unit, stop_at_arrival, lookat_unit)

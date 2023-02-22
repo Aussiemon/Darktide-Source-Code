@@ -540,6 +540,32 @@ local gameplay_vo_veteran_female_a = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_berserker_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_female_a__enemy_kill_monster_03",
+			"loc_veteran_female_a__enemy_kill_monster_04",
+			"loc_veteran_female_a__enemy_kill_monster_05",
+			"loc_veteran_female_a__enemy_kill_monster_06",
+			"loc_veteran_female_a__enemy_kill_monster_07"
+		},
+		sound_events_duration = {
+			1.799125,
+			2.726125,
+			3.400208,
+			3.939125,
+			2.942167
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_chaos_hound = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -566,6 +592,32 @@ local gameplay_vo_veteran_female_a = {
 			1.119667,
 			1.149083,
 			1.944604
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_chaos_hound_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_female_a__enemy_kill_monster_03",
+			"loc_veteran_female_a__enemy_kill_monster_04",
+			"loc_veteran_female_a__enemy_kill_monster_05",
+			"loc_veteran_female_a__enemy_kill_monster_06",
+			"loc_veteran_female_a__enemy_kill_monster_07"
+		},
+		sound_events_duration = {
+			1.799125,
+			2.726125,
+			3.400208,
+			3.939125,
+			2.942167
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -607,6 +659,32 @@ local gameplay_vo_veteran_female_a = {
 			0.1,
 			0.1,
 			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_cultist_mutant_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_female_a__enemy_kill_monster_03",
+			"loc_veteran_female_a__enemy_kill_monster_04",
+			"loc_veteran_female_a__enemy_kill_monster_05",
+			"loc_veteran_female_a__enemy_kill_monster_06",
+			"loc_veteran_female_a__enemy_kill_monster_07"
+		},
+		sound_events_duration = {
+			1.799125,
+			2.726125,
+			3.400208,
+			3.939125,
+			2.942167
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -680,6 +758,32 @@ local gameplay_vo_veteran_female_a = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_grenadier_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_female_a__enemy_kill_monster_03",
+			"loc_veteran_female_a__enemy_kill_monster_04",
+			"loc_veteran_female_a__enemy_kill_monster_05",
+			"loc_veteran_female_a__enemy_kill_monster_06",
+			"loc_veteran_female_a__enemy_kill_monster_07"
+		},
+		sound_events_duration = {
+			1.799125,
+			2.726125,
+			3.400208,
+			3.939125,
+			2.942167
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_monster = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -738,6 +842,32 @@ local gameplay_vo_veteran_female_a = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_netgunner_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_female_a__enemy_kill_monster_03",
+			"loc_veteran_female_a__enemy_kill_monster_04",
+			"loc_veteran_female_a__enemy_kill_monster_05",
+			"loc_veteran_female_a__enemy_kill_monster_06",
+			"loc_veteran_female_a__enemy_kill_monster_07"
+		},
+		sound_events_duration = {
+			1.799125,
+			2.726125,
+			3.400208,
+			3.939125,
+			2.942167
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_poxwalker_bomber = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -764,6 +894,32 @@ local gameplay_vo_veteran_female_a = {
 			1.184479,
 			0.932792,
 			2.535292
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_poxwalker_bomber_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_female_a__enemy_kill_monster_03",
+			"loc_veteran_female_a__enemy_kill_monster_04",
+			"loc_veteran_female_a__enemy_kill_monster_05",
+			"loc_veteran_female_a__enemy_kill_monster_06",
+			"loc_veteran_female_a__enemy_kill_monster_07"
+		},
+		sound_events_duration = {
+			1.799125,
+			2.726125,
+			3.400208,
+			3.939125,
+			2.942167
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -808,7 +964,111 @@ local gameplay_vo_veteran_female_a = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_renegade_berserker_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_female_a__enemy_kill_monster_03",
+			"loc_veteran_female_a__enemy_kill_monster_04",
+			"loc_veteran_female_a__enemy_kill_monster_05",
+			"loc_veteran_female_a__enemy_kill_monster_06",
+			"loc_veteran_female_a__enemy_kill_monster_07"
+		},
+		sound_events_duration = {
+			1.799125,
+			2.726125,
+			3.400208,
+			3.939125,
+			2.942167
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_scab_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_female_a__enemy_kill_monster_03",
+			"loc_veteran_female_a__enemy_kill_monster_04",
+			"loc_veteran_female_a__enemy_kill_monster_05",
+			"loc_veteran_female_a__enemy_kill_monster_06",
+			"loc_veteran_female_a__enemy_kill_monster_07"
+		},
+		sound_events_duration = {
+			1.799125,
+			2.726125,
+			3.400208,
+			3.939125,
+			2.942167
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_scab_flamer_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_female_a__enemy_kill_monster_03",
+			"loc_veteran_female_a__enemy_kill_monster_04",
+			"loc_veteran_female_a__enemy_kill_monster_05",
+			"loc_veteran_female_a__enemy_kill_monster_06",
+			"loc_veteran_female_a__enemy_kill_monster_07"
+		},
+		sound_events_duration = {
+			1.799125,
+			2.726125,
+			3.400208,
+			3.939125,
+			2.942167
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_sniper = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_female_a__enemy_kill_monster_03",
+			"loc_veteran_female_a__enemy_kill_monster_04",
+			"loc_veteran_female_a__enemy_kill_monster_05",
+			"loc_veteran_female_a__enemy_kill_monster_06",
+			"loc_veteran_female_a__enemy_kill_monster_07"
+		},
+		sound_events_duration = {
+			1.799125,
+			2.726125,
+			3.400208,
+			3.939125,
+			2.942167
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_sniper_quick_agnostic = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
 		sound_events = {
@@ -850,6 +1110,32 @@ local gameplay_vo_veteran_female_a = {
 			2.346042,
 			1.696563,
 			1.679542
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_tox_flamer_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_female_a__enemy_kill_monster_03",
+			"loc_veteran_female_a__enemy_kill_monster_04",
+			"loc_veteran_female_a__enemy_kill_monster_05",
+			"loc_veteran_female_a__enemy_kill_monster_06",
+			"loc_veteran_female_a__enemy_kill_monster_07"
+		},
+		sound_events_duration = {
+			1.799125,
+			2.726125,
+			3.400208,
+			3.939125,
+			2.942167
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -898,13 +1184,6 @@ local gameplay_vo_veteran_female_a = {
 			0.935667,
 			0.817896,
 			1.202354
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},

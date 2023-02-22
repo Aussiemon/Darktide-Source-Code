@@ -269,26 +269,11 @@ Ammo.move_clip_to_reserve = function (inventory_slot_component)
 	inventory_slot_component.current_ammunition_clip = 0
 end
 
-Ammo.set_weapon_ammo_count_wwise_parameter = function (old_ammo_parameter_value, wwise_world, inventory_slot_component)
-	if inventory_slot_component.max_ammunition_clip > 0 then
-		local current_ammo_percentage = inventory_slot_component.current_ammunition_clip / inventory_slot_component.max_ammunition_clip
-		local wwise_parameter = "weapon_ammo_count"
-		local wwise_parameter_value = current_ammo_percentage * 100
-
-		if old_ammo_parameter_value ~= wwise_parameter_value then
-			WwiseWorld.set_global_parameter(wwise_world, wwise_parameter, wwise_parameter_value)
-		end
-
-		return wwise_parameter_value
-	end
-
-	return 0
-end
-
 Ammo.add_to_all_slots = function (unit, percent)
 	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 	local weapon_slot_configuration = visual_loadout_extension:slot_configuration_by_type("weapon")
+	local ammo_gained = 0
 
 	for slot_name, config in pairs(weapon_slot_configuration) do
 		local wieldable_component = unit_data_ext:write_component(slot_name)
@@ -302,8 +287,11 @@ Ammo.add_to_all_slots = function (unit, percent)
 			local amount = math.ceil(percent * max_ammo_reserve)
 			local new_ammo_amount = math.min(ammo_reserve + amount, max_ammo_reserve + missing_clip)
 			wieldable_component.current_ammunition_reserve = new_ammo_amount
+			ammo_gained = ammo_gained + new_ammo_amount - ammo_reserve
 		end
 	end
+
+	return ammo_gained
 end
 
 return Ammo

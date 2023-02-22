@@ -101,10 +101,12 @@ minion_difficulty_settings.health = {
 	chaos_poxwalker = _health_steps(150),
 	chaos_newly_infected = _health_steps(100),
 	chaos_hound = _health_steps(900),
+	chaos_hound_mutator = _health_steps(150),
 	chaos_poxwalker_bomber = _health_steps(700),
 	chaos_plague_ogryn = _health_steps(16000),
 	chaos_plague_ogryn_sprayer = _health_steps(16000),
 	chaos_beast_of_nurgle = _health_steps(16000),
+	chaos_spawn = _health_steps(16000),
 	renegade_netgunner = _health_steps(450),
 	cultist_mutant = _health_steps(2000),
 	cultist_flamer = _health_steps(750),
@@ -215,6 +217,13 @@ minion_difficulty_settings.power_level = {
 		30,
 		40
 	},
+	chaos_spawn_melee = {
+		250,
+		400,
+		600,
+		700,
+		800
+	},
 	chaos_plague_ogryn_melee = {
 		250,
 		400,
@@ -259,12 +268,54 @@ minion_difficulty_settings.shooting = {
 		num_shots = _shoot_steps_asc(60, 60, true)
 	},
 	cultist_flamer = {
-		aim_durations = _equal_difficulty_values(1, 1),
+		aim_durations = {
+			{
+				1,
+				1
+			},
+			{
+				1,
+				1
+			},
+			{
+				0.85,
+				0.85
+			},
+			{
+				0.75,
+				0.75
+			},
+			{
+				0.7,
+				0.7
+			}
+		},
 		shoot_cooldown = _shoot_steps_desc(3, 4),
 		time_per_shot = _equal_difficulty_values(0.35, 0.35)
 	},
 	renegade_flamer = {
-		aim_durations = _equal_difficulty_values(1, 1),
+		aim_durations = {
+			{
+				1,
+				1
+			},
+			{
+				1,
+				1
+			},
+			{
+				0.85,
+				0.85
+			},
+			{
+				0.75,
+				0.75
+			},
+			{
+				0.7,
+				0.7
+			}
+		},
 		shoot_cooldown = _shoot_steps_desc(3, 4),
 		time_per_shot = _equal_difficulty_values(0.35, 0.35)
 	},
@@ -444,7 +495,7 @@ minion_difficulty_settings.cooldowns = {
 		6,
 		4,
 		3,
-		2
+		3
 	},
 	shoot_net_cooldown = {
 		10,

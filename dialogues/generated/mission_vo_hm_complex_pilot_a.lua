@@ -77,7 +77,7 @@ local mission_vo_hm_complex_pilot_a = {
 			"loc_pilot_a__mission_complex_elevator_here_04"
 		},
 		sound_events_duration = {
-			3.050542,
+			3.050521,
 			4.085,
 			4.525688,
 			5.841833
@@ -111,7 +111,7 @@ local mission_vo_hm_complex_pilot_a = {
 			"loc_pilot_a__mission_complex_old_shrine_street_04"
 		},
 		sound_events_duration = {
-			5.089042,
+			5.089021,
 			5.597188,
 			7.652313,
 			7.311479
@@ -129,7 +129,7 @@ local mission_vo_hm_complex_pilot_a = {
 		},
 		sound_events_duration = {
 			5.985083,
-			3.483875,
+			3.483854,
 			5.294958,
 			5.982854
 		},
@@ -180,7 +180,7 @@ local mission_vo_hm_complex_pilot_a = {
 		},
 		sound_events_duration = {
 			2.343958,
-			3.891417,
+			3.891396,
 			5.062083,
 			4.827604
 		},

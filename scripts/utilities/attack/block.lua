@@ -146,8 +146,9 @@ Block.attempt_block_break = function (target_unit, attacking_unit, hit_world_pos
 			if current_warp_charge < 0.97 then
 				local stat_buffs = buff_extension:stat_buffs()
 				local warp_charge_efficiency_multiplier = stat_buffs.warp_charge_block_cost
+				local warp_charge_amount_multiplier = stat_buffs.warp_charge_amount or 1
 				local percentage_of_stamina = block_cost / max_stamina
-				local sum = current_warp_charge + percentage_of_stamina * warp_charge_efficiency_multiplier
+				local sum = current_warp_charge + percentage_of_stamina * warp_charge_efficiency_multiplier * warp_charge_amount_multiplier
 				local new_warp_charge_percentage = math.min(sum, 0.97)
 				local excess = sum - 0.97
 

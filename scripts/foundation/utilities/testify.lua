@@ -1,8 +1,9 @@
 local SIGNALS = {
-	end_suite = "end_suite",
+	current_request = "current_request",
 	request = "request",
 	reply = "reply",
-	ready = "ready"
+	ready = "ready",
+	end_suite = "end_suite"
 }
 local SERVER_RPCS = {
 	"rpc_testify_wait_for_response"
@@ -82,8 +83,7 @@ Testify.make_request = function (self, request_name, ...)
 end
 
 Testify.make_request_to_runner = function (self, request_name, ...)
-	local request_parameters, num_parameters = table.pack(...)
-	request_parameters.length = num_parameters
+	local request_parameters = table.pack(...)
 
 	self:_print("Requesting %s to the Testify Runner", request_name)
 
@@ -207,6 +207,18 @@ Testify._print = function (self, ...)
 	if GameParameters.debug_testify then
 		Log.info("Testify", "%s", string.format(...))
 	end
+end
+
+Testify.print = function (self, ...)
+	self:_print(...)
+end
+
+Testify.current_request_name = function (self)
+	local requests = self._requests
+	local request_name, _ = next(requests)
+
+	self:_print("Current request name: %s", request_name)
+	self:_signal(SIGNALS.current_request, request_name)
 end
 
 Testify.make_request_on_client = function (self, peer_id, request_name, wait_for_response, ...)

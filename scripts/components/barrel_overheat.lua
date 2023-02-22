@@ -7,13 +7,14 @@ BarrelOverheat.init = function (self, unit)
 	self._unit = unit
 	self._overheat_min = self:get_data(unit, "overheat_min")
 	self._overheat_max = self:get_data(unit, "overheat_max")
-	self._overheat_color = self:get_data(unit, "overheat_color")
 
 	self:_set_barrel_overheat(0)
 end
 
 BarrelOverheat._set_barrel_overheat = function (self, value)
-	return
+	local overheat_value = math.lerp(self._overheat_min, self._overheat_max, value)
+
+	Unit.set_scalar_for_materials(self._unit, BARREL_OVERHEAT_MATERIAL_VARIABLE, overheat_value, true)
 end
 
 BarrelOverheat.enable = function (self, unit)
@@ -49,14 +50,9 @@ BarrelOverheat.component_data = {
 		min = 0,
 		step = 0.01,
 		decimals = 2,
-		value = 3,
+		value = 1,
 		ui_name = "Blur max",
-		max = 3
-	},
-	overheat_color = {
-		ui_type = "color",
-		ui_name = "Value",
-		value = QuaternionBox(1, 0.35, 0.2, 0)
+		max = 1
 	},
 	inputs = {
 		set_barrel_overheat = {

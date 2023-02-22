@@ -241,6 +241,36 @@ local line_effects = {
 			}
 		}
 	},
+	shotgun_slug_trail = {
+		keep_aligned = true,
+		vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_tracer_trail",
+		vfx_width = 0.025,
+		emitters = {
+			vfx = {
+				default = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke",
+				start = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke"
+			},
+			interval = {
+				distance = 5,
+				increase = 0
+			}
+		}
+	},
+	shotgun_incendiary_trail = {
+		keep_aligned = true,
+		vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_projectile",
+		vfx_width = 0.025,
+		emitters = {
+			vfx = {
+				default = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke",
+				start = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke"
+			},
+			interval = {
+				distance = 5,
+				increase = 0
+			}
+		}
+	},
 	ripper_trail = {
 		keep_aligned = true,
 		vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_tracer_trail",

@@ -16,19 +16,11 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
-				append_husk_to_event_name = true
 			}
 		},
 		died = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_heavy",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
 				append_husk_to_event_name = true
 			}
 		},
@@ -40,19 +32,11 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
-				append_husk_to_event_name = true
 			}
 		},
 		damage = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_heavy",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
 				append_husk_to_event_name = true
 			}
 		},
@@ -60,19 +44,11 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_reduced_damage",
 				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
-				append_husk_to_event_name = true
 			}
 		},
 		damage_negated = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
 				append_husk_to_event_name = true
 			}
 		},
@@ -80,19 +56,11 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_shield",
 				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
-				append_husk_to_event_name = true
 			}
 		},
 		dead = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
 				append_husk_to_event_name = true
 			}
 		},
@@ -227,29 +195,17 @@ local armored = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
 				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
-				append_husk_to_event_name = true
 			}
 		},
 		shield_blocked = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_shield",
 				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
-				append_husk_to_event_name = true
 			}
 		},
 		dead = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
 				append_husk_to_event_name = true
 			}
 		},
@@ -394,19 +350,11 @@ local super_armor = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_shield",
 				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
-				append_husk_to_event_name = true
 			}
 		},
 		dead = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
 				append_husk_to_event_name = true
 			}
 		},
@@ -489,10 +437,6 @@ local disgustingly_resilient = {
 				append_husk_to_event_name = true
 			},
 			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
-				append_husk_to_event_name = true
-			},
-			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
 			}
@@ -509,10 +453,6 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_combat_weapon_hit_addon_bone",
 				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
-				append_husk_to_event_name = true
 			}
 		},
 		weakspot_damage = {
@@ -523,10 +463,6 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
-				append_husk_to_event_name = true
 			}
 		},
 		damage = {
@@ -536,10 +472,6 @@ local disgustingly_resilient = {
 			},
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_resilient",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
 				append_husk_to_event_name = true
 			}
 		},
@@ -551,19 +483,11 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_resilient",
 				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
-				append_husk_to_event_name = true
 			}
 		},
 		damage_negated = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
 				append_husk_to_event_name = true
 			}
 		},
@@ -571,19 +495,11 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_shield",
 				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
-				append_husk_to_event_name = true
 			}
 		},
 		dead = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_melee_hits_metal_tone_01",
 				append_husk_to_event_name = true
 			}
 		},

@@ -11,6 +11,10 @@ BotPlayer.type = function (self)
 	return "BotPlayer"
 end
 
+BotPlayer.wanted_spawn_point = function (self)
+	return "bots"
+end
+
 BotPlayer.is_human_controlled = function (self)
 	return false
 end

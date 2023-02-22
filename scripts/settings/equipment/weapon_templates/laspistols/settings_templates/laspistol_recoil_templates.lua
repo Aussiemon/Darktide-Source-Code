@@ -529,9 +529,9 @@ recoil_templates.default_laspistol_bfg = {
 			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
 		},
 		visual_recoil_settings = {
-			intensity = 4.1,
+			intensity = 3.3,
 			lerp_scalar = 0.8,
-			yaw_intensity = 3.9
+			yaw_intensity = 3.1
 		}
 	},
 	moving = {

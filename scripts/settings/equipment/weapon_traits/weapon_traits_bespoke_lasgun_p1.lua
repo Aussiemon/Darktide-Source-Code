@@ -166,13 +166,13 @@ templates.weapon_trait_bespoke_lasgun_p1_stagger_count_bonus_damage = {
 templates.weapon_trait_bespoke_lasgun_p1_burninating_on_crit = {
 	weapon_trait_bespoke_lasgun_p1_burninating_on_crit = {
 		{
-			dot_data = {
+			target_buff_data = {
 				max_stacks = 6,
 				num_stacks_on_proc = 2
 			}
 		},
 		[4] = {
-			dot_data = {
+			target_buff_data = {
 				max_stacks = 9,
 				num_stacks_on_proc = 3
 			}

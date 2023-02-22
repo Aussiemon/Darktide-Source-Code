@@ -4,6 +4,8 @@ local SAMPLE_INTERVAL = 300
 
 HeartbeatReporter.init = function (self)
 	self._last_sample_time = 0
+
+	Managers.telemetry_events:heartbeat()
 end
 
 HeartbeatReporter.destroy = function (self)

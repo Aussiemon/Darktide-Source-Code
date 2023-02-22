@@ -147,23 +147,27 @@ templates.weapon_trait_bespoke_stubrevolver_p1_chained_weakspot_hits_increases_p
 templates.weapon_trait_bespoke_stubrevolver_p1_crit_chance_bonus_on_melee_kills = {
 	weapon_trait_bespoke_stubrevolver_p1_crit_chance_bonus_on_melee_kills = {
 		{
+			active_duration = 2.5,
 			proc_stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.05
+				[stat_buffs.ranged_critical_strike_chance] = 0.05
 			}
 		},
 		{
+			active_duration = 2.5,
 			proc_stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.1
+				[stat_buffs.ranged_critical_strike_chance] = 0.1
 			}
 		},
 		{
+			active_duration = 2.5,
 			proc_stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.15
+				[stat_buffs.ranged_critical_strike_chance] = 0.15
 			}
 		},
 		{
+			active_duration = 2.5,
 			proc_stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.2
+				[stat_buffs.ranged_critical_strike_chance] = 0.2
 			}
 		}
 	}
@@ -171,16 +175,16 @@ templates.weapon_trait_bespoke_stubrevolver_p1_crit_chance_bonus_on_melee_kills 
 templates.weapon_trait_bespoke_stubrevolver_p1_toughness_on_elite_kills = {
 	weapon_trait_bespoke_stubrevolver_p1_toughness_on_elite_kills = {
 		{
-			toughness_fixed_percentage = 0.04
-		},
-		{
-			toughness_fixed_percentage = 0.06
-		},
-		{
-			toughness_fixed_percentage = 0.08
-		},
-		{
 			toughness_fixed_percentage = 0.1
+		},
+		{
+			toughness_fixed_percentage = 0.15
+		},
+		{
+			toughness_fixed_percentage = 0.2
+		},
+		{
+			toughness_fixed_percentage = 0.25
 		}
 	}
 }

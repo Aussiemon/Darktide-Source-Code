@@ -1,10 +1,12 @@
 local Attack = require("scripts/utilities/attack/attack")
+local Component = require("scripts/utilities/component")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local PlayerMovement = require("scripts/utilities/player_movement")
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local ScriptedScenarioUtility = require("scripts/extension_systems/scripted_scenario/scripted_scenario_utility")
 local TrainingGroundsSoundEvents = require("scripts/settings/training_grounds/training_grounds_sound_events")
@@ -56,7 +58,7 @@ ShootingRangeSteps.init = {
 		local position = Unit.local_position(directional_unit, 1)
 		local rotation = Unit.local_rotation(directional_unit, 1)
 
-		PlayerMovement.teleport(player, position, rotation)
+		PlayerMovement.teleport_fixed_update(player.player_unit, position, rotation)
 		scenario_system:spawn_attached_units_in_spawn_group("shooting_range_units")
 	end
 }
@@ -79,15 +81,45 @@ end
 
 ShootingRangeSteps.chest_loop = {
 	events = {
-		"event_inventory_set_camera_position_axis_offset"
+		"shooting_range_chest_interact"
 	},
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		_respawn_loadout_chest(scenario_system, step_data)
 	end,
 	on_event = function (scenario_system, player, scenario_data, step_data, event_name)
-		_respawn_loadout_chest(scenario_system, step_data)
+		step_data.loadout_opened = true
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		if not step_data.loadout_opened then
+			return false
+		end
+
+		local interactee_extension = ScriptUnit.extension(step_data.loadout_unit, "interactee_system")
+
+		interactee_extension:set_active(false)
+
+		local inventory_view_open = Managers.ui:view_instance("inventory_background_view")
+
+		if inventory_view_open then
+			step_data.inventory_view_opened = true
+
+			return false
+		end
+
+		if step_data.inventory_view_opened then
+			step_data.inventory_view_opened = false
+			step_data.loadout_opened = false
+
+			interactee_extension:set_active(true)
+
+			local unit_data_extension = ScriptUnit.extension(player.player_unit, "unit_data_system")
+			local interaction_component = unit_data_extension:write_component("interaction")
+
+			Component.event(step_data.loadout_unit, "interaction_canceled", interaction_component.type, player.player_unit)
+
+			interaction_component.target_unit = nil
+		end
+
 		return false
 	end
 }
@@ -151,67 +183,69 @@ ShootingRangeSteps.pickup_loop = {
 		return false
 	end
 }
+
+local function _spawn_locked_vfx_unit(reference_unit, required_achievement)
+	local unit_name = "content/levels/training_grounds/fx/locked_sr_unit_indicator"
+	local template_name = "shooting_range_locked_indicator"
+	local position = Unit.local_position(reference_unit, 1)
+	local rotation = Unit.local_rotation(reference_unit, 1)
+	local locked_unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, template_name, position, rotation)
+	local interactee_extension = ScriptUnit.extension(locked_unit, "interactee_system")
+	local achievement = Managers.achievements:achievement_definition_from_id(required_achievement)
+
+	interactee_extension:set_block_text("loc_requires_achievement", {
+		achievement_label = achievement:label()
+	})
+
+	return locked_unit
+end
+
+local function _breed_is_unlocked(breed_name, required_achievement)
+	local unlocked = not required_achievement or Managers.achievements:is_unlocked(required_achievement)
+
+	return unlocked
+end
+
 ShootingRangeSteps.enemies_loop = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		local profile = player:profile()
-		local level = profile.current_level
 		local enemy_spawners = scenario_system:get_spawn_group("shooting_range_enemies")
-		local spawned_units = {}
+		local spawn_datas = {}
 		local breed_unlocks = PlayerProgressionUnlocks.shooting_range_breed_unlocks
-		local fake_unit = 1
 
-		for unit, directional_unit_extension in pairs(enemy_spawners) do
+		for directional_unit, directional_unit_extension in pairs(enemy_spawners) do
 			local identifier = directional_unit_extension:identifier()
 			local breed_name = string.sub(identifier, 1, string.find(identifier, ":") - 1)
-			local min_level = breed_unlocks[breed_name]
-
-			if not min_level or min_level <= level then
-				spawned_units[fake_unit] = {
-					breed_name = breed_name,
-					spawner = directional_unit_extension
-				}
-				fake_unit = fake_unit + 1
-			else
-				local unit_name = "content/levels/training_grounds/fx/locked_sr_unit_indicator"
-				local template_name = "shooting_range_locked_indicator"
-				local position = Unit.local_position(unit, 1)
-				local rotation = Unit.local_rotation(unit, 1)
-				local locked_unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, template_name, position, rotation)
-				local interactee_extension = ScriptUnit.extension(locked_unit, "interactee_system")
-
-				interactee_extension:set_block_text("loc_requires_level", {
-					level = min_level
-				})
-			end
+			local spawn_data = {
+				was_unlocked = true,
+				breed_name = breed_name
+			}
+			local required_achievement = breed_unlocks[breed_name]
+			spawn_data.required_achievement = required_achievement
+			spawn_datas[directional_unit] = spawn_data
 		end
 
-		step_data.units = spawned_units
+		step_data.spawn_datas = spawn_datas
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
-		local spawned_units = step_data.units
+		local spawn_datas = step_data.spawn_datas
 		local aggro_state = aggro_states.aggroed
 
-		for unit, spawner_data in pairs(spawned_units) do
-			if not HEALTH_ALIVE[unit] then
-				if not spawner_data.dissolve_t then
-					spawner_data.dissolve_t = t + 2 + math.random_range(0, 1)
-				elseif spawner_data.dissolve_t < t then
-					scenario_system:dissolve_unit(unit, t)
+		for directional_unit, spawn_data in pairs(spawn_datas) do
+			repeat
+				local spawned_unit = spawn_data.unit
+				local was_unlocked = spawn_data.was_unlocked
+				local unlocked = _breed_is_unlocked(spawn_data.breed_name, spawn_data.required_achievement)
 
-					spawned_units[unit] = nil
-					spawner_data.dissolve_t = nil
-					local spawner = spawner_data.spawner
-					local spawner_unit = spawner:unit()
-					local position = Unit.local_position(spawner_unit, 1)
-					local rotation = Unit.local_rotation(spawner_unit, 1)
-					local breed_name = spawner_data.breed_name
-					local new_unit = scenario_system:spawn_breed_ramping(breed_name, position, rotation, t, 2, 2, nil, aggro_state)
+				if not unlocked and was_unlocked then
+					spawn_data.was_unlocked = false
 
-					Managers.event:trigger("add_world_marker_unit", "damage_indicator", new_unit)
+					scenario_system:dissolve_unit(spawned_unit, t)
 
-					spawned_units[new_unit] = spawner_data
+					spawn_data.unit = _spawn_locked_vfx_unit(directional_unit, spawn_data.required_achievement)
+
+					break
 				end
-			end
+			until true
 		end
 	end
 }
@@ -278,38 +312,16 @@ ShootingRangeSteps.heavy_enemies_loop = {
 		return false
 	end
 }
-ShootingRangeSteps.unarmed_item_fix_loop = {
-	events = {
-		"event_change_wield_slot"
-	},
-	on_event = function (scenario_system, player, scenario_data, step_data, event_name, selected_slot_name)
-		step_data.wielded_slot = selected_slot_name
-	end,
-	condition_func = function (scenario_system, player, scenario_data, step_data, t)
-		local wielded_slot = step_data.wielded_slot
-
-		if not wielded_slot then
-			return false
-		end
-
-		local player_unit = player.player_unit
-		local visual_loadout_extension = ScriptUnit.extension(player_unit, "visual_loadout_system")
-
-		if visual_loadout_extension:can_wield(wielded_slot) then
-			step_data.wielded_slot = nil
-			local t = FixedFrame.get_latest_fixed_time()
-
-			PlayerUnitVisualLoadout.wield_slot(wielded_slot, player_unit, t)
-		end
-
-		return false
-	end
-}
 ShootingRangeSteps.fade_to_black = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		local local_player = Managers.player:local_player(1)
 
 		Managers.event:trigger("event_cutscene_fade_in", local_player, 0.5, math.easeCubic)
+	end
+}
+ShootingRangeSteps.disable_loadout = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		Managers.event:trigger("shooting_range_chest_interact")
 	end
 }
 ShootingRangeSteps.open_loadout = {

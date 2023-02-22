@@ -167,7 +167,7 @@ local function _add_communication_management_items(parent, player_info, is_block
 	local can_toggle_mute_voice, cannot_mute_voice_reason = social_service:can_toggle_mute_in_voice_chat(account_id, platform_user_id)
 	local is_voice_muted = player_info:is_voice_muted()
 	list_item = _get_next_list_item()
-	list_item.blueprint = not is_blocked and cannot_mute_text_reason and "disabled_button_with_explanation" or "checkbox_button"
+	list_item.blueprint = not is_blocked and cannot_mute_voice_reason and "disabled_button_with_explanation" or "checkbox_button"
 	list_item.label = Localize("loc_social_menu_mute_voice")
 	list_item.is_checked = is_voice_muted or is_blocked
 	list_item.callback = callback(parent, "cb_mute_voice_chat", player_info)

@@ -25,26 +25,26 @@ local conversations_hub_purser_a = {
 			"loc_purser_a__hub_idle_20"
 		},
 		sound_events_duration = {
-			2.979,
-			2.941271,
-			3.475771,
-			4.900792,
-			3.593542,
-			4.5765,
-			4.370542,
+			2.978979,
+			2.94125,
+			3.47575,
+			4.900771,
+			3.593521,
+			4.576479,
+			4.370521,
 			3.754896,
 			4.58425,
-			8.589813,
-			6.155042,
-			5.712458,
-			4.450646,
-			3.805333,
-			2.369104,
-			5.389875,
-			2.911458,
-			3.870917,
-			4.127667,
-			6.543854
+			8.589792,
+			6.155021,
+			5.712438,
+			4.450625,
+			3.805313,
+			2.369083,
+			5.389854,
+			2.911438,
+			3.870896,
+			4.127646,
+			6.543833
 		},
 		randomize_indexes = {}
 	},
@@ -74,32 +74,32 @@ local conversations_hub_purser_a = {
 			"loc_purser_a__hub_interact_dislikes_character_20"
 		},
 		sound_events_duration = {
-			2.494958,
-			3.067604,
+			2.494938,
+			3.067583,
 			3.617063,
-			3.673917,
-			7.243917,
-			1.242063,
-			1.919042,
-			2.179021,
+			3.673896,
+			7.243896,
+			1.242042,
+			1.919021,
+			2.179,
 			2.240313,
 			0.732021,
 			1.805792,
-			1.546938,
-			1.555896,
-			2.580208,
-			2.390188,
-			4.793396,
+			1.546917,
+			1.555875,
+			2.580188,
+			2.390167,
+			4.793375,
 			2.003729,
-			1.970417,
+			1.970396,
 			1.584958,
-			1.896
+			1.895979
 		},
 		randomize_indexes = {}
 	},
 	hub_interact_purser_likes_character = {
 		randomize_indexes_n = 0,
-		sound_events_n = 20,
+		sound_events_n = 18,
 		sound_events = {
 			"loc_purser_a__hub_interact_likes_character_01",
 			"loc_purser_a__hub_interact_likes_character_02",
@@ -111,10 +111,8 @@ local conversations_hub_purser_a = {
 			"loc_purser_a__hub_interact_likes_character_08",
 			"loc_purser_a__hub_interact_likes_character_09",
 			"loc_purser_a__hub_interact_likes_character_10",
-			"loc_purser_a__hub_interact_likes_character_11",
 			"loc_purser_a__hub_interact_likes_character_12",
 			"loc_purser_a__hub_interact_likes_character_13",
-			"loc_purser_a__hub_interact_likes_character_14",
 			"loc_purser_a__hub_interact_likes_character_15",
 			"loc_purser_a__hub_interact_likes_character_16",
 			"loc_purser_a__hub_interact_likes_character_17",
@@ -123,25 +121,23 @@ local conversations_hub_purser_a = {
 			"loc_purser_a__hub_interact_likes_character_20"
 		},
 		sound_events_duration = {
-			4.271396,
-			2.092354,
-			2.365188,
-			1.565958,
-			1.736854,
-			3.374896,
-			1.454104,
-			2.460188,
-			2.951667,
+			4.271375,
+			2.092333,
+			2.365167,
+			1.565938,
+			1.736833,
+			3.374875,
+			1.454083,
+			2.460167,
+			2.951646,
 			2.031354,
-			2.138583,
-			4.132854,
+			4.132833,
 			2.246229,
-			3.435375,
-			2.866542,
+			2.866521,
 			3.056396,
 			3.120021,
-			1.521792,
-			1.706479,
+			1.521771,
+			1.706458,
 			1.634229
 		},
 		randomize_indexes = {}
@@ -153,7 +149,7 @@ local conversations_hub_purser_a = {
 			[1.0] = "loc_purser_a__npc_first_interaction_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 7.071451
+			[1.0] = 7.071438
 		},
 		randomize_indexes = {}
 	},
@@ -164,7 +160,7 @@ local conversations_hub_purser_a = {
 			[1.0] = "loc_purser_a__npc_first_interaction_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.948549
+			[1.0] = 4.948521
 		},
 		randomize_indexes = {}
 	},
@@ -175,7 +171,7 @@ local conversations_hub_purser_a = {
 			[1.0] = "loc_purser_a__npc_first_interaction_c_01"
 		},
 		sound_events_duration = {
-			[1.0] = 7.36
+			[1.0] = 7.359979
 		},
 		randomize_indexes = {}
 	},
@@ -186,7 +182,7 @@ local conversations_hub_purser_a = {
 			[1.0] = "loc_purser_a__npc_first_interaction_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.332834
+			[1.0] = 4.332813
 		},
 		randomize_indexes = {}
 	},
@@ -197,7 +193,7 @@ local conversations_hub_purser_a = {
 			[1.0] = "loc_purser_a__npc_first_interaction_e_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.803787
+			[1.0] = 3.803771
 		},
 		randomize_indexes = {}
 	},
@@ -228,12 +224,12 @@ local conversations_hub_purser_a = {
 		},
 		sound_events_duration = {
 			2.04275,
-			2.551,
+			2.550979,
 			2.996188,
 			2.698542,
 			1.7085,
 			1.36825,
-			3.194167,
+			3.194146,
 			2.021417,
 			1.722542,
 			1.224979,
@@ -276,22 +272,22 @@ local conversations_hub_purser_a = {
 			"loc_purser_a__purser_goodbye_likes_character_20"
 		},
 		sound_events_duration = {
-			1.542438,
+			1.542417,
 			1.099104,
 			2.632854,
 			3.565646,
-			1.409604,
+			1.409583,
 			2.1225,
 			1.749208,
 			2.279771,
 			1.621938,
-			3.427104,
+			3.427083,
 			4.066917,
 			0.938104,
 			1.237729,
 			1.563896,
 			1.556354,
-			0.868917,
+			0.868896,
 			2.01325,
 			3.611396,
 			4.000542,
@@ -331,17 +327,17 @@ local conversations_hub_purser_a = {
 			1.180479,
 			2.576063,
 			1.15725,
-			1.630167,
+			1.630146,
 			2.452021,
 			2.042146,
 			3.741771,
 			2.642042,
 			3.987917,
-			3.341208,
+			3.341188,
 			2.966854,
 			1.20475,
-			3.82025,
-			3.007292,
+			3.820229,
+			3.007271,
 			2.164792,
 			4.834042,
 			2.073938

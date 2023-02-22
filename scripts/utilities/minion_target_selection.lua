@@ -18,6 +18,7 @@ end
 
 local DEFAULT_TARGET_DISABLED_WEIGHT = -2
 local DEFAULT_DISABLING_TYPE_WEIGHTS = {
+	grabbed = -8000,
 	consumed = -8000
 }
 

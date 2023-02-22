@@ -445,4 +445,12 @@ GameModeManager.mission_outro_played = function (self)
 	end
 end
 
+GameModeManager.set_init_scenario = function (self, scenario_alias, scenario_name)
+	local game_mode = self._game_mode
+
+	if game_mode.set_init_scenario then
+		game_mode:set_init_scenario(scenario_alias, scenario_name)
+	end
+end
+
 return GameModeManager

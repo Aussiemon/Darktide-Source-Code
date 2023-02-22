@@ -1,3 +1,4 @@
+local BaseViewTestify = GameParameters.testify and require("scripts/ui/views/base_view_testify")
 local InputUtils = require("scripts/managers/input/input_utils")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -64,8 +65,19 @@ BaseView._on_view_load_complete = function (self, loaded)
 		return
 	end
 
-	self._can_close = true
 	self._loading = nil
+
+	if self:is_view_requirements_complete() then
+		self:_on_view_requirements_complete()
+	end
+end
+
+BaseView.is_view_requirements_complete = function (self)
+	return not self._loading or false
+end
+
+BaseView._on_view_requirements_complete = function (self)
+	self._can_close = true
 	self._render_scale = Managers.ui:view_render_scale()
 	local definitions = self._definitions
 	self._ui_scenegraph = self:_create_scenegraph(definitions)
@@ -82,6 +94,10 @@ end
 
 BaseView.loading = function (self)
 	return self._loading or false
+end
+
+BaseView.widgets_by_name = function (self)
+	return self._widgets_by_name
 end
 
 BaseView._create_scenegraph = function (self, definitions)
@@ -127,6 +143,15 @@ end
 
 BaseView.trigger_widget_pressed = function (self, name, optional_content_id)
 	local widget = self._widgets_by_name[name]
+	local hotspot_content = self:widget_hotspot_content(name, optional_content_id)
+
+	if hotspot_content and not hotspot_content.disabled then
+		hotspot_content.force_input_pressed = true
+	end
+end
+
+BaseView.widget_hotspot_content = function (self, name, optional_content_id)
+	local widget = self._widgets_by_name[name]
 	local content = widget.content
 	local hotspot_content = nil
 
@@ -148,9 +173,7 @@ BaseView.trigger_widget_pressed = function (self, name, optional_content_id)
 		end
 	end
 
-	if hotspot_content and not hotspot_content.disabled then
-		hotspot_content.force_input_pressed = true
-	end
+	return hotspot_content
 end
 
 BaseView._create_sequence_animator = function (self, definitions)
@@ -357,7 +380,10 @@ BaseView._update_element_position = function (self, scenegraph_id, element)
 	local position = self:_scenegraph_world_position(scenegraph_id)
 
 	element:set_pivot_offset(position[1], position[2])
-	self:_set_scenegraph_size(scenegraph_id, nil, element:grid_height())
+
+	if element.grid_height then
+		self:_set_scenegraph_size(scenegraph_id, nil, element:grid_height())
+	end
 end
 
 BaseView._force_update_scenegraph = function (self)
@@ -373,6 +399,10 @@ BaseView._update_animations = function (self, dt, t)
 end
 
 BaseView.update = function (self, dt, t, input_service)
+	if GameParameters.testify then
+		Testify:poll_requests_through_handler(BaseViewTestify, self)
+	end
+
 	if self._can_close_frame_counter then
 		if self._can_close_frame_counter == 0 then
 			self:set_can_exit(self._next_frame_can_close)

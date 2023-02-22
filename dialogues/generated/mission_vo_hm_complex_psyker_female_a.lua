@@ -140,7 +140,7 @@ local mission_vo_hm_complex_psyker_female_a = {
 		},
 		sound_events_duration = {
 			[1.0] = 3.658292,
-			[2.0] = 3.45678
+			[2.0] = 2.573875
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,

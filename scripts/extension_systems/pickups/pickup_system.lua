@@ -525,6 +525,8 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_p
 		end
 	end
 
+	local spawners_after_chest_remove = #usable_spawners
+
 	for pickup_type, value in pairs(pickup_pool) do
 		table.clear(pickups_to_spawn)
 

@@ -737,11 +737,9 @@ blueprints.item_slot = {
 			if equipped_item then
 				local cb = callback(_apply_live_item_icon_cb_func, widget)
 				content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
-				style.sub_display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
-				style.display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
+				style.sub_display_name.text_color = table.clone(ItemUtils.rarity_color(equipped_item))
 				style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
 				style.rarity_tag.color = table.clone(ItemUtils.rarity_color(equipped_item))
-				style.inner_highlight.color = table.clone(ItemUtils.rarity_color(equipped_item))
 
 				if style.item_level then
 					content.item_level = ItemUtils.item_level(equipped_item)
@@ -801,11 +799,9 @@ blueprints.item_slot = {
 					content.item_power = ItemUtils.item_power(equipped_item)
 				end
 
-				style.sub_display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
-				style.display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
+				style.sub_display_name.text_color = table.clone(ItemUtils.rarity_color(equipped_item))
 				style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
 				style.rarity_tag.color = table.clone(ItemUtils.rarity_color(equipped_item))
-				style.inner_highlight.color = table.clone(ItemUtils.rarity_color(equipped_item))
 
 				if style.item_level then
 					content.item_level = ItemUtils.item_level(equipped_item)
@@ -898,9 +894,7 @@ blueprints.gadget_item_slot = {
 			if equipped_item then
 				local cb = callback(_apply_live_item_icon_cb_func, widget)
 				content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
-				style.display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
 				style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
-				style.inner_highlight.color = table.clone(ItemUtils.rarity_color(equipped_item))
 
 				if style.item_level then
 					content.item_level = ItemUtils.item_level(equipped_item)
@@ -913,6 +907,7 @@ blueprints.gadget_item_slot = {
 		local style = widget.style
 		local element = content.element
 		local slot = element.slot
+		content.hotspot.disabled = not content.unlocked
 
 		if slot then
 			local slot_name = slot.name
@@ -929,9 +924,7 @@ blueprints.gadget_item_slot = {
 					content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
 				end
 
-				style.display_name.default_color = table.clone(ItemUtils.rarity_color(equipped_item))
 				style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
-				style.inner_highlight.color = table.clone(ItemUtils.rarity_color(equipped_item))
 
 				if content.icon_load_id then
 					_remove_live_item_icon_cb_func(widget, ui_renderer)
@@ -1105,12 +1098,12 @@ blueprints.item_sub_header = {
 				vertical_alignment = "top",
 				horizontal_alignment = "center",
 				size = {
-					24,
-					24
+					90,
+					90
 				},
 				offset = {
-					285,
-					-10,
+					180,
+					-0,
 					4
 				},
 				color = Color.terminal_corner_selected(255, true)
@@ -1151,6 +1144,34 @@ blueprints.item_sub_header = {
 		local has_new_items = item_type and ItemUtils.has_new_items_by_type(item_type) or false
 		content.has_new_items = has_new_items
 	end
+}
+blueprints.exclamation_mark = {
+	pass_template = {
+		{
+			value = "content/ui/materials/icons/generic/exclamation_mark",
+			value_id = "exclamation_mark",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "bottom",
+				horizontal_alignment = "right",
+				offset = {
+					-2,
+					-2,
+					7
+				},
+				color = {
+					255,
+					246,
+					69,
+					69
+				},
+				size = {
+					16,
+					28
+				}
+			}
+		}
+	}
 }
 
 return blueprints

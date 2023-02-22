@@ -77,45 +77,6 @@ local CLOSE_COMBAT = {
 	condition = "is_aggroed",
 	name = "combat"
 }
-local MELEE_COMBAT = {
-	"BtRandomUtilityNode",
-	{
-		"BtMeleeFollowTargetAction",
-		name = "melee_follow",
-		action_data = action_data.melee_follow
-	},
-	{
-		"BtCombatIdleAction",
-		name = "melee_combat_idle",
-		condition = "should_use_combat_idle",
-		action_data = action_data.melee_combat_idle
-	},
-	{
-		"BtMeleeAttackAction",
-		name = "melee_attack",
-		condition = "attack_allowed",
-		condition_args = {
-			attack_type = "melee"
-		},
-		action_data = action_data.melee_attack
-	},
-	{
-		"BtMeleeAttackAction",
-		name = "moving_melee_attack",
-		condition = "moving_attack_allowed",
-		condition_args = {
-			attack_type = "moving_melee"
-		},
-		action_data = action_data.moving_melee_attack
-	},
-	name = "melee_combat",
-	condition = "is_aggroed_in_combat_range",
-	condition_args = {
-		combat_ranges = {
-			melee = true
-		}
-	}
-}
 local behavior_tree = {
 	"BtSelectorNode",
 	{

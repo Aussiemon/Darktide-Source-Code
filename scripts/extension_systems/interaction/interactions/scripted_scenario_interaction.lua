@@ -1,5 +1,6 @@
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
+local FixedFrame = require("scripts/utilities/fixed_frame")
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
 local ScriptedScenarioInteraction = class("ScriptedScenarioInteraction", "BaseInteraction")
 
@@ -13,8 +14,9 @@ ScriptedScenarioInteraction.start = function (self, world, interactor_unit, unit
 		local scripted_scenario_system = Managers.state.extension:system("scripted_scenario_system")
 		local alias = Unit.get_data(target_unit, "scenario_alias")
 		local scenario_name = Unit.get_data(target_unit, "scenario_name")
+		local t = FixedFrame.get_latest_fixed_time()
 
-		scripted_scenario_system:start_scenario(alias, scenario_name)
+		scripted_scenario_system:start_scenario(alias, scenario_name, t)
 	end
 end
 

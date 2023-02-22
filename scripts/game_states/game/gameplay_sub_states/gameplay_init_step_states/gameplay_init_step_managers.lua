@@ -9,6 +9,7 @@ local DecalManager = require("scripts/managers/decal/decal_manager")
 local DifficultyManager = require("scripts/managers/difficulty/difficulty_manager")
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepNvidiaAiAgent = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_nvidia_ai_agent")
+local EmoteManager = require("scripts/managers/emote/emote_manager")
 local HordeManager = require("scripts/managers/horde/horde_manager")
 local MinionDeathManager = require("scripts/managers/minion/minion_death_manager")
 local MinionSpawnManager = require("scripts/managers/minion/minion_spawn_manager")
@@ -72,8 +73,9 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 	Managers.state.chunk_lod = ChunkLodManager:new(world, mission, local_player)
 	Managers.state.network_story = NetworkStoryManager:new(world, is_server, network_event_delegate)
 	Managers.state.networked_flow_state = NetworkedFlowStateManager:new(world, is_server, network_event_delegate)
-
-	self:_init_player_unit_spawn(is_server, level_seed, mission_name, network_event_delegate, soft_cap_out_of_bounds_units)
+	local mission_template = MissionTemplates[mission_name]
+	local game_mode_name = mission_template.game_mode_name
+	Managers.state.player_unit_spawn = PlayerUnitSpawnManager:new(is_server, level_seed, has_navmesh, game_mode_name, network_event_delegate, soft_cap_out_of_bounds_units)
 
 	if is_server then
 		Managers.state.bot_nav_transition = BotNavTransitionManager:new(world, physics_world, nav_world, is_server)
@@ -88,9 +90,7 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 	Managers.state.difficulty = DifficultyManager:new(is_server, resistance, challenge)
 	Managers.state.decal = DecalManager:new(world)
 	Managers.state.minion_death = MinionDeathManager:new(is_server, network_event_delegate, soft_cap_out_of_bounds_units)
-
-	self:_init_terror_event(world, is_server, network_event_delegate, mission_name, level_name)
-
+	Managers.state.terror_event = TerrorEventManager:new(world, is_server, network_event_delegate, mission_template, level_name)
 	Managers.state.cinematic = CinematicManager:new(world, is_server, network_event_delegate)
 	Managers.state.blood = BloodManager:new(world, is_server, network_event_delegate)
 	Managers.state.attack_report = AttackReportManager:new(is_server, network_event_delegate)
@@ -98,6 +98,7 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 	Managers.state.circumstance = CircumstanceManager:new(circumstance_name)
 	Managers.state.mutator = MutatorManager:new(is_server, network_event_delegate, circumstance_name)
 	Managers.state.world_interaction = WorldInteractionManager:new(world)
+	Managers.state.emote = EmoteManager:new(is_server, network_event_delegate)
 end
 
 GameplayInitStepManagers._init_unit_spawner = function (self, world, is_server, level_name, network_event_delegate)
@@ -108,17 +109,6 @@ GameplayInitStepManagers._init_unit_spawner = function (self, world, is_server, 
 	local unit_spawner_manager = UnitSpawnerManager:new(world, extension_manager, is_server, UnitTemplates, game_session, level_name, network_event_delegate)
 	Managers.state.unit_job = UnitJobManager:new(unit_spawner_manager)
 	Managers.state.unit_spawner = unit_spawner_manager
-end
-
-GameplayInitStepManagers._init_player_unit_spawn = function (self, is_server, level_seed, mission_name, network_event_delegate, soft_cap_out_of_bounds_units)
-	local mission = MissionTemplates[mission_name]
-	local game_mode_name = mission.game_mode_name
-	Managers.state.player_unit_spawn = PlayerUnitSpawnManager:new(is_server, level_seed, game_mode_name, network_event_delegate, soft_cap_out_of_bounds_units)
-end
-
-GameplayInitStepManagers._init_terror_event = function (self, world, is_server, network_event_delegate, mission_name, level_name)
-	local mission = MissionTemplates[mission_name]
-	Managers.state.terror_event = TerrorEventManager:new(world, is_server, network_event_delegate, mission, level_name)
 end
 
 implements(GameplayInitStepManagers, GameplayInitStepInterface)

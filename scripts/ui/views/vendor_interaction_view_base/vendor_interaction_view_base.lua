@@ -7,6 +7,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local Vo = require("scripts/utilities/vo")
 local WalletSettings = require("scripts/settings/wallet_settings")
 local TextUtilities = require("scripts/utilities/ui/text")
+local VendorInteractionViewBaseTestify = GameParameters.testify and require("scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base_testify")
 local VendorInteractionViewBase = class("VendorInteractionViewBase", "TabbedMenuViewBase")
 
 VendorInteractionViewBase.init = function (self, definitions, settings, context)
@@ -328,6 +329,10 @@ VendorInteractionViewBase._draw_widgets = function (self, dt, t, input_service, 
 end
 
 VendorInteractionViewBase.update = function (self, dt, t, input_service)
+	if GameParameters.testify then
+		Testify:poll_requests_through_handler(VendorInteractionViewBaseTestify, self)
+	end
+
 	local input_legend = self:_element("input_legend")
 
 	if input_legend then
@@ -379,6 +384,7 @@ VendorInteractionViewBase._update_wallets_presentation = function (self, wallets
 	local total_width = 0
 	local widgets = {}
 	local wallet_definition = Definitions.wallet_definitions
+	self._wallets_data = wallets_data
 
 	for i = 1, #self._wallet_type do
 		local wallet_type = self._wallet_type[i]
@@ -446,7 +452,13 @@ VendorInteractionViewBase._update_vo = function (self, dt, t)
 			if dialogue_system then
 				self:play_vo_events(events, voice_profile, optional_route_key, nil, is_opinion_vo)
 
-				self._queued_vo_event_request = nil
+				local reply = queued_vo_event_request.reply
+
+				if reply then
+					self._queued_vo_event_request = reply
+				else
+					self._queued_vo_event_request = nil
+				end
 			else
 				self._queued_vo_event_request = nil
 			end
@@ -489,19 +501,29 @@ VendorInteractionViewBase.play_vo_events = function (self, events, voice_profile
 	local dialogue_system = self:dialogue_system()
 
 	if optional_delay then
-		self._queued_vo_event_request = {
+		local play_table = {
 			events = events,
 			voice_profile = voice_profile,
 			optional_route_key = optional_route_key,
 			delay = optional_delay,
 			is_opinion_vo = is_opinion_vo
 		}
+
+		if self._queued_vo_event_request then
+			self._queued_vo_event_request.reply = play_table
+		else
+			self._queued_vo_event_request = play_table
+		end
 	else
 		local wwise_route_key = optional_route_key or 40
 		local callback = self._vo_callback
 		local vo_unit = Vo.play_local_vo_events(dialogue_system, events, voice_profile, wwise_route_key, callback, nil, is_opinion_vo)
 		self._vo_unit = vo_unit
 	end
+end
+
+VendorInteractionViewBase.base_definitions = function (self)
+	return self._base_definitions
 end
 
 VendorInteractionViewBase.can_afford = function (self, amount, type)

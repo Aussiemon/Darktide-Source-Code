@@ -5,6 +5,7 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UISettings = require("scripts/settings/ui/ui_settings")
+local ItemUtils = require("scripts/utilities/items")
 local title_height = 108
 local edge_padding = 44
 local grid_width = 640
@@ -297,6 +298,10 @@ local legend_inputs = {
 		use_mouse_hold = true,
 		on_pressed_callback = "cb_on_discard_held",
 		visibility_function = function (parent)
+			if not parent:selected_grid_widget() then
+				return false
+			end
+
 			local is_item_equipped = parent:is_selected_item_equipped()
 
 			return not is_item_equipped

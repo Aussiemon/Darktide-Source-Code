@@ -198,7 +198,7 @@ local archetype_talents = {
 			}
 		},
 		ogryn_2_tier_3_name_2 = {
-			description = "loc_talent_bonebreaker_bull_rush_movement_speed_desc",
+			description = "loc_talent_bonebreaker_bull_rush_movement_speed_desc_old",
 			name = "Allies in coherency gain movement speed when you use your Charge",
 			display_name = "loc_talent_bonebreaker_bull_rush_movement_speed",
 			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_1_3",
@@ -244,7 +244,8 @@ local archetype_talents = {
 			display_name = "loc_talent_bonebreaker_tanky_with_downed_allies",
 			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_2_2",
 			format_values = {
-				damage_taken = (1 - talent_settings.defensive_2.max) / 3 * 100
+				damage_taken = (1 - talent_settings.defensive_2.max) / 3 * 100,
+				range = talent_settings.defensive_2.distance
 			},
 			passive = {
 				buff_template_name = "ogryn_bonebreaker_reduce_damage_taken_on_disabled_allies",
@@ -266,8 +267,8 @@ local archetype_talents = {
 			}
 		},
 		ogryn_2_tier_5_name_1 = {
-			description = "loc_talent_bonebreaker_revenge_damage_desc",
-			name = "WORK IN PROGRESS - Increases your damage against any enemy that damages you, for a few seconds",
+			description = "loc_talent_bonebreaker_revenge_damage_desc_old",
+			name = "Increases your damage against any enemy that damages you, for a few seconds",
 			display_name = "loc_talent_bonebreaker_revenge_damage",
 			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_3_1",
 			format_values = {
@@ -280,12 +281,17 @@ local archetype_talents = {
 			}
 		},
 		ogryn_2_tier_5_name_2 = {
-			description = "loc_talent_bonebreaker_unlimited_cleave_on_fully_charged_desc",
+			description = "loc_talent_bonebreaker_big_bully_heavy_hits_desc",
 			name = "Fully charged heavy attacks have unlimited cleave",
-			display_name = "loc_talent_bonebreaker_unlimited_cleave_on_fully_charged",
+			display_name = "loc_talent_bonebreaker_big_bully_heavy_hits",
 			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_5_2",
+			format_values = {
+				damage = talent_settings.offensive_2_2.melee_heavy_damage * 100,
+				stacks = talent_settings.offensive_2_2.max_stacks,
+				duration = talent_settings.offensive_2_2.duration
+			},
 			passive = {
-				buff_template_name = "ogryn_bonebreaker_fully_charged_attacks_infinite_cleave",
+				buff_template_name = "ogryn_bonebreaker_big_bully_heavy_hits",
 				identifier = "offensive_2"
 			}
 		},

@@ -205,12 +205,12 @@ CharacterAppearanceView.on_enter = function (self)
 						offset = {
 							0,
 							-205,
-							1
+							2
 						},
 						title_offset = {
 							0,
 							-4,
-							2
+							3
 						},
 						icon_size = {
 							100,
@@ -219,7 +219,7 @@ CharacterAppearanceView.on_enter = function (self)
 						icon_offset = {
 							0,
 							-130,
-							3
+							4
 						}
 					},
 					content = {},
@@ -628,13 +628,11 @@ CharacterAppearanceView._update_appearance_selection = function (self)
 
 					for k = 1, #page_grid.widgets do
 						local widget = page_grid.widgets[k]
-						local element_selected = selected_value and type(selected_value) == "table" and selected_value.name and type(widget.content.entry.value) == "table" and widget.content.entry.value.name and selected_value.name == widget.content.entry.value.name or selected_value and selected_value == widget.content.entry.value
-
-						if element_selected then
-							widget.content.element_selected = true
-						else
-							widget.content.element_selected = false
-						end
+						local widget_content = widget.content
+						local entry_value = widget_content.entry.value
+						local element_selected = selected_value and type(selected_value) == "table" and selected_value.name and type(entry_value) == "table" and entry_value.name and selected_value.name == entry_value.name or selected_value and selected_value == entry_value
+						widget_content.element_selected = element_selected
+						widget.content.hotspot.is_selected = element_selected
 					end
 				end
 			end
@@ -1061,6 +1059,7 @@ CharacterAppearanceView._populate_page_grid = function (self, index, entry)
 	local total_columns = 1
 	local using_scrollbar = false
 	local added_spacing = 0
+	local grid_margin = 5
 
 	if index - 1 > 0 then
 		local prev_grid_start_name = "grid_" .. index - 1 .. "_"
@@ -1154,28 +1153,28 @@ CharacterAppearanceView._populate_page_grid = function (self, index, entry)
 
 	local calculated_height = grid_visible_widgets * size[2] + grid_visible_widgets * spacing[2]
 	local scenegraph_height = math.min(calculated_height, grid_height)
-	local scenegraph_width = total_columns * size[1] + (total_columns - 1) * spacing[1]
-	local scenegraph_x = prev_scenegraph_position[1] + prev_scenegraph_size[1] + scenegraph_spacing[1]
+	local scenegraph_content_width = total_columns * size[1] + (total_columns - 1) * spacing[1]
+	local scenegraph_full_width = scenegraph_content_width + 2 * grid_margin
+	local scenegraph_x = prev_scenegraph_position[1] + prev_scenegraph_size[1] + scenegraph_spacing[1] + grid_margin
 	local scenegraph_y = scenegraph_spacing[2]
 	local grid_scenegraph = grid_start_name .. "area"
 	local grid_content_scenegraph = grid_start_name .. "content_pivot"
 
-	self:_set_scenegraph_position(grid_start_name .. "area", scenegraph_x, scenegraph_y)
-	self:_set_scenegraph_size(grid_start_name .. "interaction", scenegraph_width, scenegraph_height)
+	self:_set_scenegraph_size(grid_start_name .. "interaction", scenegraph_full_width, scenegraph_height)
 
 	if index > 1 then
 		scenegraph_y = scenegraph_y or 0
 
-		self:_set_scenegraph_position(grid_start_name .. "area", scenegraph_x, scenegraph_y)
-		self:_set_scenegraph_size(grid_scenegraph, scenegraph_width, scenegraph_height)
+		self:_set_scenegraph_position(grid_scenegraph, scenegraph_x, scenegraph_y)
+		self:_set_scenegraph_size(grid_scenegraph, scenegraph_content_width, scenegraph_height)
 		self:_set_scenegraph_size(grid_start_name .. "scrollbar", nil, scenegraph_height)
-		self:_set_scenegraph_size(grid_start_name .. "mask", scenegraph_width + mask_margin[1], scenegraph_height + mask_margin[2])
+		self:_set_scenegraph_size(grid_start_name .. "mask", scenegraph_full_width + mask_margin[1], scenegraph_height + mask_margin[2])
 	else
-		self:_set_scenegraph_position(grid_start_name .. "area", scenegraph_x - 60, scenegraph_y)
+		self:_set_scenegraph_position(grid_scenegraph, scenegraph_x - 60, scenegraph_y)
 
 		local height = math.min(CharacterAppearanceViewSettings.area_grid_size[2], description_text_size + scenegraph_height + 20)
 
-		self:_set_scenegraph_size("list_background", scenegraph_width, height)
+		self:_set_scenegraph_size("list_background", scenegraph_full_width, height)
 	end
 
 	local visible_index = 0
@@ -1201,26 +1200,30 @@ CharacterAppearanceView._populate_page_grid = function (self, index, entry)
 			local widget_definition = UIWidget.create_definition(option_pass_template, grid_start_name .. "content_pivot", nil, option_size)
 			local name = grid_start_name .. "option_" .. i
 			local widget = self:_create_widget(name, widget_definition)
-			widget.content.slot_name = entry.slot_name
-			widget.content.entry = option
+			local widget_content = widget.content
+			widget_content.slot_name = entry.slot_name
+			widget_content.entry = option
+			widget_content.show_top_divider = visible_index == 1
 			widget.index = visible_index
 			local element_selected = focused_value and type(focused_value) == "table" and focused_value.name and type(option.value) == "table" and option.value.name and focused_value.name == option.value.name or focused_value and focused_value == option.value
-			widget.content.element_selected = element_selected
-			widget.content.visible = false
-			local icon_texture = option.icon_texture
+			widget_content.element_selected = element_selected
+			widget_content.hotspot.is_selected = element_selected
+			widget_content.visible = false
 
 			if entry.no_option and i == 1 then
 				local icon_texture = "content/ui/textures/icons/appearances/no_option"
-				widget.content.icon_texture = icon_texture
-			elseif option_template_type == "icon" and not icon_texture then
+				widget_content.icon_texture = icon_texture
+			elseif option_template_type == "icon" and not option.icon_texture then
 				local count = entry.no_option and i - 1 or i
 				local icon_texture = string.format("content/ui/textures/icons/appearances/roman_numerals/%d", count)
-				widget.content.icon_texture = icon_texture
-			elseif entry.template == "icon" then
-				widget.content.icon_texture = icon_texture
+				widget_content.icon_texture = icon_texture
+			elseif template_type == "icon" then
+				widget_content.icon_texture = option.icon_texture
+			elseif template_type == "button" or template_type == "category_button" or template_type == "personality_button" then
+				spacing[2] = -2
 			end
 
-			widget.content.icon_background = entry.icon_background
+			widget_content.icon_background = entry.icon_background
 
 			if option_init then
 				option_init(self, widget, entry, option, index, "_on_entry_pressed")
@@ -1230,7 +1233,7 @@ CharacterAppearanceView._populate_page_grid = function (self, index, entry)
 				local reason = option.should_present_option.reason
 				local choice_info = choices_presentation[reason]
 				widget.alpha_multiplier = option.should_present_option.should_present_option == false and 0.5 or 1
-				widget.content.use_choice_icon = true
+				widget_content.use_choice_icon = true
 				widget.style.choice_icon.material_values = {
 					texture_map = choice_info.icon_texture
 				}
@@ -1563,14 +1566,10 @@ CharacterAppearanceView._draw_widgets = function (self, dt, t, input_service, ui
 		end
 	end
 
-	local planet_widgets = self._planet_widgets
+	local planet_widget = self._widgets_by_name.home_planets
 
-	if planet_widgets and #planet_widgets > 0 then
-		for i = 1, #planet_widgets do
-			local widget = planet_widgets[i]
-
-			UIWidget.draw(widget, ui_renderer)
-		end
+	if planet_widget then
+		UIWidget.draw(planet_widget, ui_renderer)
 	end
 
 	local page_widgets = self._page_widgets
@@ -1870,7 +1869,9 @@ CharacterAppearanceView._on_entry_pressed = function (self, current_widget, opti
 
 	for i = 1, #self._page_grids[grid_index].widgets do
 		local widget = self._page_grids[grid_index].widgets[i]
-		widget.content.element_selected = current_widget.index == i
+		local element_selected = current_widget.index == i
+		widget.content.element_selected = element_selected
+		widget.content.hotspot.is_selected = element_selected
 	end
 
 	if self._using_cursor_navigation then
@@ -2753,13 +2754,14 @@ CharacterAppearanceView._create_randomize_button = function (self)
 		40,
 		0
 	}
+	local page_widgets = self._page_widgets
 
-	if self._page_widgets then
+	if page_widgets then
 		local widget = self._page_widgets[2]
 
 		self:_unregister_widget_name(widget.name)
 
-		self._page_widgets[2] = nil
+		page_widgets[2] = nil
 	end
 
 	local template_type = "name_input"
@@ -2789,9 +2791,10 @@ CharacterAppearanceView._create_randomize_button = function (self)
 	randomize_button_widget.content.size[1] = text_width + button_margin[1] * 2 + text_margin + icon_width
 	randomize_button_widget.style.icon.offset[1] = button_margin[1]
 	randomize_button_widget.style.text.offset[1] = icon_width + button_margin[1] + text_margin
+	local offset_y = page_widgets and self._page_widgets[1].offset[2] or (size[2] - randomize_button_widget.content.size[2]) * 0.5
 	randomize_button_widget.offset = {
 		size[1] + 25,
-		(size[2] - randomize_button_widget.content.size[2]) * 0.5,
+		offset_y,
 		randomize_button_widget.offset[3]
 	}
 	randomize_button_widget.content.hotspot.pressed_callback = callback(self, "_randomize_character_name")
@@ -3049,7 +3052,9 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 
 							self:_update_current_navigation_position(1, current_navigation_position)
 
-							self._page_grids[1].widgets[current_navigation_position].content.element_selected = true
+							local current_widget = self._page_grids[1].widgets[current_navigation_position]
+							current_widget.content.element_selected = true
+							current_widget.content.hotspot.is_selected = true
 						else
 							self:_randomize_character_appearance()
 						end
@@ -3696,10 +3701,12 @@ CharacterAppearanceView._get_appearance_content = function (self)
 					enter = function (page_grid)
 						local widget = page_grid.widgets[1]
 						widget.content.element_selected = true
+						widget.content.hotspot.is_selected = true
 					end,
 					leave = function (page_grid)
 						local widget = page_grid.widgets[1]
 						widget.content.element_selected = false
+						widget.content.hotspot.is_selected = false
 					end,
 					options = {
 						{}
@@ -3867,7 +3874,7 @@ CharacterAppearanceView._get_pages = function (self)
 				end
 
 				self:_show_default_page(page)
-				self:_setup_planets_widgets()
+				self:_setup_planets_widget()
 
 				local option = page.content.get_value_function()
 
@@ -3875,19 +3882,19 @@ CharacterAppearanceView._get_pages = function (self)
 					local planet_settings = HomePlanets[option]
 
 					self:_populate_backstory_info(planet_settings)
-					self:_move_background_to_position(HomePlanets[option], true)
+					self:_move_background_to_position(planet_settings, true)
 				end
 			end,
 			leave = function ()
 				if self._planet_background_animation_id and self:_is_animation_active(self._planet_background_animation_id) then
 					self._reset_background = true
 
-					self:_complete_animation(self._planet_background_animation_id)
+					self:_stop_animation(self._planet_background_animation_id)
 
 					self._planet_background_animation_id = nil
 				end
 
-				self:_destroy_planets_widgets()
+				self:_destroy_planets_widget()
 			end,
 			title = Localize("loc_character_create_title_home_planet"),
 			top_frame = {
@@ -3901,12 +3908,12 @@ CharacterAppearanceView._get_pages = function (self)
 				offset = {
 					0,
 					-205,
-					1
+					2
 				},
 				title_offset = {
 					0,
 					-4,
-					2
+					3
 				},
 				icon_size = {
 					100,
@@ -3915,7 +3922,7 @@ CharacterAppearanceView._get_pages = function (self)
 				icon_offset = {
 					0,
 					-130,
-					3
+					4
 				}
 			},
 			description = Localize("loc_character_creator_home_planet_introduction"),
@@ -3973,12 +3980,12 @@ CharacterAppearanceView._get_pages = function (self)
 				offset = {
 					0,
 					-205,
-					1
+					2
 				},
 				title_offset = {
 					0,
 					-4,
-					2
+					3
 				},
 				icon_size = {
 					100,
@@ -3987,7 +3994,7 @@ CharacterAppearanceView._get_pages = function (self)
 				icon_offset = {
 					0,
 					-130,
-					3
+					4
 				}
 			},
 			content = self:_get_childhood_content()
@@ -4020,12 +4027,12 @@ CharacterAppearanceView._get_pages = function (self)
 				offset = {
 					0,
 					-205,
-					1
+					2
 				},
 				title_offset = {
 					0,
 					-4,
-					2
+					3
 				},
 				icon_size = {
 					100,
@@ -4034,7 +4041,7 @@ CharacterAppearanceView._get_pages = function (self)
 				icon_offset = {
 					0,
 					-130,
-					3
+					4
 				}
 			},
 			background = {
@@ -4074,12 +4081,12 @@ CharacterAppearanceView._get_pages = function (self)
 				offset = {
 					0,
 					-205,
-					1
+					2
 				},
 				title_offset = {
 					0,
 					-4,
-					2
+					3
 				},
 				icon_size = {
 					100,
@@ -4088,7 +4095,7 @@ CharacterAppearanceView._get_pages = function (self)
 				icon_offset = {
 					0,
 					-130,
-					3
+					4
 				}
 			},
 			background = {
@@ -4122,12 +4129,12 @@ CharacterAppearanceView._get_pages = function (self)
 				offset = {
 					0,
 					-205,
-					1
+					2
 				},
 				title_offset = {
 					0,
 					-4,
-					2
+					3
 				},
 				icon_size = {
 					100,
@@ -4136,7 +4143,7 @@ CharacterAppearanceView._get_pages = function (self)
 				icon_offset = {
 					0,
 					-130,
-					3
+					4
 				}
 			},
 			content = {},
@@ -4183,12 +4190,12 @@ CharacterAppearanceView._get_pages = function (self)
 				offset = {
 					0,
 					-205,
-					1
+					2
 				},
 				title_offset = {
 					0,
 					-4,
-					2
+					3
 				},
 				icon_size = {
 					100,
@@ -4197,7 +4204,7 @@ CharacterAppearanceView._get_pages = function (self)
 				icon_offset = {
 					0,
 					-130,
-					3
+					4
 				}
 			},
 			description = Localize("loc_character_creator_personality_introduction")
@@ -4241,12 +4248,12 @@ CharacterAppearanceView._get_pages = function (self)
 				offset = {
 					0,
 					-205,
-					1
+					2
 				},
 				title_offset = {
 					0,
 					-4,
-					2
+					3
 				},
 				icon_size = {
 					100,
@@ -4255,7 +4262,7 @@ CharacterAppearanceView._get_pages = function (self)
 				icon_offset = {
 					0,
 					-130,
-					3
+					4
 				}
 			},
 			description = Localize("loc_character_creator_sentence_introduction"),
@@ -4760,146 +4767,135 @@ CharacterAppearanceView._grid_navigation = function (self, start_direction)
 end
 
 CharacterAppearanceView._move_background_to_position = function (self, planet, skip_animation)
-	local start_planet_widget, end_planet_widget = nil
 	local background = self._pages[self._active_page_number].background
+	local animation_params = self._home_planet_animation_params
 
-	for i = 1, #self._planet_widgets do
-		local widget = self._planet_widgets[i]
-
-		if widget.content.current_planet then
-			if widget.content.planet_data.id == planet.id then
-				return
-			end
-
-			widget.content.current_planet = false
-			start_planet_widget = widget
-		end
-
-		if planet.id == widget.content.planet_data.id then
-			end_planet_widget = widget
-		end
+	if not animation_params then
+		animation_params = {
+			start_position = {},
+			end_position = {}
+		}
+		self._home_planet_animation_params = animation_params
 	end
 
-	if start_planet_widget then
-		start_planet_widget.content.visible = true
-	end
-
-	end_planet_widget.content.current_planet = true
-	local texture_size = background.size
+	local texture_size_x, texture_size_y = unpack(background.size)
 	local uv_diff = 1920 / background.size[1]
-	local start_position = start_planet_widget and start_planet_widget.content.planet_data.position
-	local end_position = planet.position
-	local start_uv = nil
+	local widgets_by_name = self._widgets_by_name
+	local planets_widget = widgets_by_name.home_planets
+	local background_widget = widgets_by_name.background
+	local planets_widget_content = planets_widget.content
+	local start_planet = planets_widget_content.current_planet
+	local planet_offset_on_screen_x, planet_offset_on_screen_y = unpack(CharacterAppearanceViewSettings.planet_offset)
+	local start_position_x, start_position_y, start_uvs = nil
+	local is_animation_active = self._planet_background_animation_id and self:_is_animation_active(self._planet_background_animation_id)
 
-	if start_planet_widget then
-		start_uv = {
+	if start_planet and not is_animation_active then
+		start_position_x, start_position_y = unpack(start_planet.position)
+		local start_planet_size = start_planet.image.size
+		start_position_x = start_position_x - planet_offset_on_screen_x + start_planet_size[1] / 2
+		start_position_y = start_position_y - planet_offset_on_screen_y + start_planet_size[2] / 2
+		start_uvs = {
 			{
-				start_position[1] / texture_size[1] - uv_diff / 2,
-				start_position[2] / texture_size[2] - uv_diff / 2
+				start_position_x / texture_size_x - uv_diff / 2,
+				start_position_y / texture_size_y - uv_diff / 2
 			},
 			{
-				start_position[1] / texture_size[1] + uv_diff / 2,
-				start_position[2] / texture_size[2] + uv_diff / 2
+				start_position_x / texture_size_x + uv_diff / 2,
+				start_position_y / texture_size_y + uv_diff / 2
 			}
 		}
 	else
-		start_uv = self._widgets_by_name.background.style.texture.uvs
+		start_uvs = table.clone(background_widget.style.texture.uvs)
+		start_position_x = (start_uvs[1][1] + uv_diff / 2) * texture_size_x
+		start_position_y = (start_uvs[1][2] + uv_diff / 2) * texture_size_y
 	end
 
-	local end_uv = {
+	local planet_size = planet.image.size
+	local end_position_x, end_position_y = unpack(planet.position)
+	end_position_x = end_position_x - planet_offset_on_screen_x + planet_size[1] / 2
+	end_position_y = end_position_y - planet_offset_on_screen_y + planet_size[2] / 2
+	local end_uvs = {
 		{
-			end_position[1] / texture_size[1] - uv_diff / 2,
-			end_position[2] / texture_size[2] - uv_diff / 2
+			end_position_x / texture_size_x - uv_diff / 2,
+			end_position_y / texture_size_y - uv_diff / 2
 		},
 		{
-			end_position[1] / texture_size[1] + uv_diff / 2,
-			end_position[2] / texture_size[2] + uv_diff / 2
+			end_position_x / texture_size_x + uv_diff / 2,
+			end_position_y / texture_size_y + uv_diff / 2
 		}
-	}
-	local params = {
-		start_uv = start_uv,
-		end_uv = end_uv,
-		planets = self._planet_widgets,
-		start_planet_widget = start_planet_widget,
-		end_planet_widget = end_planet_widget
 	}
 
 	if skip_animation then
-		self._widgets_by_name.background.style.texture.uvs = end_uv
-
-		for i = 1, #self._planet_widgets do
-			local widget = self._planet_widgets[i]
-			widget.content.visible = false
-			widget.content.current_planet = false
-		end
-
-		end_planet_widget.content.visible = true
-		end_planet_widget.style.planet.offset[1] = CharacterAppearanceViewSettings.planet_offset[1]
-		end_planet_widget.style.planet.offset[2] = CharacterAppearanceViewSettings.planet_offset[2]
-		end_planet_widget.content.current_planet = true
+		background_widget.style.texture.uvs = end_uvs
+		planets_widget.offset[1] = -end_position_x
+		planets_widget.offset[2] = -end_position_y
+		planets_widget_content.current_planet = planet
+		local planet_style = planets_widget.style[planet.id]
+		planet_style.visible = true
+		planet_style.size_addition[1] = 0
+		planet_style.size_addition[2] = 0
 	else
+		animation_params.start_uvs = start_uvs
+		animation_params.end_uvs = end_uvs
+		animation_params.start_position[1] = start_position_x
+		animation_params.start_position[2] = start_position_y
+		animation_params.end_position[1] = end_position_x
+		animation_params.end_position[2] = end_position_y
+		animation_params.target_planet = planet
+
 		if self._planet_background_animation_id and self:_is_animation_active(self._planet_background_animation_id) then
-			self:_complete_animation(self._planet_background_animation_id)
+			self:_stop_animation(self._planet_background_animation_id)
 
 			self._planet_background_animation_id = nil
 		end
 
-		self._planet_background_animation_id = self:_start_animation("on_planet_select", self._widgets_by_name, params)
+		self._planet_background_animation_id = self:_start_animation("on_planet_select", self._widgets_by_name, animation_params)
 	end
 end
 
-CharacterAppearanceView._setup_planets_widgets = function (self)
-	local planet_definition = UIWidget.create_definition({
-		{
-			value_id = "planet",
-			style_id = "planet",
-			pass_type = "texture",
-			value = "content/ui/materials/base/ui_default_base",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				offset = {
-					0,
-					0,
-					1
-				}
-			}
-		}
-	}, "screen")
-	local widgets = {}
+CharacterAppearanceView._setup_planets_widget = function (self)
+	local planet_passes = {}
 
 	for option_name, planet_values in pairs(HomePlanets) do
-		local name = string.format("planet_%s", option_name)
-		local widget = self:_create_widget(name, planet_definition)
-		local style = widget.style
-		local content = widget.content
-		style.planet.size = planet_values.image.size
-		style.planet.material_values = {
-			texture_map = planet_values.image.path
+		local name = planet_values.id
+		local planet_image = planet_values.image
+		local planet_size = planet_image.size
+		local planet_position = planet_values.position
+		local planet_style = {
+			visible = false,
+			offset = {
+				planet_position[1],
+				planet_position[2],
+				3
+			},
+			size = planet_size,
+			size_addition = {
+				-planet_size[1],
+				-planet_size[2]
+			},
+			material_values = {
+				texture_map = planet_image.path
+			}
 		}
-		content.planet_data = planet_values
-		widget.offset = {
-			0,
-			0,
-			2
+		local pass = {
+			pass_type = "texture",
+			value = "content/ui/materials/base/ui_default_base",
+			value_id = name,
+			style_id = name,
+			style = planet_style
 		}
-		widget.content.visible = false
-		widgets[#widgets + 1] = widget
+		planet_passes[#planet_passes + 1] = pass
 	end
 
-	self._planet_widgets = widgets
+	local planets_definition = UIWidget.create_definition(planet_passes, "screen")
+
+	self:_create_widget("home_planets", planets_definition)
 end
 
-CharacterAppearanceView._destroy_planets_widgets = function (self)
-	if self._planet_widgets then
-		for i = 1, #self._planet_widgets do
-			local widget = self._planet_widgets[i]
-
-			self:_unregister_widget_name(widget.name)
-		end
+CharacterAppearanceView._destroy_planets_widget = function (self)
+	if self._widgets_by_name.home_planets then
+		self:_unregister_widget_name("home_planets")
 	end
-
-	self._planet_widgets = nil
 end
 
 CharacterAppearanceView.on_resolution_modified = function (self)
@@ -4949,12 +4945,24 @@ CharacterAppearanceView._align_background = function (self)
 	end
 end
 
+CharacterAppearanceView.character_create = function (self)
+	return self._character_create
+end
+
 CharacterAppearanceView.dialogue_system = function (self)
 	if self._is_barber then
 		return self._parent:dialogue_system()
 	else
 		return nil
 	end
+end
+
+CharacterAppearanceView.profile_spawner = function (self)
+	return self._profile_spawner
+end
+
+CharacterAppearanceView.widgets_by_name = function (self)
+	return self._widgets_by_name
 end
 
 return CharacterAppearanceView

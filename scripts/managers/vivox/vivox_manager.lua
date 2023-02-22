@@ -136,12 +136,12 @@ VivoxManager.login = function (self, peer_id, account_id, vivox_token)
 	end
 end
 
-VivoxManager.join_chat_channel = function (self, channel, host_peer_id, voice, tag, vivox_token)
+VivoxManager.join_chat_channel = function (self, channel, host_peer_id, voice, text, tag, vivox_token)
 	if not self:is_logged_in() then
 		return
 	end
 
-	Log.info("VivoxManager", "Joining channel %s peer_id: %s tag: %s enabling voice: %s", channel, tostring(host_peer_id), tag, voice and "true" or "false")
+	Log.info("VivoxManager", "Joining channel %s peer_id: %s tag: %s enabling voice: %s enabling text: %s", channel, tostring(host_peer_id), tag, voice and "true" or "false", text and "true" or "false")
 
 	self._channel_tags[channel] = tag
 
@@ -150,11 +150,11 @@ VivoxManager.join_chat_channel = function (self, channel, host_peer_id, voice, t
 			self._channel_host_peer_id[channel] = host_peer_id
 
 			if self:is_logged_in() then
-				Vivox.add_channel_session(self._account_handle, channel, true, voice, vivox_token)
+				Vivox.add_channel_session(self._account_handle, channel, text, voice, vivox_token)
 			else
 				table.insert(self._join_queue, {
 					channel,
-					true,
+					text,
 					voice,
 					vivox_token
 				})
@@ -295,6 +295,8 @@ VivoxManager.update = function (self, dt, t)
 					self:_handle_event(message)
 				elseif message.type == Vivox.MessageType_RESPONSE then
 					self:_handle_response(message)
+				elseif message.type == Vivox.MessageType_RESPONSE_ERROR then
+					self:_handle_response_error(message)
 				end
 			end
 
@@ -306,7 +308,7 @@ end
 VivoxManager._displayname_in_channel = function (self, channel_handle, player_info)
 	local tag = self:tag_from_session_handle(channel_handle)
 
-	if tag == ChatManagerConstants.ChannelTag.HUB or ChatManagerConstants.ChannelTag.MISSION then
+	if tag == ChatManagerConstants.ChannelTag.HUB or tag == ChatManagerConstants.ChannelTag.MISSION then
 		local displayname = player_info:character_name()
 
 		if displayname and displayname ~= "" and displayname ~= "N/A" then
@@ -442,8 +444,10 @@ VivoxManager._party_immaterium_other_members_updated = function (self, other_mem
 				Managers.party_immaterium:request_vivox_party_token():next(function (vivox_data)
 					local channel = vivox_data.channelSip
 					local token = vivox_data.token
+					local voice = true
+					local text = true
 
-					self:join_chat_channel(channel, nil, true, ChatManagerConstants.ChannelTag.PARTY, token)
+					self:join_chat_channel(channel, nil, voice, text, ChatManagerConstants.ChannelTag.PARTY, token)
 
 					self._party_id_session_handles[party_id] = channel
 				end):catch(function (error)
@@ -616,8 +620,6 @@ VivoxManager._handle_event = function (self, message)
 			participant.is_validated = true
 			participant.is_mute_status_set = true
 		end
-
-		Managers.data_service.social:refresh_communication_restrictions()
 	elseif message.event == Vivox.EventType_PARTICIPANT_UPDATED then
 		if not self._sessions[message.session_handle] then
 			return
@@ -674,6 +676,16 @@ VivoxManager._handle_response = function (self, message)
 	end
 end
 
+VivoxManager._handle_response_error = function (self, message)
+	if message.response_type_string == "resp_session_set_participant_mute_for_me" and message.response_status_code == 20000 then
+		return
+	end
+
+	local exception_message = string.format("Vivox response error %s (%s): %s (%s)", tostring(message.response_type_string), tostring(message.response_type), tostring(message.response_error_string), tostring(message.response_status_code))
+
+	Crashify.print_exception("Vivox", exception_message)
+end
+
 VivoxManager._validate_participants = function (self)
 	local my_platform = Managers.data_service.social:platform()
 
@@ -698,7 +710,6 @@ VivoxManager._validate_participants = function (self)
 
 					if displayname then
 						participant.displayname = displayname
-						participant.player_info = nil
 					end
 				end
 
@@ -716,7 +727,8 @@ VivoxManager._validate_participants = function (self)
 							voice_mute = Managers.account:has_crossplay_restriction(relation, XblPermission.CommunicateUsingVoice) or voice_mute
 						else
 							local platform_muted = Managers.account:is_muted(platform_user_id)
-							text_mute = platform_muted or text_mute
+							local communication_restricted = Managers.account:user_has_restriction(platform_user_id, XblPermission.CommunicateUsingVoice)
+							text_mute = communication_restricted or text_mute
 							voice_mute = platform_muted or voice_mute
 
 							if not Managers.account:user_restriction_verified(platform_user_id, XblPermission.CommunicateUsingVoice) then
@@ -738,6 +750,7 @@ VivoxManager._validate_participants = function (self)
 
 				if participant.displayname and participant.is_mute_status_set then
 					participant.is_validated = true
+					participant.player_info = nil
 
 					if not participant.joined_announced then
 						Managers.event:trigger("chat_manager_participant_added", session_handle, participant)

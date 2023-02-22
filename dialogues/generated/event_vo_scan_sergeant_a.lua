@@ -25,6 +25,81 @@ local event_vo_scan_sergeant_a = {
 		},
 		randomize_indexes = {}
 	},
+	event_scan_all_targets_scanned = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_sergeant_a__event_scan_all_targets_scanned_a_01",
+			"loc_sergeant_a__event_scan_all_targets_scanned_a_02",
+			"loc_sergeant_a__event_scan_all_targets_scanned_a_03",
+			"loc_sergeant_a__event_scan_all_targets_scanned_a_04",
+			"loc_sergeant_a__event_scan_all_targets_scanned_a_05",
+			"loc_sergeant_a__event_scan_all_targets_scanned_a_06",
+			"loc_sergeant_a__event_scan_all_targets_scanned_a_07",
+			"loc_sergeant_a__event_scan_all_targets_scanned_a_08",
+			"loc_sergeant_a__event_scan_all_targets_scanned_a_09",
+			"loc_sergeant_a__event_scan_all_targets_scanned_a_10"
+		},
+		sound_events_duration = {
+			3.600021,
+			4.443167,
+			4.73725,
+			4.347833,
+			3.341083,
+			3.685146,
+			3.59825,
+			4.936313,
+			4.886604,
+			4.295125
+		},
+		randomize_indexes = {}
+	},
+	event_scan_find_targets_first = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_sergeant_a__event_scan_find_targets_first_a_01",
+			"loc_sergeant_a__event_scan_find_targets_first_a_02",
+			"loc_sergeant_a__event_scan_find_targets_first_a_03",
+			"loc_sergeant_a__event_scan_find_targets_first_a_04"
+		},
+		sound_events_duration = {
+			5.112333,
+			6.157938,
+			4.157063,
+			4.648479
+		},
+		randomize_indexes = {}
+	},
+	event_scan_find_targets_more = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_sergeant_a__event_scan_find_targets_more_a_01",
+			"loc_sergeant_a__event_scan_find_targets_more_a_02",
+			"loc_sergeant_a__event_scan_find_targets_more_a_03",
+			"loc_sergeant_a__event_scan_find_targets_more_a_04",
+			"loc_sergeant_a__event_scan_find_targets_more_a_05",
+			"loc_sergeant_a__event_scan_find_targets_more_a_06",
+			"loc_sergeant_a__event_scan_find_targets_more_a_07",
+			"loc_sergeant_a__event_scan_find_targets_more_a_08",
+			"loc_sergeant_a__event_scan_find_targets_more_a_09",
+			"loc_sergeant_a__event_scan_find_targets_more_a_10"
+		},
+		sound_events_duration = {
+			4.625521,
+			4.283146,
+			3.813833,
+			4.320042,
+			5.642229,
+			5.074167,
+			3.0295,
+			4.073021,
+			6.117771,
+			3.793792
+		},
+		randomize_indexes = {}
+	},
 	event_scan_more_data = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,

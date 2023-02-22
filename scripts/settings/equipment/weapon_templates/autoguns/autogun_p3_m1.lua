@@ -1,4 +1,5 @@
 local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templates")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
@@ -16,20 +17,19 @@ local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_trai
 local WeaponTraitsRangedHighFireRate = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_high_fire_rate")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local armor_types = ArmorSettings.types
-local damage_types = DamageSettings.damage_types
 local buff_stat_buffs = BuffSettings.stat_buffs
-local wield_inputs = PlayerCharacterConstants.wield_inputs
+local damage_types = DamageSettings.damage_types
 local template_types = WeaponTweakTemplateSettings.template_types
+local wield_inputs = PlayerCharacterConstants.wield_inputs
+local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
+local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
 local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
-local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
-local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local weapon_template = {
 	action_inputs = {
 		shoot = {
@@ -1067,6 +1067,13 @@ weapon_template.perks = {
 			}
 		}
 	}
+}
+weapon_template.weapon_temperature_settings = {
+	increase_rate = 0.075,
+	decay_rate = 0.075,
+	grace_time = 0.4,
+	use_charge = false,
+	barrel_threshold = 0.4
 }
 weapon_template.displayed_keywords = {
 	{

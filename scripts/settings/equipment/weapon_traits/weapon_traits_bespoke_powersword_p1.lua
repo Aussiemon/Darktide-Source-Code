@@ -5,22 +5,22 @@ templates.weapon_trait_bespoke_powersword_p1_chained_hits_increases_melee_cleave
 	weapon_trait_bespoke_powersword_p1_chained_hits_increases_melee_cleave_parent = {
 		{
 			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 0.05
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 0.1
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 0.15
-			}
-		},
-		{
-			stat_buffs = {
 				[stat_buffs.max_hit_mass_attack_modifier] = 0.2
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.3
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.4
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.6
 			}
 		}
 	}

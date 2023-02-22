@@ -98,4 +98,7 @@ if IS_WINDOWS and BUILD ~= "dev" and BUILD ~= "debug" then
 	package.loadlib = nil
 	package.loaders[3] = nil
 	package.loaders[4] = nil
+	loadfile = nil
+	loadstring = nil
+	load = nil
 end

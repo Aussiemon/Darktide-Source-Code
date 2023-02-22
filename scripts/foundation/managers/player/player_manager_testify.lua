@@ -143,7 +143,7 @@ PlayerManagerTestify.teleport_players_to_main_path_point = function (main_path_p
 	local target_position = MainPathQueries.position_from_distance(main_path_point)
 
 	if target_position then
-		target_position.z = target_position.z + 0.5
+		target_position.z = target_position.z
 
 		for _, player in pairs(human_players) do
 			if not player or not player:unit_is_alive() then
@@ -152,8 +152,18 @@ PlayerManagerTestify.teleport_players_to_main_path_point = function (main_path_p
 				return
 			end
 
-			PlayerMovement.teleport(player, target_position, Quaternion.identity())
-			Log.info("Testify", "Teleporting player to x:%s, y:%s, z:%s", target_position.x, target_position.y, target_position.z)
+			local player_position = POSITION_LOOKUP[player.player_unit]
+			local distance = Vector3.distance(target_position, player_position)
+
+			if distance > 0.01 then
+				local rotation = Quaternion.look(target_position - player_position)
+
+				PlayerMovement.teleport(player, target_position, rotation)
+
+				if GameParameters.debug_testify then
+					Log.info("Testify", "Teleporting player to x:%s, y:%s, z:%s", target_position.x, target_position.y, target_position.z)
+				end
+			end
 		end
 	end
 end
@@ -196,7 +206,7 @@ PlayerManagerTestify.wait_for_bots_to_reach_position = function (wait_for_bots_p
 end
 
 PlayerManagerTestify.wait_for_item_equipped = function (data, time, timeout)
-	local TIMEOUT = type(timeout) == "number" and timeout or 1
+	local TIMEOUT = type(timeout) == "number" and timeout or 0.4
 
 	if type(time) == "number" and TIMEOUT < os.clock() - time then
 		return

@@ -1,26 +1,21 @@
-local Action = require("scripts/utilities/weapon/action")
-local AttackSettings = require("scripts/settings/damage/attack_settings")
 local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local Attack = require("scripts/utilities/attack/attack")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
+local BurningSettings = require("scripts/settings/burning/burning_settings")
 local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local MinionState = require("scripts/utilities/minion_state")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local ailment_effects = AilmentSettings.effects
-local attack_results = AttackSettings.attack_results
-local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
 local buff_proc_events = BuffSettings.proc_events
 local buff_stat_buffs = BuffSettings.stat_buffs
-local damage_types = DamageSettings.damage_types
+local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local damage_efficiencies = AttackSettings.damage_efficiencies
+local damage_types = DamageSettings.damage_types
 local stagger_results = AttackSettings.stagger_results
-local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local CHAIN_LIGHTNING_POWER_LEVEL = 500
 local templates = {
 	flamer_assault = {
@@ -50,24 +45,7 @@ local templates = {
 				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.burning, "attacking_unit", owner_unit, "item", source_item)
 			end
 		end,
-		minion_effects = {
-			ailment_effect = ailment_effects.burning,
-			node_effects = {
-				{
-					node_name = "j_spine",
-					vfx = {
-						material_emission = true,
-						particle_effect = "content/fx/particles/enemies/buff_burning",
-						orphaned_policy = "destroy",
-						stop_type = "stop"
-					},
-					sfx = {
-						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
-						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
-					}
-				}
-			}
-		}
+		minion_effects = minion_burning_buff_effects.fire
 	},
 	warp_fire = {
 		interval = 0.75,
@@ -96,24 +74,7 @@ local templates = {
 				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.warpfire, "attacking_unit", owner_unit, "item", source_item)
 			end
 		end,
-		minion_effects = {
-			ailment_effect = ailment_effects.warpfire,
-			node_effects = {
-				{
-					node_name = "j_spine",
-					vfx = {
-						material_emission = true,
-						particle_effect = "content/fx/particles/enemies/buff_warpfire",
-						orphaned_policy = "destroy",
-						stop_type = "stop"
-					},
-					sfx = {
-						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
-						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
-					}
-				}
-			}
-		}
+		minion_effects = minion_burning_buff_effects.warpfire
 	},
 	bleed = {
 		interval = 0.5,

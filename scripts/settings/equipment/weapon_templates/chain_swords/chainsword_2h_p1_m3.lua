@@ -5,31 +5,31 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local ChainSpeedTemplates = require("scripts/settings/equipment/chain_speed_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local MeleeActionInputSetupMid = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_mid")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
-local HitZone = require("scripts/utilities/attack/hit_zone")
-local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
-local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
 local HerdingTemplates = require("scripts/settings/damage/herding_templates")
+local HitZone = require("scripts/utilities/attack/hit_zone")
+local MeleeActionInputSetupMid = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_mid")
+local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
+local WeaponTraitsChainsword2hP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_chainsword_2h_p1")
 local WeaponTraitsMeleeActivated = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_activated")
 local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
-local WeaponTraitsChainsword2hP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_chainsword_2h_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
+local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
 local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local default_hit_zone_priority = ActionSweepSettings.default_hit_zone_priority
 local hit_zone_names = HitZone.hit_zone_names
 local template_types = WeaponTweakTemplateSettings.template_types
+local wounds_shapes = WoundsSettings.shapes
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
+local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
 local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
-local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
-local wounds_shapes = WoundsSettings.shapes
 local weapon_template = {
 	action_inputs = table.clone(MeleeActionInputSetupMid.action_inputs),
 	action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
@@ -1575,11 +1575,13 @@ weapon_template.actions = {
 	},
 	action_start_special = {
 		deactivate_anim_event = "deactivate",
+		total_time_deactivate = 0.45,
 		activate_anim_event = "activate",
-		start_input = "special_action",
-		allowed_during_sprint = true,
 		activation_time = 0.3,
-		kind = "toogle_special",
+		kind = "toggle_special",
+		start_input = "special_action",
+		deactivation_time = 0.1,
+		allowed_during_sprint = true,
 		skip_3p_anims = false,
 		total_time = 0.6
 	},
@@ -1639,7 +1641,8 @@ weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",
 	"chain_sword_2h",
-	"p1"
+	"p1",
+	"activated"
 }
 weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.damage_window_start_sweep_trail_offset = -0.45

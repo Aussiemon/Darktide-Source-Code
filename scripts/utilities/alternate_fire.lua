@@ -31,6 +31,7 @@ local AlternateFire = {
 		Sway.add_immediate_sway(sway_template, sway_control_component, sway_component, movement_state_component, "alternate_fire_start")
 		Spread.add_immediate_spread(t, spread_template, spread_control_component, movement_state_component, "alternate_fire_start")
 
+		local player = Managers.state.player_unit_spawn:owner(player_unit)
 		local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 		local param_table = buff_extension:request_proc_event_param_table()
 
@@ -41,8 +42,6 @@ local AlternateFire = {
 		end
 
 		if Managers.stats.can_record_stats() then
-			local player = Managers.state.player_unit_spawn:owner(player_unit)
-
 			Managers.stats:record_alternate_fire_start(player)
 		end
 	end,

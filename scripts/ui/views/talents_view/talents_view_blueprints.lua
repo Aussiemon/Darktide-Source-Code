@@ -26,7 +26,12 @@ local function _icon_select_change_function(content, style, animation, dt)
 
 		_color_copy(style.selected_color, style.color)
 	else
-		_color_lerp(style.unselected_color, style.hover_color, hover_progress, style.color)
+		local unselected_color = style.unselected_color
+		local hover_color = style.hover_color
+
+		if unselected_color and hover_color then
+			_color_lerp(unselected_color, hover_color, hover_progress, style.color)
+		end
 	end
 
 	local material_values = style.material_values

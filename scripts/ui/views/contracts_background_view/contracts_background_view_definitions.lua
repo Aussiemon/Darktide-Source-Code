@@ -1,4 +1,6 @@
+local ItemUtils = require("scripts/utilities/items")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
@@ -52,8 +54,16 @@ local button_options_definitions = {
 
 									if active_view then
 										local view_instance = Managers.ui:view_instance(active_view)
+										local previewed_item = view_instance and view_instance._previewed_item
 
-										return view_instance and view_instance._previewed_item ~= nil
+										if previewed_item then
+											local item_type = previewed_item.item_type
+											local ITEM_TYPES = UISettings.ITEM_TYPES
+
+											if item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC or item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY or item_type == ITEM_TYPES.EMOTE then
+												return true
+											end
+										end
 									end
 
 									return false

@@ -32,13 +32,14 @@ local contracts_view_settings = {
 	task_label_collect_resources = "loc_contracts_task_label_collect_resources",
 	task_complexity_hard = "loc_contracts_contract_complexity_hard",
 	task_parameter_strings = {
-		cultist = "loc_contract_task_enemy_type_cultist",
-		tome = "loc_contract_task_pickup_type_tome",
 		renegade = "loc_contract_task_enemy_type_renegade",
+		tome = "loc_contract_task_pickup_type_tome",
+		cultist = "loc_contract_task_enemy_type_cultist",
 		traitor = "loc_contract_task_enemy_type_traitor",
+		tome_or_grimoire = "loc_contract_task_pickup_type_grimoire_or_tome",
 		melee = "loc_contract_task_weapon_type_melee",
-		ranged = "loc_contract_task_weapon_type_ranged",
-		grimoire = "loc_contract_task_pickup_type_grimoire"
+		grimoire = "loc_contract_task_pickup_type_grimoire",
+		ranged = "loc_contract_task_weapon_type_ranged"
 	},
 	vo_event_replacing_task = {
 		"contract_vendor_replacing_task"

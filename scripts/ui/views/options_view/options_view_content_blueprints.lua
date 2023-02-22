@@ -145,7 +145,7 @@ local blueprints = {
 			content.disabled = is_disabled
 			local new_value = nil
 
-			if hotspot.on_pressed and not is_disabled then
+			if hotspot.on_pressed and not parent._navigation_column_changed_this_frame and not is_disabled then
 				new_value = not value
 			end
 

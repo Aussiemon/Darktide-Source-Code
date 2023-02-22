@@ -67,9 +67,11 @@ AuthoritativePlayerInputHandler.init = function (self, player, is_server)
 	self._input_cache = input_cache
 	self._input_cache_size = #input_cache
 	self._first_frame_received = false
+
+	self:_create_clock()
 end
 
-AuthoritativePlayerInputHandler.create_clock = function (self)
+AuthoritativePlayerInputHandler._create_clock = function (self)
 	local clock_handler, clock_start = AdaptiveClockHandlerServer:new(self._player:channel_id())
 	self._clock_handler = clock_handler
 	local last_frame = math.floor(clock_start / GameParameters.fixed_time_step)
@@ -93,9 +95,13 @@ AuthoritativePlayerInputHandler.fixed_update = function (self, dt, t, frame)
 end
 
 AuthoritativePlayerInputHandler.update = function (self, dt, t)
-	if not self._clock_handler then
+	local clock_handler = self._clock_handler
+
+	if not clock_handler then
 		return
 	end
+
+	clock_handler:update(dt, t)
 
 	local num_to_remove = math.min(self._frame, self._received_frame) - (self._parsed_frame + 1)
 

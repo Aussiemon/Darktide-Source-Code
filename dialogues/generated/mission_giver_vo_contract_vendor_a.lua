@@ -1,20 +1,35 @@
 local mission_giver_vo_contract_vendor_a = {
 	info_all_players_required = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 4,
 		sound_events = {
-			"loc_contract_vendor_a__info_all_players_required_01",
-			"loc_contract_vendor_a__info_all_players_required_02",
-			"loc_contract_vendor_a__info_all_players_required_03",
-			"loc_contract_vendor_a__info_all_players_required_04",
-			"loc_contract_vendor_a__info_all_players_required_05"
+			"loc_contract_vendor_a__info_all_players_required_a_01",
+			"loc_contract_vendor_a__info_all_players_required_a_02",
+			"loc_contract_vendor_a__info_all_players_required_a_03",
+			"loc_contract_vendor_a__info_all_players_required_a_04"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			2.683646,
+			3.580104,
+			2.54276,
+			3.834083
+		},
+		randomize_indexes = {}
+	},
+	info_event_one_down = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_contract_vendor_a__info_event_one_down_a_01",
+			"loc_contract_vendor_a__info_event_one_down_a_02",
+			"loc_contract_vendor_a__info_event_one_down_a_03",
+			"loc_contract_vendor_a__info_event_one_down_a_04"
+		},
+		sound_events_duration = {
+			2.612771,
+			1.771833,
+			1.58749,
+			2.218656
 		},
 		randomize_indexes = {}
 	}

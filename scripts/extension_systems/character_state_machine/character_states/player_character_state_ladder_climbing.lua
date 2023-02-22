@@ -15,8 +15,6 @@ local INVENTORY_SLOT_TO_WIELD = "slot_unarmed"
 local LADDER_TOP_NODE = "node_top"
 local LADDER_BOTTOM_NODE = "node_bottom"
 local LADDER_LEAVE_NODE = "node_leave"
-local CLIMBING_HAND_SOUND_ALIAS = "ladder_climbing_hands"
-local CLIMBING_FEET_SOUND_ALIAS = "ladder_climbing_feet"
 
 PlayerCharacterStateLadderClimbing._on_enter_animation = function (self, unit, previous_state)
 	local animation_extension = self._animation_extension
@@ -73,7 +71,7 @@ PlayerCharacterStateLadderClimbing.on_exit = function (self, unit, t, next_state
 
 		local inventory_component = self._inventory_component
 
-		if inventory_component.wielded_slot == "slot_unarmed" then
+		if next_state ~= "dead" and inventory_component.wielded_slot == "slot_unarmed" then
 			PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
 		end
 	end

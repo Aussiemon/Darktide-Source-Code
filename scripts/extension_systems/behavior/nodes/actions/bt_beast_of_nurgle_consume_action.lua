@@ -225,7 +225,6 @@ BtBeastOfNurgleConsumeAction._start_throwing_target = function (self, unit, scra
 
 	scratchpad.animation_extension:anim_event(throw_anim)
 
-	local disabled_state_input = scratchpad.hit_unit_disabled_state_input
 	local locomotion_extension = scratchpad.locomotion_extension
 
 	if relative_direction_name ~= "fwd" then
@@ -238,10 +237,6 @@ BtBeastOfNurgleConsumeAction._start_throwing_target = function (self, unit, scra
 		local rotation_scale = Animation.calculate_anim_rotation_scale(unit, destination, rotation_sign, rotation_radians)
 
 		locomotion_extension:set_anim_rotation_scale(rotation_scale)
-
-		disabled_state_input.trigger_animation = "charger_throw_" .. relative_direction_name
-	else
-		disabled_state_input.trigger_animation = "charger_throw"
 	end
 
 	scratchpad.throw_direction = Vector3Box(throw_direction)

@@ -685,6 +685,29 @@ local on_demand_vo_psyker_male_a = {
 		},
 		randomize_indexes = {}
 	},
+	smart_tag_vo_enemy_scab_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_psyker_male_a__smart_tag_vo_enemy_scab_flamer_a_01",
+			"loc_psyker_male_a__smart_tag_vo_enemy_scab_flamer_a_02",
+			"loc_psyker_male_a__smart_tag_vo_enemy_scab_flamer_a_03",
+			"loc_psyker_male_a__smart_tag_vo_enemy_scab_flamer_a_04"
+		},
+		sound_events_duration = {
+			0.763917,
+			1.263688,
+			0.638542,
+			0.960146
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
+		randomize_indexes = {}
+	},
 	smart_tag_vo_enemy_traitor_executor = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

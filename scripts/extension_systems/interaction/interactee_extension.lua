@@ -12,12 +12,15 @@ InteracteeExtension.init = function (self, extension_init_context, unit, extensi
 	self._unit = unit
 	self._used = false
 	self._is_being_used = false
-	self._active = not extension_init_data.start_inactive
+	local start_active = not extension_init_data.start_inactive
+	self._started_active = start_active
+	self._active = start_active
 	self._spawn_cooldown = extension_init_data.spawn_interaction_cooldown
 	self._owner_system = extension_init_context.owner_system
 	self._interactions = {}
 	self._override_contexts = {}
 	self._active_interaction_type = nil
+	self._active_interaction_changed = false
 	self._emissive_material_name = nil
 	self._animation_extension = nil
 
@@ -30,7 +33,7 @@ InteracteeExtension.init = function (self, extension_init_context, unit, extensi
 		end
 	end
 
-	self:set_interaction_context(extension_init_data.interaction_type, extension_init_data.override_context)
+	self:set_interaction_context(extension_init_data.interaction_type, extension_init_data.override_context, true)
 end
 
 InteracteeExtension.update = function (self, unit, dt, t)
@@ -51,13 +54,19 @@ end
 
 InteracteeExtension.hot_join_sync = function (self, unit, sender, channel)
 	local is_active = self._active
+	local active_type_changed = self._active_interaction_changed
 
-	if not is_active then
+	if is_active ~= self._started_active or active_type_changed or self._used then
 		local unit_id = self._unit_id
 		local is_level_unit = self._is_level_unit
 		local is_used = self._used
+		local active_type_id = 0
 
-		RPC.rpc_interaction_hot_join(channel, unit_id, is_level_unit, is_active, is_used)
+		if active_type_changed then
+			active_type_id = NetworkLookup.interaction_type_strings[self._active_interaction_type]
+		end
+
+		RPC.rpc_interaction_hot_join(channel, unit_id, is_level_unit, is_active, is_used, active_type_id)
 	end
 end
 
@@ -68,7 +77,7 @@ InteracteeExtension.game_object_initialized = function (self, session, game_obje
 	end
 end
 
-InteracteeExtension.set_interaction_context = function (self, interaction_type, override_context)
+InteracteeExtension.set_interaction_context = function (self, interaction_type, override_context, set_active)
 	if interaction_type then
 		local interactions = self._interactions
 
@@ -84,7 +93,9 @@ InteracteeExtension.set_interaction_context = function (self, interaction_type, 
 			override_contexts[interaction_type] = override_context
 		end
 
-		self._active_interaction_type = interaction_type
+		if set_active then
+			self._active_interaction_type = interaction_type
+		end
 	end
 end
 
@@ -187,9 +198,13 @@ InteracteeExtension.update_light = function (self)
 	Unit.set_vector3_for_material(self._unit, self._emissive_material_name, "emissive_color", color)
 end
 
-InteracteeExtension.hot_join_setup = function (self, is_active, is_used)
+InteracteeExtension.hot_join_setup = function (self, is_active, is_used, active_type)
 	self._active = is_active
 	self._used = is_used
+
+	if active_type then
+		self._active_interaction_type = active_type
+	end
 
 	self:update_light()
 end
@@ -219,6 +234,22 @@ InteracteeExtension.interaction_type = function (self)
 	local interaction = self._interactions[active_interaction_type]
 
 	return interaction:type()
+end
+
+InteracteeExtension.interaction_network_sync = function (self)
+	local active_interaction_type = self._active_interaction_type
+
+	if not active_interaction_type then
+		return true
+	end
+
+	local override_context = self._override_contexts[active_interaction_type]
+
+	if not override_context or override_context.network_sync == nil then
+		return true
+	end
+
+	return override_context.network_sync
 end
 
 InteracteeExtension.interaction_length = function (self)
@@ -464,6 +495,7 @@ end
 
 InteracteeExtension.activate_interaction = function (self, interaction_type)
 	self._active_interaction_type = interaction_type
+	self._active_interaction_changed = true
 
 	if not self._interactions[self._active_interaction_type] or not self._override_contexts[self._active_interaction_type] then
 		self._active_interaction_type = nil

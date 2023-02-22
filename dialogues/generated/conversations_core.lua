@@ -52933,7 +52933,7 @@ return function ()
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				240
+				360
 			},
 			{
 				"faction_memory",
@@ -53033,7 +53033,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -53175,7 +53175,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -53481,7 +53481,7 @@ return function ()
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				240
+				360
 			},
 			{
 				"faction_memory",
@@ -53576,7 +53576,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -54077,7 +54077,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -54402,7 +54402,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -54600,7 +54600,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -54870,7 +54870,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -55056,7 +55056,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -55143,7 +55143,7 @@ return function ()
 				"time_since_last_conversation",
 				OP.TIMEDIFF,
 				OP.GT,
-				240
+				360
 			},
 			{
 				"faction_memory",
@@ -55238,7 +55238,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -55874,7 +55874,68 @@ return function ()
 				duration = 0.2
 			},
 			random_ignore_vo = {
-				chance = 0.04,
+				chance = 0.1,
+				max_failed_tries = 3,
+				hold_for = 0
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "eavesdropping_contract_vendor",
+		response = "eavesdropping_contract_vendor",
+		database = "conversations_core",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"lore_melk_four_c",
+					"lore_melk_one_c",
+					"lore_melk_three_c",
+					"lore_melk_two_c"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"contract_vendor"
+				}
+			},
+			{
+				"faction_memory",
+				"eavesdropping",
+				OP.EQ,
+				"0"
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"eavesdropping",
+				OP.ADD,
+				1
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			},
+			random_ignore_vo = {
+				chance = 0.1,
 				max_failed_tries = 3,
 				hold_for = 0
 			}
@@ -55937,7 +55998,68 @@ return function ()
 				duration = 0.2
 			},
 			random_ignore_vo = {
-				chance = 0.04,
+				chance = 0.1,
+				max_failed_tries = 3,
+				hold_for = 0
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "eavesdropping_purser",
+		response = "eavesdropping_purser",
+		database = "conversations_core",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"lore_hallowette_four_c",
+					"lore_hallowette_one_c",
+					"lore_hallowette_three_c",
+					"lore_hallowette_two_c"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"purser"
+				}
+			},
+			{
+				"faction_memory",
+				"eavesdropping",
+				OP.EQ,
+				"0"
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"eavesdropping",
+				OP.ADD,
+				1
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			},
+			random_ignore_vo = {
+				chance = 0.1,
 				max_failed_tries = 3,
 				hold_for = 0
 			}
@@ -56001,7 +56123,7 @@ return function ()
 				duration = 0.2
 			},
 			random_ignore_vo = {
-				chance = 0.04,
+				chance = 0.1,
 				max_failed_tries = 3,
 				hold_for = 0
 			}
@@ -56063,7 +56185,7 @@ return function ()
 				duration = 0.2
 			},
 			random_ignore_vo = {
-				chance = 0.04,
+				chance = 0.1,
 				max_failed_tries = 3,
 				hold_for = 0
 			}
@@ -63944,7 +64066,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -64147,7 +64269,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -64350,7 +64472,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -64553,7 +64675,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -64761,7 +64883,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -64969,7 +65091,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -65177,7 +65299,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -65385,7 +65507,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -68921,7 +69043,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -69129,7 +69251,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -69337,7 +69459,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -69545,7 +69667,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -69753,7 +69875,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -70169,7 +70291,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -70377,7 +70499,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -76409,7 +76531,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -76617,7 +76739,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -76825,7 +76947,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -77033,7 +77155,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_giver_default"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {

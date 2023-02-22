@@ -1052,6 +1052,13 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				5
+			},
+			{
+				"faction_memory",
+				"enemy_cultist_berzerker",
+				OP.TIMEDIFF,
+				OP.GT,
+				3
 			}
 		},
 		on_done = {
@@ -1059,12 +1066,58 @@ return function ()
 				"user_memory",
 				"time_since_enemy_kill_berserker",
 				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "enemy_kill_berserker_quick_agnostic",
+		wwise_route = 0,
+		response = "enemy_kill_berserker_quick_agnostic",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"enemy_kill"
+			},
+			{
+				"query_context",
+				"killed_type",
+				OP.SET_INCLUDES,
+				args = {
+					"cultist_berzerker"
+				}
 			},
 			{
 				"faction_memory",
-				"enemy_kill_berserker",
-				OP.ADD,
-				"1"
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			},
+			{
+				"faction_memory",
+				"enemy_cultist_berzerker",
+				OP.TIMEDIFF,
+				OP.LT,
+				3
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -1111,6 +1164,13 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				5
+			},
+			{
+				"faction_memory",
+				"enemy_chaos_hound",
+				OP.TIMEDIFF,
+				OP.GT,
+				3
 			}
 		},
 		on_done = {
@@ -1118,12 +1178,58 @@ return function ()
 				"user_memory",
 				"time_since_enemy_kill_chaos_hound",
 				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "enemy_kill_chaos_hound_quick_agnostic",
+		wwise_route = 0,
+		response = "enemy_kill_chaos_hound_quick_agnostic",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"enemy_kill"
+			},
+			{
+				"query_context",
+				"killed_type",
+				OP.SET_INCLUDES,
+				args = {
+					"chaos_hound"
+				}
 			},
 			{
 				"faction_memory",
-				"enemy_kill_chaos_hound",
-				OP.ADD,
-				"1"
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			},
+			{
+				"faction_memory",
+				"enemy_chaos_hound",
+				OP.TIMEDIFF,
+				OP.LT,
+				3
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -1170,6 +1276,13 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				5
+			},
+			{
+				"faction_memory",
+				"enemy_cultist_mutant",
+				OP.TIMEDIFF,
+				OP.GT,
+				3
 			}
 		},
 		on_done = {
@@ -1177,12 +1290,58 @@ return function ()
 				"user_memory",
 				"time_since_enemy_kill_cultist_mutant",
 				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "enemy_kill_cultist_mutant_quick_agnostic",
+		wwise_route = 0,
+		response = "enemy_kill_cultist_mutant_quick_agnostic",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"enemy_kill"
+			},
+			{
+				"query_context",
+				"killed_type",
+				OP.SET_INCLUDES,
+				args = {
+					"cultist_mutant"
+				}
 			},
 			{
 				"faction_memory",
-				"enemy_kill_cultist_mutant",
-				OP.ADD,
-				"1"
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			},
+			{
+				"faction_memory",
+				"enemy_cultist_mutant",
+				OP.TIMEDIFF,
+				OP.LT,
+				3
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -1229,6 +1388,13 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				5
+			},
+			{
+				"faction_memory",
+				"enemy_chaos_daemonhost",
+				OP.TIMEDIFF,
+				OP.GT,
+				3
 			}
 		},
 		on_done = {
@@ -1236,12 +1402,6 @@ return function ()
 				"user_memory",
 				"time_since_enemy_kill_daemonhost",
 				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"enemy_kill_daemonhost",
-				OP.ADD,
-				"1"
 			},
 			{
 				"faction_memory",
@@ -1294,6 +1454,13 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				5
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_grenadier",
+				OP.TIMEDIFF,
+				OP.GT,
+				3
 			}
 		},
 		on_done = {
@@ -1301,12 +1468,58 @@ return function ()
 				"user_memory",
 				"time_since_enemy_kill_grenadier",
 				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "enemy_kill_grenadier_quick_agnostic",
+		wwise_route = 0,
+		response = "enemy_kill_grenadier_quick_agnostic",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"enemy_kill"
+			},
+			{
+				"query_context",
+				"killed_type",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_grenadier"
+				}
 			},
 			{
 				"faction_memory",
-				"enemy_kill_grenadier",
-				OP.ADD,
-				"1"
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_grenadier",
+				OP.TIMEDIFF,
+				OP.LT,
+				3
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -1350,12 +1563,6 @@ return function ()
 				"user_memory",
 				"enemy_kill_monster",
 				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"enemy_kill_monster",
-				OP.ADD,
-				"1"
 			}
 		},
 		heard_speak_routing = {
@@ -1364,11 +1571,6 @@ return function ()
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 3
-			}
-		},
-		on_post_rule_execution = {
-			reject_events = {
-				duration = 4
 			}
 		}
 	})
@@ -1407,6 +1609,13 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				5
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_netgunner",
+				OP.TIMEDIFF,
+				OP.GT,
+				3
 			}
 		},
 		on_done = {
@@ -1414,12 +1623,58 @@ return function ()
 				"user_memory",
 				"time_since_enemy_kill_netgunner",
 				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "enemy_kill_netgunner_quick_agnostic",
+		wwise_route = 0,
+		response = "enemy_kill_netgunner_quick_agnostic",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"enemy_kill"
+			},
+			{
+				"query_context",
+				"killed_type",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_netgunner"
+				}
 			},
 			{
 				"faction_memory",
-				"enemy_kill_netgunner",
-				OP.ADD,
-				"1"
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_netgunner",
+				OP.TIMEDIFF,
+				OP.LT,
+				3
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -1466,6 +1721,13 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				5
+			},
+			{
+				"faction_memory",
+				"chaos_poxwalker_bomber",
+				OP.TIMEDIFF,
+				OP.GT,
+				3
 			}
 		},
 		on_done = {
@@ -1473,12 +1735,58 @@ return function ()
 				"user_memory",
 				"time_since_enemy_kill_poxwalker_bomber",
 				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "enemy_kill_poxwalker_bomber_quick_agnostic",
+		wwise_route = 0,
+		response = "enemy_kill_poxwalker_bomber_quick_agnostic",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"enemy_kill"
+			},
+			{
+				"query_context",
+				"killed_type",
+				OP.SET_INCLUDES,
+				args = {
+					"chaos_poxwalker_bomber"
+				}
 			},
 			{
 				"faction_memory",
-				"chaos_poxwalker_bomber",
-				OP.ADD,
-				"1"
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			},
+			{
+				"faction_memory",
+				"enemy_chaos_poxwalker_bomber",
+				OP.TIMEDIFF,
+				OP.LT,
+				3
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -1525,6 +1833,13 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				5
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_berzerker",
+				OP.TIMEDIFF,
+				OP.GT,
+				3
 			}
 		},
 		on_done = {
@@ -1532,12 +1847,58 @@ return function ()
 				"user_memory",
 				"time_since_enemy_kill_berserker",
 				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "enemy_kill_renegade_berserker_quick_agnostic",
+		wwise_route = 0,
+		response = "enemy_kill_renegade_berserker_quick_agnostic",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"enemy_kill"
+			},
+			{
+				"query_context",
+				"killed_type",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_berzerker"
+				}
 			},
 			{
 				"faction_memory",
-				"enemy_kill_berserker",
-				OP.ADD,
-				"1"
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_berzerker",
+				OP.TIMEDIFF,
+				OP.LT,
+				3
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -1584,6 +1945,13 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				5
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_flamer",
+				OP.TIMEDIFF,
+				OP.GT,
+				3
 			}
 		},
 		on_done = {
@@ -1591,12 +1959,170 @@ return function ()
 				"user_memory",
 				"time_since_enemy_kill_renegade_flamer",
 				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "enemy_kill_scab_flamer_quick_agnostic",
+		wwise_route = 0,
+		response = "enemy_kill_scab_flamer_quick_agnostic",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"enemy_kill"
+			},
+			{
+				"query_context",
+				"killed_type",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_flamer"
+				}
 			},
 			{
 				"faction_memory",
-				"enemy_kill_renegade_flamer",
-				OP.ADD,
-				"1"
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_flamer",
+				OP.TIMEDIFF,
+				OP.LT,
+				3
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "enemy_kill_sniper",
+		wwise_route = 0,
+		response = "enemy_kill_sniper",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"enemy_kill"
+			},
+			{
+				"query_context",
+				"killed_type",
+				OP.EQ,
+				"renegade_sniper"
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+					"medium",
+					"high"
+				}
+			},
+			{
+				"user_memory",
+				"time_since_enemy_kill_renegade_flamer",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_sniper",
+				OP.TIMEDIFF,
+				OP.GT,
+				3
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_enemy_kill_renegade_flamer",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "enemy_kill_sniper_quick_agnostic",
+		wwise_route = 0,
+		response = "enemy_kill_sniper_quick_agnostic",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"enemy_kill"
+			},
+			{
+				"query_context",
+				"killed_type",
+				OP.SET_INCLUDES,
+				args = {
+					"renegade_sniper"
+				}
+			},
+			{
+				"faction_memory",
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_sniper",
+				OP.TIMEDIFF,
+				OP.LT,
+				3
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -1643,6 +2169,13 @@ return function ()
 				OP.TIMEDIFF,
 				OP.GT,
 				5
+			},
+			{
+				"faction_memory",
+				"enemy_cultist_flamer",
+				OP.TIMEDIFF,
+				OP.GT,
+				3
 			}
 		},
 		on_done = {
@@ -1650,12 +2183,58 @@ return function ()
 				"user_memory",
 				"time_since_enemy_kill_tox_flamer",
 				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "enemy_kill_tox_flamer_quick_agnostic",
+		wwise_route = 0,
+		response = "enemy_kill_tox_flamer_quick_agnostic",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"enemy_kill"
+			},
+			{
+				"query_context",
+				"killed_type",
+				OP.SET_INCLUDES,
+				args = {
+					"cultist_flamer"
+				}
 			},
 			{
 				"faction_memory",
-				"enemy_kill_tox_flamer",
-				OP.ADD,
-				"1"
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			},
+			{
+				"faction_memory",
+				"enemy_cultist_flamer",
+				OP.TIMEDIFF,
+				OP.LT,
+				3
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"quick_agnostic_enemy_kill_a",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -1833,7 +2412,7 @@ return function ()
 				"query_context",
 				"distance",
 				OP.GT,
-				3
+				6
 			},
 			{
 				"query_context",
@@ -1909,7 +2488,7 @@ return function ()
 				"query_context",
 				"distance",
 				OP.GT,
-				3
+				6
 			},
 			{
 				"query_context",
@@ -1985,7 +2564,7 @@ return function ()
 				"query_context",
 				"distance",
 				OP.GT,
-				3
+				6
 			},
 			{
 				"query_context",
@@ -2061,7 +2640,7 @@ return function ()
 				"query_context",
 				"distance",
 				OP.GT,
-				3
+				6
 			},
 			{
 				"query_context",
@@ -4455,10 +5034,10 @@ return function ()
 	})
 	define_rule({
 		name = "knocked_down_2",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "knocked_down_2",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -4476,19 +5055,14 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 3
-			}
 		}
 	})
 	define_rule({
 		name = "knocked_down_3",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "knocked_down_3",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -4506,11 +5080,6 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 3
-			}
 		}
 	})
 	define_rule({
@@ -6770,7 +7339,7 @@ return function ()
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"enemy_kill_monster"
+					"enemy_kill_monster_disabled"
 				}
 			},
 			{
@@ -11756,7 +12325,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_enemy_berserker",
+				"enemy_cultist_berzerker",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -11765,7 +12334,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"seen_enemy_berserker",
+				"enemy_cultist_berzerker",
 				OP.TIMESET
 			}
 		},
@@ -11861,7 +12430,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_gunner",
+				"enemy_cultist_gunner",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -11870,7 +12439,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"seen_gunner",
+				"enemy_cultist_gunner",
 				OP.TIMESET
 			}
 		},
@@ -11913,7 +12482,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_shocktrooper",
+				"enemy_cultist_shocktrooper",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -11922,7 +12491,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"enemy_shocktrooper",
+				"enemy_cultist_shocktrooper",
 				OP.TIMESET
 			}
 		},
@@ -12015,7 +12584,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_enemy_executor",
+				"enemy_renegade_executor",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -12024,7 +12593,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"seen_enemy_executor",
+				"enemy_renegade_executor",
 				OP.TIMESET
 			}
 		},
@@ -12068,7 +12637,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_enemy_grenadier",
+				"enemy_renegade_grenadier",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -12077,7 +12646,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"seen_enemy_grenadier",
+				"enemy_renegade_grenadier",
 				OP.TIMESET
 			}
 		},
@@ -12229,7 +12798,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"cultist_mutant",
+				"enemy_cultist_mutant",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -12238,7 +12807,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"cultist_mutant",
+				"enemy_cultist_mutant",
 				OP.TIMESET
 			}
 		},
@@ -12282,7 +12851,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"renegade_netgunner",
+				"enemy_renegade_netgunner",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -12291,7 +12860,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"renegade_netgunner",
+				"enemy_renegade_netgunner",
 				OP.TIMESET
 			}
 		},
@@ -12335,7 +12904,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_gunner",
+				"enemy_chaos_ogryn_gunner",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -12344,7 +12913,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"seen_gunner",
+				"enemy_chaos_ogryn_gunner",
 				OP.TIMESET
 			}
 		},
@@ -12394,7 +12963,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_enemy_poxwalker_bomber",
+				"enemy_chaos_poxwalker_bomber",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -12403,7 +12972,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"seen_enemy_poxwalker_bomber",
+				"enemy_chaos_poxwalker_bomber",
 				OP.TIMESET
 			}
 		},
@@ -12446,7 +13015,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_enemy_berserker",
+				"enemy_renegade_berzerker",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -12455,7 +13024,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"seen_enemy_berserker",
+				"enemy_renegade_berzerker",
 				OP.TIMESET
 			}
 		},
@@ -12498,7 +13067,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_shocktrooper",
+				"enemy_renegade_shocktrooper",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -12507,7 +13076,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"enemy_shocktrooper",
+				"enemy_renegade_shocktrooper",
 				OP.TIMESET
 			}
 		},
@@ -12551,7 +13120,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"renegade_flamer",
+				"enemy_renegade_flamer",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -12560,7 +13129,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"renegade_flamer",
+				"enemy_renegade_flamer",
 				OP.TIMESET
 			}
 		},
@@ -12600,7 +13169,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_enemy_sniper",
+				"enemy_renegade_sniper",
 				OP.TIMEDIFF,
 				OP.GT,
 				60
@@ -12609,7 +13178,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"seen_enemy_sniper",
+				"enemy_renegade_sniper",
 				OP.TIMESET
 			},
 			{
@@ -12659,7 +13228,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"cultist_flamer",
+				"enemy_cultist_flamer",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -12668,7 +13237,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"cultist_flamer",
+				"enemy_cultist_flamer",
 				OP.TIMESET
 			}
 		},
@@ -12712,7 +13281,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_gunner",
+				"enemy_renegade_gunner",
 				OP.TIMEDIFF,
 				OP.GT,
 				20
@@ -12721,7 +13290,7 @@ return function ()
 		on_done = {
 			{
 				"faction_memory",
-				"seen_gunner",
+				"enemy_renegade_gunner",
 				OP.TIMESET
 			}
 		},

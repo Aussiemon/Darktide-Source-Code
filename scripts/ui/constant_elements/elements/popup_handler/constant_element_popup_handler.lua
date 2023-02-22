@@ -8,9 +8,10 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local WorldRenderUtils = require("scripts/utilities/world_render")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local TextUtilities = require("scripts/utilities/ui/text")
 local InputDevice = require("scripts/managers/input/input_device")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local WalletSettings = require("scripts/settings/wallet_settings")
+local TextUtils = require("scripts/utilities/ui/text")
 local BLUR_TIME = 0.3
 local ConstantElementPopupHandler = class("ConstantElementPopupHandler", "ConstantElementBase")
 ConstantElementPopupHandler.INPUT_DIR_UP = 1
@@ -105,16 +106,7 @@ ConstantElementPopupHandler._get_active_popup = function (self)
 end
 
 ConstantElementPopupHandler._setup_presentation = function (self, data, ui_renderer)
-	self._popup_type = data.type
-	local title_text_params = data.title_text_params
-	local title_text = Localize(data.title_text, title_text_params ~= nil, title_text_params)
-
-	self:_set_title_text(title_text)
-
-	local description_text_params = data.description_text_params
-	local description_text = Localize(data.description_text, description_text_params ~= nil, description_text_params)
-
-	self:_set_description_text(description_text)
+	self:_setup_popup_type(data, ui_renderer)
 
 	local options = data.options
 
@@ -127,7 +119,8 @@ ConstantElementPopupHandler._setup_presentation = function (self, data, ui_rende
 	local height = self:_update_popup_text_height(ui_renderer)
 	local on_enter_animation_callback = nil
 	local params = {
-		popup_height = height
+		popup_height = height,
+		additional_widgets = self._offer_price_widgets
 	}
 	self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, params, on_enter_animation_callback)
 	local enter_popup_sound = data.enter_popup_sound or UISoundEvents.system_popup_enter
@@ -141,6 +134,109 @@ ConstantElementPopupHandler._setup_presentation = function (self, data, ui_rende
 	self._input_frame_delay = 1
 end
 
+ConstantElementPopupHandler._setup_popup_type = function (self, data, ui_renderer)
+	self._popup_type = data.type
+	local title_text = nil
+	title_text = data.title_text_unlocalized and data.title_text_unlocalized or Localize(data.title_text, title_text_params ~= nil, title_text_params)
+
+	self:_set_title_text(title_text)
+
+	if data.type == "offer" then
+		if self._offer_price_widgets then
+			for i = 1, #self._offer_price_widgets do
+				local widget = self._offer_price_widgets[i]
+
+				self:_unregister_widget_name(widget.name)
+			end
+
+			self._offer_price_widgets = nil
+		end
+
+		local item_title_widget = self:_create_widget("offer_title", Definitions.offer_definitions)
+		local item_title = data.offer_name or ""
+		local item_type = data.offer_type or ""
+		item_title_widget.content.text = item_title
+		item_title_widget.content.sub_text = item_type
+		self._widgets_by_name.description_text.content.text = ""
+		local total_prices_width = 0
+		local price_widgets = {}
+		local wallet_definition = Definitions.wallet_definitions
+		local offer_prices = {
+			{
+				amount = data.offer.price.amount.amount,
+				type = data.offer.price.amount.type
+			}
+		}
+
+		for i = 1, #offer_prices do
+			local offer_price = offer_prices[i]
+			local wallet_type = offer_price.type
+			local wallet_settings = WalletSettings[wallet_type]
+			local font_gradient_material = wallet_settings.font_gradient_material
+			local icon_texture_small = wallet_settings.icon_texture_small
+			local widget = self:_create_widget("wallet_" .. i, wallet_definition)
+			widget.style.text.material = font_gradient_material
+			widget.content.texture = icon_texture_small
+			local amount = offer_price.amount
+			local text = TextUtils.format_currency(amount)
+			widget.content.text = text
+			local style = widget.style
+			local text_style = style.text
+			local text_width, _ = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size)
+			widget.style.horizontal_alignment = "center"
+			local texture_width = widget.style.texture.size[1]
+			local text_offset = widget.style.text.original_offset
+			local texture_offset = widget.style.texture.original_offset
+			local text_margin = 5
+			local price_margin = i < #offer_prices and 30 or 0
+			widget.style.texture.offset[1] = texture_offset[1] + total_prices_width
+			widget.style.text.offset[1] = text_offset[1] + text_margin + total_prices_width
+			widget.offset[1] = total_prices_width
+			total_prices_width = total_prices_width + text_width + texture_width + text_margin + price_margin
+			price_widgets[#price_widgets + 1] = widget
+		end
+
+		self:_set_scenegraph_size("offer_price_text", total_prices_width, nil)
+		self:set_scenegraph_position("offer_price_text", nil, -50)
+
+		local title_style = item_title_widget.style.text
+		local sub_title_style = item_title_widget.style.sub_text
+		local title_options = UIFonts.get_font_options_by_style(title_style)
+		local sub_title_options = UIFonts.get_font_options_by_style(sub_title_style)
+		local max_width = self._ui_scenegraph.offer_text.size[1]
+		local title_width, title_height = UIRenderer.text_size(ui_renderer, item_title_widget.content.text, title_style.font_type, title_style.font_size, {
+			max_width,
+			math.huge
+		}, title_options)
+		local sub_title_width, sub_title_height = UIRenderer.text_size(ui_renderer, item_title_widget.content.sub_text, sub_title_style.font_type, sub_title_style.font_size, {
+			max_width,
+			math.huge
+		}, sub_title_options)
+		local sub_title_margin = 10
+		local price_margin = 10
+		sub_title_style.offset[2] = sub_title_margin + title_height
+		local title_total_size = sub_title_style.offset[2] + sub_title_height
+		local price_height = 42
+
+		for i = 1, #price_widgets do
+			local widget = price_widgets[i]
+			widget.offset[2] = title_total_size + price_margin
+		end
+
+		local total_offer_text_height = title_total_size + sub_title_height + price_margin + price_height
+
+		self:_set_scenegraph_size("offer_text", nil, total_offer_text_height)
+
+		self._offer_price_widgets = price_widgets
+		self._offer_price_widgets[#self._offer_price_widgets + 1] = item_title_widget
+	else
+		local description_text = nil
+		description_text = data.description_text_unlocalized and data.description_text_unlocalized or Localize(data.description_text, description_text_params ~= nil, description_text_params)
+
+		self:_set_description_text(description_text)
+	end
+end
+
 ConstantElementPopupHandler._cleanup_presentation = function (self, active_popup, ui_renderer)
 	if self._on_enter_anim_id then
 		self:_stop_animation(self._on_enter_anim_id)
@@ -150,7 +246,8 @@ ConstantElementPopupHandler._cleanup_presentation = function (self, active_popup
 
 	local height = self:_update_popup_text_height(ui_renderer)
 	local params = {
-		popup_height = height
+		popup_height = height,
+		additional_widgets = self._offer_price_widgets
 	}
 	self._on_exit_anim_id = self:_start_animation("on_exit", self._widgets_by_name, params)
 	local exit_popup_sound = active_popup.data.exit_popup_sound or UISoundEvents.system_popup_exit
@@ -382,6 +479,8 @@ ConstantElementPopupHandler._update_popup_text_height = function (self, ui_rende
 	local description_height = self:_get_text_height(description_text, description_text_style, ui_renderer)
 	local description_text_block_height = description_height + ConstantElementPopupHandlerSettings.description_bottom_height_spacing
 	total_text_height = total_text_height + description_text_block_height
+	local offer_height = self._ui_scenegraph.offer_text.size[2]
+	total_text_height = total_text_height + offer_height
 	local button_block_height = self._total_buttons_height
 	total_text_height = total_text_height + button_block_height
 	local current_offset = -total_text_height * 0.5 + window_edge_margin_height
@@ -397,6 +496,10 @@ ConstantElementPopupHandler._update_popup_text_height = function (self, ui_rende
 	self:set_scenegraph_position(description_text_widget.scenegraph_id, nil, current_offset)
 
 	current_offset = current_offset + description_text_block_height
+
+	self:set_scenegraph_position("offer_text", nil, current_offset - description_text_block_height)
+
+	current_offset = current_offset + self._ui_scenegraph.offer_text.size[2]
 
 	self:set_scenegraph_position("button_pivot", nil, current_offset)
 
@@ -622,6 +725,18 @@ ConstantElementPopupHandler.update = function (self, dt, t, ui_renderer, render_
 			content_widgets[i] = nil
 		end
 
+		if self._offer_price_widgets then
+			for i = 1, #self._offer_price_widgets do
+				local widget = self._offer_price_widgets[i]
+
+				self:_unregister_widget_name(widget.name)
+			end
+
+			self._offer_price_widgets = nil
+
+			self:_set_scenegraph_size("offer_text", nil, 0)
+		end
+
 		self._total_buttons_height = 0
 	end
 
@@ -760,6 +875,14 @@ ConstantElementPopupHandler._draw_widgets = function (self, dt, t, input_service
 		end
 	end
 
+	if self._offer_price_widgets then
+		for i = 1, #self._offer_price_widgets do
+			local widget = self._offer_price_widgets[i]
+
+			UIWidget.draw(widget, ui_renderer)
+		end
+	end
+
 	render_settings.alpha_multiplier = previous_alpha_multiplier
 end
 
@@ -840,6 +963,10 @@ end
 
 ConstantElementPopupHandler.widgets_by_name = function (self)
 	return self._widgets_by_name
+end
+
+ConstantElementPopupHandler.active_popup = function (self)
+	return self._active_popup
 end
 
 return ConstantElementPopupHandler

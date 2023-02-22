@@ -42,42 +42,33 @@ local enemy_vo_enemy_chaos_ogryn_armoured_executor_a = {
 	},
 	chaos_ogryn_executor_assault = {
 		randomize_indexes_n = 0,
-		sound_events_n = 10,
+		sound_events_n = 7,
 		sound_events = {
-			"loc_enemy_chaos_ogryn_armoured_executor_a__assault_01",
-			"loc_enemy_chaos_ogryn_armoured_executor_a__assault_02",
 			"loc_enemy_chaos_ogryn_armoured_executor_a__assault_03",
 			"loc_enemy_chaos_ogryn_armoured_executor_a__assault_04",
 			"loc_enemy_chaos_ogryn_armoured_executor_a__assault_05",
 			"loc_enemy_chaos_ogryn_armoured_executor_a__assault_06",
 			"loc_enemy_chaos_ogryn_armoured_executor_a__assault_07",
-			"loc_enemy_chaos_ogryn_armoured_executor_a__assault_08",
 			"loc_enemy_chaos_ogryn_armoured_executor_a__assault_09",
 			"loc_enemy_chaos_ogryn_armoured_executor_a__assault_10"
 		},
 		sound_events_duration = {
-			2.735583,
-			4.372333,
 			2.267313,
 			2.342188,
 			2.912375,
 			3.274396,
 			4.137563,
-			3.206396,
 			4.465271,
 			2.775063
 		},
 		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571,
+			0.1428571
 		},
 		randomize_indexes = {}
 	},

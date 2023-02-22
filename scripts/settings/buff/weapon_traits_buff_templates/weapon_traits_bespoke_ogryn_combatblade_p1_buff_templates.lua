@@ -59,8 +59,9 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_power_on_weapon_sp
 	}
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_pass_past_armor_on_heavy_attack = {
-	class_name = "proc_buff",
+	force_predicted_proc = true,
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_sweep_start] = 1,
 		[proc_events.on_sweep_finish] = 1

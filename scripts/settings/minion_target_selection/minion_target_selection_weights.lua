@@ -89,6 +89,16 @@ local minion_target_selection_weights = {
 		threat_multiplier = 1.75,
 		distance_to_target = 40
 	},
+	chaos_spawn = {
+		occupied_slots = -2,
+		stickiness_duration = 5,
+		disabled = -80,
+		max_distance = 20,
+		stickiness_bonus = 100,
+		ledge_hanging_weight = -20,
+		threat_multiplier = 2,
+		distance_to_target = 40
+	},
 	chaos_poxwalker_bomber = {
 		distance_to_target = 2,
 		occupied_slots = -0.1,

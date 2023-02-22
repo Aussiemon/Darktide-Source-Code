@@ -218,13 +218,6 @@ local mission_giver_vo_tech_priest_a = {
 			3.981062,
 			3.851458
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	info_extraction = {
@@ -1001,6 +994,57 @@ local mission_giver_vo_tech_priest_a = {
 			0.25,
 			0.25,
 			0.25
+		},
+		randomize_indexes = {}
+	},
+	mission_resurgence_brief_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_tech_priest_a__mission_resurgence_brief_a_01",
+			"loc_tech_priest_a__mission_resurgence_brief_a_02",
+			"loc_tech_priest_a__mission_resurgence_brief_a_03",
+			"loc_tech_priest_a__mission_resurgence_brief_a_04"
+		},
+		sound_events_duration = {
+			10.64398,
+			7.921062,
+			9.073376,
+			10.27152
+		},
+		randomize_indexes = {}
+	},
+	mission_resurgence_brief_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_tech_priest_a__mission_resurgence_brief_b_01",
+			"loc_tech_priest_a__mission_resurgence_brief_b_02",
+			"loc_tech_priest_a__mission_resurgence_brief_b_03",
+			"loc_tech_priest_a__mission_resurgence_brief_b_04"
+		},
+		sound_events_duration = {
+			12.36923,
+			11.10325,
+			10.99179,
+			8.919708
+		},
+		randomize_indexes = {}
+	},
+	mission_resurgence_brief_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_tech_priest_a__mission_resurgence_brief_c_01",
+			"loc_tech_priest_a__mission_resurgence_brief_c_02",
+			"loc_tech_priest_a__mission_resurgence_brief_c_03",
+			"loc_tech_priest_a__mission_resurgence_brief_c_04"
+		},
+		sound_events_duration = {
+			9.109793,
+			11.08469,
+			10.247,
+			12.79863
 		},
 		randomize_indexes = {}
 	},

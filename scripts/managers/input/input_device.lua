@@ -107,7 +107,7 @@ InputDevice.slot = function (self)
 end
 
 InputDevice.held = function (self, id)
-	return self._raw_device.button(id) > 0
+	return self._default_held_threshold < self._raw_device.button(id)
 end
 
 InputDevice.type = function (self)
@@ -148,7 +148,7 @@ end
 
 InputDevice.buttons_held = function (self)
 	local raw_device = self._raw_device
-	local num = math.min(raw_device.num_buttons(), 255)
+	local num = raw_device.num_buttons()
 	local button_list = {}
 
 	for i = 0, num - 1 do
@@ -165,7 +165,7 @@ end
 
 InputDevice.buttons_released = function (self)
 	local raw_device = self._raw_device
-	local num = math.min(raw_device.num_buttons(), 255)
+	local num = raw_device.num_buttons()
 	local button_list = {}
 
 	for i = 0, num - 1 do

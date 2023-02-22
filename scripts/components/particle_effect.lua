@@ -148,13 +148,39 @@ ParticleEffect._destroy_particle = function (self)
 end
 
 ParticleEffect.editor_property_changed = function (self, unit)
-	self:_destroy_particle()
-	self:_create_particle()
+	if self._particle_id ~= nil then
+		self:_destroy_particle()
+	end
+
+	if self._editor_hidden ~= true then
+		self:_create_particle()
+	end
 end
 
 ParticleEffect.editor_world_transform_modified = function (self, unit)
-	self:_destroy_particle()
-	self:_create_particle()
+	if self._particle_id ~= nil then
+		self:_destroy_particle()
+	end
+
+	if self._editor_hidden ~= true then
+		self:_create_particle()
+	end
+end
+
+ParticleEffect.editor_toggle_visibility_state = function (self, visible)
+	if visible then
+		self._editor_hidden = false
+
+		if self._particle_id == nil then
+			self:_create_particle()
+		end
+	else
+		self._editor_hidden = true
+
+		if self._particle_id ~= nil then
+			self:_destroy_particle()
+		end
+	end
 end
 
 ParticleEffect.create_particle = function (self)

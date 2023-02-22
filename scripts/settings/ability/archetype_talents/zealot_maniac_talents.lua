@@ -319,7 +319,7 @@ local archetype_talents = {
 			}
 		},
 		zealot_2_tier_6_name_2 = {
-			description = "loc_talent_maniac_attack_speed_after_dash_desc",
+			description = "loc_talent_maniac_attack_speed_after_dash_desc_old",
 			name = "Gain attack speed after using your dash ability",
 			display_name = "loc_talent_maniac_attack_speed_after_dash",
 			icon = "content/ui/textures/icons/talents/zealot_2/zealot_2_tier_6_2",

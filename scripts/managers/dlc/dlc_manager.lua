@@ -379,7 +379,7 @@ DLCStates.handle_status_changes = function (dlc_manager, dt, t)
 	if table.size(NEW_DLCS) > 0 then
 		local cb_query_backend_result = callback(dlc_manager, "cb_query_backend_result")
 
-		Managers.backend.interfaces.external_payment:reconcile_dlc(new_dlcs):next(cb_query_backend_result)
+		Managers.backend.interfaces.external_payment:reconcile_dlc(NEW_DLCS):next(cb_query_backend_result)
 	end
 
 	dlc_manager:_change_state("idle")
@@ -389,6 +389,8 @@ DLCStates.present_rewards = function (dlc_manager, dt, t)
 	if table.size(dlc_manager._popup_ids) > 0 then
 		return
 	end
+
+	local item_rewards = {}
 
 	for i = 1, #dlc_manager._reward_queue do
 		local reward_data = dlc_manager._reward_queue[i]
@@ -412,14 +414,26 @@ DLCStates.present_rewards = function (dlc_manager, dt, t)
 
 					if item then
 						local item_type = item.item_type
-
-						ItemUtils.mark_item_id_as_new(gear_id, item_type)
+						item_rewards[#item_rewards + 1] = {
+							gear_id = gear_id,
+							item_type = item_type
+						}
 					end
 				end
 			end
 		end
 
 		dlc_manager:_consume_pending_dlc(store_id)
+	end
+
+	if #item_rewards > 0 then
+		Managers.data_service.gear:invalidate_gear_cache()
+
+		for i = 1, #item_rewards do
+			local reward = item_rewards[i]
+
+			ItemUtils.mark_item_id_as_new(reward.gear_id, reward.item_type)
+		end
 	end
 
 	dlc_manager:_handle_dangling_pending_dlcs()

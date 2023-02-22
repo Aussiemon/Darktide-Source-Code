@@ -139,79 +139,73 @@ local cinematic_video_template = {
 				subtitle_duration = 0.65,
 				currently_playing_subtitle = "loc_servitor_male_a__cs06_servitor_speech_24_01",
 				speaker_name = "explicator_a",
-				subtitle_start = 143.1
+				subtitle_start = 143.6
 			},
 			{
 				subtitle_duration = 1,
 				currently_playing_subtitle = "loc_crowd_a__cs06_servitor_speech_25_01",
 				speaker_name = "crowd_a",
-				subtitle_start = 143.8
+				subtitle_start = 144.3
 			},
 			{
-				subtitle_duration = 0.65,
+				subtitle_duration = 0.5,
 				currently_playing_subtitle = "loc_servitor_male_a__cs06_servitor_speech_26_01",
 				speaker_name = "explicator_a",
-				subtitle_start = 144.9
+				subtitle_start = 145.45
 			},
 			{
 				subtitle_duration = 0.85,
 				currently_playing_subtitle = "loc_crowd_a__cs06_servitor_speech_27_01",
 				speaker_name = "crowd_a",
-				subtitle_start = 145.6
+				subtitle_start = 145.985
 			},
 			{
-				subtitle_duration = 0.65,
+				subtitle_duration = 0.5,
 				currently_playing_subtitle = "loc_servitor_male_a__cs06_servitor_speech_26_01",
 				speaker_name = "explicator_a",
-				subtitle_start = 146.5
+				subtitle_start = 147
 			},
 			{
 				subtitle_duration = 0.9,
 				currently_playing_subtitle = "loc_crowd_a__cs06_servitor_speech_27_01",
 				speaker_name = "crowd_a",
-				subtitle_start = 147.2
+				subtitle_start = 147.55
 			},
 			{
-				subtitle_duration = 0.65,
+				subtitle_duration = 0.45,
 				currently_playing_subtitle = "loc_servitor_male_a__cs06_servitor_speech_26_01",
 				speaker_name = "explicator_a",
-				subtitle_start = 148.15
+				subtitle_start = 148.6
 			},
 			{
-				subtitle_duration = 0.8,
+				subtitle_duration = 1,
 				currently_playing_subtitle = "loc_crowd_a__cs06_servitor_speech_27_01",
 				speaker_name = "crowd_a",
-				subtitle_start = 148.85
+				subtitle_start = 149.1
 			},
 			{
-				subtitle_duration = 0.65,
+				subtitle_duration = 0.45,
 				currently_playing_subtitle = "loc_servitor_male_a__cs06_servitor_speech_26_01",
 				speaker_name = "explicator_a",
-				subtitle_start = 149.7
+				subtitle_start = 150.15
 			},
 			{
-				subtitle_duration = 0.85,
+				subtitle_duration = 1.05,
 				currently_playing_subtitle = "loc_crowd_a__cs06_servitor_speech_27_01",
 				speaker_name = "crowd_a",
-				subtitle_start = 150.4
+				subtitle_start = 150.65
 			},
 			{
-				subtitle_duration = 0.65,
+				subtitle_duration = 0.45,
 				currently_playing_subtitle = "loc_servitor_male_a__cs06_servitor_speech_26_01",
 				speaker_name = "explicator_a",
-				subtitle_start = 151.3
+				subtitle_start = 151.75
 			},
 			{
-				subtitle_duration = 0.7,
-				currently_playing_subtitle = "loc_crowd_a__cs06_servitor_speech_27_01",
+				subtitle_duration = 3,
+				currently_playing_subtitle = "loc_crowd_a__cs06_servitor_speech_28_01",
 				speaker_name = "crowd_a",
-				subtitle_start = 152
-			},
-			{
-				subtitle_duration = 0.65,
-				currently_playing_subtitle = "loc_servitor_male_a__cs06_servitor_speech_26_01",
-				speaker_name = "explicator_a",
-				subtitle_start = 152.75
+				subtitle_start = 152.25
 			}
 		}
 	}

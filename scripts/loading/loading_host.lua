@@ -5,7 +5,7 @@ local SpawnQueue = require("scripts/loading/spawn_queue")
 local LoadingHost = class("LoadingHost")
 LoadingHost.SPAWN_QUEUE_DELAY = 10
 
-LoadingHost.init = function (self, network_delegate, loaders)
+LoadingHost.init = function (self, network_delegate, loaders, connection_class_name)
 	self._network_delegate = network_delegate
 	self._loaders = loaders
 	local spawn_queue_delay = LoadingHost.SPAWN_QUEUE_DELAY
@@ -32,6 +32,7 @@ LoadingHost.init = function (self, network_delegate, loaders)
 	self._level = nil
 	self._clients = {}
 	self._host = nil
+	self._single_player = connection_class_name == "ConnectionSingleplayer"
 	self._package_synchronizer_host = Managers.package_synchronization:synchronizer_host()
 end
 
@@ -168,7 +169,7 @@ LoadingHost.load_mission = function (self, mission, level_editor_level, circumst
 	self:stop_load_mission()
 
 	self._mission = mission
-	self._host = LoadingHostStateMachine:new(mission, level_editor_level, circumstance_name, self._spawn_queue, self._loaders, self._done_loading_level_func)
+	self._host = LoadingHostStateMachine:new(mission, level_editor_level, circumstance_name, self._spawn_queue, self._loaders, self._done_loading_level_func, self._single_player)
 
 	self._package_synchronizer_host:set_mission_name(mission)
 end

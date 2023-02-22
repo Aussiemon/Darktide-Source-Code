@@ -7,24 +7,23 @@ local ui_view_level_requirement = {
 	crafting_view = PlayerProgressionUnlocks.crafting,
 	contracts_background_view = PlayerProgressionUnlocks.contracts
 }
+local view_story_chapter_requirement = {
+	credits_vendor_background_view = {
+		chapter = "pot_story_traitor_first",
+		story = "path_of_trust"
+	},
+	crafting_view = {
+		chapter = "pot_crafting",
+		story = "path_of_trust"
+	},
+	contracts_background_view = {
+		chapter = "pot_contracts",
+		story = "path_of_trust"
+	}
+}
 
 ViewInteraction.init = function (self, template)
 	self._template = template
-	local narrative_manager = Managers.narrative
-	self._view_story_chapter_requirement = {
-		credits_vendor_background_view = {
-			chapter = "pot_story_traitor_first",
-			story = "path_of_trust"
-		},
-		crafting_view = {
-			chapter = "pot_crafting",
-			story = "path_of_trust"
-		},
-		contracts_background_view = {
-			chapter = "pot_contracts",
-			story = "path_of_trust"
-		}
-	}
 end
 
 ViewInteraction.start = function (self, world, interactor_unit, unit_data_component, t, interactor_is_server)
@@ -69,7 +68,7 @@ ViewInteraction._check_view_requirements = function (self, interactor_unit, ui_i
 		return false, "loc_requires_level", block_context
 	end
 
-	local story_data = self._view_story_chapter_requirement[ui_interaction]
+	local story_data = view_story_chapter_requirement[ui_interaction]
 
 	if not story_data then
 		return true

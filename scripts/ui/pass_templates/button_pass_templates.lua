@@ -5,15 +5,10 @@ local ColorUtilities = require("scripts/utilities/ui/colors")
 local ListHeaderPassTemplates = require("scripts/ui/pass_templates/list_header_templates")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local ButtonPassTemplates = {}
-local terminal_orange_light = Color.ui_orange_light(255, true)
-local terminal_orange_medium = Color.ui_orange_medium(255, true)
-local terminal_orange_dark = Color.ui_orange_dark(255, true)
-local ui_brown_light = Color.ui_brown_light(255, true)
-local ui_brown_medium = Color.ui_brown_medium(255, true)
-local ui_brown_dark = Color.ui_brown_dark(255, true)
 local color_lerp = ColorUtilities.color_lerp
 local color_copy = ColorUtilities.color_copy
 local math_max = math.max
+local math_lerp = math.lerp
 local terminal_button_text_style = table.clone(UIFontSettings.button_primary)
 terminal_button_text_style.offset = {
 	0,
@@ -22,7 +17,6 @@ terminal_button_text_style.offset = {
 }
 terminal_button_text_style.text_horizontal_alignment = "center"
 terminal_button_text_style.text_vertical_alignment = "center"
-terminal_button_text_style.character_spacing = 0.1
 terminal_button_text_style.text_color = {
 	255,
 	216,
@@ -68,27 +62,56 @@ terminal_button_hold_small_text_style.offset = {
 local function terminal_button_change_function(content, style)
 	local hotspot = content.hotspot
 	local is_selected = hotspot.is_selected
-	local color = style.color
+	local is_focused = hotspot.is_focused
+	local is_hover = hotspot.is_hover
+	local disabled = hotspot.disabled
 	local default_color = style.default_color
+	local hover_color = style.hover_color
 	local selected_color = style.selected_color
+	local disabled_color = style.disabled_color
+	local color = nil
 
-	color_copy(is_selected and selected_color or default_color, color)
+	if disabled and disabled_color then
+		color = disabled_color
+	elseif (is_selected or is_focused) and selected_color then
+		color = selected_color
+	elseif is_hover and hover_color then
+		color = hover_color
+	elseif default_color then
+		color = default_color
+	end
+
+	if color then
+		color_copy(color, style.color)
+	end
 end
+
+ButtonPassTemplates.terminal_button_change_function = terminal_button_change_function
 
 local function terminal_button_hover_change_function(content, style)
 	local hotspot = content.hotspot
-	style.color[1] = 100 + math.max(hotspot.anim_hover_progress, content.hotspot.anim_select_progress) * 155
+	local anim_hover_progress = hotspot.anim_hover_progress
+	local anim_select_progress = hotspot.anim_select_progress
+	local anim_focus_progress = hotspot.anim_focus_progress
+	local default_alpha = 155
+	local hover_alpha = anim_hover_progress * 100
+	local select_alpha = math.max(anim_select_progress, anim_focus_progress) * 50
+	style.color[1] = math.clamp(default_alpha + select_alpha + hover_alpha, 0, 255)
 end
+
+ButtonPassTemplates.terminal_button_hover_change_function = terminal_button_hover_change_function
 
 local function default_button_hover_change_function(content, style)
 	local hotspot = content.hotspot
 	local default_color = hotspot.disabled and style.disabled_color or style.default_color
 	local hover_color = style.hover_color
 	local color = style.text_color or style.color
-	local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+	local progress = math.max(math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress), hotspot.anim_input_progress), hotspot.anim_select_progress)
 
 	color_lerp(default_color, hover_color, progress, color)
 end
+
+ButtonPassTemplates.default_button_hover_change_function = default_button_hover_change_function
 
 local function default_button_text_change_function(content, style)
 	local hotspot = content.hotspot
@@ -111,7 +134,81 @@ local function default_button_text_change_function(content, style)
 	local color = style.text_color
 	local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
-	color_lerp(default_color, hover_color, progress, color)
+	if color and default_color and hover_color then
+		color_lerp(default_color, hover_color, progress, color)
+	end
+end
+
+ButtonPassTemplates.terminal_list_button_background_change_function = function (content, style)
+	local math_lerp = math_lerp
+	local math_max = math_max
+	local hotspot = content.hotspot
+	local select_progress = hotspot.anim_select_progress or 0
+	local hover_progress = math_max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
+	local color = style.color
+	local max_alpha = style.max_alpha
+	local min_alpha = style.min_alpha
+	local alpha = math_lerp(min_alpha, max_alpha, hover_progress)
+	color[1] = alpha * select_progress
+end
+
+ButtonPassTemplates.terminal_list_button_frame_hover_change_function = function (content, style)
+	local color_lerp = color_lerp
+	local color_copy = color_copy
+	local math_lerp = math_lerp
+	local hotspot = content.hotspot
+	local is_selected = hotspot.is_selected
+	local hover_progress = math_max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
+	local color = style.color
+
+	if is_selected then
+		color_copy(style.selected_color, color)
+	else
+		local default_color = style.default_color
+		local hover_color = style.hover_color
+
+		color_lerp(default_color, hover_color, hover_progress, color)
+	end
+
+	local min_alpha = style.min_alpha or color[1]
+	local max_alpha = style.max_alpha or color[1]
+
+	if min_alpha ~= max_alpha then
+		color[1] = math_lerp(min_alpha, max_alpha, hover_progress)
+	end
+
+	local selected_layer = style.selected_layer
+
+	if selected_layer then
+		if is_selected then
+			style.offset[3] = selected_layer
+		else
+			style.offset[3] = style.hover_layer
+		end
+	end
+end
+
+ButtonPassTemplates.terminal_list_button_text_change_function = function (content, style)
+	local color_lerp = color_lerp
+	local math_max = math_max
+	local hotspot = content.hotspot
+	local select_progress = hotspot.anim_select_progress
+	local hover_progress = math_max(hotspot.anim_hover_progress - select_progress, 0)
+	local color = style.text_color or style.color
+	local default_color = style.default_color
+	local hover_color = style.hover_color
+	local focused_color = style.selected_color
+	local progress, target_color = nil
+
+	if hover_progress < select_progress then
+		progress = select_progress
+		target_color = focused_color
+	else
+		progress = hover_progress
+		target_color = hover_color
+	end
+
+	color_lerp(default_color, target_color, progress, color)
 end
 
 local default_button_content = {
@@ -300,14 +397,18 @@ ButtonPassTemplates.default_button = {
 				-60,
 				-30
 			},
-			color = Color.terminal_background_gradient(nil, true),
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
 			offset = {
 				0,
 				0,
 				2
 			}
 		},
-		change_function = terminal_button_hover_change_function,
+		change_function = function (content, style)
+			terminal_button_change_function(content, style)
+			terminal_button_hover_change_function(content, style)
+		end,
 		visibility_function = function (content, style)
 			return not content.hotspot.disabled
 		end
@@ -1040,14 +1141,39 @@ ButtonPassTemplates.terminal_button = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = Color.terminal_background_gradient(nil, true),
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = Color.ui_grey_medium(255, true),
 			offset = {
 				0,
 				0,
 				1
 			}
 		},
-		change_function = terminal_button_hover_change_function
+		change_function = function (content, style)
+			terminal_button_change_function(content, style)
+			terminal_button_hover_change_function(content, style)
+		end
+	},
+	{
+		value = "content/ui/materials/frames/dropshadow_medium",
+		style_id = "outer_shadow",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			scale_to_material = true,
+			color = Color.black(200, true),
+			size_addition = {
+				20,
+				20
+			},
+			offset = {
+				0,
+				0,
+				3
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -1058,10 +1184,11 @@ ButtonPassTemplates.terminal_button = {
 			horizontal_alignment = "center",
 			default_color = Color.terminal_frame(nil, true),
 			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = Color.ui_grey_medium(255, true),
 			offset = {
 				0,
 				0,
-				2
+				3
 			}
 		},
 		change_function = terminal_button_change_function
@@ -1075,10 +1202,11 @@ ButtonPassTemplates.terminal_button = {
 			horizontal_alignment = "center",
 			default_color = Color.terminal_corner(nil, true),
 			selected_color = Color.terminal_corner_selected(nil, true),
+			disabled_color = Color.ui_grey_light(255, true),
 			offset = {
 				0,
 				0,
-				3
+				4
 			}
 		},
 		change_function = terminal_button_change_function
@@ -1090,12 +1218,28 @@ ButtonPassTemplates.terminal_button = {
 		style = terminal_button_text_style,
 		change_function = function (content, style)
 			local hotspot = content.hotspot
-			local default_color = hotspot.disabled and style.disabled_color or style.default_color
+			local is_disabled = hotspot.disabled
+			local gamepad_active = hotspot.gamepad_active
+			local button_text = content.original_text or ""
+			local gamepad_action = content.gamepad_action
+
+			if gamepad_active and gamepad_action and not is_disabled then
+				local service_type = "View"
+				local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
+				local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+				content.text = string.format(Localize("loc_input_legend_text_template"), input_text, button_text)
+			else
+				content.text = button_text
+			end
+
+			local default_color = is_disabled and style.disabled_color or style.default_color
 			local hover_color = style.hover_color
-			local text_color = style.text_color
+			local color = style.text_color
 			local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
-			color_lerp(default_color, hover_color, progress, text_color)
+			if color and default_color and hover_color then
+				color_lerp(default_color, hover_color, progress, color)
+			end
 		end
 	},
 	size = {
@@ -1469,14 +1613,39 @@ ButtonPassTemplates.list_button_with_background = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = Color.terminal_background_gradient(nil, true),
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = UIFontSettings.list_button.disabled_color,
 			offset = {
 				0,
 				0,
 				1
 			}
 		},
-		change_function = terminal_button_hover_change_function
+		change_function = function (content, style)
+			terminal_button_change_function(content, style)
+			terminal_button_hover_change_function(content, style)
+		end
+	},
+	{
+		value = "content/ui/materials/frames/dropshadow_medium",
+		style_id = "outer_shadow",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			scale_to_material = true,
+			color = Color.black(200, true),
+			size_addition = {
+				20,
+				20
+			},
+			offset = {
+				0,
+				0,
+				3
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -1485,12 +1654,14 @@ ButtonPassTemplates.list_button_with_background = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
+			color = Color.terminal_frame(nil, true),
 			default_color = Color.terminal_frame(nil, true),
 			selected_color = Color.terminal_frame_selected(nil, true),
+			hover_color = Color.terminal_frame_hover(nil, true),
 			offset = {
 				0,
 				0,
-				2
+				12
 			}
 		},
 		change_function = terminal_button_change_function
@@ -1502,12 +1673,14 @@ ButtonPassTemplates.list_button_with_background = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
+			color = Color.terminal_corner(nil, true),
 			default_color = Color.terminal_corner(nil, true),
 			selected_color = Color.terminal_corner_selected(nil, true),
+			hover_color = Color.terminal_corner_hover(nil, true),
 			offset = {
 				0,
 				0,
-				3
+				13
 			}
 		},
 		change_function = terminal_button_change_function
@@ -1590,14 +1763,39 @@ ButtonPassTemplates.terminal_list_button_with_background_and_icon = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = Color.terminal_background_gradient(nil, true),
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = Color.ui_grey_medium(255, true),
 			offset = {
 				0,
 				0,
 				1
 			}
 		},
-		change_function = terminal_button_hover_change_function
+		change_function = function (content, style)
+			terminal_button_change_function(content, style)
+			terminal_button_hover_change_function(content, style)
+		end
+	},
+	{
+		value = "content/ui/materials/frames/dropshadow_medium",
+		style_id = "outer_shadow",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			scale_to_material = true,
+			color = Color.black(200, true),
+			size_addition = {
+				20,
+				20
+			},
+			offset = {
+				0,
+				0,
+				3
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -1608,6 +1806,7 @@ ButtonPassTemplates.terminal_list_button_with_background_and_icon = {
 			horizontal_alignment = "center",
 			default_color = Color.terminal_frame(nil, true),
 			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = Color.ui_grey_medium(255, true),
 			offset = {
 				0,
 				0,
@@ -1625,6 +1824,7 @@ ButtonPassTemplates.terminal_list_button_with_background_and_icon = {
 			horizontal_alignment = "center",
 			default_color = Color.terminal_corner(nil, true),
 			selected_color = Color.terminal_corner_selected(nil, true),
+			disabled_color = Color.ui_grey_light(255, true),
 			offset = {
 				0,
 				0,
@@ -1839,6 +2039,240 @@ ButtonPassTemplates.list_button_with_background_and_icon = {
 		value_id = "text",
 		style = table.clone(UIFontSettings.list_button),
 		change_function = ButtonPassTemplates.list_button_label_change_function
+	}
+}
+ButtonPassTemplates.terminal_list_divider_height = 2
+ButtonPassTemplates.terminal_list_divider = {
+	{
+		value_id = "divider",
+		style_id = "divider",
+		pass_type = "texture",
+		value = "content/ui/materials/dividers/divider_line_01",
+		style = {
+			vertical_alignment = "bottom",
+			color = Color.terminal_frame(128, true),
+			offset = {
+				0,
+				0,
+				2
+			},
+			size = {
+				[2] = ButtonPassTemplates.terminal_list_divider_height
+			}
+		}
+	}
+}
+ButtonPassTemplates.terminal_list_button_vertical_spacing = -2
+ButtonPassTemplates.terminal_list_button = {
+	{
+		style_id = "hotspot",
+		pass_type = "hotspot",
+		content_id = "hotspot",
+		content = {
+			use_is_focused = true,
+			on_hover_sound = UISoundEvents.default_mouse_hover,
+			on_pressed_sound = UISoundEvents.default_click,
+			on_select_sound = UISoundEvents.default_click
+		}
+	},
+	{
+		style_id = "background",
+		pass_type = "texture",
+		value = "content/ui/materials/backgrounds/default_square",
+		value_id = "background",
+		style = {
+			scale_to_material = true,
+			max_alpha = 64,
+			min_alpha = 24,
+			color = Color.terminal_background_selected(nil, true),
+			size_addition = {
+				0,
+				-2 * ButtonPassTemplates.terminal_list_divider_height
+			},
+			offset = {
+				0,
+				ButtonPassTemplates.terminal_list_divider_height,
+				0
+			}
+		},
+		change_function = ButtonPassTemplates.terminal_list_button_background_change_function,
+		visibility_function = function (content, style)
+			return content.hotspot.is_selected
+		end
+	},
+	{
+		style_id = "background_gradient",
+		pass_type = "texture",
+		value = "content/ui/materials/masks/gradient_horizontal_sides_02",
+		value_id = "background_gradient",
+		style = {
+			scale_to_material = true,
+			max_alpha = 255,
+			min_alpha = 150,
+			color = Color.terminal_background_gradient(nil, true),
+			default_color = Color.terminal_background_gradient(nil, true),
+			hover_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_background_selected(nil, true),
+			size_addition = {
+				0,
+				-2 * ButtonPassTemplates.terminal_list_divider_height
+			},
+			offset = {
+				0,
+				ButtonPassTemplates.terminal_list_divider_height,
+				1
+			}
+		},
+		change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function,
+		visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
+	},
+	{
+		style_id = "frame",
+		pass_type = "texture",
+		value = "content/ui/materials/frames/frame_tile_2px",
+		value_id = "frame",
+		style = {
+			hover_layer = 7,
+			selected_layer = 8,
+			scale_to_material = true,
+			color = Color.terminal_frame(nil, true),
+			default_color = Color.terminal_frame(nil, true),
+			hover_color = Color.terminal_frame_hover(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			offset = {
+				0,
+				0,
+				6
+			}
+		},
+		change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function,
+		visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
+	},
+	{
+		style_id = "corner",
+		pass_type = "texture",
+		value = "content/ui/materials/frames/frame_corner_2px",
+		value_id = "corner",
+		style = {
+			hover_layer = 10,
+			selected_layer = 11,
+			scale_to_material = true,
+			color = Color.terminal_corner(nil, true),
+			default_color = Color.terminal_corner(nil, true),
+			hover_color = Color.terminal_corner_hover(nil, true),
+			selected_color = Color.terminal_corner_selected(nil, true),
+			offset = {
+				0,
+				0,
+				9
+			}
+		},
+		change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function,
+		visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
+	},
+	{
+		value_id = "divider_top",
+		style_id = "divider_top",
+		pass_type = "texture",
+		value = "content/ui/materials/dividers/divider_line_01",
+		style = {
+			vertical_alignment = "top",
+			color = Color.terminal_frame(128, true),
+			offset = {
+				0,
+				0,
+				1
+			},
+			size = {
+				[2] = ButtonPassTemplates.terminal_list_divider_height
+			}
+		},
+		visibility_function = function (content, style)
+			return content.show_top_divider
+		end
+	},
+	{
+		value_id = "divider",
+		style_id = "divider",
+		pass_type = "texture",
+		value = "content/ui/materials/dividers/divider_line_01",
+		style = {
+			vertical_alignment = "bottom",
+			color = Color.terminal_frame(128, true),
+			offset = {
+				0,
+				0,
+				2
+			},
+			size = {
+				[2] = ButtonPassTemplates.terminal_list_divider_height
+			}
+		}
+	},
+	{
+		style_id = "bullet",
+		pass_type = "texture",
+		value = "content/ui/materials/icons/system/page_indicator_02_idle",
+		value_id = "bullet",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "left",
+			size = {
+				32,
+				32
+			},
+			offset = {
+				15,
+				0,
+				3
+			},
+			color = Color.terminal_text_body(255, true),
+			default_color = Color.terminal_text_body(255, true),
+			hover_color = Color.terminal_text_header(255, true),
+			selected_color = Color.terminal_text_header_selected(255, true)
+		},
+		change_function = ButtonPassTemplates.terminal_list_button_text_change_function
+	},
+	{
+		style_id = "bullet_active",
+		pass_type = "texture",
+		value = "content/ui/materials/icons/system/page_indicator_02_active",
+		value_id = "bullet_active",
+		style = {
+			vertical_alignment = "center",
+			max_alpha = 255,
+			horizontal_alignment = "left",
+			min_alpha = 0,
+			size = {
+				32,
+				32
+			},
+			offset = {
+				15,
+				0,
+				4
+			},
+			color = Color.terminal_text_body(255, true),
+			default_color = Color.terminal_text_body(255, true),
+			hover_color = Color.terminal_text_header(255, true),
+			selected_color = Color.terminal_text_header_selected(255, true)
+		},
+		change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function,
+		visibility_function = function (content, style)
+			local hotspot = content.hotspot
+			local is_hovered = hotspot.is_hover or hotspot.is_focused
+			local was_hovered = hotspot.anim_hover_progress > 0 or hotspot.anim_focus_progress > 0
+
+			return is_hovered or was_hovered
+		end
+	},
+	{
+		style_id = "text",
+		pass_type = "text",
+		value = "",
+		value_id = "text",
+		style = table.clone(UIFontSettings.list_button),
+		change_function = ButtonPassTemplates.terminal_list_button_text_change_function
 	}
 }
 ButtonPassTemplates.list_button = {
@@ -2358,12 +2792,12 @@ ButtonPassTemplates.menu_panel_button = {
 			vertical_alignment = "center",
 			horizontal_alignment = "right",
 			size = {
-				24,
-				24
+				80,
+				80
 			},
 			offset = {
-				12,
-				-10,
+				25,
+				-15,
 				2
 			},
 			color = Color.ui_terminal(255, true)
@@ -2977,14 +3411,38 @@ ButtonPassTemplates.item_category_tab_menu_button = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			color = Color.terminal_background_gradient(nil, true),
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
 			offset = {
 				0,
 				0,
 				1
 			}
 		},
-		change_function = terminal_button_hover_change_function
+		change_function = function (content, style)
+			terminal_button_change_function(content, style)
+			terminal_button_hover_change_function(content, style)
+		end
+	},
+	{
+		value = "content/ui/materials/frames/dropshadow_medium",
+		style_id = "outer_shadow",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			scale_to_material = true,
+			color = Color.black(200, true),
+			size_addition = {
+				20,
+				20
+			},
+			offset = {
+				0,
+				0,
+				3
+			}
+		}
 	},
 	{
 		pass_type = "texture",
@@ -2993,12 +3451,14 @@ ButtonPassTemplates.item_category_tab_menu_button = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
+			color = Color.terminal_frame(nil, true),
 			default_color = Color.terminal_frame(nil, true),
 			selected_color = Color.terminal_frame_selected(nil, true),
+			hover_color = Color.terminal_frame_hover(nil, true),
 			offset = {
 				0,
 				0,
-				2
+				12
 			}
 		},
 		change_function = terminal_button_change_function
@@ -3010,32 +3470,26 @@ ButtonPassTemplates.item_category_tab_menu_button = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
+			color = Color.terminal_corner(nil, true),
 			default_color = Color.terminal_corner(nil, true),
 			selected_color = Color.terminal_corner_selected(nil, true),
+			hover_color = Color.terminal_corner_hover(nil, true),
 			offset = {
 				0,
 				0,
-				3
+				13
 			}
 		},
 		change_function = terminal_button_change_function
 	},
 	{
-		style_id = "icon",
-		pass_type = "texture",
 		value_id = "icon",
+		pass_type = "texture",
+		style_id = "icon",
 		style = {
-			horizontal_alignment = "center",
 			vertical_alignment = "center",
-			default_color = Color.terminal_text_body(255, true),
-			hover_color = Color.terminal_corner_selected(255, true),
-			disabled_color = Color.ui_grey_medium(255, true),
-			color = {
-				255,
-				255,
-				255,
-				255
-			},
+			horizontal_alignment = "center",
+			color = Color.terminal_icon(nil, true),
 			size = {
 				126,
 				32
@@ -3045,16 +3499,7 @@ ButtonPassTemplates.item_category_tab_menu_button = {
 				0,
 				4
 			}
-		},
-		change_function = function (content, style)
-			local hotspot = content.hotspot
-			local default_color = hotspot.disabled and style.disabled_color or style.default_color
-			local hover_color = style.hover_color
-			local color = style.color
-			local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress, hotspot.anim_hover_progress, hotspot.anim_input_progress)
-
-			ColorUtilities.color_lerp(default_color, hover_color, progress, color)
-		end
+		}
 	}
 }
 

@@ -1,14 +1,14 @@
-local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local BurningSettings = require("scripts/settings/burning/burning_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-local ailment_effects = AilmentSettings.effects
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
+local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local templates = {
 	cultist_flamer_hit_by_flame = {
 		interval = 0.5,
@@ -32,24 +32,7 @@ local templates = {
 				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
 			end
 		end,
-		minion_effects = {
-			ailment_effect = ailment_effects.burning,
-			node_effects = {
-				{
-					node_name = "j_spine",
-					vfx = {
-						material_emission = true,
-						particle_effect = "content/fx/particles/enemies/buff_burning",
-						orphaned_policy = "destroy",
-						stop_type = "stop"
-					},
-					sfx = {
-						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
-						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
-					}
-				}
-			}
-		}
+		minion_effects = minion_burning_buff_effects.chemfire
 	},
 	cultist_flamer_liquid_immunity = {
 		unique_buff_id = "cultist_flamer_liquid_immunity",
@@ -81,24 +64,7 @@ local templates = {
 				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
 			end
 		end,
-		minion_effects = {
-			ailment_effect = ailment_effects.burning,
-			node_effects = {
-				{
-					node_name = "j_spine",
-					vfx = {
-						material_emission = true,
-						particle_effect = "content/fx/particles/enemies/buff_burning",
-						orphaned_policy = "destroy",
-						stop_type = "stop"
-					},
-					sfx = {
-						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
-						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
-					}
-				}
-			}
-		}
+		minion_effects = minion_burning_buff_effects.fire
 	},
 	renegade_flamer_liquid_immunity = {
 		unique_buff_id = "renegade_flamer_liquid_immunity",

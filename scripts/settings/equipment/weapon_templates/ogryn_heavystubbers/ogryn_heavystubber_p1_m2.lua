@@ -947,6 +947,13 @@ local ogryn_heavystubbert_p1_traits = table.keys(WeaponTraitsOgrynHeavystubbertP
 
 table.append(weapon_template.traits, ogryn_heavystubbert_p1_traits)
 
+weapon_template.weapon_temperature_settings = {
+	increase_rate = 0.055,
+	decay_rate = 0.075,
+	grace_time = 0.4,
+	use_charge = false,
+	barrel_threshold = 0.4
+}
 weapon_template.displayed_keywords = {
 	{
 		display_name = "loc_weapon_keyword_high_ammo_count"

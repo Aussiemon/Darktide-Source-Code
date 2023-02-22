@@ -3,9 +3,9 @@ local Sway = require("scripts/utilities/sway")
 local Crouch = {
 	crouch_input = function (input_source, is_crouching, requires_press_to_interrupt)
 		local wants_crouch = nil
-		local hold_to_sprint = input_source:get("hold_to_crouch")
+		local hold_to_crouch = input_source:get("hold_to_crouch")
 
-		if hold_to_sprint and (is_crouching or not requires_press_to_interrupt) then
+		if hold_to_crouch and (is_crouching or not requires_press_to_interrupt) then
 			wants_crouch = input_source:get("crouching")
 		elseif input_source:get("crouch") then
 			wants_crouch = not is_crouching

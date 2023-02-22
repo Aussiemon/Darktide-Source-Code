@@ -91,8 +91,6 @@ PlayerCharacterStateConsumed.on_enter = function (self, unit, dt, t, previous_st
 
 		ForceRotation.start(locomotion_force_rotation_component, locomotion_steering_component, force_rotation, force_rotation, t, 1)
 
-		self._charger_throw_smash = false
-		self._spit_out_anim_played = false
 		self._entered_state_t = t
 
 		if is_server then
@@ -144,9 +142,11 @@ PlayerCharacterStateConsumed.on_exit = function (self, unit, t, next_state)
 
 	FirstPersonView.enter(t, first_person_mode_component, rewind_ms)
 
-	local inventory_component = self._inventory_component
+	if next_state ~= "dead" then
+		local inventory_component = self._inventory_component
 
-	PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
+		PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
+	end
 
 	disabled_character_state_component.is_disabled = false
 	disabled_character_state_component.disabling_unit = nil
@@ -195,6 +195,17 @@ PlayerCharacterStateConsumed.on_exit = function (self, unit, t, next_state)
 			local time_in_captivity = t - self._entered_state_t
 
 			Managers.telemetry_events:player_exits_captivity(player, rescued_by_player, state_name, time_in_captivity)
+
+			if next_state == "catapulted" then
+				local mover = Unit.mover(unit)
+				local position = Unit.world_position(unit, 1)
+				local allowed_move_distance = 1
+				local _, non_colliding_position = Mover.fits_at(mover, position, allowed_move_distance)
+
+				if non_colliding_position then
+					PlayerMovement.teleport_fixed_update(unit, non_colliding_position)
+				end
+			end
 		end
 
 		self._entered_state_t = nil
@@ -229,15 +240,6 @@ PlayerCharacterStateConsumed._remove_buffs = function (self)
 end
 
 PlayerCharacterStateConsumed.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
-	local input_component = self._disabled_state_input
-	local trigger_animation = input_component.trigger_animation
-
-	if (trigger_animation == "charger_throw" or trigger_animation == "charger_throw_left" or trigger_animation == "charger_throw_right" or trigger_animation == "charger_throw_bwd") and not self._spit_out_anim_played then
-		self._animation_extension:anim_event(trigger_animation)
-
-		self._spit_out_anim_played = true
-	end
-
 	local disabling_unit = self._disabled_state_input.disabling_unit
 
 	if self._consumed_timing and self._consumed_timing <= t and ALIVE[disabling_unit] then

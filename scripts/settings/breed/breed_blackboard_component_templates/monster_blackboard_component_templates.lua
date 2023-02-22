@@ -14,8 +14,18 @@ local monster = {
 
 table.merge(monster, base_template)
 
+local chaos_spawn = table.clone(monster)
+chaos_spawn.behavior = {
+	wants_to_catapult_grabbed_unit = "boolean",
+	move_state = "string",
+	grabbed_unit = "Unit",
+	grab_cooldown = "number",
+	leap_velocity = "Vector3Box",
+	should_leap = "boolean"
+}
 local templates = {
-	monster = monster
+	monster = monster,
+	chaos_spawn = chaos_spawn
 }
 
 return templates

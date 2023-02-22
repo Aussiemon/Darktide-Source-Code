@@ -2,6 +2,8 @@ local BackendInterface = require("scripts/backend/backend_interface")
 local ConnectionClient = require("scripts/multiplayer/connection/connection_client")
 local SessionBootBase = require("scripts/multiplayer/session_boot_base")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
+local MissionTemplates = require("scripts/settings/mission/mission_templates")
+local JWTTicketUtils = require("scripts/multiplayer/utilities/jwt_ticket_utils")
 local STATES = table.enum("idle", "fetchingserverdetails", "handshake", "searching", "joining", "ready", "failed")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 
@@ -90,6 +92,15 @@ PartyImmateriumMissionSessionBoot._start_handshaking = function (self, noAcceler
 
 			return
 		end
+	end
+
+	local _, jwt_payload = JWTTicketUtils.decode_jwt_ticket(self._jwt_ticket)
+	local mission_name = jwt_payload.sessionSettings.missionJson.map
+
+	if not MissionTemplates[mission_name] then
+		Managers.party_immaterium:leave_party()
+
+		return self:_failed("mission_not_found", mission_name)
 	end
 
 	self._server_name = server_name

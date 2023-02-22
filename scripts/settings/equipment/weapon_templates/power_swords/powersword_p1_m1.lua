@@ -1025,8 +1025,9 @@ weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.allow_sprinting_with_special = true
 weapon_template.weapon_special_class = "WeaponSpecialDeactivateAfterNumActivations"
 weapon_template.weapon_special_tweak_data = {
-	active_duration = 3,
-	num_activations = 2
+	allow_reactivation_while_active = true,
+	num_activations = 2,
+	active_duration = 3
 }
 weapon_template.allow_sprinting_with_special = true
 weapon_template.damage_window_start_sweep_trail_offset = -0.45
@@ -1034,14 +1035,16 @@ weapon_template.damage_window_end_sweep_trail_offset = 0.45
 weapon_template.ammo_template = "no_ammo"
 weapon_template.fx_sources = {
 	_sweep = "fx_sweep",
-	_special_active = "fx_blade"
+	_special_active = "fx_blade",
+	_block = "fx_block"
 }
 weapon_template.crosshair_type = "dot"
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",
 	"power_sword",
-	"p1"
+	"p1",
+	"activated"
 }
 weapon_template.dodge_template = "smiter"
 weapon_template.sprint_template = "default"

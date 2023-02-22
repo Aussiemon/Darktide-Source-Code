@@ -677,6 +677,26 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 
 				unit_set_visibility(slot_body_face_unit, "beard", not hide_beard, true)
 			end
+
+			if item and item.mask_facial_hair ~= nil then
+				local mask_facial_hair = item.mask_facial_hair
+
+				if mask_facial_hair == "" or mask_facial_hair == nil then
+					mask_facial_hair = "facial_hair_no_mask"
+				end
+
+				VisualLoadoutCustomization.apply_material_override(slot_body_face_unit, unit_3p, false, mask_facial_hair, false)
+			end
+
+			if item and item.mask_hair ~= nil then
+				local mask_hair = item.mask_hair
+
+				if mask_hair == "" or mask_hair == nil then
+					mask_hair = "hair_no_mask"
+				end
+
+				VisualLoadoutCustomization.apply_material_override(slot_body_face_unit, unit_3p, false, mask_hair, false)
+			end
 		end
 
 		if item and item.stabilize_neck ~= nil and Unit.has_animation_event(unit_3p, "lock_head") and Unit.has_animation_event(unit_3p, "unlock_head") then

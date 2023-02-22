@@ -120,6 +120,8 @@ AuspexScanningEffects.unwield = function (self)
 	self:_set_outline_unit(self._outline_unit, false)
 
 	self._outline_unit = nil
+
+	self:_stop_scan_units_effects()
 end
 
 AuspexScanningEffects.fixed_update = function (self, unit, dt, t, frame)
@@ -205,19 +207,7 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 	end
 
 	if not scan_settings then
-		table.clear(self._holo_lerps)
-
-		local player_holo_unit = self._player_holo_unit
-
-		if player_holo_unit then
-			Unit.set_unit_visibility(player_holo_unit, false)
-		end
-
-		for i = 1, #self._holo_units do
-			Unit.set_unit_visibility(self._holo_units[i], false)
-		end
-
-		self:_set_screen_active(false)
+		self:_stop_scan_units_effects()
 
 		return
 	end
@@ -326,6 +316,22 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 	for i = current_holo_unit, #holo_units do
 		Unit.set_unit_visibility(holo_units[i], false)
 	end
+end
+
+AuspexScanningEffects._stop_scan_units_effects = function (self)
+	table.clear(self._holo_lerps)
+
+	local player_holo_unit = self._player_holo_unit
+
+	if player_holo_unit then
+		Unit.set_unit_visibility(player_holo_unit, false)
+	end
+
+	for i = 1, #self._holo_units do
+		Unit.set_unit_visibility(self._holo_units[i], false)
+	end
+
+	self:_set_screen_active(false)
 end
 
 AuspexScanningEffects.update_first_person_mode = function (self, first_person_mode)

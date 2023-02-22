@@ -251,6 +251,8 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 	local dt = ui_renderer.dt
 	local render_settings = ui_renderer.render_settings or temp_render_settings
 	local alpha_multiplier = (render_settings.alpha_multiplier or 1) * (ui_renderer.alpha_multiplier or 1)
+	local color_intensity_multiplier = (render_settings.color_intensity_multiplier or 1) * (ui_renderer.color_intensity_multiplier or 1)
+	render_settings.color_intensity_multiplier = color_intensity_multiplier
 	render_settings.alpha_multiplier = alpha_multiplier
 	local render_settings_material_flags = render_settings.material_flags or 0
 	local material_flags = render_settings_material_flags
@@ -457,6 +459,7 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 				end
 
 				render_settings.alpha_multiplier = alpha_multiplier * (widget.alpha_multiplier or 1)
+				render_settings.color_intensity_multiplier = color_intensity_multiplier * (widget.color_intensity_multiplier or 1)
 
 				ui_pass.draw(pass_info, ui_renderer, style_data, pass_content, Vector3(pass_pos_x, pass_pos_y, pass_pos_z), Vector2(pass_size_x, pass_size_y))
 			end
@@ -464,6 +467,7 @@ local function _draw_widget_passes(widget, position, ui_renderer, visible)
 	end
 
 	render_settings.alpha_multiplier = alpha_multiplier
+	render_settings.color_intensity_multiplier = color_intensity_multiplier
 	render_settings.material_flags = render_settings_material_flags
 	render_settings.world_target_position = render_settings_world_target_position or false
 end

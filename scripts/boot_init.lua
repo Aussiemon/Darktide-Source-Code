@@ -79,39 +79,6 @@ if not ENGINE_FUNCTIONS_OVERRIDDEN then
 	ENGINE_FUNCTIONS_OVERRIDDEN = true
 end
 
-local ARGS = {
-	Application.argv()
-}
-
-local function arg_value(key)
-	for i, arg in ipairs(ARGS) do
-		if arg == key then
-			return ARGS[i + 1]
-		end
-	end
-end
-
-local function backend_env()
-	local auth_url = arg_value("--backend-auth-service-url")
-
-	if auth_url then
-		local match = string.match(auth_url, "https://bsp%-auth%-(%a+)%.fatsharkgames%.se")
-
-		if match then
-			return match
-		end
-
-		match = string.match(auth_url, "https://bsp%-auth%-(%a+)%.atoma%.cloud")
-
-		if match then
-			return match
-		end
-	end
-
-	return "dev"
-end
-
-BACKEND_ENV = backend_env()
 HAS_STEAM = rawget(_G, "Steam") and true or false
 DEDICATED_SERVER = Application.is_dedicated_server()
 CLASSES = CLASSES or {}

@@ -5,22 +5,22 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_crit_chance_on_push = {
 	weapon_trait_bespoke_ogryn_combatblade_p1_crit_chance_on_push = {
 		{
 			proc_stat_buffs = {
-				[stat_buffs.melee_critical_strike_chance] = 0.01
+				[stat_buffs.melee_critical_strike_chance] = 0.075
 			}
 		},
 		{
 			proc_stat_buffs = {
-				[stat_buffs.melee_critical_strike_chance] = 0.02
+				[stat_buffs.melee_critical_strike_chance] = 0.1
 			}
 		},
 		{
 			proc_stat_buffs = {
-				[stat_buffs.melee_critical_strike_chance] = 0.03
+				[stat_buffs.melee_critical_strike_chance] = 0.125
 			}
 		},
 		{
 			proc_stat_buffs = {
-				[stat_buffs.melee_critical_strike_chance] = 0.04
+				[stat_buffs.melee_critical_strike_chance] = 0.15
 			}
 		}
 	}

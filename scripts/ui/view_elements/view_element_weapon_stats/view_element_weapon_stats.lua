@@ -557,7 +557,7 @@ end
 ViewElementWeaponStats._on_present_grid_layout_changed = function (self, layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction)
 	ViewElementWeaponStats.super._on_present_grid_layout_changed(self, layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction)
 
-	local grid_length = self:grid_length() + 30
+	local grid_length = self:grid_length() + 35
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size
 	local mask_size = menu_settings.mask_size
@@ -767,6 +767,7 @@ ViewElementWeaponStats.select_perk = function (self, index)
 
 		if widget.type == "weapon_perk" then
 			widget.style.glow.visible = widget.content.entry.perk_index == index
+			widget.style.glow_background.visible = widget.content.entry.perk_index == index
 		end
 	end
 end
@@ -779,6 +780,7 @@ ViewElementWeaponStats.select_trait = function (self, index)
 
 		if widget.type == "weapon_trait" then
 			widget.style.glow.visible = widget.content.entry.trait_index == index
+			widget.style.glow_background.visible = widget.content.entry.trait_index == index
 		end
 	end
 end

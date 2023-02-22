@@ -9,6 +9,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local WorldRenderUtils = require("scripts/utilities/world_render")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local InputDevice = require("scripts/managers/input/input_device")
 local SystemView = class("SystemView", "BaseView")
 
 SystemView.init = function (self, settings)
@@ -190,8 +191,13 @@ SystemView._setup_grid = function (self, widgets, alignment_list)
 	local grid_scenegraph_id = "background"
 	local direction = "down"
 	local spacing = ContentBlueprints.vertical_spacing
+	local grid = UIWidgetGrid:new(widgets, alignment_list, ui_scenegraph, grid_scenegraph_id, direction, spacing)
 
-	return UIWidgetGrid:new(widgets, alignment_list, ui_scenegraph, grid_scenegraph_id, direction, spacing)
+	if self._using_cursor_navigation == false and InputDevice.gamepad_active then
+		grid:select_first_index()
+	end
+
+	return grid
 end
 
 SystemView.set_render_scale = function (self, scale)

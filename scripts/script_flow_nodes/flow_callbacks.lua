@@ -1596,6 +1596,19 @@ FlowCallbacks.stop_unit_vo = function (params)
 	Vo.stop_currently_playing_vo(unit)
 end
 
+FlowCallbacks.is_currently_playing_dialogue = function (params)
+	local unit = params.source
+	local is_playing = Vo.is_currently_playing_dialogue(unit)
+
+	if is_playing then
+		flow_return_table.vo_playing = true
+	else
+		flow_return_table.vo_not_playing = true
+	end
+
+	return flow_return_table
+end
+
 FlowCallbacks.start_terror_event = function (params)
 	local terror_event_manager = Managers.state.terror_event
 
@@ -2098,6 +2111,20 @@ FlowCallbacks.start_parallel_scripted_scenario = function (params)
 	local t = Managers.time:time("gameplay")
 
 	scenario_system:start_parallel_scenario(scenario_alias, scenario_name, t)
+end
+
+FlowCallbacks.spawn_scripted_scenario_group = function (params)
+	local spawn_group_name = params.spawn_group_name
+	local scenario_system = Managers.state.extension:system("scripted_scenario_system")
+
+	scenario_system:spawn_attached_units_in_spawn_group(spawn_group_name)
+end
+
+FlowCallbacks.despawn_scripted_scenario_group = function (params)
+	local spawn_group_name = params.spawn_group_name
+	local scenario_system = Managers.state.extension:system("scripted_scenario_system")
+
+	scenario_system:unspawn_attached_units_in_spawn_group(spawn_group_name)
 end
 
 FlowCallbacks.training_grounds_servitor_interact = function ()

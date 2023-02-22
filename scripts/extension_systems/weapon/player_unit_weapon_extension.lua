@@ -2,7 +2,6 @@ local Action = require("scripts/utilities/weapon/action")
 local ActionHandler = require("scripts/utilities/action/action_handler")
 local AimAssist = require("scripts/utilities/aim_assist")
 local AlternateFire = require("scripts/utilities/alternate_fire")
-local Ammo = require("scripts/utilities/ammo")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Overheat = require("scripts/utilities/overheat")
@@ -349,7 +348,6 @@ end
 
 PlayerUnitWeaponExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
 	local inventory = self._inventory_component
-	local wielded_slot = inventory.wielded_slot
 	local wielded_weapon = self:_wielded_weapon(inventory, self._weapons)
 	local weapon_template = wielded_weapon and wielded_weapon.weapon_template
 	local alternate_fire_component = self._alternate_fire_write_component
@@ -992,14 +990,6 @@ PlayerUnitWeaponExtension._update_ammo = function (self)
 				end
 			end
 		end
-	end
-
-	local wielded_slot = self._inventory_component.wielded_slot
-
-	if wielded_slot == "slot_secondary" then
-		local wielded_weapon = weapons[wielded_slot]
-		local inventory_slot_component = wielded_weapon.inventory_slot_component
-		self._wwise_ammo_parameter_value = Ammo.set_weapon_ammo_count_wwise_parameter(self._wwise_ammo_parameter_value, self._wwise_world, inventory_slot_component)
 	end
 end
 

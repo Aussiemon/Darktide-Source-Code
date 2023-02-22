@@ -197,7 +197,7 @@ WarpCharge.update = function (dt, t, warp_charge_component, player, unit, first_
 	local high_threshold_decay_rate = base_high_threshold_decay_rate * high_threshold_decay_rate_modifier * warp_charge_dissipation_multiplier
 	local critical_threshold_decay_rate = base_critical_threshold_decay_rate * critical_threshold_decay_rate_modifier * warp_charge_dissipation_multiplier
 	local base_auto_vent_duration = specialization_warp_charge_template.auto_vent_duration
-	local auto_vent_duration_modifier = weapon_warp_charge_template.auto_vent_duration_modifier or 1
+	local auto_vent_duration_modifier = weapon_warp_charge_template.auto_vent_duration_modifier or 3
 	local auto_vent_duration = base_auto_vent_duration * auto_vent_duration_modifier
 	local new_charge = SharedFunctions.update(dt, current_percentage, auto_vent_duration, low_threshold, high_threshold, critical_threshold, low_threshold_decay_rate, high_threshold_decay_rate, critical_threshold_decay_rate, default_threshold_decay_rate_modifier)
 

@@ -6,23 +6,28 @@ local HEALTH_PERCENT_LIMIT = critical_health.health_percent_limit
 local TOUGHNESS_PERCENT_LIMIT = critical_health.toughness_percent_limit
 local PlayerUnitStatus = {}
 local DISABLED_STATES = {
-	dead = true,
-	warp_grabbed = true,
-	knocked_down = true,
-	hogtied = true,
 	ledge_hanging = true,
+	warp_grabbed = true,
+	dead = true,
+	hogtied = true,
+	grabbed = true,
 	catapulted = true,
+	knocked_down = true,
 	consumed = true,
 	netted = true,
 	mutant_charged = true,
 	pounced = true
 }
 local REQUIRES_HELP = {
-	netted = true,
+	ledge_hanging = true,
+	warp_grabbed = true,
 	hogtied = true,
+	grabbed = true,
 	knocked_down = true,
-	pounced = true,
-	ledge_hanging = true
+	consumed = true,
+	netted = true,
+	mutant_charged = true,
+	pounced = true
 }
 local REQUIRES_ALLIED_INTERACTION_HELP = {
 	netted = true,
@@ -40,8 +45,9 @@ local VALID_END_ZONE_STATES = {
 	walking = true,
 	ledge_vaulting = true,
 	falling = true,
-	warp_grabbed = true,
+	grabbed = true,
 	catapulted = true,
+	warp_grabbed = true,
 	consumed = true,
 	jumping = true,
 	sprinting = true,
@@ -125,41 +131,49 @@ end
 PlayerUnitStatus.is_pounced = function (disabled_character_state_component)
 	local is_disabled = disabled_character_state_component.is_disabled
 	local is_pounced = is_disabled and disabled_character_state_component.disabling_type == "pounced"
-	local pouncing_unit = disabled_character_state_component.disabling_unit
+	local disabling_unit = disabled_character_state_component.disabling_unit
 
-	return is_pounced, pouncing_unit
+	return is_pounced, disabling_unit
 end
 
 PlayerUnitStatus.is_netted = function (disabled_character_state_component)
 	local is_disabled = disabled_character_state_component.is_disabled
 	local is_netted = is_disabled and disabled_character_state_component.disabling_type == "netted"
-	local netting_unit = disabled_character_state_component.disabling_unit
+	local disabling_unit = disabled_character_state_component.disabling_unit
 
-	return is_netted, netting_unit
+	return is_netted, disabling_unit
 end
 
 PlayerUnitStatus.is_warp_grabbed = function (disabled_character_state_component)
 	local is_disabled = disabled_character_state_component.is_disabled
 	local is_warp_grabbed = is_disabled and disabled_character_state_component.disabling_type == "warp_grabbed"
-	local warp_grabbing_unit = disabled_character_state_component.disabling_unit
+	local disabling_unit = disabled_character_state_component.disabling_unit
 
-	return is_warp_grabbed, warp_grabbing_unit
+	return is_warp_grabbed, disabling_unit
 end
 
 PlayerUnitStatus.is_mutant_charged = function (disabled_character_state_component)
 	local is_disabled = disabled_character_state_component.is_disabled
 	local is_mutant_charged = is_disabled and disabled_character_state_component.disabling_type == "mutant_charged"
-	local mutant_charging_unit = disabled_character_state_component.disabling_unit
+	local disabling_unit = disabled_character_state_component.disabling_unit
 
-	return is_mutant_charged, mutant_charging_unit
+	return is_mutant_charged, disabling_unit
 end
 
 PlayerUnitStatus.is_consumed = function (disabled_character_state_component)
 	local is_disabled = disabled_character_state_component.is_disabled
 	local is_consumed = is_disabled and disabled_character_state_component.disabling_type == "consumed"
-	local mutant_charging_unit = disabled_character_state_component.disabling_unit
+	local disabling_unit = disabled_character_state_component.disabling_unit
 
-	return is_consumed, mutant_charging_unit
+	return is_consumed, disabling_unit
+end
+
+PlayerUnitStatus.is_grabbed = function (disabled_character_state_component)
+	local is_disabled = disabled_character_state_component.is_disabled
+	local is_consumed = is_disabled and disabled_character_state_component.disabling_type == "grabbed"
+	local disabling_unit = disabled_character_state_component.disabling_unit
+
+	return is_consumed, disabling_unit
 end
 
 PlayerUnitStatus.is_stunned = function (character_state_component)

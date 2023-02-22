@@ -143,53 +143,52 @@ end
 
 local _roman_number_array = {
 	1,
+	4,
 	5,
+	9,
 	10,
+	40,
 	50,
+	90,
 	100,
+	400,
 	500,
+	900,
 	1000
 }
 local _roman_chars = {
 	"I",
+	"IV",
 	"V",
+	"IX",
 	"X",
+	"XL",
 	"L",
+	"XC",
 	"C",
+	"CD",
 	"D",
+	"CM",
 	"M"
 }
 
 TextUtilities.convert_to_roman_numerals = function (value)
 	value = math.floor(value)
+	local idx = 13
+	local roman_value = ""
 
-	if value <= 0 then
-		return value
-	end
+	while value > 0 do
+		local div = value / _roman_number_array[idx]
+		value = value % _roman_number_array[idx]
 
-	local return_value = ""
-
-	for i = #_roman_number_array, 1, -1 do
-		local num = _roman_number_array[i]
-
-		while value - num >= 0 and value > 0 do
-			return_value = return_value .. _roman_chars[i]
-			value = value - num
+		for j = 1, div do
+			roman_value = roman_value .. _roman_chars[idx]
 		end
 
-		for j = 1, i - 1 do
-			local n2 = _roman_number_array[j]
-
-			if value - (num - n2) >= 0 and value < num and value > 0 and num - n2 ~= n2 then
-				return_value = return_value .. _roman_chars[j] .. _roman_chars[i]
-				value = value - (num - n2)
-
-				break
-			end
-		end
+		idx = idx - 1
 	end
 
-	return return_value
+	return roman_value
 end
 
 local _formatted_character_name_character_name_params = {}

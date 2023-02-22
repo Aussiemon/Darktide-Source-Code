@@ -84,7 +84,11 @@ templates.weapon_trait_bespoke_forcestaff_p4_followup_shots_ranged_damage = {
 }
 templates.weapon_trait_bespoke_forcestaff_p4_warpfire_on_crits = {
 	weapon_trait_bespoke_forcestaff_p4_warpfire_on_crits = {
-		{}
+		{
+			target_buff_data = {
+				num_stacks_on_proc = 3
+			}
+		}
 	}
 }
 templates.weapon_trait_bespoke_forcestaff_p4_warp_charge_critical_strike_chance_bonus = {

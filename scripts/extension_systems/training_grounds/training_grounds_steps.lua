@@ -1712,32 +1712,23 @@ steps.incoming_supression_prompt = {
 }
 steps.incoming_suppression_crouch = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		scenario_data.rifleman_override = false
-
 		scenario_system:spawn_attached_units_in_spawn_group("arena_b_cover_behind")
 
 		scenario_data.cover_middle_spawned = true
-		step_data.cover_directional_unit = scenario_system:get_directional_unit("incoming_suppression_cover")
+		step_data.incoming_suppression_indicator = scenario_system:get_directional_unit("incoming_suppression_crouch_indicator")
 
-		add_objective_marker(step_data.cover_directional_unit, "training_grounds", false)
+		add_objective_marker(step_data.incoming_suppression_indicator, "training_grounds", false)
 
-		local enemies = {}
-		scenario_data.num_enemies = scenario_data.rifleman_override and 3 or 1
-		scenario_data.enemies = enemies
+		step_data.incoming_suppression_cover_unit = scenario_system:get_directional_unit_extension("incoming_suppression_cover"):attached_unit()
+		local side_id = 2
+		scenario_data.enemy = spawn_breed_directional_unit("renegade_gunner", "suppression_3", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, side_id)
+		local health_extension = ScriptUnit.extension(scenario_data.enemy, "health_system")
 
-		for i = 1, scenario_data.num_enemies do
-			local breed = scenario_data.rifleman_override and "renegade_rifleman" or "renegade_gunner"
-			local offset = scenario_data.rifleman_override and 1 or 2
-			local side_id = 2
-			enemies[i] = spawn_breed_directional_unit(breed, "suppression_" .. i + offset, t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, side_id)
-			local health_extension = ScriptUnit.extension(enemies[i], "health_system")
+		health_extension:set_invulnerable(true)
 
-			health_extension:set_invulnerable(true)
+		local suppression_extension = ScriptUnit.extension(scenario_data.enemy, "suppression_system")
 
-			local suppression_extension = ScriptUnit.extension(enemies[i], "suppression_system")
-
-			suppression_extension:set_enabled(false)
-		end
+		suppression_extension:set_enabled(false)
 
 		local unit_data_extension = ScriptUnit.extension(player.player_unit, "unit_data_system")
 		local inventory_slot_component = unit_data_extension:write_component("slot_secondary")
@@ -1749,50 +1740,59 @@ steps.incoming_suppression_crouch = {
 		Ammo.remove_from_reserve(inventory_slot_component, current_ammo_in_reserve)
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
-		local cover_directional_unit = step_data.cover_directional_unit
-		local cover_pos = POSITION_LOOKUP[cover_directional_unit]
+		local incoming_suppression_cover_unit = step_data.incoming_suppression_cover_unit
+		local enemy_pos = POSITION_LOOKUP[scenario_data.enemy]
+		local cover_pos = Unit.local_position(incoming_suppression_cover_unit, 1)
 		local player_pos = POSITION_LOOKUP[player.player_unit]
-		local cover_dist_sq = 9
+		local cover_is_in_front = Vector3.dot(enemy_pos - cover_pos, cover_pos - player_pos)
 
-		if Vector3.distance_squared(cover_pos, player_pos) < cover_dist_sq then
-			local unit_data_extension = ScriptUnit.extension(player.player_unit, "unit_data_system")
-			local movement_state_component = unit_data_extension:read_component("movement_state")
-			local is_crouching = movement_state_component.is_crouching
+		if cover_is_in_front < 0 then
+			return false
+		end
 
-			if is_crouching then
-				local first_person_unit = ScriptUnit.extension(player.player_unit, "first_person_system"):first_person_unit()
-				local camera_position = Unit.local_position(first_person_unit, 1)
-				local enemies = scenario_data.enemies
+		local enemy_to_player = player_pos - enemy_pos
+		local enemy_to_cover = cover_pos - enemy_pos
+		local cover_half_width_sq = 1
+		local length_to_cover_sq = Vector3.length_squared(enemy_to_cover)
+		local hypothenuse = math.sqrt(cover_half_width_sq + length_to_cover_sq)
+		local max_dot = math.sqrt(length_to_cover_sq) / hypothenuse
+		local behind_cover_dot = Vector3.dot(Vector3.normalize(enemy_to_cover), Vector3.normalize(enemy_to_player))
 
-				for i = 1, #enemies do
-					local enemy_unit = enemies[i]
-					local behavior_extension = ScriptUnit.extension(enemy_unit, "behavior_system")
-					local behavior_tree_name = scenario_data.rifleman_override and "renegade_rifleman_tg" or "renegade_gunner_tg"
+		if behind_cover_dot < max_dot then
+			return false
+		end
 
-					behavior_extension:override_brain(behavior_tree_name, t)
+		local unit_data_extension = ScriptUnit.extension(player.player_unit, "unit_data_system")
+		local movement_state_component = unit_data_extension:read_component("movement_state")
+		local is_crouching = movement_state_component.is_crouching
 
-					local blackboard = BLACKBOARDS[enemy_unit]
-					local perception_component = Blackboard.write_component(blackboard, "perception")
-					perception_component.lock_target = true
+		if is_crouching then
+			local first_person_unit = ScriptUnit.extension(player.player_unit, "first_person_system"):first_person_unit()
+			local camera_position = Unit.local_position(first_person_unit, 1)
+			local enemy_unit = scenario_data.enemy
+			local behavior_extension = ScriptUnit.extension(enemy_unit, "behavior_system")
 
-					perception_component.target_position:store(camera_position + _camera_pos_hit_target_offset:unbox())
+			behavior_extension:override_brain("renegade_gunner_tg", t)
 
-					perception_component.target_unit = player.player_unit
-					local perception_extension = ScriptUnit.extension(enemy_unit, "perception_system")
+			local blackboard = BLACKBOARDS[enemy_unit]
+			local perception_component = Blackboard.write_component(blackboard, "perception")
+			perception_component.lock_target = true
 
-					MinionPerception.attempt_aggro(perception_extension)
-				end
+			perception_component.target_position:store(camera_position + _camera_pos_hit_target_offset:unbox())
 
-				set_objective_tracker_value("incoming_suppression_objective_0", 1, true)
+			perception_component.target_unit = player.player_unit
+			local perception_extension = ScriptUnit.extension(enemy_unit, "perception_system")
 
-				return true
-			end
+			MinionPerception.attempt_aggro(perception_extension)
+			set_objective_tracker_value("incoming_suppression_objective_0", 1, true)
+
+			return true
 		end
 
 		return false
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
-		remove_objective_marker(step_data.cover_directional_unit)
+		remove_objective_marker(step_data.incoming_suppression_indicator)
 	end
 }
 steps.incoming_suppression_loop = {
@@ -1809,17 +1809,13 @@ steps.incoming_suppression_loop = {
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
 		ensure_has_ammo(player)
 
-		local enemies = scenario_data.enemies
+		local enemy_unit = scenario_data.enemy
 		local first_person_unit = ScriptUnit.extension(player.player_unit, "first_person_system"):first_person_unit()
 		local camera_position = Unit.local_position(first_person_unit, 1)
+		local blackboard = BLACKBOARDS[enemy_unit]
+		local perception_component = Blackboard.write_component(blackboard, "perception")
 
-		for i = 1, #enemies do
-			local enemy_unit = enemies[i]
-			local blackboard = BLACKBOARDS[enemy_unit]
-			local perception_component = Blackboard.write_component(blackboard, "perception")
-
-			perception_component.target_position:store(camera_position + _camera_pos_hit_target_offset:unbox())
-		end
+		perception_component.target_position:store(camera_position + _camera_pos_hit_target_offset:unbox())
 
 		local toughness_extension = ScriptUnit.extension(player.player_unit, "toughness_system")
 
@@ -1849,15 +1845,11 @@ steps.incoming_suppression_loop_2 = {
 
 		local first_person_unit = ScriptUnit.extension(player.player_unit, "first_person_system"):first_person_unit()
 		local camera_pos = Unit.local_position(first_person_unit, 1)
-		local enemies = scenario_data.enemies
+		local enemy_unit = scenario_data.enemy
+		local blackboard = BLACKBOARDS[enemy_unit]
+		local perception_component = Blackboard.write_component(blackboard, "perception")
 
-		for i = 1, scenario_data.num_enemies do
-			local enemy_unit = enemies[i]
-			local blackboard = BLACKBOARDS[enemy_unit]
-			local perception_component = Blackboard.write_component(blackboard, "perception")
-
-			perception_component.target_position:store(camera_pos)
-		end
+		perception_component.target_position:store(camera_pos)
 
 		local cover_ready = step_data.cover_spawn_data.done
 
@@ -1878,7 +1870,7 @@ steps.incoming_suppression_loop_2 = {
 		end
 
 		if step_data.end_position then
-			local enemy_pos = POSITION_LOOKUP[scenario_data.enemies[1]]
+			local enemy_pos = POSITION_LOOKUP[enemy_unit]
 			local player_pos = POSITION_LOOKUP[player.player_unit]
 			local end_pos = step_data.end_position:unbox()
 			local dot_behind_cover = 0.9995
@@ -1889,16 +1881,10 @@ steps.incoming_suppression_loop_2 = {
 			if dot_behind_cover < player_dot_from_cover and sq_dist_cover < sq_dist_player then
 				set_objective_tracker_value("incoming_suppression_objective_2", 1, true)
 
-				local cover_directional_unit = scenario_system:get_directional_unit("incoming_suppression_cover")
-				local cover_pos = POSITION_LOOKUP[cover_directional_unit] + Vector3(0, 0, 1.5)
+				local incoming_suppression_cover_unit = scenario_system:get_directional_unit("incoming_suppression_crouch_indicator")
+				local cover_pos = POSITION_LOOKUP[incoming_suppression_cover_unit] + Vector3(0, 0, 1.5)
 
-				for i = 1, scenario_data.num_enemies do
-					local enemy_unit = enemies[i]
-					local blackboard = BLACKBOARDS[enemy_unit]
-					local perception_component = Blackboard.write_component(blackboard, "perception")
-
-					perception_component.target_position:store(cover_pos)
-				end
+				perception_component.target_position:store(cover_pos)
 
 				return true
 			end
@@ -1924,41 +1910,28 @@ steps.incoming_suppression_loop_3 = {
 		remove_objective_tracker("incoming_suppression_objective_2", true)
 		add_objective_tracker("incoming_suppression_objective_3", true)
 
-		step_data.enemies_killed = 0
-		local enemies = scenario_data.enemies
+		local enemy_unit = scenario_data.enemy
 
-		for i = 1, scenario_data.num_enemies do
-			if HEALTH_ALIVE[enemies[i]] then
-				local health_extension = ScriptUnit.extension(enemies[i], "health_system")
+		if HEALTH_ALIVE[enemy_unit] then
+			local health_extension = ScriptUnit.extension(enemy_unit, "health_system")
 
-				health_extension:set_invulnerable(false)
-			end
+			health_extension:set_invulnerable(false)
 		end
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
 		ensure_has_ammo(player)
 
-		local enemies = scenario_data.enemies
-
-		for i = 1, #enemies do
-			if HEALTH_ALIVE[enemies[i]] then
-				return false
-			end
+		if HEALTH_ALIVE[scenario_data.enemy] then
+			return false
 		end
 
 		return true
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
-		local enemies = scenario_data.enemies
-
-		for i = 1, #enemies do
-			dissolve_unit(enemies[i], t)
-		end
+		dissolve_unit(scenario_data.enemy, t)
 	end,
 	on_event = function (scenario_system, player, scenario_data, step_data, event_name, kill_data_scratchpad)
-		step_data.enemies_killed = step_data.enemies_killed + 1
-
-		set_objective_tracker_value("incoming_suppression_objective_3", step_data.enemies_killed, true)
+		set_objective_tracker_value("incoming_suppression_objective_3", 1, true)
 	end
 }
 steps.cleanup_incoming_suppression = {
@@ -4436,7 +4409,7 @@ steps.remove_all_bots = {
 			local bot_player = Managers.player:player(peer_id, bot_local_id)
 
 			if bot_player and bot_player.player_unit then
-				local bot_position = POSITION_LOOKUP[bot_player.player_unit]
+				local bot_position = Unit.local_position(bot_player.player_unit, 1)
 
 				spawn_despawn_vfx(scenario_system, bot_position)
 			end

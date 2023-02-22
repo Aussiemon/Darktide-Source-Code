@@ -20,6 +20,7 @@ _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chao
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chaos_poxwalker_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chaos_poxwalker_bomber_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chaos_beast_of_nurgle_behavior_tree")
+_create_behavior_tree_entry("scripts/extension_systems/behavior/trees/chaos/chaos_spawn_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_assault_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_flamer_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/cultist/cultist_grenadier_behavior_tree")

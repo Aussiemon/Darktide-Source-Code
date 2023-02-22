@@ -48,6 +48,8 @@ local function create_definitions(settings)
 	}
 	local use_terminal_background = settings.use_terminal_background
 	local terminal_background_icon = settings.terminal_background_icon
+	local hide_dividers = settings.hide_dividers
+	local hide_background = settings.hide_background
 	local scenegraph_definition = {
 		screen = UIWorkspaceSettings.screen,
 		pivot = {
@@ -165,7 +167,7 @@ local function create_definitions(settings)
 		},
 		grid_interaction = {
 			vertical_alignment = "top",
-			parent = "grid_background",
+			parent = "grid_mask",
 			horizontal_alignment = "left",
 			size = mask_size,
 			position = {
@@ -241,32 +243,6 @@ local function create_definitions(settings)
 				style = title_text_font_style
 			}
 		}, "title_text"),
-		grid_divider_top = UIWidget.create_definition({
-			{
-				value_id = "texture",
-				style_id = "texture",
-				pass_type = "texture",
-				value = "content/ui/materials/dividers/horizontal_frame_big_upper",
-				style = {
-					vertical_alignment = "top",
-					scale_to_material = true,
-					horizontal_alignment = "center"
-				}
-			}
-		}, "grid_divider_top"),
-		grid_divider_bottom = UIWidget.create_definition({
-			{
-				value_id = "texture",
-				style_id = "texture",
-				pass_type = "texture",
-				value = "content/ui/materials/dividers/horizontal_frame_big_lower",
-				style = {
-					vertical_alignment = "center",
-					scale_to_material = true,
-					horizontal_alignment = "center"
-				}
-			}
-		}, "grid_divider_bottom"),
 		grid_divider_title = UIWidget.create_definition({
 			{
 				value_id = "texture",
@@ -324,7 +300,7 @@ local function create_definitions(settings)
 						18,
 						24
 					},
-					color = Color.terminal_grid_background(nil, true)
+					color = Color.terminal_grid_background(hide_background and 0 or nil, true)
 				}
 			},
 			terminal_background_icon and {
@@ -348,12 +324,88 @@ local function create_definitions(settings)
 						0
 					},
 					color = {
-						150,
+						hide_background and 0 or 100,
 						0,
 						0,
 						0
 					}
 				}
+			}
+		}, "grid_background"),
+		grid_loading = UIWidget.create_definition({
+			{
+				pass_type = "rect",
+				style = {
+					vertical_alignment = "center",
+					horizontal_alignment = "center",
+					size_addition = {
+						-8,
+						0
+					},
+					color = {
+						0,
+						0,
+						0,
+						0
+					},
+					offset = {
+						0,
+						0,
+						2
+					}
+				},
+				change_function = function (content, style, _, dt)
+					local is_loading = content.is_loading
+					local anim_hover_speed = 5
+					local anim_alpha_progress = style.anim_alpha_progress or 0
+
+					if is_loading then
+						anim_alpha_progress = math.min(anim_alpha_progress + dt * anim_hover_speed, 1)
+					else
+						anim_alpha_progress = math.max(anim_alpha_progress - dt * anim_hover_speed, 0)
+					end
+
+					style.anim_alpha_progress = anim_alpha_progress
+					local alpha = 100 * anim_alpha_progress
+					style.color[1] = alpha
+				end
+			},
+			{
+				value = "content/ui/materials/loading/loading_small",
+				pass_type = "rotated_texture",
+				style = {
+					vertical_alignment = "center",
+					horizontal_alignment = "center",
+					angle = 0,
+					size = {
+						60,
+						60
+					},
+					color = Color.terminal_corner_hover(0, true),
+					offset = {
+						0,
+						0,
+						3
+					}
+				},
+				change_function = function (content, style, _, dt)
+					local add = -0.5 * dt
+					style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
+					style.angle = style.rotation_progress * math.pi * 2
+					local is_loading = content.is_loading
+					local anim_hover_speed = 5
+					local anim_alpha_progress = style.anim_alpha_progress or 0
+
+					if is_loading then
+						anim_alpha_progress = math.min(anim_alpha_progress + dt * anim_hover_speed, 1)
+					else
+						anim_alpha_progress = math.max(anim_alpha_progress - dt * anim_hover_speed, 0)
+					end
+
+					style.anim_alpha_progress = anim_alpha_progress
+					local alpha = 255 * anim_alpha_progress
+					style.color[1] = alpha
+				end
 			}
 		}, "grid_background"),
 		grid_scrollbar = UIWidget.create_definition(scrollbar_pass_templates, "grid_scrollbar", {
@@ -402,6 +454,35 @@ local function create_definitions(settings)
 			}
 		}, "timer_text")
 	}
+
+	if not hide_dividers then
+		widget_definitions.grid_divider_top = UIWidget.create_definition({
+			{
+				value_id = "texture",
+				style_id = "texture",
+				pass_type = "texture",
+				value = "content/ui/materials/dividers/horizontal_frame_big_upper",
+				style = {
+					vertical_alignment = "top",
+					scale_to_material = true,
+					horizontal_alignment = "center"
+				}
+			}
+		}, "grid_divider_top")
+		widget_definitions.grid_divider_bottom = UIWidget.create_definition({
+			{
+				value_id = "texture",
+				style_id = "texture",
+				pass_type = "texture",
+				value = "content/ui/materials/dividers/horizontal_frame_big_lower",
+				style = {
+					vertical_alignment = "center",
+					scale_to_material = true,
+					horizontal_alignment = "center"
+				}
+			}
+		}, "grid_divider_bottom")
+	end
 
 	return {
 		widget_definitions = widget_definitions,

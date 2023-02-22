@@ -15,15 +15,15 @@ local conversations_hub_mourningstar_initiate_a = {
 			"loc_mourningstar_initiate_a__hub_idle_greeting_dislike_a_10"
 		},
 		sound_events_duration = {
-			2.794031,
-			2.120219,
-			1.640865,
-			1.42424,
+			2.794,
+			2.120229,
+			1.640854,
+			1.424229,
 			1.712313,
 			1.620125,
-			1.546385,
+			1.546375,
 			0.896479,
-			1.29749,
+			1.297479,
 			2.652417
 		},
 		randomize_indexes = {}
@@ -45,15 +45,15 @@ local conversations_hub_mourningstar_initiate_a = {
 		},
 		sound_events_duration = {
 			1.336667,
-			2.503344,
+			2.503333,
 			1.915104,
-			2.196604,
+			2.196583,
 			1.878229,
 			2.696896,
-			1.450042,
-			1.61551,
+			1.450021,
+			1.615521,
 			2.253875,
-			3.726333
+			3.726313
 		},
 		randomize_indexes = {}
 	},
@@ -73,15 +73,15 @@ local conversations_hub_mourningstar_initiate_a = {
 			"loc_mourningstar_initiate_a__hub_idle_greeting_neutral_a_10"
 		},
 		sound_events_duration = {
-			1.50949,
+			1.5095,
 			2.498167,
-			1.565531,
-			1.633531,
+			1.565542,
+			1.633542,
 			2.398146,
-			2.369115,
-			1.45974,
+			2.369125,
+			1.45975,
 			2.204604,
-			1.30874,
+			1.30875,
 			2.449771
 		},
 		randomize_indexes = {}

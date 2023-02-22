@@ -1,9 +1,11 @@
 local footstep_intervals_templates = {
 	default = {
-		crouch_walking = 0.61,
 		walking = 0.4,
+		crouch_walking_alternate_fire = 0.77,
+		crouch_walking = 0.61,
+		sprinting = 0.37,
 		sprinting_overtime = 0.41,
-		sprinting = 0.37
+		walking_alternate_fire = 0.58
 	},
 	luggable_human = {
 		crouch_walking = 0.61,
@@ -16,9 +18,11 @@ local footstep_intervals_templates = {
 		sprinting = 0.49
 	},
 	bolter = {
-		crouch_walking = 0.61,
 		walking = 0.42,
-		sprinting = 0.37
+		crouch_walking_alternate_fire = 0.77,
+		crouch_walking = 0.61,
+		sprinting = 0.37,
+		walking_alternate_fire = 0.55
 	},
 	chainsword = {
 		crouch_walking = 0.4,
@@ -51,14 +55,18 @@ local footstep_intervals_templates = {
 		sprinting = 0.47
 	},
 	ogryn_heavy_stubber = {
-		crouch_walking = 0.9,
 		walking = 0.61,
-		sprinting = 0.47
+		crouch_walking_alternate_fire = 1.06,
+		crouch_walking = 0.9,
+		sprinting = 0.47,
+		walking_alternate_fire = 0.74
 	},
 	ogryn_gauntlet = {
-		crouch_walking = 0.9,
 		walking = 0.66,
-		sprinting = 0.5
+		crouch_walking_alternate_fire = 1.03,
+		crouch_walking = 0.9,
+		sprinting = 0.5,
+		walking_alternate_fire = 0.79
 	},
 	ogryn_powermaul = {
 		crouch_walking = 0.85,
@@ -66,29 +74,39 @@ local footstep_intervals_templates = {
 		sprinting = 0.51
 	},
 	ogryn_rippergun = {
-		crouch_walking = 0.9,
 		walking = 0.49,
-		sprinting = 0.54
+		crouch_walking_alternate_fire = 1.03,
+		crouch_walking = 0.9,
+		sprinting = 0.54,
+		walking_alternate_fire = 0.62
 	},
 	ogryn_thumper = {
-		crouch_walking = 0.73,
 		walking = 0.58,
-		sprinting = 0.53
+		crouch_walking_alternate_fire = 0.89,
+		crouch_walking = 0.73,
+		sprinting = 0.53,
+		walking_alternate_fire = 0.7
 	},
 	ogryn_thumper_shotgun = {
-		crouch_walking = 0.73,
 		walking = 0.58,
-		sprinting = 0.47
+		crouch_walking_alternate_fire = 0.89,
+		crouch_walking = 0.73,
+		sprinting = 0.47,
+		walking_alternate_fire = 0.7
 	},
 	ogryn_thumper_p1_m2 = {
-		crouch_walking = 0.7,
 		walking = 0.54,
-		sprinting = 0.435
+		crouch_walking_alternate_fire = 0.86,
+		crouch_walking = 0.7,
+		sprinting = 0.435,
+		walking_alternate_fire = 0.67
 	},
 	plasmagun = {
-		crouch_walking = 0.61,
 		walking = 0.45,
-		sprinting = 0.37
+		crouch_walking_alternate_fire = 0.78,
+		crouch_walking = 0.61,
+		sprinting = 0.37,
+		walking_alternate_fire = 0.58
 	},
 	powermaul_2h = {
 		crouch_walking = 0.61,

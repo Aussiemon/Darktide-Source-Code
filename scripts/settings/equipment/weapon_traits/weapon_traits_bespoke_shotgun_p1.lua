@@ -87,22 +87,22 @@ templates.weapon_trait_bespoke_shotgun_p1_power_bonus_on_hitting_single_enemy_wi
 	weapon_trait_bespoke_shotgun_p1_power_bonus_on_hitting_single_enemy_with_all = {
 		{
 			proc_stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.02
+				[stat_buffs.power_level_modifier] = 0.075
 			}
 		},
 		{
 			proc_stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.03
+				[stat_buffs.power_level_modifier] = 0.1
 			}
 		},
 		{
 			proc_stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.04
+				[stat_buffs.power_level_modifier] = 0.125
 			}
 		},
 		{
 			proc_stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.05
+				[stat_buffs.power_level_modifier] = 0.15
 			}
 		}
 	}
@@ -133,7 +133,11 @@ templates.weapon_trait_bespoke_shotgun_p1_increase_close_damage_on_close_kill = 
 }
 templates.weapon_trait_bespoke_shotgun_p1_bleed_on_crit = {
 	weapon_trait_bespoke_shotgun_p1_bleed_on_crit = {
-		{}
+		{
+			target_buff_data = {
+				num_stacks_on_proc = 6
+			}
+		}
 	}
 }
 templates.weapon_trait_bespoke_shotgun_p1_crit_chance_on_hitting_multiple_with_one_shot = {

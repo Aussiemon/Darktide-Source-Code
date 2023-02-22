@@ -38,8 +38,9 @@ local Dodge = {
 		end
 
 		local moving_forward = move.y > 0
+		local allow_dodge_while_moving_forward = allow_diagonal_forward_dodge
 
-		if not allow_diagonal_forward_dodge and moving_forward then
+		if not allow_dodge_while_moving_forward and moving_forward then
 			return false
 		end
 

@@ -147,8 +147,8 @@ local mission_vo_lm_cooling_explicator_a = {
 		sound_events_duration = {
 			4.050813,
 			4.038479,
-			4.921,
-			6.897667
+			4.285792,
+			4.519229
 		},
 		randomize_indexes = {}
 	},

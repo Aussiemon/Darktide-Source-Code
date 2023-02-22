@@ -232,14 +232,16 @@ weapon_template.actions = {
 			start_modifier = 0.3
 		},
 		fx = {
-			shoot_sfx_special_extra_alias = "ranged_single_shot_special_extra",
-			crit_shoot_sfx_alias = "critical_shot_extra",
-			shoot_tail_sfx_alias = "ranged_shot_tail",
-			shoot_sfx_alias = "ranged_single_shot",
 			muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle",
+			shell_casing_effect = "content/fx/particles/weapons/shells/shell_casing_shotgun_01",
+			crit_shoot_sfx_alias = "critical_shot_extra",
+			shoot_sfx_alias = "ranged_single_shot",
+			shoot_sfx_special_extra_alias = "ranged_single_shot_special_extra",
+			weapon_special_muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle",
+			shoot_tail_sfx_alias = "ranged_shot_tail",
 			out_of_ammo_sfx_alias = "ranged_out_of_ammo",
 			no_ammo_shoot_sfx_alias = "ranged_no_ammo",
-			shell_casing_effect = "content/fx/particles/weapons/shells/shell_casing_shotgun_01"
+			weapon_special_line_effect = LineEffects.shotgun_incendiary_trail
 		},
 		fire_configuration = {
 			anim_event = "attack_shoot_semi",
@@ -316,13 +318,15 @@ weapon_template.actions = {
 			start_modifier = 0.3
 		},
 		fx = {
-			shoot_sfx_special_extra_alias = "ranged_single_shot_special_extra",
-			crit_shoot_sfx_alias = "critical_shot_extra",
-			shoot_tail_sfx_alias = "ranged_shot_tail",
-			shoot_sfx_alias = "ranged_single_shot",
-			muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle",
+			no_ammo_shoot_sfx_alias = "ranged_no_ammo",
 			shell_casing_effect = "content/fx/particles/weapons/shells/shell_casing_shotgun_01",
-			no_ammo_shoot_sfx_alias = "ranged_no_ammo"
+			crit_shoot_sfx_alias = "critical_shot_extra",
+			shoot_sfx_alias = "ranged_single_shot",
+			shoot_sfx_special_extra_alias = "ranged_single_shot_special_extra",
+			weapon_special_muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle",
+			shoot_tail_sfx_alias = "ranged_shot_tail",
+			muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle",
+			weapon_special_line_effect = LineEffects.shotgun_incendiary_trail
 		},
 		fire_configuration = {
 			anim_event = "attack_shoot_semi",
@@ -406,13 +410,15 @@ weapon_template.actions = {
 			start_modifier = 0.3
 		},
 		fx = {
-			shoot_sfx_special_extra_alias = "ranged_single_shot_special_extra",
-			crit_shoot_sfx_alias = "critical_shot_extra",
-			shoot_tail_sfx_alias = "ranged_shot_tail",
-			shoot_sfx_alias = "ranged_single_shot",
-			muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle",
+			no_ammo_shoot_sfx_alias = "ranged_no_ammo",
 			shell_casing_effect = "content/fx/particles/weapons/shells/shell_casing_shotgun_01",
-			no_ammo_shoot_sfx_alias = "ranged_no_ammo"
+			crit_shoot_sfx_alias = "critical_shot_extra",
+			shoot_sfx_alias = "ranged_single_shot",
+			shoot_sfx_special_extra_alias = "ranged_single_shot_special_extra",
+			weapon_special_muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle",
+			shoot_tail_sfx_alias = "ranged_shot_tail",
+			muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle",
+			weapon_special_line_effect = LineEffects.shotgun_incendiary_trail
 		},
 		fire_configuration = {
 			anim_event = "attack_shoot_semi",

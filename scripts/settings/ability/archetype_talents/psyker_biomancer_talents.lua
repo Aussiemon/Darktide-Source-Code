@@ -154,7 +154,7 @@ local archetype_talents = {
 			}
 		},
 		psyker_2_tier_2_name_3 = {
-			description = "loc_talent_biomancer_smite_kills_add_warp_fire_desc",
+			description = "loc_talent_biomancer_smite_kills_add_warp_fire_desc_old",
 			name = "Killing an elite enemy with Smite applies one stack of warpfire to all nearby enemies.",
 			display_name = "loc_talent_biomancer_smite_kills_add_warp_fire",
 			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_2_3_b",

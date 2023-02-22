@@ -49,9 +49,6 @@ local conversations_core_sergeant_a = {
 		sound_events_duration = {
 			[1.0] = 8.165396
 		},
-		sound_event_weights = {
-			[1.0] = 1
-		},
 		randomize_indexes = {}
 	},
 	conversation_atoma_lore_veteran_one_02 = {

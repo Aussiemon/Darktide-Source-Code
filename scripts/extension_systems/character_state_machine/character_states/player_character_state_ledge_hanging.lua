@@ -119,8 +119,8 @@ PlayerCharacterStateLedgeHanging.on_enter = function (self, unit, dt, t, previou
 	self._ledge_hanging_character_state_component.is_interactible = false
 	self._current_state = LEDGE_HANGING_STATES.ledge_start
 	self._cancelled_assist = false
-	self._entered_state_t = t
 	local is_server = self._is_server
+	self._entered_state_t = t
 
 	if is_server then
 		self._fx_extension:trigger_gear_wwise_event_with_source(STINGER_ENTER_ALIAS, STINGER_PROPERTIES, SFX_SOURCE, true, true)
@@ -137,15 +137,19 @@ PlayerCharacterStateLedgeHanging.on_enter = function (self, unit, dt, t, previou
 end
 
 PlayerCharacterStateLedgeHanging.on_exit = function (self, unit, t, next_state)
-	if next_state and next_state ~= "ledge_hanging_falling" then
-		PlayerUnitVisualLoadout.wield_previous_slot(self._inventory_component, unit, t)
+	local is_server = self._is_server
 
-		local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
+	if next_state and next_state ~= "ledge_hanging_falling" then
+		if next_state ~= "dead" then
+			PlayerUnitVisualLoadout.wield_previous_slot(self._inventory_component, unit, t)
+		end
+
+		local rewind_ms = LagCompensation.rewind_ms(is_server, self._is_local_unit, self._player)
 
 		FirstPersonView.enter(t, self._first_person_mode_component, rewind_ms)
 		ForceRotation.stop(self._locomotion_force_rotation_component)
 
-		if self._is_server then
+		if is_server then
 			local player_unit_spawn_manager = Managers.state.player_unit_spawn
 			local player = player_unit_spawn_manager:owner(unit)
 			local is_player_alive = player:unit_is_alive()
@@ -164,7 +168,7 @@ PlayerCharacterStateLedgeHanging.on_exit = function (self, unit, t, next_state)
 
 	self._assist:stop()
 
-	if self._is_server and next_state == "walking" then
+	if is_server and next_state == "walking" then
 		self._fx_extension:trigger_exclusive_gear_wwise_event(STINGER_EXIT_ALIAS, STINGER_PROPERTIES)
 	end
 end
@@ -175,8 +179,9 @@ PlayerCharacterStateLedgeHanging.update = function (self, unit, dt, t)
 end
 
 PlayerCharacterStateLedgeHanging.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
-	local assist_done = self._assist:update(dt, t)
-	local assist_in_progress = self._assist:in_progress()
+	local assist = self._assist
+	local assist_done = assist:update(dt, t)
+	local assist_in_progress = assist:in_progress()
 
 	if assist_in_progress then
 		local ledge_hanging_character_state = self._ledge_hanging_character_state_component

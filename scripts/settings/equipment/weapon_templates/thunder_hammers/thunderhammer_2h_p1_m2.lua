@@ -980,6 +980,9 @@ weapon_template.actions = {
 			push = {
 				action_name = "action_push",
 				chain_time = 0.15
+			},
+			special_action = {
+				action_name = "action_activate_special_left"
 			}
 		}
 	},
@@ -1055,7 +1058,7 @@ weapon_template.actions = {
 		damage_type = damage_types.blunt,
 		damage_profile_special_active = DamageProfileTemplates.thunderhammer_pushfollow_active,
 		damage_type_special_active = damage_types.blunt_thunder,
-		herding_template = HerdingTemplates.linesman_left_heavy,
+		herding_template = HerdingTemplates.smiter_down,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
@@ -1251,7 +1254,8 @@ weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",
 	"thunder_hammer",
-	"p1"
+	"p1",
+	"activated"
 }
 weapon_template.dodge_template = "support"
 weapon_template.sprint_template = "support"

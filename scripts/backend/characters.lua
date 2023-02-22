@@ -24,12 +24,19 @@ Characters.equip_item_slot = function (self, character_id, slot_name, gear_id)
 	end)
 end
 
-Characters.equip_items_in_slots = function (self, character_id, item_gear_ids_by_slots)
+Characters.equip_items_in_slots = function (self, character_id, item_gear_ids_by_slots, item_gear_names_by_slots)
 	local body = {}
 
 	for slot_id, gear_id in pairs(item_gear_ids_by_slots) do
 		body[#body + 1] = {
 			instanceId = gear_id,
+			slotId = slot_id
+		}
+	end
+
+	for slot_id, name in pairs(item_gear_names_by_slots) do
+		body[#body + 1] = {
+			masterId = name,
 			slotId = slot_id
 		}
 	end

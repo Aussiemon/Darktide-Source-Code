@@ -158,7 +158,7 @@ local breed_data = {
 	hit_reaction_stun_types = {
 		toughness_absorbed_default = "ogryn_toughness",
 		toughness_broken_default = "ogryn_medium",
-		fumbled = "fumbled",
+		fumbled = "ogryn_fumbled",
 		toughness_absorbed_melee = "ogryn_toughness_melee"
 	},
 	default_stagger_result = stagger_results.no_stagger,

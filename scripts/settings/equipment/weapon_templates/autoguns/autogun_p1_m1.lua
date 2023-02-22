@@ -1,4 +1,5 @@
 local AimAssistTemplates = require("scripts/settings/equipment/aim_assist_templates")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
@@ -15,24 +16,23 @@ local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_trai
 local WeaponTraitsRangedHighFireRate = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_high_fire_rate")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local armor_types = ArmorSettings.types
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local damage_types = DamageSettings.damage_types
 local template_types = WeaponTweakTemplateSettings.template_types
-local armor_types = ArmorSettings.types
+local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
+local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
 local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local stamina_trait_templates = WeaponTraitTemplates[template_types.stamina]
-local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
 local toughness_trait_templates = WeaponTraitTemplates[template_types.toughness]
 local weapon_handling_trait_templates = WeaponTraitTemplates[template_types.weapon_handling]
-local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {
 	action_inputs = {
@@ -471,7 +471,7 @@ weapon_template.actions = {
 		}
 	},
 	action_toggle_flashlight = {
-		kind = "toogle_special",
+		kind = "toggle_special",
 		anim_event = "toggle_flashlight",
 		start_input = "weapon_special",
 		allowed_during_sprint = true,
@@ -497,7 +497,7 @@ weapon_template.actions = {
 		}
 	},
 	action_toggle_flashlight_zoom = {
-		kind = "toogle_special",
+		kind = "toggle_special",
 		crosshair_type = "none",
 		start_input = "zoom_weapon_special",
 		activation_time = 0,
@@ -816,6 +816,13 @@ weapon_template.perks = {
 			}
 		}
 	}
+}
+weapon_template.weapon_temperature_settings = {
+	increase_rate = 0.1,
+	decay_rate = 0.075,
+	grace_time = 0.4,
+	use_charge = false,
+	barrel_threshold = 0.4
 }
 weapon_template.displayed_keywords = {
 	{

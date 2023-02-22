@@ -57,13 +57,21 @@ end
 AchievementDefinition.label = function (self, unlocalized)
 	local label = AchievementLocKeys.labels[self._id]
 
-	return unlocalized and label or Localize(label)
+	if not unlocalized then
+		label = Localize(label)
+	end
+
+	return label
 end
 
 AchievementDefinition.description = function (self, unlocalized)
 	local description = AchievementLocKeys.descriptions[self._description_id]
 
-	return unlocalized and description or Localize(description, true, self._description_table)
+	if not unlocalized then
+		description = Localize(description, true, self._description_table)
+	end
+
+	return description
 end
 
 AchievementDefinition.icon = function (self)

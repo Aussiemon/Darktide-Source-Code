@@ -54,6 +54,7 @@ ViewElementGrid.init = function (self, parent, draw_layer, start_scale, optional
 	self._widgets_by_name.sort_button.content.visible = false
 	self._widgets_by_name.timer_text.content.visible = false
 	self._input_disabled = false
+	self._widgets_by_name.grid_loading.content.is_loading = self._menu_settings.show_loading_overlay
 end
 
 local _timer_params = {}
@@ -220,6 +221,10 @@ ViewElementGrid.update = function (self, dt, t, input_service)
 	return ViewElementGrid.super.update(self, dt, t, input_service)
 end
 
+ViewElementGrid.set_color_intensity_multiplier = function (self, color_intensity_multiplier)
+	self._color_intensity_multiplier = color_intensity_multiplier or 1
+end
+
 ViewElementGrid.widgets = function (self)
 	return self._grid_widgets
 end
@@ -241,6 +246,9 @@ ViewElementGrid.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 	render_settings.start_layer = (previous_layer or 0) + self._draw_layer
 	local ui_scenegraph = self._ui_scenegraph
 	local ui_grid_renderer = self._ui_grid_renderer
+	local old_color_intensity_multiplier = render_settings.color_intensity_multiplier
+	local color_intensity_multiplier = self._color_intensity_multiplier or 1
+	render_settings.color_intensity_multiplier = (old_color_intensity_multiplier or 1) * color_intensity_multiplier
 
 	if not self._ui_grid_renderer_is_external then
 		UIRenderer.clear_render_pass_queue(ui_grid_renderer)
@@ -260,6 +268,7 @@ ViewElementGrid.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 		end
 	end
 
+	self:_draw_widgets(dt, t, input_service, ui_grid_renderer, render_settings)
 	UIRenderer.end_pass(ui_grid_renderer)
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 	UIWidget.draw(self._widgets_by_name.grid_background, ui_renderer)
@@ -268,7 +277,6 @@ ViewElementGrid.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 	render_settings.start_layer = previous_layer
 
 	self:_draw_grid(dt, t, input_service, render_settings)
-	self:_draw_widgets(dt, t, input_service, ui_renderer, render_settings)
 	self:_draw_render_target(render_settings)
 
 	self._drawn = true
@@ -285,6 +293,8 @@ ViewElementGrid.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 			self:_cb_on_sort_button_pressed(next_index)
 		end
 	end
+
+	render_settings.color_intensity_multiplier = old_color_intensity_multiplier
 end
 
 ViewElementGrid._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
@@ -486,13 +496,17 @@ end
 ViewElementGrid._update_window_size = function (self)
 	local menu_settings = self._menu_settings
 	local using_title = self._display_name_key ~= nil
+	local hide_dividers = menu_settings.hide_dividers
 	local bottom_divider_height_offset = 16
 	local title_top_divider_height_offset = 15
-	local grid_height_divider_deduction = bottom_divider_height_offset + title_top_divider_height_offset
+	local grid_height_divider_deduction = hide_dividers and 0 or bottom_divider_height_offset + title_top_divider_height_offset
 	local grid_size = menu_settings.grid_size
 	local mask_size = menu_settings.mask_size
 	local title_height = menu_settings.title_height - bottom_divider_height_offset
 	local scrollbar_vertical_margin = menu_settings.scrollbar_vertical_margin or 0
+	local scrollbar_vertical_offset = menu_settings.scrollbar_vertical_offset or 0
+	local scrollbar_horizontal_offset = menu_settings.scrollbar_horizontal_offset or 0
+	local top_padding = menu_settings.top_padding or 0
 
 	if not using_title or not {
 		[2] = grid_size[2] - title_height - grid_height_divider_deduction
@@ -514,8 +528,8 @@ ViewElementGrid._update_window_size = function (self)
 
 	self:_set_scenegraph_size("grid_title_background", nil, using_title and title_height or 0)
 	self:_set_scenegraph_size("grid_background", nil, active_grid_size[2])
-	self:_set_scenegraph_size("grid_mask", nil, active_mask_size[2])
-	self:_set_scenegraph_size("grid_interaction", nil, active_mask_size[2])
+	self:_set_scenegraph_size("grid_mask", nil, active_mask_size[2] - top_padding)
+	self:_set_scenegraph_size("grid_interaction", nil, active_mask_size[2] - top_padding)
 
 	if self._use_horizontal_scrollbar then
 		self:_set_scenegraph_size("grid_scrollbar", active_mask_size[1] - 20 - scrollbar_vertical_margin, nil)
@@ -523,7 +537,13 @@ ViewElementGrid._update_window_size = function (self)
 		self:_set_scenegraph_size("grid_scrollbar", nil, active_mask_size[2] - 40 - scrollbar_vertical_margin)
 	end
 
+	self:_set_scenegraph_position("grid_scrollbar", scrollbar_horizontal_offset or 0, scrollbar_vertical_offset or 0)
+	self:_set_scenegraph_position("grid_mask", nil, top_padding and top_padding * 0.5 or 0)
 	self:_set_scenegraph_position("grid_background", nil, using_title and title_height or 0)
+
+	if self._grid then
+		self._grid:force_update_list_size()
+	end
 end
 
 ViewElementGrid._assign_display_name = function (self, display_name)
@@ -548,8 +568,6 @@ ViewElementGrid._assign_display_name = function (self, display_name)
 	widgets_by_name.title_text.content.visible = use_title
 	widgets_by_name.grid_title_background.content.visible = use_title
 	widgets_by_name.grid_divider_title.content.visible = use_title
-
-	self:_update_window_size()
 end
 
 ViewElementGrid.present_grid_layout = function (self, layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction, optional_on_present_callback, optional_left_double_click_callback)
@@ -617,7 +635,10 @@ ViewElementGrid._on_present_grid_layout_changed = function (self, layout, conten
 	local grid_direction = optional_grow_direction or "down"
 	local use_select_on_focused = menu_settings.use_select_on_focused
 	local use_is_focused_for_navigation = menu_settings.use_is_focused_for_navigation
-	local grid = UIWidgetGrid:new(self._grid_widgets, self._grid_alignment_widgets, self._ui_scenegraph, grid_scenegraph_id, grid_direction, grid_spacing, nil, use_is_focused_for_navigation, use_select_on_focused)
+	local bottom_chin = menu_settings.bottom_chin or 0
+	local top_padding = menu_settings.top_padding or 0
+	local scroll_start_margin = menu_settings.scroll_start_margin or 0
+	local grid = UIWidgetGrid:new(self._grid_widgets, self._grid_alignment_widgets, self._ui_scenegraph, grid_scenegraph_id, grid_direction, grid_spacing, nil, use_is_focused_for_navigation, use_select_on_focused, bottom_chin, top_padding, scroll_start_margin)
 	self._grid = grid
 	local widgets_by_name = self._widgets_by_name
 	local grid_scrollbar_widget_id = "grid_scrollbar"
@@ -626,7 +647,18 @@ ViewElementGrid._on_present_grid_layout_changed = function (self, layout, conten
 	grid:assign_scrollbar(scrollbar_widget, grid_pivot_scenegraph_id, grid_scenegraph_id)
 	grid:set_scrollbar_progress(0)
 	grid:set_scroll_step_length(100)
+	self:_update_window_size()
 	self:_on_navigation_input_changed()
+end
+
+ViewElementGrid.set_handle_grid_navigation = function (self, allow)
+	local grid = self._grid
+
+	grid:set_handle_grid_navigation(allow)
+end
+
+ViewElementGrid.set_loading_state = function (self, is_loading)
+	self._widgets_by_name.grid_loading.content.is_loading = is_loading
 end
 
 ViewElementGrid.update_dividers = function (self, top_divider_material, top_divider_size, top_divider_position, bottom_divider_material, bottom_divider_size, bottom_divider_position)
@@ -932,6 +964,10 @@ end
 
 ViewElementGrid.grid_area_length = function (self)
 	return self._grid:area_length()
+end
+
+ViewElementGrid.menu_settings = function (self)
+	return self._menu_settings
 end
 
 return ViewElementGrid

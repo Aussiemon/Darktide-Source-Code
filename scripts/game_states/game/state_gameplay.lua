@@ -145,8 +145,8 @@ StateGameplay.rpc_player_input_array_ack = function (self, channel_id, local_pla
 	player.input_handler:rpc_player_input_array_ack(channel_id, local_player_id, ...)
 end
 
-StateGameplay.init_performance_reporter = function (self)
-	self._testify_performance_reporter = PerformanceReporter:new()
+StateGameplay.init_performance_reporter = function (self, mspf_threads, batchcount, primitives)
+	self._testify_performance_reporter = PerformanceReporter:new(mspf_threads, batchcount, primitives)
 end
 
 StateGameplay.destroy_performance_reporter = function (self)

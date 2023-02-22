@@ -27,6 +27,7 @@ _check_network_lookup_boundaries("game_mode_outcome_id", "game_mode_outcomes")
 _check_network_lookup_boundaries("hit_zone_id", "hit_zones")
 _check_network_lookup_boundaries("host_type", "host_types")
 _check_network_lookup_boundaries("impact_fx_id", "impact_fx_names")
+_check_network_lookup_boundaries("interaction_type_string_id", "interaction_type_strings")
 _check_network_lookup_boundaries("liquid_area_template_id", "liquid_area_template_names")
 _check_network_lookup_boundaries("looping_player_sound_alias_id", "player_character_looping_sound_aliases")
 _check_network_lookup_boundaries("mechanism_mission_id", "missions")
@@ -180,6 +181,8 @@ NetworkConstants.max_mover_frames = mover_frames.max
 NetworkConstants.action_combo_count = Network.type_info("action_combo_count")
 local template_effect_buffer_index = Network.type_info("template_effect_buffer_index")
 NetworkConstants.max_template_effect_buffer_index = template_effect_buffer_index.max
+local fixed_frame_time = Network.type_info("fixed_frame_time")
+NetworkConstants.max_fixed_frame_time = fixed_frame_time.max
 NetworkConstants.fixed_frame_offset = Network.type_info("fixed_frame_offset")
 NetworkConstants.fixed_frame_offset_small = Network.type_info("fixed_frame_offset_small")
 NetworkConstants.fixed_frame_offset_start_t_5bit = Network.type_info("fixed_frame_offset_start_t_5bit")

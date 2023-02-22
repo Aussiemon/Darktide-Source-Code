@@ -191,16 +191,7 @@ local CheckProcFunctions = {
 		return true
 	end
 }
-local warp_damage_types = {
-	[damage_types.biomancer_soul] = true,
-	[damage_types.smite] = true,
-	[damage_types.electrocution] = true,
-	[damage_types.force_staff_single_target] = true,
-	[damage_types.force_staff_bfg] = true,
-	[damage_types.psyker_biomancer_discharge] = true,
-	[damage_types.warp] = true,
-	[damage_types.warpfire] = true
-}
+local warp_damage_types = DamageSettings.warp_damage_types
 
 CheckProcFunctions.on_warp_kill = function (params)
 	if params.attack_result ~= attack_results.died then
@@ -374,11 +365,19 @@ CheckProcFunctions.on_chain_lightning_hit = function (params)
 end
 
 CheckProcFunctions.on_shoot_hit_multiple = function (params)
-	return params.num_hit_units > 3
+	return params.num_hit_units > 2
 end
 
 CheckProcFunctions.on_hit_all_pellets_on_same = function (params)
 	return params.hit_all_pellets and params.num_hit_units == 1
+end
+
+CheckProcFunctions.attacked_unit_is_minion = function (params)
+	return MinionState.is_minion(params.attacked_unit)
+end
+
+CheckProcFunctions.is_weapon_special = function (params)
+	return params.weapon_special
 end
 
 CheckProcFunctions.would_die = function (params, template_data, template_context)

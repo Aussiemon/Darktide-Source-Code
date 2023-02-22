@@ -89,6 +89,22 @@ local mutator_templates = {
 		init_modify_pacing = {
 			modify_resistance = -1
 		}
+	},
+	mutator_travel_distance_spawning_specials = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		description = {
+			"loc_mutator_minion_nurgle_blessing_description_1",
+			"loc_mutator_minion_nurgle_blessing_description_2",
+			"loc_mutator_minion_nurgle_blessing_description_3"
+		}
+	},
+	mutator_travel_distance_spawning_hordes = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		description = {
+			"loc_mutator_minion_nurgle_blessing_description_1",
+			"loc_mutator_minion_nurgle_blessing_description_2",
+			"loc_mutator_minion_nurgle_blessing_description_3"
+		}
 	}
 }
 

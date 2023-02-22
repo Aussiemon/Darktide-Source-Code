@@ -41,8 +41,8 @@ InputUtils.replaced_strings.oem_4 = "oem_4 ({ [)"
 InputUtils.replaced_strings.oem_5 = "oem_5 (| )"
 InputUtils.replaced_strings.oem_6 = "oem_6 (} ])"
 InputUtils.replaced_strings.oem_7 = "oem_7 (\" ')"
-InputUtils.replaced_strings.oem_6 = "oem_8 (?!)"
-InputUtils.replaced_strings.oem_6 = "oem_102 (> <)"
+InputUtils.replaced_strings.oem_8 = "oem_8 (?!)"
+InputUtils.replaced_strings.oem_102 = "oem_102 (> <)"
 
 InputUtils.axis_index = function (global_name, raw_device, device_type)
 	local k = InputUtils.local_key_name(global_name, device_type)
@@ -139,6 +139,7 @@ InputUtils.localized_button_name = function (index, device)
 	local keystring = device.button_locale_name(index) or string.upper(device.button_name(index))
 
 	if device_category == "keyboard" then
+		keystring = string.upper(keystring)
 		keystring = string.format("[%s]", keystring)
 	end
 
@@ -150,6 +151,7 @@ InputUtils.localized_axis_name = function (index, device)
 	local keystring = device.axis_locale_name(index) or string.format("AXIS_%s", string.upper(device.axis_name(index)))
 
 	if device_category == "keyboard" then
+		keystring = string.upper(keystring)
 		keystring = string.format("[%s]", keystring)
 	end
 

@@ -560,8 +560,8 @@ damage_templates.close_gauntlet_demolitions = {
 			300
 		},
 		impact = {
-			30,
-			60
+			40,
+			80
 		}
 	},
 	targets = {

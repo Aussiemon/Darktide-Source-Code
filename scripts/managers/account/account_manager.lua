@@ -29,7 +29,8 @@ local interface = {
 	"user_has_restriction",
 	"user_restriction_verified",
 	"verify_connection",
-	"user_restriction_updated"
+	"user_restriction_updated",
+	"communication_restriction_iteration"
 }
 local NullAccountManager = class("NullAccountManager")
 
@@ -147,6 +148,10 @@ end
 
 NullAccountManager.user_restriction_updated = function (self)
 	return
+end
+
+NullAccountManager.communication_restriction_iteration = function (self)
+	return nil
 end
 
 local AccountManager = {

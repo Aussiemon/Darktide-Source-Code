@@ -1,4 +1,6 @@
+local BreedActions = require("scripts/settings/breed/breed_actions")
 local ColorUtilities = require("scripts/utilities/ui/colors")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
@@ -53,15 +55,57 @@ template.scale_settings = {
 }
 
 local function _show_warning_state(unit_data_extension)
-	if unit_data_extension then
-		local disabled_character_state_component = unit_data_extension:read_component("disabled_character_state")
-		local is_pounced = PlayerUnitStatus.is_pounced(disabled_character_state_component)
-		local is_netted = PlayerUnitStatus.is_netted(disabled_character_state_component)
-
-		return is_pounced or is_netted
+	if not unit_data_extension then
+		return false
 	end
 
-	return false
+	local disabled_character_state_component = unit_data_extension:read_component("disabled_character_state")
+	local is_mutant_charged = PlayerUnitStatus.is_mutant_charged(disabled_character_state_component)
+	local is_grabbed = PlayerUnitStatus.is_grabbed(disabled_character_state_component)
+
+	return is_mutant_charged or is_grabbed
+end
+
+local chaos_daemonhost_action_data = BreedActions.chaos_daemonhost
+local DAEMONHOST_EXECUTE_TIMING = chaos_daemonhost_action_data.warp_grab.execute_timing
+local TIME_UNTIL_FALL_DOWN_FROM_HANG_LEDGE = PlayerCharacterConstants.time_until_fall_down_from_hang_ledge
+
+local function _progress_bar_fraction(unit, unit_data_extension)
+	local progress_bar_fraction = 1
+
+	if not HEALTH_ALIVE[unit] then
+		return progress_bar_fraction
+	end
+
+	local disabled_character_state_component = unit_data_extension:read_component("disabled_character_state")
+	local is_warp_grabbed = PlayerUnitStatus.is_warp_grabbed(disabled_character_state_component)
+
+	if is_warp_grabbed then
+		local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+		local game_session = Managers.state.game_session:game_session()
+		local warp_grabbed_execution_time = GameSession.game_object_field(game_session, game_object_id, "warp_grabbed_execution_time")
+		local t = Managers.time:time("gameplay")
+		progress_bar_fraction = math.clamp((warp_grabbed_execution_time - t) / DAEMONHOST_EXECUTE_TIMING, 0, 1)
+
+		return progress_bar_fraction
+	end
+
+	local character_state_component = unit_data_extension:read_component("character_state")
+	local is_ledge_hanging = PlayerUnitStatus.is_ledge_hanging(character_state_component)
+
+	if is_ledge_hanging then
+		local ledge_hanging_character_state_component = unit_data_extension:read_component("ledge_hanging_character_state")
+		local time_to_fall_down = ledge_hanging_character_state_component.time_to_fall_down
+		local t = Managers.time:time("gameplay")
+		progress_bar_fraction = math.clamp((time_to_fall_down - t) / TIME_UNTIL_FALL_DOWN_FROM_HANG_LEDGE, 0, 1)
+
+		return progress_bar_fraction
+	end
+
+	local health_extension = ScriptUnit.extension(unit, "health_system")
+	progress_bar_fraction = health_extension:current_health_percent()
+
+	return progress_bar_fraction
 end
 
 local template_visual_definitions = {
@@ -132,7 +176,7 @@ local template_visual_definitions = {
 	}
 }
 
-local function setup_marker_by_visual_type(widget, marker, visual_type)
+local function _setup_marker_by_visual_type(widget, marker, visual_type)
 	local content = widget.content
 	local style = widget.style
 	local visual_definition = template_visual_definitions[visual_type]
@@ -428,9 +472,6 @@ end
 template.on_enter = function (widget, marker, template)
 	local content = widget.content
 	content.spawn_progress_timer = 0
-	local data = marker.data
-	local player = data.player
-	local player_slot = player:slot()
 end
 
 template.update_function = function (parent, ui_renderer, widget, marker, template, dt, t)
@@ -449,19 +490,13 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 	local visual_type = _show_warning_state(unit_data_extension) and "warning" or "critical"
 
 	if visual_type and marker.visual_type ~= visual_type then
-		setup_marker_by_visual_type(widget, marker, visual_type)
+		_setup_marker_by_visual_type(widget, marker, visual_type)
 
 		marker.visual_type = visual_type
 	end
 
-	local health_max_percentage = 1
-
-	if HEALTH_ALIVE[marker_unit] then
-		local health_extension = ScriptUnit.extension(marker_unit, "health_system")
-		health_max_percentage = health_extension:current_health_percent()
-	end
-
-	content.progress_bar_fraction = health_max_percentage
+	local progress_bar_fraction = _progress_bar_fraction(marker_unit, unit_data_extension)
+	content.progress_bar_fraction = progress_bar_fraction
 	local is_hovered = data.is_hovered
 	local anim_hover_speed = 3
 
@@ -495,7 +530,7 @@ template.update_function = function (parent, ui_renderer, widget, marker, templa
 		end
 	end
 
-	local speed = 1 + (health_max_percentage < 0.25 and 2 or 0)
+	local speed = 1 + (progress_bar_fraction < 0.25 and 2 or 0)
 	local pulse_progress = Application.time_since_launch() * speed % 1
 	local pulse_anim_progress = math.clamp((pulse_progress * 3 - 1)^2, 0, 1)
 	local alpha_multiplier = 0.7 + pulse_anim_progress * 0.3

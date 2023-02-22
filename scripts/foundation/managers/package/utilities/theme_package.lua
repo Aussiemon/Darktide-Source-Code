@@ -8,12 +8,12 @@ local function _get_theme_packages(level_name, theme_tag)
 		local theme_packages = file_data[theme_tag]
 
 		if not theme_packages then
-			Log.warning("ThemePackage", "No theme package configuration in file: %q, level: %q, theme_tag: %q", file_path, level_name, theme_tag)
+			Log.error("ThemePackage", "No theme package configuration in file: %q, level: %q, theme_tag: %q", file_path, level_name, theme_tag)
 		end
 
 		return theme_packages
 	else
-		Log.warning("ThemePackage", "Cannot load theme package configuration file: %q, level: %q, theme_tag: %q", file_path, level_name, theme_tag)
+		Log.error("ThemePackage", "Cannot load theme package configuration file: %q, level: %q, theme_tag: %q", file_path, level_name, theme_tag)
 	end
 end
 
@@ -21,7 +21,7 @@ ThemePackage.level_resource_dependency_packages = function (level_name, theme_ta
 	local theme_packages = _get_theme_packages(level_name, theme_tag)
 
 	if not theme_packages and theme_tag ~= "default" then
-		Log.warning("ThemePackage", "Falling back to theme_tag default")
+		Log.error("ThemePackage", "Falling back to theme_tag default")
 
 		theme_packages = _get_theme_packages(level_name, "default")
 	end

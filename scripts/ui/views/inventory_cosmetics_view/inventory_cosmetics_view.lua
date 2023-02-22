@@ -1,22 +1,23 @@
 local ContentBlueprints = require("scripts/ui/views/inventory_view/inventory_view_content_blueprints")
 local Definitions = require("scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_definitions")
 local InventoryCosmeticsViewSettings = require("scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_settings")
+local ItemGridViewBase = require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ItemUtils = require("scripts/utilities/items")
+local MasterItems = require("scripts/backend/master_items")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local ScriptCamera = require("scripts/foundation/utilities/script_camera")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementPlayerPanel = require("scripts/ui/view_elements/view_element_player_panel/view_element_player_panel")
-local MasterItems = require("scripts/backend/master_items")
-local ItemGridViewBase = require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
-local UISettings = require("scripts/settings/ui/ui_settings")
 local WIDGET_TYPE_BY_SLOT = {
 	slot_gear_head = "gear_item",
 	slot_animation_end_of_round = "gear_item",
@@ -45,6 +46,7 @@ InventoryCosmeticsView.init = function (self, settings, context)
 	self._disable_rotation_input = context.disable_rotation_input
 	self._animation_event_name_suffix = context.animation_event_name_suffix
 	self._animation_event_variable_data = context.animation_event_variable_data
+	self.item_type = context.item_type
 	self._preview_player = context.debug and Managers.player:local_player(1) or context.player
 	self._preview_profile_equipped_items = context.preview_profile_equipped_items
 	self._current_profile_equipped_items = context.current_profile_equipped_items or {}
@@ -59,6 +61,30 @@ InventoryCosmeticsView.init = function (self, settings, context)
 	} or self._preview_profile_equipped_items and table.clone_instance(self._preview_profile_equipped_items)
 	self._camera_zoomed_in = true
 	self._initialize_zoom = true
+	self._sort_options = {
+		{
+			display_name = Localize("loc_inventory_item_grid_sort_title_name") .. " ",
+			sort_function = ItemUtils.sort_comparator({
+				">",
+				ItemUtils.compare_item_name,
+				">",
+				ItemUtils.compare_item_rarity,
+				">",
+				ItemUtils.compare_item_level
+			})
+		},
+		{
+			display_name = Localize("loc_inventory_item_grid_sort_title_name") .. " ",
+			sort_function = ItemUtils.sort_comparator({
+				"<",
+				ItemUtils.compare_item_name,
+				">",
+				ItemUtils.compare_item_rarity,
+				">",
+				ItemUtils.compare_item_level
+			})
+		}
+	}
 
 	InventoryCosmeticsView.super.init(self, Definitions, settings)
 
@@ -279,7 +305,7 @@ InventoryCosmeticsView._register_button_callbacks = function (self)
 	equip_button.content.hotspot.pressed_callback = callback(self, "cb_on_equip_pressed")
 end
 
-InventoryCosmeticsView.cb_on_camera_zoom_toggled = function (self, id, instant)
+InventoryCosmeticsView.cb_on_camera_zoom_toggled = function (self, id, input_pressed, instant)
 	self._camera_zoomed_in = not self._camera_zoomed_in
 
 	if self._camera_zoomed_in then
@@ -352,6 +378,46 @@ InventoryCosmeticsView.on_exit = function (self)
 	InventoryCosmeticsView.super.on_exit(self)
 end
 
+InventoryCosmeticsView._verify_items = function (self, source_items, owned_gear)
+	local selected_slot = self._selected_slot
+	local selected_slot_name = selected_slot.name
+	local verified_items = {}
+	local owned_gear_by_master_id = {}
+
+	if owned_gear then
+		for gear_id, item in pairs(owned_gear) do
+			local item_name = item.name
+			owned_gear_by_master_id[item_name] = item
+		end
+	end
+
+	for item_name, item in pairs(source_items) do
+		local slots = item.slots
+
+		if slots then
+			for i = 1, #slots do
+				local slot_name = slots[i]
+
+				if selected_slot_name == slot_name then
+					if owned_gear_by_master_id[item_name] then
+						verified_items[item_name] = owned_gear_by_master_id[item_name]
+
+						break
+					end
+
+					if item.always_owned then
+						verified_items[item_name] = item
+					end
+
+					break
+				end
+			end
+		end
+	end
+
+	return verified_items
+end
+
 InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 	local local_player_id = 1
 	local player = Managers.player:local_player(local_player_id)
@@ -372,6 +438,8 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 			return
 		end
 
+		local item_definitions = MasterItems.get_cached()
+		items = self:_verify_items(item_definitions, items)
 		local items_array = {}
 
 		for gear_id, item in pairs(items) do
@@ -442,11 +510,17 @@ end
 InventoryCosmeticsView._get_item_from_inventory = function (self, wanted_item)
 	local inventory_items = self._inventory_items
 	local wanted_item_gear_id = wanted_item.gear_id
+	local wanted_item_name = wanted_item.name
 
 	for _, item in ipairs(inventory_items) do
 		local gear_id = item.gear_id
+		local item_name = item.name
 
-		if gear_id == wanted_item_gear_id then
+		if wanted_item_gear_id then
+			if gear_id and gear_id == wanted_item_gear_id then
+				return item
+			end
+		elseif wanted_item_name and wanted_item_name == item_name then
 			return item
 		end
 	end
@@ -518,6 +592,13 @@ InventoryCosmeticsView._equip_item = function (self, slot_name, item)
 			end
 		end
 
+		local item_gear_id = item and item.gear_id
+		local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
+
+		if active_profile_preset_id then
+			ProfileUtils.save_item_id_for_profile_preset(active_profile_preset_id, slot_name, item_gear_id)
+		end
+
 		Managers.event:trigger("event_inventory_view_equip_item", slot_name, item)
 	end
 end
@@ -581,7 +662,30 @@ InventoryCosmeticsView.cb_on_close_pressed = function (self)
 	self:_handle_back_pressed()
 end
 
+InventoryCosmeticsView.profile_preset_handling_input = function (self)
+	local view_name = "inventory_background_view"
+	local ui_manager = Managers.ui
+
+	if ui_manager:view_active(view_name) then
+		local view_instance = ui_manager:view_instance(view_name)
+
+		return view_instance:profile_preset_handling_input()
+	end
+end
+
+InventoryCosmeticsView.draw = function (self, dt, t, input_service, layer)
+	if self:profile_preset_handling_input() then
+		input_service = input_service:null_service()
+	end
+
+	InventoryCosmeticsView.super.draw(self, dt, t, input_service, layer)
+end
+
 InventoryCosmeticsView.update = function (self, dt, t, input_service)
+	if self:profile_preset_handling_input() then
+		input_service = input_service:null_service()
+	end
+
 	if self._spawn_player then
 		if not self._player_spawned and self._spawn_point_unit and self._default_camera_unit then
 			local profile = self._presentation_profile

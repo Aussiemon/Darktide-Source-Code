@@ -41,6 +41,7 @@ AccountManagerWinGDK.reset = function (self)
 	self._mute_list = {}
 	self._block_list = {}
 	self._restriction_listeners = {}
+	self._communication_restriction_iteration = self._communication_restriction_iteration or 1
 end
 
 AccountManagerWinGDK.signin_profile = function (self, signin_callback)
@@ -159,10 +160,15 @@ AccountManagerWinGDK.refresh_communication_restrictions = function (self)
 
 		XboxLiveUtils.get_block_list():next(function (block_list)
 			self._block_list = block_list
+			self._communication_restriction_iteration = self._communication_restriction_iteration + 1
 
 			self:fetch_crossplay_restrictions()
 		end)
 	end)
+end
+
+AccountManagerWinGDK.communication_restriction_iteration = function (self)
+	return self._communication_restriction_iteration
 end
 
 AccountManagerWinGDK.is_muted = function (self, xuid)
@@ -254,7 +260,7 @@ AccountManagerWinGDK.user_restriction_updated = function (self, xuid, restrictio
 end
 
 AccountManagerWinGDK.update = function (self, dt, t)
-	if not self._user_id or self._network_fatal_error then
+	if not self._user_id or self._network_fatal_error or self._leave_game then
 		return
 	end
 
@@ -357,7 +363,7 @@ end
 
 AccountManagerWinGDK._setup_friends_list = function (self)
 	if not self._user_id then
-		self:_show_fatal_error("loc_popup_header_error", "loc_friends_list_failed_desc")
+		self:_show_fatal_error("loc_popup_header_error", "loc_user_signin_failed_desc")
 
 		return
 	end
@@ -370,7 +376,7 @@ AccountManagerWinGDK._setup_friends_list = function (self)
 		self._offline_friends_id = XSocialManager.create_social_group(self._user_id, XPresenceFilter.AllOffline, XRelationshipFilter.Friends)
 		self._social_groups_created_id = self._user_id
 	else
-		self:_show_fatal_error("loc_popup_header_error", "loc_friends_list_failed_desc")
+		self:_show_fatal_error("loc_popup_header_error", "loc_user_signin_failed_desc")
 
 		return
 	end

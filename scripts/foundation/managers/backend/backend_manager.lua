@@ -214,12 +214,18 @@ BackendManager.authenticate = function (self)
 				return Promise.rejected(error_data)
 			end):next(function (result)
 				local success, error_code = Backend.initialize(debug_log, result.authentication_service_url, result.title_service_url, result.telemetry_service_url)
+
+				self:_set_backend_env(result.authentication_service_url)
+
 				self._initialized = true
 
 				self._initialize_promise:resolve()
 			end)
 		else
 			local success, error_code = Backend.initialize(debug_log, DEFAULT_AUTHENTICATION_SERIVCE_URL, DEFAULT_TITLE_SERIVCE_URL, DEFAULT_TELEMERTY_SERVICE_URL)
+
+			self:_set_backend_env(DEFAULT_AUTHENTICATION_SERIVCE_URL)
+
 			self._initialized = true
 
 			self._initialize_promise:resolve()
@@ -227,6 +233,10 @@ BackendManager.authenticate = function (self)
 	end
 
 	return self._initialize_promise:next(function ()
+		if Managers.account:user_detached() then
+			return Promise.rejected(BackendUtilities.create_error(BackendError.NoIdentifier, Localize("loc_popup_header_signed_out_error")))
+		end
+
 		local auth_promise = Promise:new()
 		local user_id = Managers.account:user_id()
 		local operation_identifier, error_code = Backend.authenticate(user_id)
@@ -266,6 +276,23 @@ BackendManager.authenticate = function (self)
 
 		return auth_promise
 	end)
+end
+
+BackendManager._set_backend_env = function (self, auth_service_url)
+	local match = string.match(auth_service_url, "https://bsp%-auth%-(%a+)%.fatsharkgames%.se")
+
+	if match then
+		rawset(_G, "BACKEND_ENV", match)
+	end
+
+	match = string.match(auth_service_url, "https://bsp%-auth%-(%a+)%.atoma%.cloud")
+
+	if match then
+		rawset(_G, "BACKEND_ENV", match)
+	end
+
+	Crashify.print_property("backend_env", BACKEND_ENV)
+	Managers.telemetry_events:refresh_settings()
 end
 
 BackendManager.AUTH_METHOD_XBOXLIVE = Backend.AUTH_METHOD_XBOXLIVE

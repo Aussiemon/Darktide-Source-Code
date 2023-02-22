@@ -1,16 +1,16 @@
-local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local Ammo = require("scripts/utilities/ammo")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local BurningSettings = require("scripts/settings/burning/burning_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
-local ailment_effects = AilmentSettings.effects
 local attack_results = AttackSettings.attack_results
 local buff_keywords = BuffSettings.keywords
-local buff_targets = BuffSettings.targets
-local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_proc_events = BuffSettings.proc_events
+local buff_stat_buffs = BuffSettings.stat_buffs
+local buff_targets = BuffSettings.targets
+local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local templates = {
 	debug_movement_speed_on_kill = {
 		class_name = "proc_buff",
@@ -170,24 +170,7 @@ local templates = {
 				Attack.execute(unit, damage_template, "power_level", power_level)
 			end
 		end,
-		minion_effects = {
-			ailment_effect = ailment_effects.burning,
-			node_effects = {
-				{
-					node_name = "j_spine",
-					vfx = {
-						material_emission = true,
-						particle_effect = "content/fx/particles/enemies/buff_burning",
-						orphaned_policy = "destroy",
-						stop_type = "stop"
-					},
-					sfx = {
-						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
-						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
-					}
-				}
-			}
-		}
+		minion_effects = minion_burning_buff_effects.fire
 	},
 	debug_ignite_on_hit = {
 		unique_buff_id = "debug_ignite_on_hit",
@@ -216,6 +199,14 @@ local templates = {
 		keywords = {},
 		stat_buffs = {
 			[buff_stat_buffs.power_level_modifier] = 0.1
+		}
+	},
+	debug_damage_vs_ogryns = {
+		predicted = false,
+		class_name = "buff",
+		keywords = {},
+		stat_buffs = {
+			[buff_stat_buffs.damage_vs_ogryn] = 0.1
 		}
 	}
 }

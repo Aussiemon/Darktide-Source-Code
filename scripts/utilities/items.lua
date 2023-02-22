@@ -27,6 +27,10 @@ local function _character_save_data()
 end
 
 ItemUtils.calculate_stats_rating = function (item)
+	if item.baseItemLevel then
+		return item.baseItemLevel
+	end
+
 	local rating_budget = item.itemLevel or 0
 	local rating_contribution = ItemUtils.item_perk_rating(item) + ItemUtils.item_trait_rating(item)
 
@@ -93,6 +97,55 @@ ItemUtils.unmark_item_id_as_new = function (gear_id)
 					items[gear_id] = nil
 
 					break
+				end
+			end
+		end
+
+		Managers.save:queue_save()
+	end
+end
+
+ItemUtils.unmark_all_items_as_new = function ()
+	local character_data = _character_save_data()
+
+	if not character_data then
+		return
+	end
+
+	local new_items = character_data.new_items
+
+	if new_items then
+		table.clear(new_items)
+	end
+
+	local new_items_by_type = character_data.new_items_by_type
+
+	if new_items_by_type then
+		table.clear(new_items_by_type)
+	end
+
+	Managers.save:queue_save()
+end
+
+ItemUtils.unmark_item_type_as_new = function (item_type)
+	local character_data = _character_save_data()
+
+	if not character_data then
+		return
+	end
+
+	local new_items = character_data.new_items
+
+	if new_items then
+		local new_items_by_type = character_data.new_items_by_type
+
+		if new_items_by_type then
+			local items = new_items_by_type[item_type]
+
+			if items then
+				for gear_id, _ in pairs(items) do
+					new_items[gear_id] = nil
+					items[gear_id] = nil
 				end
 			end
 		end
@@ -315,7 +368,17 @@ ItemUtils.weapon_trinket_preview_item = function (item, optional_preview_item)
 	return visual_item
 end
 
-ItemUtils.weapon_skin_preview_item = function (item)
+ItemUtils.add_weapon_trinket_on_preview_item = function (weapon_trinket_item, weapon_item)
+	for i = 1, #trinket_slot_order do
+		local slot_id = trinket_slot_order[i]
+
+		if find_link_attachment_item_slot_path(weapon_item, slot_id, weapon_trinket_item, true) then
+			break
+		end
+	end
+end
+
+ItemUtils.weapon_skin_preview_item = function (item, include_skin_item_info)
 	local preview_item_name = item.preview_item
 	local preview_item = preview_item_name and MasterItems.get_item(preview_item_name)
 	local visual_item = nil
@@ -327,6 +390,13 @@ ItemUtils.weapon_skin_preview_item = function (item)
 	if visual_item then
 		visual_item.gear_id = item.gear_id
 		visual_item.slot_weapon_skin = item
+	end
+
+	if include_skin_item_info then
+		visual_item.display_name = item.display_name
+		visual_item.description = item.description
+		visual_item.item_type = item.item_type
+		visual_item.weapon_template_restriction = item.weapon_template_restriction
 	end
 
 	return visual_item
@@ -482,6 +552,67 @@ ItemUtils.class_requirement_text = function (item)
 	return text, true
 end
 
+ItemUtils.retrieve_items_for_archetype = function (archetype, filtered_slots, workflow_states)
+	local WORKFLOW_STATES = {
+		"SHIPPABLE",
+		"RELEASABLE",
+		"FUNCTIONAL"
+	}
+	workflow_states = workflow_states and workflow_states or WORKFLOW_STATES
+	local item_definitions = MasterItems.get_cached()
+	local items = {}
+
+	for item_name, item in pairs(item_definitions) do
+		repeat
+			local slots = item.slots
+			local slot = slots and slots[1]
+
+			if not table.contains(filtered_slots, slot) then
+				break
+			end
+
+			local archetypes = item.archetypes
+
+			if not archetypes or not table.contains(archetypes, archetype) then
+				break
+			end
+
+			local is_item_stripped = true
+			local strip_tags_table = Application.get_strip_tags_table()
+
+			if table.size(item.feature_flags) == 0 then
+				is_item_stripped = false
+			else
+				for _, feature_flag in pairs(item.feature_flags) do
+					if strip_tags_table[feature_flag] == true then
+						is_item_stripped = false
+
+						break
+					end
+				end
+			end
+
+			if is_item_stripped then
+				break
+			end
+
+			local filtered_workflow_states = table.contains(workflow_states, item.workflow_state)
+
+			if not filtered_workflow_states then
+				break
+			end
+
+			if items[slot] == nil then
+				items[slot] = {}
+			end
+
+			items[slot][item_name] = item
+		until true
+	end
+
+	return items
+end
+
 ItemUtils.perk_item_by_id = function (perk_id)
 	return MasterItems.get_item(perk_id)
 end
@@ -564,6 +695,7 @@ ItemUtils.equip_slot_items = function (items)
 
 	if items then
 		local item_gear_ids_by_slots = {}
+		local item_gear_names_by_slots = {}
 
 		for slot_name, item in pairs(items) do
 			local breeds = item and item.breeds
@@ -572,11 +704,15 @@ ItemUtils.equip_slot_items = function (items)
 			local slot_valid = not slots or table.contains(slots, slot_name)
 
 			if breed_valid and slot_valid then
-				item_gear_ids_by_slots[slot_name] = item.gear_id
+				if item.gear_id then
+					item_gear_ids_by_slots[slot_name] = item.gear_id
+				elseif item.name then
+					item_gear_names_by_slots[slot_name] = item.name
+				end
 			end
 		end
 
-		return Managers.backend.interfaces.characters:equip_items_in_slots(character_id, item_gear_ids_by_slots):next(function (v)
+		return Managers.data_service.profiles:equip_items_in_slots(character_id, item_gear_ids_by_slots, item_gear_names_by_slots):next(function (v)
 			Log.debug("ItemUtils", "Items equipped in loadout slots")
 
 			if is_server then
@@ -586,8 +722,12 @@ ItemUtils.equip_slot_items = function (items)
 			else
 				Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
 			end
+
+			return true
 		end):catch(function (errors)
 			Log.error("ItemUtils", "Failed equipping items in loadout slots", errors)
+
+			return false
 		end)
 	end
 end
@@ -622,7 +762,7 @@ ItemUtils.equip_slot_master_items = function (items)
 			end
 		end
 
-		Managers.backend.interfaces.characters:equip_master_items_in_slots(character_id, item_master_ids_by_slots):next(function (v)
+		Managers.data_service.profiles:equip_master_items_in_slots(character_id, item_master_ids_by_slots):next(function (v)
 			Log.debug("ItemUtils", "Master items equipped in loadout slots")
 
 			if is_server then
@@ -632,8 +772,12 @@ ItemUtils.equip_slot_master_items = function (items)
 			else
 				Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
 			end
+
+			return true
 		end):catch(function (errors)
 			Log.error("ItemUtils", "Failed equipping master items in loadout slots", errors)
+
+			return false
 		end)
 	end
 end
@@ -662,7 +806,7 @@ ItemUtils.equip_item_in_slot = function (slot_name, item)
 	local character_id = player:character_id()
 
 	if item then
-		Managers.backend.interfaces.characters:equip_item_slot(character_id, slot_name, item.gear_id):next(function (v)
+		Managers.backend.interfaces.characters:equip_item_slot(character_id, slot_name, item.gear_id or item.name):next(function (v)
 			Log.debug("ItemUtils", "Equipped!")
 
 			if is_server then
@@ -700,6 +844,43 @@ ItemUtils.item_slot = function (item)
 	local slot_name = ItemUtils.slot_name(item)
 
 	return slot_name and ItemSlotSettings[slot_name]
+end
+
+ItemUtils.sort_comparator = function (definitions)
+	return function (a, b)
+		local a_item = a.item
+		local b_item = b.item
+
+		for i = 1, #definitions, 2 do
+			local order = definitions[i]
+			local func = definitions[i + 1]
+			local is_lt = func(a_item, b_item)
+
+			if is_lt ~= nil then
+				if order == "<" then
+					return is_lt
+				else
+					return not is_lt
+				end
+			end
+		end
+
+		return nil
+	end
+end
+
+ItemUtils.compare_item_type = function (a, b)
+	local Localize = Localize
+	local a_item_type = a.item_type or ""
+	local b_type = b.item_type or ""
+
+	if a_item_type < b_type then
+		return true
+	elseif b_type < a_item_type then
+		return false
+	end
+
+	return nil
 end
 
 ItemUtils.compare_item_name = function (a, b)
@@ -896,8 +1077,12 @@ ItemUtils.trait_category = function (item)
 	if item.item_type == "TRAIT" then
 		local trait_name = item.name
 		trait_category = string.match(trait_name, "^content/items/traits/([%w_]+)/")
+	elseif item.trait_category then
+		trait_category = item.trait_category
 	elseif item.weapon_template then
-		trait_category = string.gsub(item.weapon_template, "_m%d$", "")
+		Log.error("ItemUtils", "no trait_category found for %s, using fallback", item.name)
+
+		trait_category = "bespoke_" .. string.gsub(item.weapon_template, "_m%d$", "")
 	end
 
 	return trait_category

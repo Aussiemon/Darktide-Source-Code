@@ -1,3 +1,4 @@
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local NavQueries = {}
 local DEFAULT_NAV_ABOVE = 30
 local DEFAULT_NAV_BELOW = 30
@@ -118,6 +119,74 @@ end
 local CHECKS_PER_DIRECTION = 5
 local ANGLE_INCREMENT = math.pi / (2 * CHECKS_PER_DIRECTION)
 local CHECK_DISTANCE = 5
+local RADIUS = PlayerCharacterConstants.respawn_hot_join_radius
+local HEIGHT = PlayerCharacterConstants.respawn_hot_join_height
+local MARGIN = PlayerCharacterConstants.respawn_hot_join_margin
+
+function _check_space_empty(physics_world, position, capsule_rotation, capsule_size)
+	local _, actor_count = PhysicsWorld.immediate_overlap(physics_world, "shape", "capsule", "position", position + Vector3.up() * (HEIGHT / 2 + MARGIN), "rotation", capsule_rotation, "size", capsule_size, "collision_filter", "filter_player_mover")
+
+	return actor_count == 0
+end
+
+NavQueries.empty_space_near_nav_position = function (nav_position, check_direction, nav_world, traverse_logic, physics_world)
+	local Quaternion_rotate = Quaternion.rotate
+	local Quaternion_axis_angle = Quaternion.axis_angle
+	local GwNavQueries_raycast = GwNavQueries.raycast
+	local Vector3_distance_squared = Vector3.distance_squared
+	local capsule_rotation = Quaternion.look(Vector3.up())
+	local capsule_size = Vector3(RADIUS - MARGIN, HEIGHT / 2 - MARGIN * 2, RADIUS - MARGIN)
+	local best_position = nil
+	local best_distance_sq = -math.huge
+	local last_position = nil
+	local last_position_success = false
+	local angle_sign = 1
+
+	for i = 0, CHECKS_PER_DIRECTION do
+		local directions_to_check = i > 0 and 2 or 1
+
+		for j = 1, directions_to_check do
+			local angle = angle_sign * ANGLE_INCREMENT * i
+			local rotation = Quaternion_axis_angle(Vector3.up(), angle)
+			local new_direction = Quaternion_rotate(rotation, check_direction)
+			local to_position = nav_position + new_direction * CHECK_DISTANCE
+			local success, hit_position = GwNavQueries_raycast(nav_world, nav_position, to_position, traverse_logic)
+			local empty = _check_space_empty(physics_world, hit_position, capsule_rotation, capsule_size)
+
+			if empty then
+				if success then
+					return hit_position
+				end
+
+				local distance_sq = Vector3_distance_squared(nav_position, hit_position)
+
+				if best_distance_sq < distance_sq then
+					best_distance_sq = distance_sq
+					best_position = hit_position
+				end
+			elseif not last_position_success or success then
+				last_position = hit_position
+				last_position_success = success
+			end
+
+			angle_sign = -angle_sign
+		end
+	end
+
+	if not best_position then
+		if last_position then
+			Log.error("NavQueries", "[empty_space_near_nav_position] found no best position, using last position")
+
+			return last_position
+		else
+			Log.error("NavQueries", "[empty_space_near_nav_position] found no position, using provided nav position")
+
+			return nav_position
+		end
+	end
+
+	return best_position
+end
 
 NavQueries.position_near_nav_position = function (nav_position, check_direction, nav_world, traverse_logic)
 	local Quaternion_rotate = Quaternion.rotate

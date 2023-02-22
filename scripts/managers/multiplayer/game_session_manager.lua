@@ -455,7 +455,11 @@ GameSessionManager._client_joined = function (self, channel_id, peer_id)
 	Managers.event:trigger("host_game_session_manager_player_joined", peer_id, player)
 
 	local player_spawner_system = Managers.state.extension:system("player_spawner_system")
-	local position, rotation, parent, side_name = player_spawner_system:next_free_spawn_point()
+	local wanted_spawn_point = player:wanted_spawn_point()
+
+	player:set_wanted_spawn_point(nil)
+
+	local position, rotation, parent, side_name = player_spawner_system:next_free_spawn_point(wanted_spawn_point)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local force_spawn = true
 	local is_respawn = false

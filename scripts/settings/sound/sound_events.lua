@@ -2,6 +2,9 @@ local sound_events = {
 	"wwise/events/minions/play_beast_of_nurgle_death_explode",
 	"wwise/events/minions/play_beast_of_nurgle_ground_impact",
 	"wwise/events/minions/play_beast_of_nurgle_jump_land",
+	"wwise/events/minions/play_chaos_hound_spawn_stinger_circumstance",
+	"wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+	"wwise/events/minions/play_chaos_spawn_ground_impact_small_default",
 	"wwise/events/minions/play_enemy_chaos_hound_spawn",
 	"wwise/events/minions/play_enemy_character_foley_plague_ogryn_claw_slam",
 	"wwise/events/minions/play_enemy_character_foley_plague_ogryn_stomp_debris",
@@ -112,7 +115,11 @@ local sound_events = {
 	"wwise/events/weapon/play_weapon_shotgun_chaos",
 	"wwise/events/weapon/stop_krak_build_up",
 	"wwise/events/weapon/stop_minion_plasmapistol_charge",
-	"wwise/events/world/play_int_battery_pick_up"
+	"wwise/events/world/play_hunting_grounds_occasionals",
+	"wwise/events/world/play_int_battery_pick_up",
+	"wwise/events/world/stop_hunting_grounds_occasionals",
+	"wwise/events/minions/play_chaos_hound_group_sound",
+	"wwise/events/minions/stop_chaos_hound_group_sound"
 }
 
 return sound_events

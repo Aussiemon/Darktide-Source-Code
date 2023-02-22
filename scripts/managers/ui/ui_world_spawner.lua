@@ -39,17 +39,18 @@ UIWorldSpawner.play_story = function (self, story_name, start_time, play_backwar
 	local level = self._level
 	local storyteller = self._storyteller
 	local story_id = storyteller:play_level_story(level, story_name)
+	local length = storyteller:length(story_id)
 	self._active_story_id = story_id
 
 	if start_time then
-		storyteller:set_time(story_id, start_time)
+		storyteller:set_time(story_id, math.clamp(start_time, 0, length))
 	end
 
 	if play_backwards then
-		local length = storyteller:length(story_id)
-
 		if not start_time then
-			storyteller:set_time(story_id, length)
+			local time = storyteller:time(story_id)
+
+			storyteller:set_time(story_id, math.clamp(time, 0, length))
 		end
 
 		storyteller:set_speed(story_id, -1)

@@ -6,18 +6,41 @@ local WwiseStateGroupCircumstance = class("WwiseStateGroupCircumstance", "WwiseS
 
 WwiseStateGroupCircumstance.update = function (self, dt, t)
 	WwiseStateGroupCircumstance.super.update(self, dt, t)
+end
 
-	local wwise_state = WwiseGameSyncSettings.default_group_state
+WwiseStateGroupCircumstance.on_gameplay_post_init = function (self, level)
 	local circumstance_manager = Managers.state.circumstance
+	local circumstance_name = circumstance_manager:circumstance_name()
 
-	if circumstance_manager then
-		local circumstance_name = circumstance_manager:circumstance_name()
+	if circumstance_name then
 		local circumstance_template = CircumstanceTemplates[circumstance_name]
 		local circumstance_wwise_state = circumstance_template.wwise_state
-		wwise_state = circumstance_wwise_state or wwise_state
-	end
+		local wwise_state = circumstance_wwise_state or WwiseGameSyncSettings.default_group_state
 
-	self:_set_wwise_state(wwise_state)
+		self:_set_wwise_state(wwise_state)
+
+		local wwise_event_init = circumstance_template.wwise_event_init
+
+		if wwise_event_init then
+			WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_init)
+		end
+	end
+end
+
+WwiseStateGroupCircumstance.on_gameplay_shutdown = function (self)
+	local circumstance_manager = Managers.state.circumstance
+	local circumstance_name = circumstance_manager:circumstance_name()
+
+	if circumstance_name then
+		local circumstance_template = CircumstanceTemplates[circumstance_name]
+		local wwise_event_stop = circumstance_template.wwise_event_stop
+
+		if wwise_event_stop then
+			WwiseWorld.trigger_resource_event(self._wwise_world, wwise_event_stop)
+		end
+
+		self:_set_wwise_state(WwiseGameSyncSettings.default_group_state)
+	end
 end
 
 return WwiseStateGroupCircumstance

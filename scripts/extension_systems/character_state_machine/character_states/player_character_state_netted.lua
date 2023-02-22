@@ -116,6 +116,7 @@ PlayerCharacterStateNetted.on_enter = function (self, unit, dt, t, previous_stat
 end
 
 PlayerCharacterStateNetted.on_exit = function (self, unit, t, next_state)
+	local is_server = self._is_server
 	local disabled_character_state_component = self._disabled_character_state_component
 	local fx_extension = self._fx_extension
 	local has_reached_drag_position = disabled_character_state_component.has_reached_drag_position
@@ -131,7 +132,7 @@ PlayerCharacterStateNetted.on_exit = function (self, unit, t, next_state)
 		ForceRotation.stop(locomotion_force_rotation_component)
 	end
 
-	if self._is_server then
+	if is_server then
 		Netted.try_exit(unit, self._inventory_component, self._visual_loadout_extension, self._unit_data_extension, t)
 		self:_remove_buffs()
 
@@ -152,18 +153,18 @@ PlayerCharacterStateNetted.on_exit = function (self, unit, t, next_state)
 
 	local inventory_component = self._inventory_component
 
-	if inventory_component.wielded_slot == "slot_unarmed" then
+	if next_state ~= "dead" and inventory_component.wielded_slot == "slot_unarmed" then
 		PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
 	end
 
 	local locomotion_steering_component = self._locomotion_steering_component
 	locomotion_steering_component.disable_minion_collision = false
-	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
+	local rewind_ms = LagCompensation.rewind_ms(is_server, self._is_local_unit, self._player)
 
 	FirstPersonView.enter(t, self._first_person_mode_component, rewind_ms)
 	self._assist:stop()
 
-	if self._is_server and next_state == "walking" then
+	if is_server and next_state == "walking" then
 		fx_extension:trigger_exclusive_gear_wwise_event(STINGER_EXIT_ALIAS, STINGER_PROPERTIES)
 	end
 
@@ -175,10 +176,10 @@ end
 PlayerCharacterStateNetted.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
 	self:_update_netted(unit, dt, t)
 
-	local assist_done = self._assist:update(dt, t)
-	local is_server = self._is_server
+	local assist = self._assist
+	local assist_done = assist:update(dt, t)
 
-	if is_server and not assist_done then
+	if self._is_server and not assist_done then
 		self:_update_vo(t)
 	end
 

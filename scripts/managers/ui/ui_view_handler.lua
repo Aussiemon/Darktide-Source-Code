@@ -330,6 +330,12 @@ UIViewHandler.view_active = function (self, view_name)
 	return active_views_data[view_name] ~= nil
 end
 
+UIViewHandler.view_active_data = function (self, view_name)
+	local active_views_data = self._active_views_data
+
+	return active_views_data[view_name]
+end
+
 UIViewHandler.is_view_closing = function (self, view_name)
 	local view_data = self._active_views_data[view_name]
 
@@ -449,7 +455,7 @@ UIViewHandler._update_views = function (self, dt, t, allow_input)
 			local view_using_input = false
 			local view_instance = view_data.instance
 
-			if view_instance and not view_instance:loading() then
+			if view_instance and view_instance:is_view_requirements_complete() then
 				if render_scale then
 					view_instance:set_render_scale(render_scale)
 				end
@@ -525,7 +531,7 @@ UIViewHandler._post_update_views = function (self, dt, t)
 		if view_data then
 			local view_instance = view_data.instance
 
-			if view_instance and not view_instance:loading() then
+			if view_instance and view_instance:is_view_requirements_complete() then
 				view_instance:post_update(dt, t)
 			end
 		end
@@ -573,7 +579,7 @@ UIViewHandler._draw_views = function (self, dt, t, allow_input, transitioning_in
 			local draw_layer = 1
 
 			if draw_view then
-				draw_view = not view_instance:loading()
+				draw_view = view_instance:is_view_requirements_complete()
 				draw_layer = math.max(1, layers_per_view * i - layers_per_view)
 				local input = allow_input and input_service or null_service
 

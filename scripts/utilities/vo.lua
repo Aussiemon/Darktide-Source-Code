@@ -759,13 +759,14 @@ Vo.enemy_vo_event = function (unit, event_name)
 	end
 end
 
-Vo.enemy_generic_vo_event = function (unit, trigger_id, breed_name_or_nil)
+Vo.enemy_generic_vo_event = function (unit, trigger_id, breed_name_or_nil, target_distance)
 	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
 
 	if dialogue_extension then
 		local event_name = "generic_enemy_vo_event"
 		local event_data = dialogue_extension:get_event_data_payload()
 		event_data.trigger_id = trigger_id
+		event_data.target_distance = target_distance
 
 		if breed_name_or_nil then
 			event_data.enemy_tag = breed_name_or_nil
@@ -926,7 +927,12 @@ Vo.play_npc_interacting_vo_event = function (unit, interactor_unit, vo_event, co
 		end
 
 		if play_in == "interactor_only" then
-			dialogue_ext_npc:trigger_targeted_dialogue_event(event_name, event_data, interactor_unit)
+			event_data.npc_profile_name = dialogue_ext_npc:get_voice_profile()
+			local playable = dialogue_ext_interactor:manage_targeted_cooldowns(event_data)
+
+			if playable == true then
+				dialogue_ext_npc:trigger_targeted_dialogue_event(event_name, event_data, interactor_unit)
+			end
 		else
 			dialogue_ext_npc:trigger_dialogue_event(event_name, event_data)
 		end
@@ -1154,10 +1160,10 @@ Vo.set_dynamic_smart_tag = function (unit, tag)
 end
 
 Vo.mission_giver_check_event = function ()
-	local voice_over_spawn_manager = Managers.state.voice_over_spawn
 	local is_server = Managers.state.game_session:is_server()
 
 	if is_server then
+		local voice_over_spawn_manager = Managers.state.voice_over_spawn
 		local voice_profile = voice_over_spawn_manager:current_voice_profile()
 		local level = Managers.state.mission:mission_level()
 
@@ -1170,6 +1176,16 @@ Vo.stop_currently_playing_vo = function (unit)
 
 	if dialogue_extension then
 		dialogue_extension:stop_currently_playing_vo()
+	end
+end
+
+Vo.is_currently_playing_dialogue = function (unit)
+	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
+
+	if dialogue_extension then
+		local is_playing = dialogue_extension:is_currently_playing_dialogue()
+
+		return is_playing
 	end
 end
 

@@ -7,6 +7,7 @@ local function _create_breed_action_entry(path)
 end
 
 _create_breed_action_entry("scripts/settings/breed/breed_actions/bot_actions")
+_create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_beast_of_nurgle_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_daemonhost_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_hound_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_newly_infected_actions")
@@ -16,7 +17,7 @@ _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_ogr
 _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_plague_ogryn_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_poxwalker_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_poxwalker_bomber_actions")
-_create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_beast_of_nurgle_actions")
+_create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_spawn_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_assault_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_flamer_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_grenadier_actions")

@@ -1,3 +1,4 @@
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local constant_element_notification_feed_settings = {
 	default_alpha_value = 0.75,
 	entry_spacing = 10,
@@ -24,6 +25,12 @@ local constant_element_notification_feed_settings = {
 			"event_clear_notifications",
 			"event_clear_notifications"
 		}
+	},
+	trait_sound_events_by_rarity = {
+		UISoundEvents.notification_trait_received_rarity_1,
+		UISoundEvents.notification_trait_received_rarity_2,
+		UISoundEvents.notification_trait_received_rarity_3,
+		UISoundEvents.notification_trait_received_rarity_4
 	}
 }
 

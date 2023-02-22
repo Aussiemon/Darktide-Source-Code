@@ -1,21 +1,48 @@
+local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
+local MasterItems = require("scripts/backend/master_items")
+local Promise = require("scripts/foundation/utilities/promise")
+local TRAIT_STICKER_BOOK_ENUM = CraftingSettings.trait_sticker_book_enum
 local Crafting = class("Crafting")
 
-local function _send_crafting_operation(op)
+local function _send_crafting_operation(request_body)
 	return BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("/crafting"), {
 		method = "POST",
-		body = op
+		body = request_body
 	}):next(function (data)
 		data.body._links = nil
+		local body = data.body
+		local items = body.items
+
+		for i, item in pairs(items) do
+			items[i] = MasterItems.get_item_instance(item, item.uuid)
+		end
+
+		local traits = body.traits
+
+		for i, trait in pairs(traits) do
+			traits[i] = MasterItems.get_item_instance(trait, trait.uuid)
+		end
 
 		return data.body
 	end)
 end
 
-Crafting.get_crafting_costs = function (self)
+Crafting.refresh_crafting_costs = function (self)
 	return Managers.backend:title_request(BackendUtilities.url_builder("/data/account/crafting/costs"):to_string()):next(function (data)
-		return data.body.costs
+		local weapon_crafting_costs = data.body.costs.weapon
+		local gadget_crafting_costs = data.body.costs.gadget
+		self._crafting_costs = {
+			weapon = weapon_crafting_costs,
+			gadget = gadget_crafting_costs
+		}
+
+		return self._crafting_costs
 	end)
+end
+
+Crafting.crafting_costs = function (self)
+	return self._crafting_costs
 end
 
 Crafting.trait_sticker_book = function (self, trait_category_id)
@@ -28,9 +55,17 @@ Crafting.trait_sticker_book = function (self, trait_category_id)
 			local status = {}
 
 			for i = 1, num_ranks do
-				if bit.band(bit.rshift(trait_bitmask, i + 4), 1) == 1 then
-					status[i] = bit.band(bit.rshift(trait_bitmask, i - 1), 1) == 1
+				local value = nil
+
+				if bit.band(bit.rshift(trait_bitmask, i + 3), 1) == 0 then
+					value = TRAIT_STICKER_BOOK_ENUM.invalid
+				elseif bit.band(bit.rshift(trait_bitmask, i - 1), 1) == 1 then
+					value = TRAIT_STICKER_BOOK_ENUM.seen
+				else
+					value = TRAIT_STICKER_BOOK_ENUM.unseen
 				end
+
+				status[i] = value
 			end
 
 			sticker_book[trait_name] = status
@@ -72,13 +107,14 @@ Crafting.extract_perk_from_weapon = function (self, gear_id, trait_index)
 	})
 end
 
-Crafting.replace_trait_in_weapon = function (self, gear_id, existing_trait_index, new_trait_id)
+Crafting.replace_trait_in_weapon = function (self, gear_id, existing_trait_index, new_trait_id, new_trait_tier)
 	return _send_crafting_operation({
 		traitType = "traits",
 		op = "replaceTrait",
 		gearId = gear_id,
 		traitIndex = existing_trait_index - 1,
-		traitId = new_trait_id
+		traitId = new_trait_id,
+		traitTier = new_trait_tier
 	})
 end
 

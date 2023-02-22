@@ -42,7 +42,7 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = {
 			text_max_width,
-			50
+			0
 		},
 		position = {
 			0,
@@ -56,6 +56,34 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = {
 			text_max_width,
+			0
+		},
+		position = {
+			0,
+			0,
+			2
+		}
+	},
+	offer_text = {
+		vertical_alignment = "top",
+		parent = "center_pivot",
+		horizontal_alignment = "center",
+		size = {
+			text_max_width,
+			0
+		},
+		position = {
+			0,
+			0,
+			2
+		}
+	},
+	offer_price_text = {
+		vertical_alignment = "bottom",
+		parent = "offer_text",
+		horizontal_alignment = "center",
+		size = {
+			0,
 			50
 		},
 		position = {
@@ -85,6 +113,36 @@ title_text_style.text_vertical_alignment = "top"
 local description_text_style = table.clone(UIFontSettings.body)
 description_text_style.text_horizontal_alignment = "center"
 description_text_style.text_vertical_alignment = "top"
+local wallet_text_font_style = table.clone(UIFontSettings.currency_title)
+wallet_text_font_style.text_horizontal_alignment = "left"
+wallet_text_font_style.text_vertical_alignment = "center"
+wallet_text_font_style.original_offset = {
+	42,
+	0,
+	1
+}
+local offer_title_style = table.clone(UIFontSettings.header_1)
+offer_title_style.text_horizontal_alignment = "center"
+offer_title_style.horizontal_alignment = "center"
+offer_title_style.text_vertical_alignment = "top"
+offer_title_style.vertical_alignment = "top"
+offer_title_style.font_size = 40
+offer_title_style.offset = {
+	0,
+	0,
+	1
+}
+local offer_sub_title_style = table.clone(UIFontSettings.terminal_header_3)
+offer_sub_title_style.text_horizontal_alignment = "center"
+offer_sub_title_style.horizontal_alignment = "center"
+offer_sub_title_style.text_vertical_alignment = "top"
+offer_sub_title_style.vertical_alignment = "top"
+offer_sub_title_style.offset = {
+	0,
+	10,
+	1
+}
+offer_sub_title_style.font_size = 20
 local popup_type_style = {
 	warning = {
 		icon = "content/ui/materials/symbols/warning",
@@ -341,11 +399,61 @@ local widget_definitions = {
 			value_id = "text",
 			style_id = "text",
 			pass_type = "text",
-			value = "Press the new button for this action.",
+			value = "",
 			style = description_text_style
 		}
 	}, "description_text")
 }
+local wallet_definitions = UIWidget.create_definition({
+	{
+		style_id = "texture",
+		pass_type = "texture",
+		value_id = "texture",
+		style = {
+			vertical_alignment = "center",
+			size = {
+				42,
+				42
+			},
+			offset = {
+				0,
+				0,
+				1
+			},
+			original_offset = {
+				0,
+				0,
+				1
+			}
+		},
+		visibility_function = function (content, style)
+			return content.texture
+		end
+	},
+	{
+		value_id = "text",
+		style_id = "text",
+		pass_type = "text",
+		value = "0",
+		style = wallet_text_font_style
+	}
+}, "offer_price_text")
+local offer_definitions = UIWidget.create_definition({
+	{
+		value_id = "text",
+		pass_type = "text",
+		style_id = "text",
+		value = "",
+		style = offer_title_style
+	},
+	{
+		value_id = "sub_text",
+		pass_type = "text",
+		style_id = "sub_text",
+		value = "",
+		style = offer_sub_title_style
+	}
+}, "offer_text")
 local anim_start_delay = 0
 local animations = {
 	on_enter = {
@@ -359,6 +467,14 @@ local animations = {
 				widgets.title_text.alpha_multiplier = alpha_multiplier
 				widgets.description_text.alpha_multiplier = alpha_multiplier
 				widgets.top_icon.alpha_multiplier = alpha_multiplier
+
+				if params.additional_widgets then
+					for i = 1, #params.additional_widgets do
+						local widget = params.additional_widgets[i]
+						widget.alpha_multiplier = alpha_multiplier
+					end
+				end
+
 				widgets.edge_top.style.texture.size[1] = widgets.popup_background.style.terminal.size[1]
 				widgets.edge_bottom.style.texture.size[1] = widgets.popup_background.style.terminal.size[1]
 				local popup_type = "default"
@@ -426,6 +542,13 @@ local animations = {
 				for i = 1, #content_widgets do
 					content_widgets[i].alpha_multiplier = anim_progress
 				end
+
+				if params.additional_widgets then
+					for i = 1, #params.additional_widgets do
+						local widget = params.additional_widgets[i]
+						widget.alpha_multiplier = anim_progress
+					end
+				end
 			end
 		}
 	},
@@ -443,6 +566,13 @@ local animations = {
 
 				for i = 1, #content_widgets do
 					content_widgets[i].alpha_multiplier = anim_progress
+				end
+
+				if params.additional_widgets then
+					for i = 1, #params.additional_widgets do
+						local widget = params.additional_widgets[i]
+						widget.alpha_multiplier = anim_progress
+					end
 				end
 			end
 		},
@@ -478,5 +608,7 @@ return {
 	animations = animations,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	popup_type_style = popup_type_style
+	popup_type_style = popup_type_style,
+	wallet_definitions = wallet_definitions,
+	offer_definitions = offer_definitions
 }

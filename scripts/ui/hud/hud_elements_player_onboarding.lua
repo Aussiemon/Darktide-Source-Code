@@ -19,12 +19,6 @@ local elements = {
 			"alive",
 			"communication_wheel",
 			"tactical_overlay"
-		},
-		customizable_scenegraph_id = {
-			"local_player",
-			"player_1",
-			"player_2",
-			"player_3"
 		}
 	},
 	{
@@ -48,10 +42,6 @@ local elements = {
 			"alive",
 			"communication_wheel",
 			"tactical_overlay"
-		},
-		customizable_scenegraph_id = {
-			"slot_combat_ability",
-			"slot_support_ability"
 		}
 	},
 	{
@@ -64,10 +54,6 @@ local elements = {
 			"alive",
 			"communication_wheel",
 			"tactical_overlay"
-		},
-		customizable_scenegraph_id = {
-			"weapon_slot_1",
-			"weapon_slot_2"
 		}
 	},
 	{
@@ -82,7 +68,6 @@ local elements = {
 	},
 	{
 		package = "packages/ui/hud/blocking/blocking",
-		customizable_scenegraph_id = "area",
 		use_hud_scale = true,
 		class_name = "HudElementBlocking",
 		filename = "scripts/ui/hud/elements/blocking/hud_element_blocking",
@@ -99,10 +84,6 @@ local elements = {
 		filename = "scripts/ui/hud/elements/overcharge/hud_element_overcharge",
 		visibility_groups = {
 			"alive"
-		},
-		customizable_scenegraph_id = {
-			"overcharge",
-			"overheat"
 		}
 	},
 	{
@@ -126,7 +107,6 @@ local elements = {
 	},
 	{
 		package = "packages/ui/hud/mission_objective_feed/mission_objective_feed",
-		customizable_scenegraph_id = "area",
 		use_hud_scale = true,
 		class_name = "HudElementMissionObjectiveFeed",
 		filename = "scripts/ui/hud/elements/mission_objective_feed/hud_element_mission_objective_feed",
@@ -139,7 +119,6 @@ local elements = {
 	},
 	{
 		package = "packages/ui/hud/mission_objective_popup/mission_objective_popup",
-		customizable_scenegraph_id = "mission_popup",
 		use_hud_scale = true,
 		class_name = "HudElementMissionObjectivePopup",
 		filename = "scripts/ui/hud/elements/mission_objective_popup/hud_element_mission_objective_popup",
@@ -184,7 +163,6 @@ local elements = {
 	},
 	{
 		package = "packages/ui/hud/area_notification_popup/area_notification_popup",
-		customizable_scenegraph_id = "area_popup",
 		use_hud_scale = true,
 		class_name = "HudElementAreaNotificationPopup",
 		filename = "scripts/ui/hud/elements/area_notification_popup/hud_element_area_notification_popup",
@@ -197,7 +175,6 @@ local elements = {
 	},
 	{
 		package = "packages/ui/hud/mission_speaker_popup/mission_speaker_popup",
-		customizable_scenegraph_id = "background",
 		use_hud_scale = true,
 		class_name = "HudElementMissionSpeakerPopup",
 		filename = "scripts/ui/hud/elements/mission_speaker_popup/hud_element_mission_speaker_popup",
@@ -212,7 +189,6 @@ local elements = {
 	{
 		package = "packages/ui/hud/player_buffs/player_buffs",
 		use_retained_mode = true,
-		customizable_scenegraph_id = "background",
 		use_hud_scale = true,
 		class_name = "HudElementPlayerBuffs",
 		filename = "scripts/ui/hud/elements/player_buffs/hud_element_player_buffs",

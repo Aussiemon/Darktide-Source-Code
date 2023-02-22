@@ -570,6 +570,7 @@ local unit_templates = {
 			game_object_data.side_id = side_id
 			game_object_data.breed_id = breed_id
 			game_object_data.random_seed = random_seed
+			game_object_data.warp_grabbed_execution_time = NetworkConstants.max_fixed_frame_time
 			local player_unit_spawn_manager = Managers.state.player_unit_spawn
 
 			player_unit_spawn_manager:assign_unit_ownership(unit, player, true)

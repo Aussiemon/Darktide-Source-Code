@@ -1,5 +1,14 @@
 local BarPassTemplates = require("scripts/ui/pass_templates/bar_pass_templates")
+local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local ColorUtilities = require("scripts/utilities/ui/colors")
+local InputDevice = require("scripts/managers/input/input_device")
+local InventoryBackgroundViewSettings = require("scripts/ui/views/inventory_background_view/inventory_background_view_settings")
+local ItemUtils = require("scripts/utilities/items")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UISettings = require("scripts/settings/ui/ui_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local character_experience_bar_size = {
 	188,
@@ -71,6 +80,20 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
+			62
+		}
+	},
+	profile_presets_pivot = {
+		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "right",
+		size = {
+			0,
+			0
+		},
+		position = {
+			-60,
+			94,
 			62
 		}
 	},
@@ -285,6 +308,33 @@ local legend_inputs = {
 		on_pressed_callback = "cb_on_weapon_swap_pressed",
 		visibility_function = function (parent)
 			return parent._active_view ~= "talents_view"
+		end
+	},
+	{
+		input_action = "hotkey_item_profile_preset_input_2",
+		display_name = "loc_inventory_menu_profile_preset_cycle",
+		alignment = "right_alignment",
+		on_pressed_callback = "cb_on_profile_preset_cycle",
+		visibility_function = function (parent)
+			return InputDevice.gamepad_active and parent:can_cycle_profile_preset()
+		end
+	},
+	{
+		input_action = "hotkey_item_profile_preset_input_1",
+		display_name = "loc_inventory_menu_profile_preset_add",
+		alignment = "right_alignment",
+		on_pressed_callback = "cb_on_profile_preset_add",
+		visibility_function = function (parent)
+			return InputDevice.gamepad_active and parent:can_add_profile_preset()
+		end
+	},
+	{
+		input_action = "hotkey_item_profile_preset_input_1_hold",
+		display_name = "loc_inventory_menu_profile_preset_customize",
+		alignment = "right_alignment",
+		on_pressed_callback = "cb_on_profile_preset_customize",
+		visibility_function = function (parent)
+			return InputDevice.gamepad_active and parent:can_customize_profile_preset()
 		end
 	}
 }

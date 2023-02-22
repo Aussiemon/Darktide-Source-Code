@@ -1,6 +1,7 @@
 local GameplayInitTimeSlice = require("scripts/game_states/game/utilities/gameplay_init_time_slice")
-local PlayerManagerTestify = GameParameters.testify and require("scripts/foundation/managers/player/player_manager_testify")
+local Missions = require("scripts/settings/mission/mission_templates")
 local PlayerManagerFixedTestify = GameParameters.testify and require("scripts/foundation/managers/player/player_manager_fixed_testify")
+local PlayerManagerTestify = GameParameters.testify and require("scripts/foundation/managers/player/player_manager_testify")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local PlayerManager = class("PlayerManager")
 PlayerManager.NO_ACCOUNT_ID = "no_account_id"
@@ -520,6 +521,27 @@ PlayerManager.local_player_backend_profile = function (self)
 	end
 end
 
+PlayerManager.set_last_mission = function (self, mission_name)
+	self._last_mission_name = mission_name
+	local mission_settings = Missions[mission_name]
+
+	if rawget(mission_settings, "spawn_settings") then
+		local spawn_settings = mission_settings.spawn_settings
+
+		for _, player in pairs(self._human_players) do
+			player:set_wanted_spawn_point(spawn_settings.next_mission)
+		end
+	end
+end
+
+PlayerManager._last_mission_id = function (self)
+	if self._last_mission_name then
+		return NetworkLookup.missions[self._last_mission_name]
+	end
+
+	return nil
+end
+
 PlayerManager.create_sync_data = function (self, peer_id, include_profile_chunks)
 	local players = self._players_by_peer[peer_id]
 
@@ -535,7 +557,9 @@ PlayerManager.create_sync_data = function (self, peer_id, include_profile_chunks
 		player_session_id_array = {},
 		character_id_array = {},
 		profile_chunks_array = profile_chunks_array,
-		slot_array = {}
+		slot_array = {},
+		has_last_mission = not not self._last_mission_name,
+		last_mission_id = self:_last_mission_id()
 	}
 	local i = 1
 
@@ -566,7 +590,7 @@ PlayerManager.create_sync_data = function (self, peer_id, include_profile_chunks
 	return sync_data
 end
 
-PlayerManager.create_players_from_sync_data = function (self, player_class, channel_id, peer_id, is_server, local_player_id_array, is_human_controlled_array, account_id_array, profile_chunks_array, player_session_id_array, slot_array)
+PlayerManager.create_players_from_sync_data = function (self, player_class, channel_id, peer_id, is_server, local_player_id_array, is_human_controlled_array, account_id_array, profile_chunks_array, player_session_id_array, slot_array, last_mission_id)
 	for i = 1, #local_player_id_array do
 		local local_player_id = local_player_id_array[i]
 		local is_human_controlled = is_human_controlled_array[i]
@@ -578,7 +602,7 @@ PlayerManager.create_players_from_sync_data = function (self, player_class, chan
 		local slot = slot_array[i]
 
 		if is_human_controlled then
-			self:add_human_player(player_class, channel_id, peer_id, local_player_id, profile, slot, account_id, is_human_controlled, is_server, player_session_id)
+			self:add_human_player(player_class, channel_id, peer_id, local_player_id, profile, slot, account_id, is_human_controlled, is_server, player_session_id, last_mission_id)
 		else
 			self:add_bot_player(player_class, channel_id, peer_id, local_player_id, profile, slot, is_human_controlled, is_server)
 		end

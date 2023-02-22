@@ -454,7 +454,7 @@ weapon_template.actions = {
 		}
 	},
 	action_toggle_flashlight = {
-		kind = "toogle_special",
+		kind = "toggle_special",
 		start_input = "weapon_special",
 		activation_time = 0,
 		total_time = 0.2,
@@ -477,7 +477,7 @@ weapon_template.actions = {
 		}
 	},
 	action_toggle_flashlight_zoom = {
-		kind = "toogle_special",
+		kind = "toggle_special",
 		crosshair_type = "none",
 		start_input = "zoom_weapon_special",
 		activation_time = 0,

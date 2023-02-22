@@ -30,7 +30,7 @@ local reload_template = {
 		}
 	},
 	cock_weapon = {
-		anim_1p = "reload_end",
+		anim_1p = "reload_end_long",
 		time = 1.32,
 		state_transitions = {
 			eject_mag = 0.75

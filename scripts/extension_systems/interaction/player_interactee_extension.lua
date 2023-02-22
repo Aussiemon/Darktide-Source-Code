@@ -200,6 +200,28 @@ PlayerInteracteeExtension.interaction_icon = function (self)
 	return override_config and override_config.interaction_icon or interaction:interaction_icon()
 end
 
+PlayerInteracteeExtension.interaction_network_sync = function (self)
+	local unit_has_context = self._unit_has_context
+
+	if not unit_has_context then
+		return true
+	end
+
+	local interaction_type = self:interaction_type()
+
+	if interaction_type == "none" then
+		return true
+	end
+
+	local override_context = self._override_contexts_by_type[interaction_type]
+
+	if not override_context or override_context.network_sync == nil then
+		return true
+	end
+
+	return override_context.network_sync
+end
+
 PlayerInteracteeExtension.interaction_length = function (self)
 	local unit_has_context = self._unit_has_context
 

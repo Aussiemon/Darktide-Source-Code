@@ -80,7 +80,7 @@ PlayerCharacterStateSprinting.on_enter = function (self, unit, dt, t, previous_s
 
 		if current_stamina > 0 then
 			local buff_extension = ScriptUnit.extension(unit, "buff_system")
-			local _, local_index = buff_extension:add_externally_controlled_buff("sprint_with_stamina_buff")
+			local _, local_index = buff_extension:add_externally_controlled_buff("sprint_with_stamina_buff", t)
 			self._stamina_buff_id = local_index
 		end
 	end

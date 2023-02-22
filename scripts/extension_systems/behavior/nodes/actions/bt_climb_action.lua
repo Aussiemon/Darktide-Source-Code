@@ -218,8 +218,9 @@ BtClimbAction.run = function (self, unit, breed, blackboard, scratchpad, action_
 		return "failed"
 	end
 
+	local locomotion_extension = scratchpad.locomotion_extension
+
 	if scratchpad.blend_timing and scratchpad.blend_timing <= t then
-		local locomotion_extension = scratchpad.locomotion_extension
 		local anim_driven = true
 		local affected_by_gravity = false
 		local script_driven_rotation = true
@@ -230,7 +231,6 @@ BtClimbAction.run = function (self, unit, breed, blackboard, scratchpad, action_
 	end
 
 	local wanted_rotation = scratchpad.wanted_rotation:unbox()
-	local locomotion_extension = scratchpad.locomotion_extension
 
 	locomotion_extension:set_wanted_rotation(wanted_rotation)
 
@@ -312,10 +312,7 @@ BtClimbAction._update_falling = function (self, unit, scratchpad, action_data, d
 
 	if unit_position.z + land_check_height <= exit_position.z then
 		locomotion_extension:set_anim_translation_scale(Vector3(1, 1, 1))
-
-		local teleport_position = Vector3(exit_position.x, exit_position.y, exit_position.z)
-
-		Unit.set_local_position(unit, 1, teleport_position)
+		Unit.set_local_position(unit, 1, exit_position)
 		locomotion_extension:set_movement_type("snap_to_navmesh")
 
 		local animation_extension = scratchpad.animation_extension

@@ -5,7 +5,7 @@ local class_selection_view_settings = {
 	viewport_type = "default",
 	world_layer = 3,
 	shading_environment = "content/shading_environments/ui/class_selection",
-	domain_option_spacing = 20,
+	domain_option_spacing = 25,
 	class_option_expanded_size_fraction = 0.25,
 	viewport_name = "ui_class_selection_viewport",
 	viewport_layer = 1,
@@ -33,8 +33,8 @@ local class_selection_view_settings = {
 		560
 	},
 	domain_option_icon_size = {
-		110,
-		110
+		128,
+		263
 	}
 }
 

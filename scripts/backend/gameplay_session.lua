@@ -62,6 +62,12 @@ GameplaySession.fetch = function (self, session_id)
 	end)
 end
 
+GameplaySession.remaining_solo_rewards = function (self, account_id)
+	return Managers.backend:title_request(BackendUtilities.url_builder("/data/"):path(account_id):path("/account/untrusted/state"):to_string()):next(function (data)
+		return data.body
+	end)
+end
+
 GameplaySession.fetch_server_details = function (self, session_id)
 	return Managers.backend:title_request("/gameplay/sessions/" .. session_id .. "/serverdetails"):next(function (data)
 		return data.body

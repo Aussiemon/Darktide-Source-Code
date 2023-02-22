@@ -5,6 +5,9 @@ local ImguiWidgetUtilities = {
 		Imgui.nav_move_request_cancel()
 		Imgui.focus_item(id)
 	end,
+	set_keyboard_focus = function ()
+		Imgui.set_keyboard_focus_here()
+	end,
 	activate_widget = function (label)
 		local id = Imgui.get_id(label)
 

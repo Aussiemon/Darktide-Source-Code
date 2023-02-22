@@ -1,6 +1,8 @@
 local MaterialQuery = require("scripts/utilities/material_query")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local _trigger_1p_footstep_and_foley = nil
+local FIRST_PERSON_MODE_PARAMETER = 1
+local THIRD_PERSON_MODE_PARAMETER = 0
+local _trigger_footstep_and_foley = nil
 local Footstep = {
 	trigger_material_footstep = function (sound_alias, wwise_world, physics_world, source_id, unit, node, query_from, query_to, optional_set_speed_parameter, optional_set_first_person_parameter)
 		local hit, material, _, _, _, _ = MaterialQuery.query_material(physics_world, query_from, query_to, sound_alias)
@@ -62,8 +64,8 @@ local WEAPON_FOLEY = "sfx_weapon_locomotion"
 local EXTRA_FOLEY = "sfx_player_extra_slot"
 local SPEED_EPSILON = 0.010000000000000002
 
-Footstep.update_1p_footsteps = function (t, footstep_time, previous_frame_character_state_name, is_camera_follow_target, context, ...)
-	if not is_camera_follow_target then
+Footstep.update_1p_footsteps = function (t, footstep_time, previous_frame_character_state_name, is_in_first_person_mode, context, ...)
+	if not is_in_first_person_mode then
 		return footstep_time
 	end
 
@@ -113,12 +115,24 @@ Footstep.update_1p_footsteps = function (t, footstep_time, previous_frame_charac
 	local footstep_intervals = breed_footstep_intervals and breed_footstep_intervals[context.breed.name] or weapon_template.footstep_intervals
 
 	if footstep_intervals then
-		_trigger_1p_footstep_and_foley(context, footstep_sound_alias, foley_sound_alias, WEAPON_FOLEY, EXTRA_FOLEY)
+		_trigger_footstep_and_foley(context, footstep_sound_alias, FIRST_PERSON_MODE_PARAMETER, foley_sound_alias, WEAPON_FOLEY, EXTRA_FOLEY)
 
 		local is_crouching = context.movement_state_component.is_crouching
+		local alternate_fire_active = context.alternate_fire_component.is_active
 		local sprint_character_state_component = context.sprint_character_state_component
-		local is_spritning_overtime = sprint_character_state_component.is_sprinting and sprint_character_state_component.sprint_overtime > 0
-		local interval = is_crouching and footstep_intervals.crouch_walking or is_spritning_overtime and footstep_intervals.sprinting_overtime or footstep_intervals[character_state_name]
+		local interval = nil
+
+		if character_state_name == "sprinting" then
+			interval = sprint_character_state_component.sprint_overtime > 0 and footstep_intervals.sprinting_overtime or footstep_intervals.sprinting
+		elseif character_state_name == "walking" then
+			if is_crouching then
+				interval = alternate_fire_active and footstep_intervals.crouch_walking_alternate_fire or footstep_intervals.crouch_walking
+			else
+				interval = alternate_fire_active and footstep_intervals.walking_alternate_fire or footstep_intervals.walking
+			end
+		end
+
+		interval = interval or footstep_intervals[character_state_name]
 
 		if interval then
 			return t + interval
@@ -130,7 +144,22 @@ Footstep.update_1p_footsteps = function (t, footstep_time, previous_frame_charac
 	return footstep_time
 end
 
-function _trigger_1p_footstep_and_foley(context, footstep_sound_alias, ...)
+Footstep.update_3p_footsteps = function (previous_frame_character_state_name, is_in_first_person_mode, context, ...)
+	if is_in_first_person_mode then
+		return
+	end
+
+	local character_state_name = context.character_state_component.state_name
+
+	if previous_frame_character_state_name ~= "dodging" and character_state_name == "dodging" then
+		local footstep_sound_alias = "sfx_footstep_dodge"
+		local foley_sound_alias = "sfx_foley_upper_body"
+
+		_trigger_footstep_and_foley(context, footstep_sound_alias, THIRD_PERSON_MODE_PARAMETER, foley_sound_alias, WEAPON_FOLEY, EXTRA_FOLEY)
+	end
+end
+
+function _trigger_footstep_and_foley(context, footstep_sound_alias, first_person_mode_parameter, ...)
 	local wwise_world = context.wwise_world
 	local unit = context.unit
 	local query_from = POSITION_LOOKUP[unit] + Vector3(0, 0, 0.5)
@@ -148,7 +177,7 @@ function _trigger_1p_footstep_and_foley(context, footstep_sound_alias, ...)
 			local move_speed = context.locomotion_extension:move_speed()
 
 			WwiseWorld.set_source_parameter(wwise_world, foley_source_id, "foley_speed", move_speed)
-			WwiseWorld.set_source_parameter(wwise_world, foley_source_id, "first_person_mode", 1)
+			WwiseWorld.set_source_parameter(wwise_world, foley_source_id, "first_person_mode", first_person_mode_parameter)
 			context.fx_extension:trigger_gear_wwise_event(sound_alias, nil, foley_source_id)
 		end
 	end

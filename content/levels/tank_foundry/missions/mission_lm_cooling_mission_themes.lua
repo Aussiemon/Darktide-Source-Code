@@ -8,6 +8,9 @@ local mission_themes = {
 	assault = {
 		"content/levels/tank_foundry/missions/lm_cooling_themes/assault_01/theme_assault_01_lm_cooling"
 	},
+	ventilation_purge = {
+		"content/levels/tank_foundry/missions/lm_cooling_themes/ventilation_purge_01/theme_ventilation_purge_01_lm_cooling"
+	},
 	default = {
 		"content/levels/tank_foundry/missions/lm_cooling_themes/default/theme_default_lm_cooling"
 	}

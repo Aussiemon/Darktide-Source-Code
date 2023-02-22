@@ -31,15 +31,15 @@ local conversations_hub_barber_a = {
 			4.066104,
 			3.212167,
 			3.875583,
-			3.420125,
-			3.615896,
-			5.155792,
+			3.420104,
+			3.615875,
+			5.155771,
 			5.267521,
 			3.029229,
 			2.466563,
-			4.688896,
+			4.688875,
 			4.584729,
-			4.256958,
+			4.256938,
 			3.408313,
 			2.901542,
 			3.875896,
@@ -77,14 +77,14 @@ local conversations_hub_barber_a = {
 			1.501771,
 			1.218792,
 			1.163458,
-			3.473938,
+			3.473917,
 			2.367479,
-			2.3085,
+			2.308479,
 			0.813958,
 			1.371917,
 			2.63625,
-			4.429083,
-			5.336875,
+			4.429063,
+			5.336854,
 			1.240833,
 			2.624771,
 			1.784688,
@@ -132,7 +132,7 @@ local conversations_hub_barber_a = {
 			1.139771,
 			3.015188,
 			2.298125,
-			2.827417,
+			2.827396,
 			1.702438,
 			3.2105,
 			1.276229,
@@ -140,8 +140,8 @@ local conversations_hub_barber_a = {
 			2.829667,
 			2.359583,
 			4.370125,
-			2.640542,
-			2.461667,
+			2.640521,
+			2.461646,
 			4.805583
 		},
 		randomize_indexes = {}
@@ -153,7 +153,7 @@ local conversations_hub_barber_a = {
 			[1.0] = "loc_barber_a__barber_intro_a_01"
 		},
 		sound_events_duration = {
-			[1.0] = 9.263424
+			[1.0] = 9.263396
 		},
 		randomize_indexes = {}
 	},
@@ -164,7 +164,7 @@ local conversations_hub_barber_a = {
 			[1.0] = "loc_barber_a__barber_intro_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.44551
+			[1.0] = 5.445479
 		},
 		randomize_indexes = {}
 	},
@@ -175,7 +175,7 @@ local conversations_hub_barber_a = {
 			[1.0] = "loc_barber_a__barber_intro_c_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.451066
+			[1.0] = 4.451063
 		},
 		randomize_indexes = {}
 	},
@@ -186,7 +186,7 @@ local conversations_hub_barber_a = {
 			[1.0] = "loc_barber_a__barber_intro_d_01"
 		},
 		sound_events_duration = {
-			[1.0] = 4.558254
+			[1.0] = 4.55825
 		},
 		randomize_indexes = {}
 	},
@@ -217,14 +217,14 @@ local conversations_hub_barber_a = {
 		},
 		sound_events_duration = {
 			2.635125,
-			1.460896,
+			1.460875,
 			1.929292,
 			2.107917,
 			1.480021,
 			3.271583,
 			2.174625,
 			2.213083,
-			3.401604,
+			3.401583,
 			2.553917,
 			3.178167,
 			2.834771,
@@ -232,7 +232,7 @@ local conversations_hub_barber_a = {
 			3.045542,
 			1.965208,
 			0.907896,
-			1.366188,
+			1.366167,
 			2.206521,
 			3.765125,
 			3.575792

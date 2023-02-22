@@ -13,6 +13,29 @@ local function _ensure_table_structure(tbl, ...)
 	return tbl
 end
 
+MiscTestCases.validate_weapon_skin_preview_items = function ()
+	Testify:run_case(function (dt, t)
+		TestifySnippets.skip_splash_and_title_screen()
+
+		local item_definitions = Testify:make_request("all_items")
+		local missing_preview_items = {}
+
+		for name, item_data in pairs(item_definitions) do
+			if item_data.item_type == "WEAPON_SKIN" and (not item_data.preview_item or item_data.preview_item == "") then
+				missing_preview_items[#missing_preview_items + 1] = name
+			end
+		end
+
+		if not table.is_empty(missing_preview_items) then
+			local message = "Items contain nil attachments. These are defined in the item files but won't show up in the Item Manager:\n\t" .. table.concat(missing_preview_items, "\n\t")
+			local assert_data = {
+				condition = false,
+				message = message
+			}
+		end
+	end)
+end
+
 MiscTestCases.validate_minion_visual_loadout_templates = function ()
 	Testify:run_case(function (dt, t)
 		TestifySnippets.skip_splash_and_title_screen()
@@ -77,7 +100,7 @@ MiscTestCases.validate_minion_visual_loadout_templates = function ()
 	end)
 end
 
-local function _ensure_no_hidden_attachments_recursive(item_definitions, attachment_data, nil_attachments, attachment_name, parent_item_name, source_item_name)
+local function _ensure_no_hidden_attachments_recursive(item_definitions, nil_attachments, attachment_data, attachment_name, parent_item_name, source_item_name)
 	local item_name = attachment_data.item
 
 	if not item_name then
@@ -91,7 +114,7 @@ local function _ensure_no_hidden_attachments_recursive(item_definitions, attachm
 
 	if children then
 		for child_attachment_name, child_data in pairs(children) do
-			_ensure_no_hidden_attachments_recursive(item_definitions, child_data, nil_attachments, child_attachment_name, item_name, source_item_name)
+			_ensure_no_hidden_attachments_recursive(item_definitions, nil_attachments, child_data, child_attachment_name, item_name, source_item_name)
 		end
 	end
 end
@@ -108,14 +131,14 @@ MiscTestCases.ensure_no_hidden_attachments = function ()
 
 			if attachments then
 				for attachment_name, attachment_data in pairs(attachments) do
-					_ensure_no_hidden_attachments_recursive(item_definitions, attachment_data, nil_attachments, attachment_name, name, name)
+					_ensure_no_hidden_attachments_recursive(item_definitions, nil_attachments, attachment_data, attachment_name, name, name)
 				end
 			end
 		end
 
 		if not table.is_empty(nil_attachments) then
 			local error_tbl = {
-				"Items contain nil attachments. These are defined in the item files but won't show up in the Item Manager:\n"
+				"Items contain holes in their attachment setup. They won't show up in the Item Manager, but can be found in the file, and will load unnecessary resources:\n"
 			}
 
 			for source_item_name, nil_attachment_names in pairs(nil_attachments) do
@@ -148,7 +171,7 @@ local function _validate_attachment_parents_recursive(item_definitions, attachme
 
 	local ignored = _ignored_attachment_types[attachment_name]
 
-	if not ignored and item_name ~= "" and not parent_item_name == "" then
+	if not ignored and item_name ~= "" and parent_item_name == "" then
 		loose_children[source_item_name] = loose_children[source_item_name] or {}
 		loose_children[source_item_name][attachment_name] = true
 
@@ -189,7 +212,7 @@ MiscTestCases.validate_attachment_parents = function ()
 
 		if not table.is_empty(loose_children) then
 			local error_tbl = {
-				"Items contain attachments without parents:\n"
+				"The following items contain attachments without parents:\n"
 			}
 
 			for source_item_name, attachment_names in pairs(loose_children) do
@@ -402,7 +425,7 @@ MiscTestCases.play_all_cutscenes = function (case_settings)
 			Testify:make_request("wait_for_cutscene_to_start", cutscene_name)
 
 			if measure_performance then
-				Testify:make_request("start_measuring_performance")
+				Testify:make_request("start_measuring_performance", false, true, true)
 			end
 
 			Testify:make_request("wait_for_cutscene_to_finish", cutscene_name)
@@ -440,7 +463,7 @@ MiscTestCases.play_all_cutscenes = function (case_settings)
 			end
 
 			if measure_performance then
-				Testify:make_request("start_measuring_performance")
+				Testify:make_request("start_measuring_performance", false, true, true)
 			end
 
 			Testify:make_request("wait_for_cutscene_to_finish", cutscene_name)
@@ -574,6 +597,7 @@ MiscTestCases.spawn_all_units = function (case_settings)
 			"content/environment/artsets/debug/events_test/test_decoder_server_02",
 			"content/environment/artsets/debug/events_test/test_spinny_thing",
 			"content/environment/artsets/debug/events_test/test_vox_array",
+			"content/environment/gameplay/events/rise/end/turntable_bogie_01",
 			"content/fx/meshes/shells/crossarc_circle",
 			"content/fx/meshes/shells/cylinder",
 			"content/fx/meshes/shells/cylinder_02",

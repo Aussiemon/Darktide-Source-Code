@@ -62,7 +62,7 @@ UIProfileSpawner._node = function (self, node_name)
 	end
 end
 
-UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, scale, state_machine, animation_event, face_animation_event, force_highest_mip)
+UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, scale, state_machine, animation_event, face_animation_event, force_highest_mip, disable_hair_state_machine)
 	if self._loading_profile_data then
 		self._loading_profile_data.loader:destroy()
 
@@ -82,7 +82,6 @@ UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, sc
 	end
 
 	self._loading_profile_data = {
-		disable_hair_state_machine = false,
 		profile = profile,
 		loader = character_profile_loader,
 		reference_name = reference_name,
@@ -93,7 +92,8 @@ UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, sc
 		state_machine = state_machine,
 		animation_event = animation_event,
 		face_animation_event = face_animation_event,
-		force_highest_mip = force_highest_mip
+		force_highest_mip = force_highest_mip,
+		disable_hair_state_machine = disable_hair_state_machine or false
 	}
 end
 
@@ -320,9 +320,10 @@ UIProfileSpawner.update = function (self, dt, t, input_service)
 			local animation_event = loading_profile_data.animation_event
 			local face_animation_event = loading_profile_data.face_animation_event
 			local force_highest_mip = loading_profile_data.force_highest_mip
+			local disable_hair_state_machine = loading_profile_data.disable_hair_state_machine
 			local profile = loading_profile_data.profile
 
-			self:_spawn_character_profile(profile, loader, position, rotation, scale, state_machine, animation_event, face_animation_event, force_highest_mip)
+			self:_spawn_character_profile(profile, loader, position, rotation, scale, state_machine, animation_event, face_animation_event, force_highest_mip, disable_hair_state_machine)
 
 			self._loading_profile_data = nil
 		end
@@ -518,7 +519,7 @@ UIProfileSpawner.ignore_slot = function (self, slot_id)
 	self._ignored_slots[slot_id] = true
 end
 
-UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loader, position, rotation, scale, state_machine, animation_event, face_animation_event, force_highest_mip)
+UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loader, position, rotation, scale, state_machine, animation_event, face_animation_event, force_highest_mip, disable_hair_state_machine)
 	local loadout = profile.loadout
 	local archetype = profile.archetype
 	local archetype_name = archetype and archetype.name
@@ -641,7 +642,8 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 		rotation = rotation and QuaternionBox(rotation),
 		loading_items = {},
 		profile = profile,
-		unit_3p = unit_3p
+		unit_3p = unit_3p,
+		disable_hair_state_machine = disable_hair_state_machine
 	}
 	self._character_spawn_data = spawn_data
 	local wield_slot_id = self._request_wield_slot_id
@@ -671,11 +673,15 @@ UIProfileSpawner.cb_on_unit_3p_streaming_complete = function (self, unit_3p)
 
 	if character_spawn_data and character_spawn_data.unit_3p == unit_3p then
 		character_spawn_data.streaming_complete = true
-		local slots = character_spawn_data.slots
-		local hair_unit = slots.slot_body_hair.unit_3p
+		local disable_hair_state_machine = character_spawn_data.disable_hair_state_machine
 
-		if hair_unit then
-			Unit.disable_animation_state_machine(hair_unit)
+		if disable_hair_state_machine then
+			local slots = character_spawn_data.slots
+			local hair_unit = slots.slot_body_hair.unit_3p
+
+			if hair_unit then
+				Unit.disable_animation_state_machine(hair_unit)
+			end
 		end
 	end
 
@@ -911,6 +917,10 @@ UIProfileSpawner.character_scale = function (self)
 	return nil
 end
 
+UIProfileSpawner.rotation_angle = function (self)
+	return self._rotation_angle
+end
+
 UIProfileSpawner.set_character_scale = function (self, scale_value)
 	local character_spawn_data = self._character_spawn_data
 
@@ -920,6 +930,10 @@ UIProfileSpawner.set_character_scale = function (self, scale_value)
 
 		Unit.set_local_scale(unit, 1, scale)
 	end
+end
+
+UIProfileSpawner.set_character_rotation = function (self, angle)
+	self:_set_character_rotation(angle)
 end
 
 return UIProfileSpawner

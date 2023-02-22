@@ -303,8 +303,9 @@ PortraitUI._spawn_profile = function (self, profile, render_context)
 	local optional_animation_event = render_context and render_context.animation_event
 	local optional_face_animation_event = render_context and render_context.face_animation_event
 	local force_highest_mip = true
+	local disable_hair_state_machine = true
 
-	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, optional_state_machine, optional_animation_event, optional_face_animation_event, force_highest_mip)
+	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, optional_state_machine, optional_animation_event, optional_face_animation_event, force_highest_mip, disable_hair_state_machine)
 
 	local archetype = profile.archetype
 	local breed = archetype.breed

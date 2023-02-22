@@ -15,7 +15,7 @@ local templates = {
 templates.weapon_trait_bespoke_forcestaff_p1_followup_shots_ranged_damage.conditional_stat_buffs = {
 	[stat_buffs.charge_level_modifier] = 0.05
 }
-templates.weapon_trait_bespoke_forcestaff_p1_warpfire_on_crits = table.clone(BaseWeaponTraitBuffTemplates.warpfire_on_crits)
+templates.weapon_trait_bespoke_forcestaff_p1_warpfire_on_crits = table.clone(BaseWeaponTraitBuffTemplates.warpfire_on_crits_ranged)
 templates.weapon_trait_bespoke_forcestaff_p1_warpfire_on_crits.check_proc_func = CheckProcFunctions.all(CheckProcFunctions.any(CheckProcFunctions.on_ranged_hit, CheckProcFunctions.on_explosion_hit), CheckProcFunctions.on_crit)
 templates.weapon_trait_bespoke_forcestaff_p1_warp_charge_critical_strike_chance_bonus = table.merge({
 	conditional_stat_buffs = {
@@ -24,11 +24,15 @@ templates.weapon_trait_bespoke_forcestaff_p1_warp_charge_critical_strike_chance_
 }, BaseWeaponTraitBuffTemplates.warpcharge_stepped_bonus)
 templates.weapon_trait_bespoke_forcestaff_p1_rend_armor_on_aoe_charge = {
 	predicted = false,
-	max_num_stacks = 6,
 	max_stacks = 1,
 	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_hit] = 1
+	},
+	target_buff_data = {
+		internal_buff_name = "rending_debuff",
+		num_stacks_on_proc = 1,
+		max_stacks = math.huge
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	start_func = function (template_data, template_context)
@@ -36,6 +40,13 @@ templates.weapon_trait_bespoke_forcestaff_p1_rend_armor_on_aoe_charge = {
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local weapon_action_component = unit_data_extension:read_component("weapon_action")
 		template_data.weapon_action_component = weapon_action_component
+		local template = template_context.template
+		local target_buff_data = template.target_buff_data
+		local template_override_data = template_context.template_override_data
+		local override_target_buff_data = template_override_data.target_buff_data
+		template_data.internal_buff_name = override_target_buff_data and override_target_buff_data.internal_buff_name or target_buff_data.internal_buff_name
+		template_data.num_stacks_on_proc = override_target_buff_data and override_target_buff_data.num_stacks_on_proc or target_buff_data.num_stacks_on_proc
+		template_data.max_stacks = override_target_buff_data and override_target_buff_data.max_stacks or target_buff_data.max_stacks
 	end,
 	check_proc_func = function (params, template_data, template_context, t)
 		local weapon_action_component = template_data.weapon_action_component
@@ -48,14 +59,13 @@ templates.weapon_trait_bespoke_forcestaff_p1_rend_armor_on_aoe_charge = {
 		local attacked_unit_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
 
 		if attacked_unit_buff_extension then
-			local template = template_context.template
-			local override_data = template_context.template_override_data
-			local max_num_stacks = override_data.max_num_stacks or template.max_num_stacks
+			local internal_buff_name = template_data.internal_buff_name
+			local num_stacks_on_proc = template_data.num_stacks_on_proc
 			local charge_level = params.charge_level or 0
-			local number_of_render_buffs_to_add = math.round(charge_level * max_num_stacks)
+			local number_of_render_buffs_to_add = math.round(charge_level * num_stacks_on_proc)
 
 			if number_of_render_buffs_to_add > 0 then
-				attacked_unit_buff_extension:add_internally_controlled_buff_with_stacks("rending_debuff", number_of_render_buffs_to_add, t, "owner_unit", template_context.unit)
+				attacked_unit_buff_extension:add_internally_controlled_buff_with_stacks(internal_buff_name, number_of_render_buffs_to_add, t, "owner_unit", template_context.unit)
 			end
 		end
 	end

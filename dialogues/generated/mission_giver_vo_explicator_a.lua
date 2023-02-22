@@ -78,13 +78,6 @@ local mission_giver_vo_explicator_a = {
 			3.051625,
 			2.83525
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	info_get_out = {
@@ -222,10 +215,10 @@ local mission_giver_vo_explicator_a = {
 			"loc_explicator_a__mission_archives_brief_a_04"
 		},
 		sound_events_duration = {
-			6.984583,
-			5.183417,
-			6.181313,
-			7.622583
+			6.984604,
+			5.183438,
+			6.181333,
+			7.622604
 		},
 		randomize_indexes = {}
 	},
@@ -239,10 +232,10 @@ local mission_giver_vo_explicator_a = {
 			"loc_explicator_a__mission_archives_brief_b_04"
 		},
 		sound_events_duration = {
-			8.019313,
-			5.746,
-			7.303583,
-			7.741292
+			8.019333,
+			5.746021,
+			7.303604,
+			7.741313
 		},
 		randomize_indexes = {}
 	},
@@ -256,10 +249,10 @@ local mission_giver_vo_explicator_a = {
 			"loc_explicator_a__mission_archives_brief_c_04"
 		},
 		sound_events_duration = {
-			7.418771,
-			7.001542,
-			7.565646,
-			6.171063
+			7.418792,
+			7.001563,
+			7.565667,
+			6.171083
 		},
 		randomize_indexes = {}
 	},
@@ -385,10 +378,10 @@ local mission_giver_vo_explicator_a = {
 			"loc_explicator_a__mission_complex_brief_a_04"
 		},
 		sound_events_duration = {
-			7.102396,
-			6.648521,
-			8.743917,
-			7.759021
+			7.102417,
+			6.648542,
+			8.743937,
+			7.759042
 		},
 		randomize_indexes = {}
 	},
@@ -402,10 +395,10 @@ local mission_giver_vo_explicator_a = {
 			"loc_explicator_a__mission_complex_brief_b_04"
 		},
 		sound_events_duration = {
-			6.213271,
-			5.991542,
-			7.3885,
-			7.20975
+			6.213292,
+			5.991563,
+			7.388521,
+			7.209771
 		},
 		randomize_indexes = {}
 	},
@@ -419,9 +412,9 @@ local mission_giver_vo_explicator_a = {
 			"loc_explicator_a__mission_complex_brief_c_04"
 		},
 		sound_events_duration = {
-			7.323563,
-			5.323771,
-			6.526271,
+			7.323583,
+			5.323792,
+			6.526292,
 			6.443729
 		},
 		randomize_indexes = {}
@@ -534,7 +527,7 @@ local mission_giver_vo_explicator_a = {
 		},
 		sound_events_duration = {
 			5.218417,
-			4.540125,
+			4.695646,
 			6.972604,
 			4.653104
 		},

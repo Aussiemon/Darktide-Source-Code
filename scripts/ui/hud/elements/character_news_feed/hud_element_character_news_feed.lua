@@ -25,15 +25,13 @@ HudElementCharacterNewsFeed._fetch_inventory_items = function (self)
 	local gear_promise = nil
 
 	if Managers.backend:authenticated() then
-		local backend_interface = BackendInterface:new()
-		gear_promise = Promise.all(backend_interface.gear:fetch())
+		gear_promise = Managers.data_service.gear:fetch_gear()
 
-		local function next_function(results)
+		local function next_function(gear_list)
 			if self._destroyed then
 				return
 			end
 
-			local gear_list = unpack(results)
 			local inventory = {}
 
 			for gear_id, gear in pairs(gear_list) do

@@ -202,13 +202,13 @@ templates.weapon_trait_bespoke_lasgun_p3_stacking_crit_chance_on_weakspot = {
 templates.weapon_trait_bespoke_lasgun_p3_burninating_on_crit = {
 	weapon_trait_bespoke_lasgun_p3_burninating_on_crit = {
 		{
-			dot_data = {
+			target_buff_data = {
 				max_stacks = 6,
 				num_stacks_on_proc = 1
 			}
 		},
 		[4] = {
-			dot_data = {
+			target_buff_data = {
 				max_stacks = 9,
 				num_stacks_on_proc = 2
 			}

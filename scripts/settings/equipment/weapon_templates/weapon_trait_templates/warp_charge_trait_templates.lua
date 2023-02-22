@@ -10,7 +10,7 @@ local warp_charge_trait_templates = {
 		{
 			"auto_vent_duration_modifier",
 			{
-				max = 0,
+				max = 1,
 				min = 0
 			}
 		}
@@ -36,7 +36,7 @@ local warp_charge_trait_templates = {
 		{
 			"auto_vent_duration_modifier",
 			{
-				max = 0,
+				max = 1,
 				min = 0
 			}
 		}
@@ -52,7 +52,7 @@ local warp_charge_trait_templates = {
 		{
 			"auto_vent_duration_modifier",
 			{
-				max = 0,
+				max = 1,
 				min = 0
 			}
 		}
@@ -68,7 +68,7 @@ local warp_charge_trait_templates = {
 		{
 			"auto_vent_duration_modifier",
 			{
-				max = 0,
+				max = 1,
 				min = 0
 			}
 		}

@@ -63,6 +63,7 @@ local mission_templates = {
 				"path_of_trust_09_office"
 			}
 		},
+		circumstances = {},
 		testify_flags = {
 			run_through_mission = false,
 			screenshots = true,

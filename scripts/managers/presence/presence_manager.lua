@@ -448,6 +448,8 @@ end
 
 PresenceManager.cb_on_game_state_change = function (self, previous_state_name, next_state_name)
 	self._current_game_state_name = next_state_name
+
+	self:_check_activity()
 end
 
 implements(PresenceManager, PresenceManagerInterface)

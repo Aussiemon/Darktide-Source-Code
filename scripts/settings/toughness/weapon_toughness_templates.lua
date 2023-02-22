@@ -3,7 +3,6 @@ local ToughnessDepleted = require("scripts/utilities/toughness/toughness_deplete
 local TalentSettings = require("scripts/settings/buff/talent_settings")
 local weapon_toughness_templates = {}
 local replenish_types = ToughnessSettings.replenish_types
-local gunlugger_talent_settings = TalentSettings.ogryn_1
 weapon_toughness_templates.default = {
 	regeneration_delay_modifier = {
 		lerp_perfect = 0,
@@ -20,8 +19,7 @@ weapon_toughness_templates.default = {
 		}
 	},
 	recovery_percentage_modifiers = {
-		[replenish_types.melee_kill] = 1,
-		[replenish_types.ogryn_braced_regen] = gunlugger_talent_settings.defensive_3.braced_toughness_regen
+		[replenish_types.melee_kill] = 1
 	}
 }
 weapon_toughness_templates.auspex = {
@@ -43,8 +41,7 @@ weapon_toughness_templates.auspex = {
 		}
 	},
 	recovery_percentage_modifiers = {
-		[replenish_types.melee_kill] = 1,
-		[replenish_types.ogryn_braced_regen] = gunlugger_talent_settings.defensive_3.braced_toughness_regen
+		[replenish_types.melee_kill] = 1
 	}
 }
 weapon_toughness_templates.luggable = {
@@ -66,8 +63,7 @@ weapon_toughness_templates.luggable = {
 		}
 	},
 	recovery_percentage_modifiers = {
-		[replenish_types.melee_kill] = 1,
-		[replenish_types.ogryn_braced_regen] = gunlugger_talent_settings.defensive_3.braced_toughness_regen
+		[replenish_types.melee_kill] = 1
 	}
 }
 weapon_toughness_templates.assault = {
@@ -77,8 +73,7 @@ weapon_toughness_templates.assault = {
 		moving = 3
 	},
 	recovery_percentage_modifiers = {
-		[replenish_types.melee_kill] = 1,
-		[replenish_types.ogryn_braced_regen] = gunlugger_talent_settings.defensive_3.braced_toughness_regen
+		[replenish_types.melee_kill] = 1
 	}
 }
 weapon_toughness_templates.killshot_zoomed = {
@@ -90,8 +85,7 @@ weapon_toughness_templates.killshot_zoomed = {
 		moving = 0.5
 	},
 	recovery_percentage_modifiers = {
-		[replenish_types.melee_kill] = 1,
-		[replenish_types.ogryn_braced_regen] = gunlugger_talent_settings.defensive_3.braced_toughness_regen
+		[replenish_types.melee_kill] = 1
 	}
 }
 

@@ -293,7 +293,7 @@ local archetype_talents = {
 			display_name = "loc_talent_ranger_volley_fire_headhunter",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_6_1",
 			format_values = {
-				weakspot_damage = talent_settings.combat_ability_2.weakspot_damage * 100
+				weakspot_damage = (talent_settings.combat_ability_2.weakspot_damage - talent_settings.combat_ability.ranged_weakspot_damage) * 100
 			},
 			player_ability = {
 				ability_type = "combat_ability",

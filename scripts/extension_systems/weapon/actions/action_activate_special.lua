@@ -1,9 +1,7 @@
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
-local ActionActivateSpecial = class("ActionActivateSpecial", "ActionWeaponBase")
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
-local BuffSettings = require("scripts/settings/buff/buff_settings")
-local buff_proc_events = BuffSettings.proc_events
+local ActionActivateSpecial = class("ActionActivateSpecial", "ActionWeaponBase")
 
 ActionActivateSpecial.init = function (self, action_context, action_params, action_settings)
 	ActionActivateSpecial.super.init(self, action_context, action_params, action_settings)
@@ -11,6 +9,9 @@ ActionActivateSpecial.init = function (self, action_context, action_params, acti
 	local fx_sources = action_params.weapon.fx_sources
 	local abort_fx_source_name = action_settings.abort_fx_source_name
 	self._abort_fx_source_name = fx_sources[abort_fx_source_name]
+	local weapon_template = self._weapon_template
+	local weapon_special_tweak_data = weapon_template and weapon_template.weapon_special_tweak_data
+	self._weapon_special_tweak_data = weapon_special_tweak_data
 end
 
 ActionActivateSpecial.start = function (self, action_settings, t, time_scale, params)
@@ -44,6 +45,13 @@ ActionActivateSpecial.fixed_update = function (self, dt, t, time_in_action)
 		end
 
 		self:_set_weapon_special(true, t)
+
+		local weapon_special_tweak_data = self._weapon_special_tweak_data
+		local allow_reactivation_while_active = weapon_special_tweak_data and weapon_special_tweak_data.allow_reactivation_while_active
+
+		if allow_reactivation_while_active then
+			self._inventory_slot_component.num_special_activations = 0
+		end
 	end
 end
 

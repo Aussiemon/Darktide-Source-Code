@@ -215,6 +215,30 @@ local views = {
 			UISoundEvents.default_menu_exit
 		}
 	},
+	cosmetics_inspect_view = {
+		state_bound = true,
+		use_transition_ui = true,
+		load_in_hub = true,
+		path = "scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view",
+		package = "packages/ui/views/cosmetics_inspect_view/cosmetics_inspect_view",
+		class = "CosmeticsInspectView",
+		disable_game_world = true,
+		levels = {
+			"content/levels/ui/cosmetics_preview/cosmetics_preview"
+		},
+		dummy_data = {
+			debug = true
+		},
+		wwise_states = {
+			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
+		},
+		enter_sound_events = {
+			UISoundEvents.default_menu_enter
+		},
+		exit_sound_events = {
+			UISoundEvents.default_menu_exit
+		}
+	},
 	inventory_weapon_cosmetics_view = {
 		state_bound = true,
 		display_name = "loc_inventory_weapon_cosmetics_view_display_name",
@@ -502,9 +526,6 @@ local views = {
 		wwise_states = {
 			music_game_state = WwiseGameSyncSettings.state_groups.music_game_state.mission_board,
 			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
-		},
-		testify_flags = {
-			ui_views = false
 		}
 	},
 	lobby_view = {
@@ -866,6 +887,7 @@ end
 _declare_view("store_view", require("scripts/ui/views/store_view/store_view_declaration_settings"))
 _declare_view("store_item_detail_view", require("scripts/ui/views/store_item_detail_view/store_item_detail_view_declaration_settings"))
 _declare_view("account_profile_win_tracks_view", require("scripts/ui/views/account_profile_win_tracks_view/account_profile_win_tracks_declaration_settings"))
+_declare_view("credits_goods_vendor_view", require("scripts/ui/views/credits_goods_vendor_view/credits_goods_vendor_view_declaration_settings"))
 _declare_view("crafting_view", require("scripts/ui/views/crafting_view/crafting_view_declaration_settings"))
 _declare_view("crafting_modify_view", require("scripts/ui/views/crafting_modify_view/crafting_modify_view_declaration_settings"))
 _declare_view("crafting_upgrade_item_view", require("scripts/ui/views/crafting_upgrade_item_view/crafting_upgrade_item_view_declaration_settings"))
@@ -873,7 +895,6 @@ _declare_view("crafting_reroll_perk_view", require("scripts/ui/views/crafting_re
 _declare_view("crafting_extract_trait_view", require("scripts/ui/views/crafting_extract_trait_view/crafting_extract_trait_view_declaration_settings"))
 _declare_view("crafting_replace_trait_view", require("scripts/ui/views/crafting_replace_trait_view/crafting_replace_trait_view_declaration_settings"))
 _declare_view("crafting_modify_options_view", require("scripts/ui/views/crafting_modify_options_view/crafting_modify_options_view_declaration_settings"))
-_declare_view("crafting_fuse_view", require("scripts/ui/views/crafting_fuse_view/crafting_fuse_view_declaration_settings"))
 
 for view_name, settings in pairs(views) do
 	settings.name = view_name

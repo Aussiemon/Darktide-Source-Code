@@ -40,12 +40,13 @@ DamageCalculation.calculate = function (damage_profile, target_settings, lerp_va
 	local flanking_damage = _flanking_damage(base_damage, attacker_stat_buffs, is_flanking)
 	local rending_damage = 0
 	local finesse_boost_damage = 0
+	local finesse_buff_damage = 0
 	local base_rending_damage = _base_rending_damage(damage_profile, target_settings, power_level, charge_level, armor_type, is_critical_strike, dropoff_scalar, attack_type, attacker_stat_buffs, lerp_values, attacker_stat_buffs)
 	local boost_curve = target_settings.boost_curve or PowerLevelSettings.boost_curves.default
 	local is_finesse_hit = is_critical_strike or hit_weakspot
 
 	if is_finesse_hit then
-		finesse_boost_damage = _finesse_boost_damage(damage, base_rending_damage, rending_damage, damage_profile, target_settings, breed_or_nil, hit_zone_name, armor_type, is_critical_strike, hit_weakspot, boost_curve, attack_type, attacker_stat_buffs, target_stagger_count, lerp_values, target_buff_extension)
+		finesse_boost_damage, finesse_buff_damage = _finesse_boost_damage(damage, base_rending_damage, rending_damage, damage_profile, target_settings, breed_or_nil, hit_zone_name, armor_type, is_critical_strike, hit_weakspot, boost_curve, attack_type, attacker_stat_buffs, target_stagger_count, lerp_values, target_buff_extension)
 	end
 
 	damage = damage + finesse_boost_damage + backstab_damage + flanking_damage
@@ -353,7 +354,7 @@ function _finesse_boost_damage(base_damage, base_rending_damage, rending_damage,
 		finesse_boost_amount = finesse_boost_amount + crit_boost_amount
 	end
 
-	local finesse_damage = nil
+	local base_finesse_damage = nil
 	local finesse_min_damage = base_rending_damage * PowerLevelSettings.finesse_min_damage_multiplier
 	local use_boost_curve = boost_curve and finesse_boost_amount > 0
 
@@ -361,9 +362,9 @@ function _finesse_boost_damage(base_damage, base_rending_damage, rending_damage,
 		finesse_boost_amount = math.min(finesse_boost_amount, 1)
 		local boost_curve_multiplier_finesse = DamageProfile.boost_curve_multiplier(target_settings, "boost_curve_multiplier_finesse", lerp_values)
 		local finesse_boost_multiplier = _boost_curve_multiplier(boost_curve, finesse_boost_amount) * boost_curve_multiplier_finesse
-		finesse_damage = math.max(math.max(rending_damage, base_damage), finesse_min_damage) * finesse_boost_multiplier
+		base_finesse_damage = math.max(math.max(rending_damage, base_damage), finesse_min_damage) * finesse_boost_multiplier
 	else
-		finesse_damage = finesse_min_damage
+		base_finesse_damage = finesse_min_damage
 	end
 
 	local is_ranged = attack_type == attack_types.ranged
@@ -416,9 +417,9 @@ function _finesse_boost_damage(base_damage, base_rending_damage, rending_damage,
 
 	local finesse_modifier_bonus = stat_buffs.finesse_modifier_bonus or 1
 	local finesse_buff_damage_multiplier = weakspot_damage_stat_buff + critical_damage_stat_buff + crit_weakspot_damage_stat_buff + finesse_modifier_bonus - 3
-	finesse_damage = finesse_damage * finesse_buff_damage_multiplier
+	local final_finesse_damage = base_finesse_damage * finesse_buff_damage_multiplier
 
-	return finesse_damage
+	return final_finesse_damage, final_finesse_damage - base_finesse_damage
 end
 
 function _hit_zone_damage_multiplier(breed_or_nil, hit_zone_name, attack_type, ignore_hitzone_multiplier)

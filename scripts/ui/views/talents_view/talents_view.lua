@@ -1,10 +1,11 @@
 local Definitions = require("scripts/ui/views/talents_view/talents_view_definitions")
+local ProfileUtils = require("scripts/utilities/profile_utils")
+local TextUtilities = require("scripts/utilities/ui/text")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewBlueprints = require("scripts/ui/views/talents_view/talents_view_blueprints")
 local ViewElementUniformGrid = require("scripts/ui/view_elements/view_element_uniform_grid/view_element_uniform_grid")
 local ViewSettings = require("scripts/ui/views/talents_view/talents_view_settings")
 local ViewStyles = require("scripts/ui/views/talents_view/talents_view_styles")
-local TextUtilities = require("scripts/utilities/ui/text")
 local ViewFadeTime = 0.5
 local TalentsView = class("TalentsView", "BaseView")
 
@@ -51,6 +52,8 @@ TalentsView.on_enter = function (self)
 
 	local focus_ring_widget = self._widgets_by_name.highlight_ring
 	focus_ring_widget.visible = false
+
+	self:_register_event("event_on_profile_preset_changed", "event_on_profile_preset_changed")
 end
 
 TalentsView.on_exit = function (self)
@@ -65,7 +68,22 @@ TalentsView.on_exit = function (self)
 	end
 end
 
+TalentsView.profile_preset_handling_input = function (self)
+	local view_name = "inventory_background_view"
+	local ui_manager = Managers.ui
+
+	if ui_manager:view_active(view_name) then
+		local view_instance = ui_manager:view_instance(view_name)
+
+		return view_instance:profile_preset_handling_input()
+	end
+end
+
 TalentsView.update = function (self, dt, t, input_service)
+	if self:profile_preset_handling_input() then
+		input_service = input_service:null_service()
+	end
+
 	if self._view_alpha < 1 and self._init_done then
 		self._view_alpha = math.min(self._view_alpha + dt / ViewFadeTime, 1)
 		local render_settings = self._render_settings
@@ -80,6 +98,10 @@ TalentsView.update = function (self, dt, t, input_service)
 end
 
 TalentsView.draw = function (self, dt, t, input_service, layer)
+	if self:profile_preset_handling_input() then
+		input_service = input_service:null_service()
+	end
+
 	if self._init_done then
 		TalentsView.super.draw(self, dt, t, input_service, layer)
 	end
@@ -307,6 +329,12 @@ TalentsView._select_widget_in_group = function (self, group, selected_widget)
 		hotspot.is_selected = is_selected
 		selected_talents[talent_name] = is_selected or nil
 		widget_content.is_new = nil
+		local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
+
+		if active_profile_preset_id then
+			ProfileUtils.save_talent_id_for_profile_preset(active_profile_preset_id, talent_name, is_selected or nil)
+		end
+
 		group_has_selected_talent = group_has_selected_talent or is_selected
 	end
 
@@ -335,6 +363,28 @@ TalentsView._setup_grid = function (self)
 
 	self._grid = grid
 	local scale = self._render_scale or 1
+end
+
+TalentsView.event_on_profile_preset_changed = function (self, profile_preset_talents)
+	local player = self._preview_player
+	local profile = player:profile()
+	local selected_talents = table.create_copy(table.clone(self._selected_talents), profile_preset_talents)
+	self._selected_talents = selected_talents
+	local talent_widgets = self._talent_widgets
+
+	if talent_widgets then
+		for i = 1, #talent_widgets do
+			local widget = talent_widgets[i]
+			local widget_name = widget.name
+			local content = widget.content
+
+			if content.is_selectable then
+				local hotspot = content.hotspot
+				local talent_value = selected_talents[widget_name]
+				hotspot.is_selected = talent_value or false
+			end
+		end
+	end
 end
 
 TalentsView._populate_data = function (self, profile, selected_talents)
@@ -387,9 +437,26 @@ TalentsView._populate_talents_data = function (self, character_id, archetype, sp
 	local talent_group_definitions = specialization.talent_groups
 	local talent_widgets = self._talent_widgets
 
+	if talent_widgets then
+		for i = 1, #talent_widgets do
+			local widget = talent_widgets[i]
+
+			self._grid:remove_widget(widget)
+		end
+	end
+
 	table.clear(talent_widgets)
 
 	local talent_groups = self._talent_groups
+
+	if talent_groups then
+		for i = 1, #talent_groups do
+			local talent_group = talent_groups[i]
+			local group_widget = talent_group.group_widget
+
+			self._grid:remove_widget(group_widget)
+		end
+	end
 
 	table.clear(talent_groups)
 

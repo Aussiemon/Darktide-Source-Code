@@ -90,7 +90,7 @@ shotshell_templates.shotgun_slug_special = {
 	scatter_range = 0.1,
 	spread_pitch = 0.5,
 	roll_offset = 0.1,
-	num_pellets = 4,
+	num_pellets = 1,
 	bullseye = true,
 	num_spread_circles = 1,
 	min_num_hits = {
@@ -136,7 +136,7 @@ shotshell_templates.shotgun_burninating_special = {
 			max_stacks = 16,
 			stacks_per_pellet = 1,
 			damage_profile = DamageProfileTemplates.shotgun_assault_burninating,
-			damage_type = damage_types.pellet_heavy
+			damage_type = damage_types.pellet_incendiary
 		}
 	}
 }

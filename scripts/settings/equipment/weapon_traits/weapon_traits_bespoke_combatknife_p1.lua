@@ -80,23 +80,27 @@ templates.weapon_trait_bespoke_combatknife_p1_heavy_chained_hits_increases_killi
 templates.weapon_trait_bespoke_combatknife_p1_dodge_grants_finesse_bonus = {
 	weapon_trait_bespoke_combatknife_p1_dodge_grants_finesse_bonus = {
 		{
-			proc_stat_buffs = {
-				[stat_buffs.finesse_modifier_bonus] = 0.02
-			}
-		},
-		{
-			proc_stat_buffs = {
-				[stat_buffs.finesse_modifier_bonus] = 0.03
-			}
-		},
-		{
+			active_duration = 2,
 			proc_stat_buffs = {
 				[stat_buffs.finesse_modifier_bonus] = 0.04
 			}
 		},
 		{
+			active_duration = 2,
 			proc_stat_buffs = {
-				[stat_buffs.finesse_modifier_bonus] = 0.05
+				[stat_buffs.finesse_modifier_bonus] = 0.06
+			}
+		},
+		{
+			active_duration = 2,
+			proc_stat_buffs = {
+				[stat_buffs.finesse_modifier_bonus] = 0.08
+			}
+		},
+		{
+			active_duration = 2,
+			proc_stat_buffs = {
+				[stat_buffs.finesse_modifier_bonus] = 0.1
 			}
 		}
 	}
@@ -104,23 +108,27 @@ templates.weapon_trait_bespoke_combatknife_p1_dodge_grants_finesse_bonus = {
 templates.weapon_trait_bespoke_combatknife_p1_dodge_grants_critical_strike_chance = {
 	weapon_trait_bespoke_combatknife_p1_dodge_grants_critical_strike_chance = {
 		{
-			proc_stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.02
-			}
-		},
-		{
-			proc_stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.03
-			}
-		},
-		{
-			proc_stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.04
-			}
-		},
-		{
+			active_duration = 2,
 			proc_stat_buffs = {
 				[stat_buffs.critical_strike_chance] = 0.05
+			}
+		},
+		{
+			active_duration = 2,
+			proc_stat_buffs = {
+				[stat_buffs.critical_strike_chance] = 0.075
+			}
+		},
+		{
+			active_duration = 2,
+			proc_stat_buffs = {
+				[stat_buffs.critical_strike_chance] = 0.1
+			}
+		},
+		{
+			active_duration = 2,
+			proc_stat_buffs = {
+				[stat_buffs.critical_strike_chance] = 0.125
 			}
 		}
 	}

@@ -247,25 +247,35 @@ AchievementsManager._notify_achievement_unlock = function (self, achievement_def
 	return true
 end
 
-AchievementsManager._notify_achievement_reward = function (self, reward)
-	if reward.rewardType == "item" then
-		local master_id = reward.masterId
+local item_rewards = {}
 
-		if MasterItems.item_exists(master_id) then
-			local rewarded_master_item = MasterItems.get_item(master_id)
-			local sound_event = UISoundEvents.character_news_feed_new_item
+AchievementsManager._notify_achievement_rewards = function (self, rewards)
+	table.clear(item_rewards)
 
-			Managers.event:trigger("event_add_notification_message", "item_granted", rewarded_master_item, nil, sound_event)
+	for i = 1, #rewards do
+		local reward = rewards[i]
 
-			return true
-		else
-			Log.warning("AchievementManager", "Received invalid item %s as reward from backend.", master_id)
-
-			return false
+		if reward.rewardType == "item" then
+			item_rewards[#item_rewards + 1] = reward.masterId
 		end
 	end
 
-	return true
+	if #item_rewards > 0 then
+		Managers.data_service.gear:invalidate_gear_cache()
+
+		for i = 1, #item_rewards do
+			local master_id = item_rewards[i]
+
+			if MasterItems.item_exists(master_id) then
+				local rewarded_master_item = MasterItems.get_item(master_id)
+				local sound_event = UISoundEvents.character_news_feed_new_item
+
+				Managers.event:trigger("event_add_notification_message", "item_granted", rewarded_master_item, nil, sound_event)
+			else
+				Log.warning("AchievementManager", "Received invalid item %s as reward from backend.", master_id)
+			end
+		end
+	end
 end
 
 AchievementsManager._unlock_achievement = function (self, achievement_definition)
@@ -280,9 +290,7 @@ AchievementsManager._unlock_achievement = function (self, achievement_definition
 	local rewards = achievement_definition:get_rewards()
 
 	if rewards then
-		for i = 1, #rewards do
-			self:_notify_achievement_reward(rewards[i])
-		end
+		self:_notify_achievement_rewards(rewards)
 	end
 
 	self._unlocked[achievement_definition:id()] = true

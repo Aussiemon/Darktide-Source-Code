@@ -497,19 +497,6 @@ category_list_padding_top_style.size = {
 	category_width,
 	12
 }
-category_list_padding_top_style.divider = {}
-category_list_padding_top_divider_style = category_list_padding_top_style.divider
-category_list_padding_top_divider_style.color = Color.terminal_frame(128, true)
-category_list_padding_top_divider_style.vertical_alignment = "bottom"
-category_list_padding_top_divider_style.offset = {
-	0,
-	0,
-	2
-}
-category_list_padding_top_divider_style.size = {
-	nil,
-	2
-}
 blueprint_styles.category_list_padding_bottom = {
 	size = {
 		category_width,
@@ -522,85 +509,20 @@ simple_category_blueprint_style.size = {
 	category_width,
 	ButtonPassTemplates.list_button_default_height
 }
-simple_category_blueprint_style.hotspot = {}
-local simple_category_hotspot_style = simple_category_blueprint_style.hotspot
-simple_category_hotspot_style.on_hover_sound = UISoundEvents.default_mouse_hover
-simple_category_hotspot_style.on_pressed_sound = UISoundEvents.default_click
-simple_category_hotspot_style.on_select_sound = UISoundEvents.default_click
-simple_category_blueprint_style.background = table.clone(common_achievement_background_style)
-local simple_category_blueprint_background_style = simple_category_blueprint_style.background
-simple_category_blueprint_background_style.size = {
-	simple_category_blueprint_style.size[1],
-	simple_category_blueprint_style.size[2] - 2 * category_list_padding_top_divider_style.size[2]
-}
-simple_category_blueprint_background_style.offset = {
-	0,
-	category_list_padding_top_divider_style.size[2],
-	0
-}
-simple_category_blueprint_background_style.min_alpha = 24
-simple_category_blueprint_background_style.max_alpha = 64
-simple_category_blueprint_style.background_gradient = table.clone(common_achievement_background_gradient_style)
-local simple_category_background_gradient_style = simple_category_blueprint_style.background_gradient
-simple_category_background_gradient_style.size = simple_category_blueprint_background_style.size
-simple_category_background_gradient_style.offset = {
-	0,
-	category_list_padding_top_divider_style.size[2],
-	1
-}
-simple_category_background_gradient_style.min_alpha = 150
-simple_category_background_gradient_style.max_alpha = 255
-simple_category_blueprint_style.frame = table.clone(common_achievement_frame_style)
-local simple_category_blueprint_frame_style = simple_category_blueprint_style.frame
-simple_category_blueprint_frame_style.size = simple_category_blueprint_style.size
-simple_category_blueprint_style.corner = table.clone(common_achievement_corner_style)
-local simple_category_blueprint_corner_style = simple_category_blueprint_style.corner
-simple_category_blueprint_corner_style.size = simple_category_blueprint_style.size
-simple_category_blueprint_style.divider = table.clone(category_list_padding_top_divider_style)
-simple_category_blueprint_style.bullet = {}
-local simple_category_blueprint_bullet_style = simple_category_blueprint_style.bullet
-simple_category_blueprint_bullet_style.size = {
-	32,
-	32
-}
-simple_category_blueprint_bullet_style.offset = {
-	15,
-	0,
-	3
-}
-simple_category_blueprint_bullet_style.horizontal_alignment = "left"
-simple_category_blueprint_bullet_style.vertical_alignment = "center"
-simple_category_blueprint_bullet_style.color = Color.terminal_text_body(255, true)
-simple_category_blueprint_bullet_style.default_color = Color.terminal_text_body(255, true)
-simple_category_blueprint_bullet_style.hover_color = Color.terminal_text_header(255, true)
-simple_category_blueprint_bullet_style.selected_color = Color.terminal_text_header_selected(255, true)
-simple_category_blueprint_style.bullet_active = table.clone(simple_category_blueprint_style.bullet)
-local simple_category_blueprint_active_bullet_style = simple_category_blueprint_style.bullet_active
-simple_category_blueprint_active_bullet_style.offset[3] = 4
-simple_category_blueprint_active_bullet_style.min_alpha = 0
-simple_category_blueprint_active_bullet_style.max_alpha = 255
-simple_category_blueprint_style.text = table.clone(UIFontSettings.list_button)
-local simple_category_blueprint_text_style = simple_category_blueprint_style.text
-simple_category_blueprint_text_style.offset = {
-	50,
-	0,
-	3
-}
-simple_category_blueprint_text_style.default_color = Color.terminal_text_body(255, true)
-simple_category_blueprint_text_style.hover_color = Color.terminal_text_header(255, true)
-simple_category_blueprint_text_style.selected_color = Color.terminal_text_header_selected(255, true)
-blueprint_styles.top_category_button = table.clone(simple_category_blueprint_style)
+blueprint_styles.top_category_button = {}
 local top_category_blueprint_style = blueprint_styles.top_category_button
-top_category_blueprint_style.folded_height = simple_category_blueprint_style.size[2]
+top_category_blueprint_style.size = table.clone(simple_category_blueprint_style.size)
+top_category_blueprint_style.folded_height = top_category_blueprint_style.size[2]
+top_category_blueprint_style.hotspot = {}
 local top_category_blueprint_hotspot_style = top_category_blueprint_style.hotspot
 top_category_blueprint_hotspot_style.anim_select_speed = 32
 top_category_blueprint_hotspot_style.on_pressed_sound = nil
 top_category_blueprint_style.arrow = {}
 local top_category_blueprint_arrow_style = top_category_blueprint_style.arrow
-top_category_blueprint_arrow_style.color = Color.terminal_frame(255, true)
+top_category_blueprint_arrow_style.color = Color.terminal_text_body(255, true)
 top_category_blueprint_arrow_style.default_color = top_category_blueprint_arrow_style.color
-top_category_blueprint_arrow_style.hover_color = Color.terminal_frame_hover(nil, true)
-top_category_blueprint_arrow_style.selected_color = Color.terminal_frame_selected(nil, true)
+top_category_blueprint_arrow_style.hover_color = Color.terminal_text_header(nil, true)
+top_category_blueprint_arrow_style.selected_color = Color.terminal_text_header_selected(nil, true)
 top_category_blueprint_arrow_style.angle = math.degrees_to_radians(-90)
 top_category_blueprint_arrow_style.size = {
 	24,
@@ -615,7 +537,7 @@ top_category_blueprint_arrow_style.vertical_alignment = "center"
 top_category_blueprint_arrow_style.horizontal_alignment = "right"
 top_category_blueprint_arrow_style.unfold_sound = UISoundEvents.default_dropdown_expand
 top_category_blueprint_arrow_style.fold_sound = UISoundEvents.default_dropdown_minimize
-blueprint_styles.sub_category_button = table.clone(simple_category_blueprint_style)
+blueprint_styles.sub_category_button = {}
 local sub_category_blueprint_style = blueprint_styles.sub_category_button
 sub_category_blueprint_style.folded_size = {
 	0,
@@ -626,17 +548,7 @@ sub_category_blueprint_style.unfolded_size = {
 	56
 }
 sub_category_blueprint_style.size = sub_category_blueprint_style.folded_size
-local sub_category_blueprint_background_style = sub_category_blueprint_style.background
-sub_category_blueprint_background_style.size = {
-	sub_category_blueprint_style.unfolded_size[1],
-	sub_category_blueprint_style.unfolded_size[2] - 2 * category_list_padding_top_divider_style.size[2]
-}
-local sub_category_blueprint_background_gradient_style = sub_category_blueprint_style.background_gradient
-sub_category_blueprint_background_gradient_style.size = sub_category_blueprint_background_style.size
-local sub_category_blueprint_frame_style = sub_category_blueprint_style.frame
-sub_category_blueprint_frame_style.size = sub_category_blueprint_style.unfolded_size
-local sub_category_blueprint_corner_style = sub_category_blueprint_style.corner
-sub_category_blueprint_corner_style.size = sub_category_blueprint_style.unfolded_size
+sub_category_blueprint_style.text = table.clone(UIFontSettings.list_button)
 local sub_category_blueprint_text_style = sub_category_blueprint_style.text
 sub_category_blueprint_text_style.font_size = 20
 sub_category_blueprint_text_style.offset[1] = 52
@@ -741,10 +653,10 @@ foldout_achievement_style.size = {
 }
 foldout_achievement_style.arrow = {}
 local foldout_achievement_arrow_style = foldout_achievement_style.arrow
-foldout_achievement_arrow_style.color = Color.terminal_frame(255, true)
-foldout_achievement_arrow_style.default_color = top_category_blueprint_arrow_style.color
-foldout_achievement_arrow_style.hover_color = Color.terminal_frame_hover(255, true)
-foldout_achievement_arrow_style.selected_color = Color.terminal_frame_selected(nil, true)
+foldout_achievement_arrow_style.color = Color.terminal_text_body(255, true)
+foldout_achievement_arrow_style.default_color = foldout_achievement_arrow_style.color
+foldout_achievement_arrow_style.hover_color = Color.terminal_text_header(255, true)
+foldout_achievement_arrow_style.selected_color = Color.terminal_text_header_selected(nil, true)
 foldout_achievement_arrow_style.angle = math.degrees_to_radians(-90)
 foldout_achievement_arrow_style.size = {
 	24,

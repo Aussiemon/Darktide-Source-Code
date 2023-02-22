@@ -1,8 +1,9 @@
 local AuthoritativePlayerInputHandler = require("scripts/managers/player/player_game_states/authoritative_player_input_handler")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
+local Missions = require("scripts/settings/mission/mission_templates")
 local RemotePlayer = class("RemotePlayer")
 
-RemotePlayer.init = function (self, unique_id, session_id, channel_id, peer_id, local_player_id, profile, slot, account_id, human_controlled, is_server, telemetry_game_session)
+RemotePlayer.init = function (self, unique_id, session_id, channel_id, peer_id, local_player_id, profile, slot, account_id, human_controlled, is_server, telemetry_game_session, last_mission_id)
 	self.player_unit = nil
 	self.owned_units = {}
 	self.is_server = is_server
@@ -17,6 +18,16 @@ RemotePlayer.init = function (self, unique_id, session_id, channel_id, peer_id, 
 	self._account_id = account_id
 	self._slot = slot
 
+	if last_mission_id then
+		local mission_name = NetworkLookup.missions[last_mission_id]
+		local mission_settings = Missions[mission_name]
+
+		if rawget(mission_settings, "spawn_settings") then
+			local spawn_settings = mission_settings.spawn_settings
+			self._wanted_spawn_point = spawn_settings.next_mission
+		end
+	end
+
 	if human_controlled then
 		self._debug_name = "Remote #" .. peer_id:sub(-3, -1)
 	else
@@ -28,6 +39,14 @@ RemotePlayer.init = function (self, unique_id, session_id, channel_id, peer_id, 
 	self._game_state_object = nil
 
 	self:set_profile(profile)
+end
+
+RemotePlayer.set_wanted_spawn_point = function (self, wanted_spawn_point)
+	self._wanted_spawn_point = wanted_spawn_point
+end
+
+RemotePlayer.wanted_spawn_point = function (self)
+	return self._wanted_spawn_point
 end
 
 RemotePlayer.type = function (self)
@@ -134,8 +153,6 @@ end
 RemotePlayer.create_input_handler = function (self)
 	if self.is_server then
 		self.input_handler = AuthoritativePlayerInputHandler:new(self, self.is_server)
-
-		self.input_handler:create_clock()
 	end
 end
 

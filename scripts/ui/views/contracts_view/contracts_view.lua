@@ -377,11 +377,32 @@ local function _get_task_description_and_target(task_criteria)
 		title_loc = ViewSettings.task_label_kill_bosses
 		desc_loc = ViewSettings.task_description_kill_bosses
 	elseif task_type == "CollectPickup" then
-		params.kind = Localize(task_parameter_strings[task_criteria.pickupType] or "")
+		local param_loc = task_parameter_strings[task_criteria.pickupType]
+
+		if not param_loc then
+			local task_criteria_types = task_criteria.pickupTypes
+
+			if #task_criteria_types > 1 then
+				param_loc = task_parameter_strings.tome_or_grimoire
+			else
+				param_loc = task_parameter_strings[task_criteria_types[1]]
+			end
+		end
+
+		params.kind = Localize(param_loc or "")
 		title_loc = ViewSettings.task_label_collect_pickups
 		desc_loc = ViewSettings.task_description_collect_pickups
 	elseif task_type == "CollectResource" then
 		local wallet_settings = WalletSettings[task_criteria.resourceType]
+
+		if not wallet_settings then
+			local task_criteria_types = task_criteria.resourceTypes
+
+			if task_criteria_types and #task_criteria_types > 0 then
+				wallet_settings = WalletSettings[task_criteria_types[1]]
+			end
+		end
+
 		params.kind = wallet_settings and Localize(wallet_settings.display_name) or ""
 		title_loc = ViewSettings.task_label_collect_resources
 		desc_loc = ViewSettings.task_description_collect_resources

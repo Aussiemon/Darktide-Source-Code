@@ -287,6 +287,7 @@ damage_templates.warpfire = {
 }
 damage_templates.bleeding = {
 	stagger_category = "flamer",
+	skip_minion_toughness = true,
 	toughness_multiplier = 3,
 	ignore_shield = true,
 	armor_damage_modifier = {

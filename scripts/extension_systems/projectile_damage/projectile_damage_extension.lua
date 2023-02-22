@@ -3,26 +3,26 @@ local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local Breed = require("scripts/utilities/breed")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local Explosion = require("scripts/utilities/attack/explosion")
 local Health = require("scripts/utilities/health")
 local HitMass = require("scripts/utilities/attack/hit_mass")
 local HitZone = require("scripts/utilities/attack/hit_zone")
-local MasterItems = require("scripts/backend/master_items")
-local MinionDeath = require("scripts/utilities/minion_death")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local LagCompensation = require("scripts/utilities/lag_compensation")
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
-local Suppression = require("scripts/utilities/attack/suppression")
-local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
+local MasterItems = require("scripts/backend/master_items")
+local MinionDeath = require("scripts/utilities/minion_death")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
+local Suppression = require("scripts/utilities/attack/suppression")
+local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local armor_types = ArmorSettings.types
 local attack_results = AttackSettings.attack_results
 local buff_keywords = BuffSettings.keywords
-local surface_hit_types = SurfaceMaterialSettings.hit_types
 local projectile_impact_results = ProjectileLocomotionSettings.impact_results
+local surface_hit_types = SurfaceMaterialSettings.hit_types
 local ProjectileDamageExtension = class("ProjectileDamageExtension")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local IMPACT_FX_DATA = {
@@ -280,7 +280,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 					impact_result = "continue_straight"
 				end
 
-				local damage_dealt, attack_result, damage_efficiency, stagger_result = Attack.execute(hit_unit, impact_damage_profile, "attack_direction", hit_direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "target_index", 1, "charge_level", impact_charge_level, "is_critical_strike", is_critical_strike, "hit_actor", hit_actor, "hit_world_position", hit_position, "attack_type", AttackSettings.attack_types.ranged, "damage_type", impact_damage_type, "attacking_unit", projectile_unit, "item", weapon_item_or_nil)
+				local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(hit_unit, impact_damage_profile, "attack_direction", hit_direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "target_index", 1, "charge_level", impact_charge_level, "is_critical_strike", is_critical_strike, "hit_actor", hit_actor, "hit_world_position", hit_position, "attack_type", AttackSettings.attack_types.ranged, "damage_type", impact_damage_type, "attacking_unit", projectile_unit, "item", weapon_item_or_nil)
 
 				if impact_damage_type then
 					ImpactEffect.play(hit_unit, hit_actor, damage_dealt, impact_damage_type, hit_zone_name, attack_result, hit_position, hit_normal, hit_direction, projectile_unit, IMPACT_FX_DATA, false, AttackSettings.attack_types.ranged, damage_efficiency, impact_damage_profile)

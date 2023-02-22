@@ -1,6 +1,8 @@
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BaseTemplateSettings = require("scripts/settings/equipment/weapon_templates/base_template_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local HoloSightTemplates = require("scripts/settings/equipment/holo_sight_templates")
@@ -8,27 +10,25 @@ local LineEffects = require("scripts/settings/effects/line_effects")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
-local DamageSettings = require("scripts/settings/damage/damage_settings")
-local WeaponTraitsBespokeLaspistolP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_laspistol_p1")
-local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
-local WeaponTraitsRangedAimed = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_aimed")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
-local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
+local WeaponTraitsBespokeLaspistolP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_laspistol_p1")
+local WeaponTraitsRangedAimed = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_aimed")
+local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
-local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local armor_types = ArmorSettings.types
-local damage_types = DamageSettings.damage_types
-local wield_inputs = PlayerCharacterConstants.wield_inputs
-local template_types = WeaponTweakTemplateSettings.template_types
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
-local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
-local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
-local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
-local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
-local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
-local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
+local damage_types = DamageSettings.damage_types
+local template_types = WeaponTweakTemplateSettings.template_types
+local wield_inputs = PlayerCharacterConstants.wield_inputs
 local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
+local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
+local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
+local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
+local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
+local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
+local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
 local weapon_template = {
 	action_inputs = {
@@ -555,7 +555,7 @@ weapon_template.actions = {
 		},
 		inner_push_rad = math.pi * 0.04,
 		outer_push_rad = math.pi * 0.1,
-		inner_damage_profile = DamageProfileTemplates.ninja_push,
+		inner_damage_profile = DamageProfileTemplates.default_push,
 		inner_damage_type = damage_types.physical,
 		outer_damage_profile = DamageProfileTemplates.light_push,
 		outer_damage_type = damage_types.physical
@@ -781,7 +781,8 @@ weapon_template.uses_overheat = false
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.fx_sources = {
-	_muzzle = "fx_muzzle_01"
+	_muzzle = "fx_muzzle_01",
+	_mag_well = "fx_reload"
 }
 weapon_template.crosshair_type = "assault"
 weapon_template.hit_marker_type = "center"
@@ -853,6 +854,13 @@ table.append(weapon_template.traits, bespoke_lasgun_p1_traits)
 
 weapon_template.hipfire_inputs = {
 	shoot_pressed = true
+}
+weapon_template.weapon_temperature_settings = {
+	increase_rate = 0.07,
+	decay_rate = 0.075,
+	grace_time = 0.4,
+	use_charge = false,
+	barrel_threshold = 0.4
 }
 weapon_template.displayed_keywords = {
 	{

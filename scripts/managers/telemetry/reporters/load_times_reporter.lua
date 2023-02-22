@@ -39,9 +39,7 @@ LoadTimesReporter._loading_resources_finished = function (self)
 	self:start_timer("wait_for_spawn_timer")
 end
 
-LoadTimesReporter._mission_intro_started = function (self, mission_name)
-	self._mission_name = mission_name
-
+LoadTimesReporter._mission_intro_started = function (self)
 	self:start_timer("mission_intro_timer")
 end
 
@@ -52,7 +50,6 @@ end
 LoadTimesReporter._loading_finished = function (self)
 	self:stop_timer("loading_timer")
 	self:report()
-	self:reset_timers()
 end
 
 LoadTimesReporter.update = function (self, dt, t)
@@ -76,7 +73,8 @@ end
 LoadTimesReporter.start_timer = function (self, timer_name)
 	if Managers.time:has_timer(timer_name) then
 		Managers.time:set_time(timer_name, 0)
-		Log.info("[LoadTimesReporter]", "Reseting timer %s", timer_name)
+		Managers.time:set_active(timer_name, true)
+		Log.info("LoadTimesReporter", "Reseting timer %s", timer_name)
 	else
 		Managers.time:register_timer(timer_name, "main", 0)
 	end
@@ -94,7 +92,8 @@ local TIMERS = {
 	"loading_timer",
 	"wait_for_network_timer",
 	"resource_loading_timer",
-	"wait_for_spawn_timer"
+	"wait_for_spawn_timer",
+	"mission_intro_timer"
 }
 
 LoadTimesReporter.reset_timers = function (self)

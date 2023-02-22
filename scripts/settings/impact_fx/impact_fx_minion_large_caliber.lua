@@ -411,6 +411,12 @@ local player = {
 				only_3p = true
 			}
 		},
+		toughness_absorbed = {
+			{
+				event = "wwise/events/player/play_toughness_hits",
+				hit_direction_interface = true
+			}
+		},
 		damage_negated = {
 			{
 				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated_husk",

@@ -144,6 +144,25 @@ local disorientation_settings = {
 				action_delay = 0.75
 			}
 		},
+		ogryn_fumbled = {
+			sound_event = "wwise/events/player/play_player_get_hit_heavy_2d",
+			movement_speed_buff = "ranged_sprinting_stun_movement_slow",
+			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_heavy",
+			hit_react_anim_1p = "shake_heavy",
+			hit_react_anim_3p = "hit_react",
+			stun = {
+				start_anim_3p = "hit_stun_heavy",
+				intoxication_level = 5,
+				start_anim = "hit_stun_medium",
+				end_anim_3p = "hit_stun_finished",
+				interrupt_delay = 0.025,
+				end_anim = "hit_stun_recover",
+				end_stun_early_time = 0.5,
+				stun_immunity_time_buff = "stun_immune_long",
+				stun_duration = 0.5,
+				action_delay = 0.25
+			}
+		},
 		heavy = {
 			sound_event = "wwise/events/player/play_player_get_hit_heavy_2d",
 			movement_speed_buff = "heavy_stun_movement_slow",

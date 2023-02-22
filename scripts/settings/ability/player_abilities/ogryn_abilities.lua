@@ -1,7 +1,6 @@
 local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
 local TalentSettings = require("scripts/settings/buff/talent_settings")
 local bonebreaker_talent_settings = TalentSettings.ogryn_2
-local gunlugger_talent_settings = TalentSettings.ogryn_1
 local abilities = {
 	ogryn_charge = {
 		hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_bonebreaker_hud",
@@ -80,21 +79,6 @@ local abilities = {
 		inventory_item_name = "content/items/weapons/player/grenade_ogryn",
 		icon = "content/ui/materials/icons/abilities/combat/default",
 		max_charges = bonebreaker_talent_settings.grenade.max_charges,
-		archetypes = {
-			"ogryn"
-		}
-	},
-	ogryn_ranged_stance = {
-		required_weapon_type = "ranged",
-		hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_gunlugger_hud",
-		ability_template = "gunlugger_stance",
-		ability_type = "combat_ability",
-		icon = "content/ui/materials/icons/abilities/ultimate/default",
-		ability_template_tweak_data = {
-			buff_to_add = "ogryn_ranged_stance"
-		},
-		cooldown = gunlugger_talent_settings.combat_ability.cooldown,
-		max_charges = gunlugger_talent_settings.combat_ability.max_charges,
 		archetypes = {
 			"ogryn"
 		}

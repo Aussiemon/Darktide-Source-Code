@@ -36,7 +36,6 @@ HealthStationExtension.setup_from_component = function (self, start_charge_amoun
 	self._pickup_spawner_extension = ScriptUnit.extension(unit, "pickup_system")
 	self._point_of_interest_extension = ScriptUnit.extension(unit, "point_of_interest_system")
 	self._interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
-	self._dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
 
 	if battery_spawning_mode == "plugged" and not use_distribution_pool then
 		self:set_charge_amount(start_charge_amount)

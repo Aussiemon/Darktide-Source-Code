@@ -155,6 +155,35 @@ local conversations_hub_contract_vendor_a = {
 		},
 		randomize_indexes = {}
 	},
+	contract_vendor_purchase_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_contract_vendor_a__contract_vendor_purchase_a_01",
+			"loc_contract_vendor_a__contract_vendor_purchase_a_02",
+			"loc_contract_vendor_a__contract_vendor_purchase_a_03",
+			"loc_contract_vendor_a__contract_vendor_purchase_a_04",
+			"loc_contract_vendor_a__contract_vendor_purchase_a_05",
+			"loc_contract_vendor_a__contract_vendor_purchase_a_06",
+			"loc_contract_vendor_a__contract_vendor_purchase_a_07",
+			"loc_contract_vendor_a__contract_vendor_purchase_a_08",
+			"loc_contract_vendor_a__contract_vendor_purchase_a_09",
+			"loc_contract_vendor_a__contract_vendor_purchase_a_10"
+		},
+		sound_events_duration = {
+			1.463375,
+			2.109302,
+			1.837,
+			3.110156,
+			1.265521,
+			2.341313,
+			2.594198,
+			1.40474,
+			3.065656,
+			2.329885
+		},
+		randomize_indexes = {}
+	},
 	contract_vendor_replacing_task = {
 		randomize_indexes_n = 0,
 		sound_events_n = 20,
@@ -201,6 +230,25 @@ local conversations_hub_contract_vendor_a = {
 			5.168125,
 			3.459979,
 			2.424688
+		},
+		randomize_indexes = {}
+	},
+	contract_vendor_servitor_purchase_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_contract_vendor_a__contract_vendor_servitor_purchase_b_01",
+			"loc_contract_vendor_a__contract_vendor_servitor_purchase_b_02",
+			"loc_contract_vendor_a__contract_vendor_servitor_purchase_b_03",
+			"loc_contract_vendor_a__contract_vendor_servitor_purchase_b_04",
+			"loc_contract_vendor_a__contract_vendor_servitor_purchase_b_05"
+		},
+		sound_events_duration = {
+			2.703625,
+			2.927177,
+			2.041927,
+			3.312,
+			2.654865
 		},
 		randomize_indexes = {}
 	},

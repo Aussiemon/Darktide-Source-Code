@@ -111,7 +111,7 @@ templates.weapon_trait_bespoke_combataxe_p2_power_bonus_on_first_attack = {
 					[stat_buffs.power_level_modifier] = 0.15
 				},
 				{
-					[stat_buffs.power_level_modifier] = -0.15
+					[stat_buffs.power_level_modifier] = -0.1
 				}
 			}
 		},
@@ -121,7 +121,7 @@ templates.weapon_trait_bespoke_combataxe_p2_power_bonus_on_first_attack = {
 					[stat_buffs.power_level_modifier] = 0.2
 				},
 				{
-					[stat_buffs.power_level_modifier] = -0.2
+					[stat_buffs.power_level_modifier] = -0.1
 				}
 			}
 		},
@@ -131,7 +131,7 @@ templates.weapon_trait_bespoke_combataxe_p2_power_bonus_on_first_attack = {
 					[stat_buffs.power_level_modifier] = 0.25
 				},
 				{
-					[stat_buffs.power_level_modifier] = -0.25
+					[stat_buffs.power_level_modifier] = -0.1
 				}
 			}
 		}

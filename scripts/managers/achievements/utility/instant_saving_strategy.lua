@@ -11,6 +11,7 @@ InstantSavingStrategy.init = function (self, achievement_definitions)
 	self._tracked_accounts = {}
 	self._stats_by_player = {}
 	self._unlocks_by_player = {}
+	self._unlock_promises = {}
 end
 
 InstantSavingStrategy.destroy = function (self)
@@ -37,11 +38,16 @@ InstantSavingStrategy._add_unlock = function (self, account_id, achievement_id)
 	local achievement_definition = self._definitions.achievement_from_id(achievement_id)
 	local type, triggers = achievement_definition:get_triggers()
 	local stat_name = type == AchievementTypes.stat and triggers[1] or "none"
-	unlocks[size + 1] = {
+	local unlock = {
 		complete = true,
 		id = achievement_id,
 		stat = stat_name
 	}
+	unlocks[size + 1] = unlock
+	local promise = Promise.new()
+	self._unlock_promises[unlock] = promise
+
+	return promise
 end
 
 InstantSavingStrategy._add_stat = function (self, account_id, trigger_id, trigger_value)
@@ -67,6 +73,7 @@ end
 
 InstantSavingStrategy._push_update = function (self)
 	local updates = {}
+	local unlock_promises = {}
 
 	for i = 1, #self._tracked_accounts do
 		local account_id = self._tracked_accounts[i]
@@ -75,6 +82,12 @@ InstantSavingStrategy._push_update = function (self)
 
 		if #stats > 0 or #unlocks > 0 then
 			updates[#updates + 1] = Managers.backend.interfaces.commendations:create_update(account_id, stats, unlocks)
+
+			for j = 1, #unlocks do
+				local unlock = unlocks[j]
+				unlock_promises[#unlock_promises + 1] = self._unlock_promises[unlock]
+				self._unlock_promises[unlock] = nil
+			end
 		end
 	end
 
@@ -89,6 +102,15 @@ InstantSavingStrategy._push_update = function (self)
 	end
 
 	self._promise = Managers.backend.interfaces.commendations:bulk_update_commendations(updates):next(function ()
+		for i = 1, #unlock_promises do
+			local p = unlock_promises[i]
+
+			if p:is_pending() then
+				Log.info("InstantSavingStrategy", "Resolving unlock promise: %s", p)
+				p:resolve()
+			end
+		end
+
 		self:_push_update()
 	end)
 end
@@ -120,11 +142,13 @@ InstantSavingStrategy.save_on_stat_change = function (self, account_id, trigger_
 end
 
 InstantSavingStrategy.save_on_achievement_unlock = function (self, account_id, achievement_id)
-	self:_add_unlock(account_id, achievement_id)
+	local promise = self:_add_unlock(account_id, achievement_id)
 
 	if not self._promise:is_pending() then
 		self:_push_update()
 	end
+
+	return promise
 end
 
 implements(InstantSavingStrategy, SavingStrategyInterface)

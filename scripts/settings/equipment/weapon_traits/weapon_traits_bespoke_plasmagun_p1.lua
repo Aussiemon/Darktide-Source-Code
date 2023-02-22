@@ -6,16 +6,16 @@ local proc_events = BuffSettings.proc_events
 templates.weapon_trait_bespoke_plasmagun_p1_toughness_on_elite_kills = {
 	weapon_trait_bespoke_plasmagun_p1_toughness_on_elite_kills = {
 		{
-			toughness_fixed_percentage = 0.04
-		},
-		{
 			toughness_fixed_percentage = 0.06
 		},
 		{
-			toughness_fixed_percentage = 0.08
+			toughness_fixed_percentage = 0.1
 		},
 		{
-			toughness_fixed_percentage = 0.1
+			toughness_fixed_percentage = 0.15
+		},
+		{
+			toughness_fixed_percentage = 0.2
 		}
 	}
 }
@@ -47,7 +47,7 @@ templates.weapon_trait_bespoke_plasmagun_p1_power_bonus_on_continuous_fire = {
 	weapon_trait_bespoke_plasmagun_p1_power_bonus_on_continuous_fire = {
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.02
+				[stat_buffs.power_level_modifier] = 0.1
 			}
 		}
 	}

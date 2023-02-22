@@ -4,6 +4,7 @@ local ItemPassTemplates = require("scripts/ui/pass_templates/item_pass_templates
 local ClassSelectionViewSettings = require("scripts/ui/views/class_selection_view/class_selection_view_settings")
 local TextUtilities = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
 
 local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, render_target)
 	local material_values = widget.style.icon.material_values
@@ -73,7 +74,7 @@ local class_selection_view_blueprints = {
 					offset = {
 						0,
 						0,
-						0
+						1
 					},
 					material_values = {}
 				}
@@ -101,6 +102,8 @@ local class_selection_view_blueprints = {
 				widget.style.texture.size = element.icon_size
 			end
 
+			widget.style.texture.offset[2] = widget.style.texture.offset[2] - widget.style.texture.size[2] * 0.15
+
 			if element.ability_type == "combat_ability" then
 				widget.content.texture = "content/ui/materials/icons/talents/combat_talent_icon_container"
 			else
@@ -116,14 +119,16 @@ local class_selection_view_blueprints = {
 			local description_style = widget.style.description
 			local title_width = max_width - title_style.offset[1]
 			local description_width = max_width - description_style.offset[1]
+			local title_style_options = UIFonts.get_font_options_by_style(title_style)
+			local description_style_options = UIFonts.get_font_options_by_style(description_style)
 			local _, title_text_height = UIRenderer.text_size(parent._offscreen_renderer, widget.content.title, title_style.font_type, title_style.font_size, {
 				title_width,
 				math.huge
-			})
+			}, title_style_options)
 			local _, description_text_height = UIRenderer.text_size(parent._offscreen_renderer, widget.content.description, description_style.font_type, description_style.font_size, {
 				description_width,
 				math.huge
-			})
+			}, description_style_options)
 			title_style.size = {
 				title_width,
 				title_text_height
@@ -132,13 +137,15 @@ local class_selection_view_blueprints = {
 				description_width,
 				description_text_height
 			}
-			local total_text_size = title_text_height + description_text_height + description_style.offset[2]
+			description_style.offset[2] = description_style.offset[2] + title_style.size[2]
+			local total_text_size = description_text_height + description_style.offset[2]
 			local total_height = math.max(widget.style.texture.size[2], total_text_size)
-			local offset_text = (total_height - total_text_size) * 0.5
-			local offset_icon = (total_height - widget.style.texture.size[2]) * 0.5
-			title_style.offset[2] = title_style.offset[2] + offset_text
-			description_style.offset[2] = description_style.offset[2] + title_style.size[2] + offset_text
-			widget.style.texture.offset[2] = offset_icon
+
+			if total_height == total_text_size then
+				local bottom_margin = 20
+				total_height = total_height + bottom_margin
+			end
+
 			widget.content.size = {
 				max_width,
 				total_height
@@ -350,44 +357,44 @@ local class_selection_view_blueprints = {
 				widget.content.video_player_reference = nil
 			end
 		end
-	},
-	description_short = {
-		pass_definitions = {
-			{
-				value_id = "class_attributes",
-				pass_type = "text",
-				style_id = "class_attributes",
-				value = "",
-				style = ClassSelectionViewFontStyle.class_attributes_style
-			}
-		},
-		init = function (parent, widget, element)
-			widget.element = element
-			local attributes = ""
-
-			if element.text then
-				local localized_attributes = Localize(element.text)
-				local attributes_list = string.split(localized_attributes, ",")
-
-				for i = 1, #attributes_list do
-					local attribute = attributes_list[i]
-					attribute = attribute:match("^%s*(.-)%s*$")
-					attributes = i == 1 and attribute or attributes .. " · " .. attribute
-				end
-			end
-
-			widget.content.class_attributes = attributes
-			local attributes_style = widget.style.class_attributes
-			local _, attributes_text_height = UIRenderer.text_size(parent._offscreen_renderer, widget.content.class_attributes, attributes_style.font_type, attributes_style.font_size, {
-				max_width,
-				math.huge
-			})
-			widget.content.size = {
-				max_width,
-				attributes_text_height
-			}
-		end
 	}
+}
+class_selection_view_blueprints.description_short = {
+	pass_definitions = {
+		{
+			value_id = "class_attributes",
+			pass_type = "text",
+			style_id = "class_attributes",
+			value = "",
+			style = ClassSelectionViewFontStyle.class_attributes_style
+		}
+	},
+	init = function (parent, widget, element)
+		widget.element = element
+		local attributes = ""
+
+		if element.text then
+			local localized_attributes = Localize(element.text)
+			local attributes_list = string.split(localized_attributes, ",")
+
+			for i = 1, #attributes_list do
+				local attribute = attributes_list[i]
+				attribute = attribute:match("^%s*(.-)%s*$")
+				attributes = i == 1 and attribute or attributes .. " · " .. attribute
+			end
+		end
+
+		widget.content.class_attributes = attributes
+		local attributes_style = widget.style.class_attributes
+		local _, attributes_text_height = UIRenderer.text_size(parent._offscreen_renderer, widget.content.class_attributes, attributes_style.font_type, attributes_style.font_size, {
+			max_width,
+			math.huge
+		})
+		widget.content.size = {
+			max_width,
+			attributes_text_height
+		}
+	end
 }
 
 return class_selection_view_blueprints

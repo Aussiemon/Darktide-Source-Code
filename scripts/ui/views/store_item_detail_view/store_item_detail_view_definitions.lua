@@ -92,11 +92,11 @@ local scenegraph_definition = {
 		horizontal_alignment = "left",
 		size = {
 			grid_width,
-			700
+			660
 		},
 		position = {
 			100,
-			200,
+			120,
 			1
 		}
 	},
@@ -338,31 +338,59 @@ local scenegraph_definition = {
 			5
 		}
 	},
-	price_text = {
+	purchase_button_area = {
 		vertical_alignment = "bottom",
 		parent = "left_side",
+		horizontal_alignment = "left",
+		size = {
+			grid_width,
+			90
+		},
+		position = {
+			0,
+			120,
+			0
+		}
+	},
+	purchase_button = {
+		vertical_alignment = "center",
+		parent = "purchase_button_area",
+		horizontal_alignment = "left",
+		size = {
+			250,
+			50
+		},
+		position = {
+			20,
+			0,
+			0
+		}
+	},
+	price_bundle_text = {
+		vertical_alignment = "center",
+		parent = "purchase_button_area",
 		horizontal_alignment = "right",
 		size = {
 			0,
 			50
 		},
 		position = {
-			-50,
+			-20,
 			8,
 			0
 		}
 	},
-	purchase_button = {
-		vertical_alignment = "bottom",
-		parent = "left_side",
-		horizontal_alignment = "center",
+	price_item_text = {
+		vertical_alignment = "center",
+		parent = "purchase_button_area",
+		horizontal_alignment = "right",
 		size = {
-			250,
-			90
+			0,
+			50
 		},
 		position = {
-			0,
-			92,
+			-20,
+			8,
 			0
 		}
 	},
@@ -381,7 +409,7 @@ local scenegraph_definition = {
 		}
 	},
 	timer_text = {
-		vertical_alignment = "bottom",
+		vertical_alignment = "top",
 		parent = "left_side",
 		horizontal_alignment = "left",
 		size = {
@@ -390,7 +418,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			50,
-			10,
+			-50,
 			0
 		}
 	},
@@ -611,7 +639,7 @@ owned_set_text_font_style.text_color = Color.ui_orange_medium(255, true)
 local item_price_text_style = table.clone(UIFontSettings.body)
 item_price_text_style.text_horizontal_alignment = "left"
 item_price_text_style.text_vertical_alignment = "top"
-item_price_text_style.horizontal_alignment = "left"
+item_price_text_style.horizontal_alignment = "right"
 item_price_text_style.vertical_alignment = "center"
 item_price_text_style.offset = {
 	0,
@@ -660,6 +688,15 @@ purchase_button_text_style.offset = {
 purchase_button_text_style.horizontal_alignment = "center"
 purchase_button_text_style.vertical_alignment = "center"
 purchase_button_text_style.font_size = 24
+local purchase_button_legend_text_style = table.clone(UIFontSettings.button_primary)
+purchase_button_legend_text_style.offset = {
+	0,
+	40,
+	4
+}
+purchase_button_legend_text_style.horizontal_alignment = "center"
+purchase_button_legend_text_style.vertical_alignment = "bottom"
+purchase_button_legend_text_style.font_size = 14
 local widget_definitions = {
 	wallet_text = UIWidget.create_definition({
 		{
@@ -707,26 +744,6 @@ local widget_definitions = {
 			}
 		},
 		{
-			value = "content/ui/materials/frames/premium_store/details_lower",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "bottom",
-				horizontal_alignment = "center",
-				offset = {
-					0,
-					100,
-					3
-				},
-				size = {
-					654,
-					174
-				}
-			},
-			visibility_function = function (content, style)
-				return not content.owned
-			end
-		},
-		{
 			value = "content/ui/materials/frames/premium_store/details_lower_basic",
 			pass_type = "texture",
 			style = {
@@ -741,35 +758,7 @@ local widget_definitions = {
 					654,
 					108
 				}
-			},
-			visibility_function = function (content, style)
-				return content.owned
-			end
-		},
-		{
-			pass_type = "rect",
-			style = {
-				vertical_alignment = "bottom",
-				horizontal_alignment = "center",
-				size = {
-					nil,
-					50
-				},
-				offset = {
-					0,
-					0,
-					2
-				},
-				color = {
-					180,
-					0,
-					0,
-					0
-				}
-			},
-			visibility_function = function (content, style)
-				return not content.owned or content.force_show_price
-			end
+			}
 		}
 	}, "left_side"),
 	corner_top_left = UIWidget.create_definition({
@@ -866,28 +855,12 @@ local widget_definitions = {
 			}
 		}
 	}, "description_mask"),
-	purchase_button = UIWidget.create_definition({
+	purchase_bundle_button = UIWidget.create_definition({
 		{
 			pass_type = "hotspot",
 			content_id = "hotspot",
 			content = {
 				use_is_focused = true
-			}
-		},
-		{
-			value = "content/ui/materials/backgrounds/terminal_basic",
-			style_id = "background",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
-				horizontal_alignment = "center",
-				color = Color.terminal_grid_background(255, true),
-				offset = {
-					0,
-					0,
-					0
-				}
 			}
 		},
 		{
@@ -898,10 +871,6 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				scale_to_material = true,
 				horizontal_alignment = "center",
-				size_addition = {
-					-50,
-					-40
-				},
 				color = Color.terminal_background_gradient(nil, true)
 			},
 			offset = {
@@ -912,9 +881,6 @@ local widget_definitions = {
 			change_function = function (content, style)
 				local hotspot = content.hotspot
 				style.color[1] = 100 + math.max(hotspot.anim_hover_progress, content.hotspot.anim_select_progress) * 155
-			end,
-			visibility_function = function (content, style)
-				return not content.hotspot.disabled
 			end
 		},
 		{
@@ -925,10 +891,6 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				scale_to_material = true,
 				horizontal_alignment = "center",
-				size_addition = {
-					-50,
-					-40
-				},
 				default_color = Color.terminal_frame(nil, true),
 				hover_color = Color.terminal_frame_hover(nil, true),
 				offset = {
@@ -945,9 +907,6 @@ local widget_definitions = {
 				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 				ColorUtilities.color_lerp(default_color, hover_color, progress, color)
-			end,
-			visibility_function = function (content, style)
-				return not content.hotspot.disabled
 			end
 		},
 		{
@@ -958,10 +917,6 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				scale_to_material = true,
 				horizontal_alignment = "center",
-				size_addition = {
-					-50,
-					-40
-				},
 				default_color = Color.terminal_corner(nil, true),
 				hover_color = Color.terminal_corner_hover(nil, true),
 				offset = {
@@ -978,9 +933,6 @@ local widget_definitions = {
 				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 				ColorUtilities.color_lerp(default_color, hover_color, progress, color)
-			end,
-			visibility_function = function (content, style)
-				return not content.hotspot.disabled
 			end
 		},
 		{
@@ -988,10 +940,6 @@ local widget_definitions = {
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "center",
-				size_addition = {
-					-30,
-					-20
-				},
 				color = {
 					150,
 					0,
@@ -1022,10 +970,139 @@ local widget_definitions = {
 				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 				ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
-			end,
-			visibility_function = function (content, style)
-				return not content.hotspot.disabled
 			end
+		},
+		{
+			style_id = "legend",
+			pass_type = "text",
+			value_id = "legend",
+			value = "",
+			style = purchase_button_legend_text_style
+		}
+	}, "purchase_button"),
+	purchase_item_button = UIWidget.create_definition({
+		{
+			pass_type = "hotspot",
+			content_id = "hotspot",
+			content = {
+				use_is_focused = true
+			}
+		},
+		{
+			pass_type = "texture",
+			style_id = "background_gradient",
+			value = "content/ui/materials/gradients/gradient_vertical",
+			style = {
+				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "center",
+				color = Color.terminal_background_gradient(nil, true)
+			},
+			offset = {
+				0,
+				0,
+				2
+			},
+			change_function = function (content, style)
+				local hotspot = content.hotspot
+				style.color[1] = 100 + math.max(hotspot.anim_hover_progress, content.hotspot.anim_select_progress) * 155
+			end
+		},
+		{
+			pass_type = "texture",
+			style_id = "frame",
+			value = "content/ui/materials/frames/frame_tile_2px",
+			style = {
+				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "center",
+				default_color = Color.terminal_frame(nil, true),
+				hover_color = Color.terminal_frame_hover(nil, true),
+				offset = {
+					0,
+					0,
+					3
+				}
+			},
+			change_function = function (content, style)
+				local hotspot = content.hotspot
+				local default_color = hotspot.disabled and style.disabled_color or style.default_color
+				local hover_color = style.hover_color
+				local color = style.text_color or style.color
+				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+
+				ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+			end
+		},
+		{
+			pass_type = "texture",
+			style_id = "corner",
+			value = "content/ui/materials/frames/frame_corner_2px",
+			style = {
+				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "center",
+				default_color = Color.terminal_corner(nil, true),
+				hover_color = Color.terminal_corner_hover(nil, true),
+				offset = {
+					0,
+					0,
+					4
+				}
+			},
+			change_function = function (content, style)
+				local hotspot = content.hotspot
+				local default_color = hotspot.disabled and style.disabled_color or style.default_color
+				local hover_color = style.hover_color
+				local color = style.text_color or style.color
+				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+
+				ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+			end
+		},
+		{
+			pass_type = "rect",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				color = {
+					150,
+					0,
+					0,
+					0
+				},
+				offset = {
+					0,
+					-8,
+					3
+				}
+			},
+			visibility_function = function (content, style)
+				return content.hotspot.disabled
+			end
+		},
+		{
+			style_id = "text",
+			pass_type = "text",
+			value_id = "text",
+			value = "",
+			style = purchase_button_text_style,
+			change_function = function (content, style)
+				local hotspot = content.hotspot
+				local default_color = hotspot.disabled and style.disabled_color or style.default_color
+				local hover_color = style.hover_color
+				local text_color = style.text_color
+				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+
+				ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
+			end
+		},
+		{
+			style_id = "legend",
+			pass_type = "text",
+			value_id = "legend",
+			value = "",
+			style = purchase_button_legend_text_style
 		}
 	}, "purchase_button"),
 	timer_widget = UIWidget.create_definition({
@@ -1112,7 +1189,7 @@ local widget_definitions = {
 	}, "item_restrictions", {
 		visible = false
 	}),
-	price_text = UIWidget.create_definition({
+	price_bundle_text = UIWidget.create_definition({
 		{
 			value_id = "price_icon",
 			style_id = "price_icon",
@@ -1160,7 +1237,56 @@ local widget_definitions = {
 			value = "??? ",
 			style = item_price_text_style
 		}
-	}, "price_text"),
+	}, "price_bundle_text"),
+	price_item_text = UIWidget.create_definition({
+		{
+			value_id = "price_icon",
+			style_id = "price_icon",
+			pass_type = "texture",
+			value = "content/ui/materials/masks/gradient_horizontal",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "left",
+				size = {
+					30,
+					30
+				},
+				offset = {
+					0,
+					-10,
+					4
+				}
+			},
+			visibility_function = function (content, style)
+				if not content.element then
+					return false
+				end
+
+				return not content.element.owned and not content.element.formattedPrice
+			end
+		},
+		{
+			style_id = "discount_price",
+			pass_type = "text",
+			value_id = "discount_price",
+			value = "",
+			style = item_discount_price_text_style,
+			visibility_function = function (content, style)
+				if not content.element then
+					return false
+				end
+
+				return not content.element.owned and content.element.discount
+			end
+		},
+		{
+			style_id = "price",
+			pass_type = "text",
+			value_id = "price",
+			value = "??? ",
+			style = item_price_text_style
+		}
+	}, "price_item_text"),
 	owned_info_text = UIWidget.create_definition({
 		{
 			style_id = "text",
@@ -1418,47 +1544,6 @@ local price_text_definition = UIWidget.create_definition({
 		style = wallet_text_font_style
 	}
 }, "price_text")
-local set_detail_definition = UIWidget.create_definition({
-	{
-		value_id = "texture",
-		style_id = "texture",
-		pass_type = "texture",
-		value = "content/ui/materials/base/ui_default_base",
-		style = {
-			vertical_alignment = "center",
-			horizontal_alignment = "left",
-			color = Color.ui_grey_light(255, true),
-			size = {
-				80,
-				80
-			},
-			material_values = {
-				texture_map = ""
-			},
-			offset = {
-				-20,
-				0,
-				0
-			}
-		}
-	},
-	{
-		value_id = "text",
-		style_id = "text",
-		pass_type = "text",
-		value = "0",
-		style = set_text_font_style
-	},
-	{
-		value_id = "owned_text",
-		pass_type = "text",
-		value = Localize("loc_item_owned"),
-		style = owned_set_text_font_style,
-		visibility_function = function (content, style)
-			return content.owned
-		end
-	}
-}, "set_pivot")
 local legend_inputs = {
 	{
 		input_action = "back",
@@ -1491,12 +1576,30 @@ local legend_inputs = {
 		end
 	},
 	{
-		input_action = "hotkey_item_inspect",
-		display_name = "loc_premium_store_inspect_item",
+		input_action = "hotkey_loadout",
+		display_name = "loc_weapon_inventory_inspect_button",
 		alignment = "right_alignment",
-		on_pressed_callback = "cb_on_details_pressed",
+		on_pressed_callback = "cb_on_inspect_pressed",
 		visibility_function = function (parent)
-			return parent._selected_widget and not parent._detailed_item and not parent._aquilas_showing
+			return true
+		end
+	},
+	{
+		input_action = "cycle_list_secondary",
+		display_name = "loc_premium_store_preview_weapon_no_skin_button",
+		alignment = "right_alignment",
+		on_pressed_callback = "cb_on_weapon_skin_preview_pressed",
+		visibility_function = function (parent)
+			return parent._selected_element and parent._selected_element.visual_item.item_type == "WEAPON_SKIN" and not parent._weapon_preview_show_original and not parent._aquilas_showing
+		end
+	},
+	{
+		input_action = "cycle_list_secondary",
+		display_name = "loc_premium_store_preview_weapon_with_skin_button",
+		alignment = "right_alignment",
+		on_pressed_callback = "cb_on_weapon_skin_preview_pressed",
+		visibility_function = function (parent)
+			return parent._selected_element and parent._selected_element.visual_item.item_type == "WEAPON_SKIN" and parent._weapon_preview_show_original and not parent._aquilas_showing
 		end
 	}
 }
@@ -1506,6 +1609,5 @@ return {
 	widget_definitions = widget_definitions,
 	price_text_definition = price_text_definition,
 	scenegraph_definition = scenegraph_definition,
-	wallet_definitions = wallet_definitions,
-	set_detail_definition = set_detail_definition
+	wallet_definitions = wallet_definitions
 }

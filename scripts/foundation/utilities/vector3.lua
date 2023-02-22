@@ -68,7 +68,7 @@ Vector3.compact_string = function (v)
 end
 
 Vector3.from_compact_string = function (s)
-	local x, y, z = string.match(s, "([%d%.]+)%,([%d%.]+)%,([%d%.]+)")
+	local x, y, z = string.match(s, "([-%d%.]+)%,([-%d%.]+)%,([-%d%.]+)")
 
 	return Vector3(x, y, z)
 end

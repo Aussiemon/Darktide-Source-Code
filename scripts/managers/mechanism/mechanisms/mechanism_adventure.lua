@@ -34,13 +34,13 @@ MechanismAdventure.init = function (self, ...)
 
 			Log.info("MechanismAdventure", "Using mission backend data for challenge(%s), resistance (%s), circumstance(%s), side_mission(%s)", challenge, resistance, circumstance_name, side_mission)
 		else
-			challenge = DevParameters.challenge
-			resistance = DevParameters.resistance
-			circumstance_name = GameParameters.circumstance
-			side_mission = GameParameters.side_mission
+			challenge = context.challenge or DevParameters.challenge
+			resistance = context.resistance or DevParameters.resistance
+			circumstance_name = context.circumstance_name or GameParameters.circumstance
+			side_mission = context.side_mission or GameParameters.side_mission
 			backend_mission_id = nil
 
-			Log.info("MechanismAdventure", "Using dev parameters for challenge(%s), resistance (%s), circumstance(%s), side_mission(%s)", challenge, resistance, circumstance_name, side_mission)
+			Log.info("MechanismAdventure", "Using context or dev parameters for challenge(%s), resistance (%s), circumstance(%s), side_mission(%s)", challenge, resistance, circumstance_name, side_mission)
 		end
 
 		local data = self._mechanism_data

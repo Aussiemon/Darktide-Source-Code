@@ -1,4 +1,5 @@
 local PrivilegesManagerConstants = require("scripts/managers/privileges/privileges_manager_constants")
+local FGRLLimits = require("scripts/foundation/utilities/fgrl_limits")
 XboxPrivileges = class("XboxPrivileges")
 local DEFAULT_PRIVILEGES = DEFAULT_PRIVILEGES or {}
 local ATTEMPT_RESOLUTION_PRIVILEGES = ATTEMPT_RESOLUTION_PRIVILEGES or {}
@@ -129,7 +130,7 @@ XboxPrivileges.has_error = function (self)
 end
 
 XboxPrivileges.fetch_crossplay_restrictions = function (self)
-	local async_task, error = XboxLivePrivacy.batch_check_permission(Managers.account:user_id(), DEFAULT_PERMISSIONS, {}, DEFAULT_ANONYMOUS_USER_TYPES)
+	local async_task, error_code, error_message = XboxLivePrivacy.batch_check_permission(Managers.account:user_id(), DEFAULT_PERMISSIONS, {}, DEFAULT_ANONYMOUS_USER_TYPES)
 
 	if async_task then
 		Managers.xasync:wrap(async_task, XboxLivePrivacy.release_block):next(function (async_task)

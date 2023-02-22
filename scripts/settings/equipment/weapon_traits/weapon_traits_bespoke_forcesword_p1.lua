@@ -137,23 +137,27 @@ templates.weapon_trait_bespoke_forcesword_p1_increase_power_on_kill = {
 templates.weapon_trait_bespoke_forcesword_p1_dodge_grants_finesse_bonus = {
 	weapon_trait_bespoke_forcesword_p1_dodge_grants_finesse_bonus = {
 		{
-			proc_stat_buffs = {
-				[stat_buffs.finesse_modifier_bonus] = 0.02
-			}
-		},
-		{
-			proc_stat_buffs = {
-				[stat_buffs.finesse_modifier_bonus] = 0.03
-			}
-		},
-		{
+			active_duration = 2,
 			proc_stat_buffs = {
 				[stat_buffs.finesse_modifier_bonus] = 0.04
 			}
 		},
 		{
+			active_duration = 2,
 			proc_stat_buffs = {
-				[stat_buffs.finesse_modifier_bonus] = 0.05
+				[stat_buffs.finesse_modifier_bonus] = 0.06
+			}
+		},
+		{
+			active_duration = 2,
+			proc_stat_buffs = {
+				[stat_buffs.finesse_modifier_bonus] = 0.08
+			}
+		},
+		{
+			active_duration = 2,
+			proc_stat_buffs = {
+				[stat_buffs.finesse_modifier_bonus] = 0.1
 			}
 		}
 	}
@@ -161,23 +165,27 @@ templates.weapon_trait_bespoke_forcesword_p1_dodge_grants_finesse_bonus = {
 templates.weapon_trait_bespoke_forcesword_p1_dodge_grants_critical_strike_chance = {
 	weapon_trait_bespoke_forcesword_p1_dodge_grants_critical_strike_chance = {
 		{
-			proc_stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.02
-			}
-		},
-		{
-			proc_stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.03
-			}
-		},
-		{
-			proc_stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.04
-			}
-		},
-		{
+			active_duration = 2,
 			proc_stat_buffs = {
 				[stat_buffs.critical_strike_chance] = 0.05
+			}
+		},
+		{
+			active_duration = 2,
+			proc_stat_buffs = {
+				[stat_buffs.critical_strike_chance] = 0.1
+			}
+		},
+		{
+			active_duration = 2,
+			proc_stat_buffs = {
+				[stat_buffs.critical_strike_chance] = 0.15
+			}
+		},
+		{
+			active_duration = 2,
+			proc_stat_buffs = {
+				[stat_buffs.critical_strike_chance] = 0.2
 			}
 		}
 	}
@@ -254,13 +262,13 @@ templates.weapon_trait_bespoke_forcesword_p1_chained_hits_vents_warpcharge = {
 templates.weapon_trait_bespoke_forcesword_p1_warp_burninating_on_crit = {
 	weapon_trait_bespoke_forcesword_p1_warp_burninating_on_crit = {
 		{
-			dot_data = {
+			target_buff_data = {
 				max_stacks = 10,
 				num_stacks_on_proc = 2
 			}
 		},
 		[4] = {
-			dot_data = {
+			target_buff_data = {
 				max_stacks = 12,
 				num_stacks_on_proc = 4
 			}

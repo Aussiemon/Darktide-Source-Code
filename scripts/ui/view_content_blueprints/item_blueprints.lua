@@ -22,13 +22,20 @@ local function is_item_equipped_in_slot(parent, item, slot_name)
 		local equipped_item = parent:equipped_item_in_slot(slot_name)
 		local equipped_gear_id = equipped_item and equipped_item.gear_id
 		local item_gear_id = item.gear_id
-		equipped = item_gear_id == equipped_gear_id
+
+		if item_gear_id then
+			-- Nothing
+		else
+			local item_name = item.name
+			local equipped_item_name = equipped_item and equipped_item.name
+			equipped = item_name and equipped_item_name and item_name == equipped_item_name or false
+		end
 	end
 
 	if parent.equipped_item_name_in_slot then
 		local equipped_item_name = parent:equipped_item_name_in_slot(slot_name)
 
-		if not equipped_item_name and item.empty_item then
+		if item.empty_item and (not equipped_item_name or equipped_item_name == "") then
 			return true
 		end
 
@@ -473,15 +480,6 @@ local function generate_blueprints_function(grid_size)
 			content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
 			content.element = element
 			local item = element.item
-			local rarity = item.rarity
-			local slots = item.slots
-
-			if slots then
-				local slot_name = slots[1]
-				local slot_settings = slot_name and ItemSlotSettings[slot_name]
-				style.inner_highlight.color = table.clone(ItemUtils.rarity_color(item))
-			end
-
 			local offer = element.offer
 
 			if offer and offer.price then
@@ -564,8 +562,7 @@ local function generate_blueprints_function(grid_size)
 				required_level_background_style.size[1] = required_level_text_width + 40
 			end
 
-			style.sub_display_name.default_color = table.clone(ItemUtils.rarity_color(item))
-			style.display_name.default_color = table.clone(ItemUtils.rarity_color(item))
+			style.sub_display_name.text_color = table.clone(ItemUtils.rarity_color(item))
 			style.background_gradient.color = table.clone(ItemUtils.rarity_color(item))
 			style.rarity_tag.color = table.clone(ItemUtils.rarity_color(item))
 		end,
@@ -575,10 +572,10 @@ local function generate_blueprints_function(grid_size)
 			local content = widget.content
 			local element = content.element
 			local slot = element.slot
+			local item = element.real_item or element.item
 
 			if slot then
 				local slot_name = slot.name
-				local item = element.real_item or element.item
 				local item_type = item.item_type
 				local is_equipped = nil
 
@@ -640,6 +637,7 @@ local function generate_blueprints_function(grid_size)
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
 			local content = widget.content
 			local style = widget.style
+			content.store_item = true
 			content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
 			content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
 			content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
@@ -650,11 +648,6 @@ local function generate_blueprints_function(grid_size)
 			local slots = presentation_item.slots
 			local rarity = presentation_item.rarity
 			local rarity_color = ItemUtils.rarity_color(presentation_item)
-
-			if slots and rarity then
-				style.inner_highlight.color = table.clone(rarity_color)
-			end
-
 			local offer = element.offer
 
 			if offer and offer.price then
@@ -712,8 +705,7 @@ local function generate_blueprints_function(grid_size)
 			end
 
 			if rarity then
-				style.sub_display_name.default_color = table.clone(rarity_color)
-				style.display_name.default_color = table.clone(rarity_color)
+				style.sub_display_name.text_color = table.clone(rarity_color)
 				style.background_gradient.color = table.clone(rarity_color)
 				style.rarity_tag.color = table.clone(rarity_color)
 			end
@@ -825,6 +817,7 @@ local function generate_blueprints_function(grid_size)
 		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
 			local content = widget.content
 			local style = widget.style
+			content.store_item = true
 			content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
 			content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
 			content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
@@ -883,6 +876,52 @@ local function generate_blueprints_function(grid_size)
 				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
 				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 			end
+		end,
+		destroy = function (parent, widget, element, ui_renderer)
+			return
+		end
+	}
+	blueprints.credits_goods_item = {
+		size = ItemPassTemplates.store_item_credits_goods_size,
+		pass_template = ItemPassTemplates.credits_goods_item,
+		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
+			local content = widget.content
+			local style = widget.style
+			content.store_item = true
+			content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
+			content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
+			content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
+			content.element = element
+			local display_name = element.display_name
+			local icon = element.icon
+			local item = element.item
+
+			if display_name then
+				content.display_name = display_name
+			end
+
+			if icon then
+				content.icon = icon
+			end
+
+			local view_instance = parent._parent
+			local character_level = view_instance and view_instance.character_level and view_instance:character_level()
+			local level_requirement_met = true
+
+			if element.weapon_level_requirement then
+				level_requirement_met = element.weapon_level_requirement <= character_level
+			end
+
+			content.level_requirement_met = level_requirement_met
+
+			if level_requirement_met == false then
+				content.required_level = Localize("loc_requires_level", true, {
+					level = element.weapon_level_requirement
+				})
+			end
+		end,
+		update = function (parent, widget, input_service, dt, t, ui_renderer)
+			return
 		end,
 		destroy = function (parent, widget, element, ui_renderer)
 			return

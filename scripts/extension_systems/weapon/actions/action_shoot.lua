@@ -147,6 +147,16 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 		end
 	end
 
+	local fire_config = action_settings.fire_configuration
+
+	if fire_config.charge_cost then
+		local charge_component = self._action_module_charge_component
+		local charge_template = self._weapon_extension:charge_template()
+		local charge_cost = charge_template.charge_cost or 0
+		local new_charge = charge_component.charge_level - charge_cost * dt
+		charge_component.charge_level = math.clamp01(new_charge)
+	end
+
 	if action_component.fire_state == "waiting_to_shoot" and action_component.fire_at_time <= t then
 		self:_set_fire_state(t, "prepare_shooting")
 	end
@@ -601,7 +611,19 @@ ActionShoot._play_muzzle_flash_vfx = function (self, shoot_rotation, charge_leve
 	local effect_name = fx.muzzle_flash_effect
 	local effect_name_secondary = fx.muzzle_flash_effect_secondary
 	local crit_effect_name = fx.muzzle_flash_crit_effect
-	local effect_to_play = is_critical_strike and crit_effect_name or effect_name
+	local weapon_special_effect_name = fx.weapon_special_muzzle_flash_effect
+	local inventory_slot_component = self._inventory_slot_component
+	local special_active = inventory_slot_component.special_active
+	local effect_to_play = nil
+
+	if is_critical_strike then
+		effect_to_play = crit_effect_name or effect_name
+	elseif special_active then
+		effect_to_play = weapon_special_effect_name or effect_name
+	else
+		effect_to_play = effect_name
+	end
+
 	local is_charge_dependant = effect_to_play and type(effect_to_play) == "table"
 
 	if is_charge_dependant then

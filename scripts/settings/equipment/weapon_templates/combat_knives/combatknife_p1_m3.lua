@@ -701,14 +701,14 @@ weapon_template.actions = {
 	action_right_light_2 = {
 		damage_window_start = 0.3,
 		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1_2_ninja",
+		weapon_handling_template = "time_scale_1_1_ninja",
 		anim_end_event = "attack_finished",
 		kind = "sweep",
 		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.25,
 		allowed_during_sprint = true,
-		damage_window_end = 0.4,
-		anim_event = "attack_swing_right_diagonal_up",
+		damage_window_end = 0.39,
+		anim_event = "attack_swing_right",
 		total_time = 2,
 		action_movement_curve = {
 			{
@@ -761,11 +761,11 @@ weapon_template.actions = {
 		end,
 		weapon_box = default_weapon_box,
 		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/swing_ninja_right_01",
+			matrices_data_location = "content/characters/player/human/first_person/animations/combat_knife/swing_ninja_right",
 			anchor_point_offset = {
 				0,
 				0,
-				-0.2
+				-0.3
 			}
 		},
 		damage_profile = DamageProfileTemplates.light_combat_knife_ninja_fencer,
@@ -774,7 +774,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.right_45_slash_clean
+		wounds_shape = wounds_shapes.horizontal_slash_clean
 	},
 	action_block = {
 		weapon_handling_template = "time_scale_1_5_ninja",
@@ -843,7 +843,7 @@ weapon_template.actions = {
 		attack_direction_override = "push",
 		range_mod = 1.25,
 		first_person_hit_stop_anim = "attack_hit",
-		damage_window_end = 0.38,
+		damage_window_end = 0.39,
 		anim_event_3p = "attack_swing_right_diagonal",
 		anim_event = "attack_swing_pushfollow",
 		total_time = 1.33,

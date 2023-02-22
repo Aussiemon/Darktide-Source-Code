@@ -7,7 +7,7 @@ local TalentSettings = require("scripts/settings/buff/talent_settings")
 local buff_keywords = BuffSettings.keywords
 local special_rules = SpecialRulesSetting.special_rules
 local wield_inputs = PlayerCharacterConstants.wield_inputs
-local talent_settings = TalentSettings.zealot_3
+local talent_settings = nil
 local weapon_template = {
 	action_inputs = {
 		aim_pressed = {
@@ -146,7 +146,7 @@ local weapon_template = {
 			uninterruptible = true,
 			prevent_sprint = true,
 			total_time = 0.9,
-			coherency_toughness = talent_settings.coop_1.toughness_percent_regenerated,
+			coherency_toughness = talent_settings and talent_settings.coop_1.toughness_percent_regenerated,
 			action_movement_curve = {
 				{
 					modifier = 0.4,
@@ -194,7 +194,7 @@ local weapon_template = {
 			uninterruptible = true,
 			prevent_sprint = true,
 			total_time = 0.9,
-			coherency_toughness = talent_settings.coop_1.toughness_percent_regenerated,
+			coherency_toughness = talent_settings and talent_settings.coop_1.toughness_percent_regenerated,
 			action_movement_curve = {
 				{
 					modifier = 0.4,

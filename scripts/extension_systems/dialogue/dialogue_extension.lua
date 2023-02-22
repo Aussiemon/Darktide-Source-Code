@@ -412,10 +412,16 @@ DialogueExtension._update_mission_update_vo = function (self)
 end
 
 DialogueExtension._update_vo_event_cool_down_times = function (self, t)
-	for vo_event_name, cooldown_time in pairs(self._vo_event_cooldown_times) do
+	for vo_event_name, vo_profiles in pairs(self._vo_event_cooldown_times) do
 		repeat
-			if cooldown_time <= t then
-				self._vo_event_cooldown_times[vo_event_name] = nil
+			for vo_profile, cooldown_time in pairs(vo_profiles) do
+				if cooldown_time <= t then
+					self._vo_event_cooldown_times[vo_event_name][vo_profile] = nil
+
+					if table.is_empty(self._vo_event_cooldown_times[vo_event_name]) then
+						self._vo_event_cooldown_times[vo_event_name] = nil
+					end
+				end
 			end
 		until true
 	end
@@ -447,22 +453,34 @@ DialogueExtension.trigger_dialogue_event = function (self, event_name, event_dat
 	self:trigger_networked_dialogue_event(event_name, event_data, identifier)
 end
 
-DialogueExtension.trigger_targeted_dialogue_event = function (self, event_name, event_data, target_unit, identifier)
+DialogueExtension.manage_targeted_cooldowns = function (self, event_data)
+	local cooldown_times = self._vo_event_cooldown_times
 	local vo_event_name = event_data.vo_event
-	local existing_cooldown_time_t = self._vo_event_cooldown_times[vo_event_name]
+	local existing_cooldown_event = cooldown_times[vo_event_name]
+	local profile_name = event_data.npc_profile_name
 
-	if existing_cooldown_time_t then
-		return
+	if existing_cooldown_event then
+		local existing_cooldown_time_t = existing_cooldown_event[profile_name]
+
+		if existing_cooldown_time_t then
+			return false
+		end
+	else
+		cooldown_times[vo_event_name] = {}
 	end
 
-	local targeted_unit = target_unit
-	event_data.target_unit = targeted_unit
 	local game_time = Managers.time:time("gameplay")
 	local vo_event_cooldown_t = event_data.cooldown_time
 
 	if vo_event_name and vo_event_cooldown_t then
-		self._vo_event_cooldown_times[vo_event_name] = game_time + vo_event_cooldown_t
+		cooldown_times[vo_event_name][profile_name] = game_time + vo_event_cooldown_t
 	end
+
+	return true
+end
+
+DialogueExtension.trigger_targeted_dialogue_event = function (self, event_name, event_data, target_unit, identifier)
+	event_data.target_unit = target_unit
 
 	self:trigger_networked_dialogue_event(event_name, event_data, identifier)
 end
@@ -510,8 +528,9 @@ end
 
 DialogueExtension.trigger_voice = function (self, wwise_event_name, sound_source)
 	self._dialogue_system_wwise:set_switch(sound_source, self._wwise_voice_switch_group, self._vo_profile_name)
+	self:_set_source_parameter("voice_fx_preset", self._voice_fx_preset, sound_source)
 
-	return self._dialogue_system_wwise:trigger_resource_event(wwise_event_name, self._unit)
+	return self._dialogue_system_wwise:trigger_resource_event(wwise_event_name, sound_source)
 end
 
 DialogueExtension.play_voice_debug = function (self, sound_event)
@@ -648,8 +667,11 @@ end
 DialogueExtension.stop_currently_playing_vo = function (self)
 	local current_dialogue = self._currently_playing_dialogue
 
-	if current_dialogue and current_dialogue.currently_playing_event_id then
-		self._dialogue_system_wwise:stop_if_playing(current_dialogue.currently_playing_event_id)
+	if current_dialogue then
+		if current_dialogue.currently_playing_event_id then
+			self._dialogue_system_wwise:stop_if_playing(current_dialogue.currently_playing_event_id)
+		end
+
 		self._dialogue_system:_remove_stopped_dialogue(current_dialogue)
 	end
 end
@@ -670,14 +692,18 @@ DialogueExtension.play_local_vo_events = function (self, rule_names, wwise_route
 	local rule_queue = self._dialogue_system._vo_rule_queue
 
 	for i = 1, #rule_names do
-		local vo_event = {
-			unit = self._unit,
-			rule_name = rule_names[i],
-			wwise_route_key = wwise_route_key,
-			on_play_callback = on_play_callback,
-			seed = seed
-		}
-		rule_queue[#rule_queue + 1] = vo_event
+		local rule = rule_names[i]
+
+		if self._vo_choice[rule] then
+			local vo_event = {
+				unit = self._unit,
+				rule_name = rule,
+				wwise_route_key = wwise_route_key,
+				on_play_callback = on_play_callback,
+				seed = seed
+			}
+			rule_queue[#rule_queue + 1] = vo_event
+		end
 	end
 end
 
@@ -706,8 +732,9 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 		dialogue_system._dialog_sequence_events = dialogue_system:_create_sequence_events_table(pre_wwise_event, wwise_route, sound_event, post_wwise_event)
 		dialogue.currently_playing_event_id = self:play_event(dialogue_system._dialog_sequence_events[1])
 		local speaker_name = self:get_context().voice_template
-		dialogue_system._playing_units[self._unit] = self
-		dialogue.currently_playing_unit = self._unit
+		local unit = self._unit
+		dialogue_system._playing_units[unit] = self
+		dialogue.currently_playing_unit = unit
 		dialogue.speaker_name = speaker_name
 		dialogue.dialogue_timer = sound_event_duration
 		dialogue.currently_playing_subtitle = subtitles_event
@@ -719,6 +746,10 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 
 		self:set_currently_playing_dialogue(dialogue)
 		table.insert(dialogue_system._playing_dialogues_array, 1, dialogue)
+
+		local animation_event = "start_talking"
+
+		dialogue_system:_trigger_face_animation_event(unit, animation_event)
 
 		local dialogue_system_subtitle = dialogue_system:dialogue_system_subtitle()
 

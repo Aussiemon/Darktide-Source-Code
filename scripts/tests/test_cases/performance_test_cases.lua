@@ -62,7 +62,7 @@ PerformanceTestCases = {
 			for index, camera in pairs(cameras) do
 				Testify:make_request("set_active_testify_camera", camera.unit)
 				TestifySnippets.wait(time_before_measuring)
-				Testify:make_request("start_measuring_performance")
+				Testify:make_request("start_measuring_performance", false, true, true)
 				TestifySnippets.wait(measure_time)
 
 				performance_measurements = Testify:make_request("stop_measuring_performance")
@@ -92,7 +92,7 @@ PerformanceTestCases = {
 			for index, camera in pairs(cameras) do
 				Testify:make_request("set_active_testify_camera", camera.unit)
 				TestifySnippets.wait(time_before_measuring)
-				Testify:make_request("start_measuring_performance")
+				Testify:make_request("start_measuring_performance", false, true, true)
 				TestifySnippets.wait(measure_time)
 
 				performance_measurements = Testify:make_request("stop_measuring_performance")

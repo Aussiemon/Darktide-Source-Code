@@ -1,6 +1,7 @@
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local AcceleratedLocalSpaceMovement = require("scripts/extension_systems/character_state_machine/character_states/utilities/accelerated_local_space_movement")
+local Action = require("scripts/utilities/weapon/action")
 local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
@@ -9,7 +10,6 @@ local Interacting = require("scripts/extension_systems/character_state_machine/c
 local LedgeVaulting = require("scripts/extension_systems/character_state_machine/character_states/utilities/ledge_vaulting")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local Action = require("scripts/utilities/weapon/action")
 local PlayerCharacterStateWalking = class("PlayerCharacterStateWalking", "PlayerCharacterStateBase")
 
 PlayerCharacterStateWalking.init = function (self, character_state_init_context, ...)

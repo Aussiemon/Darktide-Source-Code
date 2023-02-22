@@ -213,7 +213,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.6
+				chain_time = 0.55
 			},
 			block = {
 				chain_time = 0.5,
@@ -332,7 +332,7 @@ weapon_template.actions = {
 		kind = "windup",
 		anim_end_event = "attack_finished",
 		weapon_handling_template = "time_scale_1",
-		anim_event_3p = "attack_swing_charge_right",
+		anim_event_3p = "attack_swing_charge_up_right",
 		anim_event = "attack_swing_charge_right_diagonal_up",
 		stop_input = "attack_cancel",
 		total_time = 3,
@@ -494,12 +494,12 @@ weapon_template.actions = {
 		damage_window_start = 0.26666666666666666,
 		hit_armor_anim = "attack_hit_shield",
 		anim_end_event = "attack_finished",
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_2",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_up_shake",
 		range_mod = 1.25,
 		damage_window_end = 0.43333333333333335,
-		anim_event_3p = "attack_swing_heavy_right",
+		anim_event_3p = "attack_swing_heavy_up_right",
 		anim_event = "attack_swing_heavy_right_diagonal_up",
 		hit_stop_anim = "hit_stop",
 		total_time = 1,
@@ -535,7 +535,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.375
+				chain_time = 0.43
 			},
 			block = {
 				chain_time = 0.35,
@@ -643,13 +643,13 @@ weapon_template.actions = {
 	action_left_light_2 = {
 		damage_window_start = 0.22,
 		hit_armor_anim = "attack_hit_shield",
+		range_mod = 1.25,
 		anim_end_event = "attack_finished",
-		weapon_handling_template = "time_scale_1",
 		kind = "sweep",
 		first_person_hit_anim = "hit_up_shake",
-		range_mod = 1.25,
+		weapon_handling_template = "time_scale_1",
+		attack_direction_override = "push",
 		damage_window_end = 0.3,
-		anim_event_3p = "attack_swing_left_diagonal",
 		anim_event = "attack_swing_stab_02",
 		hit_stop_anim = "hit_stop",
 		total_time = 2,
@@ -694,7 +694,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right_2",
-				chain_time = 0.52
+				chain_time = 0.56
 			},
 			block = {
 				action_name = "action_block",
@@ -704,16 +704,20 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		weapon_box = default_weapon_box,
+		weapon_box = {
+			0.12,
+			0.24,
+			1.15
+		},
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/combat_sword/swing_stab_02",
 			anchor_point_offset = {
+				0.18,
 				0,
-				0,
-				0
+				-0.05
 			}
 		},
-		damage_profile = DamageProfileTemplates.light_sword,
+		damage_profile = DamageProfileTemplates.light_sword_stab,
 		damage_type = damage_types.metal_slashing_medium,
 		damage_type_special_active = damage_types.power_sword,
 		damage_profile_special_active = DamageProfileTemplates.light_powersword_active,
@@ -798,7 +802,7 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_down_shake",
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_2",
 		damage_window_end = 0.4666666666666667,
 		anim_event = "attack_swing_right_diagonal",
 		hit_stop_anim = "hit_stop",
@@ -850,7 +854,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.57
+				chain_time = 0.6
 			},
 			block = {
 				chain_time = 0.5,
@@ -859,7 +863,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.5
+				chain_time = 0.6
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -940,7 +944,7 @@ weapon_template.actions = {
 		damage_window_start = 0.35,
 		hit_armor_anim = "attack_hit_shield",
 		anim_end_event = "attack_finished",
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_4",
 		kind = "sweep",
 		first_person_hit_anim = "hit_down_shake",
 		range_mod = 1.25,
@@ -1150,8 +1154,9 @@ weapon_template.max_first_person_anim_movement_speed = 5.8
 weapon_template.allow_sprinting_with_special = true
 weapon_template.weapon_special_class = "WeaponSpecialDeactivateAfterNumActivations"
 weapon_template.weapon_special_tweak_data = {
-	active_duration = 3,
-	num_activations = 2
+	allow_reactivation_while_active = true,
+	num_activations = 2,
+	active_duration = 3
 }
 weapon_template.allow_sprinting_with_special = true
 weapon_template.damage_window_start_sweep_trail_offset = -0.45
@@ -1166,7 +1171,8 @@ weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",
 	"power_sword",
-	"p1"
+	"p1",
+	"activated"
 }
 weapon_template.dodge_template = "smiter"
 weapon_template.sprint_template = "default"

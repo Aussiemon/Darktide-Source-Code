@@ -129,7 +129,7 @@ BatchedSavingStrategy.save_on_stat_change = function (self, account_id, trigger_
 end
 
 BatchedSavingStrategy.save_on_achievement_unlock = function (self, account_id, achievement_id)
-	return
+	return Promise.resolved()
 end
 
 implements(BatchedSavingStrategy, SavingStrategyInterface)

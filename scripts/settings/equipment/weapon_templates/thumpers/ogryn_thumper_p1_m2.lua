@@ -704,6 +704,7 @@ weapon_template.alternate_fire_settings = {
 }
 weapon_template.spread_template = "thumper_hip_assault"
 weapon_template.reload_template = ReloadTemplates.ogryn_thumper
+weapon_template.combo_reset_duration = 0.5
 weapon_template.conditional_state_to_action_input = {
 	{
 		conditional_state = "no_ammo_and_started_reload",

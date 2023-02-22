@@ -15,8 +15,8 @@ local Missions = require("scripts/settings/mission/mission_templates")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local SmoothForceViewPlayerOrientation = require("scripts/extension_systems/first_person/character_state_orientation/smooth_force_view_player_orientation")
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
-local WeaponLockViewPlayerOrientation = require("scripts/extension_systems/first_person/character_state_orientation/weapon_lock_view_player_orientation")
 local WeaponForceViewPlayerOrientation = require("scripts/extension_systems/first_person/character_state_orientation/weapon_force_view_player_orientation")
+local WeaponLockViewPlayerOrientation = require("scripts/extension_systems/first_person/character_state_orientation/weapon_lock_view_player_orientation")
 local unit_alive = Unit.alive
 local HumanGameplay = class("HumanGameplay")
 
@@ -53,7 +53,11 @@ HumanGameplay.init = function (self, player, game_state_context)
 			position = camera_position
 		else
 			local player_spawner_system = Managers.state.extension:system("player_spawner_system")
-			local spawn_position, spawn_rotation, spawn_parent, spawn_side = player_spawner_system:next_free_spawn_point()
+			local wanted_spawn_point = player:wanted_spawn_point()
+
+			player:set_wanted_spawn_point(nil)
+
+			local spawn_position, spawn_rotation, spawn_parent, spawn_side = player_spawner_system:next_free_spawn_point(wanted_spawn_point)
 			position = spawn_position
 			rotation = spawn_rotation
 			parent = spawn_parent
@@ -320,6 +324,10 @@ HumanGameplay._player_orientation_class = function (self)
 
 	if Managers.ui then
 		ui_using_camera_orientation = Managers.ui:communication_wheel_wants_camera_control()
+
+		if Managers.ui:emote_wheel_wants_camera_control() then
+			ui_using_camera_orientation = true
+		end
 	end
 
 	if self._force_look_rotation_component.use_force_look_rotation then

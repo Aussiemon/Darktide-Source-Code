@@ -29,6 +29,7 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_damage", {
 	"breed_name",
 	"weapon_template_name",
 	"weapon_attack_type",
+	"attack_result",
 	"hit_zone_name",
 	"damage_profile_name",
 	"distance",
@@ -37,7 +38,9 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_damage", {
 	"id",
 	"damage_type",
 	"is_critical_hit",
+	"is_weapon_special",
 	"stagger_result",
+	"stagger_type",
 	"player_class"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_blocked_damage", {
@@ -62,8 +65,10 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_kill", {
 	"player_health_percent",
 	"action",
 	"id",
-	"buff_keywords",
+	"target_buff_keywords",
 	"damage_type",
+	"is_critical_hit",
+	"is_weapon_special",
 	"solo_kill",
 	"player_class"
 }))
@@ -79,13 +84,25 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_team_kill", {
 	"weapon_attack_type"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_toughness_regenerated", {
+	"starting_ammount",
 	"reason",
+	"player_class"
+}))
+Factory.add_to_group(HookStats, Factory.create_hook("hook_toughness_broken", {
 	"player_class"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_dodge", {
 	"attack_type",
 	"attacker_breed",
 	"reason",
+	"player_class"
+}))
+Factory.add_to_group(HookStats, Factory.create_hook("hook_sweep_finished", {
+	"num_hit_units",
+	"num_killed_enemies",
+	"combo_count",
+	"hit_weakspot",
+	"is_heavy",
 	"player_class"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_ranged_attack_concluded", {
@@ -134,7 +151,8 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_knock_down", {
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_damage_taken", {
 	"player_class",
-	"attack_type"
+	"attack_type",
+	"is_attacker_elite"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_team_damage_taken"))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_team_death"))
@@ -152,17 +170,20 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_lunge_start", {
 	"player_class"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_lunge_stop", {
+	"number_of_hit_ranged",
 	"player_class"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_lunge_distance", {
 	"player_class"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_volley_fire_start"))
-Factory.add_to_group(HookStats, Factory.create_hook("hook_volley_fire_stop"))
+Factory.add_to_group(HookStats, Factory.create_hook("hook_volley_fire_stop", {
+	"volley_fire_total_time"
+}))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_zealot_2_health_healed_with_leech_during_resist_death", {
 	"player_class"
 }))
-Factory.add_to_group(HookStats, Factory.create_hook("hook_psyker_2_max_souls_hook", {
+Factory.add_to_group(HookStats, Factory.create_hook("hook_psyker_2_time_at_max_souls_hook", {
 	"player_class"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_player_joined", {

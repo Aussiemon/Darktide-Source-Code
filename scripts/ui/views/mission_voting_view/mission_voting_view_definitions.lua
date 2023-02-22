@@ -633,11 +633,11 @@ local widget_definitions = {
 local buttons_widget_definitions = {
 	accept_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "accept_button", {
 		name = "accept_button",
-		text = Managers.localization:localize("loc_mission_voting_view_accept_mission")
+		original_text = Managers.localization:localize("loc_mission_voting_view_accept_mission")
 	}),
 	decline_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "decline_button", {
 		name = "decline_button",
-		text = Managers.localization:localize("loc_mission_voting_view_decline_mission")
+		original_text = Managers.localization:localize("loc_mission_voting_view_decline_mission")
 	})
 }
 local mission_info_widget_definitions = {

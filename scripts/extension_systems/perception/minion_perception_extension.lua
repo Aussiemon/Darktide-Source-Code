@@ -285,14 +285,20 @@ MinionPerceptionExtension.alert = function (self, enemy_unit)
 	else
 		perception_component.aggro_state = aggro_states.alerted
 		local unit = self._unit
+		local target_distance = nil
+
+		if perception_component.target_unit then
+			target_distance = self._perception_component.target_distance
+		else
+			self:_set_target_unit(enemy_unit)
+
+			target_distance = Vector3.distance(POSITION_LOOKUP[unit], POSITION_LOOKUP[enemy_unit])
+		end
+
 		local breed_name = self._breed.name
 		local vo_event = "alerted_idle"
 
-		Vo.enemy_generic_vo_event(unit, vo_event, breed_name)
-
-		if perception_component.target_unit == nil then
-			self:_set_target_unit(enemy_unit)
-		end
+		Vo.enemy_generic_vo_event(unit, vo_event, breed_name, target_distance)
 	end
 end
 

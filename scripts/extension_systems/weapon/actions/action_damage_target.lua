@@ -153,7 +153,7 @@ end
 ActionDamageTarget.finish = function (self, reason, data, t, time_in_action)
 	local action_settings = self._action_settings
 
-	if not self._prevent_explosion then
+	if not self._prevent_explosion and self._dealt_damage then
 		local warp_charge_time = action_settings.pay_warp_charge_time or 0.5
 
 		if time_in_action < warp_charge_time then

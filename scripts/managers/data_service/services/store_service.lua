@@ -8,7 +8,7 @@ StoreService.init = function (self, backend_interface)
 	self._backend_interface = backend_interface
 end
 
-StoreService.get_credits_store = function (self)
+StoreService.get_credits_store = function (self, ignore_event_trigger)
 	if Managers.backend:authenticated() then
 		local backend_interface = self._backend_interface
 		local local_player_id = 1
@@ -37,6 +37,61 @@ StoreService.get_credits_store = function (self)
 				local store_data = store_catalogue.data
 				offers = store_data.personal
 				current_rotation_end = store_data.currentRotationEnd
+			end
+
+			if not ignore_event_trigger then
+				local event_manager = Managers.event
+
+				if event_manager then
+					event_manager:trigger("event_credits_store_fetched")
+				end
+			end
+
+			return {
+				offers = offers or {},
+				current_rotation_end = current_rotation_end
+			}
+		end)
+	end
+end
+
+StoreService.get_credits_goods_store = function (self, ignore_event_trigger)
+	if Managers.backend:authenticated() then
+		local backend_interface = self._backend_interface
+		local local_player_id = 1
+		local player = Managers.player:local_player(local_player_id)
+		local character_id = player:character_id()
+		local archetype_name = player:archetype_name()
+		local store_promise = nil
+		local time_since_launch = Application.time_since_launch()
+
+		if archetype_name == "veteran" then
+			store_promise = backend_interface.store:get_veteran_credits_goods_store(time_since_launch, character_id)
+		elseif archetype_name == "zealot" then
+			store_promise = backend_interface.store:get_zealot_credits_goods_store(time_since_launch, character_id)
+		elseif archetype_name == "psyker" then
+			store_promise = backend_interface.store:get_psyker_credits_goods_store(time_since_launch, character_id)
+		elseif archetype_name == "ogryn" then
+			store_promise = backend_interface.store:get_ogryn_credits_goods_store(time_since_launch, character_id)
+		end
+
+		return store_promise:catch(function (error)
+			Log.error("StoreService", "Error fetching credits store: %s", error)
+		end):next(function (store_catalogue)
+			local offers, current_rotation_end = nil
+
+			if store_catalogue then
+				local store_data = store_catalogue.data
+				offers = store_data.public
+				current_rotation_end = store_data.currentRotationEnd
+			end
+
+			if not ignore_event_trigger then
+				local event_manager = Managers.event
+
+				if event_manager then
+					event_manager:trigger("event_credits_store_fetched")
+				end
 			end
 
 			return {
@@ -201,6 +256,17 @@ StoreService.get_marks_store_temporary = function (self)
 	end
 end
 
+local function _purchased_item_to_gear(item)
+	local gear = table.clone(item)
+	local gear_id = gear.uuid
+	gear.overrides = nil
+	gear.id = nil
+	gear.uuid = nil
+	gear.gear_id = nil
+
+	return gear_id, gear
+end
+
 StoreService.purchase_item = function (self, offer)
 	local price = offer.price
 	local amount = price.amount
@@ -223,9 +289,39 @@ StoreService.purchase_item = function (self, offer)
 	end):next(function (result)
 		Log.info("StoreService", "purchase_item done")
 
+		local items = result.items
+
+		for i = 1, #items do
+			local gear_id, gear = _purchased_item_to_gear(items[i])
+
+			Managers.data_service.gear:on_gear_created(gear_id, gear)
+		end
+
 		return result
 	end):catch(function (error)
 		Log.error("StoreService", "Error purchase_item: %s", error)
+		Managers.data_service.gear:invalidate_gear_cache()
+
+		return Promise.rejected(error)
+	end)
+end
+
+StoreService.purchase_item_with_wallet = function (self, offer, wallet)
+	return offer:make_purchase(wallet):next(function (result)
+		Log.info("StoreService", "purchase_item done")
+
+		local items = result.items
+
+		for i = 1, #items do
+			local gear_id, gear = _purchased_item_to_gear(items[i])
+
+			Managers.data_service.gear:on_gear_created(gear_id, gear)
+		end
+
+		return result
+	end):catch(function (error)
+		Log.error("StoreService", "Error purchase_item: %s", error)
+		Managers.data_service.gear:invalidate_gear_cache()
 
 		return Promise.rejected(error)
 	end)

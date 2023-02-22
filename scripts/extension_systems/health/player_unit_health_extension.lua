@@ -47,7 +47,7 @@ PlayerUnitHealthExtension.init = function (self, extension_init_context, unit, e
 	self._character_state_component = unit_data_extension:read_component("character_state")
 	self._game_session = nil
 	self._game_object_id = nil
-	self.stat_record_timer = 0
+	self._stat_record_timer = 0
 end
 
 PlayerUnitHealthExtension.extensions_ready = function (self, world, unit)
@@ -73,7 +73,7 @@ PlayerUnitHealthExtension.fixed_update = function (self, unit, dt, t)
 	GameSession.set_game_object_field(self._game_session, self._game_object_id, "max_wounds", max_wounds)
 
 	if Managers.stats and Managers.stats.can_record_stats() and self._player then
-		local new_time = self.stat_record_timer + dt
+		local new_time = self._stat_record_timer + dt
 
 		while REPORT_TIME <= new_time do
 			local remaining_health_segments = max_wounds - Health.calculate_num_segments(current_health, max_health, max_wounds)
@@ -83,7 +83,7 @@ PlayerUnitHealthExtension.fixed_update = function (self, unit, dt, t)
 			new_time = new_time - REPORT_TIME
 		end
 
-		self.stat_record_timer = new_time
+		self._stat_record_timer = new_time
 	end
 end
 

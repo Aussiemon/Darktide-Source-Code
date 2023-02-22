@@ -1,6 +1,7 @@
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local LevelProps = require("scripts/settings/level_prop/level_props")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
+local Vo = require("scripts/utilities/vo")
 local VoiceOverSpawnManager = class("VoiceOverSpawnManager")
 local _default_vo_profile = "sergeant_a"
 
@@ -26,6 +27,8 @@ VoiceOverSpawnManager.on_gameplay_post_init = function (self, level)
 
 		self:_create_units(breed_dialogue_settings)
 	end
+
+	Vo.mission_giver_check_event()
 end
 
 VoiceOverSpawnManager.delete_units = function (self)

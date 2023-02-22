@@ -37,12 +37,6 @@ GameplayStateRun.on_enter = function (self, parent, params)
 	self:_register_run_network_events(is_server)
 	Managers.event:trigger("event_loading_finished")
 
-	local do_activate_boons = self:_do_activate_boons()
-
-	if do_activate_boons then
-		Managers.boons:activate_boons()
-	end
-
 	if not DEDICATED_SERVER then
 		Managers.dlc:evaluate_consumables()
 	end
@@ -93,6 +87,10 @@ GameplayStateRun.on_exit = function (self)
 	Managers.state.game_session:disconnect()
 	Managers.state.cinematic:stop_all_stories()
 	self:_despawn_units(is_server, world, level, themes)
+
+	local mission_name = Managers.state.mission:mission_name()
+
+	Managers.player:set_last_mission(mission_name)
 	Managers.state:destroy()
 
 	local world_name = self._world_name
@@ -179,6 +177,7 @@ GameplayStateRun.update = function (self, main_dt, main_t)
 		Managers.state.rooms_and_portals:update(dt, t)
 		Managers.state.mutator:update(dt, t)
 		Managers.state.attack_report:update(dt, t)
+		Managers.state.emote:update(dt, t)
 	end
 
 	player_manager:state_update(main_dt, main_t)

@@ -1,4 +1,79 @@
 local conversations_core_explicator_a = {
+	conversation_40k_lore_one_02 = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_explicator_a__conversation_40k_lore_one_b_01",
+			"loc_explicator_a__conversation_40k_lore_one_b_02",
+			"loc_explicator_a__conversation_40k_lore_one_b_03"
+		},
+		sound_events_duration = {
+			4.704958,
+			5.716229,
+			4.297229
+		},
+		randomize_indexes = {}
+	},
+	conversation_40k_lore_two_02 = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_explicator_a__conversation_40k_lore_two_b_01",
+			"loc_explicator_a__conversation_40k_lore_two_b_02",
+			"loc_explicator_a__conversation_40k_lore_two_b_03"
+		},
+		sound_events_duration = {
+			5.406833,
+			5.765333,
+			6.288104
+		},
+		randomize_indexes = {}
+	},
+	conversation_atoma_lore_experienced_one_02 = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_explicator_a__conversation_atoma_lore_experienced_one_b_01",
+			"loc_explicator_a__conversation_atoma_lore_experienced_one_b_02",
+			"loc_explicator_a__conversation_atoma_lore_experienced_one_b_03"
+		},
+		sound_events_duration = {
+			5.59175,
+			6.23375,
+			5.250271
+		},
+		randomize_indexes = {}
+	},
+	conversation_atoma_lore_rookie_one_02 = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_explicator_a__conversation_atoma_lore_rookie_one_b_01",
+			"loc_explicator_a__conversation_atoma_lore_rookie_one_b_02",
+			"loc_explicator_a__conversation_atoma_lore_rookie_one_b_03"
+		},
+		sound_events_duration = {
+			7.019896,
+			4.720917,
+			5.409896
+		},
+		randomize_indexes = {}
+	},
+	conversation_atoma_lore_veteran_one_02 = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_explicator_a__conversation_atoma_lore_veteran_one_b_01",
+			"loc_explicator_a__conversation_atoma_lore_veteran_one_b_02",
+			"loc_explicator_a__conversation_atoma_lore_veteran_one_b_03"
+		},
+		sound_events_duration = {
+			4.813896,
+			6.542313,
+			5.469104
+		},
+		randomize_indexes = {}
+	},
 	eavesdropping_explicator = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

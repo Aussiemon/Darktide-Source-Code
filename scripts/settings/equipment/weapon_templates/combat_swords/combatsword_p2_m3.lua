@@ -1361,7 +1361,7 @@ weapon_template.actions = {
 				-0.05
 			}
 		},
-		damage_profile = DamageProfileTemplates.light_combatsword_smiter,
+		damage_profile = DamageProfileTemplates.light_combatsword_smiter_stab,
 		damage_type = damage_types.metal_slashing_light,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,

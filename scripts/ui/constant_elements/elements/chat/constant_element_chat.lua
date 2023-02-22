@@ -426,9 +426,15 @@ ConstantElementChat._handle_active_chat_input = function (self, input_service, u
 		self:_update_input_field(ui_renderer, input_widget)
 	elseif input_service:get("send_chat_message") then
 		if self._selected_channel_handle and #input_text > 0 then
-			input_text = self:_scrub(input_text)
+			local command, params = self:_parse_slash_commands(input_text)
 
-			Managers.chat:send_channel_message(self._selected_channel_handle, input_text)
+			if command then
+				self:_handle_slash_command(command, params)
+			else
+				input_text = self:_scrub(input_text)
+
+				Managers.chat:send_channel_message(self._selected_channel_handle, input_text)
+			end
 		end
 
 		is_input_field_active = false
@@ -970,6 +976,29 @@ ConstantElementChat._apply_visibility_parameters = function (self, optional_visi
 	end
 
 	return need_to_update_scenegraph
+end
+
+ConstantElementChat._parse_slash_commands = function (self, text)
+	if text:sub(1, 1) == "/" then
+		local parts = string.split(text:sub(2), " ")
+
+		if #parts > 0 then
+			local command = parts[1]
+			local params = {}
+
+			for i = 2, #parts do
+				params[i - 1] = parts[i]
+			end
+
+			return command, params
+		end
+	end
+
+	return nil
+end
+
+ConstantElementChat._handle_slash_command = function (self, command, params)
+	return
 end
 
 return ConstantElementChat

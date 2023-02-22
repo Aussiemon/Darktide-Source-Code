@@ -26,9 +26,6 @@ PlayerCharacterStateHubJog.init = function (self, character_state_init_context, 
 	self._movement_method = hub_jog_character_state_component.method
 	local hub_movement = self._constants.hub_movement
 	self._move_method_anims = hub_movement.move_method_anims
-	self._idle_timer = 0
-	self._idle_camera_zoom = 1
-	self._camera_speed_zoom = 0
 end
 
 PlayerCharacterStateHubJog.on_enter = function (self, unit, dt, t, previous_state, params)
@@ -44,10 +41,6 @@ PlayerCharacterStateHubJog.on_enter = function (self, unit, dt, t, previous_stat
 	local max_slope_angle = math.degrees_to_radians(movement_settings_shared.mover_max_slope_angle)
 
 	Mover.set_max_slope_angle(mover, max_slope_angle)
-
-	self._idle_timer = 0
-	self._idle_camera_zoom = 1
-	self._camera_speed_zoom = 0
 end
 
 PlayerCharacterStateHubJog.on_exit = function (self, unit, t, next_state)
@@ -89,15 +82,7 @@ PlayerCharacterStateHubJog.fixed_update = function (self, unit, dt, t, next_stat
 	end
 
 	local move_state = self:_update_move_state(hub_jog_character_state, input_extension, anim_extension, move_speed, stopping, dt, t)
-
-	self:_update_move_method(move_state, hub_jog_character_state, locomotion, locomotion_steering, stopping, wants_move, wants_turn_on_spot, anim_extension, velocity_wanted, velocity_current, t)
-	self:_update_emotes(input_extension)
-	self:_update_mini_emotes(input_extension)
-
-	if not DEDICATED_SERVER then
-		self:_update_camera(unit, dt, t, move_state, self._movement_method, first_person, locomotion)
-	end
-
+	local method_changed, move_method = self:_update_move_method(move_state, hub_jog_character_state, locomotion, locomotion_steering, stopping, wants_move, wants_turn_on_spot, anim_extension, velocity_wanted, velocity_current, t)
 	local next_state = self:_check_transition(unit, t, next_state_params, input_extension)
 
 	return next_state
@@ -304,7 +289,9 @@ PlayerCharacterStateHubJog._update_move_method = function (self, move_state, hub
 		move_method = "idle"
 	end
 
-	if move_method ~= old_method then
+	local method_changed = move_method ~= old_method
+
+	if method_changed then
 		local move_method_anims = self._move_method_anims[move_method]
 		local from_movement_turn_anims = move_method_anims.from_movement_turn_anims
 		local from_still_turn_anims = move_method_anims.from_still_turn_anims
@@ -347,113 +334,18 @@ PlayerCharacterStateHubJog._update_move_method = function (self, move_state, hub
 
 		hub_jog_character_state.method = move_method
 	end
+
+	return method_changed, move_method
 end
 
-local CROUCH_INPUT = "crouch"
-local CROUCH_EMOTE_ANIM_EVENT = "mini_emote_01"
-local JUMP_INPUT = "jump"
-local JUMP_EMOTE_ANIM_EVENT = "mini_emote_02"
-local MOUSE_LEFT_INPUT = "action_one_pressed"
-local MOUSE_LEFT_EMOTE_ANIM_EVENT = "mini_emote_03"
-local MOUSE_RIGHT_INPUT = "action_two_pressed"
-local MOUSE_RIGHT_EMOTE_ANIM_EVENT = "mini_emote_04"
+PlayerCharacterStateHubJog._check_transition = function (self, unit, t, next_state_params, input_extension)
+	local emote_slot_id = Managers.state.emote:check_emote_input(input_extension)
 
-PlayerCharacterStateHubJog._update_mini_emotes = function (self, input_extension)
-	return
-end
+	if emote_slot_id then
+		next_state_params.emote_slot_id = emote_slot_id
 
-local emotes = {
-	emote_4 = "slot_animation_emote_4",
-	emote_5 = "slot_animation_emote_5",
-	emote_1 = "slot_animation_emote_1",
-	emote_2 = "slot_animation_emote_2",
-	emote_3 = "slot_animation_emote_3"
-}
-
-PlayerCharacterStateHubJog._update_emotes = function (self, input_extension)
-	for emote_key, emote_slot_id in pairs(emotes) do
-		if input_extension:get(emote_key) then
-			local unit = self._unit
-			local player = Managers.state.player_unit_spawn:owner(unit)
-			local profile = player:profile()
-			local loadout = profile.loadout
-			local emote_item = loadout[emote_slot_id]
-
-			if emote_item then
-				local anim_event = emote_item.animation_event
-
-				self._animation_extension:anim_event(anim_event)
-			end
-		end
+		return "hub_emote"
 	end
-end
-
-local quaternion_right = Quaternion.right
-local quaternion_forward = Quaternion.forward
-local vector3_cross = Vector3.cross
-local vector3_dot = Vector3.dot
-local math_lerp = math.lerp
-local idle_camera_zoom_delay = 1
-local idle_camera_zoom_speed = 0.5
-local idle_camera_zoom_out_speed = 0.7
-local camera_speed_zoom_in_speed = 1
-local camera_speed_zoom_out_speed = 1
-local move_state_speed_zoom_targets = {
-	sprint = 1,
-	jog = 0.25,
-	idle = 0,
-	walk = 0
-}
-
-PlayerCharacterStateHubJog._update_camera = function (self, unit, dt, t, move_state, move_method, first_person, locomotion)
-	local idle_camera_zoom = self._idle_camera_zoom
-	local camera_speed_zoom = self._camera_speed_zoom
-	local idle_timer = self._idle_timer
-
-	if move_method == "idle" or move_method == "turn_on_spot" then
-		idle_timer = idle_timer + dt
-
-		if idle_camera_zoom_delay < idle_timer then
-			local ramp_up = math.clamp(idle_timer - idle_camera_zoom_delay, 0, 1)
-			idle_camera_zoom = math_lerp(idle_camera_zoom, 1, dt * idle_camera_zoom_speed * ramp_up)
-		end
-
-		camera_speed_zoom = math_lerp(camera_speed_zoom, 0, dt * camera_speed_zoom_out_speed)
-	else
-		idle_camera_zoom = math_lerp(idle_camera_zoom, 0, dt * idle_camera_zoom_out_speed)
-		idle_timer = 0
-		local speed_zoom_target = move_state_speed_zoom_targets[move_state] or 0
-		camera_speed_zoom = math_lerp(camera_speed_zoom, speed_zoom_target, dt * camera_speed_zoom_in_speed)
-	end
-
-	self._idle_camera_zoom = idle_camera_zoom
-	self._camera_speed_zoom = camera_speed_zoom
-	self._idle_timer = idle_timer
-	local look_rotation = first_person.rotation
-	local camera_forward = quaternion_forward(look_rotation)
-	local camera_right = quaternion_right(look_rotation)
-	local flat_look_direction = vector3_cross(camera_right, Vector3.down())
-	local locomotion_rotation = locomotion.rotation
-	local character_forward = quaternion_forward(locomotion_rotation)
-	local hub_back_look_offset = (1 - vector3_dot(flat_look_direction, character_forward)) / 2
-	local hub_up_look_offset = vector3_dot(camera_forward, Vector3.up())
-	local camera_manager = Managers.state.camera
-	local player = Managers.state.player_unit_spawn:owner(unit)
-	local viewport_name = player.viewport_name
-
-	if camera_manager:has_viewport(viewport_name) then
-		camera_manager:set_variable(viewport_name, "hub_idle_offset", math.ease_quad(idle_camera_zoom))
-		camera_manager:set_variable(viewport_name, "hub_speed_zoom", math.easeCubic(camera_speed_zoom))
-		camera_manager:set_variable(viewport_name, "hub_back_look_offset", hub_back_look_offset * idle_camera_zoom)
-		camera_manager:set_variable(viewport_name, "hub_up_look_offset", hub_up_look_offset * idle_camera_zoom)
-		camera_manager:set_variable(viewport_name, "hub_up_back_look_offset", hub_back_look_offset * hub_up_look_offset * idle_camera_zoom)
-		camera_manager:set_variable(viewport_name, "hub_down_back_look_offset", hub_back_look_offset * -hub_up_look_offset * idle_camera_zoom)
-		camera_manager:set_variable(viewport_name, "hub_up_forward_look_offset", (1 - hub_back_look_offset) * hub_up_look_offset * idle_camera_zoom)
-	end
-end
-
-PlayerCharacterStateHubJog._check_transition = function (self, unit, t, next_state_params, input_source)
-	return
 end
 
 function _anims_from_angle(angle, anims)

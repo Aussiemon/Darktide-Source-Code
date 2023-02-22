@@ -43,6 +43,7 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 	local sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
 	local movement_state_component = unit_data_extension:read_component("movement_state")
 	local weapon_action_component = unit_data_extension:read_component("weapon_action")
+	local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
 	self._locomotion_component = unit_data_extension:read_component("locomotion")
 	self._recoil_component = unit_data_extension:read_component("recoil")
 	self._character_state_component = character_state_component
@@ -107,6 +108,7 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 		character_state_component = character_state_component,
 		sprint_character_state_component = sprint_character_state_component,
 		weapon_action_component = weapon_action_component,
+		alternate_fire_component = alternate_fire_component,
 		breed = breed,
 		movement_state_component = movement_state_component,
 		wwise_world = wwise_world,
@@ -207,8 +209,9 @@ end
 
 PlayerUnitFirstPersonExtension.update = function (self, unit, dt, t)
 	self._show_1p_equipment, self._wants_1p_camera = self:_update_first_person_mode(t)
+	local is_in_first_person_mode = self:is_in_first_person_mode()
 
-	if self:is_in_first_person_mode() then
+	if is_in_first_person_mode then
 		self._run_animation_speed_control:update(dt, t)
 		self._look_delta_animation_control:update(dt, t)
 	end
@@ -216,7 +219,11 @@ PlayerUnitFirstPersonExtension.update = function (self, unit, dt, t)
 	self:_update_rotation(unit, dt, t)
 
 	if not self._unit_data_extension.is_resimulating then
-		self._footstep_time = Footstep.update_1p_footsteps(t, self._footstep_time, self._previous_frame_character_state_name, self._is_camera_follow_target, self._footstep_context, FOOTSTEP_SOUND_ALIAS, UPPER_BODY_FOLEY, WEAPON_FOLEY, EXTRA_FOLEY)
+		local previous_frame_character_state_name = self._previous_frame_character_state_name
+		local footstep_context = self._footstep_context
+		self._footstep_time = Footstep.update_1p_footsteps(t, self._footstep_time, previous_frame_character_state_name, is_in_first_person_mode, footstep_context, FOOTSTEP_SOUND_ALIAS, UPPER_BODY_FOLEY, WEAPON_FOLEY, EXTRA_FOLEY)
+
+		Footstep.update_3p_footsteps(previous_frame_character_state_name, is_in_first_person_mode, footstep_context, FOOTSTEP_SOUND_ALIAS, UPPER_BODY_FOLEY, WEAPON_FOLEY, EXTRA_FOLEY)
 	end
 
 	self._previous_frame_character_state_name = self._character_state_component.state_name

@@ -1039,7 +1039,7 @@ weapon_template.actions = {
 			},
 			push_follow_up = {
 				action_name = "action_right_light_pushfollow",
-				chain_time = 0.45
+				chain_time = 0.2
 			},
 			block = {
 				action_name = "action_block",

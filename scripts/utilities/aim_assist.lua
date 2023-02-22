@@ -47,7 +47,7 @@ AimAssist.apply_aim_assist = function (main_t, main_dt, input, targeting_data, a
 	local smart_targeting_template = SmartTargeting.smart_targeting_template(game_t, weapon_action_component)
 	local aim_assist_settings = smart_targeting_template and smart_targeting_template.aim_assist
 
-	if not aim_assist_settings then
+	if not aim_assist_settings or not aim_assist_settings.always_auto_aim then
 		return look_yaw, look_pitch
 	end
 
@@ -67,23 +67,19 @@ AimAssist.apply_aim_assist = function (main_t, main_dt, input, targeting_data, a
 end
 
 function _aim_assist_multiplier(input, aim_assist_ramp_component, aim_assist_settings, gamepad_active)
-	local always_auto_aim = aim_assist_settings.always_auto_aim
 	local base_multiplier = aim_assist_settings.base_multiplier
 	local no_aim_input_multiplier = aim_assist_settings.no_aim_input_multiplier
 	local ramp_multiplier = aim_assist_ramp_component.multiplier
 	local multiplier = nil
+	local input_alias = "look_raw_controller"
+	local look_raw = input:get(input_alias)
 
-	if not always_auto_aim then
-		local input_alias = "look_raw_controller"
-		local look_raw = input:get(input_alias)
+	if Vector3.length_squared(look_raw) < MULTIPLIER_EPSILON then
+		multiplier = math.min(no_aim_input_multiplier + ramp_multiplier, 1)
+		local move = input:get("move")
 
-		if Vector3.length_squared(look_raw) < MULTIPLIER_EPSILON then
-			multiplier = math.min(no_aim_input_multiplier + ramp_multiplier, 1)
-			local move = input:get("move")
-
-			if Vector3.length_squared(move) < MULTIPLIER_EPSILON then
-				multiplier = 0
-			end
+		if Vector3.length_squared(move) < MULTIPLIER_EPSILON then
+			multiplier = 0
 		end
 	end
 

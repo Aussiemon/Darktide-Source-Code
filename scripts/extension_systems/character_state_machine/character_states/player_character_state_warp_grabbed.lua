@@ -79,9 +79,11 @@ PlayerCharacterStateWarpGrabbed.on_exit = function (self, unit, t, next_state)
 
 	FirstPersonView.enter(t, first_person_mode_component, rewind_ms)
 
-	local inventory_component = self._inventory_component
+	if next_state ~= "dead" then
+		local inventory_component = self._inventory_component
 
-	PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
+		PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
+	end
 
 	local disabled_character_state_component = self._disabled_character_state_component
 	local disabling_unit = disabled_character_state_component.disabling_unit
@@ -134,13 +136,11 @@ PlayerCharacterStateWarpGrabbed.fixed_update = function (self, unit, dt, t, next
 end
 
 PlayerCharacterStateWarpGrabbed._check_transition = function (self, unit, t, next_state_params)
-	local unit_data_extension = self._unit_data_extension
-
 	if not self._disabled_state_input.disabling_unit then
 		return "walking"
 	end
 
-	local dead_state_input = unit_data_extension:read_component("dead_state_input")
+	local dead_state_input = self._unit_data_extension:read_component("dead_state_input")
 
 	if dead_state_input.die then
 		next_state_params.time_to_despawn_corpse = dead_state_input.despawn_time

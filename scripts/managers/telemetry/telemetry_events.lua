@@ -8,6 +8,7 @@ local RPCS = {
 	"rpc_sync_server_session_id"
 }
 local SOURCE = table.remove_empty_values(TelemetrySettings.source)
+local BLACKLISTED_VIEWS = TelemetrySettings.blacklisted_views
 
 TelemetryEvents.init = function (self, telemetry_manager, connection_manager)
 	self._manager = telemetry_manager
@@ -40,6 +41,10 @@ TelemetryEvents.init = function (self, telemetry_manager, connection_manager)
 	self:game_startup()
 end
 
+TelemetryEvents.refresh_settings = function (self)
+	SOURCE.backend_environment = BACKEND_ENV
+end
+
 TelemetryEvents.destroy = function (self)
 	if not DEDICATED_SERVER then
 		self._connection_manager:network_event_delegate():unregister_events(unpack(RPCS))
@@ -63,10 +68,6 @@ TelemetryEvents.rpc_sync_server_session_id = function (self, channel_id, session
 	if self._connection_manager:host_type() == HOST_TYPES.mission_server then
 		self._session.gameplay = session_id
 	end
-
-	for _, player in pairs(Managers.player:players_at_peer(Network.peer_id())) do
-		self:client_connected(player)
-	end
 end
 
 TelemetryEvents.client_connected = function (self, player)
@@ -75,14 +76,7 @@ TelemetryEvents.client_connected = function (self, player)
 		gameplay = self._session.gameplay
 	})
 
-	event:set_data({
-		auth_platform = Managers.presence:presence_entry_myself():platform()
-	})
 	self._manager:register_event(event)
-
-	if self._connection_manager:host_type() == HOST_TYPES.mission_server then
-		self:player_inventory(player)
-	end
 end
 
 TelemetryEvents.player_inventory = function (self, player)
@@ -97,15 +91,16 @@ TelemetryEvents.player_inventory = function (self, player)
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.client_disconnected = function (self, player, info)
+TelemetryEvents.client_disconnected = function (self, player, reason)
 	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "client_disconnected", {
 		game = player:telemetry_game_session(),
 		gameplay = self._session.gameplay
 	})
 
 	event:set_data({
-		info = info
+		reason = reason
 	})
+	event:set_revision(1)
 	self._manager:register_event(event)
 end
 
@@ -572,7 +567,7 @@ TelemetryEvents.camera_performance_measurements = function (self, map, camera, m
 		camera_id = camera.id_string,
 		camera_name = camera.name,
 		go_to_camera_position_link = camera.go_to_camera_position_link,
-		ms_per_frame = measurements.ms_per_frame,
+		ms_per_frame = measurements.ms_per_frame_main,
 		batchcount = measurements.batchcount,
 		primitives_count = measurements.primitives_count
 	})
@@ -585,7 +580,7 @@ TelemetryEvents.cutscene_performance_measurements = function (self, map, cutscen
 	event:set_data({
 		map = map,
 		cutscene = cutscene,
-		ms_per_frame = measurements.ms_per_frame,
+		ms_per_frame = measurements.ms_per_frame_main,
 		batchcount = measurements.batchcount,
 		primitives_count = measurements.primitives_count
 	})
@@ -597,14 +592,12 @@ TelemetryEvents.performance_measurements = function (self, map, measurements)
 
 	event:set_data({
 		map = map,
-		ms_per_frame = measurements.ms_per_frame,
-		batchcount = measurements.batchcount,
-		primitives_count = measurements.primitives_count
+		ms_per_frame = measurements.ms_per_frame_main,
+		ms_per_frame_render = measurements.ms_per_frame_render,
+		ms_per_frame_gpu = measurements.ms_per_frame_gpu
 	})
 	self._manager:register_event(event)
 end
-
-local BLACKLISTED_VIEWS = TelemetrySettings.blacklisted_views
 
 TelemetryEvents.open_view = function (self, view_name)
 	if table.array_contains(BLACKLISTED_VIEWS, view_name) then

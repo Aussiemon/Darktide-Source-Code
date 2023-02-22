@@ -260,7 +260,7 @@ MultiplayerSessionManager.update = function (self, dt)
 					BreedLoader:new(),
 					HudLoader:new()
 				}
-				local loading_host = LoadingHost:new(Managers.connection:network_event_delegate(), loaders)
+				local loading_host = LoadingHost:new(Managers.connection:network_event_delegate(), loaders, connection_class_name)
 
 				Managers.loading:set_host(loading_host)
 			elseif connection_class_name == "ConnectionHost" then
@@ -273,7 +273,7 @@ MultiplayerSessionManager.update = function (self, dt)
 					BreedLoader:new(),
 					HudLoader:new()
 				}
-				local loading_host = LoadingHost:new(Managers.connection:network_event_delegate(), loaders)
+				local loading_host = LoadingHost:new(Managers.connection:network_event_delegate(), loaders, connection_class_name)
 
 				Managers.loading:set_host(loading_host)
 			elseif connection_class_name == "ConnectionClient" then

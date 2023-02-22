@@ -411,10 +411,6 @@ local advanced_ingame_input_settings = {
 		},
 		smart_tag = {
 			key_alias = "smart_tag",
-			type = "held"
-		},
-		smart_tag_pressed = {
-			key_alias = "smart_tag",
 			type = "pressed"
 		},
 		com_wheel = {

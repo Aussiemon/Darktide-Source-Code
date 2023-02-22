@@ -4375,14 +4375,12 @@ local conversations_core_zealot_male_a = {
 	},
 	lore_hive_cities_two_c = {
 		randomize_indexes_n = 0,
-		sound_events_n = 2,
+		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_zealot_male_a__lore_hive_cities_two_c_01",
-			[2.0] = "loc_zealot_male_a__lore_hive_cities_two_c_02"
+			[1.0] = "loc_zealot_male_a__lore_hive_cities_two_c_01"
 		},
 		sound_events_duration = {
-			[1.0] = 9.099688,
-			[2.0] = 7.905354
+			[1.0] = 9.099688
 		},
 		randomize_indexes = {}
 	},

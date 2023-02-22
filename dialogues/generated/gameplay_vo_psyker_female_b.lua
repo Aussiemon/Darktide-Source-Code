@@ -568,6 +568,47 @@ local gameplay_vo_psyker_female_b = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_berserker_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.900292,
+			2.383292,
+			0.990458,
+			1.320354,
+			2.300625,
+			2.156708,
+			1.454708,
+			1.958708,
+			1.839458,
+			1.694896
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_chaos_hound = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -597,6 +638,47 @@ local gameplay_vo_psyker_female_b = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_chaos_hound_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.900292,
+			2.383292,
+			0.990458,
+			1.320354,
+			2.300625,
+			2.156708,
+			1.454708,
+			1.958708,
+			1.839458,
+			1.694896
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_cultist_mutant = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -623,6 +705,47 @@ local gameplay_vo_psyker_female_b = {
 			2.794333,
 			2.2655,
 			3.424271
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_cultist_mutant_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.900292,
+			2.383292,
+			0.990458,
+			1.320354,
+			2.300625,
+			2.156708,
+			1.454708,
+			1.958708,
+			1.839458,
+			1.694896
 		},
 		sound_event_weights = {
 			0.1,
@@ -708,6 +831,47 @@ local gameplay_vo_psyker_female_b = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_grenadier_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.900292,
+			2.383292,
+			0.990458,
+			1.320354,
+			2.300625,
+			2.156708,
+			1.454708,
+			1.958708,
+			1.839458,
+			1.694896
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_monster = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -766,6 +930,47 @@ local gameplay_vo_psyker_female_b = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_netgunner_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.900292,
+			2.383292,
+			0.990458,
+			1.320354,
+			2.300625,
+			2.156708,
+			1.454708,
+			1.958708,
+			1.839458,
+			1.694896
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_poxwalker_bomber = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -792,6 +997,47 @@ local gameplay_vo_psyker_female_b = {
 			2.346625,
 			1.722792,
 			1.580354
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_poxwalker_bomber_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.900292,
+			2.383292,
+			0.990458,
+			1.320354,
+			2.300625,
+			2.156708,
+			1.454708,
+			1.958708,
+			1.839458,
+			1.694896
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -836,32 +1082,178 @@ local gameplay_vo_psyker_female_b = {
 		},
 		randomize_indexes = {}
 	},
-	enemy_kill_scab_flamer = {
+	enemy_kill_renegade_berserker_quick_agnostic = {
 		randomize_indexes_n = 0,
-		sound_events_n = 6,
+		sound_events_n = 10,
 		sound_events = {
-			"loc_psyker_female_b__enemy_kill_monster_02",
-			"loc_psyker_female_b__enemy_kill_monster_05",
-			"loc_psyker_female_b__enemy_kill_monster_06",
-			"loc_psyker_female_b__enemy_kill_monster_09",
-			"loc_psyker_female_b__enemy_kill_tox_flamer_02",
-			"loc_psyker_female_b__enemy_kill_tox_flamer_04"
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_10"
 		},
 		sound_events_duration = {
-			2.541604,
-			3.6175,
-			1.655479,
-			2.076042,
-			1.799688,
-			1.693354
+			1.900292,
+			2.383292,
+			0.990458,
+			1.320354,
+			2.300625,
+			2.156708,
+			1.454708,
+			1.958708,
+			1.839458,
+			1.694896
 		},
 		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_scab_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_psyker_female_b__enemy_kill_scab_flamer_a_01",
+			"loc_psyker_female_b__enemy_kill_scab_flamer_a_02",
+			"loc_psyker_female_b__enemy_kill_scab_flamer_a_03",
+			"loc_psyker_female_b__enemy_kill_scab_flamer_a_04",
+			"loc_psyker_female_b__enemy_kill_scab_flamer_a_05"
+		},
+		sound_events_duration = {
+			1.36125,
+			1.257917,
+			1.657646,
+			2.324604,
+			2.318229
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_scab_flamer_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.900292,
+			2.383292,
+			0.990458,
+			1.320354,
+			2.300625,
+			2.156708,
+			1.454708,
+			1.958708,
+			1.839458,
+			1.694896
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_sniper = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_psyker_female_b__enemy_kill_sniper_a_01",
+			"loc_psyker_female_b__enemy_kill_sniper_a_02",
+			"loc_psyker_female_b__enemy_kill_sniper_a_03",
+			"loc_psyker_female_b__enemy_kill_sniper_a_04",
+			"loc_psyker_female_b__enemy_kill_sniper_a_05"
+		},
+		sound_events_duration = {
+			1.117604,
+			1.241104,
+			2.732625,
+			1.779313,
+			2.280417
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_sniper_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.900292,
+			2.383292,
+			0.990458,
+			1.320354,
+			2.300625,
+			2.156708,
+			1.454708,
+			1.958708,
+			1.839458,
+			1.694896
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -881,6 +1273,47 @@ local gameplay_vo_psyker_female_b = {
 			2.24175,
 			1.693354,
 			2.896688
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_tox_flamer_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_female_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.900292,
+			2.383292,
+			0.990458,
+			1.320354,
+			2.300625,
+			2.156708,
+			1.454708,
+			1.958708,
+			1.839458,
+			1.694896
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -929,13 +1362,6 @@ local gameplay_vo_psyker_female_b = {
 			1.661167,
 			0.569458,
 			2.73
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -4128,27 +4554,30 @@ local gameplay_vo_psyker_female_b = {
 	},
 	seen_enemy_scab_flamer = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 6,
 		sound_events = {
-			"loc_psyker_female_b__seen_enemy_specials_generic_01",
-			"loc_psyker_female_b__seen_enemy_specials_generic_02",
-			"loc_psyker_female_b__seen_enemy_specials_generic_03",
-			"loc_psyker_female_b__seen_enemy_specials_generic_04",
-			"loc_psyker_female_b__seen_enemy_specials_generic_05"
+			"loc_psyker_female_b__seen_enemy_scab_flamer_a_01",
+			"loc_psyker_female_b__seen_enemy_scab_flamer_a_02",
+			"loc_psyker_female_b__seen_enemy_scab_flamer_a_03",
+			"loc_psyker_female_b__seen_enemy_scab_flamer_a_04",
+			"loc_psyker_female_b__seen_enemy_scab_flamer_a_05",
+			"loc_psyker_female_b__seen_enemy_scab_flamer_a_06"
 		},
 		sound_events_duration = {
-			2.048667,
-			1.405813,
-			2.223979,
-			3.843417,
-			1.426771
+			1.151208,
+			1.3095,
+			2.139042,
+			1.797417,
+			0.999521,
+			1.364646
 		},
 		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
 		},
 		randomize_indexes = {}
 	},

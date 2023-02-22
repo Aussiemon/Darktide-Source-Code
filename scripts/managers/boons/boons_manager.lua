@@ -5,12 +5,12 @@ local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local BoonsManager = class("BoonsManager")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 local RPCS_CLIENT = {
-	"rpc_player_equip_boon_response",
-	"rpc_sync_equipped_boons",
+	"rpc_player_select_boon_response",
+	"rpc_sync_selected_boons",
 	"rpc_boons_activated"
 }
 local RPCS_SERVER = {
-	"rpc_player_equip_boon_request"
+	"rpc_player_select_boon_request"
 }
 
 BoonsManager.init = function (self, is_server)
@@ -27,7 +27,7 @@ BoonsManager.init = function (self, is_server)
 		self._network_event_delegate:register_connection_events(self, unpack(RPCS_CLIENT))
 	end
 
-	self._equipped_boons = {}
+	self._selected_boons = {}
 	self._active_boons = {}
 end
 
@@ -54,7 +54,7 @@ BoonsManager._on_player_unit_spawned = function (self, player)
 			self:_send_rpc_client("rpc_boons_activated", peer_id)
 		end
 	else
-		self:_sync_equipped_boons()
+		self:_sync_selected_boons()
 	end
 end
 
@@ -62,14 +62,14 @@ BoonsManager.update = function (self, dt, t)
 	return
 end
 
-BoonsManager.request_equip_boon = function (self, player, gear_id)
+BoonsManager.request_select_boon = function (self, player, gear_id)
 	local peer_id = player:peer_id()
 	local local_player_id = player:local_player_id()
 
-	self:_send_rpc_server("rpc_player_equip_boon_request", peer_id, local_player_id, gear_id)
+	self:_send_rpc_server("rpc_player_select_boon_request", peer_id, local_player_id, gear_id)
 end
 
-BoonsManager.rpc_player_equip_boon_request = function (self, channel_id, peer_id, local_player_id, gear_id)
+BoonsManager.rpc_player_select_boon_request = function (self, channel_id, peer_id, local_player_id, gear_id)
 	local player = Managers.player:player(peer_id, local_player_id)
 	local account_id = player:account_id()
 
@@ -78,24 +78,24 @@ BoonsManager.rpc_player_equip_boon_request = function (self, channel_id, peer_id
 		local boon_can_be_equipped, optional_fail_reason = self:_boon_can_be_equipped(boon_item)
 		local success = boon_can_be_equipped
 
-		self:_send_rpc_client("rpc_player_equip_boon_response", peer_id, success, optional_fail_reason)
+		self:_send_rpc_client("rpc_player_select_boon_response", peer_id, success, optional_fail_reason)
 
 		if boon_can_be_equipped then
-			self:_equip_boon_on_server(player, boon_item)
-			self:_sync_equipped_boons()
+			self:_select_boon_on_server(player, boon_item)
+			self:_sync_selected_boons()
 		end
 	end)
 end
 
-BoonsManager.rpc_player_equip_boon_response = function (self, channel_id, success, optional_fail_reason)
+BoonsManager.rpc_player_select_boon_response = function (self, channel_id, success, optional_fail_reason)
 	Log.info("BoonsManager", "Equip boon response %s :%s", success, optional_fail_reason)
 
 	if success then
-		Managers.event:trigger("event_add_notification_message", "default", "Equip Boon Request Approved")
+		Managers.event:trigger("event_add_notification_message", "dev", "Select Boon Request Approved")
 	else
 		local error_string = Localize(optional_fail_reason)
 
-		Managers.event:trigger("event_add_notification_message", "default", string.format("Equip Boon Request Rejected\n%s", error_string))
+		Managers.event:trigger("event_add_notification_message", "dev", string.format("Select Boon Request Rejected\n%s", error_string))
 	end
 end
 
@@ -106,10 +106,10 @@ BoonsManager._boon_can_be_equipped = function (self, boon_item)
 		return false, reason
 	end
 
-	local equipped_boons = self._equipped_boons
+	local selected_boons = self._selected_boons
 	local boon_item_name = boon_item.name
 
-	for _, item in pairs(equipped_boons) do
+	for _, item in pairs(selected_boons) do
 		local item_name = item.name
 
 		if item_name == boon_item_name then
@@ -122,20 +122,19 @@ BoonsManager._boon_can_be_equipped = function (self, boon_item)
 	return true
 end
 
-BoonsManager._equip_boon_on_server = function (self, player, item)
-	self._equipped_boons[player] = item
+BoonsManager._select_boon_on_server = function (self, player, item)
+	self._selected_boons[player] = item
 end
 
 BoonsManager.activate_boons = function (self)
 	self._boons_activated = true
 
-	for player, boon_item in pairs(self._equipped_boons) do
+	for player, boon_item in pairs(self._selected_boons) do
 		self._active_boons[player] = boon_item
-		self._equipped_boons[player] = nil
+		self._selected_boons[player] = nil
 	end
 
 	self:_add_boon_effects_on_all_player()
-	Managers.connection:send_rpc_clients("rpc_boons_activated")
 end
 
 BoonsManager.rpc_boons_activated = function (self, channel_id)
@@ -172,7 +171,7 @@ BoonsManager._add_boon_effects_on_all_player = function (self)
 		end
 	end
 
-	self:_sync_equipped_boons()
+	self:_sync_selected_boons()
 end
 
 BoonsManager._add_buff = function (self, player, name)
@@ -239,13 +238,13 @@ BoonsManager._player_have_buff = function (self, player, buff_template_name)
 	return false
 end
 
-BoonsManager._sync_equipped_boons = function (self)
-	local equipped_boons = self._equipped_boons
+BoonsManager._sync_selected_boons = function (self)
+	local selected_boons = self._selected_boons
 	local peer_ids_list = {}
 	local local_player_ids_list = {}
 	local boon_items_id_list = {}
 
-	for player, boon_item in pairs(equipped_boons) do
+	for player, boon_item in pairs(selected_boons) do
 		local peer_id = player:peer_id()
 		local local_player_id = player:local_player_id()
 		local boon_item_name = boon_item.name
@@ -256,11 +255,11 @@ BoonsManager._sync_equipped_boons = function (self)
 		table.insert(boon_items_id_list, boon_item_id)
 	end
 
-	Managers.connection:send_rpc_clients("rpc_sync_equipped_boons", peer_ids_list, local_player_ids_list, boon_items_id_list)
+	Managers.connection:send_rpc_clients("rpc_sync_selected_boons", peer_ids_list, local_player_ids_list, boon_items_id_list)
 end
 
-BoonsManager.rpc_sync_equipped_boons = function (self, channel_id, peer_ids_list, local_player_ids_list, boon_items_id_list)
-	table.clear(self._equipped_boons)
+BoonsManager.rpc_sync_selected_boons = function (self, channel_id, peer_ids_list, local_player_ids_list, boon_items_id_list)
+	table.clear(self._selected_boons)
 
 	for i, peer_id in ipairs(peer_ids_list) do
 		local local_player_id = local_player_ids_list[i]
@@ -268,12 +267,12 @@ BoonsManager.rpc_sync_equipped_boons = function (self, channel_id, peer_ids_list
 		local boon_item_id = boon_items_id_list[i]
 		local boon_item_name = NetworkLookup.player_item_names[boon_item_id]
 		local boon_item_template = MasterItems.get_item(boon_item_name)
-		self._equipped_boons[player] = boon_item_template
+		self._selected_boons[player] = boon_item_template
 	end
 end
 
-BoonsManager.equipped_boon = function (self, player)
-	local boon_item = self._equipped_boons[player]
+BoonsManager.selected_boon = function (self, player)
+	local boon_item = self._selected_boons[player]
 
 	return boon_item
 end

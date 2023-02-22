@@ -1119,6 +1119,35 @@ damage_templates.chainaxe_tank = {
 		}
 	}
 }
+overrides.chainaxe_light_stab = {
+	parent_template_name = "chainaxe_tank",
+	overrides = {
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"armored",
+			damage_lerp_values.lerp_1
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"super_armor",
+			damage_lerp_values.lerp_0_5
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"resistant",
+			damage_lerp_values.lerp_0_9
+		}
+	}
+}
 
 return {
 	base_templates = damage_templates,

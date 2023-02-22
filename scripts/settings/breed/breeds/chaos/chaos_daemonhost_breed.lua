@@ -61,7 +61,7 @@ local breed_data = {
 		monster = true
 	},
 	testify_flags = {
-		spawn_all_enemies = false
+		spawn_all_enemies = true
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.resistant,

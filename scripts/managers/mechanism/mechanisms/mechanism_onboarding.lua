@@ -17,8 +17,6 @@ MechanismOnboarding.init = function (self, ...)
 	self._level_name = mission_settings.level
 	self._singleplay_type = context.singleplay_type
 	self._init_scenario = context.init_scenario
-
-	Managers.event:register(self, "scripted_scenario_system_initialized", "_event_scenario_system_initialized")
 end
 
 MechanismOnboarding.sync_data = function (self)
@@ -69,6 +67,16 @@ MechanismOnboarding.wanted_transition = function (self)
 			}
 		}
 	elseif state == "gameplay" then
+		if self._init_scenario and Managers.state.game_mode then
+			local init_scenario = self._init_scenario
+
+			if init_scenario then
+				Managers.state.game_mode:set_init_scenario(init_scenario.alias, init_scenario.name)
+			end
+
+			self._init_scenario = nil
+		end
+
 		return false
 	elseif state == "game_mode_ended" then
 		local story_name = Managers.narrative.STORIES.onboarding
@@ -108,19 +116,7 @@ MechanismOnboarding.peer_freed_slot = function (self, peer_id)
 end
 
 MechanismOnboarding.destroy = function (self)
-	Managers.event:unregister(self, "scripted_scenario_system_initialized")
-end
-
-MechanismOnboarding._event_scenario_system_initialized = function (self, scenario_system)
-	local init_scenario = self._init_scenario
-
-	if init_scenario then
-		scenario_system:set_init_scenario(init_scenario.alias, init_scenario.name)
-	end
-
-	self._init_scenario = nil
-
-	Managers.event:unregister(self, "scripted_scenario_system_initialized")
+	return
 end
 
 MechanismOnboarding.singleplay_type = function (self)

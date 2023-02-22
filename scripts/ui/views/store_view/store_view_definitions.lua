@@ -293,7 +293,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			50
+			200
 		}
 	}
 }
@@ -827,7 +827,34 @@ local widget_definitions = {
 				ColorUtilities.color_lerp(default_color, hover_color, progress, color)
 			end
 		}
-	}, "navigation_arrow_right")
+	}, "navigation_arrow_right"),
+	loading = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style = {
+				color = Color.black(127.5, true)
+			}
+		},
+		{
+			value = "content/ui/materials/loading/loading_icon",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				size = {
+					256,
+					256
+				},
+				offset = {
+					0,
+					0,
+					1
+				}
+			}
+		}
+	}, "loading", {
+		visible = false
+	})
 }
 local legend_inputs = {
 	{

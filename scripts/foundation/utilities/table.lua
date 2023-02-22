@@ -409,7 +409,7 @@ local _value_to_string_array, _table_tostring_array = nil
 
 function _value_to_string_array(v, depth, max_depth, skip_private)
 	if type(v) == "table" then
-		if depth < max_depth then
+		if depth <= max_depth then
 			return _table_tostring_array(v, depth + 1, max_depth, skip_private)
 		else
 			return {

@@ -1253,8 +1253,9 @@ weapon_template.crosshair_type = "dot"
 weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",
-	"thunder_hammer",
-	"p1"
+	"power_maul_2h",
+	"p1",
+	"activated"
 }
 weapon_template.dodge_template = "support"
 weapon_template.sprint_template = "support"

@@ -63,6 +63,10 @@ DisruptiveStateTransition.poll = function (unit, unit_data_extension, next_state
 		if disabling_type == "consumed" then
 			return "consumed"
 		end
+
+		if disabling_type == "grabbed" then
+			return "grabbed"
+		end
 	end
 
 	local catapulted_state_input = unit_data_extension:read_component("catapulted_state_input")

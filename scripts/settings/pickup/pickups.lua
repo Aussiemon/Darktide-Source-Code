@@ -26,6 +26,7 @@ _create_pickup_entry("scripts/settings/pickup/pickups/consumable/small_platinum_
 _create_pickup_entry("scripts/settings/pickup/pickups/deployable/ammo_cache_deployable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/deployable/medical_crate_deployable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/luggable/battery_01_luggable_pickup")
+_create_pickup_entry("scripts/settings/pickup/pickups/luggable/prismata_case_01_luggable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/luggable/container_01_luggable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/luggable/container_02_luggable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/luggable/container_03_luggable_pickup")

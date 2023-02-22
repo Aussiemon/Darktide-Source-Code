@@ -223,7 +223,7 @@ end
 
 local _combine_item = nil
 
-function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck)
+function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair, mask_hair)
 	for child_slot_name, child_entry in pairs(entry) do
 		if child_slot_name ~= "parent_slot_names" then
 			local child_attachments = {}
@@ -250,6 +250,14 @@ function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_pre
 
 			if data.item.stabilize_neck then
 				stabilize_neck[1] = stabilize_neck[1] or data.item.stabilize_neck
+			end
+
+			if data.item.mask_facial_hair then
+				mask_facial_hair[1] = mask_facial_hair[1] or data.item.mask_facial_hair
+			end
+
+			if data.item.mask_hair then
+				mask_hair[1] = mask_hair[1] or data.item.mask_hair
 			end
 		end
 	end
@@ -307,8 +315,10 @@ local function _generate_visual_loadout(visual_items)
 				hide_eyebrows = false
 			}
 			local stabilize_neck = {}
+			local mask_facial_hair = {}
+			local mask_hair = {}
 
-			_combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck)
+			_combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair, mask_hair)
 
 			local data = visual_items[slot_name]
 			local gear = data.gear
@@ -355,6 +365,16 @@ local function _generate_visual_loadout(visual_items)
 				overrides.stabilize_neck = stabilize_neck[1]
 			end
 
+			if mask_facial_hair then
+				overrides = overrides or {}
+				overrides.mask_facial_hair = mask_facial_hair[1]
+			end
+
+			if mask_hair then
+				overrides = overrides or {}
+				overrides.mask_hair = mask_hair[1]
+			end
+
 			gear.masterDataInstance.overrides = overrides
 			local item = MasterItems.get_item_instance(gear, item_id)
 			visual_loadout[slot_name] = item
@@ -398,7 +418,7 @@ local function _generate_visual_loadout_from_data(loadout_item_ids, loadout_item
 			local gear = {
 				masterDataInstance = {
 					id = item_data.id,
-					overrides = item_data.overrides and table.clone(item_data.overrides)
+					overrides = item_data.overrides and table.clone_instance(item_data.overrides)
 				},
 				slots = {
 					slot_name
@@ -685,6 +705,161 @@ ProfileUtils.character_title = function (profile, exlude_symbol)
 	else
 		return archetype_name
 	end
+end
+
+local function _character_save_data()
+	local local_player_id = 1
+	local player_manager = Managers.player
+	local player = player_manager and player_manager:local_player(local_player_id)
+	local character_id = player and player:character_id()
+	local save_manager = Managers.save
+	local character_data = character_id and save_manager and save_manager:character_data(character_id)
+
+	return character_data
+end
+
+ProfileUtils.save_active_profile_preset_id = function (profile_preset_id)
+	local character_data = _character_save_data()
+
+	if not character_data then
+		return
+	end
+
+	character_data.active_profile_preset_id = profile_preset_id
+
+	Managers.save:queue_save()
+end
+
+ProfileUtils.add_profile_preset = function (loadout, talents, custom_icon_key)
+	local profile_presets = ProfileUtils.get_profile_presets()
+	local num_profile_presets = #profile_presets
+	local profile_preset_id = num_profile_presets + 1
+	profile_presets[profile_preset_id] = {
+		loadout = loadout or {},
+		talents = talents or {},
+		custom_icon_key = custom_icon_key,
+		id = profile_preset_id
+	}
+
+	Managers.save:queue_save()
+
+	return profile_preset_id, profile_presets[profile_preset_id]
+end
+
+ProfileUtils.remove_profile_preset = function (profile_preset_id)
+	local profile_presets = ProfileUtils.get_profile_presets()
+
+	if not profile_preset_id or not profile_presets[profile_preset_id] then
+		return
+	end
+
+	table.remove(profile_presets, profile_preset_id)
+	Managers.save:queue_save()
+end
+
+ProfileUtils.get_active_profile_preset_id = function ()
+	local character_data = _character_save_data()
+
+	if not character_data then
+		return
+	end
+
+	return character_data.active_profile_preset_id
+end
+
+ProfileUtils.save_item_id_for_profile_preset = function (profile_preset_id, slot_id, item_gear_id)
+	local character_data = _character_save_data()
+
+	if not character_data then
+		return
+	end
+
+	if not character_data.profile_presets then
+		character_data.profile_presets = {}
+	end
+
+	local profile_presets = character_data.profile_presets
+
+	if not profile_presets[profile_preset_id] then
+		profile_presets[profile_preset_id] = {}
+	end
+
+	local profile_preset = profile_presets[profile_preset_id]
+
+	if not profile_preset.loadout then
+		profile_preset.loadout = {}
+	end
+
+	local loadout = profile_preset.loadout
+	loadout[slot_id] = item_gear_id
+
+	Managers.save:queue_save()
+end
+
+ProfileUtils.save_talent_id_for_profile_preset = function (profile_preset_id, talent_name, activated)
+	local character_data = _character_save_data()
+
+	if not character_data then
+		return
+	end
+
+	if not character_data.profile_presets then
+		character_data.profile_presets = {}
+	end
+
+	local profile_presets = character_data.profile_presets
+
+	if not profile_presets[profile_preset_id] then
+		profile_presets[profile_preset_id] = {}
+	end
+
+	local profile_preset = profile_presets[profile_preset_id]
+
+	if not profile_preset.talents then
+		profile_preset.talents = {}
+	end
+
+	local talents = profile_preset.talents
+	talents[talent_name] = activated
+
+	Managers.save:queue_save()
+end
+
+ProfileUtils.get_profile_preset = function (profile_preset_id)
+	local character_data = _character_save_data()
+
+	if not character_data then
+		return
+	end
+
+	local profile_presets = character_data.profile_presets
+
+	if not profile_presets then
+		return
+	end
+
+	local profile_preset = profile_presets and profile_presets[profile_preset_id]
+
+	return profile_preset
+end
+
+ProfileUtils.get_profile_presets = function ()
+	local character_data = _character_save_data()
+
+	if not character_data then
+		return
+	end
+
+	local profile_presets = character_data.profile_presets
+
+	if not profile_presets then
+		profile_presets = {}
+		character_data.profile_presets = profile_presets
+
+		Managers.save:queue_save()
+	end
+
+	return profile_presets
 end
 
 return ProfileUtils

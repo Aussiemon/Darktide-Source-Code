@@ -1,14 +1,14 @@
-local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local BurningSettings = require("scripts/settings/burning/burning_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-local ailment_effects = AilmentSettings.effects
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
+local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local PLAYER_KNOCKED_DOWN_POWER_LEVEL_MULTIPLIER = 0.25
 local BOT_POWER_LEVEL_MULTIPLIER = 0.25
 
@@ -95,24 +95,7 @@ local templates = {
 			1.5
 		},
 		interval_func = _scaled_damage_interval_function,
-		minion_effects = {
-			ailment_effect = ailment_effects.burning,
-			node_effects = {
-				{
-					node_name = "j_spine",
-					vfx = {
-						material_emission = true,
-						particle_effect = "content/fx/particles/enemies/buff_burning",
-						orphaned_policy = "destroy",
-						stop_type = "stop"
-					},
-					sfx = {
-						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
-						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
-					}
-				}
-			}
-		}
+		minion_effects = minion_burning_buff_effects.fire
 	},
 	fire_burninating = {
 		duration = 1,
@@ -138,24 +121,7 @@ local templates = {
 			1.5
 		},
 		interval_func = _scaled_damage_interval_function,
-		minion_effects = {
-			ailment_effect = ailment_effects.burning,
-			node_effects = {
-				{
-					node_name = "j_spine",
-					vfx = {
-						material_emission = true,
-						particle_effect = "content/fx/particles/enemies/buff_burning",
-						orphaned_policy = "destroy",
-						stop_type = "stop"
-					},
-					sfx = {
-						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
-						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
-					}
-				}
-			}
-		}
+		minion_effects = minion_burning_buff_effects.fire
 	},
 	fire_burninating_long = {
 		interval = 1,
@@ -178,24 +144,7 @@ local templates = {
 		damage_template = DamageProfileTemplates.liquid_area_fire_burning,
 		damage_type = damage_types.burning,
 		interval_func = _scaled_damage_interval_function,
-		minion_effects = {
-			ailment_effect = ailment_effects.burning,
-			node_effects = {
-				{
-					node_name = "j_spine",
-					vfx = {
-						material_emission = true,
-						particle_effect = "content/fx/particles/enemies/buff_burning",
-						orphaned_policy = "destroy",
-						stop_type = "stop"
-					},
-					sfx = {
-						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
-						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
-					}
-				}
-			}
-		}
+		minion_effects = minion_burning_buff_effects.fire
 	},
 	prop_in_corruptor_liquid_corruption = {
 		interval = 1,
@@ -245,24 +194,7 @@ local templates = {
 		damage_template = DamageProfileTemplates.liquid_area_fire_burning_barrel,
 		damage_type = damage_types.burning,
 		interval_func = _scaled_damage_interval_function,
-		minion_effects = {
-			ailment_effect = ailment_effects.burning,
-			node_effects = {
-				{
-					node_name = "j_spine",
-					vfx = {
-						material_emission = true,
-						particle_effect = "content/fx/particles/enemies/buff_burning",
-						orphaned_policy = "destroy",
-						stop_type = "stop"
-					},
-					sfx = {
-						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
-						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
-					}
-				}
-			}
-		}
+		minion_effects = minion_burning_buff_effects.fire
 	},
 	renegade_grenadier_in_fire_liquid = {
 		class_name = "interval_buff",
@@ -290,24 +222,7 @@ local templates = {
 		damage_template = DamageProfileTemplates.grenadier_liquid_fire_burning,
 		damage_type = damage_types.burning,
 		interval_func = _scaled_damage_interval_function,
-		minion_effects = {
-			ailment_effect = ailment_effects.burning,
-			node_effects = {
-				{
-					node_name = "j_spine",
-					vfx = {
-						material_emission = true,
-						particle_effect = "content/fx/particles/enemies/buff_burning",
-						orphaned_policy = "destroy",
-						stop_type = "stop"
-					},
-					sfx = {
-						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
-						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
-					}
-				}
-			}
-		}
+		minion_effects = minion_burning_buff_effects.fire
 	},
 	cultist_flamer_in_fire_liquid = {
 		interval = 0.25,
@@ -332,24 +247,7 @@ local templates = {
 		damage_template = DamageProfileTemplates.cultist_flamer_liquid_fire_burning,
 		damage_type = damage_types.burning,
 		interval_func = _scaled_damage_interval_function,
-		minion_effects = {
-			ailment_effect = ailment_effects.chem_burning,
-			node_effects = {
-				{
-					node_name = "j_spine",
-					vfx = {
-						material_emission = true,
-						particle_effect = "content/fx/particles/enemies/buff_burning_green",
-						orphaned_policy = "destroy",
-						stop_type = "stop"
-					},
-					sfx = {
-						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
-						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
-					}
-				}
-			}
-		}
+		minion_effects = minion_burning_buff_effects.chemfire
 	},
 	renegade_flamer_in_fire_liquid = {
 		interval = 0.25,
@@ -374,28 +272,10 @@ local templates = {
 		damage_template = DamageProfileTemplates.renegade_flamer_liquid_fire_burning,
 		damage_type = damage_types.burning,
 		interval_func = _scaled_damage_interval_function,
-		minion_effects = {
-			ailment_effect = ailment_effects.burning,
-			node_effects = {
-				{
-					node_name = "j_spine",
-					vfx = {
-						material_emission = true,
-						particle_effect = "content/fx/particles/enemies/buff_burning",
-						orphaned_policy = "destroy",
-						stop_type = "stop"
-					},
-					sfx = {
-						looping_wwise_stop_event = "wwise/events/weapon/stop_enemy_on_fire",
-						looping_wwise_start_event = "wwise/events/weapon/play_enemy_on_fire"
-					}
-				}
-			}
-		}
+		minion_effects = minion_burning_buff_effects.fire
 	}
 }
 local PLAYER_SLIDING_IN_SLIME_POWER_LEVEL_MULTIPLIER = 4
-local BOT_POWER_LEVEL_MULTIPLIER = 0.25
 local PLAYER_SLIDING_INTERVAL_OVERRIDE = 0.15
 
 local function _beast_of_nurgle_in_slime_interval_function(template_data, template_context, template)

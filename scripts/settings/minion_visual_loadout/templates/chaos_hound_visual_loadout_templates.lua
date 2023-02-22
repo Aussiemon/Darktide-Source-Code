@@ -15,9 +15,7 @@ local basic_chaos_hound_template = {
 			items = {
 				"content/items/characters/minions/chaos_hound/attachments_gear/horns_01",
 				"content/items/characters/minions/chaos_hound/attachments_gear/horns_02",
-				"content/items/characters/minions/chaos_hound/attachments_gear/horns_03",
-				"content/items/characters/minions/generic_items/empty_minion_item",
-				"content/items/characters/minions/generic_items/empty_minion_item"
+				"content/items/characters/minions/chaos_hound/attachments_gear/horns_03"
 			}
 		},
 		slot_body_horns = {

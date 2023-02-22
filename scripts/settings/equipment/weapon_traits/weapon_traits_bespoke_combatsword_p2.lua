@@ -54,7 +54,7 @@ templates.weapon_trait_bespoke_combatsword_p2_increased_melee_damage_on_multiple
 				required_num_hits = 3
 			},
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.15
+				[stat_buffs.melee_damage] = 0.25
 			}
 		},
 		{
@@ -62,7 +62,7 @@ templates.weapon_trait_bespoke_combatsword_p2_increased_melee_damage_on_multiple
 				required_num_hits = 3
 			},
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.175
+				[stat_buffs.melee_damage] = 0.375
 			}
 		},
 		{
@@ -70,7 +70,7 @@ templates.weapon_trait_bespoke_combatsword_p2_increased_melee_damage_on_multiple
 				required_num_hits = 3
 			},
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.2
+				[stat_buffs.melee_damage] = 0.5
 			}
 		}
 	}

@@ -143,8 +143,10 @@ local dialogue_speaker_voice_settings = {
 	},
 	purser_a = {
 		full_name = "loc_npc_full_name_purser_a",
-		short_name = "loc_npc_short_name_purser_a",
+		material_small = "content/ui/materials/icons/npc_portraits/mission_givers/alice_a_small",
 		subtitles_enabled = true,
+		short_name = "loc_npc_short_name_purser_a",
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/alice_a",
 		player_voice = false
 	},
 	explicator_a = {
@@ -219,8 +221,10 @@ local dialogue_speaker_voice_settings = {
 	},
 	contract_vendor_a = {
 		full_name = "loc_npc_full_name_contract_vendor_a",
-		short_name = "loc_npc_short_name_contract_vendor_a",
+		material_small = "content/ui/materials/icons/npc_portraits/mission_givers/melk_a_small",
 		subtitles_enabled = true,
+		short_name = "loc_npc_short_name_contract_vendor_a",
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/melk_a",
 		player_voice = false
 	},
 	credit_store_servitor_b = {
@@ -423,6 +427,11 @@ local dialogue_speaker_voice_settings = {
 		subtitles_enabled = true,
 		player_voice = false
 	},
+	medicae_servitor_b = {
+		short_name = "loc_npc_short_name_medicae_servitor_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
 	mourningstar_soldier_male_a = {
 		short_name = "loc_npc_short_name_mourningstar_soldier_male_a",
 		subtitles_enabled = true,
@@ -438,13 +447,53 @@ local dialogue_speaker_voice_settings = {
 		subtitles_enabled = true,
 		player_voice = false
 	},
+	mourningstar_soldier_male_c = {
+		short_name = "loc_npc_short_name_mourningstar_soldier_male_c",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	mourningstar_soldier_male_d = {
+		short_name = "loc_npc_short_name_mourningstar_soldier_male_d",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	mourningstar_soldier_male_e = {
+		short_name = "loc_npc_short_name_mourningstar_soldier_male_e",
+		subtitles_enabled = true,
+		player_voice = false
+	},
 	mourningstar_soldier_male_f = {
 		short_name = "loc_npc_short_name_mourningstar_soldier_male_f",
 		subtitles_enabled = true,
 		player_voice = false
 	},
+	mourningstar_soldier_male_g = {
+		short_name = "loc_npc_short_name_mourningstar_soldier_male_g",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	mourningstar_soldier_male_h = {
+		short_name = "loc_npc_short_name_mourningstar_soldier_male_h",
+		subtitles_enabled = true,
+		player_voice = false
+	},
 	mourningstar_initiate_a = {
 		short_name = "loc_npc_short_name_mourningstar_initiate_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	mourningstar_initiate_b = {
+		short_name = "loc_npc_short_name_mourningstar_initiate_b",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	mourningstar_officer_male_a = {
+		short_name = "loc_npc_short_name_mourningstar_officer_male_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	mourningstar_officer_male_b = {
+		short_name = "loc_npc_short_name_mourningstar_officer_male_b",
 		subtitles_enabled = true,
 		player_voice = false
 	},

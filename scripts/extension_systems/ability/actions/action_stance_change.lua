@@ -114,7 +114,7 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 	end
 
 	if self._is_server and refill_toughness then
-		Toughness.recover_max_toughness(player_unit)
+		Toughness.recover_max_toughness(player_unit, "ability stance")
 	end
 end
 

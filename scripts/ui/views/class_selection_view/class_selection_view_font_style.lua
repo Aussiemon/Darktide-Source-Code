@@ -6,19 +6,24 @@ main_title_style.text_vertical_alignment = "top"
 local domain_title_style = table.clone(UIFontSettings.grid_title)
 domain_title_style.text_horizontal_alignment = "center"
 domain_title_style.text_vertical_alignment = "top"
-domain_title_style.font_size = 48
+domain_title_style.font_size = 40
 domain_title_style.size_addition = {
 	-40,
 	0
 }
 domain_title_style.horizontal_alignment = "center"
+domain_title_style.offset = {
+	0,
+	10,
+	1
+}
 local domain_description_style = table.clone(UIFontSettings.body)
 domain_description_style.text_horizontal_alignment = "center"
 domain_description_style.text_vertical_alignment = "top"
 domain_description_style.color = Color.white(255, true)
 domain_description_style.offset = {
 	0,
-	90,
+	120,
 	1
 }
 domain_description_style.size_addition = {
@@ -41,6 +46,7 @@ class_domain_title_style.offset = {
 	0,
 	1
 }
+class_domain_title_style.line_spacing = 1
 class_domain_title_style.text_color = class_domain_title_style.disabled_color
 local class_title_style = table.clone(UIFontSettings.grid_title)
 class_title_style.text_horizontal_alignment = "center"
@@ -94,7 +100,7 @@ class_abilities_title.text_vertical_alignment = "top"
 class_abilities_title.offset = {
 	140,
 	0,
-	0
+	1
 }
 class_abilities_title.text_size = 22
 class_abilities_title.vertical_alignment = "top"
@@ -105,7 +111,7 @@ class_abilities_description.vertical_alignment = "top"
 class_abilities_description.offset = {
 	140,
 	10,
-	0
+	1
 }
 local class_weapon_title = table.clone(UIFontSettings.body)
 class_weapon_title.offset = {

@@ -3,8 +3,10 @@ local ContentBlueprints = require("scripts/ui/views/inventory_view/inventory_vie
 local Definitions = require("scripts/ui/views/inventory_view/inventory_view_definitions")
 local InventoryViewSettings = require("scripts/ui/views/inventory_view/inventory_view_settings")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
+local ItemUtils = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local Personalities = require("scripts/settings/character/personalities")
+local ProfileUtils = require("scripts/utilities/profile_utils")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local TextUtilities = require("scripts/utilities/ui/text")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -33,6 +35,12 @@ local VIEW_BY_SLOT = {
 	slot_animation_emote_5 = "inventory_cosmetics_view",
 	slot_portrait_frame = "inventory_cosmetics_view",
 	slot_animation_emote_2 = "inventory_cosmetics_view"
+}
+local DIRECTION = {
+	RIGHT = "right",
+	UP = "up",
+	LEFT = "left",
+	DOWN = "down"
 }
 local InventoryView = class("InventoryView", "BaseView")
 
@@ -76,6 +84,32 @@ InventoryView.on_enter = function (self)
 
 	self:_register_event("event_inventory_view_set_camera_focus")
 	self:_register_event("event_force_wallet_update")
+	self:_register_event("event_inventory_profile_preset_changed")
+end
+
+InventoryView._get_inventory_item_by_id = function (self, gear_id)
+	if not gear_id then
+		return
+	end
+
+	local inventory_items = self._inventory_items
+
+	for _, item in pairs(inventory_items) do
+		if item.gear_id == gear_id then
+			return item
+		end
+	end
+end
+
+InventoryView._character_save_data = function (self)
+	local local_player_id = 1
+	local player_manager = Managers.player
+	local player = player_manager and player_manager:local_player(local_player_id)
+	local character_id = player and player:character_id()
+	local save_manager = Managers.save
+	local character_data = character_id and save_manager and save_manager:character_data(character_id)
+
+	return character_data
 end
 
 InventoryView._setup_item_stats = function (self, reference_name, scenegraph_id)
@@ -155,6 +189,7 @@ InventoryView._switch_active_layout = function (self, tab_context)
 	local is_grid_layout = tab_context.is_grid_layout
 	local camera_settings = tab_context.camera_settings
 	local ui_animation = tab_context.ui_animation
+	local draw_wallet = tab_context.draw_wallet
 	local allow_item_hover_information = tab_context.allow_item_hover_information
 	local item_hover_information_offset = tab_context.item_hover_information_offset
 	self._active_category_tab_context = tab_context
@@ -167,6 +202,8 @@ InventoryView._switch_active_layout = function (self, tab_context)
 	else
 		self:_reset_grid_layout(self._ui_offscreen_renderer)
 		self:_setup_individual_layout(layout)
+
+		self._current_selected_loadout_index = nil
 	end
 
 	self:_set_camera_focus_by_slot_name(nil, camera_settings)
@@ -193,6 +230,22 @@ InventoryView._switch_active_layout = function (self, tab_context)
 	if ui_animation then
 		self._entry_animation_id = self:_start_animation(ui_animation, self._widgets, self)
 	end
+
+	if self._draw_wallet ~= draw_wallet then
+		if self._wallet_animation_id then
+			self:_stop_animation(self._wallet_animation_id)
+
+			self._wallet_animation_id = nil
+		end
+
+		if draw_wallet then
+			self._wallet_animation_id = self:_start_animation("wallet_on_enter", self._wallet_widgets, self)
+		else
+			self._wallet_animation_id = self:_start_animation("wallet_on_exit", self._wallet_widgets, self)
+		end
+	end
+
+	self._draw_wallet = draw_wallet
 end
 
 InventoryView.on_back_pressed = function (self)
@@ -356,6 +409,10 @@ InventoryView.event_force_wallet_update = function (self)
 	self:_request_wallets_update()
 end
 
+InventoryView.event_inventory_profile_preset_changed = function (self, missing_slots)
+	self._missing_preset_content = missing_slots
+end
+
 InventoryView.cb_on_grid_entry_right_pressed = function (self, widget, element)
 	if not self._is_own_player or self._is_readonly then
 		return
@@ -387,6 +444,7 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 	local disable_rotation_input = element.disable_rotation_input
 	local animation_event_name_suffix = element.animation_event_name_suffix
 	local animation_event_variable_data = element.animation_event_variable_data
+	local item_type = element.item_type
 	local view_name = element.view_name
 
 	if slot then
@@ -405,7 +463,8 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 					initial_rotation = initial_rotation,
 					disable_rotation_input = disable_rotation_input,
 					animation_event_name_suffix = animation_event_name_suffix,
-					animation_event_variable_data = animation_event_variable_data
+					animation_event_variable_data = animation_event_variable_data,
+					item_type = item_type
 				}
 
 				Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
@@ -428,6 +487,12 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
 		else
 			local item = element.item
+			local item_gear_id = item.gear_id
+			local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
+
+			if active_profile_preset_id then
+				ProfileUtils.save_item_id_for_profile_preset(active_profile_preset_id, slot_name, item_gear_id)
+			end
 
 			Managers.event:trigger("event_inventory_view_equip_item", slot_name, item)
 			self:_play_voice_preview(slot_name, item)
@@ -516,9 +581,10 @@ InventoryView._setup_individual_layout = function (self, layout)
 	self._widgets_by_name.grid_background.content.visible = false
 
 	self:_destroy_loadout_widgets(self._ui_renderer)
+	self:_clear_widgets(self._exclamation_widgets)
 
 	local widgets = {}
-	local loadout_widget_navigation_grid = {}
+	local excalamation_widgets = {}
 	local left_click_callback_name = "cb_on_grid_entry_pressed"
 	local right_click_callback_name = "cb_on_grid_entry_right_pressed"
 
@@ -527,24 +593,19 @@ InventoryView._setup_individual_layout = function (self, layout)
 		local scenegraph_id = entry.scenegraph_id
 		local widget, _ = self:_create_entry_widget_from_config(entry, widget_suffix, left_click_callback_name, right_click_callback_name, scenegraph_id)
 		widgets[#widgets + 1] = widget
-		local navigation_grid_indices = entry.navigation_grid_indices
 
-		if navigation_grid_indices then
-			local row = navigation_grid_indices[1]
-			local column = navigation_grid_indices[2]
-
-			if not loadout_widget_navigation_grid[row] then
-				loadout_widget_navigation_grid[row] = {}
-			end
-
-			loadout_widget_navigation_grid[row][column] = widget
+		if entry.loadout_slot then
+			local exclamation_widget = self:_create_exclamation_widget_from_config(entry, widget_suffix, scenegraph_id)
+			exclamation_widget.content.slot = entry.slot
+			excalamation_widgets[#excalamation_widgets + 1] = exclamation_widget
 		end
 
-		widget.content.index = index
+		local content = widget.content
+		content.index = index
 	end
 
 	self._loadout_widgets = widgets
-	self._loadout_widget_navigation_grid = loadout_widget_navigation_grid
+	self._exclamation_widgets = excalamation_widgets
 
 	if not Managers.ui:using_cursor_navigation() then
 		self:_select_individual_widget_index(1)
@@ -696,10 +757,23 @@ InventoryView._create_entry_widget_from_config = function (self, config, suffix,
 	end
 end
 
+InventoryView._create_exclamation_widget_from_config = function (self, config, suffix, scenegraph_id)
+	local widget_type = config.widget_type
+	local template = ContentBlueprints[widget_type]
+	local size = template.size_function and template.size_function(self, config) or template.size
+	local pass_template = ContentBlueprints.exclamation_mark.pass_template
+	local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
+	local name = "widget_exclamation_mark_" .. suffix
+	local widget = self:_create_widget(name, widget_definition)
+
+	return widget
+end
+
 InventoryView._draw_loadout_widgets = function (self, dt, t, input_service, ui_renderer)
 	local widgets = self._loadout_widgets
 	local render_settings = self._render_settings
 	local ui_scenegraph = self._ui_scenegraph
+	local exclamation_widgets = self._exclamation_widgets
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 
@@ -709,10 +783,25 @@ InventoryView._draw_loadout_widgets = function (self, dt, t, input_service, ui_r
 		UIWidget.draw(widget, ui_renderer)
 	end
 
+	if exclamation_widgets and self._missing_preset_content and self._entry_animation_id and not self:_is_animation_active(self._entry_animation_id) then
+		for i = 1, #exclamation_widgets do
+			local widget = exclamation_widgets[i]
+			local slot_name = widget.content.slot.name
+
+			if self._missing_preset_content[slot_name] then
+				UIWidget.draw(widget, ui_renderer)
+			end
+		end
+	end
+
 	UIRenderer.end_pass(ui_renderer)
 end
 
 InventoryView._draw_wallet_widgets = function (self, dt, t, input_service, ui_renderer)
+	if not self._wallet_initialized then
+		return
+	end
+
 	local widgets = self._wallet_widgets
 	local render_settings = self._render_settings
 	local ui_scenegraph = self._ui_scenegraph
@@ -786,7 +875,6 @@ InventoryView._destroy_loadout_widgets = function (self, ui_renderer)
 	end
 
 	self._loadout_widgets = nil
-	self._loadout_widget_navigation_grid = nil
 end
 
 InventoryView._destroy_grid_widgets = function (self, ui_renderer)
@@ -882,9 +970,7 @@ InventoryView._handle_input = function (self, input_service)
 		self:_set_group_header_highlight(new_highlighted_group_header, new_highlighted_group_header_text)
 	end
 
-	local loadout_widget_navigation_grid = self._loadout_widget_navigation_grid
-
-	if loadout_widget_navigation_grid then
+	if self._loadout_widgets then
 		self:_handle_individual_widget_selection(input_service)
 	end
 end
@@ -911,44 +997,131 @@ InventoryView._get_next_array_index = function (self, direction, start_index, ar
 	end
 end
 
-InventoryView._handle_individual_widget_selection = function (self, input_service)
-	local current_index = self._selected_individual_widget_index
+InventoryView._first_interactable_loadout_widget_index = function (self)
+	for i = 1, #self._loadout_widgets do
+		local widget = self._loadout_widgets[i]
 
-	if not current_index then
-		return
+		if widget.content.hotspot then
+			return i
+		end
+	end
+end
+
+InventoryView._find_closest_widget_node_neighbour = function (self, direction)
+	local start_index = self._current_selected_loadout_index or self:_first_interactable_loadout_widget_index()
+	local selected_widget = self._loadout_widgets[start_index]
+
+	if selected_widget then
+		local start_coordinates = self:_get_coordinates_from_widget(selected_widget)
+
+		return self:_find_closest_value(self._loadout_widgets, start_coordinates, direction)
+	end
+end
+
+InventoryView._get_coordinates_from_widget = function (self, widget)
+	local scenegraph_position = self:_scenegraph_world_position(widget.scenegraph_id)
+	local start_x = scenegraph_position[1] + widget.offset[1]
+	local end_x = start_x + widget.content.size[1]
+	local start_y = scenegraph_position[2] + widget.offset[2]
+	local end_y = start_y + widget.content.size[2]
+	local center_x = widget.content.size[1] * 0.5 + start_x
+	local center_y = widget.content.size[2] * 0.5 + start_y
+
+	return {
+		start_x = start_x,
+		end_x = end_x,
+		center_x = center_x,
+		start_y = start_y,
+		end_y = end_y,
+		center_y = center_y,
+		size_x = end_x - start_x,
+		size_y = end_y - start_y
+	}
+end
+
+InventoryView._find_closest_value = function (self, list, start_coordinates, direction, threshold, current_index, result_index)
+	threshold = threshold or 5
+	current_index = current_index or 1
+	local next_index = current_index + 1
+	local current_hotspot = list[current_index].content.hotspot
+
+	if not current_hotspot or current_hotspot and current_hotspot.disabled == true then
+		if list[next_index] then
+			return self:_find_closest_value(list, start_coordinates, direction, threshold, next_index, result_index)
+		end
+
+		return result_index
 	end
 
-	local loadout_widget_navigation_grid = self._loadout_widget_navigation_grid
-	local widgets = self._loadout_widgets
-	local selected_widget = widgets[current_index]
-	local element = selected_widget and selected_widget.content.element
-	local selected_navigation_grid_indices = element.navigation_grid_indices
-	local selected_row_index = selected_navigation_grid_indices[1]
-	local selected_column_index = selected_navigation_grid_indices[2]
-	local new_row_index, new_column_index = nil
+	local widget_coordinates_current = self:_get_coordinates_from_widget(list[current_index])
+	local widget_coordinates_evaluated = result_index and self:_get_coordinates_from_widget(list[result_index])
+	local use_lower = false
+	local start_coordinate_name, start_edge_coordinate_name, end_edge_coordinate_name, center_coordinate_name = nil
+
+	if direction == DIRECTION.UP then
+		start_coordinate_name = "end_y"
+		start_edge_coordinate_name = "start_x"
+		end_edge_coordinate_name = "end_x"
+		center_coordinate_name = "center_x"
+		use_lower = true
+	elseif direction == DIRECTION.DOWN then
+		start_coordinate_name = "start_y"
+		start_edge_coordinate_name = "start_x"
+		end_edge_coordinate_name = "end_x"
+		center_coordinate_name = "center_x"
+	elseif direction == DIRECTION.LEFT then
+		start_coordinate_name = "end_x"
+		start_edge_coordinate_name = "start_y"
+		end_edge_coordinate_name = "end_y"
+		center_coordinate_name = "center_y"
+		use_lower = true
+	elseif direction == DIRECTION.RIGHT then
+		start_coordinate_name = "start_x"
+		start_edge_coordinate_name = "start_y"
+		end_edge_coordinate_name = "end_y"
+		center_coordinate_name = "center_y"
+	end
+
+	local value_current = widget_coordinates_current[start_coordinate_name]
+	local value_current_edge_start = widget_coordinates_current[start_edge_coordinate_name]
+	local value_current_edge_end = widget_coordinates_current[end_edge_coordinate_name]
+	local value_current_center = widget_coordinates_current[center_coordinate_name]
+	local value_evaluated = widget_coordinates_evaluated and widget_coordinates_evaluated[start_coordinate_name] or use_lower and -math.huge or math.huge
+	local value_start = start_coordinates[start_coordinate_name]
+	local value_start_edge_start = start_coordinates[start_edge_coordinate_name]
+	local value_start_edge_end = start_coordinates[end_edge_coordinate_name]
+	local value_start_center = start_coordinates[center_coordinate_name]
+
+	if value_current ~= value_start and (use_lower and value_current < value_start and value_evaluated < value_current or value_start < value_current and value_current < value_evaluated) and (value_current_edge_start >= value_start_edge_start - threshold and value_current_edge_start <= value_start_edge_end + threshold or value_current_edge_end >= value_start_edge_start - threshold and value_current_edge_end <= value_start_edge_end + threshold or value_current_center >= value_start_edge_start - threshold and value_current_center <= value_start_edge_end + threshold or value_start_center >= value_current_edge_start - threshold and value_start_center <= value_current_edge_end + threshold) then
+		result_index = current_index
+	end
+
+	if list[next_index] then
+		return self:_find_closest_value(list, start_coordinates, direction, threshold, next_index, result_index)
+	end
+
+	return result_index
+end
+
+InventoryView._handle_individual_widget_selection = function (self, input_service)
+	local widget_index = nil
 
 	if input_service:get("navigate_up_continuous") then
-		new_row_index = self:_get_next_array_index(-1, selected_row_index - 1, loadout_widget_navigation_grid)
+		widget_index = self:_find_closest_widget_node_neighbour(DIRECTION.UP)
 	elseif input_service:get("navigate_down_continuous") then
-		new_row_index = self:_get_next_array_index(1, selected_row_index + 1, loadout_widget_navigation_grid)
+		widget_index = self:_find_closest_widget_node_neighbour(DIRECTION.DOWN)
 	elseif input_service:get("navigate_left_continuous") then
-		new_column_index = self:_get_next_array_index(-1, selected_column_index - 1, loadout_widget_navigation_grid[selected_row_index])
+		widget_index = self:_find_closest_widget_node_neighbour(DIRECTION.LEFT)
 	elseif input_service:get("navigate_right_continuous") then
-		new_column_index = self:_get_next_array_index(1, selected_column_index + 1, loadout_widget_navigation_grid[selected_row_index])
+		widget_index = self:_find_closest_widget_node_neighbour(DIRECTION.RIGHT)
 	end
 
-	local new_selection_index = nil
+	if widget_index then
+		self._current_selected_loadout_index = widget_index
+		local widget = self._loadout_widgets[self._current_selected_loadout_index]
+		local new_selection_index = widget.content.index
 
-	if new_row_index or new_column_index then
-		local row = new_row_index or selected_row_index
-		local column = new_column_index or selected_column_index
-		local widget = loadout_widget_navigation_grid[row][column]
-
-		if widget then
-			new_selection_index = widget.content.index
-
-			self:_select_individual_widget_index(new_selection_index)
-		end
+		self:_select_individual_widget_index(new_selection_index)
 	end
 end
 
@@ -965,12 +1138,15 @@ InventoryView._on_navigation_input_changed = function (self)
 		elseif grid:selected_grid_index() then
 			grid:select_grid_index(nil)
 		end
-	elseif self._loadout_widget_navigation_grid then
+	elseif self._loadout_widgets then
 		if not self._using_cursor_navigation then
-			if not self._selected_individual_widget_index then
-				self:_select_individual_widget_index(1)
+			if not self._current_selected_loadout_index then
+				local first_widget_index = self:_first_interactable_loadout_widget_index()
+				local first_widget = self._loadout_widgets[first_widget_index]
+
+				self:_select_individual_widget_index(first_widget.content.index)
 			end
-		elseif self._selected_individual_widget_index then
+		elseif self._current_selected_loadout_index then
 			self:_select_individual_widget_index(nil)
 		end
 	end
@@ -995,6 +1171,17 @@ InventoryView._select_individual_widget_index = function (self, index)
 	self._selected_individual_widget_index = index
 end
 
+InventoryView.profile_preset_handling_input = function (self)
+	local view_name = "inventory_background_view"
+	local ui_manager = Managers.ui
+
+	if ui_manager:view_active(view_name) then
+		local view_instance = ui_manager:view_instance(view_name)
+
+		return view_instance:profile_preset_handling_input()
+	end
+end
+
 InventoryView.on_resolution_modified = function (self, scale)
 	InventoryView.super.on_resolution_modified(self, scale)
 
@@ -1012,6 +1199,10 @@ InventoryView.on_resolution_modified = function (self, scale)
 end
 
 InventoryView.update = function (self, dt, t, input_service)
+	if self:profile_preset_handling_input() then
+		input_service = input_service:null_service()
+	end
+
 	if self._next_wallet_update_duration then
 		self._next_wallet_update_duration = self._next_wallet_update_duration - dt
 
@@ -1058,6 +1249,11 @@ InventoryView.update = function (self, dt, t, input_service)
 end
 
 InventoryView.draw = function (self, dt, t, input_service, layer)
+	if self:profile_preset_handling_input() then
+		input_service = input_service:null_service()
+	end
+
+	InventoryView.super.draw(self, dt, t, input_service, layer)
 	self:_draw_grid(dt, t, input_service, self._ui_offscreen_renderer)
 
 	if self._loadout_widgets then
@@ -1067,8 +1263,6 @@ InventoryView.draw = function (self, dt, t, input_service, layer)
 	if self._num_active_wallet_widgets > 0 then
 		self:_draw_wallet_widgets(dt, t, input_service, self._ui_renderer)
 	end
-
-	InventoryView.super.draw(self, dt, t, input_service, layer)
 end
 
 InventoryView._request_wallets_update = function (self)
@@ -1134,9 +1328,7 @@ InventoryView._update_wallets_presentation = function (self, wallets_data, hide_
 			end
 		end
 
-		if not self._wallet_animation_id then
-			self._wallet_animation_id = self:_start_animation("wallet_on_enter", widgets, self)
-		end
+		self._wallet_initialized = true
 	end
 
 	self._num_active_wallet_widgets = num_active_widgets

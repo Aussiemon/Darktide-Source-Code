@@ -102,9 +102,9 @@ local HitReaction = {
 
 function _minion_hit_reaction(attack_result, attacked_unit, attacking_unit, damage_profile, damage_profile_lerp_values, target_settings, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_direction, attack_type, herding_template_or_nil, hit_shield)
 	if Stagger.can_stagger(attacked_unit) then
-		local applied_stagger = Stagger.apply_stagger(attacked_unit, damage_profile, damage_profile_lerp_values, target_settings, attacking_unit, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_direction, attack_type, attack_result, herding_template_or_nil, hit_shield)
+		local applied_stagger, stagger_type = Stagger.apply_stagger(attacked_unit, damage_profile, damage_profile_lerp_values, target_settings, attacking_unit, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_direction, attack_type, attack_result, herding_template_or_nil, hit_shield)
 
-		return applied_stagger and stagger_results.stagger or stagger_results.no_stagger
+		return applied_stagger and stagger_results.stagger or stagger_results.no_stagger, stagger_type
 	end
 end
 

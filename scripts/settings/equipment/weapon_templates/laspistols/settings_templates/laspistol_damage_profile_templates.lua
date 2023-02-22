@@ -60,7 +60,7 @@ damage_templates.default_laspistol_killshot = {
 				[armor_types.armored] = damage_lerp_values.lerp_1,
 				[armor_types.resistant] = damage_lerp_values.lerp_0_65,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_65,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_65,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_65,
@@ -110,8 +110,8 @@ damage_templates.default_laspistol_killshot = {
 	},
 	power_distribution = {
 		attack = {
-			50,
-			100
+			62.5,
+			125
 		},
 		impact = {
 			4,

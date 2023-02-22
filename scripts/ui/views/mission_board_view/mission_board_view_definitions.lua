@@ -1494,7 +1494,7 @@ MissionBoardViewDefinitions.widget_definitions.info_box = UIWidget.create_defini
 	}
 }, "info_box", nil, nil, MissionBoardViewStyles.info_box_widget_style)
 MissionBoardViewDefinitions.widget_definitions.play_team_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "play_team_button", {
-	text = Utf8.upper(Localize("loc_mission_board_view_accept_mission")),
+	original_text = Utf8.upper(Localize("loc_mission_board_view_accept_mission")),
 	hotspot = {
 		on_pressed_sound = UISoundEvents.mission_board_start_mission
 	}

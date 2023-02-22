@@ -194,6 +194,19 @@ local material_overrides = {
 			}
 		}
 	},
+	color_1_colour_city_04 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/1_colour_city_04"
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_city_04"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/1_colour_city_04"
+			}
+		}
+	},
 	color_1_colour_black_01 = {
 		texture_overrides = {
 			color_gradient = {
@@ -386,6 +399,19 @@ local material_overrides = {
 			},
 			mat2_gradient = {
 				resource = "content/textures/colors/2_colour_brown_01"
+			}
+		}
+	},
+	color_2_colour_brown_04 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/1_colour_black_01"
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_brown_01"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/1_colour_brown_01"
 			}
 		}
 	},
@@ -1114,6 +1140,19 @@ local material_overrides = {
 			},
 			mat2_gradient = {
 				resource = "content/textures/colors/3_colour_desert_04"
+			}
+		}
+	},
+	color_3_colour_desert_08 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/3_colour_desert_05"
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_desert_05"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_desert_05"
 			}
 		}
 	},

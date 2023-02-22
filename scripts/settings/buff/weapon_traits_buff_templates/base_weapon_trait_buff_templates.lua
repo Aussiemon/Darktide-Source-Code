@@ -39,7 +39,7 @@ end
 
 local DEFAULT_NUMBER_OF_HITS_PER_STACK = 1
 
-local function _consecutive_hits_proc_func(params, template_data, template_context)
+local function _consecutive_hits_proc_func(params, template_data, template_context, t)
 	if template_data.attacked_unit ~= params.attacked_unit then
 		template_data.attacked_unit = params.attacked_unit
 		template_data.number_of_hits = 0
@@ -52,6 +52,51 @@ local function _consecutive_hits_proc_func(params, template_data, template_conte
 		local override = template_context.templte_override_data
 		local number_of_hits_per_stack = override and override.number_of_hits_per_stack or template.number_of_hits_per_stack or DEFAULT_NUMBER_OF_HITS_PER_STACK
 		template_data.target_number_of_stacks = math.clamp(math.floor(number_of_hits / number_of_hits_per_stack), 0, max_stacks)
+		template_data.last_hit_time = t
+	end
+end
+
+local function _add_debuff_on_hit_start(template_data, template_context)
+	local template = template_context.template
+	local target_buff_data = template.target_buff_data
+	local template_override_data = template_context.template_override_data
+	local override_target_buff_data = template_override_data.target_buff_data
+	template_data.internal_buff_name = override_target_buff_data and override_target_buff_data.internal_buff_name or target_buff_data.internal_buff_name
+	template_data.num_stacks_on_proc = override_target_buff_data and override_target_buff_data.num_stacks_on_proc or target_buff_data.num_stacks_on_proc
+	template_data.max_stacks = override_target_buff_data and override_target_buff_data.max_stacks or target_buff_data.max_stacks
+end
+
+local function _add_debuff_on_hit_proc(params, template_data, template_context, t)
+	local attacked_unit = params.attacked_unit
+
+	if not HEALTH_ALIVE[attacked_unit] then
+		return
+	end
+
+	local allow_weapon_special = template_context.template.target_buff_data.allow_weapon_special
+	local is_weapon_special = params.weapon_special
+
+	if is_weapon_special and allow_weapon_special ~= nil and not allow_weapon_special then
+		return
+	end
+
+	local attacked_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
+
+	if attacked_buff_extension then
+		local internal_buff_name = template_data.internal_buff_name
+		local num_stacks_on_proc = template_data.num_stacks_on_proc
+		local max_stacks = template_data.max_stacks
+		local current_stacks = attacked_buff_extension:current_stacks(internal_buff_name)
+		local stacks_to_add = math.min(num_stacks_on_proc, math.max(max_stacks - current_stacks, 0))
+
+		if stacks_to_add == 0 and current_stacks <= max_stacks then
+			attacked_buff_extension:refresh_duration_of_stacking_buff(internal_buff_name, t)
+		else
+			local owner_unit = template_context.owner_unit
+			local source_item = template_context.source_item
+
+			attacked_buff_extension:add_internally_controlled_buff_with_stacks(internal_buff_name, stacks_to_add, t, "owner_unit", owner_unit, "source_item", source_item)
+		end
 	end
 end
 
@@ -346,7 +391,7 @@ local base_templates = {
 
 				if target_breed then
 					local tags = target_breed.tags
-					local excluded = tags and tags.captain or tags.monster
+					local excluded = tags and (tags.captain or tags.monster or tags.ogryn)
 
 					if excluded then
 						return false
@@ -484,173 +529,52 @@ local base_templates = {
 		end
 	},
 	staggered_targets_receive_increased_stagger_debuff = {
-		class_name = "proc_buff",
 		predicted = false,
+		class_name = "proc_buff",
 		proc_events = {
 			[proc_events.on_hit] = 1
 		},
-		conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 		target_buff_data = {
 			internal_buff_name = "increase_impact_received_while_staggered",
 			num_stacks_on_proc = 1,
 			max_stacks = math.huge
 		},
-		start_func = function (template_data, template_context)
-			local template = template_context.template
-			local target_buff_data = template.target_buff_data
-			local template_override_data = template_context.template_override_data
-			local override_target_buff_data = template_override_data.target_buff_data
-			template_data.internal_buff_name = override_target_buff_data and override_target_buff_data.internal_buff_name or target_buff_data.internal_buff_name
-			template_data.num_stacks_on_proc = override_target_buff_data and override_target_buff_data.num_stacks_on_proc or target_buff_data.num_stacks_on_proc
-			template_data.max_stacks = override_target_buff_data and override_target_buff_data.max_stacks or target_buff_data.max_stacks
-		end,
-		proc_func = function (params, template_data, template_context, t)
-			local attacking_unit = params.attacking_unit
-			local attacked_unit = params.attacked_unit
-
-			if not HEALTH_ALIVE[attacked_unit] or attacking_unit == attacked_unit then
-				return
-			end
-
-			local attacked_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
-
-			if attacked_buff_extension then
-				local target_breed_or_nil = Breed.unit_breed_or_nil(attacked_unit)
-
-				if not Breed.is_minion(target_breed_or_nil) then
-					return
-				end
-
-				local internal_buff_name = template_data.internal_buff_name
-				local num_stacks_on_proc = template_data.num_stacks_on_proc
-				local max_stacks = template_data.max_stacks
-				local current_stacks = attacked_buff_extension:current_stacks(internal_buff_name)
-				local stacks_to_add = math.min(num_stacks_on_proc, math.max(max_stacks - current_stacks, 0))
-
-				if stacks_to_add == 0 then
-					attacked_buff_extension:refresh_duration_of_stacking_buff(internal_buff_name, t)
-				else
-					local owner_unit = template_context.owner_unit
-					local source_item = template_context.source_item
-
-					for ii = 1, stacks_to_add do
-						attacked_buff_extension:add_internally_controlled_buff(internal_buff_name, t, "owner_unit", owner_unit, "source_item", source_item)
-					end
-				end
-			end
-		end
+		conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+		check_proc_func = CheckProcFunctions.on_stagger_hit,
+		start_func = _add_debuff_on_hit_start,
+		proc_func = _add_debuff_on_hit_proc
 	},
 	staggered_targets_receive_increased_damage_debuff = {
-		class_name = "proc_buff",
 		predicted = false,
+		class_name = "proc_buff",
 		proc_events = {
 			[proc_events.on_hit] = 1
 		},
-		conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 		target_buff_data = {
 			internal_buff_name = "increase_damage_received_while_staggered",
 			num_stacks_on_proc = 1,
 			max_stacks = math.huge
 		},
-		start_func = function (template_data, template_context)
-			local template = template_context.template
-			local target_buff_data = template.target_buff_data
-			local template_override_data = template_context.template_override_data
-			local override_target_buff_data = template_override_data.target_buff_data
-			template_data.internal_buff_name = override_target_buff_data and override_target_buff_data.internal_buff_name or target_buff_data.internal_buff_name
-			template_data.num_stacks_on_proc = override_target_buff_data and override_target_buff_data.num_stacks_on_proc or target_buff_data.num_stacks_on_proc
-			template_data.max_stacks = override_target_buff_data and override_target_buff_data.max_stacks or target_buff_data.max_stacks
-		end,
-		proc_func = function (params, template_data, template_context, t)
-			local attacking_unit = params.attacking_unit
-			local attacked_unit = params.attacked_unit
-
-			if not HEALTH_ALIVE[attacked_unit] or attacking_unit == attacked_unit then
-				return
-			end
-
-			local attacked_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
-
-			if attacked_buff_extension then
-				local target_breed_or_nil = Breed.unit_breed_or_nil(attacked_unit)
-
-				if not Breed.is_minion(target_breed_or_nil) then
-					return
-				end
-
-				local internal_buff_name = template_data.internal_buff_name
-				local num_stacks_on_proc = template_data.num_stacks_on_proc
-				local max_stacks = template_data.max_stacks
-				local current_stacks = attacked_buff_extension:current_stacks(internal_buff_name)
-				local stacks_to_add = math.min(num_stacks_on_proc, math.max(max_stacks - current_stacks, 0))
-
-				if stacks_to_add == 0 then
-					attacked_buff_extension:refresh_duration_of_stacking_buff(internal_buff_name, t)
-				else
-					local owner_unit = template_context.owner_unit
-					local source_item = template_context.source_item
-
-					for ii = 1, stacks_to_add do
-						attacked_buff_extension:add_internally_controlled_buff(internal_buff_name, t, "owner_unit", owner_unit, "source_item", source_item)
-					end
-				end
-			end
-		end
+		conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+		check_proc_func = CheckProcFunctions.on_stagger_hit,
+		start_func = _add_debuff_on_hit_start,
+		proc_func = _add_debuff_on_hit_proc
 	},
 	targets_receive_rending_debuff = {
-		class_name = "proc_buff",
 		predicted = false,
+		class_name = "proc_buff",
 		proc_events = {
 			[proc_events.on_hit] = 1
 		},
-		conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 		target_buff_data = {
 			internal_buff_name = "rending_debuff",
 			num_stacks_on_proc = 1,
 			max_stacks = math.huge
 		},
-		start_func = function (template_data, template_context)
-			local template = template_context.template
-			local target_buff_data = template.target_buff_data
-			local template_override_data = template_context.template_override_data
-			local override_target_buff_data = template_override_data.target_buff_data
-			template_data.internal_buff_name = override_target_buff_data and override_target_buff_data.internal_buff_name or target_buff_data.internal_buff_name
-			template_data.num_stacks_on_proc = override_target_buff_data and override_target_buff_data.num_stacks_on_proc or target_buff_data.num_stacks_on_proc
-			template_data.max_stacks = override_target_buff_data and override_target_buff_data.max_stacks or target_buff_data.max_stacks
-		end,
-		proc_func = function (params, template_data, template_context, t)
-			local attacking_unit = params.attacking_unit
-			local attacked_unit = params.attacked_unit
-
-			if not HEALTH_ALIVE[attacked_unit] or attacking_unit == attacked_unit then
-				return
-			end
-
-			local attacked_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
-
-			if attacked_buff_extension then
-				local target_breed_or_nil = Breed.unit_breed_or_nil(attacked_unit)
-
-				if not Breed.is_minion(target_breed_or_nil) then
-					return
-				end
-
-				local internal_buff_name = template_data.internal_buff_name
-				local num_stacks_on_proc = template_data.num_stacks_on_proc
-				local max_stacks = template_data.max_stacks
-				local current_stacks = attacked_buff_extension:current_stacks(internal_buff_name)
-				local stacks_to_add = math.min(num_stacks_on_proc, math.max(max_stacks - current_stacks, 0))
-
-				if stacks_to_add == 0 then
-					attacked_buff_extension:refresh_duration_of_stacking_buff(internal_buff_name, t)
-				else
-					local owner_unit = template_context.owner_unit
-					local source_item = template_context.source_item
-
-					attacked_buff_extension:add_internally_controlled_buff_with_stacks(internal_buff_name, stacks_to_add, t, "owner_unit", owner_unit, "source_item", source_item)
-				end
-			end
-		end
+		conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+		check_proc_func = CheckProcFunctions.attacked_unit_is_minion,
+		start_func = _add_debuff_on_hit_start,
+		proc_func = _add_debuff_on_hit_proc
 	},
 	stacking_increase_impact_on_hit_parent = {
 		child_buff_template = "stacking_increase_impact_on_hit_child",
@@ -779,10 +703,11 @@ local base_templates = {
 	},
 	consecutive_hits_increases_stagger_parent = {
 		child_buff_template = "consecutive_hits_increases_stagger_child",
-		stacks_to_remove = 0,
+		child_duration = 2,
 		predicted = false,
-		class_name = "weapon_trait_target_number_parent_proc_buff",
 		allow_proc_while_active = true,
+		stacks_to_remove = 0,
+		class_name = "weapon_trait_target_number_parent_proc_buff",
 		proc_events = {
 			[proc_events.on_hit] = 1
 		},
@@ -801,10 +726,11 @@ local base_templates = {
 	},
 	consecutive_hits_increases_ranged_power_parent = {
 		child_buff_template = "consecutive_hits_increases_stagger_child",
-		stacks_to_remove = 0,
+		child_duration = 2,
 		predicted = false,
-		class_name = "weapon_trait_target_number_parent_proc_buff",
 		allow_proc_while_active = true,
+		stacks_to_remove = 0,
+		class_name = "weapon_trait_target_number_parent_proc_buff",
 		proc_events = {
 			[proc_events.on_hit] = 1
 		},
@@ -987,50 +913,15 @@ local base_templates = {
 		proc_events = {
 			[proc_events.on_hit] = 1
 		},
-		dot_data = {
-			dot_buff_name = "bleed",
+		target_buff_data = {
+			internal_buff_name = "bleed",
 			num_stacks_on_proc = 1,
 			max_stacks = math.huge
 		},
 		conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 		check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_melee_weapon_special_hit),
-		start_func = function (template_data, template_context)
-			local template = template_context.template
-			local dot_data = template.dot_data
-			local template_override_data = template_context.template_override_data
-			local override_dot_data = template_override_data.dot_data
-			template_data.dot_buff_name = override_dot_data and override_dot_data.dot_buff_name or dot_data.dot_buff_name
-			template_data.num_stacks_on_proc = override_dot_data and override_dot_data.num_stacks_on_proc or dot_data.num_stacks_on_proc
-			template_data.max_stacks = override_dot_data and override_dot_data.max_stacks or dot_data.max_stacks
-		end,
-		proc_func = function (params, template_data, template_context, t)
-			local attacked_unit = params.attacked_unit
-
-			if not HEALTH_ALIVE[attacked_unit] then
-				return
-			end
-
-			local attacked_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
-
-			if attacked_buff_extension then
-				local dot_buff_name = template_data.dot_buff_name
-				local num_stacks_on_proc = template_data.num_stacks_on_proc
-				local max_stacks = template_data.max_stacks
-				local current_stacks = attacked_buff_extension:current_stacks(dot_buff_name)
-				local stacks_to_add = math.min(num_stacks_on_proc, math.max(max_stacks - current_stacks, 0))
-
-				if stacks_to_add == 0 then
-					attacked_buff_extension:refresh_duration_of_stacking_buff(dot_buff_name, t)
-				else
-					local owner_unit = template_context.owner_unit
-					local source_item = template_context.source_item
-
-					for ii = 1, stacks_to_add do
-						attacked_buff_extension:add_internally_controlled_buff(dot_buff_name, t, "owner_unit", owner_unit, "source_item", source_item)
-					end
-				end
-			end
-		end
+		start_func = _add_debuff_on_hit_start,
+		proc_func = _add_debuff_on_hit_proc
 	},
 	movement_speed_on_activation = {
 		predicted = false,
@@ -1047,11 +938,7 @@ local base_templates = {
 	}
 }
 base_templates.targets_receive_rending_debuff_on_weapon_special_attacks = table.clone(base_templates.targets_receive_rending_debuff)
-
-base_templates.targets_receive_rending_debuff_on_weapon_special_attacks.check_proc_func = function (params, template_data, template_context)
-	return params.weapon_special
-end
-
+base_templates.targets_receive_rending_debuff_on_weapon_special_attacks.check_proc_func = CheckProcFunctions.is_weapon_special
 base_templates.pass_past_armor_on_weapon_special = {
 	predicted = false,
 	class_name = "proc_buff",
@@ -1262,6 +1149,7 @@ base_templates.toughness_recovery_on_close_kill = {
 }
 base_templates.reload_speed_on_slide = {
 	predicted = false,
+	allow_proc_while_active = true,
 	class_name = "proc_buff",
 	active_duration = 2,
 	proc_events = {
@@ -1371,10 +1259,11 @@ base_templates.followup_shots_ranged_weakspot_damage = {
 }
 base_templates.consecutive_hits_increases_close_damage_parent = {
 	child_buff_template = "consecutive_hits_increases_stagger_child",
-	stacks_to_remove = 0,
+	child_duration = 2,
 	predicted = false,
-	class_name = "weapon_trait_target_number_parent_proc_buff",
 	allow_proc_while_active = true,
+	stacks_to_remove = 0,
+	class_name = "weapon_trait_target_number_parent_proc_buff",
 	proc_events = {
 		[proc_events.on_hit] = 1
 	},
@@ -1400,54 +1289,20 @@ base_templates.stagger_count_bonus_damage = {
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 base_templates.burninating_on_crit_ranged = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_hit] = 1
 	},
-	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = function (params, template_data, template_context)
-		local damage = params.damage
-
-		return CheckProcFunctions.on_crit_ranged(params, template_data, template_context) and damage > 0
-	end,
-	dot_data = {
+	target_buff_data = {
 		max_stacks = 10,
-		dot_buff_name = "flamer_assault",
+		internal_buff_name = "flamer_assault",
 		num_stacks_on_proc = 1
 	},
-	start_func = function (template_data, template_context)
-		local template = template_context.template
-		local dot_data = template.dot_data
-		local template_override_data = template_context.template_override_data
-		local override_dot_data = template_override_data.dot_data
-		template_data.dot_buff_name = override_dot_data and override_dot_data.dot_buff_name or dot_data.dot_buff_name
-		template_data.num_stacks_on_proc = override_dot_data and override_dot_data.num_stacks_on_proc or dot_data.num_stacks_on_proc
-		template_data.max_stacks = override_dot_data and override_dot_data.max_stacks or dot_data.max_stacks
-	end,
-	proc_func = function (params, template_data, template_context, t)
-		local attacked_unit = params.attacked_unit
-		local attacked_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
-
-		if attacked_buff_extension then
-			local dot_buff_name = template_data.dot_buff_name
-			local num_stacks_on_proc = template_data.num_stacks_on_proc
-			local max_stacks = template_data.max_stacks
-			local current_stacks = attacked_buff_extension:current_stacks(dot_buff_name)
-			local stacks_to_add = math.min(num_stacks_on_proc, math.max(max_stacks - current_stacks, 0))
-
-			if stacks_to_add == 0 then
-				attacked_buff_extension:refresh_duration_of_stacking_buff(dot_buff_name, t)
-			else
-				local owner_unit = template_context.owner_unit
-				local source_item = template_context.source_item
-
-				for i = 1, stacks_to_add do
-					attacked_buff_extension:add_internally_controlled_buff(dot_buff_name, t, "owner_unit", owner_unit, "source_item", source_item)
-				end
-			end
-		end
-	end
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_crit_ranged, CheckProcFunctions.on_damaging_hit),
+	start_func = _add_debuff_on_hit_start,
+	proc_func = _add_debuff_on_hit_proc
 }
 base_templates.suppression_negation_on_weakspot = {
 	predicted = false,
@@ -1584,29 +1439,36 @@ base_templates.stacking_buff_on_continuous_fire = {
 	bonus_step_func = _get_number_of_continues_fire_steps
 }
 base_templates.bleed_on_crit_ranged = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_hit] = 1
 	},
+	target_buff_data = {
+		internal_buff_name = "bleed",
+		num_stacks_on_proc = 1,
+		max_stacks = math.huge
+	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_ranged_crit_hit),
-	proc_func = function (params, template_data, template_context, t)
-		local attacked_unit = params.attacked_unit
-
-		if not HEALTH_ALIVE[attacked_unit] then
-			return
-		end
-
-		local attacked_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
-
-		if attacked_buff_extension then
-			local owner_unit = template_context.owner_unit
-			local source_item = template_context.source_item
-
-			attacked_buff_extension:add_internally_controlled_buff("bleed", t, "owner_unit", owner_unit, "source_item", source_item)
-		end
-	end
+	start_func = _add_debuff_on_hit_start,
+	proc_func = _add_debuff_on_hit_proc
+}
+base_templates.bleed_on_crit_pellets = {
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_pellet_hits] = 1
+	},
+	target_buff_data = {
+		internal_buff_name = "bleed",
+		num_stacks_on_proc = 1,
+		max_stacks = math.huge
+	},
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_crit),
+	start_func = _add_debuff_on_hit_start,
+	proc_func = _add_debuff_on_hit_proc
 }
 base_templates.stacking_power_bonus_on_staggering_enemies_parent = {
 	class_name = "weapon_trait_parent_proc_buff",
@@ -1752,25 +1614,40 @@ base_templates.vents_warpcharge_on_weakspot_hits = {
 		end
 	end
 }
-base_templates.warpfire_on_crits = {
+base_templates.warpfire_on_crits_ranged = {
 	predicted = false,
-	warp_fire_buff = "warp_fire",
 	max_stacks = 1,
 	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_hit] = 1
 	},
+	target_buff_data = {
+		max_stacks = 6,
+		internal_buff_name = "warp_fire",
+		num_stacks_on_proc = 2
+	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = CheckProcFunctions.on_ranged_crit_hit,
-	proc_func = function (params, template_data, template_context, t)
-		local warp_fire_buff = template_context.template.warp_fire_buff
-		local attacked_unit = params.attacked_unit
-		local attacked_unit_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
-
-		if attacked_unit_buff_extension then
-			attacked_unit_buff_extension:add_internally_controlled_buff(warp_fire_buff, t, "owner_unit", template_context.unit, "buff_lerp_value", 1)
-		end
-	end
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_ranged_crit_hit, CheckProcFunctions.on_damaging_hit),
+	start_func = _add_debuff_on_hit_start,
+	proc_func = _add_debuff_on_hit_proc
+}
+base_templates.warpfire_on_crits_melee = {
+	predicted = false,
+	max_stacks = 1,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_hit] = 1
+	},
+	target_buff_data = {
+		max_stacks = 6,
+		internal_buff_name = "warp_fire",
+		num_stacks_on_proc = 2,
+		allow_weapon_special = true
+	},
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_melee_crit_hit, CheckProcFunctions.on_damaging_hit),
+	start_func = _add_debuff_on_hit_start,
+	proc_func = _add_debuff_on_hit_proc
 }
 base_templates.double_shot_on_crit = {
 	class_name = "buff",
@@ -1830,6 +1707,7 @@ base_templates.stacking_rending_on_weakspot_child = {
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 base_templates.dodge_grants_finesse_bonus = {
+	allow_proc_while_active = true,
 	predicted = false,
 	class_name = "proc_buff",
 	active_duration = 5,
@@ -1842,6 +1720,7 @@ base_templates.dodge_grants_finesse_bonus = {
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded
 }
 base_templates.dodge_grants_critical_strike_chance = {
+	allow_proc_while_active = true,
 	predicted = false,
 	class_name = "proc_buff",
 	active_duration = 5,
@@ -1854,114 +1733,37 @@ base_templates.dodge_grants_critical_strike_chance = {
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded
 }
 base_templates.bleed_on_crit_melee = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_hit] = 1
 	},
-	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	target_buff_data = {
 		internal_buff_name = "bleed",
 		num_stacks_on_proc = 1,
 		allow_weapon_special = true,
 		max_stacks = math.huge
 	},
-	start_func = function (template_data, template_context)
-		local template = template_context.template
-		local target_buff_data = template.target_buff_data
-		local template_override_data = template_context.template_override_data
-		local override_target_buff_data = template_override_data.target_buff_data
-		template_data.internal_buff_name = override_target_buff_data and override_target_buff_data.internal_buff_name or target_buff_data.internal_buff_name
-		template_data.num_stacks_on_proc = override_target_buff_data and override_target_buff_data.num_stacks_on_proc or target_buff_data.num_stacks_on_proc
-		template_data.max_stacks = override_target_buff_data and override_target_buff_data.max_stacks or target_buff_data.max_stacks
-	end,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_melee_crit_hit),
-	proc_func = function (params, template_data, template_context, t)
-		local attacked_unit = params.attacked_unit
-
-		if not HEALTH_ALIVE[attacked_unit] then
-			return
-		end
-
-		local allow_weapon_special = template_context.template.target_buff_data.allow_weapon_special
-		local is_weapon_special = params.weapon_special
-
-		if is_weapon_special and not allow_weapon_special then
-			return
-		end
-
-		local attacked_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
-
-		if attacked_buff_extension then
-			local internal_buff_name = template_data.internal_buff_name
-			local num_stacks_on_proc = template_data.num_stacks_on_proc
-			local max_stacks = template_data.max_stacks
-			local current_stacks = attacked_buff_extension:current_stacks(internal_buff_name)
-			local stacks_to_add = math.min(num_stacks_on_proc, math.max(max_stacks - current_stacks, 0))
-
-			if stacks_to_add == 0 then
-				attacked_buff_extension:refresh_duration_of_stacking_buff(internal_buff_name, t)
-			else
-				local owner_unit = template_context.owner_unit
-				local source_item = template_context.source_item
-
-				for ii = 1, stacks_to_add do
-					attacked_buff_extension:add_internally_controlled_buff(internal_buff_name, t, "owner_unit", owner_unit, "source_item", source_item)
-				end
-			end
-		end
-	end
+	start_func = _add_debuff_on_hit_start,
+	proc_func = _add_debuff_on_hit_proc
 }
 base_templates.bleed_on_non_weakspot_hit_melee = {
-	class_name = "proc_buff",
 	predicted = false,
+	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_hit] = 1
 	},
-	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	target_buff_data = {
 		internal_buff_name = "bleed",
 		num_stacks_on_proc = 1,
 		max_stacks = math.huge
 	},
-	start_func = function (template_data, template_context)
-		local template = template_context.template
-		local target_buff_data = template.target_buff_data
-		local template_override_data = template_context.template_override_data
-		local override_target_buff_data = template_override_data.target_buff_data
-		template_data.internal_buff_name = override_target_buff_data and override_target_buff_data.internal_buff_name or target_buff_data.internal_buff_name
-		template_data.num_stacks_on_proc = override_target_buff_data and override_target_buff_data.num_stacks_on_proc or target_buff_data.num_stacks_on_proc
-		template_data.max_stacks = override_target_buff_data and override_target_buff_data.max_stacks or target_buff_data.max_stacks
-	end,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_non_weakspot_hit_melee),
-	proc_func = function (params, template_data, template_context, t)
-		local attacked_unit = params.attacked_unit
-
-		if not HEALTH_ALIVE[attacked_unit] then
-			return
-		end
-
-		local attacked_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
-
-		if attacked_buff_extension then
-			local internal_buff_name = template_data.internal_buff_name
-			local num_stacks_on_proc = template_data.num_stacks_on_proc
-			local max_stacks = template_data.max_stacks
-			local current_stacks = attacked_buff_extension:current_stacks(internal_buff_name)
-			local stacks_to_add = math.min(num_stacks_on_proc, math.max(max_stacks - current_stacks, 0))
-
-			if stacks_to_add == 0 then
-				attacked_buff_extension:refresh_duration_of_stacking_buff(internal_buff_name, t)
-			else
-				local owner_unit = template_context.owner_unit
-				local source_item = template_context.source_item
-
-				for ii = 1, stacks_to_add do
-					attacked_buff_extension:add_internally_controlled_buff(internal_buff_name, t, "owner_unit", owner_unit, "source_item", source_item)
-				end
-			end
-		end
-	end
+	start_func = _add_debuff_on_hit_start,
+	proc_func = _add_debuff_on_hit_proc
 }
 base_templates.rending_on_backstab = {
 	predicted = false,

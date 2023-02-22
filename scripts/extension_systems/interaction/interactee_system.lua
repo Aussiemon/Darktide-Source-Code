@@ -42,11 +42,12 @@ InteracteeSystem.rpc_interaction_set_active = function (self, channel_id, unit_i
 	extension:set_active(state)
 end
 
-InteracteeSystem.rpc_interaction_hot_join = function (self, channel_id, unit_id, is_level_unit, state, is_used)
+InteracteeSystem.rpc_interaction_hot_join = function (self, channel_id, unit_id, is_level_unit, state, is_used, active_type_id)
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 	local extension = self._unit_to_extension_map[unit]
+	local active_type = active_type_id ~= 0 and NetworkLookup.interaction_type_strings[active_type_id] or nil
 
-	extension:hot_join_setup(state, is_used)
+	extension:hot_join_setup(state, is_used, active_type)
 end
 
 return InteracteeSystem

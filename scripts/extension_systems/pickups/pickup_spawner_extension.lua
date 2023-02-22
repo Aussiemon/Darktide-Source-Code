@@ -114,7 +114,7 @@ end
 PickupSpawnerExtension.can_spawn_pickup = function (self, component_index, pickup_name)
 	local component = self._components[component_index]
 
-	return component.spawnable_pickups == "all" or table.contains(component.spawnable_pickups, pickup_name) or component.is_side_mission
+	return component.spawnable_pickups == "all" or table.contains(component.spawnable_pickups, pickup_name)
 end
 
 PickupSpawnerExtension._fetch_next_item = function (self, component_index)
@@ -171,30 +171,11 @@ PickupSpawnerExtension.register_spawn_locations = function (self, node_list, dis
 		local component = components[i]
 
 		if component.distribution_type == distribution_type then
-			if component.distribution_type == DISTRIBUTION_TYPES.side_mission then
-				for pickup_name, amount in pairs(pickup_settings.side_mission_collect) do
-					local spawnable_pickups = component.spawnable_pickups
-					local num_items = #spawnable_pickups
-
-					for j = 0, num_items do
-						local spawnable_pickup = spawnable_pickups[j]
-
-						if spawnable_pickup == pickup_name then
-							node_list[#node_list + 1] = {
-								extension = self,
-								index = i,
-								chest = not not self._chest_extension
-							}
-						end
-					end
-				end
-			else
-				node_list[#node_list + 1] = {
-					extension = self,
-					index = i,
-					chest = not not self._chest_extension
-				}
-			end
+			node_list[#node_list + 1] = {
+				extension = self,
+				index = i,
+				chest = not not self._chest_extension
+			}
 		end
 	end
 end

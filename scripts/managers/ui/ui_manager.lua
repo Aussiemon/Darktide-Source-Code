@@ -69,6 +69,7 @@ UIManager.init = function (self)
 
 	Managers.event:register(self, "event_show_ui_popup", "event_show_ui_popup")
 	Managers.event:register(self, "event_remove_ui_popup", "event_remove_ui_popup")
+	Managers.event:register(self, "event_remove_ui_popups_by_priority", "event_remove_ui_popups_by_priority")
 	Managers.event:register(self, "event_player_profile_updated", "event_player_profile_updated")
 	Managers.event:register(self, "event_player_appearance_updated", "event_player_appearance_updated")
 	Managers.event:register(self, "event_on_render_settings_applied", "event_on_render_settings_applied")
@@ -532,6 +533,14 @@ UIManager.active_views = function (self)
 	return self._view_handler:active_views()
 end
 
+UIManager.active_top_view = function (self)
+	return self._view_handler:active_top_view()
+end
+
+UIManager.view_active_data = function (self, view_name)
+	return self._view_handler:view_active_data(view_name)
+end
+
 UIManager.view_instance = function (self, view_name)
 	return self._view_handler:view_instance(view_name)
 end
@@ -670,6 +679,18 @@ UIManager.communication_wheel_wants_camera_control = function (self)
 	return hud and hud:communication_wheel_wants_camera_control()
 end
 
+UIManager.emote_wheel_active = function (self)
+	local hud = self._hud
+
+	return hud and hud:emote_wheel_active()
+end
+
+UIManager.emote_wheel_wants_camera_control = function (self)
+	local hud = self._hud
+
+	return hud and hud:emote_wheel_wants_camera_control()
+end
+
 UIManager.wwise_music_state = function (self, wwise_state_group_name)
 	return self._view_handler:wwise_music_state(wwise_state_group_name)
 end
@@ -677,6 +698,7 @@ end
 UIManager.destroy = function (self)
 	Managers.event:unregister(self, "event_show_ui_popup")
 	Managers.event:unregister(self, "event_remove_ui_popup")
+	Managers.event:unregister(self, "event_remove_ui_popups_by_priority")
 	Managers.event:unregister(self, "event_player_profile_updated")
 	Managers.event:unregister(self, "event_player_appearance_updated")
 	Managers.event:unregister(self, "event_on_render_settings_applied")
@@ -1563,6 +1585,20 @@ UIManager.event_remove_ui_popup = function (self, popup_id)
 	self:_popup_by_id(popup_id, remove)
 end
 
+UIManager.event_remove_ui_popups_by_priority = function (self, priority)
+	local active_popups = self._active_popups
+
+	for i = #active_popups, 1, -1 do
+		local popup = active_popups[i]
+
+		if popup.priority_order < priority then
+			popup.closing = true
+
+			table.remove(active_popups, i)
+		end
+	end
+end
+
 UIManager._popup_by_id = function (self, popup_id, remove)
 	local active_popups = self._active_popups
 
@@ -1662,7 +1698,6 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 		return instance:load_weapon_icon(visual_item, cb, render_context)
 	elseif table.find(slots, "slot_gear_head") or table.find(slots, "slot_gear_upperbody") or table.find(slots, "slot_gear_lowerbody") or table.find(slots, "slot_gear_extra_cosmetic") or table.find(slots, "slot_animation_end_of_round") then
 		local instance = self._back_buffer_render_handlers.cosmetics
-		local dummy_profile = dummy_profile
 
 		if not dummy_profile then
 			local player = Managers.player:local_player(1)

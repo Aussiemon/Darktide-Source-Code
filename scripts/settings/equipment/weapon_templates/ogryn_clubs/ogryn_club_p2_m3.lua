@@ -280,15 +280,16 @@ weapon_template.actions = {
 	action_right_light = {
 		damage_window_start = 0.4666666666666667,
 		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1_2",
+		anim_event_3p = "attack_swing_down_slow",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		range_mod = 1.25,
+		weapon_handling_template = "time_scale_1_2",
 		first_person_hit_stop_anim = "attack_hit",
-		anim_event_3p = "attack_swing_down_slow",
+		allowed_during_sprint = true,
 		damage_window_end = 0.6,
-		attack_direction_override = "right",
+		range_mod = 1.25,
 		anim_end_event = "attack_finished",
+		attack_direction_override = "right",
 		uninterruptible = true,
 		anim_event = "attack_swing_right",
 		total_time = 2,
@@ -1155,15 +1156,15 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
 		weapon_box = {
-			0.3,
-			1.4,
-			0.3
+			0.25,
+			0.25,
+			1.25
 		},
 		spline_settings = {
 			matrices_data_location = "content/characters/player/ogryn/first_person/animations/club_ogryn/swing_left_diagonal_up",
 			anchor_point_offset = {
 				0,
-				0,
+				-0.3,
 				-0
 			}
 		},
@@ -1330,7 +1331,7 @@ weapon_template.actions = {
 			},
 			push_follow_up = {
 				action_name = "action_right_light_pushfollow",
-				chain_time = 0.45
+				chain_time = 0.3
 			},
 			block = {
 				action_name = "action_block",

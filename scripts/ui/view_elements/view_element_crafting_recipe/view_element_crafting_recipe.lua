@@ -1,6 +1,10 @@
 local ItemUtils = require("scripts/utilities/items")
 local MasterItems = require("scripts/backend/master_items")
 local WalletSettings = require("scripts/settings/wallet_settings")
+local UIWidget = require("scripts/managers/ui/ui_widget")
+local TextUtilities = require("scripts/utilities/ui/text")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewElementCraftingRecipeBlueprints = require("scripts/ui/view_elements/view_element_crafting_recipe/view_element_crafting_recipe_blueprints")
 local ViewElementCraftingRecipeDefinitions = require("scripts/ui/view_elements/view_element_crafting_recipe/view_element_crafting_recipe_definitions")
 
@@ -18,12 +22,34 @@ end
 ViewElementCraftingRecipe.init = function (self, parent, draw_layer, start_scale, optional_menu_settings)
 	ViewElementCraftingRecipe.super.init(self, parent, draw_layer, start_scale, optional_menu_settings, ViewElementCraftingRecipeDefinitions)
 
-	self._default_grid_size = table.clone(self._menu_settings.grid_size)
-	self._default_mask_size = table.clone(self._menu_settings.mask_size)
+	local menu_settings = self._menu_settings
+	self._default_grid_size = table.clone(menu_settings.grid_size)
+	self._default_mask_size = table.clone(menu_settings.mask_size)
 
 	self:present_grid_layout({}, ViewElementCraftingRecipeBlueprints)
+	self:_set_scenegraph_position("grid_content_pivot", nil, nil, 100)
 
 	self.content = {}
+	local hide_continue_button = menu_settings.hide_continue_button
+	self._hide_continue_button = hide_continue_button
+
+	if hide_continue_button then
+		self:disable_price_prasentation()
+
+		self._widgets_by_name.continue_button.content.visible = false
+		self._widgets_by_name.continue_button_background.content.visible = false
+		self._widgets_by_name.grid_divider_bottom.content.texture = "content/ui/materials/dividers/horizontal_frame_big_lower"
+		local grid_size = menu_settings.grid_size
+		local mask_size = menu_settings.mask_size
+
+		self:_set_scenegraph_size("grid_divider_bottom", mask_size[1], 36)
+		self:_set_scenegraph_position("grid_divider_bottom", nil, 12)
+	end
+end
+
+ViewElementCraftingRecipe.disable_price_prasentation = function (self)
+	self._cost_presentation_disabled = true
+	self._widgets_by_name.cost_background.content.visible = false
 end
 
 ViewElementCraftingRecipe.set_selected_item = function (self, item)
@@ -55,6 +81,18 @@ ViewElementCraftingRecipe.set_selected_item = function (self, item)
 	end
 
 	self.content.insufficient_funds = insufficient_funds
+end
+
+ViewElementCraftingRecipe.set_navigation_button_color_intensity = function (self, multiplier)
+	local widgets = self:widgets()
+
+	for i = 1, #widgets do
+		local widget = widgets[i]
+
+		if widget.content.hotspot then
+			widget.color_intensity_multiplier = multiplier
+		end
+	end
 end
 
 ViewElementCraftingRecipe.present_recipe_navigation = function (self, recipes, left_click_callback, optional_on_present_callback)
@@ -103,7 +141,7 @@ local function _push_traitlike_items(layout, widget_type, traits, has_crafting_m
 	end
 end
 
-ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, main_action_callback, select_trait_callback, optional_on_present_callback)
+ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, main_action_callback, select_trait_callback, optional_on_present_callback, additional_data)
 	local item = ingredients.item
 	local has_perk_modification = false
 	local has_trait_modification = false
@@ -115,6 +153,7 @@ ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, 
 	local has_any_modification = has_perk_modification or has_trait_modification
 	self.content.recipe = recipe
 	self.content.ingredients = ingredients
+	self.content.additional_data = additional_data
 	local layout = {
 		[#layout + 1] = {
 			widget_type = "spacing_vertical"
@@ -122,14 +161,29 @@ ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, 
 		[#layout + 1] = {
 			widget_type = "title",
 			text = recipe.display_name
-		},
-		[#layout + 1] = {
-			widget_type = "spacing_vertical_small"
-		},
-		[#layout + 1] = {
-			widget_type = "description",
-			text = recipe.description_text
 		}
+	}
+	local extra_elements = recipe.extra_elements
+
+	if extra_elements then
+		for i = 1, #extra_elements do
+			local element = extra_elements[i]
+			layout[#layout + 1] = {
+				widget_type = "spacing_vertical_small"
+			}
+			layout[#layout + 1] = {
+				widget_type = element.widget_type,
+				element = element,
+				ingredients = ingredients,
+				recipe = recipe,
+				additional_data = additional_data
+			}
+		end
+	end
+
+	layout[#layout + 1] = {
+		widget_type = "description",
+		text = recipe.description_text
 	}
 
 	if recipe.modification_warning and not has_any_modification then
@@ -158,57 +212,185 @@ ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, 
 		_push_traitlike_items(layout, "trait_button", item and item.traits, filter_modified and has_trait_modification)
 	end
 
-	local costs = recipe.get_costs(ingredients)
+	local costs = recipe.get_costs(ingredients, additional_data) or {}
 
-	if costs then
-		for i = #costs, 1, -1 do
-			if costs[i].amount == 0 then
-				table.remove(costs, i)
-			end
-		end
+	table.sort(costs, sort_wallet_currencies)
 
-		if costs[1] then
-			table.sort(costs, sort_wallet_currencies)
-
-			self.content.costs = costs
-			layout[#layout + 1] = {
-				widget_type = "spacing_vertical_small"
-			}
-			layout[#layout + 1] = {
-				widget_type = "recipe_costs",
-				costs = costs
-			}
-		end
-	end
-
-	layout[#layout + 1] = {
-		widget_type = "warning"
-	}
+	self.content.costs = costs
 	layout[#layout + 1] = {
 		widget_type = "spacing_vertical_small"
 	}
 	layout[#layout + 1] = {
-		widget_type = "craft_button",
-		sound_event = recipe.sound_event,
-		text = recipe.button_text
+		widget_type = "warning"
 	}
 	layout[#layout + 1] = {
 		widget_type = "spacing_vertical"
 	}
+	local widgets_by_name = self._widgets_by_name
+	local continue_button_widget = widgets_by_name.continue_button
+	local continue_button_widget_content = continue_button_widget.content
+	local continue_button_widget_hotspot = continue_button_widget_content.hotspot
+	continue_button_widget_hotspot.pressed_callback = callback(self, "_cb_on_continue_pressed")
+	continue_button_widget_hotspot.on_pressed_sound = nil
+	continue_button_widget_content.original_text = recipe.button_text and Utf8.upper(Localize(recipe.button_text)) or "n/a"
 
-	self:_refresh_can_craft()
+	self:refresh_can_craft(additional_data)
 	self:_pre_present_height_adjust()
 	self:present_grid_layout(layout, ViewElementCraftingRecipeBlueprints, main_action_callback, select_trait_callback, nil, nil, optional_on_present_callback)
+
+	self._update_costs = true
+end
+
+ViewElementCraftingRecipe._update_costs_presentation = function (self, costs, ui_renderer)
+	local corner_right = self._widgets_by_name.corner_top_right
+
+	if self._cost_widgets then
+		for i = 1, #self._cost_widgets do
+			local widget = self._cost_widgets[i]
+
+			self:_unregister_widget_name(widget.name)
+		end
+
+		self._cost_widgets = nil
+	end
+
+	local total_width = 0
+	local widgets = {}
+	local index = 0
+
+	if costs then
+		local wallet_definition = self._definitions.cost_definitions
+
+		for i = 1, #costs do
+			local cost = costs[i]
+			local amount = cost.amount
+			local has_cost = amount > 0
+
+			if has_cost then
+				index = index + 1
+				local wallet_type = cost.type
+				local wallet_settings = WalletSettings[wallet_type]
+				local font_gradient_material = wallet_settings.font_gradient_material
+				local icon_texture_small = wallet_settings.icon_texture_small
+				local widget = self:_create_widget("cost_" .. index, wallet_definition)
+				widget.style.text.material = font_gradient_material
+				widget.content.texture = icon_texture_small
+				local text = TextUtilities.format_currency(amount)
+				widget.content.text = text
+				local style = widget.style
+				local text_style = style.text
+				local text_width, _ = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size)
+				local texture_width = widget.style.texture.size[1]
+				local text_offset = widget.style.text.original_offset
+				local texture_offset = widget.style.texture.original_offset
+				local text_margin = 3
+				local price_margin = 10
+				widget.style.texture.offset[1] = texture_offset[1] + total_width
+				widget.style.text.offset[1] = text_offset[1] + text_margin + total_width
+				total_width = total_width + text_width + texture_width + text_margin + price_margin
+				widgets[#widgets + 1] = widget
+			end
+		end
+	end
+
+	local corner_width = corner_right and corner_right.content.original_size[1] or 0
+	local corner_texture_size_minus_wallet = 100
+	local total_corner_width = math.max(total_width + corner_width - corner_texture_size_minus_wallet, 40)
+
+	self:_set_scenegraph_size("cost_pivot", total_width, nil)
+	self:_set_scenegraph_size("cost_background", total_corner_width, nil)
+	self:_force_update_scenegraph()
+
+	self._cost_widgets = widgets
+end
+
+ViewElementCraftingRecipe.set_continue_button_force_disabled = function (self, is_disabled, force_effect)
+	self._continue_button_force_disabled = is_disabled
+
+	self:_update_continue_button_state(force_effect)
+end
+
+ViewElementCraftingRecipe.set_continue_button_callback = function (self, button_callback)
+	self._continue_button_callback = button_callback
+end
+
+ViewElementCraftingRecipe._update_continue_button_state = function (self, force_effect)
+	local widgets_by_name = self._widgets_by_name
+	local widget = widgets_by_name.continue_button
+	local widget_content = widget.content
+	local widget_hotspot = widget_content.hotspot
+	local disabled = not self:can_craft()
+
+	if disabled and not widget_hotspot.disabled and not force_effect then
+		self:stop_continue_button_animation()
+	elseif (widget_hotspot.disabled or force_effect) and not disabled then
+		self:play_continue_button_animation()
+	end
+
+	widget_hotspot.disabled = disabled
+end
+
+ViewElementCraftingRecipe._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
+	ViewElementCraftingRecipe.super._draw_widgets(self, dt, t, input_service, ui_renderer, render_settings)
+
+	local cost_widgets = self._cost_widgets
+
+	if cost_widgets then
+		for i = 1, #cost_widgets do
+			local widget = cost_widgets[i]
+
+			UIWidget.draw(widget, ui_renderer)
+		end
+	end
+
+	if self._update_costs then
+		if not self._cost_presentation_disabled then
+			local costs = self.content.costs
+
+			self:_update_costs_presentation(costs, ui_renderer)
+		end
+
+		self._update_costs = nil
+	end
+end
+
+ViewElementCraftingRecipe.update = function (self, dt, t, input_service)
+	self:_update_continue_button_state()
+
+	return ViewElementCraftingRecipe.super.update(self, dt, t, input_service)
+end
+
+ViewElementCraftingRecipe._cb_on_continue_pressed = function (self)
+	local widgets_by_name = self._widgets_by_name
+	local widget = widgets_by_name.continue_button
+
+	if self._continue_button_callback then
+		self._continue_button_callback(widget)
+	end
 end
 
 ViewElementCraftingRecipe.cb_on_grid_entry_right_pressed = function (self, widget, element)
 	ViewElementCraftingRecipe.super.cb_on_grid_entry_right_pressed(self, widget, element)
-	self:_refresh_can_craft()
+
+	local menu_settings = self._menu_settings
+
+	if menu_settings.refresh_on_grid_pressed then
+		self:refresh_can_craft(self.content.additional_data)
+		self:refresh_cost(self.content.additional_data)
+	end
+
+	self:_play_sound(UISoundEvents.default_click)
 end
 
-ViewElementCraftingRecipe._refresh_can_craft = function (self)
+ViewElementCraftingRecipe.remove_ingredient = function (self, ingredient)
+	if self._parent and self._parent.remove_ingredient then
+		self._parent:remove_ingredient(ingredient)
+	end
+end
+
+ViewElementCraftingRecipe.refresh_can_craft = function (self, additional_data)
 	local content = self.content
-	local can_craft, fail_reason = content.recipe.can_craft(content.ingredients)
+	local can_craft, fail_reason = content.recipe.can_craft(content.ingredients, additional_data)
 	local costs = content.costs
 
 	if costs then
@@ -234,6 +416,68 @@ ViewElementCraftingRecipe._refresh_can_craft = function (self)
 	content.fail_reason = fail_reason and Localize(fail_reason)
 end
 
+ViewElementCraftingRecipe.can_craft = function (self)
+	local content = self.content
+
+	return content.can_craft and not self._continue_button_force_disabled or false
+end
+
+ViewElementCraftingRecipe._is_costs_free_of_charge = function (self, costs)
+	local is_free = true
+
+	for i = 1, #costs do
+		local cost = costs[i]
+
+		if cost.amount > 0 then
+			is_free = false
+
+			break
+		end
+	end
+
+	return is_free
+end
+
+ViewElementCraftingRecipe.refresh_cost = function (self, additional_data)
+	local content = self.content
+	content.costs = nil
+
+	if not additional_data then
+		return
+	end
+
+	local ingredients = content.ingredients
+	local recipe = content.recipe
+	local wallet = additional_data.wallet
+
+	if not wallet then
+		return
+	end
+
+	local costs = recipe.get_costs(ingredients, additional_data)
+	content.costs = costs
+	local cost_string = ""
+
+	if costs then
+		table.sort(costs, sort_wallet_currencies)
+
+		for j, cost in pairs(costs) do
+			local currency = cost.type
+			local amount = cost.amount
+			local wallet_amount = wallet[currency]
+
+			if wallet_amount < amount then
+				cost_string = ""
+
+				break
+			end
+		end
+	end
+
+	self.content.insufficient_funds = cost_string
+	self._update_costs = true
+end
+
 ViewElementCraftingRecipe._pre_present_height_adjust = function (self)
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size
@@ -253,6 +497,46 @@ ViewElementCraftingRecipe.set_overlay_texture = function (self, texture)
 	return self:_start_animation("on_enter", self._widgets_by_name)
 end
 
+ViewElementCraftingRecipe.play_continue_button_animation = function (self)
+	if self._activate_continue_button_anim_id then
+		self:_stop_animation(self._activate_continue_button_anim_id)
+
+		self._activate_continue_button_anim_id = nil
+	end
+
+	if self._deactivate_continue_button_anim_id then
+		self:_stop_animation(self._deactivate_continue_button_anim_id)
+
+		self._deactivate_continue_button_anim_id = nil
+	end
+
+	if not self._hide_continue_button then
+		self._activate_continue_button_anim_id = self:_start_animation("activate_continue_button", self._widgets_by_name, nil)
+
+		self:_play_sound(UISoundEvents.crafting_craft_button_activation)
+	end
+end
+
+ViewElementCraftingRecipe.stop_continue_button_animation = function (self)
+	if self._continue_button_anim_id then
+		self:_stop_animation(self._continue_button_anim_id)
+
+		self._continue_button_anim_id = nil
+	end
+
+	if self._deactivate_continue_button_anim_id then
+		self:_stop_animation(self._deactivate_continue_button_anim_id)
+
+		self._deactivate_continue_button_anim_id = nil
+	end
+
+	if not self._hide_continue_button then
+		self._deactivate_continue_button_anim_id = self:_start_animation("deactivate_continue_button", self._widgets_by_name)
+
+		self:_play_sound(UISoundEvents.crafting_craft_button_deactivation)
+	end
+end
+
 ViewElementCraftingRecipe.play_craft_animation = function (self, callback)
 	return self:_start_animation("on_craft", self._widgets_by_name, nil, callback)
 end
@@ -260,7 +544,7 @@ end
 ViewElementCraftingRecipe._on_present_grid_layout_changed = function (self, layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction)
 	ViewElementCraftingRecipe.super._on_present_grid_layout_changed(self, layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction)
 
-	local grid_length = self:grid_length() + 30
+	local grid_length = self:grid_length() + 35
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size
 	local mask_size = menu_settings.mask_size

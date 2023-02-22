@@ -26,10 +26,6 @@ UnitCoherencyExtension.destroy = function (self)
 	self._fx_extension = nil
 end
 
-UnitCoherencyExtension.update = function (self, unit, dt, t)
-	return
-end
-
 UnitCoherencyExtension.in_coherence_units = function (self)
 	return self._in_coherence_units
 end

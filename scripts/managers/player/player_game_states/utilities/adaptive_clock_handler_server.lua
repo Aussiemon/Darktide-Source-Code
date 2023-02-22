@@ -1,4 +1,5 @@
 local AdaptiveClockHandlerServer = class("AdaptiveClockHandlerServer")
+local BUFFER_MIN = 2
 
 AdaptiveClockHandlerServer.init = function (self, channel_id)
 	self._channel_id = channel_id
@@ -8,7 +9,10 @@ AdaptiveClockHandlerServer.init = function (self, channel_id)
 	Log.info("AdaptiveClockHandlerServer", "Ping(%s) %ims", self._peer_id, ping * 1000)
 
 	self._estimated_ping = ping
-	self._buffer = 0
+	self._buffer = BUFFER_MIN
+	self._buffer_fragment = 0
+	self._buffer_added_t = 0
+	self._latest_buffer_ceiling = BUFFER_MIN
 	local clock_offset = self:_offset()
 	local clock_start = Managers.time:time("gameplay") + clock_offset + self._estimated_ping * 0.5
 	local start_frame = math.floor(clock_start / GameParameters.fixed_time_step)
@@ -41,7 +45,7 @@ AdaptiveClockHandlerServer.init = function (self, channel_id)
 end
 
 AdaptiveClockHandlerServer._offset = function (self)
-	return self._estimated_ping * 0.5 + self._buffer
+	return self._estimated_ping * 0.5 + self._buffer * GameParameters.fixed_time_step
 end
 
 AdaptiveClockHandlerServer.frame_received = function (self, frame)
@@ -66,7 +70,34 @@ AdaptiveClockHandlerServer.frame_received = function (self, frame)
 end
 
 AdaptiveClockHandlerServer.frame_missed = function (self, frame)
-	return
+	local new_buffer_fragment = self._buffer_fragment + 1
+	local fragments_needed = self._buffer - BUFFER_MIN + 1
+
+	if new_buffer_fragment >= fragments_needed then
+		local new_buffer = self._buffer + 1
+		self._buffer = new_buffer
+		self._latest_buffer_ceiling = new_buffer
+		self._buffer_fragment = new_buffer_fragment - fragments_needed
+	else
+		self._new_buffer_fragment = new_buffer_fragment
+	end
+
+	self._buffer_added_t = Managers.time:time("gameplay")
+end
+
+local BUFFER_REMOVE_FREQUENCY = 1
+
+AdaptiveClockHandlerServer.update = function (self, dt, t)
+	local buffer = self._buffer
+
+	if BUFFER_MIN < buffer then
+		local time_since_last_add = t - self._buffer_added_t
+		self._buffer = math.max(BUFFER_MIN, self._latest_buffer_ceiling - math.floor(time_since_last_add / BUFFER_REMOVE_FREQUENCY))
+
+		if self._buffer ~= buffer then
+			self._buffer_fragment = 0
+		end
+	end
 end
 
 AdaptiveClockHandlerServer._calibrate_rewind_ms = function (self, frame)

@@ -1,10 +1,13 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
+local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
+local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionPerception = require("scripts/utilities/minion_perception")
+local GroundImpact = require("scripts/utilities/attack/ground_impact")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Trajectory = require("scripts/utilities/trajectory")
 local BtChaosHoundLeapAction = class("BtChaosHoundLeapAction", "BtNode")
@@ -24,6 +27,8 @@ BtChaosHoundLeapAction.enter = function (self, unit, breed, blackboard, scratchp
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = navigation_extension
+	local stagger_component = Blackboard.write_component(blackboard, "stagger")
+	scratchpad.stagger_component = stagger_component
 
 	MinionPerception.set_target_lock(unit, perception_component, true)
 
@@ -63,23 +68,28 @@ BtChaosHoundLeapAction.enter = function (self, unit, breed, blackboard, scratchp
 	scratchpad.broadphase_system = Managers.state.extension:system("broadphase_system")
 	scratchpad.pushed_minions = {}
 	scratchpad.pushed_enemies = {}
+	scratchpad.stagger_component.controlled_stagger_finished = true
 end
 
-BtChaosHoundLeapAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
-	local locomotion_extension = scratchpad.locomotion_extension
+local OVERRIDE_SPEED_Z = 0
 
-	locomotion_extension:set_affected_by_gravity(false)
+BtChaosHoundLeapAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
+	scratchpad.stagger_component.controlled_stagger_finished = false
 
 	if not scratchpad.hit_target then
-		locomotion_extension:set_movement_type("snap_to_navmesh")
+		local locomotion_extension = scratchpad.locomotion_extension
+
 		locomotion_extension:set_mover_displacement(nil)
-		locomotion_extension:set_gravity(nil)
-		locomotion_extension:set_check_falling(true)
-		locomotion_extension:set_anim_driven(false)
+
+		if scratchpad.is_anim_driven then
+			MinionMovement.set_anim_driven(scratchpad, false)
+		end
 
 		if reason ~= "done" then
 			self:_set_pounce_cooldown(blackboard, t)
 		end
+
+		locomotion_extension:set_movement_type("snap_to_navmesh")
 	end
 
 	MinionPerception.set_target_lock(unit, scratchpad.perception_component, false)
@@ -213,9 +223,9 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 
 		local current_velocity = locomotion_extension:current_velocity()
 
-		if Mover.collides_down(mover) then
+		if mover and Mover.collides_down(mover) then
 			self:_start_landing(scratchpad, action_data, current_velocity, t)
-		elseif Mover.collides_sides(mover) or Mover.collides_up(mover) then
+		elseif mover and (Mover.collides_sides(mover) or Mover.collides_up(mover)) then
 			local hit_position, hit_normal = self:_check_wall_collision(unit, scratchpad, action_data, current_velocity)
 
 			if hit_position then
@@ -229,10 +239,28 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 
 		MinionAttack.push_friendly_minions(unit, scratchpad, action_data, t)
 		MinionAttack.push_nearby_enemies(unit, scratchpad, action_data, target_unit)
+		self:_update_in_air_stagger(unit, t, dt, scratchpad, action_data)
+	elseif state == "in_air_stagger" then
+		self:_update_in_air_stagger(unit, t, dt, scratchpad, action_data)
+
+		local current_velocity = locomotion_extension:current_velocity()
+
+		if mover and Mover.collides_down(mover) then
+			self:_stop_in_air_stagger(scratchpad)
+			self:_start_landing(scratchpad, action_data, current_velocity, t)
+		elseif mover and (Mover.collides_sides(mover) or Mover.collides_up(mover)) then
+			self:_stop_in_air_stagger(scratchpad)
+
+			local hit_position, hit_normal = self:_check_wall_collision(unit, scratchpad, action_data, current_velocity)
+
+			if hit_position then
+				self:_start_wall_jump(unit, scratchpad, action_data, hit_normal)
+			end
+		end
 	elseif state == "wall_jump" then
 		local wall_land_duration = scratchpad.wall_land_duration
 
-		if Mover.collides_down(mover) and not wall_land_duration then
+		if mover and Mover.collides_down(mover) and not wall_land_duration then
 			local wall_land_anim_event = action_data.wall_land_anim_event
 
 			scratchpad.animation_extension:anim_event(wall_land_anim_event)
@@ -247,7 +275,17 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 			return "done"
 		end
 	elseif state == "landing" then
-		if scratchpad.landing_duration < t and Mover.collides_down(mover) then
+		if scratchpad.land_impact_timing and scratchpad.land_impact_timing <= t then
+			local ground_impact_fx_template = action_data.land_ground_impact_fx_template
+
+			if ground_impact_fx_template then
+				GroundImpact.play(unit, scratchpad.physics_world, ground_impact_fx_template)
+
+				scratchpad.land_impact_timing = nil
+			end
+		end
+
+		if scratchpad.landing_duration < t then
 			locomotion_extension:set_anim_driven(false)
 			locomotion_extension:use_lerp_rotation(true)
 			self:_set_pounce_cooldown(blackboard, t)
@@ -312,7 +350,7 @@ BtChaosHoundLeapAction._calculate_wanted_velocity = function (self, unit, t, scr
 	local velocity, time_in_flight = Trajectory.get_trajectory_velocity(self_position, est_pos, gravity, speed, angle_to_hit_target)
 	time_in_flight = math.min(time_in_flight, MAX_TIME_IN_FLIGHT)
 	local debug = nil
-	local trajectory_is_ok = Trajectory.check_trajectory_collisions(scratchpad.physics_world, self_position, est_pos, gravity, speed, angle_to_hit_target, 10, "filter_minion_shooting_geometry", time_in_flight, nil, debug)
+	local trajectory_is_ok = Trajectory.check_trajectory_collisions(scratchpad.physics_world, self_position, est_pos, gravity, speed, angle_to_hit_target, 10, "filter_minion_shooting_geometry", time_in_flight, nil, debug, unit)
 
 	if trajectory_is_ok then
 		scratchpad.current_velocity = Vector3Box(velocity)
@@ -322,7 +360,6 @@ BtChaosHoundLeapAction._calculate_wanted_velocity = function (self, unit, t, scr
 end
 
 local MOVER_DISPLACEMENT_DURATION = 0.1
-local OVERRIDE_SPEED_Z = 0
 
 BtChaosHoundLeapAction._leap = function (self, scratchpad, blackboard, action_data, t, unit)
 	local ignore_dot_check = true
@@ -348,6 +385,7 @@ BtChaosHoundLeapAction._leap = function (self, scratchpad, blackboard, action_da
 	behavior_component.move_state = "attacking"
 	local pounce_component = Blackboard.write_component(blackboard, "pounce")
 	pounce_component.started_leap = true
+	scratchpad.stagger_component.controlled_stagger_finished = false
 end
 
 BtChaosHoundLeapAction._start_landing = function (self, scratchpad, action_data, current_velocity, t)
@@ -362,8 +400,17 @@ BtChaosHoundLeapAction._start_landing = function (self, scratchpad, action_data,
 	local anim_driven = true
 	local affected_by_gravity = true
 
+	locomotion_extension:set_movement_type("snap_to_navmesh")
+	locomotion_extension:set_mover_displacement(nil)
 	locomotion_extension:set_anim_driven(anim_driven, affected_by_gravity, nil, OVERRIDE_SPEED_Z)
 	locomotion_extension:use_lerp_rotation(false)
+
+	if action_data.land_impact_timing then
+		local land_impact_timing = t + action_data.land_impact_timing
+		scratchpad.land_impact_timing = land_impact_timing
+	end
+
+	scratchpad.stagger_component.controlled_stagger_finished = true
 end
 
 BtChaosHoundLeapAction._start_wall_jump = function (self, unit, scratchpad, action_data, wall_normal)
@@ -386,6 +433,8 @@ BtChaosHoundLeapAction._start_wall_jump = function (self, unit, scratchpad, acti
 	local wall_jump_anim_event = action_data.wall_jump_anim_event
 
 	scratchpad.animation_extension:anim_event(wall_jump_anim_event)
+
+	scratchpad.stagger_component.controlled_stagger_finished = true
 end
 
 BtChaosHoundLeapAction._check_wall_collision = function (self, unit, scratchpad, action_data)
@@ -528,6 +577,88 @@ BtChaosHoundLeapAction._update_ground_normal_rotation = function (self, unit, ta
 
 		locomotion_extension:set_wanted_rotation(wanted_rotation)
 	end
+end
+
+BtChaosHoundLeapAction._update_in_air_stagger = function (self, unit, t, dt, scratchpad, action_data)
+	local stagger_component = scratchpad.stagger_component
+	local locomotion_extension = scratchpad.locomotion_extension
+	local animation_extension = scratchpad.animation_extension
+	local behavior_component = scratchpad.behavior_component
+	local done = false
+
+	if stagger_component.controlled_stagger and not scratchpad.stagger_duration then
+		scratchpad.stagger_velocity_magnitude = Vector3.length(locomotion_extension:current_velocity())
+
+		if scratchpad.is_anim_driven then
+			MinionMovement.set_anim_driven(scratchpad, false)
+		end
+
+		local stagger_anims = action_data.in_air_staggers
+		local stagger_anim = Animation.random_event(stagger_anims)
+
+		animation_extension:anim_event(stagger_anim)
+		locomotion_extension:set_movement_type("constrained_by_mover")
+
+		local override_velocity_z = 0
+
+		locomotion_extension:set_affected_by_gravity(true, override_velocity_z)
+
+		local durations = action_data.in_air_stagger_duration
+
+		if type(durations) == "table" then
+			local duration = durations[stagger_anim]
+			scratchpad.stagger_duration = t + duration
+			local min_durations = action_data.in_air_stagger_min_duration
+
+			if min_durations then
+				local min_duration = min_durations[stagger_anim]
+
+				if min_duration then
+					scratchpad.stagger_min_duration = t + min_duration
+				end
+			end
+		else
+			scratchpad.stagger_duration = t + durations
+		end
+
+		scratchpad.original_movement_speed = scratchpad.navigation_extension:max_speed()
+		behavior_component.lock_combat_range_switch = true
+		stagger_component.immune_time = 0
+		scratchpad.state = "in_air_stagger"
+	end
+
+	local running_stagger_min_duration = scratchpad.stagger_min_duration
+	scratchpad.running_stagger_block_evaluate = running_stagger_min_duration and t < running_stagger_min_duration
+
+	if scratchpad.stagger_duration and scratchpad.stagger_duration < t then
+		self:_stop_in_air_stagger(scratchpad)
+
+		done = true
+	elseif scratchpad.stagger_duration then
+		local stagger_direction = stagger_component.direction:unbox()
+		local magnitude = scratchpad.stagger_velocity_magnitude * 0.5
+		local stagger_velocity = Vector3(stagger_direction.x * magnitude, stagger_direction.y * magnitude, 0)
+
+		locomotion_extension:set_wanted_velocity(stagger_velocity)
+		locomotion_extension:set_wanted_rotation(Quaternion.look(-Vector3.flat(stagger_direction)))
+	end
+
+	return done
+end
+
+BtChaosHoundLeapAction._stop_in_air_stagger = function (self, scratchpad)
+	local locomotion_extension = scratchpad.locomotion_extension
+	local behavior_component = scratchpad.behavior_component
+
+	locomotion_extension:set_movement_type("snap_to_navmesh")
+
+	scratchpad.stagger_duration = nil
+	behavior_component.lock_combat_range_switch = false
+
+	scratchpad.navigation_extension:set_max_speed(scratchpad.original_movement_speed)
+
+	scratchpad.stagger_component.controlled_stagger = false
+	scratchpad.stagger_component.controlled_stagger_finished = true
 end
 
 local COLLISION_FILTER = "filter_minion_line_of_sight_check"

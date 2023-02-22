@@ -568,6 +568,47 @@ local gameplay_vo_psyker_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_berserker_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.260292,
+			1.276146,
+			0.65725,
+			0.961188,
+			1.312167,
+			2.291979,
+			1.815625,
+			1.657979,
+			1.342479,
+			1.379417
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_chaos_hound = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -597,6 +638,47 @@ local gameplay_vo_psyker_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_chaos_hound_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.260292,
+			1.276146,
+			0.65725,
+			0.961188,
+			1.312167,
+			2.291979,
+			1.815625,
+			1.657979,
+			1.342479,
+			1.379417
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_cultist_mutant = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -623,6 +705,47 @@ local gameplay_vo_psyker_male_b = {
 			2.421458,
 			1.855042,
 			3.542979
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_cultist_mutant_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.260292,
+			1.276146,
+			0.65725,
+			0.961188,
+			1.312167,
+			2.291979,
+			1.815625,
+			1.657979,
+			1.342479,
+			1.379417
 		},
 		sound_event_weights = {
 			0.1,
@@ -708,6 +831,47 @@ local gameplay_vo_psyker_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_grenadier_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.260292,
+			1.276146,
+			0.65725,
+			0.961188,
+			1.312167,
+			2.291979,
+			1.815625,
+			1.657979,
+			1.342479,
+			1.379417
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_monster = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -766,6 +930,47 @@ local gameplay_vo_psyker_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_netgunner_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.260292,
+			1.276146,
+			0.65725,
+			0.961188,
+			1.312167,
+			2.291979,
+			1.815625,
+			1.657979,
+			1.342479,
+			1.379417
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_poxwalker_bomber = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -792,6 +997,47 @@ local gameplay_vo_psyker_male_b = {
 			2.226146,
 			2.382125,
 			1.240917
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_poxwalker_bomber_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.260292,
+			1.276146,
+			0.65725,
+			0.961188,
+			1.312167,
+			2.291979,
+			1.815625,
+			1.657979,
+			1.342479,
+			1.379417
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -836,32 +1082,166 @@ local gameplay_vo_psyker_male_b = {
 		},
 		randomize_indexes = {}
 	},
-	enemy_kill_scab_flamer = {
+	enemy_kill_renegade_berserker_quick_agnostic = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
 		sound_events = {
-			"loc_psyker_male_b__enemy_kill_monster_02",
-			"loc_psyker_male_b__enemy_kill_monster_03",
-			"loc_psyker_male_b__enemy_kill_monster_05",
-			"loc_psyker_male_b__enemy_kill_monster_06",
-			"loc_psyker_male_b__enemy_kill_monster_07",
-			"loc_psyker_male_b__enemy_kill_monster_08",
-			"loc_psyker_male_b__enemy_kill_monster_09",
-			"loc_psyker_male_b__enemy_kill_monster_10",
-			"loc_psyker_male_b__enemy_kill_tox_flamer_02",
-			"loc_psyker_male_b__enemy_kill_tox_flamer_04"
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_10"
 		},
 		sound_events_duration = {
-			2.211979,
-			1.447833,
-			2.582729,
-			0.954208,
-			1.525667,
-			1.867583,
-			2.247063,
-			3.275188,
-			1.290917,
-			1.747292
+			1.260292,
+			1.276146,
+			0.65725,
+			0.961188,
+			1.312167,
+			2.291979,
+			1.815625,
+			1.657979,
+			1.342479,
+			1.379417
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_scab_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_psyker_male_b__enemy_kill_scab_flamer_a_01",
+			"loc_psyker_male_b__enemy_kill_scab_flamer_a_02",
+			"loc_psyker_male_b__enemy_kill_scab_flamer_a_03",
+			"loc_psyker_male_b__enemy_kill_scab_flamer_a_04",
+			"loc_psyker_male_b__enemy_kill_scab_flamer_a_05"
+		},
+		sound_events_duration = {
+			1.423667,
+			0.773,
+			1.807396,
+			2.009333,
+			1.650146
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_scab_flamer_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.260292,
+			1.276146,
+			0.65725,
+			0.961188,
+			1.312167,
+			2.291979,
+			1.815625,
+			1.657979,
+			1.342479,
+			1.379417
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_sniper = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_psyker_male_b__enemy_kill_sniper_a_01",
+			"loc_psyker_male_b__enemy_kill_sniper_a_02",
+			"loc_psyker_male_b__enemy_kill_sniper_a_03",
+			"loc_psyker_male_b__enemy_kill_sniper_a_04",
+			"loc_psyker_male_b__enemy_kill_sniper_a_05"
+		},
+		sound_events_duration = {
+			0.768292,
+			0.870792,
+			1.719667,
+			1.681688,
+			1.316
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_sniper_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.260292,
+			1.276146,
+			0.65725,
+			0.961188,
+			1.312167,
+			2.291979,
+			1.815625,
+			1.657979,
+			1.342479,
+			1.379417
 		},
 		sound_event_weights = {
 			0.1,
@@ -893,6 +1273,47 @@ local gameplay_vo_psyker_male_b = {
 			1.891417,
 			1.747292,
 			3.006333
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_tox_flamer_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_01",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_02",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_03",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_04",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_05",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_06",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_07",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_08",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_09",
+			"loc_psyker_male_b__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			1.260292,
+			1.276146,
+			0.65725,
+			0.961188,
+			1.312167,
+			2.291979,
+			1.815625,
+			1.657979,
+			1.342479,
+			1.379417
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -941,13 +1362,6 @@ local gameplay_vo_psyker_male_b = {
 			1.888583,
 			0.882583,
 			3.360979
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -4122,27 +4536,30 @@ local gameplay_vo_psyker_male_b = {
 	},
 	seen_enemy_scab_flamer = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 6,
 		sound_events = {
-			"loc_psyker_male_b__seen_enemy_specials_generic_01",
-			"loc_psyker_male_b__seen_enemy_specials_generic_02",
-			"loc_psyker_male_b__seen_enemy_specials_generic_03",
-			"loc_psyker_male_b__seen_enemy_specials_generic_04",
-			"loc_psyker_male_b__seen_enemy_specials_generic_05"
+			"loc_psyker_male_b__seen_enemy_scab_flamer_a_01",
+			"loc_psyker_male_b__seen_enemy_scab_flamer_a_02",
+			"loc_psyker_male_b__seen_enemy_scab_flamer_a_03",
+			"loc_psyker_male_b__seen_enemy_scab_flamer_a_04",
+			"loc_psyker_male_b__seen_enemy_scab_flamer_a_05",
+			"loc_psyker_male_b__seen_enemy_scab_flamer_a_06"
 		},
 		sound_events_duration = {
-			1.575229,
-			1.137313,
-			1.63525,
-			2.725417,
-			1.209021
+			0.931688,
+			0.987896,
+			2.02425,
+			1.994042,
+			0.724188,
+			1.374292
 		},
 		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
 		},
 		randomize_indexes = {}
 	},

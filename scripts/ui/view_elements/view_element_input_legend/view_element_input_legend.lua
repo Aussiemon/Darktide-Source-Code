@@ -132,8 +132,6 @@ ViewElementInputLegend._handle_input = function (self, dt, t, input_service)
 					input_handled = true
 
 					on_pressed_callback(id)
-
-					break
 				end
 			end
 		end
@@ -188,7 +186,8 @@ ViewElementInputLegend._update_widget_text = function (self, entry)
 	if widget then
 		local action = entry.input_action
 		local display_name = entry.display_name
-		local text = TextUtils.localize_with_button_hint(action, display_name, nil, service_type, Localize("loc_input_legend_text_template"))
+		local include_input_type = true
+		local text = TextUtils.localize_with_button_hint(action, display_name, nil, service_type, Localize("loc_input_legend_text_template"), include_input_type)
 		local suffix = entry.suffix
 
 		if suffix then

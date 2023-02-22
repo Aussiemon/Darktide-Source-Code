@@ -198,7 +198,7 @@ local StateGameplayTestify = {
 			local hit_position = POSITION_LOOKUP[unit]
 			local damage_type = melee_damage_types[melee_damage_type_index]
 
-			Attack.execute(unit, damage_profile, "target_index", 1, "power_level", 99999, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "melee", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", crit)
+			Attack.execute(unit, damage_profile, "target_index", 1, "power_level", 5000, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "melee", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", crit)
 			Attack.execute(unit, damage_profile, "instakill", true)
 
 			melee_damage_type_index = melee_damage_type_index + 1 > #melee_damage_types and 1 or melee_damage_type_index + 1
@@ -215,7 +215,7 @@ local StateGameplayTestify = {
 			local hit_position = POSITION_LOOKUP[unit]
 			local damage_type = ranged_damage_types[ranged_damage_type_index]
 
-			Attack.execute(unit, damage_profile, "target_index", 1, "power_level", 99999, "charge_level", 1, "dropoff_scalar", 0, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", crit)
+			Attack.execute(unit, damage_profile, "target_index", 1, "power_level", 5000, "charge_level", 1, "dropoff_scalar", 0, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", crit)
 
 			ranged_damage_type_index = ranged_damage_type_index + 1 > #ranged_damage_types and 1 or ranged_damage_type_index + 1
 		end
@@ -323,11 +323,6 @@ local StateGameplayTestify = {
 		Log.info("StateGameplayTestify", "Hiding players")
 		PlayerVisibility.hide_players()
 	end,
-	load_mission = function (mission_key, _)
-		FlowCallbacks.load_mission({
-			mission_name = mission_key
-		})
-	end,
 	memory_usage = function ()
 		local memory_usage = Memory.usage()
 
@@ -350,50 +345,16 @@ local StateGameplayTestify = {
 
 		return unit
 	end,
-	start_measuring_performance = function (_, state_gameplay)
-		state_gameplay:init_performance_reporter()
+	start_measuring_performance = function (mspf_threads, batchcount, primitives, state_gameplay)
+		state_gameplay:init_performance_reporter(mspf_threads, batchcount, primitives)
 	end,
 	stop_measuring_performance = function (_, state_gameplay)
 		local performance_reporter = state_gameplay:performance_reporter()
-		local ms_per_frame = {
-			min = performance_reporter:min_ms_per_frame(),
-			max = performance_reporter:max_ms_per_frame(),
-			avg = performance_reporter:avg_ms_per_frame(),
-			median = performance_reporter:median_ms_per_frame()
-		}
-		local batchcount = {
-			min = performance_reporter:min_batchcount(),
-			max = performance_reporter:max_batchcount(),
-			avg = performance_reporter:avg_batchcount(),
-			median = performance_reporter:median_batchcount()
-		}
-		local primitives_count = {
-			min = performance_reporter:min_primitives_count(),
-			max = performance_reporter:max_primitives_count(),
-			avg = performance_reporter:avg_primitives_count(),
-			median = performance_reporter:median_primitives_count()
-		}
-		local performance_measurements = {
-			ms_per_frame = ms_per_frame,
-			batchcount = batchcount,
-			primitives_count = primitives_count
-		}
+		local performance_measurements = performance_reporter:performance_measurements()
 
 		state_gameplay:destroy_performance_reporter()
 
 		return performance_measurements
-	end,
-	take_a_screenshot = function (screenshot_settings, state_gameplay)
-		local type = "file_system"
-		local window = nil
-		local scale = 1
-		local output_dir = screenshot_settings.output_dir
-		local date_and_time = os.date("%y_%m_%d-%H%M%S")
-		local filename = screenshot_settings.filename .. "-" .. date_and_time
-		local filetype = screenshot_settings.filetype
-
-		os.execute("mkdir -p " .. "\"" .. output_dir .. "\"")
-		FrameCapture.screen_shot(type, window, scale, output_dir, filename, filetype)
 	end,
 	trigger_external_event = function (event_name)
 		Log.info("StateGameplayTestify", "Triggering external event %s", event_name)

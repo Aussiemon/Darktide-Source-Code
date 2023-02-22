@@ -55,7 +55,7 @@ local templates = {
 		weapon_trait_bespoke_ogryn_thumper_p1_power_bonus_on_continuous_fire = {
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.02
+					[stat_buffs.power_level_modifier] = 0.1
 				}
 			}
 		}
@@ -88,22 +88,22 @@ local templates = {
 		weapon_trait_bespoke_ogryn_thumper_p1_weapon_special_power_bonus_after_one_shots = {
 			{
 				proc_stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.02
+					[stat_buffs.melee_power_level_modifier] = 0.5
 				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.03
+					[stat_buffs.melee_power_level_modifier] = 0.6
 				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.04
+					[stat_buffs.melee_power_level_modifier] = 0.7
 				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.05
+					[stat_buffs.melee_power_level_modifier] = 0.8
 				}
 			}
 		}
@@ -112,44 +112,28 @@ local templates = {
 		weapon_trait_bespoke_ogryn_thumper_p1_power_bonus_on_hitting_single_enemy_with_all = {
 			{
 				proc_stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.02
+					[stat_buffs.power_level_modifier] = 0.075
 				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.03
+					[stat_buffs.power_level_modifier] = 0.125
 				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.04
+					[stat_buffs.power_level_modifier] = 0.175
 				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.05
+					[stat_buffs.power_level_modifier] = 0.225
 				}
 			}
 		}
 	},
 	weapon_trait_bespoke_ogryn_thumper_p1_shot_power_bonus_after_weapon_special_cleave = {
 		weapon_trait_bespoke_ogryn_thumper_p1_shot_power_bonus_after_weapon_special_cleave = {
-			{
-				proc_stat_buffs = {
-					[stat_buffs.ranged_power_level_modifier] = 0.02
-				},
-				buff_data = {
-					required_num_hits = 3
-				}
-			},
-			{
-				proc_stat_buffs = {
-					[stat_buffs.ranged_power_level_modifier] = 0.04
-				},
-				buff_data = {
-					required_num_hits = 3
-				}
-			},
 			{
 				proc_stat_buffs = {
 					[stat_buffs.ranged_power_level_modifier] = 0.06
@@ -160,7 +144,23 @@ local templates = {
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.ranged_power_level_modifier] = 0.08
+					[stat_buffs.ranged_power_level_modifier] = 0.09
+				},
+				buff_data = {
+					required_num_hits = 3
+				}
+			},
+			{
+				proc_stat_buffs = {
+					[stat_buffs.ranged_power_level_modifier] = 0.12
+				},
+				buff_data = {
+					required_num_hits = 3
+				}
+			},
+			{
+				proc_stat_buffs = {
+					[stat_buffs.ranged_power_level_modifier] = 0.15
 				},
 				buff_data = {
 					required_num_hits = 3

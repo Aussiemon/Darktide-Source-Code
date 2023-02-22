@@ -563,7 +563,7 @@ weapon_template.actions = {
 		damage_window_end = 0.25,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_up",
-		anim_event = "attack_right_diagonal_down",
+		anim_event = "attack_right_up",
 		weapon_handling_template = "time_scale_1",
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		uninterruptible = true,
@@ -1253,7 +1253,8 @@ weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",
 	"force_sword",
-	"p1"
+	"p1",
+	"activated"
 }
 weapon_template.smart_targeting_template = SmartTargetingTemplates.force_sword_single_target
 weapon_template.dodge_template = "psyker"

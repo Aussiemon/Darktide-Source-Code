@@ -33,9 +33,18 @@ TestifySnippets.skip_splash_and_title_screen = function ()
 	Testify:make_request("skip_privacy_policy_popup_if_displayed")
 end
 
-TestifySnippets.load_mission = function (mission_key)
+TestifySnippets.load_mission = function (mission_name, challenge, resistance, circumstance_name, side_mission)
 	Testify:make_request("wait_for_state_gameplay_reached")
-	Testify:make_request("load_mission", mission_key)
+
+	local mission_context = {
+		mission_name = mission_name,
+		challenge = challenge,
+		resistance = resistance,
+		circumstance_name = circumstance_name,
+		side_mission = side_mission
+	}
+
+	Testify:make_request("load_mission", mission_context)
 end
 
 TestifySnippets.load_mission_in_mission_board = function (level_key, challenge, resistance, circumstance_name, side_mission, peer_id)
@@ -124,6 +133,34 @@ TestifySnippets.set_difficulty = function (difficulty)
 	}
 
 	Testify:make_request("change_dev_parameter", challenge)
+end
+
+TestifySnippets.set_render_settings = function (setting_id, value, wait_time)
+	local setting = TestifySnippets.render_setting_template(setting_id)
+	local new_value = value
+	local option_data = {
+		setting = setting,
+		new_value = new_value
+	}
+
+	Testify:make_request("setting_on_activated", option_data)
+
+	if wait_time then
+		TestifySnippets.wait(wait_time)
+	end
+end
+
+TestifySnippets.render_setting_template = function (setting_id)
+	local render_settings = Testify:make_request("display_and_graphics_presets_settings")
+
+	for i = 1, #render_settings do
+		local setting = render_settings[i]
+		local id = setting.id
+
+		if setting_id == id then
+			return setting
+		end
+	end
 end
 
 TestifySnippets.is_host = function ()
@@ -414,6 +451,34 @@ TestifySnippets.wait_for_gameplay_ready = function ()
 	end
 
 	Testify:make_request("wait_for_state_gameplay_reached")
+end
+
+TestifySnippets.open_barber_surgeon_shop = function ()
+	local view_data = {
+		view_name = "barber_vendor_background_view",
+		dummy_data = {
+			debug_preview = true,
+			can_exit = true
+		}
+	}
+
+	Testify:make_request("open_view", view_data)
+	Testify:make_request("vendor_interaction_view_press_option", 1)
+	Testify:make_request("wait_for_view", "character_appearance_view")
+	TestifySnippets.wait(2)
+end
+
+TestifySnippets.appearance_options_widgets = function (appearance_slots_widget_names)
+	local appearance_options_widgets = {}
+
+	for slot_name, slot_widget_name in pairs(appearance_slots_widget_names) do
+		Testify:make_request("trigger_widget_callback", slot_widget_name)
+
+		local widgets = Testify:make_request("character_appearance_view_options_widgets")
+		appearance_options_widgets[slot_name] = widgets
+	end
+
+	return appearance_options_widgets
 end
 
 TestifySnippets.connection_statistics = function ()

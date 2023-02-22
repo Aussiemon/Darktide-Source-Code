@@ -14,6 +14,7 @@ local categories = {
 	"Camera",
 	"Capture Zone",
 	"Chaos Hound",
+	"Chaos Spawn",
 	"Chat",
 	"Chests",
 	"Chunk Lod",
@@ -81,6 +82,7 @@ local categories = {
 	"Pickup Picker",
 	"Pickups",
 	"Player Character",
+	"Premium Store",
 	"Presence",
 	"Projectile Locomotion",
 	"Projectile",
@@ -91,6 +93,7 @@ local categories = {
 	"Roamers",
 	"Script Components",
 	"Shading Environment",
+	"Shooting Range",
 	"Smart Tagging",
 	"Smart Targeting",
 	"Social Features",
@@ -198,6 +201,10 @@ local params = {
 		category = "Input"
 	},
 	show_sensitivity_modifier = {
+		value = false,
+		category = "Input"
+	},
+	debug_visualize_look_raw_controller = {
 		value = false,
 		category = "Input"
 	}
@@ -331,6 +338,10 @@ params.enable_commendations = {
 	category = "Backend"
 }
 params.backend_debug_log = {
+	value = false,
+	category = "Backend"
+}
+params.debug_verify_gear_cache = {
 	value = false,
 	category = "Backend"
 }
@@ -800,6 +811,10 @@ params.disable_player_catapulting = {
 	category = "Player Character"
 }
 params.disable_warp_charge = {
+	value = false,
+	category = "Player Character"
+}
+params.disable_warp_charge_passive_dissipating = {
 	value = false,
 	category = "Player Character"
 }
@@ -1418,6 +1433,10 @@ params.draw_minion_velocity = {
 	category = "Locomotion"
 }
 params.draw_minion_speed = {
+	value = false,
+	category = "Locomotion"
+}
+params.draw_player_mover = {
 	value = false,
 	category = "Locomotion"
 }
@@ -2136,6 +2155,10 @@ params.debug_mutant_charger = {
 	value = false,
 	category = "Mutant Charger"
 }
+params.debug_chaos_spawn = {
+	value = false,
+	category = "Chaos Spawn"
+}
 params.enable_chunk_lod = {
 	value = true,
 	category = "Chunk Lod"
@@ -2254,6 +2277,10 @@ params.debug_group_sfx = {
 	category = "Groups"
 }
 params.chaos_hound_allowed = {
+	value = true,
+	category = "Specials"
+}
+params.chaos_hound_mutator_allowed = {
 	value = true,
 	category = "Specials"
 }
@@ -2952,6 +2979,10 @@ params.local_crafting = {
 	value = false,
 	category = "UI"
 }
+params.sticker_book_seen_all_traits = {
+	value = false,
+	category = "UI"
+}
 params.override_stun_type = {
 	value = false,
 	category = "Damage",
@@ -3511,6 +3542,14 @@ params.disable_adaptive_clock_offset_correction = {
 	value = false,
 	category = "Network"
 }
+params.adaptive_clock_offset_correction_info_logging = {
+	value = false,
+	category = "Network"
+}
+params.debug_play_sound_on_not_received_input = {
+	value = false,
+	category = "Network"
+}
 params.log_mispredicts = {
 	value = false,
 	category = "Network"
@@ -3836,6 +3875,10 @@ params.visualize_aim_assist_trajectory = {
 	value = false,
 	category = "Weapon Aim Assist"
 }
+params.debug_ammo_count_effects = {
+	value = false,
+	category = "Weapon Effects"
+}
 params.debug_chain_weapon_effects = {
 	value = false,
 	category = "Weapon Effects"
@@ -3964,6 +4007,10 @@ params.debug_critical_strike_pseudo_random_distribution = {
 	category = "Critical Strikes"
 }
 params.no_critical_strikes = {
+	value = false,
+	category = "Critical Strikes"
+}
+params.debug_critical_strike_chance = {
 	value = false,
 	category = "Critical Strikes"
 }
@@ -4355,6 +4402,15 @@ params.disable_coherency_toughness_effect = {
 	value = false,
 	category = "Coherency"
 }
+params.premium_store_custom_time = {
+	value = 0,
+	hidden = true,
+	category = "Premium Store"
+}
+params.unlock_all_shooting_range_enemies = {
+	value = false,
+	category = "Shooting Range"
+}
 params.category_log_levels = {
 	hidden = true,
 	value = {
@@ -4381,6 +4437,9 @@ params.stall_warnings_enabled = {
 	on_value_set = function (new_value, old_value)
 		Application.set_stall_warnings_enabled(new_value)
 	end
+}
+params.disable_fade_system = {
+	value = false
 }
 params.debug_material_queries = {
 	value = false,

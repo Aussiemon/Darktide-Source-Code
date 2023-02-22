@@ -117,7 +117,7 @@ local channel_metadata = {
 		color = clan_channel_color
 	},
 	[ChannelTags.PRIVATE] = {
-		color = hub_channel_color
+		color = clan_channel_color
 	},
 	placeholder = {
 		color = Color.magenta(255, true)

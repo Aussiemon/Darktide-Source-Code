@@ -11,6 +11,7 @@ local MAX_PROC_EVENTS = BuffSettings.max_proc_events
 local PROC_EVENTS_STRIDE = BuffSettings.proc_events_stride
 local BuffExtensionBase = class("BuffExtensionBase")
 local Unit_world_position = Unit.world_position
+local Unit_node = Unit.node
 local WwiseWorld_set_source_position = WwiseWorld.set_source_position
 local RPCS = {
 	"rpc_add_buff",
@@ -56,8 +57,8 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 	}, _stat_buff_lazy_mt)
 	self._keywords = {}
 	self._had_keywords = {}
-	self._active_vfx = {}
-	self._active_wwise_node_sources = {}
+	self._sfx_node_effects = {}
+	self._vfx_node_effects = {}
 	self._proc_event_param_tables = {}
 	self._num_proc_events = 0
 	self._param_table_index = 0
@@ -195,10 +196,10 @@ end
 
 BuffExtensionBase._move_looping_sfx_sources = function (self, unit)
 	local wwise_world = self._buff_context.wwise_world
-	local active_wwise_node_sources = self._active_wwise_node_sources
+	local sfx_node_effects = self._sfx_node_effects
 
-	for attach_node, source in pairs(active_wwise_node_sources) do
-		WwiseWorld_set_source_position(wwise_world, source.wwise_source_id, Unit_world_position(unit, attach_node))
+	for node_index, entry in pairs(sfx_node_effects) do
+		WwiseWorld_set_source_position(wwise_world, entry.wwise_source_id, Unit_world_position(unit, node_index))
 	end
 end
 
@@ -409,6 +410,7 @@ BuffExtensionBase._add_buff = function (self, template, t, ...)
 			local previous_stack_count = existing_buff_instance:stack_count()
 
 			existing_buff_instance:add_stack()
+			self:_on_add_buff_stack(existing_buff_instance, previous_stack_count)
 
 			if template.refresh_duration_on_stack then
 				existing_buff_instance:set_start_time(t)
@@ -576,6 +578,7 @@ BuffExtensionBase._remove_buff = function (self, index)
 
 	if current_stack_count > 1 then
 		buff_instance:remove_stack()
+		self:_on_remove_buff_stack(buff_instance, current_stack_count)
 
 		if template.refresh_duration_on_remove_stack then
 			local max_stacks = buff_instance:max_stacks()
@@ -629,6 +632,36 @@ end
 
 BuffExtensionBase._post_on_remove_buff = function (self, buff_instance)
 	return
+end
+
+BuffExtensionBase._on_remove_buff_stack = function (self, buff_instance, previous_stack_count)
+	local template = buff_instance:template()
+	local shared_effects = template.effects
+
+	if shared_effects then
+		local stack_node_effects = shared_effects.stack_node_effects
+
+		if stack_node_effects then
+			local current_stack_count = buff_instance:stack_count()
+
+			self:_check_stack_node_effects(stack_node_effects, current_stack_count, previous_stack_count)
+		end
+	end
+end
+
+BuffExtensionBase._on_add_buff_stack = function (self, buff_instance, previous_stack_count)
+	local template = buff_instance:template()
+	local shared_effects = template.effects
+
+	if shared_effects then
+		local stack_node_effects = shared_effects.stack_node_effects
+
+		if stack_node_effects then
+			local current_stack_count = buff_instance:stack_count()
+
+			self:_check_stack_node_effects(stack_node_effects, current_stack_count, previous_stack_count)
+		end
+	end
 end
 
 BuffExtensionBase.has_buff_id = function (self, buff_id)
@@ -753,30 +786,18 @@ BuffExtensionBase._find_local_index = function (self, buff_instance)
 end
 
 BuffExtensionBase._start_fx = function (self, index, template)
-	if not self._active_vfx[index] then
-		self._active_vfx[index] = {}
-	end
-
-	local active_vfx = self._active_vfx[index]
 	local shared_effects = template.effects
 
 	if shared_effects then
 		local node_effects = shared_effects.node_effects
 
 		if node_effects then
-			local buff_context = self._buff_context
-			local world = buff_context.world
-			local wwise_world = buff_context.wwise_world
-			local unit = buff_context.unit
-
-			self:_start_node_effects(node_effects, unit, world, wwise_world, active_vfx)
+			self:_start_node_effects(node_effects)
 		end
 	end
 end
 
 BuffExtensionBase._stop_fx = function (self, index, template)
-	local buff_context = self._buff_context
-	local world = buff_context.world
 	local shared_effects = template.effects
 
 	if shared_effects then
@@ -786,116 +807,190 @@ BuffExtensionBase._stop_fx = function (self, index, template)
 			self:_stop_node_effects(shared_node_effects)
 		end
 	end
-
-	local active_vfx = self._active_vfx[index]
-
-	for i = 1, #active_vfx do
-		local effect = active_vfx[i]
-		local particle_id = effect.particle_id
-		local stop_type = effect.stop_type
-
-		if stop_type == "stop" then
-			World.stop_spawning_particles(world, particle_id)
-		else
-			World.destroy_particles(world, particle_id)
-		end
-	end
-
-	table.clear(active_vfx)
 end
 
-BuffExtensionBase._start_node_effects = function (self, node_effects, unit, world, wwise_world, active_vfx)
-	local active_wwise_node_sources = self._active_wwise_node_sources
+BuffExtensionBase._start_node_effects = function (self, node_effects)
+	local active_node_sfx_effects = self._sfx_node_effects
+	local active_node_vfx_effects = self._vfx_node_effects
+	local buff_context = self._buff_context
+	local world = buff_context.world
+	local wwise_world = buff_context.wwise_world
+	local unit = buff_context.unit
 	local num_effects = #node_effects
 
 	for i = 1, num_effects do
 		local effect = node_effects[i]
 		local node_name = effect.node_name
-		local attach_node = Unit.node(unit, node_name)
+		local node_index = Unit_node(unit, node_name)
+		local node_position = Unit_world_position(unit, node_index)
 		local sfx = effect.sfx
 
 		if sfx then
-			if not active_wwise_node_sources[attach_node] then
-				local position = Unit_world_position(unit, attach_node)
-				local wwise_source_id = WwiseWorld.make_manual_source(wwise_world, position, Quaternion.identity())
-				active_wwise_node_sources[attach_node] = {
+			if not active_node_sfx_effects[node_index] then
+				local wwise_source_id = WwiseWorld.make_manual_source(wwise_world, node_position, Quaternion.identity())
+				active_node_sfx_effects[node_index] = {
 					wwise_source_id = wwise_source_id,
-					active_sfx_events = {}
+					active_wwise_events = {}
 				}
 			end
 
-			local active_node_source = active_wwise_node_sources[attach_node]
+			local active_node_source = active_node_sfx_effects[node_index]
 			local wwise_source_id = active_node_source.wwise_source_id
-			local active_sfx_events = active_node_source.active_sfx_events
+			local active_wwise_events = active_node_source.active_wwise_events
 			local looping_wwise_start_event = sfx.looping_wwise_start_event
-			local ref_count = active_sfx_events[looping_wwise_start_event]
+			local ref_count = active_wwise_events[looping_wwise_start_event]
 
 			if not ref_count then
 				WwiseWorld.trigger_resource_event(wwise_world, looping_wwise_start_event, wwise_source_id)
 			end
 
-			active_sfx_events[looping_wwise_start_event] = (ref_count or 0) + 1
+			active_wwise_events[looping_wwise_start_event] = (ref_count or 0) + 1
 		end
 
 		local vfx = effect.vfx
 
 		if vfx then
-			local orphaned_policy = vfx.orphaned_policy or "destroy"
-			local particle_effect = vfx.particle_effect
-			local position = Unit_world_position(unit, attach_node)
-			local effect_id = World.create_particles(world, particle_effect, position)
-
-			if vfx.material_emission then
-				local mesh_name_or_nil = vfx.emission_mesh_name
-				local material_name_or_nil = vfx.emission_material_name
-				local apply_for_children = true
-
-				World.set_particles_surface_effect(world, effect_id, unit, mesh_name_or_nil, material_name_or_nil, apply_for_children)
-			else
-				World.link_particles(world, effect_id, unit, attach_node, Matrix4x4.identity(), orphaned_policy)
+			if not active_node_vfx_effects[node_index] then
+				active_node_vfx_effects[node_index] = {}
 			end
 
-			local stop_type = vfx.stop_type or "destroy"
+			local particle_effect = vfx.particle_effect
+			local active_node_vfx = active_node_vfx_effects[node_index]
 
-			table.insert(active_vfx, {
-				particle_id = effect_id,
-				stop_type = stop_type
-			})
+			if not active_node_vfx[particle_effect] then
+				local effect_id = World.create_particles(world, particle_effect, node_position)
+
+				if vfx.material_emission then
+					local mesh_name_or_nil = vfx.emission_mesh_name
+					local material_name_or_nil = vfx.emission_material_name
+					local apply_for_children = true
+
+					World.set_particles_surface_effect(world, effect_id, unit, mesh_name_or_nil, material_name_or_nil, apply_for_children)
+				else
+					local orphaned_policy = vfx.orphaned_policy or "destroy"
+
+					World.link_particles(world, effect_id, unit, node_index, Matrix4x4.identity(), orphaned_policy)
+				end
+
+				local stop_type = vfx.stop_type or "destroy"
+				active_node_vfx[particle_effect] = {
+					particle_id = effect_id,
+					stop_type = stop_type
+				}
+			end
+
+			local active_particle_node_effect = active_node_vfx[particle_effect]
+			local new_ref_count = (active_particle_node_effect.ref_count or 0) + 1
+			active_particle_node_effect.ref_count = new_ref_count
 		end
 	end
 end
 
 BuffExtensionBase._stop_node_effects = function (self, node_effects)
+	local active_node_sfx_effects = self._sfx_node_effects
+	local active_node_vfx_effects = self._vfx_node_effects
 	local buff_context = self._buff_context
 	local wwise_world = buff_context.wwise_world
+	local world = buff_context.world
 
 	for i = 1, #node_effects do
 		local effect = node_effects[i]
+		local node_name = effect.node_name
+		local node_index = Unit_node(self._unit, node_name)
 		local sfx = effect.sfx
 
 		if sfx then
-			local node_name = effect.node_name
-			local attach_node = Unit.node(self._unit, node_name)
-			local active_node_source = self._active_wwise_node_sources[attach_node]
-			local wwise_source_id = active_node_source.wwise_source_id
-			local active_sfx_events = active_node_source.active_sfx_events
+			local active_node_sfx = active_node_sfx_effects[node_index]
 			local looping_wwise_start_event = sfx.looping_wwise_start_event
-			local new_ref_count = active_sfx_events[looping_wwise_start_event] - 1
-			active_sfx_events[looping_wwise_start_event] = new_ref_count
+			local active_wwise_events = active_node_sfx.active_wwise_events
+			local new_ref_count = active_wwise_events[looping_wwise_start_event] - 1
+			active_wwise_events[looping_wwise_start_event] = new_ref_count
+			local wwise_source_id = active_node_sfx.wwise_source_id
 
 			if new_ref_count < 1 then
 				local looping_wwise_stop_event = sfx.looping_wwise_stop_event
 
 				WwiseWorld.trigger_resource_event(wwise_world, looping_wwise_stop_event, wwise_source_id)
 
-				active_sfx_events[looping_wwise_start_event] = nil
+				active_wwise_events[looping_wwise_start_event] = nil
 			end
 
-			if next(active_sfx_events) == nil then
+			if next(active_wwise_events) == nil then
 				WwiseWorld.destroy_manual_source(wwise_world, wwise_source_id)
 
-				self._active_wwise_node_sources[attach_node] = nil
+				active_node_sfx_effects[node_index] = nil
 			end
+		end
+
+		local vfx = effect.vfx
+
+		if vfx then
+			local active_node_vfx = active_node_vfx_effects[node_index]
+			local particle_effect = vfx.particle_effect
+			local active_particle_effect = active_node_vfx[particle_effect]
+			local new_ref_count = (active_particle_effect.ref_count or 0) - 1
+			active_particle_effect.ref_count = new_ref_count
+
+			if new_ref_count < 1 then
+				local particle_id = active_particle_effect.particle_id
+				local stop_type = active_particle_effect.stop_type
+
+				if stop_type == "stop" then
+					World.stop_spawning_particles(world, particle_id)
+				else
+					World.destroy_particles(world, particle_id)
+				end
+
+				active_node_vfx[particle_effect] = nil
+			end
+
+			if next(active_node_vfx) == nil then
+				active_node_vfx_effects[node_index] = nil
+			end
+		end
+	end
+end
+
+local TEMP_STACK_NODE_EFFECTS = {}
+
+BuffExtensionBase._check_stack_node_effects = function (self, stack_node_effects, current_stack_count, previous_stack_count)
+	if previous_stack_count < current_stack_count then
+		local index = 0
+
+		for required_stack_count, node_effects in pairs(stack_node_effects) do
+			local should_start_effect = previous_stack_count < required_stack_count and required_stack_count <= current_stack_count
+
+			if should_start_effect then
+				for i = 1, #node_effects do
+					index = index + 1
+					local effect = node_effects[i]
+					TEMP_STACK_NODE_EFFECTS[index] = effect
+				end
+			end
+		end
+
+		if index > 0 then
+			self:_start_node_effects(TEMP_STACK_NODE_EFFECTS)
+			table.clear_array(TEMP_STACK_NODE_EFFECTS, index)
+		end
+	else
+		local index = 0
+
+		for required_stack_count, node_effects in pairs(stack_node_effects) do
+			local should_stop_effect = required_stack_count <= previous_stack_count and current_stack_count < required_stack_count
+
+			if should_stop_effect then
+				for i = 1, #node_effects do
+					index = index + 1
+					local effect = node_effects[i]
+					TEMP_STACK_NODE_EFFECTS[index] = effect
+				end
+			end
+		end
+
+		if index > 0 then
+			self:_stop_node_effects(TEMP_STACK_NODE_EFFECTS)
+			table.clear_array(TEMP_STACK_NODE_EFFECTS, index)
 		end
 	end
 end

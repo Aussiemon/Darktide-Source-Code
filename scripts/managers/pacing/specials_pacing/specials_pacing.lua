@@ -17,6 +17,7 @@ SpecialsPacing.init = function (self, nav_world)
 	self._speed_running_prevention_cooldown = 0
 	self._next_speed_running_check_t = 0
 	self._num_speed_running_checks = 0
+	self._old_furthest_travel_distance = 0
 end
 
 SpecialsPacing.on_spawn_points_generated = function (self, template)
@@ -181,6 +182,9 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 	end
 
 	local main_path_manager = Managers.state.main_path
+	local furthest_travel_distance = main_path_manager:furthest_travel_distance(target_side_id)
+	local traveled_this_frame = furthest_travel_distance - self._old_furthest_travel_distance
+	self._old_furthest_travel_distance = furthest_travel_distance
 	local time_since_forward_travel_changed = main_path_manager:time_since_forward_travel_changed(target_side_id)
 	local time_since_forward_behind_changed = main_path_manager:time_since_behind_travel_changed(target_side_id)
 	local travel_distance_allowed_forward = time_since_forward_travel_changed < TRAVEL_DISTANCE_CHANGE_ALLOWANCE_FORWARD_MIN or TRAVEL_DISTANCE_CHANGE_ALLOWANCE_FORWARD_MAX < time_since_forward_travel_changed
@@ -246,9 +250,14 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 			local foreshadow_stinger = specials_slot.foreshadow_stinger
 			local foreshadow_stinger_available = foreshadow_stinger and not specials_slot.foreshadow_triggered
 			local can_update_foreshadow_stinger_timer = foreshadow_stinger_available and (specials_allowed or specials_slot.injected)
+			local has_travel_distance_spawn_mutator = Managers.state.mutator:mutator("mutator_travel_distance_spawning_specials")
 
 			if can_update_foreshadow_stinger_timer then
-				specials_slot.foreshadow_stinger_timer = math.max(specials_slot.foreshadow_stinger_timer - dt * ramp_up_timer_modifier, 0)
+				if has_travel_distance_spawn_mutator then
+					specials_slot.foreshadow_stinger_timer = math.max(specials_slot.foreshadow_stinger_timer - traveled_this_frame, 0)
+				else
+					specials_slot.foreshadow_stinger_timer = math.max(specials_slot.foreshadow_stinger_timer - dt * ramp_up_timer_modifier, 0)
+				end
 
 				if specials_slot.foreshadow_stinger_timer <= 0 then
 					local disabler_override = self:_check_disabler_override(template, target_side_id, specials_slot)
@@ -276,7 +285,11 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 			local can_update_spawn_timer = specials_allowed or specials_slot.foreshadow_triggered or specials_slot.injected
 
 			if can_update_spawn_timer then
-				specials_slot.spawn_timer = specials_slot.spawn_timer - dt * ramp_up_timer_modifier
+				if has_travel_distance_spawn_mutator and not specials_slot.foreshadow_triggered then
+					specials_slot.spawn_timer = specials_slot.spawn_timer - traveled_this_frame
+				else
+					specials_slot.spawn_timer = specials_slot.spawn_timer - dt * ramp_up_timer_modifier
+				end
 			end
 		end
 	end

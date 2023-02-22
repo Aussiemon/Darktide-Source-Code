@@ -28,7 +28,9 @@ return function ()
 				args = {
 					"pilot",
 					"sergeant",
-					"tech_priest"
+					"tech_priest",
+					"contract_vendor",
+					"purser"
 				}
 			}
 		},
@@ -117,7 +119,9 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"sergeant",
-					"tech_priest"
+					"tech_priest",
+					"contract_vendor",
+					"purser"
 				}
 			},
 			{
@@ -267,7 +271,9 @@ return function ()
 					"sergeant",
 					"pilot",
 					"explicator",
-					"tech_priest"
+					"tech_priest",
+					"contract_vendor",
+					"purser"
 				}
 			}
 		},
@@ -351,7 +357,9 @@ return function ()
 					"explicator",
 					"pilot",
 					"tech_priest",
-					"sergeant"
+					"sergeant",
+					"contract_vendor",
+					"purser"
 				}
 			}
 		},

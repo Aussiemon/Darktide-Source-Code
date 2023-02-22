@@ -9,7 +9,7 @@ local player = {
 		damage = {
 			{
 				event = "wwise/events/player/play_player_get_hit_monster_sharp",
-				append_husk_to_event_name = true
+				hit_direction_interface = true
 			},
 			{
 				event = "wwise/events/player/play_player_get_hit_monster_sharp_husk",

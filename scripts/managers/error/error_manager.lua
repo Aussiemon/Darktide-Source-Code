@@ -5,9 +5,10 @@ local ErrorManager = class("ErrorManager")
 local ERROR_QUEUE_MAX_SIZE = 3
 local ERROR_LEVEL = {
 	warning = 2,
-	fatal = 4,
-	error = 3,
-	log = 1
+	fatal = 5,
+	log = 1,
+	warning_popup = 3,
+	error = 4
 }
 ErrorManager.ERROR_LEVEL = ERROR_LEVEL
 local _, MAX_ERROR_LEVEL = table.max(ERROR_LEVEL)
@@ -39,6 +40,23 @@ local function _notify_error(error_object)
 
 	Managers.event:trigger("event_add_notification_message", "alert", {
 		text = string.format(string_format, title, description)
+	})
+end
+
+local function _notify_popup(error_object)
+	local loc_title = error_object:loc_title()
+	local loc_description, loc_description_params = error_object:loc_description()
+	local options = error_object:options() or {}
+	options[#options + 1] = {
+		close_on_pressed = true,
+		text = "loc_popup_button_close"
+	}
+
+	Managers.event:trigger("event_show_ui_popup", {
+		title_text = loc_title,
+		description_text = loc_description,
+		description_text_params = loc_description_params,
+		options = options
 	})
 end
 
@@ -112,6 +130,8 @@ ErrorManager.report_error = function (self, error_object)
 
 	if level == ERROR_LEVEL.warning then
 		_notify_error(error_object)
+	elseif level == ERROR_LEVEL.warning_popup then
+		_notify_popup(error_object)
 	elseif level == ERROR_LEVEL.error or level == ERROR_LEVEL.fatal then
 		_enqueue_error(error_object, self._error_queue)
 	end

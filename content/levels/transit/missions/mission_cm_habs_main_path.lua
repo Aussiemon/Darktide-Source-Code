@@ -7,32 +7,6 @@ local path_markers = {
 		marker_type = "normal",
 		order = 1,
 		position = {
-			199.1108856201172,
-			-17.882339477539062,
-			-0.6800000071525574
-		}
-	},
-	{
-		kind = "good",
-		name = "path_marker_002",
-		main_path_segment_index = 1,
-		crossroads = "",
-		marker_type = "break",
-		order = 2,
-		position = {
-			183,
-			-31.499984741210938,
-			-0.8009999990463257
-		}
-	},
-	{
-		kind = "good",
-		name = "path_marker_003",
-		main_path_segment_index = 2,
-		crossroads = "",
-		marker_type = "normal",
-		order = 3,
-		position = {
 			177.99996948242188,
 			-39.00001525878906,
 			-9.061092376708984
@@ -41,7 +15,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_004",
-		main_path_segment_index = 2,
+		main_path_segment_index = 1,
 		crossroads = "",
 		marker_type = "break",
 		order = 4,
@@ -54,7 +28,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_005",
-		main_path_segment_index = 3,
+		main_path_segment_index = 2,
 		crossroads = "",
 		marker_type = "normal",
 		order = 5,
@@ -67,7 +41,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_006",
-		main_path_segment_index = 3,
+		main_path_segment_index = 2,
 		crossroads = "",
 		marker_type = "normal",
 		order = 6,
@@ -80,7 +54,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_007",
-		main_path_segment_index = 3,
+		main_path_segment_index = 2,
 		crossroads = "",
 		marker_type = "normal",
 		order = 7,
@@ -93,33 +67,33 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_008",
-		main_path_segment_index = 3,
+		main_path_segment_index = 2,
 		crossroads = "",
 		marker_type = "normal",
 		order = 8,
 		position = {
-			142.2788848876953,
-			-223.8114013671875,
+			142.27891540527344,
+			-231.8114013671875,
 			3.8559999465942383
 		}
 	},
 	{
 		kind = "good",
 		name = "path_marker_009",
-		main_path_segment_index = 3,
+		main_path_segment_index = 2,
 		crossroads = "",
 		marker_type = "normal",
 		order = 9,
 		position = {
-			127.46430969238281,
-			-178.85116577148438,
-			3.8570001125335693
+			128.24993896484375,
+			-186.4999237060547,
+			3.862001895904541
 		}
 	},
 	{
 		kind = "good",
 		name = "path_marker_010",
-		main_path_segment_index = 3,
+		main_path_segment_index = 2,
 		crossroads = "",
 		marker_type = "break",
 		order = 10,
@@ -132,7 +106,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_011",
-		main_path_segment_index = 4,
+		main_path_segment_index = 3,
 		crossroads = "",
 		marker_type = "normal",
 		order = 11,
@@ -145,7 +119,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_012",
-		main_path_segment_index = 4,
+		main_path_segment_index = 3,
 		crossroads = "",
 		marker_type = "normal",
 		order = 12,
@@ -158,7 +132,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_013",
-		main_path_segment_index = 4,
+		main_path_segment_index = 3,
 		crossroads = "",
 		marker_type = "normal",
 		order = 13,
@@ -171,7 +145,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_014",
-		main_path_segment_index = 4,
+		main_path_segment_index = 3,
 		crossroads = "",
 		marker_type = "normal",
 		order = 14,
@@ -184,7 +158,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_015",
-		main_path_segment_index = 4,
+		main_path_segment_index = 3,
 		crossroads = "",
 		marker_type = "break",
 		order = 15,
@@ -197,7 +171,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_016",
-		main_path_segment_index = 5,
+		main_path_segment_index = 4,
 		crossroads = "",
 		marker_type = "normal",
 		order = 16,
@@ -210,7 +184,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_017",
-		main_path_segment_index = 5,
+		main_path_segment_index = 4,
 		crossroads = "",
 		marker_type = "normal",
 		order = 17,
@@ -223,7 +197,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_018",
-		main_path_segment_index = 5,
+		main_path_segment_index = 4,
 		crossroads = "",
 		marker_type = "normal",
 		order = 18,
@@ -236,7 +210,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_019",
-		main_path_segment_index = 5,
+		main_path_segment_index = 4,
 		crossroads = "",
 		marker_type = "break",
 		order = 19,
@@ -249,7 +223,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_020",
-		main_path_segment_index = 6,
+		main_path_segment_index = 5,
 		crossroads = "",
 		marker_type = "normal",
 		order = 20,
@@ -262,7 +236,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_021",
-		main_path_segment_index = 6,
+		main_path_segment_index = 5,
 		crossroads = "",
 		marker_type = "normal",
 		order = 21,
@@ -275,7 +249,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_022",
-		main_path_segment_index = 6,
+		main_path_segment_index = 5,
 		crossroads = "",
 		marker_type = "break",
 		order = 22,
@@ -288,7 +262,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_023",
-		main_path_segment_index = 7,
+		main_path_segment_index = 6,
 		crossroads = "",
 		marker_type = "normal",
 		order = 23,
@@ -301,7 +275,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_024",
-		main_path_segment_index = 7,
+		main_path_segment_index = 6,
 		crossroads = "",
 		marker_type = "normal",
 		order = 24,
@@ -314,7 +288,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_025",
-		main_path_segment_index = 7,
+		main_path_segment_index = 6,
 		crossroads = "",
 		marker_type = "normal",
 		order = 25,
@@ -327,7 +301,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_026",
-		main_path_segment_index = 7,
+		main_path_segment_index = 6,
 		crossroads = "",
 		marker_type = "break",
 		order = 26,
@@ -340,7 +314,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_027",
-		main_path_segment_index = 8,
+		main_path_segment_index = 7,
 		crossroads = "",
 		marker_type = "normal",
 		order = 27,
@@ -353,7 +327,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_028",
-		main_path_segment_index = 8,
+		main_path_segment_index = 7,
 		crossroads = "",
 		marker_type = "break",
 		order = 28,
@@ -366,7 +340,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_029",
-		main_path_segment_index = 9,
+		main_path_segment_index = 8,
 		crossroads = "",
 		marker_type = "normal",
 		order = 29,
@@ -379,7 +353,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_030",
-		main_path_segment_index = 9,
+		main_path_segment_index = 8,
 		crossroads = "",
 		marker_type = "normal",
 		order = 30,
@@ -392,7 +366,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_031",
-		main_path_segment_index = 9,
+		main_path_segment_index = 8,
 		crossroads = "",
 		marker_type = "normal",
 		order = 31,
@@ -405,7 +379,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_032",
-		main_path_segment_index = 9,
+		main_path_segment_index = 8,
 		crossroads = "",
 		marker_type = "normal",
 		order = 32,
@@ -418,7 +392,7 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_033",
-		main_path_segment_index = 9,
+		main_path_segment_index = 8,
 		crossroads = "",
 		marker_type = "normal",
 		order = 33,
@@ -431,38 +405,18 @@ local path_markers = {
 	{
 		kind = "good",
 		name = "path_marker_034",
-		main_path_segment_index = 9,
+		main_path_segment_index = 8,
 		crossroads = "",
 		marker_type = "normal",
 		order = 34,
 		position = {
-			307.2778625488281,
-			-311.0356140136719,
-			15.812993049621582
+			309.9999694824219,
+			-317,
+			15.622000694274902
 		}
 	}
 }
 local main_path_segments = {
-	{
-		path_length = 21.196514129638672,
-		nodes = {
-			{
-				199.1108856201172,
-				-17.882339477539062,
-				-0.6764931082725525
-			},
-			{
-				190.9989776611328,
-				-26.08738136291504,
-				-0.7424657940864563
-			},
-			{
-				183,
-				-31.499984741210938,
-				-0.7976264357566833
-			}
-		}
-	},
 	{
 		path_length = 61.8292236328125,
 		nodes = {
@@ -484,7 +438,7 @@ local main_path_segments = {
 		}
 	},
 	{
-		path_length = 391.5449752807617,
+		path_length = 407.67668533325195,
 		nodes = {
 			{
 				167.6109161376953,
@@ -517,18 +471,13 @@ local main_path_segments = {
 				-14.09450912475586
 			},
 			{
-				146.98748779296875,
-				-130.52259826660156,
-				-14.09942626953125
+				146.7549285888672,
+				-130.92987060546875,
+				-14.092199325561523
 			},
 			{
-				145.50857543945312,
-				-132.6317901611328,
-				-14.088141441345215
-			},
-			{
-				140.68215942382812,
-				-137.52212524414062,
+				140.7118682861328,
+				-137.49871826171875,
 				-14.18765640258789
 			},
 			{
@@ -537,9 +486,9 @@ local main_path_segments = {
 				-14.111590385437012
 			},
 			{
-				125.88034057617188,
-				-143.71141052246094,
-				-14.110154151916504
+				125.86116027832031,
+				-143.7223663330078,
+				-14.109683990478516
 			},
 			{
 				125.33078002929688,
@@ -642,133 +591,123 @@ local main_path_segments = {
 				-5.073413848876953
 			},
 			{
-				130.72000122070312,
-				-185.0937957763672,
+				130.6650390625,
+				-216.80181884765625,
+				-5.12282133102417
+			},
+			{
+				130.9148712158203,
+				-217.46717834472656,
 				-5.118124961853027
 			},
 			{
-				131.42636108398438,
-				-186.19381713867188,
+				131.30494689941406,
+				-218.0404815673828,
 				-5.118124961853027
 			},
 			{
-				133.28659057617188,
-				-187.82687377929688,
-				-5.124261379241943
+				135.0608673095703,
+				-221.39329528808594,
+				-5.123867511749268
 			},
 			{
-				134.76089477539062,
-				-188.73538208007812,
-				-5.1355509757995605
+				141.5033721923828,
+				-235.10052490234375,
+				-5.110545635223389
 			},
 			{
-				136.86300659179688,
-				-190.7588348388672,
-				-5.138164043426514
+				147.14642333984375,
+				-240.93679809570312,
+				-5.117425441741943
 			},
 			{
-				138.0808563232422,
-				-192.47503662109375,
-				-5.137094974517822
+				149.32901000976562,
+				-242.83642578125,
+				-4.948822498321533
 			},
 			{
-				140.17250061035156,
-				-203.4425048828125,
-				-5.130000114440918
+				152,
+				-243.10499572753906,
+				-3.5359389781951904
 			},
 			{
-				142.55809020996094,
-				-216.9352264404297,
-				-5.124364376068115
-			},
-			{
-				146.4848175048828,
-				-223.7753448486328,
-				-5.118735313415527
-			},
-			{
-				148.68382263183594,
-				-234.14048767089844,
-				-5.124946594238281
-			},
-			{
-				149.4751739501953,
-				-234.92445373535156,
-				-4.867501258850098
-			},
-			{
-				158.3258056640625,
-				-235.08474731445312,
+				158.0800018310547,
+				-243.0574951171875,
 				-0.6382812261581421
 			},
 			{
-				158.82052612304688,
-				-234.71694946289062,
+				158.6060791015625,
+				-243.0093994140625,
 				-0.6382812261581421
 			},
 			{
-				159.1232452392578,
-				-230.1448211669922,
-				-0.2683457136154175
+				158.8358612060547,
+				-242.67266845703125,
+				-0.6382812261581421
+			},
+			{
+				159.1724853515625,
+				-240.35000610351562,
+				-0.6382812261581421
+			},
+			{
+				159.20977783203125,
+				-238.1083526611328,
+				-0.278301864862442
 			},
 			{
 				150.47999572753906,
-				-227.82040405273438,
+				-235.97999572753906,
 				3.8623437881469727
 			},
 			{
-				148.67498779296875,
-				-227.33499145507812,
+				146.20355224609375,
+				-234.52735900878906,
 				3.8623437881469727
 			},
 			{
-				146.2538604736328,
-				-226.57046508789062,
+				142.27891540527344,
+				-231.8114013671875,
 				3.8623437881469727
 			},
 			{
-				142.2788848876953,
-				-223.8114013671875,
+				140.896728515625,
+				-214.803955078125,
+				3.8628146648406982
+			},
+			{
+				139.07566833496094,
+				-213.77418518066406,
+				3.873271942138672
+			},
+			{
+				133.52938842773438,
+				-212.041015625,
+				3.873870849609375
+			},
+			{
+				132.33509826660156,
+				-208.24496459960938,
+				3.8638358116149902
+			},
+			{
+				131.48001098632812,
+				-202.9199981689453,
 				3.8623437881469727
 			},
 			{
-				140.87196350097656,
-				-206.7565155029297,
+				131.2261199951172,
+				-191.87332153320312,
 				3.8623437881469727
 			},
 			{
-				138.9849395751953,
-				-205.6859588623047,
-				3.872776985168457
-			},
-			{
-				134.9949951171875,
-				-204.6300048828125,
+				128.24993896484375,
+				-186.4999237060547,
 				3.8623437881469727
 			},
 			{
-				133.4486846923828,
-				-203.97613525390625,
-				3.873782157897949
-			},
-			{
-				132.52499389648438,
-				-200.8300018310547,
-				3.8712501525878906
-			},
-			{
-				131.13491821289062,
-				-195.29946899414062,
-				3.8623437881469727
-			},
-			{
-				131.2897491455078,
-				-183.88558959960938,
-				3.8623437881469727
-			},
-			{
-				127.46430969238281,
-				-178.85116577148438,
+				131.61302185058594,
+				-173.25308227539062,
 				3.8623437881469727
 			},
 			{
@@ -1004,27 +943,22 @@ local main_path_segments = {
 		}
 	},
 	{
-		path_length = 176.49189376831055,
+		path_length = 176.44661140441895,
 		nodes = {
 			{
 				68.07325744628906,
 				-197.92678833007812,
-				20.10808563232422
+				20.134061813354492
 			},
 			{
-				72.12565612792969,
-				-196.44857788085938,
-				19.260944366455078
+				72.10609436035156,
+				-196.44537353515625,
+				19.266441345214844
 			},
 			{
-				72.4867935180664,
-				-196.4290313720703,
-				19.115825653076172
-			},
-			{
-				72.86072540283203,
-				-196.7537841796875,
-				18.901065826416016
+				72.61595153808594,
+				-196.4615478515625,
+				19.005996704101562
 			},
 			{
 				88.15999603271484,
@@ -1072,18 +1006,18 @@ local main_path_segments = {
 				18.15101432800293
 			},
 			{
-				116.17808532714844,
-				-247.10189819335938,
-				18.07900619506836
+				115.5199966430664,
+				-246.2964324951172,
+				18.152685165405273
 			},
 			{
-				117.61427307128906,
-				-248.750732421875,
+				117.50499725341797,
+				-248.5616912841797,
 				17.10519790649414
 			},
 			{
-				119.0630874633789,
-				-252.24990844726562,
+				119.06560516357422,
+				-252.25218200683594,
 				17.10519790649414
 			},
 			{
@@ -1147,9 +1081,9 @@ local main_path_segments = {
 				18.11695671081543
 			},
 			{
-				122.07096099853516,
-				-297.9981994628906,
-				18.104923248291016
+				122.11640167236328,
+				-297.829345703125,
+				18.099878311157227
 			},
 			{
 				122.07244873046875,
@@ -1197,19 +1131,19 @@ local main_path_segments = {
 				18.104923248291016
 			},
 			{
-				141.92999267578125,
-				-314.3074951171875,
-				17.444137573242188
+				141.4550018310547,
+				-314.0224914550781,
+				17.45748519897461
 			},
 			{
-				145.21090698242188,
-				-317.2630310058594,
-				17.3544864654541
+				145.15731811523438,
+				-317.3053283691406,
+				17.350086212158203
 			},
 			{
-				149.7285614013672,
-				-321.3326721191406,
-				13.46763801574707
+				149.7162628173828,
+				-321.3477478027344,
+				13.503249168395996
 			},
 			{
 				151.56707763671875,
@@ -1364,7 +1298,7 @@ local main_path_segments = {
 		}
 	},
 	{
-		path_length = 137.27335929870605,
+		path_length = 130.7238063812256,
 		nodes = {
 			{
 				331.0314025878906,
@@ -1497,14 +1431,14 @@ local main_path_segments = {
 				13.708048820495605
 			},
 			{
-				312.88555908203125,
-				-322.3493957519531,
+				312.78399658203125,
+				-322.39678955078125,
 				15.755898475646973
 			},
 			{
-				307.2778625488281,
-				-311.0356140136719,
-				15.744765281677246
+				309.9999694824219,
+				-317,
+				15.61002254486084
 			}
 		}
 	}

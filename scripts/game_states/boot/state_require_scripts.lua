@@ -25,6 +25,10 @@ StateRequireScripts._state_update = function (self, dt)
 	return false, false
 end
 
+StateRequireScripts._get_is_modded = function (self)
+	return GameParameters.is_modded_crashify_property
+end
+
 StateRequireScripts._init_crashify = function (self)
 	local settings = require("scripts/settings/crashify/crashify")
 
@@ -32,13 +36,12 @@ StateRequireScripts._init_crashify = function (self)
 	Crashify.print_property("project_branch", settings.branch)
 	Crashify.print_property("build", BUILD)
 	Crashify.print_property("platform", PLATFORM)
-	Crashify.print_property("title_id", "4711")
 	Crashify.print_property("content_revision", APPLICATION_SETTINGS.content_revision or LOCAL_CONTENT_REVISION)
 	Crashify.print_property("engine_revision", BUILD_IDENTIFIER)
 	Crashify.print_property("rendering_backend", Renderer.render_device_string())
 	Crashify.print_property("teamcity_build_id", APPLICATION_SETTINGS.teamcity_build_id)
 	Crashify.print_property("server", DEDICATED_SERVER)
-	Crashify.print_property("backend_env", BACKEND_ENV)
+	Crashify.print_property("is_modded", self:_get_is_modded())
 
 	if PLATFORM == "win32" then
 		if HAS_STEAM then

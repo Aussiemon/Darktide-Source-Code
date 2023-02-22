@@ -35,7 +35,13 @@ SaveData.default_character_data = {
 	new_items_by_type = {},
 	new_item_notifications = {},
 	new_completed_contracts = {},
-	new_unlocked_talent_groups = {}
+	new_unlocked_talent_groups = {},
+	profile_presets = {
+		intro_presented = true,
+		loadout = {},
+		talents = {}
+	},
+	favorite_items = {}
 }
 
 SaveData.init = function (self)

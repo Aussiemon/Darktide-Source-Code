@@ -3,6 +3,7 @@ local MasterItems = require("scripts/backend/master_items")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local Promise = require("scripts/foundation/utilities/promise")
 local StateMainMenuTestify = GameParameters.testify and require("scripts/game_states/game/state_main_menu_testify")
+local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES
 local StateMainMenu = class("StateMainMenu")
 
@@ -42,6 +43,13 @@ StateMainMenu.on_enter = function (self, parent, params, creation_context)
 	self._full_frame_rate_enabled = true
 
 	Managers.backend.interfaces.region_latency:pre_get_region_latencies()
+
+	local local_player = Managers.player:local_player(1)
+	local account_id = local_player:account_id()
+
+	if GameParameters.prod_like_backend and account_id ~= PlayerManager.NO_ACCOUNT_ID then
+		Managers.party_immaterium:start()
+	end
 end
 
 StateMainMenu._stay_in_main_menu = function (self, profiles, selected_profile)
@@ -119,10 +127,16 @@ StateMainMenu.event_create_new_character_back = function (self)
 end
 
 StateMainMenu._start_game_or_onboarding = function (self)
+	if self:_skip_prologue() then
+		self:_start_game()
+
+		return
+	end
+
 	local story_name = Managers.narrative.STORIES.onboarding
 	local current_chapter = Managers.narrative:current_chapter(story_name)
 
-	if current_chapter and not self:_skip_prologue() then
+	if current_chapter then
 		local chapter_data = current_chapter.data
 		local mission_name = chapter_data.mission_name
 

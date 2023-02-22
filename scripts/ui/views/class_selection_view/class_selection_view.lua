@@ -226,6 +226,10 @@ ClassSelectionView.draw = function (self, dt, t, input_service, layer)
 		for i = 1, #domain_options_widgets do
 			local widget = domain_options_widgets[i]
 
+			if self._using_cursor_navigation then
+				widget.content.hotspot.is_focused = widget.content.hotspot.is_hover
+			end
+
 			UIWidget.draw(widget, ui_renderer)
 		end
 	end
@@ -403,6 +407,11 @@ ClassSelectionView._handle_input = function (self, input_service)
 		if new_selection_index then
 			local target_option = self._domain_options[new_selection_index]
 
+			for i = 1, #self._domain_options_widgets do
+				local widget = self._domain_options_widgets[i]
+				widget.content.hotspot.is_focused = i == new_selection_index
+			end
+
 			self:_on_domain_pressed(target_option)
 		end
 	end
@@ -433,9 +442,14 @@ ClassSelectionView._create_domain_option_widgets = function (self)
 		local name = "domain_option_" .. i
 		local widget = self:_create_widget(name, domain_option_definition)
 		local content = widget.content
-		content.icon = option.archetype_icon_selection_large_unselected
-		content.icon_highlight = option.archetype_icon_selection_large
-		content.hotspot.pressed_callback = callback(self, "_on_domain_pressed", option)
+		content.icon_highlight = option.archetype_class_selection_icon
+
+		content.hotspot.pressed_callback = function ()
+			if self._using_cursor_navigation then
+				self:_on_domain_pressed(option)
+			end
+		end
+
 		content.archetype_title = option.archetype_title
 		widgets[#widgets + 1] = widget
 		widget.offset[1] = start_offset_x
@@ -446,7 +460,7 @@ ClassSelectionView._create_domain_option_widgets = function (self)
 	widget_right.offset[1] = start_offset_x
 	self._domain_options_widgets = widgets
 
-	self:_set_scenegraph_size("domain_options", start_offset_x, nil)
+	self:_set_scenegraph_size("domain_options", start_offset_x - spacing, nil)
 
 	self._domain_options_select_widget = {
 		widget_left,
@@ -483,6 +497,7 @@ ClassSelectionView._on_domain_pressed = function (self, selected_domain)
 	for i = 1, #domain_options_widgets do
 		local widget = domain_options_widgets[i]
 		local content = widget.content
+		content.hotspot.is_selected = selected_domain.archetype_title == content.archetype_title
 		content.hotspot.is_focused = selected_domain.archetype_title == content.archetype_title
 	end
 
@@ -523,21 +538,20 @@ ClassSelectionView._update_domain_info = function (self)
 		zealot = "loc_class_zealot-preacher_title",
 		ogryn = "loc_class_ogryn-skullbreaker_title"
 	}
-	local min_width = 600
 	local title_margin = 100
+	local vertical_margin = 20
+	local max_width = self._ui_scenegraph.domain_info.size[1] - title_margin
 	local title = Localize(domain_titles[selected_domain.name])
 	local title_style = widget.style.title
 	local title_style_options = UIFonts.get_font_options_by_style(title_style)
 	local title_width, title_height = self:_text_size(title, title_style.font_type, title_style.font_size, {
-		2000,
-		100
+		max_width,
+		2000
 	}, title_style_options)
-	local width = math.max(min_width, title_width + title_margin)
-
-	self:_set_scenegraph_size("domain_info", width, nil)
-	self:_force_update_scenegraph()
-
-	widget.content.title = Localize(domain_titles[selected_domain.name])
+	local initial_offset = widget.style.title.offset[2]
+	widget.style.divider.offset[2] = initial_offset + title_height + vertical_margin
+	widget.style.description.offset[2] = widget.style.divider.offset[2] + widget.style.divider.size[2] + vertical_margin
+	widget.content.title = title
 	widget.content.description = Localize(selected_domain.archetype_description)
 	widgets_by_name.corners.content.left_upper = UISettings.inventory_frames_by_archetype[selected_domain.name].right_upper
 	widgets_by_name.corners.content.right_upper = UISettings.inventory_frames_by_archetype[selected_domain.name].right_upper
@@ -629,6 +643,7 @@ ClassSelectionView._create_class_option_widgets = function (self)
 			widgets[#widgets + 1] = widget
 			widget.offset[1] = start_offset_x
 			start_offset_x = start_offset_x + size[1] + spacing
+			content.hotspot.is_selected = class.title == self._selected_class.title
 			content.hotspot.is_focused = class.title == self._selected_class.title
 			content.class_name = class_name
 			content.title = Utf8.upper(Localize(class.title))
@@ -1021,7 +1036,7 @@ ClassSelectionView._create_class_abilities_info = function (self)
 	local scrollbar_widget = self._widgets_by_name.class_details_scrollbar
 	scrollbar_widget.content.visible = true
 
-	grid:assign_scrollbar(scrollbar_widget, scenegraph_pivot, scenegraph_id)
+	grid:assign_scrollbar(scrollbar_widget, scenegraph_pivot, scenegraph_id, true)
 	grid:set_scrollbar_progress(0)
 
 	self._class_abilities_info_grid = grid

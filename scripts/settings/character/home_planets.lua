@@ -139,8 +139,8 @@ local home_planets = {
 			}
 		},
 		position = {
-			1810,
-			3252
+			2568,
+			3852
 		}
 	}
 }

@@ -19,6 +19,8 @@ VersionChecker.status = function (self)
 	local game_version = APPLICATION_SETTINGS.game_version or "1.0.0"
 	local platform = PLATFORM
 
+	Log.info("Backend", "Checking game version for %s - %s(%s)", platform, game_version, svn_rev)
+
 	return Managers.backend:title_request(BackendUtilities.url_builder(version_checker_path):query("svnRev", svn_rev):query("gameVersion", game_version):query("platform", platform):to_string()):next(function (data)
 		local status = data.body.allowed
 

@@ -1,5 +1,8 @@
 local Breeds = require("scripts/settings/breed/breeds")
+local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
+local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local MasterItems = require("scripts/backend/master_items")
+local MissionObjectives = require("scripts/settings/mission_objective/mission_objective_templates")
 local Missions = require("scripts/settings/mission/mission_templates")
 local ParameterResolver = require("scripts/foundation/utilities/parameters/parameter_resolver")
 local RenderSettings = require("scripts/settings/options/render_settings")
@@ -13,6 +16,7 @@ local function retrieve_items_for_archetype(archetype, filtered_slots, workflow_
 		"RELEASABLE",
 		"FUNCTIONAL"
 	}
+	workflow_states = workflow_states and workflow_states or WORKFLOW_STATES
 	local item_definitions = MasterItems.get_cached()
 	local items = {}
 
@@ -50,9 +54,9 @@ local function retrieve_items_for_archetype(archetype, filtered_slots, workflow_
 				break
 			end
 
-			local testable = table.contains(WORKFLOW_STATES, item.workflow_state)
+			local filtered_workflow_states = table.contains(workflow_states, item.workflow_state)
 
-			if not testable then
+			if not filtered_workflow_states then
 				break
 			end
 
@@ -130,7 +134,7 @@ local StateGameTestify = {
 
 		return weapons
 	end,
-	all_gears = function (archetype, _)
+	all_gears = function (archetype, workflow_states, _)
 		if not MasterItems.has_data() then
 			return Testify.RETRY
 		end
@@ -141,9 +145,21 @@ local StateGameTestify = {
 			"slot_gear_upperbody",
 			"slot_gear_extra_cosmetic"
 		}
-		local gears = retrieve_items_for_archetype(archetype, gears_slots)
+		local gears = retrieve_items_for_archetype(archetype, gears_slots, workflow_states)
 
 		return gears
+	end,
+	all_gears_per_slot = function (archetype, slot_name, workflow_states, _)
+		if not MasterItems.has_data() then
+			return Testify.RETRY
+		end
+
+		local gears_slots = {
+			slot_name
+		}
+		local gears = retrieve_items_for_archetype(archetype, gears_slots, workflow_states)
+
+		return gears[slot_name]
 	end,
 	all_items = function (_, _)
 		if not MasterItems.has_data() then
@@ -208,6 +224,29 @@ local StateGameTestify = {
 
 		return render_settings
 	end,
+	load_mission = function (mission_context)
+		local mission_settings = Missions[mission_context.mission_name]
+		local mechanism_name = mission_settings.mechanism_name
+		local game_mode_name = mission_settings.game_mode_name
+		local game_mode_settings = GameModeSettings[game_mode_name]
+
+		if game_mode_settings.host_singleplay then
+			local multiplayer_session_manager = Managers.multiplayer_session
+
+			multiplayer_session_manager:reset("Hosting singleplayer session from Testify")
+			multiplayer_session_manager:boot_singleplayer_session()
+		end
+
+		local mechanism_manager = Managers.mechanism
+
+		mechanism_manager:change_mechanism(mechanism_name, mission_context)
+		mechanism_manager:trigger_event("all_players_ready")
+	end,
+	mechanism_name = function (mission_name)
+		local mechanism_name = Missions[mission_name].mechanism_name
+
+		return mechanism_name
+	end,
 	metadata_execute_query_deferred = function (type, include_properties)
 		local query_handle = Metadata.execute_query_deferred(type, include_properties)
 
@@ -222,10 +261,25 @@ local StateGameTestify = {
 
 		return results
 	end,
+	mission_circumstances = function (mission_name)
+		local circumstances = Missions[mission_name].circumstances
+
+		return circumstances
+	end,
+	circumstance_theme = function (circumstance_name)
+		local circumstance_template = CircumstanceTemplates[circumstance_name]
+
+		return circumstance_template.theme_tag
+	end,
 	mission_cutscenes = function (mission_name)
 		local cutscenes = Missions[mission_name].cinematics
 
 		return cutscenes
+	end,
+	mission_settings = function (mission_name)
+		local settings = Missions[mission_name]
+
+		return settings
 	end,
 	output_to_file = function (performance_measurements)
 		local output_directory = "c:/performance_measurements"
@@ -263,6 +317,11 @@ local StateGameTestify = {
 	end,
 	setting_value = function (setting)
 		return setting:get_function()
+	end,
+	side_missions = function ()
+		local side_missions = MissionObjectives.side_mission.objectives
+
+		return side_missions
 	end,
 	skip_splash_screen = function (_, state_game)
 		local current_state_name = state_game:current_state_name()
@@ -324,6 +383,19 @@ local StateGameTestify = {
 
 			return Testify.RETRY
 		end
+	end,
+	take_a_screenshot = function (screenshot_settings, state_gameplay)
+		local type = "file_system"
+		local window = nil
+		local scale = 1
+		local save_depth = false
+		local output_dir = screenshot_settings.output_dir
+		local date_and_time = os.date("%y_%m_%d-%H%M%S")
+		local filename = screenshot_settings.filename .. "-" .. date_and_time
+		local filetype = screenshot_settings.filetype
+
+		os.execute("mkdir -p " .. "\"" .. output_dir .. "\"")
+		FrameCapture.screen_shot(type, window, scale, output_dir, filename, filetype, save_depth)
 	end,
 	weapon_template = function (weapon)
 		local weapon_template = WeaponTemplate.weapon_template_from_item(weapon)

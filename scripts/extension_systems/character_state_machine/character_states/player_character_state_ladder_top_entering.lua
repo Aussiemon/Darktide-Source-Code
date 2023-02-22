@@ -86,7 +86,7 @@ PlayerCharacterStateLadderTopEntering.on_exit = function (self, unit, t, next_st
 
 		local inventory_component = self._inventory_component
 
-		if inventory_component.wielded_slot == "slot_unarmed" then
+		if next_state ~= "dead" and inventory_component.wielded_slot == "slot_unarmed" then
 			PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
 		end
 	end

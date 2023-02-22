@@ -14,7 +14,7 @@ local templates = {
 		weapon_trait_bespoke_ogryn_heavystubber_p1_power_bonus_on_continuous_fire = {
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.02
+					[stat_buffs.power_level_modifier] = 0.1
 				}
 			}
 		}

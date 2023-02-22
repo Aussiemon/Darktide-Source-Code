@@ -1,6 +1,7 @@
 local AlternateFire = require("scripts/utilities/alternate_fire")
 local CameraHandlerTestify = GameParameters.testify and require("scripts/managers/player/player_game_states/camera_handler_testify")
 local CameraTrees = require("scripts/settings/camera/camera_trees")
+local HubCameraSettings = require("scripts/settings/camera/hub_camera_settings")
 local MoodHandler = require("scripts/managers/camera/mood_handler/mood_handler")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -33,6 +34,13 @@ CameraHandler.init = function (self, player, world)
 	self._mood_handler = MoodHandler:new(world, player)
 	self._is_hogtied = nil
 	self._is_being_rescued = nil
+
+	if Managers.state.game_mode:use_third_person_hub_camera() then
+		self._using_hub_camera = true
+		self._hub_idle_timer = 0
+		self._hub_idle_camera_zoom = 1
+		self._hub_camera_speed_zoom = 0
+	end
 end
 
 CameraHandler.on_reload = function (self, refreshed_resources)
@@ -191,6 +199,10 @@ CameraHandler._post_update = function (self, dt, t, player_orientation)
 		local first_person_extension = ScriptUnit.has_extension(camera_follow_unit, "first_person_system")
 
 		if first_person_extension then
+			if self._using_hub_camera then
+				self:_update_hub_camera_variables(dt, t, camera_follow_unit, viewport_name)
+			end
+
 			camera_manager:set_variable(viewport_name, "character_height", first_person_extension:extrapolated_character_height())
 
 			local unit_data_extension = ScriptUnit.extension(camera_follow_unit, "unit_data_system")
@@ -216,6 +228,62 @@ CameraHandler._post_update = function (self, dt, t, player_orientation)
 	end
 
 	camera_manager:post_update(dt, t, viewport_name)
+end
+
+local quaternion_right = Quaternion.right
+local quaternion_forward = Quaternion.forward
+local vector3_cross = Vector3.cross
+local vector3_dot = Vector3.dot
+local math_lerp = math.lerp
+
+CameraHandler._update_hub_camera_variables = function (self, dt, t, unit, viewport_name)
+	local unit_data = ScriptUnit.extension(unit, "unit_data_system")
+	local first_person = unit_data:read_component("first_person")
+	local locomotion = unit_data:read_component("locomotion")
+	local hub_jog_character_state_component = unit_data:read_component("hub_jog_character_state")
+	local move_state = hub_jog_character_state_component.move_state
+	local move_method = hub_jog_character_state_component.method
+	local idle_camera_zoom = self._hub_idle_camera_zoom
+	local camera_speed_zoom = self._hub_camera_speed_zoom
+	local idle_timer = self._hub_idle_timer
+
+	if move_method == "idle" or move_method == "turn_on_spot" then
+		idle_timer = idle_timer + dt
+		local idle_camera_zoom_delay = HubCameraSettings.idle_camera_zoom_delay
+
+		if idle_camera_zoom_delay < idle_timer then
+			local ramp_up = math.clamp(idle_timer - idle_camera_zoom_delay, 0, 1)
+			idle_camera_zoom = math_lerp(idle_camera_zoom, 1, dt * HubCameraSettings.idle_camera_zoom_speed * ramp_up)
+		end
+
+		camera_speed_zoom = math_lerp(camera_speed_zoom, 0, dt * HubCameraSettings.camera_speed_zoom_out_speed)
+	else
+		idle_camera_zoom = math_lerp(idle_camera_zoom, 0, dt * HubCameraSettings.idle_camera_zoom_out_speed)
+		idle_timer = 0
+		local speed_zoom_target = HubCameraSettings.move_state_speed_zoom_targets[move_state] or 0
+		camera_speed_zoom = math_lerp(camera_speed_zoom, speed_zoom_target, dt * HubCameraSettings.camera_speed_zoom_in_speed)
+	end
+
+	self._hub_idle_camera_zoom = idle_camera_zoom
+	self._hub_camera_speed_zoom = camera_speed_zoom
+	self._hub_idle_timer = idle_timer
+	local look_rotation = first_person.rotation
+	local camera_forward = quaternion_forward(look_rotation)
+	local camera_right = quaternion_right(look_rotation)
+	local flat_look_direction = vector3_cross(camera_right, Vector3.down())
+	local locomotion_rotation = locomotion.rotation
+	local character_forward = quaternion_forward(locomotion_rotation)
+	local hub_back_look_offset = (1 - vector3_dot(flat_look_direction, character_forward)) / 2
+	local hub_up_look_offset = vector3_dot(camera_forward, Vector3.up())
+	local camera_manager = Managers.state.camera
+
+	camera_manager:set_variable(viewport_name, "hub_idle_offset", math.ease_quad(idle_camera_zoom))
+	camera_manager:set_variable(viewport_name, "hub_speed_zoom", math.easeCubic(camera_speed_zoom))
+	camera_manager:set_variable(viewport_name, "hub_back_look_offset", hub_back_look_offset * idle_camera_zoom)
+	camera_manager:set_variable(viewport_name, "hub_up_look_offset", hub_up_look_offset * idle_camera_zoom)
+	camera_manager:set_variable(viewport_name, "hub_up_back_look_offset", hub_back_look_offset * hub_up_look_offset * idle_camera_zoom)
+	camera_manager:set_variable(viewport_name, "hub_down_back_look_offset", hub_back_look_offset * -hub_up_look_offset * idle_camera_zoom)
+	camera_manager:set_variable(viewport_name, "hub_up_forward_look_offset", (1 - hub_back_look_offset) * hub_up_look_offset * idle_camera_zoom)
 end
 
 CameraHandler._update_follow = function (self, follow_unit_switch)

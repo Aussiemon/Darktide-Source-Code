@@ -68,6 +68,10 @@ VideoView._load_template = function (self, template)
 end
 
 VideoView.on_enter = function (self)
+	if GameParameters.skip_cinematics then
+		self:_on_skip_pressed()
+	end
+
 	VideoView.super.on_enter(self)
 	self:_set_background_visibility(false)
 	table.clear(self._packages_loaded)

@@ -36,7 +36,7 @@ templates.weapon_trait_bespoke_powersword_p1_extended_activation_duration_on_cha
 		template_data.weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
 	end,
 	min_max_step_func = function (template_data, template_context)
-		return 0, 5
+		return 0, 3
 	end,
 	bonus_step_func = function (template_data, template_context)
 		local weapon_action_component = template_data.weapon_action_component

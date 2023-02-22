@@ -142,14 +142,15 @@ MinionRagdoll.create_ragdoll = function (self, death_data)
 	local do_ragdoll_push = death_data.do_ragdoll_push
 	local hit_zone_name = death_data.hit_zone_name
 
-	if do_ragdoll_push and hit_zone_name then
+	if do_ragdoll_push then
 		local attack_direction = death_data.attack_direction:unbox()
 		local damage_profile_name = death_data.damage_profile_name
 		local damage_profile = DamageProfileTemplates[damage_profile_name]
 		local herding_template_name_or_nil = death_data.herding_template_name
 		local herding_template_or_nil = HerdingTemplates[herding_template_name_or_nil]
+		local death_velocity = death_data.death_velocity and death_data.death_velocity:unbox()
 
-		self:push_ragdoll(unit, attack_direction, damage_profile, hit_zone_name, herding_template_or_nil)
+		self:push_ragdoll(unit, attack_direction, damage_profile, hit_zone_name, herding_template_or_nil, nil, death_velocity)
 	end
 
 	self._new_delayed_ragdoll_anim_events[#self._new_delayed_ragdoll_anim_events + 1] = unit
@@ -202,8 +203,11 @@ MinionRagdoll.remove_ragdoll_safe = function (self, unit)
 end
 
 local DEFAULT_PUSH_FORCE = 250
+local DEFAULT_HIT_ZONE_NAME = "torso"
 
-MinionRagdoll.push_ragdoll = function (self, unit, attack_direction, damage_profile, hit_zone_name, herding_template_or_nil, on_dead_ragdoll)
+MinionRagdoll.push_ragdoll = function (self, unit, attack_direction, damage_profile, hit_zone_name_or_nil, herding_template_or_nil, on_dead_ragdoll, death_velocity)
+	hit_zone_name_or_nil = hit_zone_name_or_nil or DEFAULT_HIT_ZONE_NAME
+
 	if self._removed_ragdolls[unit] then
 		return
 	end
@@ -221,13 +225,18 @@ MinionRagdoll.push_ragdoll = function (self, unit, attack_direction, damage_prof
 	local ragdoll_push_direction = attack_direction
 
 	if herding_template_or_nil then
-		ragdoll_push_direction = Herding.modify_ragdoll_push_direction(herding_template_or_nil, attack_direction, unit, hit_zone_name)
+		ragdoll_push_direction = Herding.modify_ragdoll_push_direction(herding_template_or_nil, attack_direction, unit, hit_zone_name_or_nil)
+	end
+
+	if death_velocity then
+		ragdoll_push_direction = Vector3.normalize(death_velocity)
+		push_force = push_force * Vector3.length(death_velocity)
 	end
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local breed = unit_data_extension:breed()
 	local hit_zone_ragdoll_pushes = breed.hit_zone_ragdoll_pushes
-	local push_force_data = hit_zone_ragdoll_pushes[hit_zone_name]
+	local push_force_data = hit_zone_ragdoll_pushes[hit_zone_name_or_nil]
 	local current_cache_index = self._delayed_ragdoll_push_index
 
 	if current_cache_index < RAGDOLL_PUSH_CACHE_SIZE then
@@ -245,7 +254,7 @@ MinionRagdoll.push_ragdoll = function (self, unit, attack_direction, damage_prof
 		data.unit = unit
 		data.attack_direction = Vector3Box(ragdoll_push_direction)
 		data.push_force = push_force
-		data.hit_zone_name = hit_zone_name
+		data.hit_zone_name = hit_zone_name_or_nil
 		data.push_force_data = push_force_data
 		self._delayed_ragdoll_push_index = current_cache_index
 	end

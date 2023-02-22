@@ -30,7 +30,7 @@ local MAX_NUM_HITS_UNITS = 128
 local MAX_NUM_SAVED_PELLET_HITS = 256
 local MAX_NUM_SURFACE_IMPACT_EFFECTS = 32
 local MAX_NUM_HITS_PER_UNIT = 32
-local _shotshell_template = nil
+local _shotshell_template, _line_effect = nil
 
 ActionShootPellets.init = function (self, action_context, action_params, action_settings)
 	ActionShootPellets.super.init(self, action_context, action_params, action_settings)
@@ -63,6 +63,7 @@ ActionShootPellets.init = function (self, action_context, action_params, action_
 	self._suppressed_hit_positions_per_unit = {}
 	self._num_hits_per_unit_per_hit_zone = {}
 	self._num_hits_per_unit = {}
+	self._damage_per_unit = {}
 	self._num_impact_fx_per_unit = {}
 	local unit_damage_data = {}
 
@@ -116,6 +117,7 @@ ActionShootPellets.start = function (self, ...)
 	table.clear(self._suppressed_hit_positions_per_unit)
 	table.clear(self._num_hits_per_unit_per_hit_zone)
 	table.clear(self._num_hits_per_unit)
+	table.clear(self._damage_per_unit)
 	table.clear(self._num_impact_fx_per_unit)
 
 	local unit_damage_data = self._unit_damage_data
@@ -174,6 +176,7 @@ ActionShootPellets._shoot = function (self, position, rotation, power_level, cha
 
 		table.clear(self._num_hits_per_unit_per_hit_zone)
 		table.clear(self._num_hits_per_unit)
+		table.clear(self._damage_per_unit)
 
 		local unit_damage_data = self._unit_damage_data
 
@@ -187,7 +190,7 @@ ActionShootPellets._shoot = function (self, position, rotation, power_level, cha
 		local hit_all_pellets = num_pellets_total <= number_of_pellets_hit
 		local action_component = self._action_component
 		local player_unit = self._player_unit
-		local attacker_buff_extension = ScriptUnit.extension(player_unit, "buff_system")
+		local attacker_buff_extension = self._buff_extension
 		local param_table = attacker_buff_extension:request_proc_event_param_table()
 
 		if param_table then
@@ -297,6 +300,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 	local hit_weakspot = false
 	local killing_blow = false
 	local hit_minion = false
+	local damage_per_unit = self._damage_per_unit
 	local surface_impact_data = self._surface_impact_data
 	local surface_impact_num_hits_per_unit = self._surface_impact_num_hits_per_unit
 	local penetration_entry_effects = surface_impact_data.penetration_entry
@@ -306,6 +310,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 	local exit_effect_index = 0
 	local stop_effect_index = 0
 
+	table.clear(damage_per_unit)
 	table.clear(self._suppressed_hits_per_unit)
 	table.clear(self._suppressed_hit_positions_per_unit)
 	table.clear(self._num_impact_fx_per_unit)
@@ -417,6 +422,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 								local previous_hit_weakspot = hit_weakspot
 								local damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, player_unit, hit_unit, hit_actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name, damage_profile, damage_profile_lerp_values, hit_zone_power_level, charge_level, penetrated, damage_config, instakill, damage_type, is_critical_strike, weapon_item)
 								total_damage_dealt = total_damage_dealt + damage_dealt
+								damage_per_unit[hit_unit] = (damage_per_unit[hit_unit] or 0) + damage_dealt
 								best_attack_result = attack_result
 								best_damage_efficiency = damage_efficiency
 								hit_weakspot = previous_hit_weakspot or hit_weakspot
@@ -569,8 +575,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 				end
 
 				if stop and hit_position then
-					local fx_settings = action_settings.fx
-					local line_effect = fx_settings and fx_settings.line_effect
+					local line_effect = _line_effect(action_settings.fx, self._inventory_slot_component)
 
 					self:_play_line_fx(line_effect, position, hit_position)
 				end
@@ -587,13 +592,25 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 		end
 	end
 
+	local num_hits_per_unit = self._num_hits_per_unit
 	local buff_name = damage_config.impact.buff_to_add
 
-	if buff_name then
-		local num_hits_per_unit = self._num_hits_per_unit
-
-		for hit_unit, number_of_hits in pairs(num_hits_per_unit) do
+	for hit_unit, number_of_hits in pairs(num_hits_per_unit) do
+		if buff_name then
 			self:_add_shotshell_buff(hit_unit, player_unit, damage_config, weapon_item, number_of_hits, t)
+		end
+
+		local attacker_buff_extension = self._buff_extension
+		local param_table = attacker_buff_extension:request_proc_event_param_table()
+
+		if param_table then
+			param_table.attacked_unit = hit_unit
+			param_table.number_of_pellets_hit = number_of_hits
+			param_table.max_number_of_pellets = shotshell_template.num_pellets
+			param_table.damage = damage_per_unit[hit_unit] or 0
+			param_table.is_critical_strike = is_critical_strike
+
+			attacker_buff_extension:add_proc_event(proc_events.on_pellet_hits, param_table)
 		end
 	end
 
@@ -752,6 +769,17 @@ function _shotshell_template(fire_config, inventory_slot_component)
 	end
 
 	return shotshell_template
+end
+
+function _line_effect(fx_config, inventory_slot_component)
+	if not fx_config then
+		return false
+	end
+
+	local line_effect = fx_config.line_effect
+	local weapon_special_line_effect = fx_config.weapon_special_line_effect
+
+	return inventory_slot_component.special_active and weapon_special_line_effect or line_effect
 end
 
 return ActionShootPellets

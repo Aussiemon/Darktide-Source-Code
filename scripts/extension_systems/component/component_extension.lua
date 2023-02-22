@@ -87,7 +87,7 @@ ComponentExtension._register_extension_update = function (self)
 	local component_system = self._component_system
 
 	if component_system then
-		component_system:enable_update_function("ComponentExtension", "update", unit)
+		component_system:enable_update_function("ComponentExtension", "update", unit, self)
 
 		self._extension_updates_enabled = true
 	end

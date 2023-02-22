@@ -836,6 +836,7 @@ weapon_template.anim_state_machine_3p = "content/characters/player/human/third_p
 weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/plasma_rifle"
 weapon_template.reload_template = ReloadTemplates.plasma_rifle
 weapon_template.spread_template = "default_plasma_rifle_bfg"
+weapon_template.combo_reset_duration = 0.5
 weapon_template.ammo_template = "plasmagun_p1_m1"
 weapon_template.conditional_state_to_action_input = {
 	{
@@ -892,6 +893,14 @@ weapon_template.overheat_configuration = {
 		looping_sound_parameter_name = "overheat_plasma_gun",
 		on_screen_variable_name = "plasma_radius"
 	}
+}
+weapon_template.weapon_temperature_settings = {
+	increase_rate = 0.075,
+	use_charge = true,
+	grace_time = 0.4,
+	charge_increase_rate = 0.15,
+	barrel_threshold = 0.4,
+	decay_rate = 0.025
 }
 weapon_template.displayed_keywords = {
 	{

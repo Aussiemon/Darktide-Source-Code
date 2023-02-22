@@ -706,6 +706,32 @@ local on_demand_vo_veteran_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	smart_tag_vo_enemy_scab_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_male_b__seen_enemy_specials_generic_01",
+			"loc_veteran_male_b__seen_enemy_specials_generic_02",
+			"loc_veteran_male_b__seen_enemy_specials_generic_03",
+			"loc_veteran_male_b__seen_enemy_specials_generic_04",
+			"loc_veteran_male_b__seen_enemy_specials_generic_05"
+		},
+		sound_events_duration = {
+			1.478688,
+			1.344333,
+			3.271625,
+			1.394792,
+			1.605042
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
 	smart_tag_vo_enemy_traitor_executor = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

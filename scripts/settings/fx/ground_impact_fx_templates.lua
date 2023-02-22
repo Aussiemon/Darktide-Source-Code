@@ -750,6 +750,210 @@ local templates = {
 				vfx = "content/fx/particles/enemies/beast_of_nurgle/bon_bodyslam_aoe"
 			}
 		}
+	},
+	chaos_spawn_claw = {
+		default = "concrete",
+		range = 0.65,
+		evaluation_height_offset = 1.5,
+		fx_source_name = "j_righthand",
+		materials = {
+			default = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_small_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			concrete = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_small_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			metal_solid = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_small_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			metal_sheet = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_small_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			metal_catwalk = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_small_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			wood = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_small_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			glass = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_small_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			dirt_sand = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_small_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			dirt_gravel = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_small_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			dirt_soil = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_small_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			dirt_trash = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_small_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			vegetation = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_small_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			flesh = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_small_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			water = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_small_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			dirt_mud = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_small_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			}
+		}
+	},
+	chaos_spawn_tentacle = {
+		default = "concrete",
+		range = 0.65,
+		evaluation_height_offset = 1.5,
+		fx_source_name = "j_leftfinger3_jnt",
+		materials = {
+			default = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			concrete = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			metal_solid = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			metal_sheet = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			metal_catwalk = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			wood = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			glass = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			dirt_sand = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			dirt_gravel = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			dirt_soil = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			dirt_trash = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			vegetation = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			flesh = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			water = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			},
+			dirt_mud = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/impacts/weapons/hammer_ground_impact"
+			}
+		}
+	},
+	chaos_spawn_leap = {
+		default = "concrete",
+		range = 0.65,
+		evaluation_height_offset = 1.5,
+		fx_source_name = "rp_base",
+		materials = {
+			default = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
+			},
+			concrete = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
+			},
+			metal_solid = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
+			},
+			metal_sheet = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
+			},
+			metal_catwalk = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
+			},
+			wood = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
+			},
+			glass = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
+			},
+			dirt_sand = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
+			},
+			dirt_gravel = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
+			},
+			dirt_soil = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
+			},
+			dirt_trash = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
+			},
+			vegetation = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
+			},
+			flesh = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
+			},
+			water = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
+			},
+			dirt_mud = {
+				sfx = "wwise/events/minions/play_chaos_spawn_ground_impact_large_default",
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
+			}
+		}
 	}
 }
 

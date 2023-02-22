@@ -64,7 +64,7 @@ local weapon_action_data = {
 		target_finder = _require_weapon_action("action_target_finder"),
 		throw = _require_weapon_action("action_throw"),
 		throw_grenade = _require_weapon_action("action_throw_grenade"),
-		toogle_special = _require_weapon_action("action_toggle_weapon_special"),
+		toggle_special = _require_weapon_action("action_toggle_weapon_special"),
 		unaim = _require_weapon_action("action_unaim"),
 		unwield = _require_weapon_action("action_unwield"),
 		unwield_to_previous = _require_weapon_action("action_unwield_to_previous"),
@@ -356,7 +356,7 @@ weapon_action_data.action_kind_condition_funcs = {
 	end
 }
 weapon_action_data.action_kind_total_time_funcs = {
-	reload_state = function (action_params)
+	reload_state = function (action_settings, action_params)
 		local weapon = action_params.weapon
 		local inventory_slot_component = weapon.inventory_slot_component
 		local weapon_template = weapon.weapon_template
@@ -364,6 +364,13 @@ weapon_action_data.action_kind_total_time_funcs = {
 		local total_time = ReloadStates.get_total_time(reload_template, inventory_slot_component)
 
 		return total_time
+	end,
+	toggle_special = function (action_settings, action_params)
+		local weapon = action_params.weapon
+		local inventory_slot_component = weapon.inventory_slot_component
+		local special_active = inventory_slot_component.special_active
+
+		return special_active and action_settings.total_time_deactivate or action_settings.total_time
 	end
 }
 local DEFAULT_NO_AMMO_DELAY_TIME = 1

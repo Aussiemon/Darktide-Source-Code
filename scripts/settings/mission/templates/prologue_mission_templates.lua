@@ -15,6 +15,7 @@ local mission_templates = {
 		terror_event_templates = {
 			"terror_events_prologue"
 		},
+		circumstances = {},
 		testify_flags = {
 			run_through_mission = false,
 			screenshots = true,

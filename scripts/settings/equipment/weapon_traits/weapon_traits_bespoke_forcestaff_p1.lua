@@ -84,7 +84,11 @@ templates.weapon_trait_bespoke_forcestaff_p1_followup_shots_ranged_damage = {
 }
 templates.weapon_trait_bespoke_forcestaff_p1_warpfire_on_crits = {
 	weapon_trait_bespoke_forcestaff_p1_warpfire_on_crits = {
-		{}
+		{
+			target_buff_data = {
+				num_stacks_on_proc = 3
+			}
+		}
 	}
 }
 templates.weapon_trait_bespoke_forcestaff_p1_warp_charge_critical_strike_chance_bonus = {
@@ -114,16 +118,24 @@ templates.weapon_trait_bespoke_forcestaff_p1_warp_charge_critical_strike_chance_
 templates.weapon_trait_bespoke_forcestaff_p1_rend_armor_on_aoe_charge = {
 	weapon_trait_bespoke_forcestaff_p1_rend_armor_on_aoe_charge = {
 		{
-			max_num_stacks = 2
+			target_buff_data = {
+				num_stacks_on_proc = 2
+			}
 		},
 		{
-			max_num_stacks = 4
+			target_buff_data = {
+				num_stacks_on_proc = 4
+			}
 		},
 		{
-			max_num_stacks = 6
+			target_buff_data = {
+				num_stacks_on_proc = 6
+			}
 		},
 		{
-			max_num_stacks = 8
+			target_buff_data = {
+				num_stacks_on_proc = 8
+			}
 		}
 	}
 }

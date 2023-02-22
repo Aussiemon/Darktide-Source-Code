@@ -12,6 +12,7 @@ local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_in
 local TextUtils = require("scripts/utilities/ui/text")
 local MasterItems = require("scripts/backend/master_items")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
+local InputDevice = require("scripts/managers/input/input_device")
 local MainMenuView = class("MainMenuView", "BaseView")
 
 MainMenuView.init = function (self, settings, context)
@@ -475,7 +476,7 @@ MainMenuView._handle_input = function (self, input_service)
 			self:_on_create_character_pressed()
 		elseif IS_XBS and input_service:get("cycle_list_secondary") then
 			Managers.account:show_profile_picker()
-		elseif IS_XBS and input_service:get("back") then
+		elseif IS_XBS and input_service:get("back") and InputDevice.gamepad_active then
 			Managers.account:return_to_title_screen()
 		end
 	end

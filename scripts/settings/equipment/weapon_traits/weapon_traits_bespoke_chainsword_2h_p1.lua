@@ -9,13 +9,13 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_guaranteed_melee_crit_on_activat
 templates.weapon_trait_bespoke_chainsword_2h_p1_bleed_on_activated_hit = {
 	weapon_trait_bespoke_chainsword_2h_p1_bleed_on_activated_hit = {
 		{
-			dot_data = {
-				num_stacks_on_proc = 2
+			target_buff_data = {
+				num_stacks_on_proc = 8
 			}
 		},
 		[4] = {
-			dot_data = {
-				num_stacks_on_proc = 4
+			target_buff_data = {
+				num_stacks_on_proc = 10
 			}
 		}
 	}

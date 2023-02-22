@@ -679,6 +679,29 @@ local on_demand_vo_veteran_female_c = {
 		},
 		randomize_indexes = {}
 	},
+	smart_tag_vo_enemy_scab_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_veteran_female_c__smart_tag_vo_enemy_scab_flamer_a_01",
+			"loc_veteran_female_c__smart_tag_vo_enemy_scab_flamer_a_02",
+			"loc_veteran_female_c__smart_tag_vo_enemy_scab_flamer_a_03",
+			"loc_veteran_female_c__smart_tag_vo_enemy_scab_flamer_a_04"
+		},
+		sound_events_duration = {
+			0.844802,
+			0.887354,
+			1.028906,
+			0.935948
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
+		randomize_indexes = {}
+	},
 	smart_tag_vo_enemy_traitor_executor = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

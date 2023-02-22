@@ -22,7 +22,7 @@ local pickup_data = {
 			local synchronizer_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
 			local increment_value = 1
 
-			synchronizer_extension:update_progression(increment_value, pickup_data)
+			synchronizer_extension:add_progression(increment_value, pickup_data)
 		end
 	end,
 	on_drop_func = function (unit)
@@ -35,7 +35,7 @@ local pickup_data = {
 			local synchronizer_extension = ScriptUnit.extension(synchronizer_unit, "event_synchronizer_system")
 			local increment_value = -1
 
-			synchronizer_extension:update_progression(increment_value)
+			synchronizer_extension:add_progression(increment_value)
 		end
 	end
 }

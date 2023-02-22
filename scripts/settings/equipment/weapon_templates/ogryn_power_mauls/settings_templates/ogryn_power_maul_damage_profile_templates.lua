@@ -306,6 +306,10 @@ overrides.ogryn_powermaul_light_smiter_active = {
 		{
 			"shield_override_stagger_strength",
 			200
+		},
+		{
+			"weapon_special",
+			true
 		}
 	}
 }
@@ -389,6 +393,10 @@ overrides.powermaul_2h_light_smiter_active = {
 		{
 			"shield_override_stagger_strength",
 			200
+		},
+		{
+			"weapon_special",
+			true
 		}
 	}
 }
@@ -484,6 +492,10 @@ overrides.powermaul_2h_heavy_smiter_active = {
 		{
 			"shield_override_stagger_strength",
 			200
+		},
+		{
+			"weapon_special",
+			true
 		}
 	}
 }
@@ -667,6 +679,10 @@ overrides.ogryn_powermaul_light_linesman_active = {
 		{
 			"ragdoll_push_force",
 			1300
+		},
+		{
+			"weapon_special",
+			true
 		}
 	}
 }
@@ -825,6 +841,10 @@ overrides.ogryn_powermaul_heavy_tank_active = {
 		{
 			"ragdoll_push_force",
 			1600
+		},
+		{
+			"weapon_special",
+			true
 		}
 	}
 }
@@ -920,6 +940,10 @@ overrides.powermaul_2h_heavy_tank_active = {
 		{
 			"shield_override_stagger_strength",
 			200
+		},
+		{
+			"weapon_special",
+			true
 		}
 	}
 }
@@ -1033,6 +1057,10 @@ overrides.ogryn_powermaul_heavy_smiter_active = {
 		{
 			"shield_override_stagger_strength",
 			200
+		},
+		{
+			"weapon_special",
+			true
 		}
 	}
 }
@@ -1403,6 +1431,10 @@ overrides.powermaul_2h_light_tank_active = {
 		{
 			"shield_override_stagger_strength",
 			200
+		},
+		{
+			"weapon_special",
+			true
 		}
 	}
 }

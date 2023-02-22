@@ -26,7 +26,7 @@ local circumstance_vo_nurgle_rot_pilot_a = {
 			"loc_pilot_a__nurgle_circumstance_start_b_04"
 		},
 		sound_events_duration = {
-			3.298417,
+			3.298396,
 			4.243729,
 			3.183292,
 			3.830333

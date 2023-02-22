@@ -394,6 +394,9 @@ weapon_template.actions = {
 			},
 			zoom = {
 				action_name = "action_zoom"
+			},
+			reload = {
+				action_name = "action_reload"
 			}
 		}
 	},
@@ -460,7 +463,7 @@ weapon_template.actions = {
 		}
 	},
 	action_toggle_flashlight = {
-		kind = "toogle_special",
+		kind = "toggle_special",
 		anim_event = "toggle_flashlight",
 		start_input = "weapon_special",
 		allowed_during_sprint = true,
@@ -486,7 +489,7 @@ weapon_template.actions = {
 		}
 	},
 	action_toggle_flashlight_zoom = {
-		kind = "toogle_special",
+		kind = "toggle_special",
 		crosshair_type = "none",
 		start_input = "zoom_weapon_special",
 		activation_time = 0,
@@ -721,11 +724,11 @@ local bespoke_lasgun_p3_traits = table.keys(WeaponTraitsBespokeLasgunP3)
 table.append(weapon_template.traits, bespoke_lasgun_p3_traits)
 
 weapon_template.weapon_temperature_settings = {
-	increase_rate = 0.08,
-	decay_rate = 0.2,
-	grace_time = 1.4,
+	increase_rate = 0.065,
+	decay_rate = 0.075,
+	grace_time = 0.4,
 	use_charge = false,
-	barrel_threshold = 0.1
+	barrel_threshold = 0.4
 }
 weapon_template.displayed_keywords = {
 	{

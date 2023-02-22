@@ -5,9 +5,6 @@ local FULL_POST_INTERVAL = TelemetrySettings.batch.full_post_interval
 local MAX_BATCH_SIZE = TelemetrySettings.batch.max_size
 local BATCH_SIZE = TelemetrySettings.batch.size
 local ENABLED = TelemetrySettings.enabled
-
-Log.debug("TelemetryManager", "Enabled: %s", ENABLED)
-
 local TelemetryManager = class("TelemetryManager")
 
 TelemetryManager.init = function (self)

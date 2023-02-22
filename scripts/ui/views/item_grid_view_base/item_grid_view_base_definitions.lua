@@ -1,8 +1,8 @@
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
-local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local title_height = 70
 local edge_padding = 44
 local grid_width = 640
@@ -73,7 +73,10 @@ local scenegraph_definition = {
 		vertical_alignment = "top",
 		parent = "canvas",
 		horizontal_alignment = "left",
-		size = grid_size,
+		size = {
+			grid_width,
+			grid_height
+		},
 		position = {
 			100,
 			40,
@@ -222,6 +225,16 @@ local widget_definitions = {
 		}
 	}, "sub_display_name")
 }
+local tab_menu_settings = {
+	layer = 10,
+	button_spacing = 20,
+	fixed_button_size = true,
+	horizontal_alignment = "center",
+	button_size = {
+		200,
+		500
+	}
+}
 local anim_start_delay = 0
 local animations = {
 	on_enter = {
@@ -268,6 +281,7 @@ local animations = {
 return {
 	animations = animations,
 	grid_settings = grid_settings,
+	tab_menu_settings = tab_menu_settings,
 	weapon_stats_grid_settings = weapon_stats_grid_settings,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition

@@ -51,9 +51,9 @@ AccountService.signin = function (self)
 		local auth_data_promise = Promise.resolved(auth_data)
 		local immaterium_connection_info = Managers.backend.interfaces.immaterium:fetch_connection_info()
 		local sync_achievement_rewards_promise = Managers.achievements:sync_achievement_data(account_id)
-		local crafting_settings_promise = CraftingSettings.refresh()
+		local crafting_costs_promise = Managers.backend.interfaces.crafting:refresh_crafting_costs()
 
-		return Promise.all(status_promise, settings_promise, items_promise, auth_data_promise, immaterium_connection_info, sync_achievement_rewards_promise, crafting_settings_promise)
+		return Promise.all(status_promise, settings_promise, items_promise, auth_data_promise, immaterium_connection_info, sync_achievement_rewards_promise, crafting_costs_promise)
 	end):next(function (results)
 		local status, _, _, auth_data, immaterium_connection_info = unpack(results, 1, 5)
 

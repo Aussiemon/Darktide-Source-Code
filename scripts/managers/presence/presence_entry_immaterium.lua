@@ -55,7 +55,7 @@ PresenceEntryImmaterium.destroy = function (self)
 end
 
 PresenceEntryImmaterium.update = function (self)
-	if self._started then
+	if self._started and not Managers.account:user_detached() then
 		local new_immaterium_entry = Managers.presence:_get_batched_presence(self, self._request_platform, self._request_platform_user_id)
 
 		if new_immaterium_entry then

@@ -152,6 +152,35 @@ damage_templates.light_sword = {
 		}
 	}
 }
+overrides.light_sword_stab = {
+	parent_template_name = "light_sword",
+	overrides = {
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"armored",
+			damage_lerp_values.lerp_0_8
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"super_armor",
+			damage_lerp_values.lerp_0_25
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"resistant",
+			damage_lerp_values.lerp_0_8
+		}
+	}
+}
 damage_templates.light_sword_smiter = {
 	finesse_ability_damage_multiplier = 2,
 	stagger_category = "melee",

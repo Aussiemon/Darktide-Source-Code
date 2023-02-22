@@ -196,16 +196,16 @@ local scenegraph_definition = {
 	},
 	wallet_entry = {
 		vertical_alignment = "center",
-		parent = "canvas",
+		parent = "screen",
 		horizontal_alignment = "right",
 		size = {
 			400,
 			40
 		},
 		position = {
-			-130,
-			75,
-			5
+			-90,
+			375,
+			1
 		}
 	},
 	slot_gear_head = {
@@ -285,7 +285,7 @@ local scenegraph_definition = {
 		position = {
 			60,
 			166,
-			30
+			20
 		}
 	},
 	loadout_background_1 = {
@@ -453,6 +453,76 @@ local scenegraph_definition = {
 			-33 + ItemPassTemplates.gear_icon_size[1] + 102,
 			-187,
 			-15
+		}
+	},
+	button_emote_1 = {
+		vertical_alignment = "center",
+		parent = "canvas",
+		horizontal_alignment = "center",
+		size = {
+			0,
+			0
+		},
+		position = {
+			600,
+			-330,
+			0
+		}
+	},
+	button_emote_2 = {
+		vertical_alignment = "center",
+		parent = "canvas",
+		horizontal_alignment = "center",
+		size = {
+			0,
+			0
+		},
+		position = {
+			600,
+			-200,
+			0
+		}
+	},
+	button_emote_3 = {
+		vertical_alignment = "center",
+		parent = "canvas",
+		horizontal_alignment = "center",
+		size = {
+			0,
+			0
+		},
+		position = {
+			600,
+			-70,
+			0
+		}
+	},
+	button_emote_4 = {
+		vertical_alignment = "center",
+		parent = "canvas",
+		horizontal_alignment = "center",
+		size = {
+			0,
+			0
+		},
+		position = {
+			600,
+			60,
+			0
+		}
+	},
+	button_emote_5 = {
+		vertical_alignment = "center",
+		parent = "canvas",
+		horizontal_alignment = "center",
+		size = {
+			0,
+			0
+		},
+		position = {
+			600,
+			190,
+			0
 		}
 	}
 }
@@ -625,6 +695,24 @@ local animations = {
 			end
 		}
 	},
+	wallet_on_exit = {
+		{
+			name = "fade_out",
+			end_time = 0.4,
+			start_time = 0,
+			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, parent)
+				return
+			end,
+			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, parent)
+				local anim_progress = math.easeInCubic(1 - progress)
+
+				for i = #widgets, 1, -1 do
+					local widget = widgets[i]
+					widget.alpha_multiplier = math.min(math.clamp(anim_progress * (1 + (i - 1) * 0.4), 0, 1), widget.alpha_multiplier or 0)
+				end
+			end
+		}
+	},
 	cosmetics_on_enter = {
 		{
 			name = "fade_in",
@@ -679,6 +767,11 @@ local animations = {
 				parent:_set_scenegraph_position("slot_gear_extra_cosmetic", scenegraph_definition.slot_gear_extra_cosmetic.position[1] + x_anim_distance)
 				parent:_set_scenegraph_position("slot_portrait_frame", scenegraph_definition.slot_portrait_frame.position[1] + x_anim_distance + extra_amount)
 				parent:_set_scenegraph_position("slot_insignia", scenegraph_definition.slot_insignia.position[1] + x_anim_distance + extra_amount + extra_amount + extra_amount)
+				parent:_set_scenegraph_position("button_emote_1", scenegraph_definition.button_emote_1.position[1] + x_anim_distance)
+				parent:_set_scenegraph_position("button_emote_2", scenegraph_definition.button_emote_2.position[1] + x_anim_distance + extra_amount)
+				parent:_set_scenegraph_position("button_emote_3", scenegraph_definition.button_emote_3.position[1] + x_anim_distance + extra_amount + extra_amount + extra_amount)
+				parent:_set_scenegraph_position("button_emote_4", scenegraph_definition.button_emote_4.position[1] + x_anim_distance + extra_amount + extra_amount + extra_amount + extra_amount)
+				parent:_set_scenegraph_position("button_emote_5", scenegraph_definition.button_emote_5.position[1] + x_anim_distance + extra_amount + extra_amount + extra_amount + extra_amount + extra_amount)
 				parent:_set_scenegraph_position("button_skin_sets", scenegraph_definition.button_skin_sets.position[1] + x_anim_distance + extra_amount * 2)
 				parent:_set_scenegraph_position("button_expressions", scenegraph_definition.button_expressions.position[1] + x_anim_distance + extra_amount * 4)
 			end

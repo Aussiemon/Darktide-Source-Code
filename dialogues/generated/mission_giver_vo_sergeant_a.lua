@@ -221,13 +221,6 @@ local mission_giver_vo_sergeant_a = {
 			2.936708,
 			1.508229
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	info_extraction = {
@@ -478,10 +471,10 @@ local mission_giver_vo_sergeant_a = {
 			"loc_sergeant_a__mission_archives_brief_a_04"
 		},
 		sound_events_duration = {
-			5.777125,
-			4.543021,
-			5.860938,
-			6.661417
+			5.777146,
+			4.543042,
+			5.860958,
+			6.661438
 		},
 		randomize_indexes = {}
 	},
@@ -496,9 +489,9 @@ local mission_giver_vo_sergeant_a = {
 		},
 		sound_events_duration = {
 			3.45678,
-			5.644229,
-			5.451563,
-			5.755563
+			5.64425,
+			5.451583,
+			5.755583
 		},
 		randomize_indexes = {}
 	},
@@ -512,10 +505,10 @@ local mission_giver_vo_sergeant_a = {
 			"loc_sergeant_a__mission_archives_brief_c_04"
 		},
 		sound_events_duration = {
-			7.009938,
-			6.839604,
-			5.999375,
-			6.450917
+			7.009958,
+			6.839625,
+			5.999396,
+			6.450938
 		},
 		randomize_indexes = {}
 	},
@@ -694,10 +687,10 @@ local mission_giver_vo_sergeant_a = {
 			"loc_sergeant_a__mission_complex_brief_a_04"
 		},
 		sound_events_duration = {
-			5.611333,
-			6.089688,
-			5.489229,
-			6.999625
+			5.611354,
+			6.089708,
+			5.48925,
+			6.999646
 		},
 		randomize_indexes = {}
 	},
@@ -711,10 +704,10 @@ local mission_giver_vo_sergeant_a = {
 			"loc_sergeant_a__mission_complex_brief_b_04"
 		},
 		sound_events_duration = {
-			6.733313,
-			6.111063,
-			6.116542,
-			7.442833
+			6.733333,
+			6.111083,
+			6.116563,
+			7.442854
 		},
 		randomize_indexes = {}
 	},
@@ -728,10 +721,10 @@ local mission_giver_vo_sergeant_a = {
 			"loc_sergeant_a__mission_complex_brief_c_04"
 		},
 		sound_events_duration = {
-			6.896208,
-			6.204813,
-			5.80125,
-			7.522146
+			6.896229,
+			6.204833,
+			5.801271,
+			7.522167
 		},
 		randomize_indexes = {}
 	},
@@ -1096,6 +1089,57 @@ local mission_giver_vo_sergeant_a = {
 			6.466833,
 			5.408479,
 			7.486875
+		},
+		randomize_indexes = {}
+	},
+	mission_rise_briefing_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_sergeant_a__mission_rise_briefing_a_01",
+			"loc_sergeant_a__mission_rise_briefing_a_02",
+			"loc_sergeant_a__mission_rise_briefing_a_03",
+			"loc_sergeant_a__mission_rise_briefing_a_04"
+		},
+		sound_events_duration = {
+			6.857958,
+			6.572229,
+			5.944271,
+			6.972729
+		},
+		randomize_indexes = {}
+	},
+	mission_rise_briefing_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_sergeant_a__mission_rise_briefing_b_01",
+			"loc_sergeant_a__mission_rise_briefing_b_02",
+			"loc_sergeant_a__mission_rise_briefing_b_03",
+			"loc_sergeant_a__mission_rise_briefing_b_04"
+		},
+		sound_events_duration = {
+			7.298688,
+			6.013167,
+			7.454958,
+			6.765146
+		},
+		randomize_indexes = {}
+	},
+	mission_rise_briefing_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_sergeant_a__mission_rise_briefing_c_01",
+			"loc_sergeant_a__mission_rise_briefing_c_02",
+			"loc_sergeant_a__mission_rise_briefing_c_03",
+			"loc_sergeant_a__mission_rise_briefing_c_04"
+		},
+		sound_events_duration = {
+			6.036667,
+			5.942188,
+			6.534,
+			6.562542
 		},
 		randomize_indexes = {}
 	},

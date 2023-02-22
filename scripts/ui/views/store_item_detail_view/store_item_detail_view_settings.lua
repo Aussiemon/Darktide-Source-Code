@@ -18,6 +18,10 @@ local store_item_detail_view_settings = {
 		"slot_combat_ability",
 		"slot_grenade_ability"
 	},
+	grid_size = {
+		500,
+		500
+	},
 	animations_per_archetype = {
 		psyker = {
 			initial_event = "character_customization_idle",

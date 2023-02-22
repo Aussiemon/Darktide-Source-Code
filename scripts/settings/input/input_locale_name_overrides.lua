@@ -1,5 +1,15 @@
 local input_locale_name_overrides = {
 	keyboard = {
+		["numpad 0"] = Localize("loc_keyboard_input_numpad_0"),
+		["numpad 1"] = Localize("loc_keyboard_input_numpad_1"),
+		["numpad 2"] = Localize("loc_keyboard_input_numpad_2"),
+		["numpad 3"] = Localize("loc_keyboard_input_numpad_3"),
+		["numpad 4"] = Localize("loc_keyboard_input_numpad_4"),
+		["numpad 5"] = Localize("loc_keyboard_input_numpad_5"),
+		["numpad 6"] = Localize("loc_keyboard_input_numpad_6"),
+		["numpad 7"] = Localize("loc_keyboard_input_numpad_7"),
+		["numpad 8"] = Localize("loc_keyboard_input_numpad_8"),
+		["numpad 9"] = Localize("loc_keyboard_input_numpad_9"),
 		space = Localize("loc_keyboard_input_space"),
 		enter = Localize("loc_keyboard_input_enter"),
 		tab = Localize("loc_keyboard_input_tab"),

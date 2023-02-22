@@ -8,5 +8,6 @@ end
 
 _create_boss_template_entry("scripts/settings/boss/boss_templates/chaos_daemonhost_boss_template")
 _create_boss_template_entry("scripts/settings/boss/boss_templates/chaos_beast_of_nurgle_boss_template")
+_create_boss_template_entry("scripts/settings/boss/boss_templates/chaos_spawn_boss_template")
 
 return settings("BossTemplates", boss_templates)

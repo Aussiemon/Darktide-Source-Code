@@ -197,6 +197,10 @@ end
 function _calculate_toughness_damage_minion(damage_amount, damage_profile, attack_type, attack_direction, toughness_template, current_toughness_damage, attacked_unit_stat_buffs, instakill)
 	local max_toughness = Managers.state.difficulty:get_table_entry_by_challenge(toughness_template.max)
 
+	if damage_profile.skip_minion_toughness then
+		return nil, damage_amount, 0, 0
+	end
+
 	if max_toughness <= current_toughness_damage then
 		return nil, damage_amount, 0, 0
 	end

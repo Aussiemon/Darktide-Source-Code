@@ -322,7 +322,21 @@ DoorExtension.nav_blocked = function (self)
 end
 
 DoorExtension.can_attack = function (self)
-	return self._current_state == STATES.closed and not self:_is_dead() and not self:_is_playing_anim()
+	return self._current_state == STATES.closed and not self:_is_playing_anim()
+end
+
+DoorExtension.started = function (self)
+	return self._start_state == nil
+end
+
+DoorExtension.set_start_state = function (self, state)
+	if state == "open" and type == TYPES.three_states then
+		self._start_state = "open_fwd"
+	elseif type == TYPES.two_states and (self._start_state == "open_fwd" or self._start_state == "open_bwd") then
+		self._start_state = "open"
+	else
+		self._start_state = state
+	end
 end
 
 DoorExtension.can_open = function (self, interactor_unit)
@@ -339,8 +353,6 @@ DoorExtension.can_open = function (self, interactor_unit)
 		can_open = can_open and (open_type == OPEN_TYPES.open_only or open_type == OPEN_TYPES.none)
 	end
 
-	can_open = can_open and not self:_is_dead()
-
 	return can_open
 end
 
@@ -353,7 +365,7 @@ DoorExtension.can_close = function (self, use_proximity_check)
 
 	if not use_proximity_check or not self:_minion_proximity_check() then
 		local open_type = self._open_type
-		can_close = self._current_state ~= STATES.closed and not self:_is_dead()
+		can_close = self._current_state ~= STATES.closed
 		can_close = can_close and (open_type == OPEN_TYPES.close_only or open_type == OPEN_TYPES.none)
 	end
 

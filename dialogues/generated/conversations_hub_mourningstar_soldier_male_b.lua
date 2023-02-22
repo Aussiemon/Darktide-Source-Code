@@ -21,8 +21,8 @@ local conversations_hub_mourningstar_soldier_male_b = {
 			2.998708,
 			2.760833,
 			3.372833,
-			2.366229,
-			3.810771,
+			2.366208,
+			3.81075,
 			2.561021,
 			3.207979
 		},
@@ -79,9 +79,9 @@ local conversations_hub_mourningstar_soldier_male_b = {
 			4.065583,
 			1.637521,
 			5.151375,
-			2.521208,
+			2.521188,
 			2.430229,
-			1.861479,
+			1.861458,
 			3.437833
 		},
 		randomize_indexes = {}

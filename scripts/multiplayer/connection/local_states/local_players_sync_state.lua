@@ -16,8 +16,9 @@ LocalPlayersSyncState.init = function (self, state_machine, shared_state)
 	local account_id_array = sync_data.account_id_array
 	local character_id_array = sync_data.character_id_array
 	local player_session_id_array = sync_data.player_session_id_array
+	local last_mission_id = sync_data.last_mission_id
 
-	RPC.rpc_sync_local_players(shared_state.channel_id, local_player_id_array, is_human_controlled_array, account_id_array, character_id_array, player_session_id_array)
+	RPC.rpc_sync_local_players(shared_state.channel_id, local_player_id_array, is_human_controlled_array, account_id_array, character_id_array, player_session_id_array, last_mission_id)
 end
 
 LocalPlayersSyncState.destroy = function (self)

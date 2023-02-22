@@ -694,7 +694,7 @@ local function _get_smart_object_calculation_parameters(unit, component)
 		end
 
 		if not Unit.has_node(unit, node_b_name) then
-			Log.error("[NavGraphQueries]", "[_get_smart_object_calculation_parameters][Unit: %s] node(%s) not found.", Unit.id_string(unit), node_a_name)
+			Log.error("[NavGraphQueries]", "[_get_smart_object_calculation_parameters][Unit: %s] node(%s) not found.", Unit.id_string(unit), node_b_name)
 
 			error = true
 		end

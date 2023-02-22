@@ -52,7 +52,7 @@ local scenegraph_definition = {
 		parent = "canvas",
 		horizontal_alignment = "left",
 		size = {
-			680,
+			760,
 			390
 		},
 		position = {
@@ -66,13 +66,13 @@ local scenegraph_definition = {
 		parent = "domain",
 		horizontal_alignment = "center",
 		size = {
-			680,
-			100
+			0,
+			265
 		},
 		position = {
-			0,
-			-365,
-			2
+			3,
+			-337,
+			10
 		}
 	},
 	domain_info = {
@@ -197,11 +197,11 @@ local scenegraph_definition = {
 		parent = "class",
 		horizontal_alignment = "right",
 		size = {
-			10,
-			ClassSelectionViewSettings.class_size[2] - 10
+			7,
+			ClassSelectionViewSettings.class_size[2] - 30
 		},
 		position = {
-			-15,
+			-2,
 			0,
 			50
 		}
@@ -359,9 +359,10 @@ local widget_definitions = {
 			style = ClassSelectionViewFontStyle.domain_title_style
 		},
 		{
-			value = "content/ui/materials/dividers/skull_center_02",
-			value_id = "texture",
+			value_id = "divider",
+			style_id = "divider",
 			pass_type = "texture",
+			value = "content/ui/materials/dividers/skull_center_02",
 			style = {
 				vertical_alignment = "top",
 				horizontal_alignment = "center",
@@ -371,7 +372,7 @@ local widget_definitions = {
 				},
 				offset = {
 					0,
-					60,
+					90,
 					1
 				},
 				color = Color.terminal_frame(255, true)
@@ -399,25 +400,6 @@ local widget_definitions = {
 			}
 		},
 		{
-			value_id = "top_frame",
-			style_id = "top_frame",
-			pass_type = "texture",
-			value = "content/ui/materials/dividers/horizontal_frame_big_upper",
-			style = {
-				vertical_alignment = "top",
-				horizontal_alignment = "center",
-				size = {
-					nil,
-					36
-				},
-				offset = {
-					0,
-					-18,
-					1
-				}
-			}
-		},
-		{
 			value = "content/ui/materials/dividers/horizontal_frame_big_lower",
 			pass_type = "texture",
 			style = {
@@ -440,6 +422,42 @@ local widget_definitions = {
 			pass_type = "text",
 			value = "",
 			style = ClassSelectionViewFontStyle.domain_description_style
+		},
+		{
+			value = "content/ui/materials/effects/class_selection_top_candles",
+			value_id = "top_candles",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				size = {
+					760,
+					390
+				},
+				offset = {
+					0,
+					-350,
+					3
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/frames/class_selection_top",
+			value_id = "top",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				size = {
+					760,
+					390
+				},
+				offset = {
+					0,
+					-350,
+					2
+				}
+			}
 		}
 	}, "domain_info"),
 	class_background = UIWidget.create_definition({
@@ -521,7 +539,9 @@ local widget_definitions = {
 			}
 		}
 	}, "class"),
-	class_details_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "class_details_scrollbar"),
+	class_details_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "class_details_scrollbar", {
+		axis = 2
+	}),
 	class_details_mask = UIWidget.create_definition({
 		{
 			value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_straight_blur",
@@ -550,45 +570,12 @@ local domain_option_definition = UIWidget.create_definition({
 	},
 	{
 		pass_type = "texture",
-		value_id = "icon",
-		style_id = "icon",
-		style = {
-			vertical_alignment = "center",
-			horizontal_alignment = "center",
-			color = {
-				255,
-				180,
-				161,
-				83
-			},
-			original_size = ClassSelectionViewSettings.domain_option_icon_size,
-			size = ClassSelectionViewSettings.domain_option_icon_size,
-			offset = {
-				0,
-				0,
-				1
-			}
-		},
-		change_function = function (content, style)
-			local hotspot = content.hotspot
-			local anim_progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
-			style.color[1] = (1 - anim_progress) * 255
-			local size = style.size
-			local default_size = style.original_size
-			local class_option_expanded_size_fraction = ClassSelectionViewSettings.class_option_expanded_size_fraction
-			size[1] = default_size[1] + anim_progress * default_size[1] * class_option_expanded_size_fraction
-			size[2] = default_size[2] + anim_progress * default_size[2] * class_option_expanded_size_fraction
-		end
-	},
-	{
-		pass_type = "texture",
 		value_id = "icon_highlight",
 		style_id = "icon_highlight",
 		style = {
 			vertical_alignment = "center",
-			hdr = true,
 			horizontal_alignment = "center",
-			color = Color.ui_terminal(255, true),
+			hdr = true,
 			original_size = ClassSelectionViewSettings.domain_option_icon_size,
 			size = ClassSelectionViewSettings.domain_option_icon_size,
 			offset = {
@@ -599,45 +586,47 @@ local domain_option_definition = UIWidget.create_definition({
 		},
 		change_function = function (content, style)
 			local hotspot = content.hotspot
-			local anim_progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
+			local anim_progress = hotspot.anim_select_progress
 			style.color[1] = anim_progress * 255
-			local size = style.size
-			local default_size = style.original_size
-			local class_option_expanded_size_fraction = ClassSelectionViewSettings.class_option_expanded_size_fraction
-			size[1] = default_size[1] + anim_progress * default_size[1] * class_option_expanded_size_fraction
-			size[2] = default_size[2] + anim_progress * default_size[2] * class_option_expanded_size_fraction
+		end,
+		visibility_function = function (content, style)
+			return content.hotspot.is_selected
 		end
 	},
 	{
 		pass_type = "texture",
 		style_id = "highlight",
-		value = "content/ui/materials/frames/hover",
+		value = "content/ui/materials/frames/class_selection_top_highlight",
 		style = {
-			vertical_alignment = "center",
 			horizontal_alignment = "center",
-			scale_to_material = true,
 			hdr = true,
-			color = Color.ui_terminal(255, true),
-			size = ClassSelectionViewSettings.domain_option_icon_size,
+			scale_to_material = true,
+			vertical_alignment = "center",
+			default_color = Color.terminal_text_body(255, true),
+			selected_color = Color.terminal_corner_selected(255, true),
+			hover_color = Color.terminal_corner_hover(255, true),
 			offset = {
 				0,
-				0,
-				2
+				-3,
+				4
 			},
 			size_addition = {
-				20,
-				20
+				30,
+				30
 			}
 		},
 		change_function = function (content, style)
-			local hotspot = content.hotspot
-			local anim_progress = hotspot.anim_focus_progress
-			style.color[1] = anim_progress * 255
-			local size_addition = 20 + 20 * math.easeInCubic(1 - anim_progress)
-			local style_size_additon = style.size_addition
-			style_size_additon[1] = size_addition
-			style_size_additon[2] = size_addition
-			style.hdr = anim_progress == 1
+			local color = content.hotspot.is_selected and style.selected_color or (content.hotspot.is_hover or content.hotspot.is_focused) and style.hover_color or style.default_color
+			style.color = {
+				color[1],
+				color[2],
+				color[3],
+				color[4]
+			}
+			style.color[1] = math.max(content.hotspot.anim_focus_progress, content.hotspot.anim_select_progress, content.hotspot.anim_hover_progress) * 255
+		end,
+		visibility_function = function (content, style)
+			return content.hotspot.is_focused or content.hotspot.is_hover
 		end
 	}
 }, "domain_options", nil, ClassSelectionViewSettings.domain_option_icon_size)

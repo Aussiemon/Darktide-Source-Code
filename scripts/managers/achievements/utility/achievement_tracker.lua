@@ -140,15 +140,16 @@ AchievementTracker._unlock_achievement = function (self, account_id, achievement
 	local achievement_data = tracked_table.data
 	local achievement_index = self._achievement_definitions._lookup[achievement_id]
 	achievement_data.completed[achievement_id] = true
-	local remote_player = tracked_table.remote_player
 
-	if remote_player then
-		RPC.rpc_notify_commendation_complete(tracked_table.connection_channel_id, achievement_index)
-	else
-		Managers.achievements:notify_commendation_complete(achievement_index)
-	end
+	self._saving_strategy:save_on_achievement_unlock(account_id, achievement_id):next(function ()
+		local remote_player = tracked_table.remote_player
 
-	self._saving_strategy:save_on_achievement_unlock(account_id, achievement_id)
+		if remote_player then
+			RPC.rpc_notify_commendation_complete(tracked_table.connection_channel_id, achievement_index)
+		else
+			Managers.achievements:notify_commendation_complete(achievement_index)
+		end
+	end)
 	self:_on_achievement_unlock(account_id, achievement_id)
 end
 

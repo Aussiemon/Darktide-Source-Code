@@ -1,18 +1,19 @@
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local Definitions = require("scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view_definitions")
+local InputDevice = require("scripts/managers/input/input_device")
 local InventoryWeaponCosmeticsViewSettings = require("scripts/ui/views/inventory_weapon_cosmetics_view/inventory_weapon_cosmetics_view_settings")
 local ItemGridViewBase = require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
 local ItemUtils = require("scripts/utilities/items")
+local MasterItems = require("scripts/backend/master_items")
+local Promise = require("scripts/foundation/utilities/promise")
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementInventoryWeaponPreview = require("scripts/ui/view_elements/view_element_inventory_weapon_preview/view_element_inventory_weapon_preview")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
-local MasterItems = require("scripts/backend/master_items")
-local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local Promise = require("scripts/foundation/utilities/promise")
-local InputDevice = require("scripts/managers/input/input_device")
 local trinket_slot_order = {
 	"slot_trinket_1",
 	"slot_trinket_2"
@@ -97,6 +98,31 @@ InventoryWeaponCosmeticsView.init = function (self, settings, context)
 
 		self._initial_weapon_skin_name = self._selected_weapon_skin_name
 	end
+
+	self._sort_options = {
+		{
+			display_name = Localize("loc_inventory_item_grid_sort_title_name") .. " ",
+			sort_function = ItemUtils.sort_comparator({
+				">",
+				ItemUtils.compare_item_name,
+				">",
+				ItemUtils.compare_item_rarity,
+				">",
+				ItemUtils.compare_item_level
+			})
+		},
+		{
+			display_name = Localize("loc_inventory_item_grid_sort_title_name") .. " ",
+			sort_function = ItemUtils.sort_comparator({
+				"<",
+				ItemUtils.compare_item_name,
+				">",
+				ItemUtils.compare_item_rarity,
+				">",
+				ItemUtils.compare_item_level
+			})
+		}
+	}
 
 	InventoryWeaponCosmeticsView.super.init(self, Definitions, settings)
 

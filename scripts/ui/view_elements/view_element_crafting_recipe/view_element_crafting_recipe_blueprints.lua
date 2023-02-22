@@ -178,9 +178,29 @@ ViewElementCraftingRecipeBlueprints.description = {
 
 local function item_selection_button_change_function(content, style)
 	local hotspot = content.hotspot
-	local wanted_color = hotspot.is_selected and style.selected_color or style.default_color
+	local is_selected = hotspot.is_selected
+	local is_focused = hotspot.is_focused
+	local is_hover = hotspot.is_hover
+	local disabled = hotspot.disabled
+	local default_color = style.default_color
+	local hover_color = style.hover_color
+	local selected_color = style.selected_color
+	local disabled_color = style.disabled_color
+	local color = nil
 
-	ColorUtilities.color_copy(wanted_color, style.color)
+	if disabled and disabled_color then
+		color = disabled_color
+	elseif is_selected and selected_color then
+		color = selected_color
+	elseif is_hover and hover_color then
+		color = hover_color
+	elseif default_color then
+		color = default_color
+	end
+
+	if color then
+		ColorUtilities.color_copy(color, style.color)
+	end
 end
 
 local function item_selection_button_hover_change_function(content, style)
@@ -195,12 +215,31 @@ weapon_perk_style.offset = {
 	10
 }
 weapon_perk_style.size_addition = {
-	-90
+	-55,
+	0
 }
 weapon_perk_style.font_size = 18
 weapon_perk_style.text_horizontal_alignment = "left"
 weapon_perk_style.text_vertical_alignment = "center"
-weapon_perk_style.text_color = Color.terminal_text_body(255, true)
+weapon_perk_style.text_color = {
+	255,
+	216,
+	229,
+	207
+}
+weapon_perk_style.default_color = {
+	255,
+	216,
+	229,
+	207
+}
+weapon_perk_style.hover_color = Color.white(255, true)
+weapon_perk_style.disabled_color = {
+	255,
+	60,
+	60,
+	60
+}
 ViewElementCraftingRecipeBlueprints.perk_button = {
 	size = {
 		340,
@@ -211,7 +250,12 @@ ViewElementCraftingRecipeBlueprints.perk_button = {
 		local text = ItemUtils.trait_description(config.item, config.rarity, config.value)
 		local text_options = UIFonts.get_font_options_by_style(style)
 		local size = ViewElementCraftingRecipeBlueprints.perk_button.size
-		local _, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, size, text_options)
+		local size_addition = style.size_addition
+		local actual_text_size = {
+			430 + (size_addition[1] or 0),
+			size[2] + (size_addition[2] or 0)
+		}
+		local _, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, actual_text_size, text_options)
 
 		return {
 			430,
@@ -228,6 +272,46 @@ ViewElementCraftingRecipeBlueprints.perk_button = {
 			}
 		},
 		{
+			value = "content/ui/materials/frames/dropshadow_medium",
+			style_id = "outer_shadow",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				scale_to_material = true,
+				color = Color.black(100, true),
+				size_addition = {
+					20,
+					20
+				},
+				offset = {
+					0,
+					0,
+					3
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/frames/line_thin_dashed_animated",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "right",
+				offset = {
+					0,
+					0,
+					8
+				},
+				color = Color.terminal_corner_selected(nil, true),
+				default_color = Color.terminal_corner_selected(0, true),
+				selected_color = Color.terminal_corner_selected(nil, true)
+			},
+			visibility_function = function (content, style)
+				return content.marked
+			end
+		},
+		{
 			value = "content/ui/materials/backgrounds/default_square",
 			pass_type = "texture",
 			style = {
@@ -236,7 +320,7 @@ ViewElementCraftingRecipeBlueprints.perk_button = {
 				offset = {
 					0,
 					0,
-					1
+					0
 				},
 				default_color = Color.terminal_background(nil, true),
 				selected_color = Color.terminal_background_selected(nil, true)
@@ -255,9 +339,13 @@ ViewElementCraftingRecipeBlueprints.perk_button = {
 					0,
 					2
 				},
-				color = Color.terminal_background_gradient(nil, true)
+				default_color = Color.terminal_background_gradient(nil, true),
+				selected_color = Color.terminal_frame_selected(nil, true)
 			},
-			change_function = item_selection_button_hover_change_function
+			change_function = function (content, style)
+				item_selection_button_change_function(content, style)
+				item_selection_button_hover_change_function(content, style)
+			end
 		},
 		{
 			pass_type = "texture",
@@ -314,10 +402,19 @@ ViewElementCraftingRecipeBlueprints.perk_button = {
 			}
 		},
 		{
-			value = "n/a",
-			pass_type = "text",
 			value_id = "description",
-			style = weapon_perk_style
+			pass_type = "text",
+			value = "n/a",
+			style = weapon_perk_style,
+			change_function = function (content, style)
+				local hotspot = content.hotspot
+				local default_color = hotspot.disabled and style.disabled_color or style.default_color
+				local hover_color = style.hover_color
+				local text_color = style.text_color
+				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+
+				ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
+			end
 		}
 	},
 	init = function (parent, widget, config, callback_name, secondary_callback_name, ui_renderer)
@@ -339,7 +436,25 @@ weapon_traits_style.size = {
 weapon_traits_style.font_size = 18
 weapon_traits_style.text_horizontal_alignment = "left"
 weapon_traits_style.text_vertical_alignment = "top"
-weapon_traits_style.text_color = Color.terminal_text_header(255, true)
+weapon_traits_style.text_color = {
+	255,
+	216,
+	229,
+	207
+}
+weapon_traits_style.default_color = {
+	255,
+	216,
+	229,
+	207
+}
+weapon_traits_style.hover_color = Color.white(255, true)
+weapon_traits_style.disabled_color = {
+	255,
+	60,
+	60,
+	60
+}
 local weapon_traits_description_style = table.clone(UIFontSettings.body)
 weapon_traits_description_style.offset = {
 	98,
@@ -354,6 +469,14 @@ weapon_traits_description_style.font_size = 18
 weapon_traits_description_style.text_horizontal_alignment = "left"
 weapon_traits_description_style.text_vertical_alignment = "top"
 weapon_traits_description_style.text_color = Color.terminal_text_body(255, true)
+weapon_traits_description_style.default_color = Color.terminal_text_body(255, true)
+weapon_traits_description_style.hover_color = Color.terminal_text_header(255, true)
+weapon_traits_description_style.disabled_color = {
+	255,
+	60,
+	60,
+	60
+}
 ViewElementCraftingRecipeBlueprints.trait_button = {
 	size_function = function (parent, config, ui_renderer)
 		local style = weapon_traits_description_style
@@ -374,6 +497,46 @@ ViewElementCraftingRecipeBlueprints.trait_button = {
 				on_hover_sound = UISoundEvents.default_mouse_hover,
 				on_pressed_sound = UISoundEvents.default_select
 			}
+		},
+		{
+			value = "content/ui/materials/frames/dropshadow_medium",
+			style_id = "outer_shadow",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				scale_to_material = true,
+				color = Color.black(100, true),
+				size_addition = {
+					20,
+					20
+				},
+				offset = {
+					0,
+					0,
+					3
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/frames/line_thin_dashed_animated",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				scale_to_material = true,
+				horizontal_alignment = "right",
+				offset = {
+					0,
+					0,
+					8
+				},
+				color = Color.terminal_corner_selected(nil, true),
+				default_color = Color.terminal_corner_selected(0, true),
+				selected_color = Color.terminal_corner_selected(nil, true)
+			},
+			visibility_function = function (content, style)
+				return content.marked
+			end
 		},
 		{
 			value = "content/ui/materials/backgrounds/default_square",
@@ -403,9 +566,14 @@ ViewElementCraftingRecipeBlueprints.trait_button = {
 					0,
 					2
 				},
-				color = Color.terminal_background_gradient(nil, true)
+				default_color = Color.terminal_background_gradient(nil, true),
+				selected_color = Color.terminal_frame_selected(nil, true),
+				disabled_color = Color.ui_grey_medium(255, true)
 			},
-			change_function = item_selection_button_hover_change_function
+			change_function = function (content, style)
+				item_selection_button_change_function(content, style)
+				item_selection_button_hover_change_function(content, style)
+			end
 		},
 		{
 			pass_type = "texture",
@@ -468,11 +636,20 @@ ViewElementCraftingRecipeBlueprints.trait_button = {
 			style = weapon_traits_style
 		},
 		{
-			style_id = "description",
 			value_id = "description",
 			pass_type = "text",
 			value = "n/a",
-			style = weapon_traits_description_style
+			style_id = "description",
+			style = weapon_traits_description_style,
+			change_function = function (content, style)
+				local hotspot = content.hotspot
+				local default_color = hotspot.disabled and style.disabled_color or style.default_color
+				local hover_color = style.hover_color
+				local text_color = style.text_color
+				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
+
+				ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
+			end
 		}
 	},
 	init = function (parent, widget, config, callback_name, secondary_callback_name, ui_renderer)
@@ -540,7 +717,7 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 			}
 		}
 		local x_offset = 0
-		local costs = config.costs
+		local costs = config.data.costs
 
 		for i = 1, #costs do
 			local cost = costs[i]
@@ -575,6 +752,7 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 			passes[#passes + 1] = {
 				pass_type = "texture",
 				value = wallet_settings.icon_texture_small,
+				style_id = "icon_" .. i,
 				style = {
 					horizontal_alignment = "right",
 					size = {
@@ -593,13 +771,634 @@ ViewElementCraftingRecipeBlueprints.recipe_costs = {
 
 		return passes
 	end,
+	init = function (parent, widget, config, callback_name)
+		local content = widget.content
+		content.data = config.data
+	end,
 	update = function (parent, widget, input_service, dt, t, ui_renderer)
 		local style = widget.style
-		local costs = widget.content.entry.costs
+		local content = widget.content
+		local costs = content.data.costs
 
 		for _, cost in pairs(costs) do
-			local cost_style = style[cost.type]
+			local cost_type = cost.type
+			local cost_style = style[cost_type]
 			cost_style.material = cost.can_afford and cost_style.default_material or cost_style.insufficient_material
+		end
+
+		local x_offset = 0
+
+		for i = 1, #costs do
+			local cost = costs[i]
+			local has_cost = cost.amount > 0
+			local cost_type = cost.type
+			local wallet_settings = WalletSettings[cost_type]
+			local amount_label = TextUtilities.format_currency(cost.amount)
+			content[cost_type] = amount_label
+			local price_style = style[cost_type]
+			price_style.offset[1] = x_offset
+
+			if has_cost then
+				local price_text_size = UIRenderer.text_size(ui_renderer, amount_label, price_style.font_type, price_style.font_size)
+				x_offset = x_offset - price_text_size - 5
+				style["icon_" .. i].offset[1] = x_offset
+				x_offset = x_offset - 28 - 12
+			end
+
+			style[cost_type].visible = has_cost
+			style["icon_" .. i].visible = has_cost
+		end
+	end
+}
+local TEMP_TABLE = {}
+ViewElementCraftingRecipeBlueprints.trait_background = {
+	size = {
+		440,
+		120
+	},
+	pass_template = {
+		{
+			value_id = "trait_background",
+			style_id = "trait_background",
+			pass_type = "texture",
+			value = "content/ui/materials/frames/trait_merge_overlay",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				color = Color.terminal_frame(255, true)
+			}
+		},
+		{
+			value = "content/ui/materials/frames/line_thin_detailed_02",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					-110,
+					-5,
+					3
+				},
+				size = {
+					110,
+					110
+				},
+				color = Color.terminal_frame(255, true)
+			}
+		},
+		{
+			style_id = "hotspot_1",
+			pass_type = "hotspot",
+			content_id = "hotspot_1",
+			content = {
+				hover_progress = 0,
+				on_hover_sound = UISoundEvents.default_mouse_hover,
+				on_pressed_sound = UISoundEvents.default_select
+			},
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					-110,
+					-5,
+					3
+				},
+				size = {
+					110,
+					110
+				}
+			},
+			change_function = function (content, style, animations, dt)
+				local lerp_direction = content.is_hover and 1 or -1
+				local speed = 5
+				content.hover_progress = math.clamp(content.hover_progress + dt * lerp_direction * speed, 0, 1)
+			end
+		},
+		{
+			value = "content/ui/materials/frames/line_thin_detailed_01",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					-110,
+					-5,
+					3
+				},
+				size = {
+					102,
+					102
+				},
+				color = Color.terminal_grid_background(255, true)
+			},
+			change_function = function (content, style, animations, dt)
+				local has_ingredient = content.ingredients.trait_ids[1]
+
+				if not has_ingredient then
+					style.color[1] = 158 + math.sin(Application.time_since_launch() * 4) * 97
+				else
+					local value = math.easeOutCubic(content.hotspot_1.hover_progress)
+					style.color[1] = 255 * value
+				end
+			end
+		},
+		{
+			value = "content/ui/materials/icons/appearances/roman_numerals/roman_one",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					-151.4,
+					-37,
+					3
+				},
+				size = {
+					108,
+					72
+				},
+				color = Color.terminal_grid_background(255, true)
+			}
+		},
+		{
+			value = "content/ui/materials/frames/line_thin_detailed_02",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					0,
+					-5,
+					3
+				},
+				size = {
+					110,
+					110
+				},
+				color = Color.terminal_frame(255, true)
+			}
+		},
+		{
+			pass_type = "texture",
+			style_id = "icon_1",
+			value = "content/ui/materials/icons/traits/traits_container",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				material_values = {},
+				size = {
+					64,
+					64
+				},
+				offset = {
+					-110,
+					0,
+					5
+				},
+				color = Color.terminal_grid_background(255, true),
+				unfilled_color = Color.terminal_grid_background(255, true),
+				filled_color = Color.white(255, true)
+			},
+			change_function = function (content, style, animations, dt)
+				local ingredients = content.ingredients
+				local has_ingredient = ingredients.trait_ids[1]
+				style.color = has_ingredient and style.filled_color or style.unfilled_color
+			end
+		},
+		{
+			value_id = "percentage_1",
+			style_id = "percentage_1",
+			pass_type = "text",
+			value = "",
+			style = {
+				font_size = 15,
+				text_vertical_alignment = "bottom",
+				font_type = "proxima_nova_bold",
+				text_horizontal_alignment = "left",
+				text_color = Color.ui_hud_green_super_light(255, true),
+				disabled_color = Color.terminal_frame(255, true),
+				enabled_color = Color.ui_hud_green_super_light(255, true),
+				offset = {
+					62,
+					-13,
+					10
+				}
+			},
+			visibility_function = function (content)
+				local ingredients = content.ingredients
+
+				return table.size(ingredients.trait_ids) == 3
+			end
+		},
+		{
+			style_id = "hotspot_2",
+			pass_type = "hotspot",
+			content_id = "hotspot_2",
+			content = {
+				hover_progress = 0,
+				on_hover_sound = UISoundEvents.default_mouse_hover,
+				on_pressed_sound = UISoundEvents.default_select
+			},
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					0,
+					-5,
+					3
+				},
+				size = {
+					110,
+					110
+				}
+			},
+			change_function = function (content, style, animations, dt)
+				local lerp_direction = content.is_hover and 1 or -1
+				local speed = 3
+				content.hover_progress = math.clamp(content.hover_progress + dt * lerp_direction * speed, 0, 1)
+			end
+		},
+		{
+			value = "content/ui/materials/frames/line_thin_detailed_01",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					0,
+					-5,
+					3
+				},
+				size = {
+					102,
+					102
+				},
+				color = Color.terminal_grid_background(255, true)
+			},
+			change_function = function (content, style, animations, dt)
+				local ingredients = content.ingredients
+				local has_ingredient = ingredients.trait_ids[2]
+
+				if not has_ingredient then
+					style.color[1] = 158 + math.sin(Application.time_since_launch() * 4) * 97
+				else
+					local value = math.easeOutCubic(content.hotspot_2.hover_progress)
+					style.color[1] = 255 * value
+				end
+			end
+		},
+		{
+			value = "content/ui/materials/icons/appearances/roman_numerals/roman_one",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					-41.4,
+					-37,
+					3
+				},
+				size = {
+					108,
+					72
+				},
+				color = Color.terminal_grid_background(255, true)
+			}
+		},
+		{
+			value = "content/ui/materials/icons/appearances/roman_numerals/roman_one",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					-31.4,
+					-37,
+					3
+				},
+				size = {
+					108,
+					72
+				},
+				color = Color.terminal_grid_background(255, true)
+			}
+		},
+		{
+			value = "content/ui/materials/frames/line_thin_detailed_02",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					110,
+					-5,
+					3
+				},
+				size = {
+					110,
+					110
+				},
+				color = Color.terminal_frame(255, true)
+			}
+		},
+		{
+			pass_type = "texture",
+			style_id = "icon_2",
+			value = "content/ui/materials/icons/traits/traits_container",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				material_values = {},
+				size = {
+					64,
+					64
+				},
+				offset = {
+					0,
+					0,
+					5
+				},
+				color = Color.terminal_grid_background(255, true),
+				unfilled_color = Color.terminal_grid_background(255, true),
+				filled_color = Color.white(255, true)
+			},
+			change_function = function (content, style, animations, dt)
+				local ingredients = content.ingredients
+				local has_ingredient = ingredients.trait_ids[2]
+				style.color = has_ingredient and style.filled_color or style.unfilled_color
+			end
+		},
+		{
+			value_id = "percentage_2",
+			style_id = "percentage_2",
+			pass_type = "text",
+			value = "",
+			style = {
+				font_size = 15,
+				text_vertical_alignment = "bottom",
+				font_type = "proxima_nova_bold",
+				text_horizontal_alignment = "left",
+				text_color = Color.ui_hud_green_super_light(255, true),
+				disabled_color = Color.terminal_frame(255, true),
+				enabled_color = Color.ui_hud_green_super_light(255, true),
+				offset = {
+					172,
+					-13,
+					10
+				}
+			},
+			visibility_function = function (content)
+				local ingredients = content.ingredients
+
+				return table.size(ingredients.trait_ids) == 3
+			end
+		},
+		{
+			style_id = "hotspot_3",
+			pass_type = "hotspot",
+			content_id = "hotspot_3",
+			content = {
+				hover_progress = 0,
+				on_hover_sound = UISoundEvents.default_mouse_hover,
+				on_pressed_sound = UISoundEvents.default_select
+			},
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					110,
+					-5,
+					3
+				},
+				size = {
+					110,
+					110
+				}
+			},
+			change_function = function (content, style, animations, dt)
+				local lerp_direction = content.is_hover and 1 or -1
+				local speed = 3
+				content.hover_progress = math.clamp(content.hover_progress + dt * lerp_direction * speed, 0, 1)
+			end
+		},
+		{
+			value = "content/ui/materials/frames/line_thin_detailed_01",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					110,
+					-5,
+					3
+				},
+				size = {
+					102,
+					102
+				},
+				color = Color.terminal_grid_background(255, true)
+			},
+			change_function = function (content, style, animations, dt)
+				local has_ingredient = content.ingredients.trait_ids[3]
+
+				if not has_ingredient then
+					style.color[1] = 158 + math.sin(Application.time_since_launch() * 4) * 97
+				else
+					local value = math.easeOutCubic(content.hotspot_3.hover_progress)
+					style.color[1] = 255 * value
+				end
+			end
+		},
+		{
+			value = "content/ui/materials/icons/appearances/roman_numerals/roman_one",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					68.6,
+					-37,
+					3
+				},
+				size = {
+					108,
+					72
+				},
+				color = Color.terminal_grid_background(255, true)
+			}
+		},
+		{
+			value = "content/ui/materials/icons/appearances/roman_numerals/roman_one",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					78.6,
+					-37,
+					3
+				},
+				size = {
+					108,
+					72
+				},
+				color = Color.terminal_grid_background(255, true)
+			}
+		},
+		{
+			value = "content/ui/materials/icons/appearances/roman_numerals/roman_one",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					88.6,
+					-37,
+					3
+				},
+				size = {
+					108,
+					72
+				},
+				color = Color.terminal_grid_background(255, true)
+			}
+		},
+		{
+			pass_type = "texture",
+			style_id = "icon_3",
+			value = "content/ui/materials/icons/traits/traits_container",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				material_values = {},
+				size = {
+					64,
+					64
+				},
+				offset = {
+					110,
+					0,
+					5
+				},
+				color = Color.terminal_grid_background(255, true),
+				unfilled_color = Color.terminal_grid_background(255, true),
+				filled_color = Color.white(255, true)
+			},
+			change_function = function (content, style, animations, dt)
+				local ingredients = content.ingredients
+				local trait_ids = ingredients.trait_ids
+				local has_ingredient = ingredients.trait_ids[3]
+				style.color = has_ingredient and style.filled_color or style.unfilled_color
+			end
+		},
+		{
+			value_id = "percentage_3",
+			style_id = "percentage_3",
+			pass_type = "text",
+			value = "",
+			style = {
+				font_size = 15,
+				text_vertical_alignment = "bottom",
+				font_type = "proxima_nova_bold",
+				text_horizontal_alignment = "left",
+				text_color = Color.ui_hud_green_super_light(255, true),
+				disabled_color = Color.terminal_frame(255, true),
+				enabled_color = Color.ui_hud_green_super_light(255, true),
+				offset = {
+					282,
+					-13,
+					10
+				}
+			},
+			visibility_function = function (content)
+				local ingredients = content.ingredients
+
+				return table.size(ingredients.trait_ids) == 3
+			end
+		}
+	},
+	init = function (parent, widget, config, callback_name)
+		local content = widget.content
+		local style = widget.style
+		local icon_material_values = style.icon_1.material_values
+		icon_material_values.icon = ""
+		local icon_material_values = style.icon_2.material_values
+		icon_material_values.icon = ""
+		local icon_material_values = style.icon_3.material_values
+		icon_material_values.icon = ""
+		content.ingredients = config.ingredients
+		content.additional_data = config.additional_data
+	end,
+	update = function (parent, widget, input_service, dt, t, ui_renderer)
+		local content = widget.content
+		local style = widget.style
+		local ingredients = content.ingredients
+		local trait_ids = ingredients.trait_ids
+		local additional_data = content.additional_data
+		local sticker_book = additional_data.sticker_book
+
+		for i = 1, 3 do
+			local hotspot = content["hotspot_" .. i]
+
+			if hotspot.on_pressed then
+				parent:remove_ingredient(i)
+			end
+		end
+
+		table.clear(TEMP_TABLE)
+
+		local lowest_rarity = math.huge
+		local wildcard_texture = "content/ui/textures/icons/traits/empty"
+
+		for i = 1, 3 do
+			local trait_id = trait_ids[i]
+			local trait_item = parent:parent():get_trait_item_from_id(trait_id)
+			local icon_material_values = style["icon_" .. i].material_values
+
+			if trait_item then
+				local trait_name = trait_item.name
+				local rarity = trait_item.rarity
+				local trait_collection = sticker_book and sticker_book[trait_name]
+				local is_wildcard = trait_collection and (not trait_collection[rarity + 1] or sticker_book[trait_name][rarity + 1] == "invalid")
+				local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
+				icon_material_values.icon = is_wildcard and wildcard_texture or texture_icon
+				icon_material_values.frame = texture_frame
+
+				if not is_wildcard then
+					if rarity < lowest_rarity then
+						table.clear(TEMP_TABLE)
+
+						TEMP_TABLE[i] = true
+						lowest_rarity = rarity
+					elseif rarity == lowest_rarity then
+						TEMP_TABLE[i] = true
+					end
+				end
+			else
+				icon_material_values.icon = ""
+				icon_material_values.frame = "content/ui/textures/icons/traits/trait_icon_frame_00_large"
+			end
+		end
+
+		local num_viable_traits = table.size(TEMP_TABLE)
+		local percentage = 1 / num_viable_traits * 100
+		local is_fraction = percentage ~= math.floor(percentage)
+
+		for i = 1, 3 do
+			local id = "percentage_" .. i
+
+			if TEMP_TABLE[i] then
+				if is_fraction then
+					content[id] = string.format("%.1f%%", percentage)
+				else
+					content[id] = string.format("%d%%", percentage)
+				end
+
+				style[id].text_color = style[id].enabled_color
+			else
+				content[id] = "0%"
+				style[id].text_color = style[id].disabled_color
+			end
 		end
 	end
 }

@@ -90,7 +90,6 @@ StoreView.on_enter = function (self)
 	self:_setup_input_legend()
 	self:_setup_offscreen_gui()
 	self:_register_button_callbacks()
-	self:_create_loading_widget()
 	self:_update_wallets_presentation(nil)
 	self:_update_wallets()
 
@@ -119,35 +118,6 @@ StoreView.on_enter = function (self)
 			self:play_vo_events(StoreViewSettings.vo_event_vendor_greeting, "purser_a", nil, 0.8, true)
 		end
 	end
-end
-
-StoreView._create_loading_widget = function (self)
-	local widget_definition = UIWidget.create_definition({
-		{
-			pass_type = "rect",
-			style = {
-				color = Color.black(127.5, true)
-			}
-		},
-		{
-			value = "content/ui/materials/loading/loading_icon",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				size = {
-					256,
-					256
-				},
-				offset = {
-					0,
-					0,
-					1
-				}
-			}
-		}
-	}, "loading")
-	self._loading_widget = self:_create_widget("loading", widget_definition)
 end
 
 StoreView._update_store_page = function (self)
@@ -1259,8 +1229,10 @@ StoreView.update = function (self, dt, t, input_service)
 	if self._store_promise or self._purchase_promise then
 		input_service = input_service:null_service()
 		self._show_loading = true
+		self._widgets_by_name.loading.content.visible = true
 	elseif self._show_loading then
 		self._show_loading = false
+		self._widgets_by_name.loading.content.visible = false
 	end
 
 	local world_spawner = self._world_spawner
@@ -1781,10 +1753,6 @@ StoreView._draw_grid = function (self, dt, t, input_service)
 
 			UIWidget.draw(widget, ui_renderer)
 		end
-	end
-
-	if self._show_loading and self._loading_widget then
-		UIWidget.draw(self._loading_widget, ui_renderer)
 	end
 
 	UIRenderer.end_pass(ui_renderer)

@@ -164,9 +164,11 @@ PlayerCharacterStateInteracting.on_exit = function (self, unit, t, next_state)
 		animation_extension:anim_event(anim_event_3p)
 	end
 
-	local inventory_component = self._inventory_component
+	if next_state ~= "dead" then
+		local inventory_component = self._inventory_component
 
-	PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
+		PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
+	end
 
 	local locomotion_force_rotation_component = self._locomotion_force_rotation_component
 

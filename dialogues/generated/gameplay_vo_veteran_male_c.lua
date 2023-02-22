@@ -540,6 +540,47 @@ local gameplay_vo_veteran_male_c = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_berserker_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_01",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_02",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_03",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_04",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_05",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_06",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_07",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_08",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_09",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			0.783406,
+			1.021167,
+			1.000531,
+			1.254969,
+			0.864083,
+			0.3955,
+			0.870927,
+			1.063885,
+			1.222063,
+			0.930448
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_chaos_hound = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -569,6 +610,47 @@ local gameplay_vo_veteran_male_c = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_chaos_hound_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_01",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_02",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_03",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_04",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_05",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_06",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_07",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_08",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_09",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			0.783406,
+			1.021167,
+			1.000531,
+			1.254969,
+			0.864083,
+			0.3955,
+			0.870927,
+			1.063885,
+			1.222063,
+			0.930448
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_cultist_mutant = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -595,6 +677,47 @@ local gameplay_vo_veteran_male_c = {
 			1.457646,
 			1.745854,
 			1.320563
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_cultist_mutant_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_01",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_02",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_03",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_04",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_05",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_06",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_07",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_08",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_09",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			0.783406,
+			1.021167,
+			1.000531,
+			1.254969,
+			0.864083,
+			0.3955,
+			0.870927,
+			1.063885,
+			1.222063,
+			0.930448
 		},
 		sound_event_weights = {
 			0.1,
@@ -680,6 +803,47 @@ local gameplay_vo_veteran_male_c = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_grenadier_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_01",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_02",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_03",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_04",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_05",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_06",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_07",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_08",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_09",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			0.783406,
+			1.021167,
+			1.000531,
+			1.254969,
+			0.864083,
+			0.3955,
+			0.870927,
+			1.063885,
+			1.222063,
+			0.930448
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_monster = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -738,6 +902,47 @@ local gameplay_vo_veteran_male_c = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_netgunner_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_01",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_02",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_03",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_04",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_05",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_06",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_07",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_08",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_09",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			0.783406,
+			1.021167,
+			1.000531,
+			1.254969,
+			0.864083,
+			0.3955,
+			0.870927,
+			1.063885,
+			1.222063,
+			0.930448
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	enemy_kill_poxwalker_bomber = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -764,6 +969,47 @@ local gameplay_vo_veteran_male_c = {
 			1.553302,
 			2.685448,
 			1.226625
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_poxwalker_bomber_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_01",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_02",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_03",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_04",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_05",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_06",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_07",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_08",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_09",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			0.783406,
+			1.021167,
+			1.000531,
+			1.254969,
+			0.864083,
+			0.3955,
+			0.870927,
+			1.063885,
+			1.222063,
+			0.930448
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -808,32 +1054,166 @@ local gameplay_vo_veteran_male_c = {
 		},
 		randomize_indexes = {}
 	},
-	enemy_kill_scab_flamer = {
+	enemy_kill_renegade_berserker_quick_agnostic = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
 		sound_events = {
-			"loc_veteran_male_c__enemy_kill_monster_01",
-			"loc_veteran_male_c__enemy_kill_monster_02",
-			"loc_veteran_male_c__enemy_kill_monster_03",
-			"loc_veteran_male_c__enemy_kill_monster_04",
-			"loc_veteran_male_c__enemy_kill_monster_05",
-			"loc_veteran_male_c__enemy_kill_monster_06",
-			"loc_veteran_male_c__enemy_kill_monster_07",
-			"loc_veteran_male_c__enemy_kill_monster_08",
-			"loc_veteran_male_c__enemy_kill_monster_09",
-			"loc_veteran_male_c__enemy_kill_monster_10"
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_01",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_02",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_03",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_04",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_05",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_06",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_07",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_08",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_09",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_10"
 		},
 		sound_events_duration = {
-			1.481552,
-			1.67849,
-			1.929073,
-			2.49876,
-			2.581573,
-			2.45025,
-			2.454521,
-			3.039271,
-			2.418177,
-			3.436
+			0.783406,
+			1.021167,
+			1.000531,
+			1.254969,
+			0.864083,
+			0.3955,
+			0.870927,
+			1.063885,
+			1.222063,
+			0.930448
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_scab_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_male_c__enemy_kill_scab_flamer_a_01",
+			"loc_veteran_male_c__enemy_kill_scab_flamer_a_02",
+			"loc_veteran_male_c__enemy_kill_scab_flamer_a_03",
+			"loc_veteran_male_c__enemy_kill_scab_flamer_a_04",
+			"loc_veteran_male_c__enemy_kill_scab_flamer_a_05"
+		},
+		sound_events_duration = {
+			0.862,
+			1.49076,
+			1.467938,
+			0.998906,
+			1.125667
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_scab_flamer_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_01",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_02",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_03",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_04",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_05",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_06",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_07",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_08",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_09",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			0.783406,
+			1.021167,
+			1.000531,
+			1.254969,
+			0.864083,
+			0.3955,
+			0.870927,
+			1.063885,
+			1.222063,
+			0.930448
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_sniper = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_male_c__enemy_kill_sniper_a_01",
+			"loc_veteran_male_c__enemy_kill_sniper_a_02",
+			"loc_veteran_male_c__enemy_kill_sniper_a_03",
+			"loc_veteran_male_c__enemy_kill_sniper_a_04",
+			"loc_veteran_male_c__enemy_kill_sniper_a_05"
+		},
+		sound_events_duration = {
+			1.300604,
+			1.00651,
+			1.249896,
+			1.67075,
+			1.419771
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_sniper_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_01",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_02",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_03",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_04",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_05",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_06",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_07",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_08",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_09",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			0.783406,
+			1.021167,
+			1.000531,
+			1.254969,
+			0.864083,
+			0.3955,
+			0.870927,
+			1.063885,
+			1.222063,
+			0.930448
 		},
 		sound_event_weights = {
 			0.1,
@@ -865,6 +1245,47 @@ local gameplay_vo_veteran_male_c = {
 			1.21576,
 			2.292896,
 			1.686375
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_tox_flamer_quick_agnostic = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_01",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_02",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_03",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_04",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_05",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_06",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_07",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_08",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_09",
+			"loc_veteran_male_c__quick_agnostic_enemy_kill_a_10"
+		},
+		sound_events_duration = {
+			0.783406,
+			1.021167,
+			1.000531,
+			1.254969,
+			0.864083,
+			0.3955,
+			0.870927,
+			1.063885,
+			1.222063,
+			0.930448
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -913,13 +1334,6 @@ local gameplay_vo_veteran_male_c = {
 			0.72324,
 			0.773781,
 			0.893854
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -3654,27 +4068,30 @@ local gameplay_vo_veteran_male_c = {
 	},
 	seen_enemy_scab_flamer = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 6,
 		sound_events = {
-			"loc_veteran_male_c__seen_enemy_specials_generic_01",
-			"loc_veteran_male_c__seen_enemy_specials_generic_02",
-			"loc_veteran_male_c__seen_enemy_specials_generic_03",
-			"loc_veteran_male_c__seen_enemy_specials_generic_04",
-			"loc_veteran_male_c__seen_enemy_specials_generic_05"
+			"loc_veteran_male_c__seen_enemy_scab_flamer_a_01",
+			"loc_veteran_male_c__seen_enemy_scab_flamer_a_02",
+			"loc_veteran_male_c__seen_enemy_scab_flamer_a_03",
+			"loc_veteran_male_c__seen_enemy_scab_flamer_a_04",
+			"loc_veteran_male_c__seen_enemy_scab_flamer_a_05",
+			"loc_veteran_male_c__seen_enemy_scab_flamer_a_06"
 		},
 		sound_events_duration = {
-			1.691938,
-			2.26726,
-			1.230448,
-			2.590552,
-			1.229344
+			1.262573,
+			1.52624,
+			1.815271,
+			2.362885,
+			2.324865,
+			2.880094
 		},
 		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
 		},
 		randomize_indexes = {}
 	},

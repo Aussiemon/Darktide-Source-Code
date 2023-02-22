@@ -21,6 +21,7 @@ local PowerLevelSettings = require("scripts/settings/damage/power_level_settings
 local SweepSpline = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline")
 local SweepSplineExported = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline_exported")
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
+local attack_results = AttackSettings.attack_results
 local melee_attack_strengths = AttackSettings.melee_attack_strength
 local proc_events = BuffSettings.proc_events
 local buff_keywords = BuffSettings.keywords
@@ -134,6 +135,7 @@ ActionSweep.start = function (self, action_settings, t, time_scale, params)
 	self._max_hit_mass_special = self:_calculate_max_hit_mass(damage_profile_special_active, power_level, charge_level, is_critical_strike)
 	self._amount_of_mass_hit = 0
 	self._num_hit_enemies = 0
+	self._num_killed_enemies = 0
 	self._dealt_sticky_damage = false
 	self._hit_weakspot = false
 	self._current_sticky_armor_type = nil
@@ -223,6 +225,7 @@ ActionSweep.server_correction_occurred = function (self)
 	self._max_hit_mass_special = self:_calculate_max_hit_mass(damage_profile_special_active, power_level, charge_level)
 	self._amount_of_mass_hit = 0
 	self._num_hit_enemies = 0
+	self._num_killed_enemies = 0
 end
 
 ActionSweep.finish = function (self, reason, data, t, time_in_action)
@@ -520,6 +523,11 @@ ActionSweep._update_hit_stickyness = function (self, dt, t, action_sweep_compone
 				end
 
 				local damage_dealt, attack_result, damage_efficiency, _, hit_weakspot = Attack.execute(stick_to_unit, damage_profile, "power_level", DEFAULT_POWER_LEVEL, "target_index", 1, "hit_world_position", hit_world_position, "attack_direction", attack_direction, "hit_zone_name", hit_zone_name, "attacking_unit", attacking_unit, "hit_actor", stick_to_actor, "attack_type", attack_type, "herding_template", herding_template, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", self._weapon.item, "wounds_shape", wounds_shape)
+
+				if attack_result == attack_results.died then
+					self._num_killed_enemies = self._num_killed_enemies + 1
+				end
+
 				self._hit_weakspot = self._hit_weakspot or hit_weakspot
 
 				if i == 1 then
@@ -608,15 +616,23 @@ ActionSweep._handle_exit_procs = function (self)
 	local buff_extension = self._buff_extension
 	local damage_profile = self._damage_profile
 	local is_heavy = damage_profile.melee_attack_strength == melee_attack_strengths.heavy
+	local num_hit_enemies = self._num_hit_enemies
+	local num_killed_enemies = self._num_killed_enemies
+	local hit_weakspot = self._hit_weakspot
+	local combo_count = self._combo_count
 	local param_table = buff_extension:request_proc_event_param_table()
 
 	if param_table then
-		param_table.num_hit_units = self._num_hit_enemies
-		param_table.hit_weakspot = self._hit_weakspot
-		param_table.combo_count = self._combo_count
+		param_table.num_hit_units = num_hit_enemies
+		param_table.hit_weakspot = hit_weakspot
 		param_table.is_heavy = is_heavy
+		param_table.combo_count = combo_count
 
 		buff_extension:add_proc_event(proc_events.on_sweep_finish, param_table)
+	end
+
+	if Managers.stats.can_record_stats() then
+		Managers.stats:record_sweep_finished(self._player, num_hit_enemies, num_killed_enemies, combo_count, hit_weakspot, is_heavy)
 	end
 end
 
@@ -1071,6 +1087,10 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 
 	if target_is_character and target_is_alive then
 		self._num_hit_enemies = num_hit_enemies
+	end
+
+	if target_is_character and target_is_alive and result == attack_results.died then
+		self._num_killed_enemies = self._num_killed_enemies + 1
 	end
 
 	self._amount_of_mass_hit = amount_of_mass_hit

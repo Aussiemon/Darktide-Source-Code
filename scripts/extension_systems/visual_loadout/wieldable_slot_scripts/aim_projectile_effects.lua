@@ -309,10 +309,7 @@ AimProjectileEffects._get_trajactory_data = function (self, integration_data, ma
 end
 
 AimProjectileEffects._can_update_trajectory = function (self, trajectory_settings)
-	local can_update = nil
-	can_update = self:_can_update_trajectory_spline(trajectory_settings)
-
-	return can_update
+	return self:_can_update_trajectory_spline(trajectory_settings)
 end
 
 AimProjectileEffects._start_trajectory = function (self, trajectory_settings)
@@ -324,10 +321,7 @@ AimProjectileEffects._stop_trajectory = function (self)
 end
 
 AimProjectileEffects._trajectory_is_active = function (self)
-	local is_alive = nil
-	is_alive = self:_trajectory_is_active_spline()
-
-	return is_alive
+	return self:_trajectory_is_active_spline()
 end
 
 AimProjectileEffects._set_trajectory_positions = function (self, start_position, aim_data, number_of_aim_data, arc_offset, total_distance, arc_distances, dt)

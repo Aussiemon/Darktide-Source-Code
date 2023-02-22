@@ -1,5 +1,4 @@
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
-local BoonsManager = require("scripts/managers/boons/boons_manager")
 local RemotePlayer = require("scripts/managers/player/remote_player")
 local MasterItems = require("scripts/backend/master_items")
 local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_manager_constants")
@@ -21,12 +20,6 @@ end
 MultiplayerSession.became_host = function (self, host_type, lobby_id)
 	self._state = self.STATES.host
 	self._host_type = host_type
-
-	if host_type ~= HOST_TYPES.hub_server then
-		local is_host = true
-		Managers.boons = BoonsManager:new(is_host)
-	end
-
 	local peer_id = Network.peer_id()
 
 	Managers.bot:create_synchronizer_host()
@@ -53,11 +46,12 @@ MultiplayerSession.became_host = function (self, host_type, lobby_id)
 		end
 
 		if tag then
+			local text = not IS_XBS or tag ~= ChatManagerConstants.ChannelTag.HUB
 			local voice = host_type == HOST_TYPES.mission_server
 			local vivox_backend_info = self:vivox_backend_info()
 
 			if vivox_backend_info then
-				Managers.chat:join_chat_channel(vivox_backend_info.channelSip, peer_id, voice, tag, vivox_backend_info.token)
+				Managers.chat:join_chat_channel(vivox_backend_info.channelSip, peer_id, voice, text, tag, vivox_backend_info.token)
 			else
 				Log.warning("MultiplayerSession", "Missing vivox backend info")
 			end
@@ -99,12 +93,6 @@ MultiplayerSession.stopped_being_host = function (self, is_error, source, reason
 		Managers.hub_server:delete()
 
 		Managers.hub_server = nil
-	end
-
-	if Managers.boons then
-		Managers.boons:delete()
-
-		Managers.boons = nil
 	end
 
 	self._disconnection_info = {
@@ -150,8 +138,9 @@ MultiplayerSession.client_joined = function (self, channel_id, peer_id, player_s
 	local profile_chunks_array = player_sync_data.profile_chunks_array
 	local player_session_id_array = player_sync_data.player_session_id_array
 	local slot_array = player_sync_data.slot_array
+	local last_mission_id = player_sync_data.last_mission_id
 
-	Managers.player:create_players_from_sync_data(RemotePlayer, channel_id, peer_id, is_server, local_player_id_array, is_human_controlled_array, account_id_array, profile_chunks_array, player_session_id_array, slot_array)
+	Managers.player:create_players_from_sync_data(RemotePlayer, channel_id, peer_id, is_server, local_player_id_array, is_human_controlled_array, account_id_array, profile_chunks_array, player_session_id_array, slot_array, last_mission_id)
 	Managers.loading:add_client(channel_id)
 
 	local package_synchronizer_host = Managers.package_synchronization:synchronizer_host()
@@ -171,6 +160,14 @@ MultiplayerSession.client_disconnected = function (self, channel_id, peer_id, ga
 
 	if loading_manager and loading_manager:is_host() then
 		loading_manager:remove_client(channel_id)
+	end
+
+	if server_manager then
+		for _, player in pairs(Managers.player:players_at_peer(peer_id)) do
+			if player:is_human_controlled() then
+				Managers.telemetry_events:client_disconnected(player, game_reason or engine_reason)
+			end
+		end
 	end
 
 	local removed_players_data = {}
@@ -241,18 +238,18 @@ MultiplayerSession.joined_host = function (self, channel_id, host_peer_id, host_
 		end
 
 		if tag then
+			local text = not IS_XBS or tag ~= ChatManagerConstants.ChannelTag.HUB
 			local voice = host_type == HOST_TYPES.mission_server
 			local vivox_backend_info = self:vivox_backend_info()
 
 			if vivox_backend_info then
-				Managers.chat:join_chat_channel(vivox_backend_info.channelSip, host_peer_id, voice, tag, vivox_backend_info.token)
+				Managers.chat:join_chat_channel(vivox_backend_info.channelSip, host_peer_id, voice, text, tag, vivox_backend_info.token)
 			else
 				Log.warning("MultiplayerSession", "Missing vivox backend info")
 			end
 		end
 	end
 
-	Managers.boons = BoonsManager:new()
 	local server_name = Managers.connection:server_name()
 
 	Log.info("MultiplayerSession", "Joined Server: %s", server_name)
@@ -284,13 +281,6 @@ MultiplayerSession.disconnected_from_host = function (self, is_error, source, re
 		reason = reason,
 		error_details = optional_error_details
 	}
-
-	if Managers.telemetry_events then
-		for _, player in pairs(Managers.player:players_at_peer(Network.peer_id())) do
-			Managers.telemetry_events:client_disconnected(player, self._disconnection_info)
-		end
-	end
-
 	self._state = self.STATES.dead
 	local host_peer_id = self._joined_host_peer_id
 
@@ -314,12 +304,6 @@ MultiplayerSession.disconnected_from_host = function (self, is_error, source, re
 
 			break
 		end
-	end
-
-	if Managers.boons then
-		Managers.boons:delete()
-
-		Managers.boons = nil
 	end
 
 	Managers.event:trigger("event_multiplayer_session_disconnected_from_host")
@@ -354,18 +338,23 @@ MultiplayerSession.other_client_joined = function (self, peer_id, player_sync_da
 
 	package_synchronizer_client:add_peer(peer_id)
 
-	if self._host_type == HOST_TYPES.mission_server then
-		for _, player in pairs(Managers.player:players_at_peer(peer_id)) do
-			local account_id = player:account_id()
+	local my_presence = Managers.presence:presence_entry_myself()
+	local my_account_id = my_presence:account_id()
 
-			if account_id and account_id ~= PlayerManager.NO_ACCOUNT_ID then
+	for _, player in pairs(Managers.player:players_at_peer(peer_id)) do
+		local account_id = player:account_id()
+
+		if account_id and account_id ~= PlayerManager.NO_ACCOUNT_ID and account_id ~= my_account_id then
+			if self._host_type == HOST_TYPES.mission_server then
 				Managers.data_service.social:update_recent_players(account_id)
 			end
-		end
-	end
 
-	if Managers.chat then
-		Managers.chat:player_mute_status_changed()
+			if Managers.chat then
+				Managers.chat:player_mute_status_changed(account_id)
+			end
+
+			break
+		end
 	end
 end
 

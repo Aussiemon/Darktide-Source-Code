@@ -1324,6 +1324,9 @@ weapon_template.base_stats = {
 			action_left_light_2 = {
 				damage_trait_templates.combatsword_dps_stat
 			},
+			action_right_light_2 = {
+				damage_trait_templates.combatsword_dps_stat
+			},
 			action_attack_special = {
 				damage_trait_templates.combatsword_dps_stat
 			},
@@ -1371,6 +1374,9 @@ weapon_template.base_stats = {
 			action_left_light_2 = {
 				damage_trait_templates.combatsword_finesse_stat
 			},
+			action_right_light_2 = {
+				damage_trait_templates.combatsword_finesse_stat
+			},
 			action_attack_special = {
 				damage_trait_templates.combatsword_finesse_stat
 			},
@@ -1404,6 +1410,9 @@ weapon_template.base_stats = {
 				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_left_light_2 = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_right_light_2 = {
 				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_attack_special = {
@@ -1450,6 +1459,9 @@ weapon_template.base_stats = {
 			action_left_light_2 = {
 				damage_trait_templates.combatsword_cleave_damage_stat
 			},
+			action_right_light_2 = {
+				damage_trait_templates.combatsword_cleave_damage_stat
+			},
 			action_attack_special = {
 				damage_trait_templates.combatsword_cleave_damage_stat
 			},
@@ -1487,6 +1499,9 @@ weapon_template.base_stats = {
 				damage_trait_templates.combatsword_cleave_targets_stat
 			},
 			action_left_light_2 = {
+				damage_trait_templates.combatsword_cleave_targets_stat
+			},
+			action_right_light_2 = {
 				damage_trait_templates.combatsword_cleave_targets_stat
 			},
 			action_attack_special = {

@@ -17,6 +17,7 @@ local CraftingSettings = require("scripts/settings/item/crafting_settings")
 local InputDevice = require("scripts/managers/input/input_device")
 local WeaponUIStatsTemplates = require("scripts/settings/equipment/weapon_ui_stats_templates")
 local Action = require("scripts/utilities/weapon/action")
+local TextUtilities = require("scripts/utilities/ui/text")
 local DEBUG_BACKGROUNDS = false
 local bar_size = 100
 
@@ -234,7 +235,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 	modification_lock_style.offset = {
 		10,
 		-2,
-		7
+		9
 	}
 	modification_lock_style.font_size = 24
 	modification_lock_style.text_vertical_alignment = "bottom"
@@ -243,8 +244,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 	local weapon_perk_style = table.clone(UIFontSettings.body)
 	weapon_perk_style.offset = {
 		98,
-		0,
-		6
+		3,
+		8
 	}
 	weapon_perk_style.size = {
 		grid_width - 106,
@@ -271,7 +272,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_traits_style.offset = {
 		98,
 		0,
-		3
+		8
 	}
 	weapon_traits_style.size = {
 		grid_width - 106
@@ -284,7 +285,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 	weapon_traits_description_style.offset = {
 		98,
 		20,
-		3
+		8
 	}
 	weapon_traits_description_style.size = {
 		grid_width - 106,
@@ -4559,7 +4560,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local perk_rarity = element.perk_rarity
 				local description = ItemUtils.perk_description(perk_item, perk_rarity, perk_value)
 				local text_height = get_style_text_height(description, weapon_perk_style, ui_renderer)
-				local entry_height = math.max(weapon_perk_style.font_size + 8, text_height + 10)
+				local entry_height = math.max(weapon_perk_style.font_size + 8, text_height + 14)
 
 				return {
 					grid_width,
@@ -4593,7 +4594,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							42,
 							0,
-							6
+							8
 						},
 						color = Color.terminal_icon(255, true)
 					}
@@ -4622,17 +4623,40 @@ local function generate_blueprints_function(grid_size, optional_item)
 						horizontal_alignment = "center",
 						offset = {
 							0,
-							-3,
-							14
+							0,
+							7
 						},
 						size_addition = {
-							8,
+							24,
 							25
 						},
-						color = Color.ui_blue_light(nil, true)
+						color = Color.terminal_corner_selected(nil, true)
 					},
 					change_function = function (content, style)
 						style.color[1] = 200 + 55 * math.cos(3 * Application.time_since_launch())
+					end
+				},
+				{
+					pass_type = "texture",
+					style_id = "glow_background",
+					value = "content/ui/materials/backgrounds/default_square",
+					style = {
+						vertical_alignment = "center",
+						scale_to_material = true,
+						horizontal_alignment = "center",
+						offset = {
+							0,
+							0,
+							6
+						},
+						size_addition = {
+							0,
+							1
+						},
+						color = Color.terminal_corner_selected(nil, true)
+					},
+					change_function = function (content, style)
+						style.color[1] = 50 + 5 * math.cos(3 * Application.time_since_launch())
 					end
 				},
 				{
@@ -4664,6 +4688,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content.rank = ItemUtils.perk_textures(perk_item, perk_rarity)
 				style.locked.visible = element.is_locked or false
 				style.glow.visible = element.show_glow or false
+				style.glow_background.visible = element.show_glow or false
 
 				if element.show_rating then
 					content.rating = " " .. ItemUtils.perk_rating(perk_item, perk_rarity)
@@ -4723,7 +4748,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							20,
 							0,
-							0
+							8
 						},
 						color = Color.terminal_icon(255, true)
 					}
@@ -4774,16 +4799,39 @@ local function generate_blueprints_function(grid_size, optional_item)
 						offset = {
 							0,
 							0,
-							10
+							7
 						},
 						size_addition = {
-							8,
-							32
+							24,
+							25
 						},
-						color = Color.ui_blue_light(nil, true)
+						color = Color.terminal_corner_selected(nil, true)
 					},
 					change_function = function (content, style)
 						style.color[1] = 200 + 55 * math.cos(3 * Application.time_since_launch())
+					end
+				},
+				{
+					pass_type = "texture",
+					style_id = "glow_background",
+					value = "content/ui/materials/backgrounds/default_square",
+					style = {
+						vertical_alignment = "center",
+						scale_to_material = true,
+						horizontal_alignment = "center",
+						offset = {
+							0,
+							0,
+							6
+						},
+						size_addition = {
+							0,
+							1
+						},
+						color = Color.terminal_corner_selected(nil, true)
+					},
+					change_function = function (content, style)
+						style.color[1] = 50 + 5 * math.cos(3 * Application.time_since_launch())
 					end
 				}
 			},
@@ -4799,12 +4847,20 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content.display_name = Localize(display_name)
 				local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, trait_rarity)
 				local icon_material_values = style.icon.material_values
-				icon_material_values.icon = texture_icon
-				icon_material_values.frame = texture_frame
+
+				if texture_icon then
+					icon_material_values.icon = texture_icon
+				end
+
+				if texture_frame then
+					icon_material_values.frame = texture_frame
+				end
+
 				local description = ItemUtils.trait_description(trait_item, trait_rarity, trait_value)
 				content.description = description
 				style.locked.visible = element.is_locked or false
 				style.glow.visible = element.show_glow or false
+				style.glow_background.visible = element.show_glow or false
 
 				if element.show_rating then
 					local rating_value = ItemUtils.trait_rating(trait_item, trait_rarity, trait_value)
@@ -5800,18 +5856,18 @@ local function generate_blueprints_function(grid_size, optional_item)
 			},
 			pass_template = {
 				{
-					value = "content/ui/materials/icons/perks/perk_level_01",
+					value = "content/ui/materials/icons/objectives/secondary",
 					pass_type = "texture",
 					style = {
 						vertical_alignment = "top",
 						horizontal_alignment = "left",
 						size = {
-							20,
-							20
+							15,
+							15
 						},
 						offset = {
 							20,
-							0,
+							3,
 							0
 						},
 						color = Color.terminal_icon(255, true)
@@ -5864,7 +5920,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 					value = string.format("%.2f", value) .. display_units
 				end
 
-				content.text = string.format("%s: %s", Localize(display_name), value)
+				value = TextUtilities.apply_color_to_text(value, Color.terminal_icon(255, true))
+				content.text = string.format(" %s: %s", Localize(display_name), value)
 			end
 		},
 		attack_pattern_header = {

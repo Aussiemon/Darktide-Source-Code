@@ -433,6 +433,14 @@ InputManager._update_key_watch = function (self)
 				main = released[1],
 				disablers = {}
 			}
+			local bound = "[" .. released[1] .. "]"
+
+			for _, key in ipairs(held) do
+				bound = bound .. " + [" .. key .. "]"
+			end
+
+			Log.info("Input", "Got key-combo: %s", bound)
+
 			self._key_watch = false
 		end
 	end

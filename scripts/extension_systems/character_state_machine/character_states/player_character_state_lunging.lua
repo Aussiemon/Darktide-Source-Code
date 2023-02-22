@@ -29,7 +29,7 @@ local proc_events = BuffSettings.proc_events
 local DAMAGE_COLLISION_FILTER = "filter_player_character_lunge"
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local LUNGE_ATTACK_POWER_LEVEL = 1000
-local _max_hit_mass, _record_stat_on_lunge_hit, _record_stat_on_lunge_complete = nil
+local _max_hit_mass, _record_stat_on_lunge_hit, _record_stat_on_lunge_complete, _apply_buff_to_hit_unit = nil
 local PlayerCharacterStateLunging = class("PlayerCharacterStateLunging", "PlayerCharacterStateBase")
 
 PlayerCharacterStateLunging.init = function (self, character_state_init_context, ...)
@@ -162,7 +162,7 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 		local toughness = lunge_template.restore_toughness
 
 		if toughness then
-			Toughness.replenish_percentage(unit, toughness, true)
+			Toughness.replenish_percentage(unit, toughness, true, "lunging")
 		end
 	end
 
@@ -190,6 +190,8 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 	end
 end
 
+local temp_hit_units = {}
+
 PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 	local movement_state_component = self._movement_state_component
 	movement_state_component.is_dodging = false
@@ -198,6 +200,7 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 	self._moving_backwards = false
 	self._has_pushback = false
 	self._locomotion_steering_component.disable_minion_collision = false
+	local hit_enemy_units = self._hit_enemy_units
 
 	if next_state == "sprinting" then
 		movement_state_component.method = "sprint"
@@ -220,7 +223,7 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 		self._camera_extension:trigger_camera_shake(lunge_end_camera_shake, will_be_predicted)
 	end
 
-	if lunge_template.disallow_weapons then
+	if next_state ~= "dead" and lunge_template.disallow_weapons then
 		PlayerUnitVisualLoadout.wield_previous_slot(self._inventory_component, unit, t)
 	end
 
@@ -248,7 +251,21 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 		local power_level = 600
 		local charge_level, attack_type = nil
 
-		Explosion.create_explosion(self._world, self._physics_world, position + direction * forward_offset + Vector3.up() * vertical_offset, impact_normal, unit, explosion_template, power_level, charge_level, attack_type, nil, nil, nil, nil, self._hit_enemy_units)
+		table.clear(temp_hit_units)
+		Explosion.create_explosion(self._world, self._physics_world, position + direction * forward_offset + Vector3.up() * vertical_offset, impact_normal, unit, explosion_template, power_level, charge_level, attack_type, nil, nil, nil, nil, temp_hit_units)
+
+		local add_debuff_on_hit = lunge_template.add_debuff_on_hit
+		local number_of_stacks = lunge_template.add_debuff_on_hit_stacks or 1
+
+		for hit_unit, attack_result in pairs(temp_hit_units) do
+			if add_debuff_on_hit and attack_result ~= "died" and not hit_enemy_units[hit_unit] then
+				_apply_buff_to_hit_unit(hit_unit, add_debuff_on_hit, number_of_stacks, t, unit)
+			end
+
+			hit_enemy_units[hit_unit] = attack_result
+		end
+
+		table.clear(temp_hit_units)
 	end
 
 	local add_delayed_buff = lunge_template.add_delayed_buff
@@ -269,9 +286,9 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 		end
 	end
 
-	_record_stat_on_lunge_complete(self._player, self._hit_enemy_units, lunge_template)
+	_record_stat_on_lunge_complete(self._player, hit_enemy_units, lunge_template)
 	table.clear(self._played_timing_anims)
-	table.clear(self._hit_enemy_units)
+	table.clear(hit_enemy_units)
 end
 
 PlayerCharacterStateLunging.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
@@ -514,19 +531,12 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 				self._push_sfx_cooldown = t + math.random_range(0, 0.2)
 			end
 
-			if attack_result ~= "died" then
-				local add_debuff_on_hit = lunge_template.add_debuff_on_hit
+			local add_debuff_on_hit = lunge_template.add_debuff_on_hit
 
-				if add_debuff_on_hit then
-					local stacks = lunge_template.add_debuff_on_hit_stacks or 1
-					local buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
+			if add_debuff_on_hit and attack_result ~= "died" then
+				local number_of_stacks = lunge_template.add_debuff_on_hit_stacks or 1
 
-					if buff_extension then
-						for i = 1, stacks do
-							buff_extension:add_internally_controlled_buff(add_debuff_on_hit, t, "owner_unit", unit)
-						end
-					end
-				end
+				_apply_buff_to_hit_unit(hit_unit, add_debuff_on_hit, number_of_stacks, t, unit)
 			end
 
 			hit_enemy_units[hit_unit] = attack_result
@@ -670,6 +680,7 @@ function _record_stat_on_lunge_complete(player, hit_units, lunge_template)
 	local difficulty = Managers.state.difficulty:get_difficulty()
 	local number_of_hit_units = 0
 	local number_of_hit_ogryns = 0
+	local number_of_hit_ranged = 0
 
 	for hit_unit, attack_result in pairs(hit_units) do
 		number_of_hit_units = number_of_hit_units + 1
@@ -679,13 +690,31 @@ function _record_stat_on_lunge_complete(player, hit_units, lunge_template)
 		if breed and breed.tags.ogryn then
 			number_of_hit_ogryns = number_of_hit_ogryns + 1
 		end
+
+		if breed and breed.ranged then
+			number_of_hit_ranged = number_of_hit_ranged + 1
+		end
 	end
 
-	if specialization == "ogryn_2" and number_of_hit_ogryns >= 6 and difficulty >= 4 then
-		Managers.achievements:trigger_event(account_id, character_id, "ogryn_2_bull_rushed_x_ogryns_event")
+	if specialization == "ogryn_2" then
+		local requirement = 6
+
+		if number_of_hit_ogryns >= requirement and difficulty >= 4 then
+			Managers.achievements:trigger_event(account_id, character_id, "ogryn_2_bull_rushed_x_ogryns_event")
+		end
 	end
 
-	Managers.stats:record_lunge_stop(player, number_of_hit_units)
+	Managers.stats:record_lunge_stop(player, number_of_hit_units, number_of_hit_ranged)
+end
+
+function _apply_buff_to_hit_unit(hit_unit, buff_to_apply, number_of_stacks, t, origin_unit)
+	local buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
+	local toughness_extension = ScriptUnit.has_extension(hit_unit, "toughness_system")
+	local has_toughness = toughness_extension and toughness_extension:current_toughness_percent() > 0
+
+	if HEALTH_ALIVE[hit_unit] and buff_extension and not has_toughness then
+		buff_extension:add_internally_controlled_buff_with_stacks(buff_to_apply, number_of_stacks, t, "owner_unit", origin_unit)
+	end
 end
 
 return PlayerCharacterStateLunging

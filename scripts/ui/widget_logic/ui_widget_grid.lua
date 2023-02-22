@@ -8,14 +8,17 @@ local DIRECTION = {
 }
 local UIWidgetGrid = class("UIWidgetGrid")
 
-UIWidgetGrid.init = function (self, widgets, alignment_list, scenegraph, area_scenegraph_id, direction, spacing, fill_section_spacing, use_is_focused_for_navigation, use_select_on_focused)
+UIWidgetGrid.init = function (self, widgets, alignment_list, scenegraph, area_scenegraph_id, direction, spacing, fill_section_spacing, use_is_focused_for_navigation, use_select_on_focused, bottom_chin, top_padding, scroll_start_margin)
 	self._direction = direction
 	self._scenegraph = scenegraph
 	self._spacing = spacing or {
 		0,
 		0
 	}
+	self._bottom_chin = bottom_chin or 0
+	self._top_padding = top_padding or 0
 	self._area_scenegraph_id = area_scenegraph_id
+	self._handle_grid_navigation = true
 	alignment_list = alignment_list or widgets
 	local axis = (direction == DIRECTION.LEFT or direction == DIRECTION.RIGHT) and 1 or 2
 	local negative_direction = direction == DIRECTION.LEFT or direction == DIRECTION.UP
@@ -26,11 +29,16 @@ UIWidgetGrid.init = function (self, widgets, alignment_list, scenegraph, area_sc
 	self._axis = axis
 	self._scroll_direction_multiplier = negative_direction and 1 or -1
 	local area_size = self:_get_area_size()
-	self._start_offset = negative_direction and area_size[axis] or 0
+	self._start_offset = negative_direction and area_size[axis] - self._top_padding or self._top_padding
 	self._widgets = widgets
 	self._alignment_list = alignment_list
 	self._total_grid_length, self._smallest_widget_length = self:_align_grid_widgets(alignment_list)
 	self._ui_animations = {}
+	self._scroll_start_margin = scroll_start_margin or 0
+end
+
+UIWidgetGrid.set_handle_grid_navigation = function (self, allow)
+	self._handle_grid_navigation = allow
 end
 
 UIWidgetGrid._get_area_size = function (self)
@@ -41,7 +49,10 @@ UIWidgetGrid._get_area_size = function (self)
 		local area_scenegraph_id = self._area_scenegraph_id
 		local scenegraph_size = UIScenegraph.size_scaled(scenegraph, area_scenegraph_id)
 		local size = Vector3.to_array(scenegraph_size)
-		self._area_size = size
+		self._area_size = {
+			size[1],
+			size[2] - self._bottom_chin - self._top_padding
+		}
 
 		return size
 	end
@@ -51,11 +62,12 @@ UIWidgetGrid.get_spacing = function (self)
 	return self._spacing
 end
 
-UIWidgetGrid.assign_scrollbar = function (self, scrollbar_widget, pivot_scenegraph_id, interaction_scenegraph_id)
+UIWidgetGrid.assign_scrollbar = function (self, scrollbar_widget, pivot_scenegraph_id, interaction_scenegraph_id, use_custom_scroll_amount)
 	self._scrollbar_widget = scrollbar_widget
 	self._pivot_scenegraph_id = pivot_scenegraph_id
 	self._interaction_scenegraph_id = interaction_scenegraph_id
 	scrollbar_widget.style.mouse_scroll.scenegraph_id = interaction_scenegraph_id
+	self._use_custom_scroll_amount = not not use_custom_scroll_amount
 
 	self:_update_scrollbar_sizes()
 end
@@ -126,7 +138,7 @@ UIWidgetGrid.update = function (self, dt, t, input_service)
 	self:_update_animations(dt, t)
 	self:_update_grid_position(dt, t)
 
-	if input_service then
+	if input_service and self._handle_grid_navigation then
 		local current_index = self._selected_grid_index
 
 		if current_index then
@@ -152,10 +164,13 @@ UIWidgetGrid._update_scrollbar_sizes = function (self)
 		local axis = self._axis
 		local area_length = area_size[axis]
 		scrollbar_widget.content.area_length = area_length
-		local spacing = self._spacing
-		local scroll_step_length = self._scroll_step_length or self._smallest_widget_length
-		local scroll_amount = (scroll_step_length + spacing[axis]) / scroll_length
-		scrollbar_widget.content.scroll_amount = scroll_amount
+
+		if not self._use_custom_scroll_amount then
+			local spacing = self._spacing
+			local scroll_step_length = self._scroll_step_length or self._smallest_widget_length
+			local scroll_amount = (scroll_step_length + spacing[axis]) / scroll_length
+			scrollbar_widget.content.scroll_amount = scroll_amount
+		end
 	end
 
 	local scrollbar_active = self:can_scroll()
@@ -221,9 +236,10 @@ end
 UIWidgetGrid.scroll_length = function (self)
 	local axis = self._axis
 	local stale_axis = axis % 2 + 1
+	local top_padding = self._top_padding or 0
 	local area_size = self:_get_area_size()
 	local total_grid_length = self._total_grid_length
-	local value = math.max(total_grid_length - area_size[axis], 0)
+	local value = math.max(total_grid_length - area_size[axis] - top_padding, 0)
 
 	return value
 end
@@ -392,6 +408,10 @@ UIWidgetGrid._find_closest_neighbour_horizontal = function (self, index, input_d
 end
 
 UIWidgetGrid.force_update_list_size = function (self)
+	self._area_size = nil
+
+	self:_get_area_size()
+
 	local alignment_list = self._alignment_list
 	self._total_grid_length, self._smallest_widget_length = self:_align_grid_widgets(alignment_list)
 
@@ -635,10 +655,22 @@ UIWidgetGrid.handle_grid_selection = function (self, input_service)
 
 	if new_selection_index then
 		local scroll_progress = nil
+		local current_widget = self:widget_by_index(new_selection_index)
+		local first_element = self._widgets[self._first_interactable_widget_index]
+		local last_element = self._widgets[self._last_interactable_widget_index]
+		local is_widget_first_grid_position, is_widget_last_grid_position = nil
 
-		if new_selection_index == self._first_interactable_widget_index then
+		if DIRECTION.UP or DIRECTION.DOWN then
+			is_widget_first_grid_position = first_element.content.row == current_widget.content.row
+			is_widget_last_grid_position = last_element.content.row == current_widget.content.row
+		else
+			is_widget_first_grid_position = first_element.content.column == current_widget.content.column
+			is_widget_last_grid_position = last_element.content.column == current_widget.content.column
+		end
+
+		if is_widget_first_grid_position then
 			scroll_progress = 0
-		elseif new_selection_index == self._last_interactable_widget_index then
+		elseif is_widget_last_grid_position then
 			scroll_progress = 1
 		else
 			scroll_progress = self:get_scrollbar_percentage_by_index(new_selection_index)
@@ -787,7 +819,7 @@ UIWidgetGrid.get_scrollbar_percentage_by_index = function (self, index, start_fr
 		end
 
 		local scroll_length = self:scroll_length()
-		local scrolled_length = scroll_length * scroll_progress
+		local scrolled_length = scroll_length * scroll_progress + self._top_padding
 		local axis = self._axis
 		local stale_axis = axis % 2 + 1
 		local draw_length = self._area_size[axis]
@@ -805,11 +837,11 @@ UIWidgetGrid.get_scrollbar_percentage_by_index = function (self, index, start_fr
 			local start_position_bottom = start_position_top + height
 			local percentage_difference = 0
 
-			if draw_end_height < start_position_bottom then
-				local height_missing = start_position_bottom - draw_end_height
+			if draw_end_height < start_position_bottom + self._scroll_start_margin then
+				local height_missing = start_position_bottom - draw_end_height + self._scroll_start_margin
 				percentage_difference = math.clamp(height_missing / scroll_length, 0, 1)
-			elseif start_position_top < draw_start_height then
-				local height_missing = draw_start_height - start_position_top
+			elseif start_position_top < draw_start_height + self._scroll_start_margin then
+				local height_missing = draw_start_height - start_position_top + self._scroll_start_margin
 				percentage_difference = -math.clamp(height_missing / scroll_length, 0, 1)
 			end
 
@@ -829,6 +861,7 @@ UIWidgetGrid.is_widget_visible = function (self, widget, extra_margin)
 		local scroll_progress = self:scrollbar_progress() or 0
 		local scroll_length = self:scroll_length()
 		local scrolled_length = scroll_length * scroll_progress
+		local top_padding = self._top_padding or 0
 		local axis = self._axis
 		local draw_length = self._area_size[axis]
 		local draw_start_length = scrolled_length
@@ -838,7 +871,7 @@ UIWidgetGrid.is_widget_visible = function (self, widget, extra_margin)
 		local size = content.size
 		local size_length = size[axis]
 		local margin = extra_margin or 0
-		local start_position_start = math.abs(offset[axis]) - margin
+		local start_position_start = math.abs(offset[axis]) - margin - top_padding
 		local start_position_end = start_position_start + size_length + margin * 2
 
 		if draw_end_length < start_position_start then

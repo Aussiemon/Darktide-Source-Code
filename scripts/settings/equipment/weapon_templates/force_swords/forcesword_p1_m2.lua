@@ -626,7 +626,7 @@ weapon_template.actions = {
 			anchor_point_offset = {
 				0,
 				0,
-				0
+				-0.05
 			}
 		},
 		herding_template = HerdingTemplates.uppercut,
@@ -1412,7 +1412,8 @@ weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",
 	"force_sword",
-	"p1"
+	"p1",
+	"activated"
 }
 weapon_template.smart_targeting_template = SmartTargetingTemplates.force_sword_single_target
 weapon_template.dodge_template = "psyker"

@@ -1,6 +1,6 @@
 local Crashify = require("scripts/settings/crashify/crashify")
 local settings = {
-	enabled = GameParameters.testify or BACKEND_ENV == "staging" or BACKEND_ENV == "prod",
+	enabled = true,
 	source = {
 		id = "bishop",
 		platform = PLATFORM,

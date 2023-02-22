@@ -14,6 +14,7 @@ PlayerSpawnerSystem.init = function (self, extension_init_context, system_init_d
 		Managers.event:register(self, "in_safe_volume", "in_safe_volume")
 	end
 
+	self._physics_world = extension_init_context.physics_world
 	self._spawn_points_by_identifier = {}
 	self._next_spawn_point_index_by_identifier = {}
 	self._in_safe_volume = true
@@ -110,15 +111,13 @@ PlayerSpawnerSystem._find_progression_spawn_point = function (self)
 	table.clear(progression_players)
 
 	local player_manager = Managers.player
-	local players = player_manager:players()
-	local bot_players = player_manager:players()
-
-	for _, bot in pairs(bot_players) do
-		self:_add_progression_player(bot)
-	end
+	local players = player_manager:human_players()
+	local num_players = 0
 
 	for _, player in pairs(players) do
 		self:_add_progression_player(player)
+
+		num_players = num_players + 1
 	end
 
 	if #progression_players > 2 then
@@ -147,7 +146,7 @@ PlayerSpawnerSystem._find_progression_spawn_point = function (self)
 		end
 	end
 
-	Log.warning("PlayerSpawnerSystem", "[_find_progression_spawn_point] Failed to find progression point. %s players, %s bots with %s eligible units \n%s", #players, #bot_players, #progression_players, Script.callstack())
+	Log.warning("PlayerSpawnerSystem", "[_find_progression_spawn_point] Failed to find progression point. %s players with %s eligible units \n%s", num_players, #progression_players, Script.callstack())
 
 	for i = 1, #progression_players do
 		local info = progression_players[i]
@@ -170,7 +169,7 @@ PlayerSpawnerSystem._add_progression_player = function (self, player)
 			local character_state_component = unit_data_extension:read_component("character_state")
 
 			if not PlayerUnitStatus.is_dead_for_mission_failure(character_state_component) then
-				local index = #progression_players
+				local index = #progression_players + 1
 
 				for i = 1, #progression_players do
 					if progression_players[i].distance < travel_distance then
@@ -194,17 +193,20 @@ PlayerSpawnerSystem._player_spawn_point = function (self, unit)
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	local parent = locomotion_extension:get_parent_unit()
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
-	local from_position = navigation_extension:latest_position_on_nav_mesh()
+	local nav_position = navigation_extension:latest_position_on_nav_mesh()
 
-	if from_position then
+	if nav_position then
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local first_person_component = unit_data_extension:read_component("first_person")
-		local position = from_position
-		local furthest_back_unit_position = first_person_component.position
-		local direction = Vector3.normalize(Vector3.flat(furthest_back_unit_position - position))
-		local rotation = Quaternion.look(direction)
+		local look_at_position = first_person_component.position
+		local spawn_direction = Vector3.normalize(Vector3.flat(look_at_position - nav_position))
+		local spawn_rotation = Quaternion.look(spawn_direction)
+		local query_direction = -Quaternion.forward(first_person_component.rotation)
+		local nav_world = navigation_extension:nav_world()
+		local traverse_logic = navigation_extension:traverse_logic()
+		local spawn_position = NavQueries.empty_space_near_nav_position(nav_position, query_direction, nav_world, traverse_logic, self._physics_world)
 
-		return true, position, rotation, parent, PlayerSpawnerSystem.DEFAULT_SPAWN_SIDE
+		return true, spawn_position, spawn_rotation, parent, PlayerSpawnerSystem.DEFAULT_SPAWN_SIDE
 	elseif parent then
 		return true, Unit.world_position(unit, 1), Unit.local_rotation(unit, 1), parent, PlayerSpawnerSystem.DEFAULT_SPAWN_SIDE
 	end

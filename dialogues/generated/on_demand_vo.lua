@@ -527,7 +527,12 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_enemy_berserker",
+				"enemy_cultist_berzerker",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"time_since_enemy_observed",
 				OP.TIMESET
 			}
 		},
@@ -572,7 +577,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"renegade_captain",
+				"enemy_renegade_captain",
 				OP.TIMESET
 			}
 		},
@@ -619,6 +624,11 @@ return function ()
 				"faction_memory",
 				"enemy_chaos_hound",
 				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"time_since_enemy_observed",
+				OP.TIMESET
 			}
 		},
 		on_pre_rule_execution = {
@@ -662,7 +672,12 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"cultist_mutant",
+				"enemy_cultist_mutant",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"time_since_enemy_observed",
 				OP.TIMESET
 			}
 		},
@@ -707,7 +722,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_chaos_armored_executor",
+				"enemy_chaos_ogryn_executor",
 				OP.TIMESET
 			}
 		},
@@ -804,7 +819,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_chaos_ogryn_heavy_gunner",
+				"enemy_chaos_ogryn_gunner",
 				OP.TIMESET
 			}
 		},
@@ -851,6 +866,11 @@ return function ()
 				"faction_memory",
 				"enemy_chaos_poxwalker_bomber",
 				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"time_since_enemy_observed",
+				OP.TIMESET
 			}
 		},
 		on_pre_rule_execution = {
@@ -894,7 +914,12 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"cultist_flamer",
+				"enemy_cultist_flamer",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"time_since_enemy_observed",
 				OP.TIMESET
 			}
 		},
@@ -939,7 +964,12 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_enemy_grenadier",
+				"enemy_cultist_grenadier",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"time_since_enemy_observed",
 				OP.TIMESET
 			}
 		},
@@ -984,7 +1014,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_cultist_holy_stubber_gunner",
+				"enemy_cultist_gunner",
 				OP.TIMESET
 			}
 		},
@@ -1036,7 +1066,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_shocktrooper",
+				"enemy_cultist_shocktrooper",
 				OP.TIMESET
 			}
 		},
@@ -1171,7 +1201,12 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"renegade_netgunner",
+				"enemy_renegade_netgunner",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"time_since_enemy_observed",
 				OP.TIMESET
 			}
 		},
@@ -1216,7 +1251,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_plague_ogryn",
+				"enemy_chaos_plague_ogryn",
 				OP.TIMESET
 			}
 		},
@@ -1261,7 +1296,62 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_enemy_berserker",
+				"enemy_renegade_berserker",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"time_since_enemy_observed",
+				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
+			}
+		}
+	})
+	define_rule({
+		name = "smart_tag_vo_enemy_scab_flamer",
+		category = "player_on_demand_vo",
+		wwise_route = 0,
+		response = "smart_tag_vo_enemy_scab_flamer",
+		database = "on_demand_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"on_demand_vo_tag_enemy"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"renegade_flamer"
+			},
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_flamer",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"time_since_enemy_observed",
 				OP.TIMESET
 			}
 		},
@@ -1306,7 +1396,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_enemy_executor",
+				"enemy_renegade_executor",
 				OP.TIMESET
 			}
 		},
@@ -1351,7 +1441,12 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_enemy_grenadier",
+				"enemy_renegade_grenadier",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"time_since_enemy_observed",
 				OP.TIMESET
 			}
 		},
@@ -1396,7 +1491,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_enemy_gunner",
+				"enemy_renegade_gunner",
 				OP.TIMESET
 			}
 		},
@@ -1448,7 +1543,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"enemy_shocktrooper",
+				"enemy_renegade_shocktrooper",
 				OP.TIMESET
 			}
 		},
@@ -1493,7 +1588,12 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"seen_enemy_sniper",
+				"enemy_renegade_sniper",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"time_since_enemy_observed",
 				OP.TIMESET
 			}
 		},
@@ -2130,7 +2230,7 @@ return function ()
 			},
 			{
 				"faction_memory",
-				"renegade_netgunner",
+				"enemy_renegade_netgunner",
 				OP.TIMESET
 			},
 			{

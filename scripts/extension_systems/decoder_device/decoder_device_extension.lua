@@ -37,9 +37,6 @@ DecoderDeviceExtension.extensions_ready = function (self, world, unit)
 	self._minigame_extension = ScriptUnit.has_extension(unit, "minigame_system")
 	self._animation_extension = ScriptUnit.has_extension(unit, "animation_system")
 	local interactee_extension = ScriptUnit.extension(unit, "interactee_system")
-
-	interactee_extension:activate_interaction("setup_decoding")
-
 	self._interactee_extension = interactee_extension
 	self._mission_objective_target_extension = ScriptUnit.extension(unit, "mission_objective_target_system")
 end

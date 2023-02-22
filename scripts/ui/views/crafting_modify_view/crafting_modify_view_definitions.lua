@@ -1,5 +1,8 @@
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
+local CraftingSettings = require("scripts/settings/item/crafting_settings")
+local weapon_stats_context = CraftingSettings.weapon_stats_context
+local weapon_stats_grid_size = weapon_stats_context.grid_size
 local title_height = 80
 local edge_padding = 44
 local grid_width = 640
@@ -37,22 +40,8 @@ local scenegraph_definition = {
 		size = grid_size,
 		position = {
 			100,
-			-100,
+			-110,
 			1
-		}
-	},
-	weapon_stats_pivot = {
-		vertical_alignment = "bottom",
-		parent = "canvas",
-		horizontal_alignment = "right",
-		size = {
-			0,
-			0
-		},
-		position = {
-			-1140,
-			-100,
-			3
 		}
 	},
 	crafting_recipe_pivot = {
@@ -64,8 +53,22 @@ local scenegraph_definition = {
 			400
 		},
 		position = {
-			-140,
-			-100,
+			-150,
+			-102,
+			3
+		}
+	},
+	weapon_stats_pivot = {
+		vertical_alignment = "bottom",
+		parent = "canvas",
+		horizontal_alignment = "left",
+		size = {
+			0,
+			0
+		},
+		position = {
+			grid_size[1] + 150 + 20,
+			-110,
 			1
 		}
 	},
@@ -79,7 +82,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0.5 * edge_padding,
-			-50,
+			-42,
 			1
 		}
 	},
@@ -89,11 +92,11 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = {
 			640,
-			80
+			70
 		},
 		position = {
 			22,
-			-65,
+			-57,
 			1
 		}
 	}

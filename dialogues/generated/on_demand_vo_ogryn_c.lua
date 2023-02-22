@@ -712,6 +712,29 @@ local on_demand_vo_ogryn_c = {
 		},
 		randomize_indexes = {}
 	},
+	smart_tag_vo_enemy_scab_flamer = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_c__smart_tag_vo_enemy_scab_flamer_a_01",
+			"loc_ogryn_c__smart_tag_vo_enemy_scab_flamer_a_02",
+			"loc_ogryn_c__smart_tag_vo_enemy_scab_flamer_a_03",
+			"loc_ogryn_c__smart_tag_vo_enemy_scab_flamer_a_04"
+		},
+		sound_events_duration = {
+			1.114552,
+			0.744427,
+			1.263198,
+			1.293
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
+		randomize_indexes = {}
+	},
 	smart_tag_vo_enemy_traitor_executor = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

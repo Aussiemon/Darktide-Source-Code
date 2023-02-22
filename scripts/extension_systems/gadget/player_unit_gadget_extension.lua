@@ -47,10 +47,6 @@ PlayerUnitGadgetExtension.game_object_initialized = function (self, session, obj
 	end
 end
 
-PlayerUnitGadgetExtension.update = function (self, unit, dt, t)
-	return
-end
-
 PlayerUnitGadgetExtension.on_slot_equipped = function (self, item, slot_name)
 	self:_add_gadget_buffs(item, slot_name)
 end
@@ -94,8 +90,6 @@ PlayerUnitGadgetExtension._add_gadget_buffs = function (self, item, slot_name)
 	local gear_id = item.gear_id
 	local id = slot_name .. ":" .. gear_id
 	self._gadget_buff_indexes[id] = gadget_buffs
-
-	table.dump(self._gadget_buff_indexes, "_gadget_buff_indexes", 3)
 end
 
 PlayerUnitGadgetExtension._add_gadget_buff = function (self, master_item_id, lerp_value, slot_name)

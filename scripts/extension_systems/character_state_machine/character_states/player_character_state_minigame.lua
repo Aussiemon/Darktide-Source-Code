@@ -1,3 +1,5 @@
+require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
+
 local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
@@ -7,9 +9,6 @@ local Interrupt = require("scripts/utilities/attack/interrupt")
 local Luggable = require("scripts/utilities/luggable")
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-
-require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
-
 local INTERRUPT_REASON = "minigame"
 local PlayerCharacterStateMinigame = class("PlayerCharacterStateMinigame", "PlayerCharacterStateBase")
 

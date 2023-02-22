@@ -133,8 +133,14 @@ end
 function on_activate(active)
 	print("LUA window => " .. (active and "ACTIVATED" or "DEACTIVATED"))
 
-	if active and rawget(_G, "Managers") and Managers.dlc then
-		Managers.dlc:evaluate_consumables()
+	if active and rawget(_G, "Managers") then
+		if Managers.dlc then
+			Managers.dlc:evaluate_consumables()
+		end
+
+		if Managers.account then
+			Managers.account:refresh_communication_restrictions()
+		end
 	end
 end
 

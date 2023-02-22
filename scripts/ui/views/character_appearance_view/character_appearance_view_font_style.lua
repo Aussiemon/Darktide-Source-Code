@@ -133,18 +133,12 @@ button_font_style.hover_color = Color.terminal_text_header_selected(255, true)
 button_font_style.text_color = Color.terminal_text_body(255, true)
 button_font_style.default_color = Color.terminal_text_body(255, true)
 button_font_style.selected_color = Color.terminal_text_header_selected(255, true)
-local category_button_font_style = table.clone(UIFontSettings.button_2)
+local category_button_font_style = table.clone(UIFontSettings.list_button)
 category_button_font_style.offset = {
 	30,
 	0,
 	3
 }
-category_button_font_style.text_horizontal_alignment = "left"
-category_button_font_style.text_vertical_alignment = "center"
-category_button_font_style.hover_color = Color.terminal_text_header_selected(255, true)
-category_button_font_style.text_color = Color.terminal_text_body(255, true)
-category_button_font_style.default_color = Color.terminal_text_body(255, true)
-category_button_font_style.selected_color = Color.terminal_text_header_selected(255, true)
 local entry_no_icon_style = {
 	label = table.clone(UIFontSettings.header_3)
 }

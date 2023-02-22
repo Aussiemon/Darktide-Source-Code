@@ -45,16 +45,24 @@ end
 Door._open = function (self, state, interactor_unit)
 	local door_extension = self._door_extension
 
-	if self._is_server and door_extension and door_extension:can_open() then
-		door_extension:open(state, interactor_unit)
+	if self._is_server and door_extension then
+		if door_extension:can_open() then
+			door_extension:open(state, interactor_unit)
+		elseif not door_extension:started() then
+			door_extension:set_start_state(state)
+		end
 	end
 end
 
 Door._close = function (self)
 	local door_extension = self._door_extension
 
-	if self._is_server and door_extension and door_extension:can_close() then
-		door_extension:close()
+	if self._is_server and door_extension then
+		if not door_extension:started() then
+			door_extension:set_start_state("closed")
+		elseif door_extension:can_close() then
+			door_extension:close()
+		end
 	end
 end
 

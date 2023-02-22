@@ -4,12 +4,12 @@ local unarmored = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/play_melee_hits_ogryn_punch_light_husk"
+				event = "wwise/events/weapon/play_melee_hits_ogryn_punch_heavy_husk"
 			}
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/play_melee_hits_ogryn_punch_light_husk"
+				event = "wwise/events/weapon/play_melee_hits_ogryn_punch_heavy_husk"
 			}
 		}
 	},

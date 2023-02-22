@@ -42,11 +42,6 @@ ChainLightningTargetingActionModule.fixed_update = function (self, dt, t)
 	table.clear(hit_units)
 
 	local num_results = broadphase:query(query_position, RADIUS, BROADPHASE_RESULTS, enemy_side_names)
-
-	if DevParameters.draw_chain_lightning_targeting_action_module then
-		QuickDrawer:sphere(query_position, RADIUS, Color.magenta())
-	end
-
 	local num_targets = 0
 
 	for i = 1, num_results do

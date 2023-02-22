@@ -14,7 +14,7 @@ local templates = {
 }
 templates.weapon_trait_bespoke_shotgun_p1_increase_close_damage_on_close_kill.active_duration = 2.75
 templates.weapon_trait_bespoke_shotgun_p1_power_bonus_on_hitting_single_enemy_with_all = table.clone(BaseWeaponTraitBuffTemplates.power_bonus_on_hitting_single_enemy_with_all)
-templates.weapon_trait_bespoke_shotgun_p1_bleed_on_crit = table.clone(BaseWeaponTraitBuffTemplates.bleed_on_crit_ranged)
+templates.weapon_trait_bespoke_shotgun_p1_bleed_on_crit = table.clone(BaseWeaponTraitBuffTemplates.bleed_on_crit_pellets)
 templates.weapon_trait_bespoke_shotgun_p1_crit_chance_on_hitting_multiple_with_one_shot = {
 	predicted = false,
 	allow_proc_while_active = true,

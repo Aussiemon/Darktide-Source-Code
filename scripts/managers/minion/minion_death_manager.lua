@@ -130,13 +130,17 @@ local extensions_to_keep = {
 
 MinionDeathManager.set_dead = function (self, unit, attack_direction, hit_zone_name, damage_profile_name, do_ragdoll_push, herding_template_name)
 	local minions_awaiting_death = self._minions_awaiting_death
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	local breed = unit_data_extension:breed()
+	local death_velocity = breed.use_death_velocity and Vector3Box(ScriptUnit.extension(unit, "locomotion_system"):current_velocity())
 	local death_data = {
 		unit = unit,
 		attack_direction = Vector3Box(attack_direction),
 		hit_zone_name = hit_zone_name,
 		damage_profile_name = damage_profile_name,
 		do_ragdoll_push = do_ragdoll_push,
-		herding_template_name = herding_template_name
+		herding_template_name = herding_template_name,
+		death_velocity = death_velocity
 	}
 
 	Unit.flow_event(unit, "on_death")
@@ -152,8 +156,6 @@ MinionDeathManager.set_dead = function (self, unit, attack_direction, hit_zone_n
 	else
 		minions_awaiting_death[unit] = death_data
 	end
-
-	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
 	unit_data_extension:set_owned_by_death_manager(true)
 end

@@ -333,10 +333,6 @@ StateGame.update = function (self, dt)
 		Managers.mission_server:update(dt, t)
 	end
 
-	if Managers.boons then
-		Managers.boons:update(dt, t)
-	end
-
 	Managers.progression:update(dt, t)
 	Managers.world_level_despawn:update(dt, t)
 	Managers.stats:update(dt, t)

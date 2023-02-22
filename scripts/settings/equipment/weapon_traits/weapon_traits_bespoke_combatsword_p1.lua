@@ -100,23 +100,23 @@ templates.weapon_trait_bespoke_combatsword_p1_increased_melee_damage_on_multiple
 				required_num_hits = 3
 			},
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.15
-			}
-		},
-		{
-			buff_data = {
-				required_num_hits = 3
-			},
-			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.175
-			}
-		},
-		{
-			buff_data = {
-				required_num_hits = 3
-			},
-			stat_buffs = {
 				[stat_buffs.melee_damage] = 0.2
+			}
+		},
+		{
+			buff_data = {
+				required_num_hits = 3
+			},
+			stat_buffs = {
+				[stat_buffs.melee_damage] = 0.3
+			}
+		},
+		{
+			buff_data = {
+				required_num_hits = 3
+			},
+			stat_buffs = {
+				[stat_buffs.melee_damage] = 0.4
 			}
 		}
 	}
@@ -213,22 +213,22 @@ templates.weapon_trait_bespoke_combatsword_p1_increase_stagger_per_hit_in_sweep 
 	weapon_trait_bespoke_combatsword_p1_increase_stagger_per_hit_in_sweep_parent = {
 		{
 			stat_buffs = {
-				[stat_buffs.melee_impact_modifier] = 0.02
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.melee_impact_modifier] = 0.03
-			}
-		},
-		{
-			stat_buffs = {
 				[stat_buffs.melee_impact_modifier] = 0.04
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.melee_impact_modifier] = 0.05
+				[stat_buffs.melee_impact_modifier] = 0.06
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_impact_modifier] = 0.08
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.melee_impact_modifier] = 0.1
 			}
 		}
 	}

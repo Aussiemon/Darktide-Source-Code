@@ -4,6 +4,7 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local ItemUtils = require("scripts/utilities/items")
 local info_box_size = {
 	1250,
 	200

@@ -1,3 +1,4 @@
+local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -261,6 +262,7 @@ SocialMenuRosterView.init = function (self, settings, context)
 	self._widget_fade_time = SocialMenuSettings.widget_fade_time
 	self._fade_delay = 0
 	self._selected_roster_widget_column_last_frame = 1
+	self._icon_unload_queue = {}
 
 	SocialMenuRosterView.super.init(self, Definitions, settings)
 end
@@ -292,6 +294,8 @@ SocialMenuRosterView.on_enter = function (self)
 	if self._parent then
 		self._parent:set_active_view_instance(self)
 	end
+
+	self:_register_event("event_player_profile_updated", "event_player_profile_updated")
 end
 
 SocialMenuRosterView.on_exit = function (self)
@@ -301,6 +305,7 @@ SocialMenuRosterView.on_exit = function (self)
 		self:_unload_widget_portrait(widgets_with_portraits[#widgets_with_portraits])
 	end
 
+	self:_unload_icons(true)
 	self:_destroy_renderer()
 	SocialMenuRosterView.super.on_exit(self)
 end
@@ -317,6 +322,8 @@ SocialMenuRosterView.set_can_exit = function (self, value, apply_next_frame)
 end
 
 SocialMenuRosterView.update = function (self, dt, t, input_service)
+	self:_unload_icons()
+
 	if not self._party_promise:is_pending() then
 		local new_party_members = self._new_party_members
 
@@ -711,6 +718,21 @@ SocialMenuRosterView.on_back_pressed = function (self)
 	return back_pressed_handled or not self._can_close
 end
 
+SocialMenuRosterView.event_player_profile_updated = function (self, peer_id, player_id, updated_profile)
+	local widgets_with_portraits = self._widgets_with_portraits
+
+	for i = #widgets_with_portraits, 1, -1 do
+		local widget = widgets_with_portraits[i]
+		local content = widget.content
+		local player_info = content.player_info
+		local profile = player_info:profile()
+
+		if profile == updated_profile then
+			content.has_updated_profile = true
+		end
+	end
+end
+
 SocialMenuRosterView._cb_set_player_icon = function (self, widget, grid_index, rows, columns, render_target)
 	local widget_content = widget.content
 	widget_content.awaiting_portrait_callback = nil
@@ -740,6 +762,25 @@ SocialMenuRosterView._cb_set_player_frame = function (self, widget, item)
 
 	local portrait_style = widget.style.portrait
 	portrait_style.material_values.portrait_frame_texture = icon
+end
+
+SocialMenuRosterView._cb_set_player_insignia = function (self, widget, item)
+	local widget_content = widget.content
+	widget_content.awaiting_insignia_callback = nil
+	local profile = widget_content.player_info:profile()
+	local loadout = profile and profile.loadout
+	local insignia_item = loadout and loadout.slot_insignia
+	local insignia_item_gear_id = insignia_item and insignia_item.gear_id
+	local icon = nil
+
+	if insignia_item_gear_id == item.gear_id then
+		icon = item.icon
+	else
+		icon = RosterViewStyles.character_insignia
+	end
+
+	local portrait_style = widget.style.character_insignia
+	portrait_style.material_values.texture_map = icon
 end
 
 SocialMenuRosterView._update_list_refreshes = function (self, dt)
@@ -777,19 +818,22 @@ SocialMenuRosterView._update_portraits = function (self)
 		if not profile then
 			self:_unload_widget_portrait(widget)
 
-			content.profile_hash = nil
-		elseif profile.character_id ~= content.portrait_character_id then
-			self:_load_widget_portrait(widget, profile, content.portrait_renderer)
-		elseif profile.hash ~= content.profile_hash then
+			content.has_updated_profile = nil
+		elseif content.has_updated_profile then
 			local character_name = self:formatted_character_name(player_info)
 
 			if character_name ~= "" then
 				content.name_or_activity = character_name
 				content.activity_id = nil
+				local succeeded_in_updating_profile = nil
 
-				Managers.event:trigger("event_player_profile_updated", nil, nil, profile)
+				if profile.character_id ~= content.portrait_character_id then
+					succeeded_in_updating_profile = self:_load_widget_portrait(widget, profile, content.portrait_renderer)
+				else
+					succeeded_in_updating_profile = self:_update_portrait_frame(widget, profile)
+				end
 
-				content.profile_hash = profile.hash
+				content.has_updated_profile = not succeeded_in_updating_profile
 			end
 		end
 	end
@@ -974,27 +1018,12 @@ end
 
 SocialMenuRosterView._update_portrait_frame = function (self, widget, profile)
 	local widget_content = widget.content
-	local frame_style = widget.style.portrait
 
-	if widget_content.awaiting_frame_callback and profile ~= nil then
-		return
+	if profile ~= nil and (widget_content.awaiting_frame_callback or widget_content.awaiting_insignia_callback) then
+		return false
 	end
 
-	local frame_load_id = widget_content.frame_load_id
-
-	if frame_load_id then
-		local portrait_renderer = widget_content.portrait_renderer
-
-		UIWidget.set_visible(widget, portrait_renderer, false)
-		UIWidget.set_visible(widget, portrait_renderer, true)
-
-		local material_values = frame_style.material_values
-		local portrait_frame_texture = material_values.portrait_frame_texture
-		material_values.portrait_frame_texture = RosterViewStyles.default_frame_material
-
-		Log.info("SocialMenuRosterView", "Destroying frame: %s", portrait_frame_texture)
-		Managers.ui:unload_item_icon(frame_load_id)
-	end
+	self:_queue_icons_for_unload(widget)
 
 	local loadout = profile and profile.loadout
 	local frame_item = loadout and loadout.slot_portrait_frame
@@ -1002,19 +1031,21 @@ SocialMenuRosterView._update_portrait_frame = function (self, widget, profile)
 	widget_content.frame_id = frame_id
 
 	if frame_item then
+		widget_content.awaiting_frame_callback = true
 		local cb = callback(self, "_cb_set_player_frame", widget)
 		widget_content.frame_load_id = Managers.ui:load_item_icon(frame_item, cb)
-		widget_content.awaiting_frame_callback = true
 	else
-		widget_content.frame_load_id = nil
+		widget_content.awaiting_frame_callback = nil
 	end
+
+	return true
 end
 
 SocialMenuRosterView._load_widget_portrait = function (self, widget, profile, portrait_renderer)
 	local widget_content = widget.content
 
 	if widget_content.awaiting_portrait_callback then
-		return
+		return false
 	end
 
 	local portrait_load_id = widget_content.portrait_load_id
@@ -1030,13 +1061,16 @@ SocialMenuRosterView._load_widget_portrait = function (self, widget, profile, po
 	widget_content.portrait_renderer = portrait_renderer
 	local widgets_with_portraits = self._widgets_with_portraits
 	widgets_with_portraits[#widgets_with_portraits + 1] = widget
+
+	return self:_update_portrait_frame(widget, profile)
 end
 
 SocialMenuRosterView._unload_widget_portrait = function (self, widget)
 	local widget_content = widget.content
-	local portrait_style = widget.style.portrait
+	local widget_style = widget.style
+	local portrait_style = widget_style.portrait
 
-	self:_update_portrait_frame(widget, nil)
+	self:_queue_icons_for_unload(widget)
 
 	local material_values = portrait_style.material_values
 	material_values.use_placeholder_texture = 1
@@ -1055,6 +1089,54 @@ SocialMenuRosterView._unload_widget_portrait = function (self, widget)
 			table.remove(widgets_with_portraits, i)
 
 			break
+		end
+	end
+end
+
+SocialMenuRosterView._queue_icons_for_unload = function (self, widget)
+	local icon_unload_queue = self._icon_unload_queue
+	local widget_content = widget.content
+	local widget_style = widget.style
+
+	if widget_content.frame_load_id then
+		local frame_material_values = widget_style.portrait.material_values
+		frame_material_values.portrait_frame_texture = RosterViewStyles.default_frame_material
+		icon_unload_queue[#icon_unload_queue + 1] = {
+			delay = ViewSettings.icon_unload_frame_delay,
+			load_id = widget_content.frame_load_id,
+			widget = widget
+		}
+		widget_content.frame_load_id = nil
+	end
+
+	if widget_content.insignia_load_id then
+		local insignia_material_values = widget_style.character_insignia.material_values
+		insignia_material_values.texture = RosterViewStyles.default_insignia_material
+		icon_unload_queue[#icon_unload_queue + 1] = {
+			delay = ViewSettings.icon_unload_frame_delay,
+			load_id = widget_content.insignia_load_id,
+			widget = widget
+		}
+		widget_content.insignia_load_id = nil
+	end
+end
+
+SocialMenuRosterView._unload_icons = function (self, force_unload)
+	local icon_unload_queue = self._icon_unload_queue
+
+	for i = #icon_unload_queue, 1, -1 do
+		local icon_data = icon_unload_queue[i]
+
+		if icon_data.delay == 0 or force_unload then
+			local widget = icon_data.widget
+			local portrait_renderer = widget.content.portrait_renderer
+
+			UIWidget.set_visible(widget, portrait_renderer, false)
+			UIWidget.set_visible(widget, portrait_renderer, true)
+			Managers.ui:unload_item_icon(icon_data.load_id)
+			table.remove(icon_unload_queue, i)
+		else
+			icon_data.delay = icon_data.delay - 1
 		end
 	end
 end
@@ -1550,13 +1632,21 @@ SocialMenuRosterView._refresh_roster_lists = function (self, force_refresh)
 		self._num_pending_invites = num_invites
 
 		return response
+	end):catch(function (error_data)
+		Log.error("SocialMenuRosterView", "invites_promise failed")
+
+		return Promise.rejected(error_data)
 	end)
 	local friends_promise = social_service:fetch_friends(force_refresh)
 	local recent_companions_promise = social_service:fetch_recent_companions(character_id, force_refresh)
 	local players_on_server_promise = social_service:fetch_players_on_server()
 	local on_done = callback(self, "cb_update_roster")
-	local roster_lists_promise = Promise.all(friends_promise, recent_companions_promise, players_on_server_promise, invites_promise, blocked_promise):next(on_done, on_done):catch(function (e)
-		Log.error("Failed fetching social players")
+	local roster_lists_promise = Promise.all(friends_promise, recent_companions_promise, players_on_server_promise, invites_promise, blocked_promise):next(on_done):catch(function (e)
+		if type(e) == "table" then
+			Log.error("SocialMenuRosterView", "Failed fetching social players: %s", table.tostring(e, 2))
+		else
+			Log.error("SocialMenuRosterView", "Failed fetching social players: %s", e)
+		end
 	end)
 	self._roster_lists_promise = roster_lists_promise
 end

@@ -4,12 +4,13 @@ local HostIngameState = require("scripts/loading/host_states/host_in_game_state"
 local HostLevelState = require("scripts/loading/host_states/host_level_state")
 local HostLoadersState = require("scripts/loading/host_states/host_loaders_state")
 local HostThemeState = require("scripts/loading/host_states/host_theme_state")
+local HostWaitForMissionBriefingDoneState = require("scripts/loading/host_states/host_wait_for_mission_briefing_done_state")
 local Missions = require("scripts/settings/mission/mission_templates")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local StateMachine = require("scripts/foundation/utilities/state_machine")
 local LoadingHostStateMachine = class("LoadingHostStateMachine")
 
-LoadingHostStateMachine.init = function (self, mission_name, level_editor_level, circumstance_name, spawn_queue, loaders, done_loading_level_func)
+LoadingHostStateMachine.init = function (self, mission_name, level_editor_level, circumstance_name, spawn_queue, loaders, done_loading_level_func, single_player)
 	local shared_state = {
 		state = "loading",
 		mission_name = mission_name,
@@ -18,7 +19,8 @@ LoadingHostStateMachine.init = function (self, mission_name, level_editor_level,
 		spawn_queue = spawn_queue,
 		done_loading_level_func = done_loading_level_func,
 		loaders = loaders,
-		themes = {}
+		themes = {},
+		single_player = single_player
 	}
 	self._shared_state = shared_state
 	local parent = nil
@@ -28,7 +30,14 @@ LoadingHostStateMachine.init = function (self, mission_name, level_editor_level,
 	state_machine:add_transition("HostLoadersState", "load_done", HostCreateWorldState)
 	state_machine:add_transition("HostCreateWorldState", "load_done", HostThemeState)
 	state_machine:add_transition("HostThemeState", "load_done", HostLevelState)
-	state_machine:add_transition("HostLevelState", "load_done", HostIngameState)
+
+	if single_player then
+		state_machine:add_transition("HostLevelState", "load_done", HostWaitForMissionBriefingDoneState)
+		state_machine:add_transition("HostWaitForMissionBriefingDoneState", "mission_briefing_done", HostIngameState)
+	else
+		state_machine:add_transition("HostLevelState", "load_done", HostIngameState)
+	end
+
 	state_machine:set_initial_state(HostDetermineSpawnGroupState)
 
 	self._state_machine = state_machine

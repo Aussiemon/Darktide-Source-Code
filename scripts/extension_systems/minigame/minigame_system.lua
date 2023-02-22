@@ -40,6 +40,10 @@ MinigameSystem.on_add_extension = function (self, world, unit, extension_name, e
 
 	extension:on_add_extension(self._seed)
 
+	if self._seed then
+		self._seed = self._seed + 1
+	end
+
 	return extension
 end
 

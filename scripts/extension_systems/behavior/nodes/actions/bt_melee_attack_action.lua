@@ -174,6 +174,15 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 			scratchpad.lag_compensation_timing = scratchpad.start_sweep_t + extra_timing
 		end
 
+		local sweep_ground_impact_fx_templates = action_data.sweep_ground_impact_fx_templates
+
+		if sweep_ground_impact_fx_templates then
+			local ground_impact_fx_timings = action_data.sweep_ground_impact_fx_timing[attack_event]
+			local ground_impact_fx_timing = ground_impact_fx_timings[1]
+			scratchpad.sweep_ground_impact_at_t = t + ground_impact_fx_timing
+			scratchpad.ground_impact_index = 1
+		end
+
 		local sweep_ground_impact_fx_template = action_data.sweep_ground_impact_fx_template
 
 		if sweep_ground_impact_fx_template then
@@ -433,6 +442,7 @@ BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, a
 					local current_attack_sweep_timing = attack_sweep_timings[attack_index]
 					scratchpad.start_sweep_t = scratchpad.start_time + current_attack_sweep_timing[1]
 					scratchpad.stop_sweep_t = scratchpad.start_time + current_attack_sweep_timing[2]
+					scratchpad.override_sweep_node = current_attack_sweep_timing[3]
 
 					table.clear(scratchpad.sweep_hit_units_cache)
 
@@ -452,9 +462,30 @@ BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, a
 		end
 
 		if scratchpad.sweep_ground_impact_at_t and scratchpad.sweep_ground_impact_at_t <= t then
-			GroundImpact.play(unit, scratchpad.physics_world, action_data.sweep_ground_impact_fx_template)
+			local sweep_ground_impact_fx_templates = action_data.sweep_ground_impact_fx_templates
 
-			scratchpad.sweep_ground_impact_at_t = nil
+			if sweep_ground_impact_fx_templates then
+				local ground_impact_fx_template = sweep_ground_impact_fx_templates[scratchpad.attack_event][scratchpad.ground_impact_index]
+
+				if ground_impact_fx_template then
+					GroundImpact.play(unit, scratchpad.physics_world, ground_impact_fx_template)
+				end
+
+				local ground_impact_fx_timings = action_data.sweep_ground_impact_fx_timing[scratchpad.attack_event]
+				local ground_impact_index = scratchpad.ground_impact_index + 1
+
+				if ground_impact_index <= #ground_impact_fx_timings then
+					scratchpad.ground_impact_index = ground_impact_index
+					local ground_impact_fx_timing = ground_impact_fx_timings[ground_impact_index]
+					scratchpad.sweep_ground_impact_at_t = scratchpad.start_time + ground_impact_fx_timing
+				else
+					scratchpad.sweep_ground_impact_at_t = nil
+				end
+			elseif action_data.sweep_ground_impact_fx_template then
+				GroundImpact.play(unit, scratchpad.physics_world, action_data.sweep_ground_impact_fx_template)
+
+				scratchpad.sweep_ground_impact_at_t = nil
+			end
 		end
 	elseif attack_timing and attack_timing < t then
 		self:_attack(unit, breed, blackboard, scratchpad, action_data)
@@ -532,8 +563,9 @@ BtMeleeAttackAction._attack_sweep = function (self, unit, breed, blackboard, scr
 	local override_damage_profile_or_nil, override_damage_type_or_nil = self:_extract_override_damage_data(scratchpad, action_data)
 	local attack_event = scratchpad.attack_event
 	local target_unit = scratchpad.perception_component.target_unit
+	local sweep_node = scratchpad.override_sweep_node or action_data.sweep_node
 
-	MinionAttack.sweep(unit, breed, scratchpad, blackboard, target_unit, action_data, physics_world, sweep_hit_units_cache, override_damage_profile_or_nil, override_damage_type_or_nil, attack_event)
+	MinionAttack.sweep(unit, breed, sweep_node, scratchpad, blackboard, target_unit, action_data, physics_world, sweep_hit_units_cache, override_damage_profile_or_nil, override_damage_type_or_nil, attack_event)
 
 	if not scratchpad.inital_sweep_rotation then
 		scratchpad.initial_sweep_rotation = QuaternionBox(Unit.local_rotation(unit, 1))

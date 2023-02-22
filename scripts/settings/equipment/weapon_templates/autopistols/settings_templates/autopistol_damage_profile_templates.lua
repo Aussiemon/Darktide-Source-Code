@@ -24,8 +24,8 @@ damage_templates.default_autopistol_assault = {
 	stagger_category = "killshot",
 	cleave_distribution = single_cleave,
 	ranges = {
-		max = 35,
-		min = 15
+		max = 25,
+		min = 10
 	},
 	armor_damage_modifier_ranged = {
 		near = {
@@ -34,7 +34,7 @@ damage_templates.default_autopistol_assault = {
 				[armor_types.armored] = damage_lerp_values.lerp_0_6,
 				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_1_5,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 				[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -45,7 +45,7 @@ damage_templates.default_autopistol_assault = {
 				[armor_types.armored] = damage_lerp_values.lerp_1,
 				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_4,
@@ -87,7 +87,7 @@ damage_templates.default_autopistol_assault = {
 			80
 		},
 		impact = {
-			1,
+			2,
 			4
 		}
 	},
@@ -137,8 +137,8 @@ damage_templates.default_autopistol_snp = {
 	stagger_category = "killshot",
 	cleave_distribution = single_cleave,
 	ranges = {
-		max = 35,
-		min = 15
+		max = 25,
+		min = 10
 	},
 	armor_damage_modifier_ranged = {
 		near = {
@@ -147,10 +147,10 @@ damage_templates.default_autopistol_snp = {
 				[armor_types.armored] = damage_lerp_values.lerp_0_6,
 				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_9,
+				[armor_types.berserker] = damage_lerp_values.lerp_1_5,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_6,
+				[armor_types.void_shield] = damage_lerp_values.lerp_1,
 				[armor_types.prop_armor] = damage_lerp_values.lerp_0_6
 			},
 			impact = {
@@ -158,7 +158,7 @@ damage_templates.default_autopistol_snp = {
 				[armor_types.armored] = damage_lerp_values.lerp_1,
 				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+				[armor_types.berserker] = damage_lerp_values.lerp_1,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_8,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_4,
@@ -174,7 +174,7 @@ damage_templates.default_autopistol_snp = {
 				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_01,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_6,
-				[armor_types.void_shield] = damage_lerp_values.lerp_0_4,
+				[armor_types.void_shield] = damage_lerp_values.lerp_0_6,
 				[armor_types.prop_armor] = damage_lerp_values.lerp_0_3
 			},
 			impact = {
@@ -200,13 +200,13 @@ damage_templates.default_autopistol_snp = {
 			80
 		},
 		impact = {
-			1,
-			4
+			4,
+			8
 		}
 	},
 	accumulative_stagger_strength_multiplier = {
-		0.5,
-		2
+		2,
+		4
 	},
 	herding_template = HerdingTemplates.shot,
 	wounds_template = WoundsTemplates.autopistol,
@@ -219,7 +219,7 @@ damage_templates.default_autopistol_snp = {
 	},
 	suppression_value = {
 		0.05,
-		2
+		1
 	},
 	on_kill_area_suppression = {
 		suppression_value = {

@@ -2,6 +2,7 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_lug
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_projectile_ads_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/aim_projectile_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/ammo_belt")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/ammo_count_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/auspex_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/auspex_scanning_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_lightning_effects")

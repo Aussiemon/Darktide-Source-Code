@@ -15,7 +15,7 @@ templates.weapon_trait_bespoke_flamer_p1_power_bonus_on_continuous_fire = {
 	weapon_trait_bespoke_flamer_p1_power_bonus_on_continuous_fire = {
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.02
+				[stat_buffs.power_level_modifier] = 0.1
 			}
 		}
 	}

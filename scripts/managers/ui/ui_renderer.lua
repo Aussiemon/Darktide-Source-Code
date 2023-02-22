@@ -73,6 +73,7 @@ UIRenderer.create_ui_renderer = function (world, gui, gui_retained, name, render
 	return table.make_strict_nil_exceptions({
 		alpha_multiplier = 1,
 		dt = 0,
+		color_intensity_multiplier = 1,
 		gui = gui,
 		gui_retained = gui_retained,
 		ui_scenegraph = StrictNil,
@@ -193,6 +194,7 @@ UIRenderer.script_draw_bitmap = function (self, material, gui_position, gui_size
 	end
 
 	local snap_pixel_positions, alpha_multiplier = nil
+	local color_intensity_multiplier = 1
 
 	if render_settings then
 		snap_pixel_positions = render_settings.snap_pixel_positions
@@ -202,10 +204,12 @@ UIRenderer.script_draw_bitmap = function (self, material, gui_position, gui_size
 		end
 
 		alpha_multiplier = render_settings.alpha_multiplier
+		color_intensity_multiplier = render_settings.color_intensity_multiplier
 	end
 
 	if color then
-		optional_gui_args.color = Color(color[1] * (alpha_multiplier or 1), color[2], color[3], color[4])
+		color_intensity_multiplier = color_intensity_multiplier or 1
+		optional_gui_args.color = Color(color[1] * (alpha_multiplier or 1), color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
 	end
 
 	if snap_pixel_positions == nil then
@@ -249,6 +253,7 @@ UIRenderer.script_draw_bitmap_uv = function (self, material, gui_position, gui_s
 	end
 
 	local snap_pixel_positions, alpha_multiplier = nil
+	local color_intensity_multiplier = 1
 
 	if render_settings then
 		snap_pixel_positions = render_settings.snap_pixel_positions
@@ -258,10 +263,12 @@ UIRenderer.script_draw_bitmap_uv = function (self, material, gui_position, gui_s
 		end
 
 		alpha_multiplier = render_settings.alpha_multiplier
+		color_intensity_multiplier = render_settings.color_intensity_multiplier
 	end
 
 	if color then
-		optional_gui_args.color = Color(color[1] * (alpha_multiplier or 1), color[2], color[3], color[4])
+		color_intensity_multiplier = color_intensity_multiplier or 1
+		optional_gui_args.color = Color(color[1] * (alpha_multiplier or 1), color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
 	end
 
 	if snap_pixel_positions == nil then
@@ -307,9 +314,10 @@ UIRenderer.script_draw_bitmap_3d = function (self, material, tm, gui_position, g
 	end
 
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
+	local color_intensity_multiplier = render_settings and render_settings.color_intensity_multiplier or 1
 
 	if color then
-		optional_gui_args.color = Color(color[1] * alpha_multiplier, color[2], color[3], color[4])
+		optional_gui_args.color = Color(color[1] * alpha_multiplier, color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
 	end
 
 	if render_settings then
@@ -363,7 +371,7 @@ UIRenderer.script_draw_text = function (self, text, font_size, font_type, gui_po
 		retained_id = nil
 	end
 
-	local snap_pixel_positions, alpha_multiplier = nil
+	local snap_pixel_positions, alpha_multiplier, color_intensity_multiplier = nil
 
 	if render_settings then
 		snap_pixel_positions = render_settings.snap_pixel_positions
@@ -373,10 +381,12 @@ UIRenderer.script_draw_text = function (self, text, font_size, font_type, gui_po
 		end
 
 		alpha_multiplier = render_settings.alpha_multiplier
+		color_intensity_multiplier = render_settings.color_intensity_multiplier
 	end
 
 	alpha_multiplier = alpha_multiplier or 1
-	color = color and Color(color[1] * alpha_multiplier, color[2], color[3], color[4])
+	color_intensity_multiplier = color_intensity_multiplier or 1
+	color = color and Color(color[1] * alpha_multiplier, color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
 
 	if snap_pixel_positions == nil then
 		snap_pixel_positions = SNAP_PIXEL_POSITIONS
@@ -417,7 +427,8 @@ UIRenderer.script_draw_text_3d = function (self, text, font_size, font_type, tm,
 	end
 
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
-	color = color and Color(color[1] * alpha_multiplier, color[2], color[3], color[4])
+	local color_intensity_multiplier = render_settings and render_settings.color_intensity_multiplier or 1
+	color = color and Color(color[1] * alpha_multiplier, color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
 	local snap_pixel_positions = render_settings and render_settings.snap_pixel_positions
 
 	if snap_pixel_positions == nil then
@@ -548,7 +559,8 @@ UIRenderer.draw_slug_icon = function (self, resource, index, position, size, col
 
 	local scale = self.scale
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
-	color = Color(color[1] * alpha_multiplier, color[2], color[3], color[4])
+	local color_intensity_multiplier = render_settings and render_settings.color_intensity_multiplier or 1
+	color = Color(color[1] * alpha_multiplier, color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
 	position = UIResolution.scale_vector(position, scale)
 	size = UIResolution.scale_vector(size, scale)
 
@@ -619,7 +631,8 @@ UIRenderer.draw_slug_multi_icon = function (self, resource, index, position, siz
 	end
 
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
-	color = color and Color(color[1] * alpha_multiplier, color[2], color[3], color[4])
+	local color_intensity_multiplier = render_settings and render_settings.color_intensity_multiplier or 1
+	color = color and Color(color[1] * alpha_multiplier, color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
 	local scale = self.scale
 	local gui_position = UIResolution.scale_vector(position, scale)
 	local gui_size = UIResolution.scale_vector(size, scale)
@@ -752,7 +765,8 @@ UIRenderer.draw_slug_picture = function (self, resource, position, size, color, 
 
 	local scale = self.scale
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
-	color = Color(color[1] * alpha_multiplier, color[2], color[3], color[4])
+	local color_intensity_multiplier = render_settings and render_settings.color_intensity_multiplier or 1
+	color = Color(color[1] * alpha_multiplier, color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
 	position = UIResolution.scale_vector(position, scale)
 	size = UIResolution.scale_vector(size, scale)
 	local snap_pixel_positions = render_settings and render_settings.snap_pixel_positions
@@ -825,7 +839,7 @@ UIRenderer.draw_rect = function (self, gui_position, gui_size, color, retained_i
 		retained_id = nil
 	end
 
-	local snap_pixel_positions, alpha_multiplier = nil
+	local snap_pixel_positions, alpha_multiplier, color_intensity_multiplier = nil
 
 	if render_settings then
 		snap_pixel_positions = render_settings.snap_pixel_positions
@@ -835,10 +849,12 @@ UIRenderer.draw_rect = function (self, gui_position, gui_size, color, retained_i
 		end
 
 		alpha_multiplier = render_settings.alpha_multiplier
+		color_intensity_multiplier = render_settings.color_intensity_multiplier
 	end
 
 	if color then
-		optional_gui_args.color = Color(color[1] * (alpha_multiplier or 1), color[2], color[3], color[4])
+		color_intensity_multiplier = color_intensity_multiplier or 1
+		optional_gui_args.color = Color(color[1] * (alpha_multiplier or 1), color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
 	end
 
 	if snap_pixel_positions == nil then
@@ -876,13 +892,14 @@ UIRenderer.draw_triangle = function (self, position, size, ui_style, retained_id
 
 	local scale = self.scale
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
+	local color_intensity_multiplier = render_settings and render_settings.color_intensity_multiplier or 1
 	local style_color = ui_style.color or {
 		255,
 		255,
 		0,
 		255
 	}
-	local color = Color(style_color[1] * alpha_multiplier, style_color[2], style_color[3], style_color[4])
+	local color = Color(style_color[1] * alpha_multiplier, style_color[2] * color_intensity_multiplier, style_color[3] * color_intensity_multiplier, style_color[4] * color_intensity_multiplier)
 	local layer = position[3]
 	local base_pos = Vector3(position[1], 0, position[2])
 	local pos1, pos2, pos3 = nil
@@ -966,7 +983,8 @@ UIRenderer.draw_rect_rotated = function (self, size, position, angle, pivot, col
 	Matrix4x4.set_translation(tm, translation)
 
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
-	color = Color(color[1] * alpha_multiplier, color[2], color[3], color[4])
+	local color_intensity_multiplier = render_settings and render_settings.color_intensity_multiplier or 1
+	color = Color(color[1] * alpha_multiplier, color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
 	local layer = position[3]
 
 	if render_settings then
@@ -1101,7 +1119,8 @@ UIRenderer.draw_video = function (self, material_name, position, size, color, vi
 	local pixel_snap = true
 	local render_settings = self.render_settings
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
-	color = color and Color(color[1] * alpha_multiplier, color[2], color[3], color[4])
+	local color_intensity_multiplier = render_settings and render_settings.color_intensity_multiplier or 1
+	color = color and Color(color[1] * alpha_multiplier, color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
 	local scale = self.scale
 	position = UIResolution.scale_vector(position, scale)
 
@@ -1132,7 +1151,8 @@ UIRenderer.draw_circle = function (self, position, radius, size, color)
 	local radius_y = size and size[2] / 2 or radius
 	local render_settings = self.render_settings
 	local alpha_multiplier = render_settings and render_settings.alpha_multiplier or 1
-	color = color and Color(color[1] * alpha_multiplier, color[2], color[3], color[4])
+	local color_intensity_multiplier = render_settings and render_settings.color_intensity_multiplier or 1
+	color = color and Color(color[1] * alpha_multiplier, color[2] * color_intensity_multiplier, color[3] * color_intensity_multiplier, color[4] * color_intensity_multiplier)
 	local layer = position[3]
 
 	if render_settings then
@@ -1348,13 +1368,13 @@ UIRenderer.debug_pixel_distance = function (self)
 
 				local text = string.format("%d pixels.", cursor.x - debug_startpoint[1])
 
-				Gui.slug_text(self.gui, text, font, font_size, Vector3.from_array(debug_startpoint), nil, Color(255, 255, 255, 255))
+				Gui.slug_text(self.gui, text, font, font_size, Vector3.from_array(debug_startpoint), nil, Color(255, 255, 0, 0))
 			else
 				Gui.rect(self.gui, Vector3.from_array(debug_startpoint), Vector2(20, cursor.y - debug_startpoint[2]), Color(128, 255, 255, 255))
 
 				local text = string.format("%d pixels.", cursor.y - debug_startpoint[2])
 
-				Gui.slug_text(self.gui, text, font, font_size, Vector3.from_array(debug_startpoint), nil, Color(255, 255, 255, 255))
+				Gui.slug_text(self.gui, text, font, font_size, Vector3.from_array(debug_startpoint), nil, Color(255, 255, 0, 0))
 			end
 		end
 	elseif self.debug_startpoint then

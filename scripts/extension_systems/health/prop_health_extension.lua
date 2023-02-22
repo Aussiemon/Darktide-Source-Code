@@ -70,6 +70,7 @@ PropHealthExtension.add_damage = function (self, damage_amount, permanent_damage
 		self._health = health
 
 		Component.event(self._unit, "add_damage", damage_amount, hit_actor, attack_direction)
+		Unit.flow_event(self._unit, "lua_prop_damaged")
 
 		if hit_actor and Actor.is_dynamic(hit_actor) then
 			_add_force_on_parts(hit_actor, Actor.mass(hit_actor), self._speed_on_hit, attack_direction)

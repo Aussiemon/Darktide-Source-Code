@@ -375,7 +375,7 @@ local widget_definitions = {
 		}
 	}, "reward_two"),
 	play_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "play_button", {
-		text = "PLAY BASIC"
+		original_text = "PLAY BASIC"
 	}),
 	edge_top = UIWidget.create_definition({
 		{

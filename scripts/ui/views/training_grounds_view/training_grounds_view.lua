@@ -29,7 +29,7 @@ TrainingGroundsView.on_enter = function (self)
 	if player_level < shooting_range_min_level then
 		local shooting_range_button = self._widgets_by_name.option_button_3
 		local shooting_range_name = shooting_range_button.content.text
-		shooting_range_button.content.text = string.format("%s (%s)", shooting_range_name, Localize("loc_requires_level", false, {
+		shooting_range_button.content.text = string.format("%s (%s)", shooting_range_name, Localize("loc_requires_level", true, {
 			level = shooting_range_min_level
 		}))
 		shooting_range_button.content.hotspot.disabled = true

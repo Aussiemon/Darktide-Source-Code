@@ -56,7 +56,7 @@ local actions_lookup = {
 	tag_and_world_markers = {
 		{
 			description = "loc_tag_input_description",
-			input_action = "smart_tag_pressed"
+			input_action = "smart_tag"
 		},
 		{
 			description = "loc_world_marker_input_description",

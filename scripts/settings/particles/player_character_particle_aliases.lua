@@ -118,10 +118,19 @@ local particles = {
 			"wielded_weapon_template"
 		},
 		particles = {
-			plasmagun_p1_m1 = "content/fx/particles/weapons/rifles/plasma_gun/plasma_reload",
-			ogryn_thumper_p1_m2 = "content/fx/particles/weapons/rifles/ogryn_thumper/ogryn_thumper_reload_smoke",
+			lasgun_p2_m3 = "content/fx/particles/weapons/rifles/lasgun/lasgun_reload",
+			lasgun_p3_m2 = "content/fx/particles/weapons/rifles/lasgun/lasgun_reload",
 			bot_zola_laspistol = "content/fx/particles/weapons/rifles/lasgun/lasgun_reload",
-			lasgun_p1_m1 = "content/fx/particles/weapons/rifles/lasgun/lasgun_reload"
+			lasgun_p2_m1 = "content/fx/particles/weapons/rifles/lasgun/lasgun_reload",
+			laspistol_p1_m1 = "content/fx/particles/weapons/rifles/lasgun/lasgun_reload",
+			lasgun_p1_m2 = "content/fx/particles/weapons/rifles/lasgun/lasgun_reload",
+			lasgun_p3_m3 = "content/fx/particles/weapons/rifles/lasgun/lasgun_reload",
+			lasgun_p3_m1 = "content/fx/particles/weapons/rifles/lasgun/lasgun_reload",
+			lasgun_p2_m2 = "content/fx/particles/weapons/rifles/lasgun/lasgun_reload",
+			ogryn_thumper_p1_m2 = "content/fx/particles/weapons/rifles/ogryn_thumper/ogryn_thumper_reload_smoke",
+			plasmagun_p1_m1 = "content/fx/particles/weapons/rifles/plasma_gun/plasma_reload",
+			lasgun_p1_m1 = "content/fx/particles/weapons/rifles/lasgun/lasgun_reload",
+			lasgun_p1_m3 = "content/fx/particles/weapons/rifles/lasgun/lasgun_reload"
 		}
 	},
 	ranged_charging = {

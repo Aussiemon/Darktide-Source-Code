@@ -309,7 +309,7 @@ weapon_template.actions = {
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		anim_event_3p = "attack_swing_stab",
 		uninterruptible = true,
-		anim_event = "attack_stab_01",
+		anim_event = "attack_stab_02",
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -552,9 +552,9 @@ weapon_template.actions = {
 		allowed_during_sprint = true,
 		hit_armor_anim = "attack_hit_shield",
 		damage_window_start = 0.15,
-		damage_window_end = 0.25,
+		damage_window_end = 0.3,
 		anim_end_event = "attack_finished",
-		anim_event_3p = "attack_swing_up",
+		anim_event_3p = "attack_swing_right_diagonal",
 		anim_event = "attack_right_diagonal_down",
 		weapon_handling_template = "time_scale_1",
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
@@ -621,7 +621,7 @@ weapon_template.actions = {
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = base_sweep_box,
 		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/force_sword/attack_right_up",
+			matrices_data_location = "content/characters/player/human/first_person/animations/force_sword/attack_right_diagonal_down",
 			anchor_point_offset = {
 				0,
 				0,
@@ -810,7 +810,7 @@ weapon_template.actions = {
 		damage_window_end = 0.25,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_left_diagonal",
-		anim_event = "attack_left_diagonal_down",
+		anim_event = "attack_left_diagonal_down_01",
 		weapon_handling_template = "time_scale_1",
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		uninterruptible = true,
@@ -1410,7 +1410,8 @@ weapon_template.hit_marker_type = "center"
 weapon_template.keywords = {
 	"melee",
 	"force_sword",
-	"p1"
+	"p1",
+	"activated"
 }
 weapon_template.smart_targeting_template = SmartTargetingTemplates.force_sword_single_target
 weapon_template.dodge_template = "psyker"

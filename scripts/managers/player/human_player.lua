@@ -1,7 +1,7 @@
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local HumanPlayer = class("HumanPlayer")
 
-HumanPlayer.init = function (self, unique_id, session_id, channel_id, peer_id, local_player_id, profile, slot, account_id, viewport_name, telemetry_game_session)
+HumanPlayer.init = function (self, unique_id, session_id, channel_id, peer_id, local_player_id, profile, slot, account_id, viewport_name, telemetry_game_session, last_mission_id)
 	self.player_unit = nil
 	self.viewport_name = viewport_name
 	self.owned_units = {}
@@ -29,12 +29,21 @@ HumanPlayer.init = function (self, unique_id, session_id, channel_id, peer_id, l
 	self._slot = slot
 	self._is_spectating = false
 	self._spectated_by = {}
+	self._wanted_spawn_point = nil
 
 	self:set_profile(profile)
 end
 
 HumanPlayer.type = function (self)
 	return "HumanPlayer"
+end
+
+HumanPlayer.set_wanted_spawn_point = function (self, wanted_spawn_point)
+	self._wanted_spawn_point = wanted_spawn_point
+end
+
+HumanPlayer.wanted_spawn_point = function (self)
+	return self._wanted_spawn_point
 end
 
 HumanPlayer.set_slot = function (self, slot)

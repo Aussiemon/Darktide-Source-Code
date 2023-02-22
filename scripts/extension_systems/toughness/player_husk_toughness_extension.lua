@@ -31,6 +31,14 @@ PlayerHuskToughnessExtension.toughness_damage = function (self)
 	return toughness_damage
 end
 
+PlayerHuskToughnessExtension.remaining_toughness = function (self)
+	local max_toughness = self:max_toughness()
+	local toughness_damage = self:toughness_damage()
+	local remaining_toughness = max_toughness - toughness_damage
+
+	return remaining_toughness
+end
+
 PlayerHuskToughnessExtension.current_toughness_percent_visual = function (self)
 	local max_toughness_visual = self:max_toughness_visual()
 	local max_toughness = self:max_toughness()

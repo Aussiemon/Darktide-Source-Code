@@ -163,6 +163,22 @@ end
 
 local Store = class("Store")
 
+Store.get_veteran_credits_goods_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_store_bespoke_weapons_veteran", character_id, character_id)
+end
+
+Store.get_zealot_credits_goods_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_store_bespoke_weapons_zealot", character_id, character_id)
+end
+
+Store.get_psyker_credits_goods_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_store_bespoke_weapons_psyker", character_id, character_id)
+end
+
+Store.get_ogryn_credits_goods_store = function (self, t, character_id)
+	return self:_get_storefront(t, "credits_store_bespoke_weapons_ogryn", character_id, character_id)
+end
+
 Store.get_veteran_credits_store = function (self, t, character_id)
 	return self:_get_storefront(t, "credits_store_veteran", character_id, character_id, true)
 end

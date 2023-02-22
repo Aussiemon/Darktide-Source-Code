@@ -103,7 +103,7 @@ TrainingGroundsOptionsView._set_play_button_text = function (self)
 	local settings = view_settings.play_settings[self.training_grounds_settings]
 	local input_text = get_input_text("confirm_pressed", "View")
 	local text = gamepad_active and string.format("%s %s", input_text, Utf8.upper(settings.play_button_text)) or Utf8.upper(settings.play_button_text)
-	button_content.text = text
+	button_content.original_text = text
 	button_content.hotspot.is_selected = gamepad_active
 end
 

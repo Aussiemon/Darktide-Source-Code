@@ -95,7 +95,7 @@ local templates = {
 						[stat_buffs.power_level_modifier] = 0.15
 					},
 					{
-						[stat_buffs.power_level_modifier] = -0.15
+						[stat_buffs.power_level_modifier] = -0.1
 					}
 				}
 			},
@@ -105,7 +105,7 @@ local templates = {
 						[stat_buffs.power_level_modifier] = 0.2
 					},
 					{
-						[stat_buffs.power_level_modifier] = -0.2
+						[stat_buffs.power_level_modifier] = -0.1
 					}
 				}
 			},
@@ -115,7 +115,7 @@ local templates = {
 						[stat_buffs.power_level_modifier] = 0.25
 					},
 					{
-						[stat_buffs.power_level_modifier] = -0.25
+						[stat_buffs.power_level_modifier] = -0.1
 					}
 				}
 			}
@@ -237,22 +237,22 @@ local templates = {
 		weapon_trait_bespoke_combataxe_p3_increased_weakspot_damage_on_push = {
 			{
 				proc_stat_buffs = {
-					[stat_buffs.weakspot_damage] = 0.075
+					[stat_buffs.weakspot_damage] = 0.3
 				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.weakspot_damage] = 0.1
+					[stat_buffs.weakspot_damage] = 0.4
 				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.weakspot_damage] = 0.125
+					[stat_buffs.weakspot_damage] = 0.5
 				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.weakspot_damage] = 0.15
+					[stat_buffs.weakspot_damage] = 0.6
 				}
 			}
 		}

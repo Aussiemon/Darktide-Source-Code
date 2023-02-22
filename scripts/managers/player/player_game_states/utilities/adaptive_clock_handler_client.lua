@@ -9,6 +9,7 @@ local DIAGNOSTICS_BUFFER = 64
 local DIAGNOSTICS_STRIDE = 6
 local DIAGNOSTICS_UPDATE_FREQUENCY = 0.25
 local DIAGNOSTICS_SIZE = DIAGNOSTICS_BUFFER * DIAGNOSTICS_STRIDE
+local OFFSET_CORRECTION_INFO_NUM_FRAMES = 60
 
 AdaptiveClockHandlerClient.init = function (self, network_event_delegate)
 	network_event_delegate:register_session_events(self, "rpc_sync_clock_offset")
@@ -74,20 +75,21 @@ AdaptiveClockHandlerClient._target_offset = function (self)
 end
 
 AdaptiveClockHandlerClient.frame_parsed = function (self, frame, remainder_time, frame_time)
-	local measured_time = frame * GameParameters.fixed_time_step + self:_frame_discrepancy_buffer() + remainder_time - frame_time
+	local fixed_time_step = GameParameters.fixed_time_step
+	local measured_time = frame * fixed_time_step + self:_frame_discrepancy_buffer() + remainder_time - frame_time
 	local server = Managers.connection:host()
 	local rtt = Network.ping(server)
 	local estimated_time = Managers.time:time("gameplay") - self._current_offset - rtt * 0.5
 	local wanted_offset_correction = measured_time - estimated_time
 	local offset = wanted_offset_correction - self._offset_correction
 
-	if math.abs(offset) > GameParameters.fixed_time_step * 0.01 then
+	if math.abs(offset) > fixed_time_step * 0.01 then
 		self._offset_correction = math.lerp(self._offset_correction, wanted_offset_correction, 0.005)
 	end
 end
 
 AdaptiveClockHandlerClient.post_update = function (self, main_dt)
-	self:_update_max_frame_time(main_dt)
+	self._max_frame_time = Managers.time:mean_dt()
 
 	if not self._time_scale then
 		return
@@ -124,41 +126,6 @@ AdaptiveClockHandlerClient.post_update = function (self, main_dt)
 		diag[diag_i + 4] = self._time_scale
 		diag[diag_i + 5] = self._server_offset
 		diag[diag_i + 6] = self._offset_correction
-	end
-end
-
-AdaptiveClockHandlerClient._update_max_frame_time = function (self, dt)
-	local max_dt = self._max_frame_time * MAX_FRAMERATE_SPIKE_THRESHOLD
-
-	if dt > max_dt then
-		Log.info("AdaptiveClockHandlerClient", "Filtering out frame dt of %f, more than %f times old max dt of %f", dt, MAX_FRAMERATE_SPIKE_THRESHOLD, max_dt)
-
-		dt = self._max_frame_time * INCREASE_MULTIPLIER_ON_SPIKE
-	end
-
-	self._time_since_last_sample = self._time_since_last_sample + dt
-	local buffer = self._frametime_buffer
-
-	if self._time_per_sample < self._time_since_last_sample then
-		local index = self._frametime_buffer_index % FRAMETIME_BUFFER_SIZE + 1
-		local old_value = buffer[index]
-		buffer[index] = dt
-		self._frametime_buffer_index = index
-
-		if self._max_frame_time < dt then
-			self._max_frame_time = dt
-		elseif old_value == self._max_frame_time and dt < old_value then
-			self._max_frame_time = math.max(unpack(buffer))
-		end
-
-		self._time_since_last_sample = self._time_since_last_sample - self._time_per_sample
-	else
-		local index = self._frametime_buffer_index
-
-		if buffer[index] < dt then
-			buffer[index] = dt
-			self._max_frame_time = math.max(dt, self._max_frame_time)
-		end
 	end
 end
 

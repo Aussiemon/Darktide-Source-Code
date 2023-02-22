@@ -15,6 +15,9 @@ local state_machine_settings = {
 	["content/characters/player/human/first_person/animations/bolt_gun"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
+	["content/characters/player/human/first_person/animations/bolt_pistol"] = {
+		blend_time = DEFAULT_BLEND_TIME
+	},
 	["content/characters/player/ogryn/first_person/animations/shotgun_grenade"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
@@ -22,6 +25,9 @@ local state_machine_settings = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
 	["content/characters/player/human/first_person/animations/plasma_rifle"] = {
+		blend_time = DEFAULT_BLEND_TIME
+	},
+	["content/characters/player/human/first_person/animations/melta_gun"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
 	["content/characters/player/human/first_person/animations/lasgun_pistol"] = {

@@ -244,7 +244,7 @@ damage_templates.lasgun_p2_charge_killshot = {
 	staggering_headshot = true,
 	stagger_category = "ranged",
 	crit_boost = 0.25,
-	cleave_distribution = single_cleave,
+	cleave_distribution = double_cleave,
 	ranges = {
 		max = 25,
 		min = 10
@@ -496,6 +496,34 @@ overrides.lasgun_p2_m2_charge_killshot = {
 			2,
 			"modifier",
 			1
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			"armored",
+			damage_lerp_values.lerp_0_6
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
+			"armored",
+			damage_lerp_values.lerp_0_6
+		},
+		{
+			"armor_damage_modifier_ranged_charged",
+			"near",
+			"attack",
+			"super_armor",
+			damage_lerp_values.lerp_0_6
+		},
+		{
+			"armor_damage_modifier_ranged_charged",
+			"far",
+			"attack",
+			"super_armor",
+			damage_lerp_values.lerp_0_75
 		}
 	}
 }
@@ -534,6 +562,20 @@ overrides.lasgun_p2_m3_charge_killshot = {
 			2,
 			"modifier",
 			1
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			"armored",
+			damage_lerp_values.lerp_0_8
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
+			"armored",
+			damage_lerp_values.lerp_0_9
 		},
 		{
 			"armor_damage_modifier_ranged_charged",

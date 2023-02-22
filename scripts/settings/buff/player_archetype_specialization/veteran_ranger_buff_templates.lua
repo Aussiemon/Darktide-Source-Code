@@ -68,6 +68,7 @@ local templates = {
 			}
 		},
 		start_func = function (template_data, template_context)
+			template_data.total_time = 0
 			local unit = template_context.unit
 			local specialization_extension = ScriptUnit.extension(template_context.unit, "specialization_system")
 			local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
@@ -100,17 +101,15 @@ local templates = {
 			if Managers.stats.can_record_stats() then
 				local player = template_context.player
 
-				Managers.stats:record_volley_fire_stop(player)
+				Managers.stats:record_volley_fire_stop(template_data.total_time, player)
 			end
+
+			template_data.total_time = 0
 		end,
 		refresh_func = function (template_data, template_context, t)
 			template_data.first_update = true
 		end,
 		proc_func = function (params, template_data, template_context, t)
-			if not template_data.refresh_on_kill then
-				return
-			end
-
 			local on_kill = CheckProcFunctions.on_kill(params)
 
 			if not on_kill then
@@ -143,6 +142,10 @@ local templates = {
 				end
 			end
 
+			if not template_data.refresh_on_kill then
+				return
+			end
+
 			local unit = template_context.unit
 			local buff_extension = ScriptUnit.extension(unit, "buff_system")
 			local buff_name = template_context.template.name
@@ -150,6 +153,8 @@ local templates = {
 			buff_extension:add_internally_controlled_buff(buff_name, t)
 		end,
 		update_func = function (template_data, template_context, dt, t)
+			template_data.total_time = template_data.total_time + dt
+
 			if template_data.first_update then
 				local unit = template_context.unit
 				local outline_buff = "veteran_ranger_ranged_stance_outline_units"
@@ -546,11 +551,12 @@ templates.veteran_ranger_elites_replenish_ammo = {
 		end
 
 		local units_in_coherence = template_data.coherency_extension:in_coherence_units()
+		local total_ammo_gained = 0
 
 		for coherency_unit, _ in pairs(units_in_coherence) do
 			local ammo_percent = talent_settings.coherency.ammo_replenishment_percent
-
-			Ammo.add_to_all_slots(coherency_unit, ammo_percent)
+			local ammo_gained = Ammo.add_to_all_slots(coherency_unit, ammo_percent)
+			total_ammo_gained = total_ammo_gained + ammo_gained
 		end
 	end
 }
@@ -677,7 +683,7 @@ templates.veteran_ranger_frag_grenade_bleed = {
 	proc_events = {
 		[proc_events.on_hit] = 1
 	},
-	check_proc_func = CheckProcFunctions.on_non_kill,
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_non_kill),
 	proc_func = function (params, template_data, template_context, t)
 		local damage_type = params.damage_type
 
@@ -688,12 +694,11 @@ templates.veteran_ranger_frag_grenade_bleed = {
 		local hit_unit = params.attacked_unit
 		local buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
 
-		if buff_extension then
+		if HEALTH_ALIVE[hit_unit] and buff_extension then
+			local unit = template_context.unit
 			local num_stacks = talent_settings.offensive_2_1.stacks
 
-			for i = 1, num_stacks do
-				buff_extension:add_internally_controlled_buff("bleed", t)
-			end
+			buff_extension:add_internally_controlled_buff_with_stacks("bleed", num_stacks, t, "owner_unit", unit)
 		end
 	end
 }

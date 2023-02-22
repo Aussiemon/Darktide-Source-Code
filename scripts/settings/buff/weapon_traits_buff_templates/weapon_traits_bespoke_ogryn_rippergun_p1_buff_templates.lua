@@ -31,6 +31,6 @@ templates.weapon_trait_bespoke_ogryn_rippergun_p1_power_bonus_on_continuous_fire
 	},
 	continuous_fire_step = rippergun_continuous_fire_step
 }, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire)
-templates.weapon_trait_bespoke_ogryn_rippergun_p1_bleed_on_crit = table.clone(BaseWeaponTraitBuffTemplates.bleed_on_crit_ranged)
+templates.weapon_trait_bespoke_ogryn_rippergun_p1_bleed_on_crit = table.clone(BaseWeaponTraitBuffTemplates.bleed_on_crit_pellets)
 
 return templates

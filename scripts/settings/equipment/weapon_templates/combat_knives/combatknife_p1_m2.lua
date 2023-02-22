@@ -208,7 +208,7 @@ weapon_template.actions = {
 			anchor_point_offset = {
 				0,
 				0,
-				-0.28
+				-0.33
 			}
 		},
 		damage_profile = DamageProfileTemplates.light_combat_knife_ninja_fencer,
@@ -359,7 +359,7 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.25,
 		allowed_during_sprint = true,
-		damage_window_end = 0.4,
+		damage_window_end = 0.39,
 		anim_event = "attack_swing_right_diagonal_up",
 		total_time = 2,
 		action_movement_curve = {
@@ -417,7 +417,7 @@ weapon_template.actions = {
 			anchor_point_offset = {
 				0,
 				0,
-				-0.2
+				0
 			}
 		},
 		damage_profile = DamageProfileTemplates.light_combat_knife_ninja_fencer,
@@ -563,7 +563,7 @@ weapon_template.actions = {
 		end
 	},
 	action_left_light_2 = {
-		damage_window_start = 0.24,
+		damage_window_start = 0.29,
 		hit_armor_anim = "attack_hit_shield",
 		weapon_handling_template = "time_scale_1_ninja",
 		kind = "sweep",
@@ -572,7 +572,7 @@ weapon_template.actions = {
 		allowed_during_sprint = true,
 		damage_window_end = 0.35,
 		anim_end_event = "attack_finished",
-		anim_event_3p = "attack_swing_left",
+		anim_event_3p = "attack_swing_up_left",
 		anim_event = "attack_swing_left_diagonal_up",
 		total_time = 2,
 		action_movement_curve = {
@@ -629,7 +629,7 @@ weapon_template.actions = {
 			anchor_point_offset = {
 				0,
 				0,
-				-0.3
+				-0.1
 			}
 		},
 		damage_profile = DamageProfileTemplates.light_combat_knife_ninja_fencer,
@@ -706,7 +706,7 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.25,
 		allowed_during_sprint = true,
-		damage_window_end = 0.4,
+		damage_window_end = 0.39,
 		anim_event = "attack_swing_right",
 		total_time = 2,
 		action_movement_curve = {

@@ -9,6 +9,7 @@ end
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/chaos/chaos_beast_of_nurgle_combat_ranges")
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/chaos/chaos_daemonhost_combat_ranges")
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/chaos/chaos_hound_combat_ranges")
+_create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/chaos/chaos_hound_mutator_combat_ranges")
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/chaos/chaos_ogryn_bulwark_combat_ranges")
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/chaos/chaos_ogryn_executor_combat_ranges")
 _create_breed_combat_range_entry("scripts/settings/breed/breed_combat_ranges/chaos/chaos_ogryn_gunner_combat_ranges")

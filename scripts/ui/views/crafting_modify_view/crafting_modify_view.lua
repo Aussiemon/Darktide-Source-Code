@@ -4,6 +4,7 @@ local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ViewElementCraftingRecipe = require("scripts/ui/view_elements/view_element_crafting_recipe/view_element_crafting_recipe")
 local ViewElementTabMenu = require("scripts/ui/view_elements/view_element_tab_menu/view_element_tab_menu")
+local ItemUtils = require("scripts/utilities/items")
 
 require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
 
@@ -26,7 +27,7 @@ CraftingModifyView.on_enter = function (self)
 		118
 	}, {
 		0,
-		-95,
+		-88,
 		200
 	}, "content/ui/materials/frames/item_info_lower", nil, nil)
 
@@ -52,8 +53,10 @@ CraftingModifyView._setup_crafting_recipe = function (self, reference_name, scen
 	local grid_height = 400
 	local context = {
 		scrollbar_width = 7,
-		use_parent_ui_renderer = true,
+		hide_continue_button = true,
+		top_padding = 10,
 		title_height = 0,
+		use_parent_ui_renderer = true,
 		grid_spacing = {
 			0,
 			10
@@ -70,6 +73,43 @@ CraftingModifyView._setup_crafting_recipe = function (self, reference_name, scen
 	}
 
 	return self:_add_element(ViewElementCraftingRecipe, reference_name, layer, context)
+end
+
+CraftingModifyView._setup_sort_options = function (self)
+	if not self._sort_options then
+		self._sort_options = {
+			{
+				display_name = Localize("loc_inventory_item_grid_sort_title_item_power"),
+				sort_function = ItemUtils.sort_comparator({
+					">",
+					ItemUtils.compare_item_level,
+					">",
+					ItemUtils.compare_item_type,
+					"<",
+					ItemUtils.compare_item_name,
+					"<",
+					ItemUtils.compare_item_rarity
+				})
+			},
+			{
+				display_name = Localize("loc_inventory_item_grid_sort_title_item_type"),
+				sort_function = ItemUtils.sort_comparator({
+					">",
+					ItemUtils.compare_item_type,
+					"<",
+					ItemUtils.compare_item_name,
+					">",
+					ItemUtils.compare_item_level,
+					"<",
+					ItemUtils.compare_item_rarity
+				})
+			}
+		}
+	end
+
+	local sort_callback = callback(self, "cb_on_sort_button_pressed")
+
+	self._item_grid:setup_sort_button(self._sort_options, sort_callback, 1)
 end
 
 CraftingModifyView.on_resolution_modified = function (self, scale)
@@ -91,6 +131,28 @@ CraftingModifyView.on_back_pressed = function (self)
 	return not self._using_cursor_navigation and self._selected_grid == "crafting_recipe"
 end
 
+CraftingModifyView._set_trait_inventory_focused = function (self, focus)
+	local crafting_recipe = self._crafting_recipe
+	local trait_inventory = self._trait_inventory
+	self._trait_inventory_focused = focus
+
+	if focus then
+		trait_inventory:enable()
+		trait_inventory:set_handle_grid_navigation(true)
+		trait_inventory:set_color_intensity_multiplier(1)
+		crafting_recipe:set_handle_grid_navigation(false)
+		crafting_recipe:set_navigation_button_color_intensity(0.7)
+	else
+		trait_inventory:disable()
+		trait_inventory:clear_marks()
+		trait_inventory:select_grid_index(nil)
+		trait_inventory:set_handle_grid_navigation(false)
+		trait_inventory:set_color_intensity_multiplier(0.5)
+		crafting_recipe:set_handle_grid_navigation(true)
+		crafting_recipe:set_navigation_button_color_intensity(1)
+	end
+end
+
 CraftingModifyView._set_selected_grid = function (self, new_selected_grid)
 	self._selected_grid = new_selected_grid
 
@@ -98,14 +160,44 @@ CraftingModifyView._set_selected_grid = function (self, new_selected_grid)
 		return
 	end
 
+	local crafting_recipe = self._crafting_recipe
+	local item_grid = self._item_grid
+
 	if new_selected_grid == "item_grid" then
-		self._crafting_recipe:disable_input(true)
-		self._crafting_recipe:select_grid_index(nil)
-		self._item_grid:disable_input(false)
+		crafting_recipe:disable_input(true)
+		crafting_recipe:select_grid_index(nil)
+		crafting_recipe:set_navigation_button_color_intensity(0.7)
+		item_grid:disable_input(false)
+		item_grid:set_color_intensity_multiplier(1)
 	elseif new_selected_grid == "crafting_recipe" then
-		self._crafting_recipe:disable_input(false)
-		self._crafting_recipe:select_first_index()
-		self._item_grid:disable_input(true)
+		local previously_active_view_name = self._parent:previously_active_view_name()
+		local widgets = crafting_recipe:widgets()
+		local selection_index = nil
+
+		for i = 1, #widgets do
+			local widget = widgets[i]
+			local content = widget.content
+			local entry = content.entry
+			local recipe = entry and entry.recipe
+
+			if recipe and recipe.view_name == previously_active_view_name then
+				selection_index = i
+
+				break
+			end
+		end
+
+		crafting_recipe:disable_input(false)
+
+		if selection_index then
+			crafting_recipe:select_grid_index(selection_index)
+		else
+			crafting_recipe:select_first_index()
+		end
+
+		crafting_recipe:set_navigation_button_color_intensity(1)
+		item_grid:disable_input(true)
+		item_grid:set_color_intensity_multiplier(0.5)
 	else
 		ferror("Unknown grid: %s", new_selected_grid)
 	end
@@ -153,6 +245,7 @@ CraftingModifyView._handle_input = function (self, input_service)
 end
 
 CraftingModifyView.cb_on_recipe_button_pressed = function (self, _, config)
+	self._parent:previously_active_view_name()
 	self._parent:go_to_crafting_view(config.recipe.view_name, self._previewed_item)
 end
 
@@ -186,8 +279,10 @@ CraftingModifyView._cb_fetch_inventory_items = function (self, items)
 	local layout = {}
 
 	for item_id, item in pairs(items) do
-		if not item.no_crafting then
-			local slot_name = item.slots[1]
+		local slots = item.slots
+
+		if not item.no_crafting and slots then
+			local slot_name = slots[1]
 			layout[#layout + 1] = {
 				widget_type = "item",
 				item = item,
@@ -276,6 +371,8 @@ end
 CraftingModifyView._on_navigation_input_changed = function (self)
 	if self._item_grid then
 		self._item_grid:_on_navigation_input_changed()
+		self._item_grid:set_color_intensity_multiplier(1)
+		self._crafting_recipe:set_navigation_button_color_intensity(1)
 	end
 
 	if self._using_cursor_navigation then

@@ -2,7 +2,6 @@ require("scripts/ui/hud/elements/hud_element_base")
 
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local UIHudElementCoordinator = require("scripts/managers/ui/ui_hud_element_coordinator")
 local resolution_modified_key = "modified"
 local WorldRenderUtils = require("scripts/utilities/world_render")
 local UIHudSettings = require("scripts/settings/ui/ui_hud_settings")
@@ -36,7 +35,6 @@ UIHud.init = function (self, elements, visibility_groups, params)
 	self._elements_array = {}
 	self._elements_hud_scale_lookup = {}
 	self._elements_hud_retained_mode_lookup = {}
-	self._customizable_element_scenegraph_ids = {}
 	local peer_id = params.peer_id
 	local local_player_id = params.local_player_id or 1
 	local player = Managers.player:player(peer_id, local_player_id)
@@ -47,9 +45,7 @@ UIHud.init = function (self, elements, visibility_groups, params)
 	table.sort(self._element_definitions, sort_elements_by_hud_scale)
 	self:_verify_elements(self._element_definitions)
 	self:_setup_elements(self._element_definitions)
-
-	self._element_coordinator = UIHudElementCoordinator:new()
-
+	Managers.event:register(self, "event_set_emote_wheel_state", "event_set_emote_wheel_state")
 	Managers.event:register(self, "event_set_tactical_overlay_state", "event_set_tactical_overlay_state")
 	Managers.event:register(self, "event_set_communication_wheel_state", "event_set_communication_wheel_state")
 	Managers.event:register(self, "event_update_hud_scale", "event_update_hud_scale")
@@ -177,7 +173,6 @@ UIHud._setup_element = function (self, definition)
 	local elements_array = self._elements_array
 	local elements_hud_scale_lookup = self._elements_hud_scale_lookup
 	local elements_hud_retained_mode_lookup = self._elements_hud_retained_mode_lookup
-	local customizable_element_scenegraph_ids = self._customizable_element_scenegraph_ids
 	local class_name = definition.class_name
 
 	if definition.use_hud_scale then
@@ -186,12 +181,6 @@ UIHud._setup_element = function (self, definition)
 
 	if definition.use_retained_mode then
 		elements_hud_retained_mode_lookup[class_name] = true
-	end
-
-	local customizable_scenegraph_id = definition.customizable_scenegraph_id
-
-	if customizable_scenegraph_id then
-		customizable_element_scenegraph_ids[class_name] = customizable_scenegraph_id
 	end
 
 	self:_add_element(definition, elements, elements_array)
@@ -295,19 +284,6 @@ end
 
 UIHud.update = function (self, dt, t, input_service)
 	local ui_renderer = self._ui_renderer
-	local element_coordinator = self._element_coordinator
-	local ui_hud_customize_coordinates = false
-
-	if ui_hud_customize_coordinates then
-		if not self._using_cursor then
-			self:_activate_mouse_cursor()
-		end
-
-		element_coordinator:update(dt, t, ui_renderer, input_service)
-	elseif self._using_cursor then
-		self:_deactivate_mouse_cursor()
-	end
-
 	local player_unit = self:player_unit()
 
 	if player_unit then
@@ -322,7 +298,6 @@ UIHud.update = function (self, dt, t, input_service)
 
 	local elements_hud_scale_lookup = self._elements_hud_scale_lookup
 	local currently_visible_elements = self._currently_visible_elements
-	local customizable_element_scenegraph_ids = self._customizable_element_scenegraph_ids
 	local elements_array = self._elements_array
 	local hud_scale_applied = false
 	local render_settings = self._render_settings
@@ -337,7 +312,6 @@ UIHud.update = function (self, dt, t, input_service)
 		render_settings.using_hud_scale = nil
 	end
 
-	local dragging_element = false
 	self._element_using_input = false
 
 	for i = 1, #elements_array do
@@ -351,18 +325,6 @@ UIHud.update = function (self, dt, t, input_service)
 		end
 
 		if resolution_modified and element.on_resolution_modified then
-			local scenegraph_id = customizable_element_scenegraph_ids[element_name]
-
-			if scenegraph_id then
-				if type(scenegraph_id) == "table" then
-					for j = 1, #scenegraph_id do
-						element_coordinator:refresh_coordinates(element, scenegraph_id[j])
-					end
-				else
-					element_coordinator:refresh_coordinates(element, scenegraph_id)
-				end
-			end
-
 			element:on_resolution_modified()
 		end
 
@@ -375,20 +337,6 @@ UIHud.update = function (self, dt, t, input_service)
 
 			if element.end_update then
 				element:end_update(dt, t, ui_renderer, render_settings, input_service)
-			end
-		end
-
-		if ui_hud_customize_coordinates and not dragging_element then
-			local scenegraph_id = customizable_element_scenegraph_ids[element_name]
-
-			if scenegraph_id then
-				if type(scenegraph_id) == "table" then
-					for j = 1, #scenegraph_id do
-						dragging_element = dragging_element or element_coordinator:handle_scenegraph_coordinates(element, scenegraph_id[j], input_service, render_settings)
-					end
-				else
-					dragging_element = element_coordinator:handle_scenegraph_coordinates(element, scenegraph_id, input_service, render_settings)
-				end
 			end
 		end
 
@@ -456,6 +404,7 @@ UIHud.destroy = function (self, disable_world_bloom)
 		WorldRenderUtils.disable_world_ui_bloom(self._world_name, self._player_viewport_name)
 	end
 
+	Managers.event:unregister(self, "event_set_emote_wheel_state")
 	Managers.event:unregister(self, "event_set_tactical_overlay_state")
 	Managers.event:unregister(self, "event_set_communication_wheel_state")
 	Managers.event:unregister(self, "event_update_hud_scale")
@@ -519,6 +468,20 @@ UIHud.communication_wheel_wants_camera_control = function (self)
 	local state = self._communication_wheel_state
 
 	return state == "active" or state == "camera_lock"
+end
+
+UIHud.emote_wheel_active = function (self)
+	return self._emote_wheel_state == "active"
+end
+
+UIHud.emote_wheel_wants_camera_control = function (self)
+	local state = self._emote_wheel_state
+
+	return state == "active" or state == "camera_lock"
+end
+
+UIHud.event_set_emote_wheel_state = function (self, state)
+	self._emote_wheel_state = state
 end
 
 UIHud.event_update_hud_scale = function (self, value)

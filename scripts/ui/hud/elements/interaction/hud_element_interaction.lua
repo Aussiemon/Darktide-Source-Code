@@ -43,45 +43,47 @@ HudElementInteraction.update = function (self, dt, t, ui_renderer, render_settin
 end
 
 HudElementInteraction._interaction_extension_scan = function (self)
+	local interactee_system = Managers.state.extension:system("interactee_system")
+	local unit_to_interactee_ext = interactee_system:unit_to_extension_map()
+
+	for interactee_unit, extension in pairs(unit_to_interactee_ext) do
+		self:_update_interactee_data(interactee_unit, extension)
+	end
+end
+
+HudElementInteraction._update_interactee_data = function (self, interactee_unit, extension)
 	local parent = self._parent
 	local player = parent:player()
 	local player_unit = player.player_unit
-	local event_manager = Managers.event
-	local interactee_system = Managers.state.extension:system("interactee_system")
-	local unit_to_interactee_ext = interactee_system:unit_to_extension_map()
 	local camera = parent:player_camera()
 	local camera_position = camera and Camera.local_position(camera)
-	local max_marker_distance_sq = HudElementInteractionSettings.max_spawn_distance_sq
-	local marker_type = "interaction"
+	local render_marker = extension:active() and extension:show_marker(player_unit) and interactee_unit ~= player_unit
 	local interaction_units = self._interaction_units
 
-	for interactee_unit, extension in pairs(unit_to_interactee_ext) do
-		local render_marker = extension:active() and extension:show_marker(player_unit) and interactee_unit ~= player_unit
+	if render_marker and camera_position then
+		local interactee_position = Unit.world_position(interactee_unit, 1)
+		local distance_sq = Vector3.distance_squared(interactee_position, camera_position)
+		render_marker = distance_sq <= HudElementInteractionSettings.max_spawn_distance_sq
+	end
 
-		if render_marker and camera_position then
-			local interactee_position = Unit.world_position(interactee_unit, 1)
-			local distance_sq = Vector3.distance_squared(interactee_position, camera_position)
-			render_marker = distance_sq <= max_marker_distance_sq
+	if render_marker then
+		if not interaction_units[interactee_unit] then
+			interaction_units[interactee_unit] = {
+				requested = true,
+				extension = extension
+			}
+			local marker_callback = callback(self, "_on_interaction_marker_spawned", interactee_unit)
+			local marker_type = "interaction"
+
+			Managers.event:trigger("add_world_marker_unit", marker_type, interactee_unit, marker_callback, extension)
 		end
+	elseif interaction_units[interactee_unit] then
+		local marker_id = interaction_units[interactee_unit].marker_id
 
-		if render_marker then
-			if not interaction_units[interactee_unit] then
-				interaction_units[interactee_unit] = {
-					requested = true,
-					extension = extension
-				}
-				local marker_callback = callback(self, "_on_interaction_marker_spawned", interactee_unit)
+		if marker_id then
+			Managers.event:trigger("remove_world_marker", marker_id)
 
-				event_manager:trigger("add_world_marker_unit", marker_type, interactee_unit, marker_callback, extension)
-			end
-		elseif interaction_units[interactee_unit] then
-			local marker_id = interaction_units[interactee_unit].marker_id
-
-			if marker_id then
-				event_manager:trigger("remove_world_marker", marker_id)
-
-				interaction_units[interactee_unit] = nil
-			end
+			interaction_units[interactee_unit] = nil
 		end
 	end
 end
@@ -167,6 +169,13 @@ HudElementInteraction._update_can_interact_target = function (self)
 
 				local interaction_units = self._interaction_units
 				local interaction_data = interaction_units[interactee_unit]
+
+				if not interaction_data then
+					self:_update_interactee_data(interactee_unit, interactee_extension)
+
+					interaction_data = interaction_units[interactee_unit]
+				end
+
 				local marker_id = interaction_data and interaction_data.marker_id
 				local _, type_description = interactor_extension:hud_description()
 				self._active_presentation_data = {

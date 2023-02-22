@@ -1,3 +1,4 @@
+local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local HookStats = require("scripts/managers/stats/groups/hook_stats")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
 local PriorityQueue = require("scripts/foundation/utilities/priority_queue")
@@ -201,22 +202,24 @@ StatsManager.record_objective_complete = function (self, player, mission_name, o
 	self:_trigger_hook(player, "hook_objective", 1, mission_name, objective_name, objective_type, objective_time, player:profile().specialization)
 end
 
-StatsManager.record_damage = function (self, player, breed_name, weapon_template_name, weapon_attack_type, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, damage_type, damage, is_critical_hit, stagger_result)
-	breed_name = breed_name or "unknown"
+StatsManager.record_damage = function (self, player, breed_or_nil, weapon_template_name, attack_result, weapon_attack_type, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, damage_type, damage, is_critical_hit, is_weapon_special, stagger_result, stagger_type)
+	local breed_name = breed_or_nil and breed_or_nil.name or "unknown"
 	weapon_template_name = weapon_template_name or "unknown"
 	weapon_attack_type = weapon_attack_type or "unknown"
+	attack_result = attack_result or "unknown"
 	hit_zone_name = hit_zone_name or "unknown"
 	action_name = action_name or "unknown"
 	damage_profile_name = damage_profile_name or "unknown"
 	damage_type = damage_type or "unknown"
 	is_critical_hit = is_critical_hit or "unknown"
 	stagger_result = stagger_result or "unknown"
+	stagger_type = stagger_type or "unknown"
 
-	self:_trigger_hook(player, "hook_damage", damage, breed_name, weapon_template_name, weapon_attack_type, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, damage_type, is_critical_hit, stagger_result, player:profile().specialization)
+	self:_trigger_hook(player, "hook_damage", damage, breed_name, weapon_template_name, weapon_attack_type, attack_result, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, damage_type, is_critical_hit, is_weapon_special, stagger_result, stagger_type, player:profile().specialization)
 end
 
-StatsManager.record_kill = function (self, player, breed_name, weapon_template_name, weapon_attack_type, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, buff_keywords, damage_type, solo_kill)
-	breed_name = breed_name or "unknown"
+StatsManager.record_kill = function (self, player, breed_or_nil, weapon_template_name, weapon_attack_type, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, target_buff_keywords, damage_type, is_critical_hit, is_weapon_special, solo_kill, attacked_unit_blackboard_or_nil)
+	local breed_name = breed_or_nil and breed_or_nil.name or "unknown"
 	weapon_template_name = weapon_template_name or "unknown"
 	weapon_attack_type = weapon_attack_type or "unknown"
 	hit_zone_name = hit_zone_name or "unknown"
@@ -224,7 +227,7 @@ StatsManager.record_kill = function (self, player, breed_name, weapon_template_n
 	damage_profile_name = damage_profile_name or "unknown"
 	damage_type = damage_type or "unknown"
 
-	self:_trigger_hook(player, "hook_kill", 1, breed_name, weapon_template_name, weapon_attack_type, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, buff_keywords, damage_type, solo_kill, player:profile().specialization)
+	self:_trigger_hook(player, "hook_kill", 1, breed_name, weapon_template_name, weapon_attack_type, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, target_buff_keywords, damage_type, is_critical_hit, is_weapon_special, solo_kill, player:profile().specialization)
 end
 
 StatsManager.record_buff = function (self, player, breed_name, buff_template_name, stack_count, weapon_buff_template_name)
@@ -251,8 +254,12 @@ StatsManager.record_team_kill = function (self, breed_name, weapon_attack_type)
 	self:_trigger_global_hook("hook_team_kill", 1, breed_name, weapon_attack_type)
 end
 
-StatsManager.record_toughness_regen = function (self, player, reason, amount)
-	self:_trigger_hook(player, "hook_toughness_regenerated", amount, reason, player:profile().specialization)
+StatsManager.record_toughness_regen = function (self, player, amount, starting_ammount, reason)
+	self:_trigger_hook(player, "hook_toughness_regenerated", amount, starting_ammount, reason, player:profile().specialization)
+end
+
+StatsManager.record_toughness_broken = function (self, player)
+	self:_trigger_hook(player, "hook_toughness_broken", 1, player:profile().specialization)
 end
 
 StatsManager.record_dodge = function (self, player, attacker_breed, attack_type, reason)
@@ -295,8 +302,8 @@ StatsManager.record_player_knock_down = function (self, player)
 	self:_trigger_hook(player, "hook_knock_down", 1, player:profile().specialization)
 end
 
-StatsManager.record_player_damage_taken = function (self, player, amount, attack_type)
-	self:_trigger_hook(player, "hook_damage_taken", amount, player:profile().specialization, attack_type)
+StatsManager.record_player_damage_taken = function (self, player, amount, attack_type, is_attacker_elite)
+	self:_trigger_hook(player, "hook_damage_taken", amount, player:profile().specialization, attack_type, is_attacker_elite)
 end
 
 StatsManager.record_team_damage_taken = function (self, amount)
@@ -343,6 +350,10 @@ StatsManager.record_health_update = function (self, player, current_health_perce
 	self:_trigger_hook(player, "hook_health_update", current_health_percentage, is_knocked_down, player:profile().specialization)
 end
 
+StatsManager.record_sweep_finished = function (self, player, num_hit_units, num_killed_enemies, combo_count, hit_weakspot, is_heavy)
+	self:_trigger_hook(player, "hook_sweep_finished", 1, num_hit_units, num_killed_enemies, combo_count, hit_weakspot, is_heavy, player:profile().specialization)
+end
+
 StatsManager.record_ranged_attack_concluded = function (self, player, hit_minion, hit_weakspot, kill, last_round_in_mag)
 	self:_trigger_hook(player, "hook_ranged_attack_concluded", 1, hit_minion, hit_weakspot, kill, last_round_in_mag, player:profile().specialization)
 end
@@ -371,16 +382,20 @@ StatsManager.record_lunge_distance = function (self, player, distance_lunged)
 	self:_trigger_hook(player, "hook_lunge_distance", distance_lunged, player:profile().specialization)
 end
 
-StatsManager.record_lunge_stop = function (self, player, number_of_enemies)
-	self:_trigger_hook(player, "hook_lunge_stop", number_of_enemies, player:profile().specialization)
+StatsManager.record_lunge_stop = function (self, player, number_of_enemies, number_of_hit_ranged)
+	self:_trigger_hook(player, "hook_lunge_stop", number_of_enemies, number_of_hit_ranged, player:profile().specialization)
 end
 
 StatsManager.record_volley_fire_start = function (self, player)
 	self:_trigger_hook(player, "hook_volley_fire_start", 1)
 end
 
-StatsManager.record_volley_fire_stop = function (self, player)
-	self:_trigger_hook(player, "hook_volley_fire_stop", 1)
+StatsManager.record_volley_fire_stop = function (self, volley_fire_total_time, player)
+	self:_trigger_hook(player, "hook_volley_fire_stop", 1, volley_fire_total_time)
+end
+
+StatsManager.record_zealot_2_martyrdom_stacks = function (self, martyrdom_stacks, player)
+	self:_trigger_hook(player, "hook_zealot_2_martyrdom_stacks", martyrdom_stacks, player:profile().specialization)
 end
 
 StatsManager.record_zealot_2_health_healed_with_leech_during_resist_death = function (self, player, health_ammount_percentage)
@@ -389,8 +404,8 @@ StatsManager.record_zealot_2_health_healed_with_leech_during_resist_death = func
 	self:_trigger_hook(player, "hook_zealot_2_health_healed_with_leech_during_resist_death", round_health_percentage_to_int, player:profile().specialization)
 end
 
-StatsManager.record_psyker_2_at_max_stack = function (self, player, time_at_max)
-	self:_trigger_hook(player, "hook_psyker_2_max_souls_hook", time_at_max, player:profile().specialization)
+StatsManager.record_psyker_2_time_at_max_stacks = function (self, player, time_at_max)
+	self:_trigger_hook(player, "hook_psyker_2_time_at_max_souls_hook", time_at_max, player:profile().specialization)
 end
 
 return StatsManager

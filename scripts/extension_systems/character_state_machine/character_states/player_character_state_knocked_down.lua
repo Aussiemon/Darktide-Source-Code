@@ -5,7 +5,6 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CharacterStateAssistSettings = require("scripts/settings/character_state/character_state_assist_settings")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local FirstPersonView = require("scripts/utilities/first_person_view")
-local ForceLookRotation = require("scripts/extension_systems/first_person/utilities/force_look_rotation")
 local ForceRotation = require("scripts/extension_systems/locomotion/utilities/force_rotation")
 local HealthStateTransitions = require("scripts/extension_systems/character_state_machine/character_states/utilities/health_state_transitions")
 local Interrupt = require("scripts/utilities/attack/interrupt")
@@ -123,7 +122,7 @@ PlayerCharacterStateKnockedDown.on_exit = function (self, unit, t, next_state)
 
 	self:_exit_third_person_mode(t)
 
-	if inventory_component.wielded_slot == "slot_unarmed" then
+	if next_state ~= "dead" and inventory_component.wielded_slot == "slot_unarmed" then
 		PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
 	end
 
@@ -164,7 +163,8 @@ end
 PlayerCharacterStateKnockedDown.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
 	self:_update_vo(t)
 
-	local assist_done = self._assist:update(dt, t)
+	local assist = self._assist
+	local assist_done = assist:update(dt, t)
 
 	return self:_check_transition(unit, dt, t, next_state_params, assist_done)
 end

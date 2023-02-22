@@ -4311,6 +4311,10 @@ local Credits = {
 				type = "person"
 			},
 			{
+				text = " ",
+				type = "person"
+			},
+			{
 				text = "TRACE Studio",
 				type = "header"
 			},
@@ -4364,6 +4368,10 @@ local Credits = {
 			},
 			{
 				text = "Georgii Liubimov",
+				type = "person"
+			},
+			{
+				text = "Vadim Chuvashov",
 				type = "person"
 			},
 			{
@@ -4454,19 +4462,6 @@ local Credits = {
 			},
 			{
 				text = "Andrey Ignatov",
-				type = "person"
-			},
-			{
-				text = " ",
-				type = "person"
-			},
-			{
-				text = "loc_credits_view_project_manager_title",
-				localized = true,
-				type = "title"
-			},
-			{
-				text = "Vadim Chuvashov",
 				type = "person"
 			},
 			{
@@ -6169,7 +6164,7 @@ local Credits = {
 				type = "person"
 			},
 			{
-				text = "Aitor Perez",
+				text = "Aitor Pèrez",
 				type = "person"
 			},
 			{
@@ -6224,7 +6219,7 @@ local Credits = {
 				type = "title"
 			},
 			{
-				text = "Paul Declan",
+				text = "Declan Paul",
 				type = "person"
 			},
 			{

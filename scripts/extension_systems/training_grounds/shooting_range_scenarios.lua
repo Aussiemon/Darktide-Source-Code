@@ -10,7 +10,6 @@ local ShootingRangeScenarios = {
 			GenericSteps.dynamic.start_parallel_scenario("shooting_range", "portal_loop"),
 			GenericSteps.dynamic.start_parallel_scenario("shooting_range", "pickup_loop"),
 			GenericSteps.dynamic.start_parallel_scenario("shooting_range", "enemies_loop"),
-			GenericSteps.dynamic.start_parallel_scenario("shooting_range", "unarmed_item_fix_loop"),
 			GenericSteps.dynamic.start_parallel_scenario("shooting_range", "chest_loop")
 		},
 		cleanup = {}
@@ -29,6 +28,7 @@ local ShootingRangeScenarios = {
 	},
 	open_loadout = {
 		steps = {
+			ShootingRangeSteps.disable_loadout,
 			ShootingRangeSteps.fade_to_black,
 			TrainingGroundsSteps.dynamic.delay(0.5),
 			ShootingRangeSteps.open_loadout,
@@ -57,12 +57,6 @@ local ShootingRangeScenarios = {
 	heavy_enemies_loop = {
 		steps = {
 			ShootingRangeSteps.heavy_enemies_loop
-		},
-		cleanup = {}
-	},
-	unarmed_item_fix_loop = {
-		steps = {
-			ShootingRangeSteps.unarmed_item_fix_loop
 		},
 		cleanup = {}
 	},

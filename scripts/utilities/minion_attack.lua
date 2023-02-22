@@ -715,9 +715,8 @@ end
 local _check_max_z_diff, _check_weapon_reach, _get_weapon_reach, _melee_hit, _melee_with_broadphase, _melee_with_oobb, _melee_with_weapon_reach = nil
 local DEFAULT_DODGE_REACH = 2.4
 
-MinionAttack.sweep = function (unit, breed, scratchpad, blackboard, target_unit, action_data, physics_world, sweep_hit_units_cache, override_damage_profile_or_nil, override_damage_type_or_nil, attack_event)
-	local node_name = action_data.sweep_node
-	local node = Unit.node(unit, node_name)
+MinionAttack.sweep = function (unit, breed, sweep_node, scratchpad, blackboard, target_unit, action_data, physics_world, sweep_hit_units_cache, override_damage_profile_or_nil, override_damage_type_or_nil, attack_event)
+	local node = Unit.node(unit, sweep_node)
 	local position = Unit.world_position(unit, node)
 	local radius = _get_weapon_reach(action_data, attack_event)
 	local collision_filter = action_data.collision_filter
@@ -872,7 +871,7 @@ MinionAttack.melee_oobb_extents = function (unit, action_data)
 	local dodge_hit_size = Vector3(half_dodge_width, half_dodge_range, half_dodge_height)
 	local node = action_data.oobb_node and Unit.node(unit, action_data.oobb_node) or 1
 	local self_position = Unit.world_position(unit, node)
-	local rotation = Unit.local_rotation(unit, node)
+	local rotation = action_data.oobb_use_unit_rotation and Unit.local_rotation(unit, 1) or Unit.local_rotation(unit, node)
 	local forward = Quaternion.forward(rotation)
 	local position = self_position + forward * half_range
 	local offset_bwd = action_data.offset_bwd

@@ -330,7 +330,7 @@ templates.zealot_maniac_bleeding_crits = {
 	proc_events = {
 		[proc_events.on_hit] = 1
 	},
-	check_proc_func = CheckProcFunctions.on_melee_hit,
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_melee_hit, CheckProcFunctions.on_non_kill, CheckProcFunctions.on_crit),
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local buff_extension = ScriptUnit.extension(unit, "buff_system")
@@ -347,18 +347,13 @@ templates.zealot_maniac_bleeding_crits = {
 			template_data.buff_extension:add_internally_controlled_buff("zealot_maniac_critical_strike_chance_buff", t)
 		end
 
-		local damage = params.damage or 0
-		local is_damaging_crit = params.is_critical_strike and damage > 0
-
-		if is_damaging_crit and HEALTH_ALIVE[victim_unit] and victim_buff_extension then
+		if HEALTH_ALIVE[victim_unit] and victim_buff_extension then
 			local bleeding_dot_buff_name = "bleed"
 			local t = FixedFrame.get_latest_fixed_time()
 			local unit = template_context.unit
 			local num_stacks = talent_settings.offensive_1.stacks
 
-			for i = 1, num_stacks do
-				victim_buff_extension:add_internally_controlled_buff(bleeding_dot_buff_name, t, "owner_unit", unit)
-			end
+			victim_buff_extension:add_internally_controlled_buff_with_stacks(bleeding_dot_buff_name, num_stacks, t, "owner_unit", unit)
 		end
 	end
 }

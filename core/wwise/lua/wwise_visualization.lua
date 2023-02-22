@@ -62,7 +62,7 @@ local function render_soundscape_unit(lines, lines_noz, unit)
 
 	local pose = Unit.world_pose(unit, unit_object)
 	local position = Matrix4x4.translation(pose)
-	local shape = string.lower(Unit.get_data(unit, "Wwise", "shape"))
+	local shape = string.lower(Unit.get_data(unit, "Wwise", "shape") or "")
 	local default_scale = 5
 	local scale = default_scale
 

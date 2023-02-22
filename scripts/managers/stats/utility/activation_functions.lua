@@ -78,10 +78,20 @@ local ActivationFunctions = {
 ActivationFunctions.use_parameter_value = function (stat_to_check, param_name)
 	local index_of_param = table.index_of(stat_to_check:get_parameters(), param_name)
 
-	return function (_, _, _, ...)
+	return function (_, current_value, trigger_value, ...)
 		local parameter_value = select(index_of_param, ...)
 
 		return 0, parameter_value
+	end
+end
+
+ActivationFunctions.max_parameter_value = function (stat_to_check, param_name)
+	local index_of_param = table.index_of(stat_to_check:get_parameters(), param_name)
+
+	return function (_, current_value, trigger_value, ...)
+		local parameter_value = select(index_of_param, ...)
+
+		return 0, math.max(current_value, parameter_value)
 	end
 end
 
