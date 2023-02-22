@@ -548,22 +548,24 @@ XboxLiveUtils.get_entitlements = function ()
 				}
 			end
 
-			if result ~= nil and error_code == nil then
-				slot0, slot1, slot2 = ipairs(result)
+			if result ~= nil then
+				if error_code == nil then
+					slot0, slot1, slot2 = ipairs(result)
 
-				for _, v in slot0, slot1, slot2 do
-					result_by_id[v.storeId] = v
+					for _, v in slot0, slot1, slot2 do
+						result_by_id[v.storeId] = v
+					end
+
+					if async_job_next_page then
+						return false
+					end
+
+					slot0.data = result_by_id
+
+					return {
+						success = true
+					}
 				end
-
-				if async_job_next_page then
-					return false
-				end
-
-				slot0.data = result_by_id
-
-				return {
-					success = true
-				}
 			end
 
 			return false
@@ -614,24 +616,22 @@ XboxLiveUtils.get_associated_products = function ()
 				}
 			end
 
-			if result ~= nil then
-				if error_code == nil then
-					slot0, slot1, slot2 = ipairs(result)
+			if result ~= nil and error_code == nil then
+				slot0, slot1, slot2 = ipairs(result)
 
-					for _, v in slot0, slot1, slot2 do
-						result_by_id[v.storeId] = v
-					end
-
-					if async_job_next_page then
-						return false
-					end
-
-					slot0.data = result_by_id
-
-					return {
-						success = true
-					}
+				for _, v in slot0, slot1, slot2 do
+					result_by_id[v.storeId] = v
 				end
+
+				if async_job_next_page then
+					return false
+				end
+
+				slot0.data = result_by_id
+
+				return {
+					success = true
+				}
 			end
 
 			return false
