@@ -1,10 +1,11 @@
 # Darktide Source Code
 
-Versions 'External-Test' to 1.0.31 and Associated Bundles
+Versions 'External-Test' to 1.0.31+
 -------------------------------------------------------------
 
 Date      |  Patch  | Notes
 --------: | :-----: | :--------------
+02-23-23   |  1.0.31+ | 
 02-22-23   |  1.0.31  | 
 02-22-23   |  1.0.30  | 
 02-07-23   |  1.0.25  | 

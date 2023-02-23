@@ -106,22 +106,24 @@ local TRACKING_DATA = {
 
 local function interface_limit_reached(fgrl_stats, limits, interface_name, function_name)
 	local num_burst_calls = #fgrl_stats.burst_calls
+	local burst_limit = limits.burst_limit
 
-	if limits.burst_limit <= num_burst_calls then
-		return true, "BURST LIMIT REACHED - " .. interface_name .. (function_name and "." .. function_name or "") .. " (" .. num_burst_calls .. "/" .. limits.burst_limit .. ")"
+	if burst_limit <= num_burst_calls then
+		return true, "BURST LIMIT REACHED - " .. interface_name .. (function_name and "." .. function_name or "") .. " (" .. num_burst_calls .. "/" .. burst_limit .. ")"
 	end
 
 	local num_sustain_calls = #fgrl_stats.sustain_calls
+	local sustain_limit = limits.sustain_limit
 
 	if limits.sustain_limit <= num_sustain_calls then
-		return true, "SUSTAIN LIMIT REACHED - " .. interface_name .. (function_name and "." .. function_name or "") .. " (" .. num_sustain_calls .. "/" .. limits.sustain_limit .. ")"
+		return true, "SUSTAIN LIMIT REACHED - " .. interface_name .. (function_name and "." .. function_name or "") .. " (" .. num_sustain_calls .. "/" .. sustain_limit .. ")"
 	end
 
 	return false
 end
 
 local function fgrl_failed(error_message, ...)
-	Application.error("[FGRLLimits] " .. error_message)
+	Log.error("FGRLLimits", error_message)
 
 	return nil, nil, error_message
 end

@@ -70,7 +70,7 @@ end
 
 MinionPerceptionExtension._init_blackboard_components = function (self, blackboard)
 	local perception_component = Blackboard.write_component(blackboard, "perception")
-	perception_component.aggro_state = "passive"
+	perception_component.aggro_state = aggro_states.passive
 	perception_component.target_unit = nil
 
 	perception_component.target_position:store(Vector3.zero())
@@ -93,21 +93,20 @@ MinionPerceptionExtension.extensions_ready = function (self, world, unit)
 end
 
 MinionPerceptionExtension.game_object_initialized = function (self, session, game_object_id)
+	self._game_object_id = game_object_id
+	self._game_session = session
 	local initial_aggro_state = self._initial_aggro_state
+	local initial_target_unit = self._initial_target_unit
 
 	if initial_aggro_state then
 		if initial_aggro_state == aggro_states.aggroed then
 			self:aggro()
 		elseif initial_aggro_state == aggro_states.alerted then
-			self:alert()
+			self:alert(initial_target_unit)
 		end
 
 		self._initial_aggro_state = nil
 	end
-
-	self._game_object_id = game_object_id
-	self._game_session = session
-	local initial_target_unit = self._initial_target_unit
 
 	if initial_target_unit then
 		self:_set_target_unit(initial_target_unit)
@@ -288,7 +287,7 @@ MinionPerceptionExtension.alert = function (self, enemy_unit)
 		local target_distance = nil
 
 		if perception_component.target_unit then
-			target_distance = self._perception_component.target_distance
+			target_distance = perception_component.target_distance
 		else
 			self:_set_target_unit(enemy_unit)
 
@@ -591,11 +590,13 @@ MinionPerceptionExtension.update = function (self, unit, dt, t)
 
 	for enemy_unit, time in pairs(delayed_alerts) do
 		if time < t then
-			self:alert(enemy_unit)
-
 			delayed_alerts[enemy_unit] = nil
 
-			break
+			if ALIVE[enemy_unit] then
+				self:alert(enemy_unit)
+
+				break
+			end
 		end
 	end
 

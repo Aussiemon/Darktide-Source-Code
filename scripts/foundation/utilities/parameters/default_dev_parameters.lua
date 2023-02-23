@@ -35,6 +35,7 @@ local categories = {
 	"Error",
 	"Event",
 	"Feature Info",
+	"FGRL",
 	"Framerate",
 	"Free Flight",
 	"Game Flow",
@@ -2634,6 +2635,22 @@ params.show_cinematic_active = {
 params.render_feature_info = {
 	category = "Feature Info",
 	value = SHOW_INFO
+}
+params.override_burst_limit = {
+	value = false,
+	category = "FGRL"
+}
+params.burst_limit_calls = {
+	value = 10,
+	category = "FGRL"
+}
+params.override_sustain_limit = {
+	value = false,
+	category = "FGRL"
+}
+params.sustain_limit_calls = {
+	value = 30,
+	category = "FGRL"
 }
 params.perfhud_artist = {
 	value = false,

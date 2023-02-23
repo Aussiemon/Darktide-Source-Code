@@ -36,7 +36,7 @@ XboxPrivileges.fetch_all_privileges = function (self, user_id, fetch_done_cb)
 		if ATTEMPT_RESOLUTION_PRIVILEGES[privilege] then
 			debug_log(XBOX_PRIVILEGE_LUT[privilege] .. " using attempt_resolution=true")
 
-			local async_task, h_result = XUser.resolve_privilege_async(user_id, XUserPrivilegeOptions.None, privilege)
+			local async_task, h_result, error_message = XUser.resolve_privilege_async(user_id, XUserPrivilegeOptions.None, privilege)
 
 			if async_task then
 				local success_cb = callback(self, "_cb_user_privilege_done", user_id, privilege)
@@ -46,7 +46,7 @@ XboxPrivileges.fetch_all_privileges = function (self, user_id, fetch_done_cb)
 
 				self._async_privileges[privilege] = true
 			else
-				self._has_error = h_result
+				self._has_error = h_result or error_message
 			end
 		else
 			local has_privilege, deny_reason, resolution_required = XUser.check_privilege(user_id, XUserPrivilegeOptions.None, privilege)
@@ -194,10 +194,14 @@ XboxPrivileges.verify_user_restriction = function (self, xuid, restriction)
 		return
 	end
 
-	local async_block, error_code = XboxLivePrivacy.check_user_permission(Managers.account:user_id(), xuid, restriction)
+	local async_block, error_code, error_message = XboxLivePrivacy.check_user_permission(Managers.account:user_id(), xuid, restriction)
 
 	if error_code then
-		Application.warning(string.format("[XboxPrivileges:verify_user_restriction] Check user restriction failed with error code: %s", error_code))
+		Log.warning("XboxPrivileges:verify_user_restriction", "Check user restriction failed with error code: %s", error_code)
+
+		return
+	elseif error_message then
+		Log.warning("XboxPrivileges:verify_user_restriction", "Check user restriction failed with error message: %s", error_message)
 
 		return
 	end
