@@ -215,7 +215,7 @@ BackendManager.authenticate = function (self)
 			end):next(function (result)
 				local success, error_code = Backend.initialize(debug_log, result.authentication_service_url, result.title_service_url, result.telemetry_service_url)
 
-				self:_set_backend_env(result.authentication_service_url)
+				self:_set_backend_env(Backend.get_title_url())
 
 				self._initialized = true
 
@@ -224,7 +224,7 @@ BackendManager.authenticate = function (self)
 		else
 			local success, error_code = Backend.initialize(debug_log, DEFAULT_AUTHENTICATION_SERIVCE_URL, DEFAULT_TITLE_SERIVCE_URL, DEFAULT_TELEMERTY_SERVICE_URL)
 
-			self:_set_backend_env(DEFAULT_AUTHENTICATION_SERIVCE_URL)
+			self:_set_backend_env(Backend.get_title_url())
 
 			self._initialized = true
 
@@ -278,20 +278,24 @@ BackendManager.authenticate = function (self)
 	end)
 end
 
-BackendManager._set_backend_env = function (self, auth_service_url)
-	local match = string.match(auth_service_url, "https://bsp%-auth%-(%a+)%.fatsharkgames%.se")
+BackendManager._set_backend_env = function (self, title_service_url)
+	local match = string.match(title_service_url, "https://bsp%-td%-(.+)%.fatsharkgames%.se")
 
 	if match then
 		rawset(_G, "BACKEND_ENV", match)
 	end
 
-	match = string.match(auth_service_url, "https://bsp%-auth%-(%a+)%.atoma%.cloud")
+	match = string.match(title_service_url, "https://bsp%-td%-(.+)%.atoma%.cloud")
 
 	if match then
 		rawset(_G, "BACKEND_ENV", match)
 	end
 
+	local PresenceEntryMyself = require("scripts/managers/presence/presence_entry_myself")
+
+	rawset(_G, "AUTH_PLATFORM", PresenceEntryMyself.get_platform())
 	Crashify.print_property("backend_env", BACKEND_ENV)
+	Crashify.print_property("auth_platform", AUTH_PLATFORM)
 	Managers.telemetry_events:refresh_settings()
 end
 

@@ -43,6 +43,7 @@ end
 
 TelemetryEvents.refresh_settings = function (self)
 	SOURCE.backend_environment = BACKEND_ENV
+	SOURCE.auth_platform = AUTH_PLATFORM
 end
 
 TelemetryEvents.destroy = function (self)

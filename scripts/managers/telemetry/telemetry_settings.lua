@@ -5,7 +5,6 @@ local settings = {
 		id = "bishop",
 		platform = PLATFORM,
 		environment = BUILD,
-		backend_environment = BACKEND_ENV,
 		version = {
 			engine_revision = string.value_or_nil(BUILD_IDENTIFIER),
 			content_revision = string.value_or_nil(APPLICATION_SETTINGS.content_revision or LOCAL_CONTENT_REVISION)
