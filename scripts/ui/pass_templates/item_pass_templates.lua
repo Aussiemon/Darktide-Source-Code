@@ -176,6 +176,7 @@ required_level_general_good_text_style.text_color = {
 required_level_general_good_text_style.size = {
 	150
 }
+required_level_general_good_text_style.offset[3] = 10
 local gear_item_slot_title_text_style = table.clone(UIFontSettings.header_3)
 gear_item_slot_title_text_style.text_horizontal_alignment = "center"
 gear_item_slot_title_text_style.text_vertical_alignment = "bottom"

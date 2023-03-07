@@ -509,6 +509,33 @@ InventoryWeaponsView.replace_item_instance = function (self, item)
 			end
 		end
 	end
+
+	local filtered_offer_items_layout = self._filtered_offer_items_layout
+
+	if filtered_offer_items_layout then
+		for i = 1, #filtered_offer_items_layout do
+			if filtered_offer_items_layout[i].item.gear_id == gear_id then
+				filtered_offer_items_layout[i].item = item
+
+				break
+			end
+		end
+	end
+
+	local widgets = self:grid_widgets()
+
+	if widgets then
+		for i = 1, #widgets do
+			local widget = widgets[i]
+			local widget_item = widget.content.element.item
+
+			if widget_item and widget_item.gear_id == gear_id then
+				widget.content.element.item = item
+
+				break
+			end
+		end
+	end
 end
 
 InventoryWeaponsView._get_item_from_inventory = function (self, wanted_item)
@@ -737,6 +764,30 @@ InventoryWeaponsView._mark_item_for_discard = function (self, grid_index)
 		end
 	end
 
+	local offer_items_layout = self._offer_items_layout
+
+	if offer_items_layout then
+		for i = 1, #offer_items_layout do
+			if offer_items_layout[i].item.gear_id == gear_id then
+				table.remove(self._offer_items_layout, i)
+
+				break
+			end
+		end
+	end
+
+	local filtered_offer_items_layout = self._filtered_offer_items_layout
+
+	if filtered_offer_items_layout then
+		for i = 1, #filtered_offer_items_layout do
+			if filtered_offer_items_layout[i].item.gear_id == gear_id then
+				table.remove(self._filtered_offer_items_layout, i)
+
+				break
+			end
+		end
+	end
+
 	content.discarded = true
 	local item_grid = self._item_grid
 	local grid = item_grid:grid()
@@ -756,7 +807,7 @@ InventoryWeaponsView._mark_item_for_discard = function (self, grid_index)
 	self._on_discard_anim_complete_cb = function ()
 		local widget_to_remove = self:grid_widgets()[grid_index]
 
-		grid:remove_widget(widget_to_remove)
+		item_grid:remove_widget(widget_to_remove)
 		grid:clear_scroll_progress()
 
 		local new_element = new_grid_index and self:element_by_index(new_grid_index)

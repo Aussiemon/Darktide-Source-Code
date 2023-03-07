@@ -5,6 +5,8 @@ local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
 local HudElementTacticalOverlay = class("HudElementTacticalOverlay", "HudElementBase")
 local default_mission_type_icon = "content/ui/materials/icons/mission_types/mission_type_08"
 local default_mission_type_name = "loc_mission_type_default"
@@ -18,6 +20,13 @@ HudElementTacticalOverlay.init = function (self, parent, draw_layer, start_scale
 
 	self:_setup_left_panel_widgets()
 	self:on_resolution_modified()
+	Managers.backend.interfaces.crafting:get_collected_materials_amount():next(function (collected_materials_amount)
+		self._collected_materials_amount = collected_materials_amount
+
+		Log.info("HudElementTacticalOverlay", "collected_materials_amount:%s", table.tostring(collected_materials_amount))
+	end):catch(function (error)
+		Log.error("HudElementTacticalOverlay", "failed fetching collected_materials_amount. error:%s", table.tostring(error))
+	end)
 end
 
 HudElementTacticalOverlay.update = function (self, dt, t, ui_renderer, render_settings, input_service)
@@ -35,15 +44,72 @@ HudElementTacticalOverlay.update = function (self, dt, t, ui_renderer, render_se
 		Managers.event:trigger("event_set_tactical_overlay_state", true)
 		self:_sync_mission_info()
 		self:_sync_circumstance_info()
+		self:_update_left_panel_elements(ui_renderer)
 		self:_start_animation("enter", self._left_panel_widgets)
 	elseif self._active and not active then
 		Managers.event:trigger("event_set_tactical_overlay_state", false)
 		self:_start_animation("exit", self._left_panel_widgets)
 	end
 
+	if self._active and self._collected_materials_amount then
+		self:_update_materials_collected()
+	end
+
 	self._active = active
 
 	self:_update_visibility(dt)
+end
+
+HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_renderer)
+	local total_size = 0
+	local margin = 20
+	local scenegraph = self._ui_scenegraph
+	local panel_minimum_height = 120
+	total_size = total_size + scenegraph.mission_info_panel.size[2]
+	local circumstance_info_widget = self._widgets_by_name.circumstance_info
+
+	if circumstance_info_widget.visible == true then
+		local title_margin = 20
+		total_size = total_size + margin + title_margin
+
+		self:set_scenegraph_position("circumstance_info_panel", nil, total_size)
+
+		local circumstance_info_content = circumstance_info_widget.content
+		local circumstance_name_style = circumstance_info_widget.style.circumstance_name
+		local circumstance_name_font_options = UIFonts.get_font_options_by_style(circumstance_name_style)
+		local circumstance_name_width, circumstance_name_height = UIRenderer.text_size(ui_renderer, circumstance_info_content.circumstance_name, circumstance_name_style.font_type, circumstance_name_style.font_size, {
+			circumstance_name_style.size[1],
+			1000
+		}, circumstance_name_font_options)
+		local circumstance_description_style = circumstance_info_widget.style.circumstance_description
+		local circumstance_description_font_options = UIFonts.get_font_options_by_style(circumstance_description_style)
+		local circumstance_description_width, circumstance_description_height = UIRenderer.text_size(ui_renderer, circumstance_info_content.circumstance_description, circumstance_description_style.font_type, circumstance_description_style.font_size, {
+			circumstance_description_style.size[1],
+			1000
+		}, circumstance_description_font_options)
+		local original_description_height = 60
+		local description_margin = 20
+		local circumstance_info_height = math.max(original_description_height, circumstance_description_height + description_margin)
+		local excessive_height = circumstance_info_height - original_description_height
+		circumstance_name_style.size[2] = circumstance_info_height
+
+		self:_set_scenegraph_size("circumstance_info_panel", nil, panel_minimum_height + excessive_height)
+
+		total_size = total_size + scenegraph.circumstance_info_panel.size[2]
+	end
+
+	total_size = total_size + margin
+
+	self:set_scenegraph_position("crafting_pickup_pivot", nil, total_size)
+
+	local diamantine_pos = scenegraph.plasteel_info_panel.size[2] + 5
+
+	self:set_scenegraph_position("diamantine_info_panel", nil, diamantine_pos)
+
+	total_size = total_size + diamantine_pos
+	total_size = total_size + scenegraph.diamantine_info_panel.size[2]
+
+	self:_set_scenegraph_size("left_panel", nil, total_size)
 end
 
 HudElementTacticalOverlay._set_difficulty_icons = function (self, style, difficulty_value)
@@ -138,6 +204,25 @@ HudElementTacticalOverlay._draw_widgets = function (self, dt, t, input_service, 
 			UIWidget.draw(widget, ui_renderer)
 		end
 	end
+end
+
+HudElementTacticalOverlay._update_materials_collected = function (self)
+	local pickup_system = Managers.state.extension:system("pickup_system")
+	local collected_materials = pickup_system:get_collected_materials()
+	local large_amount = self._collected_materials_amount.large
+	local small_amount = self._collected_materials_amount.small
+	local plasteel_large = collected_materials.plasteel and collected_materials.plasteel.large or 0
+	local plasteel_small = collected_materials.plasteel and collected_materials.plasteel.small or 0
+	local plasteel_info_widget = self._widgets_by_name.plasteel_info
+	local plasteel_info_content = plasteel_info_widget.content
+	local total_plasteel = plasteel_large * large_amount + plasteel_small * small_amount
+	plasteel_info_content.plasteel_amount_id = total_plasteel
+	local diamantine_large = collected_materials.diamantine and collected_materials.diamantine.large or 0
+	local diamantine_small = collected_materials.diamantine and collected_materials.diamantine.small or 0
+	local diamantine_info_widget = self._widgets_by_name.diamantine_info
+	local diamantine_info_content = diamantine_info_widget.content
+	local total_diamantine = diamantine_large * large_amount + diamantine_small * small_amount
+	diamantine_info_content.diamantine_amount_id = total_diamantine
 end
 
 HudElementTacticalOverlay.on_resolution_modified = function (self)

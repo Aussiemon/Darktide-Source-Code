@@ -382,6 +382,12 @@ end
 
 CheckProcFunctions.would_die = function (params, template_data, template_context)
 	local unit = template_context.unit
+	local attacked_unit = params.attacked_unit
+
+	if unit ~= attacked_unit then
+		return false
+	end
+
 	local health_extension = ScriptUnit.extension(unit, "health_system")
 	local current_health = health_extension:current_health()
 	local is_going_to_die = current_health <= 1

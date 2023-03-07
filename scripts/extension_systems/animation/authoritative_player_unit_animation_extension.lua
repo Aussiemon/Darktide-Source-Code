@@ -63,21 +63,22 @@ AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_float = funct
 	Managers.state.game_session:send_rpc_clients_except("rpc_player_anim_event_variable_float", self._player:channel_id(), self._game_object_id, event_index, variable_index, variable_value, first_person)
 end
 
+local MAX_SEND_PARAMS = 4
+local MAX_SEND_PARAMS_TIMES_2 = MAX_SEND_PARAMS * 2
+
 AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_floats = function (self, event_name, ...)
 	local unit = self._unit
-
-	table.clear(VARIABLES_INDEXES_RPC_CACHE)
-	table.clear(VARIABLES_VALUES_RPC_CACHE)
-
 	local num_params = select("#", ...)
+	local num_params_to_send = 0
 
 	for ii = 1, num_params, 2 do
 		local variable_name, variable_value = select(ii, ...)
 		local variable_index = Unit.animation_find_variable(unit, variable_name)
 
 		if variable_value and variable_index then
-			VARIABLES_INDEXES_RPC_CACHE[#VARIABLES_INDEXES_RPC_CACHE + 1] = variable_index
-			VARIABLES_VALUES_RPC_CACHE[#VARIABLES_VALUES_RPC_CACHE + 1] = variable_value
+			num_params_to_send = num_params_to_send + 1
+			VARIABLES_INDEXES_RPC_CACHE[num_params_to_send] = variable_index
+			VARIABLES_VALUES_RPC_CACHE[num_params_to_send] = variable_value
 
 			Unit.animation_set_variable(unit, variable_index, variable_value)
 		end
@@ -89,7 +90,18 @@ AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_floats = func
 
 	local first_person = false
 
-	Managers.state.game_session:send_rpc_clients_except("rpc_player_anim_event_variable_floats", self._player:channel_id(), self._game_object_id, event_index, VARIABLES_INDEXES_RPC_CACHE, VARIABLES_VALUES_RPC_CACHE, first_person)
+	if num_params_to_send == 0 then
+		Managers.state.game_session:send_rpc_clients_except("rpc_player_anim_event", self._player:channel_id(), self._game_object_id, event_index, first_person)
+	elseif num_params_to_send == 1 then
+		Managers.state.game_session:send_rpc_clients_except("rpc_player_anim_event_variable_float", self._player:channel_id(), self._game_object_id, event_index, VARIABLES_INDEXES_RPC_CACHE[1], VARIABLES_VALUES_RPC_CACHE[1], first_person)
+	else
+		for i = num_params_to_send + 1, MAX_SEND_PARAMS do
+			VARIABLES_INDEXES_RPC_CACHE[i] = nil
+			VARIABLES_VALUES_RPC_CACHE[i] = nil
+		end
+
+		Managers.state.game_session:send_rpc_clients_except("rpc_player_anim_event_variable_floats", self._player:channel_id(), self._game_object_id, event_index, VARIABLES_INDEXES_RPC_CACHE, VARIABLES_VALUES_RPC_CACHE, first_person)
+	end
 end
 
 AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_int = function (self, event_name, variable_name, variable_value)
@@ -135,19 +147,17 @@ end
 
 AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_floats_1p = function (self, event_name, ...)
 	local first_person_unit = self._first_person_unit
-
-	table.clear(VARIABLES_INDEXES_RPC_CACHE)
-	table.clear(VARIABLES_VALUES_RPC_CACHE)
-
 	local num_params = select("#", ...)
+	local num_params_to_send = 0
 
 	for ii = 1, num_params, 2 do
 		local variable_name, variable_value = select(ii, ...)
 		local variable_index = Unit.animation_find_variable(first_person_unit, variable_name)
 
 		if variable_value and variable_index then
-			VARIABLES_INDEXES_RPC_CACHE[#VARIABLES_INDEXES_RPC_CACHE + 1] = variable_index
-			VARIABLES_VALUES_RPC_CACHE[#VARIABLES_VALUES_RPC_CACHE + 1] = variable_value
+			num_params_to_send = num_params_to_send + 1
+			VARIABLES_INDEXES_RPC_CACHE[num_params_to_send] = variable_index
+			VARIABLES_VALUES_RPC_CACHE[num_params_to_send] = variable_value
 
 			Unit.animation_set_variable(first_person_unit, variable_index, variable_value)
 		end
@@ -159,7 +169,18 @@ AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_floats_1p = f
 
 	local is_first_person = true
 
-	Managers.state.game_session:send_rpc_clients_except("rpc_player_anim_event_variable_floats", self._player:channel_id(), self._game_object_id, event_index, VARIABLES_INDEXES_RPC_CACHE, VARIABLES_VALUES_RPC_CACHE, is_first_person)
+	if num_params_to_send == 0 then
+		Managers.state.game_session:send_rpc_clients_except("rpc_player_anim_event", self._player:channel_id(), self._game_object_id, event_index, is_first_person)
+	elseif num_params_to_send == 1 then
+		Managers.state.game_session:send_rpc_clients_except("rpc_player_anim_event_variable_float", self._player:channel_id(), self._game_object_id, event_index, VARIABLES_INDEXES_RPC_CACHE[1], VARIABLES_VALUES_RPC_CACHE[1], is_first_person)
+	else
+		for i = num_params_to_send + 1, MAX_SEND_PARAMS do
+			VARIABLES_INDEXES_RPC_CACHE[i] = nil
+			VARIABLES_VALUES_RPC_CACHE[i] = nil
+		end
+
+		Managers.state.game_session:send_rpc_clients_except("rpc_player_anim_event_variable_floats", self._player:channel_id(), self._game_object_id, event_index, VARIABLES_INDEXES_RPC_CACHE, VARIABLES_VALUES_RPC_CACHE, is_first_person)
+	end
 end
 
 AuthoritativePlayerUnitAnimationExtension.inventory_slot_wielded = function (self, weapon_template)

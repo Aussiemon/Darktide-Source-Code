@@ -1226,7 +1226,9 @@ InventoryBackgroundView._switch_active_view = function (self, view_name, additio
 			self._active_view = view_name
 			self._active_view_context = context
 
-			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
+			if not Managers.ui:view_active(view_name) then
+				Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
+			end
 		end
 
 		if self._is_own_player and self._profile_presets_element and self._profile_presets_element:has_active_profile_preset() then

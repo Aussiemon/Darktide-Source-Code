@@ -34,13 +34,13 @@ ViewElementPlayerSocialPopup.set_close_popup_request_callback = function (self, 
 	self._request_close_popup = callback
 end
 
-ViewElementPlayerSocialPopup.set_player_info = function (self, parent, player_info, portrait_data)
+ViewElementPlayerSocialPopup.set_player_info = function (self, parent, player_info)
 	if self._player_info then
 		self:_start_fade_animation("fade_out_widgets", callback(self, "_set_player_info", parent, player_info))
 	else
 		local menu_items, num_menu_items = ViewElementPlayerSocialPopupContentList.from_player_info(self._parent, player_info)
 
-		self:_set_player_info(parent, player_info, portrait_data, menu_items, num_menu_items)
+		self:_set_player_info(parent, player_info, menu_items, num_menu_items)
 	end
 end
 
@@ -117,7 +117,7 @@ end
 
 local _player_header_params = {}
 
-ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_info, portrait_data, menu_items, num_menu_items)
+ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_info, menu_items, num_menu_items)
 	self._player_info = player_info
 	local player_header = self._widgets_by_name.player_header
 	local header_content = player_header.content
@@ -207,14 +207,39 @@ ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_i
 	end
 
 	header_content.user_activity = user_activity
+	local profile = player_info.profile and player_info:profile()
 
-	if portrait_data then
-		local portrait_style = header_style.portrait
-		portrait_style.material_values = portrait_data
+	if profile then
+		local loadout = profile and profile.loadout
+		local frame_item = loadout and loadout.slot_portrait_frame
+
+		if frame_item then
+			local cb = callback(self, "_cb_set_player_frame", player_header)
+			header_content.frame_load_id = Managers.ui:load_item_icon(frame_item, cb)
+		end
+
+		local profile_icon_loaded_callback = callback(self, "_cb_set_player_icon", player_header)
+		header_content.portrait_load_id = Managers.ui:load_profile_portrait(profile, profile_icon_loaded_callback)
 	end
 
 	self:_setup_menu_items(menu_items, num_menu_items)
 	self:_start_fade_animation("open")
+end
+
+ViewElementPlayerSocialPopup._cb_set_player_icon = function (self, widget, grid_index, rows, columns, render_target)
+	local portrait_style = widget.style.portrait
+	local material_values = portrait_style.material_values
+	material_values.use_placeholder_texture = 0
+	material_values.rows = rows
+	material_values.columns = columns
+	material_values.grid_index = grid_index - 1
+	material_values.texture_icon = render_target
+end
+
+ViewElementPlayerSocialPopup._cb_set_player_frame = function (self, widget, item)
+	local icon = item.icon
+	local portrait_style = widget.style.portrait
+	portrait_style.material_values.portrait_frame_texture = icon
 end
 
 local _padding_item = {
@@ -296,6 +321,24 @@ ViewElementPlayerSocialPopup._cb_on_animation_done = function (self, on_done_cal
 	if on_done_callback then
 		on_done_callback()
 	end
+end
+
+ViewElementPlayerSocialPopup.on_exit = function (self)
+	local widget = self._widgets_by_name.player_header
+
+	if widget.content.frame_load_id then
+		Managers.ui:unload_item_icon(widget.content.frame_load_id)
+
+		widget.content.frame_load_id = nil
+	end
+
+	if widget.content.portrait_load_id then
+		Managers.ui:unload_profile_portrait(widget.content.portrait_load_id)
+
+		widget.content.portrait_load_id = nil
+	end
+
+	ViewElementPlayerSocialPopup.super.on_exit(self)
 end
 
 return ViewElementPlayerSocialPopup

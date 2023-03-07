@@ -238,6 +238,10 @@ GameSessionManager.game_object_created = function (self, game_object_id, owner_p
 		local scanning_event_extension = ScriptUnit.extension(unit, "scanning_event_system")
 
 		scanning_event_extension:on_game_object_created(game_object_id)
+	elseif type == "materials_collected" then
+		local pickup_system = Managers.state.extension:system("pickup_system")
+
+		pickup_system:on_game_object_created(game_object_id)
 	elseif type == "server_unit_data_state" then
 		local unit_game_object_id = GameSession.game_object_field(self._engine_game_session, game_object_id, "unit_game_object_id")
 		local unit = unit_spawner:unit(unit_game_object_id)
@@ -300,6 +304,20 @@ end
 
 GameSessionManager.game_session_disconnected = function (self)
 	return self._session_disconnected
+end
+
+GameSessionManager.currently_lowest_reliable_send_buffer_size = function (self)
+	local size = 32768
+	local own_peer_id = self._peer_id
+
+	for peer, _ in pairs(self._joined_peers_cache) do
+		if peer ~= own_peer_id then
+			local buffer_size = Network.reliable_send_buffer_left(peer)
+			size = math.min(size, buffer_size)
+		end
+	end
+
+	return size
 end
 
 GameSessionManager.set_simulated_packet_loss = function (self, frequency)

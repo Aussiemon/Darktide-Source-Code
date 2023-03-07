@@ -261,7 +261,7 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 	end
 
 	if was_alive_at_attack_start and target_breed_or_nil then
-		_handle_buffs(is_server, damage_profile, attacker_buff_extension, target_buff_extension, attacked_unit, damage_dealt, attack_result, stagger_result, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_unit_owner_unit, attack_direction, damage_efficiency, target_index, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position)
+		_handle_buffs(is_server, damage_profile, attacker_buff_extension, target_buff_extension, attacked_unit, damage_dealt, attack_result, stagger_result, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_unit_owner_unit, attack_direction, damage_efficiency, target_index, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position)
 
 		if is_server then
 			_handle_result(attacking_unit_owner_unit, attacked_unit, attack_result, attack_type, attacker_breed_or_nil, target_breed_or_nil, damage_dealt, damage_absorbed, damage_profile, damage_type, actual_damage_dealt)
@@ -426,7 +426,7 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 	return result, damage_dealt, damage_absorbed, damage, permanent_damage, one_hit_kill, actual_damage_dealt
 end
 
-function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil, target_buff_extension_or_nil, attacked_unit, damage, attack_result, stagger_result, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_owner_unit, attack_direction, damage_efficiency, target_index, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position_or_nil)
+function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil, target_buff_extension_or_nil, attacked_unit, damage, attack_result, stagger_result, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_owner_unit, attack_direction, damage_efficiency, target_index, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position_or_nil)
 	if not attacker_buff_extension_or_nil and not target_buff_extension_or_nil then
 		return
 	end
@@ -440,6 +440,8 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 		alternative_fire = alternate_fire_component.is_active
 	end
 
+	local attack_direction_box = Vector3Box(attack_direction)
+	local hit_world_position_box_or_nil = hit_world_position_or_nil and Vector3Box(hit_world_position_or_nil)
 	local should_proc = not damage_type or not damage_types_no_proc[damage_type]
 
 	if should_proc and attacker_buff_extension_or_nil and not damage_profile.skip_on_hit_proc then
@@ -447,7 +449,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 
 		if attacker_param_table then
 			attacker_param_table.alternative_fire = alternative_fire
-			attacker_param_table.attack_direction = Vector3Box(attack_direction)
+			attacker_param_table.attack_direction = attack_direction_box
 			attacker_param_table.attack_instigator_unit = attacking_unit
 			attacker_param_table.attack_type = attack_type
 			attacker_param_table.attacked_unit = attacked_unit
@@ -457,7 +459,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 			attacker_param_table.damage_efficiency = damage_efficiency
 			attacker_param_table.damage_type = damage_type or damage_profile.damage_type
 			attacker_param_table.hit_weakspot = hit_weakspot
-			attacker_param_table.hit_world_position = hit_world_position_or_nil and Vector3Box(hit_world_position_or_nil)
+			attacker_param_table.hit_world_position = hit_world_position_box_or_nil
 			attacker_param_table.is_backstab = is_backstab
 			attacker_param_table.is_critical_strike = is_critical_strike
 			attacker_param_table.melee_attack_strength = damage_profile.melee_attack_strength
@@ -469,6 +471,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 			attacker_param_table.target_index = target_index
 			attacker_param_table.weapon_special = damage_profile.weapon_special
 			attacker_param_table.charge_level = charge_level
+			attacker_param_table.hit_zone_name = hit_zone_name
 
 			attacker_buff_extension_or_nil:add_proc_event(proc_events.on_hit, attacker_param_table)
 		end
@@ -479,7 +482,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 
 		if attacker_param_table then
 			attacker_param_table.alternative_fire = alternative_fire
-			attacker_param_table.attack_direction = Vector3Box(attack_direction)
+			attacker_param_table.attack_direction = attack_direction_box
 			attacker_param_table.attack_instigator_unit = attacking_unit
 			attacker_param_table.attack_type = attack_type
 			attacker_param_table.attacked_unit = attacked_unit
@@ -489,7 +492,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 			attacker_param_table.damage_efficiency = damage_efficiency
 			attacker_param_table.damage_type = damage_type or damage_profile.damage_type
 			attacker_param_table.hit_weakspot = hit_weakspot
-			attacker_param_table.hit_world_position = hit_world_position_or_nil and Vector3Box(hit_world_position_or_nil)
+			attacker_param_table.hit_world_position = hit_world_position_box_or_nil
 			attacker_param_table.is_backstab = is_backstab
 			attacker_param_table.is_critical_strike = is_critical_strike
 			attacker_param_table.melee_attack_strength = damage_profile.melee_attack_strength
@@ -511,7 +514,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 
 		if attacker_param_table then
 			attacker_param_table.alternative_fire = alternative_fire
-			attacker_param_table.attack_direction = Vector3Box(attack_direction)
+			attacker_param_table.attack_direction = attack_direction_box
 			attacker_param_table.attack_instigator_unit = attacking_unit
 			attacker_param_table.attack_type = attack_type
 			attacker_param_table.attacked_unit = attacked_unit
@@ -521,7 +524,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 			attacker_param_table.damage_efficiency = damage_efficiency
 			attacker_param_table.damage_type = damage_type or damage_profile.damage_type
 			attacker_param_table.hit_weakspot = hit_weakspot
-			attacker_param_table.hit_world_position = hit_world_position_or_nil and Vector3Box(hit_world_position_or_nil)
+			attacker_param_table.hit_world_position = hit_world_position_box_or_nil
 			attacker_param_table.is_backstab = is_backstab
 			attacker_param_table.is_critical_strike = is_critical_strike
 			attacker_param_table.melee_attack_strength = damage_profile.melee_attack_strength

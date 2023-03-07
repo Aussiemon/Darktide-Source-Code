@@ -32,6 +32,7 @@ HudElementPrologueTutorialInfoBox.init = function (self, parent, draw_layer, sta
 	self._clearing_widgets = {}
 	self._entry_widgets = {}
 	self._last_index = nil
+	self._using_gamepad = InputDevice.gamepad_active
 
 	self:_register_events()
 end
@@ -76,6 +77,14 @@ HudElementPrologueTutorialInfoBox.update = function (self, dt, t, ui_renderer, r
 
 	if self:_should_update_input(self._current_info_data) then
 		self:_set_widget_info(self._current_info_data)
+	end
+
+	if InputDevice.gamepad_active ~= self._using_gamepad then
+		self._using_gamepad = InputDevice.gamepad_active
+
+		if not table.is_empty(self._current_info_data) then
+			self:_set_widget_info(self._current_info_data)
+		end
 	end
 
 	HudElementPrologueTutorialInfoBox.super.update(self, dt, t, ui_renderer, render_settings, input_service)
@@ -215,7 +224,7 @@ HudElementPrologueTutorialInfoBox._set_widget_info = function (self, info_data)
 	local widget = self._widgets_by_name.info_widget
 	local content = widget.content
 	content.title_text = Utf8.upper(Localize(info_data.title))
-	content.description_text = Localize(info_data.description)
+	content.description_text = Localize(info_data.description, true)
 	self._close_action_name = info_data.close_action
 	self._use_ingame_input = info_data.use_ingame_input
 	local input_description_text = self:_get_input_description_text(info_data)
@@ -289,7 +298,7 @@ end
 HudElementPrologueTutorialInfoBox._set_widget_size_from_content = function (self, description, title_text, input_description_text)
 	local widgets_by_name = self._widgets_by_name
 	local widget = widgets_by_name.info_widget
-	local description_loc_text = Localize(description)
+	local description_loc_text = Localize(description, true)
 	local style = widget.style
 	local base_offset = 20
 	local base_width = 450

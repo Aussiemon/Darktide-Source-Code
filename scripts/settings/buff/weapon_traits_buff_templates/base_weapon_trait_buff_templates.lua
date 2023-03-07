@@ -409,8 +409,11 @@ local base_templates = {
 			local damage_profile = DamageProfileTemplates.killing_blow
 			local power_level = PowerLevelSettings.default_power_level
 			local attacked_unit = params.attacked_unit
+			local attack_direction = params.attack_direction:unbox()
+			local hit_world_position_box = params.hit_world_position
+			local hit_world_position = hit_world_position_box and hit_world_position_box:unbox()
 
-			Attack.execute(attacked_unit, damage_profile, "power_level", power_level, "instakill", true)
+			Attack.execute(attacked_unit, damage_profile, "power_level", power_level, "instakill", true, "attack_direction", attack_direction, "hit_world_position", hit_world_position, "hit_zone_name", params.hit_zone_name, "damage_type", params.damage_type, "attack_type", params.attack_type, "attacking_unit", template_context.unit)
 		end
 	},
 	increased_attack_cleave_on_multiple_hits = {

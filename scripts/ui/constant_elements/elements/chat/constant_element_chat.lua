@@ -258,7 +258,7 @@ ConstantElementChat.cb_chat_manager_participant_removed = function (self, channe
 	if not participant.is_current_user and not participant.is_text_muted_for_me then
 		local channel = Managers.chat:sessions()[channel_handle]
 
-		if not channel or channel.session_text_state ~= ChatManagerConstants.ChannelConnectionState.CONNECTED and channel.session_media_state ~= ChatManagerConstants.ChannelConnectionState.CONNECTED then
+		if not channel or not channel.tag or channel.session_text_state ~= ChatManagerConstants.ChannelConnectionState.CONNECTED and channel.session_media_state ~= ChatManagerConstants.ChannelConnectionState.CONNECTED then
 			return
 		end
 
@@ -534,7 +534,7 @@ ConstantElementChat._update_input_field = function (self, ui_renderer, widget)
 	if self._selected_channel_handle then
 		local channel = Managers.chat:sessions()[self._selected_channel_handle]
 
-		if channel and (channel.session_text_state == ChatManagerConstants.ChannelConnectionState.CONNECTED or channel.session_media_state == ChatManagerConstants.ChannelConnectionState.CONNECTED) then
+		if channel and channel.tag and (channel.session_text_state == ChatManagerConstants.ChannelConnectionState.CONNECTED or channel.session_media_state == ChatManagerConstants.ChannelConnectionState.CONNECTED) then
 			local channel_name = self:_channel_name(channel.tag, false, channel.channel_name)
 			to_channel_text = Managers.localization:localize("loc_chat_to_channel", true, {
 				channel_name = channel_name

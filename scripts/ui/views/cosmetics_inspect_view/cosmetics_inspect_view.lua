@@ -686,12 +686,6 @@ CosmeticsInspectView.on_exit = function (self)
 	CosmeticsInspectView.super.on_exit(self)
 end
 
-CosmeticsInspectView._handle_input = function (self, input_service)
-	if input_service:get("confirm_pressed") then
-		self:cb_on_equip_pressed()
-	end
-end
-
 CosmeticsInspectView._handle_back_pressed = function (self)
 	local view_name = "cosmetics_inspect_view"
 

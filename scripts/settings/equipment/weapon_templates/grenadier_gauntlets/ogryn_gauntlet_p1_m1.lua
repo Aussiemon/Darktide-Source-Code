@@ -203,6 +203,9 @@ weapon_template.actions = {
 			},
 			wield = {
 				action_name = "action_unwield"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		conditional_state_to_action_input = {
@@ -436,6 +439,10 @@ weapon_template.actions = {
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 0.8
+			},
+			grenade_ability = {
+				action_name = "grenade_ability",
+				chain_time = 0.8
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -492,6 +499,10 @@ weapon_template.actions = {
 			},
 			zoom = {
 				action_name = "action_zoom",
+				chain_time = 0.8
+			},
+			grenade_ability = {
+				action_name = "grenade_ability",
 				chain_time = 0.8
 			}
 		},
@@ -550,6 +561,10 @@ weapon_template.actions = {
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 0.7
+			},
+			grenade_ability = {
+				action_name = "grenade_ability",
+				chain_time = 0.8
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -626,6 +641,10 @@ weapon_template.actions = {
 			},
 			zoom = {
 				action_name = "action_zoom",
+				chain_time = 0.6
+			},
+			grenade_ability = {
+				action_name = "grenade_ability",
 				chain_time = 0.6
 			}
 		},
@@ -715,6 +734,10 @@ weapon_template.actions = {
 			},
 			zoom = {
 				action_name = "action_zoom",
+				chain_time = 0.6
+			},
+			grenade_ability = {
+				action_name = "grenade_ability",
 				chain_time = 0.6
 			}
 		},
@@ -807,6 +830,10 @@ weapon_template.actions = {
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 0.8
+			},
+			grenade_ability = {
+				action_name = "grenade_ability",
+				chain_time = 0.8
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -881,6 +908,10 @@ weapon_template.actions = {
 			},
 			zoom = {
 				action_name = "action_zoom",
+				chain_time = 0.8
+			},
+			grenade_ability = {
+				action_name = "grenade_ability",
 				chain_time = 0.8
 			}
 		},
@@ -957,6 +988,10 @@ weapon_template.actions = {
 			zoom = {
 				action_name = "action_zoom",
 				chain_time = 0.8
+			},
+			grenade_ability = {
+				action_name = "grenade_ability",
+				chain_time = 0.8
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1031,6 +1066,10 @@ weapon_template.actions = {
 			},
 			zoom = {
 				action_name = "action_zoom",
+				chain_time = 0.8
+			},
+			grenade_ability = {
+				action_name = "grenade_ability",
 				chain_time = 0.8
 			}
 		},
@@ -1170,6 +1209,10 @@ weapon_template.actions = {
 			},
 			zoom = {
 				action_name = "action_zoom",
+				chain_time = 0.8
+			},
+			grenade_ability = {
+				action_name = "grenade_ability",
 				chain_time = 0.8
 			}
 		},

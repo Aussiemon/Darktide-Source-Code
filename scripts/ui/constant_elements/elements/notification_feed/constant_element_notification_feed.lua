@@ -39,7 +39,7 @@ local function _remove_live_item_icon_cb_func(widget)
 end
 
 local ConstantElementNotificationFeed = class("ConstantElementNotificationFeed", "ConstantElementBase")
-local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "crafting_material", "matchmaking")
+local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "matchmaking")
 
 ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start_scale)
 	ConstantElementNotificationFeed.super.init(self, parent, draw_layer, start_scale, Definitions)
@@ -78,13 +78,6 @@ ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start
 			widget_definition = Definitions.notification_message
 		},
 		currency = {
-			animation_exit = "popup_leave",
-			animation_enter = "popup_enter",
-			total_time = 5,
-			priority_order = 1,
-			widget_definition = Definitions.notification_message
-		},
-		crafting_material = {
 			animation_exit = "popup_leave",
 			animation_enter = "popup_enter",
 			total_time = 5,
@@ -370,18 +363,22 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 	elseif message_type == MESSAGE_TYPES.currency then
 		local currency_type = data.currency
 		local amount = data.amount
+		local amount_size = data.amount_size
+		local player_name = data.player_name
+		local optional_localization_key = data.optional_localization_key
 		local wallet_settings = WalletSettings[currency_type]
 
 		if wallet_settings then
 			local icon_texture_large = wallet_settings and wallet_settings.icon_texture_big
 			local selected_color = Color.terminal_corner_selected(255, true)
-			local amount = string.format("{#color(%d,%d,%d)}%s %s{#reset()}", selected_color[2], selected_color[3], selected_color[4], TextUtils.format_currency(amount), Localize(wallet_settings.display_name))
-			local text = Localize("loc_notification_feed_currency_acquired", true, {
-				amount = amount
+			amount = string.format("{#color(%d,%d,%d)}%s %s{#reset()}", selected_color[2], selected_color[3], selected_color[4], amount_size or TextUtils.format_currency(amount), Localize(wallet_settings.display_name))
+			local text = Localize(optional_localization_key or "loc_notification_feed_currency_acquired", true, {
+				amount = amount,
+				player_name = player_name
 			})
 			local enter_sound_event = wallet_settings.notification_sound_event
 			notification_data = {
-				icon_size = "medium",
+				icon_size = "currency",
 				texts = {
 					{
 						display_name = text
@@ -390,35 +387,6 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				icon = icon_texture_large,
 				color = Color.terminal_grid_background(100, true),
 				enter_sound_event = enter_sound_event
-			}
-		end
-	elseif message_type == MESSAGE_TYPES.crafting_material then
-		local currency_type = data.currency
-		local amount = data.amount
-		local wallet_settings = WalletSettings[currency_type]
-
-		if wallet_settings then
-			local icon_texture_large = wallet_settings and wallet_settings.icon_texture_big
-			local selected_color = Color.terminal_corner_selected(255, true)
-			local amount = string.format("{#color(%d,%d,%d)}%s %s{#reset()}", selected_color[2], selected_color[3], selected_color[4], TextUtils.format_currency(amount), Localize(wallet_settings.display_name))
-			local text = Localize("loc_notification_feed_currency_acquired", true, {
-				amount = amount
-			})
-			notification_data = {
-				icon_size = "medium",
-				texts = {
-					{
-						display_name = text
-					}
-				},
-				icon = icon_texture_large,
-				color = {
-					0,
-					0,
-					0,
-					0
-				},
-				enter_sound_event = UISoundEvents.notification_crafting_material_recieved
 			}
 		end
 	elseif message_type == MESSAGE_TYPES.achievement then

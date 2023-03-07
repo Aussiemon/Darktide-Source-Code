@@ -201,15 +201,19 @@ templates.ogryn_bonebreaker_charge_grants_allied_movement_speed = {
 	end
 }
 templates.ogryn_bonebreaker_allied_movement_speed_buff = {
+	class_name = "buff",
 	hud_priority = 4,
-	hud_icon = "content/ui/textures/icons/talents/ogryn_2/hud/ogryn_2_tier_1_3",
 	predicted = true,
 	refresh_duration_on_stack = true,
-	class_name = "buff",
+	hud_icon = "content/ui/textures/icons/talents/ogryn_2/hud/ogryn_2_tier_1_3",
 	duration = talent_settings.coop_2.duration,
 	max_stacks = talent_settings.coop_2.max_stacks,
 	stat_buffs = {
 		[stat_buffs.movement_speed] = talent_settings.coop_2.movement_speed
+	},
+	keywords = {
+		buff_keywords.stun_immune,
+		buff_keywords.suppression_immune
 	}
 }
 templates.ogryn_bonebreaker_take_ally_damage = {
@@ -445,7 +449,7 @@ templates.ogryn_bonebreaker_cooldown_on_elite_kills_by_coherence = {
 local bleed_dr_max_stacks = talent_settings.defensive_1.max_stacks
 local bleed_range = DamageSettings.in_melee_range
 templates.ogryn_bonebreaker_reduce_damage_taken_per_bleed = {
-	hud_icon = "content/ui/textures/icons/talents/ogryn_2/hud/ogryn_2_tier_3_3",
+	hud_icon = "content/ui/textures/icons/talents/ogryn_2/hud/ogryn_2_tier_3_2",
 	predicted = false,
 	hud_priority = 3,
 	class_name = "buff",
@@ -796,6 +800,43 @@ templates.ogryn_bonebreaker_big_bully_heavy_hits_buff = {
 	conditional_exit_func = function (template_data, template_context)
 		return template_data.can_finish and template_data.finished
 	end
+}
+templates.ogryn_bonebreaker_melee_revenge_damage = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_player_hit_recieved] = 1
+	},
+	check_proc_func = CheckProcFunctions.on_melee_hit,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		template_data.buff_extension = ScriptUnit.extension(unit, "buff_system")
+	end,
+	proc_func = function (params, template_data, template_context)
+		if not template_context.is_server then
+			return
+		end
+
+		local damage = params.damage
+
+		if damage > 0 then
+			local t = FixedFrame.get_latest_fixed_time()
+
+			template_data.buff_extension:add_internally_controlled_buff("ogryn_bonebreaker_melee_revenge_damage_buff", t)
+		end
+	end
+}
+templates.ogryn_bonebreaker_melee_revenge_damage_buff = {
+	hud_icon = "content/ui/textures/icons/talents/ogryn_2/hud/ogryn_2_tier_5_1",
+	max_stacks = 1,
+	predicted = false,
+	hud_priority = 3,
+	class_name = "buff",
+	refresh_duration_on_stack = true,
+	stat_buffs = {
+		[stat_buffs.damage] = talent_settings.offensive_2_1.damage
+	},
+	duration = talent_settings.offensive_2_1.time
 }
 templates.ogryn_bonebreaker_hitting_multiple_with_melee_grants_melee_damage_bonus = {
 	predicted = false,

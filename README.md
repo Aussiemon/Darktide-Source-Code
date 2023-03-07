@@ -1,11 +1,12 @@
 # Darktide Source Code
 
-Versions 'External-Test' to 1.0.32
+Versions 'External-Test' to 1.0.33
 -------------------------------------------------------------
 
-Date      |  Patch  | Notes
---------: | :-----: | :--------------
-02-28-23   |  1.0.32 | 
+Date       |  Patch   | Notes
+--------:  | :-----:  | :--------------
+03-07-23   |  1.0.33  | Patch #5
+02-28-23   |  1.0.32  | 
 02-23-23   |  1.0.31+ | 
 02-22-23   |  1.0.31  | 
 02-22-23   |  1.0.30  | 
@@ -26,4 +27,4 @@ Date      |  Patch  | Notes
 11-18-22   |  1.0.6 (Pre-Order-Beta 2)  | 
 11-17-22   |  1.0 (Pre-Order-Beta 1)  | 
 10-14-22   |  Closed-Test  | 
-8-13-22   |  External-Test  | 
+08-13-22   |  External-Test  | 

@@ -127,6 +127,14 @@ CraftingModifyView._update_weapon_stats_position = function (self, scenegraph_id
 	self:_set_scenegraph_size(scenegraph_id, nil, weapon_stats:grid_height())
 end
 
+CraftingModifyView._cb_on_present = function (self)
+	CraftingModifyView.super._cb_on_present(self)
+
+	local index = self._item_grid:selected_grid_index()
+
+	self:scroll_to_grid_index(index, true)
+end
+
 CraftingModifyView.on_back_pressed = function (self)
 	return not self._using_cursor_navigation and self._selected_grid == "crafting_recipe"
 end

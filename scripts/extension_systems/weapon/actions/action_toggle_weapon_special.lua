@@ -25,15 +25,16 @@ ActionToggleWeaponSpecial.start = function (self, action_settings, t, ...)
 end
 
 ActionToggleWeaponSpecial.fixed_update = function (self, dt, t, time_in_action)
-	local was_active = self._inventory_slot_component.special_active
 	local action_settings = self._action_settings
-	local trigger_time = was_active and action_settings.deactivation_time or action_settings.activation_time
+	local weapon_action_component = self._weapon_action_component
+	local should_deactivate = weapon_action_component.special_active_at_start
+	local trigger_time = should_deactivate and action_settings.deactivation_time or action_settings.activation_time
 	local should_toggle = ActionUtility.is_within_trigger_time(time_in_action, dt, trigger_time)
 
-	if should_toggle then
-		local is_active = not was_active
-
-		self:_set_weapon_special(is_active, t)
+	if should_deactivate and should_toggle then
+		self:_set_weapon_special(false, t)
+	elseif not should_deactivate and should_toggle then
+		self:_set_weapon_special(true, t)
 	end
 end
 

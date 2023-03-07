@@ -58,6 +58,7 @@ local function psyker_biomancer_passive_start(template_data, template_context)
 	template_data.psyker_biomancer_efficient_smites = specialization_extension:has_special_rule(special_rules.psyker_biomancer_efficient_smites)
 	template_data.psyker_biomancer_discharge_applies_warpfire = specialization_extension:has_special_rule(special_rules.psyker_biomancer_discharge_applies_warpfire)
 	template_data.psyker_biomancer_all_kills_can_generate_souls = specialization_extension:has_special_rule(special_rules.psyker_biomancer_all_kills_can_generate_souls)
+	template_data.psyker_biomancer_increased_soul_generation = specialization_extension:has_special_rule(special_rules.psyker_biomancer_increased_soul_generation)
 	template_data.buff_name = template_data.psyker_biomancer_increased_max_souls and "psyker_biomancer_souls_increased_max_stacks" or "psyker_biomancer_souls"
 	local is_playing = fx_extension:is_looping_particles_playing("psyker_biomancer_soul")
 
@@ -141,8 +142,9 @@ local function psyker_biomancer_passive_proc_on_hit(params, template_data, templ
 	if should_proc then
 		local t = FixedFrame.get_latest_fixed_time()
 		local buff_name = template_data.buff_name
+		local num_stacks = template_data.psyker_biomancer_increased_soul_generation and talent_settings.combat_ability_1.stacks or 1
 
-		template_data.buff_extension:add_internally_controlled_buff(buff_name, t)
+		template_data.buff_extension:add_internally_controlled_buff_with_stacks(buff_name, num_stacks, t)
 	end
 end
 
@@ -624,6 +626,8 @@ templates.psyker_biomancer_coherency_souls_on_kill = {
 		local unit = template_context.unit
 		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
 		template_data.units_with_talent = {}
+		local specialization_extension = ScriptUnit.extension(unit, "specialization_system")
+		template_data.psyker_biomancer_increased_soul_generation = specialization_extension:has_special_rule(special_rules.psyker_biomancer_increased_soul_generation)
 	end,
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -660,8 +664,9 @@ templates.psyker_biomancer_coherency_souls_on_kill = {
 			end
 
 			local t = FixedFrame.get_latest_fixed_time()
+			local num_stacks = template_data.psyker_biomancer_increased_soul_generation and talent_settings.combat_ability_1.stacks or 1
 
-			buff_extension:add_internally_controlled_buff(buff_name, t)
+			buff_extension:add_internally_controlled_buff_with_stacks(buff_name, num_stacks, t)
 		end
 	end
 }
@@ -916,6 +921,7 @@ templates.psyker_biomancer_warpfire_grants_souls = {
 		local has_psyker_biomancer_increased_max_souls = specialization_extension:has_special_rule(special_rules.psyker_biomancer_increased_max_souls)
 		template_data.buff_name = has_psyker_biomancer_increased_max_souls and "psyker_biomancer_souls_increased_max_stacks" or "psyker_biomancer_souls"
 		template_data.buff_extension = ScriptUnit.extension(unit, "buff_system")
+		template_data.psyker_biomancer_increased_soul_generation = specialization_extension:has_special_rule(special_rules.psyker_biomancer_increased_soul_generation)
 	end,
 	proc_func = function (params, template_data, template_context)
 		local killed_unit = params.dying_unit
@@ -936,8 +942,9 @@ templates.psyker_biomancer_warpfire_grants_souls = {
 			local buff_name = template_data.buff_name
 			local buff_extension = template_data.buff_extension
 			local t = FixedFrame.get_latest_fixed_time()
+			local num_stacks = template_data.psyker_biomancer_increased_soul_generation and talent_settings.combat_ability_1.stacks or 1
 
-			buff_extension:add_internally_controlled_buff(buff_name, t)
+			buff_extension:add_internally_controlled_buff_with_stacks(buff_name, num_stacks, t)
 		end
 	end
 }

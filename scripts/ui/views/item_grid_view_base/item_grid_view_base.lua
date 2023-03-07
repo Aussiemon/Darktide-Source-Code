@@ -716,8 +716,8 @@ ItemGridViewBase.focus_grid_index = function (self, index, scrollbar_animation_p
 	self._item_grid:focus_grid_index(index, scrollbar_animation_progress, instant_scroll)
 end
 
-ItemGridViewBase.scroll_to_grid_index = function (self, index)
-	self._item_grid:scroll_to_grid_index(index)
+ItemGridViewBase.scroll_to_grid_index = function (self, index, is_instant)
+	self._item_grid:scroll_to_grid_index(index, is_instant)
 end
 
 ItemGridViewBase.focus_on_offer = function (self, offer)

@@ -401,7 +401,7 @@ end
 HudElementEmoteWheel._update_wheel_presentation = function (self, dt, t, ui_renderer, render_settings, input_service)
 	local screen_width = RESOLUTION_LOOKUP.width
 	local screen_height = RESOLUTION_LOOKUP.height
-	local inverse_scale = render_settings.inverse_scale
+	local inverse_scale = 1
 	local scale = render_settings.scale
 	local cursor = input_service and input_service:get("cursor")
 

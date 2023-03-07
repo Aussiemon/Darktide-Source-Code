@@ -17,8 +17,8 @@ local DAMAGE_INDICATOR_ATTACK_RESULTS = {
 	[attack_results.friendly_fire] = true,
 	[attack_results.blocked] = true
 }
-local RING_BUFFER_SIZE = 256
-local MAX_UPDATES_PER_FRAME = 4
+local RING_BUFFER_SIZE = 2048
+local MAX_UPDATES_PER_FRAME = 64
 local CLIENT_RPCS = {
 	"rpc_add_attack_result"
 }
@@ -65,6 +65,14 @@ AttackReportManager.update = function (self, dt, t)
 
 	if size <= 0 then
 		return
+	end
+
+	if self._is_server then
+		local lowest_reliable_buffer_size = Managers.state.game_session:currently_lowest_reliable_send_buffer_size()
+
+		if lowest_reliable_buffer_size < 8000 then
+			return
+		end
 	end
 
 	local num_updates = math.min(MAX_UPDATES_PER_FRAME, size)

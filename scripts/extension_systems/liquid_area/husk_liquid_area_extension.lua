@@ -1,6 +1,7 @@
 local LiquidAreaSettings = require("scripts/settings/liquid_area/liquid_area_settings")
 local CLIENT_RPCS = {
 	"rpc_add_liquid",
+	"rpc_add_liquid_multiple",
 	"rpc_set_liquid_filled",
 	"rpc_set_liquid_filled_multiple"
 }
@@ -161,8 +162,7 @@ HuskLiquidAreaExtension._rotation_from_nav_mesh = function (self, position)
 	return rotation
 end
 
-HuskLiquidAreaExtension.rpc_add_liquid = function (self, channel, go_id, real_index, offset_position, is_filled)
-	local unit_position = Unit.world_position(self._unit, 1)
+HuskLiquidAreaExtension._add_liquid = function (self, unit_position, real_index, offset_position, is_filled)
 	local position = unit_position + offset_position
 	local rotation = self:_rotation_from_nav_mesh(position)
 	local particle_id = nil
@@ -184,6 +184,20 @@ HuskLiquidAreaExtension.rpc_add_liquid = function (self, channel, go_id, real_in
 	end
 
 	self._recalculate_liquid_size = true
+end
+
+HuskLiquidAreaExtension.rpc_add_liquid = function (self, channel, go_id, real_index, offset_position, is_filled)
+	local unit_position = Unit.world_position(self._unit, 1)
+
+	self:_add_liquid(unit_position, real_index, offset_position, is_filled)
+end
+
+HuskLiquidAreaExtension.rpc_add_liquid_multiple = function (self, channel, go_id, real_index_array, offset_position_array, is_filled_array)
+	local unit_position = Unit.world_position(self._unit, 1)
+
+	for i = 1, #real_index_array do
+		self:_add_liquid(unit_position, real_index_array[i], offset_position_array[i], is_filled_array[i])
+	end
 end
 
 HuskLiquidAreaExtension.rpc_set_liquid_filled = function (self, channel, go_id, real_index)

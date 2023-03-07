@@ -1,6 +1,7 @@
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ElementSettings = require("scripts/ui/hud/elements/tactical_overlay/hud_element_tactical_overlay_settings")
+local WalletSettings = require("scripts/settings/wallet_settings")
 local element_styles = ElementSettings.styles
 local details_panel_size = {
 	600,
@@ -13,6 +14,14 @@ local mission_info_size = {
 local circumstance_info_size = {
 	details_panel_size[1] - 50,
 	120
+}
+local plasteel_info_size = {
+	details_panel_size[1] - 50,
+	40
+}
+local diamantine_info_size = {
+	details_panel_size[1] - 50,
+	40
 }
 local screen_size = UIWorkspaceSettings.screen.size
 local scenegraph_definition = {
@@ -34,30 +43,66 @@ local scenegraph_definition = {
 		horizontal_alignment = "left",
 		size = details_panel_size,
 		position = {
-			-details_panel_size[1],
+			25,
 			0,
 			0
 		}
 	},
 	mission_info_panel = {
-		vertical_alignment = "center",
+		vertical_alignment = "top",
 		parent = "left_panel",
-		horizontal_alignment = "center",
+		horizontal_alignment = "left",
 		size = mission_info_size,
 		position = {
 			0,
-			-mission_info_size[2] / 2,
+			0,
 			1
 		}
 	},
 	circumstance_info_panel = {
-		vertical_alignment = "center",
+		vertical_alignment = "top",
 		parent = "left_panel",
-		horizontal_alignment = "center",
+		horizontal_alignment = "left",
 		size = circumstance_info_size,
 		position = {
 			0,
-			mission_info_size[2] / 2 + 20,
+			0,
+			1
+		}
+	},
+	crafting_pickup_pivot = {
+		vertical_alignment = "top",
+		parent = "left_panel",
+		horizontal_alignment = "left",
+		size = {
+			0,
+			0
+		},
+		position = {
+			0,
+			0,
+			1
+		}
+	},
+	plasteel_info_panel = {
+		vertical_alignment = "top",
+		parent = "crafting_pickup_pivot",
+		horizontal_alignment = "left",
+		size = plasteel_info_size,
+		position = {
+			0,
+			0,
+			1
+		}
+	},
+	diamantine_info_panel = {
+		vertical_alignment = "top",
+		parent = "crafting_pickup_pivot",
+		horizontal_alignment = "left",
+		size = diamantine_info_size,
+		position = {
+			0,
+			0,
 			1
 		}
 	}
@@ -221,9 +266,9 @@ local left_panel_widgets_definitions = {
 			pass_type = "rect",
 			style = {
 				horizontal_alignment = "left",
+				vertical_alignment = "top",
 				size = {
-					3,
-					circumstance_info_size[2]
+					3
 				},
 				color = Color.golden_rod(255, true)
 			}
@@ -240,7 +285,7 @@ local left_panel_widgets_definitions = {
 					10
 				},
 				size = {
-					mission_info_size[1],
+					nil,
 					30
 				},
 				text_color = {
@@ -271,6 +316,7 @@ local left_panel_widgets_definitions = {
 			}
 		},
 		{
+			style_id = "circumstance_name",
 			value_id = "circumstance_name",
 			pass_type = "text",
 			style = {
@@ -284,27 +330,28 @@ local left_panel_widgets_definitions = {
 					10
 				},
 				size = {
-					mission_info_size[1] - 75,
+					circumstance_info_size[1] - 75,
 					40
 				},
 				text_color = Color.golden_rod(255, true)
 			}
 		},
 		{
+			style_id = "circumstance_description",
 			value_id = "circumstance_description",
 			pass_type = "text",
 			style = {
-				vertical_alignment = "center",
+				vertical_alignment = "top",
 				text_vertical_alignment = "top",
 				horizontal_alignment = "left",
 				text_horizontal_alignment = "left",
 				offset = {
 					25,
-					25,
+					60,
 					10
 				},
 				size = {
-					mission_info_size[1] - 25,
+					circumstance_info_size[1] - 25,
 					60
 				},
 				text_color = {
@@ -315,7 +362,93 @@ local left_panel_widgets_definitions = {
 				}
 			}
 		}
-	}, "circumstance_info_panel")
+	}, "circumstance_info_panel"),
+	plasteel_info = UIWidget.create_definition({
+		{
+			pass_type = "text",
+			value = Localize(WalletSettings.plasteel.display_name),
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "left",
+				offset = {
+					0,
+					0,
+					10
+				},
+				size = {
+					nil,
+					30
+				},
+				text_color = {
+					255,
+					169,
+					191,
+					153
+				}
+			}
+		},
+		{
+			value_id = "plasteel_amount_id",
+			pass_type = "text",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "left",
+				offset = {
+					200,
+					0,
+					10
+				},
+				size = {
+					400,
+					30
+				},
+				text_color = Color.golden_rod(255, true)
+			}
+		}
+	}, "plasteel_info_panel"),
+	diamantine_info = UIWidget.create_definition({
+		{
+			pass_type = "text",
+			value = Localize(WalletSettings.diamantine.display_name),
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "left",
+				offset = {
+					0,
+					0,
+					10
+				},
+				size = {
+					nil,
+					30
+				},
+				text_color = {
+					255,
+					169,
+					191,
+					153
+				}
+			}
+		},
+		{
+			value_id = "diamantine_amount_id",
+			pass_type = "text",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "left",
+				offset = {
+					200,
+					0,
+					10
+				},
+				size = {
+					400,
+					30
+				},
+				text_color = Color.golden_rod(255, true)
+			}
+		}
+	}, "diamantine_info_panel")
 }
 local animations = {
 	enter = {
@@ -325,9 +458,11 @@ local animations = {
 			start_time = 0,
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				local left_panel_widgets = parent._left_panel_widgets
+				local start_pos = -details_panel_size[1]
 
 				for _, widget in ipairs(left_panel_widgets) do
 					widget.alpha_multiplier = 0
+					widget.offset[1] = start_pos
 				end
 			end
 		},
@@ -336,7 +471,7 @@ local animations = {
 			end_time = 0.5,
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
-				local new_pos = details_panel_size[1] * math.easeOutCubic(progress)
+				local new_pos = -details_panel_size[1] + details_panel_size[1] * math.easeOutCubic(progress)
 				local left_panel_widgets = parent._left_panel_widgets
 
 				for _, widget in ipairs(left_panel_widgets) do

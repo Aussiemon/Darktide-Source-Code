@@ -23,8 +23,8 @@ local templates = {
 	weapon_trait_bespoke_ogryn_thumper_p1_crit_chance_based_on_aim_time = table.clone(BaseWeaponTraitBuffTemplates.chance_based_on_aim_time),
 	weapon_trait_bespoke_ogryn_thumper_p1_crit_chance_based_on_aim_time = table.clone(BaseWeaponTraitBuffTemplates.chance_based_on_aim_time),
 	weapon_trait_bespoke_ogryn_thumper_p1_weapon_special_power_bonus_after_one_shots = {
-		predicted = false,
 		allow_proc_while_active = true,
+		predicted = false,
 		max_stacks = 1,
 		class_name = "proc_buff",
 		active_duration = 4,
@@ -34,8 +34,7 @@ local templates = {
 		proc_stat_buffs = {
 			[stat_buffs.melee_power_level_modifier] = 0.05
 		},
-		conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-		check_proc_func = CheckProcFunctions.on_shoot_hit_multiple
+		check_proc_func = CheckProcFunctions.all(CheckProcFunctions.check_item_slot, CheckProcFunctions.on_shoot_hit_multiple)
 	},
 	weapon_trait_bespoke_ogryn_thumper_p1_power_bonus_on_hitting_single_enemy_with_all = table.clone(BaseWeaponTraitBuffTemplates.power_bonus_on_hitting_single_enemy_with_all),
 	weapon_trait_bespoke_ogryn_thumper_p1_shot_power_bonus_after_weapon_special_cleave = {

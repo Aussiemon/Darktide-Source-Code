@@ -93,8 +93,9 @@ weapon_template.actions = {
 		}
 	},
 	action_melee_start_left = {
-		anim_end_event = "attack_finished",
 		start_input = "start_attack",
+		anim_end_event = "attack_finished",
+		proc_time_interval = 0.2,
 		kind = "windup",
 		allowed_during_sprint = true,
 		anim_event = "attack_swing_charge_left_pose",
@@ -380,9 +381,10 @@ weapon_template.actions = {
 		aim_assist_ramp_template = AimAssistTemplates.tank_swing_heavy
 	},
 	action_melee_start_right = {
-		anim_event = "attack_swing_charge_right_pose",
+		proc_time_interval = 0.2,
 		anim_end_event = "attack_finished",
 		kind = "windup",
+		anim_event = "attack_swing_charge_right_pose",
 		stop_input = "attack_cancel",
 		total_time = 3,
 		action_movement_curve = {
@@ -450,9 +452,10 @@ weapon_template.actions = {
 		end
 	},
 	action_melee_start_right_2 = {
-		anim_event = "attack_swing_charge_right_pose",
+		proc_time_interval = 0.2,
 		anim_end_event = "attack_finished",
 		kind = "windup",
+		anim_event = "attack_swing_charge_right_pose",
 		stop_input = "attack_cancel",
 		total_time = 3,
 		action_movement_curve = {
@@ -520,17 +523,18 @@ weapon_template.actions = {
 		end
 	},
 	action_right_down_light = {
-		hit_armor_anim = "attack_hit",
-		weapon_handling_template = "time_scale_0_95",
-		range_mod = 1.15,
-		kind = "sweep",
-		attack_direction_override = "push",
 		damage_window_start = 0.38,
+		hit_armor_anim = "attack_hit",
+		proc_time_interval = 0.2,
+		kind = "sweep",
+		weapon_handling_template = "time_scale_0_95",
+		attack_direction_override = "push",
+		range_mod = 1.15,
 		first_person_hit_anim = "hit_right_shake",
-		special_active_hit_stop_anim_3p = "attack_hit_power",
 		anim_end_event = "attack_finished",
 		damage_window_end = 0.5,
 		special_active_hit_stop_anim = "attack_hit_power",
+		special_active_hit_stop_anim_3p = "attack_hit_power",
 		anim_event_3p = "attack_swing_right_diagonal",
 		anim_event = "attack_swing_right_down",
 		hit_stop_anim = "attack_hit",
@@ -735,9 +739,10 @@ weapon_template.actions = {
 		aim_assist_ramp_template = AimAssistTemplates.tank_swing_heavy
 	},
 	action_melee_start_left_2 = {
-		anim_event = "attack_swing_charge_left_pose",
+		proc_time_interval = 0.2,
 		anim_end_event = "attack_finished",
 		kind = "windup",
+		anim_event = "attack_swing_charge_left_pose",
 		stop_input = "attack_cancel",
 		total_time = 3,
 		action_movement_curve = {

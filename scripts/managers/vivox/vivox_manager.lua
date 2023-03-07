@@ -442,6 +442,10 @@ VivoxManager._party_immaterium_other_members_updated = function (self, other_mem
 		if other_member_count > 0 then
 			if not self._party_id_session_handles[party_id] then
 				Managers.party_immaterium:request_vivox_party_token():next(function (vivox_data)
+					if self._party_id_session_handles[party_id] then
+						return
+					end
+
 					local channel = vivox_data.channelSip
 					local token = vivox_data.token
 					local voice = true

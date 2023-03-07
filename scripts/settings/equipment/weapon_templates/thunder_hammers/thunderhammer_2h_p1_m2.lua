@@ -94,8 +94,9 @@ weapon_template.actions = {
 	},
 	action_melee_start_left = {
 		start_input = "start_attack",
-		allowed_during_sprint = true,
+		proc_time_interval = 0.2,
 		kind = "windup",
+		allowed_during_sprint = true,
 		anim_event = "attack_swing_charge_left_down",
 		stop_input = "attack_cancel",
 		total_time = 3,
@@ -361,6 +362,7 @@ weapon_template.actions = {
 	},
 	action_melee_start_right = {
 		anim_event = "attack_swing_charge_right_down",
+		proc_time_interval = 0.2,
 		kind = "windup",
 		stop_input = "attack_cancel",
 		total_time = 3,
@@ -693,6 +695,7 @@ weapon_template.actions = {
 	},
 	action_melee_start_left_2 = {
 		anim_event = "attack_swing_charge_left_down",
+		proc_time_interval = 0.2,
 		kind = "windup",
 		stop_input = "attack_cancel",
 		total_time = 3,

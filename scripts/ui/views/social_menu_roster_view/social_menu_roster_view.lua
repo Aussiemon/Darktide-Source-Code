@@ -687,21 +687,7 @@ SocialMenuRosterView.cb_show_popup_menu_for_player = function (self, player_info
 
 	self:set_can_exit(false)
 	self:_fade_widgets("out")
-
-	local material_values = nil
-	local widgets_with_portraits = self._widgets_with_portraits
-
-	for i = 1, #widgets_with_portraits do
-		local widget = widgets_with_portraits[i]
-		local content = widget.content
-
-		if content.player_info == player_info then
-			local portrait_style = widget.style.portrait
-			material_values = portrait_style.material_values
-		end
-	end
-
-	popup_menu:set_player_info(self, player_info, material_values)
+	popup_menu:set_player_info(self, player_info)
 	popup_menu:on_navigation_input_changed(self._using_cursor_navigation)
 	popup_menu:set_close_popup_request_callback(callback(self, "cb_close_popup_menu"))
 end
@@ -1505,6 +1491,7 @@ SocialMenuRosterView._update_party_list = function (self, party_members, force_u
 		local unique_id = party_member_content.unique_id
 
 		if not party_members[unique_id] then
+			self:_unload_widget_portrait(party_widget)
 			table.remove(current_party_widgets, i)
 
 			list_is_changed = true

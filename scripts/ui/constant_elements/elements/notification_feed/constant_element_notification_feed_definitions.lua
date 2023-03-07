@@ -219,6 +219,12 @@ local create_notification_message = {
 					80
 				}
 				text_offset = 210
+			elseif element.icon_size == "currency" then
+				icon_size = {
+					104,
+					88
+				}
+				text_offset = 130
 			else
 				icon_size = {
 					40,

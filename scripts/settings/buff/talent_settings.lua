@@ -191,14 +191,6 @@ local talent_settings = {
 			sprinting_cost_multiplier = 0.8,
 			increased_toughness_health_threshold = 0.25
 		},
-		spec_passive_1 = {},
-		spec_passive_2 = {
-			toughness_to_restore = 0.05,
-			on_hit_proc_chance = 1
-		},
-		spec_passive_3 = {
-			melee_fully_charged_damage = 0.25
-		},
 		offensive_2_1 = {
 			time = 5,
 			damage = 0.2
@@ -402,16 +394,16 @@ local talent_settings = {
 			multiplier = 0.5
 		},
 		offensive_1_1 = {
-			damage_min = 0.05,
-			damage = 0.15
+			damage_min = 0.1,
+			damage = 0.25
 		},
 		offensive_1_2 = {
 			vent_speed = 1,
 			warp_charge_capacity = 0.64
 		},
 		offensive_1_3 = {
-			num_stacks = 2,
-			distance = 3
+			num_stacks = 3,
+			distance = 4
 		},
 		coop_1 = {
 			on_kill_proc_chance = 0.04
@@ -445,6 +437,7 @@ local talent_settings = {
 			smite_chance = 0.1
 		},
 		combat_ability_1 = {
+			stacks = 1,
 			cooldown_reduction_percent = 0.125
 		},
 		combat_ability_2 = {

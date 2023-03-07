@@ -104,6 +104,7 @@ buff_settings.proc_event_validation = {
 		alternative_fire = "bool",
 		melee_attack_strength = "string",
 		breed_name = "string",
+		hit_zone_name = "string",
 		is_critical_strike = "bool",
 		attack_direction = "Vector3"
 	},

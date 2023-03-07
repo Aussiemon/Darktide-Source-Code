@@ -421,4 +421,9 @@ CreditsGoodsVendorView._cb_on_purchase_pressed = function (self)
 	CreditsGoodsVendorView.super._cb_on_purchase_pressed(self)
 end
 
+CreditsGoodsVendorView.cb_switch_tab = function (self, index)
+	self._next_tab_index = index
+	self._next_tab_index_ignore_item_selection = true
+end
+
 return CreditsGoodsVendorView

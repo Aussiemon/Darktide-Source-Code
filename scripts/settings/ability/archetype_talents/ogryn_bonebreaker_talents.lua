@@ -198,7 +198,7 @@ local archetype_talents = {
 			}
 		},
 		ogryn_2_tier_3_name_2 = {
-			description = "loc_talent_bonebreaker_bull_rush_movement_speed_desc_old",
+			description = "loc_talent_bonebreaker_bull_rush_movement_speed_desc",
 			name = "Allies in coherency gain movement speed when you use your Charge",
 			display_name = "loc_talent_bonebreaker_bull_rush_movement_speed",
 			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_1_3",
@@ -267,7 +267,7 @@ local archetype_talents = {
 			}
 		},
 		ogryn_2_tier_5_name_1 = {
-			description = "loc_talent_bonebreaker_revenge_damage_desc_old",
+			description = "loc_talent_bonebreaker_revenge_damage_desc",
 			name = "Increases your damage against any enemy that damages you, for a few seconds",
 			display_name = "loc_talent_bonebreaker_revenge_damage",
 			icon = "content/ui/textures/icons/talents/ogryn_2/ogryn_2_tier_3_1",
@@ -276,7 +276,7 @@ local archetype_talents = {
 				time = talent_settings.offensive_2_1.time
 			},
 			passive = {
-				buff_template_name = "ogryn_bonebreaker_revenge_damage",
+				buff_template_name = "ogryn_bonebreaker_melee_revenge_damage",
 				identifier = "specialization_passive"
 			}
 		},

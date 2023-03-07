@@ -1487,10 +1487,10 @@ MissionBoardViewDefinitions.widget_definitions.info_box = UIWidget.create_defini
 		pass_type = "texture"
 	},
 	{
+		value = "",
 		value_id = "text",
 		pass_type = "text",
-		style_id = "text",
-		value = Localize("loc_mission_board_view_required_level")
+		style_id = "text"
 	}
 }, "info_box", nil, nil, MissionBoardViewStyles.info_box_widget_style)
 MissionBoardViewDefinitions.widget_definitions.play_team_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "play_team_button", {

@@ -87,23 +87,27 @@ local templates = {
 	weapon_trait_bespoke_ogryn_thumper_p1_weapon_special_power_bonus_after_one_shots = {
 		weapon_trait_bespoke_ogryn_thumper_p1_weapon_special_power_bonus_after_one_shots = {
 			{
+				active_duration = 3.5,
 				proc_stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.5
+					[stat_buffs.melee_power_level_modifier] = 0.25
 				}
 			},
 			{
+				active_duration = 3.5,
 				proc_stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.6
+					[stat_buffs.melee_power_level_modifier] = 0.3
 				}
 			},
 			{
+				active_duration = 3.5,
 				proc_stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.7
+					[stat_buffs.melee_power_level_modifier] = 0.35
 				}
 			},
 			{
+				active_duration = 3.5,
 				proc_stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.8
+					[stat_buffs.melee_power_level_modifier] = 0.4
 				}
 			}
 		}

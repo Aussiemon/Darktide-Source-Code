@@ -896,6 +896,10 @@ end
 
 ViewElementGrid.remove_widget = function (self, widget)
 	self._grid:remove_widget(widget)
+
+	if widget.name then
+		self:_unregister_widget_name(widget.name)
+	end
 end
 
 ViewElementGrid.grid = function (self)

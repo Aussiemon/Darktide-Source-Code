@@ -240,6 +240,7 @@ local RESET_CHARGE_ACTION_KINDS = {
 	unwield = true,
 	windup = true,
 	reload_state = true,
+	unwield_to_specific = true,
 	unaim = true,
 	sweep = true
 }

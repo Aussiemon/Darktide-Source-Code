@@ -5,9 +5,14 @@ local Pickups = require("scripts/settings/pickup/pickups")
 local PickupSettings = require("scripts/settings/pickup/pickup_settings")
 local Ammo = require("scripts/utilities/ammo")
 local Health = require("scripts/utilities/health")
+local TextUtilities = require("scripts/utilities/ui/text")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local DISTRIBUTION_TYPES = PickupSettings.distribution_types
 local PICKUPS_BY_NAME = Pickups.by_name
 local PickupSystem = class("PickupSystem", "ExtensionSystemBase")
+local CLIENT_RPCS = {
+	"rpc_player_collected_materials"
+}
 
 PickupSystem.init = function (self, context, system_init_data, ...)
 	PickupSystem.super.init(self, context, system_init_data, ...)
@@ -30,10 +35,19 @@ PickupSystem.init = function (self, context, system_init_data, ...)
 	self._rubberband_pool_start_count = {}
 	self._rubberband_pool_remaining = {}
 	self._rubberband_pool_special_spawned = {}
+
+	if not is_server then
+		local network_event_delegate = context.network_event_delegate
+		self._network_event_delegate = network_event_delegate
+
+		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
+	end
 end
 
 PickupSystem.destroy = function (self)
-	return
+	if not self._is_server then
+		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
+	end
 end
 
 PickupSystem._fetch_settings = function (self)
@@ -81,7 +95,25 @@ PickupSystem.extensions_ready = function (self, world, unit)
 		self:_pickup_spawner_spawned(unit, extension)
 
 		self._managed_spawner_extensions[unit] = extension
+
+		self:_create_game_object()
 	end
+end
+
+PickupSystem._create_game_object = function (self)
+	local game_object_data_table = {
+		plasteel_small = 0,
+		diamantine_small = 0,
+		plasteel_large = 0,
+		diamantine_large = 0,
+		game_object_type = NetworkLookup.game_object_types.materials_collected
+	}
+	local game_session = self._game_session
+	self._materials_collected_game_object_id = GameSession.create_game_object(game_session, "materials_collected", game_object_data_table)
+end
+
+PickupSystem.on_game_object_created = function (self, game_object_id)
+	self._materials_collected_game_object_id = game_object_id
 end
 
 PickupSystem.delete_units = function (self)
@@ -791,9 +823,83 @@ PickupSystem.register_material_collected = function (self, pickup_unit, interact
 	else
 		type_list[size] = type_list[size] + 1
 	end
+
+	local player = Managers.state.player_unit_spawn:owner(interactor_unit)
+
+	if player then
+		local peer_id = player:peer_id()
+		local material_type_lookup = NetworkLookup.material_type_lookup[type]
+		local material_size_lookup = NetworkLookup.material_size_lookup[size]
+
+		Managers.state.game_session:send_rpc_clients("rpc_player_collected_materials", peer_id, material_type_lookup, material_size_lookup)
+
+		if not DEDICATED_SERVER then
+			self:_show_collected_materials_notification(peer_id, type, size)
+		end
+	end
+
+	local game_session = self._game_session
+	local game_object_id = self._materials_collected_game_object_id
+	local game_object_field = type .. "_" .. size
+
+	if GameSession.has_game_object_field(game_session, game_object_id, game_object_field) then
+		local value = type_list[size]
+
+		GameSession.set_game_object_field(game_session, game_object_id, game_object_field, value)
+		Log.info("PickupSystem", "register_material_collected %s %s", game_object_field, value)
+	else
+		Log.error("PickupSystem", "Unknown game_object_field %s in materials_collected", game_object_field)
+	end
+end
+
+PickupSystem.rpc_player_collected_materials = function (self, channel_id, peer_id, material_type_lookup, material_size_lookup)
+	local material_type = NetworkLookup.material_type_lookup[material_type_lookup]
+	local material_size = NetworkLookup.material_size_lookup[material_size_lookup]
+
+	self:_show_collected_materials_notification(peer_id, material_type, material_size)
+end
+
+PickupSystem._show_collected_materials_notification = function (self, peer_id, material_type, material_size)
+	local player_manager = Managers.player
+	local local_player_id = 1
+	local player = player_manager:player(peer_id, local_player_id)
+	local player_name = player and player:name()
+	local player_slot = player and player.slot and player:slot()
+	local player_slot_colors = UISettings.player_slot_colors
+	local player_slot_color = player_slot and player_slot_colors[player_slot]
+
+	if player_name and player_slot_color then
+		player_name = TextUtilities.apply_color_to_text(player_name, player_slot_color)
+	end
+
+	local optional_localization_key = "loc_tactical_overlay_crafting_mat_notification"
+
+	Managers.event:trigger("event_add_notification_message", "currency", {
+		currency = material_type,
+		amount_size = material_size,
+		player_name = player_name,
+		optional_localization_key = optional_localization_key
+	})
 end
 
 PickupSystem.get_collected_materials = function (self)
+	if not self._is_server then
+		local game_session = self._game_session
+		local game_object_id = self._materials_collected_game_object_id
+		local diamantine_small = GameSession.game_object_field(game_session, game_object_id, "diamantine_small")
+		local diamantine_large = GameSession.game_object_field(game_session, game_object_id, "diamantine_large")
+		local plasteel_small = GameSession.game_object_field(game_session, game_object_id, "plasteel_small")
+		local plasteel_large = GameSession.game_object_field(game_session, game_object_id, "plasteel_large")
+		self._material_collected.diamantine = {
+			small = diamantine_small,
+			large = diamantine_large
+		}
+		self._material_collected.plasteel = {
+			small = plasteel_small,
+			large = plasteel_large
+		}
+	end
+
 	return self._material_collected
 end
 

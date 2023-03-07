@@ -2,7 +2,7 @@ require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local proc_events = BuffSettings.proc_events
-local PROC_INTERVAL_DEFAULT = 0.3
+local PROC_INTERVAL_DEFAULT = 0.25
 local ActionWindup = class("ActionWindup", "ActionWeaponBase")
 
 ActionWindup.start = function (self, action_settings, t, time_scale, params)

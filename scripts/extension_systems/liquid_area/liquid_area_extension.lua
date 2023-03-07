@@ -11,6 +11,10 @@ local NAV_MESH_ABOVE = LiquidAreaSettings.nav_mesh_above
 local NAV_MESH_BELOW = LiquidAreaSettings.nav_mesh_below
 local NAV_MESH_LATERAL = LiquidAreaSettings.nav_mesh_lateral
 local DISTANCE_FROM_NAV_MESH = LiquidAreaSettings.distance_from_nav_mesh
+local max_size = NetworkConstants.liquid_real_index_array_max_size
+local ADD_LIQUID_REAL_INDEX_SEND_ARRAY = Script.new_array(max_size)
+local ADD_LIQUID_OFFSET_POSITION_SEND_ARRAY = Script.new_array(max_size)
+local ADD_LIQUID_IS_FILLED_SEND_ARRAY = Script.new_array(max_size)
 
 LiquidAreaExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data)
 	local world = extension_init_context.world
@@ -111,10 +115,14 @@ LiquidAreaExtension.init = function (self, extension_init_context, unit, extensi
 		self._additional_unit_particle_id = World.create_particles(self._world, additional_unit_vfx, unit_position)
 	end
 
+	local real_index_max_size = NetworkConstants.liquid_real_index_array_max_size
+	local add_liquid_buffer = Script.new_array(real_index_max_size)
+	add_liquid_buffer[0] = 0
+	self._add_liquid_buffer = add_liquid_buffer
 	self._set_filled_buffer = {
 		size = 0
 	}
-	self._set_filled_send_array = Script.new_array(NetworkConstants.liquid_real_index_array_max_size)
+	self._set_filled_send_array = Script.new_array(real_index_max_size)
 end
 
 LiquidAreaExtension.game_object_initialized = function (self, game_session, game_object_id)
@@ -215,9 +223,10 @@ LiquidAreaExtension._create_liquid = function (self, real_index, angle)
 	local is_filled = false
 	local unit_pos = POSITION_LOOKUP[self._unit]
 	local offset_pos = from - unit_pos
-
-	Managers.state.game_session:send_rpc_clients("rpc_add_liquid", self._game_object_id, real_index, offset_pos, is_filled)
-
+	local add_liquid_buffer = self._add_liquid_buffer
+	local num_buffered = add_liquid_buffer[0] + 1
+	add_liquid_buffer[num_buffered] = real_index
+	add_liquid_buffer[0] = num_buffered
 	local liquid = {
 		amount = 0,
 		full = is_filled,
@@ -282,13 +291,36 @@ end
 LiquidAreaExtension.hot_join_sync = function (self, unit, sender, channel)
 	local unit_pos = Unit.world_position(unit, 1)
 	local game_object_id = self._game_object_id
+	local send_array_i = 0
+	local max_send_array_size = NetworkConstants.liquid_real_index_array_max_size
+	local real_index_send_array = ADD_LIQUID_REAL_INDEX_SEND_ARRAY
+	local offset_pos_send_array = ADD_LIQUID_OFFSET_POSITION_SEND_ARRAY
+	local is_filled_send_array = ADD_LIQUID_IS_FILLED_SEND_ARRAY
 
 	for real_index, liquid in pairs(self._flow) do
 		local position = liquid.position:unbox()
 		local is_filled = liquid.full
 		local offset_position = position - unit_pos
+		send_array_i = send_array_i + 1
+		real_index_send_array[send_array_i] = real_index
+		offset_pos_send_array[send_array_i] = offset_position
+		is_filled_send_array[send_array_i] = is_filled
 
-		RPC.rpc_add_liquid(channel, game_object_id, real_index, offset_position, is_filled)
+		if send_array_i == max_send_array_size then
+			RPC.rpc_add_liquid_multiple(channel, game_object_id, real_index_send_array, offset_pos_send_array, is_filled_send_array)
+
+			send_array_i = 0
+		end
+	end
+
+	if send_array_i > 0 then
+		for i = send_array_i + 1, max_send_array_size do
+			is_filled_send_array[i] = nil
+			offset_pos_send_array[i] = nil
+			real_index_send_array[i] = nil
+		end
+
+		RPC.rpc_add_liquid_multiple(channel, game_object_id, real_index_send_array, offset_pos_send_array, is_filled_send_array)
 	end
 end
 
@@ -427,10 +459,72 @@ LiquidAreaExtension.update = function (self, unit, dt, t, context, listener_posi
 	end
 end
 
+LiquidAreaExtension.post_update = function (self, unit, dt, t)
+	self:_handle_create_liquid_syncing()
+	self:_handle_set_filled_syncing(t)
+end
+
+LiquidAreaExtension._handle_create_liquid_syncing = function (self)
+	local add_liquid_buffer = self._add_liquid_buffer
+	local num_added_this_frame = add_liquid_buffer[0]
+
+	if num_added_this_frame == 0 then
+		return
+	end
+
+	local unit_pos = Unit.world_position(self._unit, 1)
+
+	if num_added_this_frame == 1 then
+		local real_index = add_liquid_buffer[1]
+		local liquid = self._flow[real_index]
+		local pos = liquid.position:unbox()
+		local offset_position = pos - unit_pos
+
+		Managers.state.game_session:send_rpc_clients("rpc_add_liquid", self._game_object_id, real_index, offset_position, liquid.full)
+	else
+		local game_session_manager = Managers.state.game_session
+		local game_object_id = self._game_object_id
+		local flow = self._flow
+		local real_index_send_array = ADD_LIQUID_REAL_INDEX_SEND_ARRAY
+		local offset_position_send_array = ADD_LIQUID_OFFSET_POSITION_SEND_ARRAY
+		local is_filled_send_array = ADD_LIQUID_IS_FILLED_SEND_ARRAY
+		local max_send_array_size = NetworkConstants.liquid_real_index_array_max_size
+		local send_array_i = 0
+
+		for i = 1, num_added_this_frame do
+			send_array_i = send_array_i + 1
+			local real_index = add_liquid_buffer[i]
+			local liquid = flow[real_index]
+			local pos = liquid.position:unbox()
+			real_index_send_array[send_array_i] = real_index
+			offset_position_send_array[send_array_i] = pos - unit_pos
+			is_filled_send_array[send_array_i] = liquid.full
+
+			if send_array_i == max_send_array_size then
+				game_session_manager:send_rpc_clients("rpc_add_liquid_multiple", game_object_id, real_index_send_array, offset_position_send_array, is_filled_send_array)
+
+				send_array_i = 0
+			end
+		end
+
+		if send_array_i > 0 then
+			for i = send_array_i + 1, max_send_array_size do
+				is_filled_send_array[i] = nil
+				offset_position_send_array[i] = nil
+				real_index_send_array[i] = nil
+			end
+
+			game_session_manager:send_rpc_clients("rpc_add_liquid_multiple", game_object_id, real_index_send_array, offset_position_send_array, is_filled_send_array)
+		end
+	end
+
+	add_liquid_buffer[0] = 0
+end
+
 local SEND_FREQUENCY = 0.3333333333333333
 local FORCE_SEND_AMOUNT = 64
 
-LiquidAreaExtension.post_update = function (self, unit, dt, t)
+LiquidAreaExtension._handle_set_filled_syncing = function (self, t)
 	local set_filled_buffer = self._set_filled_buffer
 	local size = set_filled_buffer.size
 	local transmit_wait_t = self._transmit_wait_t

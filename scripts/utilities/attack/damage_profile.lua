@@ -274,8 +274,10 @@ DamageProfile.suppression_attack_delay = function (damage_profile, damage_profil
 	return suppression_attack_delay_or_nil
 end
 
-local DAMAGE_PROFILE_NO_LERP_VALUES = {}
 local TARGET_SETTINGS_NO_LERP_VALUES = {}
+local DAMAGE_PROFILE_NO_LERP_VALUES = {
+	current_target_settings_lerp_values = TARGET_SETTINGS_NO_LERP_VALUES
+}
 
 DamageProfile.lerp_values = function (damage_profile, attacking_unit_or_nil, target_index_or_nil)
 	if not attacking_unit_or_nil then

@@ -615,7 +615,7 @@ weapon_template.base_stats = {
 		}
 	},
 	bolter_p1_m1_control_stat = {
-		display_name = "loc_stats_display_power_stat",
+		display_name = "loc_stats_display_control_stat_ranged",
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {

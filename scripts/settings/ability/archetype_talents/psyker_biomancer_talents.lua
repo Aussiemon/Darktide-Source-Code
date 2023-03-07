@@ -154,7 +154,7 @@ local archetype_talents = {
 			}
 		},
 		psyker_2_tier_2_name_3 = {
-			description = "loc_talent_biomancer_smite_kills_add_warp_fire_desc_old",
+			description = "loc_talent_biomancer_smite_kills_add_warp_fire_desc",
 			name = "Killing an elite enemy with Smite applies one stack of warpfire to all nearby enemies.",
 			display_name = "loc_talent_biomancer_smite_kills_add_warp_fire",
 			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_2_3_b",
@@ -296,8 +296,12 @@ local archetype_talents = {
 				cooldown = talent_settings.combat_ability_1.cooldown_reduction_percent * 100
 			},
 			special_rule = {
-				special_rule_name = "psyker_biomancer_restore_cooldown_per_soul",
-				identifier = "psyker_biomancer_restore_cooldown_per_soul"
+				identifier = {
+					"psyker_biomancer_restore_cooldown_per_soul"
+				},
+				special_rule_name = {
+					"psyker_biomancer_restore_cooldown_per_soul"
+				}
 			}
 		},
 		psyker_2_tier_6_name_2 = {

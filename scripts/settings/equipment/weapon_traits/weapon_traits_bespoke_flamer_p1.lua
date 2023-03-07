@@ -24,22 +24,22 @@ templates.weapon_trait_bespoke_flamer_p1_faster_reload_on_empty_clip = {
 	weapon_trait_bespoke_flamer_p1_faster_reload_on_empty_clip = {
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.05
+				[stat_buffs.reload_speed] = 0.18
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.075
+				[stat_buffs.reload_speed] = 0.2
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.1
+				[stat_buffs.reload_speed] = 0.22
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.125
+				[stat_buffs.reload_speed] = 0.24
 			}
 		}
 	}

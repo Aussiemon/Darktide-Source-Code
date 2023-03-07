@@ -50,10 +50,11 @@ ChargeActionModule.fixed_update = function (self, dt, t, charge_duration_overrid
 end
 
 local DEFAULT_RESET_CHARGE_ACTION_KINDS = {
-	unwield = true,
 	unaim = true,
+	unwield = true,
 	vent_warp_charge = true,
 	reload_state = true,
+	unwield_to_specific = true,
 	reload_shotgun = true
 }
 local DEFAULT_INTERUPT_REASONS = {

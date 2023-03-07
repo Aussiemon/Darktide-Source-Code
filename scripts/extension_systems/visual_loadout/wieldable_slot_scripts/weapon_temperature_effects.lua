@@ -69,14 +69,6 @@ WeaponTemperatureEffects.update = function (self, unit, dt, t)
 	end
 
 	self:_update_wwise_source_parameter(parameter_value)
-
-	local weapon_template = self._weapon_template
-	local weapon_temperature_settings = weapon_template.weapon_temperature_settings
-	local barrel_threshold = weapon_temperature_settings and weapon_temperature_settings.barrel_threshold or BARREL_THRESHOLD
-	local barrel_value = math.clamp01((parameter_value - barrel_threshold) / (1 - barrel_threshold))
-	barrel_value = math.ease_sine(barrel_value)
-
-	self._equipment_component.send_component_event(self._slot, "set_barrel_overheat", barrel_value)
 end
 
 WeaponTemperatureEffects._update_temperature_parameter = function (self, action_settings, dt, t)

@@ -323,6 +323,8 @@ MissionBoardView._update_can_start_mission = function (self)
 			self:_set_info_text("warning", Localize("loc_mission_board_cannot_private_match"))
 
 			is_locked = true
+		else
+			self:_set_info_text("info", nil)
 		end
 	else
 		self:_set_info_text("info", nil)
