@@ -92,15 +92,13 @@ TelemetryEvents.player_inventory = function (self, player)
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.client_disconnected = function (self, player, reason)
+TelemetryEvents.client_disconnected = function (self, player, info)
 	local event = TelemetryEvent:new(SOURCE, player:telemetry_subject(), "client_disconnected", {
 		game = player:telemetry_game_session(),
 		gameplay = self._session.gameplay
 	})
 
-	event:set_data({
-		reason = reason
-	})
+	event:set_data(info)
 	event:set_revision(1)
 	self._manager:register_event(event)
 end

@@ -215,7 +215,6 @@ PartyImmateriumMissionSessionBoot.update = function (self, dt)
 				self:_create_connection()
 				self:_set_state(STATES.ready)
 			else
-				Crashify.print_exception("PartyImmateriumMissionSessionBoot", "Failed to join lobby due to missing host_peer_id")
 				_info("Failed to join lobby due to missing host_peer_id")
 				self:_failed("failed_joining_lobby_no_host_peer")
 			end

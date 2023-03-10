@@ -1,4 +1,3 @@
-local ErrorCodes = require("scripts/managers/error/error_codes")
 local PartyImmateriumMember = require("scripts/managers/party_immaterium/party_immaterium_member")
 local PartyImmateriumConnection = require("scripts/managers/party_immaterium/party_immaterium_connection")
 local PartyImmateriumMemberMyself = require("scripts/managers/party_immaterium/party_immaterium_member_myself")
@@ -11,6 +10,7 @@ local PartyConstants = require("scripts/settings/network/party_constants")
 local MatchmakingNotificationHandler = require("scripts/multiplayer/matchmaking_notification_handler")
 local PartyImmateriumManagerTestify = GameParameters.testify and require("scripts/managers/party_immaterium/party_immaterium_manager_testify")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local ImmateriumMissionMatchmakingError = require("scripts/managers/error/errors/immaterium_mission_matchmaking_error")
 local Promise = require("scripts/foundation/utilities/promise")
 local PartyImmateriumManager = class("PartyImmateriumManager")
 
@@ -1056,18 +1056,10 @@ PartyImmateriumManager._mission_matchmaking_aborted = function (self, reason)
 		local info_string = Localize("loc_matchmaking_cancelled")
 
 		Managers.event:trigger("event_add_notification_message", "default", info_string, nil, UISoundEvents.notification_matchmaking_failed)
+		_info("Mission Matchmaking aborted, fail reason: %s", reason)
 	else
-		local error_code = ErrorCodes.get_error_code_string_from_reason(reason)
-		local info_string = Localize("loc_matchmaking_failed", true, {
-			error_code = error_code
-		})
-
-		Managers.event:trigger("event_add_notification_message", "alert", {
-			text = info_string
-		}, nil, UISoundEvents.notification_matchmaking_failed)
+		Managers.error:report_error(ImmateriumMissionMatchmakingError:new(reason))
 	end
-
-	_info("Mission Matchmaking aborted, fail reason: %s", reason)
 end
 
 PartyImmateriumManager.ready_voting_completed = function (self)

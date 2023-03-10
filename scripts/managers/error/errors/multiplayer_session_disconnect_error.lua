@@ -16,6 +16,10 @@ MultiplayerSessionDisconnectError.init = function (self, error_source, error_rea
 	end
 
 	self._log_message = string.format("source: %s, reason: %s, error_details: %s", error_source, error_reason, error_details)
+
+	if ErrorCodes.should_report_to_crashify(error_reason) then
+		Crashify.print_exception("MultiplayerSessionDisconnectError", error_reason)
+	end
 end
 
 MultiplayerSessionDisconnectError.level = function (self)

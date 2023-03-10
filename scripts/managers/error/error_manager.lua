@@ -32,15 +32,25 @@ local function _log_error(error_object)
 end
 
 local function _notify_error(error_object)
+	local notification_text = nil
 	local loc_title = error_object:loc_title()
-	local title = Localize(loc_title)
-	local loc_description, loc_description_params, string_format = error_object:loc_description()
-	local string_format = string_format or "%s: %s"
-	local description = Localize(loc_description, loc_description_params ~= nil, loc_description_params)
+
+	if loc_title then
+		local title = Localize(loc_title)
+		local loc_description, loc_description_params, string_format = error_object:loc_description()
+		string_format = string_format or "%s: %s"
+		local description = Localize(loc_description, loc_description_params ~= nil, loc_description_params)
+		notification_text = string.format(string_format, title, description)
+	else
+		local loc_description, loc_description_params, _ = error_object:loc_description()
+		notification_text = Localize(loc_description, loc_description_params ~= nil, loc_description_params)
+	end
+
+	local sound_event = error_object.sound_event and error_object:sound_event()
 
 	Managers.event:trigger("event_add_notification_message", "alert", {
-		text = string.format(string_format, title, description)
-	})
+		text = notification_text
+	}, nil, sound_event)
 end
 
 local function _notify_popup(error_object)

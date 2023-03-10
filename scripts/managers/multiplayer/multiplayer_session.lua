@@ -162,14 +162,6 @@ MultiplayerSession.client_disconnected = function (self, channel_id, peer_id, ga
 		loading_manager:remove_client(channel_id)
 	end
 
-	if server_manager then
-		for _, player in pairs(Managers.player:players_at_peer(peer_id)) do
-			if player:is_human_controlled() then
-				Managers.telemetry_events:client_disconnected(player, game_reason or engine_reason)
-			end
-		end
-	end
-
 	local removed_players_data = {}
 
 	self:_remove_remote_players(peer_id, removed_players_data)
@@ -281,6 +273,13 @@ MultiplayerSession.disconnected_from_host = function (self, is_error, source, re
 		reason = reason,
 		error_details = optional_error_details
 	}
+
+	if Managers.telemetry_events then
+		for _, player in pairs(Managers.player:players_at_peer(Network.peer_id())) do
+			Managers.telemetry_events:client_disconnected(player, self._disconnection_info)
+		end
+	end
+
 	self._state = self.STATES.dead
 	local host_peer_id = self._joined_host_peer_id
 

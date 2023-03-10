@@ -38,6 +38,9 @@ local ErrorCodesLookup = {
 	slot_reserve_rejected = {
 		code = 1013
 	},
+	afk = {
+		code = 1014
+	},
 	nonexisting_channel = {
 		code = 2001
 	},
@@ -110,6 +113,9 @@ local ErrorCodesLookup = {
 	failed_joining_lobby_no_host_peer = {
 		code = 3011
 	},
+	mission_not_found = {
+		code = 3012
+	},
 	hot_join_party_hub_failed = {
 		code = 4001
 	},
@@ -132,6 +138,7 @@ local ErrorCodesLookup = {
 		code = 4007
 	},
 	failed_handshake_timeout = {
+		report_to_crashify = true,
 		code = 4008
 	},
 	failed_mission_not_healthy = {
@@ -148,17 +155,30 @@ local ErrorCodesLookup = {
 	}
 }
 local ErrorCodes = {
-	get_error_code_string_from_reason = function (error_string)
+	_config_from_error_string = function (error_string)
 		local error_string_lower = string.lower(error_string)
-		local error_data = ErrorCodesLookup[error_string_lower]
-		error_data = error_data or ErrorCodesLookup.unknown_error
-		local error_code = error_data.code
-		local error_code_string = Localize("loc_error_code_with_line_break", nil, {
-			error_code = error_code
-		})
+		local error_config = ErrorCodesLookup[error_string_lower]
+		error_config = error_config or ErrorCodesLookup.unknown_error
 
-		return error_code_string
+		return error_config
 	end
 }
+
+ErrorCodes.get_error_code_string_from_reason = function (error_string)
+	local error_config = ErrorCodes._config_from_error_string(error_string)
+	local error_code = error_config.code
+	local error_code_string = Localize("loc_error_code_with_line_break", true, {
+		error_code = error_code
+	})
+
+	return error_code_string
+end
+
+ErrorCodes.should_report_to_crashify = function (error_string)
+	local error_config = ErrorCodes._config_from_error_string(error_string)
+	local report_to_crashify = not not error_config.report_to_crashify
+
+	return report_to_crashify
+end
 
 return ErrorCodes
