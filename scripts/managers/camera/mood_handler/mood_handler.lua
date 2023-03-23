@@ -103,12 +103,15 @@ MoodHandler.update_active_moods = function (self, mood_data)
 end
 
 MoodHandler._update_sounds = function (self, added_moods, removing_moods, removed_moods, moods_data)
+	local player = self._player
+	local wwise_world = self._wwise_world
+
 	for added_mood, _ in pairs(added_moods) do
 		local added_mood_settings = moods[added_mood]
 		local sound_start_event = added_mood_settings.sound_start_event
 
 		if sound_start_event then
-			WwiseWorld.trigger_resource_event(self._wwise_world, sound_start_event)
+			WwiseWorld.trigger_resource_event(wwise_world, sound_start_event)
 		end
 
 		local looping_sound_start_events = added_mood_settings.looping_sound_start_events
@@ -120,7 +123,7 @@ MoodHandler._update_sounds = function (self, added_moods, removing_moods, remove
 				end
 
 				local sound_event = looping_sound_start_events[i]
-				local _, source_id = WwiseWorld.trigger_resource_event(self._wwise_world, sound_event)
+				local _, source_id = WwiseWorld.trigger_resource_event(wwise_world, sound_event)
 				self._sfx_source_ids[added_mood][i][sound_event] = source_id
 			end
 		end
@@ -133,8 +136,8 @@ MoodHandler._update_sounds = function (self, added_moods, removing_moods, remove
 		if sound_stop_event then
 			local sound_stop_event_func = removed_mood_settings.sound_stop_event_func
 
-			if not sound_stop_event_func or sound_stop_event_func(self._player.player_unit) then
-				WwiseWorld.trigger_resource_event(self._wwise_world, sound_stop_event)
+			if not sound_stop_event_func or sound_stop_event_func(player.player_unit) then
+				WwiseWorld.trigger_resource_event(wwise_world, sound_stop_event)
 			end
 		end
 
@@ -144,7 +147,7 @@ MoodHandler._update_sounds = function (self, added_moods, removing_moods, remove
 			for i = 1, #looping_sound_stop_events do
 				local sound_event = looping_sound_stop_events[i]
 
-				WwiseWorld.trigger_resource_event(self._wwise_world, sound_event)
+				WwiseWorld.trigger_resource_event(wwise_world, sound_event)
 			end
 		end
 	end
@@ -152,17 +155,16 @@ MoodHandler._update_sounds = function (self, added_moods, removing_moods, remove
 	for mood_type, mood_data in pairs(moods_data) do
 		if mood_data.status == mood_status.active then
 			local mood = moods[mood_type]
-			local source_parameters = mood.source_parameters
+			local source_parameter_funcs = mood.source_parameter_funcs
 
-			if source_parameters then
-				for i = 1, #source_parameters do
-					local source_parameter = source_parameters[i]
-					local value = mood.source_parameter_func(self._player)
+			if source_parameter_funcs then
+				for i = 1, #source_parameter_funcs do
 					local looping_sound_start_events = mood.looping_sound_start_events
 					local sound_event_id = looping_sound_start_events[i]
 					local source_id = self._sfx_source_ids[mood_type][i][sound_event_id]
+					local func = source_parameter_funcs[i]
 
-					WwiseWorld.set_source_parameter(self._wwise_world, source_id, source_parameter, value)
+					func(wwise_world, source_id, player)
 				end
 			end
 		end
@@ -179,6 +181,7 @@ MoodHandler._spawn_particles = function (self, particle_name)
 end
 
 MoodHandler._update_particles = function (self, added_moods, removing_moods, removed_moods, moods_data)
+	local player = self._player
 	local world = self._world
 
 	for added_mood, _ in pairs(added_moods) do
@@ -254,24 +257,21 @@ MoodHandler._update_particles = function (self, added_moods, removing_moods, rem
 	for mood_type, mood_data in pairs(moods_data) do
 		if mood_data.status == mood_status.active then
 			local mood = moods[mood_type]
-			local particles_material_scalars = mood.particles_material_scalars
+			local particle_material_scalar_funcs = mood.particle_material_scalar_funcs
 
-			if particles_material_scalars then
-				for i = 1, #particles_material_scalars do
+			if particle_material_scalar_funcs then
+				for i = 1, #particle_material_scalar_funcs do
 					if not self._particle_material_scalar_values[mood_type][i] then
 						self._particle_material_scalar_values[mood_type][i] = {}
 					end
 
-					local particles_material_scalar = particles_material_scalars[i]
-					local last_value = self._particle_material_scalar_values[mood_type][i][particles_material_scalar]
-					local value = particles_material_scalar.scalar_func(self._player, last_value)
-					self._particle_material_scalar_values[mood_type][i][particles_material_scalar] = value
-					local on_screen_cloud_name = particles_material_scalar.on_screen_cloud_name
-					local on_screen_variable_name = particles_material_scalar.on_screen_variable_name
 					local on_screen_effect_id = self._looping_particles[mood_type][i]
+					local values = self._particle_material_scalar_values[mood_type][i]
 
 					if on_screen_effect_id then
-						World.set_particles_material_scalar(world, on_screen_effect_id, on_screen_cloud_name, on_screen_variable_name, value)
+						local func = particle_material_scalar_funcs[i]
+
+						func(world, on_screen_effect_id, player, values)
 					end
 				end
 			end

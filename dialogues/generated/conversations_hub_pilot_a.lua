@@ -42,10 +42,10 @@ local conversations_hub_pilot_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_pilot_a__hub_idle_conversation_five_b_01"
+			[1.0] = "loc_pilot_a__hub_idle_conversation_fifteen_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.866958
+			[1.0] = 4.981271
 		},
 		sound_event_weights = {
 			[1.0] = 1

@@ -87,7 +87,7 @@ local insertion_caret_size = {
 	input_field_height - (input_field_margins[2] + input_field_margins[4])
 }
 local slug_formatted_message_color = message_color[2] .. "," .. message_color[3] .. "," .. message_color[4]
-local message_presentation_format = "{# color([channel_color],255);}[author_name]:  {# color(" .. slug_formatted_message_color .. ",255)}[message_text]"
+local message_presentation_format = "{#color([channel_color],255);}[author_name]:  {# color(" .. slug_formatted_message_color .. ",255)}[message_text]{#reset()}"
 local no_leading_space_languages = table.enum("ja", "ko", "zh-cn", "zh-tw")
 local idle_timeout = 0
 local inactivity_timeout = 5

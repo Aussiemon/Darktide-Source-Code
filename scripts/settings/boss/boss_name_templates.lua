@@ -217,7 +217,7 @@ local boss_name_templates = {
 	plague_ogryn = "loc_plague_ogryn_name",
 	daemonhost = "loc_daemonhost_name",
 	beast_of_nurgle = "loc_breed_display_name_chaos_beast_of_nurgle",
-	chaos_spawn = "*UNLOCALIZED* chaos_spawn *UNLOCALIZED*"
+	chaos_spawn = "WORK IN PROGRESS CHAOS SPAWN"
 }
 
 return settings("BossNameTemplates", boss_name_templates)

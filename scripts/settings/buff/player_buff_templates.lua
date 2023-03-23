@@ -5,6 +5,8 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
+local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
+local Stamina = require("scripts/utilities/attack/stamina")
 local buff_proc_events = BuffSettings.proc_events
 local buff_stat_buffs = BuffSettings.stat_buffs
 local special_rules = SpecialRulesSetting.special_rules
@@ -55,6 +57,7 @@ templates.knocked_down_damage_tick = {
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
 	hud_priority = 1,
 	class_name = "interval_buff",
+	is_negative = true,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		template_data.health_extension = ScriptUnit.extension(unit, "health_system")
@@ -179,7 +182,7 @@ templates.weakspot_kill_reload_speed = {
 	check_proc_func = CheckProcFunctions.on_weakspot_kill
 }
 templates.coherency_toughness_regen = {
-	hud_priority = 1,
+	hud_priority = 0,
 	predicted = false,
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_coherence_buff_hud",
 	max_stacks = 4,
@@ -215,10 +218,25 @@ templates.coherency_toughness_regen = {
 	end
 }
 templates.sprint_with_stamina_buff = {
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_sprint_buff_hud",
 	predicted = false,
-	hud_priority = 1,
 	class_name = "buff",
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_sprint_buff_hud"
+	hud_priority = math.huge,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local specialization = unit_data_extension:specialization()
+		template_data.specialization_stamina_template = specialization.stamina
+		template_data.stamina_component = unit_data_extension:read_component("stamina")
+		template_data.sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
+	end,
+	conditional_stat_buffs_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local current_stamina, _ = Stamina.current_and_max_value(unit, template_data.stamina_component, template_data.specialization_stamina_template)
+		local is_sprinting = Sprint.is_sprinting(template_data.sprint_character_state_component)
+
+		return is_sprinting and current_stamina > 0
+	end
 }
 templates.no_toughness_damage_buff = {
 	predicted = false,

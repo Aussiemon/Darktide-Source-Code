@@ -4869,6 +4869,26 @@ local function generate_blueprints_function(grid_size, optional_item)
 					style.description.size[1] = description_size[1] or style.description.size[1]
 					style.description.size[2] = description_size[2] or style.description.size[2]
 				end
+
+				style.icon.material_values.overlay = 0
+
+				if element.trait_category then
+					Managers.data_service.crafting:trait_sticker_book(element.trait_category):next(function (seen_traits)
+						if seen_traits then
+							for seen_trait_name, status in pairs(seen_traits) do
+								if seen_trait_name == trait_item.name and status ~= nil then
+									local trait_status = status[trait_rarity]
+
+									if trait_status == "unseen" then
+										style.icon.material_values.overlay = 1
+
+										break
+									end
+								end
+							end
+						end
+					end)
+				end
 			end,
 			update = function (parent, widget, input_service, dt, t, ui_renderer)
 				return

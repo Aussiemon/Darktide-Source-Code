@@ -57,6 +57,34 @@ damage_templates.melee_fighter_default = {
 	ogryn_disorientation_type = "ogryn_medium",
 	melee_toughness_multiplier = 2,
 	stagger_category = "melee",
+	toughness_factor_spillover_modifier = 0.5,
+	interrupt_alternate_fire = true,
+	disorientation_type = "medium",
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod
+	},
+	power_distribution = {
+		attack = 40,
+		impact = 10
+	},
+	cleave_distribution = {
+		attack = 1,
+		impact = 1
+	},
+	force_look_function = ForcedLookSettings.look_functions.medium,
+	push_template = push_templates.medium,
+	ogryn_push_template = push_templates.medium,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+damage_templates.horde_melee_default = {
+	ogryn_disorientation_type = "ogryn_medium",
+	melee_toughness_multiplier = 2,
+	stagger_category = "melee",
 	interrupt_alternate_fire = true,
 	disorientation_type = "medium",
 	armor_damage_modifier = {
@@ -351,7 +379,7 @@ damage_templates.chaos_spawn_combo = {
 		impact = crit_impact_armor_mod
 	},
 	power_distribution = {
-		attack = 50,
+		attack = 35,
 		impact = 50
 	},
 	cleave_distribution = {
@@ -386,6 +414,39 @@ damage_templates.monster_slam = {
 	},
 	power_distribution = {
 		attack = 80,
+		impact = 50
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25
+	},
+	push_template = push_templates.plague_ogryn_medium,
+	ogryn_push_template = push_templates.plague_ogryn_light,
+	force_look_function = ForcedLookSettings.look_functions.heavy,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+damage_templates.chaos_spawn_claw = {
+	block_cost_multiplier = 2.5,
+	disorientation_type = "heavy",
+	melee_toughness_multiplier = 4,
+	ogryn_disorientation_type = "ogryn_heavy",
+	stagger_category = "melee",
+	toughness_multiplier = 2,
+	interrupt_alternate_fire = true,
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod
+	},
+	crit_mods = {
+		attack = crit_armor_mod,
+		impact = crit_impact_armor_mod
+	},
+	power_distribution = {
+		attack = 60,
 		impact = 50
 	},
 	cleave_distribution = {
@@ -467,9 +528,9 @@ damage_templates.chaos_plague_ogryn_catapult = {
 	}
 }
 damage_templates.chaos_spawn_tentacle = {
-	block_cost_multiplier = 10,
+	block_cost_multiplier = 1,
 	stagger_category = "melee",
-	melee_toughness_multiplier = 10,
+	melee_toughness_multiplier = 2,
 	toughness_multiplier = 2,
 	interrupt_alternate_fire = true,
 	armor_damage_modifier = {
@@ -1239,7 +1300,7 @@ damage_templates.poxwalker_explosion = {
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 0,
 						[armor_types.void_shield] = 0,
-						[armor_types.prop_armor] = 0
+						[armor_types.prop_armor] = 1
 					},
 					impact = {
 						[armor_types.unarmored] = 2,
@@ -1263,7 +1324,7 @@ damage_templates.poxwalker_explosion = {
 						[armor_types.super_armor] = 0,
 						[armor_types.disgustingly_resilient] = 0,
 						[armor_types.void_shield] = 0,
-						[armor_types.prop_armor] = 0
+						[armor_types.prop_armor] = 1
 					},
 					impact = {
 						[armor_types.unarmored] = 2,
@@ -1370,7 +1431,7 @@ damage_templates.poxwalker_explosion_close = {
 						[armor_types.super_armor] = 1,
 						[armor_types.disgustingly_resilient] = 5,
 						[armor_types.void_shield] = 0,
-						[armor_types.prop_armor] = 0
+						[armor_types.prop_armor] = 1
 					},
 					impact = {
 						[armor_types.unarmored] = 2,
@@ -1394,7 +1455,7 @@ damage_templates.poxwalker_explosion_close = {
 						[armor_types.super_armor] = 1,
 						[armor_types.disgustingly_resilient] = 5,
 						[armor_types.void_shield] = 0,
-						[armor_types.prop_armor] = 0
+						[armor_types.prop_armor] = 1
 					},
 					impact = {
 						[armor_types.unarmored] = 2,
@@ -1510,7 +1571,7 @@ overrides.renegade_rifleman_single_shot = {
 }
 damage_templates.assaulter_auto_burst = {
 	disorientation_type = "ranged_auto_light",
-	toughness_multiplier = 4,
+	toughness_multiplier = 3,
 	stagger_category = "ranged",
 	suppression_value = 0.75,
 	ogryn_disorientation_type = "ogryn_light",
@@ -1585,7 +1646,7 @@ overrides.assaulter_las_burst = {
 }
 damage_templates.shocktrooper_shotgun = {
 	ogryn_disorientation_type = "ogryn_heavy",
-	toughness_multiplier = 3,
+	toughness_multiplier = 2,
 	stagger_category = "ranged",
 	on_depleted_toughness_function_override_name = "spill_over",
 	suppression_value = 5,
@@ -1640,7 +1701,7 @@ damage_templates.shocktrooper_shotgun = {
 		}
 	},
 	power_distribution = {
-		attack = 10,
+		attack = 7,
 		impact = 0.25
 	},
 	cleave_distribution = {
@@ -2789,7 +2850,7 @@ damage_templates.bulwark_shield_push = {
 		impact = crit_impact_armor_mod
 	},
 	power_distribution = {
-		attack = 0.04,
+		attack = 0,
 		impact = 0.5
 	},
 	cleave_distribution = {
@@ -2988,7 +3049,7 @@ damage_templates.chaos_hound_push = {
 		impact = flat_one_armor_mod
 	},
 	power_distribution = {
-		attack = 0.001,
+		attack = 0,
 		impact = 20
 	},
 	cleave_distribution = {
@@ -3284,6 +3345,19 @@ damage_templates.mutator_corruption = {
 		}
 	}
 }
+damage_templates.mutator_gas_normal_damage = {
+	toughness_multiplier = 0.75,
+	stagger_category = "ranged",
+	power_distribution = {
+		attack = 1,
+		impact = 4
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
 damage_templates.beast_of_nurgle_slime_liquid = {
 	ogryn_disorientation_type = "corruption",
 	toughness_multiplier = 2,
@@ -3468,6 +3542,50 @@ damage_templates.beast_of_nurgle_self_gib = {
 		800
 	},
 	gibbing_power = gibbing_power.impossible,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+damage_templates.toxic_gas_mutator = {
+	stagger_category = "melee",
+	ogryn_disorientation_type = "corruption",
+	toughness_multiplier = 2,
+	disorientation_type = "corruption",
+	ignore_depleting_toughness = true,
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+			[armor_types.prop_armor] = 0
+		},
+		impact = {
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+			[armor_types.prop_armor] = 0
+		}
+	},
+	power_distribution = {
+		attack = 1,
+		impact = 0
+	},
+	cleave_distribution = {
+		attack = 1,
+		impact = 0
+	},
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default

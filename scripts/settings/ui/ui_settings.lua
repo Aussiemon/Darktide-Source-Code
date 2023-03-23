@@ -705,6 +705,14 @@ local ui_settings = {
 			display_name_pattern = "loc_weapon_pattern_name_forcesword_p1",
 			display_name = "loc_forcesword_p1_m1"
 		},
+		forcesword_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_forcesword_p1",
+			display_name = "loc_forcesword_p1_m2"
+		},
+		forcesword_p1_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_forcesword_p1",
+			display_name = "loc_forcesword_p1_m3"
+		},
 		ogryn_club_p1_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_ogryn_club_p1",
 			display_name = "loc_ogryn_club_p1_m1"
@@ -712,6 +720,14 @@ local ui_settings = {
 		ogryn_club_p2_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_ogryn_club_p2",
 			display_name = "loc_ogryn_club_p2_m1"
+		},
+		ogryn_club_p2_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_club_p2",
+			display_name = "loc_ogryn_club_p2_m2"
+		},
+		ogryn_club_p2_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_club_p2",
+			display_name = "loc_ogryn_club_p2_m3"
 		},
 		ogryn_combatblade_p1_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_ogryn_combatblade_p1",
@@ -741,9 +757,17 @@ local ui_settings = {
 			display_name_pattern = "loc_weapon_pattern_name_powersword_p1",
 			display_name = "loc_powersword_p1_m1"
 		},
+		powersword_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_powersword_p1",
+			display_name = "loc_powersword_p1_m2"
+		},
 		thunderhammer_2h_p1_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_thunderhammer_2h_p1",
 			display_name = "loc_thunderhammer_2h_p1_m1"
+		},
+		thunderhammer_2h_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_thunderhammer_2h_p1",
+			display_name = "loc_thunderhammer_2h_p1_m2"
 		},
 		autogun_p1_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_autogun_p1",
@@ -857,6 +881,14 @@ local ui_settings = {
 			display_name_pattern = "loc_weapon_pattern_name_ogryn_heavystubber_p1",
 			display_name = "loc_ogryn_heavystubber_p1_m1"
 		},
+		ogryn_heavystubber_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_heavystubber_p1",
+			display_name = "loc_ogryn_heavystubber_p1_m2"
+		},
+		ogryn_heavystubber_p1_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_ogryn_heavystubber_p1",
+			display_name = "loc_ogryn_heavystubber_p1_m3"
+		},
 		ogryn_rippergun_p1_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_ogryn_rippergun_p1",
 			display_name = "loc_ogryn_rippergun_p1_m1"
@@ -884,6 +916,14 @@ local ui_settings = {
 		shotgun_p1_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_shotgun_p1",
 			display_name = "loc_shotgun_p1_m1"
+		},
+		shotgun_p1_m2 = {
+			display_name_pattern = "loc_weapon_pattern_name_shotgun_p1",
+			display_name = "loc_shotgun_p1_m2"
+		},
+		shotgun_p1_m3 = {
+			display_name_pattern = "loc_weapon_pattern_name_shotgun_p1",
+			display_name = "loc_shotgun_p1_m3"
 		},
 		stubrevolver_p1_m1 = {
 			display_name_pattern = "loc_weapon_pattern_name_stubrevolver_p1",

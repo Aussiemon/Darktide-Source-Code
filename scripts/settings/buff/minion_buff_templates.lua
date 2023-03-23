@@ -153,13 +153,14 @@ templates.daemonhost_corruption_aura = {
 	end
 }
 templates.chaos_beast_of_nurgle_hit_by_vomit = {
-	hud_priority = 1,
-	predicted = false,
 	refresh_duration_on_stack = true,
+	duration = 10,
+	predicted = false,
+	hud_priority = 1,
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
 	max_stacks = 3,
-	duration = 10,
 	class_name = "buff",
+	is_negative = true,
 	keywords = {
 		buff_keywords.beast_of_nurgle_vomit
 	},
@@ -189,6 +190,7 @@ templates.chaos_beast_of_nurgle_being_eaten = {
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
 	max_stacks = 1,
 	class_name = "interval_buff",
+	is_negative = true,
 	keywords = {
 		buff_keywords.beast_of_nurgle_vomit,
 		buff_keywords.beast_of_nurgle_liquid_immunity

@@ -61,7 +61,7 @@ end
 ActionChargeAmmo.running_action_state = function (self, t, time_in_action)
 	local action_settings = self._action_settings
 	local charge_extra_hold_time = action_settings.charge_extra_hold_time or 0
-	local charge_complete_time = self._action_module_charge_component.charge_complete_time
+	local charge_complete_time = self._charge_module:complete_time()
 
 	if t > charge_complete_time + charge_extra_hold_time then
 		return "fully_charged"

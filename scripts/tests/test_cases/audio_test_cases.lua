@@ -58,10 +58,6 @@ AudioTestCases.vo_rules_dm_forge = function ()
 
 		Testify:make_request("wait_for_state_gameplay_reached")
 
-		while not Testify:make_request("is_party_full") do
-			TestifySnippets.spawn_bot()
-		end
-
 		local result = {
 			TestifySnippets.trigger_vo_query_mission_brief("mission_forge_briefing_a", "sergeant_a"),
 			TestifySnippets.trigger_vo_query_player_look_at("mission_forge_start_banter_a", default_vo_look_at_distance, 4),
@@ -107,10 +103,6 @@ AudioTestCases.vo_rules_dm_propaganda = function ()
 		end
 
 		Testify:make_request("wait_for_state_gameplay_reached")
-
-		while not Testify:make_request("is_party_full") do
-			TestifySnippets.spawn_bot()
-		end
 
 		local result = {
 			TestifySnippets.trigger_vo_query_mission_brief("mission_propaganda_briefing_a", "sergeant_a", 3),
@@ -159,10 +151,6 @@ AudioTestCases.vo_rules_dm_stockpile = function ()
 
 		Testify:make_request("wait_for_state_gameplay_reached")
 
-		while not Testify:make_request("is_party_full") do
-			TestifySnippets.spawn_bot()
-		end
-
 		local result = {
 			TestifySnippets.trigger_vo_query_mission_brief("mission_stockpile_briefing_a", "sergeant_a"),
 			TestifySnippets.trigger_vo_query_faction_look_at("npc", "mission_stockpile_tarp_town", default_vo_look_at_distance),
@@ -205,10 +193,6 @@ AudioTestCases.vo_rules_event_kill = function ()
 
 		Testify:make_request("wait_for_state_gameplay_reached")
 
-		while not Testify:make_request("is_party_full") do
-			TestifySnippets.spawn_bot()
-		end
-
 		local result = {
 			TestifySnippets.trigger_vo_query_mission_giver_mission_info("event_kill_kill_the_target", "explicator_a"),
 			TestifySnippets.trigger_vo_query_player_generic_vo("event_kill_target_damaged"),
@@ -237,10 +221,6 @@ AudioTestCases.vo_rules_fm_cargo = function ()
 		end
 
 		Testify:make_request("wait_for_state_gameplay_reached")
-
-		while not Testify:make_request("is_party_full") do
-			TestifySnippets.spawn_bot()
-		end
 
 		local result = {
 			TestifySnippets.trigger_vo_query_mission_brief("mission_cargo_briefing_a", "sergeant_a"),
@@ -281,10 +261,6 @@ AudioTestCases.vo_rules_hm_cartel = function ()
 		end
 
 		Testify:make_request("wait_for_state_gameplay_reached")
-
-		while not Testify:make_request("is_party_full") do
-			TestifySnippets.spawn_bot()
-		end
 
 		local result = {
 			TestifySnippets.trigger_vo_query_mission_brief("mission_cartel_brief_one", "sergeant_a"),
@@ -329,10 +305,6 @@ AudioTestCases.vo_rules_hm_strain = function ()
 		end
 
 		Testify:make_request("wait_for_state_gameplay_reached")
-
-		while not Testify:make_request("is_party_full") do
-			TestifySnippets.spawn_bot()
-		end
 
 		local result = {
 			TestifySnippets.trigger_vo_query_mission_brief("mission_strain_briefing_a", "sergeant_a"),
@@ -383,10 +355,6 @@ AudioTestCases.vo_rules_km_enforcer = function ()
 
 		Testify:make_request("wait_for_state_gameplay_reached")
 
-		while not Testify:make_request("is_party_full") do
-			TestifySnippets.spawn_bot()
-		end
-
 		local result = {
 			TestifySnippets.trigger_vo_query_mission_brief("mission_enforcer_briefing_a", "sergeant_a", 3),
 			TestifySnippets.trigger_vo_query_player_look_at("mission_enforcer_start_banter_a", default_vo_look_at_distance, 4),
@@ -433,10 +401,6 @@ AudioTestCases.vo_rules_km_station = function ()
 
 		Testify:make_request("wait_for_state_gameplay_reached")
 
-		while not Testify:make_request("is_party_full") do
-			TestifySnippets.spawn_bot()
-		end
-
 		local result = {
 			TestifySnippets.trigger_vo_query_mission_brief("mission_station_briefing_a", "explicator_a"),
 			TestifySnippets.trigger_vo_query_player_look_at("mission_station_start_banter_a", default_vo_look_at_distance),
@@ -482,10 +446,6 @@ AudioTestCases.vo_rules_lm_rails = function ()
 		end
 
 		Testify:make_request("wait_for_state_gameplay_reached")
-
-		while not Testify:make_request("is_party_full") do
-			TestifySnippets.spawn_bot()
-		end
 
 		local result = {
 			TestifySnippets.trigger_vo_query_mission_brief("mission_rails_briefing_a", "sergeant_a", 3),

@@ -1464,6 +1464,9 @@ weapon_template.base_stats = {
 			action_attack_special = {
 				damage_trait_templates.combatsword_dps_stat
 			},
+			action_attack_special_2 = {
+				damage_trait_templates.combatsword_dps_stat
+			},
 			action_right_light_pushfollow = {
 				damage_trait_templates.combatsword_dps_stat
 			},

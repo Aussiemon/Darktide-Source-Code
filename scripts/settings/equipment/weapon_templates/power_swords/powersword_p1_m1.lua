@@ -1450,11 +1450,11 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	secondary = {
-		display_name = "loc_gestalt_tank",
-		type = "tank",
+		display_name = "loc_gestalt_linesman",
+		type = "linesman",
 		attack_chain = {
-			"tank",
-			"tank"
+			"linesman",
+			"linesman"
 		}
 	},
 	special = {

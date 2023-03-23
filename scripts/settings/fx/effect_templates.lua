@@ -35,6 +35,7 @@ _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_cap
 _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_captain_void_shield")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_executor_chainaxe")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_flamer_approach")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_flamer_mutator")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_flamer")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_grenadier_grenade")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/renegade_gunner_hellgun")

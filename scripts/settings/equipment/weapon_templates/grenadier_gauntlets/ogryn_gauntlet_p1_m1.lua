@@ -1231,7 +1231,7 @@ weapon_template.actions = {
 		},
 		herding_template = HerdingTemplates.ogryn_punch,
 		damage_profile = DamageProfileTemplates.special_grenadier_gauntlet_tank,
-		damage_type = damage_types.ogryn_punch,
+		damage_type = damage_types.blunt_heavy,
 		explosion_template = ExplosionTemplates.special_gauntlet_grenade,
 		explosion_offset = Vector3Box(0, 2.25, 0)
 	},

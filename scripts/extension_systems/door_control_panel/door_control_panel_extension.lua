@@ -8,14 +8,18 @@ DoorControlPanelExtension.init = function (self, extension_init_context, unit, e
 	self._door_extension = nil
 	self._animation_extension = nil
 	self._light_active = nil
+	self._interaction_interlude = 0
+	self._last_interaction = -100
 end
 
-DoorControlPanelExtension.setup_from_component = function (self, start_active)
+DoorControlPanelExtension.setup_from_component = function (self, start_active, interaction_interlude)
 	if start_active then
 		self._state = STATES.active
 	else
 		self._state = STATES.inactive
 	end
+
+	self._interaction_interlude = interaction_interlude
 end
 
 DoorControlPanelExtension.extensions_ready = function (self, world, unit)
@@ -38,7 +42,7 @@ DoorControlPanelExtension.on_gameplay_post_init = function (self, level)
 		self:_play_anim("deactivate")
 	end
 
-	self:_update_appearance(self._state)
+	self:_update_appearance()
 end
 
 DoorControlPanelExtension.hot_join_sync = function (self, unit, sender)
@@ -49,6 +53,10 @@ DoorControlPanelExtension.is_active = function (self)
 	local is_active = self._state == STATES.active
 
 	return is_active
+end
+
+DoorControlPanelExtension.is_on_hold = function (self)
+	return Managers.time:time("gameplay") < self._last_interaction + self._interaction_interlude
 end
 
 DoorControlPanelExtension.set_active = function (self, active)
@@ -69,7 +77,7 @@ DoorControlPanelExtension._activate = function (self)
 	self._state = STATES.active
 
 	self:_sync_server_state(nil, self._state)
-	self:_update_appearance(self._state)
+	self:_update_appearance()
 end
 
 DoorControlPanelExtension._deactivate = function (self)
@@ -82,7 +90,7 @@ DoorControlPanelExtension._deactivate = function (self)
 	self._state = STATES.inactive
 
 	self:_sync_server_state(nil, self._state)
-	self:_update_appearance(self._state)
+	self:_update_appearance()
 end
 
 DoorControlPanelExtension.register_door = function (self, door_extension)
@@ -101,24 +109,20 @@ DoorControlPanelExtension.toggle_door_state = function (self, interactor_unit)
 	self:_play_anim("handle_push")
 end
 
+DoorControlPanelExtension.trigger_interlude = function (self)
+	self._last_interaction = Managers.time:time("gameplay")
+end
+
 DoorControlPanelExtension._activate_lightbulbs = function (self, val)
 	if self._light_active == val then
 		return
 	end
 
-	local color = nil
-
 	if val then
-		color = Vector3(0, 255, 0)
-
 		Unit.flow_event(self._unit, "lua_lightbulb_on")
 	else
-		color = Vector3(255, 0, 0)
-
 		Unit.flow_event(self._unit, "lua_lightbulb_off")
 	end
-
-	Unit.set_vector3_for_material(self._unit, "basic_il_red", "emissive_color", color)
 
 	self._light_active = val
 end
@@ -127,8 +131,8 @@ DoorControlPanelExtension._play_anim = function (self, anim_event)
 	self._animation_extension:anim_event(anim_event)
 end
 
-DoorControlPanelExtension._update_appearance = function (self, state)
-	local is_active = state == STATES.active
+DoorControlPanelExtension._update_appearance = function (self)
+	local is_active = self._state == STATES.active
 
 	if is_active then
 		self:_activate_lightbulbs(true)
@@ -156,7 +160,7 @@ end
 DoorControlPanelExtension.rpc_sync_door_control_panel_state = function (self, new_state)
 	self._state = new_state
 
-	self:_update_appearance(self._state)
+	self:_update_appearance()
 end
 
 return DoorControlPanelExtension

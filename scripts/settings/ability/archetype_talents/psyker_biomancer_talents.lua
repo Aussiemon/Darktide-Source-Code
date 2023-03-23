@@ -126,7 +126,7 @@ local archetype_talents = {
 			}
 		},
 		psyker_2_tier_2_name_1 = {
-			description = "loc_talent_biomancer_damage_from_warp_charge_desc",
+			description = "loc_talent_biomancer_all_damage_from_warp_charge_desc",
 			name = "Gain damage with warp attacks based on your current warp charge amount.",
 			display_name = "loc_talent_biomancer_damage_from_warp_charge",
 			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_1_3",
@@ -261,16 +261,16 @@ local archetype_talents = {
 			}
 		},
 		psyker_2_tier_5_name_2 = {
-			description = "loc_talent_biomancer_warpfire_on_max_souls_desc",
+			description = "loc_talent_biomancer_warpfire_self_spread_portion_of_stacks_desc",
 			name = "While you have maximum souls, gaining a soul instead applies a stack of warpfire to a nearby enemy, prioritizing elite enemies.",
-			display_name = "loc_talent_biomancer_warpfire_on_max_souls",
+			display_name = "loc_talent_biomancer_warpfire_spread",
 			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_1_2",
 			format_values = {
-				stacks = talent_settings.offensive_2_2.num_stacks
+				stacks = talent_settings.offensive_2_2.stacks_to_share
 			},
 			special_rule = {
-				special_rule_name = "psyker_biomancer_warpfire_on_max_souls",
-				identifier = "psyker_biomancer_warpfire_on_max_souls"
+				special_rule_name = "psyker_biomancer_spread_warpfire_on_kill",
+				identifier = "psyker_biomancer_spread_warpfire_on_kill"
 			}
 		},
 		psyker_2_tier_5_name_3 = {
@@ -288,19 +288,22 @@ local archetype_talents = {
 			}
 		},
 		psyker_2_tier_6_name_1 = {
-			description = "loc_talent_biomancer_combat_ability_cooldown_per_soul_desc",
+			description = "loc_talent_biomancer_combat_ability_cooldown_per_soul_increased_souls_desc",
 			name = "Using Unleash the warp removes all souls and reduces the cooldown for each soul removed.",
 			display_name = "loc_talent_biomancer_combat_ability_cooldown_per_soul",
 			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_6_1",
 			format_values = {
+				stacks = 2,
 				cooldown = talent_settings.combat_ability_1.cooldown_reduction_percent * 100
 			},
 			special_rule = {
 				identifier = {
-					"psyker_biomancer_restore_cooldown_per_soul"
+					"psyker_biomancer_restore_cooldown_per_soul",
+					"psyker_biomancer_increased_soul_generation"
 				},
 				special_rule_name = {
-					"psyker_biomancer_restore_cooldown_per_soul"
+					"psyker_biomancer_restore_cooldown_per_soul",
+					"psyker_biomancer_increased_soul_generation"
 				}
 			}
 		},

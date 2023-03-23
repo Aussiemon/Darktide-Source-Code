@@ -6,7 +6,7 @@ local SLOT_POCKETABLE = "slot_pocketable"
 local Pocketable = {}
 local _drop_pickup = nil
 
-Pocketable.drop_pocketable = function (t, is_server, player_unit, inventory_component, visual_loadout_extension)
+Pocketable.drop_pocketable = function (t, physics_world, is_server, player_unit, inventory_component, visual_loadout_extension)
 	if not PlayerUnitVisualLoadout.slot_equipped(inventory_component, visual_loadout_extension, SLOT_POCKETABLE) then
 		return
 	end
@@ -24,6 +24,12 @@ Pocketable.drop_pocketable = function (t, is_server, player_unit, inventory_comp
 			if nav_position then
 				position = nav_position
 			end
+		end
+
+		local hit, hit_position = PhysicsWorld.raycast(physics_world, position + Vector3.up() * 0.5, Vector3.down(), 1, "closest", "collision_filter", "filter_player_place_deployable")
+
+		if hit then
+			position = hit_position
 		end
 
 		_drop_pickup(item_name, position, rotation)

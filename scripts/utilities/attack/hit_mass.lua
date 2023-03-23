@@ -1,8 +1,12 @@
 local Armor = require("scripts/utilities/attack/armor")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
+local buff_keywords = BuffSettings.keywords
 local HitMass = {}
 local _target_breed, _hit_mass_from_character, _hit_mass_from_object = nil
 
-HitMass.target_hit_mass = function (attacker_unit, target_unit, use_reduced_hit_mass)
+HitMass.target_hit_mass = function (attacker_unit, target_unit, hit_weakspot)
+	local attacker_buff_extension = ScriptUnit.has_extension(attacker_unit, "buff_system")
+	local use_reduced_hit_mass = attacker_buff_extension and attacker_buff_extension:has_keyword(buff_keywords.use_reduced_hit_mass)
 	local hit_mass = nil
 	local breed = _target_breed(target_unit)
 
@@ -12,19 +16,22 @@ HitMass.target_hit_mass = function (attacker_unit, target_unit, use_reduced_hit_
 		hit_mass = _hit_mass_from_object(target_unit)
 	end
 
-	local attacker_buff_extension = ScriptUnit.has_extension(attacker_unit, "buff_system")
-
 	if attacker_buff_extension then
 		local stat_buffs = attacker_buff_extension:stat_buffs()
 		local consumed_hit_mass_modifier = stat_buffs.consumed_hit_mass_modifier or 1
+		local consumed_hit_mass_modifier_on_weakspot_hit = stat_buffs.consumed_hit_mass_modifier_on_weakspot_hit or 1
 		hit_mass = hit_mass * consumed_hit_mass_modifier
+
+		if hit_weakspot then
+			hit_mass = hit_mass * consumed_hit_mass_modifier_on_weakspot_hit
+		end
 	end
 
 	return hit_mass
 end
 
-HitMass.consume_hit_mass = function (attacker_unit, target_unit, hit_mass_budget_attack, hit_mass_budget_impact, use_reduced_hit_mass)
-	local target_hit_mass = HitMass.target_hit_mass(attacker_unit, target_unit, use_reduced_hit_mass)
+HitMass.consume_hit_mass = function (attacker_unit, target_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot)
+	local target_hit_mass = HitMass.target_hit_mass(attacker_unit, target_unit, hit_weakspot)
 	local new_hit_mass_budget_attack = math.max(0, hit_mass_budget_attack - target_hit_mass)
 	local new_hit_mass_budget_impact = math.max(0, hit_mass_budget_impact - target_hit_mass)
 
@@ -80,6 +87,10 @@ function _hit_mass_from_character(unit, breed, use_reduced_hit_mass)
 	end
 
 	local hit_mass = use_reduced_hit_mass and breed.reduced_hit_mass or breed.hit_mass
+
+	if type(hit_mass) == "table" then
+		hit_mass = Managers.state.difficulty:get_table_entry_by_challenge(hit_mass)
+	end
 
 	return hit_mass
 end

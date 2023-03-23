@@ -513,6 +513,18 @@ PacingManager.add_trickle_horde = function (self, template)
 end
 
 PacingManager.add_pacing_modifiers = function (self, modify_settings)
+	local set_resistance = modify_settings.set_resistance
+
+	if set_resistance then
+		Managers.state.difficulty:set_resistance(set_resistance)
+	end
+
+	local set_challenge = modify_settings.set_challenge
+
+	if set_challenge then
+		Managers.state.difficulty:set_challenge(set_challenge)
+	end
+
 	local modify_resistance = modify_settings.modify_resistance
 
 	if modify_resistance then
@@ -543,6 +555,18 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 		self._specials_pacing:set_max_alive_specials_multiplier(max_alive_specials_multiplier)
 	end
 
+	local chance_of_coordinated_strike = modify_settings.chance_of_coordinated_strike
+
+	if chance_of_coordinated_strike then
+		self._specials_pacing:set_chance_of_coordinated_strike(chance_of_coordinated_strike)
+	end
+
+	local max_of_same_override = modify_settings.max_of_same_override
+
+	if max_of_same_override then
+		self._specials_pacing:set_max_of_same_override(max_of_same_override)
+	end
+
 	local monsters_per_travel_distance = modify_settings.monsters_per_travel_distance
 	local monster_breed_name = modify_settings.monster_breed_name
 	local monster_spawn_type = modify_settings.monster_spawn_type
@@ -562,6 +586,24 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 
 	if num_encampments_override and encampments_override_chance then
 		self._roamer_pacing:num_encampments_override(num_encampments_override, encampments_override_chance)
+	end
+
+	local override_all_roamer_packs = modify_settings.override_all_roamer_packs
+
+	if override_all_roamer_packs then
+		self._roamer_pacing:override_all_roamer_packs(override_all_roamer_packs)
+	end
+
+	local override_num_roamer_range = modify_settings.override_num_roamer_range
+
+	if override_num_roamer_range then
+		self._roamer_pacing:override_num_roamer_range(override_num_roamer_range)
+	end
+
+	local override_roamer_packs = modify_settings.override_roamer_packs
+
+	if override_roamer_packs then
+		self._roamer_pacing:override_roamer_packs(override_roamer_packs)
 	end
 end
 

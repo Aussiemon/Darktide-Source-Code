@@ -4,12 +4,13 @@ local wield_inputs = PlayerCharacterConstants.wield_inputs
 local forcesword_p1_m1_melee_action_input_setup = {
 	action_inputs = {
 		start_attack = {
-			buffer_time = 0.75,
+			buffer_time = 0.3,
 			max_queue = 1,
+			reevaluation_time = 0.18,
 			input_sequence = {
 				{
 					value = true,
-					input = "action_one_pressed"
+					input = "action_one_hold"
 				}
 			}
 		},
@@ -159,15 +160,6 @@ local forcesword_p1_m1_melee_action_input_setup = {
 					value = true,
 					hold_input = "weapon_extra_release",
 					input = "weapon_extra_release"
-				}
-			}
-		},
-		find_target = {
-			buffer_time = 0.1,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_hold"
 				}
 			}
 		},

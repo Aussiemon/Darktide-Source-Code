@@ -1,6 +1,6 @@
-local WorldInteractionSettings = require("scripts/managers/world_interaction/world_interaction_settings")
 local FoliageInteraction = require("scripts/managers/world_interaction/foliage_interaction")
-WorldInteractionManager = class("WorldInteractionManager")
+local WorldInteractionSettings = require("scripts/managers/world_interaction/world_interaction_settings")
+local WorldInteractionManager = class("WorldInteractionManager")
 
 WorldInteractionManager.init = function (self, world)
 	self._world = world

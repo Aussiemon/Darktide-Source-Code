@@ -22,6 +22,8 @@ local hud_element_crosshair_settings = {
 		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_dot",
 		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_cross",
 		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_shotgun",
+		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_shotgun_wide",
+		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_shotgun_slug",
 		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_projectile_drop",
 		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_bfg",
 		"scripts/ui/hud/elements/crosshair/templates/crosshair_template_spray_n_pray",

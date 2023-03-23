@@ -3,7 +3,6 @@ local dialogue_lookup_concept_names = {
 		"aleterted_outnumbered",
 		"ammo_hog",
 		"assault",
-		"call_backup",
 		"catching_net",
 		"combat_ability",
 		"combat_story_talk",

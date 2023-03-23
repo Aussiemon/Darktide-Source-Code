@@ -1219,6 +1219,113 @@ local template = {
 				"flow_event",
 				flow_event_name = "event_luggable_monster_dead"
 			}
+		},
+		event_scavenge_escape_1 = {
+			{
+				"spawn_by_points",
+				spawner_group = "scavenge_escape_a",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				points = 14,
+				breed_tags = {
+					{
+						"melee",
+						"horde"
+					}
+				}
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "scavenge_escape_b",
+				points = 6,
+				breed_tags = {
+					{
+						"melee",
+						"roamer"
+					}
+				}
+			},
+			{
+				"start_terror_trickle",
+				delay = 3,
+				limit_spawners = 2,
+				spawner_group = "scavenge_escape_trickle",
+				template_name = "standard_melee"
+			},
+			{
+				"delay",
+				duration = 5
+			},
+			{
+				"try_inject_special_minion",
+				spawner_group = "scavenge_escape_special",
+				max_breed_amount = 1,
+				points = 8,
+				breed_tags = {
+					{
+						"special"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 5
+			},
+			{
+				"continue_when",
+				duration = 60,
+				condition = function ()
+					return TerrorEventQueries.num_aggroed_minions_in_level() < 4
+				end
+			},
+			{
+				"delay",
+				duration = 10
+			},
+			{
+				"start_terror_event",
+				start_event_name = "event_scavenge_escape_1"
+			}
+		},
+		event_scavenge_escape_2 = {
+			{
+				"spawn_by_points",
+				spawner_group = "scavenge_escape_d",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				points = 5,
+				breed_tags = {
+					{
+						"melee",
+						"horde"
+					}
+				}
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "scavenge_escape_c",
+				points = 5,
+				breed_tags = {
+					{
+						"melee",
+						"horde"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 5
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "scavenge_escape_d",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				points = 3,
+				breed_tags = {
+					{
+						"close",
+						"roamer"
+					}
+				}
+			}
 		}
 	}
 }

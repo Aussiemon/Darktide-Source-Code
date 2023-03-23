@@ -23,9 +23,9 @@ explosion_templates.default_gauntlet_grenade = {
 		1.75
 	},
 	close_damage_profile = DamageProfileTemplates.close_gauntlet_demolitions,
-	close_damage_type = damage_types.frag,
+	close_damage_type = damage_types.grenade_frag,
 	damage_profile = DamageProfileTemplates.default_gauntlet_demolitions,
-	damage_type = damage_types.frag,
+	damage_type = damage_types.grenade_frag,
 	explosion_area_suppression = {
 		suppression_falloff = true,
 		instant_aggro = true,
@@ -62,9 +62,9 @@ explosion_templates.special_gauntlet_grenade = {
 		2
 	},
 	close_damage_profile = DamageProfileTemplates.close_special_gauntlet_demolitions,
-	close_damage_type = damage_types.frag,
+	close_damage_type = damage_types.grenade_frag,
 	damage_profile = DamageProfileTemplates.default_gauntlet_demolitions,
-	damage_type = damage_types.frag,
+	damage_type = damage_types.grenade_frag,
 	explosion_area_suppression = {
 		suppression_falloff = true,
 		instant_aggro = true,

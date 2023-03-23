@@ -4,15 +4,16 @@ local combat_ranges = {
 	config = {
 		far = {
 			{
-				locked_in_melee_distance = 3,
+				locked_in_melee_distance = 7,
 				require_line_of_sight = true,
-				distance = 3,
-				sticky_time = 4,
+				distance = 5,
+				activate_slot_system = true,
 				distance_operator = "lesser",
 				switch_combat_range = "melee",
+				sticky_time = 4,
 				target_weapon_type_distance = {
-					ranged = 2,
-					melee = 3
+					ranged = 4,
+					melee = 6
 				}
 			},
 			{
@@ -26,15 +27,16 @@ local combat_ranges = {
 		},
 		close = {
 			{
-				locked_in_melee_distance = 3,
+				locked_in_melee_distance = 7,
 				require_line_of_sight = true,
-				distance = 3,
-				sticky_time = 4,
+				distance = 5,
+				activate_slot_system = true,
 				distance_operator = "lesser",
 				switch_combat_range = "melee",
+				sticky_time = 4,
 				target_weapon_type_distance = {
-					ranged = 2,
-					melee = 3
+					ranged = 4,
+					melee = 6
 				}
 			},
 			{

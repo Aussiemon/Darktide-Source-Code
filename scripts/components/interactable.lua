@@ -18,7 +18,6 @@ Interactable.init = function (self, unit, is_server)
 		local ui_interaction_type = self:get_data(unit, "ui_interaction_type")
 		local display_start_event = self:get_data(unit, "display_start_event")
 		local interaction_length = self:get_data(unit, "interaction_length")
-		local network_sync = self:get_data(unit, "network_sync")
 		local interaction_icon = self:get_data(unit, "interaction_icon")
 		local shared_interaction = self:get_data(unit, "shared_interaction")
 		local only_once = self:get_data(unit, "only_once")
@@ -44,7 +43,6 @@ Interactable.init = function (self, unit, is_server)
 
 		local interaction_context = {
 			duration = interaction_length,
-			network_sync = network_sync,
 			shared_interaction = shared_interaction,
 			only_once = only_once,
 			interactor_item_to_equip = interactor_item_to_equip,
@@ -308,6 +306,7 @@ Interactable.component_data = {
 			"scanning",
 			"servo_skull_activator",
 			"servo_skull",
+			"setup_breach_charge",
 			"setup_decoding",
 			"training_ground",
 			"vendor",
@@ -339,6 +338,7 @@ Interactable.component_data = {
 			"scanning",
 			"servo_skull_activator",
 			"servo_skull",
+			"setup_breach_charge",
 			"setup_decoding",
 			"training_ground",
 			"vendor",
@@ -424,11 +424,6 @@ Interactable.component_data = {
 		ui_type = "check_box",
 		value = true,
 		ui_name = "Start Active (don't touch)"
-	},
-	network_sync = {
-		ui_type = "check_box",
-		value = true,
-		ui_name = "Network synchronized"
 	},
 	interactor_item_to_equip = {
 		ui_type = "resource",

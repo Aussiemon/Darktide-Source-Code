@@ -195,14 +195,15 @@ RoamerPacing._create_zones = function (self, spawn_point_positions)
 				zones[#zones + 1] = {}
 			else
 				local spawn_positions = spawn_point_positions[i]
-				local num_roamers_range = density_setting.num_roamers_range[current_faction]
+				local num_roamers_range = self._num_roamer_range_override or density_setting.num_roamers_range[current_faction]
 				local num_to_spawn = self:_random(num_roamers_range[1], num_roamers_range[2])
 				local sub_zones, total_roamer_slots = self:_create_sub_zones(spawn_positions, density_setting, group_id, num_to_spawn)
 				local packs = density_setting.packs
 
 				if not chosen_packs then
 					pack_pick = pack_pick or self:_random(1, #packs)
-					chosen_packs = packs[pack_pick][current_faction]
+					local pack_override = self._all_pack_override or self._packs_override and self._packs_override[density_type]
+					chosen_packs = pack_override and pack_override[current_faction] or packs[pack_pick][current_faction]
 				end
 
 				local ambience_sfx = RoamerSettings.ambience_sfx[density_type]
@@ -972,6 +973,18 @@ end
 RoamerPacing.num_encampments_override = function (self, value, chance)
 	self._num_encampments_override = value
 	self._override_chance_of_encampment = chance
+end
+
+RoamerPacing.override_all_roamer_packs = function (self, packs_override)
+	self._all_pack_override = packs_override
+end
+
+RoamerPacing.override_roamer_packs = function (self, packs_override)
+	self._packs_override = packs_override
+end
+
+RoamerPacing.override_num_roamer_range = function (self, num_roamer_range_override)
+	self._num_roamer_range_override = num_roamer_range_override
 end
 
 RoamerPacing.current_faction = function (self)

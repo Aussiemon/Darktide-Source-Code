@@ -1,4 +1,5 @@
 local TestifySnippets = require("scripts/tests/testify_snippets")
+local FlythroughCoordinates = require("scripts/tests/test_cases/config/flythrough_coordinates")
 WorldTestCases = {
 	load_mission = function (case_settings)
 		Testify:run_case(function (dt, t)

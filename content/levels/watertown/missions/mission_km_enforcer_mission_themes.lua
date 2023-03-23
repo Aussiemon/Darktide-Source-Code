@@ -2,6 +2,9 @@ local mission_themes = {
 	darkness = {
 		"content/levels/watertown/missions/km_enforcer_themes/darkness_01/theme_darkness_01_km_enforcer"
 	},
+	ember = {
+		"content/levels/watertown/missions/km_enforcer_themes/ember_01/theme_ember_01_km_enforcer"
+	},
 	ventilation_purge = {
 		"content/levels/watertown/missions/km_enforcer_themes/ventilation_purge_01/theme_ventilation_purge_01_km_enforcer"
 	},

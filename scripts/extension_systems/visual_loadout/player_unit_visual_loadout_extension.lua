@@ -54,11 +54,13 @@ PlayerUnitVisualLoadoutExtension.init = function (self, extension_init_context, 
 	end
 
 	local world = extension_init_context.world
+	local physics_world = extension_init_context.physics_world
 	local unit_spawner = Managers.state.unit_spawner
 	local extension_manager = Managers.state.extension
 	self._item_definitions = MasterItems.get_cached()
 	local equipment_component = EquipmentComponent:new(world, self._item_definitions, unit_spawner, unit, extension_manager, optional_item_streaming_settings)
 	self._equipment_component = equipment_component
+	self._physics_world = physics_world
 	local equipment = equipment_component.initialize_equipment(slot_configuration)
 	self._equipment = equipment
 	self._locally_wielded_slot = nil
@@ -92,8 +94,8 @@ PlayerUnitVisualLoadoutExtension.init = function (self, extension_init_context, 
 		is_server = is_server,
 		game_session = game_object_data_or_game_session,
 		first_person_unit = first_person_unit,
-		world = extension_init_context.world,
-		physics_world = extension_init_context.physics_world,
+		world = world,
+		physics_world = physics_world,
 		wwise_world = extension_init_context.wwise_world,
 		visual_loadout_extension = self,
 		unit_data_extension = unit_data_extension,
@@ -479,7 +481,7 @@ PlayerUnitVisualLoadoutExtension.destroy = function (self)
 					local unit = self._unit
 					local inventory_component = self._inventory_component
 
-					Pocketable.drop_pocketable(latest_frame, is_server, unit, inventory_component, self)
+					Pocketable.drop_pocketable(latest_frame, self._physics_world, is_server, unit, inventory_component, self)
 				end
 			else
 				self:_unequip_item_from_slot(slot_name, false, latest_frame)

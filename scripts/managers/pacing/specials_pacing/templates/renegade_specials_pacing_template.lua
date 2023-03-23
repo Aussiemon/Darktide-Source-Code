@@ -67,6 +67,16 @@ local DEFAULT_MAX_OF_SAME = {
 	renegade_flamer = 2,
 	cultist_flamer = 2
 }
+local HIGH_MAX_OF_SAME = {
+	cultist_mutant = 4,
+	chaos_hound = 2,
+	renegade_grenadier = 3,
+	chaos_poxwalker_bomber = 3,
+	renegade_netgunner = 2,
+	renegade_sniper = 3,
+	renegade_flamer = 2,
+	cultist_flamer = 2
+}
 local FACTION_BOUND_BREEDS = {
 	flamer = {
 		cultist = "cultist_flamer",
@@ -182,7 +192,7 @@ local specials_pacing_template = {
 			first_spawn_timer_modifer = 0.5,
 			speed_running_required_challenge_rating = 50,
 			rushing_distance = 60,
-			coordinated_strike_num_breeds = 2,
+			coordinated_strike_num_breeds = 3,
 			num_required_speed_running_checks = 4,
 			chance_for_coordinated_strike = 0.1,
 			speed_running_required_distance = 12,
@@ -237,7 +247,7 @@ local specials_pacing_template = {
 			first_spawn_timer_modifer = 0.5,
 			speed_running_required_challenge_rating = 50,
 			rushing_distance = 50,
-			coordinated_strike_num_breeds = 3,
+			coordinated_strike_num_breeds = 4,
 			num_required_speed_running_checks = 4,
 			chance_for_coordinated_strike = 0.125,
 			speed_running_required_distance = 12,
@@ -292,7 +302,7 @@ local specials_pacing_template = {
 			first_spawn_timer_modifer = 0.4,
 			speed_running_required_challenge_rating = 40,
 			rushing_distance = 45,
-			coordinated_strike_num_breeds = 4,
+			coordinated_strike_num_breeds = 5,
 			num_required_speed_running_checks = 4,
 			chance_for_coordinated_strike = 0.15,
 			speed_running_required_distance = 10,
@@ -303,7 +313,7 @@ local specials_pacing_template = {
 				90,
 				230
 			},
-			max_of_same = DEFAULT_MAX_OF_SAME,
+			max_of_same = HIGH_MAX_OF_SAME,
 			min_distances_from_target = DEFAULT_MIN_DISTANCES_FROM_TARGET,
 			breeds = DEFAULT_BREEDS,
 			disabler_target_alone_player_chance = DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE,
@@ -347,7 +357,7 @@ local specials_pacing_template = {
 			first_spawn_timer_modifer = 0.4,
 			speed_running_required_challenge_rating = 40,
 			rushing_distance = 40,
-			coordinated_strike_num_breeds = 4,
+			coordinated_strike_num_breeds = 6,
 			num_required_speed_running_checks = 4,
 			chance_for_coordinated_strike = 0.15,
 			speed_running_required_distance = 12,
@@ -358,7 +368,7 @@ local specials_pacing_template = {
 				70,
 				200
 			},
-			max_of_same = DEFAULT_MAX_OF_SAME,
+			max_of_same = HIGH_MAX_OF_SAME,
 			min_distances_from_target = DEFAULT_MIN_DISTANCES_FROM_TARGET,
 			breeds = DEFAULT_BREEDS,
 			disabler_target_alone_player_chance = DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE,

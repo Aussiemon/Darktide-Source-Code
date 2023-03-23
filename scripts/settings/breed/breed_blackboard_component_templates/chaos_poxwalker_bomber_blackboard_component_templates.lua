@@ -23,6 +23,7 @@ local chaos_poxwalker_bomber = {
 table.merge(chaos_poxwalker_bomber, base_template)
 
 chaos_poxwalker_bomber.death = {
+	fuse_timer = "number",
 	force_instant_ragdoll = "boolean",
 	damage_profile_name = "string",
 	herding_template_name = "string",

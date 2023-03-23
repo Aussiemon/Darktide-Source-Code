@@ -81,5 +81,27 @@ templates.mutator_corruption_over_time = {
 		end
 	end
 }
+local CORRUPTION_PERMANENT_POWER_LEVEL_2 = {
+	5,
+	8,
+	10,
+	12,
+	15
+}
+templates.mutator_corruption_over_time_2 = {
+	interval = 7,
+	class_name = "interval_buff",
+	target = buff_targets.player_only,
+	interval_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if template_context.is_server and HEALTH_ALIVE[unit] then
+			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(CORRUPTION_PERMANENT_POWER_LEVEL_2)
+			local damage_profile = DamageProfileTemplates.mutator_corruption
+
+			Attack.execute(unit, damage_profile, "power_level", power_level, "damage_type", CORRUPTION_DAMAGE_TYPE, "attack_type", attack_types.buff)
+		end
+	end
+}
 
 return templates

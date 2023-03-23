@@ -50,7 +50,7 @@ PlayerManager.set_network = function (self, is_server, network_event_delegate)
 end
 
 PlayerManager.unset_network = function (self)
-	if not self._is_server then
+	if not self._is_server and self._network_event_delegate then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
 end
@@ -181,6 +181,10 @@ PlayerManager.update_time_slice_on_game_state_enter = function (self)
 end
 
 PlayerManager.on_game_state_exit = function (self, game_state_class)
+	if not self._game_state then
+		return
+	end
+
 	self._game_state = nil
 	self._game_state_mapping = nil
 	self._game_state_context = nil

@@ -4,29 +4,57 @@ local templates = {}
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
 templates.weapon_trait_bespoke_shotgun_p1_increase_power_on_close_kill = {
-	weapon_trait_bespoke_shotgun_p1_increase_power_on_close_kill = {
+	weapon_trait_bespoke_shotgun_p1_increase_power_on_close_kill_parent = {
 		{
-			active_duration = 1,
+			child_duration = 2.75,
 			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.05
 			}
 		},
 		{
-			active_duration = 1.2,
+			child_duration = 2.75,
 			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.055
 			}
 		},
 		{
-			active_duration = 1.3,
+			child_duration = 2.75,
 			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.06
 			}
 		},
 		{
-			active_duration = 1.375,
+			child_duration = 2.75,
 			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.065
+			}
+		}
+	}
+}
+templates.weapon_trait_bespoke_shotgun_p1_increase_close_damage_on_close_kill = {
+	weapon_trait_bespoke_shotgun_p1_increase_close_damage_on_close_kill_parent = {
+		{
+			child_duration = 2.75,
+			stat_buffs = {
+				[stat_buffs.damage_near] = 0.04
+			}
+		},
+		{
+			child_duration = 2.75,
+			stat_buffs = {
+				[stat_buffs.damage_near] = 0.06
+			}
+		},
+		{
+			child_duration = 2.75,
+			stat_buffs = {
+				[stat_buffs.damage_near] = 0.8
+			}
+		},
+		{
+			child_duration = 2.75,
+			stat_buffs = {
+				[stat_buffs.damage_near] = 0.1
 			}
 		}
 	}
@@ -103,30 +131,6 @@ templates.weapon_trait_bespoke_shotgun_p1_power_bonus_on_hitting_single_enemy_wi
 		{
 			proc_stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.15
-			}
-		}
-	}
-}
-templates.weapon_trait_bespoke_shotgun_p1_increase_close_damage_on_close_kill = {
-	weapon_trait_bespoke_shotgun_p1_increase_close_damage_on_close_kill = {
-		{
-			stat_buffs = {
-				[stat_buffs.damage_near] = 0.04
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.damage_near] = 0.06
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.damage_near] = 0.8
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.damage_near] = 0.1
 			}
 		}
 	}

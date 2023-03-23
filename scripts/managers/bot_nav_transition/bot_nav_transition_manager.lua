@@ -31,6 +31,8 @@ BotNavTransitionManager.on_gameplay_post_init = function (self, level)
 end
 
 BotNavTransitionManager.destroy = function (self)
+	self:clear_all_transitions()
+
 	local traverse_logic = self._traverse_logic
 
 	if traverse_logic then
@@ -46,6 +48,14 @@ BotNavTransitionManager.clear_temp_transitions = function (self)
 		if not data.permanent then
 			self:_destroy_transition(transitions, i)
 		end
+	end
+end
+
+BotNavTransitionManager.clear_all_transitions = function (self)
+	local transitions = self._bot_nav_transitions
+
+	for i, data in pairs(transitions) do
+		self:_destroy_transition(transitions, i)
 	end
 end
 
@@ -248,6 +258,10 @@ end
 BotNavTransitionManager.allow_nav_tag_layer = function (self, layer_name, layer_allowed)
 	local layer_id = Managers.state.nav_mesh:nav_tag_layer_id(layer_name)
 	local nav_tag_cost_table = self._nav_tag_cost_table
+
+	if not nav_tag_cost_table then
+		return
+	end
 
 	if layer_allowed then
 		GwNavTagLayerCostTable.allow_layer(nav_tag_cost_table, layer_id)

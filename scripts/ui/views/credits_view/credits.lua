@@ -4181,10 +4181,6 @@ local Credits = {
 				type = "person"
 			},
 			{
-				text = "Lionbridge",
-				type = "person"
-			},
-			{
 				text = "Daniel Smagowski",
 				type = "person"
 			},
@@ -4206,10 +4202,6 @@ local Credits = {
 			},
 			{
 				text = "Daniel Dudek",
-				type = "person"
-			},
-			{
-				text = "Suntech",
 				type = "person"
 			},
 			{
@@ -4245,6 +4237,117 @@ local Credits = {
 			{
 				text = "Gopinath Reddy",
 				type = "person"
+			},
+			{
+				text = " ",
+				type = "header"
+			},
+			{
+				text = "Lionbridge",
+				type = "header"
+			},
+			{
+				text = "loc_credits_view_business_development_director",
+				localized = true,
+				type = "title"
+			},
+			{
+				text = "Jairo Lopes",
+				type = "person"
+			},
+			{
+				text = " ",
+				type = "header"
+			},
+			{
+				text = "loc_credits_view_certification_test_lead",
+				localized = true,
+				type = "title"
+			},
+			{
+				text = "Daniel Smagowski",
+				type = "person"
+			},
+			{
+				text = "Szymon Stajszczak",
+				type = "person"
+			},
+			{
+				text = " ",
+				type = "header"
+			},
+			{
+				text = "loc_credits_view_certification_test_engineers",
+				localized = true,
+				type = "title"
+			},
+			{
+				text = "Mateusz Rajchert",
+				type = "person"
+			},
+			{
+				text = "Adrian Pfaffenhausen",
+				type = "person"
+			},
+			{
+				text = "Paweł Janczuk",
+				type = "person"
+			},
+			{
+				text = "Adam Kopczyński",
+				type = "person"
+			},
+			{
+				text = "Wojciech Kania",
+				type = "person"
+			},
+			{
+				text = "Agata Pisarczyk",
+				type = "person"
+			},
+			{
+				text = "Jakub Tucholski",
+				type = "person"
+			},
+			{
+				text = "Hubert Dąbrowski",
+				type = "person"
+			},
+			{
+				text = "Wiktoria Maśkiewicz",
+				type = "person"
+			},
+			{
+				text = "Daniel Dudek",
+				type = "person"
+			},
+			{
+				text = "Iga Karbowska",
+				type = "person"
+			},
+			{
+				text = "Oskar Dobrowolski",
+				type = "person"
+			},
+			{
+				text = "Michał Drożdż",
+				type = "person"
+			},
+			{
+				text = "Jakub Łoboda",
+				type = "person"
+			},
+			{
+				text = " ",
+				type = "header"
+			},
+			{
+				text = "Sun Technologies, Inc",
+				type = "header"
+			},
+			{
+				text = " ",
+				type = "header"
 			},
 			{
 				text = "OF3D",

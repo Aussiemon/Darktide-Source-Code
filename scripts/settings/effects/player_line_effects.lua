@@ -247,8 +247,8 @@ local line_effects = {
 		vfx_width = 0.025,
 		emitters = {
 			vfx = {
-				default = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke",
-				start = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke"
+				default = "content/fx/particles/weapons/rifles/shotgun/shotgun_slug_trail",
+				start = "content/fx/particles/weapons/rifles/shotgun/shotgun_slug_trail"
 			},
 			interval = {
 				distance = 5,
@@ -257,13 +257,10 @@ local line_effects = {
 		}
 	},
 	shotgun_incendiary_trail = {
-		keep_aligned = true,
-		vfx = "content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_projectile",
-		vfx_width = 0.025,
 		emitters = {
 			vfx = {
-				default = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke",
-				start = "content/fx/particles/weapons/rifles/shotgun/shotgun_trail_smoke"
+				default = "content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_trail_smoke",
+				start = "content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_trail_smoke"
 			},
 			interval = {
 				distance = 5,

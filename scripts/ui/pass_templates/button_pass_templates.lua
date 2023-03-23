@@ -331,6 +331,7 @@ ButtonPassTemplates.url_button = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
+			scale_to_material = true,
 			hdr = false,
 			color = Color.ui_terminal(255, true),
 			size_addition = {
@@ -1088,6 +1089,7 @@ ButtonPassTemplates.secondary_button = {
 		value = "content/ui/materials/frames/hover",
 		style = {
 			hdr = true,
+			scale_to_material = true,
 			color = Color.ui_terminal(255, true),
 			offset = {
 				0,
@@ -2012,6 +2014,7 @@ ButtonPassTemplates.list_button_with_background_and_icon = {
 		value = "content/ui/materials/frames/hover",
 		style = {
 			hdr = true,
+			scale_to_material = true,
 			color = Color.ui_terminal(255, true),
 			offset = {
 				0,
@@ -2310,6 +2313,7 @@ ButtonPassTemplates.list_button = {
 		value = "content/ui/materials/frames/hover",
 		style = {
 			hdr = true,
+			scale_to_material = true,
 			color = Color.ui_terminal(255, true),
 			offset = {
 				0,
@@ -2373,6 +2377,7 @@ ButtonPassTemplates.list_button_large = {
 		value = "content/ui/materials/frames/hover",
 		style = {
 			hdr = true,
+			scale_to_material = true,
 			color = Color.ui_terminal(255, true),
 			offset = {
 				0,
@@ -2432,6 +2437,7 @@ ButtonPassTemplates.list_button_large_with_info = {
 		value = "content/ui/materials/frames/hover",
 		style = {
 			hdr = true,
+			scale_to_material = true,
 			color = Color.ui_terminal(255, true),
 			offset = {
 				0,
@@ -2494,6 +2500,7 @@ ButtonPassTemplates.list_button_with_icon = {
 		value = "content/ui/materials/frames/hover",
 		style = {
 			hdr = true,
+			scale_to_material = true,
 			color = Color.ui_terminal(255, true),
 			offset = {
 				0,
@@ -2563,6 +2570,7 @@ ButtonPassTemplates.list_button_two_rows_with_icon = {
 		value = "content/ui/materials/frames/hover",
 		style = {
 			hdr = true,
+			scale_to_material = true,
 			color = Color.ui_terminal(255, true),
 			offset = {
 				0,
@@ -3327,6 +3335,7 @@ ButtonPassTemplates.settings_button = function (width, height, settings_area_wid
 			value = "content/ui/materials/frames/hover",
 			style = {
 				hdr = true,
+				scale_to_material = true,
 				color = Color.ui_terminal(255, true),
 				offset = {
 					header_width,

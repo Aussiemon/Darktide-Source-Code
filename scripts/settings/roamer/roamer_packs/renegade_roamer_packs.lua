@@ -461,6 +461,14 @@ local roamer_packs = {
 				"chaos_ogryn_gunner"
 			}
 		}
+	},
+	renegade_flamers_mutator = {
+		{
+			weight = 1,
+			breeds = {
+				"renegade_flamer_mutator"
+			}
+		}
 	}
 }
 

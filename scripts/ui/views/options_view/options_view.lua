@@ -216,7 +216,7 @@ OptionsView._setup_content_grid_scrollbar = function (self, grid, widget_id, gri
 	local widgets_by_name = self._widgets_by_name
 	local scrollbar_widget = widgets_by_name[widget_id]
 
-	grid:assign_scrollbar(scrollbar_widget, grid_pivot_scenegraph_id, grid_scenegraph_id)
+	grid:assign_scrollbar(scrollbar_widget, grid_pivot_scenegraph_id, grid_scenegraph_id, true)
 	grid:set_scrollbar_progress(0)
 end
 
@@ -846,7 +846,7 @@ OptionsView._set_tooltip_data = function (self, widget)
 			height
 		}
 		self._widgets_by_name.tooltip.offset[1] = x_pos - width * 0.8
-		self._widgets_by_name.tooltip.offset[2] = new_y - height
+		self._widgets_by_name.tooltip.offset[2] = math.max(new_y - height, 20)
 		self._widgets_by_name.tooltip.content.visible = true
 	end
 end

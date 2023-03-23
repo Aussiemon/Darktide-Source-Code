@@ -99,22 +99,22 @@ templates.weapon_trait_bespoke_stubrevolver_p1_crit_chance_based_on_aim_time = {
 templates.weapon_trait_bespoke_stubrevolver_p1_crit_chance_based_on_ammo_left = {
 	weapon_trait_bespoke_stubrevolver_p1_crit_chance_based_on_ammo_left = {
 		{
-			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.02
+			conditional_stat_buffs = {
+				[stat_buffs.critical_strike_chance] = 0.035
 			}
 		},
 		{
-			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.03
-			}
-		},
-		{
-			stat_buffs = {
+			conditional_stat_buffs = {
 				[stat_buffs.critical_strike_chance] = 0.04
 			}
 		},
 		{
-			stat_buffs = {
+			conditional_stat_buffs = {
+				[stat_buffs.critical_strike_chance] = 0.045
+			}
+		},
+		{
+			conditional_stat_buffs = {
 				[stat_buffs.critical_strike_chance] = 0.05
 			}
 		}
@@ -215,22 +215,22 @@ templates.weapon_trait_bespoke_stubrevolver_p1_followup_shots_ranged_damage = {
 templates.weapon_trait_bespoke_stubrevolver_p1_rending_on_crit = {
 	weapon_trait_bespoke_stubrevolver_p1_rending_on_crit = {
 		{
-			conditional_stat_buffs = {
+			stat_buffs = {
 				[stat_buffs.critical_strike_rending_multiplier] = 0.2
 			}
 		},
 		{
-			conditional_stat_buffs = {
+			stat_buffs = {
 				[stat_buffs.critical_strike_rending_multiplier] = 0.3
 			}
 		},
 		{
-			conditional_stat_buffs = {
+			stat_buffs = {
 				[stat_buffs.critical_strike_rending_multiplier] = 0.4
 			}
 		},
 		{
-			conditional_stat_buffs = {
+			stat_buffs = {
 				[stat_buffs.critical_strike_rending_multiplier] = 0.5
 			}
 		}

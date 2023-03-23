@@ -537,7 +537,17 @@ top_category_blueprint_arrow_style.vertical_alignment = "center"
 top_category_blueprint_arrow_style.horizontal_alignment = "right"
 top_category_blueprint_arrow_style.unfold_sound = UISoundEvents.default_dropdown_expand
 top_category_blueprint_arrow_style.fold_sound = UISoundEvents.default_dropdown_minimize
-blueprint_styles.sub_category_button = {}
+blueprint_styles.sub_category_button = {
+	bullet = {
+		offset = {}
+	},
+	bullet_active = {
+		offset = {}
+	},
+	text = {
+		offset = {}
+	}
+}
 local sub_category_blueprint_style = blueprint_styles.sub_category_button
 sub_category_blueprint_style.folded_size = {
 	0,
@@ -552,6 +562,9 @@ sub_category_blueprint_style.text = table.clone(UIFontSettings.list_button)
 local sub_category_blueprint_text_style = sub_category_blueprint_style.text
 sub_category_blueprint_text_style.font_size = 20
 sub_category_blueprint_text_style.offset[1] = 52
+sub_category_blueprint_style.bullet.offset[1] = 30
+sub_category_blueprint_style.bullet_active.offset[1] = 30
+sub_category_blueprint_style.text.offset[1] = 68
 local header_height = 54
 local header_height_margin = 12
 blueprint_styles.header = {}

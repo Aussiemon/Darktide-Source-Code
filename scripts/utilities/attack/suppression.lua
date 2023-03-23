@@ -306,6 +306,10 @@ function _apply_suppression_minion(suppressed_unit, suppression_value, suppressi
 		else
 			MinionPerception.attempt_alert(perception_extension, attacking_unit)
 		end
+
+		local target_position = Unit.world_position(attacking_unit, Unit.node(attacking_unit, "enemy_aim_target_03"))
+
+		perception_extension:set_last_los_position(attacking_unit, target_position)
 	end
 end
 

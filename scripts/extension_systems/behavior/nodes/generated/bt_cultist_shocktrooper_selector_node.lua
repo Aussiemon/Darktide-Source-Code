@@ -136,7 +136,65 @@ BtCultistShocktrooperSelectorNode.evaluate = function (self, unit, blackboard, s
 		end
 	end
 
-	local node_assault = children[7]
+	local node_melee_combat = children[7]
+	local tree_node = node_melee_combat.tree_node
+	local condition_args = tree_node.condition_args
+	local is_running = last_leaf_node_running and last_running_node == node_melee_combat
+	local condition_result = nil
+
+	repeat
+		local sub_condition_result_01, condition_result = nil
+
+		repeat
+			local sub_condition_result_01, condition_result = nil
+
+			repeat
+				local perception_component = blackboard.perception
+
+				if not is_running and perception_component.lock_target then
+					condition_result = false
+				else
+					local target_unit = perception_component.target_unit
+					condition_result = HEALTH_ALIVE[target_unit]
+				end
+			until true
+
+			sub_condition_result_01 = condition_result
+			local has_target_unit = sub_condition_result_01
+
+			if not has_target_unit then
+				condition_result = false
+			else
+				local perception_component = blackboard.perception
+				local is_aggroed = perception_component.aggro_state == "aggroed"
+				condition_result = is_aggroed
+			end
+		until true
+
+		sub_condition_result_01 = condition_result
+		local is_aggroed = sub_condition_result_01
+
+		if not is_aggroed then
+			condition_result = false
+		else
+			local behavior_component = blackboard.behavior
+			local combat_range = behavior_component.combat_range
+			local condition_combat_ranges = condition_args.combat_ranges
+			condition_result = condition_combat_ranges[combat_range]
+		end
+	until true
+
+	if condition_result then
+		local leaf_node = node_melee_combat:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+
+		if leaf_node then
+			new_running_child_nodes[node_identifier] = node_melee_combat
+
+			return leaf_node
+		end
+	end
+
+	local node_assault = children[8]
 	local tree_node = node_assault.tree_node
 	local condition_args = tree_node.condition_args
 	local is_running = last_leaf_node_running and last_running_node == node_assault
@@ -190,7 +248,7 @@ BtCultistShocktrooperSelectorNode.evaluate = function (self, unit, blackboard, s
 		return node_assault
 	end
 
-	local node_combat = children[8]
+	local node_combat = children[9]
 	local is_running = last_leaf_node_running and last_running_node == node_combat
 	local condition_result = nil
 
@@ -230,7 +288,7 @@ BtCultistShocktrooperSelectorNode.evaluate = function (self, unit, blackboard, s
 		end
 	end
 
-	local node_alerted = children[9]
+	local node_alerted = children[10]
 	local is_running = last_leaf_node_running and last_running_node == node_alerted
 	local condition_result = nil
 
@@ -266,7 +324,7 @@ BtCultistShocktrooperSelectorNode.evaluate = function (self, unit, blackboard, s
 		return node_alerted
 	end
 
-	local node_patrol = children[10]
+	local node_patrol = children[11]
 	local is_running = last_leaf_node_running and last_running_node == node_patrol
 	local condition_result = nil
 
@@ -305,7 +363,7 @@ BtCultistShocktrooperSelectorNode.evaluate = function (self, unit, blackboard, s
 		return node_patrol
 	end
 
-	local node_idle = children[11]
+	local node_idle = children[12]
 	new_running_child_nodes[node_identifier] = node_idle
 
 	return node_idle

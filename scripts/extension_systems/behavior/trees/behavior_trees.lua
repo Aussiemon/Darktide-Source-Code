@@ -34,6 +34,7 @@ _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/r
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_captain_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_executor_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_flamer_behavior_tree")
+_create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_flamer_mutator_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_grenadier_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_gunner_behavior_tree")
 _create_behavior_tree_entry("scripts/extension_systems/behavior/trees/renegade/renegade_gunner_tg_behavior_tree")

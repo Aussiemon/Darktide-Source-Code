@@ -1,7 +1,8 @@
+local BuffArgs = require("scripts/extension_systems/buff/utility/buff_args")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local MasterItems = require("scripts/backend/master_items")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_traits/weapon_trait_templates")
-local BuffArgs = require("scripts/extension_systems/buff/utility/buff_args")
 local stat_buff_types = BuffSettings.stat_buff_types
 local stat_buff_base_values = BuffSettings.stat_buff_base_values
 local Buff = class("Buff")
@@ -27,7 +28,7 @@ local function update_duration(self, template, template_data, template_context, 
 	local extra_duration = template_data.extra_duration or 0
 	local total_duration = duration + extra_duration
 	local start_time = self._start_time
-	self._duration_progress = math.clamp((total_duration - (t - start_time)) / total_duration, 0, 1)
+	self._duration_progress = math.clamp01((total_duration - (t - start_time)) / total_duration)
 
 	if t > start_time + total_duration then
 		self._finished = true
@@ -67,7 +68,7 @@ Buff.init = function (self, context, template, start_time, instance_id, ...)
 	template_context.template_override_data = template_override_data
 	self._template_data = {}
 	self._template_name = template.name
-	self._duration_progress = 0
+	self._duration_progress = 1
 	self._start_time = start_time
 	self._instance_id = instance_id
 	self._finished = false
@@ -127,7 +128,7 @@ Buff._calculate_template_override_data = function (self, template_context)
 	return override_data
 end
 
-local function _add_overrides(overrides, rarity, template_name, override_data, parent_buff_template_or_nil)
+local function _add_overrides(overrides, trait_item, rarity, template_name, override_data, parent_buff_template_or_nil)
 	for buff_name, rarity_data in pairs(overrides) do
 		local should_merge_overrides = buff_name == template_name or parent_buff_template_or_nil and parent_buff_template_or_nil == buff_name or false
 		local current_rarity_data = nil
@@ -142,6 +143,12 @@ local function _add_overrides(overrides, rarity, template_name, override_data, p
 
 		if should_merge_overrides then
 			table.merge_recursive(override_data, current_rarity_data)
+
+			local icon_small = trait_item and trait_item.icon_small
+
+			if icon_small and icon_small ~= "" then
+				override_data.item_icon = icon_small
+			end
 		end
 	end
 end
@@ -160,7 +167,7 @@ local function _add_overrides_from_item(traits, item_definitions, template_name,
 			local trait = WeaponTraitTemplates[trait_name]
 
 			if trait then
-				_add_overrides(trait, rarity, template_name, override_data, parent_buff_template_or_nil)
+				_add_overrides(trait, item, rarity, template_name, override_data, parent_buff_template_or_nil)
 			end
 		else
 			Log.warning("Buff", "Could not find item for trait %s when appplying buff %s", item_id, template_name)
@@ -173,33 +180,15 @@ Buff._calculate_override_data = function (self, override_data, item_slot_name, p
 	local template_name = template.name
 	local player = self._player
 	local profile = player:profile()
-	local debug_weapon_modifiers = profile.weapon_modifiers and profile.weapon_modifiers[item_slot_name]
-	local use_override = debug_weapon_modifiers and not not debug_weapon_modifiers.traits
+	local equiped_item = profile.loadout[item_slot_name]
+	local item_definitions = MasterItems.get_cached()
+	local traits = equiped_item and equiped_item.traits or EMPTY_TABLE
 
-	if not use_override then
-		local equiped_item = profile.loadout[item_slot_name]
-		local item_definitions = MasterItems.get_cached()
-		local traits = equiped_item and equiped_item.traits or EMPTY_TABLE
+	_add_overrides_from_item(traits, item_definitions, template_name, override_data, parent_buff_template_or_nil)
 
-		_add_overrides_from_item(traits, item_definitions, template_name, override_data, parent_buff_template_or_nil)
+	local perks = equiped_item and equiped_item.perks or EMPTY_TABLE
 
-		local perks = equiped_item and equiped_item.perks or EMPTY_TABLE
-
-		_add_overrides_from_item(perks, item_definitions, template_name, override_data, parent_buff_template_or_nil)
-	else
-		local traits = debug_weapon_modifiers and debug_weapon_modifiers.traits or EMPTY_TABLE
-
-		for i = 1, #traits do
-			local trait_data = traits[i]
-			local trait_name = trait_data.name
-			local rarity = trait_data.rarity
-			local trait = WeaponTraitTemplates[trait_name]
-
-			if trait then
-				_add_overrides(trait, rarity, template_name, override_data, parent_buff_template_or_nil)
-			end
-		end
-	end
+	_add_overrides_from_item(perks, item_definitions, template_name, override_data, parent_buff_template_or_nil)
 
 	return override_data
 end
@@ -272,48 +261,6 @@ Buff.should_remove_stack = function (self)
 	return self._should_remove_stack, last_stack
 end
 
-Buff.show_in_hud = function (self)
-	local hud_priority = self:hud_priority()
-
-	return hud_priority ~= nil
-end
-
-Buff.hud_priority = function (self)
-	local template = self._template
-
-	return template.hud_priority
-end
-
-Buff.hud_icon = function (self)
-	local template = self._template
-
-	return template.hud_icon
-end
-
-Buff.is_negative = function (self)
-	local template = self._template
-	local is_negative = template.is_negative
-
-	return not not is_negative
-end
-
-Buff.inactive = function (self)
-	local template = self._template
-	local conditional_stat_buffs_func = template.conditional_stat_buffs_func
-
-	if conditional_stat_buffs_func and not conditional_stat_buffs_func(self._template_data, self._template_context) then
-		return true
-	end
-
-	local check_active_func = template.check_active_func
-
-	if check_active_func then
-		return not check_active_func(self._template_data, self._template_context)
-	end
-
-	return false
-end
-
 Buff.instance_id = function (self)
 	return self._instance_id
 end
@@ -347,23 +294,6 @@ Buff.stat_buff_stacking_count = function (self)
 	local clamped_stack_count = math.clamp(stack_count + stack_offset, 0, max_stacks)
 
 	return clamped_stack_count
-end
-
-Buff.visual_stack_count = function (self)
-	local template = self._template
-	local use_specialization_resource = template.use_specialization_resource
-
-	if use_specialization_resource then
-		local resource = self._specialization_resource_component.current_resource
-
-		return resource
-	end
-
-	if template.visual_stack_count then
-		return template.visual_stack_count(self._template_data, self._template_context)
-	end
-
-	return self:stat_buff_stacking_count()
 end
 
 Buff.max_stacks = function (self)
@@ -448,6 +378,13 @@ Buff.duration = function (self)
 end
 
 Buff.duration_progress = function (self)
+	local template = self._template
+	local custom_duration_func = template.duration_func
+
+	if custom_duration_func then
+		return custom_duration_func(self._template_data, self._template_context)
+	end
+
 	return self._duration_progress
 end
 
@@ -605,22 +542,156 @@ Buff.destroy = function (self)
 	table.clear(self._template_data)
 end
 
-Buff.progressbar = function (self)
+Buff.template_context = function (self)
+	return self._template_context
+end
+
+Buff.has_hud = function (self)
 	local template = self._template
-	local health_bar_override_func = template.progressbar_func
+	local hide_in_hud = template.hide_icon_in_hud
+	local has_icon = self:_hud_icon() ~= nil
+	local has_hud = has_icon and not hide_in_hud
 
-	if health_bar_override_func then
-		local template_data = self._template_data
-		local template_context = self._template_context
+	return has_hud
+end
 
-		return health_bar_override_func(template_data, template_context)
+local RETURN_TABLE = {}
+
+Buff.get_hud_data = function (self)
+	local return_table = RETURN_TABLE
+
+	table.clear(return_table)
+
+	return_table.show = self:_show_in_hud()
+	return_table.is_active = self:_is_hud_active()
+	return_table.hud_icon = self:_hud_icon()
+	return_table.hud_priority = self:hud_priority()
+	local stack_count = self:visual_stack_count()
+	return_table.stack_count = stack_count
+	return_table.show_stack_count = self:_hud_show_stack_count() or stack_count > 2
+	return_table.is_negative = self:is_negative()
+	return_table.force_negative_frame = self:_force_negative_frame()
+	return_table.duration_progress = self:duration_progress()
+
+	return return_table
+end
+
+Buff._show_in_hud = function (self)
+	local visual_stack_count = self:visual_stack_count()
+
+	if visual_stack_count == 0 then
+		return false
+	end
+
+	local template = self._template
+	local template_context = self._template_context
+	local template_data = self._template_data
+	local show_in_hud_if_slot_is_wielded = template.show_in_hud_if_slot_is_wielded
+
+	if show_in_hud_if_slot_is_wielded and not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
+		return false
+	end
+
+	local always_show_in_hud = template.always_show_in_hud
+
+	if always_show_in_hud then
+		return true
+	end
+
+	local show_in_hud = self:_is_hud_active()
+
+	return show_in_hud
+end
+
+Buff._is_hud_active = function (self)
+	local template = self._template
+	local visual_stack_count = self:visual_stack_count()
+
+	if visual_stack_count == 0 then
+		return false
+	end
+
+	local always_active = template.always_active
+
+	if always_active then
+		return true
+	end
+
+	local conditional_func = template.conditional_stat_buffs_func or template.conditional_keywords_func
+
+	if conditional_func and not conditional_func(self._template_data, self._template_context) then
+		return false
+	end
+
+	local check_active_func = template.check_active_func
+
+	if check_active_func and not check_active_func(self._template_data, self._template_context) then
+		return false
+	end
+
+	return true
+end
+
+Buff._hud_show_stack_count = function (self)
+	local template = self._template
+	local max_stacks = self:max_stacks()
+	local hud_always_show_stacks = template.hud_always_show_stacks
+	local hud_always_never_stacks = template.hud_always_never_stacks
+	local show_stack_count = not hud_always_never_stacks and max_stacks and max_stacks > 1 or hud_always_show_stacks
+
+	return show_stack_count
+end
+
+Buff.hud_priority = function (self)
+	local template = self._template
+
+	return template.hud_priority or math.huge
+end
+
+Buff._hud_icon = function (self)
+	local template = self._template
+	local template_icon = template.hud_icon
+
+	if template_icon then
+		return template_icon
+	end
+
+	local template_override_data = self._template_override_data
+	local item_icon = template_override_data.item_icon
+
+	if item_icon then
+		return item_icon
 	end
 
 	return nil
 end
 
-Buff.template_context = function (self)
-	return self._template_context
+Buff._force_negative_frame = function (self)
+	return false
+end
+
+Buff.is_negative = function (self)
+	local template = self._template
+	local is_negative = template.is_negative
+
+	return not not is_negative
+end
+
+Buff.visual_stack_count = function (self)
+	local template = self._template
+	local use_specialization_resource = template.use_specialization_resource
+
+	if use_specialization_resource then
+		local resource = self._specialization_resource_component.current_resource
+
+		return resource
+	end
+
+	if template.visual_stack_count then
+		return template.visual_stack_count(self._template_data, self._template_context)
+	end
+
+	return self:stat_buff_stacking_count()
 end
 
 return Buff

@@ -1,3 +1,4 @@
+local Action = require("scripts/utilities/weapon/action")
 local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -5,6 +6,7 @@ local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
+local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
@@ -16,6 +18,7 @@ local SpecialRulesSetting = require("scripts/settings/ability/special_rules_sett
 local TalentSettings = require("scripts/settings/buff/talent_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local WarpCharge = require("scripts/utilities/warp_charge")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local ailment_effects = AilmentSettings.effects
 local attack_results = AttackSettings.attack_results
@@ -347,7 +350,7 @@ end
 
 local function souls_proc_func(params, template_data, template_context)
 	if template_data.psyker_biomancer_restore_cooldown_per_soul then
-		local num_souls = template_context.stack_count
+		local num_souls = template_data.specialization_resource_component.current_resource
 		local unit = template_context.unit
 		local ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 
@@ -416,11 +419,18 @@ templates.psyker_biomancer_base_passive = {
 		template_data.counter = 0
 	end,
 	proc_func = function (params, template_data, template_context)
-		local warp_charge_component = template_data.warp_charge_component
-		local remove_percentage = talent_settings.passive_2.warp_charge_percent
-		local unit = template_context.unit
+		template_data.proced = true
+	end,
+	update_func = function (template_data, template_context, dt, t)
+		if template_data.proced then
+			local warp_charge_component = template_data.warp_charge_component
+			local remove_percentage = talent_settings.passive_2.warp_charge_percent
+			local unit = template_context.unit
 
-		WarpCharge.decrease_immediate(remove_percentage, warp_charge_component, unit)
+			WarpCharge.decrease_immediate(remove_percentage, warp_charge_component, unit)
+
+			template_data.proced = false
+		end
 	end
 }
 templates.psyker_biomancer_coherency_damage_vs_elites = {
@@ -507,7 +517,7 @@ templates.psyker_biomancer_warp_charge_increase_force_weapon_damage = {
 	predicted = false,
 	class_name = "buff",
 	lerped_stat_buffs = {
-		[stat_buffs.force_weapon_damage] = {
+		[stat_buffs.damage] = {
 			min = talent_settings.offensive_1_1.damage_min,
 			max = talent_settings.offensive_1_1.damage
 		}
@@ -626,8 +636,6 @@ templates.psyker_biomancer_coherency_souls_on_kill = {
 		local unit = template_context.unit
 		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
 		template_data.units_with_talent = {}
-		local specialization_extension = ScriptUnit.extension(unit, "specialization_system")
-		template_data.psyker_biomancer_increased_soul_generation = specialization_extension:has_special_rule(special_rules.psyker_biomancer_increased_soul_generation)
 	end,
 	proc_func = function (params, template_data, template_context)
 		if not template_context.is_server then
@@ -664,7 +672,8 @@ templates.psyker_biomancer_coherency_souls_on_kill = {
 			end
 
 			local t = FixedFrame.get_latest_fixed_time()
-			local num_stacks = template_data.psyker_biomancer_increased_soul_generation and talent_settings.combat_ability_1.stacks or 1
+			local increased_souls = specialization_extension:has_special_rule(special_rules.psyker_biomancer_increased_soul_generation)
+			local num_stacks = increased_souls and talent_settings.combat_ability_1.stacks or 1
 
 			buff_extension:add_internally_controlled_buff_with_stacks(buff_name, num_stacks, t)
 		end
@@ -744,13 +753,41 @@ templates.psyker_biomancer_smite_vulnerable_debuff = {
 }
 templates.psyker_biomancer_block_costs_warp_charge = {
 	predicted = false,
+	hud_priority = 3,
+	hud_icon = "content/ui/textures/icons/talents/psyker_2/hud/psyker_2_tier_4_1",
 	class_name = "buff",
-	keywords = {
+	always_show_in_hud = true,
+	conditional_keywords = {
 		keywords.block_gives_warp_charge
 	},
-	stat_buffs = {
+	conditional_stat_buffs = {
 		[stat_buffs.warp_charge_block_cost] = talent_settings.defensive_1.warp_charge_cost_multiplier
-	}
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local warp_charge_component = unit_data_extension:read_component("warp_charge")
+		template_data.warp_charge_component = warp_charge_component
+	end,
+	visual_stack_count = function (template_data, template_context)
+		if ConditionalFunctions.is_blocking(template_data, template_context) then
+			return 1
+		end
+
+		return 0
+	end,
+	conditional_stat_buffs_func = function (template_data, template_context)
+		local current_percent = template_data.warp_charge_component.current_percentage
+		local is_too_high = current_percent >= 0.97
+
+		return not is_too_high
+	end,
+	duration_func = function (template_data, template_context)
+		local current_percent = template_data.warp_charge_component.current_percentage
+		local duration = 1 - math.clamp01(current_percent / 0.97)
+
+		return duration
+	end
 }
 templates.psyker_biomancer_warp_charge_reduces_toughness_damage_taken = {
 	predicted = false,
@@ -774,11 +811,26 @@ templates.psyker_biomancer_warp_charge_reduces_toughness_damage_taken = {
 	end
 }
 templates.psyker_biomancer_venting_improvements = {
+	hud_icon = "content/ui/textures/icons/talents/psyker_2/hud/psyker_2_tier_3_1",
 	predicted = false,
 	class_name = "buff",
 	stat_buffs = {
 		[stat_buffs.vent_warp_charge_decrease_movement_reduction] = talent_settings.defensive_3.vent_warp_charge_decrease_movement_reduction
-	}
+	},
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
+		template_data.weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
+	end,
+	check_active_func = function (template_data, template_context)
+		local weapon_action_component = template_data.weapon_action_component
+		local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
+		local _, current_action_settings = Action.current_action(weapon_action_component, weapon_template)
+		local current_action_kind = current_action_settings and current_action_settings.kind
+		local is_venting = current_action_kind == "vent_warp_charge"
+
+		return is_venting
+	end
 }
 templates.psyker_biomancer_smite_on_hit = {
 	predicted = false,
@@ -882,6 +934,12 @@ templates.psyker_biomancer_smite_on_hit = {
 			return
 		end
 
+		local is_prop = Breed.is_prop(breed)
+
+		if is_prop then
+			return
+		end
+
 		local is_living_prop = Breed.is_living_prop(breed)
 
 		if is_living_prop then
@@ -926,7 +984,7 @@ templates.psyker_biomancer_warpfire_grants_souls = {
 	proc_func = function (params, template_data, template_context)
 		local killed_unit = params.dying_unit
 		local killed_unit_buff_extension = ScriptUnit.has_extension(killed_unit, "buff_system")
-		local valid_target = killed_unit_buff_extension and killed_unit_buff_extension:has_keyword(keywords.warpfire_burning)
+		local valid_target = killed_unit_buff_extension and (killed_unit_buff_extension:has_keyword(keywords.warpfire_burning) or killed_unit_buff_extension:had_keyword(keywords.warpfire_burning))
 
 		if not valid_target then
 			local own_unit = template_context.unit

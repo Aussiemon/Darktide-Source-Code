@@ -116,7 +116,7 @@ local horde_pacing_template = {
 			max_active_minions = 90,
 			trigger_heard_dialogue = true,
 			time_between_waves = 17,
-			aggro_nearby_roamers_zone_range = 3,
+			aggro_nearby_roamers_zone_range = 1,
 			max_active_hordes = 3,
 			max_active_minions_for_ambush = 50,
 			horde_timer_range = {
@@ -170,7 +170,7 @@ local horde_pacing_template = {
 			max_active_minions = 90,
 			trigger_heard_dialogue = true,
 			time_between_waves = 15,
-			aggro_nearby_roamers_zone_range = 3,
+			aggro_nearby_roamers_zone_range = 2,
 			max_active_hordes = 3,
 			max_active_minions_for_ambush = 50,
 			horde_timer_range = {
@@ -224,7 +224,7 @@ local horde_pacing_template = {
 			max_active_minions = 100,
 			trigger_heard_dialogue = true,
 			time_between_waves = 10,
-			aggro_nearby_roamers_zone_range = 4,
+			aggro_nearby_roamers_zone_range = 2,
 			max_active_hordes = 3,
 			max_active_minions_for_ambush = 60,
 			horde_timer_range = {
@@ -278,7 +278,7 @@ local horde_pacing_template = {
 			max_active_minions = 110,
 			trigger_heard_dialogue = true,
 			time_between_waves = 10,
-			aggro_nearby_roamers_zone_range = 5,
+			aggro_nearby_roamers_zone_range = 3,
 			max_active_hordes = 3,
 			max_active_minions_for_ambush = 60,
 			horde_timer_range = {
@@ -329,15 +329,15 @@ local horde_pacing_template = {
 		},
 		{
 			num_trickle_hordes_active_for_cooldown = 3,
-			max_active_minions = 120,
+			max_active_minions = 110,
 			trigger_heard_dialogue = true,
 			time_between_waves = 10,
-			aggro_nearby_roamers_zone_range = 5,
+			aggro_nearby_roamers_zone_range = 3,
 			max_active_hordes = 3,
-			max_active_minions_for_ambush = 70,
+			max_active_minions_for_ambush = 60,
 			horde_timer_range = {
-				140,
-				280
+				160,
+				300
 			},
 			first_spawn_timer_modifer = {
 				0.2,

@@ -27,6 +27,13 @@ local circumstance_templates = {
 			icon = "content/ui/materials/icons/circumstances/hunting_grounds_01",
 			display_name = "loc_circumstance_hunting_grounds_title",
 			happening_display_name = "loc_happening_hunting_grounds"
+		},
+		mission_overrides = {
+			hazard_prop_settings = {
+				explosion = 1,
+				fire = 1,
+				none = 0
+			}
 		}
 	},
 	mutants_01 = {

@@ -145,10 +145,11 @@ weapon_template.actions = {
 		allowed_chain_actions = {}
 	},
 	action_wield = {
+		kind = "ranged_wield",
 		allowed_during_sprint = true,
 		wield_anim_event = "equip",
 		wield_reload_anim_event = "equip_reload",
-		kind = "ranged_wield",
+		weapon_handling_template = "time_scale_1_3",
 		continue_sprinting = true,
 		uninterruptible = true,
 		total_time = 1.15,
@@ -280,11 +281,11 @@ weapon_template.actions = {
 				t = 0.15
 			},
 			{
-				modifier = 0.45,
+				modifier = 0.55,
 				t = 0.3
 			},
 			{
-				modifier = 0.6,
+				modifier = 0.75,
 				t = 1
 			},
 			start_modifier = 0.25
@@ -433,6 +434,7 @@ weapon_template.actions = {
 		kind = "reload_state",
 		start_input = "brace_reload",
 		sprint_requires_press_to_interrupt = true,
+		weapon_handling_template = "time_scale_1_3",
 		uninterruptible = true,
 		abort_sprint = true,
 		crosshair_type = "none",
@@ -452,15 +454,15 @@ weapon_template.actions = {
 				t = 0.25
 			},
 			{
-				modifier = 0.3,
+				modifier = 0.5,
 				t = 0.3
 			},
 			{
-				modifier = 0.35,
+				modifier = 0.65,
 				t = 0.8
 			},
 			{
-				modifier = 0.5,
+				modifier = 0.7,
 				t = 0.9
 			},
 			{
@@ -500,6 +502,7 @@ weapon_template.actions = {
 		kind = "reload_state",
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
+		weapon_handling_template = "time_scale_1_3",
 		stop_alternate_fire = true,
 		abort_sprint = true,
 		crosshair_type = "none",
@@ -507,27 +510,27 @@ weapon_template.actions = {
 		total_time = 3,
 		action_movement_curve = {
 			{
-				modifier = 0.575,
+				modifier = 0.475,
 				t = 0.05
 			},
 			{
-				modifier = 0.55,
+				modifier = 0.45,
 				t = 0.075
 			},
 			{
-				modifier = 0.39,
+				modifier = 0.29,
 				t = 0.25
 			},
 			{
-				modifier = 0.3,
+				modifier = 0.5,
 				t = 0.3
 			},
 			{
-				modifier = 0.35,
+				modifier = 0.75,
 				t = 0.8
 			},
 			{
-				modifier = 0.5,
+				modifier = 0.8,
 				t = 0.9
 			},
 			{
@@ -728,7 +731,7 @@ weapon_template.alternate_fire_settings = {
 	look_delta_template = "lasgun_brace_light",
 	movement_speed_modifier = {
 		{
-			modifier = 0.375,
+			modifier = 0.475,
 			t = 0.05
 		},
 		{
@@ -744,11 +747,11 @@ weapon_template.alternate_fire_settings = {
 			t = 0.3
 		},
 		{
-			modifier = 0.5,
+			modifier = 0.6,
 			t = 0.4
 		},
 		{
-			modifier = 0.6,
+			modifier = 0.7,
 			t = 0.5
 		},
 		{

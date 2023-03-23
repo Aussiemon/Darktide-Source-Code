@@ -21,6 +21,7 @@ local PowerLevelSettings = require("scripts/settings/damage/power_level_settings
 local SweepSpline = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline")
 local SweepSplineExported = require("scripts/extension_systems/weapon/actions/utilities/sweep_spline_exported")
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
+local Weakspot = require("scripts/utilities/attack/weakspot")
 local attack_results = AttackSettings.attack_results
 local melee_attack_strengths = AttackSettings.melee_attack_strength
 local proc_events = BuffSettings.proc_events
@@ -994,7 +995,6 @@ local attack_intensities = {
 ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, action_settings, hit_position, attack_direction, hit_zone_name_or_nil, hit_normal, action_sweep_component)
 	hit_units[hit_unit] = true
 	local critical_strike_component = self._critical_strike_component
-	local inventory_slot_component = self._inventory_slot_component
 	local weapon = self._weapon
 	local is_server = self._is_server
 	local num_hit_enemies = self._num_hit_enemies
@@ -1014,9 +1014,9 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	local target_is_environment = not target_is_character
 	num_hit_enemies = num_hit_enemies + 1
 	local use_reduced_hit_mass = buff_extension:has_keyword(buff_keywords.use_reduced_hit_mass)
-	local ignore_armor_aborts_attack_ciritcal_strike = is_critical_strike and buff_extension:has_keyword(buff_keywords.ignore_armor_aborts_attack)
-	local ignore_armor_aborts_attack = ignore_armor_aborts_attack_ciritcal_strike or buff_extension:has_keyword(buff_keywords.ignore_armor_aborts_attack)
-	local target_hit_mass = HitMass.target_hit_mass(player_unit, hit_unit, use_reduced_hit_mass)
+	local ignore_armor_aborts_attack = is_critical_strike and buff_extension:has_keyword(buff_keywords.ignore_armor_aborts_attack_critical_strike) or buff_extension:has_keyword(buff_keywords.ignore_armor_aborts_attack) or use_reduced_hit_mass
+	local hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil)
+	local target_hit_mass = HitMass.target_hit_mass(player_unit, hit_unit, hit_weakspot)
 	local attack_type = AttackSettings.attack_types.melee
 	local target_armor = Armor.armor_type(hit_unit, target_breed_or_nil, hit_zone_name_or_nil, attack_type)
 	local action_armor_hit_mass_mod = action_settings.action_armor_hit_mass_mod and action_settings.action_armor_hit_mass_mod[target_armor]
@@ -1028,7 +1028,6 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	end
 
 	local max_hit_mass = self:_current_max_hit_mass(weapon_action_component)
-	ignore_armor_aborts_attack = ignore_armor_aborts_attack or buff_extension:has_keyword(buff_keywords.use_reduced_hit_mass)
 	local hit_ragdoll = Health.is_ragdolled(hit_unit)
 	local armor_aborts_attack = not ignore_armor_aborts_attack and not hit_ragdoll and target_is_alive and Armor.aborts_attack(hit_unit, target_breed_or_nil, hit_zone_name_or_nil)
 	local max_mass_hit = max_hit_mass <= amount_of_mass_hit
@@ -1047,7 +1046,7 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 		damage_type = damage_type[num_hit_enemies] or damage_type.default
 	end
 
-	local damage, result, damage_efficiency, _, hit_weakspot = nil
+	local damage, result, damage_efficiency, _ = nil
 
 	if not self._unit_data_extension.is_resimulating then
 		local is_damagable = Health.is_damagable(hit_unit)
@@ -1072,7 +1071,7 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	end
 
 	if special_implementation then
-		special_implementation:process_hit(t, weapon, action_settings, num_hit_enemies, target_is_alive, hit_unit, hit_position, attack_direction, wielded_slot)
+		special_implementation:process_hit(t, weapon, action_settings, num_hit_enemies, target_is_alive, hit_unit, hit_position, attack_direction, abort_attack, wielded_slot)
 	end
 
 	local weapon_template = self._weapon_template

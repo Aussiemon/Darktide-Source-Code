@@ -73,6 +73,10 @@ local default_debug_input_settings = {
 			raw = "keyboard_left ctrl+keyboard_p",
 			type = "pressed"
 		},
+		spawn_patrol = {
+			raw = "+keyboard_left alt+keyboard_left ctrl+keyboard_p",
+			type = "pressed"
+		},
 		despawn_all_units = {
 			type = "pressed",
 			raw = {

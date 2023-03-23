@@ -18,6 +18,7 @@ local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomo
 local Suppression = require("scripts/utilities/attack/suppression")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local Weakspot = require("scripts/utilities/attack/weakspot")
 local armor_types = ArmorSettings.types
 local attack_results = AttackSettings.attack_results
 local buff_keywords = BuffSettings.keywords
@@ -248,7 +249,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 		local health_extension = ScriptUnit.has_extension(hit_unit, "health_system")
 		local is_ragdolled = Health.is_ragdolled(hit_unit)
 		local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
-		local breed_or_nil = unit_data_extension and unit_data_extension:breed()
+		local target_breed_or_nil = unit_data_extension and unit_data_extension:breed()
 
 		if not have_unit_been_hit and is_not_self then
 			local hit_zone_name = HitZone.get_name(hit_unit, hit_actor)
@@ -272,7 +273,8 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 				end
 
 				if impact_damage_settings.delete_on_hit_mass then
-					local hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(owner_unit, hit_unit, self._hit_mass_budget_attack, self._hit_mass_budget_impact, false)
+					local hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name)
+					local hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(owner_unit, hit_unit, self._hit_mass_budget_attack, self._hit_mass_budget_impact, hit_weakspot)
 					hit_mass_stop = HitMass.stopped_attack(hit_unit, hit_zone_name, hit_mass_budget_attack, hit_mass_budget_impact, IMPACT_CONFIG)
 					self._hit_mass_budget_attack = hit_mass_budget_attack
 					self._hit_mass_budget_impact = hit_mass_budget_impact
@@ -302,13 +304,13 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 			local can_projectile_stick = not sticking_to_unit and (sticks_to_armor_types or sticks_to_breeds or sticks_to_tags) and stick_to_func_ok
 
 			if can_projectile_stick and HEALTH_ALIVE[hit_unit] and unit_data_extension then
-				local armor_type = Armor.armor_type(hit_unit, breed_or_nil, hit_zone_name)
+				local armor_type = Armor.armor_type(hit_unit, target_breed_or_nil, hit_zone_name)
 				local stick_to_armor = sticks_to_armor_types and sticks_to_armor_types[armor_type]
-				local stick_to_breed = sticks_to_breeds and sticks_to_breeds[breed_or_nil.name]
+				local stick_to_breed = sticks_to_breeds and sticks_to_breeds[target_breed_or_nil.name]
 				local stick_to_tag = false
 
-				if sticks_to_tags and breed_or_nil.tags then
-					for tag, _ in pairs(breed_or_nil.tags) do
+				if sticks_to_tags and target_breed_or_nil.tags then
+					for tag, _ in pairs(target_breed_or_nil.tags) do
 						if sticks_to_tags[tag] then
 							stick_to_tag = true
 
@@ -375,8 +377,8 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 
 			if buff_extension and buff_extension:has_keyword(buff_keywords.cluster_explode_on_super_armored) then
 				local hit_zone_is_shield = hit_zone_name == "shield"
-				local hitzone_armor_override = breed_or_nil and breed_or_nil.hitzone_armor_override and breed_or_nil.hitzone_armor_override[hit_zone_name]
-				local is_super_armored_hit = breed_or_nil and breed_or_nil.armor_type and (breed_or_nil.armor_type == armor_types.super_armor or breed_or_nil.armor_type == armor_types.armored or breed_or_nil.armor_type == armor_types.resistant) or hitzone_armor_override == armor_types.super_armor or hitzone_armor_override == armor_types.armored or hitzone_armor_override == armor_types.resistant
+				local hitzone_armor_override = target_breed_or_nil and target_breed_or_nil.hitzone_armor_override and target_breed_or_nil.hitzone_armor_override[hit_zone_name]
+				local is_super_armored_hit = target_breed_or_nil and target_breed_or_nil.armor_type and (target_breed_or_nil.armor_type == armor_types.super_armor or target_breed_or_nil.armor_type == armor_types.armored or target_breed_or_nil.armor_type == armor_types.resistant) or hitzone_armor_override == armor_types.super_armor or hitzone_armor_override == armor_types.armored or hitzone_armor_override == armor_types.resistant
 				local super_armored_settings = (is_super_armored_hit or hit_zone_is_shield) and damage_settings.super_armored and damage_settings.super_armored.impact.cluster
 
 				if super_armored_settings and not self.has_cluster_impacted then

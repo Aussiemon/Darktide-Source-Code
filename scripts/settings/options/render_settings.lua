@@ -143,47 +143,75 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 
 	if not changed_setting.disabled or changed_setting.disabled and changed_setting.disabled_origin == origin_id then
 		if changed_setting.disable_rules then
+			local disabled_by_id = {}
+			local enabled_by_id = {}
+			local affected_ids = {}
+
 			for i = 1, #changed_setting.disable_rules do
 				local disabled_rule = changed_setting.disable_rules[i]
 				local disabled_setting = render_settings_by_id[disabled_rule.id]
 
 				if disabled_setting and (not disabled_setting.validation_function or disabled_setting.validation_function and disabled_setting.validation_function()) then
-					local previously_enabled = false
-
 					if disabled_rule.validation_function(new_value) then
-						disabled_setting.disabled_by = disabled_setting.disabled_by or {}
-
-						if table.is_empty(disabled_setting.disabled_by) then
-							previously_enabled = true
-							disabled_setting.value_on_enabled = disabled_setting:get_function()
-							disabled_setting.disabled_origin = changed_setting.id
+						if not disabled_by_id[disabled_rule.id] then
+							affected_ids[disabled_rule.id] = true
+							disabled_by_id[disabled_rule.id] = {
+								disabled_origin_id = changed_setting.id,
+								affected_setting = disabled_setting,
+								disabled_rule = disabled_rule
+							}
 						end
+					elseif not disabled_rule.validation_function(new_value) and (not disabled_setting.disabled_by or disabled_setting.disabled_by and disabled_setting.disabled_by[changed_setting.id]) and not enabled_by_id[disabled_rule.id] then
+						affected_ids[disabled_rule.id] = true
+						enabled_by_id[disabled_rule.id] = {
+							disabled_origin_id = changed_setting.id,
+							affected_setting = disabled_setting,
+							disabled_rule = disabled_rule
+						}
+					end
+				end
+			end
 
-						disabled_setting.disabled_by[changed_setting.id] = disabled_rule.reason
-						disabled_setting.disabled = true
-					elseif not disabled_rule.validation_function(new_value) and disabled_setting.disabled_by and disabled_setting.disabled_by[changed_setting.id] then
-						disabled_setting.disabled_by[changed_setting.id] = nil
-						disabled_setting.disabled = not table.is_empty(disabled_setting.disabled_by)
+			for id, _ in pairs(affected_ids) do
+				local disabled_data = disabled_by_id[id]
+				local enabled_data = enabled_by_id[id]
 
-						if disabled_setting.disabled == false then
-							disabled_setting.disabled_origin = nil
-						end
+				if disabled_data then
+					local disabled_setting = disabled_data.affected_setting
+					local disabled_origin_id = disabled_data.disabled_origin_id
+					local disabled_rule = disabled_data.disabled_rule
+					disabled_setting.disabled_by = disabled_setting.disabled_by or {}
+
+					if table.is_empty(disabled_setting.disabled_by) then
+						disabled_setting.value_on_enabled = disabled_setting:get_function()
+						disabled_setting.disabled_origin = disabled_origin_id
 					end
 
-					if previously_enabled or disabled_setting.disabled == false then
-						local disabled_setting_value = nil
+					disabled_setting.disabled_by[changed_setting.id] = disabled_rule.reason
+					disabled_setting.disabled = true
+					changes_list[#changes_list + 1] = {
+						id = disabled_rule.id,
+						value = disabled_rule.disable_value,
+						save_location = disabled_setting.save_location,
+						require_apply = disabled_setting.require_apply
+					}
+				elseif enabled_data then
+					local enabled_setting = enabled_data.affected_setting
+					local enabled_origin_id = enabled_data.disabled_origin_id
+					local disabled_rule = enabled_data.disabled_rule
 
-						if disabled_setting.disabled == true then
-							disabled_setting_value = disabled_rule.disable_value
-						else
-							disabled_setting_value = disabled_setting.value_on_enabled
-						end
+					if enabled_setting.disabled_by and enabled_setting.disabled_by[enabled_origin_id] then
+						enabled_setting.disabled_by[enabled_origin_id] = nil
+						enabled_setting.disabled = not table.is_empty(enabled_setting.disabled_by)
+					end
 
+					if enabled_setting.disabled == false then
+						enabled_setting.disabled_origin = nil
 						changes_list[#changes_list + 1] = {
 							id = disabled_rule.id,
-							value = disabled_setting_value,
-							save_location = disabled_setting.save_location,
-							require_apply = disabled_setting.require_apply
+							value = enabled_setting.value_on_enabled,
+							save_location = enabled_setting.save_location,
+							require_apply = enabled_setting.require_apply
 						}
 					end
 				end
@@ -1045,7 +1073,7 @@ local RENDER_TEMPLATES = {
 					},
 					master_render_settings = {
 						rt_reflections_quality = "low",
-						rtxgi_quality = "off"
+						rtxgi_quality = "low"
 					}
 				}
 			},
@@ -1060,7 +1088,7 @@ local RENDER_TEMPLATES = {
 					},
 					master_render_settings = {
 						rt_reflections_quality = "low",
-						rtxgi_quality = "high"
+						rtxgi_quality = "medium"
 					}
 				}
 			},
@@ -1208,6 +1236,23 @@ local RENDER_TEMPLATES = {
 				},
 				values = {
 					render_settings = {
+						baked_ddgi = true,
+						rtxgi_enabled = true,
+						dxr = true,
+						rtxgi_scale = 0.5
+					}
+				}
+			},
+			{
+				id = "medium",
+				display_name = "loc_settings_menu_medium",
+				require_apply = true,
+				require_restart = false,
+				apply_values_on_edited = {
+					ray_tracing_quality = "custom"
+				},
+				values = {
+					render_settings = {
 						baked_ddgi = false,
 						rtxgi_enabled = true,
 						dxr = true,
@@ -1239,7 +1284,15 @@ local RENDER_TEMPLATES = {
 				reason = "loc_disable_rule_rtxgi_gi",
 				disable_value = "high",
 				validation_function = function (value)
-					return value == "high" or value == "low"
+					return value == "high"
+				end
+			},
+			{
+				id = "gi_quality",
+				reason = "loc_disable_rule_rtxgi_gi",
+				disable_value = "low",
+				validation_function = function (value)
+					return value == "low" or value == "medium"
 				end
 			}
 		},
@@ -1312,7 +1365,7 @@ local RENDER_TEMPLATES = {
 						dof_quality = "medium",
 						texture_quality = "medium",
 						volumetric_fog_quality = "medium",
-						gi_quality = "high",
+						gi_quality = "low",
 						light_quality = "medium",
 						ambient_occlusion_quality = "medium"
 					},
@@ -1877,7 +1930,6 @@ local RENDER_TEMPLATES = {
 				},
 				values = {
 					render_settings = {
-						baked_ddgi = true,
 						rtxgi_scale = 0.5
 					}
 				}
@@ -1892,7 +1944,6 @@ local RENDER_TEMPLATES = {
 				},
 				values = {
 					render_settings = {
-						baked_ddgi = true,
 						rtxgi_scale = 1
 					}
 				}
@@ -2368,10 +2419,6 @@ local function create_render_settings_entry(template)
 
 				if not _is_same(current_value, value) then
 					set_user_setting(template.save_location, template.id, value)
-
-					if template.changed_callback then
-						template.changed_callback(value)
-					end
 
 					dirty = true
 				end

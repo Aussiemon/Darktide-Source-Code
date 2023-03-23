@@ -797,30 +797,27 @@ weapon_template.perks = {
 }
 weapon_template.displayed_keywords = {
 	{
-		display_name = "loc_weapon_keyword_lasgun_p1_m1_description_1",
-		icon_type = "crosshair"
+		display_name = "loc_weapon_keyword_versatile"
 	},
 	{
-		display_name = "loc_weapon_keyword_lasgun_p1_m1_description_2",
-		icon_type = "shield"
-	},
-	{
-		display_name = "loc_weapon_keyword_lasgun_p1_m1_description_3",
-		icon_type = "shield"
+		display_name = "loc_weapon_keyword_high_ammo_count"
 	}
 }
 weapon_template.displayed_attacks = {
 	primary = {
-		display_name = "loc_lasgun_p1_m1_attack_primary",
-		type = "ninja_fencer"
+		fire_mode = "semi_auto",
+		display_name = "loc_ranged_attack_primary",
+		type = "hipfire"
 	},
 	secondary = {
-		display_name = "loc_lasgun_p1_m1_attack_secondary",
-		type = "ninja_fencer"
+		fire_mode = "semi_auto",
+		display_name = "loc_ranged_attack_secondary_ads",
+		type = "ads"
 	},
 	special = {
-		display_name = "loc_lasgun_p1_m1_attack_special",
-		type = "ninja_fencer"
+		desc = "loc_stats_special_action_flashlight_desc",
+		display_name = "loc_weapon_special_flashlight",
+		type = "flashlight"
 	}
 }
 

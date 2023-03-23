@@ -24,6 +24,7 @@ local sound_events = {
 	"wwise/events/minions/play_minion_horde_poxwalker_ambush_3d",
 	"wwise/events/minions/play_minion_horde_poxwalker_encampment_aggro",
 	"wwise/events/minions/play_minion_horde_poxwalker_encampment",
+	"wwise/events/minions/play_minion_special_sniper_spawn_circumstance",
 	"wwise/events/minions/play_minion_special_grenadier_spawn",
 	"wwise/events/minions/play_minion_special_mutant_charger_spawn",
 	"wwise/events/minions/play_minion_special_netgunner_spawn",

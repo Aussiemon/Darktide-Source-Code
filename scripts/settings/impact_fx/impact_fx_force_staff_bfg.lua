@@ -34,10 +34,6 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
 				only_1p = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_death_psyker",
-				append_husk_to_event_name = true
 			}
 		},
 		died = {

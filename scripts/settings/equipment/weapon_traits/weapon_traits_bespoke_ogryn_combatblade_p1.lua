@@ -116,18 +116,7 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_pass_past_armor_on_heavy_att
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_crit = {
 	weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_crit = {
-		{
-			active_duration = 1.5
-		},
-		{
-			active_duration = 2.5
-		},
-		{
-			active_duration = 3.5
-		},
-		{
-			active_duration = 4.5
-		}
+		{}
 	}
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_chained_attacks = {

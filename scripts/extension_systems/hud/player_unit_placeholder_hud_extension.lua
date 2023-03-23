@@ -204,34 +204,6 @@ PlayerUnitPlaceholderHudExtension._update_warp_charge = function (self)
 	_draw_warp_charge(self._gui, self._unit, self._warp_charge_component, 40, self._player)
 end
 
-local BUFF_CHARGE_WIDTH = 50
-local BUFF_CHARGE_HEIGHT = 5
-local BUFF_CHARGE_Y_OFFSET = 55
-local BUFF_CHARGE_X_OFFSET = -BUFF_CHARGE_WIDTH * 0.5
-local BUFF_CHARGE_BORDER_SIZE = 2
-
-PlayerUnitPlaceholderHudExtension._update_buff_progressbar = function (self)
-	local charge_level = self._buff_extension:progressbar()
-
-	if not charge_level or charge_level <= 0 then
-		return
-	end
-
-	local w, h = Application.back_buffer_size()
-	local half_res_w = w * 0.5
-	local half_res_h = h * 0.5
-	local mid_pos = Vector3(half_res_w - 1, half_res_h - 1, 0)
-	local gui = self._gui
-	local buff_charge_pos = Vector3(mid_pos.x + BUFF_CHARGE_X_OFFSET, mid_pos.y + BUFF_CHARGE_Y_OFFSET, 0)
-	local wanted_width = BUFF_CHARGE_WIDTH * charge_level
-	local half_border_size = BUFF_CHARGE_BORDER_SIZE * 0.5
-	local buff_charge_border_rect_pos = Vector3(mid_pos.x + BUFF_CHARGE_X_OFFSET - half_border_size, mid_pos.y + BUFF_CHARGE_Y_OFFSET - half_border_size, 0)
-
-	Gui.rect(gui, buff_charge_border_rect_pos, Vector2(BUFF_CHARGE_WIDTH + BUFF_CHARGE_BORDER_SIZE, BUFF_CHARGE_HEIGHT + BUFF_CHARGE_BORDER_SIZE), Color(56, 56, 56))
-	Gui.rect(gui, buff_charge_pos, Vector2(BUFF_CHARGE_WIDTH, BUFF_CHARGE_HEIGHT), Color(104, 104, 104))
-	Gui.rect(gui, buff_charge_pos, Vector2(wanted_width, BUFF_CHARGE_HEIGHT), Color(58, 192, 255))
-end
-
 PlayerUnitPlaceholderHudExtension._update_scanning_progressbar = function (self, t)
 	local scanning_progression = Scanning.scan_confirm_progression(self._scanning_component, self._weapon_action_component, t)
 	local line_of_sight = self._scanning_component.line_of_sight

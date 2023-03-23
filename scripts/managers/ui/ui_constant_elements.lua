@@ -19,6 +19,7 @@ UIConstantElements.init = function (self, parent, elements)
 	self._ui_renderer = parent:create_renderer(self._ui_renderer_name, self._world)
 	self._elements = {}
 	self._elements_array = {}
+	self._elements_hud_scale_lookup = {}
 	self._visibility_groups = table.clone(VisibilityGroups)
 	self._visibility_group_parameters = {}
 	local element_definitions = table.clone(elements)
@@ -100,7 +101,12 @@ end
 UIConstantElements._setup_element = function (self, definition)
 	local elements = self._elements
 	local elements_array = self._elements_array
+	local elements_hud_scale_lookup = self._elements_hud_scale_lookup
 	local class_name = definition.class_name
+
+	if definition.use_hud_scale then
+		elements_hud_scale_lookup[class_name] = true
+	end
 
 	self:_add_element(definition, elements, elements_array)
 
@@ -137,14 +143,31 @@ UIConstantElements.update = function (self, dt, t, input_service)
 	local ui_renderer = self._ui_renderer
 
 	self:_update_element_visibility()
+	self:_update_hud_scale_modified()
 
+	local elements_hud_scale_lookup = self._elements_hud_scale_lookup
 	local elements_array = self._elements_array
+	local hud_scale_applied = false
 	local render_settings = self._render_settings
-	local resolution_modified = RESOLUTION_LOOKUP[resolution_modified_key]
+	local resolution_modified = RESOLUTION_LOOKUP[resolution_modified_key] or self._hud_scale_modified
+	self._hud_scale_modified = nil
+
+	if resolution_modified then
+		local scale = RESOLUTION_LOOKUP.scale
+		render_settings.scale = scale
+		render_settings.inverse_scale = 1 / scale
+		render_settings.using_hud_scale = nil
+	end
 
 	for i = 1, #elements_array do
 		local element = elements_array[i]
 		local element_name = element.__class_name
+
+		if elements_hud_scale_lookup[element_name] then
+			hud_scale_applied = true
+
+			self:_apply_hud_scale()
+		end
 
 		if resolution_modified and element.on_resolution_modified then
 			element:on_resolution_modified()
@@ -152,6 +175,10 @@ UIConstantElements.update = function (self, dt, t, input_service)
 
 		if element:should_update() then
 			element:update(dt, t, ui_renderer, render_settings, input_service)
+		end
+
+		if hud_scale_applied then
+			self:_abort_hud_scale()
 		end
 	end
 end
@@ -161,21 +188,49 @@ UIConstantElements.draw = function (self, dt, t, input_service)
 	local render_settings = self._render_settings
 	local saved_start_layer = render_settings.start_layer
 	local elements_array = self._elements_array
+	local elements_hud_scale_lookup = self._elements_hud_scale_lookup
 	local alpha_multiplier = render_settings.alpha_multiplier
+	local hud_scale_applied = false
 
 	for i = 1, #elements_array do
 		local element = elements_array[i]
 		local element_name = element.__class_name
+
+		if elements_hud_scale_lookup[element_name] then
+			hud_scale_applied = true
+
+			self:_apply_hud_scale()
+		end
 
 		if element:should_draw() then
 			render_settings.alpha_multiplier = 1
 
 			element:draw(dt, t, ui_renderer, render_settings, input_service)
 		end
+
+		if hud_scale_applied then
+			self:_abort_hud_scale()
+		end
 	end
 
 	render_settings.alpha_multiplier = alpha_multiplier
 	render_settings.start_layer = saved_start_layer
+end
+
+UIConstantElements._apply_hud_scale = function (self)
+	local new_scale = self:_hud_scale()
+	local render_settings = self._render_settings
+	render_settings.scale = new_scale
+	render_settings.inverse_scale = 1 / new_scale
+	render_settings.using_hud_scale = true
+end
+
+UIConstantElements._abort_hud_scale = function (self)
+	local render_settings = self._render_settings
+	local scale = RESOLUTION_LOOKUP.scale
+	render_settings.scale = scale
+	render_settings.inverse_scale = 1 / scale
+	render_settings.using_hud_scale = nil
 end
 
 UIConstantElements.destroy = function (self)
@@ -237,6 +292,25 @@ UIConstantElements._update_element_visibility = function (self)
 
 			break
 		end
+	end
+end
+
+UIConstantElements._hud_scale = function (self)
+	local default_value = 100
+	local save_data = Managers.save:account_data()
+	local interface_settings = save_data.interface_settings
+	local hud_scale = interface_settings.hud_scale or default_value
+	local scale = RESOLUTION_LOOKUP.scale
+
+	return scale * hud_scale / 100
+end
+
+UIConstantElements._update_hud_scale_modified = function (self)
+	local new_scale = self:_hud_scale()
+
+	if self._hud_scale_value ~= new_scale then
+		self._hud_scale_value = new_scale
+		self._hud_scale_modified = true
 	end
 end
 

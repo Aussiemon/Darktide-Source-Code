@@ -230,7 +230,7 @@ local considerations = {
 		},
 		last_done_time = {
 			time_diff = true,
-			max_value = 10,
+			max_value = 8,
 			component_field = "last_done_time",
 			spline = {
 				0,
@@ -292,7 +292,7 @@ local considerations = {
 		},
 		last_done_time = {
 			time_diff = true,
-			max_value = 6,
+			max_value = 3,
 			component_field = "last_done_time",
 			spline = {
 				0,

@@ -30,20 +30,20 @@ local archetype_warp_charge_templates = {
 		}
 	},
 	psyker = {
-		critical_threshold_decay_rate = 1.5,
-		low_threshold_decay_rate = 2.5,
-		ramping_interval_modifier = 0.94,
+		critical_threshold_decay_rate = 0.7,
+		low_threshold_decay_rate = 1,
+		ramping_interval_modifier = 1,
 		explode_action = "action_warp_charge_explode",
 		high_threshold = 0.5,
-		auto_vent_duration = 15,
+		auto_vent_duration = 12,
 		extreme_threshold = 0.97,
 		critical_threshold = 0.97,
-		min_vent_time_fraction = 0.25,
-		vent_interval = 0.5,
+		min_vent_time_fraction = 0.2,
+		vent_interval = 0.25,
 		auto_vent_delay = 3,
-		high_threshold_decay_rate = 2,
+		high_threshold_decay_rate = 0.9,
 		low_threshold = 0.3,
-		vent_duration = 6,
+		vent_duration = 2.9,
 		vent_power_level = {
 			0,
 			8

@@ -71,7 +71,6 @@ netgunner.blocked = nil
 local cultist_flamer = table.clone(ranged_base)
 cultist_flamer.slot = nil
 cultist_flamer.blocked = nil
-local renegade_flamer = table.clone(cultist_flamer)
 local grenadier = table.clone(ranged_base)
 grenadier.throw_grenade = {
 	anim_event = "string",
@@ -104,6 +103,9 @@ ranged_patroller.patrol = {
 	walk_position = "Vector3Box",
 	auto_patrol = "boolean"
 }
+local renegade_flamer = table.clone(ranged_patroller)
+renegade_flamer.slot = nil
+renegade_flamer.blocked = nil
 local templates = {
 	cultist_flamer = cultist_flamer,
 	grenadier = grenadier,

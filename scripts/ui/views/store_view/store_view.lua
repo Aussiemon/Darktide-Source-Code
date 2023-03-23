@@ -1335,7 +1335,7 @@ StoreView.cb_on_grid_entry_left_pressed = function (self, widget, element)
 	local item_type = element.item_types and element.item_types[1]
 
 	if item_type == "currency" then
-		self._purchase_promise = element.offer:make_purchase():next(function (data)
+		self._purchase_promise = Managers.data_service.store:purchase_currency(element.offer):next(function (data)
 			if self._destroyed or not self._purchase_promise then
 				return
 			end

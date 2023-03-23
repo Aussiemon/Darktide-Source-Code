@@ -66,7 +66,10 @@ BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	local stagger_duration = stagger_component.duration
 	local anim_duration_mod = action_data.stagger_duration_mods and action_data.stagger_duration_mods[stagger_anim] or 1
 
-	if stagger_anim_duration < stagger_duration then
+	if action_data.ignore_extra_stagger_duration then
+		stagger_duration = stagger_anim_duration
+		scratchpad.stagger_anim_duration = t + stagger_anim_duration
+	elseif stagger_anim_duration < stagger_duration then
 		scratchpad.stagger_anim_duration = t + stagger_anim_duration * anim_duration_mod
 	end
 

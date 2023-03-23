@@ -258,70 +258,72 @@ FlowCallbacks.minion_fx = function (params)
 	end
 
 	local unit = params.unit
-	local legacy_v2_proximity_extension = ScriptUnit.has_extension(unit, "legacy_v2_proximity_system")
+	local name = params.name
+	local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
+	local sounds = breed.sounds
+	local wwise_events = sounds.events
+	local use_proximity_culling = sounds.use_proximity_culling
+	local wwise_event = wwise_events[name]
+	local sound_uses_proximity_culling = use_proximity_culling[name]
+	local legacy_v2_proximity_extension = ScriptUnit.extension(unit, "legacy_v2_proximity_system")
+	local is_proximity_fx_enabled = legacy_v2_proximity_extension.is_proximity_fx_enabled
 
-	if not params.sound_disable_proximity_fx_culling and (not legacy_v2_proximity_extension or legacy_v2_proximity_extension.is_proximity_fx_enabled == false) then
+	if sound_uses_proximity_culling and not is_proximity_fx_enabled then
+		flow_return_table.effect_id = nil
 		flow_return_table.playing_id = nil
 
 		return flow_return_table
 	end
 
-	local name = params.name
-	local wm = Managers.world
-	local world = wm:world("level_world")
-	local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
-	local sounds = breed.sounds
-	local wwise_playing_id = nil
-	local wwise_event = sounds[name]
-	local source_id = params.sound_existing_source_id
-	local suppress_vo = params.suppress_vo or false
 	local vfx = breed.vfx
 	local particle_name = vfx[name]
-	local wielded_slot_name = nil
 	local switch_on_wielded_slot = params.switch_on_wielded_slot
 
 	if switch_on_wielded_slot then
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-		wielded_slot_name = visual_loadout_extension:wielded_slot_name()
+		local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
 
-		if not wielded_slot_name then
-			particle_name = nil
+		if wielded_slot_name then
+			if type(wwise_event) == "table" then
+				wwise_event = wwise_event[wielded_slot_name]
+			end
+
+			if type(particle_name) == "table" then
+				particle_name = particle_name[wielded_slot_name]
+			end
+		else
 			wwise_event = nil
+			particle_name = nil
 		end
 	end
 
-	if wielded_slot_name then
-		if wwise_event and type(wwise_event) == "table" then
-			wwise_event = wwise_event[wielded_slot_name]
-		end
-
-		if particle_name and type(particle_name) == "table" then
-			particle_name = particle_name[wielded_slot_name]
-		end
-	end
+	local world_manager = Managers.world
+	local world = world_manager:world("level_world")
+	local wwise_playing_id = nil
 
 	if wwise_event then
-		local wwise_world = wm:wwise_world(world)
-		local play_vce = true
+		local wwise_world = world_manager:wwise_world(world)
+		local source_id = params.sound_existing_source_id
 
 		if source_id then
-			if params.sound_set_speed_parameter and source_id and unit then
+			if params.sound_set_speed_parameter then
 				_set_minion_foley_speed(unit, wwise_world, source_id)
 			end
 
+			local play_vce = true
 			local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
 
 			if dialogue_extension then
 				local is_playing_vo = dialogue_extension:is_currently_playing_dialogue()
 
 				if is_playing_vo then
-					play_vce = false
-				end
+					local suppress_vo = params.suppress_vo
 
-				if is_playing_vo and suppress_vo then
-					play_vce = true
-
-					dialogue_extension:stop_currently_playing_vo()
+					if suppress_vo then
+						dialogue_extension:stop_currently_playing_vo()
+					else
+						play_vce = false
+					end
 				end
 
 				if params.sound_use_breed_voice_profile then
@@ -347,10 +349,17 @@ FlowCallbacks.minion_fx = function (params)
 				_minion_update_targeted_in_melee_parameter(unit, wwise_world, source_id)
 			end
 
-			if params.sound_set_speed_parameter and source_id and unit then
+			if params.sound_set_speed_parameter then
 				_set_minion_foley_speed(unit, wwise_world, source_id)
 			end
 		end
+	end
+
+	if not is_proximity_fx_enabled then
+		flow_return_table.effect_id = nil
+		flow_return_table.playing_id = wwise_playing_id
+
+		return flow_return_table
 	end
 
 	local effect_id = nil
@@ -392,19 +401,22 @@ FlowCallbacks.minion_material_fx = function (params)
 		return flow_return_table
 	end
 
+	local name = params.name
 	local unit = params.unit
-	local proximity_extension = ScriptUnit.has_extension(unit, "legacy_v2_proximity_system")
+	local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
+	local sounds = breed.sounds
+	local use_proximity_culling = sounds.use_proximity_culling
+	local sound_uses_proximity_culling = use_proximity_culling[name]
+	local legacy_v2_proximity_extension = ScriptUnit.extension(unit, "legacy_v2_proximity_system")
+	local is_proximity_fx_enabled = legacy_v2_proximity_extension.is_proximity_fx_enabled
 
-	if not params.sound_disable_proximity_fx_culling and (not proximity_extension or proximity_extension.is_proximity_fx_enabled == false) then
+	if sound_uses_proximity_culling and not is_proximity_fx_enabled then
+		flow_return_table.effect_id = nil
 		flow_return_table.playing_id = nil
 
 		return flow_return_table
 	end
 
-	local name = params.name
-	local source_id = params.sound_existing_source_id
-	local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
-	local sounds = breed.sounds
 	local query_position_object = Unit.node(unit, params.query_position_object)
 	local query_from = Unit.world_position(unit, query_position_object)
 	local unit_rotation = Unit.world_rotation(unit, 1)
@@ -419,12 +431,12 @@ FlowCallbacks.minion_material_fx = function (params)
 		query_from = query_from + Quaternion.rotate(unit_rotation, query_offset)
 	end
 
-	local query_to = nil
 	local query_vector = params.query_vector
-	query_to = query_from + Quaternion.rotate(unit_rotation, query_vector)
-	local wm = Managers.world
-	local world = wm:world("level_world")
-	local wwise_event = sounds[name]
+	local query_to = query_from + Quaternion.rotate(unit_rotation, query_vector)
+	local world_manager = Managers.world
+	local world = world_manager:world("level_world")
+	local wwise_events = sounds.events
+	local wwise_event = wwise_events[name]
 	local vfx_table = breed.vfx.material_vfx[name]
 	local hit, material, impact_position, normal = nil
 
@@ -440,6 +452,7 @@ FlowCallbacks.minion_material_fx = function (params)
 
 	if wwise_event then
 		local wwise_world = World.get_data(world, "wwise_world")
+		local source_id = params.sound_existing_source_id
 
 		if source_id then
 			if not hit then
@@ -452,7 +465,7 @@ FlowCallbacks.minion_material_fx = function (params)
 				WwiseWorld.set_switch(wwise_world, "surface_material", material, source_id)
 			end
 
-			if params.sound_set_speed_parameter and unit then
+			if params.sound_set_speed_parameter then
 				_set_minion_foley_speed(unit, wwise_world, source_id)
 			end
 
@@ -476,7 +489,7 @@ FlowCallbacks.minion_material_fx = function (params)
 				WwiseWorld.set_switch(wwise_world, "surface_material", material, source_id)
 			end
 
-			if params.sound_set_speed_parameter and source_id and unit then
+			if params.sound_set_speed_parameter then
 				_set_minion_foley_speed(unit, wwise_world, source_id)
 			end
 
@@ -495,6 +508,13 @@ FlowCallbacks.minion_material_fx = function (params)
 				wwise_playing_id = WwiseWorld.trigger_resource_event(wwise_world, wwise_event, unit, sound_source_object)
 			end
 		end
+	end
+
+	if not is_proximity_fx_enabled then
+		flow_return_table.effect_id = nil
+		flow_return_table.playing_id = wwise_playing_id
+
+		return flow_return_table
 	end
 
 	local effect_id = nil
@@ -566,9 +586,7 @@ FlowCallbacks.minion_material_fx = function (params)
 	if material == "water_puddle" or material == "water_deep" then
 		material = "water"
 
-		if ALIVE[unit] then
-			Managers.state.world_interaction:add_world_interaction(material, unit)
-		end
+		Managers.state.world_interaction:add_world_interaction(material, unit)
 	end
 
 	flow_return_table.effect_id = effect_id
@@ -755,25 +773,6 @@ FlowCallbacks.player_material_fx = function (params)
 	end
 
 	flow_return_table.playing_id = wwise_playing_id
-
-	return flow_return_table
-end
-
-FlowCallbacks.minion_get_inventory_slot_unit = function (params)
-	local unit = params.unit
-	local slot_name = params.slot_name
-	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
-	local slot_unit = visual_loadout_extension:slot_unit(slot_name)
-	flow_return_table.slot_unit = slot_unit
-
-	return flow_return_table
-end
-
-FlowCallbacks.minion_get_breed_name = function (params)
-	local unit = params.unit
-	local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
-	local breed = unit_data_extension and unit_data_extension:breed()
-	flow_return_table.breed_name = breed and breed.name
 
 	return flow_return_table
 end

@@ -205,6 +205,7 @@ end
 
 BuffExtensionBase._update_proc_events = function (self, t)
 	local num_proc_events = self._num_proc_events
+	local activation_fame = t / GameParameters.fixed_time_step
 
 	if num_proc_events > 0 then
 		local proc_events = self._proc_events
@@ -225,7 +226,7 @@ BuffExtensionBase._update_proc_events = function (self, t)
 					local server_index = self:_find_local_index(buff)
 					local game_object_id = self._game_object_id
 
-					Managers.state.game_session:send_rpc_clients("rpc_buff_proc_set_active_time", game_object_id, server_index, t)
+					Managers.state.game_session:send_rpc_clients("rpc_buff_proc_set_active_time", game_object_id, server_index, activation_fame)
 				end
 			end
 		end
@@ -272,7 +273,7 @@ BuffExtensionBase._update_stat_buffs_and_keywords = function (self, t, on_remove
 
 	if on_remove_buff then
 		for keyword, _ in pairs(keywords) do
-			self._had_keywords[keyword] = true
+			self._had_keywords[keyword] = t
 		end
 	end
 
@@ -718,8 +719,17 @@ BuffExtensionBase.has_keyword = function (self, keyword)
 	return not not self._keywords[keyword]
 end
 
-BuffExtensionBase.had_keyword = function (self, keyword)
-	return not not self._had_keywords[keyword]
+BuffExtensionBase.had_keyword = function (self, keyword, interval)
+	local added_t = self._had_keywords[keyword]
+
+	if not added_t then
+		return false
+	end
+
+	interval = interval or 1
+	local t = FixedFrame.get_latest_fixed_time()
+
+	return interval > t - added_t
 end
 
 BuffExtensionBase.keywords = function (self)
@@ -998,7 +1008,7 @@ end
 BuffExtensionBase.rpc_add_buff = function (self, channel_id, game_object_id, buff_template_id, server_index, optional_lerp_value, optional_item_slot_id, optional_parent_buff_template_id)
 	local template_name = NetworkLookup.buff_templates[buff_template_id]
 	local template = BuffTemplates[template_name]
-	local t = Managers.time:time("gameplay")
+	local t = FixedFrame.get_latest_fixed_time()
 	local optional_item_slot_name = optional_item_slot_id and NetworkLookup.player_inventory_slot_names[optional_item_slot_id]
 	local optional_parent_buff_template = optional_parent_buff_template_id and NetworkLookup.buff_templates[optional_parent_buff_template_id]
 	local index = self:_add_buff(template, t, "buff_lerp_value", optional_lerp_value, "item_slot_name", optional_item_slot_name, "parent_buff_template", optional_parent_buff_template)
@@ -1013,8 +1023,9 @@ BuffExtensionBase.rpc_remove_buff = function (self, channel_id, game_object_id, 
 	self._buff_index_map[server_index] = nil
 end
 
-BuffExtensionBase.rpc_buff_proc_set_active_time = function (self, channel_id, game_object_id, server_index, activation_time)
+BuffExtensionBase.rpc_buff_proc_set_active_time = function (self, channel_id, game_object_id, server_index, activation_frame)
 	local index = self._buff_index_map[server_index]
+	local activation_time = activation_frame * GameParameters.fixed_time_step
 
 	self:_set_proc_active_start_time(index, activation_time)
 end

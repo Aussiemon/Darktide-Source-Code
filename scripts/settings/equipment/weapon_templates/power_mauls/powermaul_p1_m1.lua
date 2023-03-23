@@ -43,7 +43,7 @@ local hit_zone_priority = {
 table.add_missing(hit_zone_priority, default_hit_zone_priority)
 
 local hit_stickyness_settings_light = {
-	buff_to_add = "chock_effect",
+	buff_to_add = "shock_effect",
 	start_anim_event = "attack_hit_stick",
 	stop_anim_event = "yank_out",
 	sensitivity_modifier = 0.9,
@@ -1378,7 +1378,7 @@ table.append(weapon_template.traits, weapon_traits_bespoke_powermaul_p1)
 
 weapon_template.buffs = {
 	on_equip = {
-		"power_maul_chock_hit"
+		"power_maul_shock_hit"
 	}
 }
 weapon_template.displayed_keywords = {

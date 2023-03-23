@@ -413,7 +413,7 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		anim_event_3p = "attack_swing_heavy_left_down",
-		anim_event = "heavy_attack_left_diagonal_down",
+		anim_event = "heavy_attack_left_down",
 		total_time = 0.8,
 		action_movement_curve = {
 			{
@@ -463,7 +463,7 @@ weapon_template.actions = {
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = base_sweep_box,
 		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/force_sword/heavy_attack_left_diagonal_down",
+			matrices_data_location = "content/characters/player/human/first_person/animations/force_sword/heavy_attack_down_left",
 			anchor_point_offset = {
 				0,
 				0,
@@ -1033,11 +1033,10 @@ weapon_template.actions = {
 	},
 	action_find_target = {
 		prevent_sprint = true,
+		charge_template = "forcesword_p1_m1_charge_single_target",
 		target_finder_module_class_name = "smart_target_targeting",
-		start_input = "find_target",
 		kind = "target_finder",
 		sprint_ready_up_time = 0.25,
-		charge_template = "forcesword_p1_m1_charge_single_target",
 		allowed_during_sprint = true,
 		stop_input = "find_target_release",
 		total_time = 0.15,
@@ -1617,7 +1616,7 @@ weapon_template.displayed_attacks = {
 		attack_chain = {
 			"ninja_fencer",
 			"ninja_fencer",
-			"ninja_fencer"
+			"smiter"
 		}
 	},
 	secondary = {

@@ -15,11 +15,6 @@ local Vector3_normalize = Vector3.normalize
 local attack_types = AttackSettings.attack_types
 local proc_events = BuffSettings.proc_events
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
-local DEFAULT_MAX_ANGLE = math.pi * 0.25
-local DEFAULT_MAX_Z_DIFF = 2
-local DEFAULT_MAX_JUMPS = 3
-local DEFAULT_RADIUS = 4
-local DEFAULT_JUMP_TIME = 0.15
 local CHAIN_LIGHTNING_BUFF = "chain_lightning_interval"
 local _damage_finding_func, _target_finding_func, _traverse_validation_func, _on_add_func, _on_delete_func = nil
 
@@ -203,7 +198,6 @@ ActionChainLightning.fixed_update = function (self, dt, t, time_in_action)
 		self:_find_new_targets(t)
 	end
 
-	local charge_template = self._weapon_extension:charge_template()
 	local charge_component = self._action_module_charge_component
 	local charge_cost = charge_template.charge_cost or 0
 	local new_charge = charge_component.charge_level - charge_cost * dt
@@ -261,28 +255,20 @@ ActionChainLightning._find_new_targets = function (self, t)
 	local enemy_side_names = side:relation_side_names("enemy")
 	local broadphase = broadphase_system.broadphase
 	local stat_buffs = self._buff_extension:stat_buffs()
-	local stat_buff_max_jumps = stat_buffs.chain_lightning_max_jumps or 0
-	local stat_buff_max_radius = stat_buffs.chain_lightning_max_radius or 0
-	local stat_buff_max_angle = stat_buffs.chain_lightning_max_angle or 0
-	local stat_buff_max_z_diff = stat_buffs.chain_lightning_max_z_diff or 0
 	local chain_settings = action_settings.chain_settings
-	local max_angle = chain_settings.max_angle or DEFAULT_MAX_ANGLE + stat_buff_max_angle
-	local max_z_diff = chain_settings.max_z_diff or DEFAULT_MAX_Z_DIFF + stat_buff_max_z_diff
-	local max_jumps = (chain_settings.max_jumps or DEFAULT_MAX_JUMPS) + stat_buff_max_jumps
-	local radius = chain_settings.radius or DEFAULT_RADIUS + stat_buff_max_radius
-	local jump_time = chain_settings.jump_time or DEFAULT_JUMP_TIME
+	local max_angle, close_max_angle, max_z_diff, max_jumps, radius, jump_time = ChainLightning.targeting_parameters(chain_settings, stat_buffs)
 
 	for ii = 1, #chain_targets do
 		local target = chain_targets[ii]
 		local travel_direction = Vector3_normalize(Vector3_flat(player_position - POSITION_LOOKUP[target:value("unit")]))
 
-		self:_find_new_chain_targets(t, broadphase, enemy_side_names, max_angle, max_z_diff, max_jumps, radius, target, travel_direction)
+		self:_find_new_chain_targets(t, broadphase, enemy_side_names, max_angle, close_max_angle, max_z_diff, max_jumps, radius, target, travel_direction)
 	end
 
 	self._next_jump_time = t + jump_time
 end
 
-ActionChainLightning._find_new_chain_targets = function (self, t, broadphase, enemy_side_names, max_angle, max_z_diff, max_jumps, radius, root_target, initial_travel_direction)
+ActionChainLightning._find_new_chain_targets = function (self, t, broadphase, enemy_side_names, max_angle, close_max_angle, max_z_diff, max_jumps, radius, root_target, initial_travel_direction)
 	local temp_targets = self._temp_targets
 	local hit_units = self._hit_units
 
@@ -292,7 +278,7 @@ ActionChainLightning._find_new_chain_targets = function (self, t, broadphase, en
 	for ii = 1, #temp_targets do
 		local source = temp_targets[ii]
 
-		ChainLightning.jump(self, t, source, hit_units, broadphase, enemy_side_names, initial_travel_direction, radius, max_angle, max_z_diff, _on_add_func)
+		ChainLightning.jump(self, t, source, hit_units, broadphase, enemy_side_names, initial_travel_direction, radius, max_angle, close_max_angle, max_z_diff, _on_add_func)
 	end
 end
 
@@ -405,7 +391,7 @@ ActionChainLightning.running_action_state = function (self, t, time_in_action)
 	local charge_component = self._action_module_charge_component
 
 	if charge_cost and charge_component.charge_level <= 0 then
-		return "charge_depleated"
+		return "charge_depleted"
 	end
 
 	local action_settings = self._action_settings

@@ -80,6 +80,9 @@ local ErrorCodesLookup = {
 	unresponsive = {
 		code = 2013
 	},
+	pong_timeout = {
+		code = 2014
+	},
 	failed_joining_lobby = {
 		code = 3001
 	},

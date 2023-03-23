@@ -12,6 +12,23 @@ local monster_pacing_template = {
 					1
 				}
 			},
+			boss_patrols = {
+				chance_to_fill_empty_monster_with_patrol = 1,
+				breed_lists = {
+					renegade = BossPatrols.renegade_boss_patrols,
+					cultist = BossPatrols.cultist_boss_patrols
+				},
+				sound_events = {
+					renegade = {
+						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole",
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole"
+					},
+					cultist = {
+						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole",
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole"
+					}
+				}
+			},
 			breed_names = {
 				monsters = {
 					"chaos_plague_ogryn",
@@ -202,7 +219,7 @@ local monster_pacing_template = {
 		{
 			num_spawns = {
 				monsters = {
-					1,
+					0,
 					2
 				},
 				witches = {

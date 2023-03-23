@@ -229,7 +229,7 @@ ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, sp
 					total_hits[enemy_unit] = distance_squared
 
 					if initial_damage_profile then
-						Attack.execute(enemy_unit, initial_damage_profile, "attack_direction", attack_direction, "power_level", powerlevel, "hit_zone_name", "torso", "damage_type", damage_type, "attack_type", attack_type, "attacking_unit", player_unit)
+						Attack.execute(enemy_unit, initial_damage_profile, "attack_direction", attack_direction, "power_level", power_level, "hit_zone_name", "torso", "damage_type", damage_type, "attack_type", attack_type, "attacking_unit", player_unit)
 					end
 				end
 			end

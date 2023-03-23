@@ -80,6 +80,7 @@ local action_data = {
 		controlled_stagger_ignored_combat_range = "melee",
 		stagger_duration_modifier_during_lunge = 0.175,
 		controlled_stagger_min_speed = 2,
+		fuse_timer = 1.5,
 		lunge_duration = 1.2222222222222223,
 		enter_lunge_distance = 6,
 		use_animation_running_stagger_speed = true,
@@ -116,6 +117,7 @@ local action_data = {
 		explosion_template = ExplosionTemplates.poxwalker_bomber
 	},
 	stagger = {
+		ignore_extra_stagger_duration = true,
 		stagger_anims = {
 			light = {
 				fwd = {

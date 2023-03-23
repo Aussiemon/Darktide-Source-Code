@@ -47,6 +47,7 @@ BtPoxwalkerBomberApproachAction.init_values = function (self, blackboard)
 	death_component.killing_damage_type = ""
 	death_component.force_instant_ragdoll = false
 	death_component.staggered_during_lunge = false
+	death_component.fuse_timer = 0
 end
 
 BtPoxwalkerBomberApproachAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -138,7 +139,7 @@ BtPoxwalkerBomberApproachAction.run = function (self, unit, breed, blackboard, s
 					scratchpad.animation_extension:anim_event("stagger_finished")
 				end
 
-				self:_start_lunge(unit, scratchpad, action_data, target_unit, t)
+				self:_start_lunge(unit, blackboard, scratchpad, action_data, target_unit, t)
 			end
 		end
 
@@ -376,7 +377,7 @@ end
 
 local AOE_THREAT_SIZE = 7
 
-BtPoxwalkerBomberApproachAction._start_lunge = function (self, unit, scratchpad, action_data, target_unit, t)
+BtPoxwalkerBomberApproachAction._start_lunge = function (self, unit, blackboard, scratchpad, action_data, target_unit, t)
 	local lunge_anim_event = action_data.lunge_anim_event
 
 	scratchpad.animation_extension:anim_event(lunge_anim_event)
@@ -384,6 +385,8 @@ BtPoxwalkerBomberApproachAction._start_lunge = function (self, unit, scratchpad,
 	scratchpad.state = "lunging"
 	scratchpad.lunge_duration = t + action_data.lunge_duration
 	scratchpad.move_during_lunge_duration = t + action_data.move_during_lunge_duration
+	local death_component = Blackboard.write_component(blackboard, "death")
+	death_component.fuse_timer = t + action_data.fuse_timer
 	local group_extension = ScriptUnit.extension(target_unit, "group_system")
 	local bot_group = group_extension:bot_group()
 	local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")

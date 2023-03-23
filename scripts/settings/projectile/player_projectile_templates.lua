@@ -18,7 +18,7 @@ local projectile_templates = {
 			},
 			impact = {
 				damage_profile = DamageProfileTemplates.default_gauntlet_bfg,
-				damage_type = damage_types.frag,
+				damage_type = damage_types.grenade_frag,
 				explosion_template = ExplosionTemplates.default_gauntlet_grenade
 			}
 		},
@@ -130,7 +130,7 @@ projectile_templates.ogryn_grenade = {
 		impact = {
 			explosion_template = ExplosionTemplates.ogryn_grenade,
 			damage_profile = DamageProfileTemplates.ogryn_grenade_impact,
-			damage_type = damage_types.frag
+			damage_type = damage_types.grenade_frag
 		}
 	},
 	effects = {
@@ -183,7 +183,7 @@ projectile_templates.fire_grenade = {
 		},
 		impact = {
 			damage_profile = DamageProfileTemplates.fire_grenade_impact,
-			damage_type = damage_types.fire
+			damage_type = damage_types.grenade_fire
 		}
 	},
 	effects = {
@@ -216,7 +216,7 @@ projectile_templates.krak_grenade = {
 		},
 		impact = {
 			damage_profile = DamageProfileTemplates.krak_grenade_impact,
-			damage_type = damage_types.krak
+			damage_type = damage_types.grenade_krak
 		}
 	},
 	effects = {
@@ -268,7 +268,7 @@ projectile_templates.shock_grenade = {
 		},
 		impact = {
 			damage_profile = DamageProfileTemplates.frag_grenade_impact,
-			damage_type = damage_types.frag
+			damage_type = damage_types.grenade_frag
 		}
 	},
 	effects = {

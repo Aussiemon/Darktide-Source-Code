@@ -2,6 +2,8 @@ local PlayerUnitAnimationState = require("scripts/extension_systems/animation/ut
 local AuthoritativePlayerUnitAnimationExtension = class("AuthoritativePlayerUnitAnimationExtension")
 local VARIABLES_INDEXES_RPC_CACHE = {}
 local VARIABLES_VALUES_RPC_CACHE = {}
+local min_anim_variable_float_value = NetworkConstants.anim_variable_float.min
+local max_anim_variable_float_value = NetworkConstants.anim_variable_float.max
 
 AuthoritativePlayerUnitAnimationExtension.init = function (self, extension_init_context, unit, extension_init_data)
 	self._unit = unit
@@ -49,6 +51,10 @@ AuthoritativePlayerUnitAnimationExtension.anim_event = function (self, event_nam
 end
 
 AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_float = function (self, event_name, variable_name, variable_value)
+	if variable_value < min_anim_variable_float_value or max_anim_variable_float_value < variable_value then
+		variable_value = math.clamp(variable_value, min_anim_variable_float_value, max_anim_variable_float_value)
+	end
+
 	local unit = self._unit
 	local variable_index = Unit.animation_find_variable(unit, variable_name)
 
@@ -76,6 +82,10 @@ AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_floats = func
 		local variable_index = Unit.animation_find_variable(unit, variable_name)
 
 		if variable_value and variable_index then
+			if variable_value < min_anim_variable_float_value or max_anim_variable_float_value < variable_value then
+				variable_value = math.clamp(variable_value, min_anim_variable_float_value, max_anim_variable_float_value)
+			end
+
 			num_params_to_send = num_params_to_send + 1
 			VARIABLES_INDEXES_RPC_CACHE[num_params_to_send] = variable_index
 			VARIABLES_VALUES_RPC_CACHE[num_params_to_send] = variable_value
@@ -131,6 +141,10 @@ AuthoritativePlayerUnitAnimationExtension.anim_event_1p = function (self, event_
 end
 
 AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_float_1p = function (self, event_name, variable_name, variable_value)
+	if variable_value < min_anim_variable_float_value or max_anim_variable_float_value < variable_value then
+		variable_value = math.clamp(variable_value, min_anim_variable_float_value, max_anim_variable_float_value)
+	end
+
 	local first_person_unit = self._first_person_unit
 	local variable_index = Unit.animation_find_variable(first_person_unit, variable_name)
 
@@ -155,6 +169,10 @@ AuthoritativePlayerUnitAnimationExtension.anim_event_with_variable_floats_1p = f
 		local variable_index = Unit.animation_find_variable(first_person_unit, variable_name)
 
 		if variable_value and variable_index then
+			if variable_value < min_anim_variable_float_value or max_anim_variable_float_value < variable_value then
+				variable_value = math.clamp(variable_value, min_anim_variable_float_value, max_anim_variable_float_value)
+			end
+
 			num_params_to_send = num_params_to_send + 1
 			VARIABLES_INDEXES_RPC_CACHE[num_params_to_send] = variable_index
 			VARIABLES_VALUES_RPC_CACHE[num_params_to_send] = variable_value

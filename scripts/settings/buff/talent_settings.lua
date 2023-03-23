@@ -46,7 +46,10 @@ local talent_settings = {
 			instant_toughness = 0.25
 		},
 		toughness_2 = {
-			toughness = 0.15
+			max_stacks = 3,
+			toughness = 0.15,
+			toughness_damage_taken_multiplier = 0.9,
+			duration = 6
 		},
 		toughness_3 = {
 			toughness = 0.005,
@@ -79,8 +82,10 @@ local talent_settings = {
 			proc_chance = 0.05
 		},
 		coop_3 = {
+			duration = 3,
+			range = 5,
 			toughness_percent = 0.15,
-			range = 5
+			damage = 0.1
 		},
 		offensive_2_1 = {
 			stacks = 8
@@ -429,15 +434,16 @@ local talent_settings = {
 			max_souls_talent = 6
 		},
 		offensive_2_2 = {
+			num_stacks = 4,
 			distance = 15,
-			num_stacks = 4
+			stacks_to_share = 4
 		},
 		offensive_2_3 = {
 			cooldown = 15,
 			smite_chance = 0.1
 		},
 		combat_ability_1 = {
-			stacks = 1,
+			stacks = 2,
 			cooldown_reduction_percent = 0.125
 		},
 		combat_ability_2 = {

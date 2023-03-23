@@ -90,6 +90,12 @@ local behavior_tree = {
 		action_data = action_data.stagger
 	},
 	{
+		"BtChangeTargetAction",
+		name = "change_target",
+		condition = "target_changed_and_valid",
+		action_data = action_data.change_target
+	},
+	{
 		"BtLeapAction",
 		name = "leap",
 		condition = "chaos_spawn_should_leap",

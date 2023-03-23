@@ -42,9 +42,9 @@ local DamageProfile = {
 		max_hit_mass_attack = max_hit_mass_attack * max_hit_mass_attack_modifier
 		local max_hit_mass_impact_modifier = stat_buffs_or_nil and stat_buffs_or_nil.max_hit_mass_impact_modifier or 1
 		max_hit_mass_impact = max_hit_mass_impact * max_hit_mass_impact_modifier
-		local crit_piercing_keyword = buff_extension and buff_extension:has_keyword(buff_keywords.critical_hit_infinite_hit_mass)
+		local crit_infinite_cleave_keyword = buff_extension and buff_extension:has_keyword(buff_keywords.critical_hit_infinite_hit_mass)
 
-		if is_critical_strike and crit_piercing_keyword then
+		if is_critical_strike and crit_infinite_cleave_keyword then
 			max_hit_mass_attack = math.huge
 		end
 
@@ -160,7 +160,7 @@ DamageProfile.armor_damage_modifier = function (power_type, damage_profile, targ
 		armor_damage_modifier = math.lerp(near, far, dropoff_scalar or 0)
 	else
 		local adm = target_settings.armor_damage_modifier
-		local target_settings_adm = adm and adm[power_type] and adm[power_type][armor_type] or nil
+		local target_settings_adm = adm and adm[power_type] and adm[power_type][armor_type]
 		local lerp_values = nil
 
 		if target_settings_adm then
@@ -168,7 +168,7 @@ DamageProfile.armor_damage_modifier = function (power_type, damage_profile, targ
 			armor_damage_modifier = target_settings_adm
 		else
 			local damage_profile_adm = damage_profile.armor_damage_modifier
-			local damage_profile_settings_adm = damage_profile_adm and damage_profile_adm[power_type] and damage_profile_adm[power_type][armor_type] or nil
+			local damage_profile_settings_adm = damage_profile_adm and damage_profile_adm[power_type] and damage_profile_adm[power_type][armor_type]
 			lerp_values = damage_profile_lerp_values
 			armor_damage_modifier = damage_profile_settings_adm or PowerLevelSettings.default_armor_damage_modifier[power_type][armor_type]
 		end

@@ -4,27 +4,27 @@ local templates = {}
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
 templates.weapon_trait_bespoke_lasgun_p3_increase_power_on_close_kill = {
-	weapon_trait_bespoke_lasgun_p3_increase_power_on_close_kill = {
+	weapon_trait_bespoke_lasgun_p3_increase_power_on_close_kill_parent = {
 		{
-			active_duration = 1,
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.05
 			}
 		},
 		{
-			active_duration = 1.2,
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.055
 			}
 		},
 		{
-			active_duration = 1.3,
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.06
 			}
 		},
 		{
-			active_duration = 1.375,
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.065
 			}

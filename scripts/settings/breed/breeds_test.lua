@@ -88,6 +88,13 @@ local function _init_and_run_tests(breeds)
 		if Breed.is_minion(breed_data) then
 			local target_selection_template = breed_data.target_selection_template
 			local target_selection_weights = breed_data.target_selection_weights
+			local sounds = breed_data.sounds
+			local events = sounds.events
+			local use_proximity_culling = sounds.use_proximity_culling
+
+			for sound_alias, _ in pairs(use_proximity_culling) do
+				-- Nothing
+			end
 
 			if breed_data.tags.special and not running_from_batch then
 				local dev_parameter_name = string.format(ALLOWED_BREED_PATTERN, breed_name)

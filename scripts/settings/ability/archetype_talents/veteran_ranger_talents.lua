@@ -3,6 +3,14 @@ local SpecialRulesSetting = require("scripts/settings/ability/special_rules_sett
 local TalentSettings = require("scripts/settings/buff/talent_settings")
 local talent_settings = TalentSettings.veteran_2
 local special_rules = SpecialRulesSetting.special_rules
+local math_round = math.round
+math_round = math_round or function (value)
+	if value >= 0 then
+		return math.floor(value + 0.5)
+	else
+		return math.ceil(value - 0.5)
+	end
+end
 local archetype_talents = {
 	archetype = "veteran",
 	specialization = "veteran_2",
@@ -86,12 +94,15 @@ local archetype_talents = {
 			}
 		},
 		veteran_2_tier_1_name_2 = {
-			description = "loc_talent_ranger_toughness_on_weakspot_kill_desc",
+			description = "loc_talent_ranger_toughness_and_toughness_reduction_on_weakspot_kill_desc",
 			name = "Medium Toughness on ranged weakspot kill",
 			display_name = "loc_talent_ranger_toughness_on_weakspot_kill",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_3_1",
 			format_values = {
-				toughness = talent_settings.toughness_2.toughness * 100
+				toughness = talent_settings.toughness_2.toughness * 100,
+				toughness_damage_taken_multiplier = math_round((1 - talent_settings.toughness_2.toughness_damage_taken_multiplier) * 100),
+				stacks = talent_settings.toughness_2.max_stacks,
+				duration = talent_settings.toughness_2.duration
 			},
 			passive = {
 				buff_template_name = "veteran_ranger_ranged_weakspot_toughness_recovery",
@@ -176,12 +187,14 @@ local archetype_talents = {
 			}
 		},
 		veteran_2_tier_3_name_3 = {
-			description = "loc_talent_ranger_toughness_for_allies_close_to_ranged_kills_desc",
+			description = "loc_talent_ranger_toughness_and_damage_for_allies_close_to_ranged_kills_desc",
 			name = "Replenishes toughness to an ally when killing an enemy with a ranged attack that is in melee range of that ally.",
 			display_name = "loc_talent_ranger_toughness_for_allies_close_to_ranged_kills",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_4_3",
 			format_values = {
-				toughness = talent_settings.coop_3.toughness_percent * 100
+				toughness = talent_settings.coop_3.toughness_percent * 100,
+				damage = talent_settings.coop_3.damage * 100,
+				duration = talent_settings.coop_3.duration
 			},
 			passive = {
 				buff_template_name = "veteran_ranger_replenish_toughness_of_ally_close_to_victim",

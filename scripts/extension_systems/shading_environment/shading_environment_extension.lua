@@ -19,7 +19,6 @@ ShadingEnvironmentExtension.setup_from_component = function (self, fade_in_dista
 	self._layer = layer
 	self._blend_mask = blend_mask
 	self._slot = shading_environment_slot
-	self._enabled = start_enabled
 
 	if self._blend_mask == "true" then
 		self._blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
@@ -28,11 +27,10 @@ ShadingEnvironmentExtension.setup_from_component = function (self, fade_in_dista
 	end
 
 	if self._shading_environment_resource_name_default ~= "" and self._slot == -1 then
-		local camera_manager = Managers.state.camera
 		self._shading_environment_resource_name = self._shading_environment_resource_name_default
 
 		if start_enabled then
-			camera_manager:add_environment(self)
+			self:enable()
 		end
 
 		self._shading_environment_resource = World.create_shading_environment_resource(self._world, shading_environment_resource_name)

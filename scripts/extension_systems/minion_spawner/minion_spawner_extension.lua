@@ -21,7 +21,7 @@ MinionSpawnerExtension.init = function (self, extension_init_context, unit, exte
 	self._spawned_minions_by_queue_id = {}
 end
 
-MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, spawn_position, exit_position, exclude_from_pacing)
+MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, spawn_position, exit_position, exclude_from_pacing, spawn_type, exit_rotation_num_directions, exit_rotation_random_degree_range)
 	local exit_position_on_nav_mesh = MinionSpawnerSpawnPosition.find_exit_position_on_nav_mesh(self._nav_world, spawn_position, exit_position, self._traverse_logic)
 
 	if not exit_position_on_nav_mesh then
@@ -32,10 +32,60 @@ MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, sp
 
 	self._spawner_groups = spawner_groups
 	self._spawn_position = Vector3Box(spawn_position)
-	self._spawn_rotation = QuaternionBox(Quaternion.look(Vector3.flat(exit_position_on_nav_mesh - spawn_position), Vector3.up()))
+	local to_exit_on_navmesh = exit_position_on_nav_mesh - spawn_position
+	local spawn_direction = Vector3.flat(Vector3.normalize(to_exit_on_navmesh))
+	local spawn_rotation = Quaternion.look(spawn_direction, Vector3.up())
+	self._spawn_rotation = QuaternionBox(spawn_rotation)
 	self._exit_position = Vector3Box(exit_position_on_nav_mesh)
+
+	if exit_rotation_random_degree_range and exit_rotation_num_directions and exit_rotation_random_degree_range > 0 and exit_rotation_num_directions > 0 then
+		local degree_range = exit_rotation_random_degree_range
+		local degree_per_direction = degree_range / exit_rotation_num_directions
+		local current_degree = -(degree_range / 2)
+		local randomized_spawn_data = {}
+		local unit = self._unit
+		local unit_position = nil
+		local has_spawn_node = Unit.has_node(unit, "spawn_node")
+
+		if has_spawn_node then
+			local spawn_node = Unit.node(unit, "spawn_node")
+			unit_position = Unit.world_position(unit, spawn_node)
+		else
+			unit_position = Unit.world_position(self._unit, 1)
+		end
+
+		for i = 1, exit_rotation_num_directions + 1 do
+			local radians = math.degrees_to_radians(current_degree)
+			local direction = Vector3(math.sin(radians), math.cos(radians), 0)
+			local rotated_direction = Quaternion.rotate(spawn_rotation, direction)
+			local wanted_direction = Vector3.normalize(0.5 * spawn_direction + rotated_direction)
+			local exit_pos = unit_position + wanted_direction * Vector3.length(Vector3.flat(to_exit_on_navmesh))
+			exit_pos.z = exit_position_on_nav_mesh.z
+			local exit_pos_on_nav_mesh = MinionSpawnerSpawnPosition.find_exit_position_on_nav_mesh(self._nav_world, unit_position, exit_pos, self._traverse_logic)
+
+			if exit_pos_on_nav_mesh then
+				local spawn_data = {
+					rotation = QuaternionBox(Quaternion.look(wanted_direction))
+				}
+				local flattened_unit_position = Vector3(unit_position.x, unit_position.y, spawn_position.z)
+				local spawn_pos = flattened_unit_position + wanted_direction * Vector3.length(spawn_position - flattened_unit_position)
+				spawn_pos.z = spawn_position.z
+				spawn_data.position = Vector3Box(spawn_pos)
+				randomized_spawn_data[#randomized_spawn_data + 1] = spawn_data
+			end
+
+			current_degree = current_degree + degree_per_direction
+		end
+
+		table.shuffle(randomized_spawn_data)
+
+		self._randomized_spawn_data = randomized_spawn_data
+		self._randomized_index = 0
+	end
+
 	self._is_setup = true
 	self._excluded_from_pacing = exclude_from_pacing
+	self._spawn_type = spawn_type
 end
 
 MinionSpawnerExtension.spawner_groups = function (self)
@@ -52,6 +102,10 @@ end
 
 MinionSpawnerExtension.unit = function (self)
 	return self._unit
+end
+
+MinionSpawnerExtension.spawn_type = function (self)
+	return self._spawn_type
 end
 
 MinionSpawnerExtension.position = function (self)
@@ -123,12 +177,30 @@ MinionSpawnerExtension.update = function (self, unit, dt, t)
 			end
 
 			spawned_minion_table[#spawned_minion_table + 1] = spawned_minion
+			self._last_spawned_minion = spawned_minion
 			self._next_spawn_time = t + spawn_data.spawn_delay
 		else
-			self._next_spawn_time = nil
+			local should_wait_for_last_minion = false
 
-			Component.event(self._unit, "minion_spawner_spawning_done")
-			self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+			if ALIVE[self._last_spawned_minion] then
+				local blackboard = BLACKBOARDS[self._last_spawned_minion]
+				local spawn_component = blackboard and blackboard.spawn
+
+				if spawn_component then
+					local is_exiting_spawner = spawn_component.is_exiting_spawner
+
+					if is_exiting_spawner then
+						should_wait_for_last_minion = true
+					end
+				end
+			end
+
+			if not should_wait_for_last_minion then
+				self._next_spawn_time = nil
+
+				Component.event(self._unit, "minion_spawner_spawning_done")
+				self._owner_system:disable_update_function(self.__class_name, "update", self._unit, self)
+			end
 		end
 	end
 end
@@ -145,8 +217,21 @@ MinionSpawnerExtension._spawn = function (self, breed_name, spawn_data)
 		return
 	end
 
-	local spawn_position = self._spawn_position:unbox()
-	local spawn_rotation = self._spawn_rotation:unbox()
+	local spawn_position, spawn_rotation = nil
+
+	if self._randomized_spawn_data then
+		if self._randomized_index + 1 > #self._randomized_spawn_data then
+			self._randomized_index = 0
+		end
+
+		self._randomized_index = self._randomized_index + 1
+		spawn_rotation = self._randomized_spawn_data[self._randomized_index].rotation:unbox()
+		spawn_position = self._randomized_spawn_data[self._randomized_index].position:unbox()
+	else
+		spawn_rotation = self._spawn_rotation:unbox()
+		spawn_position = self._spawn_position:unbox()
+	end
+
 	local mission_objective_id = spawn_data.mission_objective_id
 	local spawn_side_id = spawn_data.spawn_side_id
 	local target_side_id = spawn_data.target_side_id

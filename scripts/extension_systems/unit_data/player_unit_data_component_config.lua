@@ -747,7 +747,7 @@ local PlayerComponentConfig = {
 		slot_to_wield = INVENTORY_SLOTS
 	},
 	action_module_charge = {
-		charge_complete_time = "fixed_frame_offset",
+		charge_start_time = "fixed_frame_offset",
 		max_charge = "weapon_charge_level",
 		charge_level = "weapon_charge_level"
 	},

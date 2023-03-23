@@ -1501,7 +1501,7 @@ weapon_template.actions = {
 				0
 			}
 		},
-		damage_profile = DamageProfileTemplates.light_chainsword_active_2h_push_follow,
+		damage_profile = DamageProfileTemplates.light_chainsword_2h_push_follow,
 		damage_type = damage_types.sawing_2h,
 		damage_profile_on_abort = DamageProfileTemplates.default_light_chainsword_2h,
 		damage_type_on_abort = damage_types.sawing_2h,

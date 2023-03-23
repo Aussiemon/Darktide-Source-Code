@@ -78,6 +78,8 @@ WeaponTraitParentProcBuff.update = function (self, dt, t, ...)
 	WeaponTraitParentProcBuff.super.update(self, dt, t, ...)
 
 	if self._is_server then
+		local template = self._template
+		local template_overrides = self._template_override_data
 		local num_child_stacks = self._num_child_stacks
 		local start_t = self._remove_child_stack_start_t
 
@@ -86,7 +88,6 @@ WeaponTraitParentProcBuff.update = function (self, dt, t, ...)
 			local remove_t = start_t + duration
 
 			if t > remove_t then
-				local template = self._template
 				local leftover_time = t - remove_t
 				local leftover_through_child_duration = leftover_time / duration
 				local stacks_to_remove = template.stacks_to_remove or 1
@@ -94,16 +95,23 @@ WeaponTraitParentProcBuff.update = function (self, dt, t, ...)
 
 				self:_remove_child_buff_stack(num_stacks_to_remove)
 
-				local child_duration_after_remove = template.child_duration_after_remove or template.child_duration
+				local child_duration = template_overrides.child_duration or template.child_duration
+				local child_duration_after_remove = template_overrides.child_duration_after_remove or template.child_duration_after_remove or child_duration
 
 				if child_duration_after_remove then
 					self._remove_child_stack_start_t = t
-					self._remove_child_stack_duration = template.child_duration_after_remove or template.child_duration
+					self._remove_child_stack_duration = child_duration_after_remove
 				else
 					self._remove_child_stack_start_t = 0
 					self._remove_child_stack_duration = 0
 				end
 			end
+		end
+
+		local reset_update_func = template.reset_update_func
+
+		if reset_update_func and reset_update_func(self._template_data, self._template_context) then
+			self:_remove_child_buff_stack(self._num_child_stacks - 1)
 		end
 	end
 end
@@ -114,6 +122,7 @@ WeaponTraitParentProcBuff._add_child_buff_stack = function (self, t, num_childre
 	local item_slot_name = self._item_slot_name
 	local template = self._template
 	local template_name = template.name
+	local template_overrides = self._template_override_data
 	local num_child_stacks = self._num_child_stacks
 	local child_buff_indicies = self._child_buff_indicies
 
@@ -124,7 +133,7 @@ WeaponTraitParentProcBuff._add_child_buff_stack = function (self, t, num_childre
 	end
 
 	self._num_child_stacks = num_child_stacks
-	local child_duration = template.child_duration
+	local child_duration = template_overrides.child_duration or template.child_duration
 
 	if child_duration then
 		self._remove_child_stack_start_t = t
@@ -146,6 +155,51 @@ WeaponTraitParentProcBuff._remove_child_buff_stack = function (self, num_childre
 	end
 
 	self._num_child_stacks = num_child_stacks
+end
+
+local FixedFrame = require("scripts/utilities/fixed_frame")
+
+WeaponTraitParentProcBuff.duration_progress = function (self)
+	local template = self._template
+	local template_overrides = self._template_override_data
+	local child_duration = template_overrides.child_duration or template.child_duration
+
+	if not child_duration then
+		return 0
+	end
+
+	local active_start_time = self._active_start_time
+	local t = FixedFrame.get_latest_fixed_time()
+	local time_since_proc = t - active_start_time
+	local duration_progress = 1 - time_since_proc / child_duration
+	duration_progress = duration_progress > 0 and duration_progress or 0.01
+
+	return duration_progress
+end
+
+WeaponTraitParentProcBuff.has_hud = function (self)
+	return WeaponTraitParentProcBuff.super.super.has_hud(self)
+end
+
+WeaponTraitParentProcBuff.visual_stack_count = function (self)
+	local template_context = self._template_context
+	local buff_extension = template_context.buff_extension
+	local template = template_context.template
+	local child_template_name = template.child_buff_template
+	local number_of_buffs = child_template_name and buff_extension:current_stacks(child_template_name) or 1
+
+	return number_of_buffs - 1
+end
+
+WeaponTraitParentProcBuff._show_in_hud = function (self)
+	local visual_stack_count = self:visual_stack_count()
+	local show_in_hud = visual_stack_count > 0
+
+	return show_in_hud
+end
+
+WeaponTraitParentProcBuff._hud_show_stack_count = function (self)
+	return true
 end
 
 return WeaponTraitParentProcBuff

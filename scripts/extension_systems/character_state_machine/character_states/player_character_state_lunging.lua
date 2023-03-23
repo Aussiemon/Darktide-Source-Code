@@ -29,6 +29,7 @@ local proc_events = BuffSettings.proc_events
 local DAMAGE_COLLISION_FILTER = "filter_player_character_lunge"
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local LUNGE_ATTACK_POWER_LEVEL = 1000
+local HIT_WEAKSPOT = false
 local _max_hit_mass, _record_stat_on_lunge_hit, _record_stat_on_lunge_complete, _apply_buff_to_hit_unit = nil
 local PlayerCharacterStateLunging = class("PlayerCharacterStateLunging", "PlayerCharacterStateBase")
 
@@ -186,7 +187,15 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 	self._last_hit_unit = nil
 
 	if Managers.stats.can_record_stats() then
-		Managers.stats:record_lunge_start(self._player)
+		local target_is_wielding_ranged_weapon = nil
+		local visual_loadout_extension = ScriptUnit.has_extension(lunge_target, "visual_loadout_system")
+
+		if visual_loadout_extension then
+			local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
+			target_is_wielding_ranged_weapon = visual_loadout_extension:is_inventory_slot_ranged(wielded_slot_name)
+		end
+
+		Managers.stats:record_lunge_start(self._player, has_target, target_is_wielding_ranged_weapon)
 	end
 end
 
@@ -543,7 +552,7 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 
 			_record_stat_on_lunge_hit(self._player, hit_unit, attack_result, hit_unit_action, lunge_template)
 
-			current_mass_hit = current_mass_hit + HitMass.target_hit_mass(unit, hit_unit, false)
+			current_mass_hit = current_mass_hit + HitMass.target_hit_mass(unit, hit_unit, HIT_WEAKSPOT)
 
 			if use_armor_type then
 				local hit_unit_data_extension = ScriptUnit.extension(hit_unit, "unit_data_system")

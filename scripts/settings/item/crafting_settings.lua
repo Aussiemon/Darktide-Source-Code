@@ -109,15 +109,16 @@ CraftingSettings.recipes = {
 			return true
 		end,
 		craft = function (ingredients)
+			local costs = CraftingSettings.recipes.upgrade_item.get_costs(ingredients)
 			local item = ingredients.item
 			local gear_id = item.gear_id
 			local is_gadget = item.item_type == "GADGET"
 			local promise = nil
 
 			if is_gadget then
-				promise = Managers.data_service.crafting:upgrade_gadget_rarity(gear_id)
+				promise = Managers.data_service.crafting:upgrade_gadget_rarity(gear_id, costs)
 			else
-				promise = Managers.data_service.crafting:upgrade_weapon_rarity(gear_id)
+				promise = Managers.data_service.crafting:upgrade_weapon_rarity(gear_id, costs)
 			end
 
 			return promise
@@ -270,8 +271,9 @@ CraftingSettings.recipes = {
 			return true
 		end,
 		craft = function (ingredients)
+			local costs = CraftingSettings.recipes.extract_trait.get_costs(ingredients)
 			local item = ingredients.item
-			local promise = Managers.data_service.crafting:extract_trait_from_weapon(item.gear_id, ingredients.existing_trait_index)
+			local promise = Managers.data_service.crafting:extract_trait_from_weapon(item.gear_id, ingredients.existing_trait_index, costs)
 
 			return promise
 		end
@@ -349,8 +351,9 @@ CraftingSettings.recipes = {
 			return true
 		end,
 		craft = function (ingredients)
+			local costs = CraftingSettings.recipes.replace_trait.get_costs(ingredients)
 			local item = ingredients.item
-			local promise = Managers.data_service.crafting:replace_trait_in_weapon(item.gear_id, ingredients.existing_trait_index, ingredients.trait_master_ids[1], ingredients.tiers[1])
+			local promise = Managers.data_service.crafting:replace_trait_in_weapon(item.gear_id, ingredients.existing_trait_index, ingredients.trait_master_ids[1], ingredients.tiers[1], costs)
 
 			return promise
 		end
@@ -427,9 +430,10 @@ CraftingSettings.recipes.reroll_perk = {
 		return true
 	end,
 	craft = function (ingredients)
+		local costs = CraftingSettings.recipes.reroll_perk.get_costs(ingredients)
 		local item = ingredients.item
 		local is_gadget = item.item_type == "GADGET"
-		local promise = Managers.data_service.crafting:reroll_perk_in_item(item.gear_id, ingredients.existing_perk_index, is_gadget)
+		local promise = Managers.data_service.crafting:reroll_perk_in_item(item.gear_id, ingredients.existing_perk_index, is_gadget, costs)
 
 		return promise
 	end

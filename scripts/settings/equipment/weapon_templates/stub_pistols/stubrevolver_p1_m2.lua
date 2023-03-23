@@ -397,7 +397,7 @@ weapon_template.actions = {
 		crosshair_type = "ironsight",
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_2",
 		stop_alternate_fire = true,
 		kind = "reload_shotgun",
 		allowed_during_sprint = true,
@@ -495,7 +495,7 @@ weapon_template.actions = {
 		reload_settings = {
 			13,
 			refill_at_time = 0,
-			refill_amount = 1
+			refill_amount = 2
 		},
 		action_movement_curve = {
 			{

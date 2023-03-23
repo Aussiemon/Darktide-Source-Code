@@ -27,6 +27,7 @@ end
 ActionDamageTarget.start = function (self, action_settings, t, time_scale, start_params)
 	ActionDamageTarget.super.start(self, action_settings, t, time_scale, start_params)
 
+	self._dealt_damage = false
 	local last_action_warp_charge_percent = start_params.starting_warp_charge_percent
 
 	if last_action_warp_charge_percent then

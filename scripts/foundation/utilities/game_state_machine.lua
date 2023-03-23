@@ -11,11 +11,12 @@ local function _debug_print(format, ...)
 	end
 end
 
-GameStateMachine.init = function (self, parent, start_state, params, optional_creation_context, state_change_callbacks)
+GameStateMachine.init = function (self, parent, start_state, params, optional_creation_context, state_change_callbacks, name)
 	self._parent = parent
 	self._next_state = start_state
 	self._next_state_params = params
 	self._optional_creation_context = optional_creation_context
+	self._name = name
 	self._state_change_callbacks = {}
 
 	if state_change_callbacks then
@@ -24,7 +25,7 @@ GameStateMachine.init = function (self, parent, start_state, params, optional_cr
 		end
 	end
 
-	_debug_print("Init state %s", start_state.__class_name)
+	_debug_print("[%s] Init statemachine with '%s'", name, start_state.__class_name)
 	self:_change_state()
 end
 
@@ -38,6 +39,22 @@ end
 
 GameStateMachine.next_state = function (self)
 	return self._next_state
+end
+
+GameStateMachine._log_state_change = function (self, current_state, next_state)
+	local current_state_name = ""
+
+	if current_state then
+		current_state_name = current_state.__class_name
+	end
+
+	local next_state_name = ""
+
+	if next_state then
+		next_state_name = next_state.__class_name
+	end
+
+	_debug_print("[%s] Changing state '%s' -> '%s'", self._name, current_state_name, next_state_name)
 end
 
 GameStateMachine._change_state = function (self)
@@ -68,7 +85,7 @@ end
 
 GameStateMachine.update = function (self, dt, t)
 	if self._next_state then
-		_debug_print("Changing state to %s", self._next_state.__class_name)
+		self:_log_state_change(self._state, self._next_state)
 		self:_change_state()
 	end
 
@@ -121,6 +138,8 @@ GameStateMachine.destroy = function (self, ...)
 
 		ferror("[GameStateMachine] - Trying to terminate state machine without cleaning up registered callbacks.")
 	end
+
+	_debug_print("[%s] Exit statemachine from '%s'", self._name, self._state.__class_name)
 
 	if self._state and self._state.on_exit then
 		self._state:on_exit(...)

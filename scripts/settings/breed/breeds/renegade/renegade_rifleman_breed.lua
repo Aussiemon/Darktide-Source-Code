@@ -48,7 +48,6 @@ local breed_data = {
 	can_patrol = true,
 	explosion_power_multiplier = 0.75,
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
-	hit_mass = 1.5,
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
 	breed_type = breed_types.minion,
@@ -63,6 +62,14 @@ local breed_data = {
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.armored,
+	hit_mass = {
+		1.5,
+		1.5,
+		1.5,
+		1.5,
+		1.5,
+		3
+	},
 	gib_template = MinionGibbingTemplates.renegade_rifleman_gibbing,
 	stagger_durations = {
 		[stagger_types.light] = 0.75,

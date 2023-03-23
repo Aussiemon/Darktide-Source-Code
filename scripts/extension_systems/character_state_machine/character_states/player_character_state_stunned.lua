@@ -127,12 +127,14 @@ PlayerCharacterStateStunned.fixed_update = function (self, unit, dt, t, next_sta
 	else
 		local action_input, raw_input = self._action_input_extension:peek_next_input("weapon_action")
 		local is_wield_input = action_input and action_input == WIELD_ACTION_INPUT
-		local wanted_slot_name_or_nil = is_wield_input and PlayerUnitVisualLoadout.slot_name_from_wield_input(raw_input, self._inventory_component, self._visual_loadout_extension, self._weapon_extension, self._ability_extension)
+		local inventory_component = self._inventory_component
+		local wanted_slot_name_or_nil = is_wield_input and PlayerUnitVisualLoadout.slot_name_from_wield_input(raw_input, inventory_component, self._visual_loadout_extension, self._weapon_extension, self._ability_extension)
+		local wielded_slot = inventory_component.wielded_slot
 		local wanted_weapon_template_or_nil = wanted_slot_name_or_nil and self._visual_loadout_extension:weapon_template_from_slot(wanted_slot_name_or_nil)
 		local weapon_keywords = wanted_weapon_template_or_nil and wanted_weapon_template_or_nil.keywords or NO_KEYWORDS
 		local wants_melee_weapon = wanted_weapon_template_or_nil and table.array_contains(weapon_keywords, "melee")
 
-		if wants_melee_weapon then
+		if wants_melee_weapon and wielded_slot ~= wanted_slot_name_or_nil then
 			switched_to_melee_while_interrupted = true
 
 			PlayerUnitVisualLoadout.wield_slot(wanted_slot_name_or_nil, unit, t)

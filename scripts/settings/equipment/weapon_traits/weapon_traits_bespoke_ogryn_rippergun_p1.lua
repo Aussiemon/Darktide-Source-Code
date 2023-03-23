@@ -38,23 +38,27 @@ local templates = {
 		}
 	},
 	weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close_kill = {
-		weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close_kill = {
+		weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close_kill_parent = {
 			{
+				child_duration = 1.75,
 				stat_buffs = {
 					[stat_buffs.damage_near] = 0.04
 				}
 			},
 			{
+				child_duration = 1.75,
 				stat_buffs = {
 					[stat_buffs.damage_near] = 0.06
 				}
 			},
 			{
+				child_duration = 1.75,
 				stat_buffs = {
 					[stat_buffs.damage_near] = 0.8
 				}
 			},
 			{
+				child_duration = 1.75,
 				stat_buffs = {
 					[stat_buffs.damage_near] = 0.1
 				}
@@ -81,22 +85,22 @@ local templates = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_armor_rending_bayonette = {
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 1
-				}
-			},
-			{
-				target_buff_data = {
 					num_stacks_on_proc = 2
 				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 3
+					num_stacks_on_proc = 4
 				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 4
+					num_stacks_on_proc = 6
+				}
+			},
+			{
+				target_buff_data = {
+					num_stacks_on_proc = 8
 				}
 			}
 		}

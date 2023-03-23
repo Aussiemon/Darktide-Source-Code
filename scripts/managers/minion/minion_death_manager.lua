@@ -65,7 +65,7 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 		local breed = unit_data_extension:breed()
 
 		_trigger_kill_vo(unit, attacking_unit_or_nil, hit_zone_name_or_nil, attack_type_or_nil, damage_profile_name)
-		_trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_or_nil, damage_profile)
+		_trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_or_nil, damage_profile, damage_type_or_nil)
 
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 		local inventory_slots = visual_loadout_extension:inventory_slots()
@@ -253,7 +253,7 @@ local locked_in_melee_settings = AttackIntensitySettings.locked_in_melee_setting
 local MAX_TENSION_TO_ADD_DEATH_TENSION = 50
 local CHALLENGE_RATING_TENSION_MULTIPLIER = 0.75
 
-function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_or_nil, damage_profile)
+function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_or_nil, damage_profile, damage_type_or_nil)
 	local pacing_manager = Managers.state.pacing
 
 	if pacing_manager:tension() < MAX_TENSION_TO_ADD_DEATH_TENSION then
@@ -305,7 +305,7 @@ function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_
 				param_table.attacking_unit = attacking_unit_or_nil
 				param_table.attack_type = attack_type_or_nil
 				param_table.damage_profile_name = damage_profile.name
-				param_table.damage_type = damage_profile.damage_type
+				param_table.damage_type = damage_type_or_nil
 				param_table.breed_name = breed.name
 				param_table.side_name = victim_side:name()
 				param_table.position = Vector3Box(victim_position)

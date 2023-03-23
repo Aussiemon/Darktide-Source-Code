@@ -9,13 +9,22 @@ MinionSpawner.init = function (self, unit, is_server)
 	local spawner_extension = ScriptUnit.fetch_component_extension(unit, "minion_spawner_system")
 
 	if spawner_extension then
-		local spawner_groups, spawn_position_offset, exit_position_offset, anim_data, exclude_from_pacing = self:_get_data(unit)
+		local spawner_groups, spawn_position_offset, exit_position_offset, anim_data, exclude_from_pacing, spawn_type, exit_rotation_num_directions, exit_rotation_random_degree_range = self:_get_data(unit)
 		self._anim_data = anim_data
 		local tm = Unit.world_pose(unit, 1)
+		local has_spawn_node = Unit.has_node(unit, "spawn_node")
+
+		if has_spawn_node then
+			local spawn_node = Unit.node(unit, "spawn_node")
+			local spawn_node_position = Unit.world_position(unit, spawn_node)
+
+			Matrix4x4.set_translation(tm, spawn_node_position)
+		end
+
 		local spawn_position = Matrix4x4.transform(tm, spawn_position_offset:unbox())
 		local exit_position = Matrix4x4.transform(tm, exit_position_offset:unbox())
 
-		spawner_extension:setup_from_component(spawner_groups, spawn_position, exit_position, exclude_from_pacing)
+		spawner_extension:setup_from_component(spawner_groups, spawn_position, exit_position, exclude_from_pacing, spawn_type, exit_rotation_num_directions, exit_rotation_random_degree_range)
 	end
 end
 
@@ -45,8 +54,11 @@ MinionSpawner._get_data = function (self, unit)
 	end
 
 	local exclude_from_pacing = self:get_data(unit, "exclude_from_pacing")
+	local spawn_type = self:get_data(unit, "spawn_type")
+	local exit_rotation_num_directions = self:get_data(unit, "exit_rotation_num_directions")
+	local exit_rotation_random_degree_range = self:get_data(unit, "exit_rotation_random_degree_range")
 
-	return spawner_groups, spawn_position_offset, exit_position_offset, anim_data, exclude_from_pacing
+	return spawner_groups, spawn_position_offset, exit_position_offset, anim_data, exclude_from_pacing, spawn_type, exit_rotation_num_directions, exit_rotation_random_degree_range
 end
 
 MinionSpawner.destroy = function (self)
@@ -285,6 +297,21 @@ MinionSpawner.component_data = {
 		ui_type = "check_box",
 		value = false,
 		ui_name = "Exclude From Pacing"
+	},
+	spawn_type = {
+		ui_type = "text_box",
+		value = "default",
+		ui_name = "Spawn Type(default, from_ground)"
+	},
+	exit_rotation_random_degree_range = {
+		ui_type = "number",
+		value = 0,
+		ui_name = "Exit Rotation Degree Range"
+	},
+	exit_rotation_num_directions = {
+		ui_type = "number",
+		value = 0,
+		ui_name = "Exit Rotation Num Directions"
 	},
 	inputs = {
 		debug_started_animation = {

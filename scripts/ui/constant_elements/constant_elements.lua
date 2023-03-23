@@ -30,6 +30,7 @@ local elements = {
 	},
 	{
 		package = "packages/ui/constant_elements/notification_feed/notification_feed",
+		use_hud_scale = true,
 		class_name = "ConstantElementNotificationFeed",
 		filename = "scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed",
 		visibility_groups = {

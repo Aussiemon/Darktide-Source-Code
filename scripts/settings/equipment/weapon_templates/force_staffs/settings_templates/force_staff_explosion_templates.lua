@@ -27,9 +27,9 @@ explosion_templates.default_force_staff_demolition = {
 		3
 	},
 	close_damage_profile = DamageProfileTemplates.close_force_staff_demolition,
-	close_damage_type = damage_types.force_staff_single_target,
+	close_damage_type = damage_types.force_staff_explosion,
 	damage_profile = DamageProfileTemplates.default_force_staff_demolition,
-	damage_type = damage_types.force_staff_single_target,
+	damage_type = damage_types.force_staff_explosion,
 	scalable_vfx = {
 		{
 			radius_variable_name = "radius",
@@ -66,9 +66,9 @@ explosion_templates.force_staff_p4_demolition = {
 		1.5
 	},
 	close_damage_profile = DamageProfileTemplates.close_force_staff_p4_demolition,
-	close_damage_type = damage_types.force_staff_single_target,
+	close_damage_type = damage_types.force_staff_bfg,
 	damage_profile = DamageProfileTemplates.force_staff_p4_demolition,
-	damage_type = damage_types.force_staff_single_target,
+	damage_type = damage_types.force_staff_bfg,
 	scalable_vfx = {
 		{
 			radius_variable_name = "radius",
@@ -90,9 +90,9 @@ explosion_templates.default_force_staff_assault = {
 	radius = 1.5,
 	collision_filter = "filter_player_character_explosion",
 	close_damage_profile = DamageProfileTemplates.psyker_smite_heavy,
-	close_damage_type = damage_types.force_staff_single_target,
+	close_damage_type = damage_types.force_staff_explosion,
 	damage_profile = DamageProfileTemplates.psyker_smite_heavy,
-	damage_type = damage_types.force_staff_single_target,
+	damage_type = damage_types.force_staff_explosion,
 	vfx = {
 		"content/fx/particles/abilities/psyker_smite_projectile_impact_01"
 	},

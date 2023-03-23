@@ -33,7 +33,6 @@ ConstantElementChat.init = function (self, parent, draw_layer, start_scale, defi
 	self._scroll_extra_vertical_offset = 0
 	self._first_visible_chat_message = 0
 	self._has_scrolled_back_in_history = false
-	self._message_presentation_format = ChatSettings.message_presentation_format .. "{#reset()}"
 	self._total_chat_height = 0
 	self._removed_height_since_last_frame = 0
 	self._selected_channel_handle = nil
@@ -210,7 +209,7 @@ ConstantElementChat.cb_chat_manager_message_recieved = function (self, channel_h
 			sender = participant.displayname
 		end
 
-		self:_add_message(message_text, sender, channel.tag)
+		self:_add_message(message_text, sender, channel)
 	end):catch(function (error)
 		Log.warning("ConstantElementChat", "Could not verify string, error: %s, string: %s", tostring(error), tostring(message.message_body))
 	end)
@@ -663,7 +662,8 @@ ConstantElementChat._add_notification = function (self, message, channel_tag)
 	self:_add_message_widget_to_message_list(messsage_parameters, widget)
 end
 
-ConstantElementChat._add_message = function (self, message, sender, channel_tag)
+ConstantElementChat._add_message = function (self, message, sender, channel)
+	local channel_tag = channel.tag
 	local widget_name = sender .. "-" .. message
 	local widget_definition = self._message_widget_blueprints.chat_message
 	local new_message_widget = UIWidget.init(widget_name, widget_definition)
@@ -703,7 +703,7 @@ ConstantElementChat._scrub = function (self, text)
 end
 
 ConstantElementChat._format_chat_message = function (self, message)
-	local message_format = self._message_presentation_format
+	local message_format = ChatSettings.message_presentation_format
 	local formatted_message = message_format:gsub("%[([a-zA-Z_]+)%]", function (key)
 		return message[key]
 	end)
@@ -991,6 +991,59 @@ ConstantElementChat._parse_slash_commands = function (self, text)
 			end
 
 			return command, params
+		end
+	end
+
+	return nil
+end
+
+ConstantElementChat._find_participant_in_current_channel = function (self, character_name)
+	local lowercase_character_name = string.lower(character_name)
+	local social_service = Managers.data_service.social
+
+	if not social_service then
+		return nil, nil
+	end
+
+	local found_participant = nil
+	local singular = true
+
+	if self._selected_channel_handle and Managers.chat:sessions()[self._selected_channel_handle] then
+		local channel = Managers.chat:sessions()[self._selected_channel_handle]
+
+		for participant_uri, participant in pairs(channel.participants) do
+			if not participant.is_current_user then
+				local account_id = participant.account_id
+
+				if account_id then
+					local player_info = social_service:get_player_info_by_account_id(account_id)
+
+					if player_info then
+						local participant_character_name = player_info:character_name()
+
+						if participant_character_name and lowercase_character_name == string.lower(participant_character_name) then
+							if found_participant then
+								singular = false
+							end
+
+							found_participant = participant
+						end
+					end
+				end
+			end
+		end
+	end
+
+	return found_participant, singular
+end
+
+ConstantElementChat._find_participant_player_info = function (self, participant)
+	if Managers.data_service.social then
+		local recipient_account_id = participant.account_id
+		local recipient_player_info = Managers.data_service.social:get_player_info_by_account_id(recipient_account_id)
+
+		if recipient_player_info then
+			return recipient_player_info
 		end
 	end
 

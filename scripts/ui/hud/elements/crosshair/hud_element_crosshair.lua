@@ -1,13 +1,15 @@
 local definition_path = "scripts/ui/hud/elements/crosshair/hud_element_crosshair_definitions"
 local Action = require("scripts/utilities/weapon/action")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local HudElementCrosshairSettings = require("scripts/ui/hud/elements/crosshair/hud_element_crosshair_settings")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local Recoil = require("scripts/utilities/recoil")
-local Sway = require("scripts/utilities/sway")
 local Suppression = require("scripts/utilities/attack/suppression")
+local Sway = require("scripts/utilities/sway")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local AttackSettings = require("scripts/settings/damage/attack_settings")
+local slot_configuration = PlayerCharacterConstants.slot_configuration
 local attack_results = AttackSettings.attack_results
 local HudElementCrosshair = class("HudElementCrosshair", "HudElementBase")
 local attack_result_priority = {
@@ -208,17 +210,28 @@ HudElementCrosshair._get_current_crosshair_type = function (self)
 			local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
 
 			if weapon_template then
-				local current_action_name, action_settings = Action.current_action(weapon_action_component, weapon_template)
+				local _, action_settings = Action.current_action(weapon_action_component, weapon_template)
 				local alternate_fire_component = unit_data_extension:read_component("alternate_fire")
 				local alternate_fire_settings = weapon_template.alternate_fire_settings
 
-				if current_action_name ~= "none" then
+				if action_settings then
 					crosshair_type = action_settings.crosshair_type
 				elseif alternate_fire_component.is_active and alternate_fire_settings and alternate_fire_settings.crosshair_type then
 					crosshair_type = alternate_fire_settings.crosshair_type
 				end
 
-				crosshair_type = crosshair_type or weapon_template.crosshair_type
+				local inventory_comp = unit_data_extension:read_component("inventory")
+				local wielded_slot = inventory_comp.wielded_slot
+				local slot_type = slot_configuration[wielded_slot].slot_type
+				local is_special_ative = false
+
+				if slot_type == "weapon" then
+					local inventory_slot_component = unit_data_extension:read_component(wielded_slot)
+					is_special_ative = inventory_slot_component.special_active
+				end
+
+				local weapon_cross_hair_type = is_special_ative and weapon_template.crosshair_type_special_active or weapon_template.crosshair_type
+				crosshair_type = crosshair_type or weapon_cross_hair_type
 			end
 		end
 	end

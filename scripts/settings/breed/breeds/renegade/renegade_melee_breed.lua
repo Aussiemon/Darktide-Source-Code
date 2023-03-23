@@ -42,7 +42,6 @@ local breed_data = {
 	activate_slot_system_on_spawn = true,
 	can_patrol = true,
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
-	hit_mass = 2,
 	bone_lod_radius = 1.1,
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
@@ -54,6 +53,14 @@ local breed_data = {
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.armored,
+	hit_mass = {
+		2,
+		2,
+		2,
+		2,
+		2,
+		6
+	},
 	gib_template = MinionGibbingTemplates.renegade_melee,
 	stagger_durations = {
 		[stagger_types.light] = 0.5,

@@ -74,8 +74,8 @@ LocomotionSystem._update_units_to_kill = function (self, units_to_kill)
 
 			Log.info("LocomotionSystem", "Killing %s since outside nav mesh (%s).", unit, position)
 
-			local health_extension = ScriptUnit.has_extension(unit, "health_system")
-			local last_damaging_unit = health_extension and health_extension:last_damaging_unit()
+			local health_extension = ScriptUnit.extension(unit, "health_system")
+			local last_damaging_unit = health_extension:last_damaging_unit()
 
 			Attack.execute(unit, damage_profile, "instakill", true, "attack_direction", attack_direction, "attacking_unit", last_damaging_unit)
 		end

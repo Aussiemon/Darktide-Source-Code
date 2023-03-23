@@ -18,7 +18,7 @@ WeaponSpecialWarpChargedAttacks.update = function (self, dt, t)
 	WeaponSpecial.update_active(t, self._tweak_data, self._inventory_slot_component, self._buff_extension, self._input_extension)
 end
 
-WeaponSpecialWarpChargedAttacks.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, hit_position, attack_direction, optional_origin_slot)
+WeaponSpecialWarpChargedAttacks.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, hit_position, attack_direction, abort_attack, optional_origin_slot)
 	if not target_is_alive then
 		return
 	end

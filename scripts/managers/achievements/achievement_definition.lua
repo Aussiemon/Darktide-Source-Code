@@ -3,8 +3,9 @@ local AchievementUITypes = require("scripts/settings/achievements/achievement_ui
 local AchievementLocKeys = require("scripts/settings/achievements/achievement_loc_keys")
 local AchievementDefinition = class("AchievementDefinition")
 
-AchievementDefinition.init = function (self, id, ui_type, icon, category, trigger_component, visibility_component, optional_description_id, optional_description_table, optional_previous_ids)
+AchievementDefinition.init = function (self, id, ui_type, icon, category, trigger_component, visibility_component, optional_description_id, optional_description_table, optional_previous_ids, optional_label_table)
 	self._id = id
+	self._label_table = optional_label_table or {}
 	self._category = category
 	self._trigger_component = trigger_component
 	self._visibility_component = visibility_component
@@ -58,7 +59,7 @@ AchievementDefinition.label = function (self, unlocalized)
 	local label = AchievementLocKeys.labels[self._id]
 
 	if not unlocalized then
-		label = Localize(label)
+		label = Localize(label, true, self._label_table)
 	end
 
 	return label

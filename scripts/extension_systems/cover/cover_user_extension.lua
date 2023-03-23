@@ -2,11 +2,13 @@ local Blackboard = require("scripts/extension_systems/blackboard/utilities/black
 local CoverSettings = require("scripts/settings/cover/cover_settings")
 local CombatVectorSettings = require("scripts/settings/combat_vector/combat_vector_settings")
 local CoverUserExtension = class("CoverUserExtension")
+local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
 
 CoverUserExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._combat_vector_system = Managers.state.extension:system("combat_vector_system")
 	self._cover_system = Managers.state.extension:system("cover_system")
 	self._side_system = Managers.state.extension:system("side_system")
+	self._unit = unit
 	local blackboard = BLACKBOARDS[unit]
 
 	self:_init_blackboard_components(blackboard)
@@ -131,6 +133,8 @@ CoverUserExtension.update = function (self, unit, dt, t)
 	self._last_t = t
 end
 
+local tg_on_claim_cover_slot_data = {}
+
 CoverUserExtension._claim_cover_slot = function (self, cover_slot)
 	local cover_component = self._cover_component
 	local cover_slot_position = cover_slot.position
@@ -149,6 +153,15 @@ CoverUserExtension._claim_cover_slot = function (self, cover_slot)
 	cover_slot.occupied = true
 	self._current_cover_slot = cover_slot
 	self._current_cover_slot_id = cover_slot.id
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
+
+	if game_mode_name == TRAINING_GROUNDS_GAME_MODE_NAME then
+		table.clear(tg_on_claim_cover_slot_data)
+
+		tg_on_claim_cover_slot_data.unit = self._unit
+
+		Managers.event:trigger("tg_on_claim_cover_slot", tg_on_claim_cover_slot_data)
+	end
 end
 
 CoverUserExtension._find_cover_slot = function (self, unit, cover_config, target_unit, t)

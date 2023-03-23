@@ -96,7 +96,7 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 	Managers.state.attack_report = AttackReportManager:new(is_server, network_event_delegate)
 	Managers.state.rooms_and_portals = RoomsAndPortalsManager:new(world)
 	Managers.state.circumstance = CircumstanceManager:new(circumstance_name)
-	Managers.state.mutator = MutatorManager:new(is_server, network_event_delegate, circumstance_name)
+	Managers.state.mutator = MutatorManager:new(is_server, nav_world, network_event_delegate, circumstance_name)
 	Managers.state.world_interaction = WorldInteractionManager:new(world)
 	Managers.state.emote = EmoteManager:new(is_server, network_event_delegate)
 end

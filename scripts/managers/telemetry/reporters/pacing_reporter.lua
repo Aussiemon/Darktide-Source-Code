@@ -17,9 +17,10 @@ PacingReporter.update = function (self, dt, t)
 	end
 
 	local tension = Managers.state.pacing:tension()
+	local travel_progress = Managers.state.main_path:furthest_travel_percentage(1)
 
 	if SAMPLE_INTERVAL < t - self._last_sample_time and tension ~= self._last_tension_sample then
-		Managers.telemetry_events:pacing(tension)
+		Managers.telemetry_events:pacing(tension, travel_progress)
 
 		self._last_tension_sample = tension
 		self._last_sample_time = math.floor(t)

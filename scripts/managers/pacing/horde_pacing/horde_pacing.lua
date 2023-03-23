@@ -139,7 +139,7 @@ HordePacing._start_horde_wave = function (self, template, side_id, target_side_i
 	local current_wave = self._current_wave
 	local horde_template = self._current_horde_template
 	local horde_type = self._current_horde_type
-	local compositions = Managers.state.difficulty:get_table_entry_by_resistance(self._current_compositions)
+	local compositions = Managers.state.difficulty:get_table_entry_by_challenge(self._current_compositions)
 	local success, horde_position, target_unit, group_id = self:_spawn_horde(horde_type, horde_template, compositions, side_id, target_side_id)
 
 	if success then
@@ -196,9 +196,15 @@ end
 
 HordePacing.set_timer_modifier = function (self, modifier)
 	self._timer_modifier = modifier
-	self._next_horde_at = self._next_horde_at * modifier
-	local pre_stinger_delay = self._template.pre_stinger_delays[self._current_horde_type]
-	self._next_horde_pre_stinger_at = self._next_horde_at - pre_stinger_delay
+
+	if self._next_horde_at then
+		self._next_horde_at = self._next_horde_at * modifier
+	end
+
+	if self._next_horde_pre_stinger_at then
+		local pre_stinger_delay = self._template.pre_stinger_delays[self._current_horde_type]
+		self._next_horde_pre_stinger_at = self._next_horde_at - pre_stinger_delay
+	end
 end
 
 HordePacing.set_override_required_travel_distance = function (self, required_travel_distance)
@@ -324,7 +330,7 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 						local current_density_type = Managers.state.pacing:current_density_type()
 						local faction_composition = trickle_horde_compositions[current_faction][current_density_type]
 						local chosen_compositions = faction_composition[math.random(1, #faction_composition)]
-						local resistance_scaled_composition = Managers.state.difficulty:get_table_entry_by_resistance(chosen_compositions)
+						local resistance_scaled_composition = Managers.state.difficulty:get_table_entry_by_challenge(chosen_compositions)
 						local optional_main_path_offset = template.optional_main_path_offset
 						local optional_num_tries = template.optional_num_tries
 						local stinger = template.stinger
@@ -345,9 +351,17 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 						else
 							success, horde_position, target_unit, group_id = self:_spawn_trickle_horde_wave(side_id, target_side_id, optional_main_path_offset, optional_num_tries, template, trickle_horde, t)
 
-							if success and template.num_trickle_waves then
-								trickle_horde.num_waves = math.random(template.num_trickle_waves[1], template.num_trickle_waves[2]) - 1
-								trickle_horde.next_wave_at_t = t + math.random_range(template.time_between_waves[1], template.time_between_waves[2])
+							if success then
+								local num_trickle_waves = template.num_trickle_waves
+
+								if num_trickle_waves then
+									if type(num_trickle_waves[1] == "table") then
+										num_trickle_waves = Managers.state.difficulty:get_table_entry_by_challenge(num_trickle_waves)
+									end
+
+									trickle_horde.num_waves = math.random(num_trickle_waves[1], num_trickle_waves[2]) - 1
+									trickle_horde.next_wave_at_t = t + math.random_range(template.time_between_waves[1], template.time_between_waves[2])
+								end
 							end
 						end
 					end

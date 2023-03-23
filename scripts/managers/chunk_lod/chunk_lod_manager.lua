@@ -1,4 +1,5 @@
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
+local ChunkLodUnits = require("scripts/managers/chunk_lod/chunk_lod_units")
 local ChunkLodManager = class("ChunkLodManager")
 
 ChunkLodManager.init = function (self, world, mission, local_player)
@@ -21,6 +22,28 @@ ChunkLodManager.init = function (self, world, mission, local_player)
 
 	self._safe_raycast_cb = callback(self, "_async_raycast_result_cb")
 	self._raycast_object = Managers.state.game_mode:create_safe_raycast_object("all", "types", "statics", "collision_filter", "filter_player_mover")
+	self._chunk_units = {}
+end
+
+ChunkLodManager.register_unit = function (self, unit, callback_function)
+	local world = Unit.world(unit)
+
+	if world ~= self._world then
+		return false
+	end
+
+	local level = Unit.level(unit)
+	self._chunk_units[level] = self._chunk_units[level] or ChunkLodUnits:new(level)
+
+	self._chunk_units[level]:register_unit(unit, callback_function)
+
+	return true
+end
+
+ChunkLodManager.unregister_unit = function (self, unit)
+	local level = Unit.level(unit)
+
+	self._chunk_units[level]:unregister_unit(unit)
 end
 
 ChunkLodManager.update = function (self, dt, t)
@@ -150,12 +173,21 @@ ChunkLodManager._get_neighbours = function (self, level, ...)
 	return neighbours
 end
 
+ChunkLodManager._set_show_chunk_units = function (self, level, show_units)
+	local chunk_lod_units = self._chunk_units[level]
+
+	if chunk_lod_units then
+		chunk_lod_units:set_visibility_state(show_units)
+	end
+end
+
 ChunkLodManager._update_level_lods = function (self, level, show_all)
 	local world = self._world
 	local neighbours = self:_get_neighbours(level, "neighbour_states")
 	local level_set_lod_level_type = Level.set_lod_level_type
 
 	level_set_lod_level_type(level, LodLevelType.SHOW_LEVEL)
+	self:_set_show_chunk_units(level, true)
 
 	if #neighbours > 0 then
 		for _, neighbour in ipairs(neighbours) do
@@ -164,18 +196,21 @@ ChunkLodManager._update_level_lods = function (self, level, show_all)
 
 			if Application.can_get_resource("level", neighbour_level_name) then
 				local neighbour_level = ScriptWorld.level(world, neighbour_level_name .. ".level")
+				local show_units = lod_state == "Full" or show_all
 
-				if lod_state == "Full" or show_all then
+				if show_units then
 					level_set_lod_level_type(neighbour_level, LodLevelType.SHOW_LEVEL)
+				else
+					if lod_state == "Proxy" then
+						level_set_lod_level_type(neighbour_level, LodLevelType.SHOW_LOD_UNIT)
+					end
+
+					if lod_state == "None" then
+						level_set_lod_level_type(neighbour_level, LodLevelType.HIDE)
+					end
 				end
 
-				if lod_state == "Proxy" and not show_all then
-					level_set_lod_level_type(neighbour_level, LodLevelType.SHOW_LOD_UNIT)
-				end
-
-				if lod_state == "None" and not show_all then
-					level_set_lod_level_type(neighbour_level, LodLevelType.HIDE)
-				end
+				self:_set_show_chunk_units(neighbour_level, show_units)
 			end
 		end
 	end

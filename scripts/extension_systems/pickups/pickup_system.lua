@@ -221,7 +221,7 @@ PickupSystem._get_pickup_pool_from_difficulty = function (self, distribution_set
 			local pickup = {}
 
 			for pickup_name, count in pairs(pickups) do
-				pickup[pickup_name] = count[difficulty]
+				pickup[pickup_name] = count[difficulty] or count[#count]
 			end
 
 			type[pickup_type] = pickup

@@ -2723,13 +2723,6 @@ local gameplay_vo_ogryn_a = {
 			1.486417,
 			1.644781
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	player_death_psyker = {
@@ -2748,13 +2741,6 @@ local gameplay_vo_ogryn_a = {
 			1.50474,
 			1.218396,
 			1.510021
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -2775,13 +2761,6 @@ local gameplay_vo_ogryn_a = {
 			1.344594,
 			1.609229
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	player_death_zealot = {
@@ -2800,13 +2779,6 @@ local gameplay_vo_ogryn_a = {
 			1.67076,
 			1.484219,
 			1.002354
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},

@@ -1,5 +1,4 @@
 local AlternateFire = require("scripts/utilities/alternate_fire")
-local CameraHandlerTestify = GameParameters.testify and require("scripts/managers/player/player_game_states/camera_handler_testify")
 local CameraTrees = require("scripts/settings/camera/camera_trees")
 local HubCameraSettings = require("scripts/settings/camera/hub_camera_settings")
 local MoodHandler = require("scripts/managers/camera/mood_handler/mood_handler")
@@ -65,7 +64,7 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 	local ALIVE = ALIVE
 	local old_unit = self._camera_follow_unit
 	local new_unit = old_unit
-	local player_is_available = player:unit_is_alive() and not self._testify_force_spectate
+	local player_is_available = player:unit_is_alive()
 	local is_hogtied = false
 	local is_being_rescued = false
 	local is_dead = false
@@ -121,10 +120,6 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 	self:_update_follow(switched_target or force_switch)
 	self:_update_wwise_state(new_unit)
 	self:_update_player_mood(switched_target, new_unit)
-
-	if GameParameters.testify then
-		Testify:poll_requests_through_handler(CameraHandlerTestify, self)
-	end
 
 	local camera_manager = Managers.state.camera
 	local viewport_name = player.viewport_name

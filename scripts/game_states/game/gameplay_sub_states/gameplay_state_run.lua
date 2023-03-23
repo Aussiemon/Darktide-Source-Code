@@ -1,15 +1,8 @@
-local GameplayRpcs = require("scripts/game_states/game/utilities/gameplay_rpcs")
 local GameplayStateInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_state_interface")
+local MissionCleanupUtilies = require("scripts/game_states/game/gameplay_sub_states/utilities/mission_cleanup_utilities")
 local StateGameplayTestify = GameParameters.testify and require("scripts/game_states/game/state_gameplay_testify")
 local UnitSpawnerManager = require("scripts/foundation/managers/unit_spawner/unit_spawner_manager")
 local WorldRenderUtils = require("scripts/utilities/world_render")
-
-local function _error(...)
-	Log.error("StateGameplay", ...)
-end
-
-local SERVER_RPCS = GameplayRpcs.COMMON_SERVER_RPCS
-local CLIENT_RPCS = GameplayRpcs.COMMON_CLIENT_RPCS
 local RUN_CLIENT_RPCS = {
 	"rpc_sync_clock"
 }
@@ -25,7 +18,7 @@ GameplayStateRun.on_enter = function (self, parent, params)
 	self._fixed_frame_parsed = false
 	self._max_dt = 0
 	self._fixed_frame_counter = 0
-	self._world_name = "level_world"
+	self._world_name = shared_state.world_name
 	self._viewport_name = "player1"
 	self._game_world_disabled = false
 	self._game_world_fullscreen_blur_enabled = false
@@ -51,54 +44,14 @@ end
 
 GameplayStateRun.on_exit = function (self)
 	local shared_state = self._shared_state
-
-	if Managers.account:leaving_game() then
-		local ui_manager = Managers.ui
-		local active_views = ui_manager:active_views()
-		local force_close = true
-
-		while not table.is_empty(active_views) do
-			local view_name = active_views[1]
-
-			ui_manager:close_view(view_name, force_close)
-		end
-	end
+	local gameplay_state = self._gameplay_state
+	local is_server = shared_state.is_server
 
 	Managers.telemetry_events:gameplay_stopped()
-
-	local physics_world = shared_state.physics_world
-
-	PhysicsWorld.fetch_queries(physics_world)
+	MissionCleanupUtilies.cleanup(shared_state, gameplay_state)
 
 	REPORTIFY_NETWORK_READY = false
-	local is_server = shared_state.is_server
-	local is_dedicated_server = shared_state.is_dedicated_server
-	local gameplay_state = self._gameplay_state
-	local world = shared_state.world
-	local level = shared_state.level
-	local level_name = shared_state.level_name
-	local themes = shared_state.themes
 
-	Network.set_max_transmit_rate(GameParameters.default_transmit_rate)
-	self:_music_notify_shutdown(is_dedicated_server)
-	self:_player_notify_shutdown(gameplay_state)
-	self:_unregister_network_events(is_server)
-	self:_destroy_nvidia_ai_agent(is_dedicated_server, shared_state)
-	Managers.state.game_session:disconnect()
-	Managers.state.cinematic:stop_all_stories()
-	self:_despawn_units(is_server, world, level, themes)
-
-	local mission_name = Managers.state.mission:mission_name()
-
-	Managers.player:set_last_mission(mission_name)
-	Managers.state:destroy()
-
-	local world_name = self._world_name
-
-	Managers.world_level_despawn:despawn(world, world_name, level, level_name, themes)
-	self:_destroy_nav_world(shared_state)
-	self:_unregister_timer(is_server, shared_state)
-	self:_deinit_frame_rate()
 	self:_unregister_run_network_events(is_server)
 end
 
@@ -280,105 +233,6 @@ GameplayStateRun._unregister_run_network_events = function (self, is_server)
 
 		network_event_delegate:unregister_events(unpack(RUN_CLIENT_RPCS))
 	end
-end
-
-GameplayStateRun._music_notify_shutdown = function (self, is_dedicated_server)
-	if not is_dedicated_server then
-		Managers.wwise_game_sync:on_gameplay_shutdown()
-	end
-end
-
-GameplayStateRun._player_notify_shutdown = function (self, gameplay_state)
-	Managers.player:unset_network()
-	Managers.player:on_game_state_exit(gameplay_state)
-end
-
-GameplayStateRun._unregister_network_events = function (self, is_server)
-	local connection_manager = Managers.connection
-	local network_event_delegate = connection_manager:network_event_delegate()
-
-	if is_server then
-		network_event_delegate:unregister_events(unpack(SERVER_RPCS))
-	else
-		network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
-	end
-end
-
-GameplayStateRun._destroy_nvidia_ai_agent = function (self, is_dedicated_server, out_shared_state)
-	if GameParameters.nvidia_ai_agent and not is_dedicated_server then
-		out_shared_state.nvidia_ai_agent:destroy()
-
-		out_shared_state.nvidia_ai_agent = nil
-	end
-end
-
-GameplayStateRun._despawn_units = function (self, is_server, world, level, themes)
-	local extension_manager = Managers.state.extension
-	local unit_spawner_manager = Managers.state.unit_spawner
-
-	Managers.state.blood:delete_units()
-	Managers.state.minion_death:delete_units()
-	Managers.state.decal:delete_units()
-
-	if is_server then
-		Managers.state.voice_over_spawn:delete_units()
-		Managers.state.minion_spawn:delete_units()
-		Managers.state.bot_nav_transition:clear_temp_transitions()
-	end
-
-	Managers.state.camera:delete_units()
-	extension_manager:system("liquid_area_system"):delete_units()
-	extension_manager:system("pickup_system"):delete_units()
-	extension_manager:system("weapon_system"):delete_units()
-	extension_manager:system("mission_objective_zone_system"):delete_units()
-	extension_manager:system("fx_system"):delete_units()
-	Managers.state.unit_job:delete_units()
-
-	local flow_spawned_units = extension_manager:units_by_category("flow_spawned")
-
-	for unit, _ in pairs(flow_spawned_units) do
-		unit_spawner_manager:mark_for_deletion(unit)
-	end
-
-	Managers.state.game_mode:cleanup_game_mode_units()
-
-	local level_units = Managers.state.extension:registered_level_units()
-	local num_level_units = #level_units
-
-	extension_manager:unregister_units(level_units, num_level_units)
-	unit_spawner_manager:commit_and_remove_pending_units()
-
-	local orphaned_units = extension_manager:units()
-
-	for unit, _ in pairs(orphaned_units) do
-		_error("Unregistering orphaned unit %s.", unit)
-		extension_manager:unregister_unit(unit)
-	end
-
-	unit_spawner_manager:commit_and_remove_pending_units()
-end
-
-GameplayStateRun._destroy_nav_world = function (self, out_shared_state)
-	local nav_world = out_shared_state.nav_world
-
-	GwNavWorld.destroy(nav_world)
-
-	out_shared_state.nav_data = nil
-	out_shared_state.nav_world = nil
-end
-
-GameplayStateRun._unregister_timer = function (self, is_server, out_shared_state)
-	if is_server then
-		Managers.time:unregister_timer("gameplay")
-	else
-		out_shared_state.clock_handler_client:delete()
-
-		out_shared_state.clock_handler_client = nil
-	end
-end
-
-GameplayStateRun._deinit_frame_rate = function (self)
-	Managers.frame_rate:relinquish_request("gameplay")
 end
 
 GameplayStateRun._handle_world_fullscreen_blur = function (self)

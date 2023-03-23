@@ -32,38 +32,6 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "call_backup",
-		category = "enemy_vo_prio_1",
-		wwise_route = 2,
-		response = "call_backup",
-		database = "enemy_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"call_backup"
-			},
-			{
-				"user_memory",
-				"call_backup",
-				OP.TIMEDIFF,
-				OP.GT,
-				20
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"call_backup",
-				OP.TIMESET
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
 		name = "chaos_daemonhost_aggro",
 		category = "enemy_vo_prio_0",
 		wwise_route = 15,

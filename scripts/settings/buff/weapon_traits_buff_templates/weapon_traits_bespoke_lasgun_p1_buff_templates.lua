@@ -23,8 +23,10 @@ local templates = {
 	},
 	weapon_trait_bespoke_lasgun_p1_first_shot_ammo_cost_reduction = {
 		cooldown_duration = 1,
+		show_in_hud_if_slot_is_wielded = true,
 		predicted = false,
 		class_name = "proc_buff",
+		always_show_in_hud = true,
 		proc_events = {
 			[proc_events.on_shoot] = 1
 		},

@@ -1156,7 +1156,7 @@ weapon_template.actions = {
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/power_sword"
-weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/axe"
+weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/shovel"
 weapon_template.weapon_box = combat_axe_sweep_box
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.uses_ammunition = false

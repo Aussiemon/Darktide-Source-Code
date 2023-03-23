@@ -189,7 +189,7 @@ local elements = {
 		use_retained_mode = true,
 		use_hud_scale = true,
 		class_name = "HudElementPlayerBuffs",
-		filename = "scripts/ui/hud/elements/player_buffs/hud_element_player_buffs",
+		filename = "scripts/ui/hud/elements/player_buffs/hud_element_player_buffs_polling",
 		visibility_groups = {
 			"dead",
 			"alive",

@@ -189,14 +189,18 @@ RespawnBeaconSystem._should_move_hogtied_players = function (self, side_id)
 	local MainPathQueries_closest_position = MainPathQueries.closest_position
 	local num_hogtied_players = #hogtied_players
 
-	if num_hogtied_players then
+	if num_hogtied_players > 0 then
+		local best_beacon = self._priority_respawn_beacon
+		best_beacon = best_beacon or self:_find_nearest_beacon(side_id)
+		local _, beacon_distance, _, _, _ = MainPathQueries.closest_position(Unit.world_position(best_beacon, 1))
+
 		for ii = #hogtied_players, 1, -1 do
 			local player = hogtied_players[ii]
 			local player_unit = player.player_unit
 			local position = POSITION_LOOKUP[player_unit]
 			local _, distance = MainPathQueries_closest_position(position)
 
-			if furthest_back_player_distance - distance < PLAYER_BEHIND_DISTANCE then
+			if furthest_back_player_distance - distance < PLAYER_BEHIND_DISTANCE or math.abs(beacon_distance - distance) < PLAYER_BEHIND_DISTANCE then
 				table.remove(hogtied_players, ii)
 			end
 		end

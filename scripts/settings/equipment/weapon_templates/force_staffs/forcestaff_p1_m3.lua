@@ -159,15 +159,14 @@ weapon_template.actions = {
 		projectile_item = "content/items/weapons/player/grenade_krak",
 		start_input = "shoot_pressed",
 		sprint_requires_press_to_interrupt = true,
-		kind = "spawn_projectile",
-		anim_event = "orb_shoot",
-		vfx_effect_name = "content/fx/particles/weapons/force_staff/force_staff_projectile_cast_01",
-		damage_type = "force_staff_single_target",
-		anim_time_scale = 1.5,
-		fire_time = 0.2,
 		charge_template = "forcestaff_p1_m1_projectile",
+		vfx_effect_name = "content/fx/particles/weapons/force_staff/force_staff_projectile_cast_01",
+		anim_event = "orb_shoot",
+		fire_time = 0.2,
 		uninterruptible = true,
 		vfx_effect_source_name = "fx_left_forearm",
+		kind = "spawn_projectile",
+		anim_time_scale = 1.5,
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -663,26 +662,21 @@ weapon_template.perks = {
 }
 weapon_template.displayed_keywords = {
 	{
-		display_name = "loc_weapon_keyword_forcestaff_p1_m1_description_1",
-		icon_type = "crosshair"
+		display_name = "loc_weapon_keyword_warp_weapon"
 	},
 	{
-		display_name = "loc_weapon_keyword_forcestaff_p1_m1_description_2",
-		icon_type = "shield"
-	},
-	{
-		display_name = "loc_weapon_keyword_forcestaff_p1_m1_description_3",
-		icon_type = "shield"
+		display_name = "loc_weapon_keyword_charged_attack"
 	}
 }
 weapon_template.displayed_attacks = {
 	primary = {
+		fire_mode = "projectile",
 		display_name = "loc_forcestaff_p1_m1_attack_primary",
-		type = "ninja_fencer"
+		type = "hipfire"
 	},
 	secondary = {
 		display_name = "loc_forcestaff_p1_m1_attack_secondary",
-		type = "ninja_fencer"
+		type = "charge"
 	},
 	special = {
 		desc = "loc_stats_special_action_melee_weapon_bash_forcestaff_desc",

@@ -11,12 +11,18 @@ WeaponTraitActivatedParentProcBuff.init = function (self, context, template, sta
 	self._active = false
 end
 
+local PROCCED_PROC_EVENTS = {}
+
 WeaponTraitActivatedParentProcBuff.update_proc_events = function (self, t, proc_events, num_proc_events, portable_random, local_portable_random)
 	local template = self._template
 	local template_proc_events = template.proc_events
 	local template_add_child_proc_events = template.add_child_proc_events
 	local active = self._active
 	local child_template = BuffTemplates[self._child_buff_template]
+	local activated_proc = false
+	local procced_proc_events = PROCCED_PROC_EVENTS
+
+	table.clear(procced_proc_events)
 
 	for ii = 1, num_proc_events * PROC_EVENTS_STRIDE, PROC_EVENTS_STRIDE do
 		local proc_event_name = proc_events[ii]
@@ -44,6 +50,9 @@ WeaponTraitActivatedParentProcBuff.update_proc_events = function (self, t, proc_
 					end
 
 					if active then
+						activated_proc = true
+						procced_proc_events[proc_event_name] = WeaponTraitActivatedParentProcBuff
+						self._active_start_time = t
 						local num_wanted_stacks_to_add = template_add_child_proc_events[proc_event_name]
 
 						if num_wanted_stacks_to_add and type(num_wanted_stacks_to_add) == "function" then
@@ -72,6 +81,8 @@ WeaponTraitActivatedParentProcBuff.update_proc_events = function (self, t, proc_
 	end
 
 	self._active = active
+
+	return activated_proc, procced_proc_events
 end
 
 return WeaponTraitActivatedParentProcBuff

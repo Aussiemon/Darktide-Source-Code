@@ -65,6 +65,8 @@ MinionPerceptionExtension.init = function (self, extension_init_context, unit, e
 	self._threat_config = threat_config
 	self._threat_decay_disabled = threat_config.decay_disabled
 	self._threat_units = {}
+	local ignore_detection_los_modifiers = breed.ignore_detection_los_modifiers
+	self._ignore_detection_los_modifiers = ignore_detection_los_modifiers
 	self._is_monster = breed.tags.monster
 end
 
@@ -84,6 +86,11 @@ MinionPerceptionExtension._init_blackboard_components = function (self, blackboa
 	perception_component.target_changed = false
 	perception_component.target_changed_t = -math.huge
 	perception_component.ignore_alerted_los = false
+	perception_component.has_last_los_position = false
+
+	perception_component.last_los_position:store(Vector3.zero())
+
+	perception_component.has_good_last_los_position = false
 	self._perception_component = perception_component
 end
 
@@ -125,6 +132,16 @@ MinionPerceptionExtension.last_los_position = function (self, target_unit)
 	local last_los_positions = self._last_los_positions
 
 	return last_los_positions[target_unit] and last_los_positions[target_unit]:unbox()
+end
+
+MinionPerceptionExtension.set_last_los_position = function (self, target_unit, position)
+	local last_los_positions = self._last_los_positions
+
+	if last_los_positions[target_unit] then
+		last_los_positions[target_unit]:store(position)
+	else
+		last_los_positions[target_unit] = Vector3Box(position)
+	end
 end
 
 MinionPerceptionExtension.has_line_of_sight = function (self, target_unit)
@@ -412,17 +429,29 @@ MinionPerceptionExtension._update_target_selection = function (self, unit, side,
 end
 
 MinionPerceptionExtension._update_line_of_sight = function (self, unit, target_units, los_collision_filter)
+	local detection_los_requirement = self:_check_for_detection_los_requirement()
 	local line_of_sight_queue = self._line_of_sight_queue
 	local running_line_of_sight_checks = self._running_line_of_sight_checks
+	local unit_position = POSITION_LOOKUP[unit]
 
 	for i = 1, #target_units do
 		local target_unit = target_units[i]
 
 		if not running_line_of_sight_checks[target_unit] then
-			self:_line_of_sight_check(unit, target_unit, los_collision_filter)
+			local target_position = POSITION_LOOKUP[target_unit]
 
-			running_line_of_sight_checks[target_unit] = true
-			line_of_sight_queue[#line_of_sight_queue + 1] = target_unit
+			if not detection_los_requirement or Vector3.distance(unit_position, target_position) <= detection_los_requirement then
+				self:_line_of_sight_check(unit, target_unit, los_collision_filter)
+
+				running_line_of_sight_checks[target_unit] = true
+				line_of_sight_queue[#line_of_sight_queue + 1] = target_unit
+			else
+				self._line_of_sight_lookup[target_unit] = false
+
+				for id, lookup in pairs(self._line_of_sight_lookup_by_id) do
+					lookup[target_unit] = false
+				end
+			end
 		end
 	end
 end
@@ -608,6 +637,27 @@ MinionPerceptionExtension.update = function (self, unit, dt, t)
 
 	self:_update_aggro_state(target_changed, target_unit)
 	self:_update_priority_blackboard_status(unit)
+end
+
+local DARKNESS_LOS_MODIFIER_NAME = "mutator_darkness_los"
+local VENTILATION_PURGE_LOS_MODIFIER_NAME = "mutator_ventilation_purge_los"
+local CIRCUMSTANCE_DETECTION_DISTANCE_LOS_REQUIREMENTS = {
+	mutator_ventilation_purge_los = 20,
+	mutator_darkness_los = 15
+}
+
+MinionPerceptionExtension._check_for_detection_los_requirement = function (self)
+	local mutator_manager = Managers.state.mutator
+	local los_modifier = mutator_manager:mutator(DARKNESS_LOS_MODIFIER_NAME) and DARKNESS_LOS_MODIFIER_NAME or mutator_manager:mutator(VENTILATION_PURGE_LOS_MODIFIER_NAME) and VENTILATION_PURGE_LOS_MODIFIER_NAME
+	local detection_los_requirement = nil
+
+	if self._ignore_detection_los_modifiers then
+		detection_los_requirement = false
+	elseif los_modifier then
+		detection_los_requirement = CIRCUMSTANCE_DETECTION_DISTANCE_LOS_REQUIREMENTS[los_modifier]
+	end
+
+	return detection_los_requirement
 end
 
 return MinionPerceptionExtension

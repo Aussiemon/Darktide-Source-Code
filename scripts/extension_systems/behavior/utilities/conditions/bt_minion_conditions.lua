@@ -1198,4 +1198,22 @@ conditions.chaos_spawn_should_grab = function (unit, blackboard, scratchpad, con
 	return not disabled_and_not_by_this_chaos_spawn
 end
 
+conditions.poxwalker_bomber_is_dead = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local death_component = blackboard.death
+	local is_dead = death_component.is_dead
+
+	if is_dead then
+		return true
+	end
+
+	local fuse_timer = death_component.fuse_timer
+	local t = Managers.time:time("gameplay")
+
+	if fuse_timer > 0 and fuse_timer <= t then
+		return true
+	end
+
+	return false
+end
+
 return conditions

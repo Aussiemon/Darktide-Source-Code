@@ -8,6 +8,7 @@ local basic_renegade_gunner_template = {
 		slot_ranged_weapon = {
 			drop_on_death = true,
 			is_weapon = true,
+			is_ranged_weapon = true,
 			items = {
 				"content/items/weapons/minions/ranged/chaos_traitor_guard_hellgun_01"
 			}

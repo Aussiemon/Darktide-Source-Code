@@ -514,35 +514,64 @@ local function generate_blueprints_function(grid_size)
 			local item_type = item.item_type
 			local ITEM_TYPES = UISettings.ITEM_TYPES
 			local is_weapon = item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED
+			local traits = item.traits
 
-			if is_weapon then
-				local traits = item.traits
+			if is_weapon and traits then
+				local trait_index = 1
 
-				if traits then
-					local trait_index = 1
+				for i = 1, #traits do
+					local trait = traits[i]
+					local trait_id = trait.id
+					local rarity = trait.rarity
+					local trait_item = MasterItems.get_item(trait_id)
 
-					for i = 1, #traits do
-						local trait = traits[i]
-						local trait_id = trait.id
-						local rarity = trait.rarity
-						local trait_item = MasterItems.get_item(trait_id)
+					if trait_item then
+						local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
+						local pass_id = "trait_" .. trait_index
+						local trait_style = style[pass_id]
 
-						if trait_item then
-							local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
-							local pass_id = "trait_" .. trait_index
-							local trait_style = style[pass_id]
-
-							if trait_style then
-								local material_values = trait_style.material_values
-								material_values.icon = texture_icon
-								material_values.frame = texture_frame
-							end
-
-							content[pass_id] = trait_id
-							trait_index = trait_index + 1
+						if trait_style then
+							local material_values = trait_style.material_values
+							material_values.icon = texture_icon
+							material_values.frame = texture_frame
+							material_values.overlay = 0
 						end
+
+						content[pass_id] = trait_id
+						trait_index = trait_index + 1
 					end
 				end
+
+				local trait_category = ItemUtils.trait_category(item)
+
+				Managers.data_service.crafting:trait_sticker_book(trait_category):next(function (seen_traits)
+					if seen_traits then
+						for i = 1, #traits do
+							local pass_id = "trait_" .. i
+							local trait = traits[i]
+							local trait_id = trait.id
+							local trait_rarity = trait.rarity
+
+							if trait then
+								for seen_trait_name, status in pairs(seen_traits) do
+									if seen_trait_name == trait_id and status ~= nil then
+										local trait_status = status[trait_rarity]
+
+										if trait_status == "unseen" then
+											local trait_style = style[pass_id]
+
+											if trait_style then
+												trait_style.material_values.overlay = 1
+											end
+
+											break
+										end
+									end
+								end
+							end
+						end
+					end
+				end)
 			end
 
 			local required_level = ItemUtils.character_level(item)
@@ -710,9 +739,11 @@ local function generate_blueprints_function(grid_size)
 				style.rarity_tag.color = table.clone(rarity_color)
 			end
 
+			local ITEM_TYPES = UISettings.ITEM_TYPES
+			local is_weapon = item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED
 			local traits = presentation_item.traits
 
-			if traits then
+			if is_weapon and traits then
 				local trait_index = 1
 
 				for i = 1, #traits do
@@ -730,11 +761,43 @@ local function generate_blueprints_function(grid_size)
 							local material_values = trait_style.material_values
 							material_values.icon = texture_icon
 							material_values.frame = texture_frame
+							material_values.overlay = 0
 						end
 
 						content[pass_id] = trait_id
 						trait_index = trait_index + 1
 					end
+
+					local trait_category = ItemUtils.trait_category(item)
+
+					Managers.data_service.crafting:trait_sticker_book(trait_category):next(function (seen_traits)
+						if seen_traits then
+							for i = 1, #traits do
+								local pass_id = "trait_" .. i
+								local trait = traits[i]
+								local trait_id = trait.id
+								local trait_rarity = trait.rarity
+
+								if trait then
+									for seen_trait_name, status in pairs(seen_traits) do
+										if seen_trait_name == trait_id and status ~= nil then
+											local trait_status = status[trait_rarity]
+
+											if trait_status == "unseen" then
+												local trait_style = style[pass_id]
+
+												if trait_style then
+													trait_style.material_values.overlay = 1
+												end
+
+												break
+											end
+										end
+									end
+								end
+							end
+						end
+					end)
 				end
 			end
 		end,

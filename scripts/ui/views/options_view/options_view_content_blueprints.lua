@@ -674,18 +674,24 @@ blueprints.dropdown = {
 		local using_scrollbar = num_visible_options < num_options
 
 		for i = start_index, end_index do
+			local actual_i = end_index - i + start_index
+
+			if grow_downwards then
+				actual_i = i
+			end
+
 			local option_text_id = "option_text_" .. option_index
 			local option_hotspot_id = "option_hotspot_" .. option_index
 			local outline_style_id = "outline_" .. option_index
 			local option_hotspot = content[option_hotspot_id]
 			option_hovered = option_hovered or option_hotspot.is_hover
-			option_hotspot.is_selected = i == selected_index
-			local option = options[i]
+			option_hotspot.is_selected = actual_i == selected_index
+			local option = options[actual_i]
 
 			if not new_value and focused and not using_gamepad and option_hotspot.on_pressed then
 				option_hotspot.on_pressed = nil
 				new_value = option.id
-				content.selected_index = i
+				content.selected_index = actual_i
 			end
 
 			local option_display_name = option.display_name

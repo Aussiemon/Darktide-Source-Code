@@ -4,6 +4,36 @@ local Sprint = require("scripts/extension_systems/character_state_machine/charac
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local slot_configuration = PlayerCharacterConstants.slot_configuration
 local ConditionalFunctions = {
+	all = function (...)
+		local conditions = {
+			...
+		}
+
+		return function (...)
+			for i = 1, #conditions do
+				if not conditions[i](...) then
+					return false
+				end
+			end
+
+			return true
+		end
+	end,
+	any = function (...)
+		local conditions = {
+			...
+		}
+
+		return function (...)
+			for i = 1, #conditions do
+				if conditions[i](...) then
+					return true
+				end
+			end
+
+			return false
+		end
+	end,
 	is_item_slot_wielded = function (template_data, template_context)
 		local item_slot_name = template_context.item_slot_name
 
@@ -160,6 +190,27 @@ ConditionalFunctions.is_sprinting = function (template_data, template_context)
 	local is_sprinting = Sprint.is_sprinting(sprint_character_state_component)
 
 	return is_sprinting
+end
+
+ConditionalFunctions.is_blocking = function (template_data, template_context)
+	local unit = template_context.unit
+	local is_player = template_context.is_player
+
+	if not is_player then
+		return false
+	end
+
+	local block_component = template_data.block_component
+
+	if not block_component then
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		block_component = unit_data_extension:read_component("block")
+		template_data.block_component = block_component
+	end
+
+	local is_blocking = block_component.is_blocking
+
+	return is_blocking
 end
 
 return ConditionalFunctions

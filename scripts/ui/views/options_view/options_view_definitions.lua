@@ -375,7 +375,9 @@ local widget_definitions = {
 	}, "tooltip", {
 		visible = false
 	}),
-	scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "scrollbar"),
+	scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "scrollbar", {
+		scroll_speed = 10
+	}),
 	grid_mask = UIWidget.create_definition({
 		{
 			value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_vertical_blur",
@@ -396,7 +398,9 @@ local widget_definitions = {
 			content_id = "hotspot"
 		}
 	}, "grid_interaction"),
-	settings_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "settings_scrollbar"),
+	settings_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "settings_scrollbar", {
+		scroll_speed = 10
+	}),
 	settings_grid_mask = UIWidget.create_definition({
 		{
 			value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_vertical_blur",

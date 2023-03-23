@@ -2,11 +2,6 @@ local HordeCompositions = require("scripts/managers/pacing/horde_pacing/horde_co
 local mutator_templates = {
 	mutator_chaos_hounds = {
 		class = "scripts/managers/mutator/mutators/mutator_extra_trickle_hordes",
-		description = {
-			"loc_mutator_minion_nurgle_blessing_description_1",
-			"loc_mutator_minion_nurgle_blessing_description_2",
-			"loc_mutator_minion_nurgle_blessing_description_3"
-		},
 		trickle_horde_templates = {
 			{
 				stinger_duration = 8,
@@ -14,7 +9,6 @@ local mutator_templates = {
 				not_during_terror_events = true,
 				min_players_alive = 2,
 				optional_num_tries = 6,
-				optional_main_path_offset = 50,
 				stinger = "wwise/events/minions/play_chaos_hound_spawn_stinger_circumstance",
 				ignore_disallowance = true,
 				horde_compositions = {
@@ -50,12 +44,16 @@ local mutator_templates = {
 					}
 				},
 				trickle_horde_travel_distance_range = {
-					110,
-					260
+					90,
+					220
 				},
 				trickle_horde_cooldown = {
 					40,
 					45
+				},
+				optional_main_path_offset = {
+					40,
+					60
 				},
 				pause_pacing_on_spawn = {
 					roamers = 20,
@@ -64,8 +62,26 @@ local mutator_templates = {
 					specials = 50
 				},
 				num_trickle_waves = {
-					3,
-					5
+					{
+						2,
+						3
+					},
+					{
+						3,
+						5
+					},
+					{
+						3,
+						6
+					},
+					{
+						4,
+						7
+					},
+					{
+						5,
+						7
+					}
 				},
 				time_between_waves = {
 					7,
@@ -80,19 +96,14 @@ local mutator_templates = {
 	},
 	mutator_snipers = {
 		class = "scripts/managers/mutator/mutators/mutator_extra_trickle_hordes",
-		description = {
-			"loc_mutator_minion_nurgle_blessing_description_1",
-			"loc_mutator_minion_nurgle_blessing_description_2",
-			"loc_mutator_minion_nurgle_blessing_description_3"
-		},
 		trickle_horde_templates = {
 			{
 				stinger_duration = 8,
 				num_trickle_hordes_active_for_cooldown = 20,
+				min_players_alive = 2,
 				not_during_terror_events = true,
 				optional_num_tries = 6,
-				optional_main_path_offset = 50,
-				stinger = "wwise/events/minions/play_chaos_hound_spawn_stinger_circumstance",
+				stinger = "wwise/events/minions/play_minion_special_sniper_spawn_circumstance",
 				ignore_disallowance = true,
 				horde_compositions = {
 					trickle_horde = {
@@ -134,6 +145,10 @@ local mutator_templates = {
 					40,
 					45
 				},
+				optional_main_path_offset = {
+					40,
+					70
+				},
 				pause_pacing_on_spawn = {
 					roamers = 20,
 					hordes = 40,
@@ -141,23 +156,36 @@ local mutator_templates = {
 					specials = 50
 				},
 				num_trickle_waves = {
-					2,
-					3
+					{
+						4,
+						7
+					},
+					{
+						5,
+						8
+					},
+					{
+						6,
+						9
+					},
+					{
+						7,
+						10
+					},
+					{
+						9,
+						14
+					}
 				},
 				time_between_waves = {
-					7,
-					10
+					2,
+					5
 				}
 			}
 		}
 	},
 	mutator_poxwalker_bombers = {
 		class = "scripts/managers/mutator/mutators/mutator_extra_trickle_hordes",
-		description = {
-			"loc_mutator_minion_nurgle_blessing_description_1",
-			"loc_mutator_minion_nurgle_blessing_description_2",
-			"loc_mutator_minion_nurgle_blessing_description_3"
-		},
 		trickle_horde_templates = {
 			{
 				num_trickle_hordes_active_for_cooldown = 20,
@@ -228,20 +256,13 @@ local mutator_templates = {
 	},
 	mutator_mutants = {
 		class = "scripts/managers/mutator/mutators/mutator_extra_trickle_hordes",
-		description = {
-			"loc_mutator_minion_nurgle_blessing_description_1",
-			"loc_mutator_minion_nurgle_blessing_description_2",
-			"loc_mutator_minion_nurgle_blessing_description_3"
-		},
 		trickle_horde_templates = {
 			{
-				stinger_duration = 8,
 				num_trickle_hordes_active_for_cooldown = 20,
+				min_players_alive = 2,
 				not_during_terror_events = true,
-				spawn_max_health_modifier = 0.8,
+				spawn_max_health_modifier = 0.4,
 				optional_num_tries = 6,
-				optional_main_path_offset = 50,
-				stinger = "wwise/events/minions/play_chaos_hound_spawn_stinger_circumstance",
 				ignore_disallowance = true,
 				horde_compositions = {
 					trickle_horde = {
@@ -276,37 +297,54 @@ local mutator_templates = {
 					}
 				},
 				trickle_horde_travel_distance_range = {
-					110,
-					230
+					60,
+					180
 				},
 				trickle_horde_cooldown = {
 					40,
 					45
 				},
 				pause_pacing_on_spawn = {
-					roamers = 20,
-					hordes = 40,
-					trickle_hordes = 40,
-					specials = 50
+					roamers = 10,
+					hordes = 30,
+					trickle_hordes = 20,
+					specials = 30
+				},
+				optional_main_path_offset = {
+					-60,
+					60
 				},
 				num_trickle_waves = {
-					3,
-					4
+					{
+						4,
+						8
+					},
+					{
+						5,
+						9
+					},
+					{
+						6,
+						11
+					},
+					{
+						7,
+						13
+					},
+					{
+						9,
+						15
+					}
 				},
 				time_between_waves = {
-					7,
-					10
+					2,
+					4
 				}
 			}
 		}
 	},
 	mutator_riflemen = {
 		class = "scripts/managers/mutator/mutators/mutator_extra_trickle_hordes",
-		description = {
-			"loc_mutator_minion_nurgle_blessing_description_1",
-			"loc_mutator_minion_nurgle_blessing_description_2",
-			"loc_mutator_minion_nurgle_blessing_description_3"
-		},
 		trickle_horde_templates = {
 			{
 				stinger_duration = 8,

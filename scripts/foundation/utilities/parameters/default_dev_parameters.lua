@@ -13,6 +13,7 @@ local categories = {
 	"Buffs",
 	"Camera",
 	"Capture Zone",
+	"Chain Lightning",
 	"Chaos Hound",
 	"Chaos Spawn",
 	"Chat",
@@ -318,6 +319,18 @@ params.auto_select_debug_spawned_unit = {
 	value = false,
 	category = "Breed Picker"
 }
+params.debug_spawn_multiple_amount = {
+	value = 25,
+	category = "Breed Picker",
+	options = {
+		9,
+		25,
+		49,
+		81,
+		100,
+		196
+	}
+}
 params.perform_backend_version_check = {
 	value = true,
 	category = "Backend"
@@ -343,6 +356,10 @@ params.backend_debug_log = {
 	category = "Backend"
 }
 params.debug_verify_gear_cache = {
+	value = false,
+	category = "Backend"
+}
+params.debug_log_data_service_backend_cache = {
 	value = false,
 	category = "Backend"
 }
@@ -740,7 +757,42 @@ params.character_profile_selector_placeholder = {
 		"Gun lugger",
 		"Preacher",
 		"Protectorate"
-	}
+	},
+	on_value_set = function (new_value, old_value)
+		if not new_value then
+			return
+		end
+
+		local local_player = Managers.player:local_player(1)
+
+		if not local_player then
+			return
+		end
+
+		local peer_id = local_player:peer_id()
+		local local_player_id = local_player:local_player_id()
+		local ProfileUtils = require("scripts/utilities/profile_utils")
+		local MasterItems = require("scripts/backend/master_items")
+		local placeholder_profiles = ProfileUtils.placeholder_profiles(MasterItems.get_cached())
+		local wanted_profile = placeholder_profiles[new_value]
+		local character_id = wanted_profile.character_id
+
+		Managers.narrative:load_character_narrative(character_id):next(function ()
+			if Managers.state.game_session then
+				local is_server = Managers.state.game_session:is_server()
+
+				if is_server then
+					local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
+
+					profile_synchronizer_host:profile_changed_debug_placeholder_character_profile(peer_id, local_player_id, new_value)
+				else
+					local channel = Managers.connection:host_channel()
+
+					RPC.rpc_notify_profile_changed_debug_placeholder_character_profile(channel, peer_id, local_player_id, new_value)
+				end
+			end
+		end)
+	end
 }
 params.debug_character_interpolated_fixed_frame_movement = {
 	value = false,
@@ -1400,6 +1452,16 @@ params.debug_nav_graph = {
 		"prints_and_graphics"
 	}
 }
+params.nav_graph_draw_distance = {
+	value = 50,
+	category = "Navigation",
+	options = {
+		10,
+		50,
+		100,
+		math.huge
+	}
+}
 params.debug_slots = {
 	value = false,
 	category = "Navigation",
@@ -1590,7 +1652,7 @@ params.minion_anim_event_history_count = {
 	value = 10,
 	category = "Animation"
 }
-params.debug_minion_animation_logging = {
+params.debug_minion_anim_logging = {
 	value = false,
 	category = "Animation"
 }
@@ -1720,10 +1782,6 @@ params.debug_show_attacked_hit_zones = {
 	category = "Action"
 }
 params.debug_sweep_stickyness = {
-	value = false,
-	category = "Action"
-}
-params.draw_chain_lightning_targeting_action_module = {
 	value = false,
 	category = "Action"
 }
@@ -2116,7 +2174,8 @@ params.challenge = {
 		2,
 		3,
 		4,
-		5
+		5,
+		6
 	},
 	on_value_set = function (new_value, old_value)
 		Managers.state.difficulty:set_challenge(new_value)
@@ -2333,6 +2392,10 @@ params.renegade_flamer_allowed = {
 	value = true,
 	category = "Specials"
 }
+params.renegade_flamer_mutator_allowed = {
+	value = true,
+	category = "Specials"
+}
 params.disable_monster_pacing = {
 	value = false,
 	category = "Monsters"
@@ -2476,10 +2539,6 @@ params.show_debug_overheat_hud = {
 	category = "Hud"
 }
 params.show_debug_warp_charge_hud = {
-	value = false,
-	category = "Hud"
-}
-params.show_debug_buff_progressbar = {
 	value = false,
 	category = "Hud"
 }
@@ -3150,6 +3209,10 @@ params.disable_catapult_from_damage = {
 	value = false,
 	category = "Damage"
 }
+params.enable_auto_healing = {
+	value = false,
+	category = "Damage"
+}
 params.debug_minigame = {
 	value = false,
 	category = "Minigame"
@@ -3776,6 +3839,26 @@ params.use_localized_talent_names_in_debug_menu = {
 	value = false,
 	category = "Talents"
 }
+params.draw_chain_lightning_targeting_action_module = {
+	value = false,
+	category = "Chain Lightning"
+}
+params.debug_chain_lightning = {
+	value = false,
+	category = "Chain Lightning"
+}
+params.debug_draw_chain_lightning_effects = {
+	value = false,
+	category = "Chain Lightning"
+}
+params.immediate_chain_lightning_jumps = {
+	value = false,
+	category = "Chain Lightning"
+}
+params.disable_chain_lightning_effects = {
+	value = false,
+	category = "Chain Lightning"
+}
 params.always_max_overheat = {
 	value = false,
 	category = "Weapon"
@@ -3868,13 +3951,13 @@ params.debug_alternate_fire = {
 	value = false,
 	category = "Weapon"
 }
-params.debug_chain_lightning = {
+params.debug_looping_sound_components = {
 	value = false,
 	category = "Weapon"
 }
-params.debug_looping_sound_components = {
+params.debug_draw_damage_profile_ranges = {
 	value = false,
-	category = "Dialogue"
+	category = "Weapon"
 }
 params.debug_aim_assist = {
 	value = false,

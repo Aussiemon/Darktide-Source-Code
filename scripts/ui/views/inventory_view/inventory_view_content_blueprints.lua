@@ -748,7 +748,7 @@ blueprints.item_slot = {
 				local traits = equipped_item.traits
 
 				if traits then
-					for i = 1, 3 do
+					for i = 1, #traits do
 						local pass_id = "trait_" .. i
 						local trait = traits[i]
 
@@ -763,6 +763,7 @@ blueprints.item_slot = {
 								local material_values = trait_style.material_values
 								material_values.icon = texture_icon
 								material_values.frame = texture_frame
+								trait_style.material_values.overlay = 0
 							end
 
 							content[pass_id] = trait_id
@@ -770,6 +771,37 @@ blueprints.item_slot = {
 							content[pass_id] = nil
 						end
 					end
+
+					local trait_category = ItemUtils.trait_category(content.item)
+
+					Managers.data_service.crafting:trait_sticker_book(trait_category):next(function (seen_traits)
+						if seen_traits then
+							for i = 1, #traits do
+								local pass_id = "trait_" .. i
+								local trait = traits[i]
+								local trait_id = trait.id
+								local trait_rarity = trait.rarity
+
+								if trait then
+									for seen_trait_name, status in pairs(seen_traits) do
+										if seen_trait_name == trait_id and status ~= nil then
+											local trait_status = status[trait_rarity]
+
+											if trait_status == "unseen" then
+												local trait_style = style[pass_id]
+
+												if trait_style then
+													trait_style.material_values.overlay = 1
+												end
+
+												break
+											end
+										end
+									end
+								end
+							end
+						end
+					end)
 				end
 			end
 		end
@@ -810,7 +842,7 @@ blueprints.item_slot = {
 				local traits = equipped_item.traits
 
 				if traits then
-					for i = 1, 3 do
+					for i = 1, #traits do
 						local pass_id = "trait_" .. i
 						local trait = traits[i]
 

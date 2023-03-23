@@ -132,6 +132,15 @@ TagQueryDatabase.define_rule = function (self, rule_definition)
 	self._rules_n = self._rules_n + 1
 end
 
+TagQueryDatabase.remove_rule = function (self, rule_name)
+	local rule_id = self._rule_id_mapping[rule_name]
+	self._rule_id_mapping[rule_id] = nil
+	self._rule_id_mapping[rule_name] = nil
+	self._rules_n = self._rules_n - 1
+
+	RuleDatabase.remove_rule(self._database, rule_id)
+end
+
 TagQueryDatabase.num_rules = function (self)
 	return self._rules_n
 end

@@ -142,7 +142,8 @@ local function _calculate_dodge_total_time(specialization_dodge_template, dimini
 	return time_in_dodge * 10
 end
 
-local on_dodge_data = {}
+local tg_on_dodge_data = {}
+local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
 
 PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_state, params)
 	local specialization_dodge_template = self._specialization_dodge_template
@@ -171,10 +172,17 @@ PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_sta
 	self._locomotion_steering_component.disable_velocity_rotation = true
 	movement_state.method = "dodging"
 	movement_state.is_dodging = true
-	on_dodge_data.unit = unit
-	on_dodge_data.direction = dodge_direction
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
 
-	Managers.event:trigger("on_dodge", on_dodge_data)
+	if game_mode_name == TRAINING_GROUNDS_GAME_MODE_NAME then
+		table.clear(tg_on_dodge_data)
+
+		tg_on_dodge_data.unit = unit
+		tg_on_dodge_data.direction = dodge_direction
+
+		Managers.event:trigger("tg_on_dodge_enter", tg_on_dodge_data)
+	end
+
 	Stamina.drain(unit, 0, t)
 
 	local buff_extension = self._buff_extension

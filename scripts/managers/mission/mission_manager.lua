@@ -10,6 +10,8 @@ MissionManager.SIDE_MISSION_TYPES = table.enum("none", "luggable", "collect")
 local SIDE_MISSION_TYPES = MissionManager.SIDE_MISSION_TYPES
 
 MissionManager.init = function (self, mission_name, level, level_name, side_mission_name)
+	side_mission_name = side_mission_name or "default"
+
 	rawset(_G, "SPAWNED_LEVEL_NAME", level_name)
 
 	local mission = MissionTemplates[mission_name]

@@ -63,7 +63,7 @@ local horde_compositions = {
 					name = "renegade_sniper",
 					amount = {
 						1,
-						2
+						1
 					}
 				}
 			}
@@ -73,8 +73,8 @@ local horde_compositions = {
 				{
 					name = "renegade_sniper",
 					amount = {
-						2,
-						3
+						1,
+						1
 					}
 				}
 			}
@@ -84,8 +84,8 @@ local horde_compositions = {
 				{
 					name = "renegade_sniper",
 					amount = {
-						3,
-						4
+						1,
+						1
 					}
 				}
 			}
@@ -95,8 +95,8 @@ local horde_compositions = {
 				{
 					name = "renegade_sniper",
 					amount = {
-						4,
-						5
+						1,
+						1
 					}
 				}
 			}
@@ -106,8 +106,8 @@ local horde_compositions = {
 				{
 					name = "renegade_sniper",
 					amount = {
-						5,
-						4
+						1,
+						1
 					}
 				}
 			}
@@ -176,8 +176,8 @@ local horde_compositions = {
 				{
 					name = "cultist_mutant",
 					amount = {
-						2,
-						2
+						1,
+						1
 					}
 				}
 			}
@@ -187,8 +187,8 @@ local horde_compositions = {
 				{
 					name = "cultist_mutant",
 					amount = {
-						2,
-						3
+						1,
+						1
 					}
 				}
 			}
@@ -198,8 +198,8 @@ local horde_compositions = {
 				{
 					name = "cultist_mutant",
 					amount = {
-						3,
-						4
+						1,
+						1
 					}
 				}
 			}
@@ -209,8 +209,8 @@ local horde_compositions = {
 				{
 					name = "cultist_mutant",
 					amount = {
-						3,
-						5
+						1,
+						1
 					}
 				}
 			}
@@ -220,8 +220,8 @@ local horde_compositions = {
 				{
 					name = "cultist_mutant",
 					amount = {
-						4,
-						5
+						1,
+						1
 					}
 				}
 			}

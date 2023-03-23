@@ -182,7 +182,6 @@ local weapon_charge_templates = {
 	},
 	forcestaff_p3_m1_charge = {
 		charge_on_action_start = true,
-		min_charge = 0.2,
 		charge_duration = {
 			lerp_perfect = 1.5,
 			lerp_basic = 3

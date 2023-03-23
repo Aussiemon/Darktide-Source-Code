@@ -19,6 +19,7 @@ local proc_events = BuffSettings.proc_events
 local DAMAGE_COLLISION_FILTER = "filter_player_character_lunge"
 local DEFAULT_POWER_LEVEL = 300
 local SPEED_EPSILON = 0.001
+local HIT_WEAKSPOT = false
 local slide_knock_down_damage_settings = {
 	radius = 2,
 	damage_profile = DamageProfileTemplates.slide_knockdown,
@@ -46,6 +47,7 @@ PlayerCharacterStateSliding.init = function (self, character_state_init_context,
 	self._hit_enemy_units = {}
 end
 
+local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
 local FX_SOURCE_NAME = "rightfoot"
 
 PlayerCharacterStateSliding.on_enter = function (self, unit, dt, t, previous_state, params)
@@ -65,8 +67,11 @@ PlayerCharacterStateSliding.on_enter = function (self, unit, dt, t, previous_sta
 
 	self._movement_state_component.method = "sliding"
 	self._movement_state_component.is_dodging = true
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
 
-	Managers.event:trigger("on_slide")
+	if game_mode_name == TRAINING_GROUNDS_GAME_MODE_NAME then
+		Managers.event:trigger("tg_on_slide")
+	end
 
 	local character_state_hit_mass_component = self._character_state_hit_mass_component
 	character_state_hit_mass_component.used_hit_mass_percentage = 0
@@ -265,7 +270,7 @@ PlayerCharacterStateSliding._update_enemy_hit_detection = function (self, unit, 
 
 			ImpactEffect.play(hit_unit, hit_actor, damage_dealt, damage_type, nil, attack_result, hit_position, nil, attack_direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
 
-			current_mass_hit = current_mass_hit + HitMass.target_hit_mass(unit, hit_unit, false)
+			current_mass_hit = current_mass_hit + HitMass.target_hit_mass(unit, hit_unit, HIT_WEAKSPOT)
 		end
 	end
 

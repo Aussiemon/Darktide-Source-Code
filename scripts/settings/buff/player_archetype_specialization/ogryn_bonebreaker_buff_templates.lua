@@ -449,10 +449,12 @@ templates.ogryn_bonebreaker_cooldown_on_elite_kills_by_coherence = {
 local bleed_dr_max_stacks = talent_settings.defensive_1.max_stacks
 local bleed_range = DamageSettings.in_melee_range
 templates.ogryn_bonebreaker_reduce_damage_taken_per_bleed = {
-	hud_icon = "content/ui/textures/icons/talents/ogryn_2/hud/ogryn_2_tier_3_2",
+	hud_always_show_stacks = true,
 	predicted = false,
 	hud_priority = 3,
+	hud_icon = "content/ui/textures/icons/talents/ogryn_2/hud/ogryn_2_tier_3_2",
 	class_name = "buff",
+	always_show_in_hud = true,
 	lerped_stat_buffs = {
 		[stat_buffs.damage_taken_multiplier] = {
 			min = talent_settings.defensive_1.min,
@@ -513,6 +515,7 @@ templates.ogryn_bonebreaker_reduce_damage_taken_per_bleed = {
 }
 local reduced_damage_distance = talent_settings.defensive_2.distance * talent_settings.defensive_2.distance
 templates.ogryn_bonebreaker_reduce_damage_taken_on_disabled_allies = {
+	hud_always_show_stacks = true,
 	predicted = false,
 	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/talents/ogryn_2/hud/ogryn_2_tier_2_2",
@@ -818,8 +821,9 @@ templates.ogryn_bonebreaker_melee_revenge_damage = {
 		end
 
 		local damage = params.damage
+		local damage_absorbed = params.damage_absorbed or 0
 
-		if damage > 0 then
+		if damage > 0 or damage_absorbed > 0 then
 			local t = FixedFrame.get_latest_fixed_time()
 
 			template_data.buff_extension:add_internally_controlled_buff("ogryn_bonebreaker_melee_revenge_damage_buff", t)
@@ -839,7 +843,10 @@ templates.ogryn_bonebreaker_melee_revenge_damage_buff = {
 	duration = talent_settings.offensive_2_1.time
 }
 templates.ogryn_bonebreaker_hitting_multiple_with_melee_grants_melee_damage_bonus = {
+	force_predicted_proc = true,
+	hud_always_show_stacks = true,
 	predicted = false,
+	hud_icon = "content/ui/textures/icons/talents/ogryn_2/hud/ogryn_2_tier_1_1",
 	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_sweep_finish] = talent_settings.offensive_2_3.on_sweep_finish_proc_chance
@@ -861,6 +868,18 @@ templates.ogryn_bonebreaker_hitting_multiple_with_melee_grants_melee_damage_bonu
 		local max_hits = talent_settings.offensive_2_3.max_targets
 
 		return math.clamp(hits / max_hits, 0, 1)
+	end,
+	visual_stack_count = function (template_data, template_context)
+		local hits = template_data.hits or 0
+		local number_of_stacks = math.clamp(hits, 0, talent_settings.offensive_2_3.max_targets)
+
+		return number_of_stacks
+	end,
+	check_active_func = function (template_data, template_context)
+		local hits = template_data.hits or 0
+		local show = hits > 0
+
+		return show
 	end
 }
 templates.ogryn_bonebreaker_bull_rush_hits_replenish_toughness = {

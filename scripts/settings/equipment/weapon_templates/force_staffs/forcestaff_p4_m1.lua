@@ -215,7 +215,6 @@ weapon_template.actions = {
 		sprint_requires_press_to_interrupt = true,
 		anim_event = "orb_shoot",
 		vfx_effect_name = "content/fx/particles/weapons/force_staff/force_staff_projectile_cast_01",
-		damage_type = "force_staff_single_target",
 		anim_time_scale = 1.5,
 		fire_time = 0.2,
 		charge_template = "forcestaff_p4_m1_projectile",
@@ -261,8 +260,9 @@ weapon_template.actions = {
 				action_name = "action_stab_start"
 			},
 			charge = {
-				action_name = "action_charge",
-				chain_time = 0.45
+				chain_time = 0.45,
+				reset_combo = true,
+				action_name = "action_charge"
 			}
 		},
 		fx = {
@@ -453,8 +453,9 @@ weapon_template.actions = {
 				action_name = "rapid_left"
 			},
 			charge = {
-				action_name = "action_charge",
-				chain_time = 0.5
+				chain_time = 0.5,
+				reset_combo = true,
+				action_name = "action_charge"
 			},
 			vent = {
 				action_name = "action_vent"
@@ -501,8 +502,9 @@ weapon_template.actions = {
 				action_name = "rapid_left"
 			},
 			charge = {
-				action_name = "action_charge",
-				chain_time = 1
+				chain_time = 1,
+				reset_combo = true,
+				action_name = "action_charge"
 			},
 			vent = {
 				action_name = "action_vent"
@@ -587,8 +589,9 @@ weapon_template.actions = {
 				action_name = "rapid_left"
 			},
 			charge = {
-				action_name = "action_charge",
-				chain_time = 0.5
+				chain_time = 0.5,
+				reset_combo = true,
+				action_name = "action_charge"
 			},
 			vent = {
 				action_name = "action_vent",
@@ -678,8 +681,9 @@ weapon_template.actions = {
 				action_name = "rapid_left"
 			},
 			charge = {
-				action_name = "action_charge",
-				chain_time = 0.5
+				chain_time = 0.5,
+				reset_combo = true,
+				action_name = "action_charge"
 			},
 			vent = {
 				action_name = "action_vent",
@@ -774,8 +778,9 @@ weapon_template.actions = {
 				action_name = "rapid_left"
 			},
 			charge = {
-				action_name = "action_charge",
-				chain_time = 1
+				chain_time = 1,
+				reset_combo = true,
+				action_name = "action_charge"
 			},
 			vent = {
 				action_name = "action_vent",
@@ -866,8 +871,9 @@ weapon_template.actions = {
 				action_name = "rapid_left"
 			},
 			charge = {
-				action_name = "action_charge",
-				chain_time = 0.7
+				chain_time = 0.7,
+				reset_combo = true,
+				action_name = "action_charge"
 			},
 			vent = {
 				action_name = "action_vent",

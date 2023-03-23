@@ -368,19 +368,19 @@ recoil_templates.default_laspistol_bfg = {
 		camera_recoil_percentage = 0.15,
 		decay_grace = 0.05,
 		new_influence_percent = 0.3,
-		rise_duration = 0.05,
+		rise_duration = 0.125,
 		rise = {
 			{
-				lerp_perfect = 0.27,
-				lerp_basic = 0.95
+				lerp_perfect = 0.4,
+				lerp_basic = 1.1
 			},
 			{
 				lerp_perfect = 0.25,
-				lerp_basic = 0.5
+				lerp_basic = 0.7
 			},
 			{
 				lerp_perfect = 0.23,
-				lerp_basic = 0.4
+				lerp_basic = 0.6
 			},
 			{
 				lerp_perfect = 0.2,
@@ -537,21 +537,21 @@ recoil_templates.default_laspistol_bfg = {
 	moving = {
 		new_influence_percent = 0.2,
 		inherits = {
-			"default_laspistol_killshot",
+			"default_laspistol_bfg",
 			"still"
 		}
 	},
 	crouch_still = {
 		new_influence_percent = 0.26,
 		inherits = {
-			"default_laspistol_killshot",
+			"default_laspistol_bfg",
 			"still"
 		}
 	},
 	crouch_moving = {
 		new_influence_percent = 0.35,
 		inherits = {
-			"default_laspistol_killshot",
+			"default_laspistol_bfg",
 			"still"
 		}
 	}

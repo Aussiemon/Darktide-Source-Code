@@ -7,11 +7,10 @@ local keywords = BuffSettings.keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
 local templates = {
-	weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill = table.clone(BaseWeaponTraitBuffTemplates.base_weapon_trait_add_buff_after_activated_kill)
+	weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill = table.clone(BaseWeaponTraitBuffTemplates.guaranteed_melee_crit_on_activated_kill)
 }
-templates.weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill.buff_to_add = "weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill_effect"
-templates.weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill_effect = table.clone(BaseWeaponTraitBuffTemplates.base_weapon_trait_guaranteed_melee_crit_on_activated_kill)
-templates.weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill_effect.duration = 5
+templates.weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill.buff_data.internal_buff_name = "weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill_effect"
+templates.weapon_trait_bespoke_forcesword_p1_guaranteed_melee_crit_on_activated_kill_effect = table.clone(BaseWeaponTraitBuffTemplates.guaranteed_melee_crit_on_activated_kill_effect)
 templates.weapon_trait_bespoke_forcesword_p1_can_block_ranged = {
 	predicted = false,
 	class_name = "buff",
@@ -21,7 +20,8 @@ templates.weapon_trait_bespoke_forcesword_p1_can_block_ranged = {
 	conditional_stat_buffs = {
 		[stat_buffs.block_cost_ranged_multiplier] = 1
 	},
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	check_active_func = ConditionalFunctions.all(ConditionalFunctions.is_item_slot_wielded, ConditionalFunctions.is_blocking)
 }
 templates.weapon_trait_bespoke_forcesword_p1_warp_charge_power_bonus = table.merge({
 	conditional_stat_buffs = {
@@ -42,18 +42,30 @@ templates.weapon_trait_bespoke_forcesword_p1_increase_power_on_kill_parent.child
 templates.weapon_trait_bespoke_forcesword_p1_increase_power_on_kill_child = table.clone(BaseWeaponTraitBuffTemplates.increase_power_on_kill_child)
 templates.weapon_trait_bespoke_forcesword_p1_dodge_grants_finesse_bonus = table.clone(BaseWeaponTraitBuffTemplates.dodge_grants_finesse_bonus)
 templates.weapon_trait_bespoke_forcesword_p1_dodge_grants_critical_strike_chance = table.clone(BaseWeaponTraitBuffTemplates.dodge_grants_critical_strike_chance)
-templates.weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_parent = table.merge({
-	buff_to_add = "weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_child",
-	proc_events = {
-		[proc_events.on_hit] = 1
-	},
-	check_proc_func = CheckProcFunctions.on_elite_kill
-}, BaseWeaponTraitBuffTemplates.base_weapon_trait_add_buff_after_proc)
-templates.weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_child = {
+templates.weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_parent = {
+	child_duration = 5,
 	predicted = false,
-	refresh_duration_on_stack = true,
+	child_buff_template = "weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_child",
+	allow_proc_while_active = true,
+	stacks_to_remove = 5,
+	class_name = "weapon_trait_parent_proc_buff",
+	proc_events = {
+		[proc_events.on_kill] = 1
+	},
+	add_child_proc_events = {
+		[proc_events.on_kill] = 1
+	},
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	specific_check_proc_funcs = {
+		[proc_events.on_kill] = CheckProcFunctions.on_elite_kill
+	}
+}
+templates.weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_child = {
+	hide_icon_in_hud = true,
+	stack_offset = -1,
 	max_stacks = 5,
-	duration = 5,
+	predicted = false,
 	class_name = "buff",
 	conditional_stat_buffs = {
 		[stat_buffs.power_level_modifier] = 0.05

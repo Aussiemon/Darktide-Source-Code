@@ -11,11 +11,11 @@ local weapon_warp_charge_templates = {
 		high_threshold_modifier = 1,
 		vent_duration_modifier = {
 			lerp_perfect = 0.5,
-			lerp_basic = 1
+			lerp_basic = 1.5
 		},
 		auto_vent_duration_modifier = {
-			lerp_perfect = 1,
-			lerp_basic = 5
+			lerp_perfect = 0.5,
+			lerp_basic = 1.5
 		},
 		vent_power_level_modifier = {
 			1,
@@ -34,11 +34,11 @@ local weapon_warp_charge_templates = {
 		high_threshold_modifier = 1,
 		vent_duration_modifier = {
 			lerp_perfect = 0.5,
-			lerp_basic = 1
+			lerp_basic = 1.5
 		},
 		auto_vent_duration_modifier = {
-			lerp_perfect = 1,
-			lerp_basic = 4
+			lerp_perfect = 0.6,
+			lerp_basic = 1.4
 		},
 		vent_power_level_modifier = {
 			0,
@@ -57,11 +57,11 @@ local weapon_warp_charge_templates = {
 		high_threshold_modifier = 1,
 		vent_duration_modifier = {
 			lerp_perfect = 0.5,
-			lerp_basic = 1
+			lerp_basic = 1.5
 		},
 		auto_vent_duration_modifier = {
-			lerp_perfect = 1,
-			lerp_basic = 4
+			lerp_perfect = 0.6,
+			lerp_basic = 1.4
 		},
 		vent_power_level_modifier = {
 			0,
@@ -80,11 +80,11 @@ local weapon_warp_charge_templates = {
 		high_threshold_modifier = 1,
 		vent_duration_modifier = {
 			lerp_perfect = 0.5,
-			lerp_basic = 1
+			lerp_basic = 1.5
 		},
 		auto_vent_duration_modifier = {
-			lerp_perfect = 1,
-			lerp_basic = 4
+			lerp_perfect = 0.6,
+			lerp_basic = 1.4
 		},
 		vent_power_level_modifier = {
 			0,
@@ -103,11 +103,11 @@ local weapon_warp_charge_templates = {
 		high_threshold_modifier = 1,
 		vent_duration_modifier = {
 			lerp_perfect = 0.5,
-			lerp_basic = 1
+			lerp_basic = 1.5
 		},
 		auto_vent_duration_modifier = {
-			lerp_perfect = 1,
-			lerp_basic = 4
+			lerp_perfect = 0.6,
+			lerp_basic = 1.4
 		},
 		vent_power_level_modifier = {
 			0,
@@ -125,12 +125,12 @@ local weapon_warp_charge_templates = {
 		low_threshold_modifier = 1,
 		high_threshold_modifier = 1,
 		vent_duration_modifier = {
-			lerp_perfect = 0.75,
-			lerp_basic = 1.25
+			lerp_perfect = 0.5,
+			lerp_basic = 1.5
 		},
 		auto_vent_duration_modifier = {
-			lerp_perfect = 1,
-			lerp_basic = 5
+			lerp_perfect = 0.6,
+			lerp_basic = 1.4
 		},
 		vent_power_level_modifier = {
 			0,
@@ -152,8 +152,8 @@ local weapon_warp_charge_templates = {
 			lerp_basic = 1.25
 		},
 		auto_vent_duration_modifier = {
-			lerp_perfect = 1,
-			lerp_basic = 5
+			lerp_perfect = 0.6,
+			lerp_basic = 1.4
 		},
 		vent_power_level_modifier = {
 			0,

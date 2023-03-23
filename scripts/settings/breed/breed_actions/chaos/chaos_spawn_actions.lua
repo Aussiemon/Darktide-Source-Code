@@ -11,21 +11,64 @@ local action_data = {
 	death = {
 		instant_ragdoll_chance = 1
 	},
+	change_target = {
+		rotation_speed = 6,
+		dont_set_moving_move_state = true,
+		rotate_towards_target_on_fwd = true,
+		change_target_anim_events = {
+			bwd = "change_target_bwd",
+			fwd = "change_target_fwd",
+			left = "change_target_left",
+			right = "change_target_right"
+		},
+		change_target_anim_data = {
+			change_target_fwd = {},
+			change_target_bwd = {
+				sign = 1,
+				rad = math.pi
+			},
+			change_target_left = {
+				sign = 1,
+				rad = math.pi / 2
+			},
+			change_target_right = {
+				sign = -1,
+				rad = math.pi / 2
+			}
+		},
+		change_target_rotation_timings = {
+			change_target_right = 0,
+			change_target_fwd = 0,
+			change_target_left = 0,
+			change_target_bwd = 0
+		},
+		change_target_rotation_durations = {
+			change_target_right = 1.3888888888888888,
+			change_target_fwd = 0.9722222222222222,
+			change_target_left = 1.3888888888888888,
+			change_target_bwd = 1.3888888888888888
+		},
+		change_target_event_anim_speed_durations = {
+			change_target_fwd = 0.9722222222222222
+		}
+	},
 	leap = {
-		push_minions_side_relation = "allied",
+		start_move_speed = 1,
+		push_minions_radius = 2,
 		land_impact_timing = 0.16666666666666666,
 		utility_weight = 1,
 		push_enemies_radius = 2,
 		aoe_bot_threat_duration = 1,
 		start_leap_anim_event = "attack_leap_start",
-		start_duration = 1.1333333333333333,
-		push_minions_radius = 2,
+		start_duration = 1.1111111111111112,
+		push_minions_side_relation = "allied",
 		aoe_bot_threat_timing = 0.5,
+		gravity = 20,
 		push_enemies_power_level = 2000,
 		push_minions_power_level = 2000,
-		landing_duration = 1.1666666666666667,
+		landing_duration = 0.8333333333333334,
+		speed = 18,
 		land_anim_event = "attack_leap_land",
-		start_move_speed = 1,
 		considerations = UtilityConsiderations.chaos_spawn_leap,
 		stagger_type_reduction = {
 			melee = -20,
@@ -34,7 +77,12 @@ local action_data = {
 		push_minions_damage_profile = DamageProfileTemplates.chaos_hound_push,
 		push_enemies_damage_profile = DamageProfileTemplates.chaos_hound_push,
 		aoe_bot_threat_size = Vector3Box(1.5, 2, 2),
-		land_ground_impact_fx_template = GroundImpactFxTemplates.chaos_spawn_leap
+		land_ground_impact_fx_template = GroundImpactFxTemplates.chaos_spawn_leap,
+		catapult_units = {
+			speed = 10,
+			radius = 5,
+			angle = math.pi / 6
+		}
 	},
 	follow = {
 		idle_anim_events = "idle",
@@ -179,13 +227,14 @@ local action_data = {
 		}
 	},
 	claw_attack = {
-		aoe_threat_timing = 0.4,
 		height = 5,
+		ignore_blocked = true,
 		utility_weight = 1,
 		attack_type = "oobb",
 		collision_filter = "filter_minion_melee",
 		range = 3.5,
 		bot_power_level_modifier = 0.4,
+		aoe_threat_timing = 0.4,
 		width = 1.25,
 		aoe_threat_duration = 0.75,
 		considerations = UtilityConsiderations.chaos_spawn_claw_attack,
@@ -207,7 +256,7 @@ local action_data = {
 			melee = 0.25,
 			moving_melee = 0.1
 		},
-		damage_profile = DamageProfileTemplates.monster_slam,
+		damage_profile = DamageProfileTemplates.chaos_spawn_claw,
 		damage_type = damage_types.minion_monster_sharp,
 		aoe_bot_threat_oobb_size = Vector3Box(1.5, 2.25, 2.5),
 		ground_impact_fx_template = GroundImpactFxTemplates.chaos_spawn_claw
@@ -254,7 +303,10 @@ local action_data = {
 			attack_catapult = 0
 		},
 		damage_profile = DamageProfileTemplates.chaos_spawn_tentacle,
-		damage_type = damage_types.minion_monster_blunt,
+		damage_type = {
+			human = damage_types.minion_mutant_smash,
+			ogryn = damage_types.minion_mutant_smash_ogryn
+		},
 		stagger_type_reduction = {
 			ranged = 100,
 			explosion = 100
@@ -489,6 +541,13 @@ local action_data = {
 			250,
 			300
 		},
+		heal_amount = {
+			200,
+			300,
+			450,
+			600,
+			750
+		},
 		eat_damage_profile = DamageProfileTemplates.beast_of_nurgle_hit_by_vomit,
 		eat_damage_type = {
 			human = damage_types.minion_vomit,
@@ -523,7 +582,7 @@ local action_data = {
 			"attack_melee_combo_2"
 		},
 		attack_anim_durations = {
-			attack_melee_combo_2 = 2.1666666666666665,
+			attack_melee_combo_2 = 1.8055555555555556,
 			attack_melee_combo = 1.8333333333333333
 		},
 		attack_sweep_damage_timings = {
@@ -549,17 +608,17 @@ local action_data = {
 			},
 			attack_melee_combo_2 = {
 				{
-					0.5333333333333333,
-					0.6666666666666666
+					0.4444444444444444,
+					0.5555555555555556
 				},
 				{
-					1.2666666666666666,
-					1.4,
+					1.0555555555555556,
+					1.1666666666666667,
 					"j_leftfinger3_jnt"
 				},
 				{
-					1.9333333333333333,
-					2.066666666666667
+					1.6111111111111112,
+					1.7222222222222223
 				}
 			}
 		},
@@ -570,7 +629,7 @@ local action_data = {
 			ranged = 1
 		},
 		move_start_timings = {
-			attack_melee_combo_2 = 0.8666666666666667,
+			attack_melee_combo_2 = 0.7222222222222222,
 			attack_melee_combo = 0.8666666666666667
 		},
 		damage_profile = DamageProfileTemplates.chaos_spawn_combo,
@@ -602,9 +661,9 @@ local action_data = {
 				1.5666666666666667
 			},
 			attack_melee_combo_2 = {
-				0.5,
-				1.3,
-				1.9333333333333333
+				0.6,
+				1.56,
+				2.32
 			}
 		},
 		sweep_ground_impact_fx_templates = {
@@ -751,13 +810,13 @@ local action_data = {
 	smash_obstacle = {
 		rotation_duration = 0.1,
 		attack_anim_events = {
-			"attack_slam"
+			"attack_melee_claw"
 		},
 		attack_anim_damage_timings = {
-			attack_slam = 0.7333333333333333
+			attack_melee_claw = 0.5
 		},
 		attack_anim_durations = {
-			attack_slam = 2
+			attack_melee_claw = 1.6666666666666667
 		},
 		damage_profile = DamageProfileTemplates.default
 	},

@@ -370,7 +370,8 @@ damage_templates.default_rippergun_snp = {
 damage_templates.rippergun_weapon_special = {
 	ragdoll_push_force = 50,
 	ragdoll_only = true,
-	stagger_category = "melee",
+	ignore_stagger_reduction = true,
+	stagger_category = "flamer",
 	cleave_distribution = double_cleave,
 	damage_type = damage_types.combat_blade,
 	gibbing_power = GibbingPower.light,
@@ -407,12 +408,12 @@ damage_templates.rippergun_weapon_special = {
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
-					[armor_types.armored] = damage_lerp_values.lerp_0_8,
+					[armor_types.armored] = damage_lerp_values.lerp_1,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
-					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 					[armor_types.prop_armor] = damage_lerp_values.lerp_0_8
 				},
@@ -421,16 +422,16 @@ damage_templates.rippergun_weapon_special = {
 					[armor_types.armored] = damage_lerp_values.lerp_1,
 					[armor_types.resistant] = damage_lerp_values.lerp_2,
 					[armor_types.player] = damage_lerp_values.lerp_1,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
-					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+					[armor_types.berserker] = damage_lerp_values.lerp_1,
+					[armor_types.super_armor] = damage_lerp_values.lerp_1,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 					[armor_types.prop_armor] = damage_lerp_values.lerp_1
 				}
 			},
 			power_distribution = {
-				attack = 100,
-				impact = 15
+				attack = 200,
+				impact = 25
 			},
 			finesse_boost = {
 				[armor_types.unarmored] = 0.1,

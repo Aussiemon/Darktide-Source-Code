@@ -240,13 +240,6 @@ return function ()
 				OP.ADD,
 				1
 			}
-		},
-		on_pre_rule_execution = {
-			random_ignore_vo = {
-				chance = 0,
-				max_failed_tries = 5,
-				hold_for = 0
-			}
 		}
 	})
 	define_rule({

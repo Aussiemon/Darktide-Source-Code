@@ -351,14 +351,14 @@ local action_data = {
 			attack_reach_up = 4
 		},
 		disable_shield_block_timing = {
-			attack_01 = 0.7575757575757576,
+			attack_01 = 0.45454545454545453,
 			attack_03 = 1.1111111111111112,
-			attack_02 = 0.6410256410256411
+			attack_02 = 0.1282051282051282
 		},
 		enable_shield_block_timing = {
-			attack_01 = 1.3636363636363635,
-			attack_03 = 1.6666666666666667,
-			attack_02 = 1.2820512820512822
+			attack_01 = 1.9696969696969697,
+			attack_03 = 2.5555555555555554,
+			attack_02 = 1.9230769230769231
 		}
 	},
 	shield_push = {
@@ -423,7 +423,7 @@ local action_data = {
 			attack_move_01 = 0.9090909090909091
 		},
 		enable_shield_block_timing = {
-			attack_move_01 = 1.8181818181818181
+			attack_move_01 = 2.121212121212121
 		},
 		animation_move_speed_configs = {
 			attack_move_01 = {
@@ -463,6 +463,7 @@ local action_data = {
 		}
 	},
 	stagger = {
+		ignore_extra_stagger_duration = true,
 		disable_shield_block_timing = {
 			stagger_bwd_heavy = 0,
 			stagger_shield_damage_01 = 0,
@@ -483,11 +484,15 @@ local action_data = {
 			stagger_bwd_sticky_3 = 0,
 			stagger_shield_break_01 = 0.3333333333333333,
 			stagger_right_sticky_3 = 0,
+			stagger_explosion_left = 0,
+			stagger_explosion_right = 0,
 			stagger_left_sticky = 0,
 			stagger_shield_damage_03 = 0,
 			stagger_shield_break_05 = 0.3333333333333333,
 			stagger_left_heavy = 0,
 			stagger_shield_break_02 = 0.3333333333333333,
+			stagger_explosion_front = 0,
+			stagger_explosion_back = 0,
 			stagger_front_sticky = 0,
 			stagger_left_sticky_2 = 0
 		},
@@ -511,20 +516,27 @@ local action_data = {
 			stagger_bwd_sticky_3 = 2,
 			stagger_shield_break_01 = 104.48717948717949,
 			stagger_right_sticky_3 = 2,
+			stagger_explosion_left = 3,
+			stagger_explosion_right = 3,
 			stagger_left_sticky = 2,
 			stagger_shield_damage_03 = 139.48717948717947,
 			stagger_shield_break_05 = 122.48717948717949,
 			stagger_left_heavy = 104.33333333333333,
 			stagger_shield_break_02 = 112.48717948717949,
+			stagger_explosion_front = 3,
+			stagger_explosion_back = 3,
 			stagger_front_sticky = 2,
 			stagger_left_sticky_2 = 2
 		},
 		stagger_duration_mods = {
 			stagger_shield_block_05 = 1.4,
 			stagger_shield_block_01 = 0.8,
-			stagger_shield_damage_01 = 0.87,
+			stagger_shield_damage_02 = 1.2,
+			stagger_shield_damage_01 = 1.05,
+			stagger_shield_damage_04 = 1.2,
 			stagger_shield_block_left = 1.28,
-			stagger_shield_block_right = 1.44
+			stagger_shield_block_right = 1.44,
+			stagger_shield_damage_03 = 1.4
 		},
 		stagger_anims = {
 			light = {

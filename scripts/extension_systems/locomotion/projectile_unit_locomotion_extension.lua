@@ -241,6 +241,8 @@ ProjectileUnitLocomotionExtension.switch_to_manual_state_helper = function (self
 	local integration_data = self._integration_data
 
 	ProjectileIntegrationData.fill_integration_data(integration_data, self._owner_unit, self._projectile_unit, projectile_locomotion_template, radius, mass, position, rotation, direction, speed, angular_velocity, target_unit, target_position)
+	self._position:store(position)
+	self._rotation:store(rotation)
 end
 
 ProjectileUnitLocomotionExtension._update_manual_physics = function (self, unit, dt, t)

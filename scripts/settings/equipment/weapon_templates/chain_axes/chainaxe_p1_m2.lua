@@ -1446,7 +1446,7 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			start_attack = {
-				action_name = "action_melee_start_right_2",
+				action_name = "action_melee_start_left",
 				chain_time = 0.45
 			},
 			special_action = {

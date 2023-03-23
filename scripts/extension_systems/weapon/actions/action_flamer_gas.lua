@@ -449,7 +449,7 @@ ActionFlamerGas.running_action_state = function (self, t, time_in_action)
 		local charge_component = self._action_module_charge_component
 
 		if charge_component.charge_level <= 0 then
-			return "charge_depleated"
+			return "charge_depleted"
 		end
 	else
 		local inventory_slot_component = self._inventory_slot_component

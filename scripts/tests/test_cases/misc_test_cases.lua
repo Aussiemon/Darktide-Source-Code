@@ -406,7 +406,7 @@ MiscTestCases.play_all_cutscenes = function (case_settings)
 		}
 		local measure_performance = settings.measure_performance or false
 		local performance_measurements = measure_performance and {} or nil
-		local event_name = measure_performance and "cutscene_performance_measurements" or nil
+		local telemetry_event_name = measure_performance and "perf_cutscene" or nil
 
 		if (TestifySnippets.is_debug_stripped() or BUILD == "release") and Testify:make_request("current_state_name") ~= "StateGameplay" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
@@ -425,7 +425,12 @@ MiscTestCases.play_all_cutscenes = function (case_settings)
 			Testify:make_request("wait_for_cutscene_to_start", cutscene_name)
 
 			if measure_performance then
-				Testify:make_request("start_measuring_performance", false, true, true)
+				local values_to_measure = {
+					primitives_count = true,
+					batchcount = true
+				}
+
+				Testify:make_request("start_measuring_performance", values_to_measure)
 			end
 
 			Testify:make_request("wait_for_cutscene_to_finish", cutscene_name)
@@ -433,7 +438,7 @@ MiscTestCases.play_all_cutscenes = function (case_settings)
 			if measure_performance then
 				performance_measurements = Testify:make_request("stop_measuring_performance")
 
-				Testify:make_request("create_telemetry_event", event_name, mission_key, cutscene_name, performance_measurements)
+				Testify:make_request("create_telemetry_event", telemetry_event_name, mission_key, cutscene_name, performance_measurements)
 			end
 
 			TestifySnippets.wait(2)
@@ -448,6 +453,12 @@ MiscTestCases.play_all_cutscenes = function (case_settings)
 		local temp_keys = {}
 
 		for cutscene_name, _ in table.sorted(cutscenes, temp_keys) do
+			local outro_win = cutscene_name == "outro_win"
+
+			if outro_win then
+				Testify:make_request("trigger_external_event", "mission_outro_win")
+			end
+
 			if hide_players then
 				Testify:make_request("hide_players")
 			end
@@ -463,7 +474,12 @@ MiscTestCases.play_all_cutscenes = function (case_settings)
 			end
 
 			if measure_performance then
-				Testify:make_request("start_measuring_performance", false, true, true)
+				local values_to_measure = {
+					primitives_count = true,
+					batchcount = true
+				}
+
+				Testify:make_request("start_measuring_performance", values_to_measure)
 			end
 
 			Testify:make_request("wait_for_cutscene_to_finish", cutscene_name)
@@ -471,7 +487,7 @@ MiscTestCases.play_all_cutscenes = function (case_settings)
 			if measure_performance then
 				performance_measurements = Testify:make_request("stop_measuring_performance")
 
-				Testify:make_request("create_telemetry_event", event_name, mission_key, cutscene_name, performance_measurements)
+				Testify:make_request("create_telemetry_event", telemetry_event_name, mission_key, cutscene_name, performance_measurements)
 			end
 
 			if hide_players then
@@ -567,13 +583,13 @@ MiscTestCases.play_all_vfx = function (case_settings)
 			include_properties = false
 		})
 		local particles = Testify:make_request("metadata_wait_for_query_results", query_handle)
-		local total_num_particles = table.size(particles)
+		local num_particles = #particles
+		local i = 1
 		local particle_ids = {}
-		local i = 0
 
 		for particle_name, _ in pairs(particles) do
 			if not table.contains(PARTICLES_TO_SKIP, particle_name) then
-				Log.info("Testify", "%s/%s Playing vfx %s", i, total_num_particles, particle_name)
+				Log.info("Testify", "%s/%s Playing vfx %s", i, num_particles, particle_name)
 
 				local particle_id = Testify:make_request("create_particles", world, particle_name, boxed_spawn_position, particle_life_time)
 				particle_ids[particle_name] = particle_id
@@ -621,15 +637,14 @@ MiscTestCases.spawn_all_units = function (case_settings)
 			include_properties = false
 		})
 		local units = Testify:make_request("metadata_wait_for_query_results", query_handle)
-		local total_num_units = table.size(units)
+		local num_units = #units
+		local i = 1
 
 		TestifySnippets.wait(1)
 
-		local i = 1
-
 		for unit_name, _ in pairs(units) do
 			if not table.contains(UNITS_TO_SKIP, unit_name) then
-				Log.info("Testify", "%s/%s Spawning unit %s", i, total_num_units, unit_name)
+				Log.info("Testify", "%s/%s Spawning unit %s", i, num_units, unit_name)
 
 				local unit = Testify:make_request("spawn_unit", unit_name, boxed_spawn_position)
 

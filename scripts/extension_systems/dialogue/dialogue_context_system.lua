@@ -43,9 +43,13 @@ DialogueContextSystem.on_remove_extension = function (self, unit, extension_name
 		self._next_player_key = next(self._unit_extension_data, self._next_player_key)
 	end
 
-	self._unit_extension_data[unit]:on_remove_extension()
+	local extension = self._unit_extension_data[unit]
 
-	self._unit_extension_data[unit] = nil
+	if extension then
+		extension:on_remove_extension()
+
+		self._unit_extension_data[unit] = nil
+	end
 
 	ScriptUnit.remove_extension(unit, "dialogue_context_system")
 end

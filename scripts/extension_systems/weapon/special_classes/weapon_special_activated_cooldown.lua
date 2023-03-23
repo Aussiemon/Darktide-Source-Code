@@ -56,7 +56,7 @@ WeaponSpecialActivatedCooldown._update_activation = function (self, dt, t, inven
 	end
 end
 
-WeaponSpecialActivatedCooldown.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, hit_position, attack_direction, optional_origin_slot)
+WeaponSpecialActivatedCooldown.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, hit_position, attack_direction, abort_attack, optional_origin_slot)
 	return
 end
 

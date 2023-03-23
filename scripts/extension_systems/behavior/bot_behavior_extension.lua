@@ -6,6 +6,7 @@ local Health = require("scripts/utilities/health")
 local InteractionSettings = require("scripts/settings/interaction/interaction_settings")
 local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local BotBehaviorExtension = class("BotBehaviorExtension")
 local FOLLOW_TIMER_LOWER_BOUND = 1
@@ -300,7 +301,24 @@ BotBehaviorExtension._update_health_stations = function (self, unit, dt, t)
 
 	local damage_taken = 1 - Health.current_health_percent(unit)
 	local permanent_damage_taken = Health.permanent_damage_taken_percent(unit)
-	local total_damage_value = damage_taken + permanent_damage_taken * HEALTH_VALUE_PER_PERMANTENT_DAMAGE
+	local players = Managers.player:players()
+	local num_grims = 0
+
+	for _, player in pairs(players) do
+		local player_unit = player.player_unit
+
+		if ALIVE[player_unit] then
+			local visual_loadout_extension = ScriptUnit.extension(player_unit, "visual_loadout_system")
+			local has_grim = PlayerUnitVisualLoadout.has_weapon_keyword_from_slot(visual_loadout_extension, "slot_pocketable", "grimoire")
+
+			if has_grim then
+				num_grims = num_grims + 1
+			end
+		end
+	end
+
+	local projected_grim_damage = 0.33
+	local total_damage_value = damage_taken - math.min(num_grims * projected_grim_damage, projected_grim_damage) + math.max((permanent_damage_taken - num_grims * projected_grim_damage) * HEALTH_VALUE_PER_PERMANTENT_DAMAGE, 0)
 
 	if damage_taken_required < total_damage_value then
 		local players_with_less_health = 0
@@ -310,7 +328,7 @@ BotBehaviorExtension._update_health_stations = function (self, unit, dt, t)
 			local human_unit = human_player_units[i]
 			local human_damage_taken = 1 - Health.current_health_percent(human_unit)
 			local human_permanent_damage_taken = Health.permanent_damage_taken_percent(human_unit)
-			local human_total_damage_value = human_damage_taken + human_permanent_damage_taken * HEALTH_VALUE_PER_PERMANTENT_DAMAGE
+			local human_total_damage_value = human_damage_taken - math.min(num_grims * projected_grim_damage, projected_grim_damage) + math.max((human_permanent_damage_taken - num_grims * projected_grim_damage) * HEALTH_VALUE_PER_PERMANTENT_DAMAGE, 0)
 
 			if total_damage_value < human_total_damage_value * 2 then
 				players_with_less_health = players_with_less_health + 1

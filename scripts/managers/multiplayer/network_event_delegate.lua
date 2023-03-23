@@ -7,6 +7,14 @@ NetworkEventDelegate.init = function (self)
 	self._state_events = {}
 	local event_meta_table = {
 		__index = function (t, key)
+			if BUILD == "release" then
+				Crashify.print_exception("NetworkEventDelegate", string.format("Network event not registered %q", key))
+
+				return function ()
+					return
+				end
+			end
+
 			local message_info = Network.message_info(key)
 
 			if message_info and not message_info.session_bound then

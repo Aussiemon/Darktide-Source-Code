@@ -130,12 +130,24 @@ weapon_template.actions = {
 				t = 0.5
 			},
 			{
+				modifier = 0.85,
+				t = 0.75
+			},
+			{
+				modifier = 0.95,
+				t = 0.9
+			},
+			{
 				modifier = 1,
 				t = 1.5
 			},
 			start_modifier = 0.25
 		},
 		allowed_chain_actions = {
+			push = {
+				action_name = "action_push",
+				chain_time = 0.5
+			},
 			wield = {
 				action_name = "action_unwield",
 				chain_time = 0.5
@@ -163,10 +175,18 @@ weapon_template.actions = {
 			},
 			{
 				modifier = 0,
+				t = 0.2
+			},
+			{
+				modifier = 0.2,
 				t = 0.3
 			},
 			{
 				modifier = 0.8,
+				t = 0.4
+			},
+			{
+				modifier = 1,
 				t = 0.5
 			},
 			start_modifier = 0.1
@@ -236,7 +256,7 @@ weapon_template.actions = {
 		action_movement_curve = {
 			{
 				modifier = 1,
-				t = 0.4
+				t = 0.25
 			},
 			{
 				modifier = 0.6,

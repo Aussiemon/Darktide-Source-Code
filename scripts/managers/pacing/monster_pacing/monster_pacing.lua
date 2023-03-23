@@ -168,6 +168,10 @@ MonsterPacing.fill_spawns_by_travel_distance = function (self, breed_name, spawn
 		monster_per_travel_distance = math.random_range(monster_per_travel_distance[1], monster_per_travel_distance[2])
 	end
 
+	if not self._monsters then
+		return
+	end
+
 	local monsters = self._monsters
 	local spawn_point_sections = self._spawn_type_point_sections[spawn_type]
 
@@ -380,9 +384,9 @@ end
 MonsterPacing._spawn_boss_patrol = function (self, boss_patrol, ahead_travel_distance, side_id)
 	local breed_list = boss_patrol.breed_list
 	local current_faction = Managers.state.pacing:current_faction()
-	local boss_patrol_resistance_templates = breed_list[current_faction].resistance_templates
-	local boss_patrol_resistance_breed_list = Managers.state.difficulty:get_table_entry_by_resistance(boss_patrol_resistance_templates)
-	local spawn_list = boss_patrol_resistance_breed_list[math.random(1, #boss_patrol_resistance_breed_list)]
+	local boss_patrol_challenge_templates = breed_list[current_faction].challenge_templates
+	local boss_patrol_challenge_breed_list = Managers.state.difficulty:get_table_entry_by_challenge(boss_patrol_challenge_templates)
+	local spawn_list = boss_patrol_challenge_breed_list[math.random(1, #boss_patrol_challenge_breed_list)]
 	local num_to_spawn = #spawn_list
 	local nav_world = self._nav_world
 	local spawn_point_travel_distance = boss_patrol.spawn_point_travel_distance

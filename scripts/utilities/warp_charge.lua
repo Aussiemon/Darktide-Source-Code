@@ -140,7 +140,10 @@ WarpCharge.update_observer = function (dt, t, player, unit, first_person_unit, w
 		Unit.animation_set_variable(unit, warp_charge_variable_3p, current_percentage)
 	end
 
-	WwiseWorld.set_global_parameter(wwise_world, "psyker_overload_global", current_percentage)
+	local options_peril_slider = Application.user_setting("interface_settings", "psyker_overload_intensity") or 100
+	local parameter_value = math.min(current_percentage, options_peril_slider / 100)
+
+	WwiseWorld.set_global_parameter(wwise_world, "psyker_overload_global", parameter_value)
 end
 
 WarpCharge.update = function (dt, t, warp_charge_component, player, unit, first_person_unit, is_local_unit, wwise_world)
@@ -175,7 +178,10 @@ WarpCharge.update = function (dt, t, warp_charge_component, player, unit, first_
 	end
 
 	if is_local_unit then
-		WwiseWorld.set_global_parameter(wwise_world, "psyker_overload_global", current_percentage)
+		local options_peril_slider = Application.user_setting("interface_settings", "psyker_overload_intensity") or 100
+		local parameter_value = math.min(current_percentage, options_peril_slider / 100)
+
+		WwiseWorld.set_global_parameter(wwise_world, "psyker_overload_global", parameter_value)
 	end
 
 	if current_percentage <= 0 or not idle or waiting_for_decay then
@@ -197,7 +203,7 @@ WarpCharge.update = function (dt, t, warp_charge_component, player, unit, first_
 	local high_threshold_decay_rate = base_high_threshold_decay_rate * high_threshold_decay_rate_modifier * warp_charge_dissipation_multiplier
 	local critical_threshold_decay_rate = base_critical_threshold_decay_rate * critical_threshold_decay_rate_modifier * warp_charge_dissipation_multiplier
 	local base_auto_vent_duration = specialization_warp_charge_template.auto_vent_duration
-	local auto_vent_duration_modifier = weapon_warp_charge_template.auto_vent_duration_modifier or 3
+	local auto_vent_duration_modifier = weapon_warp_charge_template.auto_vent_duration_modifier or 0.75
 	local auto_vent_duration = base_auto_vent_duration * auto_vent_duration_modifier
 	local new_charge = SharedFunctions.update(dt, current_percentage, auto_vent_duration, low_threshold, high_threshold, critical_threshold, low_threshold_decay_rate, high_threshold_decay_rate, critical_threshold_decay_rate, default_threshold_decay_rate_modifier)
 

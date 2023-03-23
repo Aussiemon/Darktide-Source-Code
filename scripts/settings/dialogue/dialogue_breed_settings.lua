@@ -613,6 +613,24 @@ dialogue_breed_settings.renegade_flamer = {
 		"enemy_traitor_guard_flamer_a"
 	}
 }
+dialogue_breed_settings.renegade_flamer_mutator = {
+	trigger_seen_vo = true,
+	is_network_synced = false,
+	trigger_heard_vo = false,
+	vo_class_name = "renegade_flamer",
+	has_dialogue_extension = true,
+	vo_triggers_enemy_kill_query = true,
+	dialogue_memory_faction_name = "enemy",
+	spawn_vo_event = "spawned",
+	can_trigger_vo = true,
+	wwise_voice_switch_group = "switch_voice_enemy_traitor_flamer_mutator",
+	wwise_voices = {
+		"enemy_traitor_guard_flamer_a",
+		"enemy_traitor_guard_flamer_mutator_b",
+		"enemy_traitor_guard_flamer_mutator_c",
+		"enemy_traitor_guard_flamer_mutator_d"
+	}
+}
 dialogue_breed_settings.unknown_breed_name = {
 	trigger_seen_vo = false,
 	trigger_heard_vo = false,

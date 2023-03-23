@@ -179,35 +179,23 @@ local function _add_trait(trait_name, rarity, buffs, weapon_name)
 	end
 end
 
-WeaponTweakTemplates.extract_trait_buffs = function (weapon_template, buffs, traits, debug_traits)
+WeaponTweakTemplates.extract_trait_buffs = function (weapon_template, buffs, traits)
 	local weapon_name = weapon_template.name
-	local use_debug = not not debug_traits
+	local item_definitions = MasterItems.get_cached()
 
-	if not use_debug then
-		local item_definitions = MasterItems.get_cached()
+	for i = 1, #traits do
+		local trait = traits[i]
+		local trait_item_id = trait.id
+		local rarity = trait.rarity or 1
+		local valid_id = trait_item_id and MasterItems.item_exists(trait_item_id)
+		local trait_item = valid_id and item_definitions[trait_item_id]
 
-		for i = 1, #traits do
-			local trait = traits[i]
-			local trait_item_id = trait.id
-			local rarity = trait.rarity or 1
-			local valid_id = trait_item_id and MasterItems.item_exists(trait_item_id)
-			local trait_item = valid_id and item_definitions[trait_item_id]
-
-			if trait_item then
-				local trait_name = trait_item.trait
-
-				_add_trait(trait_name, rarity, buffs, weapon_name)
-			else
-				Log.warning("WeaponTweakTemplates", "Could not find item for trait %s for weapon %s when extracting buffs", trait_item_id, weapon_name)
-			end
-		end
-	else
-		for i = 1, #debug_traits do
-			local trait_data = debug_traits[i]
-			local trait_name = trait_data.name
-			local rarity = trait_data.rarity
+		if trait_item then
+			local trait_name = trait_item.trait
 
 			_add_trait(trait_name, rarity, buffs, weapon_name)
+		else
+			Log.warning("WeaponTweakTemplates", "Could not find item for trait %s for weapon %s when extracting buffs", trait_item_id, weapon_name)
 		end
 	end
 end

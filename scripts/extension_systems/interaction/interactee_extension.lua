@@ -236,22 +236,6 @@ InteracteeExtension.interaction_type = function (self)
 	return interaction:type()
 end
 
-InteracteeExtension.interaction_network_sync = function (self)
-	local active_interaction_type = self._active_interaction_type
-
-	if not active_interaction_type then
-		return true
-	end
-
-	local override_context = self._override_contexts[active_interaction_type]
-
-	if not override_context or override_context.network_sync == nil then
-		return true
-	end
-
-	return override_context.network_sync
-end
-
 InteracteeExtension.interaction_length = function (self)
 	local active_interaction_type = self._active_interaction_type
 

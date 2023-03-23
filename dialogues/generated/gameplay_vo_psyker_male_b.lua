@@ -2562,13 +2562,6 @@ local gameplay_vo_psyker_male_b = {
 			2.161042,
 			2.423792
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	player_death_psyker = {
@@ -2587,13 +2580,6 @@ local gameplay_vo_psyker_male_b = {
 			2.575542,
 			1.582479,
 			1.871021
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -2614,13 +2600,6 @@ local gameplay_vo_psyker_male_b = {
 			2.35075,
 			2.159271
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	player_death_zealot = {
@@ -2639,13 +2618,6 @@ local gameplay_vo_psyker_male_b = {
 			1.507167,
 			1.300813,
 			1.775792
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},

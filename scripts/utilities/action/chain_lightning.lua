@@ -8,7 +8,8 @@ local Vector3_flat = Vector3.flat
 local Vector3_length_squared = Vector3.length_squared
 local Vector3_normalize = Vector3.normalize
 local BROADPHASE_RESULTS = {}
-local EPSILON = 0.010000000000000002
+local EPSILON_SQUARED = 0.010000000000000002
+local CLOSE_EPSILON_SQUARED = 6.25
 local LINE_OF_SIGHT_FILTER = "filter_chain_lightning_line_of_sight"
 local LINE_OF_SIGHT_NODE = "enemy_aim_target_02"
 local DEFAULT_MAX_TARGETS = 1
@@ -34,7 +35,7 @@ ChainLightning.calculate_max_targets = function (max_targets_settings, depth, us
 	return max_targets
 end
 
-ChainLightning.jump = function (self, t, source_target, hit_units, broadphase, enemy_side_names, initial_travel_direction, radius, max_angle, max_z_diff, on_add_func, jump_validation_func)
+ChainLightning.jump = function (self, t, source_target, hit_units, broadphase, enemy_side_names, initial_travel_direction, radius, max_angle, close_max_angle, max_z_diff, on_add_func, jump_validation_func)
 	local source_unit = source_target:value("unit")
 	local query_position = POSITION_LOOKUP[source_unit]
 	local depth = source_target:depth()
@@ -45,7 +46,8 @@ ChainLightning.jump = function (self, t, source_target, hit_units, broadphase, e
 	else
 		local parent_target = source_target:parent()
 		local previous_unit = parent_target:value("unit")
-		travel_direction = Vector3_normalize(Vector3_flat(POSITION_LOOKUP[previous_unit] - POSITION_LOOKUP[source_unit]))
+		local previous_position = POSITION_LOOKUP[previous_unit]
+		travel_direction = Vector3_normalize(Vector3_flat(previous_position - query_position))
 	end
 
 	table.clear(BROADPHASE_RESULTS)
@@ -57,7 +59,7 @@ ChainLightning.jump = function (self, t, source_target, hit_units, broadphase, e
 			local target_unit = BROADPHASE_RESULTS[ii]
 
 			if target_unit and not hit_units[target_unit] and HEALTH_ALIVE[target_unit] then
-				local valid_target = ChainLightning.is_valid_target(self._physics_world, source_unit, target_unit, query_position, travel_direction, max_angle, max_z_diff, jump_validation_func)
+				local valid_target = ChainLightning.is_valid_target(self._physics_world, source_unit, target_unit, query_position, travel_direction, max_angle, close_max_angle, max_z_diff, jump_validation_func)
 
 				if valid_target then
 					local child_node = source_target:add_child("unit", target_unit)
@@ -75,21 +77,13 @@ ChainLightning.jump = function (self, t, source_target, hit_units, broadphase, e
 	end
 end
 
-ChainLightning.is_valid_target = function (physics_world, source_unit, target_unit, query_position, travel_direction, max_angle, max_z_diff, jump_validation_func)
+ChainLightning.is_valid_target = function (physics_world, source_unit, target_unit, query_position, travel_direction, max_angle, close_max_angle, max_z_diff, jump_validation_func)
 	local valid_target = HEALTH_ALIVE[target_unit] and (not jump_validation_func or jump_validation_func(target_unit))
 
 	if valid_target then
 		local target_position = POSITION_LOOKUP[target_unit]
-		local target_x = target_position.x
-		local target_y = target_position.y
-		local target_z = target_position.z
-
-		if target_x > 511 or target_x < -511 or target_y > 511 or target_y < -511 or target_z > 511 or target_z < -511 then
-			Log.warning("ChainLightning", "Tried check valid target for %s at %s. This is wrong", tostring(target_unit), tostring(target_position))
-		end
-
 		local to_target_vector = query_position - target_position
-		local too_close = Vector3_length_squared(to_target_vector) < EPSILON
+		local too_close = Vector3_length_squared(to_target_vector) < EPSILON_SQUARED
 
 		if not too_close then
 			local direction = Vector3_normalize(Vector3_flat(to_target_vector))
@@ -109,6 +103,29 @@ ChainLightning.is_valid_target = function (physics_world, source_unit, target_un
 	end
 
 	return false
+end
+
+local DEFAULT_MAX_ANGLE = math.pi * 0.1
+local DEFAULT_MAX_Z_DIFF = 2
+local DEFAULT_MAX_JUMPS = 3
+local DEFAULT_RADIUS = 4
+local DEFAULT_JUMP_TIME = 0.15
+
+ChainLightning.targeting_parameters = function (chain_settings, stat_buffs)
+	local stat_buff_max_angle = stat_buffs and stat_buffs.chain_lightning_max_angle or 0
+	local stat_buff_max_z_diff = stat_buffs and stat_buffs.chain_lightning_max_z_diff or 0
+	local stat_buff_max_jumps = stat_buffs and stat_buffs.chain_lightning_max_jumps or 0
+	local stat_buff_max_radius = stat_buffs and stat_buffs.chain_lightning_max_radius or 0
+	local max_angle = chain_settings and chain_settings.max_angle or DEFAULT_MAX_ANGLE
+	local close_max_angle = chain_settings and chain_settings.close_max_angle or max_angle
+	max_angle = max_angle + stat_buff_max_angle
+	close_max_angle = close_max_angle + stat_buff_max_angle
+	local max_z_diff = (chain_settings and chain_settings.max_z_diff or DEFAULT_MAX_Z_DIFF) + stat_buff_max_z_diff
+	local max_jumps = (chain_settings and chain_settings.max_jumps or DEFAULT_MAX_JUMPS) + stat_buff_max_jumps
+	local radius = (chain_settings and chain_settings.radius or DEFAULT_RADIUS) + stat_buff_max_radius
+	local jump_time = chain_settings and chain_settings.jump_time or DEFAULT_JUMP_TIME
+
+	return max_angle, close_max_angle, max_z_diff, max_jumps, radius, jump_time
 end
 
 function _is_in_cover(target_unit)
@@ -141,14 +158,6 @@ function _has_line_of_sight(physics_world, source_unit, target_unit)
 	local target_node_index = Unit_node(target_unit, LINE_OF_SIGHT_NODE)
 	local source_los_pos = Unit_world_position(source_unit, source_node_index)
 	local target_los_pos = Unit_world_position(target_unit, target_node_index)
-	local target_x = target_los_pos.x
-	local target_y = target_los_pos.y
-	local target_z = target_los_pos.z
-
-	if target_x > 511 or target_x < -511 or target_y > 511 or target_y < -511 or target_z > 511 or target_z < -511 then
-		Log.warning("ChainLightning", "Tried LoS check for %s at %s. This is wrong. Local position is %s", tostring(target_unit), tostring(target_los_pos), tostring(Unit.local_position(target_unit, target_node_index)))
-	end
-
 	local direction, distance = Vector3_direction_length(target_los_pos - source_los_pos)
 
 	if _check_line_of_sight(physics_world, source_los_pos, direction, distance) then

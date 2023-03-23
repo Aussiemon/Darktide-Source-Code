@@ -33,10 +33,11 @@ MinionBuffExtension.hot_join_sync = function (self, unit, sender, channel)
 
 		RPC.rpc_add_buff(channel, game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id)
 
-		if buff_instance.update_proc_events and buff_instance:is_active() then
+		if buff_instance.update_proc_events and buff_instance:is_proc_active() then
 			local active_start_time = buff_instance:active_start_time()
+			local activation_fame = active_start_time / GameParameters.fixed_time_step
 
-			RPC.rpc_buff_proc_set_active_time(channel, game_object_id, index, active_start_time)
+			RPC.rpc_buff_proc_set_active_time(channel, game_object_id, index, activation_fame)
 		end
 	end
 end
@@ -45,7 +46,6 @@ MinionBuffExtension.update = function (self, unit, dt, t)
 	self:_update_buffs(dt, t)
 	self:_move_looping_sfx_sources(unit)
 	self:_update_proc_events(t)
-	table.clear(self._had_keywords)
 	self:_update_stat_buffs_and_keywords(t)
 end
 

@@ -95,7 +95,7 @@ BreedQueries.pick_random_minion_by_points = function (minion_breeds, points)
 	end
 end
 
-BreedQueries.add_spawns_single_breed = function (spawners, breed_name, breed_amount, spawn_side_id, target_side_id, spawned_minion_data, optional_mission_objective_id, optional_attack_selection_template_name, optional_aggro_state, optional_group_id, optional_max_health_modifier)
+BreedQueries.add_spawns_single_breed = function (spawners, breed_name, breed_amount, spawn_side_id, target_side_id, spawned_minion_data, optional_mission_objective_id, optional_attack_selection_template_name, optional_aggro_state, optional_group_id, optional_max_health_modifier, optional_spawn_delay)
 	local num_spawners = #spawners
 	local breed_lists = {}
 	local breed_index = 1
@@ -115,7 +115,7 @@ BreedQueries.add_spawns_single_breed = function (spawners, breed_name, breed_amo
 
 	for i = 1, #breed_lists do
 		local spawner = spawners[i]
-		local queue_id = spawner:add_spawns(breed_lists[i], spawn_side_id, target_side_id, nil, optional_mission_objective_id, optional_group_id, optional_attack_selection_template_name, optional_aggro_state, optional_max_health_modifier)
+		local queue_id = spawner:add_spawns(breed_lists[i], spawn_side_id, target_side_id, optional_spawn_delay, optional_mission_objective_id, optional_group_id, optional_attack_selection_template_name, optional_aggro_state, optional_max_health_modifier)
 		local spawner_queue_id = spawned_minion_data.spawner_queue_id
 		spawner_queue_id = spawner_queue_id or {}
 		local queue_ids = spawner_queue_id[spawner]

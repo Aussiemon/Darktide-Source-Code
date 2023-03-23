@@ -188,6 +188,24 @@ ItemPackage.compile_item_instance_dependencies = function (item, items_dictionar
 		end
 	end
 
+	local traits = item.traits
+
+	if traits then
+		for i = 1, #traits do
+			local trait = traits[i]
+			local trait_id = trait.id
+			local item_entry = rawget(items_dictionary, trait_id)
+
+			if item_entry then
+				local dependency = item_entry.icon_small
+
+				if dependency and dependency ~= "" then
+					result[dependency] = true
+				end
+			end
+		end
+	end
+
 	return result
 end
 

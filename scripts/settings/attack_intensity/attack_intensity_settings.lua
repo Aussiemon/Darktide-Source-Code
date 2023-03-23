@@ -67,14 +67,20 @@ local attack_intensity_settings = {
 		{
 			spread_multiplier = 2,
 			duration = 1
+		},
+		{
+			dont_max_out_intensity = true,
+			duration = 2,
+			spread_multiplier = 4
 		}
 	},
 	toughness_broken_grace_cooldown = {
 		1.5,
 		2,
 		3,
-		4,
-		5
+		5,
+		8,
+		12
 	},
 	attack_intensities = {
 		melee = {
@@ -127,7 +133,18 @@ local attack_intensity_settings = {
 				decay_grace = 0.25,
 				attack_intensity_clamp = 25,
 				threshold = 20,
-				decay = 10,
+				decay = 12,
+				reset = 0.25,
+				ignored_movement_states = {
+					sprint = true
+				}
+			},
+			{
+				attack_allowed_decay_multiplier = 0.25,
+				decay_grace = 0.25,
+				attack_intensity_clamp = 45,
+				threshold = 40,
+				decay = 20,
 				reset = 0.25,
 				ignored_movement_states = {
 					sprint = true
@@ -184,7 +201,18 @@ local attack_intensity_settings = {
 				decay_grace = 0.5,
 				attack_intensity_clamp = 28,
 				threshold = 24,
-				decay = 10,
+				decay = 12,
+				reset = 0.25,
+				ignored_movement_states = {
+					sprint = true
+				}
+			},
+			{
+				attack_allowed_decay_multiplier = 0.25,
+				decay_grace = 0.5,
+				attack_intensity_clamp = 55,
+				threshold = 48,
+				decay = 20,
 				reset = 0.25,
 				ignored_movement_states = {
 					sprint = true
@@ -246,6 +274,17 @@ local attack_intensity_settings = {
 				ignored_movement_states = {
 					sprint = true
 				}
+			},
+			{
+				attack_allowed_decay_multiplier = 0.25,
+				decay_grace = 1,
+				attack_intensity_clamp = 35,
+				threshold = 30,
+				decay = 12,
+				reset = 0.25,
+				ignored_movement_states = {
+					sprint = true
+				}
 			}
 		},
 		elite_ranged = {
@@ -303,9 +342,22 @@ local attack_intensity_settings = {
 			},
 			{
 				attack_allowed_decay_multiplier = 1.5,
-				decay = 10,
+				decay = 12,
 				attack_intensity_clamp = 30,
 				threshold = 20,
+				disallow_when_suppressed = false,
+				decay_grace = 2,
+				locked_in_melee_check = true,
+				reset = 2.5,
+				ignored_movement_states = {
+					sprint = false
+				}
+			},
+			{
+				attack_allowed_decay_multiplier = 1.5,
+				decay = 20,
+				attack_intensity_clamp = 50,
+				threshold = 40,
 				disallow_when_suppressed = false,
 				decay_grace = 2,
 				locked_in_melee_check = true,
@@ -370,9 +422,22 @@ local attack_intensity_settings = {
 			},
 			{
 				attack_allowed_decay_multiplier = 1,
-				decay = 5,
+				decay = 10,
 				attack_intensity_clamp = 30,
 				threshold = 20,
+				disallow_when_suppressed = true,
+				decay_grace = 1,
+				locked_in_melee_check = false,
+				reset = 2.5,
+				ignored_movement_states = {
+					sprint = false
+				}
+			},
+			{
+				attack_allowed_decay_multiplier = 1,
+				decay = 20,
+				attack_intensity_clamp = 50,
+				threshold = 40,
 				disallow_when_suppressed = true,
 				decay_grace = 1,
 				locked_in_melee_check = false,
@@ -437,9 +502,22 @@ local attack_intensity_settings = {
 			},
 			{
 				attack_allowed_decay_multiplier = 2,
-				decay = 10,
+				decay = 12,
 				attack_intensity_clamp = 25,
 				threshold = 22,
+				disallow_when_suppressed = true,
+				decay_grace = 0.2,
+				locked_in_melee_check = true,
+				reset = 2,
+				ignored_movement_states = {
+					sprint = false
+				}
+			},
+			{
+				attack_allowed_decay_multiplier = 2,
+				decay = 20,
+				attack_intensity_clamp = 54,
+				threshold = 44,
 				disallow_when_suppressed = true,
 				decay_grace = 0.2,
 				locked_in_melee_check = true,
@@ -506,9 +584,21 @@ local attack_intensity_settings = {
 				decay_grace = 0.2,
 				disallow_when_suppressed = true,
 				threshold = 20,
-				decay = 10,
+				decay = 12,
 				reset = 2,
 				attack_intensity_clamp = 25,
+				ignored_movement_states = {
+					sprint = false
+				}
+			},
+			{
+				attack_allowed_decay_multiplier = 2,
+				decay_grace = 0.2,
+				disallow_when_suppressed = true,
+				threshold = 40,
+				decay = 20,
+				reset = 2,
+				attack_intensity_clamp = 45,
 				ignored_movement_states = {
 					sprint = false
 				}

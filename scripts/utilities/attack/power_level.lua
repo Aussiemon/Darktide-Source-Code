@@ -58,7 +58,7 @@ PowerLevel.scale_power_level_to_power_type_curve = function (power_level, power_
 	return scaled_power_level
 end
 
-local function _scale_power_level_witch_charge_curve(charge_level, scaler_curve)
+local function _scale_power_level_with_charge_curve(charge_level, scaler_curve)
 	local curve_t = charge_level
 	local start_mod = scaler_curve.start_modifier
 	local p1 = start_mod
@@ -92,9 +92,9 @@ PowerLevel.scale_by_charge_level = function (power_level, charge_level, charge_l
 	end
 
 	if charge_level_scaler then
-		local power_level_scalar = _scale_power_level_witch_charge_curve(charge_level, charge_level_scaler)
+		local power_level_scalar = _scale_power_level_with_charge_curve(charge_level, charge_level_scaler)
 
-		return power_level_scalar * power_level
+		return power_level * power_level_scalar
 	end
 
 	return charge_level * power_level

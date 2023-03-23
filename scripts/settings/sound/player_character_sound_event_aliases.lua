@@ -416,7 +416,8 @@ local events = {
 			"archetype"
 		},
 		events = {
-			zealot = "wwise/events/player/play_ability_zealot_preacher_book_open"
+			zealot = "wwise/events/player/play_ability_zealot_preacher_book_open",
+			psyker = "wwise/events/player/play_psyker_warp_charge_overload_start"
 		}
 	},
 	sfx_ability_foley_02 = {
@@ -426,7 +427,8 @@ local events = {
 			"archetype"
 		},
 		events = {
-			zealot = "wwise/events/player/play_ability_zealot_preacher_book_close"
+			zealot = "wwise/events/player/play_ability_zealot_preacher_book_close",
+			psyker = "wwise/events/player/play_psyker_warp_charge_overload_stop"
 		}
 	},
 	attack_long_vce = {
@@ -1431,15 +1433,15 @@ local events = {
 			autogun_p2_m1 = "wwise/events/weapon/play_rifle_subtle",
 			autogun_p1_m1 = "wwise/events/weapon/play_rifle_subtle",
 			forcestaff_p4_m1 = "wwise/events/player/play_player_foley_subtle",
-			ogryn_heavystubber_p1_m2 = "wwise/events/weapon/play_ogryn_wpn_up",
-			ogryn_heavystubber_p1_m1 = "wwise/events/weapon/play_ogryn_wpn_up",
+			ogryn_heavystubber_p1_m2 = "wwise/events/weapon/play_ammo_belt_locomotion",
+			ogryn_heavystubber_p1_m1 = "wwise/events/weapon/play_ammo_belt_locomotion",
 			autogun_p1_m2 = "wwise/events/weapon/play_rifle_subtle",
 			autogun_p3_m1 = "wwise/events/weapon/play_rifle_subtle",
 			autogun_p2_m3 = "wwise/events/weapon/play_rifle_subtle",
 			autogun_p1_m3 = "wwise/events/weapon/play_rifle_subtle",
 			ogryn_gauntlet_p1_m1 = "wwise/events/weapon/play_ogryn_wpn_up",
 			forcestaff_p1_m1 = "wwise/events/player/play_player_foley_subtle",
-			ogryn_heavystubber_p1_m3 = "wwise/events/weapon/play_ogryn_wpn_up",
+			ogryn_heavystubber_p1_m3 = "wwise/events/weapon/play_ammo_belt_locomotion",
 			forcestaff_p3_m1 = "wwise/events/player/play_player_foley_subtle",
 			autogun_p3_m3 = "wwise/events/weapon/play_rifle_subtle"
 		}
@@ -1804,9 +1806,9 @@ local events = {
 			bolter_p1_m1 = "wwise/events/weapon/play_bolter_reload_clip_button",
 			lasgun_p3_m2 = "wwise/events/weapon/play_lasgun_p3_mag_button",
 			shotgun_p1_m1 = "wwise/events/weapon/play_shotgun_reload_insert_ammo_special",
-			shotgun_p1_m3 = "wwise/events/weapon/play_shotgun_reload_insert_ammo_special",
+			shotgun_p1_m3 = "wwise/events/weapon/play_shotgun_reload_insert_ammo_special_03",
 			default = "wwise/events/debug/play_debug_sound_short",
-			shotgun_p1_m2 = "wwise/events/weapon/play_shotgun_reload_insert_ammo_special",
+			shotgun_p1_m2 = "wwise/events/weapon/play_shotgun_reload_insert_ammo_special_02",
 			bolter_p1_m2 = "wwise/events/weapon/play_bolter_reload_clip_button",
 			lasgun_p3_m1 = "wwise/events/weapon/play_lasgun_p3_mag_button",
 			lasgun_p3_m3 = "wwise/events/weapon/play_lasgun_p3_mag_button",
@@ -2134,7 +2136,7 @@ local events = {
 		}
 	},
 	windup_start = {
-		has_husk_events = false,
+		has_husk_events = true,
 		switch = {
 			"archetype",
 			"wielded_weapon_template"
@@ -2154,7 +2156,7 @@ local events = {
 		}
 	},
 	windup_stop = {
-		has_husk_events = false,
+		has_husk_events = true,
 		switch = {
 			"archetype",
 			"wielded_weapon_template"
@@ -2595,7 +2597,7 @@ local events = {
 			autogun_p1_m2 = "wwise/events/weapon/play_autogun_p1_m2_single",
 			autopistol_p1_m2 = "wwise/events/weapon/play_weapon_autopistol",
 			ogryn_heavystubber_p1_m1 = "wwise/events/weapon/play_heavy_stubber_punch_first",
-			ogryn_heavystubber_p1_m3 = "wwise/events/weapon/play_heavy_stubber_punch_first",
+			ogryn_heavystubber_p1_m3 = "wwise/events/weapon/play_heavy_stubber_p1_m3_punch_first",
 			autopistol_p1_m1 = "wwise/events/weapon/play_weapon_autopistol",
 			autogun_p2_m3 = "wwise/events/weapon/play_autogun_p2_m3_first",
 			autogun_p1_m3 = "wwise/events/weapon/play_autogun_p1_m3_first",
@@ -2604,7 +2606,7 @@ local events = {
 			autogun_p2_m1 = "wwise/events/weapon/play_autogun_p2_m1_first",
 			autogun_p1_m1 = "wwise/events/weapon/play_autogun_p1_m1_first",
 			lasgun_p3_m2 = "wwise/events/weapon/play_lasgun_p3_m2_fire_single",
-			ogryn_heavystubber_p1_m2 = "wwise/events/weapon/play_heavy_stubber_punch_first",
+			ogryn_heavystubber_p1_m2 = "wwise/events/weapon/play_heavy_stubber_p1_m2_punch_first",
 			lasgun_p3_m3 = "wwise/events/weapon/play_lasgun_p3_m3_fire_single"
 		}
 	},
@@ -2616,15 +2618,15 @@ local events = {
 		},
 		events = {
 			default = "wwise/events/debug/play_debug_sound_short",
-			laspistol_p1_m2 = "wwise/events/weapon/play_weapon_laspistol",
+			laspistol_p1_m2 = "wwise/events/weapon/play_laspistol_p1_m2",
 			bot_zola_laspistol = "wwise/events/weapon/play_weapon_laspistol",
 			psyker_smite = "wwise/events/weapon/play_psyker_smite_fire",
 			forcestaff_p2_m2 = "wwise/events/weapon/play_psyker_smite_fire",
-			shotgun_p1_m3 = "wwise/events/weapon/play_combat_weapon_shotgun",
+			shotgun_p1_m3 = "wwise/events/weapon/play_shotgun_p1_m3",
 			autopistol_p1_m2 = "wwise/events/weapon/play_weapon_autopistol",
 			autogun_p3_m2 = "wwise/events/weapon/play_autogun_p3_m2_single",
 			forcestaff_p2_m1 = "wwise/events/weapon/play_psyker_smite_fire",
-			shotgun_p1_m2 = "wwise/events/weapon/play_combat_weapon_shotgun",
+			shotgun_p1_m2 = "wwise/events/weapon/play_shotgun_p1_m2",
 			bot_laspistol_killshot = "wwise/events/weapon/play_weapon_laspistol",
 			forcestaff_p4_m1 = "wwise/events/weapon/play_psyker_smite_fire",
 			bot_lasgun_killshot = "wwise/events/weapon/play_weapon_lasgun_p1_m1",
@@ -2639,7 +2641,7 @@ local events = {
 			ogryn_gauntlet_p1_m1 = "wwise/events/weapon/play_ogryn_gauntlet_fire",
 			ogryn_thumper_p1_m2 = "wwise/events/weapon/play_ogryn_thumper_p1_m2",
 			forcestaff_p3_m1 = "wwise/events/weapon/play_psyker_smite_fire",
-			laspistol_p1_m3 = "wwise/events/weapon/play_weapon_laspistol",
+			laspistol_p1_m3 = "wwise/events/weapon/play_laspistol_p1_m3",
 			shotgun_p1_m1 = "wwise/events/weapon/play_combat_weapon_shotgun",
 			ogryn_thumper_p1_m3 = "wwise/events/weapon/play_ogryn_thumper_p1_m1",
 			ogryn_rippergun_p1_m2 = "wwise/events/weapon/play_weapon_rippergun",
@@ -2683,9 +2685,9 @@ local events = {
 		},
 		events = {
 			default = "wwise/events/debug/play_debug_sound_short",
-			shotgun_p1_m2 = "wwise/events/weapon/play_shotgun_punch_special",
+			shotgun_p1_m2 = "wwise/events/weapon/play_shotgun_p1_m2_special",
 			shotgun_p1_m1 = "wwise/events/weapon/play_shotgun_punch_special",
-			shotgun_p1_m3 = "wwise/events/weapon/play_shotgun_punch_special"
+			shotgun_p1_m3 = "wwise/events/weapon/play_shotgun_p1_m3_special"
 		}
 	},
 	ranged_shot_tail = {
@@ -3136,14 +3138,14 @@ local looping_events = {
 			autopistol_p1_m3 = "wwise/events/weapon/%s_weapon_autopistol_auto",
 			autogun_p2_m1 = "wwise/events/weapon/%s_autogun_p2_m1_auto",
 			autogun_p1_m1 = "wwise/events/weapon/%s_autogun_p1_m1_auto",
-			ogryn_heavystubber_p1_m2 = "wwise/events/weapon/%s_heavy_stubber_auto",
+			ogryn_heavystubber_p1_m2 = "wwise/events/weapon/%s_heavy_stubber_p1_m2_auto",
 			ogryn_heavystubber_p1_m1 = "wwise/events/weapon/%s_heavy_stubber_auto",
 			lasgun_p3_m2 = "wwise/events/weapon/%s_lasgun_p3_m2_fire_auto",
 			autogun_p1_m2 = "wwise/events/weapon/%s_autogun_p1_m2_auto",
 			autopistol_p1_m1 = "wwise/events/weapon/%s_weapon_autopistol_auto",
 			autogun_p2_m3 = "wwise/events/weapon/%s_autogun_p2_m3_auto",
 			autogun_p1_m3 = "wwise/events/weapon/%s_autogun_p1_m3_auto",
-			ogryn_heavystubber_p1_m3 = "wwise/events/weapon/%s_heavy_stubber_auto",
+			ogryn_heavystubber_p1_m3 = "wwise/events/weapon/%s_heavy_stubber_p1_m3_auto",
 			forcestaff_p3_m1 = "wwise/events/weapon/%s_psyker_chain_lightning",
 			scanner_equip = "wwise/events/player/%s_device_scanning"
 		}
@@ -3165,14 +3167,14 @@ local looping_events = {
 			autopistol_p1_m3 = "wwise/events/weapon/%s_weapon_autopistol_auto",
 			autogun_p2_m1 = "wwise/events/weapon/%s_autogun_p2_m1_auto",
 			autogun_p1_m1 = "wwise/events/weapon/%s_autogun_p1_m1_auto",
-			ogryn_heavystubber_p1_m2 = "wwise/events/weapon/%s_heavy_stubber_auto",
+			ogryn_heavystubber_p1_m2 = "wwise/events/weapon/%s_heavy_stubber_p1_m2_auto",
 			ogryn_heavystubber_p1_m1 = "wwise/events/weapon/%s_heavy_stubber_auto",
 			lasgun_p3_m2 = "wwise/events/weapon/%s_lasgun_p3_m2_fire_auto",
 			autogun_p1_m2 = "wwise/events/weapon/%s_autogun_p1_m2_auto",
 			autopistol_p1_m1 = "wwise/events/weapon/%s_weapon_autopistol_auto",
 			autogun_p2_m3 = "wwise/events/weapon/%s_autogun_p2_m3_auto",
 			autogun_p1_m3 = "wwise/events/weapon/%s_autogun_p1_m3_auto",
-			ogryn_heavystubber_p1_m3 = "wwise/events/weapon/%s_heavy_stubber_auto",
+			ogryn_heavystubber_p1_m3 = "wwise/events/weapon/%s_heavy_stubber_p1_m3_auto",
 			forcestaff_p3_m1 = "wwise/events/weapon/%s_psyker_chain_lightning_heavy",
 			scanner_equip = "wwise/events/player/%s_scanner_collect_loop"
 		}

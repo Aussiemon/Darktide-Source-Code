@@ -310,7 +310,7 @@ weapon_template.actions = {
 			},
 			shoot = {
 				action_name = "action_shoot_hip",
-				chain_time = 0.4
+				chain_time = 0.45
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)

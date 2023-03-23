@@ -3078,36 +3078,6 @@ return function ()
 		on_done = {}
 	})
 	define_rule({
-		name = "prologue_gameplay_hub_b",
-		category = "cutscene",
-		wwise_route = 5,
-		response = "prologue_gameplay_hub_b",
-		database = "cutscenes_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"cutscene_vo_line"
-			},
-			{
-				"query_context",
-				"vo_line_id",
-				OP.EQ,
-				"prologue_gameplay_hub_b"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"explicator"
-				}
-			}
-		},
-		on_done = {}
-	})
-	define_rule({
 		post_wwise_event = "play_radio_static_end",
 		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",

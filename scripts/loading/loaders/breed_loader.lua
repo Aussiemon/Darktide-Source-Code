@@ -74,6 +74,8 @@ BreedLoader.cleanup = function (self)
 	end
 
 	self._load_state = LOAD_STATES.none
+
+	table.clear(self._packages_to_load)
 end
 
 implements(BreedLoader, Loader)

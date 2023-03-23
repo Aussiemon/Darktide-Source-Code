@@ -36,6 +36,7 @@ local function _calculate_score(breed, unit, target_unit, distance_sq, is_new_ta
 end
 
 local DEFAULT_STICKINESS_DISTANCE = 1
+local DEFAULT_GOOD_LAST_LOS_DISTANCE = 8
 local target_selection_template = {}
 local EXTRA_SHOOT_DISTANCE_SQ = 225
 
@@ -114,6 +115,18 @@ target_selection_template.ranged = function (unit, side, perception_component, b
 		perception_component.target_distance = math.sqrt(closest_distance_sq)
 		perception_component.target_distance_z = closest_z_distance
 		perception_component.target_speed_away = MinionMovement.target_speed_away(unit, best_target_unit)
+		local perception_extension = ScriptUnit.extension(unit, "perception_system")
+		local last_los_position = perception_extension:last_los_position(best_target_unit)
+		perception_component.has_last_los_position = last_los_position ~= nil
+
+		if last_los_position then
+			local last_los_distance = Vector3.distance(last_los_position, POSITION_LOOKUP[best_target_unit])
+			perception_component.has_good_last_los_position = last_los_distance <= (breed.good_last_los_distance or DEFAULT_GOOD_LAST_LOS_DISTANCE)
+
+			perception_component.last_los_position:store(last_los_position)
+		else
+			perception_component.has_good_last_los_position = false
+		end
 	end
 
 	return best_target_unit

@@ -58,7 +58,7 @@ local DamageTakenCalculation = {
 
 		return is_invulnerable, damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords
 	end,
-	calculate_attack_result = function (damage_amount, damage_profile, attack_type, attack_direction, instakill, is_invulnerable, damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacked_unit)
+	calculate_attack_result = function (damage_amount, damage_profile, attack_type, attack_direction, instakill, is_invulnerable, damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacked_unit, damage_type)
 		if not damage_allowed then
 			return attack_results.friendly_fire, 0, 0, 0, damage_amount
 		end
@@ -87,7 +87,7 @@ local DamageTakenCalculation = {
 
 		if remaining_damage > 0 then
 			local health_attack_result = nil
-			health_attack_result, remaining_damage, remaining_permanent_damage = _calculate_health_damage(remaining_damage, damage_profile, current_health_damage, current_permanent_damage, max_health, max_wounds, instakill, is_invulnerable, attacked_unit_stat_buffs, attacked_unit_keywords, health_setting)
+			health_attack_result, remaining_damage, remaining_permanent_damage = _calculate_health_damage(remaining_damage, damage_profile, damage_type, current_health_damage, current_permanent_damage, max_health, max_wounds, instakill, is_invulnerable, attacked_unit_stat_buffs, attacked_unit_keywords, health_setting)
 
 			if health_attack_result then
 				attack_result = attack_result or health_attack_result
@@ -166,7 +166,7 @@ function _calculate_toughness_damage_player(damage_amount, damage_profile, attac
 		toughness_damage = math.clamp(melee_toughness_multiplier * damage_amount * toughness_melee_damage_modifier, 0, melee_max_toughness)
 		absorbed_attack = real_max_toughness > current_toughness_damage + toughness_damage
 	else
-		if not ranged_attack then
+		if not ranged_attack and not damage_profile.ignore_depleting_toughness then
 			toughness_damage = max_toughness
 		end
 
@@ -219,17 +219,17 @@ function _calculate_toughness_damage_minion(damage_amount, damage_profile, attac
 	return attack_result, 0, clamped_damage_ammount, damage_amount
 end
 
-function _calculate_health_damage(damage_amount, damage_profile, current_health_damage, current_permanent_damage, max_health, max_wounds, instakill, is_invulnerable, attacked_unit_stat_buffs, attacked_unit_keywords, health_setting)
+function _calculate_health_damage(damage_amount, damage_profile, damage_type, current_health_damage, current_permanent_damage, max_health, max_wounds, instakill, is_invulnerable, attacked_unit_stat_buffs, attacked_unit_keywords, health_setting)
 	if health_setting == health_settings.player then
-		return _calculate_health_damage_player(damage_amount, damage_profile, current_health_damage, current_permanent_damage, max_health, max_wounds, instakill, is_invulnerable, attacked_unit_stat_buffs, attacked_unit_keywords)
+		return _calculate_health_damage_player(damage_amount, damage_profile, damage_type, current_health_damage, current_permanent_damage, max_health, max_wounds, instakill, is_invulnerable, attacked_unit_stat_buffs, attacked_unit_keywords)
 	elseif health_setting == health_settings.minion then
-		return _calculate_health_damage_minion(damage_amount, damage_profile, current_health_damage, current_permanent_damage, max_health, max_wounds, instakill, is_invulnerable, attacked_unit_stat_buffs, attacked_unit_keywords)
+		return _calculate_health_damage_minion(damage_amount, damage_profile, damage_type, current_health_damage, current_permanent_damage, max_health, max_wounds, instakill, is_invulnerable, attacked_unit_stat_buffs, attacked_unit_keywords)
 	end
 
 	return attack_results.damaged, damage_amount, 0
 end
 
-function _calculate_health_damage_player(damage_amount, damage_profile, current_health_damage, current_permanent_damage, max_health, max_wounds, instakill, is_invulnerable, attacked_unit_stat_buffs, attacked_unit_keywords)
+function _calculate_health_damage_player(damage_amount, damage_profile, damage_type, current_health_damage, current_permanent_damage, max_health, max_wounds, instakill, is_invulnerable, attacked_unit_stat_buffs, attacked_unit_keywords)
 	if is_invulnerable then
 		return attack_results.damaged, 0, 0
 	end
@@ -238,7 +238,7 @@ function _calculate_health_damage_player(damage_amount, damage_profile, current_
 	local permanent_damage_buff_ratio = attacked_unit_stat_buffs and attacked_unit_stat_buffs.permanent_damage_taken or 0
 	local permanent_damage_buff_resistance = attacked_unit_stat_buffs and attacked_unit_stat_buffs.permanent_damage_converter_resistance or 0
 	local permanent_damage_ratio = math.clamp(permanent_damage_profile_ratio + permanent_damage_buff_ratio * (1 - permanent_damage_buff_resistance), 0, 1)
-	local is_grimoire_damage = damage_profile.damage_type == damage_types.grimoire
+	local is_grimoire_damage = damage_type == damage_types.grimoire
 	local buff_corruption_taken_grimoire_multiplier = is_grimoire_damage and attacked_unit_stat_buffs and attacked_unit_stat_buffs.corruption_taken_grimoire_multiplier or 1
 	local buff_corruption_taken_multiplier = attacked_unit_stat_buffs and attacked_unit_stat_buffs.corruption_taken_multiplier or 1
 	buff_corruption_taken_multiplier = math.max(0, buff_corruption_taken_multiplier)
@@ -271,7 +271,7 @@ function _calculate_health_damage_player(damage_amount, damage_profile, current_
 	return attack_result, health_damage, permanent_damage
 end
 
-function _calculate_health_damage_minion(damage_amount, damage_profile, current_health_damage, current_permanent_damage, max_health, max_wounds, instakill, is_invulnerable, attacked_unit_stat_buffs, attacked_unit_keywords)
+function _calculate_health_damage_minion(damage_amount, damage_type, damage_profile, current_health_damage, current_permanent_damage, max_health, max_wounds, instakill, is_invulnerable, attacked_unit_stat_buffs, attacked_unit_keywords)
 	if is_invulnerable then
 		return attack_results.damaged, 0, 0
 	end

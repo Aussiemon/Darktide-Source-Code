@@ -18,11 +18,11 @@ local barrel_explosion_close_admr = {
 	attack = {
 		[armor_types.unarmored] = 1,
 		[armor_types.armored] = 1,
-		[armor_types.resistant] = 2,
+		[armor_types.resistant] = 8,
 		[armor_types.player] = 0.15,
 		[armor_types.berserker] = 1,
-		[armor_types.super_armor] = 0.2,
-		[armor_types.disgustingly_resilient] = 0.75,
+		[armor_types.super_armor] = 1,
+		[armor_types.disgustingly_resilient] = 3,
 		[armor_types.void_shield] = 0.75,
 		[armor_types.prop_armor] = 0
 	},
@@ -42,11 +42,11 @@ local barrel_explosion_far_admr = {
 	attack = {
 		[armor_types.unarmored] = 1,
 		[armor_types.armored] = 1,
-		[armor_types.resistant] = 2,
+		[armor_types.resistant] = 4,
 		[armor_types.player] = 0.15,
 		[armor_types.berserker] = 1,
-		[armor_types.super_armor] = 0.2,
-		[armor_types.disgustingly_resilient] = 0.75,
+		[armor_types.super_armor] = 0.6,
+		[armor_types.disgustingly_resilient] = 2,
 		[armor_types.void_shield] = 0.75,
 		[armor_types.prop_armor] = 0
 	},
@@ -60,6 +60,54 @@ local barrel_explosion_far_admr = {
 		[armor_types.disgustingly_resilient] = 2,
 		[armor_types.void_shield] = 2,
 		[armor_types.prop_armor] = 2
+	}
+}
+local fire_barrel_explosion_close_admr = {
+	attack = {
+		[armor_types.unarmored] = 1,
+		[armor_types.armored] = 1,
+		[armor_types.resistant] = 2,
+		[armor_types.player] = 0.15,
+		[armor_types.berserker] = 1,
+		[armor_types.super_armor] = 0.2,
+		[armor_types.disgustingly_resilient] = 0.75,
+		[armor_types.void_shield] = 0.75,
+		[armor_types.prop_armor] = 0
+	},
+	impact = {
+		[armor_types.unarmored] = 1,
+		[armor_types.armored] = 1,
+		[armor_types.resistant] = 1,
+		[armor_types.player] = 2,
+		[armor_types.berserker] = 1,
+		[armor_types.super_armor] = 1,
+		[armor_types.disgustingly_resilient] = 1,
+		[armor_types.void_shield] = 1,
+		[armor_types.prop_armor] = 1
+	}
+}
+local fire_barrel_explosion_far_admr = {
+	attack = {
+		[armor_types.unarmored] = 1,
+		[armor_types.armored] = 1,
+		[armor_types.resistant] = 1,
+		[armor_types.player] = 0.15,
+		[armor_types.berserker] = 1,
+		[armor_types.super_armor] = 0.2,
+		[armor_types.disgustingly_resilient] = 0.75,
+		[armor_types.void_shield] = 0.75,
+		[armor_types.prop_armor] = 0
+	},
+	impact = {
+		[armor_types.unarmored] = 1,
+		[armor_types.armored] = 1,
+		[armor_types.resistant] = 1,
+		[armor_types.player] = 2,
+		[armor_types.berserker] = 1,
+		[armor_types.super_armor] = 1,
+		[armor_types.disgustingly_resilient] = 1,
+		[armor_types.void_shield] = 1,
+		[armor_types.prop_armor] = 1
 	}
 }
 damage_templates.barrel_explosion_close = {
@@ -106,10 +154,59 @@ damage_templates.barrel_explosion_close = {
 	gibbing_type = GibbingTypes.explosion,
 	gibbing_power = GibbingPower.heavy
 }
+damage_templates.fire_barrel_explosion = {
+	disorientation_type = "grenadier",
+	interrupt_alternate_fire = true,
+	ignore_stun_immunity = true,
+	override_allow_friendly_fire = true,
+	ogryn_disorientation_type = "grenadier",
+	ignore_toughness = true,
+	ragdoll_push_force = 1000,
+	suppression_value = 20,
+	stagger_category = "explosion",
+	ignore_stagger_reduction = true,
+	cleave_distribution = {
+		attack = 0.1,
+		impact = 0.15
+	},
+	armor_damage_modifier_ranged = {
+		near = fire_barrel_explosion_close_admr,
+		far = fire_barrel_explosion_far_admr
+	},
+	power_distribution_ranged = {
+		attack = {
+			far = 10,
+			near = 10
+		},
+		impact = {
+			far = 2,
+			near = 30
+		}
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	},
+	power_distribution = {
+		attack = 10,
+		impact = 10
+	},
+	force_look_function = ForcedLookSettings.look_functions.heavy,
+	push_template = push_templates.grenadier_explosion,
+	catapulting_template = CatapultingTemplates.barrel_explosion,
+	gibbing_type = GibbingTypes.explosion,
+	gibbing_power = GibbingPower.heavy
+}
 damage_templates.barrel_explosion = table.clone(damage_templates.barrel_explosion_close)
 damage_templates.barrel_explosion.power_distribution = {
-	attack = 50,
+	attack = 100,
 	impact = 50
+}
+damage_templates.fire_barrel_explosion_close = table.clone(damage_templates.fire_barrel_explosion)
+damage_templates.fire_barrel_explosion_close.power_distribution = {
+	attack = 50,
+	impact = 20
 }
 damage_templates.barrel_explosion.barrel_explosion = nil
 damage_templates.corruptor_emerge_explosion = {

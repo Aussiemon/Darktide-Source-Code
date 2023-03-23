@@ -5,23 +5,23 @@ local proc_events = BuffSettings.proc_events
 templates.weapon_trait_bespoke_autogun_p3_crit_chance_based_on_ammo_left = {
 	weapon_trait_bespoke_autogun_p3_crit_chance_based_on_ammo_left = {
 		{
-			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.02
+			conditional_stat_buffs = {
+				[stat_buffs.critical_strike_chance] = 0.0035
 			}
 		},
 		{
-			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.03
+			conditional_stat_buffs = {
+				[stat_buffs.critical_strike_chance] = 0.004
 			}
 		},
 		{
-			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.04
+			conditional_stat_buffs = {
+				[stat_buffs.critical_strike_chance] = 0.0045
 			}
 		},
 		{
-			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.05
+			conditional_stat_buffs = {
+				[stat_buffs.critical_strike_chance] = 0.005
 			}
 		}
 	}

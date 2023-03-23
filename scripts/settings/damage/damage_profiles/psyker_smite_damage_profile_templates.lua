@@ -20,8 +20,8 @@ local flat_one_armor_mod = DamageProfileSettings.flat_one_armor_mod
 local crit_armor_mod = DamageProfileSettings.crit_armor_mod
 local crit_impact_armor_mod = DamageProfileSettings.crit_impact_armor_mod
 damage_templates.psyker_smite_kill = {
-	ragdoll_push_force = 0,
 	ignore_stagger_reduction = true,
+	ragdoll_push_force = 0,
 	ignore_shield = true,
 	ragdoll_only = true,
 	stagger_category = "uppercut",
@@ -59,7 +59,6 @@ damage_templates.psyker_smite_kill = {
 	},
 	gibbing_power = GibbingPower.heavy,
 	gibbing_type = GibbingTypes.warp,
-	damage_type = damage_types.smite,
 	targets = {
 		default_target = {
 			boost_curve_multiplier_finesse = 0
@@ -118,7 +117,6 @@ damage_templates.psyker_smite_light = {
 		attack = 100,
 		impact = 12
 	},
-	damage_type = damage_types.smite,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default
@@ -204,7 +202,6 @@ damage_templates.psyker_gunslinger_smite = {
 		attack = 100,
 		impact = 5
 	},
-	damage_type = damage_types.throwing_knife,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default

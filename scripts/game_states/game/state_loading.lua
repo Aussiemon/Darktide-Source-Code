@@ -276,10 +276,11 @@ StateLoading._update_loading = function (self)
 		}
 
 		if self._needs_load_level then
-			local world, level, themes = loading_manager:take_ownership_of_level()
+			local world, level, themes, world_name = loading_manager:take_ownership_of_level()
 			parameters.world = world
 			parameters.level = level
 			parameters.themes = themes
+			parameters.world_name = world_name
 		end
 
 		if self._next_state_params then

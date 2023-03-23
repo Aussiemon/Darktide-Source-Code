@@ -7,23 +7,23 @@ local ui_view_level_requirement = {
 	crafting_view = PlayerProgressionUnlocks.crafting,
 	contracts_background_view = PlayerProgressionUnlocks.contracts
 }
-local view_story_chapter_requirement = {
-	credits_vendor_background_view = {
-		chapter = "pot_story_traitor_first",
-		story = "path_of_trust"
-	},
-	crafting_view = {
-		chapter = "pot_crafting",
-		story = "path_of_trust"
-	},
-	contracts_background_view = {
-		chapter = "pot_contracts",
-		story = "path_of_trust"
-	}
-}
 
 ViewInteraction.init = function (self, template)
 	self._template = template
+	self._view_story_chapter_requirement = {
+		credits_vendor_background_view = {
+			chapter = "pot_story_traitor_first",
+			story = "path_of_trust"
+		},
+		crafting_view = {
+			chapter = "pot_crafting",
+			story = "path_of_trust"
+		},
+		contracts_background_view = {
+			chapter = "pot_contracts",
+			story = "path_of_trust"
+		}
+	}
 end
 
 ViewInteraction.start = function (self, world, interactor_unit, unit_data_component, t, interactor_is_server)
@@ -47,42 +47,39 @@ ViewInteraction.start = function (self, world, interactor_unit, unit_data_compon
 	end
 end
 
-local block_context = {}
+local view_requirement_failure_context = {}
 
 ViewInteraction._check_view_requirements = function (self, interactor_unit, ui_interaction)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local player = player_unit_spawn_manager:owner(interactor_unit)
-
-	if not player or player.remote then
-		return false
-	end
-
 	local player_profile = player:profile()
 	local level_requirement = ui_view_level_requirement[ui_interaction]
 
 	if level_requirement and player_profile.current_level < level_requirement then
-		table.clear(block_context)
+		table.clear(view_requirement_failure_context)
 
-		block_context.level = level_requirement
+		view_requirement_failure_context.level = level_requirement
 
-		return false, "loc_requires_level", block_context
+		return false, "loc_requires_level", view_requirement_failure_context
 	end
 
-	local story_data = view_story_chapter_requirement[ui_interaction]
+	local story_data = self._view_story_chapter_requirement[ui_interaction]
 
-	if not story_data then
+	if player.remote then
 		return true
 	end
 
-	local story_name = story_data.story
-	local chapter_name = story_data.chapter
-	local story_requirement_met = Managers.narrative:is_chapter_complete(story_name, chapter_name)
+	if story_data then
+		local story_name = story_data.story
+		local chapter_name = story_data.chapter
+		local story_requirement_met = Managers.narrative:is_chapter_complete(story_name, chapter_name, player)
 
-	if not story_requirement_met then
-		return false, "loc_requires_pot_access"
-	else
-		return true
+		if not story_requirement_met then
+			return false, "loc_requires_pot_access"
+		end
 	end
+
+	return true
 end
 
 ViewInteraction.interactor_condition_func = function (self, interactor_unit, interactee_unit)

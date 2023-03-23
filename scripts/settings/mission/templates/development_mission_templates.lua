@@ -276,19 +276,19 @@ local mission_templates = {
 			"terror_events_combat"
 		}
 	},
-	Sewers = {
+	debug_zoneseven = {
 		mission_name = "loc_mission_name_placeholder",
 		zone_id = "placeholder",
 		game_mode_name = "default",
 		mechanism_name = "adventure",
 		is_dev_mission = true,
-		level = "content/levels/debug/jacopo/missions/Sewers",
+		level = "content/levels/debug/jacopo/missions/debug_zoneseven",
 		pickup_settings = {},
 		health_station = {
 			charges_to_distribute = 10
 		},
 		terror_event_templates = {
-			"terror_events_Sewers"
+			"terror_events_debug_zoneseven"
 		}
 	},
 	combat_zone_new = {

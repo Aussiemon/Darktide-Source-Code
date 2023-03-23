@@ -16,7 +16,7 @@ local scenegraph_definition = {
 			0
 		},
 		position = {
-			0,
+			-50,
 			450,
 			990
 		}
@@ -342,7 +342,7 @@ local widget_definitions = {
 				horizontal_alignment = "right",
 				color = Color.terminal_text_header(255, true),
 				offset = {
-					-12,
+					0,
 					-10,
 					0
 				},
@@ -363,6 +363,8 @@ local widget_definitions = {
 		visible = false
 	})
 }
+local offset_end_position = 5
+local offset_start_position = header_size[1]
 local animations = {
 	popup_enter = {
 		{
@@ -372,7 +374,7 @@ local animations = {
 			init = function (parent, ui_scenegraph, scenegraph_definition, widget)
 				local text_start_offset = 25
 				widget.alpha_multiplier = 1
-				widget.style.background.offset[1] = header_size[1]
+				widget.style.background.offset[1] = offset_start_position
 				widget.style.icon.size_addition = {
 					widget.style.icon.size[1] * 0.9,
 					widget.style.icon.size[2] * 0.9
@@ -401,7 +403,8 @@ local animations = {
 			start_time = 0,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
 				local anim_progress = math.easeOutCubic(progress)
-				widget.style.background.offset[1] = header_size[1] - header_size[1] * anim_progress
+				local location_diff = offset_start_position - offset_end_position
+				widget.style.background.offset[1] = offset_end_position + location_diff - location_diff * anim_progress
 			end
 		},
 		{
@@ -453,7 +456,8 @@ local animations = {
 			update = function (parent, ui_scenegraph, scenegraph_definition, widget, progress)
 				local anim_progress = math.easeInCubic(progress)
 				widget.alpha_multiplier = 1 - anim_progress
-				widget.offset[1] = 0 + header_size[1] * 0.5 * anim_progress
+				local location_diff = offset_start_position - offset_end_position
+				widget.offset[1] = offset_end_position + location_diff * anim_progress
 			end
 		}
 	}

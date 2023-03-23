@@ -397,6 +397,7 @@ templates.veteran_ranger_toughness_regen_out_of_melee = {
 	predicted = false,
 	hud_priority = 4,
 	class_name = "buff",
+	always_show_in_hud = true,
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
 		local broadphase = broadphase_system.broadphase
@@ -453,7 +454,26 @@ templates.veteran_ranger_ranged_weakspot_toughness_recovery = {
 	check_proc_func = CheckProcFunctions.on_ranged_weakspot_kills,
 	proc_func = function (params, template_data, template_context)
 		Toughness.replenish_percentage(template_context.unit, talent_settings.toughness_2.toughness, false, "talent_toughness_2")
+
+		local t = FixedFrame.get_latest_fixed_time()
+		local buff_extension = ScriptUnit.has_extension(template_context.unit, "buff_system")
+
+		if buff_extension then
+			buff_extension:add_internally_controlled_buff("veteran_ranger_ranged_weakspot_toughenss_buff", t)
+		end
 	end
+}
+templates.veteran_ranger_ranged_weakspot_toughenss_buff = {
+	hud_icon = "content/ui/textures/icons/talents/veteran_2/hud/veteran_2_tier_3_1",
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 4,
+	class_name = "buff",
+	duration = talent_settings.toughness_2.duration,
+	max_stacks = talent_settings.toughness_2.max_stacks,
+	stat_buffs = {
+		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings.toughness_2.toughness_damage_taken_multiplier
+	}
 }
 templates.veteran_ranger_increase_ranged_far_damage = {
 	predicted = false,
@@ -482,12 +502,15 @@ local grenade_replenishment_cooldown = talent_settings.offensive_1_3.grenade_rep
 local ABILITY_TYPE = "grenade_ability"
 local grenades_restored = talent_settings.offensive_1_3.grenade_restored
 templates.veteran_ranger_grenade_replenishment = {
+	hud_priority = 4,
+	hud_icon = "content/ui/textures/icons/talents/veteran_2/hud/veteran_2_tier_1_2",
 	predicted = false,
 	class_name = "buff",
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		template_data.ability_extension = ScriptUnit.has_extension(unit, "ability_system")
 		template_data.fx_extension = ScriptUnit.extension(unit, "fx_system")
+		template_data.missing_charges = 0
 	end,
 	update_func = function (template_data, template_context, dt, t, template)
 		if not template_data.ability_extension then
@@ -504,15 +527,22 @@ templates.veteran_ranger_grenade_replenishment = {
 		local ability_extension = template_data.ability_extension
 
 		if not ability_extension or not ability_extension:has_ability_type(ABILITY_TYPE) then
+			template_data.next_grenade_t = nil
+			template_data.missing_charges = 0
+
 			return
 		end
 
 		local missing_charges = ability_extension and ability_extension:missing_ability_charges(ABILITY_TYPE)
 
 		if missing_charges == 0 then
+			template_data.next_grenade_t = nil
+			template_data.missing_charges = 0
+
 			return
 		end
 
+		template_data.missing_charges = missing_charges
 		local next_grenade_t = template_data.next_grenade_t
 
 		if not next_grenade_t then
@@ -529,6 +559,24 @@ templates.veteran_ranger_grenade_replenishment = {
 
 			template_data.next_grenade_t = nil
 		end
+	end,
+	check_active_func = function (template_data, template_context)
+		local is_missing_charges = template_data.missing_charges > 0
+
+		return is_missing_charges
+	end,
+	duration_func = function (template_data, template_context)
+		local next_grenade_t = template_data.next_grenade_t
+
+		if not next_grenade_t then
+			return 1
+		end
+
+		local t = FixedFrame.get_latest_fixed_time()
+		local time_until_next = next_grenade_t - t
+		local percentage_left = time_until_next / grenade_replenishment_cooldown
+
+		return 1 - percentage_left
 	end
 }
 templates.veteran_ranger_elites_replenish_ammo = {
@@ -645,8 +693,28 @@ templates.veteran_ranger_replenish_toughness_of_ally_close_to_victim = {
 
 		if chosen_ally_unit then
 			Toughness.replenish_percentage(chosen_ally_unit, talent_settings.coop_3.toughness_percent, false, "ranger_coop_talent")
+
+			local buff_extension = ScriptUnit.has_extension(chosen_ally_unit, "buff_system")
+
+			if buff_extension then
+				local t = FixedFrame.get_latest_fixed_time()
+
+				buff_extension:add_internally_controlled_buff("veteran_ranger_replenish_toughness_of_ally_close_to_victim_damage_buff", t)
+			end
 		end
 	end
+}
+templates.veteran_ranger_replenish_toughness_of_ally_close_to_victim_damage_buff = {
+	max_stacks = 1,
+	hud_icon = "content/ui/textures/icons/talents/veteran_2/hud/veteran_2_tier_4_3",
+	refresh_duration_on_stack = true,
+	predicted = false,
+	hud_priority = 4,
+	class_name = "buff",
+	duration = talent_settings.coop_3.duration,
+	stat_buffs = {
+		[stat_buffs.damage] = talent_settings.coop_3.damage
+	}
 }
 templates.veteran_ranger_stamina_on_ranged_dodges = {
 	cooldown_duration = 0.5,
@@ -661,8 +729,11 @@ templates.veteran_ranger_stamina_on_ranged_dodges = {
 }
 local STANDING_STILL_EPSILON = 0.001
 templates.veteran_ranger_reduced_threat_gain = {
+	hud_icon = "content/ui/textures/icons/talents/veteran_2/hud/veteran_2_tier_1_3",
 	predicted = false,
+	hud_priority = 4,
 	class_name = "buff",
+	always_show_in_hud = true,
 	conditional_stat_buffs = {
 		[stat_buffs.threat_weight_multiplier] = talent_settings.defensive_3.threat_weight_multiplier
 	},
@@ -707,7 +778,7 @@ local function is_in_weapon_alternate_fire_with_stammina(template_data, template
 	local wielded_slot = template_data.inventory_component.wielded_slot
 
 	if wielded_slot == "none" then
-		return false
+		return false, false
 	end
 
 	local wielded_slot_configuration = slot_configuration[wielded_slot]
@@ -715,26 +786,28 @@ local function is_in_weapon_alternate_fire_with_stammina(template_data, template
 	local is_weapon = slot_type == "weapon"
 
 	if not is_weapon then
-		return false
+		return false, false
 	end
 
 	local is_alternate_fire_active = template_data.alternate_fire_component.is_active
 
 	if not is_alternate_fire_active then
-		return false
+		return false, false
 	end
 
 	local has_stamina = template_data.stamina_component.current_fraction > 0
 
 	if not has_stamina then
-		return false
+		return false, is_alternate_fire_active
 	end
 
-	return true
+	return true, is_alternate_fire_active
 end
 
 templates.veteran_ranger_ads_stamina_boost = {
 	predicted = true,
+	hud_priority = 4,
+	hud_icon = "content/ui/textures/icons/talents/veteran_2/hud/veteran_2_tier_5_1",
 	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_shoot] = 1
@@ -758,10 +831,12 @@ templates.veteran_ranger_ads_stamina_boost = {
 		return template_data.is_active
 	end,
 	update_func = function (template_data, template_context, dt, t)
-		local is_active = is_in_weapon_alternate_fire_with_stammina(template_data, template_context)
+		local is_active, is_alternate_fire_active = is_in_weapon_alternate_fire_with_stammina(template_data, template_context)
 		template_data.is_active = is_active
 
-		if not is_active then
+		if not is_alternate_fire_active then
+			template_data.applied_end_sway = nil
+
 			return
 		end
 
@@ -773,17 +848,31 @@ templates.veteran_ranger_ads_stamina_boost = {
 
 			Sway.add_fixed_immediate_sway(template_data.sway_component, 1, 1)
 		end
+
+		template_data.remaining_stamina = remaining_stamina
 	end,
 	proc_func = function (params, template_data, template_context, t)
 		if not template_data.alternate_fire_component.is_active then
-			template_data.applied_end_sway = nil
-
 			return
 		end
 
 		local shoot_cost = template_data.percentage_shoot_to_remove
 
 		Stamina.drain_pecentage(template_context.unit, shoot_cost, t)
+	end,
+	check_active_func = function (template_data, template_context)
+		local is_alternate_fire_active = template_data.alternate_fire_component.is_active
+
+		return is_alternate_fire_active
+	end,
+	duration_func = function (template_data, template_context)
+		local stamina_component = template_data.stamina_component
+
+		if stamina_component then
+			return stamina_component.current_fraction
+		end
+
+		return 0.01
 	end
 }
 templates.veteran_ranger_elite_kills_reload_speed = {

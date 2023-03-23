@@ -52,9 +52,10 @@ templates.weapon_trait_bespoke_combatsword_p1_increase_stagger_per_hit_in_sweep_
 	}
 }
 templates.weapon_trait_bespoke_combatsword_p1_increase_stagger_per_hit_in_sweep_child = {
-	predicted = false,
+	hide_icon_in_hud = true,
 	stack_offset = -1,
 	max_stacks = 5,
+	predicted = false,
 	class_name = "buff",
 	conditional_stat_buffs = {
 		[stat_buffs.melee_impact_modifier] = 1

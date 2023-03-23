@@ -58,6 +58,12 @@ BtShootLiquidBeamAction.enter = function (self, unit, breed, blackboard, scratch
 		scratchpad.pushed_minions = {}
 		scratchpad.side_system = Managers.state.extension:system("side_system")
 	end
+
+	if action_data.strafe_shoot_ranged_position_fallback then
+		MinionMovement.init_find_ranged_position(scratchpad, action_data)
+
+		scratchpad.strafe_anim_switch_duration = 0
+	end
 end
 
 BtShootLiquidBeamAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -82,6 +88,11 @@ BtShootLiquidBeamAction.run = function (self, unit, breed, blackboard, scratchpa
 	local perception_component = scratchpad.perception_component
 	local target_unit = perception_component.target_unit
 	local shoot_state = scratchpad.shoot_state
+	local has_line_of_sight = scratchpad.perception_component.has_line_of_sight
+
+	if has_line_of_sight and action_data.can_strafe_shoot and shoot_state == "shooting" and (not scratchpad.next_try_to_strafe_shoot or scratchpad.next_try_to_strafe_shoot <= t) then
+		self:_try_start_strafe_shooting(unit, t, scratchpad, action_data, breed)
+	end
 
 	if shoot_state == "aiming" then
 		local done = self:_update_aiming(unit, t, dt, scratchpad, action_data)
@@ -89,6 +100,10 @@ BtShootLiquidBeamAction.run = function (self, unit, breed, blackboard, scratchpa
 		if done then
 			return "done"
 		end
+	elseif shoot_state == "trying_to_strafe_shoot" then
+		self:_update_trying_to_strafe_shoot(unit, t, scratchpad, action_data)
+	elseif shoot_state == "strafe_shooting" then
+		self:_update_strafe_shooting(unit, t, dt, scratchpad, action_data)
 	elseif shoot_state == "shooting" then
 		local done = self:_update_shooting(unit, t, dt, scratchpad, action_data)
 
@@ -280,16 +295,18 @@ BtShootLiquidBeamAction._start_shooting = function (self, unit, t, scratchpad, a
 		if behavior_component[liquid_paint_id_from_component] == 0 then
 			behavior_component[liquid_paint_id_from_component] = LiquidArea.start_paint()
 		end
-	else
+	elseif not action_data.skip_liquid then
 		scratchpad.liquid_paint_id = LiquidArea.start_paint()
 	end
 
-	local unit_position = POSITION_LOOKUP[unit]
-	local shot_from, distance_to_from = self:_get_from_shoot_pos(unit, scratchpad, action_data)
-	local distance = Vector3.distance(unit_position, shot_from)
-	local place_liquid_timing = t + distance / action_data.place_liquid_timing_speed
-	scratchpad.place_liquid_timing = place_liquid_timing
-	scratchpad.distance_to_from = distance_to_from
+	if not action_data.skip_liquid then
+		local unit_position = POSITION_LOOKUP[unit]
+		local shot_from, distance_to_from = self:_get_from_shoot_pos(unit, scratchpad, action_data)
+		local distance = Vector3.distance(unit_position, shot_from)
+		local place_liquid_timing = t + distance / action_data.place_liquid_timing_speed
+		scratchpad.place_liquid_timing = place_liquid_timing
+		scratchpad.distance_to_from = distance_to_from
+	end
 
 	self:_set_game_object_field(scratchpad, "state", STATES.shooting)
 
@@ -388,7 +405,7 @@ BtShootLiquidBeamAction._update_shooting_liquid_beam = function (self, unit, t, 
 		end
 	end
 
-	if end_position and scratchpad.place_liquid_timing < t then
+	if scratchpad.place_liquid_timing and end_position and scratchpad.place_liquid_timing < t then
 		local liquid_paint_id_from_component = action_data.liquid_paint_id_from_component
 		local liquid_paint_id = liquid_paint_id_from_component and scratchpad.behavior_component[liquid_paint_id_from_component] or scratchpad.liquid_paint_id
 		local max_liquid_paint_distance = action_data.max_liquid_paint_distance
@@ -718,6 +735,203 @@ BtShootLiquidBeamAction._stop_liquid_beam = function (self, unit, scratchpad, bl
 
 	if scratchpad.liquid_paint_id then
 		LiquidArea.stop_paint(scratchpad.liquid_paint_id)
+	end
+end
+
+local MIN_NEEDED_PATH_DISTANCE = 5
+local MAX_TRYING_TO_START_STRAFE_SHOOT_DURATION = 3
+local MIN_COMBAT_VECTOR_DISTANCE_CHANGE_SQ = 9
+local TRY_TO_STRAFE_SHOOT_COOLDOWN = {
+	3,
+	6
+}
+
+BtShootLiquidBeamAction._try_start_strafe_shooting = function (self, unit, t, scratchpad, action_data, breed)
+	local perception_component = scratchpad.perception_component
+	local self_position = POSITION_LOOKUP[unit]
+	local distance = perception_component.target_distance
+	local target_unit = perception_component.target_unit
+	local wanted_position = nil
+
+	if action_data.strafe_shoot_distance < distance then
+		local ranged_position = action_data.strafe_shoot_ranged_position_fallback and MinionMovement.find_ranged_position(unit, t, scratchpad, action_data, target_unit)
+
+		if ranged_position and action_data.strafe_shoot_distance < Vector3.distance(ranged_position, self_position) then
+			wanted_position = ranged_position
+		else
+			return
+		end
+	else
+		return
+	end
+
+	local previous_strafe_shoot_position = scratchpad.previous_strafe_shoot_position
+
+	if previous_strafe_shoot_position then
+		local previous_distance_sq = Vector3.distance_squared(wanted_position, previous_strafe_shoot_position:unbox())
+
+		if previous_distance_sq < MIN_COMBAT_VECTOR_DISTANCE_CHANGE_SQ then
+			return
+		end
+	end
+
+	local navigation_extension = scratchpad.navigation_extension
+
+	navigation_extension:set_enabled(true, action_data.strafe_speed or breed.walk_speed)
+	navigation_extension:stop()
+	navigation_extension:move_to(wanted_position)
+
+	if scratchpad.previous_strafe_shoot_position then
+		scratchpad.previous_strafe_shoot_position:store(wanted_position)
+	else
+		scratchpad.previous_strafe_shoot_position = Vector3Box(wanted_position)
+	end
+
+	scratchpad.shoot_state = "trying_to_strafe_shoot"
+	scratchpad.trying_to_start_strafe_shooting_duration = t + MAX_TRYING_TO_START_STRAFE_SHOOT_DURATION
+	scratchpad.next_try_to_strafe_shoot = t + math.random_range(TRY_TO_STRAFE_SHOOT_COOLDOWN[1], TRY_TO_STRAFE_SHOOT_COOLDOWN[2])
+end
+
+BtShootLiquidBeamAction._update_trying_to_strafe_shoot = function (self, unit, t, scratchpad, action_data)
+	local navigation_extension = scratchpad.navigation_extension
+	local done = self:_update_shooting(unit, t, scratchpad, action_data)
+
+	if done then
+		navigation_extension:set_enabled(false)
+
+		return
+	end
+
+	local is_following_path = navigation_extension:is_following_path()
+
+	if not is_following_path then
+		if scratchpad.trying_to_start_strafe_shooting_duration < t then
+			navigation_extension:set_enabled(false)
+
+			scratchpad.shoot_state = "shooting"
+		end
+
+		return
+	end
+
+	local has_upcoming_smart_object, _ = navigation_extension:path_distance_to_next_smart_object(MIN_NEEDED_PATH_DISTANCE)
+
+	if has_upcoming_smart_object then
+		navigation_extension:set_enabled(false)
+
+		scratchpad.shoot_state = "shooting"
+
+		return
+	end
+
+	scratchpad.moving_direction_name = nil
+	scratchpad.shoot_state = "strafe_shooting"
+
+	if scratchpad.is_anim_rotation_driven then
+		MinionMovement.set_anim_rotation_driven(scratchpad, false)
+	end
+end
+
+local STRAFE_ANIM_SWITCH_DURATION = 0.25
+
+BtShootLiquidBeamAction._update_strafe_shooting = function (self, unit, t, dt, scratchpad, action_data)
+	local navigation_extension = scratchpad.navigation_extension
+	local is_following_path = navigation_extension:is_following_path()
+	local has_upcoming_smart_object = is_following_path and navigation_extension:path_distance_to_next_smart_object(MIN_NEEDED_PATH_DISTANCE)
+
+	if not is_following_path or has_upcoming_smart_object then
+		self:_stop_strafe_shooting(unit, t, scratchpad, action_data)
+
+		return
+	end
+
+	local target_unit = scratchpad.perception_component.target_unit
+
+	MinionAttack.aim_at_target(unit, scratchpad, t, action_data)
+
+	if not scratchpad.shooting then
+		self:_start_shooting(unit, t, scratchpad, action_data)
+	end
+
+	local self_position = POSITION_LOOKUP[unit]
+	local target_position = POSITION_LOOKUP[target_unit]
+	local rotation = Quaternion.look(target_position - self_position)
+	local moving_direction_name = MinionMovement.get_moving_direction_name(unit, scratchpad, nil, rotation)
+
+	if moving_direction_name ~= scratchpad.moving_direction_name and scratchpad.strafe_anim_switch_duration <= t then
+		local strafe_anim_events = action_data.strafe_anim_events
+		local start_move_event = strafe_anim_events[moving_direction_name]
+
+		scratchpad.animation_extension:anim_event(start_move_event)
+
+		scratchpad.moving_direction_name = moving_direction_name
+		scratchpad.current_aim_anim_event = start_move_event
+		local strafe_speeds = action_data.strafe_speeds
+		local strafe_speed = strafe_speeds and strafe_speeds[start_move_event]
+
+		if strafe_speed then
+			navigation_extension:set_max_speed(strafe_speed)
+		end
+
+		scratchpad.strafe_anim_switch_duration = t + STRAFE_ANIM_SWITCH_DURATION
+	end
+
+	local current_strafe_direction = scratchpad.moving_direction_name
+	local current_node, next_node_in_path = scratchpad.navigation_extension:current_and_next_node_positions_in_path()
+	local destination = next_node_in_path or current_node
+	local flat_direction = Vector3.normalize(Vector3.flat(destination - self_position))
+	local wanted_rotation = nil
+
+	if current_strafe_direction == "fwd" then
+		wanted_rotation = Quaternion.look(flat_direction)
+	elseif current_strafe_direction == "left" then
+		wanted_rotation = Quaternion.look(Vector3.cross(flat_direction, Vector3.up()))
+	elseif current_strafe_direction == "right" then
+		wanted_rotation = Quaternion.look(-Vector3.cross(flat_direction, Vector3.up()))
+	else
+		wanted_rotation = Quaternion.look(-flat_direction)
+	end
+
+	scratchpad.locomotion_extension:set_wanted_rotation(wanted_rotation)
+
+	local has_reached_destination = navigation_extension:has_reached_destination()
+
+	if has_reached_destination then
+		self:_stop_strafe_shooting(unit, t, scratchpad, action_data)
+	elseif scratchpad.shooting then
+		local done = self:_update_shooting(unit, t, dt, scratchpad, action_data)
+
+		if done then
+			MinionPerception.set_target_lock(unit, scratchpad.perception_component, false)
+			self:_start_shooting(unit, t, scratchpad, action_data)
+
+			if action_data.exit_after_cooldown then
+				scratchpad.should_reevaluate = true
+			end
+		end
+
+		local multi_target_config = action_data.multi_target_config
+
+		if multi_target_config and done then
+			local is_target_locked = true
+
+			MinionPerception.evaluate_multi_target_switch(unit, scratchpad, t, multi_target_config, is_target_locked)
+		end
+	end
+end
+
+BtShootLiquidBeamAction._stop_strafe_shooting = function (self, unit, t, scratchpad, action_data)
+	scratchpad.navigation_extension:set_enabled(false)
+	scratchpad.animation_extension:anim_event(action_data.strafe_end_anim_event)
+
+	if scratchpad.shooting then
+		scratchpad.shoot_state = "shooting"
+
+		if action_data.aim_rotation_anims then
+			MinionMovement.set_anim_rotation_driven(scratchpad, true)
+		end
+	else
+		self:_start_aiming(unit, t, scratchpad, action_data)
 	end
 end
 

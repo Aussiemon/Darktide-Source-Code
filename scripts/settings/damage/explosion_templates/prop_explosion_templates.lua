@@ -30,8 +30,8 @@ local explosion_templates = {
 		collision_filter = "filter_player_character_explosion",
 		override_friendly_fire = true,
 		min_close_radius = 0.5,
-		close_damage_profile = DamageProfileTemplates.barrel_explosion_close,
-		damage_profile = DamageProfileTemplates.barrel_explosion,
+		close_damage_profile = DamageProfileTemplates.fire_barrel_explosion_close,
+		damage_profile = DamageProfileTemplates.fire_barrel_explosion,
 		vfx = {
 			"content/fx/particles/destructibles/explosive_barrel_explosion"
 		},

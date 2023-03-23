@@ -28,8 +28,8 @@ local big_cleave = DamageProfileSettings.big_cleave
 damage_templates.force_staff_ball = {
 	force_weapon_damage = true,
 	stagger_override = "medium",
-	suppression_attack_delay = 0.6,
 	stagger_category = "melee",
+	suppression_attack_delay = 0.6,
 	ragdoll_push_force = 600,
 	ignore_stagger_reduction = true,
 	armor_damage_modifier = {
@@ -74,7 +74,6 @@ damage_templates.force_staff_ball = {
 			8
 		}
 	},
-	damage_type = damage_types.warp,
 	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.warp,
 	gib_push_force = GibbingSettings.gib_push_force.force_assault,
@@ -107,7 +106,6 @@ damage_templates.default_force_staff_bfg = {
 	gibbing_power = GibbingPower.heavy,
 	gibbing_type = GibbingTypes.warp,
 	gib_push_force = GibbingSettings.gib_push_force.force_bfg,
-	damage_type = damage_types.warp,
 	targets = {
 		default_target = {
 			boost_curve_multiplier_finesse = 0.5,
@@ -252,7 +250,6 @@ damage_templates.default_force_staff_demolition = {
 	},
 	gibbing_type = GibbingTypes.warp,
 	gibbing_power = GibbingPower.medium,
-	damage_type = damage_types.warp,
 	gib_push_force = GibbingSettings.gib_push_force.force_assault
 }
 damage_templates.close_force_staff_p4_demolition = {
@@ -310,8 +307,7 @@ damage_templates.close_force_staff_p4_demolition = {
 	},
 	gibbing_type = GibbingTypes.warp,
 	gibbing_power = GibbingPower.heavy,
-	gib_push_force = GibbingSettings.gib_push_force.force_assault,
-	damage_type = damage_types.warp
+	gib_push_force = GibbingSettings.gib_push_force.force_assault
 }
 damage_templates.force_staff_p4_demolition = {
 	suppression_value = 10,
@@ -394,7 +390,6 @@ damage_templates.force_staff_p4_demolition = {
 	},
 	gibbing_type = GibbingTypes.warp,
 	gibbing_power = GibbingPower.heavy,
-	damage_type = damage_types.warp,
 	gib_push_force = GibbingSettings.gib_push_force.force_demolition
 }
 damage_templates.close_force_staff_demolition = {
@@ -452,8 +447,7 @@ damage_templates.close_force_staff_demolition = {
 	},
 	gibbing_type = GibbingTypes.warp,
 	gibbing_power = GibbingPower.heavy,
-	gib_push_force = GibbingSettings.gib_push_force.force_demolition,
-	damage_type = damage_types.warp
+	gib_push_force = GibbingSettings.gib_push_force.force_demolition
 }
 damage_templates.force_staff_bash = {
 	force_weapon_damage = true,
@@ -636,8 +630,8 @@ damage_templates.default_warpfire_assault = {
 	duration_scale_bonus = 0.5,
 	accumulative_stagger_strength_multiplier = 0.5,
 	force_weapon_damage = true,
-	suppression_value = 10,
 	ragdoll_push_force = 10,
+	suppression_value = 10,
 	stagger_category = "flamer",
 	cleave_distribution = {
 		attack = 0.1,
@@ -648,7 +642,6 @@ damage_templates.default_warpfire_assault = {
 		min = 5
 	},
 	armor_damage_modifier_ranged = assault_warpfire_armor_mod,
-	damage_type = damage_types.warpfire,
 	gibbing_type = GibbingTypes.warp,
 	targets = {
 		{
@@ -753,7 +746,6 @@ damage_templates.default_warpfire_assault_burst = {
 		min = 5
 	},
 	armor_damage_modifier_ranged = assault_warpfire_armor_mod,
-	damage_type = damage_types.warpfire,
 	gibbing_type = GibbingTypes.warp,
 	power_distribution = {
 		attack = {

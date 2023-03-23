@@ -42,7 +42,7 @@ CraftingReplaceTraitView.on_enter = function (self)
 	self._crafting_recipe:set_overlay_texture(self._recipe.overlay_texture)
 
 	local trait_category = ItemUtils.trait_category(self._item)
-	local traits_promises = Managers.backend.interfaces.crafting:trait_sticker_book(trait_category)
+	local traits_promises = Managers.data_service.crafting:trait_sticker_book(trait_category)
 	self._traits_promises = traits_promises
 
 	traits_promises:next(callback(self, "_cb_fetch_trait_data")):catch(function (err)

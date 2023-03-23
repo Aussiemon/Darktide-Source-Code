@@ -34,6 +34,10 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/play_bullet_hits_large_death",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_indicator_force_kill_2d",
+				only_1p = true
 			}
 		},
 		died = {
@@ -44,6 +48,10 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/play_indicator_death_psyker",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_indicator_force_kill_2d",
+				only_1p = true
 			}
 		},
 		weakspot_damage = {
@@ -188,6 +196,10 @@ local armored = {
 			{
 				event = "wwise/events/weapon/play_bullet_hits_large_death",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_indicator_force_kill_2d",
+				only_1p = true
 			}
 		},
 		died = {
@@ -197,6 +209,10 @@ local armored = {
 			},
 			{
 				event = "wwise/events/weapon/play_bullet_hits_large_death",
+				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_indicator_force_kill_2d",
 				only_1p = true
 			}
 		},
@@ -330,6 +346,10 @@ local super_armor = {
 			{
 				event = "wwise/events/weapon/play_bullet_hits_large_death",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_indicator_force_kill_2d",
+				only_1p = true
 			}
 		},
 		died = {
@@ -339,6 +359,10 @@ local super_armor = {
 			},
 			{
 				event = "wwise/events/weapon/play_bullet_hits_large_death",
+				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_indicator_force_kill_2d",
 				only_1p = true
 			}
 		},
@@ -472,6 +496,10 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_bullet_hits_large_death",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_indicator_force_kill_2d",
+				only_1p = true
 			}
 		},
 		died = {
@@ -482,6 +510,10 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_indicator_death_psyker",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_indicator_force_kill_2d",
+				only_1p = true
 			}
 		},
 		weakspot_damage = {

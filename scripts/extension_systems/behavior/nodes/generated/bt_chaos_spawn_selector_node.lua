@@ -110,7 +110,32 @@ BtChaosSpawnSelectorNode.evaluate = function (self, unit, blackboard, scratchpad
 		return node_stagger
 	end
 
-	local node_leap = children[5]
+	local node_change_target = children[5]
+	local is_running = last_leaf_node_running and last_running_node == node_change_target
+	local condition_result = nil
+
+	repeat
+		if is_running then
+			condition_result = true
+		else
+			local perception_component = blackboard.perception
+
+			if perception_component.target_changed then
+				local new_target_unit = perception_component.target_unit
+				condition_result = new_target_unit and ALIVE[new_target_unit]
+			else
+				condition_result = false
+			end
+		end
+	until true
+
+	if condition_result then
+		new_running_child_nodes[node_identifier] = node_change_target
+
+		return node_change_target
+	end
+
+	local node_leap = children[6]
 	local is_running = last_leaf_node_running and last_running_node == node_leap
 	local condition_result = nil
 
@@ -130,7 +155,7 @@ BtChaosSpawnSelectorNode.evaluate = function (self, unit, blackboard, scratchpad
 		return node_leap
 	end
 
-	local node_melee_combat = children[6]
+	local node_melee_combat = children[7]
 	local is_running = last_leaf_node_running and last_running_node == node_melee_combat
 	local condition_result = nil
 
@@ -170,7 +195,7 @@ BtChaosSpawnSelectorNode.evaluate = function (self, unit, blackboard, scratchpad
 		end
 	end
 
-	local node_idle = children[7]
+	local node_idle = children[8]
 	new_running_child_nodes[node_identifier] = node_idle
 
 	return node_idle

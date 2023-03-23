@@ -45,6 +45,7 @@ local KeybindPassTemplates = {
 				value = "content/ui/materials/frames/hover",
 				style = {
 					hdr = true,
+					scale_to_material = true,
 					horizontal_alignment = "right",
 					size = {
 						settings_area_width,

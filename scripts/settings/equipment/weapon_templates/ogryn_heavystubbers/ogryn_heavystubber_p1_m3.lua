@@ -27,7 +27,7 @@ local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
 local weapon_template = {
 	action_inputs = {
 		shoot = {
-			buffer_time = 0.25,
+			buffer_time = 0.51,
 			input_sequence = {
 				{
 					value = true,
@@ -36,7 +36,7 @@ local weapon_template = {
 			}
 		},
 		shoot_release = {
-			buffer_time = 0.52,
+			buffer_time = 0.616,
 			input_sequence = {
 				{
 					value = false,
@@ -159,12 +159,13 @@ weapon_template.actions = {
 		allowed_chain_actions = {}
 	},
 	action_wield = {
-		allowed_during_sprint = true,
+		weapon_handling_template = "time_scale_1_3",
+		uninterruptible = true,
 		wield_anim_event = "equip",
 		wield_reload_anim_event = "equip_reload",
 		kind = "ranged_wield",
 		continue_sprinting = true,
-		uninterruptible = true,
+		allowed_during_sprint = true,
 		total_time = 1.9,
 		conditional_state_to_action_input = {
 			started_reload = {
@@ -183,7 +184,7 @@ weapon_template.actions = {
 			},
 			reload = {
 				action_name = "action_reload",
-				chain_time = 0.275
+				chain_time = 0.245
 			},
 			zoom = {
 				action_name = "action_zoom",
@@ -191,48 +192,49 @@ weapon_template.actions = {
 			},
 			shoot = {
 				action_name = "action_shoot_hip",
-				chain_time = 1.3
+				chain_time = 1.2
 			},
 			stab = {
 				action_name = "action_stab",
-				chain_time = 0.65
+				chain_time = 0.63
 			}
 		}
 	},
 	action_shoot_hip = {
-		ammunition_usage = 1,
-		weapon_handling_template = "ogryn_heavystubber_p1_m1_hip_fire",
-		kind = "shoot_hit_scan",
+		minimum_hold_time = 0.6,
+		weapon_handling_template = "ogryn_heavystubber_p1_m3_hip_fire",
 		start_input = "shoot",
-		abort_sprint = true,
-		minimum_hold_time = 0.5,
-		allowed_during_sprint = true,
 		sprint_requires_press_to_interrupt = true,
 		sprint_ready_up_time = 0.5,
+		kind = "shoot_hit_scan",
+		allowed_during_sprint = true,
+		ammunition_usage = 1,
+		anim_end_event = "attack_finished",
+		abort_sprint = true,
 		stop_input = "shoot_release",
 		total_time = math.huge,
 		action_movement_curve = {
 			{
-				modifier = 0.4,
+				modifier = 0.6,
 				t = 0.05
 			},
 			{
-				modifier = 0.6,
+				modifier = 0.8,
 				t = 0.15
 			},
 			{
-				modifier = 0.675,
+				modifier = 0.875,
 				t = 0.175
 			},
 			{
-				modifier = 0.9,
+				modifier = 0.875,
 				t = 0.3
 			},
 			{
-				modifier = 1,
+				modifier = 0.95,
 				t = 0.5
 			},
-			start_modifier = 0.5
+			start_modifier = 0.7
 		},
 		fx = {
 			pre_loop_shoot_sfx_alias = "ranged_pre_loop_shot",
@@ -253,7 +255,7 @@ weapon_template.actions = {
 		fire_configuration = {
 			anim_event = "attack_shoot",
 			same_side_suppression_enabled = false,
-			hit_scan_template = HitScanTemplates.default_ogryn_heavystubber_full_auto,
+			hit_scan_template = HitScanTemplates.default_ogryn_heavystubber_full_auto_m3,
 			damage_type = damage_types.heavy_stubber_bullet
 		},
 		allowed_chain_actions = {
@@ -288,17 +290,18 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_zoomed = {
+		minimum_hold_time = 0.6,
 		start_input = "zoom_shoot",
+		anim_end_event = "attack_finished",
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0,
-		weapon_handling_template = "ogryn_heavystubber_p1_m1_full_auto",
+		weapon_handling_template = "ogryn_heavystubber_p1_m3_full_auto",
 		ammunition_usage = 1,
-		minimum_hold_time = 0.5,
 		stop_input = "shoot_release",
 		total_time = math.huge,
 		action_movement_curve = {
 			{
-				modifier = 0.2,
+				modifier = 0.4,
 				t = 0.15
 			},
 			{
@@ -307,14 +310,26 @@ weapon_template.actions = {
 			},
 			{
 				modifier = 0.5,
+				t = 0.5
+			},
+			{
+				modifier = 0.75,
 				t = 1
 			},
-			start_modifier = 0.05
+			{
+				modifier = 0.65,
+				t = 2
+			},
+			{
+				modifier = 0.75,
+				t = 5
+			},
+			start_modifier = 0.35
 		},
 		fire_configuration = {
 			anim_event = "attack_shoot",
 			same_side_suppression_enabled = false,
-			hit_scan_template = HitScanTemplates.default_ogryn_heavystubber_full_auto,
+			hit_scan_template = HitScanTemplates.default_ogryn_heavystubber_full_auto_m3,
 			damage_type = damage_types.heavy_stubber_bullet
 		},
 		fx = {
@@ -461,17 +476,18 @@ weapon_template.actions = {
 		uninterruptible = true,
 		start_input = "brace_reload",
 		sprint_requires_press_to_interrupt = true,
+		weapon_handling_template = "time_scale_1_3",
 		abort_sprint = true,
 		crosshair_type = "none",
 		allowed_during_sprint = true,
 		total_time = 7,
 		action_movement_curve = {
 			{
-				modifier = 0.375,
+				modifier = 0.475,
 				t = 0.05
 			},
 			{
-				modifier = 0.35,
+				modifier = 0.45,
 				t = 0.075
 			},
 			{
@@ -491,10 +507,10 @@ weapon_template.actions = {
 				t = 0.9
 			},
 			{
-				modifier = 0.75,
+				modifier = 0.85,
 				t = 2
 			},
-			start_modifier = 0.5
+			start_modifier = 1
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -525,6 +541,7 @@ weapon_template.actions = {
 		stop_alternate_fire = true,
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
+		weapon_handling_template = "time_scale_1_3",
 		abort_sprint = true,
 		crosshair_type = "none",
 		allowed_during_sprint = true,
@@ -602,7 +619,7 @@ weapon_template.actions = {
 		total_time = 1.4,
 		action_movement_curve = {
 			{
-				modifier = 0.3,
+				modifier = 0.4,
 				t = 0.1
 			},
 			{
@@ -646,11 +663,11 @@ weapon_template.actions = {
 			},
 			shoot = {
 				action_name = "action_shoot_hip",
-				chain_time = 1.5
+				chain_time = 1.35
 			},
 			zoom = {
 				action_name = "action_zoom",
-				chain_time = 1.3
+				chain_time = 1.2
 			},
 			stab = {
 				action_name = "action_stab",
@@ -698,9 +715,9 @@ weapon_template.anim_state_machine_1p = "content/characters/player/ogryn/first_p
 weapon_template.reload_template = ReloadTemplates.heavy_stubber_twin_linked
 weapon_template.sway_template = "ogyn_heavy_stubber_sway"
 weapon_template.spread_template = "ogryn_heavystubber_spread_spraynpray_hip"
-weapon_template.recoil_template = "default_ogryn_heavystubber_recoil_spraynpray_hip"
+weapon_template.recoil_template = "default_ogryn_heavystubber_recoil_spraynpray_hip_m3"
 weapon_template.look_delta_template = "default"
-weapon_template.ammo_template = "ogryn_heavystubber_p1_m1"
+weapon_template.ammo_template = "ogryn_heavystubber_p1_m3"
 weapon_template.conditional_state_to_action_input = {
 	{
 		conditional_state = "no_ammo_and_started_reload_no_alternate_fire",
@@ -733,7 +750,7 @@ weapon_template.fx_sources = {
 weapon_template.crosshair_type = "spray_n_pray"
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
-	recoil_template = "default_ogryn_heavystubber_recoil_spraynpray_brace",
+	recoil_template = "default_ogryn_heavystubber_recoil_spraynpray_brace_m3",
 	sway_template = "ogyn_heavy_stubber_sway",
 	stop_anim_event = "to_unaim_braced",
 	spread_template = "default_ogryn_heavystubber_braced",
@@ -748,31 +765,31 @@ weapon_template.alternate_fire_settings = {
 	},
 	movement_speed_modifier = {
 		{
-			modifier = 0.175,
+			modifier = 0.275,
 			t = 0.05
 		},
 		{
-			modifier = 0.24,
+			modifier = 0.34,
 			t = 0.075
 		},
 		{
-			modifier = 0.19,
+			modifier = 0.29,
 			t = 0.25
 		},
 		{
-			modifier = 0.2,
+			modifier = 0.3,
 			t = 0.3
 		},
 		{
-			modifier = 0.4,
+			modifier = 0.5,
 			t = 0.4
 		},
 		{
-			modifier = 0.5,
+			modifier = 0.6,
 			t = 0.5
 		},
 		{
-			modifier = 0.65,
+			modifier = 0.75,
 			t = 2
 		}
 	}

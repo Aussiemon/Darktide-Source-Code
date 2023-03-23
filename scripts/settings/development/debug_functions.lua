@@ -12,10 +12,13 @@ local ScriptedScenarios = require("scripts/extension_systems/scripted_scenario/s
 local level_trigger_event = Level.trigger_event
 local ui_manager = nil
 local WEAPON_CATEGORY = "Player Equipment - Weapons"
-local SHIPPABLE_DESCRIPTION = " (SHIPPABLE: READY FOR RELEASE)"
-local FUNCTIONAL_DESCRIPTION = " (FUNCTIONAL: READY FOR TESTING)"
-local PROTOTYPE_DESCRIPTION = " (PROTOTYPE: DON'T USE IN TESTS OR REPORT ISSUES)"
-local BLOCKOUT_DESCRIPTION = " (BLOCKOUT: ONLY FOR USE BY WEAPON ART OR COMBAT TEAM)"
+local WEAPON_CATEGORY_DESCRIPTIONS = {
+	prototype = "PROTOTYPE (free to test, but don't report issues)",
+	blockout = "BLOCKOUT (weapon art and combat teams only)",
+	releasable = "RELEASABLE (ready for public release)",
+	functional = "FUNCTIONAL (ready for testing)",
+	shippable = "SHIPPABLE (ready for testing)"
+}
 local categories = {
 	"Achievements",
 	"Ailments",
@@ -38,10 +41,11 @@ local categories = {
 	"Player Equipment - Boons",
 	"Player Equipment - Emotes",
 	"Player Equipment - Gear",
-	WEAPON_CATEGORY .. SHIPPABLE_DESCRIPTION,
-	WEAPON_CATEGORY .. FUNCTIONAL_DESCRIPTION,
-	WEAPON_CATEGORY .. PROTOTYPE_DESCRIPTION,
-	WEAPON_CATEGORY .. BLOCKOUT_DESCRIPTION,
+	string.format("%s - %s", WEAPON_CATEGORY, WEAPON_CATEGORY_DESCRIPTIONS.releasable),
+	string.format("%s - %s", WEAPON_CATEGORY, WEAPON_CATEGORY_DESCRIPTIONS.shippable),
+	string.format("%s - %s", WEAPON_CATEGORY, WEAPON_CATEGORY_DESCRIPTIONS.functional),
+	string.format("%s - %s", WEAPON_CATEGORY, WEAPON_CATEGORY_DESCRIPTIONS.prototype),
+	string.format("%s - %s", WEAPON_CATEGORY, WEAPON_CATEGORY_DESCRIPTIONS.blockout),
 	"Player Equipment",
 	"Player Inventory",
 	"Player Profiles",
@@ -56,7 +60,7 @@ local categories = {
 	"UI",
 	"Unit",
 	"VO",
-	"WeaponTraits"
+	"Weapon Traits"
 }
 local EMPTY_TABLE = {}
 local functions = {}
@@ -340,6 +344,10 @@ local function _trigger_level_event(event_name)
 	level_trigger_event(Managers.state.mission:mission_level(), event_name)
 end
 
+local function _mission_outro_win()
+	_trigger_level_event("mission_outro_win")
+end
+
 local CINEMATICS_TO_SKIP = {
 	path_of_trust_12 = true,
 	path_of_trust_11 = true,
@@ -374,6 +382,12 @@ functions.play_cutscene = {
 		end
 
 		Log.info("DebugFunctions", "Playing cutscene %s", cutscene_name)
+
+		local outro_win = cutscene_name == "outro_win"
+
+		if outro_win then
+			_mission_outro_win()
+		end
 
 		local mission_name = _mission_name()
 		local use_events = USE_EVENTS[mission_name]
@@ -672,17 +686,19 @@ functions.teleport_all_luggables_to_me = {
 	button_text = "Gimme!",
 	category = "Level & Mission",
 	on_activated = function (new_value, old_value)
-		if not Managers.state.game_session:is_server() then
-			return
-		end
-
 		local event_synchronizer_system = Managers.state.extension:system("event_synchronizer_system")
 
 		if event_synchronizer_system then
 			local local_player = Managers.player:local_player(1)
 			local local_player_unit = local_player.player_unit
 
-			event_synchronizer_system:debug_teleport_luggables_to_unit(local_player_unit)
+			if Managers.state.game_session:is_server() then
+				event_synchronizer_system:debug_teleport_luggables_to_unit(local_player_unit)
+			else
+				local target_unit_id = Managers.state.unit_spawner:game_object_id(local_player_unit)
+
+				Managers.connection:send_rpc_server("rpc_debug_client_request_teleport_mission_luggables_to_unit", target_unit_id)
+			end
 		end
 	end
 }
@@ -1110,22 +1126,12 @@ local function _equip_slot_on_value_set_function(item_name, old_item_name, slot_
 
 	local profile = local_player:profile()
 	local archetype = profile.archetype
-	local archetype_name = archetype.name
 	local breed_name = archetype.breed
 	local breeds = item_data and item_data.breeds
 	local breed_valid = not breeds or table.contains(breeds, breed_name)
 
 	if not breed_valid then
 		Log.info("DebugFunction", "Skipping equip of item %q due to non-compatible breed.", item_name)
-
-		return
-	end
-
-	local archetypes = item_data and item_data.archetypes
-	local archetype_valid = not archetypes or table.contains(archetypes, archetype_name)
-
-	if not archetype_valid then
-		Log.info("DebugFunction", "Skipping equip of item %q due to non-compatible archetype.", item_name)
 
 		return
 	end
@@ -1204,38 +1210,65 @@ local function _generate_slot_item_definitions_lookup(player_items)
 	return item_definitions_lookup
 end
 
-local function _add_weapon_category(function_key, category, name, slot_name, definitions)
+local function _add_weapon_category(slot_name, breed_name, workflow_state, definitions)
+	local function_key = string.format("equip_%s_%s_%s", workflow_state, slot_name, breed_name)
+	local category = string.format("%s - %s", WEAPON_CATEGORY, WEAPON_CATEGORY_DESCRIPTIONS[workflow_state])
 	functions[function_key] = {
 		category = category,
-		name = name,
+		name = slot_name,
 		get_function = function ()
 			return _current_equipment(slot_name)
 		end,
 		options_function = function ()
-			return _equip_gear_options_function(definitions)
+			return _equip_gear_options_function(definitions[workflow_state][breed_name])
 		end,
 		on_activated = function (new_value, old_value)
-			_equip_gear_on_value_set_function(new_value, old_value, slot_name, definitions)
+			_equip_gear_on_value_set_function(new_value, old_value, slot_name, definitions[workflow_state][breed_name])
+		end,
+		visibility_function = function ()
+			local player_unit_spawn_manager = Managers.state.player_unit_spawn
+
+			if not player_unit_spawn_manager then
+				return false
+			end
+
+			local local_player = player_unit_spawn_manager:owner(Debug.selected_unit)
+
+			if not local_player or local_player.remote then
+				local_player = Managers.player:local_player(1)
+			end
+
+			local profile = local_player:profile()
+			local archetype = profile.archetype
+			local archetype_breed_name = archetype.breed
+
+			return archetype_breed_name == breed_name
 		end
 	}
 end
 
 local function _create_weapon_categories(item_definitions, data, slot_name)
-	local shippable_definitions = {
-		human = {},
-		ogryn = {}
-	}
-	local functional_definitions = {
-		human = {},
-		ogryn = {}
-	}
-	local blockout_definitions = {
-		human = {},
-		ogryn = {}
-	}
-	local prototype_definitions = {
-		human = {},
-		ogryn = {}
+	local definitions = {
+		releasable = {
+			human = {},
+			ogryn = {}
+		},
+		shippable = {
+			human = {},
+			ogryn = {}
+		},
+		functional = {
+			human = {},
+			ogryn = {}
+		},
+		blockout = {
+			human = {},
+			ogryn = {}
+		},
+		prototype = {
+			human = {},
+			ogryn = {}
+		}
 	}
 
 	for name, item in pairs(item_definitions) do
@@ -1266,39 +1299,51 @@ local function _create_weapon_categories(item_definitions, data, slot_name)
 			end
 
 			local workflow_state = item.workflow_state
-			local shippable = workflow_state == "SHIPPABLE" or workflow_state == "RELEASABLE"
+			local releasable = workflow_state == "RELEASABLE"
+			local shippable = workflow_state == "SHIPPABLE"
 			local functional = workflow_state == "FUNCTIONAL"
 			local prototype = workflow_state == "PROTOTYPE"
 			local blockout = workflow_state == "BLOCKOUT"
 
-			if shippable then
+			if releasable then
 				for j = 1, #breeds do
-					shippable_definitions[breeds[j]][name] = item
+					definitions.releasable[breeds[j]][name] = item
+				end
+			elseif shippable then
+				for j = 1, #breeds do
+					definitions.shippable[breeds[j]][name] = item
 				end
 			elseif functional then
 				for j = 1, #breeds do
-					functional_definitions[breeds[j]][name] = item
+					definitions.functional[breeds[j]][name] = item
 				end
 			elseif prototype then
 				for j = 1, #breeds do
-					prototype_definitions[breeds[j]][name] = item
+					definitions.prototype[breeds[j]][name] = item
 				end
 			elseif blockout then
 				for j = 1, #breeds do
-					blockout_definitions[breeds[j]][name] = item
+					definitions.blockout[breeds[j]][name] = item
 				end
 			end
 		until true
 	end
 
-	_add_weapon_category("equip_shippable_" .. slot_name .. "_human", WEAPON_CATEGORY .. SHIPPABLE_DESCRIPTION, slot_name .. ", human (SHIPPABLE)", slot_name, shippable_definitions.human)
-	_add_weapon_category("equip_functional_" .. slot_name .. "_human", WEAPON_CATEGORY .. FUNCTIONAL_DESCRIPTION, slot_name .. ", human (FUNCTIONAL)", slot_name, functional_definitions.human)
-	_add_weapon_category("equip_prototype_" .. slot_name .. "_human", WEAPON_CATEGORY .. PROTOTYPE_DESCRIPTION, slot_name .. ", human (PROTOTYPE)", slot_name, prototype_definitions.human)
-	_add_weapon_category("equip_blockout_" .. slot_name .. "_human", WEAPON_CATEGORY .. BLOCKOUT_DESCRIPTION, slot_name .. ", human (BLOCKOUT)", slot_name, blockout_definitions.human)
-	_add_weapon_category("equip_shippable_" .. slot_name .. "_ogryn", WEAPON_CATEGORY .. SHIPPABLE_DESCRIPTION, slot_name .. ", ogryn (SHIPPABLE)", slot_name, shippable_definitions.ogryn)
-	_add_weapon_category("equip_functional_" .. slot_name .. "_ogryn", WEAPON_CATEGORY .. FUNCTIONAL_DESCRIPTION, slot_name .. ", ogryn (FUNCTIONAL)", slot_name, functional_definitions.ogryn)
-	_add_weapon_category("equip_prototype_" .. slot_name .. "_ogryn", WEAPON_CATEGORY .. PROTOTYPE_DESCRIPTION, slot_name .. ", ogryn (PROTOTYPE)", slot_name, prototype_definitions.ogryn)
-	_add_weapon_category("equip_blockout_" .. slot_name .. "_ogryn", WEAPON_CATEGORY .. BLOCKOUT_DESCRIPTION, slot_name .. ", ogryn (BLOCKOUT)", slot_name, blockout_definitions.ogryn)
+	local workflow_states = {
+		"releasable",
+		"shippable",
+		"functional",
+		"prototype",
+		"blockout"
+	}
+
+	for ii = 1, #workflow_states do
+		_add_weapon_category(slot_name, "human", workflow_states[ii], definitions)
+	end
+
+	for ii = 1, #workflow_states do
+		_add_weapon_category(slot_name, "ogryn", workflow_states[ii], definitions)
+	end
 end
 
 local function _equip_emote_on_value_set_function(item_name, slot_name)
@@ -2689,7 +2734,7 @@ functions.override_all_voice_fx = {
 functions.apply_weapon_trait_lerp_value = {
 	num_decimals = 2,
 	name = "Override Weapon Trait Lerp Value",
-	category = "WeaponTraits",
+	category = "Weapon Traits",
 	number_button = true,
 	on_activated = function (value)
 		local local_player = Managers.player:local_player(1)
@@ -2711,7 +2756,7 @@ functions.apply_weapon_trait_lerp_value = {
 }
 functions.reset_weapon_lerp_values = {
 	name = "Remove Override Weapon Trait and Tweak Lerp Value",
-	category = "WeaponTraits",
+	category = "Weapon Traits",
 	on_activated = function ()
 		local local_player = Managers.player:local_player(1)
 
@@ -2733,7 +2778,7 @@ functions.reset_weapon_lerp_values = {
 functions.apply_lerp_value_to_all_tweak_templates = {
 	num_decimals = 2,
 	name = "Apply lerp_value to all tweak templates",
-	category = "WeaponTraits",
+	category = "Weapon Traits",
 	number_button = true,
 	on_activated = function (value)
 		local local_player = Managers.player:local_player(1)
@@ -2755,7 +2800,7 @@ functions.apply_lerp_value_to_all_tweak_templates = {
 }
 functions.verify_trait_templates = {
 	name = "Verify Trait Templates",
-	category = "WeaponTraits",
+	category = "Weapon Traits",
 	on_activated = function ()
 		local trait_template_verification = require("scripts/settings/equipment/tests/trait_template_verification")
 		local success = trait_template_verification()

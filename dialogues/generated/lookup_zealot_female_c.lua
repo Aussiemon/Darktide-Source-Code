@@ -1,0 +1,13 @@
+DialogueLookup[DialogueLookup_n + 1] = "bonding_conversation_round_three_favour_a"
+DialogueLookup[DialogueLookup_n + 2] = "bonding_conversation_round_three_favour_b"
+DialogueLookup[DialogueLookup_n + 3] = "bonding_conversation_round_three_favour_c"
+DialogueLookup[DialogueLookup_n + 4] = "bonding_conversation_round_three_favour_d"
+DialogueLookup[DialogueLookup_n + 5] = "bonding_conversation_round_three_laxity_a"
+DialogueLookup[DialogueLookup_n + 6] = "bonding_conversation_round_three_laxity_b"
+DialogueLookup[DialogueLookup_n + 7] = "bonding_conversation_round_three_laxity_c"
+DialogueLookup[DialogueLookup_n + 8] = "bonding_conversation_round_three_laxity_d"
+DialogueLookup[DialogueLookup_n + 9] = "bonding_conversation_round_three_psyker_peril_06_a"
+DialogueLookup[DialogueLookup_n + 10] = "bonding_conversation_round_three_psyker_peril_06_b"
+DialogueLookup[DialogueLookup_n + 11] = "bonding_conversation_round_three_psyker_peril_06_c"
+DialogueLookup[DialogueLookup_n + 12] = "bonding_conversation_round_three_psyker_peril_06_d"
+DialogueLookup_n = DialogueLookup_n + 12

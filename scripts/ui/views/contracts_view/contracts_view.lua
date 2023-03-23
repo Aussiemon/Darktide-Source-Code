@@ -133,11 +133,11 @@ ContractsView.cb_on_close_pressed = function (self)
 	Managers.ui:close_view(view_name)
 end
 
-ContractsView.cb_reroll_task_confirmed = function (self, task_id, wallet)
+ContractsView.cb_reroll_task_confirmed = function (self, task_id, wallet, reroll_cost)
 	local last_transaction_id = wallet and wallet.lastTransactionId
 	local player = self:_player()
 	local character_id = player:character_id()
-	local promise = self._backend_interfaces.contracts:reroll_task(character_id, task_id, last_transaction_id)
+	local promise = Managers.data_service.contracts:reroll_task(character_id, task_id, last_transaction_id, reroll_cost)
 
 	promise:next(function (data)
 		if self._destroyed then
@@ -147,9 +147,6 @@ ContractsView.cb_reroll_task_confirmed = function (self, task_id, wallet)
 		self._parent:play_vo_events(ViewSettings.vo_event_replacing_task, "contract_vendor_a", nil, 1.4)
 		self:_play_sound(UISoundEvents.mark_vendor_replace_contract)
 		self:_hide_task_info()
-
-		wallet.lastTransactionId = (wallet.lastTransactionId or 0) + 1
-
 		self:_replace_contract(task_id, data)
 		self:_update_wallets()
 	end):catch(function (error)
@@ -358,7 +355,7 @@ ContractsView._set_contract_info = function (self, contract_data)
 			self:_update_wallets()
 		end
 
-		local promise = self._backend_interfaces.contracts:complete_contract(character_id)
+		local promise = Managers.data_service.contracts:complete_contract(character_id)
 
 		promise:next(on_completed_callback, on_completed_callback)
 	end
@@ -575,7 +572,7 @@ ContractsView._display_confirmation_popup = function (self, task_id, wallet)
 				stop_exit_sound = true,
 				close_on_pressed = true,
 				text = "loc_contracts_reroll_confimation_yes",
-				callback = callback(self, "cb_reroll_task_confirmed", task_id, wallet)
+				callback = callback(self, "cb_reroll_task_confirmed", task_id, wallet, reroll_cost)
 			},
 			{
 				text = "loc_contracts_reroll_confimation_no",

@@ -325,8 +325,9 @@ TerrorEventNodes.spawn_by_points = {
 			local aggro_state = node.passive and aggro_states.passive or aggro_states.aggroed
 			local group_system = Managers.state.extension:system("group_system")
 			local group_id = group_system:generate_group_id()
+			local spawn_delay = node.spawn_delay
 
-			BreedQueries.add_spawns_single_breed(spawners, breed_name, breed_amount, spawn_side_id, target_side_id, spawned_minion_data, mission_objective_id, attack_selection_template_name_or_nil, aggro_state, group_id)
+			BreedQueries.add_spawns_single_breed(spawners, breed_name, breed_amount, spawn_side_id, target_side_id, spawned_minion_data, mission_objective_id, attack_selection_template_name_or_nil, aggro_state, group_id, nil, spawn_delay)
 
 			local group = group_system:group_from_id(group_id)
 			local horde_group_sound_event_names = GROUP_SOUNDS_BY_BREED_NAME[breed_name]

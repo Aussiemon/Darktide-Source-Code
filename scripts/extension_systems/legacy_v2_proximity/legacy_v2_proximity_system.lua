@@ -43,6 +43,7 @@ LegacyV2ProximitySystem.init = function (self, extension_system_creation_context
 	self._near_units_last = Script.new_map(32)
 	self._near_units_new = Script.new_map(32)
 	self._added = Script.new_map(32)
+	self._cache_delayed_vo = nil
 	self._broadphase_result = {}
 	self._distance_based_vo_queries = {}
 	local side_system = Managers.state.extension:system("side_system")
@@ -54,8 +55,6 @@ end
 local function _can_trigger_vo(breed_configuration)
 	return breed_configuration.can_trigger_vo and (breed_configuration.trigger_heard_vo or breed_configuration.trigger_seen_vo)
 end
-
-local EMPTY_TABLE = {}
 
 local function _camera_position()
 	local local_player = Managers.player:local_player(1)
@@ -300,6 +299,18 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 		return
 	end
 
+	local vo = self._cache_delayed_vo
+
+	if vo then
+		self._cache_delayed_vo.timer = vo.timer - dt
+
+		if vo.timer < 0 then
+			Vo.distance_based_event(vo.unit, vo.proximity_type, vo.event_data)
+
+			self._cache_delayed_vo = nil
+		end
+	end
+
 	local enemy_check_raycasts = self._enemy_check_raycasts
 	local player_unit_component_map = self._player_unit_component_map
 	local ray_read_index = self._raycast_read_index
@@ -333,15 +344,25 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 
 		local last_num_matching_units = proximity_data.num
 
-		if num_matching_units < last_num_matching_units * 0.5 or num_matching_units > last_num_matching_units * 1.5 then
+		if num_matching_units < last_num_matching_units * 0.67 or num_matching_units > last_num_matching_units * 1.49 then
 			proximity_data.num = num_matching_units
 			local dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
 			local event_data = dialogue_extension:get_event_data_payload()
 			event_data.num_units = num_matching_units
-			local proximity_type = extension.id
+			local proximity_type = proximity_data.id
+			local send_friends_distant = false
 
-			if proximity_type == "friends_close" or proximity_type == "friends_distant" then
-				Vo.distance_based_event(dialogue_extension, proximity_type, event_data)
+			if proximity_type == "friends_distant" and num_matching_units == 0 then
+				send_friends_distant = true
+			end
+
+			if proximity_type == "friends_close" or send_friends_distant then
+				self._cache_delayed_vo = {
+					timer = 0.5,
+					unit = unit,
+					proximity_type = proximity_type,
+					event_data = event_data
+				}
 			end
 		end
 

@@ -63,7 +63,11 @@ AccountManagerWinGDK.signin_profile = function (self, signin_callback)
 		async_task = XUser.add_user_async(XUserAddOptions.AddDefaultUserAllowingUI)
 	end
 
-	Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb, fail_cb):catch(fail_cb)
+	if async_task then
+		Managers.xasync:wrap(async_task, XUser.release_async_block):next(success_cb, fail_cb):catch(fail_cb)
+	else
+		fail_cb()
+	end
 
 	self._signin_state = SIGNIN_STATES.signin_profile
 	self._signin_callback = signin_callback

@@ -54,7 +54,7 @@ local projectile_templates = {
 			},
 			impact = {
 				damage_profile = DamageProfileTemplates.frag_grenade_impact,
-				damage_type = damage_types.frag
+				damage_type = damage_types.grenade_frag
 			}
 		},
 		effects = {
@@ -115,7 +115,7 @@ local projectile_templates = {
 			},
 			impact = {
 				damage_profile = DamageProfileTemplates.frag_grenade_impact,
-				damage_type = damage_types.frag
+				damage_type = damage_types.grenade_frag
 			}
 		},
 		effects = {

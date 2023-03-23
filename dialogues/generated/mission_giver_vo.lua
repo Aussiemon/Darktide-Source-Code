@@ -3025,55 +3025,6 @@ return function ()
 		post_wwise_event = "play_radio_static_end",
 		concurrent_wwise_event = "play_vox_static_loop",
 		pre_wwise_event = "play_radio_static_start",
-		name = "mission_scan_aborted",
-		response = "mission_scan_aborted",
-		database = "mission_giver_vo",
-		wwise_route = 1,
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"mission_scan_aborted"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"tech_priest"
-				}
-			},
-			{
-				"user_memory",
-				"mission_scan_aborted",
-				OP.GTEQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"mission_scan_aborted",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
 		name = "mission_scan_complete",
 		response = "mission_scan_complete",
 		database = "mission_giver_vo",
@@ -3221,55 +3172,6 @@ return function ()
 			delay_vo = {
 				duration = 1
 			}
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "mission_scan_started",
-		response = "mission_scan_started",
-		database = "mission_giver_vo",
-		wwise_route = 1,
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"mission_scan_started"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"tech_priest"
-				}
-			},
-			{
-				"user_memory",
-				"mission_scan_started",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"mission_scan_started",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
 		}
 	})
 	define_rule({

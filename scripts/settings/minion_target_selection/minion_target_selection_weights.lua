@@ -91,13 +91,13 @@ local minion_target_selection_weights = {
 	},
 	chaos_spawn = {
 		occupied_slots = -2,
-		stickiness_duration = 5,
+		stickiness_duration = 6,
 		disabled = -80,
 		max_distance = 20,
-		stickiness_bonus = 100,
+		stickiness_bonus = 200,
 		ledge_hanging_weight = -20,
 		threat_multiplier = 2,
-		distance_to_target = 40
+		distance_to_target = 20
 	},
 	chaos_poxwalker_bomber = {
 		distance_to_target = 2,

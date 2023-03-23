@@ -6,6 +6,9 @@ local state_machine_settings = {
 	["content/characters/player/human/first_person/animations/hatchet"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
+	["content/characters/player/human/first_person/animations/shovel"] = {
+		blend_time = DEFAULT_BLEND_TIME
+	},
 	["content/characters/player/human/first_person/animations/power_maul"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	},

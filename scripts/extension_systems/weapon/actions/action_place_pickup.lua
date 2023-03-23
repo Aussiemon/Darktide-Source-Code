@@ -2,6 +2,7 @@ require("scripts/extension_systems/weapon/actions/action_place_base")
 
 local Pickups = require("scripts/settings/pickup/pickups")
 local ActionPlacePickup = class("ActionPlacePickup", "ActionPlaceBase")
+local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
 
 ActionPlacePickup._place_unit = function (self, action_settings, position, rotation, placed_on_unit)
 	local player_unit = self._player_unit
@@ -24,7 +25,12 @@ ActionPlacePickup._place_unit = function (self, action_settings, position, rotat
 	end
 
 	self:_register_stats_and_telemetry(pickup_name, player_or_nil)
-	Managers.event:trigger("on_pickup_placed", placed_unit)
+
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
+
+	if game_mode_name == TRAINING_GROUNDS_GAME_MODE_NAME then
+		Managers.event:trigger("tg_on_pickup_placed", placed_unit)
+	end
 end
 
 return ActionPlacePickup

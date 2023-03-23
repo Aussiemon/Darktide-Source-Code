@@ -11,6 +11,7 @@ ChainLightningTargetingActionModule.init = function (self, physics_world, player
 	self._action_settings = action_settings
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 	self._first_person_component = unit_data_extension:read_component("first_person")
+	self._buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 end
 
 ChainLightningTargetingActionModule.start = function (self, action_settings, t)
@@ -20,9 +21,9 @@ ChainLightningTargetingActionModule.start = function (self, action_settings, t)
 	component.target_unit_3 = nil
 end
 
-local RADIUS = 20
-local MAX_Z_DIFF = RADIUS
-local MAX_ANGLE = math.pi * 0.1
+local DEFAULT_RADIUS = 20
+local DEFAULT_MAX_Z_DIFF = DEFAULT_RADIUS
+local DEFAULT_MAX_ANGLE = math.pi * 0.1
 local BROADPHASE_RESULTS = {}
 local hit_units = {}
 
@@ -36,19 +37,23 @@ ChainLightningTargetingActionModule.fixed_update = function (self, dt, t)
 	local query_position = POSITION_LOOKUP[player_unit]
 	local rotation = self._first_person_component.rotation
 	local forward_direction = Vector3_normalize(Vector3_flat(Quaternion.forward(rotation)))
-	local component = self._component
+	local max_angle = DEFAULT_MAX_ANGLE
+	local close_max_angle = DEFAULT_MAX_ANGLE
+	local max_z_diff = DEFAULT_MAX_Z_DIFF
+	local radius = DEFAULT_RADIUS
 
 	table.clear(BROADPHASE_RESULTS)
 	table.clear(hit_units)
 
-	local num_results = broadphase:query(query_position, RADIUS, BROADPHASE_RESULTS, enemy_side_names)
+	local num_results = broadphase:query(query_position, radius, BROADPHASE_RESULTS, enemy_side_names)
+	local component = self._component
 	local num_targets = 0
 
 	for i = 1, num_results do
 		local target_unit = BROADPHASE_RESULTS[i]
 
 		if target_unit and not hit_units[target_unit] then
-			local valid_target = ChainLightning.is_valid_target(self._physics_world, player_unit, target_unit, query_position, -forward_direction, MAX_ANGLE, MAX_Z_DIFF)
+			local valid_target, debug_reason = ChainLightning.is_valid_target(self._physics_world, player_unit, target_unit, query_position, -forward_direction, max_angle, close_max_angle, max_z_diff)
 
 			if valid_target then
 				num_targets = num_targets + 1

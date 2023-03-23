@@ -5,8 +5,10 @@ local CinematicManagerTestify = {
 	set_active_testify_camera = function (camera, cinematic_manager)
 		cinematic_manager:set_active_testify_camera(camera)
 	end,
-	wait_for_cinematic_to_be_over = function (_, cinematic_manager)
-		if cinematic_manager:active() then
+	wait_for_mission_intro = function (_, cinematic_manager)
+		local has_mission_intro_played = cinematic_manager:mission_intro_played()
+
+		if not has_mission_intro_played then
 			return Testify.RETRY
 		end
 	end

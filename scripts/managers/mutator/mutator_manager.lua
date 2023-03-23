@@ -2,10 +2,11 @@ local CircumstanceTemplates = require("scripts/settings/circumstance/circumstanc
 local MutatorTemplates = require("scripts/settings/mutator/mutator_templates")
 local MutatorManager = class("MutatorManager")
 
-MutatorManager.init = function (self, is_server, network_event_delegate, circumstance_name)
+MutatorManager.init = function (self, is_server, nav_world, network_event_delegate, circumstance_name)
 	self._is_server = is_server
 	self._network_event_delegate = network_event_delegate
 	self._mutators = {}
+	self._nav_world = nav_world
 
 	self:_load_mutators(circumstance_name)
 
@@ -29,7 +30,7 @@ MutatorManager._load_mutators = function (self, circumstance_name)
 		for _, mutator_name in ipairs(mutators_to_load) do
 			local mutator_template = MutatorTemplates[mutator_name]
 			local mutator_class = require(mutator_template.class)
-			mutators[mutator_name] = mutator_class:new(is_server, network_event_delegate, mutator_template)
+			mutators[mutator_name] = mutator_class:new(is_server, network_event_delegate, mutator_template, self._nav_world)
 		end
 	end
 end

@@ -72,18 +72,6 @@ PlayerCharacterStateSprinting.on_enter = function (self, unit, dt, t, previous_s
 	end
 
 	self._previous_velocity_move_speed = nil
-
-	if self._is_server then
-		local specialization = self._unit_data_extension:specialization()
-		local specialization_stamina_template = specialization.stamina
-		local current_stamina, _ = Stamina.current_and_max_value(unit, self._stamina_component, specialization_stamina_template)
-
-		if current_stamina > 0 then
-			local buff_extension = ScriptUnit.extension(unit, "buff_system")
-			local _, local_index = buff_extension:add_externally_controlled_buff("sprint_with_stamina_buff", t)
-			self._stamina_buff_id = local_index
-		end
-	end
 end
 
 PlayerCharacterStateSprinting.on_exit = function (self, unit, t, next_state)
@@ -96,14 +84,6 @@ PlayerCharacterStateSprinting.on_exit = function (self, unit, t, next_state)
 	end
 
 	Stamina.set_regeneration_paused(self._stamina_component, false)
-
-	if self._is_server and self._stamina_buff_id then
-		local buff_extension = ScriptUnit.extension(unit, "buff_system")
-
-		buff_extension:remove_externally_controlled_buff(self._stamina_buff_id)
-
-		self._stamina_buff_id = nil
-	end
 end
 
 local WALK_MOVE_ANIM_THRESHOLD = 0.8
@@ -154,13 +134,6 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 	end
 
 	sprint_character_state_component.wants_sprint_camera = wants_sprint_camera
-
-	if self._is_server and remaining_stamina == 0 and self._stamina_buff_id then
-		buff_extension:remove_externally_controlled_buff(self._stamina_buff_id)
-
-		self._stamina_buff_id = nil
-	end
-
 	local animation_ext = self._animation_extension
 
 	Crouch.check(unit, self._first_person_extension, animation_ext, weapon_extension, self._movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t)

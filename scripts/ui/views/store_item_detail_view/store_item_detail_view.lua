@@ -2185,7 +2185,7 @@ StoreItemDetailView._create_aquilas_presentation = function (self, offer, item_n
 end
 
 StoreItemDetailView.cb_on_aquila_pressed = function (self, widget, element)
-	self._purchase_promise = element.offer:make_purchase():next(function (data)
+	self._purchase_promise = Managers.data_service.store:purchase_currency(element.offer):next(function (data)
 		if self._destroyed or not self._purchase_promise then
 			return
 		end

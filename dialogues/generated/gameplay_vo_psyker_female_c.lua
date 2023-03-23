@@ -2568,13 +2568,6 @@ local gameplay_vo_psyker_female_c = {
 			2.379688,
 			1.751542
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	player_death_psyker = {
@@ -2593,13 +2586,6 @@ local gameplay_vo_psyker_female_c = {
 			2.046479,
 			3.526479,
 			2.169458
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -2620,13 +2606,6 @@ local gameplay_vo_psyker_female_c = {
 			3.222115,
 			1.961823
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	player_death_zealot = {
@@ -2645,13 +2624,6 @@ local gameplay_vo_psyker_female_c = {
 			1.704802,
 			1.274219,
 			1.229042
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},

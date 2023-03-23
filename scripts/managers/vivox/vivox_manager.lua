@@ -17,7 +17,7 @@ local function _sound_setting_option_voice_chat()
 		end
 	end
 
-	return SOUND_SETTING_OPTIONS_VOICE_CHAT.muted
+	return SOUND_SETTING_OPTIONS_VOICE_CHAT.push_to_talk
 end
 
 VivoxManager.init = function (self)
@@ -138,6 +138,10 @@ end
 
 VivoxManager.join_chat_channel = function (self, channel, host_peer_id, voice, text, tag, vivox_token)
 	if not self:is_logged_in() then
+		return
+	end
+
+	if not text and not voice then
 		return
 	end
 
@@ -303,26 +307,6 @@ VivoxManager.update = function (self, dt, t)
 			self:_validate_participants()
 		end
 	end
-end
-
-VivoxManager._displayname_in_channel = function (self, channel_handle, player_info)
-	local tag = self:tag_from_session_handle(channel_handle)
-
-	if tag == ChatManagerConstants.ChannelTag.HUB or tag == ChatManagerConstants.ChannelTag.MISSION then
-		local displayname = player_info:character_name()
-
-		if displayname and displayname ~= "" and displayname ~= "N/A" then
-			return displayname
-		end
-	else
-		local displayname = player_info:user_display_name()
-
-		if displayname and displayname ~= "" and displayname ~= "N/A" then
-			return displayname
-		end
-	end
-
-	return nil
 end
 
 local function login_state_enum(vx_login_state_change_state)
@@ -710,9 +694,9 @@ VivoxManager._validate_participants = function (self)
 				local player_info = participant.player_info
 
 				if not participant.displayname then
-					local displayname = self:_displayname_in_channel(session_handle, player_info)
+					local displayname = player_info:character_name()
 
-					if displayname then
+					if displayname and displayname ~= "" and displayname ~= "N/A" then
 						participant.displayname = displayname
 					end
 				end

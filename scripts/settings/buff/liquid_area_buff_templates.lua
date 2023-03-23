@@ -57,9 +57,11 @@ end
 local templates = {
 	leaving_liquid_fire_spread_increase = {
 		unique_buff_id = "fire_spread_increase",
+		hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
 		unique_buff_priority = 1,
 		duration = 1.75,
 		class_name = "buff",
+		is_negative = true,
 		lerped_stat_buffs = {
 			[buff_stat_buffs.spread_modifier] = {
 				max = 0,
@@ -164,11 +166,12 @@ local templates = {
 		interval_func = _scaled_damage_interval_function
 	},
 	prop_in_liquid_fire_burning_movement_slow = {
-		interval = 1,
+		interval = 0.5,
 		class_name = "interval_buff",
 		hud_priority = 1,
-		hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
+		hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
 		max_stacks = 1,
+		is_negative = true,
 		stat_buffs = {
 			[buff_stat_buffs.movement_speed] = 0.75
 		},
@@ -178,10 +181,10 @@ local templates = {
 		power_level = {
 			default = {
 				500,
-				500,
-				500,
-				500,
-				500
+				600,
+				750,
+				850,
+				1000
 			},
 			player = {
 				100,
@@ -199,7 +202,10 @@ local templates = {
 	renegade_grenadier_in_fire_liquid = {
 		class_name = "interval_buff",
 		interval = 0.2,
+		hud_priority = 1,
+		hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
 		max_stacks = 1,
+		is_negative = true,
 		stat_buffs = {
 			[buff_stat_buffs.movement_speed] = 0.8
 		},
@@ -226,8 +232,11 @@ local templates = {
 	},
 	cultist_flamer_in_fire_liquid = {
 		interval = 0.25,
+		hud_priority = 1,
+		hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
 		max_stacks = 1,
 		class_name = "interval_buff",
+		is_negative = true,
 		keywords = {
 			buff_keywords.burning
 		},
@@ -251,8 +260,11 @@ local templates = {
 	},
 	renegade_flamer_in_fire_liquid = {
 		interval = 0.25,
+		hud_priority = 1,
+		hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
 		max_stacks = 1,
 		class_name = "interval_buff",
+		is_negative = true,
 		keywords = {
 			buff_keywords.burning
 		},
@@ -377,13 +389,45 @@ templates.beast_of_nurgle_in_slime = {
 		}
 	}
 }
+templates.in_toxic_gas = {
+	interval = 0.5,
+	class_name = "interval_buff",
+	predicted = false,
+	max_stacks = 1,
+	stat_buffs = {
+		[buff_stat_buffs.movement_speed] = 0.9,
+		[buff_stat_buffs.dodge_speed_multiplier] = 0.9
+	},
+	power_level = {
+		default = {
+			3,
+			6,
+			15,
+			20,
+			25
+		}
+	},
+	damage_template = DamageProfileTemplates.toxic_gas_mutator,
+	damage_type = damage_types.minion_vomit,
+	interval_func = _scaled_damage_interval_function,
+	player_effects = {
+		looping_wwise_stop_event = "wwise/events/player/play_player_vomit_exit",
+		looping_wwise_start_event = "wwise/events/player/play_player_vomit_enter",
+		wwise_state = {
+			group = "swamped",
+			on_state = "on",
+			off_state = "none"
+		}
+	}
+}
 local cultist_flamer_leaving_liquid_fire_spread_increase = table.clone(templates.leaving_liquid_fire_spread_increase)
 cultist_flamer_leaving_liquid_fire_spread_increase.forbidden_keywords = {
 	buff_keywords.cultist_flamer_liquid_immunity
 }
 templates.cultist_flamer_leaving_liquid_fire_spread_increase = cultist_flamer_leaving_liquid_fire_spread_increase
 cultist_flamer_leaving_liquid_fire_spread_increase.hud_priority = 1
-cultist_flamer_leaving_liquid_fire_spread_increase.hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud"
+cultist_flamer_leaving_liquid_fire_spread_increase.hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud"
+cultist_flamer_leaving_liquid_fire_spread_increase.is_negative = true
 local renegade_flamer_leaving_liquid_fire_spread_increase = table.clone(templates.cultist_flamer_leaving_liquid_fire_spread_increase)
 renegade_flamer_leaving_liquid_fire_spread_increase.forbidden_keywords = {
 	buff_keywords.renegade_flamer_liquid_immunity
@@ -391,7 +435,8 @@ renegade_flamer_leaving_liquid_fire_spread_increase.forbidden_keywords = {
 templates.renegade_flamer_leaving_liquid_fire_spread_increase = renegade_flamer_leaving_liquid_fire_spread_increase
 local renegade_grenadier_leaving_liquid_fire_spread_increase = table.clone(templates.leaving_liquid_fire_spread_increase)
 renegade_grenadier_leaving_liquid_fire_spread_increase.hud_priority = 1
-renegade_grenadier_leaving_liquid_fire_spread_increase.hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud"
+renegade_grenadier_leaving_liquid_fire_spread_increase.hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud"
+renegade_grenadier_leaving_liquid_fire_spread_increase.is_negative = true
 renegade_grenadier_leaving_liquid_fire_spread_increase.forbidden_keywords = {
 	buff_keywords.renegade_grenadier_liquid_immunity
 }

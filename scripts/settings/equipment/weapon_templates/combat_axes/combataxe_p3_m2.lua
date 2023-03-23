@@ -95,7 +95,7 @@ weapon_template.actions = {
 				action_name = "action_block"
 			},
 			special_action = {
-				action_name = "action_special_uppercut"
+				action_name = "action_special_activate"
 			}
 		}
 	},
@@ -227,7 +227,7 @@ weapon_template.actions = {
 				chain_time = 0.45
 			},
 			special_action = {
-				action_name = "action_special_uppercut",
+				action_name = "action_special_activate",
 				chain_time = 0.65
 			},
 			block = {
@@ -307,7 +307,7 @@ weapon_template.actions = {
 				chain_time = 0.63
 			},
 			special_action = {
-				action_name = "action_special_uppercut",
+				action_name = "action_special_activate",
 				chain_time = 0.5
 			},
 			block = {
@@ -463,7 +463,7 @@ weapon_template.actions = {
 				chain_time = 0.6
 			},
 			special_action = {
-				action_name = "action_special_uppercut",
+				action_name = "action_special_activate",
 				chain_time = 0.8
 			},
 			block = {
@@ -542,7 +542,7 @@ weapon_template.actions = {
 				chain_time = 0.5
 			},
 			special_action = {
-				action_name = "action_special_uppercut",
+				action_name = "action_special_activate",
 				chain_time = 0.5
 			},
 			block = {
@@ -699,7 +699,7 @@ weapon_template.actions = {
 				chain_time = 0.7
 			},
 			special_action = {
-				action_name = "action_special_uppercut",
+				action_name = "action_special_activate",
 				chain_time = 0.3
 			},
 			block = {
@@ -780,7 +780,7 @@ weapon_template.actions = {
 				action_name = "action_push"
 			},
 			special_action = {
-				action_name = "action_special_uppercut",
+				action_name = "action_special_activate",
 				chain_time = 0.3
 			}
 		}
@@ -839,7 +839,7 @@ weapon_template.actions = {
 				chain_time = 0.55
 			},
 			special_action = {
-				action_name = "action_special_uppercut",
+				action_name = "action_special_activate",
 				chain_time = 0.3
 			},
 			block = {
@@ -993,7 +993,7 @@ weapon_template.actions = {
 				chain_time = 0.71
 			},
 			special_action = {
-				action_name = "action_special_uppercut",
+				action_name = "action_special_activate",
 				chain_time = 0.8
 			},
 			block = {
@@ -1076,70 +1076,23 @@ weapon_template.actions = {
 		outer_damage_profile = DamageProfileTemplates.light_push,
 		outer_damage_type = damage_types.physical
 	},
-	action_special_uppercut = {
-		damage_window_start = 0.23333333333333334,
-		hit_armor_anim = "attack_hit_shield",
+	action_special_activate = {
+		deactivate_anim_event = "deactivate",
+		total_time_deactivate = 0.25,
+		activate_anim_event = "activate",
+		kind = "toggle_special",
 		start_input = "special_action",
-		kind = "sweep",
-		max_num_saved_entries = 20,
-		first_person_hit_stop_anim = "attack_hit",
-		weapon_handling_template = "time_scale_1_3",
-		num_frames_before_process = 0,
+		activation_time = 0.3,
+		deactivation_time = 0.1,
 		allowed_during_sprint = true,
-		attack_direction_override = "push",
-		damage_window_end = 0.36666666666666664,
-		anim_end_event = "attack_finished",
-		range_mod = 1.25,
-		anim_event_3p = "attack_swing_stab",
-		anim_event = "attack_stab_01",
-		total_time = 1.5,
-		action_movement_curve = {
-			{
-				modifier = 1,
-				t = 0.15
-			},
-			start_modifier = 1
-		},
+		skip_3p_anims = false,
+		total_time = 0.4,
 		allowed_chain_actions = {
-			combat_ability = {
-				action_name = "combat_ability"
-			},
-			grenade_ability = {
-				action_name = "grenade_ability"
-			},
-			wield = {
-				action_name = "action_unwield"
-			},
-			start_attack = {
-				action_name = "action_melee_start_left_2",
-				chain_time = 0.7
-			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.6
+				chain_time = 0.3
 			}
-		},
-		anim_end_event_condition_func = function (unit, data, end_reason)
-			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
-		hit_zone_priority = hit_zone_priority,
-		weapon_box = combat_axe_sweep_box,
-		herding_template = HerdingTemplates.push,
-		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/axe/attack_stab",
-			anchor_point_offset = {
-				0,
-				0,
-				-0.1
-			}
-		},
-		damage_profile = DamageProfileTemplates.axe_stab,
-		damage_type = damage_types.axe_light,
-		time_scale_stat_buffs = {
-			buff_stat_buffs.attack_speed,
-			buff_stat_buffs.melee_attack_speed
-		},
-		wounds_shape = wounds_shapes.default
+		}
 	},
 	action_inspect = {
 		anim_event = "inspect_start",
@@ -1156,7 +1109,7 @@ weapon_template.actions = {
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 
 weapon_template.anim_state_machine_3p = "content/characters/player/human/third_person/animations/power_sword"
-weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/axe"
+weapon_template.anim_state_machine_1p = "content/characters/player/human/first_person/animations/shovel"
 weapon_template.weapon_box = combat_axe_sweep_box
 weapon_template.sprint_ready_up_time = 0.1
 weapon_template.uses_ammunition = false
@@ -1224,9 +1177,6 @@ weapon_template.base_stats = {
 			action_left_light = {
 				damage_trait_templates.default_melee_dps_stat
 			},
-			action_special_uppercut = {
-				damage_trait_templates.default_melee_dps_stat
-			},
 			action_right_light_pushfollow = {
 				damage_trait_templates.default_melee_dps_stat
 			},
@@ -1268,9 +1218,6 @@ weapon_template.base_stats = {
 			action_left_light = {
 				damage_trait_templates.default_armor_pierce_stat
 			},
-			action_special_uppercut = {
-				damage_trait_templates.default_armor_pierce_stat
-			},
 			action_right_light_pushfollow = {
 				damage_trait_templates.default_armor_pierce_stat
 			},
@@ -1296,9 +1243,6 @@ weapon_template.base_stats = {
 				damage_trait_templates.default_first_target_stat
 			},
 			action_left_light = {
-				damage_trait_templates.default_first_target_stat
-			},
-			action_special_uppercut = {
 				damage_trait_templates.default_first_target_stat
 			},
 			action_right_light_pushfollow = {
@@ -1371,6 +1315,6 @@ weapon_template.displayed_attacks = {
 		type = "special_attack"
 	}
 }
-weapon_template.special_action_name = "action_special_uppercut"
+weapon_template.special_action_name = "action_special_activate"
 
 return weapon_template

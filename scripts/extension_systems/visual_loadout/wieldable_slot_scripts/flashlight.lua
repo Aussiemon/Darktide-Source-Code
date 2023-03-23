@@ -255,15 +255,24 @@ function _falloff_position_rotation(template_1p, flashlights_1p)
 	end
 end
 
-local FLASHLIGHT_AGGRO_CIRCUMSTANCES = {
-	darkness_01 = true,
-	ventilation_purge_01 = true
+local FLASHLIGHT_AGGRO_MUTATORS = {
+	"mutator_darkness_los",
+	"mutator_ventilation_purge_los"
 }
 
 function _trigger_aggro(template_1p, flashlights_1p, physics_world, owner_unit)
-	local circumstance_name = Managers.state.circumstance:circumstance_name()
+	local mutator_manager = Managers.state.mutator
+	local has_flashlight_aggro = false
 
-	if not FLASHLIGHT_AGGRO_CIRCUMSTANCES[circumstance_name] then
+	for i = 1, #FLASHLIGHT_AGGRO_MUTATORS do
+		if mutator_manager:mutator(FLASHLIGHT_AGGRO_MUTATORS[i]) then
+			has_flashlight_aggro = true
+
+			break
+		end
+	end
+
+	if not has_flashlight_aggro then
 		return
 	end
 
@@ -337,6 +346,10 @@ function _trigger_aggro(template_1p, flashlights_1p, physics_world, owner_unit)
 				elseif aggro_state == "passive" then
 					MinionPerception.attempt_alert(perception_extension, owner_unit)
 				end
+
+				local target_position = Unit.world_position(owner_unit, Unit.node(owner_unit, "enemy_aim_target_03"))
+
+				perception_extension:set_last_los_position(owner_unit, target_position)
 			end
 		until true
 	end

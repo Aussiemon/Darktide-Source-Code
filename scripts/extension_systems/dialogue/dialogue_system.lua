@@ -44,10 +44,12 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 	self._debug_state = nil
 	self._t = nil
 	self._current_mission = system_init_data.mission
+	self._current_game_mode = nil
 	self._vo_sources_cache = system_init_data.vo_sources_cache
 	self._is_rule_db_enabled = system_init_data.is_rule_db_enabled
 	self._markers = {}
 	self._original_dialogue_settings = {}
+	self._loaded_player_files_tracker = {}
 	self._in_game_voice_profiles = {}
 	self._dialogues = {}
 
@@ -85,6 +87,7 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 		end
 
 		local game_mode_name = self._current_mission.game_mode_name
+		self._current_game_mode = game_mode_name
 		local dialogue_filename = DialogueSettings.default_rule_path .. game_mode_name
 
 		self:load_dialogue_resource(dialogue_filename)
@@ -178,13 +181,6 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 	self._next_player_level_check = 0
 	self._next_local_events_queue_process = 0
 	self._next_audible_check = 0
-
-	if self._is_server then
-		local event_manager = Managers.event
-
-		event_manager:register(self, "terror_event_started", "_on_terror_event_started")
-		event_manager:register(self, "terror_event_stopped", "_on_terror_event_stopped")
-	end
 end
 
 DialogueSystem.playing_dialogues_array = function (self)
@@ -209,13 +205,6 @@ DialogueSystem.destroy = function (self)
 		for setting_name, value in pairs(self._original_dialogue_settings) do
 			DialogueSettings[setting_name] = value
 		end
-	end
-
-	if self._is_server then
-		local event_manager = Managers.event
-
-		event_manager:unregister(self, "terror_event_started")
-		event_manager:unregister(self, "terror_event_stopped")
 	end
 
 	table.clear(self)
@@ -280,6 +269,10 @@ DialogueSystem.extensions_ready = function (self, world, unit)
 
 		table.insert(self._in_game_voice_profiles, voice_profile)
 		self:_update_global_context_player_voices(self._in_game_voice_profiles)
+
+		if self._current_game_mode == "coop_complete_objective" then
+			self:load_player_resource(voice_profile)
+		end
 	end
 end
 
@@ -289,7 +282,7 @@ DialogueSystem.on_remove_extension = function (self, unit, extension_name)
 end
 
 DialogueSystem._cleanup_extension = function (self, unit, extension_name)
-	local extension = self._unit_extension_data[unit]
+	local extension = self._unit_extension_data[unit] or ScriptUnit.extension(unit, "dialogue_system")
 
 	if extension == nil then
 		return
@@ -300,6 +293,10 @@ DialogueSystem._cleanup_extension = function (self, unit, extension_name)
 		local voice_profile_index = table.index_of(self._in_game_voice_profiles, voice_profile)
 
 		table.remove(self._in_game_voice_profiles, voice_profile_index)
+
+		if self._current_game_mode == "coop_complete_objective" then
+			self:unload_player_resource(voice_profile)
+		end
 	end
 
 	local context = extension:get_context()
@@ -587,20 +584,26 @@ DialogueSystem.post_update = function (self, entity_system_update_context, t)
 	return
 end
 
-DialogueSystem.hot_join_sync = function (self, sender, channel)
-	local breed_names = {}
-	local voice_indexes = {}
-	local counter_breed_wwise = 0
+local temp_dialogue_breed_ids = {}
+local temp_dialogue_voice_indexes = {}
 
-	for key, value in pairs(self._extension_per_breed_wwise_voice_index) do
-		counter_breed_wwise = counter_breed_wwise + 1
-		breed_names[counter_breed_wwise] = key
-		voice_indexes[counter_breed_wwise] = value
+DialogueSystem.hot_join_sync = function (self, sender, channel)
+	table.clear(temp_dialogue_breed_ids)
+	table.clear(temp_dialogue_voice_indexes)
+
+	local num_breed_dialogue_voice_indexes = 0
+
+	for breed_name, voice_index in pairs(self._extension_per_breed_wwise_voice_index) do
+		num_breed_dialogue_voice_indexes = num_breed_dialogue_voice_indexes + 1
+		local breed_name_id = NetworkLookup.dialogue_breed_names[breed_name]
+		temp_dialogue_breed_ids[num_breed_dialogue_voice_indexes] = breed_name_id
+		temp_dialogue_voice_indexes[num_breed_dialogue_voice_indexes] = voice_index
 	end
 
-	local counter_extensions = 0
-	local extension_profiles = {}
-	local extension_unit_ids = {}
+	local num_dialogue_extensions = 0
+	local dialogue_extension_unit_ids = {}
+	local dialogue_extension_profiles = {}
+	local unit_spawner_manager = Managers.state.unit_spawner
 
 	for unit, extension in pairs(self._unit_extension_data) do
 		repeat
@@ -608,14 +611,13 @@ DialogueSystem.hot_join_sync = function (self, sender, channel)
 				break
 			end
 
-			counter_extensions = counter_extensions + 1
-			extension_profiles[counter_extensions] = extension:get_profile_name()
-			local unit_id = Managers.state.unit_spawner:game_object_id(unit)
-			extension_unit_ids[counter_extensions] = unit_id
+			num_dialogue_extensions = num_dialogue_extensions + 1
+			dialogue_extension_unit_ids[num_dialogue_extensions] = unit_spawner_manager:game_object_id(unit)
+			dialogue_extension_profiles[num_dialogue_extensions] = extension:get_profile_name()
 		until true
 	end
 
-	RPC.rpc_dialogue_system_joined(channel, counter_breed_wwise, breed_names, voice_indexes, counter_extensions, extension_unit_ids, extension_profiles)
+	RPC.rpc_dialogue_system_joined(channel, temp_dialogue_breed_ids, temp_dialogue_voice_indexes, dialogue_extension_unit_ids, dialogue_extension_profiles)
 end
 
 DialogueSystem.trigger_general_unit_event = function (self, unit, event)
@@ -969,16 +971,22 @@ DialogueSystem._set_ruledatabase_debug_level = function (self)
 	end
 end
 
-DialogueSystem.rpc_dialogue_system_joined = function (self, channel_id, total_breed_wwise_voices, breed_names, voice_indexes, counter_extension_data, extension_unit_ids, extension_profiles)
+DialogueSystem.rpc_dialogue_system_joined = function (self, channel_id, dialogue_breed_ids, dialogue_voice_indexes, dialogue_extension_unit_ids, dialogue_extension_profiles)
 	table.clear(self._extension_per_breed_wwise_voice_index)
 
-	for index = 1, total_breed_wwise_voices do
-		self._extension_per_breed_wwise_voice_index[breed_names[index]] = voice_indexes[index]
+	local num_dialogue_breed_ids = #dialogue_breed_ids
+
+	for ii = 1, num_dialogue_breed_ids do
+		local breed_name_id = dialogue_breed_ids[ii]
+		local breed_name = NetworkLookup.dialogue_breed_names[breed_name_id]
+		self._extension_per_breed_wwise_voice_index[breed_name] = dialogue_voice_indexes[ii]
 	end
 
-	for index = 1, counter_extension_data do
+	local num_dialogue_extension_unit_ids = #dialogue_extension_unit_ids
+
+	for ii = 1, num_dialogue_extension_unit_ids do
 		repeat
-			local unit = Managers.state.unit_spawner:unit(extension_unit_ids[index], false)
+			local unit = Managers.state.unit_spawner:unit(dialogue_extension_unit_ids[ii], false)
 
 			if unit == nil then
 				break
@@ -990,7 +998,7 @@ DialogueSystem.rpc_dialogue_system_joined = function (self, channel_id, total_br
 				break
 			end
 
-			extension:set_vo_profile(extension_profiles[index], self._vo_sources_cache)
+			extension:set_vo_profile(dialogue_extension_profiles[ii], self._vo_sources_cache)
 		until true
 	end
 end
@@ -1047,6 +1055,12 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 	local extension = self._unit_extension_data[dialogue_actor_unit]
 
 	if not extension then
+		return
+	end
+
+	local is_a_player = extension:is_a_player()
+
+	if is_a_player and not HEALTH_ALIVE[dialogue_actor_unit] then
 		return
 	end
 
@@ -1319,18 +1333,6 @@ DialogueSystem.rpc_player_select_voice = function (self, channel_id, go_id, play
 	end
 end
 
-DialogueSystem._on_terror_event_started = function (self)
-	DialogueSettings.story_ticker_enabled = false
-	DialogueSettings.short_story_ticker_enabled = false
-end
-
-DialogueSystem._on_terror_event_stopped = function (self)
-	DialogueSettings.story_ticker_enabled = true
-	self._next_story_line_update_t = self._t + DialogueSettings.story_tick_time
-	DialogueSettings.short_story_ticker_enabled = true
-	self._next_short_story_line_update_t = self._t + DialogueSettings.short_story_tick_time
-end
-
 local interrupt_dialogue_list = {}
 
 DialogueSystem._process_query = function (self, query, dt, t, is_a_delayed_query)
@@ -1410,6 +1412,10 @@ DialogueSystem._process_query = function (self, query, dt, t, is_a_delayed_query
 					end
 
 					if random_ignore_vo.chance < math.random() then
+						if random_ignore_vo.max_failed_tries == 0 then
+							return
+						end
+
 						if random_ignore_vo.failed_tries == nil then
 							random_ignore_vo.failed_tries = 1
 						else
@@ -1624,6 +1630,49 @@ DialogueSystem._trigger_face_animation_event = function (self, unit, animation_e
 						Unit.animation_event_by_index(face_unit, event_index)
 					end
 				end
+			end
+		end
+	end
+end
+
+DialogueSystem.load_player_resource = function (self, profile_name)
+	local player_load_files = DialogueSettings.player_load_files[profile_name]
+	local loaded_player_files_tracker = self._loaded_player_files_tracker
+	local has_loaded = false
+
+	for _, filename in ipairs(player_load_files) do
+		if not loaded_player_files_tracker[filename] then
+			loaded_player_files_tracker[filename] = 1
+
+			self:load_dialogue_resource(filename)
+
+			has_loaded = true
+		else
+			loaded_player_files_tracker[filename] = loaded_player_files_tracker[filename] + 1
+		end
+	end
+
+	if has_loaded and self._is_rule_db_enabled then
+		self._tagquery_database:finalize_rules()
+	end
+end
+
+DialogueSystem.unload_player_resource = function (self, profile_name)
+	local loaded_player_files_tracker = self._loaded_player_files_tracker
+	local unload_candidates = DialogueSettings.player_load_files[profile_name]
+
+	for _, filename in ipairs(unload_candidates) do
+		loaded_player_files_tracker[filename] = loaded_player_files_tracker[filename] - 1
+
+		if loaded_player_files_tracker[filename] == 0 then
+			loaded_player_files_tracker[filename] = nil
+
+			self._vo_sources_cache:remove_rule_file(filename)
+
+			local rule_file_path = DialogueSettings.default_rule_path .. filename
+
+			if self._is_rule_db_enabled then
+				self._tagquery_loader:unload_file(rule_file_path)
 			end
 		end
 	end

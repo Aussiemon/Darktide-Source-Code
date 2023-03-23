@@ -312,7 +312,7 @@ weapon_action_data.action_kind_condition_funcs = {
 			local inventory_slot_component = condition_func_params.inventory_slot_component
 			local ammo_reserve = inventory_slot_component.current_ammunition_reserve
 
-			if ammo_reserve <= cost then
+			if ammo_reserve < cost then
 				return false
 			end
 		end
@@ -546,7 +546,7 @@ weapon_action_data.action_kind_to_running_action_chain_event = {
 	},
 	chain_lightning = {
 		stop_time_reached = true,
-		charge_depleated = true
+		charge_depleted = true
 	},
 	charge = {
 		fully_charged = true
@@ -556,7 +556,7 @@ weapon_action_data.action_kind_to_running_action_chain_event = {
 	},
 	flamer_gas = {
 		reserve_empty = true,
-		charge_depleated = true,
+		charge_depleted = true,
 		clip_empty = true
 	},
 	overload_charge = {

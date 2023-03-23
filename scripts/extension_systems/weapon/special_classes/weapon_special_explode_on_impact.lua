@@ -32,7 +32,7 @@ WeaponSpecialExplodeOnImpact.update = function (self, dt, t)
 	end
 end
 
-WeaponSpecialExplodeOnImpact.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, hit_position, attack_direction, optional_origin_slot)
+WeaponSpecialExplodeOnImpact.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, hit_position, attack_direction, abort_attack, optional_origin_slot)
 	self._num_hit_enemies = num_hit_enemies
 	local special_active = self._inventory_slot_component.special_active
 	local player_position = POSITION_LOOKUP[self._player_unit] + Vector3(0, 0, 0.75)

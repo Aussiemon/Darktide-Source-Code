@@ -8,6 +8,7 @@ local attack_types = AttackSettings.attack_types
 local damage_types = DamageSettings.damage_types
 local CLOSE_RANGE_RANGED = DamageSettings.ranged_close
 local CLOSE_RANGE_SQUARED = CLOSE_RANGE_RANGED * CLOSE_RANGE_RANGED
+local ON_SHOOT_HIT_MULTIPLE_THRESHOLD = 2
 local CheckProcFunctions = {
 	all = function (...)
 		local conditions = {
@@ -216,17 +217,19 @@ CheckProcFunctions.on_ranged_close_kill = function (params)
 		return false
 	end
 
-	local attacked_unit = params.attacked_unit
+	local hit_world_position_box = params.hit_world_position
+	local hit_world_position = hit_world_position_box and hit_world_position_box:unbox()
 
-	if not Unit.alive(attacked_unit) then
-		return
+	if not hit_world_position then
+		return false
 	end
 
 	local attacking_unit = params.attacking_unit
-	local attacked_pos = POSITION_LOOKUP[attacked_unit] or Unit.world_position(attacked_unit, 1)
 	local attacking_pos = POSITION_LOOKUP[attacking_unit] or Unit.world_position(attacking_unit, 1)
+	local distance = Vector3.distance_squared(hit_world_position, attacking_pos)
+	local is_within_distance = distance <= CLOSE_RANGE_SQUARED
 
-	return Vector3.distance_squared(attacked_pos, attacking_pos) <= CLOSE_RANGE_SQUARED
+	return is_within_distance
 end
 
 CheckProcFunctions.on_block_broken = function (params)
@@ -263,6 +266,16 @@ end
 
 CheckProcFunctions.on_melee_crit_hit = function (params)
 	return params.is_critical_strike and params.attack_type == attack_types.melee
+end
+
+CheckProcFunctions.on_first_target_melee_hit = function (params, template_data, template_context)
+	if not CheckProcFunctions.on_melee_hit(params) then
+		return false
+	end
+
+	local target_index = params.target_index
+
+	return target_index == 1
 end
 
 CheckProcFunctions.on_multiple_melee_hit = function (params, template_data, template_context)
@@ -365,7 +378,7 @@ CheckProcFunctions.on_chain_lightning_hit = function (params)
 end
 
 CheckProcFunctions.on_shoot_hit_multiple = function (params)
-	return params.num_hit_units > 2
+	return ON_SHOOT_HIT_MULTIPLE_THRESHOLD < params.num_hit_units
 end
 
 CheckProcFunctions.on_hit_all_pellets_on_same = function (params)

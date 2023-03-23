@@ -11,6 +11,7 @@ end
 _extract_mutator_templates("scripts/settings/mutator/templates/mutator_minion_nurgle_blessing_templates")
 _extract_mutator_templates("scripts/settings/mutator/templates/mutator_extra_trickle_templates")
 _extract_mutator_templates("scripts/settings/mutator/templates/mutator_modify_pacing_templates")
+_extract_mutator_templates("scripts/settings/mutator/templates/mutator_stagger_overrides_templates")
 
 for name, mutator_data in pairs(mutator_templates) do
 	mutator_data.name = name

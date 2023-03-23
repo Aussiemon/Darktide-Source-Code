@@ -1260,6 +1260,79 @@ damage_templates.default_light_chainsword_2h = {
 		}
 	}
 }
+overrides.light_chainsword_2h_push_follow = {
+	parent_template_name = "default_light_chainsword_2h",
+	overrides = {
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				75,
+				150
+			}
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"impact",
+			{
+				10,
+				20
+			}
+		},
+		{
+			"targets",
+			2,
+			"power_distribution",
+			"attack",
+			{
+				50,
+				100
+			}
+		},
+		{
+			"targets",
+			2,
+			"power_distribution",
+			"impact",
+			{
+				8,
+				16
+			}
+		},
+		{
+			"targets",
+			3,
+			"power_distribution",
+			"attack",
+			{
+				40,
+				80
+			}
+		},
+		{
+			"targets",
+			3,
+			"power_distribution",
+			"impact",
+			{
+				7,
+				14
+			}
+		},
+		{
+			"ragdoll_push_force",
+			450
+		},
+		{
+			"cleave_distribution",
+			no_cleave
+		}
+	}
+}
 overrides.light_chainsword_active_2h_push_follow = {
 	parent_template_name = "default_light_chainsword_2h",
 	overrides = {
@@ -1330,6 +1403,10 @@ overrides.light_chainsword_active_2h_push_follow = {
 		{
 			"cleave_distribution",
 			no_cleave
+		},
+		{
+			"weapon_special",
+			true
 		}
 	}
 }
@@ -1404,10 +1481,6 @@ overrides.light_chainsword_active_2h = {
 		{
 			"wounds_template",
 			WoundsTemplates.chainsword_sawing_2h
-		},
-		{
-			"skip_on_hit_proc",
-			true
 		}
 	}
 }

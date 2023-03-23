@@ -58,6 +58,15 @@ local weapon_template = {
 				}
 			}
 		},
+		keep_charging = {
+			buffer_time = 0,
+			input_sequence = {
+				{
+					value = true,
+					input = "action_two_hold"
+				}
+			}
+		},
 		trigger_charge_flame = {
 			buffer_time = 0.5,
 			input_sequence = {
@@ -168,8 +177,9 @@ weapon_template.action_input_hierarchy = {
 		vent = "base",
 		combat_ability = "base",
 		trigger_charge_flame = {
-			wield = "base",
 			vent = "base",
+			keep_charging = "previous",
+			wield = "base",
 			cancel_flame = "base"
 		}
 	},
@@ -277,8 +287,9 @@ weapon_template.actions = {
 				chain_time = 0.65
 			},
 			charge = {
-				action_name = "action_charge_flame",
-				chain_time = 0.65
+				chain_time = 0.65,
+				reset_combo = true,
+				action_name = "action_charge_flame"
 			},
 			special_action_hold = {
 				chain_time = 0.3,
@@ -314,14 +325,13 @@ weapon_template.actions = {
 		}
 	},
 	action_charge_flame = {
-		crosshair_type = "charge_up",
 		overload_module_class_name = "warp_charge",
 		start_input = "charge",
-		kind = "overload_charge",
-		keep_combo_on_start = true,
-		sprint_ready_up_time = 0.25,
 		hold_combo = true,
+		kind = "overload_charge",
+		sprint_ready_up_time = 0.25,
 		anim_end_event = "attack_cancel",
+		crosshair_type = "charge_up",
 		allowed_during_sprint = true,
 		minimum_hold_time = 0.4,
 		charge_template = "forcestaff_p2_m1_charge",
@@ -410,7 +420,7 @@ weapon_template.actions = {
 		anim_event_3p = "attack_shoot_flame",
 		anim_event = "attack_shoot_flame",
 		stop_input = "cancel_flame",
-		total_time = 10.1,
+		total_time = math.huge,
 		action_movement_curve = {
 			{
 				modifier = 0.1,
@@ -427,7 +437,7 @@ weapon_template.actions = {
 			start_modifier = 0.1
 		},
 		running_action_state_to_action_input = {
-			charge_depleated = {
+			charge_depleted = {
 				input_name = "cancel_flame"
 			}
 		},
@@ -457,18 +467,11 @@ weapon_template.actions = {
 			wield = {
 				action_name = "action_unwield"
 			},
-			shoot_pressed = {
-				action_name = "action_shoot_flame",
-				chain_time = 0.6
-			},
-			special_action_hold = {
-				chain_time = 0.2,
-				reset_combo = true,
-				action_name = "action_stab_start"
-			},
-			vent = {
-				action_name = "action_vent",
-				chain_time = 0.3
+			keep_charging = {
+				action_name = "action_charge_flame",
+				running_action_state_requirement = {
+					charge_depleted = true
+				}
 			}
 		}
 	},
@@ -500,8 +503,9 @@ weapon_template.actions = {
 				action_name = "action_shoot_flame"
 			},
 			charge = {
-				action_name = "action_charge_flame",
-				chain_time = 1
+				chain_time = 1,
+				reset_combo = true,
+				action_name = "action_charge_flame"
 			},
 			special_action_light = {
 				action_name = "action_stab",
@@ -630,8 +634,9 @@ weapon_template.actions = {
 				action_name = "action_shoot_flame"
 			},
 			charge = {
-				action_name = "action_charge_flame",
-				chain_time = 0.5
+				chain_time = 0.5,
+				reset_combo = true,
+				action_name = "action_charge_flame"
 			},
 			special_action_hold = {
 				action_name = "action_swipe_start",
@@ -720,8 +725,9 @@ weapon_template.actions = {
 				action_name = "action_shoot_flame"
 			},
 			charge = {
-				action_name = "action_charge_flame",
-				chain_time = 0.5
+				chain_time = 0.5,
+				reset_combo = true,
+				action_name = "action_charge_flame"
 			},
 			special_action_hold = {
 				action_name = "action_swipe_start",
@@ -815,8 +821,9 @@ weapon_template.actions = {
 				action_name = "action_shoot_flame"
 			},
 			charge = {
-				action_name = "action_charge_flame",
-				chain_time = 1
+				chain_time = 1,
+				reset_combo = true,
+				action_name = "action_charge_flame"
 			},
 			vent = {
 				action_name = "action_vent",
@@ -906,8 +913,9 @@ weapon_template.actions = {
 				action_name = "action_shoot_flame"
 			},
 			charge = {
-				action_name = "action_charge_flame",
-				chain_time = 0.7
+				chain_time = 0.7,
+				reset_combo = true,
+				action_name = "action_charge_flame"
 			},
 			vent = {
 				action_name = "action_vent",

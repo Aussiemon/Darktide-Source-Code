@@ -232,15 +232,17 @@ weapon_template.actions = {
 			start_modifier = 0.3
 		},
 		fx = {
-			muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle",
-			shell_casing_effect = "content/fx/particles/weapons/shells/shell_casing_shotgun_01",
-			crit_shoot_sfx_alias = "critical_shot_extra",
-			shoot_sfx_alias = "ranged_single_shot",
-			shoot_sfx_special_extra_alias = "ranged_single_shot_special_extra",
-			weapon_special_muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle",
-			shoot_tail_sfx_alias = "ranged_shot_tail",
-			out_of_ammo_sfx_alias = "ranged_out_of_ammo",
 			no_ammo_shoot_sfx_alias = "ranged_no_ammo",
+			crit_shoot_sfx_alias = "critical_shot_extra",
+			shoot_tail_sfx_alias = "ranged_shot_tail",
+			shoot_sfx_alias = "ranged_single_shot",
+			weapon_special_muzzle_flash_crit_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_muzzle",
+			weapon_special_muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_muzzle",
+			shell_casing_effect = "content/fx/particles/weapons/shells/shell_casing_shotgun_01",
+			shoot_sfx_special_extra_with_offset = true,
+			shoot_sfx_special_extra_alias = "ranged_single_shot_special_extra",
+			out_of_ammo_sfx_alias = "ranged_out_of_ammo",
+			muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle",
 			weapon_special_line_effect = LineEffects.shotgun_incendiary_trail
 		},
 		fire_configuration = {
@@ -318,14 +320,16 @@ weapon_template.actions = {
 			start_modifier = 0.3
 		},
 		fx = {
-			no_ammo_shoot_sfx_alias = "ranged_no_ammo",
+			muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle",
 			shell_casing_effect = "content/fx/particles/weapons/shells/shell_casing_shotgun_01",
 			crit_shoot_sfx_alias = "critical_shot_extra",
 			shoot_sfx_alias = "ranged_single_shot",
-			shoot_sfx_special_extra_alias = "ranged_single_shot_special_extra",
-			weapon_special_muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle",
+			weapon_special_muzzle_flash_crit_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_muzzle",
+			weapon_special_muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_muzzle",
 			shoot_tail_sfx_alias = "ranged_shot_tail",
-			muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle",
+			shoot_sfx_special_extra_with_offset = true,
+			shoot_sfx_special_extra_alias = "ranged_single_shot_special_extra",
+			no_ammo_shoot_sfx_alias = "ranged_no_ammo",
 			weapon_special_line_effect = LineEffects.shotgun_incendiary_trail
 		},
 		fire_configuration = {
@@ -410,21 +414,23 @@ weapon_template.actions = {
 			start_modifier = 0.3
 		},
 		fx = {
-			no_ammo_shoot_sfx_alias = "ranged_no_ammo",
+			muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle",
 			shell_casing_effect = "content/fx/particles/weapons/shells/shell_casing_shotgun_01",
 			crit_shoot_sfx_alias = "critical_shot_extra",
 			shoot_sfx_alias = "ranged_single_shot",
-			shoot_sfx_special_extra_alias = "ranged_single_shot_special_extra",
-			weapon_special_muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle",
+			weapon_special_muzzle_flash_crit_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_muzzle",
+			weapon_special_muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_muzzle",
 			shoot_tail_sfx_alias = "ranged_shot_tail",
-			muzzle_flash_effect = "content/fx/particles/weapons/rifles/shotgun/shotgun_rifle_muzzle",
+			shoot_sfx_special_extra_with_offset = true,
+			shoot_sfx_special_extra_alias = "ranged_single_shot_special_extra",
+			no_ammo_shoot_sfx_alias = "ranged_no_ammo",
 			weapon_special_line_effect = LineEffects.shotgun_incendiary_trail
 		},
 		fire_configuration = {
 			anim_event = "attack_shoot_semi",
 			same_side_suppression_enabled = false,
 			shotshell = ShotshellTemplates.shotgun_p1_m3_killshot,
-			shotshell_special = ShotshellTemplates.shotgun_burninating_special,
+			shotshell_special = ShotshellTemplates.shotgun_burninating_special_killshot,
 			damage_type = damage_types.pellet
 		},
 		conditional_state_to_action_input = {
@@ -478,6 +484,9 @@ weapon_template.actions = {
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
 				chain_time = 0.25
+			},
+			reload = {
+				action_name = "action_start_reload"
 			}
 		},
 		smart_targeting_template = SmartTargetingTemplates.alternate_fire_assault
@@ -499,28 +508,25 @@ weapon_template.actions = {
 			},
 			zoom = {
 				action_name = "action_zoom"
+			},
+			reload = {
+				action_name = "action_start_reload"
 			}
 		}
 	},
 	action_start_reload = {
+		kind = "reload_shotgun",
 		start_input = "reload",
 		anim_end_event = "reload_end",
 		sprint_requires_press_to_interrupt = true,
-		stop_alternate_fire = true,
-		kind = "reload_shotgun",
-		crosshair_type = "none",
-		allowed_during_sprint = true,
 		abort_sprint = true,
+		crosshair_type = "none",
+		stop_alternate_fire = true,
+		allowed_during_sprint = true,
 		anim_event = "reload_start",
 		total_time = 0.95,
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
-		anim_variables_func = function (action_settings, condition_func_params)
-			local current_ammunition_clip = condition_func_params.inventory_slot_component.current_ammunition_clip
-			local max_ammunition_clip = condition_func_params.inventory_slot_component.max_ammunition_clip
-
-			return "current_clip", current_ammunition_clip, "remaining_clip", max_ammunition_clip - current_ammunition_clip
 		end,
 		reload_settings = {
 			refill_at_time = 0.62,
@@ -590,22 +596,16 @@ weapon_template.actions = {
 		}
 	},
 	action_reload_loop = {
-		sprint_requires_press_to_interrupt = true,
+		kind = "reload_shotgun",
 		anim_end_event = "reload_end",
 		weapon_handling_template = "time_scale_1",
-		kind = "reload_shotgun",
+		sprint_requires_press_to_interrupt = true,
 		crosshair_type = "none",
 		allowed_during_sprint = true,
 		anim_event = "reload_middle",
 		total_time = 0.5,
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
-		anim_variables_func = function (action_settings, condition_func_params)
-			local current_ammunition_clip = condition_func_params.inventory_slot_component.current_ammunition_clip
-			local max_ammunition_clip = condition_func_params.inventory_slot_component.max_ammunition_clip
-
-			return "current_clip", current_ammunition_clip, "remaining_clip", max_ammunition_clip - current_ammunition_clip
 		end,
 		reload_settings = {
 			refill_at_time = 0.1,
@@ -683,10 +683,11 @@ weapon_template.actions = {
 		stop_alternate_fire = true,
 		start_input = "special_action",
 		sprint_requires_press_to_interrupt = true,
+		anim_event_3p = "load_special",
 		abort_sprint = true,
 		crosshair_type = "none",
 		allowed_during_sprint = true,
-		anim_event = "load_special",
+		anim_event = "load_special_var_02",
 		prevent_sprint = true,
 		total_time = 1.5,
 		reload_settings = {
@@ -696,24 +697,24 @@ weapon_template.actions = {
 		},
 		action_movement_curve = {
 			{
-				modifier = 0.775,
+				modifier = 0.575,
 				t = 0.05
 			},
 			{
-				modifier = 0.75,
+				modifier = 0.45,
 				t = 0.075
 			},
 			{
-				modifier = 0.59,
+				modifier = 0.39,
 				t = 0.25
 			},
 			{
-				modifier = 0.6,
+				modifier = 0.3,
 				t = 0.3
 			},
 			{
-				modifier = 0.85,
-				t = 0.8
+				modifier = 0.55,
+				t = 0.7
 			},
 			{
 				modifier = 0.9,
@@ -723,7 +724,7 @@ weapon_template.actions = {
 				modifier = 1,
 				t = 2
 			},
-			start_modifier = 1
+			start_modifier = 0.8
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -788,6 +789,7 @@ weapon_template.fx_sources = {
 	_eject = "fx_eject"
 }
 weapon_template.crosshair_type = "shotgun"
+weapon_template.crosshair_type_special_active = "shotgun"
 weapon_template.alternate_fire_settings = {
 	special_recoil_template = "shotgun_special_recoil",
 	sway_template = "default_shotgun_killshot",
@@ -1065,7 +1067,7 @@ weapon_template.perks = {
 }
 weapon_template.displayed_keywords = {
 	{
-		display_name = "loc_weapon_keyword_close_combat"
+		display_name = "loc_weapon_keyword_spread_shot"
 	},
 	{
 		display_name = "loc_weapon_keyword_high_damage"

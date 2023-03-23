@@ -240,35 +240,23 @@ templates.weapon_trait_bespoke_combataxe_p1_increase_power_on_hit = {
 templates.weapon_trait_bespoke_combataxe_p1_power_bonus_scaled_on_stamina = {
 	weapon_trait_bespoke_combataxe_p1_power_bonus_scaled_on_stamina = {
 		{
-			lerped_stat_buffs = {
-				[stat_buffs.power_level_modifier] = {
-					max = 0.02,
-					min = 0
-				}
+			conditional_stat_buffs = {
+				[stat_buffs.power_level_modifier] = 0.015
 			}
 		},
 		{
-			lerped_stat_buffs = {
-				[stat_buffs.power_level_modifier] = {
-					max = 0.03,
-					min = 0
-				}
+			conditional_stat_buffs = {
+				[stat_buffs.power_level_modifier] = 0.02
 			}
 		},
 		{
-			lerped_stat_buffs = {
-				[stat_buffs.power_level_modifier] = {
-					max = 0.04,
-					min = 0
-				}
+			conditional_stat_buffs = {
+				[stat_buffs.power_level_modifier] = 0.03
 			}
 		},
 		{
-			lerped_stat_buffs = {
-				[stat_buffs.power_level_modifier] = {
-					max = 0.05,
-					min = 0
-				}
+			conditional_stat_buffs = {
+				[stat_buffs.power_level_modifier] = 0.04
 			}
 		}
 	}

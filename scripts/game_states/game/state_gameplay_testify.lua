@@ -345,8 +345,8 @@ local StateGameplayTestify = {
 
 		return unit
 	end,
-	start_measuring_performance = function (mspf_threads, batchcount, primitives, state_gameplay)
-		state_gameplay:init_performance_reporter(mspf_threads, batchcount, primitives)
+	start_measuring_performance = function (values_to_measure, state_gameplay)
+		state_gameplay:init_performance_reporter(values_to_measure)
 	end,
 	stop_measuring_performance = function (_, state_gameplay)
 		local performance_reporter = state_gameplay:performance_reporter()

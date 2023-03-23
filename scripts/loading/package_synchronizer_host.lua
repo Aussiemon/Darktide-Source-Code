@@ -203,9 +203,13 @@ PackageSynchronizerHost._player_profile_changed = function (self, sync_peer_id, 
 	local player = Managers.player:player(sync_peer_id, sync_local_player_id)
 	local new_profile = player:profile()
 	local changed_profile_fields = {
-		inventory = self:_calculate_changed_inventory_items(old_profile, new_profile),
-		talents = self:_calculate_changed_talents(old_profile, new_profile)
+		player_unit_respawn = self:_calculate_player_unit_respawn(old_profile, new_profile)
 	}
+
+	if not changed_profile_fields.player_unit_respawn then
+		changed_profile_fields.inventory = self:_calculate_changed_inventory_items(old_profile, new_profile)
+		changed_profile_fields.talents = self:_calculate_changed_talents(old_profile, new_profile)
+	end
 
 	_debug_print("LoadingTimes: Player Profile Changed (peer: %s, player_id: %s)", tostring(sync_peer_id), tostring(sync_local_player_id))
 
@@ -231,6 +235,34 @@ PackageSynchronizerHost._player_profile_changed = function (self, sync_peer_id, 
 
 		self:_increment_alias_version(peer_id, sync_peer_id, sync_local_player_id)
 	end
+end
+
+local EMPTY_TABLE = {}
+
+PackageSynchronizerHost._calculate_player_unit_respawn = function (self, profile, new_profile)
+	if profile.archetype.name ~= new_profile.archetype.name then
+		return true
+	end
+
+	if profile.gender ~= new_profile.gender then
+		return true
+	end
+
+	if profile.selected_voice ~= new_profile.selected_voice then
+		return true
+	end
+
+	local personal = profile.personal or EMPTY_TABLE
+	local new_personal = profile.personal or EMPTY_TABLE
+	local old_character_height = personal.character_height or 1
+	local new_character_height = new_personal.character_height or 1
+	local character_height_diff = math.abs(new_character_height - old_character_height)
+
+	if character_height_diff > 0.01 then
+		return true
+	end
+
+	return false
 end
 
 PackageSynchronizerHost._calculate_changed_inventory_items = function (self, profile, new_profile)
@@ -317,16 +349,71 @@ PackageSynchronizerHost._calculate_changed_inventory_items = function (self, pro
 	return changed_loadout_items
 end
 
-PackageSynchronizerHost._item_instance_altered = function (self, slot_name, item, profile, new_profile)
-	local new_weapon_modifiers = profile.weapon_modifiers and profile.weapon_modifiers[slot_name]
-	local old_weapon_modifiers = new_profile.weapon_modifiers and new_profile.weapon_modifiers[slot_name]
-	local item_altered = false
+local function _find_modifier(modifier_list, modifier_key, modifier_id)
+	for i = 1, #modifier_list do
+		local modifier = modifier_list[i]
 
-	if new_weapon_modifiers or old_weapon_modifiers then
-		item_altered = true
+		if modifier[modifier_key] == modifier_id then
+			return modifier
+		end
 	end
 
-	return item_altered
+	return false
+end
+
+local function _compare_modifier_list(modifier_list_a, modifier_list_b, idintifier_key, value_key)
+	if modifier_list_a == nil and modifier_list_b == nil then
+		return true
+	end
+
+	if modifier_list_a == nil and modifier_list_a ~= nil or modifier_list_a ~= nil and modifier_list_a == nil then
+		return false
+	end
+
+	for i = 1, #modifier_list_a do
+		local modifier_a = modifier_list_a[i]
+		local modifier_a_id = modifier_a[idintifier_key]
+		local modifier_b = _find_modifier(modifier_list_b, idintifier_key, modifier_a_id)
+		local modifier_a_value = modifier_a[value_key]
+		local modifier_b_value = modifier_b and modifier_b[value_key]
+
+		if modifier_a_value and modifier_b_value then
+			local diff = modifier_a_value - modifier_b_value
+
+			if math.abs(diff) > 0.0001 then
+				return false
+			end
+		else
+			return false
+		end
+	end
+
+	return true
+end
+
+PackageSynchronizerHost._item_instance_altered = function (self, slot_name, item, profile, new_profile)
+	local old_profile_slot_item_data = profile.loadout_item_data[slot_name]
+	local new_profile_slot_item_data = new_profile.loadout_item_data[slot_name]
+	local old_overrides = old_profile_slot_item_data.overrides
+	local new_overrides = new_profile_slot_item_data.overrides
+
+	if old_overrides == nil and new_overrides == nil then
+		return false
+	end
+
+	if old_overrides == nil and new_overrides ~= nil or old_overrides ~= nil and new_overrides == nil then
+		return true
+	end
+
+	if not _compare_modifier_list(old_overrides.base_stats, new_overrides.base_stats, "name", "value") then
+		return true
+	end
+
+	if not _compare_modifier_list(old_overrides.traits, new_overrides.traits, "id", "rarity") then
+		return true
+	end
+
+	return true
 end
 
 PackageSynchronizerHost._calculate_changed_talents = function (self, old_profile, new_profile)
@@ -442,15 +529,47 @@ end
 
 PackageSynchronizerHost._handle_profile_changes_before_sync = function (self, player, sync_data)
 	local changed_profile_fields = sync_data.changed_profile_fields
+
+	if changed_profile_fields.player_unit_respawn then
+		self:_handle_player_unit_respawn_before_sync(player, sync_data)
+	end
+
 	local changed_inventory_items = changed_profile_fields.inventory
 
-	self:_handle_inventory_changes_before_sync(changed_inventory_items, player, sync_data)
+	if changed_inventory_items then
+		self:_handle_inventory_changes_before_sync(changed_inventory_items, player, sync_data)
+	end
 
 	local changed_talents = changed_profile_fields.talents
 
 	if changed_talents then
 		self:_handle_talent_changes_before_sync(player, sync_data)
 	end
+end
+
+PackageSynchronizerHost._handle_player_unit_respawn_before_sync = function (self, player, sync_data)
+	local player_unit_spawn_manager = Managers.state.player_unit_spawn
+
+	if not player_unit_spawn_manager then
+		return
+	end
+
+	local player_unit = player.player_unit
+
+	if not player_unit then
+		return
+	end
+
+	local pose = Unit.world_pose(player_unit, 1)
+	local pose_box = sync_data.after_sync_spawn_pose_box
+
+	if pose_box then
+		pose_box:store(pose)
+	else
+		sync_data.after_sync_spawn_pose_box = Matrix4x4Box(pose)
+	end
+
+	player_unit_spawn_manager:despawn_safe(player)
 end
 
 PackageSynchronizerHost._handle_inventory_changes_before_sync = function (self, inventory_changes, player, sync_data)
@@ -519,18 +638,25 @@ PackageSynchronizerHost._handle_talent_changes_before_sync = function (self, pla
 end
 
 PackageSynchronizerHost._handle_profile_changes_after_sync = function (self, peer_id, local_player_id, sync_data)
+	local changed_profile_fields = sync_data.changed_profile_fields
 	local player = Managers.player:player(peer_id, local_player_id)
+
+	if changed_profile_fields.player_unit_respawn then
+		self:_handle_player_unit_respawn_after_sync(player, sync_data)
+	end
+
 	local player_unit = player.player_unit
 
 	if not player_unit then
 		return
 	end
 
-	local changed_profile_fields = sync_data.changed_profile_fields
-	local changed_inventory_items = changed_profile_fields.inventory
 	local fixed_t = FixedFrame.get_latest_fixed_time()
+	local changed_inventory_items = changed_profile_fields.inventory
 
-	self:_handle_inventory_changes_after_sync(changed_inventory_items, player_unit, fixed_t)
+	if changed_inventory_items then
+		self:_handle_inventory_changes_after_sync(changed_inventory_items, player_unit, fixed_t)
+	end
 
 	local changed_talents = changed_profile_fields.talents
 
@@ -543,6 +669,25 @@ PackageSynchronizerHost._handle_profile_changes_after_sync = function (self, pee
 	if wield_slot_after_sync then
 		PlayerUnitVisualLoadout.wield_slot(wield_slot_after_sync, player_unit, fixed_t)
 	end
+end
+
+PackageSynchronizerHost._handle_player_unit_respawn_after_sync = function (self, player, sync_data)
+	local player_unit_spawn_manager = Managers.state.player_unit_spawn
+
+	if not player_unit_spawn_manager then
+		return
+	end
+
+	local spawn_pose = sync_data.after_sync_spawn_pose_box:unbox()
+	local position = Matrix4x4.translation(spawn_pose)
+	local rotation = Matrix4x4.rotation(spawn_pose)
+	local parent = nil
+	local force_spawn = true
+	local side_name, breed_name, character_state = nil
+	local is_respawn = false
+	local optional_damage, optional_permanent_damage = nil
+
+	player_unit_spawn_manager:spawn_player(player, position, rotation, parent, force_spawn, side_name, breed_name, character_state, is_respawn, optional_damage, optional_permanent_damage)
 end
 
 PackageSynchronizerHost._handle_inventory_changes_after_sync = function (self, inventory_changes, player_unit, fixed_t)

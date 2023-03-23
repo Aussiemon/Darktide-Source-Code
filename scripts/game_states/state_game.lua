@@ -101,7 +101,7 @@ StateGame.on_enter = function (self, parent, params)
 		state_change_callbacks.PresenceManager = callback(Managers.presence, "cb_on_game_state_change")
 	end
 
-	self._sm = GameStateMachine:new(self, start_state, start_params, creation_context, state_change_callbacks)
+	self._sm = GameStateMachine:new(self, start_state, start_params, creation_context, state_change_callbacks, "Game")
 
 	if Managers.ui then
 		self._sm:register_on_state_change_callback("UIManager", callback(Managers.ui, "cb_on_game_state_change"))
@@ -244,7 +244,7 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 	end
 end
 
-StateGame.on_exit = function (self)
+StateGame.on_exit = function (self, on_shutdown)
 	if not DEDICATED_SERVER then
 		Managers.wwise_game_sync:set_game_state_machine(nil)
 	end
@@ -257,7 +257,7 @@ StateGame.on_exit = function (self)
 		self._sm:unregister_on_state_change_callback("PresenceManager")
 	end
 
-	self._sm:delete()
+	self._sm:delete(on_shutdown)
 	self._vo_sources_cache:destroy()
 	Managers:destroy()
 	self._approve_channel_delegate:delete()
@@ -288,6 +288,11 @@ StateGame.update = function (self, dt)
 	Managers.package:update(dt, t)
 	Managers.token:update(dt, t)
 	Managers.input:update(dt, t)
+
+	if GameParameters.testify then
+		Testify:poll_requests_through_handler(StateGameTestify, self)
+	end
+
 	self._sm:update(dt, t)
 
 	local ui_manager = Managers.ui
@@ -353,7 +358,6 @@ StateGame.update = function (self, dt)
 
 	if GameParameters.testify then
 		Testify:update(dt, t)
-		Testify:poll_requests_through_handler(StateGameTestify, self)
 	end
 
 	Managers.telemetry:update(dt, t)

@@ -1,6 +1,7 @@
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
+local GroundImpactFxTemplates = require("scripts/settings/fx/ground_impact_fx_templates")
 local damage_types = DamageSettings.damage_types
 local action_data = {
 	name = "chaos_hound",
@@ -13,7 +14,7 @@ local action_data = {
 	leap = {
 		in_air_min_stagger_duration = 0.23333333333333334,
 		stop_duration = 0.5,
-		wall_land_anim_event = "leap_hit_wall_land",
+		land_impact_timing = 0,
 		controlled_stagger_min_distance = 0.1,
 		wall_land_duration = 0.5333333333333333,
 		wall_raycast_distance = 3,
@@ -31,6 +32,7 @@ local action_data = {
 		push_minions_radius = 2,
 		acceptable_accuracy = 0.1,
 		landing_duration = 1.5,
+		wall_land_anim_event = "leap_hit_wall_land",
 		controlled_stagger = true,
 		start_move_speed = 12,
 		z_offset = -0.1,
@@ -57,7 +59,8 @@ local action_data = {
 		aoe_bot_threat_size = Vector3Box(1.5, 2, 2),
 		in_air_staggers = {
 			"stagger_inair_bwd"
-		}
+		},
+		land_ground_impact_fx_template = GroundImpactFxTemplates.chaos_hound_leap_land
 	},
 	approach_target = {
 		controlled_stagger = true,
@@ -191,7 +194,6 @@ local action_data = {
 		hit_position_node = "j_jaw",
 		tension_to_add = 20,
 		explosion_power_level = 500,
-		stagger_reduction = 50,
 		damage_frequency = 1.3333333333333333,
 		lerp_position_time = 0.06666666666666667,
 		pounce_anim_event = {
@@ -214,7 +216,11 @@ local action_data = {
 		},
 		damage_profile = DamageProfileTemplates.chaos_hound_pounce,
 		damage_type = damage_types.chaos_hound_tearing,
-		enter_explosion_template = ExplosionTemplates.chaos_hound_pounced_explosion
+		enter_explosion_template = ExplosionTemplates.chaos_hound_pounced_explosion,
+		stagger_type_reduction = {
+			melee = -30,
+			ranged = 40
+		}
 	},
 	climb = {
 		stagger_immune = true,

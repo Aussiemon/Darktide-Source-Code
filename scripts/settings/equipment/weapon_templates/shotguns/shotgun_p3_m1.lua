@@ -459,16 +459,10 @@ weapon_template.actions = {
 		sprint_requires_press_to_interrupt = true,
 		abort_sprint = true,
 		crosshair_type = "none",
+		stop_alternate_fire = true,
 		allowed_during_sprint = true,
 		anim_event = "reload_start",
-		stop_alternate_fire = true,
 		total_time = 0.95,
-		anim_variables_func = function (action_settings, condition_func_params)
-			local current_ammunition_clip = condition_func_params.inventory_slot_component.current_ammunition_clip
-			local max_ammunition_clip = condition_func_params.inventory_slot_component.max_ammunition_clip
-
-			return "current_clip", current_ammunition_clip, "remaining_clip", max_ammunition_clip - current_ammunition_clip
-		end,
 		reload_settings = {
 			refill_at_time = 0.62,
 			refill_amount = 1
@@ -537,17 +531,11 @@ weapon_template.actions = {
 		}
 	},
 	action_reload_loop = {
+		crosshair_type = "none",
 		anim_end_event = "reload_end",
 		kind = "reload_shotgun",
-		crosshair_type = "none",
 		anim_event = "reload_middle",
 		total_time = 0.65,
-		anim_variables_func = function (action_settings, condition_func_params)
-			local current_ammunition_clip = condition_func_params.inventory_slot_component.current_ammunition_clip
-			local max_ammunition_clip = condition_func_params.inventory_slot_component.max_ammunition_clip
-
-			return "current_clip", current_ammunition_clip, "remaining_clip", max_ammunition_clip - current_ammunition_clip
-		end,
 		reload_settings = {
 			refill_at_time = 0.32,
 			refill_amount = 1

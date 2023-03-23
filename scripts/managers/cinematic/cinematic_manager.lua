@@ -796,6 +796,10 @@ CinematicManager.rpc_cinematic_loaded = function (self, channel_id)
 	end
 end
 
+CinematicManager.mission_intro_played = function (self)
+	return self:_mission_intro_played()
+end
+
 CinematicManager.deactivate_testify_camera = function (self)
 	self._active_testify_camera = nil
 end

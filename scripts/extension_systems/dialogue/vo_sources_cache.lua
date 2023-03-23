@@ -23,6 +23,22 @@ VOSourcesCache.add_rule_file = function (self, rule_file_name)
 	end
 end
 
+VOSourcesCache.remove_rule_file = function (self, rule_file_name)
+	self._rule_files_loaded[rule_file_name] = nil
+
+	for voice_template, _ in pairs(self._vo_sources) do
+		local vo_source_target = DialogueSettings.default_voSources_path .. rule_file_name .. "_" .. voice_template
+
+		if Application.can_get_resource("lua", vo_source_target) then
+			local rules_to_remove = require(vo_source_target)
+
+			for rule, _ in pairs(rules_to_remove) do
+				self._vo_sources[voice_template][rule] = nil
+			end
+		end
+	end
+end
+
 VOSourcesCache.get_vo_source = function (self, voice_template)
 	Log.debug("VOSourcesCache", "voice_template %s requested", voice_template)
 

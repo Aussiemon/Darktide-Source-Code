@@ -1041,7 +1041,17 @@ local action_data = {
 		stagger_immune = true
 	},
 	exit_spawner = {
-		run_anim_event = "move_fwd"
+		run_anim_event = "move_fwd",
+		spawn_type_anim_events = {
+			from_ground = {
+				"spawn_jump_up_01",
+				"spawn_jump_up_02"
+			}
+		},
+		anim_driven_anim_event_durations = {
+			spawn_jump_up_02 = 2.6666666666666665,
+			spawn_jump_up_01 = 2.7666666666666666
+		}
 	}
 }
 

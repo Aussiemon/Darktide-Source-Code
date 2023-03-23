@@ -40,7 +40,6 @@ dialogue_context_settings.number_of_kills_callback = function (dialogue_context_
 
 	dialogue_extension:trigger_faction_dialogue_query("seen_killstreak_" .. killstreak_query.killer_class, killstreak_query, nil, dialogue_extension._faction_breed_name, true)
 	dialogue_extension:store_in_memory("user_memory", "last_killstreak", timeset)
-	dialogue_extension:store_in_memory("user_memory", "has_killstreaked", 1)
 end
 
 dialogue_context_settings.number_of_kills = {

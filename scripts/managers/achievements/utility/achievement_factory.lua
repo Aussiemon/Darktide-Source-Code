@@ -49,10 +49,10 @@ AchievementFactory.create_family = function (description, ui_type, icon, categor
 	return AchievementFactory.create_family_from_triggers(description, ui_type, icon, category, triggers, optional_show_in_progress, optional_description_table, false)
 end
 
-AchievementFactory.create_unique = function (id, ui_type, icon, category, trigger_component, optional_hidden, optional_description_table)
+AchievementFactory.create_unique = function (id, ui_type, icon, category, trigger_component, optional_hidden, optional_description_table, optional_label_table)
 	local visibility_component = optional_hidden and VisibilityHidden:new(id) or VisibilityAlways:new()
 
-	return AchievementDefinition:new(id, ui_type, icon, category, trigger_component, visibility_component, nil, optional_description_table)
+	return AchievementDefinition:new(id, ui_type, icon, category, trigger_component, visibility_component, nil, optional_description_table, nil, optional_label_table)
 end
 
 return AchievementFactory

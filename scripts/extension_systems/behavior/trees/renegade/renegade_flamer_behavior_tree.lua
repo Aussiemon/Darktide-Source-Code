@@ -81,6 +81,12 @@ local behavior_tree = {
 	MELEE_COMBAT,
 	COMBAT,
 	{
+		"BtRenegadeFlamerPatrolAction",
+		name = "aggroed_patrol",
+		condition = "should_patrol",
+		action_data = action_data.aggroed_patrol
+	},
+	{
 		"BtIdleAction",
 		name = "idle",
 		action_data = action_data.idle

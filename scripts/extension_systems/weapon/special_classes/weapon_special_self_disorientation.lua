@@ -26,15 +26,21 @@ WeaponSpecialSelfDisorientation.update = function (self, dt, t)
 	WeaponSpecial.update_active(t, self._tweak_data, self._inventory_slot_component, self._buff_extension, self._input_extension)
 end
 
-WeaponSpecialSelfDisorientation.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, hit_position, attack_direction, optional_origin_slot)
+WeaponSpecialSelfDisorientation.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, hit_position, attack_direction, abort_attack, optional_origin_slot)
 	local special_active = self._inventory_slot_component.special_active
+	local player_unit = self._player_unit
+	local tweak_data = self._tweak_data
 
 	if not special_active or not target_is_alive then
 		return
 	end
 
-	local player_unit = self._player_unit
-	local tweak_data = self._tweak_data
+	local only_deactive_on_abort = tweak_data.only_deactive_on_abort
+
+	if only_deactive_on_abort and not abort_attack then
+		return
+	end
+
 	local direction = Vector3.normalize(POSITION_LOOKUP[player_unit] - POSITION_LOOKUP[target_unit])
 	local disorientation_type = tweak_data.disorientation_type
 
@@ -58,7 +64,11 @@ WeaponSpecialSelfDisorientation.on_action_start = function (self, t, num_hit_ene
 end
 
 WeaponSpecialSelfDisorientation.on_action_finish = function (self, t, num_hit_enemies)
-	return
+	if num_hit_enemies > 0 then
+		local inventory_slot_component = self._inventory_slot_component
+		inventory_slot_component.special_active = false
+		inventory_slot_component.num_special_activations = 0
+	end
 end
 
 WeaponSpecialSelfDisorientation.on_exit_damage_window = function (self, t, num_hit_enemies)

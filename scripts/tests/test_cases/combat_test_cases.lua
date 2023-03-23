@@ -137,11 +137,11 @@ CombatTestCases.run_through_mission = function (case_settings)
 			"run_through_mission"
 		}
 		local memory_usage = settings.memory_usage
-		local lua_trace = settings.lua_trace and not BUILD == "release"
+		local lua_trace = settings.lua_trace and BUILD ~= "release"
 		local mission_key = settings.mission_key
 		local num_peers = settings.num_peers or 0
 		local telemetry_events = {
-			memory_usage = "memory_usage",
+			memory_usage = "perf_memory",
 			lua_trace = "lua_trace_stats"
 		}
 
@@ -175,11 +175,7 @@ CombatTestCases.run_through_mission = function (case_settings)
 		Testify:make_request("wait_for_state_gameplay_reached")
 		TestifySnippets.wait_for_peers(num_peers)
 		TestifySnippets.wait_for_all_peers_reach_gameplay_state()
-		TestifySnippets.wait_for_cinematic_to_be_over()
-
-		while not Testify:make_request("is_party_full") do
-			TestifySnippets.spawn_bot()
-		end
+		TestifySnippets.wait_for_mission_intro()
 
 		local num_bots = Testify:make_request("num_bots")
 
@@ -281,10 +277,7 @@ CombatTestCases.spawn_all_enemies = function (case_settings)
 		}
 
 		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
-			if not Testify:make_request("current_state_name") ~= "StateGameplay" then
-				TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
-			end
-
+			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			TestifySnippets.load_mission("spawn_all_enemies")
 		end
 
@@ -437,7 +430,7 @@ CombatTestCases.ensure_breed_ragdoll_actors = function (case_settings)
 		local result = ""
 		local settings = cjson.decode(case_settings or "{}")
 		local wait_timer = settings.wait_timer or 0.2
-		local specific_breed = string.value_or_nil(settings.specific_breed or nil)
+		local specific_breed = string.value_or_nil(settings.specific_breed)
 
 		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
@@ -452,12 +445,26 @@ CombatTestCases.ensure_breed_ragdoll_actors = function (case_settings)
 		local breeds = Testify:make_request("all_breeds")
 		local breed_side = 2
 		local player_current_position = Testify:make_request("player_current_position")
-		local distance = 8
-		local minion_spawn_position = {
-			x = player_current_position.x + distance,
-			y = player_current_position.y + distance,
-			z = player_current_position.z + 0.1
-		}
+		local num_edges = 36
+		local angle_offset = 2 * math.pi / num_edges
+		local distance = 10
+		local spawn_positions = {}
+
+		for i = 1, num_edges do
+			local angle = angle_offset * i
+			local spawn_position_offset = {
+				z = 0.2,
+				x = math.cos(angle) * distance,
+				y = math.sin(angle) * distance
+			}
+			spawn_positions[i] = {
+				x = player_current_position.x + spawn_position_offset.x,
+				y = player_current_position.y + spawn_position_offset.y,
+				z = player_current_position.z + spawn_position_offset.z
+			}
+		end
+
+		local spawn_index = 1
 
 		for _, breed in ipairs(breeds) do
 			local gib_template = breed.gib_template
@@ -471,15 +478,21 @@ CombatTestCases.ensure_breed_ragdoll_actors = function (case_settings)
 					local minion_data = {
 						breed = breed,
 						breed_name = breed_name,
-						breed_side = breed_side,
-						spawn_position = minion_spawn_position
+						breed_side = breed_side
 					}
+
+					if num_edges < spawn_index then
+						spawn_index = 1
+					end
+
+					minion_data.spawn_position = spawn_positions[spawn_index]
+					spawn_index = spawn_index + 1
 					local hit_zone_ragdoll_actors = breed.hit_zone_ragdoll_actors
 
 					if hit_zone_ragdoll_actors then
 						local minion_unit = Testify:make_request("spawn_minion", minion_data)
 
-						Unit.animation_event(minion_unit, "ragdoll")
+						Testify:make_request("trigger_unit_animation_event", minion_unit, "ragdoll")
 						TestifySnippets.wait(0.1)
 
 						local is_minion_alive = Testify:make_request("is_unit_alive", minion_unit)
@@ -493,7 +506,7 @@ CombatTestCases.ensure_breed_ragdoll_actors = function (case_settings)
 						for _, actor_names in pairs(hit_zone_ragdoll_actors) do
 							for i = 1, #actor_names do
 								local actor_name = actor_names[i]
-								local actor = Unit.actor(minion_unit, actor_name)
+								local actor = Testify:make_request("unit_actor", minion_unit, actor_name)
 
 								if actor == nil then
 									missing_actor_names[#missing_actor_names + 1] = actor_name

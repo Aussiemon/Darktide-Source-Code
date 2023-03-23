@@ -219,28 +219,31 @@ mood_settings.moods = {
 		looping_sound_stop_events = {
 			"wwise/events/player/stop_warp_charge_build_up_loop"
 		},
-		source_parameters = {
-			"psyker_overload"
-		},
-		source_parameter_func = function (player)
-			local camera_handler = player.camera_handler
-			local is_observing = camera_handler and camera_handler:is_observing()
+		source_parameter_funcs = {
+			function (wwise_world, source_id, player)
+				local camera_handler = player.camera_handler
+				local is_observing = camera_handler and camera_handler:is_observing()
 
-			if is_observing then
-				local observed_unit = camera_handler:camera_follow_unit()
-				player = Managers.state.player_unit_spawn:owner(observed_unit)
+				if is_observing then
+					local observed_unit = camera_handler:camera_follow_unit()
+					player = Managers.state.player_unit_spawn:owner(observed_unit)
+				end
+
+				local psyker_overload = 0
+				local unit_data_extension = ScriptUnit.has_extension(player.player_unit, "unit_data_system")
+
+				if unit_data_extension then
+					local warp_charge_component = unit_data_extension:read_component("warp_charge")
+					psyker_overload = warp_charge_component.current_percentage
+				end
+
+				WwiseWorld.set_source_parameter(wwise_world, source_id, "psyker_overload", psyker_overload)
+
+				local options_peril_slider = Application.user_setting("interface_settings", "psyker_overload_intensity") or 100
+
+				WwiseWorld.set_global_parameter(wwise_world, "options_peril_slider", options_peril_slider / 100)
 			end
-
-			local unit_data_extension = ScriptUnit.has_extension(player.player_unit, "unit_data_system")
-
-			if unit_data_extension then
-				local warp_charge_component = unit_data_extension:read_component("warp_charge")
-
-				return warp_charge_component.current_percentage
-			end
-
-			return 0
-		end
+		}
 	},
 	[types.warped_low_to_high] = {
 		blend_in_time = 0.03,
@@ -248,43 +251,42 @@ mood_settings.moods = {
 		particle_effects_looping = {
 			"content/fx/particles/screenspace/screen_psyker_overheat"
 		},
-		particles_material_scalars = {
-			{
-				on_screen_cloud_name = "warp",
-				on_screen_variable_name = "chaos_blend",
-				scalar_func = function (player, last_value)
-					local camera_handler = player.camera_handler
-					local is_observing = camera_handler:is_observing()
+		particle_material_scalar_funcs = {
+			function (world, particle_id, player, previous_values)
+				local camera_handler = player.camera_handler
+				local is_observing = camera_handler:is_observing()
 
-					if is_observing then
-						local observed_unit = camera_handler:camera_follow_unit()
-						player = Managers.state.player_unit_spawn:owner(observed_unit)
-					end
-
-					local unit_data_extension = ScriptUnit.has_extension(player.player_unit, "unit_data_system")
-
-					if unit_data_extension then
-						local specialization_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
-						local weapon_warp_charge_template = WarpCharge.weapon_warp_charge_template(player.player_unit)
-						local dt = Managers.time:delta_time("gameplay")
-						local warp_charge_component = unit_data_extension:read_component("warp_charge")
-						local current_percent = warp_charge_component.current_percentage
-						local base_low_threshold = specialization_warp_charge_template.low_threshold
-						local low_threshold_modifier = weapon_warp_charge_template.low_threshold_modifier or 1
-						local low_threshold = base_low_threshold * low_threshold_modifier
-						local wanted_value = math.normalize_01(current_percent, low_threshold, 1)
-						local current_value = last_value or 0
-						local delta = wanted_value - current_value
-						local length = math.min(math.abs(delta), dt)
-						local dir = math.sign(delta)
-						current_value = current_value + dir * length
-
-						return current_value
-					end
-
-					return 0
+				if is_observing then
+					local observed_unit = camera_handler:camera_follow_unit()
+					player = Managers.state.player_unit_spawn:owner(observed_unit)
 				end
-			}
+
+				local unit_data_extension = ScriptUnit.has_extension(player.player_unit, "unit_data_system")
+
+				if unit_data_extension then
+					local specialization_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
+					local weapon_warp_charge_template = WarpCharge.weapon_warp_charge_template(player.player_unit)
+					local dt = Managers.time:delta_time("gameplay")
+					local warp_charge_component = unit_data_extension:read_component("warp_charge")
+					local current_percent = warp_charge_component.current_percentage
+					local base_low_threshold = specialization_warp_charge_template.low_threshold
+					local low_threshold_modifier = weapon_warp_charge_template.low_threshold_modifier or 1
+					local low_threshold = base_low_threshold * low_threshold_modifier
+					local wanted_value = math.normalize_01(current_percent, low_threshold, 1)
+					local last_value = previous_values.chaos_blend or 0
+					local delta = wanted_value - last_value
+					local length = math.min(math.abs(delta), dt)
+					local dir = math.sign(delta)
+					local current_value = last_value + dir * length
+
+					World.set_particles_material_scalar(world, particle_id, "warp", "chaos_blend", current_value)
+
+					previous_values.chaos_blend = current_value
+					local options_peril_slider = Application.user_setting("interface_settings", "psyker_overload_intensity") or 100
+
+					World.set_particles_material_scalar(world, particle_id, "warp", "options_peril_slider_vfx", options_peril_slider / 100)
+				end
+			end
 		}
 	},
 	[types.warped_high_to_critical] = {

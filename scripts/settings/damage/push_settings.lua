@@ -128,11 +128,11 @@ local push_settings = {
 			dont_trigger_on_toughness = true
 		},
 		ranged_light_auto = {
-			speed = 0.25,
+			speed = 0.1,
 			dont_trigger_on_toughness = true
 		},
 		ogryn_ranged_light_auto = {
-			speed = 0.1,
+			speed = 0.05,
 			dont_trigger_on_toughness = true
 		},
 		beast_of_nurgle_move_push = {
@@ -142,7 +142,10 @@ local push_settings = {
 		chaos_spawn_tentacle = {
 			speed = 10,
 			max_speed_override = 10,
-			push_through_block = true
+			push_through_block = {
+				speed = 6,
+				max_speed_override = 6
+			}
 		},
 		chaos_spawn_combo = {
 			speed = 7,

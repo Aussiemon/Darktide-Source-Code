@@ -14,7 +14,7 @@ WeaponSpecialDeactivateAfterNumHits.update = function (self, dt, t)
 	WeaponSpecial.update_active(t, self._tweak_data, self._inventory_slot_component, self._buff_extension, self._input_extension)
 end
 
-WeaponSpecialDeactivateAfterNumHits.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, hit_position, attack_direction, optional_origin_slot)
+WeaponSpecialDeactivateAfterNumHits.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, hit_position, attack_direction, abort_attack, optional_origin_slot)
 	local max_hits = self._tweak_data.num_hits
 
 	if max_hits <= num_hit_enemies then

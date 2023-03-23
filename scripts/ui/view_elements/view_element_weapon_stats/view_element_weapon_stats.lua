@@ -211,6 +211,7 @@ local function add_presentation_traits(item, layout, grid_size)
 		local trait_id = trait.id
 		local trait_value = trait.value
 		local trait_rarity = trait.rarity
+		local trait_category = (item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED") and ItemUtils.trait_category(item)
 		local trait_item = MasterItems.get_item(trait_id)
 
 		if trait_item then
@@ -225,7 +226,8 @@ local function add_presentation_traits(item, layout, grid_size)
 				trait_rarity = trait_rarity,
 				trait_index = i,
 				show_glow = show_glow,
-				is_locked = is_locked
+				is_locked = is_locked,
+				trait_category = trait_category
 			}
 
 			if i < num_traits then

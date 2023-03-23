@@ -16,6 +16,10 @@ TestifySnippets.skip_title_and_main_menu_and_create_character_if_none = function
 	if not DEDICATED_SERVER then
 		TestifySnippets.skip_splash_and_title_screen()
 
+		if Testify:make_request("current_state_name") == "StateGameplay" or GameParameters.mission then
+			return
+		end
+
 		local is_any_character_created = Testify:make_request("is_any_character_created")
 
 		if not is_any_character_created then
@@ -81,14 +85,6 @@ TestifySnippets.wait_for_all_peers_reach_gameplay_state = function ()
 	TestifySnippets.send_request_to_all_peers("wait_for_state_gameplay_reached", true, 3)
 end
 
-TestifySnippets.set_force_spectate = function (value)
-	if DEDICATED_SERVER then
-		TestifySnippets.send_request_to_all_peers("set_force_spectate", nil, nil, value)
-	else
-		Testify:make_request("set_force_spectate", value)
-	end
-end
-
 TestifySnippets.enter_free_flight = function ()
 	if DEDICATED_SERVER then
 		TestifySnippets.send_request_to_all_peers("enter_free_flight")
@@ -105,17 +101,17 @@ TestifySnippets.set_free_flight_camera_position = function (camera_data)
 	end
 end
 
-TestifySnippets.wait_for_cinematic_to_be_over = function ()
+TestifySnippets.wait_for_mission_intro = function ()
 	if DEDICATED_SERVER then
-		TestifySnippets.send_request_to_all_peers("wait_for_cinematic_to_be_over", true)
+		TestifySnippets.send_request_to_all_peers("wait_for_mission_intro", true)
 	else
-		Testify:make_request("wait_for_cinematic_to_be_over")
+		Testify:make_request("wait_for_mission_intro")
 	end
 end
 
 TestifySnippets.spawn_bot = function ()
 	Testify:make_request("wait_for_master_items_data")
-	Testify:make_request("spawn_bot")
+	Testify:make_request("spawn_random_bot")
 	Testify:make_request("wait_for_bot_synchronizer_ready")
 end
 
@@ -255,7 +251,7 @@ TestifySnippets.send_telemetry_batch = function ()
 end
 
 TestifySnippets.lua_trace_statistics = function ()
-	Application.console_command("lua", "trace")
+	Testify:make_request("console_command_lua_trace")
 	TestifySnippets.wait(1)
 
 	local lua_trace_statistics = Testify:make_request_to_runner("lua_trace_statistics")
@@ -392,7 +388,7 @@ TestifySnippets.wait_for_end_of_dialogue = function (num_dialogues)
 end
 
 TestifySnippets.equip_all_traits_support_snippet = function (player, slot_name, traits, has_placeholder_profile, weapon_name, units_to_spawn)
-	local weapon = Testify:make_request("get_weapon", weapon_name)
+	local weapon = Testify:make_request("weapon", weapon_name)
 	local data = {
 		player = player,
 		slot = slot_name,

@@ -5,7 +5,7 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local VoiceFxPresetSettings = require("scripts/settings/dialogue/voice_fx_preset_settings")
 local VOQueryConstants = require("scripts/settings/dialogue/vo_query_constants")
 local Vo = {}
-local _get_breed, _get_alive_players, _get_random_player, _get_random_vox_unit, _get_all_vox_voice_profiles, _get_closest_player_except, _get_random_non_threatening_player_unit, _can_player_trigger_vo, _get_mission_giver_unit, _log_vo_event = nil
+local _get_breed, _get_alive_players, _get_healthy_players, _get_players_in_state, _get_random_player, _get_random_vox_unit, _get_all_vox_voice_profiles, _get_closest_player_except, _get_random_non_threatening_player_unit, _can_player_trigger_vo, _get_mission_giver_unit, _log_vo_event = nil
 local Interactions = {
 	health_station = function (dialogue_extension)
 		local event_data = dialogue_extension:get_event_data_payload()
@@ -42,7 +42,6 @@ Vo.interaction_start_event = function (unit, target_unit, interaction_template_n
 		local dialogue_extension = ScriptUnit.extension(target_unit, "dialogue_system")
 
 		dialogue_extension:store_in_memory("user_memory", "last_revivee", timeset)
-		dialogue_extension:store_in_memory("user_memory", "revivee", 1)
 	end
 end
 
@@ -82,52 +81,60 @@ end
 Vo.ammo_hog_event = function (unit)
 	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
 	local event_name = "ammo_hog"
-	local timeset = Managers.time:time("gameplay") + 900
 
 	if _can_player_trigger_vo(dialogue_extension, event_name) then
 		local event_data = dialogue_extension:get_event_data_payload()
 
 		dialogue_extension:trigger_faction_dialogue_query(event_name, event_data, nil, dialogue_extension._faction_breed_name, true)
+
+		local timeset = Managers.time:time("gameplay") + 900
+
 		dialogue_extension:store_in_memory("user_memory", "last_ammo_hogger", timeset)
-		dialogue_extension:store_in_memory("user_memory", "ammo_hogger", 1)
 	end
 end
 
 Vo.health_hog_event = function (unit)
 	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
 	local event_name = "health_hog"
-	local timeset = Managers.time:time("gameplay") + 900
 
 	if _can_player_trigger_vo(dialogue_extension, event_name) then
 		local event_data = dialogue_extension:get_event_data_payload()
 
 		dialogue_extension:trigger_faction_dialogue_query(event_name, event_data, nil, dialogue_extension._faction_breed_name, true)
+
+		local timeset = Managers.time:time("gameplay") + 900
+
 		dialogue_extension:store_in_memory("user_memory", "last_health_hogger", timeset)
-		dialogue_extension:store_in_memory("user_memory", "health_hogger", 1)
 	end
 end
 
 Vo.head_shot_event = function (killer_unit, distance, damage_profile_name)
-	local dialogue_extension = ScriptUnit.has_extension(killer_unit, "dialogue_system")
-	local dialogue_context_extension = ScriptUnit.has_extension(killer_unit, "dialogue_context_system")
-
-	if dialogue_extension == nil or dialogue_context_extension == nil then
-		return
-	elseif damage_profile_name == "psyker_smite_kill" then
+	if damage_profile_name == "psyker_smite_kill" then
 		return
 	end
-
-	dialogue_context_extension:increase_timed_counter("number_of_headshots")
 
 	local ranged_special_kill_threshold = DialogueSettings.ranged_special_kill_threshold
 
 	if ranged_special_kill_threshold and ranged_special_kill_threshold < distance then
+		local player_position = Unit.local_position(killer_unit, 1)
+		local best_player_unit = _get_closest_player_except(player_position, killer_unit)
+		local dialogue_extension = ScriptUnit.has_extension(best_player_unit, "dialogue_system")
+
+		if dialogue_extension == nil then
+			return
+		end
+
 		local event_name = "head_shot"
 
 		if _can_player_trigger_vo(dialogue_extension, event_name) then
 			local event_data = dialogue_extension:get_event_data_payload()
 
-			dialogue_extension:trigger_faction_dialogue_query(event_name, event_data, nil, dialogue_extension._faction_breed_name, true)
+			dialogue_extension:trigger_dialogue_event(event_name, event_data)
+
+			local killer_dialogue_extension = ScriptUnit.has_extension(killer_unit, "dialogue_system")
+			local timeset = Managers.time:time("gameplay") + 900
+
+			killer_dialogue_extension:store_in_memory("user_memory", "last_headshot", timeset)
 		end
 	end
 end
@@ -265,12 +272,13 @@ Vo.friendly_fire_event = function (attacking_unit, attacked_unit)
 		local dialogue_ext_attacked_unit = ScriptUnit.extension(attacked_unit, "dialogue_system")
 		event_data.attacked_class = dialogue_ext_attacked_unit:vo_class_name()
 		local event_name = "friendly_fire"
-		local timeset = Managers.time:time("gameplay") + 900
 
 		if _can_player_trigger_vo(dialogue_ext_attacked_unit, event_name) then
 			dialogue_ext_attacked_unit:trigger_dialogue_event(event_name, event_data)
+
+			local timeset = Managers.time:time("gameplay") + 900
+
 			dialogue_ext_attacking_unit:store_in_memory("user_memory", "last_shot_friend", timeset)
-			dialogue_ext_attacking_unit:store_in_memory("user_memory", "has_friendly_fired", 1)
 		end
 	end
 end
@@ -503,7 +511,6 @@ Vo.look_at_event = function (dialogue_extension, tag, distance, target_unit)
 		if target_ext then
 			local timeset = Managers.time:time("gameplay") + 900
 
-			target_ext:store_in_memory("user_memory", "has_been_seen", 1)
 			target_ext:store_in_memory("user_memory", "has_been_seen_time", timeset)
 		end
 	end
@@ -521,11 +528,39 @@ Vo.faction_look_at_event = function (dialogue_extension, faction_event, faction_
 	dialogue_extension:trigger_faction_dialogue_query(faction_event, event_data, nil, faction_name, true)
 end
 
-Vo.distance_based_event = function (dialogue_extension, proximity_type, event_data)
+Vo.distance_based_event = function (unit, proximity_type, event_data)
+	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
 	local event_name = proximity_type
 
 	if _can_player_trigger_vo(dialogue_extension, event_name) then
-		dialogue_extension:trigger_dialogue_event(event_name, event_data)
+		if event_name == "friends_close" then
+			local hogtied_friends = _get_players_in_state("is_hogtied")
+
+			if hogtied_friends then
+				Vo.needs_rescue_event(unit, event_name, event_data, hogtied_friends)
+			end
+		else
+			local healthy_players = _get_healthy_players()
+
+			if #healthy_players > 1 then
+				dialogue_extension:trigger_dialogue_event(event_name, event_data)
+			end
+		end
+	end
+end
+
+Vo.needs_rescue_event = function (unit, event_name, event_data, hogtied_friends)
+	local player_position = Unit.local_position(unit, 1)
+	local closest_hogtied = _get_closest_player_except(player_position, unit, hogtied_friends)
+	local hogtied_position = Unit.local_position(closest_hogtied, 1)
+	local distance = Vector3.distance(player_position, hogtied_position)
+
+	if distance < DialogueSettings.friends_close_distance + 1 then
+		local hogtied_dialogue_ext = ScriptUnit.has_extension(closest_hogtied, "dialogue_system")
+
+		if hogtied_dialogue_ext then
+			hogtied_dialogue_ext:trigger_dialogue_event(event_name, event_data)
+		end
 	end
 end
 
@@ -615,14 +650,17 @@ Vo.knocked_down_multiple_times_event = function (downed_unit)
 end
 
 Vo.player_knocked_down_multiple_times_event = function (downed_unit)
-	local dialogue_extension = ScriptUnit.has_extension(downed_unit, "dialogue_system")
+	local downed_position = Unit.local_position(downed_unit, 1)
+	local closest_unit = _get_closest_player_except(downed_position, downed_unit)
+	local closest_dialogue_extension = ScriptUnit.has_extension(closest_unit, "dialogue_system")
 	local vo_concept = "knocked_down_multiple_times"
 
-	if _can_player_trigger_vo(dialogue_extension, vo_concept) then
+	if _can_player_trigger_vo(closest_dialogue_extension, vo_concept) then
+		local dialogue_extension = ScriptUnit.has_extension(downed_unit, "dialogue_system")
 		local query_data = dialogue_extension:get_event_data_payload()
 		query_data.player_class = dialogue_extension:vo_class_name()
 
-		dialogue_extension:trigger_faction_dialogue_query(vo_concept, query_data, nil, dialogue_extension._faction_breed_name, true)
+		closest_dialogue_extension:trigger_dialogue_event(vo_concept, query_data)
 	end
 end
 
@@ -1247,6 +1285,41 @@ function _get_alive_players()
 	return alive_players
 end
 
+function _get_healthy_players()
+	local healthy_players = _get_alive_players()
+
+	for i = #healthy_players, 1, -1 do
+		local player = healthy_players[i]
+
+		if not HEALTH_ALIVE[player.player_unit] then
+			table.remove(healthy_players, i)
+		end
+	end
+
+	return healthy_players
+end
+
+function _get_players_in_state(state)
+	local players_in_state = _get_alive_players()
+
+	for i = #players_in_state, 1, -1 do
+		local player = players_in_state[i]
+		local dialogue_extension = ScriptUnit.has_extension(player.player_unit, "dialogue_system")
+		local context_data = dialogue_extension._context
+		local player_state = context_data[state]
+
+		if player_state == "false" then
+			table.remove(players_in_state, i)
+		end
+	end
+
+	if not next(players_in_state) then
+		return false
+	else
+		return players_in_state
+	end
+end
+
 function _get_random_player()
 	local alive_players = _get_alive_players()
 
@@ -1264,8 +1337,8 @@ end
 
 local valid_player_units = {}
 
-function _get_closest_player_except(position, filtered_player_unit)
-	local alive_players = _get_alive_players()
+function _get_closest_player_except(position, filtered_player_unit, optional_player_list)
+	local alive_players = optional_player_list or _get_alive_players()
 
 	if alive_players then
 		local num_alive_players = #alive_players
@@ -1379,16 +1452,16 @@ function _can_player_trigger_vo(dialogue_extension, concept_name)
 
 	local context_data = dialogue_extension._context
 
-	if concept_name == "knocked_down" and context_data.is_knocked_down then
+	if concept_name == "knocked_down" and context_data.is_knocked_down == "true" then
 		return true
-	elseif concept_name == "ledge_hanging" and context_data.is_ledge_hanging then
+	elseif concept_name == "ledge_hanging" and context_data.is_ledge_hanging == "true" then
 		return true
-	elseif concept_name == "pounced_by_special_attack" and context_data.is_pounced_down then
+	elseif concept_name == "pounced_by_special_attack" and context_data.is_pounced_down == "true" then
 		return true
-	elseif concept_name == "pounced_by_special_attack" and context_data.is_netted then
+	elseif concept_name == "pounced_by_special_attack" and context_data.is_netted == "true" then
 		return true
-	elseif concept_name == "friends_close" and context_data.is_hogtied then
-		return true
+	elseif concept_name == "friends_close" and context_data.is_hogtied == "true" then
+		return false
 	elseif context_data.is_disabled then
 		return false
 	end

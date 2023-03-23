@@ -888,7 +888,19 @@ local action_data = {
 		stagger_immune = true
 	},
 	exit_spawner = {
-		run_anim_event = "move_fwd"
+		run_anim_event = "move_fwd",
+		spawn_type_anim_events = {
+			from_ground = {
+				"spawn_jump_up_01",
+				"spawn_jump_up_02",
+				"spawn_jump_up_03"
+			}
+		},
+		anim_driven_anim_event_durations = {
+			spawn_jump_up_03 = 4,
+			spawn_jump_up_02 = 2.8333333333333335,
+			spawn_jump_up_01 = 2.7666666666666666
+		}
 	}
 }
 

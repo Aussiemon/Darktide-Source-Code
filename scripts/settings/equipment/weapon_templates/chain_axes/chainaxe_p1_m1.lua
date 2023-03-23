@@ -264,9 +264,11 @@ weapon_template.actions = {
 	},
 	action_melee_start_left = {
 		anim_event_3p = "attack_swing_charge_down_left",
-		anim_end_event = "attack_finished",
+		chain_anim_event = "heavy_charge_left_diagonal_down_pose",
 		start_input = "start_attack",
 		kind = "windup",
+		chain_anim_event_3p = "attack_swing_charge_down_left",
+		anim_end_event = "attack_finished",
 		allowed_during_sprint = true,
 		anim_event = "heavy_charge_left_diagonal_down",
 		stop_input = "attack_cancel",
@@ -825,7 +827,7 @@ weapon_template.actions = {
 	},
 	action_melee_start_left_2 = {
 		chain_anim_event_3p = "attack_swing_charge_left",
-		chain_anim_event = "heavy_charge_left_diagonal_down",
+		chain_anim_event = "heavy_charge_left_diagonal_down_pose",
 		anim_end_event = "attack_finished",
 		kind = "windup",
 		anim_event_3p = "attack_swing_charge_left",

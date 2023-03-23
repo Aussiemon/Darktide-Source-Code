@@ -598,6 +598,18 @@ MinionVisualLoadoutExtension.is_slot_visible = function (self, slot_name)
 	return slot_data.visible
 end
 
+MinionVisualLoadoutExtension.is_inventory_slot_ranged = function (self, slot_name)
+	local inventory = self._inventory
+	local inventory_slots = inventory.slots
+	local inventory_slot_data = inventory_slots[slot_name]
+
+	if not inventory_slot_data then
+		return nil
+	end
+
+	return inventory_slot_data.is_ranged_weapon
+end
+
 MinionVisualLoadoutExtension.can_wield_slot = function (self, slot_name)
 	local slots = self._slots
 	local slot_data = slots[slot_name]

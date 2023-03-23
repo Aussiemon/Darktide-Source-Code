@@ -37,10 +37,10 @@ local scenegraph_definition = {
 local text_style = table.clone(UIFontSettings.hud_body)
 text_style.horizontal_alignment = "right"
 text_style.vertical_alignment = "bottom"
-text_style.text_horizontal_alignment = "right"
+text_style.text_horizontal_alignment = "center"
 text_style.text_vertical_alignment = "bottom"
 text_style.size = {
-	38,
+	0,
 	38
 }
 text_style.offset = {
@@ -64,12 +64,13 @@ local buff_widget_definition = UIWidget.create_definition({
 		end
 	},
 	{
+		style_id = "text_background",
 		pass_type = "rect",
 		style = {
 			vertical_alignment = "bottom",
 			horizontal_alignment = "right",
 			size = {
-				15,
+				0,
 				19
 			},
 			color = {
@@ -117,7 +118,7 @@ local buff_widget_definition = UIWidget.create_definition({
 	{
 		pass_type = "texture",
 		style_id = "icon",
-		value = "content/ui/materials/icons/buffs/hud/buff_container",
+		value = "content/ui/materials/icons/buffs/hud/buff_container_with_background",
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
@@ -143,11 +144,6 @@ local buff_widget_definition = UIWidget.create_definition({
 		change_function = function (content, style)
 			local duration_progress = content.duration_progress
 			style.material_values.progress = duration_progress or 1
-		end,
-		visibility_function = function (content, style)
-			local duration_progress = content.duration_progress
-
-			return duration_progress ~= nil
 		end
 	}
 }, "buff")

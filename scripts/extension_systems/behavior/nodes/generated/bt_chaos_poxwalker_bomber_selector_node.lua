@@ -31,9 +31,20 @@ BtChaosPoxwalkerBomberSelectorNode.evaluate = function (self, unit, blackboard, 
 	local last_running_node = old_running_child_nodes[node_identifier]
 	local children = self._children
 	local node_death_sequence = children[1]
-	local death_component = blackboard.death
-	local is_dead = death_component.is_dead
-	local condition_result = is_dead
+	local condition_result = nil
+
+	repeat
+		local death_component = blackboard.death
+		local is_dead = death_component.is_dead
+
+		if is_dead then
+			condition_result = true
+		else
+			local fuse_timer = death_component.fuse_timer
+			local t = Managers.time:time("gameplay")
+			condition_result = fuse_timer > 0 and fuse_timer <= t and true or false
+		end
+	until true
 
 	if condition_result then
 		local leaf_node = node_death_sequence:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)

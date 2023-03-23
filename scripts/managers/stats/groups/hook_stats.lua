@@ -167,6 +167,8 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_health_update", {
 	"player_class"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_lunge_start", {
+	"has_target",
+	"target_is_wielding_ranged_weapon",
 	"player_class"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_lunge_stop", {

@@ -7,6 +7,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Catapulted = require("scripts/extension_systems/character_state_machine/character_states/utilities/catapulted")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
+local Health = require("scripts/utilities/health")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionMovement = require("scripts/utilities/minion_movement")
@@ -193,6 +194,11 @@ BtChaosSpawnGrabAction._update_grabbing = function (self, unit, scratchpad, acti
 		local attack_direction = Vector3.up()
 
 		ImpactEffect.play(target, nil, damage, damage_type, nil, result, hit_position, nil, attack_direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
+
+		local heal_amount = Managers.state.difficulty:get_table_entry_by_challenge(action_data.heal_amount)
+		local heal_type = nil
+
+		Health.add(unit, heal_amount, heal_type)
 
 		local damage_timings = action_data.damage_timings[scratchpad.grabbed_unit_breed_name]
 		local damage_index = scratchpad.damage_timing_index + 1

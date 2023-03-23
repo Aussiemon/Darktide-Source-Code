@@ -11,7 +11,7 @@ GameplayInitStepNetworkEvents.on_enter = function (self, parent, params)
 	local gameplay_state = parent:gameplay_state()
 	local is_server = shared_state.is_server
 
-	self:_register_network_events(gameplay_state, is_server)
+	self:_register_network_events(gameplay_state, is_server, shared_state)
 end
 
 GameplayInitStepNetworkEvents.update = function (self, main_dt, main_t)
@@ -22,7 +22,7 @@ GameplayInitStepNetworkEvents.update = function (self, main_dt, main_t)
 	return GameplayInitStepTimer, next_step_params
 end
 
-GameplayInitStepNetworkEvents._register_network_events = function (self, gameplay_state, is_server)
+GameplayInitStepNetworkEvents._register_network_events = function (self, gameplay_state, is_server, shared_state)
 	local connection_manager = Managers.connection
 	local network_event_delegate = connection_manager:network_event_delegate()
 
@@ -31,6 +31,8 @@ GameplayInitStepNetworkEvents._register_network_events = function (self, gamepla
 	else
 		network_event_delegate:register_session_events(gameplay_state, unpack(CLIENT_RPCS))
 	end
+
+	shared_state.session_rpcs_registered = true
 end
 
 implements(GameplayInitStepNetworkEvents, GameplayInitStepInterface)

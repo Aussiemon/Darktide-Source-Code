@@ -13,7 +13,12 @@ local renegade_shocktrooper_default = {
 	hit_scan_template = HitScanTemplates.shocktrooper_shotgun_bullet,
 	spread = math.degrees_to_radians(1),
 	damage_type = damage_types.minion_pellet,
-	line_effect = LineEffects.renegade_pellet
+	line_effect = LineEffects.renegade_pellet,
+	damage_falloff = {
+		falloff_range = 15,
+		max_range = 8,
+		max_power_reduction = 0.6
+	}
 }
 local shoot_templates = {
 	renegade_shocktrooper_default = renegade_shocktrooper_default

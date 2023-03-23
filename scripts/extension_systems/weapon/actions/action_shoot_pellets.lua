@@ -17,6 +17,7 @@ local ObjectPenetration = require("scripts/utilities/attack/object_penetration")
 local RangedAction = require("scripts/utilities/action/ranged_action")
 local Suppression = require("scripts/utilities/attack/suppression")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
+local Weakspot = require("scripts/utilities/attack/weakspot")
 local attack_types = AttackSettings.attack_types
 local hit_types = SurfaceMaterialSettings.hit_types
 local proc_events = BuffSettings.proc_events
@@ -406,8 +407,9 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 					local unit_to_damage_data_index = self._unit_to_damage_data_index
 
 					if not unit_to_damage_data_index[hit_unit] then
+						hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil)
 						target_index = RangedAction.target_index(target_index, penetrated, penetration_config)
-						hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(player_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, false)
+						hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(player_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot)
 						stop = HitMass.stopped_attack(hit_unit, hit_zone_name_or_nil, hit_mass_budget_attack, hit_mass_budget_impact, impact_config)
 						local instakill = false
 						local target_is_hazard_prop, hazard_prop_is_active = HazardProp.status(hit_unit)
@@ -530,7 +532,7 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 							local stop_unit_index = unit_to_index_lookup.stop[hit_unit]
 							stop_hit_index = stop_hit_index + 1
 
-							ImpactEffect.save_surface_effect(stop_effects, stop_unit_index, stop_hit_index, hit_unit, hit_actor, hit_position, hit_normal, direction)
+							ImpactEffect.save_surface_effect(stop_effects, stop_unit_index, stop_hit_index, position, hit_unit, hit_actor, hit_position, hit_normal, direction)
 						end
 					end
 
@@ -597,7 +599,13 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 
 	for hit_unit, number_of_hits in pairs(num_hits_per_unit) do
 		if buff_name then
-			self:_add_shotshell_buff(hit_unit, player_unit, damage_config, weapon_item, number_of_hits, t)
+			local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
+			local breed_or_nil = unit_data_extension and unit_data_extension:breed()
+			local breed_armor_type = Armor.armor_type(hit_unit, breed_or_nil)
+			local min_num_hits = shotshell_template.min_num_hits and breed_armor_type and shotshell_template.min_num_hits[breed_armor_type] or 0
+			local num_buff_hits = math.max(min_num_hits, number_of_hits)
+
+			self:_add_shotshell_buff(hit_unit, player_unit, damage_config, weapon_item, num_buff_hits, t)
 		end
 
 		local attacker_buff_extension = self._buff_extension

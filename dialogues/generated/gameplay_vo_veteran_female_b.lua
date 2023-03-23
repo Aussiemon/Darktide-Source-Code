@@ -2525,13 +2525,6 @@ local gameplay_vo_veteran_female_b = {
 			1.224021,
 			1.480792
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	player_death_psyker = {
@@ -2550,13 +2543,6 @@ local gameplay_vo_veteran_female_b = {
 			1.233125,
 			1.19375,
 			2.7545
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -2577,13 +2563,6 @@ local gameplay_vo_veteran_female_b = {
 			2.577229,
 			3.437458
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	player_death_zealot = {
@@ -2602,13 +2581,6 @@ local gameplay_vo_veteran_female_b = {
 			1.082063,
 			1.583375,
 			1.249708
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},

@@ -9,7 +9,7 @@ local stagger_strength_output = PowerLevelSettings.stagger_strength_output
 local StaggerCalculation = {}
 local _calculate_stagger_strength, _stagger_reduction, _get_stagger_type, _calculate_extents, _calculate_stagger_duration_scale, _calculate_stagger_length_scale, _calculate_stagger_buffs, _calculate_stagger_reduction_buffs = nil
 
-StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_values, power_level, charge_level, breed, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, stagger_count, attack_type, armor_type, optional_stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs, hit_shield, is_burning)
+StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_values, power_level, charge_level, breed, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, stagger_reduction_override_or_nil, stagger_count, attack_type, armor_type, optional_stagger_strength_multiplier, stagger_strength_pool, target_stat_buffs, attacker_stat_buffs, hit_shield, is_burning, optional_mutator_stagger_overrides)
 	local is_finesse_hit = hit_weakspot
 
 	if target_settings.power_level_multiplier then
@@ -30,7 +30,7 @@ StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_v
 	local current_hit_stagger_strength = stagger_strength
 	local sum_stagger_strength = stagger_strength + stagger_strength_pool - 0.5 * stagger_reduction
 	local stagger_resistance = breed.stagger_resistance or StaggerSettings.default_stagger_resistance
-	local stagger_type, stagger_threshold = _get_stagger_type(sum_stagger_strength, damage_profile, breed, stagger_resistance, hit_shield)
+	local stagger_type, stagger_threshold = _get_stagger_type(sum_stagger_strength, damage_profile, breed, stagger_resistance, hit_shield, optional_mutator_stagger_overrides)
 
 	if not stagger_type then
 		return nil, nil, nil, nil, stagger_strength * armor_damage_modifier
@@ -111,13 +111,14 @@ end
 
 local stagger_categories = StaggerSettings.stagger_categories
 
-function _get_stagger_type(stagger_strength, damage_profile, breed, stagger_resistance, hit_shield)
+function _get_stagger_type(stagger_strength, damage_profile, breed, stagger_resistance, hit_shield, optional_mutator_stagger_overrides)
 	local stagger_category = hit_shield and damage_profile.shield_stagger_category or damage_profile.stagger_category
 	local stagger_list = stagger_categories[stagger_category]
 	local chosen_stagger_type = nil
 	local chosen_stagger_threshold = 0
 	local default_stagger_thresholds = StaggerSettings.default_stagger_thresholds
-	local stagger_thresholds = breed.stagger_thresholds or default_stagger_thresholds
+	local threshold_overrides = optional_mutator_stagger_overrides and optional_mutator_stagger_overrides.stagger_thresholds and optional_mutator_stagger_overrides.stagger_thresholds[breed.name]
+	local stagger_thresholds = threshold_overrides or breed.stagger_thresholds or default_stagger_thresholds
 	local num_stagger_types = #stagger_list
 
 	for i = 1, num_stagger_types do

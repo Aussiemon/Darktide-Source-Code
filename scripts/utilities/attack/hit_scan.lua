@@ -16,6 +16,7 @@ local RangedAction = require("scripts/utilities/action/ranged_action")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local Suppression = require("scripts/utilities/attack/suppression")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
+local Weakspot = require("scripts/utilities/attack/weakspot")
 local attack_types = AttackSettings.attack_types
 local attack_results = AttackSettings.attack_results
 local proc_events = BuffSettings.proc_events
@@ -141,21 +142,21 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 								Managers.event:trigger("on_sprint_dodge")
 							end
 
-							local buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
+							local target_buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
 
-							if buff_extension then
+							if target_buff_extension then
 								if is_sprint_dodging then
-									local param_table = buff_extension:request_proc_event_param_table()
+									local param_table = target_buff_extension:request_proc_event_param_table()
 
 									if param_table then
-										buff_extension:add_proc_event(proc_events.on_sprint_dodge, param_table)
+										target_buff_extension:add_proc_event(proc_events.on_sprint_dodge, param_table)
 									end
 								end
 
-								local param_table = buff_extension:request_proc_event_param_table()
+								local param_table = target_buff_extension:request_proc_event_param_table()
 
 								if param_table then
-									buff_extension:add_proc_event(proc_events.on_ranged_dodge, param_table)
+									target_buff_extension:add_proc_event(proc_events.on_ranged_dodge, param_table)
 								end
 							end
 
@@ -191,8 +192,9 @@ HitScan.process_hits = function (is_server, world, physics_world, attacker_unit,
 				local damage_dealt, attack_result, damage_efficiency = nil
 
 				if deal_damage then
+					hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name_or_nil)
 					target_index = RangedAction.target_index(target_index, penetrated, penetration_config)
-					hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(attacker_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, false)
+					hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(attacker_unit, hit_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot)
 					stop = HitMass.stopped_attack(hit_unit, hit_zone_name_or_nil, hit_mass_budget_attack, hit_mass_budget_impact, impact_config)
 					local previous_hit_weakspot = hit_weakspot
 					damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, attacker_unit, hit_unit, hit_actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name_or_nil, damage_profile, damage_profile_lerp_values, power_level, charge_level, penetrated, damage_config, optional_instakill, damage_type, optional_is_critical_strike, optional_weapon_item)

@@ -516,7 +516,7 @@ damage_templates.default_gauntlet_demolitions = {
 			boost_curve = PowerLevelSettings.boost_curves.default
 		}
 	},
-	damage_type = damage_types.frag,
+	damage_type = damage_types.grenade_frag,
 	gibbing_type = GibbingTypes.explosion,
 	gibbing_power = GibbingPower.heavy,
 	gib_push_force = GibbingSettings.gib_push_force.explosive
@@ -569,7 +569,7 @@ damage_templates.close_gauntlet_demolitions = {
 			boost_curve = PowerLevelSettings.boost_curves.default
 		}
 	},
-	damage_type = damage_types.frag,
+	damage_type = damage_types.grenade_frag,
 	gibbing_type = GibbingTypes.explosion,
 	gibbing_power = GibbingPower.heavy,
 	wounds_template = WoundsTemplates.bolter,
@@ -627,7 +627,7 @@ damage_templates.close_special_gauntlet_demolitions = {
 			boost_curve = PowerLevelSettings.boost_curves.default
 		}
 	},
-	damage_type = damage_types.frag,
+	damage_type = damage_types.grenade_frag,
 	gibbing_type = GibbingTypes.explosion,
 	gibbing_power = GibbingPower.heavy,
 	wounds_template = WoundsTemplates.bolter,

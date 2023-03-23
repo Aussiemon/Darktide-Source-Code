@@ -61,22 +61,22 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 	self._use_local_player_vo_profile = false
 	self._stop_vce_event = nil
 	self._context = {
-		is_warp_grabbed = false,
-		is_ledge_hanging = false,
-		is_hogtied = false,
+		is_warp_grabbed = "false",
+		is_ledge_hanging = "false",
+		is_hogtied = "false",
 		is_disabled = false,
-		is_netted = false,
+		is_netted = "false",
 		player_level = 0,
-		is_pounced_down = false,
+		is_pounced_down = "false",
 		story_stage = "none",
-		is_catapulted = false,
+		is_catapulted = "false",
 		is_disabled_override = false,
 		is_local_player = false,
-		is_knocked_down = false,
+		is_knocked_down = "false",
 		voice_fx_preset = 0,
-		is_consumed = false,
+		is_consumed = "false",
 		class_name = "none",
-		is_mutant_charged = false,
+		is_mutant_charged = "false",
 		voice_template = "none",
 		is_player = false,
 		breed_name = "unknown_breed_name",
@@ -90,12 +90,13 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 	local breed = extension_init_data.breed
 
 	if breed then
-		local dialogue_breed_settings = DialogueBreedSettings[breed.name]
+		local breed_name = breed.name
+		local dialogue_breed_settings = DialogueBreedSettings[breed_name]
 		self._faction_breed_name = breed.faction_name
 
 		if _has_wwise_voice_switch_config(dialogue_breed_settings) then
-			if extension_per_breed_wwise_voice_index[breed.name] == nil then
-				extension_per_breed_wwise_voice_index[breed.name] = 1
+			if extension_per_breed_wwise_voice_index[breed_name] == nil then
+				extension_per_breed_wwise_voice_index[breed_name] = 1
 			end
 
 			local selected_voice_index = nil
@@ -104,8 +105,8 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 				local voice_selection_seed = extension_init_data.seed
 				voice_selection_seed, selected_voice_index = math.next_random(voice_selection_seed, 1, #dialogue_breed_settings.wwise_voices)
 			else
-				selected_voice_index = extension_per_breed_wwise_voice_index[breed.name]
-				extension_per_breed_wwise_voice_index[breed.name] = selected_voice_index % #dialogue_breed_settings.wwise_voices + 1
+				selected_voice_index = extension_per_breed_wwise_voice_index[breed_name]
+				extension_per_breed_wwise_voice_index[breed_name] = selected_voice_index % #dialogue_breed_settings.wwise_voices + 1
 			end
 
 			self._wwise_voice_switch_value = dialogue_breed_settings.wwise_voices[selected_voice_index]
@@ -130,7 +131,7 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 			PlayerVoiceGrunts.create_voice(fx_extension, first_person_unit, "ap_camera_node")
 		end
 
-		self._context.breed_name = breed.name
+		self._context.breed_name = breed_name
 		self._stop_vce_event = dialogue_breed_settings.stop_vce_event
 		local vo_events = dialogue_breed_settings.vo_events
 

@@ -56,12 +56,15 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_power_on_weapon_sp
 				end
 			end
 		end
-	}
+	},
+	check_active_func = function (template_data, template_context)
+		return ConditionalFunctions.is_item_slot_wielded(template_data, template_context) and template_data.active
+	end
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_pass_past_armor_on_heavy_attack = {
-	force_predicted_proc = true,
-	predicted = false,
 	class_name = "proc_buff",
+	predicted = false,
+	force_predicted_proc = true,
 	proc_events = {
 		[proc_events.on_sweep_start] = 1,
 		[proc_events.on_sweep_finish] = 1
@@ -83,7 +86,10 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_pass_past_armor_on_heavy_att
 		[proc_events.on_sweep_finish] = function (params, template_data, template_context)
 			template_data.active = false
 		end
-	}
+	},
+	check_active_func = function (template_data, template_context)
+		return ConditionalFunctions.is_item_slot_wielded(template_data, template_context) and template_data.active
+	end
 }
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_crit = table.clone(BaseWeaponTraitBuffTemplates.infinite_melee_cleave_on_crit)
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_chained_attacks = table.clone(BaseWeaponTraitBuffTemplates.toughness_recovery_on_chained_attacks)

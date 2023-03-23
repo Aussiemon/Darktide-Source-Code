@@ -5,9 +5,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Block = require("scripts/utilities/attack/block")
 local Breed = require("scripts/utilities/breed")
-local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
-local DodgeSettings = require("scripts/settings/dodge/dodge_settings")
 local GroundImpact = require("scripts/utilities/attack/ground_impact")
 local HitScan = require("scripts/utilities/attack/hit_scan")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
@@ -18,8 +16,6 @@ local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local attack_results = AttackSettings.attack_results
 local attack_types = AttackSettings.attack_types
-local dodge_types = DodgeSettings.dodge_types
-local proc_events = BuffSettings.proc_events
 local default_backstab_ranged_dot = MinionBackstabSettings.ranged_backstab_dot
 local default_backstab_ranged_event = MinionBackstabSettings.ranged_backstab_event
 local MinionAttack = {}
@@ -28,20 +24,31 @@ local BACKSTAB_POSITION_OFFSET_DISTANCE = 2
 local AIM_DOT_THRESHOLD = 0
 local DEFAULT_ENEMY_AIM_NODE = "enemy_aim_target_03"
 
-MinionAttack.aim_at_target = function (unit, scratchpad, t, action_data)
+MinionAttack.get_aim_position = function (unit, scratchpad, optional_line_of_sight_id, optional_aim_node_name)
 	local perception_component = scratchpad.perception_component
 	local target_unit = perception_component.target_unit
 	local target_position = nil
 
-	if perception_component.has_line_of_sight then
-		target_position = Unit.world_position(target_unit, Unit.node(target_unit, DEFAULT_ENEMY_AIM_NODE))
-	else
-		local perception_extension = scratchpad.perception_extension
-		target_position = perception_extension:last_los_position(target_unit)
-
-		if not target_position then
-			return false
+	if optional_line_of_sight_id then
+		if scratchpad.perception_extension:has_line_of_sight_by_id(target_unit, optional_line_of_sight_id) then
+			target_position = Unit.world_position(target_unit, Unit.node(target_unit, optional_aim_node_name or DEFAULT_ENEMY_AIM_NODE))
+		elseif perception_component.has_last_los_position then
+			target_position = perception_component.last_los_position:unbox()
 		end
+	elseif perception_component.has_line_of_sight then
+		target_position = Unit.world_position(target_unit, Unit.node(target_unit, optional_aim_node_name or DEFAULT_ENEMY_AIM_NODE))
+	elseif perception_component.has_last_los_position then
+		target_position = perception_component.last_los_position:unbox()
+	end
+
+	return target_position
+end
+
+MinionAttack.aim_at_target = function (unit, scratchpad, t, action_data)
+	local target_position = MinionAttack.get_aim_position(unit, scratchpad)
+
+	if not target_position then
+		return false
 	end
 
 	local valid_angle, dot, flat_to_target_direction = MinionAttack.aim_at_position(unit, scratchpad, t, action_data, target_position)
@@ -332,7 +339,7 @@ local function _set_shoot_dodge_window(unit, scratchpad, target_unit, dodge_wind
 	scratchpad.dodge_window = scratchpad.next_shoot_timing - timing
 end
 
-local DEFAULT_SHOOT_ALERT_ALLIES_RADIUS = 20
+local DEFAULT_SHOOT_ALERT_ALLIES_RADIUS = 12
 local DEFAULT_FIRST_SHOOT_TIMING = 0.5
 
 MinionAttack.start_shooting = function (unit, scratchpad, t, action_data, optional_shoot_timing, optional_ignore_add_intensity)
@@ -353,7 +360,7 @@ MinionAttack.start_shooting = function (unit, scratchpad, t, action_data, option
 
 	perception_extension:alert_nearby_allies(target_unit, action_data.alert_allies_radius or DEFAULT_SHOOT_ALERT_ALLIES_RADIUS)
 
-	if not optional_ignore_add_intensity then
+	if not optional_ignore_add_intensity and action_data.attack_intensities then
 		AttackIntensity.add_intensity(target_unit, action_data.attack_intensities)
 		AttackIntensity.set_attacked(target_unit)
 	end

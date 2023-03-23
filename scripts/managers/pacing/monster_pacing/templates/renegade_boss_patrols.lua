@@ -1,9 +1,8 @@
 local BOSS_PATROLS = {
 	name = "renegade_boss_patrols",
-	resistance_templates = {
+	challenge_templates = {
 		{
 			{
-				"renegade_shocktrooper",
 				"renegade_assault",
 				"renegade_assault",
 				"renegade_shocktrooper",
@@ -11,8 +10,7 @@ local BOSS_PATROLS = {
 				"renegade_assault",
 				"renegade_shocktrooper",
 				"renegade_assault",
-				"renegade_assault",
-				"renegade_shocktrooper"
+				"renegade_assault"
 			},
 			{
 				"renegade_gunner",
@@ -21,7 +19,6 @@ local BOSS_PATROLS = {
 				"renegade_gunner",
 				"renegade_rifleman",
 				"renegade_rifleman",
-				"renegade_gunner",
 				"renegade_rifleman",
 				"renegade_rifleman"
 			},
@@ -32,7 +29,6 @@ local BOSS_PATROLS = {
 				"renegade_executor",
 				"renegade_melee",
 				"renegade_melee",
-				"renegade_executor",
 				"renegade_melee",
 				"renegade_melee"
 			}
@@ -229,6 +225,80 @@ local BOSS_PATROLS = {
 				"renegade_executor",
 				"renegade_executor",
 				"renegade_executor",
+				"chaos_ogryn_executor"
+			},
+			{
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor"
+			}
+		},
+		{
+			{
+				"chaos_ogryn_bulwark",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_assault",
+				"renegade_assault",
+				"renegade_assault",
+				"renegade_assault",
+				"renegade_assault",
+				"renegade_assault",
+				"renegade_assault",
+				"renegade_assault",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"renegade_shocktrooper",
+				"chaos_ogryn_bulwark"
+			},
+			{
+				"chaos_ogryn_bulwark",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_rifleman",
+				"renegade_rifleman",
+				"renegade_gunner",
+				"renegade_rifleman",
+				"renegade_rifleman",
+				"renegade_gunner",
+				"renegade_rifleman",
+				"renegade_rifleman",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"chaos_ogryn_gunner"
+			},
+			{
+				"chaos_ogryn_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_melee",
+				"renegade_melee",
+				"renegade_executor",
+				"renegade_melee",
+				"renegade_melee",
+				"renegade_executor",
+				"renegade_melee",
+				"renegade_melee",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"chaos_ogryn_executor"
+			},
+			{
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
 				"chaos_ogryn_executor"
 			}
 		}

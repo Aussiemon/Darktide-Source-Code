@@ -20,6 +20,8 @@ GameplayInitStepTimer.update = function (self, main_dt, main_t)
 end
 
 GameplayInitStepTimer._register_timer = function (self, is_server, out_shared_state)
+	out_shared_state.gameplay_timer_registered = true
+
 	if is_server then
 		Managers.time:register_timer("gameplay", "main", 0)
 	else

@@ -339,7 +339,6 @@ damage_templates.protectorate_force_field = {
 			[armor_types.prop_armor] = 1
 		}
 	},
-	damage_type = damage_types.warp,
 	targets = {
 		default_target = {}
 	}

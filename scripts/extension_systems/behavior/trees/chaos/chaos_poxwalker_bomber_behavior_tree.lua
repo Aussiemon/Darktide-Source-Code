@@ -11,10 +11,11 @@ local behavior_tree = {
 		},
 		{
 			"BtDieAction",
+			enter_hook = "poxwalker_bomber_death_enter",
 			name = "death",
 			action_data = action_data.death
 		},
-		condition = "is_dead",
+		condition = "poxwalker_bomber_is_dead",
 		name = "death_sequence"
 	},
 	{

@@ -31,6 +31,7 @@ _create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renega
 _create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renegade_captain_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renegade_executor_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renegade_flamer_actions")
+_create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renegade_flamer_mutator_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renegade_grenadier_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renegade_gunner_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/renegade/renegade_melee_actions")

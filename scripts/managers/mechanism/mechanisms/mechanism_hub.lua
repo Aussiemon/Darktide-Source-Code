@@ -36,6 +36,8 @@ MechanismHub.failed_fetching_session_report = function (self)
 end
 
 local function _fetch_client_data()
+	Managers.data_service.store:invalidate_wallets_cache()
+
 	return Promise.resolved()
 end
 

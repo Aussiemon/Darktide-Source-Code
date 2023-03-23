@@ -72,6 +72,7 @@ local martyrdom_health_step = talent_settings.passive_1.health_step
 local martyrdom_default_stacks = talent_settings.passive_1.max_stacks
 local martyrdom_talent_stacks = talent_settings.offensive_2_3.max_stacks
 local martyrdom_damage_step = talent_settings.passive_1.damage_per_step
+local empowered_multiplier = talent_settings.combat_ability_2.martyrdom_empowered_multiplier
 
 local function martyrdom_stack_added(template_data, template_context, t)
 	if not template_context.is_server then
@@ -93,9 +94,10 @@ local function martyrdom_stack_added(template_data, template_context, t)
 end
 
 templates.zealot_maniac_martyrdom_base = {
+	hud_always_show_stacks = true,
 	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_base_3",
 	predicted = true,
-	hud_priority = 1,
+	hud_priority = 2,
 	class_name = "zealot_maniac_passive_buff",
 	lerped_stat_buffs = {
 		[stat_buffs.melee_damage] = {
@@ -139,8 +141,8 @@ templates.zealot_maniac_martyrdom_base = {
 templates.zealot_maniac_resist_death = {
 	predicted = false,
 	hud_priority = 2,
-	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_base_2",
 	always_show_in_hud = true,
+	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_base_2",
 	class_name = "proc_buff",
 	active_duration = talent_settings.passive_2.active_duration,
 	cooldown_duration = talent_settings.passive_2.cooldown_duration,
@@ -151,15 +153,6 @@ templates.zealot_maniac_resist_death = {
 		BuffSettings.keywords.resist_death
 	},
 	check_proc_func = CheckProcFunctions.would_die,
-	progressbar_func = function (template_data, template_context)
-		local percentage = template_context.active_percentage
-
-		if percentage and percentage > 0 then
-			return 1 - percentage
-		end
-
-		return nil
-	end,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		template_data.coherency_extension = ScriptUnit.extension(unit, "coherency_system")
@@ -245,6 +238,7 @@ templates.zealot_maniac_toughness_regen_in_melee = {
 	predicted = false,
 	hud_priority = 4,
 	class_name = "buff",
+	always_show_in_hud = true,
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
 		local broadphase = broadphase_system.broadphase
@@ -321,7 +315,7 @@ templates.zealot_maniac_increased_damage_vs_shocked = {
 	predicted = false,
 	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.damage_vs_stunned] = talent_settings.offensive_2.damage
+		[stat_buffs.damage_vs_electrocuted] = talent_settings.offensive_2.damage
 	}
 }
 templates.zealot_maniac_bleeding_crits = {
@@ -403,6 +397,7 @@ templates.zealot_maniac_multi_hits_impact_buff = {
 	predicted = false,
 	hud_priority = 4,
 	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_tier_2_2_b",
+	always_active = true,
 	duration = talent_settings.offensive_2.duration,
 	max_stacks = impact_buff_max_stacks,
 	stat_buffs = {
@@ -414,6 +409,9 @@ templates.zealot_maniac_multi_hits_impact_buff = {
 	},
 	conditional_keywords_func = function (template_data, template_context)
 		return impact_buff_max_stacks <= template_context.stack_count
+	end,
+	check_active_func = function (template_data, template_context)
+		return true
 	end
 }
 templates.zealot_maniac_attack_speed_low_health = {
@@ -561,8 +559,8 @@ templates.zealot_maniac_dash_grants_toughness = {
 templates.zealot_maniac_resist_death_improved_with_leech = {
 	predicted = false,
 	hud_priority = 2,
-	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_base_2",
 	always_show_in_hud = true,
+	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_base_2",
 	class_name = "proc_buff",
 	active_duration = talent_settings.defensive_1.active_duration,
 	cooldown_duration = talent_settings.defensive_1.cooldown_duration,
@@ -595,15 +593,6 @@ templates.zealot_maniac_resist_death_improved_with_leech = {
 				Toughness.replenish_percentage(coherency_unit, percentage, false, "maniac_coop_1")
 			end
 		end
-	end,
-	progressbar_func = function (template_data, template_context)
-		local percentage = template_context.active_percentage
-
-		if percentage and percentage > 0 then
-			return 1 - percentage
-		end
-
-		return nil
 	end,
 	proc_effects = {
 		player_effects = {
@@ -692,7 +681,10 @@ templates.zealot_maniac_movement_enhanced = {
 local num_slices = 10
 templates.zealot_maniac_recuperate_a_portion_of_damage_taken = {
 	predicted = false,
+	allow_proc_while_active = true,
+	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_tier_4_3_b",
 	class_name = "proc_buff",
+	active_duration = talent_settings.defensive_3.duration,
 	proc_events = {
 		[proc_events.on_damage_taken] = talent_settings.defensive_3.on_damage_taken_proc_chance
 	},
@@ -877,14 +869,17 @@ templates.zealot_maniac_combat_ability_crits_reduce_cooldown = {
 	end
 }
 templates.zealot_maniac_combat_ability_attack_speed_increase = {
-	allow_proc_while_active = true,
-	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_tier_6_2",
 	predicted = false,
 	hud_priority = 3,
+	allow_proc_while_active = true,
+	hud_icon = "content/ui/textures/icons/talents/zealot_2/hud/zealot_2_tier_6_2",
 	class_name = "proc_buff",
-	active_duration = talent_settings.combat_ability_2.active_duration,
+	active_duration = talent_settings.combat_ability_2.active_duration + 1,
+	proc_keywords = {
+		keywords.zealot_maniac_empowered_martyrdom
+	},
 	proc_events = {
-		[proc_events.on_lunge_end] = talent_settings.combat_ability_2.on_lunge_end_proc_chance
+		[proc_events.on_lunge_start] = talent_settings.combat_ability_2.on_lunge_end_proc_chance
 	},
 	proc_stat_buffs = {
 		[stat_buffs.attack_speed] = talent_settings.combat_ability_2.attack_speed

@@ -46,7 +46,7 @@ local MIN_TIMER_DIFF_RANGE = {
 }
 local USED_BREEDS = {}
 
-local function _setup_specials_slot(specials_slots, specials_slot, template, timer_modifier, optional_breed_name, optional_spawn_timer, optional_injected, optional_coordinated_strike, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group, optional_is_prevention)
+SpecialsPacing._setup_specials_slot = function (self, specials_slots, specials_slot, template, timer_modifier, optional_breed_name, optional_spawn_timer, optional_injected, optional_coordinated_strike, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group, optional_is_prevention)
 	local spawn_timer = optional_spawn_timer
 
 	if optional_spawn_timer == nil then
@@ -85,7 +85,8 @@ local function _setup_specials_slot(specials_slots, specials_slot, template, tim
 	if optional_breed_name == nil then
 		local breeds = optional_coordinated_strike and template.coordinated_strike_breeds or template.breeds.all
 		breed_name = breeds[math.random(1, #breeds)]
-		local max_of_same = template.max_of_same[breed_name]
+		local optional_max_of_same_override = self._optional_max_of_same_override
+		local max_of_same = optional_max_of_same_override and optional_max_of_same_override[breed_name] or template.max_of_same[breed_name]
 		local num_used_breeds = USED_BREEDS[breed_name]
 
 		if num_used_breeds and max_of_same and max_of_same <= num_used_breeds then
@@ -155,7 +156,7 @@ SpecialsPacing._setup = function (self, template, optional_first_spawn_modifier)
 	for i = 1, max_alive_specials do
 		local specials_slot = {}
 
-		_setup_specials_slot(specials_slots, specials_slot, template, optional_first_spawn_modifier or self._timer_modifier)
+		self:_setup_specials_slot(specials_slots, specials_slot, template, optional_first_spawn_modifier or self._timer_modifier)
 
 		specials_slots[i] = specials_slot
 	end
@@ -213,7 +214,7 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 				local activated_coordinated_strike = self:_check_and_activate_coordinated_strike(template, specials_slot)
 
 				if not activated_coordinated_strike then
-					_setup_specials_slot(specials_slots, specials_slot, template, self._timer_modifier)
+					self:_setup_specials_slot(specials_slots, specials_slot, template, self._timer_modifier)
 				end
 			end
 		elseif specials_slot.spawner_queue_id then
@@ -723,7 +724,7 @@ SpecialsPacing._check_and_activate_coordinated_strike = function (self, template
 		end
 	end
 
-	local chance_for_coordinated_strike = template.chance_for_coordinated_strike
+	local chance_for_coordinated_strike = self._coordinated_strike_chance_override or template.chance_for_coordinated_strike
 
 	if not chance_for_coordinated_strike then
 		return false
@@ -762,13 +763,13 @@ SpecialsPacing._check_and_activate_coordinated_strike = function (self, template
 
 	Log.info("SpecialsPacing", "Coordinated strike in %.02f", coordinated_strike_timer)
 
-	local coordinated_strike_num_breeds = template.coordinated_strike_num_breeds
+	local coordinated_strike_num_breeds = math.min(template.coordinated_strike_num_breeds * self._max_alive_specials_multiplier, #specials_slots)
 
 	for i = 1, coordinated_strike_num_breeds do
 		local specials_slot = specials_slots[i]
 		local optional_coordinated_strike = true
 
-		_setup_specials_slot(specials_slots, specials_slot, template, self._timer_modifier, nil, coordinated_strike_timer, nil, optional_coordinated_strike)
+		self:_setup_specials_slot(specials_slots, specials_slot, template, self._timer_modifier, nil, coordinated_strike_timer, nil, optional_coordinated_strike)
 
 		coordinated_strike_timer = coordinated_strike_timer + math.random_range(COORDINATED_STRIKE_TIMER_OFFSET_RANGE[1], COORDINATED_STRIKE_TIMER_OFFSET_RANGE[2])
 	end
@@ -964,7 +965,7 @@ SpecialsPacing.try_inject_special = function (self, breed_name, optional_prefere
 	local spawn_timer = foreshadow_stinger_timer or 0
 	local injected = true
 
-	_setup_specials_slot(specials_slots, chosen_slot, template, self._timer_modifier, breed_name, spawn_timer, injected, nil, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group, optional_is_prevention)
+	self:_setup_specials_slot(specials_slots, chosen_slot, template, self._timer_modifier, breed_name, spawn_timer, injected, nil, optional_prefered_spawn_direction, optional_target_unit, optional_spawner_group, optional_is_prevention)
 
 	return true
 end
@@ -976,9 +977,22 @@ end
 SpecialsPacing.set_max_alive_specials_multiplier = function (self, multiplier)
 	self._max_alive_specials_multiplier = multiplier
 	local template = self._template
+
+	if not template then
+		return
+	end
+
 	local first_spawn_timer_modifer = template.first_spawn_timer_modifer
 
 	self:_setup(template, first_spawn_timer_modifer)
+end
+
+SpecialsPacing.set_chance_of_coordinated_strike = function (self, coordinated_strike_chance)
+	self._coordinated_strike_chance_override = coordinated_strike_chance
+end
+
+SpecialsPacing.set_max_of_same_override = function (self, max_of_same_override)
+	self._optional_max_of_same_override = max_of_same_override
 end
 
 local REFUND_TIMER = 15

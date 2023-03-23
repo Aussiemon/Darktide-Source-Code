@@ -89,6 +89,87 @@ local assault_random_scale = {
 		}
 	}
 }
+local assault_scale_m2 = {
+	{
+		1,
+		{
+			0.75,
+			0.5
+		}
+	},
+	{
+		3,
+		{
+			1,
+			1
+		}
+	},
+	{
+		6,
+		{
+			0.5,
+			1
+		}
+	},
+	{
+		12,
+		{
+			0.75,
+			0.5
+		}
+	},
+	{
+		20,
+		{
+			0.6,
+			0.6
+		}
+	},
+	{
+		50,
+		{
+			0.2,
+			0.4
+		}
+	}
+}
+local assault_random_scale_m2 = {
+	{
+		1,
+		{
+			0.5,
+			0.25
+		}
+	},
+	{
+		3,
+		{
+			1,
+			0.5
+		}
+	},
+	{
+		10,
+		{
+			0.5,
+			0.8
+		}
+	},
+	{
+		20,
+		{
+			0.6,
+			0.9
+		}
+	},
+	{
+		50,
+		{
+			1,
+			1
+		}
+	}
+}
 local killshot_scale = {
 	{
 		1,
@@ -171,6 +252,153 @@ local killshot_offset_range = generate_offset_range(num_shot, 0.125, 0, lerp_dis
 local killshot_random_range = generate_offset_range(30, 0.04, 0.03, 0.75, create_scale(killshot_random_scale))
 local assault_offset_range = generate_offset_range(30, 0.015, 0, 0.95, create_scale(assault_scale))
 local assault_random_range = generate_offset_range(30, 0.01, 0.02, 0.95, create_scale(assault_random_scale))
+local assault_offset_range_m2 = generate_offset_range(50, 0.045, 0, 0.75, create_scale(assault_scale_m2))
+local assault_random_range_m2 = generate_offset_range(50, 0.01, 0.015, 0.75, create_scale(assault_random_scale_m2))
+local assault_scale_m3 = {
+	{
+		1,
+		{
+			0.75,
+			0.5
+		}
+	},
+	{
+		6,
+		{
+			1,
+			1
+		}
+	},
+	{
+		12,
+		{
+			0.75,
+			0.5
+		}
+	},
+	{
+		20,
+		{
+			0.6,
+			0.6
+		}
+	},
+	{
+		50,
+		{
+			0.2,
+			0.4
+		}
+	}
+}
+local assault_random_scale_m3 = {
+	{
+		1,
+		{
+			0.5,
+			0.25
+		}
+	},
+	{
+		3,
+		{
+			1,
+			0.5
+		}
+	},
+	{
+		10,
+		{
+			0.5,
+			0.8
+		}
+	},
+	{
+		20,
+		{
+			0.6,
+			0.9
+		}
+	},
+	{
+		50,
+		{
+			1,
+			1
+		}
+	}
+}
+local braced_scale_m3 = {
+	{
+		1,
+		{
+			0.25,
+			0.25
+		}
+	},
+	{
+		12,
+		{
+			1,
+			1
+		}
+	},
+	{
+		20,
+		{
+			0.6,
+			0.6
+		}
+	},
+	{
+		50,
+		{
+			0.2,
+			0.4
+		}
+	}
+}
+local braced_random_scale_m3 = {
+	{
+		1,
+		{
+			0.5,
+			0.25
+		}
+	},
+	{
+		3,
+		{
+			1,
+			0.5
+		}
+	},
+	{
+		10,
+		{
+			0.5,
+			0.8
+		}
+	},
+	{
+		20,
+		{
+			0.6,
+			0.9
+		}
+	},
+	{
+		50,
+		{
+			1,
+			1
+		}
+	}
+}
+local assault_offset_range_m3 = generate_offset_range(50, 0.045, 0, 0.95, create_scale(assault_scale_m3))
+local assault_random_range_m3 = generate_offset_range(50, 0.01, 0.035, 0.95, create_scale(assault_random_scale_m3))
+local braced_offset_range_m3 = generate_offset_range(50, 0.01, 0, 0.95, create_scale(braced_scale_m3))
+local braced_random_range_m3 = generate_offset_range(50, 0.0075, 0.0075, 0.95, create_scale(braced_random_scale_m3))
 recoil_templates.default_ogryn_heavystubber_recoil_spraynpray = {
 	still = {
 		camera_recoil_percentage = 0.75,
@@ -258,6 +486,106 @@ recoil_templates.default_ogryn_heavystubber_recoil_spraynpray = {
 		new_influence_percent = {
 			lerp_perfect = 0.2,
 			lerp_basic = 0.4
+		}
+	}
+}
+recoil_templates.default_ogryn_heavystubber_recoil_spraynpray_hip = {
+	still = {
+		camera_recoil_percentage = 0.85,
+		new_influence_percent = 0.2,
+		rise_duration = 0.062,
+		rise = {
+			0.1,
+			0.27,
+			0.23,
+			0.175,
+			0.15,
+			0.5,
+			0.5,
+			0.5,
+			0.5,
+			0.5,
+			0.5,
+			0.5,
+			0.9
+		},
+		decay = {
+			shooting = 0.5,
+			idle = 0.35
+		},
+		offset_range = {
+			{
+				pitch = {
+					0.1,
+					0.125
+				},
+				yaw = {
+					-0.02,
+					0.02
+				}
+			},
+			{
+				pitch = {
+					0.075,
+					0.1
+				},
+				yaw = {
+					-0.02,
+					0.02
+				}
+			},
+			{
+				pitch = {
+					0.05,
+					0.075
+				},
+				yaw = {
+					-0.03,
+					0.03
+				}
+			},
+			{
+				pitch = {
+					0.02,
+					0.04
+				},
+				yaw = {
+					-0.03,
+					0.03
+				}
+			}
+		},
+		offset_limit = {
+			yaw = 2,
+			pitch = 4
+		},
+		aim_assist = {
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		},
+		visual_recoil_settings = {
+			intensity = 1,
+			lerp_scalar = 1
+		}
+	},
+	moving = {
+		new_influence_percent = 0.25,
+		inherits = {
+			"default_ogryn_heavystubber_recoil_spraynpray_hip",
+			"still"
+		}
+	},
+	crouch_still = {
+		new_influence_percent = 0.25,
+		inherits = {
+			"default_ogryn_heavystubber_recoil_spraynpray_hip",
+			"still"
+		}
+	},
+	crouch_moving = {
+		new_influence_percent = 0.25,
+		inherits = {
+			"default_ogryn_heavystubber_recoil_spraynpray_hip",
+			"still"
 		}
 	}
 }
@@ -412,75 +740,35 @@ recoil_templates.default_ogryn_heavystubber_recoil_spraynpray_brace = {
 		}
 	}
 }
-recoil_templates.default_ogryn_heavystubber_recoil_spraynpray_hip = {
+pitch_default = 0.03
+local firerate = 0.096
+local shot_decay = 3.5
+local rise_time = 0.04784000000000001
+local decay_time = firerate - rise_time
+local shot_rise = decay_time * shot_decay
+recoil_templates.default_ogryn_heavystubber_recoil_spraynpray_hip_m2 = {
 	still = {
 		camera_recoil_percentage = 0.85,
-		new_influence_percent = 0.2,
-		rise_duration = 0.062,
+		new_influence_percent = 1,
+		rise_duration = 0.05,
 		rise = {
-			0.1,
-			0.27,
-			0.23,
+			0.75,
 			0.175,
-			0.15,
-			0.5,
-			0.5,
-			0.5,
-			0.5,
-			0.5,
-			0.5,
-			0.5,
-			0.9
+			0.225,
+			0.25,
+			0.2,
+			0.175,
+			0.2
 		},
 		decay = {
-			shooting = 0.5,
-			idle = 0.35
+			shooting = 1.6,
+			idle = 3.2
 		},
-		offset_range = {
-			{
-				pitch = {
-					0.1,
-					0.125
-				},
-				yaw = {
-					-0.02,
-					0.02
-				}
-			},
-			{
-				pitch = {
-					0.075,
-					0.1
-				},
-				yaw = {
-					-0.02,
-					0.02
-				}
-			},
-			{
-				pitch = {
-					0.05,
-					0.075
-				},
-				yaw = {
-					-0.03,
-					0.03
-				}
-			},
-			{
-				pitch = {
-					0.02,
-					0.04
-				},
-				yaw = {
-					-0.03,
-					0.03
-				}
-			}
-		},
+		offset = assault_offset_range_m2,
+		offset_random_range = assault_random_range_m2,
 		offset_limit = {
 			yaw = 2,
-			pitch = 4
+			pitch = 3
 		},
 		aim_assist = {
 			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
@@ -491,33 +779,245 @@ recoil_templates.default_ogryn_heavystubber_recoil_spraynpray_hip = {
 		}
 	},
 	moving = {
+		new_influence_percent = 0.85,
+		inherits = {
+			"default_ogryn_heavystubber_recoil_spraynpray_hip_m2",
+			"still"
+		}
+	},
+	crouch_still = {
+		new_influence_percent = 0.85,
+		inherits = {
+			"default_ogryn_heavystubber_recoil_spraynpray_hip_m2",
+			"still"
+		}
+	},
+	crouch_moving = {
+		new_influence_percent = 0.85,
+		inherits = {
+			"default_ogryn_heavystubber_recoil_spraynpray_hip_m2",
+			"still"
+		}
+	}
+}
+recoil_templates.default_ogryn_heavystubber_recoil_spraynpray_brace_m2 = {
+	still = {
+		camera_recoil_percentage = 0.75,
+		decay_grace = 0.1,
+		rise_duration = 0.08,
+		rise = {
+			{
+				lerp_perfect = 0.55,
+				lerp_basic = 0.8
+			},
+			{
+				lerp_perfect = 0.15,
+				lerp_basic = 0.3
+			},
+			{
+				lerp_perfect = 0.1,
+				lerp_basic = 0.2
+			},
+			{
+				lerp_perfect = 0.029,
+				lerp_basic = 0.12
+			},
+			{
+				lerp_perfect = 0.025,
+				lerp_basic = 0.2
+			},
+			{
+				lerp_perfect = 0.025,
+				lerp_basic = 0.15
+			}
+		},
+		decay = {
+			shooting = {
+				lerp_perfect = 0.75,
+				lerp_basic = 0.5
+			},
+			idle = {
+				lerp_perfect = 3,
+				lerp_basic = 2.5
+			}
+		},
+		offset = assault_offset_range,
+		offset_random_range = assault_random_range,
+		offset_limit = {
+			yaw = 1,
+			pitch = 1.5
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.35,
+			lerp_basic = 0.7
+		},
+		aim_assist = {
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		},
+		visual_recoil_settings = {
+			intensity = 4.5,
+			lerp_scalar = 1
+		}
+	},
+	moving = {
+		inherits = {
+			"default_ogryn_heavystubber_recoil_spraynpray_brace_m2",
+			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.3,
+			lerp_basic = 0.55
+		}
+	},
+	crouch_still = {
+		inherits = {
+			"default_ogryn_heavystubber_recoil_spraynpray_brace_m2",
+			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.15,
+			lerp_basic = 0.25
+		}
+	},
+	crouch_moving = {
+		inherits = {
+			"default_ogryn_heavystubber_recoil_spraynpray_brace_m2",
+			"still"
+		},
+		new_influence_percent = {
+			lerp_perfect = 0.2,
+			lerp_basic = 0.4
+		}
+	}
+}
+recoil_templates.default_ogryn_heavystubber_recoil_spraynpray_hip_m3 = {
+	still = {
+		camera_recoil_percentage = 0.7,
+		new_influence_percent = 0.15,
+		rise_duration = 0.04,
+		rise = {
+			0.09,
+			0.2,
+			0.17,
+			0.14,
+			0.12,
+			0.4,
+			0.4,
+			0.3,
+			0.3,
+			0.3,
+			0.35,
+			0.4,
+			0.75
+		},
+		decay = {
+			shooting = 0.5,
+			idle = 0.4
+		},
+		offset = assault_offset_range_m3,
+		offset_random_range = assault_random_range_m3,
+		offset_limit = {
+			yaw = 2,
+			pitch = 3
+		},
+		aim_assist = {
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		},
+		visual_recoil_settings = {
+			intensity = 0.8,
+			lerp_scalar = 0.9
+		}
+	},
+	moving = {
 		new_influence_percent = 0.25,
 		inherits = {
-			"default_ogryn_heavystubber_recoil_spraynpray_hip",
+			"default_ogryn_heavystubber_recoil_spraynpray_hip_m3",
 			"still"
 		}
 	},
 	crouch_still = {
 		new_influence_percent = 0.25,
 		inherits = {
-			"default_ogryn_heavystubber_recoil_spraynpray_hip",
+			"default_ogryn_heavystubber_recoil_spraynpray_hip_m3",
 			"still"
 		}
 	},
 	crouch_moving = {
 		new_influence_percent = 0.25,
 		inherits = {
-			"default_ogryn_heavystubber_recoil_spraynpray_hip",
+			"default_ogryn_heavystubber_recoil_spraynpray_hip_m3",
 			"still"
 		}
 	}
 }
-pitch_default = 0.03
-local firerate = 0.096
-local shot_decay = 3.5
-local rise_time = 0.04784000000000001
-local decay_time = firerate - rise_time
-local shot_rise = decay_time * shot_decay
+recoil_templates.default_ogryn_heavystubber_recoil_spraynpray_brace_m3 = {
+	still = {
+		camera_recoil_percentage = 0.85,
+		decay_grace = 0.05,
+		new_influence_percent = 0.29,
+		rise_duration = 0.07,
+		rise = {
+			0.1,
+			0.15,
+			0.17,
+			0.13,
+			0.12,
+			0.1,
+			0.09,
+			0.08,
+			0.08,
+			0.05,
+			0.05,
+			0.05,
+			0.03,
+			0.02
+		},
+		decay = {
+			shooting = {
+				lerp_perfect = 1.4,
+				lerp_basic = 0.8
+			},
+			idle = {
+				lerp_perfect = 3,
+				lerp_basic = 2
+			}
+		},
+		offset = braced_offset_range_m3,
+		offset_random_range = braced_random_range_m3,
+		offset_limit = {
+			yaw = 1.2,
+			pitch = 1.2
+		},
+		aim_assist = {
+			multiplier_function = AIM_ASSIST_MULTIPLIER_FUNCTIONS.unmodified_inverted_unsteadiness
+		},
+		visual_recoil_settings = {
+			intensity = 0.4,
+			lerp_scalar = 1
+		}
+	},
+	moving = {
+		new_influence_percent = 0.25,
+		inherits = {
+			"default_ogryn_heavystubber_recoil_spraynpray_brace_m3",
+			"still"
+		}
+	},
+	crouch_still = {
+		new_influence_percent = 0.25,
+		inherits = {
+			"default_ogryn_heavystubber_recoil_spraynpray_brace_m3",
+			"still"
+		}
+	},
+	crouch_moving = {
+		new_influence_percent = 0.25,
+		inherits = {
+			"default_ogryn_heavystubber_recoil_spraynpray_brace_m3",
+			"still"
+		}
+	}
+}
 
 return {
 	base_templates = recoil_templates,

@@ -46,6 +46,7 @@ DoorExtension.init = function (self, extension_init_context, unit, extension_ini
 	self._self_closing_time = 0
 	self._self_closing_timer = 0
 	self._control_panel_units = {}
+	self._volume_added = false
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
 	local extension_manager = Managers.state.extension
 	local side_system = extension_manager:system("side_system")
@@ -65,7 +66,10 @@ end
 DoorExtension.destroy = function (self)
 	if self._is_server then
 		self:_unspawn_control_panels()
-		self:_set_nav_block(false)
+
+		if self._volume_added then
+			self:_set_nav_block(false)
+		end
 	end
 end
 
@@ -185,6 +189,7 @@ DoorExtension._setup_nav_layer = function (self, unit, start_state)
 
 	Managers.state.nav_mesh:add_nav_tag_volume(volume_points, volume_alt_min, volume_alt_max, layer_name, volume_layer_allowed)
 
+	self._volume_added = true
 	self._nav_layer_name = layer_name
 	self._entrance_nav_blocked = not volume_layer_allowed
 end

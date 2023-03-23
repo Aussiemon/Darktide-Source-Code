@@ -175,7 +175,8 @@ local breed_data = {
 		inair_allowed_height_distance_min = 0.5
 	},
 	spawn_buffs = {
-		"grimoire_damage_tick"
+		"grimoire_damage_tick",
+		"sprint_with_stamina_buff"
 	},
 	blackboard_component_config = BotSettings.blackboard_component_config,
 	base_unit_sound_sources = {

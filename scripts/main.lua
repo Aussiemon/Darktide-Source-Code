@@ -14,9 +14,6 @@ local ParameterResolver = require("scripts/foundation/utilities/parameters/param
 local StateBoot = require("scripts/game_states/state_boot")
 local StateLoadAudioSettings = require("scripts/game_states/boot/state_load_audio_settings")
 local StateLoadBootAssets = require("scripts/game_states/boot/state_load_boot_assets")
-
-require("scripts/game_states/boot/state_load_mods")
-
 local StateLoadRenderSettings = require("scripts/game_states/boot/state_load_render_settings")
 local StateRequireScripts = require("scripts/game_states/boot/state_require_scripts")
 
@@ -71,7 +68,7 @@ Main.init = function (self)
 	end
 
 	self._package_manager = package_manager
-	self._sm = GameStateMachine:new(nil, StateBoot, params)
+	self._sm = GameStateMachine:new(nil, StateBoot, params, nil, nil, "Main")
 end
 
 Main.update = function (self, dt)
@@ -107,7 +104,9 @@ Main.shutdown = function (self)
 		owns_package_manager = false
 	end
 
-	self._sm:destroy()
+	local on_shutdown = true
+
+	self._sm:destroy(on_shutdown)
 
 	if owns_package_manager then
 		self._package_manager:delete()

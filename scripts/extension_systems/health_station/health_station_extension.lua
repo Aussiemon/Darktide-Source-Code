@@ -281,6 +281,8 @@ HealthStationExtension.socket_unit = function (self)
 	return self._socket_unit
 end
 
+local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
+
 HealthStationExtension.socket_luggable = function (self, luggable_unit)
 	self._luggable_socket_extension:socket_luggable(luggable_unit)
 
@@ -292,7 +294,12 @@ HealthStationExtension.socket_luggable = function (self, luggable_unit)
 	local charges = self:charge_amount()
 
 	if charges > 0 then
-		Managers.event:trigger("on_health_station_activated")
+		local game_mode_name = Managers.state.game_mode:game_mode_name()
+
+		if game_mode_name == TRAINING_GROUNDS_GAME_MODE_NAME then
+			Managers.event:trigger("tg_on_health_station_activated")
+		end
+
 		self:play_anim("open")
 	end
 end

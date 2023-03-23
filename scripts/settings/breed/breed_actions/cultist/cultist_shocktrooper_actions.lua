@@ -110,11 +110,15 @@ local action_data = {
 		}
 	},
 	melee_combat_idle = {
-		utility_weight = 2,
+		utility_weight = 1,
 		rotate_towards_target = true,
-		vo_event = "melee_idle",
-		anim_events = "idle",
-		considerations = UtilityConsiderations.melee_combat_idle
+		vo_event = "melee_combat_idle",
+		considerations = UtilityConsiderations.melee_combat_idle,
+		anim_events = {
+			"idle",
+			"idle_2",
+			"idle_3"
+		}
 	},
 	close_combat_idle = {
 		utility_weight = 2,
@@ -813,65 +817,29 @@ local action_data = {
 		}
 	},
 	melee_follow = {
-		idle_anim_events = "idle",
+		enter_walk_distance = 3,
+		leave_walk_distance = 5,
 		utility_weight = 1,
-		controlled_stagger = true,
-		controlled_stagger_min_speed = 2,
-		leave_walk_distance = 4,
-		controlled_stagger_ignored_combat_range = "melee",
-		vo_event = "melee_idle",
+		vo_event = "ranged_idle",
+		run_anim_event = "bayonet_charge_start",
+		force_move_anim_event = "bayonet_charge_start",
 		walk_anim_event = "move_fwd_walk",
-		running_stagger_duration = 1.1666666666666667,
-		running_stagger_anim_left = "run_stagger_01",
-		move_speed = 4.5,
-		use_animation_running_stagger_speed = true,
-		run_anim_event = "move_fwd",
-		running_stagger_anim_right = "run_stagger_02",
-		enter_walk_distance = 2,
 		considerations = UtilityConsiderations.melee_follow,
+		idle_anim_events = {
+			"idle",
+			"idle_2",
+			"idle_3"
+		},
 		start_move_anim_events = {
 			walking = {
-				bwd = "move_bwd_walk",
-				fwd = "move_fwd_walk",
-				left = "move_left_walk",
-				right = "move_right_walk"
-			},
-			running = {
-				bwd = "move_start_bwd",
-				fwd = "move_start_fwd",
-				left = "move_start_left",
-				right = "move_start_right"
+				bwd = "combat_walk_bayonet_bwd",
+				fwd = "combat_walk_bayonet_fwd",
+				left = "combat_walk_bayonet_left",
+				right = "combat_walk_bayonet_right"
 			}
-		},
-		start_move_anim_data = {
-			move_start_fwd = {},
-			move_start_bwd = {
-				sign = 1,
-				rad = math.pi
-			},
-			move_start_left = {
-				sign = 1,
-				rad = math.pi / 2
-			},
-			move_start_right = {
-				sign = -1,
-				rad = math.pi / 2
-			}
-		},
-		start_move_rotation_timings = {
-			move_start_right = 0.16666666666666666,
-			move_start_fwd = 0,
-			move_start_bwd = 0.16666666666666666,
-			move_start_left = 0.16666666666666666
-		},
-		start_rotation_durations = {
-			move_start_right = 0.7,
-			move_start_fwd = 0.26666666666666666,
-			move_start_bwd = 1,
-			move_start_left = 0.7666666666666667
 		},
 		start_move_event_anim_speed_durations = {
-			move_start_fwd = 1.0666666666666667
+			bayonet_charge_start = 1.2666666666666666
 		}
 	},
 	melee_attack = {
@@ -1081,6 +1049,48 @@ local action_data = {
 		},
 		damage_profile = DamageProfileTemplates.melee_roamer_default,
 		damage_type = damage_types.minion_melee_sharp
+	},
+	bayonet_charge_attack = {
+		move_speed = 4,
+		utility_weight = 10,
+		weapon_reach = 3,
+		moving_attack = true,
+		considerations = UtilityConsiderations.renegade_rifleman_bayonet_attack,
+		attack_anim_events = {
+			"bayonet_charge_hit",
+			"bayonet_charge_hit_02",
+			"bayonet_charge_hit_03",
+			"bayonet_charge_hit_04",
+			"bayonet_charge_hit_05"
+		},
+		attack_anim_damage_timings = {
+			bayonet_charge_hit_04 = 1.3888888888888888,
+			bayonet_charge_hit = 0.4666666666666667,
+			bayonet_charge_hit_05 = 1.2222222222222223,
+			bayonet_charge_hit_02 = 0.7222222222222222,
+			bayonet_charge_hit_03 = 0.6666666666666666
+		},
+		attack_anim_durations = {
+			bayonet_charge_hit_04 = 2.5,
+			bayonet_charge_hit = 2.1666666666666665,
+			bayonet_charge_hit_05 = 2.361111111111111,
+			bayonet_charge_hit_02 = 1.6666666666666667,
+			bayonet_charge_hit_03 = 1.6111111111111112
+		},
+		attack_intensities = {
+			melee = 0.25,
+			running_melee = 1,
+			moving_melee = 2,
+			ranged = 1
+		},
+		move_start_timings = {
+			bayonet_charge_hit = 0
+		},
+		damage_profile = DamageProfileTemplates.melee_roamer_default,
+		damage_type = damage_types.minion_melee_sharp,
+		stagger_type_reduction = {
+			ranged = 20
+		}
 	},
 	switch_weapon = {
 		slot_melee_weapon = {

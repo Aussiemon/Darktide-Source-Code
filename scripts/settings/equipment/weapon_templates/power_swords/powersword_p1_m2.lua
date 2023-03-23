@@ -156,16 +156,17 @@ weapon_template.actions = {
 		end
 	},
 	action_left_light = {
-		damage_window_start = 0.325,
+		damage_window_start = 0.3,
 		hit_armor_anim = "attack_hit_shield",
-		anim_end_event = "attack_finished",
 		weapon_handling_template = "time_scale_1",
 		kind = "sweep",
-		first_person_hit_anim = "hit_left_down_shake",
+		first_person_hit_anim = "hit_left_shake",
 		range_mod = 1.25,
 		allowed_during_sprint = true,
 		damage_window_end = 0.4,
-		anim_event = "attack_swing_left_diagonal",
+		anim_end_event = "attack_finished",
+		anim_event_3p = "attack_swing_left_diagonal",
+		anim_event = "attack_swing_left",
 		hit_stop_anim = "hit_stop",
 		total_time = 2,
 		action_movement_curve = {
@@ -223,43 +224,54 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_activate_special",
 				chain_time = 0.5
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		weapon_box = default_weapon_box,
+		weapon_box = {
+			0.1,
+			0.075,
+			1.25
+		},
 		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/power_sword/swing_left_diagonal",
+			matrices_data_location = "content/characters/player/human/first_person/animations/power_sword/swing_left",
 			anchor_point_offset = {
 				0,
 				0,
-				-0.1
+				-0.05
 			}
 		},
 		damage_profile = DamageProfileTemplates.light_sword,
-		damage_profile_special_active = DamageProfileTemplates.light_powersword_active,
 		damage_type = damage_types.metal_slashing_medium,
 		damage_type_special_active = damage_types.power_sword,
+		damage_profile_special_active = DamageProfileTemplates.light_powersword_active,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.left_45_slash_clean,
-		wounds_shape_special_active = wounds_shapes.left_45_slash
+		wounds_shape = wounds_shapes.horizontal_slash_clean,
+		wounds_shape_special_active = wounds_shapes.horizontal_slash
 	},
 	action_left_heavy = {
-		damage_window_start = 0.16666666666666666,
+		damage_window_start = 0.18333333333333332,
 		hit_armor_anim = "attack_hit_shield",
-		anim_end_event = "attack_finished",
 		weapon_handling_template = "time_scale_0_9",
 		kind = "sweep",
-		first_person_hit_anim = "hit_left_shake",
+		first_person_hit_anim = "hit_left_down_shake",
 		range_mod = 1.25,
 		allowed_during_sprint = true,
 		damage_window_end = 0.3,
+		anim_end_event = "attack_finished",
 		no_hit_stop_on_active = true,
-		anim_event = "attack_swing_heavy_left",
+		anim_event_3p = "attack_swing_heavy_down_left",
+		anim_event = "attack_swing_heavy_left_diagonal",
 		hit_stop_anim = "hit_stop",
 		total_time = 1,
 		action_movement_curve = {
@@ -308,13 +320,17 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		weapon_box = default_weapon_box,
+		weapon_box = {
+			0.1,
+			0.075,
+			1.17
+		},
 		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/power_sword/heavy_swing_left",
+			matrices_data_location = "content/characters/player/human/first_person/animations/power_sword/heavy_swing_left_diagonal",
 			anchor_point_offset = {
 				0,
 				0,
-				-0.05
+				-0.25
 			}
 		},
 		damage_profile = DamageProfileTemplates.heavy_sword,
@@ -330,9 +346,10 @@ weapon_template.actions = {
 	},
 	action_melee_start_right = {
 		kind = "windup",
+		anim_event_3p = "attack_swing_charge_up_right",
 		anim_end_event = "attack_finished",
 		weapon_handling_template = "time_scale_1",
-		anim_event_3p = "attack_swing_charge_up_right",
+		allowed_during_sprint = true,
 		anim_event = "attack_swing_charge_right_diagonal_up",
 		stop_input = "attack_cancel",
 		total_time = 3,
@@ -399,11 +416,12 @@ weapon_template.actions = {
 	action_right_light = {
 		damage_window_start = 0.3,
 		hit_armor_anim = "attack_hit_shield",
-		range_mod = 1.25,
 		anim_end_event = "attack_finished",
+		weapon_handling_template = "time_scale_1",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		weapon_handling_template = "time_scale_1",
+		range_mod = 1.25,
+		allowed_during_sprint = true,
 		damage_window_end = 0.4,
 		anim_event = "attack_swing_right",
 		hit_stop_anim = "hit_stop",
@@ -493,12 +511,13 @@ weapon_template.actions = {
 	action_right_heavy = {
 		damage_window_start = 0.26666666666666666,
 		hit_armor_anim = "attack_hit_shield",
-		anim_end_event = "attack_finished",
 		weapon_handling_template = "time_scale_1_2",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_up_shake",
 		range_mod = 1.25,
+		allowed_during_sprint = true,
 		damage_window_end = 0.43333333333333335,
+		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_heavy_up_right",
 		anim_event = "attack_swing_heavy_right_diagonal_up",
 		hit_stop_anim = "hit_stop",
@@ -641,16 +660,15 @@ weapon_template.actions = {
 		end
 	},
 	action_left_light_2 = {
-		damage_window_start = 0.22,
+		damage_window_start = 0.325,
 		hit_armor_anim = "attack_hit_shield",
 		range_mod = 1.25,
 		anim_end_event = "attack_finished",
 		kind = "sweep",
-		first_person_hit_anim = "hit_up_shake",
+		first_person_hit_anim = "hit_left_down_shake",
 		weapon_handling_template = "time_scale_1",
-		attack_direction_override = "push",
-		damage_window_end = 0.3,
-		anim_event = "attack_swing_stab_02",
+		damage_window_end = 0.4,
+		anim_event = "attack_swing_left_diagonal",
 		hit_stop_anim = "hit_stop",
 		total_time = 2,
 		action_movement_curve = {
@@ -699,33 +717,40 @@ weapon_template.actions = {
 			block = {
 				action_name = "action_block",
 				chain_time = 0
+			},
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
+			special_action = {
+				action_name = "action_activate_special",
+				chain_time = 0.5
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		weapon_box = {
-			0.12,
-			0.24,
-			1.15
-		},
+		weapon_box = default_weapon_box,
 		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/combat_sword/swing_stab_02",
+			matrices_data_location = "content/characters/player/human/first_person/animations/power_sword/swing_left_diagonal",
 			anchor_point_offset = {
-				0.18,
 				0,
-				-0.05
+				0,
+				-0.1
 			}
 		},
-		damage_profile = DamageProfileTemplates.light_sword_stab,
+		damage_profile = DamageProfileTemplates.light_sword,
+		damage_profile_special_active = DamageProfileTemplates.light_powersword_active,
 		damage_type = damage_types.metal_slashing_medium,
 		damage_type_special_active = damage_types.power_sword,
-		damage_profile_special_active = DamageProfileTemplates.light_powersword_active,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.default
+		wounds_shape = wounds_shapes.left_45_slash_clean,
+		wounds_shape_special_active = wounds_shapes.left_45_slash
 	},
 	action_melee_start_right_2 = {
 		anim_end_event = "attack_finished",
@@ -798,13 +823,14 @@ weapon_template.actions = {
 	action_right_light_2 = {
 		damage_window_start = 0.35,
 		hit_armor_anim = "attack_hit_shield",
-		range_mod = 1.25,
 		anim_end_event = "attack_finished",
-		kind = "sweep",
-		first_person_hit_anim = "hit_right_down_shake",
 		weapon_handling_template = "time_scale_1_2",
-		damage_window_end = 0.4666666666666667,
-		anim_event = "attack_swing_right_diagonal",
+		kind = "sweep",
+		first_person_hit_anim = "hit_down_shake",
+		range_mod = 1.25,
+		damage_window_end = 0.45,
+		anim_event_3p = "attack_swing_right_diagonal",
+		anim_event = "attack_swing_down_right",
 		hit_stop_anim = "hit_stop",
 		total_time = 2,
 		action_movement_curve = {
@@ -854,7 +880,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.6
+				chain_time = 0.61
 			},
 			block = {
 				chain_time = 0.5,
@@ -869,19 +895,23 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		weapon_box = default_weapon_box,
+		weapon_box = {
+			0.2,
+			0.125,
+			1.15
+		},
 		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/power_sword/swing_right_diagonal",
+			matrices_data_location = "content/characters/player/human/first_person/animations/power_sword/swing_down_right",
 			anchor_point_offset = {
-				0,
+				-0.1,
 				0,
 				0
 			}
 		},
-		damage_profile = DamageProfileTemplates.light_sword,
+		damage_profile = DamageProfileTemplates.light_sword_smiter,
 		damage_type = damage_types.metal_slashing_medium,
 		damage_type_special_active = damage_types.power_sword,
-		damage_profile_special_active = DamageProfileTemplates.light_powersword_active,
+		damage_profile_special_active = DamageProfileTemplates.light_powersword_smiter,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
@@ -941,38 +971,39 @@ weapon_template.actions = {
 		}
 	},
 	action_right_light_pushfollow = {
-		damage_window_start = 0.35,
+		damage_window_start = 0.13,
 		hit_armor_anim = "attack_hit_shield",
 		anim_end_event = "attack_finished",
-		weapon_handling_template = "time_scale_1_4",
+		weapon_handling_template = "time_scale_1",
 		kind = "sweep",
-		first_person_hit_anim = "hit_down_shake",
+		first_person_hit_anim = "hit_up_shake",
 		range_mod = 1.25,
-		damage_window_end = 0.45,
-		anim_event_3p = "attack_swing_down",
-		anim_event = "attack_swing_down_right",
+		attack_direction_override = "push",
+		damage_window_end = 0.2,
+		anim_event_3p = "attack_swing_stab_02",
+		anim_event = "attack_swing_stab_01",
 		hit_stop_anim = "hit_stop",
-		total_time = 2,
+		total_time = 1,
 		action_movement_curve = {
 			{
 				modifier = 1.2,
-				t = 0.2
+				t = 0.15
 			},
 			{
 				modifier = 1.15,
-				t = 0.4
+				t = 0.28
 			},
 			{
 				modifier = 0.45,
-				t = 0.45
+				t = 0.32
 			},
 			{
 				modifier = 0.6,
-				t = 0.65
+				t = 0.46
 			},
 			{
 				modifier = 1,
-				t = 1
+				t = 0.7
 			},
 			start_modifier = 1.4
 		},
@@ -987,38 +1018,43 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			start_attack = {
-				action_name = "action_melee_start_left",
-				chain_time = 0.7
+				action_name = "action_melee_start_right_2",
+				chain_time = 0.4
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.65
+				chain_time = 0.43
 			},
 			special_action = {
 				action_name = "action_activate_special",
-				chain_time = 0.65
+				chain_time = 0.43
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		weapon_box = default_weapon_box,
+		weapon_box = {
+			0.12,
+			0.24,
+			1.15
+		},
 		spline_settings = {
-			matrices_data_location = "content/characters/player/human/first_person/animations/power_sword/swing_down_right",
+			matrices_data_location = "content/characters/player/human/first_person/animations/power_sword/swing_stab_02",
 			anchor_point_offset = {
+				0.22,
 				0,
-				0,
-				0
+				-0.05
 			}
 		},
-		damage_profile = DamageProfileTemplates.light_sword_smiter,
+		damage_profile = DamageProfileTemplates.light_sword_stab,
 		damage_type = damage_types.metal_slashing_medium,
 		damage_type_special_active = damage_types.power_sword,
-		damage_profile_special_active = DamageProfileTemplates.light_powersword_smiter,
+		damage_profile_special_active = DamageProfileTemplates.light_powersword_stab_active,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
-		}
+		},
+		wounds_shape = wounds_shapes.default
 	},
 	action_push = {
 		block_duration = 0.5,
@@ -1062,7 +1098,7 @@ weapon_template.actions = {
 			},
 			push_follow_up = {
 				action_name = "action_right_light_pushfollow",
-				chain_time = 0.35
+				chain_time = 0.25
 			},
 			block = {
 				action_name = "action_block",
@@ -1084,44 +1120,64 @@ weapon_template.actions = {
 		activation_time = 0.35,
 		kind = "activate_special",
 		start_input = "special_action",
-		anim_end_event = "activate_out",
 		weapon_handling_template = "time_scale_1",
+		anim_event_3p = "activate",
+		anim_end_event = "activate_out",
 		abort_sound_alias = "weapon_special_abort",
 		allowed_during_sprint = true,
-		anim_event = "activate",
+		anim_event = "activate_var_01",
 		abort_fx_source_name = "_special_active",
 		skip_3p_anims = false,
-		total_time = 0.85,
+		total_time = 1.25,
 		action_movement_curve = {
 			{
-				modifier = 0.75,
+				modifier = 0.5,
 				t = 0.2
 			},
 			{
-				modifier = 0.62,
+				modifier = 0.32,
 				t = 0.3
 			},
 			{
-				modifier = 0.6,
+				modifier = 0.3,
 				t = 0.325
 			},
 			{
-				modifier = 0.61,
+				modifier = 0.31,
 				t = 0.35
 			},
 			{
-				modifier = 0.75,
+				modifier = 0.5,
 				t = 0.5
 			},
 			{
-				modifier = 1,
+				modifier = 0.6,
 				t = 1
 			},
 			{
 				modifier = 1.1,
 				t = 2
 			},
-			start_modifier = 1
+			start_modifier = 0.25
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
+			wield = {
+				action_name = "action_unwield"
+			},
+			start_attack = {
+				action_name = "action_melee_start_left",
+				chain_time = 0.85
+			},
+			block = {
+				action_name = "action_block",
+				chain_time = 0.8
+			}
 		}
 	},
 	action_inspect = {
@@ -1496,15 +1552,15 @@ weapon_template.displayed_attacks = {
 			"linesman",
 			"linesman",
 			"linesman",
-			"linesman"
+			"smiter"
 		}
 	},
 	secondary = {
-		display_name = "loc_gestalt_tank",
-		type = "tank",
+		display_name = "loc_gestalt_linesman",
+		type = "linesman",
 		attack_chain = {
-			"tank",
-			"tank"
+			"linesman",
+			"linesman"
 		}
 	},
 	special = {

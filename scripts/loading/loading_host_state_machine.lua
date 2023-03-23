@@ -13,6 +13,7 @@ local LoadingHostStateMachine = class("LoadingHostStateMachine")
 LoadingHostStateMachine.init = function (self, mission_name, level_editor_level, circumstance_name, spawn_queue, loaders, done_loading_level_func, single_player)
 	local shared_state = {
 		state = "loading",
+		world_name = "level_world",
 		mission_name = mission_name,
 		level_name = Missions[mission_name].level or level_editor_level,
 		circumstance_name = circumstance_name,
@@ -107,7 +108,7 @@ LoadingHostStateMachine.take_ownership_of_level = function (self)
 	shared_state.themes = themes
 	themes = shared_state.themes
 
-	return world, level, themes
+	return world, level, themes, shared_state.world_name
 end
 
 LoadingHostStateMachine.is_level_loaded = function (self)

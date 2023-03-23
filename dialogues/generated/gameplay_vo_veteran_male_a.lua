@@ -2525,13 +2525,6 @@ local gameplay_vo_veteran_male_a = {
 			1.745375,
 			1.328313
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	player_death_psyker = {
@@ -2550,13 +2543,6 @@ local gameplay_vo_veteran_male_a = {
 			1.531417,
 			1.447792,
 			1.761396
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -2577,13 +2563,6 @@ local gameplay_vo_veteran_male_a = {
 			2.224396,
 			2.641708
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	player_death_zealot = {
@@ -2602,13 +2581,6 @@ local gameplay_vo_veteran_male_a = {
 			1.684375,
 			1.687729,
 			1.470688
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},

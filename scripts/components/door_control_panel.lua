@@ -7,8 +7,9 @@ DoorControlPanel.init = function (self, unit)
 
 	if door_control_panel_extension then
 		local start_active = self:get_data(unit, "start_active")
+		local interaction_interlude = self:get_data(unit, "interaction_interlude")
 
-		door_control_panel_extension:setup_from_component(start_active)
+		door_control_panel_extension:setup_from_component(start_active, interaction_interlude)
 
 		self._door_control_panel_extension = door_control_panel_extension
 	end
@@ -30,6 +31,12 @@ DoorControlPanel.destroy = function (self, unit)
 	return
 end
 
+DoorControlPanel.events.interaction_success = function (self, type, unit)
+	if self._door_control_panel_extension then
+		self._door_control_panel_extension:trigger_interlude()
+	end
+end
+
 DoorControlPanel.activate = function (self)
 	if self._door_control_panel_extension then
 		self._door_control_panel_extension:set_active(true)
@@ -47,6 +54,12 @@ DoorControlPanel.component_data = {
 		ui_type = "check_box",
 		value = true,
 		ui_name = "Start Active"
+	},
+	interaction_interlude = {
+		ui_type = "number",
+		min = 0,
+		ui_name = "Interaction Interlude (sec.)",
+		value = 0.75
 	},
 	inputs = {
 		activate = {

@@ -1496,7 +1496,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.default_light_chainsword_2h,
 		damage_type = damage_types.sawing_2h,
-		damage_profile_on_abort = DamageProfileTemplates.light_chainsword_active_2h_push_follow,
+		damage_profile_on_abort = DamageProfileTemplates.light_chainsword_2h_push_follow,
 		damage_type_on_abort = damage_types.sawing_2h,
 		damage_profile_special_active = DamageProfileTemplates.light_chainsword_active_2h_push_follow,
 		damage_type_special_active = damage_types.sawing_stuck,

@@ -88,7 +88,7 @@ ProgressionManager.fetch_session_report = function (self, session_id)
 	local session_report_promise = self._backend_interface.gameplay_session:poll_for_end_of_round(session_id, participant)
 	local character_xp_settings_promise = self._progression:get_xp_table("character")
 	local account_xp_settings_promise = self._progression:get_xp_table("account")
-	local account_wallet_promise = self._backend_interface.wallet:combined_wallets(player:character_id())
+	local account_wallet_promise = Managers.data_service.store:combined_wallets()
 
 	_info("Fetching session report for session %s...", session_id)
 	Promise.all(session_report_promise, character_xp_settings_promise, account_xp_settings_promise, account_wallet_promise):next(function (results)

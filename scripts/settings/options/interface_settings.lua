@@ -75,7 +75,8 @@ local function construct_interface_settings_boolean(template)
 		on_value_changed = template.on_value_changed,
 		indentation_level = template.indentation_level,
 		tooltip_text = template.tooltip_text,
-		disable_rules = template.disable_rules
+		disable_rules = template.disable_rules,
+		validation_function = template.validation_function
 	}
 	local id = template.id
 	local save_location = template.save_location
@@ -345,6 +346,19 @@ local settings_definitions = {
 		widget_type = "percent_slider"
 	},
 	{
+		save_location = "interface_settings",
+		min_value = 0,
+		display_name = "loc_settings_menu_peril_effect",
+		id = "warp_charge_effects_intensity",
+		default_value = 100,
+		widget_type = "percent_slider",
+		on_value_changed = function (value)
+			Wwise.set_parameter("psyker_overload_global", (value or 100) / 100)
+			Application.set_user_setting("interface_settings", "psyker_overload_intensity", value)
+			Application.save_user_settings()
+		end
+	},
+	{
 		group_name = "other_settings",
 		display_name = "loc_settings_menu_group_other_settings",
 		widget_type = "group_header"
@@ -368,6 +382,9 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			return
+		end,
+		validation_function = function ()
+			return not IS_XBS
 		end
 	}
 }

@@ -471,6 +471,9 @@ weapon_template.actions = {
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
 				chain_time = 0.25
+			},
+			reload = {
+				action_name = "action_start_reload"
 			}
 		},
 		smart_targeting_template = SmartTargetingTemplates.alternate_fire_assault
@@ -492,28 +495,25 @@ weapon_template.actions = {
 			},
 			zoom = {
 				action_name = "action_zoom"
+			},
+			reload = {
+				action_name = "action_start_reload"
 			}
 		}
 	},
 	action_start_reload = {
+		kind = "reload_shotgun",
 		start_input = "reload",
 		anim_end_event = "reload_end",
 		sprint_requires_press_to_interrupt = true,
-		stop_alternate_fire = true,
-		kind = "reload_shotgun",
-		crosshair_type = "none",
-		allowed_during_sprint = true,
 		abort_sprint = true,
+		crosshair_type = "none",
+		stop_alternate_fire = true,
+		allowed_during_sprint = true,
 		anim_event = "reload_start",
 		total_time = 0.95,
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
-		anim_variables_func = function (action_settings, condition_func_params)
-			local current_ammunition_clip = condition_func_params.inventory_slot_component.current_ammunition_clip
-			local max_ammunition_clip = condition_func_params.inventory_slot_component.max_ammunition_clip
-
-			return "current_clip", current_ammunition_clip, "remaining_clip", max_ammunition_clip - current_ammunition_clip
 		end,
 		reload_settings = {
 			refill_at_time = 0.62,
@@ -583,22 +583,16 @@ weapon_template.actions = {
 		}
 	},
 	action_reload_loop = {
-		sprint_requires_press_to_interrupt = true,
+		kind = "reload_shotgun",
 		anim_end_event = "reload_end",
 		weapon_handling_template = "time_scale_1",
-		kind = "reload_shotgun",
+		sprint_requires_press_to_interrupt = true,
 		crosshair_type = "none",
 		allowed_during_sprint = true,
 		anim_event = "reload_middle",
 		total_time = 0.5,
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
-		end,
-		anim_variables_func = function (action_settings, condition_func_params)
-			local current_ammunition_clip = condition_func_params.inventory_slot_component.current_ammunition_clip
-			local max_ammunition_clip = condition_func_params.inventory_slot_component.max_ammunition_clip
-
-			return "current_clip", current_ammunition_clip, "remaining_clip", max_ammunition_clip - current_ammunition_clip
 		end,
 		reload_settings = {
 			refill_at_time = 0.1,
@@ -781,6 +775,7 @@ weapon_template.fx_sources = {
 	_eject = "fx_eject"
 }
 weapon_template.crosshair_type = "shotgun"
+weapon_template.crosshair_type_special_active = "shotgun_wide"
 weapon_template.alternate_fire_settings = {
 	special_recoil_template = "shotgun_special_recoil",
 	sway_template = "default_shotgun_killshot",

@@ -38,27 +38,27 @@ templates.weapon_trait_bespoke_autogun_p1_hipfire_while_sprinting = {
 	}
 }
 templates.weapon_trait_bespoke_autogun_p1_increase_power_on_close_kill = {
-	weapon_trait_bespoke_autogun_p1_increase_power_on_close_kill = {
+	weapon_trait_bespoke_autogun_p1_increase_power_on_close_kill_parent = {
 		{
-			active_duration = 1,
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.05
 			}
 		},
 		{
-			active_duration = 1.2,
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.055
 			}
 		},
 		{
-			active_duration = 1.3,
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.06
 			}
 		},
 		{
-			active_duration = 1.375,
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.065
 			}
@@ -66,23 +66,27 @@ templates.weapon_trait_bespoke_autogun_p1_increase_power_on_close_kill = {
 	}
 }
 templates.weapon_trait_bespoke_autogun_p1_increase_close_damage_on_close_kill = {
-	weapon_trait_bespoke_autogun_p1_increase_close_damage_on_close_kill = {
+	weapon_trait_bespoke_autogun_p1_increase_close_damage_on_close_kill_parent = {
 		{
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.damage_near] = 0.04
 			}
 		},
 		{
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.damage_near] = 0.06
 			}
 		},
 		{
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.damage_near] = 0.08
 			}
 		},
 		{
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.damage_near] = 0.1
 			}
@@ -90,23 +94,27 @@ templates.weapon_trait_bespoke_autogun_p1_increase_close_damage_on_close_kill = 
 	}
 }
 templates.weapon_trait_bespoke_autogun_p1_increase_damage_on_close_kill = {
-	weapon_trait_bespoke_autogun_p1_increase_damage_on_close_kill = {
+	weapon_trait_bespoke_autogun_p1_increase_damage_on_close_kill_parent = {
 		{
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.damage] = 0.02
 			}
 		},
 		{
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.damage] = 0.03
 			}
 		},
 		{
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.damage] = 0.04
 			}
 		},
 		{
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.damage] = 0.05
 			}

@@ -88,4 +88,15 @@ BtEnterHooks.beast_of_nurgle_stagger_enter = function (unit, breed, blackboard, 
 	end
 end
 
+BtEnterHooks.poxwalker_bomber_death_enter = function (unit, breed, blackboard, scratchpad, action_data, t)
+	local death_component = Blackboard.write_component(blackboard, "death")
+	local fuse_timer = death_component.fuse_timer
+
+	if fuse_timer > 0 and fuse_timer <= t then
+		death_component.hit_zone_name = "center_mass"
+		death_component.damage_profile_name = "default"
+		death_component.herding_template_name = nil
+	end
+end
+
 return BtEnterHooks

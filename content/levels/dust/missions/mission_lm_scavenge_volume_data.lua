@@ -418,6 +418,54 @@ local volume_data = {
 		}
 	},
 	{
+		height = 2,
+		type = "default",
+		name = "volume",
+		alt_max_vector = {
+			-73,
+			155,
+			-157
+		},
+		alt_min_vector = {
+			-73,
+			155,
+			-159
+		},
+		bottom_points = {
+			{
+				-74,
+				154,
+				-159
+			},
+			{
+				-72,
+				154,
+				-159
+			},
+			{
+				-72,
+				156,
+				-159
+			},
+			{
+				-74,
+				156,
+				-159
+			}
+		},
+		color = {
+			255,
+			0,
+			64,
+			153
+		},
+		up_vector = {
+			0,
+			0,
+			1
+		}
+	},
+	{
 		height = 7,
 		type = "content/volume_types/nav_tag_volumes/no_spawn",
 		name = "volume_no_spawn_scavenge_ship_port_001",

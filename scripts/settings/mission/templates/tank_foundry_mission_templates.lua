@@ -38,11 +38,17 @@ local mission_templates = {
 		},
 		circumstances = {
 			more_resistance_01 = true,
+			ventilation_purge_with_snipers_01 = true,
+			ventilation_purge_01 = true,
+			ventilation_purge_with_snipers_less_resistance_01 = true,
+			ventilation_purge_with_snipers_more_resistance_01 = true,
+			darkness_less_resistance_01 = true,
+			darkness_hunting_grounds_01 = true,
 			hunting_grounds_01 = true,
 			less_resistance_01 = true,
 			assault_01 = true,
 			darkness_01 = true,
-			ventilation_purge_01 = true
+			darkness_more_resistance_01 = true
 		},
 		testify_flags = {},
 		health_station = {},
@@ -118,11 +124,17 @@ local mission_templates = {
 		},
 		circumstances = {
 			more_resistance_01 = true,
+			ventilation_purge_with_snipers_01 = true,
+			ventilation_purge_01 = true,
+			ventilation_purge_with_snipers_less_resistance_01 = true,
+			ventilation_purge_with_snipers_more_resistance_01 = true,
+			darkness_less_resistance_01 = true,
+			darkness_hunting_grounds_01 = true,
 			hunting_grounds_01 = true,
 			less_resistance_01 = true,
 			assault_01 = true,
 			darkness_01 = true,
-			ventilation_purge_01 = true
+			darkness_more_resistance_01 = true
 		},
 		testify_flags = {},
 		spawn_settings = {
@@ -183,11 +195,17 @@ local mission_templates = {
 		},
 		circumstances = {
 			more_resistance_01 = true,
+			ventilation_purge_with_snipers_01 = true,
+			ventilation_purge_01 = true,
+			ventilation_purge_with_snipers_less_resistance_01 = true,
+			ventilation_purge_with_snipers_more_resistance_01 = true,
+			darkness_less_resistance_01 = true,
+			darkness_hunting_grounds_01 = true,
 			hunting_grounds_01 = true,
 			less_resistance_01 = true,
 			assault_01 = true,
 			darkness_01 = true,
-			ventilation_purge_01 = true
+			darkness_more_resistance_01 = true
 		},
 		testify_flags = {},
 		spawn_settings = {

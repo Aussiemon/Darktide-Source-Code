@@ -18,6 +18,7 @@ LoadingClient.init = function (self, network_delegate, host_channel_id, loaders)
 	self._network_delegate = network_delegate
 	local shared_state = {
 		state = "loading",
+		world_name = "level_world",
 		network_delegate = network_delegate,
 		host_channel_id = host_channel_id,
 		timeout = LoadingClient.TIMEOUT,
@@ -186,7 +187,7 @@ LoadingClient.take_ownership_of_level = function (self)
 	shared_state.themes = themes
 	themes = shared_state.themes
 
-	return world, level, themes
+	return world, level, themes, shared_state.world_name
 end
 
 LoadingClient.spawn_group = function (self)

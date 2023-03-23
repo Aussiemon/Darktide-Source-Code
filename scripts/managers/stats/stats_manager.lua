@@ -374,8 +374,8 @@ StatsManager.record_decoder_ignored = function (self)
 	self:_trigger_global_hook("hook_decoder_ignored")
 end
 
-StatsManager.record_lunge_start = function (self, player)
-	self:_trigger_hook(player, "hook_lunge_start", 1)
+StatsManager.record_lunge_start = function (self, player, has_target, target_is_wielding_ranged_weapon)
+	self:_trigger_hook(player, "hook_lunge_start", 1, has_target, target_is_wielding_ranged_weapon, player:profile().specialization)
 end
 
 StatsManager.record_lunge_distance = function (self, player, distance_lunged)

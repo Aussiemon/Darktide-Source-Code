@@ -23,126 +23,156 @@ local buff_keywords = BuffSettings.keywords
 local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
-local weapon_template = {
-	smart_targeting_template = SmartTargetingTemplates.force_staff_single_target,
-	action_inputs = {
-		shoot_pressed = {
-			buffer_time = 0.15,
-			max_queue = 2,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_one_pressed"
-				}
+local weapon_template = {}
+local chain_settings_charged = {
+	radius = 8,
+	jump_time = 0.1,
+	max_jumps = 3,
+	max_targets = {
+		2,
+		1,
+		{
+			0,
+			1
+		},
+		{
+			0,
+			1
+		}
+	},
+	max_angle = math.pi * 0.75
+}
+local chain_settings_charged_targeting = table.clone(chain_settings_charged)
+chain_settings_charged_targeting.radius = 20
+chain_settings_charged_targeting.max_angle = math.pi * 0.25
+chain_settings_charged_targeting.close_max_angle = math.pi * 0.5
+weapon_template.smart_targeting_template = SmartTargetingTemplates.force_staff_single_target
+weapon_template.action_inputs = {
+	shoot_pressed = {
+		buffer_time = 0.15,
+		max_queue = 2,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_one_pressed"
 			}
-		},
-		charge = {
-			buffer_time = 0.1,
-			input_sequence = {
-				{
-					value = true,
-					input = "action_two_hold"
-				}
+		}
+	},
+	charge = {
+		buffer_time = 0.1,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_hold"
 			}
-		},
-		charge_release = {
-			buffer_time = 0.41,
-			input_sequence = {
-				{
-					value = false,
-					input = "action_two_hold",
-					time_window = math.huge
-				}
+		}
+	},
+	charge_release = {
+		buffer_time = 0.41,
+		input_sequence = {
+			{
+				value = false,
+				input = "action_two_hold",
+				time_window = math.huge
 			}
-		},
-		shoot_charged = {
-			buffer_time = 0.5,
-			input_sequence = {
-				{
-					value = true,
-					hold_input = "action_two_hold",
-					input = "action_one_pressed"
-				}
+		}
+	},
+	keep_charging = {
+		buffer_time = 0,
+		input_sequence = {
+			{
+				value = true,
+				input = "action_two_hold"
 			}
-		},
-		shoot_charged_release = {
-			buffer_time = 0.41,
-			input_sequence = false
-		},
-		wield = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					inputs = wield_inputs
-				}
+		}
+	},
+	shoot_charged = {
+		buffer_time = 0.5,
+		input_sequence = {
+			{
+				value = true,
+				hold_input = "action_two_hold",
+				input = "action_one_pressed"
 			}
-		},
-		vent = {
-			buffer_time = 0,
-			clear_input_queue = true,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_reload_hold"
-				}
+		}
+	},
+	shoot_charged_release = {
+		buffer_time = 0.41,
+		input_sequence = false
+	},
+	wield = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				inputs = wield_inputs
 			}
-		},
-		vent_release = {
-			buffer_time = 0.1,
-			input_sequence = {
-				{
-					value = false,
-					input = "weapon_reload_hold",
-					time_window = math.huge
-				}
+		}
+	},
+	vent = {
+		buffer_time = 0,
+		clear_input_queue = true,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_reload_hold"
 			}
-		},
-		special_action = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					value = true,
-					input = "weapon_extra_pressed"
-				}
+		}
+	},
+	vent_release = {
+		buffer_time = 0.1,
+		input_sequence = {
+			{
+				value = false,
+				input = "weapon_reload_hold",
+				time_window = math.huge
 			}
-		},
-		special_action_hold = {
-			buffer_time = 0.2,
-			input_sequence = {
-				{
-					value = true,
-					hold_input = "weapon_extra_hold",
-					input = "weapon_extra_hold"
-				}
+		}
+	},
+	special_action = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				value = true,
+				input = "weapon_extra_pressed"
 			}
-		},
-		special_action_light = {
-			buffer_time = 0.3,
-			max_queue = 1,
-			input_sequence = {
-				{
-					value = false,
-					time_window = 0.25,
-					input = "weapon_extra_hold"
-				}
+		}
+	},
+	special_action_hold = {
+		buffer_time = 0.2,
+		input_sequence = {
+			{
+				value = true,
+				hold_input = "weapon_extra_hold",
+				input = "weapon_extra_hold"
 			}
-		},
-		special_action_heavy = {
-			buffer_time = 0.5,
-			max_queue = 1,
-			input_sequence = {
-				{
-					value = true,
-					duration = 0.25,
-					input = "weapon_extra_hold"
-				},
-				{
-					value = false,
-					time_window = 1.5,
-					auto_complete = false,
-					input = "weapon_extra_hold"
-				}
+		}
+	},
+	special_action_light = {
+		buffer_time = 0.3,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = false,
+				time_window = 0.25,
+				input = "weapon_extra_hold"
+			}
+		}
+	},
+	special_action_heavy = {
+		buffer_time = 0.5,
+		max_queue = 1,
+		input_sequence = {
+			{
+				value = true,
+				duration = 0.25,
+				input = "weapon_extra_hold"
+			},
+			{
+				value = false,
+				time_window = 1.5,
+				auto_complete = false,
+				input = "weapon_extra_hold"
 			}
 		}
 	}
@@ -160,10 +190,11 @@ weapon_template.action_input_hierarchy = {
 		vent = "base",
 		combat_ability = "base",
 		shoot_charged = {
-			shoot_charged_release = "base",
+			keep_charging = "previous",
 			wield = "base",
-			combat_ability = "base",
-			grenade_ability = "base"
+			grenade_ability = "base",
+			shoot_charged_release = "base",
+			combat_ability = "base"
 		}
 	},
 	vent = {
@@ -228,7 +259,6 @@ weapon_template.actions = {
 		kind = "spawn_projectile",
 		vfx_effect_name = "content/fx/particles/weapons/force_staff/force_staff_projectile_cast_01",
 		anim_event = "orb_shoot",
-		damage_type = "force_staff_single_target",
 		anim_time_scale = 1.5,
 		fire_time = 0.2,
 		charge_template = "forcestaff_p3_m1_projectile",
@@ -270,8 +300,9 @@ weapon_template.actions = {
 				action_name = "action_stab_start"
 			},
 			charge = {
-				action_name = "action_charge",
-				chain_time = 0.45
+				chain_time = 0.45,
+				reset_combo = true,
+				action_name = "action_charge"
 			},
 			vent = {
 				action_name = "action_vent",
@@ -287,14 +318,13 @@ weapon_template.actions = {
 		}
 	},
 	action_charge = {
+		crosshair_type = "charge_up",
 		overload_module_class_name = "warp_charge",
 		target_finder_module_class_name = "chain_lightning",
+		start_input = "charge",
 		kind = "overload_charge_target_finder",
-		keep_combo_on_start = true,
 		sprint_ready_up_time = 0.25,
 		hold_combo = true,
-		start_input = "charge",
-		crosshair_type = "charge_up",
 		allowed_during_sprint = true,
 		target_anim_event = "target_start",
 		target_missing_anim_event = "target_end",
@@ -355,6 +385,7 @@ weapon_template.actions = {
 			material_emission = true,
 			effect_name = "content/fx/particles/enemies/buff_chainlightning"
 		},
+		chain_settings_targeting = chain_settings_charged_targeting,
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			if end_reason == "hold_input_released" or end_reason == "stunned" then
 				return true
@@ -377,9 +408,9 @@ weapon_template.actions = {
 		minimum_hold_time = 0.4,
 		crosshair_type = "none",
 		anim_event = "attack_charge_shoot_lightning",
-		anim_event_3p = "attack_charge_shoot_lightning",
 		charge_template = "forcestaff_p3_m1_chain_ligthning",
 		can_crit = true,
+		anim_event_3p = "attack_charge_shoot_lightning",
 		anim_end_event = "attack_cancel",
 		uninterruptible = true,
 		stop_input = "shoot_charged_release",
@@ -404,7 +435,7 @@ weapon_template.actions = {
 			start_modifier = 0.8
 		},
 		running_action_state_to_action_input = {
-			charge_depleated = {
+			charge_depleted = {
 				input_name = "shoot_charged_release"
 			},
 			stop_time_reached = {
@@ -412,8 +443,22 @@ weapon_template.actions = {
 			}
 		},
 		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
 			wield = {
-				action_name = "action_unwield"
+				action_name = "action_unwield",
+				chain_time = 0.15
+			},
+			keep_charging = {
+				action_name = "action_charge",
+				running_action_state_requirement = {
+					stop_time_reached = true,
+					charge_depleted = true
+				}
 			}
 		},
 		fx = {
@@ -425,24 +470,8 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.default_chain_lighting_attack,
 		damage_type = damage_types.electrocution,
-		chain_settings = {
-			radius = 8,
-			jump_time = 0.1,
-			max_jumps = 3,
-			max_targets = {
-				2,
-				1,
-				{
-					0,
-					1
-				},
-				{
-					0,
-					1
-				}
-			},
-			max_angle = math.pi * 0.75
-		}
+		chain_settings = chain_settings_charged,
+		chain_settings_targeting = chain_settings_charged_targeting
 	},
 	action_stab_start = {
 		anim_end_event = "attack_finished",

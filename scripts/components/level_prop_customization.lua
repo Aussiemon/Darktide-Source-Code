@@ -6,8 +6,30 @@ LevelPropCustomization.init = function (self, unit)
 	self._unit = unit
 	self._world = Unit.world(self._unit)
 	self._child_units = {}
+	self._chunk_lodding_registered = false
+	self._child_is_static = {}
 
 	self:_spawn_children()
+
+	if Managers and Managers.state and Managers.state.chunk_lod and Managers.state.chunk_lod:register_unit(unit, callback(self, "on_chunk_visibility_state_changed")) then
+		self._chunk_lodding_registered = true
+	end
+end
+
+LevelPropCustomization.on_chunk_visibility_state_changed = function (self, is_visible)
+	local static_map = self._child_is_static
+
+	for _, child_unit in ipairs(self._child_units) do
+		Unit.set_unit_visibility(child_unit, is_visible)
+
+		if static_map[child_unit] then
+			if is_visible then
+				self:_create_actors(child_unit)
+			else
+				self:_destroy_actors(child_unit)
+			end
+		end
+	end
 end
 
 LevelPropCustomization.get_navgen_units = function (self)
@@ -20,6 +42,12 @@ LevelPropCustomization.editor_world_transform_modified = function (self, unit)
 end
 
 LevelPropCustomization.destroy = function (self, unit)
+	if self._chunk_lodding_registered then
+		Managers.state.chunk_lod:unregister_unit(unit)
+
+		self._chunk_lodding_registered = false
+	end
+
 	self:_unspawn_children()
 end
 
@@ -51,12 +79,15 @@ LevelPropCustomization._spawn_children = function (self)
 
 			if child_unit_spawn_info.is_static then
 				child_unit = World.spawn_unit_ex(world, child_unit_name, nil, full_pose, nil, true)
+				self._child_is_static[child_unit] = true
 			else
 				child_unit = World.spawn_unit_ex(world, child_unit_name, nil, full_pose)
 
 				self:_destroy_actors(child_unit)
 				World.link_unit(world, child_unit, 1, unit, parent_node)
 				Unit.set_local_scale(child_unit, 1, child_scale)
+
+				self._child_is_static[child_unit] = false
 			end
 
 			if not child_unit_spawn_info.cast_shadows then
@@ -71,6 +102,12 @@ end
 LevelPropCustomization._destroy_actors = function (self, unit)
 	for ii = 1, Unit.num_actors(unit) do
 		Unit.destroy_actor(unit, ii)
+	end
+end
+
+LevelPropCustomization._create_actors = function (self, unit)
+	for ii = 1, Unit.num_actors(unit) do
+		Unit.create_actor(unit, ii)
 	end
 end
 

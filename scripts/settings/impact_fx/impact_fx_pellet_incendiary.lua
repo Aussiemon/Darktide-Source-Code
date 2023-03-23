@@ -80,7 +80,7 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_impact"
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact"
 				}
 			}
 		},
@@ -92,7 +92,7 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_impact"
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact"
 				}
 			}
 		},
@@ -104,7 +104,7 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_impact"
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact"
 				}
 			}
 		},
@@ -116,19 +116,19 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_impact"
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact"
 				}
 			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/impacts/flesh/blood_splatter_01"
+					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
 				}
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_impact"
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact"
 				}
 			}
 		},
@@ -136,6 +136,47 @@ local unarmored = {
 			{
 				effects = {
 					"content/fx/particles/impacts/armor_ricochet"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact_small"
+				}
+			}
+		},
+		shield_blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact_small"
+				}
+			}
+		},
+		blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/damage_blocked"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact_small"
+				}
+			}
+		},
+		dead = {
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact_small"
 				}
 			}
 		}
@@ -222,7 +263,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/autogun/autogun_impact_armored"
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact"
 				}
 			}
 		},
@@ -234,7 +275,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/autogun/autogun_impact_armored"
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact"
 				}
 			}
 		},
@@ -246,7 +287,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/autogun/autogun_impact_armored"
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact"
 				}
 			}
 		},
@@ -258,21 +299,67 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/autogun/autogun_impact_armored"
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact"
 				}
 			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/autogun/autogun_impact_armored"
+					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact"
 				}
 			}
 		},
 		damage_negated = {
 			{
 				effects = {
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact_small"
+				}
+			},
+			{
+				effects = {
 					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
+		},
+		shield_blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact_small"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
+		},
+		blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact_small"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/damage_blocked"
+				}
+			}
+		},
+		dead = {
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/blood_splatter_reduced_damage_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact_small"
 				}
 			}
 		}
@@ -362,7 +449,7 @@ local disgustingly_resilient = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_impact"
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact"
 				}
 			},
 			{
@@ -379,7 +466,7 @@ local disgustingly_resilient = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_impact"
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact"
 				}
 			},
 			{
@@ -396,7 +483,7 @@ local disgustingly_resilient = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_impact"
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact"
 				}
 			},
 			{
@@ -418,14 +505,67 @@ local disgustingly_resilient = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_impact"
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact"
+				}
+			}
+		},
+		damage_reduced = {
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_small_01"
 				}
 			}
 		},
 		damage_negated = {
 			{
 				effects = {
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact_small"
+				}
+			},
+			{
+				effects = {
 					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
+		},
+		shield_blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact_small"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
+		},
+		blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact_small"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/damage_blocked"
+				}
+			}
+		},
+		dead = {
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact_small"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_small_01"
 				}
 			}
 		}
@@ -469,7 +609,7 @@ local player = {
 			},
 			{
 				effects = {
-					"content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_impact"
+					"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact_small"
 				}
 			}
 		},
@@ -504,7 +644,7 @@ local default_surface_fx = {
 		{
 			normal_rotation = true,
 			effects = {
-				"content/fx/particles/weapons/rifles/shotgun/shotgun_incendiary_impact"
+				"content/fx/particles/impacts/weapons/shotgun/shotgun_incendiary_impact_small"
 			}
 		}
 	}
@@ -513,145 +653,145 @@ local surface_decal = {
 	concrete = {
 		[hit_types.stop] = {
 			uniform_extents = {
-				max = 0.18,
-				min = 0.12
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_medium_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
-				max = 0.18,
-				min = 0.12
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_medium_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
-				max = 0.18,
-				min = 0.12
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_medium_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		}
 	},
 	metal_solid = {
 		[hit_types.stop] = {
 			uniform_extents = {
-				max = 0.16,
-				min = 0.14
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_metal_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
-				max = 0.16,
-				min = 0.14
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_metal_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
-				max = 0.16,
-				min = 0.14
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_metal_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		}
 	},
 	metal_sheet = {
 		[hit_types.stop] = {
 			uniform_extents = {
-				max = 0.16,
-				min = 0.14
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_metal_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
-				max = 0.16,
-				min = 0.14
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_metal_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
-				max = 0.16,
-				min = 0.14
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_metal_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		}
 	},
 	metal_catwalk = {
 		[hit_types.stop] = {
 			uniform_extents = {
-				max = 0.16,
-				min = 0.14
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_metal_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
-				max = 0.16,
-				min = 0.14
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_metal_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
-				max = 0.16,
-				min = 0.14
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_metal_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		}
 	},
 	cloth = {
 		[hit_types.stop] = {
 			uniform_extents = {
-				max = 0.25,
-				min = 0.17
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_cloth_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
-				max = 0.25,
-				min = 0.17
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_cloth_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
-				max = 0.25,
-				min = 0.17
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_cloth_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		}
 	},
@@ -716,58 +856,58 @@ local surface_decal = {
 	wood_solid = {
 		[hit_types.stop] = {
 			uniform_extents = {
-				max = 0.25,
-				min = 0.17
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_wood_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
-				max = 0.25,
-				min = 0.17
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_wood_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
-				max = 0.25,
-				min = 0.17
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_wood_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		}
 	},
 	wood_plywood = {
 		[hit_types.stop] = {
 			uniform_extents = {
-				max = 0.25,
-				min = 0.17
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_wood_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		},
 		[hit_types.penetration_entry] = {
 			uniform_extents = {
-				max = 0.25,
-				min = 0.17
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_wood_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		},
 		[hit_types.penetration_exit] = {
 			uniform_extents = {
-				max = 0.25,
-				min = 0.17
+				max = 0.6,
+				min = 0.3
 			},
 			units = {
-				"content/fx/units/weapons/small_caliber_concrete_small_01"
+				"content/fx/units/weapons/incendiary_shotgun_scorchmark_small_01"
 			}
 		}
 	}

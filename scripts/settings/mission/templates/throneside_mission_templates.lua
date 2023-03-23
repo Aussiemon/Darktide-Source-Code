@@ -41,7 +41,10 @@ local mission_templates = {
 			hunting_grounds_01 = true,
 			less_resistance_01 = true,
 			assault_01 = true,
-			ventilation_purge_01 = true
+			ventilation_purge_with_snipers_01 = true,
+			ventilation_purge_01 = true,
+			ventilation_purge_with_snipers_more_resistance_01 = true,
+			ventilation_purge_with_snipers_less_resistance_01 = true
 		},
 		testify_flags = {},
 		health_station = {},
@@ -100,7 +103,10 @@ local mission_templates = {
 			hunting_grounds_01 = true,
 			less_resistance_01 = true,
 			assault_01 = true,
-			ventilation_purge_01 = true
+			ventilation_purge_with_snipers_01 = true,
+			ventilation_purge_01 = true,
+			ventilation_purge_with_snipers_more_resistance_01 = true,
+			ventilation_purge_with_snipers_less_resistance_01 = true
 		},
 		testify_flags = {},
 		health_station = {},

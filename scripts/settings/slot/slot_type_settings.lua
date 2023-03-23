@@ -16,7 +16,7 @@ local slot_type_settings = {
 		dialogue_surrounded_count = 3
 	},
 	large = {
-		count = 4,
+		count = 5,
 		priority = 1,
 		distance = 2.25,
 		queue_distance = 5.5,

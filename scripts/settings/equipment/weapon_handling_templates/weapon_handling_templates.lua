@@ -487,7 +487,6 @@ local weapon_handling_templates = {
 	autogun_single_shot = {
 		fire_rate = {
 			max_shots = 1,
-			auto_fire_time = 0.075,
 			fire_time = 0
 		}
 	},
@@ -660,6 +659,46 @@ local weapon_handling_templates = {
 		fire_rate = {
 			fire_time = 0.22,
 			auto_fire_time = 0.11
+		},
+		critical_strike = {
+			chance_modifier = -0.02,
+			max_critical_shots = 3
+		}
+	},
+	ogryn_heavystubber_p1_m2_full_auto = {
+		fire_rate = {
+			fire_time = 0.22,
+			auto_fire_time = 0.16
+		},
+		critical_strike = {
+			chance_modifier = -0.02,
+			max_critical_shots = 3
+		}
+	},
+	ogryn_heavystubber_p1_m2_hip_fire = {
+		fire_rate = {
+			fire_time = 0.22,
+			auto_fire_time = 0.16
+		},
+		critical_strike = {
+			chance_modifier = -0.02,
+			max_critical_shots = 3
+		}
+	},
+	ogryn_heavystubber_p1_m3_full_auto = {
+		fire_rate = {
+			fire_time = 0.22,
+			auto_fire_time = 0.093
+		},
+		critical_strike = {
+			chance_modifier = -0.02,
+			max_critical_shots = 3
+		}
+	},
+	ogryn_heavystubber_p1_m3_hip_fire = {
+		fire_rate = {
+			fire_time = 0.22,
+			auto_fire_time = 0.093
 		},
 		critical_strike = {
 			chance_modifier = -0.02,

@@ -1208,6 +1208,74 @@ local gameplay_vo_ogryn_d = {
 		},
 		randomize_indexes = {}
 	},
+	player_death_ogryn = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_d__player_death_ogryn_01",
+			"loc_ogryn_d__player_death_ogryn_02",
+			"loc_ogryn_d__player_death_ogryn_03",
+			"loc_ogryn_d__player_death_ogryn_04"
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678
+		},
+		randomize_indexes = {}
+	},
+	player_death_psyker = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_d__player_death_psyker_01",
+			"loc_ogryn_d__player_death_psyker_02",
+			"loc_ogryn_d__player_death_psyker_03",
+			"loc_ogryn_d__player_death_psyker_04"
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678
+		},
+		randomize_indexes = {}
+	},
+	player_death_veteran = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_d__player_death_veteran_01",
+			"loc_ogryn_d__player_death_veteran_02",
+			"loc_ogryn_d__player_death_veteran_03",
+			"loc_ogryn_d__player_death_veteran_04"
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678
+		},
+		randomize_indexes = {}
+	},
+	player_death_zealot = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_d__player_death_zealot_01",
+			"loc_ogryn_d__player_death_zealot_02",
+			"loc_ogryn_d__player_death_zealot_03",
+			"loc_ogryn_d__player_death_zealot_04"
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678
+		},
+		randomize_indexes = {}
+	},
 	player_tip_armor_hit_generic = {
 		randomize_indexes_n = 0,
 		sound_events_n = 8,

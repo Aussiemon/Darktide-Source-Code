@@ -26,6 +26,8 @@ TelemetryEvents.init = function (self, telemetry_manager, connection_manager)
 		game = Application.guid()
 	}
 
+	Crashify.print_property("game_session_id", self._session.game)
+
 	if not DEDICATED_SERVER then
 		self._connection_manager:network_event_delegate():register_connection_events(self, unpack(RPCS))
 	end
@@ -558,42 +560,57 @@ TelemetryEvents.vo_bank_reshuffled = function (self, character_name, bank_name)
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.camera_performance_measurements = function (self, map, camera, measurements)
-	local event = self:_create_event("performance_static_camera_measurements")
+TelemetryEvents.perf_camera = function (self, map, camera, measurements)
+	local event = self:_create_event("perf_camera")
 
+	event:set_revision(1)
 	event:set_data({
 		map = map,
 		camera_id = camera.id_string,
 		camera_name = camera.name,
 		go_to_camera_position_link = camera.go_to_camera_position_link,
-		ms_per_frame = measurements.ms_per_frame_main,
+		frame_time_main = measurements.frame_time_main,
 		batchcount = measurements.batchcount,
 		primitives_count = measurements.primitives_count
 	})
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.cutscene_performance_measurements = function (self, map, cutscene, measurements)
-	local event = self:_create_event("cutscene_performance_measurements")
+TelemetryEvents.perf_cutscene = function (self, map, cutscene, measurements)
+	local event = self:_create_event("perf_cutscene")
 
+	event:set_revision(1)
 	event:set_data({
 		map = map,
 		cutscene = cutscene,
-		ms_per_frame = measurements.ms_per_frame_main,
+		frame_time_main = measurements.frame_time_main,
 		batchcount = measurements.batchcount,
 		primitives_count = measurements.primitives_count
 	})
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.performance_measurements = function (self, map, measurements)
-	local event = self:_create_event("performance_measurements")
+TelemetryEvents.perf_enemies = function (self, map, measurements)
+	local event = self:_create_event("perf_enemies")
 
+	event:set_revision(1)
 	event:set_data({
 		map = map,
-		ms_per_frame = measurements.ms_per_frame_main,
-		ms_per_frame_render = measurements.ms_per_frame_render,
-		ms_per_frame_gpu = measurements.ms_per_frame_gpu
+		frame_time_main = measurements.frame_time_main,
+		frame_time_render = measurements.frame_time_render,
+		frame_time_gpu = measurements.frame_time_gpu
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.perf_memory = function (self, map, index, memory_usage)
+	local event = self:_create_event("perf_memory")
+
+	event:set_revision(1)
+	event:set_data({
+		map = map,
+		index = index,
+		memory_usage = memory_usage
 	})
 	self._manager:register_event(event)
 end
@@ -632,17 +649,6 @@ TelemetryEvents.end_cutscene = function (self, cinematics_name, cinematic_scene_
 		cinematic_scene_name = cinematic_scene_name,
 		percent_viewed = percent_viewed,
 		character_level = character_level
-	})
-	self._manager:register_event(event)
-end
-
-TelemetryEvents.memory_usage = function (self, map, index, memory_usage)
-	local event = self:_create_event("performance_memory_usage")
-
-	event:set_data({
-		map = map,
-		index = index,
-		memory_usage = memory_usage
 	})
 	self._manager:register_event(event)
 end
@@ -733,11 +739,12 @@ TelemetryEvents.record_slow_response_time = function (self, path, response_time)
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.pacing = function (self, tension)
+TelemetryEvents.pacing = function (self, tension, travel_progress)
 	local event = self:_create_event("pacing")
 
 	event:set_data({
-		tension = tension
+		tension = tension,
+		travel_progress = travel_progress
 	})
 	self._manager:register_event(event)
 end

@@ -133,9 +133,9 @@ local explosion_templates = {
 		static_power_level = 500,
 		min_close_radius = 2,
 		close_damage_profile = DamageProfileTemplates.renegade_captain_frag_grenade_close,
-		close_damage_type = damage_types.frag,
+		close_damage_type = damage_types.grenade_frag,
 		damage_profile = DamageProfileTemplates.renegade_captain_frag_grenade,
-		damage_type = damage_types.frag,
+		damage_type = damage_types.grenade_frag,
 		vfx = {
 			"content/fx/particles/explosions/frag_grenade_01"
 		},
@@ -154,9 +154,9 @@ local explosion_templates = {
 		static_power_level = 500,
 		min_close_radius = 3,
 		close_damage_profile = DamageProfileTemplates.renegade_shocktrooper_frag_grenade_close,
-		close_damage_type = damage_types.frag,
+		close_damage_type = damage_types.grenade_frag,
 		damage_profile = DamageProfileTemplates.renegade_shocktrooper_frag_grenade,
-		damage_type = damage_types.frag,
+		damage_type = damage_types.grenade_frag,
 		vfx = {
 			"content/fx/particles/explosions/frag_grenade_01"
 		},

@@ -1,7 +1,7 @@
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local MasterItems = require("scripts/backend/master_items")
 local BotManagerTestify = {
-	spawn_bot = function (_, bot_manager)
+	spawn_random_bot = function (_, bot_manager)
 		local is_server = Managers.state.game_session:is_server()
 		local profile_id = math.random(1, 6)
 		local profile_name = "bot_" .. profile_id

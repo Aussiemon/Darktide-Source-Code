@@ -21,7 +21,7 @@ local breed_name = "chaos_spawn"
 local breed_data = {
 	walk_speed = 6,
 	use_navigation_path_splines = true,
-	use_bone_lod = true,
+	use_bone_lod = false,
 	look_at_distance = 20,
 	navigation_propagation_box_extent = 200,
 	sub_faction_name = "chaos",
@@ -103,13 +103,10 @@ local breed_data = {
 	},
 	inventory = MinionVisualLoadoutTemplates.chaos_spawn,
 	sounds = require("scripts/settings/breed/breeds/chaos/chaos_spawn_sounds"),
-	vfx = require("scripts/settings/breed/breeds/chaos/chaos_common_vfx"),
+	vfx = require("scripts/settings/breed/breeds/chaos/chaos_spawn_vfx"),
 	look_at_tag = breed_name,
 	behavior_tree_name = breed_name,
-	animation_variables = {
-		"lean",
-		"moving_attack_fwd_speed"
-	},
+	animation_variables = {},
 	attack_intensity_cooldowns = {
 		melee = {
 			0,
@@ -135,9 +132,9 @@ local breed_data = {
 	target_selection_template = TargetSelectionTemplates.chaos_spawn,
 	target_selection_weights = TargetSelectionWeights.chaos_spawn,
 	threat_config = {
-		threat_multiplier = 0.1,
-		max_threat = 50,
-		threat_decay_per_second = 5
+		threat_multiplier = 1,
+		max_threat = 100,
+		threat_decay_per_second = 10
 	},
 	nav_tag_allowed_layers = {
 		monster_walls = 1.5

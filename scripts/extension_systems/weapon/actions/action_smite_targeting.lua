@@ -92,7 +92,7 @@ ActionSmiteTargeting.fixed_update = function (self, dt, t, time_in_action)
 				local damage_profile = attack_settings.damage_profile
 				local hit_zone_name = "head"
 
-				Attack.execute(target_unit, damage_profile, "attack_direction", direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "attack_type", attack_types.ranged, "attacking_unit", player_unit, "item", self._weapon.item)
+				Attack.execute(target_unit, damage_profile, "attack_direction", direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "attack_type", attack_types.ranged, "damage_type", damage_types.warp, "attacking_unit", player_unit, "item", self._weapon.item)
 			end
 
 			self._has_attacked_target = true

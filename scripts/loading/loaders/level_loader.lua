@@ -33,7 +33,8 @@ LevelLoader.start_loading = function (self, mission_name, level_editor_level, ci
 		self:_level_load_done_callback(item_definitions)
 	end
 
-	self._level_package_id = Managers.package:load(level_name, "LevelLoader", callback)
+	self._reference_name = "LevelLoader (" .. tostring(mission_name) .. ")"
+	self._level_package_id = Managers.package:load(level_name, self._reference_name, callback)
 end
 
 LevelLoader._level_load_done_callback = function (self, item_definitions)
@@ -64,9 +65,10 @@ LevelLoader._level_load_done_callback = function (self, item_definitions)
 
 		local package_manager = Managers.package
 		local package_ids = self._package_ids
+		local reference_name = self._reference_name
 
 		for package_name, _ in pairs(packages_to_load) do
-			local id = package_manager:load(package_name, "LevelLoader", callback)
+			local id = package_manager:load(package_name, reference_name, callback)
 			package_ids[id] = package_name
 		end
 	end
@@ -106,6 +108,7 @@ LevelLoader.cleanup = function (self)
 	end
 
 	table.clear(self._package_ids)
+	table.clear(self._packages_to_load)
 
 	if self._level_package_id then
 		package_manager:release(self._level_package_id)

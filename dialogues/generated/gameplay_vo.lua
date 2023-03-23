@@ -156,10 +156,10 @@ return function ()
 	})
 	define_rule({
 		name = "ability_venting",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "ability_venting",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -194,9 +194,6 @@ return function ()
 				OP.TIMESET,
 				0
 			}
-		},
-		heard_speak_routing = {
-			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -285,8 +282,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"ammo_hogger",
-				OP.EQ,
+				"last_ammo_hogger",
+				OP.GT,
 				1
 			},
 			{
@@ -297,14 +294,7 @@ return function ()
 				10
 			}
 		},
-		on_done = {
-			{
-				"user_memory",
-				"ammo_hogger",
-				OP.SUB,
-				1
-			}
-		},
+		on_done = {},
 		heard_speak_routing = {
 			target = "players"
 		},
@@ -336,7 +326,7 @@ return function ()
 			{
 				"user_context",
 				"friends_distant",
-				OP.GT,
+				OP.GTEQ,
 				0
 			},
 			{
@@ -346,7 +336,7 @@ return function ()
 				2
 			},
 			{
-				"user_memory",
+				"faction_memory",
 				"last_friends_distant",
 				OP.TIMEDIFF,
 				OP.GT,
@@ -355,7 +345,7 @@ return function ()
 		},
 		on_done = {
 			{
-				"user_memory",
+				"faction_memory",
 				"last_friends_distant",
 				OP.TIMESET
 			}
@@ -536,25 +526,12 @@ return function ()
 				args = {
 					"away_from_squad"
 				}
-			},
-			{
-				"user_memory",
-				"last_friends_distant",
-				OP.TIMEDIFF,
-				OP.GT,
-				30
 			}
 		},
-		on_done = {
-			{
-				"user_memory",
-				"last_friends_distant",
-				OP.TIMESET
-			}
-		},
+		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 4
+				duration = 0.2
 			}
 		}
 	})
@@ -1111,6 +1088,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.LT,
 				3
+			},
+			{
+				"faction_memory",
+				"enemy_cultist_berzerker",
+				OP.GT,
+				1
 			}
 		},
 		on_done = {
@@ -1223,6 +1206,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.LT,
 				3
+			},
+			{
+				"faction_memory",
+				"enemy_chaos_hound",
+				OP.GT,
+				1
 			}
 		},
 		on_done = {
@@ -1335,6 +1324,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.LT,
 				3
+			},
+			{
+				"faction_memory",
+				"enemy_cultist_mutant",
+				OP.GT,
+				1
 			}
 		},
 		on_done = {
@@ -1513,6 +1508,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.LT,
 				3
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_grenadier",
+				OP.GT,
+				1
 			}
 		},
 		on_done = {
@@ -1668,6 +1669,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.LT,
 				3
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_netgunner",
+				OP.GT,
+				1
 			}
 		},
 		on_done = {
@@ -1780,6 +1787,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.LT,
 				3
+			},
+			{
+				"faction_memory",
+				"enemy_chaos_poxwalker_bomber",
+				OP.GT,
+				1
 			}
 		},
 		on_done = {
@@ -1892,6 +1905,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.LT,
 				3
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_berzerker",
+				OP.GT,
+				1
 			}
 		},
 		on_done = {
@@ -2004,6 +2023,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.LT,
 				3
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_flamer",
+				OP.GT,
+				1
 			}
 		},
 		on_done = {
@@ -2116,6 +2141,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.LT,
 				3
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_sniper",
+				OP.GT,
+				1
 			}
 		},
 		on_done = {
@@ -2228,6 +2259,12 @@ return function ()
 				OP.TIMEDIFF,
 				OP.LT,
 				3
+			},
+			{
+				"faction_memory",
+				"enemy_cultist_flamer",
+				OP.GT,
+				1
 			}
 		},
 		on_done = {
@@ -4438,6 +4475,11 @@ return function ()
 				"faction_memory",
 				"time_since_head_shot",
 				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_seen_headshot",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -4607,8 +4649,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"health_hogger",
-				OP.EQ,
+				"last_health_hogger",
+				OP.GT,
 				1
 			},
 			{
@@ -4619,14 +4661,7 @@ return function ()
 				10
 			}
 		},
-		on_done = {
-			{
-				"user_memory",
-				"health_hogger",
-				OP.SUB,
-				1
-			}
-		},
+		on_done = {},
 		heard_speak_routing = {
 			target = "players"
 		},
@@ -4638,10 +4673,10 @@ return function ()
 	})
 	define_rule({
 		name = "heard_enemy_chaos_hound",
+		category = "enemy_alerts_prio_0",
 		wwise_route = 0,
 		response = "heard_enemy_chaos_hound",
 		database = "gameplay_vo",
-		category = "enemy_alerts_prio_0",
 		criterias = {
 			{
 				"query_context",
@@ -4678,11 +4713,6 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 1
-			}
 		}
 	})
 	define_rule({
@@ -5121,6 +5151,11 @@ return function ()
 				"time_since_knocked_down_multiple_times",
 				OP.TIMESET
 			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
+			}
 		}
 	})
 	define_rule({
@@ -5161,6 +5196,11 @@ return function ()
 				"faction_memory",
 				"time_since_knocked_down_multiple_times",
 				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
 			}
 		}
 	})
@@ -5203,6 +5243,11 @@ return function ()
 				"time_since_knocked_down_multiple_times",
 				OP.TIMESET
 			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
+			}
 		}
 	})
 	define_rule({
@@ -5243,6 +5288,11 @@ return function ()
 				"faction_memory",
 				"time_since_knocked_down_multiple_times",
 				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
 			}
 		}
 	})
@@ -5623,8 +5673,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_been_seen",
-				OP.EQ,
+				"has_been_seen_time",
+				OP.GT,
 				1
 			},
 			{
@@ -5640,12 +5690,6 @@ return function ()
 				"user_memory",
 				"medicae_servitor_idle_full_a",
 				OP.ADD,
-				1
-			},
-			{
-				"user_memory",
-				"has_been_seen",
-				OP.SUB,
 				1
 			}
 		},
@@ -5824,11 +5868,6 @@ return function ()
 				"last_need_rescue",
 				OP.TIMESET
 			}
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 2.2
-			}
 		}
 	})
 	define_rule({
@@ -5874,6 +5913,11 @@ return function ()
 			{
 				"faction_memory",
 				"last_seen_killstreak",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_seen_killstreak_user",
 				OP.TIMESET
 			}
 		},
@@ -5932,6 +5976,11 @@ return function ()
 				"faction_memory",
 				"last_seen_killstreak",
 				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_seen_killstreak_user",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -5989,6 +6038,11 @@ return function ()
 				"faction_memory",
 				"last_seen_killstreak",
 				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_seen_killstreak_user",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -6045,6 +6099,11 @@ return function ()
 			{
 				"faction_memory",
 				"last_seen_killstreak",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_seen_killstreak_user",
 				OP.TIMESET
 			}
 		},
@@ -6351,7 +6410,13 @@ return function ()
 				"prologue"
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_player_death",
+				OP.TIMESET
+			}
+		},
 		heard_speak_routing = {
 			target = "players"
 		},
@@ -6393,7 +6458,13 @@ return function ()
 				"prologue"
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_player_death",
+				OP.TIMESET
+			}
+		},
 		heard_speak_routing = {
 			target = "players"
 		},
@@ -6435,7 +6506,13 @@ return function ()
 				"prologue"
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_player_death",
+				OP.TIMESET
+			}
+		},
 		heard_speak_routing = {
 			target = "players"
 		},
@@ -6477,7 +6554,13 @@ return function ()
 				"prologue"
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"faction_memory",
+				"time_since_player_death",
+				OP.TIMESET
+			}
+		},
 		heard_speak_routing = {
 			target = "players"
 		},
@@ -6588,6 +6671,11 @@ return function ()
 				"faction_memory",
 				"last_seen_killstreak",
 				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_seen_killstreak_user",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -6644,6 +6732,11 @@ return function ()
 			{
 				"faction_memory",
 				"last_seen_killstreak",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_seen_killstreak_user",
 				OP.TIMESET
 			}
 		},
@@ -6702,6 +6795,11 @@ return function ()
 				"faction_memory",
 				"last_seen_killstreak",
 				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_seen_killstreak_user",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -6758,6 +6856,11 @@ return function ()
 			{
 				"faction_memory",
 				"last_seen_killstreak",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_seen_killstreak_user",
 				OP.TIMESET
 			}
 		},
@@ -7414,8 +7517,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_friendly_fired",
-				OP.EQ,
+				"last_shot_friend",
+				OP.GT,
 				1
 			},
 			{
@@ -7490,8 +7593,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_friendly_fired",
-				OP.EQ,
+				"last_shot_friend",
+				OP.GT,
 				1
 			},
 			{
@@ -7566,8 +7669,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_friendly_fired",
-				OP.EQ,
+				"last_shot_friend",
+				OP.GT,
 				1
 			},
 			{
@@ -7642,8 +7745,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_friendly_fired",
-				OP.EQ,
+				"last_shot_friend",
+				OP.GT,
 				1
 			},
 			{
@@ -7718,8 +7821,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_friendly_fired",
-				OP.EQ,
+				"last_shot_friend",
+				OP.GT,
 				1
 			},
 			{
@@ -7734,6 +7837,11 @@ return function ()
 			{
 				"user_memory",
 				"response_for_friendly_fire",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"time_since_friendly_fire_ps_og",
 				OP.TIMESET
 			}
 		},
@@ -7794,8 +7902,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_friendly_fired",
-				OP.EQ,
+				"last_shot_friend",
+				OP.GT,
 				1
 			},
 			{
@@ -7870,8 +7978,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_friendly_fired",
-				OP.EQ,
+				"last_shot_friend",
+				OP.GT,
 				1
 			},
 			{
@@ -7946,8 +8054,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_friendly_fired",
-				OP.EQ,
+				"last_shot_friend",
+				OP.GT,
 				1
 			},
 			{
@@ -8022,8 +8130,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_friendly_fired",
-				OP.EQ,
+				"last_shot_friend",
+				OP.GT,
 				1
 			},
 			{
@@ -8038,6 +8146,11 @@ return function ()
 			{
 				"user_memory",
 				"response_for_friendly_fire",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"time_since_friendly_fire_vt_og",
 				OP.TIMESET
 			}
 		},
@@ -8098,8 +8211,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_friendly_fired",
-				OP.EQ,
+				"last_shot_friend",
+				OP.GT,
 				1
 			},
 			{
@@ -8174,8 +8287,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_friendly_fired",
-				OP.EQ,
+				"last_shot_friend",
+				OP.GT,
 				1
 			},
 			{
@@ -8250,8 +8363,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_friendly_fired",
-				OP.EQ,
+				"last_shot_friend",
+				OP.GT,
 				1
 			},
 			{
@@ -8326,8 +8439,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_friendly_fired",
-				OP.EQ,
+				"last_shot_friend",
+				OP.GT,
 				1
 			},
 			{
@@ -8402,8 +8515,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_friendly_fired",
-				OP.EQ,
+				"last_shot_friend",
+				OP.GT,
 				1
 			},
 			{
@@ -8478,8 +8591,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_friendly_fired",
-				OP.EQ,
+				"last_shot_friend",
+				OP.GT,
 				1
 			},
 			{
@@ -8554,8 +8667,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_friendly_fired",
-				OP.EQ,
+				"last_shot_friend",
+				OP.GT,
 				1
 			},
 			{
@@ -9034,12 +9147,18 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_killstreaked",
-				OP.EQ,
+				"last_killstreak",
+				OP.GT,
 				1
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"user_memory",
+				"last_killstreak",
+				OP.TIMESET
+			}
+		},
 		heard_speak_routing = {
 			target = "players"
 		},
@@ -9051,10 +9170,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_ogryn_seen_killstreak_psyker",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_ogryn_seen_killstreak_psyker",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -9103,12 +9222,21 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_killstreaked",
-				OP.EQ,
+				"last_killstreak",
+				OP.GT,
 				1
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"user_memory",
+				"last_killstreak",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -9117,10 +9245,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_ogryn_seen_killstreak_veteran",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_ogryn_seen_killstreak_veteran",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -9169,12 +9297,21 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_killstreaked",
-				OP.EQ,
+				"last_killstreak",
+				OP.GT,
 				1
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"user_memory",
+				"last_killstreak",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -9183,10 +9320,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_ogryn_seen_killstreak_zealot",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_ogryn_seen_killstreak_zealot",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -9235,12 +9372,21 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_killstreaked",
-				OP.EQ,
+				"last_killstreak",
+				OP.GT,
 				1
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"user_memory",
+				"last_killstreak",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -9294,8 +9440,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"revivee",
-				OP.EQ,
+				"last_revivee",
+				OP.GT,
 				1
 			},
 			{
@@ -9363,8 +9509,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"revivee",
-				OP.EQ,
+				"last_revivee",
+				OP.GT,
 				1
 			},
 			{
@@ -9429,8 +9575,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"revivee",
-				OP.EQ,
+				"last_revivee",
+				OP.GT,
 				1
 			},
 			{
@@ -9498,8 +9644,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"revivee",
-				OP.EQ,
+				"last_revivee",
+				OP.GT,
 				1
 			},
 			{
@@ -10059,10 +10205,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_psyker_seen_killstreak_ogryn",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_psyker_seen_killstreak_ogryn",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -10111,12 +10257,21 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_killstreaked",
-				OP.EQ,
+				"last_killstreak",
+				OP.GT,
 				1
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"user_memory",
+				"last_killstreak",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -10125,10 +10280,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_psyker_seen_killstreak_psyker",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_psyker_seen_killstreak_psyker",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -10177,12 +10332,21 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_killstreaked",
-				OP.EQ,
+				"last_killstreak",
+				OP.GT,
 				1
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"user_memory",
+				"last_killstreak",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -10191,10 +10355,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_psyker_seen_killstreak_veteran",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_psyker_seen_killstreak_veteran",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -10243,12 +10407,21 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_killstreaked",
-				OP.EQ,
+				"last_killstreak",
+				OP.GT,
 				1
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"user_memory",
+				"last_killstreak",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -10257,10 +10430,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_psyker_seen_killstreak_zealot",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_psyker_seen_killstreak_zealot",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -10309,12 +10482,21 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_killstreaked",
-				OP.EQ,
+				"last_killstreak",
+				OP.GT,
 				1
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"user_memory",
+				"last_killstreak",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -10368,8 +10550,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"revivee",
-				OP.EQ,
+				"last_revivee",
+				OP.GT,
 				1
 			},
 			{
@@ -10380,7 +10562,13 @@ return function ()
 				10
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_revived_by_psyker",
+				OP.TIMESET
+			}
+		},
 		heard_speak_routing = {
 			target = "players"
 		},
@@ -10437,8 +10625,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"revivee",
-				OP.EQ,
+				"last_revivee",
+				OP.GT,
 				1
 			},
 			{
@@ -10503,8 +10691,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"revivee",
-				OP.EQ,
+				"last_revivee",
+				OP.GT,
 				1
 			},
 			{
@@ -10572,8 +10760,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"revivee",
-				OP.EQ,
+				"last_revivee",
+				OP.GT,
 				1
 			},
 			{
@@ -10939,12 +11127,18 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_killstreaked",
-				OP.EQ,
+				"last_killstreak",
+				OP.GT,
 				1
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"user_memory",
+				"last_killstreak",
+				OP.TIMESET
+			}
+		},
 		heard_speak_routing = {
 			target = "players"
 		},
@@ -11008,12 +11202,18 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_killstreaked",
-				OP.EQ,
+				"last_killstreak",
+				OP.GT,
 				1
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"user_memory",
+				"last_killstreak",
+				OP.TIMESET
+			}
+		},
 		heard_speak_routing = {
 			target = "players"
 		},
@@ -11025,10 +11225,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_veteran_seen_killstreak_veteran",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_veteran_seen_killstreak_veteran",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -11077,12 +11277,21 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_killstreaked",
-				OP.EQ,
+				"last_killstreak",
+				OP.GT,
 				1
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"user_memory",
+				"last_killstreak",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -11091,10 +11300,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_veteran_seen_killstreak_zealot",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_veteran_seen_killstreak_zealot",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -11143,12 +11352,21 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_killstreaked",
-				OP.EQ,
+				"last_killstreak",
+				OP.GT,
 				1
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"user_memory",
+				"last_killstreak",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -11202,8 +11420,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"revivee",
-				OP.EQ,
+				"last_revivee",
+				OP.GT,
 				1
 			},
 			{
@@ -11271,8 +11489,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"revivee",
-				OP.EQ,
+				"last_revivee",
+				OP.GT,
 				1
 			},
 			{
@@ -11337,8 +11555,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"revivee",
-				OP.EQ,
+				"last_revivee",
+				OP.GT,
 				1
 			},
 			{
@@ -11406,8 +11624,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"revivee",
-				OP.EQ,
+				"last_revivee",
+				OP.GT,
 				1
 			},
 			{
@@ -11422,11 +11640,6 @@ return function ()
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
-			},
-			random_ignore_vo = {
-				chance = 0,
-				max_failed_tries = 3,
-				hold_for = 0
 			}
 		}
 	})
@@ -11723,10 +11936,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_zealot_seen_killstreak_ogryn",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_zealot_seen_killstreak_ogryn",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -11775,12 +11988,21 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_killstreaked",
-				OP.EQ,
+				"last_killstreak",
+				OP.GT,
 				1
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"user_memory",
+				"last_killstreak",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -11789,10 +12011,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_zealot_seen_killstreak_psyker",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_zealot_seen_killstreak_psyker",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -11841,12 +12063,21 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_killstreaked",
-				OP.EQ,
+				"last_killstreak",
+				OP.GT,
 				1
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"user_memory",
+				"last_killstreak",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -11855,10 +12086,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_zealot_seen_killstreak_veteran",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_zealot_seen_killstreak_veteran",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -11907,12 +12138,21 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_killstreaked",
-				OP.EQ,
+				"last_killstreak",
+				OP.GT,
 				1
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"user_memory",
+				"last_killstreak",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -11921,10 +12161,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_zealot_seen_killstreak_zealot",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_zealot_seen_killstreak_zealot",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -11973,12 +12213,21 @@ return function ()
 			},
 			{
 				"user_memory",
-				"has_killstreaked",
-				OP.EQ,
+				"last_killstreak",
+				OP.GT,
 				1
 			}
 		},
-		on_done = {},
+		on_done = {
+			{
+				"user_memory",
+				"last_killstreak",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -12032,8 +12281,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"revivee",
-				OP.EQ,
+				"last_revivee",
+				OP.GT,
 				1
 			},
 			{
@@ -12101,8 +12350,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"revivee",
-				OP.EQ,
+				"last_revivee",
+				OP.GT,
 				1
 			},
 			{
@@ -12167,8 +12416,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"revivee",
-				OP.EQ,
+				"last_revivee",
+				OP.GT,
 				1
 			},
 			{
@@ -12233,8 +12482,8 @@ return function ()
 			},
 			{
 				"user_memory",
-				"revivee",
-				OP.EQ,
+				"last_revivee",
+				OP.GT,
 				1
 			},
 			{
@@ -13611,6 +13860,11 @@ return function ()
 				"faction_memory",
 				"last_seen_killstreak",
 				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_seen_killstreak_user",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -13670,14 +13924,13 @@ return function ()
 				OP.TIMESET
 			},
 			{
-				"faction_memory",
-				"veteran_seen_killstreak_psyker",
-				OP.ADD,
-				1
+				"user_memory",
+				"time_since_veteran_seen_killstreak_psyker",
+				OP.TIMESET
 			},
 			{
-				"faction_memory",
-				"time_since_veteran_seen_killstreak_psyker",
+				"user_memory",
+				"last_seen_killstreak_user",
 				OP.TIMESET
 			}
 		},
@@ -13736,6 +13989,11 @@ return function ()
 				"faction_memory",
 				"last_seen_killstreak",
 				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_seen_killstreak_user",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -13792,6 +14050,11 @@ return function ()
 			{
 				"faction_memory",
 				"last_seen_killstreak",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_seen_killstreak_user",
 				OP.TIMESET
 			}
 		},
@@ -14104,6 +14367,16 @@ return function ()
 				"faction_memory",
 				"last_seen_killstreak",
 				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_seen_killstreak_user",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"time_since_zealot_seen_killstreak_ogryn",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -14160,6 +14433,16 @@ return function ()
 			{
 				"faction_memory",
 				"last_seen_killstreak",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_seen_killstreak_user",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"time_since_zealot_seen_killstreak_psyker",
 				OP.TIMESET
 			}
 		},
@@ -14218,6 +14501,11 @@ return function ()
 				"faction_memory",
 				"last_seen_killstreak",
 				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_seen_killstreak_user",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -14274,6 +14562,11 @@ return function ()
 			{
 				"faction_memory",
 				"last_seen_killstreak",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_seen_killstreak_user",
 				OP.TIMESET
 			}
 		},

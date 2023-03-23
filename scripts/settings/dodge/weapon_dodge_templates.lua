@@ -67,6 +67,28 @@ local weapon_dodge_templates = {
 			lerp_basic = 1
 		}
 	},
+	psyker_ninja = {
+		distance_scale = {
+			lerp_perfect = 1.2,
+			lerp_basic = 0.9
+		},
+		diminishing_return_distance_modifier = {
+			lerp_perfect = 0.3,
+			lerp_basic = 0.6
+		},
+		diminishing_return_start = {
+			lerp_basic = math.huge,
+			lerp_perfect = math.huge
+		},
+		diminishing_return_limit = {
+			lerp_perfect = 100,
+			lerp_basic = 100
+		},
+		speed_modifier = {
+			lerp_perfect = 1.1,
+			lerp_basic = 1
+		}
+	},
 	default_ranged = {
 		consecutive_dodges_reset = 0,
 		distance_scale = {

@@ -206,7 +206,6 @@ local interaction_templates = {
 		description = "loc_pull_up",
 		ui_interaction_type = "critical",
 		stop_anim_event = "arms_down",
-		interaction_class_name = "pull_up",
 		taggable = true,
 		is_third_person = true,
 		start_anim_event_3p = "interaction_revive",
@@ -214,22 +213,43 @@ local interaction_templates = {
 		interaction_icon = "content/ui/materials/hud/interactions/icons/help",
 		stop_anim_event_3p = "interaction_end",
 		duration = 3,
-		start_anim_event = "arms_down"
+		interaction_class_name = "pull_up",
+		start_anim_event_func = function (interactee_unit, interactor_unit)
+			local interactee_unit_data_extension = ScriptUnit.extension(interactee_unit, "unit_data_system")
+			local breed = interactee_unit_data_extension:breed()
+			local breed_name = breed.name
+
+			if breed_name == "human" then
+				return "arms_down", "interaction_revive_human"
+			end
+
+			return "arms_down", "interaction_revive_ogryn"
+		end
 	},
 	remove_net = {
 		description = "loc_remove_net",
 		ui_interaction_type = "critical",
 		stop_anim_event = "arms_down",
-		interaction_class_name = "remove_net",
-		vo_event = "start_revive",
+		taggable = true,
 		is_third_person = true,
 		start_anim_event_3p = "interaction_revive",
-		taggable = true,
+		vo_event = "start_revive",
 		action_text = "loc_action_interaction_help",
 		interaction_icon = "content/ui/materials/hud/interactions/icons/help",
 		stop_anim_event_3p = "interaction_end",
 		duration = 1,
-		start_anim_event = "arms_down"
+		interaction_class_name = "remove_net",
+		start_anim_event_func = function (interactee_unit, interactor_unit)
+			local interactee_unit_data_extension = ScriptUnit.extension(interactee_unit, "unit_data_system")
+			local breed = interactee_unit_data_extension:breed()
+			local breed_name = breed.name
+
+			if breed_name == "human" then
+				return "arms_down", "interaction_revive_human"
+			end
+
+			return "arms_down", "interaction_revive_ogryn"
+		end
 	},
 	revive = {
 		description = "loc_revive",

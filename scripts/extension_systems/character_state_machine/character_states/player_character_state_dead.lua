@@ -26,10 +26,11 @@ PlayerCharacterStateDead.on_enter = function (self, unit, dt, t, previous_state,
 	local inventory_component = self._inventory_component
 	local visual_loadout_extension = self._visual_loadout_extension
 	local is_server = self._is_server
+	local physics_world = self._physics_world
 
 	Interrupt.ability_and_action(t, unit, "dead", nil, ignore_immunity)
 	Luggable.drop_luggable(t, unit, inventory_component, visual_loadout_extension, true)
-	Pocketable.drop_pocketable(t, is_server, unit, inventory_component, visual_loadout_extension)
+	Pocketable.drop_pocketable(t, physics_world, is_server, unit, inventory_component, visual_loadout_extension)
 
 	local health_ext = ScriptUnit.extension(unit, "health_system")
 

@@ -882,11 +882,11 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_special_jab",
-				chain_time = 0.25
+				chain_time = 0.44
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.25
+				chain_time = 0.44
 			},
 			block = {
 				action_name = "action_block",

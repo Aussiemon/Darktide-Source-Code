@@ -56,11 +56,7 @@ local PlayerManagerTestify = {
 		end
 	end,
 	num_bots = function (_, player_manager)
-		local players = player_manager:players()
-		local bots = table.filter(players, function (player)
-			return not player:is_human_controlled()
-		end)
-		local num_bots = table.size(bots)
+		local num_bots = player_manager:num_players() - player_manager:num_human_players()
 
 		return num_bots
 	end,

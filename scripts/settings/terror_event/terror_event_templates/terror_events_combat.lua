@@ -227,6 +227,21 @@ local template = {
 				"start_terror_event",
 				start_event_name = "kill_target_wave"
 			}
+		},
+		test_hatchet_spawners = {
+			{
+				"spawn_by_points",
+				limit_spawners = 10,
+				max_breed_amount = 20,
+				spawner_group = "spawners_hatchet",
+				spawn_delay = 0.5,
+				points = 20,
+				breed_tags = {
+					{
+						"horde"
+					}
+				}
+			}
 		}
 	}
 }

@@ -132,7 +132,7 @@ local enemy_vo_enemy_daemonhost_a = {
 	},
 	chaos_daemonhost_mantra_medium = {
 		randomize_indexes_n = 0,
-		sound_events_n = 11,
+		sound_events_n = 10,
 		sound_events = {
 			"loc_enemy_daemonhost_a__mantra_2_01",
 			"loc_enemy_daemonhost_a__mantra_2_02",
@@ -143,7 +143,6 @@ local enemy_vo_enemy_daemonhost_a = {
 			"loc_enemy_daemonhost_a__mantra_2_07",
 			"loc_enemy_daemonhost_a__mantra_2_08",
 			"loc_enemy_daemonhost_a__mantra_2_09",
-			"loc_enemy_daemonhost_a__mantra_2_10",
 			"loc_enemy_daemonhost_a__mantra_2_11"
 		},
 		sound_events_duration = {
@@ -156,21 +155,19 @@ local enemy_vo_enemy_daemonhost_a = {
 			5.333333,
 			5.733333,
 			4.888854,
-			5.733333,
 			5.533333
 		},
 		sound_event_weights = {
-			0.09090909,
-			0.09090909,
-			0.09090909,
-			0.09090909,
-			0.09090909,
-			0.09090909,
-			0.09090909,
-			0.09090909,
-			0.09090909,
-			0.09090909,
-			0.09090909
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},

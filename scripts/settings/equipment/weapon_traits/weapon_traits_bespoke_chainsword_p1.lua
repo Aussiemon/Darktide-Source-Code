@@ -75,18 +75,7 @@ templates.weapon_trait_bespoke_chainsword_p1_increased_melee_damage_on_multiple_
 }
 templates.weapon_trait_bespoke_chainsword_p1_infinite_melee_cleave_on_crit = {
 	weapon_trait_bespoke_chainsword_p1_infinite_melee_cleave_on_crit = {
-		{
-			active_duration = 1.5
-		},
-		{
-			active_duration = 2.5
-		},
-		{
-			active_duration = 3.5
-		},
-		{
-			active_duration = 4.5
-		}
+		{}
 	}
 }
 templates.weapon_trait_bespoke_chainsword_p1_chained_hits_increases_melee_cleave = {

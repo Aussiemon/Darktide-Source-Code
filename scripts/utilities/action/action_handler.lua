@@ -480,7 +480,8 @@ ActionHandler.stop_action = function (self, id, reason, data, t, actions, action
 				local start_t = component.start_t
 				local time_scale = component.time_scale
 				local current_action_t = t - start_t
-				local chain_action_validated, action_name, action_settings, reset_combo = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, nil)
+				local running_action_state = running_action:running_action_state(t, current_action_t)
+				local chain_action_validated, action_name, action_settings, reset_combo = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, nil, running_action_state)
 
 				if chain_action_validated then
 					self._action_input_extension:action_transitioned_with_automatic_input(id, finish_reason_input, t)
@@ -625,12 +626,14 @@ ActionHandler._check_chain_actions = function (self, handler_data, current_actio
 	local time_scale = component.time_scale
 	local current_action_t = t - current_action_start_t
 	local wanted_action_name, wanted_action_settings, wanted_used_input, automatic_input, reset_combo = nil
+	local running_action = handler_data.running_action
+	local running_action_state = running_action:running_action_state(t, current_action_t)
 
 	if action_input then
 		local chain_action = allowed_chain_actions[action_input]
 
 		if chain_action then
-			local chain_action_validated, action_name, action_settings, action_reset_combo = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input)
+			local chain_action_validated, action_name, action_settings, action_reset_combo = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input, running_action_state)
 
 			if chain_action_validated then
 				wanted_action_name = action_name
@@ -642,27 +645,22 @@ ActionHandler._check_chain_actions = function (self, handler_data, current_actio
 		end
 	end
 
-	if not wanted_action_name then
-		local running_action = handler_data.running_action
-		local running_action_state = running_action:running_action_state(t, current_action_t)
+	if not wanted_action_name and running_action_state then
+		local running_action_chain_config = running_action_state_to_action_input[running_action_state]
 
-		if running_action_state then
-			local running_action_chain_config = running_action_state_to_action_input[running_action_state]
+		if running_action_chain_config then
+			local running_action_input = running_action_chain_config.input_name
+			local chain_action = allowed_chain_actions[running_action_input]
 
-			if running_action_chain_config then
-				local running_action_input = running_action_chain_config.input_name
-				local chain_action = allowed_chain_actions[running_action_input]
+			if chain_action then
+				local chain_action_validated, action_name, action_settings, action_reset_combo = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input, running_action_state)
 
-				if chain_action then
-					local chain_action_validated, action_name, action_settings, action_reset_combo = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input)
-
-					if chain_action_validated then
-						wanted_action_name = action_name
-						wanted_action_settings = action_settings
-						wanted_used_input = nil
-						automatic_input = running_action_input
-						reset_combo = action_reset_combo
-					end
+				if chain_action_validated then
+					wanted_action_name = action_name
+					wanted_action_settings = action_settings
+					wanted_used_input = nil
+					automatic_input = running_action_input
+					reset_combo = action_reset_combo
 				end
 			end
 		end
@@ -678,7 +676,7 @@ ActionHandler._check_chain_actions = function (self, handler_data, current_actio
 			local chain_action = allowed_chain_actions[conditional_action_input]
 
 			if chain_action and func(condition_func_params, action_params, remaining_time, t) then
-				local chain_action_validated, action_name, action_settings, action_reset_combo = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input)
+				local chain_action_validated, action_name, action_settings, action_reset_combo = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input, running_action_state)
 
 				if chain_action_validated then
 					wanted_action_name = action_name
@@ -700,11 +698,17 @@ ActionHandler._check_chain_actions = function (self, handler_data, current_actio
 	end
 end
 
-ActionHandler._validate_chain_action = function (self, chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input)
+ActionHandler._validate_chain_action = function (self, chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input, running_action_state)
 	local chain_time = chain_action.chain_time and chain_action.chain_time / time_scale
 	local chain_until = chain_action.chain_until and chain_action.chain_until / time_scale
 	local chain_validated = nil
 	chain_validated = not chain_time or (chain_time and chain_time <= current_action_t or chain_until and current_action_t <= chain_until) and true
+	local running_action_state_requirement = chain_action.running_action_state_requirement
+
+	if running_action_state_requirement and (not running_action_state or not running_action_state_requirement[running_action_state]) then
+		chain_validated = false
+	end
+
 	local action_name = chain_action.action_name
 	local action_settings = actions[action_name]
 	local reset_combo = chain_action.reset_combo
@@ -924,7 +928,8 @@ ActionHandler.action_input_is_currently_valid = function (self, id, actions, con
 			local start_t = component.start_t
 			local time_scale = component.time_scale
 			local current_action_t = t - start_t
-			local chain_action_validated, _, _ = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input)
+			local running_action_state = running_action:running_action_state(t, current_action_t)
+			local chain_action_validated, _, _ = self:_validate_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input, running_action_state)
 
 			if chain_action_validated then
 				is_valid = true

@@ -44,7 +44,6 @@ local breed_data = {
 	game_object_type = "minion_melee",
 	explosion_power_multiplier = 0.65,
 	base_unit = "content/characters/enemy/chaos_poxwalker/third_person/base",
-	hit_mass = 1,
 	bone_lod_radius = 1.1,
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
@@ -56,6 +55,14 @@ local breed_data = {
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.disgustingly_resilient,
+	hit_mass = {
+		1,
+		1,
+		1,
+		1,
+		1,
+		3
+	},
 	gib_template = MinionGibbingTemplates.chaos_poxwalker,
 	stagger_durations = {
 		[stagger_types.light] = 0.5,

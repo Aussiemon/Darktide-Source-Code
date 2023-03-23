@@ -1,3 +1,4 @@
+local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local Breeds = require("scripts/settings/breed/breeds")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
@@ -7,8 +8,15 @@ local Missions = require("scripts/settings/mission/mission_templates")
 local ParameterResolver = require("scripts/foundation/utilities/parameters/parameter_resolver")
 local RenderSettings = require("scripts/settings/options/render_settings")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local application_console_command = Application.console_command
+local unit_actor = Unit.actor
+local unit_animation_event = Unit.animation_event
 local world_create_particles = World.create_particles
 local world_set_particles_life_time = World.set_particles_life_time
+
+local function _console_command(command, ...)
+	application_console_command(command, ...)
+end
 
 local function retrieve_items_for_archetype(archetype, filtered_slots, workflow_states)
 	local WORKFLOW_STATES = {
@@ -93,6 +101,40 @@ local StateGameTestify = {
 
 		return breeds
 	end,
+	all_gears = function (archetype, workflow_states, _)
+		if not MasterItems.has_data() then
+			return Testify.RETRY
+		end
+
+		local gears_slots = {
+			"slot_gear_head",
+			"slot_gear_lowerbody",
+			"slot_gear_upperbody",
+			"slot_gear_extra_cosmetic"
+		}
+		local gears = retrieve_items_for_archetype(archetype, gears_slots, workflow_states)
+
+		return gears
+	end,
+	all_gears_per_slot = function (archetype, slot_name, workflow_states, _)
+		if not MasterItems.has_data() then
+			return Testify.RETRY
+		end
+
+		local gears_slots = {
+			slot_name
+		}
+		local gears = retrieve_items_for_archetype(archetype, gears_slots, workflow_states)
+
+		return gears[slot_name]
+	end,
+	all_items = function (_, _)
+		if not MasterItems.has_data() then
+			return Testify.RETRY
+		end
+
+		return MasterItems.get_cached()
+	end,
 	all_mission_flags = function (mission_key, _)
 		local flags = {}
 
@@ -134,54 +176,6 @@ local StateGameTestify = {
 
 		return weapons
 	end,
-	all_gears = function (archetype, workflow_states, _)
-		if not MasterItems.has_data() then
-			return Testify.RETRY
-		end
-
-		local gears_slots = {
-			"slot_gear_head",
-			"slot_gear_lowerbody",
-			"slot_gear_upperbody",
-			"slot_gear_extra_cosmetic"
-		}
-		local gears = retrieve_items_for_archetype(archetype, gears_slots, workflow_states)
-
-		return gears
-	end,
-	all_gears_per_slot = function (archetype, slot_name, workflow_states, _)
-		if not MasterItems.has_data() then
-			return Testify.RETRY
-		end
-
-		local gears_slots = {
-			slot_name
-		}
-		local gears = retrieve_items_for_archetype(archetype, gears_slots, workflow_states)
-
-		return gears[slot_name]
-	end,
-	all_items = function (_, _)
-		if not MasterItems.has_data() then
-			return Testify.RETRY
-		end
-
-		return MasterItems.get_cached()
-	end,
-	current_state_name = function (_, state_game)
-		local current_state_name = state_game:current_state_name()
-
-		return current_state_name
-	end,
-	get_weapon = function (name, _)
-		if not MasterItems.has_data() then
-			return Testify.RETRY
-		end
-
-		local item_definitions = MasterItems.get_cached()
-
-		return item_definitions[name]
-	end,
 	["as" .. "sert"] = function (assert_data, _)
 		local context = {
 			assert_data = assert_data
@@ -192,6 +186,14 @@ local StateGameTestify = {
 	end,
 	change_dev_parameter = function (parameter, _)
 		ParameterResolver.set_dev_parameter(parameter.name, parameter.value)
+	end,
+	circumstance_theme = function (circumstance_name)
+		local circumstance_template = CircumstanceTemplates[circumstance_name]
+
+		return circumstance_template.theme_tag
+	end,
+	console_command_lua_trace = function ()
+		_console_command("lua", "trace")
 	end,
 	create_particles = function (world, particle_name, boxed_spawn_position, particle_life_time)
 		Log.info("StateGameTestify", "Creating particle %s", particle_name)
@@ -207,6 +209,11 @@ local StateGameTestify = {
 		local telemetry_events_manager = Managers.telemetry_events
 
 		telemetry_events_manager[event_name](telemetry_events_manager, ...)
+	end,
+	current_state_name = function (_, state_game)
+		local current_state_name = state_game:current_state_name()
+
+		return current_state_name
 	end,
 	display_and_graphics_presets_settings = function ()
 		local settings = RenderSettings.settings
@@ -266,11 +273,6 @@ local StateGameTestify = {
 
 		return circumstances
 	end,
-	circumstance_theme = function (circumstance_name)
-		local circumstance_template = CircumstanceTemplates[circumstance_name]
-
-		return circumstance_template.theme_tag
-	end,
 	mission_cutscenes = function (mission_name)
 		local cutscenes = Missions[mission_name].cinematics
 
@@ -308,6 +310,12 @@ local StateGameTestify = {
 
 		return profile
 	end,
+	register_timer = function (name, start_time)
+		Managers.time:register_timer(name, "main", start_time)
+	end,
+	remove_best_bot = function ()
+		BotSpawning.despawn_best_bot()
+	end,
 	set_autoload_enabled = function (is_enabled)
 		Application.set_autoload_enabled(is_enabled)
 	end,
@@ -322,39 +330,6 @@ local StateGameTestify = {
 		local side_missions = MissionObjectives.side_mission.objectives
 
 		return side_missions
-	end,
-	skip_splash_screen = function (_, state_game)
-		local current_state_name = state_game:current_state_name()
-
-		if current_state_name == "StateSplash" then
-			local view_name = "splash_view"
-			local view = Managers.ui:view_instance(view_name)
-			local view_active = Managers.ui:view_active(view_name)
-
-			if view and view_active then
-				view:on_skip_pressed()
-			end
-
-			return Testify.RETRY
-		end
-	end,
-	slot_fallback_item = function (slot, _)
-		if not MasterItems.has_data() then
-			return Testify.RETRY
-		end
-
-		local fallback_item = MasterItems.find_fallback_item_id(slot)
-
-		return fallback_item
-	end,
-	skip_title_screen = function (_, state_game)
-		local current_state_name = state_game:current_state_name()
-
-		if current_state_name == "StateSplash" then
-			return Testify.RETRY
-		elseif current_state_name == "StateTitle" then
-			Managers.event:trigger("event_state_title_continue")
-		end
 	end,
 	skip_privacy_policy_popup_if_displayed = function (_, state_game)
 		local current_state_name = state_game:current_state_name()
@@ -384,6 +359,33 @@ local StateGameTestify = {
 			return Testify.RETRY
 		end
 	end,
+	skip_splash_screen = function (_, state_game)
+		local current_state_name = state_game:current_state_name()
+
+		if current_state_name == "StateSplash" then
+			local view_name = "splash_view"
+			local view = Managers.ui:view_instance(view_name)
+			local view_active = Managers.ui:view_active(view_name)
+
+			if view and view_active then
+				view:on_skip_pressed()
+			end
+
+			return Testify.RETRY
+		end
+	end,
+	skip_title_screen = function (_, state_game)
+		local current_state_name = state_game:current_state_name()
+
+		if current_state_name == "StateSplash" then
+			return Testify.RETRY
+		elseif current_state_name == "StateTitle" then
+			Managers.event:trigger("event_state_title_continue")
+		end
+	end,
+	spawn_bot = function (profile_name)
+		BotSpawning.spawn_bot_character(profile_name)
+	end,
 	take_a_screenshot = function (screenshot_settings, state_gameplay)
 		local type = "file_system"
 		local window = nil
@@ -396,6 +398,31 @@ local StateGameTestify = {
 
 		os.execute("mkdir -p " .. "\"" .. output_dir .. "\"")
 		FrameCapture.screen_shot(type, window, scale, output_dir, filename, filetype, save_depth)
+	end,
+	time = function (name)
+		local time = Managers.time:time(name)
+
+		return time
+	end,
+	trigger_unit_animation_event = function (unit, animation_event)
+		unit_animation_event(unit, animation_event)
+	end,
+	unit_actor = function (unit, actor_name)
+		local actor = unit_actor(unit, actor_name)
+
+		return actor
+	end,
+	unregister_timer = function (name)
+		Managers.time:unregister_timer(name)
+	end,
+	weapon = function (name, _)
+		if not MasterItems.has_data() then
+			return Testify.RETRY
+		end
+
+		local item_definitions = MasterItems.get_cached()
+
+		return item_definitions[name]
 	end,
 	weapon_template = function (weapon)
 		local weapon_template = WeaponTemplate.weapon_template_from_item(weapon)

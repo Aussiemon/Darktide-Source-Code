@@ -31,9 +31,7 @@ local templates = {
 			[buff_proc_events.on_successful_dodge] = 1
 		},
 		proc_func = function (params, template_data, template_context)
-			local unit = template_context.unit
-
-			Managers.event:trigger("on_successful_dodge")
+			Managers.event:trigger("tg_on_successful_dodge")
 		end
 	},
 	tg_on_combat_ability_hook = {
@@ -43,9 +41,7 @@ local templates = {
 			[buff_proc_events.on_combat_ability] = 1
 		},
 		proc_func = function (params, template_data, template_context)
-			local unit = template_context.unit
-
-			Managers.event:trigger("on_combat_ability", params)
+			Managers.event:trigger("tg_on_combat_ability", params)
 		end
 	},
 	tg_on_ammo_consumed_hook = {
@@ -55,9 +51,7 @@ local templates = {
 			[buff_proc_events.on_ammo_consumed] = 1
 		},
 		proc_func = function (params, template_data, template_context)
-			local unit = template_context.unit
-
-			Managers.event:trigger("on_ammo_consumed", params)
+			Managers.event:trigger("tg_on_ammo_consumed", params)
 		end
 	},
 	tg_player_short_ability_cooldown = {

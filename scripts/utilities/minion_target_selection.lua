@@ -238,18 +238,20 @@ MinionTargetSelection.ledge_hanging_weight = function (target_selection_weights,
 	return 0
 end
 
+local DARKNESS_LOS_MODIFIER_NAME = "mutator_darkness_los"
+local VENTILATION_PURGE_LOS_MODIFIER_NAME = "mutator_ventilation_purge_los"
 local CIRCUMSTANCE_DETECTION_RADIUS_MODIFIERS = {
-	darkness_01 = 0.5,
-	ventilation_purge_01 = 0.65
+	mutator_ventilation_purge_los = 0.7,
+	mutator_darkness_los = 0.5
 }
 
 MinionTargetSelection.detection_radius = function (breed)
-	local circumstance_name = Managers.state.circumstance:circumstance_name()
 	local detection_radius = breed.detection_radius
-	local circumstance_modifier = CIRCUMSTANCE_DETECTION_RADIUS_MODIFIERS[circumstance_name]
+	local mutator_manager = Managers.state.mutator
+	local los_modifier = mutator_manager:mutator(DARKNESS_LOS_MODIFIER_NAME) and DARKNESS_LOS_MODIFIER_NAME or mutator_manager:mutator(VENTILATION_PURGE_LOS_MODIFIER_NAME) and VENTILATION_PURGE_LOS_MODIFIER_NAME
 
-	if circumstance_modifier then
-		return detection_radius * circumstance_modifier
+	if los_modifier then
+		return detection_radius * CIRCUMSTANCE_DETECTION_RADIUS_MODIFIERS[los_modifier]
 	end
 
 	return detection_radius

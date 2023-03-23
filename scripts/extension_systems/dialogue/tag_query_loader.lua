@@ -48,6 +48,12 @@ TagQueryLoader.init = function (self, tagquery_database, dialogues_destination_t
 			}
 		end
 	}
+	self.unload_file_environment = {
+		OP = OP,
+		define_rule = function (rule_definition)
+			tagquery_database:remove_rule(rule_definition.name)
+		end
+	}
 	self.tagquery_database = tagquery_database
 end
 
@@ -65,24 +71,33 @@ TagQueryLoader.load_file = function (self, filename)
 	Log.info("DialogueSystemDebug", "Loaded file %q. Read %d rules.", filename, rules_read)
 end
 
-TagQueryLoader.unload_files = function (self)
-	for _, filename in ipairs(self.loaded_files) do
-		if package.loaded[filename] then
-			local load_order = package.load_order
-			local n_load_order = #load_order
-			local found_file = nil
+TagQueryLoader.unload_file = function (self, filename)
+	if package.loaded[filename] then
+		local load_order = package.load_order
+		local n_load_order = #load_order
+		local found_file = nil
 
-			for i = n_load_order, 1, -1 do
-				if load_order[i] == filename then
-					found_file = true
-					package.loaded[filename] = nil
+		for i = n_load_order, 1, -1 do
+			if load_order[i] == filename then
+				found_file = true
+				package.loaded[filename] = nil
 
-					table.remove(load_order, i)
+				table.remove(load_order, i)
 
-					break
-				end
+				break
 			end
 		end
+
+		local file_function = require(filename)
+
+		setfenv(file_function, self.unload_file_environment)
+		file_function()
+	end
+end
+
+TagQueryLoader.unload_files = function (self)
+	for _, filename in ipairs(self.loaded_files) do
+		self:unload_file(filename)
 	end
 
 	self.file_environment = nil

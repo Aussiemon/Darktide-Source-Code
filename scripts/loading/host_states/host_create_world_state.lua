@@ -6,7 +6,7 @@ HostCreateWorldState.init = function (self, state_machine, shared_state)
 		timer_name = "gameplay",
 		layer = 1
 	}
-	local world = AsyncLevelSpawner.setup_world("level_world", world_parameters)
+	local world = AsyncLevelSpawner.setup_world(shared_state.world_name, world_parameters)
 	shared_state.world = world
 end
 

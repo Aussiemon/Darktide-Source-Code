@@ -1278,7 +1278,7 @@ return function ()
 				"query_context",
 				"enemy_tag",
 				OP.EQ,
-				"renegade_berserker"
+				"renegade_berzerker"
 			},
 			{
 				"user_memory",

@@ -152,35 +152,6 @@ damage_templates.light_sword = {
 		}
 	}
 }
-overrides.light_sword_stab = {
-	parent_template_name = "light_sword",
-	overrides = {
-		{
-			"targets",
-			1,
-			"armor_damage_modifier",
-			"attack",
-			"armored",
-			damage_lerp_values.lerp_0_8
-		},
-		{
-			"targets",
-			1,
-			"armor_damage_modifier",
-			"attack",
-			"super_armor",
-			damage_lerp_values.lerp_0_25
-		},
-		{
-			"targets",
-			1,
-			"armor_damage_modifier",
-			"attack",
-			"resistant",
-			damage_lerp_values.lerp_0_8
-		}
-	}
-}
 damage_templates.light_sword_smiter = {
 	finesse_ability_damage_multiplier = 2,
 	stagger_category = "melee",
@@ -246,6 +217,34 @@ damage_templates.light_sword_smiter = {
 				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+overrides.light_sword_stab = {
+	parent_template_name = "light_sword_smiter",
+	overrides = {
+		{
+			"targets",
+			1,
+			"boost_curve_multiplier_finesse",
+			{
+				1,
+				2
+			}
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				100,
+				200
+			}
+		},
+		{
+			"gibbing_power",
+			0
 		}
 	}
 }
@@ -528,6 +527,15 @@ damage_templates.light_powersword_smiter = {
 }
 overrides.light_powersword_active_smiter = {
 	parent_template_name = "light_powersword",
+	overrides = {
+		{
+			"wounds_template",
+			WoundsTemplates.power_sword_active
+		}
+	}
+}
+overrides.light_powersword_stab_active = {
+	parent_template_name = "light_powersword_smiter",
 	overrides = {
 		{
 			"wounds_template",

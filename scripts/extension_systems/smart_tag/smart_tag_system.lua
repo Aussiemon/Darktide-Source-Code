@@ -141,6 +141,9 @@ SmartTagSystem.on_remove_extension = function (self, unit, extension_name)
 	SmartTagSystem.super.on_remove_extension(self, unit, extension_name)
 end
 
+local tg_on_tag_event_data = {}
+local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
+
 SmartTagSystem.set_tag = function (self, template_name, tagger_unit, target_unit, target_location)
 	local template = SmartTagSettings.templates[template_name]
 	local tagger_game_object_id = nil
@@ -164,12 +167,16 @@ SmartTagSystem.set_tag = function (self, template_name, tagger_unit, target_unit
 	end
 
 	local template_name_id = NetworkLookup.smart_tag_templates[template_name]
-	local on_tag_event_data = {
-		target_unit = target_unit,
-		target_location = target_location
-	}
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
 
-	Managers.event:trigger("on_tag", on_tag_event_data)
+	if game_mode_name == TRAINING_GROUNDS_GAME_MODE_NAME then
+		table.clear(tg_on_tag_event_data)
+
+		tg_on_tag_event_data.target_unit = target_unit
+		tg_on_tag_event_data.target_location = target_location
+
+		Managers.event:trigger("tg_on_tag", tg_on_tag_event_data)
+	end
 
 	if self._is_server then
 		local tag_id = self:_generate_tag_id()

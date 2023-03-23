@@ -19,12 +19,7 @@ local TARGET_NODE = "enemy_aim_target_02"
 local PARTICLE_VARIABLE_NAME = "length"
 local DEFAULT_HAND = "both"
 local MAX_FX_TABLES = 128
-local DEFAULT_MAX_ANGLE = math.pi * 0.25
-local DEFAULT_MAX_Z_DIFF = 2
-local DEFAULT_MAX_JUMPS = 3
-local DEFAULT_RADIUS = 4
-local DEFAULT_JUMP_TIME = 0.1
-local _jump_validation_func, _on_add_func, _on_delete_func, _target_finding_func, _traverse_validation_func = nil
+local _jump_validation_func, _on_add_func, _on_delete_func, _target_finding_func, _traverse_validation_func, _target_vfx_from_charge_level = nil
 
 ChainLightningEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local is_husk = context.is_husk
@@ -59,6 +54,7 @@ ChainLightningEffects.init = function (self, context, slot, weapon_template, fx_
 	self._right_hand_particle_id = nil
 	self._left_hand_particle_id = nil
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
+	self._buff_extension = ScriptUnit.extension(owner_unit, "buff_system")
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 	self._action_module_targeting_component = unit_data_extension:read_component("action_module_targeting")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
@@ -119,6 +115,7 @@ ChainLightningEffects._find_root_targets = function (self, t)
 	local use_charge = fx_settings and fx_settings.use_charge
 	local action_module_charge_component = self._action_module_charge_component
 	local charge_level = use_charge and action_module_charge_component.charge_level or 1
+	self._charge_level = charge_level
 	local targeting = action_kind == "overload_charge_target_finder" or action_kind == "overload_target_finder"
 	local attacking = action_kind == "chain_lightning"
 
@@ -147,18 +144,18 @@ ChainLightningEffects._find_root_targets = function (self, t)
 		local spawner_unit_left, spawner_node_left = self._fx_extension:vfx_spawner_unit_and_node(self._left_fx_source_name)
 
 		if fx_hand == "right" or fx_hand == "both" then
-			self._target_1_right_particle_id = self:_update_vfx(t, self._world, self._target_1_right_particle_id, spawner_unit_right, spawner_node_right, max_targets >= 1 and action_module_targeting_component.target_unit_1, charge_level)
-			self._target_2_right_particle_id = self:_update_vfx(t, self._world, self._target_2_right_particle_id, spawner_unit_right, spawner_node_right, max_targets >= 2 and action_module_targeting_component.target_unit_2, charge_level)
-			self._target_3_right_particle_id = self:_update_vfx(t, self._world, self._target_3_right_particle_id, spawner_unit_right, spawner_node_right, max_targets >= 3 and action_module_targeting_component.target_unit_3, charge_level)
+			self._target_1_right_particle_id = self:_update_vfx(t, self._world, self._target_1_right_particle_id, spawner_unit_right, spawner_node_right, max_targets >= 1 and action_module_targeting_component.target_unit_1)
+			self._target_2_right_particle_id = self:_update_vfx(t, self._world, self._target_2_right_particle_id, spawner_unit_right, spawner_node_right, max_targets >= 2 and action_module_targeting_component.target_unit_2)
+			self._target_3_right_particle_id = self:_update_vfx(t, self._world, self._target_3_right_particle_id, spawner_unit_right, spawner_node_right, max_targets >= 3 and action_module_targeting_component.target_unit_3)
 			self._right_hand_particle_id = self:_update_hand_vfx(t, self._world, self._right_hand_particle_id, spawner_unit_right, spawner_node_right, true)
 			local has_any_particle_effect = self._target_1_right_particle_id or self._target_2_right_particle_id or self._target_3_right_particle_id
 			self._no_target_particle_right_id = self:_update_no_target_vfx(t, self._world, self._no_target_particle_right_id, has_any_particle_effect, spawner_unit_right, spawner_node_right)
 		end
 
 		if fx_hand == "left" or fx_hand == "both" then
-			self._target_1_left_particle_id = self:_update_vfx(t, self._world, self._target_1_left_particle_id, spawner_unit_left, spawner_node_left, max_targets >= 1 and action_module_targeting_component.target_unit_1, charge_level)
-			self._target_2_left_particle_id = self:_update_vfx(t, self._world, self._target_2_left_particle_id, spawner_unit_left, spawner_node_left, max_targets >= 2 and action_module_targeting_component.target_unit_2, charge_level)
-			self._target_3_left_particle_id = self:_update_vfx(t, self._world, self._target_3_left_particle_id, spawner_unit_left, spawner_node_left, max_targets >= 3 and action_module_targeting_component.target_unit_3, charge_level)
+			self._target_1_left_particle_id = self:_update_vfx(t, self._world, self._target_1_left_particle_id, spawner_unit_left, spawner_node_left, max_targets >= 1 and action_module_targeting_component.target_unit_1)
+			self._target_2_left_particle_id = self:_update_vfx(t, self._world, self._target_2_left_particle_id, spawner_unit_left, spawner_node_left, max_targets >= 2 and action_module_targeting_component.target_unit_2)
+			self._target_3_left_particle_id = self:_update_vfx(t, self._world, self._target_3_left_particle_id, spawner_unit_left, spawner_node_left, max_targets >= 3 and action_module_targeting_component.target_unit_3)
 			self._left_hand_particle_id = self:_update_hand_vfx(t, self._world, self._left_hand_particle_id, spawner_unit_left, spawner_node_left, true)
 			local has_any_particle_effect = self._target_1_left_particle_id or self._target_2_left_particle_id or self._target_3_left_particle_id
 			self._no_target_particle_left_id = self:_update_no_target_vfx(t, self._world, self._no_target_particle_left_id, has_any_particle_effect, spawner_unit_left, spawner_node_left)
@@ -203,12 +200,14 @@ ChainLightningEffects._find_root_targets = function (self, t)
 
 		table.clear(self._chain_targets)
 		table.clear(self._hit_units)
+
+		self._charge_level = nil
 	end
 end
 
 local valid_sources = {}
 
-ChainLightningEffects._find_new_chain_targets = function (self, t, broadphase, enemy_side_names, max_angle, max_z_diff, max_jumps, radius, root_target, initial_travel_direction)
+ChainLightningEffects._find_new_chain_targets = function (self, t, broadphase, enemy_side_names, max_angle, close_max_angle, max_z_diff, max_jumps, radius, root_target, initial_travel_direction)
 	local hit_units = self._hit_units
 
 	table.clear(valid_sources)
@@ -217,7 +216,7 @@ ChainLightningEffects._find_new_chain_targets = function (self, t, broadphase, e
 	for ii = 1, #valid_sources do
 		local source = valid_sources[ii]
 
-		ChainLightning.jump(self, t, source, hit_units, broadphase, enemy_side_names, initial_travel_direction, radius, max_angle, max_z_diff, _on_add_func, _jump_validation_func)
+		ChainLightning.jump(self, t, source, hit_units, broadphase, enemy_side_names, initial_travel_direction, radius, max_angle, close_max_angle, max_z_diff, _on_add_func, _jump_validation_func)
 	end
 end
 
@@ -276,23 +275,21 @@ ChainLightningEffects._find_new_targets = function (self, t)
 		return
 	end
 
+	local owner_unit = self._owner_unit
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local side_system = Managers.state.extension:system("side_system")
-	local side = side_system.side_by_unit[self._owner_unit]
+	local side = side_system.side_by_unit[owner_unit]
 	local enemy_side_names = side:relation_side_names("enemy")
 	local broadphase = broadphase_system.broadphase
 	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
+	local stat_buffs = self._buff_extension:stat_buffs()
 	local chain_settings = action_settings and action_settings.chain_settings
-	local max_angle = chain_settings and chain_settings.max_angle or DEFAULT_MAX_ANGLE
-	local max_z_diff = chain_settings and chain_settings.max_z_diff or DEFAULT_MAX_Z_DIFF
-	local max_jumps = chain_settings and chain_settings.max_jumps or DEFAULT_MAX_JUMPS
-	local radius = chain_settings and chain_settings.radius or DEFAULT_RADIUS
-	local jump_time = chain_settings and chain_settings.jump_time or DEFAULT_JUMP_TIME
+	local max_angle, close_max_angle, max_z_diff, max_jumps, radius, jump_time = ChainLightning.targeting_parameters(chain_settings, stat_buffs)
 
 	for ii = 1, #self._chain_targets do
-		local attack_direction = Vector3_normalize(Vector3_flat(POSITION_LOOKUP[self._owner_unit] - POSITION_LOOKUP[self._chain_targets[ii]:value("unit")]))
+		local attack_direction = Vector3_normalize(Vector3_flat(POSITION_LOOKUP[owner_unit] - POSITION_LOOKUP[self._chain_targets[ii]:value("unit")]))
 
-		self:_find_new_chain_targets(t, broadphase, enemy_side_names, max_angle, max_z_diff, max_jumps, radius, self._chain_targets[ii], attack_direction)
+		self:_find_new_chain_targets(t, broadphase, enemy_side_names, max_angle, close_max_angle, max_z_diff, max_jumps, radius, self._chain_targets[ii], attack_direction)
 	end
 
 	self._next_jump_time = t + jump_time
@@ -331,21 +328,7 @@ ChainLightningEffects.update_first_person_mode = function (self, first_person_mo
 	self._is_in_first_person = first_person_mode
 end
 
-local function _get_particle_vfx(charge_level)
-	if not charge_level then
-		return TARGET_VFX_HIGH
-	end
-
-	if charge_level > 0.86 then
-		return TARGET_VFX_HIGH
-	elseif charge_level > 0.33 then
-		return TARGET_VFX_MID
-	else
-		return TARGET_VFX_LOW
-	end
-end
-
-ChainLightningEffects._update_vfx = function (self, t, world, current_particle_id, node_unit, node, target_unit, charge_level)
+ChainLightningEffects._update_vfx = function (self, t, world, current_particle_id, node_unit, node, target_unit)
 	if target_unit then
 		local from_pos = Unit_world_position(node_unit, node)
 		local target_pos = Unit_world_position(target_unit, Unit_node(target_unit, TARGET_NODE))
@@ -360,8 +343,7 @@ ChainLightningEffects._update_vfx = function (self, t, world, current_particle_i
 
 			return current_particle_id
 		else
-			local target_vfx = _get_particle_vfx(charge_level)
-			self._current_target_vfx = target_vfx
+			local target_vfx = _target_vfx_from_charge_level(self._charge_level)
 			local effect_id = World.create_particles(world, target_vfx, Vector3.zero())
 
 			World.set_particles_variable(world, effect_id, self._length_variable_index, particle_length)
@@ -520,19 +502,11 @@ function _on_add_func(self, t, parent_node, child_node)
 		local target_node_index = Unit_node(child_unit, TARGET_NODE)
 		local source_pos = Unit_world_position(parent_unit, source_node_index)
 		local target_pos = Unit_world_position(child_unit, target_node_index)
-		local target_x = target_pos.x
-		local target_y = target_pos.y
-		local target_z = target_pos.z
-
-		if target_x > 511 or target_x < -511 or target_y > 511 or target_y < -511 or target_z > 511 or target_z < -511 then
-			Log.warning("ChainLightningEffects", "Tried targeting %s at %s. This is wrong. Local position is %s.", tostring(child_unit), tostring(target_pos), tostring(Unit.local_position(child_unit, target_node_index)))
-		end
-
 		local line = target_pos - source_pos
 		local direction, length = Vector3_direction_length(line)
 		local rotation = Quaternion_look(direction)
 		local particle_length = Vector3(length, 1, 1)
-		local target_vfx = self._current_target_vfx
+		local target_vfx = _target_vfx_from_charge_level(self._charge_level)
 		local effect_id = World.create_particles(world, target_vfx, source_pos, rotation)
 
 		World.set_particles_variable(world, effect_id, self._length_variable_index, particle_length)
@@ -559,6 +533,20 @@ function _on_delete_func(node, self)
 
 	local unit = node:value("unit")
 	self._hit_units[unit] = nil
+end
+
+function _target_vfx_from_charge_level(charge_level)
+	if not charge_level then
+		return TARGET_VFX_HIGH
+	end
+
+	if charge_level > 0.86 then
+		return TARGET_VFX_HIGH
+	elseif charge_level > 0.33 then
+		return TARGET_VFX_MID
+	else
+		return TARGET_VFX_LOW
+	end
 end
 
 return ChainLightningEffects

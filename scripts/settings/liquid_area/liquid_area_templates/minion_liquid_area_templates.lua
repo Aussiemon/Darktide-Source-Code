@@ -57,6 +57,21 @@ local templates = {
 		spawn_brush_size = 1,
 		sfx_name_start = "wwise/events/minions/play_beast_of_nurgle_vomit_aoe",
 		sfx_name_stop = "wwise/events/minions/stop_beast_of_nurgle_vomit_aoe"
+	},
+	toxic_gas = {
+		start_pressure = 40,
+		end_pressure = 10,
+		sfx_name_stop = "wwise/events/minions/stop_beast_of_nurgle_vomit_aoe",
+		max_liquid = 1000,
+		cell_size = 0.75,
+		nav_cost_map_cost = 5,
+		linearized_flow = false,
+		life_time = 99999,
+		vfx_name_filled = "content/fx/particles/debug/toxic_gas_test",
+		sfx_name_start = "wwise/events/minions/play_beast_of_nurgle_vomit_aoe",
+		in_liquid_buff_template_name = "in_toxic_gas",
+		nav_cost_map_name = "fire",
+		spread_function = LiquidSpread.pour
 	}
 }
 

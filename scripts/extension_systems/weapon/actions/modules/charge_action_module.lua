@@ -16,15 +16,8 @@ end
 
 ChargeActionModule.reset = function (self, t, charge_duration_override)
 	local action_module_charge_component = self._action_module_charge_component
-	local charge_template = self._weapon_extension:charge_template()
-	local stat_buffs = self._buff_extension:stat_buffs()
-	local charge_duration = charge_duration_override or charge_template.charge_duration
-	charge_duration = charge_duration * stat_buffs.charge_up_time
-	local charge_delay = charge_template.charge_delay or 0
-	local charge_complete_time = t + charge_duration + charge_delay
-	local charge_level = 0
-	action_module_charge_component.charge_complete_time = charge_complete_time
-	action_module_charge_component.charge_level = charge_level
+	action_module_charge_component.charge_start_time = t
+	action_module_charge_component.charge_level = 0
 end
 
 ChargeActionModule.fixed_update = function (self, dt, t, charge_duration_override)
@@ -35,9 +28,9 @@ ChargeActionModule.fixed_update = function (self, dt, t, charge_duration_overrid
 	local charge_duration = charge_duration_override or charge_template.charge_duration
 	charge_duration = charge_duration * stat_buffs.charge_up_time
 	local charge_delay = charge_template.charge_delay or 0
-	local charge_complete_time = action_module_charge_component.charge_complete_time
+	local charge_start_time = action_module_charge_component.charge_start_time
 	local max_charge = action_module_charge_component.max_charge
-	local time_charged = math.max(0, charge_duration - math.max(0, charge_complete_time + charge_delay - t))
+	local time_charged = math.max(0, t - (charge_start_time + charge_delay))
 	local min_charge = time_charged > 0 and charge_template.min_charge or 0
 	local charge_time_percentage = time_charged / charge_duration
 	local charge_level = math.min(math.clamp(min_charge + (1 - min_charge) * charge_time_percentage, min_charge, 1), max_charge)
@@ -47,6 +40,18 @@ ChargeActionModule.fixed_update = function (self, dt, t, charge_duration_overrid
 	if charge_variable then
 		Unit.animation_set_variable(first_person_unit, charge_variable, charge_level)
 	end
+end
+
+ChargeActionModule.complete_time = function (self, charge_duration_override)
+	local action_module_charge_component = self._action_module_charge_component
+	local start_time = action_module_charge_component.charge_start_time
+	local charge_template = self._weapon_extension:charge_template()
+	local stat_buffs = self._buff_extension:stat_buffs()
+	local charge_duration = charge_duration_override or charge_template.charge_duration
+	charge_duration = charge_duration * stat_buffs.charge_up_time
+	local complete_time = start_time + charge_duration
+
+	return complete_time
 end
 
 local DEFAULT_RESET_CHARGE_ACTION_KINDS = {
@@ -81,7 +86,7 @@ ChargeActionModule.finish = function (self, reason, data, t, force_reset, ignore
 
 	if force_reset or action_kind_reset or reason_reset then
 		local action_module_charge_component = self._action_module_charge_component
-		action_module_charge_component.charge_complete_time = 0
+		action_module_charge_component.charge_start_time = 0
 		action_module_charge_component.charge_level = 0
 	end
 end

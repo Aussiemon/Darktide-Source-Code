@@ -2530,13 +2530,6 @@ local gameplay_vo_psyker_male_a = {
 			1.959813,
 			2.684
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	player_death_psyker = {
@@ -2555,13 +2548,6 @@ local gameplay_vo_psyker_male_a = {
 			2.079729,
 			3.027667,
 			2.170542
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -2582,13 +2568,6 @@ local gameplay_vo_psyker_male_a = {
 			5.146604,
 			1.905625
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	player_death_zealot = {
@@ -2607,13 +2586,6 @@ local gameplay_vo_psyker_male_a = {
 			1.982729,
 			1.529042,
 			1.804896
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -3772,27 +3744,24 @@ local gameplay_vo_psyker_male_a = {
 	},
 	response_for_veteran_seen_killstreak_psyker = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 4,
 		sound_events = {
 			"loc_psyker_male_a__response_for_veteran_seen_killstreak_psyker_01",
 			"loc_psyker_male_a__response_for_veteran_seen_killstreak_psyker_02",
 			"loc_psyker_male_a__response_for_veteran_seen_killstreak_psyker_03",
-			"loc_psyker_male_a__response_for_veteran_seen_killstreak_psyker_04",
-			"loc_psyker_male_a__response_for_veteran_seen_killstreak_psyker_05"
+			"loc_psyker_male_a__response_for_veteran_seen_killstreak_psyker_04"
 		},
 		sound_events_duration = {
 			4.259333,
 			1.994896,
 			2.0605,
-			2.004021,
-			3.375229
+			2.004021
 		},
 		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
+			0.25,
+			0.25,
+			0.25,
+			0.25
 		},
 		randomize_indexes = {}
 	},

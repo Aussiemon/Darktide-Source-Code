@@ -18,6 +18,7 @@ local Vo = require("scripts/utilities/vo")
 local InputDevice = require("scripts/managers/input/input_device")
 local ActionShoot = class("ActionShoot", "ActionWeaponBase")
 local proc_events = BuffSettings.proc_events
+local DEFUALT_NUM_CRITICAL_SHOTS = 1
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local EMPTY_TABLE = {}
 local ALT_FIRE_WWISE_SWITCH = {
@@ -81,7 +82,7 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 	local fire_time = fire_rate_settings.fire_time or 0
 	local auto_fire_time = fire_rate_settings.auto_fire_time
 	local max_shots = fire_rate_settings.max_shots
-	self._is_auto_fire_weapon = max_shots == nil and not not auto_fire_time
+	self._is_auto_fire_weapon = (max_shots == nil or max_shots == math.huge) and not not auto_fire_time
 	local combo_count = params.combo_count
 	self._combo_count = combo_count
 
@@ -543,7 +544,25 @@ ActionShoot._play_shoot_sound = function (self)
 			local has_special_shot = self._inventory_slot_component.special_active
 
 			if shoot_sfx_special_extra_alias and has_special_shot then
-				_trigger_gear_sound(fx_extension, muzzle_fx_source_name, shoot_sfx_special_extra_alias, action_module_charge_component)
+				local shoot_sfx_special_extra_with_offset = fx_settings.shoot_sfx_special_extra_with_offset
+
+				if shoot_sfx_special_extra_with_offset then
+					local spawner_pose = fx_extension:vfx_spawner_pose(muzzle_fx_source_name)
+					local from_pos = Matrix4x4.translation(spawner_pose)
+					local aim_rotation = self._first_person_component.rotation
+					local aim_direction = Quaternion.forward(aim_rotation)
+					local distance = 3
+
+					table.clear(EXTERNAL_PROPERTIES)
+
+					local charge_level = action_module_charge_component.charge_level
+					EXTERNAL_PROPERTIES.charge_level = charge_level >= 1 and "fully_charged"
+					local sync_to_clients = true
+
+					fx_extension:trigger_gear_wwise_event_with_position(shoot_sfx_special_extra_alias, EXTERNAL_PROPERTIES, from_pos + aim_direction * distance, sync_to_clients)
+				else
+					_trigger_gear_sound(fx_extension, muzzle_fx_source_name, shoot_sfx_special_extra_alias, action_module_charge_component)
+				end
 			end
 		end
 	elseif trigger_no_ammo_sound then
@@ -612,18 +631,17 @@ ActionShoot._play_muzzle_flash_vfx = function (self, shoot_rotation, charge_leve
 	local effect_name_secondary = fx.muzzle_flash_effect_secondary
 	local crit_effect_name = fx.muzzle_flash_crit_effect
 	local weapon_special_effect_name = fx.weapon_special_muzzle_flash_effect
+	local weapon_special_crit_effect_name = fx.weapon_special_muzzle_flash_crit_effect
 	local inventory_slot_component = self._inventory_slot_component
 	local special_active = inventory_slot_component.special_active
 	local effect_to_play = nil
 
-	if is_critical_strike then
-		effect_to_play = crit_effect_name or effect_name
-	elseif special_active then
-		effect_to_play = weapon_special_effect_name or effect_name
-	else
-		effect_to_play = effect_name
+	if special_active then
+		effect_to_play = is_critical_strike and weapon_special_crit_effect_name or weapon_special_effect_name
 	end
 
+	effect_to_play = effect_to_play or is_critical_strike and crit_effect_name or effect_name
+	effect_to_play = effect_to_play or effect_name
 	local is_charge_dependant = effect_to_play and type(effect_to_play) == "table"
 
 	if is_charge_dependant then
@@ -730,7 +748,7 @@ ActionShoot._check_for_auto_critical_strike = function (self)
 	local num_critical_shots = critical_strike_component.num_critical_shots
 	local weapon_handling_template = self._weapon_extension:weapon_handling_template() or EMPTY_TABLE
 	local critical_strike = weapon_handling_template.critical_strike or EMPTY_TABLE
-	local max_critical_shots = critical_strike.max_critical_shots or 1
+	local max_critical_shots = critical_strike.max_critical_shots or DEFUALT_NUM_CRITICAL_SHOTS
 	local auto_crits_left = num_critical_shots < max_critical_shots
 
 	if auto_fire and is_critical_strike and auto_crits_left then

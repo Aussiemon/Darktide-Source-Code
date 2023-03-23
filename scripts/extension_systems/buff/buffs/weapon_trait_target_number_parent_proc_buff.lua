@@ -33,14 +33,19 @@ WeaponTraitTargetNumberParentProcBuff.update = function (self, dt, t, ...)
 				local num_stacks_to_remove = num_child_stacks - 1
 
 				self:_remove_child_buff_stack(num_stacks_to_remove)
+
+				self._duration_progress = 0
+			else
+				local time_until_remove = remove_t - t
+				local remove_progress = time_until_remove / duration
+				self._duration_progress = 1 - remove_progress
 			end
 		end
 	end
 end
 
 WeaponTraitTargetNumberParentProcBuff.update_proc_events = function (self, t, proc_events, num_proc_events, portable_random, local_portable_random)
-	WeaponTraitTargetNumberParentProcBuff.super.super.update_proc_events(self, t, proc_events, num_proc_events, portable_random, local_portable_random)
-
+	local activated_proc, procced_proc_events = WeaponTraitTargetNumberParentProcBuff.super.super.update_proc_events(self, t, proc_events, num_proc_events, portable_random, local_portable_random)
 	local target_number_of_child_buffs = 1 + (self._template_data.target_number_of_stacks or 0)
 	local current_num_child_stacks = self._num_child_stacks
 
@@ -48,11 +53,17 @@ WeaponTraitTargetNumberParentProcBuff.update_proc_events = function (self, t, pr
 		local num_stacks_to_add = target_number_of_child_buffs - current_num_child_stacks
 
 		self:_add_child_buff_stack(t, num_stacks_to_add)
+
+		self._duration_progress = 0
 	elseif target_number_of_child_buffs < current_num_child_stacks then
 		local num_stacks_to_remove = current_num_child_stacks - target_number_of_child_buffs
 
 		self:_remove_child_buff_stack(num_stacks_to_remove)
+
+		self._duration_progress = 0
 	end
+
+	return activated_proc, procced_proc_events
 end
 
 return WeaponTraitTargetNumberParentProcBuff

@@ -3,11 +3,12 @@ NetworkedTestCases = {
 	complete_mission = function ()
 		Testify:run_case(function (dt, t)
 			Testify:make_request("complete_game_mode")
+			TestifySnippets.send_request_to_all_peers("wait_for_cutscene_to_finish", true, 3, "outro_win")
 		end)
 	end,
-	wait_for_cinematic_to_be_over = function ()
+	wait_for_mission_intro = function ()
 		Testify:run_case(function (dt, t)
-			TestifySnippets.wait_for_cinematic_to_be_over()
+			TestifySnippets.wait_for_mission_intro()
 		end)
 	end,
 	fast_forward_end_of_round = function ()
@@ -26,7 +27,7 @@ NetworkedTestCases = {
 				return output, true
 			end
 
-			if GameParameters.prod_like_backend then
+			if GameParameters.prod_like_backend and BUILD ~= "release" then
 				Testify:make_request("leave_party_immaterium")
 			end
 
@@ -68,6 +69,19 @@ NetworkedTestCases = {
 			TestifySnippets.send_request_to_all_peers("accept_vote", true)
 		end)
 	end,
+	create_party_with_all_clients = function ()
+		Testify:run_case(function (dt, t)
+			local party_id = Testify:make_request_on_client(TestifySnippets.first_peer(), "immaterium_party_id", true)
+			local peers_except_first = TestifySnippets.peers_except_first()
+			local first_peer = TestifySnippets.first_peer()
+
+			for _, peer_id in pairs(peers_except_first) do
+				Testify:make_request_on_client(peer_id, "immaterium_join_party", true, party_id)
+				Testify:make_request_on_client(first_peer, "accept_join_party", true)
+				TestifySnippets.wait(1)
+			end
+		end)
+	end,
 	reach_mission_on_all_clients = function (num_peers)
 		Testify:run_case(function (dt, t)
 			TestifySnippets.wait_for_peers(num_peers)
@@ -99,6 +113,12 @@ NetworkedTestCases = {
 			local num_iterations = settings.num_iterations or 12
 			local stay_in_the_hub_time = settings.stay_in_the_hub_time or 3
 			local stay_in_the_main_menu_time = settings.stay_in_the_main_menu_time or 1
+			local join_party = settings.join_party or false
+			local party_id = nil
+
+			if join_party then
+				party_id = Testify:make_request("immaterium_party_id")
+			end
 
 			for i = 1, num_iterations do
 				Testify:make_request("exit_to_main_menu")
@@ -106,7 +126,13 @@ NetworkedTestCases = {
 				TestifySnippets.wait(stay_in_the_main_menu_time)
 				Testify:make_request("press_play_main_menu")
 				Testify:make_request("wait_for_state_gameplay_reached")
-				TestifySnippets.wait(stay_in_the_hub_time)
+				TestifySnippets.wait(1)
+
+				if join_party then
+					Testify:make_request("immaterium_join_party", party_id)
+				end
+
+				TestifySnippets.wait(stay_in_the_hub_time - 1)
 			end
 		end)
 	end

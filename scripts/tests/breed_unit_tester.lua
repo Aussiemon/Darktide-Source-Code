@@ -52,6 +52,11 @@ end
 
 BreedUnitTester.update_time_slice_package_load = function (self)
 	local init_data = self._init_data
+
+	if init_data.ready then
+		return init_data.ready
+	end
+
 	local last_index = init_data.last_index
 	local resource_list = init_data.parameters.resource_list
 	local num_resources = #resource_list

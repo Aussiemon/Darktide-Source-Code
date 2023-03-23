@@ -540,8 +540,8 @@ weapon_template.actions = {
 		end,
 		hit_zone_priority = hit_zone_priority,
 		weapon_box = {
-			0.2,
-			0.15,
+			0.25,
+			0.25,
 			1.25
 		},
 		spline_settings = {
@@ -549,7 +549,7 @@ weapon_template.actions = {
 			anchor_point_offset = {
 				0,
 				0,
-				0
+				-0.15
 			}
 		},
 		damage_profile = DamageProfileTemplates.ogryn_club_heavy_tank,
@@ -557,9 +557,10 @@ weapon_template.actions = {
 		herding_template = HerdingTemplates.thunder_hammer_left_heavy
 	},
 	action_melee_start_left_2 = {
+		uninterruptible = true,
 		anim_end_event = "attack_finished",
 		kind = "windup",
-		uninterruptible = true,
+		anim_event_3p = "attack_swing_charge_left",
 		anim_event = "attack_swing_charge_left_pose",
 		stop_input = "attack_cancel",
 		total_time = 3,
@@ -832,7 +833,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.6
+				chain_time = 0.64
 			},
 			block = {
 				action_name = "action_block",

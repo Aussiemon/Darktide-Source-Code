@@ -29,6 +29,11 @@ end
 
 WwiseStateGroupCircumstance.on_gameplay_shutdown = function (self)
 	local circumstance_manager = Managers.state.circumstance
+
+	if not circumstance_manager then
+		return
+	end
+
 	local circumstance_name = circumstance_manager:circumstance_name()
 
 	if circumstance_name then

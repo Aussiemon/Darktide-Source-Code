@@ -32,6 +32,7 @@ _create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_berzerker_b
 _create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_captain_breed")
 _create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_executor_breed")
 _create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_flamer_breed")
+_create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_flamer_mutator_breed")
 _create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_grenadier_breed")
 _create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_gunner_breed")
 _create_breed_entry("scripts/settings/breed/breeds/renegade/renegade_melee_breed")

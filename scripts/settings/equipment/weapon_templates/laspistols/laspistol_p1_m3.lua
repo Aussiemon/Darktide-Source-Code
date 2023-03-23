@@ -557,9 +557,9 @@ weapon_template.actions = {
 		},
 		inner_push_rad = math.pi * 0.04,
 		outer_push_rad = math.pi * 0.1,
-		inner_damage_profile = DamageProfileTemplates.push_psyker,
+		inner_damage_profile = DamageProfileTemplates.default_push,
 		inner_damage_type = damage_types.physical,
-		outer_damage_profile = DamageProfileTemplates.push_psyker_outer,
+		outer_damage_profile = DamageProfileTemplates.light_push,
 		outer_damage_type = damage_types.physical
 	},
 	action_psyker_push = {

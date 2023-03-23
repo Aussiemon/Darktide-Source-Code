@@ -2468,7 +2468,7 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"hub_idle_conversation_fifteen_a"
+					"explicator"
 				}
 			},
 			{
@@ -2884,7 +2884,7 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"hub_idle_conversation_nine_a"
+					"explicator"
 				}
 			},
 			{
@@ -3692,7 +3692,7 @@ return function ()
 				"query_context",
 				"trigger_id",
 				OP.EQ,
-				"vox_story_talk"
+				"npc_story_talk"
 			},
 			{
 				"user_context",

@@ -606,7 +606,7 @@ weapon_template.actions = {
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/thunder_hammer/swing_right_down",
 			anchor_point_offset = {
-				0,
+				-0.15,
 				0,
 				0
 			}

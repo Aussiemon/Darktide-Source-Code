@@ -9,6 +9,14 @@ ActionWindup.start = function (self, action_settings, t, time_scale, params)
 	ActionWindup.super.start(self, action_settings, t, time_scale, params)
 
 	self._proc_trigger_time = self:_latest_chain_time(action_settings)
+	local buff_extension = self._buff_extension
+	local param_table = buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		param_table.combo_count = params.combo_count
+
+		buff_extension:add_proc_event(proc_events.on_windup_start, param_table)
+	end
 end
 
 ActionWindup.fixed_update = function (self, dt, t, time_in_action)

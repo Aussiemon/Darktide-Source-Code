@@ -427,7 +427,7 @@ local breed_data = {
 	hitzone_damage_multiplier = {
 		melee = {
 			[hit_zone_names.head] = 0.8,
-			[hit_zone_names.weakspot] = 0.9,
+			[hit_zone_names.weakspot] = 1.1,
 			[hit_zone_names.lower_left_arm] = 0.6,
 			[hit_zone_names.lower_right_arm] = 0.6,
 			[hit_zone_names.lower_left_leg] = 0.6,
@@ -441,7 +441,7 @@ local breed_data = {
 			[hit_zone_names.lower_tail] = 0.2
 		},
 		ranged = {
-			[hit_zone_names.weakspot] = 0.5,
+			[hit_zone_names.weakspot] = 0.7,
 			[hit_zone_names.head] = 0.4,
 			[hit_zone_names.lower_left_arm] = 0.35,
 			[hit_zone_names.lower_right_arm] = 0.35,

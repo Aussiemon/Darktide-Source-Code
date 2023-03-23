@@ -65,11 +65,11 @@ local breed_data = {
 		[stagger_types.sticky] = 3.6666666666666665
 	},
 	stagger_immune_times = {
-		[stagger_types.light] = 2,
-		[stagger_types.medium] = 2,
-		[stagger_types.heavy] = 2,
-		[stagger_types.light_ranged] = 2,
-		[stagger_types.killshot] = 2
+		[stagger_types.light] = 1,
+		[stagger_types.medium] = 1,
+		[stagger_types.heavy] = 1,
+		[stagger_types.light_ranged] = 1,
+		[stagger_types.killshot] = 1
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = 5,

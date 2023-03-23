@@ -6,6 +6,7 @@ local renegade_captain_default = {
 		slot_hellgun = {
 			drop_on_death = true,
 			is_weapon = true,
+			is_ranged_weapon = true,
 			items = {
 				"content/items/weapons/minions/ranged/chaos_traitor_guard_hellgun_01"
 			}
@@ -13,6 +14,7 @@ local renegade_captain_default = {
 		slot_bolt_pistol = {
 			drop_on_death = true,
 			is_weapon = true,
+			is_ranged_weapon = true,
 			items = {
 				"content/items/weapons/minions/ranged/chaos_traitor_guard_captain_plasma_gun_01"
 			}
@@ -20,6 +22,7 @@ local renegade_captain_default = {
 		slot_plasma_pistol = {
 			drop_on_death = true,
 			is_weapon = true,
+			is_ranged_weapon = true,
 			items = {
 				"content/items/weapons/minions/ranged/chaos_traitor_guard_captain_plasma_gun_01"
 			}
@@ -27,6 +30,7 @@ local renegade_captain_default = {
 		slot_shotgun = {
 			drop_on_death = true,
 			is_weapon = true,
+			is_ranged_weapon = true,
 			items = {
 				"content/items/weapons/minions/ranged/renegade_elite_shotgun"
 			}
@@ -34,6 +38,7 @@ local renegade_captain_default = {
 		slot_netgun = {
 			drop_on_death = true,
 			is_weapon = true,
+			is_ranged_weapon = true,
 			items = {
 				"content/items/weapons/minions/ranged/renegade_netgun"
 			}

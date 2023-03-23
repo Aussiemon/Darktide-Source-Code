@@ -65,6 +65,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 	local drowdown_button_passes = {
 		{
 			value = "content/ui/materials/buttons/background_selected",
+			style_id = "background",
 			pass_type = "texture",
 			style = {
 				horizontal_alignment = "right",
@@ -82,6 +83,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 		},
 		{
 			value = "content/ui/materials/buttons/dropdown_fill",
+			style_id = "fill",
 			pass_type = "texture",
 			style = {
 				vertical_alignment = "center",
@@ -96,8 +98,9 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 			}
 		},
 		{
-			value = "content/ui/materials/buttons/dropdown_line",
 			pass_type = "texture",
+			style_id = "line",
+			value = "content/ui/materials/buttons/dropdown_line",
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "right",
@@ -115,6 +118,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 		},
 		{
 			pass_type = "texture",
+			style_id = "frame",
 			value = "content/ui/materials/frames/hover",
 			style = {
 				vertical_alignment = "top",
@@ -151,8 +155,9 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 			visibility_function = list_item_focused_visibility_function
 		},
 		{
-			style_id = "dropdown_background",
 			pass_type = "rect",
+			syle_id = "dropdown_background",
+			style_id = "dropdown_background",
 			style = {
 				vertical_alignment = "top",
 				horizontal_alignment = "right",
@@ -178,6 +183,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 			value_id = "value_text",
 			pass_type = "text",
 			value = "n/a",
+			style_id = "text",
 			style = value_font_style,
 			change_function = highlight_color_change_function
 		}

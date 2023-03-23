@@ -11,6 +11,7 @@ local CircumstanceTemplates = require("scripts/settings/circumstance/circumstanc
 local CorruptorSettings = require("scripts/settings/corruptor/corruptor_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local DialogueLookup = require("scripts/settings/dialogue/dialogue_lookup")
 local DialogueLookupConcepts = require("scripts/settings/dialogue/dialogue_lookup_concepts")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
@@ -103,6 +104,7 @@ local no_item_definitions = {}
 local bot_profiles = BotCharacterProfiles(no_item_definitions)
 NetworkLookup.bot_profile_names = _create_lookup({}, bot_profiles)
 NetworkLookup.breed_names = _create_lookup({}, Breeds)
+NetworkLookup.dialogue_breed_names = _create_lookup({}, DialogueBreedSettings)
 NetworkLookup.buff_templates = _create_lookup({}, BuffTemplates)
 NetworkLookup.camera_shake_events = _create_lookup({}, CameraEffectSettings.shake)
 NetworkLookup.chest_states = {
@@ -399,10 +401,6 @@ for _, weapon_template in pairs(WeaponTemplates) do
 		weapon_modifiers[modifier_name] = true
 	end
 
-	for modifier_name, _ in pairs(perks) do
-		weapon_modifiers[modifier_name] = true
-	end
-
 	for modifier_name, _ in pairs(overclocks) do
 		weapon_modifiers[modifier_name] = true
 	end
@@ -419,8 +417,9 @@ NetworkLookup.weapon_modifier_override_type = _create_lookup({}, {
 	perks = true
 })
 NetworkLookup.weapon_modifier_override_keys = _create_lookup({}, {
-	value = true,
+	id = true,
 	name = true,
+	value = true,
 	rarity = true
 })
 NetworkLookup.weapon_templates = _create_lookup({}, WeaponTemplates)

@@ -211,11 +211,12 @@ BtInCoverAction._update_suppressed = function (self, unit, scratchpad, action_da
 	end
 end
 
-local function _target_is_left_or_right(unit, target_unit)
+local function _target_is_left_or_right(unit, scratchpad, action_data)
 	local forward = Quaternion.forward(Unit.local_rotation(unit, 1))
-	local target_position = POSITION_LOOKUP[target_unit]
+	local clear_shot_line_of_sight_id = action_data.clear_shot_line_of_sight_id
+	local aim_position = MinionAttack.get_aim_position(unit, scratchpad, clear_shot_line_of_sight_id) or POSITION_LOOKUP[scratchpad.perception_component.target_unit]
 	local unit_position = POSITION_LOOKUP[unit]
-	local flat_direction_to_target = Vector3.flat(Vector3.normalize(target_position - unit_position))
+	local flat_direction_to_target = Vector3.flat(Vector3.normalize(aim_position - unit_position))
 
 	if Vector3.cross(forward, flat_direction_to_target).z > 0 then
 		return "left"
@@ -224,20 +225,19 @@ local function _target_is_left_or_right(unit, target_unit)
 	end
 end
 
-BtInCoverAction._get_peek_identifier = function (self, unit, scratchpad, cover_component)
+BtInCoverAction._get_peek_identifier = function (self, unit, scratchpad, action_data, cover_component)
 	local peek_type = cover_component.peek_type
 	local cover_type = cover_component.type
 	local peek_types = CoverSettings.peek_types
 	local cover_types = CoverSettings.types
 	local peek_identifier = nil
-	local perception_component = scratchpad.perception_component
 
 	if peek_type == peek_types.both then
-		local left_or_right = _target_is_left_or_right(unit, perception_component.target_unit)
+		local left_or_right = _target_is_left_or_right(unit, scratchpad, action_data)
 		peek_identifier = left_or_right
 	elseif peek_type == peek_types.right then
 		if cover_type == cover_types.low then
-			local left_or_right = _target_is_left_or_right(unit, perception_component.target_unit)
+			local left_or_right = _target_is_left_or_right(unit, scratchpad, action_data)
 
 			if left_or_right == "left" then
 				peek_identifier = "up"
@@ -249,7 +249,7 @@ BtInCoverAction._get_peek_identifier = function (self, unit, scratchpad, cover_c
 		end
 	elseif peek_type == peek_types.left then
 		if cover_type == cover_types.low then
-			local left_or_right = _target_is_left_or_right(unit, perception_component.target_unit)
+			local left_or_right = _target_is_left_or_right(unit, scratchpad, action_data)
 
 			if left_or_right == "right" then
 				peek_identifier = "up"
@@ -267,7 +267,7 @@ BtInCoverAction._get_peek_identifier = function (self, unit, scratchpad, cover_c
 end
 
 BtInCoverAction._start_peeking = function (self, unit, scratchpad, action_data, cover_component, peek_identifier, t)
-	peek_identifier = peek_identifier or self:_get_peek_identifier(unit, scratchpad, cover_component)
+	peek_identifier = peek_identifier or self:_get_peek_identifier(unit, scratchpad, action_data, cover_component)
 	local anim_event = action_data.peek_anim_events[peek_identifier]
 	local animation_extension = scratchpad.animation_extension
 
@@ -306,7 +306,7 @@ BtInCoverAction._update_peeking = function (self, unit, scratchpad, action_data,
 			local can_peak = scratchpad.perception_component.target_distance < min_peak_distance
 
 			if can_peak then
-				local peek_identifier = self:_get_peek_identifier(unit, scratchpad, cover_component)
+				local peek_identifier = self:_get_peek_identifier(unit, scratchpad, action_data, cover_component)
 
 				if peek_identifier ~= scratchpad.current_peak_identifier then
 					self:_start_peeking(unit, scratchpad, action_data, cover_component, peek_identifier, t)
@@ -319,6 +319,14 @@ end
 
 BtInCoverAction._has_clear_shot_from_aiming_when_peeking = function (self, unit, scratchpad, action_data, perception_component, target_unit)
 	if not perception_component.has_line_of_sight then
+		if action_data.suppressive_fire and perception_component.has_good_last_los_position then
+			local clear_shot_line_of_sight_id = action_data.clear_shot_line_of_sight_id
+			local to_node = scratchpad.clear_shot_line_of_sight_data.to_node
+			local aim_position = MinionAttack.get_aim_position(unit, scratchpad, clear_shot_line_of_sight_id, to_node)
+
+			return true, aim_position
+		end
+
 		return false, nil
 	end
 
@@ -333,12 +341,11 @@ BtInCoverAction._has_clear_shot_from_aiming_when_peeking = function (self, unit,
 	end
 
 	local local_offset = boxed_offset:unbox()
-	local clear_shot_line_of_sight_data = scratchpad.clear_shot_line_of_sight_data
-	local to_node_name = clear_shot_line_of_sight_data.to_node
 	local unit_world_pose = Unit.world_pose(unit, 1)
 	local from_position = Matrix4x4.transform(unit_world_pose, local_offset)
-	local to_node = Unit.node(target_unit, to_node_name)
-	local to_position = Unit.world_position(target_unit, to_node)
+	local clear_shot_line_of_sight_id = action_data.clear_shot_line_of_sight_id
+	local to_node = scratchpad.clear_shot_line_of_sight_data.to_node
+	local to_position = MinionAttack.get_aim_position(unit, scratchpad, clear_shot_line_of_sight_id, to_node)
 	local vector = to_position - from_position
 	local distance = Vector3.length(vector)
 	local direction = Vector3.normalize(vector)
@@ -394,23 +401,20 @@ BtInCoverAction._update_aiming = function (self, unit, breed, scratchpad, blackb
 end
 
 BtInCoverAction._aim_at_target = function (self, unit, t, action_data, scratchpad, blackboard)
-	local perception_component = scratchpad.perception_component
-	local perception_extension = scratchpad.perception_extension
-	local target_unit = perception_component.target_unit
 	local clear_shot_line_of_sight_id = action_data.clear_shot_line_of_sight_id
+	local to_node = scratchpad.clear_shot_line_of_sight_data.to_node
+	local aim_position = MinionAttack.get_aim_position(unit, scratchpad, clear_shot_line_of_sight_id, to_node)
 
-	if not perception_extension:has_line_of_sight_by_id(target_unit, clear_shot_line_of_sight_id) then
+	if not aim_position then
 		return
 	end
 
-	local last_los_position = perception_extension:last_los_position(target_unit)
+	scratchpad.current_aim_position:store(aim_position)
 
-	scratchpad.current_aim_position:store(last_los_position)
-
-	local los_node = scratchpad.clear_shot_line_of_sight_data.from_node
-	local aim_node = Unit.node(unit, los_node)
+	local from_node = scratchpad.clear_shot_line_of_sight_data.from_node
+	local aim_node = Unit.node(unit, from_node)
 	local unit_position = Unit.world_position(unit, aim_node)
-	local to_target = last_los_position - unit_position
+	local to_target = aim_position - unit_position
 	local to_target_direction = Vector3.normalize(to_target)
 	local unit_rotation = Unit.local_rotation(unit, 1)
 	local current_peak_identifier = scratchpad.current_peak_identifier

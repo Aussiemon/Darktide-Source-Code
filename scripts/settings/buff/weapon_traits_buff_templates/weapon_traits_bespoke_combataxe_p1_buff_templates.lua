@@ -36,9 +36,10 @@ templates.weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill_par
 	check_proc_func = CheckProcFunctions.on_one_hit_kill
 }
 templates.weapon_trait_bespoke_combataxe_p1_rending_on_one_hit_kill_child = {
-	predicted = false,
+	hide_icon_in_hud = true,
 	stack_offset = -1,
 	max_stacks = 5,
+	predicted = false,
 	class_name = "buff",
 	conditional_stat_buffs = {
 		[stat_buffs.rending_multiplier] = 0.1

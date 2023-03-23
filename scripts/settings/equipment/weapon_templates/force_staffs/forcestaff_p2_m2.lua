@@ -240,7 +240,6 @@ weapon_template.actions = {
 		kind = "spawn_projectile",
 		anim_event = "orb_shoot",
 		vfx_effect_name = "content/fx/particles/weapons/force_staff/force_staff_projectile_cast_01",
-		damage_type = "force_staff_single_target",
 		anim_time_scale = 1.5,
 		fire_time = 0.2,
 		charge_template = "forcestaff_p1_m1_projectile",
@@ -412,7 +411,7 @@ weapon_template.actions = {
 			start_modifier = 0.1
 		},
 		running_action_state_to_action_input = {
-			charge_depleated = {
+			charge_depleted = {
 				input_name = "cancel_flame"
 			}
 		},
@@ -430,7 +429,7 @@ weapon_template.actions = {
 		fire_configuration = {
 			charge_cost = true,
 			flamer_gas_template = FlamerGasTemplates.warp_fire_auto,
-			damage_type = damage_types.force_staff_single_target
+			damage_type = damage_types.warpfire
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -1109,12 +1108,12 @@ weapon_template.displayed_attacks = {
 		type = "hipfire"
 	},
 	secondary = {
-		display_name = "loc_forcestaff_p2_m1_attack_secondary",
+		display_name = "loc_forcestaff_p2_m1_attack_primary",
 		type = "charge"
 	},
 	special = {
 		desc = "loc_stats_special_action_melee_weapon_bash_forcestaff_desc",
-		display_name = "loc_forcestaff_p2_m1_attack_special",
+		display_name = "loc_forcestaff_p1_m1_attack_special",
 		type = "melee_hand"
 	}
 }

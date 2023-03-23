@@ -278,12 +278,12 @@ weapon_template.actions = {
 		end
 	},
 	action_right_light = {
-		damage_window_start = 0.4666666666666667,
+		damage_window_start = 0.43333333333333335,
 		hit_armor_anim = "attack_hit_shield",
-		anim_event_3p = "attack_swing_down_slow",
+		anim_event_3p = "attack_swing_right",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		weapon_handling_template = "time_scale_1_2",
+		weapon_handling_template = "time_scale_1_4",
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
 		damage_window_end = 0.6,
@@ -334,7 +334,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left_2",
-				chain_time = 0.65
+				chain_time = 0.62
 			},
 			block = {
 				action_name = "action_block",
@@ -446,7 +446,7 @@ weapon_template.actions = {
 				-0.2
 			}
 		},
-		damage_profile = DamageProfileTemplates.ogryn_club_heavy_smiter,
+		damage_profile = DamageProfileTemplates.ogryn_club_heavy_tank,
 		damage_type = damage_types.ogryn_pipe_club,
 		herding_template = HerdingTemplates.thunder_hammer_left_heavy
 	},
@@ -489,7 +489,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
-				chain_time = 0.75
+				chain_time = 0.72
 			},
 			block = {
 				action_name = "action_block"
@@ -510,7 +510,7 @@ weapon_template.actions = {
 		damage_window_start = 0.43333333333333335,
 		hit_armor_anim = "attack_hit_shield",
 		anim_event_3p = "attack_swing_left_slow",
-		weapon_handling_template = "time_scale_0_9",
+		weapon_handling_template = "time_scale_1",
 		first_person_hit_anim = "hit_left_down_shake",
 		kind = "sweep",
 		first_person_hit_stop_anim = "attack_hit",
@@ -563,7 +563,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.75
+				chain_time = 0.61
 			},
 			block = {
 				action_name = "action_block"
@@ -598,7 +598,7 @@ weapon_template.actions = {
 		herding_template = HerdingTemplates.thunder_hammer_left_heavy
 	},
 	action_left_light_2 = {
-		damage_window_start = 0.43333333333333335,
+		damage_window_start = 0.5,
 		hit_armor_anim = "attack_hit_shield",
 		weapon_handling_template = "time_scale_1_1",
 		kind = "sweep",
@@ -606,7 +606,7 @@ weapon_template.actions = {
 		range_mod = 1.25,
 		first_person_hit_stop_anim = "attack_hit",
 		anim_event_3p = "attack_swing_down_slow",
-		damage_window_end = 0.7666666666666667,
+		damage_window_end = 0.6,
 		attack_direction_override = "push",
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
@@ -802,7 +802,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.95
+				chain_time = 0.68
 			},
 			block = {
 				action_name = "action_block",
@@ -1234,7 +1234,7 @@ weapon_template.actions = {
 		first_person_hit_stop_anim = "attack_hit",
 		attack_direction_override = "push",
 		damage_window_end = 0.8,
-		anim_event_3p = "attack_swing_down",
+		anim_event_3p = "attack_swing_down_slow",
 		anim_event = "attack_swing_down",
 		total_time = 2,
 		action_movement_curve = {
@@ -1676,10 +1676,10 @@ weapon_template.displayed_attacks = {
 		}
 	},
 	secondary = {
-		display_name = "loc_gestalt_smiter",
-		type = "smiter",
+		display_name = "loc_gestalt_tank",
+		type = "tank",
 		attack_chain = {
-			"smiter",
+			"tank",
 			"tank"
 		}
 	},

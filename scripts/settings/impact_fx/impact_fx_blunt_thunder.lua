@@ -20,6 +20,10 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/play_weakspot_blood",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_thunder_hammer_cleave",
+				append_husk_to_event_name = true
 			}
 		},
 		died = {
@@ -29,6 +33,10 @@ local unarmored = {
 			},
 			{
 				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_thunder_hammer_cleave",
 				append_husk_to_event_name = true
 			}
 		},
@@ -40,6 +48,10 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/play_weakspot_blood",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_thunder_hammer_cleave",
+				append_husk_to_event_name = true
 			}
 		},
 		damage = {
@@ -49,6 +61,30 @@ local unarmored = {
 			},
 			{
 				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_thunder_hammer_cleave",
+				append_husk_to_event_name = true
+			}
+		},
+		damage_reduced = {
+			{
+				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_thunder_hammer_cleave",
+				append_husk_to_event_name = true
+			}
+		},
+		damage_negated = {
+			{
+				event = "wwise/events/weapon/melee_hits_blunt_heavy",
 				append_husk_to_event_name = true
 			}
 		},
@@ -95,6 +131,11 @@ local unarmored = {
 				effects = {
 					"content/fx/particles/impacts/generic_dust_unarmored"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/thunder_hammer/impact_thunder_hammer_default"
+				}
 			}
 		},
 		died = {
@@ -106,6 +147,11 @@ local unarmored = {
 			{
 				effects = {
 					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/thunder_hammer/impact_thunder_hammer_default"
 				}
 			}
 		},
@@ -123,6 +169,11 @@ local unarmored = {
 			{
 				effects = {
 					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/thunder_hammer/impact_thunder_hammer_default"
 				}
 			}
 		},
@@ -144,6 +195,11 @@ local unarmored = {
 			{
 				effects = {
 					"content/fx/particles/impacts/generic_dust_unarmored"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/thunder_hammer/impact_thunder_hammer_default"
 				}
 			}
 		},
@@ -217,6 +273,10 @@ local armored = {
 			{
 				event = "wwise/events/weapon/play_weakspot_blood",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_thunder_hammer_cleave",
+				append_husk_to_event_name = true
 			}
 		},
 		died = {
@@ -227,6 +287,10 @@ local armored = {
 			{
 				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_thunder_hammer_cleave",
+				append_husk_to_event_name = true
 			}
 		},
 		weakspot_damage = {
@@ -236,6 +300,10 @@ local armored = {
 			},
 			{
 				event = "wwise/events/weapon/play_weakspot_blood",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_thunder_hammer_cleave",
 				append_husk_to_event_name = true
 			}
 		},
@@ -247,6 +315,10 @@ local armored = {
 			{
 				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_thunder_hammer_cleave",
+				append_husk_to_event_name = true
 			}
 		},
 		damage_reduced = {
@@ -257,6 +329,10 @@ local armored = {
 			{
 				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_thunder_hammer_cleave",
+				append_husk_to_event_name = true
 			}
 		},
 		damage_negated = {
@@ -309,6 +385,11 @@ local armored = {
 				effects = {
 					"content/fx/particles/impacts/armor_penetrate"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/thunder_hammer/impact_thunder_hammer_default"
+				}
 			}
 		},
 		died = {
@@ -320,6 +401,11 @@ local armored = {
 			{
 				effects = {
 					"content/fx/particles/impacts/armor_penetrate"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/thunder_hammer/impact_thunder_hammer_default"
 				}
 			}
 		},
@@ -333,6 +419,11 @@ local armored = {
 				effects = {
 					"content/fx/particles/impacts/armor_penetrate"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/thunder_hammer/impact_thunder_hammer_default"
+				}
 			}
 		},
 		damage = {
@@ -344,6 +435,11 @@ local armored = {
 			{
 				effects = {
 					"content/fx/particles/impacts/armor_penetrate"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/thunder_hammer/impact_thunder_hammer_default"
 				}
 			}
 		},
@@ -432,6 +528,10 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_weakspot_blood",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_thunder_hammer_cleave",
+				append_husk_to_event_name = true
 			}
 		},
 		died = {
@@ -441,6 +541,10 @@ local disgustingly_resilient = {
 			},
 			{
 				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_thunder_hammer_cleave",
 				append_husk_to_event_name = true
 			}
 		},
@@ -452,6 +556,10 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_weakspot_blood",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_thunder_hammer_cleave",
+				append_husk_to_event_name = true
 			}
 		},
 		damage = {
@@ -461,6 +569,16 @@ local disgustingly_resilient = {
 			},
 			{
 				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_thunder_hammer_cleave",
+				append_husk_to_event_name = true
+			}
+		},
+		damage_reduced = {
+			{
+				event = "wwise/events/weapon/melee_hits_blunt_heavy",
 				append_husk_to_event_name = true
 			}
 		},
@@ -512,12 +630,22 @@ local disgustingly_resilient = {
 				effects = {
 					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
 				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/thunder_hammer/impact_thunder_hammer_default"
+				}
 			}
 		},
 		died = {
 			{
 				effects = {
 					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/thunder_hammer/impact_thunder_hammer_default"
 				}
 			}
 		},
@@ -530,6 +658,11 @@ local disgustingly_resilient = {
 			{
 				effects = {
 					"content/fx/particles/impacts/flesh/gib_flesh_bits_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/thunder_hammer/impact_thunder_hammer_default"
 				}
 			}
 		},
@@ -544,6 +677,11 @@ local disgustingly_resilient = {
 				normal_rotation = false,
 				effects = {
 					"content/fx/particles/impacts/flesh/poxwalker_blood_splatter_reduced_damage_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/weapons/thunder_hammer/impact_thunder_hammer_default"
 				}
 			}
 		},
