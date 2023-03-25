@@ -554,7 +554,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.43
+				chain_time = 0.45
 			},
 			block = {
 				chain_time = 0.35,

@@ -141,7 +141,6 @@ damage_templates.frag_grenade = {
 	gibbing_power = 0,
 	stagger_category = "explosion",
 	suppression_value = 10,
-	damage_type = "frag",
 	ragdoll_push_force = 600,
 	ignore_stagger_reduction = true,
 	cleave_distribution = {
@@ -213,11 +212,11 @@ damage_templates.frag_grenade = {
 			boost_curve = PowerLevelSettings.boost_curves.default
 		}
 	},
-	gibbing_type = GibbingTypes.explosion
+	gibbing_type = GibbingTypes.explosion,
+	damage_type = damage_types.grenade_frag
 }
 damage_templates.close_frag_grenade = {
 	suppression_value = 10,
-	damage_type = "frag",
 	ragdoll_push_force = 850,
 	ignore_stagger_reduction = true,
 	stagger_category = "explosion",
@@ -259,12 +258,12 @@ damage_templates.close_frag_grenade = {
 		}
 	},
 	gibbing_type = GibbingTypes.explosion,
-	gibbing_power = GibbingPower.heavy
+	gibbing_power = GibbingPower.heavy,
+	damage_type = damage_types.grenade_frag
 }
 damage_templates.krak_grenade = {
 	stagger_category = "explosion",
 	suppression_value = 10,
-	damage_type = "krak",
 	ragdoll_push_force = 500,
 	ignore_stagger_reduction = true,
 	cleave_distribution = {
@@ -337,12 +336,12 @@ damage_templates.krak_grenade = {
 		}
 	},
 	gibbing_type = GibbingTypes.explosion,
-	gibbing_power = GibbingPower.medium
+	gibbing_power = GibbingPower.medium,
+	damage_type = damage_types.grenade_krak
 }
 damage_templates.close_krak_grenade = {
 	suppression_value = 10,
 	ignore_shield = true,
-	damage_type = "krak",
 	ragdoll_push_force = 1250,
 	ignore_stagger_reduction = true,
 	stagger_category = "explosion",
@@ -384,7 +383,8 @@ damage_templates.close_krak_grenade = {
 		}
 	},
 	gibbing_type = GibbingTypes.explosion,
-	gibbing_power = GibbingPower.heavy
+	gibbing_power = GibbingPower.heavy,
+	damage_type = damage_types.grenade_krak
 }
 damage_templates.plasma_demolition = {
 	ragdoll_push_force = 1250,

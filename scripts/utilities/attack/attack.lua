@@ -8,6 +8,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Damage = require("scripts/utilities/attack/damage")
 local DamageCalculation = require("scripts/utilities/attack/damage_calculation")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
+local DamageSettings = require("scripts/settings/damage/damage_settings")
 local DamageTakenCalculation = require("scripts/utilities/attack/damage_taken_calculation")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local FriendlyFire = require("scripts/utilities/attack/friendly_fire")
@@ -28,6 +29,7 @@ local attack_types = AttackSettings.attack_types
 local damage_efficiencies = AttackSettings.damage_efficiencies
 local proc_events = BuffSettings.proc_events
 local keywords = BuffSettings.keywords
+local damage_types = DamageSettings.damage_types
 local toughness_replenish_types = ToughnessSettings.replenish_types
 local _execute, _handle_attack, _handle_buffs, _handle_result, _has_armor_penetrating_buff, _record_stats, _record_telemetry, _trigger_backstab_interfacing, _trigger_elite_special_kill_interfacing, _trigger_flank_interfacing, _trigger_training_grounds_events, ARGS, NUM_ARGS = nil
 local Attack = {}
@@ -227,7 +229,7 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 			local is_attacked_unit_suppressed = Suppression.is_suppressed(attacked_unit)
 			local power_level_damage_multiplier = 1
 
-			if damage_type == "frag" and target_breed_or_nil and target_breed_or_nil.explosion_power_multiplier then
+			if damage_type == damage_types.grenade_frag and target_breed_or_nil and target_breed_or_nil.explosion_power_multiplier then
 				power_level_damage_multiplier = target_breed_or_nil.explosion_power_multiplier
 			end
 

@@ -5,6 +5,7 @@ local Breeds = require("scripts/settings/breed/breeds")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
 local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
+local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
@@ -18,6 +19,7 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local attack_types = AttackSettings.attack_types
 local keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
+local damage_types = DamageSettings.damage_types
 local slot_configuration = PlayerCharacterConstants.slot_configuration
 local special_rules = SpecialRulesSetting.special_rules
 local stat_buffs = BuffSettings.stat_buffs
@@ -758,7 +760,7 @@ templates.veteran_ranger_frag_grenade_bleed = {
 	proc_func = function (params, template_data, template_context, t)
 		local damage_type = params.damage_type
 
-		if not damage_type or damage_type ~= "frag" then
+		if not damage_type or damage_type ~= damage_types.grenade_frag then
 			return
 		end
 

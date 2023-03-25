@@ -1101,7 +1101,7 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 		end
 
 		if sound_event then
-			if rule.pre_wwise_event or rule.post_wwise_event then
+			if rule and (rule.pre_wwise_event or rule.post_wwise_event) then
 				dialogue.dialogue_sequence = self:_create_sequence_events_table(rule.pre_wwise_event, wwise_route, sound_event, rule.post_wwise_event)
 				dialogue.currently_playing_event_id = extension:play_event(dialogue.dialogue_sequence[1])
 				is_sequence = true
@@ -1115,7 +1115,7 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 				is_sequence = false
 			end
 
-			local concurrent_wwise_event = rule.concurrent_wwise_event
+			local concurrent_wwise_event = rule and rule.concurrent_wwise_event
 
 			if concurrent_wwise_event then
 				dialogue.concurrent_wwise_event_id = self:play_wwise_event(extension, concurrent_wwise_event)
@@ -1162,7 +1162,9 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 		self._dialogue_system_subtitle:add_playing_localized_dialogue(speaker_name, dialogue)
 	end
 
-	dialogue.wwise_route = rule.wwise_route
+	if rule then
+		dialogue.wwise_route = rule.wwise_route
+	end
 end
 
 DialogueSystem._create_sequence_events_table = function (self, pre_wwise_event, wwise_route, sound_event, post_wwise_event)
