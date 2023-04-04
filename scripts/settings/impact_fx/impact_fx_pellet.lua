@@ -291,7 +291,186 @@ local armored = {
 		damage = blood_ball
 	}
 }
-local super_armor = table.clone(armored)
+local super_armor = {
+	sfx = {
+		weakspot_died = {
+			{
+				event = "wwise/events/weapon/play_bullet_hits_large_gen",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_large_death",
+				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_indicator_weakspot_armored",
+				only_1p = true
+			}
+		},
+		died = {
+			{
+				event = "wwise/events/weapon/play_bullet_hits_large_gen",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_bullet_hits_large_death",
+				only_1p = true
+			}
+		},
+		weakspot_damage = {
+			{
+				event = "wwise/events/weapon/play_bullet_hits_large_gen",
+				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_indicator_weakspot_armored",
+				only_1p = true
+			}
+		},
+		damage = {
+			{
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
+				append_husk_to_event_name = true
+			}
+		},
+		damage_reduced = {
+			{
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
+				append_husk_to_event_name = true
+			}
+		},
+		damage_negated = {
+			{
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				append_husk_to_event_name = true
+			}
+		},
+		shield_blocked = {
+			{
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				append_husk_to_event_name = true
+			}
+		},
+		blocked = {
+			{
+				event = "wwise/events/weapon/play_bullet_hits_gen_damage_negated",
+				append_husk_to_event_name = true
+			}
+		},
+		dead = {
+			{
+				event = "wwise/events/weapon/play_bullet_hits_gen_armored",
+				append_husk_to_event_name = true
+			}
+		}
+	},
+	vfx = {
+		weakspot_died = {
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/autogun/autogun_impact_armored"
+				}
+			}
+		},
+		died = {
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/blood_splatter_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/autogun/autogun_impact_armored"
+				}
+			}
+		},
+		weakspot_damage = {
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/blood_splatter_weakspot_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/autogun/autogun_impact_armored"
+				}
+			}
+		},
+		damage = {
+			{
+				effects = {
+					"content/fx/particles/impacts/flesh/blood_splatter_small_01"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/autogun/autogun_impact_armored"
+				}
+			}
+		},
+		damage_reduced = {
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/autogun/autogun_impact_armored"
+				}
+			}
+		},
+		damage_negated = {
+			{
+				effects = {
+					"content/fx/particles/impacts/damage_blocked"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
+		},
+		shield_blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/damage_blocked"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
+		},
+		blocked = {
+			{
+				effects = {
+					"content/fx/particles/impacts/damage_blocked"
+				}
+			},
+			{
+				effects = {
+					"content/fx/particles/impacts/armor_ricochet"
+				}
+			}
+		}
+	},
+	linked_decal = {
+		weakspot_died = default_armor_decal,
+		died = default_armor_decal,
+		weakspot_damage = default_armor_decal,
+		damage = default_armor_decal,
+		damage_reduced = default_armor_decal
+	},
+	blood_ball = {
+		weakspot_died = blood_ball,
+		died = blood_ball,
+		weakspot_damage = blood_ball,
+		damage = blood_ball
+	}
+}
 local disgustingly_resilient = {
 	sfx = {
 		weakspot_died = {

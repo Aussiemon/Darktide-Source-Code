@@ -41,6 +41,9 @@ DefaultPlayerOrientation.pre_update = function (self, main_t, main_dt, input, se
 	local weapon_action_component = self._weapon_action_component
 	local aim_assist_ramp_component = self._aim_assist_ramp_component
 	local targeting_data = self._smart_targeting_extension:targeting_data()
+	local aim_assist_context = self:_aim_assist_context()
+	local aim_assist_sensitivity_modifier = AimAssist.sensitivity_modifier(aim_assist_context)
+	sensitivity = sensitivity * aim_assist_sensitivity_modifier
 
 	self:_fill_look_delta_context(look_delta_context)
 
@@ -60,12 +63,17 @@ DefaultPlayerOrientation.pre_update = function (self, main_t, main_dt, input, se
 		end
 	end
 
+	AimAssist.apply_movement_aim_assist(aim_assist_context, orientation, input, look_delta, main_dt, main_t)
+
+	orientation.yaw, orientation.pitch = AimAssist.apply_lock_on(aim_assist_context, main_t, targeting_data, look_delta, orientation.yaw, orientation.pitch)
 	local yaw = (orientation.yaw - look_delta.x) % PI_2
 	local pitch = math.clamp((orientation.pitch + PI) % PI_2 - PI + look_delta.y, min_pitch, max_pitch) % PI_2
 	yaw, pitch = AimAssist.apply_aim_assist(main_t, main_dt, input, targeting_data, aim_assist_ramp_component, weapon_action_component, yaw, pitch, position)
 	orientation.yaw = math.mod_two_pi(yaw)
 	orientation.pitch = math.mod_two_pi(pitch)
 	orientation.roll = 0
+
+	AimAssist.store_target_position(aim_assist_context, orientation)
 end
 
 DefaultPlayerOrientation.orientation_offset = function (self)

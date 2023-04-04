@@ -1,3 +1,4 @@
+local InputDevice = require("scripts/managers/input/input_device")
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
 local BasePlayerOrientation = class("BasePlayerOrientation")
 
@@ -71,6 +72,25 @@ BasePlayerOrientation._fill_look_delta_context = function (self, context)
 	context.is_lunging = is_lunging
 	context.alternate_fire_component = alternate_fire_component
 	context.weapon_action_component = weapon_action_component
+end
+
+local _aim_assist_context = {}
+
+BasePlayerOrientation._aim_assist_context = function (self)
+	local last_pressed_device = InputDevice.last_pressed_device
+	local gamepad_active = last_pressed_device and last_pressed_device:type() == "xbox_controller"
+	_aim_assist_context.input_device_wants_aim_assist = gamepad_active
+	_aim_assist_context.targeting_data = self._smart_targeting_extension:targeting_data()
+	_aim_assist_context.first_person_unit = self._first_person_unit
+	local aim_assist_data = self._player.aim_assist_data
+	local wants_lock_on = aim_assist_data.wants_lock_on
+	_aim_assist_context.wants_lock_on = wants_lock_on
+
+	if wants_lock_on then
+		aim_assist_data.wants_lock_on = false
+	end
+
+	return _aim_assist_context
 end
 
 return BasePlayerOrientation

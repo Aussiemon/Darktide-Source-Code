@@ -80,14 +80,15 @@ templates.weapon_trait_bespoke_forcesword_p1_chained_weakspot_hits_increases_pow
 templates.weapon_trait_bespoke_forcesword_p1_chained_weakspot_hits_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.chained_weakspot_hits_increases_power_child)
 templates.weapon_trait_bespoke_forcesword_p1_warp_burninating_on_crit = table.clone(BaseWeaponTraitBuffTemplates.warpfire_on_crits_melee)
 templates.weapon_trait_bespoke_forcesword_p1_chained_hits_vents_warpcharge = {
-	predicted = false,
 	vent_percentage = 0.05,
+	predicted = false,
 	max_stacks = 1,
 	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_sweep_finish] = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = CheckProcFunctions.on_weakspot_hit,
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")

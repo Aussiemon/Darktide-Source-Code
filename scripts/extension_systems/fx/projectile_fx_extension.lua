@@ -1,3 +1,4 @@
+local AttackingUnitResolver = require("scripts/utilities/attack/attacking_unit_resolver")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
@@ -364,7 +365,17 @@ ProjectileFxExtension.set_speed_paramater = function (self, speed)
 end
 
 ProjectileFxExtension.should_play_husk_effect = function (self)
-	return false
+	local owner_unit = AttackingUnitResolver.resolve(self._unit)
+
+	if self._unit ~= owner_unit then
+		local owner_unit_fx_extension = ScriptUnit.has_extension(owner_unit, "fx_system")
+
+		if owner_unit_fx_extension then
+			return owner_unit_fx_extension:should_play_husk_effect()
+		end
+	end
+
+	return true
 end
 
 return ProjectileFxExtension

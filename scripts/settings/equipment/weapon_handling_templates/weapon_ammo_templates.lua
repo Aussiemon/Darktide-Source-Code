@@ -135,12 +135,12 @@ local weapon_ammo_templates = {
 	},
 	flamer_p1_m1 = {
 		ammunition_clip = {
-			lerp_perfect = 50,
-			lerp_basic = 30
+			lerp_perfect = 40,
+			lerp_basic = 20
 		},
 		ammunition_reserve = {
-			lerp_perfect = 250,
-			lerp_basic = 90
+			lerp_perfect = 200,
+			lerp_basic = 80
 		}
 	},
 	ogryn_gauntlet_p1_m1 = {

@@ -1,5 +1,7 @@
+local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Health = require("scripts/utilities/health")
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local ProximityHeal = class("ProximityHeal")
 local _heal_amount_percentage_from_range = nil
@@ -8,7 +10,8 @@ ProximityHeal.init = function (self, logic_context, init_data)
 	self._unit = logic_context.unit
 	self._side_name = logic_context.side_name
 	self._units_in_proximity = {}
-	self._med_kit_settings = init_data
+	local med_kit_settings = init_data
+	self._med_kit_settings = med_kit_settings
 	self._amount_of_damage_healed = 0
 	self._fx_time_table = {}
 	local t = Managers.time:time("gameplay")
@@ -35,9 +38,11 @@ ProximityHeal.init = function (self, logic_context, init_data)
 	end
 
 	self._heal_amount_modifier = players_have_improved_keyword and 2 or 1
-	self._heal_reserve = self._med_kit_settings.optional_heal_reserve
-	self._heal_time = self._med_kit_settings.optional_heal_time
+	self._heal_reserve = med_kit_settings.optional_heal_reserve
+	self._heal_time = med_kit_settings.optional_heal_time
 	self._players_have_improved_keyword = players_have_improved_keyword
+	self._knock_down_player_heal_cost_multiplier = med_kit_settings.knock_down_player_heal_cost_multiplier or 1
+	self._knock_down_player_heal_speed_multiplier = med_kit_settings.knock_down_player_heal_speed_multiplier or 1
 end
 
 ProximityHeal.unit_entered_proximity = function (self, unit)
@@ -74,20 +79,38 @@ ProximityHeal.update = function (self, dt, t)
 	local amount_healed_this_tick = 0
 	local players_have_improved_keyword = self._players_have_improved_keyword
 	local optional_buff = self._med_kit_settings.optional_buff
+	local knock_down_player_heal_speed_multiplier = self._knock_down_player_heal_speed_multiplier
+	local knock_down_player_heal_cost_multiplier = self._knock_down_player_heal_cost_multiplier
 
 	for unit, _ in pairs(self._units_in_proximity) do
 		local health_extension = ScriptUnit.has_extension(unit, "health_system")
 
-		if health_extension then
+		if health_extension and health_extension:is_alive() then
 			local max_health = health_extension:max_health()
-			local heal_amount = max_health * heal_percentage * heal_amount_modifier
+			local speed_multiplier = 1
+			local cost_multiplier = 1
+			local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+			local breed_or_nil = unit_data_extension and unit_data_extension:breed()
+			local is_player = Breed.is_player(breed_or_nil)
+
+			if unit_data_extension and is_player then
+				local character_state_component = unit_data_extension:read_component("character_state")
+				local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
+
+				if is_knocked_down then
+					speed_multiplier = knock_down_player_heal_speed_multiplier
+					cost_multiplier = knock_down_player_heal_cost_multiplier
+				end
+			end
+
+			local heal_amount = max_health * heal_percentage * heal_amount_modifier * speed_multiplier
 			local health_added = Health.add(unit, heal_amount, heal_type)
-			amount_healed_this_tick = amount_healed_this_tick + health_added
+			amount_healed_this_tick = amount_healed_this_tick + health_added * cost_multiplier
 
 			if optional_buff then
 				local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
-				local stat_buffs = buff_extension:stat_buffs()
-				local heal_modifier = stat_buffs[optional_buff]
+				local stat_buffs = buff_extension and buff_extension:stat_buffs()
+				local heal_modifier = stat_buffs and stat_buffs[optional_buff] or 1
 				local extra_heal_percentage = heal_percentage * heal_modifier - heal_percentage
 
 				if extra_heal_percentage > 0 then

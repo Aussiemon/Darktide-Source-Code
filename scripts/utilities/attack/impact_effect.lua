@@ -1,5 +1,4 @@
 local Armor = require("scripts/utilities/attack/armor")
-local AttackingUnitResolver = require("scripts/utilities/attack/attacking_unit_resolver")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local ImpactEffectSettings = require("scripts/settings/damage/impact_effect_settings")
@@ -41,9 +40,8 @@ ImpactEffect.play = function (attacked_unit, hit_actor_or_nil, damage, damage_ty
 		local source_parameters = impact_fx_data_or_nil.source_parameters or EMPTY_TABLE
 		local fx_system = Managers.state.extension:system("fx_system")
 		local node_index = hit_actor_or_nil and Actor.node(hit_actor_or_nil)
-		local attacking_unit_owner_unit = AttackingUnitResolver.resolve(attacking_unit)
 
-		fx_system:play_impact_fx(impact_fx, hit_position, attack_direction, source_parameters, attacking_unit_owner_unit, attacked_unit, node_index, hit_normal, will_be_predicted, local_only)
+		fx_system:play_impact_fx(impact_fx, hit_position, attack_direction, source_parameters, attacking_unit, attacked_unit, node_index, hit_normal, will_be_predicted, local_only)
 	end
 
 	local should_play_offset_animation = target_alive and Unit.has_animation_state_machine(attacked_unit) and not breed_or_nil.ignore_hit_reacts and damage_profile and not damage_profile.ignore_hit_reacts

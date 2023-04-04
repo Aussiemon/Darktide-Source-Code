@@ -21,7 +21,8 @@ damage_settings.warp_damage_types = {
 	[damage_types.force_staff_bfg] = true,
 	[damage_types.psyker_biomancer_discharge] = true,
 	[damage_types.warp] = true,
-	[damage_types.warpfire] = true
+	[damage_types.warpfire] = true,
+	[damage_types.force_sword_cleave] = true
 }
 
 return settings("DamageSettings", damage_settings)

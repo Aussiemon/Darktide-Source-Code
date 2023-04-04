@@ -46,21 +46,25 @@ templates.weapon_trait_bespoke_lasgun_p2_negate_stagger_reduction_on_weakspot = 
 templates.weapon_trait_bespoke_lasgun_p2_crit_chance_based_on_aim_time = {
 	weapon_trait_bespoke_lasgun_p2_crit_chance_based_on_aim_time = {
 		{
+			duration_per_stack = 0.35,
 			stat_buffs = {
 				[stat_buffs.critical_strike_chance] = 0.02
 			}
 		},
 		{
+			duration_per_stack = 0.35,
 			stat_buffs = {
 				[stat_buffs.critical_strike_chance] = 0.03
 			}
 		},
 		{
+			duration_per_stack = 0.35,
 			stat_buffs = {
 				[stat_buffs.critical_strike_chance] = 0.04
 			}
 		},
 		{
+			duration_per_stack = 0.35,
 			stat_buffs = {
 				[stat_buffs.critical_strike_chance] = 0.05
 			}

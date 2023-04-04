@@ -6,6 +6,7 @@ HumanPlayer.init = function (self, unique_id, session_id, channel_id, peer_id, l
 	self.viewport_name = viewport_name
 	self.owned_units = {}
 	self.sensitivity = 1
+	self.aim_assist_data = self:_create_aim_assist_data()
 	self._telemetry_game_session = telemetry_game_session
 
 	if self:type() == "HumanPlayer" then
@@ -170,6 +171,12 @@ HumanPlayer.unit_is_alive = function (self)
 	local player_unit = self.player_unit
 
 	return player_unit and Unit.alive(player_unit)
+end
+
+HumanPlayer._create_aim_assist_data = function (self)
+	local aim_assist_data = {}
+
+	return aim_assist_data
 end
 
 implements(HumanPlayer, PlayerManager.PLAYER_INTERFACE)

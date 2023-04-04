@@ -379,10 +379,10 @@ local disorientation_settings = {
 				end_stun_early_time = 0.9,
 				intoxication_level = 4,
 				stun_immunity_time_buff = "stun_immune_short",
-				stun_duration = 1.8,
+				stun_duration = 1.3,
 				self_stun = true,
 				interrupt_delay = false,
-				action_delay = 1.1
+				action_delay = 0.6
 			}
 		},
 		shocktrooper_frag = {

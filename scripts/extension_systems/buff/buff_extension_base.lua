@@ -16,7 +16,8 @@ local WwiseWorld_set_source_position = WwiseWorld.set_source_position
 local RPCS = {
 	"rpc_add_buff",
 	"rpc_remove_buff",
-	"rpc_buff_proc_set_active_time"
+	"rpc_buff_proc_set_active_time",
+	"rpc_add_buff_with_stacks"
 }
 local _stat_buff_base_values = BuffSettings.stat_buff_type_base_values
 local _stat_buff_lazy_mt = {
@@ -28,10 +29,11 @@ local _stat_buff_lazy_mt = {
 	end
 }
 
-BuffExtensionBase.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
+BuffExtensionBase.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id, pre_allocate_event_param_tables)
 	local is_server = extension_init_context.is_server
 	self._is_server = is_server
 	self._unit = unit
+	self._player = extension_init_data.player
 	local seed = extension_init_data.buff_seed
 	self._portable_random = PortableRandom:new(seed)
 	self._local_portable_random = PortableRandom:new(seed)
@@ -64,7 +66,7 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 	self._param_table_index = 0
 	self._unique_frame_proc = {}
 
-	if self._pre_allocate_event_param_tables then
+	if pre_allocate_event_param_tables then
 		self._proc_events = Script.new_array(MAX_PROC_EVENTS * PROC_EVENTS_STRIDE)
 
 		for i = 1, MAX_PROC_EVENTS do
@@ -116,23 +118,7 @@ BuffExtensionBase.destroy = function (self)
 end
 
 BuffExtensionBase.game_object_initialized = function (self, game_session, game_object_id)
-	self._game_object_id = game_object_id
-	local buffs_added_before_game_object_cration = self._buffs_added_before_game_object_creation
-
-	if buffs_added_before_game_object_cration then
-		for i = 1, #buffs_added_before_game_object_cration do
-			local buff_added_before_game_object_cration = buffs_added_before_game_object_cration[i]
-			local buff_template_id = buff_added_before_game_object_cration.buff_template_id
-			local index = buff_added_before_game_object_cration.index
-			local optional_lerp_value = buff_added_before_game_object_cration.optional_lerp_value
-			local optional_slot_id = buff_added_before_game_object_cration.optional_slot_id
-			local optional_parent_buff_template_id = buff_added_before_game_object_cration.optional_parent_buff_template_id
-
-			Managers.state.game_session:send_rpc_clients("rpc_add_buff", game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id)
-		end
-
-		self._buffs_added_before_game_object_creation = nil
-	end
+	ferror("Buff extension is using base implementation of game_object_initialized, it shouldn't")
 end
 
 BuffExtensionBase.set_unit_local = function (self)
@@ -205,7 +191,6 @@ end
 
 BuffExtensionBase._update_proc_events = function (self, t)
 	local num_proc_events = self._num_proc_events
-	local activation_fame = t / GameParameters.fixed_time_step
 
 	if num_proc_events > 0 then
 		local proc_events = self._proc_events
@@ -224,9 +209,8 @@ BuffExtensionBase._update_proc_events = function (self, t)
 
 				if activated_proc and is_server and not is_predicted then
 					local server_index = self:_find_local_index(buff)
-					local game_object_id = self._game_object_id
 
-					Managers.state.game_session:send_rpc_clients("rpc_buff_proc_set_active_time", game_object_id, server_index, activation_fame)
+					self:_set_proc_active_start_time(server_index, t)
 				end
 			end
 		end
@@ -243,15 +227,6 @@ BuffExtensionBase._update_proc_events = function (self, t)
 	self._param_table_index = 0
 
 	table.clear(self._unique_frame_proc)
-end
-
-BuffExtensionBase._set_proc_active_start_time = function (self, index, activation_time)
-	local buffs_by_index = self._buffs_by_index
-	local buff_instance = buffs_by_index[index]
-
-	if buff_instance and buff_instance.set_active_start_time then
-		buff_instance:set_active_start_time(activation_time)
-	end
 end
 
 BuffExtensionBase._reset_stat_buffs = function (self)
@@ -360,35 +335,6 @@ end
 
 BuffExtensionBase.add_externally_controlled_buff = function (self, template_name, t, ...)
 	ferror("Buff extension is using base implementation of add_externally_controlled_buff, it shouldn't")
-end
-
-BuffExtensionBase._add_rpc_synced_buff = function (self, template, t, ...)
-	local index = self:_add_buff(template, t, ...)
-	local game_object_id = self._game_object_id
-	local template_name = template.name
-	local buff_template_id = NetworkLookup.buff_templates[template_name]
-	local buff_instance = self._buffs_by_index[index]
-	local optional_lerp_value = buff_instance:buff_lerp_value()
-	local optional_item_slot = buff_instance:item_slot_name()
-	local optional_slot_id = optional_item_slot and NetworkLookup.player_inventory_slot_names[optional_item_slot]
-	local optional_parent_buff_template = buff_instance.parent_buff_template and buff_instance:parent_buff_template()
-	local optional_parent_buff_template_id = optional_parent_buff_template and NetworkLookup.buff_templates[optional_parent_buff_template]
-
-	if game_object_id then
-		Managers.state.game_session:send_rpc_clients("rpc_add_buff", game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id)
-	else
-		local buff_added_before_game_object_cration = {
-			buff_template_id = buff_template_id,
-			index = index,
-			optional_lerp_value = optional_lerp_value,
-			optional_slot_id = optional_slot_id,
-			optional_parent_buff_template_id = optional_parent_buff_template_id
-		}
-		local buffs_added_before_game_object_cration = self._buffs_added_before_game_object_creation
-		buffs_added_before_game_object_cration[#buffs_added_before_game_object_cration + 1] = buff_added_before_game_object_cration
-	end
-
-	return index
 end
 
 BuffExtensionBase._next_local_index = function (self)
@@ -553,13 +499,6 @@ end
 
 BuffExtensionBase._remove_internally_controlled_buff = function (self, local_index)
 	ferror("Buff extension is using base implementation of _remove_internally_controlled_buff, it shouldn't")
-end
-
-BuffExtensionBase._remove_rpc_synced_buff = function (self, index)
-	local game_object_id = self._game_object_id
-
-	self:_remove_buff(index)
-	Managers.state.game_session:send_rpc_clients("rpc_remove_buff", game_object_id, index)
 end
 
 BuffExtensionBase._remove_buff = function (self, index)
@@ -1015,6 +954,20 @@ BuffExtensionBase.rpc_add_buff = function (self, channel_id, game_object_id, buf
 	self._buff_index_map[server_index] = index
 end
 
+BuffExtensionBase.rpc_add_buff_with_stacks = function (self, channel_id, game_object_id, buff_template_id, server_index_array, optional_lerp_value, optional_item_slot_id, optional_parent_buff_template_id)
+	local template_name = NetworkLookup.buff_templates[buff_template_id]
+	local template = BuffTemplates[template_name]
+	local t = FixedFrame.get_latest_fixed_time()
+	local optional_item_slot_name = optional_item_slot_id and NetworkLookup.player_inventory_slot_names[optional_item_slot_id]
+	local optional_parent_buff_template = optional_parent_buff_template_id and NetworkLookup.buff_templates[optional_parent_buff_template_id]
+
+	for i = 1, #server_index_array do
+		local server_index = server_index_array[i]
+		local index = self:_add_buff(template, t, "buff_lerp_value", optional_lerp_value, "item_slot_name", optional_item_slot_name, "parent_buff_template", optional_parent_buff_template)
+		self._buff_index_map[server_index] = index
+	end
+end
+
 BuffExtensionBase.rpc_remove_buff = function (self, channel_id, game_object_id, server_index)
 	local index = self._buff_index_map[server_index]
 
@@ -1028,6 +981,10 @@ BuffExtensionBase.rpc_buff_proc_set_active_time = function (self, channel_id, ga
 	local activation_time = activation_frame * GameParameters.fixed_time_step
 
 	self:_set_proc_active_start_time(index, activation_time)
+end
+
+BuffExtensionBase._set_proc_active_start_time = function (self, index, activation_time)
+	ferror("Buff extension is using base implementation of _set_proc_active_start_time, it shouldn't")
 end
 
 implements(BuffExtensionBase, BuffExtensionInterface)

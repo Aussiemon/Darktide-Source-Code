@@ -35,6 +35,12 @@ local weapon_template = {
 	action_input_hierarchy = table.clone(MeleeActionInputSetupMid.action_input_hierarchy)
 }
 weapon_template.action_inputs.start_attack.buffer_time = 0.5
+local _force_abort_breed_tags_special_active = {
+	"elite",
+	"special",
+	"monster",
+	"captain"
+}
 local chain_sword_sweep_box = {
 	0.1,
 	0.1,
@@ -442,19 +448,19 @@ weapon_template.actions = {
 		end
 	},
 	action_left_down_light = {
-		kind = "sweep",
-		attack_direction_override = "push",
-		num_frames_before_process = 0,
-		allowed_during_sprint = true,
+		damage_window_start = 0.26666666666666666,
 		max_num_saved_entries = 20,
+		allowed_during_sprint = true,
+		kind = "sweep",
+		first_person_hit_anim = "hit_down_shake",
+		num_frames_before_process = 0,
 		damage_window_end = 0.4,
 		anim_end_event = "attack_finished",
-		first_person_hit_anim = "hit_down_shake",
-		weapon_handling_template = "time_scale_1",
+		anim_event = "attack_left_down",
 		range_mod = 1.25,
 		hit_armor_anim = "attack_hit_shield",
-		damage_window_start = 0.26666666666666666,
-		anim_event = "attack_left_down",
+		weapon_handling_template = "time_scale_1",
+		attack_direction_override = "push",
 		hit_stop_anim = "hit_stop",
 		total_time = 1.3,
 		action_movement_curve = {
@@ -541,6 +547,7 @@ weapon_template.actions = {
 		damage_type = damage_types.sawing_2h,
 		damage_profile_special_active = DamageProfileTemplates.smiter_light_chainsword_2h_active,
 		damage_type_special_active = damage_types.sawing_stuck,
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.vertical_slash_coarse,
 		wounds_shape_special_active = wounds_shapes.vertical_slash_coarse,
 		herding_template = HerdingTemplates.smiter_down,
@@ -646,6 +653,7 @@ weapon_template.actions = {
 			[armor_types.berserker] = 3,
 			[armor_types.armored] = 0.75
 		},
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.horizontal_slash_coarse,
 		wounds_shape_special_active = wounds_shapes.horizontal_slash_coarse,
 		time_scale_stat_buffs = {
@@ -741,19 +749,19 @@ weapon_template.actions = {
 		end
 	},
 	action_right_diagonal_light = {
-		kind = "sweep",
-		attack_direction_override = "right",
-		num_frames_before_process = 0,
+		damage_window_start = 0.3,
 		max_num_saved_entries = 20,
-		damage_window_end = 0.43333333333333335,
+		kind = "sweep",
 		first_person_hit_anim = "hit_right_down_shake",
+		num_frames_before_process = 0,
+		damage_window_end = 0.43333333333333335,
 		anim_end_event = "attack_finished",
-		weapon_handling_template = "time_scale_0_85",
+		anim_event = "attack_right_diagonal_down",
 		range_mod = 1.25,
 		hit_armor_anim = "attack_hit_shield",
-		damage_window_start = 0.3,
+		weapon_handling_template = "time_scale_0_85",
+		attack_direction_override = "right",
 		uninterruptible = true,
-		anim_event = "attack_right_diagonal_down",
 		hit_stop_anim = "hit_stop",
 		total_time = 1.5,
 		action_movement_curve = {
@@ -841,6 +849,7 @@ weapon_template.actions = {
 		damage_type_on_abort = damage_types.sawing_2h,
 		damage_profile_special_active = DamageProfileTemplates.light_chainsword_active_2h,
 		damage_type_special_active = damage_types.sawing_stuck,
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.right_45_slash_coarse,
 		wounds_shape_special_active = wounds_shapes.right_45_slash_coarse,
 		time_scale_stat_buffs = {
@@ -935,6 +944,7 @@ weapon_template.actions = {
 		damage_profile_special_active = DamageProfileTemplates.heavy_chainsword_smiter_active_abort_2h,
 		damage_profile_special_active_on_abort = DamageProfileTemplates.heavy_chainsword_smiter_active_abort_2h,
 		damage_type_special_active = damage_types.sawing_stuck,
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.vertical_slash_coarse,
 		wounds_shape_special_active = wounds_shapes.vertical_slash_coarse,
 		time_scale_stat_buffs = {
@@ -1145,6 +1155,7 @@ weapon_template.actions = {
 		damage_type_on_abort = damage_types.sawing_2h,
 		damage_profile_special_active = DamageProfileTemplates.light_chainsword_active_2h,
 		damage_type_special_active = damage_types.sawing_stuck,
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.horizontal_slash_coarse,
 		wounds_shape_special_active = wounds_shapes.horizontal_slash_coarse,
 		time_scale_stat_buffs = {
@@ -1252,10 +1263,10 @@ weapon_template.actions = {
 	},
 	action_right_down_light = {
 		damage_window_start = 0.3,
+		range_mod = 1.25,
 		max_num_saved_entries = 20,
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		range_mod = 1.25,
 		num_frames_before_process = 0,
 		damage_window_end = 0.5,
 		anim_end_event = "attack_finished",
@@ -1351,6 +1362,7 @@ weapon_template.actions = {
 		damage_type_on_abort = damage_types.sawing_2h,
 		damage_profile_special_active = DamageProfileTemplates.smiter_light_chainsword_2h_active,
 		damage_type_special_active = damage_types.sawing_stuck,
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		herding_template = HerdingTemplates.smiter_down,
 		wounds_shape = wounds_shapes.vertical_slash_coarse,
 		wounds_shape_special_active = wounds_shapes.vertical_slash_coarse,
@@ -1404,19 +1416,19 @@ weapon_template.actions = {
 		}
 	},
 	action_right_light_pushfollow = {
-		damage_window_start = 0.2833333333333333,
-		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
-		weapon_handling_template = "time_scale_1_2",
+		max_num_saved_entries = 20,
 		first_person_hit_anim = "hit_right_shake",
 		range_mod = 1.35,
-		max_num_saved_entries = 20,
 		num_frames_before_process = 0,
+		hit_armor_anim = "attack_hit_shield",
+		damage_window_start = 0.2833333333333333,
 		damage_window_end = 0.4666666666666667,
 		anim_end_event = "attack_finished",
+		anim_event = "attack_right",
+		weapon_handling_template = "time_scale_1_2",
 		attack_direction_override = "right",
 		uninterruptible = true,
-		anim_event = "attack_right",
 		hit_stop_anim = "hit_stop",
 		total_time = 1.8,
 		action_movement_curve = {
@@ -1500,6 +1512,7 @@ weapon_template.actions = {
 		damage_type_on_abort = damage_types.sawing_2h,
 		damage_profile_special_active = DamageProfileTemplates.light_chainsword_active_2h_push_follow,
 		damage_type_special_active = damage_types.sawing_stuck,
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.horizontal_slash_coarse,
 		wounds_shape_special_active = wounds_shapes.horizontal_slash_coarse,
 		time_scale_stat_buffs = {

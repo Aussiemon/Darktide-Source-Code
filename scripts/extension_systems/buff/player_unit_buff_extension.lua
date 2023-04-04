@@ -11,9 +11,7 @@ local COMPONENT_KEY_LOOKUP = PlayerCharacterConstants.buff_component_key_lookup
 local PlayerUnitBuffExtension = class("PlayerUnitBuffExtension", "BuffExtensionBase")
 
 PlayerUnitBuffExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
-	self._pre_allocate_event_param_tables = true
-
-	PlayerUnitBuffExtension.super.init(self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
+	PlayerUnitBuffExtension.super.init(self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id, true)
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local buff_component = unit_data_extension:write_component("buff")
@@ -47,34 +45,28 @@ PlayerUnitBuffExtension._init_components = function (self, buff_component)
 	buff_component.seed = seed
 end
 
-PlayerUnitBuffExtension.hot_join_sync = function (self, unit, sender, channel)
-	if self._buff_context.is_local_unit then
-		return
-	end
+PlayerUnitBuffExtension.hot_join_sync = function (self, unit, sender, channel_id)
+	return
+end
 
-	local game_object_id = self._game_object_id
-	local network_lookup_buff_templates = NetworkLookup.buff_templates
-	local buffs = self._buffs_by_index
+PlayerUnitBuffExtension.game_object_initialized = function (self, game_session, game_object_id)
+	self._game_object_id = game_object_id
+	local channel_id = self._player:channel_id()
+	local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
 
-	for index, buff_instance in pairs(buffs) do
-		local template = buff_instance:template()
+	if buffs_added_before_game_object_creation then
+		for i = 1, #buffs_added_before_game_object_creation do
+			local buff_added_before_game_object_creation = buffs_added_before_game_object_creation[i]
+			local buff_template_id = buff_added_before_game_object_creation.buff_template_id
+			local index = buff_added_before_game_object_creation.index
+			local optional_lerp_value = buff_added_before_game_object_creation.optional_lerp_value
+			local optional_slot_id = buff_added_before_game_object_creation.optional_slot_id
+			local optional_parent_buff_template_id = buff_added_before_game_object_creation.optional_parent_buff_template_id
 
-		if not template.predicted then
-			local template_name = template.name
-			local buff_template_id = network_lookup_buff_templates[template_name]
-			local optional_lerp_value = buff_instance:buff_lerp_value()
-			local optional_item_slot = buff_instance:item_slot_name()
-			local optional_slot_id = optional_item_slot and NetworkLookup.player_inventory_slot_names[optional_item_slot]
-
-			RPC.rpc_add_buff(channel, game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id)
-
-			if buff_instance.update_proc_events and buff_instance:is_proc_active() then
-				local active_start_time = buff_instance:active_start_time()
-				local activation_fame = active_start_time / GameParameters.fixed_time_step
-
-				RPC.rpc_buff_proc_set_active_time(channel, game_object_id, index, activation_fame)
-			end
+			RPC.rpc_add_buff(channel_id, game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id)
 		end
+
+		self._buffs_added_before_game_object_creation = nil
 	end
 end
 
@@ -378,6 +370,75 @@ PlayerUnitBuffExtension._add_buff_from_server_correction = function (self, templ
 	buff_instance:set_buff_component(buff_component, component_keys, component_index)
 
 	self._component_buffs[component_index] = buff_instance
+end
+
+PlayerUnitBuffExtension._add_rpc_synced_buff = function (self, template, t, ...)
+	local index = self:_add_buff(template, t, ...)
+	local game_object_id = self._game_object_id
+	local template_name = template.name
+	local buff_template_id = NetworkLookup.buff_templates[template_name]
+	local buff_instance = self._buffs_by_index[index]
+	local optional_lerp_value = buff_instance:buff_lerp_value()
+	local optional_item_slot = buff_instance:item_slot_name()
+	local optional_slot_id = optional_item_slot and NetworkLookup.player_inventory_slot_names[optional_item_slot]
+	local optional_parent_buff_template = buff_instance.parent_buff_template and buff_instance:parent_buff_template()
+	local optional_parent_buff_template_id = optional_parent_buff_template and NetworkLookup.buff_templates[optional_parent_buff_template]
+	local player = self._player
+
+	if player.remote then
+		if game_object_id then
+			local channel_id = player:channel_id()
+
+			RPC.rpc_add_buff(channel_id, game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id)
+		else
+			local buff_added_before_game_object_creation = {
+				buff_template_id = buff_template_id,
+				index = index,
+				optional_lerp_value = optional_lerp_value,
+				optional_slot_id = optional_slot_id,
+				optional_parent_buff_template_id = optional_parent_buff_template_id
+			}
+			local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
+			buffs_added_before_game_object_creation[#buffs_added_before_game_object_creation + 1] = buff_added_before_game_object_creation
+		end
+	end
+
+	return index
+end
+
+PlayerUnitBuffExtension._remove_rpc_synced_buff = function (self, index)
+	local game_object_id = self._game_object_id
+
+	self:_remove_buff(index)
+
+	local player = self._player
+
+	if player.remote then
+		local channel_id = player:channel_id()
+
+		RPC.rpc_remove_buff(channel_id, game_object_id, index)
+	end
+end
+
+PlayerUnitBuffExtension._set_proc_active_start_time = function (self, index, activation_time)
+	if self._is_server then
+		local activation_frame = activation_time / GameParameters.fixed_time_step
+		local player = self._player
+
+		if player.remote then
+			local channel_id = player:channel_id()
+			local game_object_id = self._game_object_id
+
+			RPC.rpc_buff_proc_set_active_time(channel_id, game_object_id, index, activation_frame)
+		end
+	else
+		local buffs_by_index = self._buffs_by_index
+		local buff_instance = buffs_by_index[index]
+
+		if buff_instance and buff_instance.set_active_start_time then
+			buff_instance:set_active_start_time(activation_time)
+		end
+	end
 end
 
 PlayerUnitBuffExtension._start_fx = function (self, index, template)

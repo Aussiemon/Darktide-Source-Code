@@ -810,7 +810,11 @@ OptionsView._set_tooltip_data = function (self, widget)
 	local disabled_by_list = widget.content.entry.disabled_by
 
 	if tooltip_text then
-		localized_text = Localize(tooltip_text)
+		if type(tooltip_text) == "function" then
+			localized_text = tooltip_text()
+		else
+			localized_text = Localize(tooltip_text)
+		end
 	end
 
 	if disabled_by_list then

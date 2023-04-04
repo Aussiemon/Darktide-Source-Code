@@ -5,11 +5,13 @@ local medical_crate = {
 	stickiness_limit = 5,
 	stickiness_time = 1,
 	proximity_heal_init_data = {
-		heal_rate_percentage = 0.06,
-		optional_buff = "medical_crate_healing_modifier",
-		optional_heal_time = 60,
+		knock_down_player_heal_cost_multiplier = 1,
+		knock_down_player_heal_speed_multiplier = 1,
 		fx_intervall = 0.6,
+		optional_heal_time = 300,
+		heal_rate_percentage = 0.06,
 		optional_heal_reserve = 500,
+		optional_buff = "medical_crate_healing_modifier",
 		heal_type = DamageSettings.heal_types.medkit
 	}
 }

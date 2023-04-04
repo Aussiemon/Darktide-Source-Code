@@ -79,6 +79,12 @@ local hit_zone_priority = {
 	[hit_zone_names.upper_left_leg] = 3,
 	[hit_zone_names.upper_right_leg] = 3
 }
+local _force_abort_breed_tags_special_active = {
+	"elite",
+	"special",
+	"monster",
+	"captain"
+}
 
 table.add_missing(hit_zone_priority, default_hit_zone_priority)
 
@@ -193,10 +199,14 @@ weapon_template.actions = {
 		total_time = 0.3,
 		action_movement_curve = {
 			{
-				modifier = 1,
+				modifier = 1.2,
 				t = 0.3
 			},
-			start_modifier = 1.5
+			{
+				modifier = 1,
+				t = 0.4
+			},
+			start_modifier = 0.8
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -295,21 +305,21 @@ weapon_template.actions = {
 		end
 	},
 	action_left_diagonal_light = {
-		damage_window_start = 0.2,
-		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1_1",
+		range_mod = 1.25,
 		kind = "sweep",
 		max_num_saved_entries = 20,
 		first_person_hit_stop_anim = "hit_stop_p3",
 		num_frames_before_process = 0,
 		allowed_during_sprint = true,
-		range_mod = 1.25,
+		hit_armor_anim = "attack_hit_shield",
+		damage_window_start = 0.2,
 		damage_window_end = 0.26666666666666666,
 		anim_end_event = "attack_finished",
-		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		anim_event_3p = "attack_swing_stab",
-		uninterruptible = true,
 		anim_event = "attack_stab_02",
+		weapon_handling_template = "time_scale_1_1",
+		charge_template = "forcesword_p1_m1_weapon_special_hit",
+		uninterruptible = true,
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -389,6 +399,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.default,
 		wounds_shape_special_active = wounds_shapes.default
 	},
@@ -472,6 +483,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.left_45_slash_clean,
 		wounds_shape_special_active = wounds_shapes.default
 	},
@@ -544,18 +556,18 @@ weapon_template.actions = {
 		end
 	},
 	action_right_diagonal_light = {
-		range_mod = 1.25,
+		allowed_during_sprint = true,
 		kind = "sweep",
 		max_num_saved_entries = 20,
 		first_person_hit_stop_anim = "hit_stop",
 		num_frames_before_process = 0,
-		allowed_during_sprint = true,
 		hit_armor_anim = "attack_hit_shield",
 		damage_window_start = 0.26666666666666666,
 		damage_window_end = 0.36666666666666664,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_right_diagonal",
 		anim_event = "attack_right_diagonal_down",
+		range_mod = 1.25,
 		weapon_handling_template = "time_scale_1",
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		uninterruptible = true,
@@ -639,6 +651,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.right_45_slash_clean,
 		wounds_shape_special_active = wounds_shapes.default
 	},
@@ -725,6 +738,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.default,
 		wounds_shape_special_active = wounds_shapes.default
 	},
@@ -799,18 +813,18 @@ weapon_template.actions = {
 		end
 	},
 	action_left_down_light = {
-		range_mod = 1.25,
+		allowed_during_sprint = true,
 		kind = "sweep",
 		max_num_saved_entries = 20,
 		first_person_hit_stop_anim = "hit_stop",
 		num_frames_before_process = 0,
-		allowed_during_sprint = true,
 		hit_armor_anim = "hit_stop",
 		damage_window_start = 0.15,
 		damage_window_end = 0.25,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_left_diagonal_down",
 		anim_event = "attack_left_diagonal_down_01",
+		range_mod = 1.25,
 		weapon_handling_template = "time_scale_1",
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		uninterruptible = true,
@@ -894,6 +908,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.vertical_slash_clean,
 		wounds_shape_special_active = wounds_shapes.default
 	},
@@ -965,18 +980,18 @@ weapon_template.actions = {
 		end
 	},
 	action_right_diagonal_light_2 = {
-		range_mod = 1.25,
+		allowed_during_sprint = true,
 		kind = "sweep",
 		max_num_saved_entries = 20,
 		first_person_hit_stop_anim = "hit_stop",
 		num_frames_before_process = 0,
-		allowed_during_sprint = true,
 		hit_armor_anim = "attack_hit_shield",
 		damage_window_start = 0.2,
 		damage_window_end = 0.2833333333333333,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_down_right",
 		anim_event = "attack_right_down",
+		range_mod = 1.25,
 		weapon_handling_template = "time_scale_1",
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		uninterruptible = true,
@@ -1060,23 +1075,20 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.right_45_slash_clean,
 		wounds_shape_special_active = wounds_shapes.default
 	},
 	action_block = {
 		weapon_handling_template = "time_scale_1_65",
+		minimum_hold_time = 0.3,
 		start_input = "block",
 		anim_end_event = "parry_finished",
 		kind = "block",
-		minimum_hold_time = 0.3,
 		block_vfx_name = "content/fx/particles/weapons/swords/forcesword/psyker_block",
 		anim_event = "parry_pose",
 		stop_input = "block_release",
 		total_time = math.huge,
-		block_attack_types = {
-			ranged = true,
-			melee = true
-		},
 		action_movement_curve = {
 			{
 				modifier = 0.75,
@@ -1489,6 +1501,9 @@ weapon_template.base_stats = {
 			},
 			action_left_down_light = {
 				damage_trait_templates.default_melee_dps_stat
+			},
+			action_right_diagonal_light_2 = {
+				damage_trait_templates.default_melee_dps_stat
 			}
 		}
 	},
@@ -1530,6 +1545,9 @@ weapon_template.base_stats = {
 			},
 			action_left_down_light = {
 				damage_trait_templates.default_melee_finesse_stat
+			},
+			action_right_diagonal_light_2 = {
+				damage_trait_templates.default_melee_finesse_stat
 			}
 		},
 		weapon_handling = {
@@ -1558,6 +1576,9 @@ weapon_template.base_stats = {
 				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_left_down_light = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_right_diagonal_light_2 = {
 				weapon_handling_trait_templates.default_finesse_stat
 			}
 		}
@@ -1599,6 +1620,9 @@ weapon_template.base_stats = {
 				damage_trait_templates.default_first_target_stat
 			},
 			action_left_down_light = {
+				damage_trait_templates.default_first_target_stat
+			},
+			action_right_diagonal_light_2 = {
 				damage_trait_templates.default_first_target_stat
 			}
 		}

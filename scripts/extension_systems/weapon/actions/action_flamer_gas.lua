@@ -423,6 +423,11 @@ ActionFlamerGas._acquire_suppressed_units = function (self, t)
 end
 
 ActionFlamerGas.finish = function (self, reason, data, t, time_in_action)
+	if self._is_server then
+		self:_damage_targets(0, t, true)
+		self:_burn_targets(0, t, true)
+	end
+
 	ActionFlamerGas.super.finish(self, reason, data, t, time_in_action)
 
 	local position_finder_component = self._action_module_position_finder_component
@@ -433,11 +438,6 @@ ActionFlamerGas.finish = function (self, reason, data, t, time_in_action)
 
 	if fire_config.charge_cost then
 		self._action_module_charge_component.charge_level = 0
-	end
-
-	if self._is_server then
-		self:_damage_targets(0, t, true)
-		self:_burn_targets(0, t, true)
 	end
 end
 

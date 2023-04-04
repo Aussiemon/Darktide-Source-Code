@@ -1211,7 +1211,7 @@ weapon_template.allow_sprinting_with_special = true
 weapon_template.weapon_special_class = "WeaponSpecialDeactivateAfterNumActivations"
 weapon_template.weapon_special_tweak_data = {
 	allow_reactivation_while_active = true,
-	num_activations = 2,
+	num_activations = 1,
 	active_duration = 3
 }
 weapon_template.allow_sprinting_with_special = true

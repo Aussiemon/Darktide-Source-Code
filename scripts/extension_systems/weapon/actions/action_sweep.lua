@@ -63,6 +63,34 @@ local function _calculate_attack_direction(action_settings, start_rotation, end_
 	return action_settings.invert_attack_direction and -attack_direction or attack_direction
 end
 
+local function _breed_aborts_attack(action_settings, speccial_active, target_breed_or_nil)
+	if not target_breed_or_nil then
+		return false
+	end
+
+	local force_abort_breed_tags = speccial_active and action_settings.force_abort_breed_tags_special_active or action_settings.force_abort_breed_tags
+
+	if not force_abort_breed_tags then
+		return false
+	end
+
+	local breed_tags = target_breed_or_nil.tags
+
+	if not breed_tags then
+		return false
+	end
+
+	for i = 1, #force_abort_breed_tags do
+		local abort_tag = force_abort_breed_tags[i]
+
+		if breed_tags[abort_tag] then
+			return true
+		end
+	end
+
+	return false
+end
+
 local ActionSweep = class("ActionSweep", "ActionWeaponBase")
 
 ActionSweep.init = function (self, action_context, action_params, action_settings)
@@ -180,6 +208,7 @@ ActionSweep._reset_sweep_component = function (self)
 	action_sweep_component.sweep_aborted_actor_index = nil
 	action_sweep_component.is_sticky = false
 	action_sweep_component.attack_direction = Vector3.zero()
+	action_sweep_component.sweep_state = "before_damage_window"
 end
 
 ActionSweep._calculate_max_hit_mass = function (self, damage_profile, power_level, charge_level, critical_strike)
@@ -235,9 +264,22 @@ ActionSweep.finish = function (self, reason, data, t, time_in_action)
 	local action_settings = self._action_settings
 	local special_active_at_start = self._weapon_action_component.special_active_at_start
 	local hit_stickyness_settings = special_active_at_start and action_settings.hit_stickyness_settings_special_active or action_settings.hit_stickyness_settings
+	local is_sticky = self:_is_currently_sticky()
 
-	if hit_stickyness_settings and self:_is_currently_sticky() then
+	if hit_stickyness_settings and is_sticky then
 		self:_stop_hit_stickyness(hit_stickyness_settings)
+	end
+
+	local action_sweep_component = self._action_sweep_component
+
+	if action_sweep_component.sweep_state == "during_damage_window" then
+		self:_exit_damage_window(t, self._num_hit_enemies)
+
+		if not is_sticky then
+			self:_handle_exit_procs()
+		end
+
+		action_sweep_component.sweep_state = "after_damage_window"
 	end
 
 	local special_implementation = self._weapon.special_implementation
@@ -311,6 +353,7 @@ ActionSweep._update_sweep = function (self, dt, t, time_in_action, action_settin
 			damage_window_t = 1
 		end
 
+		action_sweep_component.sweep_state = "during_damage_window"
 		local start_position = action_sweep_component.sweep_position
 		local start_rotation = action_sweep_component.sweep_rotation
 		local end_position, end_rotation = sweep_spline:position_and_rotation(damage_window_t)
@@ -323,6 +366,8 @@ ActionSweep._update_sweep = function (self, dt, t, time_in_action, action_settin
 			if not self:_is_currently_sticky() then
 				self:_handle_exit_procs()
 			end
+
+			action_sweep_component.sweep_state = "after_damage_window"
 		end
 
 		action_sweep_component.sweep_position = end_position
@@ -1030,8 +1075,9 @@ ActionSweep._process_hit = function (self, t, hit_unit, hit_actor, hit_units, ac
 	local max_hit_mass = self:_current_max_hit_mass(weapon_action_component)
 	local hit_ragdoll = Health.is_ragdolled(hit_unit)
 	local armor_aborts_attack = not ignore_armor_aborts_attack and not hit_ragdoll and target_is_alive and Armor.aborts_attack(hit_unit, target_breed_or_nil, hit_zone_name_or_nil)
+	local breed_aborts_attack = not hit_ragdoll and target_is_alive and _breed_aborts_attack(action_settings, is_special_active, target_breed_or_nil)
 	local max_mass_hit = max_hit_mass <= amount_of_mass_hit
-	local abort_attack = max_mass_hit or armor_aborts_attack
+	local abort_attack = max_mass_hit or armor_aborts_attack or breed_aborts_attack
 	local damage_profile, damage_type = nil
 
 	if is_special_active then

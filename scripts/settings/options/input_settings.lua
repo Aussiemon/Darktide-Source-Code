@@ -188,6 +188,29 @@ local function construct_interface_settings_dropdown(template)
 	return params
 end
 
+local function _aim_assist_options()
+	local options = {
+		{
+			display_name = "loc_setting_aim_assist_off",
+			name = "off"
+		},
+		{
+			display_name = "loc_setting_aim_assist_old",
+			name = "old"
+		},
+		{
+			display_name = "loc_setting_aim_assist_new_slim",
+			name = "new_slim"
+		},
+		{
+			display_name = "loc_setting_aim_assist_new_full",
+			name = "new_full"
+		}
+	}
+
+	return options
+end
+
 local settings_definitions = {
 	{
 		group_name = "movement_settings",
@@ -331,6 +354,37 @@ local settings_definitions = {
 		options = Managers.input:get_input_layout_names(),
 		on_value_changed = function (value)
 			Managers.input:change_input_layout(value)
+		end,
+		validation_function = function ()
+			return not Managers.ui.using_cursor_navigation()
+		end
+	},
+	{
+		save_location = "input_settings",
+		display_name = "loc_setting_aim_assist",
+		id = "controller_aim_assist",
+		widget_type = "dropdown",
+		options = _aim_assist_options(),
+		tooltip_text = function ()
+			local assist_title_1 = Localize("loc_setting_aim_assist_new_full")
+			local assist_desc_1 = Localize("loc_setting_aim_assist_new_full_desc")
+			local assist_title_2 = Localize("loc_setting_aim_assist_new_slim")
+			local assist_desc_2 = Localize("loc_setting_aim_assist_new_slim_desc")
+			local assist_title_3 = Localize("loc_setting_aim_assist_old")
+			local assist_desc_3 = Localize("loc_setting_aim_assist_old_desc")
+			local assist_title_4 = Localize("loc_setting_aim_assist_off")
+			local assist_desc_4 = Localize("loc_setting_aim_assist_off_desc")
+
+			return Localize("loc_setting_aim_assist_mouseover_text_format", false, {
+				assist_title_1 = assist_title_1,
+				assist_desc_1 = assist_desc_1,
+				assist_title_2 = assist_title_2,
+				assist_desc_2 = assist_desc_2,
+				assist_title_3 = assist_title_3,
+				assist_desc_3 = assist_desc_3,
+				assist_title_4 = assist_title_4,
+				assist_desc_4 = assist_desc_4
+			})
 		end,
 		validation_function = function ()
 			return not Managers.ui.using_cursor_navigation()

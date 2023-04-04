@@ -42,25 +42,25 @@ local templates = {
 			{
 				child_duration = 1.75,
 				stat_buffs = {
-					[stat_buffs.damage_near] = 0.04
-				}
-			},
-			{
-				child_duration = 1.75,
-				stat_buffs = {
-					[stat_buffs.damage_near] = 0.06
-				}
-			},
-			{
-				child_duration = 1.75,
-				stat_buffs = {
-					[stat_buffs.damage_near] = 0.8
+					[stat_buffs.damage_near] = 0.075
 				}
 			},
 			{
 				child_duration = 1.75,
 				stat_buffs = {
 					[stat_buffs.damage_near] = 0.1
+				}
+			},
+			{
+				child_duration = 1.75,
+				stat_buffs = {
+					[stat_buffs.damage_near] = 0.125
+				}
+			},
+			{
+				child_duration = 1.75,
+				stat_buffs = {
+					[stat_buffs.damage_near] = 0.15
 				}
 			}
 		}

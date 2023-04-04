@@ -59,7 +59,7 @@ ChainLightning.jump = function (self, t, source_target, hit_units, broadphase, e
 			local target_unit = BROADPHASE_RESULTS[ii]
 
 			if target_unit and not hit_units[target_unit] and HEALTH_ALIVE[target_unit] then
-				local valid_target = ChainLightning.is_valid_target(self._physics_world, source_unit, target_unit, query_position, travel_direction, max_angle, close_max_angle, max_z_diff, jump_validation_func)
+				local valid_target, debug_reason = ChainLightning.is_valid_target(self._physics_world, source_unit, target_unit, query_position, travel_direction, max_angle, close_max_angle, max_z_diff, jump_validation_func)
 
 				if valid_target then
 					local child_node = source_target:add_child("unit", target_unit)
@@ -82,10 +82,12 @@ ChainLightning.is_valid_target = function (physics_world, source_unit, target_un
 
 	if valid_target then
 		local target_position = POSITION_LOOKUP[target_unit]
-		local to_target_vector = query_position - target_position
-		local too_close = Vector3_length_squared(to_target_vector) < EPSILON_SQUARED
+		local x = query_position.x - target_position.x
+		local y = query_position.y - target_position.y
+		local too_close = x * x + y * y < EPSILON_SQUARED
 
 		if not too_close then
+			local to_target_vector = query_position - target_position
 			local direction = Vector3_normalize(Vector3_flat(to_target_vector))
 			local angle = Vector3_angle(travel_direction, direction)
 			local z_diff = math_abs(target_position.z - query_position.z)

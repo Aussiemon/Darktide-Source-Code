@@ -1067,7 +1067,7 @@ damage_templates.forcesword_active_cleave_light = {
 	gibbing_type = GibbingTypes.sawing,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_medium,
 	melee_attack_strength = melee_attack_strengths.light,
-	wounds_template = WoundsTemplates.force_sword,
+	wounds_template = WoundsTemplates.force_sword_active,
 	armor_damage_modifier = power_am,
 	targets = {
 		{
@@ -1203,7 +1203,7 @@ damage_templates.forcesword_active_cleave_heavy = {
 	gibbing_type = GibbingTypes.default,
 	melee_attack_strength = melee_attack_strengths.heavy,
 	gib_push_force = GibbingSettings.gib_push_force.sawing_heavy,
-	wounds_template = WoundsTemplates.force_sword,
+	wounds_template = WoundsTemplates.force_sword_active,
 	armor_damage_modifier = power_am,
 	targets = {
 		{

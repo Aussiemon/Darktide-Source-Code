@@ -354,7 +354,8 @@ weapon_template.actions = {
 				chain_time = 0.75
 			},
 			special_action = {
-				action_name = "action_weapon_special"
+				action_name = "action_weapon_special",
+				chain_time = 0.75
 			},
 			shoot_pressed = {
 				action_name = "action_shoot_hip",
@@ -451,6 +452,10 @@ weapon_template.actions = {
 			},
 			reload = {
 				action_name = "action_start_reload",
+				chain_time = 0.45
+			},
+			special_action = {
+				action_name = "action_weapon_special",
 				chain_time = 0.45
 			}
 		},

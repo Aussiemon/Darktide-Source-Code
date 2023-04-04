@@ -11,34 +11,64 @@ MinionBuffExtension.UPDATE_DISABLED_BY_DEFAULT = true
 MinionBuffExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
 	self._owner_system = extension_init_context.owner_system
 
-	MinionBuffExtension.super.init(self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
+	MinionBuffExtension.super.init(self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id, false)
 end
+
+local buffs_to_sync = {}
 
 MinionBuffExtension.hot_join_sync = function (self, unit, sender, channel)
 	if self._buff_context.is_local_unit then
 		return
 	end
 
-	local game_object_id = self._game_object_id
 	local network_lookup_buff_templates = NetworkLookup.buff_templates
+
+	table.clear(buffs_to_sync)
+
 	local buffs = self._buffs_by_index
 
 	for index, buff_instance in pairs(buffs) do
+		if not buffs_to_sync[buff_instance] then
+			buffs_to_sync[buff_instance] = {}
+		end
+
+		local local_indexes = buffs_to_sync[buff_instance]
+		local_indexes[#local_indexes + 1] = index
+	end
+
+	local game_object_id = self._game_object_id
+
+	for buff_instance, index_array in pairs(buffs_to_sync) do
 		local template = buff_instance:template()
 		local template_name = template.name
 		local buff_template_id = network_lookup_buff_templates[template_name]
 		local optional_lerp_value = buff_instance:buff_lerp_value()
-		local optional_item_slot = buff_instance:item_slot_name()
-		local optional_slot_id = optional_item_slot and NetworkLookup.player_inventory_slot_names[optional_item_slot]
 
-		RPC.rpc_add_buff(channel, game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id)
+		if #index_array == 1 then
+			local index = index_array[1]
 
-		if buff_instance.update_proc_events and buff_instance:is_proc_active() then
-			local active_start_time = buff_instance:active_start_time()
-			local activation_fame = active_start_time / GameParameters.fixed_time_step
-
-			RPC.rpc_buff_proc_set_active_time(channel, game_object_id, index, activation_fame)
+			RPC.rpc_add_buff(channel, game_object_id, buff_template_id, index, optional_lerp_value)
+		else
+			RPC.rpc_add_buff_with_stacks(channel, game_object_id, buff_template_id, index_array, optional_lerp_value)
 		end
+	end
+end
+
+MinionBuffExtension.game_object_initialized = function (self, game_session, game_object_id)
+	self._game_object_id = game_object_id
+	local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
+
+	if buffs_added_before_game_object_creation then
+		for i = 1, #buffs_added_before_game_object_creation do
+			local buff_added_before_game_object_creation = buffs_added_before_game_object_creation[i]
+			local buff_template_id = buff_added_before_game_object_creation.buff_template_id
+			local index = buff_added_before_game_object_creation.index
+			local optional_lerp_value = buff_added_before_game_object_creation.optional_lerp_value
+
+			Managers.state.game_session:send_rpc_clients("rpc_add_buff", game_object_id, buff_template_id, index, optional_lerp_value)
+		end
+
+		self._buffs_added_before_game_object_creation = nil
 	end
 end
 
@@ -204,6 +234,52 @@ MinionBuffExtension._remove_internally_controlled_buff = function (self, local_i
 		self:_remove_buff(local_index)
 	elseif self._is_server then
 		self:_remove_rpc_synced_buff(local_index)
+	end
+end
+
+MinionBuffExtension._add_rpc_synced_buff = function (self, template, t, ...)
+	local index = self:_add_buff(template, t, ...)
+	local game_object_id = self._game_object_id
+	local template_name = template.name
+	local buff_template_id = NetworkLookup.buff_templates[template_name]
+	local buff_instance = self._buffs_by_index[index]
+	local optional_lerp_value = buff_instance:buff_lerp_value()
+
+	if game_object_id then
+		Managers.state.game_session:send_rpc_clients("rpc_add_buff", game_object_id, buff_template_id, index, optional_lerp_value)
+	else
+		local buff_added_before_game_object_creation = {
+			buff_template_id = buff_template_id,
+			index = index,
+			optional_lerp_value = optional_lerp_value
+		}
+		local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
+		buffs_added_before_game_object_creation[#buffs_added_before_game_object_creation + 1] = buff_added_before_game_object_creation
+	end
+
+	return index
+end
+
+MinionBuffExtension._remove_rpc_synced_buff = function (self, index)
+	local game_object_id = self._game_object_id
+
+	self:_remove_buff(index)
+	Managers.state.game_session:send_rpc_clients("rpc_remove_buff", game_object_id, index)
+end
+
+MinionBuffExtension._set_proc_active_start_time = function (self, index, activation_time)
+	if self._is_server then
+		local activation_frame = activation_time / GameParameters.fixed_time_step
+		local game_object_id = self._game_object_id
+
+		Managers.state.game_session:send_rpc_clients("rpc_buff_proc_set_active_time", game_object_id, index, activation_frame)
+	else
+		local buffs_by_index = self._buffs_by_index
+		local buff_instance = buffs_by_index[index]
+
+		if buff_instance and buff_instance.set_active_start_time then
+			buff_instance:set_active_start_time(activation_time)
+		end
 	end
 end
 

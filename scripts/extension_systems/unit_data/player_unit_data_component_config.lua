@@ -711,14 +711,19 @@ local PlayerComponentConfig = {
 		target_unit = "Unit"
 	},
 	action_sweep = {
-		sweep_aborted_t = "fixed_frame_offset",
 		sweep_aborted = "bool",
-		sweep_aborted_actor_index = "hit_zone_actor_index",
-		is_sticky = "bool",
 		sweep_rotation = "Quaternion",
 		sweep_aborted_unit = "Unit",
+		sweep_aborted_t = "fixed_frame_offset",
+		sweep_aborted_actor_index = "hit_zone_actor_index",
+		is_sticky = "bool",
 		sweep_position = "Vector3",
-		attack_direction = "Vector3"
+		attack_direction = "Vector3",
+		sweep_state = {
+			"before_damage_window",
+			"during_damage_window",
+			"after_damage_window"
+		}
 	},
 	action_shoot = {
 		shooting_charge_level = "weapon_charge_level",

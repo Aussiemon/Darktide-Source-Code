@@ -36,25 +36,25 @@ templates.weapon_trait_bespoke_shotgun_p1_increase_close_damage_on_close_kill = 
 		{
 			child_duration = 2.75,
 			stat_buffs = {
-				[stat_buffs.damage_near] = 0.04
-			}
-		},
-		{
-			child_duration = 2.75,
-			stat_buffs = {
-				[stat_buffs.damage_near] = 0.06
-			}
-		},
-		{
-			child_duration = 2.75,
-			stat_buffs = {
-				[stat_buffs.damage_near] = 0.8
+				[stat_buffs.damage_near] = 0.075
 			}
 		},
 		{
 			child_duration = 2.75,
 			stat_buffs = {
 				[stat_buffs.damage_near] = 0.1
+			}
+		},
+		{
+			child_duration = 2.75,
+			stat_buffs = {
+				[stat_buffs.damage_near] = 0.125
+			}
+		},
+		{
+			child_duration = 2.75,
+			stat_buffs = {
+				[stat_buffs.damage_near] = 0.15
 			}
 		}
 	}

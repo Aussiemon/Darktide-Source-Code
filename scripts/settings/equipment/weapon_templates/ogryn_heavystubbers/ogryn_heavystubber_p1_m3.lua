@@ -802,53 +802,10 @@ weapon_template.base_stats = {
 		damage = {
 			action_shoot_hip = {
 				damage_trait_templates.default_dps_stat,
-				display_data = {
-					prefix = "Hip Fire",
-					display_stats = {
-						armor_damage_modifier_ranged = {
-							near = {
-								attack = {
-									[armor_types.unarmored] = {},
-									[armor_types.disgustingly_resilient] = {}
-								}
-							},
-							far = {
-								attack = {
-									[armor_types.unarmored] = {},
-									[armor_types.disgustingly_resilient] = {}
-								}
-							}
-						},
-						power_distribution = {
-							attack = {}
-						}
-					}
-				}
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
-				damage_trait_templates.default_dps_stat,
-				display_data = {
-					prefix = "Zoomed Fire",
-					display_stats = {
-						armor_damage_modifier_ranged = {
-							near = {
-								attack = {
-									[armor_types.unarmored] = {},
-									[armor_types.disgustingly_resilient] = {}
-								}
-							},
-							far = {
-								attack = {
-									[armor_types.unarmored] = {},
-									[armor_types.disgustingly_resilient] = {}
-								}
-							}
-						},
-						power_distribution = {
-							attack = {}
-						}
-					}
-				}
+				damage_trait_templates.default_dps_stat
 			}
 		}
 	},
@@ -884,49 +841,10 @@ weapon_template.base_stats = {
 		damage = {
 			action_shoot_hip = {
 				damage_trait_templates.shotgun_default_range_stat,
-				display_data = {
-					prefix = "Hip Fire",
-					display_stats = {
-						armor_damage_modifier_ranged = {
-							far = {
-								attack = {
-									[armor_types.unarmored] = {},
-									[armor_types.disgustingly_resilient] = {},
-									[armor_types.armored] = {},
-									[armor_types.resistant] = {},
-									[armor_types.berserker] = {}
-								}
-							}
-						},
-						ranges = {
-							min = {},
-							max = {}
-						}
-					}
-				}
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
-				damage_trait_templates.shotgun_default_range_stat,
-				display_data = {
-					prefix = "Zoomed Fire",
-					display_stats = {
-						armor_damage_modifier_ranged = {
-							far = {
-								attack = {
-									[armor_types.unarmored] = {},
-									[armor_types.disgustingly_resilient] = {},
-									[armor_types.armored] = {},
-									[armor_types.resistant] = {},
-									[armor_types.berserker] = {}
-								}
-							}
-						},
-						ranges = {
-							min = {},
-							max = {}
-						}
-					}
-				}
+				damage_trait_templates.shotgun_default_range_stat
 			}
 		}
 	},
@@ -936,12 +854,7 @@ weapon_template.base_stats = {
 		ammo = {
 			base = {
 				ammo_trait_templates.default_ammo_stat,
-				display_data = {
-					display_stats = {
-						ammunition_clip = {},
-						ammunition_reserve = {}
-					}
-				}
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
@@ -951,71 +864,10 @@ weapon_template.base_stats = {
 		damage = {
 			action_shoot_hip = {
 				damage_trait_templates.shotgun_control_stat,
-				display_data = {
-					prefix = "Hip Fire",
-					display_stats = {
-						armor_damage_modifier_ranged = {
-							near = {
-								impact = {
-									[armor_types.unarmored] = {},
-									[armor_types.disgustingly_resilient] = {},
-									[armor_types.resistant] = {},
-									[armor_types.berserker] = {}
-								}
-							},
-							far = {
-								impact = {
-									[armor_types.unarmored] = {},
-									[armor_types.disgustingly_resilient] = {},
-									[armor_types.resistant] = {},
-									[armor_types.berserker] = {}
-								}
-							}
-						},
-						power_distribution = {
-							impact = {}
-						},
-						suppression_value = {},
-						on_kill_area_suppression = {
-							suppression_value = {},
-							distance = {}
-						}
-					}
-				}
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
-				damage_trait_templates.shotgun_control_stat,
-				display_data = {
-					prefix = "Zoomed Fire",
-					display_stats = {
-						armor_damage_modifier_ranged = {
-							near = {
-								impact = {
-									[armor_types.unarmored] = {},
-									[armor_types.disgustingly_resilient] = {},
-									[armor_types.resistant] = {},
-									[armor_types.berserker] = {}
-								}
-							},
-							far = {
-								impact = {
-									[armor_types.unarmored] = {},
-									[armor_types.disgustingly_resilient] = {},
-									[armor_types.resistant] = {},
-									[armor_types.berserker] = {}
-								}
-							}
-						},
-						power_distribution = {
-							impact = {}
-						},
-						suppression_value = {},
-						on_kill_area_suppression = {
-							suppression_value = {},
-							distance = {}
-						}
-					}
-				}
+				damage_trait_templates.shotgun_control_stat
 			}
 		}
 	}

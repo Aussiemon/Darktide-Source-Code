@@ -49,6 +49,12 @@ local default_weapon_box = {
 	0.15,
 	1.2
 }
+local _force_abort_breed_tags_special_active = {
+	"elite",
+	"special",
+	"monster",
+	"captain"
+}
 weapon_template.actions = {
 	action_unwield = {
 		continue_sprinting = true,
@@ -258,6 +264,7 @@ weapon_template.actions = {
 		damage_profile_special_active_on_abort = DamageProfileTemplates.thunderhammer_m2_light_active,
 		damage_type_special_active = damage_types.blunt_thunder,
 		damage_type_special_active_on_abort = damage_types.blunt_thunder,
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		herding_template = HerdingTemplates.linesman_left_heavy,
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			if data and data.self_stun then
@@ -370,6 +377,7 @@ weapon_template.actions = {
 		damage_profile_special_active_on_abort = DamageProfileTemplates.thunderhammer_m2_heavy_active,
 		damage_type_special_active = damage_types.blunt_thunder,
 		damage_type_special_active_on_abort = damage_types.blunt_thunder,
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		herding_template = HerdingTemplates.thunder_hammer_left_heavy,
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			if data and data.self_stun then
@@ -549,6 +557,7 @@ weapon_template.actions = {
 		damage_profile_special_active_on_abort = DamageProfileTemplates.thunderhammer_m2_light_active,
 		damage_type_special_active = damage_types.blunt_thunder,
 		damage_type_special_active_on_abort = damage_types.blunt_thunder,
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			if data and data.self_stun then
 				return false
@@ -661,6 +670,7 @@ weapon_template.actions = {
 		damage_profile_special_active_on_abort = DamageProfileTemplates.thunderhammer_m2_heavy_active,
 		damage_type_special_active = damage_types.blunt_thunder,
 		damage_type_special_active_on_abort = damage_types.blunt_thunder,
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		herding_template = HerdingTemplates.thunder_hammer_right_heavy,
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			if data and data.self_stun then
@@ -820,6 +830,7 @@ weapon_template.actions = {
 		damage_profile_special_active_on_abort = DamageProfileTemplates.thunderhammer_m2_heavy_active,
 		damage_type_special_active = damage_types.blunt_thunder,
 		damage_type_special_active_on_abort = damage_types.blunt_thunder,
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			if data and data.self_stun then
 				return false
@@ -966,6 +977,7 @@ weapon_template.actions = {
 		damage_profile_special_active_on_abort = DamageProfileTemplates.thunderhammer_m2_pushfollow_active,
 		damage_type_special_active = damage_types.blunt_thunder,
 		damage_type_special_active_on_abort = damage_types.blunt_thunder,
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		herding_template = HerdingTemplates.linesman_left_heavy,
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			if data and data.self_stun then

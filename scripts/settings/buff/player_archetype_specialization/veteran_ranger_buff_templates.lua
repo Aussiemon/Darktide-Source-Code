@@ -663,12 +663,7 @@ templates.veteran_ranger_replenish_toughness_of_ally_close_to_victim = {
 	end,
 	proc_func = function (params, template_data, template_context)
 		local victim_unit = params.attacked_unit
-
-		if not ALIVE[victim_unit] then
-			return
-		end
-
-		local victim_pos = victim_unit and POSITION_LOOKUP[victim_unit]
+		local victim_pos = victim_unit and POSITION_LOOKUP[victim_unit] or params.hit_world_position:unbox()
 
 		if not victim_pos then
 			return

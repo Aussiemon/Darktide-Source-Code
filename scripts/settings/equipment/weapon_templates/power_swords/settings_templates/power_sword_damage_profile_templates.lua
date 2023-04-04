@@ -538,6 +538,15 @@ overrides.light_powersword_stab_active = {
 	parent_template_name = "light_powersword_smiter",
 	overrides = {
 		{
+			"targets",
+			1,
+			"boost_curve_multiplier_finesse",
+			{
+				1,
+				2
+			}
+		},
+		{
 			"wounds_template",
 			WoundsTemplates.power_sword_active
 		}

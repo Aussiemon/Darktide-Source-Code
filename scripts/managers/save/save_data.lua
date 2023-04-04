@@ -4,6 +4,7 @@ SaveData.default_account_data = {
 	input_settings = {
 		controller_layout = "default",
 		controller_look_scale = 1,
+		controller_aim_assist = "new_full",
 		controller_enable_acceleration = true,
 		mouse_invert_look_y = false,
 		com_wheel_delay = 0.3,

@@ -290,22 +290,22 @@ local assault_flamer_armor_mod = {
 	near = {
 		attack = {
 			[armor_types.unarmored] = 2,
-			[armor_types.armored] = 1.75,
+			[armor_types.armored] = 1,
 			[armor_types.resistant] = 2,
 			[armor_types.player] = 1,
 			[armor_types.berserker] = 2.5,
-			[armor_types.super_armor] = 0.25,
+			[armor_types.super_armor] = 0.1,
 			[armor_types.disgustingly_resilient] = 1.5,
 			[armor_types.void_shield] = 1,
 			[armor_types.prop_armor] = 1
 		},
 		impact = {
 			[armor_types.unarmored] = 1,
-			[armor_types.armored] = 1,
+			[armor_types.armored] = 0.75,
 			[armor_types.resistant] = 0.75,
 			[armor_types.player] = 1,
-			[armor_types.berserker] = 1.5,
-			[armor_types.super_armor] = 0.2,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 0.1,
 			[armor_types.disgustingly_resilient] = 1,
 			[armor_types.void_shield] = 1,
 			[armor_types.prop_armor] = 1
@@ -314,7 +314,7 @@ local assault_flamer_armor_mod = {
 	far = {
 		attack = {
 			[armor_types.unarmored] = 1,
-			[armor_types.armored] = 0.75,
+			[armor_types.armored] = 0.5,
 			[armor_types.resistant] = 1,
 			[armor_types.player] = 1,
 			[armor_types.berserker] = 1,
@@ -325,11 +325,11 @@ local assault_flamer_armor_mod = {
 		},
 		impact = {
 			[armor_types.unarmored] = 0.75,
-			[armor_types.armored] = 0.25,
+			[armor_types.armored] = 0.1,
 			[armor_types.resistant] = 0.3,
 			[armor_types.player] = 0,
-			[armor_types.berserker] = 1.25,
-			[armor_types.super_armor] = 0.1,
+			[armor_types.berserker] = 0.5,
+			[armor_types.super_armor] = 0.01,
 			[armor_types.disgustingly_resilient] = 0.75,
 			[armor_types.void_shield] = 0.5,
 			[armor_types.prop_armor] = 0.75
@@ -354,8 +354,8 @@ local assault_flamer_burst_armor_mod = {
 			[armor_types.armored] = 1,
 			[armor_types.resistant] = 0.75,
 			[armor_types.player] = 1,
-			[armor_types.berserker] = 1.5,
-			[armor_types.super_armor] = 0.2,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 0.1,
 			[armor_types.disgustingly_resilient] = 1,
 			[armor_types.void_shield] = 1,
 			[armor_types.prop_armor] = 1
@@ -377,9 +377,9 @@ local assault_flamer_burst_armor_mod = {
 			[armor_types.unarmored] = 1,
 			[armor_types.armored] = 1,
 			[armor_types.resistant] = 0.75,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 1.5,
-			[armor_types.super_armor] = 0.2,
+			[armor_types.player] = 0.5,
+			[armor_types.berserker] = 0.5,
+			[armor_types.super_armor] = 0.01,
 			[armor_types.disgustingly_resilient] = 1,
 			[armor_types.void_shield] = 1,
 			[armor_types.prop_armor] = 1
@@ -412,8 +412,8 @@ damage_templates.default_flamer_assault = {
 					12
 				},
 				impact = {
-					5,
-					9
+					1,
+					2
 				}
 			}
 		},
@@ -424,8 +424,8 @@ damage_templates.default_flamer_assault = {
 					16
 				},
 				impact = {
-					5,
-					10
+					2,
+					4
 				}
 			}
 		},
@@ -436,8 +436,8 @@ damage_templates.default_flamer_assault = {
 					20
 				},
 				impact = {
-					7,
-					12
+					3,
+					6
 				}
 			}
 		},
@@ -448,8 +448,8 @@ damage_templates.default_flamer_assault = {
 					30
 				},
 				impact = {
-					8,
-					15
+					4,
+					8
 				}
 			}
 		},
@@ -460,8 +460,8 @@ damage_templates.default_flamer_assault = {
 					35
 				},
 				impact = {
-					10,
-					15
+					6,
+					12
 				}
 			}
 		},
@@ -480,8 +480,8 @@ damage_templates.default_flamer_assault = {
 		default_target = {
 			power_distribution = {
 				attack = {
-					40,
-					60
+					30,
+					50
 				},
 				impact = {
 					10,

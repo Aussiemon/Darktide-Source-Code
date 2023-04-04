@@ -68,6 +68,12 @@ function _gamepad_input(input, look_delta_context)
 	local is_sticky = look_delta_context.is_sticky
 	local is_lunging = look_delta_context.is_lunging
 	local new_input_filter_method = false
+	local aim_assist_type = Managers.save:account_data().input_settings.controller_aim_assist
+
+	if aim_assist_type ~= "old" then
+		new_input_filter_method = true
+	end
+
 	local input_filter_name = nil
 
 	if new_input_filter_method then

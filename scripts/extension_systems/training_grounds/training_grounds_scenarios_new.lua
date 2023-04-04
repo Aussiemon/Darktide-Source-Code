@@ -340,6 +340,7 @@ scenarios.advanced_training = {
 	steps = {
 		TrainingGroundsSteps.advanced_training,
 		TrainingGroundsSteps.make_player_invulnerable,
+		TrainingGroundsSteps.dynamic.set_ability_enabled("combat_ability", false, true),
 		TrainingGroundsSteps.dynamic.delay(2),
 		TrainingGroundsSteps.dynamic.swap_scenario("training_grounds", "armor_types")
 	},
@@ -455,6 +456,7 @@ scenarios.tagging = {
 		TrainingGroundsSteps.dynamic.teleport_player("player_reset"),
 		TrainingGroundsSteps.dynamic.add_unique_buff("tg_player_unperceivable"),
 		TrainingGroundsSteps.tagging_prompt,
+		TrainingGroundsSteps.dynamic.delay(2),
 		TrainingGroundsSteps.sniper_tag_loop,
 		TrainingGroundsSteps.dynamic.delay(post_scenario_complete_ui_remove_delay),
 		TrainingGroundsSteps.hide_prompt,

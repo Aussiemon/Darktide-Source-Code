@@ -142,6 +142,7 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 	action_sweep.sweep_aborted_actor_index = nil
 	action_sweep.is_sticky = false
 	action_sweep.attack_direction = Vector3.zero()
+	action_sweep.sweep_state = "before_damage_window"
 	local action_shoot = unit_data_extension:write_component("action_shoot")
 	action_shoot.fire_state = "shot"
 	action_shoot.fire_at_time = 0

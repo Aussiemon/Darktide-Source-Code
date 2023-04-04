@@ -4606,8 +4606,26 @@ local Credits = {
 				type = "person"
 			},
 			{
+				text = " ",
+				type = "person"
+			},
+			{
+				text = "loc_credits_view_project_manager_title",
+				localized = true,
+				type = "title"
+			},
+			{
 				text = "Anna Noskova-Dukelskaia",
 				type = "person"
+			},
+			{
+				text = " ",
+				type = "person"
+			},
+			{
+				text = "loc_credits_view_team_lead_title",
+				localized = true,
+				type = "title"
 			},
 			{
 				text = "Mikhail Terekhov",

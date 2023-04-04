@@ -1835,6 +1835,7 @@ base_templates.chance_based_on_aim_time = {
 	max_stacks = 1,
 	predicted = false,
 	stack_offset = -1,
+	duration_per_stack = 1,
 	class_name = "stepped_stat_buff",
 	conditional_stat_buffs = {
 		[stat_buffs.critical_strike_chance] = 0.05
@@ -1864,8 +1865,10 @@ base_templates.chance_based_on_aim_time = {
 		local check_time = math.max(alternate_fire_time, last_shoot_time)
 		local t = FixedFrame.get_latest_fixed_time()
 		local time_lapsed = t - check_time
-		local step_size = 1
-		local steps = math.floor(time_lapsed / step_size)
+		local template = template_context.template
+		local override_data = template_context.template_override_data
+		local duration_per_stack = override_data.duration_per_stack or template.duration_per_stack
+		local steps = math.floor(time_lapsed / duration_per_stack)
 
 		return steps
 	end

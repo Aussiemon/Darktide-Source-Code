@@ -226,19 +226,19 @@ damage_templates.thunderhammer_light = {
 				}
 			},
 			finesse_boost = {
-				[armor_types.unarmored] = 0.1,
+				[armor_types.unarmored] = 0.3,
 				[armor_types.armored] = 0.5,
-				[armor_types.resistant] = 0.1,
-				[armor_types.player] = 0.1,
-				[armor_types.berserker] = 0.1,
-				[armor_types.super_armor] = 0.1,
-				[armor_types.disgustingly_resilient] = 0.25,
-				[armor_types.void_shield] = 0.25,
+				[armor_types.resistant] = 0.3,
+				[armor_types.player] = 0.3,
+				[armor_types.berserker] = 0.3,
+				[armor_types.super_armor] = 0.5,
+				[armor_types.disgustingly_resilient] = 0.3,
+				[armor_types.void_shield] = 0.3,
 				[armor_types.prop_armor] = 0.5
 			},
 			boost_curve_multiplier_finesse = {
-				0.25,
-				0.75
+				0.5,
+				1.5
 			},
 			power_level_multiplier = {
 				0.75,
@@ -339,19 +339,19 @@ damage_templates.thunderhammer_light_linesman = {
 				}
 			},
 			finesse_boost = {
-				[armor_types.unarmored] = 0.1,
+				[armor_types.unarmored] = 0.3,
 				[armor_types.armored] = 0.5,
-				[armor_types.resistant] = 0.1,
-				[armor_types.player] = 0.1,
-				[armor_types.berserker] = 0.1,
-				[armor_types.super_armor] = 0.1,
-				[armor_types.disgustingly_resilient] = 0.25,
-				[armor_types.void_shield] = 0.25,
+				[armor_types.resistant] = 0.3,
+				[armor_types.player] = 0.3,
+				[armor_types.berserker] = 0.3,
+				[armor_types.super_armor] = 0.5,
+				[armor_types.disgustingly_resilient] = 0.3,
+				[armor_types.void_shield] = 0.3,
 				[armor_types.prop_armor] = 0.5
 			},
 			boost_curve_multiplier_finesse = {
-				0.25,
-				0.75
+				0.5,
+				1.5
 			},
 			power_level_multiplier = {
 				0.75,
@@ -513,19 +513,19 @@ damage_templates.thunderhammer_light_tank = {
 				}
 			},
 			finesse_boost = {
-				[armor_types.unarmored] = 0.1,
+				[armor_types.unarmored] = 0.3,
 				[armor_types.armored] = 0.5,
-				[armor_types.resistant] = 0.1,
-				[armor_types.player] = 0.1,
-				[armor_types.berserker] = 0.1,
-				[armor_types.super_armor] = 0.1,
-				[armor_types.disgustingly_resilient] = 0.25,
-				[armor_types.void_shield] = 0.25,
+				[armor_types.resistant] = 0.3,
+				[armor_types.player] = 0.3,
+				[armor_types.berserker] = 0.3,
+				[armor_types.super_armor] = 0.5,
+				[armor_types.disgustingly_resilient] = 0.3,
+				[armor_types.void_shield] = 0.3,
 				[armor_types.prop_armor] = 0.5
 			},
 			boost_curve_multiplier_finesse = {
-				0.25,
-				0.75
+				0.5,
+				1.5
 			},
 			power_level_multiplier = {
 				0.75,
@@ -619,7 +619,6 @@ damage_templates.thunderhammer_light_active = {
 	armor_damage_modifier = hammer_smiter_light_default_am,
 	targets = {
 		{
-			boost_curve_multiplier_finesse = 0.25,
 			armor_damage_modifier = hammer_smiter_light_active_am,
 			power_distribution = {
 				attack = {
@@ -632,15 +631,19 @@ damage_templates.thunderhammer_light_active = {
 				}
 			},
 			finesse_boost = {
-				[armor_types.unarmored] = 0.1,
+				[armor_types.unarmored] = 0.3,
 				[armor_types.armored] = 0.5,
-				[armor_types.resistant] = 0.1,
-				[armor_types.player] = 0.1,
-				[armor_types.berserker] = 0.1,
-				[armor_types.super_armor] = 0.1,
-				[armor_types.disgustingly_resilient] = 0.25,
-				[armor_types.void_shield] = 0.25,
+				[armor_types.resistant] = 0.3,
+				[armor_types.player] = 0.3,
+				[armor_types.berserker] = 0.3,
+				[armor_types.super_armor] = 0.5,
+				[armor_types.disgustingly_resilient] = 0.3,
+				[armor_types.void_shield] = 0.3,
 				[armor_types.prop_armor] = 0.5
+			},
+			boost_curve_multiplier_finesse = {
+				0.25,
+				0.75
 			},
 			power_level_multiplier = {
 				0.75,

@@ -283,57 +283,57 @@ FxSystem._stop_template_effect = function (self, template_effect, template)
 	table.swap_delete(running_template_effects, index_to_remove)
 end
 
-FxSystem.play_impact_fx = function (self, impact_fx, position, direction, source_parameters, provoking_unit, optional_target_unit, optional_node_index, optional_hit_normal, optional_will_be_predicted, local_only_or_nil)
+FxSystem.play_impact_fx = function (self, impact_fx, position, direction, source_parameters, attacking_unit, optional_target_unit, optional_node_index, optional_hit_normal, optional_will_be_predicted, local_only_or_nil)
 	local world = self._world
 	local t = World.time(world)
-	local particle_group_id_or_nil = self.unit_to_particle_group_lookup[provoking_unit]
+	local particle_group_id_or_nil = self.unit_to_particle_group_lookup[attacking_unit]
 
-	_play_impact_fx_template(t, world, self._wwise_world, self._unit_to_extension_map, self._spawned_impact_fx_units, impact_fx, position, direction, source_parameters, provoking_unit, particle_group_id_or_nil, optional_target_unit, optional_node_index, optional_hit_normal)
+	_play_impact_fx_template(t, world, self._wwise_world, self._unit_to_extension_map, self._spawned_impact_fx_units, impact_fx, position, direction, source_parameters, attacking_unit, particle_group_id_or_nil, optional_target_unit, optional_node_index, optional_hit_normal)
 
 	if self._is_server then
 		local impact_fx_name = impact_fx.name
 		local impact_fx_name_id = NetworkLookup.impact_fx_names[impact_fx_name]
-		local provoking_unit_id = Managers.state.unit_spawner:game_object_id(provoking_unit)
+		local attacking_unit_id = Managers.state.unit_spawner:game_object_id(attacking_unit)
 
-		if not provoking_unit_id then
+		if not attacking_unit_id then
 			return
 		end
 
 		local optional_target_unit_id = optional_target_unit and Managers.state.unit_spawner:game_object_id(optional_target_unit)
-		local provoking_unit_has_particle_id = self.unit_to_particle_group_lookup[provoking_unit] ~= nil
+		local attacking_unit_has_particle_id = self.unit_to_particle_group_lookup[attacking_unit] ~= nil
 
 		if not local_only_or_nil then
 			if optional_will_be_predicted then
-				local predicting_player = Managers.state.player_unit_spawn:owner(provoking_unit)
+				local predicting_player = Managers.state.player_unit_spawn:owner(attacking_unit)
 				local except = predicting_player:channel_id()
 
-				Managers.state.game_session:send_rpc_clients_except("rpc_play_impact_fx", except, impact_fx_name_id, position, direction, provoking_unit_id, optional_target_unit_id, optional_node_index, optional_hit_normal, provoking_unit_has_particle_id)
+				Managers.state.game_session:send_rpc_clients_except("rpc_play_impact_fx", except, impact_fx_name_id, position, direction, attacking_unit_id, optional_target_unit_id, optional_node_index, optional_hit_normal, attacking_unit_has_particle_id)
 			else
-				Managers.state.game_session:send_rpc_clients("rpc_play_impact_fx", impact_fx_name_id, position, direction, provoking_unit_id, optional_target_unit_id, optional_node_index, optional_hit_normal, provoking_unit_has_particle_id)
+				Managers.state.game_session:send_rpc_clients("rpc_play_impact_fx", impact_fx_name_id, position, direction, attacking_unit_id, optional_target_unit_id, optional_node_index, optional_hit_normal, attacking_unit_has_particle_id)
 			end
 		end
 	end
 end
 
-FxSystem.play_surface_impact_fx = function (self, hit_position, hit_direction, source_parameters, provoking_unit, optional_hit_normal, damage_type, hit_type, optional_will_be_predicted)
+FxSystem.play_surface_impact_fx = function (self, hit_position, hit_direction, source_parameters, attacking_unit, optional_hit_normal, damage_type, hit_type, optional_will_be_predicted)
 	if self._is_server then
-		local provoking_unit_id = Managers.state.unit_spawner:game_object_id(provoking_unit)
+		local attacking_unit_id = Managers.state.unit_spawner:game_object_id(attacking_unit)
 
-		if not provoking_unit_id then
+		if not attacking_unit_id then
 			return
 		end
 
 		local damage_type_id = NetworkLookup.damage_types[damage_type]
 		local hit_type_id = NetworkLookup.surface_hit_types[hit_type]
-		local provoking_unit_has_particle_id = self.unit_to_particle_group_lookup[provoking_unit] ~= nil
+		local attacking_unit_has_particle_id = self.unit_to_particle_group_lookup[attacking_unit] ~= nil
 
 		if optional_will_be_predicted then
-			local predicting_player = Managers.state.player_unit_spawn:owner(provoking_unit)
+			local predicting_player = Managers.state.player_unit_spawn:owner(attacking_unit)
 			local except = predicting_player:channel_id()
 
-			Managers.state.game_session:send_rpc_clients_except("rpc_play_surface_impact_fx", except, hit_position, hit_direction, provoking_unit_id, optional_hit_normal, damage_type_id, hit_type_id, provoking_unit_has_particle_id)
+			Managers.state.game_session:send_rpc_clients_except("rpc_play_surface_impact_fx", except, hit_position, hit_direction, attacking_unit_id, optional_hit_normal, damage_type_id, hit_type_id, attacking_unit_has_particle_id)
 		else
-			Managers.state.game_session:send_rpc_clients("rpc_play_surface_impact_fx", hit_position, hit_direction, provoking_unit_id, optional_hit_normal, damage_type_id, hit_type_id, provoking_unit_has_particle_id)
+			Managers.state.game_session:send_rpc_clients("rpc_play_surface_impact_fx", hit_position, hit_direction, attacking_unit_id, optional_hit_normal, damage_type_id, hit_type_id, attacking_unit_has_particle_id)
 		end
 	end
 
@@ -342,7 +342,7 @@ FxSystem.play_surface_impact_fx = function (self, hit_position, hit_direction, s
 	end
 
 	local physics_world = self._physics_world
-	local surface_impact_fx, hit_unit, hit_actor = ImpactEffect.surface_impact_fx(physics_world, provoking_unit, hit_position, optional_hit_normal, hit_direction, damage_type, hit_type)
+	local surface_impact_fx, hit_unit, hit_actor = ImpactEffect.surface_impact_fx(physics_world, attacking_unit, hit_position, optional_hit_normal, hit_direction, damage_type, hit_type)
 
 	if not surface_impact_fx then
 		return
@@ -350,30 +350,30 @@ FxSystem.play_surface_impact_fx = function (self, hit_position, hit_direction, s
 
 	local world = self._world
 	local t = World.time(world)
-	local particle_group_id_or_nil = self.unit_to_particle_group_lookup[provoking_unit]
+	local particle_group_id_or_nil = self.unit_to_particle_group_lookup[attacking_unit]
 
-	_play_impact_fx_template(t, world, self._wwise_world, self._unit_to_extension_map, self._spawned_impact_fx_units, surface_impact_fx, hit_position, hit_direction, source_parameters, provoking_unit, particle_group_id_or_nil, hit_unit, hit_actor, optional_hit_normal)
+	_play_impact_fx_template(t, world, self._wwise_world, self._unit_to_extension_map, self._spawned_impact_fx_units, surface_impact_fx, hit_position, hit_direction, source_parameters, attacking_unit, particle_group_id_or_nil, hit_unit, hit_actor, optional_hit_normal)
 end
 
-FxSystem.play_shotshell_surface_impact_fx = function (self, fire_position, hit_positions, hit_normals, source_parameters, provoking_unit, damage_type, hit_type, optional_will_be_predicted)
+FxSystem.play_shotshell_surface_impact_fx = function (self, fire_position, hit_positions, hit_normals, source_parameters, attacking_unit, damage_type, hit_type, optional_will_be_predicted)
 	if self._is_server then
-		local provoking_unit_id = Managers.state.unit_spawner:game_object_id(provoking_unit)
+		local attacking_unit_id = Managers.state.unit_spawner:game_object_id(attacking_unit)
 
-		if not provoking_unit_id then
+		if not attacking_unit_id then
 			return
 		end
 
 		local damage_type_id = NetworkLookup.damage_types[damage_type]
 		local hit_type_id = NetworkLookup.surface_hit_types[hit_type]
-		local provoking_unit_has_particle_id = self.unit_to_particle_group_lookup[provoking_unit] ~= nil
+		local attacking_unit_has_particle_id = self.unit_to_particle_group_lookup[attacking_unit] ~= nil
 
 		if optional_will_be_predicted then
-			local predicting_player = Managers.state.player_unit_spawn:owner(provoking_unit)
+			local predicting_player = Managers.state.player_unit_spawn:owner(attacking_unit)
 			local except = predicting_player:channel_id()
 
-			Managers.state.game_session:send_rpc_clients_except("rpc_play_shotshell_surface_impact_fx", except, fire_position, hit_positions, hit_normals, provoking_unit_id, damage_type_id, hit_type_id, provoking_unit_has_particle_id)
+			Managers.state.game_session:send_rpc_clients_except("rpc_play_shotshell_surface_impact_fx", except, fire_position, hit_positions, hit_normals, attacking_unit_id, damage_type_id, hit_type_id, attacking_unit_has_particle_id)
 		else
-			Managers.state.game_session:send_rpc_clients("rpc_play_shotshell_surface_impact_fx", fire_position, hit_positions, hit_normals, provoking_unit_id, damage_type_id, hit_type_id, provoking_unit_has_particle_id)
+			Managers.state.game_session:send_rpc_clients("rpc_play_shotshell_surface_impact_fx", fire_position, hit_positions, hit_normals, attacking_unit_id, damage_type_id, hit_type_id, attacking_unit_has_particle_id)
 		end
 	end
 
@@ -382,7 +382,7 @@ FxSystem.play_shotshell_surface_impact_fx = function (self, fire_position, hit_p
 	end
 
 	local physics_world = self._physics_world
-	local surface_impact_fxs = ImpactEffect.shotshell_surface_impact_fx(physics_world, fire_position, provoking_unit, hit_positions, hit_normals, damage_type, hit_type)
+	local surface_impact_fxs = ImpactEffect.shotshell_surface_impact_fx(physics_world, fire_position, attacking_unit, hit_positions, hit_normals, damage_type, hit_type)
 
 	if not surface_impact_fxs then
 		return
@@ -393,7 +393,7 @@ FxSystem.play_shotshell_surface_impact_fx = function (self, fire_position, hit_p
 	local unit_to_extension_map = self._unit_to_extension_map
 	local spawned_impact_fx_units = self._spawned_impact_fx_units
 	local t = World.time(world)
-	local particle_group_id_or_nil = self.unit_to_particle_group_lookup[provoking_unit]
+	local particle_group_id_or_nil = self.unit_to_particle_group_lookup[attacking_unit]
 
 	for ii = 1, #surface_impact_fxs, 7 do
 		local surface_impact_fx = surface_impact_fxs[ii]
@@ -404,7 +404,7 @@ FxSystem.play_shotshell_surface_impact_fx = function (self, fire_position, hit_p
 		local hit_actor = surface_impact_fxs[ii + 5]
 		local only_decal = surface_impact_fxs[ii + 6]
 
-		_play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, spawned_impact_fx_units, surface_impact_fx, hit_position, hit_direction, source_parameters, provoking_unit, particle_group_id_or_nil, hit_unit, hit_actor, hit_normal, only_decal)
+		_play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, spawned_impact_fx_units, surface_impact_fx, hit_position, hit_direction, source_parameters, attacking_unit, particle_group_id_or_nil, hit_unit, hit_actor, hit_normal, only_decal)
 	end
 end
 
@@ -552,12 +552,12 @@ end
 
 local SOURCE_PARAMETERS = {}
 
-FxSystem.rpc_play_impact_fx = function (self, channel_id, impact_fx_name_id, position, direction, provoking_unit_id, optional_target_unit_id, optional_node_index, optional_hit_normal, provoking_unit_has_particle_group)
+FxSystem.rpc_play_impact_fx = function (self, channel_id, impact_fx_name_id, position, direction, attacking_unit_id, optional_target_unit_id, optional_node_index, optional_hit_normal, attacking_unit_has_particle_group)
 	local impact_fx_name = NetworkLookup.impact_fx_names[impact_fx_name_id]
 	local impact_fx = impact_fx_templates[impact_fx_name]
-	local provoking_unit = Managers.state.unit_spawner:unit(provoking_unit_id)
+	local attacking_unit = Managers.state.unit_spawner:unit(attacking_unit_id)
 
-	if provoking_unit_has_particle_group and not provoking_unit then
+	if attacking_unit_has_particle_group and not attacking_unit then
 		return
 	end
 
@@ -566,13 +566,13 @@ FxSystem.rpc_play_impact_fx = function (self, channel_id, impact_fx_name_id, pos
 	direction = Vector3.normalize(direction)
 	optional_hit_normal = optional_hit_normal and Vector3.normalize(optional_hit_normal)
 
-	self:play_impact_fx(impact_fx, position, direction, SOURCE_PARAMETERS, provoking_unit, optional_target_unit, optional_node_index, optional_hit_normal, optional_will_be_predicted)
+	self:play_impact_fx(impact_fx, position, direction, SOURCE_PARAMETERS, attacking_unit, optional_target_unit, optional_node_index, optional_hit_normal, optional_will_be_predicted)
 end
 
-FxSystem.rpc_play_surface_impact_fx = function (self, channel_id, hit_position, hit_direction, provoking_unit_id, optional_hit_normal, damage_type_id, hit_type_id, provoking_unit_has_particle_group)
-	local provoking_unit = Managers.state.unit_spawner:unit(provoking_unit_id)
+FxSystem.rpc_play_surface_impact_fx = function (self, channel_id, hit_position, hit_direction, attacking_unit_id, optional_hit_normal, damage_type_id, hit_type_id, attacking_unit_has_particle_group)
+	local attacking_unit = Managers.state.unit_spawner:unit(attacking_unit_id)
 
-	if provoking_unit_has_particle_group and not provoking_unit then
+	if attacking_unit_has_particle_group and not attacking_unit then
 		return
 	end
 
@@ -581,13 +581,13 @@ FxSystem.rpc_play_surface_impact_fx = function (self, channel_id, hit_position, 
 	local optional_will_be_predicted = false
 	optional_hit_normal = optional_hit_normal and Vector3.normalize(optional_hit_normal)
 
-	self:play_surface_impact_fx(hit_position, hit_direction, SOURCE_PARAMETERS, provoking_unit, optional_hit_normal, damage_type, hit_type, optional_will_be_predicted)
+	self:play_surface_impact_fx(hit_position, hit_direction, SOURCE_PARAMETERS, attacking_unit, optional_hit_normal, damage_type, hit_type, optional_will_be_predicted)
 end
 
-FxSystem.rpc_play_shotshell_surface_impact_fx = function (self, channel_id, fire_position, hit_positions, hit_normals, provoking_unit_id, damage_type_id, hit_type_id, provoking_unit_has_particle_group)
-	local provoking_unit = Managers.state.unit_spawner:unit(provoking_unit_id)
+FxSystem.rpc_play_shotshell_surface_impact_fx = function (self, channel_id, fire_position, hit_positions, hit_normals, attacking_unit_id, damage_type_id, hit_type_id, attacking_unit_has_particle_group)
+	local attacking_unit = Managers.state.unit_spawner:unit(attacking_unit_id)
 
-	if provoking_unit_has_particle_group and not provoking_unit then
+	if attacking_unit_has_particle_group and not attacking_unit then
 		return
 	end
 
@@ -595,7 +595,7 @@ FxSystem.rpc_play_shotshell_surface_impact_fx = function (self, channel_id, fire
 	local hit_type = NetworkLookup.surface_hit_types[hit_type_id]
 	local optional_will_be_predicted = false
 
-	self:play_shotshell_surface_impact_fx(fire_position, hit_positions, hit_normals, SOURCE_PARAMETERS, provoking_unit, damage_type, hit_type, optional_will_be_predicted)
+	self:play_shotshell_surface_impact_fx(fire_position, hit_positions, hit_normals, SOURCE_PARAMETERS, attacking_unit, damage_type, hit_type, optional_will_be_predicted)
 end
 
 FxSystem.rpc_trigger_vfx = function (self, channel_id, vfx_id, position, optional_rotation)
@@ -728,12 +728,12 @@ function _create_material_switch_sfx(wwise_world, material_switch_sfx, position,
 	_play_material_switch_sfx(wwise_world, material_switch_sfx.attack_rotation, position, attack_direction, false)
 end
 
-function _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, table_name, husk_table_name, target_player_is_in_1p)
+function _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, table_name, husk_table_name, target_player_is_in_1p)
 	local fx = impact_fx[table_name]
 	local husk_fx = nil
 
 	if not target_player_is_in_1p and husk_table_name then
-		local fx_extension = unit_to_extension_map[provoking_unit]
+		local fx_extension = unit_to_extension_map[attacking_unit]
 
 		if fx_extension and fx_extension:should_play_husk_effect() then
 			husk_fx = impact_fx[husk_table_name]
@@ -787,28 +787,28 @@ function _create_projection_decal(t, decal_settings, position, rotation, normal,
 	Managers.state.decal:add_projection_decal(decal_unit_name, position, rotation, normal, decal_extents, hit_actor, hit_unit, t)
 end
 
-function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, spawned_impact_fx_units, impact_fx, position, direction, source_parameters, provoking_unit, optional_particle_group_id, optional_target_unit, optional_node_index, optional_hit_normal, only_decal)
+function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, spawned_impact_fx_units, impact_fx, position, direction, source_parameters, attacking_unit, optional_particle_group_id, optional_target_unit, optional_node_index, optional_hit_normal, only_decal)
 	local impact_fx_name = impact_fx.name
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local target_player = optional_target_unit and player_unit_spawn_manager:owner(optional_target_unit)
 	local target_first_person_extension = optional_target_unit and ScriptUnit.has_extension(optional_target_unit, "first_person_system")
-	local provoker_first_person_extension = provoking_unit and ScriptUnit.has_extension(provoking_unit, "first_person_system")
+	local attacker_first_person_extension = attacking_unit and ScriptUnit.has_extension(attacking_unit, "first_person_system")
 	local target_player_is_in_1p = target_player and target_first_person_extension and target_first_person_extension:is_in_first_person_mode()
 	local opposite_direction = -direction
 
 	if not only_decal then
-		local sfx = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "sfx", "sfx_husk", target_player_is_in_1p)
+		local sfx = _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, "sfx", "sfx_husk", target_player_is_in_1p)
 
 		if sfx then
 			_create_impact_sfx(wwise_world, sfx, source_parameters, position, opposite_direction, optional_hit_normal)
 		end
 
-		if provoker_first_person_extension then
-			local follow_target = provoker_first_person_extension:is_camera_follow_target()
-			local in_first_person = provoker_first_person_extension:is_in_first_person_mode()
+		if attacker_first_person_extension then
+			local follow_target = attacker_first_person_extension:is_camera_follow_target()
+			local in_first_person = attacker_first_person_extension:is_in_first_person_mode()
 
 			if follow_target and in_first_person then
-				local sfx_1p = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "sfx_1p")
+				local sfx_1p = _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, "sfx_1p")
 
 				if sfx_1p then
 					_create_impact_sfx(wwise_world, sfx_1p, source_parameters, position, opposite_direction)
@@ -817,7 +817,7 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 		end
 
 		if target_player_is_in_1p then
-			local sfx_1p_direction_interface = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "sfx_1p_direction_interface")
+			local sfx_1p_direction_interface = _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, "sfx_1p_direction_interface")
 
 			if sfx_1p_direction_interface then
 				local interface_position = position + opposite_direction * INTERFACE_POSITION_OFFSET_DISTANCE
@@ -826,13 +826,13 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 			end
 		end
 
-		local sfx_3p = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "sfx_3p", nil, target_player_is_in_1p)
+		local sfx_3p = _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, "sfx_3p", nil, target_player_is_in_1p)
 
 		if sfx_3p and not target_player_is_in_1p then
 			_create_impact_sfx(wwise_world, sfx_3p, source_parameters, position, opposite_direction)
 		end
 
-		local material_switch_sfx = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "material_switch_sfx", "material_switch_sfx_husk")
+		local material_switch_sfx = _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, "material_switch_sfx", "material_switch_sfx_husk")
 
 		if material_switch_sfx and optional_hit_normal then
 			_create_material_switch_sfx(wwise_world, material_switch_sfx, position, opposite_direction, optional_hit_normal)
@@ -841,8 +841,8 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 		local play_vfx = not target_player_is_in_1p
 		local play_1p_vfx, play_3p_vfx = nil
 
-		if provoker_first_person_extension and not target_player_is_in_1p then
-			local in_first_person = provoker_first_person_extension:is_in_first_person_mode()
+		if attacker_first_person_extension and not target_player_is_in_1p then
+			local in_first_person = attacker_first_person_extension:is_in_first_person_mode()
 			play_1p_vfx = in_first_person
 			play_3p_vfx = not in_first_person
 		else
@@ -851,7 +851,7 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 		end
 
 		if play_vfx then
-			local vfx = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "vfx")
+			local vfx = _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, "vfx")
 
 			if vfx then
 				_create_impact_vfx(world, vfx, position, opposite_direction, optional_hit_normal, optional_particle_group_id)
@@ -859,7 +859,7 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 		end
 
 		if play_1p_vfx then
-			local vfx_1p = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "vfx_1p")
+			local vfx_1p = _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, "vfx_1p")
 
 			if vfx_1p then
 				_create_impact_vfx(world, vfx_1p, position, opposite_direction, optional_hit_normal, optional_particle_group_id)
@@ -867,7 +867,7 @@ function _play_impact_fx_template(t, world, wwise_world, unit_to_extension_map, 
 		end
 
 		if play_3p_vfx then
-			local vfx_3p = _impact_fx(impact_fx, provoking_unit, unit_to_extension_map, "vfx_3p")
+			local vfx_3p = _impact_fx(impact_fx, attacking_unit, unit_to_extension_map, "vfx_3p")
 
 			if vfx_3p then
 				_create_impact_vfx(world, vfx_3p, position, opposite_direction, optional_hit_normal, optional_particle_group_id)

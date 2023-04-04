@@ -12,7 +12,7 @@ table.make_unique(overrides)
 
 local burninating_adm = {
 	[armor_types.unarmored] = 1.5,
-	[armor_types.armored] = 2,
+	[armor_types.armored] = 1,
 	[armor_types.resistant] = 1.5,
 	[armor_types.player] = 0.125,
 	[armor_types.berserker] = 1,

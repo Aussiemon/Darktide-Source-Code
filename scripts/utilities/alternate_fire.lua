@@ -32,6 +32,11 @@ local AlternateFire = {
 		Spread.add_immediate_spread(t, spread_template, spread_control_component, movement_state_component, "alternate_fire_start")
 
 		local player = Managers.state.player_unit_spawn:owner(player_unit)
+
+		if player.aim_assist_data then
+			player.aim_assist_data.wants_lock_on = true
+		end
+
 		local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 		local param_table = buff_extension:request_proc_event_param_table()
 

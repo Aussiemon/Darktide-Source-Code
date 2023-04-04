@@ -79,6 +79,12 @@ local hit_zone_priority = {
 	[hit_zone_names.upper_left_leg] = 3,
 	[hit_zone_names.upper_right_leg] = 3
 }
+local _force_abort_breed_tags_special_active = {
+	"elite",
+	"special",
+	"monster",
+	"captain"
+}
 
 table.add_missing(hit_zone_priority, default_hit_zone_priority)
 
@@ -302,21 +308,21 @@ weapon_template.actions = {
 		end
 	},
 	action_left_diagonal_light = {
-		damage_window_start = 0.15,
-		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1",
+		range_mod = 1.25,
 		kind = "sweep",
 		max_num_saved_entries = 20,
 		first_person_hit_stop_anim = "hit_stop",
 		num_frames_before_process = 0,
 		allowed_during_sprint = true,
-		range_mod = 1.25,
+		hit_armor_anim = "attack_hit_shield",
+		damage_window_start = 0.15,
 		damage_window_end = 0.25,
 		anim_end_event = "attack_finished",
-		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		anim_event_3p = "attack_swing_left_diagonal",
-		uninterruptible = true,
 		anim_event = "attack_left_diagonal_down",
+		weapon_handling_template = "time_scale_1",
+		charge_template = "forcesword_p1_m1_weapon_special_hit",
+		uninterruptible = true,
 		total_time = 0.9,
 		action_movement_curve = {
 			{
@@ -396,6 +402,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.left_45_slash_clean,
 		wounds_shape_special_active = wounds_shapes.default
 	},
@@ -480,6 +487,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.vertical_slash_clean,
 		wounds_shape_special_active = wounds_shapes.default
 	},
@@ -552,18 +560,18 @@ weapon_template.actions = {
 		end
 	},
 	action_right_diagonal_light = {
-		range_mod = 1.25,
+		allowed_during_sprint = true,
 		kind = "sweep",
 		max_num_saved_entries = 20,
 		first_person_hit_stop_anim = "hit_stop",
 		num_frames_before_process = 0,
-		allowed_during_sprint = true,
 		hit_armor_anim = "attack_hit_shield",
 		damage_window_start = 0.15,
 		damage_window_end = 0.25,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_up",
 		anim_event = "attack_right_up",
+		range_mod = 1.25,
 		weapon_handling_template = "time_scale_1",
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		uninterruptible = true,
@@ -647,6 +655,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.left_45_slash_clean,
 		wounds_shape_special_active = wounds_shapes.default
 	},
@@ -733,6 +742,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.right_45_slash_clean,
 		wounds_shape_special_active = wounds_shapes.default
 	},
@@ -809,18 +819,18 @@ weapon_template.actions = {
 		end
 	},
 	action_left_down_light = {
-		range_mod = 1.25,
+		allowed_during_sprint = true,
 		kind = "sweep",
 		max_num_saved_entries = 20,
 		first_person_hit_stop_anim = "hit_stop",
 		num_frames_before_process = 0,
-		allowed_during_sprint = true,
 		hit_armor_anim = "attack_hit_shield",
 		damage_window_start = 0.2,
 		damage_window_end = 0.26666666666666666,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_stab_01",
 		anim_event = "attack_stab_01",
+		range_mod = 1.25,
 		weapon_handling_template = "time_scale_1",
 		charge_template = "forcesword_p1_m1_weapon_special_hit",
 		uninterruptible = true,
@@ -904,6 +914,7 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
+		force_abort_breed_tags_special_active = _force_abort_breed_tags_special_active,
 		wounds_shape = wounds_shapes.default,
 		wounds_shape_special_active = wounds_shapes.default
 	},

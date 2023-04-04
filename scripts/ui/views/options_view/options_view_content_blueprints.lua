@@ -607,6 +607,7 @@ blueprints.dropdown = {
 		local scroll_area_height = parent:settings_grid_length()
 		local dropdown_length = size[2] * (num_visible_options + 1)
 		local grow_downwards = true
+		local always_keep_order = true
 
 		if scroll_area_height <= offset[2] - scroll_amount + dropdown_length then
 			grow_downwards = false
@@ -631,13 +632,13 @@ blueprints.dropdown = {
 
 		if selected_index and focused then
 			if input_service:get("navigate_up_continuous") then
-				if grow_downwards then
+				if grow_downwards or not grow_downwards and always_keep_order then
 					new_selection_index = math.max(selected_index - 1, 1)
 				else
 					new_selection_index = math.min(selected_index + 1, num_options)
 				end
 			elseif input_service:get("navigate_down_continuous") then
-				if grow_downwards then
+				if grow_downwards or not grow_downwards and always_keep_order then
 					new_selection_index = math.min(selected_index + 1, num_options)
 				else
 					new_selection_index = math.max(selected_index - 1, 1)
@@ -674,10 +675,10 @@ blueprints.dropdown = {
 		local using_scrollbar = num_visible_options < num_options
 
 		for i = start_index, end_index do
-			local actual_i = end_index - i + start_index
+			local actual_i = i
 
-			if grow_downwards then
-				actual_i = i
+			if not grow_downwards and always_keep_order then
+				actual_i = end_index - i + start_index
 			end
 
 			local option_text_id = "option_text_" .. option_index

@@ -66,7 +66,7 @@ PlayerCharacterStateSprinting.on_enter = function (self, unit, dt, t, previous_s
 	if wielded_slot ~= "none" then
 		local slot_type = slot_configuration[wielded_slot].slot_type
 
-		if slot_type == "ability" and not wielded_slot == "slot_grenade_ability" then
+		if slot_type == "ability" and wielded_slot ~= "slot_grenade_ability" then
 			PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory_component, unit, t)
 		end
 	end

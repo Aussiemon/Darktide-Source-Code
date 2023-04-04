@@ -12,7 +12,7 @@ table.add_missing(weapon_template.action_input_hierarchy, PockatablesTemplateSet
 
 weapon_template.actions = {
 	action_place_complete = {
-		allowed_during_sprint = false,
+		allowed_during_sprint = true,
 		start_input = "place",
 		remove_item_from_inventory = true,
 		kind = "place_pickup",

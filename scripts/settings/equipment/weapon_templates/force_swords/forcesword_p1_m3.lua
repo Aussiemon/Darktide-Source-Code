@@ -97,10 +97,14 @@ weapon_template.actions = {
 		total_time = 0.3,
 		action_movement_curve = {
 			{
-				modifier = 1,
+				modifier = 1.2,
 				t = 0.3
 			},
-			start_modifier = 1.5
+			{
+				modifier = 1,
+				t = 0.4
+			},
+			start_modifier = 0.8
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -290,8 +294,8 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.vertical_slash_clean,
-		wounds_shape_special_active = wounds_shapes.default
+		wounds_shape = wounds_shapes.left_45_slash_clean,
+		wounds_shape_special_active = wounds_shapes.left_45_slash_clean
 	},
 	action_left_heavy = {
 		damage_window_start = 0.1,
@@ -370,8 +374,8 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.left_45_slash_clean,
-		wounds_shape_special_active = wounds_shapes.default
+		wounds_shape = wounds_shapes.horizontal_slash_clean,
+		wounds_shape_special_active = wounds_shapes.horizontal_slash_clean
 	},
 	action_melee_start_right = {
 		kind = "windup",
@@ -534,8 +538,8 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.right_45_slash_clean,
-		wounds_shape_special_active = wounds_shapes.default
+		wounds_shape = wounds_shapes.horizontal_slash_clean,
+		wounds_shape_special_active = wounds_shapes.horizontal_slash_clean
 	},
 	action_right_heavy = {
 		damage_window_start = 0.175,
@@ -618,7 +622,7 @@ weapon_template.actions = {
 			buff_stat_buffs.melee_attack_speed
 		},
 		wounds_shape = wounds_shapes.right_45_slash_clean,
-		wounds_shape_special_active = wounds_shapes.default
+		wounds_shape_special_active = wounds_shapes.right_45_slash_clean
 	},
 	action_melee_start_left_2 = {
 		sprint_enabled_time = 0.5,
@@ -783,8 +787,8 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.vertical_slash_clean,
-		wounds_shape_special_active = wounds_shapes.default
+		wounds_shape = wounds_shapes.right_45_slash_clean,
+		wounds_shape_special_active = wounds_shapes.right_45_slash_clean
 	},
 	action_melee_start_right_2 = {
 		kind = "windup",
@@ -947,23 +951,19 @@ weapon_template.actions = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
 		},
-		wounds_shape = wounds_shapes.right_45_slash_clean,
-		wounds_shape_special_active = wounds_shapes.default
+		wounds_shape = wounds_shapes.left_45_slash_clean,
+		wounds_shape_special_active = wounds_shapes.left_45_slash_clean
 	},
 	action_block = {
 		weapon_handling_template = "time_scale_1_65",
+		minimum_hold_time = 0.3,
 		start_input = "block",
 		anim_end_event = "parry_finished",
 		kind = "block",
-		minimum_hold_time = 0.3,
 		block_vfx_name = "content/fx/particles/weapons/swords/forcesword/psyker_block",
 		anim_event = "parry_pose",
 		stop_input = "block_release",
 		total_time = math.huge,
-		block_attack_types = {
-			ranged = true,
-			melee = true
-		},
 		action_movement_curve = {
 			{
 				modifier = 0.75,
@@ -1377,6 +1377,9 @@ weapon_template.base_stats = {
 			},
 			action_left_down_light = {
 				damage_trait_templates.default_melee_dps_stat
+			},
+			action_right_diagonal_light_2 = {
+				damage_trait_templates.default_melee_dps_stat
 			}
 		}
 	},
@@ -1418,6 +1421,9 @@ weapon_template.base_stats = {
 			},
 			action_left_down_light = {
 				damage_trait_templates.default_melee_finesse_stat
+			},
+			action_right_diagonal_light_2 = {
+				damage_trait_templates.default_melee_finesse_stat
 			}
 		},
 		weapon_handling = {
@@ -1446,6 +1452,9 @@ weapon_template.base_stats = {
 				weapon_handling_trait_templates.default_finesse_stat
 			},
 			action_left_down_light = {
+				weapon_handling_trait_templates.default_finesse_stat
+			},
+			action_right_diagonal_light_2 = {
 				weapon_handling_trait_templates.default_finesse_stat
 			}
 		}
@@ -1487,6 +1496,9 @@ weapon_template.base_stats = {
 				damage_trait_templates.default_first_target_stat
 			},
 			action_left_down_light = {
+				damage_trait_templates.default_first_target_stat
+			},
+			action_right_diagonal_light_2 = {
 				damage_trait_templates.default_first_target_stat
 			}
 		}

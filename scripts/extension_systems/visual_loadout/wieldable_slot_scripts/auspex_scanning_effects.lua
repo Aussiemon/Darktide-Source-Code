@@ -241,11 +241,15 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 
 	local player_holo_position = Vector3.up() * HOLO_BASE_HIGHT
 	local world_player_holo_position = Matrix4x4.transform(holo_world_pose, player_holo_position)
+	local is_in_first_person = self._is_in_first_person
 	local player_holo_unit = self._player_holo_unit
 
 	if not player_holo_unit then
 		player_holo_unit = World.spawn_unit_ex(self._world, PLAYER_HOLO_UNIT_NAME)
 		self._player_holo_unit = player_holo_unit
+
+		Unit.set_shader_pass_flag_for_meshes_in_unit_and_childs(player_holo_unit, "custom_fov", is_in_first_person)
+
 		local player_holo_mesh = Unit.mesh(player_holo_unit, "g_auspex_scanner_holo_drop_01")
 		self._player_holo_material = Mesh.material(player_holo_mesh, 1)
 	end
@@ -258,7 +262,6 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 
 	local mission_objective_zone_system = Managers.state.extension:system("mission_objective_zone_system")
 	local current_scan_mission_zone = mission_objective_zone_system:current_active_zone()
-	local is_in_first_person = self._is_in_first_person
 	local holo_units = self._holo_units
 	local current_holo_unit = 1
 
@@ -342,6 +345,12 @@ AuspexScanningEffects.update_first_person_mode = function (self, first_person_mo
 			local holo_unit = holo_units[i]
 
 			Unit.set_shader_pass_flag_for_meshes_in_unit_and_childs(holo_unit, "custom_fov", first_person_mode)
+		end
+
+		local player_holo_unit = self._player_holo_unit
+
+		if player_holo_unit then
+			Unit.set_shader_pass_flag_for_meshes_in_unit_and_childs(player_holo_unit, "custom_fov", first_person_mode)
 		end
 	end
 

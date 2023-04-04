@@ -48,7 +48,7 @@ template.create_widget_defintion = function (template, scenegraph_id)
 	local hit_default_distance = template.hit_default_distance
 	local offset_up = {
 		0,
-		-(size[1] * 2 + center_half_width),
+		-(size[1] * 2) + center_half_width,
 		1
 	}
 	local offset_down = {

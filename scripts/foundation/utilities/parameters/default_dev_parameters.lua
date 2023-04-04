@@ -502,6 +502,10 @@ params.debug_fill_pickup_spawners = {
 		"side_mission"
 	}
 }
+params.debug_medkits = {
+	value = false,
+	category = "Pickups"
+}
 params.projectile_aim_disable_aim_offset = {
 	value = false,
 	category = "Projectile Locomotion"
@@ -3839,7 +3843,7 @@ params.use_localized_talent_names_in_debug_menu = {
 	value = false,
 	category = "Talents"
 }
-params.draw_chain_lightning_targeting_action_module = {
+params.draw_chain_lightning_targeting = {
 	value = false,
 	category = "Chain Lightning"
 }
@@ -3972,6 +3976,10 @@ params.enable_mouse_and_keyboard_aim_assist = {
 	category = "Weapon Aim Assist"
 }
 params.visualize_aim_assist_trajectory = {
+	value = false,
+	category = "Weapon Aim Assist"
+}
+params.debug_movement_aim_assist_logging = {
 	value = false,
 	category = "Weapon Aim Assist"
 }
