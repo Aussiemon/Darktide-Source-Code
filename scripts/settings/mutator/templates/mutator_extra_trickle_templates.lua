@@ -56,10 +56,29 @@ local mutator_templates = {
 					60
 				},
 				pause_pacing_on_spawn = {
-					roamers = 20,
-					hordes = 40,
-					trickle_hordes = 40,
-					specials = 50
+					{
+						roamers = 20,
+						hordes = 40,
+						trickle_hordes = 40,
+						specials = 50
+					},
+					{
+						roamers = 20,
+						hordes = 40,
+						trickle_hordes = 40,
+						specials = 50
+					},
+					{
+						hordes = 20,
+						trickle_hordes = 30,
+						specials = 20
+					},
+					{
+						trickle_hordes = 20
+					},
+					{
+						trickle_hordes = 10
+					}
 				},
 				num_trickle_waves = {
 					{
@@ -150,10 +169,29 @@ local mutator_templates = {
 					70
 				},
 				pause_pacing_on_spawn = {
-					roamers = 20,
-					hordes = 40,
-					trickle_hordes = 40,
-					specials = 50
+					{
+						roamers = 20,
+						hordes = 40,
+						trickle_hordes = 40,
+						specials = 50
+					},
+					{
+						roamers = 20,
+						hordes = 40,
+						trickle_hordes = 40,
+						specials = 50
+					},
+					{
+						hordes = 40,
+						trickle_hordes = 40,
+						specials = 50
+					},
+					{
+						trickle_hordes = 20
+					},
+					{
+						trickle_hordes = 10
+					}
 				},
 				num_trickle_waves = {
 					{
@@ -234,10 +272,29 @@ local mutator_templates = {
 					45
 				},
 				pause_pacing_on_spawn = {
-					roamers = 10,
-					hordes = 30,
-					trickle_hordes = 20,
-					specials = 30
+					{
+						roamers = 20,
+						hordes = 40,
+						trickle_hordes = 40,
+						specials = 50
+					},
+					{
+						roamers = 20,
+						hordes = 40,
+						trickle_hordes = 40,
+						specials = 50
+					},
+					{
+						hordes = 40,
+						trickle_hordes = 40,
+						specials = 50
+					},
+					{
+						trickle_hordes = 20
+					},
+					{
+						trickle_hordes = 10
+					}
 				},
 				optional_main_path_offset = {
 					-60,
@@ -305,10 +362,29 @@ local mutator_templates = {
 					45
 				},
 				pause_pacing_on_spawn = {
-					roamers = 10,
-					hordes = 30,
-					trickle_hordes = 20,
-					specials = 30
+					{
+						roamers = 20,
+						hordes = 40,
+						trickle_hordes = 40,
+						specials = 50
+					},
+					{
+						roamers = 20,
+						hordes = 40,
+						trickle_hordes = 40,
+						specials = 50
+					},
+					{
+						hordes = 40,
+						trickle_hordes = 40,
+						specials = 50
+					},
+					{
+						trickle_hordes = 20
+					},
+					{
+						trickle_hordes = 10
+					}
 				},
 				optional_main_path_offset = {
 					-60,
@@ -395,10 +471,29 @@ local mutator_templates = {
 					45
 				},
 				pause_pacing_on_spawn = {
-					roamers = 20,
-					hordes = 40,
-					trickle_hordes = 40,
-					specials = 50
+					{
+						roamers = 20,
+						hordes = 40,
+						trickle_hordes = 40,
+						specials = 50
+					},
+					{
+						roamers = 20,
+						hordes = 40,
+						trickle_hordes = 40,
+						specials = 50
+					},
+					{
+						hordes = 40,
+						trickle_hordes = 40,
+						specials = 50
+					},
+					{
+						trickle_hordes = 20
+					},
+					{
+						trickle_hordes = 10
+					}
 				}
 			}
 		}

@@ -340,6 +340,18 @@ local default_view_input_settings = {
 			"xbox_controller_right_trigger+xbox_controller_left_trigger",
 			description = "",
 			bindable = false
+		},
+		notification_option_a = {
+			"keyboard_f9",
+			"xbox_controller_d_right+xbox_controller_left_trigger",
+			description = "",
+			bindable = false
+		},
+		notification_option_b = {
+			"keyboard_f10",
+			"xbox_controller_d_right+xbox_controller_right_trigger",
+			description = "",
+			bindable = false
 		}
 	},
 	settings = {
@@ -721,6 +733,14 @@ local default_view_input_settings = {
 		},
 		cancel_matchmaking = {
 			key_alias = "cancel_matchmaking",
+			type = "pressed"
+		},
+		notification_option_a = {
+			key_alias = "notification_option_a",
+			type = "pressed"
+		},
+		notification_option_b = {
+			key_alias = "notification_option_b",
 			type = "pressed"
 		}
 	}

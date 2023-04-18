@@ -39,7 +39,7 @@ local function _remove_live_item_icon_cb_func(widget)
 end
 
 local ConstantElementNotificationFeed = class("ConstantElementNotificationFeed", "ConstantElementBase")
-local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "matchmaking")
+local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "matchmaking", "voting")
 
 ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start_scale)
 	ConstantElementNotificationFeed.super.init(self, parent, draw_layer, start_scale, Definitions)
@@ -110,6 +110,12 @@ ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start
 			animation_enter = "popup_enter",
 			priority_order = 1,
 			widget_definition = Definitions.notification_message
+		},
+		voting = {
+			animation_exit = "popup_leave",
+			animation_enter = "popup_enter",
+			priority_order = 1,
+			widget_definition = Definitions.notification_message
 		}
 	}
 	local event_manager = Managers.event
@@ -171,7 +177,8 @@ ConstantElementNotificationFeed.event_remove_notification = function (self, noti
 	local notification = self:_notification_by_id(notification_id)
 
 	if notification then
-		self:_remove_notification(notification)
+		notification.total_time = 0
+		notification.time = 0
 	end
 end
 
@@ -480,6 +487,39 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			scale_icon = data.scale_icon or false
 		}
 	elseif message_type == MESSAGE_TYPES.matchmaking then
+		notification_data = {
+			texts = {
+				{
+					display_name = data.texts[1],
+					color = {
+						255,
+						200,
+						200,
+						200
+					}
+				},
+				{
+					font_size = 18,
+					display_name = data.texts[2],
+					color = {
+						255,
+						140,
+						140,
+						140
+					}
+				},
+				{
+					display_name = data.texts[3],
+					color = {
+						255,
+						200,
+						182,
+						149
+					}
+				}
+			}
+		}
+	elseif message_type == MESSAGE_TYPES.voting then
 		notification_data = {
 			texts = {
 				{

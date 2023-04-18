@@ -258,6 +258,16 @@ GameModeCoopCompleteObjective.on_player_unit_spawn = function (self, player, uni
 			self:_apply_persistent_player_data(player)
 		end
 
+		if not is_respawn then
+			local buff_extension = ScriptUnit.has_extension(player.player_unit, "buff_system")
+
+			if buff_extension then
+				local t = Managers.time:time("gameplay")
+
+				buff_extension:add_internally_controlled_buff("player_spawn_grace", t)
+			end
+		end
+
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
 		if mission_objective_system then
@@ -380,8 +390,9 @@ GameModeCoopCompleteObjective._apply_persistent_player_data = function (self, pl
 			Log.info("GameModeCoopCompleteObjective", "Player %s inherited persistent data from previous bot: %s", account_id, table.tostring(selected_data, 3))
 		end
 
+		local player_unit = player.player_unit
+
 		if selected_data then
-			local player_unit = player.player_unit
 			local health_extension = ScriptUnit.extension(player_unit, "health_system")
 
 			health_extension:apply_persistent_data(selected_data.damage_percent, selected_data.permanent_damage_percent)
@@ -415,7 +426,6 @@ GameModeCoopCompleteObjective._apply_persistent_player_data = function (self, pl
 				end
 			end
 		else
-			local player_unit = player.player_unit
 			local settings = self._settings.spawn
 			local ammo_percentage = settings.ammo_percentage or 1
 			local health_percentage = settings.health_percentage or 0

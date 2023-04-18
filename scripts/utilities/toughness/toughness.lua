@@ -20,11 +20,11 @@ local Toughness = {
 			toughness_extension:recover_flat_toughness(amount, ignore_stat_buffs, reason)
 		end
 	end,
-	recover_max_toughness = function (unit, reason)
+	recover_max_toughness = function (unit, reason, ignore_state_block)
 		local toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
 
 		if toughness_extension then
-			toughness_extension:recover_max_toughness(reason)
+			toughness_extension:recover_max_toughness(reason, ignore_state_block)
 		end
 	end
 }

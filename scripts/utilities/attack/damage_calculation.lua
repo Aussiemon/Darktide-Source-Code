@@ -56,7 +56,7 @@ DamageCalculation.calculate = function (damage_profile, damage_type, target_sett
 	rending_damage = math.max(0, armor_damage_damage_diff * rending_multiplier)
 	local rended_reduction = armor_damage_damage_diff - rending_damage
 	damage = damage - rended_reduction
-	local hit_zone_damage_multiplier = _hit_zone_damage_multiplier(breed_or_nil, hit_zone_name, attack_type, damage_profile.ignore_hitzone_multiplier)
+	local hit_zone_damage_multiplier = _hit_zone_damage_multiplier(breed_or_nil, hit_zone_name, attack_type, damage_profile.ignore_hitzone_multiplier, damage_profile.ignore_roamer_hitzone_multipliers)
 	damage = damage * hit_zone_damage_multiplier
 	damage = _apply_armor_type_buffs_to_damage(damage, armor_type, attacker_stat_buffs, target_toughness_extension)
 	damage = _apply_armor_type_buffs_to_damage(damage, armor_type, target_stat_buffs, target_toughness_extension)
@@ -420,8 +420,14 @@ function _finesse_boost_damage(base_damage, base_rending_damage, rending_damage,
 	return final_finesse_damage, final_finesse_damage - base_finesse_damage
 end
 
-function _hit_zone_damage_multiplier(breed_or_nil, hit_zone_name, attack_type, ignore_hitzone_multiplier)
+function _hit_zone_damage_multiplier(breed_or_nil, hit_zone_name, attack_type, ignore_hitzone_multiplier, ignore_roamer_hitzone_multipliers)
 	if ignore_hitzone_multiplier or not breed_or_nil then
+		return 1
+	end
+
+	local breed_tags = breed_or_nil.tags
+
+	if breed_tags and ignore_roamer_hitzone_multipliers and not breed_tags.monster then
 		return 1
 	end
 

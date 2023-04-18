@@ -20,6 +20,9 @@ local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local Trajectory = require("scripts/utilities/trajectory")
 local attack_types = AttackSettings.attack_types
 local BtMutantChargerChargeAction = class("BtMutantChargerChargeAction", "BtNode")
+local ABOVE = 1
+local BELOW = 2
+local LATERAL = 2
 
 BtMutantChargerChargeAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local spawn_component = blackboard.spawn
@@ -134,6 +137,18 @@ BtMutantChargerChargeAction.run = function (self, unit, breed, blackboard, scrat
 	return "running"
 end
 
+BtMutantChargerChargeAction._is_facing_target = function (self, unit, scratchpad)
+	local target_unit = scratchpad.perception_component.target_unit
+	local unit_position = POSITION_LOOKUP[unit]
+	local target_position = POSITION_LOOKUP[target_unit]
+	local forward = Quaternion.forward(Unit.local_rotation(unit, 1))
+	local to_target_normalized = Vector3.normalize(Vector3.flat(target_position - unit_position))
+	local dot = Vector3.dot(forward, to_target_normalized)
+	local facing_target = dot > 0.75
+
+	return facing_target
+end
+
 BtMutantChargerChargeAction._start_charging = function (self, unit, scratchpad, action_data, t)
 	scratchpad.state = "charging"
 	scratchpad.charge_started_at_t = t
@@ -146,6 +161,9 @@ BtMutantChargerChargeAction._start_charging = function (self, unit, scratchpad, 
 	behavior_component.move_state = "attacking"
 	scratchpad.target_dodged_during_attack = nil
 	scratchpad.target_dodged_type = nil
+	local not_facing_target = not self:_is_facing_target(unit, scratchpad)
+	scratchpad.charge_aborted = not_facing_target
+	scratchpad.start_colliding_with_players_timing = nil
 end
 
 BtMutantChargerChargeAction._start_navigating = function (self, unit, scratchpad, action_data, t)
@@ -353,7 +371,7 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 
 		locomotion_extension:set_rotation_speed(scratchpad.target_dodged_during_attack and action_data.dodge_rotation_speed or action_data.close_rotation_speed)
 
-		if action_data.min_time_spent_charging <= time_spent_charging then
+		if action_data.min_time_spent_charging <= time_spent_charging or scratchpad.charge_aborted then
 			local dot = Vector3.dot(wanted_direction, true_direction_to_target)
 
 			if dot < action_data.charged_past_dot_threshold then
@@ -401,8 +419,9 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 	end
 end
 
-local MIN_DISTANCE_FOR_MOVE_TO = 2
-local MOVE_FREQUENCY = 0.5
+local MIN_DISTANCE_FOR_MOVE_TO = 3
+local MOVE_FREQUENCY = 1
+local MIN_DISTANCE_FOR_MOVE_TO_NOT_FACING = 5
 
 BtMutantChargerChargeAction._update_navigating = function (self, unit, scratchpad, action_data, t, dt, breed)
 	local can_exit_navigating = not scratchpad.min_time_navigating or scratchpad.min_time_navigating < t
@@ -415,17 +434,23 @@ BtMutantChargerChargeAction._update_navigating = function (self, unit, scratchpa
 		return
 	end
 
+	local navigation_extension = scratchpad.navigation_extension
 	local target_unit = scratchpad.perception_component.target_unit
 	local target_position = POSITION_LOOKUP[target_unit]
-	local navigation_extension = scratchpad.navigation_extension
+	local not_facing_target = not self:_is_facing_target(unit, scratchpad)
 	local destination = navigation_extension:destination()
 	local distance = Vector3.distance(target_position, destination)
-	local should_force_move = not scratchpad.move_to_timer or t < scratchpad.move_to_timer
+	local should_force_move = scratchpad.behavior_component.move_state ~= "moving" or navigation_extension:has_reached_destination() or not not_facing_target and (not scratchpad.move_to_timer or t < scratchpad.move_to_timer)
+	local min_distance = not_facing_target and MIN_DISTANCE_FOR_MOVE_TO_NOT_FACING or MIN_DISTANCE_FOR_MOVE_TO
 
-	if MIN_DISTANCE_FOR_MOVE_TO < distance or should_force_move then
+	if min_distance < distance or should_force_move then
 		self:_move_to_position(scratchpad, target_position)
 
 		scratchpad.move_to_timer = t + MOVE_FREQUENCY
+
+		if not_facing_target then
+			scratchpad.started_charge_anim = nil
+		end
 	end
 
 	local should_start_idle, should_be_idling = MinionMovement.should_start_idle(scratchpad, scratchpad.behavior_component)
@@ -746,10 +771,6 @@ BtMutantChargerChargeAction._update_throwing = function (self, unit, scratchpad,
 		end
 	end
 end
-
-local ABOVE = 1
-local BELOW = 2
-local LATERAL = 2
 
 BtMutantChargerChargeAction._update_ray_can_go = function (self, unit, scratchpad)
 	local navigation_extension = scratchpad.navigation_extension

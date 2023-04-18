@@ -415,7 +415,13 @@ HordePacing._spawn_trickle_horde_wave = function (self, side_id, target_side_id,
 		end
 
 		if trickle_horde.pause_pacing_on_spawn then
-			for spawn_type, duration in pairs(trickle_horde.pause_pacing_on_spawn) do
+			local pause_pacing_on_spawn = trickle_horde.pause_pacing_on_spawn
+
+			if type(pause_pacing_on_spawn) == "table" then
+				pause_pacing_on_spawn = Managers.state.difficulty:get_table_entry_by_challenge(pause_pacing_on_spawn)
+			end
+
+			for spawn_type, duration in pairs(pause_pacing_on_spawn) do
 				Managers.state.pacing:pause_spawn_type(spawn_type, true, "trickle_horde", duration)
 			end
 		end

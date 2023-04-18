@@ -616,6 +616,18 @@ SocialService.leave_party = function (self)
 	Managers.party_immaterium:leave_party()
 end
 
+SocialService._get_kick_voting_template = function (self, player_info)
+	local party_status = player_info:party_status()
+	local is_in_mission = self:is_in_mission()
+	local voting_template = nil
+
+	if is_in_mission and (party_status == PartyStatus.same_mission or party_status == PartyStatus.mine) then
+		voting_template = "kick_from_mission"
+	end
+
+	return voting_template
+end
+
 SocialService.can_kick_from_party = function (self, player_info)
 	local party_status = player_info:party_status()
 
@@ -625,6 +637,15 @@ SocialService.can_kick_from_party = function (self, player_info)
 
 	if self._num_party_members < SocialConstants.min_num_party_members_to_vote then
 		return false, "loc_social_fail_too_few_to_kick_vote"
+	end
+
+	local peer_id = player_info:peer_id()
+	local voting_template = self:_get_kick_voting_template(player_info)
+
+	if not voting_template or not Managers.voting:can_start_voting("kick_from_mission", {
+		kick_peer_id = peer_id
+	}) then
+		return false
 	end
 
 	return true
@@ -637,13 +658,7 @@ SocialService.initiate_kick_vote = function (self, player_info)
 		return
 	end
 
-	local party_status = player_info:party_status()
-	local is_in_mission = self:is_in_mission()
-	local voting_template = nil
-
-	if is_in_mission and (party_status == PartyStatus.same_mission or party_status == PartyStatus.mine) then
-		voting_template = "kick_from_mission"
-	end
+	local voting_template = self:_get_kick_voting_template(player_info)
 
 	if voting_template then
 		Managers.voting:start_voting(voting_template, {

@@ -35,8 +35,6 @@ VotingClient.init = function (self, voting_id, initiator_peer, template, optiona
 			self._member_list[i] = peer_id
 			self._votes[peer_id] = initial_votes_list[i]
 		end
-
-		_info("Joined voting %q (%s) initated by %s, params: %s", voting_id, template.name, initiator_peer, table.tostring(params))
 	end
 end
 

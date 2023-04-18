@@ -45,8 +45,8 @@ local combat_axe_sweep_box = {
 	1
 }
 local hit_zone_priority = {
-	[hit_zone_names.head] = 2,
-	[hit_zone_names.torso] = 1,
+	[hit_zone_names.head] = 1,
+	[hit_zone_names.torso] = 2,
 	[hit_zone_names.upper_left_arm] = 3,
 	[hit_zone_names.upper_right_arm] = 3,
 	[hit_zone_names.upper_left_leg] = 3,

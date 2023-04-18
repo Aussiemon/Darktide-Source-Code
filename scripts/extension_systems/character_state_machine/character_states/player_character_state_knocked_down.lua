@@ -13,6 +13,7 @@ local Luggable = require("scripts/utilities/luggable")
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local Vo = require("scripts/utilities/vo")
+local Toughness = require("scripts/utilities/toughness/toughness")
 local PlayerCharacterStateKnockedDown = class("PlayerCharacterStateKnockedDown", "PlayerCharacterStateBase")
 local assist_anims = CharacterStateAssistSettings.anim_settings.knocked_down
 local proc_events = BuffSettings.proc_events
@@ -152,6 +153,10 @@ PlayerCharacterStateKnockedDown.on_exit = function (self, unit, t, next_state)
 			local time_in_captivity = t - self._entered_state_t
 
 			Managers.telemetry_events:player_exits_captivity(player, rescued_by_player, state_name, time_in_captivity)
+
+			local ignore_state_block = true
+
+			Toughness.recover_max_toughness(unit, "exit_knock_down", ignore_state_block)
 		end
 
 		self._entered_state_t = nil

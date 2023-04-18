@@ -21,6 +21,17 @@ local burninating_adm = {
 	[armor_types.void_shield] = 1,
 	[armor_types.prop_armor] = 0.75
 }
+local burninating_warp_adm = {
+	[armor_types.unarmored] = 1.5,
+	[armor_types.armored] = 1.5,
+	[armor_types.resistant] = 1.5,
+	[armor_types.player] = 0.125,
+	[armor_types.berserker] = 1,
+	[armor_types.super_armor] = 0.1,
+	[armor_types.disgustingly_resilient] = 1.25,
+	[armor_types.void_shield] = 1,
+	[armor_types.prop_armor] = 0.75
+}
 local burninating_barrel_adm = {
 	[armor_types.unarmored] = 2,
 	[armor_types.armored] = 1.75,
@@ -267,8 +278,8 @@ damage_templates.warpfire = {
 	stagger_category = "melee",
 	ogryn_disorientation_type = "burninating",
 	armor_damage_modifier = {
-		attack = burninating_adm,
-		impact = burninating_adm
+		attack = burninating_warp_adm,
+		impact = burninating_warp_adm
 	},
 	power_distribution = {
 		attack = 250,

@@ -1,4 +1,4 @@
-local PlayerCompositions = require("scripts/utilities/players/player_compositions")
+local InputUtils = require("scripts/managers/input/input_utils")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local OPTIONS = table.enum("yes", "no")
 local RESULTS = table.enum("approved", "rejected")
@@ -8,69 +8,59 @@ local function _cast_kick_vote(voting_id, vote)
 	Managers.voting:cast_vote(voting_id, vote)
 end
 
-local function _close_voting_popup()
-	if popup_id ~= StrictNil then
-		Managers.event:trigger("event_remove_ui_popup", popup_id)
-
-		popup_id = StrictNil
-	end
+local function _close_voting_popup(voting_id)
+	Managers.voting:remove_notification(voting_id)
 end
 
-local function _show_voting_popup(voting_id, peer_id)
-	if popup_id ~= StrictNil then
-		_close_voting_popup()
-	end
+local function _instructions_text()
+	local yes_input = InputUtils.input_text_for_current_input_device("View", "notification_option_a", false)
+	local no_input = InputUtils.input_text_for_current_input_device("View", "notification_option_b", false)
+	local context = {
+		yes_input = InputUtils.apply_color_to_input_text(yes_input, Color.ui_hud_green_light(255, true)),
+		no_input = InputUtils.apply_color_to_input_text(no_input, Color.ui_hud_red_light(255, true))
+	}
 
-	local players_at_peer = Managers.player:players_at_peer(peer_id)
+	return Localize("loc_party_kick_instructions", true, context)
+end
+
+local function _show_voting_popup(voting_id, kicked_peer_id)
 	local player_name = "John Doe"
+	local players_at_peer = Managers.player:players_at_peer(kicked_peer_id)
 
 	if players_at_peer then
 		local player = players_at_peer[1]
 		player_name = player:name()
-	else
-		local human_players = Managers.player:human_players()
-		player_name = "John Doe"
 	end
 
+	local instructions_text = _instructions_text()
 	local context = {
-		title_text = "loc_party_kick_vote_header",
-		description_text = "loc_party_kick_vote_description",
-		description_text_params = {
-			player_name = player_name
+		player_name = InputUtils.apply_color_to_input_text(player_name, Color.ui_highlight_color(255, true))
+	}
+	local data = {
+		show_timer = true,
+		title = Localize("loc_party_kick_instructions_header", true, context),
+		lines = {
+			instructions_text
 		},
-		options = {
-			{
-				text = "loc_party_kick_vote_vote_to_kick",
-				close_on_pressed = true,
-				callback = function ()
-					_cast_kick_vote(voting_id, OPTIONS.yes)
-				end
-			},
-			{
-				text = "loc_party_kick_vote_vote_to_keep",
-				close_on_pressed = true,
-				hotkey = "back",
-				callback = function ()
-					_cast_kick_vote(voting_id, OPTIONS.no)
-				end
-			}
+		inputs = {
+			notification_option_a = callback(_cast_kick_vote, voting_id, OPTIONS.yes),
+			notification_option_b = callback(_cast_kick_vote, voting_id, OPTIONS.no)
 		}
 	}
 
-	Managers.event:trigger("event_show_ui_popup", context, function (id)
-		popup_id = id
-	end)
+	Managers.voting:create_notification(voting_id, data)
 end
 
 local kick_from_mission_voting_template = {
 	rpc_start_voting = "rpc_start_voting_kick_player",
 	can_change_vote = false,
-	name = "kick_from_mission",
+	retry_delay = 70,
 	duration = 30,
-	voting_impl = "network",
-	abort_on_member_joined = true,
+	name = "kick_from_mission",
 	abort_on_member_left = true,
+	voting_impl = "network",
 	rpc_request_voting = "rpc_request_voting_kick_player",
+	abort_on_member_joined = true,
 	options = {
 		OPTIONS.yes,
 		OPTIONS.no
@@ -148,7 +138,7 @@ local kick_from_mission_voting_template = {
 		end
 	end,
 	on_completed = function (voting_id, template, params, result)
-		_close_voting_popup()
+		_close_voting_popup(voting_id)
 
 		if result == RESULTS.approved then
 			local kick_peer_id = params.kick_peer_id
@@ -170,7 +160,7 @@ local kick_from_mission_voting_template = {
 		end
 	end,
 	on_aborted = function (voting_id, template, params, abort_reason)
-		_close_voting_popup()
+		_close_voting_popup(voting_id)
 	end,
 	on_vote_casted = function (voting_id, template, voter_peer_id, vote_option)
 		return

@@ -1,12 +1,17 @@
 local Promise = require("scripts/foundation/utilities/promise")
-local VotingTemplates = require("scripts/settings/voting/voting_templates")
-local VotingByNetworkImpl = require("scripts/managers/voting/voting_by_network_impl")
 local VotingByImmateriumPartyImpl = require("scripts/managers/voting/voting_by_immaterium_party_impl")
+local VotingByNetworkImpl = require("scripts/managers/voting/voting_by_network_impl")
+local VotingNotificationHandler = require("scripts/managers/voting/voting_notification_handler")
+local VotingTemplates = require("scripts/settings/voting/voting_templates")
 local VotingManager = class("VotingManager")
 
 VotingManager.init = function (self, network_event_delegate)
 	self._network_voting_impl = VotingByNetworkImpl:new(network_event_delegate)
 	self._immaterium_party_voting_impl = VotingByImmateriumPartyImpl:new()
+
+	if not DEDICATED_SERVER then
+		self._notification_handler = VotingNotificationHandler:new()
+	end
 end
 
 VotingManager._get_impl_by_template = function (self, template)
@@ -28,6 +33,7 @@ VotingManager._get_impl_by_vote_id = function (self, vote_id)
 end
 
 VotingManager.can_start_voting = function (self, template_name, params)
+	local initiator_peer = Network.peer_id()
 	local template = VotingTemplates[template_name]
 
 	if not template then
@@ -46,7 +52,7 @@ VotingManager.can_start_voting = function (self, template_name, params)
 		end
 	end
 
-	local result, message = self:_get_impl_by_template(template):can_start_voting(template_name, params)
+	local result, message = self:_get_impl_by_template(template):can_start_voting(template_name, params, initiator_peer)
 
 	if not result then
 		return false, message
@@ -84,6 +90,10 @@ end
 VotingManager.update = function (self, dt, t)
 	self._network_voting_impl:update(dt, t)
 	self._immaterium_party_voting_impl:update(dt, t)
+
+	if not DEDICATED_SERVER then
+		self._notification_handler:update(dt, t)
+	end
 end
 
 VotingManager.complete_vote = function (self, voting_id)
@@ -120,6 +130,24 @@ end
 
 VotingManager.is_host = function (self, voting_id)
 	return self:_get_impl_by_vote_id(voting_id):is_host(voting_id)
+end
+
+VotingManager.create_notification = function (self, voting_id, data)
+	if not DEDICATED_SERVER then
+		return self._notification_handler:create(voting_id, data)
+	end
+end
+
+VotingManager.modify_notification = function (self, voting_id, data)
+	if not DEDICATED_SERVER then
+		return self._notification_handler:modify(voting_id, data)
+	end
+end
+
+VotingManager.remove_notification = function (self, voting_id)
+	if not DEDICATED_SERVER then
+		return self._notification_handler:remove(voting_id)
+	end
 end
 
 return VotingManager

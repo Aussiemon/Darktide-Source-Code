@@ -91,7 +91,7 @@ local action_data = {
 		enter_walk_distance = 5,
 		effect_template = EffectTemplates.chaos_poxwalker_bomber_foley,
 		stagger_type_reduction = {
-			melee = -20,
+			melee = -200,
 			ranged = 20
 		},
 		running_stagger_anim_left = {

@@ -9,6 +9,7 @@ local Sprint = require("scripts/extension_systems/character_state_machine/charac
 local Stamina = require("scripts/utilities/attack/stamina")
 local buff_proc_events = BuffSettings.proc_events
 local buff_stat_buffs = BuffSettings.stat_buffs
+local keywords = BuffSettings.keywords
 local special_rules = SpecialRulesSetting.special_rules
 local stat_buffs = BuffSettings.stat_buffs
 local templates = {
@@ -253,6 +254,17 @@ templates.no_toughness_damage_buff = {
 	conditional_exit_func = function (template_data)
 		return template_data.finish
 	end
+}
+templates.player_spawn_grace = {
+	class_name = "buff",
+	duration = 5,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_heal_over_time_buff_hud",
+	keywords = {
+		keywords.unperceivable
+	},
+	stat_buffs = {
+		[buff_stat_buffs.damage_taken_modifier] = 0
+	}
 }
 
 return templates

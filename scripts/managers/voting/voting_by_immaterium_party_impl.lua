@@ -36,7 +36,7 @@ VotingManagerImmateriumParty._wrap_vote_id = function (self, id)
 	return string.format("immaterium_party:%s", id)
 end
 
-VotingManagerImmateriumParty.can_start_voting = function (self, template_name, params)
+VotingManagerImmateriumParty.can_start_voting = function (self, template_name, params, initiator_peer)
 	local template = VotingTemplates[template_name]
 
 	if template.immaterium_party_vote_type == "matchmaking_start" and not self:_can_start_matchmaking() then
@@ -51,7 +51,7 @@ VotingManagerImmateriumParty.can_start_voting = function (self, template_name, p
 end
 
 VotingManagerImmateriumParty.start_voting = function (self, template_name, params)
-	local success, fail_reason = self:can_start_voting(template_name, params)
+	local success, fail_reason = self:can_start_voting(template_name, params, nil)
 
 	if not success then
 		return Promise.rejected({

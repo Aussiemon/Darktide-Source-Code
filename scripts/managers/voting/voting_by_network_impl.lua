@@ -32,6 +32,7 @@ VotingByNetworkImpl.init = function (self, network_event_delegate)
 	self._votings = {}
 	self._voting_results = {}
 	self._voting_index = 0
+	self._last_vote_started = {}
 	local connection_manager = Managers.connection
 
 	connection_manager:register_event_listener(self, "client_connected", "_event_network_client_connected")
@@ -47,7 +48,7 @@ VotingByNetworkImpl._generate_voting_id = function (self)
 	return string.format("%s:%s", Network.peer_id(), index)
 end
 
-VotingByNetworkImpl.can_start_voting = function (self, template_name, params)
+VotingByNetworkImpl.can_start_voting = function (self, template_name, params, initiator_peer)
 	local template = VotingTemplates[template_name]
 
 	if not template then
@@ -78,11 +79,29 @@ VotingByNetworkImpl.can_start_voting = function (self, template_name, params)
 		return false, "can't become voting host/client"
 	end
 
+	local retry_delay = template.retry_delay
+
+	if retry_delay then
+		local last_started_at = self._last_vote_started[template_name] and self._last_vote_started[template_name][initiator_peer]
+		local current_time = Managers.time:time("main")
+
+		if last_started_at and current_time < last_started_at + retry_delay then
+			return false, string.format("must wait %s seconds before starting a new vote", last_started_at + retry_delay - current_time)
+		end
+	end
+
 	if template.can_start then
 		return template.can_start()
 	end
 
 	return true
+end
+
+VotingByNetworkImpl._on_started = function (self, voting_id, template, params, initiator_peer)
+	self._last_vote_started[template.name] = self._last_vote_started[template.name] or {}
+	self._last_vote_started[template.name][initiator_peer] = Managers.time:time("main")
+
+	template.on_started(voting_id, template, table.clone(params))
 end
 
 VotingByNetworkImpl.start_voting = function (self, template_name, params)
@@ -97,7 +116,7 @@ VotingByNetworkImpl.start_voting = function (self, template_name, params)
 		local voting = VotingHost:new(voting_id, initiator_peer, template, params)
 		self._votings[voting_id] = voting
 
-		template.on_started(voting_id, template, table.clone(params))
+		self:_on_started(voting_id, template, params, initiator_peer)
 	elseif network_interface:is_client() then
 		local voting = VotingClient:new(voting_id, initiator_peer, template, params)
 		self._votings[voting_id] = voting
@@ -354,10 +373,11 @@ VotingByNetworkImpl.rpc_voting_client_ready = function (self, channel_id)
 end
 
 VotingByNetworkImpl._rpc_request_voting = function (self, channel_id, voting_id, template_id, ...)
+	local initiator_peer = Network.peer_id(channel_id)
 	local template_name = NetworkLookup.voting_templates[template_id]
 	local template = template_name and VotingTemplates[template_name]
 	local params = template and template.unpack_params(...)
-	local success, fail_reason = self:can_start_voting(template_name, params)
+	local success, fail_reason = self:can_start_voting(template_name, params, initiator_peer)
 
 	if not success then
 		RPC.rpc_voting_aborted(channel_id, voting_id, string.format("Denied by host, %s", fail_reason))
@@ -365,11 +385,10 @@ VotingByNetworkImpl._rpc_request_voting = function (self, channel_id, voting_id,
 		return
 	end
 
-	local initiator_peer = Network.peer_id(channel_id)
 	local voting = VotingHost:new(voting_id, initiator_peer, template, params)
 	self._votings[voting_id] = voting
 
-	template.on_started(voting_id, template, table.clone(params))
+	self:_on_started(voting_id, template, params, initiator_peer)
 end
 
 VotingByNetworkImpl.rpc_request_voting_no_params = function (self, channel_id, voting_id, template_id)
@@ -415,8 +434,9 @@ VotingByNetworkImpl.rpc_voting_accepted = function (self, channel_id, voting_id,
 		voting:on_voting_accepted(member_list, initial_votes_list, time_left)
 
 		local template = voting:template()
+		local initiator_peer = Network.peer_id()
 
-		template.on_started(voting_id, template, table.clone(voting:params()))
+		self:_on_started(voting_id, template, voting:params(), initiator_peer)
 	end
 end
 
@@ -435,7 +455,7 @@ VotingByNetworkImpl._rpc_start_voting = function (self, voting_id, template_id, 
 	local voting = VotingClient:new(voting_id, initiator_peer, template, params, member_list, initial_votes_list, time_left)
 	self._votings[voting_id] = voting
 
-	template.on_started(voting_id, template, table.clone(params))
+	self:_on_started(voting_id, template, params, initiator_peer)
 end
 
 VotingByNetworkImpl.rpc_voting_aborted = function (self, channel_id, voting_id, reason)

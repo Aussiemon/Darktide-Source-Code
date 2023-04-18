@@ -407,7 +407,7 @@ local talent_settings = {
 			warp_charge_capacity = 0.64
 		},
 		offensive_1_3 = {
-			num_stacks = 3,
+			num_stacks = 4,
 			distance = 4
 		},
 		coop_1 = {

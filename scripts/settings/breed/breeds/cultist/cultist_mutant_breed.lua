@@ -109,6 +109,17 @@ local breed_data = {
 		max_threat = 10000,
 		threat_decay_per_second = 50
 	},
+	navigation_path_spline_config = {
+		spline_distance_to_borders = 3,
+		spline_recomputation_ratio = 0.5,
+		navigation_channel_radius = 6,
+		turn_sampling_angle = 45,
+		spline_length = 100,
+		channel_smoothing_angle = 15,
+		max_distance_to_spline_position = 5,
+		max_distance_between_gates = 5,
+		min_distance_between_gates = 0.5
+	},
 	smart_object_template = SmartObjectSettings.templates.cultist_mutant,
 	fade = {
 		max_distance = 1.3,

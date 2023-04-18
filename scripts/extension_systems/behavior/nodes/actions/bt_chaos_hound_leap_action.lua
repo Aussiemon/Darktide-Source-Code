@@ -98,6 +98,9 @@ BtChaosHoundLeapAction.leave = function (self, unit, breed, blackboard, scratchp
 	pounce_component.started_leap = false
 end
 
+local MIN_LAG_COMPENSATION_RADIUS = 5
+local MAX_LAG_COMPENSATION = 0.2
+
 BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
 	local behavior_component = scratchpad.behavior_component
 	local state = scratchpad.state
@@ -181,13 +184,13 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 		local current_colliding_target = scratchpad.current_colliding_target
 		local hit_player_unit = scratchpad.init_hit_target or self:_check_colliding_players(unit, scratchpad, action_data)
 
-		if not scratchpad.current_colliding_target_check_time and (hit_player_unit and current_colliding_target ~= target_unit or hit_player_unit == target_unit) then
+		if not scratchpad.dodged_attack and not scratchpad.current_colliding_target_check_time and (hit_player_unit and current_colliding_target ~= target_unit or hit_player_unit == target_unit) then
 			local extra_timing = 0
 			local player_unit_spawn_manager = Managers.state.player_unit_spawn
 			local player = player_unit_spawn_manager:owner(hit_player_unit)
 
 			if player and player.remote then
-				extra_timing = player:lag_compensation_rewind_s() * 0.5
+				extra_timing = math.min(player:lag_compensation_rewind_s(), MAX_LAG_COMPENSATION)
 				scratchpad.lag_compensation_rewind_s = extra_timing
 			end
 
@@ -195,13 +198,34 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 			scratchpad.current_colliding_target_check_time = t + extra_timing
 		elseif scratchpad.current_colliding_target then
 			if scratchpad.current_colliding_target_check_time <= t then
-				local pounce_component = Blackboard.write_component(blackboard, "pounce")
-				pounce_component.pounce_target = scratchpad.current_colliding_target
-				scratchpad.hit_target = true
-				scratchpad.current_colliding_target = nil
-				scratchpad.current_colliding_target_check_time = nil
+				if not is_dodging and ALIVE[current_colliding_target] and Vector3.distance(POSITION_LOOKUP[unit], POSITION_LOOKUP[current_colliding_target]) < MIN_LAG_COMPENSATION_RADIUS then
+					local pounce_component = Blackboard.write_component(blackboard, "pounce")
+					pounce_component.pounce_target = scratchpad.current_colliding_target
+					scratchpad.hit_target = true
+					scratchpad.current_colliding_target = nil
+					scratchpad.current_colliding_target_check_time = nil
 
-				return "done"
+					return "done"
+				else
+					scratchpad.current_colliding_target = nil
+					scratchpad.current_colliding_target_check_time = nil
+
+					if is_dodging then
+						dodge_type = scratchpad.target_dodged_type
+
+						Dodge.sucessful_dodge(target_unit, unit, nil, dodge_type, breed)
+
+						scratchpad.dodged_attack = true
+						scratchpad.current_colliding_target = nil
+					end
+				end
+			elseif is_dodging then
+				dodge_type = scratchpad.target_dodged_type
+
+				Dodge.sucessful_dodge(target_unit, unit, nil, dodge_type, breed)
+
+				scratchpad.dodged_attack = true
+				scratchpad.current_colliding_target = nil
 			end
 		elseif target_unit and ALIVE[target_unit] then
 			local current_velocity = locomotion_extension:current_velocity()
@@ -223,18 +247,20 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 
 		local current_velocity = locomotion_extension:current_velocity()
 
-		if mover and Mover.collides_down(mover) then
-			self:_start_landing(scratchpad, action_data, current_velocity, t)
-		elseif mover and (Mover.collides_sides(mover) or Mover.collides_up(mover)) then
-			local hit_position, hit_normal = self:_check_wall_collision(unit, scratchpad, action_data, current_velocity)
+		if not scratchpad.current_colliding_target then
+			if mover and Mover.collides_down(mover) then
+				self:_start_landing(scratchpad, action_data, current_velocity, t)
+			elseif mover and (Mover.collides_sides(mover) or Mover.collides_up(mover)) then
+				local hit_position, hit_normal = self:_check_wall_collision(unit, scratchpad, action_data, current_velocity)
 
-			if hit_position then
-				self:_start_wall_jump(unit, scratchpad, action_data, hit_normal)
+				if hit_position then
+					self:_start_wall_jump(unit, scratchpad, action_data, hit_normal)
+				end
+			else
+				local wanted_velocity = Vector3(current_velocity.x, current_velocity.y, 0)
+
+				locomotion_extension:set_wanted_velocity(wanted_velocity)
 			end
-		else
-			local wanted_velocity = Vector3(current_velocity.x, current_velocity.y, 0)
-
-			locomotion_extension:set_wanted_velocity(wanted_velocity)
 		end
 
 		MinionAttack.push_friendly_minions(unit, scratchpad, action_data, t)

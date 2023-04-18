@@ -437,9 +437,11 @@ damage_templates.default_shield_push = {
 	}
 }
 damage_templates.plasma_vent_damage = {
-	ignore_toughness = true,
-	stagger_category = "ranged",
+	toughness_multiplier = 2,
 	ignore_shield = true,
+	ignore_toughness = false,
+	stagger_category = "ranged",
+	ignore_depleting_toughness = true,
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = 1,

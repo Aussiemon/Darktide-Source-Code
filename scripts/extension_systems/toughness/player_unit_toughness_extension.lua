@@ -244,8 +244,8 @@ PlayerUnitToughnessExtension.recover_flat_toughness = function (self, amount, ig
 	end
 end
 
-PlayerUnitToughnessExtension.recover_max_toughness = function (self, reason)
-	if self:_toughness_regen_disabled() then
+PlayerUnitToughnessExtension.recover_max_toughness = function (self, reason, ignore_state_block)
+	if self:_toughness_regen_disabled(ignore_state_block) then
 		return
 	end
 
@@ -309,8 +309,8 @@ PlayerUnitToughnessExtension.add_damage = function (self, damage_amount, attack_
 	end
 end
 
-PlayerUnitToughnessExtension._toughness_regen_disabled = function (self)
-	if PlayerUnitStatus.is_knocked_down(self._character_state_component) and not self._assisted_state_input_component.force_assist then
+PlayerUnitToughnessExtension._toughness_regen_disabled = function (self, ignore_state_block)
+	if not ignore_state_block and PlayerUnitStatus.is_knocked_down(self._character_state_component) and not self._assisted_state_input_component.force_assist then
 		return true
 	end
 
