@@ -163,7 +163,6 @@ BtMutantChargerChargeAction._start_charging = function (self, unit, scratchpad, 
 	scratchpad.target_dodged_type = nil
 	local not_facing_target = not self:_is_facing_target(unit, scratchpad)
 	scratchpad.charge_aborted = not_facing_target
-	scratchpad.start_colliding_with_players_timing = nil
 end
 
 BtMutantChargerChargeAction._start_navigating = function (self, unit, scratchpad, action_data, t)
@@ -295,6 +294,8 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 
 				if z_diff > 0 and distance_to_target < action_data.grab_close_up_distance then
 					self:_hit_target(unit, target_unit, scratchpad, action_data, t)
+
+					return
 				end
 			end
 		end

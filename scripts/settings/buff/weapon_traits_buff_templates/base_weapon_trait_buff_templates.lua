@@ -1391,14 +1391,14 @@ base_templates.crit_weakspot_finesse = {
 	end
 }
 
-local function _continues_fire_start_func(template_data, template_context)
+local function _continuous_fire_start_func(template_data, template_context)
 	local unit = template_context.unit
 	local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
 	template_data.shooting_status_component = unit_data_extension and unit_data_extension:read_component("shooting_status")
 	template_data.weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
 end
 
-local function _get_number_of_continues_fire_steps(template_data, template_context)
+local function _get_number_of_continuous_fire_steps(template_data, template_context)
 	local template = template_context.template
 	local use_combo = template.use_combo
 
@@ -1421,13 +1421,13 @@ base_templates.conditional_buff_on_continuous_fire = {
 	predicted = false,
 	max_stacks = 1,
 	class_name = "stepped_stat_buff",
-	start_func = _continues_fire_start_func,
+	start_func = _continuous_fire_start_func,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		if not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
 			return false
 		end
 
-		local number_of_steps = _get_number_of_continues_fire_steps(template_data, template_context)
+		local number_of_steps = _get_number_of_continuous_fire_steps(template_data, template_context)
 
 		return number_of_steps > 0
 	end
@@ -1439,11 +1439,11 @@ base_templates.stacking_buff_on_continuous_fire = {
 	class_name = "stepped_stat_buff",
 	conditional_stepped_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
-	start_func = _continues_fire_start_func,
+	start_func = _continuous_fire_start_func,
 	min_max_step_func = function (template_data, template_context)
 		return 0, 5
 	end,
-	bonus_step_func = _get_number_of_continues_fire_steps
+	bonus_step_func = _get_number_of_continuous_fire_steps
 }
 base_templates.bleed_on_crit_ranged = {
 	predicted = false,

@@ -387,6 +387,7 @@ BtPoxwalkerBomberApproachAction._start_lunge = function (self, unit, blackboard,
 	scratchpad.move_during_lunge_duration = t + action_data.move_during_lunge_duration
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
 	stagger_component.immune_time = 0
+	stagger_component.controlled_stagger = false
 	local death_component = Blackboard.write_component(blackboard, "death")
 	death_component.fuse_timer = t + action_data.fuse_timer
 	local group_extension = ScriptUnit.extension(target_unit, "group_system")

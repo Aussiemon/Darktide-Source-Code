@@ -65,11 +65,17 @@ local breed_data = {
 		[stagger_types.sticky] = 3.6666666666666665
 	},
 	stagger_immune_times = {
-		[stagger_types.light] = 1,
-		[stagger_types.medium] = 1,
-		[stagger_types.heavy] = 1,
-		[stagger_types.light_ranged] = 1,
-		[stagger_types.killshot] = 1
+		[stagger_types.light] = 0,
+		[stagger_types.medium] = 0,
+		[stagger_types.heavy] = 0,
+		[stagger_types.explosion] = 0,
+		[stagger_types.light_ranged] = 0,
+		[stagger_types.sticky] = 0,
+		[stagger_types.killshot] = 0,
+		[stagger_types.shield_block] = 0,
+		[stagger_types.shield_heavy_block] = 0,
+		[stagger_types.shield_broken] = 0,
+		[stagger_types.wall_collision] = 0
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = 5,

@@ -259,7 +259,8 @@ local archetype_talents = {
 			format_values = {
 				crit_chance = talent_settings.offensive_2_2.critical_strike_chance * 100,
 				sway_reduction = (1 - talent_settings.offensive_2_2.sway_modifier) * 100,
-				stamina = talent_settings.offensive_2_2.stamina * 100
+				stamina = talent_settings.offensive_2_2.stamina * 100,
+				stamina_per_shot = talent_settings.offensive_2_2.shot_stamina_percent * 100
 			},
 			passive = {
 				buff_template_name = "veteran_ranger_ads_stamina_boost",

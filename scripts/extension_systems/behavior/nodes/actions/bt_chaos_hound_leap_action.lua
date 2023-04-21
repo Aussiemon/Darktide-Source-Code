@@ -98,7 +98,7 @@ BtChaosHoundLeapAction.leave = function (self, unit, breed, blackboard, scratchp
 	pounce_component.started_leap = false
 end
 
-local MIN_LAG_COMPENSATION_RADIUS = 5
+local LAG_COMPENSATION_CHECK_RADIUS = 3
 local MAX_LAG_COMPENSATION = 0.2
 
 BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
@@ -190,15 +190,24 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 			local player = player_unit_spawn_manager:owner(hit_player_unit)
 
 			if player and player.remote then
-				extra_timing = math.min(player:lag_compensation_rewind_s(), MAX_LAG_COMPENSATION)
+				local lag_compensation_rewind = player:lag_compensation_rewind_s() * 0.5
+				extra_timing = math.min(lag_compensation_rewind, MAX_LAG_COMPENSATION)
 				scratchpad.lag_compensation_rewind_s = extra_timing
 			end
 
 			scratchpad.current_colliding_target = hit_player_unit
 			scratchpad.current_colliding_target_check_time = t + extra_timing
-		elseif scratchpad.current_colliding_target then
+		elseif current_colliding_target then
+			local fwd = Quaternion.forward(Unit.local_rotation(unit, 1))
+			local to_target = Vector3.normalize(Vector3.flat(POSITION_LOOKUP[current_colliding_target] - POSITION_LOOKUP[unit]))
+			local dot = Vector3.dot(fwd, to_target)
+			local is_in_front = dot > 0.3
+			local target_distance = Vector3.distance(POSITION_LOOKUP[unit], POSITION_LOOKUP[current_colliding_target])
+
 			if scratchpad.current_colliding_target_check_time <= t then
-				if not is_dodging and ALIVE[current_colliding_target] and Vector3.distance(POSITION_LOOKUP[unit], POSITION_LOOKUP[current_colliding_target]) < MIN_LAG_COMPENSATION_RADIUS then
+				local can_hit = is_in_front and target_distance < LAG_COMPENSATION_CHECK_RADIUS
+
+				if ALIVE[current_colliding_target] and can_hit then
 					local pounce_component = Blackboard.write_component(blackboard, "pounce")
 					pounce_component.pounce_target = scratchpad.current_colliding_target
 					scratchpad.hit_target = true
@@ -210,7 +219,7 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 					scratchpad.current_colliding_target = nil
 					scratchpad.current_colliding_target_check_time = nil
 
-					if is_dodging then
+					if is_dodging and not is_in_front then
 						dodge_type = scratchpad.target_dodged_type
 
 						Dodge.sucessful_dodge(target_unit, unit, nil, dodge_type, breed)
@@ -219,7 +228,7 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 						scratchpad.current_colliding_target = nil
 					end
 				end
-			elseif is_dodging then
+			elseif is_dodging and not is_in_front then
 				dodge_type = scratchpad.target_dodged_type
 
 				Dodge.sucessful_dodge(target_unit, unit, nil, dodge_type, breed)
