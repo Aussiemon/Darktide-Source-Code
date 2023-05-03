@@ -87,7 +87,7 @@ InventoryWeaponCosmeticsView.init = function (self, settings, context)
 
 		if trinket_item and trinket_item and trinket_item ~= "content/items/weapons/player/trinkets/empty_trinket" then
 			self._selected_weapon_trinket_name = trinket_item
-			self._initial_weapon_trinket_name = trinket_item
+			self._equipped_weapon_trinket_name = trinket_item
 		end
 
 		self._selected_weapon_skin_name = selected_item.slot_weapon_skin
@@ -96,7 +96,7 @@ InventoryWeaponCosmeticsView.init = function (self, settings, context)
 			self._selected_weapon_skin_name = selected_item.gear.masterDataInstance.overrides.slot_weapon_skin
 		end
 
-		self._initial_weapon_skin_name = self._selected_weapon_skin_name
+		self._equipped_weapon_skin_name = self._selected_weapon_skin_name
 	end
 
 	self._sort_options = {
@@ -182,12 +182,6 @@ InventoryWeaponCosmeticsView._destroy_forward_gui = function (self)
 end
 
 InventoryWeaponCosmeticsView.on_exit = function (self)
-	if self._equip_promise then
-		self._equip_promise:cancel()
-
-		self._equip_promise = nil
-	end
-
 	self:_destroy_forward_gui()
 	InventoryWeaponCosmeticsView.super.on_exit(self)
 end
@@ -376,17 +370,18 @@ InventoryWeaponCosmeticsView._register_button_callbacks = function (self)
 end
 
 InventoryWeaponCosmeticsView._update_equip_button_state = function (self)
-	local button_disabled = true
+	local disable_button = true
 
-	if self._selected_weapon_skin_name ~= self._initial_weapon_skin_name then
-		button_disabled = false
-	elseif self._selected_weapon_trinket_name ~= self._initial_weapon_trinket_name then
-		button_disabled = false
+	if self._selected_tab_index == 1 and self._selected_weapon_skin_name ~= self._equipped_weapon_skin_name then
+		disable_button = false
+	elseif self._selected_tab_index == 2 and self._selected_weapon_trinket_name ~= self._equipped_weapon_trinket_name then
+		disable_button = false
 	end
 
-	local widgets_by_name = self._widgets_by_name
-	local equip_button = widgets_by_name.equip_button
-	equip_button.content.hotspot.disabled = button_disabled
+	local button = self._widgets_by_name.equip_button
+	local button_content = button.content
+	button_content.hotspot.disabled = disable_button
+	button_content.text = Utf8.upper(disable_button and Localize("loc_weapon_inventory_equipped_button") or Localize("loc_weapon_inventory_equip_button"))
 end
 
 InventoryWeaponCosmeticsView.present_grid_layout = function (self, layout, optional_on_present_callback)
@@ -600,6 +595,10 @@ InventoryWeaponCosmeticsView._select_starting_item_by_slot_name = function (self
 
 		self:focus_grid_index(start_index, scrollbar_animation_progress, instant_scroll)
 	end
+
+	local element = self:element_by_index(start_index)
+	self._equipped_weapon_skin = element.real_item
+	self._equipped_weapon_trinket = element.real_item
 end
 
 InventoryWeaponCosmeticsView._item_valid_by_current_profile = function (self, item)
@@ -632,78 +631,76 @@ end
 
 InventoryWeaponCosmeticsView.equipped_item_name_in_slot = function (self, slot_name)
 	if slot_name == "slot_trinket_1" then
-		return self._initial_weapon_trinket_name
+		return self._equipped_weapon_trinket_name
 	elseif slot_name == "slot_weapon_skin" then
-		return self._initial_weapon_skin_name
+		return self._equipped_weapon_skin_name
 	end
 
 	return nil
 end
 
-InventoryWeaponCosmeticsView.cb_on_equip_pressed = function (self)
+InventoryWeaponCosmeticsView._equip_weapon_cosmetics = function (self)
 	local previewed_element = self._previewed_element
 
 	if previewed_element then
 		local selected_item = self._selected_item
-		local update_icon = false
-		self._equip_promise = Promise:new()
+		local promise, item_type = nil
 
-		self._equip_promise:next(function ()
-			if self._selected_weapon_skin_name ~= self._initial_weapon_skin_name then
-				update_icon = true
+		if self._selected_tab_index == 1 and self._equipped_weapon_skin_name ~= self._selected_weapon_skin_name then
+			promise = ItemUtils.equip_weapon_skin(selected_item, self._selected_weapon_skin)
+			item_type = "skin"
+		elseif self._selected_tab_index == 2 and self._equipped_weapon_trinket_name ~= self._selected_weapon_trinket_name then
+			promise = ItemUtils.equip_weapon_trinket(selected_item, self._selected_weapon_trinket)
+			item_type = "trinket"
+		end
 
-				return ItemUtils.equip_weapon_skin(selected_item, self._selected_weapon_skin)
-			end
+		if promise then
+			self._equip_promise = promise
 
-			return Promise.resolved()
-		end):next(function (result)
-			if self._selected_weapon_trinket_name ~= self._initial_weapon_trinket_name then
-				update_icon = true
+			promise:next(function (result)
+				local gear = result.item
+				local gear_id = selected_item.gear_id
+				local item = MasterItems.get_item_instance(gear, gear_id)
+				self._selected_item = item
 
-				return ItemUtils.equip_weapon_trinket(selected_item, self._selected_weapon_trinket)
-			end
+				Managers.ui:item_icon_updated(item)
+				Managers.event:trigger("event_item_icon_updated", item)
+				Managers.event:trigger("event_replace_list_item", item)
 
-			return Promise.resolved(result)
-		end):next(function (result)
-			local gear = result.item
-			local gear_id = selected_item.gear_id
-			local item = MasterItems.get_item_instance(gear, gear_id)
+				if item_type == "skin" then
+					self._equipped_weapon_skin_name = self._selected_weapon_skin_name
+					self._equipped_weapon_skin = self._selected_weapon_skin
+				else
+					self._equipped_weapon_trinket_name = self._selected_weapon_trinket_name
+					self._equipped_weapon_trinket = self._selected_weapon_trinket
+				end
 
-			Managers.ui:item_icon_updated(item)
-			Managers.event:trigger("event_item_icon_updated", item)
-			Managers.event:trigger("event_replace_list_item", item)
+				Log.debug("InventoryWeaponCosmeticsView", "Items equipped in loadout slots")
 
-			self._selected_weapon_skin = nil
-			self._selected_weapon_skin_name = nil
-			self._selected_weapon_trinket_name = nil
-			self._selected_weapon_trinket = nil
+				local peer_id = Network.peer_id()
+				local local_player_id = 1
+				local is_server = Managers.state.game_session and Managers.state.game_session:is_server()
 
-			return Promise.resolved(item)
-		end):next(function (item)
-			Log.debug("InventoryWeaponCosmeticsView", "Items equipped in loadout slots")
+				if is_server then
+					local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
 
-			local peer_id = Network.peer_id()
-			local local_player_id = 1
-			local is_server = Managers.state.game_session and Managers.state.game_session:is_server()
+					profile_synchronizer_host:profile_changed(peer_id, local_player_id)
+				else
+					Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
+				end
 
-			if is_server then
-				local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
+				self._equip_promise = nil
+			end):catch(function (errors)
+				Log.error("InventoryWeaponCosmeticsView", "Failed equipping items in loadout slots", errors)
 
-				profile_synchronizer_host:profile_changed(peer_id, local_player_id)
-			else
-				Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
-			end
-
-			self._equip_promise = nil
-		end):catch(function (errors)
-			Log.error("InventoryWeaponCosmeticsView", "Failed equipping items in loadout slots", errors)
-
-			self._equip_promise = nil
-		end)
-		self._equip_promise:resolve()
+				self._equip_promise = nil
+			end)
+		end
 	end
+end
 
-	Managers.ui:close_view("inventory_weapon_cosmetics_view")
+InventoryWeaponCosmeticsView.cb_on_equip_pressed = function (self)
+	self:_equip_weapon_cosmetics()
 end
 
 InventoryWeaponCosmeticsView._cb_on_close_pressed = function (self)
@@ -715,7 +712,6 @@ InventoryWeaponCosmeticsView._preview_element = function (self, element)
 	local content = self._tabs_content[selected_tab_index]
 	local apply_on_preview = content.apply_on_preview
 	local presentation_item = self._presentation_item
-	local selected_item = self._selected_item
 	local item = element.item
 	local real_item = element.real_item
 	self._previewed_item = item
@@ -781,7 +777,9 @@ end
 InventoryWeaponCosmeticsView._handle_input = function (self, input_service, dt, t)
 	local scroll_axis = input_service:get("scroll_axis")
 
-	if scroll_axis then
+	if input_service:get("confirm_pressed") then
+		self:cb_on_equip_pressed()
+	elseif scroll_axis then
 		local scroll = scroll_axis[2]
 		local scroll_speed = 0.25
 
@@ -862,6 +860,20 @@ end
 
 InventoryWeaponCosmeticsView.cb_switch_tab = function (self, index)
 	if index ~= self._selected_tab_index then
+		if self._selected_tab_index then
+			local presentation_item = self._presentation_item
+			local real_item = nil
+
+			if self._selected_tab_index == 1 then
+				real_item = self._equipped_weapon_skin
+			else
+				real_item = self._equipped_weapon_trinket
+			end
+
+			self._tabs_content[self._selected_tab_index].apply_on_preview(real_item, presentation_item)
+			self:_preview_item(presentation_item)
+		end
+
 		self._selected_tab_index = index
 
 		self._tab_menu_element:set_selected_index(index)

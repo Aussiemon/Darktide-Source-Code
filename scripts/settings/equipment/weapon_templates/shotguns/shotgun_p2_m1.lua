@@ -8,8 +8,6 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local LineEffects = require("scripts/settings/effects/line_effects")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
-local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
-local WeaponTraitsRangedAimed = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_aimed")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local buff_stat_buffs = BuffSettings.stat_buffs
@@ -1102,14 +1100,6 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
-
-table.append(weapon_template.traits, ranged_common_traits)
-
-local ranged_aimed_traits = table.keys(WeaponTraitsRangedAimed)
-
-table.append(weapon_template.traits, ranged_aimed_traits)
-
 weapon_template.perks = {
 	shotgun_p1_m1_stability_perk = {
 		display_name = "loc_trait_display_shotgun_p1_m1_stability_perk",

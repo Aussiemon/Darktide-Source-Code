@@ -372,6 +372,7 @@ local PlayerComponentConfig = {
 		can_jump = "bool",
 		is_dodging = "bool",
 		can_exit_crouch = "bool",
+		is_effective_dodge = "bool",
 		method = {
 			"falling",
 			"jumping",
@@ -431,7 +432,8 @@ local PlayerComponentConfig = {
 		was_in_dodge_cooldown = "bool",
 		friction_function = {
 			"default",
-			"sprint"
+			"sprint",
+			"ineffective_slide"
 		}
 	},
 	ledge_vaulting_character_state = {
@@ -727,11 +729,12 @@ local PlayerComponentConfig = {
 	},
 	action_shoot = {
 		shooting_charge_level = "weapon_charge_level",
-		num_shots_fired = "ammunition",
-		shooting_rotation = "Quaternion",
+		fire_last_t = "fixed_frame_offset_start_t_9bit",
 		started_from_sprint = "bool",
+		num_shots_fired = "ammunition",
 		shooting_position = "Vector3",
 		fire_at_time = "fixed_frame_offset",
+		shooting_rotation = "Quaternion",
 		fire_state = {
 			"waiting_to_shoot",
 			"prepare_shooting",

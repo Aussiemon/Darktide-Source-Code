@@ -7,6 +7,7 @@ local TestifySnippets = {
 		local is_any_character_created = Testify:make_request("is_any_character_created")
 
 		if not is_any_character_created then
+			Testify:make_request("navigate_to_create_character_from_main_menu")
 			Testify:make_request("create_random_character")
 		end
 	end
@@ -23,9 +24,11 @@ TestifySnippets.skip_title_and_main_menu_and_create_character_if_none = function
 		local is_any_character_created = Testify:make_request("is_any_character_created")
 
 		if not is_any_character_created then
+			Testify:make_request("navigate_to_create_character_from_main_menu")
 			Testify:make_request("create_random_character")
 		else
 			Testify:make_request("wait_for_main_menu_play_button_enabled")
+			TestifySnippets.wait(4)
 			Testify:make_request("press_play_main_menu")
 		end
 	end
@@ -34,7 +37,6 @@ end
 TestifySnippets.skip_splash_and_title_screen = function ()
 	Testify:make_request("skip_splash_screen")
 	Testify:make_request("skip_title_screen")
-	Testify:make_request("skip_privacy_policy_popup_if_displayed")
 end
 
 TestifySnippets.load_mission = function (mission_name, challenge, resistance, circumstance_name, side_mission)
@@ -258,6 +260,17 @@ TestifySnippets.lua_trace_statistics = function ()
 	lua_trace_statistics = cjson.decode(lua_trace_statistics)
 
 	return lua_trace_statistics
+end
+
+TestifySnippets.memory_tree = function (depth, ascii_separator, memory_limit)
+	Testify:make_request_to_runner("start_memory_tree_monitoring", ascii_separator)
+	Testify:make_request("console_command_memory_tree_formatted", depth, ascii_separator, memory_limit)
+	TestifySnippets.wait(1)
+
+	local memory_tree = Testify:make_request_to_runner("stop_memory_tree_monitoring")
+	memory_tree = cjson.decode(memory_tree)
+
+	return memory_tree
 end
 
 TestifySnippets.trigger_vo_query_player_look_at = function (look_at_tag, distance, num_dialogues)

@@ -3,11 +3,12 @@ local HIT_PARTICLE_NAME = "content/fx/particles/enemies/daemonhost/daemonhost_be
 local HIT_PARTICLE_NODE_NAME = "j_hips"
 local HIT_WWISE_EVENT = "wwise/events/minions/play_enemy_daemonhost_grab_beam"
 local HIT_WWISE_STOP_EVENT = "wwise/events/minions/stop_enemy_daemonhost_grab_beam"
-local FX_NODE_NAME = "j_righthand"
-local FX_PARTICLE_NAME = "content/fx/particles/enemies/daemonhost/daemonhost_hand_execution"
+local GRAB_FX_NODE_NAME = "j_righthand"
+local GRAB_FX_PARTICLE_NAME = "content/fx/particles/enemies/daemonhost/daemonhost_hand_execution"
 local _start_fx = nil
 local resources = {
 	hit_particle_name = HIT_PARTICLE_NAME,
+	grab_particle_name = GRAB_FX_PARTICLE_NAME,
 	beam_sound_event = HIT_WWISE_EVENT,
 	stop_beam_sound_event = HIT_WWISE_STOP_EVENT
 }
@@ -78,9 +79,9 @@ function _start_fx(target_unit, template_data, template_context)
 	WwiseWorld.trigger_resource_event(wwise_world, HIT_WWISE_EVENT, source_id)
 
 	local daemonhost_unit = template_data.unit
-	local daemonhost_fx_node = Unit.node(daemonhost_unit, FX_NODE_NAME)
+	local daemonhost_fx_node = Unit.node(daemonhost_unit, GRAB_FX_NODE_NAME)
 	local daemonhost_fx_position = Unit.world_position(daemonhost_unit, daemonhost_fx_node)
-	local fx_particle_id = World.create_particles(world, FX_PARTICLE_NAME, daemonhost_fx_position)
+	local fx_particle_id = World.create_particles(world, GRAB_FX_PARTICLE_NAME, daemonhost_fx_position)
 	local pose = Matrix4x4.identity()
 	local orphaned_policy = "destroy"
 

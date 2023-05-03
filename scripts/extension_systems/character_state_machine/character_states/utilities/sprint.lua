@@ -66,10 +66,10 @@ Sprint.check = function (t, unit, movement_state_component, sprint_character_sta
 		return false
 	end
 
+	local flat_velocity = Vector3.flat(locomotion_component.velocity_current)
 	local yaw, _, roll = input_source:get_orientation()
 	local flat_rotation = Quaternion.from_yaw_pitch_roll(yaw, 0, roll)
 	local world_move = Quaternion.rotate(flat_rotation, move)
-	local flat_velocity = Vector3.flat(locomotion_component.velocity_current)
 	local input_angle = Vector3.angle(flat_velocity, world_move, true)
 
 	if INPUT_ALIGNED_WITH_MOVENESS < input_angle then

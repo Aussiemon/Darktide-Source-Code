@@ -26,15 +26,32 @@ templates.weapon_trait_bespoke_powersword_p1_extended_activation_duration_on_cha
 		[stat_buffs.weapon_special_max_activations] = 1
 	},
 	conditional_stepped_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
-	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.all(ConditionalFunctions.is_item_slot_wielded, function (template_data, template_context)
+		local inventory_slot_component = template_data.inventory_slot_component
+		local special_active = inventory_slot_component.special_active
+
+		return special_active
+	end),
+	buff_data = {
+		extra_hits_max = 2
+	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
 		local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
 		template_data.shooting_status_component = unit_data_extension and unit_data_extension:read_component("shooting_status")
 		template_data.weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
+		template_data.weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
+		local item_slot_name = template_context.item_slot_name
+		template_data.inventory_slot_component = unit_data_extension and unit_data_extension:read_component(item_slot_name)
 	end,
 	min_max_step_func = function (template_data, template_context)
-		return 0, 2
+		local template = template_context.template
+		local buff_data = template.buff_data
+		local template_override_data = template_context.template_override_data
+		local override_buff_data = template_override_data and template_override_data.buff_data
+		local extra_hits_max = override_buff_data and override_buff_data.extra_hits_max or buff_data.extra_hits_max or 1
+
+		return 0, extra_hits_max
 	end,
 	bonus_step_func = function (template_data, template_context)
 		local weapon_action_component = template_data.weapon_action_component

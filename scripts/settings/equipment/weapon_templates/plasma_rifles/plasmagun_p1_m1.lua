@@ -10,8 +10,6 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokePlasmagunP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_plasmagun_p1")
-local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
-local WeaponTraitsRangedOverheat = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_overheat")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
@@ -944,14 +942,6 @@ weapon_template.toughness_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.plasmagun
 weapon_template.smart_targeting_template = SmartTargetingTemplates.assault
 weapon_template.traits = {}
-local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
-
-table.append(weapon_template.traits, ranged_common_traits)
-
-local ranged_overheat_traits = table.keys(WeaponTraitsRangedOverheat)
-
-table.append(weapon_template.traits, ranged_overheat_traits)
-
 local bespoke_plasmagun_p1_traits = table.keys(WeaponTraitsBespokePlasmagunP1)
 
 table.append(weapon_template.traits, bespoke_plasmagun_p1_traits)

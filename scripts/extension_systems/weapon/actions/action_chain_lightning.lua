@@ -376,7 +376,7 @@ ActionChainLightning.finish = function (self, reason, data, t, time_in_action)
 	if param_table then
 		param_table.unit = self._player_unit
 
-		buff_extension:add_proc_event(proc_events.on_chain_lightning_finished, param_table)
+		buff_extension:add_proc_event(proc_events.on_chain_lightning_finish, param_table)
 	end
 
 	self._action_module_charge_component.charge_level = 0

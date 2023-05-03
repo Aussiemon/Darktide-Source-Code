@@ -1,5 +1,6 @@
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local Definitions = require("scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base_definitions")
+local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local TabbedMenuViewBase = require("scripts/ui/views/tabbed_menu_view_base")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
@@ -31,6 +32,7 @@ VendorInteractionViewBase.init = function (self, definitions, settings, context)
 	self._parent = parent
 	self._current_vo_event = nil
 	self._current_vo_id = nil
+	self._character_cooldowns = {}
 	self._vo_unit = nil
 	self._vo_callback = callback(self, "_cb_on_play_vo")
 
@@ -159,6 +161,16 @@ VendorInteractionViewBase._handle_input = function (self, input_service)
 			end
 		end
 	end
+end
+
+VendorInteractionViewBase.disable_view_worlds = function (self, view)
+	local active_view_instance = self._active_view_instance
+
+	if active_view_instance then
+		return active_view_instance.world_spawner and active_view_instance:world_spawner() ~= nil
+	end
+
+	return false
 end
 
 VendorInteractionViewBase._handle_back_pressed = function (self)
@@ -321,7 +333,7 @@ VendorInteractionViewBase._draw_widgets = function (self, dt, t, input_service, 
 		for i = 1, #wallet_widgets do
 			local widget = wallet_widgets[i]
 
-			UIWidget.draw(widget, self._ui_renderer)
+			UIWidget.draw(widget, ui_renderer)
 		end
 	end
 
@@ -437,6 +449,15 @@ end
 
 VendorInteractionViewBase._update_vo = function (self, dt, t)
 	local queued_vo_event_request = self._queued_vo_event_request
+	local character_cooldowns = self._character_cooldowns
+
+	for voice, cooldown in pairs(character_cooldowns) do
+		character_cooldowns[voice] = cooldown - dt
+
+		if cooldown < 0 then
+			character_cooldowns[voice] = nil
+		end
+	end
 
 	if queued_vo_event_request then
 		local delay = queued_vo_event_request.delay
@@ -444,18 +465,26 @@ VendorInteractionViewBase._update_vo = function (self, dt, t)
 		if delay <= 0 then
 			local events = queued_vo_event_request.events
 			local voice_profile = queued_vo_event_request.voice_profile
-			local optional_route_key = queued_vo_event_request.optional_route_key
-			local is_opinion_vo = queued_vo_event_request.is_opinion_vo
-			local world_spawner = self._world_spawner
-			local dialogue_system = world_spawner and self:dialogue_system(world_spawner)
+			local character_cooldown = character_cooldowns[voice_profile]
 
-			if dialogue_system then
-				self:play_vo_events(events, voice_profile, optional_route_key, nil, is_opinion_vo)
+			if not character_cooldown then
+				local optional_route_key = queued_vo_event_request.optional_route_key
+				local is_opinion_vo = queued_vo_event_request.is_opinion_vo
+				local world_spawner = self._world_spawner
+				local dialogue_system = world_spawner and self:dialogue_system(world_spawner)
 
-				local reply = queued_vo_event_request.reply
+				if dialogue_system then
+					self:play_vo_events(events, voice_profile, optional_route_key, nil, is_opinion_vo)
 
-				if reply then
-					self._queued_vo_event_request = reply
+					character_cooldowns[voice_profile] = DialogueSettings.store_npc_cooldown_time
+					local reply = queued_vo_event_request.reply
+
+					if reply then
+						self._queued_vo_event_request = reply
+						self._queued_vo_event_request.reply = nil
+					else
+						self._queued_vo_event_request = nil
+					end
 				else
 					self._queued_vo_event_request = nil
 				end
@@ -508,9 +537,12 @@ VendorInteractionViewBase.play_vo_events = function (self, events, voice_profile
 			delay = optional_delay,
 			is_opinion_vo = is_opinion_vo
 		}
+		local queued_vo_event_request = self._queued_vo_event_request
 
-		if self._queued_vo_event_request then
-			self._queued_vo_event_request.reply = play_table
+		if queued_vo_event_request then
+			if queued_vo_event_request.voice_profile ~= play_table.voice_profile then
+				queued_vo_event_request.reply = play_table
+			end
 		else
 			self._queued_vo_event_request = play_table
 		end

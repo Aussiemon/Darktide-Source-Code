@@ -53,33 +53,14 @@ templates.weapon_trait_bespoke_flamer_p1_negate_stagger_reduction_with_primary_o
 		return valid_actions[current_action_name] and ConditionalFunctions.is_item_slot_wielded(template_data, template_context)
 	end
 }
-templates.weapon_trait_bespoke_flamer_p1_chance_to_explode_elites_on_kill = {
-	fire_buff_id = "flamer_assault",
-	predicted = false,
-	class_name = "proc_buff",
-	proc_events = {
-		[proc_events.on_minion_death] = 0.05
-	},
-	explosion_template = ExplosionTemplates.buff_explosion,
-	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = function (params, template_data, template_context)
-		local tempalte = template_context.template
-		local unit = params.dying_unit
-		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
-		local is_burning = buff_extension and buff_extension:has_keyword(keywords.burning)
-		local is_source_player = buff_extension and buff_extension:has_buff_id_with_owner(tempalte.fire_buff_id, template_context.unit)
-		local breed_name = params.breed_name
-		local breed = Breeds[breed_name]
-		local is_elite = breed and breed.tags and breed.tags.elite
-
-		return is_burning and is_source_player and is_elite
-	end,
-	proc_func = function (params, template_data, template_context)
-		local dying_unit = params.dying_unit
-		local explosion_position = HitZone.hit_zone_center_of_mass(dying_unit, HitZone.hit_zone_names.center_mass, false) + Vector3.up() * 0.01
-
-		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, Vector3.up(), template_context.unit, template_context.template.explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
-	end
-}
+templates.weapon_trait_bespoke_flamer_p1_chance_to_explode_elites_on_kill = table.merge(table.clone(BaseWeaponTraitBuffTemplates.chance_to_explode_elites_on_kill), {
+	proc_data = {
+		fire_buff_id = "flamer_assault",
+		explosion_template = ExplosionTemplates.trait_buff_flamer_p1_minion_explosion,
+		validation_keywords = {
+			keywords.burning
+		}
+	}
+})
 
 return templates

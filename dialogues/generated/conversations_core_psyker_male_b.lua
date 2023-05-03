@@ -213,10 +213,6 @@ local conversations_core_psyker_male_b = {
 			[1.0] = 3.828521,
 			[2.0] = 3.382813
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	conversation_explicator_two_b = {
@@ -532,10 +528,6 @@ local conversations_core_psyker_male_b = {
 			[1.0] = 3.232604,
 			[2.0] = 3.203854
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	conversation_sergeant_three_04 = {
@@ -587,10 +579,6 @@ local conversations_core_psyker_male_b = {
 		sound_events_duration = {
 			[1.0] = 3.974083,
 			[2.0] = 2.581583
-		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -2075,10 +2063,6 @@ local conversations_core_psyker_male_b = {
 		sound_events_duration = {
 			[1.0] = 4.287042,
 			[2.0] = 3.556
-		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -3574,10 +3558,6 @@ local conversations_core_psyker_male_b = {
 			[1.0] = 4.709875,
 			[2.0] = 5.339771
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	lore_zola_one_b = {
@@ -3620,12 +3600,6 @@ local conversations_core_psyker_male_b = {
 			7.166375,
 			7.767229,
 			4.548792
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},

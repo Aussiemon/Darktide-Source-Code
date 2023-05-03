@@ -66,6 +66,9 @@ netgunner.behavior = {
 	hit_target = "boolean",
 	lock_combat_range_switch = "boolean"
 }
+netgunner.record_state = {
+	has_disabled_player = "boolean"
+}
 netgunner.slot = nil
 netgunner.blocked = nil
 local cultist_flamer = table.clone(ranged_base)

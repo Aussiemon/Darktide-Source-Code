@@ -150,15 +150,13 @@ UIViewHandler.wwise_music_state = function (self, wwise_state_group_name)
 	for i = #active_views_array, 1, -1 do
 		local view_name = active_views_array[i]
 
-		if not TEMP_DRAWN_VIEWS[view_name] then
-			return nil
-		end
+		if TEMP_DRAWN_VIEWS[view_name] then
+			local view_settings = self:settings_by_view_name(view_name)
+			local wwise_state = view_settings.wwise_states and view_settings.wwise_states[wwise_state_group_name]
 
-		local view_settings = self:settings_by_view_name(view_name)
-		local wwise_state = view_settings.wwise_states and view_settings.wwise_states[wwise_state_group_name]
-
-		if wwise_state then
-			return wwise_state
+			if wwise_state then
+				return wwise_state
+			end
 		end
 	end
 end
@@ -590,8 +588,10 @@ UIViewHandler._draw_views = function (self, dt, t, allow_input, transitioning_in
 				end
 			end
 
+			local disable_view_worlds = not transitioning_in and not transitioning_out and view_instance.disable_view_worlds and view_instance:disable_view_worlds()
+
 			self:_set_view_worlds_layer(view_name, draw_layer)
-			self:_set_view_worlds_enabled(view_name, draw_view)
+			self:_set_view_worlds_enabled(view_name, draw_view and not disable_view_worlds)
 
 			if top_draw_layer < draw_layer then
 				top_draw_layer = draw_layer

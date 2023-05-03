@@ -410,6 +410,19 @@ local conversations_core_ogryn_c = {
 		},
 		randomize_indexes = {}
 	},
+	conversation_sergeant_three_02 = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_ogryn_c__conversation_sergeant_three_02_01",
+			[2.0] = "loc_ogryn_c__conversation_sergeant_three_02_02"
+		},
+		sound_events_duration = {
+			[1.0] = 1.93901,
+			[2.0] = 3.823417
+		},
+		randomize_indexes = {}
+	},
 	conversation_sergeant_three_04 = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -459,10 +472,6 @@ local conversations_core_ogryn_c = {
 		sound_events_duration = {
 			[1.0] = 3.086313,
 			[2.0] = 2.906313
-		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -1942,10 +1951,6 @@ local conversations_core_ogryn_c = {
 			[1.0] = 5.718604,
 			[2.0] = 4.413417
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	lore_hive_cities_two_b = {
@@ -3422,10 +3427,6 @@ local conversations_core_ogryn_c = {
 		sound_events_duration = {
 			[1.0] = 3.427219,
 			[2.0] = 2.557135
-		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},

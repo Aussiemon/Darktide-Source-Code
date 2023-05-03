@@ -2,6 +2,13 @@ local BaseWeaponTraitBuffTemplates = require("scripts/settings/buff/weapon_trait
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
 local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
+local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FixedFrame = require("scripts/utilities/fixed_frame")
+local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
+local PushAttack = require("scripts/utilities/attack/push_attack")
+local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
+local damage_types = DamageSettings.damage_types
 local keywords = BuffSettings.keywords
 local stat_buffs = BuffSettings.stat_buffs
 local proc_events = BuffSettings.proc_events
@@ -10,7 +17,9 @@ local templates = {
 	weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_staggered_targets_receive_increased_damage_debuff = table.clone(BaseWeaponTraitBuffTemplates.staggered_targets_receive_increased_damage_debuff),
 	weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_infinite_melee_cleave_on_weakspot_kill = table.clone(BaseWeaponTraitBuffTemplates.infinite_melee_cleave_on_weakspot_kill),
 	weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_staggered_targets_receive_increased_stagger_debuff = table.clone(BaseWeaponTraitBuffTemplates.staggered_targets_receive_increased_stagger_debuff),
-	weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_taunt_target_on_hit = table.clone(BaseWeaponTraitBuffTemplates.taunt_target_on_hit)
+	weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_taunt_target_on_hit = table.clone(BaseWeaponTraitBuffTemplates.taunt_target_on_staggered_hit),
+	weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_taunt_target_on_hit_child = table.clone(BaseWeaponTraitBuffTemplates.taunt_target_child)
 }
+templates.weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_taunt_target_on_hit.child_buff_template = "weapon_trait_bespoke_ogryn_powermaul_slabshield_p1_taunt_target_on_hit_child"
 
 return templates

@@ -13,6 +13,7 @@ local MinionBackstabSettings = require("scripts/settings/minion_backstab/minion_
 local MinionPerception = require("scripts/utilities/minion_perception")
 local MinionPushFx = require("scripts/utilities/minion_push_fx")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
+local Push = require("scripts/extension_systems/character_state_machine/character_states/utilities/push")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local attack_results = AttackSettings.attack_results
 local attack_types = AttackSettings.attack_types
@@ -638,8 +639,9 @@ MinionAttack.push_nearby_enemies = function (unit, scratchpad, action_data, igno
 	for i = 1, num_results do
 		repeat
 			local hit_unit = ENEMY_BROADPHASE_RESULTS[i]
+			local should_ignore = not action_data.push_enemies_include_target_unit and ignored_unit == hit_unit
 
-			if ALIVE[hit_unit] and hit_unit ~= unit and not pushed_enemies[hit_unit] and hit_unit ~= ignored_unit then
+			if ALIVE[hit_unit] and hit_unit ~= unit and not pushed_enemies[hit_unit] and not should_ignore then
 				local to = POSITION_LOOKUP[hit_unit]
 				local direction = Vector3.normalize(Vector3.flat(to - from))
 
@@ -654,7 +656,14 @@ MinionAttack.push_nearby_enemies = function (unit, scratchpad, action_data, igno
 
 				pushed_enemies[hit_unit] = true
 
-				Attack.execute(hit_unit, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_direction", direction, "hit_zone_name", "torso")
+				if action_data.push_enemies_push_template then
+					local unit_data_extension = ScriptUnit.extension(hit_unit, "unit_data_system")
+					local locomotion_push_component = unit_data_extension:write_component("locomotion_push")
+
+					Push.add(hit_unit, locomotion_push_component, direction, action_data.push_enemies_push_template, "attack")
+				elseif damage_profile then
+					Attack.execute(hit_unit, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_direction", direction, "hit_zone_name", "torso")
+				end
 			end
 		until true
 	end
@@ -722,7 +731,7 @@ end
 local _check_max_z_diff, _check_weapon_reach, _get_weapon_reach, _melee_hit, _melee_with_broadphase, _melee_with_oobb, _melee_with_weapon_reach = nil
 local DEFAULT_DODGE_REACH = 2.4
 
-MinionAttack.sweep = function (unit, breed, sweep_node, scratchpad, blackboard, target_unit, action_data, physics_world, sweep_hit_units_cache, override_damage_profile_or_nil, override_damage_type_or_nil, attack_event)
+MinionAttack.sweep = function (unit, breed, sweep_node, scratchpad, blackboard, target_unit, action_data, physics_world, sweep_hit_units_cache, override_damage_profile_or_nil, override_damage_type_or_nil, attack_event, optional_ignore_target_unit)
 	local node = Unit.node(unit, sweep_node)
 	local position = Unit.world_position(unit, node)
 	local radius = _get_weapon_reach(action_data, attack_event)
@@ -748,8 +757,9 @@ MinionAttack.sweep = function (unit, breed, sweep_node, scratchpad, blackboard, 
 	for i = 1, actor_count do
 		local hit_actor = actors[i]
 		local hit_unit = Actor.unit(hit_actor)
+		local target_ignore_override = optional_ignore_target_unit and hit_unit == target_unit
 
-		if HEALTH_ALIVE[hit_unit] and not sweep_hit_units_cache[hit_unit] and hit_unit ~= unit then
+		if HEALTH_ALIVE[hit_unit] and not sweep_hit_units_cache[hit_unit] and hit_unit ~= unit and not target_ignore_override then
 			local actor_position = Actor.position(hit_actor)
 			local is_dodging, dodge_type = Dodge.is_dodging(hit_unit, attack_types.melee)
 			is_dodging = not action_data.ignore_dodge and is_dodging

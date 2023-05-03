@@ -21,10 +21,10 @@ local reload_template = {
 		anim_1p = "reload_middle",
 		time = 4.7,
 		state_transitions = {
-			eject_mag = 2.2333333333333334
+			eject_mag = 2.466666666666667
 		},
 		functionality = {
-			refill_ammunition = 2.2333333333333334
+			refill_ammunition = 2.466666666666667
 		}
 	},
 	gunlugger_ability = {

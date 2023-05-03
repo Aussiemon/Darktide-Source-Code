@@ -34,8 +34,6 @@ Commendations.bulk_update_commendations = function (self, commendation_update)
 
 	local path = BackendUtilities.url_builder():path("/commendations"):to_string()
 
-	Log.info("Backend", "Patching commendations %s", table.tostring(commendation_update, 99))
-
 	return Managers.backend:title_request(path, {
 		method = "PATCH",
 		body = commendation_update

@@ -63,20 +63,14 @@ local mission_giver_vo_explicator_a = {
 	},
 	info_event_one_down = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 2,
 		sound_events = {
-			"loc_explicator_a__info_event_one_down_01",
-			"loc_explicator_a__info_event_one_down_02",
-			"loc_explicator_a__info_event_one_down_03",
-			"loc_explicator_a__info_event_one_down_04",
-			"loc_explicator_a__info_event_one_down_05"
+			[1.0] = "loc_explicator_a__info_event_one_down_01",
+			[2.0] = "loc_explicator_a__info_event_one_down_03"
 		},
 		sound_events_duration = {
-			2.028208,
-			2.483208,
-			1.715646,
-			3.051625,
-			2.83525
+			[1.0] = 2.028208,
+			[2.0] = 1.715646
 		},
 		randomize_indexes = {}
 	},

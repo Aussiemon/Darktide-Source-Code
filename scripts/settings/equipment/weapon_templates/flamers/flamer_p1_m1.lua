@@ -7,7 +7,6 @@ local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local WeaponTraitsBespokeFlamerP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_flamer_p1")
-local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
@@ -734,10 +733,6 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
-
-table.append(weapon_template.traits, ranged_common_traits)
-
 local bespoke_forcestaff_p1_traits = table.keys(WeaponTraitsBespokeFlamerP1)
 
 table.append(weapon_template.traits, bespoke_forcestaff_p1_traits)

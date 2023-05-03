@@ -2,9 +2,11 @@ local AbilityTemplates = require("scripts/settings/ability/ability_templates/abi
 local ActionAvailability = require("scripts/extension_systems/weapon/utilities/action_availability")
 local ActionHandlerSettings = require("scripts/settings/action/action_handler_settings")
 local Ammo = require("scripts/utilities/ammo")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local proc_events = BuffSettings.proc_events
 local ActionHandler = class("ActionHandler")
 local MAX_COMBO_COUNT = NetworkConstants.action_combo_count.max
 local EMPTY_TABLE = {}
@@ -27,6 +29,7 @@ ActionHandler.init = function (self, unit, data)
 	self._alternate_fire_component = unit_data_extension:read_component("alternate_fire")
 	self._inventory_component = unit_data_extension:read_component("inventory")
 	self._targeting_component = unit_data_extension:read_component("action_module_targeting")
+	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
 end
 
 ActionHandler.add_component = function (self, component_name)
@@ -259,6 +262,16 @@ ActionHandler.start_action = function (self, id, action_objects, action_name, ac
 	action:start(action_settings, t, time_scale, action_start_params)
 	self:_anim_event(action_settings, action, is_chain_action, condition_func_params)
 	self:_update_combo_count(running_action, action_settings, component, automatic_input, reset_combo_override)
+
+	local buff_extension = self._buff_extension
+	local param_table = buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		param_table.action_name = action_name
+		param_table.action_settings = action_settings
+
+		buff_extension:add_proc_event(proc_events.on_action_start, param_table)
+	end
 end
 
 ActionHandler._calculate_action_total_time = function (self, action_settings, action_params, time_scale)
@@ -291,7 +304,7 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 		time_scale = time_scale * weapon_handling_time_scale
 	end
 
-	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
+	local buff_extension = self._buff_extension
 	local stat_buffs = buff_extension:stat_buffs()
 	local action_time_scale_stat_buffs = action_settings.time_scale_stat_buffs
 
@@ -572,7 +585,7 @@ ActionHandler._validate_action = function (self, action_settings, condition_func
 	local is_sprinting = Sprint.is_sprinting(sprint_character_state_component)
 
 	if is_sprinting then
-		local buff_extension = ScriptUnit.has_extension(self._unit, "buff_system")
+		local buff_extension = self._buff_extension
 
 		if not ActionAvailability.available_in_sprint(action_settings, buff_extension) then
 			return false

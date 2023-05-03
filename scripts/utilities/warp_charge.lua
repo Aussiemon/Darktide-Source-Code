@@ -84,6 +84,12 @@ WarpCharge.decrease_immediate = function (remove_percentage, warp_charge_compone
 		local Interrupt = require("scripts/utilities/attack/interrupt")
 
 		Interrupt.action(t, unit, "psyker_ability", nil, true)
+
+		if Managers.stats.can_record_stats() then
+			local player = Managers.state.player_unit_spawn:owner(unit)
+
+			Managers.stats:record_psyker_2_survived_perils(player)
+		end
 	end
 
 	warp_charge_component.state = new_state or current_state

@@ -1,12 +1,16 @@
 local SharedOverheatAndWarpChargeFunctions = require("scripts/utilities/shared_overheat_and_warp_charge_functions")
-local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local SharedFunctions = SharedOverheatAndWarpChargeFunctions
 local Overheat = {}
 
-Overheat.increase_immediate = function (t, charge_level, inventory_slot_component, charge_template, unit)
+Overheat.increase_immediate = function (t, charge_level, inventory_slot_component, charge_template, unit, is_critical_strike)
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
 	local stat_buffs = buff_extension:stat_buffs()
 	local buff_multiplier = stat_buffs and stat_buffs.overheat_amount * stat_buffs.overheat_immediate_amount or 1
+
+	if is_critical_strike and stat_buffs then
+		buff_multiplier = buff_multiplier * (stat_buffs.overheat_immediate_amount_critical_strike or 1)
+	end
+
 	local current_percentage = inventory_slot_component.overheat_current_percentage
 	local current_state = inventory_slot_component.overheat_state
 	local use_charge = charge_template.use_charge

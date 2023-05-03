@@ -277,15 +277,6 @@ local gameplay_vo_zealot_male_c = {
 			2.329073,
 			2.793115
 		},
-		sound_event_weights = {
-			0.1428571,
-			0.1428571,
-			0.1428571,
-			0.1428571,
-			0.1428571,
-			0.1428571,
-			0.1428571
-		},
 		randomize_indexes = {}
 	},
 	critical_health = {
@@ -779,18 +770,6 @@ local gameplay_vo_zealot_male_c = {
 			1.452688,
 			2.736354,
 			1.790594
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -1463,13 +1442,6 @@ local gameplay_vo_zealot_male_c = {
 			2.529729,
 			2.309135
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	found_health_booster_ogryn_low_on_health = {
@@ -1794,18 +1766,6 @@ local gameplay_vo_zealot_male_c = {
 			1.918115,
 			2.721677,
 			3.049479
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -2320,18 +2280,6 @@ local gameplay_vo_zealot_male_c = {
 			2.365177,
 			2.963729,
 			1.747771
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -3217,13 +3165,6 @@ local gameplay_vo_zealot_male_c = {
 			1.516167,
 			2.853719
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	response_for_psyker_disabled_by_chaos_hound = {
@@ -3516,24 +3457,20 @@ local gameplay_vo_zealot_male_c = {
 	},
 	response_for_zealot_cover_me = {
 		randomize_indexes_n = 0,
-		sound_events_n = 4,
+		sound_events_n = 5,
 		sound_events = {
+			"loc_zealot_male_c__response_for_zealot_cover_me_01",
 			"loc_zealot_male_c__response_for_zealot_cover_me_02",
 			"loc_zealot_male_c__response_for_zealot_cover_me_03",
 			"loc_zealot_male_c__response_for_zealot_cover_me_04",
 			"loc_zealot_male_c__response_for_zealot_cover_me_05"
 		},
 		sound_events_duration = {
+			1.237417,
 			1.051427,
 			1.435729,
 			1.927854,
 			3.164844
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -3845,13 +3782,6 @@ local gameplay_vo_zealot_male_c = {
 			2.717188,
 			3.842177
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	seen_enemy_executor = {
@@ -3993,6 +3923,47 @@ local gameplay_vo_zealot_male_c = {
 		},
 		randomize_indexes = {}
 	},
+	seen_enemy_netgunner = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_zealot_male_c__seen_netgunner_01",
+			"loc_zealot_male_c__seen_netgunner_02",
+			"loc_zealot_male_c__seen_netgunner_03",
+			"loc_zealot_male_c__seen_netgunner_04",
+			"loc_zealot_male_c__seen_netgunner_05",
+			"loc_zealot_male_c__seen_netgunner_06",
+			"loc_zealot_male_c__seen_netgunner_07",
+			"loc_zealot_male_c__seen_netgunner_08",
+			"loc_zealot_male_c__seen_netgunner_09",
+			"loc_zealot_male_c__seen_netgunner_10"
+		},
+		sound_events_duration = {
+			1.035375,
+			0.788167,
+			1.526375,
+			1.884688,
+			1.470198,
+			2.406323,
+			1.948063,
+			2.686531,
+			2.160865,
+			2.146781
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
+		},
+		randomize_indexes = {}
+	},
 	seen_enemy_ogryn_heavy_gunner = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -4021,7 +3992,7 @@ local gameplay_vo_zealot_male_c = {
 	},
 	seen_enemy_poxwalker_bomber = {
 		randomize_indexes_n = 0,
-		sound_events_n = 10,
+		sound_events_n = 9,
 		sound_events = {
 			"loc_zealot_male_c__seen_enemy_poxwalker_bomber_01",
 			"loc_zealot_male_c__seen_enemy_poxwalker_bomber_02",
@@ -4031,7 +4002,6 @@ local gameplay_vo_zealot_male_c = {
 			"loc_zealot_male_c__seen_enemy_poxwalker_bomber_06",
 			"loc_zealot_male_c__seen_enemy_poxwalker_bomber_07",
 			"loc_zealot_male_c__seen_enemy_poxwalker_bomber_08",
-			"loc_zealot_male_c__seen_enemy_poxwalker_bomber_09",
 			"loc_zealot_male_c__seen_enemy_poxwalker_bomber_10"
 		},
 		sound_events_duration = {
@@ -4043,20 +4013,18 @@ local gameplay_vo_zealot_male_c = {
 			2.835104,
 			1.990802,
 			2.450625,
-			1.154094,
 			2.125542
 		},
 		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111
 		},
 		randomize_indexes = {}
 	},

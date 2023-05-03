@@ -1,6 +1,8 @@
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
+local attack_types = AttackSettings.attack_types
 local proc_events = BuffSettings.proc_events
 local IMPACT_FX_DATA_PREDICTED = {
 	will_be_predicted = true
@@ -74,7 +76,7 @@ PushAttack.push = function (physics_world, push_position, push_direction, rewind
 			if damage_profile then
 				hit_units[unit] = true
 				local hit_zone_name = "torso"
-				local damage_dealt, attack_result, damage_efficiency, stagger_result = Attack.execute(unit, damage_profile, "attacking_unit", attacking_unit, "attack_direction", attack_direction, "hit_world_position", hit_world_position, "hit_actor", actor, "power_level", power_level, "hit_zone_name", hit_zone_name, "damage_type", damage_type, "item", optional_weapon_item)
+				local damage_dealt, attack_result, damage_efficiency, stagger_result = Attack.execute(unit, damage_profile, "attacking_unit", attacking_unit, "attack_direction", attack_direction, "attack_type", attack_types.push, "hit_world_position", hit_world_position, "hit_actor", actor, "power_level", power_level, "hit_zone_name", hit_zone_name, "damage_type", damage_type, "item", optional_weapon_item)
 
 				ImpactEffect.play(unit, actor, damage_dealt, damage_type, hit_zone_name, attack_result, hit_world_position, nil, attack_direction, attacking_unit, impact_fx_data, nil, nil, damage_efficiency, damage_profile)
 

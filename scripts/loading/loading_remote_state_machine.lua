@@ -69,6 +69,10 @@ LoadingRemoteStateMachine.spawn_group_ready = function (self, spawn_group)
 
 	if state.spawn_group_ready then
 		state:spawn_group_ready(spawn_group)
+	else
+		local state_name = StateMachine._current_state_name(self._state_machine)
+
+		Log.warning("RemoteLoadState", "LoadingRemoteStateMachine:spawn_group_ready() called, but state machine wasn't ready to handle it. Machine was in state: %s", state_name)
 	end
 end
 

@@ -444,6 +444,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 			attacker_param_table.breed_name = target_breed_or_nil and target_breed_or_nil.name
 			attacker_param_table.damage = damage
 			attacker_param_table.damage_efficiency = damage_efficiency
+			attacker_param_table.damage_profile = damage_profile
 			attacker_param_table.damage_type = damage_type
 			attacker_param_table.hit_weakspot = hit_weakspot
 			attacker_param_table.hit_world_position = hit_world_position_box_or_nil
@@ -477,6 +478,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 			attacker_param_table.breed_name = target_breed_or_nil and target_breed_or_nil.name
 			attacker_param_table.damage = damage
 			attacker_param_table.damage_efficiency = damage_efficiency
+			attacker_param_table.damage_profile = damage_profile
 			attacker_param_table.damage_type = damage_type
 			attacker_param_table.hit_weakspot = hit_weakspot
 			attacker_param_table.hit_world_position = hit_world_position_box_or_nil

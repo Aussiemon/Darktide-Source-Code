@@ -16,8 +16,10 @@ local decal_table = {
 	decal_atlas_hive_scum_01 = "content/textures/gear_decals/decal_atlas_hive_scum_01",
 	decal_atlas_steel_legion_01 = "content/textures/gear_decals/decal_atlas_steel_legion_01",
 	decal_atlas_skulls_edition = "content/textures/gear_decals/decal_atlas_skulls_edition",
+	decal_atlas_holidays_01 = "content/textures/gear_decals/decal_atlas_holidays_01",
 	decal_atlas_z_preacher_maniac_01 = "content/textures/gear_decals/decal_atlas_z_preacher_maniac_01",
 	decal_atlas_ogryn_02 = "content/textures/gear_decals/decal_atlas_ogryn_02",
+	decal_atlas_holidays_02 = "content/textures/gear_decals/decal_atlas_holidays_02",
 	decal_atlas_p_biomancer_protector_01 = "content/textures/gear_decals/decal_atlas_p_biomancer_protector_01"
 }
 local material_types = {

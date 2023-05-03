@@ -1,5 +1,6 @@
 require("scripts/extension_systems/weapon/actions/action_base")
 
+local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local AimAssist = require("scripts/utilities/aim_assist")
 local AlternateFire = require("scripts/utilities/alternate_fire")
 local BuffSettings = require("scripts/settings/buff/buff_settings")

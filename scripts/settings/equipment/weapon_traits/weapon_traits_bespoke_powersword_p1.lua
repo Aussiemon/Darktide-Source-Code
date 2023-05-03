@@ -132,7 +132,16 @@ templates.weapon_trait_bespoke_powersword_p1_pass_past_armor_on_weapon_special =
 }
 templates.weapon_trait_bespoke_powersword_p1_extended_activation_duration_on_chained_attacks = {
 	weapon_trait_bespoke_powersword_p1_extended_activation_duration_on_chained_attacks = {
-		{}
+		{
+			buff_data = {
+				extra_hits_max = 1
+			}
+		},
+		[4] = {
+			buff_data = {
+				extra_hits_max = 2
+			}
+		}
 	}
 }
 

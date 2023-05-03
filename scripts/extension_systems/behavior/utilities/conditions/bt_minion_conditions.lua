@@ -577,16 +577,15 @@ conditions.daemonhost_wants_to_leave = function (unit, blackboard, scratchpad, c
 	end
 
 	local statistics_component = blackboard.statistics
-	local valid_targets_on_aggro = statistics_component.valid_targets_on_aggro
 
-	if valid_targets_on_aggro > 1 and num_alive_targets == 1 then
+	if num_alive_targets == 1 then
 		return true
 	end
 
+	local player_deaths = statistics_component.player_deaths
 	local DaemonhostSettings = require("scripts/settings/specials/daemonhost_settings")
 	local num_player_kills_for_despawn = Managers.state.difficulty:get_table_entry_by_challenge(DaemonhostSettings.num_player_kills_for_despawn)
-	local num_dead_players = valid_targets_on_aggro - num_alive_targets
-	local wants_to_leave = num_player_kills_for_despawn <= num_dead_players
+	local wants_to_leave = num_player_kills_for_despawn <= player_deaths
 
 	return wants_to_leave
 end
@@ -1180,6 +1179,13 @@ conditions.chaos_spawn_should_leap = function (unit, blackboard, scratchpad, con
 end
 
 conditions.chaos_spawn_should_grab = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local t = Managers.time:time("gameplay")
+	local behavior_component = blackboard.behavior
+
+	if t < behavior_component.grab_cooldown then
+		return false
+	end
+
 	local perception_component = blackboard.perception
 	local target_unit = perception_component.target_unit
 	local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
@@ -1196,6 +1202,38 @@ conditions.chaos_spawn_should_grab = function (unit, blackboard, scratchpad, con
 	local disabled_and_not_by_this_chaos_spawn = disabled_state_input.disabling_unit and disabled_state_input.disabling_unit ~= unit
 
 	return not disabled_and_not_by_this_chaos_spawn
+end
+
+conditions.chaos_spawn_target_changed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
+	if is_running then
+		return true
+	end
+
+	local perception_component = blackboard.perception
+
+	return perception_component.target_changed
+end
+
+conditions.chaos_spawn_target_changed_close = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if is_running then
+		return true
+	end
+
+	local perception_component = blackboard.perception
+
+	if perception_component.target_changed then
+		local new_target_unit = perception_component.target_unit
+
+		return new_target_unit and ALIVE[new_target_unit] and perception_component.target_distance < 8
+	end
+
+	return false
 end
 
 conditions.poxwalker_bomber_is_dead = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)

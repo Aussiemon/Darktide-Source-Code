@@ -57,13 +57,13 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 			sfx = {
 				[armor_hit_types.damage] = {
 					{
-						event = "wwise/events/minion/play_traitor_captain_shield_bullet_hits",
+						event = "wwise/events/minions/play_traitor_captain_shield_bullet_hits",
 						append_husk_to_event_name = true
 					}
 				},
 				[armor_hit_types.damage_negated] = {
 					{
-						event = "wwise/events/minion/play_traitor_captain_shield_bullet_hits",
+						event = "wwise/events/minions/play_traitor_captain_shield_bullet_hits",
 						append_husk_to_event_name = true
 					}
 				}
@@ -73,7 +73,7 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 					{
 						normal_rotation = true,
 						effects = {
-							"content/fx/particles/enemies/renegade_captain/renegade_captain_shield_impact"
+							"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shield_impact"
 						}
 					}
 				},
@@ -81,7 +81,7 @@ function _inject_armor_impact_fx(damage_type, armor_config)
 					{
 						normal_rotation = true,
 						effects = {
-							"content/fx/particles/enemies/renegade_captain/renegade_captain_shield_impact"
+							"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shield_impact"
 						}
 					}
 				}

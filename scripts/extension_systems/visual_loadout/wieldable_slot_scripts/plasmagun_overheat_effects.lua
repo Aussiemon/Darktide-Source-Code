@@ -47,6 +47,7 @@ PlasmagunOverheatEffects.init = function (self, context, slot, weapon_template, 
 	self._on_screen_effect_id = nil
 	self._plasma_coil_components_1p = _slot_components(slot.attachments_1p)
 	self._plasma_coil_components_3p = _slot_components(slot.attachments_3p)
+	self._material_overheat_percentage = 0
 end
 
 PlasmagunOverheatEffects.destroy = function (self)
@@ -158,20 +159,27 @@ end
 PlasmagunOverheatEffects._update_material = function (self, overheat_percentage)
 	local components_1p = self._plasma_coil_components_1p
 	local components_3p = self._plasma_coil_components_3p
+	local material_overheat_percentage = self._material_overheat_percentage
+	local min = math.min(material_overheat_percentage, overheat_percentage)
+	local max = math.max(material_overheat_percentage, overheat_percentage)
+	local lerp_t = 1 - math.abs(overheat_percentage - material_overheat_percentage) / 1
+	material_overheat_percentage = math.lerp(min, max, lerp_t)
 
 	for ii = 1, #components_1p do
 		local plasma_coil = components_1p[ii]
 		local unit = plasma_coil.unit
 
-		plasma_coil.component:set_overheat(unit, overheat_percentage)
+		plasma_coil.component:set_overheat(unit, material_overheat_percentage * 0.25)
 	end
 
 	for ii = 1, #components_3p do
 		local plasma_coil = components_3p[ii]
 		local unit = plasma_coil.unit
 
-		plasma_coil.component:set_overheat(unit, overheat_percentage)
+		plasma_coil.component:set_overheat(unit, material_overheat_percentage * 0.25)
 	end
+
+	self._material_overheat_percentage = material_overheat_percentage
 end
 
 PlasmagunOverheatEffects._update_screenspace = function (self, overheat_percentage)

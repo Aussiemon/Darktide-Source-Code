@@ -24,15 +24,12 @@ local default_imgui_input_settings = {
 				"xbox_controller_right_thumb+xbox_controller_d_right"
 			}
 		},
-		hotkey_options_gui = {
-			type = "pressed",
-			raw = {
-				"keyboard_insert",
-				"xbox_controller_right_thumb+xbox_controller_d_up"
-			}
-		},
 		hotkey_input_gui = {
 			raw = "keyboard_left shift+keyboard_i",
+			type = "pressed"
+		},
+		hotkey_simple_graph = {
+			raw = "keyboard_right shift+keyboard_k",
 			type = "pressed"
 		},
 		hotkey_package_gui = {

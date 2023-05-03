@@ -17,7 +17,7 @@ local action_data = {
 			"move_fwd"
 		},
 		speeds = {
-			move_fwd = 1.25
+			move_fwd = 2
 		}
 	},
 	death = {
@@ -412,6 +412,10 @@ local action_data = {
 		}
 	},
 	stagger = {
+		stagger_duration_mods = {
+			stagger_right_heavy = 0.5,
+			stagger_fwd_heavy = 0.5
+		},
 		stagger_anims = {
 			light = {
 				fwd = {

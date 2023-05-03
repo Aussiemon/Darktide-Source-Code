@@ -16,7 +16,7 @@ local scenegraph_definition = {
 			0
 		},
 		position = {
-			-50,
+			-10,
 			450,
 			990
 		}
@@ -188,6 +188,9 @@ local create_notification_message = {
 				text_offset = 210
 			elseif element.icon_size == "large_cosmetic" then
 				icon_size = UISettings.cosmetics_item_size
+				text_offset = 210
+			elseif element.icon_size == "weapon_skin" then
+				icon_size = UISettings.weapon_icon_size
 				text_offset = 210
 			elseif element.icon_size == "large_gadget" then
 				icon_size = UISettings.gadget_icon_size

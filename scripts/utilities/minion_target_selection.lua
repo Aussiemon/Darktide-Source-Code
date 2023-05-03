@@ -197,12 +197,22 @@ end
 
 MinionTargetSelection.weight_multiplier = function (target_unit)
 	local multiplier = 1
-	local buff_extension = target_unit and ScriptUnit.has_extension(target_unit, "buff_system")
+	local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 
 	if buff_extension then
 		local stat_buffs = buff_extension:stat_buffs()
 		local threat_weight_multiplier = stat_buffs.threat_weight_multiplier
 		multiplier = multiplier * threat_weight_multiplier
+	end
+
+	return multiplier
+end
+
+MinionTargetSelection.taunt_weight_multiplier = function (target_selection_weights, target_unit, taunter_unit_or_nil)
+	local multiplier = 1
+
+	if target_unit == taunter_unit_or_nil then
+		multiplier = target_selection_weights.taunt_weight_multiplier
 	end
 
 	return multiplier

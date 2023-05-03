@@ -44,6 +44,7 @@ local FIXED_FRAME_OFFSET_NETWORK_TYPES = {
 	fixed_frame_offset_small = true,
 	fixed_frame_offset_start_t_6bit = true,
 	fixed_frame_offset_end_t_4bit = true,
+	fixed_frame_offset_start_t_9bit = true,
 	fixed_frame_offset_end_t_6bit = true,
 	fixed_frame_offset_end_t_7bit = true
 }

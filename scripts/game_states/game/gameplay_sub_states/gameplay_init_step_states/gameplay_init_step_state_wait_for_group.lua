@@ -12,6 +12,10 @@ GameplayInitStepStateWaitForGroup.on_enter = function (self, parent, params)
 	local is_server = shared_state.is_server
 	self._is_server = is_server
 
+	if Managers.connection:host_type() == "hub_server" then
+		self._report_time_out = 10
+	end
+
 	if not is_server then
 		local connection_manager = Managers.connection
 		local spawn_group_id = shared_state.spawn_group_id
@@ -43,6 +47,16 @@ GameplayInitStepStateWaitForGroup.on_exit = function (self)
 end
 
 GameplayInitStepStateWaitForGroup.update = function (self, main_dt, main_t)
+	if self._report_time_out then
+		self._report_time_out = self._report_time_out - main_dt
+
+		if self._report_time_out < 0 then
+			Crashify.print_exception("GameplayInitStepStateWaitForGroup", "No rpc_group_loaded within 10 seconds on hub server")
+
+			self._report_time_out = nil
+		end
+	end
+
 	if not self._shared_state.is_server then
 		local lost_connection = not Managers.connection:host_channel()
 
@@ -68,6 +82,8 @@ end
 
 GameplayInitStepStateWaitForGroup.rpc_group_loaded = function (self, channel_id, spawn_group)
 	local expected_spawn_group = self._shared_state.spawn_group_id
+
+	Log.info("StateGameplay", "[GameplayInitStepStateWaitForGroup][rpc_group_loaded] channel_id(%d), spawn_group(%d), expected_spawn_group(%d), peer_id(%s)", channel_id, spawn_group, expected_spawn_group, Network.peer_id())
 
 	if spawn_group == expected_spawn_group then
 		self._ready_to_spawn = true

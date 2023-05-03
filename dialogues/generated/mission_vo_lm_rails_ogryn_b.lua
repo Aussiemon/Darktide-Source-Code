@@ -109,13 +109,14 @@ local mission_vo_lm_rails_ogryn_b = {
 	},
 	mission_rails_first_objective_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 9,
+		sound_events_n = 10,
 		sound_events = {
 			"loc_ogryn_b__guidance_starting_area_01",
 			"loc_ogryn_b__guidance_starting_area_02",
 			"loc_ogryn_b__guidance_starting_area_03",
 			"loc_ogryn_b__guidance_starting_area_04",
 			"loc_ogryn_b__guidance_starting_area_05",
+			"loc_ogryn_b__guidance_starting_area_06",
 			"loc_ogryn_b__guidance_starting_area_07",
 			"loc_ogryn_b__guidance_starting_area_08",
 			"loc_ogryn_b__guidance_starting_area_09",
@@ -127,21 +128,23 @@ local mission_vo_lm_rails_ogryn_b = {
 			1.793698,
 			2.30924,
 			3.229344,
+			5.244063,
 			3.821292,
 			2.978958,
 			3.775854,
 			5.305125
 		},
 		sound_event_weights = {
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -160,10 +163,11 @@ local mission_vo_lm_rails_ogryn_b = {
 	},
 	mission_rails_refectory_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 6,
 		sound_events = {
 			"loc_ogryn_b__region_habculum_01",
 			"loc_ogryn_b__region_habculum_02",
+			"loc_ogryn_b__region_habculum_03",
 			"loc_ogryn_b__zone_transit_01",
 			"loc_ogryn_b__zone_transit_02",
 			"loc_ogryn_b__zone_transit_03"
@@ -171,16 +175,18 @@ local mission_vo_lm_rails_ogryn_b = {
 		sound_events_duration = {
 			2.677917,
 			3.472167,
+			4.688417,
 			5.573948,
 			3.932,
 			4.966625
 		},
 		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
 		},
 		randomize_indexes = {}
 	},

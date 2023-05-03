@@ -11,8 +11,8 @@ local decal_settings = {
 	impact = {
 		sort_order_base = 1000000,
 		units = {
-			"content/fx/units/decal_cross_01",
-			"content/fx/units/vfx_decal_metal_bullethole",
+			"content/fx/units/weapons/decal_cross_01",
+			"content/fx/units/weapons/vfx_decal_metal_bullethole",
 			"content/fx/units/weapons/small_caliber_concrete_small_01",
 			"content/fx/units/weapons/small_caliber_concrete_medium_01",
 			"content/fx/units/weapons/small_caliber_concrete_large_01",

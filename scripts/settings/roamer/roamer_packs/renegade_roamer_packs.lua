@@ -130,7 +130,7 @@ local roamer_packs = {
 			weight = 2,
 			breeds = {
 				elite_executor,
-				roamer_melee,
+				elite_executor,
 				roamer_melee,
 				roamer_melee,
 				roamer_melee,
@@ -188,8 +188,8 @@ local roamer_packs = {
 			breeds = {
 				elite_executor,
 				elite_executor,
-				roamer_melee,
-				roamer_melee
+				elite_executor,
+				elite_executor
 			}
 		},
 		{
@@ -222,7 +222,7 @@ local roamer_packs = {
 			breeds = {
 				elite_berzerker,
 				elite_berzerker,
-				roamer_melee
+				elite_executor
 			}
 		},
 		{
@@ -230,7 +230,7 @@ local roamer_packs = {
 			breeds = {
 				elite_berzerker,
 				elite_berzerker,
-				roamer_melee,
+				elite_executor,
 				roamer_melee,
 				roamer_melee,
 				roamer_melee,
@@ -467,6 +467,218 @@ local roamer_packs = {
 			weight = 1,
 			breeds = {
 				"renegade_flamer_mutator"
+			}
+		}
+	},
+	renegade_close_low_no_melee_ogryns = {
+		{
+			weight = 1,
+			breeds = {
+				roamer_assault,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 2,
+			breeds = {
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				elite_shocktrooper,
+				roamer_assault
+			}
+		}
+	},
+	renegade_close_high_no_melee_ogryns = {
+		{
+			weight = 1,
+			breeds = {
+				roamer_assault,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 2,
+			breeds = {
+				elite_shocktrooper,
+				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				roamer_assault,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 2,
+			breeds = {
+				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		}
+	},
+	renegade_far_low_no_melee_ogryns = {
+		{
+			weight = 1,
+			breeds = {
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman
+			}
+		},
+		{
+			weight = 2,
+			breeds = {
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				elite_gunner,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman
+			}
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				elite_gunner,
+				roamer_rifleman,
+				roamer_rifleman
+			}
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				"chaos_ogryn_gunner",
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman
+			}
+		}
+	},
+	renegade_far_high_no_melee_ogryns = {
+		{
+			weight = 1,
+			breeds = {
+				elite_gunner,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				"chaos_ogryn_gunner",
+				roamer_rifleman,
+				roamer_rifleman,
+				elite_gunner
+			}
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				elite_gunner,
+				elite_gunner,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				elite_gunner,
+				elite_gunner,
+				roamer_rifleman,
+				roamer_rifleman
+			}
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				elite_gunner,
+				"chaos_ogryn_gunner"
 			}
 		}
 	}

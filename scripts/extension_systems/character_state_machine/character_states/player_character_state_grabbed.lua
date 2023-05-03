@@ -33,9 +33,9 @@ end
 local ENTER_TELEPORT_NODE = "rp_base"
 local DISABLING_UNIT_LINK_NODE = "j_lefthand"
 local DISABLED_UNIT_LINK_NODE = "j_hips"
-local SET_CONSUMED_TIMING = {
-	human = 3.566666666666667,
-	ogryn = 3.8
+local START_EAT_TIMING = {
+	human = 1.5333333333333334,
+	ogryn = 1.8166666666666667
 }
 
 PlayerCharacterStateGrabbed.on_enter = function (self, unit, dt, t, previous_state, params)
@@ -82,6 +82,7 @@ PlayerCharacterStateGrabbed.on_enter = function (self, unit, dt, t, previous_sta
 		end
 
 		self._charger_throw_smash = false
+		self._smash_played = false
 		self._throw_anim_played = false
 		self._entered_state_t = t
 
@@ -90,7 +91,7 @@ PlayerCharacterStateGrabbed.on_enter = function (self, unit, dt, t, previous_sta
 		self._animation_extension:anim_event("revive_abort")
 	end
 
-	self._consumed_timing = t + SET_CONSUMED_TIMING[self._breed.name]
+	self._start_eat_timing = t + START_EAT_TIMING[self._breed.name]
 end
 
 local THROW_TELEPORT_UP_OFFSET_HUMAN = 1.5
@@ -188,6 +189,8 @@ PlayerCharacterStateGrabbed.on_exit = function (self, unit, t, next_state)
 	end
 end
 
+local START_EAT_ANIM_EVENT = "attack_grabbed_eat_start"
+
 PlayerCharacterStateGrabbed.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
 	local input_component = self._disabled_state_input
 	local trigger_animation = input_component.trigger_animation
@@ -198,6 +201,18 @@ PlayerCharacterStateGrabbed.fixed_update = function (self, unit, dt, t, next_sta
 		self._animation_extension:anim_event(animation_event)
 
 		self._throw_anim_played = true
+	end
+
+	if trigger_animation == "smash" and not self._smash_played then
+		self._animation_extension:anim_event("attack_grabbed_smash")
+
+		self._smash_played = true
+	end
+
+	if not self._smash_played and self._start_eat_timing and self._start_eat_timing <= t then
+		self._animation_extension:anim_event(START_EAT_ANIM_EVENT)
+
+		self._start_eat_timing = nil
 	end
 
 	return self:_check_transition(unit, t, next_state_params)

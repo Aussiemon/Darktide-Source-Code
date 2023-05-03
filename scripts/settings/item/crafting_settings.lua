@@ -16,7 +16,8 @@ local function scale_by_item_level(cost, item, item_crafting_costs)
 	local item_level = item.baseItemLevel
 	local item_level_span = item_crafting_costs.baseItemLevelSpan
 	local cost_scaling_span = item_crafting_costs.costScalingSpan
-	local span_multiplier = math.remap(item_level_span.min or 1, item_level_span.max or 380, cost_scaling_span.min or 1, cost_scaling_span.max or 1, item_level or 380)
+	local scale = item_level_span.scale or 1
+	local span_multiplier = math.remap(item_level_span.minInt or item_level_span.min or 1 * scale, item_level_span.maxInt or item_level_span.max or 380 * scale, cost_scaling_span.minInt or cost_scaling_span.min or 1 * scale, cost_scaling_span.maxInt or cost_scaling_span.max or 1 * scale, (item_level or 380) * scale) / scale
 	local amount = math.round(cost * span_multiplier)
 
 	return amount
@@ -400,7 +401,7 @@ CraftingSettings.recipes.reroll_perk = {
 		local item_crafting_costs = crafting_costs[item_type]
 		local reroll_perk_costs = item_crafting_costs.rerollPerk
 		local start_cost = reroll_perk_costs.startCost
-		local cost_increase = reroll_perk_costs.costIncrease
+		local cost_increase = (reroll_perk_costs.costIncreaseInt or reroll_perk_costs.costIncrease) / (reroll_perk_costs.costIncreaseScale or 1)
 		local reroll_count = item.reroll_count
 		local rarity = tostring(ingredients.item.rarity)
 		local cost_multiplier = cost_increase^(reroll_count or 0)

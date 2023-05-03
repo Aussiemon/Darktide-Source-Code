@@ -665,13 +665,21 @@ VivoxManager._handle_response = function (self, message)
 end
 
 VivoxManager._handle_response_error = function (self, message)
+	local filter_exception = false
+
 	if message.response_type_string == "resp_session_set_participant_mute_for_me" and message.response_status_code == 20000 then
-		return
+		filter_exception = true
+	elseif message.response_status_code == 1001 then
+		filter_exception = true
 	end
 
 	local exception_message = string.format("Vivox response error %s (%s): %s (%s)", tostring(message.response_type_string), tostring(message.response_type), tostring(message.response_error_string), tostring(message.response_status_code))
 
-	Crashify.print_exception("Vivox", exception_message)
+	if filter_exception then
+		Log.error("VivoxManager", exception_message)
+	else
+		Crashify.print_exception("Vivox", exception_message)
+	end
 end
 
 VivoxManager._validate_participants = function (self)
@@ -686,7 +694,7 @@ VivoxManager._validate_participants = function (self)
 				end
 
 				if not participant.player_info then
-					Log.warn("VivoxManager", "Invalid participant %s, could not get PlayerInfo", participant_uri)
+					Log.warning("VivoxManager", "Invalid participant %s, could not get PlayerInfo", participant_uri)
 
 					return
 				end

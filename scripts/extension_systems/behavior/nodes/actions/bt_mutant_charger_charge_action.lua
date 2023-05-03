@@ -30,6 +30,7 @@ BtMutantChargerChargeAction.enter = function (self, unit, breed, blackboard, scr
 	local perception_component = Blackboard.write_component(blackboard, "perception")
 	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
 	scratchpad.perception_component = perception_component
+	scratchpad.record_state_component = Blackboard.write_component(blackboard, "record_state")
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = locomotion_extension
@@ -55,6 +56,11 @@ BtMutantChargerChargeAction.enter = function (self, unit, breed, blackboard, scr
 	else
 		self:_start_charging(unit, scratchpad, action_data, t)
 	end
+end
+
+BtMutantChargerChargeAction.init_values = function (self, blackboard)
+	local record_state_component = Blackboard.write_component(blackboard, "record_state")
+	record_state_component.has_disabled_player = false
 end
 
 BtMutantChargerChargeAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -925,6 +931,13 @@ BtMutantChargerChargeAction._hit_target = function (self, unit, hit_unit, scratc
 	Attack.execute(target, damage_profile, "power_level", power_level, "hit_world_position", hit_position, "attacking_unit", unit, "attack_type", attack_types.melee, "damage_type", damage_type)
 	self:_stop_effect_template(scratchpad)
 	self:_allow_gibbing(unit, action_data, false)
+
+	local is_player_unit = Managers.state.player_unit_spawn:is_player_unit(hit_unit)
+
+	if is_player_unit then
+		local record_state_component = scratchpad.record_state_component
+		record_state_component.has_disabled_player = true
+	end
 end
 
 local COLLISION_FILTER = "filter_player_mover"

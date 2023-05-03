@@ -24,6 +24,7 @@ MonsterPacing.init = function (self, nav_world)
 
 	self._num_spawn_type_sections = num_spawn_type_sections
 	self._spawn_type_point_sections = spawn_point_sections
+	self._health_modifier = 1
 end
 
 MonsterPacing.destroy = function (self)
@@ -96,7 +97,7 @@ MonsterPacing._generate_spawns = function (self, template)
 	for i = 1, num_valid_spawn_types do
 		local spawn_type = valid_spawn_types[i]
 		local num_spawns = template.num_spawns[spawn_type]
-		local num_to_spawn = math.min(num_sections, type(num_spawns) == "table" and num_spawns[math.random(1, #num_spawns)] or num_spawns)
+		local num_to_spawn = math.min(num_sections, type(num_spawns) == "table" and math.random(num_spawns[1], num_spawns[2]) or num_spawns)
 
 		for j = 1, num_to_spawn do
 			local spawn_point_sections = spawn_type_point_sections[spawn_type]
@@ -116,7 +117,8 @@ MonsterPacing._generate_spawns = function (self, template)
 					breed_name = breed_name,
 					position = position,
 					section = section_index,
-					despawn_distance_when_passive = despawn_distance_when_passive
+					despawn_distance_when_passive = despawn_distance_when_passive,
+					spawn_type = spawn_type
 				}
 				monsters[#monsters + 1] = monster
 
@@ -125,12 +127,17 @@ MonsterPacing._generate_spawns = function (self, template)
 				num_sections = num_sections - 1
 			end
 		end
+	end
 
-		local boss_patrol_settings = template.boss_patrols
+	local boss_patrol_settings = template.boss_patrols
 
-		if boss_patrol_settings and spawn_type == "monsters" and num_to_spawn == 0 and math.random() <= boss_patrol_settings.chance_to_fill_empty_monster_with_patrol then
-			boss_patrols = {}
-			local spawn_point_sections = spawn_type_point_sections.monsters
+	if boss_patrol_settings then
+		local num_boss_patrols_range = boss_patrol_settings.num_boss_patrols_range
+		local num_boss_patrols = math.min(math.random(num_boss_patrols_range[1], num_boss_patrols_range[2]), num_sections)
+		boss_patrols = {}
+		local spawn_point_sections = spawn_type_point_sections.monsters
+
+		for i = 1, num_boss_patrols do
 			local temp_section_index = math.random(#TEMP_SECTIONS)
 			local section_index = TEMP_SECTIONS[temp_section_index]
 			local section = spawn_point_sections[section_index]
@@ -226,6 +233,10 @@ MonsterPacing.fill_spawns_by_travel_distance = function (self, breed_name, spawn
 			end
 		end
 	end
+end
+
+MonsterPacing.set_health_modifier = function (self, modifier)
+	self._health_modifier = modifier
 end
 
 MonsterPacing.add_spawn_point = function (self, unit, position, path_position, travel_distance, section_index, spawn_type)
@@ -364,6 +375,15 @@ MonsterPacing._spawn_monster = function (self, monster, ahead_target_unit, side_
 		spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, aggro_state, ahead_target_unit)
 	else
 		spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id)
+	end
+
+	local spawn_max_health_modifier = self._health_modifier
+
+	if spawn_max_health_modifier and spawn_max_health_modifier ~= 1 then
+		local spawned_unit_health_extension = ScriptUnit.extension(spawned_unit, "health_system")
+		local max_health = spawned_unit_health_extension:max_health()
+
+		spawned_unit_health_extension:add_damage(max_health * spawn_max_health_modifier)
 	end
 
 	local pause_pacing_on_spawn_settings = template.pause_pacing_on_spawn

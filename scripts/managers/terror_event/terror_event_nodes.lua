@@ -234,6 +234,29 @@ TerrorEventNodes.spawn_by_points = {
 			scratchpad.started_spawn = true
 			local breed_tags = node.breed_tags
 			local excluded_breed_tags = node.excluded_breed_tags
+			local tags_replacement = Managers.state.terror_event:get_tags_replacement()
+
+			if tags_replacement then
+				breed_tags = table.clone(breed_tags)
+
+				for i = 1, #breed_tags do
+					local tags = breed_tags[i]
+
+					for j = 1, #tags do
+						local tag = tags[j]
+						local tag_replacement = tags_replacement[tag]
+
+						if tag_replacement then
+							if type(tag_replacement) == "table" then
+								tag_replacement = tag_replacement[math.random(1, #tag_replacement)]
+							end
+
+							tags[j] = tag_replacement
+						end
+					end
+				end
+			end
+
 			local difficulty_scale = Managers.state.difficulty:get_table_entry_by_resistance(MinionDifficultySettings.terror_event_point_costs)
 			local points = node.points * difficulty_scale
 			local spawner_group = node.spawner_group

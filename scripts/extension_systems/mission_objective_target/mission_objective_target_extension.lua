@@ -10,7 +10,6 @@ MissionObjectiveTargetExtension.init = function (self, extension_init_context, u
 	self._add_marker_on_objective_start = true
 	self._enabled_only_during_mission = false
 	self._registered_objective = nil
-	self._registered_peer_id = {}
 	self._mission_objective_system = Managers.state.extension:system("mission_objective_system")
 end
 
@@ -44,7 +43,7 @@ MissionObjectiveTargetExtension.setup_from_external = function (self, objective_
 		self._enabled_only_during_mission = enabled_only_during_mission
 	end
 
-	self:_setup(peer_id)
+	self:_setup()
 
 	if self._is_server and sync_to_clients then
 		local unit = self._unit
@@ -57,61 +56,54 @@ MissionObjectiveTargetExtension.setup_from_external = function (self, objective_
 	end
 end
 
-MissionObjectiveTargetExtension._setup = function (self, peer_id)
+MissionObjectiveTargetExtension._setup = function (self)
 	local objective_name = self._objective_name
 	local objective_stage = self._objective_stage
 
-	if objective_name ~= "default" and (not self._registered_objective or self._registered_objective == objective_name) then
-		if self._registered_peer_id[peer_id or -1] ~= nil then
-			Log.warning("MissionObjectiveTargetExtension", "Trying to registering peer %s when it's already registered.", peer_id)
-
-			return
-		end
-
+	if objective_name ~= "default" and not self._registered_objective then
 		local unit = self._unit
 		self._registered_objective = objective_name
-		self._registered_peer_id[peer_id or -1] = true
 
-		self._mission_objective_system:register_objective_unit(objective_name, unit, objective_stage, peer_id)
+		self._mission_objective_system:register_objective_unit(objective_name, unit, objective_stage)
 
 		if self._is_server and self._add_marker_on_registration then
-			self:add_unit_marker(peer_id)
+			self:add_unit_marker()
 		end
 
 		if self._enabled_only_during_mission then
-			self:disable_unit(peer_id)
+			self:disable_unit()
 		end
 	end
 end
 
-MissionObjectiveTargetExtension.add_unit_marker = function (self, peer_id)
+MissionObjectiveTargetExtension.add_unit_marker = function (self)
 	local objective_name = self._objective_name
 	local unit = self._unit
 
-	self._mission_objective_system:add_marker(objective_name, unit, peer_id)
+	self._mission_objective_system:add_marker(objective_name, unit)
 end
 
-MissionObjectiveTargetExtension.remove_unit_marker = function (self, peer_id)
+MissionObjectiveTargetExtension.remove_unit_marker = function (self)
 	local objective_name = self._objective_name
 	local unit = self._unit
 
-	self._mission_objective_system:remove_marker(objective_name, unit, peer_id)
+	self._mission_objective_system:remove_marker(objective_name, unit)
 end
 
-MissionObjectiveTargetExtension.enable_unit = function (self, peer_id)
+MissionObjectiveTargetExtension.enable_unit = function (self)
 	local objective_name = self._objective_name
 	local unit = self._unit
 	local stage = self._objective_stage
 
-	self._mission_objective_system:enable_unit(objective_name, unit, stage, peer_id)
+	self._mission_objective_system:enable_unit(objective_name, unit, stage)
 end
 
-MissionObjectiveTargetExtension.disable_unit = function (self, peer_id)
+MissionObjectiveTargetExtension.disable_unit = function (self)
 	local objective_name = self._objective_name
 	local unit = self._unit
 	local stage = self._objective_stage
 
-	self._mission_objective_system:disable_unit(objective_name, unit, stage, peer_id)
+	self._mission_objective_system:disable_unit(objective_name, unit, stage)
 end
 
 MissionObjectiveTargetExtension.set_objective_name = function (self, objective_name, sync)
@@ -141,18 +133,6 @@ end
 
 MissionObjectiveTargetExtension.objective_stage = function (self)
 	return self._objective_stage
-end
-
-MissionObjectiveTargetExtension.channel_registered = function (self, channel_id)
-	if self._registered_peer_id[-1] then
-		return true
-	end
-
-	local peer_id = Managers.state.game_session:channel_to_peer(channel_id)
-
-	if self._registered_peer_id[peer_id] then
-		return true
-	end
 end
 
 MissionObjectiveTargetExtension.should_add_marker_on_registration = function (self)

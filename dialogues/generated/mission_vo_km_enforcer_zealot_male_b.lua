@@ -142,10 +142,6 @@ local mission_vo_km_enforcer_zealot_male_b = {
 			[1.0] = 2.188333,
 			[2.0] = 4.050542
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	mission_enforcer_infrastructure = {

@@ -303,6 +303,30 @@ local smart_targeting_templates = {
 			max_angle = _degrees_to_radians(15)
 		}
 	},
+	target_ally_close = {
+		precision_target = {
+			max_range = 2,
+			min_range = 0.5,
+			collision_filter = "filter_player_unit",
+			breed_weights = {},
+			min_angle = _degrees_to_radians(0.05),
+			max_angle = _degrees_to_radians(0.1),
+			wanted_target = TORSO,
+			wanted_target_fallback = HEAD
+		},
+		aim_assist = {
+			base_multiplier = 0.07,
+			no_aim_input_multiplier = 0,
+			always_auto_aim = true
+		},
+		trajectory_assist = {
+			range = 35,
+			assist_multiplier = 1,
+			falloff_func = Range.power_4,
+			min_angle = _degrees_to_radians(3),
+			max_angle = _degrees_to_radians(15)
+		}
+	},
 	throwing_knifes_single_target = {
 		precision_target = {
 			max_range = 100,

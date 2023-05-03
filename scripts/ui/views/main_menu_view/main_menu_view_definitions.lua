@@ -92,7 +92,7 @@ slots_count_text_style.offset = {
 	0
 }
 local gamertag_style = table.clone(UIFontSettings.header_2)
-gamertag_style.text_horizontal_alignment = "left"
+gamertag_style.text_horizontal_alignment = "center"
 gamertag_style.text_color = {
 	255,
 	128,
@@ -100,7 +100,7 @@ gamertag_style.text_color = {
 	255
 }
 local gamertag_input_style = table.clone(UIFontSettings.body)
-gamertag_input_style.text_horizontal_alignment = "left"
+gamertag_input_style.text_horizontal_alignment = "center"
 gamertag_input_style.text_color = {
 	255,
 	255,
@@ -370,26 +370,26 @@ local scenegraph_definition = {
 		}
 	},
 	gamertag = {
-		vertical_alignment = "bottom",
-		parent = "button_pivot",
-		horizontal_alignment = "left",
+		vertical_alignment = "top",
+		parent = "character_info_pivot",
+		horizontal_alignment = "center",
 		size = {
-			374,
-			76
+			600,
+			40
 		},
 		position = {
-			145,
-			50,
+			0,
+			120,
 			2
 		}
 	},
 	gamertag_input = {
-		vertical_alignment = "bottom",
+		vertical_alignment = "top",
 		parent = "gamertag",
-		horizontal_alignment = "left",
+		horizontal_alignment = "center",
 		size = {
 			600,
-			76
+			40
 		},
 		position = {
 			0,
@@ -657,8 +657,8 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				horizontal_alignment = "center",
 				size_addition = {
-					20,
-					20
+					-25,
+					-20
 				},
 				color = Color.terminal_background_gradient(nil, true),
 				offset = {
@@ -676,18 +676,19 @@ local widget_definitions = {
 			end
 		},
 		{
-			style_id = "frame",
 			pass_type = "texture",
 			value = "content/ui/materials/frames/frame_tile_2px",
+			style_id = "frame",
 			style = {
 				vertical_alignment = "center",
-				horizontal_alignment = "center",
 				scale_to_material = true,
+				horizontal_alignment = "center",
 				size_addition = {
-					-30,
+					-25,
 					-20
 				},
-				color = Color.terminal_frame(255, true),
+				default_color = Color.terminal_frame(nil, true),
+				hover_color = Color.terminal_frame_hover(nil, true),
 				offset = {
 					0,
 					0,
@@ -696,21 +697,31 @@ local widget_definitions = {
 			},
 			visibility_function = function (content, style)
 				return not content.hotspot.disabled
+			end,
+			change_function = function (content, style)
+				local hotspot = content.hotspot
+				local default_color = hotspot.disabled and style.disabled_color or style.default_color
+				local hover_color = style.hover_color
+				local color = style.text_color or style.color
+				local progress = math.max(math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress), hotspot.anim_input_progress), hotspot.anim_select_progress)
+
+				ColorUtilities.color_lerp(default_color, hover_color, progress, color)
 			end
 		},
 		{
-			style_id = "corner",
 			pass_type = "texture",
 			value = "content/ui/materials/frames/frame_corner_2px",
+			style_id = "corner",
 			style = {
 				vertical_alignment = "center",
-				horizontal_alignment = "center",
 				scale_to_material = true,
+				horizontal_alignment = "center",
 				size_addition = {
-					-30,
+					-25,
 					-20
 				},
-				color = Color.terminal_corner(255, true),
+				default_color = Color.terminal_corner(nil, true),
+				hover_color = Color.terminal_corner_hover(nil, true),
 				offset = {
 					0,
 					0,
@@ -719,6 +730,15 @@ local widget_definitions = {
 			},
 			visibility_function = function (content, style)
 				return not content.hotspot.disabled
+			end,
+			change_function = function (content, style)
+				local hotspot = content.hotspot
+				local default_color = hotspot.disabled and style.disabled_color or style.default_color
+				local hover_color = style.hover_color
+				local color = style.text_color or style.color
+				local progress = math.max(math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress), hotspot.anim_input_progress), hotspot.anim_select_progress)
+
+				ColorUtilities.color_lerp(default_color, hover_color, progress, color)
 			end
 		},
 		{

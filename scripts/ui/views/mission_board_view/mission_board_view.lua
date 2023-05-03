@@ -15,6 +15,7 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local Promise = require("scripts/foundation/utilities/promise")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
 local MissionBoardView = class("MissionBoardView", "BaseView")
 
 MissionBoardView.init = function (self, settings)
@@ -448,13 +449,39 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 		content.circumstance_name = Localize(circumstance_ui_data.display_name)
 		content.circumstance_description = Localize(circumstance_ui_data.description)
 		content.circumstance_icon = circumstance_ui_data.icon
+		local description_margin = 5
 		local style = widget.style
-		local description_text_box_size = self._ui_scenegraph.detail_circumstance.size
-		local text_height = UIRenderer.text_height(self._ui_renderer, Localize(circumstance_ui_data.description), style.circumstance_description.font_type, style.circumstance_description.font_size, description_text_box_size)
+		local default_height = 100
+		local description_text_box_size = {
+			self._ui_scenegraph.detail_circumstance.size[1],
+			default_height
+		}
+		local title_style_options = UIFonts.get_font_options_by_style(style.circumstance_name)
+		local description_style_options = UIFonts.get_font_options_by_style(style.circumstance_description)
+		local title_size = {
+			description_text_box_size[1] + style.circumstance_name.size_addition[1],
+			description_text_box_size[2] + style.circumstance_name.size_addition[2]
+		}
+		local description_size = {
+			description_text_box_size[1] + style.circumstance_description.size_addition[1],
+			description_text_box_size[2] + style.circumstance_description.size_addition[2]
+		}
+		local circumstance_name_width, circumstance_name_height = UIRenderer.text_size(self._ui_renderer, content.circumstance_name, style.circumstance_name.font_type, style.circumstance_name.font_size, title_size, title_style_options)
+		local circumstance_description_width, circumstance_description_height = UIRenderer.text_size(self._ui_renderer, content.circumstance_description, style.circumstance_description.font_type, style.circumstance_description.font_size, description_size, description_style_options)
+		local title_height = circumstance_name_height - style.circumstance_name.size_addition[2]
+		local description_height = circumstance_description_height - style.circumstance_description.size_addition[2]
+		style.circumstance_name.size = {
+			title_size[1] - style.circumstance_name.size_addition[1],
+			title_height
+		}
+		style.circumstance_description.offset[2] = style.circumstance_name.offset[2] + title_height + description_margin
+		style.circumstance_description.size = {
+			description_size[1] - style.circumstance_description.size_addition[1],
+			description_height
+		}
+		local text_height = style.circumstance_description.offset[2] + style.circumstance_description.size[2]
 
-		if text_height > 30 then
-			self:_set_scenegraph_size("detail_circumstance", nil, text_height + 60)
-		end
+		self:_set_scenegraph_size("detail_circumstance", nil, text_height + 30)
 
 		local extraRewards = mission.extraRewards.circumstance
 

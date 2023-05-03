@@ -37,6 +37,9 @@ renegade_captain.available_attacks = {
 	fire_grenade = "boolean",
 	hellgun_sweep_shoot = "boolean"
 }
+renegade_captain.record_state = {
+	has_disabled_player = "boolean"
+}
 local templates = {
 	renegade_captain = renegade_captain
 }

@@ -8,7 +8,6 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local definition_path = "scripts/ui/view_elements/view_element_inventory_weapon_preview/view_element_inventory_weapon_preview_definitions"
 local BLUR_TIME = 0.3
 local WORLD_LAYER_BACKGROUND = 0
-local WORLD_LAYER_TOP_GUI = 1
 local WORLD_LAYER_ITEM = 35
 local ViewElementInventoryWeaponPreview = class("ViewElementInventoryWeaponPreview", "ViewElementBase")
 
@@ -24,28 +23,11 @@ ViewElementInventoryWeaponPreview.init = function (self, parent, draw_layer, sta
 	self._ignore_blur = context and context.ignore_blur
 	self._draw_background = context and context.draw_background == true or false
 
-	self:_setup_default_gui()
-	self:_setup_background_gui()
 	self:_initialize_preview_world()
+	self:_setup_background_gui()
 
 	local on_enter_animation_callback = callback(self, "cb_start_experience_presentation")
 	self._on_enter_anim_id = self:_start_animation("on_enter", self._widgets_by_name, self, on_enter_animation_callback)
-end
-
-ViewElementInventoryWeaponPreview._setup_default_gui = function (self)
-	local ui_manager = Managers.ui
-	local reference_name = self._reference_name
-	local timer_name = "ui"
-	local world_layer = WORLD_LAYER_TOP_GUI + self._draw_layer
-	local world_name = reference_name .. "_ui_default_world"
-	local view_name = self._parent.view_name
-	self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
-	local viewport_name = reference_name .. "_ui_default_world_viewport"
-	local viewport_type = "overlay"
-	local viewport_layer = 1
-	self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
-	self._viewport_name = viewport_name
-	self._ui_default_renderer = ui_manager:create_renderer(reference_name .. "_ui_default_renderer", self._world)
 end
 
 ViewElementInventoryWeaponPreview._setup_background_gui = function (self)
@@ -274,6 +256,7 @@ ViewElementInventoryWeaponPreview.set_weapon_zoom = function (self, fraction, us
 				local diff = offset_pos - start_position
 				local value = math.remap(optional_min_zoom or 0, optional_max_zoom or 1, 0, 1, amount)
 				local default_x = self._default_camera_position_offset[1]
+				local default_y = self._default_camera_position_offset[2]
 				local default_z = self._default_camera_position_offset[3]
 
 				world_spawner:set_camera_position_axis_offset("x", math.lerp(default_x, diff[1], value), 0, math.easeOutCubic)
@@ -395,21 +378,6 @@ ViewElementInventoryWeaponPreview.destroy = function (self)
 		self._background_world = nil
 	end
 
-	if self._ui_default_renderer then
-		self._ui_default_renderer = nil
-
-		Managers.ui:destroy_renderer(self._reference_name .. "_ui_default_renderer")
-
-		local world = self._world
-		local viewport_name = self._viewport_name
-
-		ScriptWorld.destroy_viewport(world, viewport_name)
-		Managers.ui:destroy_world(world)
-
-		self._viewport_name = nil
-		self._world = nil
-	end
-
 	if self._ui_weapon_spawner then
 		self._ui_weapon_spawner:destroy()
 
@@ -430,7 +398,6 @@ ViewElementInventoryWeaponPreview.draw = function (self, dt, t, ui_renderer, ren
 		return
 	end
 
-	ui_renderer = self._ui_default_renderer
 	local previous_alpha_multiplier = render_settings.alpha_multiplier
 	local alpha_multiplier = self._alpha_multiplier or 0
 	render_settings.alpha_multiplier = alpha_multiplier

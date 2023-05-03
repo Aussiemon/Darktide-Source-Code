@@ -206,19 +206,17 @@ local mission_giver_vo_sergeant_a = {
 	},
 	info_event_one_down = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 4,
 		sound_events = {
 			"loc_sergeant_a__info_event_one_down_01",
 			"loc_sergeant_a__info_event_one_down_02",
 			"loc_sergeant_a__info_event_one_down_03",
-			"loc_sergeant_a__info_event_one_down_04",
 			"loc_sergeant_a__info_event_one_down_05"
 		},
 		sound_events_duration = {
 			1.793708,
 			1.448125,
 			1.708083,
-			2.936708,
 			1.508229
 		},
 		randomize_indexes = {}

@@ -12,7 +12,6 @@ MinigameDecodeSymbols.init = function (self, unit, is_server, seed, context)
 	self._decode_symbols_sweep_duration = context.decode_symbols_sweep_duration
 	self._decode_symbols_stage_amount = context.decode_symbols_stage_amount
 	self._decode_symbols_items_per_stage = context.decode_symbols_items_per_stage
-	self._decode_symbols_target_margin = context.decode_symbols_target_margin
 	self._decode_symbols_total_items = context.decode_symbols_total_items
 	self._symbols = {}
 	self._decode_targets = {}
@@ -158,15 +157,7 @@ MinigameDecodeSymbols.on_action_pressed = function (self, t)
 		return
 	end
 
-	local sweep_duration = self._decode_symbols_sweep_duration
-	local current_stage = self._decode_current_stage
-	local targets = self._decode_targets
-	local target = targets[current_stage]
-	local target_margin = self._decode_symbols_target_margin * sweep_duration
-	local start_target = (target - 1) * target_margin
-	local end_target = target * target_margin
-	local cursor_time = self:_calculate_cursor_time(t)
-	local is_action_on_target = start_target < cursor_time and cursor_time < end_target
+	local is_action_on_target = self:is_on_target(t)
 	local fx_extension = self._fx_extension
 	local sync_with_clients = true
 	local include_client = true
@@ -195,6 +186,19 @@ MinigameDecodeSymbols.on_action_pressed = function (self, t)
 	local is_level_unit, minigame_unit_id = unit_spawner_manager:game_object_id_or_level_index(self._minigame_unit)
 
 	game_session_manager:send_rpc_clients("rpc_minigame_sync_decode_symbols_set_stage", minigame_unit_id, is_level_unit, self._decode_current_stage)
+end
+
+MinigameDecodeSymbols.is_on_target = function (self, t)
+	local sweep_duration = self._decode_symbols_sweep_duration
+	local current_stage = self._decode_current_stage
+	local targets = self._decode_targets
+	local target = targets[current_stage]
+	local target_margin = 1 / (self._decode_symbols_items_per_stage - 1) * sweep_duration
+	local start_target = (target - 1.5) * target_margin
+	local end_target = (target - 0.5) * target_margin
+	local cursor_time = self:_calculate_cursor_time(t)
+
+	return start_target < cursor_time and cursor_time < end_target
 end
 
 MinigameDecodeSymbols._calculate_cursor_time = function (self, t)

@@ -10,7 +10,6 @@ local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokeOgrynClubP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_club_p1")
-local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
@@ -1178,10 +1177,6 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local melee_common_traits = table.keys(WeaponTraitsMeleeCommon)
-
-table.append(weapon_template.traits, melee_common_traits)
-
 local bespoke_ogryn_club_p1 = table.keys(WeaponTraitsBespokeOgrynClubP1)
 
 table.append(weapon_template.traits, bespoke_ogryn_club_p1)

@@ -220,27 +220,35 @@ ui_item_slot_title_text_style.default_color = Color.ui_brown_light(255, true)
 ui_item_slot_title_text_style.hover_color = Color.ui_brown_super_light(255, true)
 local item_owned_text_style = table.clone(UIFontSettings.header_2)
 item_owned_text_style.text_horizontal_alignment = "right"
-item_owned_text_style.text_vertical_alignment = "top"
+item_owned_text_style.text_vertical_alignment = "bottom"
 item_owned_text_style.horizontal_alignment = "right"
-item_owned_text_style.vertical_alignment = "center"
+item_owned_text_style.vertical_alignment = "bottom"
 item_owned_text_style.offset = {
 	-10,
-	5,
+	-5,
 	5
 }
+item_owned_text_style.text_color = Color.terminal_text_body(255, true)
 local item_price_style = table.clone(UIFontSettings.body)
 item_price_style.text_horizontal_alignment = "right"
 item_price_style.text_vertical_alignment = "bottom"
-item_price_style.horizontal_alignment = "left"
+item_price_style.horizontal_alignment = "right"
 item_price_style.vertical_alignment = "center"
 item_price_style.offset = {
-	-48,
-	-5,
+	-35,
+	-8,
 	12
 }
+item_price_style.font_size = 20
 item_price_style.text_color = Color.white(255, true)
 item_price_style.default_color = Color.white(255, true)
 item_price_style.hover_color = Color.white(255, true)
+local gear_item_price_style = table.clone(item_price_style)
+gear_item_price_style.offset = {
+	-29,
+	-3,
+	12
+}
 local item_sold_style = table.clone(UIFontSettings.body)
 item_sold_style.text_horizontal_alignment = "right"
 item_sold_style.text_vertical_alignment = "bottom"
@@ -474,11 +482,11 @@ ItemPassTemplates.gear_item = {
 			},
 			size = {
 				nil,
-				40
+				30
 			}
 		},
 		visibility_function = function (content, style)
-			return content.has_price_tag
+			return content.has_price_tag and not content.sold
 		end
 	},
 	{
@@ -486,7 +494,7 @@ ItemPassTemplates.gear_item = {
 		style_id = "price_text",
 		pass_type = "text",
 		value = "n/a",
-		style = item_price_style,
+		style = gear_item_price_style,
 		visibility_function = function (content, style)
 			return content.has_price_tag and not content.sold
 		end
@@ -500,12 +508,12 @@ ItemPassTemplates.gear_item = {
 			vertical_alignment = "bottom",
 			horizontal_alignment = "right",
 			size = {
-				20,
+				28,
 				20
 			},
 			offset = {
-				0,
-				-10,
+				-2,
+				-5,
 				12
 			},
 			color = {
@@ -2270,11 +2278,11 @@ ItemPassTemplates.item = {
 			vertical_alignment = "bottom",
 			horizontal_alignment = "right",
 			size = {
-				20,
+				28,
 				20
 			},
 			offset = {
-				-15,
+				-8,
 				-10,
 				12
 			},
@@ -2619,11 +2627,11 @@ ItemPassTemplates.general_goods_item = {
 			vertical_alignment = "bottom",
 			horizontal_alignment = "right",
 			size = {
-				20,
+				28,
 				20
 			},
 			offset = {
-				-15,
+				-8,
 				-10,
 				12
 			},
@@ -3125,7 +3133,7 @@ ItemPassTemplates.item_icon = {
 			vertical_alignment = "bottom",
 			horizontal_alignment = "right",
 			size = {
-				20,
+				28,
 				20
 			},
 			offset = {

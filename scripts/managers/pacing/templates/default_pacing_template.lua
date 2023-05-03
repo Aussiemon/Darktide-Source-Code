@@ -88,6 +88,7 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 	{
 		travel_change_pause_time = 5,
 		ramp_duration = 600,
+		max_duration = 50,
 		ramp_up_states = {
 			build_up_tension = true,
 			build_up_tension_low = true
@@ -100,51 +101,53 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 	{
 		travel_change_pause_time = 7,
 		ramp_duration = 600,
+		max_duration = 50,
 		ramp_up_states = {
 			build_up_tension = true,
 			build_up_tension_low = true
 		},
 		ramp_modifiers = {
 			hordes = 1.5,
-			specials = 1.5
+			specials = 2
 		}
 	},
 	{
 		travel_change_pause_time = 9,
-		ramp_duration = 450,
+		ramp_duration = 500,
+		max_duration = 75,
 		ramp_up_states = {
 			build_up_tension = true,
 			build_up_tension_low = true
 		},
 		ramp_modifiers = {
 			hordes = 1.5,
-			specials = 1.5
+			specials = 2
 		}
 	},
 	{
 		travel_change_pause_time = 11,
-		ramp_duration = 350,
+		ramp_duration = 400,
+		max_duration = 100,
 		ramp_up_states = {
-			build_up_tension_high = true,
-			build_up_tension_low = true,
-			build_up_tension = true
+			build_up_tension = true,
+			build_up_tension_low = true
 		},
 		ramp_modifiers = {
 			hordes = 1.75,
-			specials = 1.75
+			specials = 2.5
 		}
 	},
 	{
 		travel_change_pause_time = 13,
-		ramp_duration = 250,
+		ramp_duration = 300,
+		max_duration = 120,
 		ramp_up_states = {
-			build_up_tension_high = true,
-			build_up_tension_low = true,
-			build_up_tension = true
+			build_up_tension = true,
+			build_up_tension_low = true
 		},
 		ramp_modifiers = {
 			hordes = 2,
-			specials = 2
+			specials = 3
 		}
 	}
 }

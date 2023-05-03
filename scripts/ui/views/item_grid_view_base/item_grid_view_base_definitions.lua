@@ -125,6 +125,34 @@ local scenegraph_definition = {
 			3
 		}
 	},
+	weapon_viewport = {
+		vertical_alignment = "center",
+		parent = "screen",
+		horizontal_alignment = "center",
+		size = {
+			1920,
+			1080
+		},
+		position = {
+			0,
+			0,
+			3
+		}
+	},
+	weapon_pivot = {
+		vertical_alignment = "center",
+		parent = "weapon_viewport",
+		horizontal_alignment = "center",
+		size = {
+			0,
+			0
+		},
+		position = {
+			300,
+			0,
+			1
+		}
+	},
 	display_name = {
 		vertical_alignment = "top",
 		parent = "weapon_stats_pivot",

@@ -133,18 +133,15 @@ local mission_vo_hm_complex_psyker_female_b = {
 	},
 	mission_complex_start_banter_a = {
 		randomize_indexes_n = 0,
-		sound_events_n = 2,
+		sound_events_n = 1,
 		sound_events = {
-			[1.0] = "loc_psyker_female_b__mission_complex_start_banter_a_01",
-			[2.0] = "loc_psyker_female_b__mission_complex_start_banter_a_02"
+			[1.0] = "loc_psyker_female_b__mission_complex_start_banter_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678,
-			[2.0] = 5.308
+			[1.0] = 5.308
 		},
 		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
+			[1.0] = 1
 		},
 		randomize_indexes = {}
 	},

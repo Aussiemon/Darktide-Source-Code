@@ -65,6 +65,7 @@ local player_character_particle_names_lookup = {
 	["content/fx/particles/enemies/assault_scope_flash"] = true,
 	["content/fx/particles/weapons/rifles/laspistol/laspistol_muzzle"] = true,
 	["content/fx/particles/destructibles/explosive_barrel_explosion"] = true,
+	["content/fx/particles/weapon_traits/flamer_minion_explosion"] = true,
 	["content/fx/particles/weapons/rifles/autogun/autogun_crit_trail"] = true,
 	["content/fx/particles/impacts/surfaces/impact_metal"] = true,
 	["content/fx/particles/weapons/rifles/autopistol/autopistol_muzzle"] = true,

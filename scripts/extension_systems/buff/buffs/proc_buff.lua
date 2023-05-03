@@ -286,9 +286,9 @@ ProcBuff.update_proc_events = function (self, t, proc_events, num_proc_events, p
 
 	table.clear(procced_proc_events)
 
-	for i = 1, num_proc_events * PROC_EVENTS_STRIDE, PROC_EVENTS_STRIDE do
-		local proc_event_name = proc_events[i]
-		local params = proc_events[i + 1]
+	for ii = 1, num_proc_events * PROC_EVENTS_STRIDE, PROC_EVENTS_STRIDE do
+		local proc_event_name = proc_events[ii]
+		local params = proc_events[ii + 1]
 		local proc_chance = self:_proc_chance(proc_event_name)
 		local is_local_proc_event = params.is_local_proc_event
 		local is_predicted_buff = template.predicted

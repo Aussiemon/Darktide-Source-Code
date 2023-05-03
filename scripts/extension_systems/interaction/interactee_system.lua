@@ -6,6 +6,7 @@ local RPCS = {
 	"rpc_interaction_started",
 	"rpc_interaction_stopped",
 	"rpc_interaction_set_active",
+	"rpc_interaction_set_missing_player",
 	"rpc_interaction_hot_join"
 }
 
@@ -40,6 +41,13 @@ InteracteeSystem.rpc_interaction_set_active = function (self, channel_id, unit_i
 	local extension = self._unit_to_extension_map[unit]
 
 	extension:set_active(state)
+end
+
+InteracteeSystem.rpc_interaction_set_missing_player = function (self, channel_id, unit_id, is_level_unit, is_missing)
+	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+	local extension = self._unit_to_extension_map[unit]
+
+	extension:set_missing_players(is_missing)
 end
 
 InteracteeSystem.rpc_interaction_hot_join = function (self, channel_id, unit_id, is_level_unit, state, is_used, active_type_id)

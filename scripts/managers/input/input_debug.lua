@@ -1,22 +1,4 @@
-local InputDevice = require("scripts/managers/input/input_device")
 local InputDebug = class("InputDebug")
-InputDebug._debug_devices = {
-	keyboard = Keyboard,
-	xbox_controller = Pad1,
-	mouse = Mouse,
-	gamepad = Pad1,
-	ps4_controller = PS4Pad1
-}
-InputDebug.BUTTON_FUNCS = {
-	"button",
-	"pressed",
-	"released",
-	"held"
-}
-InputDebug.AXIS_FUNCS = {
-	"axis"
-}
-InputDebug.DEBUG_TAG = "Input Debug"
 InputDebug.DISPLAY_AS = {
 	["left shift"] = "LSHIFT",
 	["right shift"] = "RSHIFT",
@@ -26,47 +8,38 @@ InputDebug.DISPLAY_AS = {
 	["right alt"] = "RALT"
 }
 
-InputDebug.value_or_table_to_string = function (item, uppercase)
-	local out = nil
-
+local function _value_or_table_to_string_array(item, uppercase, out)
 	if type(item) == "table" then
-		for n, i in ipairs(item) do
-			i = InputDebug.DISPLAY_AS[i] or i
+		local num_items = #item
 
-			if uppercase then
-				i = string.upper(i)
-			end
-
-			if not out then
-				out = i
-			else
-				out = out .. " | " .. i
-			end
-		end
-
-		if out then
-			return out
-		end
-
-		for k, v in pairs(item) do
-			if type(v) == "table" then
-				v = InputDebug.value_or_table_to_string(v, uppercase)
-			end
-
+		for i = 1, num_items do
+			local v = item[i]
 			v = InputDebug.DISPLAY_AS[v] or v
 
 			if uppercase then
 				v = string.upper(v)
 			end
 
-			if not out then
-				out = v
-			else
-				out = out .. " | " .. v
-			end
+			out[#out + 1] = v
 		end
 
-		out = out or ""
+		if num_items > 0 then
+			return out
+		end
+
+		for k, v in pairs(item) do
+			if type(v) == "table" then
+				_value_or_table_to_string_array(v, uppercase, out)
+			else
+				v = InputDebug.DISPLAY_AS[v] or v
+
+				if uppercase then
+					v = string.upper(v)
+				end
+
+				out[#out + 1] = v
+			end
+		end
 
 		return out
 	end
@@ -77,22 +50,19 @@ InputDebug.value_or_table_to_string = function (item, uppercase)
 		item = string.upper(item)
 	end
 
-	return item
+	out[#out + 1] = item
+
+	return out
 end
 
-local function _debug_print(str, ...)
-	Log.debug(InputDebug.DEBUG_TAG, str, ...)
-end
+local TEMP_STRINGS = {}
 
-InputDebug.active_debug_device_types = function ()
-	local device_types = {
-		keyboard = DevParameters.debug_show_keyboard_mappings,
-		mouse = DevParameters.debug_show_mouse_mappings,
-		xbox_controller = DevParameters.debug_show_xbox_mappings,
-		ps4_controller = DevParameters.debug_show_ps4_mappings
-	}
+InputDebug.value_or_table_to_string = function (item, uppercase)
+	local item_string = table.concat(_value_or_table_to_string_array(item, uppercase, TEMP_STRINGS), "|")
 
-	return device_types
+	table.clear_array(TEMP_STRINGS, #TEMP_STRINGS)
+
+	return item_string
 end
 
 return InputDebug

@@ -144,6 +144,12 @@ local templates = {
 				end
 			end
 
+			if Managers.stats.can_record_stats() then
+				local player = template_context.player
+
+				Managers.stats:record_veteran_2_kill_volley_fire_target(player)
+			end
+
 			if not template_data.refresh_on_kill then
 				return
 			end
@@ -607,6 +613,20 @@ templates.veteran_ranger_elites_replenish_ammo = {
 			local ammo_percent = talent_settings.coherency.ammo_replenishment_percent
 			local ammo_gained = Ammo.add_to_all_slots(coherency_unit, ammo_percent)
 			total_ammo_gained = total_ammo_gained + ammo_gained
+		end
+
+		for coherency_unit, _ in pairs(units_in_coherence) do
+			local unit_data_extension = ScriptUnit.has_extension(coherency_unit, "unit_data_system")
+
+			if unit_data_extension then
+				local specialization = unit_data_extension:specialization()
+
+				if specialization.name == "veteran_2" then
+					local player = Managers.state.player_unit_spawn:owner(coherency_unit)
+
+					Managers.stats:record_veteran_2_ammo_given_from_coherency(player, total_ammo_gained)
+				end
+			end
 		end
 	end
 }

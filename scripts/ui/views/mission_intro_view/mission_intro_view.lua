@@ -7,6 +7,7 @@ local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local Vo = require("scripts/utilities/vo")
+local ViewElementVideo = require("scripts/ui/view_elements/view_element_video/view_element_video")
 local MissionIntroView = class("MissionIntroView", "BaseView")
 
 local function _generate_seed(mission_id)
@@ -35,7 +36,6 @@ MissionIntroView.init = function (self, settings, context)
 	local backend_mission_id = Managers.mechanism:backend_mission_id()
 	self._seed = _generate_seed(backend_mission_id)
 
-	self:_setup_offscreen_gui()
 	MissionIntroView.super.init(self, Definitions, settings)
 
 	self._pass_draw = false
@@ -51,53 +51,9 @@ MissionIntroView.on_enter = function (self)
 	self._num_animation_events_used = 0
 end
 
-MissionIntroView._setup_offscreen_gui = function (self)
-	local ui_manager = Managers.ui
-	local class_name = self.__class_name
-	local timer_name = "ui"
-	local world_layer = 10
-	local world_name = class_name .. "_ui_offscreen_world"
-	local view_name = self.view_name
-	self._offscreen_world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
-	local viewport_name = class_name .. "_ui_offscreen_world_viewport"
-	local viewport_type = "overlay_offscreen"
-	local viewport_layer = 1
-	self._offscreen_viewport = ui_manager:create_viewport(self._offscreen_world, viewport_name, viewport_type, viewport_layer)
-	self._offscreen_viewport_name = viewport_name
-	self._ui_offscreen_renderer = ui_manager:create_renderer(class_name .. "_ui_offscreen_renderer", self._offscreen_world)
-end
-
-MissionIntroView._destroy_offscreen_gui = function (self)
-	if self._ui_offscreen_renderer then
-		self._ui_offscreen_renderer = nil
-
-		Managers.ui:destroy_renderer(self.__class_name .. "_ui_offscreen_renderer")
-
-		local world = self._offscreen_world
-		local viewport_name = self._offscreen_viewport_name
-
-		ScriptWorld.destroy_viewport(world, viewport_name)
-		Managers.ui:destroy_world(world)
-
-		self._offscreen_viewport_name = nil
-		self._offscreen_world = nil
-	end
-end
+USE_DEBUG_RENDERER = false
 
 MissionIntroView.draw = function (self, dt, t, input_service, layer)
-	local debug_ui = false
-	local render_scale = self._render_scale
-	local render_settings = self._render_settings
-	local ui_renderer = debug_ui and self._ui_renderer or self._ui_offscreen_renderer
-	render_settings.start_layer = layer
-	render_settings.scale = render_scale
-	render_settings.inverse_scale = render_scale and 1 / render_scale
-	local ui_scenegraph = self._ui_scenegraph
-
-	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
-	self:_draw_widgets(dt, t, input_service, ui_renderer)
-	UIRenderer.end_pass(ui_renderer)
-	self:_draw_elements(dt, t, ui_renderer, render_settings, input_service)
 	Managers.ui:render_loading_icon()
 end
 
@@ -167,12 +123,25 @@ MissionIntroView._initialize_background_world = function (self)
 	self:_register_event("event_mission_intro_trigger_players_event")
 end
 
+MissionIntroView._get_unit_by_value_key = function (self, key, value)
+	local world_spawner = self._world_spawner
+	local level = world_spawner:level()
+	local level_units = Level.units(level)
+
+	for i = 1, #level_units do
+		local unit = level_units[i]
+
+		if Unit.get_data(unit, key) == value then
+			return unit
+		end
+	end
+end
+
 MissionIntroView.can_exit = function (self)
 	return self._can_exit
 end
 
 MissionIntroView.on_exit = function (self)
-	self:_destroy_offscreen_gui()
 	MissionIntroView.super.on_exit(self)
 
 	local spawn_slots = self._spawn_slots

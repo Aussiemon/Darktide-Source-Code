@@ -262,13 +262,13 @@ local action_data = {
 		ignore_blocked = true,
 		considerations = UtilityConsiderations.ranged_elite_melee,
 		attack_anim_events = {
-			"attack_pommel_01"
+			"attack_push_kick_01"
 		},
 		attack_anim_damage_timings = {
-			attack_pommel_01 = 0.5185185185185185
+			attack_push_kick_01 = 0.3950617283950617
 		},
 		attack_anim_durations = {
-			attack_pommel_01 = 1.728395061728395
+			attack_push_kick_01 = 1.1111111111111112
 		},
 		attack_intensities = {
 			ranged = 2,

@@ -129,11 +129,26 @@ UIManager._setup_icon_renderers = function (self)
 		portrait_height = 192,
 		timer_name = "ui"
 	}
+	local weapon_skins_render_settings = {
+		viewport_layer = 900,
+		world_layer = 800,
+		world_name = "weapon_skins_icon_world",
+		viewport_type = "default_with_alpha",
+		viewport_name = "weapon_viewport",
+		level_name = "content/levels/ui/weapon_icon/weapon_icon",
+		shading_environment = "content/shading_environments/ui/weapon_icons",
+		timer_name = "ui",
+		weapon_width = UISettings.weapon_icon_size[1],
+		weapon_height = UISettings.weapon_icon_size[2],
+		target_resolution_width = UISettings.weapon_icon_size[1] * 10,
+		target_resolution_height = UISettings.weapon_icon_size[2] * 10
+	}
 	local back_buffer_render_handlers = {
 		portraits = self:create_single_icon_renderer("portrait", "portraits", portrait_render_settings),
 		appearance = self:create_single_icon_renderer("portrait", "appearance", appearance_render_settings),
 		cosmetics = self:create_single_icon_renderer("portrait", "cosmetics", cosmetics_render_settings),
 		weapons = self:create_single_icon_renderer("weapon", "weapons"),
+		weapon_skin = self:create_single_icon_renderer("weapon", "weapon_skin", weapon_skins_render_settings),
 		icon = self:create_single_icon_renderer("icon", "icon")
 	}
 	self._back_buffer_render_handlers = back_buffer_render_handlers
@@ -211,12 +226,12 @@ UIManager.get_time = function (self)
 	return t
 end
 
-UIManager.create_renderer = function (self, name, world, create_resource_target, gui, gui_retained, material_name)
+UIManager.create_renderer = function (self, name, world, create_resource_target, gui, gui_retained, material_name, optional_width, optional_height, ignore_back_buffer)
 	world = world or self._world
 	local renderer = nil
 
 	if create_resource_target then
-		renderer = UIRenderer.create_resource_renderer(world, gui, gui_retained, name, material_name)
+		renderer = UIRenderer.create_resource_renderer(world, gui, gui_retained, name, material_name, optional_width, optional_height, ignore_back_buffer)
 	else
 		renderer = UIRenderer.create_viewport_renderer(world)
 	end
@@ -600,9 +615,9 @@ UIManager.cb_on_game_sub_state_change = function (self, previous_state_name, nex
 	self._current_sub_state_name = next_state_name
 end
 
-UIManager.create_viewport = function (self, world, viewport_name, viewport_type, viewport_layer, shading_environment_name, shading_callback)
+UIManager.create_viewport = function (self, world, viewport_name, viewport_type, viewport_layer, shading_environment_name, shading_callback, optional_render_targets)
 	shading_environment_name = shading_environment_name or GameParameters.default_ui_shading_environment
-	local viewport = ScriptWorld.create_viewport(world, viewport_name, viewport_type, viewport_layer, nil, nil, nil, nil, shading_environment_name, shading_callback)
+	local viewport = ScriptWorld.create_viewport(world, viewport_name, viewport_type, viewport_layer, nil, nil, nil, nil, shading_environment_name, shading_callback, nil, optional_render_targets)
 
 	return viewport
 end
@@ -1295,6 +1310,10 @@ UIManager._debug_draw_feature_info = function (self, dt, t)
 			Application.render_config("settings", "upscaling_enabled", false) and Application.render_config("settings", "upscaling_mode", false) == "fsr2"
 		},
 		{
+			"xess",
+			Application.render_config("settings", "upscaling_enabled", false) and Application.render_config("settings", "upscaling_mode", false) == "xess"
+		},
+		{
 			"d3d_debug",
 			Renderer.settings("d3d_debug")
 		},
@@ -1688,11 +1707,11 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 		return instance:load_weapon_icon(item, cb, render_context)
 	elseif item_type == "WEAPON_SKIN" then
 		local visual_item = ItemUtils.weapon_skin_preview_item(item)
-		local instance = self._back_buffer_render_handlers.weapons
+		local instance = self._back_buffer_render_handlers.weapon_skin
 
 		return instance:load_weapon_icon(visual_item, cb, render_context)
 	elseif item_type == "WEAPON_TRINKET" then
-		local instance = self._back_buffer_render_handlers.weapons
+		local instance = self._back_buffer_render_handlers.weapon_skin
 		local visual_item = ItemUtils.weapon_trinket_preview_item(item)
 
 		return instance:load_weapon_icon(visual_item, cb, render_context)
@@ -1887,10 +1906,13 @@ end
 
 UIManager.unload_item_icon = function (self, id)
 	local weapons_instance = self._back_buffer_render_handlers.weapons
+	local weapon_skin_instance = self._back_buffer_render_handlers.weapon_skin
 	local cosmetics_instance = self._back_buffer_render_handlers.cosmetics
 	local icon_instance = self._back_buffer_render_handlers.icon
 
-	if weapons_instance:has_request(id) then
+	if weapon_skin_instance:has_request(id) then
+		weapon_skin_instance:unload_weapon_icon(id)
+	elseif weapons_instance:has_request(id) then
 		weapons_instance:unload_weapon_icon(id)
 	elseif icon_instance:has_request(id) then
 		icon_instance:unload_icon(id)
@@ -1902,8 +1924,12 @@ end
 UIManager.item_icon_updated = function (self, item)
 	local item_type = item.item_type
 
-	if item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "GADGET" or item_type == "WEAPON_TRINKET" or item_type == "WEAPON_SKIN" then
+	if item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "GADGET" then
 		local instance = self._back_buffer_render_handlers.weapons
+
+		instance:weapon_icon_updated(item)
+	elseif item_type == "WEAPON_TRINKET" or item_type == "WEAPON_SKIN" then
+		local instance = self._back_buffer_render_handlers.weapon_skin
 
 		instance:weapon_icon_updated(item)
 	else

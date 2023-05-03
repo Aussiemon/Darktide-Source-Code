@@ -560,6 +560,13 @@ TelemetryEvents.vo_bank_reshuffled = function (self, character_name, bank_name)
 	self._manager:register_event(event)
 end
 
+TelemetryEvents.memory_usage_evolution = function (self, memory_usage_evolution)
+	local event = self:_create_event("memory_usage_evolution")
+
+	event:set_data(memory_usage_evolution)
+	self._manager:register_event(event)
+end
+
 TelemetryEvents.perf_camera = function (self, map, camera, measurements)
 	local event = self:_create_event("perf_camera")
 
@@ -611,6 +618,16 @@ TelemetryEvents.perf_memory = function (self, map, index, memory_usage)
 		map = map,
 		index = index,
 		memory_usage = memory_usage
+	})
+	self._manager:register_event(event)
+end
+
+TelemetryEvents.perf_memory_tree = function (self, map, memory_tree)
+	local event = self:_create_event("perf_memory_tree")
+
+	event:set_data({
+		map = map,
+		memory_tree = memory_tree
 	})
 	self._manager:register_event(event)
 end
@@ -679,12 +696,13 @@ TelemetryEvents.lua_trace_stats = function (self, map, index, lua_trace_stats)
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.performance_frame_time = function (self, avg, std_dev, p99, p95, p90, p75, p50, p25, observations, map_name)
+TelemetryEvents.performance_frame_time = function (self, avg, std_dev, p99_9, p99, p95, p90, p75, p50, p25, observations, map_name)
 	local event = self:_create_event("performance_frame_time")
 
 	event:set_data({
 		avg = avg,
 		std_dev = std_dev,
+		p99_9 = p99_9,
 		p99 = p99,
 		p95 = p95,
 		p90 = p90,
@@ -697,12 +715,13 @@ TelemetryEvents.performance_frame_time = function (self, avg, std_dev, p99, p95,
 	self._manager:register_event(event)
 end
 
-TelemetryEvents.performance_ping = function (self, avg, std_dev, p99, p95, p90, p75, p50, p25, observations, region, map_name)
+TelemetryEvents.performance_ping = function (self, avg, std_dev, p99_9, p99, p95, p90, p75, p50, p25, observations, region, map_name)
 	local event = self:_create_event("performance_ping")
 
 	event:set_data({
 		avg = avg,
 		std_dev = std_dev,
+		p99_9 = p99_9,
 		p99 = p99,
 		p95 = p95,
 		p90 = p90,

@@ -13,7 +13,7 @@ local templates = {
 		class_name = "buff",
 		target = buff_targets.minion_only,
 		stat_buffs = {
-			[buff_stat_buffs.unarmored_damage] = -0.25,
+			[buff_stat_buffs.unarmored_damage] = -0.5,
 			[buff_stat_buffs.resistant_damage] = -0.25,
 			[buff_stat_buffs.disgustingly_resilient_damage] = -0.5,
 			[buff_stat_buffs.berserker_damage] = -0.5,
@@ -102,6 +102,38 @@ templates.mutator_corruption_over_time_2 = {
 			Attack.execute(unit, damage_profile, "power_level", power_level, "damage_type", CORRUPTION_DAMAGE_TYPE, "attack_type", attack_types.buff)
 		end
 	end
+}
+templates.mutator_player_cooldown_reduction = {
+	class_name = "buff",
+	target = buff_targets.player_only,
+	stat_buffs = {
+		[buff_stat_buffs.ability_cooldown_modifier] = -0.5
+	}
+}
+templates.mutator_player_enhanced_grenade_abilities = {
+	class_name = "buff",
+	target = buff_targets.player_only,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local template = template_context.template
+		local stat_buffs = template.stat_buffs.extra_max_amount_of_grenades
+		local extra_grenades = stat_buffs
+		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
+		template_context.initial_num_charges = grenade_ability_component.num_charges
+		grenade_ability_component.num_charges = grenade_ability_component.num_charges + extra_grenades
+	end,
+	stop_func = function (template_data, template_context)
+		local unit = template_context.unit
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local grenade_ability_component = unit_data_extension:write_component("grenade_ability")
+		local initial_num_charges = template_context.initial_num_charges
+		grenade_ability_component.num_charges = math.min(grenade_ability_component.num_charges, initial_num_charges)
+	end,
+	stat_buffs = {
+		[buff_stat_buffs.extra_max_amount_of_grenades] = 2,
+		[buff_stat_buffs.warp_charge_amount_smite] = 0.5
+	}
 }
 
 return templates

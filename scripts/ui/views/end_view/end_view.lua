@@ -562,7 +562,7 @@ EndView._assign_player_to_slot = function (self, player_info, slot, more_than_on
 	slot.boxed_rotation = QuaternionBox(spawn_rotation)
 	local profile_spawner = slot.profile_spawner
 
-	profile_spawner:spawn_profile(preview_profile, spawn_position, spawn_rotation, spawn_scale, item_state_machine, item_animation_event, item_face_animation_event)
+	profile_spawner:spawn_profile(preview_profile, spawn_position, spawn_rotation, spawn_scale, item_state_machine, item_animation_event, nil, item_face_animation_event)
 
 	if item_wield_slot then
 		profile_spawner:wield_slot(item_wield_slot)

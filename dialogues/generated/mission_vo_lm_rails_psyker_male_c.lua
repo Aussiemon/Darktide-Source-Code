@@ -163,21 +163,30 @@ local mission_vo_lm_rails_psyker_male_c = {
 	},
 	mission_rails_refectory_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 3,
+		sound_events_n = 6,
 		sound_events = {
+			"loc_psyker_male_c__region_habculum_01",
+			"loc_psyker_male_c__region_habculum_02",
+			"loc_psyker_male_c__region_habculum_03",
 			"loc_psyker_male_c__zone_transit_01",
 			"loc_psyker_male_c__zone_transit_02",
 			"loc_psyker_male_c__zone_transit_03"
 		},
 		sound_events_duration = {
+			3.36051,
+			3.409594,
+			4.554875,
 			5.021115,
 			2.897792,
 			4.446938
 		},
 		sound_event_weights = {
-			0.3333333,
-			0.3333333,
-			0.3333333
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
 		},
 		randomize_indexes = {}
 	},

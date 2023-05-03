@@ -13,7 +13,6 @@ local WeaponTraitsBespokeCombatswordP1 = require("scripts/settings/equipment/wea
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
-local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
@@ -1368,10 +1367,6 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local melee_common_traits = table.keys(WeaponTraitsMeleeCommon)
-
-table.append(weapon_template.traits, melee_common_traits)
-
 local bespoke_combatsword_p1_traits = table.keys(WeaponTraitsBespokeCombatswordP1)
 
 table.append(weapon_template.traits, bespoke_combatsword_p1_traits)

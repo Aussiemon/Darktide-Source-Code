@@ -205,91 +205,138 @@ local ConditionalFunctions = {
 
 			return staggered
 		end
-	end,
-	is_initial_buff_application = function (stat_to_check, buff_name)
-		local index_of_buff_template_name = table.index_of(stat_to_check:get_parameters(), "buff_template_name")
-		local index_of_stack_count = table.index_of(stat_to_check:get_parameters(), "stack_count")
-
-		return function (_, _, _, ...)
-			local buff_template_name = select(index_of_buff_template_name, ...)
-
-			if buff_template_name ~= buff_name then
-				return false
-			end
-
-			local stack_count = select(index_of_stack_count, ...)
-
-			return stack_count == 1
-		end
-	end,
-	weapon_has_keywords = function (stat_to_check, keywords)
-		local _weapon_templates = {}
-
-		for name, weapon_template in pairs(WeaponTemplates) do
-			local weapon_template_keywords = weapon_template.keywords
-
-			if weapon_template_keywords then
-				local template_is_ok = true
-
-				for _, keyword in ipairs(keywords) do
-					if not table.array_contains(weapon_template_keywords, keyword) then
-						template_is_ok = false
-
-						break
-					end
-				end
-
-				if template_is_ok then
-					_weapon_templates[#_weapon_templates + 1] = name
-				end
-			end
-		end
-
-		local index_of_weapon = table.index_of(stat_to_check:get_parameters(), "weapon_template_name")
-
-		return function (_, _, _, ...)
-			local weapon_template_name = select(index_of_weapon, ...)
-
-			return table.array_contains(_weapon_templates, weapon_template_name)
-		end
-	end,
-	difficulty_is_at_least = function (desired_difficulty)
-		return function (_, _, _, ...)
-			local current_difficulty = Managers.state and Managers.state.difficulty and Managers.state.difficulty:get_difficulty() or 0
-
-			return desired_difficulty <= current_difficulty
-		end
-	end,
-	all = function (...)
-		local conditions = {
-			...
-		}
-
-		return function (...)
-			for i = 1, #conditions do
-				if not conditions[i](...) then
-					return false
-				end
-			end
-
-			return true
-		end
-	end,
-	any = function (...)
-		local conditions = {
-			...
-		}
-
-		return function (...)
-			for i = 1, #conditions do
-				if conditions[i](...) then
-					return true
-				end
-			end
-
-			return false
-		end
 	end
 }
+local warp_damage_types = DamageSettings.warp_damage_types
+
+ConditionalFunctions.is_warp_hit = function (stat_to_check)
+	local param_name = "damage_type"
+	local index_of_param = table.index_of(stat_to_check:get_parameters(), param_name)
+
+	return function (_, _, _, ...)
+		local damage_type = select(index_of_param, ...)
+
+		return warp_damage_types[damage_type]
+	end
+end
+
+ConditionalFunctions.is_heavy_stagger_hit = function (stat_to_check)
+	local index_of_stagger_type = table.index_of(stat_to_check:get_parameters(), "stagger_type")
+
+	return function (_, _, _, ...)
+		local stagger_type = select(index_of_stagger_type, ...)
+		local staggered = stagger_type == StaggerSettings.stagger_types.heavy
+
+		return staggered
+	end
+end
+
+ConditionalFunctions.is_explosion_stagger_hit = function (stat_to_check)
+	local index_of_stagger_type = table.index_of(stat_to_check:get_parameters(), "stagger_type")
+
+	return function (_, _, _, ...)
+		local stagger_type = select(index_of_stagger_type, ...)
+		local staggered = stagger_type == StaggerSettings.stagger_types.explosion
+
+		return staggered
+	end
+end
+
+ConditionalFunctions.is_initial_buff_application = function (stat_to_check, buff_name)
+	local index_of_buff_template_name = table.index_of(stat_to_check:get_parameters(), "buff_template_name")
+	local index_of_stack_count = table.index_of(stat_to_check:get_parameters(), "stack_count")
+
+	return function (_, _, _, ...)
+		local buff_template_name = select(index_of_buff_template_name, ...)
+
+		if buff_template_name ~= buff_name then
+			return false
+		end
+
+		local stack_count = select(index_of_stack_count, ...)
+
+		return stack_count == 1
+	end
+end
+
+ConditionalFunctions.weapon_has_keywords = function (stat_to_check, keywords)
+	local _weapon_templates = {}
+
+	for name, weapon_template in pairs(WeaponTemplates) do
+		local weapon_template_keywords = weapon_template.keywords
+
+		if weapon_template_keywords then
+			local template_is_ok = true
+
+			for _, keyword in ipairs(keywords) do
+				if not table.array_contains(weapon_template_keywords, keyword) then
+					template_is_ok = false
+
+					break
+				end
+			end
+
+			if template_is_ok then
+				_weapon_templates[#_weapon_templates + 1] = name
+			end
+		end
+	end
+
+	local index_of_weapon = table.index_of(stat_to_check:get_parameters(), "weapon_template_name")
+
+	return function (_, _, _, ...)
+		local weapon_template_name = select(index_of_weapon, ...)
+
+		return table.array_contains(_weapon_templates, weapon_template_name)
+	end
+end
+
+ConditionalFunctions.difficulty_is_at_least = function (desired_difficulty)
+	return function (_, _, _, ...)
+		local current_difficulty = Managers.state and Managers.state.difficulty and Managers.state.difficulty:get_difficulty() or 0
+
+		return desired_difficulty <= current_difficulty
+	end
+end
+
+ConditionalFunctions.is_private_session = function ()
+	return function (_, _, _, ...)
+		local is_private_session = Managers.mission_server:is_private_session()
+
+		return is_private_session
+	end
+end
+
+ConditionalFunctions.all = function (...)
+	local conditions = {
+		...
+	}
+
+	return function (...)
+		for i = 1, #conditions do
+			if not conditions[i](...) then
+				return false
+			end
+		end
+
+		return true
+	end
+end
+
+ConditionalFunctions.any = function (...)
+	local conditions = {
+		...
+	}
+
+	return function (...)
+		for i = 1, #conditions do
+			if conditions[i](...) then
+				return true
+			end
+		end
+
+		return false
+	end
+end
 
 return ConditionalFunctions

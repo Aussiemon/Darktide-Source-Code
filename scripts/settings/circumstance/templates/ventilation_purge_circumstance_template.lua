@@ -1,5 +1,6 @@
 local circumstance_templates = {
 	ventilation_purge_01 = {
+		dialogue_id = "circumstance_vo_ventilation_purge",
 		wwise_state = "ventilation_purge_01",
 		theme_tag = "ventilation_purge",
 		mutators = {
@@ -13,6 +14,7 @@ local circumstance_templates = {
 		}
 	},
 	ventilation_purge_with_snipers_01 = {
+		dialogue_id = "circumstance_vo_ventilation_purge",
 		wwise_state = "ventilation_purge_01",
 		theme_tag = "ventilation_purge",
 		mutators = {
@@ -27,6 +29,7 @@ local circumstance_templates = {
 		}
 	},
 	ventilation_purge_with_snipers_more_resistance_01 = {
+		dialogue_id = "circumstance_vo_ventilation_purge",
 		wwise_state = "ventilation_purge_01",
 		theme_tag = "ventilation_purge",
 		mutators = {
@@ -42,6 +45,7 @@ local circumstance_templates = {
 		}
 	},
 	ventilation_purge_with_snipers_less_resistance_01 = {
+		dialogue_id = "circumstance_vo_ventilation_purge",
 		wwise_state = "ventilation_purge_01",
 		theme_tag = "ventilation_purge",
 		mutators = {
@@ -57,10 +61,25 @@ local circumstance_templates = {
 		}
 	},
 	toxic_gas_01 = {
+		dialogue_id = "circumstance_vo_ventilation_purge",
 		wwise_state = "ventilation_purge_01",
 		theme_tag = "default",
 		mutators = {
 			"mutator_toxic_gas"
+		},
+		ui = {
+			description = "loc_circumstance_toxic_gas_description",
+			icon = "content/ui/materials/icons/circumstances/ventilation_purge_01",
+			display_name = "loc_circumstance_toxic_gas_title",
+			happening_display_name = "loc_happening_ventilation_purge"
+		}
+	},
+	toxic_gas_volumes_01 = {
+		dialogue_id = "circumstance_vo_ventilation_purge",
+		wwise_state = "ventilation_purge_01",
+		theme_tag = "toxic_gas",
+		mutators = {
+			"mutator_toxic_gas_volumes"
 		},
 		ui = {
 			description = "loc_circumstance_toxic_gas_description",

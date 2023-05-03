@@ -64,63 +64,73 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 	local ALIVE = ALIVE
 	local old_unit = self._camera_follow_unit
 	local new_unit = old_unit
-	local player_is_available = player:unit_is_alive()
-	local is_hogtied = false
-	local is_being_rescued = false
-	local is_dead = false
-	local unit_data_extension = ScriptUnit.has_extension(player.player_unit, "unit_data_system")
 
-	if unit_data_extension then
-		local character_state_component = unit_data_extension:read_component("character_state")
-		local assisted_state_input_component = unit_data_extension:read_component("assisted_state_input")
-		is_hogtied = PlayerUnitStatus.is_hogtied(character_state_component)
-		is_being_rescued = PlayerUnitStatus.is_assisted(assisted_state_input_component)
-		is_dead = PlayerUnitStatus.is_dead(character_state_component)
+	if not Managers.state.cinematic:active() then
+		local player_is_available = player:unit_is_alive()
+		local is_hogtied = false
+		local is_being_rescued = false
+		local is_dead = false
+		local unit_data_extension = ScriptUnit.has_extension(player.player_unit, "unit_data_system")
+
+		if unit_data_extension then
+			local character_state_component = unit_data_extension:read_component("character_state")
+			local assisted_state_input_component = unit_data_extension:read_component("assisted_state_input")
+			is_hogtied = PlayerUnitStatus.is_hogtied(character_state_component)
+			is_being_rescued = PlayerUnitStatus.is_assisted(assisted_state_input_component)
+			is_dead = PlayerUnitStatus.is_dead(character_state_component)
+		end
+
+		local was_hogtied = self._is_hogtied
+		self._is_hogtied = is_hogtied
+		local force_switch = false
+		local was_being_rescued = self._is_being_rescued
+		self._is_being_rescued = is_being_rescued
+
+		if is_dead then
+			force_switch = self._mode ~= CameraModes.dead
+			new_unit = player.player_unit
+			self._mode = CameraModes.dead
+		elseif is_hogtied and not was_being_rescued and is_being_rescued then
+			new_unit = player.player_unit
+			self._mode = CameraModes.observer
+		elseif not was_hogtied and is_hogtied then
+			new_unit = player.player_unit
+			self._mode = CameraModes.observer
+		elseif is_hogtied and player_is_available and input:get("spectate_next") then
+			new_unit = self:_next_follow_unit(nil)
+			self._mode = CameraModes.observer
+		elseif not is_hogtied and player_is_available and old_unit ~= player.player_unit then
+			new_unit = self:_follow_owner()
+			self._mode = CameraModes.first_person
+		elseif not is_hogtied and player_is_available then
+			self._mode = CameraModes.first_person
+		elseif not old_unit or not ALIVE[old_unit] or not player_is_available and (input:get("spectate_next") or old_unit == player.player_unit) then
+			new_unit = self:_next_follow_unit(player.player_unit)
+			self._mode = CameraModes.observer
+		end
+
+		local weather_system = Managers.state.extension:system("weather_system")
+
+		weather_system:update_weather(new_unit)
+
+		local switched_target = old_unit ~= new_unit
+
+		if switched_target then
+			self:_switch_follow_target(new_unit)
+		end
+
+		self:_update_follow(switched_target or force_switch)
+		self:_update_wwise_state(new_unit)
+		self:_update_player_mood(switched_target, new_unit)
 	end
 
-	local was_hogtied = self._is_hogtied
-	self._is_hogtied = is_hogtied
-	local force_switch = false
-	local was_being_rescued = self._is_being_rescued
-	self._is_being_rescued = is_being_rescued
+	self:_update_camera_manager(dt, t, player_orientation)
 
-	if is_dead then
-		force_switch = self._mode ~= CameraModes.dead
-		new_unit = player.player_unit
-		self._mode = CameraModes.dead
-	elseif is_hogtied and not was_being_rescued and is_being_rescued then
-		new_unit = player.player_unit
-		self._mode = CameraModes.observer
-	elseif not was_hogtied and is_hogtied then
-		new_unit = player.player_unit
-		self._mode = CameraModes.observer
-	elseif is_hogtied and player_is_available and input:get("spectate_next") then
-		new_unit = self:_next_follow_unit(nil)
-		self._mode = CameraModes.observer
-	elseif not is_hogtied and player_is_available and old_unit ~= player.player_unit then
-		new_unit = self:_follow_owner()
-		self._mode = CameraModes.first_person
-	elseif not is_hogtied and player_is_available then
-		self._mode = CameraModes.first_person
-	elseif not old_unit or not ALIVE[old_unit] or not player_is_available and (input:get("spectate_next") or old_unit == player.player_unit) then
-		new_unit = self:_next_follow_unit(player.player_unit)
-		self._mode = CameraModes.observer
-	end
+	return new_unit
+end
 
-	local weather_system = Managers.state.extension:system("weather_system")
-
-	weather_system:update_weather(new_unit)
-
-	local switched_target = old_unit ~= new_unit
-
-	if switched_target then
-		self:_switch_follow_target(new_unit)
-	end
-
-	self:_update_follow(switched_target or force_switch)
-	self:_update_wwise_state(new_unit)
-	self:_update_player_mood(switched_target, new_unit)
-
+CameraHandler._update_camera_manager = function (self, dt, t, player_orientation)
+	local player = self._player
 	local camera_manager = Managers.state.camera
 	local viewport_name = player.viewport_name
 	local camera_follow_unit = self._camera_follow_unit
@@ -137,8 +147,6 @@ CameraHandler.update = function (self, dt, t, player_orientation, input)
 
 		camera_manager:update(dt, t, viewport_name, yaw + yaw_offset, pitch + pitch_offset, roll + roll_offset)
 	end
-
-	return new_unit
 end
 
 CameraHandler._switch_follow_target = function (self, new_unit)

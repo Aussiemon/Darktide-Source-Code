@@ -403,7 +403,7 @@ local disorientation_settings = {
 			}
 		},
 		corruption = {
-			sound_event = "wwise/events/player/play_player_vomit_enter",
+			sound_event = "wwise/events/player/play_player_get_hit_corruption_2d",
 			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
 			stun = {
 				intoxication_level = 0,

@@ -161,10 +161,17 @@ function _calculate_toughness_damage_player(damage_amount, damage_profile, attac
 		local melee_max_toughness = override_max_toughness or real_max_toughness
 		local toughness_melee_spillover_modifier = toughness_template.melee_spillover_modifier or 1
 		local current_toughness_percent = 1 - current_toughness_damage / real_max_toughness or 0
-		local toughness_factor = current_toughness_percent * real_max_toughness / real_max_toughness
+		local toughness_factor_spillover_modifier = damage_profile.toughness_factor_spillover_modifier or 1
+		local toughness_factor = current_toughness_percent * real_max_toughness / real_max_toughness * toughness_factor_spillover_modifier
 		remaining_damage = math.lerp(damage_amount * 1, damage_amount * 0, math.min(toughness_factor, 1) * toughness_melee_spillover_modifier)
 		toughness_damage = math.clamp(melee_toughness_multiplier * damage_amount * toughness_melee_damage_modifier, 0, melee_max_toughness)
 		absorbed_attack = real_max_toughness > current_toughness_damage + toughness_damage
+		toughness_broken = not absorbed_attack and toughness_before_damage > 0 or false
+
+		if toughness_broken and damage_profile.on_depleted_toughness_function_override_name then
+			local toughness_depleted_func = ToughnessDepleted[damage_profile.on_depleted_toughness_function_override_name]
+			remaining_damage = toughness_depleted_func(current_toughness_damage, max_toughness, damage_amount)
+		end
 	else
 		if not ranged_attack and not damage_profile.ignore_depleting_toughness then
 			toughness_damage = max_toughness

@@ -2,6 +2,9 @@ local base_template = require("scripts/settings/breed/breed_blackboard_component
 local cultist_mutant = {
 	behavior = {
 		move_state = "string"
+	},
+	record_state = {
+		has_disabled_player = "boolean"
 	}
 }
 

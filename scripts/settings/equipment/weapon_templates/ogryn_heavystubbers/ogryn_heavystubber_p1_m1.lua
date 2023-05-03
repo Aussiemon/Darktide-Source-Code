@@ -9,7 +9,6 @@ local ReloadTemplates = require("scripts/settings/equipment/reload_templates/rel
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsOgrynHeavystubbertP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_heavystubber_p1")
-local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local LineEffects = require("scripts/settings/effects/line_effects")
@@ -842,10 +841,6 @@ weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_heavy_stubber
 weapon_template.traits = {}
-local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
-
-table.append(weapon_template.traits, ranged_common_traits)
-
 local ogryn_heavystubbert_p1_traits = table.keys(WeaponTraitsOgrynHeavystubbertP1)
 
 table.append(weapon_template.traits, ogryn_heavystubbert_p1_traits)

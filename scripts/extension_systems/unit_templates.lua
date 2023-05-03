@@ -372,6 +372,7 @@ local unit_templates = {
 			config:add("PlayerUnitWeaponExtension", {
 				player = player,
 				is_local_unit = is_local_unit,
+				is_human_unit = is_human_controlled,
 				is_server = is_server,
 				critical_strike_seed = critical_strike_seed
 			})
@@ -812,6 +813,7 @@ local unit_templates = {
 					is_server = false,
 					player = player,
 					is_local_unit = is_local_unit,
+					is_human_unit = is_human_controlled,
 					critical_strike_seed = critical_strike_seed
 				})
 				config:add("PlayerUnitWeaponSpreadExtension", {

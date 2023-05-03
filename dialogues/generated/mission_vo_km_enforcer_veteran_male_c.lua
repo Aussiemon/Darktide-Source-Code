@@ -140,9 +140,6 @@ local mission_vo_km_enforcer_veteran_male_c = {
 		sound_events_duration = {
 			[1.0] = 3.069479
 		},
-		sound_event_weights = {
-			[1.0] = 1
-		},
 		randomize_indexes = {}
 	},
 	mission_enforcer_infrastructure = {
@@ -174,10 +171,9 @@ local mission_vo_km_enforcer_veteran_male_c = {
 	},
 	mission_enforcer_start_banter_c = {
 		randomize_indexes_n = 0,
-		sound_events_n = 6,
+		sound_events_n = 5,
 		sound_events = {
 			"loc_veteran_male_c__region_habculum_01",
-			"loc_veteran_male_c__region_habculum_02",
 			"loc_veteran_male_c__region_habculum_03",
 			"loc_veteran_male_c__zone_watertown_01",
 			"loc_veteran_male_c__zone_watertown_02",
@@ -185,19 +181,17 @@ local mission_vo_km_enforcer_veteran_male_c = {
 		},
 		sound_events_duration = {
 			3.064042,
-			3.487031,
 			2.817177,
 			2.341635,
 			1.098083,
 			1.669896
 		},
 		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
 		},
 		randomize_indexes = {}
 	},

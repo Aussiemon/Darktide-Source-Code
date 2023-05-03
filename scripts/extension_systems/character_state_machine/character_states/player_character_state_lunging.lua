@@ -8,6 +8,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
+local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local Explosion = require("scripts/utilities/attack/explosion")
 local HealthStateTransitions = require("scripts/extension_systems/character_state_machine/character_states/utilities/health_state_transitions")
 local HitMass = require("scripts/utilities/attack/hit_mass")
@@ -156,7 +157,7 @@ PlayerCharacterStateLunging.on_enter = function (self, unit, dt, t, previous_sta
 	movement_state_component.method = "lunging"
 
 	if lunge_template.is_dodging then
-		movement_state_component.is_dodging = true
+		self._movement_state_component.is_dodging = true
 	end
 
 	if self._is_server then
@@ -706,7 +707,7 @@ function _record_stat_on_lunge_complete(player, hit_units, lunge_template)
 	end
 
 	if specialization == "ogryn_2" then
-		local requirement = 6
+		local requirement = 4
 
 		if number_of_hit_ogryns >= requirement and difficulty >= 4 then
 			Managers.achievements:trigger_event(account_id, character_id, "ogryn_2_bull_rushed_x_ogryns_event")

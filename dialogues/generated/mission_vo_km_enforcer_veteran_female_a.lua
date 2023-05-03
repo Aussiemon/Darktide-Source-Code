@@ -142,10 +142,6 @@ local mission_vo_km_enforcer_veteran_female_a = {
 			[1.0] = 3.568104,
 			[2.0] = 3.526625
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	mission_enforcer_infrastructure = {

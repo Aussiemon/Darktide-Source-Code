@@ -5,6 +5,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Explosion = require("scripts/utilities/attack/explosion")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
+local PlayerAssistNotifications = require("scripts/utilities/player_assist_notifications")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local BtChaosHoundTargetPouncedAction = class("BtChaosHoundTargetPouncedAction", "BtNode")
 
@@ -39,6 +40,8 @@ BtChaosHoundTargetPouncedAction.enter = function (self, unit, breed, blackboard,
 	scratchpad.attempting_pounce = true
 	scratchpad.disabled_character_state_component = target_unit_data_extension:read_component("disabled_character_state")
 	scratchpad.disabled_state_input_component = disabled_state_input
+	local record_state_component = Blackboard.write_component(blackboard, "record_state")
+	scratchpad.record_state_component = record_state_component
 
 	self:_damage_target(scratchpad, unit, action_data, action_data.impact_power_level)
 
@@ -64,6 +67,13 @@ BtChaosHoundTargetPouncedAction._pounce_achieved = function (self, scratchpad, a
 	scratchpad.next_damage_t = t + action_data.damage_start_time
 
 	Managers.state.pacing:add_tension_type("pounced", pounce_target)
+
+	local record_state_component = scratchpad.record_state_component
+	local is_player_unit = Managers.state.player_unit_spawn:is_player_unit(pounce_target)
+
+	if is_player_unit then
+		record_state_component.has_disabled_player = true
+	end
 end
 
 BtChaosHoundTargetPouncedAction.init_values = function (self, blackboard)
@@ -71,6 +81,8 @@ BtChaosHoundTargetPouncedAction.init_values = function (self, blackboard)
 	pounce_component.pounce_target = nil
 	pounce_component.pounce_cooldown = 0
 	pounce_component.started_leap = false
+	local record_state_component = Blackboard.write_component(blackboard, "record_state")
+	record_state_component.has_disabled_player = false
 end
 
 BtChaosHoundTargetPouncedAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)

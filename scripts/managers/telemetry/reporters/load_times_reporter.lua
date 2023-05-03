@@ -44,7 +44,9 @@ LoadTimesReporter._mission_intro_started = function (self)
 end
 
 LoadTimesReporter._mission_intro_finished = function (self)
-	self:stop_timer("mission_intro_timer")
+	if Managers.time:has_timer("mission_intro_timer") then
+		self:stop_timer("mission_intro_timer")
+	end
 end
 
 LoadTimesReporter._loading_finished = function (self)

@@ -1160,7 +1160,7 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_d"
+					"ogryn_b"
 				}
 			},
 			{

@@ -720,6 +720,11 @@ MissionVotingView._create_details_widgets = function (self, content, scenegraph_
 
 		local widget_name = scenegraph_id .. "_widget_" .. i
 		local widget = self:_create_widget(widget_name, widget_definition)
+		local size = template.size_function and template.size_function(self, widget, self._ui_renderer) or template.size
+
+		if size then
+			widget.size = size
+		end
 
 		if template.init then
 			template.init(widget, entry.widget_data, self._ui_renderer)

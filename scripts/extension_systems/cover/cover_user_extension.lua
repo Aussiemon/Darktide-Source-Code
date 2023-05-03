@@ -214,6 +214,12 @@ CoverUserExtension._find_cover_slot = function (self, unit, cover_config, target
 end
 
 CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_config, t)
+	local disabled = cover_slot.disabled
+
+	if disabled then
+		return false
+	end
+
 	local disable_t = cover_slot.disable_t
 
 	if disable_t and t < disable_t then

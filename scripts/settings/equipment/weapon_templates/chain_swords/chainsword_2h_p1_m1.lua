@@ -11,8 +11,6 @@ local HitZone = require("scripts/utilities/attack/hit_zone")
 local MeleeActionInputSetupMid = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_mid")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsChainsword2hP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_chainsword_2h_p1")
-local WeaponTraitsMeleeActivated = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_activated")
-local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
@@ -60,6 +58,7 @@ local hit_zone_priority = {
 table.add_missing(hit_zone_priority, default_hit_zone_priority)
 
 local hit_stickyness_settings_light = {
+	disable_vertical_force_view = true,
 	start_anim_event = "attack_hit_stick",
 	stop_anim_event = "yank_out",
 	sensitivity_modifier = 0.9,
@@ -140,11 +139,12 @@ local hit_stickyness_settings_light_special = {
 	}
 }
 local hit_stickyness_settings_heavy = {
+	disallow_chain_actions = true,
 	start_anim_event = "attack_hit_stick",
 	stop_anim_event = "yank_out",
 	sensitivity_modifier = 0.5,
 	min_sticky_time = 0.25,
-	disallow_chain_actions = true,
+	disable_vertical_force_view = true,
 	duration = 0.3,
 	always_sticky = true,
 	damage = {
@@ -181,11 +181,12 @@ local hit_stickyness_settings_heavy = {
 	}
 }
 local hit_stickyness_settings_heavy_smiter = {
+	disallow_chain_actions = true,
 	start_anim_event = "attack_hit_stick",
 	stop_anim_event = "yank_out",
 	sensitivity_modifier = 0.5,
 	min_sticky_time = 0.25,
-	disallow_chain_actions = true,
+	disable_vertical_force_view = true,
 	duration = 0.3,
 	always_sticky = true,
 	damage = {
@@ -1632,14 +1633,6 @@ weapon_template.actions = {
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 
 weapon_template.traits = {}
-local melee_common_traits = table.keys(WeaponTraitsMeleeCommon)
-
-table.append(weapon_template.traits, melee_common_traits)
-
-local melee_activated_traits = table.keys(WeaponTraitsMeleeActivated)
-
-table.append(weapon_template.traits, melee_activated_traits)
-
 local bespoke_chainsword_2h_p1_traits = table.keys(WeaponTraitsChainsword2hP1)
 
 table.append(weapon_template.traits, bespoke_chainsword_2h_p1_traits)

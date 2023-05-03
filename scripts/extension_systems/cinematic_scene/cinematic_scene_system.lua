@@ -652,15 +652,19 @@ CinematicSceneSystem._reset_spawn_slot = function (self, slot)
 end
 
 CinematicSceneSystem._initialize_cutscene_characters = function (self, cinematic_name)
-	local cutscene_character_system = Managers.state.extension:system("cutscene_character_system")
+	if not DEDICATED_SERVER then
+		local cutscene_character_system = Managers.state.extension:system("cutscene_character_system")
 
-	cutscene_character_system:initialize_characters_for_cinematic(cinematic_name)
+		cutscene_character_system:initialize_characters_for_cinematic(cinematic_name)
+	end
 end
 
 CinematicSceneSystem._uninitialize_cutscene_characters = function (self, cinematic_name)
-	local cutscene_character_system = Managers.state.extension:system("cutscene_character_system")
+	if not DEDICATED_SERVER then
+		local cutscene_character_system = Managers.state.extension:system("cutscene_character_system")
 
-	cutscene_character_system:uninitialize_characters_for_cinematic(cinematic_name)
+		cutscene_character_system:uninitialize_characters_for_cinematic(cinematic_name)
+	end
 end
 
 CinematicSceneSystem._set_cinematic_name = function (self, cinematic_name)

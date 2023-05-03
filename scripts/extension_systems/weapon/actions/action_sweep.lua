@@ -4,6 +4,7 @@ local Action = require("scripts/utilities/weapon/action")
 local ActionSweepSettings = require("scripts/settings/equipment/action_sweep_settings")
 local AimAssist = require("scripts/utilities/aim_assist")
 local Armor = require("scripts/utilities/attack/armor")
+local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -23,6 +24,7 @@ local SweepSplineExported = require("scripts/extension_systems/weapon/actions/ut
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
 local Weakspot = require("scripts/utilities/attack/weakspot")
 local attack_results = AttackSettings.attack_results
+local armor_types = ArmorSettings.types
 local melee_attack_strengths = AttackSettings.melee_attack_strength
 local proc_events = BuffSettings.proc_events
 local buff_keywords = BuffSettings.keywords
@@ -235,8 +237,10 @@ ActionSweep._calculate_max_hit_mass = function (self, damage_profile, power_leve
 		return math.huge
 	end
 
-	local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, self._player_unit)
-	local max_hit_mass_attack, max_hit_mass_impact = DamageProfile.max_hit_mass(damage_profile, power_level, charge_level, damage_profile_lerp_values, critical_strike, self._player_unit)
+	local attack_type = AttackSettings.attack_types.melee
+	local player_unit = self._player_unit
+	local damage_profile_lerp_values = DamageProfile.lerp_values(damage_profile, player_unit)
+	local max_hit_mass_attack, max_hit_mass_impact = DamageProfile.max_hit_mass(damage_profile, power_level, charge_level, damage_profile_lerp_values, critical_strike, player_unit, attack_type)
 
 	return math.max(max_hit_mass_attack, max_hit_mass_impact)
 end

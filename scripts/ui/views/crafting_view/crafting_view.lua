@@ -1,6 +1,7 @@
 local CraftingViewDefinitions = require("scripts/ui/views/crafting_view/crafting_view_definitions")
 local ItemUtils = require("scripts/utilities/items")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UIWeaponSpawner = require("scripts/managers/ui/ui_weapon_spawner")
 
 require("scripts/ui/views/vendor_interaction_view_base/vendor_interaction_view_base")
 
@@ -66,7 +67,7 @@ CraftingView.previously_active_view_name = function (self)
 	return self._previously_active_view_name
 end
 
-CraftingView._close_active_view = function (self)
+CraftingView._close_active_view = function (self, is_handling_new_view)
 	self._wanted_overlay_alpha = 0
 	self._previously_active_view_name = self._active_view
 
@@ -104,7 +105,9 @@ CraftingView._switch_tab_view = function (self, index)
 	local ui_manager = Managers.ui
 
 	if view ~= current_view or not current_view then
-		self:_close_active_view()
+		local is_handling_new_view = view ~= nil
+
+		self:_close_active_view(is_handling_new_view)
 
 		self._active_view = view
 
@@ -236,6 +239,13 @@ CraftingView.craft = function (self, recipe, ingredients, callback, done_callbac
 
 		if input_item then
 			self:_loadout_refresh(input_item)
+		end
+
+		local world_spawner = self._world_spawner
+
+		if world_spawner then
+			world_spawner:trigger_level_event("event_despawn_upgrade_particle")
+			world_spawner:trigger_level_event("event_spawn_upgrade_particle")
 		end
 
 		self:_update_wallets()

@@ -404,6 +404,206 @@ local roamer_packs = {
 				"chaos_ogryn_gunner"
 			}
 		}
+	},
+	cultist_close_low_no_melee_ogryns = {
+		{
+			weight = 1,
+			breeds = {
+				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				elite_shocktrooper,
+				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 2,
+			breeds = {
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				elite_shocktrooper,
+				roamer_assault
+			}
+		}
+	},
+	cultist_close_high_no_melee_ogryns = {
+		{
+			weight = 1,
+			breeds = {
+				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				roamer_assault,
+				roamer_assault,
+				elite_shocktrooper,
+				elite_shocktrooper
+			}
+		},
+		{
+			weight = 2,
+			breeds = {
+				elite_shocktrooper,
+				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 2,
+			breeds = {
+				roamer_assault,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		}
+	},
+	cultist_far_low_no_melee_ogryns = {
+		{
+			weight = 1,
+			breeds = {
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman
+			}
+		},
+		{
+			weight = 2,
+			breeds = {
+				elite_gunner,
+				roamer_rifleman
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				elite_gunner
+			}
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				roamer_rifleman,
+				roamer_rifleman,
+				elite_gunner
+			}
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				"chaos_ogryn_gunner"
+			}
+		}
+	},
+	cultist_far_high_no_melee_ogryns = {
+		{
+			weight = 1,
+			breeds = {
+				elite_gunner,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman,
+				roamer_rifleman
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				"chaos_ogryn_gunner",
+				roamer_rifleman,
+				roamer_rifleman,
+				elite_gunner
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				elite_gunner,
+				elite_gunner,
+				roamer_rifleman,
+				roamer_rifleman
+			}
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				elite_gunner,
+				elite_gunner,
+				"chaos_ogryn_gunner"
+			}
+		}
 	}
 }
 

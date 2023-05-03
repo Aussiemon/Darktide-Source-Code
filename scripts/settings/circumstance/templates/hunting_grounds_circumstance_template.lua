@@ -1,9 +1,10 @@
 local circumstance_templates = {
 	hunting_grounds_01 = {
-		wwise_state = "hunting_grounds_01",
+		dialogue_id = "circumstance_vo_hunting_grounds",
 		wwise_event_stop = "wwise/events/world/stop_hunting_grounds_occasionals",
 		wwise_event_init = "wwise/events/world/play_hunting_grounds_occasionals",
 		theme_tag = "default",
+		wwise_state = "hunting_grounds_01",
 		mutators = {
 			"mutator_chaos_hounds"
 		},
@@ -15,10 +16,11 @@ local circumstance_templates = {
 		}
 	},
 	hunting_grounds_more_resistance_01 = {
-		wwise_state = "hunting_grounds_01",
+		dialogue_id = "circumstance_vo_hunting_grounds",
 		wwise_event_stop = "wwise/events/world/stop_hunting_grounds_occasionals",
 		wwise_event_init = "wwise/events/world/play_hunting_grounds_occasionals",
 		theme_tag = "default",
+		wwise_state = "hunting_grounds_01",
 		mutators = {
 			"mutator_chaos_hounds",
 			"mutator_add_resistance"
@@ -31,10 +33,11 @@ local circumstance_templates = {
 		}
 	},
 	hunting_grounds_less_resistance_01 = {
-		wwise_state = "hunting_grounds_01",
+		dialogue_id = "circumstance_vo_hunting_grounds",
 		wwise_event_stop = "wwise/events/world/stop_hunting_grounds_occasionals",
 		wwise_event_init = "wwise/events/world/play_hunting_grounds_occasionals",
 		theme_tag = "default",
+		wwise_state = "hunting_grounds_01",
 		mutators = {
 			"mutator_chaos_hounds",
 			"mutator_subtract_resistance"

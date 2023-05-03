@@ -20,6 +20,7 @@ MinionPerceptionExtension.init = function (self, extension_init_context, unit, e
 	local breed = extension_init_data.breed
 	self._breed = breed
 	self._unit = unit
+	self._reports_known_position = breed.reports_known_position or breed.cover_config ~= nil
 	local initial_aggro_state = extension_init_data.aggro_state
 	self._initial_aggro_state = initial_aggro_state
 	self._is_priority_blackboard_update = false
@@ -96,6 +97,7 @@ end
 
 MinionPerceptionExtension.extensions_ready = function (self, world, unit)
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
+	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
 	self._visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 end
 
@@ -250,6 +252,12 @@ MinionPerceptionExtension.cb_line_of_sight_hit = function (self, los_raycast_dat
 				end
 			elseif not last_los_positions[target_unit] then
 				last_los_positions[target_unit] = Vector3Box(los_to_position)
+			end
+
+			if self._reports_known_position then
+				local combat_vector_system = Managers.state.extension:system("combat_vector_system")
+
+				combat_vector_system:set_last_known_position(target_unit, los_to_position)
 			end
 		end
 	end
@@ -423,13 +431,12 @@ MinionPerceptionExtension._update_target_selection = function (self, unit, side,
 	self:_update_line_of_sight(unit, target_units, los_collision_filter)
 
 	local template = self._target_selection_template
-	local target_unit = template(unit, side, perception_component, breed, target_units, self._line_of_sight_lookup, t, self._threat_units, force_new_target_attempt, force_new_target_attempt_config, self._debug_target_weighting, self._last_los_positions)
+	local target_unit = template(unit, side, perception_component, self._buff_extension, breed, target_units, self._line_of_sight_lookup, t, self._threat_units, force_new_target_attempt, force_new_target_attempt_config, self._debug_target_weighting, self._last_los_positions)
 
 	return target_unit
 end
 
 MinionPerceptionExtension._update_line_of_sight = function (self, unit, target_units, los_collision_filter)
-	local detection_los_requirement = self:_check_for_detection_los_requirement()
 	local line_of_sight_queue = self._line_of_sight_queue
 	local running_line_of_sight_checks = self._running_line_of_sight_checks
 	local unit_position = POSITION_LOOKUP[unit]
@@ -439,6 +446,7 @@ MinionPerceptionExtension._update_line_of_sight = function (self, unit, target_u
 
 		if not running_line_of_sight_checks[target_unit] then
 			local target_position = POSITION_LOOKUP[target_unit]
+			local detection_los_requirement = self:_check_for_detection_los_requirement(unit, target_unit)
 
 			if not detection_los_requirement or Vector3.distance(unit_position, target_position) <= detection_los_requirement then
 				self:_line_of_sight_check(unit, target_unit, los_collision_filter)
@@ -645,8 +653,11 @@ local CIRCUMSTANCE_DETECTION_DISTANCE_LOS_REQUIREMENTS = {
 	mutator_ventilation_purge_los = 20,
 	mutator_darkness_los = 15
 }
+local BUFF_KEYWORD_DISTANCE_LOS_REQUIREMENT = {
+	concealed = 5
+}
 
-MinionPerceptionExtension._check_for_detection_los_requirement = function (self)
+MinionPerceptionExtension._check_for_detection_los_requirement = function (self, unit, target_unit)
 	local mutator_manager = Managers.state.mutator
 	local los_modifier = mutator_manager:mutator(DARKNESS_LOS_MODIFIER_NAME) and DARKNESS_LOS_MODIFIER_NAME or mutator_manager:mutator(VENTILATION_PURGE_LOS_MODIFIER_NAME) and VENTILATION_PURGE_LOS_MODIFIER_NAME
 	local detection_los_requirement = nil
@@ -655,6 +666,20 @@ MinionPerceptionExtension._check_for_detection_los_requirement = function (self)
 		detection_los_requirement = false
 	elseif los_modifier then
 		detection_los_requirement = CIRCUMSTANCE_DETECTION_DISTANCE_LOS_REQUIREMENTS[los_modifier]
+	end
+
+	local buff_extension = self._buff_extension
+
+	for keyword, distance_requirement in pairs(BUFF_KEYWORD_DISTANCE_LOS_REQUIREMENT) do
+		if buff_extension:has_keyword(keyword) then
+			return BUFF_KEYWORD_DISTANCE_LOS_REQUIREMENT.concealed
+		else
+			local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+
+			if target_buff_extension and target_buff_extension:has_keyword(keyword) then
+				return BUFF_KEYWORD_DISTANCE_LOS_REQUIREMENT.concealed
+			end
+		end
 	end
 
 	return detection_los_requirement

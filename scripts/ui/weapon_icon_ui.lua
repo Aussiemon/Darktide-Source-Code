@@ -210,6 +210,9 @@ WeaponIconUI._handle_request_queue = function (self)
 					end
 
 					local active_request = self._active_request
+
+					Log.info("WeaponIconUI", "[_handle_request_queue] spawned; profile: %s", tostring(active_request.gear_id))
+
 					local grid_index = active_request.grid_index
 					local uvs = self:_grid_index_uvs(grid_index)
 					local size_scale_x = uvs[2][1] - uvs[1][1]
@@ -219,6 +222,7 @@ WeaponIconUI._handle_request_queue = function (self)
 					local callbacks = active_request.callbacks
 
 					if self._capture_render_target and self._icon_render_target and not self._shutting_down then
+						Log.info("WeaponIconUI", "[_handle_request_queue] copy_render_target_rect; gear_id: %s", tostring(active_request.gear_id))
 						Renderer.copy_render_target_rect(self._capture_render_target, 0, 0, 1, 1, self._icon_render_target, position_scale_x, position_scale_y, size_scale_x, size_scale_y)
 
 						local grid_index = active_request.grid_index
@@ -249,6 +253,8 @@ WeaponIconUI._handle_request_queue = function (self)
 end
 
 WeaponIconUI._handle_next_request_in_queue = function (self)
+	Log.info("WeaponIconUI", "[_handle_next_request_in_queue] create_render_target")
+
 	if not self._world_spawner then
 		self:_initialize_world()
 
@@ -307,7 +313,8 @@ WeaponIconUI._spawn_weapon = function (self, item, render_context)
 	local world = world_spawner:world()
 	local camera = world_spawner:camera()
 	local unit_spawner = world_spawner:unit_spawner()
-	local ui_weapon_spawner = UIWeaponSpawner:new("WeaponIconUI", world, camera, unit_spawner)
+	local verbose = true
+	local ui_weapon_spawner = UIWeaponSpawner:new("WeaponIconUI", world, camera, unit_spawner, verbose)
 	self._ui_weapon_spawner = ui_weapon_spawner
 	local alignment_key = "weapon_alignment_tag"
 
@@ -335,6 +342,8 @@ WeaponIconUI._spawn_weapon = function (self, item, render_context)
 		world_spawner:set_camera_position(camera_position)
 		world_spawner:set_camera_rotation(camera_rotation)
 	end
+
+	Log.info("WeaponIconUI", "[_spawn_weapon] gear_id: %s", tostring(item.gear_id))
 end
 
 WeaponIconUI._initialize_world = function (self)
@@ -393,12 +402,16 @@ WeaponIconUI._setup_viewport = function (self, camera_unit, render_targets)
 end
 
 WeaponIconUI._resume_rendering = function (self)
+	Log.info("WeaponIconUI", "[_resume_rendering]")
+
 	local world_spawner = self._world_spawner
 
 	world_spawner:set_world_disabled(false)
 end
 
 WeaponIconUI._pause_rendering = function (self)
+	Log.info("WeaponIconUI", "[_pause_rendering]")
+
 	local world_spawner = self._world_spawner
 
 	world_spawner:set_world_disabled(true)

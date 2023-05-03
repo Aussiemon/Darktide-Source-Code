@@ -24,6 +24,32 @@ TriggerConditionAllRequiredPlayersInEndZone.on_volume_exit = function (self, exi
 	return self:_unregister_unit(exiting_unit)
 end
 
+TriggerConditionAllRequiredPlayersInEndZone._log_player_states = function (self, alive_players)
+	local text = "Ending mission with alive players in following character states: "
+	local first = true
+
+	for ii = 1, #alive_players do
+		local player = alive_players[ii]
+		local player_unit = player.player_unit
+		local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
+
+		if unit_data_extension then
+			local character_state_component = unit_data_extension:read_component("character_state")
+
+			if player:is_human_controlled() then
+				if not first then
+					text = text .. ", "
+				end
+
+				text = text .. tostring(character_state_component.state_name)
+				first = false
+			end
+		end
+	end
+
+	Log.info("TriggerConditionAllRequiredPlayersInEndZone", text)
+end
+
 local units_to_test = {}
 
 TriggerConditionAllRequiredPlayersInEndZone.filter_passed = function (self, filter_unit, volume_id)
@@ -54,6 +80,12 @@ TriggerConditionAllRequiredPlayersInEndZone.filter_passed = function (self, filt
 
 	if num_units_to_test > 0 then
 		filter_passed = VolumeEvent.has_all_units_inside(self._engine_volume_event_system, volume_id, unpack(units_to_test))
+	end
+
+	if filter_passed and not self._states_logged then
+		self:_log_player_states(alive_players)
+
+		self._states_logged = true
 	end
 
 	return filter_passed

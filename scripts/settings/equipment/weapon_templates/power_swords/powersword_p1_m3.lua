@@ -15,8 +15,6 @@ local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_t
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
-local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
-local WeaponTraitsMeleeActivated = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_activated")
 local damage_types = DamageSettings.damage_types
 local armor_types = ArmorSettings.types
 local buff_stat_buffs = BuffSettings.stat_buffs
@@ -1695,14 +1693,6 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local melee_common_traits = table.keys(WeaponTraitsMeleeCommon)
-
-table.append(weapon_template.traits, melee_common_traits)
-
-local melee_activated_traits = table.keys(WeaponTraitsMeleeActivated)
-
-table.append(weapon_template.traits, melee_activated_traits)
-
 local bespoke_powersword_p1_traits = table.keys(WeaponTraitsBespokePowerswordP1)
 
 table.append(weapon_template.traits, bespoke_powersword_p1_traits)

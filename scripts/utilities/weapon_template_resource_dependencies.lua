@@ -59,12 +59,13 @@ local function _is_valid_wwise_resource_name(value)
 end
 
 local CONTENT_FX_PARTICLES_WEAPONS = "content/fx/particles/weapons/"
-local CONTENT_FX_PARTICLES_IMPACTS_WEAPONS = "content/fx/particles/impacts/weapons"
+local CONTENT_FX_PARTICLES_IMPACTS = "content/fx/particles/impacts/"
 local CONTENT_FX_PARTICLES_ABILITIES = "content/fx/particles/abilities"
 local CONTENT_FX_UNITS_WEAPONS = "content/fx/units/weapons/"
+local CONTENT_FX_DECALS_BLOOD_BALL = "content/decals/blood_ball/"
 
 local function _is_valid_fx_resource_name(value)
-	return string.starts_with(value, CONTENT_FX_PARTICLES_WEAPONS) or string.starts_with(value, CONTENT_FX_PARTICLES_IMPACTS_WEAPONS) or string.starts_with(value, CONTENT_FX_PARTICLES_ABILITIES) or string.starts_with(value, CONTENT_FX_UNITS_WEAPONS)
+	return string.starts_with(value, CONTENT_FX_PARTICLES_WEAPONS) or string.starts_with(value, CONTENT_FX_PARTICLES_IMPACTS) or string.starts_with(value, CONTENT_FX_PARTICLES_ABILITIES) or string.starts_with(value, CONTENT_FX_UNITS_WEAPONS) or string.starts_with(value, CONTENT_FX_DECALS_BLOOD_BALL)
 end
 
 local function _is_valid_unit_resource(value)

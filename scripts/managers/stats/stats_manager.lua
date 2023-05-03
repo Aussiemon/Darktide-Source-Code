@@ -228,6 +228,13 @@ StatsManager.record_kill = function (self, player, breed_or_nil, weapon_template
 	damage_type = damage_type or "unknown"
 
 	self:_trigger_hook(player, "hook_kill", 1, breed_name, weapon_template_name, weapon_attack_type, hit_zone_name, damage_profile_name, distance, player_health, action_name, id, target_buff_keywords, damage_type, is_critical_hit, is_weapon_special, solo_kill, player:profile().specialization)
+
+	if breed_or_nil and breed_or_nil.tags.disabler and attacked_unit_blackboard_or_nil and Blackboard.has_component(attacked_unit_blackboard_or_nil, "record_state") then
+		local record_state_component = attacked_unit_blackboard_or_nil.record_state
+		local has_disabled_player = record_state_component.has_disabled_player
+
+		self:_trigger_hook(player, "hook_killed_disabler", 1, breed_name, has_disabled_player, weapon_template_name, weapon_attack_type, damage_profile_name, player:profile().specialization)
+	end
 end
 
 StatsManager.record_buff = function (self, player, breed_name, buff_template_name, stack_count, weapon_buff_template_name)
@@ -268,12 +275,16 @@ StatsManager.record_dodge = function (self, player, attacker_breed, attack_type,
 	self:_trigger_hook(player, "hook_dodge", 1, attack_type, attacker_breed, reason, player:profile().specialization)
 end
 
-StatsManager.record_respawn_ally = function (self, player, target_player)
-	self:_trigger_hook(player, "hook_respawn_ally", 1, target_player:session_id(), player:profile().specialization)
+StatsManager.record_rescue_ally = function (self, player, target_player)
+	self:_trigger_hook(player, "hook_rescue_ally", 1, target_player:session_id(), player:profile().specialization)
 end
 
-StatsManager.record_help_ally = function (self, player, target_player)
-	self:_trigger_hook(player, "hook_help_ally", 1, target_player:session_id(), player:profile().specialization)
+StatsManager.record_assist_ally = function (self, player, target_player, assist_type)
+	self:_trigger_hook(player, "hook_assist_ally", 1, target_player:session_id(), assist_type, player:profile().specialization)
+end
+
+StatsManager.record_exit_disabled_character_state = function (self, state_name, time_in_state)
+	self:_trigger_global_hook("hook_team_exit_disabled_character_state", 1, state_name, time_in_state)
 end
 
 StatsManager.record_collect_material = function (self, type, amount)
@@ -346,6 +357,10 @@ StatsManager.record_coherency_exit = function (self, player, is_exiter_alive, nu
 	self:_trigger_hook(player, "hook_coherency_exit", 1, is_exiter_alive, num_units_in_coherency, player:profile().specialization)
 end
 
+StatsManager.record_coherency_update = function (self, player, num_units_in_coherency)
+	self:_trigger_hook(player, "hook_coherency_update", 1, num_units_in_coherency, player:profile().specialization)
+end
+
 StatsManager.record_health_update = function (self, player, current_health_percentage, is_knocked_down)
 	self:_trigger_hook(player, "hook_health_update", current_health_percentage, is_knocked_down, player:profile().specialization)
 end
@@ -356,6 +371,10 @@ end
 
 StatsManager.record_ranged_attack_concluded = function (self, player, hit_minion, hit_weakspot, kill, last_round_in_mag)
 	self:_trigger_hook(player, "hook_ranged_attack_concluded", 1, hit_minion, hit_weakspot, kill, last_round_in_mag, player:profile().specialization)
+end
+
+StatsManager.record_projectile_impact_concluded_stats = function (self, player, num_hit_on_impact, num_hit_weakspot, num_kill, num_hit_elite, num_hit_special, weapon_template_name)
+	self:_trigger_hook(player, "hook_projectile_impact_concluded", 1, num_hit_on_impact, num_hit_weakspot, num_kill, num_hit_elite, num_hit_special, weapon_template_name, player:profile().specialization)
 end
 
 StatsManager.record_alternate_fire_start = function (self, player)
@@ -406,6 +425,26 @@ end
 
 StatsManager.record_psyker_2_time_at_max_stacks = function (self, player, time_at_max)
 	self:_trigger_hook(player, "hook_psyker_2_time_at_max_souls_hook", time_at_max, player:profile().specialization)
+end
+
+StatsManager.record_veteran_2_ammo_given_from_coherency = function (self, player, amount)
+	self:_trigger_hook(player, "hook_veteran_2_ammo_given", amount)
+end
+
+StatsManager.record_veteran_2_kill_volley_fire_target = function (self, player)
+	self:_trigger_hook(player, "hook_veteran_2_kill_volley_fire_target", 1)
+end
+
+StatsManager.record_psyker_2_reached_max_souls = function (self, player)
+	self:_trigger_hook(player, "hook_psyker_2_reached_max_souls", 1)
+end
+
+StatsManager.record_psyker_2_lost_max_souls = function (self, player)
+	self:_trigger_hook(player, "hook_psyker_2_lost_max_souls", 1)
+end
+
+StatsManager.record_psyker_2_survived_perils = function (self, player)
+	self:_trigger_hook(player, "hook_psyker_2_survived_perils", 1, player:profile().specialization)
 end
 
 return StatsManager

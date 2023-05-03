@@ -16,6 +16,7 @@ Testify = {
 	_requests = {},
 	_responses = {},
 	_peers = {},
+	_cache = {},
 	RETRY = newproxy(false)
 }
 local __raw_print = print
@@ -162,6 +163,14 @@ Testify.respond_to_runner_request = function (self, request_name, responses, num
 	self:respond_to_request(request_name, {
 		responses
 	}, num_responses)
+end
+
+Testify.store_cache = function (self, key, value)
+	self._cache[key] = value
+end
+
+Testify.retrieve_cache = function (self, key, value)
+	return self._cache[key]
 end
 
 Testify.print_test_case_marker = function (self)

@@ -596,6 +596,7 @@ local action_data = {
 		degree_per_direction = 10,
 		randomized_direction_degree_range = 180,
 		max_distance_to_target = 11,
+		vo_event = "start_shooting",
 		strafe_end_anim_event = "hip_fire",
 		not_allowed_cooldown = 0.25,
 		move_to_fail_cooldown = 1,

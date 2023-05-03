@@ -293,6 +293,7 @@ details_widgets_blueprints.templates = {
 				1
 			}
 			local _, circumstance_title_height = calculate_text_size(widget, "circumstance_title", ui_renderer)
+			local _, body_text_height = calculate_text_size(widget, "body_text", ui_renderer)
 			local body_text_y_offset = circumstance_title_height + text_padding + text_y_offset
 			body_text_style.offset = {
 				text_x_offset,
@@ -300,6 +301,7 @@ details_widgets_blueprints.templates = {
 				1
 			}
 			widget.style.circumstance_icon.offset[2] = text_y_offset
+			widget.size[2] = body_text_y_offset + body_text_height
 		end
 	},
 	category_name = {

@@ -1,7 +1,9 @@
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementMenuPanel = require("scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel")
+local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local Views = require("scripts/ui/views/views")
+local Breeds = require("scripts/settings/breed/breeds")
 local TabbedMenuViewBase = class("TabbedMenuViewBase", "BaseView")
 
 TabbedMenuViewBase.init = function (self, definitions, settings, context)
@@ -36,6 +38,7 @@ end
 
 TabbedMenuViewBase.on_exit = function (self)
 	self:_close_active_view()
+	self:despawn_active_profile()
 
 	if self._world_spawner then
 		self._world_spawner:destroy()
@@ -77,6 +80,10 @@ TabbedMenuViewBase.update = function (self, dt, t, input_service)
 
 	if world_spawner then
 		world_spawner:update(dt, t)
+
+		if self._profile_spawner then
+			self._profile_spawner:update(dt, t, input_service)
+		end
 	end
 
 	return TabbedMenuViewBase.super.update(self, dt, t, input_service)
@@ -144,11 +151,66 @@ TabbedMenuViewBase._setup_background_world = function (self, world_params)
 		self._context.background_world_spawner = self._world_spawner
 	end
 
+	self:_register_event("event_register_character_spawn_point")
+
 	local level_name = world_params.level_name
 
 	if level_name then
 		self._world_spawner:spawn_level(level_name)
 	end
+end
+
+TabbedMenuViewBase.event_register_character_spawn_point = function (self, spawn_point_unit)
+	self:_unregister_event("event_register_character_spawn_point")
+
+	self._spawn_point_unit = spawn_point_unit
+end
+
+TabbedMenuViewBase.despawn_active_profile = function (self)
+	if self._profile_spawner then
+		self._profile_spawner:destroy()
+
+		self._profile_spawner = nil
+	end
+end
+
+TabbedMenuViewBase.spawn_profile = function (self, profile, visible_on_spawn)
+	self:despawn_active_profile()
+
+	local spawn_point_unit = self._spawn_point_unit
+	local world_params = self._definitions.background_world_params
+	local world = self._world_spawner:world()
+	local camera = self._world_spawner:camera()
+	local unit_spawner = self._world_spawner:unit_spawner()
+	local name = self.__class_name
+	self._profile_spawner = UIProfileSpawner:new(name, world, camera, unit_spawner)
+
+	self._profile_spawner:set_visibility(visible_on_spawn or false)
+
+	local spawn_position = Unit.world_position(spawn_point_unit, 1)
+	local spawn_rotation = Unit.world_rotation(spawn_point_unit, 1)
+	self._spawn_point_position = Vector3.to_array(spawn_position)
+
+	self._profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation)
+
+	local archetype_settings = profile.archetype
+	local archetype_name = archetype_settings.name
+	local breed_name = archetype_settings.breed
+	local breed_settings = Breeds[breed_name]
+	local character_creation_state_machine = breed_settings.character_creation_state_machine
+	local animations_per_archetype = world_params.animations_per_archetype
+	local animations_settings = animations_per_archetype[archetype_name]
+	local animation_event = animations_settings.initial_event
+
+	self._profile_spawner:assign_state_machine(character_creation_state_machine, animation_event)
+end
+
+TabbedMenuViewBase.set_profile_visible = function (self, visible)
+	self._profile_spawner:set_visibility(visible)
+end
+
+TabbedMenuViewBase.profile_spawner = function (self)
+	return self._profile_spawner
 end
 
 TabbedMenuViewBase._setup_tab_bar = function (self, tab_bar_params, additional_context)
@@ -280,6 +342,7 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 	local tab_params = self._tab_bar_views[index]
 	local view = tab_params.view
 	local view_function = tab_params.view_function
+	local view_function_on_level_story_complete = tab_params.view_function_on_level_story_complete
 	local view_input_legend_buttons = tab_params.input_legend_buttons
 	local current_view = self._active_view
 	local ui_manager = Managers.ui
@@ -297,7 +360,7 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 			local context_function = tab_params.context_function
 
 			if context_function then
-				additional_context = context_function()
+				additional_context = context_function(self)
 			end
 
 			if additional_context then
@@ -305,6 +368,10 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 			end
 
 			ui_manager:open_view(view, nil, nil, nil, nil, context)
+
+			local view_instance = ui_manager:view_instance(view)
+
+			self:set_active_view_instance(view_instance)
 
 			local input_legend_params = self._definitions.input_legend_params
 
@@ -322,24 +389,37 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 		end
 	end
 
-	self._active_view_on_enter_callback = self._active_view and view_function and callback(function ()
-		if self._active_view == view then
-			local view_instance = ui_manager:view_instance(self._active_view)
-
-			if view_instance and view_instance:entered() then
-				view_instance[view_function](view_instance)
-
-				return true
-			end
-		end
-
-		return false
-	end)
 	local story_name = tab_params.level_story_event
+	local story_event_speed = tab_params.level_story_event_speed or 1
+	local level_story_complete_callback_time_fraction = tab_params.level_story_complete_callback_time_fraction
+	local active_view_callback = callback(function ()
+		self._active_view_on_enter_callback = self._active_view and view_function and callback(function ()
+			if self._active_view == view then
+				local view_instance = ui_manager:view_instance(self._active_view)
+
+				if view_instance and view_instance:entered() then
+					view_instance[view_function](view_instance)
+
+					return true
+				end
+			end
+
+			return false
+		end)
+	end)
+	local level_story_complete_callback = nil
+
+	if story_name and view_function_on_level_story_complete then
+		level_story_complete_callback = active_view_callback
+	else
+		active_view_callback()
+	end
+
+	self._world_spawner:set_story_speed(story_event_speed)
 
 	if story_name then
 		if not self._previous_story_name or self._previous_story_name ~= story_name then
-			self._world_spawner:play_story(story_name)
+			self._world_spawner:play_story(story_name, nil, nil, level_story_complete_callback, level_story_complete_callback_time_fraction)
 
 			self._previous_story_name = story_name
 		end

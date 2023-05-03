@@ -1,5 +1,5 @@
 local STATES = table.index_lookup_table("passive", "aiming", "shooting")
-local beast_of_nurgle_settings = {
+local chaos_beast_of_nurgle_settings = {
 	dodge_radius = 0.5,
 	radius = 2.25,
 	range = 20,
@@ -30,4 +30,4 @@ local beast_of_nurgle_settings = {
 	}
 }
 
-return settings("BeastOfNurgleSettings", beast_of_nurgle_settings)
+return settings("ChaosBeastOfNurgleSettings", chaos_beast_of_nurgle_settings)

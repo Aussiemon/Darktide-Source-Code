@@ -1,3 +1,4 @@
+local PlayerAssistNotifications = require("scripts/utilities/player_assist_notifications")
 local Assist = class("Assist")
 local FORCE_ASSIST_TIME = 0.75
 
@@ -121,6 +122,7 @@ Assist.reset = function (self)
 	self._assisted_state_input_component.success = false
 	self._assisted_state_input_component.force_assist = false
 	self._force_assist_timer = 0
+	self._last_interactor_unit = nil
 end
 
 Assist.in_progress = function (self)

@@ -213,10 +213,6 @@ local conversations_core_zealot_female_c = {
 			[1.0] = 5.669229,
 			[2.0] = 6.551323
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	conversation_explicator_two_b = {
@@ -485,10 +481,6 @@ local conversations_core_zealot_female_c = {
 			[1.0] = 1.816552,
 			[2.0] = 0.788677
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	conversation_sergeant_three_04 = {
@@ -540,10 +532,6 @@ local conversations_core_zealot_female_c = {
 		sound_events_duration = {
 			[1.0] = 3.777208,
 			[2.0] = 5.016406
-		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -811,6 +799,320 @@ local conversations_core_zealot_female_c = {
 		sound_events_duration = {
 			[1.0] = 3.50424,
 			[2.0] = 5.165375
+		},
+		randomize_indexes = {}
+	},
+	lore_daemons_four_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_daemons_four_b_01",
+			[2.0] = "loc_zealot_female_c__lore_daemons_four_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 7.658927,
+			[2.0] = 6.812344
+		},
+		randomize_indexes = {}
+	},
+	lore_daemons_four_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_daemons_four_c_01",
+			[2.0] = "loc_zealot_female_c__lore_daemons_four_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 7.811948,
+			[2.0] = 5.920552
+		},
+		randomize_indexes = {}
+	},
+	lore_daemons_one_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_daemons_one_b_01",
+			[2.0] = "loc_zealot_female_c__lore_daemons_one_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 5.079542,
+			[2.0] = 1.87
+		},
+		randomize_indexes = {}
+	},
+	lore_daemons_one_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_daemons_one_c_01",
+			[2.0] = "loc_zealot_female_c__lore_daemons_one_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 3.633917,
+			[2.0] = 4.204208
+		},
+		randomize_indexes = {}
+	},
+	lore_daemons_three_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_daemons_three_b_01",
+			[2.0] = "loc_zealot_female_c__lore_daemons_three_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 3.143719,
+			[2.0] = 4.438177
+		},
+		randomize_indexes = {}
+	},
+	lore_daemons_three_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_daemons_three_c_01",
+			[2.0] = "loc_zealot_female_c__lore_daemons_three_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 6.241177,
+			[2.0] = 6.533969
+		},
+		randomize_indexes = {}
+	},
+	lore_daemons_two_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_zealot_female_c__lore_daemons_two_a_01",
+			"loc_zealot_female_c__lore_daemons_two_a_02",
+			"loc_zealot_female_c__lore_daemons_two_a_03",
+			"loc_zealot_female_c__lore_daemons_two_a_04"
+		},
+		sound_events_duration = {
+			6.909771,
+			6.405792,
+			7.526479,
+			6.238646
+		},
+		randomize_indexes = {}
+	},
+	lore_daemons_two_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_daemons_two_b_01",
+			[2.0] = "loc_zealot_female_c__lore_daemons_two_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 5.23701,
+			[2.0] = 5.528865
+		},
+		randomize_indexes = {}
+	},
+	lore_daemons_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_daemons_two_c_01",
+			[2.0] = "loc_zealot_female_c__lore_daemons_two_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.145385,
+			[2.0] = 6.179531
+		},
+		randomize_indexes = {}
+	},
+	lore_ecclesiarchy_four_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_ecclesiarchy_four_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 6.22576
+		},
+		randomize_indexes = {}
+	},
+	lore_ecclesiarchy_four_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_ecclesiarchy_four_c_01",
+			[2.0] = "loc_zealot_female_c__lore_ecclesiarchy_four_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 3.60601,
+			[2.0] = 6.59249
+		},
+		randomize_indexes = {}
+	},
+	lore_ecclesiarchy_one_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_ecclesiarchy_one_b_01",
+			[2.0] = "loc_zealot_female_c__lore_ecclesiarchy_one_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 5.085406,
+			[2.0] = 3.297802
+		},
+		randomize_indexes = {}
+	},
+	lore_ecclesiarchy_one_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_ecclesiarchy_one_c_01",
+			[2.0] = "loc_zealot_female_c__lore_ecclesiarchy_one_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.761781,
+			[2.0] = 4.728219
+		},
+		randomize_indexes = {}
+	},
+	lore_ecclesiarchy_three_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_ecclesiarchy_three_b_01",
+			[2.0] = "loc_zealot_female_c__lore_ecclesiarchy_three_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 5.409323,
+			[2.0] = 5.73476
+		},
+		randomize_indexes = {}
+	},
+	lore_ecclesiarchy_three_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_ecclesiarchy_three_c_01",
+			[2.0] = "loc_zealot_female_c__lore_ecclesiarchy_three_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 10.09774,
+			[2.0] = 5.270323
+		},
+		randomize_indexes = {}
+	},
+	lore_ecclesiarchy_two_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_ecclesiarchy_two_b_01",
+			[2.0] = "loc_zealot_female_c__lore_ecclesiarchy_two_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 3.740594,
+			[2.0] = 5.640156
+		},
+		randomize_indexes = {}
+	},
+	lore_ecclesiarchy_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_ecclesiarchy_two_c_01",
+			[2.0] = "loc_zealot_female_c__lore_ecclesiarchy_two_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 6.888385,
+			[2.0] = 5.06999
+		},
+		randomize_indexes = {}
+	},
+	lore_enemy_within_four_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_enemy_within_four_b_01",
+			[2.0] = "loc_zealot_female_c__lore_enemy_within_four_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.777177,
+			[2.0] = 6.164115
+		},
+		randomize_indexes = {}
+	},
+	lore_enemy_within_four_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_enemy_within_four_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.345698
+		},
+		randomize_indexes = {}
+	},
+	lore_enemy_within_three_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_enemy_within_three_b_01",
+			[2.0] = "loc_zealot_female_c__lore_enemy_within_three_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 5.08449,
+			[2.0] = 4.42276
+		},
+		randomize_indexes = {}
+	},
+	lore_enemy_within_three_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_enemy_within_three_c_01",
+			[2.0] = "loc_zealot_female_c__lore_enemy_within_three_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 5.19326,
+			[2.0] = 4.823427
+		},
+		randomize_indexes = {}
+	},
+	lore_enemy_within_two_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_zealot_female_c__lore_enemy_within_two_a_01",
+			"loc_zealot_female_c__lore_enemy_within_two_a_03",
+			"loc_zealot_female_c__lore_enemy_within_two_a_04"
+		},
+		sound_events_duration = {
+			4.279385,
+			5.889594,
+			4.335135
+		},
+		randomize_indexes = {}
+	},
+	lore_enemy_within_two_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_enemy_within_two_b_01",
+			[2.0] = "loc_zealot_female_c__lore_enemy_within_two_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.576656,
+			[2.0] = 4.730948
+		},
+		randomize_indexes = {}
+	},
+	lore_enemy_within_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_enemy_within_two_c_01",
+			[2.0] = "loc_zealot_female_c__lore_enemy_within_two_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 2.897135,
+			[2.0] = 5.285906
 		},
 		randomize_indexes = {}
 	},
@@ -1292,6 +1594,248 @@ local conversations_core_zealot_female_c = {
 		},
 		randomize_indexes = {}
 	},
+	lore_inquisition_four_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_inquisition_four_b_01",
+			[2.0] = "loc_zealot_female_c__lore_inquisition_four_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 5.132583,
+			[2.0] = 4.221271
+		},
+		randomize_indexes = {}
+	},
+	lore_inquisition_four_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_inquisition_four_c_01",
+			[2.0] = "loc_zealot_female_c__lore_inquisition_four_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 3.525563,
+			[2.0] = 4.471771
+		},
+		randomize_indexes = {}
+	},
+	lore_inquisition_one_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_inquisition_one_b_01",
+			[2.0] = "loc_zealot_female_c__lore_inquisition_one_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 2.839896,
+			[2.0] = 6.595
+		},
+		randomize_indexes = {}
+	},
+	lore_inquisition_one_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_inquisition_one_c_01",
+			[2.0] = "loc_zealot_female_c__lore_inquisition_one_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.685083,
+			[2.0] = 5.079875
+		},
+		randomize_indexes = {}
+	},
+	lore_inquisition_three_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_inquisition_three_b_01",
+			[2.0] = "loc_zealot_female_c__lore_inquisition_three_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.611542,
+			[2.0] = 5.078646
+		},
+		randomize_indexes = {}
+	},
+	lore_inquisition_three_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_inquisition_three_c_01",
+			[2.0] = "loc_zealot_female_c__lore_inquisition_three_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 5.091813,
+			[2.0] = 5.298729
+		},
+		randomize_indexes = {}
+	},
+	lore_inquisition_two_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_zealot_female_c__lore_inquisition_two_a_01",
+			"loc_zealot_female_c__lore_inquisition_two_a_02",
+			"loc_zealot_female_c__lore_inquisition_two_a_03",
+			"loc_zealot_female_c__lore_inquisition_two_a_04"
+		},
+		sound_events_duration = {
+			5.117104,
+			6.279854,
+			5.652354,
+			6.892625
+		},
+		randomize_indexes = {}
+	},
+	lore_inquisition_two_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_inquisition_two_b_01",
+			[2.0] = "loc_zealot_female_c__lore_inquisition_two_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 2.064854,
+			[2.0] = 6.189771
+		},
+		randomize_indexes = {}
+	},
+	lore_inquisition_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_inquisition_two_c_01",
+			[2.0] = "loc_zealot_female_c__lore_inquisition_two_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 6.022479,
+			[2.0] = 3.734417
+		},
+		randomize_indexes = {}
+	},
+	lore_lost_history_four_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_lost_history_four_b_01",
+			[2.0] = "loc_zealot_female_c__lore_lost_history_four_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 5.921708,
+			[2.0] = 4.098104
+		},
+		randomize_indexes = {}
+	},
+	lore_lost_history_four_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_lost_history_four_c_01",
+			[2.0] = "loc_zealot_female_c__lore_lost_history_four_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 5.172375,
+			[2.0] = 5.663083
+		},
+		randomize_indexes = {}
+	},
+	lore_lost_history_one_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_lost_history_one_b_01",
+			[2.0] = "loc_zealot_female_c__lore_lost_history_one_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 6.240021,
+			[2.0] = 5.210375
+		},
+		randomize_indexes = {}
+	},
+	lore_lost_history_one_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_lost_history_one_c_01",
+			[2.0] = "loc_zealot_female_c__lore_lost_history_one_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.456208,
+			[2.0] = 4.469458
+		},
+		randomize_indexes = {}
+	},
+	lore_lost_history_three_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_lost_history_three_b_01",
+			[2.0] = "loc_zealot_female_c__lore_lost_history_three_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.767875,
+			[2.0] = 7.28775
+		},
+		randomize_indexes = {}
+	},
+	lore_lost_history_three_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_lost_history_three_c_01",
+			[2.0] = "loc_zealot_female_c__lore_lost_history_three_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.787771,
+			[2.0] = 5.769188
+		},
+		randomize_indexes = {}
+	},
+	lore_lost_history_two_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_zealot_female_c__lore_lost_history_two_a_01",
+			"loc_zealot_female_c__lore_lost_history_two_a_02",
+			"loc_zealot_female_c__lore_lost_history_two_a_03",
+			"loc_zealot_female_c__lore_lost_history_two_a_04"
+		},
+		sound_events_duration = {
+			5.700479,
+			7.566271,
+			6.690938,
+			6.448771
+		},
+		randomize_indexes = {}
+	},
+	lore_lost_history_two_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_lost_history_two_b_01",
+			[2.0] = "loc_zealot_female_c__lore_lost_history_two_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 6.233375,
+			[2.0] = 4.2915
+		},
+		randomize_indexes = {}
+	},
+	lore_lost_history_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_lost_history_two_c_01",
+			[2.0] = "loc_zealot_female_c__lore_lost_history_two_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 6.138563,
+			[2.0] = 6.664417
+		},
+		randomize_indexes = {}
+	},
 	lore_melk_four_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -1724,6 +2268,367 @@ local conversations_core_zealot_female_c = {
 		},
 		randomize_indexes = {}
 	},
+	lore_space_marines_four_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_space_marines_four_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.164958
+		},
+		randomize_indexes = {}
+	},
+	lore_space_marines_four_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_space_marines_four_c_01",
+			[2.0] = "loc_zealot_female_c__lore_space_marines_four_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.719938,
+			[2.0] = 5.043854
+		},
+		randomize_indexes = {}
+	},
+	lore_space_marines_one_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_space_marines_one_b_01",
+			[2.0] = "loc_zealot_female_c__lore_space_marines_one_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.883479,
+			[2.0] = 6.695813
+		},
+		randomize_indexes = {}
+	},
+	lore_space_marines_one_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_space_marines_one_c_01",
+			[2.0] = "loc_zealot_female_c__lore_space_marines_one_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.829292,
+			[2.0] = 5.772021
+		},
+		randomize_indexes = {}
+	},
+	lore_space_marines_three_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_space_marines_three_b_01",
+			[2.0] = "loc_zealot_female_c__lore_space_marines_three_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 3.469771,
+			[2.0] = 4.205292
+		},
+		randomize_indexes = {}
+	},
+	lore_space_marines_three_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_space_marines_three_c_01",
+			[2.0] = "loc_zealot_female_c__lore_space_marines_three_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.26925,
+			[2.0] = 5.612229
+		},
+		randomize_indexes = {}
+	},
+	lore_space_marines_two_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_zealot_female_c__lore_space_marines_two_a_01",
+			"loc_zealot_female_c__lore_space_marines_two_a_02",
+			"loc_zealot_female_c__lore_space_marines_two_a_03",
+			"loc_zealot_female_c__lore_space_marines_two_a_04"
+		},
+		sound_events_duration = {
+			2.875646,
+			4.963396,
+			4.049083,
+			6.728583
+		},
+		randomize_indexes = {}
+	},
+	lore_space_marines_two_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_space_marines_two_b_01",
+			[2.0] = "loc_zealot_female_c__lore_space_marines_two_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 3.349083,
+			[2.0] = 6.749396
+		},
+		randomize_indexes = {}
+	},
+	lore_space_marines_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_space_marines_two_c_01",
+			[2.0] = "loc_zealot_female_c__lore_space_marines_two_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 6.901958,
+			[2.0] = 6.170042
+		},
+		randomize_indexes = {}
+	},
+	lore_the_emperor_four_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_the_emperor_four_b_01",
+			[2.0] = "loc_zealot_female_c__lore_the_emperor_four_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.927021,
+			[2.0] = 5.855396
+		},
+		randomize_indexes = {}
+	},
+	lore_the_emperor_four_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_the_emperor_four_c_01",
+			[2.0] = "loc_zealot_female_c__lore_the_emperor_four_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 6.213479,
+			[2.0] = 6.35275
+		},
+		randomize_indexes = {}
+	},
+	lore_the_emperor_one_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_the_emperor_one_b_01",
+			[2.0] = "loc_zealot_female_c__lore_the_emperor_one_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 2.999979,
+			[2.0] = 3.428354
+		},
+		randomize_indexes = {}
+	},
+	lore_the_emperor_one_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_the_emperor_one_c_01",
+			[2.0] = "loc_zealot_female_c__lore_the_emperor_one_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.071583,
+			[2.0] = 5.099438
+		},
+		randomize_indexes = {}
+	},
+	lore_the_emperor_three_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_the_emperor_three_b_01",
+			[2.0] = "loc_zealot_female_c__lore_the_emperor_three_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.714813,
+			[2.0] = 4.522521
+		},
+		randomize_indexes = {}
+	},
+	lore_the_emperor_three_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_the_emperor_three_c_01",
+			[2.0] = "loc_zealot_female_c__lore_the_emperor_three_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 6.173708,
+			[2.0] = 4.747979
+		},
+		randomize_indexes = {}
+	},
+	lore_the_emperor_two_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_zealot_female_c__lore_the_emperor_two_a_01",
+			"loc_zealot_female_c__lore_the_emperor_two_a_02",
+			"loc_zealot_female_c__lore_the_emperor_two_a_03",
+			"loc_zealot_female_c__lore_the_emperor_two_a_04"
+		},
+		sound_events_duration = {
+			6.120646,
+			5.994646,
+			5.358042,
+			5.271854
+		},
+		randomize_indexes = {}
+	},
+	lore_the_emperor_two_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_the_emperor_two_b_01",
+			[2.0] = "loc_zealot_female_c__lore_the_emperor_two_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 6.001292,
+			[2.0] = 4.741333
+		},
+		randomize_indexes = {}
+	},
+	lore_the_emperor_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_the_emperor_two_c_01",
+			[2.0] = "loc_zealot_female_c__lore_the_emperor_two_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.456208,
+			[2.0] = 3.806333
+		},
+		randomize_indexes = {}
+	},
+	lore_the_warp_four_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_the_warp_four_b_01",
+			[2.0] = "loc_zealot_female_c__lore_the_warp_four_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 3.693604,
+			[2.0] = 5.848771
+		},
+		randomize_indexes = {}
+	},
+	lore_the_warp_four_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_the_warp_four_c_01",
+			[2.0] = "loc_zealot_female_c__lore_the_warp_four_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 7.107125,
+			[2.0] = 6.690938
+		},
+		randomize_indexes = {}
+	},
+	lore_the_warp_one_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_the_warp_one_b_01",
+			[2.0] = "loc_zealot_female_c__lore_the_warp_one_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.403146,
+			[2.0] = 4.291396
+		},
+		randomize_indexes = {}
+	},
+	lore_the_warp_one_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_the_warp_one_c_01",
+			[2.0] = "loc_zealot_female_c__lore_the_warp_one_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 5.265938,
+			[2.0] = 6.320979
+		},
+		randomize_indexes = {}
+	},
+	lore_the_warp_three_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_the_warp_three_b_01",
+			[2.0] = "loc_zealot_female_c__lore_the_warp_three_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 6.363917,
+			[2.0] = 6.592979
+		},
+		randomize_indexes = {}
+	},
+	lore_the_warp_three_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_the_warp_three_c_01",
+			[2.0] = "loc_zealot_female_c__lore_the_warp_three_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.831563,
+			[2.0] = 2.672396
+		},
+		randomize_indexes = {}
+	},
+	lore_the_warp_two_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_zealot_female_c__lore_the_warp_two_a_01",
+			"loc_zealot_female_c__lore_the_warp_two_a_02",
+			"loc_zealot_female_c__lore_the_warp_two_a_03",
+			"loc_zealot_female_c__lore_the_warp_two_a_04"
+		},
+		sound_events_duration = {
+			5.729396,
+			3.003958,
+			4.602083,
+			5.926063
+		},
+		randomize_indexes = {}
+	},
+	lore_the_warp_two_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_the_warp_two_b_01",
+			[2.0] = "loc_zealot_female_c__lore_the_warp_two_b_02"
+		},
+		sound_events_duration = {
+			[1.0] = 5.643229,
+			[2.0] = 4.801021
+		},
+		randomize_indexes = {}
+	},
+	lore_the_warp_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__lore_the_warp_two_c_01",
+			[2.0] = "loc_zealot_female_c__lore_the_warp_two_c_02"
+		},
+		sound_events_duration = {
+			[1.0] = 4.933646,
+			[2.0] = 6.352771
+		},
+		randomize_indexes = {}
+	},
 	lore_training_psyker_four_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,
@@ -1920,10 +2825,6 @@ local conversations_core_zealot_female_c = {
 		sound_events_duration = {
 			[1.0] = 2.204823,
 			[2.0] = 3.158854
-		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},

@@ -1,3 +1,4 @@
+local AchievementList = require("scripts/managers/achievements/achievement_list")
 local ArchetypeSpecializations = require("scripts/settings/ability/archetype_specializations/archetype_specializations")
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
@@ -73,7 +74,9 @@ local function _create_lookup(lookup, hashtable)
 	return lookup
 end
 
-NetworkLookup = {}
+NetworkLookup = {
+	achievement_names = _create_lookup({}, AchievementList._lookup)
+}
 local archetype_specialization_names = {}
 
 for _, archetype_specializations in pairs(ArchetypeSpecializations) do
@@ -190,6 +193,11 @@ NetworkLookup.moveable_platform_direction = {
 	"forward",
 	"backward"
 }
+NetworkLookup.assist_type_lookup = {
+	"assisted",
+	"saved",
+	"revived"
+}
 local minion_attack_selection_template_names = {}
 NetworkLookup.minigame_states = _create_lookup({}, MinigameSettings.states)
 NetworkLookup.minion_attack_selection_template_names = _create_lookup(minion_attack_selection_template_names, MinionAttackSelectionTemplates)
@@ -259,11 +267,11 @@ local player_character_sounds = {
 	["wwise/events/ui/play_hud_heal_2d"] = true,
 	["wwise/events/player/stop_foley_fall_wind_2D"] = true,
 	["wwise/events/weapon/play_indicator_weakspot"] = true,
-	["wwise/events/player/play_player_experience_fall_damage_2d"] = true,
+	["wwise/events/player/play_pick_up_ammo_01"] = true,
 	["wwise/events/player/play_player_vomit_enter"] = true,
 	["wwise/events/weapon/play_shared_combat_weapon_bolter_bullet_flyby"] = true,
-	["wwise/events/player/play_player_get_hit_fire"] = true,
 	["wwise/events/player/play_player_get_hit_light_2d"] = true,
+	["wwise/events/minions/play_enemy_daemonhost_execute_player_impact"] = true,
 	["wwise/events/player/play_backstab_indicator_newly_infected"] = true,
 	["wwise/events/weapon/play_bullet_hits_gen_unarmored_death"] = true,
 	["wwise/events/weapon/play_weapon_lasgun_crack_beam_nearby"] = true,
@@ -274,18 +282,18 @@ local player_character_sounds = {
 	["wwise/events/weapon/play_enemy_netgunner_net_trapped"] = true,
 	["wwise/events/player/play_vault"] = true,
 	["wwise/events/ui/play_hud_coherency_off"] = true,
-	["wwise/events/minions/play_enemy_daemonhost_execute_player_impact"] = true,
+	["wwise/events/player/play_player_experience_fall_damage_2d"] = true,
 	["wwise/events/ui/play_hud_health_station_2d"] = true,
-	["wwise/events/player/play_pick_up_ammo_01"] = true,
+	["wwise/events/player/play_player_get_hit_fire"] = true,
 	["wwise/events/ui/play_hud_coherency_on"] = true,
 	["wwise/events/weapon/play_explosion_force_med"] = true,
 	["wwise/events/player/play_psyker_ability_shout"] = true,
+	["wwise/events/player/play_player_get_hit_corruption_2d"] = true,
 	["wwise/events/player/play_toughness_hits"] = true,
 	["wwise/events/player/play_player_dodge_ranged_success"] = true,
 	["wwise/events/player/play_player_get_hit_heavy_2d"] = true,
 	["wwise/events/player/play_player_dodge_melee_success"] = true,
-	["wwise/events/minions/play_enemy_daemonhost_execute_player_impact_husk"] = true,
-	["wwise/events/weapon/play_indicator_damage_full"] = true
+	["wwise/events/minions/play_enemy_daemonhost_execute_player_impact_husk"] = true
 }
 
 for event_name, _ in pairs(PlayerCharacterSounds.resource_events) do
@@ -298,18 +306,25 @@ NetworkLookup.player_character_sounds = _create_lookup({
 NetworkLookup.player_character_voices = {
 	"psyker_female_a",
 	"psyker_female_b",
+	"psyker_female_c",
 	"zealot_female_a",
 	"zealot_female_b",
+	"zealot_female_c",
 	"veteran_female_a",
 	"veteran_female_b",
+	"veteran_female_c",
 	"zealot_male_a",
 	"zealot_male_b",
+	"zealot_male_c",
 	"psyker_male_a",
 	"psyker_male_b",
+	"psyker_male_c",
 	"veteran_male_a",
 	"veteran_male_b",
+	"veteran_male_c",
 	"ogryn_a",
-	"ogryn_b"
+	"ogryn_b",
+	"ogryn_c"
 }
 NetworkLookup.player_abilities = _create_lookup({
 	"not_equipped"

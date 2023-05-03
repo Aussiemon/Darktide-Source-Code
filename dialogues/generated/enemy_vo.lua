@@ -1823,59 +1823,6 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "cultist_shocktrooper_throwing_grenade",
-		category = "enemy_vo_prio_1",
-		wwise_route = 27,
-		response = "cultist_shocktrooper_throwing_grenade",
-		database = "enemy_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"generic_enemy_vo_event"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"throwing_grenade"
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.EQ,
-				"cultist_shocktrooper"
-			},
-			{
-				"user_memory",
-				"enemy_memory_cultist_shocktrooper_throwing_grenade",
-				OP.TIMEDIFF,
-				OP.GT,
-				10
-			},
-			{
-				"faction_memory",
-				"faction_memory_cultist_shocktrooper_throwing_grenade",
-				OP.TIMEDIFF,
-				OP.GT,
-				10
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"enemy_memory_cultist_shocktrooper_throwing_grenade",
-				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"faction_memory_cultist_shocktrooper_throwing_grenade",
-				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
 		name = "enemy_cultist_berzerker_assault",
 		category = "enemy_vo_prio_0",
 		wwise_route = 46,

@@ -43,6 +43,7 @@ PlayerCharacterStateNetted.init = function (self, character_state_init_context, 
 	self._disabled_character_state_component = disabled_character_state_component
 	self._disabled_state_input = unit_data_extension:read_component("disabled_state_input")
 	self._entered_state_t = nil
+	self._time_disabled = nil
 end
 
 PlayerCharacterStateNetted.extensions_ready = function (self, world, unit)
@@ -111,6 +112,7 @@ PlayerCharacterStateNetted.on_enter = function (self, unit, dt, t, previous_stat
 	end
 
 	self._entered_state_t = t
+	self._time_disabled = is_server and 0 or nil
 
 	self._assist:reset()
 end
@@ -146,9 +148,16 @@ PlayerCharacterStateNetted.on_exit = function (self, unit, t, next_state)
 			local time_in_captivity = t - self._entered_state_t
 
 			Managers.telemetry_events:player_exits_captivity(player, rescued_by_player, state_name, time_in_captivity)
+
+			local stat_manager = Managers.stats
+
+			if stat_manager.can_record_stats() then
+				stat_manager:record_exit_disabled_character_state(state_name, self._time_disabled)
+			end
 		end
 
 		self._entered_state_t = nil
+		self._time_disabled = nil
 	end
 
 	local inventory_component = self._inventory_component
@@ -179,8 +188,14 @@ PlayerCharacterStateNetted.fixed_update = function (self, unit, dt, t, next_stat
 	local assist = self._assist
 	local assist_done = assist:update(dt, t)
 
-	if self._is_server and not assist_done then
-		self:_update_vo(t)
+	if self._is_server then
+		if not assist:in_progress() then
+			self._time_disabled = self._time_disabled + dt
+		end
+
+		if not assist_done then
+			self:_update_vo(t)
+		end
 	end
 
 	return self:_check_transition(unit, t, next_state_params, assist_done)

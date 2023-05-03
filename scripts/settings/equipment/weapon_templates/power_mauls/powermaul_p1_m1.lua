@@ -10,7 +10,6 @@ local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokePowermaulP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_powermaul_p1")
-local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
@@ -1368,10 +1367,6 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local melee_common_traits = table.keys(WeaponTraitsMeleeCommon)
-
-table.append(weapon_template.traits, melee_common_traits)
-
 local weapon_traits_bespoke_powermaul_p1 = table.keys(WeaponTraitsBespokePowermaulP1)
 
 table.append(weapon_template.traits, weapon_traits_bespoke_powermaul_p1)

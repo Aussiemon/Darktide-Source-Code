@@ -21,6 +21,7 @@ MissionCleanupUtilies.cleanup = function (shared_state, gameplay_state)
 		end
 	end
 
+	REPORTIFY_NETWORK_READY = false
 	local physics_world = shared_state.physics_world
 
 	if physics_world then

@@ -35,6 +35,7 @@ PickupSystem.init = function (self, context, system_init_data, ...)
 	self._rubberband_pool_start_count = {}
 	self._rubberband_pool_remaining = {}
 	self._rubberband_pool_special_spawned = {}
+	self._rubberband_free_spots = 0
 
 	if not is_server then
 		local network_event_delegate = context.network_event_delegate
@@ -312,6 +313,7 @@ local function lerp(a, b, t)
 end
 
 local weights = {}
+local SLOT_POCKETABLE = "slot_pocketable"
 
 PickupSystem.get_rubberband_pickup = function (self, distribution_type, percentage_through_level)
 	local AMMO = 1
@@ -332,6 +334,8 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 	local total_ammo = 0
 	local total_grenades = 0
 	local total_health = 0
+	local pocketables_space = 0
+	local pool_size = 0
 
 	for _, player in pairs(players) do
 		local player_unit = player.player_unit
@@ -341,35 +345,54 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 			total_ammo = total_ammo + 1 - Ammo.current_total_percentage(player_unit)
 			total_grenades = total_grenades + 1 - current_grenade_percentage(player_unit)
 			total_health = total_health + 1 - Health.current_health_percent(player_unit)
+			local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+			local inventory_component = unit_data_extension:read_component("inventory")
+			local item_name = inventory_component[SLOT_POCKETABLE]
+
+			if item_name == "not_equipped" then
+				pocketables_space = pocketables_space + 1
+			end
 		end
 	end
 
+	local pocketable_weight = lerp(RubberbandSettings.pocketable_weight.min, RubberbandSettings.pocketable_weight.max, pocketables_space / 4)
 	local min, max = unpack(RubberbandSettings.status_weight[distribution_type])
 	local block_distance = RubberbandSettings.special_block_distance
 
 	table.clear(weights)
 
-	if remaining.ammo > 0 then
-		weights[AMMO] = remaining.ammo / start_count.ammo * (RubberbandSettings.distribution_type_weight.ammo[distribution_type] or 1) * lerp(min, max, total_ammo / player_count) * RubberbandSettings.base_spawn_rate
+	local remaining_ammo = remaining.ammo
+
+	if remaining_ammo > 0 then
+		pool_size = remaining_ammo
+		weights[AMMO] = remaining_ammo / start_count.ammo * (RubberbandSettings.distribution_type_weight.ammo[distribution_type] or 1) * lerp(min, max, total_ammo / player_count)
 	else
 		weights[AMMO] = 0
 	end
 
-	if remaining.grenade > 0 then
-		weights[GRENADE] = remaining.grenade / start_count.grenade * (RubberbandSettings.distribution_type_weight.grenade[distribution_type] or 1) * lerp(min, max, total_grenades / player_count) * RubberbandSettings.base_spawn_rate
+	local remaining_grenade = remaining.grenade
+
+	if remaining_grenade > 0 then
+		pool_size = pool_size + remaining_grenade
+		weights[GRENADE] = remaining_grenade / start_count.grenade * (RubberbandSettings.distribution_type_weight.grenade[distribution_type] or 1) * lerp(min, max, total_grenades / player_count)
 	else
 		weights[GRENADE] = 0
 	end
 
+	local remaining_health = remaining.health
 	local health_special_spawned = special_spawned.medical_crate_pocketable
 
-	if remaining.health > 0 and (not health_special_spawned or percentage_through_level >= health_special_spawned + block_distance) then
-		weights[HEALTH] = remaining.health / start_count.health * (RubberbandSettings.distribution_type_weight.health[distribution_type] or 1) * lerp(min, max, total_health / player_count) * RubberbandSettings.base_spawn_rate
+	if remaining_health > 0 and (not health_special_spawned or percentage_through_level >= health_special_spawned + block_distance) then
+		pool_size = pool_size + remaining_health
+		weights[HEALTH] = remaining_health / start_count.health * (RubberbandSettings.distribution_type_weight.health[distribution_type] or 1) * lerp(min, max, total_health / player_count) * pocketable_weight
 	else
 		weights[HEALTH] = 0
 	end
 
-	self._rubberband_info = string.format("Rubberband request (%s): Ammo: %s, Grenade %s, Health: %s", distribution_type, math.round_with_precision(weights[AMMO] * 100, 2), math.round_with_precision(weights[GRENADE] * 10, 2), math.round_with_precision(weights[HEALTH] * 100, 2))
+	if pool_size <= 0 then
+		return nil
+	end
+
 	local total_weight = 0
 
 	for i = 1, #weights do
@@ -377,10 +400,11 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 		weights[i] = total_weight
 	end
 
+	total_weight = self._rubberband_free_spots / pool_size
+	self._rubberband_free_spots = self._rubberband_free_spots - 1
 	local new_seed, rnd = math.next_random(self._seed)
 	self._seed = new_seed
 	rnd = rnd * math.max(total_weight, 1)
-	self._rubberband_info = self._rubberband_info .. string.format(" (%s/%s)", math.round_with_precision(rnd * 100, 2), math.round_with_precision(total_weight * 100, 2))
 
 	if rnd <= weights[AMMO] then
 		pool = pool.ammo
@@ -395,7 +419,7 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 		local ammo_special_spawned = special_spawned.ammo_cache_pocketable
 
 		if not ammo_special_spawned or percentage_through_level >= ammo_special_spawned + block_distance then
-			weights[AMMO_CACHE] = pool.ammo_cache_pocketable * total_ammo
+			weights[AMMO_CACHE] = pool.ammo_cache_pocketable * total_ammo * pocketable_weight
 		end
 
 		total_weight = 0
@@ -406,8 +430,6 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 		end
 
 		if total_weight <= 0 then
-			self._rubberband_info = self._rubberband_info .. ", picked ammo, spawned: nothing"
-
 			return nil
 		end
 
@@ -416,38 +438,31 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 		remaining.ammo = remaining.ammo - 1
 
 		if rnd <= weights[SMALL_CLIP] then
-			self._rubberband_info = self._rubberband_info .. ", spawned: small clip"
 			pool.small_clip = pool.small_clip - 1
 
 			return "small_clip"
 		elseif rnd <= weights[LARGE_CLIP] then
-			self._rubberband_info = self._rubberband_info .. ", spawned: large clip"
 			pool.large_clip = pool.large_clip - 1
 
 			return "large_clip"
 		else
-			self._rubberband_info = self._rubberband_info .. ", spawned: ammo cache"
 			pool.ammo_cache_pocketable = pool.ammo_cache_pocketable - 1
 			special_spawned.ammo_cache_pocketable = percentage_through_level
 
 			return "ammo_cache_pocketable"
 		end
 	elseif rnd <= weights[GRENADE] then
-		self._rubberband_info = self._rubberband_info .. ", spawned: small grenade"
 		remaining.grenade = remaining.grenade - 1
 		pool.grenade.small_grenade = pool.grenade.small_grenade - 1
 
 		return "small_grenade"
 	elseif rnd <= weights[HEALTH] then
-		self._rubberband_info = self._rubberband_info .. ", spawned: medical crate"
 		remaining.health = remaining.health - 1
 		pool.health.medical_crate_pocketable = pool.health.medical_crate_pocketable - 1
 		special_spawned.medical_crate_pocketable = percentage_through_level
 
 		return "medical_crate_pocketable"
 	else
-		self._rubberband_info = self._rubberband_info .. ", spawned: nothing"
-
 		return nil
 	end
 end
@@ -694,6 +709,12 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_p
 			end
 		end
 	end
+
+	for i = 1, #usable_spawners do
+		if usable_spawners[i].chest then
+			self._rubberband_free_spots = self._rubberband_free_spots + 1
+		end
+	end
 end
 
 PickupSystem._check_spawn = function (self, spawner, pickup_type)
@@ -873,13 +894,22 @@ PickupSystem._show_collected_materials_notification = function (self, peer_id, m
 	end
 
 	local optional_localization_key = "loc_tactical_overlay_crafting_mat_notification"
+	local save_manager = Managers.save
+	local show_pickup_notification = true
 
-	Managers.event:trigger("event_add_notification_message", "currency", {
-		currency = material_type,
-		amount_size = material_size,
-		player_name = player_name,
-		optional_localization_key = optional_localization_key
-	})
+	if save_manager then
+		local account_data = save_manager:account_data()
+		show_pickup_notification = account_data.interface_settings.show_crafting_pickup_notification
+	end
+
+	if show_pickup_notification then
+		Managers.event:trigger("event_add_notification_message", "currency", {
+			currency = material_type,
+			amount_size = material_size,
+			player_name = player_name,
+			optional_localization_key = optional_localization_key
+		})
+	end
 end
 
 PickupSystem.get_collected_materials = function (self)

@@ -520,6 +520,54 @@ local volume_data = {
 		}
 	},
 	{
+		height = 3.5,
+		type = "content/volume_types/nav_tag_volumes/no_spawn",
+		name = "volume",
+		alt_max_vector = {
+			166.125,
+			-4.6154961585998535,
+			-5.75
+		},
+		alt_min_vector = {
+			166.125,
+			-4.6154961585998535,
+			-9.25
+		},
+		bottom_points = {
+			{
+				162.88880920410156,
+				-6.226432800292969,
+				-9.25
+			},
+			{
+				168.92970275878906,
+				-7.031900882720947,
+				-9.25
+			},
+			{
+				169.36119079589844,
+				-3.0045595169067383,
+				-9.25
+			},
+			{
+				162.88880920410156,
+				-2.1990914344787598,
+				-9.25
+			}
+		},
+		color = {
+			255,
+			120,
+			120,
+			255
+		},
+		up_vector = {
+			0,
+			0,
+			1
+		}
+	},
+	{
 		height = 2,
 		type = "content/volume_types/player_mover_blocker",
 		name = "volume_blocker_streets_008",

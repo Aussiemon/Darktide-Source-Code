@@ -160,10 +160,11 @@ local mission_vo_lm_rails_veteran_male_b = {
 	},
 	mission_rails_refectory_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 6,
 		sound_events = {
 			"loc_veteran_male_b__region_habculum_01",
 			"loc_veteran_male_b__region_habculum_02",
+			"loc_veteran_male_b__region_habculum_03",
 			"loc_veteran_male_b__zone_transit_01",
 			"loc_veteran_male_b__zone_transit_02",
 			"loc_veteran_male_b__zone_transit_03"
@@ -171,16 +172,18 @@ local mission_vo_lm_rails_veteran_male_b = {
 		sound_events_duration = {
 			6.857729,
 			4.159563,
+			3.920688,
 			3.567667,
 			5.182688,
 			3.639292
 		},
 		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
 		},
 		randomize_indexes = {}
 	},

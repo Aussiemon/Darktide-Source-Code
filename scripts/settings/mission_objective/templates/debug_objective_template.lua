@@ -13,6 +13,16 @@ local mission_objective_templates = {
 				mission_objective_type = "goal",
 				header = "loc_objective_debug_locate_scanner_header"
 			},
+			objective_goal_objective_one = {
+				description = "loc_objective_debug_locate_scanner_desc",
+				mission_objective_type = "goal",
+				header = "loc_objective_debug_locate_scanner_header"
+			},
+			objective_goal_objective_two = {
+				description = "loc_objective_debug_locate_scanner_desc",
+				mission_objective_type = "goal",
+				header = "loc_objective_debug_locate_scanner_header"
+			},
 			capture_objective = {
 				use_music_event = "control_mission",
 				description = "loc_objective_zone_capture_desc",
@@ -101,6 +111,24 @@ local mission_objective_templates = {
 				description = "Survive while data is being transferred",
 				mission_objective_type = "luggable",
 				header = "Ensure Vox Array Data Transfer"
+			},
+			objective_harvest_hack_first = {
+				description = "Hack your way forward",
+				progress_bar = true,
+				mission_objective_type = "decode",
+				header = "Hack your way forward"
+			},
+			objective_harvest_hack_second = {
+				description = "Hack your way forward",
+				progress_bar = true,
+				mission_objective_type = "decode",
+				header = "Hack your way forward"
+			},
+			objective_harvest_hack_third = {
+				description = "Hack your way forward",
+				progress_bar = true,
+				mission_objective_type = "decode",
+				header = "Hack your way forward"
 			}
 		}
 	}

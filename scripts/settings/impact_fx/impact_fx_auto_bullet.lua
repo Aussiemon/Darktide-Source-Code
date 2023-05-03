@@ -16,7 +16,7 @@ local default_shield_block_decal = {
 		}
 	},
 	units = {
-		"content/fx/units/vfx_decal_metal_bullethole"
+		"content/fx/units/weapons/vfx_decal_metal_bullethole"
 	}
 }
 local blood_ball = {

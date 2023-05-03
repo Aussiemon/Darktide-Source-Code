@@ -1,10 +1,12 @@
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
+local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local CoherencyUtils = require("scripts/extension_systems/coherency/coherency_utils")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local Vo = require("scripts/utilities/vo")
+local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local special_rules = SpecialRulesSetting.special_rules
 local ActionBuffTarget = class("ActionBuffTarget", "ActionAbilityBase")
 
@@ -19,10 +21,13 @@ end
 ActionBuffTarget.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionBuffTarget.super.start(self, action_settings, t, time_scale, action_start_params)
 
-	local _, self_cast = self:_get_target()
-	local anim_event = self_cast and action_settings.self_cast_anim_event or action_settings.ally_anim_event
+	local target_unit, self_cast = self:_get_target()
+	local anim_event = (not target_unit or self_cast) and action_settings.no_target_cast_anim_event or action_settings.has_target_anim_event
+	local anim_event_3p = (not target_unit or self_cast) and action_settings.no_target_cast_anim_event_3p or action_settings.has_target_anim_event_3p
 
-	self:trigger_anim_event(anim_event)
+	if anim_event then
+		self:trigger_anim_event(anim_event, anim_event_3p)
+	end
 
 	local vo_tag = action_settings.vo_tag
 
@@ -41,6 +46,11 @@ end
 
 ActionBuffTarget.finish = function (self, reason, data, t, time_in_action)
 	ActionBuffTarget.super.finish(self, reason, data, t, time_in_action)
+
+	local action_module_targeting_component = self._action_module_targeting_component
+	action_module_targeting_component.target_unit_1 = nil
+	action_module_targeting_component.target_unit_2 = nil
+	action_module_targeting_component.target_unit_3 = nil
 end
 
 ActionBuffTarget.fixed_update = function (self, dt, t, time_in_action)
@@ -50,10 +60,11 @@ ActionBuffTarget.fixed_update = function (self, dt, t, time_in_action)
 
 	local action_settings = self._action_settings
 	local cast_time = action_settings.cast_time
+	local target_unit, self_cast = self:_get_target()
+	local should_cast = ActionUtility.is_within_trigger_time(time_in_action, dt, cast_time) and (target_unit or self_cast)
 
-	if cast_time < time_in_action and not self._spell_cast then
+	if should_cast then
 		self._spell_cast = true
-		local target_unit, self_cast = self:_get_target()
 		local action_module_targeting_component = self._action_module_targeting_component
 		action_module_targeting_component.target_unit_1 = nil
 		action_module_targeting_component.target_unit_2 = nil
@@ -112,13 +123,29 @@ ActionBuffTarget.fixed_update = function (self, dt, t, time_in_action)
 			end
 		end
 	end
+
+	local remove_item_from_inventory_time = action_settings.remove_item_from_inventory
+
+	if self._spell_cast and remove_item_from_inventory_time then
+		local remove_time = action_settings.remove_item_from_inventory_time or action_settings.total_time
+		local should_unequip = remove_time <= time_in_action
+
+		if should_unequip and action_settings.remove_item_from_inventory then
+			local inventory_component = self._inventory_component
+			local wielded_slot = inventory_component.wielded_slot
+			local player_unit = self._player_unit
+
+			PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory_component, player_unit, t)
+			PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, wielded_slot, t)
+		end
+	end
 end
 
 ActionBuffTarget._get_target = function (self)
 	local action_settings = self._action_settings
 	local action_module_targeting_component = self._action_module_targeting_component
 	local target_unit = action_module_targeting_component.target_unit_1
-	local self_cast = action_settings.self_cast or not target_unit
+	local self_cast = action_settings.self_cast or action_settings.self_cast_if_no_target and not target_unit
 	local target = self_cast and self._player_unit or target_unit
 
 	return target, self_cast

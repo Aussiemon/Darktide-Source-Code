@@ -1,5 +1,6 @@
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
+local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local AlternateFire = require("scripts/utilities/alternate_fire")
 local Overheat = require("scripts/utilities/overheat")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")

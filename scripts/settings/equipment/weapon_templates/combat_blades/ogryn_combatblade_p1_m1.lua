@@ -10,7 +10,6 @@ local HitZone = require("scripts/utilities/attack/hit_zone")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
-local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WeaponTraitsBespokeOgrynCombatbladeP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_combatblade_p1")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
@@ -319,11 +318,12 @@ weapon_template.actions = {
 		}
 	},
 	action_melee_start_right = {
-		chain_anim_event_3p = "attack_swing_charge_down_right",
+		allowed_during_sprint = true,
 		chain_anim_event = "attack_swing_charge_right_pose",
-		anim_end_event = "attack_finished",
+		chain_anim_event_3p = "attack_swing_charge_down_right",
 		kind = "windup",
 		first_person_hit_anim = "hit_right_shake",
+		anim_end_event = "attack_finished",
 		first_person_hit_stop_anim = "attack_hit",
 		anim_event_3p = "attack_swing_charge_down_right",
 		anim_event = "attack_swing_charge_right",
@@ -381,13 +381,14 @@ weapon_template.actions = {
 	action_right_light = {
 		damage_window_start = 0.26666666666666666,
 		hit_armor_anim = "attack_hit_shield",
-		anim_end_event = "attack_finished",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
 		range_mod = 1.25,
 		first_person_hit_stop_anim = "attack_hit",
+		allowed_during_sprint = true,
 		weapon_handling_template = "time_scale_1",
 		damage_window_end = 0.4,
+		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_right_diagonal",
 		anim_event = "attack_swing_right_diagonal",
 		total_time = 1.5,
@@ -1236,10 +1237,6 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local melee_common_traits = table.keys(WeaponTraitsMeleeCommon)
-
-table.append(weapon_template.traits, melee_common_traits)
-
 local bespoke_ogryn_combatblade_p1 = table.keys(WeaponTraitsBespokeOgrynCombatbladeP1)
 
 table.append(weapon_template.traits, bespoke_ogryn_combatblade_p1)

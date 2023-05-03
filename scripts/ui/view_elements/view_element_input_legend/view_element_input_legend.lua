@@ -36,7 +36,6 @@ ViewElementInputLegend.add_entry = function (self, display_name, input_action, v
 	local widget = self:_create_widget(id, widget_definition)
 	local entry = {
 		recalcultate_text_width = true,
-		is_visible = true,
 		widget = widget,
 		id = id,
 		display_name = display_name,
@@ -44,6 +43,7 @@ ViewElementInputLegend.add_entry = function (self, display_name, input_action, v
 		visibility_function = visibility_function,
 		on_pressed_callback = on_pressed_callback,
 		side = side_optional,
+		is_visible = not visibility_function,
 		use_mouse_hold = use_mouse_hold
 	}
 	local content = widget.content

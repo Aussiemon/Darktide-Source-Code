@@ -1,3 +1,5 @@
+local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
+
 require("scripts/extension_systems/buff/buffs/proc_buff")
 
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
@@ -192,10 +194,20 @@ WeaponTraitParentProcBuff.visual_stack_count = function (self)
 end
 
 WeaponTraitParentProcBuff._show_in_hud = function (self)
+	local template = self._template
+	local template_context = self._template_context
+	local template_data = self._template_data
+	local show_in_hud_if_slot_is_wielded = template.show_in_hud_if_slot_is_wielded
+
+	if show_in_hud_if_slot_is_wielded and not ConditionalFunctions.is_item_slot_wielded(template_data, template_context) then
+		return false
+	end
+
 	local visual_stack_count = self:visual_stack_count()
 	local show_in_hud = visual_stack_count > 0
+	local is_hud_active = self:_is_hud_active()
 
-	return show_in_hud
+	return show_in_hud and is_hud_active
 end
 
 WeaponTraitParentProcBuff._hud_show_stack_count = function (self)

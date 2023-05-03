@@ -8,6 +8,7 @@ LevelPropCustomization.init = function (self, unit)
 	self._child_units = {}
 	self._chunk_lodding_registered = false
 	self._child_is_static = {}
+	self._editor_toggle_visibility_state = true
 
 	self:_spawn_children()
 
@@ -29,6 +30,14 @@ LevelPropCustomization.on_chunk_visibility_state_changed = function (self, is_vi
 				self:_destroy_actors(child_unit)
 			end
 		end
+	end
+end
+
+LevelPropCustomization.editor_toggle_visibility_state = function (self, is_visible)
+	self._editor_toggle_visibility_state = is_visible
+
+	for _, child_unit in ipairs(self._child_units) do
+		Unit.set_unit_visibility(child_unit, is_visible)
 	end
 end
 
@@ -97,6 +106,8 @@ LevelPropCustomization._spawn_children = function (self)
 			table.insert(self._child_units, child_unit)
 		end
 	end
+
+	self:editor_toggle_visibility_state(self._editor_toggle_visibility_state)
 end
 
 LevelPropCustomization._destroy_actors = function (self, unit)

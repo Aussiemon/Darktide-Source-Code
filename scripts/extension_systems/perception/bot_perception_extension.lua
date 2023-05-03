@@ -154,9 +154,9 @@ BotPerceptionExtension._update_target_enemy = function (self, self_unit, self_po
 		for read_index = 1, num_enemies_in_proximity do
 			local enemy_unit = enemies_in_proximity[read_index]
 			local data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
-			local breed = data_extension and data_extension:breed()
+			local breed = data_extension:breed()
 
-			if breed and not breed.not_bot_target and aggroed_units[enemy_unit] then
+			if not breed.not_bot_target and aggroed_units[enemy_unit] then
 				write_index = write_index + 1
 				enemies_in_proximity[write_index] = enemies_in_proximity[read_index]
 

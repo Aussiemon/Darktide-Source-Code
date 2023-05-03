@@ -200,7 +200,7 @@ ConstantElementChat.cb_chat_manager_message_recieved = function (self, channel_h
 
 		local sender = nil
 
-		if message.is_current_user then
+		if message.is_current_user and channel.tag then
 			local channel_name = self:_channel_name(channel.tag, false, channel.channel_name)
 			sender = Managers.localization:localize("loc_chat_own_player", true, {
 				channel_name = channel_name
@@ -237,7 +237,7 @@ ConstantElementChat.cb_chat_manager_participant_added = function (self, channel_
 			end
 		end
 
-		if show_notification and participant.displayname then
+		if show_notification and participant.displayname and channel.tag then
 			local channel_name = self:_channel_name(channel.tag, true, channel.channel_name)
 			local message = Managers.localization:localize("loc_chat_user_joined_channel", true, {
 				channel_name = channel_name,
@@ -275,7 +275,7 @@ ConstantElementChat.cb_chat_manager_participant_removed = function (self, channe
 			end
 		end
 
-		if show_notification and participant.displayname then
+		if show_notification and participant.displayname and channel.tag then
 			local channel_name = self:_channel_name(channel.tag, true, channel.channel_name)
 			local message = Managers.localization:localize("loc_chat_user_left_channel", true, {
 				channel_name = channel_name,

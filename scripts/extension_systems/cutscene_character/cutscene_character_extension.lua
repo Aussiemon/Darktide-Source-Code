@@ -1,10 +1,11 @@
+local Breeds = require("scripts/settings/breed/breeds")
 local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinematic_scene_settings")
+local CinematicSceneTemplates = require("scripts/settings/cinematic_scene/cinematic_scene_templates")
 local MasterItems = require("scripts/backend/master_items")
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
+local UIUnitSpawner = require("scripts/managers/ui/ui_unit_spawner")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/weapon_templates")
-local CinematicSceneTemplates = require("scripts/settings/cinematic_scene/cinematic_scene_templates")
-local Breeds = require("scripts/settings/breed/breeds")
 local CutsceneCharacterExtension = class("CutsceneCharacterExtension")
 local AnimationType = {
 	Weapon = 2,
@@ -21,29 +22,33 @@ CutsceneCharacterExtension.init = function (self, extension_init_context, unit, 
 	self._breed_name = "none"
 	self._player_unique_id = nil
 	self._prop_items = {}
-	self._resource_list = {}
-	self._packages_loading = 0
+	self._equip_slot_on_loadout_assign = ""
+	local world = extension_init_context.world
+	local unit_spawner = UIUnitSpawner:new(world)
+	local level_unit_id = Unit.id_string(unit)
+	local camera = nil
+	local force_highest_lod_step = true
+	self._profile_spawner = UIProfileSpawner:new("CutsceneCharacterExtension_" .. level_unit_id, world, camera, unit_spawner, force_highest_lod_step)
 	self._inventory_animation_event = nil
 	self._weapon_animation_event = nil
 	self._current_state_machine = AnimationType.None
 end
 
 CutsceneCharacterExtension.destroy = function (self)
-	if self._player_loadout_assigned then
-		self:unassign_player_loadout()
-	end
+	self._profile_spawner:destroy()
 
 	local cutscene_character_system = self._extension_manager:system("cutscene_character_system")
 
 	cutscene_character_system:unregister_cutscene_character(self)
 end
 
-CutsceneCharacterExtension.setup_from_component = function (self, cinematic_name, character_type, breed_name, prop_items, slot, inventory_animation_event)
+CutsceneCharacterExtension.setup_from_component = function (self, cinematic_name, character_type, breed_name, prop_items, slot, inventory_animation_event, equip_slot_on_loadout_assign)
 	self._cinematic_name = cinematic_name
 	self._character_type = character_type
 	self._breed_name = breed_name
 	self._prop_items = prop_items
 	self._slot = slot
+	self._equip_slot_on_loadout_assign = equip_slot_on_loadout_assign
 
 	if cinematic_name ~= "none" and self:_check_valid_animation(cinematic_name, inventory_animation_event, AnimationType.Inventory) then
 		self._inventory_animation_event = inventory_animation_event
@@ -52,6 +57,10 @@ CutsceneCharacterExtension.setup_from_component = function (self, cinematic_name
 	local cutscene_character_system = self._extension_manager:system("cutscene_character_system")
 
 	cutscene_character_system:register_cutscene_character(self)
+end
+
+CutsceneCharacterExtension.update = function (self, unit, dt, t)
+	self._profile_spawner:update(dt, t)
 end
 
 CutsceneCharacterExtension.cinematic_name = function (self)
@@ -89,16 +98,6 @@ CutsceneCharacterExtension._check_valid_animation = function (self, cinematic_na
 	return valid_animation
 end
 
-CutsceneCharacterExtension._is_valid_for_cutscene = function (self, cinematic_name)
-	local character_cinematic_name = self._cinematic_name
-	local character_type = self._character_type
-	local breed_name = self._breed_name
-	local valid_character = character_type == "player" and breed_name ~= "none"
-	local valid_cinematic = character_cinematic_name ~= CinematicSceneSettings.CINEMATIC_NAMES.none and character_cinematic_name == cinematic_name
-
-	return valid_character and valid_cinematic
-end
-
 local NUM_CPT_PER_UNIT = 1
 
 local function _check_component_amount(unit, components, component_name)
@@ -125,132 +124,91 @@ CutsceneCharacterExtension._clear_loadout = function (self)
 	end
 end
 
-local prop_items = {}
+CutsceneCharacterExtension.has_player_assigned = function (self)
+	return self._player_unique_id ~= nil or self._profile_spawner:loading()
+end
 
-CutsceneCharacterExtension._set_loadout = function (self, items)
+local PROP_ITEMS = {}
+
+CutsceneCharacterExtension.assign_player_loadout = function (self, player_unique_id, items)
+	local cinematic_name = self._cinematic_name
+	local cinematic_template = CinematicSceneTemplates[cinematic_name]
+	local ignored_slots = cinematic_template.ignored_slots
+	local equip_slot = self._equip_slot_on_loadout_assign
+	local ignore_wield_on_assigned = equip_slot == ""
+
+	for j = 1, #ignored_slots do
+		local ignored_slot_name = ignored_slots[j]
+
+		self._profile_spawner:ignore_slot(ignored_slot_name)
+
+		if equip_slot ~= "" and ignored_slot_name == equip_slot then
+			ignore_wield_on_assigned = true
+		end
+	end
+
+	if equip_slot ~= "" and not ignore_wield_on_assigned then
+		self._profile_spawner:wield_slot(equip_slot)
+	end
+
+	local profile = Managers.player:player_from_unique_id(player_unique_id):profile()
+	local unit = self._unit
+	local position = Unit.world_position(unit, 1)
+	local rotation = Unit.world_rotation(unit, 1)
+	local scale = Unit.world_scale(unit, 1)
+	local animation_event, face_animation_event = nil
+	local force_highest_mip = true
+	local disable_hair_state_machine = false
+	local state_machine = nil
+	local ignore_state_machine = true
+	local mission_manager = Managers.state.mission
+	local mission_template = mission_manager and mission_manager:mission()
+	local face_state_machine_key = mission_template.face_state_machine_key
+
+	self._profile_spawner:spawn_profile(profile, position, rotation, scale, state_machine, animation_event, face_state_machine_key, face_animation_event, force_highest_mip, disable_hair_state_machine, unit, ignore_state_machine)
+	self:_load_props()
+
+	self._player_unique_id = player_unique_id
+end
+
+CutsceneCharacterExtension._load_props = function (self)
+	table.clear(PROP_ITEMS)
+
+	local prop_item_names = self._prop_items
+	local item_definitions = MasterItems.get_cached()
+
+	for i = 1, #prop_item_names do
+		local item_name = prop_item_names[i]
+		PROP_ITEMS[i] = rawget(item_definitions, item_name)
+	end
+
 	local extension_manager = self._extension_manager
-	local player_character_unit = self._unit
 	local component_system = extension_manager:system("component_system")
+	local player_character_unit = self._unit
 	local player_customization_components = component_system:get_components(player_character_unit, "PlayerCustomization")
 
 	if _check_component_amount(player_character_unit, player_customization_components, "PlayerCustomization") then
 		local player_customization_component = player_customization_components[1]
 		local mission_manager = Managers.state.mission
 		local mission_template = mission_manager and mission_manager:mission()
-		local slot_equip_order = PlayerCharacterConstants.slot_equip_order
-		local items_by_slot_order = {}
 
-		for slot, item in pairs(items) do
-			local order = table.find(slot_equip_order, slot)
-			items_by_slot_order[order] = item
-		end
-
-		local keys_ordered = {}
-
-		table.keys(items_by_slot_order, keys_ordered)
-		table.sort(keys_ordered)
-
-		local items_list = {}
-
-		for index, keys in ipairs(keys_ordered) do
-			items_list[index] = items_by_slot_order[keys]
-		end
-
-		player_customization_component:spawn_items(items_list, mission_template)
-		table.clear(prop_items)
-
-		local prop_item_names = self._prop_items
-		local item_definitions = MasterItems.get_cached()
-
-		for i = 1, #prop_item_names do
-			local item_name = prop_item_names[i]
-			prop_items[i] = rawget(item_definitions, item_name)
-		end
-
-		player_customization_component:spawn_items(prop_items, mission_template)
-
-		local slot_body_face_unit = player_customization_component:unit_in_slot("slot_body_face")
-
-		if slot_body_face_unit then
-			for slot, item in pairs(items) do
-				if item and item.hide_eyebrows ~= nil then
-					local hide_eyebrows = item.hide_eyebrows
-
-					Unit.set_visibility(slot_body_face_unit, "eyebrows", not hide_eyebrows, true)
-				end
-
-				if item and item.hide_beard ~= nil then
-					local hide_beard = item.hide_beard
-
-					Unit.set_visibility(slot_body_face_unit, "beard", not hide_beard, true)
-				end
-			end
-		end
-
-		return true
+		player_customization_component:spawn_items(PROP_ITEMS, mission_template)
 	end
-
-	return false
-end
-
-CutsceneCharacterExtension.has_player_assigned = function (self)
-	return self._player_unique_id ~= nil or self._packages_loading > 0
-end
-
-CutsceneCharacterExtension._on_package_loaded = function (self, player_unique_id, items, id)
-	self._resource_list[id] = true
-	self._packages_loading = self._packages_loading - 1
-
-	if self._packages_loading == 0 then
-		if self:_set_loadout(items) then
-			self._player_unique_id = player_unique_id
-		else
-			local package_manager = Managers.package
-
-			for package_id, _ in pairs(self._resource_list) do
-				package_manager:release(package_id)
-			end
-		end
-	end
-end
-
-CutsceneCharacterExtension.assign_player_loadout = function (self, player_unique_id, items)
-	local on_load_callback = callback(self, "_on_package_loaded", player_unique_id, items)
-	local profile = Managers.player:player_from_unique_id(player_unique_id):profile()
-	local package_manager = Managers.package
-	local package_synchronizer_client = Managers.package_synchronization:synchronizer_client()
-	local packages = package_synchronizer_client:resolve_profile_packages(profile)
-
-	for alias, package_data in pairs(packages) do
-		for package, _ in pairs(package_data.dependencies) do
-			local id = package_manager:load(package, "CutsceneCharacterExtension", on_load_callback, true)
-			self._resource_list[id] = false
-			self._packages_loading = self._packages_loading + 1
-		end
-	end
-
-	self._player_loadout_assigned = true
 end
 
 CutsceneCharacterExtension.unassign_player_loadout = function (self)
-	self._player_loadout_assigned = false
-
+	self._profile_spawner:reset()
 	self:_clear_loadout()
 
-	local package_manager = Managers.package
-
-	for id, _ in pairs(self._resource_list) do
-		package_manager:release(id)
-	end
-
-	table.clear(self._resource_list)
-
 	self._player_unique_id = nil
-	self._packages_loading = 0
 end
 
 CutsceneCharacterExtension.set_equipped_weapon = function (self, weapon)
 	self._equipped_weapon = weapon
+end
+
+CutsceneCharacterExtension.wield_slot = function (self, slot_name)
+	self._profile_spawner:wield_slot(slot_name)
 end
 
 CutsceneCharacterExtension.set_weapon_animation_event = function (self, animation_event)
@@ -298,6 +256,10 @@ CutsceneCharacterExtension.start_inventory_specific_walk_animation = function (s
 			Unit.animation_event(self._unit, self._inventory_animation_event)
 		end
 	end
+end
+
+CutsceneCharacterExtension.unit_3p_from_slot = function (self, slot_id)
+	return self._profile_spawner:unit_3p_from_slot(slot_id)
 end
 
 return CutsceneCharacterExtension

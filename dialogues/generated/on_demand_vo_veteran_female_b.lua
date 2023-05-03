@@ -18,14 +18,6 @@ local on_demand_vo_veteran_female_b = {
 			0.525708,
 			0.547479
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_follow_you = {
@@ -118,14 +110,6 @@ local on_demand_vo_veteran_female_b = {
 			0.770604,
 			0.744396
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_need_health = {
@@ -197,14 +181,6 @@ local on_demand_vo_veteran_female_b = {
 			0.68825,
 			0.742625
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_over_here = {
@@ -255,14 +231,6 @@ local on_demand_vo_veteran_female_b = {
 			0.662063,
 			0.791896
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_yes = {
@@ -283,14 +251,6 @@ local on_demand_vo_veteran_female_b = {
 			0.545208,
 			0.553667,
 			0.665563
-		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
 		},
 		randomize_indexes = {}
 	},
@@ -439,12 +399,6 @@ local on_demand_vo_veteran_female_b = {
 			1.011458,
 			0.754313
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_ogryn_heavy_gunner = {
@@ -462,12 +416,6 @@ local on_demand_vo_veteran_female_b = {
 			0.55,
 			0.708271
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_poxwalker_bomber = {
@@ -484,12 +432,6 @@ local on_demand_vo_veteran_female_b = {
 			1.084229,
 			0.940729,
 			1.096521
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -525,12 +467,6 @@ local on_demand_vo_veteran_female_b = {
 			0.8515,
 			0.803417
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_cultist_holy_stubber_gunner = {
@@ -547,12 +483,6 @@ local on_demand_vo_veteran_female_b = {
 			1.093896,
 			1.130313,
 			1.15125
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -571,12 +501,6 @@ local on_demand_vo_veteran_female_b = {
 			1.305583,
 			1.257896
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_daemonhost_witch = {
@@ -594,17 +518,11 @@ local on_demand_vo_veteran_female_b = {
 			1.339813,
 			1.21725
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_daemonhost_witch_not_alerted = {
 		randomize_indexes_n = 0,
-		sound_events_n = 9,
+		sound_events_n = 10,
 		sound_events = {
 			"loc_veteran_female_b__seen_enemy_daemonhost_01",
 			"loc_veteran_female_b__seen_enemy_daemonhost_02",
@@ -612,6 +530,7 @@ local on_demand_vo_veteran_female_b = {
 			"loc_veteran_female_b__seen_enemy_daemonhost_04",
 			"loc_veteran_female_b__seen_enemy_daemonhost_05",
 			"loc_veteran_female_b__seen_enemy_daemonhost_06",
+			"loc_veteran_female_b__seen_enemy_daemonhost_07",
 			"loc_veteran_female_b__seen_enemy_daemonhost_08",
 			"loc_veteran_female_b__seen_enemy_daemonhost_09",
 			"loc_veteran_female_b__seen_enemy_daemonhost_10"
@@ -623,20 +542,22 @@ local on_demand_vo_veteran_female_b = {
 			1.141063,
 			2.043125,
 			1.7045,
+			2.051667,
 			1.055688,
 			1.334583,
 			1.260583
 		},
 		sound_event_weights = {
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -655,12 +576,6 @@ local on_demand_vo_veteran_female_b = {
 			0.808125,
 			0.82025
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_plague_ogryn = {
@@ -677,12 +592,6 @@ local on_demand_vo_veteran_female_b = {
 			1.12425,
 			1.243604,
 			1.007438
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -747,12 +656,6 @@ local on_demand_vo_veteran_female_b = {
 			0.910854,
 			0.846771
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_traitor_grenadier = {
@@ -769,12 +672,6 @@ local on_demand_vo_veteran_female_b = {
 			1.21075,
 			0.993979,
 			1.083104
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -793,12 +690,6 @@ local on_demand_vo_veteran_female_b = {
 			0.972875,
 			1.107
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_traitor_scout_shocktrooper = {
@@ -815,12 +706,6 @@ local on_demand_vo_veteran_female_b = {
 			1.686875,
 			1.499938,
 			1.212625
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -839,12 +724,6 @@ local on_demand_vo_veteran_female_b = {
 			0.835021,
 			0.817083
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_ammo = {
@@ -861,12 +740,6 @@ local on_demand_vo_veteran_female_b = {
 			0.699542,
 			0.550583,
 			0.780958
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -885,12 +758,6 @@ local on_demand_vo_veteran_female_b = {
 			0.824333,
 			0.797271
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_container = {
@@ -907,12 +774,6 @@ local on_demand_vo_veteran_female_b = {
 			1.164188,
 			0.988042,
 			1.128521
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -931,12 +792,6 @@ local on_demand_vo_veteran_female_b = {
 			1.043917,
 			1.005333
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_deployed_ammo_crate = {
@@ -953,12 +808,6 @@ local on_demand_vo_veteran_female_b = {
 			0.882167,
 			0.944167,
 			1.083438
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -977,12 +826,6 @@ local on_demand_vo_veteran_female_b = {
 			0.941583,
 			1.110292
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_forge_metal = {
@@ -1000,12 +843,6 @@ local on_demand_vo_veteran_female_b = {
 			0.880563,
 			0.707292
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_health_booster = {
@@ -1022,12 +859,6 @@ local on_demand_vo_veteran_female_b = {
 			1.086583,
 			0.841688,
 			0.936833
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -1189,12 +1020,6 @@ local on_demand_vo_veteran_female_b = {
 			1.218667,
 			0.973938
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_station_health_without_battery = {
@@ -1215,14 +1040,6 @@ local on_demand_vo_veteran_female_b = {
 			0.979583,
 			0.997875,
 			1.004979
-		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
 		},
 		randomize_indexes = {}
 	}

@@ -283,18 +283,6 @@ local gameplay_vo_zealot_male_a = {
 			1.887146,
 			1.126938
 		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
-		},
 		randomize_indexes = {}
 	},
 	critical_health = {
@@ -788,18 +776,6 @@ local gameplay_vo_zealot_male_a = {
 			2.784771,
 			1.585438,
 			2.429271
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -1470,13 +1446,6 @@ local gameplay_vo_zealot_male_a = {
 			1.588729,
 			1.861438
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	found_health_booster_ogryn_low_on_health = {
@@ -1801,18 +1770,6 @@ local gameplay_vo_zealot_male_a = {
 			1.448396,
 			1.822354,
 			2.24025
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -2327,18 +2284,6 @@ local gameplay_vo_zealot_male_a = {
 			1.745417,
 			1.000813,
 			1.593031
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -3224,13 +3169,6 @@ local gameplay_vo_zealot_male_a = {
 			2.164104,
 			2.073156
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	response_for_psyker_disabled_by_chaos_hound = {
@@ -3538,13 +3476,6 @@ local gameplay_vo_zealot_male_a = {
 			1.775906,
 			1.295219
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	response_for_zealot_disabled_by_chaos_hound = {
@@ -3840,14 +3771,13 @@ local gameplay_vo_zealot_male_a = {
 	},
 	seen_enemy_daemonhost = {
 		randomize_indexes_n = 0,
-		sound_events_n = 10,
+		sound_events_n = 9,
 		sound_events = {
 			"loc_zealot_male_a__seen_enemy_daemonhost_01",
 			"loc_zealot_male_a__seen_enemy_daemonhost_02",
 			"loc_zealot_male_a__seen_enemy_daemonhost_03",
 			"loc_zealot_male_a__seen_enemy_daemonhost_04",
 			"loc_zealot_male_a__seen_enemy_daemonhost_05",
-			"loc_zealot_male_a__seen_enemy_daemonhost_06",
 			"loc_zealot_male_a__seen_enemy_daemonhost_07",
 			"loc_zealot_male_a__seen_enemy_daemonhost_08",
 			"loc_zealot_male_a__seen_enemy_daemonhost_09",
@@ -3859,23 +3789,10 @@ local gameplay_vo_zealot_male_a = {
 			0.936635,
 			1.343219,
 			1.356948,
-			1.358271,
 			2.77624,
 			1.964177,
 			3.8205,
 			1.50299
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},

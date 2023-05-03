@@ -83,7 +83,7 @@ end
 
 BtChaosDaemonhostPassiveAction.init_values = function (self, blackboard, action_data, node_data)
 	local statistics_component = Blackboard.write_component(blackboard, "statistics")
-	statistics_component.valid_targets_on_aggro = 0
+	statistics_component.player_deaths = 0
 end
 
 BtChaosDaemonhostPassiveAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
@@ -121,12 +121,9 @@ BtChaosDaemonhostPassiveAction.leave = function (self, unit, breed, blackboard, 
 	Managers.state.nav_mesh:remove_nav_cost_map_volume(nav_cost_map_volume_id, nav_cost_map_id)
 
 	local statistics_component = Blackboard.write_component(blackboard, "statistics")
-	local target_side_id = 1
-	local side_system = Managers.state.extension:system("side_system")
-	local side = side_system:get_side(target_side_id)
-	local target_units = side.valid_player_units
-	local num_valid_target_units = #target_units
-	statistics_component.valid_targets_on_aggro = num_valid_target_units
+
+	Managers.state.pacing:set_minion_listening_for_player_deaths(unit, statistics_component, true)
+
 	local aim_component = scratchpad.aim_component
 	aim_component.controlled_aiming = true
 end

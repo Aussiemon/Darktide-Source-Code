@@ -163,10 +163,11 @@ local mission_vo_lm_rails_zealot_male_a = {
 	},
 	mission_rails_refectory_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 6,
 		sound_events = {
 			"loc_zealot_male_a__region_habculum_01",
 			"loc_zealot_male_a__region_habculum_02",
+			"loc_zealot_male_a__region_habculum_03",
 			"loc_zealot_male_a__zone_transit_01",
 			"loc_zealot_male_a__zone_transit_02",
 			"loc_zealot_male_a__zone_transit_03"
@@ -174,16 +175,18 @@ local mission_vo_lm_rails_zealot_male_a = {
 		sound_events_duration = {
 			5.763042,
 			11.39183,
+			3.9235,
 			3.125521,
 			2.909563,
 			3.736813
 		},
 		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
 		},
 		randomize_indexes = {}
 	},

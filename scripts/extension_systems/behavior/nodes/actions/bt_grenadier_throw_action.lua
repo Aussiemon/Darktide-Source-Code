@@ -134,7 +134,7 @@ BtGrenadierThrowAction._throw_grenade = function (self, unit, scratchpad, action
 	Managers.state.unit_spawner:spawn_network_unit(grenade_unit_name, "item_projectile", throw_position, nil, nil, item, projectile_template, locomotion_state, throw_direction, speed, angular_velocity, unit)
 
 	local throw_grenade_component = scratchpad.throw_grenade_component
-	local cooldown = Managers.state.difficulty:get_table_entry_by_challenge(MinionDifficultySettings.cooldowns.grenadier_throw)
+	local cooldown = Managers.state.difficulty:get_table_entry_by_challenge(action_data.cooldown or MinionDifficultySettings.cooldowns.grenadier_throw)
 	throw_grenade_component.next_throw_at_t = t + cooldown
 end
 

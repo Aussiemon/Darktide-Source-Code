@@ -10,14 +10,14 @@ local FACIAL_HAIR_VISIBILITY_GROUPS = table.enum("eyebrows", "beard")
 local _should_spawn_3p, _should_spawn_1p = nil
 local EquipmentComponent = class("EquipmentComponent")
 
-EquipmentComponent.init = function (self, world, item_definitions, unit_spawner, unit_3p, optional_extension_manager, optional_item_streaming_settings, optional_is_in_menu)
+EquipmentComponent.init = function (self, world, item_definitions, unit_spawner, unit_3p, optional_extension_manager, optional_item_streaming_settings, optional_force_highest_lod_step)
 	self._world = world
 	self._item_definitions = item_definitions
 	self._unit_spawner = unit_spawner
 	self.lod_group_3p = VisualLoadoutLodGroup.try_init_and_fetch_lod_group(unit_3p, "lod")
 	self.lod_shadow_group_3p = VisualLoadoutLodGroup.try_init_and_fetch_lod_group(unit_3p, "lod_shadow")
 	self._extension_manager = optional_extension_manager
-	self._is_in_menu = optional_is_in_menu
+	self._force_highest_lod_step = optional_force_highest_lod_step
 	local has_slot_package_streaming = optional_item_streaming_settings ~= nil
 	self._has_slot_package_streaming = has_slot_package_streaming
 
@@ -86,7 +86,7 @@ EquipmentComponent._attach_settings = function (self)
 	temp.item_definitions = self._item_definitions
 	temp.extension_manager = extension_manager
 	temp.spawn_with_extensions = extension_manager ~= nil
-	temp.is_in_menu = self._is_in_menu
+	temp.force_highest_lod_step = self._force_highest_lod_step
 
 	return temp
 end
@@ -785,8 +785,8 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 end
 
 EquipmentComponent.wield_slot = function (slot, first_person_mode)
-	local base_unit_1p = first_person_mode and slot.unit_1p
-	local base_unit_3p = slot.unit_3p ~= nil and unit_alive(slot.unit_3p) and slot.unit_3p
+	local base_unit_1p = first_person_mode and slot and slot.unit_1p
+	local base_unit_3p = slot and slot.unit_3p ~= nil and unit_alive(slot.unit_3p) and slot.unit_3p
 	local base_unit = base_unit_1p or base_unit_3p or nil
 
 	if base_unit then

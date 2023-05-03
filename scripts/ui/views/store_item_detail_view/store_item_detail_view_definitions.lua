@@ -1556,7 +1556,7 @@ local legend_inputs = {
 		display_name = "loc_rotate",
 		alignment = "right_alignment",
 		visibility_function = function (parent)
-			return not parent._using_cursor_navigation and (parent._is_dummy_showing or parent._is_weapon_showing)
+			return not parent._using_cursor_navigation and (parent._is_dummy_showing or parent._is_weapon_showing) and not parent._aquilas_showing
 		end
 	},
 	{
@@ -1564,7 +1564,7 @@ local legend_inputs = {
 		display_name = "loc_scroll_text_up",
 		alignment = "right_alignment",
 		visibility_function = function (parent)
-			return not parent._using_cursor_navigation and parent._description_scroll
+			return not parent._using_cursor_navigation and parent._description_scroll and not parent._aquilas_showing
 		end
 	},
 	{
@@ -1572,7 +1572,7 @@ local legend_inputs = {
 		display_name = "loc_scroll_text_down",
 		alignment = "right_alignment",
 		visibility_function = function (parent)
-			return not parent._using_cursor_navigation and parent._description_scroll
+			return not parent._using_cursor_navigation and parent._description_scroll and not parent._aquilas_showing
 		end
 	},
 	{
@@ -1581,7 +1581,7 @@ local legend_inputs = {
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_inspect_pressed",
 		visibility_function = function (parent)
-			return true
+			return not parent._aquilas_showing
 		end
 	},
 	{

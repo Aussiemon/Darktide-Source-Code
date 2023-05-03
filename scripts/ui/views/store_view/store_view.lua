@@ -743,7 +743,10 @@ StoreView._create_aquilas_presentation = function (self, offers)
 			if bonus_aquila and bonus_aquila > 0 then
 				local aquilas = offer.value.amount
 				local aquila_minus_bonus = aquilas - bonus_aquila
-				description = string.format("%d  \n + %d  bonus", aquila_minus_bonus, bonus_aquila)
+				local bonus_text = Localize("loc_premium_store_credits_bonus", true, {
+					amount = bonus_aquila
+				})
+				description = string.format("%d  \n %s", aquila_minus_bonus, bonus_text)
 			end
 
 			element.description = description

@@ -225,6 +225,10 @@ PartyImmateriumManager.start = function (self)
 	end)
 end
 
+PartyImmateriumManager.is_started = function (self)
+	return self._started
+end
+
 PartyImmateriumManager.reset = function (self)
 	self:_reset_party_data()
 
@@ -1016,7 +1020,7 @@ PartyImmateriumManager._game_session_promise = function (self)
 	return game_session_promise
 end
 
-PartyImmateriumManager.wanted_mission_selected = function (self, backend_mission_id, private_session)
+PartyImmateriumManager.wanted_mission_selected = function (self, backend_mission_id, private_session, reef)
 	local vote_state = self:party_vote_state()
 
 	if vote_state.state == "ONGOING" then
@@ -1027,7 +1031,8 @@ PartyImmateriumManager.wanted_mission_selected = function (self, backend_mission
 
 	return Managers.voting:start_voting("mission_vote_matchmaking_immaterium", {
 		backend_mission_id = backend_mission_id,
-		private_session = private_session and "true" or "false"
+		private_session = private_session and "true" or "false",
+		reef = reef
 	}):catch(function (error)
 		_error("Could not start voting, error=%s", self:_table_tostring_or_string(error))
 	end):next(function ()

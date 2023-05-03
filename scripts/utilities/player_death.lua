@@ -23,6 +23,14 @@ local PlayerDeath = {
 				Managers.stats:record_player_death(player)
 			end
 		end
+
+		if player and Managers.state.pacing then
+			local minions_listening_for_player_deaths = Managers.state.pacing:get_minions_listening_for_player_deaths()
+
+			for minion_unit, statistics_component in pairs(minions_listening_for_player_deaths) do
+				statistics_component.player_deaths = statistics_component.player_deaths + 1
+			end
+		end
 	end
 }
 

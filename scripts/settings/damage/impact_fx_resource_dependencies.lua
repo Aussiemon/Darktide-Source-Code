@@ -1,4 +1,6 @@
+local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ImpactEffectSettings = require("scripts/settings/damage/impact_effect_settings")
+local damage_types = DamageSettings.damage_types
 local impact_fx_lookup = ImpactEffectSettings.impact_fx_lookup
 local ImpactFxResourceDependencies = {}
 local _fetch_impact_fx_lookups_recursive, _find_resources_recursive, _find_impact_decal_resources_recursive, _is_valid_resource, _is_valid_impact_decal_resource, _is_class = nil
@@ -50,15 +52,7 @@ function _fetch_impact_fx_lookups_recursive(data_table, impact_fx_map, path)
 	for key, value in pairs(data_table) do
 		if type(value) == "table" and not _is_class(value) then
 			_fetch_impact_fx_lookups_recursive(value, impact_fx_map, (path or "") .. "." .. key)
-		elseif key == "damage_type" then
-			impact_fx_map[value] = impact_fx_lookup[value]
-		elseif key == "damage_type_special_active" then
-			impact_fx_map[value] = impact_fx_lookup[value]
-		elseif key == "damage_type_special_active_on_abort" then
-			impact_fx_map[value] = impact_fx_lookup[value]
-		elseif key == "inner_damage_type" then
-			impact_fx_map[value] = impact_fx_lookup[value]
-		elseif key == "outer_damage_type" then
+		elseif type(value) == "string" and rawget(damage_types, value) then
 			impact_fx_map[value] = impact_fx_lookup[value]
 		end
 	end

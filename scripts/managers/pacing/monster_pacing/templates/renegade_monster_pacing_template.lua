@@ -13,7 +13,6 @@ local monster_pacing_template = {
 				}
 			},
 			boss_patrols = {
-				chance_to_fill_empty_monster_with_patrol = 1,
 				breed_lists = {
 					renegade = BossPatrols.renegade_boss_patrols,
 					cultist = BossPatrols.cultist_boss_patrols
@@ -27,6 +26,10 @@ local monster_pacing_template = {
 						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole",
 						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole"
 					}
+				},
+				num_boss_patrols_range = {
+					0,
+					1
 				}
 			},
 			breed_names = {
@@ -70,7 +73,6 @@ local monster_pacing_template = {
 				}
 			},
 			boss_patrols = {
-				chance_to_fill_empty_monster_with_patrol = 1,
 				breed_lists = {
 					renegade = BossPatrols.renegade_boss_patrols,
 					cultist = BossPatrols.cultist_boss_patrols
@@ -84,6 +86,10 @@ local monster_pacing_template = {
 						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole",
 						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole"
 					}
+				},
+				num_boss_patrols_range = {
+					0,
+					1
 				}
 			},
 			breed_names = {
@@ -127,7 +133,6 @@ local monster_pacing_template = {
 				}
 			},
 			boss_patrols = {
-				chance_to_fill_empty_monster_with_patrol = 0.75,
 				breed_lists = {
 					renegade = BossPatrols.renegade_boss_patrols,
 					cultist = BossPatrols.cultist_boss_patrols
@@ -141,6 +146,10 @@ local monster_pacing_template = {
 						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole",
 						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole"
 					}
+				},
+				num_boss_patrols_range = {
+					0,
+					1
 				}
 			},
 			breed_names = {
@@ -182,7 +191,6 @@ local monster_pacing_template = {
 				}
 			},
 			boss_patrols = {
-				chance_to_fill_empty_monster_with_patrol = 1,
 				breed_lists = {
 					renegade = BossPatrols.renegade_boss_patrols,
 					cultist = BossPatrols.cultist_boss_patrols
@@ -196,6 +204,10 @@ local monster_pacing_template = {
 						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole",
 						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole"
 					}
+				},
+				num_boss_patrols_range = {
+					1,
+					2
 				}
 			},
 			breed_names = {
@@ -228,7 +240,6 @@ local monster_pacing_template = {
 				}
 			},
 			boss_patrols = {
-				chance_to_fill_empty_monster_with_patrol = 1,
 				breed_lists = {
 					renegade = BossPatrols.renegade_boss_patrols,
 					cultist = BossPatrols.cultist_boss_patrols
@@ -242,6 +253,10 @@ local monster_pacing_template = {
 						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole",
 						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole"
 					}
+				},
+				num_boss_patrols_range = {
+					1,
+					2
 				}
 			},
 			breed_names = {

@@ -211,6 +211,10 @@ HordePacing.set_override_required_travel_distance = function (self, required_tra
 	self._override_required_travel_distance = required_travel_distance
 end
 
+HordePacing.override_trickle_horde_compositions = function (self, compositions)
+	self._override_trickle_horde_compositions = compositions
+end
+
 HordePacing._trigger_pre_stinger = function (self, template, side_id, optional_stinger_event_name)
 	local stinger_sound_event = optional_stinger_event_name or template.pre_stinger_sound_events[self._current_compositions.name]
 
@@ -325,7 +329,7 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 
 					if trickle_hordes_allowed then
 						local trickle_horde_template = HordeTemplates.trickle_horde
-						local trickle_horde_compositions = template.horde_compositions.trickle_horde
+						local trickle_horde_compositions = self._override_trickle_horde_compositions or template.horde_compositions.trickle_horde
 						local current_faction = Managers.state.pacing:current_faction()
 						local current_density_type = Managers.state.pacing:current_density_type()
 						local faction_composition = trickle_horde_compositions[current_faction][current_density_type]
@@ -390,7 +394,7 @@ end
 
 HordePacing._spawn_trickle_horde_wave = function (self, side_id, target_side_id, optional_main_path_offset, optional_num_tries, template, trickle_horde, t)
 	local trickle_horde_template = HordeTemplates.trickle_horde
-	local trickle_horde_compositions = template.horde_compositions.trickle_horde
+	local trickle_horde_compositions = self._override_trickle_horde_compositions or template.horde_compositions.trickle_horde
 	local current_faction = Managers.state.pacing:current_faction()
 	local current_density_type = Managers.state.pacing:current_density_type()
 	local faction_composition = trickle_horde_compositions[current_faction][current_density_type]

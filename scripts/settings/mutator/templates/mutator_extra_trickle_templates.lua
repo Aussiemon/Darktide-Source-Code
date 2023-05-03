@@ -301,8 +301,26 @@ local mutator_templates = {
 					60
 				},
 				num_trickle_waves = {
-					6,
-					14
+					{
+						4,
+						7
+					},
+					{
+						5,
+						8
+					},
+					{
+						6,
+						9
+					},
+					{
+						7,
+						10
+					},
+					{
+						9,
+						14
+					}
 				},
 				time_between_waves = {
 					1,

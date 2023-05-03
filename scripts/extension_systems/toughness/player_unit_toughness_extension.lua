@@ -275,6 +275,11 @@ PlayerUnitToughnessExtension.time_since_toughness_broken = function (self)
 	return self._toughness_broken_at_t and t - self._toughness_broken_at_t or math.huge
 end
 
+PlayerUnitToughnessExtension.set_toughness_regen_delay = function (self)
+	local t = Managers.time:time("gameplay")
+	self._toughness_regen_delay = t
+end
+
 PlayerUnitToughnessExtension.add_damage = function (self, damage_amount, attack_result, hit_actor, damage_profile, attack_type, attack_direction, hit_world_position_or_nil)
 	local unit = self._unit
 	local weapon_toughness_template = self._weapon_extension:toughness_template()

@@ -831,11 +831,6 @@ roamer_settings.pause_spawn_type_when_aggroed = {
 		}
 	}
 }
-roamer_settings.trigger_horde_when_aggroed = {
-	poxwalkers = {
-		horde_template_name = "flood_horde",
-		composition = HordeCompositions.renegade_flood
-	}
-}
+roamer_settings.trigger_horde_when_aggroed = {}
 
 return settings("RoamerSettings", roamer_settings)

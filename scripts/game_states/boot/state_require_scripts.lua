@@ -42,6 +42,7 @@ StateRequireScripts._init_crashify = function (self)
 	Crashify.print_property("teamcity_build_id", APPLICATION_SETTINGS.teamcity_build_id)
 	Crashify.print_property("server", DEDICATED_SERVER)
 	Crashify.print_property("is_modded", self:_get_is_modded())
+	Crashify.print_property("game_version", APPLICATION_SETTINGS.game_version)
 
 	if PLATFORM == "win32" then
 		if HAS_STEAM then

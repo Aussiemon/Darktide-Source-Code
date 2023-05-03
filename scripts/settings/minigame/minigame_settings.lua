@@ -32,6 +32,5 @@ minigame_settings.disengage_view_angle_v = math.degrees_to_radians(58)
 minigame_settings.decode_symbols_stage_amount = num_stages
 minigame_settings.decode_symbols_items_per_stage = num_symbols_per_stage
 minigame_settings.decode_symbols_total_items = num_stages * num_symbols_per_stage
-minigame_settings.decode_symbols_target_margin = 1 / num_symbols_per_stage
 
 return settings("MinigameSettings", minigame_settings)

@@ -11,7 +11,6 @@ local ReloadTemplates = require("scripts/settings/equipment/reload_templates/rel
 local ShotshellTemplates = require("scripts/settings/projectile/shotshell_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokeThumperP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_thumper_p1")
-local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local armor_types = ArmorSettings.types
@@ -435,6 +434,7 @@ weapon_template.actions = {
 		start_input = "bash",
 		kind = "sweep",
 		sprint_requires_press_to_interrupt = true,
+		first_person_hit_anim = "hit_left_shake",
 		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.15,
 		crosshair_type = "dot",
@@ -543,8 +543,9 @@ weapon_template.actions = {
 		hit_armor_anim = "attack_hit_shield",
 		crosshair_type = "dot",
 		sprint_requires_press_to_interrupt = true,
-		range_mod = 1.15,
+		first_person_hit_anim = "hit_right_shake",
 		first_person_hit_stop_anim = "attack_hit",
+		range_mod = 1.15,
 		allowed_during_sprint = true,
 		kind = "sweep",
 		attack_direction_override = "right",
@@ -820,10 +821,6 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_thumper_shotgun
 weapon_template.traits = {}
-local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
-
-table.append(weapon_template.traits, ranged_common_traits)
-
 local bespoke_traits = table.keys(WeaponTraitsBespokeThumperP1)
 
 table.append(weapon_template.traits, bespoke_traits)

@@ -140,7 +140,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -279,7 +279,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -420,7 +420,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -565,7 +565,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -711,7 +711,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -856,7 +856,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -1005,7 +1005,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -1146,7 +1146,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -1291,7 +1291,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -1432,7 +1432,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -1575,7 +1575,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -1720,7 +1720,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -1865,7 +1865,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -2008,7 +2008,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -2149,7 +2149,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -2292,7 +2292,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -2437,7 +2437,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -2578,7 +2578,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -2719,7 +2719,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -2862,7 +2862,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -3012,7 +3012,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -3162,7 +3162,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -3309,7 +3309,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -3459,7 +3459,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -3606,7 +3606,7 @@ return function ()
 		on_done = {},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -3756,7 +3756,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})
@@ -3906,7 +3906,7 @@ return function ()
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
-				duration = 0.3
+				duration = 0.2
 			}
 		}
 	})

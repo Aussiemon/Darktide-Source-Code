@@ -333,7 +333,7 @@ return function ()
 				"user_context",
 				"enemies_close",
 				OP.LT,
-				2
+				15
 			},
 			{
 				"faction_memory",
@@ -13585,66 +13585,6 @@ return function ()
 				"last_seen_horde",
 				OP.TIMESET
 			}
-		}
-	})
-	define_rule({
-		name = "start_rescue",
-		category = "player_prio_1",
-		wwise_route = 0,
-		response = "start_rescue",
-		database = "gameplay_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"interaction_vo"
-			},
-			{
-				"user_context",
-				"interactor_class",
-				OP.SET_INCLUDES,
-				args = {
-					"ogryn",
-					"psyker",
-					"veteran",
-					"zealot"
-				}
-			},
-			{
-				"user_context",
-				"interactee_class",
-				OP.SET_INCLUDES,
-				args = {
-					"ogryn",
-					"psyker",
-					"veteran",
-					"zealot"
-				}
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"archived"
-			},
-			{
-				"faction_memory",
-				"last_start_rescue",
-				OP.TIMEDIFF,
-				OP.GT,
-				1
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"last_start_rescue",
-				OP.TIMESET
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
 		}
 	})
 	define_rule({

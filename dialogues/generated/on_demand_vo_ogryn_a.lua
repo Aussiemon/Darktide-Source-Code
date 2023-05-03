@@ -18,14 +18,6 @@ local on_demand_vo_ogryn_a = {
 			0.627885,
 			0.822542
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_follow_you = {
@@ -118,14 +110,6 @@ local on_demand_vo_ogryn_a = {
 			1.204427,
 			1.158885
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_need_health = {
@@ -197,14 +181,6 @@ local on_demand_vo_ogryn_a = {
 			0.643708,
 			1.148708
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_over_here = {
@@ -255,14 +231,6 @@ local on_demand_vo_ogryn_a = {
 			1.345896,
 			1.721969
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_yes = {
@@ -283,14 +251,6 @@ local on_demand_vo_ogryn_a = {
 			0.95651,
 			0.754698,
 			0.841552
-		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
 		},
 		randomize_indexes = {}
 	},
@@ -439,12 +399,6 @@ local on_demand_vo_ogryn_a = {
 			0.974896,
 			1.065615
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_ogryn_heavy_gunner = {
@@ -462,12 +416,6 @@ local on_demand_vo_ogryn_a = {
 			0.945438,
 			1.247292
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_poxwalker_bomber = {
@@ -484,12 +432,6 @@ local on_demand_vo_ogryn_a = {
 			1.599854,
 			1.162396,
 			1.416969
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -525,12 +467,6 @@ local on_demand_vo_ogryn_a = {
 			1.394875,
 			1.49749
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_cultist_holy_stubber_gunner = {
@@ -547,12 +483,6 @@ local on_demand_vo_ogryn_a = {
 			1.20249,
 			1.448438,
 			1.219052
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -571,12 +501,6 @@ local on_demand_vo_ogryn_a = {
 			1.676969,
 			1.62801
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_daemonhost_witch = {
@@ -593,12 +517,6 @@ local on_demand_vo_ogryn_a = {
 			1.503052,
 			1.679323,
 			1.628479
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -658,12 +576,6 @@ local on_demand_vo_ogryn_a = {
 			1.224188,
 			1.129063
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_plague_ogryn = {
@@ -680,12 +592,6 @@ local on_demand_vo_ogryn_a = {
 			1.942667,
 			1.955552,
 			2.513333
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -750,12 +656,6 @@ local on_demand_vo_ogryn_a = {
 			1.170406,
 			1.618167
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_traitor_grenadier = {
@@ -772,12 +672,6 @@ local on_demand_vo_ogryn_a = {
 			1.746573,
 			1.664604,
 			1.838958
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -796,12 +690,6 @@ local on_demand_vo_ogryn_a = {
 			1.682823,
 			1.627594
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_traitor_scout_shocktrooper = {
@@ -818,12 +706,6 @@ local on_demand_vo_ogryn_a = {
 			1.924073,
 			2.024323,
 			1.825198
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -842,12 +724,6 @@ local on_demand_vo_ogryn_a = {
 			0.957802,
 			1.732573
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_ammo = {
@@ -864,12 +740,6 @@ local on_demand_vo_ogryn_a = {
 			1.446844,
 			0.899333,
 			1.237458
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -888,12 +758,6 @@ local on_demand_vo_ogryn_a = {
 			1.683854,
 			1.123854
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_container = {
@@ -910,12 +774,6 @@ local on_demand_vo_ogryn_a = {
 			1.609271,
 			1.667969,
 			2.022385
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -934,12 +792,6 @@ local on_demand_vo_ogryn_a = {
 			1.304708,
 			1.552073
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_deployed_ammo_crate = {
@@ -956,12 +808,6 @@ local on_demand_vo_ogryn_a = {
 			1.603771,
 			1.174615,
 			1.329344
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -980,12 +826,6 @@ local on_demand_vo_ogryn_a = {
 			1.486604,
 			2.117615
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_forge_metal = {
@@ -1003,12 +843,6 @@ local on_demand_vo_ogryn_a = {
 			1.705875,
 			1.334438
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_health_booster = {
@@ -1025,12 +859,6 @@ local on_demand_vo_ogryn_a = {
 			1.959521,
 			1.904917,
 			2.110146
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -1192,12 +1020,6 @@ local on_demand_vo_ogryn_a = {
 			2.224135,
 			1.799323
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_station_health_without_battery = {
@@ -1218,14 +1040,6 @@ local on_demand_vo_ogryn_a = {
 			1.672146,
 			1.454292,
 			1.290396
-		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
 		},
 		randomize_indexes = {}
 	}

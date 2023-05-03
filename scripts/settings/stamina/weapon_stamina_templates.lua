@@ -188,7 +188,7 @@ weapon_stamina_templates.forcesword_p1_m1 = {
 		lerp_basic = 1.5
 	},
 	block_cost_default = {
-		innner = {
+		inner = {
 			lerp_perfect = 0.5,
 			lerp_basic = 1.5
 		},

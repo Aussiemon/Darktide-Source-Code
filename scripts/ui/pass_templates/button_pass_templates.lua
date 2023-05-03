@@ -576,8 +576,8 @@ ButtonPassTemplates.ready_button = {
 			scale_to_material = true,
 			horizontal_alignment = "center",
 			size_addition = {
-				-40 + ready_button_small_button_size_addition[1],
-				-30 + ready_button_small_button_size_addition[2]
+				-44 + ready_button_small_button_size_addition[1],
+				-44 + ready_button_small_button_size_addition[2]
 			},
 			color = Color.terminal_background_gradient(nil, true),
 			offset = {
@@ -600,8 +600,8 @@ ButtonPassTemplates.ready_button = {
 			scale_to_material = true,
 			horizontal_alignment = "center",
 			size_addition = {
-				-50 + ready_button_small_button_size_addition[1],
-				-50 + ready_button_small_button_size_addition[2]
+				-44 + ready_button_small_button_size_addition[1],
+				-44 + ready_button_small_button_size_addition[2]
 			},
 			default_color = Color.terminal_frame(nil, true),
 			hover_color = Color.terminal_frame_hover(nil, true),
@@ -625,8 +625,8 @@ ButtonPassTemplates.ready_button = {
 			scale_to_material = true,
 			horizontal_alignment = "center",
 			size_addition = {
-				-50 + ready_button_small_button_size_addition[1],
-				-50 + ready_button_small_button_size_addition[2]
+				-44 + ready_button_small_button_size_addition[1],
+				-44 + ready_button_small_button_size_addition[2]
 			},
 			default_color = Color.terminal_corner(nil, true),
 			hover_color = Color.terminal_corner_hover(nil, true),
@@ -699,7 +699,7 @@ ButtonPassTemplates.aquila_button = {
 			vertical_alignment = "center",
 			scale_to_material = true,
 			horizontal_alignment = "center",
-			color = Color.terminal_grid_background(255, true),
+			color = Color.terminal_grid_background_gradient(255, true),
 			offset = {
 				0,
 				0,
@@ -1288,6 +1288,7 @@ ButtonPassTemplates.terminal_button_small = {
 		value = "content/ui/materials/frames/frame_tile_2px",
 		style = {
 			vertical_alignment = "center",
+			scale_to_material = true,
 			horizontal_alignment = "center",
 			default_color = Color.terminal_frame(nil, true),
 			selected_color = Color.terminal_frame_selected(nil, true),
@@ -1305,6 +1306,7 @@ ButtonPassTemplates.terminal_button_small = {
 		value = "content/ui/materials/frames/frame_corner_2px",
 		style = {
 			vertical_alignment = "center",
+			scale_to_material = true,
 			horizontal_alignment = "center",
 			default_color = Color.terminal_corner(nil, true),
 			selected_color = Color.terminal_corner_selected(nil, true),
@@ -1315,6 +1317,26 @@ ButtonPassTemplates.terminal_button_small = {
 			}
 		},
 		change_function = terminal_button_change_function
+	},
+	{
+		value = "content/ui/materials/frames/dropshadow_medium",
+		style_id = "outer_shadow",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			scale_to_material = true,
+			color = Color.black(200, true),
+			size_addition = {
+				20,
+				20
+			},
+			offset = {
+				0,
+				0,
+				3
+			}
+		}
 	},
 	{
 		style_id = "text",
@@ -1379,6 +1401,7 @@ ButtonPassTemplates.terminal_button_hold_small = {
 		value = "content/ui/materials/frames/frame_tile_2px",
 		style = {
 			vertical_alignment = "top",
+			scale_to_material = true,
 			horizontal_alignment = "center",
 			default_color = Color.terminal_frame(nil, true),
 			selected_color = Color.terminal_frame_selected(nil, true),
@@ -1396,6 +1419,7 @@ ButtonPassTemplates.terminal_button_hold_small = {
 		value = "content/ui/materials/frames/frame_corner_2px",
 		style = {
 			vertical_alignment = "top",
+			scale_to_material = true,
 			horizontal_alignment = "center",
 			default_color = Color.terminal_corner(nil, true),
 			selected_color = Color.terminal_corner_selected(nil, true),
@@ -1433,6 +1457,30 @@ ButtonPassTemplates.terminal_button_hold_small = {
 			local total_width = content.size[1]
 			style.size[1] = total_width * progress
 		end
+	},
+	{
+		value = "content/ui/materials/frames/dropshadow_medium",
+		style_id = "outer_shadow",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "top",
+			horizontal_alignment = "center",
+			scale_to_material = true,
+			color = Color.black(200, true),
+			size = {
+				nil,
+				40
+			},
+			size_addition = {
+				20,
+				20
+			},
+			offset = {
+				0,
+				-10,
+				3
+			}
+		}
 	},
 	{
 		style_id = "text",
@@ -1654,6 +1702,7 @@ ButtonPassTemplates.list_button_with_background = {
 		style_id = "frame",
 		value = "content/ui/materials/frames/frame_tile_2px",
 		style = {
+			scale_to_material = true,
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
 			color = Color.terminal_frame(nil, true),
@@ -1673,6 +1722,7 @@ ButtonPassTemplates.list_button_with_background = {
 		style_id = "corner",
 		value = "content/ui/materials/frames/frame_corner_2px",
 		style = {
+			scale_to_material = true,
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
 			color = Color.terminal_corner(nil, true),

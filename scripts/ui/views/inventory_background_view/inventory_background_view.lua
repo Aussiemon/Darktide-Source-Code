@@ -207,8 +207,8 @@ InventoryBackgroundView._cb_set_player_frame = function (self, item)
 	material_values.portrait_frame_texture = icon
 end
 
-InventoryBackgroundView._request_player_insignia = function (self, item)
-	self:_unload_insignia()
+InventoryBackgroundView._request_player_insignia = function (self, item, ui_renderer)
+	self:_unload_insignia(ui_renderer)
 	self:_load_insignia(item)
 end
 
@@ -1621,7 +1621,7 @@ InventoryBackgroundView.update = function (self, dt, t, input_service)
 		if insignia_item_gear_id ~= self._insignia_item_gear_id then
 			self._insignia_item_gear_id = insignia_item_gear_id
 
-			self:_request_player_insignia(insignia_item)
+			self:_request_player_insignia(insignia_item, self._ui_renderer)
 		end
 	end
 

@@ -137,7 +137,8 @@ local push_settings = {
 		},
 		beast_of_nurgle_move_push = {
 			speed = 8,
-			max_speed_override = 7
+			max_speed_override = 7,
+			push_through_block = true
 		},
 		chaos_spawn_tentacle = {
 			speed = 10,

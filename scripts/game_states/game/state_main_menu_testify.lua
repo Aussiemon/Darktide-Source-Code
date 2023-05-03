@@ -1,9 +1,7 @@
 local CharacterCreate = require("scripts/utilities/character_create")
 local StateMainMenuTestify = {
 	create_character_by_archetype_and_gender = function (archetype_name, gender, state_main_menu)
-		Managers.time:register_timer("character_creation_timer", "main")
-
-		local character_create = state_main_menu:new_character_create()
+		local character_create = state_main_menu:character_create_instance()
 
 		character_create:set_name("Testify")
 
@@ -36,9 +34,7 @@ local StateMainMenuTestify = {
 }
 
 StateMainMenuTestify.create_random_character = function (_, state_main_menu)
-	Managers.time:register_timer("character_creation_timer", "main")
-
-	local character_create = state_main_menu:new_character_create()
+	local character_create = state_main_menu:character_create_instance()
 
 	character_create:set_name("Testify")
 

@@ -150,10 +150,11 @@ local mission_vo_lm_rails_zealot_female_b = {
 	},
 	mission_rails_refectory_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 6,
 		sound_events = {
 			"loc_zealot_female_b__region_habculum_01",
 			"loc_zealot_female_b__region_habculum_02",
+			"loc_zealot_female_b__region_habculum_03",
 			"loc_zealot_female_b__zone_transit_01",
 			"loc_zealot_female_b__zone_transit_02",
 			"loc_zealot_female_b__zone_transit_03"
@@ -161,16 +162,18 @@ local mission_vo_lm_rails_zealot_female_b = {
 		sound_events_duration = {
 			4.296146,
 			6.11475,
+			2.481792,
 			4.234729,
 			4.803896,
 			3.656396
 		},
 		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
 		},
 		randomize_indexes = {}
 	},

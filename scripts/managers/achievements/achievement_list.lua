@@ -96,51 +96,126 @@ local function _add_specialization_group(specialization, icon, ...)
 	_add_meta_family(description, specialization, icon, ...)
 end
 
+local function _add_specialization_missions_difficulty(specialization, category, complexity, amount, icon, ...)
+	local achievement_id = string.format("missions_%s_%s_difficulty_%%s", specialization, complexity)
+	local stat_id = string.format("missions_%s_difficulty_%%s", specialization)
+
+	_add_achievement_family_from_trigger(achievement_id, UITypes.increasing_stat, icon, category, {
+		IncreasingStatTrigger:new(AchievementStats.definitions[string.format(stat_id, 1)], amount),
+		IncreasingStatTrigger:new(AchievementStats.definitions[string.format(stat_id, 2)], amount),
+		IncreasingStatTrigger:new(AchievementStats.definitions[string.format(stat_id, 3)], amount),
+		IncreasingStatTrigger:new(AchievementStats.definitions[string.format(stat_id, 4)], amount),
+		IncreasingStatTrigger:new(AchievementStats.definitions[string.format(stat_id, 5)], amount)
+	})
+end
+
 local specialization = "ogryn_2"
 
 _add_specialization_ranks(specialization, "content/ui/textures/icons/achievements/achievement_icon_0001")
 _add_specialization_missions(specialization, "content/ui/textures/icons/achievements/achievement_icon_0002")
 _add_specialization_objectives(specialization, "content/ui/textures/icons/achievements/achievement_icon_0003")
 
-local category = "ogryn_2"
+local category = "ogryn_2_challenges"
 
+_add_specialization_missions_difficulty(specialization, category, "medium", 5, "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_09")
 _add_achievement("ogryn_2_bull_rushed_charging_ogryn", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0004", category, EventTrigger:new("ogryn_2_bull_rushed_charging_ogryn_event"))
 _add_achievement("ogryn_2_killed_corruptor_with_grenade_impact", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0008", category, IncreasingStatTrigger:new(AchievementStats.definitions.ogryn_2_killed_corruptor_with_grenade_impact, 1))
 _add_achievement("ogryn_2_win_with_coherency_all_alive_units", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0009", category, IncreasingStatTrigger:new(AchievementStats.definitions.ogryn_2_win_with_coherency_all_alive_units, 1), nil, {
 	time = 90
 })
 
-local ogryn_2_bull_rushed_100_enemies_requirement = 70
+local ogryn_2_bull_rushed_100_enemies_requirement = 60
 
 _add_achievement("ogryn_2_bull_rushed_100_enemies", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0006", category, IncreasingStatTrigger:new(AchievementStats.definitions.max_ogryn_2_lunge_number_of_enemies_hit, ogryn_2_bull_rushed_100_enemies_requirement))
 _add_achievement("ogryn_2_bull_rushed_70_within_25_seconds", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0007", category, IncreasingStatTrigger:new(AchievementStats.definitions.max_ogryn_2_lunge_distance_last_x_seconds, 40), nil, {
-	time_window = 20
+	tag_color_b = 20,
+	tag_color_g = 140,
+	tag_color_r = 200,
+	time_window = 20,
+	description_tag = "\n " .. Localize("loc_private_tag_name") .. ": " .. Localize("loc_private_tag_description")
+}, {
+	name_tag = "",
+	tag_color_g = 170,
+	tag_color_r = 255,
+	tag_color_b = 30
 })
 
-local ogryn_2_bull_rushed_4_ogryns_requirement = 6
+local ogryn_2_bull_rushed_4_ogryns_requirement = 4
 
 _add_achievement("ogryn_2_bull_rushed_4_ogryns", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0005", category, EventTrigger:new("ogryn_2_bull_rushed_x_ogryns_event"), nil, {
 	target = ogryn_2_bull_rushed_4_ogryns_requirement
 })
-_add_specialization_group(specialization, "content/ui/textures/icons/achievements/achievement_icon_0010", {
+_add_achievement("group_class_ogryn_2_1", UITypes.meta, "content/ui/textures/icons/achievements/achievement_icon_0047", category, MetaTrigger:new({
+	"ogryn_2_killed_corruptor_with_grenade_impact",
+	"ogryn_2_bull_rushed_charging_ogryn"
+}))
+_add_achievement("group_class_ogryn_2_2", UITypes.meta, "content/ui/textures/icons/achievements/achievement_icon_0047", category, MetaTrigger:new({
+	"group_class_ogryn_2_1",
+	"ogryn_2_bull_rushed_100_enemies",
+	"ogryn_2_win_with_coherency_all_alive_units"
+}))
+_add_achievement("group_class_ogryn_2_3", UITypes.meta, "content/ui/textures/icons/achievements/achievement_icon_0047", category, MetaTrigger:new({
+	"group_class_ogryn_2_2",
+	"ogryn_2_bull_rushed_70_within_25_seconds",
+	"ogryn_2_bull_rushed_4_ogryns"
+}))
+
+local category = "ogryn_2"
+
+_add_specialization_missions_difficulty(specialization, category, "easy", 1, "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_02")
+_add_achievement("group_ogryn_2_rank_1_difficulty_1", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_10", category, MetaTrigger:new({
+	"rank_ogryn_2_1",
+	"missions_ogryn_2_easy_difficulty_1"
+}))
+_add_achievement("group_ogryn_2_rank_2_difficulty_2", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_10", category, MetaTrigger:new({
+	"rank_ogryn_2_2",
+	"missions_ogryn_2_easy_difficulty_2"
+}))
+_add_achievement("ogryn_2_easy_1", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_03", category, IncreasingStatTrigger:new(AchievementStats.definitions.ogryn_2_number_of_revived_or_assisted_allies, 40))
+_add_achievement("ogryn_2_easy_2", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_04", category, IncreasingStatTrigger:new(AchievementStats.definitions.ogryn_2_number_of_knocked_down_enemies, 5000))
+_add_achievement("group_ogryn_2_rank_4_difficulty_3", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_11", category, MetaTrigger:new({
+	"rank_ogryn_2_4",
+	"missions_ogryn_2_easy_difficulty_3"
+}))
+_add_achievement("group_ogryn_2_rank_5_difficulty_4", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_11", category, MetaTrigger:new({
+	"rank_ogryn_2_5",
+	"missions_ogryn_2_easy_difficulty_4"
+}))
+_add_achievement("ogryn_2_medium_1", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_05", category, IncreasingStatTrigger:new(AchievementStats.definitions.ogryn_2_bullrushed_group_of_ranged_enemies, 25), nil, {
+	num_enemies = 3
+})
+_add_achievement("ogryn_2_medium_2", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_06", category, IncreasingStatTrigger:new(AchievementStats.definitions.ogryn_2_killed_multiple_enemies_with_sweep, 250), nil, {
+	amount = 2
+})
+_add_achievement("ogryn_2_hard_1", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_07", category, IncreasingStatTrigger:new(AchievementStats.definitions.ogryn_2_number_of_missions_with_no_deaths_and_all_revives_within_x_seconds, 3), nil, {
+	time = 10
+})
+_add_achievement("ogryn_2_hard_2", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_08", category, IncreasingStatTrigger:new(AchievementStats.definitions.ogryn_2_grenade_box_kills_without_missing, 5), nil, {
+	amount = 4
+})
+_add_achievement("group_class_ogryn_2_1_rework", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_12", category, MetaTrigger:new({
 	"rank_ogryn_2_4",
 	"missions_ogryn_2_objective_1",
 	"missions_ogryn_2_1",
-	"ogryn_2_killed_corruptor_with_grenade_impact",
-	"ogryn_2_bull_rushed_charging_ogryn"
-}, {
+	"ogryn_2_easy_1",
+	"ogryn_2_easy_2"
+}))
+_add_achievement("group_class_ogryn_2_2_rework", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_12", category, MetaTrigger:new({
+	"group_class_ogryn_2_1_rework",
 	"rank_ogryn_2_5",
 	"missions_ogryn_2_objective_2",
 	"missions_ogryn_2_2",
-	"ogryn_2_bull_rushed_100_enemies",
-	"ogryn_2_win_with_coherency_all_alive_units"
-}, {
+	"ogryn_2_medium_1",
+	"ogryn_2_medium_2"
+}))
+_add_achievement("group_class_ogryn_2_3_rework", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_ogryn_achievement_12", category, MetaTrigger:new({
+	"group_class_ogryn_2_2_rework",
 	"rank_ogryn_2_6",
 	"missions_ogryn_2_objective_3",
 	"missions_ogryn_2_3",
-	"ogryn_2_bull_rushed_70_within_25_seconds",
-	"ogryn_2_bull_rushed_4_ogryns"
-})
+	"ogryn_2_hard_1",
+	"ogryn_2_hard_2"
+}))
 
 local specialization = "veteran_2"
 
@@ -148,40 +223,91 @@ _add_specialization_ranks(specialization, "content/ui/textures/icons/achievement
 _add_specialization_missions(specialization, "content/ui/textures/icons/achievements/achievement_icon_0012")
 _add_specialization_objectives(specialization, "content/ui/textures/icons/achievements/achievement_icon_0013")
 
-local category = "veteran_2"
+local category = "veteran_2_challenges"
 
+_add_specialization_missions_difficulty(specialization, category, "medium", 5, "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_09")
 _add_achievement("veteran_2_weakspot_hits_during_volley_fire_alternate_fire", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0015", category, IncreasingStatTrigger:new(AchievementStats.definitions.max_weakspot_hit_during_volley_fire_alternate_fire, 4))
 _add_achievement("veteran_2_unbounced_grenade_kills", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0014", category, EventTrigger:new("veteran_2_unbounced_grenade_hits_event"), nil, {
 	target = 5
 })
 
-local veteran_2_kills_with_last_round_in_mag_requirement = 5
+local veteran_2_kills_with_last_round_in_mag_requirement = 8
 
 _add_achievement("veteran_2_kills_with_last_round_in_mag", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0017", category, IncreasingStatTrigger:new(AchievementStats.definitions.max_veteran_2_kills_with_last_round_in_mag, veteran_2_kills_with_last_round_in_mag_requirement))
 _add_achievement("veteran_2_no_melee_damage_taken", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0016", category, IncreasingStatTrigger:new(AchievementStats.definitions.veteran_2_mission_no_melee_damage_taken, 1))
 _add_achievement("veteran_2_elite_weakspot_kills_during_volley_fire_alternate_fire", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0018", category, IncreasingStatTrigger:new(AchievementStats.definitions.max_elite_weakspot_kill_during_volley_fire_alternate_fire, 5))
-_add_achievement("veteran_2_no_missed_shots_empty_ammo", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0019", category, IncreasingStatTrigger:new(AchievementStats.definitions.veteran_2_mission_no_missed_shots_empty_ammo, 1), nil, {
-	accuracy = 100
+_add_achievement("veteran_2_no_missed_shots_empty_ammo", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0016", category, IncreasingStatTrigger:new(AchievementStats.definitions.veteran_2_mission_no_missed_shots_empty_ammo, 1), nil, {
+	accuracy = 90
 })
-_add_specialization_group(specialization, "content/ui/textures/icons/achievements/achievement_icon_0020", {
+_add_achievement("group_class_veteran_2_1", UITypes.meta, "content/ui/textures/icons/achievements/achievement_icon_0047", category, MetaTrigger:new({
+	"veteran_2_unbounced_grenade_kills",
+	"veteran_2_weakspot_hits_during_volley_fire_alternate_fire"
+}))
+_add_achievement("group_class_veteran_2_2", UITypes.meta, "content/ui/textures/icons/achievements/achievement_icon_0047", category, MetaTrigger:new({
+	"group_class_veteran_2_1",
+	"veteran_2_no_melee_damage_taken",
+	"veteran_2_kills_with_last_round_in_mag"
+}))
+_add_achievement("group_class_veteran_2_3", UITypes.meta, "content/ui/textures/icons/achievements/achievement_icon_0047", category, MetaTrigger:new({
+	"group_class_veteran_2_2",
+	"veteran_2_no_missed_shots_empty_ammo",
+	"veteran_2_elite_weakspot_kills_during_volley_fire_alternate_fire"
+}))
+
+local category = "veteran_2"
+
+_add_specialization_missions_difficulty(specialization, category, "easy", 1, "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_02")
+_add_achievement("group_veteran_2_rank_1_difficulty_1", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_10", category, MetaTrigger:new({
+	"rank_veteran_2_1",
+	"missions_veteran_2_easy_difficulty_1"
+}))
+_add_achievement("group_veteran_2_rank_2_difficulty_2", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_10", category, MetaTrigger:new({
+	"rank_veteran_2_2",
+	"missions_veteran_2_easy_difficulty_2"
+}))
+_add_achievement("veteran_2_easy_1", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_03", category, IncreasingStatTrigger:new(AchievementStats.definitions.veteran_2_weakspot_kills, 350))
+_add_achievement("veteran_2_easy_2", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_04", category, IncreasingStatTrigger:new(AchievementStats.definitions.veteran_2_ammo_given, 5000))
+_add_achievement("group_veteran_2_rank_4_difficulty_3", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_11", category, MetaTrigger:new({
+	"rank_veteran_2_4",
+	"missions_veteran_2_easy_difficulty_3"
+}))
+_add_achievement("group_veteran_2_rank_5_difficulty_4", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_11", category, MetaTrigger:new({
+	"rank_veteran_2_5",
+	"missions_veteran_2_easy_difficulty_4"
+}))
+_add_achievement("veteran_2_medium_1", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_05", category, IncreasingStatTrigger:new(AchievementStats.definitions.veteran_2_kill_volley_fire_target_malice, 150))
+_add_achievement("veteran_2_medium_2", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_06", category, IncreasingStatTrigger:new(AchievementStats.definitions.veteran_2_long_range_kills, 100), nil, {
+	distance = 25
+})
+_add_achievement("veteran_2_hard_1", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_07", category, IncreasingStatTrigger:new(AchievementStats.definitions.max_multiple_elite_or_special_kills_during_volley_fire_heresy, 50), nil, {
+	num_enemies = 2
+})
+_add_achievement("veteran_2_hard_2", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_08", category, IncreasingStatTrigger:new(AchievementStats.definitions.veteran_2_extended_volley_fire_duration, 5), nil, {
+	time = 20
+})
+_add_achievement("group_class_veteran_2_1_rework", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_12", category, MetaTrigger:new({
 	"rank_veteran_2_4",
 	"missions_veteran_2_objective_1",
 	"missions_veteran_2_1",
-	"veteran_2_unbounced_grenade_kills",
-	"veteran_2_weakspot_hits_during_volley_fire_alternate_fire"
-}, {
+	"veteran_2_easy_1",
+	"veteran_2_easy_2"
+}))
+_add_achievement("group_class_veteran_2_2_rework", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_12", category, MetaTrigger:new({
+	"group_class_veteran_2_1_rework",
 	"rank_veteran_2_5",
 	"missions_veteran_2_objective_2",
 	"missions_veteran_2_2",
-	"veteran_2_no_melee_damage_taken",
-	"veteran_2_kills_with_last_round_in_mag"
-}, {
+	"veteran_2_medium_1",
+	"veteran_2_medium_2"
+}))
+_add_achievement("group_class_veteran_2_3_rework", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_veteran_achievement_12", category, MetaTrigger:new({
+	"group_class_veteran_2_2_rework",
 	"rank_veteran_2_6",
 	"missions_veteran_2_objective_3",
 	"missions_veteran_2_3",
-	"veteran_2_no_missed_shots_empty_ammo",
-	"veteran_2_elite_weakspot_kills_during_volley_fire_alternate_fire"
-})
+	"veteran_2_hard_1",
+	"veteran_2_hard_2"
+}))
 
 local specialization = "psyker_2"
 
@@ -189,45 +315,100 @@ _add_specialization_ranks(specialization, "content/ui/textures/icons/achievement
 _add_specialization_missions(specialization, "content/ui/textures/icons/achievements/achievement_icon_0022")
 _add_specialization_objectives(specialization, "content/ui/textures/icons/achievements/achievement_icon_0023")
 
-local category = "psyker_2"
+local category = "psyker_2_challenges"
 
+_add_specialization_missions_difficulty(specialization, category, "medium", 5, "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_09")
 _add_achievement("psyker_2_smite_hound_mid_leap", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0024", category, IncreasingStatTrigger:new(AchievementStats.definitions.smite_hound_mid_leap, 1))
 _add_achievement("psyker_2_edge_kills_last_2_sec", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0028", category, IncreasingStatTrigger:new(AchievementStats.definitions.max_psyker_2_edge_kills_last_2_sec, 7), nil, {
 	time_window = 2
 })
 _add_achievement("psyker_2_stay_at_max_souls_for_duration", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0027", category, IncreasingStatTrigger:new(AchievementStats.definitions.max_psyker_2_time_at_max_souls, 300))
 
-local psyker_2_perils_of_the_warp_elite_kills_requirement = 3
+local psyker_2_perils_of_the_warp_elite_kills_requirement = 1
 
 _add_achievement("psyker_2_perils_of_the_warp_elite_kills", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0025", category, EventTrigger:new("psyker_2_perils_of_the_warp_elite_kills_event"), nil, {
 	target = psyker_2_perils_of_the_warp_elite_kills_requirement
 })
 
-local psyker_2_elite_or_special_kills_with_smite_last_10_sec_requirement = 5
+local psyker_2_elite_or_special_kills_with_smite_last_10_sec_requirement = 4
 
 _add_achievement("psyker_2_elite_or_special_kills_with_smite_last_10_sec", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0026", category, IncreasingStatTrigger:new(AchievementStats.definitions.max_elite_or_special_kills_with_smite_last_12_sec, psyker_2_elite_or_special_kills_with_smite_last_10_sec_requirement), nil, {
 	time_window = 12
 })
-_add_achievement("psyker_2_kill_boss_solo_with_smite", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0029", category, IncreasingStatTrigger:new(AchievementStats.definitions.kill_boss_solo_with_smite, 1))
-_add_specialization_group(specialization, "content/ui/textures/icons/achievements/achievement_icon_0030", {
+_add_achievement("psyker_2_kill_boss_solo_with_smite", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0029", category, IncreasingStatTrigger:new(AchievementStats.definitions.kill_boss_solo_with_smite, 1), nil, {
+	tag_color_g = 140,
+	tag_color_r = 200,
+	tag_color_b = 20,
+	description_tag = "\n " .. Localize("loc_private_tag_name") .. ": " .. Localize("loc_private_tag_description")
+}, {
+	name_tag = "",
+	tag_color_g = 170,
+	tag_color_r = 255,
+	tag_color_b = 30
+})
+_add_achievement("group_class_psyker_2_1", UITypes.meta, "content/ui/textures/icons/achievements/achievement_icon_0047", category, MetaTrigger:new({
+	"psyker_2_edge_kills_last_2_sec",
+	"psyker_2_smite_hound_mid_leap"
+}))
+_add_achievement("group_class_psyker_2_2", UITypes.meta, "content/ui/textures/icons/achievements/achievement_icon_0047", category, MetaTrigger:new({
+	"group_class_psyker_2_1",
+	"psyker_2_perils_of_the_warp_elite_kills",
+	"psyker_2_stay_at_max_souls_for_duration"
+}))
+_add_achievement("group_class_psyker_2_3", UITypes.meta, "content/ui/textures/icons/achievements/achievement_icon_0047", category, MetaTrigger:new({
+	"group_class_psyker_2_2",
+	"psyker_2_elite_or_special_kills_with_smite_last_10_sec",
+	"psyker_2_kill_boss_solo_with_smite"
+}))
+
+local category = "psyker_2"
+
+_add_specialization_missions_difficulty(specialization, category, "easy", 1, "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_02")
+_add_achievement("group_psyker_2_rank_1_difficulty_1", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_10", category, MetaTrigger:new({
+	"rank_psyker_2_1",
+	"missions_psyker_2_easy_difficulty_1"
+}))
+_add_achievement("group_psyker_2_rank_2_difficulty_2", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_10", category, MetaTrigger:new({
+	"rank_psyker_2_2",
+	"missions_psyker_2_easy_difficulty_2"
+}))
+_add_achievement("psyker_2_easy_1", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_03", category, IncreasingStatTrigger:new(AchievementStats.definitions.psyker_2_elite_or_special_kills_with_smite, 200))
+_add_achievement("psyker_2_easy_2", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_04", category, IncreasingStatTrigger:new(AchievementStats.definitions.psyker_2_survived_perils, 50))
+_add_achievement("group_psyker_2_rank_4_difficulty_3", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_11", category, MetaTrigger:new({
+	"rank_psyker_2_4",
+	"missions_psyker_2_easy_difficulty_3"
+}))
+_add_achievement("group_psyker_2_rank_5_difficulty_4", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_11", category, MetaTrigger:new({
+	"rank_psyker_2_5",
+	"missions_psyker_2_easy_difficulty_4"
+}))
+_add_achievement("psyker_2_medium_1", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_05", category, IncreasingStatTrigger:new(AchievementStats.definitions.psyker_2_smite_kills_at_max_souls, 100))
+_add_achievement("psyker_2_medium_2", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_06", category, IncreasingStatTrigger:new(AchievementStats.definitions.psyker_2_warp_kills, 2500))
+_add_achievement("psyker_2_hard_1", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_07", category, IncreasingStatTrigger:new(AchievementStats.definitions.psyker_2_killed_disablers_before_disabling, 25))
+_add_achievement("psyker_2_hard_2", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_08", category, IncreasingStatTrigger:new(AchievementStats.definitions.psyker_2_x_missions_no_elite_melee_damage_taken, 3))
+_add_achievement("group_class_psyker_2_1_rework", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_12", category, MetaTrigger:new({
 	"rank_psyker_2_4",
 	"missions_psyker_2_objective_1",
 	"missions_psyker_2_1",
-	"psyker_2_edge_kills_last_2_sec",
-	"psyker_2_smite_hound_mid_leap"
-}, {
+	"psyker_2_easy_1",
+	"psyker_2_easy_2"
+}))
+_add_achievement("group_class_psyker_2_2_rework", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_12", category, MetaTrigger:new({
+	"group_class_psyker_2_1_rework",
 	"rank_psyker_2_5",
 	"missions_psyker_2_objective_2",
 	"missions_psyker_2_2",
-	"psyker_2_perils_of_the_warp_elite_kills",
-	"psyker_2_stay_at_max_souls_for_duration"
-}, {
+	"psyker_2_medium_1",
+	"psyker_2_medium_2"
+}))
+_add_achievement("group_class_psyker_2_3_rework", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_psyker_achievement_12", category, MetaTrigger:new({
+	"group_class_psyker_2_2_rework",
 	"rank_psyker_2_6",
 	"missions_psyker_2_objective_3",
 	"missions_psyker_2_3",
-	"psyker_2_elite_or_special_kills_with_smite_last_10_sec",
-	"psyker_2_kill_boss_solo_with_smite"
-})
+	"psyker_2_hard_1",
+	"psyker_2_hard_2"
+}))
 
 local specialization = "zealot_2"
 
@@ -235,8 +416,9 @@ _add_specialization_ranks(specialization, "content/ui/textures/icons/achievement
 _add_specialization_missions(specialization, "content/ui/textures/icons/achievements/achievement_icon_0032")
 _add_specialization_objectives(specialization, "content/ui/textures/icons/achievements/achievement_icon_0033")
 
-local category = "zealot_2"
+local category = "zealot_2_challenges"
 
+_add_specialization_missions_difficulty(specialization, category, "medium", 5, "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_09")
 _add_achievement("zealot_2_stagger_sniper_with_grenade_distance", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0035", category, IncreasingStatTrigger:new(AchievementStats.definitions.max_zealot_2_stagger_sniper_with_grenade_distance, 40))
 _add_achievement("zelot_2_kill_mutant_charger_with_melee_while_dashing", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0039", category, IncreasingStatTrigger:new(AchievementStats.definitions.zelot_2_kill_mutant_charger_with_melee_while_dashing, 1))
 _add_achievement("zealot_2_kills_of_shocked_enemies_last_15", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0037", category, IncreasingStatTrigger:new(AchievementStats.definitions.max_zealot_2_kills_of_shocked_enemies_last_15, 40), nil, {
@@ -245,28 +427,83 @@ _add_achievement("zealot_2_kills_of_shocked_enemies_last_15", UITypes.increasing
 _add_achievement("zealot_2_not_use_ranged_attacks", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0038", category, IncreasingStatTrigger:new(AchievementStats.definitions.zealot_2_not_use_ranged_attacks, 1))
 _add_achievement("zealot_2_healed_up_after_resisting_death", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0036", category, IncreasingStatTrigger:new(AchievementStats.definitions.max_zealot_2_health_healed_with_leech_during_resist_death, 75))
 _add_achievement("zealot_2_health_on_last_segment_enough_during_mission", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0034", category, IncreasingStatTrigger:new(AchievementStats.definitions.zealot_2_health_on_last_segment_enough_mission_end, 1), nil, {
+	tag_color_b = 20,
+	tag_color_g = 140,
 	health = 75,
-	time_window = 20
+	tag_color_r = 200,
+	time_window = 20,
+	description_tag = "\n " .. Localize("loc_private_tag_name") .. ": " .. Localize("loc_private_tag_description")
+}, {
+	name_tag = "",
+	tag_color_g = 170,
+	tag_color_r = 255,
+	tag_color_b = 30
 })
-_add_specialization_group(specialization, "content/ui/textures/icons/achievements/achievement_icon_0040", {
+_add_achievement("group_class_zealot_2_1", UITypes.meta, "content/ui/textures/icons/achievements/achievement_icon_0047", category, MetaTrigger:new({
+	"zelot_2_kill_mutant_charger_with_melee_while_dashing",
+	"zealot_2_stagger_sniper_with_grenade_distance"
+}))
+_add_achievement("group_class_zealot_2_2", UITypes.meta, "content/ui/textures/icons/achievements/achievement_icon_0047", category, MetaTrigger:new({
+	"group_class_zealot_2_1",
+	"zealot_2_kills_of_shocked_enemies_last_15",
+	"zealot_2_not_use_ranged_attacks"
+}))
+_add_achievement("group_class_zealot_2_3", UITypes.meta, "content/ui/textures/icons/achievements/achievement_icon_0047", category, MetaTrigger:new({
+	"group_class_zealot_2_2",
+	"zealot_2_health_on_last_segment_enough_during_mission",
+	"zealot_2_healed_up_after_resisting_death"
+}))
+
+local category = "zealot_2"
+
+_add_specialization_missions_difficulty(specialization, category, "easy", 1, "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_02")
+_add_achievement("group_zealot_2_rank_1_difficulty_1", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_10", category, MetaTrigger:new({
+	"rank_zealot_2_1",
+	"missions_zealot_2_easy_difficulty_1"
+}))
+_add_achievement("group_zealot_2_rank_2_difficulty_2", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_10", category, MetaTrigger:new({
+	"rank_zealot_2_2",
+	"missions_zealot_2_easy_difficulty_2"
+}))
+_add_achievement("zealot_2_easy_1", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_03", category, IncreasingStatTrigger:new(AchievementStats.definitions.zealot_2_number_of_shocked_enemies, 1500))
+_add_achievement("zealot_2_easy_2", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_04", category, IncreasingStatTrigger:new(AchievementStats.definitions.zealot_2_toughness_gained_from_chastise_the_wicked, 7500))
+_add_achievement("group_zealot_2_rank_4_difficulty_3", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_11", category, MetaTrigger:new({
+	"rank_zealot_2_4",
+	"missions_zealot_2_easy_difficulty_3"
+}))
+_add_achievement("group_zealot_2_rank_5_difficulty_4", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_11", category, MetaTrigger:new({
+	"rank_zealot_2_5",
+	"missions_zealot_2_easy_difficulty_4"
+}))
+_add_achievement("zealot_2_medium_1", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_05", category, IncreasingStatTrigger:new(AchievementStats.definitions.zealot_2_number_of_critical_hits_kills_when_stunned, 75))
+_add_achievement("zealot_2_medium_2", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_06", category, IncreasingStatTrigger:new(AchievementStats.definitions.zealot_2_kills_with_martyrdoom_stacks, 1000), nil, {
+	stacks = 3
+})
+_add_achievement("zealot_2_hard_1", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_07", category, IncreasingStatTrigger:new(AchievementStats.definitions.zealot_2_killed_elites_and_specials_with_activated_attacks, 75))
+_add_achievement("zealot_2_hard_2", UITypes.increasing_stat, "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_08", category, IncreasingStatTrigger:new(AchievementStats.definitions.zealot_2_charged_enemy_wielding_ranged_weapon, 40))
+_add_achievement("group_class_zealot_2_1_rework", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_12", category, MetaTrigger:new({
 	"rank_zealot_2_4",
 	"missions_zealot_2_objective_1",
 	"missions_zealot_2_1",
-	"zelot_2_kill_mutant_charger_with_melee_while_dashing",
-	"zealot_2_stagger_sniper_with_grenade_distance"
-}, {
+	"zealot_2_easy_1",
+	"zealot_2_easy_2"
+}))
+_add_achievement("group_class_zealot_2_2_rework", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_12", category, MetaTrigger:new({
+	"group_class_zealot_2_1_rework",
 	"rank_zealot_2_5",
 	"missions_zealot_2_objective_2",
 	"missions_zealot_2_2",
-	"zealot_2_kills_of_shocked_enemies_last_15",
-	"zealot_2_not_use_ranged_attacks"
-}, {
+	"zealot_2_medium_1",
+	"zealot_2_medium_2"
+}))
+_add_achievement("group_class_zealot_2_3_rework", UITypes.meta, "content/ui/textures/icons/achievements/class_achievements/class_zealot_achievement_12", category, MetaTrigger:new({
+	"group_class_zealot_2_2_rework",
 	"rank_zealot_2_6",
 	"missions_zealot_2_objective_3",
 	"missions_zealot_2_3",
-	"zealot_2_health_on_last_segment_enough_during_mission",
-	"zealot_2_healed_up_after_resisting_death"
-})
+	"zealot_2_hard_1",
+	"zealot_2_hard_2"
+}))
 
 local category_name = "enemies"
 

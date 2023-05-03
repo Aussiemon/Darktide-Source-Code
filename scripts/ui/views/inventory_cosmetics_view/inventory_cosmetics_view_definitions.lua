@@ -325,7 +325,7 @@ local legend_inputs = {
 
 			parent._input_legend_element:set_display_name(id, display_name)
 
-			return true
+			return parent._initialize_zoom
 		end
 	}
 }

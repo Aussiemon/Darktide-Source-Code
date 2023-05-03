@@ -15,14 +15,6 @@ local DEFAULT_REPLACEMENTS = {
 			"cultist_melee"
 		}
 	},
-	chaos_ogryn_gunner = {
-		renegade = {
-			"renegade_melee"
-		},
-		cultist = {
-			"cultist_melee"
-		}
-	},
 	renegade_executor = {
 		renegade = {
 			"renegade_melee"
@@ -45,6 +37,14 @@ local DEFAULT_REPLACEMENTS = {
 		},
 		cultist = {
 			"cultist_melee"
+		}
+	},
+	chaos_ogryn_gunner = {
+		renegade = {
+			"renegade_rifleman"
+		},
+		cultist = {
+			"cultist_assault"
 		}
 	},
 	renegade_gunner = {
@@ -275,7 +275,7 @@ local roamer_limits = {
 			chaos_ogryn_bulwark = 2,
 			chaos_ogryn_gunner = 2,
 			renegade_berzerker = 4,
-			renegade_executor = 5,
+			renegade_executor = 7,
 			chaos_ogryn_executor = 2,
 			tag_limits = {
 				elite = 7,
@@ -293,7 +293,7 @@ local roamer_limits = {
 			chaos_ogryn_bulwark = 2,
 			chaos_ogryn_gunner = 8,
 			renegade_berzerker = 8,
-			renegade_executor = 8,
+			renegade_executor = 10,
 			chaos_ogryn_executor = 2,
 			tag_limits = {
 				elite = 10,
@@ -364,7 +364,7 @@ local roamer_limits = {
 			chaos_ogryn_bulwark = 2,
 			cultist_gunner = 3,
 			renegade_berzerker = 5,
-			renegade_executor = 4,
+			renegade_executor = 7,
 			chaos_ogryn_executor = 2,
 			tag_limits = {
 				elite = 7,
@@ -382,7 +382,7 @@ local roamer_limits = {
 			chaos_ogryn_bulwark = 2,
 			cultist_gunner = 3,
 			renegade_berzerker = 5,
-			renegade_executor = 6,
+			renegade_executor = 10,
 			chaos_ogryn_executor = 3,
 			tag_limits = {
 				elite = 10,
@@ -401,7 +401,7 @@ local roamer_limits = {
 			chaos_ogryn_bulwark = 2,
 			cultist_gunner = 10,
 			renegade_berzerker = 10,
-			renegade_executor = 10,
+			renegade_executor = 20,
 			chaos_ogryn_executor = 3,
 			tag_limits = {
 				elite = 20,

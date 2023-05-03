@@ -1,3 +1,4 @@
+local HordeCompositions = require("scripts/managers/pacing/horde_pacing/horde_compositions")
 local RoamerPacks = require("scripts/settings/roamer/roamer_packs")
 local mutator_templates = {
 	mutator_more_specials = {
@@ -5,6 +6,20 @@ local mutator_templates = {
 		modify_pacing = {
 			max_alive_specials_multiplier = 2,
 			specials_timer_modifier = 0.25
+		}
+	},
+	mutator_more_alive_specials = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		modify_pacing = {
+			chance_of_coordinated_strike = 1,
+			max_alive_specials_multiplier = {
+				1,
+				1,
+				1,
+				1.25,
+				1.5,
+				2
+			}
 		}
 	},
 	mutator_waves_of_specials = {
@@ -72,6 +87,12 @@ local mutator_templates = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		init_modify_pacing = {
 			modify_resistance = -1
+		}
+	},
+	mutator_subtract_resistance_02 = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			modify_resistance = -2
 		}
 	},
 	mutator_darkness_los = {
@@ -161,7 +182,179 @@ local mutator_templates = {
 	mutator_toxic_gas = {
 		class = "scripts/managers/mutator/mutators/mutator_toxic_gas",
 		gas_settings = {
-			num_gas_clouds = 10
+			num_gas_clouds = 10,
+			cloud_spawn_distance_range = {
+				80,
+				140
+			}
+		}
+	},
+	mutator_toxic_gas_volumes = {
+		class = "scripts/managers/mutator/mutators/mutator_toxic_gas_volumes",
+		gas_settings = {
+			num_gas_clouds = 10,
+			cloud_spawn_distance_range = {
+				80,
+				140
+			}
+		}
+	},
+	mutator_half_boss_health = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			monster_health_modifier = 0.5
+		}
+	},
+	mutator_only_melee_roamers = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			override_roamer_packs = {
+				low = {
+					renegade = RoamerPacks.renegade_melee_low,
+					cultist = RoamerPacks.cultist_melee_low
+				},
+				high = {
+					renegade = RoamerPacks.renegade_melee_high,
+					cultist = RoamerPacks.cultist_melee_high
+				}
+			}
+		}
+	},
+	mutator_only_melee_terror_events = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			replace_terror_event_tags = {
+				far = "melee",
+				close = "melee"
+			}
+		}
+	},
+	mutator_only_melee_trickle_hordes = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			override_trickle_horde_compositions = {
+				renegade = {
+					none = {
+						HordeCompositions.renegade_trickle_melee
+					},
+					low = {
+						HordeCompositions.renegade_trickle_melee
+					},
+					high = {
+						HordeCompositions.renegade_trickle_melee_elites
+					},
+					poxwalkers = {
+						HordeCompositions.renegade_trickle_melee
+					}
+				},
+				cultist = {
+					none = {
+						HordeCompositions.cultist_trickle_melee
+					},
+					low = {
+						HordeCompositions.cultist_trickle_melee
+					},
+					high = {
+						HordeCompositions.cultist_trickle_melee_elites
+					},
+					poxwalkers = {
+						HordeCompositions.cultist_trickle_melee
+					}
+				}
+			}
+		}
+	},
+	mutator_only_ranged_roamers = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			override_roamer_packs = {
+				none = {
+					renegade = RoamerPacks.renegade_far_low_no_melee_ogryns,
+					cultist = RoamerPacks.cultist_far_low_no_melee_ogryns
+				},
+				low = {
+					renegade = RoamerPacks.renegade_close_low_no_melee_ogryns,
+					cultist = RoamerPacks.cultist_close_low_no_melee_ogryns
+				},
+				high = {
+					renegade = RoamerPacks.renegade_far_high_no_melee_ogryns,
+					cultist = RoamerPacks.cultist_far_high_no_melee_ogryns
+				}
+			}
+		}
+	},
+	mutator_only_ranged_terror_events = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			replace_terror_event_tags = {
+				horde = "roamer",
+				melee = {
+					"far",
+					"close"
+				}
+			}
+		}
+	},
+	mutator_only_ranged_trickle_hordes = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			override_trickle_horde_compositions = {
+				renegade = {
+					none = {
+						HordeCompositions.renegade_trickle_riflemen
+					},
+					low = {
+						HordeCompositions.renegade_trickle_riflemen
+					},
+					high = {
+						HordeCompositions.renegade_trickle_riflemen_high
+					},
+					poxwalkers = {
+						HordeCompositions.renegade_trickle_riflemen
+					}
+				},
+				cultist = {
+					none = {
+						HordeCompositions.cultist_trickle_assaulters
+					},
+					low = {
+						HordeCompositions.cultist_trickle_assaulters
+					},
+					high = {
+						HordeCompositions.cultist_trickle_assaulters_high
+					},
+					poxwalkers = {
+						HordeCompositions.cultist_trickle_assaulters
+					}
+				}
+			}
+		}
+	},
+	mutator_modify_challenge_resistance_scale_six_one = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			modify_challenge_resistance_scale = {
+				{
+					3,
+					1
+				},
+				{
+					4,
+					1
+				},
+				{
+					5,
+					1
+				},
+				{
+					5,
+					2
+				},
+				{
+					6,
+					2
+				}
+			}
 		}
 	}
 }

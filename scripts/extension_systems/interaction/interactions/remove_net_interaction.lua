@@ -29,6 +29,15 @@ RemoveNetInteraction.stop = function (self, world, interactor_unit, unit_data_co
 		assisted_state_input_component.success = true
 		local interactor_player = Managers.state.player_unit_spawn:owner(interactor_unit)
 		local target_player = Managers.state.player_unit_spawn:owner(target_unit)
+
+		if Managers.stats.can_record_stats() and interactor_player and target_player then
+			local is_human_player = interactor_player:is_human_controlled()
+
+			if is_human_player then
+				Managers.stats:record_assist_ally(interactor_player, target_player, self._template.type)
+			end
+		end
+
 		local reviver_position = POSITION_LOOKUP[interactor_unit]
 		local revivee_position = POSITION_LOOKUP[target_unit]
 		local state_name = "netted"

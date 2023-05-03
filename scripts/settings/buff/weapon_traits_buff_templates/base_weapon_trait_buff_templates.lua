@@ -1,25 +1,26 @@
 local Action = require("scripts/utilities/weapon/action")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
-local Breed = require("scripts/utilities/breed")
+local Breeds = require("scripts/settings/breed/breeds")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CheckProcFunctions = require("scripts/settings/buff/validation_functions/check_proc_functions")
 local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
+local Explosion = require("scripts/utilities/attack/explosion")
 local FixedFrame = require("scripts/utilities/fixed_frame")
+local HitZone = require("scripts/utilities/attack/hit_zone")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local Suppression = require("scripts/utilities/attack/suppression")
-local Threat = require("scripts/utilities/threat")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local attack_types = AttackSettings.attack_types
-local damage_efficiencies = AttackSettings.damage_efficiencies
 local keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
-local slot_configuration = PlayerCharacterConstants.slot_configuration
 local stat_buffs = BuffSettings.stat_buffs
+local slot_configuration = PlayerCharacterConstants.slot_configuration
 
 local function _regain_toughness_proc_func(params, template_data, template_context)
 	local toughness_extension = template_data.toughness_extension
@@ -32,7 +33,8 @@ local function _regain_toughness_proc_func(params, template_data, template_conte
 
 	local buff_template = template_context.template
 	local override_data = template_context.template_override_data
-	local fixed_percentage = override_data.toughness_fixed_percentage or buff_template.toughness_fixed_percentage
+	local multiplier = template_data.toughness_regain_multiplier or 1
+	local fixed_percentage = (override_data.toughness_fixed_percentage or buff_template.toughness_fixed_percentage) * multiplier
 	local ignore_stat_buffs = true
 
 	toughness_extension:recover_percentage_toughness(fixed_percentage, ignore_stat_buffs)
@@ -409,13 +411,12 @@ base_templates.heavy_chained_hits_increases_killing_blow_chance_child = {
 	end,
 	proc_func = function (params, template_data, template_context)
 		local damage_profile = DamageProfileTemplates.killing_blow
-		local power_level = PowerLevelSettings.default_power_level
 		local attacked_unit = params.attacked_unit
 		local attack_direction = params.attack_direction:unbox()
 		local hit_world_position_box = params.hit_world_position
 		local hit_world_position = hit_world_position_box and hit_world_position_box:unbox()
 
-		Attack.execute(attacked_unit, damage_profile, "power_level", power_level, "instakill", true, "attack_direction", attack_direction, "hit_world_position", hit_world_position, "hit_zone_name", params.hit_zone_name, "damage_type", params.damage_type, "attack_type", params.attack_type, "attacking_unit", template_context.unit)
+		Attack.execute(attacked_unit, damage_profile, "power_level", DEFAULT_POWER_LEVEL, "instakill", true, "attack_direction", attack_direction, "hit_world_position", hit_world_position, "hit_zone_name", params.hit_zone_name, "damage_type", params.damage_type, "attack_type", params.attack_type, "attacking_unit", template_context.unit)
 	end
 }
 base_templates.increased_attack_cleave_on_multiple_hits = {
@@ -676,13 +677,37 @@ base_templates.power_bonus_scaled_on_stamina = {
 		return steps
 	end
 }
-base_templates.taunt_target_on_hit = {
-	class_name = "proc_buff",
+base_templates.taunt_target_on_staggered_hit = {
+	child_buff_template = "taunt_target_child",
 	predicted = false,
+	stacks_to_remove = 0,
+	class_name = "weapon_trait_target_number_parent_proc_buff",
 	proc_events = {
 		[proc_events.on_hit] = 1
 	},
+	start_func = function (template_data, template_context)
+		template_data.taunted_enemies = {}
+	end,
+	update_func = function (template_data, template_context)
+		local number_of_taunted_enemies = 0
+		local unit = template_context.unit
+		local taunted_enemies = template_data.taunted_enemies
+
+		for tauned_unit, _ in pairs(taunted_enemies) do
+			local attacked_unit_buff_extension = ScriptUnit.has_extension(tauned_unit, "buff_system")
+			local owner_of_taunt = attacked_unit_buff_extension and attacked_unit_buff_extension:owner_of_buff_with_id("taunted")
+
+			if owner_of_taunt == unit then
+				number_of_taunted_enemies = number_of_taunted_enemies + 1
+			else
+				taunted_enemies[tauned_unit] = nil
+			end
+		end
+
+		template_data.target_number_of_stacks = number_of_taunted_enemies
+	end,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_stagger_hit, CheckProcFunctions.any(CheckProcFunctions.on_melee_hit, CheckProcFunctions.on_push_hit)),
 	proc_func = function (params, template_data, template_context)
 		local attacked_unit = params.attacked_unit
 
@@ -690,10 +715,26 @@ base_templates.taunt_target_on_hit = {
 			return
 		end
 
-		local unit = template_context.unit
+		local attacked_unit_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
 
-		Threat.add_flat_threat(attacked_unit, unit, 500)
+		if attacked_unit_buff_extension then
+			local owner_unit = template_context.owner_unit
+			local source_item = template_context.source_item
+			local t = FixedFrame.get_latest_fixed_time()
+
+			attacked_unit_buff_extension:add_internally_controlled_buff("taunted", t, "owner_unit", owner_unit, "source_item", source_item)
+
+			template_data.taunted_enemies[attacked_unit] = true
+		end
 	end
+}
+base_templates.taunt_target_child = {
+	hide_icon_in_hud = true,
+	predicted = false,
+	stack_offset = -1,
+	max_stacks = 1,
+	class_name = "buff",
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 base_templates.consecutive_hits_increases_stagger_parent = {
 	child_buff_template = "consecutive_hits_increases_stagger_child",
@@ -720,7 +761,7 @@ base_templates.consecutive_hits_increases_stagger_child = {
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 base_templates.consecutive_hits_increases_ranged_power_parent = {
-	child_buff_template = "consecutive_hits_increases_stagger_child",
+	child_buff_template = "consecutive_hits_increases_ranged_power_child",
 	child_duration = 2,
 	predicted = false,
 	allow_proc_while_active = true,
@@ -878,6 +919,16 @@ base_templates.power_bonus_on_first_attack = {
 		}
 	}
 }
+base_templates.rending_vs_staggered = {
+	hide_icon_in_hud = true,
+	predicted = false,
+	max_stacks = 1,
+	class_name = "buff",
+	conditional_stat_buffs = {
+		[stat_buffs.rending_vs_staggered_multiplier] = 0.1
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+}
 base_templates.guaranteed_melee_crit_on_activated_kill = {
 	predicted = false,
 	class_name = "proc_buff",
@@ -967,27 +1018,49 @@ base_templates.pass_past_armor_on_weapon_special = {
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.all(ConditionalFunctions.is_item_slot_wielded, ConditionalFunctions.melee_weapon_special_active)
 }
+base_templates.extra_explosion_on_activated_attacks_on_armor = {
+	predicted = false,
+	class_name = "buff",
+	conditional_stat_buffs = {
+		[stat_buffs.weapon_special_max_activations] = 1
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.all(ConditionalFunctions.is_item_slot_wielded, ConditionalFunctions.melee_weapon_special_active)
+}
 base_templates.windup_increases_power_parent = {
 	stacks_to_remove = 3,
 	predicted = false,
-	child_buff_template = "windup_increases_power_child",
 	allow_proc_while_active = true,
+	child_buff_template = "windup_increases_power_child",
 	stack_offset = -1,
 	max_stacks = 3,
 	class_name = "weapon_trait_parent_proc_buff",
+	show_in_hud_if_slot_is_wielded = true,
 	proc_events = {
 		[proc_events.on_windup_trigger] = 1,
 		[proc_events.on_sweep_finish] = 1,
+		[proc_events.on_action_start] = 1,
 		[proc_events.on_wield] = 1
+	},
+	specific_check_proc_funcs = {
+		[proc_events.on_windup_trigger] = function (params, template_data, template_context)
+			return ConditionalFunctions.is_item_slot_wielded(template_data, template_context)
+		end,
+		[proc_events.on_action_start] = function (params, template_data, template_context)
+			local action_settings = params.action_settings
+			local kind = action_settings.kind
+			local is_sweep = kind == "sweep"
+
+			return not is_sweep
+		end
 	},
 	add_child_proc_events = {
 		[proc_events.on_windup_trigger] = 1
 	},
 	clear_child_stacks_proc_events = {
 		[proc_events.on_sweep_finish] = true,
+		[proc_events.on_action_start] = true,
 		[proc_events.on_wield] = true
 	},
-	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
 base_templates.windup_increases_power_child = {
@@ -997,7 +1070,7 @@ base_templates.windup_increases_power_child = {
 	predicted = false,
 	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.power_level_modifier] = 0.5
+		[stat_buffs.melee_power_level_modifier] = 0.5
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }
@@ -1405,7 +1478,12 @@ local function _get_number_of_continuous_fire_steps(template_data, template_cont
 	if not use_combo then
 		local shooting_status_component = template_data.shooting_status_component
 		local num_shots = shooting_status_component.num_shots
-		local continuous_fire_step = template_context.template.continuous_fire_step or 1
+		local continuous_fire_step = continuous_fire_step or template_context.template.continuous_fire_step or 1
+
+		if continuous_fire_step == 0 then
+			return 0
+		end
+
 		local steps = math.floor(num_shots / continuous_fire_step)
 
 		return steps
@@ -1806,9 +1884,23 @@ base_templates.increased_crit_chance_on_staggered_weapon_special_hit_child = {
 	predicted = false,
 	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.critical_strike_chance] = 0.5
+		[stat_buffs.critical_strike_chance] = 0.1
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+}
+base_templates.increased_crit_chance_on_weapon_special_hit = {
+	allow_proc_while_active = true,
+	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 3,
+	proc_events = {
+		[proc_events.on_hit] = 1
+	},
+	proc_stat_buffs = {
+		[stat_buffs.critical_strike_chance] = 0.1
+	},
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = CheckProcFunctions.on_melee_weapon_special_hit
 }
 base_templates.toughness_on_elite_kills = {
 	predicted = false,
@@ -1846,7 +1938,7 @@ base_templates.chance_based_on_aim_time = {
 		local unit = template_context.unit
 		local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
 		template_data.alternate_fire_component = unit_data_extension and unit_data_extension:read_component("alternate_fire")
-		template_data.weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
+		template_data.action_shoot_component = unit_data_extension and unit_data_extension:read_component("action_shoot")
 	end,
 	min_max_step_func = function (template_data, template_context)
 		return 0, 5
@@ -1860,8 +1952,8 @@ base_templates.chance_based_on_aim_time = {
 		end
 
 		local alternate_fire_time = alternate_fire_component.start_t
-		local weapon_action_component = template_data.weapon_action_component
-		local last_shoot_time = weapon_action_component.start_t
+		local action_shoot_component = template_data.action_shoot_component
+		local last_shoot_time = action_shoot_component.fire_last_t
 		local check_time = math.max(alternate_fire_time, last_shoot_time)
 		local t = FixedFrame.get_latest_fixed_time()
 		local time_lapsed = t - check_time
@@ -1917,6 +2009,53 @@ base_templates.sticky_projectiles = {
 		keywords.sticky_projectiles
 	}
 }
+base_templates.chance_to_explode_elites_on_kill = {
+	class_name = "proc_buff",
+	predicted = false,
+	proc_events = {
+		[proc_events.on_minion_death] = 0.05
+	},
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = function (params, template_data, template_context)
+		local template = template_context.template
+		local proc_data = template.proc_data
+		local target_unit = params.dying_unit
+		local breed_name = params.breed_name
+		local breed = Breeds[breed_name]
+		local is_elite = breed and breed.tags and breed.tags.elite
+
+		if not is_elite then
+			return false
+		end
+
+		local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
+
+		if not target_buff_extension then
+			return false
+		end
+
+		local valid_keyword = target_buff_extension:has_any_keyword(proc_data.validation_keywords)
+
+		if not valid_keyword then
+			return false
+		end
+
+		local is_source_player = target_buff_extension:has_buff_id_with_owner(proc_data.fire_buff_id, template_context.unit)
+
+		if not is_source_player then
+			return false
+		end
+
+		return true
+	end,
+	proc_func = function (params, template_data, template_context)
+		local dying_unit = params.dying_unit
+		local explosion_position = HitZone.hit_zone_center_of_mass(dying_unit, HitZone.hit_zone_names.center_mass, false) + Vector3.up() * 0.01
+		local explosion_template = template_context.template.proc_data.explosion_template
+
+		Explosion.create_explosion(template_context.world, template_context.physics_world, explosion_position, Vector3.up(), template_context.unit, explosion_template, DEFAULT_POWER_LEVEL, 1, attack_types.explosion)
+	end
+}
 base_templates.faster_reload_on_empty_clip = {
 	predicted = false,
 	class_name = "buff",
@@ -1933,7 +2072,7 @@ base_templates.power_scales_with_clip_percentage = {
 	stack_offset = -1,
 	class_name = "stepped_stat_buff",
 	conditional_stat_buffs = {
-		[stat_buffs.power_level_modifier] = 0.05
+		[stat_buffs.ranged_power_level_modifier] = 0.05
 	},
 	conditional_stepped_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
@@ -1966,6 +2105,33 @@ base_templates.power_scales_with_clip_percentage = {
 		end
 
 		return 0
+	end
+}
+base_templates.move_ammo_from_reserve_to_clip_on_crit = {
+	num_ammmo_to_move = 5,
+	force_predicted_proc = true,
+	predicted = false,
+	class_name = "proc_buff",
+	proc_events = {
+		[proc_events.on_critical_strike] = 1
+	},
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	start_func = function (template_data, template_context)
+		local item_slot_name = template_context.item_slot_name
+		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+		template_data.inventory_slot_component = unit_data_extension:write_component(item_slot_name)
+	end,
+	proc_func = function (params, template_data, template_context)
+		local inventory_slot_component = template_data.inventory_slot_component
+		local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
+		local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
+		local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
+		local override_data = template_context.template_override_data
+		local total_ammo_to_move = override_data and override_data.num_ammmo_to_move or template_context.template.num_ammmo_to_move
+		local number_of_bullets_missing_from_clip = max_ammunition_clip - current_ammunition_clip
+		total_ammo_to_move = math.min(total_ammo_to_move, number_of_bullets_missing_from_clip, current_ammunition_reserve)
+		inventory_slot_component.current_ammunition_clip = current_ammunition_clip + total_ammo_to_move
+		inventory_slot_component.current_ammunition_reserve = current_ammunition_reserve - total_ammo_to_move
 	end
 }
 

@@ -12,7 +12,6 @@ local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates
 local ShotshellTemplates = require("scripts/settings/projectile/shotshell_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokeThumperP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_thumper_p1")
-local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local armor_types = ArmorSettings.types
@@ -295,14 +294,15 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_zoomed = {
-		start_input = "zoom_shoot",
+		uninterruptible = true,
+		weapon_handling_template = "stubrevolver_single_shot",
 		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0.4,
-		weapon_handling_template = "stubrevolver_single_shot",
+		start_input = "zoom_shoot",
 		ammunition_usage = 1,
-		sprint_requires_press_to_interrupt = true,
-		allowed_during_sprint = true,
-		total_time = 1,
+		allowed_during_sprint = false,
+		crosshair_type = "shotgun",
+		total_time = 0.75,
 		action_movement_curve = {
 			{
 				modifier = 1.2,
@@ -352,18 +352,31 @@ weapon_template.actions = {
 			wield = {
 				action_name = "action_unwield"
 			},
-			shoot_pressed = {
-				action_name = "action_shoot_hip",
-				chain_time = 0.5
+			reload = {
+				action_name = "action_reload",
+				chain_time = 0.4
 			},
-			zoom = {
-				action_name = "action_zoom",
-				chain_time = 0.1
+			zoom_shoot = {
+				action_name = "action_shoot_zoomed",
+				chain_time = 1.05
+			},
+			zoom_release = {
+				action_name = "action_unzoom",
+				chain_time = 0.2
+			},
+			bash = {
+				chain_time = 0.1,
+				reset_combo = true,
+				action_name = "action_bash"
 			}
 		},
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.ranged_attack_speed
+		},
+		action_keywords = {
+			"braced",
+			"braced_shooting"
 		},
 		buff_keywords = {
 			buff_keywords.allow_hipfire_during_sprint
@@ -444,6 +457,7 @@ weapon_template.actions = {
 		start_input = "bash",
 		kind = "sweep",
 		sprint_requires_press_to_interrupt = true,
+		first_person_hit_anim = "hit_left_shake",
 		first_person_hit_stop_anim = "attack_hit",
 		crosshair_type = "dot",
 		range_mod = 1.15,
@@ -537,12 +551,13 @@ weapon_template.actions = {
 	action_bash_right = {
 		damage_window_start = 0.6333333333333333,
 		hit_armor_anim = "attack_hit_shield",
-		kind = "sweep",
-		sprint_requires_press_to_interrupt = true,
-		crosshair_type = "dot",
-		first_person_hit_stop_anim = "attack_hit",
-		allowed_during_sprint = true,
 		range_mod = 1.15,
+		kind = "sweep",
+		first_person_hit_anim = "hit_right_shake",
+		first_person_hit_stop_anim = "attack_hit",
+		crosshair_type = "dot",
+		allowed_during_sprint = true,
+		sprint_requires_press_to_interrupt = true,
 		attack_direction_override = "right",
 		damage_window_end = 0.7333333333333333,
 		abort_sprint = true,
@@ -639,6 +654,7 @@ weapon_template.actions = {
 		total_time = math.huge
 	}
 }
+local WeaponBarUIDescriptionTemplates = require("scripts/settings/equipment/weapon_bar_ui_description_templates")
 weapon_template.base_stats = {
 	ogryn_thumper_dps_stat = {
 		display_name = "loc_stats_display_damage_stat",
@@ -646,25 +662,10 @@ weapon_template.base_stats = {
 		damage = {
 			action_shoot_hip = {
 				damage_trait_templates.stubrevolver_dps_stat,
-				display_data = {
-					prefix = "Hip Fire",
-					display_stats = {
-						power_distribution = {
-							attack = {}
-						}
-					}
-				}
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
-				damage_trait_templates.stubrevolver_dps_stat,
-				display_data = {
-					prefix = "Zoomed Fire",
-					display_stats = {
-						power_distribution = {
-							attack = {}
-						}
-					}
-				}
+				damage_trait_templates.stubrevolver_dps_stat
 			}
 		}
 	},
@@ -675,8 +676,8 @@ weapon_template.base_stats = {
 			action_reload = {
 				weapon_handling_trait_templates.max_reload_speed_modify,
 				display_data = {
-					prefix = "loc_weapon_action_title_light",
 					display_stats = {
+						__all_basic_stats = true,
 						time_scale = {
 							display_name = "loc_weapon_stats_display_reload_speed"
 						}
@@ -691,32 +692,19 @@ weapon_template.base_stats = {
 		dodge = {
 			base = {
 				dodge_trait_templates.default_dodge_stat,
-				display_data = {
-					display_stats = {
-						distance_scale = {},
-						diminishing_return_start = {}
-					}
-				}
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		sprint = {
 			base = {
 				sprint_trait_templates.default_sprint_stat,
-				display_data = {
-					display_stats = {
-						sprint_speed_mod = {}
-					}
-				}
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		},
 		movement_curve_modifier = {
 			base = {
 				movement_curve_modifier_trait_templates.default_movement_curve_modifier_stat,
-				display_data = {
-					display_stats = {
-						modifier = {}
-					}
-				}
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			}
 		}
 	},
@@ -726,49 +714,10 @@ weapon_template.base_stats = {
 		damage = {
 			action_shoot_hip = {
 				damage_trait_templates.shotgun_default_range_stat,
-				display_data = {
-					prefix = "Hip Fire",
-					display_stats = {
-						armor_damage_modifier_ranged = {
-							far = {
-								attack = {
-									[armor_types.unarmored] = {},
-									[armor_types.disgustingly_resilient] = {},
-									[armor_types.armored] = {},
-									[armor_types.resistant] = {},
-									[armor_types.berserker] = {}
-								}
-							}
-						},
-						ranges = {
-							min = {},
-							max = {}
-						}
-					}
-				}
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
-				damage_trait_templates.shotgun_default_range_stat,
-				display_data = {
-					prefix = "Zoomed Fire",
-					display_stats = {
-						armor_damage_modifier_ranged = {
-							far = {
-								attack = {
-									[armor_types.unarmored] = {},
-									[armor_types.disgustingly_resilient] = {},
-									[armor_types.armored] = {},
-									[armor_types.resistant] = {},
-									[armor_types.berserker] = {}
-								}
-							}
-						},
-						ranges = {
-							min = {},
-							max = {}
-						}
-					}
-				}
+				damage_trait_templates.shotgun_default_range_stat
 			}
 		}
 	},
@@ -777,62 +726,11 @@ weapon_template.base_stats = {
 		is_stat_trait = true,
 		damage = {
 			action_shoot_hip = {
-				damage_trait_templates.default_power_stat,
-				display_data = {
-					prefix = "Hip Fire",
-					display_stats = {
-						armor_damage_modifier_ranged = {
-							near = {
-								attack = {
-									[armor_types.armored] = {},
-									[armor_types.super_armor] = {},
-									[armor_types.resistant] = {},
-									[armor_types.berserker] = {}
-								}
-							},
-							far = {
-								attack = {
-									[armor_types.armored] = {},
-									[armor_types.super_armor] = {},
-									[armor_types.resistant] = {},
-									[armor_types.berserker] = {}
-								}
-							}
-						},
-						power_distribution = {
-							impact = {}
-						}
-					}
-				}
+				damage_trait_templates.thumper_shotgun_power_stat,
+				display_data = WeaponBarUIDescriptionTemplates.all_basic_stats
 			},
 			action_shoot_zoomed = {
-				damage_trait_templates.default_power_stat,
-				display_data = {
-					prefix = "Zoomed Fire",
-					display_stats = {
-						armor_damage_modifier_ranged = {
-							near = {
-								attack = {
-									[armor_types.armored] = {},
-									[armor_types.super_armor] = {},
-									[armor_types.resistant] = {},
-									[armor_types.berserker] = {}
-								}
-							},
-							far = {
-								attack = {
-									[armor_types.armored] = {},
-									[armor_types.super_armor] = {},
-									[armor_types.resistant] = {},
-									[armor_types.berserker] = {}
-								}
-							}
-						},
-						power_distribution = {
-							impact = {}
-						}
-					}
-				}
+				damage_trait_templates.thumper_shotgun_power_stat
 			}
 		}
 	}
@@ -847,7 +745,7 @@ weapon_template.alternate_fire_settings = {
 	toughness_template = "killshot_zoomed",
 	stop_anim_event = "to_unaim_braced",
 	start_anim_event = "to_braced",
-	spread_template = "default_bolter_spraynpray",
+	spread_template = "thumper_m3_aim",
 	camera = {
 		custom_vertical_fov = 55,
 		vertical_fov = 50,
@@ -885,7 +783,7 @@ weapon_template.alternate_fire_settings = {
 	},
 	projectile_aim_effect_settings = {}
 }
-weapon_template.spread_template = "default_autogun_assault"
+weapon_template.spread_template = "thumper_m3_hip"
 weapon_template.recoil_template = "default_thumper_assault"
 weapon_template.reload_template = ReloadTemplates.ogryn_thumper
 weapon_template.conditional_state_to_action_input = {
@@ -918,10 +816,6 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_thumper
 weapon_template.traits = {}
-local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
-
-table.append(weapon_template.traits, ranged_common_traits)
-
 local bespoke_traits = table.keys(WeaponTraitsBespokeThumperP1)
 
 table.append(weapon_template.traits, bespoke_traits)

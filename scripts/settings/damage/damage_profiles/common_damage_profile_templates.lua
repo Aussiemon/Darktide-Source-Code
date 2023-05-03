@@ -684,6 +684,30 @@ damage_templates.overheat_exploding_tick = {
 		}
 	}
 }
+damage_templates.warp_charge_exploding_tick = {
+	ignore_shield = true,
+	ignore_toughness = true,
+	stagger_category = "melee",
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod
+	},
+	power_distribution = {
+		attack = 0,
+		impact = 0.5
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25
+	},
+	force_look_function = ForcedLookSettings.look_functions.medium,
+	push_template = push_templates.medium,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
 damage_templates.falling_light = {
 	ogryn_disorientation_type = "falling_light",
 	stagger_category = "ranged",

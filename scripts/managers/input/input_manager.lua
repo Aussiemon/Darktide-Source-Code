@@ -49,7 +49,15 @@ InputManager.init = function (self)
 	self._key_watch_result = nil
 	self._key_watch_devices = {}
 	self._key_watch = false
-	self._active_rumbles = {}
+	self._rumble_instances = {}
+
+	for i = 1, InputManager.MAX_RUMBLES do
+		local rumble_instance = {
+			ids = {}
+		}
+		self._rumble_instances[i] = rumble_instance
+	end
+
 	self._rumble_device = nil
 	self._rumble_id = 1
 	self._selection = {
@@ -134,6 +142,8 @@ InputManager._select_fixed = function (self)
 			end
 
 			self._rumble_device = device
+		elseif self._rumble_device then
+			self._rumble_device = nil
 		end
 
 		table.clear(used_devices)
@@ -166,6 +176,8 @@ InputManager._select_latest = function (self)
 			end
 
 			self._rumble_device = latest
+		elseif self._rumble_device then
+			self._rumble_device = nil
 		end
 
 		local used_devices = self._used_input_devices
@@ -628,72 +640,122 @@ end
 
 InputManager._free_rumble_slot = function (self)
 	local raw_device = self._rumble_device:raw_device()
+	local free_slot, rumble_instance = nil
+	local rumble_instances = self._rumble_instances
 
 	for i = 1, InputManager.MAX_RUMBLES do
-		local rumble = self._active_rumbles[i]
+		local current_rumble_instance = rumble_instances[i]
 
-		if not rumble then
-			return i
+		if not current_rumble_instance.rumble_id then
+			free_slot = i
+			rumble_instance = current_rumble_instance
 		else
 			local playing = false
 
-			for motor_id, id in pairs(rumble.ids) do
+			for motor_id, id in pairs(current_rumble_instance.ids) do
 				if raw_device.is_rumble_effect_playing(motor_id - 1, id) then
 					playing = true
 				end
 			end
 
 			if not playing then
-				return i
+				free_slot = i
+				rumble_instance = current_rumble_instance
 			end
 		end
 	end
+
+	if free_slot and rumble_instance then
+		table.clear(rumble_instance.ids)
+
+		rumble_instance.id = nil
+	end
+
+	return free_slot, rumble_instance
 end
 
-InputManager.start_rumble_effect = function (self, name)
-	if not self._rumble_device then
+InputManager.trigger_rumble_effect = function (self, rumble_name)
+	local rumble_settings = RumbleSettings[rumble_name]
+
+	return self:_start_rumble_effect(rumble_name, rumble_settings)
+end
+
+InputManager.start_rumble_effect = function (self, rumble_name)
+	local rumble_settings = RumbleSettings[rumble_name]
+
+	return self:_start_rumble_effect(rumble_name, rumble_settings)
+end
+
+local _rumble_params_table = {}
+
+InputManager._get_rumble_params = function (self, params)
+	local rumble_intensity = self._rumble_intensity or 1
+
+	if rumble_intensity == 1 then
+		return params
+	end
+
+	table.clear(_rumble_params_table)
+	table.merge(_rumble_params_table, params)
+
+	_rumble_params_table.attack_level = (_rumble_params_table.attack_level or 1) * rumble_intensity
+	_rumble_params_table.sustain_level = (_rumble_params_table.sustain_level or 1) * rumble_intensity
+
+	return _rumble_params_table
+end
+
+InputManager._start_rumble_effect = function (self, rumble_name, rumble_settings)
+	if not self._rumble_enabled or self._rumble_intensity == 0 then
 		return 0
 	end
 
-	local raw_device = self._rumble_device:raw_device()
-	local free_slot = self:_free_rumble_slot()
+	local rumble_device = self._rumble_device
 
-	if not free_slot then
-		return 0
-	end
-
-	local effect_data = RumbleSettings[name]
-	local effect_instance = {
-		ids = {},
-		rumble_id = self._rumble_id
-	}
-
-	for _, motor_id in pairs(effect_data.motors) do
-		local params = effect_data.params[motor_id + 1]
-		local new_id = raw_device.rumble_effect(motor_id, params)
-		effect_instance.ids[motor_id + 1] = new_id
-	end
-
-	self._rumble_id = self._rumble_id + 1
-	self._active_rumbles[free_slot] = effect_instance
-
-	return effect_instance.rumble_id
-end
-
-InputManager.stop_rumble_effect = function (self, id)
-	if not self._rumble_device then
+	if not rumble_device then
 		return
 	end
 
-	local raw_device = self._rumble_device:raw_device()
+	local raw_device = rumble_device:raw_device()
+	local free_slot, rumble_instance = self:_free_rumble_slot()
+
+	if not free_slot or not rumble_instance then
+		return 0
+	end
+
+	local rumble_id = self._rumble_id
+	self._rumble_id = rumble_id + 1
+	rumble_instance.rumble_id = rumble_id
+
+	for _, effect_data in pairs(rumble_settings) do
+		local motor_id = effect_data.motor_id
+		local params = self:_get_rumble_params(effect_data.params)
+		local new_id = raw_device.rumble_effect(motor_id, params)
+		rumble_instance.ids[motor_id + 1] = new_id
+	end
+
+	return rumble_id
+end
+
+InputManager.stop_rumble_effect = function (self, id)
+	local rumble_device = self._rumble_device
+
+	if not rumble_device then
+		return
+	end
+
+	local raw_device = rumble_device:raw_device()
 
 	for i = 1, self.MAX_RUMBLES do
-		local effect_instance = self._active_rumbles[i]
+		local rumble_instance = self._rumble_instances[i]
 
-		if effect_instance and effect_instance.rumble_id == id then
-			for motor_id, internal_id in pairs(effect_instance.ids) do
+		if rumble_instance and rumble_instance.rumble_id == id then
+			for motor_id, internal_id in pairs(rumble_instance.ids) do
 				raw_device.stop_rumble_effect(motor_id - 1, internal_id)
 			end
+
+			table.clear(rumble_instance.ids)
+
+			rumble_instance.rumble_id = nil
 
 			return
 		end
@@ -701,21 +763,39 @@ InputManager.stop_rumble_effect = function (self, id)
 end
 
 InputManager.stop_all_rumbles = function (self)
+	local rumble_device = self._rumble_device
+
+	if not rumble_device then
+		return
+	end
+
+	local raw_device = rumble_device:raw_device()
+
+	for i = 1, self.MAX_RUMBLES do
+		local rumble_instance = self._rumble_instances[i]
+
+		if rumble_instance then
+			for motor_id, internal_id in pairs(rumble_instance.ids) do
+				raw_device.stop_rumble_effect(motor_id - 1, internal_id)
+			end
+
+			table.clear(rumble_instance.ids)
+
+			rumble_instance.rumble_id = nil
+		end
+	end
+end
+
+InputManager.set_rumble_enabled = function (self, do_rumble)
+	self._rumble_enabled = do_rumble
+
 	if not self._rumble_device then
 		return
 	end
 
 	local raw_device = self._rumble_device:raw_device()
 
-	for i = 1, self.MAX_RUMBLES do
-		local effect_instance = self._active_rumbles[i]
-
-		if effect_instance then
-			for motor_id, internal_id in pairs(effect_instance.ids) do
-				raw_device.stop_rumble_effect(motor_id - 1, internal_id)
-			end
-		end
-	end
+	raw_device.set_rumble_enabled(do_rumble)
 end
 
 return InputManager

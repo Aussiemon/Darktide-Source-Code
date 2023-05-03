@@ -1,7 +1,8 @@
 local material_overrides = {
 	hair_no_mask = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
+				0,
 				0,
 				0
 			},
@@ -21,16 +22,13 @@ local material_overrides = {
 				0,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	hair_mask_underside_back_01 = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
+				0,
 				0,
 				0
 			},
@@ -50,18 +48,15 @@ local material_overrides = {
 				0,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	hair_mask_half_left_01 = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
 				0,
-				0.66
+				1,
+				0
 			},
 			hair_mask_x = {
 				-0.5,
@@ -79,18 +74,15 @@ local material_overrides = {
 				-0.09,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	hair_mask_half_right_01 = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
 				0,
-				0.66
+				1,
+				1
 			},
 			hair_mask_x = {
 				-0.5,
@@ -108,18 +100,15 @@ local material_overrides = {
 				0.09,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				1
 			}
 		}
 	},
 	hair_mask_half_right_02 = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
 				0,
-				0.64
+				0.64,
+				1
 			},
 			hair_mask_x = {
 				-0.5,
@@ -137,16 +126,13 @@ local material_overrides = {
 				0,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				1
 			}
 		}
 	},
 	hair_mask_back = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
+				0,
 				0,
 				0
 			},
@@ -166,16 +152,13 @@ local material_overrides = {
 				0,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	hair_mask_back_big = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
+				0,
 				0,
 				0
 			},
@@ -195,16 +178,13 @@ local material_overrides = {
 				0,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	hair_mask_back_top = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
+				0,
 				0,
 				0
 			},
@@ -224,16 +204,13 @@ local material_overrides = {
 				0,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	hair_mask_backside_02 = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
+				0,
 				0,
 				0
 			},
@@ -253,16 +230,13 @@ local material_overrides = {
 				0,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	hair_mask_fringe_big = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
+				0,
 				0,
 				0
 			},
@@ -282,17 +256,14 @@ local material_overrides = {
 				0,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	hair_mask_fringe = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
 				1,
+				0,
 				0
 			},
 			hair_mask_x = {
@@ -311,17 +282,14 @@ local material_overrides = {
 				0,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	hair_mask_fringe_tight = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
 				1,
+				0,
 				0
 			},
 			hair_mask_x = {
@@ -340,47 +308,15 @@ local material_overrides = {
 				0,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	hair_mask_fringe_inverted = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
 				1,
-				0
-			},
-			hair_mask_x = {
-				-0.5,
-				-0.5
-			},
-			hair_mask_y = {
-				-1,
-				-1
-			},
-			hair_mask_z = {
-				-1,
-				-1
-			},
-			hair_mask_offset = {
-				0,
-				0,
-				0
-			},
-			mask_type_step_invert = {
 				0,
 				1
-			}
-		}
-	},
-	hair_mask_fringe_tight_left = {
-		property_overrides = {
-			hair_mask_types = {
-				1,
-				0
 			},
 			hair_mask_x = {
 				-0.5,
@@ -397,17 +333,14 @@ local material_overrides = {
 			hair_mask_offset = {
 				0,
 				0,
-				0
-			},
-			mask_type_step_invert = {
-				-0.2,
 				0
 			}
 		}
 	},
 	hair_mask_top = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
+				0,
 				0,
 				0
 			},
@@ -427,16 +360,13 @@ local material_overrides = {
 				0,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	hair_mask_top_bigger = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
+				0,
 				0,
 				0
 			},
@@ -456,16 +386,13 @@ local material_overrides = {
 				0,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	hair_mask_top_big = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
+				0,
 				0,
 				0
 			},
@@ -485,17 +412,14 @@ local material_overrides = {
 				0,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	ogryn_hair_mask_fringe = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
 				1,
+				0,
 				0
 			},
 			hair_mask_x = {
@@ -514,16 +438,13 @@ local material_overrides = {
 				0,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	ogryn_hair_mask_back_01 = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
+				0,
 				0,
 				0
 			},
@@ -543,16 +464,13 @@ local material_overrides = {
 				-0,
 				0,
 				-0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	ogryn_hair_mask_beret = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
+				0,
 				0,
 				0
 			},
@@ -572,16 +490,13 @@ local material_overrides = {
 				-0,
 				0.1,
 				-0.03
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	ogryn_hair_mask_cap_01 = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
+				0,
 				0,
 				0
 			},
@@ -601,16 +516,13 @@ local material_overrides = {
 				-0,
 				0.162,
 				0.108
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	ogryn_hair_mask_cap_02 = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
+				0,
 				0,
 				0
 			},
@@ -630,16 +542,13 @@ local material_overrides = {
 				-0,
 				-0.054,
 				0.108
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	ogryn_hair_mask_top_01 = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
+				0,
 				0,
 				0
 			},
@@ -659,16 +568,13 @@ local material_overrides = {
 				-0,
 				0.112,
 				-0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	ogryn_hair_mask_top_02 = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
+				0,
 				0,
 				0
 			},
@@ -688,18 +594,15 @@ local material_overrides = {
 				-0,
 				0.112,
 				-0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	ogryn_hair_mask_half_left = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
 				0,
-				1.777
+				1.777,
+				0
 			},
 			hair_mask_x = {
 				-0.5,
@@ -717,18 +620,15 @@ local material_overrides = {
 				-0.2,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				0
 			}
 		}
 	},
 	ogryn_hair_mask_half_right = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
 				0,
-				1.777
+				1.777,
+				1
 			},
 			hair_mask_x = {
 				-0.5,
@@ -746,16 +646,13 @@ local material_overrides = {
 				0.2,
 				0,
 				0
-			},
-			mask_type_step_invert = {
-				0,
-				1
 			}
 		}
 	},
 	ogryn_hair_mask_half_right_02 = {
 		property_overrides = {
-			hair_mask_types = {
+			hair_mask_types_invert = {
+				0,
 				0,
 				0
 			},
@@ -773,10 +670,6 @@ local material_overrides = {
 			},
 			hair_mask_offset = {
 				0,
-				0,
-				0
-			},
-			mask_type_step_invert = {
 				0,
 				0
 			}

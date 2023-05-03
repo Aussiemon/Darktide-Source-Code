@@ -11,9 +11,6 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokeAutogunP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_autogun_p1")
-local WeaponTraitsRangedAimed = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_aimed")
-local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
-local WeaponTraitsRangedHighFireRate = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_high_fire_rate")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local armor_types = ArmorSettings.types
@@ -717,18 +714,6 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
-
-table.append(weapon_template.traits, ranged_common_traits)
-
-local ranged_high_fire_rate_traits = table.keys(WeaponTraitsRangedHighFireRate)
-
-table.append(weapon_template.traits, ranged_high_fire_rate_traits)
-
-local ranged_aimed_traits = table.keys(WeaponTraitsRangedAimed)
-
-table.append(weapon_template.traits, ranged_aimed_traits)
-
 local bespoke_autogun_p1_traits = table.keys(WeaponTraitsBespokeAutogunP1)
 
 table.append(weapon_template.traits, bespoke_autogun_p1_traits)

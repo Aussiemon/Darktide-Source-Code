@@ -15,7 +15,7 @@ local default_armor_decal = {
 		}
 	},
 	units = {
-		"content/fx/units/vfx_decal_lasgun_scorchmark"
+		"content/fx/units/weapons/vfx_decal_lasgun_scorchmark"
 	}
 }
 local default_shield_block_decal = {
@@ -30,7 +30,7 @@ local default_shield_block_decal = {
 		}
 	},
 	units = {
-		"content/fx/units/vfx_decal_lasgun_scorchmark"
+		"content/fx/units/weapons/vfx_decal_lasgun_scorchmark"
 	}
 }
 local blood_ball = {

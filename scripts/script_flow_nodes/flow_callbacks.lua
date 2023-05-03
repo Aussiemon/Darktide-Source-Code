@@ -1759,7 +1759,7 @@ FlowCallbacks.register_objective_unit = function (params)
 	if is_server then
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_register_objective_unit(params.objective_name, params.objective_unit, params.peer_id)
+		mission_objective_system:flow_callback_register_objective_unit(params.objective_name, params.objective_unit)
 	end
 end
 
@@ -1769,7 +1769,7 @@ FlowCallbacks.start_mission_objective = function (params)
 	if is_server then
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_start_mission_objective(params.objective_name, params.peer_id)
+		mission_objective_system:flow_callback_start_mission_objective(params.objective_name)
 	end
 end
 
@@ -1779,7 +1779,7 @@ FlowCallbacks.update_mission_objective = function (params)
 	if is_server then
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_update_mission_objective(params.objective_name, params.peer_id)
+		mission_objective_system:flow_callback_update_mission_objective(params.objective_name)
 	end
 end
 
@@ -1789,7 +1789,7 @@ FlowCallbacks.end_mission_objective = function (params)
 	if is_server then
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-		mission_objective_system:flow_callback_end_mission_objective(params.objective_name, params.peer_id)
+		mission_objective_system:flow_callback_end_mission_objective(params.objective_name)
 	end
 end
 
@@ -1831,6 +1831,18 @@ FlowCallbacks.mission_objective_reset_override_ui_string = function (params)
 		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
 		mission_objective_system:flow_callback_override_ui_string(objective_name, "empty_objective_string", "empty_objective_string")
+	end
+end
+
+FlowCallbacks.mission_objective_show_ui = function (params)
+	local is_server = Managers.state.game_session:is_server()
+
+	if is_server then
+		local objective_name = params.mission_objective_name
+		local show = params.show
+		local mission_objective_system = Managers.state.extension:system("mission_objective_system")
+
+		mission_objective_system:flow_callback_set_objective_show_ui(objective_name, show)
 	end
 end
 
@@ -2002,12 +2014,20 @@ end
 FlowCallbacks.get_unit_from_item_slot = function (params)
 	local unit = params.unit
 	local slot_name = params.slot
+	local slot_unit = nil
 	local component_system = Managers.state.extension:system("component_system")
 	local player_customization_components = component_system:get_components(unit, "PlayerCustomization")
-	local slot_unit = nil
 
 	if table.size(player_customization_components) == 1 then
 		slot_unit = player_customization_components[1]:unit_in_slot(slot_name)
+	end
+
+	if not Unit.alive(slot_unit) then
+		local cutscene_character_extension = ScriptUnit.fetch_component_extension(unit, "cutscene_character_system")
+
+		if cutscene_character_extension then
+			slot_unit = cutscene_character_extension:unit_3p_from_slot(slot_name)
+		end
 	end
 
 	if Unit.alive(slot_unit) then

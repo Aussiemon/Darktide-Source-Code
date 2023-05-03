@@ -258,7 +258,7 @@ function _spawn_attachment(item_data, settings, parent_unit, optional_mission_te
 		end
 	end
 
-	if settings.is_first_person or settings.is_in_menu then
+	if settings.is_first_person or settings.force_highest_lod_step then
 		Unit.set_unit_culling(spawned_unit, false)
 
 		if Unit.has_lod_object(spawned_unit, "lod") then
@@ -290,7 +290,9 @@ function _spawn_attachment(item_data, settings, parent_unit, optional_mission_te
 		Unit.set_unit_objects_visibility(spawned_unit, false, true, VisibilityContexts.RAYTRACING_CONTEXT)
 	end
 
-	World.link_unit(settings.world, spawned_unit, 1, parent_unit, attach_node_index, not settings.skip_link_children and true)
+	local keep_local_transform = not settings.skip_link_children and true
+
+	World.link_unit(settings.world, spawned_unit, 1, parent_unit, attach_node_index, keep_local_transform)
 
 	if settings.lod_group and Unit.has_lod_object(spawned_unit, "lod") and not settings.is_first_person then
 		local attached_lod_object = Unit.lod_object(spawned_unit, "lod")

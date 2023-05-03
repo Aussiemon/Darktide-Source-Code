@@ -10,7 +10,6 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local WeaponTraitsBespokeOgrynClubP2 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_club_p2")
-local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local damage_types = DamageSettings.damage_types
@@ -319,10 +318,11 @@ weapon_template.actions = {
 		herding_template = HerdingTemplates.smiter_down
 	},
 	action_melee_start_right = {
-		chain_anim_event_3p = "attack_swing_charge_down_right",
+		allowed_during_sprint = true,
 		chain_anim_event = "attack_swing_charge_down_right_pose",
-		anim_end_event = "attack_finished",
+		chain_anim_event_3p = "attack_swing_charge_down_right",
 		kind = "windup",
+		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_swing_charge_down_right",
 		stop_input = "attack_cancel",
@@ -382,15 +382,16 @@ weapon_template.actions = {
 	action_right_light = {
 		damage_window_start = 0.4666666666666667,
 		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1_2",
+		anim_event_3p = "attack_swing_right_diagonal_slow",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		range_mod = 1.25,
+		weapon_handling_template = "time_scale_1_2",
 		first_person_hit_stop_anim = "attack_hit",
-		anim_event_3p = "attack_swing_right_diagonal_slow",
+		allowed_during_sprint = true,
 		damage_window_end = 0.5666666666666667,
-		attack_direction_override = "right",
+		range_mod = 1.25,
 		anim_end_event = "attack_finished",
+		attack_direction_override = "right",
 		uninterruptible = true,
 		anim_event = "attack_swing_right_diagonal",
 		total_time = 2,
@@ -1001,7 +1002,11 @@ weapon_template.actions = {
 			}
 		},
 		damage_profile = DamageProfileTemplates.ogryn_club_smiter_pushfollow,
-		damage_type = damage_types.ogryn_pipe_club
+		damage_type = damage_types.ogryn_pipe_club,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed
+		}
 	},
 	action_push = {
 		push_radius = 2.5,
@@ -1709,10 +1714,6 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local melee_common_traits = table.keys(WeaponTraitsMeleeCommon)
-
-table.append(weapon_template.traits, melee_common_traits)
-
 local bespoke_ogryn_club_p2 = table.keys(WeaponTraitsBespokeOgrynClubP2)
 
 table.append(weapon_template.traits, bespoke_ogryn_club_p2)

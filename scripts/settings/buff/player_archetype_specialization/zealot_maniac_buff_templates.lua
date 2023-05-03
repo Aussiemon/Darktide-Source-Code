@@ -129,6 +129,12 @@ templates.zealot_maniac_martyrdom_base = {
 				martyrdom_stack_added(template_data, template_context, t)
 			end
 
+			if current_stacks ~= template_data.current_stacks and Managers.stats.can_record_stats() then
+				local player = template_context.player
+
+				Managers.stats:record_zealot_2_martyrdom_stacks(current_stacks, player)
+			end
+
 			template_data.current_stacks = current_stacks
 			local lerp_t = current_stacks / martyrdom_talent_stacks
 

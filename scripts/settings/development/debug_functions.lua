@@ -2450,6 +2450,57 @@ functions.verify_achievements = {
 	category = "Achievements",
 	on_activated = _verify_achievements
 }
+
+local function achievement_options()
+	local achievement_definitions = Managers.achievements:get_achievement_definitions()
+	local achievement_names = {}
+
+	for _, achievement_definition in ipairs(achievement_definitions) do
+		local id = achievement_definition:id()
+
+		if not Managers.achievements:is_unlocked(id) then
+			achievement_names[#achievement_names + 1] = achievement_definition:label()
+		end
+	end
+
+	return achievement_names
+end
+
+local function _unlock_achievement(achievement_name)
+	if not DEDICATED_SERVER then
+		local local_player = Managers.player:local_player(1)
+		local profile = local_player:profile()
+
+		if profile then
+			local account_id = local_player:account_id()
+
+			if type(account_id) == "string" then
+				local channel = Managers.connection:host_channel()
+				local achievement_definitions = Managers.achievements:get_achievement_definitions()
+				local id = nil
+
+				for _, achievement_definition in ipairs(achievement_definitions) do
+					local name = achievement_definition:label()
+
+					if name == achievement_name then
+						local achievement_id = achievement_definition:id()
+						id = NetworkLookup.achievement_names[achievement_id]
+					end
+				end
+
+				RPC.rpc_debug_client_request_unlock_achievement(channel, account_id, id)
+			end
+		end
+	end
+end
+
+functions.unlock_achievement = {
+	name = "Unlock Achievement",
+	category = "Achievements",
+	dynamic_contents = true,
+	options_function = achievement_options,
+	on_activated = _unlock_achievement
+}
 local Views = require("scripts/ui/views/views")
 
 local function _ui_manager_not_initialized()

@@ -308,29 +308,28 @@ local function generate_blueprints_function(grid_size)
 				local price_data = offer.price.amount
 				local type = price_data.type
 				local price = price_data.amount
-				local price_text = tostring(price)
+				local price_text = TextUtilities.format_currency(price)
 				content.has_price_tag = true
 				content.price_text = price_text
 				local wallet_settings = WalletSettings[type]
 				content.wallet_icon = wallet_settings.icon_texture_small
 				local price_text_style = style.price_text
-				price_text_style.horizontal_alignment = "right"
-				local initial_margin = -15
-				local icon_margin = 5
-				price_text_style.offset[1] = initial_margin
-				local price_text_size = UIRenderer.text_size(ui_renderer, price_text, price_text_style.font_type, price_text_style.font_size) or 0
-				local wallet_icon_style = style.wallet_icon
-				wallet_icon_style.offset[1] = initial_margin - price_text_size - icon_margin
 				local can_afford = true
 				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
-			end
 
-			local owned_count = element.owned_count
-			local total_count = element.total_count
+				if not content.sold then
+					local owned_count = element.owned_count
+					local total_count = element.total_count
+					local owning_total_count = owned_count and total_count and owned_count == total_count
+					local is_owned = offer.state == "owned" or owning_total_count
+					content.sold = is_owned
 
-			if owned_count and total_count and total_count > 0 then
-				local is_owned = owned_count == total_count
-				content.owned = is_owned and "" or owned_count > 0 and string.format("%d/%d", owned_count, total_count) or nil
+					if is_owned then
+						content.owned = is_owned and ""
+					elseif owned_count and total_count and total_count > 0 then
+						content.owned = owned_count > 0 and string.format("%d/%d", owned_count, total_count) or nil
+					end
+				end
 			end
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
@@ -342,6 +341,21 @@ local function generate_blueprints_function(grid_size)
 			local item = element.real_item or element.item
 			local is_equipped = is_item_equipped_in_slot(view_instance, item, slot_name)
 			content.equipped = is_equipped
+			local offer = element.offer
+
+			if not content.sold then
+				local owned_count = element.owned_count
+				local total_count = element.total_count
+				local owning_total_count = owned_count and total_count and owned_count == total_count
+				local is_owned = offer and offer.state == "owned" or owning_total_count
+				content.sold = is_owned
+
+				if is_owned then
+					content.owned = is_owned and ""
+				elseif owned_count and total_count and total_count > 0 then
+					content.owned = owned_count > 0 and string.format("%d/%d", owned_count, total_count) or nil
+				end
+			end
 		end,
 		load_icon = function (parent, widget, element, ui_renderer, dummy_profile)
 			local content = widget.content
@@ -492,9 +506,6 @@ local function generate_blueprints_function(grid_size)
 				local wallet_settings = WalletSettings[type]
 				content.wallet_icon = wallet_settings.icon_texture_small
 				local price_text_style = style.price_text
-				local price_text_size = UIRenderer.text_size(ui_renderer, price_text, price_text_style.font_type, price_text_style.font_size) or 0
-				local wallet_icon_style = style.wallet_icon
-				wallet_icon_style.offset[1] = ItemPassTemplates.icon_size[1] - wallet_icon_style.size[1] - (price_text_size + 10) + style.price_text.offset[1]
 				local can_afford = false
 				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 			end

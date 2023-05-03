@@ -44,14 +44,14 @@ local weapon_template = {
 					anim_event_1p = "explode_warp_end"
 				}
 			},
-			explosion_template = ExplosionTemplates.plasma_rifle_overheat,
-			death_damage_profile = DamageProfileTemplates.overheat_exploding_tick,
-			death_damage_type = damage_types.laser,
+			explosion_template = ExplosionTemplates.warp_charge_overload,
+			death_damage_profile = DamageProfileTemplates.warp_charge_exploding_tick,
+			death_damage_type = damage_types.warp_overload,
 			dot_settings = {
 				power_level = 1000,
 				damage_frequency = 0.8,
-				damage_profile = DamageProfileTemplates.overheat_exploding_tick,
-				damage_type = damage_types.laser
+				damage_profile = DamageProfileTemplates.warp_charge_exploding_tick,
+				damage_type = damage_types.warp_overload
 			},
 			allowed_chain_actions = {
 				combat_ability = {

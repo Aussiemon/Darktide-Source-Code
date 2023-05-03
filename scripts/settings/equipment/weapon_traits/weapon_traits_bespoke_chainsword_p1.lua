@@ -138,9 +138,19 @@ templates.weapon_trait_bespoke_chainsword_p1_bleed_on_activated_hit = {
 				num_stacks_on_proc = 8
 			}
 		},
-		[4] = {
+		{
 			target_buff_data = {
 				num_stacks_on_proc = 10
+			}
+		},
+		{
+			target_buff_data = {
+				num_stacks_on_proc = 12
+			}
+		},
+		{
+			target_buff_data = {
+				num_stacks_on_proc = 14
 			}
 		}
 	}
@@ -148,21 +158,25 @@ templates.weapon_trait_bespoke_chainsword_p1_bleed_on_activated_hit = {
 templates.weapon_trait_bespoke_chainsword_p1_movement_speed_on_activation = {
 	weapon_trait_bespoke_chainsword_p1_movement_speed_on_activation = {
 		{
+			active_duration = 3,
 			stat_buffs = {
 				[stat_buffs.movement_speed] = 1.075
 			}
 		},
 		{
+			active_duration = 3,
 			stat_buffs = {
 				[stat_buffs.movement_speed] = 1.1
 			}
 		},
 		{
+			active_duration = 3,
 			stat_buffs = {
 				[stat_buffs.movement_speed] = 1.125
 			}
 		},
 		{
+			active_duration = 3,
 			stat_buffs = {
 				[stat_buffs.movement_speed] = 1.15
 			}

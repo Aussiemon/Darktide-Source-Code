@@ -374,15 +374,18 @@ ScriptWorld.destroy_shading_environment = function (world, viewport)
 	World.destroy_shading_environment(world, shading_environment)
 end
 
-ScriptWorld.spawn_level = function (world, name, object_sets, position, rotation, spawn_units, ignore_background)
+ScriptWorld.spawn_level = function (world, name, position, rotation, spawn_units, ignore_background, included_object_sets, excluded_object_sets)
 	local levels = World.get_data(world, "levels")
 	local spawned_level_count = World.get_data(world, "spawned_level_count")
+	position = position or Vector3.zero()
+	rotation = rotation or Quaternion.identity()
+	local scale = Vector3(1, 1, 1)
 	local level = nil
 
 	if spawn_units then
-		level = World.spawn_level(world, name, position or Vector3.zero(), rotation or Quaternion.identity(), Vector3(1, 1, 1), object_sets)
+		level = World.spawn_level(world, name, position, rotation, scale, included_object_sets, excluded_object_sets)
 	else
-		level = World.spawn_level_time_sliced(world, name, position or Vector3.zero(), rotation or Quaternion.identity(), Vector3(1, 1, 1), object_sets)
+		level = World.spawn_level_time_sliced(world, name, position, rotation, scale, included_object_sets, excluded_object_sets)
 	end
 
 	spawned_level_count = spawned_level_count + 1

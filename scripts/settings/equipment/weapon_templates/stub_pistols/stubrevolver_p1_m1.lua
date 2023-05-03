@@ -11,8 +11,6 @@ local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local WeaponTraitsBespokeStubrevolverP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_stubrevolver_p1")
-local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
-local WeaponTraitsRangedAimed = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_aimed")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local damage_types = DamageSettings.damage_types
@@ -1090,14 +1088,6 @@ weapon_template.hipfire_inputs = {
 	shoot_pressed = true
 }
 weapon_template.traits = {}
-local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
-
-table.append(weapon_template.traits, ranged_common_traits)
-
-local ranged_aimed_traits = table.keys(WeaponTraitsRangedAimed)
-
-table.append(weapon_template.traits, ranged_aimed_traits)
-
 local bespoke_stubrevolver_p1_traits = table.keys(WeaponTraitsBespokeStubrevolverP1)
 
 table.append(weapon_template.traits, bespoke_stubrevolver_p1_traits)

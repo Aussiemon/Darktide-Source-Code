@@ -8,7 +8,6 @@ local OBJECTIVE_EVENT_TYPES = table.enum("None", "mid_event", "end_event")
 MissionObjectiveBase.init = function (self)
 	self._name = nil
 	self._objective_type = nil
-	self._peer_id = nil
 	self._is_updated_externally = false
 	self._order_of_activation = 0
 	self._is_side_mission = false
@@ -33,6 +32,7 @@ MissionObjectiveBase.init = function (self)
 	self._music_objective = MUSIC_OBJECTIVE_NONE
 	self._mission_giver_voice_profile = nil
 	self._use_hud = true
+	self._use_hud_changed = false
 	self._use_counter = true
 	self._progress_bar = false
 	self._icon = nil
@@ -280,11 +280,11 @@ MissionObjectiveBase._init_objective_unit = function (self, unit)
 	local mission_objective_target_extension = ScriptUnit.extension(unit, "mission_objective_target_system")
 
 	if mission_objective_target_extension:enabled_only_during_mission() and self._name == mission_objective_target_extension:objective_name() then
-		mission_objective_target_extension:enable_unit(self._peer_id)
+		mission_objective_target_extension:enable_unit()
 	end
 
 	if mission_objective_target_extension:should_add_marker_on_objective_start() then
-		mission_objective_target_extension:add_unit_marker(self._peer_id)
+		mission_objective_target_extension:add_unit_marker()
 	end
 
 	self:register_unit(unit)
@@ -296,11 +296,11 @@ MissionObjectiveBase._deinit_objective_unit = function (self, unit)
 	local mission_objective_target_extension = ScriptUnit.has_extension(unit, "mission_objective_target_system")
 
 	if mission_objective_target_extension and mission_objective_target_extension:should_add_marker_on_objective_start() then
-		mission_objective_target_extension:remove_unit_marker(self._peer_id)
+		mission_objective_target_extension:remove_unit_marker()
 	end
 
 	if mission_objective_target_extension and mission_objective_target_extension:enabled_only_during_mission() and self._name == mission_objective_target_extension:objective_name() then
-		mission_objective_target_extension:disable_unit(self._peer_id)
+		mission_objective_target_extension:disable_unit()
 	end
 end
 
@@ -346,14 +346,6 @@ end
 
 MissionObjectiveBase.synchronizer_unit = function (self)
 	return self._synchronizer_unit
-end
-
-MissionObjectiveBase.peer_id = function (self)
-	return self._peer_id
-end
-
-MissionObjectiveBase.set_peer_id = function (self, peer_id)
-	self._peer_id = peer_id
 end
 
 MissionObjectiveBase.name = function (self)
@@ -488,6 +480,19 @@ MissionObjectiveBase.use_hud = function (self)
 	return self._use_hud
 end
 
+MissionObjectiveBase.use_hud_changed_state = function (self)
+	if not self._use_hud_changed then
+		return nil
+	end
+
+	return self._use_hud
+end
+
+MissionObjectiveBase.set_use_ui = function (self, use)
+	self._use_hud = use
+	self._use_hud_changed = true
+end
+
 MissionObjectiveBase.locally_added = function (self)
 	return self._locally_added
 end
@@ -496,7 +501,11 @@ MissionObjectiveBase.use_counter = function (self)
 	return self._use_counter and self:max_incremented_progression() > 0
 end
 
-MissionObjectiveBase.use_counter_raw = function (self)
+MissionObjectiveBase.use_counter_changed_state = function (self)
+	if self._use_counter then
+		return nil
+	end
+
 	return self._use_counter
 end
 

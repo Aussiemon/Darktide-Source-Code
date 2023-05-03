@@ -16,6 +16,7 @@ UIWorldSpawner.init = function (self, world_name, world_layer, timer_name, optio
 
 	self._unit_spawner = UIUnitSpawner:new(world)
 	self._world = world
+	self._story_speed = 1
 	self._default_animation_data = {
 		x = {
 			value = 0
@@ -31,7 +32,7 @@ UIWorldSpawner.init = function (self, world_name, world_layer, timer_name, optio
 	self._camera_position_animation_data = table.clone(self._default_animation_data)
 end
 
-UIWorldSpawner.play_story = function (self, story_name, start_time, play_backwards)
+UIWorldSpawner.play_story = function (self, story_name, start_time, play_backwards, on_complete_callback, on_complete_callback_time_fraction)
 	if self:is_playing_story() then
 		self:stop_active_story()
 	end
@@ -41,6 +42,8 @@ UIWorldSpawner.play_story = function (self, story_name, start_time, play_backwar
 	local story_id = storyteller:play_level_story(level, story_name)
 	local length = storyteller:length(story_id)
 	self._active_story_id = story_id
+	self._on_story_complete_callback = on_complete_callback
+	self._on_complete_callback_time_fraction = on_complete_callback_time_fraction
 
 	if start_time then
 		storyteller:set_time(story_id, math.clamp(start_time, 0, length))
@@ -53,10 +56,22 @@ UIWorldSpawner.play_story = function (self, story_name, start_time, play_backwar
 			storyteller:set_time(story_id, math.clamp(time, 0, length))
 		end
 
-		storyteller:set_speed(story_id, -1)
+		storyteller:set_speed(story_id, -1 * self._story_speed)
+	else
+		storyteller:set_speed(story_id, self._story_speed)
 	end
 
+	self._play_story_backwards = play_backwards
+
 	return story_id
+end
+
+UIWorldSpawner.set_story_speed = function (self, story_speed)
+	self._story_speed = story_speed or 1
+
+	if self._active_story_id then
+		self._storyteller:set_speed(self._active_story_id, (self._play_story_backwards and -1 or 1) * self._story_speed)
+	end
 end
 
 UIWorldSpawner.story_time = function (self, story_id)
@@ -71,6 +86,7 @@ UIWorldSpawner.stop_story = function (self, story_id)
 	self._storyteller:stop(story_id)
 
 	self._active_story_id = nil
+	self._on_story_complete_callback = nil
 
 	return story_id
 end
@@ -80,6 +96,7 @@ UIWorldSpawner.stop_active_story = function (self)
 		self._storyteller:stop(self._active_story_id)
 
 		self._active_story_id = nil
+		self._on_story_complete_callback = nil
 	end
 end
 
@@ -93,24 +110,20 @@ UIWorldSpawner.is_playing_story = function (self)
 	if self._active_story_id then
 		local active = self._storyteller:is_playing(self._active_story_id)
 
-		if not active then
-			self._active_story_id = nil
-		end
-
 		return active
 	end
 
 	return false
 end
 
-UIWorldSpawner.spawn_level = function (self, level_name, object_sets, position, rotation, ignore_level_background)
+UIWorldSpawner.spawn_level = function (self, level_name, included_object_sets, position, rotation, ignore_level_background)
 	self._level_name = level_name
 	local world = self._world
 	local spawn_units = true
 
 	self:_setup_extension_manager()
 
-	local level = ScriptWorld.spawn_level(world, level_name, object_sets, position, rotation, spawn_units, ignore_level_background)
+	local level = ScriptWorld.spawn_level(world, level_name, position, rotation, spawn_units, ignore_level_background, included_object_sets)
 	self._level = level
 	local level_units = Level.units(level, true)
 	local category_name = "level_spawned"
@@ -123,6 +136,14 @@ UIWorldSpawner.spawn_level = function (self, level_name, object_sets, position, 
 	end
 
 	self._extension_manager:on_gameplay_post_init(level)
+end
+
+UIWorldSpawner.trigger_level_event = function (self, event_name)
+	local level = self._level
+
+	if level then
+		Level.trigger_event(level, event_name)
+	end
 end
 
 UIWorldSpawner.level = function (self)
@@ -205,7 +226,7 @@ UIWorldSpawner._setup_extension_manager = function (self)
 			false,
 			false,
 			false,
-			true,
+			false,
 			false,
 			{
 				"CutsceneCharacterExtension"
@@ -541,6 +562,26 @@ UIWorldSpawner.update = function (self, dt, t)
 		self:_update_animation_data(self._camera_rotation_animation_data, dt)
 		self:_update_camera_position()
 		self:_update_camera_rotation()
+	end
+
+	local active_story_id = self._active_story_id
+
+	if active_story_id and self._on_story_complete_callback then
+		local storyteller = self._storyteller
+		local active = self._storyteller:is_playing(active_story_id)
+
+		if active then
+			local current_time = self:story_time(active_story_id)
+			local length = storyteller:length(active_story_id)
+			local play_story_backwards = self._play_story_backwards
+			local on_complete_time_fraction = self._on_complete_callback_time_fraction or 1
+
+			if not play_story_backwards and current_time >= length * on_complete_time_fraction and self._on_story_complete_callback then
+				self._on_story_complete_callback()
+
+				self._on_story_complete_callback = nil
+			end
+		end
 	end
 
 	self._unit_spawner:remove_pending_units()

@@ -583,7 +583,9 @@ return function ()
 					"sergeant",
 					"tech_priest",
 					"pilot",
-					"explicator"
+					"explicator",
+					"purser",
+					"contract_vendor"
 				}
 			},
 			{

@@ -4181,64 +4181,6 @@ local Credits = {
 				type = "person"
 			},
 			{
-				text = "Daniel Smagowski",
-				type = "person"
-			},
-			{
-				text = "Szymon Stajszczak",
-				type = "person"
-			},
-			{
-				text = "Mateusz Rajchert",
-				type = "person"
-			},
-			{
-				text = "Michał Drożdż",
-				type = "person"
-			},
-			{
-				text = "Paweł Janczuk",
-				type = "person"
-			},
-			{
-				text = "Daniel Dudek",
-				type = "person"
-			},
-			{
-				text = " ",
-				type = "person"
-			},
-			{
-				text = "loc_credits_view_qa_lead_title",
-				localized = true,
-				type = "title"
-			},
-			{
-				text = "Abhijeet Palem",
-				type = "person"
-			},
-			{
-				text = " ",
-				type = "person"
-			},
-			{
-				text = "loc_credits_view_qa_tester_title",
-				localized = true,
-				type = "title"
-			},
-			{
-				text = "Sai Teja Rampam",
-				type = "person"
-			},
-			{
-				text = "Laxman Kambala",
-				type = "person"
-			},
-			{
-				text = "Gopinath Reddy",
-				type = "person"
-			},
-			{
 				text = " ",
 				type = "header"
 			},
@@ -4344,6 +4286,40 @@ local Credits = {
 			{
 				text = "Sun Technologies, Inc",
 				type = "header"
+			},
+			{
+				text = " ",
+				type = "person"
+			},
+			{
+				text = "loc_credits_view_qa_lead_title",
+				localized = true,
+				type = "title"
+			},
+			{
+				text = "Abhijeet Palem",
+				type = "person"
+			},
+			{
+				text = " ",
+				type = "person"
+			},
+			{
+				text = "loc_credits_view_qa_tester_title",
+				localized = true,
+				type = "title"
+			},
+			{
+				text = "Sai Teja Rampam",
+				type = "person"
+			},
+			{
+				text = "Laxman Kambala",
+				type = "person"
+			},
+			{
+				text = "Gopinath Reddy",
+				type = "person"
 			},
 			{
 				text = " ",

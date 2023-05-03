@@ -25,7 +25,7 @@ local template = {
 			},
 			fence = {
 				jump = {
-					anim_events = "jump_up_fence_3m",
+					anim_events = "jump_up_fence_2m",
 					anim_vertical_length = 3
 				}
 			}
@@ -86,7 +86,30 @@ local template = {
 			}
 		},
 		{
-			height_threshold = 4,
+			height_threshold = 2.5,
+			edge = {
+				jump = {
+					anim_events = "jump_down_3m",
+					anim_vertical_length = 1
+				},
+				land = {
+					anim_events = "jump_down_land_3m"
+				}
+			},
+			fence = {
+				jump = {
+					anim_vertical_length = 1,
+					anim_horizontal_length = 1.5,
+					anim_events = "jump_down_fence_2m"
+				},
+				land = {
+					anim_horizontal_length = 0,
+					anim_events = "jump_down_land_3m"
+				}
+			}
+		},
+		{
+			height_threshold = 3.5,
 			edge = {
 				jump = {
 					anim_events = "jump_down",
@@ -104,7 +127,7 @@ local template = {
 				},
 				land = {
 					anim_horizontal_length = 0,
-					anim_events = "jump_down_land"
+					anim_events = "jump_down_land_3m"
 				}
 			}
 		},
@@ -112,7 +135,7 @@ local template = {
 			height_threshold = math.huge,
 			edge = {
 				jump = {
-					anim_events = "jump_down",
+					anim_events = "jump_down_5m",
 					anim_vertical_length = 5
 				},
 				land = {
@@ -127,7 +150,7 @@ local template = {
 				},
 				land = {
 					anim_horizontal_length = 0,
-					anim_events = "jump_down_land"
+					anim_events = "jump_down_land_3m"
 				}
 			}
 		}

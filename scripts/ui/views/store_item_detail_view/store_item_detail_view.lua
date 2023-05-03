@@ -2130,7 +2130,10 @@ StoreItemDetailView._create_aquilas_presentation = function (self, offer, item_n
 				if bonus_aquila and bonus_aquila > 0 then
 					local aquilas = offer.value.amount
 					local aquila_minus_bonus = aquilas - bonus_aquila
-					description = string.format("%d  \n + %d  bonus", aquila_minus_bonus, bonus_aquila)
+					local bonus_text = Localize("loc_premium_store_credits_bonus", true, {
+						amount = bonus_aquila
+					})
+					description = string.format("%d  \n %s", aquila_minus_bonus, bonus_text)
 				end
 
 				element.description = description
@@ -2412,6 +2415,10 @@ StoreItemDetailView.cb_on_inspect_pressed = function (self)
 
 		self._inpect_view_opened = view_name
 	end
+end
+
+StoreItemDetailView.dialogue_system = function (self)
+	return self._context.parent:dialogue_system()
 end
 
 return StoreItemDetailView

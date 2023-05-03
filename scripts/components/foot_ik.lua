@@ -2,6 +2,11 @@ local FootIk = component("FootIk")
 
 FootIk.init = function (self, unit)
 	self.in_editor = false
+
+	if DEDICATED_SERVER then
+		return false
+	end
+
 	local use_foot_ik = Managers.state.game_mode:use_foot_ik()
 
 	if not use_foot_ik then

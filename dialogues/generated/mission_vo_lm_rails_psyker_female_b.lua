@@ -109,30 +109,42 @@ local mission_vo_lm_rails_psyker_female_b = {
 	},
 	mission_rails_first_objective_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 6,
+		sound_events_n = 10,
 		sound_events = {
+			"loc_psyker_female_b__guidance_starting_area_01",
+			"loc_psyker_female_b__guidance_starting_area_02",
+			"loc_psyker_female_b__guidance_starting_area_03",
 			"loc_psyker_female_b__guidance_starting_area_04",
 			"loc_psyker_female_b__guidance_starting_area_05",
 			"loc_psyker_female_b__guidance_starting_area_06",
 			"loc_psyker_female_b__guidance_starting_area_07",
 			"loc_psyker_female_b__guidance_starting_area_08",
-			"loc_psyker_female_b__guidance_starting_area_09"
+			"loc_psyker_female_b__guidance_starting_area_09",
+			"loc_psyker_female_b__guidance_starting_area_10"
 		},
 		sound_events_duration = {
+			1.542875,
+			1.689292,
+			2.206854,
 			1.794875,
 			1.488542,
 			2.45075,
 			2.846729,
 			2.258458,
-			2.091063
+			2.091063,
+			3.238646
 		},
 		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -151,10 +163,11 @@ local mission_vo_lm_rails_psyker_female_b = {
 	},
 	mission_rails_refectory_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 6,
 		sound_events = {
 			"loc_psyker_female_b__region_habculum_01",
 			"loc_psyker_female_b__region_habculum_02",
+			"loc_psyker_female_b__region_habculum_03",
 			"loc_psyker_female_b__zone_transit_01",
 			"loc_psyker_female_b__zone_transit_02",
 			"loc_psyker_female_b__zone_transit_03"
@@ -162,16 +175,18 @@ local mission_vo_lm_rails_psyker_female_b = {
 		sound_events_duration = {
 			4.395063,
 			6.283625,
+			4.012771,
 			4.612313,
 			5.808125,
 			5.116521
 		},
 		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
 		},
 		randomize_indexes = {}
 	},

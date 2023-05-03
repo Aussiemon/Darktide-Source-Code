@@ -152,8 +152,8 @@ end
 VendorViewBase._preview_element = function (self, element)
 	VendorViewBase.super._preview_element(self, element)
 
-	local offer = element.offer
-	local price = offer.price.amount
+	local offer = element and element.offer
+	local price = offer and offer.price.amount
 
 	self:_set_display_price(price)
 
@@ -212,7 +212,7 @@ VendorViewBase._clear_list = function (self)
 	self:_present_layout_by_slot_filter({})
 end
 
-VendorViewBase._fetch_store_items = function (self)
+VendorViewBase._fetch_store_items = function (self, ignore_focus_on_offer)
 	self._current_rotation_end = nil
 	self._offer_items_layout = nil
 	self._filtered_offer_items_layout = nil
@@ -300,7 +300,7 @@ VendorViewBase._fetch_store_items = function (self)
 				end
 			end
 
-			if found == false then
+			if found == false or ignore_focus_on_offer then
 				self:_stop_previewing()
 
 				self._previewed_offer = nil
@@ -314,7 +314,7 @@ VendorViewBase._fetch_store_items = function (self)
 		local first_element = self:element_by_index(1)
 		local first_offer = first_element and first_element.offer
 
-		if focus_on_first_offer and first_offer then
+		if not ignore_focus_on_offer and focus_on_first_offer and first_offer then
 			self:focus_on_offer(first_offer)
 		end
 	end):catch(function (error)
@@ -430,25 +430,33 @@ VendorViewBase._convert_offers_to_layout_entries = function (self, item_offers)
 					local preview_item = preview_item_name and MasterItems.get_item(preview_item_name)
 
 					if preview_item then
-						local visual_item = table.clone_instance(preview_item)
-						visual_item.gear_id = item.gear_id
-						visual_item.slot_weapon_skin = item
 						layout[#layout + 1] = {
 							widget_type = "store_item",
-							item = visual_item,
+							item = item,
 							real_item = item,
 							offer = offer,
-							offer_id = offer_id
+							offer_id = offer_id,
+							slot = {
+								name = item.slots[1]
+							},
+							filter_slots = {
+								preview_item.slots[1]
+							}
 						}
 					else
 						Log.error("VendorViewBase", "Cannot find preview item (%s) for weapon skin (%s)", preview_item, item.name)
 					end
 				else
+					local is_cosmetics_gear = item_type == "GEAR_EXTRA_COSMETIC" or item_type == "GEAR_HEAD" or item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY"
+					local widget_type = "store_item"
 					layout[#layout + 1] = {
-						widget_type = "store_item",
 						item = item,
+						widget_type = widget_type,
 						offer = offer,
-						offer_id = offer_id
+						offer_id = offer_id,
+						slot = {
+							name = item.slots[1]
+						}
 					}
 				end
 			end
@@ -493,9 +501,9 @@ VendorViewBase._update_button_disable_state = function (self)
 end
 
 VendorViewBase._set_display_price = function (self, price_data)
-	local amount = price_data.amount
-	local type = price_data.type
-	local can_afford = self:can_afford(amount, type)
+	local amount = price_data and price_data.amount
+	local type = price_data and price_data.type
+	local can_afford = amount and self:can_afford(amount, type)
 	local price_text = nil
 	price_text = amount and TextUtilities.format_currency(amount) or ""
 	local widgets_by_name = self._widgets_by_name
@@ -586,7 +594,7 @@ VendorViewBase.can_afford = function (self, amount, type)
 	return amount <= (self._current_balance[type] or 0)
 end
 
-VendorViewBase._handle_input = function (self, input_service)
+VendorViewBase._handle_input = function (self, input_service, dt, t)
 	local next_tab_index = self._next_tab_index
 
 	if next_tab_index then
@@ -616,6 +624,8 @@ VendorViewBase._handle_input = function (self, input_service)
 			end
 		end
 	end
+
+	VendorViewBase.super._handle_input(self, input_service, dt, t)
 end
 
 VendorViewBase._setup_sort_options = function (self)

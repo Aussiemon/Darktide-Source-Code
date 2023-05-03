@@ -208,6 +208,7 @@ local DialogueSettings = {
 	npc_story_ticker_enabled = true,
 	npc_story_ticker_start_delay = 127,
 	npc_story_tick_time = 607,
+	store_npc_cooldown_time = 5,
 	mission_update_tick_time = 15,
 	ambush_delay = 4,
 	vector_delay = 6,

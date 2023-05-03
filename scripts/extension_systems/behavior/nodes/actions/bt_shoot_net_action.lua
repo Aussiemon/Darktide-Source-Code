@@ -20,6 +20,7 @@ BtShootNetAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 	behavior_component.move_state = "attacking"
 	scratchpad.behavior_component = behavior_component
 	scratchpad.perception_component = perception_component
+	scratchpad.record_state_component = Blackboard.write_component(blackboard, "record_state")
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.perception_extension = ScriptUnit.extension(unit, "perception_system")
@@ -57,10 +58,13 @@ BtShootNetAction.init_values = function (self, blackboard, action_data, node_dat
 	behavior_component.shoot_net_cooldown = 0
 	behavior_component.hit_target = false
 	behavior_component.net_is_ready = true
+	local record_state_component = Blackboard.write_component(blackboard, "record_state")
+	record_state_component.has_disabled_player = false
 end
 
 BtShootNetAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
 	local behavior_component = scratchpad.behavior_component
+	local record_state_component = scratchpad.record_state_component
 
 	if scratchpad.num_shots_fired > 0 then
 		local shoot_net_cooldown = action_data.shoot_net_cooldown or Managers.state.difficulty:get_table_entry_by_challenge(MinionDifficultySettings.cooldowns.shoot_net_cooldown)
@@ -71,6 +75,12 @@ BtShootNetAction.leave = function (self, unit, breed, blackboard, scratchpad, ac
 	if behavior_component.is_dragging then
 		behavior_component.is_dragging = false
 		behavior_component.hit_target = true
+		local hit_unit = scratchpad.hit_unit
+		local is_player_unit = Managers.state.player_unit_spawn:is_player_unit(hit_unit)
+
+		if is_player_unit then
+			record_state_component.has_disabled_player = true
+		end
 	end
 
 	self:_stop_effect_template(scratchpad)

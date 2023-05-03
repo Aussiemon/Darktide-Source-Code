@@ -7,8 +7,8 @@ local event_vo_scan_zealot_female_c = {
 			[2.0] = "loc_zealot_female_c__event_scan_first_target_scanned_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678,
-			[2.0] = 3.45678
+			[1.0] = 1.272219,
+			[2.0] = 2.086542
 		},
 		randomize_indexes = {}
 	}

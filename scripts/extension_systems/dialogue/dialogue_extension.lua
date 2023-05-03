@@ -716,7 +716,7 @@ DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_k
 		local _, random_n = math.next_random(seed, 1, self._vo_choice[rule_name].sound_events_n)
 		dialogue_index = random_n
 	else
-		dialogue_index = math.random(1, self._vo_choice[rule_name].sound_events_n)
+		dialogue_index = DialogueQueries.get_dialogue_event_index(self._vo_choice[rule_name])
 	end
 
 	local sound_event, subtitles_event, sound_event_duration = self:get_dialogue_event(rule_name, dialogue_index)

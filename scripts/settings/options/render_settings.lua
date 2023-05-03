@@ -140,8 +140,9 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 	end
 
 	local settings_list = affected_settings or {}
+	local changed_setting_valid = not changed_setting.validation_function or changed_setting.validation_function and changed_setting:validation_function()
 
-	if not changed_setting.disabled or changed_setting.disabled and changed_setting.disabled_origin == origin_id then
+	if changed_setting_valid and (not changed_setting.disabled or changed_setting.disabled and changed_setting.disabled_origin == origin_id) then
 		if changed_setting.disable_rules then
 			local disabled_by_id = {}
 			local enabled_by_id = {}
@@ -151,7 +152,7 @@ local function verify_and_apply_changes(changed_setting, new_value, affected_set
 				local disabled_rule = changed_setting.disable_rules[i]
 				local disabled_setting = render_settings_by_id[disabled_rule.id]
 
-				if disabled_setting and (not disabled_setting.validation_function or disabled_setting.validation_function and disabled_setting.validation_function()) then
+				if disabled_setting and (not disabled_setting.validation_function or disabled_setting.validation_function and disabled_setting:validation_function()) then
 					if disabled_rule.validation_function(new_value) then
 						if not disabled_by_id[disabled_rule.id] then
 							affected_ids[disabled_rule.id] = true
@@ -1205,8 +1206,9 @@ local RENDER_TEMPLATES = {
 		}
 	},
 	{
-		default_value = "off",
 		display_name = "loc_rtxgi_quality",
+		default_value = "off",
+		apply_on_startup = true,
 		id = "rtxgi_quality",
 		tooltip_text = "loc_rtxgi_quality_mouseover",
 		save_location = "master_render_settings",

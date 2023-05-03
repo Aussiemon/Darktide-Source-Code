@@ -170,6 +170,61 @@ local BOSS_PATROLS = {
 				"cultist_melee",
 				"cultist_melee",
 				"cultist_berzerker"
+			},
+			{
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor"
+			},
+			{
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark"
+			},
+			{
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner"
+			},
+			{
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker"
+			},
+			{
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner"
 			}
 		},
 		{
@@ -299,7 +354,65 @@ local BOSS_PATROLS = {
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
 				"chaos_ogryn_executor"
+			},
+			{
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark"
+			},
+			{
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner"
+			},
+			{
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker",
+				"cultist_berzerker"
+			},
+			{
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner",
+				"cultist_gunner"
 			}
 		}
 	}

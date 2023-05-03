@@ -38,7 +38,7 @@ RescueInteraction.stop = function (self, world, interactor_unit, unit_data_compo
 			local is_human_player = interactor_player:is_human_controlled()
 
 			if is_human_player then
-				Managers.stats:record_respawn_ally(interactor_player, target_player)
+				Managers.stats:record_rescue_ally(interactor_player, target_player)
 			end
 		end
 

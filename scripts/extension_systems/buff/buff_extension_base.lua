@@ -654,8 +654,38 @@ BuffExtensionBase.has_buff_id_with_owner = function (self, buff_id, owner_unit)
 	return false
 end
 
+BuffExtensionBase.owner_of_buff_with_id = function (self, buff_id)
+	local buffs = self._buffs
+
+	for i = 1, #buffs do
+		local buff_instance = buffs[i]
+		local intance_template = buff_instance:template()
+		local instance_buff_name = intance_template.buff_id
+		local buff_context = buff_instance:template_context()
+		local buff_owner_unit = buff_context.owner_unit
+
+		if instance_buff_name == buff_id then
+			return buff_owner_unit
+		end
+	end
+
+	return nil
+end
+
 BuffExtensionBase.has_keyword = function (self, keyword)
 	return not not self._keywords[keyword]
+end
+
+BuffExtensionBase.has_any_keyword = function (self, keywords)
+	local active_keywords = self._keywords
+
+	for ii = 1, #keywords do
+		if active_keywords[keywords[ii]] then
+			return true
+		end
+	end
+
+	return false
 end
 
 BuffExtensionBase.had_keyword = function (self, keyword, interval)

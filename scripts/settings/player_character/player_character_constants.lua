@@ -39,15 +39,15 @@ local constants = {
 	jump_step_up_speed = 2,
 	warp_grabbed_drag_slowdown_distance = 4.5,
 	horizontal_climb_scale = 0.25,
+	max_dynamic_weapon_buffs = 4,
+	step_up_min_fall_speed = -0.1,
 	air_move_speed_scale = 0.75,
 	ladder_top_entering_animation_time = 1,
-	step_up_min_fall_speed = -0.1,
-	warp_grabbed_drag_destination_size = 0.15,
 	respawn_beacon_spot_radius = 1,
 	slide_move_speed_threshold = 4.2,
-	knocked_down_damage_reduction_buff = "knocked_down_damage_reduction",
+	warp_grabbed_drag_destination_size = 0.15,
 	ladder_jumping_cooldown = 1,
-	max_dynamic_weapon_buffs = 4,
+	knocked_down_damage_reduction_buff = "knocked_down_damage_reduction",
 	hang_ledge_collision_capsule_radius = 0.5,
 	time_until_fall_down_from_hang_ledge = 30,
 	air_acceleration = 3,
@@ -63,6 +63,7 @@ local constants = {
 	crouch_move_speed = 1.4,
 	ladder_cooldown = 0.5,
 	default_wielded_slot_name = "slot_primary",
+	sprint_move_speed_threshold = 3.8,
 	duration_to_hanging_position_from_hang_ledge = 0.2,
 	ladder_top_leaving_animation_time = 1,
 	ledge_hanging_to_ground_safe_distance = 1.2,
@@ -153,12 +154,6 @@ local constants = {
 	air_directional_speed_scale_angle = math.pi / 2,
 	air_drag_angle = math.pi / 6,
 	sprint_slide_friction_function = function (speed, slide_time, buff_extension, weapon_template_or_nil)
-		local has_zero_slide_friction = buff_extension:has_keyword(keywords.zero_slide_friction)
-
-		if has_zero_slide_friction then
-			return -1
-		end
-
 		local slide_tweak_type = weapon_template_or_nil and weapon_template_or_nil.slide_tweak_type or "no_tweak_values"
 		local slide_tweak_values = SLIDE_TWEAK_VALUES[slide_tweak_type]
 		local grace_time = slide_tweak_values.grace_time or 0.5
@@ -179,12 +174,6 @@ local constants = {
 		end
 	end,
 	slide_friction_function = function (speed, slide_time, buff_extension, weapon_template_or_nil)
-		local has_zero_slide_friction = buff_extension:has_keyword(keywords.zero_slide_friction)
-
-		if has_zero_slide_friction then
-			return 0
-		end
-
 		local slide_tweak_type = weapon_template_or_nil and weapon_template_or_nil.slide_tweak_type or "no_tweak_values"
 		local slide_tweak_values = SLIDE_TWEAK_VALUES[slide_tweak_type]
 		local max_slide_speed = slide_tweak_values.max_slide_speed or 5.5
@@ -617,6 +606,7 @@ local constants = {
 }
 constants.move_speed_sq = constants.move_speed^2
 constants.slide_move_speed_threshold_sq = constants.slide_move_speed_threshold^2
+constants.sprint_move_speed_threshold_sq = constants.sprint_move_speed_threshold^2
 local inventory_component_data = constants.inventory_component_data
 local weapon_component_data = inventory_component_data.weapon
 

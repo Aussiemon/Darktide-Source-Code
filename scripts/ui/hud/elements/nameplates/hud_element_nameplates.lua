@@ -29,6 +29,14 @@ HudElementNameplates._nameplate_extension_scan = function (self)
 	local marker_type = nil
 	local event_manager = Managers.event
 	local nameplate_units = self._nameplate_units
+	local extensions = self:_player_extensions(my_player)
+	local has_disable_nameplates_buff = false
+
+	if extensions then
+		local buff_extension = extensions.buff
+		has_disable_nameplates_buff = buff_extension and buff_extension:has_keyword("hud_nameplates_disabled")
+	end
+
 	local player_manager = Managers.player
 	local players = player_manager:players()
 	local ALIVE = ALIVE
@@ -51,8 +59,10 @@ HudElementNameplates._nameplate_extension_scan = function (self)
 			local unit = player.player_unit
 			local active = ALIVE[unit]
 
-			if active then
-				if not nameplate_units[unit] then
+			if active and not has_disable_nameplates_buff then
+				if nameplate_units[unit] and has_disable_nameplates_buff then
+					nameplate_units[unit].synced = false
+				elseif not nameplate_units[unit] then
 					nameplate_units[unit] = {
 						synced = true
 					}
@@ -62,6 +72,8 @@ HudElementNameplates._nameplate_extension_scan = function (self)
 				elseif nameplate_units[unit] == marker_type then
 					nameplate_units[unit].synced = marker_type
 				end
+			elseif nameplate_units[unit] and has_disable_nameplates_buff then
+				nameplate_units[unit].synced = false
 			end
 		end
 	end
@@ -77,6 +89,20 @@ HudElementNameplates._nameplate_extension_scan = function (self)
 			end
 		end
 	end
+end
+
+HudElementNameplates._player_extensions = function (self, player)
+	local player_unit = player.player_unit
+
+	if Unit.alive(player_unit) then
+		if not self._extensions then
+			self._extensions = self._parent:get_all_player_extensions(player, {})
+		end
+	elseif self._extensions then
+		self._extensions = nil
+	end
+
+	return self._extensions
 end
 
 HudElementNameplates._on_nameplate_marker_spawned = function (self, unit, id)

@@ -20,8 +20,8 @@ local action_data = {
 			"move_fwd_2"
 		},
 		speeds = {
-			move_fwd_1 = 0.9,
-			move_fwd_2 = 0.9
+			move_fwd_1 = 1.2,
+			move_fwd_2 = 1.2
 		}
 	},
 	death = {

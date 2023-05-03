@@ -273,7 +273,7 @@ BtMeleeFollowTargetAction._start_walk_anim = function (self, scratchpad, action_
 	local start_move_anim_events = action_data.start_move_anim_events
 	local walking_anim_event = nil
 
-	if start_move_anim_events then
+	if start_move_anim_events and start_move_anim_events.walking then
 		local start_walking_anim_events = start_move_anim_events.walking
 		walking_anim_event = Animation.random_event(start_walking_anim_events[optional_moving_direction_name])
 	else

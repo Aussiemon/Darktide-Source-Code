@@ -211,7 +211,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/environment/sparks_fuse_03_constant"
+					"content/fx/particles/impacts/weapons/chainsword/chainsword_armor_sparks_01"
 				}
 			}
 		},
@@ -228,7 +228,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/environment/sparks_fuse_03_constant"
+					"content/fx/particles/impacts/weapons/chainsword/chainsword_armor_sparks_01"
 				}
 			}
 		},
@@ -245,7 +245,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/environment/sparks_fuse_03_constant"
+					"content/fx/particles/impacts/weapons/chainsword/chainsword_armor_sparks_01"
 				}
 			}
 		},
@@ -263,7 +263,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/environment/sparks_fuse_03_constant"
+					"content/fx/particles/impacts/weapons/chainsword/chainsword_armor_sparks_01"
 				}
 			}
 		},
@@ -280,7 +280,7 @@ local armored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/environment/sparks_fuse_03_constant"
+					"content/fx/particles/impacts/weapons/chainsword/chainsword_armor_sparks_01"
 				}
 			}
 		},

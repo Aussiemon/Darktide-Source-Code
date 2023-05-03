@@ -1,11 +1,6 @@
 local mutator_templates = {
 	mutator_minion_nurgle_blessing = {
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
-		description = {
-			"loc_mutator_minion_nurgle_blessing_description_1",
-			"loc_mutator_minion_nurgle_blessing_description_2",
-			"loc_mutator_minion_nurgle_blessing_description_3"
-		},
 		random_spawn_buff_templates = {
 			buffs = {
 				"mutator_minion_nurgle_blessing_tougher",
@@ -28,29 +23,16 @@ local mutator_templates = {
 				chaos_ogryn_executor = 0.3,
 				cultist_flamer = 1
 			}
-		},
-		modify_pacing = {
-			override_faction = "cultist"
 		}
 	},
 	mutator_corruption_over_time = {
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
-		description = {
-			"loc_mutator_minion_nurgle_blessing_description_1",
-			"loc_mutator_minion_nurgle_blessing_description_2",
-			"loc_mutator_minion_nurgle_blessing_description_3"
-		},
 		buff_templates = {
 			"mutator_corruption_over_time"
 		}
 	},
 	mutator_corruption_over_time_2 = {
 		class = "scripts/managers/mutator/mutators/mutator_minion_nurgle_blessing",
-		description = {
-			"loc_mutator_minion_nurgle_blessing_description_1",
-			"loc_mutator_minion_nurgle_blessing_description_2",
-			"loc_mutator_minion_nurgle_blessing_description_3"
-		},
 		buff_templates = {
 			"mutator_corruption_over_time_2"
 		}

@@ -47,7 +47,7 @@ StateMainMenu.on_enter = function (self, parent, params, creation_context)
 	local local_player = Managers.player:local_player(1)
 	local account_id = local_player:account_id()
 
-	if GameParameters.prod_like_backend and account_id ~= PlayerManager.NO_ACCOUNT_ID then
+	if GameParameters.prod_like_backend and account_id ~= PlayerManager.NO_ACCOUNT_ID and not Managers.party_immaterium:is_started() then
 		Managers.party_immaterium:start()
 	end
 end
@@ -235,6 +235,10 @@ end
 StateMainMenu.new_character_create = function (self)
 	self._character_create = CharacterCreate:new(self._item_definitions, self._gear)
 
+	return self._character_create
+end
+
+StateMainMenu.character_create_instance = function (self)
 	return self._character_create
 end
 
@@ -458,7 +462,10 @@ StateMainMenu.update = function (self, main_dt, main_t)
 
 	local session_in_progress = GameParameters.prod_like_backend and Managers.party_immaterium:game_session_in_progress()
 
-	if not self._reconnect_pressed and self._reconnect_popup_activated and session_in_progress then
+	if session_in_progress and DevParameters.reconnect_to_ongoing_game_session == false then
+		Log.info("StateMainMenu", "Has ongoing session from a previous session and dev parameter reconnect_to_ongoing_game_session set to false. Leaving it.")
+		Managers.party_immaterium:leave_party()
+	elseif not self._reconnect_pressed and self._reconnect_popup_activated and session_in_progress then
 		if not self._reconnect_popup_id then
 			self:_show_reconnect_popup()
 		end

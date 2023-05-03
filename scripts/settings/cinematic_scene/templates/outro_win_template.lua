@@ -11,7 +11,6 @@ local cinematic_scene_templates = {
 		include_bots = true,
 		mission_outro = false,
 		ignored_slots = {
-			"slot_unarmed",
 			"slot_pocketable",
 			"slot_luggable",
 			"slot_support_ability",

@@ -7,6 +7,7 @@ local MinionDifficultySettings = require("scripts/settings/difficulty/minion_dif
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
+local buff_targets = BuffSettings.targets
 local damage_types = DamageSettings.damage_types
 local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local PLAYER_KNOCKED_DOWN_POWER_LEVEL_MULTIPLIER = 0.25
@@ -389,30 +390,189 @@ templates.beast_of_nurgle_in_slime = {
 		}
 	}
 }
+
+local function _toxic_gas_interval_function(template_data, template_context, template)
+	local unit = template_context.unit
+
+	if not HEALTH_ALIVE[unit] then
+		return
+	end
+
+	local breed = template_context.breed
+	local breed_type = breed.breed_type
+	local power_level_by_breed_type = template.power_level
+	local power_level_by_challenge = power_level_by_breed_type[breed_type] or power_level_by_breed_type.default
+	local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_by_challenge)
+
+	if template_context.is_player then
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local character_state_component = unit_data_extension:read_component("character_state")
+		local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
+
+		if is_knocked_down then
+			power_level = power_level * PLAYER_KNOCKED_DOWN_POWER_LEVEL_MULTIPLIER
+		end
+
+		local player = Managers.state.player_unit_spawn:owner(unit)
+		local is_bot = player and not player:is_human_controlled()
+
+		if is_bot then
+			power_level = power_level * BOT_POWER_LEVEL_MULTIPLIER
+		end
+	end
+
+	if template.power_level_random then
+		power_level = power_level * 0.5 + math.random() * power_level
+	end
+
+	local player_health_extension = ScriptUnit.extension(unit, "health_system")
+	local toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
+	local has_toughness = toughness_extension and toughness_extension:current_toughness_percent() > 0
+	local should_apply_damage = has_toughness or player_health_extension:damage_taken() > player_health_extension:permanent_damage_taken() + 5
+
+	if should_apply_damage then
+		local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
+		local optional_source_item = template_context.is_server and template_context.source_item or nil
+		local damage_template = template.damage_template
+		local damage_type = template.damage_type
+
+		Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_type, "attacking_unit", optional_owner_unit, "item", optional_source_item)
+	end
+end
+
 templates.in_toxic_gas = {
-	interval = 0.5,
-	class_name = "interval_buff",
 	predicted = false,
+	hud_priority = 1,
+	interval = 0.5,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
 	max_stacks = 1,
+	class_name = "interval_buff",
+	is_negative = true,
 	stat_buffs = {
 		[buff_stat_buffs.movement_speed] = 0.9,
-		[buff_stat_buffs.dodge_speed_multiplier] = 0.9
+		[buff_stat_buffs.dodge_speed_multiplier] = 0.9,
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+	},
+	keywords = {
+		buff_keywords.concealed,
+		buff_keywords.hud_nameplates_disabled
 	},
 	power_level = {
 		default = {
-			3,
+			4,
 			6,
-			15,
-			20,
-			25
+			8,
+			10,
+			12
 		}
 	},
 	damage_template = DamageProfileTemplates.toxic_gas_mutator,
-	damage_type = damage_types.minion_vomit,
-	interval_func = _scaled_damage_interval_function,
+	damage_type = damage_types.corruption,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
+		if DEDICATED_SERVER then
+			return
+		end
+
+		local is_local_unit = template_context.is_local_unit
+
+		if not is_local_unit then
+			return
+		end
+
+		if template_context.is_player then
+			local player = Managers.state.player_unit_spawn:owner(unit)
+			local is_bot = player and not player:is_human_controlled()
+
+			if not is_bot then
+				local outline_system = Managers.state.extension:system("outline_system")
+
+				outline_system:set_global_visibility(false)
+			end
+		end
+	end,
+	stop_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
+		if DEDICATED_SERVER then
+			return
+		end
+
+		local is_local_unit = template_context.is_local_unit
+
+		if not is_local_unit then
+			return
+		end
+
+		if template_context.is_player then
+			local player = Managers.state.player_unit_spawn:owner(unit)
+			local is_bot = player and not player:is_human_controlled()
+
+			if not is_bot then
+				local outline_system = Managers.state.extension:system("outline_system")
+
+				outline_system:set_global_visibility(true)
+			end
+		end
+	end,
+	interval_func = _toxic_gas_interval_function,
 	player_effects = {
+		on_screen_effect = "content/fx/particles/environment/circumstances/toxic_gas/toxic_gas_screen",
 		looping_wwise_stop_event = "wwise/events/player/play_player_vomit_exit",
 		looping_wwise_start_event = "wwise/events/player/play_player_vomit_enter",
+		stop_type = "stop",
+		wwise_state = {
+			group = "swamped",
+			on_state = "on",
+			off_state = "none"
+		}
+	}
+}
+templates.left_toxic_gas = {
+	predicted = false,
+	hud_priority = 1,
+	interval = 0.5,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
+	max_stacks = 1,
+	duration = 0.5,
+	class_name = "interval_buff",
+	is_negative = true,
+	target = buff_targets.player_only,
+	stat_buffs = {
+		[buff_stat_buffs.movement_speed] = 0.9,
+		[buff_stat_buffs.dodge_speed_multiplier] = 0.9,
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+	},
+	keywords = {
+		buff_keywords.concealed,
+		buff_keywords.hud_nameplates_disabled
+	},
+	power_level = {
+		default = {
+			1,
+			2,
+			4,
+			6,
+			8
+		}
+	},
+	damage_template = DamageProfileTemplates.toxic_gas_mutator,
+	damage_type = damage_types.corruption,
+	interval_func = _toxic_gas_interval_function,
+	player_effects = {
+		on_screen_effect = "content/fx/particles/environment/circumstances/toxic_gas/toxic_gas_screen",
+		looping_wwise_stop_event = "wwise/events/player/play_player_vomit_exit",
+		looping_wwise_start_event = "wwise/events/player/play_player_vomit_enter",
+		stop_type = "destroy",
 		wwise_state = {
 			group = "swamped",
 			on_state = "on",

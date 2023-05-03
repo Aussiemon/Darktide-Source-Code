@@ -3,6 +3,7 @@ require("scripts/extension_systems/character_state_machine/character_states/play
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
+local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local HealthStateTransitions = require("scripts/extension_systems/character_state_machine/character_states/utilities/health_state_transitions")
 local Stamina = require("scripts/utilities/attack/stamina")
 local proc_events = BuffSettings.proc_events
@@ -152,6 +153,7 @@ PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_sta
 	local dodge_direction = params.dodge_direction
 	dodge_character_state_component.dodge_direction = dodge_direction
 	params.dodge_direction = nil
+	local buff_extension = self._buff_extension
 
 	if dodge_character_state_component.consecutive_dodges_cooldown < t then
 		dodge_character_state_component.consecutive_dodges = 1
@@ -159,11 +161,11 @@ PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_sta
 		dodge_character_state_component.consecutive_dodges = math.min(dodge_character_state_component.consecutive_dodges + 1, NetworkConstants.max_consecutive_dodges)
 	end
 
-	local movement_state = self._movement_state_component
 	local diminishing_return_factor = _calculate_dodge_diminishing_return(dodge_character_state_component, weapon_dodge_template, self._buff_extension)
 	local base_distance = weapon_dodge_template and weapon_dodge_template.base_distance or specialization_dodge_template.base_distance
 	dodge_character_state_component.distance_left = base_distance * (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * diminishing_return_factor
 	dodge_character_state_component.jump_override_time = t + specialization_dodge_template.dodge_jump_override_timer
+	local movement_state = self._movement_state_component
 	dodge_character_state_component.started_from_crouch = movement_state.is_crouching
 	local estimated_dodge_time = _calculate_dodge_total_time(specialization_dodge_template, diminishing_return_factor, weapon_dodge_template, self._buff_extension)
 
@@ -185,7 +187,6 @@ PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_sta
 
 	Stamina.drain(unit, 0, t)
 
-	local buff_extension = self._buff_extension
 	local param_table = buff_extension:request_proc_event_param_table()
 
 	if param_table then

@@ -11,6 +11,7 @@ local action_data = {
 		anim_events = "idle"
 	},
 	patrol = {
+		idle_anim_events = "patrol_idle",
 		anim_events = {
 			"move_fwd_1"
 		},
@@ -207,8 +208,8 @@ local action_data = {
 	follow = {
 		idle_anim_events = "idle",
 		utility_weight = 1,
-		enter_walk_distance = 6,
-		leave_walk_distance = 10,
+		enter_walk_distance = 4,
+		leave_walk_distance = 6,
 		run_anim_event = "move_fwd",
 		vo_event = "melee_idle",
 		walk_anim_event = "move_fwd_walk",
@@ -249,10 +250,10 @@ local action_data = {
 			move_start_left = 0
 		},
 		start_rotation_durations = {
-			move_start_right = 1.4333333333333333,
-			move_start_fwd = 0.26666666666666666,
-			move_start_bwd = 1.4333333333333333,
-			move_start_left = 1.5
+			move_start_right = 1.72,
+			move_start_fwd = 0.32,
+			move_start_bwd = 1.72,
+			move_start_left = 1.7999999999999998
 		},
 		start_move_event_anim_speed_durations = {
 			move_start_fwd = 1.2666666666666666
@@ -283,9 +284,9 @@ local action_data = {
 			attack_down_01 = 2.1666666666666665
 		},
 		attack_anim_durations = {
-			attack_03 = 1.92,
+			attack_03 = 1.7333333333333334,
 			attack_reach_up = 1.7435897435897436,
-			attack_04 = 1.7333333333333334,
+			attack_04 = 1.4666666666666666,
 			attack_down_01 = 4.5
 		},
 		attack_intensities = {

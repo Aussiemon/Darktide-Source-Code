@@ -202,6 +202,10 @@ local function add_soul_function(template_data, template_context, t, previous_st
 
 	if stacks == max_stacks then
 		soul_screenspace_effect = "content/fx/particles/screenspace/screen_biomancer_maxsouls"
+
+		if Managers.stats.can_record_stats() then
+			Managers.stats:record_psyker_2_reached_max_souls(template_context.player)
+		end
 	else
 		soul_screenspace_effect = "content/fx/particles/screenspace/screen_biomancer_souls"
 	end
@@ -333,6 +337,10 @@ local function update_soul_function(template_data, template_context, dt, t)
 	if current_stacks ~= stacks then
 		local max_stacks = template_context.template.max_stacks
 		template_data.specialization_resource_component.current_resource = math.clamp(stacks, 0, max_stacks)
+
+		if can_record_stats and stacks < current_stacks then
+			Managers.stats:record_psyker_2_lost_max_souls(template_context.player)
+		end
 	end
 end
 

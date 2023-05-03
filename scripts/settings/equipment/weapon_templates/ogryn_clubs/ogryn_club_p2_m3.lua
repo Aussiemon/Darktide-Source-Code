@@ -10,7 +10,6 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local WeaponTraitsBespokeOgrynClubP2 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_club_p2")
-local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local damage_types = DamageSettings.damage_types
@@ -219,12 +218,13 @@ weapon_template.actions = {
 		herding_template = HerdingTemplates.smiter_down
 	},
 	action_melee_start_right = {
-		uninterruptible = true,
+		allowed_during_sprint = true,
 		chain_anim_event = "attack_swing_charge_down_right_pose",
-		chain_anim_event_3p = "attack_swing_charge_down_right",
-		kind = "windup",
-		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_charge_down_right",
+		kind = "windup",
+		chain_anim_event_3p = "attack_swing_charge_down_right",
+		anim_end_event = "attack_finished",
+		uninterruptible = true,
 		anim_event = "attack_swing_charge_down_right",
 		stop_input = "attack_cancel",
 		total_time = 3,
@@ -1298,7 +1298,11 @@ weapon_template.actions = {
 			}
 		},
 		damage_profile = DamageProfileTemplates.ogryn_club_light_smiter,
-		damage_type = damage_types.ogryn_pipe_club
+		damage_type = damage_types.ogryn_pipe_club,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed
+		}
 	},
 	action_push = {
 		push_radius = 2.5,
@@ -1326,6 +1330,12 @@ weapon_template.actions = {
 			start_modifier = 1.4
 		},
 		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
 			wield = {
 				action_name = "action_unwield"
 			},
@@ -1340,6 +1350,10 @@ weapon_template.actions = {
 			special_action = {
 				action_name = "action_weapon_special",
 				chain_time = 0.25
+			},
+			start_attack = {
+				action_name = "action_melee_start_left",
+				chain_time = 0.4
 			}
 		},
 		inner_push_rad = math.pi * 0.25,
@@ -1648,10 +1662,6 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local melee_common_traits = table.keys(WeaponTraitsMeleeCommon)
-
-table.append(weapon_template.traits, melee_common_traits)
-
 local bespoke_ogryn_club_p2 = table.keys(WeaponTraitsBespokeOgrynClubP2)
 
 table.append(weapon_template.traits, bespoke_ogryn_club_p2)

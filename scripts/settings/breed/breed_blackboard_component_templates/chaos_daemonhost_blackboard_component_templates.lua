@@ -36,7 +36,7 @@ local chaos_daemonhost = {
 		num_units = "number"
 	},
 	statistics = {
-		valid_targets_on_aggro = "number"
+		player_deaths = "number"
 	}
 }
 

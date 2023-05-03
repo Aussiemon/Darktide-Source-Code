@@ -1901,7 +1901,7 @@ return function ()
 	})
 	define_rule({
 		name = "cs_prologue_seven_02",
-		category = "cutscene_prio_high",
+		category = "cutscene",
 		wwise_route = 5,
 		response = "cs_prologue_seven_02",
 		database = "cutscenes_vo",
@@ -2021,7 +2021,7 @@ return function ()
 	})
 	define_rule({
 		name = "cs_prologue_seven_06",
-		category = "cutscene_prio_high",
+		category = "cutscene",
 		wwise_route = 5,
 		response = "cs_prologue_seven_06",
 		database = "cutscenes_vo",

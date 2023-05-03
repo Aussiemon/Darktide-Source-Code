@@ -64,7 +64,6 @@ HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_rende
 	local total_size = 0
 	local margin = 20
 	local scenegraph = self._ui_scenegraph
-	local panel_minimum_height = 120
 	total_size = total_size + scenegraph.mission_info_panel.size[2]
 	local circumstance_info_widget = self._widgets_by_name.circumstance_info
 
@@ -87,15 +86,17 @@ HudElementTacticalOverlay._update_left_panel_elements = function (self, ui_rende
 			circumstance_description_style.size[1],
 			1000
 		}, circumstance_description_font_options)
-		local original_description_height = 60
-		local description_margin = 20
-		local circumstance_info_height = math.max(original_description_height, circumstance_description_height + description_margin)
-		local excessive_height = circumstance_info_height - original_description_height
-		circumstance_name_style.size[2] = circumstance_info_height
+		local description_margin = 5
+		local min_height = circumstance_info_widget.style.icon.size[2]
+		local title_height = math.max(min_height, circumstance_name_height)
+		circumstance_name_style.size[2] = title_height
+		circumstance_description_style.offset[2] = title_height + circumstance_name_style.offset[2] + description_margin
+		circumstance_description_style.size[2] = circumstance_description_height
+		local circumstance_height = circumstance_description_style.offset[2] + circumstance_description_style.size[2] + circumstance_info_widget.style.icon.offset[2]
 
-		self:_set_scenegraph_size("circumstance_info_panel", nil, panel_minimum_height + excessive_height)
+		self:_set_scenegraph_size("circumstance_info_panel", nil, circumstance_height)
 
-		total_size = total_size + scenegraph.circumstance_info_panel.size[2]
+		total_size = total_size + circumstance_height
 	end
 
 	total_size = total_size + margin

@@ -1,9 +1,11 @@
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Breed = require("scripts/utilities/breed")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerMovement = require("scripts/utilities/player_movement")
 local MoveablePlatformExtension = class("MoveablePlatformExtension")
 local MOVEABLE_PLATFORM_DIRECTION = table.enum("none", "forward", "backward")
+local OPEN_WALL_FILTER = "filter_platform_wall"
 
 MoveablePlatformExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._world = extension_init_context.world
@@ -63,29 +65,25 @@ MoveablePlatformExtension.init = function (self, extension_init_context, unit, e
 
 	local wall_count = 1
 	local wall_prefix = "c_wall_"
-	local actor_id = Unit.find_actor(unit, wall_prefix .. tostring(wall_count))
+	local wall_actor = Unit.actor(unit, wall_prefix .. tostring(wall_count))
 
-	while actor_id ~= nil do
-		self._walls[wall_count] = {
-			actor_id = actor_id
-		}
+	while wall_actor ~= nil do
+		self._walls[wall_count] = wall_actor
 		wall_count = wall_count + 1
-		actor_id = Unit.find_actor(unit, wall_prefix .. tostring(wall_count))
+		wall_actor = Unit.actor(unit, wall_prefix .. tostring(wall_count))
 	end
 
 	for _, wall in pairs(self._walls) do
-		self:_enable_wall_collision(wall.actor_id, false)
+		self:_enable_wall_collision(wall, false)
 
-		self._overlap_result[wall.actor_id] = {}
+		self._overlap_result[wall] = {}
 	end
 
-	self._box = {
-		actor_id = Unit.find_actor(unit, "c_box_center")
-	}
+	self._box = Unit.actor(unit, "c_box_center")
 
-	self:_enable_wall_collision(self._box.actor_id, false)
+	self:_enable_wall_collision(self._box, false)
 
-	self._overlap_result[self._box.actor_id] = {}
+	self._overlap_result[self._box] = {}
 end
 
 MoveablePlatformExtension.setup_from_component = function (self, story_name, player_side, wall_collision_enabled, wall_collision_filter, require_all_players_onboard, interactable_story_actions, interactable_hud_descriptions, story_speed_forward, story_speed_backward, end_sound_time, nav_handling_enabled, stop_position)
@@ -243,14 +241,12 @@ MoveablePlatformExtension.set_direction_husk = function (self, direction)
 	self._story_direction = direction
 end
 
-MoveablePlatformExtension._enable_wall_collision = function (self, actor_id, activate)
-	local filter = "filter_player_character_trigger"
+MoveablePlatformExtension._enable_wall_collision = function (self, actor, activate)
+	local filter = OPEN_WALL_FILTER
 
 	if activate then
 		filter = self._wall_collision_filter
 	end
-
-	local actor = Unit.actor(self._unit, actor_id)
 
 	Actor.set_collision_filter(actor, filter)
 end
@@ -400,22 +396,11 @@ end
 
 MoveablePlatformExtension._update_passengers = function (self)
 	local passenger_units = self._passenger_units
-	local passenger_actors = self._overlap_result[self._box.actor_id]
+	local overlapping_units = self._overlap_result[self._box]
 
-	if passenger_actors then
-		local ActorBox_unbox = ActorBox.unbox
-		local Actor_unit = Actor.unit
-
-		for i = 1, #passenger_actors do
-			local passenger_actor = ActorBox_unbox(passenger_actors[i])
-
-			if passenger_actor then
-				local passenger_unit = Actor_unit(passenger_actor)
-
-				if not passenger_units[passenger_unit] then
-					passenger_units[passenger_unit] = true
-				end
-			end
+	if overlapping_units then
+		for passenger_unit, _ in pairs(overlapping_units) do
+			passenger_units[passenger_unit] = true
 		end
 	end
 end
@@ -431,11 +416,15 @@ MoveablePlatformExtension._add_bots_to_passengers = function (self, bot_player_u
 end
 
 MoveablePlatformExtension._update_overlap = function (self)
-	for _, wall in pairs(self._walls) do
-		self:_send_player_overlap_request(wall.actor_id)
-	end
+	local players = Managers.player:human_players()
 
-	self:_send_player_overlap_request(self._box.actor_id)
+	for _, player in pairs(players) do
+		local player_unit = player.player_unit
+
+		if ALIVE[player_unit] then
+			self:_send_wall_overlap_request(player_unit)
+		end
+	end
 end
 
 MoveablePlatformExtension._update_velocity = function (self, unit, dt)
@@ -457,45 +446,40 @@ MoveablePlatformExtension.movement_since_last_fixed_update = function (self)
 	return self._movement_since_last_fixed_update
 end
 
-MoveablePlatformExtension._send_player_overlap_request = function (self, actor_id)
-	local unit = self._unit
-	local actor = Unit.actor(unit, actor_id)
-	local node = Actor.node(actor)
-	local meshes = Unit.get_node_meshes(unit, node, true, false)
-	local mesh_id = meshes and meshes[1]
+local HEIGHT = PlayerCharacterConstants.respawn_hot_join_height
 
-	if mesh_id then
-		local mesh = Unit.mesh(unit, mesh_id)
-		local box_pose, box_half_extents = Mesh.box(mesh)
-		local position = Matrix4x4.translation(box_pose)
-		local rotation = Matrix4x4.rotation(box_pose)
-		local size = box_half_extents + Vector3(0.2, 0.2, 0)
+MoveablePlatformExtension._send_wall_overlap_request = function (self, player_unit)
+	local mover = Unit.mover(player_unit)
+	local player_position = Unit.world_position(player_unit, 1)
+	local player_radius = Mover.radius(mover)
+	local capsule_rotation = Quaternion.look(Vector3.up())
+	local capsule_size = Vector3(player_radius, HEIGHT / 2, player_radius)
 
-		PhysicsWorld.overlap(self._physics_world, function (...)
-			self:_receive_overlap_result_players(actor_id, ...)
-		end, "shape", "oobb", "position", position, "rotation", rotation, "size", size, "collision_filter", "filter_player_character_trigger")
-	end
+	PhysicsWorld.overlap(self._physics_world, function (...)
+		self:_receive_overlap_result_wall(player_unit, ...)
+	end, "shape", "capsule", "position", player_position + Vector3.up() * HEIGHT / 2, "rotation", capsule_rotation, "size", capsule_size, "collision_filter", "filter_platform_wall_trigger")
 end
 
-MoveablePlatformExtension._receive_overlap_result_players = function (self, actor_id, _, hit_actors)
-	local overlaps_for_actor = self._overlap_result[actor_id]
+MoveablePlatformExtension._receive_overlap_result_wall = function (self, player_unit, _, hit_actors)
+	local unit = self._unit
 
-	table.clear(overlaps_for_actor)
+	for _, wall in pairs(self._walls) do
+		self._overlap_result[wall][player_unit] = nil
+	end
 
-	local i = 1
+	self._overlap_result[self._box][player_unit] = nil
 
 	for _, actor in pairs(hit_actors) do
-		overlaps_for_actor[i] = ActorBox()
-
-		overlaps_for_actor[i]:store(actor)
-
-		i = i + 1
+		if Actor.unit(actor) == unit then
+			local overlaps_for_wall = self._overlap_result[actor]
+			overlaps_for_wall[player_unit] = true
+		end
 	end
 end
 
 MoveablePlatformExtension._lock_units_on_platform = function (self)
 	for _, wall in pairs(self._walls) do
-		self:_enable_wall_collision(wall.actor_id, true)
+		self:_enable_wall_collision(wall, true)
 	end
 
 	local has_passengers = self:_set_platform_as_parent_for_all_passengers()
@@ -511,11 +495,10 @@ end
 
 MoveablePlatformExtension._passengers_inside_walls = function (self)
 	for _, wall in pairs(self._walls) do
-		if self._overlap_result[wall.actor_id] then
-			local results = self._overlap_result[wall.actor_id]
-			local num_actors_in_wall = #results
+		if self._overlap_result[wall] then
+			local results = self._overlap_result[wall]
 
-			if num_actors_in_wall > 0 then
+			if next(results) ~= nil then
 				return true
 			end
 		end
@@ -594,7 +577,7 @@ end
 
 MoveablePlatformExtension._unlock_units_on_platform = function (self)
 	for _, wall in pairs(self._walls) do
-		self:_enable_wall_collision(wall.actor_id, false)
+		self:_enable_wall_collision(wall, false)
 	end
 
 	self._units_locked = false
@@ -727,8 +710,6 @@ MoveablePlatformExtension._valid_passenger_player_unit = function (self, player_
 	return HEALTH_ALIVE[player_unit] and not PlayerUnitStatus.is_hogtied(character_state_component)
 end
 
-local units_inside = {}
-
 MoveablePlatformExtension._get_passengers_onboard_info = function (self)
 	local side_name = self._player_side
 	local side_system = self._side_system
@@ -736,22 +717,8 @@ MoveablePlatformExtension._get_passengers_onboard_info = function (self)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 
 	if side then
-		local ActorBox_unbox = ActorBox.unbox
-		local Actor_unit = Actor.unit
 		local player_units = side.player_units
-		local passenger_actors = self._overlap_result[self._box.actor_id]
-
-		table.clear(units_inside)
-
-		for i = 1, #passenger_actors do
-			local passenger_actor = ActorBox_unbox(passenger_actors[i])
-
-			if passenger_actor then
-				local passenger_unit = Actor_unit(passenger_actor)
-				units_inside[passenger_unit] = true
-			end
-		end
-
+		local passenger_units = self._overlap_result[self._box]
 		local all_valid_players_inside = true
 		local at_least_one_player_inside = false
 
@@ -761,7 +728,7 @@ MoveablePlatformExtension._get_passengers_onboard_info = function (self)
 			local is_human = player:is_human_controlled()
 
 			if is_human and self:_valid_passenger_player_unit(player_unit) then
-				if not units_inside[player_unit] then
+				if not passenger_units[player_unit] then
 					all_valid_players_inside = false
 
 					break

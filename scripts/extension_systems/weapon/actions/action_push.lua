@@ -75,7 +75,13 @@ ActionPush._push = function (self, t)
 			power_level = power_level * math.clamp(current_stamina * 2 / push_cost, 0.5, 1)
 		end
 
-		number_of_units_hit = PushAttack.push(self._physics_world, player_position, player_direction, rewind_ms, power_level, action_settings, player_unit, is_predicted, weapon_item, weak_push)
+		local push_offset = action_settings.push_offset or 0
+		local push_posisition = player_position + player_direction * push_offset
+		number_of_units_hit = PushAttack.push(self._physics_world, push_posisition, player_direction, rewind_ms, power_level, action_settings, player_unit, is_predicted, weapon_item, weak_push)
+
+		if number_of_units_hit > 0 then
+			-- Nothing
+		end
 	end
 
 	if not action_settings.block_duration then

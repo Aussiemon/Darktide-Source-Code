@@ -29,6 +29,7 @@ require("scripts/extension_systems/behavior/nodes/actions/bt_combat_idle_action"
 require("scripts/extension_systems/behavior/nodes/actions/bt_cultist_flamer_approach_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_die_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_exit_spawner_action")
+require("scripts/extension_systems/behavior/nodes/actions/bt_erratic_follow_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_grenadier_follow_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_grenadier_throw_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_idle_action")

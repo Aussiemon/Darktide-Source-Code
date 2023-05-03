@@ -275,13 +275,13 @@ local particles = {
 		},
 		particles = {
 			powersword_p1_m1 = {
-				["true"] = "content/fx/particles/weapons/hammers/thunder_hammer_trail"
+				["true"] = "content/fx/particles/weapons/swords/powersword_p1_m1_trail"
 			},
 			powersword_p1_m2 = {
-				["true"] = "content/fx/particles/weapons/hammers/thunder_hammer_trail"
+				["true"] = "content/fx/particles/weapons/swords/powersword_p1_m1_trail"
 			},
 			powersword_p1_m3 = {
-				["true"] = "content/fx/particles/weapons/hammers/thunder_hammer_trail"
+				["true"] = "content/fx/particles/weapons/swords/powersword_p1_m1_trail"
 			},
 			thunderhammer_2h_p1_m1 = {
 				["true"] = "content/fx/particles/weapons/hammers/thunder_hammer_trail"
@@ -302,7 +302,6 @@ local particles = {
 		particles = {
 			servo_skull = "content/fx/particles/interacts/servoskull_visibility_hover",
 			grimoire_pocketable = "content/fx/particles/interacts/grimoire_idle",
-			syringe_corruption_pocketable = "content/fx/particles/pocketables/syringe_bubbles",
 			flamer_p1_m1 = "content/fx/particles/weapons/rifles/zealot_flamer/zealot_flamer_pilot_light"
 		}
 	},

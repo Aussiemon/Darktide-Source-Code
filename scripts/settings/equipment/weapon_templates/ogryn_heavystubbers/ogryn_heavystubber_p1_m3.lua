@@ -9,7 +9,6 @@ local ReloadTemplates = require("scripts/settings/equipment/reload_templates/rel
 local HitScanTemplates = require("scripts/settings/projectile/hit_scan_templates")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsOgrynHeavystubbertP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_heavystubber_p1")
-local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local LineEffects = require("scripts/settings/effects/line_effects")
@@ -27,11 +26,11 @@ local sway_trait_templates = WeaponTraitTemplates[template_types.sway]
 local weapon_template = {
 	action_inputs = {
 		shoot = {
-			buffer_time = 0.51,
+			buffer_time = 0.25,
 			input_sequence = {
 				{
 					value = true,
-					input = "action_one_pressed"
+					input = "action_one_hold"
 				}
 			}
 		},
@@ -132,14 +131,14 @@ weapon_template.action_input_hierarchy = {
 		shoot_release = "base"
 	},
 	zoom = {
-		wield = "base",
 		zoom_release = "base",
+		wield = "base",
 		grenade_ability = "base",
-		brace_reload = "stay",
+		reload = "base",
 		combat_ability = "base",
 		zoom_shoot = {
-			brace_reload = "previous",
 			wield = "base",
+			reload = "base",
 			zoom_release = "base",
 			shoot_release = "previous"
 		}
@@ -358,8 +357,8 @@ weapon_template.actions = {
 			wield = {
 				action_name = "action_unwield"
 			},
-			brace_reload = {
-				action_name = "action_brace_reload"
+			reload = {
+				action_name = "action_reload"
 			},
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
@@ -395,8 +394,8 @@ weapon_template.actions = {
 			wield = {
 				action_name = "action_unwield"
 			},
-			brace_reload = {
-				action_name = "action_brace_reload",
+			reload = {
+				action_name = "action_reload",
 				chain_time = 0.1
 			},
 			zoom_shoot = {
@@ -426,8 +425,8 @@ weapon_template.actions = {
 			wield = {
 				action_name = "action_unwield"
 			},
-			brace_reload = {
-				action_name = "action_brace_reload",
+			reload = {
+				action_name = "action_reload",
 				chain_time = 0.25
 			},
 			zoom_shoot = {
@@ -459,7 +458,7 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			reload = {
-				action_name = "action_brace_reload",
+				action_name = "action_reload",
 				chain_time = 0.25
 			},
 			zoom = {
@@ -729,11 +728,11 @@ weapon_template.conditional_state_to_action_input = {
 	},
 	{
 		conditional_state = "no_ammo_and_started_reload_alternate_fire",
-		input_name = "brace_reload"
+		input_name = "reload"
 	},
 	{
 		conditional_state = "no_ammo_alternate_fire_with_delay",
-		input_name = "brace_reload"
+		input_name = "reload"
 	}
 }
 weapon_template.no_ammo_delay = 0.4
@@ -884,10 +883,6 @@ weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.ogryn_heavy_stubber
 weapon_template.traits = {}
-local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
-
-table.append(weapon_template.traits, ranged_common_traits)
-
 local ogryn_heavystubbert_p1_traits = table.keys(WeaponTraitsOgrynHeavystubbertP1)
 
 table.append(weapon_template.traits, ogryn_heavystubbert_p1_traits)

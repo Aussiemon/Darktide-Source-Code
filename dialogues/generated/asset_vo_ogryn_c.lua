@@ -16,6 +16,23 @@ local asset_vo_ogryn_c = {
 		},
 		randomize_indexes = {}
 	},
+	asset_cartel_insignia = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_ogryn_c__mission_cartel_insignia_01",
+			[2.0] = "loc_ogryn_c__mission_cartel_insignia_02"
+		},
+		sound_events_duration = {
+			[1.0] = 2.526604,
+			[2.0] = 3.30751
+		},
+		sound_event_weights = {
+			[1.0] = 0.5,
+			[2.0] = 0.5
+		},
+		randomize_indexes = {}
+	},
 	asset_foul_smoke = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -30,6 +47,23 @@ local asset_vo_ogryn_c = {
 			5.446063,
 			2.202198,
 			3.355781
+		},
+		randomize_indexes = {}
+	},
+	asset_goo = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_ogryn_c__level_hab_block_goo_01",
+			[2.0] = "loc_ogryn_c__level_hab_block_goo_02"
+		},
+		sound_events_duration = {
+			[1.0] = 3.954031,
+			[2.0] = 4.947542
+		},
+		sound_event_weights = {
+			[1.0] = 0.5,
+			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -90,6 +124,23 @@ local asset_vo_ogryn_c = {
 			4.993167,
 			3.040063,
 			5.480031
+		},
+		randomize_indexes = {}
+	},
+	asset_water_course = {
+		randomize_indexes_n = 0,
+		sound_events_n = 2,
+		sound_events = {
+			[1.0] = "loc_ogryn_c__mission_cartel_water_course_01",
+			[2.0] = "loc_ogryn_c__mission_cartel_water_course_02"
+		},
+		sound_events_duration = {
+			[1.0] = 6.651708,
+			[2.0] = 4.269167
+		},
+		sound_event_weights = {
+			[1.0] = 0.5,
+			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	}

@@ -15,7 +15,7 @@ local default_armor_decal = {
 		}
 	},
 	units = {
-		"content/fx/units/vfx_decal_lasgun_scorchmark"
+		"content/fx/units/weapons/vfx_decal_lasgun_scorchmark"
 	}
 }
 local blood_ball = {
@@ -717,7 +717,7 @@ local default_surface_decal = {
 	Vector3(0.2, 0.2, 0.2),
 	Vector3(0.2, 0.2, 0.2),
 	{
-		"content/fx/units/decal_cross_01"
+		"content/fx/units/weapons/decal_cross_01"
 	}
 }
 local default_surface_fx = {

@@ -374,10 +374,10 @@ local function _get_task_description_and_target(task_criteria)
 		title_loc = ViewSettings.task_label_kill_bosses
 		desc_loc = ViewSettings.task_description_kill_bosses
 	elseif task_type == "CollectPickup" then
-		local param_loc = task_parameter_strings[task_criteria.pickupType]
+		local param_loc = task_parameter_strings[task_criteria.pickupTypes]
 
 		if not param_loc then
-			local task_criteria_types = task_criteria.pickupTypes
+			local task_criteria_types = task_criteria.pickupType
 
 			if #task_criteria_types > 1 then
 				param_loc = task_parameter_strings.tome_or_grimoire

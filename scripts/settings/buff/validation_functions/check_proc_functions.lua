@@ -1,13 +1,14 @@
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local MinionState = require("scripts/utilities/minion_state")
 local attack_results = AttackSettings.attack_results
 local stagger_results = AttackSettings.stagger_results
 local attack_types = AttackSettings.attack_types
 local damage_types = DamageSettings.damage_types
 local CLOSE_RANGE_RANGED = DamageSettings.ranged_close
-local CLOSE_RANGE_SQUARED = CLOSE_RANGE_RANGED * CLOSE_RANGE_RANGED
+local CLOSE_RANGE_RANGED_SQUARED = CLOSE_RANGE_RANGED * CLOSE_RANGE_RANGED
 local ON_SHOOT_HIT_MULTIPLE_THRESHOLD = 2
 local CheckProcFunctions = {
 	all = function (...)
@@ -225,9 +226,10 @@ CheckProcFunctions.on_ranged_close_kill = function (params)
 	end
 
 	local attacking_unit = params.attacking_unit
+	local close_range_squared = CLOSE_RANGE_RANGED_SQUARED
 	local attacking_pos = POSITION_LOOKUP[attacking_unit] or Unit.world_position(attacking_unit, 1)
-	local distance = Vector3.distance_squared(hit_world_position, attacking_pos)
-	local is_within_distance = distance <= CLOSE_RANGE_SQUARED
+	local distance_squared = Vector3.distance_squared(hit_world_position, attacking_pos)
+	local is_within_distance = distance_squared <= close_range_squared
 
 	return is_within_distance
 end
@@ -254,6 +256,10 @@ end
 
 CheckProcFunctions.on_melee_hit = function (params)
 	return params.attack_type == attack_types.melee
+end
+
+CheckProcFunctions.on_push_hit = function (params)
+	return params.attack_type == attack_types.push
 end
 
 CheckProcFunctions.on_exploion_hit = function (params)
@@ -284,7 +290,8 @@ CheckProcFunctions.on_multiple_melee_hit = function (params, template_data, temp
 	end
 
 	local template_override_data = template_context.template_override_data
-	local buff_data = template_override_data and template_override_data.buff_data or template_data.buff_data
+	local template = template_context.template
+	local buff_data = template_override_data and template_override_data.buff_data or template_data.buff_data or template.buff_data
 	local required_num_hits = buff_data.required_num_hits
 	local target_index = params.target_index
 
@@ -382,7 +389,7 @@ CheckProcFunctions.on_shoot_hit_multiple = function (params)
 end
 
 CheckProcFunctions.on_hit_all_pellets_on_same = function (params)
-	return params.hit_all_pellets and params.num_hit_units == 1
+	return params.hit_all_pellets_on_same
 end
 
 CheckProcFunctions.attacked_unit_is_minion = function (params)
@@ -391,6 +398,14 @@ end
 
 CheckProcFunctions.is_weapon_special = function (params)
 	return params.weapon_special
+end
+
+CheckProcFunctions.on_elite_hit = function (params)
+	if not params.tags or not params.tags.elite then
+		return false
+	end
+
+	return true
 end
 
 CheckProcFunctions.would_die = function (params, template_data, template_context)

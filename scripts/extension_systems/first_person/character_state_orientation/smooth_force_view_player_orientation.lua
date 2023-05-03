@@ -1,9 +1,11 @@
 require("scripts/extension_systems/first_person/character_state_orientation/base_player_orientation")
 
+local Action = require("scripts/utilities/weapon/action")
 local Fov = require("scripts/utilities/camera/fov")
 local Orientation = require("scripts/utilities/orientation")
 local PlayerOrientationSettings = require("scripts/settings/player_character/player_orientation_settings")
 local SweepStickyness = require("scripts/utilities/action/sweep_stickyness")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local SmoothForceViewPlayerOrientation = class("SmoothForceViewPlayerOrientation", "BasePlayerOrientation")
 
 SmoothForceViewPlayerOrientation.init = function (self, player, orientation)
@@ -83,6 +85,21 @@ SmoothForceViewPlayerOrientation.pre_update = function (self, main_t, main_dt, i
 	local pitch_p = math.max(math.ilerp_no_clamp(NUDGE_MIN, NUDGE_MAX, math.abs(delta_pitch)), 0)
 	local pitch_nudge = math.sign(delta_pitch) * MAX_NUDGE_PER_SEC * main_dt * pitch_p
 	local nudged_pitch = math.clamp((new_pitch + PI) % PI_2 - PI + pitch_nudge, min_pitch, max_pitch) % PI_2
+	local disable_vertical_force_view = false
+	local weapon_action_component = self._weapon_action_component
+	local weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
+	local _, current_action_settings = Action.current_action(weapon_action_component, weapon_template)
+
+	if current_action_settings then
+		local special_active_at_start = weapon_action_component.special_active_at_start
+		local hit_stickyness_settings = special_active_at_start and current_action_settings.hit_stickyness_settings_special_active or current_action_settings.hit_stickyness_settings
+		disable_vertical_force_view = hit_stickyness_settings and hit_stickyness_settings.disable_vertical_force_view
+	end
+
+	if disable_vertical_force_view then
+		nudged_pitch = orientation.pitch
+	end
+
 	orientation.yaw = math.mod_two_pi(nudged_yaw)
 	orientation.pitch = math.mod_two_pi(nudged_pitch)
 	orientation.roll = 0

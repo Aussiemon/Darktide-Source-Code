@@ -39,7 +39,7 @@ local function _remove_live_item_icon_cb_func(widget)
 end
 
 local ConstantElementNotificationFeed = class("ConstantElementNotificationFeed", "ConstantElementBase")
-local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "matchmaking", "voting")
+local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "matchmaking", "player_assist", "voting")
 
 ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start_scale)
 	ConstantElementNotificationFeed.super.init(self, parent, draw_layer, start_scale, Definitions)
@@ -78,6 +78,13 @@ ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start
 			widget_definition = Definitions.notification_message
 		},
 		currency = {
+			animation_exit = "popup_leave",
+			animation_enter = "popup_enter",
+			total_time = 5,
+			priority_order = 1,
+			widget_definition = Definitions.notification_message
+		},
+		player_assist = {
 			animation_exit = "popup_leave",
 			animation_enter = "popup_enter",
 			total_time = 5,
@@ -326,9 +333,12 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		elseif item_type == "CHARACTER_INSIGNIA" then
 			icon = "content/ui/materials/base/ui_default_base"
 			icon_size = "insignia"
-		elseif item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "WEAPON_TRINKET" or item_type == "WEAPON_SKIN" then
+		elseif item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "WEAPON_TRINKET" then
 			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
 			icon_size = "large_weapon"
+		elseif item_type == "WEAPON_SKIN" then
+			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
+			icon_size = "weapon_skin"
 		elseif item_type == "GADGET" then
 			icon = "content/ui/materials/icons/items/containers/item_container_landscape"
 			icon_size = "large_gadget"
@@ -396,6 +406,27 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				enter_sound_event = enter_sound_event
 			}
 		end
+	elseif message_type == MESSAGE_TYPES.player_assist then
+		local assist_type = data.assist_type
+		local player_name = data.player_name
+		local text = nil
+
+		if assist_type == "assisted" then
+			text = "Assisted by " .. player_name
+		elseif assist_type == "revived" then
+			text = "Revived by " .. player_name
+		elseif assist_type == "saved" then
+			text = "Saved by " .. player_name
+		end
+
+		notification_data = {
+			texts = {
+				{
+					display_name = text
+				}
+			},
+			color = Color.citadel_elysian_green(100, true)
+		}
 	elseif message_type == MESSAGE_TYPES.achievement then
 		notification_data = {
 			icon_size = "medium",

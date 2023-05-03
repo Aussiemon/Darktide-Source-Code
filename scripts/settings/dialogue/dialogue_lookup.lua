@@ -11,7 +11,10 @@ local function _add_to_lookup(path)
 end
 
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_asset_vo")
+_add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_circumstance_vo_darkness")
+_add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_circumstance_vo_hunting_grounds")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_circumstance_vo_nurgle_rot")
+_add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_circumstance_vo_ventilation_purge")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_conversations_core")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_conversations_hub")
 _add_to_lookup(DialogueSettings.default_lookup_path .. "lookup_cutscenes_vo")

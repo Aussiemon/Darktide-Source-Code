@@ -126,6 +126,10 @@ CutsceneCharacterSystem.initialize_characters_for_cinematic = function (self, ci
 
 						if weapon then
 							extension:set_equipped_weapon(weapon)
+
+							local slot_name = items.slot_primary and "slot_primary" or items.slot_secondary and "slot_secondary"
+
+							extension:wield_slot(slot_name)
 						end
 					end
 

@@ -323,18 +323,6 @@ local gameplay_vo_psyker_male_a = {
 			2.894458,
 			2.696375
 		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
-		},
 		randomize_indexes = {}
 	},
 	critical_health = {
@@ -828,18 +816,6 @@ local gameplay_vo_psyker_male_a = {
 			1.432229,
 			2.40125,
 			1.708188
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -1512,13 +1488,6 @@ local gameplay_vo_psyker_male_a = {
 			3.458875,
 			2.569271
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	found_health_booster_ogryn_low_on_health = {
@@ -1843,18 +1812,6 @@ local gameplay_vo_psyker_male_a = {
 			3.089625,
 			2.142917,
 			1.363021
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -2328,18 +2285,6 @@ local gameplay_vo_psyker_male_a = {
 			2.548313,
 			2.013458,
 			3.941833
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -3494,12 +3439,6 @@ local gameplay_vo_psyker_male_a = {
 			1.638771,
 			1.415604
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	response_for_psyker_disabled_by_chaos_hound = {
@@ -3793,24 +3732,20 @@ local gameplay_vo_psyker_male_a = {
 	},
 	response_for_zealot_cover_me = {
 		randomize_indexes_n = 0,
-		sound_events_n = 4,
+		sound_events_n = 5,
 		sound_events = {
 			"loc_psyker_male_a__response_for_zealot_cover_me_01",
 			"loc_psyker_male_a__response_for_zealot_cover_me_02",
+			"loc_psyker_male_a__response_for_zealot_cover_me_03",
 			"loc_psyker_male_a__response_for_zealot_cover_me_04",
 			"loc_psyker_male_a__response_for_zealot_cover_me_05"
 		},
 		sound_events_duration = {
 			2.296792,
 			1.682688,
+			2.311167,
 			1.378458,
 			2.874875
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -4117,18 +4052,6 @@ local gameplay_vo_psyker_male_a = {
 			3.131917,
 			2.224563,
 			2.668938
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -4575,47 +4498,6 @@ local gameplay_vo_psyker_male_a = {
 			2.046375,
 			2.262271,
 			3.587313
-		},
-		randomize_indexes = {}
-	},
-	start_rescue = {
-		randomize_indexes_n = 0,
-		sound_events_n = 10,
-		sound_events = {
-			"loc_psyker_male_a__start_revive_generic_01",
-			"loc_psyker_male_a__start_revive_generic_02",
-			"loc_psyker_male_a__start_revive_generic_03",
-			"loc_psyker_male_a__start_revive_generic_04",
-			"loc_psyker_male_a__start_revive_generic_05",
-			"loc_psyker_male_a__start_revive_generic_06",
-			"loc_psyker_male_a__start_revive_generic_07",
-			"loc_psyker_male_a__start_revive_generic_08",
-			"loc_psyker_male_a__start_revive_generic_09",
-			"loc_psyker_male_a__start_revive_generic_10"
-		},
-		sound_events_duration = {
-			1.572729,
-			2.415229,
-			1.554,
-			1.819771,
-			2.630208,
-			2.668292,
-			2.413167,
-			2.700042,
-			2.370063,
-			3.227188
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},

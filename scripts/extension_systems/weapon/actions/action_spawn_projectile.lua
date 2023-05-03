@@ -316,12 +316,6 @@ ActionSpawnProjectile._pay_for_projectile = function (self, t)
 		self:_pay_warp_charge_cost(t, charge_level)
 	end
 
-	local use_ability_charge = action_settings.use_ability_charge
-
-	if use_ability_charge then
-		self:_pay_ability_charge_cost()
-	end
-
 	local fx_settings = action_settings.fx
 	local shoot_sfx_alias = fx_settings and fx_settings.shoot_sfx_alias
 

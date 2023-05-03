@@ -131,8 +131,9 @@ PerceptionSystem.update = function (self, context, dt, t)
 	self._current_update_extension = current_update_extension
 end
 
-PerceptionSystem.on_reload = function (self)
+PerceptionSystem.on_reload = function (self, refreshed_resources)
 	self:_preparse_bot_gestalt_target_selection_weights(BotGestaltTargetSelectionWeights)
+	PerceptionSystem.super.on_reload(self, refreshed_resources)
 end
 
 PerceptionSystem._preparse_bot_gestalt_target_selection_weights = function (self, bot_gestalt_target_selection_weights)

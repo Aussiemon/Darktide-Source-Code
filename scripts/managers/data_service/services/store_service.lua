@@ -148,7 +148,7 @@ StoreService.get_credits_cosmetics_store = function (self)
 
 			if store_catalogue then
 				local store_data = store_catalogue.data
-				offers = store_data.personal
+				offers = store_data.public
 				current_rotation_end = store_data.currentRotationEnd
 			end
 

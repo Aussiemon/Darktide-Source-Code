@@ -38,32 +38,6 @@ templates.weapon_trait_bespoke_ogryn_heavystubber_p1_movement_speed_on_continous
 	},
 	continuous_fire_step = heavystubber_fire_step
 }, BaseWeaponTraitBuffTemplates.conditional_buff_on_continuous_fire)
-templates.weapon_trait_bespoke_ogryn_heavystubber_p1_ammo_from_reserve_on_crit = {
-	number_of_ammmo_from_reserve = 5,
-	force_predicted_proc = true,
-	predicted = false,
-	class_name = "proc_buff",
-	proc_events = {
-		[proc_events.on_critical_strike] = 1
-	},
-	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	start_func = function (template_data, template_context)
-		local item_slot_name = template_context.item_slot_name
-		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
-		template_data.inventory_slot_component = unit_data_extension:write_component(item_slot_name)
-	end,
-	proc_func = function (params, template_data, template_context)
-		local inventory_slot_component = template_data.inventory_slot_component
-		local current_ammunition_clip = inventory_slot_component.current_ammunition_clip
-		local current_ammunition_reserve = inventory_slot_component.current_ammunition_reserve
-		local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
-		local override_data = template_context.template_override_data
-		local number_of_bullets_to_move = override_data and override_data.number_of_ammmo_from_reserve or template_context.template.number_of_ammmo_from_reserve
-		local number_of_bullets_missing_from_clip = max_ammunition_clip - current_ammunition_clip
-		number_of_bullets_to_move = math.min(number_of_bullets_to_move, number_of_bullets_missing_from_clip, current_ammunition_reserve)
-		inventory_slot_component.current_ammunition_clip = current_ammunition_clip + number_of_bullets_to_move
-		inventory_slot_component.current_ammunition_reserve = current_ammunition_reserve - number_of_bullets_to_move
-	end
-}
+templates.weapon_trait_bespoke_ogryn_heavystubber_p1_ammo_from_reserve_on_crit = table.clone(BaseWeaponTraitBuffTemplates.move_ammo_from_reserve_to_clip_on_crit)
 
 return templates

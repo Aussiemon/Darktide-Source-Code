@@ -15,6 +15,23 @@ local event_vo_demolition_purser_a = {
 			3.112
 		},
 		randomize_indexes = {}
+	},
+	event_demolition_last_corruptor = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_purser_a__event_demolition_last_corruptor_a_01",
+			"loc_purser_a__event_demolition_last_corruptor_a_02",
+			"loc_purser_a__event_demolition_last_corruptor_a_03",
+			"loc_purser_a__event_demolition_last_corruptor_a_04"
+		},
+		sound_events_duration = {
+			2.690604,
+			3.847198,
+			2.599333,
+			3.581927
+		},
+		randomize_indexes = {}
 	}
 }
 

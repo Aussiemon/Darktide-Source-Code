@@ -350,9 +350,6 @@ end
 
 LuggableSynchronizerExtension._register_spawned_luggable = function (self, luggable_unit, spawner_unit, objective_name, objective_stage)
 	local luggable_objective_target_ext = ScriptUnit.extension(luggable_unit, "mission_objective_target_system")
-
-	luggable_objective_target_ext:set_objective_name(objective_name)
-
 	local should_spawn_with_marker = self._spawners_with_marker_on_start[spawner_unit]
 
 	if should_spawn_with_marker then

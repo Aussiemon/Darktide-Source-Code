@@ -16,18 +16,18 @@ pickup_settings.distribution_pool = {
 	rubberband_pool = {
 		ammo = {
 			small_clip = {
-				5,
-				5,
+				4,
+				4,
 				4,
 				3,
 				3
 			},
 			large_clip = {
-				1,
-				1,
-				1,
-				1,
-				1
+				2,
+				2,
+				2,
+				2,
+				2
 			},
 			ammo_cache_pocketable = {
 				2,
@@ -117,6 +117,22 @@ pickup_settings.distribution_pool = {
 				1,
 				1
 			}
+		},
+		forge_material = {
+			small_metal = {
+				4,
+				5,
+				5,
+				6,
+				7
+			},
+			large_metal = {
+				1,
+				1,
+				2,
+				3,
+				7
+			}
 		}
 	},
 	secondary = {
@@ -163,18 +179,18 @@ pickup_settings.distribution_pool = {
 		},
 		forge_material = {
 			small_metal = {
-				11,
+				7,
+				8,
+				9,
 				13,
-				14,
-				19,
-				23
+				16
 			},
 			large_metal = {
+				1,
 				2,
 				3,
-				5,
-				10,
-				23
+				7,
+				16
 			},
 			small_platinum = {
 				0,
@@ -195,7 +211,11 @@ pickup_settings.distribution_pool = {
 }
 pickup_settings.rubberband = {
 	special_block_distance = 0.2,
-	base_spawn_rate = 0.5,
+	base_spawn_rate = 1,
+	pocketable_weight = {
+		max = 1,
+		min = 0.4
+	},
 	status_weight = {
 		[pickup_settings.distribution_types.mid_event] = {
 			0.4,
@@ -206,26 +226,26 @@ pickup_settings.rubberband = {
 			1
 		},
 		[pickup_settings.distribution_types.primary] = {
-			0,
+			0.05,
 			1
 		},
 		[pickup_settings.distribution_types.secondary] = {
-			0,
+			0.05,
 			1
 		}
 	},
 	distribution_type_weight = {
 		ammo = {
-			[pickup_settings.distribution_types.mid_event] = 1.5,
-			[pickup_settings.distribution_types.end_event] = 1.8
+			[pickup_settings.distribution_types.mid_event] = 1.8,
+			[pickup_settings.distribution_types.end_event] = 2
 		},
 		grenade = {
 			[pickup_settings.distribution_types.mid_event] = 1.5,
 			[pickup_settings.distribution_types.end_event] = 2.5
 		},
 		health = {
-			[pickup_settings.distribution_types.mid_event] = 2,
-			[pickup_settings.distribution_types.end_event] = 3.5
+			[pickup_settings.distribution_types.mid_event] = 2.5,
+			[pickup_settings.distribution_types.end_event] = 4
 		}
 	}
 }

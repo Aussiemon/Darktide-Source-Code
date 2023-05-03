@@ -17,6 +17,9 @@ local mission_themes = {
 	noir = {
 		"content/levels/transit/missions/km_station_themes/noir_01/theme_noir_01_km_station"
 	},
+	ember = {
+		"content/levels/transit/missions/km_station_themes/ember_01/theme_ember_01_km_station"
+	},
 	darkness = {
 		"content/levels/transit/missions/km_station_themes/darkness_01/theme_darkness_01_km_station"
 	},

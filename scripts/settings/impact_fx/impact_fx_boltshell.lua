@@ -58,20 +58,12 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
 				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_damage_full",
-				only_1p = true
 			}
 		},
 		damage_reduced = {
 			{
 				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
 				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_damage_reduced",
-				only_1p = true
 			}
 		},
 		damage_negated = {
@@ -275,10 +267,6 @@ local armored = {
 			{
 				event = "wwise/events/weapon/play_bullet_hits_explosive_armored",
 				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_damage_full",
-				only_1p = true
 			}
 		},
 		damage_reduced = {
@@ -289,10 +277,6 @@ local armored = {
 			{
 				event = "wwise/events/weapon/play_bullet_hits_explosive_armored",
 				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_damage_reduced",
-				only_1p = true
 			}
 		},
 		damage_negated = {
@@ -494,10 +478,6 @@ local super_armor = {
 			{
 				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
 				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_damage_full",
-				only_1p = true
 			}
 		},
 		damage_reduced = {
@@ -540,10 +520,6 @@ local super_armor = {
 			{
 				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
 				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_damage_full",
-				only_1p = true
 			}
 		}
 	},
@@ -711,20 +687,12 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
 				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_damage_full",
-				only_1p = true
 			}
 		},
 		damage_reduced = {
 			{
 				event = "wwise/events/weapon/play_bullet_hits_explosive_gen",
 				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_damage_reduced",
-				only_1p = true
 			}
 		},
 		damage_negated = {
@@ -977,7 +945,7 @@ local default_surface_decal = {
 	Vector3(0.2, 0.2, 0.2),
 	Vector3(0.2, 0.2, 0.2),
 	{
-		"content/fx/units/decal_cross_01"
+		"content/fx/units/weapons/decal_cross_01"
 	}
 }
 local default_surface_fx = {

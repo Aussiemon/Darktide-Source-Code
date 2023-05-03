@@ -386,6 +386,16 @@ local settings_definitions = {
 		validation_function = function ()
 			return not IS_XBS
 		end
+	},
+	{
+		save_location = "interface_settings",
+		display_name = "loc_interface_setting_show_crafting_pickup_notification",
+		id = "show_crafting_pickup_notification",
+		default_value = true,
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			return
+		end
 	}
 }
 local settings = {}

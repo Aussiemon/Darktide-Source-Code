@@ -4,9 +4,7 @@ local TrainingGroundsServitorHandler = require("scripts/extension_systems/traini
 local Attack = require("scripts/utilities/attack/attack")
 local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local Health = require("scripts/utilities/health")
 local MinionDissolveUtility = require("scripts/extension_systems/scripted_scenario/minion_dissolve_utility")
-local PlayerMovement = require("scripts/utilities/player_movement")
 local ScriptedScenarios = require("scripts/extension_systems/scripted_scenario/scripted_scenarios")
 local TrainingGroundsSoundEvents = require("scripts/settings/training_grounds/training_grounds_sound_events")
 local ScriptedScenarioSystem = class("ScriptedScenarioSystem", "ExtensionSystemBase")
@@ -908,7 +906,7 @@ ScriptedScenarioSystem.start_parallel_scenario = function (self, alias, name, t)
 	local should_stop = self:_start_scenario(scenario, t)
 
 	if should_stop then
-		stop_parallel_scenario(alias, name, t)
+		self:stop_parallel_scenario(alias, name, t)
 	end
 end
 

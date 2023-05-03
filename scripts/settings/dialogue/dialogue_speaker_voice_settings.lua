@@ -227,6 +227,12 @@ local dialogue_speaker_voice_settings = {
 		icon = "content/ui/textures/icons/npc_portraits/mission_givers/melk_a",
 		player_voice = false
 	},
+	credit_store_servitor_a = {
+		full_name = "loc_npc_full_name_credit_store_servitor_b",
+		short_name = "loc_npc_short_name_credit_store_servitor_b",
+		subtitles_enabled = true,
+		player_voice = false
+	},
 	credit_store_servitor_b = {
 		full_name = "loc_npc_full_name_credit_store_servitor_a",
 		short_name = "loc_npc_short_name_credit_store_servitor_a",

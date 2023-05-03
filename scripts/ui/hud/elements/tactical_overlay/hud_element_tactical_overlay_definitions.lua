@@ -297,16 +297,17 @@ local left_panel_widgets_definitions = {
 			}
 		},
 		{
-			value = "content/ui/materials/icons/generic/danger",
 			value_id = "icon",
+			style_id = "icon",
 			pass_type = "texture",
+			value = "content/ui/materials/icons/generic/danger",
 			style = {
 				vertical_alignment = "top",
 				horizontal_alignment = "left",
 				color = Color.golden_rod(255, true),
 				offset = {
 					25,
-					10,
+					20,
 					2
 				},
 				size = {
@@ -321,7 +322,7 @@ local left_panel_widgets_definitions = {
 			pass_type = "text",
 			style = {
 				vertical_alignment = "top",
-				text_vertical_alignment = "top",
+				text_vertical_alignment = "center",
 				horizontal_alignment = "left",
 				text_horizontal_alignment = "left",
 				offset = {

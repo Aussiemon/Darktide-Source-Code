@@ -8,6 +8,7 @@ local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
+local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local HealthStateTransitions = require("scripts/extension_systems/character_state_machine/character_states/utilities/health_state_transitions")
 local HitMass = require("scripts/utilities/attack/hit_mass")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
@@ -63,10 +64,14 @@ PlayerCharacterStateSliding.on_enter = function (self, unit, dt, t, previous_sta
 
 	animation_extension:anim_event_1p("slide_in")
 	self._fx_extension:trigger_looping_wwise_event(self._sliding_loop_alias, FX_SOURCE_NAME)
+
+	local buff_extension = self._buff_extension
+
 	animation_extension:anim_event("slide_in")
 
-	self._movement_state_component.method = "sliding"
-	self._movement_state_component.is_dodging = true
+	local movement_state_component = self._movement_state_component
+	movement_state_component.method = "sliding"
+	movement_state_component.is_dodging = true
 	local game_mode_name = Managers.state.game_mode:game_mode_name()
 
 	if game_mode_name == TRAINING_GROUNDS_GAME_MODE_NAME then
@@ -79,7 +84,6 @@ PlayerCharacterStateSliding.on_enter = function (self, unit, dt, t, previous_sta
 	table.clear(self._hit_enemy_units)
 
 	self._slide_character_state_component.was_in_dodge_cooldown = t < self._dodge_character_state_component.consecutive_dodges_cooldown
-	local buff_extension = self._buff_extension
 	local param_table = buff_extension:request_proc_event_param_table()
 
 	if param_table then
@@ -94,6 +98,7 @@ PlayerCharacterStateSliding.on_exit = function (self, unit, t, next_state)
 
 	local movement_state_component = self._movement_state_component
 	movement_state_component.is_dodging = false
+	local buff_extension = self._buff_extension
 
 	if self._slide_character_state_component.was_in_dodge_cooldown then
 		local specialization_dodge_template = self._specialization_dodge_template
@@ -107,7 +112,6 @@ PlayerCharacterStateSliding.on_exit = function (self, unit, t, next_state)
 		self._first_person_extension:set_wanted_player_height("crouch", 0.3)
 	end
 
-	local buff_extension = self._buff_extension
 	local param_table = buff_extension:request_proc_event_param_table()
 
 	if param_table then
@@ -153,7 +157,9 @@ PlayerCharacterStateSliding.fixed_update = function (self, unit, dt, t, next_sta
 		local friction_function = self._slide_character_state_component.friction_function
 		local friction_speed = nil
 
-		if friction_function == "sprint" then
+		if buff_extension:has_keyword(buff_keywords.zero_slide_friction) then
+			friction_speed = 0
+		elseif friction_function == "sprint" then
 			friction_speed = self._constants.sprint_slide_friction_function(speed, time_in_action, buff_extension, weapon_template_or_nil)
 		else
 			friction_speed = self._constants.slide_friction_function(speed, time_in_action, buff_extension, weapon_template_or_nil)

@@ -213,10 +213,6 @@ local conversations_core_veteran_male_c = {
 			[1.0] = 2.394417,
 			[2.0] = 2.748771
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	conversation_explicator_two_b = {
@@ -515,10 +511,6 @@ local conversations_core_veteran_male_c = {
 			[1.0] = 3.668688,
 			[2.0] = 2.704073
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	conversation_sergeant_three_03 = {
@@ -604,10 +596,6 @@ local conversations_core_veteran_male_c = {
 		sound_events_duration = {
 			[1.0] = 3.58801,
 			[2.0] = 1.066802
-		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -2081,10 +2069,6 @@ local conversations_core_veteran_male_c = {
 		sound_events_duration = {
 			[1.0] = 3.217969,
 			[2.0] = 2.826135
-		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},
@@ -3564,10 +3548,6 @@ local conversations_core_veteran_male_c = {
 		sound_events_duration = {
 			[1.0] = 3.209646,
 			[2.0] = 3.7115
-		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
 		},
 		randomize_indexes = {}
 	},

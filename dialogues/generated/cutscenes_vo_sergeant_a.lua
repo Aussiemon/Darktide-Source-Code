@@ -50,7 +50,7 @@ local cutscenes_vo_sergeant_a = {
 			[1.0] = "loc_sergeant_a__cs_pot02_05"
 		},
 		sound_events_duration = {
-			[1.0] = 2.1
+			[1.0] = 2.345521
 		},
 		randomize_indexes = {}
 	},
@@ -138,7 +138,7 @@ local cutscenes_vo_sergeant_a = {
 			[1.0] = "loc_sergeant_a__cs_prologue_seven_06_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.699979
+			[1.0] = 3.675063
 		},
 		randomize_indexes = {}
 	},

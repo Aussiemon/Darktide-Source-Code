@@ -47,9 +47,9 @@ local talent_settings = {
 		},
 		toughness_2 = {
 			max_stacks = 3,
-			toughness = 0.15,
+			toughness = 0.2,
 			toughness_damage_taken_multiplier = 0.9,
-			duration = 6
+			duration = 8
 		},
 		toughness_3 = {
 			toughness = 0.005,
@@ -92,10 +92,10 @@ local talent_settings = {
 		},
 		offensive_2_2 = {
 			spread_modifier = -0.19,
-			stamina = 0.1,
+			stamina = 0.08,
 			critical_strike_chance = 0.25,
 			recoil_modifier = -0.12,
-			shot_stamina_percent = 0.05,
+			shot_stamina_percent = 0.04,
 			sway_modifier = 0.4
 		},
 		offensive_2_3 = {
@@ -106,7 +106,7 @@ local talent_settings = {
 			weakspot_damage = 0.5
 		},
 		combat_ability_3 = {
-			damage_vs_ogryn_and_monsters = 0.5
+			damage_vs_ogryn_and_monsters = 0.75
 		}
 	},
 	ogryn_shared = {
@@ -152,11 +152,11 @@ local talent_settings = {
 			toughness_bonus = 1
 		},
 		toughness_2 = {
-			toughness = 0.2,
+			toughness = 0.25,
 			on_sweep_finish_proc_chance = 1
 		},
 		toughness_3 = {
-			toughness = 0.2,
+			toughness = 0.25,
 			on_sweep_finish_proc_chance = 1
 		},
 		offensive_1 = {
@@ -165,7 +165,7 @@ local talent_settings = {
 		},
 		offensive_2 = {},
 		offensive_3 = {
-			stacks = 4
+			stacks = 6
 		},
 		coop_1 = {
 			coherency_aura_size_increase = 0.5
@@ -181,10 +181,10 @@ local talent_settings = {
 			cooldown = 0.1
 		},
 		defensive_1 = {
-			max_stacks = 5,
+			max_stacks = 6,
 			min = 1,
 			time = 1,
-			max = 0.5
+			max = 0.4
 		},
 		defensive_2 = {
 			min = 1,
@@ -252,7 +252,7 @@ local talent_settings = {
 		passive_1 = {
 			max_stacks = 3,
 			health_step = 0.15,
-			damage_per_step = 0.05
+			damage_per_step = 0.08
 		},
 		passive_2 = {
 			on_damage_taken_proc_chance = 1,
@@ -263,7 +263,7 @@ local talent_settings = {
 			melee_attack_speed = 0.1
 		},
 		toughness_1 = {
-			toughness_melee_replenish = 0.75
+			toughness_melee_replenish = 1
 		},
 		toughness_2 = {
 			toughness_damage_taken_multiplier = 0.5,
@@ -344,7 +344,7 @@ local talent_settings = {
 		combat_ability_2 = {
 			attack_speed = 0.2,
 			on_lunge_end_proc_chance = 1,
-			active_duration = 5
+			active_duration = 10
 		},
 		combat_ability_3 = {
 			max_charges = 2
@@ -393,7 +393,7 @@ local talent_settings = {
 			percent_toughness = 0.06
 		},
 		toughness_2 = {
-			percent_toughness = 0.1
+			percent_toughness = 0.15
 		},
 		toughness_3 = {
 			multiplier = 0.5

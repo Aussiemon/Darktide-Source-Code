@@ -1,6 +1,6 @@
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
-local ActionTargetAlly = class("ActionTargetAlly", "ActionAbilityBase")
+local ActionTargetAlly = class("ActionTargetAlly", "ActionBase")
 
 ActionTargetAlly.init = function (self, action_context, action_params, action_setting)
 	ActionTargetAlly.super.init(self, action_context, action_params, action_setting)
@@ -28,10 +28,23 @@ ActionTargetAlly.fixed_update = function (self, dt, t, time_in_action)
 	self:_find_target(time_in_action)
 end
 
+ActionTargetAlly.finish = function (self, reason, data, t, time_in_action)
+	ActionTargetAlly.super.finish(self, reason, data, t, time_in_action)
+
+	local action_setting = self._action_settings
+
+	if action_setting.clear_on_hold_release and reason == "hold_input_released" then
+		self._action_module_targeting_component.target_unit_1 = nil
+	end
+end
+
 ActionTargetAlly._find_target = function (self, time_in_action)
 	local smart_targeting_data = self._smart_targeting_extension:targeting_data()
 	local target_unit = smart_targeting_data.unit
-	self._action_module_targeting_component.target_unit_1 = target_unit
+
+	if target_unit ~= self._player_unit then
+		self._action_module_targeting_component.target_unit_1 = target_unit
+	end
 end
 
 return ActionTargetAlly

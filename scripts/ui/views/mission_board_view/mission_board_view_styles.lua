@@ -420,12 +420,12 @@ MissionBoardViewStyles.detail_widget_style = {
 		horizontal_alignment = "left",
 		color = MissionBoardViewSettings.color_accent,
 		size = {
-			42,
-			42
+			40,
+			40
 		},
 		offset = {
 			20,
-			15,
+			10,
 			3
 		}
 	},
@@ -451,9 +451,10 @@ MissionBoardViewStyles.detail_widget_style = {
 			4
 		},
 		size_addition = {
-			-75,
-			-10
-		}
+			-85,
+			0
+		},
+		size = {}
 	},
 	circumstance_description = {
 		line_spacing = 1,
@@ -465,9 +466,10 @@ MissionBoardViewStyles.detail_widget_style = {
 			30,
 			6
 		},
+		size = {},
 		size_addition = {
-			-75,
-			-30
+			-85,
+			0
 		}
 	}
 }

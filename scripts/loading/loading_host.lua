@@ -1,3 +1,7 @@
+local function _info(...)
+	Log.info("LoadingHost", ...)
+end
+
 local Loader = require("scripts/loading/loader")
 local LoadingHostStateMachine = require("scripts/loading/loading_host_state_machine")
 local LoadingRemoteStateMachine = require("scripts/loading/loading_remote_state_machine")
@@ -23,6 +27,8 @@ LoadingHost.init = function (self, network_delegate, loaders, connection_class_n
 	self._spawn_group = nil
 	self._spawn_peers = nil
 	self._state = "initial_spawn"
+
+	_info("Setting state %s", self._state)
 
 	self._done_loading_level_func = function (spawn_group, peer_id)
 		self._spawn_queue:loaded_level(spawn_group, peer_id)
@@ -103,6 +109,7 @@ LoadingHost.update = function (self, dt)
 			if self._state == "initial_spawn" then
 				self._state = "wait_for_end_load"
 
+				_info("Setting state %s", self._state)
 				Log.info("LoadingHost", "[update] LoadingTimes: Spawn Group Finished Loading Required Player Profile Packages for Initial Spawn")
 			elseif self._state == "hot_join" then
 				self:_trigger_spawn_group()
@@ -200,6 +207,8 @@ LoadingHost.stop_load_mission = function (self)
 	end
 
 	self._state = "initial_spawn"
+
+	_info("Setting state %s", self._state)
 end
 
 LoadingHost.first_group_ready = function (self)
@@ -228,6 +237,8 @@ LoadingHost._trigger_spawn_group = function (self)
 	end
 
 	self._state = "hot_join"
+
+	_info("Setting state %s", self._state)
 end
 
 return LoadingHost

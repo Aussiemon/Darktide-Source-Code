@@ -246,6 +246,10 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 				local spawn_failed_wait_time = template.spawn_failed_wait_time
 				local spawn_timer = spawn_failed_wait_time
 				specials_slot.spawn_timer = spawn_timer
+
+				Managers.server_metrics:add_annotation("special_failed_to_spawn", {
+					travel_distance = furthest_travel_distance
+				})
 			end
 		else
 			local foreshadow_stinger = specials_slot.foreshadow_stinger
@@ -975,6 +979,10 @@ SpecialsPacing.freeze = function (self, should_freeze)
 end
 
 SpecialsPacing.set_max_alive_specials_multiplier = function (self, multiplier)
+	if type(multiplier) == "table" then
+		multiplier = Managers.state.difficulty:get_table_entry_by_challenge(multiplier)
+	end
+
 	self._max_alive_specials_multiplier = multiplier
 	local template = self._template
 
@@ -989,6 +997,10 @@ end
 
 SpecialsPacing.set_chance_of_coordinated_strike = function (self, coordinated_strike_chance)
 	self._coordinated_strike_chance_override = coordinated_strike_chance
+end
+
+SpecialsPacing.set_coordinated_strike_num_breeds_override = function (self, coordinated_strike_num_breeds_override)
+	self._coordinated_strike_num_breeds_override = coordinated_strike_num_breeds_override
 end
 
 SpecialsPacing.set_max_of_same_override = function (self, max_of_same_override)

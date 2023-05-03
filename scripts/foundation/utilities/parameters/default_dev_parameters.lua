@@ -21,6 +21,7 @@ local categories = {
 	"Chunk Lod",
 	"Coherency",
 	"Combat Vector",
+	"Controller",
 	"Corruptors",
 	"Covers",
 	"Critical Strikes",
@@ -156,22 +157,6 @@ local params = {
 	},
 	debug_track_only_used_actions = {
 		value = true,
-		category = "Input"
-	},
-	debug_show_keyboard_mappings = {
-		value = true,
-		category = "Input"
-	},
-	debug_show_mouse_mappings = {
-		value = true,
-		category = "Input"
-	},
-	debug_show_xbox_mappings = {
-		value = false,
-		category = "Input"
-	},
-	debug_show_ps4_mappings = {
-		value = false,
 		category = "Input"
 	},
 	grab_mouse = {
@@ -693,6 +678,7 @@ params.physics_debug_filter = {
 		"filter_ladder_climb_collision",
 		"filter_minion_line_of_sight_check",
 		"filter_minion_shooting_geometry",
+		"filter_minion_shooting_no_friendly_fire",
 		"filter_player_character_melee_sweep",
 		"filter_player_character_ballistic_raycast",
 		"filter_player_character_shooting_projectile",
@@ -740,62 +726,27 @@ params.box_minion_collision = {
 params.character_profile_selector_placeholder = {
 	value = false,
 	category = "Player Character",
-	options = {
-		false,
-		1,
-		2,
-		3,
-		4,
-		5,
-		6,
-		7,
-		8
-	},
-	options_texts = {
-		"Use backend profile",
-		"Sharpshooter (Ranger)",
-		"Skullbreaker (Bonebreaker)",
-		"Preacher (Maniac)",
-		"Psykinetic (Biomancer)",
-		"Squad leader",
-		"Gun lugger",
-		"Preacher",
-		"Protectorate"
-	},
-	on_value_set = function (new_value, old_value)
-		if not new_value then
-			return
-		end
+	options_function = function ()
+		local options = {
+			false,
+			1,
+			2,
+			3,
+			4
+		}
 
-		local local_player = Managers.player:local_player(1)
+		return options
+	end,
+	options_texts_function = function ()
+		local options_texts = {
+			"Use backend profile",
+			"Sharpshooter (ranger)",
+			"Skullbreaker (bonebreaker)",
+			"Preacher (maniac)",
+			"Psykinetic (biomancer)"
+		}
 
-		if not local_player then
-			return
-		end
-
-		local peer_id = local_player:peer_id()
-		local local_player_id = local_player:local_player_id()
-		local ProfileUtils = require("scripts/utilities/profile_utils")
-		local MasterItems = require("scripts/backend/master_items")
-		local placeholder_profiles = ProfileUtils.placeholder_profiles(MasterItems.get_cached())
-		local wanted_profile = placeholder_profiles[new_value]
-		local character_id = wanted_profile.character_id
-
-		Managers.narrative:load_character_narrative(character_id):next(function ()
-			if Managers.state.game_session then
-				local is_server = Managers.state.game_session:is_server()
-
-				if is_server then
-					local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
-
-					profile_synchronizer_host:profile_changed_debug_placeholder_character_profile(peer_id, local_player_id, new_value)
-				else
-					local channel = Managers.connection:host_channel()
-
-					RPC.rpc_notify_profile_changed_debug_placeholder_character_profile(channel, peer_id, local_player_id, new_value)
-				end
-			end
-		end)
+		return options_texts
 	end
 }
 params.debug_character_interpolated_fixed_frame_movement = {
@@ -1010,6 +961,10 @@ params.disable_likely_stuck_implementation = {
 	category = "Player Character"
 }
 params.debug_push_velocity = {
+	value = false,
+	category = "Player Character"
+}
+params.add_constant_push = {
 	value = false,
 	category = "Player Character"
 }
@@ -1296,10 +1251,6 @@ params.debug_minion_buff_fx = {
 	category = "Buffs"
 }
 params.debug_boons = {
-	value = false,
-	category = "Buffs"
-}
-params.disable_boon_activation_at_start_of_mission = {
 	value = false,
 	category = "Buffs"
 }
@@ -1856,6 +1807,10 @@ params.renegade_captain_attack_selection_template_override = {
 		return _attack_selection_template_override_options("renegade_captain")
 	end
 }
+params.debug_taunting = {
+	value = false,
+	category = "Minion Attack Selection"
+}
 params.renegade_captain_custom_attack_selection_bolt_pistol_shoot = {
 	value = false,
 	category = "Minion Renegade Captain Custom Attack Selection"
@@ -2125,6 +2080,13 @@ params.calculate_offset_from_peeking_to_aiming_in_cover = {
 params.kill_debug_spawned_minions_outside_navmesh = {
 	value = true,
 	category = "Minions"
+}
+params.mute_minion_sounds = {
+	value = false,
+	category = "Minions",
+	on_value_set = function (new_value, old_value)
+		Wwise.set_state("debug_mute_minions", new_value and "true" or "None")
+	end
 }
 params.debug_stats = {
 	value = false,
@@ -2454,6 +2416,10 @@ params.immaterium_local_grpc = {
 }
 params.party_hash = {
 	value = false,
+	category = "Party"
+}
+params.reconnect_to_ongoing_game_session = {
+	value = true,
 	category = "Party"
 }
 params.verbose_party_log = {
@@ -4052,7 +4018,7 @@ params.disable_sway = {
 	category = "Weapon Handling"
 }
 params.weapon_traits_randomization_base = {
-	value = 0.5,
+	value = 0.4,
 	num_decimals = 3,
 	category = "Weapon Traits"
 }
@@ -4518,6 +4484,14 @@ params.premium_store_custom_time = {
 params.unlock_all_shooting_range_enemies = {
 	value = false,
 	category = "Shooting Range"
+}
+params.show_rumble_events = {
+	value = false,
+	category = "Controller"
+}
+params.max_num_rumble_events = {
+	value = 10,
+	category = "Controller"
 }
 params.category_log_levels = {
 	hidden = true,

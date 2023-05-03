@@ -1233,7 +1233,7 @@ local systems = {
 		false,
 		false,
 		false,
-		true,
+		false,
 		true,
 		{
 			"CutsceneCharacterExtension"
@@ -1294,7 +1294,7 @@ local systems = {
 		false,
 		true,
 		false,
-		false,
+		true,
 		false,
 		{
 			"ScriptableScenarioDirectionalUnitExtension"

@@ -1569,6 +1569,114 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "credit_store_servitor_distance_restocked",
+		category = "npc_prio_0",
+		response = "credit_store_servitor_distance_restocked",
+		database = "conversations_hub",
+		wwise_route = 19,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"credit_store_servitor_distance_restocked_b"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"zealot_female_a",
+					"zealot_female_b",
+					"zealot_female_c",
+					"zealot_male_a",
+					"zealot_male_b",
+					"zealot_male_c"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"credit_store_servitor"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"zealot_female_a",
+					"zealot_female_b",
+					"zealot_female_c",
+					"zealot_male_a",
+					"zealot_male_b",
+					"zealot_male_c"
+				}
+			},
+			{
+				"user_memory",
+				"credit_store_servitor_goodbye_b",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"credit_store_servitor_distance_restocked_b",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"credit_store_servitor_distance_restocked_b",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
 		name = "credit_store_servitor_distance_restocked_b",
 		category = "npc_prio_0",
 		response = "credit_store_servitor_distance_restocked_b",
@@ -1766,6 +1874,54 @@ return function ()
 		on_done = {}
 	})
 	define_rule({
+		name = "credit_store_servitor_goodbye",
+		category = "npc_prio_0",
+		response = "credit_store_servitor_goodbye",
+		database = "conversations_hub",
+		wwise_route = 19,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				""
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"",
+				OP.ADD,
+				1
+			}
+		}
+	})
+	define_rule({
 		name = "credit_store_servitor_goodbye_b",
 		category = "npc_prio_0",
 		response = "credit_store_servitor_goodbye_b",
@@ -1834,6 +1990,47 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "credit_store_servitor_hello",
+		category = "npc_prio_0",
+		response = "credit_store_servitor_hello",
+		database = "conversations_hub",
+		wwise_route = 40,
+		speaker_routing = {
+			target = "dialogist"
+		},
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				""
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
 		name = "credit_store_servitor_hello_b",
 		category = "npc_prio_0",
 		wwise_route = 40,
@@ -1870,6 +2067,85 @@ return function ()
 			}
 		},
 		on_done = {}
+	})
+	define_rule({
+		name = "credit_store_servitor_purchase",
+		category = "npc_prio_0",
+		wwise_route = 40,
+		response = "credit_store_servitor_purchase",
+		database = "conversations_hub",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_interacting_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"credit_store_servitor_purchase_b"
+			},
+			{
+				"query_context",
+				"interactor_voice_profile",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					""
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"zealot_female_a",
+					"zealot_female_b",
+					"zealot_female_c",
+					"zealot_male_a",
+					"zealot_male_b",
+					"zealot_male_c"
+				}
+			},
+			{
+				"user_memory",
+				"last_t",
+				OP.TIMEDIFF,
+				OP.GT,
+				30
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"last_",
+				OP.TIMESET
+			}
+		}
 	})
 	define_rule({
 		name = "credit_store_servitor_purchase_b",

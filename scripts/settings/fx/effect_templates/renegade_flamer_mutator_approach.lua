@@ -1,6 +1,6 @@
 local Effect = require("scripts/extension_systems/fx/utilities/effect")
 local MinionPerception = require("scripts/utilities/minion_perception")
-local APPROACH_SOUND_EVENT = "wwise/events/minions/play_cultist_flamer_proximity_warning"
+local APPROACH_SOUND_EVENT = "wwise/events//ui/play_ui_silence"
 local TARGET_NODE_NAME = "j_spine"
 local TRIGGER_DISTANCE = 25
 local RESTART_TRIGGER_DISTANCE = 28

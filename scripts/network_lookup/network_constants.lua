@@ -192,6 +192,7 @@ NetworkConstants.fixed_frame_offset_small = Network.type_info("fixed_frame_offse
 NetworkConstants.fixed_frame_offset_start_t_5bit = Network.type_info("fixed_frame_offset_start_t_5bit")
 NetworkConstants.fixed_frame_offset_start_t_6bit = Network.type_info("fixed_frame_offset_start_t_6bit")
 NetworkConstants.fixed_frame_offset_start_t_7bit = Network.type_info("fixed_frame_offset_start_t_7bit")
+NetworkConstants.fixed_frame_offset_start_t_9bit = Network.type_info("fixed_frame_offset_start_t_9bit")
 NetworkConstants.fixed_frame_offset_end_t_4bit = Network.type_info("fixed_frame_offset_end_t_4bit")
 NetworkConstants.fixed_frame_offset_end_t_6bit = Network.type_info("fixed_frame_offset_end_t_6bit")
 NetworkConstants.fixed_frame_offset_end_t_7bit = Network.type_info("fixed_frame_offset_end_t_7bit")

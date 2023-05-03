@@ -202,6 +202,9 @@ PortraitUI._handle_request_queue = function (self)
 
 					local active_request = self._active_request
 					local callbacks = active_request.callbacks
+
+					Log.info("PortraitUI", "[_handle_request_queue] spawned; profile: %s", tostring(active_request.character_id))
+
 					local grid_index = active_request.grid_index
 					local uvs = self:_grid_index_uvs(grid_index)
 					local size_scale_x = uvs[2][1] - uvs[1][1]
@@ -210,6 +213,7 @@ PortraitUI._handle_request_queue = function (self)
 					local position_scale_y = uvs[1][2]
 
 					if self._capture_render_target and self._icon_render_target and not self._shutting_down then
+						Log.info("PortraitUI", "[_handle_request_queue] copy_render_target_rect; character_id: %s", tostring(active_request.character_id))
 						Renderer.copy_render_target_rect(self._capture_render_target, 0, 0, 1, 1, self._icon_render_target, position_scale_x, position_scale_y, size_scale_x, size_scale_y)
 
 						for id, on_load_callback in pairs(callbacks) do
@@ -235,6 +239,7 @@ end
 
 PortraitUI._handle_next_request_in_queue = function (self)
 	if not self._world_spawner then
+		Log.info("PortraitUI", "[_handle_next_request_in_queue] create_render_target")
 		self:_initialize_world()
 
 		self._icon_render_target = Renderer.create_resource("render_target", "R8G8B8A8", nil, self._target_resolution_width, self._target_resolution_height, self._unique_id)
@@ -295,7 +300,8 @@ PortraitUI._spawn_profile = function (self, profile, render_context)
 	local world = world_spawner:world()
 	local camera = world_spawner:camera()
 	local unit_spawner = world_spawner:unit_spawner()
-	local profile_spawner = UIProfileSpawner:new("PortraitUI", world, camera, unit_spawner)
+	local verbose = true
+	local profile_spawner = UIProfileSpawner:new("PortraitUI", world, camera, unit_spawner, verbose)
 	self._profile_spawner = profile_spawner
 	local spawn_position = Unit.world_position(self._spawn_point_unit, 1)
 	local spawn_rotation = Unit.world_rotation(self._spawn_point_unit, 1)
@@ -305,7 +311,7 @@ PortraitUI._spawn_profile = function (self, profile, render_context)
 	local force_highest_mip = true
 	local disable_hair_state_machine = true
 
-	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, optional_state_machine, optional_animation_event, optional_face_animation_event, force_highest_mip, disable_hair_state_machine)
+	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation, nil, optional_state_machine, optional_animation_event, nil, optional_face_animation_event, force_highest_mip, disable_hair_state_machine)
 
 	local archetype = profile.archetype
 	local breed = archetype.breed
@@ -331,6 +337,8 @@ PortraitUI._spawn_profile = function (self, profile, render_context)
 			self._profile_spawner:wield_slot(wield_slot)
 		end
 	end
+
+	Log.info("PortraitUI", "[_spawn_profile] profile: %s", tostring(profile.character_id))
 end
 
 PortraitUI._initialize_world = function (self)
@@ -389,12 +397,16 @@ PortraitUI._setup_viewport = function (self, camera_unit, render_targets)
 end
 
 PortraitUI._resume_rendering = function (self)
+	Log.info("PortraitUI", "[_resume_rendering]")
+
 	local world_spawner = self._world_spawner
 
 	world_spawner:set_world_disabled(false)
 end
 
 PortraitUI._pause_rendering = function (self)
+	Log.info("PortraitUI", "[_pause_rendering]")
+
 	local world_spawner = self._world_spawner
 
 	world_spawner:set_world_disabled(true)

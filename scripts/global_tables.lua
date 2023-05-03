@@ -44,7 +44,6 @@ end
 UPDATE_RESOLUTION_LOOKUP()
 
 GLOBAL_RESOURCES = {
-	"content/minion_impact_assets",
 	"wwise/packages/vo_dependencies",
 	"content/characters/enemy/enemy_character_assets",
 	"content/liquid_area/liquid_area_assets",

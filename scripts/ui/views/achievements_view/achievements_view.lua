@@ -425,7 +425,7 @@ AchievementsView._populate_achievements_grid = function (self, achievements, gro
 			local is_feat_of_strength = achievement.type == AchievementUITypes.feat_of_strength
 			local related_commendation_ids = achievement.related_commendation_ids
 
-			if related_commendation_ids and (is_meta_achievement or is_completed) then
+			if related_commendation_ids then
 				achievement_context.widget_type = "foldout_achievement"
 				local all_achievements = self._achievements
 				local sub_achievements = {}
@@ -436,7 +436,13 @@ AchievementsView._populate_achievements_grid = function (self, achievements, gro
 					sub_achievements[#sub_achievements + 1] = related_achievement
 				end
 
-				achievement_context.sub_achievements = sub_achievements
+				local first_completed = sub_achievements[1] and sub_achievements[1].completed
+
+				if is_completed or is_meta_achievement or not first_completed then
+					achievement_context.sub_achievements = sub_achievements
+				else
+					achievement_context.widget_type = "normal_achievement"
+				end
 			else
 				achievement_context.widget_type = "normal_achievement"
 			end

@@ -182,13 +182,13 @@ Block.attempt_block_break = function (target_unit, attacking_unit, hit_world_pos
 	local weapon_template_id = NetworkLookup.weapon_templates[weapon_template.name]
 	local attack_type_id = NetworkLookup.attack_types[attack_type]
 
-	Block.player_blocked_attack(target_unit, attacking_unit, hit_world_position, block_broken, weapon_template, attack_type)
+	Block.player_blocked_attack(target_unit, attacking_unit, hit_world_position, block_broken, weapon_template, attack_type, block_cost)
 	Managers.state.game_session:send_rpc_clients("rpc_player_blocked_attack", unit_id, attacking_unit_id, hit_world_position, block_broken, weapon_template_id, attack_type_id)
 
 	return block_broken
 end
 
-Block.player_blocked_attack = function (target_unit, attacking_unit, hit_world_position, block_broken, weapon_template, attack_type)
+Block.player_blocked_attack = function (target_unit, attacking_unit, hit_world_position, block_broken, weapon_template, attack_type, block_cost)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local player = player_unit_spawn_manager:owner(target_unit)
 
@@ -199,7 +199,7 @@ Block.player_blocked_attack = function (target_unit, attacking_unit, hit_world_p
 	local weapon_extension = ScriptUnit.has_extension(target_unit, "weapon_system")
 
 	if weapon_extension then
-		weapon_extension:blocked_attack(attacking_unit, hit_world_position, block_broken, weapon_template, attack_type)
+		weapon_extension:blocked_attack(attacking_unit, hit_world_position, block_broken, weapon_template, attack_type, block_cost)
 	end
 end
 

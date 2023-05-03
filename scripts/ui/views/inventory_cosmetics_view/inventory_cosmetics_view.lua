@@ -59,8 +59,9 @@ InventoryCosmeticsView.init = function (self, settings, context)
 	self._presentation_profile.loadout = context.debug and {
 		slot_insignia = UISettings.insignia_default_texture
 	} or self._preview_profile_equipped_items and table.clone_instance(self._preview_profile_equipped_items)
+	local is_gear = not not string.find(self._selected_slot.name, "slot_gear") and self._selected_slot.name ~= "slot_gear_extra_cosmetic"
 	self._camera_zoomed_in = true
-	self._initialize_zoom = true
+	self._initialize_zoom = is_gear
 	self._sort_options = {
 		{
 			display_name = Localize("loc_inventory_item_grid_sort_title_name") .. " ",

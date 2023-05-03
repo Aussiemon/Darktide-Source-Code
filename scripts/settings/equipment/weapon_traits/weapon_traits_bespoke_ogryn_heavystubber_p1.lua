@@ -107,16 +107,16 @@ local templates = {
 	weapon_trait_bespoke_ogryn_heavystubber_p1_ammo_from_reserve_on_crit = {
 		weapon_trait_bespoke_ogryn_heavystubber_p1_ammo_from_reserve_on_crit = {
 			{
-				number_of_ammmo_from_reserve = 4
+				num_ammmo_to_move = 4
 			},
 			{
-				number_of_ammmo_from_reserve = 6
+				num_ammmo_to_move = 6
 			},
 			{
-				number_of_ammmo_from_reserve = 8
+				num_ammmo_to_move = 8
 			},
 			{
-				number_of_ammmo_from_reserve = 10
+				num_ammmo_to_move = 10
 			}
 		}
 	}

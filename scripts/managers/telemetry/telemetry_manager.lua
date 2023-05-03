@@ -38,7 +38,7 @@ TelemetryManager.register_event = function (self, event)
 		Log.debug("TelemetryManager", "Registered event '%s'", event)
 		table.insert(self._events, table.remove_empty_values(raw_event))
 	else
-		Log.warning("TelemetryManager", "Discarding event '%s', buffer is full!")
+		Log.warning("TelemetryManager", "Discarding event '%s', buffer is full!", event)
 	end
 end
 

@@ -18,7 +18,9 @@ WeaponSpecialDeactivateAfterNumActivations.update = function (self, dt, t)
 end
 
 WeaponSpecialDeactivateAfterNumActivations.process_hit = function (self, t, weapon, action_settings, num_hit_enemies, target_is_alive, target_unit, hit_position, attack_direction, abort_attack, optional_origin_slot)
-	self._inventory_slot_component.special_active_start_t = t
+	if target_is_alive then
+		self._inventory_slot_component.special_active_start_t = t
+	end
 end
 
 WeaponSpecialDeactivateAfterNumActivations.on_action_start = function (self, t, num_hit_enemies)

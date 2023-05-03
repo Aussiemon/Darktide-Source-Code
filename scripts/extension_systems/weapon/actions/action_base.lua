@@ -18,6 +18,7 @@ ActionBase.init = function (self, action_context, action_params, action_settings
 	self._smart_targeting_extension = action_context.smart_targeting_extension
 	self._unit_data_extension = action_context.unit_data_extension
 	self._dialogue_input = action_context.dialogue_input
+	self._input_manager = Managers.input
 	local weapon_action_component = action_context.weapon_action_component
 	self._weapon_action_component = weapon_action_component
 	self._first_person_component = action_context.first_person_component
@@ -29,6 +30,7 @@ ActionBase.init = function (self, action_context, action_params, action_settings
 	self._action_settings = action_settings
 	self._is_server = action_context.is_server
 	self._is_local_unit = action_context.is_local_unit
+	self._is_human_controlled = action_context.is_human_controlled
 	self._buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 end
 

@@ -24,6 +24,7 @@ _extract_circumstance_templates("scripts/settings/circumstance/templates/more_sp
 _extract_circumstance_templates("scripts/settings/circumstance/templates/more_hordes_circumstance_template")
 _extract_circumstance_templates("scripts/settings/circumstance/templates/more_monsters_circumstance_template")
 _extract_circumstance_templates("scripts/settings/circumstance/templates/more_witches_circumstance_template")
+_extract_circumstance_templates("scripts/settings/circumstance/templates/flash_mission_circumstance_template")
 
 for name, circumstance_data in pairs(circumstance_templates) do
 	circumstance_data.name = name

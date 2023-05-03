@@ -20,15 +20,12 @@ NetworkedTestCases = {
 		Testify:run_case(function (dt, t)
 			local settings = cjson.decode(case_settings or "{}")
 			local mission_key = settings.mission
+			local store_mission_in_cache = settings.store_mission_in_cache == true or false
 			local flags = settings.flags or {}
 			local output = TestifySnippets.check_flags_for_mission(flags, mission_key)
 
 			if output then
 				return output, true
-			end
-
-			if GameParameters.prod_like_backend and BUILD ~= "release" then
-				Testify:make_request("leave_party_immaterium")
 			end
 
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
@@ -38,6 +35,10 @@ NetworkedTestCases = {
 			Testify:make_request("accept_mission_board_vote")
 			Testify:make_request("wait_for_view", "lobby_view")
 			Testify:make_request("lobby_set_ready_status", true)
+
+			if store_mission_in_cache then
+				Testify:store_cache("last_mission_loaded", mission_key)
+			end
 		end)
 	end,
 	join_hub_on_hub_server = function ()
@@ -80,6 +81,12 @@ NetworkedTestCases = {
 				Testify:make_request_on_client(first_peer, "accept_join_party", true)
 				TestifySnippets.wait(1)
 			end
+		end)
+	end,
+	reach_gameplay_state_and_wait = function (duration)
+		Testify:run_case(function (dt, t)
+			Testify:make_request("wait_for_state_gameplay_reached")
+			TestifySnippets.wait(duration)
 		end)
 	end,
 	reach_mission_on_all_clients = function (num_peers)

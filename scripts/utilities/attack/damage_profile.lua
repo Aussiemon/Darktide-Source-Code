@@ -203,6 +203,22 @@ end
 
 DamageProfile.dropoff_scalar = function (hit_distance, damage_profile, lerp_values)
 	local dropoff_scalar = false
+	local min, max = DamageProfile.ranges(damage_profile, lerp_values)
+
+	if min and max then
+		if max <= hit_distance then
+			dropoff_scalar = 1
+		elseif hit_distance <= min then
+			dropoff_scalar = 0
+		else
+			dropoff_scalar = (hit_distance - min) / (max - min)
+		end
+	end
+
+	return dropoff_scalar
+end
+
+DamageProfile.ranges = function (damage_profile, lerp_values)
 	local ranges = damage_profile.ranges
 
 	if ranges then
@@ -222,16 +238,10 @@ DamageProfile.dropoff_scalar = function (hit_distance, damage_profile, lerp_valu
 			max = DamageProfile.lerp_damage_profile_entry(max, lerp_value)
 		end
 
-		if max <= hit_distance then
-			dropoff_scalar = 1
-		elseif hit_distance <= min then
-			dropoff_scalar = 0
-		else
-			dropoff_scalar = (hit_distance - min) / (max - min)
-		end
+		return min, max
 	end
 
-	return dropoff_scalar
+	return false, false
 end
 
 DamageProfile.boost_curve_multiplier = function (target_settings, boost_multiplier_name, damage_profile_lerp_values)

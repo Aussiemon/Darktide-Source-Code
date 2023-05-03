@@ -720,6 +720,54 @@ local volume_data = {
 		}
 	},
 	{
+		height = 2,
+		type = "content/volume_types/nav_tag_volumes/no_spawn",
+		name = "no_spawn_monster_wall_2",
+		alt_max_vector = {
+			-23.25,
+			13,
+			8.915931701660156
+		},
+		alt_min_vector = {
+			-23.25,
+			13,
+			6.9159321784973145
+		},
+		bottom_points = {
+			{
+				-25.25,
+				9.25,
+				6.9159321784973145
+			},
+			{
+				-21.5,
+				9.25,
+				6.9159321784973145
+			},
+			{
+				-21.5,
+				17.5,
+				6.9159321784973145
+			},
+			{
+				-25.25,
+				17.5,
+				6.9159321784973145
+			}
+		},
+		color = {
+			255,
+			120,
+			120,
+			255
+		},
+		up_vector = {
+			0,
+			0,
+			1
+		}
+	},
+	{
 		height = 20,
 		type = "content/volume_types/player_mover_blocker",
 		name = "volume_player_blocker_fix_003",
@@ -2033,54 +2081,6 @@ local volume_data = {
 			-5.199761289986782e-06,
 			7.307917258003727e-06,
 			2.0055320262908936
-		}
-	},
-	{
-		height = 2,
-		type = "content/volume_types/nav_tag_volumes/no_spawn",
-		name = "no_spawn_monster_wall_2",
-		alt_max_vector = {
-			-23.25,
-			13,
-			8.915931701660156
-		},
-		alt_min_vector = {
-			-23.25,
-			13,
-			6.9159321784973145
-		},
-		bottom_points = {
-			{
-				-25.25,
-				9.25,
-				6.9159321784973145
-			},
-			{
-				-21.5,
-				9.25,
-				6.9159321784973145
-			},
-			{
-				-21.5,
-				17.5,
-				6.9159321784973145
-			},
-			{
-				-25.25,
-				17.5,
-				6.9159321784973145
-			}
-		},
-		color = {
-			255,
-			120,
-			120,
-			255
-		},
-		up_vector = {
-			0,
-			0,
-			1
 		}
 	},
 	{

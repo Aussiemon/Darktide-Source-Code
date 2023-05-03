@@ -92,18 +92,6 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 
 		self:load_dialogue_resource(dialogue_filename)
 
-		self.global_context.circumstance_vo_id = "default"
-		local circumstance_template = CircumstanceTemplates[self._circumstance_name]
-		local dialogue_id = circumstance_template.dialogue_id
-
-		if dialogue_id then
-			local circumstance_vo_rule_file_name = DialogueSettings.default_rule_path .. dialogue_id
-
-			self:load_dialogue_resource(circumstance_vo_rule_file_name)
-
-			self.global_context.circumstance_vo_id = dialogue_id
-		end
-
 		local blocked_auto_load = DialogueSettings.blocked_auto_load_files[self._current_mission.name]
 
 		if not blocked_auto_load then
@@ -114,6 +102,22 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 
 		if level_specific_load_files then
 			self:load_dialogue_resources(level_specific_load_files)
+		end
+
+		self.global_context.circumstance_vo_id = "default"
+		local circumstance_template = CircumstanceTemplates[self._circumstance_name]
+		local dialogue_id = circumstance_template.dialogue_id
+
+		if dialogue_id then
+			local circumstance_load_files = circumstance_template.dialogue_load_files
+
+			if circumstance_load_files then
+				self:load_dialogue_resources(circumstance_load_files)
+			else
+				self:load_dialogue_resource(dialogue_id)
+			end
+
+			self.global_context.circumstance_vo_id = dialogue_id
 		end
 	else
 		self:load_dialogue_resources(auto_load_files)

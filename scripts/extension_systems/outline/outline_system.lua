@@ -294,6 +294,10 @@ OutlineSystem._hide_outline = function (self, unit, extension)
 end
 
 OutlineSystem._check_global_visibility = function (self)
+	if self._disabled then
+		return false
+	end
+
 	if self:_cinematic_active() then
 		return false
 	end
@@ -353,6 +357,10 @@ OutlineSystem.dropping_loadout_unit = function (self, unit, loadout_unit)
 			_set_material_layers(loadout_unit, visible_material_layers, false)
 		end
 	end
+end
+
+OutlineSystem.set_global_visibility = function (self, visible)
+	self._disabled = not visible
 end
 
 return OutlineSystem

@@ -12,7 +12,9 @@ BarrelOverheat.init = function (self, unit)
 end
 
 BarrelOverheat._set_barrel_overheat = function (self, value)
-	return
+	local overheat_value = math.lerp(self._overheat_min, self._overheat_max, value)
+
+	Unit.set_scalar_for_materials(self._unit, BARREL_OVERHEAT_MATERIAL_VARIABLE, overheat_value, true)
 end
 
 BarrelOverheat.enable = function (self, unit)

@@ -64,7 +64,7 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/enemies/renegade_captain/renegade_captain_shotgun_impact"
+					"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shotgun_impact"
 				}
 			}
 		},
@@ -76,7 +76,7 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/enemies/renegade_captain/renegade_captain_shotgun_impact"
+					"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shotgun_impact"
 				}
 			}
 		},
@@ -88,7 +88,7 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/enemies/renegade_captain/renegade_captain_shotgun_impact"
+					"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shotgun_impact"
 				}
 			}
 		},
@@ -100,7 +100,7 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/enemies/renegade_captain/renegade_captain_shotgun_impact"
+					"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shotgun_impact"
 				}
 			}
 		},
@@ -112,7 +112,7 @@ local unarmored = {
 			},
 			{
 				effects = {
-					"content/fx/particles/enemies/renegade_captain/renegade_captain_shotgun_impact"
+					"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shotgun_impact"
 				}
 			}
 		},
@@ -314,7 +314,7 @@ local disgustingly_resilient = {
 			},
 			{
 				effects = {
-					"content/fx/particles/enemies/renegade_captain/renegade_captain_shotgun_impact"
+					"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shotgun_impact"
 				}
 			}
 		},
@@ -326,7 +326,7 @@ local disgustingly_resilient = {
 			},
 			{
 				effects = {
-					"content/fx/particles/enemies/renegade_captain/renegade_captain_shotgun_impact"
+					"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shotgun_impact"
 				}
 			}
 		},
@@ -338,7 +338,7 @@ local disgustingly_resilient = {
 			},
 			{
 				effects = {
-					"content/fx/particles/enemies/renegade_captain/renegade_captain_shotgun_impact"
+					"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shotgun_impact"
 				}
 			}
 		},
@@ -350,7 +350,7 @@ local disgustingly_resilient = {
 			},
 			{
 				effects = {
-					"content/fx/particles/enemies/renegade_captain/renegade_captain_shotgun_impact"
+					"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shotgun_impact"
 				}
 			}
 		},
@@ -425,7 +425,7 @@ local player = {
 			},
 			{
 				effects = {
-					"content/fx/particles/enemies/renegade_captain/renegade_captain_shotgun_impact"
+					"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shotgun_impact"
 				}
 			}
 		},
@@ -437,14 +437,14 @@ local player = {
 			},
 			{
 				effects = {
-					"content/fx/particles/enemies/renegade_captain/renegade_captain_shotgun_impact"
+					"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shotgun_impact"
 				}
 			}
 		},
 		damage_reduced = {
 			{
 				effects = {
-					"content/fx/particles/enemies/renegade_captain/renegade_captain_shotgun_impact"
+					"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shotgun_impact"
 				}
 			}
 		},
@@ -456,7 +456,7 @@ local player = {
 			},
 			{
 				effects = {
-					"content/fx/particles/enemies/renegade_captain/renegade_captain_shotgun_impact"
+					"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shotgun_impact"
 				}
 			}
 		},
@@ -468,14 +468,14 @@ local player = {
 			},
 			{
 				effects = {
-					"content/fx/particles/enemies/renegade_captain/renegade_captain_shotgun_impact"
+					"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shotgun_impact"
 				}
 			}
 		},
 		blocked = {
 			{
 				effects = {
-					"content/fx/particles/enemies/renegade_captain/renegade_captain_shotgun_impact"
+					"content/fx/particles/impacts/enemies/renegade_captain/renegade_captain_shotgun_impact"
 				}
 			}
 		}
@@ -487,7 +487,7 @@ local default_surface_decal = {
 	Vector3(0.2, 0.2, 0.2),
 	Vector3(0.2, 0.2, 0.2),
 	{
-		"content/fx/units/decal_cross_01"
+		"content/fx/units/weapons/decal_cross_01"
 	}
 }
 local default_surface_fx = {

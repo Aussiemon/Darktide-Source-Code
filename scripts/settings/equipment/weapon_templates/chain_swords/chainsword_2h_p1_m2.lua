@@ -11,8 +11,6 @@ local HitZone = require("scripts/utilities/attack/hit_zone")
 local MeleeActionInputSetupMid = require("scripts/settings/equipment/weapon_templates/melee_action_input_setup_mid")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsChainsword2hP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_chainsword_2h_p1")
-local WeaponTraitsMeleeActivated = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_activated")
-local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
@@ -540,7 +538,7 @@ weapon_template.actions = {
 		damage_type = damage_types.sawing_2h,
 		damage_profile_on_abort = DamageProfileTemplates.default_light_chainsword_2h,
 		damage_type_on_abort = damage_types.sawing_2h,
-		damage_profile_special_active = DamageProfileTemplates.light_chainsword_active_2h,
+		damage_profile_special_active = DamageProfileTemplates.light_chainsword_active_2h_cleave,
 		damage_type_special_active = damage_types.sawing_stuck,
 		wounds_shape = wounds_shapes.left_45_slash_coarse,
 		wounds_shape_special_active = wounds_shapes.left_45_slash_coarse,
@@ -550,17 +548,18 @@ weapon_template.actions = {
 		}
 	},
 	action_left_heavy = {
-		range_mod = 1.25,
+		allowed_during_sprint = true,
 		kind = "sweep",
 		max_num_saved_entries = 20,
 		first_person_hit_anim = "hit_left_shake",
 		num_frames_before_process = 0,
-		allowed_during_sprint = true,
+		range_mod = 1.25,
 		damage_window_start = 0.16666666666666666,
 		damage_window_end = 0.36666666666666664,
 		anim_end_event = "attack_finished",
 		anim_event = "heavy_attack_left",
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_0_9",
+		uninterruptible = true,
 		hit_stop_anim = "hit_stop",
 		total_time = 1.5,
 		action_movement_curve = {
@@ -639,9 +638,9 @@ weapon_template.actions = {
 		damage_type = damage_types.sawing,
 		damage_profile_on_abort = DamageProfileTemplates.heavy_chainsword_2h,
 		damage_type_on_abort = damage_types.sawing,
-		damage_profile_special_active = DamageProfileTemplates.heavy_chainsword_active_2h,
+		damage_profile_special_active = DamageProfileTemplates.heavy_chainsword_active_2h_cleave,
 		damage_profile_special_active_on_abort = DamageProfileTemplates.heavy_chainsword_active_abort_2h,
-		damage_type_special_active = damage_types.sawing_stuck,
+		damage_type_special_active = damage_types.sawing,
 		action_armor_hit_mass_mod = {
 			[armor_types.berserker] = 3,
 			[armor_types.armored] = 0.75
@@ -847,9 +846,9 @@ weapon_template.actions = {
 		}
 	},
 	action_right_heavy = {
+		range_mod = 1.25,
 		kind = "sweep",
 		max_num_saved_entries = 20,
-		range_mod = 1.25,
 		first_person_hit_anim = "hit_right_shake",
 		num_frames_before_process = 0,
 		hit_armor_anim = "attack_hit_shield",
@@ -859,6 +858,7 @@ weapon_template.actions = {
 		anim_event = "heavy_attack_right",
 		weapon_handling_template = "time_scale_1",
 		attack_direction_override = "right",
+		uninterruptible = true,
 		hit_stop_anim = "hit_stop",
 		total_time = 1.5,
 		action_movement_curve = {
@@ -930,7 +930,7 @@ weapon_template.actions = {
 		damage_type = damage_types.sawing,
 		damage_profile_on_abort = DamageProfileTemplates.heavy_chainsword_2h,
 		damage_type_on_abort = damage_types.sawing,
-		damage_profile_special_active = DamageProfileTemplates.heavy_chainsword_active_2h,
+		damage_profile_special_active = DamageProfileTemplates.heavy_chainsword_active_2h_cleave,
 		damage_profile_special_active_on_abort = DamageProfileTemplates.heavy_chainsword_active_abort_2h,
 		damage_type_special_active = damage_types.sawing_stuck,
 		wounds_shape = wounds_shapes.horizontal_slash_coarse,
@@ -1580,7 +1580,7 @@ weapon_template.actions = {
 		deactivation_time = 0.1,
 		allowed_during_sprint = true,
 		skip_3p_anims = false,
-		total_time = 1,
+		total_time = 3,
 		allowed_chain_actions = {
 			combat_ability = {
 				action_name = "combat_ability"
@@ -1596,9 +1596,405 @@ weapon_template.actions = {
 				chain_time = 0.65
 			},
 			start_attack = {
-				action_name = "action_melee_start_left",
+				action_name = "action_melee_start_left_special",
 				chain_time = 0.65
 			}
+		}
+	},
+	action_melee_start_left_special = {
+		chain_anim_event = "heavy_charge_left",
+		anim_end_event = "attack_finished",
+		kind = "windup",
+		allowed_during_sprint = true,
+		anim_event = "heavy_charge_left",
+		hit_stop_anim = "hit_stop",
+		total_time = 3,
+		action_movement_curve = {
+			{
+				modifier = 0.75,
+				t = 0.05
+			},
+			{
+				modifier = 0.65,
+				t = 0.1
+			},
+			{
+				modifier = 0.5,
+				t = 0.25
+			},
+			{
+				modifier = 0.65,
+				t = 0.4
+			},
+			{
+				modifier = 0.65,
+				t = 0.5
+			},
+			{
+				modifier = 0.635,
+				t = 0.55
+			},
+			{
+				modifier = 0.3,
+				t = 1.2
+			},
+			start_modifier = 1
+		},
+		powered_weapon_intensity = {
+			{
+				intensity = 1,
+				t = 0.15
+			},
+			{
+				intensity = 0.25,
+				t = 0.25
+			},
+			{
+				intensity = 0.85,
+				t = 0.3
+			},
+			{
+				intensity = 0.9,
+				t = 0.65
+			},
+			{
+				intensity = 0.5,
+				t = 1.25
+			},
+			{
+				intensity = 0.8,
+				t = 2
+			},
+			start_intensity = 0.3
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
+			wield = {
+				action_name = "action_unwield"
+			},
+			light_attack = {
+				action_name = "action_ligth_1_special",
+				chain_time = 0.1
+			},
+			heavy_attack = {
+				action_name = "action_left_heavy",
+				chain_time = 0.4
+			},
+			block = {
+				action_name = "action_block"
+			},
+			special_action = {
+				action_name = "action_start_special"
+			}
+		},
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end
+	},
+	action_ligth_1_special = {
+		kind = "sweep",
+		attack_direction_override = "left",
+		allowed_during_sprint = true,
+		num_frames_before_process = 0,
+		max_num_saved_entries = 20,
+		damage_window_end = 0.4,
+		anim_end_event = "attack_finished",
+		first_person_hit_anim = "hit_down_shake",
+		weapon_handling_template = "time_scale_1",
+		range_mod = 1.25,
+		hit_armor_anim = "attack_hit_shield",
+		damage_window_start = 0.26666666666666666,
+		anim_event = "attack_left_diagonal_down",
+		hit_stop_anim = "hit_stop",
+		total_time = 1.3,
+		action_movement_curve = {
+			{
+				modifier = 1.25,
+				t = 0.2
+			},
+			{
+				modifier = 0.7,
+				t = 0.35
+			},
+			{
+				modifier = 0.4,
+				t = 0.5
+			},
+			{
+				modifier = 0.35,
+				t = 0.55
+			},
+			{
+				modifier = 1,
+				t = 0.6
+			},
+			start_modifier = 1.2
+		},
+		powered_weapon_intensity = {
+			{
+				intensity = 0.75,
+				t = 0.25
+			},
+			{
+				intensity = 0.9,
+				t = 0.4
+			},
+			{
+				intensity = 0.3,
+				t = 0.5
+			},
+			{
+				intensity = 0.2,
+				t = 1
+			},
+			start_intensity = 0.2
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
+			wield = {
+				action_name = "action_unwield"
+			},
+			start_attack = {
+				action_name = "action_melee_start_right_special",
+				chain_time = 0.7
+			},
+			block = {
+				action_name = "action_block",
+				chain_time = 0.5
+			},
+			special_action = {
+				action_name = "action_start_special",
+				chain_time = 0.5
+			}
+		},
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+		weapon_box = chain_sword_sweep_box,
+		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
+		hit_zone_priority = hit_zone_priority,
+		spline_settings = {
+			matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_left_diagonal_down",
+			anchor_point_offset = {
+				0.25,
+				0,
+				0.25
+			}
+		},
+		damage_profile = DamageProfileTemplates.default_light_chainsword_2h,
+		damage_type = damage_types.sawing_2h,
+		damage_profile_on_abort = DamageProfileTemplates.default_light_chainsword_2h,
+		damage_type_on_abort = damage_types.sawing_2h,
+		damage_profile_special_active = DamageProfileTemplates.light_chainsword_active_2h_cleave,
+		damage_type_special_active = damage_types.sawing_stuck,
+		wounds_shape = wounds_shapes.left_45_slash_coarse,
+		wounds_shape_special_active = wounds_shapes.left_45_slash_coarse,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed
+		}
+	},
+	action_melee_start_right_special = {
+		anim_end_event = "attack_finished",
+		kind = "windup",
+		anim_event = "heavy_charge_right",
+		hit_stop_anim = "hit_stop",
+		stop_input = "attack_cancel",
+		total_time = 3,
+		action_movement_curve = {
+			{
+				modifier = 0.75,
+				t = 0.05
+			},
+			{
+				modifier = 0.65,
+				t = 0.1
+			},
+			{
+				modifier = 0.5,
+				t = 0.25
+			},
+			{
+				modifier = 0.65,
+				t = 0.4
+			},
+			{
+				modifier = 0.65,
+				t = 0.5
+			},
+			{
+				modifier = 0.635,
+				t = 0.55
+			},
+			{
+				modifier = 0.3,
+				t = 1.2
+			},
+			start_modifier = 1
+		},
+		powered_weapon_intensity = {
+			{
+				intensity = 0.2,
+				t = 0.1
+			},
+			{
+				intensity = 1,
+				t = 0.3
+			},
+			{
+				intensity = 1,
+				t = 1.25
+			},
+			{
+				intensity = 0.5,
+				t = 1.5
+			},
+			start_intensity = 0.2
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
+			wield = {
+				action_name = "action_unwield"
+			},
+			light_attack = {
+				action_name = "action_light_2_special",
+				chain_time = 0
+			},
+			heavy_attack = {
+				action_name = "action_right_heavy",
+				chain_time = 0.65
+			},
+			block = {
+				action_name = "action_block"
+			},
+			special_action = {
+				action_name = "action_start_special",
+				chain_time = 0.4
+			}
+		},
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end
+	},
+	action_light_2_special = {
+		damage_window_start = 0.3,
+		hit_armor_anim = "attack_hit_shield",
+		range_mod = 1.25,
+		weapon_handling_template = "time_scale_0_85",
+		first_person_hit_anim = "hit_right_down_shake",
+		max_num_saved_entries = 20,
+		num_frames_before_process = 0,
+		damage_window_end = 0.4,
+		kind = "sweep",
+		anim_end_event = "attack_finished",
+		uninterruptible = true,
+		anim_event = "attack_right",
+		hit_stop_anim = "hit_stop",
+		total_time = 1.5,
+		action_movement_curve = {
+			{
+				modifier = 1.25,
+				t = 0.2
+			},
+			{
+				modifier = 0.7,
+				t = 0.35
+			},
+			{
+				modifier = 0.4,
+				t = 0.5
+			},
+			{
+				modifier = 0.35,
+				t = 0.55
+			},
+			{
+				modifier = 1,
+				t = 0.6
+			},
+			start_modifier = 1.2
+		},
+		powered_weapon_intensity = {
+			{
+				intensity = 0.5,
+				t = 0.25
+			},
+			{
+				intensity = 0.55,
+				t = 0.4
+			},
+			{
+				intensity = 0.3,
+				t = 0.5
+			},
+			{
+				intensity = 0.2,
+				t = 1
+			},
+			start_intensity = 0.2
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				action_name = "grenade_ability"
+			},
+			wield = {
+				action_name = "action_unwield"
+			},
+			start_attack = {
+				action_name = "action_melee_start_left",
+				chain_time = 0.71
+			},
+			block = {
+				action_name = "action_block",
+				chain_time = 0.55
+			},
+			special_action = {
+				action_name = "action_start_special",
+				chain_time = 0.55
+			}
+		},
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end,
+		hit_stickyness_settings_special_active = hit_stickyness_settings_light_special,
+		hit_zone_priority = hit_zone_priority,
+		weapon_box = chain_sword_sweep_box,
+		spline_settings = {
+			matrices_data_location = "content/characters/player/human/first_person/animations/2h_chain_sword/attack_right",
+			anchor_point_offset = {
+				0,
+				0,
+				-0
+			}
+		},
+		damage_profile = DamageProfileTemplates.default_light_chainsword_2h,
+		damage_type_on_abort = damage_types.sawing_2h,
+		damage_type = damage_types.sawing_2h,
+		damage_profile_special_active = DamageProfileTemplates.light_chainsword_active_2h_cleave,
+		damage_type_special_active = damage_types.sawing_stuck,
+		wounds_shape = wounds_shapes.horizontal_slash_coarse,
+		wounds_shape_special_active = wounds_shapes.horizontal_slash_coarse,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed
 		}
 	},
 	action_inspect = {
@@ -1617,14 +2013,6 @@ weapon_template.actions = {
 table.add_missing(weapon_template.actions, BaseTemplateSettings.actions)
 
 weapon_template.traits = {}
-local melee_common_traits = table.keys(WeaponTraitsMeleeCommon)
-
-table.append(weapon_template.traits, melee_common_traits)
-
-local melee_activated_traits = table.keys(WeaponTraitsMeleeActivated)
-
-table.append(weapon_template.traits, melee_activated_traits)
-
 local bespoke_chainsword_2h_p1_traits = table.keys(WeaponTraitsChainsword2hP1)
 
 table.append(weapon_template.traits, bespoke_chainsword_2h_p1_traits)
@@ -1642,8 +2030,8 @@ weapon_template.ammo_template = "no_ammo"
 weapon_template.allow_sprinting_with_special = true
 weapon_template.weapon_special_class = "WeaponSpecialDeactivateAfterNumActivations"
 weapon_template.weapon_special_tweak_data = {
-	active_duration = 4,
-	num_activations = 1
+	active_duration = 6,
+	num_activations = 2
 }
 weapon_template.fx_sources = {
 	_sticky = "fx_sawing",

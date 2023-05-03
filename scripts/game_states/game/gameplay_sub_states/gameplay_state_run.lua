@@ -2,7 +2,6 @@ local GameplayStateInterface = require("scripts/game_states/game/gameplay_sub_st
 local MissionCleanupUtilies = require("scripts/game_states/game/gameplay_sub_states/utilities/mission_cleanup_utilities")
 local StateGameplayTestify = GameParameters.testify and require("scripts/game_states/game/state_gameplay_testify")
 local UnitSpawnerManager = require("scripts/foundation/managers/unit_spawner/unit_spawner_manager")
-local WorldRenderUtils = require("scripts/utilities/world_render")
 local RUN_CLIENT_RPCS = {
 	"rpc_sync_clock"
 }
@@ -18,11 +17,6 @@ GameplayStateRun.on_enter = function (self, parent, params)
 	self._fixed_frame_parsed = false
 	self._max_dt = 0
 	self._fixed_frame_counter = 0
-	self._world_name = shared_state.world_name
-	self._viewport_name = "player1"
-	self._game_world_disabled = false
-	self._game_world_fullscreen_blur_enabled = false
-	self._game_world_fullscreen_blur_amount = 0
 	self._failed_clients = {}
 	self._delayed_disconnects = {}
 	self._crash_countdown = GameParameters.crash_countdown
@@ -49,28 +43,7 @@ GameplayStateRun.on_exit = function (self)
 
 	Managers.telemetry_events:gameplay_stopped()
 	MissionCleanupUtilies.cleanup(shared_state, gameplay_state)
-
-	REPORTIFY_NETWORK_READY = false
-
 	self:_unregister_run_network_events(is_server)
-end
-
-GameplayStateRun._do_activate_boons = function (self)
-	local shared_state = self._shared_state
-	local is_server = shared_state.is_server
-
-	if not is_server then
-		return false
-	end
-
-	local game_mode_name = Managers.state.game_mode:game_mode_name()
-	local game_mode_hub = game_mode_name == "hub"
-
-	if game_mode_hub then
-		return false
-	end
-
-	return true
 end
 
 GameplayStateRun.update = function (self, main_dt, main_t)
@@ -100,11 +73,6 @@ GameplayStateRun.update = function (self, main_dt, main_t)
 	Managers.state.position_lookup:pre_update()
 	Managers.state.out_of_bounds:pre_update(shared_state)
 	Managers.state.bone_lod:pre_update()
-
-	if not is_dedicated_server then
-		self:_handle_world_fullscreen_blur()
-		self:_handle_world_enabled_state()
-	end
 
 	local gameplay_timer_registered = self._gameplay_timer_registered
 	local t = gameplay_timer_registered and Managers.time:time("gameplay")
@@ -232,47 +200,6 @@ GameplayStateRun._unregister_run_network_events = function (self, is_server)
 		local network_event_delegate = connection_manager:network_event_delegate()
 
 		network_event_delegate:unregister_events(unpack(RUN_CLIENT_RPCS))
-	end
-end
-
-GameplayStateRun._handle_world_fullscreen_blur = function (self)
-	local ui_manager = Managers.ui
-
-	if ui_manager then
-		local apply_blur, blur_amount = ui_manager:use_fullscreen_blur()
-
-		if apply_blur ~= self._game_world_fullscreen_blur_enabled or self._game_world_fullscreen_blur_amount ~= blur_amount then
-			local world_name = self._world_name
-			local viewport_name = self._viewport_name
-			self._game_world_fullscreen_blur_enabled = apply_blur
-			self._game_world_fullscreen_blur_amount = blur_amount
-
-			if apply_blur then
-				WorldRenderUtils.enable_world_fullscreen_blur(world_name, viewport_name, blur_amount)
-			else
-				WorldRenderUtils.disable_world_fullscreen_blur(world_name, viewport_name)
-			end
-		end
-	end
-end
-
-GameplayStateRun._handle_world_enabled_state = function (self)
-	local ui_manager = Managers.ui
-
-	if ui_manager then
-		local disable_game_world = ui_manager:disable_game_world()
-
-		if disable_game_world ~= self._game_world_disabled then
-			local world_name = self._world_name
-			local viewport_name = self._viewport_name
-			self._game_world_disabled = disable_game_world
-
-			if disable_game_world then
-				WorldRenderUtils.deactivate_world(world_name, viewport_name)
-			else
-				WorldRenderUtils.activate_world(world_name, viewport_name)
-			end
-		end
 	end
 end
 

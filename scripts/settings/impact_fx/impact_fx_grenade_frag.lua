@@ -15,7 +15,7 @@ local default_armor_decal = {
 		}
 	},
 	units = {
-		"content/fx/units/vfx_decal_plasma_scorchmark"
+		"content/fx/units/weapons/vfx_decal_plasma_scorchmark"
 	}
 }
 local unarmored = {
@@ -85,18 +85,84 @@ local unarmored = {
 	},
 	blood_ball = {}
 }
-local armored = table.clone(unarmored)
-local super_armor = table.clone(unarmored)
+local armored = {
+	sfx = {
+		weakspot_died = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_armored",
+				append_husk_to_event_name = true
+			}
+		},
+		died = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_armored",
+				append_husk_to_event_name = true
+			}
+		},
+		weakspot_damage = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_armored",
+				append_husk_to_event_name = true
+			}
+		},
+		damage = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_armored",
+				append_husk_to_event_name = true
+			}
+		},
+		damage_reduced = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_armored",
+				append_husk_to_event_name = true
+			}
+		},
+		damage_negated = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_damage_negate",
+				append_husk_to_event_name = false
+			}
+		},
+		shield_blocked = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_damage_negate",
+				append_husk_to_event_name = false
+			}
+		},
+		blocked = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_damage_negate",
+				append_husk_to_event_name = false
+			}
+		},
+		dead = {
+			{
+				event = "wwise/events/weapon/play_grenade_hits_armored",
+				append_husk_to_event_name = true
+			}
+		}
+	},
+	vfx = {},
+	linked_decal = {
+		weakspot_died = default_armor_decal,
+		died = default_armor_decal,
+		weakspot_damage = default_armor_decal,
+		damage = default_armor_decal,
+		damage_reduced = default_armor_decal
+	},
+	blood_ball = {}
+}
+local super_armor = table.clone(armored)
 local disgustingly_resilient = table.clone(unarmored)
 local resistant = table.clone(unarmored)
-local berserker = table.clone(unarmored)
-local prop_armor = table.clone(unarmored)
+local berserker = table.clone(armored)
+local prop_armor = table.clone(armored)
 local player = table.clone(unarmored)
 local default_surface_decal = {
 	Vector3(0.2, 0.2, 0.2),
 	Vector3(0.2, 0.2, 0.2),
 	{
-		"content/fx/units/decal_cross_01"
+		"content/fx/units/weapons/decal_cross_01"
 	}
 }
 local default_surface_fx = {

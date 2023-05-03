@@ -455,8 +455,8 @@ damage_templates.force_staff_bash = {
 	ragdoll_only = true,
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
-	gibbing_power = GibbingPower.light,
-	gibbing_type = GibbingTypes.default,
+	gibbing_power = GibbingPower.always,
+	gibbing_type = GibbingTypes.ballistic,
 	melee_attack_strength = melee_attack_strengths.light,
 	damage_type = damage_types.bash,
 	armor_damage_modifier = {
@@ -574,6 +574,9 @@ damage_templates.force_staff_bash = {
 				[armor_types.prop_armor] = 0.5
 			}
 		}
+	},
+	critical_strike = {
+		gibbing_type = GibbingTypes.crushing
 	}
 }
 local assault_warpfire_armor_mod = {

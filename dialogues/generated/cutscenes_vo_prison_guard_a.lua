@@ -50,7 +50,7 @@ local cutscenes_vo_prison_guard_a = {
 			[1.0] = "loc_prison_guard_a__cs_prologue_two_09_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.833313
+			[1.0] = 3.874021
 		},
 		randomize_indexes = {}
 	},
@@ -61,7 +61,7 @@ local cutscenes_vo_prison_guard_a = {
 			[1.0] = "loc_prison_guard_a__cs_prologue_two_11_01"
 		},
 		sound_events_duration = {
-			[1.0] = 5.133313
+			[1.0] = 4.9595
 		},
 		sound_event_weights = {
 			[1.0] = 1
@@ -75,7 +75,7 @@ local cutscenes_vo_prison_guard_a = {
 			[1.0] = "loc_prison_guard_a__cs_prologue_two_13_01"
 		},
 		sound_events_duration = {
-			[1.0] = 2.666021
+			[1.0] = 2.557542
 		},
 		sound_event_weights = {
 			[1.0] = 1

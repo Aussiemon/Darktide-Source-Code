@@ -35,6 +35,7 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	self._wwise_world = wwise_world
 	local physics_world = extension_init_context.physics_world
 	self._physics_world = physics_world
+	self._input_manager = Managers.input
 	local fp_ext = ScriptUnit.extension(unit, "first_person_system")
 	self._first_person_extension = fp_ext
 	local input_extension = ScriptUnit.extension(unit, "input_system")
@@ -106,6 +107,7 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 
 	local is_local_unit = extension_init_data.is_local_unit
 	self._is_local_unit = is_local_unit
+	self._is_human_controlled = extension_init_data.is_human_unit
 	self._weapons = {}
 	self._base_ammo_by_slot = {}
 	self._base_clip_by_slot = {}
@@ -146,6 +148,7 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 	local action_shoot = unit_data_extension:write_component("action_shoot")
 	action_shoot.fire_state = "shot"
 	action_shoot.fire_at_time = 0
+	action_shoot.fire_last_t = 0
 	action_shoot.num_shots_fired = 0
 	action_shoot.started_from_sprint = false
 	action_shoot.shooting_charge_level = 0
@@ -243,6 +246,7 @@ PlayerUnitWeaponExtension.extensions_ready = function (self, world, unit)
 		player_unit = self._unit,
 		is_server = self._is_server,
 		is_local_unit = self._is_local_unit,
+		is_human_controlled = self._is_human_controlled,
 		unit_data_extension = self._unit_data_extension,
 		first_person_extension = first_person_extension,
 		fx_extension = fx_extension,
@@ -513,6 +517,7 @@ PlayerUnitWeaponExtension.on_slot_wielded = function (self, slot_name, t, skip_w
 	weapon_tweak_templates_component.size_of_flame_template_name = weapon_template.size_of_flame_template or "none"
 
 	action_handler:set_active_template("weapon_action", weapon_template.name)
+	Wwise.set_state("wielded_weapon", weapon_template.name)
 
 	if not skip_wield_action then
 		self:_start_action(action_name, action_settings, t, false, "on_slot_wielded")
@@ -664,7 +669,7 @@ function _get_block_anim_event(weapon_template, attack_type, event_name)
 	return event_name
 end
 
-PlayerUnitWeaponExtension.blocked_attack = function (self, attacking_unit, hit_world_position, block_broken, weapon_template, attack_type)
+PlayerUnitWeaponExtension.blocked_attack = function (self, attacking_unit, hit_world_position, block_broken, weapon_template, attack_type, block_cost)
 	local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
 	local wanted_weapon_template_name = weapon_template.name
 	local current_weapon_template_name = weapon.weapon_template.name
@@ -690,6 +695,7 @@ PlayerUnitWeaponExtension.blocked_attack = function (self, attacking_unit, hit_w
 	if param_table then
 		param_table.block_broken = block_broken
 		param_table.attacking_unit = attacking_unit
+		param_table.block_cost = block_cost
 
 		buff_extension:add_proc_event(proc_events.on_block, param_table)
 	end

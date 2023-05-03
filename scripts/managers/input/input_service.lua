@@ -1,30 +1,26 @@
 local InputFilters = require("scripts/managers/input/input_filters")
-local NullInputService = require("scripts/managers/input/null_input_service")
 local InputUtils = require("scripts/managers/input/input_utils")
+local NullInputService = require("scripts/managers/input/null_input_service")
 local InputService = class("InputService")
 InputService.DEBUG_TAG = "Input Service"
 
-local function _log(str, ...)
-	Log.info(InputService.DEBUG_TAG, str, ...)
-end
-
-local function default_boolean()
+local function _default_boolean()
 	return false
 end
 
-local function default_vector3()
+local function _default_vector3()
 	return Vector3(0, 0, 0)
 end
 
-local function default_float()
+local function _default_float()
 	return 0
 end
 
-local function boolean_combine(value_one, value_two)
+local function _boolean_combine(value_one, value_two)
 	return value_one or value_two
 end
 
-local function vector3_combine(value_one, value_two)
+local function _vector3_combine(value_one, value_two)
 	if Vector3.length(value_two) < Vector3.length(value_one) then
 		return value_one
 	else
@@ -32,7 +28,7 @@ local function vector3_combine(value_one, value_two)
 	end
 end
 
-local function float_combine(value_one, value_two)
+local function _float_combine(value_one, value_two)
 	return math.max(value_one, value_two)
 end
 
@@ -40,32 +36,32 @@ InputService.ACTION_TYPES = InputService.ACTION_TYPES or {
 	pressed = {
 		device_func = "pressed",
 		type = "boolean",
-		default_device_func = default_boolean,
-		combine_func = boolean_combine
+		default_device_func = _default_boolean,
+		combine_func = _boolean_combine
 	},
 	held = {
 		device_func = "held",
 		type = "boolean",
-		default_device_func = default_boolean,
-		combine_func = boolean_combine
+		default_device_func = _default_boolean,
+		combine_func = _boolean_combine
 	},
 	released = {
 		device_func = "released",
 		type = "boolean",
-		default_device_func = default_boolean,
-		combine_func = boolean_combine
+		default_device_func = _default_boolean,
+		combine_func = _boolean_combine
 	},
 	axis = {
 		device_func = "axis",
 		type = "vector3",
-		default_device_func = default_vector3,
-		combine_func = vector3_combine
+		default_device_func = _default_vector3,
+		combine_func = _vector3_combine
 	},
 	button = {
 		device_func = "button",
 		type = "float",
-		default_device_func = default_float,
-		combine_func = float_combine
+		default_device_func = _default_float,
+		combine_func = _float_combine
 	}
 }
 
@@ -196,8 +192,8 @@ InputService._corresponding_device = function (self, name)
 	end
 end
 
-InputService.update = function (self, t, dt)
-	self:_evaluate_filters(t, dt)
+InputService.update = function (self, dt, t)
+	self:_evaluate_filters(dt, t)
 
 	self._last_time = t
 end
@@ -206,7 +202,7 @@ InputService.on_reload = function (self)
 	self:_rework_actions()
 end
 
-InputService._evaluate_filters = function (self, t, dt)
+InputService._evaluate_filters = function (self, dt, t)
 	for action_name, action_rule in pairs(self._actions) do
 		if action_rule.filter then
 			action_rule.eval_obj.current_value = nil
@@ -220,7 +216,7 @@ InputService.action_rule = function (self, action_name)
 	return action_rule
 end
 
-InputService.reverse_lookup = function (self, action_name, device_types)
+InputService.reverse_lookup = function (self, action_name)
 	local action_rule = self._actions[action_name]
 
 	return action_rule.debug_info
@@ -370,7 +366,7 @@ InputService.device = function (self, device_type)
 	end
 end
 
-InputService.devices = function (self, device_type)
+InputService.devices = function (self)
 	return self._connected_devices
 end
 

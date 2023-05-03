@@ -1,5 +1,6 @@
 local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
+local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local HealthStateTransitions = require("scripts/extension_systems/character_state_machine/character_states/utilities/health_state_transitions")
 local Interrupt = require("scripts/utilities/attack/interrupt")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")

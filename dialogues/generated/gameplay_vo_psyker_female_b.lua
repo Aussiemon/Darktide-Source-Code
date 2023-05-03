@@ -315,14 +315,6 @@ local gameplay_vo_psyker_female_b = {
 			1.279042,
 			1.169188
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	critical_health = {
@@ -816,18 +808,6 @@ local gameplay_vo_psyker_female_b = {
 			2.564396,
 			2.082604,
 			0.941208
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -1500,13 +1480,6 @@ local gameplay_vo_psyker_female_b = {
 			2.162083,
 			2.190813
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	found_health_booster_ogryn_low_on_health = {
@@ -1831,18 +1804,6 @@ local gameplay_vo_psyker_female_b = {
 			1.804292,
 			2.337042,
 			3.903792
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -2357,18 +2318,6 @@ local gameplay_vo_psyker_female_b = {
 			1.913792,
 			2.801479,
 			2.449271
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -3532,13 +3481,6 @@ local gameplay_vo_psyker_female_b = {
 			4.075958,
 			1.380417
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	response_for_psyker_disabled_by_chaos_hound = {
@@ -3852,13 +3794,6 @@ local gameplay_vo_psyker_female_b = {
 			1.719521,
 			2.437125,
 			1.630729
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -4186,18 +4121,6 @@ local gameplay_vo_psyker_female_b = {
 			3.608583,
 			2.355646,
 			2.011708
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},

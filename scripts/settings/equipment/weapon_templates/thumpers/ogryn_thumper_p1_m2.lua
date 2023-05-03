@@ -436,6 +436,7 @@ weapon_template.actions = {
 		start_input = "bash",
 		kind = "sweep",
 		sprint_requires_press_to_interrupt = true,
+		first_person_hit_anim = "hit_left_shake",
 		first_person_hit_stop_anim = "attack_hit",
 		crosshair_type = "dot",
 		range_mod = 1.15,
@@ -538,12 +539,13 @@ weapon_template.actions = {
 		hit_armor_anim = "attack_hit_shield",
 		crosshair_type = "dot",
 		sprint_requires_press_to_interrupt = true,
+		first_person_hit_anim = "hit_right_shake",
 		range_mod = 1.15,
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
 		kind = "sweep",
-		attack_direction_override = "right",
 		damage_window_end = 0.8,
+		attack_direction_override = "right",
 		abort_sprint = true,
 		uninterruptible = true,
 		anim_event = "attack_bash_right",
@@ -819,75 +821,6 @@ local bespoke_traits = table.keys(WeaponTraitsBespokeThumperP2)
 
 table.append(weapon_template.traits, bespoke_traits)
 
-weapon_template.perks = {
-	ogryn_thumper_p1_m2_ammo_perk = {
-		display_name = "loc_trait_display_ogryn_thumper_p1_m2_ammo_perk",
-		ammo = {
-			base = {
-				ammo_trait_templates.default_explosive_ammo_perk
-			}
-		}
-	},
-	ogryn_thumper_p1_m2_explosion_damage_perk = {
-		display_name = "loc_trait_display_ogryn_thumper_p1_m2_explosion_damage_perk",
-		explosion = {
-			action_shoot_hip = {
-				explosion_trait_templates.dafault_explosion_damage_perk
-			},
-			action_shoot_zoomed = {
-				explosion_trait_templates.dafault_explosion_damage_perk
-			}
-		},
-		damage = {
-			action_shoot_hip = {
-				damage_trait_templates.ogryn_thumper_p1_m2_explosion_damage_perk
-			},
-			action_shoot_zoomed = {
-				damage_trait_templates.ogryn_thumper_p1_m2_explosion_damage_perk
-			}
-		}
-	},
-	ogryn_thumper_p1_m2_explosion_size_perk = {
-		display_name = "loc_trait_display_ogryn_thumper_p1_m2_explosion_size_perk",
-		explosion = {
-			action_shoot_hip = {
-				explosion_trait_templates.default_explosion_size_perk
-			},
-			action_shoot_zoomed = {
-				explosion_trait_templates.default_explosion_size_perk
-			}
-		}
-	},
-	thumper_p1_m2_mobility_perk = {
-		display_name = "loc_trait_display_thumper_p1_m2_mobility_perk",
-		dodge = {
-			base = {
-				dodge_trait_templates.default_dodge_perk
-			}
-		},
-		sprint = {
-			base = {
-				sprint_trait_templates.default_sprint_perk
-			}
-		},
-		movement_curve_modifier = {
-			base = {
-				movement_curve_modifier_trait_templates.default_movement_curve_modifier_perk
-			}
-		}
-	},
-	ogryn_thumper_p1_m2_explosion_antiarmor_perk = {
-		display_name = "loc_trait_display_ogryn_thumper_p1_m2_explosion_antiarmor_perk",
-		damage = {
-			action_shoot_hip = {
-				damage_trait_templates.ogryn_thumper_p1_m2_explosion_antiarmor_perk
-			},
-			action_shoot_zoomed = {
-				damage_trait_templates.ogryn_thumper_p1_m2_explosion_antiarmor_perk
-			}
-		}
-	}
-}
 weapon_template.displayed_keywords = {
 	{
 		display_name = "loc_weapon_keyword_explosive"

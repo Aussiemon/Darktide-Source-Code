@@ -249,6 +249,21 @@ InteracteeExtension.interaction_length = function (self)
 	return override_context.duration or interaction:duration()
 end
 
+InteracteeExtension.set_missing_players = function (self, is_missing)
+	if is_missing then
+		self:set_block_text("loc_action_interaction_generic_missing_players")
+	else
+		self:set_block_text(nil)
+	end
+
+	if self._is_server then
+		local unit_id = self._unit_id
+		local is_level_unit = self._is_level_unit
+
+		Managers.state.game_session:send_rpc_clients("rpc_interaction_set_missing_player", unit_id, is_level_unit, is_missing)
+	end
+end
+
 InteracteeExtension.display_start_event = function (self)
 	local active_interaction_type = self._active_interaction_type
 

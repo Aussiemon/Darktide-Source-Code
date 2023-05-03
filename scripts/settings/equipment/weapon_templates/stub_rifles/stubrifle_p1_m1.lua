@@ -6,8 +6,6 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
-local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
-local WeaponTraitsRangedAimed = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_aimed")
 local damage_types = DamageSettings.damage_types
 local buff_stat_buffs = BuffSettings.stat_buffs
 local wield_inputs = PlayerCharacterConstants.wield_inputs
@@ -670,12 +668,5 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "assault"
 weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
 weapon_template.traits = {}
-local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
-
-table.append(weapon_template.traits, ranged_common_traits)
-
-local ranged_aimed_traits = table.keys(WeaponTraitsRangedAimed)
-
-table.append(weapon_template.traits, ranged_aimed_traits)
 
 return weapon_template

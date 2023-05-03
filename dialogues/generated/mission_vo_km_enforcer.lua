@@ -629,10 +629,10 @@ return function ()
 	})
 	define_rule({
 		name = "mission_enforcer_first_objective_response",
-		category = "conversations_prio_0",
 		wwise_route = 0,
 		response = "mission_enforcer_first_objective_response",
 		database = "mission_vo_km_enforcer",
+		category = "conversations_prio_0",
 		criterias = {
 			{
 				"query_context",
@@ -650,6 +650,9 @@ return function ()
 			}
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2

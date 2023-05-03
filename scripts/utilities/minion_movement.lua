@@ -297,6 +297,27 @@ MinionMovement.update_anim_driven_change_target_rotation = function (unit, scrat
 	end
 end
 
+MinionMovement.update_anim_driven_melee_attack_rotation = function (unit, scratchpad, action_data, t, target_position)
+	if not scratchpad.melee_attack_rotation_duration then
+		local melee_rotation_anim_data = action_data.melee_rotation_anim_data
+		local anim_event_name = scratchpad.attack_event
+		local anim_data = melee_rotation_anim_data[anim_event_name]
+		local rotation_sign = anim_data.sign
+		local rotation_radians = anim_data.rad
+		local rotation_scale = Animation.calculate_anim_rotation_scale(unit, target_position, rotation_sign, rotation_radians)
+
+		scratchpad.locomotion_extension:set_anim_rotation_scale(rotation_scale)
+
+		local rotation_durations = action_data.melee_attack_rotation_durations
+		local melee_attack_rotation_duration = rotation_durations[anim_event_name]
+		scratchpad.melee_attack_rotation_duration = t + melee_attack_rotation_duration
+	elseif scratchpad.melee_attack_rotation_duration <= t then
+		scratchpad.melee_attack_rotation_duration = nil
+
+		MinionMovement.set_anim_driven(scratchpad, false)
+	end
+end
+
 MinionMovement.update_running_stagger = function (unit, t, dt, scratchpad, action_data, optional_reset_stagger_immune_time)
 	local stagger_component = scratchpad.stagger_component
 	local locomotion_extension = scratchpad.locomotion_extension

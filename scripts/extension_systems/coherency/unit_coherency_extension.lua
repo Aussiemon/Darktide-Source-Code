@@ -2,6 +2,7 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local buff_keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
+local STAT_REPORT_TIME = 1
 local UnitCoherencyExtension = class("UnitCoherencyExtension")
 
 UnitCoherencyExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -16,6 +17,7 @@ UnitCoherencyExtension.init = function (self, extension_init_context, unit, exte
 	self._buff_extension = ScriptUnit.has_extension(self._unit, "buff_system")
 	self._fx_extension = ScriptUnit.has_extension(self._unit, "fx_system")
 	self._coherency_settings = extension_init_data.coherency_settings
+	self._stat_record_timer = 0
 end
 
 UnitCoherencyExtension.destroy = function (self)
@@ -24,6 +26,22 @@ UnitCoherencyExtension.destroy = function (self)
 	self._coherency_buff_indexes = {}
 	self._buff_extension = nil
 	self._fx_extension = nil
+end
+
+UnitCoherencyExtension.fixed_update = function (self, unit, dt, t)
+	local player = self._player
+
+	if Managers.stats and Managers.stats.can_record_stats() and player then
+		local new_time = self._stat_record_timer + dt
+
+		while STAT_REPORT_TIME <= new_time do
+			Managers.stats:record_coherency_update(player, self._num_units_in_coherence)
+
+			new_time = new_time - STAT_REPORT_TIME
+		end
+
+		self._stat_record_timer = new_time
+	end
 end
 
 UnitCoherencyExtension.in_coherence_units = function (self)

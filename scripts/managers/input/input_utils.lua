@@ -1,33 +1,34 @@
-local InputUtils = InputUtils or {}
-InputUtils.input_device_list = InputUtils.input_device_list or {
-	xbox_controller = {
-		rawget(_G, "Pad1"),
-		rawget(_G, "Pad2"),
-		rawget(_G, "Pad3"),
-		rawget(_G, "Pad4"),
-		rawget(_G, "Pad5"),
-		rawget(_G, "Pad6"),
-		rawget(_G, "Pad7"),
-		rawget(_G, "Pad8")
+local InputUtils = {
+	input_device_list = {
+		xbox_controller = {
+			rawget(_G, "Pad1"),
+			rawget(_G, "Pad2"),
+			rawget(_G, "Pad3"),
+			rawget(_G, "Pad4"),
+			rawget(_G, "Pad5"),
+			rawget(_G, "Pad6"),
+			rawget(_G, "Pad7"),
+			rawget(_G, "Pad8")
+		},
+		ps4_controller = {
+			rawget(_G, "PS4Pad1"),
+			rawget(_G, "PS4Pad2"),
+			rawget(_G, "PS4Pad3"),
+			rawget(_G, "PS4Pad4"),
+			rawget(_G, "PS4Pad5"),
+			rawget(_G, "PS4Pad6"),
+			rawget(_G, "PS4Pad7"),
+			rawget(_G, "PS4Pad8")
+		},
+		mouse = {
+			rawget(_G, "Mouse")
+		},
+		keyboard = {
+			rawget(_G, "Keyboard")
+		}
 	},
-	ps4_controller = {
-		rawget(_G, "PS4Pad1"),
-		rawget(_G, "PS4Pad2"),
-		rawget(_G, "PS4Pad3"),
-		rawget(_G, "PS4Pad4"),
-		rawget(_G, "PS4Pad5"),
-		rawget(_G, "PS4Pad6"),
-		rawget(_G, "PS4Pad7"),
-		rawget(_G, "PS4Pad8")
-	},
-	mouse = {
-		rawget(_G, "Mouse")
-	},
-	keyboard = {
-		rawget(_G, "Keyboard")
-	}
+	replaced_strings = {}
 }
-InputUtils.replaced_strings = InputUtils.replaced_strings or {}
 InputUtils.replaced_strings.oem_period = "oem_period (> .)"
 InputUtils.replaced_strings.oem_minus = "oem_minus (_ -)"
 InputUtils.replaced_strings["numpad plus"] = "numpad +"

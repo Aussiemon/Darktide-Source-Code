@@ -59,6 +59,21 @@ local material_overrides = {
 			}
 		}
 	},
+	face_tattoo_traitor_servitor = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_traitor_servitor/face_tattoo_traitor_servitor"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0.1,
+				0.03,
+				0,
+				0.2
+			}
+		}
+	},
 	body_tattoo_01 = {
 		texture_overrides = {
 			tatoo_mask = {
@@ -749,6 +764,21 @@ local material_overrides = {
 			}
 		}
 	},
+	body_tattoo_easter = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_easter/body_tattoo_easter"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
 	face_tattoo_01 = {
 		texture_overrides = {
 			tatoo_mask = {
@@ -1353,6 +1383,36 @@ local material_overrides = {
 		texture_overrides = {
 			tatoo_mask = {
 				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_sianna/face_tattoo_sianna"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_easter = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/face_tattoo_easter/face_tattoo_easter"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_creator_program = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_creator_program/face_tattoo_creator_program"
 			}
 		},
 		property_overrides = {
@@ -3584,6 +3644,36 @@ local material_overrides = {
 			}
 		}
 	},
+	body_tattoo_ogryn_easter = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/body_tattoo_easter/body_tattoo_easter"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	body_tattoo_ogryn_creator_program = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/body_tattoo_creator_program/body_tattoo_creator_program"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
 	face_tattoo_ogryn_01 = {
 		texture_overrides = {
 			tatoo_mask = {
@@ -4383,6 +4473,21 @@ local material_overrides = {
 		texture_overrides = {
 			tatoo_mask = {
 				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/face_tattoo_labour_03/face_tattoo_labour_03_tier_02"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0,
+				0.11,
+				0.17,
+				0.5
+			}
+		}
+	},
+	face_tattoo_ogryn_easter = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/ogryn/attachments_base/tattoos/textures/face_tattoo_easter/face_tattoo_easter"
 			}
 		},
 		property_overrides = {

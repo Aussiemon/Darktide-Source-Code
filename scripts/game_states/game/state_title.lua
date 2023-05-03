@@ -145,6 +145,10 @@ StateTitle.is_loading = function (self)
 end
 
 StateTitle._legal_verification = function (self)
+	if GameParameters.testify then
+		return self:_set_state(STATES.done)
+	end
+
 	self:_set_state(STATES.legal_verification)
 
 	local legal_promises = {
@@ -183,6 +187,11 @@ StateTitle._legal_verification = function (self)
 						privacy_policy = privacy_policy_status and privacy_policy_status + 1 or 1
 					}):next(function ()
 						self:_legal_verification()
+					end):catch(function (error)
+						Managers.event:trigger("event_add_notification_message", "alert", {
+							text = Localize("loc_popup_description_backend_error")
+						})
+						self:_on_error()
 					end)
 				end
 			}
@@ -233,6 +242,11 @@ StateTitle._legal_verification = function (self)
 						eula = eula_status and eula_status + 1 or 1
 					}):next(function ()
 						self:_legal_verification()
+					end):catch(function (error)
+						Managers.event:trigger("event_add_notification_message", "alert", {
+							text = Localize("loc_popup_description_backend_error")
+						})
+						self:_on_error()
 					end)
 				end
 			}
@@ -259,6 +273,9 @@ StateTitle._legal_verification = function (self)
 			self:_set_state(STATES.done)
 		end
 	end):catch(function (error)
+		Managers.event:trigger("event_add_notification_message", "alert", {
+			text = Localize("loc_popup_description_backend_error")
+		})
 		self:_on_error()
 	end)
 end

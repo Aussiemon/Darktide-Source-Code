@@ -109,30 +109,42 @@ local mission_vo_lm_rails_psyker_male_b = {
 	},
 	mission_rails_first_objective_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 6,
+		sound_events_n = 10,
 		sound_events = {
+			"loc_psyker_male_b__guidance_starting_area_01",
+			"loc_psyker_male_b__guidance_starting_area_02",
+			"loc_psyker_male_b__guidance_starting_area_03",
 			"loc_psyker_male_b__guidance_starting_area_04",
 			"loc_psyker_male_b__guidance_starting_area_05",
 			"loc_psyker_male_b__guidance_starting_area_06",
 			"loc_psyker_male_b__guidance_starting_area_07",
 			"loc_psyker_male_b__guidance_starting_area_08",
-			"loc_psyker_male_b__guidance_starting_area_09"
+			"loc_psyker_male_b__guidance_starting_area_09",
+			"loc_psyker_male_b__guidance_starting_area_10"
 		},
 		sound_events_duration = {
+			1.998167,
+			1.853771,
+			2.238729,
 			1.286896,
 			1.377813,
 			2.572667,
 			3.0755,
 			2.197708,
-			2.287354
+			2.287354,
+			2.922938
 		},
 		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -151,10 +163,11 @@ local mission_vo_lm_rails_psyker_male_b = {
 	},
 	mission_rails_refectory_response = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 6,
 		sound_events = {
 			"loc_psyker_male_b__region_habculum_01",
 			"loc_psyker_male_b__region_habculum_02",
+			"loc_psyker_male_b__region_habculum_03",
 			"loc_psyker_male_b__zone_transit_01",
 			"loc_psyker_male_b__zone_transit_02",
 			"loc_psyker_male_b__zone_transit_03"
@@ -162,16 +175,18 @@ local mission_vo_lm_rails_psyker_male_b = {
 		sound_events_duration = {
 			5.513708,
 			6.412979,
+			1.909729,
 			3.250042,
 			3.759708,
 			3.257458
 		},
 		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
 		},
 		randomize_indexes = {}
 	},

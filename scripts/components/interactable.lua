@@ -4,19 +4,20 @@ local Interactable = component("Interactable")
 Interactable.init = function (self, unit, is_server)
 	self._unit = unit
 	self._used = false
-	self._interactee_extension = nil
 	self._is_server = is_server
 
 	if EDITOR or rawget(_G, "EditorApi") then
 		return
 	end
 
-	self._interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
+	local interactee_extension = ScriptUnit.has_extension(unit, "interactee_system")
+	self._interactee_extension = interactee_extension
 
-	if self._interactee_extension then
+	if interactee_extension then
 		local interaction_type = self:get_data(unit, "interaction_type")
 		local ui_interaction_type = self:get_data(unit, "ui_interaction_type")
 		local display_start_event = self:get_data(unit, "display_start_event")
+		local require_all_players = self:get_data(unit, "require_all_players")
 		local interaction_length = self:get_data(unit, "interaction_length")
 		local interaction_icon = self:get_data(unit, "interaction_icon")
 		local shared_interaction = self:get_data(unit, "shared_interaction")
@@ -53,8 +54,12 @@ Interactable.init = function (self, unit, is_server)
 			display_start_event = display_start_event
 		}
 
-		self._interactee_extension:set_interaction_context(interaction_type, interaction_context, start_active)
-		self._interactee_extension:set_emissive_material_name(emissive_material_name)
+		interactee_extension:set_interaction_context(interaction_type, interaction_context, start_active)
+		interactee_extension:set_emissive_material_name(emissive_material_name)
+
+		if require_all_players then
+			interactee_extension:set_block_text("loc_action_interaction_generic_missing_players")
+		end
 
 		local has_animation_state_machine = Unit.has_animation_state_machine(unit)
 		self._support_simple_animation = self:get_data(unit, "support_simple_animation") and not has_animation_state_machine
@@ -147,6 +152,22 @@ end
 
 Interactable.interactable_disable = function (self, unit)
 	self:disable(unit)
+end
+
+Interactable.interactable_clear_block = function (self, unit)
+	local interactee_extension = self._interactee_extension
+
+	if interactee_extension then
+		interactee_extension:set_missing_players(false)
+	end
+end
+
+Interactable.interactable_missing_players = function (self, unit)
+	local interactee_extension = self._interactee_extension
+
+	if interactee_extension then
+		interactee_extension:set_missing_players(true)
+	end
 end
 
 Interactable.events.interactable_enable = function (self, unit)
@@ -431,6 +452,12 @@ Interactable.component_data = {
 		ui_name = "Interactor Item to Equip (scanner, decoder, ...)",
 		filter = "item"
 	},
+	require_all_players = {
+		ui_type = "check_box",
+		value = false,
+		ui_name = "Show 'Require All Players'",
+		category = "UI"
+	},
 	display_start_event = {
 		ui_type = "check_box",
 		value = false,
@@ -481,6 +508,14 @@ Interactable.component_data = {
 			type = "event"
 		},
 		interactable_disable = {
+			accessibility = "public",
+			type = "event"
+		},
+		interactable_clear_block = {
+			accessibility = "public",
+			type = "event"
+		},
+		interactable_missing_players = {
 			accessibility = "public",
 			type = "event"
 		},

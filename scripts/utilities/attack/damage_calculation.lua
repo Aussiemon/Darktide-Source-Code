@@ -34,7 +34,8 @@ DamageCalculation.calculate = function (damage_profile, damage_type, target_sett
 	end
 
 	local base_damage, base_buff_damage, attack_power_level = _base_damage(damage_profile, damage_type, target_settings, power_level, charge_level, armor_type, is_critical_strike, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, lerp_values, num_triggered_staggers, is_attacked_unit_suppressed, breed_or_nil, attacker_breed_or_nil, distance, auto_completed_action, blackboard, target_stagger_count)
-	local rending_multiplier, is_rending = _rending_multiplier(attacker_stat_buffs, target_stat_buffs, is_backstab, is_flanking, is_critical_strike)
+	local is_target_staggered = num_triggered_staggers > 0
+	local rending_multiplier, is_rending = _rending_multiplier(attacker_stat_buffs, target_stat_buffs, is_backstab, is_flanking, is_critical_strike, is_target_staggered)
 	local damage = base_damage + base_buff_damage
 	local backstab_damage = _backstab_damage(base_damage, attacker_stat_buffs, is_backstab)
 	local flanking_damage = _flanking_damage(base_damage, attacker_stat_buffs, is_flanking)
@@ -290,7 +291,7 @@ function _damage_multiplier_from_breed(target_stat_buffs, attacker_breed_or_nil)
 	return multiplier
 end
 
-function _rending_multiplier(attacker_stat_buffs, target_stat_buffs, is_backstab, is_flanking, is_critical_strike)
+function _rending_multiplier(attacker_stat_buffs, target_stat_buffs, is_backstab, is_flanking, is_critical_strike, is_target_staggered)
 	local attacker_multiplier = attacker_stat_buffs.rending_multiplier or 1
 	local target_multiplier = target_stat_buffs.rending_multiplier or 1
 	local attacker_backstab_multiplier = is_backstab and attacker_stat_buffs.backstab_rending_multiplier or 1
@@ -299,7 +300,8 @@ function _rending_multiplier(attacker_stat_buffs, target_stat_buffs, is_backstab
 	local target_flanking_multiplier = is_flanking and target_stat_buffs.flanking_rending_multiplier or 1
 	local attacker_crit_multiplier = is_critical_strike and attacker_stat_buffs.critical_strike_rending_multiplier or 1
 	local target_crit_multiplier = is_critical_strike and target_stat_buffs.critical_strike_rending_multiplier or 1
-	local rending_multiplier = attacker_multiplier + target_multiplier + attacker_backstab_multiplier + target_backstab_multiplier + attacker_crit_multiplier + target_crit_multiplier + attacker_flanking_multiplier + target_flanking_multiplier - 8
+	local attacker_vs_staggered_multiplier = is_target_staggered and attacker_stat_buffs.rending_vs_staggered_multiplier or 1
+	local rending_multiplier = attacker_multiplier + target_multiplier + attacker_backstab_multiplier + target_backstab_multiplier + attacker_crit_multiplier + target_crit_multiplier + attacker_flanking_multiplier + target_flanking_multiplier + attacker_vs_staggered_multiplier - 9
 
 	return rending_multiplier, rending_multiplier > 0
 end

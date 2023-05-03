@@ -42,6 +42,7 @@ PlayerCharacterStateKnockedDown.init = function (self, character_state_init_cont
 	self._next_vo_trigger_time = 0
 	self._vo_sequence = 0
 	self._entered_state_t = nil
+	self._time_disabled = nil
 end
 
 PlayerCharacterStateKnockedDown.extensions_ready = function (self, world, unit)
@@ -72,6 +73,7 @@ PlayerCharacterStateKnockedDown.on_enter = function (self, unit, dt, t, previous
 	self:_enter_third_person_mode(t)
 
 	self._entered_state_t = t
+	self._time_disabled = is_server and 0 or nil
 
 	Interrupt.ability_and_action(t, unit, INTERRUPT_REASON, nil)
 	Luggable.drop_luggable(t, unit, inventory_component, visual_loadout_extension, true)
@@ -154,12 +156,19 @@ PlayerCharacterStateKnockedDown.on_exit = function (self, unit, t, next_state)
 
 			Managers.telemetry_events:player_exits_captivity(player, rescued_by_player, state_name, time_in_captivity)
 
+			local stat_manager = Managers.stats
+
+			if stat_manager.can_record_stats() then
+				stat_manager:record_exit_disabled_character_state(state_name, self._time_disabled)
+			end
+
 			local ignore_state_block = true
 
 			Toughness.recover_max_toughness(unit, "exit_knock_down", ignore_state_block)
 		end
 
 		self._entered_state_t = nil
+		self._time_disabled = nil
 	end
 
 	self._assist:stop()
@@ -170,6 +179,18 @@ PlayerCharacterStateKnockedDown.fixed_update = function (self, unit, dt, t, next
 
 	local assist = self._assist
 	local assist_done = assist:update(dt, t)
+
+	if self._is_server and not assist:in_progress() then
+		self._time_disabled = self._time_disabled + dt
+	end
+
+	local unit_data_extension = self._unit_data_extension
+	local interactee_component = unit_data_extension:read_component("interactee")
+	local interactor_unit = interactee_component.interactor_unit
+
+	if interactor_unit then
+		self._last_interactor_unit = interactor_unit
+	end
 
 	return self:_check_transition(unit, dt, t, next_state_params, assist_done)
 end

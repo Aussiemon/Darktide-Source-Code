@@ -4,7 +4,7 @@ local UICharacterProfilePackageLoader = require("scripts/managers/ui/ui_characte
 local InputDevice = require("scripts/managers/input/input_device")
 local UIWeaponSpawner = class("UIWeaponSpawner")
 
-UIWeaponSpawner.init = function (self, reference_name, world, camera, unit_spawner)
+UIWeaponSpawner.init = function (self, reference_name, world, camera, unit_spawner, verbose)
 	self._reference_name = reference_name
 	self._world = world
 	self._camera = camera
@@ -13,6 +13,7 @@ UIWeaponSpawner.init = function (self, reference_name, world, camera, unit_spawn
 	self._default_rotation_angle = 0
 	self._force_allow_rotation = false
 	self._rotation_angle = self._default_rotation_angle
+	self._verbose = verbose
 end
 
 UIWeaponSpawner.set_force_allow_rotation = function (self, allow)
@@ -55,7 +56,7 @@ UIWeaponSpawner.start_presentation = function (self, item, position, rotation, s
 
 	self._weapon_loader_index = (self._weapon_loader_index or 0) + 1
 	local reference_name = self._reference_name .. "_weapon_item_loader_" .. tostring(self._weapon_loader_index)
-	local single_item_loader = UICharacterProfilePackageLoader:new(reference_name, self._item_definitions)
+	local single_item_loader = UICharacterProfilePackageLoader:new(reference_name, self._item_definitions, self._verbose)
 	local slot_id = "slot_primary"
 	local on_loaded_callback = callback(self, "cb_on_item_package_loaded", slot_id, item, on_spawn_cb)
 	self._loading_weapon_data = {
@@ -167,6 +168,10 @@ UIWeaponSpawner._despawn_weapon = function (self)
 		local attachment_units_3p = weapon_spawn_data.attachment_units_3p
 		local link_unit = weapon_spawn_data.link_unit
 
+		if self._verbose then
+			Log.info("UIWeaponSpawner", "[_spawn_weapon] gear_id: %s", tostring(weapon_spawn_data.item.gear_id))
+		end
+
 		for i = #attachment_units_3p, 1, -1 do
 			local unit = attachment_units_3p[i]
 
@@ -198,6 +203,10 @@ UIWeaponSpawner.set_position = function (self, position)
 end
 
 UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, loader, position, rotation, scale, force_highest_mip)
+	if self._verbose then
+		Log.info("UIWeaponSpawner", "[_spawn_weapon] gear_id: %s", tostring(item.gear_id))
+	end
+
 	position = position or Vector3.zero()
 	rotation = rotation or Quaternion.identity()
 	scale = scale or Vector3.zero()
@@ -209,7 +218,7 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, loader, po
 	local extension_manager = self._extension_manager
 	local attach_settings = {
 		from_script_component = false,
-		is_in_menu = true,
+		force_highest_lod_step = true,
 		world = world,
 		unit_spawner = self._unit_spawner,
 		item_definitions = self._item_definitions,

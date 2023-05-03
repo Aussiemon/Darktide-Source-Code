@@ -83,6 +83,14 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_team_kill", {
 	"breed_name",
 	"weapon_attack_type"
 }))
+Factory.add_to_group(HookStats, Factory.create_hook("hook_killed_disabler", {
+	"breed_name",
+	"has_disabled_player",
+	"weapon_template_name",
+	"weapon_attack_type",
+	"damage_profile_name",
+	"player_class"
+}))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_toughness_regenerated", {
 	"starting_ammount",
 	"reason",
@@ -112,6 +120,15 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_ranged_attack_conclude
 	"last_round_in_mag",
 	"player_class"
 }))
+Factory.add_to_group(HookStats, Factory.create_hook("hook_projectile_impact_concluded", {
+	"num_hit_on_impact",
+	"num_hit_weakspot",
+	"num_kill",
+	"num_hit_elite",
+	"num_hit_special",
+	"weapon_template_name",
+	"player_class"
+}))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_alternate_fire_start"))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_alternate_fire_stop"))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_ammo_consumed", {
@@ -120,13 +137,18 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_ammo_consumed", {
 	"remaining_clip",
 	"remaining_reserve"
 }))
-Factory.add_to_group(HookStats, Factory.create_hook("hook_respawn_ally", {
+Factory.add_to_group(HookStats, Factory.create_hook("hook_rescue_ally", {
 	"target_player_id",
 	"player_class"
 }))
-Factory.add_to_group(HookStats, Factory.create_hook("hook_help_ally", {
+Factory.add_to_group(HookStats, Factory.create_hook("hook_assist_ally", {
 	"target_player_id",
+	"assist_type",
 	"player_class"
+}))
+Factory.add_to_group(HookStats, Factory.create_hook("hook_team_exit_disabled_character_state", {
+	"state_name",
+	"time_in_state"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_pickup_item", {
 	"pickup_name",
@@ -162,6 +184,10 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_coherency_exit", {
 	"num_units_in_coherency",
 	"player_class"
 }))
+Factory.add_to_group(HookStats, Factory.create_hook("hook_coherency_update", {
+	"num_units_in_coherency",
+	"player_class"
+}))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_health_update", {
 	"is_knocked_down",
 	"player_class"
@@ -182,12 +208,22 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_volley_fire_start"))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_volley_fire_stop", {
 	"volley_fire_total_time"
 }))
+Factory.add_to_group(HookStats, Factory.create_hook("hook_veteran_2_ammo_given"))
+Factory.add_to_group(HookStats, Factory.create_hook("hook_veteran_2_kill_volley_fire_target"))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_zealot_2_health_healed_with_leech_during_resist_death", {
+	"player_class"
+}))
+Factory.add_to_group(HookStats, Factory.create_hook("hook_zealot_2_martyrdom_stacks", {
 	"player_class"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_psyker_2_time_at_max_souls_hook", {
 	"player_class"
 }))
+Factory.add_to_group(HookStats, Factory.create_hook("hook_psyker_2_survived_perils", {
+	"player_class"
+}))
+Factory.add_to_group(HookStats, Factory.create_hook("hook_psyker_2_reached_max_souls"))
+Factory.add_to_group(HookStats, Factory.create_hook("hook_psyker_2_lost_max_souls"))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_player_joined", {
 	"player_class"
 }))

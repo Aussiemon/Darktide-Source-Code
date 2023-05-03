@@ -1,4 +1,5 @@
-local VendorViewBase = require("scripts/ui/views/vendor_view_base/vendor_view_base")
+require("scripts/ui/views/vendor_view_base/vendor_view_base")
+
 local Definitions = require("scripts/ui/views/credits_vendor_view/credits_vendor_view_definitions")
 local CreditsVendorViewSettings = require("scripts/ui/views/credits_vendor_view/credits_vendor_view_settings")
 local Promise = require("scripts/foundation/utilities/promise")

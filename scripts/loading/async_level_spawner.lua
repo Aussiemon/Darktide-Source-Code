@@ -1,16 +1,15 @@
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local AsyncLevelSpawner = class("AsyncLevelSpawner")
 
-AsyncLevelSpawner.init = function (self, world_name, level_name, parameters, frame_time_budget, optional_world)
+AsyncLevelSpawner.init = function (self, world_name, level_name, parameters, frame_time_budget, optional_world, excluded_object_sets)
 	local world = optional_world or self.setup_world(world_name, parameters)
 	self._is_world_owner = not optional_world
 	self._level_name = level_name
 	self._world = world
 	self._level_spawn_time_budget = frame_time_budget
-	local object_sets = {}
 	local position = Vector3(0, 0, 0)
 	local rotation = Quaternion.identity()
-	self._level = ScriptWorld.spawn_level(world, level_name, object_sets, position, rotation)
+	self._level = ScriptWorld.spawn_level(world, level_name, position, rotation, false, false, nil, excluded_object_sets)
 end
 
 AsyncLevelSpawner.destroy = function (self)

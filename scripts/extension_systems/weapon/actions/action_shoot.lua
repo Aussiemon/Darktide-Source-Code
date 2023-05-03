@@ -181,6 +181,9 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 
 		if not self._unit_data_extension.is_resimulating then
 			table.clear(self._shot_result)
+
+			action_component.fire_last_t = t
+
 			self:_shoot(position, rotation, DEFAULT_POWER_LEVEL, charge_level, t)
 		end
 
@@ -381,8 +384,9 @@ ActionShoot._add_heat = function (self, dt, t, charge_level)
 
 	local inventory_slot_component = self._inventory_slot_component
 	local player_unit = self._player_unit
+	local is_critical_strike = self._critical_strike_component.is_active
 
-	Overheat.increase_immediate(t, charge_level, inventory_slot_component, charge_template, player_unit)
+	Overheat.increase_immediate(t, charge_level, inventory_slot_component, charge_template, player_unit, is_critical_strike)
 end
 
 ActionShoot._trigger_new_charge = function (self, t)
@@ -465,6 +469,13 @@ ActionShoot.finish = function (self, reason, data, t, time_in_action)
 	if fire_rate_settings.auto_fire_time and action_component.num_shots_fired > 0 then
 		local semi_fire_factor = weapon_template.semi_auto_chain_factor or 1.5
 		action_component.fire_at_time = action_component.fire_at_time + fire_rate_settings.auto_fire_time * semi_fire_factor
+	end
+
+	local buff_extension = self._buff_extension
+	local param_table = buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		buff_extension:add_proc_event(proc_events.on_shoot_finish, param_table)
 	end
 
 	action_component.num_shots_fired = 0

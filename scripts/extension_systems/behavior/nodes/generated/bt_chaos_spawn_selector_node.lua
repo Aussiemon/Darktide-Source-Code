@@ -110,29 +110,60 @@ BtChaosSpawnSelectorNode.evaluate = function (self, unit, blackboard, scratchpad
 		return node_stagger
 	end
 
-	local node_change_target = children[5]
-	local is_running = last_leaf_node_running and last_running_node == node_change_target
+	local node_target_change = children[5]
+	local is_running = last_leaf_node_running and last_running_node == node_target_change
 	local condition_result = nil
 
 	repeat
-		if is_running then
+		local sub_condition_result_01, condition_result = nil
+
+		repeat
+			local sub_condition_result_01, condition_result = nil
+
+			repeat
+				local perception_component = blackboard.perception
+
+				if not is_running and perception_component.lock_target then
+					condition_result = false
+				else
+					local target_unit = perception_component.target_unit
+					condition_result = HEALTH_ALIVE[target_unit]
+				end
+			until true
+
+			sub_condition_result_01 = condition_result
+			local has_target_unit = sub_condition_result_01
+
+			if not has_target_unit then
+				condition_result = false
+			else
+				local perception_component = blackboard.perception
+				local is_aggroed = perception_component.aggro_state == "aggroed"
+				condition_result = is_aggroed
+			end
+		until true
+
+		sub_condition_result_01 = condition_result
+		local is_aggroed = sub_condition_result_01
+
+		if not is_aggroed then
+			condition_result = false
+		elseif is_running then
 			condition_result = true
 		else
 			local perception_component = blackboard.perception
-
-			if perception_component.target_changed then
-				local new_target_unit = perception_component.target_unit
-				condition_result = new_target_unit and ALIVE[new_target_unit]
-			else
-				condition_result = false
-			end
+			condition_result = perception_component.target_changed
 		end
 	until true
 
 	if condition_result then
-		new_running_child_nodes[node_identifier] = node_change_target
+		local leaf_node = node_target_change:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
 
-		return node_change_target
+		if leaf_node then
+			new_running_child_nodes[node_identifier] = node_target_change
+
+			return leaf_node
+		end
 	end
 
 	local node_leap = children[6]

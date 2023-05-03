@@ -76,6 +76,19 @@ BtMeleeAttackAction.enter = function (self, unit, breed, blackboard, scratchpad,
 	if is_anim_driven then
 		MinionMovement.set_anim_driven(scratchpad, true)
 	end
+
+	if action_data.push_enemies_damage_profile or action_data.push_enemies_push_template then
+		scratchpad.broadphase_system = Managers.state.extension:system("broadphase_system")
+		scratchpad.pushed_enemies = {}
+		scratchpad.push_enemies_frequency = action_data.push_enemies_frequency
+		scratchpad.side_system = Managers.state.extension:system("side_system")
+	end
+
+	if action_data.push_minions_damage_profile then
+		scratchpad.side_system = Managers.state.extension:system("side_system")
+		scratchpad.broadphase_system = Managers.state.extension:system("broadphase_system")
+		scratchpad.pushed_minions = {}
+	end
 end
 
 local DEFAULT_DOWN_Z_THRESHOLD = -2
@@ -91,22 +104,34 @@ local DEFAULT_SET_ATTACKED_MELEE_TIMING = {
 BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_unit, t, spawn_component, scratchpad, action_data)
 	local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 	local attack_anim_events = action_data.attack_anim_events or DEFAULT_ATTACK_ANIM_EVENT
-	local wanted_events = attack_anim_events.normal or attack_anim_events
-	local unit_z = POSITION_LOOKUP[unit].z
-	local target_z = POSITION_LOOKUP[target_unit].z
-	local z_diff = target_z - unit_z
-	local down_threshold = action_data.down_z_threshold or DEFAULT_DOWN_Z_THRESHOLD
-	local up_threshold = action_data.up_z_threshold or DEFAULT_UP_Z_THRESHOLD
+	local wanted_events, should_be_anim_driven = nil
 
-	if up_threshold <= z_diff and attack_anim_events.up then
-		wanted_events = attack_anim_events.up
-	elseif z_diff <= 0 and attack_anim_events.down then
-		local character_state_component = unit_data_extension:read_component("character_state")
+	if attack_anim_events.directional then
+		local target_position = POSITION_LOOKUP[target_unit]
+		local direction_name = MinionMovement.get_change_target_direction(unit, target_position)
+		wanted_events = attack_anim_events.directional[direction_name]
 
-		if PlayerUnitStatus.is_climbing_ladder(character_state_component) then
-			wanted_events = attack_anim_events.reach_down or attack_anim_events.down
-		elseif z_diff < down_threshold or PlayerUnitStatus.is_knocked_down(character_state_component) then
-			wanted_events = attack_anim_events.down
+		if direction_name ~= "fwd" then
+			should_be_anim_driven = true
+		end
+	else
+		wanted_events = attack_anim_events.normal or attack_anim_events
+		local unit_z = POSITION_LOOKUP[unit].z
+		local target_z = POSITION_LOOKUP[target_unit].z
+		local z_diff = target_z - unit_z
+		local down_threshold = action_data.down_z_threshold or DEFAULT_DOWN_Z_THRESHOLD
+		local up_threshold = action_data.up_z_threshold or DEFAULT_UP_Z_THRESHOLD
+
+		if up_threshold <= z_diff and attack_anim_events.up then
+			wanted_events = attack_anim_events.up
+		elseif z_diff <= 0 and attack_anim_events.down then
+			local character_state_component = unit_data_extension:read_component("character_state")
+
+			if PlayerUnitStatus.is_climbing_ladder(character_state_component) then
+				wanted_events = attack_anim_events.reach_down or attack_anim_events.down
+			elseif z_diff < down_threshold or PlayerUnitStatus.is_knocked_down(character_state_component) then
+				wanted_events = attack_anim_events.down
+			end
 		end
 	end
 
@@ -282,6 +307,15 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 		local using_animation_movement_speed = not action_data.ignore_animation_movement_speed
 		scratchpad.navigation_extension = navigation_extension
 		scratchpad.set_animation_wanted_movement_speed = true
+		local melee_attack_rotation_durations = action_data.melee_attack_rotation_durations
+
+		if should_be_anim_driven and melee_attack_rotation_durations and melee_attack_rotation_durations[scratchpad.attack_event] then
+			local melee_attack_rotation_duration = melee_attack_rotation_durations[scratchpad.attack_event]
+
+			MinionMovement.set_anim_driven(scratchpad, true)
+
+			scratchpad.melee_attack_rotation_duration = t + melee_attack_rotation_duration
+		end
 	end
 
 	local effect_template_start_timing = action_data.effect_template_start_timings and action_data.effect_template_start_timings[attack_event]
@@ -362,6 +396,16 @@ BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, a
 		end
 
 		MinionPerception.set_target_lock(unit, perception_component, true)
+	end
+
+	if scratchpad.melee_attack_rotation_duration then
+		local is_anim_driven = scratchpad.is_anim_driven
+
+		if is_anim_driven then
+			local target_position = POSITION_LOOKUP[unit]
+
+			MinionMovement.update_anim_driven_melee_attack_rotation(unit, scratchpad, action_data, t, target_position)
+		end
 	end
 
 	local vo_event = action_data.vo_event
@@ -528,6 +572,26 @@ BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, a
 					scratchpad.stored_dodge_rotation = QuaternionBox(rotation)
 				end
 			end
+		end
+	end
+
+	if not scratchpad.finished_attack then
+		if scratchpad.push_enemies_frequency then
+			scratchpad.push_enemies_frequency = scratchpad.push_enemies_frequency - dt
+
+			if scratchpad.push_enemies_frequency <= 0 then
+				table.clear(scratchpad.pushed_enemies)
+
+				scratchpad.push_enemies_frequency = action_data.push_enemies_frequency
+			end
+
+			local optional_only_ahead_targets = true
+
+			MinionAttack.push_nearby_enemies(unit, scratchpad, action_data, target_unit, optional_only_ahead_targets)
+		end
+
+		if action_data.push_minions_damage_profile then
+			MinionAttack.push_friendly_minions(unit, scratchpad, action_data, t)
 		end
 	end
 

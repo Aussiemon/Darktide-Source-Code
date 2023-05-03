@@ -163,15 +163,13 @@ PlayerCharacterStateMutantCharged.on_exit = function (self, unit, t, next_state)
 
 			Managers.telemetry_events:player_exits_captivity(player, rescued_by_player, state_name, time_in_captivity)
 
-			if next_state == "catapulted" then
-				local mover = Unit.mover(unit)
-				local position = Unit.world_position(unit, 1)
-				local allowed_move_distance = 1
-				local _, non_colliding_position = Mover.fits_at(mover, position, allowed_move_distance)
+			local mover = Unit.mover(unit)
+			local position = Unit.world_position(unit, 1)
+			local allowed_move_distance = 1
+			local _, non_colliding_position = Mover.fits_at(mover, position, allowed_move_distance)
 
-				if non_colliding_position then
-					PlayerMovement.teleport_fixed_update(unit, non_colliding_position)
-				end
+			if non_colliding_position then
+				PlayerMovement.teleport_fixed_update(unit, non_colliding_position)
 			end
 		end
 

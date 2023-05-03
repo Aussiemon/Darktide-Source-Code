@@ -203,13 +203,9 @@ PackageSynchronizerHost._player_profile_changed = function (self, sync_peer_id, 
 	local player = Managers.player:player(sync_peer_id, sync_local_player_id)
 	local new_profile = player:profile()
 	local changed_profile_fields = {
-		player_unit_respawn = self:_calculate_player_unit_respawn(old_profile, new_profile)
+		inventory = self:_calculate_changed_inventory_items(old_profile, new_profile),
+		talents = self:_calculate_changed_talents(old_profile, new_profile)
 	}
-
-	if not changed_profile_fields.player_unit_respawn then
-		changed_profile_fields.inventory = self:_calculate_changed_inventory_items(old_profile, new_profile)
-		changed_profile_fields.talents = self:_calculate_changed_talents(old_profile, new_profile)
-	end
 
 	_debug_print("LoadingTimes: Player Profile Changed (peer: %s, player_id: %s)", tostring(sync_peer_id), tostring(sync_local_player_id))
 
@@ -529,16 +525,9 @@ end
 
 PackageSynchronizerHost._handle_profile_changes_before_sync = function (self, player, sync_data)
 	local changed_profile_fields = sync_data.changed_profile_fields
-
-	if changed_profile_fields.player_unit_respawn then
-		self:_handle_player_unit_respawn_before_sync(player, sync_data)
-	end
-
 	local changed_inventory_items = changed_profile_fields.inventory
 
-	if changed_inventory_items then
-		self:_handle_inventory_changes_before_sync(changed_inventory_items, player, sync_data)
-	end
+	self:_handle_inventory_changes_before_sync(changed_inventory_items, player, sync_data)
 
 	local changed_talents = changed_profile_fields.talents
 
@@ -654,9 +643,7 @@ PackageSynchronizerHost._handle_profile_changes_after_sync = function (self, pee
 	local fixed_t = FixedFrame.get_latest_fixed_time()
 	local changed_inventory_items = changed_profile_fields.inventory
 
-	if changed_inventory_items then
-		self:_handle_inventory_changes_after_sync(changed_inventory_items, player_unit, fixed_t)
-	end
+	self:_handle_inventory_changes_after_sync(changed_inventory_items, player_unit, fixed_t)
 
 	local changed_talents = changed_profile_fields.talents
 

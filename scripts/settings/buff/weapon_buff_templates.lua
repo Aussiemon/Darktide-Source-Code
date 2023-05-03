@@ -1,6 +1,7 @@
 local AilmentSettings = require("scripts/settings/ailments/ailment_settings")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
 local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
@@ -8,6 +9,7 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local MinionState = require("scripts/utilities/minion_state")
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local TalentSettings = require("scripts/settings/buff/talent_settings")
 local ailment_effects = AilmentSettings.effects
@@ -43,8 +45,8 @@ local templates = {
 				local stack_multiplier = template_context.stack_count / template.max_stacks
 				local smoothstep_multiplier = stack_multiplier * stack_multiplier * (3 - 2 * stack_multiplier)
 				local power_level = smoothstep_multiplier * 500
-				local owner_unit = template_context.is_server and template_context.owner_unit or nil
-				local source_item = template_context.is_server and template_context.source_item or nil
+				local owner_unit = template_context.is_server and template_context.owner_unit
+				local source_item = template_context.is_server and template_context.source_item
 
 				Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.burning, "attacking_unit", owner_unit, "item", source_item)
 			end
@@ -74,8 +76,8 @@ templates.warp_fire = {
 			local stack_multiplier = template_context.stack_count / template.max_stacks
 			local smoothstep_multiplier = stack_multiplier * stack_multiplier * (3 - 2 * stack_multiplier)
 			local power_level = smoothstep_multiplier * 500
-			local owner_unit = template_context.is_server and template_context.owner_unit or nil
-			local source_item = template_context.is_server and template_context.source_item or nil
+			local owner_unit = template_context.is_server and template_context.owner_unit
+			local source_item = template_context.is_server and template_context.source_item
 
 			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.warpfire, "attacking_unit", owner_unit, "item", source_item)
 		end
@@ -190,8 +192,8 @@ templates.bleed = {
 			local stack_multiplier = template_context.stack_count / template.max_stacks
 			local smoothstep_multiplier = stack_multiplier * stack_multiplier * (3 - 2 * stack_multiplier)
 			local power_level = smoothstep_multiplier * 500
-			local source_item = template_context.is_server and template_context.source_item or nil
-			local owner_unit = template_context.is_server and template_context.owner_unit or template_context.unit or nil
+			local source_item = template_context.is_server and template_context.source_item
+			local owner_unit = template_context.is_server and template_context.owner_unit or template_context.unit
 
 			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.bleeding, "attacking_unit", owner_unit, "item", source_item)
 		end
@@ -444,6 +446,75 @@ templates.shock_effect = {
 			}
 		}
 	}
+}
+templates.taunted = {
+	unique_buff_id = "taunted",
+	duration = 10,
+	buff_id = "taunted",
+	predicted = false,
+	class_name = "buff",
+	keywords = {
+		buff_keywords.taunted
+	},
+	start_func = function (template_data, template_context)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return
+		end
+
+		local taunter_unit = template_context.owner_unit
+		local taunter_buff_extension = ScriptUnit.extension(taunter_unit, "buff_system")
+		template_data.taunter_buff_extension = taunter_buff_extension
+		local taunter_unit_data_extension = ScriptUnit.extension(taunter_unit, "unit_data_system")
+		local taunter_breed = taunter_unit_data_extension:breed()
+
+		if Breed.is_player(taunter_breed) then
+			local taunter_character_state_component = taunter_unit_data_extension:read_component("character_state")
+			template_data.taunter_character_state_component = taunter_character_state_component
+		end
+
+		local breed = template_context.breed
+		local is_disabler = breed.tags.disabler
+		template_data.is_disabler = is_disabler
+		local unit = template_context.unit
+		local blackboard = BLACKBOARDS[unit]
+		local perception_component = blackboard.perception
+
+		if perception_component.target_unit ~= taunter_unit then
+			Managers.state.extension:system("perception_system"):register_prioritized_unit_update(unit)
+		end
+	end,
+	conditional_stack_exit_func = function (template_data, template_context)
+		local is_server = template_context.is_server
+
+		if not is_server then
+			return false
+		end
+
+		local taunter_unit = template_context.owner_unit
+
+		if not HEALTH_ALIVE[taunter_unit] then
+			return true
+		end
+
+		local taunter_buff_extension = template_data.taunter_buff_extension
+		local is_invisible = taunter_buff_extension:has_keyword(buff_keywords.invisible)
+		local is_unperceivable = taunter_buff_extension:has_keyword(buff_keywords.unperceivable)
+
+		if is_invisible or is_unperceivable then
+			return true
+		end
+
+		local is_disabler = template_data.is_disabler
+		local taunter_character_state_component = template_data.taunter_character_state_component
+
+		if is_disabler and taunter_character_state_component and PlayerUnitStatus.is_disabled(taunter_character_state_component) then
+			return true
+		end
+
+		return false
+	end
 }
 
 return templates

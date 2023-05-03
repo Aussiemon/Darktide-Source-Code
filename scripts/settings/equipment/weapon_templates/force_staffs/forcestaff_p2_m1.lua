@@ -8,8 +8,6 @@ local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokeForcestaffP2 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_forcestaff_p2")
-local WeaponTraitsRangedCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_common")
-local WeaponTraitsRangedWarpCharge = require("scripts/settings/equipment/weapon_traits/weapon_traits_ranged_warp_charge")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local FlamerGasTemplates = require("scripts/settings/projectile/flamer_gas_templates")
@@ -1166,14 +1164,6 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local ranged_common_traits = table.keys(WeaponTraitsRangedCommon)
-
-table.append(weapon_template.traits, ranged_common_traits)
-
-local ranged_warp_charge_traits = table.keys(WeaponTraitsRangedWarpCharge)
-
-table.append(weapon_template.traits, ranged_warp_charge_traits)
-
 local bespoke_forcestaff_p2_traits = table.keys(WeaponTraitsBespokeForcestaffP2)
 
 table.append(weapon_template.traits, bespoke_forcestaff_p2_traits)

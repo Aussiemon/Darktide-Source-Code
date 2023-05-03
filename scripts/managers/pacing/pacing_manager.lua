@@ -31,6 +31,7 @@ PacingManager.init = function (self, world, nav_world, level_name, level_seed, p
 	self._current_combat_state = "low"
 	self._disabled = false
 	self._backend_pacing_control = pacing_control
+	self._minions_listening_for_player_deaths = {}
 end
 
 PacingManager.on_gameplay_post_init = function (self, level_name)
@@ -406,6 +407,7 @@ PacingManager._update_ramp_up_frequency = function (self, dt, target_side_id)
 		end
 
 		self._current_ramp_up_duration = nil
+		self._max_ramp_up_duration = nil
 
 		return
 	end
@@ -424,6 +426,17 @@ PacingManager._update_ramp_up_frequency = function (self, dt, target_side_id)
 	end
 
 	local ramp_up_percentage = math.min(1 - self._current_ramp_up_duration / ramp_duration, 1)
+
+	if ramp_up_percentage == 1 and not self._max_ramp_up_duration then
+		local max_duration = ramp_up_frequency_settings.max_duration
+		self._max_ramp_up_duration = max_duration
+	elseif self._max_ramp_up_duration then
+		self._max_ramp_up_duration = self._max_ramp_up_duration - dt
+
+		if self._max_ramp_up_duration <= 0 then
+			self._current_ramp_up_duration = ramp_duration
+		end
+	end
 
 	for spawn_type, max_modifier in pairs(ramp_modifiers) do
 		local diff = math.abs(1 - max_modifier)
@@ -488,6 +501,8 @@ PacingManager.remove_aggroed_minion = function (self, unit)
 
 		self._side_system:remove_aggroed_minion(unit)
 	end
+
+	self._minions_listening_for_player_deaths[unit] = nil
 end
 
 PacingManager.total_challenge_rating = function (self)
@@ -529,6 +544,17 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 
 	if modify_resistance then
 		Managers.state.difficulty:modify_resistance(modify_resistance)
+	end
+
+	local modify_challenge_resistance_scale = modify_settings.modify_challenge_resistance_scale
+
+	if modify_challenge_resistance_scale then
+		local challenge = Managers.state.difficulty:get_challenge()
+		local new_challenge = modify_challenge_resistance_scale[challenge][1]
+		local new_resistance = modify_challenge_resistance_scale[challenge][2]
+
+		Managers.state.difficulty:set_challenge(new_challenge)
+		Managers.state.difficulty:set_resistance(new_resistance)
 	end
 
 	local horde_timer_modifier = modify_settings.horde_timer_modifier
@@ -605,6 +631,24 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 	if override_roamer_packs then
 		self._roamer_pacing:override_roamer_packs(override_roamer_packs)
 	end
+
+	local monster_health_modifier = modify_settings.monster_health_modifier
+
+	if monster_health_modifier then
+		self._monster_pacing:set_health_modifier(monster_health_modifier)
+	end
+
+	local override_trickle_horde_compositions = modify_settings.override_trickle_horde_compositions
+
+	if override_trickle_horde_compositions then
+		self._horde_pacing:override_trickle_horde_compositions(override_trickle_horde_compositions)
+	end
+
+	local replace_terror_event_tags = modify_settings.replace_terror_event_tags
+
+	if replace_terror_event_tags then
+		Managers.state.terror_event:replace_terror_event_tags(replace_terror_event_tags)
+	end
 end
 
 PacingManager.aggro_roamer_zone_range = function (self, target_unit, range)
@@ -653,6 +697,18 @@ end
 
 PacingManager.get_backend_pacing_control_flag = function (self, flag)
 	return self._backend_pacing_control and self._backend_pacing_control[flag]
+end
+
+PacingManager.set_minion_listening_for_player_deaths = function (self, unit, statistics_component, set)
+	if set then
+		self._minions_listening_for_player_deaths[unit] = statistics_component
+	else
+		self._minions_listening_for_player_deaths[unit] = nil
+	end
+end
+
+PacingManager.get_minions_listening_for_player_deaths = function (self)
+	return self._minions_listening_for_player_deaths
 end
 
 return PacingManager

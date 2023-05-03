@@ -270,28 +270,30 @@ function _trigger_damage_indicator(attacked_unit, attacking_unit, attack_directi
 		Managers.event:trigger("spawn_hud_damage_indicator", angle, attack_result)
 	end
 
-	local mood_extension = ScriptUnit.has_extension(attacked_unit, "mood_system")
+	if not damage_profile.ignore_mood_effects then
+		local mood_extension = ScriptUnit.has_extension(attacked_unit, "mood_system")
 
-	if mood_extension then
-		local permanent_damage_ratio = damage_profile.permanent_damage_ratio
-		local have_permanent_damage = permanent_damage_ratio and permanent_damage_ratio > 0
-		local have_normal_damage = not permanent_damage_ratio or permanent_damage_ratio < 1
-		local t = Managers.time:time("gameplay")
-		local skip_rpc = true
+		if mood_extension then
+			local permanent_damage_ratio = damage_profile.permanent_damage_ratio
+			local have_permanent_damage = permanent_damage_ratio and permanent_damage_ratio > 0
+			local have_normal_damage = not permanent_damage_ratio or permanent_damage_ratio < 1
+			local t = Managers.time:time("gameplay")
+			local skip_rpc = true
 
-		if attack_result == attack_results.damaged then
-			if have_normal_damage then
-				mood_extension:add_timed_mood(t, mood_types.damage_taken, skip_rpc)
+			if attack_result == attack_results.damaged then
+				if have_normal_damage then
+					mood_extension:add_timed_mood(t, mood_types.damage_taken, skip_rpc)
+				end
+
+				if have_permanent_damage then
+					mood_extension:add_timed_mood(t, mood_types.corruption_taken, skip_rpc)
+				end
+			elseif attack_result == attack_results.toughness_broken then
+				mood_extension:add_timed_mood(t, mood_types.toughness_broken, skip_rpc)
+				mood_extension:add_timed_mood(t, mood_types.toughness_absorbed, skip_rpc)
+			elseif attack_result == attack_results.toughness_absorbed or attack_result == attack_results.toughness_absorbed_melee then
+				mood_extension:add_timed_mood(t, mood_types.toughness_absorbed, skip_rpc)
 			end
-
-			if have_permanent_damage then
-				mood_extension:add_timed_mood(t, mood_types.corruption_taken, skip_rpc)
-			end
-		elseif attack_result == attack_results.toughness_broken then
-			mood_extension:add_timed_mood(t, mood_types.toughness_broken, skip_rpc)
-			mood_extension:add_timed_mood(t, mood_types.toughness_absorbed, skip_rpc)
-		elseif attack_result == attack_results.toughness_absorbed or attack_result == attack_results.toughness_absorbed_melee then
-			mood_extension:add_timed_mood(t, mood_types.toughness_absorbed, skip_rpc)
 		end
 	end
 end

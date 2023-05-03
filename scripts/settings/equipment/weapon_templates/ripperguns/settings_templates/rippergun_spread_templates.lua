@@ -237,19 +237,19 @@ spread_templates.rippergun_p1_m2_assault = {
 	},
 	moving = {
 		inherits = {
-			"default_rippergun_assault",
+			"rippergun_p1_m2_assault",
 			"still"
 		}
 	},
 	crouch_still = {
 		inherits = {
-			"default_rippergun_assault",
+			"rippergun_p1_m2_assault",
 			"still"
 		}
 	},
 	crouch_moving = {
 		inherits = {
-			"default_rippergun_assault",
+			"rippergun_p1_m2_assault",
 			"still"
 		}
 	}
@@ -331,19 +331,19 @@ spread_templates.rippergun_p1_m2_braced = {
 	},
 	moving = {
 		inherits = {
-			"default_rippergun_braced",
+			"rippergun_p1_m2_braced",
 			"still"
 		}
 	},
 	crouch_still = {
 		inherits = {
-			"default_rippergun_braced",
+			"rippergun_p1_m2_braced",
 			"still"
 		}
 	},
 	crouch_moving = {
 		inherits = {
-			"default_rippergun_braced",
+			"rippergun_p1_m2_braced",
 			"still"
 		}
 	}
@@ -409,19 +409,19 @@ spread_templates.rippergun_p1_m3_assault = {
 	},
 	moving = {
 		inherits = {
-			"default_rippergun_assault",
+			"rippergun_p1_m3_assault",
 			"still"
 		}
 	},
 	crouch_still = {
 		inherits = {
-			"default_rippergun_assault",
+			"rippergun_p1_m3_assault",
 			"still"
 		}
 	},
 	crouch_moving = {
 		inherits = {
-			"default_rippergun_assault",
+			"rippergun_p1_m3_assault",
 			"still"
 		}
 	}

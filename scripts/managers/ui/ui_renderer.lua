@@ -60,8 +60,8 @@ UIRenderer.create_viewport_renderer = function (world, ...)
 	return UIRenderer.create_ui_renderer(world, gui, gui_retained)
 end
 
-UIRenderer.create_resource_renderer = function (world, gui, gui_retained, reference_name, material_name, ...)
-	local render_target = Renderer.create_resource("render_target", "R8G8B8A8", "back_buffer", 1, 1, reference_name)
+UIRenderer.create_resource_renderer = function (world, gui, gui_retained, reference_name, material_name, optional_width, optional_height, ignore_back_buffer)
+	local render_target = Renderer.create_resource("render_target", "R8G8B8A8", not ignore_back_buffer and "back_buffer" or nil, optional_width or 1, optional_height or 1, reference_name)
 	local render_target_material = Gui.create_material(gui, material_name, GuiMaterialFlag.GUI_RENDER_PASS_LAYER)
 
 	Material.set_resource(render_target_material, "source", render_target)
@@ -507,6 +507,13 @@ UIRenderer.destroy_video_player = function (self, reference_name, world)
 	World.destroy_video_player(world or self.world, video_player)
 
 	video_players[reference_name] = nil
+end
+
+UIRenderer.video_player = function (self, reference_name)
+	local video_players = self.video_players
+	local video_player = video_players[reference_name]
+
+	return video_player
 end
 
 UIRenderer.clear_scenegraph_queue = function (self)

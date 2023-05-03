@@ -142,10 +142,6 @@ local mission_vo_km_enforcer_psyker_male_a = {
 			[1.0] = 3.358771,
 			[2.0] = 4.965729
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	mission_enforcer_infrastructure = {

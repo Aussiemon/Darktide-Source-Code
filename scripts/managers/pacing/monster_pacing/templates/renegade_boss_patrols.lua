@@ -170,6 +170,30 @@ local BOSS_PATROLS = {
 				"renegade_melee",
 				"renegade_melee",
 				"renegade_executor"
+			},
+			{
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"renegade_executor",
+				"renegade_executor"
+			},
+			{
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"renegade_executor",
+				"renegade_executor"
+			},
+			{
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"renegade_gunner",
+				"renegade_gunner"
 			}
 		},
 		{
@@ -235,6 +259,52 @@ local BOSS_PATROLS = {
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor"
+			},
+			{
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark"
+			},
+			{
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner"
+			},
+			{
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor"
+			},
+			{
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner"
 			}
 		},
 		{
@@ -299,7 +369,65 @@ local BOSS_PATROLS = {
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor",
 				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
+				"chaos_ogryn_executor",
 				"chaos_ogryn_executor"
+			},
+			{
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark",
+				"chaos_ogryn_bulwark"
+			},
+			{
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner",
+				"chaos_ogryn_gunner"
+			},
+			{
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor",
+				"renegade_executor"
+			},
+			{
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner",
+				"renegade_gunner"
 			}
 		}
 	}

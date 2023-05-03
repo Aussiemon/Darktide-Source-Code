@@ -28,6 +28,9 @@ local chaos_hound = {
 		last_weapon_switch_t = "number",
 		wanted_weapon_slot = "string",
 		wanted_combat_range = "string"
+	},
+	record_state = {
+		has_disabled_player = "boolean"
 	}
 }
 

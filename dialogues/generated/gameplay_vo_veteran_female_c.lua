@@ -283,18 +283,6 @@ local gameplay_vo_veteran_female_c = {
 			1.488813,
 			1.374177
 		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
-		},
 		randomize_indexes = {}
 	},
 	critical_health = {
@@ -764,8 +752,13 @@ local gameplay_vo_veteran_female_c = {
 	},
 	enemy_kill_grenadier = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 10,
 		sound_events = {
+			"loc_veteran_female_c__enemy_kill_grenadier_01",
+			"loc_veteran_female_c__enemy_kill_grenadier_02",
+			"loc_veteran_female_c__enemy_kill_grenadier_03",
+			"loc_veteran_female_c__enemy_kill_grenadier_04",
+			"loc_veteran_female_c__enemy_kill_grenadier_05",
 			"loc_veteran_female_c__enemy_kill_grenadier_06",
 			"loc_veteran_female_c__enemy_kill_grenadier_07",
 			"loc_veteran_female_c__enemy_kill_grenadier_08",
@@ -773,18 +766,16 @@ local gameplay_vo_veteran_female_c = {
 			"loc_veteran_female_c__enemy_kill_grenadier_10"
 		},
 		sound_events_duration = {
+			0.766938,
+			1.202156,
+			1.20849,
+			0.798625,
+			1.350052,
 			1.30674,
 			1.324063,
 			1.630823,
 			1.052031,
 			1.305125
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -1457,13 +1448,6 @@ local gameplay_vo_veteran_female_c = {
 			1.749073,
 			2.408698
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	found_health_booster_ogryn_low_on_health = {
@@ -1788,18 +1772,6 @@ local gameplay_vo_veteran_female_c = {
 			1.77849,
 			1.117479,
 			1.229479
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -2314,18 +2286,6 @@ local gameplay_vo_veteran_female_c = {
 			2.360063,
 			0.902646,
 			0.94926
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -3144,13 +3104,6 @@ local gameplay_vo_veteran_female_c = {
 			2.725177,
 			2.152802
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	response_for_psyker_disabled_by_chaos_hound = {
@@ -3444,13 +3397,6 @@ local gameplay_vo_veteran_female_c = {
 			1.5335,
 			1.521281
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	response_for_zealot_disabled_by_chaos_hound = {
@@ -3627,8 +3573,9 @@ local gameplay_vo_veteran_female_c = {
 	},
 	seen_enemy_bulwark_custom = {
 		randomize_indexes_n = 0,
-		sound_events_n = 8,
+		sound_events_n = 9,
 		sound_events = {
+			"loc_veteran_female_c__seen_enemy_bulwark_01",
 			"loc_veteran_female_c__seen_enemy_bulwark_02",
 			"loc_veteran_female_c__seen_enemy_bulwark_03",
 			"loc_veteran_female_c__seen_enemy_bulwark_04",
@@ -3639,6 +3586,7 @@ local gameplay_vo_veteran_female_c = {
 			"loc_veteran_female_c__smart_tag_vo_enemy_chaos_ogryn_bulwark_04"
 		},
 		sound_events_duration = {
+			1.131417,
 			0.874208,
 			1.203625,
 			1.646198,
@@ -3649,14 +3597,15 @@ local gameplay_vo_veteran_female_c = {
 			1.300292
 		},
 		sound_event_weights = {
-			0.125,
-			0.125,
-			0.125,
-			0.125,
-			0.125,
-			0.125,
-			0.125,
-			0.125
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111,
+			0.1111111
 		},
 		randomize_indexes = {}
 	},
@@ -3740,13 +3689,6 @@ local gameplay_vo_veteran_female_c = {
 			1.381906,
 			1.915458,
 			1.240365
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -3886,6 +3828,47 @@ local gameplay_vo_veteran_female_c = {
 			2.01275,
 			2.205,
 			1.685365
+		},
+		randomize_indexes = {}
+	},
+	seen_enemy_netgunner = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_female_c__seen_netgunner_01",
+			"loc_veteran_female_c__seen_netgunner_02",
+			"loc_veteran_female_c__seen_netgunner_03",
+			"loc_veteran_female_c__seen_netgunner_04",
+			"loc_veteran_female_c__seen_netgunner_05",
+			"loc_veteran_female_c__seen_netgunner_06",
+			"loc_veteran_female_c__seen_netgunner_07",
+			"loc_veteran_female_c__seen_netgunner_08",
+			"loc_veteran_female_c__seen_netgunner_09",
+			"loc_veteran_female_c__seen_netgunner_10"
+		},
+		sound_events_duration = {
+			1.101854,
+			0.818344,
+			1.206781,
+			1.640104,
+			2.252521,
+			1.39974,
+			1.591833,
+			1.525146,
+			1.676281,
+			1.864417
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},

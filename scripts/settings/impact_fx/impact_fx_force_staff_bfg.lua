@@ -15,7 +15,7 @@ local default_armor_decal = {
 		}
 	},
 	units = {
-		"content/fx/units/vfx_decal_lasgun_scorchmark"
+		"content/fx/units/weapons/vfx_decal_lasgun_scorchmark"
 	}
 }
 local blood_ball = {
@@ -28,71 +28,63 @@ local unarmored = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/play_indicator_death_psyker",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_death",
 				append_husk_to_event_name = true
 			},
 			{
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-				only_1p = true
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
+				append_husk_to_event_name = true
 			}
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/play_indicator_death_psyker",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_death",
 				append_husk_to_event_name = true
 			},
 			{
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-				only_1p = true
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
+				append_husk_to_event_name = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_sharp",
-				only_1p = true
-			},
-			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_death_psyker",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
 				append_husk_to_event_name = true
 			}
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
 				append_husk_to_event_name = true
 			}
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
 				append_husk_to_event_name = true
 			}
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
 				append_husk_to_event_name = true
 			}
 		},
 		shield_blocked = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
 				append_husk_to_event_name = true
 			}
 		},
 		blocked = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
 				append_husk_to_event_name = true
 			}
 		},
 		dead = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
 				append_husk_to_event_name = true
 			}
 		}
@@ -228,21 +220,17 @@ local armored = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			},
 			{
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_death_psyker",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_death",
 				append_husk_to_event_name = true
 			}
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			},
 			{
@@ -252,47 +240,43 @@ local armored = {
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_death_psyker",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			}
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_armored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			}
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_armored_reduced",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			}
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			}
 		},
 		shield_blocked = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			}
 		},
 		blocked = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			}
 		},
 		dead = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			}
 		}
@@ -445,71 +429,63 @@ local super_armor = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			},
 			{
-				event = "wwise/events/weapon/play_bullet_hits_gen_armored_death",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_death_psyker",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_death",
 				append_husk_to_event_name = true
 			}
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			},
 			{
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_death",
 				only_1p = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_death_psyker",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			}
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_armored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			}
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_armored_reduced",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			}
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			}
 		},
 		shield_blocked = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			}
 		},
 		blocked = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			}
 		},
 		dead = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_armored",
 				append_husk_to_event_name = true
 			}
 		}
@@ -662,71 +638,63 @@ local disgustingly_resilient = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
 				append_husk_to_event_name = true
 			},
 			{
-				event = "wwise/events/weapon/play_indicator_death_psyker",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_death",
 				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
-				only_1p = true
 			}
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
 				append_husk_to_event_name = true
 			},
 			{
-				event = "wwise/events/weapon/play_bullet_hits_gen_unarmored_death",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff_death",
 				only_1p = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
-				append_husk_to_event_name = true
-			},
-			{
-				event = "wwise/events/weapon/play_indicator_death_psyker",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
 				append_husk_to_event_name = true
 			}
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
 				append_husk_to_event_name = true
 			}
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
 				append_husk_to_event_name = true
 			}
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
 				append_husk_to_event_name = true
 			}
 		},
 		shield_blocked = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
 				append_husk_to_event_name = true
 			}
 		},
 		blocked = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_damage_negated",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
 				append_husk_to_event_name = true
 			}
 		},
 		dead = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
 				append_husk_to_event_name = true
 			}
 		}
@@ -837,7 +805,7 @@ local player = {
 	sfx = {
 		damage = {
 			{
-				event = "wwise/events/weapon/play_bullet_hits_laser_unarmored",
+				event = "wwise/events/weapon/play_bullet_hits_force_staff",
 				append_husk_to_event_name = true
 			}
 		}
@@ -870,7 +838,7 @@ local default_surface_decal = {
 	Vector3(0.2, 0.2, 0.2),
 	Vector3(0.2, 0.2, 0.2),
 	{
-		"content/fx/units/decal_cross_01"
+		"content/fx/units/weapons/decal_cross_01"
 	}
 }
 local default_surface_fx = {

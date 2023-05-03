@@ -188,13 +188,10 @@ table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inp
 
 weapon_template.action_input_hierarchy = {
 	wield = "stay",
+	shoot = "stay",
 	block_cancel = "base",
 	combat_ability = "stay",
 	recall_one = "stay",
-	shoot = {
-		combat_ability = "base",
-		wield = "base"
-	},
 	recall = {
 		combat_ability = "base",
 		wield = "base",
@@ -241,7 +238,10 @@ weapon_template.actions = {
 			return anim_event, anim_event_3p
 		end,
 		timeline_anims = {
-			[0.05] = "equip"
+			[0.05] = {
+				anim_event_3p = "equip",
+				anim_event_1p = "equip"
+			}
 		},
 		conditional_state_to_action_input = {
 			no_grenade_ability_charge = {
@@ -518,7 +518,7 @@ weapon_template.actions = {
 		kind = "recall",
 		continue_sprinting = false,
 		first_recall_time = 0.65,
-		allowed_during_sprint = false,
+		allowed_during_sprint = true,
 		ability_type = "grenade_ability",
 		anim_catch_event = "catch",
 		priority = 1,

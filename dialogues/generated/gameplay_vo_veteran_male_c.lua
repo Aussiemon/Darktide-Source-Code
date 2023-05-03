@@ -283,18 +283,6 @@ local gameplay_vo_veteran_male_c = {
 			1.50574,
 			1.613875
 		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
-		},
 		randomize_indexes = {}
 	},
 	critical_health = {
@@ -788,18 +776,6 @@ local gameplay_vo_veteran_male_c = {
 			1.238729,
 			0.702698,
 			1.175271
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -1472,13 +1448,6 @@ local gameplay_vo_veteran_male_c = {
 			1.936479,
 			2.089844
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	found_health_booster_ogryn_low_on_health = {
@@ -1803,18 +1772,6 @@ local gameplay_vo_veteran_male_c = {
 			1.851104,
 			0.89474,
 			1.109021
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -2329,18 +2286,6 @@ local gameplay_vo_veteran_male_c = {
 			2.357667,
 			1.129333,
 			1.173406
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -3159,13 +3104,6 @@ local gameplay_vo_veteran_male_c = {
 			1.911542,
 			1.390688
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	response_for_psyker_disabled_by_chaos_hound = {
@@ -3458,13 +3396,6 @@ local gameplay_vo_veteran_male_c = {
 			2.049188,
 			1.269844,
 			1.069292
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -3759,13 +3690,6 @@ local gameplay_vo_veteran_male_c = {
 			2.379833,
 			1.384302
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	seen_enemy_executor = {
@@ -3904,6 +3828,47 @@ local gameplay_vo_veteran_male_c = {
 			2.130927,
 			2.158146,
 			1.459833
+		},
+		randomize_indexes = {}
+	},
+	seen_enemy_netgunner = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_veteran_male_c__seen_netgunner_01",
+			"loc_veteran_male_c__seen_netgunner_02",
+			"loc_veteran_male_c__seen_netgunner_03",
+			"loc_veteran_male_c__seen_netgunner_04",
+			"loc_veteran_male_c__seen_netgunner_05",
+			"loc_veteran_male_c__seen_netgunner_06",
+			"loc_veteran_male_c__seen_netgunner_07",
+			"loc_veteran_male_c__seen_netgunner_08",
+			"loc_veteran_male_c__seen_netgunner_09",
+			"loc_veteran_male_c__seen_netgunner_10"
+		},
+		sound_events_duration = {
+			0.628219,
+			0.609281,
+			1.712323,
+			1.865854,
+			1.776781,
+			1.407438,
+			2.005417,
+			1.254927,
+			1.978854,
+			1.605656
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},

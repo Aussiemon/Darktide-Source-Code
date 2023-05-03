@@ -70,7 +70,7 @@ mood_settings.moods = {
 		blend_in_time = 0.15,
 		blend_out_time = 0.36,
 		active_time = 0.5,
-		sound_start_event = "wwise/events/debug/play_toughness_break",
+		sound_start_event = "wwise/events/player/play_toughness_break",
 		shading_environment = "content/shading_environments/moods/thoughness_broken_mood",
 		particle_effects_on_enter = {
 			"content/fx/particles/screenspace/toughness_break"

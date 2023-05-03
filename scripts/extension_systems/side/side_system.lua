@@ -1,4 +1,3 @@
-local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Side = require("scripts/extension_systems/side/side")
@@ -298,9 +297,9 @@ local function _is_valid_target(unit, side_extension)
 	local is_player_unit = side_extension.is_player_unit
 
 	if is_player_unit then
-		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+		local buff_extension = ScriptUnit.extension(unit, "buff_system")
 
-		if buff_extension and (buff_extension:has_keyword(keywords.invisible) or buff_extension:has_keyword(keywords.unperceivable)) then
+		if buff_extension:has_keyword(keywords.invisible) or buff_extension:has_keyword(keywords.unperceivable) then
 			return false
 		end
 

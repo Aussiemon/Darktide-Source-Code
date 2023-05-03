@@ -101,7 +101,6 @@ Matchmaker._get_common_queue_ticket_data = function (self, matchmaker_type, alia
 
 		table.insert(dedicated_aliases, alias_type .. ":default")
 		Log.info("Matchmaker", "Resolved dedicated aliases: %s", table.tostring(dedicated_aliases, 3))
-		Log.info("Matchmaker", "Resolved latency_list: %s", table.tostring(latency_list, 3))
 
 		return {
 			matchmakerType = matchmaker_type,

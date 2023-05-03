@@ -5,8 +5,13 @@ title_text_style.text_horizontal_alignment = "left"
 title_text_style.text_color = Color.terminal_text_header(255, true)
 local sub_title_text_style = table.clone(UIFontSettings.body)
 sub_title_text_style.text_color = Color.terminal_text_body(255, true)
-sub_title_text_style.text_vertical_alignment = "bottom"
+sub_title_text_style.text_vertical_alignment = "top"
 sub_title_text_style.text_horizontal_alignment = "left"
+sub_title_text_style.offset = {
+	0,
+	60,
+	1
+}
 local character_name_style = table.clone(UIFontSettings.body)
 character_name_style.text_horizontal_alignment = "center"
 character_name_style.text_vertical_alignment = "top"

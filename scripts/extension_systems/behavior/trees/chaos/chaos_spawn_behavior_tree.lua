@@ -28,9 +28,9 @@ local COMBAT = {
 		action_data = action_data.tentacle_attack
 	},
 	{
-		"BtMeleeFollowTargetAction",
-		name = "follow",
-		action_data = action_data.follow
+		"BtErraticFollowAction",
+		name = "erratic_follow",
+		action_data = action_data.erratic_follow
 	},
 	condition = "is_aggroed",
 	name = "melee_combat"
@@ -90,10 +90,20 @@ local behavior_tree = {
 		action_data = action_data.stagger
 	},
 	{
-		"BtChangeTargetAction",
-		name = "change_target",
-		condition = "target_changed_and_valid",
-		action_data = action_data.change_target
+		"BtSelectorNode",
+		{
+			"BtMeleeAttackAction",
+			name = "change_target_combo",
+			condition = "chaos_spawn_target_changed_close",
+			action_data = action_data.change_target_combo
+		},
+		{
+			"BtChangeTargetAction",
+			name = "change_target",
+			action_data = action_data.change_target
+		},
+		condition = "chaos_spawn_target_changed",
+		name = "target_change"
 	},
 	{
 		"BtLeapAction",

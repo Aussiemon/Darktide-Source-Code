@@ -1,5 +1,5 @@
 local ShootingRangeSteps = require("scripts/extension_systems/training_grounds/shooting_range_steps")
-local TrainingGroundsSteps = require("scripts/extension_systems/training_grounds/training_grounds_steps_new")
+local TrainingGroundsSteps = require("scripts/extension_systems/training_grounds/training_grounds_steps")
 local GenericSteps = require("scripts/extension_systems/scripted_scenario/generic_steps")
 local ShootingRangeScenarios = {
 	init = {

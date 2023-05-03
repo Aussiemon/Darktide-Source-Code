@@ -21,6 +21,7 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local Weakspot = require("scripts/utilities/attack/weakspot")
 local armor_types = ArmorSettings.types
 local attack_results = AttackSettings.attack_results
+local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
 local projectile_impact_results = ProjectileLocomotionSettings.impact_results
 local surface_hit_types = SurfaceMaterialSettings.hit_types
@@ -54,6 +55,11 @@ ProjectileDamageExtension.init = function (self, extension_init_context, unit, e
 	self._marked_for_deletion = false
 	self._has_impacted = false
 	self._reset_time = false
+	self._impact_hit = 0
+	self._impact_hit_weakspot = 0
+	self._num_impact_hit_kill = 0
+	self._num_impact_hit_elite = 0
+	self._num_impact_hit_special = 0
 	local projectile_template = self._projectile_template
 	local damage_settings = projectile_template.damage
 	local fuse_damage_settings = damage_settings and damage_settings.fuse
@@ -70,11 +76,12 @@ ProjectileDamageExtension._calculate_hit_mass = function (self)
 	local projectile_template = self._projectile_template
 	local damage_settings = projectile_template.damage
 	local impact_damage_settings = damage_settings and damage_settings.impact
+	local attack_type = attack_types.ranged
 
 	if impact_damage_settings and impact_damage_settings.delete_on_hit_mass then
 		local impact_damage_profile = impact_damage_settings.damage_profile
 		local damage_profile_lerp_values = DamageProfile.lerp_values(impact_damage_profile, owner_unit)
-		local hit_mass_budget_attack, hit_mass_budget_impact = DamageProfile.max_hit_mass(impact_damage_profile, DEFAULT_POWER_LEVEL, charge_level, damage_profile_lerp_values, is_critical_strike)
+		local hit_mass_budget_attack, hit_mass_budget_impact = DamageProfile.max_hit_mass(impact_damage_profile, DEFAULT_POWER_LEVEL, charge_level, damage_profile_lerp_values, is_critical_strike, owner_unit, attack_type)
 
 		return hit_mass_budget_attack, hit_mass_budget_impact
 	end
@@ -207,6 +214,7 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 	end
 
 	if mark_for_deletion and not self._marked_for_deletion and not self._locomotion_extension:has_been_marked_for_deletion() then
+		self:_record_impact_concluded_stats()
 		Managers.state.unit_spawner:mark_for_deletion(projectile_unit)
 
 		self._marked_for_deletion = true
@@ -282,10 +290,15 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 					impact_result = "continue_straight"
 				end
 
-				local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(hit_unit, impact_damage_profile, "attack_direction", hit_direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "target_index", 1, "charge_level", impact_charge_level, "is_critical_strike", is_critical_strike, "hit_actor", hit_actor, "hit_world_position", hit_position, "attack_type", AttackSettings.attack_types.ranged, "damage_type", impact_damage_type, "attacking_unit", projectile_unit, "item", weapon_item_or_nil)
+				local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(hit_unit, impact_damage_profile, "attack_direction", hit_direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "target_index", 1, "charge_level", impact_charge_level, "is_critical_strike", is_critical_strike, "hit_actor", hit_actor, "hit_world_position", hit_position, "attack_type", attack_types.ranged, "damage_type", impact_damage_type, "attacking_unit", projectile_unit, "item", weapon_item_or_nil)
+				self._impact_hit = true
+				self._impact_hit_weakspot = self._impact_hit_weakspot + 1
+				self._num_impact_hit_kill = self._num_impact_hit_kill + (attack_result == attack_results.died and 1 or 0)
+				self._num_impact_hit_elite = self._num_impact_hit_elite + (target_breed_or_nil and target_breed_or_nil.tags.elite and 1 or 0)
+				self._num_impact_hit_special = self._num_impact_hit_special + (target_breed_or_nil and target_breed_or_nil.tags.special and 1 or 0)
 
 				if impact_damage_type then
-					ImpactEffect.play(hit_unit, hit_actor, damage_dealt, impact_damage_type, hit_zone_name, attack_result, hit_position, hit_normal, hit_direction, projectile_unit, IMPACT_FX_DATA, false, AttackSettings.attack_types.ranged, damage_efficiency, impact_damage_profile)
+					ImpactEffect.play(hit_unit, hit_actor, damage_dealt, impact_damage_type, hit_zone_name, attack_result, hit_position, hit_normal, hit_direction, projectile_unit, IMPACT_FX_DATA, false, attack_types.ranged, damage_efficiency, impact_damage_profile)
 				end
 
 				if impact_suppression_settings then
@@ -406,6 +419,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 	end
 
 	if (mark_for_deletion or force_delete) and not self._marked_for_deletion and not self._locomotion_extension:has_been_marked_for_deletion() then
+		self:_record_impact_concluded_stats()
 		Managers.state.unit_spawner:mark_for_deletion(projectile_unit)
 
 		self._marked_for_deletion = true
@@ -526,6 +540,23 @@ ProjectileDamageExtension._handle_explosion_achivements = function (self, player
 		if count >= 5 then
 			Managers.achievements:trigger_event(player:account_id(), player:character_id(), "veteran_2_unbounced_grenade_hits_event")
 		end
+	end
+end
+
+ProjectileDamageExtension._record_impact_concluded_stats = function (self)
+	local player = Managers.state.player_unit_spawn:owner(self._owner_unit)
+
+	if player and Managers.stats.can_record_stats() then
+		local impact_hit = self._impact_hit
+		local num_impact_hit_weakspot = self._impact_hit_weakspot
+		local num_impact_hit_kill = self._num_impact_hit_kill
+		local num_impact_hit_elite = self._num_impact_hit_elite
+		local num_impact_hit_special = self._num_impact_hit_special
+		local weapon_item_or_nil = self._weapon_item_or_nil
+		local weapon_template_or_nil = weapon_item_or_nil and WeaponTemplate.weapon_template_from_item(weapon_item_or_nil)
+		local weapon_template_name = weapon_template_or_nil and weapon_template_or_nil.name or "none"
+
+		Managers.stats:record_projectile_impact_concluded_stats(player, impact_hit, num_impact_hit_weakspot, num_impact_hit_kill, num_impact_hit_elite, num_impact_hit_special, weapon_template_name)
 	end
 end
 

@@ -56,7 +56,7 @@ ReviveInteraction.stop = function (self, world, interactor_unit, unit_data_compo
 			local is_human_player = interactor_player:is_human_controlled()
 
 			if is_human_player and Managers.stats.can_record_stats() then
-				Managers.stats:record_help_ally(interactor_player, target_player)
+				Managers.stats:record_assist_ally(interactor_player, target_player, self._template.type)
 			end
 		end
 	end

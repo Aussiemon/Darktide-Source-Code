@@ -226,7 +226,6 @@ local template_groups = {
 		"ammo_cache_pocketable",
 		"grimoire_pocketable",
 		"medical_crate_pocketable",
-		"syringe_corruption_pocketable",
 		"tome_pocketable"
 	},
 	{
@@ -291,8 +290,7 @@ local template_groups = {
 		"debug",
 		"debug_forcestaff_p1_base",
 		"debug_forcestaff_p2_base",
-		"debug_forcestaff_p3_base",
-		"debug_forcesword_2h_p1_base"
+		"debug_forcestaff_p3_base"
 	}
 }
 local template_names = {

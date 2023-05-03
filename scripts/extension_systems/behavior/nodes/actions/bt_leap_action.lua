@@ -3,10 +3,11 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Catapulted = require("scripts/extension_systems/character_state_machine/character_states/utilities/catapulted")
 local ChaosSpawnSettings = require("scripts/settings/monster/chaos_spawn_settings")
+local GroundImpact = require("scripts/utilities/attack/ground_impact")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionPerception = require("scripts/utilities/minion_perception")
-local GroundImpact = require("scripts/utilities/attack/ground_impact")
+local NavQueries = require("scripts/utilities/nav_queries")
 local Trajectory = require("scripts/utilities/trajectory")
 local BtLeapAction = class("BtLeapAction", "BtNode")
 
@@ -51,12 +52,19 @@ BtLeapAction.enter = function (self, unit, breed, blackboard, scratchpad, action
 		scratchpad.aoe_bot_threat_timing = t + action_data.aoe_bot_threat_timing
 	end
 
-	local start_duration = action_data.start_duration or 0
-	scratchpad.start_duration = t + start_duration
-	local start_leap_anim = action_data.start_leap_anim_event
+	local start_leap_anim = nil
+	local distance = perception_component.target_distance
+	local is_short_leap = distance <= ChaosSpawnSettings.short_leap_distance
+
+	if is_short_leap then
+		start_leap_anim = action_data.short_start_leap_anim_event
+	else
+		start_leap_anim = action_data.start_leap_anim_event
+	end
 
 	animation_extension:anim_event(start_leap_anim)
 
+	scratchpad.start_duration = t + action_data.start_duration[start_leap_anim]
 	scratchpad.state = "starting"
 	behavior_component.move_state = "moving"
 	scratchpad.broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -99,8 +107,7 @@ BtLeapAction.run = function (self, unit, breed, blackboard, scratchpad, action_d
 
 	if state == "starting" then
 		local leap_velocity = behavior_component.leap_velocity:unbox()
-		local slot_system = Managers.state.extension:system("slot_system")
-		local target_position = slot_system:user_unit_slot_position(unit) or POSITION_LOOKUP[target_unit]
+		local target_position = POSITION_LOOKUP[target_unit]
 
 		if target_position then
 			local towards_target_position = Vector3.flat(Vector3.normalize(target_position - POSITION_LOOKUP[unit]))
@@ -119,7 +126,7 @@ BtLeapAction.run = function (self, unit, breed, blackboard, scratchpad, action_d
 			self:_try_start_leap(unit, t, blackboard, scratchpad, action_data)
 		end
 
-		if scratchpad.aoe_bot_threat_timing and scratchpad.aoe_bot_threat_timing <= t then
+		if ALIVE[target_unit] and scratchpad.aoe_bot_threat_timing and scratchpad.aoe_bot_threat_timing <= t then
 			local group_extension = ScriptUnit.extension(target_unit, "group_system")
 			local bot_group = group_extension:bot_group()
 			local aoe_bot_threat_size = action_data.aoe_bot_threat_size:unbox()
@@ -243,23 +250,20 @@ BtLeapAction._get_leap_velocity = function (self, unit, scratchpad, action_data)
 		return false
 	end
 
-	local distance = perception_component.target_distance
-
-	if distance < ChaosSpawnSettings.min_leap_distance or ChaosSpawnSettings.max_leap_distance < distance then
-		return
-	end
-
 	local speed = ChaosSpawnSettings.leap_speed
 	local gravity = ChaosSpawnSettings.leap_gravity
 	local acceptable_accuracy = 0.1
-	local slot_system = Managers.state.extension:system("slot_system")
-	local target_position = slot_system:user_unit_slot_position(unit)
+	local target_position = POSITION_LOOKUP[perception_component.target_unit]
+	local offset_dir = Vector3.normalize(self_position - target_position)
+	target_position = target_position + offset_dir * ChaosSpawnSettings.offset_in_front_of_target
+	local nav_world = scratchpad.navigation_extension:nav_world()
+	local target_position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, target_position, 1, 1, 0.5, 0.1)
 
-	if not target_position or ChaosSpawnSettings.min_leap_distance < Vector3.distance(self_position, target_position) then
+	if not target_position_on_navmesh then
 		return false
 	end
 
-	local angle_to_hit_target, est_pos = Trajectory.angle_to_hit_moving_target(self_position, target_position, speed, Vector3(0, 0, 0), gravity, acceptable_accuracy)
+	local angle_to_hit_target, est_pos = Trajectory.angle_to_hit_moving_target(self_position, target_position_on_navmesh, speed, Vector3(0, 0, 0), gravity, acceptable_accuracy)
 
 	if not angle_to_hit_target then
 		return false

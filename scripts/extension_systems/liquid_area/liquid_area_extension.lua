@@ -31,8 +31,9 @@ LiquidAreaExtension.init = function (self, extension_init_context, unit, extensi
 	local template = extension_init_data.template
 	local cell_size = template.cell_size
 	local max_liquid = extension_init_data.optional_max_liquid or template.max_liquid
+	local z_cell_size = template.z_cell_size or Z_CELL_SIZE
 	local xy_extents = math.min(max_liquid + EXTRA_XY_EXTENTS, MAX_XY_EXTENTS)
-	self._grid = HexGrid:new(nav_mesh_position, xy_extents, Z_EXTENTS, cell_size, Z_CELL_SIZE)
+	self._grid = HexGrid:new(nav_mesh_position, xy_extents, Z_EXTENTS, cell_size, z_cell_size)
 	self._cell_radius = cell_size / 2
 	self._ignore_bot_threat = template.ignore_bot_threat
 	self._liquid_paint_id = extension_init_data.optional_liquid_paint_id
@@ -79,6 +80,14 @@ LiquidAreaExtension.init = function (self, extension_init_context, unit, extensi
 	self._starting_flow_angle = starting_angle
 	self._source_unit = extension_init_data.source_unit
 	self._optional_source_item = extension_init_data.optional_source_item
+	local disable_covers_within_radius = template.disable_covers_within_radius
+
+	if disable_covers_within_radius then
+		self._disable_covers_within_radius = disable_covers_within_radius
+		self._disabled_cover_slots = {}
+		self._cover_system = Managers.state.extension:system("cover_system")
+	end
+
 	local nav_cost_map_name = template.nav_cost_map_name
 
 	if nav_cost_map_name then
@@ -259,6 +268,20 @@ LiquidAreaExtension._set_filled = function (self, real_index)
 		liquid.particle_id = World.create_particles(world, vfx_name_filled, position, rotation)
 	else
 		liquid.particle_id = nil
+	end
+
+	local disable_covers_within_radius = self._disable_covers_within_radius
+
+	if disable_covers_within_radius then
+		local disabled_cover_slots = self._disabled_cover_slots
+		local cover_system = self._cover_system
+		local nearby_cover_slots = cover_system:find_cover_slots(position, disable_covers_within_radius)
+
+		for i = 1, #nearby_cover_slots do
+			local cover_slot = nearby_cover_slots[i]
+			cover_slot.disabled = true
+			disabled_cover_slots[#disabled_cover_slots + 1] = cover_slot
+		end
 	end
 
 	local set_filled_buffer = self._set_filled_buffer
@@ -724,6 +747,7 @@ LiquidAreaExtension._update_flow = function (self, dt)
 	end
 end
 
+local MAX_BROADPHASE_RADIUS = 50
 local TEMP_POSITIONS = {}
 
 LiquidAreaExtension._calculate_broadphase_size = function (self)
@@ -761,7 +785,7 @@ LiquidAreaExtension._calculate_broadphase_size = function (self)
 
 	self._broadphase_center:store(center_position)
 
-	self._broadphase_radius = math.sqrt(max_distance_sq)
+	self._broadphase_radius = math.min(math.sqrt(max_distance_sq), MAX_BROADPHASE_RADIUS)
 	local nav_cost_map_id = self._nav_cost_map_id
 
 	if nav_cost_map_id and not self._nav_cost_map_volume_uses_cells then

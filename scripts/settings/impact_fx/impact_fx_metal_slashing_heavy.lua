@@ -419,41 +419,6 @@ local armored = {
 		damage = blood_ball
 	}
 }
-local void_shield = {
-	sfx = {
-		damage = {
-			{
-				event = "wwise/events/minion/play_traitor_captain_shield_bullet_hits",
-				append_husk_to_event_name = true
-			}
-		},
-		damage_negated = {
-			{
-				event = "wwise/events/minion/play_traitor_captain_shield_bullet_hits",
-				append_husk_to_event_name = true
-			}
-		}
-	},
-	vfx = {
-		damage = {
-			{
-				normal_rotation = true,
-				effects = {
-					"content/fx/particles/enemies/renegade_captain/renegade_captain_shield_impact"
-				}
-			}
-		},
-		damage_negated = {
-			{
-				normal_rotation = true,
-				effects = {
-					"content/fx/particles/enemies/renegade_captain/renegade_captain_shield_impact"
-				}
-			}
-		}
-	},
-	blood_ball = {}
-}
 local super_armor = {
 	sfx = {
 		weakspot_died = {
@@ -998,7 +963,6 @@ return {
 		[armor_types.resistant] = resistant,
 		[armor_types.super_armor] = super_armor,
 		[armor_types.unarmored] = unarmored,
-		[armor_types.prop_armor] = prop_armor,
-		[armor_types.void_shield] = void_shield
+		[armor_types.prop_armor] = prop_armor
 	}
 }

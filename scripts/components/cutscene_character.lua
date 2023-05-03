@@ -1,6 +1,10 @@
 local CutsceneCharacter = component("CutsceneCharacter")
 
 CutsceneCharacter.init = function (self, unit)
+	if DEDICATED_SERVER then
+		return false
+	end
+
 	self:enable(unit)
 
 	self._unit = unit
@@ -12,13 +16,14 @@ CutsceneCharacter.init = function (self, unit)
 	self._breed_name = breed_name
 	local cinematic_slot = self:get_data(unit, "cinematic_slot")
 	self._cinematic_slot = cinematic_slot
+	local equip_slot_on_loadout_assign = self:get_data(unit, "equip_slot_on_loadout_assign")
 	local cutscene_character_extension = ScriptUnit.fetch_component_extension(unit, "cutscene_character_system")
 
 	if cutscene_character_extension then
 		local prop_items = self:get_data(unit, "prop_items")
 		local animation_event = self:get_data(unit, "animation_event")
 
-		cutscene_character_extension:setup_from_component(cinematic_name, character_type, breed_name, prop_items, cinematic_slot, animation_event)
+		cutscene_character_extension:setup_from_component(cinematic_name, character_type, breed_name, prop_items, cinematic_slot, animation_event, equip_slot_on_loadout_assign)
 	end
 end
 
@@ -51,12 +56,20 @@ CutsceneCharacter.breed_name = function (self)
 end
 
 CutsceneCharacter.start_weapon_specific_walk_animation = function (self)
+	if DEDICATED_SERVER then
+		return false
+	end
+
 	local cutscene_character_extension = ScriptUnit.extension(self._unit, "cutscene_character_system")
 
 	cutscene_character_extension:start_weapon_specific_walk_animation()
 end
 
 CutsceneCharacter.start_inventory_specific_walk_animation = function (self)
+	if DEDICATED_SERVER then
+		return false
+	end
+
 	local cutscene_character_extension = ScriptUnit.extension(self._unit, "cutscene_character_system")
 
 	cutscene_character_extension:start_inventory_specific_walk_animation()
@@ -194,6 +207,12 @@ CutsceneCharacter.component_data = {
 			"unready_idle",
 			"ready"
 		}
+	},
+	equip_slot_on_loadout_assign = {
+		ui_type = "text_box",
+		value = "",
+		ui_name = "Equip Slot on Loadout Assignment",
+		category = "Attachments"
 	},
 	inputs = {
 		start_weapon_specific_walk_animation = {

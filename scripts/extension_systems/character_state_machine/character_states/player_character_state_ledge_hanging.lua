@@ -69,6 +69,7 @@ PlayerCharacterStateLedgeHanging.init = function (self, character_state_init_con
 	self._canceled_assist = false
 	self._inventory_component = unit_data_extension:write_component("inventory")
 	self._entered_state_t = nil
+	self._time_disabled = nil
 	local unit = self._unit
 	local left_handle = Unit.node(unit, HAND_IK_CONFIG.left_handle_name)
 	local left_transform_node = Unit.node(unit, HAND_IK_CONFIG.left_transform_name)
@@ -121,6 +122,7 @@ PlayerCharacterStateLedgeHanging.on_enter = function (self, unit, dt, t, previou
 	self._cancelled_assist = false
 	local is_server = self._is_server
 	self._entered_state_t = t
+	self._time_disabled = is_server and 0 or nil
 
 	if is_server then
 		self._fx_extension:trigger_gear_wwise_event_with_source(STINGER_ENTER_ALIAS, STINGER_PROPERTIES, SFX_SOURCE, true, true)
@@ -160,9 +162,16 @@ PlayerCharacterStateLedgeHanging.on_exit = function (self, unit, t, next_state)
 				local time_in_captivity = t - self._entered_state_t
 
 				Managers.telemetry_events:player_exits_captivity(player, rescued_by_player, state_name, time_in_captivity)
+
+				local stat_manager = Managers.stats
+
+				if stat_manager.can_record_stats() then
+					stat_manager:record_exit_disabled_character_state(state_name, self._time_disabled)
+				end
 			end
 
 			self._entered_state_t = nil
+			self._time_disabled = nil
 		end
 	end
 
@@ -187,6 +196,10 @@ PlayerCharacterStateLedgeHanging.fixed_update = function (self, unit, dt, t, nex
 		local ledge_hanging_character_state = self._ledge_hanging_character_state_component
 		local time_to_fall_down = ledge_hanging_character_state.time_to_fall_down
 		ledge_hanging_character_state.time_to_fall_down = time_to_fall_down + dt
+	end
+
+	if self._is_server and not assist_in_progress then
+		self._time_disabled = self._time_disabled + dt
 	end
 
 	return self:_check_transition(unit, t, next_state_params, assist_done)

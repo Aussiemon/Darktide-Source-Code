@@ -226,14 +226,14 @@ local action_data = {
 			attack_throw_long_02 = Vector3Box(0.3618, 0.8799, 1.8387)
 		},
 		throw_config = {
-			acceptable_accuracy = 0.5,
+			acceptable_accuracy = 1,
 			item = "content/items/weapons/minions/ranged/cultist_grenade",
 			unit_node = "j_rightweaponattach",
-			projectile_template = ProjectileTemplates.renegade_grenadier_fire_grenade
+			projectile_template = ProjectileTemplates.cultist_grenadier_grenade
 		},
 		throw_position_distance = {
 			1,
-			2.5
+			12
 		},
 		new_location_max_dist = math.huge
 	},
@@ -275,8 +275,9 @@ local action_data = {
 		throw_config = {
 			unit_node = "j_rightweaponattach",
 			item = "content/items/weapons/minions/ranged/cultist_grenade",
-			projectile_template = ProjectileTemplates.renegade_grenadier_fire_grenade
-		}
+			projectile_template = ProjectileTemplates.cultist_grenadier_grenade
+		},
+		cooldown = MinionDifficultySettings.cooldowns.cultist_grenadier_throw
 	},
 	quick_throw_grenade = {
 		utility_weight = 20,
@@ -299,9 +300,9 @@ local action_data = {
 			acceptable_accuracy = 1,
 			item = "content/items/weapons/minions/ranged/cultist_grenade",
 			unit_node = "j_rightweaponattach",
-			projectile_template = ProjectileTemplates.renegade_grenadier_fire_grenade
+			projectile_template = ProjectileTemplates.cultist_grenadier_grenade
 		},
-		cooldown = MinionDifficultySettings.cooldowns.grenadier_throw
+		cooldown = MinionDifficultySettings.cooldowns.cultist_grenadier_throw
 	},
 	melee_attack = {
 		weapon_reach = 4,

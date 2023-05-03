@@ -34,6 +34,7 @@ CombatVectorSystem.init = function (self, ...)
 		self._current_from_position = Vector3Box()
 		self._current_to_position = Vector3Box()
 		self._combat_vector = Vector3Box()
+		self._last_known_positions = {}
 		local location_types = CombatVectorSettings.location_types
 		local max_segments = CombatVectorSettings.max_segments
 		local segments = {}
@@ -231,7 +232,7 @@ CombatVectorSystem._update_combat_vector = function (self, dt, t)
 
 	if astar_data.astar_timer < t and astar_data.astar_finished then
 		local new_astar = astar_data.astar or GwNavAStar.create(nav_world)
-		local from_position = _calculate_from_position(nav_world, traverse_logic, self._locked_in_melee_unit or self._main_aggro_unit)
+		local from_position = _calculate_from_position(nav_world, traverse_logic, self._locked_in_melee_unit or self._main_aggro_unit, self._last_known_positions)
 		local astar_frequency = CombatVectorSettings.astar_frequency
 
 		if not from_position then
@@ -405,6 +406,14 @@ CombatVectorSystem.is_traverse_logic_initialized = function (self)
 	return self._traverse_logic ~= nil
 end
 
+CombatVectorSystem.set_last_known_position = function (self, unit, position)
+	if not self._last_known_positions[unit] then
+		self._last_known_positions[unit] = Vector3Box(position)
+	else
+		self._last_known_positions[unit]:store(position)
+	end
+end
+
 local ABOVE = 4
 local BELOW = 4
 local LATERAL = 4
@@ -550,13 +559,13 @@ function _calculate_segment(nav_world, traverse_logic, segments, segment_positio
 	segments[index][RIGHT_SEGMENT_INDEX]:store(hit_position2)
 end
 
-function _calculate_from_position(nav_world, traverse_logic, main_aggro_unit)
+function _calculate_from_position(nav_world, traverse_logic, main_aggro_unit, last_known_positions)
 	if not ALIVE[main_aggro_unit] then
 		return
 	end
 
 	local from_unit = main_aggro_unit
-	local from_position = POSITION_LOOKUP[from_unit]
+	local from_position = last_known_positions[from_unit] and last_known_positions[from_unit]:unbox() or POSITION_LOOKUP[from_unit]
 	local from_position_on_nav_mesh = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, from_position, ABOVE, BELOW, LATERAL, DISTANCE_FROM_OBSTACLE)
 
 	return from_position_on_nav_mesh

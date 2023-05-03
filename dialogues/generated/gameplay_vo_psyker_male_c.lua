@@ -321,17 +321,6 @@ local gameplay_vo_psyker_male_c = {
 			1.37499,
 			1.509708
 		},
-		sound_event_weights = {
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111
-		},
 		randomize_indexes = {}
 	},
 	critical_health = {
@@ -825,18 +814,6 @@ local gameplay_vo_psyker_male_c = {
 			1.103125,
 			1.763521,
 			1.419104
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -1509,13 +1486,6 @@ local gameplay_vo_psyker_male_c = {
 			2.668917,
 			2.611854
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	found_health_booster_ogryn_low_on_health = {
@@ -1840,18 +1810,6 @@ local gameplay_vo_psyker_male_c = {
 			1.609583,
 			1.869177,
 			2.099094
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -2366,18 +2324,6 @@ local gameplay_vo_psyker_male_c = {
 			2.608833,
 			1.683615,
 			1.827708
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -3452,13 +3398,6 @@ local gameplay_vo_psyker_male_c = {
 			2.562385,
 			1.749625
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	response_for_psyker_disabled_by_chaos_hound = {
@@ -3772,13 +3711,6 @@ local gameplay_vo_psyker_male_c = {
 			1.349375,
 			1.282823,
 			1.453667
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -4099,14 +4031,6 @@ local gameplay_vo_psyker_male_c = {
 			2.546927,
 			2.057333
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	seen_enemy_executor = {
@@ -4245,6 +4169,47 @@ local gameplay_vo_psyker_male_c = {
 			1.142719,
 			1.569375,
 			2.215646
+		},
+		randomize_indexes = {}
+	},
+	seen_enemy_netgunner = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_psyker_male_c__seen_netgunner_01",
+			"loc_psyker_male_c__seen_netgunner_02",
+			"loc_psyker_male_c__seen_netgunner_03",
+			"loc_psyker_male_c__seen_netgunner_04",
+			"loc_psyker_male_c__seen_netgunner_05",
+			"loc_psyker_male_c__seen_netgunner_06",
+			"loc_psyker_male_c__seen_netgunner_07",
+			"loc_psyker_male_c__seen_netgunner_08",
+			"loc_psyker_male_c__seen_netgunner_09",
+			"loc_psyker_male_c__seen_netgunner_10"
+		},
+		sound_events_duration = {
+			0.54224,
+			0.895344,
+			1.187198,
+			0.936896,
+			1.055052,
+			1.148167,
+			1.660771,
+			1.161323,
+			1.952573,
+			1.141427
+		},
+		sound_event_weights = {
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1,
+			0.1
 		},
 		randomize_indexes = {}
 	},

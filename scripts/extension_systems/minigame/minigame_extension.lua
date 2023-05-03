@@ -35,7 +35,6 @@ MinigameExtension.setup_from_component = function (self, minigame_type, decode_s
 		decode_symbols_sweep_duration = decode_symbols_sweep_duration,
 		decode_symbols_stage_amount = MinigameSettings.decode_symbols_stage_amount,
 		decode_symbols_items_per_stage = MinigameSettings.decode_symbols_items_per_stage,
-		decode_symbols_target_margin = MinigameSettings.decode_symbols_target_margin,
 		decode_symbols_total_items = MinigameSettings.decode_symbols_total_items
 	}
 	local minigame_class = MINIGAME_CLASSES[minigame_type]

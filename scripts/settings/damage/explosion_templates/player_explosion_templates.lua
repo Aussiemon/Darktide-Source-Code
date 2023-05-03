@@ -164,7 +164,29 @@ local explosion_templates = {
 			"content/fx/particles/impacts/weapons/plasma_gun/plasma_gun_impact_large"
 		},
 		sfx = {
-			"wwise/events/weapon/play_explosion_plasma_overheat",
+			"wwise/events/weapon/play_explosion_barrel_explosion",
+			"wwise/events/weapon/play_explosion_refl_small"
+		}
+	},
+	warp_charge_overload = {
+		static_power_level = 500,
+		radius = 10,
+		damage_falloff = true,
+		close_radius = 1.5,
+		collision_filter = "filter_player_character_explosion",
+		damage_profile = DamageProfileTemplates.plasma_overheat,
+		close_damage_profile = DamageProfileTemplates.plasma_overheat,
+		explosion_area_suppression = {
+			suppression_falloff = true,
+			instant_aggro = true,
+			distance = 15,
+			suppression_value = 20
+		},
+		vfx = {
+			"content/fx/particles/impacts/weapons/plasma_gun/plasma_gun_impact_large"
+		},
+		sfx = {
+			"wwise/events/weapon/play_explosion_barrel_explosion",
 			"wwise/events/weapon/play_explosion_refl_small"
 		}
 	},
@@ -345,14 +367,13 @@ local explosion_templates = {
 			}
 		}
 	},
-	buff_explosion = {
+	trait_buff_flamer_p1_minion_explosion = {
 		static_power_level = 600,
 		radius = 2,
-		min_radius = 0.25,
 		damage_falloff = true,
+		min_radius = 0.25,
 		collision_filter = "filter_player_character_explosion",
 		damage_profile = DamageProfileTemplates.default_grenade,
-		damage_type = damage_types.grenade_frag,
 		explosion_area_suppression = {
 			suppression_falloff = true,
 			instant_aggro = true,
@@ -360,7 +381,7 @@ local explosion_templates = {
 			suppression_value = 12
 		},
 		vfx = {
-			"content/fx/particles/weapons/grenades/flame_grenade_initial_blast"
+			"content/fx/particles/weapon_traits/flamer_minion_explosion"
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_flame",

@@ -80,7 +80,6 @@ local sound_events = {
 	"wwise/events/weapon/play_explosion_grenade_frag",
 	"wwise/events/weapon/play_explosion_grenade_krak",
 	"wwise/events/weapon/play_explosion_grenade_shock",
-	"wwise/events/weapon/play_explosion_plasma_overheat",
 	"wwise/events/weapon/play_explosion_refl_gen",
 	"wwise/events/weapon/play_explosion_refl_small",
 	"wwise/events/weapon/play_explosion_refl_tiny",

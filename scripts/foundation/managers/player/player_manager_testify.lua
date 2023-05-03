@@ -139,7 +139,7 @@ PlayerManagerTestify.teleport_players_to_main_path_point = function (main_path_p
 	local target_position = MainPathQueries.position_from_distance(main_path_point)
 
 	if target_position then
-		target_position.z = target_position.z
+		target_position.z = target_position.z + 0.5
 
 		for _, player in pairs(human_players) do
 			if not player or not player:unit_is_alive() then

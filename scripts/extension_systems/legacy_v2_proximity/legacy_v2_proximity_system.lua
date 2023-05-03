@@ -30,7 +30,6 @@ LegacyV2ProximitySystem.init = function (self, extension_system_creation_context
 	self._player_unit_component_map = {}
 	self._ai_unit_extensions_map = {}
 	self._special_unit_extension_map = {}
-	self._is_server = extension_system_creation_context.is_server
 	self._enemy_broadphase = Broadphase(PROXIMITY_DISTANCE_ENEMIES, 128)
 	self._special_units_broadphase = Broadphase(SPECIAL_PROXIMITY_DISTANCE, 8)
 	self._player_units_broadphase = Broadphase(PROXIMITY_DISTANCE_FRIENDS, 4)
@@ -46,8 +45,6 @@ LegacyV2ProximitySystem.init = function (self, extension_system_creation_context
 	self._cache_delayed_vo = nil
 	self._broadphase_result = {}
 	self._distance_based_vo_queries = {}
-	local side_system = Managers.state.extension:system("side_system")
-	self._player_side = side_system:get_side_from_name(side_system:get_default_player_side_name())
 	self._safe_raycast_cb = callback(self, "_async_raycast_result_cb")
 	self._raycast_object = Managers.state.game_mode:create_safe_raycast_object("all", "collision_filter", "filter_see_enemies")
 end
@@ -293,7 +290,7 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 		Broadphase_move(special_units_broadphase, extension.special_broadphase_id, position)
 	end
 
-	self:_update_nearby_enemies(self._player_side)
+	self:_update_nearby_enemies()
 
 	if not self._is_server then
 		return
@@ -373,9 +370,9 @@ LegacyV2ProximitySystem.physics_async_update = function (self, context, dt, t)
 				local look_direction = Quaternion.forward(look_rot)
 				local pos_flat = Vector3.flat(position)
 				look_direction.z = 0
-				local num_nearby_units = Broadphase.query(special_units_broadphase, position, SPECIAL_PROXIMITY_DISTANCE, broadphase_result)
+				local num_nearby_special_units = Broadphase.query(special_units_broadphase, position, SPECIAL_PROXIMITY_DISTANCE, broadphase_result)
 
-				for i = 1, num_nearby_units do
+				for i = 1, num_nearby_special_units do
 					local nearby_unit = broadphase_result[i]
 					broadphase_result[i] = nil
 
@@ -434,7 +431,7 @@ end
 
 local MAX_ALLOWED_FX = 12
 
-LegacyV2ProximitySystem._update_nearby_enemies = function (self, side)
+LegacyV2ProximitySystem._update_nearby_enemies = function (self)
 	if DEDICATED_SERVER then
 		return
 	end

@@ -343,8 +343,8 @@ CreditsGoodsVendorView._on_purchase_complete = function (self, items)
 	end
 
 	self._parent:play_vo_events({
-		"credit_store_servitor_purchase_c"
-	}, "credit_store_servitor_c", nil, 1.4)
+		"credit_store_servitor_purchase_b"
+	}, "credit_store_servitor_b", nil, 1.4)
 end
 
 CreditsGoodsVendorView._is_result_presentation_active = function (self)

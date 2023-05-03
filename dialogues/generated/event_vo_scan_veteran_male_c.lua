@@ -7,8 +7,8 @@ local event_vo_scan_veteran_male_c = {
 			[2.0] = "loc_veteran_male_c__event_scan_first_target_scanned_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678,
-			[2.0] = 3.45678
+			[1.0] = 1.465396,
+			[2.0] = 1.835552
 		},
 		randomize_indexes = {}
 	}

@@ -57,7 +57,6 @@ damage_templates.melee_fighter_default = {
 	ogryn_disorientation_type = "ogryn_medium",
 	melee_toughness_multiplier = 2,
 	stagger_category = "melee",
-	toughness_factor_spillover_modifier = 0.5,
 	interrupt_alternate_fire = true,
 	disorientation_type = "medium",
 	armor_damage_modifier = {
@@ -551,6 +550,69 @@ damage_templates.chaos_spawn_tentacle = {
 	},
 	push_template = push_templates.chaos_spawn_tentacle,
 	ogryn_push_template = push_templates.chaos_spawn_tentacle,
+	force_look_function = ForcedLookSettings.look_functions.to_or_from_attack_direction,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+damage_templates.chaos_spawn_grab_smash_human = {
+	block_cost_multiplier = 1,
+	stagger_category = "melee",
+	melee_toughness_multiplier = 2,
+	toughness_multiplier = 2,
+	interrupt_alternate_fire = true,
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod
+	},
+	crit_mods = {
+		attack = crit_armor_mod,
+		impact = crit_impact_armor_mod
+	},
+	power_distribution = {
+		attack = 10,
+		impact = 50
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25
+	},
+	push_template = push_templates.chaos_spawn_tentacle,
+	ogryn_push_template = push_templates.chaos_spawn_tentacle,
+	force_look_function = ForcedLookSettings.look_functions.to_or_from_attack_direction,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+damage_templates.chaos_spawn_grab_smash_ogryn = {
+	block_cost_multiplier = 2,
+	melee_toughness_multiplier = 2,
+	stagger_category = "melee",
+	toughness_multiplier = 2,
+	interrupt_alternate_fire = true,
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod
+	},
+	crit_mods = {
+		attack = crit_armor_mod,
+		impact = crit_impact_armor_mod
+	},
+	power_distribution = {
+		attack = 15,
+		impact = 50
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25
+	},
+	push_template = push_templates.chaos_spawn_tentacle,
+	ogryn_push_template = push_templates.chaos_spawn_tentacle,
+	catapulting_template = CatapultingTemplates.plague_ogryn_catapult,
 	force_look_function = ForcedLookSettings.look_functions.to_or_from_attack_direction,
 	targets = {
 		default_target = {
@@ -3077,6 +3139,8 @@ damage_templates.beast_of_nurgle_push_players.push_template = push_templates.bea
 damage_templates.beast_of_nurgle_push_players.disorientation_type = "medium"
 damage_templates.beast_of_nurgle_push_players.ogryn_disorientation_type = "ogryn_medium"
 damage_templates.beast_of_nurgle_push_minion = table.clone(damage_templates.chaos_hound_push)
+damage_templates.chaos_spawn_push_players = table.clone(damage_templates.beast_of_nurgle_push_players)
+damage_templates.chaos_spawn_push_minions = table.clone(damage_templates.chaos_hound_push)
 damage_templates.chaos_ogryn_gunner_melee = {
 	disorientation_type = "heavy",
 	stagger_category = "melee",
@@ -3549,10 +3613,12 @@ damage_templates.beast_of_nurgle_self_gib = {
 	}
 }
 damage_templates.toxic_gas_mutator = {
-	stagger_category = "melee",
 	ogryn_disorientation_type = "corruption",
-	toughness_multiplier = 2,
 	disorientation_type = "corruption",
+	toughness_multiplier = 3,
+	permanent_damage_ratio = 1,
+	ignore_mood_effects = true,
+	stagger_category = "melee",
 	ignore_depleting_toughness = true,
 	armor_damage_modifier = {
 		attack = {

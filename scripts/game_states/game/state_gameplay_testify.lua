@@ -107,6 +107,17 @@ local StateGameplayTestify = {
 
 		spawner_manager:mark_for_deletion(unit)
 	end,
+	fast_forward_end_of_round = function (_, end_view)
+		local mission = Managers.state.mission:mission_name()
+		local game_mode_name = Managers.state.game_mode:game_mode_name()
+		local is_in_hub = game_mode_name == "hub"
+
+		if is_in_hub then
+			return
+		else
+			return Testify.RETRY
+		end
+	end,
 	fetch_weapon_traits = function (params)
 		local traits = {
 			melee_traits = {},

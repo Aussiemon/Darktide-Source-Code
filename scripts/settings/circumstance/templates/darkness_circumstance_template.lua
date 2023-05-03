@@ -1,5 +1,6 @@
 local circumstance_templates = {
 	darkness_01 = {
+		dialogue_id = "circumstance_vo_darkness",
 		wwise_state = "darkness_01",
 		theme_tag = "darkness",
 		ui = {
@@ -15,8 +16,13 @@ local circumstance_templates = {
 		}
 	},
 	darkness_hunting_grounds_01 = {
+		dialogue_id = "circumstance_vo_darkness",
 		wwise_state = "darkness_01",
 		theme_tag = "darkness",
+		dialogue_load_files = {
+			"circumstance_vo_darkness",
+			"circumstance_vo_hunting_grounds"
+		},
 		ui = {
 			description = "loc_circumstance_darkness_hunting_grounds_description",
 			icon = "content/ui/materials/icons/circumstances/darkness_02",
@@ -31,6 +37,7 @@ local circumstance_templates = {
 		}
 	},
 	darkness_more_resistance_01 = {
+		dialogue_id = "circumstance_vo_darkness",
 		wwise_state = "darkness_01",
 		theme_tag = "darkness",
 		ui = {
@@ -47,6 +54,7 @@ local circumstance_templates = {
 		}
 	},
 	darkness_less_resistance_01 = {
+		dialogue_id = "circumstance_vo_darkness",
 		wwise_state = "darkness_01",
 		theme_tag = "darkness",
 		ui = {

@@ -7,7 +7,8 @@ local MUZZLE_VFX = "content/fx/particles/enemies/renegade_captain/enemy_plasma_s
 local FX_SOURCE_NAME = "muzzle"
 local resources = {
 	start_sound_event = START_SOUND_EVENT,
-	stop_sound_event = STOP_SOUND_EVENT
+	stop_sound_event = STOP_SOUND_EVENT,
+	muzzle_vfx = MUZZLE_VFX
 }
 local effect_template = {
 	name = "renegade_captain_plasma_pistol_charge_up",

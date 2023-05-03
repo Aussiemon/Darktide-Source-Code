@@ -127,7 +127,7 @@ local archetype_talents = {
 		},
 		psyker_2_tier_2_name_1 = {
 			description = "loc_talent_biomancer_all_damage_from_warp_charge_desc",
-			name = "Gain damage with warp attacks based on your current warp charge amount.",
+			name = "Gain damage with based on your current warp charge amount. 10-25%",
 			display_name = "loc_talent_biomancer_damage_from_warp_charge",
 			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_1_3",
 			format_values = {
@@ -155,7 +155,7 @@ local archetype_talents = {
 		},
 		psyker_2_tier_2_name_3 = {
 			description = "loc_talent_biomancer_smite_kills_add_warp_fire_desc",
-			name = "Killing an elite enemy with Smite applies one stack of warpfire to all nearby enemies.",
+			name = "Hitting an elite/special enemy with Smite applies 3 stack of warpfire to all nearby enemies.",
 			display_name = "loc_talent_biomancer_smite_kills_add_warp_fire",
 			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_2_3_b",
 			format_values = {
@@ -199,7 +199,7 @@ local archetype_talents = {
 		},
 		psyker_2_tier_3_name_3 = {
 			description = "loc_talent_biomancer_smite_increases_non_warp_damage_desc",
-			name = "Damaging an enemy with your smite ability causes them to take increased damage from all non-warp sources for {time:%d} seconds.",
+			name = "Damaging an enemy with your smite ability causes them to take increased damage from all sources for 5 seconds.",
 			display_name = "loc_talent_biomancer_smite_increases_non_warp_damage",
 			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_3_3",
 			format_values = {
@@ -262,7 +262,7 @@ local archetype_talents = {
 		},
 		psyker_2_tier_5_name_2 = {
 			description = "loc_talent_biomancer_warpfire_self_spread_portion_of_stacks_desc",
-			name = "While you have maximum souls, gaining a soul instead applies a stack of warpfire to a nearby enemy, prioritizing elite enemies.",
+			name = "Whenever an enemy you've affected with Warpfire dies, they spread up to 4 stacks evenly to enemies nearby",
 			display_name = "loc_talent_biomancer_warpfire_spread",
 			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_1_2",
 			format_values = {
@@ -289,7 +289,7 @@ local archetype_talents = {
 		},
 		psyker_2_tier_6_name_1 = {
 			description = "loc_talent_biomancer_combat_ability_cooldown_per_soul_increased_souls_desc",
-			name = "Using Unleash the warp removes all souls and reduces the cooldown for each soul removed.",
+			name = "Using Unleash the warp removes all souls and reduces the cooldown for each soul removed. You now gain one extra soul whenever you would gain a soul",
 			display_name = "loc_talent_biomancer_combat_ability_cooldown_per_soul",
 			icon = "content/ui/textures/icons/talents/psyker_2/psyker_2_tier_6_1",
 			format_values = {

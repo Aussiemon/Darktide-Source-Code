@@ -36,8 +36,11 @@ MinigameDecodeSymbolsView.update = function (self, dt, t, widgets_by_name)
 		end
 
 		if #self._grid_widgets > 0 and decode_start_time then
-			self:_draw_cursor(widgets_by_name, decode_start_time)
-			self:_draw_targets(widgets_by_name, decode_start_time)
+			local t_gameplay = Managers.time:time("gameplay")
+			local on_target = minigame:is_on_target(t_gameplay)
+
+			self:_draw_cursor(widgets_by_name, decode_start_time, on_target, t_gameplay)
+			self:_draw_targets(widgets_by_name, decode_start_time, on_target)
 		end
 	end
 end
@@ -107,8 +110,7 @@ MinigameDecodeSymbolsView._create_symbol_widgets = function (self)
 	end
 end
 
-MinigameDecodeSymbolsView._draw_cursor = function (self, widgets_by_name, decode_start_time)
-	local t_gameplay = Managers.time:time("gameplay")
+MinigameDecodeSymbolsView._draw_cursor = function (self, widgets_by_name, decode_start_time, on_target, gameplay_time)
 	local minigame_extension = self._minigame_extension
 	local minigame = minigame_extension:minigame(MinigameSettings.types.decode_symbols)
 	local current_decode_stage = minigame:current_stage()
@@ -117,19 +119,29 @@ MinigameDecodeSymbolsView._draw_cursor = function (self, widgets_by_name, decode
 	local starting_offset_x = ScannerDisplayViewSettings.decode_symbol_starting_offset_x
 	local starting_offset_y = ScannerDisplayViewSettings.decode_symbol_starting_offset_y
 	local symbols_per_stage = MinigameSettings.decode_symbols_items_per_stage
-	local cursor_position = self:_get_cursor_position_from_time(decode_start_time, t_gameplay)
+	local cursor_position = self:_get_cursor_position_from_time(decode_start_time, gameplay_time)
 	local widget_target = widgets_by_name.symbol_frame
 	widget_target.style.frame.offset[1] = starting_offset_x + (widget_size[1] + spacing) * (symbols_per_stage - 1) * cursor_position
 	widget_target.style.frame.offset[2] = starting_offset_y + (widget_size[2] + spacing) * (current_decode_stage - 1)
-	widget_target.style.frame.color = {
-		255,
-		255,
-		165,
-		0
-	}
+
+	if on_target then
+		widget_target.style.frame.color = {
+			255,
+			255,
+			255,
+			150
+		}
+	else
+		widget_target.style.frame.color = {
+			255,
+			255,
+			165,
+			0
+		}
+	end
 end
 
-MinigameDecodeSymbolsView._draw_targets = function (self, widgets_by_name, decode_start_time)
+MinigameDecodeSymbolsView._draw_targets = function (self, widgets_by_name, decode_start_time, on_target)
 	local minigame_extension = self._minigame_extension
 	local minigame = minigame_extension:minigame(MinigameSettings.types.decode_symbols)
 	local decode_target = minigame:current_decode_target()
@@ -141,12 +153,22 @@ MinigameDecodeSymbolsView._draw_targets = function (self, widgets_by_name, decod
 	local widget_target = widgets_by_name.symbol_highlight
 	widget_target.style.highlight.offset[1] = starting_offset_x + (widget_size[1] + spacing) * (decode_target - 1)
 	widget_target.style.highlight.offset[2] = starting_offset_y + (widget_size[2] + spacing) * (current_decode_stage - 1)
-	widget_target.style.highlight.color = {
-		255,
-		255,
-		165,
-		0
-	}
+
+	if on_target then
+		widget_target.style.highlight.color = {
+			255,
+			255,
+			255,
+			150
+		}
+	else
+		widget_target.style.highlight.color = {
+			255,
+			255,
+			165,
+			0
+		}
+	end
 end
 
 MinigameDecodeSymbolsView._get_cursor_position_from_time = function (self, decode_start_time, time)

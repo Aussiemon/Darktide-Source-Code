@@ -13,6 +13,19 @@ local function _equal_difficulty_values(val, val_2)
 	return diff_table
 end
 
+local function _monster_health_steps(health)
+	local health_steps = {
+		health * 0.6,
+		health * 0.75,
+		health * 1,
+		health * 1.5,
+		health * 2,
+		health * 3
+	}
+
+	return health_steps
+end
+
 local function _health_steps(health)
 	local health_steps = {
 		health * 0.65,
@@ -59,7 +72,7 @@ local function _step_dmg(damage)
 		damage * 1,
 		damage * 1.5,
 		damage * 2,
-		damage * 4
+		damage * 6
 	}
 
 	return damage_steps
@@ -134,10 +147,10 @@ minion_difficulty_settings.health = {
 	chaos_hound = _special_health_steps(900),
 	chaos_hound_mutator = _special_health_steps(150),
 	chaos_poxwalker_bomber = _special_health_steps(700),
-	chaos_plague_ogryn = _health_steps(16000),
-	chaos_plague_ogryn_sprayer = _health_steps(16000),
-	chaos_beast_of_nurgle = _health_steps(16000),
-	chaos_spawn = _health_steps(14000),
+	chaos_plague_ogryn = _monster_health_steps(20000),
+	chaos_plague_ogryn_sprayer = _monster_health_steps(16000),
+	chaos_beast_of_nurgle = _monster_health_steps(16000),
+	chaos_spawn = _monster_health_steps(15000),
 	renegade_netgunner = _special_health_steps(450),
 	cultist_mutant = _special_health_steps(2000),
 	cultist_flamer = _special_health_steps(750),

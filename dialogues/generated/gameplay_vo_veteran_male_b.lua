@@ -283,18 +283,6 @@ local gameplay_vo_veteran_male_b = {
 			0.963563,
 			2.031583
 		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
-		},
 		randomize_indexes = {}
 	},
 	critical_health = {
@@ -750,17 +738,6 @@ local gameplay_vo_veteran_male_b = {
 			0.820292,
 			0.415563,
 			0.649708
-		},
-		sound_event_weights = {
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111,
-			0.1111111
 		},
 		randomize_indexes = {}
 	},
@@ -1355,13 +1332,6 @@ local gameplay_vo_veteran_male_b = {
 			3.196708,
 			3.164375
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	found_health_booster_ogryn_low_on_health = {
@@ -1686,18 +1656,6 @@ local gameplay_vo_veteran_male_b = {
 			1.8765,
 			3.098938,
 			0.925521
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -2212,18 +2170,6 @@ local gameplay_vo_veteran_male_b = {
 			1.420042,
 			1.613896,
 			1.435396
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},
@@ -3069,13 +3015,6 @@ local gameplay_vo_veteran_male_b = {
 			1.944688,
 			2.839229
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	response_for_psyker_disabled_by_chaos_hound = {
@@ -3368,13 +3307,6 @@ local gameplay_vo_veteran_male_b = {
 			2.414396,
 			1.895854,
 			2.167
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -3682,18 +3614,6 @@ local gameplay_vo_veteran_male_b = {
 			1.130448,
 			1.083625,
 			1.434698
-		},
-		sound_event_weights = {
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1,
-			0.1
 		},
 		randomize_indexes = {}
 	},

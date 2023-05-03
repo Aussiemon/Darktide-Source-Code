@@ -26,7 +26,7 @@ end
 
 local target_selection_template = {}
 
-target_selection_template.renegade_netgunner = function (unit, side, perception_component, breed, target_units, line_of_sight_lookup, t, threat_units, force_new_target_attempt, force_new_target_attempt_config_or_nil, debug_target_weighting_or_nil)
+target_selection_template.renegade_netgunner = function (unit, side, perception_component, buff_extension, breed, target_units, line_of_sight_lookup, t, threat_units, force_new_target_attempt, force_new_target_attempt_config_or_nil, debug_target_weighting_or_nil)
 	local current_target_unit = perception_component.target_unit
 	local position = POSITION_LOOKUP[unit]
 	local best_score, best_target_unit, closest_distance_sq, closest_z_distance = nil
@@ -75,16 +75,38 @@ target_selection_template.renegade_netgunner = function (unit, side, perception_
 	local lock_target = perception_component.lock_target
 
 	if not lock_target then
-		local num_target_units = #target_units
+		local taunter_unit = buff_extension:owner_of_buff_with_id("taunted")
 
-		for i = 1, num_target_units do
-			local target_unit = target_units[i]
+		if target_units[taunter_unit] then
+			local target_unit_data_extension = ScriptUnit.extension(taunter_unit, "unit_data_system")
+			local disabled_character_state_component = target_unit_data_extension:read_component("disabled_character_state")
+			local character_state_component = target_unit_data_extension:read_component("character_state")
+			local _, netting_unit = PlayerUnitStatus.is_netted(disabled_character_state_component)
+			local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
+			local blackboard = BLACKBOARDS[unit]
+			local behavior_component = blackboard.behavior
+			local is_dragging = behavior_component.is_dragging
+			local is_netting_unit = netting_unit == unit
 
-			if target_unit ~= current_target_unit then
-				local target_position = POSITION_LOOKUP[target_unit]
-				local distance_sq = Vector3_distance_squared(position, target_position)
+			if not is_disabled or is_netting_unit and is_dragging then
+				local target_position = POSITION_LOOKUP[taunter_unit]
+				local distance_to_target_sq = Vector3_distance_squared(position, target_position)
+				local z_distance = math.abs(position.z - target_position.z)
+				closest_z_distance = z_distance
+				closest_distance_sq = distance_to_target_sq
+				best_target_unit = taunter_unit
+			else
+				closest_z_distance = math.huge
+				closest_distance_sq = math.huge
+				best_target_unit = nil
+			end
+		else
+			local num_target_units = #target_units
 
-				if valid_enemy_player_units[target_unit] then
+			for i = 1, num_target_units do
+				local target_unit = target_units[i]
+
+				if target_unit ~= current_target_unit and valid_enemy_player_units[target_unit] then
 					local can_be_disabled = AttackIntensity.player_can_be_attacked(target_unit, "disabling")
 					local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 					local character_state_component = target_unit_data_extension:read_component("character_state")
@@ -92,13 +114,15 @@ target_selection_template.renegade_netgunner = function (unit, side, perception_
 
 					if can_be_disabled and not is_disabled then
 						local is_new_target = true
+						local target_position = POSITION_LOOKUP[target_unit]
+						local distance_sq = Vector3_distance_squared(position, target_position)
 						local score = _calculate_score(breed, unit, target_unit, distance_sq, is_new_target, debug_target_weighting_or_nil)
 
 						if best_score < score then
 							local z_distance = math.abs(position.z - target_position.z)
-							best_target_unit = target_unit
-							closest_distance_sq = distance_sq
 							closest_z_distance = z_distance
+							closest_distance_sq = distance_sq
+							best_target_unit = target_unit
 							best_score = score
 						end
 					end

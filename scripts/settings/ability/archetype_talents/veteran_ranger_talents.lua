@@ -95,7 +95,7 @@ local archetype_talents = {
 		},
 		veteran_2_tier_1_name_2 = {
 			description = "loc_talent_ranger_toughness_and_toughness_reduction_on_weakspot_kill_desc",
-			name = "Medium Toughness on ranged weakspot kill",
+			name = "Medium Toughness on ranged weakspot kill. Increases thoughness damage reduction by 10% for 6 seconds, 3 stacks",
 			display_name = "loc_talent_ranger_toughness_on_weakspot_kill",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_3_1",
 			format_values = {
@@ -188,7 +188,7 @@ local archetype_talents = {
 		},
 		veteran_2_tier_3_name_3 = {
 			description = "loc_talent_ranger_toughness_and_damage_for_allies_close_to_ranged_kills_desc",
-			name = "Replenishes toughness to an ally when killing an enemy with a ranged attack that is in melee range of that ally.",
+			name = "Replenishes toughness to an ally and grant damage bonus to them, when killing an enemy with a ranged attack that is in melee range of that ally.",
 			display_name = "loc_talent_ranger_toughness_for_allies_close_to_ranged_kills",
 			icon = "content/ui/textures/icons/talents/veteran_2/veteran_2_tier_4_3",
 			format_values = {

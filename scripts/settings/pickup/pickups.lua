@@ -33,7 +33,6 @@ _create_pickup_entry("scripts/settings/pickup/pickups/luggable/container_03_lugg
 _create_pickup_entry("scripts/settings/pickup/pickups/luggable/control_rod_01_luggable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/pocketable/ammo_cache_pocketable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/pocketable/medical_crate_pocketable_pickup")
-_create_pickup_entry("scripts/settings/pickup/pickups/pocketable/syringe_corruption_pocketable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/side_mission/consumable_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/side_mission/grimoire_pickup")
 _create_pickup_entry("scripts/settings/pickup/pickups/side_mission/tome_pickup")

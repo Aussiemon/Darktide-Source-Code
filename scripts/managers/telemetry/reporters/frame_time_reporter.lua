@@ -35,6 +35,7 @@ FrameTimeReporter.report = function (self)
 	local avg = table.average(self._measures)
 	local variance = table.variance(self._measures)
 	local std_dev = math.sqrt(variance)
+	local p99_9 = table.percentile(self._measures, 99.9)
 	local p99 = table.percentile(self._measures, 99)
 	local p95 = table.percentile(self._measures, 95)
 	local p90 = table.percentile(self._measures, 90)
@@ -44,7 +45,7 @@ FrameTimeReporter.report = function (self)
 	local observations = #self._measures
 	local map_name = self._mission_name
 
-	Managers.telemetry_events:performance_frame_time(avg, std_dev, p99, p95, p90, p75, p50, p25, observations, map_name)
+	Managers.telemetry_events:performance_frame_time(avg, std_dev, p99_9, p99, p95, p90, p75, p50, p25, observations, map_name)
 end
 
 implements(FrameTimeReporter, ReporterInterface)

@@ -9,7 +9,6 @@ local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokeCombataxeP2 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_combataxe_p2")
-local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
@@ -350,11 +349,12 @@ weapon_template.actions = {
 		wounds_shape = wounds_shapes.vertical_slash_clean
 	},
 	action_melee_start_right = {
-		chain_anim_event = "heavy_charge_right_up_pose",
 		chain_anim_event_3p = "attack_swing_charge_up_right",
-		anim_end_event = "attack_finished",
-		kind = "windup",
+		chain_anim_event = "heavy_charge_right_up_pose",
 		anim_event_3p = "attack_swing_charge_up_right",
+		kind = "windup",
+		anim_end_event = "attack_finished",
+		allowed_during_sprint = true,
 		anim_event = "heavy_charge_right_up",
 		stop_input = "attack_cancel",
 		total_time = 3,
@@ -418,15 +418,16 @@ weapon_template.actions = {
 	action_right_diagonal_light = {
 		damage_window_start = 0.3,
 		hit_armor_anim = "attack_hit_shield",
-		weapon_handling_template = "time_scale_1_hatchet",
 		kind = "sweep",
+		weapon_handling_template = "time_scale_1_hatchet",
 		first_person_hit_anim = "hit_right_down_shake",
-		range_mod = 1.25,
+		anim_event_3p = "attack_swing_right_diagonal",
 		first_person_hit_stop_anim = "hit_stop",
 		num_frames_before_process = 2,
-		anim_event_3p = "attack_swing_right_diagonal",
-		damage_window_end = 0.4166666666666667,
+		allowed_during_sprint = true,
 		max_num_saved_entries = 20,
+		range_mod = 1.25,
+		damage_window_end = 0.4166666666666667,
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_right_diagonal_down_ninja",
@@ -511,10 +512,11 @@ weapon_template.actions = {
 		max_num_saved_entries = 20,
 		kind = "sweep",
 		first_person_hit_anim = "hit_up_shake",
-		weapon_handling_template = "time_scale_1_hatchet",
 		first_person_hit_stop_anim = "attack_hit",
-		num_frames_before_process = 2,
 		range_mod = 1.25,
+		num_frames_before_process = 2,
+		allowed_during_sprint = true,
+		weapon_handling_template = "time_scale_1_hatchet",
 		damage_window_end = 0.2,
 		attack_direction_override = "push",
 		anim_end_event = "attack_finished",
@@ -1519,10 +1521,6 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local melee_common_traits = table.keys(WeaponTraitsMeleeCommon)
-
-table.append(weapon_template.traits, melee_common_traits)
-
 local bespoke_combataxe_p2_traits = table.keys(WeaponTraitsBespokeCombataxeP2)
 
 table.append(weapon_template.traits, bespoke_combataxe_p2_traits)

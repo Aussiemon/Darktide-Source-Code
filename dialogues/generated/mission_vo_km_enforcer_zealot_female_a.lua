@@ -142,10 +142,6 @@ local mission_vo_km_enforcer_zealot_female_a = {
 			[1.0] = 5.156563,
 			[2.0] = 4.994417
 		},
-		sound_event_weights = {
-			[1.0] = 0.5,
-			[2.0] = 0.5
-		},
 		randomize_indexes = {}
 	},
 	mission_enforcer_infrastructure = {

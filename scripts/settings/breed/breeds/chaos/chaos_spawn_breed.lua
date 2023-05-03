@@ -68,21 +68,21 @@ local breed_data = {
 	boss_display_name = BossNameTemplates.chaos_spawn,
 	boss_template = BossTemplates.chaos_spawn,
 	stagger_durations = {
-		[stagger_types.light] = 2,
-		[stagger_types.medium] = 2,
-		[stagger_types.heavy] = 2,
-		[stagger_types.light_ranged] = 2,
-		[stagger_types.explosion] = 1,
-		[stagger_types.killshot] = 2,
-		[stagger_types.sticky] = 1.6666666666666667,
+		[stagger_types.light] = 1.5,
+		[stagger_types.medium] = 1.5,
+		[stagger_types.heavy] = 1.5,
+		[stagger_types.light_ranged] = 1.5,
+		[stagger_types.explosion] = 1.5,
+		[stagger_types.killshot] = 1.5,
+		[stagger_types.sticky] = 1.5,
 		[stagger_types.wall_collision] = 2
 	},
 	stagger_immune_times = {
 		[stagger_types.light] = 1.5,
 		[stagger_types.medium] = 1.5,
-		[stagger_types.heavy] = 2.25,
+		[stagger_types.heavy] = 1.5,
 		[stagger_types.light_ranged] = 0.5,
-		[stagger_types.explosion] = 4
+		[stagger_types.explosion] = 1.5
 	},
 	stagger_thresholds = {
 		[stagger_types.light] = -1,
@@ -133,8 +133,8 @@ local breed_data = {
 	target_selection_weights = TargetSelectionWeights.chaos_spawn,
 	threat_config = {
 		threat_multiplier = 1,
-		max_threat = 100,
-		threat_decay_per_second = 10
+		max_threat = 1000,
+		threat_decay_per_second = 100
 	},
 	nav_tag_allowed_layers = {
 		monster_walls = 1.5
@@ -145,9 +145,9 @@ local breed_data = {
 		1.08
 	},
 	fade = {
-		max_distance = 1.3,
+		max_distance = 1.6,
 		max_height_difference = 2,
-		min_distance = 1
+		min_distance = 1.1
 	},
 	hit_zones = {
 		{
@@ -403,7 +403,7 @@ local breed_data = {
 	hitzone_damage_multiplier = {
 		melee = {
 			[hit_zone_names.head] = 1,
-			[hit_zone_names.torso] = 0.75,
+			[hit_zone_names.torso] = 0.85,
 			[hit_zone_names.lower_left_arm] = 0.65,
 			[hit_zone_names.lower_right_arm] = 0.65,
 			[hit_zone_names.lower_left_leg] = 0.65,
@@ -415,8 +415,8 @@ local breed_data = {
 			[hit_zone_names.center_mass] = 0.65
 		},
 		ranged = {
-			[hit_zone_names.head] = 0.8,
-			[hit_zone_names.torso] = 0.6,
+			[hit_zone_names.head] = 1,
+			[hit_zone_names.torso] = 0.75,
 			[hit_zone_names.lower_left_arm] = 0.5,
 			[hit_zone_names.lower_right_arm] = 0.5,
 			[hit_zone_names.lower_left_leg] = 0.5,

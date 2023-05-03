@@ -45,7 +45,8 @@ ItemGridViewBase.on_enter = function (self)
 
 	self._item_definitions = MasterItems.get_cached()
 	self._inventory_items = {}
-	local ui_renderer = self._context and self._context.ui_renderer
+	local context = self._context
+	local ui_renderer = context and context.ui_renderer
 
 	if ui_renderer then
 		self._ui_default_renderer = ui_renderer
@@ -53,6 +54,14 @@ ItemGridViewBase.on_enter = function (self)
 	else
 		self:_setup_default_gui()
 	end
+
+	local use_weapon_preview = context and context.use_weapon_preview
+
+	if use_weapon_preview then
+		self:_setup_weapon_preview()
+	end
+
+	self._disable_item_presentation = context and context.disable_item_presentation
 end
 
 ItemGridViewBase._setup_sort_options = function (self)
@@ -168,7 +177,8 @@ ItemGridViewBase._present_layout_by_slot_filter = function (self, slot_filter, o
 			local add_item = false
 
 			if item then
-				local slots = item.slots
+				local entry_filter_slots = entry.filter_slots
+				local slots = entry_filter_slots or item.slots
 
 				if slots then
 					for _, slot_name in ipairs(slots) do
@@ -275,7 +285,7 @@ ItemGridViewBase._preview_item = function (self, item)
 
 	self._previewed_item = item
 
-	if not item then
+	if not item or self._disable_item_presentation then
 		return
 	end
 
@@ -284,34 +294,46 @@ ItemGridViewBase._preview_item = function (self, item)
 	local can_compare = is_weapon or item_type == "GADGET"
 
 	if is_weapon or item_type == "GADGET" or item_type == "PORTRAIT_FRAME" or item_type == "CHARACTER_INSIGNIA" then
-		if self._weapon_stats then
-			self._weapon_stats:present_item(item)
-		end
+		if self._weapon_preview then
+			local disable_auto_spin = true
 
-		if self._weapon_compare_stats then
-			local slot_name = self:_fetch_item_compare_slot_name(item)
-			local equipped_item = slot_name and self.equipped_item_in_slot and self:equipped_item_in_slot(slot_name)
-
-			if equipped_item and can_compare then
-				if not self._previewed_equipped_item or self._previewed_equipped_item.gear_id ~= equipped_item.gear_id then
-					self._previewed_equipped_item = equipped_item
-					local is_equipped = true
-
-					self._weapon_compare_stats:present_item(equipped_item, is_equipped)
-				end
-			else
-				self._previewed_equipped_item = nil
+			self._weapon_preview:present_item(item, disable_auto_spin)
+		else
+			if self._weapon_stats then
+				self._weapon_stats:present_item(item)
 			end
 
-			local compare_stats_visible = can_compare and equipped_item and self._item_compare_toggled or false
+			if self._weapon_compare_stats then
+				local slot_name = self:_fetch_item_compare_slot_name(item)
+				local equipped_item = slot_name and self.equipped_item_in_slot and self:equipped_item_in_slot(slot_name)
 
-			self._weapon_compare_stats:set_visibility(compare_stats_visible)
+				if equipped_item and can_compare then
+					if not self._previewed_equipped_item or self._previewed_equipped_item.gear_id ~= equipped_item.gear_id then
+						self._previewed_equipped_item = equipped_item
+						local is_equipped = true
+
+						self._weapon_compare_stats:present_item(equipped_item, is_equipped)
+					end
+				else
+					self._previewed_equipped_item = nil
+				end
+
+				local compare_stats_visible = can_compare and equipped_item and self._item_compare_toggled or false
+
+				self._weapon_compare_stats:set_visibility(compare_stats_visible)
+			end
 		end
 	elseif item_type == "WEAPON_SKIN" then
 		local visual_item = ItemUtils.weapon_skin_preview_item(item)
 
-		if visual_item and self._weapon_stats then
-			self._weapon_stats:present_item(item)
+		if visual_item then
+			if self._weapon_preview then
+				local disable_auto_spin = true
+
+				self._weapon_preview:present_item(visual_item, disable_auto_spin)
+			elseif self._weapon_stats then
+				self._weapon_stats:present_item(item)
+			end
 		end
 	elseif (item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_HEAD" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "END_OF_ROUND") and self._weapon_stats then
 		self._weapon_stats:present_item(item)
@@ -356,10 +378,69 @@ ItemGridViewBase._setup_weapon_preview = function (self)
 		local reference_name = "weapon_preview"
 		local layer = 10
 		local context = {
-			ignore_blur = true
+			ignore_blur = true,
+			draw_background = false
 		}
 		self._weapon_preview = self:_add_element(ViewElementInventoryWeaponPreview, reference_name, layer, context)
+		self._weapon_zoom_fraction = -3
+		self._weapon_zoom_target = 1
+		self._min_zoom = -3
+		self._max_zoom = 1
+
+		self._weapon_preview:center_align(0, {
+			-0.6,
+			-2,
+			-0.2
+		})
+		self._weapon_preview:set_force_allow_rotation(true)
+		self:_update_weapon_preview_viewport()
 	end
+end
+
+ItemGridViewBase._update_weapon_preview_viewport = function (self)
+	local weapon_preview = self._weapon_preview
+
+	if weapon_preview then
+		local width_scale = 1
+		local height_scale = 1
+		local x_scale = 0
+		local y_scale = 0
+
+		weapon_preview:set_viewport_position_normalized(x_scale, y_scale)
+		weapon_preview:set_viewport_size_normalized(width_scale, height_scale)
+
+		local weapon_x_scale, weapon_y_scale = self:_get_weapon_spawn_position_normalized()
+
+		weapon_preview:set_weapon_position_normalized(weapon_x_scale, weapon_y_scale)
+
+		local weapon_zoom_fraction = self._weapon_zoom_fraction or 1
+		local use_custom_zoom = true
+		local optional_node_name = "p_zoom"
+		local optional_pos = nil
+		local min_zoom = self._min_zoom
+		local max_zoom = self._max_zoom
+
+		weapon_preview:set_weapon_zoom(weapon_zoom_fraction, use_custom_zoom, optional_node_name, optional_pos, min_zoom, max_zoom)
+	end
+end
+
+ItemGridViewBase._set_weapon_zoom = function (self, fraction)
+	self._weapon_zoom_fraction = fraction
+
+	self:_update_weapon_preview_viewport()
+end
+
+ItemGridViewBase._get_weapon_spawn_position_normalized = function (self)
+	self:_force_update_scenegraph()
+
+	local scale = nil
+	local pivot_world_position = self:_scenegraph_world_position("weapon_pivot", scale)
+	local parent_world_position = self:_scenegraph_world_position("weapon_viewport", scale)
+	local viewport_width, viewport_height = self:_scenegraph_size("weapon_viewport", scale)
+	local scale_x = (pivot_world_position[1] - parent_world_position[1]) / viewport_width
+	local scale_y = 1 - (pivot_world_position[2] - parent_world_position[2]) / viewport_height
+
+	return scale_x, scale_y
 end
 
 ItemGridViewBase._setup_weapon_stats = function (self, reference_name, scenegraph_id)
@@ -612,8 +693,8 @@ ItemGridViewBase.cb_on_grid_entry_left_pressed = function (self, widget, element
 	self._update_callback_on_grid_entry_left_pressed = callback(cb_func)
 end
 
-ItemGridViewBase._handle_input = function (self, input_service)
-	return
+ItemGridViewBase._handle_input = function (self, input_service, dt, t)
+	return ItemGridViewBase.super._handle_input(self, input_service, dt, t)
 end
 
 ItemGridViewBase.update = function (self, dt, t, input_service)
@@ -695,6 +776,7 @@ end
 
 ItemGridViewBase.on_resolution_modified = function (self, scale)
 	ItemGridViewBase.super.on_resolution_modified(self, scale)
+	self:_update_weapon_preview_viewport()
 	self:_update_item_grid_position()
 
 	if self._weapon_stats then

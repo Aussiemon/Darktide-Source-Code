@@ -15,14 +15,16 @@ WeaponTraitTargetNumberParentProcBuff.update = function (self, dt, t, ...)
 	WeaponTraitTargetNumberParentProcBuff.super.super.update(self, dt, t, ...)
 
 	local template = self._template
-	local template_override_data = self._template_override_data
-	local duration = template_override_data and template_override_data.child_duration or template.child_duration
 
 	if self._is_server then
+		self:update_number_of_children(t)
+
+		local template_override_data = self._template_override_data
+		local duration = template_override_data and template_override_data.child_duration or template.child_duration
 		local num_child_stacks = self._num_child_stacks
 		local start_t = self._template_data.last_hit_time
 
-		if num_child_stacks > 1 and start_t ~= 0 then
+		if num_child_stacks > 1 and duration and start_t ~= 0 then
 			local remove_t = start_t + duration
 
 			if t > remove_t then
@@ -46,6 +48,13 @@ end
 
 WeaponTraitTargetNumberParentProcBuff.update_proc_events = function (self, t, proc_events, num_proc_events, portable_random, local_portable_random)
 	local activated_proc, procced_proc_events = WeaponTraitTargetNumberParentProcBuff.super.super.update_proc_events(self, t, proc_events, num_proc_events, portable_random, local_portable_random)
+
+	self:update_number_of_children(t)
+
+	return activated_proc, procced_proc_events
+end
+
+WeaponTraitTargetNumberParentProcBuff.update_number_of_children = function (self, t)
 	local target_number_of_child_buffs = 1 + (self._template_data.target_number_of_stacks or 0)
 	local current_num_child_stacks = self._num_child_stacks
 
@@ -62,8 +71,6 @@ WeaponTraitTargetNumberParentProcBuff.update_proc_events = function (self, t, pr
 
 		self._duration_progress = 0
 	end
-
-	return activated_proc, procced_proc_events
 end
 
 return WeaponTraitTargetNumberParentProcBuff

@@ -6,6 +6,7 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerSpawnerSystem = class("PlayerSpawnerSystem", "ExtensionSystemBase")
 PlayerSpawnerSystem.DEFAULT_SPAWN_IDENTIFIER = "default"
 PlayerSpawnerSystem.DEFAULT_SPAWN_SIDE = "heroes"
+local MAX_DISTANCE_SQUARED_TO_SPAWN_POINT = 400
 
 PlayerSpawnerSystem.init = function (self, extension_init_context, system_init_data, ...)
 	PlayerSpawnerSystem.super.init(self, extension_init_context, system_init_data, ...)
@@ -69,7 +70,9 @@ PlayerSpawnerSystem.next_free_spawn_point = function (self, optional_spawn_ident
 		found, position, rotation, side = self:_find_spawner_spawn_point(optional_spawn_identifier)
 	end
 
-	if not found and not self._in_safe_volume then
+	local use_progression_spawn_point = not self._in_safe_volume or self:_use_progression_spawn_in_safe_zone()
+
+	if not found and use_progression_spawn_point then
 		found, position, rotation, parent, side = self:_find_progression_spawn_point()
 	end
 
@@ -87,6 +90,42 @@ PlayerSpawnerSystem.next_free_spawn_point = function (self, optional_spawn_ident
 	end
 
 	return position, rotation, parent, side
+end
+
+PlayerSpawnerSystem._use_progression_spawn_in_safe_zone = function (self)
+	local game_mode_name = Managers.state.game_mode:game_mode_name()
+
+	if game_mode_name == "hub" then
+		return false
+	end
+
+	local player_manager = Managers.player
+	local players = player_manager:human_players()
+	local spawn_points_by_identifier = self._spawn_points_by_identifier
+
+	for identifier, spawn_point_data in pairs(spawn_points_by_identifier) do
+		local num_spawn_points = #spawn_point_data
+
+		for ii = 1, num_spawn_points do
+			local spawn_point = spawn_point_data[ii]
+			local spawn_point_position = spawn_point.position:unbox()
+
+			for _, player in pairs(players) do
+				local player_unit = player.player_unit
+
+				if ALIVE[player_unit] then
+					local player_position = Unit.world_position(player_unit, 1)
+					local distance_sq = Vector3.distance_squared(player_position, spawn_point_position)
+
+					if MAX_DISTANCE_SQUARED_TO_SPAWN_POINT < distance_sq then
+						return true
+					end
+				end
+			end
+		end
+	end
+
+	return false
 end
 
 PlayerSpawnerSystem._find_spawner_spawn_point = function (self, spawn_identifier)

@@ -678,7 +678,7 @@ end
 CinematicManager._spawn_cinematic_level = function (self, level_name)
 	local world = self._world
 	local spawn_units = true
-	local level = ScriptWorld.spawn_level(world, level_name, nil, nil, nil, spawn_units)
+	local level = ScriptWorld.spawn_level(world, level_name, nil, nil, spawn_units)
 
 	Level.set_data(level, "runtime_loaded_level", true)
 

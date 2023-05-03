@@ -255,6 +255,14 @@ TerrorEventManager.stop_terror_trickle = function (self)
 	Managers.event:trigger("terror_event_stopped")
 end
 
+TerrorEventManager.replace_terror_event_tags = function (self, tags_to_replace)
+	self._tags_replacement = tags_to_replace
+end
+
+TerrorEventManager.get_tags_replacement = function (self)
+	return self._tags_replacement
+end
+
 TerrorEventManager.get_terror_trickle_data = function (self)
 	return self._terror_trickle_data
 end

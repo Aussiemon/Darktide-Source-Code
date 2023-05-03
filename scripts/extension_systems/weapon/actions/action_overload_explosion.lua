@@ -5,11 +5,13 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local Explosion = require("scripts/utilities/attack/explosion")
 local Health = require("scripts/utilities/health")
+local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local Overheat = require("scripts/utilities/overheat")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local attack_types = AttackSettings.attack_types
 local attack_results = AttackSettings.attack_results
+local damage_efficiencies = AttackSettings.damage_efficiencies
 local ActionOverloadExplosion = class("ActionOverloadExplosion", "ActionWeaponBase")
 local DEFAULT_POWER_LEVEL = 2000
 
@@ -38,24 +40,29 @@ end
 ActionOverloadExplosion.fixed_update = function (self, dt, t, time_in_action)
 	ActionOverloadExplosion.super.fixed_update(self, dt, t, time_in_action)
 
-	if self._is_server then
-		local action_settings = self._action_settings
-		local dot_settings = action_settings.dot_settings
+	local action_settings = self._action_settings
+	local dot_settings = action_settings.dot_settings
 
-		if dot_settings then
-			local damage_frequency = dot_settings.damage_frequency
-			local this_frame_time = time_in_action % damage_frequency
-			local previous_frame_time = math.max(time_in_action - dt, 0) % damage_frequency
-			local time_to_do_damage = this_frame_time < previous_frame_time
+	if dot_settings then
+		local damage_frequency = dot_settings.damage_frequency
+		local this_frame_time = time_in_action % damage_frequency
+		local previous_frame_time = math.max(time_in_action - dt, 0) % damage_frequency
+		local time_to_do_damage = this_frame_time < previous_frame_time
 
-			if time_to_do_damage then
-				local damage_profile = dot_settings.damage_profile
-				local player_unit = self._player_unit
-				local power_level = dot_settings.power_level
-				local weapon_item = self._weapon.item
+		if time_to_do_damage then
+			local damage_profile = dot_settings.damage_profile
+			local player_unit = self._player_unit
+			local power_level = dot_settings.power_level
+			local damage_type = dot_settings.damage_type
+			local weapon_item = self._weapon.item
+			local attack_direction = Vector3.normalize(Vector3(math.random(), math.random(), math.random()))
+			local hit_position = self._first_person_component.position
 
-				Attack.execute(player_unit, damage_profile, "power_level", power_level, "item", weapon_item)
+			if self._is_server then
+				Attack.execute(player_unit, damage_profile, "power_level", power_level, "item", weapon_item, "attack_direction", attack_direction, "damage_type", damage_type)
 			end
+
+			ImpactEffect.play(player_unit, nil, 1, damage_type, nil, attack_results.damaged, hit_position, nil, attack_direction, player_unit, nil, nil, nil, damage_efficiencies.full, damage_profile)
 		end
 	end
 end
@@ -127,7 +134,7 @@ ActionOverloadExplosion._handle_exposion_stats = function (self, explosion_attac
 
 		if difficulty >= 3 then
 			local count = 0
-			local requirement = 3
+			local requirement = 1
 
 			for hit_unit, attack_result in pairs(explosion_attack_result_table) do
 				if attack_result == attack_results.died then

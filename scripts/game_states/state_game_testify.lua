@@ -195,6 +195,9 @@ local StateGameTestify = {
 	console_command_lua_trace = function ()
 		_console_command("lua", "trace")
 	end,
+	console_command_memory_tree_formatted = function (depth, ascii_separator, memory_limit)
+		_console_command("memory_tree", depth, ascii_separator, memory_limit)
+	end,
 	create_particles = function (world, particle_name, boxed_spawn_position, particle_life_time)
 		Log.info("StateGameTestify", "Creating particle %s", particle_name)
 
@@ -330,34 +333,6 @@ local StateGameTestify = {
 		local side_missions = MissionObjectives.side_mission.objectives
 
 		return side_missions
-	end,
-	skip_privacy_policy_popup_if_displayed = function (_, state_game)
-		local current_state_name = state_game:current_state_name()
-
-		if current_state_name == "StateTitle" then
-			local state_machine = state_game:state_machine()
-			local state_title = state_machine:current_state()
-			local state_title_state = state_title:state()
-
-			if state_title_state == "done" then
-				return
-			end
-
-			if state_title_state == "legal_verification" then
-				local constant_elements = Managers.ui:ui_constant_elements()
-				local constant_element_popup_handler = constant_elements:element("ConstantElementPopupHandler")
-				local widgets_by_name = constant_element_popup_handler:widgets_by_name()
-				local accept_button = widgets_by_name.popup_widget_2
-
-				if accept_button then
-					constant_element_popup_handler:trigger_widget_callback(accept_button)
-
-					return
-				end
-			end
-
-			return Testify.RETRY
-		end
 	end,
 	skip_splash_screen = function (_, state_game)
 		local current_state_name = state_game:current_state_name()

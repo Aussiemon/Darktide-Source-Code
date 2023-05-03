@@ -10,7 +10,6 @@ local HerdingTemplates = require("scripts/settings/damage/herding_templates")
 local HitZone = require("scripts/utilities/attack/hit_zone")
 local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local WeaponTraitsBespokeOgrynClubP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_club_p1")
-local WeaponTraitsMeleeCommon = require("scripts/settings/equipment/weapon_traits/weapon_traits_melee_common")
 local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local WoundsSettings = require("scripts/settings/wounds/wounds_settings")
@@ -932,7 +931,11 @@ weapon_template.actions = {
 		damage_profile = DamageProfileTemplates.ogryn_shovel_light_tank_followup,
 		damage_type = damage_types.blunt,
 		herding_template = HerdingTemplates.linesman_right_heavy_inverted,
-		wounds_shape = wounds_shapes.horizontal_slash_coarse
+		wounds_shape = wounds_shapes.horizontal_slash_coarse,
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.melee_attack_speed
+		}
 	},
 	action_push = {
 		push_radius = 3,
@@ -1277,10 +1280,6 @@ weapon_template.base_stats = {
 	}
 }
 weapon_template.traits = {}
-local melee_common_traits = table.keys(WeaponTraitsMeleeCommon)
-
-table.append(weapon_template.traits, melee_common_traits)
-
 local bespoke_ogryn_club_p1 = table.keys(WeaponTraitsBespokeOgrynClubP1)
 
 table.append(weapon_template.traits, bespoke_ogryn_club_p1)
@@ -1300,7 +1299,7 @@ weapon_template.displayed_attacks = {
 		attack_chain = {
 			"tank",
 			"tank",
-			"linesman"
+			"smiter"
 		}
 	},
 	secondary = {

@@ -18,14 +18,6 @@ local on_demand_vo_psyker_female_b = {
 			1.008979,
 			0.699729
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_follow_you = {
@@ -118,14 +110,6 @@ local on_demand_vo_psyker_female_b = {
 			0.919792,
 			1.016646
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_need_health = {
@@ -197,14 +181,6 @@ local on_demand_vo_psyker_female_b = {
 			0.659479,
 			0.939875
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_over_here = {
@@ -255,14 +231,6 @@ local on_demand_vo_psyker_female_b = {
 			1.631979,
 			1.824292
 		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
-		},
 		randomize_indexes = {}
 	},
 	com_wheel_vo_yes = {
@@ -283,14 +251,6 @@ local on_demand_vo_psyker_female_b = {
 			1.57325,
 			1.063396,
 			1.539
-		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
 		},
 		randomize_indexes = {}
 	},
@@ -418,12 +378,6 @@ local on_demand_vo_psyker_female_b = {
 			1.245479,
 			0.932396
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_ogryn_heavy_gunner = {
@@ -441,12 +395,6 @@ local on_demand_vo_psyker_female_b = {
 			0.774688,
 			0.598438
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_chaos_poxwalker_bomber = {
@@ -463,12 +411,6 @@ local on_demand_vo_psyker_female_b = {
 			1.454792,
 			1.049188,
 			0.995938
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -504,12 +446,6 @@ local on_demand_vo_psyker_female_b = {
 			2.108146,
 			1.440063
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_cultist_holy_stubber_gunner = {
@@ -526,12 +462,6 @@ local on_demand_vo_psyker_female_b = {
 			1.085625,
 			1.382188,
 			1.060375
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -550,12 +480,6 @@ local on_demand_vo_psyker_female_b = {
 			1.290083,
 			1.529292
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_daemonhost_witch = {
@@ -572,12 +496,6 @@ local on_demand_vo_psyker_female_b = {
 			1.169292,
 			1.236958,
 			1.440042
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -637,12 +555,6 @@ local on_demand_vo_psyker_female_b = {
 			0.614542,
 			0.645792
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_plague_ogryn = {
@@ -659,12 +571,6 @@ local on_demand_vo_psyker_female_b = {
 			1.180583,
 			1.061813,
 			1.096042
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -729,12 +635,6 @@ local on_demand_vo_psyker_female_b = {
 			0.717667,
 			0.862229
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_traitor_grenadier = {
@@ -751,12 +651,6 @@ local on_demand_vo_psyker_female_b = {
 			1.186667,
 			1.325563,
 			1.35375
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -775,12 +669,6 @@ local on_demand_vo_psyker_female_b = {
 			0.924063,
 			1.026729
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_enemy_traitor_scout_shocktrooper = {
@@ -797,12 +685,6 @@ local on_demand_vo_psyker_female_b = {
 			1.368625,
 			1.366375,
 			1.79075
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -821,12 +703,6 @@ local on_demand_vo_psyker_female_b = {
 			0.896167,
 			0.950875
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_ammo = {
@@ -843,12 +719,6 @@ local on_demand_vo_psyker_female_b = {
 			0.6185,
 			0.538229,
 			0.540542
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -867,12 +737,6 @@ local on_demand_vo_psyker_female_b = {
 			0.727917,
 			0.78675
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_container = {
@@ -889,12 +753,6 @@ local on_demand_vo_psyker_female_b = {
 			1.3315,
 			1.029021,
 			1.353917
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -913,12 +771,6 @@ local on_demand_vo_psyker_female_b = {
 			1.162708,
 			1.123313
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_deployed_ammo_crate = {
@@ -935,12 +787,6 @@ local on_demand_vo_psyker_female_b = {
 			0.878688,
 			0.926188,
 			0.998771
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -959,12 +805,6 @@ local on_demand_vo_psyker_female_b = {
 			1.144021,
 			1.18425
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_forge_metal = {
@@ -982,12 +822,6 @@ local on_demand_vo_psyker_female_b = {
 			0.841875,
 			0.95975
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_pickup_health_booster = {
@@ -1004,12 +838,6 @@ local on_demand_vo_psyker_female_b = {
 			1.027875,
 			0.796292,
 			0.896167
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -1171,12 +999,6 @@ local on_demand_vo_psyker_female_b = {
 			1.36375,
 			1.262896
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	smart_tag_vo_station_health_without_battery = {
@@ -1197,14 +1019,6 @@ local on_demand_vo_psyker_female_b = {
 			1.2235,
 			1.011104,
 			2.128021
-		},
-		sound_event_weights = {
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667,
-			0.1666667
 		},
 		randomize_indexes = {}
 	}
