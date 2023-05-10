@@ -78,6 +78,12 @@ AchievementTracker.track_player = function (self, player)
 				self:_on_stat_trigger(stat_id, trigger_id, value)
 			end
 		end
+
+		for achievement_id, _ in pairs(self._triggered_by[AchievementTypes.meta]) do
+			if achievement_data.completed[achievement_id] then
+				self:_on_achievement_unlock(account_id, achievement_id)
+			end
+		end
 	end):catch(function (error)
 		self._tracked_players[account_id] = nil
 
