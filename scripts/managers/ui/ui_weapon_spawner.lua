@@ -56,7 +56,7 @@ UIWeaponSpawner.start_presentation = function (self, item, position, rotation, s
 
 	self._weapon_loader_index = (self._weapon_loader_index or 0) + 1
 	local reference_name = self._reference_name .. "_weapon_item_loader_" .. tostring(self._weapon_loader_index)
-	local single_item_loader = UICharacterProfilePackageLoader:new(reference_name, self._item_definitions, self._verbose)
+	local single_item_loader = UICharacterProfilePackageLoader:new(reference_name, self._item_definitions, nil, self._verbose)
 	local slot_id = "slot_primary"
 	local on_loaded_callback = callback(self, "cb_on_item_package_loaded", slot_id, item, on_spawn_cb)
 	self._loading_weapon_data = {

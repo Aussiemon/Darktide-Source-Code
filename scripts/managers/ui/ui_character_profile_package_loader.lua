@@ -1,9 +1,10 @@
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local UICharacterProfilePackageLoader = class("UICharacterProfilePackageLoader")
 
-UICharacterProfilePackageLoader.init = function (self, unique_id, item_definitions, verbose)
+UICharacterProfilePackageLoader.init = function (self, unique_id, item_definitions, optional_mission_template, verbose)
 	self._reference_name = self.__class_name .. "_" .. unique_id
 	self._item_definitions = item_definitions
+	self._mission_template = optional_mission_template
 	self._slots_loading_data = {}
 	self._slots_item_loaded = {}
 	self._slots_package_ids = {}
@@ -84,7 +85,8 @@ UICharacterProfilePackageLoader.load_slot_item = function (self, slot_id, item, 
 	end
 
 	local item_definitions = self._item_definitions
-	local dependencies = ItemPackage.compile_item_instance_dependencies(item, item_definitions)
+	local mission_template = self._mission_template
+	local dependencies = ItemPackage.compile_item_instance_dependencies(item, item_definitions, nil, mission_template)
 	local packages_to_load = {}
 
 	for package_name, _ in pairs(dependencies) do

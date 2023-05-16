@@ -7,12 +7,13 @@ local UICharacterProfilePackageLoader = require("scripts/managers/ui/ui_characte
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local UIProfileSpawner = class("UIProfileSpawner")
 
-UIProfileSpawner.init = function (self, reference_name, world, camera, unit_spawner, force_highest_lod_step, verbose)
+UIProfileSpawner.init = function (self, reference_name, world, camera, unit_spawner, force_highest_lod_step, optional_mission_template, verbose)
 	self._reference_name = reference_name
 	self._world = world
 	self._camera = camera
 	self._unit_spawner = unit_spawner
 	self._item_definitions = MasterItems.get_cached()
+	self._mission_template = optional_mission_template
 	self._visible = true
 	self._verbose = verbose
 
@@ -33,13 +34,13 @@ UIProfileSpawner.reset = function (self)
 	self:_despawn_current_character_profile()
 
 	if self._loading_profile_data then
-		self._loading_profile_data.loader:destroy()
+		self._loading_profile_data.profile_loader:destroy()
 
 		self._loading_profile_data = nil
 	end
 
 	local single_item_loader_reference_name = self._reference_name .. "_single_item"
-	self._single_item_profile_loader = UICharacterProfilePackageLoader:new(single_item_loader_reference_name, self._item_definitions, self._verbose)
+	self._single_item_profile_loader = UICharacterProfilePackageLoader:new(single_item_loader_reference_name, self._item_definitions, self._mission_template, self._verbose)
 	self._ignored_slots = {}
 	self._default_rotation_angle = 0
 	self._rotation_angle = self._default_rotation_angle
@@ -71,14 +72,14 @@ end
 
 UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, scale, state_machine, animation_event, face_state_machine_key, face_animation_event, force_highest_mip, disable_hair_state_machine, optional_unit_3p, optional_ignore_state_machine)
 	if self._loading_profile_data then
-		self._loading_profile_data.loader:destroy()
+		self._loading_profile_data.profile_loader:destroy()
 
 		self._loading_profile_data = nil
 	end
 
 	self._profile_loader_index = (self._profile_loader_index or 0) + 1
 	local reference_name = self._reference_name .. "_profile_loader_" .. tostring(self._profile_loader_index)
-	local character_profile_loader = UICharacterProfilePackageLoader:new(reference_name, self._item_definitions, self._verbose)
+	local character_profile_loader = UICharacterProfilePackageLoader:new(reference_name, self._item_definitions, self._mission_template, self._verbose)
 	local loading_items = character_profile_loader:load_profile(profile)
 
 	if not state_machine then
@@ -90,7 +91,7 @@ UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, sc
 
 	self._loading_profile_data = {
 		profile = profile,
-		loader = character_profile_loader,
+		profile_loader = character_profile_loader,
 		reference_name = reference_name,
 		position = position and Vector3.to_array(position),
 		rotation = rotation and QuaternionBox(rotation),
@@ -233,7 +234,7 @@ UIProfileSpawner._change_slot_item = function (self, slot_id, item)
 	local use_loader_version = loading_profile_data ~= nil
 	local loading_items = use_loader_version and loading_profile_data.loading_items or character_spawn_data.loading_items
 	loading_items[slot_id] = item
-	local loader = use_loader_version and loading_profile_data.loader or self._single_item_profile_loader
+	local loader = use_loader_version and loading_profile_data.profile_loader or self._single_item_profile_loader
 	local complete_callback = callback(self, "cb_on_single_slot_item_loaded", slot_id, item)
 
 	if item then
@@ -247,7 +248,7 @@ UIProfileSpawner.cb_on_single_slot_item_loaded = function (self, slot_id, item)
 	local character_spawn_data = self._character_spawn_data
 	local loading_profile_data = self._loading_profile_data
 	local use_loader_version = loading_profile_data ~= nil
-	local profile_loader = use_loader_version and loading_profile_data.loader or character_spawn_data.profile_loader
+	local profile_loader = use_loader_version and loading_profile_data.profile_loader or character_spawn_data.profile_loader
 	local profile = use_loader_version and loading_profile_data.profile or character_spawn_data.profile
 	local loadout = profile.loadout
 	loadout[slot_id] = item
@@ -275,7 +276,7 @@ UIProfileSpawner.destroy = function (self)
 	self:_despawn_current_character_profile()
 
 	if self._loading_profile_data then
-		self._loading_profile_data.loader:destroy()
+		self._loading_profile_data.profile_loader:destroy()
 
 		self._loading_profile_data = nil
 	end
@@ -329,9 +330,9 @@ UIProfileSpawner.update = function (self, dt, t, input_service)
 	local loading_profile_data = self._loading_profile_data
 
 	if loading_profile_data then
-		local loader = loading_profile_data.loader
+		local profile_loader = loading_profile_data.profile_loader
 
-		if loader:is_all_loaded() then
+		if profile_loader:is_all_loaded() then
 			if self._character_spawn_data then
 				self:_despawn_current_character_profile()
 			end
@@ -349,7 +350,7 @@ UIProfileSpawner.update = function (self, dt, t, input_service)
 			local profile = loading_profile_data.profile
 			local optional_ignore_state_machine = loading_profile_data.optional_ignore_state_machine
 
-			self:_spawn_character_profile(profile, loader, position, rotation, scale, state_machine, animation_event, face_state_machine_key, face_animation_event, force_highest_mip, disable_hair_state_machine, optional_unit_3p, optional_ignore_state_machine)
+			self:_spawn_character_profile(profile, profile_loader, position, rotation, scale, state_machine, animation_event, face_state_machine_key, face_animation_event, force_highest_mip, disable_hair_state_machine, optional_unit_3p, optional_ignore_state_machine)
 
 			self._loading_profile_data = nil
 		end

@@ -23,12 +23,15 @@ CutsceneCharacterExtension.init = function (self, extension_init_context, unit, 
 	self._player_unique_id = nil
 	self._prop_items = {}
 	self._equip_slot_on_loadout_assign = ""
+	local mission_manager = Managers.state.mission
+	local mission_template = mission_manager and mission_manager:mission()
+	self._mission_template = mission_template
 	local world = extension_init_context.world
 	local unit_spawner = UIUnitSpawner:new(world)
 	local level_unit_id = Unit.id_string(unit)
 	local camera = nil
 	local force_highest_lod_step = true
-	self._profile_spawner = UIProfileSpawner:new("CutsceneCharacterExtension_" .. level_unit_id, world, camera, unit_spawner, force_highest_lod_step)
+	self._profile_spawner = UIProfileSpawner:new("CutsceneCharacterExtension_" .. level_unit_id, world, camera, unit_spawner, force_highest_lod_step, mission_template)
 	self._inventory_animation_event = nil
 	self._weapon_animation_event = nil
 	self._current_state_machine = AnimationType.None
@@ -161,9 +164,8 @@ CutsceneCharacterExtension.assign_player_loadout = function (self, player_unique
 	local disable_hair_state_machine = false
 	local state_machine = nil
 	local ignore_state_machine = true
-	local mission_manager = Managers.state.mission
-	local mission_template = mission_manager and mission_manager:mission()
-	local face_state_machine_key = mission_template.face_state_machine_key
+	local mission_template = self._mission_template
+	local face_state_machine_key = mission_template and mission_template.face_state_machine_key
 
 	self._profile_spawner:spawn_profile(profile, position, rotation, scale, state_machine, animation_event, face_state_machine_key, face_animation_event, force_highest_mip, disable_hair_state_machine, unit, ignore_state_machine)
 	self:_load_props()
