@@ -23,11 +23,6 @@ local COMBAT = {
 		action_data = action_data.combo_attack
 	},
 	{
-		"BtMeleeAttackAction",
-		name = "tentacle_attack",
-		action_data = action_data.tentacle_attack
-	},
-	{
 		"BtErraticFollowAction",
 		name = "erratic_follow",
 		action_data = action_data.erratic_follow

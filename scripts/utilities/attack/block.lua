@@ -9,6 +9,7 @@ local attack_types = AttackSettings.attack_types
 local stat_buff_types = BuffSettings.stat_buffs
 local buff_keywords = BuffSettings.keywords
 local DEFAULT_BLOCK_BREAK_DISORIENTATION_TYPE = "block_broken"
+local BLOCK_ANGLE_DISTANCE_SQUARED_EPSILON = 0.010000000000000002
 local _block_buff_modifier, _calculate_block_angle, _get_block_angles, _get_block_cost = nil
 local Block = {}
 local auto_block_interactions = {
@@ -94,14 +95,22 @@ Block.is_blocking = function (target_unit, attacking_unit, attack_type, weapon_t
 	return can_block
 end
 
-Block.attack_is_blockable = function (damage_profile, target_unit, weapon_template)
-	local unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
-	local weapon_action_component = unit_data_extension:read_component("weapon_action")
-	local _, action_setting = Action.current_action(weapon_action_component, weapon_template)
-	local block_unblockable = action_setting and action_setting.block_unblockable
-	local block_goes_brrr = action_setting and action_setting.block_goes_brrr
+Block.attack_is_blockable = function (damage_profile, optional_target_unit, optional_weapon_template)
+	if not damage_profile.unblockable then
+		return true
+	end
 
-	return block_unblockable or block_goes_brrr or not damage_profile.unblockable
+	if optional_weapon_template then
+		local unit_data_extension = ScriptUnit.extension(optional_target_unit, "unit_data_system")
+		local weapon_action_component = unit_data_extension:read_component("weapon_action")
+		local _, action_setting = Action.current_action(weapon_action_component, optional_weapon_template)
+		local block_unblockable = action_setting and action_setting.block_unblockable
+		local block_goes_brrr = action_setting and action_setting.block_goes_brrr
+
+		return block_unblockable or block_goes_brrr
+	else
+		return false
+	end
 end
 
 Block.attempt_block_break = function (target_unit, attacking_unit, hit_world_position, attack_type, attack_direction, weapon_template, damage_profile)
@@ -257,19 +266,30 @@ function _calculate_block_angle(target_unit, attacking_unit, target_unit_data_ex
 
 	local target_position = POSITION_LOOKUP[target_unit]
 	local attacking_position = POSITION_LOOKUP[attacking_unit]
-	local attack_check_direction = Vector3.normalize(attacking_position - target_position)
-	local target_forward = nil
+	local x = attacking_position.x - target_position.x
+	local y = attacking_position.y - target_position.y
+	local distance_squared = x * x + y * y
+
+	if distance_squared < BLOCK_ANGLE_DISTANCE_SQUARED_EPSILON then
+		return 0
+	end
+
+	local target_forward_flat_normalized = nil
 
 	if target_unit_data_extension then
 		local first_person_component = target_unit_data_extension:read_component("first_person")
 		local first_person_rotation = first_person_component.rotation
-		target_forward = Quaternion.forward(first_person_rotation)
+		local right = Quaternion.right(first_person_rotation)
+		target_forward_flat_normalized = Vector3.normalize(Vector3.cross(right, Vector3.down()))
 	else
 		local target_rotation = Unit.world_rotation(target_unit, 1)
-		target_forward = Quaternion.forward(target_rotation)
+		local right = Quaternion.right(target_rotation)
+		target_forward_flat_normalized = Vector3.normalize(Vector3.cross(right, Vector3.down()))
 	end
 
-	local angle = Vector3.angle(attack_check_direction, target_forward)
+	local to_target = attacking_position - target_position
+	local to_target_flat_normalized = Vector3.normalize(Vector3.flat(to_target))
+	local angle = Vector3.angle(to_target_flat_normalized, target_forward_flat_normalized)
 
 	return angle
 end

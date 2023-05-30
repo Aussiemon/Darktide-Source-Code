@@ -5,7 +5,7 @@ local templates = {
 		weapon_trait_bespoke_ogryn_heavystubber_p1_toughness_on_continuous_fire = {
 			{
 				stat_buffs = {
-					[stat_buffs.toughness_extra_regen_rate] = 0.1
+					[stat_buffs.toughness_extra_regen_rate] = 0.25
 				}
 			}
 		}
@@ -23,7 +23,7 @@ local templates = {
 		weapon_trait_bespoke_ogryn_heavystubber_p1_increased_suppression_on_continuous_fire = {
 			{
 				stat_buffs = {
-					[stat_buffs.increased_suppression] = 0.02
+					[stat_buffs.increased_suppression] = 0.2
 				}
 			}
 		}

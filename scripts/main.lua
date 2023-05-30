@@ -157,6 +157,16 @@ function on_close()
 	return should_close
 end
 
+function on_suspend()
+	return
+end
+
+function on_resume()
+	if Managers and Managers.backend then
+		Managers.backend:time_sync_restart()
+	end
+end
+
 function shutdown()
 	Main:shutdown()
 end

@@ -95,17 +95,20 @@ ScriptWorld.viewport = function (world, name, return_free_flight_viewport)
 	return viewport
 end
 
-ScriptWorld.destroy_viewport = function (world, name)
+ScriptWorld.destroy_viewport = function (world, name, ignore_camera_destruction)
 	local viewports = World.get_data(world, "viewports")
 	local viewport = viewports[name]
 	viewports[name] = nil
 
 	ScriptWorld.destroy_shading_environment(world, viewport)
 
-	local camera = Viewport.get_data(viewport, "camera")
-	local camera_unit = Camera.get_data(camera, "unit")
+	if not ignore_camera_destruction then
+		local camera = Viewport.get_data(viewport, "camera")
+		local camera_unit = Camera.get_data(camera, "unit")
 
-	World.destroy_unit(world, camera_unit)
+		World.destroy_unit(world, camera_unit)
+	end
+
 	Application.destroy_viewport(world, viewport)
 	ScriptWorld._update_render_queue(world)
 end

@@ -19,6 +19,10 @@ HuskHealthExtension.init = function (self, extension_init_context, unit, extensi
 	end
 end
 
+HuskHealthExtension.pre_update = function (self, unit, dt, t)
+	self._was_hit_by_critical_hit_this_render_frame = false
+end
+
 HuskHealthExtension.is_alive = function (self)
 	return not self.is_dead
 end
@@ -93,6 +97,29 @@ end
 
 HuskHealthExtension.set_invulnerable = function (self)
 	return
+end
+
+HuskHealthExtension.set_last_damaging_unit = function (self, last_damaging_unit, hit_zone_name, last_hit_was_critical)
+	self._last_damaging_unit = last_damaging_unit
+	self._last_hit_zone_name = hit_zone_name
+	self._last_hit_was_critical = last_hit_was_critical
+	self._was_hit_by_critical_hit_this_render_frame = self._was_hit_by_critical_hit_this_render_frame or last_hit_was_critical
+end
+
+HuskHealthExtension.last_damaging_unit = function (self)
+	return self._last_damaging_unit
+end
+
+HuskHealthExtension.last_hit_zone_name = function (self)
+	return self._last_hit_zone_name
+end
+
+HuskHealthExtension.last_hit_was_critical = function (self)
+	return self._last_hit_was_critical
+end
+
+HuskHealthExtension.was_hit_by_critical_hit_this_render_frame = function (self)
+	return self._was_hit_by_critical_hit_this_render_frame
 end
 
 HuskHealthExtension.num_wounds = function (self)

@@ -31,34 +31,70 @@ BtChaosDaemonhostSelectorNode.evaluate = function (self, unit, blackboard, scrat
 	local last_running_node = old_running_child_nodes[node_identifier]
 	local children = self._children
 	local node_death_leave = children[1]
+	local is_running = last_leaf_node_running and last_running_node == node_death_leave
 	local condition_result = nil
 
 	repeat
-		local target_side_id = 1
-		local side_system = Managers.state.extension:system("side_system")
-		local side = side_system:get_side(target_side_id)
-		local target_units = side.valid_player_units
-		local num_valid_target_units = #target_units
-		local num_alive_targets = 0
+		local sub_condition_result_01, condition_result = nil
 
-		for i = 1, num_valid_target_units do
-			local player_unit = target_units[i]
+		repeat
+			local sub_condition_result_01, condition_result = nil
 
-			if HEALTH_ALIVE[player_unit] then
-				num_alive_targets = num_alive_targets + 1
+			repeat
+				local perception_component = blackboard.perception
+
+				if not is_running and perception_component.lock_target then
+					condition_result = false
+				else
+					local target_unit = perception_component.target_unit
+					condition_result = HEALTH_ALIVE[target_unit]
+				end
+			until true
+
+			sub_condition_result_01 = condition_result
+			local has_target_unit = sub_condition_result_01
+
+			if not has_target_unit then
+				condition_result = false
+			else
+				local perception_component = blackboard.perception
+				local is_aggroed = perception_component.aggro_state == "aggroed"
+				condition_result = is_aggroed
 			end
-		end
+		until true
 
-		local statistics_component = blackboard.statistics
+		sub_condition_result_01 = condition_result
+		local is_aggroed = sub_condition_result_01
 
-		if num_alive_targets == 1 then
-			condition_result = true
+		if not is_aggroed then
+			condition_result = false
 		else
-			local player_deaths = statistics_component.player_deaths
-			local DaemonhostSettings = require("scripts/settings/specials/daemonhost_settings")
-			local num_player_kills_for_despawn = Managers.state.difficulty:get_table_entry_by_challenge(DaemonhostSettings.num_player_kills_for_despawn)
-			local wants_to_leave = num_player_kills_for_despawn <= player_deaths
-			condition_result = wants_to_leave
+			local target_side_id = 1
+			local side_system = Managers.state.extension:system("side_system")
+			local side = side_system:get_side(target_side_id)
+			local target_units = side.valid_player_units
+			local num_valid_target_units = #target_units
+			local num_alive_targets = 0
+
+			for i = 1, num_valid_target_units do
+				local player_unit = target_units[i]
+
+				if HEALTH_ALIVE[player_unit] then
+					num_alive_targets = num_alive_targets + 1
+				end
+			end
+
+			local statistics_component = blackboard.statistics
+
+			if num_alive_targets == 1 then
+				condition_result = true
+			else
+				local player_deaths = statistics_component.player_deaths
+				local DaemonhostSettings = require("scripts/settings/specials/daemonhost_settings")
+				local num_player_kills_for_despawn = Managers.state.difficulty:get_table_entry_by_challenge(DaemonhostSettings.num_player_kills_for_despawn)
+				local wants_to_leave = num_player_kills_for_despawn <= player_deaths
+				condition_result = wants_to_leave
+			end
 		end
 	until true
 

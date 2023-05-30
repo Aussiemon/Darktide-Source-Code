@@ -310,6 +310,14 @@ MinionBuffExtension._start_fx = function (self, index, template)
 		if node_effects then
 			self:_start_node_effects(node_effects)
 		end
+
+		local effect_template = minion_effects.effect_template
+
+		if effect_template then
+			local fx_system = Managers.state.extension:system("fx_system")
+			local effect_template_id = fx_system:start_template_effect(effect_template, unit)
+			self._effect_template_id = effect_template_id
+		end
 	end
 end
 

@@ -1,7 +1,9 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local Block = require("scripts/utilities/attack/block")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
@@ -10,6 +12,8 @@ local MinionPerception = require("scripts/utilities/minion_perception")
 local GroundImpact = require("scripts/utilities/attack/ground_impact")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Trajectory = require("scripts/utilities/trajectory")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local attack_types = AttackSettings.attack_types
 local BtChaosHoundLeapAction = class("BtChaosHoundLeapAction", "BtNode")
 
 BtChaosHoundLeapAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -100,6 +104,7 @@ end
 
 local LAG_COMPENSATION_CHECK_RADIUS = 3
 local MAX_LAG_COMPENSATION = 0.2
+local EXTRA_BLOCK_TIMING = 0.1
 
 BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
 	local behavior_component = scratchpad.behavior_component
@@ -151,11 +156,22 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 		end
 
 		if scratchpad.aoe_bot_threat_timing and scratchpad.aoe_bot_threat_timing <= t then
-			local group_extension = ScriptUnit.extension(target_unit, "group_system")
-			local bot_group = group_extension:bot_group()
 			local aoe_bot_threat_size = action_data.aoe_bot_threat_size:unbox()
+			local aoe_bot_threat_duration = action_data.aoe_bot_threat_duration
+			local aoe_bot_threat_rotation = Unit.local_rotation(unit, 1)
+			local target_unit_position = POSITION_LOOKUP[target_unit]
+			local side_system = scratchpad.side_system
+			local side = side_system.side_by_unit[unit]
+			local enemy_sides = side:relation_sides("enemy")
+			local group_system = Managers.state.extension:system("group_system")
+			local bot_groups = group_system:bot_groups_from_sides(enemy_sides)
+			local num_bot_groups = #bot_groups
 
-			bot_group:aoe_threat_created(POSITION_LOOKUP[target_unit], "oobb", aoe_bot_threat_size, Unit.local_rotation(unit, 1), action_data.aoe_bot_threat_duration)
+			for i = 1, num_bot_groups do
+				local bot_group = bot_groups[i]
+
+				bot_group:aoe_threat_created(target_unit_position, "oobb", aoe_bot_threat_size, aoe_bot_threat_rotation, aoe_bot_threat_duration)
+			end
 
 			scratchpad.aoe_bot_threat_timing = nil
 		end
@@ -182,6 +198,13 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 		end
 
 		local current_colliding_target = scratchpad.current_colliding_target
+
+		self:_update_in_air_stagger(unit, t, dt, scratchpad, action_data)
+
+		if scratchpad.state ~= "leaping" or scratchpad.stagger_component.controlled_stagger then
+			return "running"
+		end
+
 		local hit_player_unit = scratchpad.init_hit_target or self:_check_colliding_players(unit, scratchpad, action_data)
 
 		if not scratchpad.dodged_attack and not scratchpad.current_colliding_target_check_time and (hit_player_unit and current_colliding_target ~= target_unit or hit_player_unit == target_unit) then
@@ -193,6 +216,15 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 				local lag_compensation_rewind = player:lag_compensation_rewind_s() * 0.5
 				extra_timing = math.min(lag_compensation_rewind, MAX_LAG_COMPENSATION)
 				scratchpad.lag_compensation_rewind_s = extra_timing
+				local unit_data_extension = ScriptUnit.has_extension(hit_player_unit, "unit_data_system")
+				local weapon_action_component = unit_data_extension:read_component("weapon_action")
+				local target_weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
+				local attack_type = attack_types.melee
+				local is_blocking = Block.is_blocking(hit_player_unit, unit, attack_type, target_weapon_template, true)
+
+				if is_blocking then
+					extra_timing = extra_timing + EXTRA_BLOCK_TIMING
+				end
 			end
 
 			scratchpad.current_colliding_target = hit_player_unit
@@ -213,6 +245,7 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 					scratchpad.hit_target = true
 					scratchpad.current_colliding_target = nil
 					scratchpad.current_colliding_target_check_time = nil
+					scratchpad.stagger_component.controlled_stagger_finished = true
 
 					return "done"
 				else
@@ -274,7 +307,6 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 
 		MinionAttack.push_friendly_minions(unit, scratchpad, action_data, t)
 		MinionAttack.push_nearby_enemies(unit, scratchpad, action_data, target_unit)
-		self:_update_in_air_stagger(unit, t, dt, scratchpad, action_data)
 	elseif state == "in_air_stagger" then
 		self:_update_in_air_stagger(unit, t, dt, scratchpad, action_data)
 

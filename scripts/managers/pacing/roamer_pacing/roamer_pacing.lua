@@ -489,6 +489,7 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 							local breed_index = j % num_breeds + 1
 							local breed_name = breed_names[breed_index]
 							local replaced_breed_name = self:_limit_roamer_breeds(breed_name, limit_settings, faction)
+							local side_id = 2
 							local roamer_slot = roamer_slots[j + 1]
 							local roamer_id = #roamers + 1
 							local roamer = {
@@ -506,7 +507,8 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 								zone_id = i,
 								sub_zone_id = sub_zone_index,
 								travel_distance = travel_distance,
-								density_type = density_type
+								density_type = density_type,
+								side_id = side_id
 							}
 							roamers[roamer_id] = roamer
 
@@ -619,7 +621,7 @@ RoamerPacing.update = function (self, dt, t, side_id, target_side_id)
 			if should_activate and not is_active and not roamers_allowed then
 				roamer_got_removed = self:_deactivate_roamer(roamer)
 			elseif should_activate and not is_active then
-				local activated_roamer = self:_try_activate_roamer(roamer, side_id)
+				local activated_roamer = self:_try_activate_roamer(roamer, roamer.side_id or side_id)
 
 				if not activated_roamer then
 					roamer_got_removed = self:_deactivate_roamer(roamer)

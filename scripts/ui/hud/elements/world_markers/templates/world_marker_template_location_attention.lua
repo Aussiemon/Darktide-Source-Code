@@ -1,5 +1,6 @@
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
+local UISettings = require("scripts/settings/ui/ui_settings")
 local template = {}
 local size = {
 	100,
@@ -179,6 +180,16 @@ end
 template.on_enter = function (widget, marker, template)
 	local content = widget.content
 	content.spawn_progress_timer = 0
+	local data = marker.data
+	local player = data.player
+	local tag_instance = data.tag_instance
+	local tagger_player = tag_instance and tag_instance:tagger_player()
+	local player_slot = (tagger_player or player):slot()
+	local player_slot_color = UISettings.player_slot_colors[player_slot] or Color.ui_hud_green_light(255, true)
+	local style = widget.style
+	style.icon.color = table.clone(player_slot_color)
+	style.entry_icon_1.color = table.clone(player_slot_color)
+	style.entry_icon_2.color = table.clone(player_slot_color)
 end
 
 template.update_function = function (parent, ui_renderer, widget, marker, template, dt, t)

@@ -13,8 +13,8 @@ local home_planets = {
 			}
 		},
 		position = {
-			6080,
-			4832
+			3040,
+			2416
 		}
 	},
 	option_2 = {
@@ -31,8 +31,8 @@ local home_planets = {
 			}
 		},
 		position = {
-			8370,
-			4894
+			4185,
+			2447
 		}
 	},
 	option_3 = {
@@ -49,8 +49,8 @@ local home_planets = {
 			}
 		},
 		position = {
-			7502,
-			3396
+			3751,
+			1698
 		}
 	},
 	option_4 = {
@@ -67,8 +67,8 @@ local home_planets = {
 			}
 		},
 		position = {
-			4852,
-			3252
+			2426,
+			1626
 		}
 	},
 	option_5 = {
@@ -85,8 +85,8 @@ local home_planets = {
 			}
 		},
 		position = {
-			6148,
-			1644
+			3074,
+			822
 		}
 	},
 	option_6 = {
@@ -103,8 +103,8 @@ local home_planets = {
 			}
 		},
 		position = {
-			2944,
-			2728
+			1472,
+			1364
 		}
 	},
 	option_7 = {
@@ -121,8 +121,8 @@ local home_planets = {
 			}
 		},
 		position = {
-			3572,
-			5176
+			1786,
+			2588
 		}
 	},
 	option_8 = {
@@ -139,8 +139,8 @@ local home_planets = {
 			}
 		},
 		position = {
-			2568,
-			3852
+			1284,
+			1926
 		}
 	}
 }

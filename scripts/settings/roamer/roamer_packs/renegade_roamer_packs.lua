@@ -5,6 +5,7 @@ local elite_executor = "renegade_executor"
 local elite_berzerker = "renegade_berzerker"
 local elite_gunner = "renegade_gunner"
 local elite_shocktrooper = "renegade_shocktrooper"
+local elite_plasma_shocktrooper = "renegade_shocktrooper"
 local roamer_packs = {
 	renegade_traitor_mix_none = {
 		{
@@ -266,6 +267,15 @@ local roamer_packs = {
 			}
 		},
 		{
+			weight = 1,
+			breeds = {
+				elite_plasma_shocktrooper,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
 			weight = 2,
 			breeds = {
 				roamer_assault,
@@ -277,6 +287,13 @@ local roamer_packs = {
 			weight = 0.5,
 			breeds = {
 				elite_shocktrooper,
+				roamer_assault
+			}
+		},
+		{
+			weight = 0.5,
+			breeds = {
+				elite_plasma_shocktrooper,
 				roamer_assault
 			}
 		}
@@ -303,10 +320,29 @@ local roamer_packs = {
 			}
 		},
 		{
+			weight = 1,
+			breeds = {
+				elite_plasma_shocktrooper,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
 			weight = 2,
 			breeds = {
 				elite_shocktrooper,
 				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 2,
+			breeds = {
+				elite_plasma_shocktrooper,
+				elite_plasma_shocktrooper,
 				roamer_assault,
 				roamer_assault
 			}
@@ -325,6 +361,16 @@ local roamer_packs = {
 			weight = 2,
 			breeds = {
 				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 2,
+			breeds = {
+				elite_plasma_shocktrooper,
 				roamer_assault,
 				roamer_assault,
 				roamer_assault,
@@ -343,9 +389,29 @@ local roamer_packs = {
 			}
 		},
 		{
+			weight = 0.5,
+			breeds = {
+				"chaos_ogryn_bulwark",
+				elite_plasma_shocktrooper,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
 			weight = 1,
 			breeds = {
 				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault
+			}
+		},
+		{
+			weight = 1,
+			breeds = {
+				elite_plasma_shocktrooper,
 				roamer_assault,
 				roamer_assault,
 				roamer_assault

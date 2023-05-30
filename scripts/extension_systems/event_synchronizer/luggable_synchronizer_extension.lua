@@ -20,6 +20,7 @@ LuggableSynchronizerExtension.init = function (self, extension_init_context, uni
 	self._luggable_consume_timers = {}
 	self._spawners_with_marker_on_start = {}
 	self._objective_stages = 1
+	self._objective_stage = 1
 	self._is_side_mission_synchronizer = false
 end
 
@@ -249,7 +250,9 @@ LuggableSynchronizerExtension.start_event = function (self)
 	LuggableSynchronizerExtension.super.start_event(self)
 end
 
-LuggableSynchronizerExtension.start_stage = function (self)
+LuggableSynchronizerExtension.start_stage = function (self, stage)
+	self._objective_stage = stage
+
 	if self._is_server then
 		self:_configure_spawner_markers()
 
@@ -295,6 +298,10 @@ LuggableSynchronizerExtension.spawn_luggable = function (self, spawner_unit)
 			objective_stage = mission_target_extension:objective_stage()
 		end
 
+		if objective_stage < self._objective_stage then
+			objective_stage = self._objective_stage
+		end
+
 		if self._is_side_mission_synchronizer then
 			local side_mission = Managers.state.mission:side_mission()
 			local pickup_name = side_mission.unit_name
@@ -315,6 +322,8 @@ LuggableSynchronizerExtension.spawn_luggable = function (self, spawner_unit)
 		self:_register_spawned_luggable(luggable_unit, spawner_unit, objective_name, objective_stage)
 
 		self._spawner_to_luggable[spawner_unit] = luggable_unit
+	else
+		Log.warning("LuggableSynchronizerExtension", "Trying to spawn_luggable before mission is active")
 	end
 end
 

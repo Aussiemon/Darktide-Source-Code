@@ -36,7 +36,7 @@ local function _calculate_score(breed, unit, target_unit, distance_sq, is_new_ta
 end
 
 local DEFAULT_STICKINESS_DISTANCE = 1
-local DEFAULT_GOOD_LAST_LOS_DISTANCE = 8
+local DEFAULT_GOOD_LAST_LOS_DISTANCE = 3
 local target_selection_template = {}
 local EXTRA_SHOOT_DISTANCE_SQ = 225
 

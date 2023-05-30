@@ -123,7 +123,8 @@ local function _dequeue_error(queue, queue_empty_promise)
 		title_text = loc_title,
 		description_text = loc_description,
 		description_text_params = loc_description_params,
-		options = options
+		options = options,
+		priority_order = math.huge
 	})
 end
 

@@ -77,7 +77,7 @@ local function create_definitions(settings)
 			position = {
 				0,
 				0,
-				12
+				3
 			}
 		},
 		grid_title_background = {
@@ -90,8 +90,8 @@ local function create_definitions(settings)
 			},
 			position = {
 				0,
-				15,
-				-10
+				13,
+				0
 			}
 		},
 		grid_divider_title = {
@@ -105,7 +105,7 @@ local function create_definitions(settings)
 			position = {
 				0,
 				22,
-				12
+				3
 			}
 		},
 		grid_background = {
@@ -116,7 +116,7 @@ local function create_definitions(settings)
 			position = {
 				0,
 				title_height,
-				1
+				0
 			}
 		},
 		grid_divider_bottom = {
@@ -130,7 +130,7 @@ local function create_definitions(settings)
 			position = {
 				0,
 				16,
-				12
+				3
 			}
 		},
 		grid_content_pivot = {
@@ -162,7 +162,7 @@ local function create_definitions(settings)
 			position = {
 				0,
 				0,
-				10
+				2
 			}
 		},
 		grid_interaction = {
@@ -187,7 +187,7 @@ local function create_definitions(settings)
 			position = {
 				0,
 				0,
-				12
+				3
 			}
 		},
 		sort_button = {
@@ -195,7 +195,7 @@ local function create_definitions(settings)
 			parent = "grid_divider_bottom",
 			horizontal_alignment = "left",
 			size = {
-				background_size[1] / 2,
+				background_size[1],
 				20
 			},
 			position = {
@@ -231,8 +231,12 @@ local function create_definitions(settings)
 		255,
 		255
 	}
+	local empty_message_style = table.clone(UIFontSettings.grid_title)
+	empty_message_style.text_horizontal_alignment = "center"
+	empty_message_style.text_vertical_alignment = "center"
 	local timer_text_style = table.clone(sort_button_style)
 	timer_text_style.text_horizontal_alignment = "right"
+	timer_text_style.font_size = 24
 	local widget_definitions = {
 		title_text = UIWidget.create_definition({
 			{
@@ -343,7 +347,7 @@ local function create_definitions(settings)
 						0
 					},
 					color = {
-						0,
+						100,
 						0,
 						0,
 						0
@@ -354,25 +358,13 @@ local function create_definitions(settings)
 						2
 					}
 				},
-				change_function = function (content, style, _, dt)
-					local is_loading = content.is_loading
-					local anim_hover_speed = 5
-					local anim_alpha_progress = style.anim_alpha_progress or 0
-
-					if is_loading then
-						anim_alpha_progress = math.min(anim_alpha_progress + dt * anim_hover_speed, 1)
-					else
-						anim_alpha_progress = math.max(anim_alpha_progress - dt * anim_hover_speed, 0)
-					end
-
-					style.anim_alpha_progress = anim_alpha_progress
-					local alpha = 100 * anim_alpha_progress
-					style.color[1] = alpha
+				visibility_function = function (content, style)
+					return content.is_loading
 				end
 			},
 			{
-				value = "content/ui/materials/loading/loading_small",
 				pass_type = "rotated_texture",
+				value = "content/ui/materials/loading/loading_small",
 				style = {
 					vertical_alignment = "center",
 					horizontal_alignment = "center",
@@ -381,7 +373,7 @@ local function create_definitions(settings)
 						60,
 						60
 					},
-					color = Color.terminal_corner_hover(0, true),
+					color = Color.terminal_corner_hover(255, true),
 					offset = {
 						0,
 						0,
@@ -393,21 +385,23 @@ local function create_definitions(settings)
 					style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
 					style.angle = style.rotation_progress * math.pi * 2
 					local is_loading = content.is_loading
-					local anim_hover_speed = 5
-					local anim_alpha_progress = style.anim_alpha_progress or 0
-
-					if is_loading then
-						anim_alpha_progress = math.min(anim_alpha_progress + dt * anim_hover_speed, 1)
-					else
-						anim_alpha_progress = math.max(anim_alpha_progress - dt * anim_hover_speed, 0)
-					end
-
-					style.anim_alpha_progress = anim_alpha_progress
-					local alpha = 255 * anim_alpha_progress
-					style.color[1] = alpha
+				end,
+				visibility_function = function (content, style)
+					return content.is_loading
 				end
 			}
 		}, "grid_background"),
+		grid_empty = UIWidget.create_definition({
+			{
+				style_id = "text",
+				pass_type = "text",
+				value_id = "text",
+				style = empty_message_style,
+				value = Localize("loc_item_grid_empty")
+			}
+		}, "grid_background", {
+			visible = false
+		}),
 		grid_scrollbar = UIWidget.create_definition(scrollbar_pass_templates, "grid_scrollbar", {
 			axis = use_horizontal_scrollbar and 1 or 2
 		}),

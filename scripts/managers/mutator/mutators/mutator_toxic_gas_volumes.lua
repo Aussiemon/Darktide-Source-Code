@@ -51,6 +51,8 @@ MutatorToxicGasVolumes.on_gameplay_post_init = function (self, level, themes)
 		return
 	end
 
+	local num_sections = 0
+
 	for i = 1, #fog_units do
 		local fog_unit = fog_units[i]
 		local components = Component.get_components_by_name(fog_unit, "ToxicGasFog")
@@ -69,16 +71,19 @@ MutatorToxicGasVolumes.on_gameplay_post_init = function (self, level, themes)
 				gas_clouds[section_id][id] = {}
 			end
 
+			if num_sections < section_id then
+				num_sections = section_id
+			end
+
 			table.insert(gas_clouds[section_id][id], fog_unit)
 		end
 
 		QuickDrawerStay:sphere(pos, 2, Color.lime())
 	end
 
-	local num_gas_clouds = 3
 	local active_gas_clouds = {}
 
-	for i = 1, num_gas_clouds do
+	for i = 1, num_sections do
 		local max_section_id = #gas_clouds
 		local random_section_id = self:_random(1, max_section_id)
 		local section_entry = gas_clouds[random_section_id]

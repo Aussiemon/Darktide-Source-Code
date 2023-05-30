@@ -54,7 +54,7 @@ local ui_font_settings = {
 		hover_color = Color.ui_brown_super_light(255, true)
 	},
 	currency_title = {
-		font_size = 36,
+		font_size = 28,
 		text_horizontal_alignment = "center",
 		drop_shadow = true,
 		text_vertical_alignment = "center",
@@ -255,13 +255,13 @@ local ui_font_settings = {
 		}
 	},
 	input_legend_button = {
-		font_size = 24,
+		font_size = 22,
 		text_vertical_alignment = "center",
 		font_type = "proxima_nova_bold",
 		text_horizontal_alignment = "center",
-		text_color = Color.ui_grey_medium(255, true),
-		default_text_color = Color.ui_grey_medium(255, true),
-		hover_color = Color.white(255, true)
+		text_color = Color.legend_button_text(255, true),
+		default_text_color = Color.legend_button_text(255, true),
+		hover_color = Color.legend_button_text_hover(255, true)
 	},
 	list_button = {
 		text_horizontal_alignment = "left",

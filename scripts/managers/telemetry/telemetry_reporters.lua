@@ -1,6 +1,7 @@
 local CombatAbilityReporter = require("scripts/managers/telemetry/reporters/combat_ability_reporter")
 local ComWheelReporter = require("scripts/managers/telemetry/reporters/com_wheel_reporter")
 local EnemySpawnedReporter = require("scripts/managers/telemetry/reporters/enemy_spawned_reporter")
+local FixedUpdateMissedInputsReporter = require("scripts/managers/telemetry/reporters/fixed_update_missed_inputs_reporter")
 local FrameTimeReporter = require("scripts/managers/telemetry/reporters/frame_time_reporter")
 local GrenadeAbilityReporter = require("scripts/managers/telemetry/reporters/grenade_ability_reporter")
 local HeartbeatReporter = require("scripts/managers/telemetry/reporters/heartbeat_reporter")
@@ -19,6 +20,7 @@ local REPORTER_CLASS_MAP = {
 	com_wheel = ComWheelReporter,
 	combat_ability = CombatAbilityReporter,
 	enemy_spawns = EnemySpawnedReporter,
+	fixed_update_missed_inputs = FixedUpdateMissedInputsReporter,
 	frame_time = FrameTimeReporter,
 	grenade_ability = GrenadeAbilityReporter,
 	heartbeat = HeartbeatReporter,

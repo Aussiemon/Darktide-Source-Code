@@ -6,7 +6,7 @@ templates.weapon_trait_bespoke_flamer_p1_toughness_on_continuous_fire = {
 	weapon_trait_bespoke_flamer_p1_toughness_on_continuous_fire = {
 		{
 			stat_buffs = {
-				[stat_buffs.toughness_extra_regen_rate] = 0.1
+				[stat_buffs.toughness_extra_regen_rate] = 0.35
 			}
 		}
 	}

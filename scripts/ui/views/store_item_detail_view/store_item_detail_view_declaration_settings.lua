@@ -12,7 +12,7 @@ local view_settings = {
 	disable_game_world = true,
 	load_in_hub = true,
 	levels = {
-		"content/levels/ui/inventory/inventory"
+		"content/levels/ui/vendor_cosmetics_preview_gear/vendor_cosmetics_preview_gear"
 	},
 	testify_flags = {
 		ui_views = false

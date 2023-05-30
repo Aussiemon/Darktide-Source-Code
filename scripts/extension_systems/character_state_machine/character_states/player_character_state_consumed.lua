@@ -1,7 +1,6 @@
 require("scripts/extension_systems/character_state_machine/character_states/player_character_state_base")
 
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
-local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local FirstPersonView = require("scripts/utilities/first_person_view")
 local ForceRotation = require("scripts/extension_systems/locomotion/utilities/force_rotation")
 local Interrupt = require("scripts/utilities/attack/interrupt")
@@ -16,7 +15,6 @@ local STINGER_PROPERTIES = {
 	stinger_type = "mutant_charge"
 }
 local VCE = "scream_long_vce"
-local CONSUMED_EFFECT = EffectTemplates.chaos_beast_of_nurgle_consumed_effect
 local PlayerCharacterStateConsumed = class("PlayerCharacterStateConsumed", "PlayerCharacterStateBase")
 
 PlayerCharacterStateConsumed.init = function (self, character_state_init_context, ...)
@@ -60,6 +58,8 @@ PlayerCharacterStateConsumed.on_enter = function (self, unit, dt, t, previous_st
 		locomotion_steering_component.disable_minion_collision = true
 		self._movement_state_component.method = "idle"
 		local disabling_unit = self._disabled_state_input.disabling_unit
+		local disabling_unit_data_extension = ScriptUnit.extension(disabling_unit, "unit_data_system")
+		self._disabling_breed = disabling_unit_data_extension:breed()
 		local disabled_character_state_component = self._disabled_character_state_component
 		disabled_character_state_component.is_disabled = true
 		disabled_character_state_component.disabling_unit = disabling_unit
@@ -259,7 +259,9 @@ PlayerCharacterStateConsumed.fixed_update = function (self, unit, dt, t, next_st
 			PlayerMovement.teleport_fixed_update(unit, teleport_position, teleport_rotation)
 
 			local fx_system = Managers.state.extension:system("fx_system")
-			local effect_id = fx_system:start_template_effect(CONSUMED_EFFECT, unit)
+			local disabling_breed = self._disabling_breed
+			local target_effect_template = disabling_breed.target_effect_template
+			local effect_id = fx_system:start_template_effect(target_effect_template, unit)
 			self._consumed_effect_id = effect_id
 		end
 

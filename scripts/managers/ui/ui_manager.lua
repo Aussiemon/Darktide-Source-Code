@@ -17,6 +17,7 @@ local InputDevice = require("scripts/managers/input/input_device")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local Archetypes = require("scripts/settings/archetype/archetypes")
 local ItemUtils = require("scripts/utilities/items")
+local RenderTargetAtlasGenerator = require("scripts/ui/render_target_atlas_generator")
 local UIManager = class("UIManager")
 UIManager.DEBUG_TAG = "UI Manager"
 local DEBUG_RELOAD = false
@@ -52,6 +53,7 @@ UIManager.init = function (self)
 	self._viewport_name = viewport_name
 	self._single_icon_renderers = {}
 	self._single_icon_renderers_marked_for_destruction_array = {}
+	self._render_target_atlas_generator = RenderTargetAtlasGenerator:new()
 
 	self:_setup_icon_renderers()
 
@@ -74,6 +76,7 @@ UIManager.init = function (self)
 	Managers.event:register(self, "event_player_appearance_updated", "event_player_appearance_updated")
 	Managers.event:register(self, "event_on_render_settings_applied", "event_on_render_settings_applied")
 	Managers.event:register(self, "event_cinematic_skip_state", "event_cinematic_skip_state")
+	Managers.event:register(self, "event_portrait_render_change", "event_portrait_render_change")
 end
 
 UIManager.get_delta_time = function (self)
@@ -88,60 +91,58 @@ UIManager._setup_icon_renderers = function (self)
 	local item_icon_size = UISettings.item_icon_size
 	local cosmetics_icon_size = UISettings.item_icon_size
 	local portrait_render_settings = {
-		viewport_layer = 1,
+		timer_name = "ui",
+		height = 160,
 		world_layer = 1,
-		world_name = "portrait_world",
-		target_resolution_height = 1600,
+		shading_environment = "content/shading_environments/ui/portrait",
 		viewport_type = "default_with_alpha",
 		viewport_name = "portrait_viewport",
-		portrait_width = 140,
-		target_resolution_width = 1400,
-		shading_environment = "content/shading_environments/ui/portrait",
+		viewport_layer = 1,
 		level_name = "content/levels/ui/portrait/portrait",
-		portrait_height = 160,
-		timer_name = "ui"
+		width = 140,
+		world_name = "portrait_world",
+		render_target_atlas_generator = self._render_target_atlas_generator
 	}
 	local cosmetics_render_settings = {
-		viewport_layer = 900,
+		timer_name = "ui",
 		world_layer = 900,
-		world_name = "cosmetics_portrait_world",
+		shading_environment = "content/shading_environments/ui/portrait",
 		viewport_type = "default_with_alpha",
 		viewport_name = "cosmetics_portrait_viewport",
-		shading_environment = "content/shading_environments/ui/portrait",
+		viewport_layer = 900,
+		always_render = true,
 		level_name = "content/levels/ui/portrait/portrait",
-		timer_name = "ui",
-		portrait_width = cosmetics_icon_size[1],
-		portrait_height = cosmetics_icon_size[2],
-		target_resolution_width = cosmetics_icon_size[1] * 10,
-		target_resolution_height = cosmetics_icon_size[2] * 10
+		world_name = "cosmetics_portrait_world",
+		width = cosmetics_icon_size[1],
+		height = cosmetics_icon_size[2],
+		render_target_atlas_generator = self._render_target_atlas_generator
 	}
 	local appearance_render_settings = {
-		viewport_layer = 900,
+		timer_name = "ui",
+		height = 192,
 		world_layer = 900,
-		world_name = "appearance_portrait_world",
-		target_resolution_height = 1920,
+		shading_environment = "content/shading_environments/ui/portrait",
 		viewport_type = "default_with_alpha",
 		viewport_name = "appearance_portrait_viewport",
-		portrait_width = 128,
-		target_resolution_width = 1280,
-		shading_environment = "content/shading_environments/ui/portrait",
+		viewport_layer = 900,
+		always_render = true,
 		level_name = "content/levels/ui/portrait/portrait",
-		portrait_height = 192,
-		timer_name = "ui"
+		width = 128,
+		world_name = "appearance_portrait_world",
+		render_target_atlas_generator = self._render_target_atlas_generator
 	}
 	local weapon_skins_render_settings = {
-		viewport_layer = 900,
+		timer_name = "ui",
+		height = 128,
 		world_layer = 800,
-		world_name = "weapon_skins_icon_world",
+		shading_environment = "content/shading_environments/ui/weapon_icons",
 		viewport_type = "default_with_alpha",
 		viewport_name = "weapon_viewport",
+		viewport_layer = 900,
 		level_name = "content/levels/ui/weapon_icon/weapon_icon",
-		shading_environment = "content/shading_environments/ui/weapon_icons",
-		timer_name = "ui",
-		weapon_width = UISettings.weapon_icon_size[1],
-		weapon_height = UISettings.weapon_icon_size[2],
-		target_resolution_width = UISettings.weapon_icon_size[1] * 10,
-		target_resolution_height = UISettings.weapon_icon_size[2] * 10
+		width = 128,
+		world_name = "weapon_skins_icon_world",
+		render_target_atlas_generator = self._render_target_atlas_generator
 	}
 	local back_buffer_render_handlers = {
 		portraits = self:create_single_icon_renderer("portrait", "portraits", portrait_render_settings),
@@ -718,6 +719,7 @@ UIManager.destroy = function (self)
 	Managers.event:unregister(self, "event_player_appearance_updated")
 	Managers.event:unregister(self, "event_on_render_settings_applied")
 	Managers.event:unregister(self, "event_cinematic_skip_state")
+	Managers.event:unregister(self, "event_portrait_render_change")
 	self._view_handler:destroy()
 
 	self._view_handler = nil
@@ -759,6 +761,10 @@ UIManager.destroy = function (self)
 
 		self:_handle_single_icon_renderer_destruction()
 	end
+
+	self._render_target_atlas_generator:destroy()
+
+	self._render_target_atlas_generator = nil
 
 	Managers.time:unregister_timer(self._timer_name)
 
@@ -816,6 +822,7 @@ UIManager._handle_resolution_modified = function (self)
 end
 
 UIManager.update = function (self, dt, t)
+	self._render_target_atlas_generator:update(dt, t)
 	self:_handle_single_icon_renderer_destruction()
 
 	if self._update_hotkeys then
@@ -1644,10 +1651,10 @@ UIManager.get_current_sub_state_name = function (self)
 	return self._current_sub_state_name
 end
 
-UIManager.load_profile_portrait = function (self, profile, cb, render_context)
+UIManager.load_profile_portrait = function (self, profile, cb, render_context, unload_cb)
 	local instance = self._back_buffer_render_handlers.portraits
 
-	return instance:load_profile_portrait(profile, cb, render_context)
+	return instance:load_profile_portrait(profile, cb, render_context, nil, unload_cb)
 end
 
 UIManager.unload_profile_portrait = function (self, id)
@@ -1660,6 +1667,18 @@ UIManager.event_player_profile_updated = function (self, peer_id, local_player_i
 	local instance = self._back_buffer_render_handlers.portraits
 
 	instance:profile_updated(profile)
+end
+
+UIManager.event_portrait_render_change = function (self, value)
+	local instance = self._back_buffer_render_handlers.portraits
+
+	instance:change_render_portrait_status(value)
+end
+
+UIManager.portrait_has_request = function (self, id)
+	local instance = self._back_buffer_render_handlers.portraits
+
+	return instance:has_request(id)
 end
 
 UIManager.load_appearance_portrait = function (self, profile, cb, render_context, prioritized)
@@ -1686,7 +1705,7 @@ UIManager.event_player_appearance_updated = function (self, profile)
 	instance:profile_updated(profile)
 end
 
-UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_profile)
+UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_profile, prioritize)
 	local item_name = real_item.name
 	local gear_id = real_item.gear_id or item_name
 	local item = nil
@@ -1704,20 +1723,18 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 	if item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "GADGET" then
 		local instance = self._back_buffer_render_handlers.weapons
 
-		return instance:load_weapon_icon(item, cb, render_context)
+		return instance:load_weapon_icon(item, cb, render_context, prioritize)
 	elseif item_type == "WEAPON_SKIN" then
 		local visual_item = ItemUtils.weapon_skin_preview_item(item)
 		local instance = self._back_buffer_render_handlers.weapon_skin
 
-		return instance:load_weapon_icon(visual_item, cb, render_context)
+		return instance:load_weapon_icon(visual_item, cb, render_context, prioritize)
 	elseif item_type == "WEAPON_TRINKET" then
 		local instance = self._back_buffer_render_handlers.weapon_skin
 		local visual_item = ItemUtils.weapon_trinket_preview_item(item)
 
-		return instance:load_weapon_icon(visual_item, cb, render_context)
+		return instance:load_weapon_icon(visual_item, cb, render_context, prioritize)
 	elseif table.find(slots, "slot_gear_head") or table.find(slots, "slot_gear_upperbody") or table.find(slots, "slot_gear_lowerbody") or table.find(slots, "slot_gear_extra_cosmetic") or table.find(slots, "slot_animation_end_of_round") then
-		local instance = self._back_buffer_render_handlers.cosmetics
-
 		if not dummy_profile then
 			local player = Managers.player:local_player(1)
 			local profile = player:profile()
@@ -1841,31 +1858,30 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 			render_context.wield_slot = prop_item_slot
 		end
 
-		return instance:load_profile_portrait(dummy_profile, cb, render_context)
+		local instance = self._back_buffer_render_handlers.cosmetics
+
+		return instance:load_profile_portrait(dummy_profile, cb, render_context, prioritize)
 	elseif table.find(slots, "slot_insignia") or table.find(slots, "slot_portrait_frame") or table.find(slots, "slot_animation_emote_1") or table.find(slots, "slot_animation_emote_2") or table.find(slots, "slot_animation_emote_3") or table.find(slots, "slot_animation_emote_4") or table.find(slots, "slot_animation_emote_5") then
 		local instance = self._back_buffer_render_handlers.icon
 
-		return instance:load_icon(item, cb, render_context, dummy_profile)
+		return instance:load_icon(item, cb, render_context, dummy_profile, prioritize)
 	elseif item_type == "SET" then
 		local instance = self._back_buffer_render_handlers.cosmetics
-		local dummy_profile = dummy_profile
+		local items = item.items
 
-		if not dummy_profile then
-			local player = Managers.player:local_player(1)
-			local profile = player:profile()
-			dummy_profile = table.clone_instance(profile)
+		if not items then
+			items = {}
+
+			for _, set_item_data in pairs(item.set_items) do
+				items[#items + 1] = MasterItems.get_item(set_item_data.item)
+			end
 		end
 
+		dummy_profile = dummy_profile or ItemUtils.create_mannequin_profile_by_item(item)
 		local gender_name = dummy_profile.gender
 		local archetype = dummy_profile.archetype
 		local breed_name = archetype.breed
 		local loadout = dummy_profile.loadout
-		local items = {}
-
-		for _, set_item_data in pairs(item.set_items) do
-			items[#items + 1] = MasterItems.get_item(set_item_data.item)
-		end
-
 		local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_set_per_slot_by_breed_and_gender[breed_name]
 		local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender_name]
 
@@ -1885,22 +1901,14 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 		end
 
 		for i = 1, #items do
-			local item = items[i]
-			local first_slot_name = item.slots[1]
-			loadout[first_slot_name] = item
-			local prop_item_key = item.prop_item
-			local prop_item = prop_item_key and prop_item_key ~= "" and MasterItems.get_item(prop_item_key)
-
-			if prop_item then
-				local prop_item_slot = prop_item.slots[1]
-				dummy_profile.loadout[prop_item_slot] = prop_item
-				render_context.wield_slot = prop_item_slot
-			end
+			local set_item = items[i]
+			local first_slot_name = set_item.slots[1]
+			loadout[first_slot_name] = set_item
 		end
 
 		dummy_profile.character_id = string.format("%s_%s_%s", gear_id, dummy_profile.breed, dummy_profile.gender)
 
-		return instance:load_profile_portrait(dummy_profile, cb, render_context)
+		return instance:load_profile_portrait(dummy_profile, cb, render_context, prioritize)
 	end
 end
 
@@ -1918,6 +1926,40 @@ UIManager.unload_item_icon = function (self, id)
 		icon_instance:unload_icon(id)
 	elseif cosmetics_instance:has_request(id) then
 		cosmetics_instance:unload_profile_portrait(id)
+	end
+end
+
+UIManager.update_item_icon_priority = function (self, id)
+	local weapons_instance = self._back_buffer_render_handlers.weapons
+	local weapon_skin_instance = self._back_buffer_render_handlers.weapon_skin
+	local cosmetics_instance = self._back_buffer_render_handlers.cosmetics
+	local icon_instance = self._back_buffer_render_handlers.icon
+
+	if weapon_skin_instance:has_request(id) then
+		weapon_skin_instance:prioritize_request(id)
+	elseif weapons_instance:has_request(id) then
+		weapons_instance:prioritize_request(id)
+	elseif icon_instance:has_request(id) then
+		icon_instance:prioritize_request(id)
+	elseif cosmetics_instance:has_request(id) then
+		cosmetics_instance:prioritize_request(id)
+	end
+end
+
+UIManager.increment_item_icon_load_by_existing_id = function (self, id)
+	local weapons_instance = self._back_buffer_render_handlers.weapons
+	local weapon_skin_instance = self._back_buffer_render_handlers.weapon_skin
+	local cosmetics_instance = self._back_buffer_render_handlers.cosmetics
+	local icon_instance = self._back_buffer_render_handlers.icon
+
+	if weapon_skin_instance:has_request(id) then
+		return weapon_skin_instance:increment_icon_request_by_reference_id(id)
+	elseif weapons_instance:has_request(id) then
+		return weapons_instance:increment_icon_request_by_reference_id(id)
+	elseif icon_instance:has_request(id) then
+		return icon_instance:increment_icon_request_by_reference_id(id)
+	elseif cosmetics_instance:has_request(id) then
+		return cosmetics_instance:increment_icon_request_by_reference_id(id)
 	end
 end
 

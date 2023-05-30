@@ -74,6 +74,21 @@ conditions.has_cover = function (unit, blackboard, scratchpad, condition_args, a
 	return has_cover
 end
 
+conditions.has_cover_no_aggro_requirement = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local combat_range = behavior_component.combat_range
+	local combat_ranges = condition_args.combat_ranges
+
+	if not combat_ranges[combat_range] then
+		return false
+	end
+
+	local cover_component = blackboard.cover
+	local has_cover = cover_component.has_cover
+
+	return has_cover
+end
+
 conditions.is_aggroed_in_combat_range = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 
@@ -561,6 +576,12 @@ conditions.slot_wielded = function (unit, blackboard, scratchpad, condition_args
 end
 
 conditions.daemonhost_wants_to_leave = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local is_aggroed = conditions.is_aggroed(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+
+	if not is_aggroed then
+		return false
+	end
+
 	local target_side_id = 1
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system:get_side(target_side_id)
@@ -1188,8 +1209,15 @@ conditions.chaos_spawn_should_grab = function (unit, blackboard, scratchpad, con
 
 	local perception_component = blackboard.perception
 	local target_unit = perception_component.target_unit
-	local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
-	local character_state_component = unit_data_extension:read_component("character_state")
+	local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+	local target_breed = target_unit_data_extension:breed()
+	local Breed = require("scripts/utilities/breed")
+
+	if not Breed.is_player(target_breed) then
+		return false
+	end
+
+	local character_state_component = target_unit_data_extension:read_component("character_state")
 	local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 	local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
 
@@ -1197,11 +1225,24 @@ conditions.chaos_spawn_should_grab = function (unit, blackboard, scratchpad, con
 		return false
 	end
 
-	local hit_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
-	local disabled_state_input = hit_unit_data_extension:read_component("disabled_state_input")
-	local disabled_and_not_by_this_chaos_spawn = disabled_state_input.disabling_unit and disabled_state_input.disabling_unit ~= unit
+	if is_running then
+		return true
+	end
 
-	return not disabled_and_not_by_this_chaos_spawn
+	local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
+
+	if is_disabled then
+		local disabled_state_input = target_unit_data_extension:read_component("disabled_state_input")
+		local disabled_by_this_chaos_spawn = disabled_state_input.disabling_unit and disabled_state_input.disabling_unit == unit
+
+		if disabled_by_this_chaos_spawn then
+			return true
+		else
+			return false
+		end
+	end
+
+	return true
 end
 
 conditions.chaos_spawn_target_changed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)

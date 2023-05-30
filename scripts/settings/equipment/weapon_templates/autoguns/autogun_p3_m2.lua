@@ -259,9 +259,9 @@ weapon_template.actions = {
 		weapon_handling_template = "autogun_single_shot",
 		sprint_requires_press_to_interrupt = true,
 		sprint_ready_up_time = 0.235,
-		allowed_during_sprint = true,
+		allowed_during_sprint = false,
 		ammunition_usage = 1,
-		abort_sprint = true,
+		abort_sprint = false,
 		total_time = 0.25,
 		action_movement_curve = {
 			{

@@ -255,6 +255,22 @@ UIWidgetGrid.length = function (self)
 	return self._total_grid_length
 end
 
+UIWidgetGrid.can_move_vertical = function (self, input_direction)
+	local current_index = self._selected_grid_index
+	local using_negative_direction = self._using_negative_direction
+	local direction = nil
+
+	if input_direction == "up" then
+		direction = using_negative_direction and DIRECTION.DOWN or DIRECTION.UP
+	else
+		direction = using_negative_direction and DIRECTION.UP or DIRECTION.DOWN
+	end
+
+	local neighbor_index = self:_find_closest_neighbour_vertical(current_index, direction)
+
+	return neighbor_index ~= nil
+end
+
 UIWidgetGrid._find_closest_neighbour_vertical = function (self, index, input_direction)
 	local widgets = self._widgets
 	local direction = self._direction
@@ -299,38 +315,32 @@ UIWidgetGrid._find_closest_neighbour_vertical = function (self, index, input_dir
 		for i = math.min(index + 1, num_widgets), num_widgets do
 			local widget = widgets[i]
 			local content = widget.content
+			local row = content.row
 
-			if closest_widget and closest_widget.content.row < content.row then
+			if closest_widget and closest_widget.content.row < row then
 				break
 			end
 
-			if content.hotspot then
-				local row = content.row
-
-				if is_widget_closest(index, widget, i) then
-					closest_index_distance = math.abs(index - i)
-					closest_index = i
-					closest_widget = widget
-				end
+			if content.hotspot and is_widget_closest(index, widget, i) then
+				closest_index_distance = math.abs(index - i)
+				closest_index = i
+				closest_widget = widget
 			end
 		end
 	elseif input_direction == DIRECTION.UP then
 		for i = index, 1, -1 do
 			local widget = widgets[i]
 			local content = widget.content
+			local row = content.row
 
-			if closest_widget and content.row < closest_widget.content.row then
+			if closest_widget and row < closest_widget.content.row then
 				break
 			end
 
-			if content.hotspot then
-				local row = content.row
-
-				if is_widget_closest(index, widget, i) then
-					closest_index_distance = math.abs(index - i)
-					closest_index = i
-					closest_widget = widget
-				end
+			if content.hotspot and is_widget_closest(index, widget, i) then
+				closest_index_distance = math.abs(index - i)
+				closest_index = i
+				closest_widget = widget
 			end
 		end
 	end

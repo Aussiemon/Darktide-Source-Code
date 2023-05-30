@@ -1,5 +1,6 @@
 local OptionsUtilities = require("scripts/utilities/ui/options")
 local SaveData = require("scripts/managers/save/save_data")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 
 local function save_account_settings(location_name, settings_name, value)
 	local player = Managers.player:local_player(1)
@@ -101,6 +102,70 @@ local function construct_interface_settings_boolean(template)
 	end
 
 	return entry
+end
+
+local function construct_interface_settings_percent_slider(template)
+	local min_value = template.min_value or 0
+	local max_value = template.max_value or 100
+	local value_range = max_value - min_value
+	local convertion_value = value_range / 100
+	local step_size = template.step_size_value or 1
+	local percent_step_size = step_size / convertion_value
+	local default_value = ((template.default_value or min_value) - min_value) / convertion_value
+	local id = template.id
+	local save_location = template.save_location
+
+	local function explode_value(percent_value)
+		local exploded_value = min_value + percent_value * convertion_value
+		exploded_value = math.round(exploded_value / step_size) * step_size
+
+		return exploded_value
+	end
+
+	local on_value_changed = template.on_value_changed
+
+	local function on_value_changed_function(percent_value)
+		local exploded_value = explode_value(percent_value)
+
+		save_account_settings(save_location, id, exploded_value)
+
+		if on_value_changed then
+			on_value_changed(exploded_value)
+		end
+	end
+
+	local value_get_function = template.get_function or function ()
+		local exploded_value = get_account_settings(save_location, id)
+
+		if exploded_value == nil then
+			exploded_value = default_value
+		end
+
+		local percent_value = (exploded_value - min_value) / convertion_value
+
+		return percent_value
+	end
+	local format_value_function = template.format_value_function or function (current_value)
+		local exploded_value = explode_value(current_value)
+		local result = string.format("%d %%", exploded_value)
+
+		return result
+	end
+	local params = {
+		apply_on_drag = true,
+		display_name = template.display_name,
+		default_value = default_value,
+		step_size_value = percent_step_size,
+		value_get_function = value_get_function,
+		on_value_changed_function = on_value_changed_function,
+		format_value_function = format_value_function,
+		indentation_level = template.indentation_level,
+		validation_function = template.validation_function,
+		tooltip_text = template.tooltip_text,
+		disable_rules = template.disable_rules
+	}
+
+	return OptionsUtilities.create_percent_slider_template(params)
 end
 
 local function construct_interface_settings_value_slider(template)
@@ -394,6 +459,7 @@ local settings_definitions = {
 local template_functions = {
 	boolean = construct_interface_settings_boolean,
 	value_slider = construct_interface_settings_value_slider,
+	percent_slider = construct_interface_settings_percent_slider,
 	dropdown = construct_interface_settings_dropdown
 }
 local settings = {}

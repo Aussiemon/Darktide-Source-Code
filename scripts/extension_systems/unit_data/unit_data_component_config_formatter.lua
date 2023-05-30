@@ -58,6 +58,7 @@ local LUA_TYPES = {
 	locomotion_rotation = "Quaternion",
 	short_distance = "number",
 	weapon_sway_offset = "number",
+	fixed_frame_offset_start_t_5bit = "number",
 	Quaternion = "Quaternion",
 	move_speed = "number",
 	locomotion_parent = "Unit",

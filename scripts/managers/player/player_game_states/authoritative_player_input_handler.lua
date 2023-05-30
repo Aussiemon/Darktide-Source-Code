@@ -72,7 +72,7 @@ AuthoritativePlayerInputHandler.init = function (self, player, is_server)
 end
 
 AuthoritativePlayerInputHandler._create_clock = function (self)
-	local clock_handler, clock_start = AdaptiveClockHandlerServer:new(self._player:channel_id())
+	local clock_handler, clock_start = AdaptiveClockHandlerServer:new(self._player)
 	self._clock_handler = clock_handler
 	local last_frame = math.floor(clock_start / GameParameters.fixed_time_step)
 	self._received_frame = last_frame

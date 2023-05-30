@@ -83,6 +83,11 @@ InteracteeExtension.set_interaction_context = function (self, interaction_type, 
 
 		if not interactions[interaction_type] then
 			local interaction_template = InteractionTemplates[interaction_type]
+
+			if not interaction_template then
+				return
+			end
+
 			local interaction_class_name = interaction_template.interaction_class_name
 			interactions[interaction_type] = Interactions[interaction_class_name]:new(interaction_template)
 		end

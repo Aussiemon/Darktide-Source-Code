@@ -1,10 +1,15 @@
-local InventoryCosmeticsViewSettings = require("scripts/ui/views/inventory_cosmetics_view/inventory_cosmetics_view_settings")
+local CosmeticsInspectViewSettings = require("scripts/ui/views/cosmetics_inspect_view/cosmetics_inspect_view_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local ItemUtils = require("scripts/utilities/items")
+local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
+local grid_height = CosmeticsInspectViewSettings.grid_height
+local grid_margin = 30
+local item_grid_width = 542
+local grid_width = item_grid_width + grid_margin * 2
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
 	canvas = {
@@ -119,60 +124,88 @@ local scenegraph_definition = {
 			3
 		}
 	},
-	item_title_background = {
-		vertical_alignment = "bottom",
-		parent = "screen",
-		horizontal_alignment = "right",
-		size = {
-			800,
-			0
-		},
-		position = {
-			0,
-			-90,
-			1
-		}
-	},
-	item_title = {
-		vertical_alignment = "center",
-		parent = "item_title_background",
-		horizontal_alignment = "right",
-		size = {
-			500,
-			0
-		},
-		position = {
-			-120,
-			0,
-			1
-		}
-	},
-	item_restrictions_background = {
-		vertical_alignment = "bottom",
+	left_side = {
+		vertical_alignment = "top",
 		parent = "canvas",
 		horizontal_alignment = "left",
 		size = {
-			800,
-			0
+			grid_width,
+			grid_height
 		},
 		position = {
 			100,
-			-90,
+			130,
 			1
 		}
 	},
-	item_restrictions = {
-		vertical_alignment = "center",
-		parent = "item_restrictions_background",
+	title = {
+		vertical_alignment = "top",
+		parent = "left_side",
 		horizontal_alignment = "left",
 		size = {
-			500,
+			grid_width - 40,
+			70
+		},
+		position = {
+			20,
+			50,
+			1
+		}
+	},
+	description_grid = {
+		vertical_alignment = "top",
+		parent = "left_side",
+		horizontal_alignment = "center",
+		size = {
+			grid_width - grid_margin * 2,
+			grid_height - 80
+		},
+		position = {
+			0,
+			40,
+			1
+		}
+	},
+	description_content_pivot = {
+		vertical_alignment = "top",
+		parent = "description_grid",
+		horizontal_alignment = "left",
+		size = {
+			0,
 			0
 		},
 		position = {
-			50,
 			0,
-			1
+			0,
+			2
+		}
+	},
+	description_mask = {
+		vertical_alignment = "center",
+		parent = "description_grid",
+		horizontal_alignment = "center",
+		size = {
+			grid_width,
+			grid_height - 40
+		},
+		position = {
+			0,
+			0,
+			2
+		}
+	},
+	description_scrollbar = {
+		vertical_alignment = "top",
+		parent = "description_grid",
+		horizontal_alignment = "right",
+		size = {
+			10,
+			grid_height - 80
+		},
+		position = {
+			30,
+			-20,
+			2
 		}
 	}
 }
@@ -187,97 +220,145 @@ item_restrictions_title_style.offset = {
 	1
 }
 item_restrictions_title_style.font_size = 20
-local item_title_style = table.clone(UIFontSettings.header_1)
-item_title_style.material = "content/ui/materials/font_gradients/slug_font_gradient_rust"
-item_title_style.font_size = 40
-item_title_style.offset = {
+item_restrictions_title_style.text_color = Color.terminal_text_body_sub_header(255, true)
+local item_restrictions_text_style = table.clone(item_restrictions_title_style)
+item_restrictions_text_style.text_color = Color.terminal_text_body(255, true)
+local title_style = table.clone(UIFontSettings.header_1)
+title_style.font_size = 40
+title_style.offset = {
 	0,
 	0,
 	1
 }
-item_title_style.text_horizontal_alignment = "right"
-item_title_style.horizontal_alignment = "right"
-item_title_style.text_vertical_alignment = "top"
-item_title_style.vertical_alignment = "bottom"
-local item_sub_title_style = table.clone(UIFontSettings.terminal_header_3)
-item_sub_title_style.text_horizontal_alignment = "right"
-item_sub_title_style.horizontal_alignment = "right"
-item_sub_title_style.text_vertical_alignment = "top"
-item_sub_title_style.vertical_alignment = "bottom"
-item_sub_title_style.offset = {
+title_style.text_horizontal_alignment = "center"
+title_style.text_vertical_alignment = "top"
+local sub_title_style = table.clone(UIFontSettings.header_5)
+sub_title_style.text_horizontal_alignment = "center"
+sub_title_style.text_vertical_alignment = "top"
+sub_title_style.offset = {
 	0,
-	10,
-	1
+	0,
+	0
 }
-item_sub_title_style.font_size = 20
+sub_title_style.text_color = Color.terminal_text_body(255, true)
+local description_text_font_style = table.clone(UIFontSettings.terminal_header_3)
+description_text_font_style.text_horizontal_alignment = "left"
+description_text_font_style.text_vertical_alignment = "top"
+description_text_font_style.font_size = 20
+description_text_font_style.text_color = Color.terminal_text_body(255, true)
 local widget_definitions = {
-	item_title_background = UIWidget.create_definition({
+	bundle_background = UIWidget.create_definition({
 		{
-			value_id = "title_background",
-			style_id = "title_background",
-			pass_type = "texture_uv",
-			value = "content/ui/materials/masks/gradient_horizontal",
+			value_id = "bundle",
+			style_id = "bundle",
+			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/bundle_store_preview",
 			style = {
 				vertical_alignment = "center",
-				scale_to_material = true,
-				horizontal_alignment = "top",
-				color = Color.black(153, true),
-				size_addition = {
-					0,
-					20
-				},
+				horizontal_alignment = "right",
 				offset = {
 					0,
 					0,
 					0
 				},
-				uvs = {
-					{
-						1,
-						0
-					},
-					{
-						0,
-						1
-					}
+				size = {
+					1200,
+					1080
+				},
+				size_addition = {
+					0,
+					0
+				},
+				material_values = {
+					gradient_map = "content/ui/textures/masks/blur_straight"
 				}
-			}
+			},
+			visibility_function = function (content, style)
+				return style.material_values.texture_map
+			end
 		}
-	}, "item_title_background"),
-	item_title = UIWidget.create_definition({
+	}, "canvas"),
+	title = UIWidget.create_definition({
 		{
 			value_id = "text",
 			pass_type = "text",
 			style_id = "text",
 			value = "",
-			style = item_title_style
+			style = title_style
 		},
 		{
 			value_id = "sub_text",
 			pass_type = "text",
 			style_id = "sub_text",
 			value = "",
-			style = item_sub_title_style
-		}
-	}, "item_title"),
-	item_restrictions = UIWidget.create_definition({
-		{
-			value_id = "title",
-			style_id = "title",
-			pass_type = "text",
-			value = Localize("loc_item_equippable_on_header"),
-			style = item_restrictions_title_style
+			style = sub_title_style
 		},
 		{
-			value_id = "text",
-			style_id = "text",
-			pass_type = "text",
-			value = "",
-			style = item_restrictions_title_style
+			value_id = "divider",
+			style_id = "divider",
+			pass_type = "texture",
+			value = "content/ui/materials/dividers/skull_center_02",
+			style = {
+				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
+				size = {
+					400,
+					18
+				},
+				offset = {
+					0,
+					9,
+					1
+				},
+				color = Color.terminal_frame(255, true)
+			}
 		}
-	}, "item_restrictions", {
-		visible = false
-	})
+	}, "title"),
+	description_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "description_scrollbar"),
+	description_mask = UIWidget.create_definition({
+		{
+			value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_straight_blur_viewport_2",
+			pass_type = "texture",
+			style = {
+				color = {
+					255,
+					255,
+					255,
+					255
+				},
+				offset = {
+					0,
+					0,
+					3
+				}
+			}
+		}
+	}, "description_mask")
+}
+local text_description_pass_template = {
+	{
+		value_id = "text",
+		style_id = "text",
+		pass_type = "text",
+		value = "",
+		style = description_text_font_style
+	}
+}
+local item_restrictions_pass = {
+	{
+		value_id = "title",
+		style_id = "title",
+		pass_type = "text",
+		value = Utf8.upper(Localize("loc_item_equippable_on_header")),
+		style = item_restrictions_title_style
+	},
+	{
+		value_id = "text",
+		style_id = "text",
+		pass_type = "text",
+		value = "",
+		style = item_restrictions_text_style
+	}
 }
 local menu_zoom_out = "loc_inventory_menu_zoom_out"
 local menu_zoom_in = "loc_inventory_menu_zoom_in"
@@ -336,5 +417,7 @@ local legend_inputs = {
 return {
 	legend_inputs = legend_inputs,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition
+	scenegraph_definition = scenegraph_definition,
+	text_description_pass_template = text_description_pass_template,
+	item_restrictions_pass = item_restrictions_pass
 }

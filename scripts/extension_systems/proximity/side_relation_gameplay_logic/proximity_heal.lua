@@ -4,12 +4,12 @@ local Health = require("scripts/utilities/health")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local ProximityHeal = class("ProximityHeal")
-local _heal_amount_percentage_from_range = nil
 
-ProximityHeal.init = function (self, logic_context, init_data)
+ProximityHeal.init = function (self, logic_context, init_data, owner_unit_or_nil)
 	self._unit = logic_context.unit
 	self._side_name = logic_context.side_name
 	self._units_in_proximity = {}
+	self._units_healed = {}
 	local med_kit_settings = init_data
 	self._med_kit_settings = med_kit_settings
 	self._amount_of_damage_healed = 0
@@ -17,6 +17,7 @@ ProximityHeal.init = function (self, logic_context, init_data)
 	local t = Managers.time:time("gameplay")
 	self._start_time = t
 	self._current_t = t
+	self._owner_unit_or_nil = owner_unit_or_nil
 	local players_have_improved_keyword = false
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system:get_side_from_name(self._side_name)
@@ -57,6 +58,7 @@ end
 
 ProximityHeal.unit_left_proximity = function (self, unit)
 	self._units_in_proximity[unit] = nil
+	self._units_healed[unit] = nil
 end
 
 ProximityHeal.unit_in_proximity_deleted = function (self, unit)
@@ -126,6 +128,10 @@ ProximityHeal.update = function (self, dt, t)
 
 			if health_added > 0 then
 				self:play_fx_for_unit(unit, t)
+			end
+
+			if not self._units_healed[unit] and health_added > 0 then
+				self._units_healed[unit] = true
 			end
 		end
 	end

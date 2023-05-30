@@ -43,12 +43,12 @@ StateLoadRenderSettings._check_render_settings = function (self, settings, setti
 				end
 			end
 
-			local valid = not setting.validation_function or setting:validation_function()
+			local apply_on_startup = setting.apply_on_startup
 
-			if valid then
-				local apply_on_startup = setting.apply_on_startup
+			if apply_on_startup then
+				local valid = not setting.validation_function or setting:validation_function()
 
-				if apply_on_startup then
+				if valid then
 					local get_function = setting.get_function
 
 					if get_function then

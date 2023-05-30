@@ -61,9 +61,12 @@ MissionObjectiveSystem.init = function (self, context, system_init_data, ...)
 	self._objective_start_times = {}
 	self._music_event_listener = nil
 	local network_event_delegate = context.network_event_delegate
-	self._network_event_delegate = network_event_delegate
 
-	network_event_delegate:register_session_events(self, unpack(RPCS))
+	if not DEDICATED_SERVER then
+		self._network_event_delegate = network_event_delegate
+
+		network_event_delegate:register_session_events(self, unpack(RPCS))
+	end
 
 	self._level_name = context.level_name
 	local mission = system_init_data.mission
@@ -72,7 +75,10 @@ MissionObjectiveSystem.init = function (self, context, system_init_data, ...)
 end
 
 MissionObjectiveSystem.destroy = function (self, ...)
-	self._network_event_delegate:unregister_events(unpack(RPCS))
+	if not DEDICATED_SERVER then
+		self._network_event_delegate:unregister_events(unpack(RPCS))
+	end
+
 	MissionObjectiveSystem.super.destroy(self, ...)
 end
 

@@ -80,8 +80,18 @@ ViewElementPlayerSocialPopup.update = function (self, dt, t, input_service)
 		menu_grid:update(dt, t, input_service)
 	end
 
-	if input_service:get("left_pressed") and not self._widgets_by_name.background.content.hotspot.is_hover then
+	local widgets_by_name = self._widgets_by_name
+
+	if input_service:get("left_pressed") and not widgets_by_name.background.content.hotspot.is_hover then
 		self._request_close_popup()
+	end
+
+	if self._searching_for_player then
+		local widgets = self._widgets_by_name
+		local player_plaque = widgets.player_plaque
+		local remainder = math.ceil(t * 10) % 12
+		local suffix = remainder <= 1 and "." or remainder <= 6 and ".." or remainder <= 11 and "..."
+		player_plaque.content.search_status_text = Localize("loc_social_menu_find_player_searching") .. suffix
 	end
 
 	ViewElementPlayerSocialPopup.super.update(self, dt, t, input_service)
@@ -117,11 +127,24 @@ end
 
 local _player_header_params = {}
 
-ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_info, menu_items, num_menu_items)
-	self._player_info = player_info
+ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_info, menu_items, num_menu_items, show_friend_code)
 	local player_header = self._widgets_by_name.player_header
 	local header_content = player_header.content
 	local header_style = player_header.style
+
+	if header_content.frame_load_id then
+		Managers.ui:unload_item_icon(header_content.frame_load_id)
+
+		header_content.frame_load_id = nil
+	end
+
+	if header_content.portrait_load_id then
+		Managers.ui:unload_profile_portrait(header_content.portrait_load_id)
+
+		header_content.portrait_load_id = nil
+	end
+
+	self._player_info = player_info
 	local player_display_name, user_display_name = nil
 	local character_name = player_info:character_name()
 
@@ -219,7 +242,8 @@ ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_i
 		end
 
 		local profile_icon_loaded_callback = callback(self, "_cb_set_player_icon", player_header)
-		header_content.portrait_load_id = Managers.ui:load_profile_portrait(profile, profile_icon_loaded_callback)
+		local profile_icon_unloaded_callback = callback(self, "_cb_unset_player_icon", player_header)
+		header_content.portrait_load_id = Managers.ui:load_profile_portrait(profile, profile_icon_loaded_callback, nil, profile_icon_unloaded_callback)
 	end
 
 	self:_setup_menu_items(menu_items, num_menu_items)
@@ -228,12 +252,23 @@ end
 
 ViewElementPlayerSocialPopup._cb_set_player_icon = function (self, widget, grid_index, rows, columns, render_target)
 	local portrait_style = widget.style.portrait
+	widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base"
 	local material_values = portrait_style.material_values
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
 	material_values.texture_icon = render_target
+end
+
+ViewElementPlayerSocialPopup._cb_unset_player_icon = function (self, widget)
+	local material_values = widget.style.portrait.material_values
+	material_values.use_placeholder_texture = nil
+	material_values.rows = nil
+	material_values.columns = nil
+	material_values.grid_index = nil
+	material_values.texture_icon = nil
+	widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
 end
 
 ViewElementPlayerSocialPopup._cb_set_player_frame = function (self, widget, item)
@@ -300,6 +335,7 @@ ViewElementPlayerSocialPopup._create_menu_widget = function (self, menu_item_set
 		widget_blueprint.init(self, widget, menu_item_settings)
 	end
 
+	widget.content.template_type = blueprint_name
 	widget.alpha_multiplier = 0
 
 	return widget

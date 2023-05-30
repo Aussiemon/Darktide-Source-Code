@@ -22,6 +22,10 @@ PartyImmateriumMemberMyself.platform = function (self)
 	return self._platform
 end
 
+PartyImmateriumMemberMyself.presence = function (self)
+	return self._presence_entry
+end
+
 PartyImmateriumMemberMyself.presence_name = function (self)
 	return self._presence_entry:activity_id()
 end

@@ -452,7 +452,7 @@ Factory.add_to_group(AchievementStats, Factory.create_simple("ogryn_2_number_of_
 local _index_of_elite_hit = table.index_of(Hooks.definitions.hook_projectile_impact_concluded:get_parameters(), "num_hit_elite")
 local _index_of_special_hit = table.index_of(Hooks.definitions.hook_projectile_impact_concluded:get_parameters(), "num_hit_special")
 
-Factory.add_to_group(AchievementStats, Factory.create_simple("ogryn_2_grenade_box_kills_without_missing_counter", Hooks.definitions.hook_projectile_impact_concluded, Activations.on_condition(Conditions.all(Conditions.difficulty_is_at_least(4), Conditions.param_has_value(Hooks.definitions.hook_projectile_impact_concluded, "player_class", ogryn_2_specialization), Conditions.param_is_equal_or_greater_than(Hooks.definitions.hook_projectile_impact_concluded, "weapon_template_name", "ogryn_grenade_box")), function (stat_table, current_value, trigger_value, ...)
+Factory.add_to_group(AchievementStats, Factory.create_simple("ogryn_2_grenade_box_kills_without_missing_counter", Hooks.definitions.hook_projectile_impact_concluded, Activations.on_condition(Conditions.all(Conditions.difficulty_is_at_least(4), Conditions.param_has_value(Hooks.definitions.hook_projectile_impact_concluded, "player_class", ogryn_2_specialization), Conditions.param_is_equal_to(Hooks.definitions.hook_projectile_impact_concluded, "weapon_template_name", "ogryn_grenade_box")), function (stat_table, current_value, trigger_value, ...)
 	local num_hit_elite = select(_index_of_elite_hit, ...)
 	local num_hit_special = select(_index_of_special_hit, ...)
 
@@ -576,7 +576,10 @@ Factory.add_to_group(AchievementStats, Factory.create_simple("max_elite_weakspot
 }))
 Factory.add_to_group(AchievementStats, Factory.create_simple("veteran_2_mission_no_melee_damage_taken", Hooks.definitions.hook_mission, Activations.on_condition(Conditions.all(Conditions.param_has_value(Hooks.definitions.hook_mission, "win", true), Conditions.stat_is_less_then(AchievementStats.definitions._total_melee_session_damage, 0.99), Conditions.difficulty_is_at_least(3), Conditions.param_has_value(Hooks.definitions.hook_mission, "player_class", veteran_2_specialization), Conditions.stat_is_less_then(AchievementStats.definitions.progression_when_player_joined, FROM_START_OF_MISSION_PROGRESSION_CUTOFF)), Activations.set(1))))
 Factory.add_to_group(AchievementStats, Factory.create_echo("veteran_2_kills_with_last_round_in_mag", Hooks.definitions.hook_ranged_attack_concluded, Conditions.all(Conditions.difficulty_is_at_least(3), Conditions.param_has_value(Hooks.definitions.hook_ranged_attack_concluded, "player_class", veteran_2_specialization), Conditions.param_has_value(Hooks.definitions.hook_ranged_attack_concluded, "last_round_in_mag", true), Conditions.param_has_value(Hooks.definitions.hook_ranged_attack_concluded, "kill", true))))
-Factory.add_to_group(AchievementStats, Factory.create_simple("max_veteran_2_kills_with_last_round_in_mag", AchievementStats.definitions.veteran_2_kills_with_last_round_in_mag, Activations.clamp(Activations.increment, 0, 5), {
+
+local veteran_2_kills_with_last_round_in_mag_requirement = 8
+
+Factory.add_to_group(AchievementStats, Factory.create_simple("max_veteran_2_kills_with_last_round_in_mag", AchievementStats.definitions.veteran_2_kills_with_last_round_in_mag, Activations.clamp(Activations.increment, 0, veteran_2_kills_with_last_round_in_mag_requirement), {
 	Flags.save_to_backend
 }))
 Factory.add_to_group(AchievementStats, Factory.create_flag("has_missed_shot", Hooks.definitions.hook_ranged_attack_concluded, Conditions.inverse(Conditions.param_has_value(Hooks.definitions.hook_ranged_attack_concluded, "hit_minion", true))))

@@ -27,8 +27,8 @@ local horde_compositions = {
 				{
 					name = "chaos_hound_mutator",
 					amount = {
-						4,
-						6
+						7,
+						9
 					}
 				}
 			}
@@ -38,8 +38,15 @@ local horde_compositions = {
 				{
 					name = "chaos_hound_mutator",
 					amount = {
-						5,
-						6
+						8,
+						10
+					}
+				},
+				{
+					name = "chaos_hound",
+					amount = {
+						1,
+						2
 					}
 				}
 			}
@@ -49,8 +56,15 @@ local horde_compositions = {
 				{
 					name = "chaos_hound_mutator",
 					amount = {
-						6,
-						8
+						10,
+						12
+					}
+				},
+				{
+					name = "chaos_hound",
+					amount = {
+						1,
+						2
 					}
 				}
 			}

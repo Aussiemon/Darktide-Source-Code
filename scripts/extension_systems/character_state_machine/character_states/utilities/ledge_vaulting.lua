@@ -29,36 +29,34 @@ LedgeVaulting.can_enter = function (ledge_finder_extension, ledge_tweak_data, un
 
 	local allowed_flat_distance_to_ledge = ledge_tweak_data.allowed_flat_distance_to_ledge
 	local allowed_flat_distance_to_ledge_sq = allowed_flat_distance_to_ledge * allowed_flat_distance_to_ledge
-	local ledge = ledge_data[1]
-	local height_distance = ledge.height_distance_from_player_unit
-
-	if allowed_height_distance_max < height_distance then
-		return false
-	end
-
-	if height_distance < allowed_height_distance_min then
-		return false
-	end
-
-	local distance_flat_sq = ledge.distance_flat_sq_from_player_unit
-
-	if allowed_flat_distance_to_ledge_sq < distance_flat_sq then
-		return false
-	end
-
 	local move = input_extension:get("move")
 	local move_norm = Vector3.normalize(move)
 	local first_person_component = unit_data_extension:read_component("first_person")
 	local fp_rotation = first_person_component.rotation
 	local wanted_move_dir = Quaternion.rotate(fp_rotation, move_norm)
-	local ledge_forward = ledge.forward:unbox()
-	local dot = Vector3.dot(ledge_forward, wanted_move_dir)
+	local good_ledge = nil
 
-	if dot < 0.3 then
-		return false
+	for i = num_ledges, 1, -1 do
+		local ledge = ledge_data[i]
+		local height_distance = ledge.height_distance_from_player_unit
+
+		if height_distance <= allowed_height_distance_max and allowed_height_distance_min <= height_distance then
+			local distance_flat_sq = ledge.distance_flat_sq_from_player_unit
+
+			if distance_flat_sq <= allowed_flat_distance_to_ledge_sq then
+				local ledge_forward = ledge.forward:unbox()
+				local dot = Vector3.dot(ledge_forward, wanted_move_dir)
+
+				if dot >= 0.3 then
+					good_ledge = ledge
+
+					break
+				end
+			end
+		end
 	end
 
-	return true, ledge
+	return good_ledge ~= nil, good_ledge
 end
 
 return LedgeVaulting

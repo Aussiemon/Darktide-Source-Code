@@ -51,24 +51,22 @@ local function _init_and_run_tests(unit_1p, breed_name, world)
 			local has_bounds_error = false
 			local error_bounds = ""
 
-			if Unit.animation_get_variable_min_max then
-				for variable_name, bounds in pairs(VARIABLE_BOUNDS) do
-					local variable_index = Unit.animation_find_variable(unit_1p, variable_name)
+			for variable_name, bounds in pairs(VARIABLE_BOUNDS) do
+				local variable_index = Unit.animation_find_variable(unit_1p, variable_name)
 
-					if variable_index then
-						local state_machine_min, state_machine_max = Unit.animation_get_variable_min_max(unit_1p, variable_index)
-						local min = bounds.min
-						local max = bounds.max
+				if variable_index then
+					local state_machine_min, state_machine_max = Unit.animation_get_variable_min_max(unit_1p, variable_index)
+					local min = bounds.min
+					local max = bounds.max
 
-						if min < state_machine_min then
-							has_bounds_error = true
-							error_bounds = string.format("%s\n%s", error_bounds, string.format("%q %f is higher than required lower value of %f", variable_name, state_machine_min, min))
-						end
+					if min < state_machine_min then
+						has_bounds_error = true
+						error_bounds = string.format("%s\n%s", error_bounds, string.format("%q %f is higher than required lower value of %f", variable_name, state_machine_min, min))
+					end
 
-						if state_machine_max < max then
-							has_bounds_error = true
-							error_bounds = string.format("%s\n%s", error_bounds, string.format("%q %f is lower than required upper value of %f", variable_name, state_machine_max, max))
-						end
+					if state_machine_max < max then
+						has_bounds_error = true
+						error_bounds = string.format("%s\n%s", error_bounds, string.format("%q %f is lower than required upper value of %f", variable_name, state_machine_max, max))
 					end
 				end
 			end

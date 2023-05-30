@@ -127,6 +127,7 @@ HudElementWieldInfo.update = function (self, dt, t, ui_renderer, render_settings
 	local wielded_slot_id = inventory_component.wielded_slot
 	local visual_loadout_extension = extensions.visual_loadout
 	local ability_extension = extensions.ability
+	local weapon_extention = extensions.weapon
 	local active_wield_inputs = self._active_wield_inputs
 
 	for i = 1, #active_wield_inputs do
@@ -134,6 +135,7 @@ HudElementWieldInfo.update = function (self, dt, t, ui_renderer, render_settings
 	end
 
 	local weapon_name, weapon_template, weapon_action_component, current_action_name, current_action, current_passive_wield_info_name = nil
+	local condition_func_params = weapon_extention:condition_func_params(wielded_slot_id)
 	weapon_name = wielded_slot_id ~= "none" and inventory_component[wielded_slot_id]
 	weapon_template = weapon_name and visual_loadout_extension:weapon_template_from_slot(wielded_slot_id)
 
@@ -191,7 +193,7 @@ HudElementWieldInfo.update = function (self, dt, t, ui_renderer, render_settings
 			local input = active_wield_inputs[i]
 			local validation_function = input.validation_function
 
-			if validation_function and not validation_function(wielded_slot_id, item, current_action, current_action_name, player) then
+			if validation_function and not validation_function(wielded_slot_id, item, current_action, current_action_name, player, condition_func_params) then
 				self:_remove_entry(i)
 
 				entries_removed = true
@@ -216,7 +218,7 @@ HudElementWieldInfo.update = function (self, dt, t, ui_renderer, render_settings
 				local weapon_template_validation_function = input.weapon_template_validation_function
 				local validation_function = weapon_template and weapon_template_validation_function and weapon_template_validation_function ~= "" and weapon_template[weapon_template_validation_function]
 
-				if not validation_function or validation_function(wielded_slot_id, item, current_action, current_action_name, player) then
+				if not validation_function or validation_function(wielded_slot_id, item, current_action, current_action_name, player, condition_func_params) then
 					local data = self:_create_entry(input, validation_function)
 					active_wield_inputs[#active_wield_inputs + 1] = data
 					entries_added = true

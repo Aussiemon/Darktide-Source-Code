@@ -8,7 +8,7 @@ Door.init = function (self, unit, is_server)
 	local door_extension = ScriptUnit.fetch_component_extension(unit, "door_system")
 
 	if door_extension then
-		local type = self:get_data(unit, "type")
+		local door_type = self:get_data(unit, "type")
 		local start_state = self:get_data(unit, "start_state")
 		local open_time = self:get_data(unit, "open_time")
 		local close_time = self:get_data(unit, "close_time")
@@ -24,7 +24,7 @@ Door.init = function (self, unit, is_server)
 			-- Nothing
 		end
 
-		door_extension:setup_from_component(type, start_state, open_time, close_time, allow_closing, self_closing_time, blocked_time, open_type, control_panel_props, control_panels_active, ignore_broadphase)
+		door_extension:setup_from_component(door_type, start_state, open_time, close_time, allow_closing, self_closing_time, blocked_time, open_type, control_panel_props, control_panels_active, ignore_broadphase)
 
 		self._door_extension = door_extension
 	end
@@ -84,6 +84,36 @@ Door.editor_init = function (self, unit)
 	self._control_panel_units = {}
 
 	self:_spawn_control_panels(unit)
+
+	local door_type = self:get_data(unit, "type")
+	local start_state = self:get_data(unit, "start_state")
+
+	if LevelEditor then
+		require("core/editor_slave/settings")
+
+		local DoorSettings = require("scripts/settings/components/door_settings")
+
+		self:_editor_set_open_or_closed(unit, door_type, start_state, DoorSettings)
+	end
+end
+
+Door._editor_set_open_or_closed = function (self, unit, door_type, start_state, DoorSettings)
+	local TYPES = DoorSettings.TYPES
+	local STATES = DoorSettings.STATES
+
+	if door_type == TYPES.two_states then
+		if start_state == STATES.open_fwd or start_state == STATES.open_bwd then
+			start_state = STATES.open
+		end
+	elseif door_type == TYPES.three_states and start_state == STATES.open then
+		start_state = STATES.open_fwd
+	end
+
+	local anim = DoorSettings.anim[start_state]
+	local variable_index = Unit.animation_find_variable(unit, "anim_duration")
+
+	Unit.animation_set_variable(unit, variable_index, 0.1)
+	Unit.animation_event(unit, anim.event)
 end
 
 Door.editor_destroy = function (self, unit)
@@ -135,6 +165,8 @@ Door._unspawn_control_panels = function (self, unit)
 
 		World.unlink_unit(world, control_panel_unit)
 		World.destroy_unit(world, control_panel_unit)
+
+		control_panel_units[i] = nil
 	end
 end
 
@@ -155,7 +187,7 @@ Door.destroy = function (self, unit)
 	return
 end
 
-Door.events.interaction_success = function (self, type, interactor_unit)
+Door.events.interaction_success = function (self, door_type, interactor_unit)
 	self:_toggle(nil, interactor_unit)
 end
 

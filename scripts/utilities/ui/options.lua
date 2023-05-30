@@ -23,6 +23,7 @@ OptionsUtilities.create_percent_slider_template = function (params)
 		on_activated = value_change_function,
 		get_function = value_get_function,
 		format_value_function = format_value_function,
+		validation_function = params.validation_function,
 		normalized_step_size = normalized_step_size,
 		apply_on_drag = params.apply_on_drag
 	}
@@ -69,6 +70,7 @@ OptionsUtilities.create_value_slider_template = function (params)
 		get_function = value_get_function,
 		explode_function = explode_function,
 		format_value_function = format_value_function,
+		validation_function = params.validation_function,
 		step_size = step_size,
 		normalized_step_size = normalized_step_size,
 		apply_on_drag = params.apply_on_drag

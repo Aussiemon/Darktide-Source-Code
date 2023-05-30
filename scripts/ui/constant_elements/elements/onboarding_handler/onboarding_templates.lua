@@ -571,6 +571,72 @@ local templates = {
 		sync_on_events = {}
 	},
 	{
+		name = "Level 3 Unlocks Objective - Cosmetics Shop",
+		valid_states = {
+			"GameplayStateRun"
+		},
+		validation_func = function (self)
+			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_cosmetic_store_visited")
+		end,
+		on_activation = function (self)
+			local objective_name = self.name
+			local localization_key = "loc_objective_hub_cosmetics_shop"
+			local interaction_type = "cosmetics_vendor"
+			local marker_units = _get_interaction_units_by_type(interaction_type)
+			local objective = _create_objective(objective_name, localization_key, marker_units, nil, true)
+			self.objective = objective
+
+			Managers.event:trigger("event_add_mission_objective", objective)
+		end,
+		on_deactivation = function (self)
+			if not self.objective then
+				return
+			end
+
+			local objective = self.objective
+			local objective_name = objective:name()
+
+			Managers.event:trigger("event_remove_mission_objective", objective_name)
+
+			self.objective = nil
+
+			objective:destroy()
+		end,
+		close_condition = function (self)
+			return Managers.ui:view_active("cosmetics_vendor_background_view")
+		end,
+		sync_on_events = {}
+	},
+	{
+		name = "Level 3 Unlocks Popup - Cosmetics Shop",
+		valid_states = {
+			"GameplayStateRun"
+		},
+		validation_func = function (self)
+			return _is_in_hub() and Managers.narrative:can_complete_event("level_unlock_cosmetic_store_popup")
+		end,
+		on_activation = function (self)
+			local player = _get_player()
+			local localization_key = "loc_onboarding_popup_cosmetics_shop"
+			local localized_text = Localize(localization_key)
+			local duration = UI_POPUP_INFO_DURATION
+
+			local function close_callback_function()
+				Managers.narrative:complete_event("level_unlock_cosmetic_store_popup")
+			end
+
+			local close_callback = callback(close_callback_function)
+
+			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration, close_callback)
+		end,
+		on_deactivation = function (self)
+			local player = _get_player()
+
+			Managers.event:trigger("event_player_hide_onboarding_message", player)
+		end,
+		sync_on_events = {}
+	},
+	{
 		name = "Level 4 Unlocks Objective - Forge / Crafting",
 		valid_states = {
 			"GameplayStateRun"

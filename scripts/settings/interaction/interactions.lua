@@ -53,7 +53,8 @@ local interactions = {
 	setup_decoding = SetupDecodingInteraction,
 	training_ground = ViewInteraction,
 	vendor = ViewInteraction,
-	scripted_scenario = ScriptedScenarioInteraction
+	scripted_scenario = ScriptedScenarioInteraction,
+	cosmetics_vendor = ViewInteraction
 }
 
 return settings("Interactions", interactions)

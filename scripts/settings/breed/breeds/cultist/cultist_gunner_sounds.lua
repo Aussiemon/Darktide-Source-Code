@@ -10,7 +10,7 @@ local sound_data = {
 		vce_grunt = "wwise/events/minions/play_enemy_cultist_gunner__stagger_vce",
 		vce_death_gassed = "wwise/events/minions/play_enemy_cultist_gunner__death_quick_vce",
 		swing = "wwise/events/weapon/play_minion_swing_1h_sword",
-		footstep = "wwise/events/minions/play_minion_footsteps_wrapped_feet",
+		footstep = "wwise/events/minions/play_minion_footsteps_wrapped_feet_specials",
 		run_foley = "wwise/events/minions/play_shared_minion_cloth_leather_run_foley"
 	},
 	use_proximity_culling = {

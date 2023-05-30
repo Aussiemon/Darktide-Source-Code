@@ -1478,7 +1478,7 @@ local function _get_number_of_continuous_fire_steps(template_data, template_cont
 	if not use_combo then
 		local shooting_status_component = template_data.shooting_status_component
 		local num_shots = shooting_status_component.num_shots
-		local continuous_fire_step = continuous_fire_step or template_context.template.continuous_fire_step or 1
+		local continuous_fire_step = template_context.template.continuous_fire_step or 1
 
 		if continuous_fire_step == 0 then
 			return 0

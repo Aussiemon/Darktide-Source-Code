@@ -144,19 +144,38 @@ SocialXboxLive.update_recent_players = function (self, account_id)
 	end
 
 	self._updated_recent_players[account_id] = true
-	local _, promise = Managers.presence:get_presence(account_id)
+	local _, presence_promise = Managers.presence:get_presence(account_id)
 
-	promise:next(function (presence)
-		if presence and presence:platform() == "xbox" then
-			local xuid = presence:platform_user_id()
-
-			if xuid then
-				Log.info("SocialXboxLive", "[XboxLive] Updating recent player (account_id: %s, xuid: %s)", account_id, xuid)
-				XboxLiveUtils.update_recent_player_teammate(xuid)
-			end
+	presence_promise:next(function (presence)
+		if not presence then
+			return Promise.rejected({
+				"Missing presence"
+			})
 		end
+
+		local platform = presence:platform()
+
+		if platform ~= "xbox" then
+			return Promise.rejected({
+				string.format("Unexpected platform %s, expected 'xbox'", platform)
+			})
+		end
+
+		local xuid = presence:platform_user_id()
+
+		if not xuid then
+			return Promise.rejected({
+				"Missing xuid"
+			})
+		end
+
+		Log.info("SocialXboxLive", "[update_recent_players] Updating... (account_id: %s, xuid: %s)", account_id, xuid)
+
+		return XboxLiveUtils.update_recent_player_teammate(xuid)
+	end):next(function ()
+		Log.info("SocialXboxLive", "[update_recent_players] Update Success (account_id: %s)", account_id)
 	end):catch(function (err)
-		Log.info("SocialXboxLive", "[XboxLive] Couldn't update recent player, presence error: %s", table.tostring(err))
+		Log.error("SocialXboxLive", "[update_recent_players] Update Failed (account_id: %s): %s", account_id, table.tostring(err, 5))
 	end)
 end
 

@@ -210,12 +210,12 @@ PlayerCharacterStateLedgeVaulting.fixed_update = function (self, unit, dt, t, ne
 
 	local passed_by_ledge_and_enough_distance = passed_by_ledge and PASSED_BY_LEDGE_DISTANCE_SQ <= distance_to_ledge_flat_sq
 
-	return self:_check_transition(unit, t, next_state_params, passed_by_ledge_and_enough_distance, weapon_template)
+	return self:_check_transition(unit, t, next_state_params, passed_by_ledge_and_enough_distance, still_below_ledge, weapon_template)
 end
 
 local LEDGE_CLIMB_TIMEOUT = 0.8
 
-PlayerCharacterStateLedgeVaulting._check_transition = function (self, unit, t, next_state_params, passed_by_ledge, weapon_template)
+PlayerCharacterStateLedgeVaulting._check_transition = function (self, unit, t, next_state_params, passed_by_ledge, still_below_ledge, weapon_template)
 	local unit_data_extension = self._unit_data_extension
 	local health_transition = HealthStateTransitions.poll(unit_data_extension, next_state_params)
 
@@ -238,8 +238,20 @@ PlayerCharacterStateLedgeVaulting._check_transition = function (self, unit, t, n
 	end
 
 	local time_in_state = t - self._character_state_component.entered_t
+	local moving_into_stuff = false
 
-	if passed_by_ledge or LEDGE_CLIMB_TIMEOUT < time_in_state then
+	if not still_below_ledge then
+		local current_flat_dir = Vector3.normalize(Vector3.flat(self._locomotion_component.velocity_current))
+		local wanted_flat_dir = Vector3.normalize(Vector3.flat(self._locomotion_steering_component.velocity_wanted))
+
+		if Vector3.dot(current_flat_dir, wanted_flat_dir) < 0.4 then
+			moving_into_stuff = true
+		end
+	end
+
+	local should_disengage = passed_by_ledge or moving_into_stuff or LEDGE_CLIMB_TIMEOUT < time_in_state
+
+	if should_disengage then
 		if self._inair_state_component.on_ground then
 			local movement_state_component = self._movement_state_component
 			local input_extension = self._input_extension

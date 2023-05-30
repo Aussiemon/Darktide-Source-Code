@@ -292,6 +292,10 @@ CombatVectorSystem.get_combat_direction = function (self)
 	return combat_vector_normalized
 end
 
+CombatVectorSystem.get_from_position = function (self)
+	return self._current_from_position:unbox()
+end
+
 CombatVectorSystem.get_to_position = function (self, vector_type)
 	local vector_types = CombatVectorSettings.vector_types
 
@@ -582,7 +586,6 @@ function _calculate_to_position(from_position, nav_world, traverse_logic)
 	local min_distance_sq = CombatVectorSettings.min_distance_sq
 	local max_distance_sq = CombatVectorSettings.max_distance_sq
 	local average_position = Vector3(0, 0, 0)
-	local from_mainpath_position, from_travel_distance = MainPathQueries.closest_position(from_position)
 	local num_alive_minions = alive_minions.size
 	local num_aggroed = 0
 
@@ -605,13 +608,8 @@ function _calculate_to_position(from_position, nav_world, traverse_logic)
 			if not is_in_melee then
 				local unit_position = POSITION_LOOKUP[unit]
 				local distance_sq = Vector3_distance_squared(from_position, unit_position)
-				local check_distance = math.max(from_travel_distance + MAINPATH_CHECK_POSITION_DISTANCE, 0)
-				local check_main_path_position = MainPathQueries.position_from_distance(check_distance)
-				local to_unit = Vector3.normalize(unit_position - from_mainpath_position)
-				local to_main_path_position = Vector3.normalize(check_main_path_position - from_mainpath_position)
-				local dot = Vector3.dot(to_main_path_position, to_unit)
 
-				if dot > 0 and min_distance_sq < distance_sq and distance_sq < max_distance_sq then
+				if min_distance_sq < distance_sq and distance_sq < max_distance_sq then
 					average_position = average_position + unit_position
 					num_aggroed = num_aggroed + 1
 				end

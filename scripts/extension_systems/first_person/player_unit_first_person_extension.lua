@@ -82,6 +82,7 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 	first_person_component.position = position
 	first_person_component.rotation = look_rotation
 	first_person_component.previous_rotation = look_rotation
+	first_person_component.height_change_function = "ease_out_quad"
 	self._first_person_component = first_person_component
 	self._heights = extension_init_data.heights
 	local first_person_mode_component = unit_data_extension:write_component("first_person_mode")
@@ -101,6 +102,12 @@ PlayerUnitFirstPersonExtension.init = function (self, extension_init_context, un
 	force_look_rotation_component.start_time = 0
 	force_look_rotation_component.end_time = 0
 	self._force_look_rotation_component = force_look_rotation_component
+	local peeking_component = unit_data_extension:write_component("peeking")
+	peeking_component.has_significant_obstacle_in_front = false
+	peeking_component.in_cover = false
+	peeking_component.peeking_is_possible = false
+	peeking_component.is_peeking = false
+	peeking_component.peeking_height = 0.5
 	self._state_machine_lerp_values = {}
 	self._footstep_time = 0
 	local feet_source_id = WwiseWorld.make_manual_source(wwise_world, unit, 1)
@@ -394,19 +401,31 @@ PlayerUnitFirstPersonExtension.extrapolated_rotation = function (self)
 	return Unit.local_rotation(self._first_person_unit, 1)
 end
 
-PlayerUnitFirstPersonExtension.set_wanted_player_height = function (self, state, time_to_change)
+local player_height_movement_speed = 3
+
+PlayerUnitFirstPersonExtension.set_wanted_player_height = function (self, state, time_to_change, height_change_function)
 	local player_height_wanted = self:_player_height_from_name(state)
-	local player_height_movement_speed = 3
 	local fp_component = self._first_person_component
 	fp_component.wanted_height = player_height_wanted
+
+	self:reset_height_change(time_to_change, height_change_function)
+end
+
+PlayerUnitFirstPersonExtension.reset_height_change = function (self, time_to_change, height_change_function)
+	local fp_component = self._first_person_component
 	fp_component.old_height = fp_component.height
 
 	if time_to_change == nil then
-		time_to_change = math.abs(player_height_wanted - fp_component.old_height) / player_height_movement_speed
+		time_to_change = math.abs(fp_component.wanted_height - fp_component.old_height) / player_height_movement_speed
+	end
+
+	if height_change_function == nil then
+		height_change_function = "ease_out_quad"
 	end
 
 	fp_component.height_change_duration = Network.pack_unpack(NetworkConstants.short_time_index, time_to_change)
 	fp_component.height_change_start_time = self._last_fixed_t
+	fp_component.height_change_function = height_change_function
 end
 
 PlayerUnitFirstPersonExtension._player_height_from_name = function (self, name)

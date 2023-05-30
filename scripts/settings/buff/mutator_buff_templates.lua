@@ -3,6 +3,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local Health = require("scripts/utilities/health")
 local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
@@ -35,12 +36,6 @@ local templates = {
 				if not template_data.old_damage_taken or damage_taken ~= template_data.old_damage_taken then
 					template_data.old_damage_taken = damage_taken
 					template_data.next_heal_at = t + 5
-				end
-
-				if template_data.next_heal_at and template_data.next_heal_at <= t then
-					local health_to_recover = 100
-					local heal_type = DamageSettings.heal_types.heal_over_time_tick
-					local health_added = Health.add(unit, health_to_recover, heal_type)
 				end
 			end
 		end,
@@ -133,6 +128,32 @@ templates.mutator_player_enhanced_grenade_abilities = {
 	stat_buffs = {
 		[buff_stat_buffs.extra_max_amount_of_grenades] = 2,
 		[buff_stat_buffs.warp_charge_amount_smite] = 0.5
+	}
+}
+templates.mutator_stimmed_minion = {
+	class_name = "buff",
+	target = buff_targets.minion_only,
+	stat_buffs = {
+		[buff_stat_buffs.unarmored_damage] = -0.8,
+		[buff_stat_buffs.resistant_damage] = -0.8,
+		[buff_stat_buffs.disgustingly_resilient_damage] = -0.8,
+		[buff_stat_buffs.berserker_damage] = -0.8,
+		[buff_stat_buffs.armored_damage] = -0.6,
+		[buff_stat_buffs.super_armor_damage] = -0.6,
+		[buff_stat_buffs.consumed_hit_mass_modifier] = 10
+	},
+	minion_effects = {
+		node_effects = {
+			{
+				node_name = "j_spine",
+				vfx = {
+					orphaned_policy = "destroy",
+					particle_effect = "content/fx/particles/enemies/buff_stimmed",
+					stop_type = "stop"
+				}
+			}
+		},
+		effect_template = EffectTemplates.glowing_eyes
 	}
 }
 

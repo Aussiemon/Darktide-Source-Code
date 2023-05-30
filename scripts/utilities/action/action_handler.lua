@@ -330,40 +330,35 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 	local min = NetworkConstants.action_time_scale.min
 	local max = NetworkConstants.action_time_scale.max
 
-	if Unit.animation_get_variable_min_max then
-		if time_scale < min or max < time_scale then
-			local active_buffs = "Buffs:"
-			local buffs = buff_extension:buffs()
+	if time_scale < min or max < time_scale then
+		local active_buffs = "Buffs:"
+		local buffs = buff_extension:buffs()
 
-			for ii = 1, #buffs do
-				local template = buffs[ii]:template()
-				local template_stat_buffs = template.stat_buffs
-				local template_conditional_stat_buffs = template.conditional_stat_buffs
-				local template_lerped_stat_buffs = template.lerped_stat_buffs
-				local template_proc_stat_buffs = template.proc_stat_buffs
+		for ii = 1, #buffs do
+			local template = buffs[ii]:template()
+			local template_stat_buffs = template.stat_buffs
+			local template_conditional_stat_buffs = template.conditional_stat_buffs
+			local template_lerped_stat_buffs = template.lerped_stat_buffs
+			local template_proc_stat_buffs = template.proc_stat_buffs
 
-				for jj = 1, #action_time_scale_stat_buffs do
-					local key = action_time_scale_stat_buffs[jj]
+			for jj = 1, #action_time_scale_stat_buffs do
+				local key = action_time_scale_stat_buffs[jj]
 
-					if template_stat_buffs and template_stat_buffs[key] or template_conditional_stat_buffs and template_conditional_stat_buffs[key] or template_lerped_stat_buffs and template_lerped_stat_buffs[key] or template_proc_stat_buffs and template_proc_stat_buffs[key] then
-						active_buffs = string.format("%s %s,", active_buffs, template.name)
-					end
+				if template_stat_buffs and template_stat_buffs[key] or template_conditional_stat_buffs and template_conditional_stat_buffs[key] or template_lerped_stat_buffs and template_lerped_stat_buffs[key] or template_proc_stat_buffs and template_proc_stat_buffs[key] then
+					active_buffs = string.format("%s %s,", active_buffs, template.name)
 				end
 			end
-
-			local active_stat_buffs = "Time scales:"
-
-			for ii = 1, #action_time_scale_stat_buffs do
-				local key = action_time_scale_stat_buffs[ii]
-				local value = stat_buffs[key]
-				active_stat_buffs = string.format("%s (%s:%s),", active_stat_buffs, key, value and string.format("%.3f", value) or "n/a")
-			end
-
-			Log.exception("ActionHandler", "action time scale value of %.3f fell outside allowed %.3f-%.3f range! %s %s", time_scale, min, max, active_stat_buffs, active_buffs)
 		end
-	else
-		max = 2
-		min = NetworkConstants.action_time_scale.min
+
+		local active_stat_buffs = "Time scales:"
+
+		for ii = 1, #action_time_scale_stat_buffs do
+			local key = action_time_scale_stat_buffs[ii]
+			local value = stat_buffs[key]
+			active_stat_buffs = string.format("%s (%s:%s),", active_stat_buffs, key, value and string.format("%.3f", value) or "n/a")
+		end
+
+		Log.exception("ActionHandler", "action time scale value of %.3f fell outside allowed %.3f-%.3f range! %s %s", time_scale, min, max, active_stat_buffs, active_buffs)
 	end
 
 	time_scale = math.clamp(time_scale, min, max)
@@ -542,6 +537,49 @@ ActionHandler.running_action_name = function (self, id)
 	local action_settings = running_action:action_settings()
 
 	return action_settings.name
+end
+
+ActionHandler.action_settings_from_action_input = function (self, id, actions, action_input)
+	if not actions then
+		return nil
+	end
+
+	local registered_components = self._registered_components
+	local handler_data = registered_components[id]
+	local running_action = handler_data.running_action
+	local has_running_action = running_action ~= nil
+	local action_settings = nil
+
+	if not has_running_action then
+		local current_settings = nil
+		local current_priority = -math.huge
+
+		for name, settings in pairs(actions) do
+			local start_input = settings.start_input
+			local priority = settings.priority or math.huge
+
+			if start_input == action_input and current_priority < priority then
+				current_settings = settings
+				current_priority = priority
+
+				if not settings.priority then
+					break
+				end
+			end
+		end
+
+		action_settings = current_settings
+	else
+		local current_action_settings = running_action:action_settings()
+		local allowed_chain_actions = current_action_settings.allowed_chain_actions
+		local chain_action = allowed_chain_actions and allowed_chain_actions[action_input]
+
+		if chain_action then
+			action_settings = actions[chain_action.action_name]
+		end
+	end
+
+	return action_settings
 end
 
 ActionHandler.update_actions = function (self, fixed_frame, id, condition_func_params, actions, action_objects, action_params)

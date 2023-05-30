@@ -17,6 +17,8 @@ local InputUtils = require("scripts/managers/input/input_utils")
 local TextUtils = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local Vo = require("scripts/utilities/vo")
+local ItemUtils = require("scripts/utilities/items")
+local ViewElementWallet = require("scripts/ui/view_elements/view_element_wallet/view_element_wallet")
 local DIRECTION = {
 	RIGHT = 4,
 	UP = 1,
@@ -81,8 +83,6 @@ end
 StoreView.on_enter = function (self)
 	StoreView.super.on_enter(self)
 
-	self._current_balance = {}
-	self._wallet_by_type = {}
 	self._account_items = {}
 	self._url_textures = {}
 
@@ -90,8 +90,14 @@ StoreView.on_enter = function (self)
 	self:_setup_input_legend()
 	self:_setup_offscreen_gui()
 	self:_register_button_callbacks()
-	self:_update_wallets_presentation(nil)
-	self:_update_wallets()
+
+	self._wallet_element = self:_add_element(ViewElementWallet, "wallet_element", 100)
+
+	self:_update_element_position("wallet_element_pivot", self._wallet_element, true)
+	self._wallet_element:_generate_currencies(self._wallet_type, {
+		nil,
+		30
+	})
 
 	self._store_promise = self:_update_account_items():next(function ()
 		if self._destroyed or not self._store_promise then
@@ -123,23 +129,40 @@ end
 StoreView._update_store_page = function (self)
 	self:_update_wallets()
 
-	self._store_promise = self:_update_account_items():next(function ()
-		if self._destroyed or not self._store_promise then
+	return self:_update_account_items():next(function ()
+		if self._destroyed then
 			return
 		end
 
-		self._store_promise = nil
 		local path = {
 			page_index = self._selected_page_index or 1,
 			category_index = self._selected_category_index or 1
 		}
 
-		self:_open_navigation_path(path)
-	end):catch(function (error)
-		self._store_promise = nil
-	end)
+		return self:_open_navigation_path(path):next(function ()
+			if self._destroyed then
+				return
+			end
 
-	return self._store_promise
+			local found_element = nil
+
+			for i = 1, #self._grid_widgets do
+				local element = self._grid_widgets[i].content.element
+
+				if element.offer.offerId == self._selected_store_item_offerId then
+					found_element = element
+
+					break
+				end
+			end
+
+			return found_element
+		end):catch(function (error)
+			return
+		end)
+	end):catch(function (error)
+		return
+	end)
 end
 
 StoreView._on_navigation_input_changed = function (self)
@@ -194,8 +217,8 @@ StoreView._set_panels_store = function (self)
 	}
 	local category_panel = self:_setup_element(ViewElementTabMenu, "category_panel", 10, tab_menu_settings)
 	self._category_panel = category_panel
-	local input_action_left = "navigate_secondary_left_pressed"
-	local input_action_right = "navigate_secondary_right_pressed"
+	local input_action_left = "navigate_primary_left_pressed"
+	local input_action_right = "navigate_primary_right_pressed"
 
 	category_panel:set_input_actions(input_action_left, input_action_right)
 	category_panel:set_is_handling_navigation_input(true)
@@ -509,7 +532,7 @@ StoreView._open_navigation_path = function (self, path)
 		self:_on_page_index_selected(page_index)
 	end)
 
-	self:_on_category_index_selected(category_index, page_callback)
+	return self:_on_category_index_selected(category_index, page_callback)
 end
 
 StoreView._on_category_index_selected = function (self, index, on_complete_callback)
@@ -518,7 +541,7 @@ StoreView._on_category_index_selected = function (self, index, on_complete_callb
 	self._selected_category_layout = category_layout
 	local storefront = category_layout.storefront
 
-	self:_fetch_storefront(storefront, on_complete_callback)
+	return self:_fetch_storefront(storefront, on_complete_callback)
 end
 
 StoreView._on_page_index_selected = function (self, page_index)
@@ -592,7 +615,92 @@ StoreView._find_empty_element_with_type = function (self, pages, type)
 	return nil
 end
 
-StoreView._fill_layout_with_offers = function (self, pages, offers)
+StoreView._is_owned = function (self, items)
+	local total_count = 0
+	local owned_count = 0
+	local owned_items = {}
+
+	for i = 1, #items do
+		local item = items[i]
+		total_count = total_count + 1
+		local is_owned = self:is_item_owned(item.gearId)
+
+		if is_owned then
+			owned_count = owned_count + 1
+		end
+
+		if is_owned then
+			owned_items[#owned_items + 1] = item
+		end
+	end
+
+	return total_count == owned_count, owned_items
+end
+
+StoreView._extract_items = function (self, offer)
+	local offer_type = offer.description.type
+	local items = {}
+
+	if offer_type == "bundle" then
+		for i = 1, #offer.bundleInfo do
+			local bundle_item = offer.bundleInfo[i]
+			local real_item, item = self:_extract_item(bundle_item.description)
+			local item_info = table.clone(bundle_item)
+
+			if item_info.price then
+				item_info.price.type = "aquilas"
+			end
+
+			items[#items + 1] = {
+				real_item = real_item,
+				gearId = bundle_item.description.gearId,
+				item = item,
+				offer = item_info
+			}
+		end
+	else
+		local real_item, item = self:_extract_item(offer.description)
+		items[#items + 1] = {
+			real_item = real_item,
+			gearId = offer.description.gearId,
+			item = item,
+			offer = offer
+		}
+	end
+
+	return items
+end
+
+StoreView._extract_item = function (self, description)
+	local modified_desciption = table.clone(description)
+	modified_desciption.gear_id = description.gearId
+	local item = MasterItems.get_store_item_instance(modified_desciption)
+
+	if not item then
+		return
+	end
+
+	local visual_item = nil
+	local item_type = item.item_type
+
+	if item_type == "WEAPON_SKIN" then
+		visual_item = ItemUtils.weapon_skin_preview_item(item)
+	elseif item_type == "WEAPON_TRINKET" then
+		visual_item = ItemUtils.weapon_trinket_preview_item(item)
+
+		if visual_item and not visual_item.slots then
+			visual_item.slots = {
+				"slot_trinket_1"
+			}
+		end
+	end
+
+	visual_item = visual_item or item
+
+	return item, visual_item
+end
+
+StoreView._fill_layout_with_offers = function (self, pages, offers, bundle_rules)
 	self:_unload_url_textures()
 
 	if not offers then
@@ -614,6 +722,40 @@ StoreView._fill_layout_with_offers = function (self, pages, offers)
 		end
 
 		if element then
+			if offer.bundleInfo then
+				local starting_price = offer.price and offer.price.amount.amount or 0
+				local discounted_price = starting_price
+				local bundle_info = offer.bundleInfo
+				local items = self:_extract_items(offer)
+				local _, owned_items = self:_is_owned(items)
+
+				if #owned_items > 0 then
+					for i = 1, #bundle_info do
+						local part = bundle_info[i]
+
+						if part.discountValue then
+							for j = 1, #owned_items do
+								local owned = owned_items[j]
+
+								if owned.gearId == part.description.gear_id then
+									discounted_price = discounted_price - part.discountValue.amount
+								end
+							end
+						end
+					end
+				end
+
+				if discounted_price ~= starting_price then
+					local total_rounding = bundle_rules and bundle_rules.totalRounding or 1
+					discounted_price = math.round(discounted_price / total_rounding) * total_rounding
+					offer.discount = starting_price
+					offer.price.amount.amount = math.max(discounted_price, 0)
+					element.discount = offer.discount
+				else
+					offer.discount = nil
+				end
+			end
+
 			local title = offer.sku.name
 			local item_type = Utf8.upper(offer.description.type)
 			local item = offer.description.id and offer.description.id ~= "<n/a>" and MasterItems.get_item(offer.description.id)
@@ -750,7 +892,6 @@ StoreView._create_aquilas_presentation = function (self, offers)
 			end
 
 			element.description = description
-			element.texture_map = string.format("content/ui/textures/icons/offer_cards/premium_currency_%02d", i)
 			element.offer = offer
 			element.item_types = {
 				"currency"
@@ -765,6 +906,18 @@ StoreView._create_aquilas_presentation = function (self, offers)
 			}
 			offset = offset + size[1] + spacing[1]
 			local init = template.init
+			element.media_url = offer.mediaUrl
+
+			if element.media_url then
+				Managers.url_loader:load_texture(element.media_url):next(function (data)
+					element.texture_map = data.texture
+					self._url_textures[#self._url_textures + 1] = data
+
+					if init then
+						init(self, widget, element, "cb_on_grid_entry_left_pressed")
+					end
+				end)
+			end
 
 			if init then
 				init(self, widget, element, "cb_on_grid_entry_left_pressed")
@@ -821,7 +974,7 @@ StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
 	self._store_promise = store_service:get_premium_store(storefront)
 
 	if not self._store_promise then
-		return
+		return Promise:resolved()
 	end
 
 	if self._page_panel then
@@ -832,7 +985,7 @@ StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
 		self._widgets_by_name.navigation_arrow_right.content.visible = false
 	end
 
-	self._store_promise:next(function (data)
+	return self._store_promise:next(function (data)
 		if storefront_request_id ~= self._storefront_request_id or not self._store_promise or not data then
 			return
 		end
@@ -992,64 +1145,80 @@ StoreView._fetch_storefront = function (self, storefront, on_complete_callback)
 		table.remove_sequence(category_pages_layout_data, last_index + 1, #category_pages_layout_data)
 
 		self._category_pages_layout_data = category_pages_layout_data
-		self._store_promise = Promise.all(unpack(self:_fill_layout_with_offers(category_pages_layout_data, valid_offers))):next(function (elements)
+		self._store_promise = Promise.all(unpack(self:_fill_layout_with_offers(category_pages_layout_data, valid_offers, data.bundle_rules))):next(function (elements)
 			if self._destroyed or not self._store_promise then
 				return
 			end
 
 			self._store_promise = nil
 
-			if #category_pages_layout_data > 1 then
-				local tab_menu_settings = {
-					fixed_button_size = true,
-					horizontal_alignment = "center",
-					button_spacing = 0,
-					button_size = {
-						30,
-						30
-					}
-				}
-				local page_panel = self:_setup_element(ViewElementTabMenu, "page_panel", 10, tab_menu_settings)
-				self._page_panel = page_panel
-				local tab_button_template = table.clone(ButtonPassTemplates.page_indicator_terminal)
-				local page_panel_tab_ids = {}
-
-				for i = 1, #category_pages_layout_data do
-					local function entry_callback_function()
-						local path = {
-							category_index = self._selected_category_index,
-							screen_index = self._selected_screen_index,
-							page_index = i
-						}
-
-						self:_open_navigation_path(path)
-					end
-
-					local cb = callback(entry_callback_function)
-					local tab_id = page_panel:add_entry("", cb, tab_button_template)
-					page_panel_tab_ids[i] = tab_id
-				end
-
-				self._page_panel_tab_ids = page_panel_tab_ids
-
-				self:_update_panel_positions()
-			elseif self._page_panel then
-				self:_remove_element("page_panel")
-
-				self._page_panel = nil
-			end
-
-			self:_setup_navigation_arrows(category_pages_layout_data)
+			self:_setup_panels(category_pages_layout_data)
 
 			if on_complete_callback then
 				on_complete_callback()
 			end
-		end):catch(function (error)
+		end):catch(function (elements)
+			if self._destroyed or not self._store_promise then
+				return
+			end
+
 			self._store_promise = nil
+
+			self:_setup_panels(category_pages_layout_data)
+
+			if on_complete_callback then
+				on_complete_callback()
+			end
 		end)
+
+		return self._store_promise
 	end):catch(function (error)
 		self._store_promise = nil
 	end)
+end
+
+StoreView._setup_panels = function (self, category_pages_layout_data)
+	if #category_pages_layout_data > 1 then
+		local tab_menu_settings = {
+			fixed_button_size = true,
+			horizontal_alignment = "center",
+			button_spacing = 0,
+			button_size = {
+				30,
+				30
+			}
+		}
+		local page_panel = self:_setup_element(ViewElementTabMenu, "page_panel", 10, tab_menu_settings)
+		self._page_panel = page_panel
+		local tab_button_template = table.clone(ButtonPassTemplates.page_indicator_terminal)
+		local page_panel_tab_ids = {}
+
+		for i = 1, #category_pages_layout_data do
+			local function entry_callback_function()
+				local path = {
+					category_index = self._selected_category_index,
+					screen_index = self._selected_screen_index,
+					page_index = i
+				}
+
+				self:_open_navigation_path(path)
+			end
+
+			local cb = callback(entry_callback_function)
+			local tab_id = page_panel:add_entry("", cb, tab_button_template)
+			page_panel_tab_ids[i] = tab_id
+		end
+
+		self._page_panel_tab_ids = page_panel_tab_ids
+
+		self:_update_panel_positions()
+	elseif self._page_panel then
+		self:_remove_element("page_panel")
+
+		self._page_panel = nil
+	end
+
+	self:_setup_navigation_arrows(category_pages_layout_data)
 end
 
 StoreView._setup_navigation_arrows = function (self, layout_pages)
@@ -1252,6 +1421,26 @@ StoreView.update = function (self, dt, t, input_service)
 		self:_update_panel_positions()
 	end
 
+	local wallet_width = self._wallet_element:get_size()[1]
+
+	if wallet_width ~= self._wallet_width then
+		self._wallet_width = wallet_width
+		local corner_right = self._widgets_by_name.corner_top_right
+
+		if not corner_right.content.original_size then
+			local corner_width, corner_height = self:_scenegraph_size("corner_top_right")
+			corner_right.content.original_size = {
+				corner_width,
+				corner_height
+			}
+		end
+
+		local corner_width = corner_right.content.original_size[1]
+		local total_corner_width = wallet_width + corner_width
+
+		self:_set_scenegraph_size("corner_top_right", total_corner_width, nil)
+	end
+
 	return StoreView.super.update(self, dt, t, input_service)
 end
 
@@ -1264,25 +1453,6 @@ StoreView._update_timers = function (self)
 		if not time_remaining then
 			self._catalog_timer = nil
 			should_refresh_offers = true
-		end
-	end
-
-	if self._grid_widgets then
-		for i = 1, #self._grid_widgets do
-			local widget = self._grid_widgets[i]
-
-			if widget.config.should_expire then
-				local offer = widget.config.offer
-				local time_remaining = self:_set_expire_time(offer)
-
-				if not time_remaining then
-					widget.config.should_expire = false
-					widget.content.hotspot.disabled = true
-					should_refresh_offers = true
-				else
-					widget.content.timer_text = time_remaining
-				end
-			end
 		end
 	end
 
@@ -1366,6 +1536,8 @@ StoreView.cb_on_grid_entry_left_pressed = function (self, widget, element)
 			self._purchase_promise = nil
 		end)
 	else
+		self._selected_store_item_offerId = element.offer.offerId
+
 		Managers.ui:open_view("store_item_detail_view", nil, nil, nil, nil, {
 			store_item = element,
 			parent = self
@@ -1469,14 +1641,6 @@ StoreView._create_entry_widget_from_config = function (self, config, suffix, pri
 
 	if widget.content.item then
 		template.load_icon(self, widget, config)
-	end
-
-	local offer = widget.config.offer
-	local remaining_time = self:_set_expire_time(offer)
-
-	if remaining_time then
-		widget.content.timer_text = remaining_time
-		config.should_expire = true
 	end
 
 	return widget
@@ -1821,6 +1985,10 @@ StoreView.draw = function (self, dt, t, input_service, layer)
 	end
 
 	UIRenderer.end_pass(ui_renderer)
+
+	if self._wallet_element then
+		self._wallet_element:draw(dt, t, ui_renderer, render_settings, input_service)
+	end
 end
 
 StoreView._select_aquila_widget_by_index = function (self, index)
@@ -1983,104 +2151,24 @@ StoreView._debug_draw_grid = function (self, dt, t, ui_renderer)
 end
 
 StoreView._update_wallets = function (self)
-	local store_service = Managers.data_service.store
-	local promise = store_service:combined_wallets()
+	if self._wallet_element then
+		self._wallet_promise = self._wallet_element:update_wallets():next(function ()
+			self._wallet_promise = nil
+		end):catch(function (error)
+			self._wallet_promise = nil
+		end)
 
-	promise:next(function (wallets_data)
-		if self._destroyed or not self._wallet_promise then
-			return
-		end
-
-		self:_update_wallets_presentation(wallets_data)
-
-		self._wallet_promise = nil
-
-		if wallets_data then
-			for i = 1, #wallets_data do
-				local wallet = wallets_data[i]
-			end
-		end
-	end)
-
-	self._wallet_promise = promise
-
-	return promise
-end
-
-StoreView._update_wallets_presentation = function (self, wallets_data)
-	local corner_right = self._widgets_by_name.corner_top_right
-
-	if not corner_right.content.original_size then
-		local corner_width, corner_height = self:_scenegraph_size("corner_top_right")
-		corner_right.content.original_size = {
-			corner_width,
-			corner_height
-		}
+		return self._wallet_promise
 	end
 
-	if self._wallet_widgets then
-		for i = 1, #self._wallet_widgets do
-			local widget = self._wallet_widgets[i]
-
-			self:_unregister_widget_name(widget.name)
-		end
-
-		self._wallet_widgets = nil
-	end
-
-	local total_width = 0
-	local widgets = {}
-	local wallet_definition = Definitions.wallet_definitions
-
-	for i = 1, #self._wallet_type do
-		local wallet_type = self._wallet_type[i]
-		local wallet_settings = WalletSettings[wallet_type]
-		local font_gradient_material = wallet_settings.font_gradient_material
-		local icon_texture_small = wallet_settings.icon_texture_small
-		local widget = self:_create_widget("wallet_" .. i, wallet_definition)
-		widget.style.text.material = font_gradient_material
-		widget.content.texture = icon_texture_small
-		local amount = 0
-
-		if wallets_data then
-			local wallet = wallets_data:by_type(wallet_type)
-			self._wallet_by_type[wallet_type] = wallet
-			local balance = wallet and wallet.balance
-			amount = balance and balance.amount or 0
-		end
-
-		local text = TextUtils.format_currency(amount)
-		self._current_balance[wallet_type] = amount
-		widget.content.text = text
-		local style = widget.style
-		local text_style = style.text
-		local text_width, _ = self:_text_size(text, text_style.font_type, text_style.font_size)
-		local texture_width = widget.style.texture.size[1]
-		local text_offset = widget.style.text.original_offset
-		local texture_offset = widget.style.texture.original_offset
-		local text_margin = 5
-		local price_margin = i < #self._wallet_type and 30 or 0
-		widget.style.texture.offset[1] = texture_offset[1] + total_width
-		widget.style.text.offset[1] = text_offset[1] + text_margin + total_width
-		total_width = total_width + text_width + texture_width + text_margin + price_margin
-		widgets[#widgets + 1] = widget
-	end
-
-	local corner_width = corner_right.content.original_size[1]
-	local corner_texture_size_minus_wallet = 100
-	local total_corner_width = total_width + corner_width - corner_texture_size_minus_wallet
-
-	self:_set_scenegraph_size("wallet_pivot", total_width, nil)
-	self:_set_scenegraph_size("corner_top_right", total_corner_width, nil)
-
-	self._wallet_widgets = widgets
+	return Promise:resolved()
 end
 
 StoreView._can_afford = function (self, store_item)
 	local can_afford = true
 	local cost = store_item.price.amount.amount
 	local currency = store_item.price.amount.type
-	can_afford = cost <= self._current_balance[currency]
+	can_afford = cost <= self._wallet_element:get_amount_by_currency(currency)
 
 	return can_afford
 end

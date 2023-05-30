@@ -36,7 +36,7 @@ item_header_text_style.text_vertical_alignment = "top"
 item_header_text_style.horizontal_alignment = "left"
 item_header_text_style.vertical_alignment = "center"
 item_header_text_style.offset = {
-	0,
+	30,
 	20,
 	4
 }
@@ -321,7 +321,8 @@ local blueprints = {
 				end
 			},
 			{
-				pass_type = "rect",
+				value = "content/ui/materials/base/ui_default_base",
+				pass_type = "texture",
 				style = {
 					vertical_alignment = "bottom",
 					horizontal_alignment = "center",
@@ -356,16 +357,16 @@ local blueprints = {
 				value_id = "price_icon",
 				style_id = "price_icon",
 				pass_type = "texture",
-				value = "content/ui/materials/masks/gradient_horizontal",
+				value = "content/ui/materials/base/ui_default_base",
 				style = {
 					vertical_alignment = "bottom",
 					horizontal_alignment = "right",
 					size = {
-						30,
-						30
+						40,
+						28
 					},
 					offset = {
-						-30,
+						-5,
 						-10,
 						4
 					}
@@ -547,7 +548,8 @@ local blueprints = {
 					},
 					offset = {
 						0,
-						0
+						0,
+						1
 					},
 					size = {
 						192,
@@ -696,10 +698,10 @@ local blueprints = {
 			style.title_background.size = {
 				[2] = title_height + title_background_margin
 			}
+			style.title_background.offset[2] = style.title.offset[2]
 			style.title_background.offset[2] = style.title_background.offset[2] - title_background_margin * 0.25
 			style.sub_title.offset[2] = style.title_background.offset[2] + style.title_background.size[2] + sub_title_margin
-			title_style.offset[1] = 30
-			content.price = element.owned and string.format("%s ", Localize("loc_item_owned")) or element.formattedPrice and element.formattedPrice or TextUtils.format_currency(element.price)
+			content.price = element.owned and string.format("%s ", Localize("loc_item_owned")) or element.formattedPrice and element.formattedPrice or TextUtils.format_currency(element.price)
 			local wallet_settings = WalletSettings.aquilas
 			local font_gradient_material = wallet_settings.font_gradient_material
 			local icon_texture_small = wallet_settings.icon_texture_small
@@ -717,17 +719,17 @@ local blueprints = {
 				}
 			end
 
-			local icon_margin = 50
+			local icon_margin = 10
 			style.icon.size_addition[1] = content.size[1] - style.icon.size[1] - icon_margin * 2
 			style.icon.size_addition[2] = content.size[1] / style.icon.size[1] * style.icon.size[2] - style.icon.size[2] - icon_margin * 2
-			local icon_margin = 10
+			local icon_margin = 0
 			local price_style = style.price
 			local price_options = UIFonts.get_font_options_by_style(price_style)
 			local price_width, price_height = parent:_text_size(content.price, price_style.font_type, price_style.font_size, {
 				title_width,
 				math.huge
 			}, price_options)
-			style.price_icon.offset[1] = -price_width - icon_margin - 30
+			style.price.offset[1] = element.owned and style.price_icon.offset[1] or style.price_icon.offset[1] - icon_margin - style.price_icon.size[1]
 			local slot = element.slot
 
 			if slot then
@@ -741,27 +743,29 @@ local blueprints = {
 				end
 			end
 
-			local value = element.discount_percent
+			local discount_percent = element.discount_percent
 
-			if value then
-				content.discount_banner = true
-				content.divider_top = "content/ui/materials/frames/premium_store/offer_card_upper_sale"
-				content.divider_bottom = "content/ui/materials/frames/premium_store/offer_card_lower_sale"
-				local index = 1
-				local value_to_string = tostring(value)
-				local price_style = style.price
+			if element.discount then
 				local text_width, _ = parent:_text_size(content.price, price_style.font_type, price_style.font_size)
 				local discount_margin = 20
-				style.discount_price.offset[1] = style.price.offset[1] - text_width - discount_margin
-				style.discount_price.material = "content/ui/materials/font_gradients/slug_font_gradient_sale"
+				local price_style = style.price
 				content.discount_price = string.format("{#strike(true)}%s{#strike(false)}", TextUtils.format_currency(element.discount))
+				style.discount_price.text_color = Color.terminal_text_body(255, true)
 				local discount_style = style.discount_price
 				local discount_options = UIFonts.get_font_options_by_style(discount_style)
 				local discount_width, discount_height = parent:_text_size(content.discount_price, discount_style.font_type, discount_style.font_size, {
 					title_width,
 					math.huge
 				}, discount_options)
-				style.price_icon.offset[1] = style.price_icon.offset[1] - discount_margin - discount_width
+				style.discount_price.offset[1] = style.price.offset[1] - discount_margin - price_width
+			end
+
+			if discount_percent then
+				content.discount_banner = true
+				content.divider_top = "content/ui/materials/frames/premium_store/offer_card_upper_sale"
+				content.divider_bottom = "content/ui/materials/frames/premium_store/offer_card_lower_sale"
+				local index = 1
+				local value_to_string = tostring(discount_percent)
 				local num_digits = #value_to_string
 
 				for i = num_digits, 1, -1 do
@@ -935,7 +939,7 @@ local blueprints = {
 					}
 				},
 				visibility_function = function (content, style)
-					return not content.element.owned and not content.element.formattedPrice
+					return content.element and not content.element.owned and not content.element.formattedPrice
 				end
 			},
 			{
@@ -972,7 +976,7 @@ local blueprints = {
 					},
 					offset = {
 						0,
-						20,
+						0,
 						3
 					}
 				}
@@ -990,13 +994,13 @@ local blueprints = {
 				style_id = "icon",
 				style = {
 					vertical_alignment = "top",
-					horizontal_alignment = "left",
+					horizontal_alignment = "right",
 					size = {
-						42,
-						42
+						40,
+						28
 					},
 					offset = {
-						30,
+						-20,
 						0,
 						5
 					},
@@ -1148,8 +1152,9 @@ local blueprints = {
 			style.title_background.size = {
 				[2] = title_height + title_background_margin
 			}
+			style.title_background.offset[2] = title_style.offset[2]
 			style.title_background.offset[2] = style.title_background.offset[2] - title_background_margin * 0.25
-			content.price = element.owned and string.format("%s ", Localize("loc_item_owned")) or element.formattedPrice and element.formattedPrice or TextUtils.format_currency(element.price)
+			content.price = element.owned and string.format("%s ", Localize("loc_item_owned")) or element.formattedPrice and element.formattedPrice or TextUtils.format_currency(element.price)
 			style.price.offset[1] = not element.owned and not element.formattedPrice and style.price.offset[1] - style.price_icon.size[1] - 10 or style.price.offset[1]
 			local wallet_settings = WalletSettings.aquilas
 			local font_gradient_material = wallet_settings.font_gradient_material
@@ -1159,12 +1164,10 @@ local blueprints = {
 			style.texture.material_values.main_texture = element.texture_map
 			style.texture.offset[2] = element.description and element.description ~= "" and -25 or 0
 			content.icon = icon_texture_small
-			style.icon.offset[1] = 30
-			title_style.offset[1] = style.icon.offset[1] + style.icon.size[1] + icon_margin
 			title_style.size = {
 				widget.content.size[1] - style.icon.size[1] - icon_margin
 			}
-			style.icon.offset[2] = title_style.offset[2] - 5
+			style.icon.offset[2] = title_style.offset[2]
 		end
 	}
 }

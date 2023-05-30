@@ -44,15 +44,18 @@ CoverUserExtension.extensions_ready = function (self, world, unit)
 end
 
 CoverUserExtension.update = function (self, unit, dt, t)
+	local cover_config = self._cover_config
 	local perception_component = self._perception_component
-	local is_aggroed = perception_component.aggro_state == "aggroed"
-	local target_unit = perception_component.target_unit
 
-	if not ALIVE[target_unit] or not is_aggroed then
-		return
+	if not cover_config.ignore_aggro_requirement then
+		local is_aggroed = perception_component.aggro_state == "aggroed"
+		local target_unit = perception_component.target_unit
+
+		if not ALIVE[target_unit] or not is_aggroed then
+			return
+		end
 	end
 
-	local cover_config = self._cover_config
 	local behavior_component = self._behavior_component
 	local combat_range = behavior_component.combat_range
 	local combat_range_uses_cover = cover_config.cover_combat_ranges[combat_range]
@@ -64,7 +67,9 @@ CoverUserExtension.update = function (self, unit, dt, t)
 	local has_line_of_sight = perception_component.has_line_of_sight
 	local max_distance_modifier_duration = cover_config.max_distance_modifier_duration
 
-	if max_distance_modifier_duration then
+	if max_distance_modifier_duration and ALIVE[perception_component.target_unit] then
+		local target_unit = perception_component.target_unit
+
 		if self._old_target_unit ~= target_unit then
 			self._old_target_unit = target_unit
 			self._max_distance_modifier = 1
@@ -109,6 +114,7 @@ CoverUserExtension.update = function (self, unit, dt, t)
 	local need_to_find_cover = not cover_component.has_cover
 
 	if need_to_find_cover then
+		local target_unit = perception_component.target_unit
 		local cover_slot = self:_find_cover_slot(unit, cover_config, target_unit, t)
 
 		if cover_slot then
@@ -174,6 +180,9 @@ CoverUserExtension._find_cover_slot = function (self, unit, cover_config, target
 		search_position = POSITION_LOOKUP[unit]
 	elseif search_source == search_sources.from_target then
 		search_position = POSITION_LOOKUP[target_unit]
+	elseif search_source == search_sources.from_combat_vector_start then
+		local combat_vector_system = self._combat_vector_system
+		search_position = combat_vector_system:get_from_position()
 	end
 
 	local radius = nil
@@ -242,28 +251,30 @@ CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_conf
 	local is_suppressed = suppression_component.is_suppressed
 	local perception_component = self._perception_component
 	local current_target_unit = perception_component.target_unit
-	local cover_slot_position = cover_slot.position:unbox()
-	local slot_direction = cover_slot.direction:unbox()
-	local max_distance_from_target = is_suppressed and cover_config.suppressed_max_distance_from_target or cover_config.max_distance_from_target
 
-	if max_distance_from_target then
-		local max_distance_modified = self._max_distance_modifier and max_distance_from_target * self._max_distance_modifier or max_distance_from_target
-		local target_position = POSITION_LOOKUP[current_target_unit]
-		local distance_to_slot = Vector3.distance(cover_slot_position, target_position)
+	if ALIVE[current_target_unit] then
+		local cover_slot_position = cover_slot.position:unbox()
+		local max_distance_from_target = is_suppressed and cover_config.suppressed_max_distance_from_target or cover_config.max_distance_from_target
 
-		if max_distance_modified < distance_to_slot then
-			return false
+		if max_distance_from_target then
+			local max_distance_modified = self._max_distance_modifier and max_distance_from_target * self._max_distance_modifier or max_distance_from_target
+			local target_position = POSITION_LOOKUP[current_target_unit]
+			local distance_to_slot = Vector3.distance(cover_slot_position, target_position)
+
+			if max_distance_modified < distance_to_slot then
+				return false
+			end
 		end
-	end
 
-	local min_distance_from_target = cover_config.min_distance_from_target
+		local min_distance_from_target = cover_config.min_distance_from_target
 
-	if min_distance_from_target then
-		local target_position = POSITION_LOOKUP[current_target_unit]
-		local distance_to_slot = Vector3.distance(cover_slot_position, target_position)
+		if min_distance_from_target then
+			local target_position = POSITION_LOOKUP[current_target_unit]
+			local distance_to_slot = Vector3.distance(cover_slot_position, target_position)
 
-		if distance_to_slot < min_distance_from_target then
-			return false
+			if distance_to_slot < min_distance_from_target then
+				return false
+			end
 		end
 	end
 
@@ -280,6 +291,7 @@ CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_conf
 			combat_vector_direction = combat_vector_system:get_combat_direction()
 		end
 
+		local cover_slot_position = cover_slot.position:unbox()
 		local max_distance_from_combat_vector = is_suppressed and cover_config.suppressed_max_distance_from_combat_vector or cover_config.max_distance_from_combat_vector
 
 		if max_distance_from_combat_vector then
@@ -291,29 +303,38 @@ CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_conf
 			end
 		end
 
-		local max_distance_from_target_z = cover_config.max_distance_from_target_z
+		if ALIVE[current_target_unit] then
+			local max_distance_from_target_z = cover_config.max_distance_from_target_z
 
-		if max_distance_from_target_z then
-			local target_position = POSITION_LOOKUP[current_target_unit]
-			local z_distance = math.abs(target_position.z - cover_slot_position.z)
+			if max_distance_from_target_z then
+				local target_position = POSITION_LOOKUP[current_target_unit]
+				local z_distance = math.abs(target_position.z - cover_slot_position.z)
 
-			if max_distance_from_target_z < z_distance then
-				return false
+				if max_distance_from_target_z < z_distance then
+					return false
+				end
 			end
-		end
 
-		local max_distance_from_target_z_below = cover_config.max_distance_from_target_z_below
+			local max_distance_from_target_z_below = cover_config.max_distance_from_target_z_below
 
-		if max_distance_from_target_z_below then
-			local target_position = POSITION_LOOKUP[current_target_unit]
-			local z_distance = cover_slot_position.z - target_position.z
+			if max_distance_from_target_z_below then
+				local target_position = POSITION_LOOKUP[current_target_unit]
+				local z_distance = cover_slot_position.z - target_position.z
 
-			if max_distance_from_target_z_below > z_distance then
-				return false
+				if max_distance_from_target_z_below > z_distance then
+					return false
+				end
 			end
 		end
 
 		if combat_vector_direction then
+			local invert_cover_direction = cover_config.invert_cover_direction
+
+			if invert_cover_direction then
+				combat_vector_direction = -combat_vector_direction
+			end
+
+			local slot_direction = cover_slot.direction:unbox()
 			local dot = Vector3.dot(-combat_vector_direction, slot_direction)
 
 			if dot < CoverSettings.flanking_cover_dot then
@@ -333,6 +354,8 @@ CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_conf
 		local last_los_position = perception_extension:last_los_position(target_unit)
 
 		if last_los_position then
+			local cover_slot_position = cover_slot.position:unbox()
+			local slot_direction = cover_slot.direction:unbox()
 			local slot_to_target = Vector3.normalize(last_los_position - cover_slot_position)
 			local dot = Vector3.dot(slot_to_target, slot_direction)
 

@@ -24,9 +24,12 @@ ViewElementGrid.init = function (self, parent, draw_layer, start_scale, optional
 		0,
 		0
 	}
+	self._loaded_icon_id_cache = {}
+	self._cache_loaded_icons = self._menu_settings.cache_loaded_icons or false
 	self._use_horizontal_scrollbar = self._menu_settings.use_horizontal_scrollbar
 	self._widget_visual_margin = self._menu_settings.widget_visual_margin or 0
 	self._widget_icon_load_margin = self._menu_settings.widget_icon_load_margin or 0
+	self._resource_renderer_background = self._menu_settings.resource_renderer_background or false
 	local definitions = create_definitions_function(self._menu_settings)
 
 	if optional_definitions then
@@ -40,15 +43,23 @@ ViewElementGrid.init = function (self, parent, draw_layer, start_scale, optional
 
 	if self._menu_settings.use_parent_ui_renderer then
 		local ui_renderer = self._parent:ui_renderer()
+		local world = ui_renderer.world
 		self._ui_grid_renderer = ui_renderer
 		self._ui_grid_renderer_is_external = true
 		local gui = self._ui_grid_renderer.gui
 		local gui_retained = self._ui_grid_renderer.gui_retained
 		local resource_renderer_name = self._unique_id
 		local material_name = "content/ui/materials/render_target_masks/ui_render_target_straight_blur"
-		self._ui_resource_renderer = Managers.ui:create_renderer(resource_renderer_name, self._world, true, gui, gui_retained, material_name)
+		self._ui_resource_renderer = Managers.ui:create_renderer(resource_renderer_name, world, true, gui, gui_retained, material_name)
 	else
-		self:_setup_grid_gui()
+		local optional_world = nil
+
+		if self._menu_settings.use_parent_world then
+			local ui_renderer = self._parent:ui_renderer()
+			optional_world = ui_renderer.world
+		end
+
+		self:_setup_grid_gui(optional_world)
 	end
 
 	self._widgets_by_name.sort_button.content.visible = false
@@ -119,7 +130,26 @@ ViewElementGrid._apply_sort_button_text = function (self)
 
 		local widget = self._widgets_by_name.sort_button
 		widget.content.text = text
+		self._update_sort_button_length = true
 	end
+end
+
+ViewElementGrid.set_sort_button_offset = function (self, x, y)
+	local widget = self._widgets_by_name.sort_button
+	local scenegraph_id = widget.scenegraph_id
+	self._pivot_offset[1] = x or self._pivot_offset[1]
+	self._pivot_offset[2] = y or self._pivot_offset[2]
+
+	self:_set_scenegraph_position(scenegraph_id, x, y)
+end
+
+ViewElementGrid.set_timer_text_offset = function (self, x, y)
+	local widget = self._widgets_by_name.timer_text
+	local scenegraph_id = widget.scenegraph_id
+	self._pivot_offset[1] = x or self._pivot_offset[1]
+	self._pivot_offset[2] = y or self._pivot_offset[2]
+
+	self:_set_scenegraph_position(scenegraph_id, x, y)
 end
 
 ViewElementGrid.set_pivot_offset = function (self, x, y)
@@ -137,26 +167,31 @@ ViewElementGrid.input_disabled = function (self)
 	return self._input_disabled
 end
 
-ViewElementGrid._setup_grid_gui = function (self)
+ViewElementGrid._setup_grid_gui = function (self, optional_world)
 	local ui_manager = Managers.ui
-	local timer_name = "ui"
-	local world_layer = 101 + self._draw_layer
-	local world_name = self._unique_id .. "_ui_grid_world"
-	local parent = self._parent
-	local view_name = parent.view_name
-	self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
-	local viewport_name = self._unique_id .. "_ui_grid_world_viewport"
-	local viewport_type = "overlay"
-	local viewport_layer = 1
-	self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
-	self._viewport_name = viewport_name
+
+	if not optional_world then
+		local timer_name = "ui"
+		local world_layer = 101 + self._draw_layer
+		local world_name = self._unique_id .. "_ui_grid_world"
+		local parent = self._parent
+		local view_name = parent.view_name
+		self._world = ui_manager:create_world(world_name, world_layer, timer_name, view_name)
+		local viewport_name = self._unique_id .. "_ui_grid_world_viewport"
+		local viewport_type = "overlay"
+		local viewport_layer = 1
+		self._viewport = ui_manager:create_viewport(self._world, viewport_name, viewport_type, viewport_layer)
+		self._viewport_name = viewport_name
+	end
+
+	local world = optional_world or self._world
 	local renderer_name = self._unique_id .. "_grid_renderer"
-	self._ui_grid_renderer = ui_manager:create_renderer(renderer_name, self._world)
+	self._ui_grid_renderer = ui_manager:create_renderer(renderer_name, world)
 	local gui = self._ui_grid_renderer.gui
 	local gui_retained = self._ui_grid_renderer.gui_retained
 	local resource_renderer_name = self._unique_id
 	local material_name = "content/ui/materials/render_target_masks/ui_render_target_straight_blur"
-	self._ui_resource_renderer = ui_manager:create_renderer(resource_renderer_name, self._world, true, gui, gui_retained, material_name)
+	self._ui_resource_renderer = ui_manager:create_renderer(resource_renderer_name, world, true, gui, gui_retained, material_name)
 end
 
 ViewElementGrid._destroy_grid_gui = function (self)
@@ -238,6 +273,16 @@ ViewElementGrid.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 		return
 	end
 
+	if self._update_sort_button_length then
+		self._update_sort_button_length = false
+		local widget = self._widgets_by_name.sort_button
+		local style = widget.style
+		local text_style = style.text
+		local text_width, _, _, _ = UIRenderer.text_size(ui_renderer, widget.content.text, text_style.font_type, text_style.font_size)
+
+		self:_set_scenegraph_size("sort_button", text_width + 10)
+	end
+
 	if self._input_disabled then
 		input_service = input_service:null_service()
 	end
@@ -270,9 +315,12 @@ ViewElementGrid.draw = function (self, dt, t, ui_renderer, render_settings, inpu
 
 	self:_draw_widgets(dt, t, input_service, ui_grid_renderer, render_settings)
 	UIRenderer.end_pass(ui_grid_renderer)
-	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
-	UIWidget.draw(self._widgets_by_name.grid_background, ui_renderer)
-	UIRenderer.end_pass(ui_renderer)
+
+	if not self._resource_renderer_background then
+		UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
+		UIWidget.draw(self._widgets_by_name.grid_background, ui_renderer)
+		UIRenderer.end_pass(ui_renderer)
+	end
 
 	render_settings.start_layer = previous_layer
 
@@ -349,6 +397,10 @@ ViewElementGrid._draw_grid = function (self, dt, t, input_service, render_settin
 
 	UIRenderer.begin_pass(ui_resource_renderer, ui_scenegraph, input_service, dt, render_settings)
 
+	if self._resource_renderer_background then
+		UIWidget.draw(self._widgets_by_name.grid_background, ui_resource_renderer)
+	end
+
 	for i = 1, #widgets do
 		local widget = widgets[i]
 
@@ -385,6 +437,7 @@ ViewElementGrid._update_grid_widgets = function (self, dt, t, input_service)
 			local content = widget.content
 			local visible = grid:is_widget_visible(widget, content.extra_margin or widget_visual_margin)
 			local render_icon = grid:is_widget_visible(widget, widget_icon_load_margin)
+			content.visible_last_frame = content.visible
 			content.visible = visible
 			content.render_icon = render_icon or visible
 
@@ -595,6 +648,7 @@ end
 ViewElementGrid._on_present_grid_layout_changed = function (self, layout, content_blueprints, left_click_callback, right_click_callback, display_name, optional_grow_direction, optional_left_double_click_callback)
 	self:_destroy_grid_widgets()
 	self:_assign_display_name(display_name)
+	self:_hide_empty_message()
 
 	self._visible_grid_layout = layout
 	self._content_blueprints = content_blueprints
@@ -649,6 +703,24 @@ ViewElementGrid._on_present_grid_layout_changed = function (self, layout, conten
 	grid:set_scroll_step_length(100)
 	self:_update_window_size()
 	self:_on_navigation_input_changed()
+
+	if #self._grid_widgets == 0 then
+		self:_show_empty_message()
+	end
+end
+
+ViewElementGrid._show_empty_message = function (self)
+	self._widgets_by_name.grid_empty.content.visible = true
+end
+
+ViewElementGrid._hide_empty_message = function (self)
+	self._widgets_by_name.grid_empty.content.visible = false
+end
+
+ViewElementGrid.set_empty_message = function (self, text)
+	if text then
+		self._widgets_by_name.grid_empty.content.text = text
+	end
 end
 
 ViewElementGrid.set_handle_grid_navigation = function (self, allow)
@@ -659,6 +731,10 @@ end
 
 ViewElementGrid.set_loading_state = function (self, is_loading)
 	self._widgets_by_name.grid_loading.content.is_loading = is_loading
+
+	if is_loading then
+		self:_hide_empty_message()
+	end
 end
 
 ViewElementGrid.update_dividers = function (self, top_divider_material, top_divider_size, top_divider_position, bottom_divider_material, bottom_divider_size, bottom_divider_position)
@@ -852,9 +928,10 @@ ViewElementGrid.update_grid_widgets_visibility = function (self)
 	local widgets = self._grid_widgets
 
 	if widgets then
-		local num_widgets = #widgets
 		local ui_renderer = self._ui_resource_renderer
 		local content_blueprints = self._content_blueprints
+		local num_widgets = #widgets
+		local update_visible_icon_prioritization_load = false
 
 		for i = 1, num_widgets do
 			local widget = widgets[i]
@@ -873,7 +950,7 @@ ViewElementGrid.update_grid_widgets_visibility = function (self)
 			end
 		end
 
-		for i = 1, num_widgets do
+		for i = num_widgets, 1, -1 do
 			local widget = widgets[i]
 			local widget_type = widget.type
 			local template = content_blueprints[widget_type]
@@ -882,12 +959,38 @@ ViewElementGrid.update_grid_widgets_visibility = function (self)
 				local content = widget.content
 				local element = content.element
 				local visible = content.visible
+				local visible_last_frame = content.visible_last_frame
 				local render_icon = content.render_icon or visible
 
 				if render_icon and template.load_icon then
 					local prioritize = visible
 
+					if content.icon_load_id and visible and not visible_last_frame then
+						update_visible_icon_prioritization_load = true
+					end
+
 					template.load_icon(self, widget, element, ui_renderer, nil, prioritize)
+
+					local icon_load_id = content.icon_load_id
+
+					if icon_load_id and self._cache_loaded_icons and not self._loaded_icon_id_cache[icon_load_id] then
+						self._loaded_icon_id_cache[icon_load_id] = Managers.ui:increment_item_icon_load_by_existing_id(icon_load_id)
+					end
+				end
+			end
+		end
+
+		if update_visible_icon_prioritization_load then
+			for j = #widgets, 1, -1 do
+				local widget = widgets[j]
+				local widget_type = widget.type
+				local template = content_blueprints[widget_type]
+				local content = widget.content
+				local element = content.element
+				local visible = content.visible
+
+				if visible and template.update_item_icon_priority then
+					template.update_item_icon_priority(self, widget, element, ui_renderer)
 				end
 			end
 		end
@@ -911,6 +1014,11 @@ ViewElementGrid.destroy = function (self, ui_renderer)
 		self._present_grid_layout = nil
 	end
 
+	for _, icon_reference_id in pairs(self._loaded_icon_id_cache) do
+		Managers.ui:unload_item_icon(icon_reference_id)
+	end
+
+	self._loaded_icon_id_cache = nil
 	local ui_grid_renderer = self._ui_grid_renderer
 
 	if ui_grid_renderer then
@@ -972,6 +1080,21 @@ end
 
 ViewElementGrid.menu_settings = function (self)
 	return self._menu_settings
+end
+
+ViewElementGrid.sort_button_widget = function (self)
+	return self._widgets_by_name.sort_button
+end
+
+ViewElementGrid.sort_button_scenegpraph = function (self)
+	return self._ui_scenegraph.sort_button
+end
+
+ViewElementGrid.get_sort_button_world_position = function (self)
+	local widget = self._widgets_by_name.sort_button
+	local scenegraph_id = widget.scenegraph_id
+
+	return self:scenegraph_world_position(scenegraph_id)
 end
 
 return ViewElementGrid

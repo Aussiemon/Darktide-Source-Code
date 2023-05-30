@@ -135,7 +135,7 @@ end
 
 local MAX_TRIES = 20
 local SECTIONS = 20
-local COLLISION_FILTER = "filter_minion_shooting_geometry"
+local COLLISION_FILTER = "filter_minion_throwing"
 
 BtGrenadierFollowAction._check_grenade_trajectory = function (self, unit, blackboard, scratchpad, action_data)
 	local target_unit = scratchpad.perception_component.target_unit
@@ -144,7 +144,7 @@ BtGrenadierFollowAction._check_grenade_trajectory = function (self, unit, blackb
 	local i = 1
 
 	while i < MAX_TRIES and not throw_target_position do
-		throw_target_position = self:_get_throw_position(target_position, scratchpad, action_data)
+		throw_target_position = self:_get_throw_position(unit, target_position, scratchpad, action_data)
 		i = i + 1
 	end
 
@@ -187,8 +187,9 @@ BtGrenadierFollowAction._check_grenade_trajectory = function (self, unit, blackb
 		return false
 	end
 
+	local debug = false
 	local velocity, time_in_flight = Trajectory.get_trajectory_velocity(throw_node_position, estimated_position, gravity, speed, angle_to_hit_target)
-	local trajectory_is_ok = Trajectory.check_trajectory_collisions(scratchpad.physics_world, throw_node_position, estimated_position, gravity, speed, angle_to_hit_target, SECTIONS, COLLISION_FILTER, time_in_flight)
+	local trajectory_is_ok = Trajectory.check_trajectory_collisions(scratchpad.physics_world, throw_node_position, estimated_position, gravity, speed, angle_to_hit_target, SECTIONS, COLLISION_FILTER, time_in_flight, nil, debug)
 
 	if trajectory_is_ok then
 		local throw_direction = Vector3.normalize(velocity)
@@ -209,7 +210,7 @@ end
 local THROW_POSITION_Z_OFFSET = 3
 local RAYCAST_Z_OFFSET = 0.1
 
-BtGrenadierFollowAction._get_throw_position = function (self, target_position, scratchpad, action_data)
+BtGrenadierFollowAction._get_throw_position = function (self, unit, target_position, scratchpad, action_data)
 	local physics_world = scratchpad.physics_world
 	local range = math.random_range(action_data.throw_position_distance[1], action_data.throw_position_distance[2])
 	local throw_direction_index = scratchpad.throw_direction_index
@@ -217,7 +218,24 @@ BtGrenadierFollowAction._get_throw_position = function (self, target_position, s
 	local randomized_direction = randomized_throw_directions[throw_direction_index]:unbox()
 	local z_offset = Vector3(0, 0, RAYCAST_Z_OFFSET)
 	target_position = target_position + z_offset
+
+	if action_data.throw_position_distance_fwd then
+		local to_target = Vector3.normalize(POSITION_LOOKUP[unit], target_position)
+		local dot = Vector3.dot(to_target, randomized_direction)
+
+		if action_data.throw_position_distance_fwd_dot < dot then
+			range = math.random_range(action_data.throw_position_distance_fwd[1], action_data.throw_position_distance_fwd[2])
+		end
+	end
+
 	local randomized_position = target_position + randomized_direction * range
+	local nav_world = scratchpad.nav_world
+	randomized_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, randomized_position, 2, 1, 1)
+
+	if not randomized_position then
+		return
+	end
+
 	local check_z_position = randomized_position + Vector3(0, 0, THROW_POSITION_Z_OFFSET)
 	local hit, hit_position = self:_ray_cast(physics_world, check_z_position, randomized_position)
 	local wanted_position = nil

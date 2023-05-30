@@ -1,14 +1,14 @@
-local HazardPropExtension = class("HazardPropExtension")
-HazardPropExtension.UPDATE_DISABLED_BY_DEFAULT = true
 local Explosion = require("scripts/utilities/attack/explosion")
-local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
 local HazardPropSettings = require("scripts/settings/hazard_prop/hazard_prop_settings")
+local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
 local explosion_settings = HazardPropSettings.explosion_settings
 local fire_settings = HazardPropSettings.fire_settings
 local hazard_content = HazardPropSettings.hazard_content
 local hazard_material = HazardPropSettings.material
 local hazard_state = HazardPropSettings.hazard_state
 local TRIGGER_TIME = 3
+local HazardPropExtension = class("HazardPropExtension")
+HazardPropExtension.UPDATE_DISABLED_BY_DEFAULT = true
 
 HazardPropExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._unit = unit
@@ -123,26 +123,19 @@ HazardPropExtension.set_current_state = function (self, state)
 				self:start_trigger_timer()
 				self._owner_system:enable_update_function(self.__class_name, "update", unit, self)
 
-				local bot_group = nil
-				local bot_players = Managers.player:bot_players()
+				local shape = "sphere"
+				local size = explosion_settings.explosion_template.radius
+				local rotation = Quaternion.identity()
+				local duration = TRIGGER_TIME
+				local position = POSITION_LOOKUP[unit]
+				local side_system = Managers.state.extension:system("side_system")
+				local sides = side_system:sides()
+				local group_system = Managers.state.extension:system("group_system")
+				local bot_groups = group_system:bot_groups_from_sides(sides)
+				local num_bot_groups = #bot_groups
 
-				for _, bot_player in pairs(bot_players) do
-					local bot_unit = bot_player.player_unit
-					local group_extension = ScriptUnit.has_extension(bot_unit, "group_system")
-
-					if group_extension then
-						bot_group = group_extension:bot_group()
-
-						break
-					end
-				end
-
-				if bot_group then
-					local shape = "sphere"
-					local size = explosion_settings.explosion_template.radius
-					local rotation = Quaternion.identity()
-					local duration = TRIGGER_TIME
-					local position = POSITION_LOOKUP[unit]
+				for i = 1, num_bot_groups do
+					local bot_group = bot_groups[i]
 
 					bot_group:aoe_threat_created(position, shape, size, rotation, duration)
 				end

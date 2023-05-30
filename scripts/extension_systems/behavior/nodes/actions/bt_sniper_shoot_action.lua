@@ -454,10 +454,18 @@ BtSniperShootAction._create_bot_threat = function (self, unit, target_unit)
 	local rotation = Quaternion.look(to_target_position)
 	local up = Quaternion.up(rotation)
 	local position = target_position + up * half_height
-	local group_extension = ScriptUnit.extension(target_unit, "group_system")
-	local bot_group = group_extension:bot_group()
+	local side_system = Managers.state.extension:system("side_system")
+	local side = side_system.side_by_unit[unit]
+	local enemy_sides = side:relation_sides("enemy")
+	local group_system = Managers.state.extension:system("group_system")
+	local bot_groups = group_system:bot_groups_from_sides(enemy_sides)
+	local num_bot_groups = #bot_groups
 
-	bot_group:aoe_threat_created(position, "oobb", hit_size, rotation, BOT_THREAT_DURATION)
+	for i = 1, num_bot_groups do
+		local bot_group = bot_groups[i]
+
+		bot_group:aoe_threat_created(position, "oobb", hit_size, rotation, BOT_THREAT_DURATION)
+	end
 end
 
 return BtSniperShootAction

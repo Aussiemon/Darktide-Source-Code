@@ -1,5 +1,5 @@
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local raw_inputs = {
 	"action_one_pressed",
@@ -65,6 +65,8 @@ ActionInputParser.init = function (self, unit, action_component_name, action_com
 
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	self._player = player_unit_spawn_manager:owner(unit)
+	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
+	self._sprint_character_state_component = unit_data_ext:read_component("sprint_character_state")
 	local bot_action_input_request_queue = Script.new_array(BOT_REQUEST_RING_BUFFER_MAX)
 	self._bot_action_input_request_queue = bot_action_input_request_queue
 	self._global_bot_request_id = 0
@@ -552,6 +554,12 @@ ActionInputParser.fixed_update = function (self, unit, dt, t, fixed_frame)
 end
 
 ActionInputParser._update_buffering = function (self, old_input_queue, new_input_queue, t, sequence_configs, hierarchy_position, sequences, base_hierarchy, network_lookup)
+	local sprint_character_state_component = self._sprint_character_state_component
+
+	if Sprint.is_sprinting(sprint_character_state_component) or t < sprint_character_state_component.cooldown then
+		self._input_queue_first_entry_became_first_entry_t = t
+	end
+
 	local first_entry = old_input_queue[1]
 	local first_action_input = first_entry[ACTION_INPUT]
 	local has_first_entry = first_action_input ~= self._NO_ACTION_INPUT

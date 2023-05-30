@@ -20,7 +20,7 @@ local ability_template = {
 			start_input = "stance_pressed",
 			allowed_during_sprint = true,
 			kind = "stance_change",
-			sprint_ready_up_time = 0.5,
+			sprint_ready_up_time = 0,
 			uninterruptible = true,
 			total_time = 0.1
 		}

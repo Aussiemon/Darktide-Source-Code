@@ -17,15 +17,17 @@ SaveData.default_account_data = {
 		hold_to_crouch = default_hold
 	},
 	interface_settings = {
-		subtitle_text_opacity = 100,
+		subtitle_enabled = true,
 		news_enabled = true,
 		subtitle_font_size = 32,
-		subtitle_enabled = true,
 		profanity_filter_enabled = true,
+		subtitle_text_opacity = 100,
 		subtitle_speaker_enabled = true,
 		show_crafting_pickup_notification = true,
+		portrait_rendering_enabled = true,
 		camera_movement_offset_sway_intensity = 100,
-		subtitle_background_opacity = 60
+		subtitle_background_opacity = 60,
+		warp_charge_effects_intensity = 100
 	},
 	completed_profile_prologues = {},
 	viewed_news_slides = {},

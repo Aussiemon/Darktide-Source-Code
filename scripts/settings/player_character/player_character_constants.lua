@@ -572,7 +572,12 @@ local constants = {
 			}
 		},
 		unarmed = {},
-		pocketable = {},
+		pocketable = {
+			unequip_slot = {
+				default_value = false,
+				network_type = "bool"
+			}
+		},
 		ability = {},
 		device = {}
 	},

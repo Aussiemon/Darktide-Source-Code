@@ -1,4 +1,4 @@
-require("scripts/extension_systems/weapon/actions/action_ability_base")
+require("scripts/extension_systems/weapon/actions/action_base")
 
 local ActionTargetAlly = class("ActionTargetAlly", "ActionBase")
 
@@ -39,11 +39,28 @@ ActionTargetAlly.finish = function (self, reason, data, t, time_in_action)
 end
 
 ActionTargetAlly._find_target = function (self, time_in_action)
+	local action_setting = self._action_settings
 	local smart_targeting_data = self._smart_targeting_extension:targeting_data()
 	local target_unit = smart_targeting_data.unit
+	local action_module_targeting_component = self._action_module_targeting_component
+	local validate_target_func = action_setting.validate_target_func
+	local is_valid_target = target_unit and target_unit ~= self._player_unit and (not validate_target_func or validate_target_func(target_unit))
+	local old_target = action_module_targeting_component.target_unit_1
+	local has_target_anim_event = action_setting.has_target_anim_event
+	local no_target_anim_event = action_setting.no_target_anim_event
 
-	if target_unit ~= self._player_unit then
-		self._action_module_targeting_component.target_unit_1 = target_unit
+	if is_valid_target then
+		action_module_targeting_component.target_unit_1 = target_unit
+
+		if old_target == nil and has_target_anim_event then
+			self:trigger_anim_event(has_target_anim_event)
+		end
+	else
+		action_module_targeting_component.target_unit_1 = nil
+
+		if old_target ~= nil and no_target_anim_event then
+			self:trigger_anim_event(no_target_anim_event)
+		end
 	end
 end
 

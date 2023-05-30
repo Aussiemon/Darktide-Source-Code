@@ -276,16 +276,16 @@ weapon_template.actions = {
 		end
 	},
 	action_shoot = {
-		ammunition_usage_min = 3,
 		ammunition_usage_max = 3,
-		weapon_handling_template = "immediate_single_shot",
-		recoil_template = "default_plasma_rifle_bfg",
 		kind = "shoot_hit_scan",
+		weapon_handling_template = "immediate_single_shot",
 		sprint_ready_up_time = 0.6,
-		allowed_during_sprint = true,
-		use_charge = true,
 		charge_template = "plasmagun_p1_m1_shoot",
+		ammunition_usage_min = 3,
+		use_charge = true,
+		recoil_template = "default_plasma_rifle_bfg",
 		spread_template = "default_plasma_rifle_bfg",
+		prevent_sprint = true,
 		total_time = 0.5,
 		action_movement_curve = {
 			{

@@ -1,6 +1,13 @@
 local PlayerMovement = require("scripts/utilities/player_movement")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerManagerTestify = {
+	character_state_component = function (unit_data_extension, _)
+		return unit_data_extension:read_component("character_state")
+	end,
+	unit_data_extension = function (player_unit, _)
+		return ScriptUnit.extension(player_unit, "unit_data_system")
+	end,
 	has_placeholder_profile = function (player, _)
 		return player:has_placeholder_profile()
 	end,
@@ -12,81 +19,89 @@ local PlayerManagerTestify = {
 		local local_player = player_manager:local_player(local_player_id)
 
 		return local_player
-	end,
-	local_player_archetype_name = function (id, player_manager)
-		local local_player_id = id
-		local local_player = player_manager:local_player(local_player_id)
-
-		return local_player:archetype_name()
-	end,
-	make_players_invulnerable = function (_, player_manager)
-		for _, player in pairs(player_manager._players) do
-			if player:unit_is_alive() then
-				local player_unit = player.player_unit
-				local health_extension = ScriptUnit.extension(player_unit, "health_system")
-
-				health_extension:set_invulnerable(true)
-			end
-		end
-	end,
-	make_players_unkillable = function (_, player_manager)
-		for _, player in pairs(player_manager._players) do
-			if player:unit_is_alive() then
-				local player_unit = player.player_unit
-				local health_extension = ScriptUnit.extension(player_unit, "health_system")
-
-				health_extension:set_unkillable(true)
-			end
-		end
-	end,
-	move_bots_to_position = function (position, player_manager)
-		local pos = position:unbox()
-		local players = player_manager:players()
-		local bots = table.filter(players, function (player)
-			return not player:is_human_controlled()
-		end)
-
-		for _, bot in pairs(bots) do
-			if bot:unit_is_alive() then
-				local bot_unit = bot.player_unit
-				local behavior_extension = ScriptUnit.extension(bot_unit, "behavior_system")
-
-				behavior_extension:set_hold_position(pos, 0.1)
-			end
-		end
-	end,
-	num_bots = function (_, player_manager)
-		local num_bots = player_manager:num_players() - player_manager:num_human_players()
-
-		return num_bots
-	end,
-	player_current_position = function (_, player_manager)
-		local _, player = next(player_manager._human_players)
-
-		return POSITION_LOOKUP[player.player_unit]
-	end,
-	player_unit = function (_, player_manager)
-		local players = player_manager:players()
-		local human_players = table.filter(players, function (player)
-			return player:is_human_controlled()
-		end)
-		local _, player = next(human_players)
-		local player_unit = player.player_unit
-
-		return player_unit
-	end,
-	players_are_alive = function (_, player_manager)
-		local human_players = player_manager:human_players()
-
-		for _, human_player in pairs(human_players) do
-			if not human_player:unit_is_alive() then
-				return false
-			end
-		end
-
-		return true
 	end
 }
+
+PlayerManagerTestify.local_player_archetype_name = function (id, player_manager)
+	local local_player_id = id
+	local local_player = player_manager:local_player(local_player_id)
+
+	return local_player:archetype_name()
+end
+
+PlayerManagerTestify.make_players_invulnerable = function (_, player_manager)
+	for _, player in pairs(player_manager._players) do
+		if player:unit_is_alive() then
+			local player_unit = player.player_unit
+			local health_extension = ScriptUnit.extension(player_unit, "health_system")
+
+			health_extension:set_invulnerable(true)
+		end
+	end
+end
+
+PlayerManagerTestify.make_players_unkillable = function (_, player_manager)
+	for _, player in pairs(player_manager._players) do
+		if player:unit_is_alive() then
+			local player_unit = player.player_unit
+			local health_extension = ScriptUnit.extension(player_unit, "health_system")
+
+			health_extension:set_unkillable(true)
+		end
+	end
+end
+
+PlayerManagerTestify.move_bots_to_position = function (position, player_manager)
+	local pos = position:unbox()
+	local players = player_manager:players()
+	local bots = table.filter(players, function (player)
+		return not player:is_human_controlled()
+	end)
+
+	for _, bot in pairs(bots) do
+		if bot:unit_is_alive() then
+			local bot_unit = bot.player_unit
+			local behavior_extension = ScriptUnit.extension(bot_unit, "behavior_system")
+
+			behavior_extension:set_hold_position(pos, 0.1)
+		end
+	end
+end
+
+PlayerManagerTestify.num_bots = function (_, player_manager)
+	local num_bots = player_manager:num_players() - player_manager:num_human_players()
+
+	return num_bots
+end
+
+PlayerManagerTestify.player_current_position = function (_, player_manager)
+	local _, player = next(player_manager._human_players)
+
+	return POSITION_LOOKUP[player.player_unit]
+end
+
+PlayerManagerTestify.player_unit = function (_, player_manager)
+	local players = player_manager:players()
+	local human_players = table.filter(players, function (player)
+		return player:is_human_controlled()
+	end)
+	local _, player = next(human_players)
+	local player_unit = player.player_unit
+
+	return player_unit
+end
+
+PlayerManagerTestify.players_are_alive = function (_, player_manager)
+	local human_players = player_manager:human_players()
+
+	for _, human_player in pairs(human_players) do
+		if not human_player:unit_is_alive() then
+			return false
+		end
+	end
+
+	return true
+end
 
 PlayerManagerTestify.teleport_bots_forward_on_main_path_if_blocked = function (bots_data, player_manager)
 	local bots_stuck_data = bots_data.bots_stuck_data

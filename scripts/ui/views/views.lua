@@ -895,6 +895,8 @@ _declare_view("crafting_reroll_perk_view", require("scripts/ui/views/crafting_re
 _declare_view("crafting_extract_trait_view", require("scripts/ui/views/crafting_extract_trait_view/crafting_extract_trait_view_declaration_settings"))
 _declare_view("crafting_replace_trait_view", require("scripts/ui/views/crafting_replace_trait_view/crafting_replace_trait_view_declaration_settings"))
 _declare_view("crafting_modify_options_view", require("scripts/ui/views/crafting_modify_options_view/crafting_modify_options_view_declaration_settings"))
+_declare_view("cosmetics_vendor_view", require("scripts/ui/views/cosmetics_vendor_view/cosmetics_vendor_view_declaration_settings"))
+_declare_view("cosmetics_vendor_background_view", require("scripts/ui/views/cosmetics_vendor_background_view/cosmetics_vendor_background_view_declaration_settings"))
 
 for view_name, settings in pairs(views) do
 	settings.name = view_name

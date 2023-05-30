@@ -522,6 +522,7 @@ local breed_names = {
 	"renegade_netgunner",
 	"renegade_rifleman",
 	"renegade_shocktrooper",
+	"renegade_plasma_shocktrooper",
 	"renegade_sniper",
 	"renegade_flamer",
 	"renegade_flamer_mutator",

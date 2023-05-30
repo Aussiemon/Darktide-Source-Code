@@ -130,6 +130,10 @@ XboxPrivileges.has_error = function (self)
 end
 
 XboxPrivileges.fetch_crossplay_restrictions = function (self)
+	if Managers.account:user_detached() then
+		return
+	end
+
 	local async_task, error_code, error_message = XboxLivePrivacy.batch_check_permission(Managers.account:user_id(), DEFAULT_PERMISSIONS, {}, DEFAULT_ANONYMOUS_USER_TYPES)
 
 	if async_task then
@@ -183,14 +187,30 @@ XboxPrivileges.has_crossplay_restriction = function (self, relation, restriction
 	return relation_restrictions and relation_restrictions[restriction]
 end
 
-XboxPrivileges.verify_user_restriction = function (self, xuid, restriction)
+XboxPrivileges.verify_user_restriction = function (self, xuid, restriction, optional_callback)
 	if not XBOX_PERMISSION_LUT[restriction] then
+		if optional_callback then
+			optional_callback(false, nil)
+		end
+
+		return
+	end
+
+	if Managers.account:user_detached() then
+		if optional_callback then
+			optional_callback(false, nil)
+		end
+
 		return
 	end
 
 	local user_data = self._user_restrictions[xuid]
 
 	if user_data and user_data[restriction] ~= nil then
+		if optional_callback then
+			optional_callback(true, user_data[restriction])
+		end
+
 		return
 	end
 
@@ -199,9 +219,17 @@ XboxPrivileges.verify_user_restriction = function (self, xuid, restriction)
 	if error_code then
 		Log.warning("XboxPrivileges:verify_user_restriction", "Check user restriction failed with error code: %s", error_code)
 
+		if optional_callback then
+			optional_callback(false, nil)
+		end
+
 		return
 	elseif error_message then
 		Log.warning("XboxPrivileges:verify_user_restriction", "Check user restriction failed with error message: %s", error_message)
+
+		if optional_callback then
+			optional_callback(false, nil)
+		end
 
 		return
 	end
@@ -211,6 +239,10 @@ XboxPrivileges.verify_user_restriction = function (self, xuid, restriction)
 
 		if error_code then
 			Application.warning(string.format("[XboxPrivileges:verify_user_restriction] Failed getting the restriction results with error code: %s", error_code))
+
+			if optional_callback then
+				optional_callback(false, nil)
+			end
 
 			return
 		end
@@ -227,7 +259,10 @@ XboxPrivileges.verify_user_restriction = function (self, xuid, restriction)
 		end
 
 		Managers.chat:player_mute_status_changed()
-		Managers.account:user_restriction_updated(xuid, restriction)
+
+		if optional_callback then
+			optional_callback(true, not result.is_allowed)
+		end
 	end)
 end
 
@@ -341,7 +376,7 @@ local function setup_lookup_tables()
 	XBOX_PERMISSION_DENY_REASON_LUT[XblPermissionDenyReason.MissingPrivilege] = "MissingPrivilege"
 	XBOX_PERMISSION_DENY_REASON_LUT[XblPermissionDenyReason.MuteListRestrictsTarget] = "MuteListRestrictsTarget"
 	XBOX_PERMISSION_DENY_REASON_LUT[XblPermissionDenyReason.NotAllowed] = "NotAllowed"
-	XBOX_PERMISSION_DENY_REASON_LUT[XblPermissionDenyReason.PrivacySettingsRestrictsTarget] = "PrivacySettingsRestrictsTarget"
+	XBOX_PERMISSION_DENY_REASON_LUT[XblPermissionDenyReason.PrivacySettingRestrictsTarget] = "PrivacySettingRestrictsTarget"
 	XBOX_PERMISSION_DENY_REASON_LUT[XblPermissionDenyReason.PrivilegeRestrictsTarget] = "PrivilegeRestrictsTarget"
 	XBOX_PERMISSION_DENY_REASON_LUT[XblPermissionDenyReason.Unknown] = "Unknown"
 end

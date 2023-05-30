@@ -376,10 +376,19 @@ BaseView._scenegraph_world_position = function (self, id, scale)
 	return UIScenegraph.world_position(ui_scenegraph, id, scale)
 end
 
-BaseView._update_element_position = function (self, scenegraph_id, element)
-	local position = self:_scenegraph_world_position(scenegraph_id)
+BaseView._update_element_position = function (self, scenegraph_id, element, use_local_position)
+	local position = nil
 
-	element:set_pivot_offset(position[1], position[2])
+	if use_local_position then
+		position = self._ui_scenegraph[scenegraph_id].position
+	else
+		position = self:_scenegraph_world_position(scenegraph_id)
+	end
+
+	local horizontal_alignment = self._ui_scenegraph[scenegraph_id].horizontal_alignment
+	local vertical_alignment = self._ui_scenegraph[scenegraph_id].vertical_alignment
+
+	element:set_pivot_offset(position[1], position[2], horizontal_alignment, vertical_alignment)
 
 	if element.grid_height then
 		self:_set_scenegraph_size(scenegraph_id, nil, element:grid_height())
@@ -664,7 +673,7 @@ end
 
 BaseView._player = function (self)
 	local player_manager = Managers.player
-	local player = player_manager:local_player(self._local_player_id)
+	local player = player_manager:local_player(self._local_player_id or 1)
 
 	return player
 end

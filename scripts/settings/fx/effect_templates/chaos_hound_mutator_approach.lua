@@ -13,7 +13,8 @@ local PARTICLE_3_NAME = "content/fx/particles/enemies/chaos_hound/chaos_hound_mu
 local PARTICLE_3_NODE = "j_righteye"
 local resources = {
 	approach_sound_event = APPROACH_SOUND_EVENT,
-	approach_vfx = PARTICLE_NAME
+	approach_vfx = PARTICLE_NAME,
+	eye_vfx = PARTICLE_2_NAME
 }
 local _trigger_sound = nil
 local effect_template = {

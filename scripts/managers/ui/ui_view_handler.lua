@@ -520,6 +520,8 @@ end
 UIViewHandler._post_update_views = function (self, dt, t)
 	local active_views_array = self._active_views_array
 	local active_views_data = self._active_views_data
+	local input_service, null_service, gamepad_active = self:_get_input()
+	local allow_input = self._allow_input
 	local num_active_views = self._num_active_views
 
 	for i = num_active_views, 1, -1 do
@@ -530,7 +532,13 @@ UIViewHandler._post_update_views = function (self, dt, t)
 			local view_instance = view_data.instance
 
 			if view_instance and view_instance:is_view_requirements_complete() then
-				view_instance:post_update(dt, t)
+				if not view_data.allow_next_input then
+					allow_input = false
+				end
+
+				local input = allow_input and input_service or null_service
+
+				view_instance:post_update(dt, t, input)
 			end
 		end
 	end

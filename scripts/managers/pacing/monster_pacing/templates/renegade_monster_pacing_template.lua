@@ -35,7 +35,8 @@ local monster_pacing_template = {
 			breed_names = {
 				monsters = {
 					"chaos_plague_ogryn",
-					"chaos_beast_of_nurgle"
+					"chaos_beast_of_nurgle",
+					"chaos_spawn"
 				},
 				witches = {
 					"chaos_daemonhost"
@@ -43,7 +44,8 @@ local monster_pacing_template = {
 			},
 			aggro_states = {
 				chaos_plague_ogryn = AggroStates.aggroed,
-				chaos_beast_of_nurgle = AggroStates.aggroed
+				chaos_beast_of_nurgle = AggroStates.aggroed,
+				chaos_spawn = AggroStates.aggroed
 			},
 			pause_pacing_on_spawn = {
 				chaos_plague_ogryn = {
@@ -52,6 +54,11 @@ local monster_pacing_template = {
 					specials = 50
 				},
 				chaos_beast_of_nurgle = {
+					hordes = 60,
+					trickle_hordes = 40,
+					specials = 50
+				},
+				chaos_spawn = {
 					hordes = 60,
 					trickle_hordes = 40,
 					specials = 50
@@ -95,7 +102,8 @@ local monster_pacing_template = {
 			breed_names = {
 				monsters = {
 					"chaos_plague_ogryn",
-					"chaos_beast_of_nurgle"
+					"chaos_beast_of_nurgle",
+					"chaos_spawn"
 				},
 				witches = {
 					"chaos_daemonhost"
@@ -103,7 +111,8 @@ local monster_pacing_template = {
 			},
 			aggro_states = {
 				chaos_plague_ogryn = AggroStates.aggroed,
-				chaos_beast_of_nurgle = AggroStates.aggroed
+				chaos_beast_of_nurgle = AggroStates.aggroed,
+				chaos_spawn = AggroStates.aggroed
 			},
 			pause_pacing_on_spawn = {
 				chaos_plague_ogryn = {
@@ -112,6 +121,11 @@ local monster_pacing_template = {
 					specials = 20
 				},
 				chaos_beast_of_nurgle = {
+					hordes = 50,
+					trickle_hordes = 20,
+					specials = 20
+				},
+				chaos_spawn = {
 					hordes = 50,
 					trickle_hordes = 20,
 					specials = 20
@@ -125,7 +139,7 @@ local monster_pacing_template = {
 			num_spawns = {
 				monsters = {
 					0,
-					1
+					2
 				},
 				witches = {
 					0,
@@ -155,7 +169,8 @@ local monster_pacing_template = {
 			breed_names = {
 				monsters = {
 					"chaos_plague_ogryn",
-					"chaos_beast_of_nurgle"
+					"chaos_beast_of_nurgle",
+					"chaos_spawn"
 				},
 				witches = {
 					"chaos_daemonhost"
@@ -163,7 +178,8 @@ local monster_pacing_template = {
 			},
 			aggro_states = {
 				chaos_plague_ogryn = AggroStates.aggroed,
-				chaos_beast_of_nurgle = AggroStates.aggroed
+				chaos_beast_of_nurgle = AggroStates.aggroed,
+				chaos_spawn = AggroStates.aggroed
 			},
 			pause_pacing_on_spawn = {
 				chaos_plague_ogryn = {
@@ -171,6 +187,10 @@ local monster_pacing_template = {
 					hordes = 20
 				},
 				chaos_beast_of_nurgle = {
+					specials = 15,
+					hordes = 20
+				},
+				chaos_spawn = {
 					specials = 15,
 					hordes = 20
 				}
@@ -182,7 +202,7 @@ local monster_pacing_template = {
 		{
 			num_spawns = {
 				monsters = {
-					0,
+					1,
 					2
 				},
 				witches = {
@@ -213,7 +233,8 @@ local monster_pacing_template = {
 			breed_names = {
 				monsters = {
 					"chaos_plague_ogryn",
-					"chaos_beast_of_nurgle"
+					"chaos_beast_of_nurgle",
+					"chaos_spawn"
 				},
 				witches = {
 					"chaos_daemonhost"
@@ -221,7 +242,8 @@ local monster_pacing_template = {
 			},
 			aggro_states = {
 				chaos_plague_ogryn = AggroStates.aggroed,
-				chaos_beast_of_nurgle = AggroStates.aggroed
+				chaos_beast_of_nurgle = AggroStates.aggroed,
+				chaos_spawn = AggroStates.aggroed
 			},
 			pause_pacing_on_spawn = {},
 			despawn_distance_when_passive = {
@@ -231,7 +253,7 @@ local monster_pacing_template = {
 		{
 			num_spawns = {
 				monsters = {
-					0,
+					1,
 					2
 				},
 				witches = {
@@ -262,7 +284,8 @@ local monster_pacing_template = {
 			breed_names = {
 				monsters = {
 					"chaos_plague_ogryn",
-					"chaos_beast_of_nurgle"
+					"chaos_beast_of_nurgle",
+					"chaos_spawn"
 				},
 				witches = {
 					"chaos_daemonhost"
@@ -270,7 +293,8 @@ local monster_pacing_template = {
 			},
 			aggro_states = {
 				chaos_plague_ogryn = AggroStates.aggroed,
-				chaos_beast_of_nurgle = AggroStates.aggroed
+				chaos_beast_of_nurgle = AggroStates.aggroed,
+				chaos_spawn = AggroStates.aggroed
 			},
 			pause_pacing_on_spawn = {},
 			despawn_distance_when_passive = {

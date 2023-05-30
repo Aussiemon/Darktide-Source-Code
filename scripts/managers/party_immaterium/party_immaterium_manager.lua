@@ -286,6 +286,21 @@ PartyImmateriumManager.num_other_members = function (self)
 	return #self._other_members
 end
 
+local temp_all_members = {}
+
+PartyImmateriumManager.all_members = function (self)
+	table.clear(temp_all_members)
+
+	temp_all_members[1] = self._myself
+	local other_members = self._other_members
+
+	for i = 1, #other_members do
+		temp_all_members[i + 1] = other_members[i]
+	end
+
+	return temp_all_members
+end
+
 PartyImmateriumManager.member_from_account_id = function (self, account_id)
 	if self._myself:unique_id() == account_id then
 		return self._myself
@@ -359,8 +374,6 @@ PartyImmateriumManager._fetch_cached_debug_get_parties = function (self, dt, for
 end
 
 PartyImmateriumManager.leave_party = function (self)
-	Managers.event:trigger("party_immaterium_left")
-
 	if self._leave_party_promise then
 		return self._leave_party_promise
 	end
@@ -668,7 +681,20 @@ PartyImmateriumManager._handle_request_to_join = function (self, joiner_account_
 					Managers.grpc:answer_request_to_join(party_id, joiner_account_id, "OK_POPUP")
 				end
 			elseif context_account_id == "" or context_account_id == self._myself:account_id() then
-				self:_request_to_join_popup(joiner_account_id)
+				if IS_GDK or IS_XBS then
+					XboxJoinPermission.check_join_request_communication_allowed(joiner_account_id, requester_presence):next(function (is_allowed)
+						if is_allowed then
+							self:_request_to_join_popup(joiner_account_id)
+						else
+							_info("Denying request to join, communication not allowed")
+							Managers.grpc:answer_request_to_join(self:party_id(), joiner_account_id, "COMMUNICATION_BLOCKED_JOIN_REQUEST")
+						end
+					end):catch(function (err)
+						_error("Ignoring request to join, communication permissions check failed: %s", table.tostring(err, 10))
+					end)
+				else
+					self:_request_to_join_popup(joiner_account_id)
+				end
 			end
 		else
 			self:_resolve_join_permission(requester_presence, "JOIN_REQUEST"):next(function ()
@@ -681,12 +707,15 @@ PartyImmateriumManager._handle_request_to_join = function (self, joiner_account_
 end
 
 PartyImmateriumManager._check_for_invites = function (self)
+	if Managers.account:user_detached() then
+		return
+	end
+
 	local social_service = Managers.data_service.social
 
 	if social_service:has_invite() then
 		local invite_address = social_service:get_invite()
 
-		_info("Joining party %s through invite", invite_address)
 		self:join_party(invite_address)
 	end
 end

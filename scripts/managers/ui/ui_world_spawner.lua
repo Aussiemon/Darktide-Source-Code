@@ -301,7 +301,22 @@ end
 
 UIWorldSpawner.create_viewport = function (self, camera_unit, viewport_name, viewport_type, viewport_layer, shading_environment, shading_callback, render_targets)
 	local world = self._world
+
+	if self._viewport then
+		local ignore_camera_destruction = true
+
+		ScriptWorld.destroy_viewport(world, self._viewport_name, ignore_camera_destruction)
+
+		self._viewport = nil
+		self._viewport_name = nil
+	end
+
 	shading_callback = shading_callback or callback(self, "_shading_callback")
+
+	if not camera_unit then
+		self._handle_camera_unit_destruction = true
+	end
+
 	local viewport = ScriptWorld.create_viewport(world, viewport_name, viewport_type, viewport_layer, camera_unit, nil, nil, nil, shading_environment, shading_callback, nil, render_targets)
 	self._viewport = viewport
 	self._viewport_name = viewport_name
@@ -319,6 +334,10 @@ UIWorldSpawner.create_viewport = function (self, camera_unit, viewport_name, vie
 	self._initial_fov = Camera.vertical_fov(camera) / math.pi * 180
 
 	return viewport
+end
+
+UIWorldSpawner.add_viewport_custom_output_targets = function (self, custom_render_targets)
+	Viewport.add_custom_output_targets(self._viewport, custom_render_targets)
 end
 
 UIWorldSpawner.change_camera_unit = function (self, camera_unit, add_shadow_cull_camera)
@@ -373,10 +392,10 @@ UIWorldSpawner.set_viewport_size = function (self, width_scale, height_scale)
 end
 
 UIWorldSpawner._update_viewport_rect = function (self)
-	local x_scale = math.min(self._viewport_x_scale or 0, 1)
-	local y_scale = math.min(self._viewport_y_scale or 0, 1)
-	local width_scale = math.min(self._viewport_width_scale or 0, 1)
-	local height_scale = math.min(self._viewport_height_scale or 0, 1)
+	local x_scale = math.clamp(self._viewport_x_scale or 0, 0, 1)
+	local y_scale = math.clamp(self._viewport_y_scale or 0, 0, 1)
+	local width_scale = math.clamp(self._viewport_width_scale or 0, 0, 1)
+	local height_scale = math.clamp(self._viewport_height_scale or 0, 0, 1)
 
 	Viewport.set_rect(self._viewport, x_scale, y_scale, width_scale, height_scale)
 end
@@ -430,6 +449,14 @@ end
 
 UIWorldSpawner.camera_position_axis_offset = function (self, axis)
 	return self._camera_position_animation_data[axis].value
+end
+
+UIWorldSpawner.reset_camera_rotation_axis_offset = function (self)
+	self._camera_rotation_animation_data = table.clone(self._default_animation_data)
+end
+
+UIWorldSpawner.reset_camera_position_axis_offset = function (self)
+	self._camera_position_animation_data = table.clone(self._default_animation_data)
 end
 
 UIWorldSpawner._animate_axis = function (self, source, axis, value, animation_time, func_ptr, optional_start_time)
@@ -644,6 +671,7 @@ UIWorldSpawner.destroy = function (self)
 	Managers.ui:destroy_world(world)
 
 	self._world = nil
+	self._world_name = nil
 end
 
 return UIWorldSpawner

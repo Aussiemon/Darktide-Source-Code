@@ -342,7 +342,7 @@ XboxLiveUtils.batch_check_permission = function (permissions, xuids, anonymous_u
 end
 
 XboxLiveUtils.update_recent_player_teammate = function (xuid)
-	XboxLiveUtils.user_id():next(function (user_id)
+	return XboxLiveUtils.user_id():next(function (user_id)
 		local _, _, error_message = XboxLiveMPA.update_recent_players(user_id, xuid, XblMultiplayerActivityEncounterType.ENCOUNTER_TYPE_TEAMMATE)
 
 		if error_message then

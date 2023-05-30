@@ -152,6 +152,9 @@ local husk_data_component_config = {
 		"is_active",
 		"line_of_sight",
 		"scannable_unit"
+	},
+	peeking = {
+		"is_peeking"
 	}
 }
 

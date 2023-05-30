@@ -4,6 +4,7 @@ local Definitions = require("scripts/ui/views/credits_vendor_view/credits_vendor
 local CreditsVendorViewSettings = require("scripts/ui/views/credits_vendor_view/credits_vendor_view_settings")
 local Promise = require("scripts/foundation/utilities/promise")
 local ItemUtils = require("scripts/utilities/items")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local CreditsVendorView = class("CreditsVendorView", "VendorViewBase")
 
 CreditsVendorView.init = function (self, settings, context)
@@ -12,6 +13,27 @@ CreditsVendorView.init = function (self, settings, context)
 	self._optional_store_service = context and context.optional_store_service
 
 	CreditsVendorView.super.init(self, Definitions, settings, context)
+end
+
+CreditsVendorView.on_enter = function (self)
+	CreditsVendorView.super.on_enter(self)
+	self._item_grid:update_dividers("content/ui/materials/frames/details_upper_armoury", {
+		656,
+		76
+	}, {
+		0,
+		-45,
+		20
+	}, "content/ui/materials/frames/details_lower_armoury", {
+		674,
+		80
+	}, {
+		0,
+		0,
+		20
+	})
+	self._item_grid:set_sort_button_offset(0, 45)
+	self._item_grid:set_timer_text_offset(0, 45)
 end
 
 CreditsVendorView._get_store = function (self)
@@ -63,6 +85,13 @@ CreditsVendorView._purchase_item = function (self, offer)
 
 	promise:next(function (result)
 		self._purchase_promise = nil
+		local widgets_by_name = self._widgets_by_name
+		local purchase_sound = widgets_by_name.purchase_button.content.purchase_sound
+
+		if purchase_sound then
+			self:_play_sound(purchase_sound)
+		end
+
 		offer.state = "owned"
 
 		self:_on_purchase_complete(result.items)
@@ -70,6 +99,10 @@ CreditsVendorView._purchase_item = function (self, offer)
 		self:_fetch_store_items()
 
 		self._purchase_promise = nil
+
+		Managers.event:trigger("event_add_notification_message", "alert", {
+			text = Localize("loc_notification_acqusition_failed")
+		}, nil, UISoundEvents.notification_join_party_failed)
 	end)
 
 	self._purchase_promise = promise

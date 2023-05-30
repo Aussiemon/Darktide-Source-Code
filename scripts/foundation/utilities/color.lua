@@ -2473,6 +2473,18 @@ local color_definitions = {
 		113,
 		126,
 		103
+	},
+	legend_button_text = {
+		255,
+		204,
+		204,
+		204
+	},
+	legend_button_text_hover = {
+		255,
+		255,
+		242,
+		230
 	}
 }
 local color_list = {}

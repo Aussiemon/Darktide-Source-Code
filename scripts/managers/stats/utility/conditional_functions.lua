@@ -96,6 +96,13 @@ local ConditionalFunctions = {
 			return param_value <= select(index_of_param, ...)
 		end
 	end,
+	param_is_equal_to = function (stat_to_check, param_name, param_value)
+		local index_of_param = table.index_of(stat_to_check:get_parameters(), param_name)
+
+		return function (_, _, _, ...)
+			return select(index_of_param, ...) == param_value
+		end
+	end,
 	param_table_has_value = function (stat_to_check, param_name, param_table_index, param_table_value)
 		local index_of_param = table.index_of(stat_to_check:get_parameters(), param_name)
 

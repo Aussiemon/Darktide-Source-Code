@@ -59,7 +59,6 @@ local weapon_template = {
 			kind = "wield",
 			uninterruptible = true,
 			anim_event = "equip_2h_powermaul",
-			sprint_ready_up_time = 0.2,
 			total_time = 0.3,
 			allowed_chain_actions = {
 				combat_ability = {

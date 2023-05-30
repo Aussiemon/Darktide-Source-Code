@@ -53,14 +53,10 @@ Matchmaker._get_common_queue_ticket_data = function (self, matchmaker_type, alia
 		platform_alias_promise = Promise.resolved(nil)
 	end
 
-	local cross_play_promise = self._privileges_manager:cross_play():next(function ()
-		return false
-	end):catch(function (error)
-		if error.message == "OK" then
-			return Promise.resolved(true)
-		else
-			return Promise.rejected(error)
-		end
+	local cross_play_promise = self._privileges_manager:cross_play():next(function (result)
+		local cross_play_disabled = not result.has_privilege
+
+		return Promise.resolved(cross_play_disabled)
 	end)
 	local platform_blocklist_promise = Managers.data_service.social:fetch_platform_block_list_ids_forced():catch(function (error)
 		if type(error) == "table" then

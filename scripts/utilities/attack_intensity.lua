@@ -21,7 +21,11 @@ local AttackIntensity = {
 			return
 		end
 
-		local target_attack_intensity_extension = ScriptUnit.extension(target_unit, "attack_intensity_system")
+		local target_attack_intensity_extension = ScriptUnit.has_extension(target_unit, "attack_intensity_system")
+
+		if not target_attack_intensity_extension then
+			return
+		end
 
 		target_attack_intensity_extension:remove_attacked_melee()
 	end,
@@ -47,7 +51,11 @@ local AttackIntensity = {
 		end
 	end,
 	set_monster_attacker = function (target_unit, attacker_unit)
-		local target_attack_intensity_extension = ScriptUnit.extension(target_unit, "attack_intensity_system")
+		local target_attack_intensity_extension = ScriptUnit.has_extension(target_unit, "attack_intensity_system")
+
+		if not target_attack_intensity_extension then
+			return
+		end
 
 		target_attack_intensity_extension:set_monster_attacker(attacker_unit)
 	end,

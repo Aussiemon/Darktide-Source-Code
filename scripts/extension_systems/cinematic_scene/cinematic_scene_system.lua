@@ -5,13 +5,10 @@ local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinemat
 local CinematicSceneTemplates = require("scripts/settings/cinematic_scene/cinematic_scene_templates")
 local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
-local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
-local UIUnitSpawner = require("scripts/managers/ui/ui_unit_spawner")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 local CINEMATIC_NAMES = CinematicSceneSettings.CINEMATIC_NAMES
 local CinematicSceneSystem = class("CinematicSceneSystem", "ExtensionSystemBase")
 local NUM_CPT_PER_UNIT = 1
-local NUM_PLAYER_SPAWN = 4
 local CLIENT_RPCS = {
 	"rpc_play_cutscene",
 	"rpc_cinematic_intro_played"
@@ -79,8 +76,6 @@ CinematicSceneSystem.init = function (self, extension_init_context, system_init_
 	self._cinematics_setups = {}
 	self._cinematics_left_to_play = 0
 	self._current_cinematic_name = CINEMATIC_NAMES.none
-	self._unit_spawner = UIUnitSpawner:new(world)
-	self._spawn_slots = {}
 	self._intro_played = false
 	self._intro_loading_started = false
 
@@ -131,8 +126,6 @@ CinematicSceneSystem._fetch_settings = function (self, mission, circumstance_nam
 end
 
 CinematicSceneSystem.destroy = function (self, ...)
-	self:_clear_spawn_slots()
-
 	if self._is_server then
 		local current_cinematic_name = self._current_cinematic_name
 
@@ -391,18 +384,6 @@ CinematicSceneSystem._initialize_cinematic = function (self, cinematic_name)
 
 	if sub_cinematics then
 		local sub_cinematics_setup = self:_initialize_sub_cinematics(cinematic_name, sub_cinematics)
-
-		for cinematic_category, cinematic_setup in pairs(sub_cinematics_setup) do
-			local player_spawner_units = cinematic_setup.player_spawner_units
-
-			if #player_spawner_units > 0 then
-				local camera = cinematic_setup.camera
-
-				self:_setup_spawn_slots(self._world, cinematic_name, camera, player_spawner_units)
-				self:_assign_player_slots(cinematic_name)
-			end
-		end
-
 		self._cinematics_setups[cinematic_name] = sub_cinematics_setup
 	else
 		self._cinematics_setups[cinematic_name] = {}
@@ -425,7 +406,6 @@ CinematicSceneSystem._initialize_sub_cinematics = function (self, cinematic_name
 			scene_level_origin = nil,
 			camera_unit = nil,
 			camera = nil,
-			player_spawner_units = {},
 			is_valid = true
 		}
 		sub_cinematics_setup[cinematic_category] = new_cinematic_setup
@@ -468,23 +448,6 @@ CinematicSceneSystem._initialize_sub_cinematics = function (self, cinematic_name
 		end
 	end
 
-	local cinematic_spawners = component_system:get_units_from_component_name("CinematicPlayerSpawner")
-
-	for _, cinematic_spawner_unit in ipairs(cinematic_spawners) do
-		local cinematic_spawner_components = component_system:get_components(cinematic_spawner_unit, "CinematicPlayerSpawner")
-		local cinematic_spawner_component = cinematic_spawner_components[1]
-		local spawner_cinematic_name = cinematic_spawner_component:cinematic_name()
-		local valid_cinematic = spawner_cinematic_name ~= CINEMATIC_NAMES.none and spawner_cinematic_name == cinematic_name
-
-		if valid_cinematic then
-			for _, cinematic_category in ipairs(sub_cinematics) do
-				local sub_cinematic_category_setup = sub_cinematics_setup[cinematic_category]
-				local player_spawner_units = sub_cinematic_category_setup.player_spawner_units
-				player_spawner_units[#player_spawner_units + 1] = cinematic_spawner_unit
-			end
-		end
-	end
-
 	for cinematic_category, cinematic_setup in pairs(sub_cinematics_setup) do
 		if not cinematic_setup.scene_unit_origin then
 			cinematic_setup.is_valid = false
@@ -500,155 +463,6 @@ CinematicSceneSystem._initialize_sub_cinematics = function (self, cinematic_name
 	end
 
 	return sub_cinematics_setup
-end
-
-CinematicSceneSystem._get_free_slot_id = function (self)
-	local spawn_slots = self._spawn_slots
-
-	for i = 1, #spawn_slots do
-		local slot = spawn_slots[i]
-
-		if not slot.occupied then
-			return i
-		end
-	end
-end
-
-CinematicSceneSystem._player_slot_id = function (self, unique_id)
-	local spawn_slots = self._spawn_slots
-
-	for i = 1, #spawn_slots do
-		local slot = spawn_slots[i]
-
-		if slot.occupied and slot.unique_id == unique_id then
-			return i
-		end
-	end
-end
-
-CinematicSceneSystem._clear_spawn_slots = function (self)
-	local spawn_slots = self._spawn_slots
-	local num_slots = #spawn_slots
-
-	for i = 1, num_slots do
-		local slot = spawn_slots[i]
-
-		if slot.occupied then
-			self:_reset_spawn_slot(slot)
-		end
-	end
-
-	table.clear(self._spawn_slots)
-end
-
-CinematicSceneSystem._setup_spawn_slots = function (self, world, cinematic_name, camera, player_spawner_units)
-	local unit_spawner = self._unit_spawner
-	local template = CinematicSceneTemplates[cinematic_name]
-	local ignored_slots = template.ignored_slots
-	local spawn_slots = {}
-
-	if #player_spawner_units == NUM_PLAYER_SPAWN then
-		for i = 1, NUM_PLAYER_SPAWN do
-			local spawn_point_unit = player_spawner_units[i]
-			local initial_position = Unit.world_position(spawn_point_unit, 1)
-			local initial_rotation = Unit.world_rotation(spawn_point_unit, 1)
-			local profile_spawner = UIProfileSpawner:new("CinematicSceneSystem_" .. i, world, camera, unit_spawner)
-
-			for j = 1, #ignored_slots do
-				local slot_name = ignored_slots[j]
-
-				profile_spawner:ignore_slot(slot_name)
-			end
-
-			local spawn_slot = {
-				index = i,
-				boxed_rotation = QuaternionBox(initial_rotation),
-				boxed_position = Vector3Box(initial_position),
-				profile_spawner = profile_spawner,
-				spawn_point_unit = spawn_point_unit
-			}
-			spawn_slots[i] = spawn_slot
-		end
-	end
-
-	self._spawn_slots = spawn_slots
-end
-
-CinematicSceneSystem._update_player_slots = function (self, dt, t, input_service)
-	local spawn_slots = self._spawn_slots
-
-	for i = 1, #spawn_slots do
-		local slot = spawn_slots[i]
-
-		if slot.occupied then
-			local profile_spawner = slot.profile_spawner
-
-			profile_spawner:update(dt, t, input_service)
-		end
-	end
-end
-
-CinematicSceneSystem._assign_player_slots = function (self, cinematic_name)
-	local player_manager = Managers.player
-	local players = player_manager:players()
-	local spawn_slots = self._spawn_slots
-
-	for unique_id, player in pairs(players) do
-		local slot_id = self:_player_slot_id(unique_id)
-
-		if not slot_id then
-			slot_id = self:_get_free_slot_id()
-			local slot = spawn_slots[slot_id]
-
-			if slot then
-				self:_assign_player_to_slot(cinematic_name, player, slot)
-			end
-		end
-	end
-end
-
-CinematicSceneSystem._assign_player_to_slot = function (self, cinematic_name, player, slot)
-	local unique_id = player:unique_id()
-	local profile = player:profile()
-	local boxed_position = slot.boxed_position
-	local boxed_rotation = slot.boxed_rotation
-	local spawn_position = Vector3Box.unbox(boxed_position)
-	local spawn_rotation = QuaternionBox.unbox(boxed_rotation)
-	local profile_spawner = slot.profile_spawner
-
-	profile_spawner:spawn_profile(profile, spawn_position, spawn_rotation)
-
-	local archetype_settings = profile.archetype
-	local archetype_name = archetype_settings.name
-	local breed_name = archetype_settings.breed
-	local breed_settings = Breeds[breed_name]
-	local mission_intro_state_machine = breed_settings.mission_intro_state_machine
-
-	profile_spawner:assign_state_machine(mission_intro_state_machine)
-
-	local template = CinematicSceneTemplates[cinematic_name]
-	local animations_per_archetype = template.animations_per_archetype
-	local animations_settings = animations_per_archetype[archetype_name]
-	local anim_index = math.random(1, #animations_settings)
-	local animation_event = animations_settings[anim_index]
-
-	profile_spawner:assign_animation_event(animation_event)
-
-	slot.occupied = true
-	slot.player = player
-	slot.unique_id = unique_id
-end
-
-CinematicSceneSystem._reset_spawn_slot = function (self, slot)
-	local profile_spawner = slot.profile_spawner
-
-	if profile_spawner then
-		profile_spawner:destroy()
-	end
-
-	slot.unique_id = nil
-	slot.profile_spawner = nil
-	slot.player = nil
 end
 
 CinematicSceneSystem._initialize_cutscene_characters = function (self, cinematic_name)

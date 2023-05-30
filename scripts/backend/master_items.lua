@@ -232,7 +232,13 @@ local function _item_plus_overrides(gear, gear_id, is_preview_item)
 				return nil
 			end
 
-			return master_item[field_name]
+			local field_value = master_item[field_name]
+
+			if field_name == "rarity" and field_value == -1 then
+				return nil
+			end
+
+			return field_value
 		end,
 		__newindex = function (t, field_name, value)
 			if is_preview_item then
@@ -268,9 +274,8 @@ local function _store_item_plus_overrides(data)
 				overrides = data.overrides
 			}
 		},
-		__gear_id = data.gear_id
+		__gear_id = data.gear_id or data.gearId
 	}
-	local overrides = item_instance.__gear.masterDataInstance.overrides
 
 	setmetatable(item_instance, {
 		__index = function (t, field_name)
@@ -302,7 +307,13 @@ local function _store_item_plus_overrides(data)
 				return nil
 			end
 
-			return master_item[field_name]
+			local field_value = master_item[field_name]
+
+			if field_name == "rarity" and field_value == -1 then
+				return nil
+			end
+
+			return field_value
 		end,
 		__newindex = function (t, field_name, value)
 			ferror("Not allowed to modify inventory items - %s[%s]", rawget(item_instance, "__gear_id"), field_name)

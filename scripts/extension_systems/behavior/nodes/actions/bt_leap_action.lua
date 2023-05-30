@@ -19,9 +19,10 @@ BtLeapAction.enter = function (self, unit, breed, blackboard, scratchpad, action
 	local perception_component = Blackboard.write_component(blackboard, "perception")
 	scratchpad.behavior_component = behavior_component
 	scratchpad.perception_component = perception_component
+	local side_system = Managers.state.extension:system("side_system")
+	scratchpad.side_system = side_system
 
 	if action_data.catapult_units then
-		local side_system = Managers.state.extension:system("side_system")
 		local side = side_system.side_by_unit[unit]
 		local enemy_side_names = side:relation_side_names("enemy")
 		scratchpad.enemy_side_names = enemy_side_names
@@ -31,7 +32,6 @@ BtLeapAction.enter = function (self, unit, breed, blackboard, scratchpad, action
 		scratchpad.broadphase = broadphase_system.broadphase
 	end
 
-	scratchpad.side_system = Managers.state.extension:system("side_system")
 	local animation_extension = ScriptUnit.extension(unit, "animation_system")
 	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
@@ -54,9 +54,11 @@ BtLeapAction.enter = function (self, unit, breed, blackboard, scratchpad, action
 
 	local start_leap_anim = nil
 	local distance = perception_component.target_distance
-	local is_short_leap = distance <= ChaosSpawnSettings.short_leap_distance
+	local is_shortest_leap = distance <= ChaosSpawnSettings.shortest_leap_distance
 
-	if is_short_leap then
+	if is_shortest_leap then
+		start_leap_anim = action_data.shortest_start_leap_anim_event
+	elseif distance <= ChaosSpawnSettings.short_leap_distance then
 		start_leap_anim = action_data.short_start_leap_anim_event
 	else
 		start_leap_anim = action_data.start_leap_anim_event
@@ -127,11 +129,21 @@ BtLeapAction.run = function (self, unit, breed, blackboard, scratchpad, action_d
 		end
 
 		if ALIVE[target_unit] and scratchpad.aoe_bot_threat_timing and scratchpad.aoe_bot_threat_timing <= t then
-			local group_extension = ScriptUnit.extension(target_unit, "group_system")
-			local bot_group = group_extension:bot_group()
 			local aoe_bot_threat_size = action_data.aoe_bot_threat_size:unbox()
+			local aoe_bot_threat_duration = action_data.aoe_bot_threat_duration
+			local aoe_bot_threat_rotation = Unit.local_rotation(unit, 1)
+			local side_system = scratchpad.side_system
+			local side = side_system.side_by_unit[unit]
+			local enemy_sides = side:relation_sides("enemy")
+			local group_system = Managers.state.extension:system("group_system")
+			local bot_groups = group_system:bot_groups_from_sides(enemy_sides)
+			local num_bot_groups = #bot_groups
 
-			bot_group:aoe_threat_created(POSITION_LOOKUP[target_unit], "oobb", aoe_bot_threat_size, Unit.local_rotation(unit, 1), action_data.aoe_bot_threat_duration)
+			for i = 1, num_bot_groups do
+				local bot_group = bot_groups[i]
+
+				bot_group:aoe_threat_created(target_position, "oobb", aoe_bot_threat_size, aoe_bot_threat_rotation, aoe_bot_threat_duration)
+			end
 
 			scratchpad.aoe_bot_threat_timing = nil
 		end
@@ -272,7 +284,9 @@ BtLeapAction._get_leap_velocity = function (self, unit, scratchpad, action_data)
 	local velocity, time_in_flight = Trajectory.get_trajectory_velocity(self_position, est_pos, gravity, speed, angle_to_hit_target)
 	time_in_flight = math.min(time_in_flight, ChaosSpawnSettings.leap_max_time_in_flight)
 	local debug = nil
-	local trajectory_is_ok = Trajectory.check_trajectory_collisions(scratchpad.physics_world, self_position, est_pos, gravity, speed, angle_to_hit_target, SECTIONS, "filter_minion_shooting_geometry", time_in_flight, nil, debug, unit)
+	local optional_extra_ray_check_down = Vector3(0, 0, 2)
+	local optional_extra_ray_check_up = Vector3(0, 0, -0.3)
+	local trajectory_is_ok = Trajectory.check_trajectory_collisions(scratchpad.physics_world, self_position, est_pos, gravity, speed, angle_to_hit_target, SECTIONS, "filter_minion_shooting_geometry", time_in_flight, nil, debug, unit, optional_extra_ray_check_down, optional_extra_ray_check_up)
 
 	if trajectory_is_ok then
 		return velocity

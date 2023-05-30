@@ -110,6 +110,12 @@ end
 
 Vo.head_shot_event = function (killer_unit, distance, damage_profile_name)
 	if damage_profile_name == "psyker_smite_kill" then
+		local context_extension = ScriptUnit.has_extension(killer_unit, "dialogue_context_system")
+
+		if context_extension then
+			context_extension:increase_timed_counter("number_of_head_pops")
+		end
+
 		return
 	end
 
@@ -162,15 +168,12 @@ Vo.player_interaction_vo_event = function (interactor_unit, interactee_unit, int
 	end
 end
 
-Vo.killstreak_event = function (killer_unit)
+Vo.kill_spree_self_event = function (killer_unit)
 	local dialogue_extension = ScriptUnit.has_extension(killer_unit, "dialogue_system")
-	local event_name = "killstreak"
+	local event_name = "kill_spree_self"
 
 	if _can_player_trigger_vo(dialogue_extension, event_name) then
-		local breed = _get_breed(killer_unit)
-		local killer_source_name = breed and DialogueBreedSettings[breed.name].vo_class_name
 		local event_data = dialogue_extension:get_event_data_payload()
-		event_data.killer_name = killer_source_name
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
 	end

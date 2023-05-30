@@ -122,6 +122,14 @@ MinionAttackIntensityExtension.set_attacked = function (self)
 	return
 end
 
+MinionAttackIntensityExtension.set_attacked_melee = function (self)
+	return
+end
+
+MinionAttackIntensityExtension.remove_attacked_melee = function (self)
+	return
+end
+
 MinionAttackIntensityExtension.can_attack = function (self, attack_type)
 	return self._allowed_attacks[attack_type]
 end

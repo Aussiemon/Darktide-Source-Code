@@ -79,6 +79,7 @@ MoveablePlatformExtension.init = function (self, extension_init_context, unit, e
 		self._overlap_result[wall] = {}
 	end
 
+	self._wall_enabled = false
 	self._box = Unit.actor(unit, "c_box_center")
 
 	self:_enable_wall_collision(self._box, false)
@@ -239,6 +240,30 @@ MoveablePlatformExtension.set_direction_husk = function (self, direction)
 	end
 
 	self._story_direction = direction
+end
+
+MoveablePlatformExtension.wall_active = function (self)
+	return self._wall_enabled
+end
+
+MoveablePlatformExtension.set_wall_collision = function (self, activate)
+	if activate == self._wall_enabled then
+		return
+	end
+
+	self._wall_enabled = activate
+
+	for _, wall in pairs(self._walls) do
+		self:_enable_wall_collision(wall, activate)
+	end
+
+	if self._is_server then
+		local unit = self._unit
+		local unit_level_index = Managers.state.unit_spawner:level_index(unit)
+		local game_session_manager = Managers.state.game_session
+
+		game_session_manager:send_rpc_clients("rpc_moveable_platform_set_wall_collision", unit_level_index, activate)
+	end
 end
 
 MoveablePlatformExtension._enable_wall_collision = function (self, actor, activate)
@@ -415,15 +440,52 @@ MoveablePlatformExtension._add_bots_to_passengers = function (self, bot_player_u
 	end
 end
 
+local player_units = {}
+local deprecated_units = {}
+
 MoveablePlatformExtension._update_overlap = function (self)
 	local players = Managers.player:human_players()
+
+	table.clear(player_units)
 
 	for _, player in pairs(players) do
 		local player_unit = player.player_unit
 
 		if ALIVE[player_unit] then
+			player_units[player_unit] = true
+
 			self:_send_wall_overlap_request(player_unit)
 		end
+	end
+
+	for _, wall in pairs(self._walls) do
+		local old_overlaps = self._overlap_result[wall]
+
+		table.clear(deprecated_units)
+
+		for overlap_unit, _ in pairs(old_overlaps) do
+			if not player_units[overlap_unit] then
+				deprecated_units[overlap_unit] = true
+			end
+		end
+
+		for deprecated_unit, _ in pairs(deprecated_units) do
+			old_overlaps[deprecated_unit] = nil
+		end
+	end
+
+	local old_overlaps = self._overlap_result[self._box]
+
+	table.clear(deprecated_units)
+
+	for overlap_unit, _ in pairs(old_overlaps) do
+		if not player_units[overlap_unit] then
+			deprecated_units[overlap_unit] = true
+		end
+	end
+
+	for deprecated_unit, _ in pairs(deprecated_units) do
+		old_overlaps[deprecated_unit] = nil
 	end
 end
 
@@ -478,9 +540,7 @@ MoveablePlatformExtension._receive_overlap_result_wall = function (self, player_
 end
 
 MoveablePlatformExtension._lock_units_on_platform = function (self)
-	for _, wall in pairs(self._walls) do
-		self:_enable_wall_collision(wall, true)
-	end
+	self:set_wall_collision(true)
 
 	local has_passengers = self:_set_platform_as_parent_for_all_passengers()
 
@@ -576,9 +636,7 @@ MoveablePlatformExtension._check_passengers_outside = function (self)
 end
 
 MoveablePlatformExtension._unlock_units_on_platform = function (self)
-	for _, wall in pairs(self._walls) do
-		self:_enable_wall_collision(wall, false)
-	end
+	self:set_wall_collision(false)
 
 	self._units_locked = false
 

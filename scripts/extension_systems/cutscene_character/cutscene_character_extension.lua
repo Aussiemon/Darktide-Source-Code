@@ -26,6 +26,9 @@ CutsceneCharacterExtension.init = function (self, extension_init_context, unit, 
 	local mission_manager = Managers.state.mission
 	local mission_template = mission_manager and mission_manager:mission()
 	self._mission_template = mission_template
+	self._is_loading_profile = false
+	self._activate_post_spawn_weapon_specific_walk_animation = false
+	self._activate_post_spawn_inventory_specific_walk_animation = false
 	local world = extension_init_context.world
 	local unit_spawner = UIUnitSpawner:new(world)
 	local level_unit_id = Unit.id_string(unit)
@@ -64,6 +67,22 @@ end
 
 CutsceneCharacterExtension.update = function (self, unit, dt, t)
 	self._profile_spawner:update(dt, t)
+
+	if self._is_loading_profile and self._profile_spawner:spawned() then
+		self._is_loading_profile = false
+
+		if self._activate_post_spawn_weapon_specific_walk_animation then
+			self:_start_weapon_specific_walk_animation()
+
+			self._activate_post_spawn_weapon_specific_walk_animation = false
+		end
+
+		if self._activate_post_spawn_inventory_specific_walk_animation then
+			self:_start_inventory_specific_walk_animation()
+
+			self._activate_post_spawn_inventory_specific_walk_animation = false
+		end
+	end
 end
 
 CutsceneCharacterExtension.cinematic_name = function (self)
@@ -171,6 +190,7 @@ CutsceneCharacterExtension.assign_player_loadout = function (self, player_unique
 	self:_load_props()
 
 	self._player_unique_id = player_unique_id
+	self._is_loading_profile = true
 end
 
 CutsceneCharacterExtension._load_props = function (self)
@@ -221,42 +241,62 @@ end
 
 CutsceneCharacterExtension.start_weapon_specific_walk_animation = function (self)
 	if self._weapon_animation_event and self:has_player_assigned() then
-		local unit = self._unit
-		local event = self._weapon_animation_event
+		if self._profile_spawner:spawned() then
+			self:_start_weapon_specific_walk_animation()
 
-		if self._current_state_machine ~= AnimationType.Weapon then
-			local weapon_template = WeaponTemplates[self._equipped_weapon.weapon_template]
-			local state_machine_3p, _ = WeaponTemplate.state_machines(weapon_template, self._breed_name)
-
-			Unit.set_animation_state_machine(unit, state_machine_3p)
-			Unit.enable_animation_state_machine(unit)
-
-			self._current_state_machine = AnimationType.Weapon
-		end
-
-		if Unit.has_animation_event(unit, event) then
-			Unit.animation_event(unit, event)
+			self._activate_post_spawn_weapon_specific_walk_animation = false
 		else
-			Log.error(CutsceneCharacterExtension.DEBUG_TAG, "No animation event called %q in state machine, using fallback weapon?", event)
+			self._activate_post_spawn_weapon_specific_walk_animation = true
 		end
+	end
+end
+
+CutsceneCharacterExtension._start_weapon_specific_walk_animation = function (self)
+	local unit = self._unit
+	local event = self._weapon_animation_event
+
+	if self._current_state_machine ~= AnimationType.Weapon then
+		local weapon_template = WeaponTemplates[self._equipped_weapon.weapon_template]
+		local state_machine_3p, _ = WeaponTemplate.state_machines(weapon_template, self._breed_name)
+
+		Unit.set_animation_state_machine(unit, state_machine_3p)
+		Unit.enable_animation_state_machine(unit)
+
+		self._current_state_machine = AnimationType.Weapon
+	end
+
+	if Unit.has_animation_event(unit, event) then
+		Unit.animation_event(unit, event)
+	else
+		Log.error(CutsceneCharacterExtension.DEBUG_TAG, "No animation event called %q in state machine, using fallback weapon?", event)
 	end
 end
 
 CutsceneCharacterExtension.start_inventory_specific_walk_animation = function (self)
 	if self._inventory_animation_event and self:has_player_assigned() then
-		if self._current_state_machine ~= AnimationType.Inventory then
-			local breed = Breeds[self._breed_name]
+		if self._profile_spawner:spawned() then
+			self:_start_inventory_specific_walk_animation()
 
-			Unit.set_animation_state_machine(self._unit, breed.inventory_state_machine)
-			Unit.enable_animation_state_machine(self._unit)
-			Unit.animation_event(self._unit, self._equipped_weapon.inventory_animation_event)
-
-			self._current_state_machine = AnimationType.Inventory
+			self._activate_post_spawn_inventory_specific_walk_animation = false
+		else
+			self._activate_post_spawn_inventory_specific_walk_animation = true
 		end
+	end
+end
 
-		if self._inventory_animation_event ~= "unready_idle" then
-			Unit.animation_event(self._unit, self._inventory_animation_event)
-		end
+CutsceneCharacterExtension._start_inventory_specific_walk_animation = function (self)
+	if self._current_state_machine ~= AnimationType.Inventory then
+		local breed = Breeds[self._breed_name]
+
+		Unit.set_animation_state_machine(self._unit, breed.inventory_state_machine)
+		Unit.enable_animation_state_machine(self._unit)
+		Unit.animation_event(self._unit, self._equipped_weapon.inventory_animation_event)
+
+		self._current_state_machine = AnimationType.Inventory
+	end
+
+	if self._inventory_animation_event ~= "unready_idle" then
+		Unit.animation_event(self._unit, self._inventory_animation_event)
 	end
 end
 

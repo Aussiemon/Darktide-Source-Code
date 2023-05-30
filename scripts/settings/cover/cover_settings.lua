@@ -1,7 +1,7 @@
 local cover_settings = {
 	types = table.enum("high", "low"),
 	peek_types = table.enum("right", "left", "both", "blocked"),
-	user_search_sources = table.enum("from_self", "from_target"),
+	user_search_sources = table.enum("from_self", "from_target", "from_combat_vector_start"),
 	peek_z_offsets = {
 		high = 1,
 		low = 0.5

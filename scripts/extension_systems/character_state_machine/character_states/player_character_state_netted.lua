@@ -52,7 +52,7 @@ PlayerCharacterStateNetted.extensions_ready = function (self, world, unit)
 	local is_server = self._is_server
 	local game_session_or_nil = self._game_session
 	local game_object_id_or_nil = self._game_object_id
-	self._assist = Assist:new(assist_anims, is_server, unit, game_session_or_nil, game_object_id_or_nil)
+	self._assist = Assist:new(assist_anims, is_server, unit, game_session_or_nil, game_object_id_or_nil, "saved")
 end
 
 PlayerCharacterStateNetted.game_object_initialized = function (self, game_session, game_object_id)

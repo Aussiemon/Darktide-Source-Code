@@ -1,7 +1,7 @@
-local ScannerDisplayViewSettings = require("scripts/ui/views/scanner_display_view/scanner_display_view_settings")
+local ScannerDisplayViewDecodeSymbolsSettings = require("scripts/ui/views/scanner_display_view/scanner_display_view_decode_symbols_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
-local size_factor = ScannerDisplayViewSettings.decode_symbols_size_factor
+local size_factor = ScannerDisplayViewDecodeSymbolsSettings.decode_symbols_size_factor
 local screen_ratio = UIWorkspaceSettings.screen.size[1] / UIWorkspaceSettings.screen.size[2]
 local symbol_widget_size = {
 	screen_ratio * size_factor * 60,

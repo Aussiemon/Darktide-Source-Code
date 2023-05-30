@@ -391,6 +391,10 @@ end
 ProfileSynchronizerHost.rpc_notify_profile_changed = function (self, channel_id, peer_id, local_player_id)
 	local player = Managers.player:player(peer_id, local_player_id)
 
+	if not Managers.connection:is_dedicated_hub_server() then
+		return
+	end
+
 	if not player then
 		self._delayed_profile_changes[peer_id] = self._delayed_profile_changes[peer_id] or {}
 		self._delayed_profile_changes[peer_id][local_player_id] = true

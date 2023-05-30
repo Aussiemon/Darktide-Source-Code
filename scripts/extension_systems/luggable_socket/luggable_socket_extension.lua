@@ -13,6 +13,7 @@ LuggableSocketExtension.init = function (self, extension_init_context, unit, ext
 	self._temp_locked_timer = 0
 	self._lock_offset_node = nil
 	self._socket_objective_target_ext = ScriptUnit.has_extension(unit, "mission_objective_target_system")
+	self._visible = false
 end
 
 LuggableSocketExtension.setup_from_component = function (self, consume_luggable, is_side_mission_socket, lock_offset_node)
@@ -51,12 +52,6 @@ LuggableSocketExtension._fetch_actor_size = function (self, unit, actor_name)
 	local _, box_half_extents = Mesh.box(mesh)
 
 	return mesh_id, box_half_extents
-end
-
-LuggableSocketExtension.hot_join_sync = function (self, socketed_unit)
-	if socketed_unit then
-		self:socket_luggable(socketed_unit)
-	end
 end
 
 LuggableSocketExtension.update = function (self, unit, dt, t)
@@ -125,7 +120,7 @@ LuggableSocketExtension._has_same_mission_objective = function (self, unit)
 	return same_mission_objective
 end
 
-LuggableSocketExtension.socket_luggable = function (self, luggable, socket_lock_time)
+LuggableSocketExtension.socket_luggable = function (self, luggable_unit, socket_lock_time)
 	local socket_unit = self._unit
 
 	if self._consume_luggable then
@@ -133,17 +128,17 @@ LuggableSocketExtension.socket_luggable = function (self, luggable, socket_lock_
 		self._is_temp_locked = true
 	end
 
-	self:_lock_socket(luggable)
+	self:_lock_socket(luggable_unit)
 	Unit.flow_event(socket_unit, "lua_socketed")
 
-	local luggable_objective_target_ext = ScriptUnit.has_extension(luggable, "mission_objective_target_system")
+	local luggable_objective_target_ext = ScriptUnit.has_extension(luggable_unit, "mission_objective_target_system")
 
 	if luggable_objective_target_ext then
 		luggable_objective_target_ext:remove_unit_marker()
 	end
 
 	if self._is_server then
-		local interactee_extension = ScriptUnit.has_extension(luggable, "interactee_system")
+		local interactee_extension = ScriptUnit.has_extension(luggable_unit, "interactee_system")
 
 		interactee_extension:set_active(false)
 
@@ -159,13 +154,13 @@ LuggableSocketExtension.socket_luggable = function (self, luggable, socket_lock_
 			slot_rotation = Unit.world_rotation(socket_unit, 1)
 		end
 
-		local locomotion_extension = ScriptUnit.extension(luggable, "locomotion_system")
+		local locomotion_extension = ScriptUnit.extension(luggable_unit, "locomotion_system")
 
 		locomotion_extension:switch_to_socket_lock(slot_position, slot_rotation)
 
 		local unit_spawner_manager = Managers.state.unit_spawner
 		local socket_is_level_unit, socket_id = unit_spawner_manager:game_object_id_or_level_index(socket_unit)
-		local luggable_is_level_unit, luggable_id = unit_spawner_manager:game_object_id_or_level_index(luggable)
+		local luggable_is_level_unit, luggable_id = unit_spawner_manager:game_object_id_or_level_index(luggable_unit)
 
 		Managers.state.game_session:send_rpc_clients("rpc_luggable_socket_luggable", socket_id, socket_is_level_unit, luggable_id, luggable_is_level_unit)
 	end
@@ -186,12 +181,10 @@ LuggableSocketExtension._check_temp_locked_socket = function (self, dt)
 	end
 end
 
-LuggableSocketExtension._lock_socket = function (self, luggable)
-	self._locked_luggable = luggable
+LuggableSocketExtension._lock_socket = function (self, luggable_unit)
+	self._locked_luggable = luggable_unit
 
-	if self._is_server then
-		self:set_socket_visibility(false)
-	end
+	self:set_socket_visibility(false)
 
 	local socket_objective_target_ext = self._socket_objective_target_ext
 
@@ -234,10 +227,16 @@ LuggableSocketExtension.consume_luggable = function (self)
 	return self._consume_luggable
 end
 
+LuggableSocketExtension.visible = function (self)
+	return self._visible
+end
+
 LuggableSocketExtension.set_socket_visibility = function (self, value)
 	local socket_unit = self._unit
 
 	Unit.set_visibility(socket_unit, "main", value)
+
+	self._visible = value
 
 	if self._is_server then
 		local unit_spawner_manager = Managers.state.unit_spawner

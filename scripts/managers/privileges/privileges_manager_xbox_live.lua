@@ -18,7 +18,8 @@ local function _get_xbox_privilege(privilege_name)
 	local has_privilege, deny_reason = Managers.account:get_privilege(privilege_name)
 
 	p:resolve({
-		has_privilege = has_privilege or false
+		has_privilege = has_privilege or false,
+		deny_reason = deny_reason
 	})
 
 	return p

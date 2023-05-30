@@ -562,8 +562,6 @@ end
 
 MiscTestCases.spawn_all_units = function (case_settings)
 	Testify:run_case(function (dt, t)
-		local settings = cjson.decode(case_settings or "{}")
-		local interval = settings.interval or 0
 		local UNITS_TO_SKIP = {
 			"content/characters/enemy/chaos_hound/third_person/base",
 			"content/characters/npc/human/attachments_base/face_emora_brahms/face_emora_brahms",
@@ -572,13 +570,15 @@ MiscTestCases.spawn_all_units = function (case_settings)
 			"content/environment/artsets/debug/events_test/test_spinny_thing",
 			"content/environment/artsets/debug/events_test/test_vox_array",
 			"content/environment/gameplay/events/rise/end/turntable_bogie_01",
-			"content/fx/meshes/shells/crossarc_circle",
 			"content/fx/meshes/shells/cylinder",
-			"content/fx/meshes/shells/cylinder_02",
 			"content/fx/meshes/shells/lightning_pipe_discharge_tube",
 			"content/fx/meshes/vfx_plane",
 			"content/fx/units/weapons/small_caliber_plastic_large_01"
 		}
+		local settings = cjson.decode(case_settings or "{}")
+		local interval = settings.interval or 0
+		local spawn_and_destroy_same_frame = settings.spawn_and_destroy_same_frame == true
+		local units_to_skip = settings.units_to_skip or UNITS_TO_SKIP
 
 		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
@@ -595,24 +595,23 @@ MiscTestCases.spawn_all_units = function (case_settings)
 			include_properties = false
 		})
 		local units = Testify:make_request("metadata_wait_for_query_results", query_handle)
-		local num_units = #units
+		local num_units = table.size(units)
 		local i = 1
 
 		TestifySnippets.wait(1)
 
 		for unit_name, _ in pairs(units) do
-			if not table.contains(UNITS_TO_SKIP, unit_name) then
+			if not table.array_contains(units_to_skip, unit_name) then
 				Log.info("Testify", "%s/%s Spawning unit %s", i, num_units, unit_name)
 
-				local unit = Testify:make_request("spawn_unit", unit_name, boxed_spawn_position)
-
-				if interval == 0 then
-					TestifySnippets.wait_frames(1)
+				if spawn_and_destroy_same_frame then
+					Testify:make_request("spawn_and_destroy_unit", unit_name, boxed_spawn_position)
 				else
-					TestifySnippets.wait(interval)
-				end
+					local unit = Testify:make_request("spawn_unit", unit_name, boxed_spawn_position)
 
-				Testify:make_request("delete_unit", unit)
+					TestifySnippets.wait(interval)
+					Testify:make_request("delete_unit", unit)
+				end
 			end
 
 			i = i + 1

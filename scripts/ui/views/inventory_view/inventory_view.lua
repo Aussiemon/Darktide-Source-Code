@@ -46,6 +46,7 @@ local InventoryView = class("InventoryView", "BaseView")
 
 InventoryView.init = function (self, settings, context)
 	self._context = context
+	self._parent = context and context.parent
 	self._preview_player = context.debug and Managers.player:local_player(1) or context.player
 	self._preview_profile_equipped_items = context.preview_profile_equipped_items or {}
 	self._current_profile_equipped_items = context.current_profile_equipped_items or table.clone(self._preview_profile_equipped_items)
@@ -140,7 +141,12 @@ InventoryView._on_item_hover_start = function (self, item)
 	self._currently_hovered_item = item
 
 	if self._item_stats then
-		self._item_stats:present_item(item)
+		local item_type = item and item.item_type
+		local is_gear = item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_HEAD" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "END_OF_ROUND" or item_type == "PORTRAIT_FRAME" or item_type == "CHARACTER_INSIGNIA" or item_type == "EMOTE" or item_type == "END_OF_ROUND"
+
+		if not is_gear then
+			self._item_stats:present_item(item)
+		end
 	end
 end
 
@@ -464,7 +470,8 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 					disable_rotation_input = disable_rotation_input,
 					animation_event_name_suffix = animation_event_name_suffix,
 					animation_event_variable_data = animation_event_variable_data,
-					item_type = item_type
+					item_type = item_type,
+					parent = self._parent
 				}
 
 				Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
@@ -481,7 +488,8 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 				player_specialization = self._chosen_specialization,
 				preview_profile_equipped_items = self._preview_profile_equipped_items,
 				selected_slot = slot,
-				initial_rotation = initial_rotation
+				initial_rotation = initial_rotation,
+				parent = self._parent
 			}
 
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
@@ -502,7 +510,8 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 			player = self._preview_player,
 			player_specialization = self._chosen_specialization,
 			preview_profile_equipped_items = self._preview_profile_equipped_items,
-			selected_slots = slots
+			selected_slots = slots,
+			parent = self._parent
 		}
 
 		Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
@@ -662,6 +671,12 @@ InventoryView.cb_switch_tab = function (self, index)
 end
 
 InventoryView._destroy_previous_tab = function (self)
+	if self._wallet_animation_id then
+		self:_stop_animation(self._wallet_animation_id)
+
+		self._wallet_animation_id = nil
+	end
+
 	if self._tab_menu_element then
 		self._tab_menu_element = nil
 		local id = "tab_menu"

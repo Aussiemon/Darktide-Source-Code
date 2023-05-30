@@ -21,6 +21,22 @@ local explosion_templates = {
 			"wwise/events/weapon/play_explosion_refl_small"
 		}
 	},
+	cultist_grenadier_gas_grenade_impact = {
+		damage_falloff = false,
+		radius = 5,
+		min_radius = 2.5,
+		collision_filter = "filter_minion_explosion",
+		close_radius = 2.5,
+		static_power_level = 0,
+		scalable_radius = true,
+		min_close_radius = 0.5,
+		close_damage_profile = DamageProfileTemplates.renegade_grenadier_fire_grenade_impact_close,
+		damage_profile = DamageProfileTemplates.renegade_grenadier_fire_grenade_impact,
+		sfx = {
+			"wwise/events/weapon/play_explosion_grenade_gas",
+			"wwise/events/weapon/play_explosion_refl_small"
+		}
+	},
 	poxwalker_bomber = {
 		damage_falloff = false,
 		radius = 6,

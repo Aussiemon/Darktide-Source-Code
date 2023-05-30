@@ -138,6 +138,8 @@ BtShootAction.run = function (self, unit, breed, blackboard, scratchpad, action_
 
 		MinionMovement.update_anim_driven_start_rotation(unit, scratchpad, action_data, t, destination, ignore_set_anim_driven)
 		MinionMovement.set_anim_rotation(unit, scratchpad)
+	elseif is_anim_rotation_driven and not scratchpad.start_rotation_timing then
+		MinionMovement.set_anim_rotation_driven(scratchpad, false)
 	end
 
 	local has_line_of_sight = scratchpad.perception_component.has_line_of_sight
@@ -646,9 +648,11 @@ BtShootAction._update_cooldown = function (self, unit, t, scratchpad, action_dat
 
 	MinionAttack.aim_at_target(unit, scratchpad, t, action_data)
 
-	local flat_rotation = MinionMovement.rotation_towards_unit_flat(unit, target_unit)
+	if not scratchpad.is_anim_rotation_driven then
+		local flat_rotation = MinionMovement.rotation_towards_unit_flat(unit, target_unit)
 
-	scratchpad.locomotion_extension:set_wanted_rotation(flat_rotation)
+		scratchpad.locomotion_extension:set_wanted_rotation(flat_rotation)
+	end
 
 	if scratchpad.cooldown < t then
 		local attack_allowed = AttackIntensity.minion_can_attack(unit, action_data.attack_intensity_type, target_unit)

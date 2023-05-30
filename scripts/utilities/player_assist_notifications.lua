@@ -1,4 +1,4 @@
-local PlayerAssistNotification = {
+local PlayerAssistNotifications = {
 	show_notification = function (assisted_unit, assisting_unit, assist_type)
 		if not assisting_unit or not ALIVE[assisting_unit] then
 			return
@@ -28,4 +28,4 @@ local PlayerAssistNotification = {
 	end
 }
 
-return PlayerAssistNotification
+return PlayerAssistNotifications

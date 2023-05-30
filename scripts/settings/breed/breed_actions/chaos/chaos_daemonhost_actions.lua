@@ -49,7 +49,7 @@ local action_data = {
 		considerations = UtilityConsiderations.chaos_daemonhost_warp_grab
 	},
 	warp_grab = {
-		execute_duration = 4.833333333333333,
+		execute_duration = 4.9,
 		execute_anim_event = "grab_execute",
 		fire_from_node = "j_righthand",
 		vo_event = "chaos_daemonhost_warp_grab",
@@ -60,7 +60,7 @@ local action_data = {
 		channel_anim_event = "grab_loop",
 		power_level = 1000,
 		execute_husk_event_name = "wwise/events/minions/play_enemy_daemonhost_execute_player_impact_husk",
-		execute_timing = 3.8,
+		execute_timing = 2.7666666666666666,
 		start_execute_at_t = {
 			6,
 			5,

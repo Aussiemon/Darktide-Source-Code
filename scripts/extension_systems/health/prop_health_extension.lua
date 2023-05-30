@@ -32,6 +32,10 @@ PropHealthExtension.setup_from_component = function (self, max_health, invulnera
 	end
 end
 
+PropHealthExtension.pre_update = function (self, unit, dt, t)
+	self._was_hit_by_critical_hit_this_render_frame = false
+end
+
 PropHealthExtension.set_dead = function (self)
 	self._health = 0
 
@@ -86,12 +90,27 @@ PropHealthExtension.add_heal = function (self, heal_amount, heal_type)
 	return
 end
 
-PropHealthExtension.set_last_damaging_unit = function (self, last_damaging_unit)
+PropHealthExtension.set_last_damaging_unit = function (self, last_damaging_unit, hit_zone_name, last_hit_was_critical)
 	self._last_damaging_unit = last_damaging_unit
+	self._last_hit_zone_name = hit_zone_name
+	self._last_hit_was_critical = last_hit_was_critical
+	self._was_hit_by_critical_hit_this_render_frame = self._was_hit_by_critical_hit_this_render_frame or last_hit_was_critical
 end
 
 PropHealthExtension.last_damaging_unit = function (self)
 	return self._last_damaging_unit
+end
+
+PropHealthExtension.last_hit_zone_name = function (self)
+	return self._last_hit_zone_name
+end
+
+PropHealthExtension.last_hit_was_critical = function (self)
+	return self._last_hit_was_critical
+end
+
+PropHealthExtension.was_hit_by_critical_hit_this_render_frame = function (self)
+	return self._was_hit_by_critical_hit_this_render_frame
 end
 
 PropHealthExtension.max_health = function (self)

@@ -537,6 +537,12 @@ local voice_chat_settings = {
 		end
 	end
 }
+
+if IS_XBS then
+	voice_chat_settings.options[3] = nil
+	voice_chat_settings.default_value = 1
+end
+
 settings[#settings + 1] = construct_audio_settings_dropdown(voice_chat_settings)
 
 return {

@@ -28,6 +28,7 @@ PickupSystem.init = function (self, context, system_init_data, ...)
 	self._guaranteed_spawned_pickups = {}
 	self._pickup_to_spawner = {}
 	self._pickup_to_owner = {}
+	self._pickup_to_owner_player = {}
 	self._pickup_to_interactors = {}
 	self._pickup_spawner_extensions = {}
 	self._managed_spawner_extensions = {}
@@ -752,7 +753,7 @@ PickupSystem.update = function (self, system_context, dt, t)
 end
 
 PickupSystem.get_owner = function (self, pickup_unit)
-	return self._pickup_to_owner[pickup_unit]
+	return self._pickup_to_owner[pickup_unit], self._pickup_to_owner_player[pickup_unit]
 end
 
 PickupSystem.has_interacted = function (self, pickup_unit, player_session_id)
@@ -782,9 +783,10 @@ PickupSystem.spawn_pickup = function (self, pickup_name, position, rotation, pic
 	return pickup_unit, pickup_unit_go_id
 end
 
-PickupSystem.player_spawn_pickup = function (self, pickup_name, position, rotation, player_session_id, placed_on_unit)
+PickupSystem.player_spawn_pickup = function (self, pickup_name, position, rotation, player, player_session_id, placed_on_unit)
 	local pickup_unit, pickup_unit_go_id = self:spawn_pickup(pickup_name, position, rotation, nil, placed_on_unit)
 	self._pickup_to_owner[pickup_unit] = player_session_id
+	self._pickup_to_owner_player[pickup_unit] = player
 
 	return pickup_unit, pickup_unit_go_id
 end
@@ -795,6 +797,7 @@ PickupSystem.despawn_pickup = function (self, pickup_unit)
 	local num_spawned_pickups = #spawned_pickups
 	self._pickup_to_spawner[pickup_unit] = nil
 	self._pickup_to_owner[pickup_unit] = nil
+	self._pickup_to_owner_player[pickup_unit] = nil
 	self._pickup_to_interactors[pickup_unit] = nil
 	local deleted_index = nil
 	local ALIVE = ALIVE

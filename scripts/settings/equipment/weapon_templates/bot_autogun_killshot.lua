@@ -232,15 +232,14 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_hip = {
-		sprint_requires_press_to_interrupt = true,
+		ammunition_usage = 1,
 		weapon_handling_template = "autogun_triple_burst",
+		sprint_requires_press_to_interrupt = true,
 		start_input = "shoot",
 		minimum_hold_time = 0.3,
 		kind = "shoot_hit_scan",
-		sprint_ready_up_time = 0.2,
-		allowed_during_sprint = true,
-		ammunition_usage = 1,
 		uninterruptible = true,
+		sprint_ready_up_time = 0.2,
 		total_time = 0.75,
 		action_movement_curve = {
 			{

@@ -88,6 +88,8 @@ PlayerUnitCameraExtension._evaluate_camera_tree = function (self)
 			node = "hogtied"
 		elseif is_ledge_hanging then
 			node = "ledge_hanging"
+		elseif is_grabbed then
+			node = "grabbed"
 		elseif is_pounced or is_netted or is_warp_grabbed or is_mutant_charged or is_grabbed then
 			node = "pounced"
 		elseif is_consumed then

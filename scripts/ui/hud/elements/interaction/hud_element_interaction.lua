@@ -203,12 +203,17 @@ HudElementInteraction._update_can_interact_target = function (self)
 	local active_presentation_data = self._active_presentation_data
 
 	if active_presentation_data then
-		self:_update_tag_input_information(interactee_unit)
-
 		local marker = active_presentation_data.marker
 		local show_interaction_ui = interactor_extension:show_interaction_ui()
 		local show_counter_ui = interactor_extension:show_counter_ui()
 		local show_block_ui = interactor_extension:hud_block_text()
+
+		self:_update_tag_input_information(interactee_unit)
+
+		if not show_block_ui then
+			self:_update_interaction_input_text(active_presentation_data.interactee_extension)
+		end
+
 		self._show_interaction_hud = marker and (show_interaction_ui or show_counter_ui or show_block_ui)
 	else
 		self._show_interaction_hud = false
@@ -261,6 +266,14 @@ HudElementInteraction._update_tag_input_information = function (self, interactee
 
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.tag_text.content.text = input_text_tag
+end
+
+HudElementInteraction._update_interaction_input_text = function (self, interactee_extension)
+	local hold_required = interactee_extension:hold_required()
+	local input_action_text = interactee_extension:action_text()
+	local input_text_interact = _get_input_text("interact", input_action_text or "n/a", hold_required)
+	local widgets_by_name = self._widgets_by_name
+	widgets_by_name.interact_text.content.text = input_text_interact
 end
 
 HudElementInteraction._cb_world_markers_list_request = function (self, marker_list)

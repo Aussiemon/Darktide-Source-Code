@@ -298,7 +298,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 				self._num_impact_hit_special = self._num_impact_hit_special + (target_breed_or_nil and target_breed_or_nil.tags.special and 1 or 0)
 
 				if impact_damage_type then
-					ImpactEffect.play(hit_unit, hit_actor, damage_dealt, impact_damage_type, hit_zone_name, attack_result, hit_position, hit_normal, hit_direction, projectile_unit, IMPACT_FX_DATA, false, attack_types.ranged, damage_efficiency, impact_damage_profile)
+					ImpactEffect.play(hit_unit, hit_actor, damage_dealt, impact_damage_type, hit_zone_name, attack_result, hit_position, hit_normal, hit_direction, owner_unit or projectile_unit, IMPACT_FX_DATA, false, attack_types.ranged, damage_efficiency, impact_damage_profile)
 				end
 
 				if impact_suppression_settings then

@@ -651,9 +651,10 @@ local widget_definitions = {
 	}),
 	character_portrait = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/base/ui_portrait_frame_base",
+			value_id = "texture",
 			style_id = "texture",
 			pass_type = "texture",
+			value = "content/ui/materials/base/ui_portrait_frame_base",
 			style = {
 				material_values = {
 					texture_frame = "content/ui/textures/icons/items/frames/default",

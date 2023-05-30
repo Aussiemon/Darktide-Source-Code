@@ -7,7 +7,7 @@ local UICharacterProfilePackageLoader = require("scripts/managers/ui/ui_characte
 local VisualLoadoutCustomization = require("scripts/extension_systems/visual_loadout/utilities/visual_loadout_customization")
 local UIProfileSpawner = class("UIProfileSpawner")
 
-UIProfileSpawner.init = function (self, reference_name, world, camera, unit_spawner, force_highest_lod_step, optional_mission_template, verbose)
+UIProfileSpawner.init = function (self, reference_name, world, camera, unit_spawner, force_highest_lod_step, optional_mission_template)
 	self._reference_name = reference_name
 	self._world = world
 	self._camera = camera
@@ -15,7 +15,6 @@ UIProfileSpawner.init = function (self, reference_name, world, camera, unit_spaw
 	self._item_definitions = MasterItems.get_cached()
 	self._mission_template = optional_mission_template
 	self._visible = true
-	self._verbose = verbose
 
 	if force_highest_lod_step == nil then
 		self._force_highest_lod_step = true
@@ -40,7 +39,7 @@ UIProfileSpawner.reset = function (self)
 	end
 
 	local single_item_loader_reference_name = self._reference_name .. "_single_item"
-	self._single_item_profile_loader = UICharacterProfilePackageLoader:new(single_item_loader_reference_name, self._item_definitions, self._mission_template, self._verbose)
+	self._single_item_profile_loader = UICharacterProfilePackageLoader:new(single_item_loader_reference_name, self._item_definitions, self._mission_template)
 	self._ignored_slots = {}
 	self._default_rotation_angle = 0
 	self._rotation_angle = self._default_rotation_angle
@@ -79,7 +78,7 @@ UIProfileSpawner.spawn_profile = function (self, profile, position, rotation, sc
 
 	self._profile_loader_index = (self._profile_loader_index or 0) + 1
 	local reference_name = self._reference_name .. "_profile_loader_" .. tostring(self._profile_loader_index)
-	local character_profile_loader = UICharacterProfilePackageLoader:new(reference_name, self._item_definitions, self._mission_template, self._verbose)
+	local character_profile_loader = UICharacterProfilePackageLoader:new(reference_name, self._item_definitions, self._mission_template)
 	local loading_items = character_profile_loader:load_profile(profile)
 
 	if not state_machine then
@@ -411,10 +410,6 @@ UIProfileSpawner._despawn_current_character_profile = function (self)
 	local character_spawn_data = self._character_spawn_data
 
 	if character_spawn_data then
-		if self._verbose then
-			Log.info("UIProfileSpawner", "[_despawn_current_character_profile] character_id: %s", tostring(character_spawn_data.profile.character_id))
-		end
-
 		local profile_loader = character_spawn_data.profile_loader
 
 		self:_despawn_players_gear()
@@ -505,7 +500,7 @@ UIProfileSpawner._equip_item_for_spawn_character = function (self, slot_id, item
 		for _, parent_slot_name in pairs(parent_slot_names) do
 			local parent_slot_unit_3p = slots[parent_slot_name].unit_3p
 			local parent_item = slots[parent_slot_name].item
-			local parent_item_deform_overrides = parent_item.deform_overrides or {}
+			local parent_item_deform_overrides = parent_item and parent_item.deform_overrides or {}
 
 			for _, deform_override in pairs(parent_item_deform_overrides) do
 				deform_overrides[#deform_overrides + 1] = deform_override
@@ -549,10 +544,6 @@ UIProfileSpawner.ignore_slot = function (self, slot_id)
 end
 
 UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loader, position, rotation, scale, state_machine, animation_event, face_state_machine_key, face_animation_event, force_highest_mip, disable_hair_state_machine, optional_unit_3p, optional_ignore_state_machine)
-	if self._verbose then
-		Log.info("UIProfileSpawner", "[_spawn_character_profile] character_id: %s", profile.character_id)
-	end
-
 	local loadout = profile.loadout
 	local archetype = profile.archetype
 	local archetype_name = archetype and archetype.name
@@ -562,6 +553,13 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 	local base_unit = optional_base_unit or breed_settings.base_unit
 	position = position or Vector3.zero()
 	rotation = rotation or Quaternion.identity()
+	local spawn_rotation = rotation
+
+	if self._rotation_angle and self._rotation_angle ~= 0 then
+		local character_rotation_angle = Quaternion.axis_angle(Vector3(0, 0, 1), -self._rotation_angle)
+		spawn_rotation = Quaternion.multiply(character_rotation_angle, spawn_rotation)
+	end
+
 	local unit_3p = optional_unit_3p
 
 	if not unit_3p then
@@ -572,7 +570,7 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 
 			unit_3p = World.spawn_unit_ex(self._world, base_unit, nil, pose)
 		else
-			unit_3p = World.spawn_unit_ex(self._world, base_unit, nil, position, rotation)
+			unit_3p = World.spawn_unit_ex(self._world, base_unit, nil, position, spawn_rotation)
 		end
 	end
 
@@ -798,7 +796,14 @@ UIProfileSpawner._update_input_rotation = function (self, dt)
 	end
 
 	local unit_3p = character_spawn_data.unit_3p
-	local rotation_angle = math.lerp(self._previous_rotation_angle, self._rotation_angle, 0.2)
+	local rotation_angle = nil
+
+	if self._rotate_instantly then
+		rotation_angle = self._rotation_angle
+	else
+		rotation_angle = math.lerp(self._previous_rotation_angle, self._rotation_angle, 0.2)
+	end
+
 	self._previous_rotation_angle = rotation_angle
 	local character_rotation = Quaternion.axis_angle(Vector3(0, 0, 1), -rotation_angle)
 	local boxed_start_rotation = character_spawn_data.rotation
@@ -821,8 +826,9 @@ UIProfileSpawner._set_auto_rotation_return = function (self, enabled)
 	self._auto_rotation_return = enabled
 end
 
-UIProfileSpawner._set_character_rotation = function (self, angle)
+UIProfileSpawner._set_character_rotation = function (self, angle, instant)
 	self._rotation_angle = angle
+	self._rotate_instantly = instant
 end
 
 UIProfileSpawner.disable_rotation_input = function (self)
@@ -982,6 +988,10 @@ UIProfileSpawner.rotation_angle = function (self)
 	return self._rotation_angle
 end
 
+UIProfileSpawner.default_rotation_angle = function (self)
+	return self._default_rotation_angle
+end
+
 UIProfileSpawner.set_character_scale = function (self, scale_value)
 	local character_spawn_data = self._character_spawn_data
 
@@ -993,14 +1003,16 @@ UIProfileSpawner.set_character_scale = function (self, scale_value)
 	end
 end
 
-UIProfileSpawner.set_character_rotation = function (self, angle)
-	self:_set_character_rotation(angle)
+UIProfileSpawner.set_character_rotation = function (self, angle, instant)
+	self:_set_character_rotation(angle, instant)
 end
 
-UIProfileSpawner.set_character_default_rotation = function (self, angle)
+UIProfileSpawner.set_character_default_rotation = function (self, angle, ignore_direct_application)
 	self._default_rotation_angle = angle
 
-	self:_set_character_rotation(angle - 0.001)
+	if not ignore_direct_application then
+		self:_set_character_rotation(angle - 0.001)
+	end
 end
 
 UIProfileSpawner.unit_3p_from_slot = function (self, slot_id)

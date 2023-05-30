@@ -146,7 +146,7 @@ weapon_template.actions = {
 		weapon_handling_template = "immediate_single_shot",
 		spread_template = "default_stub_rifle_assault",
 		ammunition_usage = 1,
-		allowed_during_sprint = true,
+		allowed_during_sprint = false,
 		total_time = 1.415,
 		action_movement_curve = {
 			{
@@ -283,7 +283,7 @@ weapon_template.actions = {
 	action_zoom = {
 		crosshair_type = "none",
 		start_input = "zoom",
-		allowed_during_sprint = true,
+		allowed_during_sprint = false,
 		kind = "aim",
 		sprint_ready_up_time = 0.4,
 		total_time = 0.5,

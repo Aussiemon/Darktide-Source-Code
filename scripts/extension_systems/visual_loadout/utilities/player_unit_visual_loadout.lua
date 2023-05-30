@@ -73,6 +73,10 @@ PlayerUnitVisualLoadout.unwield_slot_husk = function (slot_to_unwield, visual_lo
 end
 
 PlayerUnitVisualLoadout.slot_equipped = function (inventory_component, visual_loadout_extension, slot_name)
+	if visual_loadout_extension.is_husk then
+		return visual_loadout_extension:item_from_slot(slot_name) ~= nil
+	end
+
 	return inventory_component[slot_name] ~= visual_loadout_extension.UNEQUIPPED_SLOT
 end
 

@@ -198,7 +198,7 @@ weapon_template.actions = {
 		}
 	},
 	action_charge_direct = {
-		allowed_during_sprint = true,
+		allowed_during_sprint = false,
 		start_input = "zoom_charge",
 		kind = "overload_charge",
 		sprint_ready_up_time = 0.25,
@@ -278,7 +278,7 @@ weapon_template.actions = {
 		recoil_template = "default_plasma_rifle_bfg",
 		crosshair_type = "none",
 		ammunition_usage_min = 1,
-		allowed_during_sprint = true,
+		allowed_during_sprint = false,
 		use_charge = true,
 		spread_template = "default_plasma_rifle_bfg",
 		total_time = 0.5,
@@ -346,7 +346,7 @@ weapon_template.actions = {
 		}
 	},
 	action_charge = {
-		allowed_during_sprint = true,
+		allowed_during_sprint = false,
 		recoil_template = "default_plasma_rifle_demolitions",
 		start_input = "shoot_charge",
 		kind = "overload_charge",
@@ -567,7 +567,7 @@ weapon_template.actions = {
 		spread_template = "default_lasgun_bfg",
 		anim_end_event = "to_unaim_ironsight",
 		crosshair_type = "none",
-		allowed_during_sprint = true,
+		allowed_during_sprint = false,
 		anim_event = "to_ironsight",
 		total_time = math.huge,
 		action_movement_curve = {

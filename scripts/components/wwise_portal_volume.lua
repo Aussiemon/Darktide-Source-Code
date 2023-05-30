@@ -165,7 +165,7 @@ WwisePortalVolume.door_apply_portal_obstruction = function (self, door_is_closed
 				new_anim_time = math.max(new_anim_time, 0)
 				normalize_anim_time = new_anim_time / new_length
 			else
-				Log.error("WwisePortalVolume", "[door_apply_portal_obstruction] Unit(%s, %s), 'actual_open_time' settings longer than door animation time. actual_open_time(%.2f) > anim_duration(%.2f)", tostring(unit), Unit.id_string(unit), anim_duration, actual_open_time)
+				Log.error("WwisePortalVolume", "[door_apply_portal_obstruction] Unit(%s, %s), 'actual_open_time' settings longer than door animation time. actual_open_time(%.2f) > anim_duration(%.2f)", tostring(unit), Unit.id_string(unit), actual_open_time, anim_duration)
 			end
 		end
 

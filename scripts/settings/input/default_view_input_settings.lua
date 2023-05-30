@@ -61,8 +61,8 @@ local default_view_input_settings = {
 		},
 		hotkey_item_discard = {
 			"keyboard_x",
-			"xbox_controller_right_thumb",
-			"ps4_controller_d_down",
+			"xbox_controller_x",
+			"ps4_controller_square",
 			description = "loc_alias_view_hotkey_item_discard",
 			bindable = false
 		},
@@ -75,7 +75,7 @@ local default_view_input_settings = {
 		},
 		hotkey_item_inspect = {
 			"keyboard_v",
-			"xbox_controller_x",
+			"xbox_controller_right_thumb",
 			"ps4_controller_triangle",
 			description = "loc_alias_view_hotkey_item_inspect",
 			bindable = false
@@ -183,6 +183,7 @@ local default_view_input_settings = {
 			bindable = false
 		},
 		cycle_list_primary = {
+			"keyboard_tab",
 			"xbox_controller_left_thumb",
 			"ps4_controller_l3",
 			description = "loc_alias_view_cycle_list_primary",
@@ -204,12 +205,14 @@ local default_view_input_settings = {
 		},
 		cycle_chat_channel = {
 			"keyboard_tab",
+			"xbox_controller_y",
 			description = "loc_alias_view_open_chat",
 			bindable = false,
 			group = "input_group_interface"
 		},
 		show_chat = {
 			"keyboard_enter",
+			"xbox_controller_right_thumb+xbox_controller_left_thumb",
 			description = "loc_alias_view_show_chat",
 			bindable = true,
 			group = "input_group_interface"
@@ -351,6 +354,12 @@ local default_view_input_settings = {
 			"keyboard_f10",
 			"xbox_controller_d_right+xbox_controller_right_trigger",
 			description = "",
+			bindable = false
+		},
+		toggle_filter = {
+			"keyboard_t",
+			"xbox_controller_y",
+			description = "loc_alias_view_toggle_filter",
 			bindable = false
 		}
 	},
@@ -741,6 +750,10 @@ local default_view_input_settings = {
 		},
 		notification_option_b = {
 			key_alias = "notification_option_b",
+			type = "pressed"
+		},
+		toggle_filter = {
+			key_alias = "toggle_filter",
 			type = "pressed"
 		}
 	}

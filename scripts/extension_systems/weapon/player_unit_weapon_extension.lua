@@ -234,6 +234,8 @@ PlayerUnitWeaponExtension.extensions_ready = function (self, world, unit)
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	local first_person_unit = first_person_extension:first_person_unit()
 	self._first_person_unit = first_person_unit
+	local health_extension = ScriptUnit.extension(unit, "health_system")
+	self._health_extension = health_extension
 	local weapon_recoil_system = ScriptUnit.extension(unit, "weapon_recoil_system")
 	self._weapon_recoil_system = weapon_recoil_system
 	local unit_data_ext = self._unit_data_extension
@@ -448,7 +450,7 @@ PlayerUnitWeaponExtension.on_wieldable_slot_equipped = function (self, item, slo
 			end
 		elseif key == "existing_unit_3p" then
 			inventory_slot_component[key] = optional_existing_unit_3p
-		else
+		elseif key ~= "unequip_slot" then
 			inventory_slot_component[key] = data.default_value
 		end
 	end
@@ -479,7 +481,9 @@ PlayerUnitWeaponExtension.on_wieldable_slot_unequipped = function (self, slot_na
 	local component_data = inventory_component_data[config.slot_type]
 
 	for key, data in pairs(component_data) do
-		inventory_slot_component[key] = data.default_value
+		if key ~= "unequip_slot" then
+			inventory_slot_component[key] = data.default_value
+		end
 	end
 
 	weapon:delete()
@@ -599,7 +603,7 @@ PlayerUnitWeaponExtension._start_action = function (self, action_name, action_se
 	action_params.weapon = weapon
 	local inventory_component = self._inventory_component
 	local wielded_slot = inventory_component.wielded_slot
-	local condition_func_params = self:_condition_func_params(wielded_slot)
+	local condition_func_params = self:condition_func_params(wielded_slot)
 
 	self._action_handler:start_action("weapon_action", action_objects, action_name, action_params, action_settings, used_input, t, transition_type, condition_func_params)
 end
@@ -636,7 +640,7 @@ PlayerUnitWeaponExtension.stop_action = function (self, reason, data, t, allow_r
 	if not allow_reason_chain_action or wielded_slot == "none" then
 		self._action_handler:stop_action("weapon_action", reason, data, t)
 	else
-		local condition_func_params = self:_condition_func_params(wielded_slot)
+		local condition_func_params = self:condition_func_params(wielded_slot)
 		local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
 		local actions = weapon.weapon_template.actions
 		local action_objects = weapon.actions
@@ -772,15 +776,29 @@ PlayerUnitWeaponExtension.get_shield_block_position = function (self, hit_world_
 	return new_hit_position
 end
 
+PlayerUnitWeaponExtension.action_settings_from_action_input = function (self, action_input)
+	local inventory_component = self._inventory_component
+	local wielded_slot = inventory_component.wielded_slot
+
+	if wielded_slot == "none" then
+		return
+	end
+
+	local weapon = self:_wielded_weapon(inventory_component, self._weapons)
+	local actions = weapon.weapon_template.actions
+
+	return self._action_handler:action_settings_from_action_input("weapon_action", actions, action_input)
+end
+
 local temp_table = {}
 
-PlayerUnitWeaponExtension._condition_func_params = function (self, wielded_slot)
-	table.clear(temp_table)
-
-	local inventory_slot_component = self._weapons[wielded_slot].inventory_slot_component
+PlayerUnitWeaponExtension.condition_func_params = function (self, wielded_slot)
+	local weapon = self._weapons[wielded_slot]
+	local inventory_slot_component = weapon and weapon.inventory_slot_component
 	temp_table.ability_extension = self._ability_extension
+	temp_table.health_extension = self._health_extension
 	temp_table.visual_loadout_extension = self._visual_loadout_extension
-	temp_table.weapon_extention = self
+	temp_table.weapon_extension = self
 	temp_table.action_place_component = self._action_place_component
 	temp_table.alternate_fire_component = self._alternate_fire_read_component
 	temp_table.block_component = self._block_component
@@ -806,7 +824,7 @@ PlayerUnitWeaponExtension.update_weapon_actions = function (self, fixed_frame)
 		return
 	end
 
-	local condition_func_params = self:_condition_func_params(wielded_slot)
+	local condition_func_params = self:condition_func_params(wielded_slot)
 	local weapon = self:_wielded_weapon(inventory_component, self._weapons)
 	local actions = weapon.weapon_template.actions
 	local action_objects = weapon.actions
@@ -1235,7 +1253,7 @@ PlayerUnitWeaponExtension.action_input_is_currently_valid = function (self, comp
 
 	local weapon = self:_wielded_weapon(inventory_component, self._weapons)
 	local actions = weapon.weapon_template.actions
-	local condition_func_params = self:_condition_func_params(wielded_slot)
+	local condition_func_params = self:condition_func_params(wielded_slot)
 
 	return self._action_handler:action_input_is_currently_valid(component_name, actions, condition_func_params, current_fixed_t, action_input, used_input)
 end

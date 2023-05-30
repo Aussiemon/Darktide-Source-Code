@@ -5,6 +5,7 @@ local BreedBlackboardComponentTemplates = require("scripts/settings/breed/breed_
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BreedTerrorEventSettings = require("scripts/settings/breed/breed_terror_event_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local MinionGibbingTemplates = require("scripts/managers/minion/minion_gibbing_templates")
 local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local SmartObjectSettings = require("scripts/settings/navigation/smart_object_settings")
@@ -25,26 +26,26 @@ local breed_data = {
 	look_at_distance = 20,
 	navigation_propagation_box_extent = 200,
 	sub_faction_name = "chaos",
-	hit_reacts_min_damage = 100,
 	power_level_type = "chaos_spawn_melee",
+	spawn_aggro_state = "aggroed",
 	unit_template_name = "minion",
 	slot_template = "chaos_spawn",
 	broadphase_radius = 1,
-	ignore_stagger_accumulation = false,
 	stagger_resistance = 1,
+	ignore_stagger_accumulation = false,
 	half_extent_forward = 0.6,
 	half_extent_right = 0.7,
+	hit_reacts_min_damage = 100,
 	game_object_type = "minion_monster",
 	challenge_rating = 30,
 	bone_lod_radius = 3,
 	trigger_boss_health_bar_on_damaged = true,
 	explosion_radius = 1,
-	display_name = "unlocalize_chaos_spawn_breed_display_name",
+	display_name = "loc_breed_display_name_chaos_spawn",
 	run_speed = 6,
 	is_boss = true,
 	faction_name = "chaos",
 	base_height = 3.6,
-	spawn_aggro_state = "aggroed",
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 50,
 	player_locomotion_constrain_radius = 1.5,
@@ -65,6 +66,7 @@ local breed_data = {
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.resistant,
+	gib_template = MinionGibbingTemplates.chaos_spawn,
 	boss_display_name = BossNameTemplates.chaos_spawn,
 	boss_template = BossTemplates.chaos_spawn,
 	stagger_durations = {
@@ -141,13 +143,13 @@ local breed_data = {
 	},
 	smart_object_template = SmartObjectSettings.templates.chaos_spawn,
 	size_variation_range = {
-		1.08,
-		1.08
+		1.04,
+		1.04
 	},
 	fade = {
-		max_distance = 1.6,
+		max_distance = 1.2,
 		max_height_difference = 2,
-		min_distance = 1.1
+		min_distance = 0.8
 	},
 	hit_zones = {
 		{
@@ -293,7 +295,12 @@ local breed_data = {
 		},
 		[hit_zone_names.lower_left_arm] = {
 			"j_leftforearm",
-			"j_lefthand"
+			"j_lefthand",
+			"j_leftfinger1_jnt",
+			"j_leftfinger2_jnt",
+			"j_leftfinger3_jnt",
+			"j_leftfinger4_jnt",
+			"j_leftfinger5_jnt"
 		},
 		[hit_zone_names.upper_right_arm] = {
 			"j_rightarm",

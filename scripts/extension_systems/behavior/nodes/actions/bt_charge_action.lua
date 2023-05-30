@@ -4,6 +4,7 @@ local Animation = require("scripts/utilities/animation")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local Breed = require("scripts/utilities/breed")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local MinionAttack = require("scripts/utilities/minion_attack")
@@ -87,11 +88,15 @@ BtChargeAction.run = function (self, unit, breed, blackboard, scratchpad, action
 	if state == "charging" or state == "navigating" then
 		local target_unit = scratchpad.perception_component.target_unit
 		local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
-		local character_state_component = target_unit_data_extension:read_component("character_state")
-		local is_ledge_hanging = PlayerUnitStatus.is_ledge_hanging(character_state_component)
+		local target_breed = target_unit_data_extension:breed()
 
-		if is_ledge_hanging then
-			return "done"
+		if Breed.is_player(target_breed) then
+			local character_state_component = target_unit_data_extension:read_component("character_state")
+			local is_ledge_hanging = PlayerUnitStatus.is_ledge_hanging(character_state_component)
+
+			if is_ledge_hanging then
+				return "done"
+			end
 		end
 	end
 

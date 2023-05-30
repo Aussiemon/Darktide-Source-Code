@@ -1243,11 +1243,128 @@ ButtonPassTemplates.terminal_button = {
 				color_lerp(default_color, hover_color, progress, color)
 			end
 		end
-	},
-	size = {
-		340,
-		60
 	}
+}
+ButtonPassTemplates.terminal_button_icon = {
+	{
+		pass_type = "hotspot",
+		content_id = "hotspot",
+		content = default_button_content
+	},
+	{
+		pass_type = "texture",
+		style_id = "background",
+		value = "content/ui/materials/backgrounds/default_square",
+		style = {
+			default_color = Color.terminal_background(nil, true),
+			selected_color = Color.terminal_background_selected(nil, true)
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "background_gradient",
+		value = "content/ui/materials/gradients/gradient_vertical",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = Color.ui_grey_medium(255, true),
+			offset = {
+				0,
+				0,
+				1
+			}
+		},
+		change_function = function (content, style)
+			terminal_button_change_function(content, style)
+			terminal_button_hover_change_function(content, style)
+		end
+	},
+	{
+		value = "content/ui/materials/frames/dropshadow_medium",
+		style_id = "outer_shadow",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			scale_to_material = true,
+			color = Color.black(200, true),
+			size_addition = {
+				20,
+				20
+			},
+			offset = {
+				0,
+				0,
+				3
+			}
+		}
+	},
+	{
+		pass_type = "texture",
+		style_id = "frame",
+		value = "content/ui/materials/frames/frame_tile_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_frame(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = Color.ui_grey_medium(255, true),
+			offset = {
+				0,
+				0,
+				3
+			}
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "corner",
+		value = "content/ui/materials/frames/frame_corner_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_corner(nil, true),
+			selected_color = Color.terminal_corner_selected(nil, true),
+			disabled_color = Color.ui_grey_light(255, true),
+			offset = {
+				0,
+				0,
+				4
+			}
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		pass_type = "texture",
+		value_id = "icon",
+		style_id = "icon",
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			default_color = Color.terminal_text_header(255, true),
+			disabled_color = Color.gray(255, true),
+			color = Color.terminal_text_header(255, true),
+			hover_color = Color.terminal_text_header_selected(255, true),
+			size = {
+				40,
+				40
+			},
+			offset = {
+				0,
+				0,
+				6
+			}
+		},
+		change_function = ButtonPassTemplates.list_button_label_change_function
+	}
+}
+ButtonPassTemplates.terminal_button.size = {
+	340,
+	60
 }
 ButtonPassTemplates.terminal_button_small = {
 	{
@@ -3559,6 +3676,142 @@ ButtonPassTemplates.item_category_tab_menu_button = {
 				4
 			}
 		}
+	}
+}
+ButtonPassTemplates.item_category_sort_button = {
+	{
+		style_id = "hotspot",
+		pass_type = "hotspot",
+		content_id = "hotspot",
+		content = {
+			on_pressed_sound = UISoundEvents.tab_secondary_button_pressed,
+			on_hover_sound = UISoundEvents.default_mouse_hover
+		},
+		style = list_button_hotspot_default_style
+	},
+	{
+		pass_type = "texture",
+		style_id = "background",
+		value = "content/ui/materials/backgrounds/default_square",
+		style = {
+			default_color = Color.terminal_background(nil, true),
+			selected_color = Color.terminal_background_selected(nil, true)
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "background_gradient",
+		value = "content/ui/materials/gradients/gradient_vertical",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = Color.ui_grey_medium(255, true),
+			offset = {
+				0,
+				0,
+				1
+			}
+		},
+		change_function = function (content, style)
+			terminal_button_change_function(content, style)
+			terminal_button_hover_change_function(content, style)
+		end
+	},
+	{
+		value = "content/ui/materials/frames/dropshadow_medium",
+		style_id = "outer_shadow",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			scale_to_material = true,
+			color = Color.black(200, true),
+			size_addition = {
+				20,
+				20
+			},
+			offset = {
+				0,
+				0,
+				3
+			}
+		}
+	},
+	{
+		pass_type = "texture",
+		style_id = "frame",
+		value = "content/ui/materials/frames/frame_tile_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_frame(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			disabled_color = Color.ui_grey_medium(255, true),
+			offset = {
+				0,
+				0,
+				2
+			}
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "corner",
+		value = "content/ui/materials/frames/frame_corner_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_corner(nil, true),
+			selected_color = Color.terminal_corner_selected(nil, true),
+			disabled_color = Color.ui_grey_light(255, true),
+			offset = {
+				0,
+				0,
+				3
+			}
+		},
+		change_function = terminal_button_change_function
+	},
+	{
+		pass_type = "texture",
+		value_id = "icon",
+		style_id = "icon",
+		style = {
+			horizontal_alignment = "center",
+			vertical_alignment = "center",
+			default_color = Color.terminal_text_header(255, true),
+			disabled_color = Color.gray(255, true),
+			color = Color.terminal_text_header(255, true),
+			hover_color = Color.terminal_text_header_selected(255, true),
+			original_size_addition = {
+				-20,
+				-20
+			},
+			size_addition = {
+				0,
+				0
+			},
+			offset = {
+				0,
+				0,
+				6
+			}
+		},
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
+			local size_addition = 2 * math.easeInCubic(progress)
+			local style_size_addition = style.size_addition
+			local original_size_addition = style.original_size_addition
+			style_size_addition[1] = original_size_addition[1] + size_addition * 2
+			style_size_addition[2] = original_size_addition[1] + size_addition * 2
+
+			ButtonPassTemplates.list_button_label_change_function(content, style)
+		end
 	}
 }
 

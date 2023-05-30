@@ -1,14 +1,13 @@
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local UICharacterProfilePackageLoader = class("UICharacterProfilePackageLoader")
 
-UICharacterProfilePackageLoader.init = function (self, unique_id, item_definitions, optional_mission_template, verbose)
+UICharacterProfilePackageLoader.init = function (self, unique_id, item_definitions, optional_mission_template)
 	self._reference_name = self.__class_name .. "_" .. unique_id
 	self._item_definitions = item_definitions
 	self._mission_template = optional_mission_template
 	self._slots_loading_data = {}
 	self._slots_item_loaded = {}
 	self._slots_package_ids = {}
-	self._verbose = verbose
 end
 
 UICharacterProfilePackageLoader.destroy = function (self)
@@ -110,11 +109,6 @@ UICharacterProfilePackageLoader.load_slot_item = function (self, slot_id, item, 
 			local on_loaded_callback = callback(self, "cb_on_slot_item_package_loaded", slot_id, item_name, package_name, complete_callback)
 			local prioritize = true
 			local use_resident_loading = true
-
-			if self._verbose then
-				Log.info("UICharacterProfilePackageLoader", "[load_slot_item] package_name: %s", tostring(package_name))
-			end
-
 			package_ids[i] = package_manager:load(package_name, reference_name, on_loaded_callback, prioritize, use_resident_loading)
 		end
 
@@ -133,15 +127,7 @@ UICharacterProfilePackageLoader.cb_on_slot_item_package_loaded = function (self,
 	local slot_loading_data = self._slots_loading_data[slot_id]
 
 	if not slot_loading_data then
-		if self._verbose then
-			Log.info("UICharacterProfilePackageLoader", "[cb_on_slot_item_package_loaded] slots_loading_data[slot_id] is nil; package_name: %s", tostring(package_name))
-		end
-
 		return
-	end
-
-	if self._verbose then
-		Log.info("UICharacterProfilePackageLoader", "[cb_on_slot_item_package_loaded] package_name: %s", tostring(package_name))
 	end
 
 	local item_packages = slot_loading_data.packages
@@ -167,10 +153,6 @@ UICharacterProfilePackageLoader.cb_on_slot_item_package_loaded = function (self,
 end
 
 UICharacterProfilePackageLoader._unload_slot = function (self, slot_id)
-	if self._verbose then
-		Log.info("UICharacterProfilePackageLoader", "[_unload_slot] slot_id: %s", tostring(slot_id))
-	end
-
 	local package_manager = Managers.package
 	local packages = self._slots_package_ids[slot_id]
 

@@ -60,6 +60,10 @@ PlayerUnitHealthExtension.game_object_initialized = function (self, session, obj
 	self._game_object_id = object_id
 end
 
+PlayerUnitHealthExtension.pre_update = function (self, unit, dt, t)
+	self._was_hit_by_critical_hit_this_render_frame = false
+end
+
 PlayerUnitHealthExtension.fixed_update = function (self, unit, dt, t)
 	local is_knocked_down = PlayerUnitStatus.is_knocked_down(self._character_state_component)
 	self._is_knocked_down = is_knocked_down
@@ -314,6 +318,29 @@ end
 
 PlayerUnitHealthExtension.set_invulnerable = function (self, should_be_invulnerable)
 	self._is_invulnerable = should_be_invulnerable
+end
+
+PlayerUnitHealthExtension.set_last_damaging_unit = function (self, last_damaging_unit, hit_zone_name, last_hit_was_critical)
+	self._last_damaging_unit = last_damaging_unit
+	self._last_hit_zone_name = hit_zone_name
+	self._last_hit_was_critical = last_hit_was_critical
+	self._was_hit_by_critical_hit_this_render_frame = self._was_hit_by_critical_hit_this_render_frame or last_hit_was_critical
+end
+
+PlayerUnitHealthExtension.last_damaging_unit = function (self)
+	return self._last_damaging_unit
+end
+
+PlayerUnitHealthExtension.last_hit_zone_name = function (self)
+	return self._last_hit_zone_name
+end
+
+PlayerUnitHealthExtension.last_hit_was_critical = function (self)
+	return self._last_hit_was_critical
+end
+
+PlayerUnitHealthExtension.was_hit_by_critical_hit_this_render_frame = function (self)
+	return self._was_hit_by_critical_hit_this_render_frame
 end
 
 PlayerUnitHealthExtension.kill = function (self)

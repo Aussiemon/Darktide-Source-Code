@@ -105,8 +105,8 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 	local stat_buffs = buff_extension:stat_buffs()
 	local has_sprinting_buff = buff_extension:has_keyword(buff_keywords.allow_hipfire_during_sprint)
 	local weapon_template = PlayerUnitVisualLoadout.wielded_weapon_template(self._visual_loadout_extension, self._inventory_component)
-	local has_input = _check_input(self._action_input_extension, weapon_template, has_sprinting_buff)
-	local wants_sprint = sprint_input and not has_input
+	local has_weapon_action_input, weapon_action_input = _check_input(self._action_input_extension, weapon_template, has_sprinting_buff)
+	local wants_sprint = sprint_input and not has_weapon_action_input
 	local sprint_character_state_component = self._sprint_character_state_component
 	local move_direction, move_speed, new_x, new_y, wants_to_stop, remaining_stamina = self:_wanted_movement(dt, sprint_character_state_component, input_extension, locomotion_steering, locomotion, move_settings, self._first_person_component, wants_sprint, weapon_extension, stat_buffs, t)
 	local old_y = locomotion_steering.local_move_y
@@ -150,10 +150,10 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 	local sprint_momentum = math.max((move_speed - run_move_speed) / (sprint_move_speed - run_move_speed), 0)
 	local wants_slide = movement_state.is_crouching
 
-	return self:_check_transition(unit, t, next_state_params, input_extension, decreasing_speed, action_move_speed_modifier, sprint_momentum, wants_slide, wants_to_stop, has_input, move_direction, move_speed_without_weapon_actions)
+	return self:_check_transition(unit, t, next_state_params, input_extension, decreasing_speed, action_move_speed_modifier, sprint_momentum, wants_slide, wants_to_stop, has_weapon_action_input, weapon_action_input, move_direction, move_speed_without_weapon_actions)
 end
 
-PlayerCharacterStateSprinting._check_transition = function (self, unit, t, next_state_params, input_source, decreasing_speed, action_move_speed_modifier, sprint_momentum, wants_slide, wants_to_stop, has_input, move_direction, move_speed_without_weapon_actions)
+PlayerCharacterStateSprinting._check_transition = function (self, unit, t, next_state_params, input_source, decreasing_speed, action_move_speed_modifier, sprint_momentum, wants_slide, wants_to_stop, has_weapon_action_input, weapon_action_input, move_direction, move_speed_without_weapon_actions)
 	local unit_data_extension = self._unit_data_extension
 	local health_transition = HealthStateTransitions.poll(unit_data_extension, next_state_params)
 
@@ -232,8 +232,9 @@ PlayerCharacterStateSprinting._check_transition = function (self, unit, t, next_
 	local weapon_template = PlayerUnitVisualLoadout.wielded_weapon_template(self._visual_loadout_extension, self._inventory_component)
 
 	if wants_to_stop then
-		if has_input then
-			local sprint_ready_up_time = weapon_template and weapon_template.sprint_ready_up_time or 0
+		if has_weapon_action_input then
+			local action_settings = self._weapon_extension:action_settings_from_action_input(weapon_action_input)
+			local sprint_ready_up_time = action_settings and action_settings.sprint_ready_up_time or weapon_template and weapon_template.sprint_ready_up_time or 0
 			self._sprint_character_state_component.cooldown = t + sprint_ready_up_time
 		end
 
@@ -366,7 +367,7 @@ function _check_input(action_input_extension, weapon_template, has_hip_fire_buff
 		return false
 	end
 
-	return peek ~= nil
+	return peek ~= nil, peek
 end
 
 function _sideways_speed_function(speed, wanted_speed, acceleration, deceleration, dt)

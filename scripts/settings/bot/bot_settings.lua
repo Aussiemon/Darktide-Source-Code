@@ -2,11 +2,6 @@ local bot_settings = {
 	flat_move_to_previous_pos_epsilon = 0.25,
 	flat_move_to_epsilon = 0.05,
 	z_move_to_epsilon = 0.3,
-	default_bot_threat_difficulty_data = {
-		normal = {
-			max_start_delay = 0.35
-		}
-	},
 	opportunity_target_reaction_times = {
 		normal = {
 			max = 20,

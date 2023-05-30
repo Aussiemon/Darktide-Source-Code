@@ -18,13 +18,13 @@ local CommonJoinPermission = {
 		local cross_play_check = nil
 
 		if platform ~= Managers.presence:presence_entry_myself():platform() then
-			cross_play_check = privileges_manager:cross_play():catch(function (error)
-				if error.message == "OK" then
-					return Promise.rejected("CROSS_PLAY_DISABLED" .. context_suffix)
-				else
-					Log.error("CommonJoinPermission", "unkown privileges error for cross-play %s", table.tostring(error, 3))
-
+			cross_play_check = privileges_manager:cross_play():next(function (result)
+				if result.has_privilege == true then
 					return Promise.resolved()
+				else
+					Log.info("CommonJoinPermission", "Crossplay privilege denied, reason: %s", result.deny_reason)
+
+					return Promise.rejected("CROSS_PLAY_DISABLED" .. context_suffix)
 				end
 			end)
 		else

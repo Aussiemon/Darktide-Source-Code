@@ -11,6 +11,15 @@ local store_item_detail_view_settings = {
 	vo_event_vendor_purchase = {
 		"purser_purchase"
 	},
+	level_settings = {
+		viewport_layer = 1,
+		level_name = "content/levels/ui/vendor_cosmetics_preview_gear/vendor_cosmetics_preview_gear",
+		world_layer = 1,
+		shading_environment = "content/shading_environments/ui/vendor_cosmetics_preview_gear",
+		viewport_type = "default",
+		viewport_name = "ui_vendor_cosmetics_preview_gear_preview_viewport",
+		world_name = "ui_vendor_cosmetics_preview_gear_preview"
+	},
 	ignored_slots = {
 		"slot_pocketable",
 		"slot_luggable",
@@ -21,36 +30,6 @@ local store_item_detail_view_settings = {
 	grid_size = {
 		500,
 		500
-	},
-	animations_per_archetype = {
-		psyker = {
-			initial_event = "character_customization_idle",
-			events = {
-				"character_customization_crime_select_idle",
-				"character_customization_idle"
-			}
-		},
-		veteran = {
-			initial_event = "character_customization_idle",
-			events = {
-				"character_customization_crime_select_idle",
-				"character_customization_idle"
-			}
-		},
-		zealot = {
-			initial_event = "character_customization_idle",
-			events = {
-				"character_customization_crime_select_idle",
-				"character_customization_idle"
-			}
-		},
-		ogryn = {
-			initial_event = "character_customization_idle",
-			events = {
-				"character_customization_crime_select_idle",
-				"character_customization_idle"
-			}
-		}
 	}
 }
 

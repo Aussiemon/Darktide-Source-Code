@@ -198,7 +198,7 @@ GearService.fetch_inventory = function (self, character_id, slot_filter_list, it
 			if not gear.characterId or gear.characterId == character_id then
 				gear_id = gear.uuid or gear_id
 				local gear_item = MasterItems.get_item_instance(gear, gear_id)
-				local valid = not not gear_item
+				local valid = gear_item
 
 				if valid and require_item_type_filter then
 					local item_type = gear_item.item_type

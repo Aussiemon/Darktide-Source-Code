@@ -1,12 +1,11 @@
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
-local Promise = require("scripts/foundation/utilities/promise")
 local Wallet = class("Wallet")
 
 Wallet.get_currency_configuration = function (self)
 	return Managers.backend:title_request("/store/currencies", {
 		method = "GET"
 	}):next(function (data)
-		return data.body
+		return data.body.currencies
 	end)
 end
 

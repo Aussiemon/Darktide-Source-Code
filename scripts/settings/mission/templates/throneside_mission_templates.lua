@@ -1,4 +1,64 @@
 local mission_templates = {
+	cm_archives = {
+		mission_name = "loc_mission_name_cm_archives",
+		wwise_state = "zone_5",
+		zone_id = "throneside",
+		texture_small = "content/ui/textures/missions/cm_archives_small",
+		mission_brief_material = "content/environment/cinematic/mission_briefing/mission_briefing_hologram_cm_archives_01",
+		mechanism_name = "adventure",
+		face_state_machine_key = "state_machine_missions",
+		texture_medium = "content/ui/textures/missions/cm_archives_medium",
+		texture_big = "content/ui/textures/missions/cm_archives_big",
+		objectives = "cm_archives",
+		coordinates = "loc_mission_coordinates_cm_archives",
+		level = "content/levels/throneside/missions/mission_cm_archives",
+		game_mode_name = "coop_complete_objective",
+		mission_intro_minimum_time = 5,
+		mission_type = "06",
+		mission_description = "loc_mission_board_main_objective_archives_description",
+		cinematics = {
+			intro_abc = {
+				"c_cam"
+			},
+			outro_fail = {
+				"outro_fail"
+			},
+			outro_win = {
+				"outro_win"
+			}
+		},
+		hazard_prop_settings = {
+			explosion = 0.2,
+			fire = 0.2,
+			none = 0.5
+		},
+		circumstances = {
+			more_resistance_01 = true,
+			hunting_grounds_01 = true,
+			less_resistance_01 = true,
+			assault_01 = true
+		},
+		testify_flags = {
+			run_through_mission = true
+		},
+		pickup_settings = {},
+		terror_event_templates = {
+			"terror_events_cm_archives"
+		},
+		health_station = {},
+		mission_brief_vo = {
+			vo_profile = "sergeant_a",
+			wwise_route_key = 1,
+			vo_events = {
+				"mission_archives_brief_a",
+				"mission_archives_brief_b",
+				"mission_archives_brief_c"
+			}
+		},
+		spawn_settings = {
+			next_mission = "recent_mission"
+		}
+	},
 	fm_resurgence = {
 		mission_name = "loc_mission_name_fm_resurgence",
 		wwise_state = "zone_5",

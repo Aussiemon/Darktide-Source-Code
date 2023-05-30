@@ -1,7 +1,7 @@
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
+local MinigameClasses = require("scripts/settings/minigame/minigame_classes")
 local MinigameExtension = class("MinigameExtension")
 MinigameExtension.UPDATE_DISABLED_BY_DEFAULT = true
-local MINIGAME_CLASSES = MinigameSettings.minigame_classes
 local STATES = MinigameSettings.states
 
 MinigameExtension.init = function (self, extension_init_context, unit, ...)
@@ -28,17 +28,10 @@ MinigameExtension.on_add_extension = function (self, seed)
 	self._seed = seed
 end
 
-MinigameExtension.setup_from_component = function (self, minigame_type, decode_symbols_sweep_duration)
+MinigameExtension.setup_from_component = function (self, minigame_type)
 	self._minigame_type = minigame_type
-	local minigame_context = {
-		decode_target_margin = MinigameSettings.decode_target_margin,
-		decode_symbols_sweep_duration = decode_symbols_sweep_duration,
-		decode_symbols_stage_amount = MinigameSettings.decode_symbols_stage_amount,
-		decode_symbols_items_per_stage = MinigameSettings.decode_symbols_items_per_stage,
-		decode_symbols_total_items = MinigameSettings.decode_symbols_total_items
-	}
-	local minigame_class = MINIGAME_CLASSES[minigame_type]
-	self._minigame = minigame_class:new(self._unit, self._is_server, self._seed, minigame_context)
+	local minigame_class = MinigameClasses[minigame_type]
+	self._minigame = minigame_class:new(self._unit, self._is_server, self._seed)
 end
 
 MinigameExtension.update = function (self, unit, dt, t)
@@ -109,6 +102,20 @@ end
 MinigameExtension.on_action_pressed = function (self, t)
 	if self._current_state == STATES.active then
 		self._minigame:on_action_pressed(t)
+	end
+end
+
+MinigameExtension.uses_joystick = function (self)
+	if self._current_state == STATES.active then
+		return self._minigame:uses_joystick()
+	end
+
+	return false
+end
+
+MinigameExtension.on_axis_set = function (self, t, x, y)
+	if self._current_state == STATES.active then
+		self._minigame:on_axis_set(t, x, y)
 	end
 end
 

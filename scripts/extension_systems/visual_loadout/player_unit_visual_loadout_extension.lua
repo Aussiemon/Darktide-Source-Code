@@ -358,6 +358,26 @@ PlayerUnitVisualLoadoutExtension.fixed_update = function (self, unit, dt, t, fra
 	end
 end
 
+PlayerUnitVisualLoadoutExtension.update_delayed_unequipped_slots = function (self, unit, dt, t, frame)
+	local inventory = self._inventory_component
+	local wieldable_slot_components = self._wieldable_slot_components
+	local pocketable_slots = self._slot_configuration_by_type.pocketable
+
+	for slot_name, slot_config in pairs(pocketable_slots) do
+		local slot_component = wieldable_slot_components[slot_name]
+
+		if slot_component.unequip_slot then
+			if inventory.wielded_slot == slot_name then
+				PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory, unit, t)
+			end
+
+			PlayerUnitVisualLoadout.unequip_item_from_slot(unit, slot_name, t)
+
+			slot_component.unequip_slot = false
+		end
+	end
+end
+
 PlayerUnitVisualLoadoutExtension.update_unit_position = function (self, unit, dt, t)
 	local inventory_component = self._inventory_component
 	local wielded_slot_name = inventory_component.wielded_slot
@@ -624,7 +644,14 @@ PlayerUnitVisualLoadoutExtension.unequip_item_from_slot = function (self, slot_n
 	local inventory_component = self._inventory_component
 
 	if inventory_component.previously_wielded_slot == slot_name then
-		inventory_component.previously_wielded_slot = "none"
+		local previously_wielded_weapon_slot = inventory_component.previously_wielded_weapon_slot
+
+		if previously_wielded_weapon_slot ~= slot_name and previously_wielded_weapon_slot ~= "none" then
+			inventory_component.previously_wielded_slot = previously_wielded_weapon_slot
+		else
+			local default_wielded_slot_name = Managers.state.game_mode:default_wielded_slot_name()
+			inventory_component.previously_wielded_slot = default_wielded_slot_name
+		end
 	end
 
 	if self._is_server then

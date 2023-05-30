@@ -816,10 +816,6 @@ damage_templates.default_chain_lighting_attack = {
 			200
 		}
 	},
-	crit_mod = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod
-	},
 	random_damage = {
 		{
 			max = 1.1,

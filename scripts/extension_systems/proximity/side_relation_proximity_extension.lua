@@ -48,8 +48,9 @@ SideRelationProximityExtension._initialize_relation = function (self, relation_n
 		local config = logic_configuration[i]
 		local class_name = config.class_name
 		local init_data = config.init_data
+		local owner_unit_or_nil = config.owner_unit_or_nil
 		local class_object = CLASSES[class_name]
-		local class_instance = class_object:new(logic_context, init_data)
+		local class_instance = class_object:new(logic_context, init_data, owner_unit_or_nil)
 		logic[i] = class_instance
 
 		if config.use_as_job then

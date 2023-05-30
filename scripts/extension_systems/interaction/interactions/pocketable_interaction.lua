@@ -1,24 +1,10 @@
 require("scripts/extension_systems/interaction/interactions/pickup_interaction")
 
-local MasterItems = require("scripts/backend/master_items")
 local Pickups = require("scripts/settings/pickup/pickups")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local Pocketable = require("scripts/utilities/pocketable")
 local SLOT_NAME = "slot_pocketable"
 local PocketableInteraction = class("PocketableInteraction", "PickupInteraction")
-
-local function _fetch_pocketable_item(item_name)
-	local item_definitions = MasterItems.get_cached()
-	local inventory_item = item_definitions[item_name]
-
-	if not inventory_item then
-		inventory_item = MasterItems.find_fallback_item("slot_pocketable")
-
-		Log.error("PocketableInteraction", "[_fetch_pocketable_item] missing item '%s'", item_name)
-	end
-
-	return inventory_item
-end
 
 PocketableInteraction.stop = function (self, world, interactor_unit, interaction_context, t, result, interactor_is_server)
 	if result == "success" then
@@ -34,7 +20,7 @@ PocketableInteraction.stop = function (self, world, interactor_unit, interaction
 			pickup_data.on_pickup_func(interactee_unit, interactor_unit, pickup_data)
 		end
 
-		local inventory_item = _fetch_pocketable_item(pickup_data.inventory_item)
+		local inventory_item = Pocketable.item_from_name(pickup_data.inventory_item)
 
 		Pocketable.equip_pocketable(t, interactor_is_server, interactor_unit, interactee_unit, inventory_item)
 
@@ -65,7 +51,7 @@ PocketableInteraction.interactor_condition_func = function (self, interactor_uni
 
 	if pickup_name then
 		local pickup_data = Pickups.by_name[pickup_name]
-		local inventory_item = _fetch_pocketable_item(pickup_data.inventory_item)
+		local inventory_item = Pocketable.item_from_name(pickup_data.inventory_item)
 		local wanted_item_name = inventory_item.name
 		has_same_item = item_name == wanted_item_name
 	end
@@ -84,7 +70,7 @@ PocketableInteraction.hud_block_text = function (self, interactor_unit, interact
 
 	if pickup_name then
 		local pickup_data = Pickups.by_name[pickup_name]
-		local inventory_item = _fetch_pocketable_item(pickup_data.inventory_item)
+		local inventory_item = Pocketable.item_from_name(pickup_data.inventory_item)
 		local item_name = inventory_component[SLOT_NAME]
 		local wanted_item_name = inventory_item.name
 

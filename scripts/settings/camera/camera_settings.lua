@@ -115,6 +115,20 @@ CameraSettings.player_third_person = {
 				{
 					_node = {
 						near_range = 0.025,
+						name = "grabbed",
+						class = "TransformCamera",
+						custom_vertical_fov = 65,
+						vertical_fov = 65,
+						offset_position = {
+							z = -0.1,
+							x = 0,
+							y = -1.97
+						}
+					}
+				},
+				{
+					_node = {
+						near_range = 0.025,
 						name = "disabled",
 						class = "TransformCamera",
 						offset_position = {
@@ -195,10 +209,12 @@ CameraSettings.player_third_person = {
 		tree_transitions = {
 			world = CameraTransitionTemplates.instant_cut,
 			first_person = CameraTransitionTemplates.to_first_person,
+			grabbed = CameraTransitionTemplates.to_grabbed,
 			dead = CameraTransitionTemplates.dead
 		},
 		node_transitions = {
-			default = CameraTransitionTemplates.to_third_person
+			default = CameraTransitionTemplates.to_third_person,
+			grabbed = CameraTransitionTemplates.to_grabbed
 		},
 		safe_position_offset = Vector3Box(0, 0, 1.65)
 	}
@@ -596,7 +612,11 @@ CameraSettings.player_first_person = {
 					node_transitions = {
 						sprint = CameraTransitionTemplates.to_sprint,
 						lunge = CameraTransitionTemplates.to_lunge,
-						default = CameraTransitionTemplates.zoom
+						default = CameraTransitionTemplates.zoom,
+						grabbed = CameraTransitionTemplates.to_grabbed
+					},
+					tree_transitions = {
+						third_person = CameraTransitionTemplates.to_third_person
 					}
 				}
 			},
@@ -634,6 +654,7 @@ CameraSettings.player_first_person = {
 			third_person = CameraTransitionTemplates.to_third_person,
 			pounced = CameraTransitionTemplates.to_third_person,
 			consumed = CameraTransitionTemplates.to_consumed,
+			grabbed = CameraTransitionTemplates.to_grabbed,
 			dead = CameraTransitionTemplates.dead
 		},
 		node_transitions = {

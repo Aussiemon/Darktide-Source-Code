@@ -35,9 +35,7 @@ PlasmagunOverheatEffects.init = function (self, context, slot, weapon_template, 
 	self._sfx_threshold_stages = {}
 	self._looping_playing_ids = {}
 	self._looping_stop_events = {}
-	local sfx_source_name = fx_sources[overheat_fx.sfx_source_name]
-	local sfx_link_unit, sfx_link_node = fx_extension:sfx_spawner_unit_and_node(sfx_source_name)
-	self._sfx_source_id = WwiseWorld.make_manual_source(wwise_world, sfx_link_unit, sfx_link_node)
+	self._overheat_sfx_source_name = fx_sources[overheat_fx.sfx_source_name]
 	self._looping_sound_parameter_name = overheat_fx.looping_sound_parameter_name
 	self._looping_playing_id = nil
 	self._looping_critical_playing_id = nil
@@ -48,13 +46,6 @@ PlasmagunOverheatEffects.init = function (self, context, slot, weapon_template, 
 	self._plasma_coil_components_1p = _slot_components(slot.attachments_1p)
 	self._plasma_coil_components_3p = _slot_components(slot.attachments_3p)
 	self._material_overheat_percentage = 0
-end
-
-PlasmagunOverheatEffects.destroy = function (self)
-	WwiseWorld.set_source_parameter(self._wwise_world, self._sfx_source_id, self._looping_sound_parameter_name, 0)
-	self:_destroy_all_vfx()
-	self:_stop_looping_sfx()
-	self:_destroy_screenspace()
 end
 
 PlasmagunOverheatEffects.fixed_update = function (self, unit, dt, t, frame)
@@ -108,7 +99,7 @@ PlasmagunOverheatEffects._update_threshold_sfx = function (self, overheat_config
 	local is_husk = self._is_husk
 	local is_local_unit = self._is_local_unit
 	local wwise_world = self._wwise_world
-	local sfx_source_id = self._sfx_source_id
+	local sfx_source_id = self._fx_extension:sound_source(self._overheat_sfx_source_name)
 	local threshold_stages = self._sfx_threshold_stages
 	local visual_loadout_extension = self._visual_loadout_extension
 	local use_husk_event = is_husk or not is_local_unit
@@ -136,7 +127,7 @@ end
 
 PlasmagunOverheatEffects._update_looping_sfx = function (self, overheat_configuration, overheat_percentage)
 	local wwise_world = self._wwise_world
-	local sfx_source_id = self._sfx_source_id
+	local sfx_source_id = self._fx_extension:sound_source(self._overheat_sfx_source_name)
 	local critical_threshold = overheat_configuration.thresholds.critical
 
 	self:_update_sfx_loop(overheat_percentage, "base", 0)
@@ -201,32 +192,12 @@ PlasmagunOverheatEffects._update_screenspace = function (self, overheat_percenta
 	end
 end
 
-PlasmagunOverheatEffects._destroy_all_vfx = function (self)
-	local world = self._world
-	local vfx_threshold_effect_ids = self._vfx_threshold_effect_ids
-
-	for _, effect_id in pairs(vfx_threshold_effect_ids) do
-		World.destroy_particles(world, effect_id)
-	end
-
-	table.clear(vfx_threshold_effect_ids)
-end
-
-PlasmagunOverheatEffects._stop_looping_sfx = function (self)
-	self:_stop_sfx_loop("base")
-	self:_stop_sfx_loop("critical")
-end
-
-PlasmagunOverheatEffects._destroy_screenspace = function (self)
-	if self._on_screen_effect_id then
-		World.destroy_particles(self._world, self._on_screen_effect_id)
-	end
-
-	self._on_screen_effect_id = nil
-end
-
 PlasmagunOverheatEffects.update_first_person_mode = function (self, first_person_mode)
-	return
+	if self._first_person_mode ~= first_person_mode then
+		self:_stop_all_effects(true)
+
+		self._first_person_mode = first_person_mode
+	end
 end
 
 PlasmagunOverheatEffects.wield = function (self)
@@ -234,17 +205,18 @@ PlasmagunOverheatEffects.wield = function (self)
 end
 
 PlasmagunOverheatEffects.unwield = function (self)
-	WwiseWorld.set_source_parameter(self._wwise_world, self._sfx_source_id, self._looping_sound_parameter_name, 0)
-	self:_destroy_all_vfx()
-	self:_stop_looping_sfx()
-	self:_destroy_screenspace()
+	self:_stop_all_effects()
+end
+
+PlasmagunOverheatEffects.destroy = function (self)
+	self:_stop_all_effects()
 end
 
 PlasmagunOverheatEffects._start_sfx_loop = function (self, stage)
 	local is_husk = self._is_husk
 	local is_local_unit = self._is_local_unit
 	local wwise_world = self._wwise_world
-	local sfx_source_id = self._sfx_source_id
+	local sfx_source_id = self._fx_extension:sound_source(self._overheat_sfx_source_name)
 	local visual_loadout_extension = self._visual_loadout_extension
 	local use_husk_event = is_husk or not is_local_unit
 	local start_config = LOOPING_SFX_CONFIG.start
@@ -274,13 +246,13 @@ PlasmagunOverheatEffects._start_sfx_loop = function (self, stage)
 	end
 end
 
-PlasmagunOverheatEffects._stop_sfx_loop = function (self, stage)
+PlasmagunOverheatEffects._stop_sfx_loop = function (self, stage, force_stop)
 	local wwise_world = self._wwise_world
-	local sfx_source_id = self._sfx_source_id
+	local sfx_source_id = self._fx_extension:sound_source(self._overheat_sfx_source_name)
 	local current_playing_id = self._looping_playing_ids[stage]
 	local stop_event_name = self._looping_stop_events[stage]
 
-	if stop_event_name and sfx_source_id then
+	if not force_stop and stop_event_name and sfx_source_id then
 		WwiseWorld.trigger_resource_event(wwise_world, stop_event_name, sfx_source_id)
 	else
 		WwiseWorld.stop_event(wwise_world, current_playing_id)
@@ -288,6 +260,30 @@ PlasmagunOverheatEffects._stop_sfx_loop = function (self, stage)
 
 	self._looping_playing_ids[stage] = nil
 	self._looping_stop_events[stage] = nil
+end
+
+PlasmagunOverheatEffects._stop_all_effects = function (self, force_stop)
+	local sfx_source_id = self._fx_extension:sound_source(self._overheat_sfx_source_name)
+
+	WwiseWorld.set_source_parameter(self._wwise_world, sfx_source_id, self._looping_sound_parameter_name, 0)
+
+	local world = self._world
+	local vfx_threshold_effect_ids = self._vfx_threshold_effect_ids
+
+	for _, effect_id in pairs(vfx_threshold_effect_ids) do
+		World.destroy_particles(world, effect_id)
+	end
+
+	table.clear(vfx_threshold_effect_ids)
+
+	if self._on_screen_effect_id then
+		World.destroy_particles(self._world, self._on_screen_effect_id)
+	end
+
+	self._on_screen_effect_id = nil
+
+	self:_stop_sfx_loop("base", force_stop)
+	self:_stop_sfx_loop("critical", force_stop)
 end
 
 function _slot_components(attachments)

@@ -1,6 +1,6 @@
-local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BotGestaltTargetSelectionWeights = require("scripts/settings/bot/bot_gestalt_target_selection_weights")
 local BotSettings = require("scripts/settings/bot/bot_settings")
+local BreedSettings = require("scripts/settings/breed/breed_settings")
 local breed_types = BreedSettings.types
 local breed_type_player = breed_types.player
 local BotTargetSelection = {

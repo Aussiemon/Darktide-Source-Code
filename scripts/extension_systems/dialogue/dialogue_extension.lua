@@ -61,21 +61,22 @@ DialogueExtension.init = function (self, dialogue_system, dialogue_system_wwise,
 	self._use_local_player_vo_profile = false
 	self._stop_vce_event = nil
 	self._context = {
-		is_warp_grabbed = "false",
+		is_catapulted = "false",
 		is_ledge_hanging = "false",
 		is_hogtied = "false",
 		is_disabled = false,
 		is_netted = "false",
 		player_level = 0,
-		is_pounced_down = "false",
+		weapon_type = "none",
 		story_stage = "none",
-		is_catapulted = "false",
-		is_disabled_override = false,
+		is_warp_grabbed = "false",
+		is_pounced_down = "false",
 		is_local_player = false,
 		is_knocked_down = "false",
 		voice_fx_preset = 0,
-		is_consumed = "false",
+		is_disabled_override = false,
 		class_name = "none",
+		is_consumed = "false",
 		is_mutant_charged = "false",
 		voice_template = "none",
 		is_player = false,
@@ -710,13 +711,19 @@ end
 
 DialogueExtension.play_local_vo_event = function (self, rule_name, wwise_route_key, on_play_callback, seed)
 	local dialogue_system = self._dialogue_system
+	local rule = self._vo_choice[rule_name]
+
+	if not rule then
+		return
+	end
+
 	local dialogue_index = nil
 
 	if seed then
-		local _, random_n = math.next_random(seed, 1, self._vo_choice[rule_name].sound_events_n)
+		local _, random_n = math.next_random(seed, 1, rule.sound_events_n)
 		dialogue_index = random_n
 	else
-		dialogue_index = DialogueQueries.get_dialogue_event_index(self._vo_choice[rule_name])
+		dialogue_index = DialogueQueries.get_dialogue_event_index(rule)
 	end
 
 	local sound_event, subtitles_event, sound_event_duration = self:get_dialogue_event(rule_name, dialogue_index)

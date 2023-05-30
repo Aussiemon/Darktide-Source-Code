@@ -24,6 +24,7 @@ end
 DialogueContextExtension.extensions_ready = function (self, world, unit)
 	self._health_extension = ScriptUnit.extension(unit, "health_system")
 	self._legacy_v2_proximity_extension = ScriptUnit.extension(unit, "legacy_v2_proximity_system")
+	self._weapon_extension = ScriptUnit.extension(unit, "weapon_system")
 end
 
 DialogueContextExtension.update = function (self, t)
@@ -40,6 +41,8 @@ DialogueContextExtension._update_player_equipment_context = function (self)
 	local wielded_slot = inventory_component.wielded_slot
 
 	if wielded_slot ~= "none" then
+		local weapon_action_component = unit_data_extension:read_component("weapon_action")
+		self._target_context.weapon_type = weapon_action_component.template_name
 		self._target_context.current_slot_percentage = Ammo.current_slot_percentage(self._unit, wielded_slot)
 	end
 end
@@ -89,7 +92,7 @@ end
 DialogueContextExtension._update_timed_timers_context = function (self, t)
 	for key, value in pairs(self._timed_counters) do
 		repeat
-			value.time_lived = value.time_lived + t
+			value.time_lived = value.time_lived + t * 5
 
 			if value.time_to_live < value.time_lived then
 				self._target_context.count = 0

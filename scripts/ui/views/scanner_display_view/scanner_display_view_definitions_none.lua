@@ -1,4 +1,3 @@
-local ScannerDisplayViewSettings = require("scripts/ui/views/scanner_display_view/scanner_display_view_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local scenegraph_definition = {

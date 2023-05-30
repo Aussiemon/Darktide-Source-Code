@@ -495,7 +495,7 @@ BackendManager.get_server_time = function (self, t)
 	end
 end
 
-BackendManager._time_sync_restart = function (self)
+BackendManager.time_sync_restart = function (self)
 	self.server_time_game_start_epoch = nil
 	self.time_sync_started_t = nil
 	self.time_sync_state = TIME_SYNC_STATES.not_started

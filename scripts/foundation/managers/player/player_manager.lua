@@ -6,6 +6,7 @@ local ProfileUtils = require("scripts/utilities/profile_utils")
 local PlayerManager = class("PlayerManager")
 PlayerManager.NO_ACCOUNT_ID = "no_account_id"
 local CLIENT_RPCS = {}
+local SERVER_RPCS = {}
 PlayerManager.PLAYER_INTERFACE = {
 	"type",
 	"name",
@@ -46,12 +47,18 @@ PlayerManager.set_network = function (self, is_server, network_event_delegate)
 		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 
 		self._network_event_delegate = network_event_delegate
+	elseif self._is_server then
+		network_event_delegate:register_session_events(self, unpack(SERVER_RPCS))
+
+		self._network_event_delegate = network_event_delegate
 	end
 end
 
 PlayerManager.unset_network = function (self)
 	if not self._is_server and self._network_event_delegate then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
+	elseif self._is_server and self._network_event_delegate then
+		self._network_event_delegate:unregister_events(unpack(SERVER_RPCS))
 	end
 end
 

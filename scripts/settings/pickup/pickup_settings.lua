@@ -54,7 +54,8 @@ pickup_settings.distribution_pool = {
 				2,
 				2
 			}
-		}
+		},
+		wounds = {}
 	},
 	mid_event = {
 		ammo = {
@@ -177,6 +178,7 @@ pickup_settings.distribution_pool = {
 				1
 			}
 		},
+		wounds = {},
 		forge_material = {
 			small_metal = {
 				7,

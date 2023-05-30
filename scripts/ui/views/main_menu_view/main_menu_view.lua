@@ -774,13 +774,14 @@ MainMenuView._request_player_icon = function (self, profile, widget)
 end
 
 MainMenuView._load_portrait_icon = function (self, profile, widget)
-	local cb = callback(self, "_cb_set_player_icon", widget)
-	local icon_load_id = Managers.ui:load_profile_portrait(profile, cb)
-	widget.content.icon_load_id = icon_load_id
+	local load_cb = callback(self, "_cb_set_player_icon", widget)
+	local unload_cb = callback(self, "_cb_unset_player_icon", widget)
+	widget.content.icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
 end
 
 MainMenuView._cb_set_player_icon = function (self, widget, grid_index, rows, columns, render_target)
 	local material_values = widget.style.character_portrait.material_values
+	widget.content.character_portrait = "content/ui/materials/base/ui_portrait_frame_base"
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
@@ -788,22 +789,40 @@ MainMenuView._cb_set_player_icon = function (self, widget, grid_index, rows, col
 	material_values.texture_icon = render_target
 end
 
+MainMenuView._cb_unset_player_icon = function (self, widget)
+	local material_values = widget.style.character_portrait.material_values
+	material_values.use_placeholder_texture = nil
+	material_values.rows = nil
+	material_values.columns = nil
+	material_values.grid_index = nil
+	material_values.texture_icon = nil
+	widget.content.character_portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
+end
+
 MainMenuView._unload_portrait_icon = function (self, widget)
-	if widget.content.icon_load_id then
-		local ui_renderer = self._character_list_renderer
+	local ui_renderer = self._character_list_renderer
 
-		UIWidget.set_visible(widget, ui_renderer, false)
+	UIWidget.set_visible(widget, ui_renderer, false)
 
-		local icon_load_id = widget.content.icon_load_id
-		local frame_load_id = widget.content.frame_load_id
-		local insignia_load_id = widget.content.insignia_load_id
+	local icon_load_id = widget.content.icon_load_id
+	local frame_load_id = widget.content.frame_load_id
+	local insignia_load_id = widget.content.insignia_load_id
 
+	if icon_load_id then
 		Managers.ui:unload_profile_portrait(icon_load_id)
-		Managers.ui:unload_item_icon(frame_load_id)
-		Managers.ui:unload_item_icon(insignia_load_id)
 
 		widget.content.icon_load_id = nil
+	end
+
+	if frame_load_id then
+		Managers.ui:unload_item_icon(frame_load_id)
+
 		widget.content.frame_load_id = nil
+	end
+
+	if insignia_load_id then
+		Managers.ui:unload_item_icon(insignia_load_id)
+
 		widget.content.insignia_load_id = nil
 	end
 end

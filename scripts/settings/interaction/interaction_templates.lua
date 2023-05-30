@@ -169,6 +169,15 @@ local interaction_templates = {
 		interaction_class_name = "premium_vendor",
 		ui_view_name = "store_view"
 	},
+	cosmetics_vendor = {
+		action_text = "loc_action_interaction_view",
+		ui_interaction_type = "point_of_interest",
+		interaction_icon = "content/ui/materials/hud/interactions/icons/cosmetics_store",
+		description = "loc_cosmetics_vendor_view_title",
+		duration = 0,
+		interaction_class_name = "cosmetics_vendor",
+		ui_view_name = "cosmetics_vendor_background_view"
+	},
 	training_ground = {
 		action_text = "loc_action_interaction_view",
 		ui_interaction_type = "point_of_interest",

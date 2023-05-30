@@ -2,6 +2,8 @@ local BaseTemplateSettings = require("scripts/settings/equipment/weapon_template
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local PocketableUtils = require("scripts/settings/equipment/weapon_templates/pocketables/pockatables_utils")
+local SmartTargetingTemplates = require("scripts/settings/equipment/smart_targeting_templates")
 local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local pockatables_template_settings = {
@@ -40,7 +42,7 @@ table.add_missing(pockatables_template_settings.action_inputs, BaseTemplateSetti
 
 pockatables_template_settings.action_input_hierarchy = {
 	place = "base",
-	wield = "stay",
+	wield = "base",
 	push = "stay"
 }
 

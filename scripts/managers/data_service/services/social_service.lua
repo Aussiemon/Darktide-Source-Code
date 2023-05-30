@@ -576,25 +576,40 @@ SocialService.can_invite_to_party = function (self, player_info)
 end
 
 SocialService.send_party_invite = function (self, invitee_player_info)
-	local player_online_status = invitee_player_info:online_status()
+	local has_party_id = Managers.party_immaterium:party_id() ~= nil
 
-	if player_online_status == OnlineStatus.online and not IS_XBS then
+	if not has_party_id then
+		return
+	end
+
+	local invitee_online_status = invitee_player_info:online_status()
+	local invitee_platform = invitee_player_info:platform()
+	local invitee_platform_id = invitee_player_info:platform_user_id()
+	local same_platform = self._platform == invitee_platform
+	local is_online = invitee_online_status == OnlineStatus.online
+
+	if is_online and (not same_platform or self._platform ~= Platforms.xbox) then
 		Managers.party_immaterium:invite_to_party(invitee_player_info:account_id()):catch(function (error)
 			_warning("invite_to_party failed with %s", table.tostring(error, 3))
 		end)
-	elseif player_online_status == OnlineStatus.platform_online or IS_XBS and player_online_status == OnlineStatus.online then
-		local party_id = Managers.party_immaterium:party_id()
-		local platform = invitee_player_info:platform()
-		local platform_user_id = invitee_player_info:platform_user_id()
 
-		if party_id and platform and platform_user_id then
-			Managers.party_immaterium:get_invite_code_for_platform_invite(platform, platform_user_id):next(function (invite_code)
-				self._invites:send_invite(platform_user_id, invite_code)
-			end):catch(function (error)
-				_warning("invite_platform_user_to_party failed with %s", table.tostring(error, 3))
-			end)
-		end
+		return
 	end
+
+	local has_platform = self._platform and self._platform ~= Platforms.lan
+	local is_available = is_online or invitee_online_status == OnlineStatus.platform_online
+
+	if has_platform and is_available and same_platform then
+		Managers.party_immaterium:get_invite_code_for_platform_invite(invitee_platform, invitee_platform_id):next(function (invite_code)
+			self._invites:send_invite(invitee_platform_id, invite_code)
+		end):catch(function (error)
+			_warning("invite_platform_user_to_party failed with %s", table.tostring(error, 3))
+		end)
+
+		return
+	end
+
+	_warning("Failed to send invite.")
 end
 
 SocialService.cancel_party_invite = function (self, invitee_player_info)

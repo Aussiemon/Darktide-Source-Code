@@ -22,9 +22,13 @@ LightController.init = function (self, unit)
 		light_controller_extension:setup_from_component(start_enabled, fake_light, light_groups, flicker_start_enabled, flicker_config)
 
 		self._light_controller_extension = light_controller_extension
-	end
 
-	Unit.flow_event(unit, "light_controller_spawned")
+		if start_enabled then
+			Unit.flow_event(unit, "lua_light_controller_spawned_enabled")
+		else
+			Unit.flow_event(unit, "lua_light_controller_spawned_disabled")
+		end
+	end
 end
 
 LightController.editor_init = function (self, unit)
@@ -56,7 +60,11 @@ LightController.editor_init = function (self, unit)
 			LightControllerUtilities.set_flicker(unit, flicker_enabled, flicker_config)
 		end
 
-		Unit.flow_event(unit, "light_controller_spawned_editor")
+		if self:get_data(unit, "start_enabled") then
+			Unit.flow_event(unit, "lua_light_controller_spawned_editor_enabled")
+		else
+			Unit.flow_event(unit, "lua_light_controller_spawned_editor_disabled")
+		end
 	end
 end
 

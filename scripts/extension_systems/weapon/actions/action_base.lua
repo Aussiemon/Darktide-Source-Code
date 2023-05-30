@@ -18,7 +18,6 @@ ActionBase.init = function (self, action_context, action_params, action_settings
 	self._smart_targeting_extension = action_context.smart_targeting_extension
 	self._unit_data_extension = action_context.unit_data_extension
 	self._dialogue_input = action_context.dialogue_input
-	self._input_manager = Managers.input
 	local weapon_action_component = action_context.weapon_action_component
 	self._weapon_action_component = weapon_action_component
 	self._first_person_component = action_context.first_person_component

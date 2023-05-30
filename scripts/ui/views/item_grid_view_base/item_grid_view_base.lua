@@ -96,9 +96,11 @@ ItemGridViewBase._setup_sort_options = function (self)
 		}
 	end
 
-	local sort_callback = callback(self, "cb_on_sort_button_pressed")
+	if self._sort_options and #self._sort_options > 0 then
+		local sort_callback = callback(self, "cb_on_sort_button_pressed")
 
-	self._item_grid:setup_sort_button(self._sort_options, sort_callback, 1)
+		self._item_grid:setup_sort_button(self._sort_options, sort_callback, 1)
+	end
 end
 
 ItemGridViewBase._setup_default_gui = function (self)
@@ -161,11 +163,11 @@ ItemGridViewBase.cb_switch_tab = function (self, index)
 		local slot_types = tab_content.slot_types
 		local display_name = tab_content.display_name
 
-		self:_present_layout_by_slot_filter(slot_types, not tab_content.hide_display_name and display_name or nil)
+		self:_present_layout_by_slot_filter(slot_types, nil, not tab_content.hide_display_name and display_name or nil)
 	end
 end
 
-ItemGridViewBase._present_layout_by_slot_filter = function (self, slot_filter, optional_display_name)
+ItemGridViewBase._present_layout_by_slot_filter = function (self, slot_filter, item_type_filter, optional_display_name)
 	local layout = self._offer_items_layout
 
 	if layout then
@@ -174,22 +176,31 @@ ItemGridViewBase._present_layout_by_slot_filter = function (self, slot_filter, o
 		for i = #layout, 1, -1 do
 			local entry = layout[i]
 			local item = entry.item
-			local add_item = false
+			local add_item = true
 
 			if item then
 				local entry_filter_slots = entry.filter_slots
 				local slots = entry_filter_slots or item.slots
+				local item_type = item.item_type
 
-				if slots then
-					for _, slot_name in ipairs(slots) do
-						if not slot_filter or table.find(slot_filter, slot_name) then
-							add_item = true
+				if slot_filter and not table.is_empty(slot_filter) then
+					local slot_name_found = false
 
-							break
+					if slots then
+						for _, slot_name in ipairs(slots) do
+							if table.find(slot_filter, slot_name) then
+								slot_name_found = true
+
+								break
+							end
 						end
 					end
-				else
-					add_item = true
+
+					add_item = slot_name_found
+				end
+
+				if item_type_filter and not table.is_empty(item_type_filter) and not table.find(item_type_filter, item_type) then
+					add_item = false
 				end
 			else
 				add_item = true
@@ -443,8 +454,12 @@ ItemGridViewBase._get_weapon_spawn_position_normalized = function (self)
 	return scale_x, scale_y
 end
 
+ItemGridViewBase.ui_renderer = function (self)
+	return self._ui_renderer
+end
+
 ItemGridViewBase._setup_weapon_stats = function (self, reference_name, scenegraph_id)
-	local layer = 10
+	local layer = 1
 	local context = self._definitions.weapon_stats_grid_settings
 	local weapon_stats = self:_add_element(ViewElementWeaponStats, reference_name, layer, context)
 
@@ -612,7 +627,7 @@ ItemGridViewBase._sort_grid_layout = function (self, sort_function)
 		return
 	end
 
-	local layout = table.clone_instance(self._filtered_offer_items_layout)
+	local layout = table.append({}, self._filtered_offer_items_layout)
 
 	if sort_function and #layout > 1 then
 		table.sort(layout, sort_function)
@@ -931,9 +946,27 @@ ItemGridViewBase.cb_on_inspect_pressed = function (self)
 
 			if item_type == "WEAPON_SKIN" then
 				local player = self:_player()
-				local profile = table.clone_instance(player:profile())
+				local player_profile = player:profile()
 				local include_skin_item_texts = true
 				local visual_item = ItemUtils.weapon_skin_preview_item(previewed_item, include_skin_item_texts)
+				local is_item_supported_on_played_character = false
+
+				if visual_item.archetypes and not table.is_empty(visual_item.archetypes) then
+					for i = 1, #visual_item.archetypes do
+						local archetype = visual_item.archetypes[i]
+
+						if archetype == player_profile.archetype.name then
+							is_item_supported_on_played_character = true
+
+							break
+						end
+					end
+				else
+					is_item_supported_on_played_character = true
+				end
+
+				local preffered_gender = player_profile and player_profile.gender
+				local profile = is_item_supported_on_played_character and table.clone_instance(player_profile) or ItemUtils.create_mannequin_profile_by_item(visual_item, preffered_gender)
 				local slots = visual_item.slots
 				local slot_name = slots[1]
 				profile.loadout[slot_name] = visual_item
@@ -944,18 +977,35 @@ ItemGridViewBase.cb_on_inspect_pressed = function (self)
 				local animation_event = visual_item.inventory_animation_event or "inventory_idle_default"
 				context = {
 					disable_zoom = true,
-					preview_with_gear = false,
 					profile = profile,
 					state_machine = state_machine,
 					animation_event = animation_event,
 					wield_slot = slot_name,
+					preview_with_gear = is_item_supported_on_played_character,
 					preview_item = visual_item
 				}
 			else
 				local player = self:_player()
 				local profile = player:profile()
+				local is_item_supported_on_played_character = false
+
+				if previewed_item.archetypes and not table.is_empty(previewed_item.archetypes) then
+					for i = 1, #previewed_item.archetypes do
+						local archetype = previewed_item.archetypes[i]
+
+						if archetype == profile.archetype.name then
+							is_item_supported_on_played_character = true
+
+							break
+						end
+					end
+				else
+					is_item_supported_on_played_character = true
+				end
+
 				context = {
 					profile = profile,
+					preview_with_gear = is_item_supported_on_played_character,
 					preview_item = previewed_item
 				}
 			end
@@ -980,6 +1030,24 @@ ItemGridViewBase.cb_on_toggle_item_compare = function (self)
 
 	if self._weapon_compare_stats then
 		self._weapon_compare_stats:set_visibility(self._item_compare_toggled)
+	end
+end
+
+ItemGridViewBase.sort_button_widget = function (self)
+	if self._item_grid then
+		return self._item_grid:sort_button_widget()
+	end
+end
+
+ItemGridViewBase.sort_button_scenegraph = function (self)
+	if self._item_grid then
+		return self._item_grid:sort_button_scenegpraph()
+	end
+end
+
+ItemGridViewBase.get_sort_button_world_position = function (self)
+	if self._item_grid then
+		return self._item_grid:get_sort_button_world_position()
 	end
 end
 

@@ -47,7 +47,6 @@ PlayerCharacterStateMutantCharged.on_enter = function (self, unit, dt, t, previo
 		locomotion_steering_component.move_method = "script_driven"
 		locomotion_steering_component.velocity_wanted = Vector3.zero()
 		locomotion_steering_component.calculate_fall_velocity = false
-		locomotion_steering_component.disable_velocity_rotation = true
 		locomotion_steering_component.disable_minion_collision = true
 		self._movement_state_component.method = "idle"
 		local disabling_unit = self._disabled_state_input.disabling_unit
@@ -61,7 +60,7 @@ PlayerCharacterStateMutantCharged.on_enter = function (self, unit, dt, t, previo
 			local teleport_position = Unit.world_position(disabling_unit, 1)
 			local teleport_rotation = Quaternion.inverse(Unit.local_rotation(disabling_unit, 1))
 
-			PlayerMovement.teleport_fixed_update(unit, teleport_position, teleport_rotation)
+			PlayerMovement.teleport_fixed_update(unit, teleport_position, nil)
 		end
 
 		local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
@@ -100,11 +99,12 @@ PlayerCharacterStateMutantCharged.on_exit = function (self, unit, t, next_state)
 	local disabled_character_state_component = self._disabled_character_state_component
 	local disabling_unit = disabled_character_state_component.disabling_unit
 	local is_server = self._is_server
+	local teleport_position = nil
 
-	if is_server and ALIVE[disabling_unit] then
+	if ALIVE[disabling_unit] then
 		local breed_name = self._breed.name
 		local is_human = breed_name == "human"
-		local teleport_position = disabled_character_state_component.target_drag_position
+		teleport_position = disabled_character_state_component.target_drag_position
 		local unit_rotation = Unit.local_rotation(disabling_unit, 1)
 		local disabling_unit_forward = Quaternion.forward(unit_rotation)
 		local direction = is_human and disabling_unit_forward or -disabling_unit_forward
@@ -164,7 +164,7 @@ PlayerCharacterStateMutantCharged.on_exit = function (self, unit, t, next_state)
 			Managers.telemetry_events:player_exits_captivity(player, rescued_by_player, state_name, time_in_captivity)
 
 			local mover = Unit.mover(unit)
-			local position = Unit.world_position(unit, 1)
+			local position = teleport_position or Unit.world_position(unit, 1)
 			local allowed_move_distance = 1
 			local _, non_colliding_position = Mover.fits_at(mover, position, allowed_move_distance)
 

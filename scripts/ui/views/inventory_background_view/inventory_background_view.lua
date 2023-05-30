@@ -13,18 +13,20 @@ local UICharacterProfilePackageLoader = require("scripts/managers/ui/ui_characte
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
 local UISettings = require("scripts/settings/ui/ui_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWeaponSpawner = require("scripts/managers/ui/ui_weapon_spawner")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
-local ViewElementProfilePresets = require("scripts/ui/view_elements/view_element_profile_presets/view_element_profile_presets")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementMenuPanel = require("scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel")
+local ViewElementProfilePresets = require("scripts/ui/view_elements/view_element_profile_presets/view_element_profile_presets")
 local Views = require("scripts/ui/views/views")
 local InventoryBackgroundView = class("InventoryBackgroundView", "BaseView")
 
 InventoryBackgroundView.init = function (self, settings, context)
 	self._context = context
 	self._inventory_items = {}
+	self.show_locked_cosmetics = true
 
 	self:_fetch_inventory_items()
 	InventoryBackgroundView.super.init(self, Definitions, settings)
@@ -122,8 +124,9 @@ end
 
 InventoryBackgroundView._load_portrait_icon = function (self)
 	local profile = self._presentation_profile
-	local cb = callback(self, "_cb_set_player_icon")
-	local icon_load_id = Managers.ui:load_profile_portrait(profile, cb)
+	local load_cb = callback(self, "_cb_set_player_icon")
+	local unload_cb = callback(self, "_cb_unset_player_icon")
+	local icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
 	self._portrait_loaded_info = {
 		icon_load_id = icon_load_id
 	}
@@ -144,12 +147,25 @@ InventoryBackgroundView._unload_portrait_icon = function (self)
 end
 
 InventoryBackgroundView._cb_set_player_icon = function (self, grid_index, rows, columns, render_target)
-	local material_values = self._widgets_by_name.character_portrait.style.texture.material_values
+	local widget = self._widgets_by_name.character_portrait
+	widget.content.texture = "content/ui/materials/base/ui_portrait_frame_base"
+	local material_values = widget.style.texture.material_values
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
 	material_values.texture_icon = render_target
+end
+
+InventoryBackgroundView._cb_unset_player_icon = function (self, widget)
+	local widget = self._widgets_by_name.character_portrait
+	local material_values = widget.style.texture.material_values
+	material_values.use_placeholder_texture = nil
+	material_values.rows = nil
+	material_values.columns = nil
+	material_values.grid_index = nil
+	material_values.texture_icon = nil
+	widget.content.texture = "content/ui/materials/base/ui_portrait_frame_base_no_render"
 end
 
 InventoryBackgroundView._request_player_frame = function (self, item, ui_renderer)
@@ -526,6 +542,7 @@ InventoryBackgroundView.cb_on_weapon_swap_pressed = function (self)
 	local slot_name = self._preview_wield_slot_id
 	slot_name = slot_name == "slot_primary" and "slot_secondary" or "slot_primary"
 
+	self:_play_sound(UISoundEvents.weapons_swap)
 	self:_set_preview_wield_slot_id(slot_name)
 	self:_update_presentation_wield_item()
 end
@@ -934,16 +951,16 @@ InventoryBackgroundView._setup_top_panel = function (self)
 								slot_title = "loc_inventory_title_slot_animation_end_of_round",
 								display_name = "loc_inventory_title_slot_animation_end_of_round",
 								loadout_slot = true,
-								widget_type = "list_button_with_background",
+								widget_type = "pose_item_slot",
 								default_icon = "content/ui/materials/icons/items/gears/legs/empty",
 								size = {
-									500,
-									60
+									64,
+									64
 								},
 								slot = ItemSlotSettings.slot_animation_end_of_round,
 								navigation_grid_indices = {
-									4,
-									2
+									6,
+									3
 								},
 								item_type = UISettings.ITEM_TYPES.END_OF_ROUND
 							},

@@ -538,6 +538,7 @@ local RENDER_TEMPLATES = {
 						dlss_enabled = true
 					},
 					master_render_settings = {
+						xess = 0,
 						fsr = 0,
 						fsr2 = 0
 					}
@@ -554,6 +555,7 @@ local RENDER_TEMPLATES = {
 						dlss_enabled = true
 					},
 					master_render_settings = {
+						xess = 0,
 						fsr = 0,
 						fsr2 = 0
 					}
@@ -570,6 +572,7 @@ local RENDER_TEMPLATES = {
 						dlss_enabled = true
 					},
 					master_render_settings = {
+						xess = 0,
 						fsr = 0,
 						fsr2 = 0
 					}
@@ -586,6 +589,7 @@ local RENDER_TEMPLATES = {
 						dlss_enabled = true
 					},
 					master_render_settings = {
+						xess = 0,
 						fsr = 0,
 						fsr2 = 0
 					}
@@ -602,6 +606,7 @@ local RENDER_TEMPLATES = {
 						dlss_enabled = true
 					},
 					master_render_settings = {
+						xess = 0,
 						fsr = 0,
 						fsr2 = 0
 					}
@@ -814,6 +819,7 @@ local RENDER_TEMPLATES = {
 						fsr2_enabled = true
 					},
 					master_render_settings = {
+						xess = 0,
 						fsr = 0,
 						dlss = 0
 					}
@@ -830,6 +836,7 @@ local RENDER_TEMPLATES = {
 						fsr2_enabled = true
 					},
 					master_render_settings = {
+						xess = 0,
 						fsr = 0,
 						dlss = 0
 					}
@@ -846,6 +853,7 @@ local RENDER_TEMPLATES = {
 						fsr2_enabled = true
 					},
 					master_render_settings = {
+						xess = 0,
 						fsr = 0,
 						dlss = 0
 					}
@@ -862,6 +870,7 @@ local RENDER_TEMPLATES = {
 						fsr2_enabled = true
 					},
 					master_render_settings = {
+						xess = 0,
 						fsr = 0,
 						dlss = 0
 					}
@@ -872,6 +881,106 @@ local RENDER_TEMPLATES = {
 			{
 				id = "anti_aliasing_solution",
 				reason = "loc_disable_rule_fsr_aa",
+				disable_value = 0,
+				validation_function = function (value)
+					return value > 0
+				end
+			}
+		}
+	},
+	{
+		id = "xess",
+		display_name = "loc_setting_xess",
+		require_apply = true,
+		default_value = 0,
+		apply_on_startup = true,
+		tooltip_text = "loc_setting_xess_mouseover",
+		save_location = "master_render_settings",
+		options = {
+			{
+				id = 0,
+				display_name = "loc_settings_menu_off",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						xess_enabled = false
+					}
+				}
+			},
+			{
+				id = 1,
+				display_name = "loc_setting_dlss_quality_max_performance",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						upscaling_quality = "performance",
+						xess_enabled = true
+					},
+					master_render_settings = {
+						fsr2 = 0,
+						fsr = 0,
+						dlss = 0
+					}
+				}
+			},
+			{
+				id = 2,
+				display_name = "loc_setting_dlss_quality_balanced",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						upscaling_quality = "balanced",
+						xess_enabled = true
+					},
+					master_render_settings = {
+						fsr2 = 0,
+						fsr = 0,
+						dlss = 0
+					}
+				}
+			},
+			{
+				id = 3,
+				display_name = "loc_setting_dlss_quality_max_quality",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						upscaling_quality = "quality",
+						xess_enabled = true
+					},
+					master_render_settings = {
+						fsr2 = 0,
+						fsr = 0,
+						dlss = 0
+					}
+				}
+			},
+			{
+				id = 4,
+				display_name = "loc_setting_fsr_quality_ultra_quality",
+				require_apply = true,
+				require_restart = false,
+				values = {
+					render_settings = {
+						upscaling_quality = "ultra_quality",
+						xess_enabled = true
+					},
+					master_render_settings = {
+						fsr2 = 0,
+						fsr = 0,
+						dlss = 0
+					}
+				}
+			}
+		},
+		disable_rules = {
+			{
+				id = "anti_aliasing_solution",
+				reason = "loc_disable_rule_xess_aa",
 				disable_value = 0,
 				validation_function = function (value)
 					return value > 0
@@ -2641,6 +2750,72 @@ render_settings[#render_settings + 1] = {
 		return resolution_undefiend_return_value
 	end
 }
+
+if IS_XBS and Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_ANACONDA then
+	render_settings[#render_settings + 1] = {
+		require_apply = true,
+		display_name = "loc_setting_xbs_quality_preset",
+		apply_on_startup = true,
+		id = "xbox_quality_preset",
+		tooltip_text = "loc_setting_xbs_quality_preset_mouseover",
+		options = {
+			{
+				id = "quality",
+				display_name = "loc_setting_xbs_quality_preset_quality",
+				data = {
+					target_fps = 40,
+					height = 2160,
+					width = 3840
+				}
+			},
+			{
+				id = "performance",
+				display_name = "loc_setting_xbs_quality_preset_performance",
+				data = {
+					target_fps = 60,
+					height = 1440,
+					width = 2560
+				}
+			}
+		},
+		on_activated = function (value, template)
+			verify_and_apply_changes(template, value)
+		end,
+		on_changed = function (value, template)
+			local options = template.options
+			local index = table.index_of_condition(options, function (option)
+				return option.id == value
+			end)
+			local option = options[index]
+
+			if not option then
+				return
+			end
+
+			local target_fps = option.data.target_fps
+
+			Application.set_target_frame_rate(target_fps)
+
+			local width = option.data.width
+			local height = option.data.height
+
+			Application.set_resolution(width, height)
+			Application.set_user_setting("render_settings", "xbox_quality_preset", value)
+
+			if template.changed_callback then
+				template.changed_callback(value)
+			end
+
+			return true, template.require_apply
+		end,
+		get_function = function (template)
+			local xbox_quality_preset = Application.user_setting("render_settings", "xbox_quality_preset") or "quality"
+
+			return xbox_quality_preset
+		end
+	}
+end
+
 local screen_mode_setting = {
 	tooltip_text = "loc_setting_screen_mode_mouseover",
 	display_name = "loc_setting_screen_mode",

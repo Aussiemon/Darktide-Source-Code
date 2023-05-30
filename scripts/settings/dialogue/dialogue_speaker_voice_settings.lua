@@ -507,6 +507,11 @@ local dialogue_speaker_voice_settings = {
 		short_name = "loc_npc_short_name_barber-chirurgeon_a",
 		subtitles_enabled = true,
 		player_voice = false
+	},
+	archive_servitor_a = {
+		short_name = "loc_npc_short_name_servitor_male_a",
+		subtitles_enabled = true,
+		player_voice = false
 	}
 }
 

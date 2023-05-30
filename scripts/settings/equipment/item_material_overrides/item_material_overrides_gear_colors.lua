@@ -948,6 +948,19 @@ local material_overrides = {
 			}
 		}
 	},
+	color_3_colour_atoma_prime_01 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/3_colour_atoma_prime_01"
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_atoma_prime_01"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/3_colour_atoma_prime_01"
+			}
+		}
+	},
 	color_3_colour_gray_01 = {
 		texture_overrides = {
 			color_gradient = {
@@ -1517,6 +1530,19 @@ local material_overrides = {
 			},
 			mat2_gradient = {
 				resource = "content/textures/colors/color_atoma_prime_02"
+			}
+		}
+	},
+	color_moebian_6th_01 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/color_moebian_6th_01"
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_black_01"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/1_colour_black_01"
 			}
 		}
 	},

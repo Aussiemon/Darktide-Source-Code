@@ -1,4 +1,5 @@
 local TelemetryEvent = class("TelemetryEvent")
+local type_name = Script.type_name
 
 TelemetryEvent.init = function (self, source, subject, type, session)
 	self._event = {

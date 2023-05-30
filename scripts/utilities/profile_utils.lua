@@ -172,15 +172,6 @@ local function profile_from_backend_data(backend_profile_data)
 	local loadout_item_data = backend_profile.loadout_item_data
 
 	for slot_name, item_id in pairs(item_ids) do
-		if not items or not items[item_id] then
-			print("-- items --")
-			table.dump(items)
-			print("-- item_ids --")
-			table.dump(item_ids)
-			print("-- missing item --")
-			print(item_id)
-		end
-
 		if not items[item_id] then
 			Log.error("ProfileUtil", "Equipped item %s was not present in the backend inventory", item_id)
 

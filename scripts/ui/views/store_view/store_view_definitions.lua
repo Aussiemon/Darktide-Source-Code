@@ -117,34 +117,6 @@ local scenegraph_definition = {
 			1
 		}
 	},
-	wallet_pivot = {
-		vertical_alignment = "top",
-		parent = "corner_top_right",
-		horizontal_alignment = "right",
-		size = {
-			0,
-			0
-		},
-		position = {
-			-30,
-			120,
-			1
-		}
-	},
-	wallet_text = {
-		vertical_alignment = "top",
-		parent = "screen",
-		horizontal_alignment = "right",
-		size = {
-			200,
-			200
-		},
-		position = {
-			-50,
-			5,
-			5
-		}
-	},
 	corner_top_left = {
 		vertical_alignment = "top",
 		parent = "screen",
@@ -164,7 +136,7 @@ local scenegraph_definition = {
 		parent = "screen",
 		horizontal_alignment = "right",
 		size = {
-			240,
+			120,
 			224
 		},
 		position = {
@@ -217,8 +189,8 @@ local scenegraph_definition = {
 		parent = "screen",
 		horizontal_alignment = "left",
 		size = {
-			30,
-			120
+			70,
+			70
 		},
 		position = {
 			20,
@@ -231,8 +203,8 @@ local scenegraph_definition = {
 		parent = "screen",
 		horizontal_alignment = "right",
 		size = {
-			30,
-			120
+			70,
+			70
 		},
 		position = {
 			-20,
@@ -295,15 +267,21 @@ local scenegraph_definition = {
 			0,
 			200
 		}
+	},
+	wallet_element_pivot = {
+		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "right",
+		size = {
+			0,
+			0
+		},
+		position = {
+			-50,
+			105,
+			0
+		}
 	}
-}
-local wallet_text_font_style = table.clone(UIFontSettings.currency_title)
-wallet_text_font_style.text_horizontal_alignment = "left"
-wallet_text_font_style.text_vertical_alignment = "center"
-wallet_text_font_style.original_offset = {
-	0,
-	0,
-	1
 }
 local emporium_font_style = table.clone(UIFontSettings.header_1)
 emporium_font_style.text_horizontal_alignment = "center"
@@ -463,14 +441,6 @@ local widget_definitions = {
 	}, "category_panel_background", {
 		visible = false
 	}),
-	wallet_text = UIWidget.create_definition({
-		{
-			value = "",
-			value_id = "text",
-			pass_type = "text",
-			style = wallet_text_font_style
-		}
-	}, "wallet_text"),
 	grid_interaction = UIWidget.create_definition({
 		{
 			pass_type = "hotspot",
@@ -560,252 +530,11 @@ local widget_definitions = {
 			content_id = "hotspot"
 		},
 		{
-			pass_type = "texture",
-			style_id = "background",
-			value = "content/ui/materials/backgrounds/default_square",
-			style = {
-				default_color = Color.terminal_background(nil, true),
-				selected_color = Color.terminal_background_selected(nil, true)
-			},
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local is_selected = hotspot.is_selected
-				local default_color = style.default_color
-				local selected_color = style.selected_color
-				style.color[1] = is_selected and selected_color[1] or default_color[1]
-				style.color[2] = is_selected and selected_color[2] or default_color[2]
-				style.color[3] = is_selected and selected_color[3] or default_color[3]
-				style.color[4] = is_selected and selected_color[4] or default_color[4]
-			end
-		},
-		{
-			pass_type = "texture",
-			style_id = "background_gradient",
-			value = "content/ui/materials/masks/gradient_horizontal_sides_dynamic_02",
-			style = {
-				scale_to_material = true,
-				default_color = Color.terminal_background_gradient(nil, true),
-				selected_color = Color.terminal_background_gradient_selected(nil, true),
-				offset = {
-					0,
-					0,
-					1
-				}
-			},
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local is_selected = hotspot.is_selected
-				local default_color = style.default_color
-				local selected_color = style.selected_color
-				local anim_progress = math.max(hotspot.anim_hover_progress, content.hotspot.anim_focus_progress)
-				style.color[1] = default_color[1] + anim_progress * (selected_color[1] - default_color[1])
-				style.color[2] = is_selected and selected_color[2] or default_color[2]
-				style.color[3] = is_selected and selected_color[3] or default_color[3]
-				style.color[4] = is_selected and selected_color[4] or default_color[4]
-			end
-		},
-		{
-			pass_type = "texture",
-			style_id = "frame",
-			value = "content/ui/materials/frames/frame_tile_2px",
-			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
-				horizontal_alignment = "center",
-				default_color = Color.terminal_frame(nil, true),
-				selected_color = Color.terminal_frame_selected(nil, true),
-				offset = {
-					0,
-					0,
-					10
-				}
-			},
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local is_selected = hotspot.is_selected
-				local default_color = style.default_color
-				local selected_color = style.selected_color
-				style.color[2] = is_selected and selected_color[2] or default_color[2]
-				style.color[3] = is_selected and selected_color[3] or default_color[3]
-				style.color[4] = is_selected and selected_color[4] or default_color[4]
-			end
-		},
-		{
-			pass_type = "texture",
-			style_id = "corner",
-			value = "content/ui/materials/frames/frame_corner_2px",
-			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
-				horizontal_alignment = "center",
-				default_color = Color.terminal_corner(nil, true),
-				selected_color = Color.terminal_corner_selected(nil, true),
-				offset = {
-					0,
-					0,
-					11
-				}
-			},
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local is_selected = hotspot.is_selected
-				local default_color = style.default_color
-				local selected_color = style.selected_color
-				style.color[2] = is_selected and selected_color[2] or default_color[2]
-				style.color[3] = is_selected and selected_color[3] or default_color[3]
-				style.color[4] = is_selected and selected_color[4] or default_color[4]
-			end
-		},
-		{
-			pass_type = "texture",
-			style_id = "arrow_selected",
-			value = "content/ui/materials/icons/system/page_arrow",
-			style = {
-				horizontal_alignment = "center",
-				vertical_alignment = "center",
-				default_color = Color.terminal_text_header(255, true),
-				hover_color = Color.terminal_text_body(255, true),
-				offset = {
-					0,
-					0,
-					1
-				},
-				size = {
-					24,
-					46
-				}
-			},
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local default_color = style.default_color
-				local hover_color = style.hover_color
-				local color = style.color
-				local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
-
-				ColorUtilities.color_lerp(default_color, hover_color, progress, color)
-			end
-		}
-	}, "navigation_arrow_left"),
-	navigation_arrow_right = UIWidget.create_definition({
-		{
-			pass_type = "hotspot",
-			content_id = "hotspot"
-		},
-		{
-			pass_type = "texture",
-			style_id = "background",
-			value = "content/ui/materials/backgrounds/default_square",
-			style = {
-				default_color = Color.terminal_background(nil, true),
-				selected_color = Color.terminal_background_selected(nil, true)
-			},
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local is_selected = hotspot.is_selected
-				local default_color = style.default_color
-				local selected_color = style.selected_color
-				style.color[1] = is_selected and selected_color[1] or default_color[1]
-				style.color[2] = is_selected and selected_color[2] or default_color[2]
-				style.color[3] = is_selected and selected_color[3] or default_color[3]
-				style.color[4] = is_selected and selected_color[4] or default_color[4]
-			end
-		},
-		{
-			pass_type = "texture",
-			style_id = "background_gradient",
-			value = "content/ui/materials/masks/gradient_horizontal_sides_dynamic_02",
-			style = {
-				scale_to_material = true,
-				default_color = Color.terminal_background_gradient(nil, true),
-				selected_color = Color.terminal_background_gradient_selected(nil, true),
-				offset = {
-					0,
-					0,
-					1
-				}
-			},
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local is_selected = hotspot.is_selected
-				local default_color = style.default_color
-				local selected_color = style.selected_color
-				local anim_progress = math.max(hotspot.anim_hover_progress, content.hotspot.anim_focus_progress)
-				style.color[1] = default_color[1] + anim_progress * (selected_color[1] - default_color[1])
-				style.color[2] = is_selected and selected_color[2] or default_color[2]
-				style.color[3] = is_selected and selected_color[3] or default_color[3]
-				style.color[4] = is_selected and selected_color[4] or default_color[4]
-			end
-		},
-		{
-			pass_type = "texture",
-			style_id = "frame",
-			value = "content/ui/materials/frames/frame_tile_2px",
-			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
-				horizontal_alignment = "center",
-				default_color = Color.terminal_frame(nil, true),
-				selected_color = Color.terminal_frame_selected(nil, true),
-				offset = {
-					0,
-					0,
-					10
-				}
-			},
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local is_selected = hotspot.is_selected
-				local default_color = style.default_color
-				local selected_color = style.selected_color
-				style.color[2] = is_selected and selected_color[2] or default_color[2]
-				style.color[3] = is_selected and selected_color[3] or default_color[3]
-				style.color[4] = is_selected and selected_color[4] or default_color[4]
-			end
-		},
-		{
-			pass_type = "texture",
-			style_id = "corner",
-			value = "content/ui/materials/frames/frame_corner_2px",
-			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
-				horizontal_alignment = "center",
-				default_color = Color.terminal_corner(nil, true),
-				selected_color = Color.terminal_corner_selected(nil, true),
-				offset = {
-					0,
-					0,
-					11
-				}
-			},
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local is_selected = hotspot.is_selected
-				local default_color = style.default_color
-				local selected_color = style.selected_color
-				style.color[2] = is_selected and selected_color[2] or default_color[2]
-				style.color[3] = is_selected and selected_color[3] or default_color[3]
-				style.color[4] = is_selected and selected_color[4] or default_color[4]
-			end
-		},
-		{
+			value_id = "arrow",
+			style_id = "arrow",
 			pass_type = "texture_uv",
-			style_id = "arrow_selected",
-			value = "content/ui/materials/icons/system/page_arrow",
+			value = "content/ui/materials/buttons/premium_store_button_next_page",
 			style = {
-				horizontal_alignment = "center",
-				vertical_alignment = "center",
-				default_color = Color.terminal_text_header(255, true),
-				hover_color = Color.terminal_text_body(255, true),
-				offset = {
-					0,
-					0,
-					1
-				},
-				size = {
-					24,
-					46
-				},
 				uvs = {
 					{
 						1,
@@ -817,14 +546,61 @@ local widget_definitions = {
 					}
 				}
 			},
-			change_function = function (content, style)
+			visibility_function = function (content, style)
 				local hotspot = content.hotspot
-				local default_color = style.default_color
-				local hover_color = style.hover_color
-				local color = style.color
-				local progress = math.max(hotspot.anim_hover_progress, hotspot.anim_focus_progress)
 
-				ColorUtilities.color_lerp(default_color, hover_color, progress, color)
+				return not hotspot.is_selected and not hotspot.is_hover and not hotspot.is_focused
+			end
+		},
+		{
+			value_id = "arrow_active",
+			style_id = "arrow_active",
+			pass_type = "texture_uv",
+			value = "content/ui/materials/buttons/premium_store_button_next_page_hover",
+			style = {
+				uvs = {
+					{
+						1,
+						0
+					},
+					{
+						0,
+						1
+					}
+				}
+			},
+			visibility_function = function (content, style)
+				local hotspot = content.hotspot
+
+				return hotspot.is_selected or hotspot.is_hover or hotspot.is_focused
+			end
+		}
+	}, "navigation_arrow_left"),
+	navigation_arrow_right = UIWidget.create_definition({
+		{
+			pass_type = "hotspot",
+			content_id = "hotspot"
+		},
+		{
+			value_id = "arrow",
+			style_id = "arrow",
+			pass_type = "texture",
+			value = "content/ui/materials/buttons/premium_store_button_next_page",
+			visibility_function = function (content, style)
+				local hotspot = content.hotspot
+
+				return not hotspot.is_selected and not hotspot.is_hover and not hotspot.is_focused
+			end
+		},
+		{
+			value_id = "arrow_active",
+			style_id = "arrow_active",
+			pass_type = "texture",
+			value = "content/ui/materials/buttons/premium_store_button_next_page_hover",
+			visibility_function = function (content, style)
+				local hotspot = content.hotspot
+
+				return hotspot.is_selected or hotspot.is_hover or hotspot.is_focused
 			end
 		}
 	}, "navigation_arrow_right"),
@@ -864,38 +640,6 @@ local legend_inputs = {
 		alignment = "left_alignment"
 	}
 }
-local wallet_definitions = UIWidget.create_definition({
-	{
-		value_id = "texture",
-		style_id = "texture",
-		pass_type = "texture",
-		value = "content/ui/materials/icons/currencies/marks_small",
-		style = {
-			vertical_alignment = "center",
-			size = {
-				42,
-				42
-			},
-			offset = {
-				-42,
-				0,
-				1
-			},
-			original_offset = {
-				-42,
-				0,
-				1
-			}
-		}
-	},
-	{
-		value_id = "text",
-		style_id = "text",
-		pass_type = "text",
-		value = "0",
-		style = wallet_text_font_style
-	}
-}, "wallet_pivot")
 local anim_start_delay = 0
 local animations = {
 	on_enter = {
@@ -963,6 +707,5 @@ return {
 	animations = animations,
 	legend_inputs = legend_inputs,
 	widget_definitions = widget_definitions,
-	scenegraph_definition = scenegraph_definition,
-	wallet_definitions = wallet_definitions
+	scenegraph_definition = scenegraph_definition
 }

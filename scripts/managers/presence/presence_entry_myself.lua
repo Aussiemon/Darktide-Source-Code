@@ -1,5 +1,6 @@
 local PresenceEntryInterface = require("scripts/managers/presence/presence_entry")
 local PresenceSettings = require("scripts/settings/presence/presence_settings")
+local Promise = require("scripts/foundation/utilities/promise")
 local PresenceEntryMyself = class("PresenceEntryMyself")
 
 PresenceEntryMyself.get_platform = function ()
@@ -69,6 +70,10 @@ end
 
 PresenceEntryMyself.account_and_platform_composite_id = function (self)
 	return "myself"
+end
+
+PresenceEntryMyself.first_update_promise = function (self)
+	return Promise.resolved(self)
 end
 
 PresenceEntryMyself.set_character_profile = function (self, character_profile)

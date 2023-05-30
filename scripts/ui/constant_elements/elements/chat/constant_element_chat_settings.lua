@@ -130,6 +130,7 @@ local channel_priority = {
 	[ChannelTags.CLAN] = 4,
 	[ChannelTags.PRIVATE] = 5
 }
+local max_message_length = 256
 local constant_element_chat_settings = {
 	chat_window_size = chat_window_size,
 	chat_window_offset = chat_window_offset,
@@ -168,7 +169,8 @@ local constant_element_chat_settings = {
 	close_on_backspace = close_on_backspace,
 	message_presentation_format = message_presentation_format,
 	channel_metadata = channel_metadata,
-	channel_priority = channel_priority
+	channel_priority = channel_priority,
+	max_message_length = max_message_length
 }
 
 return settings("ConstantElementChatSettings", constant_element_chat_settings)

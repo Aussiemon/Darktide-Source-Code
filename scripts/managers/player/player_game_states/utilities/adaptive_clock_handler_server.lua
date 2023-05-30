@@ -1,7 +1,9 @@
 local AdaptiveClockHandlerServer = class("AdaptiveClockHandlerServer")
 local BUFFER_MIN = 2
 
-AdaptiveClockHandlerServer.init = function (self, channel_id)
+AdaptiveClockHandlerServer.init = function (self, player)
+	local channel_id = player:channel_id()
+	self._player = player
 	self._channel_id = channel_id
 	self._peer_id = Managers.state.game_session:channel_to_peer(channel_id)
 	local ping = Network.ping(self._peer_id)
@@ -83,6 +85,8 @@ AdaptiveClockHandlerServer.frame_missed = function (self, frame)
 	end
 
 	self._buffer_added_t = Managers.time:time("gameplay")
+
+	Managers.telemetry_reporters:reporter("fixed_update_missed_inputs"):register_event(self._player)
 end
 
 local BUFFER_REMOVE_FREQUENCY = 1

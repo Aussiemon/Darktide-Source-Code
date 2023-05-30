@@ -75,6 +75,7 @@ PlayerHuskVisualLoadoutExtension.NO_WIELDABLE_SLOT = "not_wielded"
 PlayerHuskVisualLoadoutExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, game_object_id)
 	self._unit = unit
 	self._game_object_id = game_object_id
+	self.is_husk = true
 	local slot_configuration = extension_init_data.slot_configuration
 	self._slot_configuration = slot_configuration
 	self._player = extension_init_data.player

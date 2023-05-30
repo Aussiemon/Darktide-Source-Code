@@ -16,10 +16,11 @@ local dialogue_category_config = {
 			player_prio_1 = true,
 			enemy_vo_prio_1 = true,
 			npc_prio_1 = true,
-			enemy_vo_prio_0 = true,
+			npc_prio_0 = true,
 			enemy_alerts_prio_1 = true,
 			player_prio_2 = true,
 			player_on_demand_vo = true,
+			enemy_vo_prio_0 = true,
 			player_prio_0 = true,
 			enemy_alerts_prio_0 = true
 		}

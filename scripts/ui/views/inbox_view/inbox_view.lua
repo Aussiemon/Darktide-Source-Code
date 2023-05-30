@@ -76,19 +76,33 @@ end
 
 InboxView._load_portrait_icon = function (self)
 	local profile = self._presentation_profile
-	local cb = callback(self, "_cb_set_player_icon")
-	local icon_load_id = Managers.ui:load_profile_portrait(profile, cb)
+	local load_cb = callback(self, "_cb_set_player_icon")
+	local unload_cb = callback(self, "_cb_unset_player_icon")
+	local icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
 	self._portrait_loaded_info = {
 		icon_load_id = icon_load_id
 	}
 end
 
 InboxView._cb_set_player_icon = function (self, grid_index, rows, columns)
-	local material_values = self._widgets_by_name.character_portrait.style.texture.material_values
+	local widget = self._widgets_by_name.character_portrait
+	local material_values = widget.style.texture.material_values
+	widget.content.texture = "content/ui/materials/base/ui_portrait_frame_base"
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
+end
+
+InboxView._cb_unset_player_icon = function (self)
+	local widget = self._widgets_by_name.character_portrait
+	local material_values = widget.style.texture.material_values
+	material_values.use_placeholder_texture = nil
+	material_values.rows = nil
+	material_values.columns = nil
+	material_values.grid_index = nil
+	material_values.texture_icon = nil
+	widget.content.texture = "content/ui/materials/base/ui_portrait_frame_base_no_render"
 end
 
 InboxView._set_experience_bar = function (self, experience_fraction, duration)

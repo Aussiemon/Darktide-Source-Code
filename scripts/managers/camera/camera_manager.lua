@@ -348,6 +348,14 @@ CameraManager.set_camera_node = function (self, viewport_name, tree_id, node_nam
 		if old_tree_id ~= tree_id then
 			local tree_transitions = current_node.node:tree_transitions()
 			transition_template = tree_transitions[tree_id] or tree_transitions.default
+
+			if next_node then
+				local node_transitions = current_node.node:node_transitions()
+
+				if node_transitions[next_node.node:name()] then
+					transition_template = node_transitions[next_node.node:name()]
+				end
+			end
 		else
 			local node_transitions = current_node.node:node_transitions()
 			transition_template = node_transitions[next_node.node:name()] or node_transitions.default

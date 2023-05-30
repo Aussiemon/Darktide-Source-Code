@@ -291,6 +291,21 @@ local mission_templates = {
 			"terror_events_debug_zoneseven"
 		}
 	},
+	fm_fuel = {
+		mission_name = "loc_mission_name_placeholder",
+		zone_id = "placeholder",
+		game_mode_name = "coop_complete_objective",
+		mechanism_name = "adventure",
+		is_dev_mission = true,
+		level = "content/levels/debug/wastes/missions/mission_fm_fuel",
+		pickup_settings = {},
+		health_station = {
+			charges_to_distribute = 8
+		},
+		terror_event_templates = {
+			"terror_events_debug_zoneseven"
+		}
+	},
 	combat_zone_new = {
 		mission_name = "loc_mission_name_placeholder",
 		zone_id = "placeholder",

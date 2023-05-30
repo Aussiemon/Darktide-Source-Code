@@ -58,21 +58,23 @@ TabbedMenuViewBase.update = function (self, dt, t, input_service)
 		self._active_view_on_enter_callback = nil
 	end
 
-	local next_tab_index = self._next_tab_index
+	if self._tab_bar_views then
+		local next_tab_index = self._next_tab_index
 
-	if next_tab_index then
-		local handle_tab_switch = true
+		if next_tab_index then
+			local handle_tab_switch = true
 
-		if self._previously_active_view and Managers.ui:is_view_closing(self._previously_active_view) then
-			handle_tab_switch = false
-		else
-			self._previously_active_view = nil
-		end
+			if self._previously_active_view and Managers.ui:is_view_closing(self._previously_active_view) then
+				handle_tab_switch = false
+			else
+				self._previously_active_view = nil
+			end
 
-		if handle_tab_switch then
-			self:_switch_tab(next_tab_index)
+			if handle_tab_switch then
+				self:_switch_tab(next_tab_index)
 
-			self._next_tab_index = nil
+				self._next_tab_index = nil
+			end
 		end
 	end
 
@@ -83,6 +85,15 @@ TabbedMenuViewBase.update = function (self, dt, t, input_service)
 
 		if self._profile_spawner then
 			self._profile_spawner:update(dt, t, input_service)
+		end
+	end
+
+	if self._tab_bar_visibility_function then
+		local visible = self:_tab_bar_visibility_function()
+		local tab_bar = self._elements.tab_bar
+
+		if tab_bar and tab_bar:visible() ~= visible then
+			tab_bar:set_visibility(visible)
 		end
 	end
 
@@ -213,7 +224,7 @@ TabbedMenuViewBase.profile_spawner = function (self)
 	return self._profile_spawner
 end
 
-TabbedMenuViewBase._setup_tab_bar = function (self, tab_bar_params, additional_context)
+TabbedMenuViewBase._setup_tab_bar = function (self, tab_bar_params, additional_context, optional_start_index)
 	if self._previous_story_name then
 		local play_backwards = true
 		local world_spawner = self._world_spawner
@@ -272,13 +283,19 @@ TabbedMenuViewBase._setup_tab_bar = function (self, tab_bar_params, additional_c
 				tab_bar:add_entry(title, callback, update_function)
 			end
 		end
+
+		self._tab_bar_visibility_function = tab_bar_params.visibility_function
+
+		if self._tab_bar_visibility_function then
+			tab_bar:set_visibility(false)
+		end
 	end
 
 	self._tab_bar_views = tab_bar_views
 
 	self:set_can_navigate(not tab_bar_params.hide_tabs)
 
-	self._next_tab_index = #tab_bar_views > 0 and 1 or nil
+	self._next_tab_index = #tab_bar_views > 0 and (optional_start_index and math.clamp(optional_start_index, 0, #tab_bar_views) or 1) or nil
 end
 
 TabbedMenuViewBase._setup_input_legend = function (self, input_legend_params)
@@ -287,9 +304,7 @@ TabbedMenuViewBase._setup_input_legend = function (self, input_legend_params)
 	end
 
 	local layer = input_legend_params.layer or 10
-
-	self:_add_element(ViewElementInputLegend, "input_legend", layer)
-
+	self._input_legend_element = self:_add_element(ViewElementInputLegend, "input_legend", layer)
 	local buttons_params = input_legend_params.buttons_params
 
 	for i = 1, #buttons_params do
@@ -342,6 +357,7 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 	local tab_params = self._tab_bar_views[index]
 	local view = tab_params.view
 	local view_function = tab_params.view_function
+	local view_function_context = tab_params.view_function_context
 	local view_function_on_level_story_complete = tab_params.view_function_on_level_story_complete
 	local view_input_legend_buttons = tab_params.input_legend_buttons
 	local current_view = self._active_view
@@ -398,7 +414,7 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 				local view_instance = ui_manager:view_instance(self._active_view)
 
 				if view_instance and view_instance:entered() then
-					view_instance[view_function](view_instance)
+					view_instance[view_function](view_instance, view_function_context)
 
 					return true
 				end

@@ -353,6 +353,12 @@ local narrative = {
 		},
 		level_unlock_barber_visited = {
 			requirement = level_at_least(PlayerProgressionUnlocks.barber)
+		},
+		level_unlock_cosmetic_store_visited = {
+			requirement = level_at_least(PlayerProgressionUnlocks.cosmetics_vendor)
+		},
+		level_unlock_cosmetic_store_popup = {
+			requirement = level_at_least(PlayerProgressionUnlocks.cosmetics_vendor)
 		}
 	}
 }

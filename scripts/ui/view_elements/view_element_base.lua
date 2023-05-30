@@ -235,6 +235,10 @@ ViewElementBase.set_visibility = function (self, visible)
 	self._visible = visible
 end
 
+ViewElementBase.visible = function (self)
+	return self._visible
+end
+
 ViewElementBase._play_sound = function (self, event_name)
 	local ui_manager = Managers.ui
 

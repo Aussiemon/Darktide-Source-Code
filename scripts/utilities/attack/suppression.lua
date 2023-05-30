@@ -290,9 +290,18 @@ function _apply_suppression_minion(suppressed_unit, suppression_value, suppressi
 
 		suppression_extension:add_suppress_value(suppression_value, suppression_type, suppression_attack_delay, direction, attacking_unit)
 
-		local combat_vector_system = Managers.state.extension:system("combat_vector_system")
+		local attacking_unit_data_extension = ScriptUnit.has_extension(attacking_unit, "unit_data_system")
+		local attacker_breed_or_nil = attacking_unit_data_extension and attacking_unit_data_extension:breed()
 
-		combat_vector_system:add_main_aggro_target_score("suppression", attacking_unit, suppressed_unit)
+		if attacker_breed_or_nil then
+			local attacker_is_player = Breed.is_player(attacker_breed_or_nil)
+
+			if attacker_is_player then
+				local combat_vector_system = Managers.state.extension:system("combat_vector_system")
+
+				combat_vector_system:add_main_aggro_target_score("suppression", attacking_unit, suppressed_unit)
+			end
+		end
 	end
 
 	local side_system = Managers.state.extension:system("side_system")

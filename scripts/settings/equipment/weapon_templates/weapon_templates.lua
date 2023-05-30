@@ -267,7 +267,6 @@ local template_groups = {
 		"shotgun_p1_m1",
 		"shotgun_p1_m2",
 		"shotgun_p1_m3",
-		"shotgun_p2_m1",
 		"shotgun_p3_m1"
 	},
 	{
@@ -285,12 +284,6 @@ local template_groups = {
 		"thunderhammer_2h_p1_m1",
 		"thunderhammer_2h_p1_m2",
 		"thunderhammer_2h_p1_m3"
-	},
-	{
-		"debug",
-		"debug_forcestaff_p1_base",
-		"debug_forcestaff_p2_base",
-		"debug_forcestaff_p3_base"
 	}
 }
 local template_names = {
@@ -588,7 +581,7 @@ for name, weapon_template in pairs(weapon_templates) do
 	local weapon_template_sprint_ready_up_time = weapon_template.sprint_ready_up_time
 
 	for _, action_settings in pairs(weapon_template.actions) do
-		if not action_settings.sprint_ready_up_time and not unwield_action_kinds[action_settings.kind] then
+		if not action_settings.sprint_ready_up_time and not unwield_action_kinds[action_settings.kind] and not action_settings.allowed_during_sprint then
 			action_settings.sprint_ready_up_time = weapon_template_sprint_ready_up_time
 		end
 	end

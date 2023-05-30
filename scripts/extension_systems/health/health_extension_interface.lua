@@ -1,4 +1,5 @@
 local HealthExtensionInterface = {
+	"pre_update",
 	"add_damage",
 	"add_heal",
 	"current_health",
@@ -15,7 +16,12 @@ local HealthExtensionInterface = {
 	"max_wounds",
 	"num_wounds",
 	"set_invulnerable",
-	"set_unkillable"
+	"set_unkillable",
+	"set_last_damaging_unit",
+	"last_damaging_unit",
+	"last_hit_zone_name",
+	"last_hit_was_critical",
+	"was_hit_by_critical_hit_this_render_frame"
 }
 
 return HealthExtensionInterface

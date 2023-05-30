@@ -644,9 +644,9 @@ local action_data = {
 			turn_shoot_left = 0
 		},
 		start_rotation_durations = {
-			turn_shoot_right = 0.6410256410256411,
-			turn_shoot_bwd = 0.5714285714285714,
-			turn_shoot_left = 0.6410256410256411
+			turn_shoot_right = 0.5128205128205128,
+			turn_shoot_bwd = 0.38095238095238093,
+			turn_shoot_left = 0.5128205128205128
 		},
 		aim_stances = {
 			turn_shoot_right = "standing",

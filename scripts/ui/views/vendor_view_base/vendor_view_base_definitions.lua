@@ -89,7 +89,7 @@ local widget_definitions = {
 			value_id = "text",
 			style_id = "text",
 			pass_type = "text",
-			value = "0",
+			value = "",
 			style = price_text_style
 		}
 	}, "price_text"),
@@ -105,8 +105,9 @@ local widget_definitions = {
 		gamepad_action = "confirm_pressed",
 		text = Utf8.upper(Localize("loc_vendor_purchase_button")),
 		hotspot = {
-			on_pressed_sound = UISoundEvents.credits_vendor_on_purchase
-		}
+			on_pressed_sound = UISoundEvents.default_click
+		},
+		purchase_sound = UISoundEvents.credits_vendor_on_purchase
 	})
 }
 local anim_start_delay = 0

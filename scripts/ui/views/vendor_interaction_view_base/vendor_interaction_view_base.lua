@@ -28,6 +28,15 @@ VendorInteractionViewBase.init = function (self, definitions, settings, context)
 		table.merge_recursive(self._base_definitions, definitions)
 	end
 
+	self._option_button_settings = definitions.option_button_settings or {
+		spacing = 10,
+		grow_vertically = true,
+		button_template = ButtonPassTemplates.list_button_with_background
+	}
+	self._button_input_actions = {
+		"navigate_down_continuous",
+		"navigate_up_continuous"
+	}
 	local parent = context and context.parent
 	self._parent = parent
 	self._current_vo_event = nil
@@ -130,6 +139,14 @@ VendorInteractionViewBase._on_navigation_input_changed = function (self)
 end
 
 VendorInteractionViewBase._handle_input = function (self, input_service)
+	local tab_bar_menu = self._elements.tab_bar
+	local can_navigate = self._can_navigate
+
+	if tab_bar_menu then
+		tab_bar_menu:set_is_handling_navigation_input(can_navigate)
+	end
+
+	input_service = self._presenting_options and input_service or input_service:null_service()
 	local is_mouse = self._using_cursor_navigation
 	local button_widgets = self._button_widgets
 	local focused_index = nil
@@ -146,12 +163,14 @@ VendorInteractionViewBase._handle_input = function (self, input_service)
 			end
 		end
 
+		local button_input_actions = self._button_input_actions
+
 		if num_buttons > 0 then
 			local next_index = nil
 
-			if input_service:get("navigate_down_continuous") and focused_index < num_buttons then
+			if input_service:get(button_input_actions[1]) and focused_index < num_buttons then
 				next_index = focused_index + 1
-			elseif input_service:get("navigate_up_continuous") and focused_index > 1 then
+			elseif input_service:get(button_input_actions[2]) and focused_index > 1 then
 				next_index = focused_index - 1
 			end
 
@@ -221,21 +240,36 @@ VendorInteractionViewBase._handle_back_pressed = function (self)
 end
 
 VendorInteractionViewBase._setup_option_buttons = function (self, options)
-	local button_definition = UIWidget.create_definition(table.clone(ButtonPassTemplates.list_button_with_background), "button_pivot")
+	local option_button_settings = self._option_button_settings
+	local scenegraph_id = "button_pivot"
+	local button_definition = UIWidget.create_definition(table.clone(option_button_settings.button_template), scenegraph_id)
 	local button_widgets = {}
-	local spacing = 10
-	local button_height = 50
+	local definitions = self._definitions
+	local default_scenegraph_definition = definitions.scenegraph_definition
+	local button_scenegraph_definition = default_scenegraph_definition[scenegraph_id]
+	local grow_vertically = option_button_settings.grow_vertically
+	local spacing = option_button_settings.spacing or 10
+	local button_width = button_scenegraph_definition.size[1]
+	local button_height = button_scenegraph_definition.size[2]
 
 	for i = 1, #options do
 		local option = options[i]
 		local widget = self:_create_widget("option_button_" .. i, button_definition)
-		local hotspot = widget.content.hotspot
+		local content = widget.content
+		local hotspot = content.hotspot
 		hotspot.pressed_callback = callback(self, "on_option_button_pressed", i, option)
 		hotspot.disabled = option.disabled
 		local display_name = option.display_name
 		local unlocalized_name = option.unlocalized_name
-		widget.content.text = unlocalized_name and not display_name and unlocalized_name or Localize(display_name)
-		widget.offset[2] = (i - 1) * (button_height + spacing)
+		content.text = unlocalized_name and not display_name and unlocalized_name or Localize(display_name)
+		content.icon = option.icon
+
+		if grow_vertically then
+			widget.offset[2] = (i - 1) * (button_height + spacing)
+		else
+			widget.offset[1] = (i - 1) * (button_width + spacing)
+		end
+
 		button_widgets[#button_widgets + 1] = widget
 	end
 
@@ -373,16 +407,6 @@ VendorInteractionViewBase._update_wallets = function (self)
 end
 
 VendorInteractionViewBase._update_wallets_presentation = function (self, wallets_data)
-	local corner_right = self._widgets_by_name.corner_top_right
-
-	if corner_right and not corner_right.content.original_size then
-		local corner_width, corner_height = self:_scenegraph_size("corner_top_right")
-		corner_right.content.original_size = {
-			corner_width,
-			corner_height
-		}
-	end
-
 	if self._wallet_widgets then
 		for i = 1, #self._wallet_widgets do
 			local widget = self._wallet_widgets[i]
@@ -423,22 +447,42 @@ VendorInteractionViewBase._update_wallets_presentation = function (self, wallets
 		local texture_width = widget.style.texture.size[1]
 		local text_offset = widget.style.text.original_offset
 		local texture_offset = widget.style.texture.original_offset
-		local text_margin = 5
-		local price_margin = i < #self._wallet_type and 30 or 0
-		widget.style.texture.offset[1] = texture_offset[1] + total_width
-		widget.style.text.offset[1] = text_offset[1] + text_margin + total_width
-		total_width = total_width + text_width + texture_width + text_margin + price_margin
+		local text_margin = 0
+		local price_margin = i < #self._wallet_type and 5 or 0
+
+		if i == 1 then
+			total_width = texture_offset[1]
+		end
+
+		widget.style.texture.offset[1] = -total_width
+		total_width = total_width + texture_width
+		widget.style.text.offset[1] = -total_width
+		total_width = total_width + text_width + texture_width * 0.5 + text_margin + price_margin
 		widgets[#widgets + 1] = widget
+	end
+
+	self:_set_scenegraph_size("wallet_pivot", total_width, nil)
+	self:_set_wallet_background_width(total_width)
+
+	self._wallet_widgets = widgets
+end
+
+VendorInteractionViewBase._set_wallet_background_width = function (self, total_width)
+	local corner_right = self._widgets_by_name.corner_top_right
+
+	if corner_right and not corner_right.content.original_size then
+		local corner_width, corner_height = self:_scenegraph_size("corner_top_right")
+		corner_right.content.original_size = {
+			corner_width,
+			corner_height
+		}
 	end
 
 	local corner_width = corner_right and corner_right.content.original_size[1] or 0
 	local corner_texture_size_minus_wallet = 100
 	local total_corner_width = total_width + corner_width - corner_texture_size_minus_wallet
 
-	self:_set_scenegraph_size("wallet_pivot", total_width, nil)
 	self:_set_scenegraph_size("corner_top_right", total_corner_width, nil)
-
-	self._wallet_widgets = widgets
 end
 
 VendorInteractionViewBase.set_camera_position_axis_offset = function (self, axis, value, animation_duration, func_ptr)

@@ -1,3 +1,4 @@
+local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local LagCompensation = require("scripts/utilities/lag_compensation")
 
@@ -6,20 +7,20 @@ require("scripts/extension_systems/minigame/minigames/minigame_base")
 local FX_SOURCE_NAME = "_speaker"
 local MinigameDecodeSymbols = class("MinigameDecodeSymbols", "MinigameBase")
 
-MinigameDecodeSymbols.init = function (self, unit, is_server, seed, context)
-	MinigameDecodeSymbols.super.init(self, unit, is_server, seed, context)
+MinigameDecodeSymbols.init = function (self, unit, is_server, seed)
+	MinigameDecodeSymbols.super.init(self, unit, is_server, seed)
 
-	self._decode_symbols_sweep_duration = context.decode_symbols_sweep_duration
-	self._decode_symbols_stage_amount = context.decode_symbols_stage_amount
-	self._decode_symbols_items_per_stage = context.decode_symbols_items_per_stage
-	self._decode_symbols_total_items = context.decode_symbols_total_items
+	self._decode_symbols_sweep_duration = MinigameSettings.decode_symbols_sweep_duration
+	self._decode_symbols_stage_amount = MinigameSettings.decode_symbols_stage_amount
+	self._decode_symbols_items_per_stage = MinigameSettings.decode_symbols_items_per_stage
+	self._decode_symbols_total_items = MinigameSettings.decode_symbols_total_items
 	self._symbols = {}
 	self._decode_targets = {}
 	self._decode_current_stage = nil
 	self._decode_start_time = nil
 	self._decode_misses = nil
 
-	Unit.set_flow_variable(unit, "lua_auspex_scanner_speed", context.decode_symbols_sweep_duration)
+	Unit.set_flow_variable(unit, "lua_auspex_scanner_speed", MinigameSettings.decode_symbols_sweep_duration)
 end
 
 MinigameDecodeSymbols.hot_join_sync = function (self, sender, channel)

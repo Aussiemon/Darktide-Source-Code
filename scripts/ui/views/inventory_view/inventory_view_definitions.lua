@@ -381,16 +381,16 @@ local scenegraph_definition = {
 		}
 	},
 	button_expressions = {
-		vertical_alignment = "bottom",
+		vertical_alignment = "center",
 		parent = "canvas",
-		horizontal_alignment = "right",
+		horizontal_alignment = "center",
 		size = {
 			0,
 			0
 		},
 		position = {
-			-620,
-			-140,
+			600,
+			320,
 			0
 		}
 	},
@@ -653,7 +653,10 @@ local animations = {
 					local widget = widgets[i]
 					widget.alpha_multiplier = 0
 					local offset = widget.offset
-					widget.default_offset = table.clone(offset)
+
+					if not widget.default_offset then
+						widget.default_offset = table.clone(offset)
+					end
 				end
 			end
 		},

@@ -1,0 +1,3 @@
+local PlayerQuickReply = {}
+
+return PlayerQuickReply

@@ -10,6 +10,7 @@ local UISettings = require("scripts/settings/ui/ui_settings")
 local MasterItems = require("scripts/backend/master_items")
 local TextUtilities = require("scripts/utilities/ui/text")
 local Archetypes = require("scripts/settings/archetype/archetypes")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
 
 local function is_item_equipped_in_slot(parent, item, slot_name)
 	if not parent or not item then
@@ -181,6 +182,34 @@ local function generate_blueprints_function(grid_size)
 				20
 			}
 		},
+		divider = {
+			size = {
+				grid_width,
+				60
+			},
+			pass_template = {
+				{
+					value_id = "divider",
+					style_id = "divider",
+					pass_type = "texture",
+					value = "content/ui/materials/dividers/skull_center_02",
+					style = {
+						vertical_alignment = "top",
+						horizontal_alignment = "center",
+						size = {
+							math.min(grid_width * 0.8, 400),
+							18
+						},
+						offset = {
+							0,
+							24,
+							1
+						},
+						color = Color.terminal_frame(255, true)
+					}
+				}
+			}
+		},
 		spacing_vertical_small = {
 			size = {
 				grid_width,
@@ -209,6 +238,7 @@ local function generate_blueprints_function(grid_size)
 			content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
 			content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
 			content.element = element
+			content.locked = element.locked
 			local slot = element.slot
 
 			if slot then
@@ -235,7 +265,7 @@ local function generate_blueprints_function(grid_size)
 			end
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local view_instance = parent._parent
+			local view_instance = parent._parent or parent
 			local content = widget.content
 			local element = content.element
 			local slot = element.slot
@@ -244,7 +274,7 @@ local function generate_blueprints_function(grid_size)
 			local is_equipped = is_item_equipped_in_slot(view_instance, item, slot_name)
 			content.equipped = is_equipped
 		end,
-		load_icon = function (parent, widget, element, ui_renderer, dummy_profile)
+		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
 			local content = widget.content
 
 			if not content.icon_load_id then
@@ -255,7 +285,7 @@ local function generate_blueprints_function(grid_size)
 				local render_context = {
 					camera_focus_slot_name = slot_name
 				}
-				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile)
+				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile, prioritize)
 			end
 		end,
 		unload_icon = function (parent, widget, element, ui_renderer)
@@ -276,6 +306,13 @@ local function generate_blueprints_function(grid_size)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
+			end
+		end,
+		update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
+			local content = widget.content
+
+			if content.icon_load_id then
+				Managers.ui:update_item_icon_priority(content.icon_load_id)
 			end
 		end
 	}
@@ -300,21 +337,30 @@ local function generate_blueprints_function(grid_size)
 					content.display_name = ItemUtils.display_name(item)
 					content.sub_display_name = ItemUtils.sub_display_name(item)
 				end
+
+				local rarity = item and item.rarity
+
+				if rarity then
+					local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
+					style.background_gradient.color = table.clone(rarity_color_dark)
+				end
 			end
 
+			content.locked = element.locked
 			local offer = element.offer
 
 			if offer and offer.price then
 				local price_data = offer.price.amount
 				local type = price_data.type
-				local price = price_data.amount
+				local price = price_data.discounted_price or price_data.amount
 				local price_text = TextUtilities.format_currency(price)
 				content.has_price_tag = true
 				content.price_text = price_text
 				local wallet_settings = WalletSettings[type]
 				content.wallet_icon = wallet_settings.icon_texture_small
 				local price_text_style = style.price_text
-				local can_afford = true
+				local view_instance = parent._parent or parent
+				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
 				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 
 				if not content.sold then
@@ -325,7 +371,7 @@ local function generate_blueprints_function(grid_size)
 					content.sold = is_owned
 
 					if is_owned then
-						content.owned = is_owned and ""
+						content.owned = is_owned and ""
 					elseif owned_count and total_count and total_count > 0 then
 						content.owned = owned_count > 0 and string.format("%d/%d", owned_count, total_count) or nil
 					end
@@ -333,15 +379,29 @@ local function generate_blueprints_function(grid_size)
 			end
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local view_instance = parent._parent
+			local view_instance = parent._parent or parent
+			local style = widget.style
 			local content = widget.content
 			local element = content.element
 			local slot = element.slot
 			local slot_name = slot.name
 			local item = element.real_item or element.item
 			local is_equipped = is_item_equipped_in_slot(view_instance, item, slot_name)
-			content.equipped = is_equipped
+			content.equipped = not element.disable_equipped_status and is_equipped
+			local price_text_style = style.price_text
 			local offer = element.offer
+
+			if offer and offer.price then
+				local price_data = offer.price.amount
+				local type = price_data.type
+				local price = price_data.discounted_price or price_data.amount
+				local price_text = TextUtilities.format_currency(price)
+				content.price_text = price_text
+				local wallet_settings = WalletSettings[type]
+				content.wallet_icon = wallet_settings.icon_texture_small
+				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
+				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+			end
 
 			if not content.sold then
 				local owned_count = element.owned_count
@@ -351,13 +411,13 @@ local function generate_blueprints_function(grid_size)
 				content.sold = is_owned
 
 				if is_owned then
-					content.owned = is_owned and ""
+					content.owned = is_owned and ""
 				elseif owned_count and total_count and total_count > 0 then
 					content.owned = owned_count > 0 and string.format("%d/%d", owned_count, total_count) or nil
 				end
 			end
 		end,
-		load_icon = function (parent, widget, element, ui_renderer, dummy_profile)
+		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
 			local content = widget.content
 
 			if not content.icon_load_id then
@@ -372,7 +432,7 @@ local function generate_blueprints_function(grid_size)
 					state_machine = item_state_machine,
 					animation_event = item_animation_event
 				}
-				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile)
+				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, dummy_profile, prioritize)
 			end
 		end,
 		unload_icon = function (parent, widget, element, ui_renderer)
@@ -393,6 +453,13 @@ local function generate_blueprints_function(grid_size)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
+			end
+		end,
+		update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
+			local content = widget.content
+
+			if content.icon_load_id then
+				Managers.ui:update_item_icon_priority(content.icon_load_id)
 			end
 		end
 	}
@@ -414,33 +481,52 @@ local function generate_blueprints_function(grid_size)
 				local price_data = offer.price.amount
 				local type = price_data.type
 				local price = price_data.amount
-				local price_text = tostring(price)
+				local price_text = TextUtilities.format_currency(price)
 				content.has_price_tag = true
 				content.price_text = price_text
 				local wallet_settings = WalletSettings[type]
 				content.wallet_icon = wallet_settings.icon_texture_small
 				local price_text_style = style.price_text
-				price_text_style.horizontal_alignment = "right"
-				local initial_margin = -15
-				local icon_margin = 5
-				price_text_style.offset[1] = initial_margin
-				local price_text_size = UIRenderer.text_size(ui_renderer, price_text, price_text_style.font_type, price_text_style.font_size) or 0
-				local wallet_icon_style = style.wallet_icon
-				wallet_icon_style.offset[1] = initial_margin - price_text_size - icon_margin
-				local can_afford = true
+				local view_instance = parent._parent or parent
+				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
 				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+
+				if not content.sold then
+					local owned_count = element.owned_count
+					local total_count = element.total_count
+					local owning_total_count = owned_count and total_count and owned_count == total_count
+					local is_owned = offer.state == "owned" or owning_total_count
+					content.sold = is_owned
+
+					if is_owned then
+						content.owned = is_owned and ""
+					elseif owned_count and total_count and total_count > 0 then
+						content.owned = owned_count > 0 and string.format("%d/%d", owned_count, total_count) or nil
+					end
+				end
 			end
 
-			local owned_count = element.owned_count
-			local total_count = element.total_count
+			if content.show_class_restrictions then
+				local item = element.visual_item
+				local text = ""
 
-			if owned_count and total_count and total_count > 0 then
-				local is_owned = owned_count == total_count
-				content.owned = is_owned and "" or owned_count > 0 and string.format("%d/%d", owned_count, total_count) or nil
+				if type(item.archetypes) ~= "table" or #item.archetypes <= 0 then
+					item = element.item
+				end
+
+				if type(item.archetypes) == "table" and #item.archetypes > 0 then
+					for f = 1, #item.archetypes do
+						local archetype = item.archetypes[f]
+						local text_icon = UISettings.archetype_font_icon[archetype]
+						text = text and string.format("%s %s", text, text_icon) or text_icon
+					end
+				end
+
+				content.restriction_icon_text = text
 			end
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local view_instance = parent._parent
+			local view_instance = parent._parent or parent
 			local style = widget.style
 			local content = widget.content
 			local element = content.element
@@ -453,13 +539,13 @@ local function generate_blueprints_function(grid_size)
 				content.equipped = is_equipped
 			end
 		end,
-		load_icon = function (parent, widget, element, ui_renderer, dummy_profile)
+		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
 			local content = widget.content
 
 			if not content.icon_load_id then
 				local item = element.item or element.real_item
 				local cb = callback(_apply_live_item_icon_cb_func, widget)
-				content.icon_load_id = Managers.ui:load_item_icon(item, cb, nil, dummy_profile)
+				content.icon_load_id = Managers.ui:load_item_icon(item, cb, nil, dummy_profile, prioritize)
 			end
 		end,
 		unload_icon = function (parent, widget, element, ui_renderer)
@@ -480,6 +566,13 @@ local function generate_blueprints_function(grid_size)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
+			end
+		end,
+		update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
+			local content = widget.content
+
+			if content.icon_load_id then
+				Managers.ui:update_item_icon_priority(content.icon_load_id)
 			end
 		end
 	}
@@ -506,7 +599,8 @@ local function generate_blueprints_function(grid_size)
 				local wallet_settings = WalletSettings[type]
 				content.wallet_icon = wallet_settings.icon_texture_small
 				local price_text_style = style.price_text
-				local can_afford = false
+				local view_instance = parent._parent or parent
+				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
 				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 			end
 
@@ -586,7 +680,7 @@ local function generate_blueprints_function(grid_size)
 			end
 
 			local required_level = ItemUtils.character_level(item)
-			local view_instance = parent._parent
+			local view_instance = parent._parent or parent
 			local character_level = view_instance and view_instance.character_level and view_instance:character_level()
 			local level_requirement_met = required_level and required_level <= character_level
 			content.level_requirement_met = level_requirement_met
@@ -607,7 +701,7 @@ local function generate_blueprints_function(grid_size)
 			style.rarity_tag.color = table.clone(ItemUtils.rarity_color(item))
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local view_instance = parent._parent
+			local view_instance = parent._parent or parent
 			local style = widget.style
 			local content = widget.content
 			local element = content.element
@@ -641,13 +735,13 @@ local function generate_blueprints_function(grid_size)
 				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 			end
 		end,
-		load_icon = function (parent, widget, element, ui_renderer, dummy_profile)
+		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
 			local content = widget.content
 
 			if not content.icon_load_id then
 				local item = element.item
 				local cb = callback(_apply_live_item_icon_cb_func, widget)
-				content.icon_load_id = Managers.ui:load_item_icon(item, cb, nil, dummy_profile)
+				content.icon_load_id = Managers.ui:load_item_icon(item, cb, nil, dummy_profile, prioritize)
 			end
 		end,
 		unload_icon = function (parent, widget, element, ui_renderer)
@@ -668,6 +762,145 @@ local function generate_blueprints_function(grid_size)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
+			end
+		end,
+		update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
+			local content = widget.content
+
+			if content.icon_load_id then
+				Managers.ui:update_item_icon_priority(content.icon_load_id)
+			end
+		end
+	}
+	blueprints.gear_set = {
+		size = ItemPassTemplates.gear_bundle_size,
+		pass_template = ItemPassTemplates.gear_item,
+		init = function (parent, widget, element, callback_name, secondary_callback_name, ui_renderer, double_click_callback)
+			local content = widget.content
+			local style = widget.style
+			content.hotspot.pressed_callback = callback_name and callback(parent, callback_name, widget, element)
+			content.hotspot.double_click_callback = double_click_callback and callback(parent, double_click_callback, widget, element)
+			content.hotspot.right_pressed_callback = secondary_callback_name and callback(parent, secondary_callback_name, widget, element)
+			content.element = element
+			local item = element.item
+			local rarity = item and item.rarity
+			local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
+
+			if rarity then
+				style.background_gradient.color = table.clone(rarity_color_dark)
+			end
+
+			local offer = element.offer
+
+			if offer and offer.price then
+				local price_data = offer.price.amount
+				local type = price_data.type
+				local price = price_data.discounted_price or price_data.amount
+				local price_text = TextUtilities.format_currency(price)
+				content.has_price_tag = true
+				content.price_text = price_text
+				local wallet_settings = WalletSettings[type]
+				content.wallet_icon = wallet_settings.icon_texture_small
+				local price_text_style = style.price_text
+				local view_instance = parent._parent or parent
+				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
+				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+
+				if not content.sold then
+					local owned_count = element.owned_count
+					local total_count = element.total_count
+					local owning_total_count = owned_count and total_count and owned_count == total_count
+					local is_owned = offer.state == "owned" or owning_total_count
+					content.sold = is_owned
+
+					if is_owned then
+						content.owned = is_owned and ""
+						content.owned_count_text = nil
+					elseif owned_count and total_count and owned_count > 0 and owned_count < total_count then
+						content.owned_count_text = string.format("%d/%d ", owned_count, total_count) or nil
+					end
+				end
+			end
+		end,
+		update = function (parent, widget, input_service, dt, t, ui_renderer)
+			local style = widget.style
+			local content = widget.content
+			local element = content.element
+			local offer = element.offer
+
+			if offer and offer.price then
+				local price_data = offer.price.amount
+				local type = price_data.type
+				local price = price_data.discounted_price or price_data.amount
+				local price_text = TextUtilities.format_currency(price)
+				content.has_price_tag = true
+				content.price_text = price_text
+				local wallet_settings = WalletSettings[type]
+				content.wallet_icon = wallet_settings.icon_texture_small
+				local price_text_style = style.price_text
+				local view_instance = parent._parent or parent
+				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
+				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
+
+				if not content.sold then
+					local owned_count = element.owned_count
+					local total_count = element.total_count
+					local owning_total_count = owned_count and total_count and owned_count == total_count
+					local is_owned = offer and offer.state == "owned" or owning_total_count
+					content.sold = is_owned
+
+					if is_owned then
+						content.owned = is_owned and ""
+						content.owned_count_text = nil
+					elseif owned_count and total_count and owned_count > 0 and owned_count < total_count then
+						content.owned_count_text = string.format("%d/%d ", owned_count, total_count) or nil
+					end
+				end
+			end
+		end,
+		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
+			local content = widget.content
+
+			if not content.icon_load_id then
+				local item = element.item or element.real_item
+				local cb = callback(_apply_live_item_icon_cb_func, widget)
+				local preview_profile = dummy_profile or element.preview_profile
+				local gear_bundle_size = ItemPassTemplates.gear_bundle_size
+				local render_context = {
+					camera_focus_slot_name = "slot_set",
+					size = {
+						gear_bundle_size[1],
+						gear_bundle_size[2]
+					}
+				}
+				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, preview_profile, prioritize)
+			end
+		end,
+		unload_icon = function (parent, widget, element, ui_renderer)
+			local content = widget.content
+
+			if content.icon_load_id then
+				_remove_live_item_icon_cb_func(widget, ui_renderer)
+				Managers.ui:unload_item_icon(content.icon_load_id)
+
+				content.icon_load_id = nil
+			end
+		end,
+		destroy = function (parent, widget, element, ui_renderer)
+			local content = widget.content
+
+			if content.icon_load_id then
+				_remove_live_item_icon_cb_func(widget, ui_renderer)
+				Managers.ui:unload_item_icon(content.icon_load_id)
+
+				content.icon_load_id = nil
+			end
+		end,
+		update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
+			local content = widget.content
+
+			if content.icon_load_id then
+				Managers.ui:update_item_icon_priority(content.icon_load_id)
 			end
 		end
 	}
@@ -700,7 +933,8 @@ local function generate_blueprints_function(grid_size)
 				local wallet_settings = WalletSettings[type]
 				content.wallet_icon = wallet_settings.icon_texture_small
 				local price_text_style = style.price_text
-				local can_afford = false
+				local view_instance = parent._parent or parent
+				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
 				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 				local is_active = offer.state == "active"
 				content.sold = not is_active
@@ -725,7 +959,7 @@ local function generate_blueprints_function(grid_size)
 			end
 
 			local required_level = ItemUtils.character_level(presentation_item)
-			local view_instance = parent._parent
+			local view_instance = parent._parent or parent
 			local character_level = view_instance and view_instance.character_level and view_instance:character_level()
 			local level_requirement_met = required_level and required_level <= character_level
 			content.level_requirement_met = level_requirement_met
@@ -813,7 +1047,7 @@ local function generate_blueprints_function(grid_size)
 			end
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local view_instance = parent._parent
+			local view_instance = parent._parent or parent
 			local style = widget.style
 			local content = widget.content
 			local element = content.element
@@ -831,7 +1065,7 @@ local function generate_blueprints_function(grid_size)
 				content.sold = not is_active
 			end
 		end,
-		load_icon = function (parent, widget, element, ui_renderer)
+		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
 			local content = widget.content
 
 			if not content.icon_load_id then
@@ -861,7 +1095,7 @@ local function generate_blueprints_function(grid_size)
 				end
 
 				local cb = callback(_apply_live_item_icon_cb_func, widget)
-				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context)
+				content.icon_load_id = Managers.ui:load_item_icon(item, cb, render_context, prioritize)
 			end
 		end,
 		unload_icon = function (parent, widget, element, ui_renderer)
@@ -882,6 +1116,13 @@ local function generate_blueprints_function(grid_size)
 				Managers.ui:unload_item_icon(content.icon_load_id)
 
 				content.icon_load_id = nil
+			end
+		end,
+		update_item_icon_priority = function (parent, widget, element, ui_renderer, dummy_profile)
+			local content = widget.content
+
+			if content.icon_load_id then
+				Managers.ui:update_item_icon_priority(content.icon_load_id)
 			end
 		end
 	}
@@ -930,12 +1171,13 @@ local function generate_blueprints_function(grid_size)
 				local wallet_settings = WalletSettings[type]
 				content.wallet_icon = wallet_settings.icon_texture_small
 				local price_text_style = style.price_text
-				local can_afford = false
+				local view_instance = parent._parent or parent
+				local can_afford = view_instance and view_instance.can_afford and view_instance:can_afford(price, type) or false
 				price_text_style.material = can_afford and wallet_settings.font_gradient_material or wallet_settings.font_gradient_material_insufficient_funds
 			end
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
-			local view_instance = parent._parent
+			local view_instance = parent._parent or parent
 			local style = widget.style
 			local content = widget.content
 			local element = content.element
@@ -978,7 +1220,7 @@ local function generate_blueprints_function(grid_size)
 				content.icon = icon
 			end
 
-			local view_instance = parent._parent
+			local view_instance = parent._parent or parent
 			local character_level = view_instance and view_instance.character_level and view_instance:character_level()
 			local level_requirement_met = true
 
@@ -1071,6 +1313,100 @@ local function generate_blueprints_function(grid_size)
 			end
 
 			content.text = text
+		end
+	}
+	blueprints.item_name = {
+		size_function = function (parent, config, ui_renderer)
+			return config.size
+		end,
+		pass_template = ItemPassTemplates.item_name,
+		init = function (self, widget, element, callback_name, secondary_callback_name, ui_renderer)
+			local item = element.item
+			local ignore_localization = element.ignore_localization
+			local display_name = ignore_localization and item.display_name or ItemUtils.display_name(item)
+			local item_type = ignore_localization and item.item_type or ItemUtils.type_display_name(item)
+			widget.content.title = display_name
+
+			if item.rarity then
+				local rarity_color, rarity_color_dark = ItemUtils.rarity_color(item)
+				local rarity_display_name = ignore_localization and item.rarity_name or ItemUtils.rarity_display_name(item)
+				widget.style.background.material_values.line_color = {
+					rarity_color[2] / 255,
+					rarity_color[3] / 255,
+					rarity_color[4] / 255,
+					rarity_color[1] / 255
+				}
+				widget.style.background.material_values.background_color = {
+					rarity_color_dark[2] / 255,
+					rarity_color_dark[3] / 255,
+					rarity_color_dark[4] / 255,
+					rarity_color_dark[1] / 191.25
+				}
+				widget.content.description = string.format("{#color(%d, %d, %d)}%s{#reset()} • %s", rarity_color[2], rarity_color[3], rarity_color[4], rarity_display_name, item_type)
+			else
+				local background_color = Color.terminal_frame(191.25, true)
+				local line_color = Color.terminal_frame_hover(255, true)
+				widget.style.background.material_values.line_color = {
+					line_color[2] / 255,
+					line_color[3] / 255,
+					line_color[4] / 255,
+					line_color[1] / 255
+				}
+				widget.style.background.material_values.background_color = {
+					background_color[2] / 255,
+					background_color[3] / 255,
+					background_color[4] / 255,
+					background_color[1] / 255
+				}
+				widget.content.description = item_type
+			end
+
+			local item_name_style = widget.style.title
+			local display_description_style = widget.style.description
+
+			if element.use_store_appearance then
+				item_name_style.material = "content/ui/materials/font_gradients/slug_font_gradient_gold"
+			else
+				item_name_style.material = "content/ui/materials/font_gradients/slug_font_gradient_header"
+			end
+
+			local item_name_options = UIFonts.get_font_options_by_style(item_name_style)
+			local display_description_options = UIFonts.get_font_options_by_style(display_description_style)
+			local item_name_size = {
+				widget.content.size[1],
+				1080
+			}
+			local item_name_width, item_name_height = UIRenderer.text_size(ui_renderer, widget.content.title, item_name_style.font_type, item_name_style.font_size, item_name_size, item_name_options)
+			local display_description_width, display_description_height = UIRenderer.text_size(ui_renderer, widget.content.description, display_description_style.font_type, display_description_style.font_size, item_name_size, display_description_options)
+			local item_name_margin = 15
+			widget.content.size[2] = item_name_height + item_name_margin + display_description_height
+			widget.style.title.size = {
+				item_name_width + item_name_margin,
+				item_name_height
+			}
+			widget.style.description.size = {
+				display_description_width + item_name_margin,
+				display_description_height
+			}
+			widget.style.description.offset[2] = item_name_height + item_name_margin
+			local offset_x = 0
+			local offset_y = 0
+
+			if element.horizontal_alignment == "right" then
+				offset_x = -widget.content.size[1]
+			elseif element.horizontal_alignment == "center" then
+				offset_x = -widget.content.size[1] * 0.5
+			end
+
+			if element.vertical_alignment == "bottom" then
+				offset_y = -widget.content.size[2]
+			elseif element.vertical_alignment == "center" then
+				offset_x = -widget.content.size[2] * 0.5
+			end
+
+			widget.offset[1] = offset_x
+			widget.offset[2] = offset_y
+			widget.original_offset = table.clone(widget.offset)
 		end
 	}
 

@@ -84,7 +84,7 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = {
 			0,
-			50
+			0
 		},
 		position = {
 			0,
@@ -116,11 +116,6 @@ description_text_style.text_vertical_alignment = "top"
 local wallet_text_font_style = table.clone(UIFontSettings.currency_title)
 wallet_text_font_style.text_horizontal_alignment = "left"
 wallet_text_font_style.text_vertical_alignment = "center"
-wallet_text_font_style.original_offset = {
-	42,
-	0,
-	1
-}
 local offer_title_style = table.clone(UIFontSettings.header_1)
 offer_title_style.text_horizontal_alignment = "center"
 offer_title_style.horizontal_alignment = "center"
@@ -411,16 +406,12 @@ local wallet_definitions = UIWidget.create_definition({
 		value_id = "texture",
 		style = {
 			vertical_alignment = "center",
+			horizontal_alignment = "right",
 			size = {
 				42,
-				42
+				30
 			},
 			offset = {
-				0,
-				0,
-				1
-			},
-			original_offset = {
 				0,
 				0,
 				1

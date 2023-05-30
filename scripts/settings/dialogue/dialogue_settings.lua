@@ -8,7 +8,6 @@ local DialogueSettings = {
 		"conversations_core",
 		"guidance_vo",
 		"enemy_vo",
-		"cutscenes_vo",
 		"event_vo_fortification",
 		"event_vo_kill",
 		"event_vo_demolition",
@@ -17,8 +16,7 @@ local DialogueSettings = {
 		"event_vo_survive",
 		"event_vo_hacking",
 		"event_vo_scan",
-		"on_demand_vo",
-		"circumstance_vo_nurgle_rot"
+		"on_demand_vo"
 	},
 	menu_vo_files = {
 		"conversations_hub"
@@ -62,6 +60,9 @@ local DialogueSettings = {
 		hm_complex = {
 			"mission_vo_hm_complex"
 		},
+		cm_archives = {
+			"mission_vo_cm_archives"
+		},
 		km_station = {
 			"mission_vo_km_station"
 		},
@@ -85,6 +86,9 @@ local DialogueSettings = {
 		},
 		cm_habs = {
 			"mission_vo_cm_habs"
+		},
+		dm_rise = {
+			"mission_vo_dm_rise"
 		}
 	},
 	player_load_files = {

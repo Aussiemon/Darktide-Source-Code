@@ -203,7 +203,7 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 					if on_pressed then
 						content.drag_active = not is_disabled
 
-						if content.drag_active then
+						if content.drag_active and IS_WINDOWS then
 							Window.set_clip_cursor(true)
 						end
 					else
@@ -219,7 +219,9 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 					content.drag_active = nil
 					content.input_offset = nil
 
-					Window.set_clip_cursor(false)
+					if IS_WINDOWS then
+						Window.set_clip_cursor(false)
+					end
 
 					return
 				else
@@ -613,7 +615,7 @@ SliderPassTemplates._slider = function (width, height, use_is_focused, is_percen
 					if on_pressed then
 						content.drag_active = not is_disabled
 
-						if content.drag_active then
+						if content.drag_active and IS_WINDOWS then
 							Window.set_clip_cursor(true)
 						end
 					else
@@ -629,7 +631,9 @@ SliderPassTemplates._slider = function (width, height, use_is_focused, is_percen
 					content.drag_active = nil
 					content.input_offset = nil
 
-					Window.set_clip_cursor(false)
+					if IS_WINDOWS then
+						Window.set_clip_cursor(false)
+					end
 
 					return
 				else

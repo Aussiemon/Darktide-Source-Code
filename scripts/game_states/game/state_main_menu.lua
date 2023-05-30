@@ -327,7 +327,9 @@ StateMainMenu._on_profile_create_completed = function (self, created_profile)
 
 		if self._force_create_first_character then
 			self._force_create_first_character = nil
-			promises[3] = Managers.data_service.account:set_has_created_first_character()
+			promises[1] = promises[1]:next(function ()
+				return Managers.data_service.account:set_has_created_first_character()
+			end)
 		end
 
 		Promise.all(unpack(promises)):next(function (_)
@@ -338,7 +340,7 @@ StateMainMenu._on_profile_create_completed = function (self, created_profile)
 			end
 		end):next(function (_)
 			self:_start_game_or_onboarding()
-		end):catch(function ()
+		end):catch(function (error)
 			self:_set_view_state_cb("main_menu")
 		end)
 	else

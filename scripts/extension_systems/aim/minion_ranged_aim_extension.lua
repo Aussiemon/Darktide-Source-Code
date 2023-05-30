@@ -8,7 +8,6 @@ MinionRangedAimExtension.init = function (self, extension_init_context, unit, ex
 
 	local breed = extension_init_data.breed
 	local aim_config = breed.aim_config
-	self._constraint_target = Unit.animation_find_constraint_target(unit, aim_config.target)
 	self._aim_component = blackboard.aim
 	self._perception_component = blackboard.perception
 	self._aim_lerp_speed = aim_config.lerp_speed
@@ -46,6 +45,8 @@ end
 MinionRangedAimExtension.extensions_ready = function (self, world, unit)
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
 	self._perception_extension = ScriptUnit.extension(unit, "perception_system")
+	local aim_config = self._aim_config
+	self._constraint_target = Unit.animation_find_constraint_target(unit, aim_config.target)
 end
 
 MinionRangedAimExtension.update = function (self, unit, dt, t)

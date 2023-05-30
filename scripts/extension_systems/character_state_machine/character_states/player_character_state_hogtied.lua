@@ -31,7 +31,7 @@ PlayerCharacterStateHogtied.extensions_ready = function (self, world, unit)
 	local is_server = self._is_server
 	local game_session_or_nil = self._game_session
 	local game_object_id_or_nil = self._game_object_id
-	self._assist = Assist:new(assist_anims, is_server, unit, game_session_or_nil, game_object_id_or_nil)
+	self._assist = Assist:new(assist_anims, is_server, unit, game_session_or_nil, game_object_id_or_nil, "rescued")
 end
 
 PlayerCharacterStateHogtied.game_object_initialized = function (self, game_session, game_object_id)
@@ -131,18 +131,22 @@ PlayerCharacterStateHogtied._update_close_friendlies = function (self, unit)
 		end
 	end
 
-	if num_non_hogtied_nearby_friendlies >= 1 and not self._played_close_animation then
-		local animation_extension = ScriptUnit.extension(unit, "animation_system")
+	local inventory_component = self._inventory_component
 
-		animation_extension:anim_event(ANIM_EVENT_ON_FRIENDLIES_CLOSE)
+	if inventory_component.wielded_slot == "slot_unarmed" then
+		if num_non_hogtied_nearby_friendlies >= 1 and not self._played_close_animation then
+			local animation_extension = ScriptUnit.extension(unit, "animation_system")
 
-		self._played_close_animation = true
-	elseif num_non_hogtied_nearby_friendlies == 0 and self._played_close_animation then
-		local animation_extension = ScriptUnit.extension(unit, "animation_system")
+			animation_extension:anim_event(ANIM_EVENT_ON_FRIENDLIES_CLOSE)
 
-		animation_extension:anim_event(ANIM_EVENT_ON_ENTER)
+			self._played_close_animation = true
+		elseif num_non_hogtied_nearby_friendlies == 0 and self._played_close_animation then
+			local animation_extension = ScriptUnit.extension(unit, "animation_system")
 
-		self._played_close_animation = false
+			animation_extension:anim_event(ANIM_EVENT_ON_ENTER)
+
+			self._played_close_animation = false
+		end
 	end
 end
 

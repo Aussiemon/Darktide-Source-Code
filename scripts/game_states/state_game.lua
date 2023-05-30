@@ -171,7 +171,8 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 		return {
 			["request-id"] = math.uuid(),
 			["platform-name"] = version_id,
-			["accept-language"] = language
+			["accept-language"] = language,
+			["is-modded"] = GameParameters.is_modded_crashify_property or nil
 		}
 	end)
 	Managers.steam = SteamManager:new()
@@ -360,8 +361,8 @@ StateGame.update = function (self, dt)
 		Testify:update(dt, t)
 	end
 
-	Managers.telemetry:update(dt, t)
 	Managers.telemetry_reporters:update(dt, t)
+	Managers.telemetry:update(dt, t)
 	Managers.server_metrics:update(dt, t)
 	self._sm:post_update(dt, t)
 	Managers.bot:post_update(dt, t)

@@ -7,9 +7,8 @@ Minigame.init = function (self, unit)
 
 	if minigame_extension then
 		local minigame_type = self:get_data(unit, "minigame_type")
-		local decode_symbols_sweep_duration = self:get_data(unit, "decode_symbols_sweep_duration")
 
-		minigame_extension:setup_from_component(minigame_type, decode_symbols_sweep_duration)
+		minigame_extension:setup_from_component(minigame_type)
 	end
 end
 
@@ -44,15 +43,6 @@ Minigame.component_data = {
 			"scan",
 			"decode_symbols"
 		}
-	},
-	decode_symbols_sweep_duration = {
-		ui_type = "number",
-		min = 0.5,
-		decimals = 1,
-		category = "Decode Symbols",
-		value = 2,
-		ui_name = "Highlight Sweep Duration (in sec)",
-		step = 0.1
 	},
 	extensions = {
 		"MinigameExtension"

@@ -356,8 +356,10 @@ end
 templates.beast_of_nurgle_in_slime = {
 	predicted = false,
 	interval = 0.5,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
 	max_stacks = 1,
 	class_name = "interval_buff",
+	is_negative = true,
 	keywords = {
 		buff_keywords.zero_slide_friction
 	},
@@ -527,14 +529,9 @@ templates.in_toxic_gas = {
 	interval_func = _toxic_gas_interval_function,
 	player_effects = {
 		on_screen_effect = "content/fx/particles/environment/circumstances/toxic_gas/toxic_gas_screen",
-		looping_wwise_stop_event = "wwise/events/player/play_player_vomit_exit",
-		looping_wwise_start_event = "wwise/events/player/play_player_vomit_enter",
-		stop_type = "stop",
-		wwise_state = {
-			group = "swamped",
-			on_state = "on",
-			off_state = "none"
-		}
+		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
+		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
+		stop_type = "stop"
 	}
 }
 templates.left_toxic_gas = {
@@ -567,17 +564,97 @@ templates.left_toxic_gas = {
 	},
 	damage_template = DamageProfileTemplates.toxic_gas_mutator,
 	damage_type = damage_types.corruption,
-	interval_func = _toxic_gas_interval_function,
-	player_effects = {
-		on_screen_effect = "content/fx/particles/environment/circumstances/toxic_gas/toxic_gas_screen",
-		looping_wwise_stop_event = "wwise/events/player/play_player_vomit_exit",
-		looping_wwise_start_event = "wwise/events/player/play_player_vomit_enter",
-		stop_type = "destroy",
-		wwise_state = {
-			group = "swamped",
-			on_state = "on",
-			off_state = "none"
+	interval_func = _toxic_gas_interval_function
+}
+templates.in_cultist_grenadier_gas = {
+	predicted = false,
+	hud_priority = 1,
+	interval = 0.75,
+	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
+	max_stacks = 1,
+	class_name = "interval_buff",
+	is_negative = true,
+	stat_buffs = {
+		[buff_stat_buffs.movement_speed] = 0.9,
+		[buff_stat_buffs.dodge_speed_multiplier] = 0.9,
+		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
+	},
+	keywords = {
+		buff_keywords.concealed,
+		buff_keywords.hud_nameplates_disabled
+	},
+	power_level = {
+		default = {
+			4,
+			6,
+			8,
+			10,
+			12
 		}
+	},
+	damage_template = DamageProfileTemplates.cultist_grenadier_gas,
+	damage_type = damage_types.corruption,
+	start_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
+		if DEDICATED_SERVER then
+			return
+		end
+
+		local is_local_unit = template_context.is_local_unit
+
+		if not is_local_unit then
+			return
+		end
+
+		if template_context.is_player then
+			local player = Managers.state.player_unit_spawn:owner(unit)
+			local is_bot = player and not player:is_human_controlled()
+
+			if not is_bot then
+				local outline_system = Managers.state.extension:system("outline_system")
+
+				outline_system:set_global_visibility(false)
+			end
+		end
+	end,
+	stop_func = function (template_data, template_context)
+		local unit = template_context.unit
+
+		if not HEALTH_ALIVE[unit] then
+			return
+		end
+
+		if DEDICATED_SERVER then
+			return
+		end
+
+		local is_local_unit = template_context.is_local_unit
+
+		if not is_local_unit then
+			return
+		end
+
+		if template_context.is_player then
+			local player = Managers.state.player_unit_spawn:owner(unit)
+			local is_bot = player and not player:is_human_controlled()
+
+			if not is_bot then
+				local outline_system = Managers.state.extension:system("outline_system")
+
+				outline_system:set_global_visibility(true)
+			end
+		end
+	end,
+	interval_func = _scaled_damage_interval_function,
+	player_effects = {
+		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
+		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
+		stop_type = "stop"
 	}
 }
 local cultist_flamer_leaving_liquid_fire_spread_increase = table.clone(templates.leaving_liquid_fire_spread_increase)

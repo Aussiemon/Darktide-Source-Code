@@ -64,8 +64,7 @@ AuspexScanningEffects.init = function (self, context, slot, weapon_template, fx_
 	end
 
 	local fx_sources_name = fx_sources[FX_SOURCE_NAME]
-	self._fx_sources_name = fx_sources_name
-	self._fx_source = self._fx_extension:sound_source(fx_sources_name)
+	self._fx_source_name = fx_sources_name
 	self._high_light_timer = 0
 	self._current_distance_paramater = 0
 	self._current_angle_parameter = 0
@@ -166,10 +165,12 @@ AuspexScanningEffects.update_unit_position = function (self, unit, dt, t)
 		return
 	end
 
-	WwiseWorld.set_source_parameter(self._wwise_world, self._fx_source, WWISE_PARAMETER_NAME_DISTANCE, current_distance)
-	WwiseWorld.set_source_parameter(self._wwise_world, self._fx_source, WWISE_PARAMETER_NAME_ANGLE, current_angle)
+	local fx_source = self._fx_extension:sound_source(self._fx_source_name)
 
-	local current_beep = WwiseWorld.get_source_parameter(self._wwise_world, WWISE_PARAMETER_NAME_BEEP_VOLUME, self._fx_source)
+	WwiseWorld.set_source_parameter(self._wwise_world, fx_source, WWISE_PARAMETER_NAME_DISTANCE, current_distance)
+	WwiseWorld.set_source_parameter(self._wwise_world, fx_source, WWISE_PARAMETER_NAME_ANGLE, current_angle)
+
+	local current_beep = WwiseWorld.get_source_parameter(self._wwise_world, WWISE_PARAMETER_NAME_BEEP_VOLUME, fx_source)
 	local current_beep_normalized = 1 - math.clamp01(current_beep / -48)
 	local should_light_be_on = is_active and current_beep_normalized > 0.7
 
@@ -363,7 +364,7 @@ AuspexScanningEffects._start_searching_sfx_loop = function (self)
 	end
 
 	if not self._seach_loop_sound_component.is_playing then
-		self._fx_extension:trigger_looping_wwise_event(SEARCH_LOOP_ALIAS, self._fx_sources_name)
+		self._fx_extension:trigger_looping_wwise_event(SEARCH_LOOP_ALIAS, self._fx_source_name)
 	end
 end
 
@@ -383,7 +384,7 @@ AuspexScanningEffects._start_confirm_sfx_loop = function (self)
 	end
 
 	if not self._confirm_loop_sound_component.is_playing then
-		self._fx_extension:trigger_looping_wwise_event(CONFIRM_LOOP_ALIAS, self._fx_sources_name)
+		self._fx_extension:trigger_looping_wwise_event(CONFIRM_LOOP_ALIAS, self._fx_source_name)
 	end
 end
 

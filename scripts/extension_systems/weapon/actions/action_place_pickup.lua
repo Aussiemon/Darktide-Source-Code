@@ -13,7 +13,7 @@ ActionPlacePickup._place_unit = function (self, action_settings, position, rotat
 	local placed_unit = nil
 
 	if player_or_nil then
-		placed_unit = pickup_system:player_spawn_pickup(pickup_name, position, rotation, player_or_nil:session_id(), placed_on_unit)
+		placed_unit = pickup_system:player_spawn_pickup(pickup_name, position, rotation, player_or_nil, player_or_nil:session_id(), placed_on_unit)
 	else
 		placed_unit = pickup_system:spawn_pickup(pickup_name, position, rotation, nil, placed_on_unit)
 	end

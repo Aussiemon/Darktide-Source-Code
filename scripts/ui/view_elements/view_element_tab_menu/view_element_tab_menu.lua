@@ -25,6 +25,12 @@ ViewElementTabMenu.init = function (self, parent, draw_layer, start_scale, optio
 	}
 
 	self:_update_input_action_texts()
+
+	if self._menu_settings.grow_vertically then
+		self._widgets_by_name.input_text_left.style.text.text_horizontal_alignment = "left"
+		self._widgets_by_name.input_text_left.style.text.horizontal_alignment = "left"
+		self._widgets_by_name.input_text_left.style.text.text_vertical_alignment = "bottom"
+	end
 end
 
 ViewElementTabMenu._on_navigation_input_changed = function (self)
@@ -82,12 +88,15 @@ ViewElementTabMenu._update_widget_size = function (self, widget, ui_renderer)
 	local content = widget.content
 	local style = widget.style
 	local text_style = style.text
-	local text = content.text
-	local size = content.size
-	local text_options = UIFonts.get_font_options_by_style(text_style)
-	size[1] = 1920
-	local width, _ = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
-	size[1] = width + self._menu_settings.button_text_margin
+
+	if text_style then
+		local text = content.text
+		local size = content.size
+		local text_options = UIFonts.get_font_options_by_style(text_style)
+		size[1] = 1920
+		local width, _ = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, size, text_options)
+		size[1] = width + self._menu_settings.button_text_margin
+	end
 end
 
 ViewElementTabMenu.set_tab_disabled = function (self, id, is_disabled)
@@ -163,10 +172,15 @@ ViewElementTabMenu.update = function (self, dt, t, input_service)
 	return ViewElementTabMenu.super.update(self, dt, t, input_service)
 end
 
+ViewElementTabMenu.entries = function (self)
+	return self._entries
+end
+
 ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
 	local menu_settings = self._menu_settings
 	local update_text_lengths = self._update_text_lengths and not menu_settings.fixed_button_size
 	self._update_text_lengths = nil
+	local grow_vertically = menu_settings.grow_vertically
 	local widgets_by_name = self._widgets_by_name
 	local entries = self._entries
 
@@ -179,6 +193,7 @@ ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_rend
 		local pivot_offset_x = pivot_offset[1]
 		local pivot_offset_y = pivot_offset[2]
 		local total_width = 0
+		local total_height = 0
 		local num_entries = #entries
 
 		for i = 1, num_entries do
@@ -191,9 +206,11 @@ ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_rend
 
 			local size = widget.content.size
 			total_width = total_width + size[1] + button_spacing
+			total_height = total_height + size[2] + button_spacing
 		end
 
 		local left_size_offset = 0
+		local top_size_offset = 0
 		local horizontal_alignment = menu_settings.horizontal_alignment
 
 		if horizontal_alignment then
@@ -204,8 +221,24 @@ ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_rend
 			end
 		end
 
-		widgets_by_name.input_text_left.offset[1] = left_size_offset - input_label_offset_x
-		widgets_by_name.input_text_left.offset[2] = input_label_offset_y
+		local vertical_alignment = menu_settings.vertical_alignment
+
+		if vertical_alignment then
+			if vertical_alignment == "center" then
+				top_size_offset = -(total_height - button_spacing) * 0.5
+			elseif vertical_alignment == "right" then
+				top_size_offset = -total_height + button_spacing
+			end
+		end
+
+		if grow_vertically then
+			local button_size = ViewElementTabMenuSettings.button_size
+			widgets_by_name.input_text_left.offset[1] = input_label_offset_x
+			widgets_by_name.input_text_left.offset[2] = top_size_offset - (button_size[2] + input_label_offset_y)
+		else
+			widgets_by_name.input_text_left.offset[1] = left_size_offset - input_label_offset_x
+			widgets_by_name.input_text_left.offset[2] = input_label_offset_y
+		end
 
 		for i = 1, num_entries do
 			local entry = entries[i]
@@ -213,19 +246,34 @@ ViewElementTabMenu._draw_widgets = function (self, dt, t, input_service, ui_rend
 			widget.content.hotspot.is_focused = i == self._selected_index
 			local offset = widget.offset
 			local size = widget.content.size
-			offset[1] = 0 + left_size_offset
-			offset[2] = 0
+
+			if grow_vertically then
+				offset[1] = 0
+				offset[2] = 0 + top_size_offset
+			else
+				offset[1] = 0 + left_size_offset
+				offset[2] = 0
+			end
+
 			left_size_offset = left_size_offset + size[1]
+			top_size_offset = top_size_offset + size[2]
 
 			if i < num_entries then
 				left_size_offset = left_size_offset + button_spacing
+				top_size_offset = top_size_offset + button_spacing
 			end
 
 			UIWidget.draw(widget, ui_renderer)
 		end
 
-		widgets_by_name.input_text_right.offset[1] = left_size_offset + input_label_offset_x
-		widgets_by_name.input_text_right.offset[2] = input_label_offset_y
+		if grow_vertically then
+			widgets_by_name.input_text_right.offset[1] = input_label_offset_x
+			widgets_by_name.input_text_right.offset[2] = top_size_offset + input_label_offset_y
+		else
+			widgets_by_name.input_text_right.offset[1] = left_size_offset + input_label_offset_x
+			widgets_by_name.input_text_right.offset[2] = input_label_offset_y
+		end
+
 		self._total_width = total_width
 	end
 

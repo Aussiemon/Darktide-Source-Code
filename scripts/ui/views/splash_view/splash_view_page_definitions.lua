@@ -166,7 +166,7 @@ local splash_definitions = {
 local legend_inputs = {
 	{
 		input_action = "skip_cinematic_hold",
-		display_name = "loc_cutscene_skip_hold_no_input",
+		display_name = "loc_cutscene_skip_no_input",
 		alignment = "left_alignment",
 		use_mouse_hold = true,
 		on_pressed_callback = "on_hold_skip_pressed",

@@ -46,7 +46,15 @@ Pocketable.equip_pocketable = function (t, is_server, player_unit, pickup_unit, 
 	local swap_item = item_name ~= "not_equipped"
 
 	if swap_item then
-		if is_server then
+		PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, SLOT_POCKETABLE, t)
+	end
+
+	PlayerUnitVisualLoadout.equip_item_to_slot(player_unit, inventory_item, SLOT_POCKETABLE, nil, t)
+
+	if swap_item and is_server then
+		local inventory_slot_component = unit_data_extension:write_component(SLOT_POCKETABLE)
+
+		if not inventory_slot_component.unequip_slot then
 			local position = Unit.world_position(pickup_unit, 1)
 			local rotation = Unit.world_rotation(pickup_unit, 1)
 			local spawned_unit = _drop_pickup(item_name, position, rotation)
@@ -55,16 +63,27 @@ Pocketable.equip_pocketable = function (t, is_server, player_unit, pickup_unit, 
 			if spawned_unit and pickup_animation_system then
 				pickup_animation_system:start_animation_from_unit(spawned_unit, player_unit)
 			end
+		else
+			inventory_slot_component.unequip_slot = false
 		end
-
-		PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, SLOT_POCKETABLE, t)
 	end
-
-	PlayerUnitVisualLoadout.equip_item_to_slot(player_unit, inventory_item, SLOT_POCKETABLE, nil, t)
 
 	if swap_item and pocketable_wielded then
 		PlayerUnitVisualLoadout.wield_slot(SLOT_POCKETABLE, player_unit, t)
 	end
+end
+
+Pocketable.item_from_name = function (item_name)
+	local item_definitions = MasterItems.get_cached()
+	local inventory_item = item_definitions[item_name]
+
+	if not inventory_item then
+		inventory_item = MasterItems.find_fallback_item("slot_pocketable")
+
+		Log.error("PocketableInteraction", "[_fetch_pocketable_item] missing item '%s'", item_name)
+	end
+
+	return inventory_item
 end
 
 function _drop_pickup(item_name, spawn_pos, spawn_rot)

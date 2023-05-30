@@ -52,6 +52,21 @@ local function _default_group_selection_function(player_info)
 	end
 end
 
+local function _friend_group_selection_function(player_info)
+	local online_status = player_info:online_status(true)
+	local is_online = online_status == OnlineStatus.online or online_status == OnlineStatus.reconnecting
+	local is_platform_online = online_status == OnlineStatus.platform_online
+	local zero_if_platform_friend = player_info:is_platform_friend() and 0 or 1
+
+	if is_online then
+		return 1 + zero_if_platform_friend
+	elseif is_platform_online then
+		return 3
+	else
+		return 4 + zero_if_platform_friend
+	end
+end
+
 local function _group_by_invite(player_info)
 	local friend_status = player_info:friend_status()
 	local online_status = player_info:online_status(true)
@@ -81,28 +96,22 @@ local function _sort_by_name(a, b)
 	return a:user_display_name(true) < b:user_display_name(true)
 end
 
-local function _sort_by_default_group_selection(a, b)
-	local a_group_id = _default_group_selection_function(a)
-	local b_group_id = _default_group_selection_function(b)
+local function _sort_by_grouping_function(grouping_function)
+	return function (a, b)
+		local a_group_id = grouping_function(a)
+		local b_group_id = grouping_function(b)
 
-	if a_group_id == b_group_id then
-		return _sort_by_name(a, b)
+		if a_group_id == b_group_id then
+			return _sort_by_name(a, b)
+		end
+
+		return a_group_id < b_group_id
 	end
-
-	return a_group_id < b_group_id
 end
 
-local function _sort_by_invite(a, b)
-	local a_group_id = _group_by_invite(a)
-	local b_group_id = _group_by_invite(b)
-
-	if a_group_id == b_group_id then
-		return _sort_by_name(a, b)
-	end
-
-	return a_group_id < b_group_id
-end
-
+local _sort_by_friend = _sort_by_grouping_function(_friend_group_selection_function)
+local _sort_by_default_group_selection = _sort_by_grouping_function(_default_group_selection_function)
+local _sort_by_invite = _sort_by_grouping_function(_group_by_invite)
 local _groups_by_online_status = {
 	{
 		blueprint = "group_header",
@@ -132,9 +141,47 @@ SocialMenuRosterView.init = function (self, settings, context)
 	self._players_by_account_id = {}
 	local roster_lists = {
 		[FRIENDS_LIST] = {
-			group_select_function = _default_group_selection_function,
-			primary_sort_function = _sort_by_default_group_selection,
-			groups = _groups_by_online_status,
+			group_select_function = _friend_group_selection_function,
+			primary_sort_function = _sort_by_friend,
+			groups = {
+				{
+					blueprint = "group_header",
+					header = "loc_social_menu_list_group_header_in_game_platform",
+					group_name = "in_game - same platform",
+					item_blueprint = "player_plaque",
+					members = {}
+				},
+				{
+					blueprint = "group_header",
+					header = "loc_social_menu_friend_list_group_header_in_game",
+					group_name = "in_game - different platform",
+					no_divider = true,
+					item_blueprint = "player_plaque",
+					members = {}
+				},
+				{
+					blueprint = "group_header",
+					header = "loc_social_menu_list_header_online",
+					group_name = "platform_online",
+					item_blueprint = "player_plaque_platform_online",
+					members = {}
+				},
+				{
+					blueprint = "group_header",
+					header = "loc_social_menu_list_header_offline_platform",
+					group_name = "offline - same platform",
+					item_blueprint = "player_plaque_offline",
+					members = {}
+				},
+				{
+					blueprint = "group_header",
+					header = "loc_social_menu_friend_list_group_header_offline",
+					group_name = "offline - different platform",
+					no_divider = true,
+					item_blueprint = "player_plaque_offline",
+					members = {}
+				}
+			},
 			sorted_list = {}
 		},
 		[PREVIOUS_MISSION_COMPANIONS_LIST] = {
@@ -722,6 +769,7 @@ end
 SocialMenuRosterView._cb_set_player_icon = function (self, widget, grid_index, rows, columns, render_target)
 	local widget_content = widget.content
 	widget_content.awaiting_portrait_callback = nil
+	widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base"
 	local portrait_style = widget.style.portrait
 	local material_values = portrait_style.material_values
 	material_values.use_placeholder_texture = 0
@@ -729,6 +777,16 @@ SocialMenuRosterView._cb_set_player_icon = function (self, widget, grid_index, r
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
 	material_values.texture_icon = render_target
+end
+
+SocialMenuRosterView._cb_unset_player_icon = function (self, widget)
+	local material_values = widget.style.portrait.material_values
+	material_values.use_placeholder_texture = nil
+	material_values.rows = nil
+	material_values.columns = nil
+	material_values.grid_index = nil
+	material_values.texture_icon = nil
+	widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
 end
 
 SocialMenuRosterView._cb_set_player_frame = function (self, widget, item)
@@ -1041,8 +1099,9 @@ SocialMenuRosterView._load_widget_portrait = function (self, widget, profile, po
 	end
 
 	local profile_icon_loaded_callback = callback(self, "_cb_set_player_icon", widget)
+	local profile_icon_unloaded_callback = callback(self, "_cb_unset_player_icon", widget)
 	widget_content.awaiting_portrait_callback = true
-	widget_content.portrait_load_id = profile and Managers.ui:load_profile_portrait(profile, profile_icon_loaded_callback)
+	widget_content.portrait_load_id = profile and Managers.ui:load_profile_portrait(profile, profile_icon_loaded_callback, nil, profile_icon_unloaded_callback)
 	widget_content.portrait_character_id = profile and profile.character_id
 	widget_content.portrait_renderer = portrait_renderer
 	local widgets_with_portraits = self._widgets_with_portraits
@@ -1385,10 +1444,11 @@ SocialMenuRosterView._prepare_list = function (self, roster_list_data, roster_li
 
 					table.insert(roster_list, i + 1, group)
 				end
+			else
+				group_counter = 0
 			end
 
 			if not group.no_divider then
-				group_counter = 0
 				local divider = _list_dividers[group_id]
 
 				if not divider then

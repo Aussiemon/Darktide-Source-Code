@@ -823,17 +823,34 @@ CharacterAppearanceView._open_page = function (self, index)
 		self._widgets_by_name.background.content.visible = true
 	end
 
-	self._widgets_by_name.background.content.texture = page.background and page.background.value
-	self._widgets_by_name.background.style.texture.uvs = page.background and page.background.uvs or {
-		{
-			0,
-			0
-		},
-		{
-			1,
-			1
+	if self._background_widgets then
+		for i = 1, #self._background_widgets do
+			local widget = self._background_widgets[i]
+			local widget_name = widget.name
+
+			self:_unregister_widget_name(widget_name)
+		end
+
+		self._background_widgets = nil
+	end
+
+	if page.background_function then
+		self._background_widgets = page.background_function()
+		self._widgets_by_name.background.content.visible = false
+	else
+		self._widgets_by_name.background.content.visible = page.background and not not page.background.value
+		self._widgets_by_name.background.content.texture = page.background and page.background.value
+		self._widgets_by_name.background.style.texture.uvs = page.background and page.background.uvs or {
+			{
+				0,
+				0
+			},
+			{
+				1,
+				1
+			}
 		}
-	}
+	end
 
 	if page.top_frame then
 		self._widgets_by_name.list_background.content.top_frame = page.top_frame.header
@@ -1587,6 +1604,16 @@ CharacterAppearanceView._draw_widgets = function (self, dt, t, input_service, ui
 					template.update(self, widget)
 				end
 			end
+		end
+	end
+
+	local background_widgets = self._background_widgets
+
+	if background_widgets and #background_widgets > 0 then
+		for i = 1, #background_widgets do
+			local widget = background_widgets[i]
+
+			UIWidget.draw(widget, ui_renderer)
 		end
 	end
 end
@@ -3926,23 +3953,87 @@ CharacterAppearanceView._get_pages = function (self)
 				}
 			},
 			description = Localize("loc_character_creator_home_planet_introduction"),
-			background = {
-				value = "content/ui/materials/backgrounds/backstory/home_planet",
-				uvs = {
+			background_function = function ()
+				local material = "content/ui/materials/base/ui_default_base"
+				local textures = {
 					{
-						0,
-						0
+						value = "content/ui/textures/backgrounds/backstory/home_planet_1",
+						position = {
+							0,
+							0
+						},
+						size = {
+							2754,
+							1600
+						}
 					},
 					{
-						0.17,
-						0.17
+						value = "content/ui/textures/backgrounds/backstory/home_planet_2",
+						position = {
+							2754,
+							0
+						},
+						size = {
+							2754,
+							1600
+						}
+					},
+					{
+						value = "content/ui/textures/backgrounds/backstory/home_planet_3",
+						position = {
+							0,
+							1600
+						},
+						size = {
+							2754,
+							1600
+						}
+					},
+					{
+						value = "content/ui/textures/backgrounds/backstory/home_planet_4",
+						position = {
+							2754,
+							1600
+						},
+						size = {
+							2754,
+							1600
+						}
 					}
-				},
-				size = {
-					11016,
-					6400
 				}
-			},
+				local passes = {}
+
+				for i = 1, #textures do
+					local texture = textures[i]
+					passes[#passes + 1] = {
+						pass_type = "texture",
+						value_id = "background_" .. i,
+						style_id = "background_" .. i,
+						value = material,
+						style = {
+							size = texture.size,
+							offset = {
+								texture.position[1],
+								texture.position[2],
+								0
+							},
+							material_values = {
+								texture_map = texture.value
+							}
+						}
+					}
+				end
+
+				local definition = UIWidget.create_definition(passes, "screen", nil, {
+					5508,
+					3200
+				})
+				local widget = self:_create_widget("background_planet", definition)
+
+				return {
+					widget
+				}
+			end,
 			content = self:_get_planet_content()
 		},
 		{
@@ -4767,80 +4858,69 @@ CharacterAppearanceView._grid_navigation = function (self, start_direction)
 end
 
 CharacterAppearanceView._move_background_to_position = function (self, planet, skip_animation)
-	local background = self._pages[self._active_page_number].background
 	local animation_params = self._home_planet_animation_params
 
 	if not animation_params then
 		animation_params = {
-			start_position = {},
-			end_position = {}
+			start_background_position = {},
+			end_background_position = {},
+			start_planet_position = {},
+			end_planet_position = {}
 		}
 		self._home_planet_animation_params = animation_params
 	end
 
-	local texture_size_x, texture_size_y = unpack(background.size)
-	local uv_diff = 1920 / background.size[1]
 	local widgets_by_name = self._widgets_by_name
 	local planets_widget = widgets_by_name.home_planets
-	local background_widget = widgets_by_name.background
+	local background_widget = widgets_by_name.background_planet
 	local planets_widget_content = planets_widget.content
 	local start_planet = planets_widget_content.current_planet
 	local planet_offset_on_screen_x, planet_offset_on_screen_y = unpack(CharacterAppearanceViewSettings.planet_offset)
-	local start_position_x, start_position_y, start_uvs = nil
+	local start_position_x, start_position_y, background_start_position_x, background_start_position_y, start_planet_position_x, start_planet_position_y = nil
+	local scale = 1
+	local ratio = 1
 	local is_animation_active = self._planet_background_animation_id and self:_is_animation_active(self._planet_background_animation_id)
 
 	if start_planet and not is_animation_active then
 		start_position_x, start_position_y = unpack(start_planet.position)
 		local start_planet_size = start_planet.image.size
-		start_position_x = start_position_x - planet_offset_on_screen_x + start_planet_size[1] / 2
-		start_position_y = start_position_y - planet_offset_on_screen_y + start_planet_size[2] / 2
-		start_uvs = {
-			{
-				start_position_x / texture_size_x - uv_diff / 2,
-				start_position_y / texture_size_y - uv_diff / 2
-			},
-			{
-				start_position_x / texture_size_x + uv_diff / 2,
-				start_position_y / texture_size_y + uv_diff / 2
-			}
-		}
+		start_planet_position_x = start_position_x - planet_offset_on_screen_x + start_planet_size[1] / 2
+		start_planet_position_y = start_position_y - planet_offset_on_screen_y + start_planet_size[2] / 2
+		background_start_position_x = planet_offset_on_screen_x - start_position_x
+		background_start_position_y = planet_offset_on_screen_y - start_position_y
 	else
-		start_uvs = table.clone(background_widget.style.texture.uvs)
-		start_position_x = (start_uvs[1][1] + uv_diff / 2) * texture_size_x
-		start_position_y = (start_uvs[1][2] + uv_diff / 2) * texture_size_y
+		background_start_position_x = background_widget.content.original_offset and background_widget.content.original_offset[1] or background_widget.offset[1]
+		background_start_position_y = background_widget.content.original_offset and background_widget.content.original_offset[2] or background_widget.offset[2]
+		start_planet_position_x = -1 * (planets_widget.content.original_offset and planets_widget.content.original_offset[1] or planets_widget.offset[1])
+		start_planet_position_y = -1 * (planets_widget.content.original_offset and planets_widget.content.original_offset[2] or planets_widget.offset[2])
 	end
 
 	local planet_size = planet.image.size
 	local end_position_x, end_position_y = unpack(planet.position)
-	end_position_x = end_position_x - planet_offset_on_screen_x + planet_size[1] / 2
-	end_position_y = end_position_y - planet_offset_on_screen_y + planet_size[2] / 2
-	local end_uvs = {
-		{
-			end_position_x / texture_size_x - uv_diff / 2,
-			end_position_y / texture_size_y - uv_diff / 2
-		},
-		{
-			end_position_x / texture_size_x + uv_diff / 2,
-			end_position_y / texture_size_y + uv_diff / 2
-		}
-	}
+	local end_planet_position_x = end_position_x - planet_offset_on_screen_x + planet_size[1] / 2
+	local end_planet_position_y = end_position_y - planet_offset_on_screen_y + planet_size[2] / 2
+	local background_end_position_x = planet_offset_on_screen_x - end_position_x
+	local background_end_position_y = planet_offset_on_screen_y - end_position_y
 
 	if skip_animation then
-		background_widget.style.texture.uvs = end_uvs
-		planets_widget.offset[1] = -end_position_x
-		planets_widget.offset[2] = -end_position_y
+		background_widget.offset[1] = background_end_position_x * scale * ratio
+		background_widget.offset[2] = background_end_position_y * scale * ratio
+		planets_widget.offset[1] = -(end_planet_position_x * scale) * ratio
+		planets_widget.offset[2] = -(end_planet_position_y * scale) * ratio
 		planets_widget_content.current_planet = planet
 		local planet_style = planets_widget.style[planet.id]
 		planet_style.visible = true
 		planet_style.size_addition[1] = 0
 		planet_style.size_addition[2] = 0
 	else
-		animation_params.start_uvs = start_uvs
-		animation_params.end_uvs = end_uvs
-		animation_params.start_position[1] = start_position_x
-		animation_params.start_position[2] = start_position_y
-		animation_params.end_position[1] = end_position_x
-		animation_params.end_position[2] = end_position_y
+		animation_params.start_background_position[1] = background_start_position_x * scale * ratio
+		animation_params.start_background_position[2] = background_start_position_y * scale * ratio
+		animation_params.end_background_position[1] = background_end_position_x * scale * ratio
+		animation_params.end_background_position[2] = background_end_position_y * scale * ratio
+		animation_params.start_planet_position[1] = start_planet_position_x * scale * ratio
+		animation_params.start_planet_position[2] = start_planet_position_y * scale * ratio
+		animation_params.end_planet_position[1] = end_planet_position_x * scale * ratio
+		animation_params.end_planet_position[2] = end_planet_position_y * scale * ratio
 		animation_params.target_planet = planet
 
 		if self._planet_background_animation_id and self:_is_animation_active(self._planet_background_animation_id) then
@@ -4910,29 +4990,21 @@ CharacterAppearanceView._align_background = function (self)
 		local inverse_scale = RESOLUTION_LOOKUP.inverse_scale
 		local parent_size_x = screen_width * inverse_scale
 		local parent_size_y = screen_height * inverse_scale
-		local reference_size = self._pages[self._active_page_number].background and self._pages[self._active_page_number].background.size or {
+		local reference_size = {
 			1920,
 			1080
 		}
-		local width_reference_ratio = reference_size[1] / reference_size[2]
-		local height_reference_ratio = reference_size[2] / reference_size[1]
-		local screen_ratio = screen_width / screen_height
-		local size = {
-			parent_size_x,
-			parent_size_y
+		local widget_size = self._pages[self._active_page_number].background and self._pages[self._active_page_number].background.size or {
+			1920,
+			1080
 		}
-
-		if width_reference_ratio < screen_ratio then
-			size = {
-				parent_size_x,
-				parent_size_x * height_reference_ratio
-			}
-		elseif screen_ratio < width_reference_ratio then
-			size = {
-				parent_size_y * width_reference_ratio,
-				parent_size_y
-			}
-		end
+		local width_reference_ratio = screen_width / reference_size[1]
+		local height_reference_ratio = screen_height / reference_size[2]
+		local reference_ratio = math.max(width_reference_ratio, height_reference_ratio)
+		local size = {
+			widget_size[1] * inverse_scale * reference_ratio,
+			widget_size[2] * inverse_scale * reference_ratio
+		}
 
 		if self._widgets_by_name and self._widgets_by_name.background then
 			self._widgets_by_name.background.content.size = size
@@ -4942,6 +5014,57 @@ CharacterAppearanceView._align_background = function (self)
 				0
 			}
 		end
+	elseif self._pages and self._pages[self._active_page_number] and self._pages and self._pages[self._active_page_number].name == "home_planet" then
+		local widget = self._widgets_by_name.background_planet
+		local screen_width = RESOLUTION_LOOKUP.width
+		local screen_height = RESOLUTION_LOOKUP.height
+		local inverse_scale = RESOLUTION_LOOKUP.inverse_scale
+		local parent_size = {
+			screen_width * inverse_scale,
+			screen_height * inverse_scale
+		}
+		local reference_size = {
+			1920,
+			1080
+		}
+		local widget_size = {
+			5508,
+			3200
+		}
+		local width_reference_ratio = screen_width / reference_size[1]
+		local height_reference_ratio = screen_height / reference_size[2]
+		local reference_ratio = math.max(width_reference_ratio, height_reference_ratio)
+		local size = {
+			widget_size[1] * inverse_scale * reference_ratio,
+			widget_size[2] * inverse_scale * reference_ratio
+		}
+		widget.content.size = size
+		widget.content.ratio = reference_ratio
+		widget.content.scale = inverse_scale
+		widget.style.background_1.size = {
+			size[1] * 0.5,
+			size[2] * 0.5
+		}
+		widget.style.background_2.size = {
+			size[1] * 0.5,
+			size[2] * 0.5
+		}
+		widget.style.background_3.size = {
+			size[1] * 0.5,
+			size[2] * 0.5
+		}
+		widget.style.background_4.size = {
+			size[1] * 0.5,
+			size[2] * 0.5
+		}
+		widget.style.background_1.offset[1] = 0
+		widget.style.background_1.offset[2] = 0
+		widget.style.background_2.offset[1] = size[1] * 0.5
+		widget.style.background_2.offset[2] = 0
+		widget.style.background_3.offset[1] = 0
+		widget.style.background_3.offset[2] = size[2] * 0.5
+		widget.style.background_4.offset[1] = size[1] * 0.5
+		widget.style.background_4.offset[2] = size[2] * 0.5
 	end
 end
 

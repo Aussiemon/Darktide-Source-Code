@@ -5,7 +5,6 @@ local AttackIntensity = require("scripts/utilities/attack_intensity")
 local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Block = require("scripts/utilities/attack/block")
-local BreedSettings = require("scripts/settings/breed/breed_settings")
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local GroundImpact = require("scripts/utilities/attack/ground_impact")
@@ -15,10 +14,9 @@ local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local MinionShield = require("scripts/utilities/minion_shield")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local Vo = require("scripts/utilities/vo")
+local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local attack_types = AttackSettings.attack_types
-local breed_types = BreedSettings.types
 local default_backstab_melee_dot = MinionBackstabSettings.melee_backstab_dot
 local default_backstab_melee_event = MinionBackstabSettings.melee_backstab_event
 local BtMeleeAttackAction = class("BtMeleeAttackAction", "BtNode")
@@ -102,7 +100,8 @@ local DEFAULT_SET_ATTACKED_MELEE_TIMING = {
 }
 
 BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_unit, t, spawn_component, scratchpad, action_data)
-	local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+	local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+	local target_player = Managers.state.player_unit_spawn:owner(target_unit)
 	local attack_anim_events = action_data.attack_anim_events or DEFAULT_ATTACK_ANIM_EVENT
 	local wanted_events, should_be_anim_driven = nil
 
@@ -125,11 +124,18 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 		if up_threshold <= z_diff and attack_anim_events.up then
 			wanted_events = attack_anim_events.up
 		elseif z_diff <= 0 and attack_anim_events.down then
-			local character_state_component = unit_data_extension:read_component("character_state")
+			local is_climbing_ladder = false
+			local is_knocked_down = false
 
-			if PlayerUnitStatus.is_climbing_ladder(character_state_component) then
+			if target_player then
+				local target_character_state_component = target_unit_data_extension:read_component("character_state")
+				is_climbing_ladder = PlayerUnitStatus.is_climbing_ladder(target_character_state_component)
+				is_knocked_down = PlayerUnitStatus.is_knocked_down(target_character_state_component)
+			end
+
+			if is_climbing_ladder then
 				wanted_events = attack_anim_events.reach_down or attack_anim_events.down
-			elseif z_diff < down_threshold or PlayerUnitStatus.is_knocked_down(character_state_component) then
+			elseif z_diff < down_threshold or is_knocked_down then
 				wanted_events = attack_anim_events.down
 			end
 		end
@@ -157,11 +163,9 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 
 	local extra_timing = 0
 	local backstab_timing = DEFAULT_BACKSTAB_TIMING or action_data.backstab_timing
-	local player_unit_spawn_manager = Managers.state.player_unit_spawn
-	local player = player_unit_spawn_manager:owner(target_unit)
 
-	if player and player.remote then
-		extra_timing = player:lag_compensation_rewind_s()
+	if target_player and target_player.remote then
+		extra_timing = target_player:lag_compensation_rewind_s()
 		scratchpad.lag_compensation_rewind_s = extra_timing
 	end
 
@@ -215,13 +219,9 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 		end
 
 		scratchpad.set_attacked_melee_timing = scratchpad.start_sweep_t - math.random_range(DEFAULT_SET_ATTACKED_MELEE_TIMING[1], DEFAULT_SET_ATTACKED_MELEE_TIMING[2])
-		local should_create_aoe_threat = unit_data_extension:breed().breed_type == breed_types.player
 
-		if should_create_aoe_threat and action_data.aoe_threat_timing then
+		if action_data.aoe_threat_timing then
 			local aoe_threat_timing = action_data.aoe_threat_timing
-			local group_extension = ScriptUnit.extension(target_unit, "group_system")
-			local bot_group = group_extension:bot_group()
-			scratchpad.aoe_threat_bot_group = bot_group
 			scratchpad.aoe_threat_window = (scratchpad.start_time or scratchpad.start_sweep_t) + aoe_threat_timing
 			scratchpad.should_create_aoe_threat = true
 		end
@@ -248,8 +248,13 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 		local dodge_window = (action_data.dodge_window or DEFAULT_DODGE_WINDOW) + extra_timing
 		scratchpad.dodge_window = scratchpad.attack_timing - dodge_window
 		scratchpad.backstab_timing = scratchpad.attack_timing - backstab_timing - extra_timing
-		local target_weapon_action_component = unit_data_extension:read_component("weapon_action")
-		local target_weapon_template = WeaponTemplate.current_weapon_template(target_weapon_action_component)
+		local target_weapon_template = nil
+
+		if target_player then
+			local target_weapon_action_component = target_unit_data_extension:read_component("weapon_action")
+			target_weapon_template = WeaponTemplate.current_weapon_template(target_weapon_action_component)
+		end
+
 		local is_blockable = Block.attack_is_blockable(action_data.damage_profile, target_unit, target_weapon_template)
 
 		if not is_blockable then
@@ -261,18 +266,12 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 		end
 
 		local aoe_threat_timing = action_data.aoe_threat_timing
-		local should_create_aoe_threat = not is_blockable and unit_data_extension:breed().breed_type == breed_types.player and (attack_type == "oobb" or attack_type == "broadphase")
+		local should_create_aoe_threat = not is_blockable and (attack_type == "oobb" or attack_type == "broadphase")
 		scratchpad.should_create_aoe_threat = should_create_aoe_threat
 
 		if should_create_aoe_threat then
-			local group_extension = ScriptUnit.extension(target_unit, "group_system")
-			local bot_group = group_extension:bot_group()
-			scratchpad.aoe_threat_bot_group = bot_group
 			scratchpad.aoe_threat_window = scratchpad.dodge_window - (aoe_threat_timing or DEFAULT_BOT_AOE_THREAT_TIMING)
 		elseif aoe_threat_timing then
-			local group_extension = ScriptUnit.extension(target_unit, "group_system")
-			local bot_group = group_extension:bot_group()
-			scratchpad.aoe_threat_bot_group = bot_group
 			scratchpad.aoe_threat_window = scratchpad.dodge_window - aoe_threat_timing
 			scratchpad.should_create_aoe_threat = true
 		end
@@ -417,6 +416,7 @@ BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, a
 		scratchpad.next_assault_vo_t = t + scratchpad.assault_vo_interval_t
 	end
 
+	local target_unit = scratchpad.perception_component.target_unit
 	local backstab_timing = scratchpad.backstab_timing
 
 	if backstab_timing and backstab_timing <= t then
@@ -426,7 +426,6 @@ BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, a
 			local ignore_attack_intensity = true
 			local wwise_event = action_data.backstab_event or default_backstab_melee_event
 			local dot_threshold = action_data.backstab_dot or default_backstab_melee_dot
-			local target_unit = scratchpad.perception_component.target_unit
 			local triggered_backstab_sound = MinionAttack.check_and_trigger_backstab_sound(unit, action_data, target_unit, wwise_event, dot_threshold, ignore_attack_intensity)
 
 			if triggered_backstab_sound then
@@ -440,13 +439,10 @@ BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, a
 	if scratchpad.should_create_aoe_threat and scratchpad.aoe_threat_window <= t then
 		local duration = action_data.aoe_threat_duration or (scratchpad.start_sweep_t or attack_timing) - t
 
-		self:_create_bot_aoe_threat(unit, scratchpad.aoe_threat_bot_group, action_data, duration)
+		self:_create_bot_aoe_threat(unit, action_data, duration)
 
-		scratchpad.aoe_threat_bot_group = nil
 		scratchpad.should_create_aoe_threat = false
 	end
-
-	local target_unit = scratchpad.perception_component.target_unit
 
 	if scratchpad.set_attacked_melee_timing and scratchpad.set_attacked_melee_timing <= t then
 		AttackIntensity.set_attacked_melee(target_unit)
@@ -801,7 +797,7 @@ end
 
 local SWEEP_AOE_THREAT_RADIUS = 4
 
-BtMeleeAttackAction._create_bot_aoe_threat = function (self, unit, bot_group, action_data, duration)
+BtMeleeAttackAction._create_bot_aoe_threat = function (self, unit, action_data, duration)
 	local position, shape, size, rotation = nil
 	local attack_type = action_data.attack_type
 
@@ -839,7 +835,18 @@ BtMeleeAttackAction._create_bot_aoe_threat = function (self, unit, bot_group, ac
 		shape = "sphere"
 	end
 
-	bot_group:aoe_threat_created(position, shape, size, rotation, duration)
+	local side_system = Managers.state.extension:system("side_system")
+	local side = side_system.side_by_unit[unit]
+	local enemy_sides = side:relation_sides("enemy")
+	local group_system = Managers.state.extension:system("group_system")
+	local bot_groups = group_system:bot_groups_from_sides(enemy_sides)
+	local num_bot_groups = #bot_groups
+
+	for i = 1, num_bot_groups do
+		local bot_group = bot_groups[i]
+
+		bot_group:aoe_threat_created(position, shape, size, rotation, duration)
+	end
 end
 
 return BtMeleeAttackAction

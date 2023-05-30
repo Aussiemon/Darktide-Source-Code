@@ -348,13 +348,21 @@ BtShootLiquidBeamAction._update_shooting = function (self, unit, t, dt, scratchp
 		end
 
 		if scratchpad.aoe_bot_threat_timing and scratchpad.aoe_bot_threat_timing <= t then
-			local perception_component = scratchpad.perception_component
-			local target_unit = perception_component.target_unit
-			local group_extension = ScriptUnit.extension(target_unit, "group_system")
-			local bot_group = group_extension:bot_group()
 			local aoe_bot_threat_size = action_data.aoe_bot_threat_size:unbox()
+			local aoe_bot_threat_duration = action_data.aoe_bot_threat_duration
+			local aoe_bot_threat_rotation = Quaternion.look(flat_to_target_direction)
+			local side_system = Managers.state.extension:system("side_system")
+			local side = side_system.side_by_unit[unit]
+			local enemy_sides = side:relation_sides("enemy")
+			local group_system = Managers.state.extension:system("group_system")
+			local bot_groups = group_system:bot_groups_from_sides(enemy_sides)
+			local num_bot_groups = #bot_groups
 
-			bot_group:aoe_threat_created(target_position, "oobb", aoe_bot_threat_size, Quaternion.look(flat_to_target_direction), action_data.aoe_bot_threat_duration)
+			for i = 1, num_bot_groups do
+				local bot_group = bot_groups[i]
+
+				bot_group:aoe_threat_created(target_position, "oobb", aoe_bot_threat_size, aoe_bot_threat_rotation, aoe_bot_threat_duration)
+			end
 
 			scratchpad.aoe_bot_threat_timing = nil
 		end

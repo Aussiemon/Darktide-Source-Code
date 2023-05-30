@@ -119,6 +119,9 @@ local ErrorCodesLookup = {
 	mission_not_found = {
 		code = 3012
 	},
+	failed_found_no_lobby = {
+		code = 3013
+	},
 	hot_join_party_hub_failed = {
 		code = 4001
 	},

@@ -486,14 +486,18 @@ local PlayerComponentConfig = {
 		}
 	},
 	first_person = {
-		previous_rotation = "locomotion_rotation",
+		old_height = "character_height",
 		height = "character_height",
 		height_change_duration = "short_time",
 		wanted_height = "character_height",
-		old_height = "character_height",
+		previous_rotation = "locomotion_rotation",
 		position = "locomotion_position",
 		rotation = "locomotion_rotation",
-		height_change_start_time = "fixed_frame_offset"
+		height_change_start_time = "fixed_frame_offset",
+		height_change_function = {
+			"ease_out_quad",
+			"ease_in_cubic"
+		}
 	},
 	force_look_rotation = {
 		wanted_pitch = "rotation_single",
@@ -825,6 +829,13 @@ local PlayerComponentConfig = {
 	alternate_fire = {
 		start_t = "fixed_frame_offset",
 		is_active = "bool"
+	},
+	peeking = {
+		peeking_is_possible = "bool",
+		has_significant_obstacle_in_front = "bool",
+		in_cover = "bool",
+		peeking_height = "character_height",
+		is_peeking = "bool"
 	},
 	interaction = {
 		done_time = "fixed_frame_time",

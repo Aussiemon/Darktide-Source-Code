@@ -25,6 +25,7 @@ local grid_settings = {
 	use_select_on_focused = true,
 	use_is_focused_for_navigation = false,
 	use_terminal_background = true,
+	scrollbar_horizontal_offset = -7,
 	grid_spacing = grid_spacing,
 	grid_size = grid_size,
 	mask_size = mask_size,
@@ -39,6 +40,7 @@ weapon_stats_grid_settings = {
 	scrollbar_width = 7,
 	ignore_blur = true,
 	title_height = 70,
+	use_parent_world = false,
 	grid_spacing = {
 		0,
 		0
@@ -107,7 +109,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			-1140,
-			40,
+			80,
 			3
 		}
 	},
@@ -121,7 +123,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			-1140 + grid_size[1] - 50,
-			40,
+			80,
 			3
 		}
 	},

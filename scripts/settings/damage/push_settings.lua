@@ -152,6 +152,11 @@ local push_settings = {
 			speed = 7,
 			max_speed_override = 7,
 			push_through_block = true
+		},
+		chaos_spawn_combo_heavy = {
+			speed = 9,
+			max_speed_override = 9,
+			push_through_block = true
 		}
 	}
 }

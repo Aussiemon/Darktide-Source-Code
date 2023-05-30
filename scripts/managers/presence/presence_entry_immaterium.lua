@@ -159,9 +159,9 @@ PresenceEntryImmaterium.platform_icon = function (self)
 		elseif platform == "xbox" then
 			return ""
 		end
+	else
+		return ""
 	end
-
-	return nil
 end
 
 PresenceEntryImmaterium.platform_user_id = function (self)

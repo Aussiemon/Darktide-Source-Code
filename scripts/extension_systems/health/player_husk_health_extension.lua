@@ -22,6 +22,10 @@ PlayerHuskHealthExtension.init = function (self, extension_init_context, unit, e
 	self._character_state_read_component = unit_data_extension:read_component("character_state")
 end
 
+PlayerHuskHealthExtension.pre_update = function (self, unit, dt, t)
+	self._was_hit_by_critical_hit_this_render_frame = false
+end
+
 PlayerHuskHealthExtension.fixed_update = function (self, unit, dt, t)
 	self._is_knocked_down = PlayerUnitStatus.is_knocked_down(self._character_state_read_component)
 	local game_session = self._game_session
@@ -156,6 +160,29 @@ end
 
 PlayerHuskHealthExtension.set_invulnerable = function (self, should_be_invulnerable)
 	return
+end
+
+PlayerHuskHealthExtension.set_last_damaging_unit = function (self, last_damaging_unit, hit_zone_name, last_hit_was_critical)
+	self._last_damaging_unit = last_damaging_unit
+	self._last_hit_zone_name = hit_zone_name
+	self._last_hit_was_critical = last_hit_was_critical
+	self._was_hit_by_critical_hit_this_render_frame = self._was_hit_by_critical_hit_this_render_frame or last_hit_was_critical
+end
+
+PlayerHuskHealthExtension.last_damaging_unit = function (self)
+	return self._last_damaging_unit
+end
+
+PlayerHuskHealthExtension.last_hit_zone_name = function (self)
+	return self._last_hit_zone_name
+end
+
+PlayerHuskHealthExtension.last_hit_was_critical = function (self)
+	return self._last_hit_was_critical
+end
+
+PlayerHuskHealthExtension.was_hit_by_critical_hit_this_render_frame = function (self)
+	return self._was_hit_by_critical_hit_this_render_frame
 end
 
 PlayerHuskHealthExtension.kill = function (self)

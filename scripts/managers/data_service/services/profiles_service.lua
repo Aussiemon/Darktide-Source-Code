@@ -1,5 +1,6 @@
 local BackendError = require("scripts/managers/error/errors/backend_error")
 local MasterItems = require("scripts/backend/master_items")
+local ParameterResolver = require("scripts/foundation/utilities/parameters/parameter_resolver")
 local ProfileUtils = require("scripts/utilities/profile_utils")
 local Promise = require("scripts/foundation/utilities/promise")
 local ProfilesService = class("ProfilesService")

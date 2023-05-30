@@ -193,11 +193,6 @@ NetworkLookup.moveable_platform_direction = {
 	"forward",
 	"backward"
 }
-NetworkLookup.assist_type_lookup = {
-	"assisted",
-	"saved",
-	"revived"
-}
 local minion_attack_selection_template_names = {}
 NetworkLookup.minigame_states = _create_lookup({}, MinigameSettings.states)
 NetworkLookup.minion_attack_selection_template_names = _create_lookup(minion_attack_selection_template_names, MinionAttackSelectionTemplates)

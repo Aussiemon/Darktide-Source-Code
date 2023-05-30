@@ -354,7 +354,7 @@ projectile_templates.ogryn_grenade_box = {
 			},
 			sfx = {
 				looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
-				looping_sgtop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop"
+				looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop"
 			}
 		},
 		cluster = {}

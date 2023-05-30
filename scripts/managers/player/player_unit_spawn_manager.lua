@@ -1,5 +1,4 @@
 local Breeds = require("scripts/settings/breed/breeds")
-local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local UnitSpawnerManager = require("scripts/foundation/managers/unit_spawner/unit_spawner_manager")
 local DELETION_STATES = UnitSpawnerManager.DELETION_STATES
 local PlayerUnitSpawnManager = class("PlayerUnitSpawnManager")
@@ -56,10 +55,6 @@ PlayerUnitSpawnManager.fixed_update = function (self, dt, t)
 end
 
 PlayerUnitSpawnManager.update = function (self, dt, t)
-	if self._is_server then
-		-- Nothing
-	end
-
 	self:_update_ragdolls(self._frozen_ragdolls, self._soft_cap_out_of_bounds_units)
 end
 

@@ -365,7 +365,7 @@ damage_templates.melee_roamer_default = {
 }
 damage_templates.chaos_spawn_combo = {
 	ogryn_disorientation_type = "ogryn_light",
-	block_cost_multiplier = 1,
+	block_cost_multiplier = 1.25,
 	stagger_category = "melee",
 	interrupt_alternate_fire = true,
 	disorientation_type = "light",
@@ -386,6 +386,37 @@ damage_templates.chaos_spawn_combo = {
 		impact = 0.25
 	},
 	push_template = push_templates.chaos_spawn_combo,
+	ogryn_push_template = push_templates.chaos_spawn_combo,
+	force_look_function = ForcedLookSettings.look_functions.to_or_from_attack_direction,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+damage_templates.chaos_spawn_combo_heavy = {
+	ogryn_disorientation_type = "ogryn_light",
+	block_cost_multiplier = 1.85,
+	stagger_category = "melee",
+	interrupt_alternate_fire = true,
+	disorientation_type = "light",
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod
+	},
+	crit_mods = {
+		attack = crit_armor_mod,
+		impact = crit_impact_armor_mod
+	},
+	power_distribution = {
+		attack = 40,
+		impact = 50
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25
+	},
+	push_template = push_templates.chaos_spawn_combo_heavy,
 	ogryn_push_template = push_templates.chaos_spawn_combo,
 	force_look_function = ForcedLookSettings.look_functions.to_or_from_attack_direction,
 	targets = {
@@ -3617,6 +3648,52 @@ damage_templates.toxic_gas_mutator = {
 	disorientation_type = "corruption",
 	toughness_multiplier = 3,
 	permanent_damage_ratio = 1,
+	ignore_mood_effects = true,
+	stagger_category = "melee",
+	ignore_depleting_toughness = true,
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+			[armor_types.prop_armor] = 0
+		},
+		impact = {
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+			[armor_types.prop_armor] = 0
+		}
+	},
+	power_distribution = {
+		attack = 1,
+		impact = 0
+	},
+	cleave_distribution = {
+		attack = 1,
+		impact = 0
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+damage_templates.cultist_grenadier_gas = {
+	ogryn_disorientation_type = "corruption",
+	disorientation_type = "corruption",
+	toughness_multiplier = 3,
+	permanent_damage_ratio = 0.8,
 	ignore_mood_effects = true,
 	stagger_category = "melee",
 	ignore_depleting_toughness = true,

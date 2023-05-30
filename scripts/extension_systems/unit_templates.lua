@@ -325,7 +325,8 @@ local unit_templates = {
 			})
 			config:add("PlayerUnitInputExtension", {
 				player = player,
-				input_handler = input_handler
+				input_handler = input_handler,
+				is_local_unit = is_local_unit
 			})
 			config:add("BotNavigationExtension", {
 				nav_tag_allowed_layers = breed.nav_tag_allowed_layers,
@@ -768,7 +769,8 @@ local unit_templates = {
 				config:add("PlayerUnitAnimationExtension")
 				config:add("PlayerUnitInputExtension", {
 					player = player,
-					input_handler = input_handler
+					input_handler = input_handler,
+					is_local_unit = is_local_unit
 				})
 				config:add("PlayerUnitLocomotionExtension", {
 					player = player,
@@ -1815,7 +1817,7 @@ local unit_templates = {
 		game_object_type = function ()
 			return "medical_crate_deployable"
 		end,
-		local_init = function (unit, config, template_context, game_object_data, side_id, deployable, placed_on_unit)
+		local_init = function (unit, config, template_context, game_object_data, side_id, deployable, placed_on_unit, owner_unit_or_nil)
 			local is_server = template_context.is_server
 
 			Unit.set_data(unit, "deployable_type", "medical_crate")
@@ -1845,7 +1847,8 @@ local unit_templates = {
 						{
 							use_as_job = true,
 							class_name = "ProximityHeal",
-							init_data = deployable.proximity_heal_init_data
+							init_data = deployable.proximity_heal_init_data,
+							owner_unit_or_nil = owner_unit_or_nil
 						}
 					}
 				}

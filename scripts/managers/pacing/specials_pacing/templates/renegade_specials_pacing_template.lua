@@ -12,19 +12,21 @@ local DEFAULT_SPAWN_STINGERS = {
 	chaos_poxwalker_bomber = "wwise/events/minions/play_minion_special_poxwalker_bomber_spawn"
 }
 local DEFAULT_OPTIONAL_PREFERED_SPAWN_DIRECTION = {
+	renegade_sniper = "ahead",
 	renegade_grenadier = "ahead",
-	renegade_sniper = "ahead"
+	cultist_grenadier = "ahead"
 }
 local DEFAULT_OPTIONAL_MAINPATH_OFFSET = {
+	renegade_sniper = 40,
 	renegade_grenadier = 30,
-	renegade_sniper = 40
+	cultist_grenadier = 30
 }
 local DEFAULT_BREEDS = {
 	all = {
 		"chaos_hound",
 		"chaos_poxwalker_bomber",
 		"cultist_mutant",
-		"renegade_grenadier",
+		"grenadier",
 		"renegade_netgunner",
 		"renegade_sniper",
 		"flamer"
@@ -36,7 +38,7 @@ local DEFAULT_BREEDS = {
 	},
 	scramblers = {
 		"chaos_poxwalker_bomber",
-		"renegade_grenadier",
+		"grenadier",
 		"renegade_sniper",
 		"flamer"
 	}
@@ -58,40 +60,47 @@ local DEFAULT_SPEED_RUNNING_PREVENTION_BREEDS = {
 	"renegade_netgunner"
 }
 local DEFAULT_MAX_OF_SAME = {
+	chaos_poxwalker_bomber = 2,
+	renegade_sniper = 2,
+	renegade_grenadier = 3,
+	renegade_flamer = 2,
+	renegade_netgunner = 2,
+	cultist_grenadier = 3,
 	cultist_mutant = 3,
 	chaos_hound = 2,
-	renegade_grenadier = 3,
-	chaos_poxwalker_bomber = 2,
-	renegade_netgunner = 2,
-	renegade_sniper = 2,
-	renegade_flamer = 2,
 	cultist_flamer = 2
 }
 local HIGH_MAX_OF_SAME = {
+	chaos_poxwalker_bomber = 3,
+	renegade_sniper = 3,
+	renegade_grenadier = 3,
+	renegade_flamer = 2,
+	renegade_netgunner = 2,
+	cultist_grenadier = 3,
 	cultist_mutant = 4,
 	chaos_hound = 2,
-	renegade_grenadier = 3,
-	chaos_poxwalker_bomber = 3,
-	renegade_netgunner = 2,
-	renegade_sniper = 3,
-	renegade_flamer = 2,
 	cultist_flamer = 2
 }
 local FACTION_BOUND_BREEDS = {
 	flamer = {
 		cultist = "cultist_flamer",
 		renegade = "renegade_flamer"
+	},
+	grenadier = {
+		cultist = "renegade_grenadier",
+		renegade = "renegade_grenadier"
 	}
 }
 local DEFAULT_MIN_DISTANCES_FROM_TARGET = {
+	chaos_poxwalker_bomber = 35,
+	cultist_flamer = 20,
+	renegade_grenadier = 20,
+	renegade_flamer = 15,
+	renegade_netgunner = 20,
+	cultist_grenadier = 20,
 	cultist_mutant = 25,
 	chaos_hound = 25,
-	renegade_grenadier = 20,
-	chaos_poxwalker_bomber = 35,
-	renegade_netgunner = 20,
-	renegade_sniper = 30,
-	renegade_flamer = 15,
-	cultist_flamer = 20
+	renegade_sniper = 30
 }
 local DEFAULT_MIN_SPAWNERS_RANGES = {
 	max = 40,

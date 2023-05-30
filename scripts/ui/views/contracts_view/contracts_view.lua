@@ -294,6 +294,8 @@ ContractsView._setup_task_grid_layout = function (self)
 end
 
 ContractsView._fetch_task_list = function (self)
+	self._task_grid:set_loading_state(true)
+
 	local player = self:_player()
 	local character_id = player:character_id()
 	local promise = self._backend_interfaces.contracts:get_current_contract(character_id)
@@ -303,6 +305,8 @@ ContractsView._fetch_task_list = function (self)
 			self._contract_data = data
 			self._update_tasks_list = true
 		end
+
+		self._task_grid:set_loading_state(false)
 	end)
 end
 

@@ -33,7 +33,7 @@ EventSynchronizerBaseExtension.start_event = function (self)
 	end
 end
 
-EventSynchronizerBaseExtension.start_stage = function (self)
+EventSynchronizerBaseExtension.start_stage = function (self, stage)
 	return
 end
 

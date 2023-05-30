@@ -934,7 +934,7 @@ DialogueSystem.is_server = function (self)
 	return self._is_server
 end
 
-DialogueSystem.is_playable_dialogue_category = function (self, dialogue)
+DialogueSystem._is_playable_dialogue_category = function (self, dialogue)
 	local is_playable = true
 	local is_cinematic_playing = Managers.state.cinematic:is_playing()
 
@@ -947,6 +947,31 @@ DialogueSystem.is_playable_dialogue_category = function (self, dialogue)
 	end
 
 	return is_playable
+end
+
+DialogueSystem._prevent_on_demand_vo = function (self, actor_unit, dialogue)
+	local prevent_play = false
+	local is_on_demand_vo = dialogue.category == "player_on_demand_vo"
+
+	if not is_on_demand_vo then
+		return prevent_play
+	end
+
+	local player_unit_spawn_manager = Managers.state.player_unit_spawn
+	local player = player_unit_spawn_manager:owner(actor_unit)
+
+	if player then
+		local account_id = player:account_id()
+		local social_service_manager = Managers.data_service.social
+		local player_info = account_id and social_service_manager and social_service_manager:get_player_info_by_account_id(account_id)
+
+		if player_info then
+			local is_muted = player_info:is_text_muted() or player_info:is_voice_muted()
+			prevent_play = is_on_demand_vo and is_muted
+		end
+	end
+
+	return prevent_play
 end
 
 DialogueSystem._set_ruledatabase_debug_level = function (self)
@@ -1052,7 +1077,11 @@ DialogueSystem._play_dialogue_event_implementation = function (self, go_id, is_l
 	local dialogue_name = NetworkLookup.dialogues[dialogue_id]
 	local dialogue = self._dialogues[dialogue_name]
 
-	if not self:is_playable_dialogue_category(dialogue) then
+	if not self:_is_playable_dialogue_category(dialogue) then
+		return
+	end
+
+	if self:_prevent_on_demand_vo(dialogue_actor_unit, dialogue) then
 		return
 	end
 

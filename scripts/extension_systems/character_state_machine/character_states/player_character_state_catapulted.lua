@@ -2,6 +2,7 @@ require("scripts/extension_systems/character_state_machine/character_states/play
 
 local DisruptiveStateTransition = require("scripts/extension_systems/character_state_machine/character_states/utilities/disruptive_state_transition")
 local Fall = require("scripts/extension_systems/character_state_machine/character_states/utilities/fall")
+local ForceRotation = require("scripts/extension_systems/locomotion/utilities/force_rotation")
 local HealthStateTransitions = require("scripts/extension_systems/character_state_machine/character_states/utilities/health_state_transitions")
 local Interrupt = require("scripts/utilities/attack/interrupt")
 local Luggable = require("scripts/utilities/luggable")
@@ -69,7 +70,11 @@ PlayerCharacterStateCatapulted.on_enter = function (self, unit, dt, t, previous_
 
 	Interrupt.ability_and_action(t, unit, "catapulted", nil)
 	Luggable.drop_luggable(t, unit, inventory_component, visual_loadout_extension, true)
-	PlayerUnitVisualLoadout.wield_slot("slot_unarmed", unit, t)
+
+	if previous_state ~= "grabbed" then
+		PlayerUnitVisualLoadout.wield_slot("slot_unarmed", unit, t)
+	end
+
 	self:_trigger_anim_event(catapulted_direction, "enter")
 	self._fx_extension:trigger_looping_wwise_event("catapulted", "head")
 
@@ -80,6 +85,13 @@ PlayerCharacterStateCatapulted.on_enter = function (self, unit, dt, t, previous_
 	end
 
 	Vo.player_catapulted_event(unit)
+
+	local locomotion_steering_component = self._locomotion_steering_component
+	local locomotion_force_rotation_component = self._locomotion_force_rotation_component
+	local wanted_direction = catapulted_direction == "forward" and direction or -direction
+	local force_rotation = Quaternion.look(wanted_direction)
+
+	ForceRotation.start(locomotion_force_rotation_component, locomotion_steering_component, force_rotation, force_rotation, t, 1)
 
 	self._skip_next_frame = true
 end
@@ -94,6 +106,12 @@ PlayerCharacterStateCatapulted._trigger_anim_event = function (self, direction, 
 end
 
 PlayerCharacterStateCatapulted.on_exit = function (self, unit, t, next_state)
+	local locomotion_force_rotation_component = self._locomotion_force_rotation_component
+
+	if locomotion_force_rotation_component.use_force_rotation then
+		ForceRotation.stop(locomotion_force_rotation_component)
+	end
+
 	local fx_extension = self._fx_extension
 	local locomotion_component = self._locomotion_component
 	local inair_state_component = self._inair_state_component

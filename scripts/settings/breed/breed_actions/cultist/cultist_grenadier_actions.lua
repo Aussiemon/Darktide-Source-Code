@@ -158,14 +158,15 @@ local action_data = {
 		}
 	},
 	follow = {
-		check_grenade_trajectory_frequency = 0.25,
-		new_location_min_dist = 2,
-		new_location_combat_range = "close",
 		idle_anim_events = "idle",
-		vo_event = "skulking",
 		move_anim_events = "move_fwd",
-		min_distance_from_target = 6,
+		check_grenade_trajectory_frequency = 0.25,
+		new_location_combat_range = "close",
 		speed = 4.2,
+		vo_event = "skulking",
+		throw_position_distance_fwd_dot = 0.25,
+		min_distance_from_target = 6,
+		new_location_min_dist = 2,
 		start_move_anim_events = {
 			bwd = "move_start_bwd",
 			fwd = "move_start_fwd",
@@ -231,9 +232,13 @@ local action_data = {
 			unit_node = "j_rightweaponattach",
 			projectile_template = ProjectileTemplates.cultist_grenadier_grenade
 		},
+		throw_position_distance_fwd = {
+			2,
+			10
+		},
 		throw_position_distance = {
 			1,
-			12
+			5
 		},
 		new_location_max_dist = math.huge
 	},

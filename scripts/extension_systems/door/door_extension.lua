@@ -3,10 +3,11 @@ local Breed = require("scripts/utilities/breed")
 local LevelProps = require("scripts/settings/level_prop/level_props")
 local NavTagVolumeBox = require("scripts/extension_systems/navigation/utilities/nav_tag_volume_box")
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
+local DoorSettings = require("scripts/settings/components/door_settings")
 local DoorExtension = class("DoorExtension")
-local TYPES = table.enum("none", "two_states", "three_states")
-local OPEN_TYPES = table.enum("none", "open_only", "close_only")
-local STATES = table.enum("none", "open", "open_fwd", "open_bwd", "closed")
+local TYPES = DoorSettings.TYPES
+local OPEN_TYPES = DoorSettings.OPEN_TYPES
+local STATES = DoorSettings.STATES
 
 DoorExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._unit = unit
@@ -16,27 +17,7 @@ DoorExtension.init = function (self, extension_init_context, unit, extension_ini
 	self._open_type = OPEN_TYPES.none
 	self._start_state = nil
 	self._current_state = STATES.none
-	self._anim_data = {
-		[STATES.none] = {
-			duration = 0
-		},
-		[STATES.open] = {
-			event = "open",
-			duration = 0
-		},
-		[STATES.open_fwd] = {
-			event = "open_fwd",
-			duration = 0
-		},
-		[STATES.open_bwd] = {
-			event = "open_bwd",
-			duration = 0
-		},
-		[STATES.closed] = {
-			event = "close",
-			duration = 0
-		}
-	}
+	self._anim_data = table.clone(DoorSettings.anim)
 	self._previous_anim_time_normalized = 0
 	self._entrance_nav_blocked = false
 	self._num_attackers = 0
@@ -77,9 +58,9 @@ DoorExtension.hot_join_sync = function (self, unit, sender)
 	self:_sync_server_state(sender, self._current_state)
 end
 
-DoorExtension.setup_from_component = function (self, type, start_state, open_duration, close_duration, allow_closing, self_closing_time, blocked_time, open_type, control_panel_props, control_panels_active, ignore_broadphase)
+DoorExtension.setup_from_component = function (self, door_type, start_state, open_duration, close_duration, allow_closing, self_closing_time, blocked_time, open_type, control_panel_props, control_panels_active, ignore_broadphase)
 	local unit = self._unit
-	self._type = type
+	self._type = door_type
 	self._open_type = open_type
 	self._start_state = start_state
 	self._blocked_time = blocked_time
@@ -95,14 +76,14 @@ DoorExtension.setup_from_component = function (self, type, start_state, open_dur
 		self:_spawn_control_panels(control_panel_props, control_panels_active)
 	end
 
-	if type == TYPES.two_states then
+	if door_type == TYPES.two_states then
 		self._anim_data[STATES.open].duration = open_duration
 		self._anim_data[STATES.closed].duration = close_duration
 
 		if start_state == "open_fwd" or start_state == "open_bwd" then
 			self._start_state = "open"
 		end
-	elseif type == TYPES.three_states then
+	elseif door_type == TYPES.three_states then
 		self._anim_data[STATES.open_fwd].duration = open_duration
 		self._anim_data[STATES.open_bwd].duration = open_duration
 		self._anim_data[STATES.closed].duration = close_duration

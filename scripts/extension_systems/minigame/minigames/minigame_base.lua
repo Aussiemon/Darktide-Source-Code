@@ -1,6 +1,6 @@
 local MinigameBase = class("MinigameBase")
 
-MinigameBase.init = function (self, unit, is_server, seed, context)
+MinigameBase.init = function (self, unit, is_server, seed)
 	self._minigame_unit = unit
 	self._is_server = is_server
 	self._seed = seed
@@ -31,7 +31,15 @@ MinigameBase.setup_game = function (self)
 	return
 end
 
+MinigameBase.uses_joystick = function (self)
+	return false
+end
+
 MinigameBase.on_action_pressed = function (self, t)
+	return
+end
+
+MinigameBase.on_axis_set = function (self, t, x, y)
 	return
 end
 

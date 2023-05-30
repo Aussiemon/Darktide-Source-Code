@@ -188,6 +188,22 @@ ItemIconLoaderUI.load_request = function (self, request)
 	end
 end
 
+ItemIconLoaderUI.prioritize_request = function (self, reference_id)
+	local data = self:_request_by_id(reference_id)
+
+	if data then
+		local gear_id = data.gear_id
+
+		for i = 1, #self._requests_queue_order do
+			if self._requests_queue_order[i] == gear_id then
+				table.remove(self._requests_queue_order, i)
+			end
+		end
+
+		table.insert(self._requests_queue_order, 1, gear_id)
+	end
+end
+
 ItemIconLoaderUI._cb_on_item_package_loaded = function (self, gear_id, package_name)
 	local request = self._requests[gear_id]
 

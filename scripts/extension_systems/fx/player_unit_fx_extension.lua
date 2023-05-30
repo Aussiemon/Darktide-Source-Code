@@ -25,6 +25,9 @@ local CLIENT_RPCS = {
 	"rpc_spawn_player_fx_line",
 	"rpc_player_trigger_wwise_event_synced"
 }
+local FLOW_CONTROLLED_WWISE_SOURCES = {
+	j_hips = true
+}
 local _closest_point_on_line = nil
 
 PlayerUnitFxExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
@@ -792,12 +795,6 @@ PlayerUnitFxExtension.vfx_spawner_unit_and_node = function (self, spawner_name)
 	return vfx_spawner.unit, vfx_spawner.node, unit_3p, node_3p
 end
 
-PlayerUnitFxExtension.sfx_spawner_unit_and_node = function (self, spawner_name)
-	local source_cache = self._wwise_source_node_cache[spawner_name]
-
-	return source_cache.unit, source_cache.node
-end
-
 PlayerUnitFxExtension.vfx_spawner_pose = function (self, spawner_name)
 	local vfx_spawner = self._vfx_spawners[spawner_name]
 	local unit = vfx_spawner.unit
@@ -841,7 +838,9 @@ PlayerUnitFxExtension._unregister_sound_source = function (self, source_name)
 	if num_registered_sources == 0 then
 		local source = cache.source
 
-		WwiseWorld.destroy_manual_source(wwise_world, source)
+		if not FLOW_CONTROLLED_WWISE_SOURCES[node_name] then
+			WwiseWorld.destroy_manual_source(wwise_world, source)
+		end
 
 		unit_cache[node_name] = nil
 

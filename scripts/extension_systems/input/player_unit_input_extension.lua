@@ -8,6 +8,7 @@ PlayerUnitInputExtension.init = function (self, extension_init_context, unit, ex
 	local fixed_frame = extension_init_context.fixed_frame
 	self._human_unit_input = HumanUnitInput:new(player, input_handler, fixed_frame)
 	self._player = player
+	self._is_local_unit = extension_init_data.is_local_unit
 	local is_server = extension_init_context.is_server
 
 	if is_server then

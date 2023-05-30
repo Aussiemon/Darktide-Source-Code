@@ -179,7 +179,7 @@ weapon_template.actions = {
 		weapon_handling_template = "stubrevolver_single_shot",
 		ammunition_usage = 1,
 		sprint_requires_press_to_interrupt = true,
-		allowed_during_sprint = true,
+		allowed_during_sprint = false,
 		total_time = 0.56,
 		action_movement_curve = {
 			{

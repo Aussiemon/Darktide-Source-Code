@@ -28,4 +28,15 @@ MissionObjectiveKill.update_progression = function (self)
 	end
 end
 
+MissionObjectiveKill._init_objective_unit = function (self, unit)
+	local mission_objective_target_extension = ScriptUnit.has_extension(unit, "mission_objective_target_system")
+
+	if mission_objective_target_extension then
+		MissionObjectiveKill.super._init_objective_unit(self, unit)
+	else
+		Managers.state.extension:system("mission_objective_system"):add_marker(self._name, unit)
+		self:register_unit(unit)
+	end
+end
+
 return MissionObjectiveKill

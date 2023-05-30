@@ -192,6 +192,10 @@ local function generate_base_template()
 					aim_hold = {
 						action_name = "action_aim",
 						chain_time = 1.4
+					},
+					short_hand_aim_hold = {
+						action_name = "action_aim_underhand",
+						chain_time = 0.9
 					}
 				}
 			},

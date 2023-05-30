@@ -94,6 +94,7 @@ local categories = {
 	"QA",
 	"Respawn",
 	"Roamers",
+	"Rumble",
 	"Script Components",
 	"Shading Environment",
 	"Shooting Range",
@@ -171,8 +172,8 @@ local params = {
 		value = 1,
 		category = "Input"
 	},
-	controller_invert_look_y = {
-		value = false,
+	controller_look_scale_ranged = {
+		value = 1,
 		category = "Input"
 	},
 	controller_look_dead_zone = {
@@ -261,24 +262,6 @@ params.debug_prevent_forced_dequip_of_auspex = {
 	value = false,
 	category = "Auspex"
 }
-params.player_character_size = {
-	value = "none",
-	category = "Breed",
-	options = {
-		"none",
-		"human",
-		"ogryn"
-	},
-	on_value_set = function (new_value, old_value)
-		local player = Managers.player:local_player(1)
-
-		if player and player:unit_is_alive() and new_value ~= "none" then
-			local player_unit_spawn_manager = Managers.state.player_unit_spawn
-
-			player_unit_spawn_manager:debug_respawn(player, new_value)
-		end
-	end
-}
 params.debug_breed_picker_selected_name = {
 	value = "",
 	hidden = true,
@@ -321,6 +304,10 @@ params.perform_backend_version_check = {
 	category = "Backend"
 }
 params.allow_backend_game_param_overrides = {
+	value = false,
+	category = "Backend"
+}
+params.crash_on_account_login_error = {
 	value = false,
 	category = "Backend"
 }
@@ -724,8 +711,8 @@ params.box_minion_collision = {
 	category = "Player Character"
 }
 params.character_profile_selector_placeholder = {
-	value = false,
 	category = "Player Character",
+	value = false,
 	options_function = function ()
 		local options = {
 			false,
@@ -747,6 +734,41 @@ params.character_profile_selector_placeholder = {
 		}
 
 		return options_texts
+	end,
+	on_value_set = function (new_value, old_value)
+		if not new_value then
+			return
+		end
+
+		local local_player = Managers.player:local_player(1)
+
+		if not local_player then
+			return
+		end
+
+		local peer_id = local_player:peer_id()
+		local local_player_id = local_player:local_player_id()
+		local ProfileUtils = require("scripts/utilities/profile_utils")
+		local MasterItems = require("scripts/backend/master_items")
+		local placeholder_profiles = ProfileUtils.placeholder_profiles(MasterItems.get_cached())
+		local wanted_profile = placeholder_profiles[new_value]
+		local character_id = wanted_profile.character_id
+
+		Managers.narrative:load_character_narrative(character_id):next(function ()
+			if Managers.state.game_session then
+				local is_server = Managers.state.game_session:is_server()
+
+				if is_server then
+					local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
+
+					profile_synchronizer_host:profile_changed_debug_placeholder_character_profile(peer_id, local_player_id, new_value)
+				else
+					local channel = Managers.connection:host_channel()
+
+					RPC.rpc_notify_profile_changed_debug_placeholder_character_profile(channel, peer_id, local_player_id, new_value)
+				end
+			end
+		end)
 	end
 }
 params.debug_character_interpolated_fixed_frame_movement = {
@@ -1904,6 +1926,10 @@ params.debug_disable_minion_suppression_indicators = {
 	value = false,
 	category = "Minions"
 }
+params.debug_grenadiers = {
+	value = false,
+	category = "Minions"
+}
 params.debug_minion_suppression = {
 	value = false,
 	category = "Minions"
@@ -2351,6 +2377,10 @@ params.renegade_sniper_allowed = {
 	category = "Specials"
 }
 params.flamer_allowed = {
+	value = true,
+	category = "Specials"
+}
+params.grenadier_allowed = {
 	value = true,
 	category = "Specials"
 }
@@ -2925,7 +2955,7 @@ params.ui_skip_splash_screen = {
 	value = false,
 	category = "UI"
 }
-params.ui_hud_customize_coordinates = {
+params.ui_disable_view_loader = {
 	value = false,
 	category = "UI"
 }
@@ -3027,6 +3057,10 @@ params.local_crafting = {
 }
 params.sticker_book_seen_all_traits = {
 	value = false,
+	category = "UI"
+}
+params.debug_render_target_atlas_generator = {
+	value = true,
 	category = "UI"
 }
 params.override_stun_type = {
@@ -3690,6 +3724,35 @@ local function set_pong_timeout(new_value, old_value)
 	end
 end
 
+function enable_rpc_logging()
+	if not DevParameters.debug_rpc_logging then
+		Network.log("silent")
+
+		return
+	end
+
+	Log.info("Network", "enabling rpc logging")
+	Network.log("messages")
+
+	local to_ignore = {
+		"rpc_player_input_array",
+		"rpc_player_input_array_ack",
+		"rpc_minion_anim_event",
+		"rpc_player_anim_event",
+		"rpc_set_allowed_nav_tag_layer",
+		"rpc_add_buff",
+		"rpc_minion_wield_slot",
+		"rpc_hazard_prop_hot_join",
+		"rpc_sync_destructible",
+		"rpc_sync_anim_state",
+		"rpc_interaction_set_active"
+	}
+
+	for key, value in ipairs(to_ignore) do
+		Network.ignore_rpc_log(value)
+	end
+end
+
 params.pong_timeout = {
 	value = 10,
 	category = "Network",
@@ -3702,6 +3765,11 @@ params.reliable_rpc_send_count_debug = {
 params.debug_pass_EAC_check = {
 	value = true,
 	category = "Network"
+}
+params.debug_rpc_logging = {
+	value = false,
+	category = "Network",
+	on_value_set = enable_rpc_logging
 }
 params.debug_breed_resource_dependencies = {
 	value = false,
@@ -4485,13 +4553,9 @@ params.unlock_all_shooting_range_enemies = {
 	value = false,
 	category = "Shooting Range"
 }
-params.show_rumble_events = {
+params.trace_rumble_activation_events = {
 	value = false,
-	category = "Controller"
-}
-params.max_num_rumble_events = {
-	value = 10,
-	category = "Controller"
+	category = "Rumble"
 }
 params.category_log_levels = {
 	hidden = true,

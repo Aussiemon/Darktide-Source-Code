@@ -30,24 +30,26 @@ input_text_style_left.size = {
 	200,
 	50
 }
-input_text_style_left.text_color = Color.ui_grey_medium(255, true)
+input_text_style_left.text_color = Color.ui_input_color(255, true)
 local input_text_style_right = table.clone(input_text_style_left)
 input_text_style_right.text_horizontal_alignment = "left"
 input_text_style_right.horizontal_alignment = "left"
 local widget_definitions = {
 	input_text_left = UIWidget.create_definition({
 		{
-			value = "left",
 			value_id = "text",
+			style_id = "text",
 			pass_type = "text",
+			value = "left",
 			style = input_text_style_left
 		}
 	}, "entry_pivot"),
 	input_text_right = UIWidget.create_definition({
 		{
-			value = "right",
 			value_id = "text",
+			style_id = "text",
 			pass_type = "text",
+			value = "right",
 			style = input_text_style_right
 		}
 	}, "entry_pivot")

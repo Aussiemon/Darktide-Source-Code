@@ -297,6 +297,18 @@ local wwise_vo_routing_settings = {
 		wwise_event_path = "wwise/events/vo/play_sfx_es_traitor_berzerker_assault_vo",
 		display_name = "Elite Traitor Berzerker Assault",
 		wwise_sound_source = "es_traitor_berzerker_assault_vo"
+	},
+	{
+		is_default = false,
+		wwise_event_path = "wwise/events/vo/play_sfx_es_cultist_grenadier_skulking_vo",
+		display_name = "Special Cultist Grenadier Skulking",
+		wwise_sound_source = "es_cultist_grenadier_skulking_vo"
+	},
+	{
+		is_default = false,
+		wwise_event_path = "wwise/events/vo/play_sfx_es_npc_mission_vo",
+		display_name = "NPC Mission VO",
+		wwise_sound_source = "es_npc_mission_vo"
 	}
 }
 

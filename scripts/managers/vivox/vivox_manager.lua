@@ -31,17 +31,14 @@ VivoxManager.init = function (self)
 	self._channel_host_peer_id = {}
 	self._input_service = Managers.input:get_input_service("Ingame")
 	self._party_id_session_handles = {}
+	self._tx_session_state = nil
 	self._time_since_mute_local_mic = nil
 
 	Managers.event:register(self, "player_mute_status_changed", "player_mute_status_changed")
-	Managers.event:register(self, "party_immaterium_other_members_updated", "_party_immaterium_other_members_updated")
-	Managers.event:register(self, "party_immaterium_left", "_party_immaterium_left")
 end
 
 VivoxManager.destroy = function (self)
 	Managers.event:unregister(self, "player_mute_status_changed")
-	Managers.event:unregister(self, "party_immaterium_other_members_updated")
-	Managers.event:unregister(self, "party_immaterium_left")
 end
 
 VivoxManager.split_displayname = function (self, input)
@@ -273,7 +270,7 @@ VivoxManager.update = function (self, dt, t)
 	if muted_setting == SOUND_SETTING_OPTIONS_VOICE_CHAT.push_to_talk then
 		local should_mute = true
 
-		if self._input_service and self._input_service:get("voip_push_to_talk") then
+		if self._input_service and self._input_service:has("voip_push_to_talk") and self._input_service:get("voip_push_to_talk") then
 			should_mute = false
 		end
 
@@ -305,6 +302,17 @@ VivoxManager.update = function (self, dt, t)
 			end
 
 			self:_validate_participants()
+			self:_poll_party()
+		end
+	end
+
+	if self._tx_session_state and self._tx_session_state.tx_session_handle then
+		local sessiongroup_handles = table.keys(self._tx_session_state.no_tx_sessiongroup_handles)
+
+		if #sessiongroup_handles == 0 then
+			Vivox.set_tx_session(self._tx_session_state.tx_session_handle)
+
+			self._tx_session_state = nil
 		end
 	end
 end
@@ -412,18 +420,11 @@ VivoxManager.player_mute_status_changed = function (self, account_id)
 	end
 end
 
-VivoxManager._party_immaterium_other_members_updated = function (self, other_members)
+VivoxManager._poll_party = function (self)
 	if Managers.party_immaterium then
 		local party_id = Managers.party_immaterium:party_id()
-		local other_member_count = 0
 
-		for _, v in ipairs(other_members) do
-			if v._immaterium_entry and v._immaterium_entry.status == "CONNECTED" then
-				other_member_count = other_member_count + 1
-			end
-		end
-
-		if other_member_count > 0 then
+		if party_id and Managers.party_immaterium:num_other_members() > 0 then
 			if not self._party_id_session_handles[party_id] then
 				Managers.party_immaterium:request_vivox_party_token():next(function (vivox_data)
 					if self._party_id_session_handles[party_id] then
@@ -443,26 +444,11 @@ VivoxManager._party_immaterium_other_members_updated = function (self, other_mem
 				end)
 			end
 		else
-			local session_handle = self._party_id_session_handles[party_id]
-
-			if session_handle then
+			for _, session_handle in pairs(self._party_id_session_handles) do
 				self:leave_channel(session_handle)
-
-				self._party_id_session_handles[party_id] = nil
 			end
-		end
-	end
-end
 
-VivoxManager._party_immaterium_left = function (self)
-	if Managers.party_immaterium then
-		local party_id = Managers.party_immaterium:party_id()
-		local session_handle = self._party_id_session_handles[party_id]
-
-		if session_handle then
-			self:leave_channel(session_handle)
-
-			self._party_id_session_handles[party_id] = nil
+			self._party_id_session_handles = {}
 		end
 	end
 end
@@ -509,6 +495,7 @@ VivoxManager._handle_event = function (self, message)
 			participants = {},
 			is_channel = message.is_channel,
 			session_handle = message.session_handle,
+			sessiongroup_handle = message.sessiongroup_handle,
 			name = message.name,
 			tag = tag
 		}
@@ -661,6 +648,12 @@ VivoxManager._handle_response = function (self, message)
 	elseif message.response == Vivox.ResponseType_GET_CAPTURE_DEVICES then
 		self._capture_devices = message.capture_devices
 		self._current_capture_device = message.current_capture_device
+	elseif message.response == Vivox.ResponseType_SET_TX_NO_SESSION then
+		local sessiongroup_handle = message.sessiongroup_handle
+
+		if self._tx_session_state then
+			self._tx_session_state.no_tx_sessiongroup_handles[sessiongroup_handle] = nil
+		end
 	end
 end
 
@@ -783,7 +776,18 @@ VivoxManager._update_transmitting_channel_priority = function (self)
 	end
 
 	if priority_channel then
-		Vivox.set_tx_session(priority_channel.session_handle)
+		local sessiongroup_handles = {}
+
+		for _, session in pairs(self._sessions) do
+			sessiongroup_handles[session.sessiongroup_handle] = true
+
+			Vivox.set_tx_no_session(session.sessiongroup_handle)
+		end
+
+		self._tx_session_state = {
+			no_tx_sessiongroup_handles = sessiongroup_handles,
+			tx_session_handle = priority_channel.session_handle
+		}
 	end
 end
 

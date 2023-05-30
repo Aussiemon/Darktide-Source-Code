@@ -831,6 +831,14 @@ local CameraEffectSettings = {
 			fade_in = 0.5,
 			octaves = 5
 		},
+		chaos_spawn_grabbed = {
+			persistance = 1,
+			fade_out = 0.35,
+			amplitude = 0.6,
+			duration = 0.5,
+			fade_in = 0,
+			octaves = 8
+		},
 		chaos_spawn_roar = {
 			persistance = 1,
 			amplitude = 0.2,

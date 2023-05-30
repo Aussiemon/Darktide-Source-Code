@@ -92,6 +92,14 @@ function _hit_mass_from_character(unit, breed, use_reduced_hit_mass)
 		hit_mass = Managers.state.difficulty:get_table_entry_by_challenge(hit_mass)
 	end
 
+	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+	if buff_extension then
+		local stat_buffs = buff_extension:stat_buffs()
+		local consumed_hit_mass_modifier = stat_buffs.consumed_hit_mass_modifier or 1
+		hit_mass = hit_mass * consumed_hit_mass_modifier
+	end
+
 	return hit_mass
 end
 

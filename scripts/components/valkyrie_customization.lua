@@ -155,6 +155,10 @@ ValkyrieCustomization.fx_idle = function (self)
 	Unit.flow_event(self._body_unit, "fx_idle")
 end
 
+ValkyrieCustomization.fx_thrusters_off = function (self)
+	Unit.flow_event(self._body_unit, "fx_thrusters_off")
+end
+
 ValkyrieCustomization.fx_land = function (self)
 	Unit.flow_event(self._body_unit, "fx_land")
 end
@@ -440,6 +444,10 @@ ValkyrieCustomization.component_data = {
 			type = "event"
 		},
 		fx_idle = {
+			accessibility = "public",
+			type = "event"
+		},
+		fx_thrusters_off = {
 			accessibility = "public",
 			type = "event"
 		},

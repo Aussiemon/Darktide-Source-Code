@@ -176,6 +176,8 @@ PackageManager.release = function (self, id)
 		end
 
 		if resource_handle then
+			local reference_name = load_call_item.reference_name
+
 			ResourcePackage.unload(resource_handle)
 			Application.release_resource_package(resource_handle)
 		end

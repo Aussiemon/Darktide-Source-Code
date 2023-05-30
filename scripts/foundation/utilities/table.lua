@@ -293,6 +293,16 @@ table.index_of = function (t, element)
 	return -1
 end
 
+table.index_of_condition = function (t, condition)
+	for i = 1, #t do
+		if condition(t[i]) then
+			return i
+		end
+	end
+
+	return -1
+end
+
 table.slice = function (t, start_index, length)
 	local end_index = math.min(start_index + length - 1, #t)
 	local slice = {}

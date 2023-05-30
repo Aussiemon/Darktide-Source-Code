@@ -62,6 +62,7 @@ Dialogue.component_data = {
 		ui_name = "Class",
 		options_keys = {
 			"None",
+			"Archive Servitor",
 			"Boon Vendor",
 			"Confessional",
 			"Contract Vendor",
@@ -90,6 +91,7 @@ Dialogue.component_data = {
 		},
 		options_values = {
 			"none",
+			"archive_servitor",
 			"boon_vendor",
 			"confessional",
 			"contract_vendor",
@@ -124,6 +126,7 @@ Dialogue.component_data = {
 		ui_name = "Character Voice",
 		options_keys = {
 			"None",
+			"Archive Servitor A",
 			"Boon Vendor A",
 			"Contract Vendor",
 			"Enemy Nemesis Wolfer, Male",
@@ -181,6 +184,7 @@ Dialogue.component_data = {
 		},
 		options_values = {
 			"none",
+			"archive_servitor_a",
 			"boon_vendor_a",
 			"contract_vendor_a",
 			"enemy_nemesis_wolfer_a",

@@ -581,6 +581,7 @@ AchievementsView._setup_grids = function (self)
 		local layer = 1
 		local grid = self:_add_element(ViewElementGrid, scenegraph_id, layer, view_element_grid_settings)
 
+		grid:set_empty_message("")
 		grid:present_grid_layout(layout_dummy)
 
 		self._grids[i] = grid

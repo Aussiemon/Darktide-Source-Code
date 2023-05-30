@@ -92,6 +92,10 @@ PlayerHuskFirstPersonExtension.destroy = function (self)
 	end
 end
 
+PlayerHuskFirstPersonExtension.default_height = function (self, state_name)
+	return self._heights[state_name]
+end
+
 PlayerHuskFirstPersonExtension.update = function (self, unit, dt, t)
 	self._show_1p_equipment, self._wants_1p_camera = self:_update_first_person_mode(t)
 	local is_in_first_person_mode = self:is_in_first_person_mode()

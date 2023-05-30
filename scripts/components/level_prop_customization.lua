@@ -107,7 +107,9 @@ LevelPropCustomization._spawn_children = function (self)
 		end
 	end
 
-	self:editor_toggle_visibility_state(self._editor_toggle_visibility_state)
+	if rawget(_G, "LevelEditor") then
+		self:editor_toggle_visibility_state(self._editor_toggle_visibility_state)
+	end
 end
 
 LevelPropCustomization._destroy_actors = function (self, unit)

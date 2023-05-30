@@ -139,16 +139,25 @@ BtShootNetAction._update_aiming = function (self, unit, t, scratchpad, action_da
 	local aim_target_node = scratchpad.aim_target_node
 	local target_node = Unit.node(target_unit, aim_target_node)
 	local aim_position = Unit.world_position(target_unit, target_node)
-	local wanted_aim_position = aim_position
 
-	scratchpad.current_aim_position:store(wanted_aim_position)
+	scratchpad.current_aim_position:store(aim_position)
 
 	if scratchpad.aoe_bot_threat_timing and scratchpad.aoe_bot_threat_timing <= t then
-		local group_extension = ScriptUnit.extension(target_unit, "group_system")
-		local bot_group = group_extension:bot_group()
 		local aoe_bot_threat_size = action_data.aoe_bot_threat_size:unbox()
+		local aoe_bot_threat_duration = action_data.aoe_bot_threat_duration
+		local target_unit_position = POSITION_LOOKUP[target_unit]
+		local side_system = Managers.state.extension:system("side_system")
+		local side = side_system.side_by_unit[unit]
+		local enemy_sides = side:relation_sides("enemy")
+		local group_system = Managers.state.extension:system("group_system")
+		local bot_groups = group_system:bot_groups_from_sides(enemy_sides)
+		local num_bot_groups = #bot_groups
 
-		bot_group:aoe_threat_created(POSITION_LOOKUP[target_unit], "oobb", aoe_bot_threat_size, flat_rotation, action_data.aoe_bot_threat_duration)
+		for i = 1, num_bot_groups do
+			local bot_group = bot_groups[i]
+
+			bot_group:aoe_threat_created(target_unit_position, "oobb", aoe_bot_threat_size, flat_rotation, aoe_bot_threat_duration)
+		end
 
 		scratchpad.aoe_bot_threat_timing = nil
 	end

@@ -8,10 +8,23 @@ local DefaultViewInputSettings = require("scripts/settings/input/default_view_in
 local ChatSettings = require("scripts/ui/constant_elements/elements/chat/constant_element_chat_settings")
 local Promise = require("scripts/foundation/utilities/promise")
 local StringVerification = require("scripts/managers/localization/string_verification")
+local InputDevice = require("scripts/managers/input/input_device")
 local ConstantElementChat = class("ConstantElementChat", "ConstantElementBase")
-local STATE_HIDDEN = "hidden"
-local STATE_IDLE = "idle"
-local STATE_ACTIVE = "active"
+local States = table.enum("hidden", "idle", "active")
+local StateSettings = {
+	[States.hidden] = {
+		target_background_alpha = 0,
+		target_alpha = 0
+	},
+	[States.idle] = {
+		target_alpha = ChatSettings.idle_text_alpha / 255,
+		target_background_alpha = ChatSettings.idle_background_alpha
+	},
+	[States.active] = {
+		target_alpha = 1,
+		target_background_alpha = ChatSettings.background_color[1]
+	}
+}
 
 ConstantElementChat.init = function (self, parent, draw_layer, start_scale, definitions)
 	ConstantElementChat.super.init(self, parent, draw_layer, start_scale, Definitions)
@@ -24,7 +37,7 @@ ConstantElementChat.init = function (self, parent, draw_layer, start_scale, defi
 	Managers.event:register(self, "chat_manager_participant_update", "cb_chat_manager_participant_update")
 	Managers.event:register(self, "chat_manager_participant_removed", "cb_chat_manager_participant_removed")
 
-	self._active_state = STATE_HIDDEN
+	self._active_state = States.hidden
 	self._message_widget_blueprints = Definitions.message_widget_blueprints
 	self._messages = {}
 	self._message_widgets = {}
@@ -42,6 +55,7 @@ ConstantElementChat.init = function (self, parent, draw_layer, start_scale, defi
 	self._time_since_last_update = ChatSettings.inactivity_timeout
 	self._input_field_widget = nil
 	self._reported_left_channel_handles = {}
+	self._virtual_keyboard_promise = nil
 
 	self:_setup_input()
 
@@ -61,6 +75,14 @@ ConstantElementChat.destroy = function (self)
 	Managers.event:unregister(self, "chat_manager_participant_added")
 	Managers.event:unregister(self, "chat_manager_participant_update")
 	Managers.event:unregister(self, "chat_manager_participant_removed")
+
+	local virtual_keyboard_promise = self._virtual_keyboard_promise
+
+	if virtual_keyboard_promise and virtual_keyboard_promise:is_pending() then
+		virtual_keyboard_promise:cancel()
+
+		self._virtual_keyboard_promise = nil
+	end
 end
 
 ConstantElementChat.update = function (self, dt, t, ui_renderer, render_settings, input_service)
@@ -87,41 +109,46 @@ ConstantElementChat.update = function (self, dt, t, ui_renderer, render_settings
 		self._refresh_to_channel_text = nil
 	end
 
-	local target_state, target_alpha, target_background_alpha_full = nil
 	local time_since_last_update = is_input_field_active and 0 or self._time_since_last_update
 
 	if is_visible then
 		self._time_since_last_update = time_since_last_update + dt
 	end
 
+	local target_state = nil
 	local inactivity_timeout = ChatSettings.inactivity_timeout
 	local idle_timeout = ChatSettings.idle_timeout
 
 	if inactivity_timeout <= time_since_last_update and inactivity_timeout >= 0 and not is_input_field_active or not is_visible then
-		target_alpha = 0
-		target_background_alpha_full = 0
-		target_state = STATE_HIDDEN
+		target_state = States.hidden
 	elseif idle_timeout <= time_since_last_update and idle_timeout >= 0 and not is_input_field_active then
-		target_alpha = ChatSettings.idle_text_alpha / 255
-		target_background_alpha_full = ChatSettings.idle_background_alpha
-		target_state = STATE_IDLE
+		target_state = States.idle
 	else
-		target_alpha = 1
-		target_background_alpha_full = ChatSettings.background_color[1]
-		target_state = STATE_ACTIVE
+		target_state = States.active
 	end
 
-	if not self:_is_animation_active(self._chat_window_animation_id) and not self:_is_animation_active(self._input_field_animation_id) and (target_state ~= self._active_state or target_alpha ~= self._alpha) then
-		local params = {
-			target_state = target_state,
-			target_alpha = target_alpha,
-			target_background_alpha = target_background_alpha_full,
-			message_widgets = self._message_widgets
-		}
-		local speed = target_state == STATE_HIDDEN and is_visible and ChatSettings.inactive_fade_speed or 1
-		self._chat_window_animation_id = self:_start_animation("fade_chat_window", self._widgets_by_name, params, nil, speed)
-		self._input_field_animation_id = self:_start_animation("fade_input_field", self._widgets_by_name, params, nil, speed)
+	local is_state_changing = self:_is_state_changing()
+
+	if not is_state_changing and target_state ~= self._active_state then
+		self:_change_state(target_state)
 	end
+end
+
+ConstantElementChat._is_state_changing = function (self)
+	return self:_is_animation_active(self._chat_window_animation_id) or self:_is_animation_active(self._input_field_animation_id)
+end
+
+ConstantElementChat._change_state = function (self, target_state)
+	local params = {
+		target_state = target_state,
+		target_alpha = StateSettings[target_state].target_alpha,
+		target_background_alpha = StateSettings[target_state].target_background_alpha,
+		message_widgets = self._message_widgets
+	}
+	local is_visible = self._is_visible
+	local speed = target_state == States.hidden and is_visible and ChatSettings.inactive_fade_speed or 1
+	self._chat_window_animation_id = self:_start_animation("fade_chat_window", self._widgets_by_name, params, nil, speed)
+	self._input_field_animation_id = self:_start_animation("fade_input_field", self._widgets_by_name, params, nil, speed)
 end
 
 ConstantElementChat.using_input = function (self)
@@ -143,7 +170,7 @@ ConstantElementChat.set_visible = function (self, visible, optional_visibility_p
 	local need_to_update_scenegraph = self:_apply_visibility_parameters(optional_visibility_parameters)
 	local active_state = self._active_state
 
-	if need_to_update_scenegraph and active_state ~= STATE_HIDDEN then
+	if need_to_update_scenegraph and active_state ~= States.hidden then
 		local fade_out_params = {
 			target_background_alpha = 0,
 			target_alpha = 0,
@@ -152,8 +179,8 @@ ConstantElementChat.set_visible = function (self, visible, optional_visibility_p
 		}
 		local fade_in_params = {
 			target_state = active_state,
-			target_alpha = active_state == STATE_IDLE and ChatSettings.idle_text_alpha / 255 or 1,
-			target_background_alpha = active_state == STATE_IDLE and ChatSettings.idle_background_alpha or ChatSettings.background_color[1],
+			target_alpha = active_state == States.idle and ChatSettings.idle_text_alpha / 255 or 1,
+			target_background_alpha = active_state == States.idle and ChatSettings.idle_background_alpha or ChatSettings.background_color[1],
 			message_widgets = self._message_widgets
 		}
 
@@ -206,7 +233,11 @@ ConstantElementChat.cb_chat_manager_message_recieved = function (self, channel_h
 				channel_name = channel_name
 			})
 		else
-			sender = participant.displayname
+			sender = self:_participant_displayname(participant)
+
+			if not sender then
+				return
+			end
 		end
 
 		self:_add_message(message_text, sender, channel)
@@ -237,11 +268,17 @@ ConstantElementChat.cb_chat_manager_participant_added = function (self, channel_
 			end
 		end
 
-		if show_notification and participant.displayname and channel.tag then
+		if show_notification and channel.tag then
+			local displayname = self:_participant_displayname(participant)
+
+			if not displayname then
+				return
+			end
+
 			local channel_name = self:_channel_name(channel.tag, true, channel.channel_name)
 			local message = Managers.localization:localize("loc_chat_user_joined_channel", true, {
 				channel_name = channel_name,
-				display_name = participant.displayname
+				display_name = displayname
 			})
 
 			self:_add_notification(message)
@@ -275,11 +312,17 @@ ConstantElementChat.cb_chat_manager_participant_removed = function (self, channe
 			end
 		end
 
-		if show_notification and participant.displayname and channel.tag then
+		if show_notification and channel.tag then
+			local displayname = self:_participant_displayname(participant)
+
+			if not displayname then
+				return
+			end
+
 			local channel_name = self:_channel_name(channel.tag, true, channel.channel_name)
 			local message = Managers.localization:localize("loc_chat_user_left_channel", true, {
 				channel_name = channel_name,
-				display_name = participant.displayname
+				display_name = displayname
 			})
 
 			self:_add_notification(message)
@@ -390,26 +433,124 @@ ConstantElementChat._get_localized_input_text = function (self, action)
 	return input_key
 end
 
-ConstantElementChat._handle_input = function (self, input_service, ui_renderer)
+ConstantElementChat._start_chatting = function (self, ui_renderer)
+	local input_widget = self._input_field_widget
+	input_widget.content.input_text = ""
+	input_widget.content.caret_position = 1
+	input_widget.content.is_writing = true
+	input_widget.content.force_caret_update = true
+
+	if not self._selected_channel_handle then
+		self._selected_channel_handle = self:_next_connected_channel_handle()
+	end
+
+	self:_cancel_animations_if_necessary()
+	self:_enable_mouse_cursor(true)
+	self:_update_input_field(ui_renderer, input_widget)
+	self:_setup_input_labels()
+end
+
+ConstantElementChat._handle_keyboard_input = function (self, input_service, ui_renderer)
 	local input_widget = self._input_field_widget
 	local is_input_field_active = input_widget.content.is_writing
 
 	if is_input_field_active then
 		self:_handle_active_chat_input(input_service, ui_renderer)
 	elseif input_service:get("show_chat") then
+		self:_start_chatting(ui_renderer)
+	end
+end
+
+ConstantElementChat._handle_console_input = function (self, input_service, ui_renderer)
+	local input_widget = self._input_field_widget
+	local is_active = self._active_state == States.active
+	local using_input = self:using_input()
+
+	if not is_active and input_service:get("show_chat") then
+		self:_start_chatting(ui_renderer)
+	end
+
+	if not using_input then
+		return
+	end
+
+	if input_service:get("close_view") or input_service:get("back") then
 		input_widget.content.input_text = ""
-		input_widget.content.caret_position = 1
-		input_widget.content.is_writing = true
+		input_widget.content.is_writing = false
+
+		self:_enable_mouse_cursor(false)
+
+		return
+	end
+
+	if input_service:get("cycle_chat_channel") then
+		self._selected_channel_handle = self:_next_connected_channel_handle()
 		input_widget.content.force_caret_update = true
 
+		self:_update_input_field(ui_renderer, input_widget)
+
+		return
+	end
+
+	if input_service:get("confirm_pressed") and not self._virtual_keyboard_promise then
+		local x_game_ui = XAsyncBlock.new_block()
+
 		if not self._selected_channel_handle then
-			self._selected_channel_handle = self:_next_connected_channel_handle()
+			return
 		end
 
-		self:_cancel_animations_if_necessary()
-		self:_enable_mouse_cursor(true)
-		self:_update_input_field(ui_renderer, input_widget)
-		self:_setup_input_labels()
+		local channel = Managers.chat:sessions()[self._selected_channel_handle]
+
+		if not channel or not channel.tag or channel.session_text_state ~= ChatManagerConstants.ChannelConnectionState.CONNECTED and channel.session_media_state ~= ChatManagerConstants.ChannelConnectionState.CONNECTED then
+			return
+		end
+
+		local channel_name = self:_channel_name(channel.tag, false, channel.channel_name)
+		local virtual_keyboard_title = Localize("loc_chat_virtual_keyboard_title")
+		local virtual_keyboard_description = Localize("loc_chat_virtual_keyboard_description", true, {
+			channel_name = channel_name
+		})
+
+		XGameUI.show_text_entry_async(x_game_ui, virtual_keyboard_title, virtual_keyboard_description, "", "default", ChatSettings.max_message_length)
+
+		self._virtual_keyboard_promise = Managers.xasync:wrap(x_game_ui, XAsyncBlock.release_block)
+
+		self._virtual_keyboard_promise:next(function (async_block)
+			local new_input_text = XGameUI.resolve_text_entry(async_block)
+			local last_char = new_input_text:sub(#new_input_text)
+
+			if last_char == " " then
+				new_input_text = new_input_text:sub(1, #new_input_text - 1)
+			end
+
+			Managers.chat:send_channel_message(self._selected_channel_handle, new_input_text)
+
+			input_widget.content.input_text = ""
+			input_widget.content.is_writing = false
+			self._virtual_keyboard_promise = nil
+		end, function (hr_table)
+			local hr = hr_table[1]
+
+			if hr ~= HRESULT.E_ABORT then
+				Log.warning("ConstantElementChat", "XBox virtual keyboard closed with 0x%x", hr)
+			end
+
+			input_widget.content.input_text = ""
+			input_widget.content.is_writing = false
+			self._virtual_keyboard_promise = nil
+		end)
+
+		return
+	end
+end
+
+ConstantElementChat._handle_input = function (self, input_service, ui_renderer)
+	local uses_virtual_keyboard = IS_XBS and InputDevice.gamepad_active
+
+	if uses_virtual_keyboard then
+		return self:_handle_console_input(input_service, ui_renderer)
+	else
+		return self:_handle_keyboard_input(input_service, ui_renderer)
 	end
 end
 
@@ -913,7 +1054,7 @@ ConstantElementChat._text_size = function (self, ui_renderer, text, font_style, 
 end
 
 ConstantElementChat._cancel_animations_if_necessary = function (self, force_cancellation)
-	if self._active_state == STATE_HIDDEN or force_cancellation then
+	if self._active_state == States.hidden or force_cancellation then
 		if self:_is_animation_active(self._chat_window_animation_id) then
 			self:_complete_animation(self._chat_window_animation_id)
 		end
@@ -1035,6 +1176,26 @@ ConstantElementChat._find_participant_in_current_channel = function (self, chara
 	end
 
 	return found_participant, singular
+end
+
+ConstantElementChat._participant_displayname = function (self, participant)
+	if not participant then
+		return nil
+	end
+
+	local player_info = self:_find_participant_player_info(participant)
+
+	if player_info then
+		local displayname = player_info:character_name()
+
+		if displayname and displayname ~= "" then
+			return displayname
+		end
+	end
+
+	Log.error("ConstantElementChat", "Missing displayname for participant %s", participant.displayname)
+
+	return nil
 end
 
 ConstantElementChat._find_participant_player_info = function (self, participant)

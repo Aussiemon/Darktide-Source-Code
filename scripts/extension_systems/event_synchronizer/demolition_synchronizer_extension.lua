@@ -170,7 +170,7 @@ DemolitionSynchronizerExtension._stage_contains_corruptor = function (self, stag
 	return false
 end
 
-DemolitionSynchronizerExtension.start_stage = function (self)
+DemolitionSynchronizerExtension.start_stage = function (self, stage)
 	if self._segment_trigger_unit then
 		Unit.flow_event(self._segment_trigger_unit, "lua_event_trigger_enabled")
 

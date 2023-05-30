@@ -485,6 +485,12 @@ ProcBuff._show_in_hud = function (self)
 	local template = self._template
 	local template_data = self._template_data
 	local template_context = self._template_context
+	local visual_stack_count = self:visual_stack_count()
+
+	if visual_stack_count == 0 then
+		return false
+	end
+
 	local check_active_func = template.check_active_func
 
 	if check_active_func and check_active_func(template_data, template_context) then

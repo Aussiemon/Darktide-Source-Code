@@ -1,9 +1,9 @@
 require("scripts/foundation/utilities/color")
 
 local ui_settings = {
+	insignia_default_texture = "content/ui/textures/nameplates/insignias/default",
 	double_click_threshold = 0.2,
 	portrait_frame_default_texture = "content/ui/textures/nameplates/portrait_frames/default",
-	insignia_default_texture = "content/ui/textures/nameplates/insignias/default",
 	item_icon_size = {
 		128,
 		128
@@ -11,6 +11,10 @@ local ui_settings = {
 	cosmetics_item_size = {
 		128,
 		128
+	},
+	cosmetics_bundle_item_size = {
+		128,
+		266
 	},
 	ui_item_size = {
 		128,
@@ -95,6 +99,39 @@ local ui_settings = {
 		linesman = "loc_item_weapon_variant_linesman",
 		smiter = "loc_item_weapon_variant_smiter"
 	},
+	set_item_parts_presentation_order = {
+		GEAR_LOWERBODY = 4,
+		BOON = 0,
+		EMOTE = 0,
+		FACE = 0,
+		END_OF_ROUND = 0,
+		WEAPON_RANGED = 0,
+		PORTRAIT_FRAME = 0,
+		BODY_TATTOO = 0,
+		GEAR_EXTRA_COSMETIC = 5,
+		SET = 1,
+		TRAIT = 0,
+		BUNDLE = 0,
+		DEVICE = 0,
+		POCKETABLE = 0,
+		FACE_HAIR = 0,
+		GEAR_UPPERBODY = 3,
+		HAIR_COLOR = 0,
+		WEAPON_MELEE = 0,
+		EYE_COLOR = 0,
+		HAIR = 0,
+		PERK = 0,
+		SKIN = 0,
+		FACE_SCAR = 0,
+		SKIN_COLOR = 0,
+		GEAR_HEAD = 2,
+		GADGET = 0,
+		WEAPON_TRINKET = 0,
+		WEAPON_SKIN = 0,
+		FACE_TATTOO = 0,
+		CHARACTER_INSIGNIA = 0,
+		LUGGABLE = 0
+	},
 	item_type_localization_lookup = {
 		GEAR_LOWERBODY = "loc_item_type_gear_lowerbody",
 		BOON = "loc_item_type_boon",
@@ -152,6 +189,31 @@ local ui_settings = {
 		WEAPON_SKIN = "content/ui/textures/icons/item_types/weapons",
 		FACE_TATTOO = "content/ui/textures/icons/item_types/face_tattoos",
 		CHARACTER_INSIGNIA = "content/ui/textures/icons/item_types/nameplates"
+	},
+	item_type_material_lookup = {
+		GEAR_LOWERBODY = "content/ui/materials/icons/item_types/lower_bodies",
+		BODY_TATTOO = "content/ui/materials/icons/item_types/body_tattoos",
+		GEAR_HEAD = "content/ui/materials/icons/item_types/headgears",
+		END_OF_ROUND = "content/ui/materials/icons/item_types/poses",
+		PORTRAIT_FRAME = "content/ui/textures/icons/item_types/nameplates",
+		WEAPON_RANGED = "content/ui/textures/icons/item_types/ranged_weapons",
+		WEAPON_MELEE = "content/ui/textures/icons/item_types/melee_weapons",
+		HAIR = "content/ui/materials/icons/item_types/hair_styles",
+		GEAR_EXTRA_COSMETIC = "content/ui/materials/icons/item_types/outfits",
+		SKIN_COLOR = "content/ui/textures/icons/item_types/outfits",
+		WEAPON_TRINKET = "content/ui/textures/icons/item_types/weapon_trinkets",
+		DEVICE = "content/ui/materials/icons/item_types/devices",
+		FACE_HAIR = "content/ui/materials/icons/item_types/facial_hair_styles",
+		GEAR_UPPERBODY = "content/ui/materials/icons/item_types/upper_bodies",
+		HAIR_COLOR = "content/ui/materials/icons/item_types/hair_styles",
+		EYE_COLOR = "content/ui/materials/icons/item_types/eye_color",
+		SET = "content/ui/textures/icons/item_types/outfits",
+		FACE_SCAR = "content/ui/materials/icons/item_types/scars",
+		FACE = "content/ui/materials/icons/item_types/face_types",
+		GADGET = "content/ui/materials/icons/item_types/devices",
+		WEAPON_SKIN = "content/ui/textures/icons/item_types/weapons",
+		FACE_TATTOO = "content/ui/materials/icons/item_types/face_tattoos",
+		CHARACTER_INSIGNIA = "content/ui/materials/icons/item_types/nameplates"
 	},
 	item_pattern_localization_lookup = {
 		lucius = "loc_item_pattern_lucius",

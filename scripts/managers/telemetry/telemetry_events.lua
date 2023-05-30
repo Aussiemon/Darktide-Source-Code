@@ -157,6 +157,7 @@ TelemetryEvents.gameplay_started = function (self, params)
 	Managers.telemetry_reporters:start_reporter("com_wheel")
 	Managers.telemetry_reporters:start_reporter("combat_ability")
 	Managers.telemetry_reporters:start_reporter("enemy_spawns")
+	Managers.telemetry_reporters:start_reporter("fixed_update_missed_inputs")
 	Managers.telemetry_reporters:start_reporter("frame_time", params)
 	Managers.telemetry_reporters:start_reporter("grenade_ability")
 	Managers.telemetry_reporters:start_reporter("pacing")
@@ -180,6 +181,7 @@ TelemetryEvents.gameplay_stopped = function (self)
 	Managers.telemetry_reporters:stop_reporter("pacing")
 	Managers.telemetry_reporters:stop_reporter("grenade_ability")
 	Managers.telemetry_reporters:stop_reporter("frame_time")
+	Managers.telemetry_reporters:stop_reporter("fixed_update_missed_inputs")
 	Managers.telemetry_reporters:stop_reporter("enemy_spawns")
 	Managers.telemetry_reporters:stop_reporter("combat_ability")
 	Managers.telemetry_reporters:stop_reporter("com_wheel")
@@ -836,6 +838,22 @@ TelemetryEvents.breed_info = function (self, breed_info)
 
 	event:set_data(breed_info)
 	self._manager:register_event(event)
+end
+
+TelemetryEvents.fixed_update_missed_inputs_report = function (self, reports)
+	for player, report in pairs(reports) do
+		local entries = report.entries
+		local player_data = report.player_data
+		local event = TelemetryEvent:new(SOURCE, player_data.telemetry_subject, "fixed_update_missed_inputs_report", {
+			game = player_data.telemetry_game_session,
+			gameplay = self._session.gameplay
+		})
+
+		event:set_data({
+			missed_inputs = entries
+		})
+		self._manager:register_event(event)
+	end
 end
 
 return TelemetryEvents

@@ -36,6 +36,7 @@ ItemPassTemplates.ui_icon_size = {
 	70
 }
 ItemPassTemplates.gear_icon_size = UISettings.cosmetics_item_size
+ItemPassTemplates.gear_bundle_size = UISettings.cosmetics_bundle_item_size
 ItemPassTemplates.gadget_size = gadget_item_size
 ItemPassTemplates.gadget_icon_size = gadget_icon_size
 
@@ -224,9 +225,9 @@ item_owned_text_style.text_vertical_alignment = "bottom"
 item_owned_text_style.horizontal_alignment = "right"
 item_owned_text_style.vertical_alignment = "bottom"
 item_owned_text_style.offset = {
-	-10,
-	-5,
-	5
+	0,
+	4,
+	15
 }
 item_owned_text_style.text_color = Color.terminal_text_body(255, true)
 local item_price_style = table.clone(UIFontSettings.body)
@@ -249,6 +250,13 @@ gear_item_price_style.offset = {
 	-3,
 	12
 }
+gear_item_owned_count_style = table.clone(item_price_style)
+gear_item_owned_count_style.offset = {
+	-8,
+	-35,
+	15
+}
+gear_item_owned_count_style.text_color = Color.terminal_text_body(255, true)
 local item_sold_style = table.clone(UIFontSettings.body)
 item_sold_style.text_horizontal_alignment = "right"
 item_sold_style.text_vertical_alignment = "bottom"
@@ -260,13 +268,27 @@ item_sold_style.offset = {
 	15
 }
 item_sold_style.text_color = Color.terminal_text_header(255, true)
+local item_lock_symbol_text_style = table.clone(UIFontSettings.header_3)
+item_lock_symbol_text_style.text_color = Color.terminal_icon(255, true)
+item_lock_symbol_text_style.default_color = Color.terminal_icon(255, true)
+item_lock_symbol_text_style.hover_color = Color.terminal_icon_selected(255, true)
+item_lock_symbol_text_style.selected_color = Color.terminal_corner_selected(255, true)
+item_lock_symbol_text_style.font_size = 36
+item_lock_symbol_text_style.drop_shadow = false
+item_lock_symbol_text_style.text_horizontal_alignment = "right"
+item_lock_symbol_text_style.text_vertical_alignment = "bottom"
+item_lock_symbol_text_style.offset = {
+	-10,
+	-5,
+	7
+}
 ItemPassTemplates.gear_item = {
 	{
 		pass_type = "hotspot",
 		content_id = "hotspot",
 		style = {
 			on_hover_sound = UISoundEvents.default_mouse_hover,
-			on_pressed_sound = UISoundEvents.weapons_select_weapon
+			on_pressed_sound = UISoundEvents.default_click
 		}
 	},
 	{
@@ -291,6 +313,32 @@ ItemPassTemplates.gear_item = {
 		style = {
 			color = Color.terminal_background_dark(nil, true),
 			selected_color = Color.terminal_background_selected(nil, true)
+		}
+	},
+	{
+		value = "content/ui/materials/gradients/gradient_vertical",
+		style_id = "background_gradient",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = {
+				100,
+				33,
+				35,
+				37
+			},
+			color = {
+				100,
+				33,
+				35,
+				37
+			},
+			offset = {
+				0,
+				0,
+				1
+			}
 		}
 	},
 	{
@@ -403,6 +451,16 @@ ItemPassTemplates.gear_item = {
 		style = item_owned_text_style,
 		visibility_function = function (content, style)
 			return content.owned
+		end
+	},
+	{
+		value_id = "owned_count_text",
+		style_id = "owned_count_text",
+		pass_type = "text",
+		value = "",
+		style = gear_item_owned_count_style,
+		visibility_function = function (content, style)
+			return content.owned_count_text
 		end
 	},
 	{
@@ -526,6 +584,56 @@ ItemPassTemplates.gear_item = {
 		visibility_function = function (content, style)
 			return content.has_price_tag and not content.sold
 		end
+	},
+	{
+		pass_type = "rect",
+		style = {
+			offset = {
+				0,
+				0,
+				3
+			},
+			color = {
+				150,
+				0,
+				0,
+				0
+			}
+		},
+		visibility_function = function (content, style)
+			return content.locked
+		end
+	},
+	{
+		pass_type = "text",
+		value = "",
+		style = item_lock_symbol_text_style,
+		visibility_function = function (content, style)
+			return content.locked
+		end,
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			local is_selected = hotspot.is_selected
+			local is_focused = hotspot.is_focused
+			local is_hover = hotspot.is_hover
+			local default_text_color = style.default_color
+			local hover_color = style.hover_color
+			local text_color = style.text_color
+			local selected_color = style.selected_color
+			local color = nil
+
+			if is_selected or is_focused then
+				color = selected_color
+			elseif is_hover then
+				color = hover_color
+			else
+				color = default_text_color
+			end
+
+			local progress = math.max(math.max(hotspot.anim_hover_progress or 0, hotspot.anim_select_progress or 0), hotspot.anim_focus_progress or 0)
+
+			ColorUtilities.color_lerp(text_color, color, progress, text_color)
+		end
 	}
 }
 ItemPassTemplates.gear_item_slot = {
@@ -597,6 +705,12 @@ ItemPassTemplates.gear_item_slot = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
+			default_color = {
+				100,
+				33,
+				35,
+				37
+			},
 			color = {
 				100,
 				33,
@@ -758,7 +872,8 @@ ItemPassTemplates.ui_item = {
 		pass_type = "hotspot",
 		content_id = "hotspot",
 		style = {
-			on_hover_sound = UISoundEvents.default_mouse_hover
+			on_hover_sound = UISoundEvents.default_mouse_hover,
+			on_pressed_sound = UISoundEvents.default_click
 		}
 	},
 	{
@@ -966,6 +1081,56 @@ ItemPassTemplates.ui_item = {
 		visibility_function = function (content, style)
 			return content.equipped
 		end
+	},
+	{
+		pass_type = "rect",
+		style = {
+			offset = {
+				0,
+				0,
+				3
+			},
+			color = {
+				150,
+				0,
+				0,
+				0
+			}
+		},
+		visibility_function = function (content, style)
+			return content.locked
+		end
+	},
+	{
+		pass_type = "text",
+		value = "",
+		style = item_lock_symbol_text_style,
+		visibility_function = function (content, style)
+			return content.locked
+		end,
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			local is_selected = hotspot.is_selected
+			local is_focused = hotspot.is_focused
+			local is_hover = hotspot.is_hover
+			local default_text_color = style.default_color
+			local hover_color = style.hover_color
+			local text_color = style.text_color
+			local selected_color = style.selected_color
+			local color = nil
+
+			if is_selected or is_focused then
+				color = selected_color
+			elseif is_hover then
+				color = hover_color
+			else
+				color = default_text_color
+			end
+
+			local progress = math.max(math.max(hotspot.anim_hover_progress or 0, hotspot.anim_select_progress or 0), hotspot.anim_focus_progress or 0)
+
+			ColorUtilities.color_lerp(text_color, color, progress, text_color)
+		end
 	}
 }
 ItemPassTemplates.ui_item_slot = {
@@ -973,7 +1138,8 @@ ItemPassTemplates.ui_item_slot = {
 		pass_type = "hotspot",
 		content_id = "hotspot",
 		style = {
-			on_hover_sound = UISoundEvents.default_mouse_hover
+			on_hover_sound = UISoundEvents.default_mouse_hover,
+			on_pressed_sound = UISoundEvents.default_click
 		}
 	},
 	{
@@ -1037,6 +1203,12 @@ ItemPassTemplates.ui_item_slot = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
+			default_color = {
+				100,
+				33,
+				35,
+				37
+			},
 			color = {
 				100,
 				33,
@@ -1192,7 +1364,8 @@ ItemPassTemplates.ui_item_emote_slot = {
 		pass_type = "hotspot",
 		content_id = "hotspot",
 		style = {
-			on_hover_sound = UISoundEvents.default_mouse_hover
+			on_hover_sound = UISoundEvents.default_mouse_hover,
+			on_pressed_sound = UISoundEvents.default_click
 		}
 	},
 	{
@@ -1256,6 +1429,12 @@ ItemPassTemplates.ui_item_emote_slot = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
+			default_color = {
+				100,
+				33,
+				35,
+				37
+			},
 			color = {
 				100,
 				33,
@@ -1406,6 +1585,232 @@ ItemPassTemplates.ui_item_emote_slot = {
 		change_function = item_change_function
 	}
 }
+ItemPassTemplates.ui_item_pose_slot = {
+	{
+		pass_type = "hotspot",
+		content_id = "hotspot",
+		style = {
+			on_hover_sound = UISoundEvents.default_mouse_hover,
+			on_pressed_sound = UISoundEvents.default_click
+		}
+	},
+	{
+		value = "content/ui/materials/frames/cosmetic_slot_small",
+		style_id = "slot",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			color = {
+				255,
+				255,
+				255,
+				255
+			},
+			size = {
+				125,
+				115
+			},
+			offset = {
+				0,
+				-10.5,
+				0
+			}
+		}
+	},
+	{
+		style_id = "slot_title",
+		pass_type = "text",
+		value = "n/a",
+		value_id = "slot_title",
+		style = ui_item_emote_slot_title_text_style,
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			local default_text_color = style.default_color
+			local hover_color = style.hover_color
+			local text_color = style.text_color
+			local progress = math.max(math.max(hotspot.anim_hover_progress, hotspot.anim_select_progress), hotspot.anim_focus_progress)
+
+			ColorUtilities.color_lerp(default_text_color, hover_color, progress, text_color)
+		end
+	},
+	{
+		value = "content/ui/materials/backgrounds/default_square",
+		style_id = "background",
+		pass_type = "texture",
+		style = {
+			color = Color.terminal_background_dark(nil, true),
+			selected_color = Color.terminal_background_selected(nil, true),
+			offset = {
+				0,
+				0,
+				1
+			}
+		}
+	},
+	{
+		value = "content/ui/materials/gradients/gradient_vertical",
+		style_id = "background_gradient",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = {
+				100,
+				33,
+				35,
+				37
+			},
+			color = {
+				100,
+				33,
+				35,
+				37
+			},
+			offset = {
+				0,
+				0,
+				2
+			}
+		}
+	},
+	{
+		value = "content/ui/materials/icons/generic/aquila",
+		pass_type = "texture",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			color = Color.terminal_frame(nil, true),
+			offset = {
+				0,
+				0,
+				3
+			},
+			size = {
+				52,
+				20
+			}
+		},
+		visibility_function = function (content, style)
+			return not content.item
+		end
+	},
+	{
+		value_id = "icon",
+		style_id = "icon",
+		pass_type = "texture",
+		value = "content/ui/materials/icons/items/containers/item_container_landscape",
+		style = {
+			scale_to_material = true,
+			material_values = {},
+			offset = {
+				0,
+				0,
+				3
+			}
+		},
+		visibility_function = function (content, style)
+			local parent_style = style.parent
+
+			return parent_style.icon.material_values.use_placeholder_texture == 0
+		end
+	},
+	{
+		pass_type = "rotated_texture",
+		value = "content/ui/materials/loading/loading_small",
+		style_id = "loading",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			angle = 0,
+			size = {
+				40,
+				40
+			},
+			color = {
+				60,
+				160,
+				160,
+				160
+			},
+			offset = {
+				0,
+				0,
+				3
+			}
+		},
+		visibility_function = function (content, style)
+			local use_placeholder_texture = content.use_placeholder_texture
+
+			if (not use_placeholder_texture or use_placeholder_texture == 1) and content.item then
+				return true
+			end
+
+			return false
+		end,
+		change_function = function (content, style, _, dt)
+			local add = -0.5 * dt
+			style.rotation_progress = ((style.rotation_progress or 0) + add) % 1
+			style.angle = style.rotation_progress * math.pi * 2
+		end
+	},
+	{
+		pass_type = "texture",
+		style_id = "inner_highlight",
+		value = "content/ui/materials/frames/inner_shadow_medium",
+		style = {
+			scale_to_material = true,
+			color = Color.terminal_frame(255, true),
+			offset = {
+				0,
+				0,
+				4
+			}
+		},
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			style.color[1] = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress) * 255
+		end
+	},
+	{
+		pass_type = "texture",
+		style_id = "frame",
+		value = "content/ui/materials/frames/frame_tile_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			color = Color.terminal_frame(nil, true),
+			default_color = Color.terminal_frame(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			hover_color = Color.terminal_frame_hover(nil, true),
+			offset = {
+				0,
+				0,
+				6
+			}
+		},
+		change_function = item_change_function
+	},
+	{
+		pass_type = "texture",
+		style_id = "corner",
+		value = "content/ui/materials/frames/frame_corner_2px",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			color = Color.terminal_corner(nil, true),
+			default_color = Color.terminal_corner(nil, true),
+			selected_color = Color.terminal_corner_selected(nil, true),
+			hover_color = Color.terminal_corner_hover(nil, true),
+			offset = {
+				0,
+				0,
+				7
+			}
+		},
+		change_function = item_change_function
+	}
+}
 ItemPassTemplates.item_slot = {
 	{
 		value = "content/ui/materials/frames/dropshadow_medium",
@@ -1427,7 +1832,7 @@ ItemPassTemplates.item_slot = {
 		content_id = "hotspot",
 		style = {
 			on_hover_sound = UISoundEvents.default_mouse_hover,
-			on_pressed_sound = UISoundEvents.weapons_select_weapon
+			on_pressed_sound = UISoundEvents.default_click
 		}
 	},
 	{
@@ -1446,6 +1851,7 @@ ItemPassTemplates.item_slot = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "left",
+			default_color = Color.terminal_background_gradient(nil, true),
 			color = Color.terminal_background_gradient(nil, true),
 			size = {},
 			offset = {
@@ -1749,7 +2155,7 @@ ItemPassTemplates.item = {
 		content_id = "hotspot",
 		style = {
 			on_hover_sound = UISoundEvents.default_mouse_hover,
-			on_pressed_sound = UISoundEvents.weapons_select_weapon
+			on_pressed_sound = UISoundEvents.default_click
 		}
 	},
 	{
@@ -1768,6 +2174,7 @@ ItemPassTemplates.item = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "left",
+			default_color = Color.terminal_background_gradient(nil, true),
 			color = Color.terminal_background_gradient(nil, true),
 			size = {},
 			offset = {
@@ -2406,7 +2813,7 @@ ItemPassTemplates.general_goods_item = {
 		content_id = "hotspot",
 		style = {
 			on_hover_sound = UISoundEvents.default_mouse_hover,
-			on_pressed_sound = UISoundEvents.weapons_select_weapon
+			on_pressed_sound = UISoundEvents.default_click
 		}
 	},
 	{
@@ -2425,6 +2832,7 @@ ItemPassTemplates.general_goods_item = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "right",
+			default_color = Color.terminal_background_gradient(nil, true),
 			color = Color.terminal_background_gradient(nil, true),
 			size = {
 				weapon_item_size[1] * 0.5
@@ -2663,7 +3071,7 @@ ItemPassTemplates.credits_goods_item = {
 		content_id = "hotspot",
 		style = {
 			on_hover_sound = UISoundEvents.default_mouse_hover,
-			on_pressed_sound = UISoundEvents.weapons_select_weapon
+			on_pressed_sound = UISoundEvents.default_click
 		}
 	},
 	{
@@ -2875,7 +3283,7 @@ ItemPassTemplates.item_icon = {
 		content_id = "hotspot",
 		style = {
 			on_hover_sound = UISoundEvents.default_mouse_hover,
-			on_pressed_sound = UISoundEvents.weapons_select_weapon
+			on_pressed_sound = UISoundEvents.default_click
 		}
 	},
 	{
@@ -2988,6 +3396,12 @@ ItemPassTemplates.item_icon = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
+			default_color = {
+				100,
+				33,
+				35,
+				37
+			},
 			color = {
 				100,
 				33,
@@ -3119,7 +3533,7 @@ ItemPassTemplates.item_icon = {
 		style_id = "price_text",
 		pass_type = "text",
 		value = "n/a",
-		style = item_price_style,
+		style = gear_item_price_style,
 		visibility_function = function (content, style)
 			return content.has_price_tag and not content.sold
 		end
@@ -3137,8 +3551,8 @@ ItemPassTemplates.item_icon = {
 				20
 			},
 			offset = {
-				0,
-				-10,
+				-2,
+				-5,
 				12
 			},
 			color = {
@@ -3225,7 +3639,7 @@ ItemPassTemplates.emote_item_slot = {
 		content_id = "hotspot",
 		style = {
 			on_hover_sound = UISoundEvents.default_mouse_hover,
-			on_pressed_sound = UISoundEvents.apparel_enter
+			on_pressed_sound = UISoundEvents.default_click
 		}
 	},
 	{
@@ -3371,7 +3785,7 @@ ItemPassTemplates.animation_item_slot = {
 		content_id = "hotspot",
 		style = {
 			on_hover_sound = UISoundEvents.default_mouse_hover,
-			on_pressed_sound = UISoundEvents.apparel_enter
+			on_pressed_sound = UISoundEvents.default_click
 		}
 	},
 	{
@@ -3514,7 +3928,7 @@ ItemPassTemplates.gadget_item_slot = {
 		content_id = "hotspot",
 		style = {
 			on_hover_sound = UISoundEvents.default_mouse_hover,
-			on_pressed_sound = UISoundEvents.gadget_enter
+			on_pressed_sound = UISoundEvents.default_click
 		},
 		visibility_function = function (content, style)
 			return content.parent.unlocked
@@ -3527,6 +3941,12 @@ ItemPassTemplates.gadget_item_slot = {
 		style = {
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
+			default_color = {
+				100,
+				33,
+				35,
+				37
+			},
 			color = {
 				100,
 				33,
@@ -3818,6 +4238,57 @@ ItemPassTemplates.gadget_item_slot = {
 
 			ColorUtilities.color_lerp(default_text_color, hover_color, progress, text_color)
 		end
+	}
+}
+local item_name_title_style = table.clone(UIFontSettings.header_1)
+item_name_title_style.text_horizontal_alignment = "right"
+item_name_title_style.text_vertical_alignment = "top"
+item_name_title_style.horizontal_alignment = "right"
+item_name_title_style.offset = {
+	-100,
+	0,
+	2
+}
+item_name_title_style.text_color = Color.white(255, true)
+item_name_title_style.font_size = 38
+local item_name_description_style = table.clone(UIFontSettings.body)
+item_name_description_style.text_horizontal_alignment = "right"
+item_name_description_style.text_vertical_alignment = "top"
+item_name_description_style.horizontal_alignment = "right"
+item_name_description_style.offset = {
+	-100,
+	0,
+	2
+}
+ItemPassTemplates.item_name = {
+	{
+		value_id = "background",
+		style_id = "background",
+		pass_type = "texture",
+		value = "content/ui/materials/backgrounds/item_name",
+		style = {
+			vertical_alignment = "center",
+			scale_to_material = true,
+			size_addition = {
+				0,
+				80
+			},
+			material_values = {}
+		}
+	},
+	{
+		value_id = "title",
+		style_id = "title",
+		pass_type = "text",
+		value = "",
+		style = item_name_title_style
+	},
+	{
+		value_id = "description",
+		style_id = "description",
+		pass_type = "text",
+		value = "",
+		style = item_name_description_style
 	}
 }
 

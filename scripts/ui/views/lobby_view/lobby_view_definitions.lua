@@ -297,9 +297,10 @@ local panel_definition = UIWidget.create_definition({
 		}
 	},
 	{
-		value = "content/ui/materials/base/ui_portrait_frame_base",
+		value_id = "character_portrait",
 		style_id = "character_portrait",
 		pass_type = "texture",
+		value = "content/ui/materials/base/ui_portrait_frame_base",
 		style = {
 			horizontal_alignment = "center",
 			material_values = {

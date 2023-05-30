@@ -118,6 +118,10 @@ BtErraticFollowAction.run = function (self, unit, breed, blackboard, scratchpad,
 		MinionMovement.update_anim_driven_start_rotation(unit, scratchpad, action_data, t)
 	end
 
+	local slot_system = Managers.state.extension:system("slot_system")
+
+	slot_system:register_prioritized_user_unit_update(unit)
+
 	local state = scratchpad.state
 
 	if state == "running" then
@@ -177,6 +181,10 @@ BtErraticFollowAction._start_move_anim = function (self, unit, breed, t, scratch
 	else
 		scratchpad.start_rotation_timing = nil
 		scratchpad.move_start_anim_event_name = nil
+
+		if scratchpad.is_anim_driven then
+			MinionMovement.set_anim_driven(scratchpad, false)
+		end
 	end
 
 	local start_move_event_anim_speed_duration = action_data.start_move_event_anim_speed_durations and action_data.start_move_event_anim_speed_durations[start_move_event]
@@ -190,6 +198,12 @@ BtErraticFollowAction._start_move_anim = function (self, unit, breed, t, scratch
 end
 
 BtErraticFollowAction._update_running = function (self, unit, t, scratchpad, blackboard, action_data)
+	local navigation_extension = scratchpad.navigation_extension
+	local slot_system = Managers.state.extension:system("slot_system")
+	local slot_position = slot_system:user_unit_slot_position(unit) or POSITION_LOOKUP[scratchpad.perception_component.target_unit]
+
+	navigation_extension:move_to(slot_position)
+
 	local is_jumping = self:_investigate_jump(unit, t, scratchpad, blackboard, action_data)
 
 	if is_jumping then
@@ -271,10 +285,10 @@ end
 
 local RANDOM_JUMP_COOLDOWN = {
 	1,
-	2
+	4
 }
-local JUMP_COOLDOWN_CHANCE = 0.25
-local MAX_DISTANCE_TO_TARGET_FOR_JUMP = 6
+local JUMP_COOLDOWN_CHANCE = 0.5
+local MAX_DISTANCE_TO_TARGET_FOR_JUMP = 10
 
 BtErraticFollowAction._investigate_jump = function (self, unit, t, scratchpad, blackboard, action_data)
 	if scratchpad.jump_cooldown and t < scratchpad.jump_cooldown then
@@ -358,6 +372,8 @@ BtErraticFollowAction._investigate_jump = function (self, unit, t, scratchpad, b
 		if math.random() < JUMP_COOLDOWN_CHANCE then
 			scratchpad.jump_cooldown = t + math.random_range(RANDOM_JUMP_COOLDOWN[1], RANDOM_JUMP_COOLDOWN[2])
 		end
+
+		scratchpad.time_to_next_evaluate = scratchpad.jump_duration
 
 		return true
 	end

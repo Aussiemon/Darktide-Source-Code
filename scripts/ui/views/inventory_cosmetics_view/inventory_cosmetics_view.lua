@@ -18,6 +18,9 @@ local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ViewElementPlayerPanel = require("scripts/ui/view_elements/view_element_player_panel/view_element_player_panel")
+local AchievementUIHelper = require("scripts/managers/achievements/utility/achievement_ui_helper")
+local InputDevice = require("scripts/managers/input/input_device")
+local Promise = require("scripts/foundation/utilities/promise")
 local WIDGET_TYPE_BY_SLOT = {
 	slot_gear_head = "gear_item",
 	slot_animation_end_of_round = "gear_item",
@@ -36,56 +39,36 @@ local InventoryCosmeticsView = class("InventoryCosmeticsView", "ItemGridViewBase
 
 InventoryCosmeticsView.init = function (self, settings, context)
 	self._context = context
-	self._selected_slot = context.debug and {
-		name = "slot_insignia"
-	} or context.selected_slot
-	self._selected_slots = context.selected_slots or {
-		context.selected_slot
-	}
-	self._initial_rotation = context.initial_rotation
-	self._disable_rotation_input = context.disable_rotation_input
-	self._animation_event_name_suffix = context.animation_event_name_suffix
-	self._animation_event_variable_data = context.animation_event_variable_data
-	self.item_type = context.item_type
-	self._preview_player = context.debug and Managers.player:local_player(1) or context.player
 	self._preview_profile_equipped_items = context.preview_profile_equipped_items
 	self._current_profile_equipped_items = context.current_profile_equipped_items or {}
-	self._is_own_player = self._preview_player == Managers.player:local_player(1)
 	self._is_readonly = context and context.is_readonly
-	local player = self._preview_player
-	local profile = player:profile()
-	self._presentation_profile = context.debug and {} or table.clone_instance(profile)
-	self._presentation_profile.character_id = "cosmetics_view_preview_character"
-	self._presentation_profile.loadout = context.debug and {
-		slot_insignia = UISettings.insignia_default_texture
-	} or self._preview_profile_equipped_items and table.clone_instance(self._preview_profile_equipped_items)
-	local is_gear = not not string.find(self._selected_slot.name, "slot_gear") and self._selected_slot.name ~= "slot_gear_extra_cosmetic"
-	self._camera_zoomed_in = true
-	self._initialize_zoom = is_gear
-	self._sort_options = {
-		{
-			display_name = Localize("loc_inventory_item_grid_sort_title_name") .. " ",
-			sort_function = ItemUtils.sort_comparator({
-				">",
-				ItemUtils.compare_item_name,
-				">",
-				ItemUtils.compare_item_rarity,
-				">",
-				ItemUtils.compare_item_level
-			})
-		},
-		{
-			display_name = Localize("loc_inventory_item_grid_sort_title_name") .. " ",
-			sort_function = ItemUtils.sort_comparator({
-				"<",
-				ItemUtils.compare_item_name,
-				">",
-				ItemUtils.compare_item_rarity,
-				">",
-				ItemUtils.compare_item_level
-			})
+	self._sort_options = {}
+
+	if not context.debug then
+		self._selected_slot = context.selected_slot
+		self._selected_slots = context.selected_slots or {
+			context.selected_slot
 		}
-	}
+		self._initial_rotation = context.initial_rotation
+		self._disable_rotation_input = context.disable_rotation_input
+		self._animation_event_name_suffix = context.animation_event_name_suffix
+		self._animation_event_variable_data = context.animation_event_variable_data
+		self.item_type = context.item_type
+		self._preview_player = context.player
+		self._is_own_player = self._preview_player == Managers.player:local_player(1)
+		local player = self._preview_player
+		local profile = player:profile()
+		self._presentation_profile = table.clone_instance(profile)
+		self._presentation_profile.character_id = "cosmetics_view_preview_character"
+		self._presentation_profile.loadout = self._preview_profile_equipped_items and table.clone_instance(self._preview_profile_equipped_items) or {}
+		local is_gear = not not string.find(self._selected_slot.name, "slot_gear")
+		self._camera_zoomed_in = true
+		self._initialize_zoom = is_gear
+	else
+		self._preview_player = Managers.player:local_player(1)
+		local profile = self._preview_player:profile()
+		self._presentation_profile = table.clone_instance(profile)
+	end
 
 	InventoryCosmeticsView.super.init(self, Definitions, settings)
 
@@ -96,33 +79,193 @@ end
 
 InventoryCosmeticsView.on_enter = function (self)
 	InventoryCosmeticsView.super.on_enter(self)
-	self:_stop_previewing()
 
-	self._inventory_items = {}
 	local selected_slots = self._selected_slots
 
 	if selected_slots then
-		self:_fetch_inventory_items(selected_slots)
+		self._inventory_items = {}
 
-		local spawn_player = false
+		self:_stop_previewing()
+		self:set_loading_state(true)
+		self:_fetch_inventory_items(selected_slots):next(function ()
+			self:set_loading_state(false)
 
-		for i = 1, #selected_slots do
-			local slot = selected_slots[i]
-			local selected_slot_name = slot.name
+			local spawn_player = false
 
-			if selected_slot_name ~= "slot_insignia" and selected_slot_name ~= "slot_portrait_frame" then
-				spawn_player = true
+			for i = 1, #selected_slots do
+				local slot = selected_slots[i]
+				local selected_slot_name = slot.name
 
-				break
+				if selected_slot_name ~= "slot_insignia" and selected_slot_name ~= "slot_portrait_frame" then
+					spawn_player = true
+
+					break
+				end
 			end
-		end
 
-		self._spawn_player = spawn_player
+			self._spawn_player = spawn_player
+			local has_rarity = false
+			local has_locked = false
+
+			for i = 1, #self._cosmetic_layout do
+				local layout = self._cosmetic_layout[i]
+
+				if layout.item and layout.item.rarity then
+					has_rarity = true
+				end
+
+				if layout.locked then
+					has_locked = true
+				end
+
+				if layout.locked == true and has_rarity == true then
+					break
+				end
+			end
+
+			self._widgets_by_name.toggle_locked.content.visible = has_locked
+
+			if has_locked then
+				self._show_locked_cosmetics = true
+
+				if self._parent and self._parent.show_locked_cosmetics ~= nil then
+					self._show_locked_cosmetics = self._parent.show_locked_cosmetics
+				end
+			end
+
+			self._sort_options = {
+				{
+					display_name = Localize("loc_inventory_item_grid_sort_title_format_increasing_letters", true, {
+						sort_name = Localize("loc_inventory_item_grid_sort_title_name")
+					}),
+					sort_function = function (a, b)
+						local a_locked = a.locked
+						local b_locked = b.locked
+
+						if not a_locked and b_locked == true then
+							return true
+						elseif not b_locked and a_locked == true then
+							return false
+						end
+
+						if a.widget_type == "divider" and not b_locked or b.widget_type == "divider" and a_locked == true then
+							return false
+						elseif a.widget_type == "divider" and b_locked == true or b.widget_type == "divider" and not a_locked then
+							return true
+						end
+
+						return ItemUtils.sort_comparator({
+							"<",
+							ItemUtils.compare_item_name
+						})(a, b)
+					end
+				},
+				{
+					display_name = Localize("loc_inventory_item_grid_sort_title_format_decreasing_letters", true, {
+						sort_name = Localize("loc_inventory_item_grid_sort_title_name")
+					}),
+					sort_function = function (a, b)
+						local a_locked = a.locked
+						local b_locked = b.locked
+
+						if not a_locked and b_locked == true then
+							return true
+						elseif not b_locked and a_locked == true then
+							return false
+						end
+
+						if a.widget_type == "divider" and not b_locked or b.widget_type == "divider" and a_locked == true then
+							return false
+						elseif a.widget_type == "divider" and b_locked == true or b.widget_type == "divider" and not a_locked then
+							return true
+						end
+
+						return ItemUtils.sort_comparator({
+							">",
+							ItemUtils.compare_item_name
+						})(a, b)
+					end
+				}
+			}
+
+			if has_rarity then
+				self._sort_options[#self._sort_options + 1] = {
+					display_name = Localize("loc_inventory_item_grid_sort_title_format_high_low", true, {
+						sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
+					}),
+					sort_function = function (a, b)
+						local a_locked = a.locked
+						local b_locked = b.locked
+
+						if not a_locked and b_locked == true then
+							return true
+						elseif not b_locked and a_locked == true then
+							return false
+						end
+
+						if a.widget_type == "divider" and not b_locked or b.widget_type == "divider" and a_locked == true then
+							return false
+						elseif a.widget_type == "divider" and b_locked == true or b.widget_type == "divider" and not a_locked then
+							return true
+						end
+
+						return ItemUtils.sort_comparator({
+							">",
+							ItemUtils.compare_item_rarity,
+							"<",
+							ItemUtils.compare_item_name
+						})(a, b)
+					end
+				}
+				self._sort_options[#self._sort_options + 1] = {
+					display_name = Localize("loc_inventory_item_grid_sort_title_format_low_high", true, {
+						sort_name = Localize("loc_inventory_item_grid_sort_title_rarity")
+					}),
+					sort_function = function (a, b)
+						local a_locked = a.locked
+						local b_locked = b.locked
+
+						if not a_locked and b_locked == true then
+							return true
+						elseif not b_locked and a_locked == true then
+							return false
+						end
+
+						if a.widget_type == "divider" and not b_locked or b.widget_type == "divider" and a_locked == true then
+							return false
+						elseif a.widget_type == "divider" and b_locked == true or b.widget_type == "divider" and not a_locked then
+							return true
+						end
+
+						return ItemUtils.sort_comparator({
+							"<",
+							ItemUtils.compare_item_rarity,
+							"<",
+							ItemUtils.compare_item_name
+						})(a, b)
+					end
+				}
+			end
+
+			self:_setup_sort_options()
+			self:_start_show_layout()
+		end):catch(function ()
+			self:set_loading_state(false)
+		end)
 	end
 
 	self:_register_button_callbacks()
 	self:_setup_input_legend()
 	self:_setup_background_world()
+
+	local x, y = self:_scenegraph_position("item_grid_pivot")
+	local sort_button_widget = self:sort_button_widget()
+	local sort_button_scenegraph = self:sort_button_scenegraph()
+	local sort_button_world_position = self:get_sort_button_world_position()
+	local margin = 5
+	local sort_height = sort_button_widget.content.size and sort_button_widget.content.size[2] or sort_button_scenegraph.size[2]
+
+	self:_set_scenegraph_position("toggle_locked_pivot", x + sort_button_world_position[1], sort_button_world_position[2] + sort_height + margin)
 end
 
 InventoryCosmeticsView._setup_input_legend = function (self)
@@ -142,12 +285,17 @@ InventoryCosmeticsView._set_preview_widgets_visibility = function (self, visible
 
 	local widgets_by_name = self._widgets_by_name
 	widgets_by_name.equip_button.content.visible = allow_equip_button and true or visible
-	widgets_by_name.display_name_divider2.content.visible = visible
 end
 
 InventoryCosmeticsView._stop_previewing = function (self)
 	InventoryCosmeticsView.super._stop_previewing(self)
 	self:_set_preview_widgets_visibility(false)
+
+	if self._item_name_widget then
+		self:_unregister_widget_name(self._item_name_widget.name)
+
+		self._item_name_widget = nil
+	end
 
 	if self._player_panel then
 		self:_remove_element("player_panel")
@@ -230,6 +378,7 @@ InventoryCosmeticsView._preview_element = function (self, element)
 	end
 
 	self._previewed_item = item
+	self._previewed_element = element
 	local slots = item.slots or {}
 	local item_name = item.name
 	local gear_id = item.gear_id or item_name
@@ -280,13 +429,112 @@ InventoryCosmeticsView._preview_element = function (self, element)
 		if selected_slot_name == "slot_portrait_frame" or selected_slot_name == "slot_insignia" then
 			InventoryCosmeticsView.super._preview_element(self, element)
 			self:_set_preview_widgets_visibility(false, true)
-		else
-			local display_name = ItemUtils.display_name(item)
-			local widgets_by_name = self._widgets_by_name
-			widgets_by_name.display_name.content.text = display_name
-
-			self:_set_preview_widgets_visibility(true)
 		end
+
+		local display_name = ItemUtils.display_name(item)
+		local widgets_by_name = self._widgets_by_name
+		local achievement = element.achievement
+		local store = element.store
+
+		if achievement then
+			if element.locked then
+				widgets_by_name.unlock_title.content.text = Localize("loc_inventory_cosmetic_item_acquisition_penance_title_lock", true, {
+					penance_title = achievement.label
+				})
+				widgets_by_name.unlock_details.content.text = achievement.description
+			else
+				widgets_by_name.unlock_title.content.text = Localize("loc_inventory_cosmetic_item_acquisition_penance_title_unlock", true, {
+					penance_title = achievement.label
+				})
+				widgets_by_name.unlock_details.content.text = ""
+			end
+		elseif store then
+			if element.locked then
+				widgets_by_name.unlock_title.content.text = Localize("loc_inventory_cosmetic_item_acquisition_store_title_lock")
+			else
+				widgets_by_name.unlock_title.content.text = Localize("loc_inventory_cosmetic_item_acquisition_store_title_unlock")
+			end
+
+			widgets_by_name.unlock_details.content.text = ""
+		else
+			widgets_by_name.unlock_title.content.text = ""
+			widgets_by_name.unlock_details.content.text = ""
+		end
+
+		widgets_by_name.unlock_title.content.locked = element.locked
+		local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
+		local item_size = {
+			700,
+			60
+		}
+		local ui_renderer = self._ui_default_renderer
+		local scenegraph_id = "item_name_pivot"
+		local widget_type = "item_name"
+		local ContentBlueprints = generate_blueprints_function(item_size)
+		local template = ContentBlueprints[widget_type]
+		local config = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "right",
+			size = item_size,
+			item = item
+		}
+		local size = template.size_function and template.size_function(self, config, ui_renderer) or template.size
+		local pass_template = template.pass_template_function and template.pass_template_function(self, config, ui_renderer) or template.pass_template
+		local optional_style = template.style_function and template.style_function(self, config, size) or template.style
+		local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, size, optional_style)
+		local widget = nil
+
+		if widget_definition then
+			local name = "item_name"
+			widget = self:_create_widget(name, widget_definition)
+			widget.type = widget_type
+			local init = template.init
+
+			if init then
+				init(self, widget, config, nil, nil, ui_renderer)
+			end
+
+			self._item_name_widget = widget
+		end
+
+		local unlock_title_size = {
+			self._ui_scenegraph.unlock_box.size[1],
+			1080
+		}
+		local spacing = 20
+		local max_unlock_width = widget.content.size[1] + unlock_title_size[1] - (widget.style.title.size[1] + spacing)
+		local unlock_title_style = widgets_by_name.unlock_title.style.text
+		local unlock_details_style = widgets_by_name.unlock_details.style.text
+		local unlock_title_options = UIFonts.get_font_options_by_style(unlock_title_style)
+		local unlock_details_options = UIFonts.get_font_options_by_style(unlock_details_style)
+		local unlock_title_width, unlock_title_height = UIRenderer.text_size(self._ui_default_renderer, widgets_by_name.unlock_title.content.text, unlock_title_style.font_type, unlock_title_style.font_size, {
+			max_unlock_width,
+			unlock_title_size[2]
+		}, unlock_title_options)
+		local unlock_details_width, unlock_details_height = UIRenderer.text_size(self._ui_default_renderer, widgets_by_name.unlock_details.content.text, unlock_details_style.font_type, unlock_details_style.font_size, {
+			max_unlock_width,
+			unlock_title_size[2]
+		}, unlock_details_options)
+		local unlock_details_margin = 5
+
+		self:_set_scenegraph_size("unlock_title", max_unlock_width, nil)
+		self:_set_scenegraph_size("unlock_details", max_unlock_width, nil)
+		self:_set_scenegraph_size("unlock_box", nil, unlock_title_height + unlock_details_margin + unlock_details_height)
+
+		if element.locked then
+			local added_height = 100
+			widget.offset[2] = widget.original_offset[2] + added_height
+			widgets_by_name.unlock_title.offset[2] = added_height
+			widgets_by_name.unlock_details.offset[2] = unlock_title_height + unlock_details_margin + added_height
+		else
+			widget.offset[2] = widget.original_offset[2]
+			widgets_by_name.unlock_title.offset[2] = 0
+			widgets_by_name.unlock_details.offset[2] = unlock_title_height + unlock_details_margin
+		end
+
+		local can_equip = not self._previewed_element.locked
+
+		self:_set_preview_widgets_visibility(can_equip)
 	end
 end
 
@@ -302,8 +550,8 @@ end
 
 InventoryCosmeticsView._register_button_callbacks = function (self)
 	local widgets_by_name = self._widgets_by_name
-	local equip_button = widgets_by_name.equip_button
-	equip_button.content.hotspot.pressed_callback = callback(self, "cb_on_equip_pressed")
+	widgets_by_name.equip_button.content.hotspot.pressed_callback = callback(self, "cb_on_equip_pressed")
+	widgets_by_name.toggle_locked.content.hotspot.pressed_callback = callback(self, "cb_on_lock_pressed")
 end
 
 InventoryCosmeticsView.cb_on_camera_zoom_toggled = function (self, id, input_pressed, instant)
@@ -335,6 +583,47 @@ InventoryCosmeticsView._trigger_zoom_logic = function (self, instant, optional_s
 		world_spawner:set_camera_rotation_axis_offset("y", 0, duration, func_ptr)
 		world_spawner:set_camera_rotation_axis_offset("z", 0, duration, func_ptr)
 	end
+end
+
+InventoryCosmeticsView.cb_on_lock_pressed = function (self)
+	self._show_locked_cosmetics = not self._show_locked_cosmetics
+
+	if self._parent then
+		self._parent.show_locked_cosmetics = self._show_locked_cosmetics
+	end
+
+	if self._item_grid and InputDevice.gamepad_active then
+		self._item_grid:disable_input(true)
+
+		self._filter_triggered = true
+	end
+
+	self:_stop_previewing()
+	self:_start_show_layout()
+end
+
+InventoryCosmeticsView._start_show_layout = function (self)
+	if self._show_locked_cosmetics == false then
+		local filtered_layout = {}
+
+		for i = 1, #self._cosmetic_layout do
+			local layout = self._cosmetic_layout[i]
+
+			if not layout.locked and layout.widget_type ~= "divider" then
+				filtered_layout[#filtered_layout + 1] = layout
+			end
+		end
+
+		self._offer_items_layout = filtered_layout
+	else
+		self._offer_items_layout = self._cosmetic_layout
+	end
+
+	local selected_slot = self._selected_slot
+	local selected_slot_name = selected_slot.name
+	local slot_display_name = selected_slot and selected_slot.display_name
+
+	self:_present_layout_by_slot_filter(nil, nil, slot_display_name)
 end
 
 InventoryCosmeticsView.cb_on_equip_pressed = function (self)
@@ -372,10 +661,7 @@ InventoryCosmeticsView.on_exit = function (self)
 		self._world_spawner = nil
 	end
 
-	if not self._has_equipped_item then
-		self:_play_sound(UISoundEvents.default_menu_exit)
-	end
-
+	self:_play_sound(UISoundEvents.default_menu_exit)
 	InventoryCosmeticsView.super.on_exit(self)
 end
 
@@ -433,8 +719,8 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 
 	local selected_slot = self._selected_slot
 	local selected_slot_name = selected_slot.name
-
-	Managers.data_service.gear:fetch_inventory(character_id, filter):next(function (items)
+	local promises = {}
+	promises[#promises + 1] = Managers.data_service.gear:fetch_inventory(character_id, filter):next(function (items)
 		if self._destroyed then
 			return
 		end
@@ -448,7 +734,7 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 		end
 
 		self._inventory_items = items_array
-		local layout = {}
+		local valid_items = {}
 
 		for i = 1, #items_array do
 			local item = items_array[i]
@@ -460,38 +746,161 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 					local valid = true
 
 					if valid then
-						layout[#layout + 1] = {
-							item = item,
-							slot = selected_slot,
-							widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name]
-						}
+						valid_items[#valid_items + 1] = item
 					end
 				end
 			end
 		end
 
-		local first_selected_slot = selected_slots[1]
-		self._offer_items_layout = layout
-		local slot_display_name = selected_slot and selected_slot.display_name
-
-		self:_present_layout_by_slot_filter(nil, slot_display_name)
-
-		local start_index = #layout > 0 and 1
-		local equipped_item = start_index and self:equipped_item_in_slot(selected_slot_name)
-
-		if equipped_item then
-			start_index = self:item_grid_index(equipped_item) or start_index
-
-			if start_index then
-				self:focus_on_item(equipped_item)
-			end
-		else
-			local instant_scroll = true
-			local scrollbar_animation_progress = 0
-
-			self:focus_grid_index(start_index, scrollbar_animation_progress, instant_scroll)
-		end
+		return valid_items
 	end)
+	promises[#promises + 1] = Managers.data_service.account:get_achievements():next(function (achievements)
+		local achievement_items = {}
+
+		for id, achievement in pairs(achievements) do
+			local reward_item = AchievementUIHelper.get_reward_item(achievement)
+
+			if reward_item and self:_item_valid_by_current_profile(reward_item) and selected_slot_name == reward_item.slots[1] then
+				local description_text = nil
+
+				if achievement.type == "meta" then
+					local sub_penances_count = #achievement.related_commendation_ids or ""
+					description_text = Localize("loc_inventory_cosmetic_item_acquisition_penance_description_multiple_requirement", true, {
+						penance_amount = sub_penances_count
+					})
+				elseif achievement.hidden == true then
+					description_text = achievement.description
+				else
+					description_text = achievement.description
+				end
+
+				local valid = true
+
+				if valid then
+					achievement_items[#achievement_items + 1] = {
+						item = reward_item,
+						label = achievement.label,
+						description = description_text
+					}
+				end
+			end
+		end
+
+		return achievement_items
+	end)
+	promises[#promises + 1] = Managers.data_service.store:get_credits_cosmetics_store():next(function (data)
+		local offers = data.offers
+		local store_items = {}
+
+		for i = 1, #offers do
+			local offer = offers[i]
+			local id = offer.description and offer.description.id
+
+			if id then
+				local item = MasterItems.get_item(id)
+
+				if item and self:_item_valid_by_current_profile(item) and selected_slot_name == item.slots[1] then
+					local valid = true
+
+					if valid then
+						store_items[#store_items + 1] = item
+					end
+				end
+			end
+		end
+
+		return store_items
+	end)
+
+	return Promise.all(unpack(promises)):next(function (data)
+		self._cosmetic_layout = self:_prepare_cosmetic_layout_data(data)
+	end):catch(function (data)
+		self._cosmetic_layout = self:_prepare_cosmetic_layout_data(data)
+	end)
+end
+
+InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
+	local inventory_items, achievement_items, store_items = unpack(result)
+	local layout = {}
+	local used_achivements = {}
+	local used_store = {}
+	local used_achievements_count = 0
+	local used_store_count = 0
+	local selected_slot = self._selected_slot
+	local selected_slot_name = selected_slot.name
+
+	for i = 1, #inventory_items do
+		local inventory_item = inventory_items[i]
+		local found_achievement, found_store = nil
+
+		for j = 1, #achievement_items do
+			local achievement_item = achievement_items[j]
+
+			if achievement_item.item.name == inventory_item.name then
+				found_achievement = achievement_item
+				used_achivements[achievement_item.item.name] = true
+				used_achievements_count = used_achievements_count + 1
+
+				break
+			end
+		end
+
+		for k = 1, #store_items do
+			local store_item = store_items[k]
+
+			if store_item.name == inventory_item.name then
+				found_store = store_item
+				used_store[store_item.name] = true
+				used_store_count = used_store_count + 1
+
+				break
+			end
+		end
+
+		layout[#layout + 1] = {
+			item = inventory_item,
+			slot = selected_slot,
+			widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
+			achievement = found_achievement,
+			store = found_store
+		}
+	end
+
+	if #achievement_items > 0 and used_achievements_count < #achievement_items or #store_items > 0 and used_store_count < #store_items then
+		layout[#layout + 1] = {
+			widget_type = "divider"
+		}
+	end
+
+	for i = 1, #achievement_items do
+		local achievement_item = achievement_items[i]
+
+		if not used_achivements[achievement_item.item.name] then
+			layout[#layout + 1] = {
+				locked = true,
+				item = achievement_item.item,
+				slot = selected_slot,
+				widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
+				achievement = achievement_item
+			}
+		end
+	end
+
+	for i = 1, #store_items do
+		local store_item = store_items[i]
+
+		if not used_store[store_item.name] then
+			layout[#layout + 1] = {
+				locked = true,
+				item = store_item,
+				slot = selected_slot,
+				widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
+				store = store_item
+			}
+		end
+	end
+
+	return layout
 end
 
 InventoryCosmeticsView._calc_text_size = function (self, widget, text_and_style_id)
@@ -582,9 +991,9 @@ InventoryCosmeticsView._equip_item = function (self, slot_name, item)
 			local item_type = item.item_type
 			local ITEM_TYPES = UISettings.ITEM_TYPES
 
-			if item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY or item_type == ITEM_TYPES.END_OF_ROUND then
+			if item_type == ITEM_TYPES.GEAR_LOWERBODY or item_type == ITEM_TYPES.GEAR_UPPERBODY then
 				self:_play_sound(UISoundEvents.apparel_equip)
-			elseif item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC then
+			elseif item_type == ITEM_TYPES.GEAR_HEAD or item_type == ITEM_TYPES.EMOTE or item_type == ITEM_TYPES.END_OF_ROUND or item_type == ITEM_TYPES.GEAR_EXTRA_COSMETIC then
 				self:_play_sound(UISoundEvents.apparel_equip_small)
 			elseif item_type == ITEM_TYPES.PORTRAIT_FRAME or item_type == ITEM_TYPES.CHARACTER_INSIGNIA then
 				self:_play_sound(UISoundEvents.apparel_equip_frame)
@@ -630,6 +1039,8 @@ end
 InventoryCosmeticsView._handle_input = function (self, input_service)
 	if input_service:get("confirm_pressed") then
 		self:cb_on_equip_pressed()
+	elseif self._show_locked_cosmetics ~= nil and input_service:get("toggle_filter") then
+		self:cb_on_lock_pressed()
 	end
 end
 
@@ -642,19 +1053,22 @@ end
 InventoryCosmeticsView._update_equip_button_status = function (self)
 	local previewed_item = self._previewed_item
 	local disable_button = not previewed_item
+	local cannot_equip = false
 
 	if not disable_button then
 		local selected_slot = self._selected_slot
 		local selected_slot_name = selected_slot and selected_slot.name
 		local equipped_item = selected_slot_name and self:equipped_item_in_slot(selected_slot_name)
 		disable_button = equipped_item and equipped_item.gear_id == previewed_item.gear_id
+		cannot_equip = self._previewed_element.locked
 	end
 
-	if self._equip_button_disabled ~= disable_button then
-		self._equip_button_disabled = disable_button
+	if self._equip_button_disabled ~= disable_button or self._equip_button_disabled ~= cannot_equip then
+		self._equip_button_disabled = disable_button or cannot_equip
 		local button = self._widgets_by_name.equip_button
 		local button_content = button.content
-		button_content.hotspot.disabled = disable_button
+		button_content.hotspot.disabled = disable_button or cannot_equip
+		button_content.visible = not cannot_equip
 		button_content.text = Utf8.upper(disable_button and Localize("loc_weapon_inventory_equipped_button") or Localize("loc_weapon_inventory_equip_button"))
 	end
 end
@@ -677,6 +1091,20 @@ end
 InventoryCosmeticsView.draw = function (self, dt, t, input_service, layer)
 	if self:profile_preset_handling_input() then
 		input_service = input_service:null_service()
+	end
+
+	if self._filter_triggered then
+		self._item_grid:disable_input(false)
+	end
+
+	local ui_scenegraph = self._ui_scenegraph
+	local ui_renderer = self._ui_default_renderer
+	local render_settings = self._render_settings
+
+	if self._item_name_widget then
+		UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
+		UIWidget.draw(self._item_name_widget, ui_renderer)
+		UIRenderer.end_pass(ui_renderer)
 	end
 
 	InventoryCosmeticsView.super.draw(self, dt, t, input_service, layer)

@@ -189,6 +189,10 @@ PlayerInfo.is_myself = function (self)
 	return presence and presence:is_myself()
 end
 
+PlayerInfo.is_platform_friend = function (self)
+	return self._platform_social ~= nil and self:is_friend()
+end
+
 PlayerInfo.platform = function (self)
 	local platform_social = self._platform_social
 	local presence = self:_get_presence()
@@ -325,6 +329,14 @@ PlayerInfo.profile = function (self)
 	local profile = presence and presence:character_profile()
 
 	return profile
+end
+
+PlayerInfo.first_update_promise = function (self)
+	local presence = self:_get_presence()
+
+	return presence:first_update_promise():next(function (presence)
+		return self
+	end)
 end
 
 PlayerInfo._update_presence = function (self)

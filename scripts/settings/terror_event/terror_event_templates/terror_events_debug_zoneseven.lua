@@ -66,6 +66,7 @@ local template = {
 			},
 			{
 				"spawn_by_points",
+				proximity_spawners = true,
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_m2_endevent",
 				limit_spawners = 3,
@@ -79,9 +80,10 @@ local template = {
 			},
 			{
 				"try_inject_special_minion",
-				points = 6,
+				proximity_spawners = true,
 				max_breed_amount = 1,
 				spawner_group = "spawner_m2_endevent",
+				points = 6,
 				breed_tags = {
 					{
 						"special",
@@ -116,8 +118,8 @@ local template = {
 				end
 			},
 			{
-				"start_terror_event",
-				start_event_name = "trickle_m2_test"
+				"flow_event",
+				flow_event_name = "trickle_m2_test_completed"
 			}
 		}
 	}

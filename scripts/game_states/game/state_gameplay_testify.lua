@@ -356,6 +356,12 @@ local StateGameplayTestify = {
 
 		return unit
 	end,
+	spawn_and_destroy_unit = function (unit_name, position, _)
+		local world = Managers.world:world("level_world")
+		local unit = World.spawn_unit_ex(world, unit_name, nil, position:unbox())
+
+		World.destroy_unit(world, unit)
+	end,
 	start_measuring_performance = function (values_to_measure, state_gameplay)
 		state_gameplay:init_performance_reporter(values_to_measure)
 	end,

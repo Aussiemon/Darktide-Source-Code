@@ -432,10 +432,12 @@ StateTitle.on_exit = function (self)
 				ui_manager:close_view(view_name, force_close)
 			end
 
-			local main_menu_loader = self._main_menu_loader
+			local main_menu_loader = self._next_state_params and self._next_state_params.main_menu_loader
 
 			if main_menu_loader then
 				main_menu_loader:delete()
+
+				self._next_state_params.main_menu_loader = nil
 			end
 		elseif ui_manager:view_active(view_name) then
 			ui_manager:close_view(view_name)
@@ -497,12 +499,12 @@ StateTitle._signin = function (self)
 			self._narrative_promise = Managers.narrative:load_character_narrative(character_id)
 		end
 
-		self._main_menu_loader = MainMenuLoader:new()
+		local main_menu_loader = MainMenuLoader:new()
 
-		self._main_menu_loader:start_loading()
+		main_menu_loader:start_loading()
 
 		local next_state_params = self._next_state_params
-		next_state_params.main_menu_loader = self._main_menu_loader
+		next_state_params.main_menu_loader = main_menu_loader
 		next_state_params.profiles = profiles
 		next_state_params.gear = gear
 		next_state_params.selected_profile = selected_profile

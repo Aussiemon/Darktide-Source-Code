@@ -121,13 +121,13 @@ StoreService.get_credits_goods_store = function (self, ignore_event_trigger)
 	end
 end
 
-StoreService.get_credits_cosmetics_store = function (self)
+StoreService.get_credits_cosmetics_store = function (self, archetype_name)
 	if Managers.backend:authenticated() then
 		local backend_interface = self._backend_interface
 		local local_player_id = 1
 		local player = Managers.player:local_player(local_player_id)
 		local character_id = player:character_id()
-		local archetype_name = player:archetype_name()
+		archetype_name = archetype_name or player:archetype_name()
 		local store_promise = nil
 		local time_since_launch = Application.time_since_launch()
 
@@ -160,13 +160,13 @@ StoreService.get_credits_cosmetics_store = function (self)
 	end
 end
 
-StoreService.get_credits_weapon_cosmetics_store = function (self)
+StoreService.get_credits_weapon_cosmetics_store = function (self, archetype_name)
 	if Managers.backend:authenticated() then
 		local backend_interface = self._backend_interface
 		local local_player_id = 1
 		local player = Managers.player:local_player(local_player_id)
 		local character_id = player:character_id()
-		local archetype_name = player:archetype_name()
+		archetype_name = archetype_name or player:archetype_name()
 		local store_promise = nil
 		local time_since_launch = Application.time_since_launch()
 
@@ -357,7 +357,7 @@ StoreService.purchase_currency = function (self, offer)
 
 			return backend_result
 		else
-			self:_change_cached_wallet_balance(currency_type, currency_amount, false, "purchase_currency")
+			self:_change_cached_wallet_balance(currency_type, currency_amount, true, "purchase_currency")
 
 			return backend_result
 		end
@@ -576,7 +576,7 @@ StoreService.get_premium_store = function (self, storefront_key)
 	return promise:catch(function (error)
 		Log.error("StoreService", "Failed to fetch premium storefront %s %s", storefront_key, error)
 	end):next(function (store_catalogue)
-		local offers, current_rotation_end, layout_config, decorate_offer, catalog_validity = nil
+		local offers, current_rotation_end, layout_config, decorate_offer, catalog_validity, bundle_rules = nil
 
 		if store_catalogue then
 			local store_data = store_catalogue.data
@@ -585,6 +585,7 @@ StoreService.get_premium_store = function (self, storefront_key)
 			current_rotation_end = store_data and store_data.currentRotationEnd
 			decorate_offer = store_catalogue.decorate_offer
 			catalog_validity = store_catalogue.catalog
+			bundle_rules = store_catalogue.bundle_rules
 		end
 
 		return {
@@ -594,7 +595,8 @@ StoreService.get_premium_store = function (self, storefront_key)
 			decorate_offer = decorate_offer and function (self, test, is_personal)
 				decorate_offer(store_catalogue.storefront, test, is_personal)
 			end or nil,
-			catalog_validity = catalog_validity
+			catalog_validity = catalog_validity,
+			bundle_rules = bundle_rules
 		}
 	end)
 end

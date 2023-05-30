@@ -9,13 +9,23 @@ local footstep_intervals_templates = {
 	},
 	luggable_human = {
 		crouch_walking = 0.61,
-		walking = 0.84,
+		walking = 0.6,
 		sprinting = 0.55
 	},
-	ogryn = {
+	luggable_ogryn = {
 		crouch_walking = 0.61,
-		walking = 0.71,
-		sprinting = 0.49
+		walking = 0.6,
+		sprinting = 0.51
+	},
+	pocketable_human = {
+		crouch_walking = 0.61,
+		walking = 0.43,
+		sprinting = 0.38
+	},
+	pocketable_ogryn = {
+		crouch_walking = 0.61,
+		walking = 0.55,
+		sprinting = 0.5
 	},
 	bolter = {
 		walking = 0.42,
@@ -62,7 +72,7 @@ local footstep_intervals_templates = {
 		walking_alternate_fire = 0.74
 	},
 	ogryn_gauntlet = {
-		walking = 0.66,
+		walking = 0.6,
 		crouch_walking_alternate_fire = 1.03,
 		crouch_walking = 0.9,
 		sprinting = 0.5,
@@ -81,14 +91,14 @@ local footstep_intervals_templates = {
 		walking_alternate_fire = 0.62
 	},
 	ogryn_thumper = {
-		walking = 0.58,
+		walking = 0.61,
 		crouch_walking_alternate_fire = 0.89,
 		crouch_walking = 0.73,
 		sprinting = 0.53,
 		walking_alternate_fire = 0.7
 	},
 	ogryn_thumper_shotgun = {
-		walking = 0.58,
+		walking = 0.56,
 		crouch_walking_alternate_fire = 0.89,
 		crouch_walking = 0.73,
 		sprinting = 0.47,
@@ -99,6 +109,13 @@ local footstep_intervals_templates = {
 		crouch_walking_alternate_fire = 0.86,
 		crouch_walking = 0.7,
 		sprinting = 0.435,
+		walking_alternate_fire = 0.67
+	},
+	ogryn_grenade_box = {
+		walking = 0.54,
+		crouch_walking_alternate_fire = 0.86,
+		crouch_walking = 0.61,
+		sprinting = 0.5,
 		walking_alternate_fire = 0.67
 	},
 	plasmagun = {
@@ -130,7 +147,7 @@ local footstep_intervals_templates = {
 	},
 	slabshield = {
 		crouch_walking = 0.85,
-		walking = 0.65,
+		walking = 0.67,
 		sprinting = 0.54
 	}
 }

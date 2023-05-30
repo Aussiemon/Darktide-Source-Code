@@ -1,4 +1,4 @@
-local ScannerDisplayViewSettings = require("scripts/ui/views/scanner_display_view/scanner_display_view_settings")
+local ScannerDisplayViewScanSettings = require("scripts/ui/views/scanner_display_view/scanner_display_view_scan_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local Scanning = require("scripts/utilities/scanning")
 local FixedFrame = require("scripts/utilities/fixed_frame")
@@ -26,9 +26,8 @@ MinigameScanView.init = function (self, context)
 	local owner_unit = context.device_owner_unit
 	local player_visual_loadout_extension = ScriptUnit.extension(owner_unit, "visual_loadout_system")
 	local fx_sources = player_visual_loadout_extension:source_fx_for_slot(SLOT_NAME)
-	local player_fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
-	local fx_sources_name = fx_sources[FX_SOURCE_NAME]
-	self._speaker_fx_source = player_fx_extension:sound_source(fx_sources_name)
+	self._player_fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
+	self._fx_source_name = fx_sources[FX_SOURCE_NAME]
 	local unit_data_extension = ScriptUnit.extension(context.device_owner_unit, "unit_data_system")
 	self._scanning_component = unit_data_extension:read_component("scanning")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
@@ -102,7 +101,8 @@ MinigameScanView.update = function (self, dt, t, widgets_by_name)
 	self._blinking = blinking
 	self._blink_time = self._blink_time + dt
 	local WWISE_PARAMETER_NAME_BEEP_VOLUME = "scanner_beep_volume"
-	local current_beep = WwiseWorld.get_source_parameter(self._wwise_world, WWISE_PARAMETER_NAME_BEEP_VOLUME, self._speaker_fx_source)
+	local sfx_source = self._player_fx_extension:sound_source(self._fx_source_name)
+	local current_beep = WwiseWorld.get_source_parameter(self._wwise_world, WWISE_PARAMETER_NAME_BEEP_VOLUME, sfx_source)
 	local current_beep_normalized = 1 - math.clamp01(current_beep / -48)
 	self._intense_blink_alpha = current_beep_normalized > 0.7 and 1 or 0
 end
@@ -176,14 +176,13 @@ MinigameScanView._create_cog_widgets = function (self)
 end
 
 MinigameScanView._create_wallet_widgets = function (self, material_name, widget_name_prefix, style_id, widgets)
-	local num_skulls_columns = ScannerDisplayViewSettings.scan_num_skulls_columns
-	local num_skulls_rows = ScannerDisplayViewSettings.scan_num_skulls_rows
-	local start_offset = ScannerDisplayViewSettings.scan_skulls_start_offset
-	local spacing = ScannerDisplayViewSettings.scan_skulls_spacing
+	local num_skulls_columns = ScannerDisplayViewScanSettings.scan_num_skulls_columns
+	local num_skulls_rows = ScannerDisplayViewScanSettings.scan_num_skulls_rows
+	local start_offset = ScannerDisplayViewScanSettings.scan_skulls_start_offset
+	local spacing = ScannerDisplayViewScanSettings.scan_skulls_spacing
 	local scenegraph_id = "center_pivot"
 	local material_path = "content/ui/materials/backgrounds/scanner/"
-	local widget_size = ScannerDisplayViewSettings.scan_skull_widget_size
-	local widget_offsets = ScannerDisplayViewSettings.scan_skull_widget_offsets
+	local widget_size = ScannerDisplayViewScanSettings.scan_skull_widget_size
 
 	table.clear(widgets)
 
@@ -220,13 +219,13 @@ end
 
 MinigameScanView._create_segment_widgets = function (self)
 	local scenegraph_id = "segments_center_pivot"
-	local num_segments = ScannerDisplayViewSettings.scan_num_segments
-	local widget_size = ScannerDisplayViewSettings.scan_segment_widget_size
-	local widget_offset = ScannerDisplayViewSettings.scan_segment_widget_offset
-	local widget_pivot = ScannerDisplayViewSettings.scan_segment_widget_pivot
+	local num_segments = ScannerDisplayViewScanSettings.scan_num_segments
+	local widget_size = ScannerDisplayViewScanSettings.scan_segment_widget_size
+	local widget_offset = ScannerDisplayViewScanSettings.scan_segment_widget_offset
+	local widget_pivot = ScannerDisplayViewScanSettings.scan_segment_widget_pivot
 	local material_path = "content/ui/materials/backgrounds/scanner/scanner_scan_segment"
 	local widget_name_prefix = "segment_"
-	local angle = ScannerDisplayViewSettings.scan_segment_half_angle
+	local angle = ScannerDisplayViewScanSettings.scan_segment_half_angle
 	local angle_step = angle * 2 / num_segments
 	local segments = self._segments
 

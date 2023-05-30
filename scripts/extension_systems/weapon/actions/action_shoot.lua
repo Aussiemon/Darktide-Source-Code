@@ -132,11 +132,6 @@ end
 ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 	local action_component = self._action_component
 	local action_settings = self._action_settings
-	local last_sprint_time = self._sprint_character_state_component.last_sprint_time
-
-	if t < last_sprint_time + (action_settings.sprint_ready_up_time or 0) then
-		return
-	end
 
 	if action_settings.ammunition_usage then
 		local buff_keywords = BuffSettings.keywords

@@ -2,12 +2,13 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local MasterItems = require("scripts/backend/master_items")
 local Overheat = require("scripts/utilities/overheat")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local PocketableUtils = require("scripts/settings/equipment/weapon_templates/pocketables/pockatables_utils")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
+local Scanning = require("scripts/utilities/scanning")
+local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local Vo = require("scripts/utilities/vo")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
-local Scanning = require("scripts/utilities/scanning")
-local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 
 local function _require_weapon_action(action)
 	local base = "scripts/extension_systems/weapon/actions/"
@@ -53,7 +54,7 @@ local weapon_action_data = {
 		reload_shotgun = _require_weapon_action("action_reload_shotgun"),
 		reload_state = _require_weapon_action("action_reload_state"),
 		shoot_hit_scan = _require_weapon_action("action_shoot_hit_scan"),
-		shoot_pellets = _require_weapon_action("action_shoot_pellets_new"),
+		shoot_pellets = _require_weapon_action("action_shoot_pellets"),
 		shoot_projectile = _require_weapon_action("action_shoot_projectile"),
 		smite_targeting = _require_weapon_action("action_smite_targeting"),
 		spawn_projectile = _require_weapon_action("action_spawn_projectile"),
@@ -69,6 +70,7 @@ local weapon_action_data = {
 		unwield = _require_weapon_action("action_unwield"),
 		unwield_to_previous = _require_weapon_action("action_unwield_to_previous"),
 		unwield_to_specific = _require_weapon_action("action_unwield_to_specific"),
+		use_syringe = _require_weapon_action("action_use_syringe"),
 		vent_overheat = _require_weapon_action("action_vent_overheat"),
 		vent_warp_charge = _require_weapon_action("action_vent_warp_charge"),
 		wield = _require_weapon_action("action_wield"),
@@ -189,15 +191,15 @@ weapon_action_data.action_kind_condition_funcs = {
 	unwield = function (action_settings, condition_func_params, used_input)
 		local visual_loadout_extension = condition_func_params.visual_loadout_extension
 		local inventory_read_component = condition_func_params.inventory_read_component
-		local weapon_extention = condition_func_params.weapon_extention
+		local weapon_extension = condition_func_params.weapon_extension
 		local ability_extension = condition_func_params.ability_extension
-		local slot_to_wield = PlayerUnitVisualLoadout.slot_name_from_wield_input(used_input, inventory_read_component, visual_loadout_extension, weapon_extention, ability_extension)
+		local slot_to_wield = PlayerUnitVisualLoadout.slot_name_from_wield_input(used_input, inventory_read_component, visual_loadout_extension, weapon_extension, ability_extension)
 
 		if not visual_loadout_extension:can_wield(slot_to_wield) then
 			return false
 		end
 
-		if not weapon_extention:can_wield(slot_to_wield) then
+		if not weapon_extension:can_wield(slot_to_wield) then
 			return false
 		end
 

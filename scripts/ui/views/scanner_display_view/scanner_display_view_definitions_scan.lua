@@ -1,8 +1,7 @@
-local ScannerDisplayViewSettings = require("scripts/ui/views/scanner_display_view/scanner_display_view_settings")
+local ScannerDisplayViewScanSettings = require("scripts/ui/views/scanner_display_view/scanner_display_view_scan_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
-local size_factor = ScannerDisplayViewSettings.scan_size_factor
-local skull_size_factor = ScannerDisplayViewSettings.scan_skull_size_factor
+local size_factor = ScannerDisplayViewScanSettings.scan_size_factor
 local screen_ratio = UIWorkspaceSettings.screen.size[1] / UIWorkspaceSettings.screen.size[2]
 local decoration_inquisition_widget_size = {
 	screen_ratio * size_factor * 64,
@@ -15,10 +14,6 @@ local decoration_left_mark_widget_size = {
 local decoration_right_mark_widget_size = {
 	screen_ratio * size_factor * 64,
 	size_factor * 128
-}
-local segmented_arch_widget_size = {
-	screen_ratio * size_factor * 715,
-	size_factor * 180
 }
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,

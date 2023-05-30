@@ -98,32 +98,38 @@ PlayerCharacterStateMinigame._update_input = function (self, t)
 	local action_one_pressed = input_extension:get("action_one_pressed")
 	local action_two_pressed = input_extension:get("action_two_pressed")
 	local action_interaction_pressed = input_extension:get("interact_pressed")
-	local move_input = input_extension:get("move")
 	local animation_extension = self._animation_extension
-
-	if Vector3.length_squared(move_input) > 0 then
-		local vertical_move = move_input.y
-
-		if vertical_move > 0 then
-			animation_extension:anim_event_1p("knob_turn_up")
-		else
-			animation_extension:anim_event_1p("knob_turn_down")
-		end
-	end
-
 	local minigame_extension = self._minigame_extension
 
-	if minigame_extension and (action_one_pressed or action_interaction_pressed) then
-		if self._is_server then
-			minigame_extension:on_action_pressed(t)
+	if minigame_extension then
+		if action_one_pressed or action_interaction_pressed then
+			if self._is_server then
+				minigame_extension:on_action_pressed(t)
+			end
+
+			animation_extension:anim_event_1p("button_press")
+
+			local current_minigame_state = minigame_extension:current_state()
+
+			if current_minigame_state == MinigameSettings.states.completed then
+				animation_extension:anim_event_1p("scan_end")
+			end
 		end
 
-		animation_extension:anim_event_1p("button_press")
+		if minigame_extension:uses_joystick() then
+			local move_input = input_extension:get("move")
 
-		local current_minigame_state = minigame_extension:current_state()
+			if self._is_server then
+				minigame_extension:on_axis_set(t, move_input.x, move_input.y)
+			end
 
-		if current_minigame_state == MinigameSettings.states.completed then
-			animation_extension:anim_event_1p("scan_end")
+			if not Vector3.equal(move_input, Vector3.zero()) then
+				if move_input.y > 0 or move_input.x > 0 then
+					animation_extension:anim_event_1p("knob_turn_up")
+				else
+					animation_extension:anim_event_1p("knob_turn_down")
+				end
+			end
 		end
 	end
 

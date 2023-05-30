@@ -165,7 +165,7 @@ InventoryWeaponsView.cb_switch_tab = function (self, index)
 	local slot_types = tab_content.slot_types
 	local display_name = tab_content.display_name
 
-	self:_present_layout_by_slot_filter(slot_types, display_name)
+	self:_present_layout_by_slot_filter(slot_types, nil, display_name)
 end
 
 InventoryWeaponsView.cb_on_discard_held = function (self, _, input_pressed)
@@ -381,10 +381,9 @@ InventoryWeaponsView.on_exit = function (self)
 				Managers.event:trigger("event_change_wield_slot", selected_slot_name)
 			end
 		end
-	else
-		self:_play_sound(UISoundEvents.default_menu_exit)
 	end
 
+	self:_play_sound(UISoundEvents.default_menu_exit)
 	InventoryWeaponsView.super.on_exit(self)
 end
 
@@ -451,7 +450,7 @@ InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
 			end
 		end
 
-		self:_present_layout_by_slot_filter(nil, slot_display_name)
+		self:_present_layout_by_slot_filter(nil, nil, slot_display_name)
 
 		if not equipped_item and not self._selected_gear_id then
 			local instant_scroll = true
@@ -636,8 +635,12 @@ InventoryWeaponsView._equip_item = function (self, slot_name, item)
 			self:_play_sound(UISoundEvents.weapons_equip_weapon)
 		elseif item_type == ITEM_TYPES.GADGET then
 			self:_play_sound(UISoundEvents.weapons_equip_gadget)
+		elseif item_type == ITEM_TYPES.EMOTE or item_type == ITEM_TYPES.END_OF_ROUND then
+			self:_play_sound(UISoundEvents.apparel_equip_small)
+		elseif item_type == ITEM_TYPES.PORTRAIT_FRAME or item_type == ITEM_TYPES.CHARACTER_INSIGNIA then
+			self:_play_sound(UISoundEvents.apparel_equip_frame)
 		else
-			self:_play_sound(UISoundEvents.weapons_equip_weapon)
+			self:_play_sound(UISoundEvents.apparel_equip)
 		end
 
 		local item_gear_id = item and item.gear_id

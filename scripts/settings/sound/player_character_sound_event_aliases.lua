@@ -322,6 +322,21 @@ local events = {
 			}
 		}
 	},
+	sfx_share_ally = {
+		has_husk_events = true,
+		switch = {
+			"archetype",
+			"sfx_body_material"
+		},
+		events = {
+			default = {
+				default = "wwise/events/player/play_player_foley_give_item"
+			},
+			ogryn = {
+				default = "wwise/events/player/play_player_foley_give_item"
+			}
+		}
+	},
 	footstep = {
 		has_husk_events = true,
 		switch = {
@@ -1094,6 +1109,7 @@ local events = {
 			ogryn_combatblade_p1_m3 = "wwise/events/weapon/play_ogryn_knife_equip",
 			autogun_p1_m2 = "wwise/events/weapon/play_autogun_equip",
 			ogryn_grenade_box = "wwise/events/weapon/play_ogryn_grenade_crate_equip",
+			ammo_cache_pocketable = "wwise/events/player/play_foley_melee_equip_gen_short",
 			combataxe_p1_m2 = "wwise/events/weapon/play_pipe_club_equip",
 			combatsword_p1_m2 = "wwise/events/weapon/play_weapon_equip_medium_sword",
 			laspistol_p1_m2 = "wwise/events/weapon/play_autopistol_equip",
@@ -1192,7 +1208,7 @@ local events = {
 		}
 	},
 	sfx_foley_equip = {
-		has_husk_events = false,
+		has_husk_events = true,
 		switch = {
 			"sfx_body_material"
 		},
@@ -1373,7 +1389,7 @@ local events = {
 			bot_zola_laspistol = "wwise/events/weapon/play_rifle_locomotion",
 			flamer_p1_m1 = "wwise/events/weapon/play_liquid_locomotion",
 			autopistol_p3_m2 = "wwise/events/weapon/play_smg_locomotion",
-			bot_lasgun_killshot = "wwise/events/weapon/play_rifle_locomotion",
+			luggable = "wwise/events/weapon/play_item_luggable_foley",
 			shotgun_p1_m3 = "wwise/events/weapon/play_heavy_locomotion",
 			ogryn_heavystubber_p1_m1 = "wwise/events/weapon/play_ammo_belt_locomotion",
 			ogryn_heavystubber_p1_m2 = "wwise/events/weapon/play_ammo_belt_locomotion",
@@ -1392,6 +1408,7 @@ local events = {
 			lasgun_p1_m2 = "wwise/events/weapon/play_rifle_locomotion",
 			bolter_p1_m2 = "wwise/events/weapon/play_heavy_locomotion",
 			ogryn_thumper_p1_m1 = "wwise/events/weapon/play_heavy_locomotion",
+			bot_lasgun_killshot = "wwise/events/weapon/play_rifle_locomotion",
 			ogryn_gauntlet_p1_m1 = "wwise/events/weapon/play_heavy_locomotion",
 			autopistol_p3_m1 = "wwise/events/weapon/play_smg_locomotion",
 			lasgun_p2_m1 = "wwise/events/weapon/play_rifle_locomotion",
@@ -1485,7 +1502,6 @@ local events = {
 			plasmagun_p1_m1 = "wwise/events/weapon/play_foley_plasma_rifle_heavy_movement",
 			ogryn_thumper_p1_m3 = "wwise/events/weapon/play_thumper_locomotion_metal_plate",
 			flamer_p1_m1 = "wwise/events/weapon/play_flamethrower_push",
-			luggable = "wwise/events/player/play_item_luggable_foley",
 			bolter_p1_m2 = "wwise/events/weapon/play_bolter_reload_hand",
 			ogryn_thumper_p1_m1 = "wwise/events/weapon/play_weapon_silence",
 			ogryn_thumper_p1_m2 = "wwise/events/weapon/play_thumper_locomotion_metal_plate",

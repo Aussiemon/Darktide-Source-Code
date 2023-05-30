@@ -318,18 +318,6 @@ BtInCoverAction._update_peeking = function (self, unit, scratchpad, action_data,
 end
 
 BtInCoverAction._has_clear_shot_from_aiming_when_peeking = function (self, unit, scratchpad, action_data, perception_component, target_unit)
-	if not perception_component.has_line_of_sight then
-		if action_data.suppressive_fire and perception_component.has_good_last_los_position then
-			local clear_shot_line_of_sight_id = action_data.clear_shot_line_of_sight_id
-			local to_node = scratchpad.clear_shot_line_of_sight_data.to_node
-			local aim_position = MinionAttack.get_aim_position(unit, scratchpad, clear_shot_line_of_sight_id, to_node)
-
-			return true, aim_position
-		end
-
-		return false, nil
-	end
-
 	local cover_component = scratchpad.cover_component
 	local cover_type = cover_component.type
 	local peek_identifier = scratchpad.current_peak_identifier
@@ -346,6 +334,11 @@ BtInCoverAction._has_clear_shot_from_aiming_when_peeking = function (self, unit,
 	local clear_shot_line_of_sight_id = action_data.clear_shot_line_of_sight_id
 	local to_node = scratchpad.clear_shot_line_of_sight_data.to_node
 	local to_position = MinionAttack.get_aim_position(unit, scratchpad, clear_shot_line_of_sight_id, to_node)
+
+	if not to_position then
+		return false, nil
+	end
+
 	local vector = to_position - from_position
 	local distance = Vector3.length(vector)
 	local direction = Vector3.normalize(vector)

@@ -3,11 +3,9 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local Animation = require("scripts/utilities/animation")
 local Attack = require("scripts/utilities/attack/attack")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local BreedSettings = require("scripts/settings/breed/breed_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local NavQueries = require("scripts/utilities/nav_queries")
-local breed_types = BreedSettings.types
 local BtPoxwalkerBomberApproachAction = class("BtPoxwalkerBomberApproachAction", "BtNode")
 
 BtPoxwalkerBomberApproachAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
@@ -390,18 +388,22 @@ BtPoxwalkerBomberApproachAction._start_lunge = function (self, unit, blackboard,
 	stagger_component.controlled_stagger = false
 	local death_component = Blackboard.write_component(blackboard, "death")
 	death_component.fuse_timer = t + action_data.fuse_timer
-	local group_extension = ScriptUnit.extension(target_unit, "group_system")
-	local bot_group = group_extension:bot_group()
-	local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
-	local should_create_aoe_threat = unit_data_extension:breed().breed_type == breed_types.player
+	local shape = "sphere"
+	local rotation = Unit.local_rotation(unit, 1)
+	local fwd = Quaternion.forward(rotation)
+	local position = POSITION_LOOKUP[unit] + fwd * 2
+	local aoe_bot_threat_duration = action_data.lunge_duration
+	local side_system = Managers.state.extension:system("side_system")
+	local side = side_system.side_by_unit[unit]
+	local enemy_sides = side:relation_sides("enemy")
+	local group_system = Managers.state.extension:system("group_system")
+	local bot_groups = group_system:bot_groups_from_sides(enemy_sides)
+	local num_bot_groups = #bot_groups
 
-	if should_create_aoe_threat then
-		local shape = "sphere"
-		local rotation = Unit.local_rotation(unit, 1)
-		local fwd = Quaternion.forward(rotation)
-		local position = POSITION_LOOKUP[unit] + fwd * 2
+	for i = 1, num_bot_groups do
+		local bot_group = bot_groups[i]
 
-		bot_group:aoe_threat_created(position, shape, AOE_THREAT_SIZE, rotation, action_data.lunge_duration)
+		bot_group:aoe_threat_created(position, shape, AOE_THREAT_SIZE, rotation, aoe_bot_threat_duration)
 	end
 end
 

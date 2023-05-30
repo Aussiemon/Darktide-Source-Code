@@ -719,8 +719,9 @@ end
 
 LobbyView._load_portrait_icon = function (self, slot)
 	local profile = slot.profile
-	local cb = callback(self, "_cb_set_player_icon", slot)
-	local icon_load_id = Managers.ui:load_profile_portrait(profile, cb)
+	local load_cb = callback(self, "_cb_set_player_icon", slot)
+	local unload_cb = callback(self, "_cb_unset_player_icon", slot)
+	local icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
 	slot.icon_load_id = icon_load_id
 end
 
@@ -767,12 +768,24 @@ end
 
 LobbyView._cb_set_player_icon = function (self, slot, grid_index, rows, columns, render_target)
 	local widget = slot.panel_widget
+	widget.content.character_portrait = "content/ui/materials/base/ui_portrait_frame_base"
 	local material_values = widget.style.character_portrait.material_values
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
 	material_values.texture_icon = render_target
+end
+
+LobbyView._cb_unset_player_icon = function (self, slot)
+	local widget = slot.panel_widget
+	local material_values = widget.style.character_portrait.material_values
+	material_values.use_placeholder_texture = nil
+	material_values.rows = nil
+	material_values.columns = nil
+	material_values.grid_index = nil
+	material_values.texture_icon = nil
+	widget.content.character_portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
 end
 
 LobbyView._sync_local_player = function (self)

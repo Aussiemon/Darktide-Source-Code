@@ -20,7 +20,7 @@ local function highlight_color_change_function(content, style)
 	local default_color = content.disabled and style.disabled_color or style.default_color
 	local hover_color = content.disabled and style.disabled_color or style.hover_color
 	local color = style.color or style.text_color
-	local progress = content.highlight_progress
+	local progress = content.highlight_progress or 0
 
 	ColorUtilities.color_lerp(default_color, hover_color, progress, color)
 

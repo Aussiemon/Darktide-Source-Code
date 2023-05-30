@@ -4,6 +4,7 @@ local cosmetics_inspect_view_settings = {
 	total_blur_duration = 0.5,
 	timer_name = "ui",
 	viewport_type = "default",
+	grid_height = 840,
 	viewport_name = "ui_cosmetics_inspect_preview_viewport",
 	viewport_layer = 1,
 	level_name = "content/levels/ui/cosmetics_preview/cosmetics_preview",

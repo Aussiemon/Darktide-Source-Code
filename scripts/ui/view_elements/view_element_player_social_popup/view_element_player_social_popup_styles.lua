@@ -5,6 +5,7 @@ local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templ
 local SocialMenuSettings = require("scripts/ui/views/social_menu_view/social_menu_view_settings")
 local RosterViewStyles = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_styles")
 local ColorUtilities = require("scripts/utilities/ui/colors")
+local DefaultPassStyles = require("scripts/ui/default_pass_styles")
 local column_width = 480
 local column_margin = {
 	30,

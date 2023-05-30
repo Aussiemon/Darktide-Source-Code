@@ -148,6 +148,11 @@ local widget_definitions = {
 	}, "popup_area_background", nil, nil, PopupStyles.background),
 	player_header = UIWidget.create_definition({
 		{
+			style_id = "user_fatshark_id",
+			pass_type = "hotspot",
+			content_id = "hotspot"
+		},
+		{
 			style_id = "player_display_name",
 			value_id = "player_display_name",
 			pass_type = "text"

@@ -169,11 +169,11 @@ weapon_template.actions = {
 		sprint_ready_up_time = 0.2,
 		ignore_shooting_look_delta_anim_control = true,
 		allow_shots_with_less_than_required_ammo = true,
-		allowed_during_sprint = true,
+		allowed_during_sprint = false,
 		ammunition_usage = 2,
 		recoil_template = "default_laspistol_assault",
 		spread_template = "default_laspistol_assault",
-		abort_sprint = true,
+		abort_sprint = false,
 		total_time = 0.5,
 		action_movement_curve = {
 			{

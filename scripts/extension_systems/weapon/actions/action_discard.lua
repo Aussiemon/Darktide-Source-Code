@@ -51,7 +51,7 @@ ActionDiscard._discard = function (self, action_settings)
 		local placed_unit = nil
 
 		if player_or_nil then
-			placed_unit = pickup_system:player_spawn_pickup(pickup_name, position, rotation, player_or_nil:session_id())
+			placed_unit = pickup_system:player_spawn_pickup(pickup_name, position, rotation, player_or_nil, player_or_nil:session_id())
 		else
 			placed_unit = pickup_system:spawn_pickup(pickup_name, position, rotation)
 		end

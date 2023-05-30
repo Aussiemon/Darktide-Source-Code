@@ -60,7 +60,8 @@ template.update = function (template_data, template_context, dt, t)
 			return
 		end
 
-		target_position = NavQueries.position_on_mesh(template_data.nav_world, target_position, 1, 4)
+		local nav_world = template_data.nav_world
+		target_position = NavQueries.position_on_mesh(nav_world, target_position, 1, 4)
 
 		if not target_position then
 			return
@@ -79,28 +80,31 @@ template.update = function (template_data, template_context, dt, t)
 
 		if is_short_leap then
 			navmesh_position = self_position + towards_target_position * ChaosSpawnSettings.leap_short_fwd_check_distance
-			navmesh_position = NavQueries.position_on_mesh(template_data.nav_world, navmesh_position, 1, 4)
+			navmesh_position = NavQueries.position_on_mesh(nav_world, navmesh_position, 1, 4)
 			self_position = self_position + towards_target_position
 			target_position = target_position + Vector3.normalize(self_position - target_position)
 		else
 			navmesh_position = self_position + towards_target_position * ChaosSpawnSettings.leap_fwd_check_distance
-			navmesh_position = NavQueries.position_on_mesh(template_data.nav_world, navmesh_position, 1, 4)
+			navmesh_position = NavQueries.position_on_mesh(nav_world, navmesh_position, 1, 4)
 		end
 
 		if not navmesh_position then
 			return
 		end
 
+		local raycango = GwNavQueries.raycango(nav_world, self_position, navmesh_position)
+
+		if not raycango then
+			template_data.next_leap_trajectory_check_t = t + LEAP_TRAJECTORY_CHECK_FREQUENCY
+
+			return false
+		end
+
 		navmesh_position = navmesh_position + Vector3.up() * 0.5
 		self_position = self_position + Vector3.up() * 0.5
 		target_position = target_position + Vector3.up() * 0.5
-
-		if distance < ChaosSpawnSettings.min_leap_distance or ChaosSpawnSettings.max_leap_distance < distance then
-			return
-		end
-
 		target_position = target_position - towards_target_position * ChaosSpawnSettings.offset_in_front_of_target
-		local target_position_on_navmesh = NavQueries.position_on_mesh(template_data.nav_world, target_position, 1, 4)
+		local target_position_on_navmesh = NavQueries.position_on_mesh(nav_world, target_position, 1, 4)
 
 		if not target_position_on_navmesh then
 			return
@@ -135,7 +139,9 @@ template.update = function (template_data, template_context, dt, t)
 		local velocity, time_in_flight = Trajectory.get_trajectory_velocity(navmesh_position, est_pos, gravity, speed, angle_to_hit_target)
 		time_in_flight = math.min(time_in_flight, ChaosSpawnSettings.leap_max_time_in_flight)
 		local debug = nil
-		local trajectory_is_ok = Trajectory.check_trajectory_collisions(physics_world, navmesh_position, est_pos, gravity, speed, angle_to_hit_target, 10, "filter_minion_shooting_geometry", time_in_flight, nil, debug, unit)
+		local optional_extra_ray_check_down = Vector3(0, 0, 2)
+		local optional_extra_ray_check_up = Vector3(0, 0, -0.3)
+		local trajectory_is_ok = Trajectory.check_trajectory_collisions(physics_world, navmesh_position, est_pos, gravity, speed, angle_to_hit_target, 10, "filter_minion_shooting_geometry", time_in_flight, nil, debug, unit, optional_extra_ray_check_down, optional_extra_ray_check_up)
 
 		if trajectory_is_ok and not behavior_component.should_leap then
 			behavior_component.leap_velocity:store(velocity)

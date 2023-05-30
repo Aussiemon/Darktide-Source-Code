@@ -116,7 +116,7 @@ MissionObjectiveBase.start_stage = function (self, stage)
 	local synchronizer_extension = self._synchronizer_extension
 
 	if synchronizer_extension then
-		synchronizer_extension:start_stage()
+		synchronizer_extension:start_stage(stage)
 	end
 
 	for _, unit in ipairs(units) do

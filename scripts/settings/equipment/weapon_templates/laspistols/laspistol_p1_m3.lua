@@ -175,14 +175,13 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_hip = {
-		start_input = "shoot_pressed",
-		kind = "shoot_hit_scan",
 		sprint_ready_up_time = 0.2,
+		kind = "shoot_hit_scan",
 		weapon_handling_template = "immediate_single_shot_pistol",
+		sprint_requires_press_to_interrupt = true,
 		allow_shots_with_less_than_required_ammo = true,
 		ammunition_usage = 3,
-		allowed_during_sprint = true,
-		sprint_requires_press_to_interrupt = true,
+		start_input = "shoot_pressed",
 		total_time = 0.7,
 		action_movement_curve = {
 			{

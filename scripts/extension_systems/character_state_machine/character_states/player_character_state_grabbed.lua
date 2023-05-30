@@ -34,8 +34,8 @@ local ENTER_TELEPORT_NODE = "rp_base"
 local DISABLING_UNIT_LINK_NODE = "j_lefthand"
 local DISABLED_UNIT_LINK_NODE = "j_hips"
 local START_EAT_TIMING = {
-	human = 1.5333333333333334,
-	ogryn = 1.8166666666666667
+	human = 1.2,
+	ogryn = 1.5666666666666667
 }
 
 PlayerCharacterStateGrabbed.on_enter = function (self, unit, dt, t, previous_state, params)
@@ -52,7 +52,6 @@ PlayerCharacterStateGrabbed.on_enter = function (self, unit, dt, t, previous_sta
 		locomotion_steering_component.move_method = "script_driven"
 		locomotion_steering_component.velocity_wanted = Vector3.zero()
 		locomotion_steering_component.calculate_fall_velocity = false
-		locomotion_steering_component.disable_velocity_rotation = true
 		locomotion_steering_component.disable_minion_collision = true
 		self._movement_state_component.method = "idle"
 		local disabling_unit = self._disabled_state_input.disabling_unit
@@ -67,9 +66,15 @@ PlayerCharacterStateGrabbed.on_enter = function (self, unit, dt, t, previous_sta
 			local teleport_position = Unit.world_position(disabling_unit, link_node)
 			local unit_forward = Quaternion.forward(Unit.world_rotation(disabling_unit, link_node))
 			teleport_position = teleport_position + unit_forward * 0.75
+			local lookat_override = Quaternion.look(-Quaternion.forward(Unit.local_rotation(disabling_unit, 1)))
 
-			PlayerMovement.teleport_fixed_update(unit, teleport_position, Unit.local_rotation(disabling_unit, 1))
+			PlayerMovement.teleport_fixed_update(unit, teleport_position, lookat_override)
 		end
+
+		local camera_extension = ScriptUnit.has_extension(unit, "camera_system")
+		local will_be_predicted = true
+
+		camera_extension:trigger_camera_shake("chaos_spawn_grabbed", will_be_predicted)
 
 		local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 
@@ -94,11 +99,6 @@ PlayerCharacterStateGrabbed.on_enter = function (self, unit, dt, t, previous_sta
 	self._start_eat_timing = t + START_EAT_TIMING[self._breed.name]
 end
 
-local THROW_TELEPORT_UP_OFFSET_HUMAN = 1.5
-local THROW_TELEPORT_UP_OFFSET_OGRYN = 1.5
-local THROW_TELEPORT_FWD_OFFSET_HUMAN = 3.2
-local THROW_TELEPORT_FWD_OFFSET_OGRYN = 3.2
-
 PlayerCharacterStateGrabbed.on_exit = function (self, unit, t, next_state)
 	local locomotion_force_rotation_component = self._locomotion_force_rotation_component
 
@@ -108,20 +108,17 @@ PlayerCharacterStateGrabbed.on_exit = function (self, unit, t, next_state)
 
 	local disabled_character_state_component = self._disabled_character_state_component
 	local disabling_unit = disabled_character_state_component.disabling_unit
-	local is_server = self._is_server
+	local teleport_position = nil
 
-	if is_server and ALIVE[disabling_unit] then
-		local breed_name = self._breed.name
-		local is_human = breed_name == "human"
-		local disabling_unit_position = Unit.world_position(disabling_unit, 1)
-		local unit_rotation = Unit.local_rotation(disabling_unit, 1)
-		local up = Vector3.up() * (is_human and THROW_TELEPORT_UP_OFFSET_HUMAN or THROW_TELEPORT_UP_OFFSET_OGRYN)
-		local disabling_unit_forward = Quaternion.forward(unit_rotation) * (is_human and THROW_TELEPORT_FWD_OFFSET_HUMAN or THROW_TELEPORT_FWD_OFFSET_OGRYN)
-		local teleport_position = disabling_unit_position + disabling_unit_forward + up
-		local direction = is_human and disabling_unit_forward or -disabling_unit_forward
-		local teleport_rotation = Quaternion.look(direction)
+	if ALIVE[disabling_unit] then
+		local wanted_node = Unit.node(disabling_unit, DISABLING_UNIT_LINK_NODE)
+		teleport_position = Unit.world_position(disabling_unit, wanted_node)
 
-		PlayerMovement.teleport_fixed_update(unit, teleport_position, teleport_rotation)
+		PlayerMovement.teleport_fixed_update(unit, teleport_position)
+
+		local first_person_component = self._unit_data_extension:write_component("first_person")
+		local flat_rotation = Unit.local_rotation(disabling_unit, 1)
+		first_person_component.rotation = flat_rotation
 	end
 
 	local first_person_mode_component = self._first_person_mode_component
@@ -129,7 +126,7 @@ PlayerCharacterStateGrabbed.on_exit = function (self, unit, t, next_state)
 
 	FirstPersonView.enter(t, first_person_mode_component, rewind_ms)
 
-	if next_state ~= "dead" then
+	if next_state ~= "dead" and next_state ~= "catapulted" then
 		local inventory_component = self._inventory_component
 
 		PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
@@ -143,9 +140,6 @@ PlayerCharacterStateGrabbed.on_exit = function (self, unit, t, next_state)
 
 	locomotion_extension:set_parent_unit(nil)
 	locomotion_extension:visual_unlink()
-
-	local locomotion_steering_component = self._locomotion_steering_component
-	locomotion_steering_component.velocity_wanted = Vector3.zero()
 
 	if self._is_server then
 		local player_unit_spawn_manager = Managers.state.player_unit_spawn
@@ -175,9 +169,8 @@ PlayerCharacterStateGrabbed.on_exit = function (self, unit, t, next_state)
 
 			if next_state == "catapulted" then
 				local mover = Unit.mover(unit)
-				local position = Unit.world_position(unit, 1)
 				local allowed_move_distance = 1
-				local _, non_colliding_position = Mover.fits_at(mover, position, allowed_move_distance)
+				local _, non_colliding_position = Mover.fits_at(mover, teleport_position, allowed_move_distance)
 
 				if non_colliding_position then
 					PlayerMovement.teleport_fixed_update(unit, non_colliding_position)
@@ -197,6 +190,12 @@ PlayerCharacterStateGrabbed.fixed_update = function (self, unit, dt, t, next_sta
 
 	if trigger_animation == "throw" and not self._throw_anim_played then
 		local animation_event = "attack_grabbed_throw"
+
+		self._animation_extension:anim_event(animation_event)
+
+		self._throw_anim_played = true
+	elseif (trigger_animation == "throw" or trigger_animation == "throw_left" or trigger_animation == "throw_right" or trigger_animation == "throw_bwd") and not self._throw_anim_played then
+		local animation_event = "attack_grabbed_" .. trigger_animation
 
 		self._animation_extension:anim_event(animation_event)
 

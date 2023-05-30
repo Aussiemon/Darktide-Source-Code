@@ -5,7 +5,8 @@ require("scripts/extension_systems/moveable_platform/moveable_platform_extension
 
 local MoveablePlatformSystem = class("MoveablePlatformSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
-	"rpc_moveable_platform_set_direction"
+	"rpc_moveable_platform_set_direction",
+	"rpc_moveable_platform_set_wall_collision"
 }
 
 MoveablePlatformSystem.init = function (self, context, ...)
@@ -32,11 +33,15 @@ MoveablePlatformSystem.hot_join_sync = function (self, sender, channel)
 	local unit_to_extension_map = self._unit_to_extension_map
 
 	for unit, extension in pairs(unit_to_extension_map) do
+		local level_unit_id = Managers.state.unit_spawner:level_index(unit)
 		local story_direction = extension:story_direction()
 		local direction_id = NetworkLookup.moveable_platform_direction[story_direction]
-		local level_unit_id = Managers.state.unit_spawner:level_index(unit)
 
 		RPC.rpc_moveable_platform_set_direction(channel, level_unit_id, direction_id)
+
+		local wall_active = extension:wall_active()
+
+		RPC.rpc_moveable_platform_set_wall_collision(channel, level_unit_id, wall_active)
 	end
 end
 
@@ -47,6 +52,14 @@ MoveablePlatformSystem.rpc_moveable_platform_set_direction = function (self, cha
 	local direction = NetworkLookup.moveable_platform_direction[direction_id]
 
 	extension:set_direction_husk(direction)
+end
+
+MoveablePlatformSystem.rpc_moveable_platform_set_wall_collision = function (self, channel_id, level_unit_id, active)
+	local is_level_unit = true
+	local unit = Managers.state.unit_spawner:unit(level_unit_id, is_level_unit)
+	local extension = self._unit_to_extension_map[unit]
+
+	extension:set_wall_collision(active)
 end
 
 MoveablePlatformSystem.update_level_props_broadphase = function (self)

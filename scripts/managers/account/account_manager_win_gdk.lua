@@ -40,7 +40,6 @@ AccountManagerWinGDK.reset = function (self)
 	self._gamertag = nil
 	self._mute_list = {}
 	self._block_list = {}
-	self._restriction_listeners = {}
 	self._communication_restriction_iteration = self._communication_restriction_iteration or 1
 end
 
@@ -229,12 +228,7 @@ AccountManagerWinGDK.verify_gdk_store_account = function (self, optional_callbac
 end
 
 AccountManagerWinGDK.verify_user_restriction = function (self, xuid, restriction, optional_callback)
-	if optional_callback then
-		self._restriction_listeners[xuid] = self._restriction_listeners[xuid] or {}
-		self._restriction_listeners[xuid][restriction] = optional_callback
-	end
-
-	self._xbox_privileges:verify_user_restriction(xuid, restriction or XblPermission.CommunicateUsingVoice)
+	self._xbox_privileges:verify_user_restriction(xuid, restriction, optional_callback)
 end
 
 AccountManagerWinGDK.user_has_restriction = function (self, xuid, restriction)
@@ -243,24 +237,6 @@ end
 
 AccountManagerWinGDK.user_restriction_verified = function (self, xuid, restriction)
 	return self._xbox_privileges:user_restriction_verified(xuid, restriction)
-end
-
-AccountManagerWinGDK.user_restriction_updated = function (self, xuid, restriction)
-	local listener = self._restriction_listeners[xuid]
-
-	if not listener then
-		return
-	end
-
-	local restriction_listener = listener[restriction]
-
-	if not restriction_listener then
-		return
-	end
-
-	listener[restriction] = nil
-
-	restriction_listener()
 end
 
 AccountManagerWinGDK.update = function (self, dt, t)
@@ -434,9 +410,7 @@ AccountManagerWinGDK._show_store_account_error = function (self, title_text, des
 		}
 	}
 
-	Managers.event:trigger("event_show_ui_popup", context, function (id)
-		self._popup_id = id
-	end)
+	Managers.event:trigger("event_show_ui_popup", context)
 end
 
 AccountManagerWinGDK._return_to_title_screen = function (self)

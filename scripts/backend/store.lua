@@ -196,19 +196,19 @@ Store.get_ogryn_credits_store = function (self, t, character_id)
 end
 
 Store.get_veteran_credits_cosmetics_store = function (self, t, character_id)
-	return self:_get_storefront(t, "credits_cosmetics_store_veteran", character_id, character_id, true)
+	return self:_get_storefront(t, "credits_cosmetics_store_veteran", character_id, character_id, false)
 end
 
 Store.get_zealot_credits_cosmetics_store = function (self, t, character_id)
-	return self:_get_storefront(t, "credits_cosmetics_store_zealot", character_id, character_id, true)
+	return self:_get_storefront(t, "credits_cosmetics_store_zealot", character_id, character_id, false)
 end
 
 Store.get_psyker_credits_cosmetics_store = function (self, t, character_id)
-	return self:_get_storefront(t, "credits_cosmetics_store_psyker", character_id, character_id, true)
+	return self:_get_storefront(t, "credits_cosmetics_store_psyker", character_id, character_id, false)
 end
 
 Store.get_ogryn_credits_cosmetics_store = function (self, t, character_id)
-	return self:_get_storefront(t, "credits_cosmetics_store_ogryn", character_id, character_id, true)
+	return self:_get_storefront(t, "credits_cosmetics_store_ogryn", character_id, character_id, false)
 end
 
 Store.get_veteran_credits_weapon_cosmetics_store = function (self, t, character_id)
@@ -247,7 +247,18 @@ Store.get_premium_storefront = function (self, storefront, t)
 	return self:_get_storefront(t, storefront, nil):next(function (store)
 		local catalog = store.data.catalog
 
-		return store:get_config(catalog):next(function (config)
+		return Promise.all(store:get_config(catalog), Managers.backend.interfaces.wallet:get_currency_configuration()):next(function (data)
+			local config, currencies = unpack(data)
+			local bundle_rules = nil
+
+			for i = 1, #currencies do
+				local currency = currencies[i]
+
+				if currency.name == "aquilas" then
+					bundle_rules = currency.bundleRules
+				end
+			end
+
 			local catalog_valid_from = catalog and catalog.validFrom
 			local catalog_valid_to = catalog and catalog.validTo
 
@@ -261,7 +272,8 @@ Store.get_premium_storefront = function (self, storefront, t)
 				catalog = {
 					valid_from = catalog_valid_from and tonumber(catalog_valid_from),
 					valid_to = catalog_valid_to and tonumber(catalog_valid_to)
-				}
+				},
+				bundle_rules = bundle_rules
 			})
 		end)
 	end)

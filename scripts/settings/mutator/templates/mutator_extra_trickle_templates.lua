@@ -4,7 +4,7 @@ local mutator_templates = {
 		class = "scripts/managers/mutator/mutators/mutator_extra_trickle_hordes",
 		trickle_horde_templates = {
 			{
-				stinger_duration = 8,
+				stinger_duration = 5,
 				num_trickle_hordes_active_for_cooldown = 20,
 				not_during_terror_events = true,
 				min_players_alive = 2,
@@ -44,8 +44,8 @@ local mutator_templates = {
 					}
 				},
 				trickle_horde_travel_distance_range = {
-					90,
-					220
+					140,
+					250
 				},
 				trickle_horde_cooldown = {
 					40,
@@ -82,24 +82,24 @@ local mutator_templates = {
 				},
 				num_trickle_waves = {
 					{
-						2,
-						3
+						1,
+						1
 					},
 					{
-						3,
-						5
+						1,
+						1
 					},
 					{
-						3,
-						6
+						1,
+						2
 					},
 					{
-						4,
-						7
+						1,
+						2
 					},
 					{
-						5,
-						7
+						1,
+						2
 					}
 				},
 				time_between_waves = {

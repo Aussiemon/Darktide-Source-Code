@@ -22,15 +22,16 @@ CreditsGoodsVendorView.init = function (self, settings, context)
 	end
 end
 
+CreditsGoodsVendorView.set_loading_state = function (self, state)
+	CreditsGoodsVendorView.super.set_loading_state(self, state)
+end
+
 CreditsGoodsVendorView.present_grid_layout = function (self, layout, on_present_callback)
-	local is_loading = layout and table.size(layout) <= 0 or false
-
-	self:set_loading_state(is_loading)
-
+	local show_info = layout and table.size(layout) <= 0 or false
 	local widgets_by_name = self._widgets_by_name
-	widgets_by_name.title_text.content.visible = not is_loading
-	widgets_by_name.description_text.content.visible = not is_loading
-	widgets_by_name.divider.content.visible = not is_loading
+	widgets_by_name.title_text.content.visible = not show_info
+	widgets_by_name.description_text.content.visible = not show_info
+	widgets_by_name.divider.content.visible = not show_info
 
 	CreditsGoodsVendorView.super.present_grid_layout(self, layout, on_present_callback)
 end
@@ -397,8 +398,8 @@ end
 CreditsGoodsVendorView._update_button_disable_state = function (self)
 	CreditsGoodsVendorView.super._update_button_disable_state(self)
 
-	local widgets = self._item_grid:widgets()
-	local selected_grid_index = self._item_grid:selected_grid_index()
+	local widgets = self._item_grid and self._item_grid:widgets()
+	local selected_grid_index = self._item_grid and self._item_grid:selected_grid_index()
 
 	if widgets and selected_grid_index then
 		local widget = widgets[selected_grid_index]

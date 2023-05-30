@@ -5,9 +5,8 @@ TargetUnits.init = function (self, context, slot, weapon_template, fx_sources)
 		return
 	end
 
-	local wwise_world = context.wwise_world
 	self._world = context.world
-	self._wwise_world = wwise_world
+	self._wwise_world = context.wwise_world
 	self._weapon_actions = weapon_template.actions
 	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
@@ -15,14 +14,13 @@ TargetUnits.init = function (self, context, slot, weapon_template, fx_sources)
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 	self._action_module_targeting_component = unit_data_extension:read_component("action_module_targeting")
-end
-
-TargetUnits.fixed_update = function (self, unit, dt, t, frame)
-	return
+	self._target_unit_1 = nil
+	self._target_unit_2 = nil
+	self._target_unit_3 = nil
 end
 
 TargetUnits.update = function (self, unit, dt, t)
-	if DEDICATED_SERVER then
+	if DEDICATED_SERVER or not self._is_local_unit then
 		return
 	end
 
@@ -34,7 +32,7 @@ TargetUnits.update_first_person_mode = function (self, first_person_mode)
 end
 
 TargetUnits.wield = function (self)
-	if DEDICATED_SERVER then
+	if DEDICATED_SERVER or not self._is_local_unit then
 		return
 	end
 
@@ -42,7 +40,7 @@ TargetUnits.wield = function (self)
 end
 
 TargetUnits.unwield = function (self)
-	if DEDICATED_SERVER then
+	if DEDICATED_SERVER or not self._is_local_unit then
 		return
 	end
 
@@ -50,7 +48,7 @@ TargetUnits.unwield = function (self)
 end
 
 TargetUnits.destroy = function (self)
-	if DEDICATED_SERVER then
+	if DEDICATED_SERVER or not self._is_local_unit then
 		return
 	end
 
@@ -98,7 +96,7 @@ TargetUnits._remove_outlines = function (self)
 
 	self:_set_outline(self._target_unit_3, false)
 
-	self._target_unit_4 = nil
+	self._target_unit_3 = nil
 end
 
 TargetUnits._set_outline = function (self, unit, enabled)

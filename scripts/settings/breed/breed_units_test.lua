@@ -21,6 +21,11 @@ local FX_SOURCE_NAME = "muzzle"
 
 local function _init_and_run_tests()
 	local world = Application.new_world()
+
+	if BUILD ~= "release" then
+		World.set_flow_enabled(world, false)
+	end
+
 	local trigger_flow = false
 	local attach_settings = {
 		from_script_component = true,

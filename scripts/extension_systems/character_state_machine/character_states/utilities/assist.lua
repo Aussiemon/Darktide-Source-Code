@@ -2,7 +2,7 @@ local PlayerAssistNotifications = require("scripts/utilities/player_assist_notif
 local Assist = class("Assist")
 local FORCE_ASSIST_TIME = 0.75
 
-Assist.init = function (self, anim_settings, is_server, unit, game_session_or_nil, game_object_id_or_nil)
+Assist.init = function (self, anim_settings, is_server, unit, game_session_or_nil, game_object_id_or_nil, assist_type_or_nil)
 	self._is_server = is_server
 	self._unit = unit
 	self._game_session = game_session_or_nil
@@ -13,6 +13,7 @@ Assist.init = function (self, anim_settings, is_server, unit, game_session_or_ni
 	self._interactee_extension = ScriptUnit.extension(unit, "interactee_system")
 	self._interactee_component = unit_data_extension:read_component("interactee")
 	self._assisted_state_input_component = unit_data_extension:write_component("assisted_state_input")
+	self._assist_type_or_nil = assist_type_or_nil
 
 	self:reset()
 end

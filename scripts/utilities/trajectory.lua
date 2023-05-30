@@ -101,7 +101,7 @@ end
 
 local SEGMENT_LIST = {}
 
-Trajectory.check_trajectory_collisions = function (physics_world, from_position, target_position, gravity, projectile_speed, angle, sections, collision_filter, time_in_flight, ignored_unit_collisions, debug_draw_trajectory, optional_unit)
+Trajectory.check_trajectory_collisions = function (physics_world, from_position, target_position, gravity, projectile_speed, angle, sections, collision_filter, time_in_flight, ignored_unit_collisions, debug_draw_trajectory, optional_unit, optional_extra_ray_check_up, optional_extra_ray_check_down)
 	table.clear(SEGMENT_LIST)
 
 	local to_target = target_position - from_position
@@ -141,6 +141,16 @@ Trajectory.check_trajectory_collisions = function (physics_world, from_position,
 			local mover_fits = Unit.mover_fits_at(optional_unit, "mover", mover_test_position)
 
 			if not mover_fits then
+				return false, nil, SEGMENT_LIST
+			end
+		end
+
+		if i > 1 and i < sections and optional_extra_ray_check_up and optional_extra_ray_check_down then
+			local ray_from = segment_pos2 + optional_extra_ray_check_down
+			local ray_to = segment_pos2 + optional_extra_ray_check_up
+			local extra_raycast_result = PhysicsWorld.raycast(physics_world, ray_from, ray_to, length, "closest", "collision_filter", collision_filter)
+
+			if extra_raycast_result then
 				return false, nil, SEGMENT_LIST
 			end
 		end

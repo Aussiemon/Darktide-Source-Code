@@ -235,11 +235,6 @@ function _validate_chain_actions(weapon_template, action_settings)
 			chain_action_error_msg = chain_action_error_msg .. string.format("%q does not match any action_input. ", input)
 		end
 
-		if input == stop_input then
-			chain_action_success = false
-			chain_action_error_msg = chain_action_error_msg .. string.format("%q is also used as stop_input and could lead to unpredicatable behaviour. Talk to combat coders if this is desired. ", input)
-		end
-
 		if not chain_action_success then
 			error_msg = error_msg .. chain_action_error_msg .. "\n"
 			success = false

@@ -164,6 +164,10 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	local profile = player:profile()
 
 	if profile then
+		if self._portrait_loaded_info and not Managers.ui:portrait_has_request(self._portrait_loaded_info.icon_load_id) then
+			self._portrait_loaded_info = nil
+		end
+
 		if not self._portrait_loaded_info or self._portrait_loaded_info.character_id ~= profile.character_id then
 			self:_request_player_icon(ui_renderer)
 		end
@@ -933,8 +937,9 @@ HudElementPlayerPanelBase._load_portrait_icon = function (self, ui_renderer)
 
 	local player = self._player
 	local profile = player:profile()
-	local cb = callback(self, "_cb_set_player_icon")
-	local icon_load_id = Managers.ui:load_profile_portrait(profile, cb)
+	local load_cb = callback(self, "_cb_set_player_icon")
+	local unload_cb = callback(self, "_cb_unset_player_icon")
+	local icon_load_id = Managers.ui:load_profile_portrait(profile, load_cb, nil, unload_cb)
 	self._portrait_loaded_info = {
 		icon_load_id = icon_load_id,
 		character_id = profile.character_id
@@ -970,7 +975,19 @@ HudElementPlayerPanelBase._cb_set_player_icon = function (self, grid_index, rows
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
 	material_values.texture_icon = render_target
+	widget.content.texture = "content/ui/materials/base/ui_portrait_frame_base"
 	widget.dirty = true
+end
+
+HudElementPlayerPanelBase._cb_unset_player_icon = function (self)
+	local widget = self._widgets_by_name.player_icon
+	local material_values = widget.style.texture.material_values
+	material_values.use_placeholder_texture = nil
+	material_values.rows = nil
+	material_values.columns = nil
+	material_values.grid_index = nil
+	material_values.texture_icon = nil
+	widget.content.texture = "content/ui/materials/base/ui_portrait_frame_base_no_render"
 end
 
 HudElementPlayerPanelBase._set_character_text = function (self, character_title, ui_renderer)

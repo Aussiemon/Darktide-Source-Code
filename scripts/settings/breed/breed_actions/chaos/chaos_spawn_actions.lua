@@ -54,14 +54,15 @@ local action_data = {
 	},
 	leap = {
 		start_move_speed = 1,
-		push_minions_radius = 2,
+		push_minions_side_relation = "allied",
 		land_impact_timing = 0.16666666666666666,
 		utility_weight = 1,
 		push_enemies_radius = 2,
 		aoe_bot_threat_duration = 1,
 		start_leap_anim_event = "attack_leap_start",
-		push_minions_side_relation = "allied",
+		push_minions_radius = 2,
 		aoe_bot_threat_timing = 0.5,
+		shortest_start_leap_anim_event = "attack_leap_shortest_start",
 		push_enemies_power_level = 2000,
 		push_minions_power_level = 2000,
 		landing_duration = 0.6944444444444444,
@@ -71,7 +72,8 @@ local action_data = {
 		considerations = UtilityConsiderations.chaos_spawn_leap,
 		start_duration = {
 			attack_leap_short_start = 0.5333333333333333,
-			attack_leap_start = 1.1111111111111112
+			attack_leap_start = 1.1111111111111112,
+			attack_leap_shortest_start = 0.4
 		},
 		stagger_type_reduction = {
 			melee = -20,
@@ -615,26 +617,27 @@ local action_data = {
 	grab = {
 		degree_per_throw_direction = 20,
 		after_throw_taunt_duration = 0,
+		start_eat_anim = "attack_grabbed_eat_start",
 		check_for_smash_radius = 3,
 		collision_filter = "filter_minion_melee_friendly_fire",
-		after_throw_taunt_anim = "change_target_fwd",
 		oobb_use_unit_rotation = true,
 		range = 2,
+		after_throw_taunt_anim = "change_target_fwd",
 		grab_node = "j_leftfinger4_jnt",
 		grab_target_node = "j_hips",
-		dodge_grab_check_radius = 0.75,
 		sweep_node = "j_leftfinger3_jnt",
+		dodge_grab_check_radius = 1,
 		dodge_weapon_reach = 1.25,
 		width = 2,
 		aoe_threat_duration = 0.75,
 		height = 2,
-		utility_weight = 20,
+		utility_weight = 200,
 		cooldown = 10,
 		attack_type = "oobb",
-		ignore_blocked = true,
-		throw_test_distance = 8,
-		grab_check_radius = 2.1,
+		throw_test_distance = 15,
+		grab_check_radius = 2.25,
 		oobb_node = "j_leftfinger4_jnt",
+		ignore_blocked = true,
 		weapon_reach = 2.25,
 		bot_power_level_modifier = 0.4,
 		rotation_speed = 6,
@@ -649,15 +652,21 @@ local action_data = {
 			ogryn = "attack_grab_player_ogryn"
 		},
 		grab_timings = {
-			human = 0.8,
-			ogryn = 0.8
+			human = {
+				0.7666666666666667,
+				0.9333333333333333
+			},
+			ogryn = {
+				0.7666666666666667,
+				0.9333333333333333
+			}
 		},
 		total_grab_durations = {
-			human = 10.666666666666666,
-			ogryn = 10.966666666666667
+			human = 10.333333333333334,
+			ogryn = 10.566666666666666
 		},
 		grab_durations = {
-			human = 1.6666666666666667,
+			human = 1.3333333333333333,
 			ogryn = 1.9666666666666666
 		},
 		smash_anims = {
@@ -665,8 +674,8 @@ local action_data = {
 			ogryn = "attack_grabbed_smash"
 		},
 		smash_durations = {
-			human = 1.8333333333333333,
-			ogryn = 4.266666666666667
+			human = 3.2,
+			ogryn = 3.6666666666666665
 		},
 		smash_timings = {
 			human = {
@@ -697,11 +706,28 @@ local action_data = {
 					2.9,
 					"j_leftfinger3_jnt"
 				}
+			},
+			human = {
+				{
+					0.6333333333333333,
+					0.8,
+					"j_leftfinger3_jnt"
+				},
+				{
+					1.4333333333333333,
+					1.5666666666666667,
+					"j_leftfinger3_jnt"
+				},
+				{
+					2.466666666666667,
+					2.533333333333333,
+					"j_leftfinger3_jnt"
+				}
 			}
 		},
 		damage_profile = DamageProfileTemplates.chaos_spawn_grab_smash_human,
 		smash_damage_profile = {
-			human = DamageProfileTemplates.chaos_spawn_grab_smash_human,
+			human = DamageProfileTemplates.chaos_spawn_grab_smash_ogryn,
 			ogryn = DamageProfileTemplates.chaos_spawn_grab_smash_ogryn
 		},
 		damage_type = damage_types.minion_monster_blunt,
@@ -711,6 +737,10 @@ local action_data = {
 			ogryn = {
 				0.9666666666666667
 			}
+		},
+		start_eat_timings = {
+			human = 1.2,
+			ogryn = 1.5666666666666667
 		},
 		damage_timings = {
 			human = {
@@ -726,6 +756,18 @@ local action_data = {
 		},
 		anim_data = {
 			attack_grabbed_throw = {},
+			attack_grabbed_throw_bwd = {
+				sign = 1,
+				rad = math.pi
+			},
+			attack_grabbed_throw_left = {
+				sign = 1,
+				rad = math.pi / 2
+			},
+			attack_grabbed_throw_right = {
+				sign = -1,
+				rad = math.pi / 2
+			},
 			move_start_bwd = {
 				sign = -1,
 				rad = math.pi
@@ -753,19 +795,25 @@ local action_data = {
 				right = "attack_grabbed_throw"
 			},
 			ogryn = {
-				bwd = "attack_grabbed_throw",
+				bwd = "attack_grabbed_throw_bwd",
 				fwd = "attack_grabbed_throw",
-				left = "attack_grabbed_throw",
-				right = "attack_grabbed_throw"
+				left = "attack_grabbed_throw_left",
+				right = "attack_grabbed_throw_right"
 			}
 		},
 		throw_timing = {
-			human = 1.3333333333333333,
-			ogryn = 1
+			human = 0.7,
+			ogryn = {
+				from_eating = 0.9333333333333333,
+				from_smashing = 0.6333333333333333
+			}
 		},
 		throw_duration = {
-			human = 2.1666666666666665,
-			ogryn = 2
+			ogryn = 1.6666666666666667,
+			human = {
+				from_eating = 1.6666666666666667,
+				from_smashing = 1.6666666666666667
+			}
 		},
 		catapult_force = {
 			human = 14,
@@ -1001,6 +1049,16 @@ local action_data = {
 					override_damage_type = damage_types.minion_monster_blunt
 				}
 			},
+			attack_melee_combo_4 = {
+				{
+					override_damage_profile = DamageProfileTemplates.chaos_spawn_combo_heavy,
+					override_damage_type = damage_types.minion_monster_blunt
+				},
+				{
+					override_damage_profile = DamageProfileTemplates.chaos_spawn_combo_heavy,
+					override_damage_type = damage_types.minion_monster_blunt
+				}
+			},
 			attack_turn_left = {
 				[2] = {
 					override_damage_type = damage_types.minion_monster_blunt
@@ -1013,9 +1071,11 @@ local action_data = {
 			},
 			attack_turn_bwd = {
 				{
+					override_damage_profile = DamageProfileTemplates.chaos_spawn_combo_heavy,
 					override_damage_type = damage_types.minion_monster_blunt
 				},
 				{
+					override_damage_profile = DamageProfileTemplates.chaos_spawn_combo_heavy,
 					override_damage_type = damage_types.minion_monster_blunt
 				}
 			}
@@ -1032,9 +1092,8 @@ local action_data = {
 				1.7
 			},
 			attack_melee_combo_2 = {
-				0.6,
-				1.56,
-				2.32
+				1.0833333333333333,
+				1.6111111111111112
 			},
 			attack_melee_combo_3 = {
 				0.6333333333333333,
@@ -1043,20 +1102,21 @@ local action_data = {
 			},
 			attack_melee_combo_4 = {
 				1,
-				2
+				2,
+				2.033333333333333
 			},
 			attack_turn_left = {
-				0.6666666666666666,
+				0.5666666666666667,
 				1.1,
-				1.6666666666666667
+				1.7333333333333334
 			},
 			attack_turn_right = {
-				0.6333333333333333,
-				1.1333333333333333
+				0.6333333333333333
 			},
 			attack_turn_bwd = {
-				0.7666666666666667,
-				1.9
+				1,
+				2,
+				2.033333333333333
 			}
 		},
 		sweep_ground_impact_fx_templates = {
@@ -1067,7 +1127,6 @@ local action_data = {
 				GroundImpactFxTemplates.chaos_spawn_tentacle
 			},
 			attack_melee_combo_2 = {
-				false,
 				GroundImpactFxTemplates.chaos_spawn_tentacle,
 				GroundImpactFxTemplates.chaos_spawn_claw
 			},
@@ -1078,20 +1137,20 @@ local action_data = {
 			},
 			attack_melee_combo_4 = {
 				GroundImpactFxTemplates.chaos_spawn_claw,
-				GroundImpactFxTemplates.chaos_spawn_tentacle,
-				GroundImpactFxTemplates.chaos_spawn_claw
+				GroundImpactFxTemplates.chaos_spawn_claw,
+				GroundImpactFxTemplates.chaos_spawn_tentacle
 			},
 			attack_turn_left = {
 				GroundImpactFxTemplates.chaos_spawn_claw,
-				false,
+				GroundImpactFxTemplates.chaos_spawn_tentacle,
 				GroundImpactFxTemplates.chaos_spawn_claw
 			},
 			attack_turn_right = {
-				GroundImpactFxTemplates.chaos_spawn_tentacle,
-				GroundImpactFxTemplates.chaos_spawn_claw
+				GroundImpactFxTemplates.chaos_spawn_tentacle
 			},
 			attack_turn_bwd = {
-				GroundImpactFxTemplates.chaos_spawn_tentacle,
+				GroundImpactFxTemplates.chaos_spawn_claw,
+				GroundImpactFxTemplates.chaos_spawn_claw,
 				GroundImpactFxTemplates.chaos_spawn_tentacle
 			}
 		},
@@ -1297,6 +1356,16 @@ local action_data = {
 					override_damage_type = damage_types.minion_monster_blunt
 				}
 			},
+			attack_melee_combo_4 = {
+				{
+					override_damage_profile = DamageProfileTemplates.chaos_spawn_combo_heavy,
+					override_damage_type = damage_types.minion_monster_blunt
+				},
+				{
+					override_damage_profile = DamageProfileTemplates.chaos_spawn_combo_heavy,
+					override_damage_type = damage_types.minion_monster_blunt
+				}
+			},
 			attack_turn_left = {
 				[2] = {
 					override_damage_type = damage_types.minion_monster_blunt
@@ -1309,9 +1378,11 @@ local action_data = {
 			},
 			attack_turn_bwd = {
 				{
+					override_damage_profile = DamageProfileTemplates.chaos_spawn_combo_heavy,
 					override_damage_type = damage_types.minion_monster_blunt
 				},
 				{
+					override_damage_profile = DamageProfileTemplates.chaos_spawn_combo_heavy,
 					override_damage_type = damage_types.minion_monster_blunt
 				}
 			}
@@ -1328,9 +1399,8 @@ local action_data = {
 				1.7
 			},
 			attack_melee_combo_2 = {
-				0.6,
-				1.56,
-				2.32
+				1.0833333333333333,
+				1.6111111111111112
 			},
 			attack_melee_combo_3 = {
 				0.6333333333333333,
@@ -1339,19 +1409,21 @@ local action_data = {
 			},
 			attack_melee_combo_4 = {
 				1,
-				2
+				2,
+				2.033333333333333
 			},
 			attack_turn_left = {
-				0.6666666666666666,
+				0.5666666666666667,
 				1.1,
-				1.6666666666666667
+				1.7333333333333334
 			},
 			attack_turn_right = {
-				0.6333333333333333,
-				1.1333333333333333
+				0.6333333333333333
 			},
 			attack_turn_bwd = {
-				0.7666666666666667,
+				0.6666666666666666,
+				0.7333333333333333,
+				1.8666666666666667,
 				1.9
 			}
 		},
@@ -1363,7 +1435,6 @@ local action_data = {
 				GroundImpactFxTemplates.chaos_spawn_tentacle
 			},
 			attack_melee_combo_2 = {
-				false,
 				GroundImpactFxTemplates.chaos_spawn_tentacle,
 				GroundImpactFxTemplates.chaos_spawn_claw
 			},
@@ -1374,20 +1445,21 @@ local action_data = {
 			},
 			attack_melee_combo_4 = {
 				GroundImpactFxTemplates.chaos_spawn_claw,
-				GroundImpactFxTemplates.chaos_spawn_tentacle,
-				GroundImpactFxTemplates.chaos_spawn_claw
+				GroundImpactFxTemplates.chaos_spawn_claw,
+				GroundImpactFxTemplates.chaos_spawn_tentacle
 			},
 			attack_turn_left = {
 				GroundImpactFxTemplates.chaos_spawn_claw,
-				false,
+				GroundImpactFxTemplates.chaos_spawn_tentacle,
 				GroundImpactFxTemplates.chaos_spawn_claw
 			},
 			attack_turn_right = {
-				GroundImpactFxTemplates.chaos_spawn_tentacle,
-				GroundImpactFxTemplates.chaos_spawn_claw
+				GroundImpactFxTemplates.chaos_spawn_tentacle
 			},
 			attack_turn_bwd = {
+				GroundImpactFxTemplates.chaos_spawn_claw,
 				GroundImpactFxTemplates.chaos_spawn_tentacle,
+				GroundImpactFxTemplates.chaos_spawn_claw,
 				GroundImpactFxTemplates.chaos_spawn_tentacle
 			}
 		},

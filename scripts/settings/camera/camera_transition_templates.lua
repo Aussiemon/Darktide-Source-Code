@@ -74,6 +74,19 @@ CameraTransitionTemplates.to_consumed = {
 		duration = CameraTransitionSettings.perspective_transition_time
 	}
 }
+CameraTransitionTemplates.to_grabbed = {
+	position = {
+		duration = 0.01,
+		class = "CameraTransitionPositionLinear",
+		transition_func = function (t)
+			return math.smoothstep(t, 0, 1)
+		end
+	},
+	rotation = {
+		class = "CameraTransitionRotationLerp",
+		duration = CameraTransitionSettings.perspective_transition_time
+	}
+}
 CameraTransitionTemplates.zoom = {
 	position = {
 		class = "CameraTransitionPositionLinear",

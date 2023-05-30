@@ -2,7 +2,11 @@ local UIWidget = require("scripts/managers/ui/ui_widget")
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local ColorUtilities = require("scripts/utilities/ui/colors")
-local grid_width = 600
+local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local grid_height = 840
+local grid_margin = 30
+local item_grid_width = 542
+local grid_width = item_grid_width + grid_margin * 2
 local scenegraph_definition = {
 	screen = {
 		scale = "fit",
@@ -49,7 +53,7 @@ local scenegraph_definition = {
 		parent = "screen",
 		horizontal_alignment = "right",
 		size = {
-			240,
+			120,
 			224
 		},
 		position = {
@@ -92,39 +96,11 @@ local scenegraph_definition = {
 		horizontal_alignment = "left",
 		size = {
 			grid_width,
-			660
+			grid_height
 		},
 		position = {
 			100,
-			120,
-			1
-		}
-	},
-	item_title_background = {
-		vertical_alignment = "bottom",
-		parent = "screen",
-		horizontal_alignment = "right",
-		size = {
-			800,
-			0
-		},
-		position = {
-			0,
-			-90,
-			1
-		}
-	},
-	item_title = {
-		vertical_alignment = "center",
-		parent = "item_title_background",
-		horizontal_alignment = "right",
-		size = {
-			500,
-			0
-		},
-		position = {
-			-120,
-			0,
+			130,
 			1
 		}
 	},
@@ -133,12 +109,12 @@ local scenegraph_definition = {
 		parent = "canvas",
 		horizontal_alignment = "left",
 		size = {
-			800,
+			300,
 			0
 		},
 		position = {
 			grid_width + 100,
-			-90,
+			-200,
 			1
 		}
 	},
@@ -147,13 +123,55 @@ local scenegraph_definition = {
 		parent = "item_restrictions_background",
 		horizontal_alignment = "left",
 		size = {
-			500,
+			400,
 			0
 		},
 		position = {
-			50,
+			40,
 			0,
 			1
+		}
+	},
+	purchase_button_area = {
+		vertical_alignment = "bottom",
+		parent = "canvas",
+		horizontal_alignment = "right",
+		size = {
+			grid_width - 28,
+			90
+		},
+		position = {
+			-70,
+			-100,
+			0
+		}
+	},
+	purchase_button = {
+		vertical_alignment = "center",
+		parent = "purchase_button_area",
+		horizontal_alignment = "right",
+		size = {
+			360,
+			50
+		},
+		position = {
+			0,
+			0,
+			5
+		}
+	},
+	price_item_text = {
+		vertical_alignment = "center",
+		parent = "purchase_button_area",
+		horizontal_alignment = "right",
+		size = {
+			0,
+			50
+		},
+		position = {
+			-grid_width,
+			15,
+			0
 		}
 	},
 	promo = {
@@ -180,20 +198,34 @@ local scenegraph_definition = {
 		},
 		position = {
 			20,
-			40,
+			50,
+			1
+		}
+	},
+	details_pivot = {
+		vertical_alignment = "top",
+		parent = "left_side",
+		horizontal_alignment = "center",
+		size = {
+			grid_width - grid_margin * 2,
+			0
+		},
+		position = {
+			0,
+			0,
 			1
 		}
 	},
 	description_grid = {
 		vertical_alignment = "top",
 		parent = "left_side",
-		horizontal_alignment = "left",
+		horizontal_alignment = "center",
 		size = {
-			grid_width - 50,
-			300
+			grid_width - grid_margin * 2,
+			grid_height - 80
 		},
 		position = {
-			20,
+			0,
 			40,
 			1
 		}
@@ -218,7 +250,7 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = {
 			grid_width,
-			340
+			grid_height - 40
 		},
 		position = {
 			0,
@@ -232,12 +264,26 @@ local scenegraph_definition = {
 		horizontal_alignment = "right",
 		size = {
 			10,
-			300
+			grid_height - 80
 		},
 		position = {
-			10,
+			0,
 			0,
 			2
+		}
+	},
+	grid_divider = {
+		vertical_alignment = "top",
+		parent = "left_side",
+		horizontal_alignment = "left",
+		size = {
+			grid_width,
+			18
+		},
+		position = {
+			0,
+			0,
+			1
 		}
 	},
 	grid_background = {
@@ -245,12 +291,12 @@ local scenegraph_definition = {
 		parent = "left_side",
 		horizontal_alignment = "left",
 		size = {
-			grid_width - 40,
-			280
+			grid_width - grid_margin * 2,
+			grid_height - 420
 		},
 		position = {
-			20,
-			360,
+			30,
+			370,
 			1
 		}
 	},
@@ -259,8 +305,8 @@ local scenegraph_definition = {
 		parent = "grid_background",
 		horizontal_alignment = "center",
 		size = {
-			grid_width + 40,
-			300
+			grid_width,
+			grid_height - 420
 		},
 		position = {
 			0,
@@ -288,10 +334,10 @@ local scenegraph_definition = {
 		horizontal_alignment = "right",
 		size = {
 			10,
-			280
+			grid_height - 420
 		},
 		position = {
-			0,
+			20,
 			0,
 			2
 		}
@@ -338,73 +384,17 @@ local scenegraph_definition = {
 			5
 		}
 	},
-	purchase_button_area = {
-		vertical_alignment = "bottom",
-		parent = "left_side",
-		horizontal_alignment = "left",
-		size = {
-			grid_width,
-			90
-		},
-		position = {
-			0,
-			120,
-			0
-		}
-	},
-	purchase_button = {
-		vertical_alignment = "center",
-		parent = "purchase_button_area",
-		horizontal_alignment = "left",
-		size = {
-			250,
-			50
-		},
-		position = {
-			20,
-			0,
-			0
-		}
-	},
-	price_bundle_text = {
-		vertical_alignment = "center",
-		parent = "purchase_button_area",
-		horizontal_alignment = "right",
-		size = {
-			0,
-			50
-		},
-		position = {
-			-20,
-			8,
-			0
-		}
-	},
-	price_item_text = {
-		vertical_alignment = "center",
-		parent = "purchase_button_area",
-		horizontal_alignment = "right",
-		size = {
-			0,
-			50
-		},
-		position = {
-			-20,
-			8,
-			0
-		}
-	},
 	owned_info_text = {
-		vertical_alignment = "bottom",
-		parent = "left_side",
-		horizontal_alignment = "center",
+		vertical_alignment = "center",
+		parent = "purchase_button_area",
+		horizontal_alignment = "right",
 		size = {
 			grid_width,
-			90
+			50
 		},
 		position = {
 			0,
-			70,
+			0,
 			0
 		}
 	},
@@ -505,6 +495,34 @@ local scenegraph_definition = {
 			0,
 			50
 		}
+	},
+	wallet_element_pivot = {
+		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "right",
+		size = {
+			0,
+			0
+		},
+		position = {
+			-50,
+			105,
+			0
+		}
+	},
+	item_name_pivot = {
+		vertical_alignment = "bottom",
+		parent = "canvas",
+		horizontal_alignment = "right",
+		size = {
+			0,
+			0
+		},
+		position = {
+			-66,
+			-230,
+			3
+		}
 	}
 }
 local wallet_text_font_style = table.clone(UIFontSettings.currency_title)
@@ -515,6 +533,12 @@ wallet_text_font_style.original_offset = {
 	0,
 	1
 }
+wallet_text_font_style.offset = {
+	0,
+	0,
+	1
+}
+wallet_text_font_style.font_size = 28
 local title_style = table.clone(UIFontSettings.header_1)
 title_style.font_size = 40
 title_style.offset = {
@@ -522,24 +546,27 @@ title_style.offset = {
 	0,
 	1
 }
-title_style.text_horizontal_alignment = "left"
+title_style.text_horizontal_alignment = "center"
 title_style.text_vertical_alignment = "top"
 local sub_title_style = table.clone(UIFontSettings.header_5)
-sub_title_style.text_horizontal_alignment = "left"
+sub_title_style.text_horizontal_alignment = "center"
 sub_title_style.text_vertical_alignment = "top"
 sub_title_style.offset = {
 	0,
-	5,
+	0,
 	0
 }
+sub_title_style.text_color = Color.terminal_text_body(255, true)
 local grid_title_style = table.clone(UIFontSettings.header_3)
 grid_title_style.text_horizontal_alignment = "left"
 grid_title_style.text_vertical_alignment = "top"
 grid_title_style.offset = {
 	0,
-	-40,
+	-30,
 	0
 }
+grid_title_style.font_size = 18
+grid_title_style.text_color = Color.terminal_text_body_sub_header(255, true)
 local grid_sub_title_style = table.clone(UIFontSettings.header_3)
 grid_sub_title_style.text_horizontal_alignment = "left"
 grid_sub_title_style.text_vertical_alignment = "top"
@@ -577,7 +604,8 @@ promo_text_font_style.offset = {
 local description_text_font_style = table.clone(UIFontSettings.terminal_header_3)
 description_text_font_style.text_horizontal_alignment = "left"
 description_text_font_style.text_vertical_alignment = "top"
-description_text_font_style.font_size = 24
+description_text_font_style.font_size = 20
+description_text_font_style.text_color = Color.terminal_text_body(255, true)
 local item_title_style = table.clone(title_style)
 item_title_style.text_horizontal_alignment = "right"
 item_title_style.horizontal_alignment = "right"
@@ -616,6 +644,9 @@ item_restrictions_title_style.offset = {
 	1
 }
 item_restrictions_title_style.font_size = 20
+item_restrictions_title_style.text_color = Color.terminal_text_body_sub_header(255, true)
+local item_restrictions_text_style = table.clone(item_restrictions_title_style)
+item_restrictions_text_style.text_color = Color.terminal_text_body(255, true)
 local set_text_font_style = table.clone(UIFontSettings.currency_title)
 set_text_font_style.text_horizontal_alignment = "left"
 set_text_font_style.text_vertical_alignment = "top"
@@ -637,7 +668,7 @@ owned_set_text_font_style.offset = {
 }
 owned_set_text_font_style.text_color = Color.ui_orange_medium(255, true)
 local item_price_text_style = table.clone(UIFontSettings.body)
-item_price_text_style.text_horizontal_alignment = "left"
+item_price_text_style.text_horizontal_alignment = "right"
 item_price_text_style.text_vertical_alignment = "top"
 item_price_text_style.horizontal_alignment = "right"
 item_price_text_style.vertical_alignment = "center"
@@ -648,10 +679,11 @@ item_price_text_style.offset = {
 }
 local item_discount_price_text_style = table.clone(item_price_text_style)
 item_discount_price_text_style.text_color = Color.white(255, true)
+item_discount_price_text_style.text_horizontal_alignment = "left"
 local owned_item_text_style = table.clone(UIFontSettings.body)
-owned_item_text_style.text_horizontal_alignment = "center"
-owned_item_text_style.text_vertical_alignment = "bottom"
-owned_item_text_style.horizontal_alignment = "center"
+owned_item_text_style.text_horizontal_alignment = "right"
+owned_item_text_style.text_vertical_alignment = "center"
+owned_item_text_style.horizontal_alignment = "right"
 owned_item_text_style.vertical_alignment = "center"
 owned_item_text_style.offset = {
 	0,
@@ -697,6 +729,86 @@ purchase_button_legend_text_style.offset = {
 purchase_button_legend_text_style.horizontal_alignment = "center"
 purchase_button_legend_text_style.vertical_alignment = "bottom"
 purchase_button_legend_text_style.font_size = 14
+local item_price_style = table.clone(UIFontSettings.body)
+item_price_style.text_horizontal_alignment = "right"
+item_price_style.text_vertical_alignment = "bottom"
+item_price_style.horizontal_alignment = "right"
+item_price_style.vertical_alignment = "center"
+item_price_style.offset = {
+	0,
+	-3,
+	12
+}
+item_price_style.font_size = 20
+item_price_style.text_color = Color.white(255, true)
+item_price_style.default_color = Color.white(255, true)
+item_price_style.hover_color = Color.white(255, true)
+local item_owned_text_style = table.clone(UIFontSettings.header_2)
+item_owned_text_style.text_horizontal_alignment = "right"
+item_owned_text_style.text_vertical_alignment = "bottom"
+item_owned_text_style.horizontal_alignment = "right"
+item_owned_text_style.font_size = 36
+item_owned_text_style.text_color = Color.terminal_text_body(255, true)
+item_owned_text_style.vertical_alignment = "bottom"
+item_owned_text_style.offset = {
+	0,
+	5,
+	20
+}
+local item_discount_price_style = table.clone(item_price_style)
+local bundle_owned_items_text = table.clone(item_price_style)
+bundle_owned_items_text.offset = {
+	15,
+	-5,
+	12
+}
+bundle_owned_items_text.text_horizontal_alignment = "left"
+bundle_owned_items_text.text_color = Color.terminal_text_body(255, true)
+bundle_owned_items_text.font_size = 16
+local bundle_title = table.clone(UIFontSettings.terminal_header_3)
+bundle_title.text_horizontal_alignment = "left"
+bundle_title.text_vertical_alignment = "center"
+bundle_title.font_size = 24
+bundle_title.text_color = Color.terminal_text_header(255, true)
+bundle_title.offset = {
+	15,
+	0,
+	4
+}
+bundle_title.size_addition = {
+	-30,
+	0
+}
+local bundle_description = table.clone(UIFontSettings.terminal_header_3)
+bundle_description.text_horizontal_alignment = "left"
+bundle_description.text_vertical_alignment = "center"
+bundle_description.font_size = 20
+bundle_description.text_color = Color.terminal_text_body(255, true)
+bundle_description.offset = {
+	15,
+	0,
+	4
+}
+bundle_description.size_addition = {
+	-30,
+	0
+}
+local item_restrictions_pass = {
+	{
+		value_id = "title",
+		style_id = "title",
+		pass_type = "text",
+		value = Utf8.upper(Localize("loc_item_equippable_on_header")),
+		style = item_restrictions_title_style
+	},
+	{
+		value_id = "text",
+		style_id = "text",
+		pass_type = "text",
+		value = "",
+		style = item_restrictions_text_style
+	}
+}
 local widget_definitions = {
 	wallet_text = UIWidget.create_definition({
 		{
@@ -732,13 +844,17 @@ local widget_definitions = {
 			style = {
 				vertical_alignment = "top",
 				horizontal_alignment = "center",
+				size_addition = {
+					52,
+					0
+				},
 				offset = {
 					0,
 					-60,
 					3
 				},
 				size = {
-					654,
+					nil,
 					80
 				}
 			}
@@ -749,13 +865,17 @@ local widget_definitions = {
 			style = {
 				vertical_alignment = "bottom",
 				horizontal_alignment = "center",
+				size_addition = {
+					52,
+					0
+				},
 				offset = {
 					0,
 					34,
 					3
 				},
 				size = {
-					654,
+					nil,
 					108
 				}
 			}
@@ -785,11 +905,34 @@ local widget_definitions = {
 			value = "content/ui/materials/frames/screen/premium_lower_right"
 		}
 	}, "corner_bottom_right"),
+	grid_divider = UIWidget.create_definition({
+		{
+			value_id = "divider",
+			style_id = "divider",
+			pass_type = "texture",
+			value = "content/ui/materials/dividers/skull_center_02",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				size = {
+					400,
+					18
+				},
+				offset = {
+					0,
+					-6,
+					1
+				},
+				color = Color.terminal_frame(255, true)
+			}
+		}
+	}, "grid_divider"),
 	grid_title = UIWidget.create_definition({
 		{
-			value = "",
 			value_id = "text",
+			style_id = "text",
 			pass_type = "text",
+			value = "",
 			style = grid_title_style
 		}
 	}, "grid_background"),
@@ -833,6 +976,26 @@ local widget_definitions = {
 			style_id = "sub_text",
 			value = "",
 			style = sub_title_style
+		},
+		{
+			value_id = "divider",
+			style_id = "divider",
+			pass_type = "texture",
+			value = "content/ui/materials/dividers/skull_center_02",
+			style = {
+				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
+				size = {
+					400,
+					18
+				},
+				offset = {
+					0,
+					9,
+					1
+				},
+				color = Color.terminal_frame(255, true)
+			}
 		}
 	}, "title"),
 	description_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "description_scrollbar"),
@@ -855,131 +1018,6 @@ local widget_definitions = {
 			}
 		}
 	}, "description_mask"),
-	purchase_bundle_button = UIWidget.create_definition({
-		{
-			pass_type = "hotspot",
-			content_id = "hotspot",
-			content = {
-				use_is_focused = true
-			}
-		},
-		{
-			pass_type = "texture",
-			style_id = "background_gradient",
-			value = "content/ui/materials/gradients/gradient_vertical",
-			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
-				horizontal_alignment = "center",
-				color = Color.terminal_background_gradient(nil, true)
-			},
-			offset = {
-				0,
-				0,
-				2
-			},
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				style.color[1] = 100 + math.max(hotspot.anim_hover_progress, content.hotspot.anim_select_progress) * 155
-			end
-		},
-		{
-			pass_type = "texture",
-			style_id = "frame",
-			value = "content/ui/materials/frames/frame_tile_2px",
-			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
-				horizontal_alignment = "center",
-				default_color = Color.terminal_frame(nil, true),
-				hover_color = Color.terminal_frame_hover(nil, true),
-				offset = {
-					0,
-					0,
-					3
-				}
-			},
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local default_color = hotspot.disabled and style.disabled_color or style.default_color
-				local hover_color = style.hover_color
-				local color = style.text_color or style.color
-				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
-
-				ColorUtilities.color_lerp(default_color, hover_color, progress, color)
-			end
-		},
-		{
-			pass_type = "texture",
-			style_id = "corner",
-			value = "content/ui/materials/frames/frame_corner_2px",
-			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
-				horizontal_alignment = "center",
-				default_color = Color.terminal_corner(nil, true),
-				hover_color = Color.terminal_corner_hover(nil, true),
-				offset = {
-					0,
-					0,
-					4
-				}
-			},
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local default_color = hotspot.disabled and style.disabled_color or style.default_color
-				local hover_color = style.hover_color
-				local color = style.text_color or style.color
-				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
-
-				ColorUtilities.color_lerp(default_color, hover_color, progress, color)
-			end
-		},
-		{
-			pass_type = "rect",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				color = {
-					150,
-					0,
-					0,
-					0
-				},
-				offset = {
-					0,
-					-8,
-					3
-				}
-			},
-			visibility_function = function (content, style)
-				return content.hotspot.disabled
-			end
-		},
-		{
-			style_id = "text",
-			pass_type = "text",
-			value_id = "text",
-			value = "",
-			style = purchase_button_text_style,
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local default_color = hotspot.disabled and style.disabled_color or style.default_color
-				local hover_color = style.hover_color
-				local text_color = style.text_color
-				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
-
-				ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
-			end
-		},
-		{
-			style_id = "legend",
-			pass_type = "text",
-			value_id = "legend",
-			value = "",
-			style = purchase_button_legend_text_style
-		}
-	}, "purchase_button"),
 	purchase_item_button = UIWidget.create_definition({
 		{
 			pass_type = "hotspot",
@@ -990,23 +1028,54 @@ local widget_definitions = {
 		},
 		{
 			pass_type = "texture",
+			style_id = "background",
+			value = "content/ui/materials/backgrounds/default_square",
+			style = {
+				default_color = Color.terminal_background(nil, true),
+				selected_color = Color.terminal_background_selected(nil, true)
+			},
+			change_function = ButtonPassTemplates.terminal_button_change_function
+		},
+		{
+			pass_type = "texture",
 			style_id = "background_gradient",
 			value = "content/ui/materials/gradients/gradient_vertical",
 			style = {
 				vertical_alignment = "center",
-				scale_to_material = true,
 				horizontal_alignment = "center",
-				color = Color.terminal_background_gradient(nil, true)
-			},
-			offset = {
-				0,
-				0,
-				2
+				default_color = Color.terminal_background_gradient(nil, true),
+				selected_color = Color.terminal_frame_selected(nil, true),
+				disabled_color = Color.ui_grey_medium(255, true),
+				offset = {
+					0,
+					0,
+					1
+				}
 			},
 			change_function = function (content, style)
-				local hotspot = content.hotspot
-				style.color[1] = 100 + math.max(hotspot.anim_hover_progress, content.hotspot.anim_select_progress) * 155
+				ButtonPassTemplates.terminal_button_change_function(content, style)
+				ButtonPassTemplates.terminal_button_hover_change_function(content, style)
 			end
+		},
+		{
+			value = "content/ui/materials/frames/dropshadow_medium",
+			style_id = "outer_shadow",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				scale_to_material = true,
+				color = Color.black(200, true),
+				size_addition = {
+					20,
+					20
+				},
+				offset = {
+					0,
+					0,
+					3
+				}
+			}
 		},
 		{
 			pass_type = "texture",
@@ -1014,25 +1083,17 @@ local widget_definitions = {
 			value = "content/ui/materials/frames/frame_tile_2px",
 			style = {
 				vertical_alignment = "center",
-				scale_to_material = true,
 				horizontal_alignment = "center",
 				default_color = Color.terminal_frame(nil, true),
-				hover_color = Color.terminal_frame_hover(nil, true),
+				selected_color = Color.terminal_frame_selected(nil, true),
+				disabled_color = Color.ui_grey_medium(255, true),
 				offset = {
 					0,
 					0,
-					3
+					2
 				}
 			},
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local default_color = hotspot.disabled and style.disabled_color or style.default_color
-				local hover_color = style.hover_color
-				local color = style.text_color or style.color
-				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
-
-				ColorUtilities.color_lerp(default_color, hover_color, progress, color)
-			end
+			change_function = ButtonPassTemplates.terminal_button_change_function
 		},
 		{
 			pass_type = "texture",
@@ -1040,25 +1101,17 @@ local widget_definitions = {
 			value = "content/ui/materials/frames/frame_corner_2px",
 			style = {
 				vertical_alignment = "center",
-				scale_to_material = true,
 				horizontal_alignment = "center",
 				default_color = Color.terminal_corner(nil, true),
-				hover_color = Color.terminal_corner_hover(nil, true),
+				selected_color = Color.terminal_corner_selected(nil, true),
+				disabled_color = Color.ui_grey_light(255, true),
 				offset = {
 					0,
 					0,
-					4
+					3
 				}
 			},
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local default_color = hotspot.disabled and style.disabled_color or style.default_color
-				local hover_color = style.hover_color
-				local color = style.text_color or style.color
-				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
-
-				ColorUtilities.color_lerp(default_color, hover_color, progress, color)
-			end
+			change_function = ButtonPassTemplates.terminal_button_change_function
 		},
 		{
 			pass_type = "rect",
@@ -1073,7 +1126,7 @@ local widget_definitions = {
 				},
 				offset = {
 					0,
-					-8,
+					0,
 					3
 				}
 			},
@@ -1113,143 +1166,20 @@ local widget_definitions = {
 			style = timer_text_style
 		}
 	}, "timer_text"),
-	item_title_background = UIWidget.create_definition({
-		{
-			value_id = "title_background",
-			style_id = "title_background",
-			pass_type = "texture_uv",
-			value = "content/ui/materials/masks/gradient_horizontal",
-			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
-				horizontal_alignment = "top",
-				color = Color.black(153, true),
-				size_addition = {
-					0,
-					20
-				},
-				offset = {
-					0,
-					0,
-					0
-				},
-				uvs = {
-					{
-						1,
-						0
-					},
-					{
-						0,
-						1
-					}
-				}
-			}
-		}
-	}, "item_title_background"),
-	item_title = UIWidget.create_definition({
-		{
-			value_id = "text",
-			pass_type = "text",
-			style_id = "text",
-			value = "",
-			style = item_title_style
-		},
-		{
-			value_id = "sub_text",
-			pass_type = "text",
-			style_id = "sub_text",
-			value = "",
-			style = item_sub_title_style
-		},
-		{
-			value_id = "owned_text",
-			pass_type = "text",
-			value = string.format("%s ", Localize("loc_premium_store_item_owned")),
-			style = owned_title_style,
-			visibility_function = function (content, style)
-				return content.owned
-			end
-		}
-	}, "item_title"),
-	item_restrictions = UIWidget.create_definition({
-		{
-			value_id = "title",
-			style_id = "title",
-			pass_type = "text",
-			value = Localize("loc_item_equippable_on_header"),
-			style = item_restrictions_title_style
-		},
-		{
-			value_id = "text",
-			style_id = "text",
-			pass_type = "text",
-			value = "",
-			style = item_restrictions_title_style
-		}
-	}, "item_restrictions", {
+	item_restrictions = UIWidget.create_definition(item_restrictions_pass, "item_restrictions", {
 		visible = false
 	}),
-	price_bundle_text = UIWidget.create_definition({
-		{
-			value_id = "price_icon",
-			style_id = "price_icon",
-			pass_type = "texture",
-			value = "content/ui/materials/masks/gradient_horizontal",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "left",
-				size = {
-					30,
-					30
-				},
-				offset = {
-					0,
-					-10,
-					4
-				}
-			},
-			visibility_function = function (content, style)
-				if not content.element then
-					return false
-				end
-
-				return not content.element.owned and not content.element.formattedPrice
-			end
-		},
-		{
-			style_id = "discount_price",
-			pass_type = "text",
-			value_id = "discount_price",
-			value = "",
-			style = item_discount_price_text_style,
-			visibility_function = function (content, style)
-				if not content.element then
-					return false
-				end
-
-				return not content.element.owned and content.element.discount
-			end
-		},
-		{
-			style_id = "price",
-			pass_type = "text",
-			value_id = "price",
-			value = "??? ",
-			style = item_price_text_style
-		}
-	}, "price_bundle_text"),
 	price_item_text = UIWidget.create_definition({
 		{
 			value_id = "price_icon",
-			style_id = "price_icon",
 			pass_type = "texture",
-			value = "content/ui/materials/masks/gradient_horizontal",
+			style_id = "price_icon",
 			style = {
 				vertical_alignment = "center",
-				horizontal_alignment = "left",
+				horizontal_alignment = "right",
 				size = {
-					30,
-					30
+					40,
+					28
 				},
 				offset = {
 					0,
@@ -1258,7 +1188,7 @@ local widget_definitions = {
 				}
 			},
 			visibility_function = function (content, style)
-				if not content.element then
+				if not content.element or not content.price_icon then
 					return false
 				end
 
@@ -1293,7 +1223,7 @@ local widget_definitions = {
 			pass_type = "text",
 			value_id = "text",
 			style = owned_item_text_style,
-			value = string.format("%s ", Localize("loc_premium_store_owned_note"))
+			value = string.format("%s ", Localize("loc_premium_store_owned_note"))
 		}
 	}, "owned_info_text", {
 		visible = false
@@ -1478,9 +1408,40 @@ local widget_definitions = {
 				return content.discount_banner
 			end
 		}
-	}, "promo")
+	}, "promo"),
+	bundle_background = UIWidget.create_definition({
+		{
+			value_id = "bundle",
+			style_id = "bundle",
+			pass_type = "texture",
+			value = "content/ui/materials/backgrounds/bundle_store_preview",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "right",
+				offset = {
+					0,
+					0,
+					0
+				},
+				size = {
+					1200,
+					1080
+				},
+				size_addition = {
+					0,
+					0
+				},
+				material_values = {
+					gradient_map = "content/ui/textures/masks/blur_straight"
+				}
+			},
+			visibility_function = function (content, style)
+				return style.material_values.texture_map
+			end
+		}
+	}, "canvas")
 }
-local wallet_definitions = UIWidget.create_definition({
+local price_text_definition = {
 	{
 		value_id = "texture",
 		style_id = "texture",
@@ -1488,62 +1449,300 @@ local wallet_definitions = UIWidget.create_definition({
 		value = "content/ui/materials/icons/currencies/marks_small",
 		style = {
 			vertical_alignment = "center",
+			horizontal_alignment = "right",
 			size = {
-				42,
-				42
+				40,
+				28
 			},
 			offset = {
-				-42,
+				0,
 				0,
 				1
 			},
 			original_offset = {
-				-42,
+				0,
 				0,
 				1
 			}
 		}
 	},
 	{
-		value_id = "text",
-		style_id = "text",
+		value_id = "price_text",
+		style_id = "price_text",
 		pass_type = "text",
 		value = "0",
 		style = wallet_text_font_style
 	}
-}, "wallet_pivot")
-local price_text_definition = UIWidget.create_definition({
+}
+local bundle_button_definition = {
 	{
-		value_id = "texture",
-		style_id = "texture",
+		value = "content/ui/materials/frames/dropshadow_medium",
+		style_id = "outer_shadow",
 		pass_type = "texture",
-		value = "content/ui/materials/icons/currencies/marks_small",
 		style = {
 			vertical_alignment = "center",
-			size = {
-				42,
-				42
-			},
-			offset = {
-				-42,
-				0,
-				1
-			},
-			original_offset = {
-				-42,
-				0,
-				1
+			scale_to_material = true,
+			horizontal_alignment = "center",
+			color = Color.black(200, true),
+			size_addition = {
+				20,
+				20
 			}
 		}
 	},
 	{
-		value_id = "text",
-		style_id = "text",
+		pass_type = "hotspot",
+		content_id = "hotspot",
+		content = {
+			use_is_focused = true
+		}
+	},
+	{
+		pass_type = "rect",
+		style = {
+			offset = {
+				0,
+				0,
+				3
+			},
+			color = {
+				191.25,
+				17,
+				29,
+				23
+			}
+		}
+	},
+	{
+		pass_type = "texture_uv",
+		style_id = "background_gradient",
+		value = "content/ui/materials/gradients/gradient_diagonal_down_right",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "left",
+			color = Color.terminal_background_gradient(nil, true),
+			size = {},
+			offset = {
+				0,
+				0,
+				3
+			},
+			uvs = {
+				{
+					1,
+					0
+				},
+				{
+					0,
+					1
+				}
+			}
+		},
+		change_function = function (content, style)
+			style.color[1] = 150
+		end
+	},
+	{
+		pass_type = "texture",
+		style_id = "button_gradient",
+		value = "content/ui/materials/gradients/gradient_diagonal_down_right",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_corner_selected(nil, true),
+			offset = {
+				0,
+				0,
+				3
+			}
+		},
+		change_function = function (content, style)
+			ButtonPassTemplates.terminal_button_change_function(content, style)
+			ButtonPassTemplates.terminal_button_hover_change_function(content, style)
+		end
+	},
+	{
+		value_id = "icon",
+		style_id = "icon",
+		pass_type = "texture_uv",
+		value = "content/ui/materials/base/ui_default_base",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			color = Color.white(255, true),
+			material_values = {},
+			uvs = {
+				{
+					0,
+					0
+				},
+				{
+					1,
+					1
+				}
+			}
+		},
+		visibility_function = function (content, style)
+			return not not style.material_values.texture_map
+		end
+	},
+	{
+		pass_type = "texture",
+		style_id = "frame",
+		value = "content/ui/materials/frames/frame_tile_2px",
+		style = {
+			scale_to_material = true,
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_frame(nil, true),
+			hover_color = Color.terminal_frame_hover(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			offset = {
+				0,
+				0,
+				5
+			}
+		},
+		change_function = function (content, style)
+			ButtonPassTemplates.terminal_button_change_function(content, style)
+		end
+	},
+	{
+		pass_type = "texture",
+		style_id = "corner",
+		value = "content/ui/materials/frames/frame_corner_2px",
+		style = {
+			scale_to_material = true,
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_corner(nil, true),
+			hover_color = Color.terminal_corner_hover(nil, true),
+			selected_color = Color.terminal_corner_selected(nil, true),
+			offset = {
+				0,
+				0,
+				6
+			}
+		},
+		change_function = function (content, style)
+			ButtonPassTemplates.terminal_button_change_function(content, style)
+		end
+	},
+	{
+		value_id = "title",
+		style_id = "title",
 		pass_type = "text",
-		value = "0",
-		style = wallet_text_font_style
+		value = "",
+		style = bundle_title
+	},
+	{
+		value_id = "description",
+		style_id = "description",
+		pass_type = "text",
+		value = "",
+		style = bundle_description
+	},
+	{
+		style_id = "price_background",
+		pass_type = "rect",
+		style = {
+			vertical_alignment = "bottom",
+			offset = {
+				0,
+				0,
+				4
+			},
+			color = {
+				150,
+				0,
+				0,
+				0
+			},
+			size = {
+				nil,
+				30
+			}
+		},
+		visibility_function = function (content, style)
+			return content.has_price_tag and not content.owned and not content.sold
+		end
+	},
+	{
+		value_id = "owned_items",
+		style_id = "owned_items",
+		pass_type = "text",
+		value = "n/a",
+		style = bundle_owned_items_text,
+		visibility_function = function (content, style)
+			return content.has_price_tag and not content.sold and not content.owned
+		end
+	},
+	{
+		value_id = "price_text",
+		style_id = "price_text",
+		pass_type = "text",
+		value = "n/a",
+		style = item_price_style,
+		visibility_function = function (content, style)
+			return content.has_price_tag and not content.sold and not content.owned
+		end
+	},
+	{
+		style_id = "discount_price",
+		pass_type = "text",
+		value_id = "discount_price",
+		value = "",
+		style = item_discount_price_style,
+		visibility_function = function (content, style)
+			return not content.owned and content.discount_price
+		end
+	},
+	{
+		value_id = "wallet_icon",
+		style_id = "wallet_icon",
+		pass_type = "texture",
+		value = "content/ui/materials/base/ui_default_base",
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "right",
+			size = {
+				28,
+				20
+			},
+			offset = {
+				-2,
+				-5,
+				12
+			},
+			color = {
+				255,
+				255,
+				255,
+				255
+			}
+		},
+		visibility_function = function (content, style)
+			return content.has_price_tag and not content.sold and not content.owned
+		end
+	},
+	{
+		value_id = "owned",
+		style_id = "owned",
+		pass_type = "text",
+		value = "",
+		style = item_owned_text_style,
+		visibility_function = function (content, style)
+			return content.owned
+		end
 	}
-}, "price_text")
+}
+local menu_zoom_out = "loc_inventory_menu_zoom_out"
+local menu_zoom_in = "loc_inventory_menu_zoom_in"
+local menu_preview_with_gear_off = "loc_inventory_menu_preview_with_gear_off"
+local menu_preview_with_gear_on = "loc_inventory_menu_preview_with_gear_on"
+local weapon_preview_skin_off = "loc_premium_store_preview_weapon_no_skin_button"
+local weapon_preview_skin_on = "loc_premium_store_preview_weapon_with_skin_button"
 local legend_inputs = {
 	{
 		input_action = "back",
@@ -1560,47 +1759,68 @@ local legend_inputs = {
 		end
 	},
 	{
-		input_action = "navigate_secondary_left_pressed",
-		display_name = "loc_scroll_text_up",
-		alignment = "right_alignment",
-		visibility_function = function (parent)
-			return not parent._using_cursor_navigation and parent._description_scroll and not parent._aquilas_showing
-		end
-	},
-	{
-		input_action = "navigate_secondary_right_pressed",
-		display_name = "loc_scroll_text_down",
-		alignment = "right_alignment",
-		visibility_function = function (parent)
-			return not parent._using_cursor_navigation and parent._description_scroll and not parent._aquilas_showing
-		end
-	},
-	{
-		input_action = "hotkey_loadout",
-		display_name = "loc_weapon_inventory_inspect_button",
+		input_action = "hotkey_item_inspect",
+		display_name = "loc_premium_store_inspect_item",
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_inspect_pressed",
 		visibility_function = function (parent)
-			return not parent._aquilas_showing
+			return not parent._aquilas_showing and parent._valid_inspect
 		end
 	},
 	{
-		input_action = "cycle_list_secondary",
-		display_name = "loc_premium_store_preview_weapon_no_skin_button",
+		input_action = "cycle_list_primary",
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_weapon_skin_preview_pressed",
-		visibility_function = function (parent)
-			return parent._selected_element and parent._selected_element.visual_item.item_type == "WEAPON_SKIN" and not parent._weapon_preview_show_original and not parent._aquilas_showing
+		display_name = weapon_preview_skin_off,
+		visibility_function = function (parent, id)
+			local display_name = parent._weapon_preview_show_original and weapon_preview_skin_on or weapon_preview_skin_off
+
+			parent._input_legend_element:set_display_name(id, display_name)
+
+			return parent._selected_element and parent._selected_element.item and parent._selected_element.item.item_type == "WEAPON_SKIN" and not parent._aquilas_showing
 		end
 	},
 	{
-		input_action = "cycle_list_secondary",
-		display_name = "loc_premium_store_preview_weapon_with_skin_button",
+		input_action = "hotkey_menu_special_2",
 		alignment = "right_alignment",
-		on_pressed_callback = "cb_on_weapon_skin_preview_pressed",
-		visibility_function = function (parent)
-			return parent._selected_element and parent._selected_element.visual_item.item_type == "WEAPON_SKIN" and parent._weapon_preview_show_original and not parent._aquilas_showing
+		on_pressed_callback = "cb_on_preview_with_gear_toggled",
+		display_name = menu_preview_with_gear_off,
+		visibility_function = function (parent, id)
+			local display_name = parent._previewed_with_gear and menu_preview_with_gear_off or menu_preview_with_gear_on
+
+			parent._input_legend_element:set_display_name(id, display_name)
+
+			return parent._can_preview_with_gear and parent._selected_element and parent._selected_element.item and not parent._aquilas_showing
 		end
+	},
+	{
+		display_name = "loc_inventory_menu_zoom_in",
+		input_action = "hotkey_menu_special_1",
+		alignment = "right_alignment",
+		on_pressed_callback = "cb_on_camera_zoom_toggled",
+		visibility_function = function (parent, id)
+			if parent:_can_zoom() and not parent._aquilas_showing then
+				local display_name = parent._camera_zoomed_in and menu_zoom_out or menu_zoom_in
+				local input_legend = parent:_element("input_legend")
+
+				if input_legend then
+					input_legend:set_display_name(id, display_name)
+				end
+
+				return parent._on_enter_animation_triggered
+			end
+
+			return false
+		end
+	}
+}
+local text_description_pass_template = {
+	{
+		value_id = "text",
+		style_id = "text",
+		pass_type = "text",
+		value = "",
+		style = description_text_font_style
 	}
 }
 
@@ -1609,5 +1829,7 @@ return {
 	widget_definitions = widget_definitions,
 	price_text_definition = price_text_definition,
 	scenegraph_definition = scenegraph_definition,
-	wallet_definitions = wallet_definitions
+	text_description_pass_template = text_description_pass_template,
+	bundle_button_definition = bundle_button_definition,
+	item_restrictions_pass = item_restrictions_pass
 }

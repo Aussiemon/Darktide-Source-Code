@@ -193,6 +193,7 @@ local function construct_interface_settings_percent_slider(template)
 		on_value_changed_function = on_value_changed_function,
 		format_value_function = format_value_function,
 		indentation_level = template.indentation_level,
+		validation_function = template.validation_function,
 		tooltip_text = template.tooltip_text,
 		disable_rules = template.disable_rules
 	}
@@ -245,6 +246,7 @@ local function construct_interface_settings_value_slider(template)
 		value_get_function = value_get_function,
 		on_value_changed_function = on_value_changed_function,
 		indentation_level = template.indentation_level,
+		validation_function = template.validation_function,
 		tooltip_text = template.tooltip_text,
 		disable_rules = template.disable_rules
 	}
@@ -395,6 +397,17 @@ local settings_definitions = {
 		widget_type = "boolean",
 		on_value_changed = function (value)
 			return
+		end
+	},
+	{
+		save_location = "interface_settings",
+		tooltip_text = "loc_settings_portrait_rendering_mouseover",
+		display_name = "loc_interface_setting_portrait_rendering_enabled",
+		id = "portrait_rendering_enabled",
+		default_value = true,
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_portrait_render_change", value)
 		end
 	}
 }

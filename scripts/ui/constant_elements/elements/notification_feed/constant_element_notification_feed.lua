@@ -1,15 +1,17 @@
-local Definitions = require("scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed_definitions")
 local ConstantElementNotificationFeedSettings = require("scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed_settings")
-local UIWidget = require("scripts/managers/ui/ui_widget")
+local CriteriaParser = require("scripts/managers/contracts/utility/criteria_parser")
+local Definitions = require("scripts/ui/constant_elements/elements/notification_feed/constant_element_notification_feed_definitions")
+local ItemUtils = require("scripts/utilities/items")
+local TextUtilities = require("scripts/utilities/ui/text")
+local TextUtils = require("scripts/utilities/ui/text")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local ItemUtils = require("scripts/utilities/items")
-local WalletSettings = require("scripts/settings/wallet_settings")
-local TextUtils = require("scripts/utilities/ui/text")
-local CriteriaParser = require("scripts/managers/contracts/utility/criteria_parser")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIWidget = require("scripts/managers/ui/ui_widget")
+local WalletSettings = require("scripts/settings/wallet_settings")
 local DEBUG_RELOAD = true
+local _localization_context = {}
 
 local function _apply_package_item_icon_cb_func(widget, item)
 	local icon = item.icon
@@ -39,7 +41,7 @@ local function _remove_live_item_icon_cb_func(widget)
 end
 
 local ConstantElementNotificationFeed = class("ConstantElementNotificationFeed", "ConstantElementBase")
-local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "matchmaking", "player_assist", "voting")
+local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "matchmaking", "voting")
 
 ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start_scale)
 	ConstantElementNotificationFeed.super.init(self, parent, draw_layer, start_scale, Definitions)
@@ -78,13 +80,6 @@ ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start
 			widget_definition = Definitions.notification_message
 		},
 		currency = {
-			animation_exit = "popup_leave",
-			animation_enter = "popup_enter",
-			total_time = 5,
-			priority_order = 1,
-			widget_definition = Definitions.notification_message
-		},
-		player_assist = {
 			animation_exit = "popup_leave",
 			animation_enter = "popup_enter",
 			total_time = 5,
@@ -406,27 +401,6 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 				enter_sound_event = enter_sound_event
 			}
 		end
-	elseif message_type == MESSAGE_TYPES.player_assist then
-		local assist_type = data.assist_type
-		local player_name = data.player_name
-		local text = nil
-
-		if assist_type == "assisted" then
-			text = "Assisted by " .. player_name
-		elseif assist_type == "revived" then
-			text = "Revived by " .. player_name
-		elseif assist_type == "saved" then
-			text = "Saved by " .. player_name
-		end
-
-		notification_data = {
-			texts = {
-				{
-					display_name = text
-				}
-			},
-			color = Color.citadel_elysian_green(100, true)
-		}
 	elseif message_type == MESSAGE_TYPES.achievement then
 		notification_data = {
 			icon_size = "medium",
@@ -637,7 +611,7 @@ ConstantElementNotificationFeed._add_notification_message = function (self, mess
 	end
 end
 
-ConstantElementNotificationFeed._remove_notification = function (self, notification_to_remove)
+ConstantElementNotificationFeed._remove_notification = function (self, notification_to_remove, ui_renderer)
 	local notifications = self._notifications
 
 	for i = 1, #notifications do
@@ -880,13 +854,13 @@ ConstantElementNotificationFeed._draw_widgets = function (self, dt, t, input_ser
 			local time = notification.time
 
 			if time and total_time and total_time <= time then
-				self:_evaluate_notification_removal(notification)
+				self:_evaluate_notification_removal(notification, ui_renderer)
 			end
 		end
 	end
 end
 
-ConstantElementNotificationFeed._evaluate_notification_removal = function (self, notification)
+ConstantElementNotificationFeed._evaluate_notification_removal = function (self, notification, ui_renderer)
 	local widget = notification.widget
 
 	if notification.animation_exit_id and not self:_is_animation_completed(notification.animation_exit_id) then
@@ -902,7 +876,7 @@ ConstantElementNotificationFeed._evaluate_notification_removal = function (self,
 	else
 		notification.animation_exit_id = nil
 
-		self:_remove_notification(notification)
+		self:_remove_notification(notification, ui_renderer)
 	end
 end
 

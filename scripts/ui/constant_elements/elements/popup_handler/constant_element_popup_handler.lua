@@ -183,21 +183,16 @@ ConstantElementPopupHandler._setup_popup_type = function (self, data, ui_rendere
 			local style = widget.style
 			local text_style = style.text
 			local text_width, _ = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size)
-			widget.style.horizontal_alignment = "center"
 			local texture_width = widget.style.texture.size[1]
-			local text_offset = widget.style.text.original_offset
-			local texture_offset = widget.style.texture.original_offset
 			local text_margin = 5
-			local price_margin = i < #offer_prices and 30 or 0
-			widget.style.texture.offset[1] = texture_offset[1] + total_prices_width
-			widget.style.text.offset[1] = text_offset[1] + text_margin + total_prices_width
 			widget.offset[1] = total_prices_width
-			total_prices_width = total_prices_width + text_width + texture_width + text_margin + price_margin
+			widget.content.size = {
+				text_width + texture_width + text_margin,
+				widget.style.texture.size[2]
+			}
+			total_prices_width = total_prices_width + widget.content.size[1]
 			price_widgets[#price_widgets + 1] = widget
 		end
-
-		self:_set_scenegraph_size("offer_price_text", total_prices_width, nil)
-		self:set_scenegraph_position("offer_price_text", nil, -50)
 
 		local title_style = item_title_widget.style.text
 		local sub_title_style = item_title_widget.style.sub_text
@@ -216,15 +211,10 @@ ConstantElementPopupHandler._setup_popup_type = function (self, data, ui_rendere
 		local price_margin = 10
 		sub_title_style.offset[2] = sub_title_margin + title_height
 		local title_total_size = sub_title_style.offset[2] + sub_title_height
-		local price_height = 42
-
-		for i = 1, #price_widgets do
-			local widget = price_widgets[i]
-			widget.offset[2] = title_total_size + price_margin
-		end
-
+		local price_height = price_widgets[1].style and price_widgets[1].style.texture.size[2] or 0
 		local total_offer_text_height = title_total_size + sub_title_height + price_margin + price_height
 
+		self:_set_scenegraph_size("offer_price_text", total_prices_width, price_height)
 		self:_set_scenegraph_size("offer_text", nil, total_offer_text_height)
 
 		self._offer_price_widgets = price_widgets

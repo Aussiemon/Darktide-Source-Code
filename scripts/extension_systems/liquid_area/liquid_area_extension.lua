@@ -54,7 +54,7 @@ LiquidAreaExtension.init = function (self, extension_init_context, unit, extensi
 	local extension_manager = Managers.state.extension
 	local side_system = extension_manager:system("side_system")
 	self._side_names = side_system:side_names()
-	self._side_system = side_system
+	self._sides = side_system:sides()
 	local broadphase_system = extension_manager:system("broadphase_system")
 	self._broadphase = broadphase_system.broadphase
 	self._broadphase_radius = 0
@@ -94,19 +94,6 @@ LiquidAreaExtension.init = function (self, extension_init_context, unit, extensi
 		self._nav_cost_map_cost = template.nav_cost_map_cost
 		self._nav_cost_map_id = Managers.state.nav_mesh:nav_cost_map_id(nav_cost_map_name)
 		self._nav_cost_map_volume_uses_cells = template.nav_cost_map_volume_uses_cells
-	end
-
-	local bot_players = Managers.player:bot_players()
-
-	for _, bot_player in pairs(bot_players) do
-		local bot_unit = bot_player.player_unit
-		local group_extension = ScriptUnit.has_extension(bot_unit, "group_system")
-
-		if group_extension then
-			self._bot_group = group_extension:bot_group()
-
-			break
-		end
 	end
 
 	if sfx_name_start then
@@ -230,8 +217,6 @@ LiquidAreaExtension._create_liquid = function (self, real_index, angle)
 	end
 
 	local is_filled = false
-	local unit_pos = POSITION_LOOKUP[self._unit]
-	local offset_pos = from - unit_pos
 	local add_liquid_buffer = self._add_liquid_buffer
 	local num_buffered = add_liquid_buffer[0] + 1
 	add_liquid_buffer[num_buffered] = real_index
@@ -454,14 +439,21 @@ LiquidAreaExtension.update = function (self, unit, dt, t, context, listener_posi
 
 		self._recalculate_broadphase_size = false
 
-		if self._flow_done and self._bot_group and not self._ignore_bot_threat then
+		if self._flow_done and not self._ignore_bot_threat then
 			local shape = "sphere"
 			local size = self._broadphase_radius
 			local rotation = Quaternion.identity()
 			local duration = self._broadphase_radius * 0.5
 			local position = POSITION_LOOKUP[unit]
+			local group_system = Managers.state.extension:system("group_system")
+			local bot_groups = group_system:bot_groups_from_sides(self._sides)
+			local num_bot_groups = #bot_groups
 
-			self._bot_group:aoe_threat_created(position, shape, size, rotation, duration)
+			for i = 1, num_bot_groups do
+				local bot_group = bot_groups[i]
+
+				bot_group:aoe_threat_created(position, shape, size, rotation, duration)
+			end
 		end
 	end
 

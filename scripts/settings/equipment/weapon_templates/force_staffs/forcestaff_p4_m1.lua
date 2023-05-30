@@ -272,7 +272,7 @@ weapon_template.actions = {
 		}
 	},
 	action_charge = {
-		allowed_during_sprint = true,
+		allowed_during_sprint = false,
 		start_input = "charge",
 		sprint_requires_press_to_interrupt = true,
 		kind = "overload_charge_target_finder",

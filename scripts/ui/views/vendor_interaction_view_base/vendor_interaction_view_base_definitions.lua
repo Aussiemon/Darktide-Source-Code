@@ -75,7 +75,7 @@ local scenegraph_definition = {
 	},
 	wallet_pivot = {
 		vertical_alignment = "top",
-		parent = "canvas",
+		parent = "screen",
 		horizontal_alignment = "right",
 		size = {
 			0,
@@ -84,7 +84,7 @@ local scenegraph_definition = {
 		position = {
 			-20,
 			50,
-			1
+			31
 		}
 	},
 	info_box = {
@@ -159,7 +159,7 @@ local scenegraph_definition = {
 	}
 }
 local wallet_text_font_style = table.clone(UIFontSettings.currency_title)
-wallet_text_font_style.text_horizontal_alignment = "left"
+wallet_text_font_style.text_horizontal_alignment = "right"
 wallet_text_font_style.text_vertical_alignment = "center"
 wallet_text_font_style.original_offset = {
 	0,
@@ -257,17 +257,18 @@ local wallet_definitions = UIWidget.create_definition({
 		value = "content/ui/materials/icons/currencies/marks_small",
 		style = {
 			vertical_alignment = "center",
+			horizontal_alignment = "right",
 			size = {
 				42,
 				30
 			},
 			offset = {
-				-42,
+				0,
 				0,
 				1
 			},
 			original_offset = {
-				-42,
+				0,
 				0,
 				1
 			}

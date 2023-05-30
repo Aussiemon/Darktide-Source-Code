@@ -488,7 +488,7 @@ dialogue_breed_settings.chaos_ogryn_bulwark = {
 	trigger_heard_vo = false,
 	vo_class_name = "chaos_ogryn_bulwark",
 	has_dialogue_extension = true,
-	vo_triggers_enemy_kill_query = false,
+	vo_triggers_enemy_kill_query = true,
 	dialogue_memory_faction_name = "enemy",
 	follow_vo_interval_t = 5,
 	assault_vo_interval_t = 5,
@@ -504,7 +504,7 @@ dialogue_breed_settings.chaos_ogryn_gunner = {
 	trigger_heard_vo = true,
 	vo_class_name = "enemy_chaos_ogryn_heavy_gunner",
 	has_dialogue_extension = true,
-	vo_triggers_enemy_kill_query = false,
+	vo_triggers_enemy_kill_query = true,
 	dialogue_memory_faction_name = "enemy",
 	can_trigger_vo = true,
 	wwise_voice_switch_group = "enemy_voice_profile",
@@ -589,6 +589,20 @@ dialogue_breed_settings.renegade_shocktrooper = {
 	is_network_synced = false,
 	trigger_heard_vo = false,
 	vo_class_name = "renegade_shocktrooper",
+	has_dialogue_extension = true,
+	vo_triggers_enemy_kill_query = true,
+	dialogue_memory_faction_name = "enemy",
+	can_trigger_vo = true,
+	wwise_voice_switch_group = "switch_voice_enemy_traitor_shocktrooper",
+	wwise_voices = {
+		"enemy_traitor_scout_shocktrooper_a"
+	}
+}
+dialogue_breed_settings.renegade_plasma_shocktrooper = {
+	trigger_seen_vo = true,
+	is_network_synced = false,
+	trigger_heard_vo = false,
+	vo_class_name = "renegade_plasma_shocktrooper",
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = true,
 	dialogue_memory_faction_name = "enemy",
@@ -882,12 +896,27 @@ dialogue_breed_settings.medicae_servitor = {
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = false,
 	dialogue_memory_faction_name = "npc",
-	subtitle_distance = 17,
+	subtitle_distance = 15,
 	can_trigger_vo = true,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
 		"medicae_servitor_a",
 		"medicae_servitor_b"
+	}
+}
+dialogue_breed_settings.archive_servitor = {
+	trigger_seen_vo = false,
+	is_network_synced = true,
+	trigger_heard_vo = false,
+	vo_class_name = "archive_servitor",
+	has_dialogue_extension = true,
+	vo_triggers_enemy_kill_query = false,
+	dialogue_memory_faction_name = "npc",
+	subtitle_distance = 25,
+	can_trigger_vo = true,
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"archive_servitor_a"
 	}
 }
 dialogue_breed_settings.mourningstar_soldier = {

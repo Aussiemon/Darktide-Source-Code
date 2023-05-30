@@ -49,7 +49,10 @@ weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.hud_icon = "content/ui/materials/icons/pickups/default"
 weapon_template.swap_pickup_name = "ammo_cache_pocketable"
-weapon_template.footstep_intervals = FootstepIntervalsTemplates.default
+weapon_template.breed_footstep_intervals = {
+	human = FootstepIntervalsTemplates.pocketable_human,
+	ogryn = FootstepIntervalsTemplates.pocketable_ogryn
+}
 weapon_template.hud_icon = "content/ui/materials/icons/pocketables/hud/ammo_crate"
 weapon_template.hud_icon_small = "content/ui/materials/icons/pocketables/hud/small/party_ammo_crate"
 
@@ -59,6 +62,18 @@ end
 
 weapon_template.action_place_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
 	return current_action_name == "action_place"
+end
+
+weapon_template.action_none_gift_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+	return
+end
+
+weapon_template.action_can_give_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player, condition_func_params)
+	return
+end
+
+weapon_template.action_cant_give_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player, condition_func_params)
+	return
 end
 
 return weapon_template

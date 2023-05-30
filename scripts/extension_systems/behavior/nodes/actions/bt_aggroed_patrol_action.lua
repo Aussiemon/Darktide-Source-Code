@@ -2,17 +2,17 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local MainPathQueries = require("scripts/utilities/main_path_queries")
-local MinionMovement = require("scripts/utilities/minion_movement")
-local MinionPatrols = require("scripts/utilities/minion_patrols")
-local NavQueries = require("scripts/utilities/nav_queries")
-local NavigationCostSettings = require("scripts/settings/navigation/navigation_cost_settings")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
 local HitScan = require("scripts/utilities/attack/hit_scan")
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
+local MainPathQueries = require("scripts/utilities/main_path_queries")
 local MinionAttack = require("scripts/utilities/minion_attack")
+local MinionMovement = require("scripts/utilities/minion_movement")
+local MinionPatrols = require("scripts/utilities/minion_patrols")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
+local NavigationCostSettings = require("scripts/settings/navigation/navigation_cost_settings")
+local NavQueries = require("scripts/utilities/nav_queries")
 local Trajectory = require("scripts/utilities/trajectory")
 local Vo = require("scripts/utilities/vo")
 local STATES = table.index_lookup_table("passive", "aiming", "shooting")
@@ -696,13 +696,21 @@ BtAggroedPatrolAction._update_shooting = function (self, unit, t, dt, scratchpad
 		end
 
 		if scratchpad.aoe_bot_threat_timing and scratchpad.aoe_bot_threat_timing <= t then
-			local perception_component = scratchpad.perception_component
-			local target_unit = perception_component.target_unit
-			local group_extension = ScriptUnit.extension(target_unit, "group_system")
-			local bot_group = group_extension:bot_group()
 			local aoe_bot_threat_size = action_data.aoe_bot_threat_size:unbox()
+			local aoe_bot_threat_duration = action_data.aoe_bot_threat_duration
+			local aoe_bot_threat_rotation = Quaternion.look(flat_to_target_direction)
+			local side_system = Managers.state.extension:system("side_system")
+			local side = side_system.side_by_unit[unit]
+			local enemy_sides = side:relation_sides("enemy")
+			local group_system = Managers.state.extension:system("group_system")
+			local bot_groups = group_system:bot_groups_from_sides(enemy_sides)
+			local num_bot_groups = #bot_groups
 
-			bot_group:aoe_threat_created(target_position, "oobb", aoe_bot_threat_size, Quaternion.look(flat_to_target_direction), action_data.aoe_bot_threat_duration)
+			for i = 1, num_bot_groups do
+				local bot_group = bot_groups[i]
+
+				bot_group:aoe_threat_created(target_position, "oobb", aoe_bot_threat_size, aoe_bot_threat_rotation, aoe_bot_threat_duration)
+			end
 
 			scratchpad.aoe_bot_threat_timing = nil
 		end

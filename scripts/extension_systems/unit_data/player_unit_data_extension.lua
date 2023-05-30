@@ -38,14 +38,15 @@ local VECTOR3_NETWORK_TYPE_TOLERANCES = {
 	high_precision_direction = 1e-05
 }
 local FIXED_FRAME_OFFSET_NETWORK_TYPES = {
-	fixed_frame_offset = true,
-	fixed_frame_offset_start_t_7bit = true,
-	fixed_frame_offset_small = true,
-	fixed_frame_offset_start_t_6bit = true,
-	fixed_frame_offset_end_t_4bit = true,
-	fixed_frame_offset_start_t_9bit = true,
 	fixed_frame_offset_end_t_6bit = true,
-	fixed_frame_offset_end_t_7bit = true
+	fixed_frame_offset_start_t_7bit = true,
+	fixed_frame_offset_start_t_9bit = true,
+	fixed_frame_offset_start_t_6bit = true,
+	fixed_frame_offset_small = true,
+	fixed_frame_offset_start_t_5bit = true,
+	fixed_frame_offset = true,
+	fixed_frame_offset_end_t_7bit = true,
+	fixed_frame_offset_end_t_4bit = true
 }
 local script_id_string_32 = Script.id_string_32
 local NETWORK_NAME_ID_TO_FIELD_ID = {}
@@ -360,6 +361,7 @@ PlayerUnitDataExtension.extensions_ready = function (self, world, unit)
 
 	self._action_input_extension = ScriptUnit.extension(unit, "action_input_system")
 	self._input_extension = ScriptUnit.extension(unit, "input_system")
+	self._visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 end
 
 local READ_ONLY_META = {
@@ -714,6 +716,8 @@ PlayerUnitDataExtension.pre_update = function (self, unit, dt, t)
 end
 
 PlayerUnitDataExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
+	self._visual_loadout_extension:update_delayed_unequipped_slots(unit, dt, t, fixed_frame)
+
 	local old_index = self._component_index
 	local next_frame = fixed_frame + 1
 	local new_index = (next_frame - 1) % self._state_cache_size + 1

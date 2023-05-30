@@ -465,14 +465,9 @@ ItemUtils.rarity_display_name = function (item)
 end
 
 ItemUtils.rarity_color = function (item)
-	local rarity_settings = RaritySettings[item.rarity]
+	local rarity_settings = RaritySettings[item and item.rarity] or RaritySettings[0]
 
-	return rarity_settings and rarity_settings.color or {
-		255,
-		255,
-		0,
-		0
-	}
+	return rarity_settings.color, rarity_settings.color_dark
 end
 
 ItemUtils.keywords_text = function (item)
@@ -527,24 +522,73 @@ ItemUtils.weapon_skin_requirement_text = function (item)
 	return text, true
 end
 
-ItemUtils.class_requirement_text = function (item)
-	local archetype_restrictions = item.archetypes
-	local text = ""
+local _temp_archetype_restriction_list = {}
 
-	if not archetype_restrictions or table.is_empty(archetype_restrictions) then
-		return text, false
+ItemUtils.set_item_class_requirement_text = function (item)
+	table.clear(_temp_archetype_restriction_list)
+
+	local text = ""
+	local items = item.items
+
+	for i = 1, #items do
+		local set_piece_item = items[i]
+		local archetype_restrictions = set_piece_item.archetypes
+
+		if not archetype_restrictions or table.is_empty(archetype_restrictions) then
+			return text, false
+		end
+
+		for j = 1, #archetype_restrictions do
+			local archetype_name = archetype_restrictions[j]
+
+			if not _temp_archetype_restriction_list[archetype_name] then
+				local archetype = Archetypes[archetype_name]
+				local display_name_localized = archetype and Localize(archetype.archetype_name)
+
+				if display_name_localized then
+					text = text .. "• " .. display_name_localized
+
+					if i < #archetype_restrictions then
+						text = text .. "\n"
+					end
+				end
+
+				_temp_archetype_restriction_list[archetype_name] = true
+			end
+		end
 	end
 
-	for i = 1, #archetype_restrictions do
-		local archetype_name = archetype_restrictions[i]
-		local archetype = Archetypes[archetype_name]
-		local display_name_localized = archetype and Localize(archetype.archetype_name)
+	return text, true
+end
 
-		if display_name_localized then
-			text = text .. "• " .. display_name_localized
+ItemUtils.class_requirement_text = function (item)
+	local text = ""
+	local item_type = item.item_type
 
-			if i < #archetype_restrictions then
-				text = text .. "\n"
+	if item_type == "SET" then
+		local items = item.items
+
+		for i = 1, #items do
+			text = text .. ItemUtils.class_requirement_text(items[i])
+		end
+	else
+		local archetype_restrictions = item.archetypes
+
+		if not archetype_restrictions or table.is_empty(archetype_restrictions) then
+			return text, false
+		end
+
+		for i = 1, #archetype_restrictions do
+			local archetype_name = archetype_restrictions[i]
+			local archetype = Archetypes[archetype_name]
+			local display_name_localized = archetype and Localize(archetype.archetype_name)
+
+			if display_name_localized then
+				text = text .. "• " .. display_name_localized
+
+				if i < #archetype_restrictions then
+					text = text .. "\n"
+				end
 			end
 		end
 	end
@@ -846,18 +890,16 @@ ItemUtils.item_slot = function (item)
 	return slot_name and ItemSlotSettings[slot_name]
 end
 
-ItemUtils.sort_comparator = function (definitions)
+ItemUtils.sort_element_key_comparator = function (definitions)
 	return function (a, b)
-		local a_item = a.item
-		local b_item = b.item
-
-		for i = 1, #definitions, 2 do
+		for i = 1, #definitions, 3 do
 			local order = definitions[i]
-			local func = definitions[i + 1]
-			local is_lt = func(a_item, b_item)
+			local key = definitions[i + 1]
+			local func = definitions[i + 2]
+			local is_lt = func(key and a[key] or a, key and b[key] or b)
 
 			if is_lt ~= nil then
-				if order == "<" then
+				if order == "<" or order == "true" then
 					return is_lt
 				else
 					return not is_lt
@@ -867,6 +909,72 @@ ItemUtils.sort_comparator = function (definitions)
 
 		return nil
 	end
+end
+
+ItemUtils.sort_comparator = function (definitions)
+	return function (a, b)
+		local a_item = a.item
+		local b_item = b.item
+
+		if a_item and b_item then
+			for i = 1, #definitions, 2 do
+				local order = definitions[i]
+				local func = definitions[i + 1]
+				local is_lt = func(a_item, b_item)
+
+				if is_lt ~= nil then
+					if order == "<" or order == "true" then
+						return is_lt
+					else
+						return not is_lt
+					end
+				end
+			end
+		end
+
+		return nil
+	end
+end
+
+ItemUtils.compare_offer_owned = function (a_offer, b_offer)
+	if a_offer and b_offer then
+		local owned_key = "owned"
+		local a_owned = a_offer.state and a_offer.state == owned_key
+		local b_owned = b_offer.state and b_offer.state == owned_key
+
+		if a_owned and not b_owned then
+			return true
+		elseif b_owned and not a_owned then
+			return false
+		end
+	end
+
+	return nil
+end
+
+ItemUtils.compare_offer_price = function (a_offer, b_offer)
+	if a_offer and b_offer then
+		local owned_key = "owned"
+		local a_owned = a_offer.state and a_offer.state == owned_key
+		local b_owned = b_offer.state and b_offer.state == owned_key
+		local a_price_data = a_offer.price.amount
+		local a_price = not a_owned and a_price_data and (a_price_data.discounted_price or a_price_data.amount)
+		local b_price_data = b_offer.price.amount
+		local b_price = not b_owned and b_price_data and (b_price_data.discounted_price or b_price_data.amount)
+
+		if a_price and b_price and a_price ~= b_price then
+			return a_price < b_price
+		end
+	end
+end
+
+ItemUtils.compare_set_item_parts_presentation_order = function (a, b)
+	local a_item_type = a.item_type
+	local b_item_type = b.item_type
+	local a_sort_index = UISettings.set_item_parts_presentation_order[a_item_type] or 0
+	local b_sort_index = UISettings.set_item_parts_presentation_order[b_item_type] or 0
+
+	return a_sort_index < b_sort_index
 end
 
 ItemUtils.compare_item_type = function (a, b)
@@ -1116,6 +1224,68 @@ ItemUtils.has_crafting_modification = function (item)
 	end
 
 	return has_perk_modification, has_trait_modification
+end
+
+ItemUtils.create_mannequin_profile_by_item = function (item, prefered_gender, prefered_archetype)
+	local item_gender, item_breed, item_archetype = nil
+
+	if item.genders and not table.is_empty(item.genders) then
+		if prefered_gender and table.find(item.genders, prefered_gender) then
+			item_gender = prefered_gender
+		elseif table.find(item.genders, "male") then
+			item_gender = "male"
+		else
+			item_gender = item.genders[1]
+		end
+	elseif (not item.genders or item.genders and table.is_empty(item.genders)) and prefered_gender then
+		item_gender = prefered_gender
+	end
+
+	if item.archetypes and not table.is_empty(item.archetypes) then
+		if prefered_archetype and table.find(item.archetypes, prefered_archetype) then
+			item_archetype = type(prefered_archetype) == "string" and Archetypes[prefered_archetype] or prefered_archetype
+		else
+			local archetype = item.archetypes[1]
+			item_archetype = type(archetype) == "string" and Archetypes[archetype] or archetype
+		end
+	end
+
+	if item.breeds and not table.is_empty(item.breeds) then
+		if #item.breeds > 1 and item_archetype and item_archetype.name == "ogryn" and table.find(item.breeds, "ogryn") then
+			item_breed = "ogryn"
+		else
+			item_breed = item.breeds[1]
+		end
+	end
+
+	local breed = item_breed or item.breeds and item.breeds[1] or "human"
+	local archetype = breed == "ogryn" and Archetypes.ogryn or item_archetype or item.archetypes and item.archetypes[1] and Archetypes[item.archetypes[1]] or Archetypes.veteran
+	local gender = breed ~= "ogryn" and (item_gender or item.genders and item.genders[1]) or "male"
+	local loadout = {}
+	local required_breed_item_names_per_slot = UISettings.item_preview_required_slot_items_set_per_slot_by_breed_and_gender[breed]
+	local required_gender_item_names_per_slot = required_breed_item_names_per_slot and required_breed_item_names_per_slot[gender]
+
+	if required_gender_item_names_per_slot then
+		local required_items = required_gender_item_names_per_slot
+
+		if required_items then
+			for slot_name, slot_item_name in pairs(required_items) do
+				local item_definition = MasterItems.get_item(slot_item_name)
+
+				if item_definition then
+					local slot_item = table.clone(item_definition)
+					loadout[slot_name] = slot_item
+				end
+			end
+		end
+	end
+
+	return {
+		loadout = loadout,
+		archetype = archetype,
+		breed = breed,
+		gender = gender
+	}
 end
 
 return ItemUtils

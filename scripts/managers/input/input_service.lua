@@ -395,6 +395,10 @@ InputService.set_devices = function (self, devices)
 	self:_rework_actions()
 end
 
+InputService.has = function (self, action_name)
+	return self._actions[action_name] ~= nil
+end
+
 InputService.get = function (self, action_name)
 	local action_rule = self._actions[action_name]
 

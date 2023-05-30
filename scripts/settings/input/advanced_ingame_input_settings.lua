@@ -436,4 +436,9 @@ local advanced_ingame_input_settings = {
 	}
 }
 
+if IS_XBS then
+	advanced_ingame_input_settings.aliases.voip_push_to_talk = nil
+	advanced_ingame_input_settings.settings.voip_push_to_talk = nil
+end
+
 return settings("AdvancedIngameInputSettings", advanced_ingame_input_settings)

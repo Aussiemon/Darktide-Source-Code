@@ -352,11 +352,21 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 	local should_trigger_aoe_threat = has_started_charge and not scratchpad.triggered_aoe_threat and distance_to_extrapolated_position < threat_distance
 
 	if should_trigger_aoe_threat then
-		local group_extension = ScriptUnit.extension(target_unit, "group_system")
-		local bot_group = group_extension:bot_group()
 		local aoe_bot_threat_size = action_data.aoe_bot_threat_size:unbox()
+		local aoe_bot_threat_duration = action_data.aoe_bot_threat_duration
+		local aoe_bot_threat_rotation = Unit.local_rotation(unit, 1)
+		local side_system = scratchpad.side_system
+		local side = side_system.side_by_unit[unit]
+		local enemy_sides = side:relation_sides("enemy")
+		local group_system = Managers.state.extension:system("group_system")
+		local bot_groups = group_system:bot_groups_from_sides(enemy_sides)
+		local num_bot_groups = #bot_groups
 
-		bot_group:aoe_threat_created(POSITION_LOOKUP[target_unit], "oobb", aoe_bot_threat_size, Unit.local_rotation(unit, 1), action_data.aoe_bot_threat_duration)
+		for i = 1, num_bot_groups do
+			local bot_group = bot_groups[i]
+
+			bot_group:aoe_threat_created(target_position, "oobb", aoe_bot_threat_size, aoe_bot_threat_rotation, aoe_bot_threat_duration)
+		end
 
 		scratchpad.aoe_bot_threat_timing = nil
 		scratchpad.triggered_aoe_threat = true

@@ -655,9 +655,11 @@ MinionAttack.push_nearby_enemies = function (unit, scratchpad, action_data, igno
 				end
 
 				pushed_enemies[hit_unit] = true
+				local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
+				local breed_or_nil = unit_data_extension and unit_data_extension:breed()
+				local is_player_character = Breed.is_player(breed_or_nil)
 
-				if action_data.push_enemies_push_template then
-					local unit_data_extension = ScriptUnit.extension(hit_unit, "unit_data_system")
+				if is_player_character and action_data.push_enemies_push_template then
 					local locomotion_push_component = unit_data_extension:write_component("locomotion_push")
 
 					Push.add(hit_unit, locomotion_push_component, direction, action_data.push_enemies_push_template, "attack")

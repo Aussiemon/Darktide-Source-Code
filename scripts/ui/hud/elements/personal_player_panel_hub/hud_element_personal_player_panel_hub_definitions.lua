@@ -159,9 +159,10 @@ local widget_definitions = {
 	}, "panel_background"),
 	player_icon = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/base/ui_portrait_frame_base",
 			style_id = "texture",
+			value_id = "texture",
 			pass_type = "texture",
+			value = "content/ui/materials/base/ui_portrait_frame_base",
 			style = {
 				material_values = {
 					use_placeholder_texture = 1,
