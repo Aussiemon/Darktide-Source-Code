@@ -55,6 +55,23 @@ local event_vo_hacking_purser_a = {
 		},
 		randomize_indexes = {}
 	},
+	cmd_hacking_place_device = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_purser_a__cmd_hacking_place_device_a_01",
+			"loc_purser_a__cmd_hacking_place_device_a_02",
+			"loc_purser_a__cmd_hacking_place_device_a_03",
+			"loc_purser_a__cmd_hacking_place_device_a_04"
+		},
+		sound_events_duration = {
+			3.999635,
+			3.63051,
+			3.506031,
+			3.469833
+		},
+		randomize_indexes = {}
+	},
 	info_hacking_decoding_in_progress = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -92,6 +109,23 @@ local event_vo_hacking_purser_a = {
 			0.25,
 			0.25,
 			0.25
+		},
+		randomize_indexes = {}
+	},
+	info_hacking_mission_complete = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_purser_a__info_hacking_mission_complete_a_01",
+			"loc_purser_a__info_hacking_mission_complete_a_02",
+			"loc_purser_a__info_hacking_mission_complete_a_03",
+			"loc_purser_a__info_hacking_mission_complete_a_04"
+		},
+		sound_events_duration = {
+			2.374021,
+			3.709708,
+			3.631802,
+			2.47675
 		},
 		randomize_indexes = {}
 	}

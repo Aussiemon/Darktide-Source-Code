@@ -100,6 +100,31 @@ local gameplay_vo_ogryn_d = {
 		},
 		randomize_indexes = {}
 	},
+	calling_for_help = {
+		randomize_indexes_n = 0,
+		sound_events_n = 8,
+		sound_events = {
+			"loc_ogryn_d__calling_for_help_01",
+			"loc_ogryn_d__calling_for_help_02",
+			"loc_ogryn_d__calling_for_help_03",
+			"loc_ogryn_d__calling_for_help_04",
+			"loc_ogryn_d__calling_for_help_05",
+			"loc_ogryn_d__calling_for_help_06",
+			"loc_ogryn_d__calling_for_help_07",
+			"loc_ogryn_d__calling_for_help_08"
+		},
+		sound_events_duration = {
+			1.796927,
+			2.094344,
+			3.267688,
+			2.105896,
+			2.128969,
+			2.437073,
+			2.58149,
+			2.393323
+		},
+		randomize_indexes = {}
+	},
 	chaos_daemonhost_aggroed = {
 		randomize_indexes_n = 0,
 		sound_events_n = 8,
@@ -1690,6 +1715,31 @@ local gameplay_vo_ogryn_d = {
 		},
 		randomize_indexes = {}
 	},
+	heard_enemy_chaos_spawn = {
+		randomize_indexes_n = 0,
+		sound_events_n = 8,
+		sound_events = {
+			"loc_ogryn_d__heard_enemy_chaos_spawn_01",
+			"loc_ogryn_d__heard_enemy_chaos_spawn_02",
+			"loc_ogryn_d__heard_enemy_chaos_spawn_03",
+			"loc_ogryn_d__heard_enemy_chaos_spawn_04",
+			"loc_ogryn_d__heard_enemy_chaos_spawn_05",
+			"loc_ogryn_d__heard_enemy_chaos_spawn_06",
+			"loc_ogryn_d__heard_enemy_chaos_spawn_07",
+			"loc_ogryn_d__heard_enemy_chaos_spawn_08"
+		},
+		sound_events_duration = {
+			1.563354,
+			2.207792,
+			1.597125,
+			3.299948,
+			2.395688,
+			2.460271,
+			2.900677,
+			3.170781
+		},
+		randomize_indexes = {}
+	},
 	heard_enemy_daemonhost = {
 		randomize_indexes_n = 0,
 		sound_events_n = 8,
@@ -2526,6 +2576,31 @@ local gameplay_vo_ogryn_d = {
 		},
 		randomize_indexes = {}
 	},
+	response_for_calling_for_help = {
+		randomize_indexes_n = 0,
+		sound_events_n = 8,
+		sound_events = {
+			"loc_ogryn_d__response_for_calling_for_help_01",
+			"loc_ogryn_d__response_for_calling_for_help_02",
+			"loc_ogryn_d__response_for_calling_for_help_03",
+			"loc_ogryn_d__response_for_calling_for_help_04",
+			"loc_ogryn_d__response_for_calling_for_help_05",
+			"loc_ogryn_d__response_for_calling_for_help_06",
+			"loc_ogryn_d__response_for_calling_for_help_07",
+			"loc_ogryn_d__response_for_calling_for_help_08"
+		},
+		sound_events_duration = {
+			1.686042,
+			1.599125,
+			1.61651,
+			2.24226,
+			2.662896,
+			1.703417,
+			2.957583,
+			3.316458
+		},
+		randomize_indexes = {}
+	},
 	response_for_cover_me = {
 		randomize_indexes_n = 0,
 		sound_events_n = 8,
@@ -2760,6 +2835,23 @@ local gameplay_vo_ogryn_d = {
 		},
 		randomize_indexes = {}
 	},
+	response_for_ogryn_critical_health = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_d__response_for_ogryn_critical_health_01",
+			"loc_ogryn_d__response_for_ogryn_critical_health_02",
+			"loc_ogryn_d__response_for_ogryn_critical_health_03",
+			"loc_ogryn_d__response_for_ogryn_critical_health_04"
+		},
+		sound_events_duration = {
+			3.022302,
+			2.446448,
+			2.307698,
+			6.429688
+		},
+		randomize_indexes = {}
+	},
 	response_for_ogryn_disabled_by_chaos_hound = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -2774,6 +2866,27 @@ local gameplay_vo_ogryn_d = {
 			3.179813,
 			3.15376,
 			2.583073
+		},
+		randomize_indexes = {}
+	},
+	response_for_ogryn_disabled_by_enemy = {
+		randomize_indexes_n = 0,
+		sound_events_n = 6,
+		sound_events = {
+			"loc_ogryn_d__response_for_ogryn_disabled_by_enemy_01",
+			"loc_ogryn_d__response_for_ogryn_disabled_by_enemy_02",
+			"loc_ogryn_d__response_for_ogryn_disabled_by_enemy_03",
+			"loc_ogryn_d__response_for_ogryn_disabled_by_enemy_04",
+			"loc_ogryn_d__response_for_ogryn_disabled_by_enemy_05",
+			"loc_ogryn_d__response_for_ogryn_disabled_by_enemy_06"
+		},
+		sound_events_duration = {
+			2.072469,
+			1.796146,
+			1.555865,
+			3.105698,
+			3.617042,
+			2.227333
 		},
 		randomize_indexes = {}
 	},
@@ -2973,6 +3086,23 @@ local gameplay_vo_ogryn_d = {
 		},
 		randomize_indexes = {}
 	},
+	response_for_psyker_critical_health = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_d__response_for_psyker_critical_health_01",
+			"loc_ogryn_d__response_for_psyker_critical_health_02",
+			"loc_ogryn_d__response_for_psyker_critical_health_03",
+			"loc_ogryn_d__response_for_psyker_critical_health_04"
+		},
+		sound_events_duration = {
+			3.259719,
+			3.717146,
+			3.568927,
+			3.792708
+		},
+		randomize_indexes = {}
+	},
 	response_for_psyker_disabled_by_chaos_hound = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -2987,6 +3117,27 @@ local gameplay_vo_ogryn_d = {
 			2.654573,
 			2.666865,
 			2.972479
+		},
+		randomize_indexes = {}
+	},
+	response_for_psyker_disabled_by_enemy = {
+		randomize_indexes_n = 0,
+		sound_events_n = 6,
+		sound_events = {
+			"loc_ogryn_d__response_for_psyker_disabled_by_enemy_01",
+			"loc_ogryn_d__response_for_psyker_disabled_by_enemy_02",
+			"loc_ogryn_d__response_for_psyker_disabled_by_enemy_03",
+			"loc_ogryn_d__response_for_psyker_disabled_by_enemy_04",
+			"loc_ogryn_d__response_for_psyker_disabled_by_enemy_05",
+			"loc_ogryn_d__response_for_psyker_disabled_by_enemy_06"
+		},
+		sound_events_duration = {
+			2.585865,
+			2.781563,
+			2.481542,
+			2.694063,
+			2.435771,
+			3.46625
 		},
 		randomize_indexes = {}
 	},
@@ -3108,6 +3259,23 @@ local gameplay_vo_ogryn_d = {
 		},
 		randomize_indexes = {}
 	},
+	response_for_veteran_critical_health = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_d__response_for_veteran_critical_health_01",
+			"loc_ogryn_d__response_for_veteran_critical_health_02",
+			"loc_ogryn_d__response_for_veteran_critical_health_03",
+			"loc_ogryn_d__response_for_veteran_critical_health_04"
+		},
+		sound_events_duration = {
+			4.309802,
+			4.21749,
+			2.817094,
+			5.458865
+		},
+		randomize_indexes = {}
+	},
 	response_for_veteran_disabled_by_chaos_hound = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -3122,6 +3290,27 @@ local gameplay_vo_ogryn_d = {
 			2.112354,
 			4.036813,
 			2.562073
+		},
+		randomize_indexes = {}
+	},
+	response_for_veteran_disabled_by_enemy = {
+		randomize_indexes_n = 0,
+		sound_events_n = 6,
+		sound_events = {
+			"loc_ogryn_d__response_for_veteran_disabled_by_enemy_01",
+			"loc_ogryn_d__response_for_veteran_disabled_by_enemy_02",
+			"loc_ogryn_d__response_for_veteran_disabled_by_enemy_03",
+			"loc_ogryn_d__response_for_veteran_disabled_by_enemy_04",
+			"loc_ogryn_d__response_for_veteran_disabled_by_enemy_05",
+			"loc_ogryn_d__response_for_veteran_disabled_by_enemy_06"
+		},
+		sound_events_duration = {
+			1.602615,
+			3.676385,
+			3.618896,
+			2.676802,
+			2.575979,
+			2.346542
 		},
 		randomize_indexes = {}
 	},
@@ -3237,6 +3426,23 @@ local gameplay_vo_ogryn_d = {
 		},
 		randomize_indexes = {}
 	},
+	response_for_zealot_critical_health = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_d__response_for_zealot_critical_health_01",
+			"loc_ogryn_d__response_for_zealot_critical_health_02",
+			"loc_ogryn_d__response_for_zealot_critical_health_03",
+			"loc_ogryn_d__response_for_zealot_critical_health_04"
+		},
+		sound_events_duration = {
+			2.997771,
+			4.058333,
+			2.820573,
+			3.989594
+		},
+		randomize_indexes = {}
+	},
 	response_for_zealot_disabled_by_chaos_hound = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -3251,6 +3457,27 @@ local gameplay_vo_ogryn_d = {
 			2.828656,
 			3.114115,
 			3.92724
+		},
+		randomize_indexes = {}
+	},
+	response_for_zealot_disabled_by_enemy = {
+		randomize_indexes_n = 0,
+		sound_events_n = 6,
+		sound_events = {
+			"loc_ogryn_d__response_for_zealot_disabled_by_enemy_01",
+			"loc_ogryn_d__response_for_zealot_disabled_by_enemy_02",
+			"loc_ogryn_d__response_for_zealot_disabled_by_enemy_03",
+			"loc_ogryn_d__response_for_zealot_disabled_by_enemy_04",
+			"loc_ogryn_d__response_for_zealot_disabled_by_enemy_05",
+			"loc_ogryn_d__response_for_zealot_disabled_by_enemy_06"
+		},
+		sound_events_duration = {
+			2.569146,
+			1.912,
+			3.406844,
+			2.680281,
+			3.146115,
+			2.416083
 		},
 		randomize_indexes = {}
 	},

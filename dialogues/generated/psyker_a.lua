@@ -4283,4 +4283,58 @@ return function ()
 			}
 		}
 	})
+	define_rule({
+		name = "repeated_psykinetic_head_pop_a",
+		wwise_route = 0,
+		response = "repeated_psykinetic_head_pop_a",
+		database = "psyker_a",
+		category = "player_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"multiple_head_pops"
+			},
+			{
+				"query_context",
+				"killer_class",
+				OP.EQ,
+				"psyker"
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				10
+			},
+			{
+				"user_memory",
+				"repeated_psykinetic_head_pop_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				400
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"repeated_psykinetic_head_pop_a",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			},
+			random_ignore_vo = {
+				chance = 0.15,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
+		}
+	})
 end

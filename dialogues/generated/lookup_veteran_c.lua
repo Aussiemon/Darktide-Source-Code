@@ -44,4 +44,5 @@ DialogueLookup[DialogueLookup_n + 43] = "combat_pause_quirk_trust_a"
 DialogueLookup[DialogueLookup_n + 44] = "combat_pause_quirk_trust_b"
 DialogueLookup[DialogueLookup_n + 45] = "combat_pause_quirk_turncoat_a"
 DialogueLookup[DialogueLookup_n + 46] = "combat_pause_quirk_turncoat_b"
-DialogueLookup_n = DialogueLookup_n + 46
+DialogueLookup[DialogueLookup_n + 47] = "plasma_vent_b"
+DialogueLookup_n = DialogueLookup_n + 47

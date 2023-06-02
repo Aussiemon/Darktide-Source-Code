@@ -922,7 +922,7 @@ return function ()
 				"time_since_zealot_seen_killstreak_ogryn",
 				OP.TIMEDIFF,
 				OP.LT,
-				45
+				90
 			}
 		},
 		on_done = {
@@ -1068,7 +1068,7 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_d"
+					"ogryn_b"
 				}
 			},
 			{
@@ -1310,7 +1310,7 @@ return function ()
 				"time_since_zealot_seen_killstreak_psyker",
 				OP.TIMEDIFF,
 				OP.LT,
-				45
+				90
 			}
 		},
 		on_done = {
@@ -1810,7 +1810,7 @@ return function ()
 				"time_since_zealot_seen_killstreak_psyker",
 				OP.TIMEDIFF,
 				OP.LT,
-				45
+				90
 			}
 		},
 		on_done = {

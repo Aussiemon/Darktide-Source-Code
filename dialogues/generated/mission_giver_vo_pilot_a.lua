@@ -203,13 +203,6 @@ local mission_giver_vo_pilot_a = {
 			1.787021,
 			2.895833
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	info_event_one_down = {

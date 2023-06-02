@@ -389,6 +389,25 @@ local zealot_c_zealot_male_c = {
 			[2.0] = 8.24349
 		},
 		randomize_indexes = {}
+	},
+	thunder_hammer_kill_spree_self_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_zealot_male_c__thunder_hammer_kill_spree_self_a_01",
+			"loc_zealot_male_c__thunder_hammer_kill_spree_self_a_02",
+			"loc_zealot_male_c__thunder_hammer_kill_spree_self_a_03",
+			"loc_zealot_male_c__thunder_hammer_kill_spree_self_a_04",
+			"loc_zealot_male_c__thunder_hammer_kill_spree_self_a_05"
+		},
+		sound_events_duration = {
+			3.621135,
+			3.356188,
+			3.398969,
+			3.898719,
+			3.690531
+		},
+		randomize_indexes = {}
 	}
 }
 

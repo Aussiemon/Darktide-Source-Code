@@ -58,4 +58,5 @@ DialogueLookup[DialogueLookup_n + 57] = "lore_diction_a"
 DialogueLookup[DialogueLookup_n + 58] = "lore_diction_b"
 DialogueLookup[DialogueLookup_n + 59] = "lore_diction_c"
 DialogueLookup[DialogueLookup_n + 60] = "lore_diction_d"
-DialogueLookup_n = DialogueLookup_n + 60
+DialogueLookup[DialogueLookup_n + 61] = "repeated_psykinetic_head_pop_a"
+DialogueLookup_n = DialogueLookup_n + 61

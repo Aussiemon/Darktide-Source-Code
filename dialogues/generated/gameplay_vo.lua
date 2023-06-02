@@ -27,7 +27,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "disabled"
+			target = "players"
 		}
 	})
 	define_rule({
@@ -352,6 +352,55 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		}
+	})
+	define_rule({
+		name = "calling_for_help",
+		wwise_route = 0,
+		response = "calling_for_help",
+		database = "gameplay_vo",
+		category = "player_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"rapid_loosing_health"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.GT,
+				10
+			},
+			{
+				"user_memory",
+				"last_calling_for_help",
+				OP.TIMEDIFF,
+				OP.GT,
+				300
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"last_calling_for_help",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
+			}
 		}
 	})
 	define_rule({
@@ -992,6 +1041,9 @@ return function ()
 				"last_pounced_by_special_attack",
 				OP.TIMESET
 			}
+		},
+		heard_speak_routing = {
+			target = "players"
 		}
 	})
 	define_rule({
@@ -4507,7 +4559,7 @@ return function ()
 			{
 				"user_context",
 				"friends_close",
-				OP.GT,
+				OP.GTEQ,
 				0
 			},
 			{
@@ -4557,9 +4609,6 @@ return function ()
 				"heal_start_faction",
 				OP.TIMESET
 			}
-		},
-		heard_speak_routing = {
-			target = "disabled"
 		}
 	})
 	define_rule({
@@ -4713,6 +4762,49 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		}
+	})
+	define_rule({
+		name = "heard_enemy_chaos_spawn",
+		wwise_route = 0,
+		response = "heard_enemy_chaos_spawn",
+		database = "gameplay_vo",
+		category = "enemy_alerts_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_enemy"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"chaos_spawn"
+			},
+			{
+				"faction_memory",
+				"heard_enemy_chaos_spawn",
+				OP.TIMEDIFF,
+				OP.GT,
+				340
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"heard_enemy_chaos_spawn",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
+			}
 		}
 	})
 	define_rule({
@@ -5142,7 +5234,7 @@ return function ()
 				"time_since_knocked_down_multiple_times",
 				OP.TIMEDIFF,
 				OP.GT,
-				1
+				300
 			}
 		},
 		on_done = {
@@ -5188,7 +5280,7 @@ return function ()
 				"time_since_knocked_down_multiple_times",
 				OP.TIMEDIFF,
 				OP.GT,
-				1
+				300
 			}
 		},
 		on_done = {
@@ -5234,7 +5326,7 @@ return function ()
 				"time_since_knocked_down_multiple_times",
 				OP.TIMEDIFF,
 				OP.GT,
-				1
+				300
 			}
 		},
 		on_done = {
@@ -5280,7 +5372,7 @@ return function ()
 				"time_since_knocked_down_multiple_times",
 				OP.TIMEDIFF,
 				OP.GT,
-				1
+				300
 			}
 		},
 		on_done = {
@@ -5795,6 +5887,72 @@ return function ()
 				OP.ADD,
 				1
 			}
+		}
+	})
+	define_rule({
+		name = "mission_archives_activate_from_hibernation_a",
+		category = "npc_prio_0",
+		wwise_route = 50,
+		response = "mission_archives_activate_from_hibernation_a",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"mission_archives_activate_from_hibernation_a"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"archive_servitor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
+		name = "mission_archives_task_complete_a",
+		category = "npc_prio_0",
+		wwise_route = 50,
+		response = "mission_archives_task_complete_a",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"npc_vo"
+			},
+			{
+				"query_context",
+				"vo_event",
+				OP.EQ,
+				"mission_archives_task_complete_a"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"archive_servitor"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -6376,6 +6534,77 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		}
+	})
+	define_rule({
+		name = "plasma_vent_a",
+		wwise_route = 0,
+		response = "plasma_vent_a",
+		database = "gameplay_vo",
+		category = "player_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"reloading"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.GTEQ,
+				0
+			},
+			{
+				"user_context",
+				"threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low",
+					"medium"
+				}
+			},
+			{
+				"user_context",
+				"weapon_type",
+				OP.SET_INCLUDES,
+				args = {
+					"plasmagun_p1_m1"
+				}
+			},
+			{
+				"faction_memory",
+				"plasma_vent_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				300
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"plasma_vent_a",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 2.7
+			},
+			random_ignore_vo = {
+				chance = 0.2,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
 		}
 	})
 	define_rule({
@@ -7288,6 +7517,63 @@ return function ()
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.5
+			}
+		}
+	})
+	define_rule({
+		name = "response_for_calling_for_help",
+		wwise_route = 0,
+		response = "response_for_calling_for_help",
+		database = "gameplay_vo",
+		category = "player_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.GTEQ,
+				10
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"calling_for_help"
+				}
+			},
+			{
+				"user_memory",
+				"calling_for_help_response",
+				OP.TIMEDIFF,
+				OP.GT,
+				180
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"calling_for_help_response",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
 			}
 		}
 	})
@@ -8866,6 +9152,76 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "response_for_ogryn_critical_health",
+		wwise_route = 0,
+		response = "response_for_ogryn_critical_health",
+		database = "gameplay_vo",
+		category = "player_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				10
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"critical_health"
+				}
+			},
+			{
+				"query_context",
+				"speaker_class",
+				OP.EQ,
+				"ogryn"
+			},
+			{
+				"user_memory",
+				"rapid_loosing_health_response",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			},
+			{
+				"faction_memory",
+				"last_saw_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				180
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"rapid_loosing_health_response",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "all"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
 		name = "response_for_ogryn_disabled_by_chaos_hound",
 		wwise_route = 0,
 		response = "response_for_ogryn_disabled_by_chaos_hound",
@@ -8927,6 +9283,48 @@ return function ()
 				duration = 0.2
 			}
 		}
+	})
+	define_rule({
+		name = "response_for_ogryn_disabled_by_enemy",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "response_for_ogryn_disabled_by_enemy",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				10
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"disabled_by_enemy"
+				}
+			},
+			{
+				"query_context",
+				"speaker_class",
+				OP.EQ,
+				"ogryn"
+			}
+		},
+		on_done = {}
 	})
 	define_rule({
 		name = "response_for_ogryn_enemy_kill_monster",
@@ -9976,6 +10374,76 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "response_for_psyker_critical_health",
+		wwise_route = 0,
+		response = "response_for_psyker_critical_health",
+		database = "gameplay_vo",
+		category = "player_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				10
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"critical_health"
+				}
+			},
+			{
+				"query_context",
+				"speaker_class",
+				OP.EQ,
+				"psyker"
+			},
+			{
+				"user_memory",
+				"rapid_loosing_health_response",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			},
+			{
+				"faction_memory",
+				"last_saw_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				180
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"rapid_loosing_health_response",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "all"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
 		name = "response_for_psyker_disabled_by_chaos_hound",
 		wwise_route = 0,
 		response = "response_for_psyker_disabled_by_chaos_hound",
@@ -10037,6 +10505,48 @@ return function ()
 				duration = 0.2
 			}
 		}
+	})
+	define_rule({
+		name = "response_for_psyker_disabled_by_enemy",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "response_for_psyker_disabled_by_enemy",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				10
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"disabled_by_enemy"
+				}
+			},
+			{
+				"query_context",
+				"speaker_class",
+				OP.EQ,
+				"psyker"
+			}
+		},
+		on_done = {}
 	})
 	define_rule({
 		name = "response_for_psyker_enemy_kill_monster",
@@ -10846,6 +11356,76 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "response_for_veteran_critical_health",
+		wwise_route = 0,
+		response = "response_for_veteran_critical_health",
+		database = "gameplay_vo",
+		category = "player_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				10
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"critical_health"
+				}
+			},
+			{
+				"query_context",
+				"speaker_class",
+				OP.EQ,
+				"veteran"
+			},
+			{
+				"user_memory",
+				"rapid_loosing_health_response",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			},
+			{
+				"faction_memory",
+				"last_saw_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				180
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"rapid_loosing_health_response",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "all"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
 		name = "response_for_veteran_disabled_by_chaos_hound",
 		wwise_route = 0,
 		response = "response_for_veteran_disabled_by_chaos_hound",
@@ -10907,6 +11487,48 @@ return function ()
 				duration = 0.2
 			}
 		}
+	})
+	define_rule({
+		name = "response_for_veteran_disabled_by_enemy",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "response_for_veteran_disabled_by_enemy",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				10
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"disabled_by_enemy"
+				}
+			},
+			{
+				"query_context",
+				"speaker_class",
+				OP.EQ,
+				"veteran"
+			}
+		},
+		on_done = {}
 	})
 	define_rule({
 		name = "response_for_veteran_enemy_kill_monster",
@@ -11707,6 +12329,76 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "response_for_zealot_critical_health",
+		wwise_route = 0,
+		response = "response_for_zealot_critical_health",
+		database = "gameplay_vo",
+		category = "player_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				10
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"critical_health"
+				}
+			},
+			{
+				"query_context",
+				"speaker_class",
+				OP.EQ,
+				"zealot"
+			},
+			{
+				"user_memory",
+				"rapid_loosing_health_response",
+				OP.TIMEDIFF,
+				OP.GT,
+				10
+			},
+			{
+				"faction_memory",
+				"last_saw_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				180
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"rapid_loosing_health_response",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "all"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
 		name = "response_for_zealot_disabled_by_chaos_hound",
 		wwise_route = 0,
 		response = "response_for_zealot_disabled_by_chaos_hound",
@@ -11768,6 +12460,48 @@ return function ()
 				duration = 0.2
 			}
 		}
+	})
+	define_rule({
+		name = "response_for_zealot_disabled_by_enemy",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "response_for_zealot_disabled_by_enemy",
+		database = "gameplay_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				10
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"disabled_by_enemy"
+				}
+			},
+			{
+				"query_context",
+				"speaker_class",
+				OP.EQ,
+				"zealot"
+			}
+		},
+		on_done = {}
 	})
 	define_rule({
 		name = "response_for_zealot_enemy_kill_monster",
@@ -12501,6 +13235,63 @@ return function ()
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "seen_barrel_exploded_a",
+		wwise_route = 0,
+		response = "seen_barrel_exploded_a",
+		database = "gameplay_vo",
+		category = "player_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"generic_mission_vo"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"seen_barrel_exploded_a"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GTEQ,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				10
+			},
+			{
+				"user_memory",
+				"seen_barrel_exploded_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				300
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"seen_barrel_exploded_a",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			random_ignore_vo = {
+				chance = 0.3,
+				max_failed_tries = 0,
+				hold_for = 0
 			}
 		}
 	})
@@ -13584,6 +14375,147 @@ return function ()
 				"faction_memory",
 				"last_seen_horde",
 				OP.TIMESET
+			}
+		}
+	})
+	define_rule({
+		name = "seen_kill_streak_prayer_c",
+		wwise_route = 0,
+		response = "seen_kill_streak_prayer_c",
+		database = "gameplay_vo",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"response_for_ogryn_seen_killstreak_ogryn",
+					"response_for_ogryn_seen_killstreak_psyker",
+					"response_for_ogryn_seen_killstreak_veteran",
+					"response_for_ogryn_seen_killstreak_zealot",
+					"response_for_psyker_seen_killstreak_ogryn",
+					"response_for_psyker_seen_killstreak_psyker",
+					"response_for_psyker_seen_killstreak_veteran",
+					"response_for_psyker_seen_killstreak_zealot",
+					"response_for_veteran_seen_killstreak_ogryn",
+					"response_for_veteran_seen_killstreak_psyker",
+					"response_for_veteran_seen_killstreak_veteran",
+					"response_for_veteran_seen_killstreak_zealot",
+					"response_for_zealot_seen_killstreak_ogryn",
+					"response_for_zealot_seen_killstreak_psyker",
+					"response_for_zealot_seen_killstreak_veteran",
+					"response_for_zealot_seen_killstreak_zealot"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a",
+					"zealot_female_b",
+					"zealot_female_c",
+					"zealot_male_a",
+					"zealot_male_b",
+					"zealot_male_c"
+				}
+			},
+			{
+				"user_memory",
+				"seen_kill_streak_prayer_c",
+				OP.TIMEDIFF,
+				OP.GT,
+				300
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"seen_kill_streak_prayer_c",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			},
+			random_ignore_vo = {
+				chance = 0.15,
+				max_failed_tries = 0,
+				hold_for = 0
+			}
+		}
+	})
+	define_rule({
+		name = "seen_psychic_power_ultimate_a",
+		wwise_route = 0,
+		response = "seen_psychic_power_ultimate_a",
+		database = "gameplay_vo",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"ability_biomancer_high"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c"
+				}
+			},
+			{
+				"user_memory",
+				"seen_psychic_power_ultimate_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				420
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"seen_psychic_power_ultimate_a",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			},
+			random_ignore_vo = {
+				chance = 0.15,
+				max_failed_tries = 0,
+				hold_for = 0
 			}
 		}
 	})

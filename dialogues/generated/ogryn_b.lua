@@ -2393,7 +2393,7 @@ return function ()
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_round_three_shouty_d"
+					"bonding_conversation_round_three_shouty_e"
 				}
 			},
 			{
@@ -6563,6 +6563,44 @@ return function ()
 			}
 		},
 		on_done = {},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "seen_teammate_heal_a",
+		wwise_route = 0,
+		response = "seen_teammate_heal_a",
+		database = "ogryn_b",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"heal_start"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2

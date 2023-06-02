@@ -2082,7 +2082,7 @@ return function ()
 					"mission_propaganda_short_elevator_conversation_one_b",
 					"mission_propaganda_short_elevator_conversation_two_b",
 					"mission_propaganda_short_elevator_conversation_three_b",
-					"level_hab_block_start_banter_c",
+					"level_hab_block_first_objective_response",
 					"mission_archives_start_banter_c",
 					"mission_complex_start_banter_c",
 					"mission_enforcer_start_banter_c",

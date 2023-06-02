@@ -1595,27 +1595,7 @@ return function ()
 				"interactor_voice_profile",
 				OP.SET_INCLUDES,
 				args = {
-					"ogryn_a",
-					"ogryn_b",
-					"ogryn_c",
-					"psyker_female_a",
-					"psyker_female_b",
-					"psyker_female_c",
-					"psyker_male_a",
-					"psyker_male_b",
-					"psyker_male_c",
-					"veteran_female_a",
-					"veteran_female_b",
-					"veteran_female_c",
-					"veteran_male_a",
-					"veteran_male_b",
-					"veteran_male_c",
-					"zealot_female_a",
-					"zealot_female_b",
-					"zealot_female_c",
-					"zealot_male_a",
-					"zealot_male_b",
-					"zealot_male_c"
+					""
 				}
 			},
 			{
@@ -1623,7 +1603,7 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					"credit_store_servitor"
+					""
 				}
 			},
 			{
@@ -1631,38 +1611,18 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
-					"ogryn_a",
-					"ogryn_b",
-					"ogryn_c",
-					"psyker_female_a",
-					"psyker_female_b",
-					"psyker_female_c",
-					"psyker_male_a",
-					"psyker_male_b",
-					"psyker_male_c",
-					"veteran_female_a",
-					"veteran_female_b",
-					"veteran_female_c",
-					"veteran_male_a",
-					"veteran_male_b",
-					"veteran_male_c",
-					"zealot_female_a",
-					"zealot_female_b",
-					"zealot_female_c",
-					"zealot_male_a",
-					"zealot_male_b",
-					"zealot_male_c"
+					""
 				}
 			},
 			{
 				"user_memory",
-				"credit_store_servitor_goodbye_b",
+				"",
 				OP.EQ,
 				0
 			},
 			{
 				"faction_memory",
-				"credit_store_servitor_distance_restocked_b",
+				"",
 				OP.EQ,
 				0
 			}
@@ -1670,7 +1630,7 @@ return function ()
 		on_done = {
 			{
 				"user_memory",
-				"credit_store_servitor_distance_restocked_b",
+				"",
 				OP.ADD,
 				1
 			}
@@ -1893,14 +1853,34 @@ return function ()
 				"query_context",
 				"vo_event",
 				OP.EQ,
-				""
+				"credit_store_servitor_goodbye"
 			},
 			{
 				"query_context",
 				"interactor_voice_profile",
 				OP.SET_INCLUDES,
 				args = {
-					""
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"zealot_female_a",
+					"zealot_female_b",
+					"zealot_female_c",
+					"zealot_male_a",
+					"zealot_male_b",
+					"zealot_male_c"
 				}
 			},
 			{
@@ -1908,14 +1888,14 @@ return function ()
 				"class_name",
 				OP.SET_INCLUDES,
 				args = {
-					""
+					"credit_store_servitor"
 				}
 			}
 		},
 		on_done = {
 			{
 				"user_memory",
-				"",
+				"credit_store_servitor_goodbye",
 				OP.ADD,
 				1
 			}

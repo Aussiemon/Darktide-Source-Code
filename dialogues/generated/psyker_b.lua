@@ -3910,4 +3910,80 @@ return function ()
 			}
 		}
 	})
+	define_rule({
+		name = "seen_self_melee_killstreak_a",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "seen_self_melee_killstreak_a",
+		database = "psyker_b",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"kill_spree_self"
+			},
+			{
+				"user_context",
+				"weapon_type",
+				OP.SET_INCLUDES,
+				args = {
+					"chainsword_p1_m1",
+					"combataxe_p1_m1",
+					"combataxe_p1_m2",
+					"combataxe_p1_m3",
+					"combataxe_p2_m1",
+					"combataxe_p2_m2",
+					"combataxe_p2_m3",
+					"combatsword_p1_m1",
+					"combatsword_p1_m2",
+					"combatsword_p1_m3",
+					"combatsword_p3_m1",
+					"combatsword_p3_m2",
+					"combatsword_p3_m3",
+					"combatknife_p1_m1",
+					"forcesword_p1_m1",
+					"forcesword_p1_m2",
+					"forcesword_p1_m3"
+				}
+			},
+			{
+				"user_context",
+				"number_of_kills",
+				OP.GTEQ,
+				15
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"psyker"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.GTEQ,
+				3
+			},
+			{
+				"user_memory",
+				"last_kill_spree",
+				OP.TIMEDIFF,
+				OP.GT,
+				300
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"last_kill_spree",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
 end

@@ -1045,7 +1045,7 @@ return function ()
 				"time_since_friendly_fire_ps_og",
 				OP.TIMEDIFF,
 				OP.LT,
-				60
+				90
 			}
 		},
 		on_done = {
@@ -1102,13 +1102,13 @@ return function ()
 				}
 			},
 			{
-				"faction_memory",
+				"user_memory",
 				"time_since_friendly_fire",
 				OP.GT,
 				1
 			},
 			{
-				"faction_memory",
+				"user_memory",
 				"time_since_friendly_fire",
 				OP.TIMEDIFF,
 				OP.LT,

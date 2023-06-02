@@ -103,4 +103,5 @@ DialogueLookup[DialogueLookup_n + 102] = "combat_pause_quirk_puny_a"
 DialogueLookup[DialogueLookup_n + 103] = "combat_pause_quirk_puny_b"
 DialogueLookup[DialogueLookup_n + 104] = "combat_pause_quirk_sleepy_a"
 DialogueLookup[DialogueLookup_n + 105] = "combat_pause_quirk_sleepy_b"
-DialogueLookup_n = DialogueLookup_n + 105
+DialogueLookup[DialogueLookup_n + 106] = "seen_teammate_heal_a"
+DialogueLookup_n = DialogueLookup_n + 106

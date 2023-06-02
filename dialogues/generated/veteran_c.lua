@@ -3325,4 +3325,42 @@ return function ()
 			}
 		}
 	})
+	define_rule({
+		name = "plasma_vent_b",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "plasma_vent_b",
+		database = "veteran_c",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"plasma_vent_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_c",
+					"veteran_male_c"
+				}
+			}
+		},
+		on_done = {},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
 end

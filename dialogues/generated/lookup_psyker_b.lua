@@ -52,4 +52,5 @@ DialogueLookup[DialogueLookup_n + 51] = "combat_pause_quirk_lonely_a"
 DialogueLookup[DialogueLookup_n + 52] = "combat_pause_quirk_lonely_b"
 DialogueLookup[DialogueLookup_n + 53] = "combat_pause_quirk_togetherness_a"
 DialogueLookup[DialogueLookup_n + 54] = "combat_pause_quirk_togetherness_b"
-DialogueLookup_n = DialogueLookup_n + 54
+DialogueLookup[DialogueLookup_n + 55] = "seen_self_melee_killstreak_a"
+DialogueLookup_n = DialogueLookup_n + 55

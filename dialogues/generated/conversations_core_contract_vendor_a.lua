@@ -10,11 +10,11 @@ local conversations_core_contract_vendor_a = {
 			"loc_contract_vendor_a__eavesdropping_contract_vendor_05"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			3.245271,
+			1.745729,
+			2.764125,
+			4.257667,
+			2.575438
 		},
 		randomize_indexes = {}
 	}

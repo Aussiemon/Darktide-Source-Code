@@ -58,6 +58,102 @@ local volume_data = {
 		}
 	},
 	{
+		height = 2,
+		type = "core/gwnav/volumes/gwnavexclusivetagvolume",
+		name = "volume_block_nav_end_strain_008",
+		alt_max_vector = {
+			-6.934999942779541,
+			418.125,
+			-59.5
+		},
+		alt_min_vector = {
+			-6.934999942779541,
+			418.125,
+			-61.5
+		},
+		bottom_points = {
+			{
+				-7.934999942779541,
+				419.375,
+				-61.5
+			},
+			{
+				-5.934999942779541,
+				419.375,
+				-61.5
+			},
+			{
+				-5.934999942779541,
+				420.39202880859375,
+				-61.5
+			},
+			{
+				-7.934999942779541,
+				420.39202880859375,
+				-61.5
+			}
+		},
+		color = {
+			255,
+			255,
+			0,
+			0
+		},
+		up_vector = {
+			0,
+			0,
+			1
+		}
+	},
+	{
+		height = 2,
+		type = "core/gwnav/volumes/gwnavexclusivetagvolume",
+		name = "volume_block_nav_end_strain_007",
+		alt_max_vector = {
+			-1.934999942779541,
+			418.125,
+			-59.5
+		},
+		alt_min_vector = {
+			-1.934999942779541,
+			418.125,
+			-61.5
+		},
+		bottom_points = {
+			{
+				-2.934999942779541,
+				419.375,
+				-61.5
+			},
+			{
+				-0.934999942779541,
+				419.375,
+				-61.5
+			},
+			{
+				-0.934999942779541,
+				420.39202880859375,
+				-61.5
+			},
+			{
+				-2.934999942779541,
+				420.39202880859375,
+				-61.5
+			}
+		},
+		color = {
+			255,
+			255,
+			0,
+			0
+		},
+		up_vector = {
+			0,
+			0,
+			1
+		}
+	},
+	{
 		height = 8.000001999999995,
 		type = "content/volume_types/player_mover_blocker",
 		name = "volume_player_blocker_scanning_002",

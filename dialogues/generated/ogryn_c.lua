@@ -566,7 +566,7 @@ return function ()
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_round_three_respect_c"
+					"bonding_conversation_round_three_respect_b"
 				}
 			},
 			{
@@ -1340,7 +1340,7 @@ return function ()
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_round_three_respect_a"
+					"bonding_conversation_round_three_tougher_a"
 				}
 			},
 			{

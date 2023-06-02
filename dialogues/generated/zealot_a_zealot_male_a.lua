@@ -1,4 +1,23 @@
 local zealot_a_zealot_male_a = {
+	chain_weapon_kill_spree_self_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_zealot_male_a__chain_weapon_kill_spree_self_a_01",
+			"loc_zealot_male_a__chain_weapon_kill_spree_self_a_02",
+			"loc_zealot_male_a__chain_weapon_kill_spree_self_a_03",
+			"loc_zealot_male_a__chain_weapon_kill_spree_self_a_04",
+			"loc_zealot_male_a__chain_weapon_kill_spree_self_a_05"
+		},
+		sound_events_duration = {
+			4.112125,
+			3.495271,
+			3.453042,
+			2.686958,
+			4.062104
+		},
+		randomize_indexes = {}
+	},
 	combat_pause_limited_zealot_a_01_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,
@@ -510,6 +529,21 @@ local zealot_a_zealot_male_a = {
 		sound_events_duration = {
 			[1.0] = 1.160021,
 			[2.0] = 1.649021
+		},
+		randomize_indexes = {}
+	},
+	combat_pause_quirk_zealot_a_wounded_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_zealot_male_a__combat_pause_quirk_zealot_a_wounded_c_01",
+			"loc_zealot_male_a__combat_pause_quirk_zealot_a_wounded_c_02",
+			"loc_zealot_male_a__combat_pause_quirk_zealot_a_wounded_c_03"
+		},
+		sound_events_duration = {
+			4.699708,
+			4.901458,
+			2.654188
 		},
 		randomize_indexes = {}
 	}

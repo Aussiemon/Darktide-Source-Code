@@ -31,12 +31,6 @@ local mission_giver_vo_contract_vendor_a = {
 			3.494302,
 			2.685521
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	info_event_one_down = {

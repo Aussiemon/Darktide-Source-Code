@@ -1125,7 +1125,7 @@ return function ()
 				"time_since_veteran_seen_killstreak_psyker",
 				OP.TIMEDIFF,
 				OP.LT,
-				60
+				90
 			},
 			{
 				"user_memory",

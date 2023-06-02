@@ -469,6 +469,25 @@ local psyker_b_psyker_male_b = {
 			[2.0] = 4.362125
 		},
 		randomize_indexes = {}
+	},
+	seen_self_melee_killstreak_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_psyker_male_b__seen_self_melee_killstreak_a_01",
+			"loc_psyker_male_b__seen_self_melee_killstreak_a_02",
+			"loc_psyker_male_b__seen_self_melee_killstreak_a_03",
+			"loc_psyker_male_b__seen_self_melee_killstreak_a_04",
+			"loc_psyker_male_b__seen_self_melee_killstreak_a_05"
+		},
+		sound_events_duration = {
+			2.545333,
+			2.714021,
+			3.211833,
+			3.459125,
+			3.599458
+		},
+		randomize_indexes = {}
 	}
 }
 

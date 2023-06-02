@@ -3462,4 +3462,65 @@ return function ()
 			}
 		}
 	})
+	define_rule({
+		name = "thunder_hammer_kill_spree_self_a",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "thunder_hammer_kill_spree_self_a",
+		database = "zealot_c",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"kill_spree_self"
+			},
+			{
+				"user_context",
+				"weapon_type",
+				OP.SET_INCLUDES,
+				args = {
+					"thunderhammer_2h_p1_m1",
+					"thunderhammer_2h_p1_m2"
+				}
+			},
+			{
+				"user_context",
+				"number_of_kills",
+				OP.GTEQ,
+				15
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.GTEQ,
+				3
+			},
+			{
+				"user_memory",
+				"last_kill_spree",
+				OP.TIMEDIFF,
+				OP.GT,
+				300
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"last_kill_spree",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
 end

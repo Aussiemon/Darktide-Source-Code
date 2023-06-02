@@ -534,6 +534,25 @@ local psyker_a_psyker_female_a = {
 			[1.0] = 5.245083
 		},
 		randomize_indexes = {}
+	},
+	repeated_psykinetic_head_pop_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_psyker_female_a__repeated_psykinetic_head_pop_a_01",
+			"loc_psyker_female_a__repeated_psykinetic_head_pop_a_02",
+			"loc_psyker_female_a__repeated_psykinetic_head_pop_a_03",
+			"loc_psyker_female_a__repeated_psykinetic_head_pop_a_04",
+			"loc_psyker_female_a__repeated_psykinetic_head_pop_a_05"
+		},
+		sound_events_duration = {
+			2.488875,
+			2.220417,
+			2.981083,
+			1.2625,
+			3.884229
+		},
+		randomize_indexes = {}
 	}
 }
 

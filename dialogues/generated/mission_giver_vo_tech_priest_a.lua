@@ -192,13 +192,6 @@ local mission_giver_vo_tech_priest_a = {
 			3.809667,
 			4.380771
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	info_event_one_down = {

@@ -57,6 +57,23 @@ local event_vo_hacking_contract_vendor_a = {
 		},
 		randomize_indexes = {}
 	},
+	cmd_hacking_place_device = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_contract_vendor_a__cmd_hacking_place_device_a_01",
+			"loc_contract_vendor_a__cmd_hacking_place_device_a_02",
+			"loc_contract_vendor_a__cmd_hacking_place_device_a_03",
+			"loc_contract_vendor_a__cmd_hacking_place_device_a_04"
+		},
+		sound_events_duration = {
+			2.767573,
+			3.530302,
+			3.552479,
+			5.37874
+		},
+		randomize_indexes = {}
+	},
 	info_hacking_decoding_in_progress = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -97,6 +114,23 @@ local event_vo_hacking_contract_vendor_a = {
 		},
 		randomize_indexes = {}
 	},
+	info_hacking_mission_complete = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_contract_vendor_a__info_hacking_mission_complete_a_01",
+			"loc_contract_vendor_a__info_hacking_mission_complete_a_02",
+			"loc_contract_vendor_a__info_hacking_mission_complete_a_03",
+			"loc_contract_vendor_a__info_hacking_mission_complete_a_04"
+		},
+		sound_events_duration = {
+			3.589698,
+			3.474635,
+			4.61924,
+			4.807198
+		},
+		randomize_indexes = {}
+	},
 	vox_introduction_hacking_event = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -108,11 +142,11 @@ local event_vo_hacking_contract_vendor_a = {
 			"loc_contract_vendor_a__vox_introduction_contract_vendor_05"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			1.723271,
+			1.629,
+			2.001021,
+			1.844646,
+			2.700688
 		},
 		sound_event_weights = {
 			0.2,

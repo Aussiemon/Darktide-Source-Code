@@ -1064,210 +1064,6 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "bonding_conversation_round_three_deaf_a",
-		category = "conversations_prio_1",
-		wwise_route = 0,
-		response = "bonding_conversation_round_three_deaf_a",
-		database = "ogryn_a",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"short_story_talk"
-			},
-			{
-				"user_context",
-				"friends_close",
-				OP.GT,
-				0
-			},
-			{
-				"user_context",
-				"enemies_close",
-				OP.LT,
-				1
-			},
-			{
-				"global_context",
-				"level_time",
-				OP.GT,
-				90
-			},
-			{
-				"global_context",
-				"is_decaying_tension",
-				OP.EQ,
-				"true"
-			},
-			{
-				"user_context",
-				"voice_template",
-				OP.SET_INCLUDES,
-				args = {
-					"ogryn_a"
-				}
-			},
-			{
-				"global_context",
-				"player_voice_profiles",
-				OP.SET_INTERSECTS,
-				args = {
-					"zealot_male_c"
-				}
-			},
-			{
-				"faction_memory",
-				"bonding_conversation_round_three_deaf_a",
-				OP.EQ,
-				0
-			},
-			{
-				"faction_memory",
-				"time_since_last_short_conversation",
-				OP.TIMEDIFF,
-				OP.GT,
-				140
-			},
-			{
-				"faction_memory",
-				"time_since_last_conversation",
-				OP.TIMEDIFF,
-				OP.GT,
-				20
-			},
-			{
-				"user_memory",
-				"exploding_barrel",
-				OP.TIMEDIFF,
-				OP.LT,
-				20
-			},
-			{
-				"user_memory",
-				"exploding_barrel",
-				OP.GT,
-				1
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"bonding_conversation_round_three_deaf_a",
-				OP.ADD,
-				1
-			},
-			{
-				"faction_memory",
-				"time_since_last_short_conversation",
-				OP.TIMESET,
-				"0"
-			},
-			{
-				"user_memory",
-				"bonding_conversation_round_three_deaf_a_user",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
-		name = "bonding_conversation_round_three_deaf_b",
-		wwise_route = 0,
-		response = "bonding_conversation_round_three_deaf_b",
-		database = "ogryn_a",
-		category = "conversations_prio_1",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak"
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"bonding_conversation_round_three_deaf_a"
-				}
-			},
-			{
-				"user_context",
-				"voice_template",
-				OP.SET_INCLUDES,
-				args = {
-					"zealot_male_c"
-				}
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"bonding_conversation_round_three_deaf_b_user",
-				OP.ADD,
-				1
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2
-			}
-		}
-	})
-	define_rule({
-		name = "bonding_conversation_round_three_deaf_c",
-		wwise_route = 0,
-		response = "bonding_conversation_round_three_deaf_c",
-		database = "ogryn_a",
-		category = "conversations_prio_1",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak"
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"bonding_conversation_round_three_deaf_b"
-				}
-			},
-			{
-				"user_context",
-				"voice_template",
-				OP.SET_INCLUDES,
-				args = {
-					"ogryn_a"
-				}
-			},
-			{
-				"user_memory",
-				"bonding_conversation_round_three_deaf_a_user",
-				OP.EQ,
-				1
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2
-			}
-		}
-	})
-	define_rule({
 		name = "bonding_conversation_round_three_decree_a",
 		wwise_route = 0,
 		response = "bonding_conversation_round_three_decree_a",
@@ -1928,7 +1724,7 @@ return function ()
 				"time_since_revived_by_psyker",
 				OP.TIMEDIFF,
 				OP.LT,
-				60
+				120
 			}
 		},
 		on_done = {
@@ -2441,7 +2237,7 @@ return function ()
 				"dialogue_name",
 				OP.SET_INCLUDES,
 				args = {
-					"bonding_conversation_round_three_love_e"
+					"bonding_conversation_round_three_love_f"
 				}
 			},
 			{
@@ -2861,7 +2657,7 @@ return function ()
 			},
 			{
 				"user_memory",
-				"bonding_conversation_round_three_decree_a_user",
+				"bonding_conversation_round_three_sleep_a_user",
 				OP.EQ,
 				1
 			}
@@ -6882,6 +6678,58 @@ return function ()
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "self_enemy_ogryn_kill_a",
+		wwise_route = 0,
+		response = "self_enemy_ogryn_kill_a",
+		database = "ogryn_a",
+		category = "enemy_alerts_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"enemy_kill"
+			},
+			{
+				"query_context",
+				"killed_type",
+				OP.SET_INCLUDES,
+				args = {
+					"chaos_ogryn_bulwark",
+					"chaos_ogryn_executor",
+					"chaos_ogryn_gunner"
+				}
+			},
+			{
+				"user_memory",
+				"self_enemy_ogryn_kill_a",
+				OP.TIMEDIFF,
+				OP.GT,
+				300
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"self_enemy_ogryn_kill_a",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.5
+			},
+			random_ignore_vo = {
+				chance = 0.05,
+				max_failed_tries = 0,
+				hold_for = 0
 			}
 		}
 	})

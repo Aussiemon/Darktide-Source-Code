@@ -867,65 +867,6 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "cultist_berzerker_alerted_idle",
-		category = "enemy_vo_prio_1",
-		wwise_route = 28,
-		response = "cultist_berzerker_alerted_idle",
-		database = "enemy_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"generic_enemy_vo_event"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"alerted_idle"
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.EQ,
-				"cultist_berzerker"
-			},
-			{
-				"query_context",
-				"target_distance",
-				OP.GTEQ,
-				30
-			},
-			{
-				"user_memory",
-				"enemy_memory_cultist_berzerker_alerted_idle",
-				OP.TIMEDIFF,
-				OP.GT,
-				2
-			},
-			{
-				"faction_memory",
-				"",
-				OP.TIMEDIFF,
-				OP.GT,
-				0
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"enemy_memory_cultist_berzerker_alerted_idle",
-				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"",
-				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
 		name = "cultist_berzerker_alerted_idle_close",
 		category = "enemy_vo_prio_1",
 		wwise_route = 28,
@@ -1091,7 +1032,7 @@ return function ()
 	define_rule({
 		name = "cultist_grenadier_skulking",
 		category = "enemy_vo_prio_0",
-		wwise_route = 13,
+		wwise_route = 25,
 		response = "cultist_grenadier_skulking",
 		database = "enemy_vo",
 		criterias = {
@@ -1118,14 +1059,14 @@ return function ()
 				"enemy_memory_cultist_grenadier_skulking",
 				OP.TIMEDIFF,
 				OP.GT,
-				10
+				20
 			},
 			{
 				"faction_memory",
 				"faction_enemy_memory_cultist_grenadier_skulking",
 				OP.TIMEDIFF,
 				OP.GT,
-				20
+				10
 			}
 		},
 		on_done = {
@@ -1144,7 +1085,7 @@ return function ()
 	define_rule({
 		name = "cultist_grenadier_spawned",
 		category = "enemy_vo_prio_0",
-		wwise_route = 13,
+		wwise_route = 25,
 		response = "cultist_grenadier_spawned",
 		database = "enemy_vo",
 		criterias = {
@@ -1852,7 +1793,7 @@ return function ()
 				"cultist_berzerker_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				2
+				1
 			}
 		},
 		on_done = {
@@ -2258,14 +2199,14 @@ return function ()
 				"enemy_memory_renegade_grenadier_skulking",
 				OP.TIMEDIFF,
 				OP.GT,
-				20
+				15
 			},
 			{
 				"faction_memory",
 				"faction_memory_renegade_grenadier_skulking",
 				OP.TIMEDIFF,
 				OP.GT,
-				2
+				10
 			}
 		},
 		on_done = {
@@ -2311,7 +2252,7 @@ return function ()
 				"traitor_berzerker_assault",
 				OP.TIMEDIFF,
 				OP.GT,
-				2
+				1
 			}
 		},
 		on_done = {

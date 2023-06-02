@@ -54,4 +54,5 @@ DialogueLookup[DialogueLookup_n + 53] = "combat_pause_quirk_speed_a"
 DialogueLookup[DialogueLookup_n + 54] = "combat_pause_quirk_speed_b"
 DialogueLookup[DialogueLookup_n + 55] = "combat_pause_quirk_trial_a"
 DialogueLookup[DialogueLookup_n + 56] = "combat_pause_quirk_trial_b"
-DialogueLookup_n = DialogueLookup_n + 56
+DialogueLookup[DialogueLookup_n + 57] = "flamer_kill_spree_self_a"
+DialogueLookup_n = DialogueLookup_n + 57

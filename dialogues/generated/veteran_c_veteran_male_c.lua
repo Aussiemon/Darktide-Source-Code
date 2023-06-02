@@ -374,6 +374,25 @@ local veteran_c_veteran_male_c = {
 			[2.0] = 3.475396
 		},
 		randomize_indexes = {}
+	},
+	plasma_vent_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_veteran_male_c__plasma_vent_b_01",
+			"loc_veteran_male_c__plasma_vent_b_02",
+			"loc_veteran_male_c__plasma_vent_b_03",
+			"loc_veteran_male_c__plasma_vent_b_04",
+			"loc_veteran_male_c__plasma_vent_b_05"
+		},
+		sound_events_duration = {
+			2.089073,
+			1.495823,
+			0.872146,
+			1.219469,
+			1.358917
+		},
+		randomize_indexes = {}
 	}
 }
 

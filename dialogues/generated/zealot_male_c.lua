@@ -2940,6 +2940,93 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "bonding_conversation_round_three_deaf_b",
+		wwise_route = 0,
+		response = "bonding_conversation_round_three_deaf_b",
+		database = "zealot_male_c",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_ogryn_a__bonding_conversation_round_three_deaf_a_01"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_male_c"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_round_three_deaf_c",
+		wwise_route = 0,
+		response = "bonding_conversation_round_three_deaf_c",
+		database = "zealot_male_c",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_round_three_deaf_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"ogryn_a"
+				}
+			},
+			{
+				"user_memory",
+				"seen_barrel_exploded_a",
+				OP.TIMEDIFF,
+				OP.LT,
+				10
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
 		name = "bonding_conversation_round_three_deeds_a",
 		category = "conversations_prio_1",
 		wwise_route = 0,

@@ -21,17 +21,6 @@ local ogryn_a_zealot_male_c = {
 		},
 		randomize_indexes = {}
 	},
-	bonding_conversation_round_three_deaf_b = {
-		randomize_indexes_n = 0,
-		sound_events_n = 1,
-		sound_events = {
-			[1.0] = "loc_zealot_male_c__bonding_conversation_round_three_deaf_b_01"
-		},
-		sound_events_duration = {
-			[1.0] = 5.027875
-		},
-		randomize_indexes = {}
-	},
 	bonding_conversation_round_three_musk_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

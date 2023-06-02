@@ -32,6 +32,23 @@ local event_vo_demolition_contract_vendor_a = {
 			3.127469
 		},
 		randomize_indexes = {}
+	},
+	event_demolition_more_corruptors = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_contract_vendor_a__event_demolition_more_corruptors_a_01",
+			"loc_contract_vendor_a__event_demolition_more_corruptors_a_02",
+			"loc_contract_vendor_a__event_demolition_more_corruptors_a_03",
+			"loc_contract_vendor_a__event_demolition_more_corruptors_a_04"
+		},
+		sound_events_duration = {
+			3.922854,
+			3.015135,
+			4.126219,
+			3.226271
+		},
+		randomize_indexes = {}
 	}
 }
 

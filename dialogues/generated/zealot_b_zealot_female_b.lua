@@ -497,6 +497,25 @@ local zealot_b_zealot_female_b = {
 			[2.0] = 2.888833
 		},
 		randomize_indexes = {}
+	},
+	flamer_kill_spree_self_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_zealot_female_b__flamer_kill_spree_self_a_01",
+			"loc_zealot_female_b__flamer_kill_spree_self_a_02",
+			"loc_zealot_female_b__flamer_kill_spree_self_a_03",
+			"loc_zealot_female_b__flamer_kill_spree_self_a_04",
+			"loc_zealot_female_b__flamer_kill_spree_self_a_05"
+		},
+		sound_events_duration = {
+			3.314625,
+			2.407396,
+			2.039688,
+			2.305833,
+			3.153396
+		},
+		randomize_indexes = {}
 	}
 }
 

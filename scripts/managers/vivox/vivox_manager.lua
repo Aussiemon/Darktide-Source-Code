@@ -662,6 +662,12 @@ VivoxManager._handle_response_error = function (self, message)
 
 	if message.response_type_string == "resp_session_set_participant_mute_for_me" and message.response_status_code == 20000 then
 		filter_exception = true
+	elseif message.response_type_string == "resp_sessiongroup_set_tx_no_session" and message.response_status_code == 1001 then
+		if self._tx_session_state then
+			self._tx_session_state.no_tx_sessiongroup_handles = {}
+		end
+
+		filter_exception = true
 	elseif message.response_status_code == 1001 then
 		filter_exception = true
 	end

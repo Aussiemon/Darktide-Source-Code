@@ -560,11 +560,11 @@ CosmeticsInspectView._stop_previewing = function (self)
 
 	self:_set_preview_widgets_visibility(visible)
 
-	if self._spawned_prop_item_slot then
+	if self._context.prop_item then
+		local item_slot = self._context.prop_item.slots[1]
 		local presentation_profile = self._presentation_profile
 		local presentation_loadout = presentation_profile.loadout
-		presentation_loadout[self._spawned_prop_item_slot] = nil
-		self._spawned_prop_item_slot = nil
+		presentation_loadout[item_slot] = nil
 	end
 end
 
@@ -744,9 +744,7 @@ CosmeticsInspectView._start_preview_item = function (self)
 			return
 		end
 
-		local slots = item.slots or {}
 		local item_name = item.name
-		local gear_id = item.gear_id or item_name
 		local selected_slot = self._selected_slot
 		local selected_slot_name = selected_slot and selected_slot.name
 		local presentation_profile = self._presentation_profile
@@ -759,37 +757,47 @@ CosmeticsInspectView._start_preview_item = function (self)
 		local animation_slot = ANIMATION_SLOTS_MAP[selected_slot_name]
 
 		if animation_slot then
-			local item_state_machine = item.state_machine
+			local context = self._context
+			local state_machine = item.state_machine
 			local item_animation_event = item.animation_event
-			local item_face_animation_event = self._previewed_with_gear and item.face_animation_event or nil
+			local item_face_animation_event = item.face_animation_event
 			local animation_event_name_suffix = self._animation_event_name_suffix
+			self._disable_zoom = context.disable_zoom or true
+			context.state_machine = context.state_machine or item.state_machine
+			context.animation_event = context.animation_event or item_animation_event
+			context.face_animation_event = self._previewed_with_gear and (context.face_animation_event or item_face_animation_event) or nil
 			local animation_event = item_animation_event
 
 			if animation_event_name_suffix then
 				animation_event = animation_event .. animation_event_name_suffix
 			end
 
-			self._profile_spawner:assign_state_machine(item_state_machine, animation_event, item_face_animation_event)
+			if self._profile_spawner then
+				self._profile_spawner:assign_state_machine(context.state_machine, context.item_animation_event, context.item_face_animation_event)
+			end
 
 			local animation_event_variable_data = self._animation_event_variable_data
 
-			if animation_event_variable_data then
+			if animation_event_variable_data and self._profile_spawner then
 				local index = animation_event_variable_data.index
 				local value = animation_event_variable_data.value
 
-				self._profile_spawner:assign_animation_variable(index, value)
+				if self._profile_spawner then
+					self._profile_spawner:assign_animation_variable(index, value)
+				end
 			end
 
 			local prop_item_key = item.prop_item
 			local prop_item = prop_item_key and prop_item_key ~= "" and MasterItems.get_item(prop_item_key)
+			context.prop_item = context.prop_item or prop_item
 
-			if prop_item then
-				local prop_item_slot = prop_item.slots[1]
-				presentation_loadout[prop_item_slot] = prop_item
+			if context.prop_item then
+				local prop_item_slot = context.prop_item.slots[1]
+				presentation_loadout[prop_item_slot] = context.prop_item
 
-				self._profile_spawner:wield_slot(prop_item_slot)
-
-				self._spawned_prop_item_slot = prop_item_slot
+				if self._profile_spawner then
+					self._profile_spawner:wield_slot(prop_item_slot)
+				end
 			end
 		end
 
@@ -1052,10 +1060,14 @@ CosmeticsInspectView.update = function (self, dt, t, input_service)
 
 		self:_trigger_zoom_logic(true, self._camera_focus_slot_name or selected_slot_name)
 
-		local wield_slot = context.wield_slot
+		local wield_slot = context.prop_item and context.prop_item.slots and context.prop_item.slots[1] or context.wield_slot
 
 		if wield_slot then
 			self._wielded_slot = wield_slot
+
+			if context.prop_item then
+				profile.loadout[wield_slot] = context.prop_item
+			end
 
 			self._profile_spawner:wield_slot(wield_slot)
 		end
@@ -1067,6 +1079,15 @@ CosmeticsInspectView.update = function (self, dt, t, input_service)
 			local face_animation_event = context.face_animation_event
 
 			self._profile_spawner:assign_state_machine(state_machine, animation_event, face_animation_event)
+		end
+
+		local animation_event_variable_data = self._animation_event_variable_data
+
+		if animation_event_variable_data and self._profile_spawner then
+			local index = animation_event_variable_data.index
+			local value = animation_event_variable_data.value
+
+			self._profile_spawner:assign_animation_variable(index, value)
 		end
 	end
 

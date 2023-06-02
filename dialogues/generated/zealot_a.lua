@@ -1,5 +1,67 @@
 return function ()
 	define_rule({
+		name = "chain_weapon_kill_spree_self_a",
+		category = "player_prio_1",
+		wwise_route = 0,
+		response = "chain_weapon_kill_spree_self_a",
+		database = "zealot_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"kill_spree_self"
+			},
+			{
+				"user_context",
+				"weapon_type",
+				OP.SET_INCLUDES,
+				args = {
+					"chainsword_p1_m1",
+					"chainsword_2h_p1_m1",
+					"chainaxe_p1_m1"
+				}
+			},
+			{
+				"user_context",
+				"number_of_kills",
+				OP.GTEQ,
+				15
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot"
+				}
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.GTEQ,
+				3
+			},
+			{
+				"user_memory",
+				"last_kill_spree",
+				OP.TIMEDIFF,
+				OP.GT,
+				300
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"last_kill_spree",
+				OP.TIMESET
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
+		}
+	})
+	define_rule({
 		name = "combat_pause_limited_zealot_a_01_a",
 		wwise_route = 0,
 		response = "combat_pause_limited_zealot_a_01_a",
@@ -4042,10 +4104,10 @@ return function ()
 	})
 	define_rule({
 		name = "combat_pause_quirk_zealot_a_wounded_b",
-		category = "conversations_prio_1",
 		wwise_route = 0,
 		response = "combat_pause_quirk_zealot_a_wounded_b",
 		database = "zealot_a",
+		category = "conversations_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -4059,6 +4121,38 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"combat_pause_quirk_zealot_a_wounded_a"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "combat_pause_quirk_zealot_a_wounded_c",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "combat_pause_quirk_zealot_a_wounded_c",
+		database = "zealot_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"combat_pause_quirk_zealot_a_wounded_b"
 				}
 			}
 		},

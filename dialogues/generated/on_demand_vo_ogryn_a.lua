@@ -233,6 +233,35 @@ local on_demand_vo_ogryn_a = {
 		},
 		randomize_indexes = {}
 	},
+	com_wheel_vo_thank_you_delayed = {
+		randomize_indexes_n = 0,
+		sound_events_n = 6,
+		sound_events = {
+			"loc_ogryn_a__com_wheel_vo_thank_you_01",
+			"loc_ogryn_a__com_wheel_vo_thank_you_02",
+			"loc_ogryn_a__com_wheel_vo_thank_you_03",
+			"loc_ogryn_a__com_wheel_vo_thank_you_04",
+			"loc_ogryn_a__com_wheel_vo_thank_you_05",
+			"loc_ogryn_a__com_wheel_vo_thank_you_06"
+		},
+		sound_events_duration = {
+			0.917896,
+			1.142052,
+			0.962938,
+			1.407594,
+			1.345896,
+			1.721969
+		},
+		sound_event_weights = {
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667,
+			0.1666667
+		},
+		randomize_indexes = {}
+	},
 	com_wheel_vo_yes = {
 		randomize_indexes_n = 0,
 		sound_events_n = 6,
@@ -432,6 +461,23 @@ local on_demand_vo_ogryn_a = {
 			1.599854,
 			1.162396,
 			1.416969
+		},
+		randomize_indexes = {}
+	},
+	smart_tag_vo_enemy_chaos_spawn = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_ogryn_a__smart_tag_vo_enemy_chaos_spawn_b_01",
+			"loc_ogryn_a__smart_tag_vo_enemy_chaos_spawn_b_02",
+			"loc_ogryn_a__smart_tag_vo_enemy_chaos_spawn_b_03",
+			"loc_ogryn_a__smart_tag_vo_enemy_chaos_spawn_b_04"
+		},
+		sound_events_duration = {
+			1.215292,
+			1.187688,
+			1.217354,
+			1.329469
 		},
 		randomize_indexes = {}
 	},

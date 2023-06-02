@@ -46,4 +46,5 @@ DialogueLookup[DialogueLookup_n + 45] = "combat_pause_quirk_pray_with_me_a"
 DialogueLookup[DialogueLookup_n + 46] = "combat_pause_quirk_pray_with_me_b"
 DialogueLookup[DialogueLookup_n + 47] = "combat_pause_quirk_your_sins_a"
 DialogueLookup[DialogueLookup_n + 48] = "combat_pause_quirk_your_sins_b"
-DialogueLookup_n = DialogueLookup_n + 48
+DialogueLookup[DialogueLookup_n + 49] = "thunder_hammer_kill_spree_self_a"
+DialogueLookup_n = DialogueLookup_n + 49

@@ -776,6 +776,25 @@ local ogryn_b_ogryn_b = {
 			[2.0] = 3.425104
 		},
 		randomize_indexes = {}
+	},
+	seen_teammate_heal_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_ogryn_b__seen_teammate_heal_a_01",
+			"loc_ogryn_b__seen_teammate_heal_a_02",
+			"loc_ogryn_b__seen_teammate_heal_a_03",
+			"loc_ogryn_b__seen_teammate_heal_a_04",
+			"loc_ogryn_b__seen_teammate_heal_a_05"
+		},
+		sound_events_duration = {
+			3.115229,
+			3.214802,
+			3.36749,
+			1.711781,
+			2.723813
+		},
+		randomize_indexes = {}
 	}
 }
 

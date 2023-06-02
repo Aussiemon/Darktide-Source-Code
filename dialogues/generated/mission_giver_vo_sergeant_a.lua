@@ -195,13 +195,6 @@ local mission_giver_vo_sergeant_a = {
 			1.943417,
 			1.834792
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	info_event_one_down = {
@@ -478,15 +471,13 @@ local mission_giver_vo_sergeant_a = {
 	},
 	mission_archives_brief_b = {
 		randomize_indexes_n = 0,
-		sound_events_n = 4,
+		sound_events_n = 3,
 		sound_events = {
-			"loc_sergeant_a__mission_archives_brief_b_01",
 			"loc_sergeant_a__mission_archives_brief_b_02",
 			"loc_sergeant_a__mission_archives_brief_b_03",
 			"loc_sergeant_a__mission_archives_brief_b_04"
 		},
 		sound_events_duration = {
-			3.45678,
 			5.64425,
 			5.451583,
 			5.755583

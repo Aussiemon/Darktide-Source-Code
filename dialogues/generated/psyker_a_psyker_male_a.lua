@@ -534,6 +534,25 @@ local psyker_a_psyker_male_a = {
 			[1.0] = 6.545854
 		},
 		randomize_indexes = {}
+	},
+	repeated_psykinetic_head_pop_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_psyker_male_a__repeated_psykinetic_head_pop_a_01",
+			"loc_psyker_male_a__repeated_psykinetic_head_pop_a_02",
+			"loc_psyker_male_a__repeated_psykinetic_head_pop_a_03",
+			"loc_psyker_male_a__repeated_psykinetic_head_pop_a_04",
+			"loc_psyker_male_a__repeated_psykinetic_head_pop_a_05"
+		},
+		sound_events_duration = {
+			3.491125,
+			2.750646,
+			3.851354,
+			1.617938,
+			4.884229
+		},
+		randomize_indexes = {}
 	}
 }
 

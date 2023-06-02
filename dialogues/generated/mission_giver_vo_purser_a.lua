@@ -31,12 +31,6 @@ local mission_giver_vo_purser_a = {
 			1.572875,
 			3.426438
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	info_event_one_down = {
@@ -53,6 +47,23 @@ local mission_giver_vo_purser_a = {
 			2.123313,
 			1.875927,
 			2.027167
+		},
+		randomize_indexes = {}
+	},
+	info_extraction = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_purser_a__info_extraction_a_01",
+			"loc_purser_a__info_extraction_a_02",
+			"loc_purser_a__info_extraction_a_03",
+			"loc_purser_a__info_extraction_a_04"
+		},
+		sound_events_duration = {
+			3.45678,
+			3.45678,
+			3.45678,
+			3.45678
 		},
 		randomize_indexes = {}
 	},

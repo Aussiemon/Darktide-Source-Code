@@ -400,6 +400,46 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "com_wheel_vo_thank_you_delayed",
+		category = "player_on_demand_vo",
+		wwise_route = 0,
+		response = "com_wheel_vo_thank_you_delayed",
+		database = "on_demand_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"on_demand_com_wheel"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"com_thank_you_delayed"
+			},
+			{
+				"user_memory",
+				"time_since_com_wheel_vo_over_here",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_com_wheel_vo_over_here",
+				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.7
+			}
+		}
+	})
+	define_rule({
 		name = "com_wheel_vo_yes",
 		category = "player_on_demand_vo",
 		wwise_route = 0,
@@ -850,6 +890,51 @@ return function ()
 			{
 				"faction_memory",
 				"enemy_chaos_poxwalker_bomber",
+				OP.TIMESET
+			}
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.15
+			}
+		}
+	})
+	define_rule({
+		name = "smart_tag_vo_enemy_chaos_spawn",
+		category = "player_on_demand_vo",
+		wwise_route = 0,
+		response = "smart_tag_vo_enemy_chaos_spawn",
+		database = "on_demand_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"on_demand_vo_tag_enemy"
+			},
+			{
+				"query_context",
+				"enemy_tag",
+				OP.EQ,
+				"chaos_spawn"
+			},
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMEDIFF,
+				OP.GT,
+				5
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"time_since_smart_tag",
+				OP.TIMESET
+			},
+			{
+				"faction_memory",
+				"enemy_renegade_sniper",
 				OP.TIMESET
 			}
 		},

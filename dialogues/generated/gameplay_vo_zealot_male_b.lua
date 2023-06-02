@@ -104,6 +104,35 @@ local gameplay_vo_zealot_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	calling_for_help = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_zealot_male_b__calling_for_help_01",
+			"loc_zealot_male_b__calling_for_help_02",
+			"loc_zealot_male_b__calling_for_help_03",
+			"loc_zealot_male_b__calling_for_help_04",
+			"loc_zealot_male_b__calling_for_help_05",
+			"loc_zealot_male_b__calling_for_help_06",
+			"loc_zealot_male_b__calling_for_help_07",
+			"loc_zealot_male_b__calling_for_help_08",
+			"loc_zealot_male_b__calling_for_help_09",
+			"loc_zealot_male_b__calling_for_help_10"
+		},
+		sound_events_duration = {
+			0.701438,
+			0.694271,
+			1.182396,
+			1.082875,
+			1.745042,
+			1.660021,
+			2.760125,
+			3.101479,
+			1.290896,
+			1.647979
+		},
+		randomize_indexes = {}
+	},
 	chaos_daemonhost_aggroed = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -1864,6 +1893,35 @@ local gameplay_vo_zealot_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	heard_enemy_chaos_spawn = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_zealot_male_b__heard_enemy_chaos_spawn_01",
+			"loc_zealot_male_b__heard_enemy_chaos_spawn_02",
+			"loc_zealot_male_b__heard_enemy_chaos_spawn_03",
+			"loc_zealot_male_b__heard_enemy_chaos_spawn_04",
+			"loc_zealot_male_b__heard_enemy_chaos_spawn_05",
+			"loc_zealot_male_b__heard_enemy_chaos_spawn_06",
+			"loc_zealot_male_b__heard_enemy_chaos_spawn_07",
+			"loc_zealot_male_b__heard_enemy_chaos_spawn_08",
+			"loc_zealot_male_b__heard_enemy_chaos_spawn_09",
+			"loc_zealot_male_b__heard_enemy_chaos_spawn_10"
+		},
+		sound_events_duration = {
+			1.036042,
+			1.562604,
+			2.417792,
+			2.529271,
+			1.253125,
+			1.564708,
+			1.215146,
+			1.305917,
+			2.588354,
+			1.254396
+		},
+		randomize_indexes = {}
+	},
 	heard_enemy_daemonhost = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -2639,6 +2697,35 @@ local gameplay_vo_zealot_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	response_for_calling_for_help = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_zealot_male_b__response_for_calling_for_help_01",
+			"loc_zealot_male_b__response_for_calling_for_help_02",
+			"loc_zealot_male_b__response_for_calling_for_help_03",
+			"loc_zealot_male_b__response_for_calling_for_help_04",
+			"loc_zealot_male_b__response_for_calling_for_help_05",
+			"loc_zealot_male_b__response_for_calling_for_help_06",
+			"loc_zealot_male_b__response_for_calling_for_help_07",
+			"loc_zealot_male_b__response_for_calling_for_help_08",
+			"loc_zealot_male_b__response_for_calling_for_help_09",
+			"loc_zealot_male_b__response_for_calling_for_help_10"
+		},
+		sound_events_duration = {
+			1.098771,
+			1.042021,
+			1.286521,
+			1.100292,
+			1.487833,
+			1.804271,
+			1.358833,
+			1.207688,
+			0.958646,
+			1.282333
+		},
+		randomize_indexes = {}
+	},
 	response_for_cover_me = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,
@@ -2901,6 +2988,25 @@ local gameplay_vo_zealot_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	response_for_ogryn_critical_health = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_zealot_male_b__response_for_ogryn_critical_health_01",
+			"loc_zealot_male_b__response_for_ogryn_critical_health_02",
+			"loc_zealot_male_b__response_for_ogryn_critical_health_03",
+			"loc_zealot_male_b__response_for_ogryn_critical_health_04",
+			"loc_zealot_male_b__response_for_ogryn_critical_health_05"
+		},
+		sound_events_duration = {
+			1.571896,
+			1.974938,
+			3.084125,
+			1.757688,
+			1.704833
+		},
+		randomize_indexes = {}
+	},
 	response_for_ogryn_disabled_by_chaos_hound = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -2917,6 +3023,35 @@ local gameplay_vo_zealot_male_b = {
 			1.706917,
 			1.881188,
 			2.37025
+		},
+		randomize_indexes = {}
+	},
+	response_for_ogryn_disabled_by_enemy = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_zealot_male_b__response_for_ogryn_disabled_by_enemy_01",
+			"loc_zealot_male_b__response_for_ogryn_disabled_by_enemy_02",
+			"loc_zealot_male_b__response_for_ogryn_disabled_by_enemy_03",
+			"loc_zealot_male_b__response_for_ogryn_disabled_by_enemy_04",
+			"loc_zealot_male_b__response_for_ogryn_disabled_by_enemy_05",
+			"loc_zealot_male_b__response_for_ogryn_disabled_by_enemy_06",
+			"loc_zealot_male_b__response_for_ogryn_disabled_by_enemy_07",
+			"loc_zealot_male_b__response_for_ogryn_disabled_by_enemy_08",
+			"loc_zealot_male_b__response_for_ogryn_disabled_by_enemy_09",
+			"loc_zealot_male_b__response_for_ogryn_disabled_by_enemy_10"
+		},
+		sound_events_duration = {
+			1.576208,
+			1.26875,
+			1.4605,
+			1.479271,
+			1.182271,
+			1.609542,
+			1.084563,
+			2.37025,
+			1.394688,
+			1.607083
 		},
 		randomize_indexes = {}
 	},
@@ -2977,25 +3112,6 @@ local gameplay_vo_zealot_male_b = {
 		},
 		randomize_indexes = {}
 	},
-	response_for_ogryn_seen_killstreak_zealot = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_zealot_male_b__response_for_ogryn_seen_killstreak_zealot_01",
-			"loc_zealot_male_b__response_for_ogryn_seen_killstreak_zealot_02",
-			"loc_zealot_male_b__response_for_ogryn_seen_killstreak_zealot_03",
-			"loc_zealot_male_b__response_for_ogryn_seen_killstreak_zealot_04",
-			"loc_zealot_male_b__response_for_ogryn_seen_killstreak_zealot_05"
-		},
-		sound_events_duration = {
-			1.652208,
-			1.487625,
-			1.473396,
-			2.402417,
-			2.511375
-		},
-		randomize_indexes = {}
-	},
 	response_for_ogryn_start_revive_zealot = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -3012,13 +3128,6 @@ local gameplay_vo_zealot_male_b = {
 			2.313625,
 			2.061438,
 			1.193563
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -3157,6 +3266,25 @@ local gameplay_vo_zealot_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	response_for_psyker_critical_health = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_zealot_male_b__response_for_psyker_critical_health_01",
+			"loc_zealot_male_b__response_for_psyker_critical_health_02",
+			"loc_zealot_male_b__response_for_psyker_critical_health_03",
+			"loc_zealot_male_b__response_for_psyker_critical_health_04",
+			"loc_zealot_male_b__response_for_psyker_critical_health_05"
+		},
+		sound_events_duration = {
+			1.482625,
+			2.185271,
+			1.363604,
+			2.347625,
+			1.473854
+		},
+		randomize_indexes = {}
+	},
 	response_for_psyker_disabled_by_chaos_hound = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -3173,6 +3301,35 @@ local gameplay_vo_zealot_male_b = {
 			1.69775,
 			1.3175,
 			2.015125
+		},
+		randomize_indexes = {}
+	},
+	response_for_psyker_disabled_by_enemy = {
+		randomize_indexes_n = 0,
+		sound_events_n = 10,
+		sound_events = {
+			"loc_zealot_male_b__response_for_psyker_disabled_by_enemy_01",
+			"loc_zealot_male_b__response_for_psyker_disabled_by_enemy_02",
+			"loc_zealot_male_b__response_for_psyker_disabled_by_enemy_03",
+			"loc_zealot_male_b__response_for_psyker_disabled_by_enemy_04",
+			"loc_zealot_male_b__response_for_psyker_disabled_by_enemy_05",
+			"loc_zealot_male_b__response_for_psyker_disabled_by_enemy_06",
+			"loc_zealot_male_b__response_for_psyker_disabled_by_enemy_07",
+			"loc_zealot_male_b__response_for_psyker_disabled_by_enemy_08",
+			"loc_zealot_male_b__response_for_psyker_disabled_by_enemy_09",
+			"loc_zealot_male_b__response_for_psyker_disabled_by_enemy_10"
+		},
+		sound_events_duration = {
+			1.634208,
+			1.586708,
+			1.240417,
+			1.719938,
+			1.217438,
+			1.662125,
+			1.123646,
+			2.595958,
+			1.760104,
+			1.951375
 		},
 		randomize_indexes = {}
 	},
@@ -3260,13 +3417,6 @@ local gameplay_vo_zealot_male_b = {
 			1.572792,
 			2.404188
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	response_for_veteran_cover_me = {
@@ -3292,6 +3442,25 @@ local gameplay_vo_zealot_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	response_for_veteran_critical_health = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_zealot_male_b__response_for_veteran_critical_health_01",
+			"loc_zealot_male_b__response_for_veteran_critical_health_02",
+			"loc_zealot_male_b__response_for_veteran_critical_health_03",
+			"loc_zealot_male_b__response_for_veteran_critical_health_04",
+			"loc_zealot_male_b__response_for_veteran_critical_health_05"
+		},
+		sound_events_duration = {
+			2.403125,
+			2.251125,
+			2.875438,
+			1.661188,
+			2.307188
+		},
+		randomize_indexes = {}
+	},
 	response_for_veteran_disabled_by_chaos_hound = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -3308,6 +3477,33 @@ local gameplay_vo_zealot_male_b = {
 			1.465938,
 			0.924229,
 			1.113396
+		},
+		randomize_indexes = {}
+	},
+	response_for_veteran_disabled_by_enemy = {
+		randomize_indexes_n = 0,
+		sound_events_n = 9,
+		sound_events = {
+			"loc_zealot_male_b__response_for_veteran_disabled_by_enemy_01",
+			"loc_zealot_male_b__response_for_veteran_disabled_by_enemy_02",
+			"loc_zealot_male_b__response_for_veteran_disabled_by_enemy_03",
+			"loc_zealot_male_b__response_for_veteran_disabled_by_enemy_04",
+			"loc_zealot_male_b__response_for_veteran_disabled_by_enemy_05",
+			"loc_zealot_male_b__response_for_veteran_disabled_by_enemy_07",
+			"loc_zealot_male_b__response_for_veteran_disabled_by_enemy_08",
+			"loc_zealot_male_b__response_for_veteran_disabled_by_enemy_09",
+			"loc_zealot_male_b__response_for_veteran_disabled_by_enemy_10"
+		},
+		sound_events_duration = {
+			1.880083,
+			1.789271,
+			1.246229,
+			0.992208,
+			1.416792,
+			2.636125,
+			2.974271,
+			1.576,
+			1.865875
 		},
 		randomize_indexes = {}
 	},
@@ -3378,25 +3574,6 @@ local gameplay_vo_zealot_male_b = {
 		},
 		randomize_indexes = {}
 	},
-	response_for_veteran_seen_killstreak_zealot = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_zealot_male_b__response_for_veteran_seen_killstreak_zealot_01",
-			"loc_zealot_male_b__response_for_veteran_seen_killstreak_zealot_02",
-			"loc_zealot_male_b__response_for_veteran_seen_killstreak_zealot_03",
-			"loc_zealot_male_b__response_for_veteran_seen_killstreak_zealot_04",
-			"loc_zealot_male_b__response_for_veteran_seen_killstreak_zealot_05"
-		},
-		sound_events_duration = {
-			3.828438,
-			1.285271,
-			2.860229,
-			3.046229,
-			1.741563
-		},
-		randomize_indexes = {}
-	},
 	response_for_veteran_start_revive_zealot = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -3414,13 +3591,6 @@ local gameplay_vo_zealot_male_b = {
 			1.161479,
 			2.742188
 		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
 		randomize_indexes = {}
 	},
 	response_for_zealot_cover_me = {
@@ -3435,6 +3605,25 @@ local gameplay_vo_zealot_male_b = {
 			1.770188,
 			1.291958,
 			1.589563
+		},
+		randomize_indexes = {}
+	},
+	response_for_zealot_critical_health = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_zealot_male_b__respons_for_zealot_critical_health_01",
+			"loc_zealot_male_b__respons_for_zealot_critical_health_02",
+			"loc_zealot_male_b__respons_for_zealot_critical_health_03",
+			"loc_zealot_male_b__respons_for_zealot_critical_health_04",
+			"loc_zealot_male_b__respons_for_zealot_critical_health_05"
+		},
+		sound_events_duration = {
+			1.787563,
+			2.830167,
+			2.346896,
+			1.926271,
+			1.843854
 		},
 		randomize_indexes = {}
 	},
@@ -3454,6 +3643,33 @@ local gameplay_vo_zealot_male_b = {
 			1.114854,
 			3.644979,
 			1.708583
+		},
+		randomize_indexes = {}
+	},
+	response_for_zealot_disabled_by_enemy = {
+		randomize_indexes_n = 0,
+		sound_events_n = 9,
+		sound_events = {
+			"loc_zealot_male_b__response_for_zealot_disabled_by_enemy_01",
+			"loc_zealot_male_b__response_for_zealot_disabled_by_enemy_02",
+			"loc_zealot_male_b__response_for_zealot_disabled_by_enemy_03",
+			"loc_zealot_male_b__response_for_zealot_disabled_by_enemy_04",
+			"loc_zealot_male_b__response_for_zealot_disabled_by_enemy_05",
+			"loc_zealot_male_b__response_for_zealot_disabled_by_enemy_07",
+			"loc_zealot_male_b__response_for_zealot_disabled_by_enemy_08",
+			"loc_zealot_male_b__response_for_zealot_disabled_by_enemy_09",
+			"loc_zealot_male_b__response_for_zealot_disabled_by_enemy_10"
+		},
+		sound_events_duration = {
+			1.658813,
+			1.723813,
+			1.113375,
+			1.821771,
+			1.033417,
+			2.633854,
+			2.681667,
+			1.554375,
+			2.014708
 		},
 		randomize_indexes = {}
 	},
@@ -3524,25 +3740,6 @@ local gameplay_vo_zealot_male_b = {
 		},
 		randomize_indexes = {}
 	},
-	response_for_zealot_seen_killstreak_zealot = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_zealot_male_b__response_for_zealot_seen_killstreak_zealot_01",
-			"loc_zealot_male_b__response_for_zealot_seen_killstreak_zealot_02",
-			"loc_zealot_male_b__response_for_zealot_seen_killstreak_zealot_03",
-			"loc_zealot_male_b__response_for_zealot_seen_killstreak_zealot_04",
-			"loc_zealot_male_b__response_for_zealot_seen_killstreak_zealot_05"
-		},
-		sound_events_duration = {
-			2.665521,
-			1.833438,
-			2.136,
-			3.132604,
-			2.069479
-		},
-		randomize_indexes = {}
-	},
 	response_for_zealot_start_revive_zealot = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -3559,13 +3756,6 @@ local gameplay_vo_zealot_male_b = {
 			2.41225,
 			3.571146,
 			2.547958
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
 		},
 		randomize_indexes = {}
 	},
@@ -4173,6 +4363,25 @@ local gameplay_vo_zealot_male_b = {
 			2.088667,
 			1.644688,
 			1.570333
+		},
+		randomize_indexes = {}
+	},
+	seen_kill_streak_prayer_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_zealot_male_b__seen_kill_streak_prayer_c_01",
+			"loc_zealot_male_b__seen_kill_streak_prayer_c_02",
+			"loc_zealot_male_b__seen_kill_streak_prayer_c_03",
+			"loc_zealot_male_b__seen_kill_streak_prayer_c_04",
+			"loc_zealot_male_b__seen_kill_streak_prayer_c_05"
+		},
+		sound_events_duration = {
+			4.616375,
+			5.850083,
+			4.858354,
+			5.92375,
+			5.564354
 		},
 		randomize_indexes = {}
 	},

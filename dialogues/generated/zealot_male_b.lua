@@ -727,7 +727,7 @@ return function ()
 				"time_since_zealot_seen_killstreak_psyker",
 				OP.TIMEDIFF,
 				OP.LT,
-				45
+				90
 			}
 		},
 		on_done = {
