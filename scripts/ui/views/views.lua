@@ -886,7 +886,6 @@ end
 
 _declare_view("store_view", require("scripts/ui/views/store_view/store_view_declaration_settings"))
 _declare_view("store_item_detail_view", require("scripts/ui/views/store_item_detail_view/store_item_detail_view_declaration_settings"))
-_declare_view("account_profile_win_tracks_view", require("scripts/ui/views/account_profile_win_tracks_view/account_profile_win_tracks_declaration_settings"))
 _declare_view("credits_goods_vendor_view", require("scripts/ui/views/credits_goods_vendor_view/credits_goods_vendor_view_declaration_settings"))
 _declare_view("crafting_view", require("scripts/ui/views/crafting_view/crafting_view_declaration_settings"))
 _declare_view("crafting_modify_view", require("scripts/ui/views/crafting_modify_view/crafting_modify_view_declaration_settings"))

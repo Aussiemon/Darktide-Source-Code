@@ -285,7 +285,7 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		if has_rarity then
 			local sound_event_name = string.format("notification_item_received_rarity_%d", visual_item.rarity)
 			enter_sound_event = UISoundEvents[sound_event_name] or enter_sound_event
-			rarity_color = ItemUtils.rarity_color(visual_item)
+			rarity_color = table.clone(ItemUtils.rarity_color(visual_item))
 			texts = {
 				{
 					display_name = ItemUtils.display_name(visual_item),

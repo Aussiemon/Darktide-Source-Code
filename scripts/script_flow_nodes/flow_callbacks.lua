@@ -2167,16 +2167,17 @@ FlowCallbacks.projectile_locomotion_engine_collision = function (params)
 		local collision_position = params.collision_position
 		local collision_actor = params.collision_actor
 		local collision_normal = params.collision_normal
+		local collision_unit = Actor.unit(collision_actor)
 		local projectile_damage_extension = ScriptUnit.has_extension(unit, "projectile_damage_system")
 
 		if projectile_damage_extension then
-			projectile_damage_extension:on_impact(collision_position, collision_actor, collision_direction, collision_normal, speed)
+			projectile_damage_extension:on_impact(collision_position, collision_unit, collision_actor, collision_direction, collision_normal, speed)
 		end
 
 		local fx_extension = ScriptUnit.has_extension(unit, "fx_system")
 
 		if fx_extension then
-			fx_extension:on_impact(collision_position, collision_actor, collision_direction, collision_normal, speed)
+			fx_extension:on_impact(collision_position, collision_unit, collision_direction, collision_normal, speed)
 		end
 	end
 end

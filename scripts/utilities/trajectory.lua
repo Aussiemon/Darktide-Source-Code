@@ -148,10 +148,12 @@ Trajectory.check_trajectory_collisions = function (physics_world, from_position,
 		if i > 1 and i < sections and optional_extra_ray_check_up and optional_extra_ray_check_down then
 			local ray_from = segment_pos2 + optional_extra_ray_check_down
 			local ray_to = segment_pos2 + optional_extra_ray_check_up
-			local extra_raycast_result = PhysicsWorld.raycast(physics_world, ray_from, ray_to, length, "closest", "collision_filter", collision_filter)
+			local extra_ray_length = Vector3.distance(ray_from, ray_to)
+			local extra_ray_direction = Vector3.normalize(optional_extra_ray_check_up)
+			local extra_raycast_result, extra_raycast_hit_pos = PhysicsWorld.raycast(physics_world, ray_from, extra_ray_direction, extra_ray_length, "closest", "collision_filter", collision_filter)
 
 			if extra_raycast_result then
-				return false, nil, SEGMENT_LIST
+				return false, extra_raycast_hit_pos, SEGMENT_LIST
 			end
 		end
 

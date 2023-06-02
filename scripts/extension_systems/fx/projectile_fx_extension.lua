@@ -151,7 +151,7 @@ end
 
 local IMPACT_FX_DATA = {}
 
-ProjectileFxExtension.on_impact = function (self, hit_position, hit_actor, hit_direction, hit_normal, current_speed)
+ProjectileFxExtension.on_impact = function (self, hit_position, hit_unit, hit_direction, hit_normal, current_speed)
 	local is_server = self._is_server
 	local effects = self._effects
 	local impact_fx = effects and effects.impact
@@ -163,7 +163,6 @@ ProjectileFxExtension.on_impact = function (self, hit_position, hit_actor, hit_d
 	end
 
 	local impact_damage_type = self._projectile_template.impact_damage_type
-	local hit_unit = Actor.unit(hit_actor)
 
 	if is_server and impact_damage_type and not HEALTH_ALIVE[hit_unit] then
 		local attacker_unit = self._unit

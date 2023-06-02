@@ -376,7 +376,7 @@ function _small_reward_icon_template_init(widget_content, widget_style, reward_i
 	local rarity = reward_item.rarity
 
 	if rarity then
-		small_reward_icon_style.color = ItemUtils.rarity_color(reward_item)
+		small_reward_icon_style.color = table.clone(ItemUtils.rarity_color(reward_item))
 	end
 end
 

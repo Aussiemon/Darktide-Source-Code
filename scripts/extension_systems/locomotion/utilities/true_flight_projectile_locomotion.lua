@@ -152,7 +152,7 @@ local function _check_collisions(physics_world, integration_data, previus_positi
 
 			if integration_data.damage_extension then
 				local current_speed = Vector3.length(integration_data.velocity)
-				local impact_result = integration_data.damage_extension:on_impact(hit.position, hit_actor, hit.hit_direction, hit.hit_normal, current_speed, force_delete)
+				local impact_result = integration_data.damage_extension:on_impact(hit.position, hit_unit, hit_actor, hit.hit_direction, hit.hit_normal, current_speed, force_delete)
 
 				if impact_result == projectile_impact_results.removed then
 					integration_data.integrate = false

@@ -272,11 +272,11 @@ weapon_template.actions = {
 		}
 	},
 	action_charge = {
-		allowed_during_sprint = false,
+		allowed_during_sprint = true,
 		start_input = "charge",
-		sprint_requires_press_to_interrupt = true,
+		sprint_requires_press_to_interrupt = false,
 		kind = "overload_charge_target_finder",
-		sprint_ready_up_time = 0.25,
+		sprint_ready_up_time = 0,
 		min_scale = 0,
 		hold_combo = true,
 		anim_end_event = "attack_cancel",

@@ -128,11 +128,11 @@ ProjectileLocomotion.integrate_position = function (physics_world, integration_d
 						local impact_result = nil
 
 						if damage_extension then
-							impact_result = damage_extension:on_impact(hit_position, hit_actor, hit_direction, hit_normal, current_speed)
+							impact_result = damage_extension:on_impact(hit_position, hit_unit, hit_actor, hit_direction, hit_normal, current_speed)
 						end
 
 						if fx_extension then
-							fx_extension:on_impact(hit_position, hit_actor, hit_direction, hit_normal, current_speed)
+							fx_extension:on_impact(hit_position, hit_unit, hit_direction, hit_normal, current_speed)
 						end
 
 						if impact_result == "removed" then

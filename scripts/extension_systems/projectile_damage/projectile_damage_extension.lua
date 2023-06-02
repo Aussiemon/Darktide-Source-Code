@@ -223,7 +223,7 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 	self._life_time = new_life_time
 end
 
-ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, hit_direction, hit_normal, current_speed, force_delete)
+ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hit_actor, hit_direction, hit_normal, current_speed, force_delete)
 	local owner_unit = self._owner_unit
 	local projectile_unit = self._projectile_unit
 	local projectile_template = self._projectile_template
@@ -247,7 +247,6 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_actor, h
 		local impact_explosion_template = impact_damage_settings.explosion_template
 		local impact_liquid_area_template = impact_damage_settings.liquid_area_template
 		local impact_suppression_settings = impact_damage_settings.suppression_settings
-		local hit_unit = Actor.unit(hit_actor)
 		local hit_units = self._hit_units
 		local have_unit_been_hit = hit_units[hit_unit]
 		local is_not_self = hit_unit ~= owner_unit

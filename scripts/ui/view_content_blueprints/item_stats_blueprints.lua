@@ -1804,13 +1804,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local type_name_style = style.type_name
 				local display_name_text_height = get_style_text_height(display_name, weapon_display_name_style, ui_renderer)
 				type_name_style.offset[2] = type_name_style.offset[2] + display_name_text_height
-				style.background.color = table.clone(ItemUtils.rarity_color(item))
+				local rarity_color = ItemUtils.rarity_color(item)
+				style.background.color = table.clone(rarity_color)
 				style.background.material_values = {
 					direction = 1
 				}
-				local rarity_color = ItemUtils.rarity_color(item)
-				style.display_name.text_color = rarity_color
-				style.type_name.text_color = rarity_color
+				style.display_name.text_color = table.clone(rarity_color)
+				style.type_name.text_color = table.clone(rarity_color)
 				local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 				local displayed_attacks = weapon_template.displayed_attacks
 				local is_ranged_weapon = ItemUtils.is_weapon_template_ranged(item)
@@ -5659,7 +5659,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 					end
 				end
 
-				style.rarity_name.text_color = rarity_color
+				style.rarity_name.text_color = table.clone(rarity_color)
 			end
 		},
 		weapon_stat = {

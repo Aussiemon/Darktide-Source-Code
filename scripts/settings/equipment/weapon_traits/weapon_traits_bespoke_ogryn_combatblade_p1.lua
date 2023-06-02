@@ -167,22 +167,22 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_windup_increases_power = {
 	weapon_trait_bespoke_ogryn_combatblade_p1_windup_increases_power_parent = {
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.05
+				[stat_buffs.melee_power_level_modifier] = 0.05
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.1
+				[stat_buffs.melee_power_level_modifier] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.15
+				[stat_buffs.melee_power_level_modifier] = 0.15
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.2
+				[stat_buffs.melee_power_level_modifier] = 0.2
 			}
 		}
 	}

@@ -696,9 +696,10 @@ local function generate_blueprints_function(grid_size)
 				required_level_background_style.size[1] = required_level_text_width + 40
 			end
 
-			style.sub_display_name.text_color = table.clone(ItemUtils.rarity_color(item))
-			style.background_gradient.color = table.clone(ItemUtils.rarity_color(item))
-			style.rarity_tag.color = table.clone(ItemUtils.rarity_color(item))
+			local rarity_color = ItemUtils.rarity_color(item)
+			style.sub_display_name.text_color = table.clone(rarity_color)
+			style.background_gradient.color = table.clone(rarity_color)
+			style.rarity_tag.color = table.clone(rarity_color)
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local view_instance = parent._parent or parent
