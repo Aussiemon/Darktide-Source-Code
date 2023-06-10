@@ -30,9 +30,9 @@ templates.weapon_trait_bespoke_forcestaff_p1_rend_armor_on_aoe_charge = {
 		[proc_events.on_hit] = 1
 	},
 	target_buff_data = {
+		max_stacks = 31,
 		internal_buff_name = "rending_debuff",
-		num_stacks_on_proc = 1,
-		max_stacks = math.huge
+		num_stacks_on_proc = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	start_func = function (template_data, template_context)

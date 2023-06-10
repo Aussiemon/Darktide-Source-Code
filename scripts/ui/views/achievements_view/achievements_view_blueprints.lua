@@ -363,7 +363,7 @@ local _small_reward_icon_template = {
 	}
 }
 
-function _small_reward_icon_template_init(widget_content, widget_style, reward_item)
+local function _small_reward_icon_template_init(widget_content, widget_style, reward_item)
 	if not reward_item then
 		return
 	end
@@ -382,7 +382,9 @@ end
 
 local function _apply_live_item_icon_cb_func(widget, item_id, grid_index, rows, columns, render_target)
 	local widget_style = widget.style
+	local widget_content = widget.content
 	local icon_style = widget_style[item_id]
+	widget_content[item_id] = "content/ui/materials/icons/items/containers/item_container_landscape"
 	local material_values = icon_style.material_values
 	material_values.use_placeholder_texture = 0
 	material_values.use_render_target = 1
@@ -390,17 +392,56 @@ local function _apply_live_item_icon_cb_func(widget, item_id, grid_index, rows, 
 	material_values.columns = columns
 	material_values.grid_index = grid_index - 1
 	material_values.render_target = render_target
+	widget_content.use_placeholder_texture = material_values.use_placeholder_texture
+end
+
+local function _remove_live_item_icon_cb_func(widget, item_id, ui_renderer)
+	if widget.content.visible then
+		UIWidget.set_visible(widget, ui_renderer, false)
+		UIWidget.set_visible(widget, ui_renderer, true)
+	end
+
+	local widget_style = widget.style
+	local widget_content = widget.content
+	local icon_style = widget_style[item_id]
+	local material_values = icon_style.material_values
+	material_values.use_placeholder_texture = 1
+	material_values.use_render_target = 0
+	material_values.rows = nil
+	material_values.columns = nil
+	material_values.grid_index = nil
+	widget_content.use_placeholder_texture = material_values.use_placeholder_texture
+	material_values.render_target = nil
+	widget_content[item_id] = nil
 end
 
 local function _apply_live_nameplate_icon_cb_func(widget, item_id, item)
 	local widget_style = widget.style
+	local widget_content = widget.content
 	local icon_style = widget_style[item_id]
+	widget_content[item_id] = "content/ui/materials/icons/items/containers/item_container_square"
 	local material_values = icon_style.material_values
-	material_values.texture_icon = item.icon
 	local item_slot = ItemUtils.item_slot(item)
 	local icon_size = item_slot.item_icon_size
+	material_values.texture_icon = item.icon
 	material_values.icon_size = icon_size
 	material_values.use_placeholder_texture = 0
+	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
+end
+
+local function _remove_live_nameplate_icon_cb_func(widget, item_id, ui_renderer)
+	UIWidget.set_visible(widget, ui_renderer, false)
+	UIWidget.set_visible(widget, ui_renderer, true)
+
+	local widget_style = widget.style
+	local widget_content = widget.content
+	local icon_style = widget_style[item_id]
+	local material_values = icon_style.material_values
+	widget_content[item_id] = nil
+	material_values.icon_size = nil
+	material_values.texture_icon = nil
+	material_values.use_placeholder_texture = 1
+	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 end
 
 local function _reward_load_icon_func(parent, widget, config, ui_renderer)
@@ -434,18 +475,21 @@ local function _reward_load_icon_func(parent, widget, config, ui_renderer)
 				state_machine = item_state_machine,
 				animation_event = item_animation_event
 			}
-			local cb = nil
+			local cb, unload_cb = nil
 
 			if item_group == "nameplates" then
 				cb = callback(_apply_live_nameplate_icon_cb_func, widget, reward_item_id)
+				unload_cb = callback(_remove_live_nameplate_icon_cb_func, widget, reward_item_id, ui_renderer)
 			elseif item_group == "weapon_skin" then
 				cb = callback(_apply_live_item_icon_cb_func, widget, reward_item_id)
+				unload_cb = callback(_remove_live_item_icon_cb_func, widget, reward_item_id, ui_renderer)
 				reward_item = ItemUtils.weapon_skin_preview_item(reward_item)
 			else
 				cb = callback(_apply_live_item_icon_cb_func, widget, reward_item_id)
+				unload_cb = callback(_remove_live_item_icon_cb_func, widget, reward_item_id, ui_renderer)
 			end
 
-			icon_load_ids[reward_item_id] = Managers.ui:load_item_icon(reward_item, cb, render_context)
+			icon_load_ids[reward_item_id] = Managers.ui:load_item_icon(reward_item, cb, render_context, nil, nil, unload_cb)
 		end
 	end
 end
@@ -455,18 +499,9 @@ local function _reward_unload_icon_func(parent, widget, element, ui_renderer)
 	local icon_load_ids = content.icon_load_ids
 
 	if icon_load_ids then
-		UIWidget.set_visible(widget, ui_renderer, false)
-		UIWidget.set_visible(widget, ui_renderer, true)
-
-		local widget_style = widget.style
 		local ui_manager = Managers.ui
 
 		for item_id, load_id in pairs(icon_load_ids) do
-			local style = widget_style[item_id]
-			local material_values = style.material_values
-			material_values.texture_icon = nil
-			material_values.use_placeholder_texture = 1
-
 			ui_manager:unload_item_icon(load_id)
 		end
 
@@ -482,16 +517,6 @@ local function _add_reward_pass_template(pass_template, config)
 	end
 
 	table.append(pass_template, _small_reward_icon_template)
-
-	local reward_item_group = config.reward_item_group
-	local icon_material = nil
-
-	if reward_item_group == "nameplates" then
-		icon_material = "content/ui/materials/icons/items/containers/item_container_square"
-	else
-		icon_material = "content/ui/materials/icons/items/containers/item_container_landscape"
-	end
-
 	table.append(pass_template, {
 		{
 			style_id = "reward_icon_frame",
@@ -512,8 +537,9 @@ local function _add_reward_pass_template(pass_template, config)
 			value_id = "reward_icon",
 			style_id = "reward_icon",
 			pass_type = "texture",
-			value = icon_material,
-			visibility_function = _foldout_visibility_function
+			visibility_function = function (content, style)
+				return _foldout_visibility_function(content, style) and content.reward_icon
+			end
 		},
 		{
 			value_id = "reward_label",
@@ -806,14 +832,6 @@ local function _add_family_rewards_pass_template(pass_template, config)
 
 		if reward_item then
 			reward_count = reward_count + 1
-			local icon_material = nil
-
-			if item_group == "nameplates" then
-				icon_material = "content/ui/materials/icons/items/containers/item_container_square"
-			else
-				icon_material = "content/ui/materials/icons/items/containers/item_container_landscape"
-			end
-
 			local name_prefix = string.format("reward_%d_", reward_count)
 			step_param.step = i
 
@@ -837,8 +855,9 @@ local function _add_family_rewards_pass_template(pass_template, config)
 					pass_type = "texture",
 					value_id = name_prefix .. "icon",
 					style_id = name_prefix .. "icon",
-					value = icon_material,
-					visibility_function = _foldout_visibility_function
+					visibility_function = function (content, style)
+						return _foldout_visibility_function(content, style) and content[name_prefix .. "icon"]
+					end
 				},
 				{
 					pass_type = "text",

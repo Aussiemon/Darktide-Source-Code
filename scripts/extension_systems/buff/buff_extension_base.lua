@@ -990,8 +990,13 @@ BuffExtensionBase.rpc_add_buff_with_stacks = function (self, channel_id, game_ob
 	local t = FixedFrame.get_latest_fixed_time()
 	local optional_item_slot_name = optional_item_slot_id and NetworkLookup.player_inventory_slot_names[optional_item_slot_id]
 	local optional_parent_buff_template = optional_parent_buff_template_id and NetworkLookup.buff_templates[optional_parent_buff_template_id]
+	local num_index = #server_index_array
 
-	for i = 1, #server_index_array do
+	if num_index == 0 then
+		Log.exception("BuffExtensionBase", "Got rpc_add_buff_with_stacks with #server_index_array == 0")
+	end
+
+	for i = 1, num_index do
 		local server_index = server_index_array[i]
 		local index = self:_add_buff(template, t, "buff_lerp_value", optional_lerp_value, "item_slot_name", optional_item_slot_name, "parent_buff_template", optional_parent_buff_template)
 		self._buff_index_map[server_index] = index

@@ -1705,7 +1705,7 @@ UIManager.event_player_appearance_updated = function (self, profile)
 	instance:profile_updated(profile)
 end
 
-UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_profile, prioritize)
+UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_profile, prioritize, unload_cb)
 	local item_name = real_item.name
 	local gear_id = real_item.gear_id or item_name
 	local item = nil
@@ -1723,17 +1723,17 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 	if item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "GADGET" then
 		local instance = self._back_buffer_render_handlers.weapons
 
-		return instance:load_weapon_icon(item, cb, render_context, prioritize)
+		return instance:load_weapon_icon(item, cb, render_context, prioritize, unload_cb)
 	elseif item_type == "WEAPON_SKIN" then
 		local visual_item = ItemUtils.weapon_skin_preview_item(item)
 		local instance = self._back_buffer_render_handlers.weapon_skin
 
-		return instance:load_weapon_icon(visual_item, cb, render_context, prioritize)
+		return instance:load_weapon_icon(visual_item, cb, render_context, prioritize, unload_cb)
 	elseif item_type == "WEAPON_TRINKET" then
 		local instance = self._back_buffer_render_handlers.weapon_skin
 		local visual_item = ItemUtils.weapon_trinket_preview_item(item)
 
-		return instance:load_weapon_icon(visual_item, cb, render_context, prioritize)
+		return instance:load_weapon_icon(visual_item, cb, render_context, prioritize, unload_cb)
 	elseif table.find(slots, "slot_gear_head") or table.find(slots, "slot_gear_upperbody") or table.find(slots, "slot_gear_lowerbody") or table.find(slots, "slot_gear_extra_cosmetic") or table.find(slots, "slot_animation_end_of_round") then
 		if not dummy_profile then
 			local player = Managers.player:local_player(1)
@@ -1860,11 +1860,11 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 
 		local instance = self._back_buffer_render_handlers.cosmetics
 
-		return instance:load_profile_portrait(dummy_profile, cb, render_context, prioritize)
+		return instance:load_profile_portrait(dummy_profile, cb, render_context, prioritize, unload_cb)
 	elseif table.find(slots, "slot_insignia") or table.find(slots, "slot_portrait_frame") or table.find(slots, "slot_animation_emote_1") or table.find(slots, "slot_animation_emote_2") or table.find(slots, "slot_animation_emote_3") or table.find(slots, "slot_animation_emote_4") or table.find(slots, "slot_animation_emote_5") then
 		local instance = self._back_buffer_render_handlers.icon
 
-		return instance:load_icon(item, cb, render_context, dummy_profile, prioritize)
+		return instance:load_icon(item, cb, unload_cb)
 	elseif item_type == "SET" then
 		local instance = self._back_buffer_render_handlers.cosmetics
 		local items = item.items
@@ -1908,7 +1908,7 @@ UIManager.load_item_icon = function (self, real_item, cb, render_context, dummy_
 
 		dummy_profile.character_id = string.format("%s_%s_%s", gear_id, dummy_profile.breed, dummy_profile.gender)
 
-		return instance:load_profile_portrait(dummy_profile, cb, render_context, prioritize)
+		return instance:load_profile_portrait(dummy_profile, cb, render_context, prioritize, unload_cb)
 	end
 end
 

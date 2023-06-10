@@ -521,9 +521,9 @@ base_templates.staggered_targets_receive_increased_stagger_debuff = {
 		[proc_events.on_hit] = 1
 	},
 	target_buff_data = {
+		max_stacks = 31,
 		internal_buff_name = "increase_impact_received_while_staggered",
-		num_stacks_on_proc = 1,
-		max_stacks = math.huge
+		num_stacks_on_proc = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.on_stagger_hit,
@@ -537,9 +537,9 @@ base_templates.staggered_targets_receive_increased_damage_debuff = {
 		[proc_events.on_hit] = 1
 	},
 	target_buff_data = {
+		max_stacks = 31,
 		internal_buff_name = "increase_damage_received_while_staggered",
-		num_stacks_on_proc = 1,
-		max_stacks = math.huge
+		num_stacks_on_proc = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.on_stagger_hit,
@@ -553,9 +553,9 @@ base_templates.targets_receive_rending_debuff = {
 		[proc_events.on_hit] = 1
 	},
 	target_buff_data = {
+		max_stacks = 31,
 		internal_buff_name = "rending_debuff",
-		num_stacks_on_proc = 1,
-		max_stacks = math.huge
+		num_stacks_on_proc = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.attacked_unit_is_minion,
@@ -984,9 +984,9 @@ base_templates.bleed_on_activated_hit = {
 		[proc_events.on_hit] = 1
 	},
 	target_buff_data = {
+		max_stacks = 31,
 		internal_buff_name = "bleed",
-		num_stacks_on_proc = 1,
-		max_stacks = math.huge
+		num_stacks_on_proc = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_melee_weapon_special_hit),
@@ -1530,9 +1530,9 @@ base_templates.bleed_on_crit_ranged = {
 		[proc_events.on_hit] = 1
 	},
 	target_buff_data = {
+		max_stacks = 31,
 		internal_buff_name = "bleed",
-		num_stacks_on_proc = 1,
-		max_stacks = math.huge
+		num_stacks_on_proc = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_ranged_crit_hit),
@@ -1546,9 +1546,9 @@ base_templates.bleed_on_crit_pellets = {
 		[proc_events.on_pellet_hits] = 1
 	},
 	target_buff_data = {
+		max_stacks = 31,
 		internal_buff_name = "bleed",
-		num_stacks_on_proc = 1,
-		max_stacks = math.huge
+		num_stacks_on_proc = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_crit),
@@ -1814,10 +1814,10 @@ base_templates.bleed_on_crit_melee = {
 		[proc_events.on_hit] = 1
 	},
 	target_buff_data = {
+		max_stacks = 31,
 		internal_buff_name = "bleed",
 		num_stacks_on_proc = 1,
-		allow_weapon_special = true,
-		max_stacks = math.huge
+		allow_weapon_special = true
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_melee_crit_hit),
@@ -1831,9 +1831,9 @@ base_templates.bleed_on_non_weakspot_hit_melee = {
 		[proc_events.on_hit] = 1
 	},
 	target_buff_data = {
+		max_stacks = 31,
 		internal_buff_name = "bleed",
-		num_stacks_on_proc = 1,
-		max_stacks = math.huge
+		num_stacks_on_proc = 1
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = CheckProcFunctions.all(CheckProcFunctions.on_damaging_hit, CheckProcFunctions.on_non_weakspot_hit_melee),

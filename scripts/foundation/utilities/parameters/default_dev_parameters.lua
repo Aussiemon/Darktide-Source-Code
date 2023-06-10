@@ -172,8 +172,8 @@ local params = {
 		value = 1,
 		category = "Input"
 	},
-	controller_look_scale_ranged = {
-		value = 1,
+	controller_invert_look_y = {
+		value = false,
 		category = "Input"
 	},
 	controller_look_dead_zone = {

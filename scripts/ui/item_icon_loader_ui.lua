@@ -12,7 +12,7 @@ ItemIconLoaderUI.init = function (self)
 	self._active_request = nil
 end
 
-ItemIconLoaderUI.load_icon = function (self, item, on_load_callback)
+ItemIconLoaderUI.load_icon = function (self, item, on_load_callback, on_unload_callback)
 	local id = self._id_prefix .. "_" .. self._id_counter
 	self._id_counter = self._id_counter + 1
 	local gear_id = item.gear_id or item.name
@@ -33,6 +33,7 @@ ItemIconLoaderUI.load_icon = function (self, item, on_load_callback)
 			references_lookup = {},
 			references_array = {},
 			callbacks = {},
+			destroy_callbacks = {},
 			gear_id = gear_id,
 			item = item,
 			item_name = item_name,
@@ -52,11 +53,23 @@ ItemIconLoaderUI.load_icon = function (self, item, on_load_callback)
 		on_load_callback(item)
 	end
 
+	if on_unload_callback then
+		data.destroy_callbacks[id] = on_unload_callback
+	end
+
 	return id
 end
 
 ItemIconLoaderUI.unload_icon = function (self, id)
 	local data = self:_request_by_id(id)
+	local destroy_callbacks = data.destroy_callbacks
+
+	if destroy_callbacks and destroy_callbacks[id] then
+		destroy_callbacks[id]()
+
+		destroy_callbacks[id] = nil
+	end
+
 	data.callbacks[id] = nil
 	self._requests_to_unload[#self._requests_to_unload + 1] = {
 		frame_delay_counter = 2,
