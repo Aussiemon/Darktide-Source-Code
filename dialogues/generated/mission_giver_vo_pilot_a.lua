@@ -767,25 +767,6 @@ local mission_giver_vo_pilot_a = {
 		},
 		randomize_indexes = {}
 	},
-	mission_scan_final = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_pilot_a__mission_scan_final_01",
-			"loc_pilot_a__mission_scan_final_02",
-			"loc_pilot_a__mission_scan_final_03",
-			"loc_pilot_a__mission_scan_final_04",
-			"loc_pilot_a__mission_scan_final_05"
-		},
-		sound_events_duration = {
-			4.089396,
-			3.220167,
-			5.385667,
-			5.667646,
-			4.714583
-		},
-		randomize_indexes = {}
-	},
 	mission_scan_new_target = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

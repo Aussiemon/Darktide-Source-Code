@@ -35,25 +35,6 @@ local mission_giver_vo_sergeant_a = {
 		},
 		randomize_indexes = {}
 	},
-	cmd_undeploy_skull = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_sergeant_a__cmd_undeploy_skull_01",
-			"loc_sergeant_a__cmd_undeploy_skull_02",
-			"loc_sergeant_a__cmd_undeploy_skull_03",
-			"loc_sergeant_a__cmd_undeploy_skull_04",
-			"loc_sergeant_a__cmd_undeploy_skull_05"
-		},
-		sound_events_duration = {
-			2.983771,
-			2.550563,
-			4.515333,
-			3.788021,
-			4.032521
-		},
-		randomize_indexes = {}
-	},
 	door_release = {
 		randomize_indexes_n = 0,
 		sound_events_n = 6,
@@ -768,52 +749,6 @@ local mission_giver_vo_sergeant_a = {
 		},
 		randomize_indexes = {}
 	},
-	mission_cooling_cmd_load_coolant = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_sergeant_a__cmd_load_coolant_01",
-			"loc_sergeant_a__cmd_load_coolant_02",
-			"loc_sergeant_a__cmd_load_coolant_03",
-			"loc_sergeant_a__cmd_load_coolant_04"
-		},
-		sound_events_duration = {
-			2.697854,
-			3.146333,
-			3.780875,
-			2.981438
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
-		randomize_indexes = {}
-	},
-	mission_cooling_cmd_stabilise = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_sergeant_a__cmd_stabilise_01",
-			"loc_sergeant_a__cmd_stabilise_02",
-			"loc_sergeant_a__cmd_stabilise_03",
-			"loc_sergeant_a__cmd_stabilise_04"
-		},
-		sound_events_duration = {
-			3.495521,
-			3.923146,
-			3.831479,
-			3.053604
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
-		randomize_indexes = {}
-	},
 	mission_enforcer_briefing_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -1129,51 +1064,6 @@ local mission_giver_vo_sergeant_a = {
 			5.942188,
 			6.534,
 			6.562542
-		},
-		randomize_indexes = {}
-	},
-	mission_scan_complete = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_sergeant_a__level_hab_block_scan_complete_01",
-			"loc_sergeant_a__level_hab_block_scan_complete_02",
-			"loc_sergeant_a__level_hab_block_scan_complete_03",
-			"loc_sergeant_a__level_hab_block_scan_complete_04",
-			"loc_sergeant_a__level_hab_block_scan_complete_05"
-		},
-		sound_events_duration = {
-			3.174208,
-			3.3325,
-			2.496438,
-			2.83825,
-			3.585375
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
-		randomize_indexes = {}
-	},
-	mission_scan_final = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_sergeant_a__mission_scan_final_01",
-			"loc_sergeant_a__mission_scan_final_02",
-			"loc_sergeant_a__mission_scan_final_03",
-			"loc_sergeant_a__mission_scan_final_04",
-			"loc_sergeant_a__mission_scan_final_05"
-		},
-		sound_events_duration = {
-			3.487625,
-			3.959625,
-			3.848792,
-			4.466188,
-			4.979083
 		},
 		randomize_indexes = {}
 	},

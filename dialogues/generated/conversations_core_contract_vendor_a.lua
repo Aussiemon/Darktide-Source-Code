@@ -12,7 +12,7 @@ local conversations_core_contract_vendor_a = {
 		sound_events_duration = {
 			3.245271,
 			1.745729,
-			2.764125,
+			2.764104,
 			4.257667,
 			2.575438
 		},

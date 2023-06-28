@@ -3400,6 +3400,25 @@ local gameplay_vo_zealot_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	response_for_psyker_seen_killstreak_zealot = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_zealot_male_b__response_for_psyker_seen_killstreak_zealot_01",
+			"loc_zealot_male_b__response_for_psyker_seen_killstreak_zealot_02",
+			"loc_zealot_male_b__response_for_psyker_seen_killstreak_zealot_03",
+			"loc_zealot_male_b__response_for_psyker_seen_killstreak_zealot_04",
+			"loc_zealot_male_b__response_for_psyker_seen_killstreak_zealot_05"
+		},
+		sound_events_duration = {
+			2.173313,
+			2.883333,
+			3.402208,
+			3.32975,
+			3.605896
+		},
+		randomize_indexes = {}
+	},
 	response_for_psyker_start_revive_zealot = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

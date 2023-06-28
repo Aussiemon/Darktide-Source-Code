@@ -250,6 +250,51 @@ local mission_vo_cm_habs_sergeant_a = {
 			0.2
 		},
 		randomize_indexes = {}
+	},
+	mission_scan_complete = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_sergeant_a__level_hab_block_scan_complete_01",
+			"loc_sergeant_a__level_hab_block_scan_complete_02",
+			"loc_sergeant_a__level_hab_block_scan_complete_03",
+			"loc_sergeant_a__level_hab_block_scan_complete_04",
+			"loc_sergeant_a__level_hab_block_scan_complete_05"
+		},
+		sound_events_duration = {
+			3.174208,
+			3.3325,
+			2.496438,
+			2.83825,
+			3.585375
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
+	mission_scan_final = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_sergeant_a__mission_scan_final_01",
+			"loc_sergeant_a__mission_scan_final_02",
+			"loc_sergeant_a__mission_scan_final_03",
+			"loc_sergeant_a__mission_scan_final_04",
+			"loc_sergeant_a__mission_scan_final_05"
+		},
+		sound_events_duration = {
+			3.487625,
+			3.959625,
+			3.848792,
+			4.466188,
+			4.979083
+		},
+		randomize_indexes = {}
 	}
 }
 

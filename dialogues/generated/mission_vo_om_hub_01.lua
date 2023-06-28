@@ -180,52 +180,6 @@ return function ()
 		}
 	})
 	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "prologue_hub_go_training_grounds",
-		response = "prologue_hub_go_training_grounds",
-		database = "mission_vo_om_hub_01",
-		wwise_route = 1,
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"prologue_hub_go_training_grounds_disabled"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"explicator"
-				}
-			},
-			{
-				"faction_memory",
-				"prologue_hub_go_training_grounds",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"prologue_hub_go_training_grounds",
-				OP.ADD,
-				1
-			}
-		}
-	})
-	define_rule({
 		pre_wwise_event = "play_radio_static_start",
 		concurrent_wwise_event = "play_vox_static_loop",
 		name = "prologue_hub_go_training_grounds_a",
@@ -308,52 +262,6 @@ return function ()
 		on_done = {},
 		heard_speak_routing = {
 			target = "all"
-		}
-	})
-	define_rule({
-		post_wwise_event = "play_radio_static_end",
-		concurrent_wwise_event = "play_vox_static_loop",
-		pre_wwise_event = "play_radio_static_start",
-		name = "prologue_hub_mourningstar_intro",
-		response = "prologue_hub_mourningstar_intro",
-		database = "mission_vo_om_hub_01",
-		wwise_route = 1,
-		category = "vox_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"mission_info"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"prologue_hub_mourningstar_intro_disabled"
-			},
-			{
-				"user_context",
-				"class_name",
-				OP.SET_INCLUDES,
-				args = {
-					"explicator"
-				}
-			},
-			{
-				"faction_memory",
-				"prologue_hub_mourningstar_intro",
-				OP.EQ,
-				0
-			}
-		},
-		on_done = {
-			{
-				"faction_memory",
-				"prologue_hub_mourningstar_intro",
-				OP.ADD,
-				1
-			}
 		}
 	})
 	define_rule({
@@ -472,6 +380,9 @@ return function ()
 				}
 			}
 		},
-		on_done = {}
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
 	})
 end

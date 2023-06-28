@@ -282,6 +282,51 @@ local mission_vo_cm_habs_tech_priest_a = {
 			[2.0] = 0.5
 		},
 		randomize_indexes = {}
+	},
+	mission_scan_complete = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_tech_priest_a__level_hab_block_scan_complete_01",
+			"loc_tech_priest_a__level_hab_block_scan_complete_02",
+			"loc_tech_priest_a__level_hab_block_scan_complete_03",
+			"loc_tech_priest_a__level_hab_block_scan_complete_04",
+			"loc_tech_priest_a__level_hab_block_scan_complete_05"
+		},
+		sound_events_duration = {
+			5.67375,
+			6.233917,
+			5.85675,
+			6.639667,
+			8.049
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
+	mission_scan_final = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_tech_priest_a__mission_scan_final_01",
+			"loc_tech_priest_a__mission_scan_final_02",
+			"loc_tech_priest_a__mission_scan_final_03",
+			"loc_tech_priest_a__mission_scan_final_04",
+			"loc_tech_priest_a__mission_scan_final_05"
+		},
+		sound_events_duration = {
+			4.39175,
+			5.147396,
+			5.326271,
+			5.680667,
+			6.014042
+		},
+		randomize_indexes = {}
 	}
 }
 

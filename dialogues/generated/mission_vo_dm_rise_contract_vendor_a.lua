@@ -333,9 +333,9 @@ local mission_vo_dm_rise_contract_vendor_a = {
 			"loc_contract_vendor_a__mission_rise_keep_coming_a_04"
 		},
 		sound_events_duration = {
-			4.894542,
+			4.894521,
 			5.796396,
-			5.353729,
+			5.35375,
 			4.046833
 		},
 		randomize_indexes = {}

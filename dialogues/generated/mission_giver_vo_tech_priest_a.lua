@@ -35,25 +35,6 @@ local mission_giver_vo_tech_priest_a = {
 		},
 		randomize_indexes = {}
 	},
-	cmd_undeploy_skull = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_tech_priest_a__cmd_undeploy_skull_01",
-			"loc_tech_priest_a__cmd_undeploy_skull_02",
-			"loc_tech_priest_a__cmd_undeploy_skull_03",
-			"loc_tech_priest_a__cmd_undeploy_skull_04",
-			"loc_tech_priest_a__cmd_undeploy_skull_05"
-		},
-		sound_events_duration = {
-			3.953833,
-			5.149229,
-			4.476208,
-			3.577667,
-			3.983646
-		},
-		randomize_indexes = {}
-	},
 	door_release = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
@@ -512,6 +493,51 @@ local mission_giver_vo_tech_priest_a = {
 		},
 		randomize_indexes = {}
 	},
+	mission_armoury_briefing_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_tech_priest_a__mission_armoury_briefing_a_01",
+			"loc_tech_priest_a__mission_armoury_briefing_a_02",
+			"loc_tech_priest_a__mission_armoury_briefing_a_03"
+		},
+		sound_events_duration = {
+			11.05006,
+			8.796667,
+			11.0169
+		},
+		randomize_indexes = {}
+	},
+	mission_armoury_briefing_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_tech_priest_a__mission_armoury_briefing_b_01",
+			"loc_tech_priest_a__mission_armoury_briefing_b_02",
+			"loc_tech_priest_a__mission_armoury_briefing_b_03"
+		},
+		sound_events_duration = {
+			6.454792,
+			8.862062,
+			9.4735
+		},
+		randomize_indexes = {}
+	},
+	mission_armoury_briefing_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 3,
+		sound_events = {
+			"loc_tech_priest_a__mission_armoury_briefing_c_01",
+			"loc_tech_priest_a__mission_armoury_briefing_c_02",
+			"loc_tech_priest_a__mission_armoury_briefing_c_03"
+		},
+		sound_events_duration = {
+			13.62704,
+			12.50729,
+			11.91146
+		},
+		randomize_indexes = {}
+	},
 	mission_brief_control_mission_one = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -725,52 +751,6 @@ local mission_giver_vo_tech_priest_a = {
 			9.090751,
 			8.198229,
 			8.165104
-		},
-		randomize_indexes = {}
-	},
-	mission_cooling_cmd_load_coolant = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_tech_priest_a__cmd_load_coolant_01",
-			"loc_tech_priest_a__cmd_load_coolant_02",
-			"loc_tech_priest_a__cmd_load_coolant_03",
-			"loc_tech_priest_a__cmd_load_coolant_04"
-		},
-		sound_events_duration = {
-			4.466125,
-			5.268521,
-			4.298771,
-			8.776083
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
-		randomize_indexes = {}
-	},
-	mission_cooling_cmd_stabilise = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_tech_priest_a__cmd_stabilise_01",
-			"loc_tech_priest_a__cmd_stabilise_02",
-			"loc_tech_priest_a__cmd_stabilise_03",
-			"loc_tech_priest_a__cmd_stabilise_04"
-		},
-		sound_events_duration = {
-			5.691833,
-			5.79775,
-			7.0435,
-			7.9615
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -1038,51 +1018,6 @@ local mission_giver_vo_tech_priest_a = {
 			11.08469,
 			10.247,
 			12.79863
-		},
-		randomize_indexes = {}
-	},
-	mission_scan_complete = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_tech_priest_a__level_hab_block_scan_complete_01",
-			"loc_tech_priest_a__level_hab_block_scan_complete_02",
-			"loc_tech_priest_a__level_hab_block_scan_complete_03",
-			"loc_tech_priest_a__level_hab_block_scan_complete_04",
-			"loc_tech_priest_a__level_hab_block_scan_complete_05"
-		},
-		sound_events_duration = {
-			5.67375,
-			6.233917,
-			5.85675,
-			6.639667,
-			8.049
-		},
-		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
-		},
-		randomize_indexes = {}
-	},
-	mission_scan_final = {
-		randomize_indexes_n = 0,
-		sound_events_n = 5,
-		sound_events = {
-			"loc_tech_priest_a__mission_scan_final_01",
-			"loc_tech_priest_a__mission_scan_final_02",
-			"loc_tech_priest_a__mission_scan_final_03",
-			"loc_tech_priest_a__mission_scan_final_04",
-			"loc_tech_priest_a__mission_scan_final_05"
-		},
-		sound_events_duration = {
-			4.39175,
-			5.147396,
-			5.326271,
-			5.680667,
-			6.014042
 		},
 		randomize_indexes = {}
 	},

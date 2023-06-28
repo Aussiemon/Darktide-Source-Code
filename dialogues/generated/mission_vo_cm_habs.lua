@@ -467,6 +467,9 @@ return function ()
 			}
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -615,6 +618,9 @@ return function ()
 			}
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -667,6 +673,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -1445,6 +1454,105 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "players"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_scan_complete",
+		response = "mission_scan_complete",
+		database = "mission_vo_cm_habs",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"mission_scan_complete"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"tech_priest"
+				}
+			},
+			{
+				"user_memory",
+				"mission_scan_complete",
+				OP.GTEQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_scan_final",
+		response = "mission_scan_final",
+		database = "mission_vo_cm_habs",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"level_hab_block_temple_response"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"tech_priest"
+				}
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"mission_scan_final",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.3
+			}
 		}
 	})
 end

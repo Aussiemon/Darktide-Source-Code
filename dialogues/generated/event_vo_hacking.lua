@@ -139,6 +139,9 @@ return function ()
 				OP.TIMESET,
 				0
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -187,6 +190,9 @@ return function ()
 				OP.TIMESET,
 				0
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -363,7 +369,10 @@ return function ()
 				}
 			}
 		},
-		on_done = {}
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
 	})
 	define_rule({
 		post_wwise_event = "play_radio_static_end",
@@ -412,6 +421,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({

@@ -45,6 +45,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -144,6 +147,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -192,6 +198,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -240,6 +249,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -288,6 +300,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -336,6 +351,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -419,6 +437,102 @@ return function ()
 			delay_vo = {
 				duration = 0.2
 			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_cooling_cmd_load_coolant",
+		response = "mission_cooling_cmd_load_coolant",
+		database = "mission_vo_lm_cooling",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"luggable_mission_pick_up_lm_cooling"
+				}
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"explicator",
+					"sergeant",
+					"tech_priest"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.3
+			}
+		}
+	})
+	define_rule({
+		post_wwise_event = "play_radio_static_end",
+		concurrent_wwise_event = "play_vox_static_loop",
+		pre_wwise_event = "play_radio_static_start",
+		name = "mission_cooling_cmd_stabilise",
+		response = "mission_cooling_cmd_stabilise",
+		database = "mission_vo_lm_cooling",
+		wwise_route = 1,
+		category = "vox_prio_0",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"mission_info"
+			},
+			{
+				"query_context",
+				"trigger_id",
+				OP.EQ,
+				"cmd_stabilise"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"sergeant",
+					"explicator",
+					"tech_priest"
+				}
+			},
+			{
+				"user_memory",
+				"cmd_stabilise",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"cmd_stabilise",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -1201,6 +1315,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({

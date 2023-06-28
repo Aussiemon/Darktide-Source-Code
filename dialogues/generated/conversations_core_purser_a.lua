@@ -11,9 +11,9 @@ local conversations_core_purser_a = {
 		},
 		sound_events_duration = {
 			3.573813,
-			4.038313,
+			4.038333,
 			5.340979,
-			5.051125,
+			5.051146,
 			3.763979
 		},
 		randomize_indexes = {}

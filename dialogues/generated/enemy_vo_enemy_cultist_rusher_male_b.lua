@@ -72,11 +72,12 @@ local enemy_vo_enemy_cultist_rusher_male_b = {
 	},
 	cultist_rusher_take_cover = {
 		randomize_indexes_n = 0,
-		sound_events_n = 11,
+		sound_events_n = 12,
 		sound_events = {
 			"loc_enemy_cultist_rusher_male_b__take_cover_01",
 			"loc_enemy_cultist_rusher_male_b__take_cover_02",
 			"loc_enemy_cultist_rusher_male_b__take_cover_03",
+			"loc_enemy_cultist_rusher_male_b__take_cover_04",
 			"loc_enemy_cultist_rusher_male_b__take_cover_05",
 			"loc_enemy_cultist_rusher_male_b__take_cover_06",
 			"loc_enemy_cultist_rusher_male_b__take_cover_07",
@@ -90,6 +91,7 @@ local enemy_vo_enemy_cultist_rusher_male_b = {
 			1.178146,
 			1.668708,
 			2.098979,
+			1.352104,
 			1.232188,
 			1.145417,
 			1.188021,
@@ -100,17 +102,18 @@ local enemy_vo_enemy_cultist_rusher_male_b = {
 			3.323292
 		},
 		sound_event_weights = {
-			0.09090909,
-			0.09090909,
-			0.09090909,
-			0.09090909,
-			0.09090909,
-			0.09090909,
-			0.09090909,
-			0.09090909,
-			0.09090909,
-			0.09090909,
-			0.09090909
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334,
+			0.08333334
 		},
 		randomize_indexes = {}
 	},

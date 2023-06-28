@@ -17,9 +17,9 @@ local event_vo_hacking_purser_a = {
 			3.237427,
 			3.760573,
 			2.953906,
-			2.058354,
-			3.28326,
-			2.320427,
+			2.058344,
+			3.283271,
+			2.320417,
 			3.84949,
 			3.167146,
 			3.120677
@@ -43,14 +43,14 @@ local event_vo_hacking_purser_a = {
 		},
 		sound_events_duration = {
 			3.836323,
-			2.614521,
+			2.61451,
 			2.397448,
 			2.508802,
 			2.609813,
 			4.011406,
-			2.320604,
-			2.141167,
-			2.721552,
+			2.320615,
+			2.141156,
+			2.721563,
 			4.45199
 		},
 		randomize_indexes = {}
@@ -65,9 +65,9 @@ local event_vo_hacking_purser_a = {
 			"loc_purser_a__cmd_hacking_place_device_a_04"
 		},
 		sound_events_duration = {
-			3.999635,
+			3.999646,
 			3.63051,
-			3.506031,
+			3.506021,
 			3.469833
 		},
 		randomize_indexes = {}
@@ -99,7 +99,7 @@ local event_vo_hacking_purser_a = {
 			"loc_purser_a__info_hacking_mission_almost_done_a_04"
 		},
 		sound_events_duration = {
-			1.562969,
+			1.562958,
 			2.239031,
 			1.994354,
 			3.558802

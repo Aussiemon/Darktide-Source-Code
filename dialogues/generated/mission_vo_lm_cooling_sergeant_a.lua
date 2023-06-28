@@ -135,6 +135,52 @@ local mission_vo_lm_cooling_sergeant_a = {
 		},
 		randomize_indexes = {}
 	},
+	mission_cooling_cmd_load_coolant = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_sergeant_a__cmd_load_coolant_01",
+			"loc_sergeant_a__cmd_load_coolant_02",
+			"loc_sergeant_a__cmd_load_coolant_03",
+			"loc_sergeant_a__cmd_load_coolant_04"
+		},
+		sound_events_duration = {
+			2.697854,
+			3.146333,
+			3.780875,
+			2.981438
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
+		randomize_indexes = {}
+	},
+	mission_cooling_cmd_stabilise = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_sergeant_a__cmd_stabilise_01",
+			"loc_sergeant_a__cmd_stabilise_02",
+			"loc_sergeant_a__cmd_stabilise_03",
+			"loc_sergeant_a__cmd_stabilise_04"
+		},
+		sound_events_duration = {
+			3.495521,
+			3.923146,
+			3.831479,
+			3.053604
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
+		randomize_indexes = {}
+	},
 	mission_cooling_first_objective = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

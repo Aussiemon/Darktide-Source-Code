@@ -2,6 +2,9 @@ local mission_themes = {
 	default = {
 		"content/levels/transit/missions/cm_habs_themes/default/theme_default_cm_habs"
 	},
+	toxic_gas = {
+		"content/levels/transit/missions/cm_habs_themes/toxic_gas_01/theme_toxic_gas_01_cm_habs"
+	},
 	darkness = {
 		"content/levels/transit/missions/cm_habs_themes/darkness_01/theme_darkness_01_cm_habs"
 	},

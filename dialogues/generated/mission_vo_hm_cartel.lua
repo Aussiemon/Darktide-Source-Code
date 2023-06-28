@@ -92,6 +92,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -140,6 +143,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -750,6 +756,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -875,6 +884,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -923,6 +935,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -1097,12 +1112,12 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "mission_cartel_sewer",
 		concurrent_wwise_event = "play_vox_static_loop",
-		category = "vox_prio_0",
+		wwise_route = 1,
+		name = "mission_cartel_sewer",
 		response = "mission_cartel_sewer",
 		database = "mission_vo_hm_cartel",
-		wwise_route = 1,
+		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
@@ -1152,6 +1167,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -1331,6 +1349,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({

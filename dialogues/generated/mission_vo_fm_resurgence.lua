@@ -35,6 +35,9 @@ return function ()
 			}
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.24
@@ -194,6 +197,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -309,6 +315,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -709,6 +718,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -757,6 +769,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -1075,6 +1090,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 end

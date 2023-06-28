@@ -44,7 +44,7 @@ local mission_giver_vo_contract_vendor_a = {
 		},
 		sound_events_duration = {
 			2.612771,
-			1.771833,
+			1.771823,
 			1.58749,
 			2.218656
 		},

@@ -80,6 +80,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -752,6 +755,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -972,6 +978,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -1020,6 +1029,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -1068,6 +1080,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -1326,6 +1341,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -1418,6 +1436,9 @@ return function ()
 				1
 			}
 		},
+		heard_speak_routing = {
+			target = "disabled"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 2.5
@@ -1460,6 +1481,9 @@ return function ()
 			}
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.3
@@ -1512,6 +1536,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 end

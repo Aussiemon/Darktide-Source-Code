@@ -10,8 +10,8 @@ local mission_vo_dm_rise_purser_a = {
 		},
 		sound_events_duration = {
 			4.740823,
-			3.941531,
-			4.361677,
+			3.941521,
+			4.361667,
 			3.852833
 		},
 		randomize_indexes = {}
@@ -89,7 +89,7 @@ local mission_vo_dm_rise_purser_a = {
 			"loc_purser_a__mission_rise_blast_gate_a_04"
 		},
 		sound_events_duration = {
-			5.936698,
+			5.936708,
 			4.80374,
 			4.77751,
 			6.305719
@@ -106,10 +106,10 @@ local mission_vo_dm_rise_purser_a = {
 			"loc_purser_a__mission_rise_demolisher_a_04"
 		},
 		sound_events_duration = {
-			5.129917,
-			4.707552,
-			7.621115,
-			5.957646
+			5.129927,
+			4.707542,
+			7.621104,
+			5.957656
 		},
 		randomize_indexes = {}
 	},
@@ -120,7 +120,7 @@ local mission_vo_dm_rise_purser_a = {
 			[1.0] = "loc_purser_a__mission_rise_demolisher_melk_01_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 6.442333
+			[1.0] = 6.442323
 		},
 		randomize_indexes = {}
 	},
@@ -131,7 +131,7 @@ local mission_vo_dm_rise_purser_a = {
 			[1.0] = "loc_purser_a__mission_rise_demolisher_melk_02_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.881156
+			[1.0] = 3.881146
 		},
 		randomize_indexes = {}
 	},
@@ -142,7 +142,7 @@ local mission_vo_dm_rise_purser_a = {
 			[1.0] = "loc_purser_a__mission_rise_demolisher_melk_03_b_01"
 		},
 		sound_events_duration = {
-			[1.0] = 3.231677
+			[1.0] = 3.231688
 		},
 		randomize_indexes = {}
 	},
@@ -176,7 +176,7 @@ local mission_vo_dm_rise_purser_a = {
 			2.572958,
 			1.388229,
 			1.552083,
-			5.141073
+			5.141063
 		},
 		randomize_indexes = {}
 	},
@@ -193,7 +193,7 @@ local mission_vo_dm_rise_purser_a = {
 			3.021313,
 			2.46725,
 			1.841021,
-			3.886698
+			3.886688
 		},
 		randomize_indexes = {}
 	},
@@ -227,7 +227,7 @@ local mission_vo_dm_rise_purser_a = {
 			3.825333,
 			4.581167,
 			4.020885,
-			3.535208
+			3.535198
 		},
 		randomize_indexes = {}
 	},
@@ -239,7 +239,7 @@ local mission_vo_dm_rise_purser_a = {
 			[2.0] = "loc_purser_a__mission_rise_end_event_corruptor_two_dead_a_03"
 		},
 		sound_events_duration = {
-			[1.0] = 3.961917,
+			[1.0] = 3.961927,
 			[2.0] = 4.351729
 		},
 		randomize_indexes = {}
@@ -273,7 +273,7 @@ local mission_vo_dm_rise_purser_a = {
 		sound_events_duration = {
 			3.995656,
 			4.777083,
-			4.981823,
+			4.981813,
 			5.824146
 		},
 		randomize_indexes = {}
@@ -290,7 +290,7 @@ local mission_vo_dm_rise_purser_a = {
 		sound_events_duration = {
 			7.595656,
 			5.252448,
-			5.170927,
+			5.170938,
 			5.826531
 		},
 		randomize_indexes = {}
@@ -306,7 +306,7 @@ local mission_vo_dm_rise_purser_a = {
 		},
 		sound_events_duration = {
 			3.669167,
-			5.661052,
+			5.661063,
 			4.478542,
 			5.506677
 		},
@@ -324,7 +324,7 @@ local mission_vo_dm_rise_purser_a = {
 		sound_events_duration = {
 			4.454854,
 			3.582281,
-			4.343708,
+			4.343698,
 			4.668844
 		},
 		randomize_indexes = {}
@@ -342,7 +342,7 @@ local mission_vo_dm_rise_purser_a = {
 			3.893375,
 			3.362135,
 			4.314448,
-			3.405594
+			3.405604
 		},
 		randomize_indexes = {}
 	},
@@ -356,9 +356,9 @@ local mission_vo_dm_rise_purser_a = {
 			"loc_purser_a__mission_rise_event_one_step_one_complete_a_04"
 		},
 		sound_events_duration = {
-			3.725656,
+			3.725667,
 			3.373521,
-			2.88376,
+			2.883771,
 			3.335281
 		},
 		randomize_indexes = {}
@@ -373,8 +373,8 @@ local mission_vo_dm_rise_purser_a = {
 			"loc_purser_a__mission_rise_first_tracks_a_04"
 		},
 		sound_events_duration = {
-			4.428083,
-			4.162031,
+			4.428073,
+			4.162042,
 			5.266448,
 			3.871635
 		},
@@ -424,9 +424,9 @@ local mission_vo_dm_rise_purser_a = {
 			"loc_purser_a__mission_rise_pipe_bridge_b_04"
 		},
 		sound_events_duration = {
-			2.835146,
+			2.835135,
 			2.713219,
-			3.339333,
+			3.339323,
 			3.478
 		},
 		randomize_indexes = {}
@@ -509,10 +509,10 @@ local mission_vo_dm_rise_purser_a = {
 			"loc_purser_a__mission_rise_through_depot_a_04"
 		},
 		sound_events_duration = {
-			4.419781,
+			4.419771,
 			3.500531,
 			3.960094,
-			5.604042
+			5.604031
 		},
 		randomize_indexes = {}
 	},
@@ -526,9 +526,9 @@ local mission_vo_dm_rise_purser_a = {
 			"loc_purser_a__mission_rise_tracks_two_a_04"
 		},
 		sound_events_duration = {
-			4.312927,
+			4.312917,
 			4.589823,
-			4.377292,
+			4.377302,
 			5.329427
 		},
 		randomize_indexes = {}

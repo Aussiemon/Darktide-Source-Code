@@ -5,6 +5,9 @@ local mission_themes = {
 	ember = {
 		"content/levels/watertown/missions/km_enforcer_themes/ember_01/theme_ember_01_km_enforcer"
 	},
+	toxic_gas = {
+		"content/levels/watertown/missions/km_enforcer_themes/toxic_gas_01/theme_toxic_gas_01_km_enforcer"
+	},
 	ventilation_purge = {
 		"content/levels/watertown/missions/km_enforcer_themes/ventilation_purge_01/theme_ventilation_purge_01_km_enforcer"
 	},

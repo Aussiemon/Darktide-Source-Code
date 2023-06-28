@@ -135,6 +135,52 @@ local mission_vo_lm_cooling_tech_priest_a = {
 		},
 		randomize_indexes = {}
 	},
+	mission_cooling_cmd_load_coolant = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_tech_priest_a__cmd_load_coolant_01",
+			"loc_tech_priest_a__cmd_load_coolant_02",
+			"loc_tech_priest_a__cmd_load_coolant_03",
+			"loc_tech_priest_a__cmd_load_coolant_04"
+		},
+		sound_events_duration = {
+			4.466125,
+			5.268521,
+			4.298771,
+			8.776083
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
+		randomize_indexes = {}
+	},
+	mission_cooling_cmd_stabilise = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_tech_priest_a__cmd_stabilise_01",
+			"loc_tech_priest_a__cmd_stabilise_02",
+			"loc_tech_priest_a__cmd_stabilise_03",
+			"loc_tech_priest_a__cmd_stabilise_04"
+		},
+		sound_events_duration = {
+			5.691833,
+			5.79775,
+			7.0435,
+			7.9615
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
+		randomize_indexes = {}
+	},
 	mission_cooling_elevator_conversation_one_line_two = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,

@@ -2089,7 +2089,8 @@ return function ()
 					"mission_rails_start_banter_c",
 					"mission_resurgence_start_banter_c",
 					"mission_stockpile_start_banter_c",
-					"mission_strain_start_banter_c"
+					"mission_strain_start_banter_c",
+					"mission_armoury_rooftops_c"
 				}
 			},
 			{

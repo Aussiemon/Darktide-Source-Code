@@ -4234,6 +4234,9 @@ return function ()
 				1
 			}
 		},
+		heard_speak_routing = {
+			target = "disabled"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -4294,6 +4297,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -4358,6 +4364,9 @@ return function ()
 				1
 			}
 		},
+		heard_speak_routing = {
+			target = "disabled"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -4418,6 +4427,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -4483,6 +4495,9 @@ return function ()
 				1
 			}
 		},
+		heard_speak_routing = {
+			target = "disabled"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -4544,6 +4559,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {

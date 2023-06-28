@@ -1532,12 +1532,12 @@ return function ()
 		}
 	})
 	define_rule({
-		name = "info_asset_nurgle_growth",
 		concurrent_wwise_event = "play_vox_static_loop",
-		category = "vox_prio_0",
+		wwise_route = 1,
+		name = "info_asset_nurgle_growth",
 		response = "info_asset_nurgle_growth",
 		database = "guidance_vo",
-		wwise_route = 1,
+		category = "vox_prio_0",
 		criterias = {
 			{
 				"query_context",
@@ -1585,6 +1585,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 end

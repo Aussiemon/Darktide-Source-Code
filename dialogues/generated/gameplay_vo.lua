@@ -5720,14 +5720,17 @@ return function ()
 				}
 			}
 		},
-		on_done = {}
+		on_done = {},
+		heard_speak_routing = {
+			target = "disabled"
+		}
 	})
 	define_rule({
 		name = "medicae_servitor_idle_full_a",
-		category = "npc_prio_1",
 		wwise_route = 45,
 		response = "medicae_servitor_idle_full_a",
 		database = "gameplay_vo",
+		category = "npc_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -5785,6 +5788,9 @@ return function ()
 				1
 			}
 		},
+		heard_speak_routing = {
+			target = "disabled"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -5838,6 +5844,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -5887,6 +5896,9 @@ return function ()
 				OP.ADD,
 				1
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({

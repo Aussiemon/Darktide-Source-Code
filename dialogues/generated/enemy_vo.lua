@@ -1,37 +1,5 @@
 return function ()
 	define_rule({
-		name = "aleterted_outnumbered",
-		category = "enemy_vo_prio_1",
-		wwise_route = 2,
-		response = "aleterted_outnumbered",
-		database = "enemy_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"aleterted_outnumbered"
-			},
-			{
-				"user_memory",
-				"aleterted_outnumbered",
-				OP.TIMEDIFF,
-				OP.GT,
-				5
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"aleterted_outnumbered",
-				OP.TIMESET
-			}
-		},
-		heard_speak_routing = {
-			target = "players"
-		}
-	})
-	define_rule({
 		name = "chaos_daemonhost_aggro",
 		category = "enemy_vo_prio_0",
 		wwise_route = 15,
@@ -1158,7 +1126,7 @@ return function ()
 				"cultist_grenadier_throwing_grenade",
 				OP.TIMEDIFF,
 				OP.GT,
-				10
+				9
 			}
 		},
 		on_done = {
@@ -2553,59 +2521,6 @@ return function ()
 			{
 				"user_memory",
 				"throwing_grenade",
-				OP.TIMESET
-			}
-		}
-	})
-	define_rule({
-		name = "traitor_guard_flamer_assault",
-		category = "enemy_vo_prio_0",
-		wwise_route = 44,
-		response = "traitor_guard_flamer_assault",
-		database = "enemy_vo",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"generic_enemy_vo_event"
-			},
-			{
-				"query_context",
-				"trigger_id",
-				OP.EQ,
-				"assault"
-			},
-			{
-				"query_context",
-				"enemy_tag",
-				OP.EQ,
-				"renegade_flamer"
-			},
-			{
-				"user_memory",
-				"traitor_guard_flamer_assault",
-				OP.TIMEDIFF,
-				OP.GT,
-				5
-			},
-			{
-				"faction_memory",
-				"faction_traitor_guard_flamer_assault",
-				OP.TIMEDIFF,
-				OP.GT,
-				2
-			}
-		},
-		on_done = {
-			{
-				"user_memory",
-				"traitor_guard_flamer_assault",
-				OP.TIMESET
-			},
-			{
-				"faction_memory",
-				"faction_traitor_guard_flamer_assault",
 				OP.TIMESET
 			}
 		}

@@ -320,6 +320,57 @@ local mission_giver_vo_explicator_a = {
 		},
 		randomize_indexes = {}
 	},
+	mission_armoury_briefing_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_explicator_a__mission_armoury_briefing_a_01",
+			"loc_explicator_a__mission_armoury_briefing_a_02",
+			"loc_explicator_a__mission_armoury_briefing_a_03",
+			"loc_explicator_a__mission_armoury_briefing_a_04"
+		},
+		sound_events_duration = {
+			8.453667,
+			8.700999,
+			9.704166,
+			8.433042
+		},
+		randomize_indexes = {}
+	},
+	mission_armoury_briefing_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_explicator_a__mission_armoury_briefing_b_01",
+			"loc_explicator_a__mission_armoury_briefing_b_02",
+			"loc_explicator_a__mission_armoury_briefing_b_03",
+			"loc_explicator_a__mission_armoury_briefing_b_04"
+		},
+		sound_events_duration = {
+			5.246354,
+			7.117958,
+			5.839479,
+			6.264292
+		},
+		randomize_indexes = {}
+	},
+	mission_armoury_briefing_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 4,
+		sound_events = {
+			"loc_explicator_a__mission_armoury_briefing_c_01",
+			"loc_explicator_a__mission_armoury_briefing_c_02",
+			"loc_explicator_a__mission_armoury_briefing_c_03",
+			"loc_explicator_a__mission_armoury_briefing_c_04"
+		},
+		sound_events_duration = {
+			11.86854,
+			9.404124,
+			10.62244,
+			10.13992
+		},
+		randomize_indexes = {}
+	},
 	mission_cargo_briefing_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 4,
@@ -531,52 +582,6 @@ local mission_giver_vo_explicator_a = {
 			7.083563,
 			6.844313,
 			8.699353
-		},
-		randomize_indexes = {}
-	},
-	mission_cooling_cmd_load_coolant = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_explicator_a__cmd_load_coolant_01",
-			"loc_explicator_a__cmd_load_coolant_02",
-			"loc_explicator_a__cmd_load_coolant_03",
-			"loc_explicator_a__cmd_load_coolant_04"
-		},
-		sound_events_duration = {
-			2.909042,
-			2.858979,
-			4.437458,
-			3.841625
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
-		randomize_indexes = {}
-	},
-	mission_cooling_cmd_stabilise = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_explicator_a__cmd_stabilise_01",
-			"loc_explicator_a__cmd_stabilise_02",
-			"loc_explicator_a__cmd_stabilise_03",
-			"loc_explicator_a__cmd_stabilise_04"
-		},
-		sound_events_duration = {
-			4.198688,
-			2.918542,
-			2.729083,
-			3.92675
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},

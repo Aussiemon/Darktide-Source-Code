@@ -12,7 +12,7 @@ local mission_giver_vo_purser_a = {
 			2.904271,
 			2.644813,
 			1.976323,
-			3.00951
+			3.0095
 		},
 		randomize_indexes = {}
 	},
@@ -26,7 +26,7 @@ local mission_giver_vo_purser_a = {
 			"loc_purser_a__info_event_almost_done_a_04"
 		},
 		sound_events_duration = {
-			1.977458,
+			1.977448,
 			2.568917,
 			1.572875,
 			3.426438
@@ -43,9 +43,9 @@ local mission_giver_vo_purser_a = {
 			"loc_purser_a__info_event_one_down_a_04"
 		},
 		sound_events_duration = {
-			1.668427,
+			1.668438,
 			2.123313,
-			1.875927,
+			1.875938,
 			2.027167
 		},
 		randomize_indexes = {}

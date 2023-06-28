@@ -27,4 +27,6 @@ DialogueLookup[DialogueLookup_n + 26] = "level_hab_block_temple"
 DialogueLookup[DialogueLookup_n + 27] = "level_hab_block_temple_response"
 DialogueLookup[DialogueLookup_n + 28] = "level_hab_block_trapped_response"
 DialogueLookup[DialogueLookup_n + 29] = "level_hab_block_vista"
-DialogueLookup_n = DialogueLookup_n + 29
+DialogueLookup[DialogueLookup_n + 30] = "mission_scan_complete"
+DialogueLookup[DialogueLookup_n + 31] = "mission_scan_final"
+DialogueLookup_n = DialogueLookup_n + 31
