@@ -12,11 +12,13 @@ local PowerLevelSettings = require("scripts/settings/damage/power_level_settings
 local ActionChainLightning = class("ActionChainLightning", "ActionWeaponBase")
 local Vector3_flat = Vector3.flat
 local Vector3_normalize = Vector3.normalize
-local attack_types = AttackSettings.attack_types
-local proc_events = BuffSettings.proc_events
-local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
+local ATTACK_TYPES = AttackSettings.attack_types
 local CHAIN_LIGHTNING_BUFF = "chain_lightning_interval"
-local _damage_finding_func, _target_finding_func, _traverse_validation_func, _on_add_func, _on_delete_func = nil
+local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
+local PROC_EVENTS = BuffSettings.proc_events
+local BREADTH_FIRST_VALIDATION = ChainLightning.breadth_first_validation_functions
+local DEPTH_FIRST_VALIDATION = ChainLightning.depth_first_validation_functions
+local _damage_finding_func, _target_finding_func, _traverse_validation_func, _on_add_func, _on_remove_func = nil
 
 ActionChainLightning.init = function (self, action_context, action_params, action_settings)
 	ActionChainLightning.super.init(self, action_context, action_params, action_settings)
@@ -41,6 +43,12 @@ ActionChainLightning.init = function (self, action_context, action_params, actio
 	self._temp_targets = {}
 	self._hit_units = {}
 	self._next_jump_time = 0
+	self._func_context = {
+		action_settings = self._action_settings,
+		buff_extension = self._buff_extension,
+		hit_units = self._hit_units,
+		player_unit = self._player_unit
+	}
 	local fx_settings = action_settings.fx
 	local looping_shoot_sfx_alias = fx_settings.looping_shoot_sfx_alias
 
@@ -62,8 +70,8 @@ ActionChainLightning.init = function (self, action_context, action_params, actio
 	self._both_fx_source_name = weapon.fx_sources._both
 end
 
-ActionChainLightning.start = function (self, action_settings, t, ...)
-	ActionChainLightning.super.start(self, action_settings, t, ...)
+ActionChainLightning.start = function (self, action_settings, t, time_scale, action_start_params)
+	ActionChainLightning.super.start(self, action_settings, t, time_scale, action_start_params)
 
 	local charge_component = self._action_module_charge_component
 
@@ -89,7 +97,7 @@ ActionChainLightning.start = function (self, action_settings, t, ...)
 	if param_table then
 		param_table.unit = self._player_unit
 
-		buff_extension:add_proc_event(proc_events.on_chain_lightning_start, param_table)
+		buff_extension:add_proc_event(PROC_EVENTS.on_chain_lightning_start, param_table)
 	end
 
 	charge_component.max_charge = 1
@@ -105,9 +113,10 @@ ActionChainLightning.start = function (self, action_settings, t, ...)
 
 		local player_unit = self._player_unit
 		local chain_settings = action_settings.chain_settings
-		local max_targets_settings = chain_settings.max_targets
-		local max_targets = ChainLightning.calculate_max_targets(max_targets_settings, 1)
-		local use_random = true
+		local time_in_action = 0
+		local depth = 1
+		local use_random = false
+		local max_targets = ChainLightning.max_targets(time_in_action, chain_settings, depth, use_random)
 		local target_unit_1 = self._targeting_component.target_unit_1
 		local target_unit_2 = self._targeting_component.target_unit_2
 		local target_unit_3 = self._targeting_component.target_unit_3
@@ -120,7 +129,7 @@ ActionChainLightning.start = function (self, action_settings, t, ...)
 				_, buff_id = target_buff_extension:add_externally_controlled_buff(CHAIN_LIGHTNING_BUFF, t, "owner_unit", player_unit)
 			end
 
-			local target = ChainLightningTarget:new(max_targets_settings, 1, use_random, nil, "unit", target_unit_1, "buff_id", buff_id)
+			local target = ChainLightningTarget:new(chain_settings, 1, use_random, nil, "unit", target_unit_1, "buff_id", buff_id)
 			self._chain_targets[#self._chain_targets + 1] = target
 			self._hit_units[target_unit_1] = true
 		end
@@ -133,7 +142,7 @@ ActionChainLightning.start = function (self, action_settings, t, ...)
 				_, buff_id = target_buff_extension:add_externally_controlled_buff(CHAIN_LIGHTNING_BUFF, t, "owner_unit", player_unit)
 			end
 
-			local target = ChainLightningTarget:new(max_targets_settings, 1, use_random, nil, "unit", target_unit_2, "buff_id", buff_id)
+			local target = ChainLightningTarget:new(chain_settings, 1, use_random, nil, "unit", target_unit_2, "buff_id", buff_id)
 			self._chain_targets[#self._chain_targets + 1] = target
 			self._hit_units[target_unit_2] = true
 		end
@@ -146,7 +155,7 @@ ActionChainLightning.start = function (self, action_settings, t, ...)
 				_, buff_id = target_buff_extension:add_externally_controlled_buff(CHAIN_LIGHTNING_BUFF, t, "owner_unit", player_unit)
 			end
 
-			local target = ChainLightningTarget:new(max_targets_settings, 1, use_random, nil, "unit", target_unit_3, "buff_id", buff_id)
+			local target = ChainLightningTarget:new(chain_settings, 1, use_random, nil, "unit", target_unit_3, "buff_id", buff_id)
 			self._chain_targets[#self._chain_targets + 1] = target
 			self._hit_units[target_unit_3] = true
 		end
@@ -208,13 +217,15 @@ ActionChainLightning._validate_targets = function (self, t)
 	local temp_targets = self._temp_targets
 	local chain_targets = self._chain_targets
 	local hit_units = self._hit_units
+	local player_unit = self._player_unit
+	local func_context = self._func_context
 
 	for ii = #chain_targets, 1, -1 do
 		local target = chain_targets[ii]
 		local target_unit = target:value("unit")
 
 		if not HEALTH_ALIVE[target_unit] then
-			ChainLightningTarget.remove_all_child_nodes(target, _on_delete_func, self._hit_units)
+			ChainLightningTarget.remove_all_child_nodes(target, _on_remove_func, func_context)
 			table.swap_delete(chain_targets, ii)
 
 			hit_units[target_unit] = nil
@@ -224,7 +235,7 @@ ActionChainLightning._validate_targets = function (self, t)
 	table.clear(temp_targets)
 
 	for ii = 1, #chain_targets do
-		ChainLightningTarget.traverse_depth_first(chain_targets[ii], temp_targets, _traverse_validation_func)
+		ChainLightningTarget.traverse_depth_first(t, chain_targets[ii], temp_targets, _traverse_validation_func, player_unit)
 	end
 
 	local num_targets = #temp_targets
@@ -236,7 +247,7 @@ ActionChainLightning._validate_targets = function (self, t)
 	end
 
 	for ii = 1, #chain_targets do
-		ChainLightningTarget.remove_child_nodes_marked_for_deletion(chain_targets[ii], _on_delete_func, hit_units)
+		ChainLightningTarget.remove_child_nodes_marked_for_deletion(chain_targets[ii], _on_remove_func, func_context)
 	end
 end
 
@@ -255,8 +266,9 @@ ActionChainLightning._find_new_targets = function (self, t)
 	local enemy_side_names = side:relation_side_names("enemy")
 	local broadphase = broadphase_system.broadphase
 	local stat_buffs = self._buff_extension:stat_buffs()
-	local chain_settings = action_settings.chain_settings
-	local max_angle, close_max_angle, max_z_diff, max_jumps, radius, jump_time = ChainLightning.targeting_parameters(chain_settings, stat_buffs)
+	local chain_settings = action_settings and action_settings.chain_settings
+	local time_in_action = t - self._weapon_action_component.start_t
+	local max_angle, close_max_angle, max_z_diff, max_jumps, radius, jump_time = ChainLightning.targeting_parameters(time_in_action, chain_settings, stat_buffs)
 
 	for ii = 1, #chain_targets do
 		local target = chain_targets[ii]
@@ -271,14 +283,16 @@ end
 ActionChainLightning._find_new_chain_targets = function (self, t, broadphase, enemy_side_names, max_angle, close_max_angle, max_z_diff, max_jumps, radius, root_target, initial_travel_direction)
 	local temp_targets = self._temp_targets
 	local hit_units = self._hit_units
+	local func_context = self._func_context
+	local physics_world = self._physics_world
 
 	table.clear(temp_targets)
-	ChainLightningTarget.traverse_breadth_first(root_target, temp_targets, _target_finding_func, max_jumps)
+	ChainLightningTarget.traverse_breadth_first(t, root_target, temp_targets, _target_finding_func, max_jumps)
 
 	for ii = 1, #temp_targets do
 		local source = temp_targets[ii]
 
-		ChainLightning.jump(self, t, source, hit_units, broadphase, enemy_side_names, initial_travel_direction, radius, max_angle, close_max_angle, max_z_diff, _on_add_func)
+		ChainLightning.jump(t, physics_world, source, hit_units, broadphase, enemy_side_names, initial_travel_direction, radius, max_angle, close_max_angle, max_z_diff, _on_add_func, func_context, nil)
 	end
 end
 
@@ -309,7 +323,7 @@ ActionChainLightning._deal_damage = function (self, t, time_in_action)
 	local chain_targets = self._chain_targets
 
 	for ii = 1, #chain_targets do
-		ChainLightningTarget.traverse_depth_first(chain_targets[ii], temp_targets, _damage_finding_func, player_unit)
+		ChainLightningTarget.traverse_depth_first(t, chain_targets[ii], temp_targets, _damage_finding_func, player_unit)
 	end
 
 	for ii = 1, #temp_targets do
@@ -334,7 +348,7 @@ ActionChainLightning._deal_damage = function (self, t, time_in_action)
 			power_level = power_level * random_mod
 		end
 
-		local damage_dealt, attack_result, damage_efficiency = Attack.execute(unit, damage_profile, "power_level", power_level, "charge_level", attack_charge, "target_index", depth, "hit_world_position", hit_world_position, "hit_zone_name", hit_zone_name, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", attack_types.ranged, "damage_type", damage_type, "is_critical_strike", is_critical_strike)
+		local damage_dealt, attack_result, damage_efficiency = Attack.execute(unit, damage_profile, "power_level", power_level, "charge_level", attack_charge, "target_index", depth, "hit_world_position", hit_world_position, "hit_zone_name", hit_zone_name, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", ATTACK_TYPES.ranged, "damage_type", damage_type, "is_critical_strike", is_critical_strike)
 	end
 end
 
@@ -352,13 +366,15 @@ ActionChainLightning.finish = function (self, reason, data, t, time_in_action)
 		self._fx_extension:stop_looping_wwise_event(fx_settings.looping_shoot_critical_strike_sfx_alias)
 	end
 
+	local func_context = self._func_context
+
 	if self._is_server then
 		self:_deal_damage(t, time_in_action)
 
 		local chain_targets = self._chain_targets
 
 		for ii = 1, #chain_targets do
-			ChainLightningTarget.remove_all_child_nodes(chain_targets[ii], _on_delete_func, self._hit_units)
+			ChainLightningTarget.remove_all_child_nodes(chain_targets[ii], _on_remove_func, func_context)
 
 			local target_unit = chain_targets[ii]:value("unit")
 			local buff_id = chain_targets[ii]:value("buff_id")
@@ -376,7 +392,7 @@ ActionChainLightning.finish = function (self, reason, data, t, time_in_action)
 	if param_table then
 		param_table.unit = self._player_unit
 
-		buff_extension:add_proc_event(proc_events.on_chain_lightning_finish, param_table)
+		buff_extension:add_proc_event(PROC_EVENTS.on_chain_lightning_finish, param_table)
 	end
 
 	self._action_module_charge_component.charge_level = 0
@@ -407,38 +423,40 @@ ActionChainLightning.running_action_state = function (self, t, time_in_action)
 	end
 end
 
-function _damage_finding_func(node, player_unit)
+function _damage_finding_func(t, node, player_unit)
 	local target_unit = node:value("unit")
 
 	return target_unit ~= player_unit and HEALTH_ALIVE[target_unit]
 end
 
-function _target_finding_func(node, max_jumps)
+function _target_finding_func(t, node, max_jumps)
 	return not node:is_full() and node:depth() <= max_jumps and HEALTH_ALIVE[node:value("unit")]
 end
 
-function _traverse_validation_func(node)
+function _traverse_validation_func(t, node, player_unit)
 	local target_unit = node:value("unit")
 
 	return not HEALTH_ALIVE[target_unit]
 end
 
-function _on_add_func(self, t, parent_node, child_node)
-	local target_unit = child_node:value("unit")
+function _on_add_func(node, context)
+	local target_unit = node:value("unit")
+	local start_t = node:value("start_t") or 0
+	context.hit_units[target_unit] = true
 	local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 
 	if target_buff_extension then
-		local _, buff_id = target_buff_extension:add_externally_controlled_buff(CHAIN_LIGHTNING_BUFF, t, "owner_unit", self._layer_unit)
+		local _, buff_id = target_buff_extension:add_externally_controlled_buff(CHAIN_LIGHTNING_BUFF, start_t, "owner_unit", context.player_unit)
 
-		child_node:set_value("buff_id", buff_id)
+		node:set_value("buff_id", buff_id)
 	end
 end
 
-function _on_delete_func(node, hit_units)
-	local unit = node:value("unit")
+function _on_remove_func(node, context)
+	local target_unit = node:value("unit")
 	local buff_id = node:value("buff_id")
-	hit_units[unit] = nil
-	local target_buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+	context.hit_units[target_unit] = nil
+	local target_buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
 
 	if buff_id and target_buff_extension then
 		target_buff_extension:remove_externally_controlled_buff(buff_id)

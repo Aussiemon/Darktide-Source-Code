@@ -792,7 +792,7 @@ BotBehaviorExtension._alter_target_position = function (self, nav_world, travers
 		else
 			wanted_position = target_position + Vector3.normalize(self_position - target_position)
 		end
-	elseif reason == "knocked_down" and perception_component.aggressive_mode then
+	elseif reason == "knocked_down" then
 		wanted_position = target_position + Vector3.normalize(self_position - target_position)
 	elseif reason == "in_need_of_attention_stop" then
 		local should_stop = true

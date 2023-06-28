@@ -232,6 +232,31 @@ damage_templates.ogryn_powermaul_light_smiter = {
 		}
 	}
 }
+overrides.ogryn_powermaul_shield_light_smiter = {
+	parent_template_name = "ogryn_powermaul_light_smiter",
+	overrides = {
+		{
+			"armor_damage_modifier",
+			light_active_am
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				150,
+				300
+			}
+		},
+		{
+			"targets",
+			1,
+			"boost_curve_multiplier_finesse",
+			0.5
+		}
+	}
+}
 overrides.ogryn_powermaul_light_smiter_active = {
 	parent_template_name = "ogryn_powermaul_light_smiter",
 	overrides = {
@@ -1083,8 +1108,8 @@ damage_templates.ogryn_powermaul_slabshield_smite = {
 		{
 			power_distribution = {
 				attack = {
-					100,
-					200
+					150,
+					300
 				},
 				impact = {
 					40,
@@ -1095,7 +1120,7 @@ damage_templates.ogryn_powermaul_slabshield_smite = {
 		{
 			power_distribution = {
 				attack = {
-					30,
+					45,
 					90
 				},
 				impact = {
@@ -1107,8 +1132,8 @@ damage_templates.ogryn_powermaul_slabshield_smite = {
 		{
 			power_distribution = {
 				attack = {
-					10,
-					10
+					20,
+					40
 				},
 				impact = {
 					15,
@@ -1120,8 +1145,8 @@ damage_templates.ogryn_powermaul_slabshield_smite = {
 			armor_damage_modifier = tank_heavy_default_am,
 			power_distribution = {
 				attack = {
-					0,
-					0
+					15,
+					30
 				},
 				impact = {
 					10,
@@ -1153,8 +1178,8 @@ damage_templates.ogryn_powermaul_slabshield_tank = {
 		{
 			power_distribution = {
 				attack = {
-					50,
-					100
+					80,
+					160
 				},
 				impact = {
 					20,
@@ -1202,8 +1227,8 @@ damage_templates.ogryn_powermaul_slabshield_tank = {
 			armor_damage_modifier = tank_heavy_default_am,
 			power_distribution = {
 				attack = {
-					0,
-					0
+					15,
+					30
 				},
 				impact = {
 					5,
@@ -1234,8 +1259,8 @@ damage_templates.ogryn_powermaul_light_tank = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					75,
-					100
+					80,
+					160
 				},
 				impact = {
 					15,
@@ -1251,8 +1276,8 @@ damage_templates.ogryn_powermaul_light_tank = {
 					50
 				},
 				impact = {
-					11,
-					18
+					13,
+					20
 				}
 			}
 		},
@@ -1261,11 +1286,11 @@ damage_templates.ogryn_powermaul_light_tank = {
 			power_distribution = {
 				attack = {
 					20,
-					30
+					40
 				},
 				impact = {
-					5,
-					10
+					13,
+					20
 				}
 			}
 		},
@@ -1273,12 +1298,12 @@ damage_templates.ogryn_powermaul_light_tank = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					10,
-					20
+					15,
+					30
 				},
 				impact = {
-					3,
-					10
+					11,
+					17
 				}
 			}
 		},
@@ -1287,8 +1312,8 @@ damage_templates.ogryn_powermaul_light_tank = {
 			armor_damage_modifier = tank_heavy_default_am,
 			power_distribution = {
 				attack = {
-					0,
-					0
+					15,
+					30
 				},
 				impact = {
 					3,

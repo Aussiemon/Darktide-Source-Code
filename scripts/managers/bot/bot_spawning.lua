@@ -16,6 +16,7 @@ BotSpawning.spawn_bot_character = function (profile_name)
 		end
 
 		local profile = ProfileUtils.get_bot_profile(profile_name)
+		profile.identifier = profile_name
 
 		bot_synchronizer_host:add_bot(local_player_id, profile)
 
@@ -49,6 +50,20 @@ BotSpawning.despawn_best_bot = function ()
 	end
 
 	BotSpawning.despawn_bot_character(local_player_id)
+end
+
+local bot_configs = table.enum("low", "medium", "high")
+
+BotSpawning.get_bot_config_identifier = function ()
+	local challenge = Managers.state.difficulty:get_challenge()
+
+	if challenge >= 5 then
+		return bot_configs.high
+	elseif challenge == 3 or challenge == 4 then
+		return bot_configs.medium
+	else
+		return bot_configs.low
+	end
 end
 
 return BotSpawning

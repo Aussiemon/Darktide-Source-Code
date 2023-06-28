@@ -237,9 +237,7 @@ MarksGoodsVendorView._preview_item = function (self, item)
 end
 
 MarksGoodsVendorView._set_preview_widgets_visibility = function (self, visible)
-	local widgets_by_name = self._widgets_by_name
-	widgets_by_name.purchase_button.content.visible = visible
-	widgets_by_name.price_icon.content.visible = visible
+	MarksGoodsVendorView.super._set_preview_widgets_visibility(self, visible)
 end
 
 MarksGoodsVendorView.dialogue_system = function (self)

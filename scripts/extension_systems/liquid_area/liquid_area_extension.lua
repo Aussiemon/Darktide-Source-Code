@@ -66,6 +66,7 @@ LiquidAreaExtension.init = function (self, extension_init_context, unit, extensi
 	self._sfx_name_start = sfx_name_start
 	self._sfx_name_stop = template.sfx_name_stop
 	self._spawn_brush_size = template.spawn_brush_size
+	self._forbidden_keyword = template.forbidden_keyword
 	local starting_angle = 0
 	local flow_direction = extension_init_data.flow_direction_or_nil
 
@@ -845,7 +846,7 @@ LiquidAreaExtension._update_collision_detection = function (self, t)
 		local unit = BROADPHASE_RESULTS[i]
 		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
-		if buff_extension and not TEMP_ALREADY_CHECKED_UNITS[unit] and self:_is_unit_colliding(grid, unit) then
+		if buff_extension and not TEMP_ALREADY_CHECKED_UNITS[unit] and self:_is_unit_colliding(grid, unit) and (not self._forbidden_keyword or not buff_extension:has_keyword(self._forbidden_keyword)) then
 			local _, local_index, component_index = buff_extension:add_externally_controlled_buff(in_liquid_buff_template_name, t, "owner_unit", self._source_unit, "source_item", self._optional_source_item)
 			buff_affected_units[unit] = {
 				local_index = local_index,

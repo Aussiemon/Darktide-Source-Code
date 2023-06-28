@@ -8,6 +8,7 @@ local XboxLiveUtilities = require("scripts/foundation/utilities/xbox_live")
 local PresenceManager = class("PresenceManager")
 local PRESENCE_UPDATE_INTERVAL = 30
 local ACTIVITY_CHECK_INTERVAL = 0.5
+local CROSS_PLAY_CHECK_INTERVAL = 3
 
 local function _info(...)
 	Log.info("PresenceManager", ...)
@@ -40,9 +41,8 @@ PresenceManager.init = function (self)
 	self._character_name_update_interval = 0
 	self._update_interval = 0
 	self._next_activity_check = 0
-
-	self:_init_immaterium_presence()
-	self:_init_batched_get_presence()
+	self._next_cross_play_check = 0
+	self._advertise_playing = false
 
 	if IS_XBS or IS_GDK then
 		self._load_buffer_in_flight = nil
@@ -51,6 +51,8 @@ PresenceManager.init = function (self)
 		self._last_request_xbox_gamertag = 0
 		self._loaded_xbox_gamertags = {}
 	end
+
+	self._initialized = false
 end
 
 PresenceManager.destroy = function (self)
@@ -59,6 +61,50 @@ PresenceManager.destroy = function (self)
 
 		self._advertise_playing = false
 	end
+end
+
+PresenceManager.initialize = function (self)
+	self._initialized = true
+
+	self:_init_immaterium_presence()
+	self:_init_batched_get_presence()
+end
+
+PresenceManager.reset = function (self)
+	if not self._initialized then
+		return
+	end
+
+	self._initialized = false
+
+	if self._immaterium_presence_operation_id then
+		Managers.grpc:abort_operation(self._immaterium_presence_operation_id)
+
+		self._immaterium_presence_operation_id = nil
+	end
+
+	if self._batched_get_presence_operation_id then
+		Managers.grpc:abort_operation(self._batched_get_presence_operation_id)
+
+		self._batched_get_presence_operation_id = nil
+	end
+
+	for id, presence in pairs(self._presences_by_account_id) do
+		presence:destroy()
+
+		self._presences_by_account_id[id] = nil
+	end
+
+	for platform, platform_table in pairs(self._presences_by_platform_id) do
+		for id, presence in pairs(platform_table) do
+			presence:destroy()
+
+			platform_table[id] = nil
+		end
+	end
+
+	table.clear(self._batched_get_presence_request_id_to_entry)
+	self._myself:reset()
 end
 
 PresenceManager.presence = function (self)
@@ -86,6 +132,27 @@ PresenceManager.set_character_profile = function (self, character_profile)
 	self._myself:set_character_profile(character_profile)
 	self:_update_my_presence({
 		character_profile = true
+	})
+end
+
+PresenceManager.set_cross_play_disabled = function (self, disabled)
+	self._myself:set_cross_play_disabled(disabled)
+	self:_update_my_presence({
+		cross_play_disabled = true
+	})
+end
+
+PresenceManager._set_cross_play_disabled_in_party = function (self, disabled)
+	self._myself:set_cross_play_disabled_in_party(disabled)
+	self:_update_my_presence({
+		cross_play_disabled_in_party = true
+	})
+end
+
+PresenceManager._set_is_cross_playing = function (self, value)
+	self._myself:set_is_cross_playing(value)
+	self:_update_my_presence({
+		is_cross_playing = true
 	})
 end
 
@@ -139,7 +206,9 @@ PresenceManager._init_immaterium_presence = function (self)
 	end):catch(function (error)
 		self._immaterium_presence_operation_id = nil
 
-		if error.error_code == 10 then
+		if error.aborted then
+			_info("Aborted presence operation")
+		elseif error.error_code == 10 then
 			_info("Logged in from another location, sending fatal error...")
 			Managers.error:report_error(LoggedInFromAnotherLocationError:new())
 		else
@@ -163,10 +232,14 @@ PresenceManager._init_batched_get_presence = function (self)
 	end):catch(function (error)
 		self._batched_get_presence_operation_id = nil
 
-		_info("Disconnected from batched get presence - %s", table.tostring(error, 3))
-		Managers.grpc:delay_with_jitter_and_backoff("batched_get_presence"):next(function ()
-			self:_init_batched_get_presence()
-		end)
+		if error.aborted then
+			_info("Aborted batched presence operation")
+		else
+			_info("Disconnected from batched get presence - %s", table.tostring(error, 3))
+			Managers.grpc:delay_with_jitter_and_backoff("batched_get_presence"):next(function ()
+				self:_init_batched_get_presence()
+			end)
+		end
 	end)
 end
 
@@ -360,6 +433,40 @@ PresenceManager.update = function (self, dt, t)
 
 		self._next_activity_check = t + ACTIVITY_CHECK_INTERVAL
 	end
+
+	if self._next_cross_play_check <= t then
+		self:_check_cross_play()
+
+		self._next_cross_play_check = t + CROSS_PLAY_CHECK_INTERVAL
+	end
+end
+
+PresenceManager._check_cross_play = function (self)
+	local disabled_in_party = false
+	local is_cross_playing = false
+	local my_platform = self._myself:platform()
+	local all_members = Managers.party_immaterium:all_members()
+
+	for i = 1, #all_members do
+		local member = all_members[i]
+		local presence = member:presence()
+
+		if presence:cross_play_disabled() then
+			disabled_in_party = true
+		end
+
+		if presence:platform() ~= my_platform then
+			is_cross_playing = true
+		end
+	end
+
+	if disabled_in_party ~= self._myself:cross_play_disabled_in_party() then
+		self:_set_cross_play_disabled_in_party(disabled_in_party)
+	end
+
+	if is_cross_playing ~= self._myself:is_cross_playing() then
+		self:_set_is_cross_playing(is_cross_playing)
+	end
 end
 
 PresenceManager._check_activity = function (self)
@@ -390,12 +497,12 @@ PresenceManager._check_activity = function (self)
 
 		if advertise_playing ~= self._advertise_playing then
 			if advertise_playing then
-				self._advertise_playing = self:_update_platform_presence()
+				self:_update_platform_presence()
 			else
 				self:_delete_platform_presence()
-
-				self._advertise_playing = false
 			end
+
+			self._advertise_playing = advertise_playing
 		end
 	elseif activity_id == "mission" then
 		local num_mission_members = Managers.connection:num_members()
@@ -421,7 +528,7 @@ PresenceManager._update_platform_presence = function (self)
 	local party_id = myself:party_id()
 
 	if not party_id then
-		return false
+		return
 	end
 
 	if HAS_STEAM then
@@ -434,8 +541,6 @@ PresenceManager._update_platform_presence = function (self)
 			XboxLiveUtilities.set_activity(party_id_with_invite_code, party_id, num_other_members, join_restrictions)
 		end)
 	end
-
-	return true
 end
 
 PresenceManager._delete_platform_presence = function (self)

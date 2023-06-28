@@ -110,29 +110,40 @@ CoverUserExtension.update = function (self, unit, dt, t)
 		end
 	end
 
-	local cover_component = self._cover_component
-	local need_to_find_cover = not cover_component.has_cover
-
-	if need_to_find_cover then
-		local target_unit = perception_component.target_unit
-		local cover_slot = self:_find_cover_slot(unit, cover_config, target_unit, t)
-
-		if cover_slot then
-			self:_claim_cover_slot(cover_slot)
-		elseif self._max_distance_modifier_timer then
-			self._max_distance_modifier = 1
-			self._max_distance_modifier_timer = t + max_distance_modifier_duration
-		end
+	if self._reaction_time and self._reaction_time > 0 then
+		self._reaction_time = self._reaction_time - dt
 	else
-		local current_cover_slot = self._current_cover_slot
-		local cover_slot_is_valid = self:_validate_cover_slot(current_cover_slot, cover_config, t)
+		local cover_component = self._cover_component
+		local need_to_find_cover = not cover_component.has_cover
 
-		if not cover_slot_is_valid then
-			self:release_cover_slot()
+		if need_to_find_cover then
+			local target_unit = perception_component.target_unit
+			local cover_slot = self:_find_cover_slot(unit, cover_config, target_unit, t)
+
+			if cover_slot then
+				self:_claim_cover_slot(cover_slot)
+			elseif self._max_distance_modifier_timer then
+				self._max_distance_modifier = 1
+				self._max_distance_modifier_timer = t + max_distance_modifier_duration
+			end
 		else
-			local current_cover_position = current_cover_slot.navmesh_position:unbox()
-			local distance = Vector3.distance(POSITION_LOOKUP[unit], current_cover_position)
-			cover_component.distance_to_cover = distance
+			local current_cover_slot = self._current_cover_slot
+			local cover_slot_is_valid = self:_validate_cover_slot(current_cover_slot, cover_config, t)
+
+			if not cover_slot_is_valid then
+				if cover_config.reaction_time_range and not self._reaction_time then
+					local reaction_time = math.random_range(cover_config.reaction_time_range[1], cover_config.reaction_time_range[2])
+					self._reaction_time = reaction_time
+				else
+					self._reaction_time = nil
+
+					self:release_cover_slot()
+				end
+			else
+				local current_cover_position = current_cover_slot.navmesh_position:unbox()
+				local distance = Vector3.distance(POSITION_LOOKUP[unit], current_cover_position)
+				cover_component.distance_to_cover = distance
+			end
 		end
 	end
 
@@ -222,6 +233,8 @@ CoverUserExtension._find_cover_slot = function (self, unit, cover_config, target
 	return best_cover_slot
 end
 
+local DEFAULT_MAX_DISTANCE_FROM_COMBAT_VECTOR_TYPE = "to"
+
 CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_config, t)
 	local disabled = cover_slot.disabled
 
@@ -295,8 +308,16 @@ CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_conf
 		local max_distance_from_combat_vector = is_suppressed and cover_config.suppressed_max_distance_from_combat_vector or cover_config.max_distance_from_combat_vector
 
 		if max_distance_from_combat_vector then
-			local combat_vector_to_position = combat_vector_system:get_to_position(current_vector_type)
-			local distance_to_combat_vector = Vector3.distance(cover_slot_position, combat_vector_to_position)
+			local max_distance_from_combat_vector_type = cover_config.max_distance_from_combat_vector_type or DEFAULT_MAX_DISTANCE_FROM_COMBAT_VECTOR_TYPE
+			local combat_vector_position = combat_vector_system:get_to_position(current_vector_type)
+
+			if max_distance_from_combat_vector_type == "to" then
+				combat_vector_position = combat_vector_system:get_to_position(current_vector_type)
+			elseif max_distance_from_combat_vector_type == "from" then
+				combat_vector_position = combat_vector_system:get_from_position()
+			end
+
+			local distance_to_combat_vector = Vector3.distance(cover_slot_position, combat_vector_position)
 
 			if max_distance_from_combat_vector < distance_to_combat_vector then
 				return false
@@ -362,6 +383,17 @@ CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_conf
 			if dot < CoverSettings.flanking_cover_dot then
 				return false
 			end
+		end
+	end
+
+	if cover_config.dot_against_current_target and ALIVE[current_target_unit] then
+		local cover_slot_position = cover_slot.position:unbox()
+		local slot_direction = cover_slot.direction:unbox()
+		local slot_to_target = Vector3.normalize(POSITION_LOOKUP[current_target_unit] - cover_slot_position)
+		local dot = Vector3.dot(slot_to_target, slot_direction)
+
+		if dot < CoverSettings.flanking_cover_dot then
+			return false
 		end
 	end
 

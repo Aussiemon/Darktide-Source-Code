@@ -9,8 +9,8 @@ local CraftingView = class("CraftingView", "VendorInteractionViewBase")
 
 CraftingView.init = function (self, settings, context)
 	self._wallet_type = {
-		"plasteel",
 		"diamantine",
+		"plasteel",
 		"credits"
 	}
 

@@ -22,27 +22,27 @@ local breed_data = {
 	detection_radius = 15,
 	display_name = "loc_breed_display_name_cultist_melee",
 	run_speed = 5.6,
-	spawn_inventory_slot = "slot_melee_weapon",
+	challenge_rating = 0.75,
 	use_bone_lod = true,
 	spawn_anim_state = "to_melee",
-	game_object_type = "minion_melee",
-	unit_template_name = "minion",
 	power_level_type = "renegade_default_melee",
+	unit_template_name = "minion",
 	faction_name = "chaos",
+	walk_speed = 2.3,
 	sub_faction_name = "cultist",
 	broadphase_radius = 1,
 	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_cultist",
-	use_avoidance = true,
-	stagger_resistance = 1,
 	base_height = 1.9,
-	walk_speed = 2.3,
+	stagger_resistance = 1,
+	spawn_inventory_slot = "slot_melee_weapon",
 	player_locomotion_constrain_radius = 0.4,
-	challenge_rating = 0.75,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	use_wounds = true,
+	use_avoidance = true,
 	slot_template = "renegade_melee",
 	activate_slot_system_on_spawn = true,
 	can_patrol = true,
+	game_object_type = "minion_melee",
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
 	bone_lod_radius = 1.1,
 	has_direct_ragdoll_flow_event = true,
@@ -90,19 +90,6 @@ local breed_data = {
 		"anim_move_speed"
 	},
 	combat_range_data = BreedCombatRanges.renegade_melee,
-	suppress_config = {
-		max_value = math.huge,
-		threshold = math.huge,
-		decay_speeds = {
-			melee = 0.05,
-			far = 0.2,
-			close = 0.2
-		},
-		immunity_duration = {
-			0.75,
-			1.25
-		}
-	},
 	attack_intensity_cooldowns = {
 		melee = {
 			0.7,

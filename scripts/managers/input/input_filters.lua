@@ -112,12 +112,13 @@ InputFilters.scale_vector3_xy_accelerated_x_dev_params = {
 		return internal_filter_data
 	end,
 	update = function (filter_data, input_service)
-		local invert_look_y = DevParameters[filter_data.invert_look_y] and -1 or 1
-		local multiplier = DevParameters[filter_data.multiplier]
+		local settings = Managers.save:account_data().input_settings
+		local invert_look_y = settings[filter_data.invert_look_y] and -1 or 1
+		local multiplier = settings[filter_data.multiplier]
 		local val = input_service:get(filter_data.input_mappings)
 		val = Vector3.multiply_elements(val, Vector3(1, invert_look_y, 1))
 
-		_input_threshold(val, DevParameters[filter_data.input_threshold] or 0)
+		_input_threshold(val, settings[filter_data.input_threshold] or 0)
 
 		local mean_dt = Managers.time:mean_dt()
 		local time = Application.time_since_launch()
@@ -148,7 +149,7 @@ InputFilters.scale_vector3_xy_accelerated_x_dev_params = {
 			val.y = val.y * (1 - (math_abs(val.x) - 0.75) / 0.25)
 		end
 
-		if not DevParameters[filter_data.enable_acceleration] then
+		if not settings[filter_data.enable_acceleration] then
 			x = val.x * filter_data.multiplier_min_x
 		elseif filter_data.turnaround_threshold and turnaround_elapsed_time >= filter_data.acceleration_delay + filter_data.turnaround_delay and filter_data.turnaround_threshold <= math_abs(val.x) then
 			local value = math_clamp(elapsed_time - (filter_data.acceleration_delay + filter_data.turnaround_delay) / filter_data.turnaround_time_ref, 0, 1)

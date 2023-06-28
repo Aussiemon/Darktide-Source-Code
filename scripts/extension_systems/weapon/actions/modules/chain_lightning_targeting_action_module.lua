@@ -11,6 +11,7 @@ ChainLightningTargetingActionModule.init = function (self, physics_world, player
 	self._action_settings = action_settings
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 	self._first_person_component = unit_data_extension:read_component("first_person")
+	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 end
 
@@ -53,7 +54,7 @@ ChainLightningTargetingActionModule.fixed_update = function (self, dt, t)
 		local target_unit = BROADPHASE_RESULTS[i]
 
 		if target_unit and not hit_units[target_unit] then
-			local valid_target, debug_reason = ChainLightning.is_valid_target(self._physics_world, player_unit, target_unit, query_position, -forward_direction, max_angle, close_max_angle, max_z_diff)
+			local valid_target, debug_reason = ChainLightning.is_valid_target(self._physics_world, player_unit, target_unit, query_position, -forward_direction, max_angle, close_max_angle, max_z_diff, nil, nil, nil)
 
 			if valid_target then
 				num_targets = num_targets + 1

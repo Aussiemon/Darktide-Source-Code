@@ -139,19 +139,13 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 			if leap_velocity or scratchpad.current_velocity then
 				self:_try_start_leap(unit, t, scratchpad, action_data)
 			else
-				local hit_position, hit_normal = self:_check_wall_collision(unit, scratchpad, action_data)
+				scratchpad.animation_extension:anim_event(action_data.stop_anim)
 
-				if hit_position then
-					self:_start_wall_jump(unit, scratchpad, action_data, hit_normal)
-				else
-					scratchpad.animation_extension:anim_event(action_data.stop_anim)
+				scratchpad.stop_duration = t + action_data.stop_duration
+				scratchpad.state = "stopping"
+				behavior_component.move_state = "idle"
 
-					scratchpad.stop_duration = t + action_data.stop_duration
-					scratchpad.state = "stopping"
-					behavior_component.move_state = "idle"
-
-					return "running"
-				end
+				return "running"
 			end
 		end
 
@@ -292,12 +286,6 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 		if not scratchpad.current_colliding_target then
 			if mover and Mover.collides_down(mover) then
 				self:_start_landing(scratchpad, action_data, current_velocity, t)
-			elseif mover and (Mover.collides_sides(mover) or Mover.collides_up(mover)) then
-				local hit_position, hit_normal = self:_check_wall_collision(unit, scratchpad, action_data, current_velocity)
-
-				if hit_position then
-					self:_start_wall_jump(unit, scratchpad, action_data, hit_normal)
-				end
 			else
 				local wanted_velocity = Vector3(current_velocity.x, current_velocity.y, 0)
 
@@ -315,14 +303,6 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 		if mover and Mover.collides_down(mover) then
 			self:_stop_in_air_stagger(scratchpad)
 			self:_start_landing(scratchpad, action_data, current_velocity, t)
-		elseif mover and (Mover.collides_sides(mover) or Mover.collides_up(mover)) then
-			self:_stop_in_air_stagger(scratchpad)
-
-			local hit_position, hit_normal = self:_check_wall_collision(unit, scratchpad, action_data, current_velocity)
-
-			if hit_position then
-				self:_start_wall_jump(unit, scratchpad, action_data, hit_normal)
-			end
 		end
 	elseif state == "wall_jump" then
 		local wall_land_duration = scratchpad.wall_land_duration
@@ -334,6 +314,8 @@ BtChaosHoundLeapAction.run = function (self, unit, breed, blackboard, scratchpad
 
 			scratchpad.wall_land_duration = t + action_data.wall_land_duration
 		end
+
+		locomotion_extension:set_wanted_rotation(scratchpad.wanted_wall_rotation:unbox())
 
 		if wall_land_duration and wall_land_duration <= t then
 			locomotion_extension:set_anim_driven(false)
@@ -478,78 +460,6 @@ BtChaosHoundLeapAction._start_landing = function (self, scratchpad, action_data,
 	end
 
 	scratchpad.stagger_component.controlled_stagger_finished = true
-end
-
-BtChaosHoundLeapAction._start_wall_jump = function (self, unit, scratchpad, action_data, wall_normal)
-	scratchpad.state = "wall_jump"
-	local locomotion_extension = scratchpad.locomotion_extension
-
-	locomotion_extension:set_wanted_velocity(Vector3.zero())
-	locomotion_extension:set_affected_by_gravity(false, OVERRIDE_SPEED_Z)
-
-	local anim_driven = true
-	local affected_by_gravity = false
-	local script_driven_rotation = true
-
-	locomotion_extension:set_anim_driven(anim_driven, affected_by_gravity, script_driven_rotation)
-
-	local rotation = Quaternion.look(-wall_normal)
-
-	Unit.set_local_rotation(unit, 1, rotation)
-
-	local wall_jump_anim_event = action_data.wall_jump_anim_event
-
-	scratchpad.animation_extension:anim_event(wall_jump_anim_event)
-
-	scratchpad.stagger_component.controlled_stagger_finished = true
-end
-
-BtChaosHoundLeapAction._check_wall_collision = function (self, unit, scratchpad, action_data)
-	local wall_raycast_node_name = action_data.wall_raycast_node_name
-	local wall_raycast_node = Unit.node(unit, wall_raycast_node_name)
-	local from = Unit.world_position(unit, wall_raycast_node)
-	local physics_world = scratchpad.physics_world
-	local wall_raycast_distance = action_data.wall_raycast_distance
-	local rotation = Unit.local_rotation(unit, 1)
-	local direction = Quaternion.forward(rotation)
-	local collision_filter = "filter_minion_line_of_sight_check"
-	local _, hit_position, _, hit_normal_1, _ = PhysicsWorld.raycast(physics_world, from, direction, wall_raycast_distance, "closest", "collision_filter", collision_filter)
-
-	if not hit_position then
-		local right = Quaternion.right(rotation)
-		local from_right = from + right
-		_, hit_position, _, hit_normal_1, _ = PhysicsWorld.raycast(physics_world, from_right, direction, wall_raycast_distance, "closest", "collision_filter", collision_filter)
-	end
-
-	if not hit_position then
-		local left = -Quaternion.right(rotation)
-		local from_left = from + left
-		_, hit_position, _, hit_normal_1, _ = PhysicsWorld.raycast(physics_world, from_left, direction, wall_raycast_distance, "closest", "collision_filter", collision_filter)
-	end
-
-	if hit_position then
-		local average_normal = hit_normal_1
-		local num_normal_hits = 1
-		local from_2 = from + Vector3.up() * 0.5
-		local from_3 = from - Vector3.up() * 0.5
-		local _, _, _, hit_normal_2, _ = PhysicsWorld.raycast(physics_world, from_2, direction, wall_raycast_distance, "closest", "collision_filter", collision_filter)
-
-		if hit_normal_2 then
-			average_normal = average_normal + hit_normal_2
-			num_normal_hits = num_normal_hits + 1
-		end
-
-		local _, _, _, hit_normal_3, _ = PhysicsWorld.raycast(physics_world, from_3, direction, wall_raycast_distance, "closest", "collision_filter", collision_filter)
-
-		if hit_normal_3 then
-			average_normal = average_normal + hit_normal_3
-			num_normal_hits = num_normal_hits + 1
-		end
-
-		average_normal = average_normal / num_normal_hits
-
-		return hit_position, average_normal
-	end
 end
 
 local LEAP_NODE = "j_head"

@@ -9,11 +9,9 @@ local templates = {
 	weapon_trait_bespoke_ogryn_thumper_p1_hipfire_while_sprinting = table.clone(BaseWeaponTraitBuffTemplates.hipfire_while_sprinting),
 	weapon_trait_bespoke_ogryn_thumper_p1_suppression_on_close_kill = table.clone(BaseWeaponTraitBuffTemplates.suppression_on_close_kill),
 	weapon_trait_bespoke_ogryn_thumper_p1_toughness_on_continuous_fire = table.merge({
-		use_combo = true,
-		conditional_stat_buffs = {
-			[stat_buffs.toughness_extra_regen_rate] = 0.05
-		}
-	}, BaseWeaponTraitBuffTemplates.stacking_buff_on_continuous_fire),
+		toughness_fixed_percentage = 0.1,
+		use_combo = true
+	}, BaseWeaponTraitBuffTemplates.toughness_on_continuous_fire),
 	weapon_trait_bespoke_ogryn_thumper_p1_power_bonus_on_continuous_fire = table.merge({
 		use_combo = true,
 		conditional_stat_buffs = {

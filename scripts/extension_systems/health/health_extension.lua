@@ -124,11 +124,19 @@ HealthExtension.add_heal = function (self, heal_amount, heal_type)
 	return actual_heal_amount
 end
 
-HealthExtension.set_last_damaging_unit = function (self, last_damaging_unit, hit_zone_name, last_hit_was_critical)
+HealthExtension.set_last_damaging_unit = function (self, last_damaging_unit, hit_zone_name, last_hit_was_critical, hit_world_position_or_nil)
 	self._last_damaging_unit = last_damaging_unit
 	self._last_hit_zone_name = hit_zone_name
 	self._last_hit_was_critical = last_hit_was_critical
 	self._was_hit_by_critical_hit_this_render_frame = self._was_hit_by_critical_hit_this_render_frame or last_hit_was_critical
+
+	if hit_world_position_or_nil then
+		if not self._hit_world_position then
+			self._hit_world_position = Vector3Box(hit_world_position_or_nil)
+		else
+			self._hit_world_position:store(hit_world_position_or_nil)
+		end
+	end
 end
 
 HealthExtension.last_damaging_unit = function (self)
@@ -141,6 +149,10 @@ end
 
 HealthExtension.last_hit_was_critical = function (self)
 	return self._last_hit_was_critical
+end
+
+HealthExtension.last_hit_world_position = function (self)
+	return self._hit_world_position and self._hit_world_position:unbox()
 end
 
 HealthExtension.was_hit_by_critical_hit_this_render_frame = function (self)

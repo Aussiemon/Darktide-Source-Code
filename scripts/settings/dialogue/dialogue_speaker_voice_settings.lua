@@ -133,6 +133,14 @@ local dialogue_speaker_voice_settings = {
 		icon = "content/ui/textures/icons/npc_portraits/mission_givers/sergeant_a",
 		player_voice = true
 	},
+	sergeant_b = {
+		full_name = "loc_npc_full_name_sergeant_a",
+		material_small = "content/ui/materials/icons/npc_portraits/mission_givers/sergeant_a_small",
+		subtitles_enabled = true,
+		short_name = "loc_npc_short_name_sergeant_a",
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/sergeant_a",
+		player_voice = true
+	},
 	pilot_a = {
 		full_name = "loc_npc_full_name_pilot_a",
 		material_small = "content/ui/materials/icons/npc_portraits/mission_givers/pilot_a_small",
@@ -181,6 +189,7 @@ local dialogue_speaker_voice_settings = {
 		full_name = "loc_npc_full_name_shipmistress_a",
 		short_name = "loc_npc_short_name_shipmistress_a",
 		subtitles_enabled = true,
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/brahms_a",
 		player_voice = false
 	},
 	vocator_a = {
@@ -279,6 +288,21 @@ local dialogue_speaker_voice_settings = {
 		full_name = "loc_npc_full_name_enemy_nemesis_wolfer_a",
 		short_name = "loc_npc_short_name_enemy_nemesis_wolfer_a",
 		subtitles_enabled = true,
+		icon = "content/ui/textures/icons/npc_portraits/enemies/wolfer_a",
+		player_voice = false
+	},
+	enemy_wolfer_adjutant_a = {
+		full_name = "loc_npc_full_name_enemy_wolfer_adjutant_a",
+		short_name = "loc_npc_short_name_enemy_wolfer_adjutant_a",
+		subtitles_enabled = true,
+		icon = "content/ui/textures/icons/npc_portraits/enemies/officer_01",
+		player_voice = false
+	},
+	enemy_wolfer_adjutant_b = {
+		full_name = "loc_npc_full_name_enemy_wolfer_adjutant_b",
+		short_name = "loc_npc_short_name_enemy_wolfer_adjutant_b",
+		subtitles_enabled = true,
+		icon = "content/ui/textures/icons/npc_portraits/enemies/officer_02",
 		player_voice = false
 	},
 	enemy_cultist_flamer_a = {

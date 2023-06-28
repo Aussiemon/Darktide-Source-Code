@@ -47,7 +47,7 @@ FoliageInteraction._update_foliage_players = function (self, dt, t)
 
 				local relative_world_pos = Vector2(unit_pos[1] % window_size, unit_pos[2] % window_size)
 				local relative_texture_pos = Vector2(relative_world_pos[1] / window_size, relative_world_pos[2] / window_size)
-				local relative_screen_pos = Vector3(relative_texture_pos[1] * w, h - relative_texture_pos[2] * h, 0)
+				local relative_screen_pos = Vector3(relative_texture_pos[1] * w, relative_texture_pos[2] * h, 0)
 				local relative_texture_size = Vector2(texture_size[1] / window_size * w, texture_size[2] / window_size * h)
 				local relative_start_pos = relative_screen_pos - relative_texture_size * 0.5
 
@@ -86,7 +86,12 @@ FoliageInteraction._update_foliage_ai = function (self, local_player_unit, dt, t
 	local texture_world_size = foliage_settings.default_texture_world_size
 	local duplicate_edge_cases = foliage_settings.duplicate_edge_cases
 	local w, h = Gui.resolution()
-	local player_pos = Unit.local_position(local_player_unit, 0)
+	local player_pos = Unit.local_position(local_player_unit, 1)
+
+	if not Managers.state.entity then
+		return
+	end
+
 	local ai_broadphase = Managers.state.entity:system("ai_system").broadphase
 	local ai_unit = nil
 	local num_enemies = Broadphase.query(ai_broadphase, player_pos, window_size * 0.5, ENEMIES)

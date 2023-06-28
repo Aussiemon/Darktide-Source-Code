@@ -24,15 +24,15 @@ AmmunitionInteraction.stop = function (self, world, interactor_unit, unit_data_c
 end
 
 AmmunitionInteraction.interactor_condition_func = function (self, interactor_unit, interactee_unit)
-	local missing_ammo = not Ammo.ammo_is_full(interactor_unit)
+	local ammo_full = Ammo.ammo_is_full(interactor_unit)
 
-	return missing_ammo and AmmunitionInteraction.super.interactor_condition_func(self, interactor_unit, interactee_unit)
+	return not ammo_full and AmmunitionInteraction.super.interactor_condition_func(self, interactor_unit, interactee_unit)
 end
 
 AmmunitionInteraction.hud_block_text = function (self, interactor_unit, interactee_unit, interactable_actor_node_index)
-	local missing_ammo = not Ammo.ammo_is_full(interactor_unit)
+	local ammo_full = Ammo.ammo_is_full(interactor_unit)
 
-	if not missing_ammo then
+	if ammo_full then
 		if Ammo.uses_ammo(interactor_unit) then
 			return "loc_action_interaction_inactive_ammo_full"
 		else
@@ -56,39 +56,6 @@ AmmunitionInteraction._add_ammo = function (self, interactor_unit, pickup_data)
 			local max_ammo_reserve = wieldable_component.max_ammunition_reserve
 			local ammo_clip = wieldable_component.current_ammunition_clip
 			local max_ammo_clip = wieldable_component.max_ammunition_clip
-			local players_have_improved_keyword = false
-			local side_system = Managers.state.extension:system("side_system")
-			local side = side_system.side_by_unit[interactor_unit]
-			local player_units = side.player_units
-			local buff_keywords = BuffSettings.keywords
-
-			for _, player_unit in pairs(player_units) do
-				local buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
-
-				if buff_extension then
-					local improved_keyword = buff_extension:has_keyword(buff_keywords.improved_ammo_pickups)
-
-					if improved_keyword then
-						players_have_improved_keyword = true
-
-						break
-					end
-				end
-			end
-
-			pickup_data.modifier = 1
-
-			if players_have_improved_keyword and pickup_data.ammo_crate then
-				local ability_extension = ScriptUnit.has_extension(interactor_unit, "ability_system")
-
-				if ability_extension then
-					local ability_type = "grenade_ability"
-					local charges_restored = 100
-
-					ability_extension:restore_ability_charge(ability_type, charges_restored)
-				end
-			end
-
 			local pickup_amount = pickup_data.ammo_amount_func(max_ammo_reserve, max_ammo_clip, pickup_data)
 			local missing_clip = max_ammo_clip - ammo_clip
 			local new_ammo_amount = math.min(ammo_reserve + pickup_amount, max_ammo_reserve + missing_clip)

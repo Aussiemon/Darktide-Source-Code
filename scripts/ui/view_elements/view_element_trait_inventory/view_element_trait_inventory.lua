@@ -25,14 +25,14 @@ ViewElementTraitInventory.init = function (self, parent, draw_layer, start_scale
 	self._active = not self._do_animations
 end
 
-ViewElementTraitInventory.destroy = function (self)
+ViewElementTraitInventory.destroy = function (self, ui_renderer)
 	if self._weapon_stats then
 		self._weapon_stats:destroy()
 
 		self._weapon_stats = nil
 	end
 
-	ViewElementTraitInventory.super.destroy(self)
+	ViewElementTraitInventory.super.destroy(self, ui_renderer)
 end
 
 ViewElementTraitInventory.show_overlay = function (self, show)

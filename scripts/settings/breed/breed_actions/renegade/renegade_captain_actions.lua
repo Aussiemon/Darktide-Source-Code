@@ -522,10 +522,10 @@ local action_data = {
 		considerations = UtilityConsiderations.melee_follow,
 		start_move_anim_events = {
 			walking = {
-				bwd = "move_start_bwd",
-				fwd = "move_start_fwd",
-				left = "move_start_left",
-				right = "move_start_right"
+				bwd = "move_bwd_walk",
+				fwd = "move_fwd_walk",
+				left = "move_left_walk",
+				right = "move_right_walk"
 			},
 			running = {
 				bwd = "move_start_bwd",

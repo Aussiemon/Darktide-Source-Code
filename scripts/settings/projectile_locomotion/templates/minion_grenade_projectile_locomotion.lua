@@ -51,13 +51,13 @@ local projectile_locomotion_templates = {
 			throw = {
 				offset_right = 0,
 				aim_max_iterations = 150,
-				speed_inital = 20,
+				speed_inital = 25,
 				place_distance = 2,
 				inherit_owner_velocity_percentage = 1,
 				speed_charge_duration = 0,
 				offset_forward = 1,
 				rotation_charge_duration = 0,
-				speed_maximal = 20,
+				speed_maximal = 25,
 				locomotion_state = locomotion_states.manual_physics,
 				rotation_offset_initial = Vector3Box(0, 0, 0),
 				rotation_offset_maximal = Vector3Box(0, 0, 0),
@@ -79,9 +79,9 @@ local projectile_locomotion_templates = {
 			}
 		},
 		integrator_parameters = {
-			gravity = 12.5,
+			gravity = 14.5,
 			radius = 0.025,
-			coefficient_of_restitution = 0.6,
+			coefficient_of_restitution = 0.55,
 			drag_coefficient = 0,
 			collision_filter = "filter_minion_throwing",
 			use_actor_mass_radius = false,

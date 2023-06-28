@@ -9,6 +9,10 @@ local CUSTOM_ATTACK_NAME_PATTERN = "%s_custom_attack_selection_%s"
 local TEMP_MISSING_ENTRIES = {}
 
 local function _init_and_run_tests(breeds)
+	if EDITOR then
+		return
+	end
+
 	local player_character_breeds = {}
 
 	for breed_name, breed_data in pairs(breeds) do

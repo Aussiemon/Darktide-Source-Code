@@ -45,9 +45,7 @@ ViewElementWeaponActions._hide_dividers = function (self)
 	grid_divider_title.style.texture.color[1] = 0
 end
 
-ViewElementWeaponActions.destroy = function (self)
-	ViewElementWeaponActions.super.destroy(self)
-
+ViewElementWeaponActions.destroy = function (self, ui_renderer)
 	if self._weapon_icon_renderer then
 		self._weapon_icon_renderer = nil
 
@@ -55,6 +53,8 @@ ViewElementWeaponActions.destroy = function (self)
 
 		self._weapon_icon_renderer_id = nil
 	end
+
+	ViewElementWeaponActions.super.destroy(self, ui_renderer)
 end
 
 ViewElementWeaponActions.present_item = function (self, item)

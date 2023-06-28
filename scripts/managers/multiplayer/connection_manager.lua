@@ -131,6 +131,14 @@ ConnectionManager.initialize_wan_client = function (self, peer_id)
 	self._client_destructor = Network.shutdown_lan_client
 end
 
+ConnectionManager.destroy_wan_client = function (self)
+	Log.info("ConnectionManager", "Destroying wan_client with peer_id %s", Network.peer_id())
+	self:shutdown_connections("wan_client_destroyed")
+	self._client_destructor(self._client)
+
+	self._client = nil
+end
+
 ConnectionManager.is_initialized = function (self)
 	return self._client ~= nil
 end

@@ -1,6 +1,6 @@
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
-local TalentSettings = require("scripts/settings/buff/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local talent_settings = TalentSettings.zealot_2
 local special_rules = SpecialRulesSetting.special_rules
 local math_round = math.round

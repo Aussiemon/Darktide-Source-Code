@@ -22,15 +22,15 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_ogryn_bulwark"
 local breed_data = {
-	detection_radius = 13,
+	explosion_radius = 0.25,
 	walk_speed = 1.9,
 	use_navigation_path_splines = true,
 	use_bone_lod = true,
+	state_machine = "content/characters/enemy/chaos_ogryn/third_person/animations/chaos_ogryn_bulwark",
 	sub_faction_name = "chaos",
-	explosion_radius = 0.25,
+	detection_radius = 13,
 	unit_template_name = "minion",
 	spawn_inventory_slot = "slot_shield",
-	state_machine = "content/characters/enemy/chaos_ogryn/third_person/animations/chaos_ogryn_bulwark",
 	slot_template = "chaos_ogryn",
 	broadphase_radius = 1,
 	activate_slot_system_on_spawn = true,
@@ -76,8 +76,8 @@ local breed_data = {
 		[stagger_types.medium] = 2.6666666666666665,
 		[stagger_types.heavy] = 3.5,
 		[stagger_types.explosion] = 3,
-		[stagger_types.light_ranged] = 2.6666666666666665,
-		[stagger_types.killshot] = 2.6666666666666665,
+		[stagger_types.light_ranged] = 2.5,
+		[stagger_types.killshot] = 2.5,
 		[stagger_types.sticky] = 0.6,
 		[stagger_types.shield_block] = 0.4166666666666667,
 		[stagger_types.shield_heavy_block] = 3.076923076923077,
@@ -121,19 +121,6 @@ local breed_data = {
 		"anim_move_speed"
 	},
 	combat_range_data = BreedCombatRanges.chaos_ogryn_bulwark,
-	suppress_config = {
-		max_value = math.huge,
-		threshold = math.huge,
-		decay_speeds = {
-			melee = 0.05,
-			far = 0.3,
-			close = 0.3
-		},
-		immunity_duration = {
-			2.75,
-			3.25
-		}
-	},
 	attack_intensity_cooldowns = {
 		melee = {
 			0,

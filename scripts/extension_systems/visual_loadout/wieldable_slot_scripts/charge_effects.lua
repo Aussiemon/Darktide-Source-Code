@@ -8,7 +8,7 @@ ChargeEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	local owner_unit = context.owner_unit
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
 	self._weapon_template = weapon_template
-	self._charge_effects = weapon_template.charge_effects
+	self._weapon_template_charge_effects = weapon_template.charge_effects
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._action_module_charge_component = unit_data_extension:read_component("action_module_charge")
@@ -39,8 +39,7 @@ ChargeEffects.update = function (self, unit, dt, t)
 	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
 	local action_module_charge_component = self._action_module_charge_component
 	local charge_level = action_module_charge_component.charge_level
-	local weapon_template = self._weapon_template
-	local charge_effects = action_settings and action_settings.charge_effects or weapon_template and weapon_template.charge_effects
+	local charge_effects = action_settings and action_settings.charge_effects or self._weapon_template_charge_effects
 	local charge_sfx_parameter = charge_effects and charge_effects.sfx_parameter
 
 	if charge_sfx_parameter == nil then
@@ -77,7 +76,8 @@ end
 
 ChargeEffects._start_effects = function (self, t)
 	local fx_extension = self._fx_extension
-	local charge_effects = self._charge_effects
+	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
+	local charge_effects = action_settings and action_settings.charge_effects or self._weapon_template_charge_effects
 
 	if charge_effects then
 		local fx_sources = self._fx_sources
@@ -133,11 +133,13 @@ ChargeEffects._stop_effects = function (self)
 	end
 
 	self._played_start_effects = false
+	self._is_charge_done_sound_played = false
 end
 
 ChargeEffects._play_charged_done_effects = function (self)
 	local fx_extension = self._fx_extension
-	local charge_effects = self._charge_effects
+	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
+	local charge_effects = action_settings and action_settings.charge_effects or self._weapon_template_charge_effects
 	local fx_sources = self._fx_sources
 
 	if not charge_effects then

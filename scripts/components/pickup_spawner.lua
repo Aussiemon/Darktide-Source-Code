@@ -1,4 +1,6 @@
+local Pickups = require("scripts/settings/pickup/pickups")
 local PickupSpawner = component("PickupSpawner")
+local PICKUPS_BY_NAME = Pickups.by_name
 
 PickupSpawner.init = function (self, unit, is_server)
 	self._unit = unit
@@ -12,6 +14,21 @@ PickupSpawner.init = function (self, unit, is_server)
 		local items = self:get_data(unit, "items")
 		local item_spawn_selection = self:get_data(unit, "item_spawn_selection")
 		local spawn_nodes = self:get_data(unit, "spawn_nodes")
+		local index = 1
+
+		while true do
+			local pickup_name = items[index]
+
+			if not pickup_name then
+				break
+			end
+
+			if not PICKUPS_BY_NAME[pickup_name] then
+				table.swap_delete(items, index)
+			else
+				index = index + 1
+			end
+		end
 
 		pickup_spawner_extension:setup_from_component(self, spawn_method, ignore_item_list, items, item_spawn_selection, spawn_nodes)
 

@@ -1,9 +1,4 @@
 local GameplayInitTimeSlice = require("scripts/game_states/game/utilities/gameplay_init_time_slice")
-
-local function _info(...)
-	Log.info("WorldLevelDespawnManager", ...)
-end
-
 local WorldLevelDespawnManager = class("WorldLevelDespawnManager")
 local Unit_alive = Unit.alive
 local MAX_DT_IN_MSEC = 16
@@ -144,7 +139,6 @@ WorldLevelDespawnManager._update_time_slice_despawn_units = function (self)
 	local units_to_despawn = init_data.parameters.unit_list_to_despawn
 	local num_units = #units_to_despawn
 	local performance_counter_handle, duration_ms = GameplayInitTimeSlice.pre_loop()
-	local unit_spawner_manager = Managers.state.unit_spawner
 
 	for index = last_index + 1, num_units do
 		local start_timer = GameplayInitTimeSlice.pre_process(performance_counter_handle, duration_ms, MAX_DT_IN_MSEC)

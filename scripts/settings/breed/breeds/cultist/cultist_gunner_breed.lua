@@ -6,6 +6,7 @@ local BreedTerrorEventSettings = require("scripts/settings/breed/breed_terror_ev
 local CoverSettings = require("scripts/settings/cover/cover_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionGibbingTemplates = require("scripts/managers/minion/minion_gibbing_templates")
 local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
@@ -24,16 +25,16 @@ local breed_name = "cultist_gunner"
 local breed_data = {
 	detection_radius = 15,
 	walk_speed = 2.3,
-	volley_fire_target = true,
+	spawn_inventory_slot = "slot_ranged_weapon",
 	use_bone_lod = true,
-	game_object_type = "minion_elite_ranged",
 	sub_faction_name = "cultist",
 	unit_template_name = "minion",
 	spawn_anim_state = "to_ranged",
+	volley_fire_target = true,
 	slot_template = "renegade_melee",
 	broadphase_radius = 1,
 	stagger_resistance = 2,
-	spawn_inventory_slot = "slot_ranged_weapon",
+	game_object_type = "minion_elite_ranged",
 	challenge_rating = 4,
 	bone_lod_radius = 1.2,
 	use_wounds = true,
@@ -42,7 +43,6 @@ local breed_data = {
 	faction_name = "chaos",
 	base_height = 2,
 	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_elite_gunner",
-	ignore_attack_delay = false,
 	ranged = true,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 0,
@@ -133,21 +133,7 @@ local breed_data = {
 			close = false
 		}
 	},
-	suppress_config = {
-		max_value = 40,
-		above_threshold_decay_multiplier = 2,
-		threshold = 27.5,
-		disable_cover_threshold = 35,
-		decay_speeds = {
-			melee = 0.05,
-			far = 0.5,
-			close = 0.3
-		},
-		immunity_duration = {
-			0.25,
-			0.5
-		}
-	},
+	suppress_config = MinionDifficultySettings.suppression.cultist_gunner,
 	attack_intensity_cooldowns = {
 		melee = {
 			0.7,

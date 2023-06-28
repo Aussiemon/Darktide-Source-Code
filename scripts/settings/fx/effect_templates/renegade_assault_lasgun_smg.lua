@@ -1,11 +1,15 @@
 local Effect = require("scripts/extension_systems/fx/utilities/effect")
-local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
+local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionPerception = require("scripts/utilities/minion_perception")
+local MinionVisualLoadout = require("scripts/utilities/minion_visual_loadout")
+local shooting_difficulty_settings = MinionDifficultySettings.shooting.renegade_assault
 local FX_SOURCE_NAME = "muzzle"
 local ORPHANED_POLICY = "stop"
 local START_SHOOT_SOUND_EVENT = "wwise/events/weapon/play_weapon_lasgun_smg_auto_minion"
 local STOP_SHOOT_SOUND_EVENT = "wwise/events/weapon/stop_weapon_lasgun_smg_auto_minion"
 local SHOOT_VFX = "content/fx/particles/weapons/rifles/lasgun/lasgun_muzzle"
+local FIRE_RATE_PARAMETER_NAME = "wpn_fire_interval"
+local STIMMED_PARAMETER_NAME = "minion_stimmed"
 local resources = {
 	shoot_vfx = SHOOT_VFX,
 	start_shoot_sound_event = START_SHOOT_SOUND_EVENT,
@@ -38,7 +42,26 @@ local effect_template = {
 		World.link_particles(world, particle_id, attachment_unit, node_index, pose, ORPHANED_POLICY)
 
 		template_data.particle_id = particle_id
+		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+		local fire_rate_modifier = 1
 
+		if buff_extension then
+			local stat_buffs = buff_extension:stat_buffs()
+
+			if stat_buffs.ranged_attack_speed then
+				fire_rate_modifier = stat_buffs.ranged_attack_speed
+			end
+
+			if buff_extension:has_keyword("stimmed") then
+				WwiseWorld.set_source_parameter(wwise_world, source_id, STIMMED_PARAMETER_NAME, 1)
+			end
+		end
+
+		local time_per_shot = shooting_difficulty_settings.time_per_shot
+		local diff_time_per_shot = Managers.state.difficulty:get_table_entry_by_challenge(time_per_shot)
+		local parameter_value = diff_time_per_shot[1]
+
+		WwiseWorld.set_source_parameter(wwise_world, source_id, FIRE_RATE_PARAMETER_NAME, parameter_value / fire_rate_modifier)
 		Unit.animation_event(unit, "offset_rifle_standing_shoot_loop_01")
 	end,
 	update = function (template_data, template_context, dt, t)

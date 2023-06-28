@@ -12,6 +12,5 @@ _extract_true_flight_functions("scripts/extension_systems/locomotion/utilities/t
 _extract_true_flight_functions("scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_smite")
 _extract_true_flight_functions("scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_krak_grenade")
 _extract_true_flight_functions("scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_throwing_knives")
-_extract_true_flight_functions("scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_strike_missile")
 
 return settings("TrueFlightFunctions", true_flight_functions)

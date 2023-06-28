@@ -70,7 +70,7 @@ local attack_intensity_settings = {
 		},
 		{
 			dont_max_out_intensity = true,
-			duration = 2,
+			duration = 1,
 			spread_multiplier = 4
 		}
 	},
@@ -80,7 +80,7 @@ local attack_intensity_settings = {
 		3,
 		5,
 		8,
-		12
+		30
 	},
 	attack_intensities = {
 		melee = {

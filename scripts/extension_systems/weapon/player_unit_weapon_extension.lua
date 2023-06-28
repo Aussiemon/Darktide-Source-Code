@@ -957,7 +957,9 @@ PlayerUnitWeaponExtension._update_overheat = function (self, dt, t)
 end
 
 PlayerUnitWeaponExtension._update_stamina = function (self, dt, t, fixed_frame)
-	Stamina.update(t, dt, self._stamina_component, self._specialization_stamina_template, self._unit, fixed_frame)
+	local base_stamina_template = self._specialization_stamina_template
+
+	Stamina.update(t, dt, self._stamina_component, base_stamina_template, self._unit, fixed_frame)
 end
 
 PlayerUnitWeaponExtension._update_ammo = function (self)

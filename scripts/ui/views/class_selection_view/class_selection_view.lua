@@ -50,6 +50,7 @@ ClassSelectionView.on_enter = function (self)
 	self:_create_domain_option_widgets()
 	self:_show_classes_widgets(false, profile.archetype)
 	self:_handle_continue_button_text()
+	self:_handle_details_button_text()
 	self:_start_loading_talent_icons()
 
 	self._setup_complete = true
@@ -311,13 +312,11 @@ ClassSelectionView._on_continue_pressed = function (self)
 end
 
 ClassSelectionView._on_details_pressed = function (self)
-	if self._classes_visible then
-		self._widgets_by_name.details_button.content.text = Utf8.upper(Localize("loc_mission_voting_view_show_details"))
+	self:_handle_details_button_text()
 
+	if self._classes_visible then
 		self:_show_classes_widgets(false)
 	else
-		self._widgets_by_name.details_button.content.text = Utf8.upper(Localize("loc_mission_voting_view_hide_details"))
-
 		self:_on_class_pressed(self._selected_class.name)
 	end
 end
@@ -420,6 +419,7 @@ end
 ClassSelectionView._on_navigation_input_changed = function (self)
 	ClassSelectionView.super._on_navigation_input_changed(self)
 	self:_handle_continue_button_text()
+	self:_handle_details_button_text()
 end
 
 ClassSelectionView._create_domain_option_widgets = function (self)
@@ -504,12 +504,13 @@ ClassSelectionView._on_domain_pressed = function (self, selected_domain)
 	if self._classes_visible then
 		self:_show_class_details(false)
 
-		self._widgets_by_name.details_button.content.text = Utf8.upper(Localize("loc_mission_voting_view_show_details"))
 		self._widgets_by_name.class_background.content.visible = false
 
 		self:_enable_blur(false)
 
 		self._classes_visible = false
+
+		self:_handle_details_button_text()
 	end
 
 	local selected_class_name = nil
@@ -607,6 +608,8 @@ ClassSelectionView._show_classes_widgets = function (self, show, force_domain)
 	end
 
 	self._classes_visible = show
+
+	self:_handle_details_button_text()
 end
 
 ClassSelectionView._destroy_class_option_widgets = function (self)
@@ -1075,6 +1078,27 @@ ClassSelectionView._handle_continue_button_text = function (self)
 	end
 
 	widgets_by_name.continue_button.content.text = Utf8.upper(continue_button_text)
+end
+
+ClassSelectionView._handle_details_button_text = function (self)
+	local widgets_by_name = self._widgets_by_name
+	local service_type = DefaultViewInputSettings.service_type
+	local show_class_info_button_action = "confirm_pressed"
+	local details_button_text = nil
+
+	if self._classes_visible then
+		if self._using_cursor_navigation then
+			details_button_text = Localize("loc_mission_voting_view_hide_details")
+		else
+			details_button_text = TextUtils.localize_with_button_hint(show_class_info_button_action, "loc_mission_voting_view_hide_details", nil, service_type)
+		end
+	elseif self._using_cursor_navigation then
+		details_button_text = Localize("loc_mission_voting_view_show_details")
+	else
+		details_button_text = TextUtils.localize_with_button_hint(show_class_info_button_action, "loc_mission_voting_view_show_details", nil, service_type)
+	end
+
+	widgets_by_name.details_button.content.text = Utf8.upper(details_button_text)
 end
 
 return ClassSelectionView

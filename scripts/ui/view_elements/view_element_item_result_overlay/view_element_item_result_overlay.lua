@@ -150,12 +150,16 @@ ViewElementItemResultOverlay.cb_start_reward_presentation = function (self)
 	return
 end
 
-ViewElementItemResultOverlay.destroy = function (self)
+ViewElementItemResultOverlay.destroy = function (self, ui_renderer)
+	ui_renderer = self._ui_default_renderer or ui_renderer
+
 	if self._weapon_stats then
-		self._weapon_stats:destroy()
+		self._weapon_stats:destroy(ui_renderer)
 
 		self._weapon_stats = nil
 	end
+
+	ViewElementItemResultOverlay.super.destroy(self, ui_renderer)
 
 	if self._ui_popup_background_renderer then
 		self._ui_popup_background_renderer = nil
@@ -186,8 +190,6 @@ ViewElementItemResultOverlay.destroy = function (self)
 		self._viewport_name = nil
 		self._world = nil
 	end
-
-	ViewElementItemResultOverlay.super.destroy(self)
 end
 
 ViewElementItemResultOverlay.draw = function (self, dt, t, ui_renderer, render_settings, input_service)

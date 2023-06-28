@@ -150,6 +150,7 @@ local function profile_from_backend_data(backend_profile_data)
 	local specialization = character.career and character.career.specialization or "none"
 	local progression = backend_profile_data.progression
 	local current_level = progression and progression.currentLevel or 1
+	local talent_points = progression and progression.talentPoints or 0
 	local item_ids = character.inventory
 	local backend_profile = {
 		character_id = character.id,
@@ -164,6 +165,7 @@ local function profile_from_backend_data(backend_profile_data)
 		lore = character.lore,
 		talents = {},
 		current_level = current_level,
+		talent_points = talent_points,
 		specialization = specialization,
 		name = character.name,
 		personal = character.personal
@@ -602,12 +604,14 @@ ProfileUtils.character_to_profile = function (character, gear_list, progression)
 	local archetype = Archetypes[archetype_name]
 	local specialization = character.career and character.career.specialization or "none"
 	local current_level = progression and progression.currentLevel or 1
+	local talent_points = progression and progression.talentPoints or 0
 	local item_ids = character.inventory
 	local profile = {
 		character_id = character.id,
 		archetype = archetype,
 		specialization = specialization,
 		current_level = current_level,
+		talent_points = talent_points,
 		gender = character.gender,
 		selected_voice = character.selected_voice,
 		skin_color = character.skin_color,
@@ -648,8 +652,8 @@ ProfileUtils.character_to_profile = function (character, gear_list, progression)
 
 	local visual_loadout = _generate_visual_loadout_from_data(profile.loadout_item_ids, profile.loadout_item_data)
 	profile.visual_loadout = visual_loadout
-	local character_talents = character.career and character.career.talents
 	local profile_talents = profile.talents
+	local character_talents = character.career and character.career.talents
 
 	if character_talents then
 		for i = 1, #character_talents do

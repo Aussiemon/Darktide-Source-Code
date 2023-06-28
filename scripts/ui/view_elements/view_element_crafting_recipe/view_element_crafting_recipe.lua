@@ -256,6 +256,8 @@ ViewElementCraftingRecipe._update_costs_presentation = function (self, costs, ui
 
 	local total_width = 0
 	local widgets = {}
+	local text_margin = 3
+	local price_margin = 10
 	local index = 0
 
 	if costs then
@@ -280,14 +282,13 @@ ViewElementCraftingRecipe._update_costs_presentation = function (self, costs, ui
 				local style = widget.style
 				local text_style = style.text
 				local text_width, _ = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size)
-				local texture_width = widget.style.texture.size[1]
-				local text_offset = widget.style.text.original_offset
-				local texture_offset = widget.style.texture.original_offset
-				local text_margin = 3
-				local price_margin = 10
-				widget.style.texture.offset[1] = texture_offset[1] + total_width
-				widget.style.text.offset[1] = text_offset[1] + text_margin + total_width
-				total_width = total_width + text_width + texture_width + text_margin + price_margin
+				local icon_size = widget.style.texture.size
+				widget.offset[1] = total_width
+				widget.content.size = {
+					text_width + icon_size[1] + text_margin,
+					icon_size[2]
+				}
+				total_width = total_width + text_width + icon_size[1] + text_margin + price_margin
 				widgets[#widgets + 1] = widget
 			end
 		end
@@ -295,9 +296,10 @@ ViewElementCraftingRecipe._update_costs_presentation = function (self, costs, ui
 
 	local corner_width = corner_right and corner_right.content.original_size[1] or 0
 	local corner_texture_size_minus_wallet = 100
+	local icon_height = widgets[1] and widgets[1].content.size[2]
 	local total_corner_width = math.max(total_width + corner_width - corner_texture_size_minus_wallet, 40)
 
-	self:_set_scenegraph_size("cost_pivot", total_width, nil)
+	self:_set_scenegraph_size("cost_pivot", total_width - price_margin, icon_height)
 	self:_set_scenegraph_size("cost_background", total_corner_width, nil)
 	self:_force_update_scenegraph()
 

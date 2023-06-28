@@ -7,6 +7,10 @@ OutlineSystem.system_extensions = {
 	"PropOutlineExtension",
 	"PlayerUnitOutlineExtension"
 }
+local RPCS = {
+	"rpc_add_outline_to_unit",
+	"rpc_remove_outline_from_unit"
+}
 
 OutlineSystem.init = function (self, context, system_init_data, system_name, _, ...)
 	local extensions = OutlineSystem.system_extensions
@@ -18,11 +22,13 @@ OutlineSystem.init = function (self, context, system_init_data, system_name, _, 
 	self._visible = true
 	self._color_blind_mode = "off"
 
+	self._network_event_delegate:register_session_events(self, unpack(RPCS))
 	Managers.event:register(self, "event_smart_tag_created", "_event_smart_tag_created")
 	Managers.event:register(self, "event_smart_tag_removed", "_event_smart_tag_removed")
 end
 
 OutlineSystem.destroy = function (self)
+	self._network_event_delegate:unregister_events(unpack(RPCS))
 	Managers.event:unregister(self, "event_smart_tag_created")
 	Managers.event:unregister(self, "event_smart_tag_removed")
 	OutlineSystem.super.destroy(self)
@@ -361,6 +367,24 @@ end
 
 OutlineSystem.set_global_visibility = function (self, visible)
 	self._disabled = not visible
+end
+
+OutlineSystem.rpc_add_outline_to_unit = function (self, channel_id, go_id, outline_id)
+	local outline_name = NetworkLookup.outline_types[outline_id]
+	local unit = Managers.state.unit_spawner:unit(go_id)
+
+	if HEALTH_ALIVE[unit] then
+		self:add_outline(unit, outline_name)
+	end
+end
+
+OutlineSystem.rpc_remove_outline_from_unit = function (self, channel_id, go_id, outline_id)
+	local outline_name = NetworkLookup.outline_types[outline_id]
+	local unit = Managers.state.unit_spawner:unit(go_id)
+
+	if HEALTH_ALIVE[unit] then
+		self:remove_outline(unit, outline_name)
+	end
 end
 
 return OutlineSystem

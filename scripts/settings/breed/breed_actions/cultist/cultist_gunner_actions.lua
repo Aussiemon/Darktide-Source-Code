@@ -466,7 +466,7 @@ local action_data = {
 		},
 		shoot_template = BreedShootTemplates.cultist_gunner_shoot_spray_n_pray,
 		stagger_type_reduction = {
-			ranged = 10
+			ranged = 20
 		}
 	},
 	in_cover = {
@@ -506,7 +506,7 @@ local action_data = {
 		},
 		shoot_template = BreedShootTemplates.cultist_gunner_aimed,
 		stagger_type_reduction = {
-			ranged = 10
+			ranged = 20
 		},
 		clear_shot_offset_from_peeking = {
 			high = {

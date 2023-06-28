@@ -78,6 +78,7 @@ ActionShootHitScan._shoot = function (self, position, rotation, power_level, cha
 		param_table.combo_count = self._combo_count
 		param_table.hit_weakspot = hit_weakspot
 		param_table.num_hit_units = num_hit_units
+		param_table.is_critical_strike = is_critical_strike
 
 		attacker_buff_extension:add_proc_event(proc_events.on_shoot, param_table)
 	end

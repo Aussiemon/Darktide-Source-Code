@@ -3,10 +3,10 @@ local Breeds = require("scripts/settings/breed/breeds")
 local minion_list = {}
 local minion_list_by_name = {}
 
-for _, breed in pairs(Breeds) do
+for name, breed in pairs(Breeds) do
 	if Breed.is_minion(breed) then
 		minion_list[#minion_list + 1] = breed
-		minion_list_by_name[breed.name] = breed
+		minion_list_by_name[name] = breed
 	end
 end
 

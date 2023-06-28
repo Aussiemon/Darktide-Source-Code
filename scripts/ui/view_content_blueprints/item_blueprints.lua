@@ -276,9 +276,9 @@ local function generate_blueprints_function(grid_size)
 		end,
 		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
 			local content = widget.content
+			local item = element.item
 
-			if not content.icon_load_id then
-				local item = element.item
+			if not content.icon_load_id and item then
 				local slot = element.slot
 				local slot_name = slot.name
 				local cb = callback(_apply_package_item_icon_cb_func, widget, item)
@@ -419,9 +419,9 @@ local function generate_blueprints_function(grid_size)
 		end,
 		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
 			local content = widget.content
+			local item = element.item
 
-			if not content.icon_load_id then
-				local item = element.item
+			if not content.icon_load_id and item then
 				local slot = element.slot
 				local slot_name = slot.name
 				local cb = callback(_apply_live_item_icon_cb_func, widget)
@@ -541,9 +541,9 @@ local function generate_blueprints_function(grid_size)
 		end,
 		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
 			local content = widget.content
+			local item = element.item or element.real_item
 
-			if not content.icon_load_id then
-				local item = element.item or element.real_item
+			if not content.icon_load_id and item then
 				local cb = callback(_apply_live_item_icon_cb_func, widget)
 				content.icon_load_id = Managers.ui:load_item_icon(item, cb, nil, dummy_profile, prioritize)
 			end
@@ -682,7 +682,7 @@ local function generate_blueprints_function(grid_size)
 			local required_level = ItemUtils.character_level(item)
 			local view_instance = parent._parent or parent
 			local character_level = view_instance and view_instance.character_level and view_instance:character_level()
-			local level_requirement_met = required_level and required_level <= character_level
+			local level_requirement_met = not item and true or required_level and required_level <= character_level
 			content.level_requirement_met = level_requirement_met
 
 			if not level_requirement_met then
@@ -738,9 +738,9 @@ local function generate_blueprints_function(grid_size)
 		end,
 		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
 			local content = widget.content
+			local item = element.item
 
-			if not content.icon_load_id then
-				local item = element.item
+			if not content.icon_load_id and item then
 				local cb = callback(_apply_live_item_icon_cb_func, widget)
 				content.icon_load_id = Managers.ui:load_item_icon(item, cb, nil, dummy_profile, prioritize)
 			end
@@ -861,9 +861,9 @@ local function generate_blueprints_function(grid_size)
 		end,
 		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
 			local content = widget.content
+			local item = element.item or element.real_item
 
-			if not content.icon_load_id then
-				local item = element.item or element.real_item
+			if not content.icon_load_id and item then
 				local cb = callback(_apply_live_item_icon_cb_func, widget)
 				local preview_profile = dummy_profile or element.preview_profile
 				local gear_bundle_size = ItemPassTemplates.gear_bundle_size
@@ -919,8 +919,8 @@ local function generate_blueprints_function(grid_size)
 			local item = element.item
 			local real_item = element.real_item
 			local presentation_item = real_item or item
-			local slots = presentation_item.slots
-			local rarity = presentation_item.rarity
+			local slots = presentation_item and presentation_item.slots
+			local rarity = presentation_item and presentation_item.rarity
 			local rarity_color = ItemUtils.rarity_color(presentation_item)
 			local offer = element.offer
 
@@ -943,7 +943,7 @@ local function generate_blueprints_function(grid_size)
 				content.owned = is_owned
 			end
 
-			local item_type = item.item_type
+			local item_type = item and item.item_type
 
 			if item_type == UISettings.ITEM_TYPES.GEAR_LOWERBODY or item_type == UISettings.ITEM_TYPES.GEAR_UPPERBODY or item_type == UISettings.ITEM_TYPES.GEAR_HEAD or item_type == UISettings.ITEM_TYPES.GEAR_EXTRA_COSMETIC or item_type == UISettings.ITEM_TYPES.END_OF_ROUND then
 				local icon_style = style.icon
@@ -953,16 +953,17 @@ local function generate_blueprints_function(grid_size)
 				icon_offset[1] = icon_offset[1] - icon_size[1] * 0.3
 			end
 
-			local item_level, has_item_level = ItemUtils.item_level(presentation_item)
+			local item_level = presentation_item and ItemUtils.item_level(presentation_item)
+			local has_item_level = nil
 
 			if content.item_level then
 				content.item_level = has_item_level and item_level or ""
 			end
 
-			local required_level = ItemUtils.character_level(presentation_item)
+			local required_level = presentation_item and ItemUtils.character_level(presentation_item)
 			local view_instance = parent._parent or parent
 			local character_level = view_instance and view_instance.character_level and view_instance:character_level()
-			local level_requirement_met = required_level and required_level <= character_level
+			local level_requirement_met = not presentation_item and true or required_level and required_level <= character_level
 			content.level_requirement_met = level_requirement_met
 
 			if not level_requirement_met then
@@ -971,7 +972,7 @@ local function generate_blueprints_function(grid_size)
 				})
 			end
 
-			local display_name = presentation_item.display_name
+			local display_name = presentation_item and presentation_item.display_name
 
 			if display_name then
 				content.display_name = ItemUtils.display_name(presentation_item)
@@ -987,7 +988,7 @@ local function generate_blueprints_function(grid_size)
 
 			local ITEM_TYPES = UISettings.ITEM_TYPES
 			local is_weapon = item_type == ITEM_TYPES.WEAPON_MELEE or item_type == ITEM_TYPES.WEAPON_RANGED
-			local traits = presentation_item.traits
+			local traits = presentation_item and presentation_item.traits
 
 			if is_weapon and traits then
 				local trait_index = 1
@@ -1068,9 +1069,9 @@ local function generate_blueprints_function(grid_size)
 		end,
 		load_icon = function (parent, widget, element, ui_renderer, dummy_profile, prioritize)
 			local content = widget.content
+			local item = element.item
 
-			if not content.icon_load_id then
-				local item = element.item
+			if not content.icon_load_id and item then
 				local render_context = nil
 				local item_type = item.item_type
 				local ui_item_types = UISettings.ITEM_TYPES

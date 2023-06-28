@@ -18,6 +18,7 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local Suppression = require("scripts/utilities/attack/suppression")
 local Stamina = require("scripts/utilities/attack/stamina")
+local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local Threat = require("scripts/utilities/threat")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local ToughnessSettings = require("scripts/settings/toughness/toughness_settings")
@@ -205,11 +206,15 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 		local target_blackboard = BLACKBOARDS[attacked_unit]
 		local target_stagger_count = 0
 		local num_triggered_staggers = 0
+		local current_stagger_impact = 0
 
 		if not is_player_character and target_blackboard then
 			local stagger_component = target_blackboard.stagger
 			target_stagger_count = stagger_component.count
 			num_triggered_staggers = stagger_component.num_triggered_staggers
+			local stagger_impact_comparison = StaggerSettings.stagger_impact_comparison
+			local current_stagger_type = stagger_component.type
+			current_stagger_impact = stagger_impact_comparison[current_stagger_type]
 		end
 
 		local damage_immune = target_buff_extension and target_buff_extension:has_keyword("damage_immune")
@@ -233,7 +238,7 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 				power_level_damage_multiplier = target_breed_or_nil.explosion_power_multiplier
 			end
 
-			calculated_damage, damage_efficiency = DamageCalculation.calculate(damage_profile, damage_type, target_settings, damage_profile_lerp_values, hit_zone_name, power_level * power_level_damage_multiplier, charge_level, target_breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, attacked_unit, auto_completed_action)
+			calculated_damage, damage_efficiency = DamageCalculation.calculate(damage_profile, damage_type, target_settings, damage_profile_lerp_values, hit_zone_name, power_level * power_level_damage_multiplier, charge_level, target_breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, attacked_unit, auto_completed_action, current_stagger_impact)
 		end
 	end
 
@@ -352,8 +357,8 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 			local t = Managers.time:time("gameplay")
 			local stamina_read_component = unit_data_extension:read_component("stamina")
 			local specialization = unit_data_extension:specialization()
-			local specialization_stamina_template = specialization.stamina
-			local current_stamina, max_stamina = Stamina.current_and_max_value(attacked_unit, stamina_read_component, specialization_stamina_template)
+			local base_stamina_template = specialization.stamina
+			local current_stamina, max_stamina = Stamina.current_and_max_value(attacked_unit, stamina_read_component, base_stamina_template)
 
 			Stamina.drain(attacked_unit, max_stamina, t)
 
@@ -393,8 +398,8 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 					local is_blockable = Block.attack_is_blockable(damage_profile, attacked_unit, target_weapon_template)
 					local stamina_read_component = unit_data_extension:read_component("stamina")
 					local specialization = unit_data_extension:specialization()
-					local specialization_stamina_template = specialization.stamina
-					local current_stamina, max_stamina = Stamina.current_and_max_value(attacked_unit, stamina_read_component, specialization_stamina_template)
+					local base_stamina_template = specialization.stamina
+					local current_stamina, max_stamina = Stamina.current_and_max_value(attacked_unit, stamina_read_component, base_stamina_template)
 
 					if is_blockable and current_stamina <= 0.5 * max_stamina then
 						Stamina.add_stamina(attacked_unit, 1)
@@ -556,7 +561,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 				target_param_table.tags = target_breed_or_nil and target_breed_or_nil.tags
 				target_param_table.weapon_special = damage_profile.weapon_special
 
-				target_buff_extension_or_nil:add_proc_event(proc_events.on_player_hit_recieved, target_param_table)
+				target_buff_extension_or_nil:add_proc_event(proc_events.on_player_hit_received, target_param_table)
 			end
 		end
 	end

@@ -233,11 +233,11 @@ weapon_template.actions = {
 	action_left_heavy = {
 		damage_window_start = 0.4666666666666667,
 		hit_armor_anim = "attack_hit",
+		weapon_handling_template = "time_scale_1",
 		kind = "sweep",
 		attack_direction_override = "left",
 		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.25,
-		weapon_handling_template = "time_scale_1",
 		damage_window_end = 0.6,
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
@@ -311,8 +311,7 @@ weapon_template.actions = {
 			}
 		},
 		damage_profile = DamageProfileTemplates.ogryn_powermaul_slabshield_tank,
-		damage_type = damage_types.ogryn_pipe_club,
-		herding_template = HerdingTemplates.linesman_left_heavy
+		damage_type = damage_types.ogryn_pipe_club
 	},
 	action_melee_start_right = {
 		first_person_hit_stop_anim = "attack_hit",
@@ -375,11 +374,11 @@ weapon_template.actions = {
 	action_right_light = {
 		damage_window_start = 0.4666666666666667,
 		hit_armor_anim = "attack_hit",
+		range_mod = 1.25,
 		kind = "sweep",
 		weapon_handling_template = "time_scale_1",
 		attack_direction_override = "right",
 		first_person_hit_stop_anim = "attack_hit",
-		range_mod = 1.25,
 		allowed_during_sprint = true,
 		damage_window_end = 0.6,
 		anim_end_event = "attack_finished",
@@ -461,7 +460,6 @@ weapon_template.actions = {
 				-0.1
 			}
 		},
-		herding_template = HerdingTemplates.thunder_hammer_right_heavy,
 		damage_profile = DamageProfileTemplates.ogryn_powermaul_light_tank,
 		damage_type = damage_types.ogryn_pipe_club
 	},
@@ -696,8 +694,7 @@ weapon_template.actions = {
 		},
 		herding_template = HerdingTemplates.thunder_hammer_left_heavy,
 		damage_profile = DamageProfileTemplates.ogryn_powermaul_light_linesman,
-		damage_type = damage_types.ogryn_pipe_club,
-		herding_template = HerdingTemplates.linesman_left_heavy
+		damage_type = damage_types.ogryn_pipe_club
 	},
 	action_melee_start_right_2 = {
 		first_person_hit_stop_anim = "attack_hit",
@@ -1079,11 +1076,11 @@ weapon_template.actions = {
 	action_right_light_pushfollow = {
 		damage_window_start = 0.16666666666666666,
 		hit_armor_anim = "attack_hit",
+		weapon_handling_template = "time_scale_1",
 		kind = "sweep",
 		attack_direction_override = "push",
 		first_person_hit_stop_anim = "attack_hit",
 		range_mod = 1.25,
-		weapon_handling_template = "time_scale_1",
 		damage_window_end = 0.3,
 		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_left_down",
@@ -1132,7 +1129,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		hit_zone_priority = hit_zone_priority,
+		hit_zone_priority = default_hit_zone_priority,
 		weapon_box = {
 			0.2,
 			0.15,
@@ -1146,9 +1143,8 @@ weapon_template.actions = {
 				0
 			}
 		},
-		damage_profile = DamageProfileTemplates.ogryn_powermaul_light_smiter,
-		damage_type = damage_types.ogryn_pipe_club,
-		herding_template = HerdingTemplates.linesman_left_heavy
+		damage_profile = DamageProfileTemplates.ogryn_powermaul_shield_light_smiter,
+		damage_type = damage_types.ogryn_pipe_club
 	},
 	action_push = {
 		push_radius = 2.5,

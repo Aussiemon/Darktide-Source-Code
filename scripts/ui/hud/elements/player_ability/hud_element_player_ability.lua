@@ -61,12 +61,15 @@ HudElementPlayerAbility.update = function (self, dt, t, ui_renderer, render_sett
 	if ability_extension and ability_extension:ability_is_equipped(ability_id) then
 		local remaining_ability_cooldown = ability_extension:remaining_ability_cooldown(ability_id)
 		local max_ability_cooldown = ability_extension:max_ability_cooldown(ability_id)
+		local is_paused = ability_extension:is_cooldown_paused(ability_id)
 		remaining_ability_charges = ability_extension:remaining_ability_charges(ability_id)
 		local max_ability_charges = ability_extension:max_ability_charges(ability_id)
 		uses_charges = max_ability_charges and max_ability_charges > 1
 		has_charges_left = remaining_ability_charges > 0
 
-		if max_ability_cooldown and max_ability_cooldown > 0 then
+		if is_paused then
+			cooldown_progress = 0
+		elseif max_ability_cooldown and max_ability_cooldown > 0 then
 			cooldown_progress = 1 - math.lerp(0, 1, remaining_ability_cooldown / max_ability_cooldown)
 
 			if cooldown_progress == 0 then

@@ -6,27 +6,33 @@ BossExtension.init = function (self, extension_init_context, unit, extension_ini
 	self._seed = seed
 	local breed = extension_init_data.breed
 	self._breed = breed
+	self._is_server = extension_init_context.is_server
+	self._nav_world = extension_init_context.nav_world
+	self._physics_world = extension_init_context.physics_world
 	self._world = extension_init_context.world
 	self._wwise_world = extension_init_context.wwise_world
-	self._is_server = extension_init_context.is_server
 	self._boss_encounter_started = false
 
 	self:_generate_display_name()
 
-	if not self._is_server and breed.boss_template then
-		self:_start_boss_template(breed.boss_template)
+	local boss_template = breed.boss_template
+
+	if not self._is_server and boss_template then
+		self:_start_boss_template(boss_template)
 	end
+
+	Managers.event:register(self, "event_player_hud_created", "_event_player_hud_created")
 end
 
 BossExtension.game_object_initialized = function (self, session, object_id)
 	local breed = self._breed
+	local boss_template = breed.boss_template
 
-	if breed.boss_template then
-		self:_start_boss_template(breed.boss_template)
+	if boss_template then
+		self:_start_boss_template(boss_template)
 	end
 
-	local game_object_id = Managers.state.unit_spawner:game_object_id(self._unit)
-	self._game_object_id = game_object_id
+	self._game_object_id = object_id
 end
 
 BossExtension.extensions_ready = function (self)
@@ -40,6 +46,12 @@ end
 BossExtension.hot_join_sync = function (self, unit, sender, channel_id)
 	if self._boss_encounter_started then
 		RPC.rpc_start_boss_encounter(channel_id, self._game_object_id)
+	end
+end
+
+BossExtension._event_player_hud_created = function (self, player)
+	if self._boss_encounter_started then
+		self:start_boss_encounter()
 	end
 end
 
@@ -61,9 +73,13 @@ end
 BossExtension.destroy = function (self)
 	Managers.event:trigger("boss_encounter_end", self._unit, self)
 
-	if self._boss_template then
-		self._boss_template.stop(self._template_data, self._template_context)
+	local boss_template = self._boss_template
+
+	if boss_template then
+		boss_template.stop(self._template_data, self._template_context)
 	end
+
+	Managers.event:unregister(self, "event_player_hud_created")
 end
 
 BossExtension.damaged = function (self)
@@ -121,6 +137,8 @@ end
 BossExtension._start_boss_template = function (self, boss_template)
 	self._template_context = {
 		is_server = self._is_server,
+		physics_world = self._physics_world,
+		nav_world = self._nav_world,
 		world = self._world,
 		wwise_world = self._wwise_world
 	}

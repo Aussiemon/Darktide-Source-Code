@@ -524,19 +524,18 @@ ItemGridViewBase.on_exit = function (self)
 		self._inpect_view_opened = nil
 	end
 
-	if self._weapon_stats then
-		self:_remove_element("weapon_stats")
+	local elements_array = self._elements_array
 
-		self._weapon_stats = nil
+	for _, element in ipairs(elements_array) do
+		element:destroy(self._ui_default_renderer)
 	end
 
-	if self._weapon_compare_stats then
-		self:_remove_element("weapon_compare_stats")
-
-		self._weapon_compare_stats = nil
-	end
-
-	self:_destroy_weapon_preview()
+	self._elements = nil
+	self._elements_array = nil
+	self._weapon_stats = nil
+	self._weapon_compare_stats = nil
+	self._item_grid = nil
+	self._weapon_preview = nil
 
 	if self._ui_default_renderer then
 		self._ui_default_renderer = nil
@@ -558,7 +557,35 @@ ItemGridViewBase.on_exit = function (self)
 		end
 	end
 
-	ItemGridViewBase.super.on_exit(self)
+	self:_unregister_events()
+
+	if Managers.telemetry_events then
+		Managers.telemetry_events:close_view(self.view_name)
+	end
+
+	if self._cursor_pushed then
+		local input_manager = Managers.input
+		local name = self.__class_name
+
+		input_manager:pop_cursor(name)
+
+		self._cursor_pushed = nil
+	end
+
+	if self._should_unload then
+		self._should_unload = nil
+		local frame_delay_count = 1
+
+		Managers.ui:unload_view(self.view_name, self.__class_name, frame_delay_count)
+	end
+
+	self._ui_renderer = nil
+
+	if not self._ui_renderer_is_external then
+		Managers.ui:destroy_renderer(self.__class_name .. "_ui_renderer")
+	end
+
+	self._destroyed = true
 end
 
 ItemGridViewBase.cb_on_sort_button_pressed = function (self, option)

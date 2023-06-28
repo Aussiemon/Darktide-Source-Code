@@ -20,6 +20,54 @@ ViewElementPlayerSocialPopup.init = function (self, parent, draw_layer, start_sc
 	self._navigation_blocked = true
 	self._start_height = 0
 	self._menu_height = 0
+
+	self:_register_event("event_player_profile_updated", "event_player_profile_updated")
+end
+
+ViewElementPlayerSocialPopup.event_player_profile_updated = function (self, peer_id, player_id, updated_profile)
+	local player_header = self._widgets_by_name.player_header
+	local content = player_header.content
+	local player_info = self._player_info
+	local profile = player_info:profile()
+
+	if profile == updated_profile then
+		self:_update_portrait()
+	end
+end
+
+ViewElementPlayerSocialPopup._update_portrait = function (self)
+	local player_header = self._widgets_by_name.player_header
+	local content = player_header.content
+	local player_info = self._player_info
+
+	if content.frame_load_id then
+		Managers.ui:unload_item_icon(content.frame_load_id)
+
+		content.frame_load_id = nil
+	end
+
+	if content.portrait_load_id then
+		Managers.ui:unload_profile_portrait(content.portrait_load_id)
+
+		content.portrait_load_id = nil
+	end
+
+	local profile = player_info.profile and player_info:profile()
+
+	if profile then
+		local loadout = profile and profile.loadout
+		local frame_item = loadout and loadout.slot_portrait_frame
+
+		if frame_item then
+			local cb = callback(self, "_cb_set_player_frame", player_header)
+			local unload_cb = callback(self, "_cb_unset_player_frame", player_header, self._ui_renderer)
+			content.frame_load_id = Managers.ui:load_item_icon(frame_item, cb, nil, nil, nil, unload_cb)
+		end
+
+		local profile_icon_loaded_callback = callback(self, "_cb_set_player_icon", player_header)
+		local profile_icon_unloaded_callback = callback(self, "_cb_unset_player_icon", player_header, self._ui_renderer)
+		content.portrait_load_id = Managers.ui:load_profile_portrait(profile, profile_icon_loaded_callback, nil, profile_icon_unloaded_callback)
+	end
 end
 
 ViewElementPlayerSocialPopup.close = function (self, on_done_callback)
@@ -34,14 +82,88 @@ ViewElementPlayerSocialPopup.set_close_popup_request_callback = function (self, 
 	self._request_close_popup = callback
 end
 
+ViewElementPlayerSocialPopup.cb_set_player_info = function (self, player_info)
+	self:set_player_info(self._parent, player_info)
+end
+
 ViewElementPlayerSocialPopup.set_player_info = function (self, parent, player_info)
 	if self._player_info then
-		self:_start_fade_animation("fade_out_widgets", callback(self, "_set_player_info", parent, player_info))
+		local menu_items, num_menu_items = ViewElementPlayerSocialPopupContentList.from_player_info(self._parent, player_info)
+
+		self:_start_fade_animation("fade_out_widgets", callback(self, "_transition_to_new_player_info", parent, player_info, menu_items, num_menu_items))
 	else
 		local menu_items, num_menu_items = ViewElementPlayerSocialPopupContentList.from_player_info(self._parent, player_info)
 
 		self:_set_player_info(parent, player_info, menu_items, num_menu_items)
 	end
+end
+
+ViewElementPlayerSocialPopup.setup_find_player = function (self, parent, player_info)
+	local menu_items, num_menu_items = ViewElementPlayerSocialPopupContentList.find_player_menu_items(self._parent)
+	local show_friend_code = true
+
+	self:_set_player_info(parent, player_info, menu_items, num_menu_items, show_friend_code)
+	self:_start_fade_animation("open")
+end
+
+ViewElementPlayerSocialPopup._search_for_player = function (self, fatshark_id)
+	local widgets = self._widgets_by_name
+	local player_plaque = widgets.player_plaque
+
+	self._parent:_unload_widget_portrait(player_plaque)
+
+	player_plaque.content.player_info = nil
+	player_plaque.content.player_info_updated = true
+
+	Managers.data_service.social:get_player_info_by_fatshark_id(fatshark_id):next(function (player_info)
+		if not player_info then
+			return nil
+		end
+
+		local presence_myself = Managers.presence:presence_entry_myself()
+		local my_platform = presence_myself:platform()
+		local other_platform = player_info:platform()
+
+		if my_platform ~= other_platform and (presence_myself:cross_play_disabled() or player_info:cross_play_disabled()) then
+			return nil
+		end
+
+		return player_info
+	end):next(function (player_info)
+		if player_info then
+			player_plaque.content.player_info = player_info
+			player_plaque.content.player_info_updated = true
+			local profile = player_info.profile and player_info:profile()
+
+			if profile then
+				self._parent:_load_widget_portrait(player_plaque, profile, self._ui_renderer)
+			end
+
+			player_plaque.content.search_status_text = ""
+		else
+			player_plaque.content.search_status_text = Localize("loc_social_menu_find_player_failed")
+		end
+
+		local fatshark_id_entry = widgets.fatshark_id_entry
+		local hotspot = fatshark_id_entry.content.hotspot
+		hotspot.use_is_focused = true
+		hotspot.disabled = false
+		self._searching_for_player = false
+	end):catch(function ()
+		player_plaque.content.search_status_text = Localize("loc_social_menu_find_player_failed")
+		local fatshark_id_entry = widgets.fatshark_id_entry
+		local hotspot = fatshark_id_entry.content.hotspot
+		hotspot.use_is_focused = true
+		hotspot.disabled = false
+		self._searching_for_player = false
+	end)
+
+	self._searching_for_player = true
+	self._searched_fatshark_id = fatshark_id
+end
+
+ViewElementPlayerSocialPopup.previously_searched_fatshark_id = function (self)
+	return self._searched_fatshark_id
 end
 
 ViewElementPlayerSocialPopup.on_navigation_input_changed = function (self, using_cursor_navigation)
@@ -81,9 +203,34 @@ ViewElementPlayerSocialPopup.update = function (self, dt, t, input_service)
 	end
 
 	local widgets_by_name = self._widgets_by_name
+	local player_header = widgets_by_name.player_header
+	local player_header_hovered = player_header.content.hotspot.is_hover
+	local header_style = player_header.style
+	local fatshark_id_style = header_style.user_fatshark_id
 
-	if input_service:get("left_pressed") and not widgets_by_name.background.content.hotspot.is_hover then
-		self._request_close_popup()
+	if player_header_hovered then
+		if input_service:get("left_hold") then
+			fatshark_id_style.text_color = fatshark_id_style.disabled_color
+			fatshark_id_style.font_size = 25
+		else
+			fatshark_id_style.text_color = fatshark_id_style.hover_color
+			fatshark_id_style.font_size = 26
+		end
+	else
+		fatshark_id_style.text_color = fatshark_id_style.default_color
+		fatshark_id_style.font_size = 26
+	end
+
+	if input_service:get("left_pressed") then
+		if not widgets_by_name.background.content.hotspot.is_hover then
+			self._request_close_popup()
+		end
+
+		local fatshark_id = self._user_fatshark_id
+
+		if player_header_hovered and fatshark_id then
+			Clipboard.put(fatshark_id)
+		end
 	end
 
 	if self._searching_for_player then
@@ -122,7 +269,22 @@ ViewElementPlayerSocialPopup._draw_widgets = function (self, dt, t, input_servic
 		local widget = menu_widgets[i]
 
 		UIWidget.draw(widget, ui_renderer)
+
+		local template_type = widget.content.template_type
+
+		if template_type then
+			local template = self._definitions.blueprints[template_type]
+
+			if template and template.update then
+				template.update(self, widget)
+			end
+		end
 	end
+end
+
+ViewElementPlayerSocialPopup._transition_to_new_player_info = function (self, parent, player_info, menu_items, num_menu_items)
+	self:_set_player_info(parent, player_info, menu_items, num_menu_items, false)
+	self:on_navigation_input_changed(self._using_cursor_navigation)
 end
 
 local _player_header_params = {}
@@ -238,12 +400,25 @@ ViewElementPlayerSocialPopup._set_player_info = function (self, parent, player_i
 
 		if frame_item then
 			local cb = callback(self, "_cb_set_player_frame", player_header)
-			header_content.frame_load_id = Managers.ui:load_item_icon(frame_item, cb)
+			local unload_cb = callback(self, "_cb_unset_player_frame", player_header, self._ui_renderer)
+			header_content.frame_load_id = Managers.ui:load_item_icon(frame_item, cb, nil, nil, nil, unload_cb)
 		end
 
 		local profile_icon_loaded_callback = callback(self, "_cb_set_player_icon", player_header)
-		local profile_icon_unloaded_callback = callback(self, "_cb_unset_player_icon", player_header)
+		local profile_icon_unloaded_callback = callback(self, "_cb_unset_player_icon", player_header, self._ui_renderer)
 		header_content.portrait_load_id = Managers.ui:load_profile_portrait(profile, profile_icon_loaded_callback, nil, profile_icon_unloaded_callback)
+	end
+
+	if show_friend_code then
+		header_content.user_fatshark_id = Localize("loc_social_menu_find_player_fetch_id")
+
+		Managers.data_service.social:get_fatshark_id():next(function (fatshark_id)
+			header_content.user_fatshark_id = Localize("loc_social_menu_find_player_player_id_title") .. " " .. fatshark_id
+			self._user_fatshark_id = fatshark_id
+		end)
+	else
+		header_content.user_fatshark_id = ""
+		self._user_fatshark_id = nil
 	end
 
 	self:_setup_menu_items(menu_items, num_menu_items)
@@ -261,7 +436,11 @@ ViewElementPlayerSocialPopup._cb_set_player_icon = function (self, widget, grid_
 	material_values.texture_icon = render_target
 end
 
-ViewElementPlayerSocialPopup._cb_unset_player_icon = function (self, widget)
+ViewElementPlayerSocialPopup._cb_unset_player_icon = function (self, widget, ui_renderer)
+	local previously_visible = widget.content.visible
+
+	UIWidget.set_visible(widget, ui_renderer, false)
+
 	local material_values = widget.style.portrait.material_values
 	material_values.use_placeholder_texture = nil
 	material_values.rows = nil
@@ -269,12 +448,30 @@ ViewElementPlayerSocialPopup._cb_unset_player_icon = function (self, widget)
 	material_values.grid_index = nil
 	material_values.texture_icon = nil
 	widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
+
+	if previously_visible then
+		UIWidget.set_visible(widget, ui_renderer, true)
+	end
 end
 
 ViewElementPlayerSocialPopup._cb_set_player_frame = function (self, widget, item)
 	local icon = item.icon
 	local portrait_style = widget.style.portrait
 	portrait_style.material_values.portrait_frame_texture = icon
+end
+
+ViewElementPlayerSocialPopup._cb_unset_player_frame = function (self, widget, ui_renderer)
+	local previously_visible = widget.content.visible
+
+	UIWidget.set_visible(widget, ui_renderer, false)
+
+	local widget_style = widget.style
+	local material_values = widget_style.portrait.material_values
+	material_values.portrait_frame_texture = "content/ui/textures/nameplates/portrait_frames/default"
+
+	if previously_visible then
+		UIWidget.set_visible(widget, ui_renderer, true)
+	end
 end
 
 local _padding_item = {
@@ -359,7 +556,7 @@ ViewElementPlayerSocialPopup._cb_on_animation_done = function (self, on_done_cal
 	end
 end
 
-ViewElementPlayerSocialPopup.on_exit = function (self)
+ViewElementPlayerSocialPopup.destroy = function (self, ui_renderer)
 	local widget = self._widgets_by_name.player_header
 
 	if widget.content.frame_load_id then
@@ -374,7 +571,14 @@ ViewElementPlayerSocialPopup.on_exit = function (self)
 		widget.content.portrait_load_id = nil
 	end
 
-	ViewElementPlayerSocialPopup.super.on_exit(self)
+	local virtual_keyboard_widget = self._widgets_by_name.fatshark_id_entry
+	local virtual_keyboard_content = virtual_keyboard_widget and virtual_keyboard_widget.content
+
+	if virtual_keyboard_content and virtual_keyboard_content.x_async_block then
+		XAsyncBlock.cancel(virtual_keyboard_content.x_async_block)
+	end
+
+	ViewElementPlayerSocialPopup.super.destroy(self, ui_renderer)
 end
 
 return ViewElementPlayerSocialPopup

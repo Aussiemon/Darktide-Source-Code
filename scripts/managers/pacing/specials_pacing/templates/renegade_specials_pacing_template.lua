@@ -65,9 +65,12 @@ local DEFAULT_MAX_OF_SAME = {
 	renegade_grenadier = 3,
 	renegade_flamer = 2,
 	renegade_netgunner = 2,
+	chaos_plague_ogryn = 2,
+	chaos_spawn = 2,
 	cultist_grenadier = 3,
 	cultist_mutant = 3,
 	chaos_hound = 2,
+	chaos_beast_of_nurgle = 1,
 	cultist_flamer = 2
 }
 local HIGH_MAX_OF_SAME = {
@@ -76,9 +79,12 @@ local HIGH_MAX_OF_SAME = {
 	renegade_grenadier = 3,
 	renegade_flamer = 2,
 	renegade_netgunner = 2,
+	chaos_plague_ogryn = 2,
+	chaos_spawn = 2,
 	cultist_grenadier = 3,
 	cultist_mutant = 4,
 	chaos_hound = 2,
+	chaos_beast_of_nurgle = 1,
 	cultist_flamer = 2
 }
 local FACTION_BOUND_BREEDS = {
@@ -97,14 +103,17 @@ local DEFAULT_MIN_DISTANCES_FROM_TARGET = {
 	renegade_grenadier = 20,
 	renegade_flamer = 15,
 	renegade_netgunner = 20,
+	chaos_plague_ogryn = 30,
+	chaos_spawn = 30,
 	cultist_grenadier = 20,
 	cultist_mutant = 25,
 	chaos_hound = 25,
+	chaos_beast_of_nurgle = 30,
 	renegade_sniper = 30
 }
 local DEFAULT_MIN_SPAWNERS_RANGES = {
 	max = 40,
-	min = 15
+	min = 12
 }
 local DEFAULT_NUM_ALLOWED_DISABLED_PER_ALIVE_TARGETS = {
 	{

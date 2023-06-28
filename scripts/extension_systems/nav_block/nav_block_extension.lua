@@ -1,12 +1,8 @@
 local NavBlockExtension = class("NavBlockExtension")
 
 NavBlockExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
-	self._unit = unit
 	self._is_server = extension_init_context.is_server
-	self._start_blocked = nil
 	self._layer_name = ""
-
-	self:_setup_nav_gate(unit, not self._start_blocked)
 end
 
 NavBlockExtension.destroy = function (self)
@@ -20,30 +16,33 @@ NavBlockExtension.destroy = function (self)
 	end
 end
 
-NavBlockExtension.setup_from_component = function (self, start_blocked)
-	self:set_start_blocked(start_blocked)
-end
+NavBlockExtension.setup_from_component = function (self, unit, start_blocked)
+	local unit_level_index = Managers.state.unit_spawner:level_index(unit)
+	local layer_name = "nav_block_volume_" .. tostring(unit_level_index)
+	local volume_layer_allowed = nil
 
-NavBlockExtension.set_start_blocked = function (self, start_blocked)
-	self._start_blocked = start_blocked
-end
-
-NavBlockExtension.update = function (self, unit, dt, t)
-	if self._is_server and self._start_blocked ~= nil then
-		self:set_block(self._start_blocked)
-
-		self._start_blocked = nil
+	if self._is_server then
+		volume_layer_allowed = not start_blocked
+	else
+		volume_layer_allowed = true
 	end
+
+	local volume_points = Unit.volume_points(unit, "g_volume_block")
+	local volume_height = Unit.volume_height(unit, "g_volume_block")
+	local volume_alt_min, volume_alt_max = self:_get_volume_alt_min_max(unit, volume_points, volume_height)
+
+	Managers.state.nav_mesh:add_nav_tag_volume(volume_points, volume_alt_min, volume_alt_max, layer_name, volume_layer_allowed)
+
+	self._layer_name = layer_name
 end
 
 NavBlockExtension.set_block = function (self, block)
-	local nav_mesh_manager = Managers.state.nav_mesh
 	local is_allowed = not block
 
-	nav_mesh_manager:set_allowed_nav_tag_layer(self._layer_name, is_allowed)
+	Managers.state.nav_mesh:set_allowed_nav_tag_layer(self._layer_name, is_allowed)
 end
 
-NavBlockExtension._get_volume_alt_min_max = function (self, volume_points, volume_height)
+NavBlockExtension._get_volume_alt_min_max = function (self, unit, volume_points, volume_height)
 	local alt_min, alt_max = nil
 
 	for i = 1, #volume_points do
@@ -59,18 +58,6 @@ NavBlockExtension._get_volume_alt_min_max = function (self, volume_points, volum
 	end
 
 	return alt_min, alt_max
-end
-
-NavBlockExtension._setup_nav_gate = function (self, unit, layer_allowed)
-	local unit_level_index = Managers.state.unit_spawner:level_index(unit)
-	local layer_name = "nav_block_volume_" .. tostring(unit_level_index)
-	local volume_points = Unit.volume_points(unit, "g_volume_block")
-	local volume_height = Unit.volume_height(unit, "g_volume_block")
-	local volume_alt_min, volume_alt_max = self:_get_volume_alt_min_max(volume_points, volume_height)
-
-	Managers.state.nav_mesh:add_nav_tag_volume(volume_points, volume_alt_min, volume_alt_max, layer_name, layer_allowed)
-
-	self._layer_name = layer_name
 end
 
 return NavBlockExtension

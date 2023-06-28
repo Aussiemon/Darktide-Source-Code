@@ -115,10 +115,6 @@ MissionCleanupUtilies._despawn_units = function (is_server, world, level, themes
 		Managers.state.minion_death:delete_units()
 	end
 
-	if Managers.state.decal then
-		Managers.state.decal:delete_units()
-	end
-
 	if is_server then
 		if Managers.state.voice_over_spawn then
 			Managers.state.voice_over_spawn:delete_units()
@@ -131,6 +127,10 @@ MissionCleanupUtilies._despawn_units = function (is_server, world, level, themes
 		if Managers.state.bot_nav_transition then
 			Managers.state.bot_nav_transition:clear_temp_transitions()
 		end
+	end
+
+	if Managers.state.decal then
+		Managers.state.decal:delete_units()
 	end
 
 	if Managers.state.camera then

@@ -7,20 +7,22 @@ local BurningSettings = require("scripts/settings/burning/burning_settings")
 local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local MinionState = require("scripts/utilities/minion_state")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
-local TalentSettings = require("scripts/settings/buff/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local ailment_effects = AilmentSettings.effects
 local buff_keywords = BuffSettings.keywords
 local buff_proc_events = BuffSettings.proc_events
 local buff_stat_buffs = BuffSettings.stat_buffs
-local minion_burning_buff_effects = BurningSettings.buff_effects.minions
+local buff_targets = BuffSettings.targets
 local damage_efficiencies = AttackSettings.damage_efficiencies
 local damage_types = DamageSettings.damage_types
-local stagger_results = AttackSettings.stagger_results
+local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local special_rules = SpecialRulesSetting.special_rules
+local stagger_results = AttackSettings.stagger_results
 local CHAIN_LIGHTNING_POWER_LEVEL = 500
 local psyker_talent_settings = TalentSettings.psyker_2
 local templates = {
@@ -295,6 +297,50 @@ templates.power_maul_shock_hit = {
 		end
 	end
 }
+
+local function _chain_lightning_start_func(template_data, template_context, template)
+	local is_server = template_context.is_server
+
+	if not is_server then
+		return
+	end
+
+	local buff_extension = ScriptUnit.has_extension(template_context.unit, "buff_system")
+	template_data.buff_extension = buff_extension
+end
+
+local function _chain_lightning_interval_func(template_data, template_context, template)
+	local is_server = template_context.is_server
+
+	if not is_server then
+		return
+	end
+
+	local unit = template_context.unit
+
+	if HEALTH_ALIVE[unit] then
+		local damage_template = template.interval_attack_damage_profile
+		local owner_unit = template_context.owner_unit
+		local attack_direction = nil
+		local target_position = POSITION_LOOKUP[unit]
+		local owner_position = owner_unit and POSITION_LOOKUP[owner_unit]
+
+		if owner_position and target_position then
+			attack_direction = Vector3.normalize(target_position - owner_position)
+		end
+
+		Attack.execute(unit, damage_template, "power_level", CHAIN_LIGHTNING_POWER_LEVEL, "damage_type", damage_types.electrocution, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction)
+	end
+
+	local buff_extension = template_data.buff_extension
+
+	if buff_extension then
+		local t = FixedFrame.get_latest_fixed_time()
+
+		buff_extension:add_internally_controlled_buff(template.shock_effect_buff_template, t)
+	end
+end
+
 templates.chain_lightning_interval = {
 	predicted = false,
 	start_with_frame_offset = true,
@@ -311,111 +357,8 @@ templates.chain_lightning_interval = {
 		0.3
 	},
 	interval_attack_damage_profile = DamageProfileTemplates.default_chain_lighting_interval,
-	start_func = function (template_data, template_context, template)
-		local is_server = template_context.is_server
-
-		if not is_server then
-			return
-		end
-
-		local buff_extension = ScriptUnit.has_extension(template_context.unit, "buff_system")
-		template_data.buff_extension = buff_extension
-	end,
-	interval_func = function (template_data, template_context, template)
-		local is_server = template_context.is_server
-
-		if not is_server then
-			return
-		end
-
-		local unit = template_context.unit
-
-		if HEALTH_ALIVE[unit] then
-			local damage_template = template.interval_attack_damage_profile
-			local owner_unit = template_context.owner_unit
-			local attack_direction = nil
-			local target_position = POSITION_LOOKUP[unit]
-			local owner_position = owner_unit and POSITION_LOOKUP[owner_unit]
-
-			if owner_position and target_position then
-				attack_direction = Vector3.normalize(target_position - owner_position)
-			end
-
-			Attack.execute(unit, damage_template, "power_level", CHAIN_LIGHTNING_POWER_LEVEL, "damage_type", damage_types.electrocution, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction)
-		end
-
-		local buff_extension = template_data.buff_extension
-
-		if buff_extension then
-			local t = FixedFrame.get_latest_fixed_time()
-
-			buff_extension:add_internally_controlled_buff(template.shock_effect_buff_template, t)
-		end
-	end,
-	minion_effects = {
-		ailment_effect = ailment_effects.electrocution
-	}
-}
-templates.chain_lightning_quick_interval = {
-	predicted = false,
-	start_with_frame_offset = true,
-	max_stacks = 1,
-	max_stacks_cap = 1,
-	quick_multiplier = 0.25,
-	shock_effect_buff_template = "shock_effect",
-	start_interval_on_apply = true,
-	class_name = "interval_buff",
-	keywords = {
-		buff_keywords.electrocuted
-	},
-	interval = {
-		0.1,
-		0.3
-	},
-	interval_attack_damage_profile = DamageProfileTemplates.default_chain_lighting_interval,
-	start_func = function (template_data, template_context, template)
-		local is_server = template_context.is_server
-
-		if not is_server then
-			return
-		end
-
-		local buff_extension = ScriptUnit.has_extension(template_context.unit, "buff_extension")
-		template_data.buff_extension = buff_extension
-	end,
-	interval_func = function (template_data, template_context, template)
-		local is_server = template_context.is_server
-
-		if not is_server then
-			return
-		end
-
-		quick_multiplier = template.quick_multiplier
-		local unit = template_context.unit
-
-		if HEALTH_ALIVE[unit] then
-			local damage_template = template.interval_attack_damage_profile
-			local owner_unit = template_context.owner_unit
-			local power_level = CHAIN_LIGHTNING_POWER_LEVEL * quick_multiplier
-			local attack_direction = nil
-			local target_position = POSITION_LOOKUP[unit]
-			local owner_position = owner_unit and POSITION_LOOKUP[owner_unit]
-
-			if owner_position and target_position then
-				attack_direction = Vector3.normalize(target_position - owner_position)
-			end
-
-			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", damage_types.electrocution, "attacking_unit", HEALTH_ALIVE[owner_unit] and owner_unit, "attack_direction", attack_direction)
-		end
-
-		local buff_extension = template_data.buff_extension
-
-		if buff_extension then
-			local t = FixedFrame.get_latest_fixed_time()
-
-			buff_extension:add_internally_controlled_buff(template.shock_effect_buff_template, t)
-		end
-	end,
+	start_func = _chain_lightning_start_func,
+	interval_func = _chain_lightning_interval_func,
 	minion_effects = {
 		ailment_effect = ailment_effects.electrocution
 	}
@@ -448,13 +391,41 @@ templates.shock_effect = {
 	}
 }
 templates.taunted = {
+	buff_id = "taunted",
 	unique_buff_id = "taunted",
 	duration = 10,
-	buff_id = "taunted",
 	predicted = false,
 	class_name = "buff",
 	keywords = {
 		buff_keywords.taunted
+	},
+	minion_effects = {
+		node_effects = {
+			{
+				node_name = "j_lefteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy"
+				}
+			},
+			{
+				node_name = "j_righteye",
+				vfx = {
+					orphaned_policy = "stop",
+					particle_effect = "content/fx/particles/enemies/red_glowing_eyes",
+					stop_type = "destroy"
+				}
+			}
+		},
+		material_vector = {
+			name = "stimmed_color",
+			value = {
+				0.15,
+				0,
+				0.005
+			}
+		}
 	},
 	start_func = function (template_data, template_context)
 		local is_server = template_context.is_server

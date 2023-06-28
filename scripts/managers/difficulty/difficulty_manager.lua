@@ -52,6 +52,10 @@ DifficultyManager.get_difficulty = function (self)
 	return self:get_challenge()
 end
 
+DifficultyManager.get_dummy_challenge = function (self)
+	return self._dummy_challenge
+end
+
 DifficultyManager.set_challenge = function (self, new_challenge)
 	self._challenge = new_challenge
 
@@ -62,6 +66,12 @@ DifficultyManager.set_resistance = function (self, new_resistance)
 	self._resistance = new_resistance
 
 	Log.info("DifficultyManager", "Resistance set to %s", self._resistance)
+end
+
+DifficultyManager.set_dummy_challenge = function (self, new_challenge)
+	self._dummy_challenge = new_challenge
+
+	Log.info("DifficultyManager", "Dummy challenge set to %s", self._dummy_challenge)
 end
 
 DifficultyManager.modify_resistance = function (self, modifier)

@@ -59,7 +59,7 @@ end
 
 local TEMP_INIT_DATA = {}
 
-MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation, side_id, optional_aggro_state, optional_target_unit, optional_spawner_unit, optional_group_id, optional_mission_objective_id, optional_attack_selection_template_name)
+MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation, side_id, optional_aggro_state, optional_target_unit, optional_spawner_unit, optional_group_id, optional_mission_objective_id, optional_attack_selection_template_name, optional_health_modifier)
 	local breed = Breeds[breed_name]
 	local seed = math.random_seed(self._seed)
 	local spawn_aggro_state = optional_aggro_state or breed.spawn_aggro_state
@@ -71,6 +71,7 @@ MinionSpawnManager.spawn_minion = function (self, breed_name, position, rotation
 	TEMP_INIT_DATA.optional_group_id = optional_group_id
 	TEMP_INIT_DATA.optional_mission_objective_id = optional_mission_objective_id
 	TEMP_INIT_DATA.optional_attack_selection_template_name = optional_attack_selection_template_name
+	TEMP_INIT_DATA.optional_health_modifier = optional_health_modifier
 	local unit_template_name = breed.unit_template_name
 	local unit = Managers.state.unit_spawner:spawn_network_unit(nil, unit_template_name, position, rotation, nil, TEMP_INIT_DATA)
 	self._seed = seed

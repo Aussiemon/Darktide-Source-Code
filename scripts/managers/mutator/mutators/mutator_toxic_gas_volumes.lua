@@ -3,7 +3,8 @@ require("scripts/managers/mutator/mutators/mutator_base")
 local Component = require("scripts/utilities/component")
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
-local LevelProps = require("scripts/settings/level_prop/level_props")
+local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
+local NavQueries = require("scripts/utilities/nav_queries")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local MutatorToxicGasVolumes = class("MutatorToxicGasVolumes", "MutatorBase")
 
@@ -16,6 +17,7 @@ MutatorToxicGasVolumes.init = function (self, is_server, network_event_delegate,
 	self._gas_clouds = {}
 	self._nav_world = nav_world
 	self._buff_affected_units = {}
+	self._active_gas_clouds = {}
 	self._seed = level_seed
 	local extension_manager = Managers.state.extension
 	local side_system = extension_manager:system("side_system")
@@ -35,14 +37,28 @@ end
 
 MutatorToxicGasVolumes._activate_cloud = function (self, cloud)
 	local liquid_area_template = LiquidAreaTemplates.toxic_gas
-	local unit = LiquidArea.try_create(cloud.position:unbox(), Vector3(0, 0, 1), self._nav_world, liquid_area_template)
+	local max_liquid = cloud.max_liquid
+	local unit = LiquidArea.try_create(cloud.position:unbox(), Vector3(0, 0, 1), self._nav_world, liquid_area_template, nil, max_liquid)
 	cloud.active = true
-	cloud.unit = unit
+	cloud.liquid_unit = unit
+
+	cloud.fog_component:set_volume_enabled(true)
 end
 
-local fog_unit_name = "content/environment/volumetrics/toxic_fog_volume"
+MutatorToxicGasVolumes._deactivate_cloud = function (self, cloud)
+	if ALIVE[cloud.liquid_unit] then
+		Managers.state.unit_spawner:mark_for_deletion(cloud.liquid_unit)
+	end
 
-MutatorToxicGasVolumes.on_gameplay_post_init = function (self, level, themes)
+	cloud.active = false
+	cloud.liquid_unit = nil
+
+	cloud.fog_component:set_volume_enabled(false)
+end
+
+local CHANCE_TO_NOT_SPAWN_CLOUD = 0.25
+
+MutatorToxicGasVolumes.on_spawn_points_generated = function (self, level, themes)
 	local gas_clouds = self._gas_clouds
 	local component_system = Managers.state.extension:system("component_system")
 	local fog_units = component_system:get_units_from_component_name("ToxicGasFog")
@@ -56,12 +72,11 @@ MutatorToxicGasVolumes.on_gameplay_post_init = function (self, level, themes)
 	for i = 1, #fog_units do
 		local fog_unit = fog_units[i]
 		local components = Component.get_components_by_name(fog_unit, "ToxicGasFog")
-		local pos = Unit.world_position(fog_unit, 1)
-		local rot = Unit.world_rotation(fog_unit, 1)
 
 		for _, fog_component in ipairs(components) do
 			local id = fog_component:get_data(fog_unit, "id")
 			local section_id = fog_component:get_data(fog_unit, "section")
+			local max_liquid = fog_component:get_data(fog_unit, "max_liquid")
 
 			if not gas_clouds[section_id] then
 				gas_clouds[section_id] = {}
@@ -75,47 +90,72 @@ MutatorToxicGasVolumes.on_gameplay_post_init = function (self, level, themes)
 				num_sections = section_id
 			end
 
-			table.insert(gas_clouds[section_id][id], fog_unit)
-		end
+			local entry = {
+				fog_unit = fog_unit,
+				max_liquid = max_liquid
+			}
 
-		QuickDrawerStay:sphere(pos, 2, Color.lime())
+			table.insert(gas_clouds[section_id][id], entry)
+		end
 	end
 
 	local active_gas_clouds = {}
+	local force_next_to_not_skip = false
 
 	for i = 1, num_sections do
-		local max_section_id = #gas_clouds
-		local random_section_id = self:_random(1, max_section_id)
-		local section_entry = gas_clouds[random_section_id]
-		local random_id = self:_random(1, #section_entry)
-		local clouds = section_entry[random_id]
+		repeat
+			local max_section_id = #gas_clouds
+			local random_section_id = self:_random(1, max_section_id)
+			local section_entry = gas_clouds[random_section_id]
+			local random_id = self:_random(1, #section_entry)
+			local clouds = section_entry[random_id]
+			local main_path_manager = Managers.state.main_path
 
-		for j = 1, #clouds do
-			local cloud = clouds[j]
-			local fog_components = Component.get_components_by_name(cloud, "ToxicGasFog")
+			if not force_next_to_not_skip and math.random() < CHANCE_TO_NOT_SPAWN_CLOUD then
+				force_next_to_not_skip = true
+			else
+				force_next_to_not_skip = false
 
-			for _, fog_component in ipairs(fog_components) do
-				fog_component:set_volume_enabled(true)
+				for j = 1, #clouds do
+					local cloud = clouds[j]
+					local cloud_unit = cloud.fog_unit
+					local max_liquid = cloud.max_liquid
+					local fog_components = Component.get_components_by_name(cloud_unit, "ToxicGasFog")
+					local wanted_component = nil
+
+					for _, fog_component in ipairs(fog_components) do
+						wanted_component = fog_component
+					end
+
+					local position = Unit.local_position(cloud_unit, 1)
+					local position_on_navmesh = NavQueries.position_on_mesh_with_outside_position(self._nav_world, nil, position, 1, 1, 1)
+
+					if position_on_navmesh then
+						local nav_spawn_points = main_path_manager:nav_spawn_points()
+						local spawn_point_group_index = SpawnPointQueries.group_from_position(self._nav_world, nav_spawn_points, position_on_navmesh)
+
+						if spawn_point_group_index then
+							local start_index = main_path_manager:node_index_by_nav_group_index(spawn_point_group_index or 1)
+							local end_index = start_index + 1
+							local _, travel_distance, _, _, _ = MainPathQueries.closest_position_between_nodes(position_on_navmesh, start_index, end_index)
+							local boxed_position = Vector3Box(position)
+							active_gas_clouds[#active_gas_clouds + 1] = {
+								cloud_unit = cloud_unit,
+								travel_distance = travel_distance,
+								position = boxed_position,
+								max_liquid = max_liquid,
+								fog_component = wanted_component
+							}
+						end
+					end
+				end
+
+				table.remove(gas_clouds, random_section_id)
 			end
-
-			QuickDrawerStay:sphere(POSITION_LOOKUP[cloud], 4, Color.yellow())
-
-			active_gas_clouds[#active_gas_clouds + 1] = cloud
-		end
-
-		table.remove(gas_clouds, random_section_id)
+		until true
 	end
 
 	self._active_gas_clouds = active_gas_clouds
-end
-
-MutatorToxicGasVolumes._deactivate_cloud = function (self, cloud)
-	if ALIVE[cloud.unit] then
-		Managers.state.unit_spawner:mark_for_deletion(cloud.unit)
-	end
-
-	cloud.active = false
-	cloud.unit = nil
 end
 
 MutatorToxicGasVolumes._random = function (self, ...)
@@ -127,8 +167,6 @@ end
 
 local TARGET_SIDE_ID = 1
 local CLOUD_SPAWN_DISTANCE = 60
-local TEMP_ALREADY_CHECKED_UNITS = {}
-local BROADPHASE_RESULTS = {}
 
 MutatorToxicGasVolumes.update = function (self, dt, t)
 	if not self._is_server then
@@ -148,87 +186,25 @@ MutatorToxicGasVolumes.update = function (self, dt, t)
 		return
 	end
 
-	table.clear(TEMP_ALREADY_CHECKED_UNITS)
+	local _, behind_travel_distance = main_path_manager:behind_unit(TARGET_SIDE_ID)
+	local gas_clouds = self._active_gas_clouds
 
-	local buff_affected_units = self._buff_affected_units
-	local side_system = Managers.state.extension:system("side_system")
-	local side = side_system:get_side_from_name("heroes")
-	local valid_player_units = side.valid_player_units
-	local active_gas_clouds = self._active_gas_clouds
-	local ALIVE = ALIVE
+	for i = 1, #gas_clouds do
+		repeat
+			local gas_cloud = gas_clouds[i]
+			local cloud_travel_distance = gas_cloud.travel_distance
+			local ahead_travel_distance_diff = math.abs(ahead_travel_distance - cloud_travel_distance)
+			local behind_travel_distance_diff = math.abs(behind_travel_distance - cloud_travel_distance)
+			local is_between_ahead_and_behind = cloud_travel_distance < ahead_travel_distance and behind_travel_distance < cloud_travel_distance
+			local should_activate = is_between_ahead_and_behind or ahead_travel_distance_diff < CLOUD_SPAWN_DISTANCE or behind_travel_distance_diff < CLOUD_SPAWN_DISTANCE
+			local is_active = gas_cloud.active
 
-	for unit, buff_indices in pairs(buff_affected_units) do
-		local is_inside_any_cloud = false
-
-		for j = 1, #active_gas_clouds do
-			local cloud_unit = active_gas_clouds[j]
-
-			if not ALIVE[unit] or Unit.is_point_inside_volume(cloud_unit, "fog_volume", POSITION_LOOKUP[unit]) then
-				is_inside_any_cloud = true
-
-				break
+			if should_activate and not is_active then
+				self:_activate_cloud(gas_cloud)
+			elseif not should_activate and is_active then
+				self:_deactivate_cloud(gas_cloud)
 			end
-		end
-
-		if not is_inside_any_cloud then
-			local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
-
-			if buff_extension then
-				local local_index = buff_indices.local_index
-				local component_index = buff_indices.component_index
-
-				buff_extension:remove_externally_controlled_buff(local_index, component_index)
-
-				local leaving_liquid_buff_template_name = self._leaving_fog_buff_template_name
-
-				if leaving_liquid_buff_template_name then
-					buff_extension:add_internally_controlled_buff(leaving_liquid_buff_template_name, t, "owner_unit", unit)
-				end
-			end
-
-			buff_affected_units[unit] = nil
-		end
-
-		TEMP_ALREADY_CHECKED_UNITS[unit] = true
-	end
-
-	local broadphase = self._broadphase
-	local side_names = self._side_names
-	local broadphase_radius = self._broadphase_radius
-
-	for i = 1, #active_gas_clouds do
-		local cloud_unit = active_gas_clouds[i]
-		local cloud_unit_position = Unit.world_position(cloud_unit, 1)
-		local num_results = broadphase:query(cloud_unit_position, broadphase_radius, BROADPHASE_RESULTS, side_names)
-
-		for j = 1, num_results do
-			repeat
-				local unit = BROADPHASE_RESULTS[j]
-
-				if not ALIVE[unit] or TEMP_ALREADY_CHECKED_UNITS[unit] then
-					break
-				end
-
-				local unit_position = POSITION_LOOKUP[unit]
-				local unit_is_inside = Unit.is_point_inside_volume(cloud_unit, "fog_volume", unit_position)
-
-				if unit_is_inside then
-					QuickDrawer:sphere(unit_position, 1, Color.red())
-
-					local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
-
-					if buff_extension and not TEMP_ALREADY_CHECKED_UNITS[unit] then
-						local _, local_index, component_index = buff_extension:add_externally_controlled_buff(self._in_fog_buff_template_name, t, "owner_unit", cloud_unit)
-						buff_affected_units[unit] = {
-							local_index = local_index,
-							component_index = component_index
-						}
-					end
-
-					TEMP_ALREADY_CHECKED_UNITS[unit] = true
-				end
-			until true
-		end
+		until true
 	end
 end
 

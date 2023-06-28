@@ -1,9 +1,10 @@
 local Action = require("scripts/utilities/weapon/action")
-local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
+local PlayerCharacterLoopingSoundAliases = require("scripts/settings/sound/player_character_looping_sound_aliases")
 local WeaponTemperatureEffects = class("WeaponTemperatureEffects")
 local FX_SOURCE_NAME = "_muzzle"
 local PARAMETER_NAME = "weapon_temperature"
-local LOOPING_SOUND_ALIAS = "weapon_temperature"
+local LOOPING_SFX_ALIAS = "weapon_temperature"
+local LOOPING_SFX_CONFIG = PlayerCharacterLoopingSoundAliases[LOOPING_SFX_ALIAS]
 local INCREASE_RATE = 0.05
 local DECAY_RATE = 0.1
 local GRACE_TIME = 1.8
@@ -22,9 +23,9 @@ local CHARGE_ACTIONS = {
 	charge = true,
 	overload_charge_target_finder = true,
 	overload_charge_position_finder = true,
-	overload_charge = true,
-	charge_aim = true
+	overload_charge = true
 }
+local sfx_external_properties = {}
 
 WeaponTemperatureEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	self._is_husk = context.is_husk
@@ -36,10 +37,9 @@ WeaponTemperatureEffects.init = function (self, context, slot, weapon_template, 
 	self._equipment_component = context.equipment_component
 	local owner_unit = context.owner_unit
 	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
-	local looping_sound_component_name = PlayerUnitData.looping_sound_component_name(LOOPING_SOUND_ALIAS)
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
+	self._visual_loadout_extension = context.visual_loadout_extension
 	self._fx_source_name = fx_sources[FX_SOURCE_NAME]
-	self._looping_sound_component = unit_data_extension:read_component(looping_sound_component_name)
 	self._shooting_status_component = unit_data_extension:read_component("shooting_status")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._wieldable_slot_component = unit_data_extension:read_component(slot.name)
@@ -48,9 +48,10 @@ WeaponTemperatureEffects.init = function (self, context, slot, weapon_template, 
 end
 
 WeaponTemperatureEffects.destroy = function (self)
-	if self._looping_sound_component.is_playing then
-		self:_stop_looping_sound()
-	end
+	self._parameter_value = 0
+
+	self:_update_wwise_source_parameter(0)
+	self:_stop_sfx_loop()
 end
 
 WeaponTemperatureEffects.fixed_update = function (self, unit, dt, t, frame)
@@ -60,12 +61,12 @@ end
 WeaponTemperatureEffects.update = function (self, unit, dt, t)
 	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
 	local parameter_value = self:_update_temperature_parameter(action_settings, dt, t)
-	local sfx_playing = self._looping_sound_component.is_playing
+	local sfx_playing = self._looping_playing_id
 
 	if parameter_value > 0 and not sfx_playing then
-		self:_start_looping_sound()
+		self:_start_sfx_loop()
 	elseif parameter_value <= 0 and sfx_playing then
-		self:_stop_looping_sound()
+		self:_stop_sfx_loop()
 	end
 
 	self:_update_wwise_source_parameter(parameter_value)
@@ -134,31 +135,60 @@ WeaponTemperatureEffects.wield = function (self)
 end
 
 WeaponTemperatureEffects.unwield = function (self)
-	if self._looping_sound_component.is_playing then
-		self:_stop_looping_sound()
-	end
-
 	self._parameter_value = 0
 
 	self._equipment_component.send_component_event(self._slot, "set_barrel_overheat", 0)
-end
-
-WeaponTemperatureEffects._start_looping_sound = function (self)
-	if self._is_husk then
-		return
-	end
-
-	self._fx_extension:trigger_looping_wwise_event(LOOPING_SOUND_ALIAS, self._fx_source_name)
-	self:_update_wwise_source_parameter()
-end
-
-WeaponTemperatureEffects._stop_looping_sound = function (self)
-	if self._is_husk then
-		return
-	end
-
-	self._fx_extension:stop_looping_wwise_event(LOOPING_SOUND_ALIAS)
 	self:_update_wwise_source_parameter(0)
+	self:_stop_sfx_loop()
+end
+
+WeaponTemperatureEffects._start_sfx_loop = function (self)
+	local is_husk = self._is_husk
+	local is_local_unit = self._is_local_unit
+	local wwise_world = self._wwise_world
+	local sfx_source_id = self._fx_extension:sound_source(self._fx_source_name)
+	local visual_loadout_extension = self._visual_loadout_extension
+	local use_husk_event = is_husk or not is_local_unit
+	local start_config = LOOPING_SFX_CONFIG.start
+	local stop_config = LOOPING_SFX_CONFIG.stop
+	local start_event_alias = start_config.event_alias
+	local stop_event_alias = stop_config.event_alias
+	local resolved, has_husk_events, event_name = nil
+	resolved, event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(start_event_alias, sfx_external_properties)
+
+	if resolved then
+		if use_husk_event and has_husk_events then
+			event_name = event_name .. "_husk" or event_name
+		end
+
+		local new_playing_id = WwiseWorld.trigger_resource_event(wwise_world, event_name, sfx_source_id)
+		self._looping_playing_id = new_playing_id
+		resolved, event_name, has_husk_events = visual_loadout_extension:resolve_gear_sound(stop_event_alias, sfx_external_properties)
+
+		if resolved then
+			if use_husk_event and has_husk_events then
+				event_name = event_name .. "_husk" or event_name
+			end
+
+			self._looping_stop_event_name = event_name
+		end
+	end
+end
+
+WeaponTemperatureEffects._stop_sfx_loop = function (self)
+	local wwise_world = self._wwise_world
+	local sfx_source_id = self._fx_extension:sound_source(self._fx_source_name)
+	local current_playing_id = self._looping_playing_id
+	local stop_event_name = self._looping_stop_event_name
+
+	if stop_event_name and sfx_source_id then
+		WwiseWorld.trigger_resource_event(wwise_world, stop_event_name, sfx_source_id)
+	else
+		WwiseWorld.stop_event(wwise_world, current_playing_id)
+	end
+
+	self._looping_playing_id = nil
+	self._looping_stop_event_name = nil
 end
 
 WeaponTemperatureEffects._update_wwise_source_parameter = function (self, parameter_value)

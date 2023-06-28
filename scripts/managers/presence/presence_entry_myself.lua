@@ -30,6 +30,16 @@ PresenceEntryMyself.init = function (self)
 	self:set_activity_id("splash_screen")
 end
 
+PresenceEntryMyself.reset = function (self)
+	self._character_profile = nil
+	self._party_id = nil
+	self._num_party_members = nil
+	self._num_mission_members = nil
+	self._cross_play_disabled = nil
+	self._cross_play_disabled_in_party = nil
+	self._is_cross_playing = nil
+end
+
 PresenceEntryMyself.account_id = function (self)
 	return gRPC.get_account_id()
 end
@@ -149,6 +159,30 @@ PresenceEntryMyself.set_party_id = function (self, party_id)
 	self._party_id = party_id
 end
 
+PresenceEntryMyself.cross_play_disabled = function (self)
+	return self._cross_play_disabled == "true"
+end
+
+PresenceEntryMyself.set_cross_play_disabled = function (self, disabled)
+	self._cross_play_disabled = disabled and "true" or "false"
+end
+
+PresenceEntryMyself.cross_play_disabled_in_party = function (self)
+	return self._cross_play_disabled_in_party == "true"
+end
+
+PresenceEntryMyself.set_cross_play_disabled_in_party = function (self, disabled)
+	self._cross_play_disabled_in_party = disabled and "true" or "false"
+end
+
+PresenceEntryMyself.is_cross_playing = function (self)
+	return self._is_cross_playing == "true"
+end
+
+PresenceEntryMyself.set_is_cross_playing = function (self, value)
+	self._is_cross_playing = value and "true" or "false"
+end
+
 PresenceEntryMyself.is_alive = function (self)
 	return true
 end
@@ -176,6 +210,18 @@ PresenceEntryMyself.create_key_values = function (self, white_list)
 
 	if not white_list or white_list.num_mission_members then
 		key_values.num_mission_members = self._num_mission_members
+	end
+
+	if not white_list or white_list.cross_play_disabled then
+		key_values.cross_play_disabled = self._cross_play_disabled
+	end
+
+	if not white_list or white_list.cross_play_disabled_in_party then
+		key_values.cross_play_disabled_in_party = self._cross_play_disabled_in_party
+	end
+
+	if not white_list or white_list.is_cross_playing then
+		key_values.is_cross_playing = self._is_cross_playing
 	end
 
 	return key_values

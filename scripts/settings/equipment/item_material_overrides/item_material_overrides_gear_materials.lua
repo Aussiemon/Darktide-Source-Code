@@ -63,6 +63,80 @@ local material_overrides = {
 			}
 		}
 	},
+	oxidized_metal_steel_paint_forest_01_wear_01 = {
+		texture_overrides = {
+			oxid1_gradient = {
+				resource = "content/textures/colors/oxidation_color_red_02"
+			},
+			oxid_mat1_bc = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_forest_01_bca"
+			},
+			oxid_mat1_nm = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_nm"
+			},
+			oxid_mat1_orm = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_orm"
+			},
+			oxid2_gradient = {
+				resource = "content/textures/colors/oxidation_color_red_01"
+			},
+			oxid_mat2_bc = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_forest_01_bca"
+			},
+			oxid_mat2_nm = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_nm"
+			},
+			oxid_mat2_orm = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_orm"
+			}
+		},
+		property_overrides = {
+			edge_chipping = {
+				0.3
+			},
+			oxid_level = {
+				0.1,
+				0.3
+			}
+		}
+	},
+	oxidized_metal_steel_paint_forest_01_wear_02 = {
+		texture_overrides = {
+			oxid1_gradient = {
+				resource = "content/textures/colors/oxidation_color_red_02"
+			},
+			oxid_mat1_bc = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_forest_01_bca"
+			},
+			oxid_mat1_nm = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_nm"
+			},
+			oxid_mat1_orm = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_orm"
+			},
+			oxid2_gradient = {
+				resource = "content/textures/colors/oxidation_color_red_01"
+			},
+			oxid_mat2_bc = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_forest_01_bca"
+			},
+			oxid_mat2_nm = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_nm"
+			},
+			oxid_mat2_orm = {
+				resource = "content/characters/tiling_materials/steel_paint_01/steel_paint_01_orm"
+			}
+		},
+		property_overrides = {
+			edge_chipping = {
+				0.5
+			},
+			oxid_level = {
+				0.2,
+				0.5
+			}
+		}
+	},
 	oxidized_metal_steel_paint_black_wear_01 = {
 		texture_overrides = {
 			oxid1_gradient = {
@@ -1571,6 +1645,87 @@ local material_overrides = {
 			}
 		}
 	},
+	fabric_cotton_01_leather_03_wear_01 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/cotton_01/cotton_01_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/cotton_01/cotton_01_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/cotton_01/cotton_01_orm"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/leather_02/leather_02_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/leather_02/leather_02_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/leather_02/leather_02_orm"
+			}
+		},
+		property_overrides = {
+			dirt = {
+				0.1
+			}
+		}
+	},
+	fabric_cotton_01_leather_03_wear_02 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/cotton_01/cotton_01_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/cotton_01/cotton_01_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/cotton_01/cotton_01_orm"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/leather_02/leather_02_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/leather_02/leather_02_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/leather_02/leather_02_orm"
+			}
+		},
+		property_overrides = {
+			dirt = {
+				0.3
+			}
+		}
+	},
+	fabric_cotton_01_leather_03_wear_03 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/cotton_01/cotton_01_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/cotton_01/cotton_01_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/cotton_01/cotton_01_orm"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/leather_02/leather_02_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/leather_02/leather_02_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/leather_02/leather_02_orm"
+			}
+		},
+		property_overrides = {
+			dirt = {
+				0.6
+			}
+		}
+	},
 	fabric_cotton_01_wear_01 = {
 		texture_overrides = {
 			mat1_bc = {
@@ -2859,6 +3014,87 @@ local material_overrides = {
 			},
 			mat2_orm = {
 				resource = "content/characters/tiling_materials/leather_03/leather_03_orm"
+			}
+		},
+		property_overrides = {
+			dirt = {
+				0.6
+			}
+		}
+	},
+	fabric_leather_04_wool_01_wear_01 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/leather_03/leather_03_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/leather_03/leather_03_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/leather_03/leather_03_orm"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm"
+			}
+		},
+		property_overrides = {
+			dirt = {
+				0.1
+			}
+		}
+	},
+	fabric_leather_04_wool_01_wear_02 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/leather_03/leather_03_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/leather_03/leather_03_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/leather_03/leather_03_orm"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm"
+			}
+		},
+		property_overrides = {
+			dirt = {
+				0.3
+			}
+		}
+	},
+	fabric_leather_04_wool_01_wear_03 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/leather_03/leather_03_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/leather_03/leather_03_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/leather_03/leather_03_orm"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm"
 			}
 		},
 		property_overrides = {

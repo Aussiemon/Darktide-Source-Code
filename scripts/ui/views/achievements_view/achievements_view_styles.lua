@@ -457,6 +457,18 @@ family_reward_display_name_style.size = {
 	18
 }
 family_reward_display_name_style.text_color = Color.terminal_text_header(255, true)
+achievement_family_reward_style.sub_display_name = table.clone(UIFontSettings.body_small)
+local family_reward_display_name_style = achievement_family_reward_style.sub_display_name
+family_reward_display_name_style.offset = {
+	family_reward_label_style.offset[1],
+	family_reward_label_style.offset[2] + 45,
+	3
+}
+family_reward_display_name_style.size = {
+	250,
+	18
+}
+family_reward_display_name_style.text_color = Color.terminal_text_body_sub_header(255, true)
 achievement_family_reward_style.lock = {}
 local family_reward_lock_style = achievement_family_reward_style.lock
 family_reward_lock_style.font_type = "proxima_nova_bold"

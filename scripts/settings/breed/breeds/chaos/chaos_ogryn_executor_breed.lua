@@ -21,19 +21,19 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_ogryn_executor"
 local breed_data = {
-	explosion_radius = 0.25,
+	detection_radius = 13,
 	walk_speed = 2,
+	explosion_radius = 0.25,
 	use_navigation_path_splines = true,
 	use_bone_lod = true,
 	state_machine = "content/characters/enemy/chaos_ogryn/third_person/animations/chaos_ogryn_executor",
 	sub_faction_name = "chaos",
-	detection_radius = 13,
+	can_patrol = true,
 	unit_template_name = "minion",
 	game_object_type = "minion_melee",
 	push_multiplier = 2.5,
 	slot_template = "chaos_ogryn",
 	broadphase_radius = 1,
-	activate_slot_system_on_spawn = true,
 	stagger_resistance = 1,
 	aggro_inventory_slot = "slot_melee_weapon",
 	half_extent_forward = 0.5,
@@ -53,7 +53,7 @@ local breed_data = {
 	stagger_reduction = 15,
 	player_locomotion_constrain_radius = 0.9,
 	stagger_reduction_ranged = 15,
-	can_patrol = true,
+	activate_slot_system_on_spawn = true,
 	smart_tag_target_type = "breed",
 	base_unit = "content/characters/enemy/chaos_ogryn/third_person/base",
 	hit_mass = 20,
@@ -104,15 +104,6 @@ local breed_data = {
 		"anim_move_speed"
 	},
 	combat_range_data = BreedCombatRanges.chaos_ogryn_executor,
-	suppress_config = {
-		max_value = math.huge,
-		threshold = math.huge,
-		decay_speeds = {
-			melee = 0.05,
-			far = 0.2,
-			close = 0.2
-		}
-	},
 	attack_intensity_cooldowns = {
 		melee = {
 			0.1,

@@ -47,9 +47,9 @@ MinionBuffExtension.hot_join_sync = function (self, unit, sender, channel)
 		if #index_array == 1 then
 			local index = index_array[1]
 
-			RPC.rpc_add_buff(channel, game_object_id, buff_template_id, index, optional_lerp_value)
+			RPC.rpc_add_buff(channel, game_object_id, buff_template_id, index, optional_lerp_value, nil, nil, false)
 		else
-			RPC.rpc_add_buff_with_stacks(channel, game_object_id, buff_template_id, index_array, optional_lerp_value)
+			RPC.rpc_add_buff_with_stacks(channel, game_object_id, buff_template_id, index_array, optional_lerp_value, nil, nil, false)
 		end
 	end
 end
@@ -64,8 +64,10 @@ MinionBuffExtension.game_object_initialized = function (self, game_session, game
 			local buff_template_id = buff_added_before_game_object_creation.buff_template_id
 			local index = buff_added_before_game_object_creation.index
 			local optional_lerp_value = buff_added_before_game_object_creation.optional_lerp_value
+			local optional_slot_id, optional_parent_buff_template_id = nil
+			local from_specialization = false
 
-			Managers.state.game_session:send_rpc_clients("rpc_add_buff", game_object_id, buff_template_id, index, optional_lerp_value)
+			Managers.state.game_session:send_rpc_clients("rpc_add_buff", game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id, from_specialization)
 		end
 
 		self._buffs_added_before_game_object_creation = nil
@@ -246,9 +248,10 @@ MinionBuffExtension._add_rpc_synced_buff = function (self, template, t, ...)
 	local optional_lerp_value = buff_instance:buff_lerp_value()
 
 	if game_object_id then
-		Managers.state.game_session:send_rpc_clients("rpc_add_buff", game_object_id, buff_template_id, index, optional_lerp_value)
+		Managers.state.game_session:send_rpc_clients("rpc_add_buff", game_object_id, buff_template_id, index, optional_lerp_value, nil, nil, false)
 	else
 		local buff_added_before_game_object_creation = {
+			from_specialization = false,
 			buff_template_id = buff_template_id,
 			index = index,
 			optional_lerp_value = optional_lerp_value
@@ -311,12 +314,23 @@ MinionBuffExtension._start_fx = function (self, index, template)
 			self:_start_node_effects(node_effects)
 		end
 
-		local effect_template = minion_effects.effect_template
+		local material_vector = minion_effects.material_vector
 
-		if effect_template then
-			local fx_system = Managers.state.extension:system("fx_system")
-			local effect_template_id = fx_system:start_template_effect(effect_template, unit)
-			self._effect_template_id = effect_template_id
+		if material_vector then
+			local name = material_vector.name
+			local value = material_vector.value
+
+			Unit.set_vector3_for_materials(self._unit, name, Vector3(value[1], value[2], value[3]), true)
+		end
+
+		if self._is_server then
+			local effect_template = minion_effects.effect_template
+
+			if effect_template then
+				local fx_system = Managers.state.extension:system("fx_system")
+				local effect_template_id = fx_system:start_template_effect(effect_template, unit)
+				self._effect_template_id = effect_template_id
+			end
 		end
 	end
 end
@@ -329,6 +343,23 @@ MinionBuffExtension._stop_fx = function (self, index, template)
 
 		if minion_node_effects then
 			self:_stop_node_effects(minion_node_effects)
+		end
+
+		local material_vector = minion_effects.material_vector
+
+		if material_vector then
+			local name = material_vector.name
+
+			Unit.set_vector3_for_materials(self._unit, name, Vector3(0, 0, 0), true)
+		end
+
+		if self._is_server then
+			local effect_template = minion_effects.effect_template
+			local fx_system = Managers.state.extension:system("fx_system")
+
+			if effect_template and self._effect_template_id and fx_system:has_running_global_effect_id(self._effect_template_id) then
+				fx_system:stop_template_effect(self._effect_template_id)
+			end
 		end
 	end
 

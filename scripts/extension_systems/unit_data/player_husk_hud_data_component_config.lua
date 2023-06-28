@@ -39,10 +39,12 @@ local husk_hud_data_component_config = {
 	},
 	grenade_ability = {
 		"cooldown",
+		"cooldown_paused",
 		"num_charges"
 	},
 	combat_ability = {
 		"cooldown",
+		"cooldown_paused",
 		"num_charges"
 	},
 	weapon_lock_view = {
@@ -51,9 +53,7 @@ local husk_hud_data_component_config = {
 		"yaw"
 	}
 }
-local looping_sound_aliases = {
-	"weapon_temperature"
-}
+local looping_sound_aliases = {}
 
 for i = 1, #looping_sound_aliases do
 	local looping_sound_alias = looping_sound_aliases[i]

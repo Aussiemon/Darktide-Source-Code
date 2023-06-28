@@ -10,6 +10,17 @@ MoveablePlatformInteraction.interactee_condition_func = function (self, interact
 	return can_interact
 end
 
+MoveablePlatformInteraction.hud_block_text = function (self, interactor_unit, interactee_unit, interactable_actor_node_index)
+	local moveable_platform_extension = ScriptUnit.extension(interactee_unit, "moveable_platform_system")
+	local extension_block_text = moveable_platform_extension:block_text()
+
+	if extension_block_text then
+		return extension_block_text
+	end
+
+	return MoveablePlatformInteraction.super.hud_block_text(self, interactor_unit, interactee_unit, interactable_actor_node_index)
+end
+
 MoveablePlatformInteraction.hud_description = function (self, interactor_unit, interactee_unit, interactable_actor_node_index)
 	local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
 	local description = interactee_extension:description()

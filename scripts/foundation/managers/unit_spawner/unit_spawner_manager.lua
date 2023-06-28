@@ -41,7 +41,7 @@ UnitSpawnerManager.init = function (self, world, extension_manager, is_server, u
 	self._unit_template_network_lookup = self:_build_network_lookup(self._unit_templates)
 
 	if game_session then
-		self._is_fully_hot_join_synced = is_server and true or false
+		self.is_fully_hot_join_synced = is_server and true or false
 
 		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
 
@@ -95,7 +95,7 @@ UnitSpawnerManager.commit_and_remove_pending_units = function (self)
 end
 
 UnitSpawnerManager._add_pending_extensions = function (self)
-	if not self._is_fully_hot_join_synced then
+	if not self.is_fully_hot_join_synced then
 		return 0
 	end
 
@@ -401,7 +401,7 @@ UnitSpawnerManager.destroy_game_object_unit = function (self, game_object_id, ow
 end
 
 UnitSpawnerManager.rpc_is_fully_hot_join_synced = function (self, channel_id)
-	self._is_fully_hot_join_synced = true
+	self.is_fully_hot_join_synced = true
 end
 
 return UnitSpawnerManager

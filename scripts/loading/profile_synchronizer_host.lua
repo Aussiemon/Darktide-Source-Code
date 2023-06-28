@@ -142,6 +142,10 @@ ProfileSynchronizerHost.profile_changed = function (self, peer_id, local_player_
 	local connected_peer_channel_ids = self._connected_peers
 
 	Managers.backend.interfaces.characters:fetch_account_character(account_id, character_id, true, true):next(function (backend_profile_data)
+		if not Managers.player:player(peer_id, local_player_id) then
+			return
+		end
+
 		backend_profile_data = ProfileUtils.process_backend_body(backend_profile_data)
 		local new_profile = ProfileUtils.backend_profile_data_to_profile(backend_profile_data)
 		local profile_json = ProfileUtils.pack_backend_profile_data(backend_profile_data)
@@ -391,7 +395,7 @@ end
 ProfileSynchronizerHost.rpc_notify_profile_changed = function (self, channel_id, peer_id, local_player_id)
 	local player = Managers.player:player(peer_id, local_player_id)
 
-	if not Managers.connection:is_dedicated_hub_server() then
+	if not Managers.mechanism:profile_changes_are_allowed() then
 		return
 	end
 

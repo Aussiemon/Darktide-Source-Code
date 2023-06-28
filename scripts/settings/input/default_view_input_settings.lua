@@ -212,7 +212,8 @@ local default_view_input_settings = {
 		},
 		show_chat = {
 			"keyboard_enter",
-			"xbox_controller_right_thumb+xbox_controller_left_thumb",
+			"xbox_controller_right_thumb+xbox_controller_d_right",
+			"xbox_controller_d_right+xbox_controller_right_thumb",
 			description = "loc_alias_view_show_chat",
 			bindable = true,
 			group = "input_group_interface"
@@ -347,12 +348,14 @@ local default_view_input_settings = {
 		notification_option_a = {
 			"keyboard_f9",
 			"xbox_controller_d_right+xbox_controller_left_trigger",
+			"xbox_controller_left_trigger+xbox_controller_d_right",
 			description = "",
 			bindable = false
 		},
 		notification_option_b = {
 			"keyboard_f10",
 			"xbox_controller_d_right+xbox_controller_right_trigger",
+			"xbox_controller_right_trigger+xbox_controller_d_right",
 			description = "",
 			bindable = false
 		},

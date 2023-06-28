@@ -2412,6 +2412,8 @@ local function create_render_settings_entry(template)
 	local tooltip_text = template.tooltip_text
 	local value_type = template.value_type
 	local default_value = template.default_value
+	local get_function = template.get_function
+	local on_changed = template.on_changed
 	local default_value_type = value_type or default_value ~= nil and type(default_value) or nil
 	local options = template.options
 	local save_location = template.save_location
@@ -2423,7 +2425,7 @@ local function create_render_settings_entry(template)
 			on_activated = function (value, template)
 				verify_and_apply_changes(template, value)
 			end,
-			on_changed = function (value, template)
+			on_changed = on_changed or function (value, template)
 				local option = nil
 
 				for i = 1, #options do
@@ -2463,7 +2465,7 @@ local function create_render_settings_entry(template)
 
 				return dirty, option.require_apply
 			end,
-			get_function = function (template)
+			get_function = get_function or function (template)
 				local old_value = get_user_setting(template.save_location, template.id)
 
 				if old_value == nil then
@@ -2493,10 +2495,9 @@ local function create_render_settings_entry(template)
 			end
 		end
 
-		local function get_function(template)
+		local get_function = get_function or function (template)
 			return get_user_setting(template.save_location, template.id) or default_value
 		end
-
 		local slider_params = {
 			display_name = display_name,
 			min_value = template.min,
@@ -2520,7 +2521,7 @@ local function create_render_settings_entry(template)
 			on_activated = function (value, template)
 				verify_and_apply_changes(template, value)
 			end,
-			on_changed = function (value, template)
+			on_changed = on_changed or function (value, template)
 				local dirty = false
 				local current_value = template:get_function()
 
@@ -2536,7 +2537,7 @@ local function create_render_settings_entry(template)
 
 				return dirty, template.require_apply
 			end,
-			get_function = function (template)
+			get_function = get_function or function (template)
 				local old_value = get_user_setting(template.save_location, template.id)
 
 				if old_value == nil then
@@ -2570,6 +2571,8 @@ render_settings[#render_settings + 1] = {
 	display_name = "loc_settings_menu_group_display",
 	widget_type = "group_header"
 }
+local resolution_undefined_return_value = 0
+local resolution_custom_return_value = -1
 
 local function generate_resolution_options()
 	if not IS_WINDOWS then
@@ -2619,6 +2622,27 @@ local function generate_resolution_options()
 					height = height
 				}
 			end
+		end
+
+		if #options > 0 then
+			options[resolution_undefined_return_value] = {
+				height = 0,
+				display_name = "loc_setting_resolution_undefined",
+				width = 0,
+				id = resolution_undefined_return_value,
+				adapter_index = adapter_index,
+				output_screen = output_screen
+			}
+			options[resolution_custom_return_value] = {
+				display_name = "",
+				height = 0,
+				ignore_localization = true,
+				width = 0,
+				loc_display_name = "loc_setting_resolution_custom",
+				id = resolution_custom_return_value,
+				adapter_index = adapter_index,
+				output_screen = output_screen
+			}
 		end
 
 		return options
@@ -2694,9 +2718,6 @@ render_settings[#render_settings + 1] = {
 	end
 }
 local resolution_options = generate_resolution_options()
-local resolution_undefiend_return_value = {
-	display_name = "loc_setting_resolution_undefined"
-}
 render_settings[#render_settings + 1] = {
 	id = "resolution",
 	display_name = "loc_setting_resolution",
@@ -2710,6 +2731,10 @@ render_settings[#render_settings + 1] = {
 		verify_and_apply_changes(template, value)
 	end,
 	on_changed = function (value, template)
+		if value == resolution_undefined_return_value or value == resolution_custom_return_value then
+			return
+		end
+
 		local option = resolution_options[value]
 		local output_screen = option.output_screen
 		local adapter_index = option.adapter_index
@@ -2731,23 +2756,43 @@ render_settings[#render_settings + 1] = {
 		return true, template.require_apply
 	end,
 	get_function = function (template)
-		local resolution = Application.user_setting("screen_resolution")
-		local resolution_width = resolution[1]
-		local resolution_height = resolution[2]
+		local resolution_width, resolution_height = nil
 
-		for i = 1, #resolution_options do
-			local option = resolution_options[i]
-
-			if option.width == resolution_width and option.height == resolution_height then
-				return i
-			end
+		if not Application.user_setting("fullscreen") and Application.back_buffer_size then
+			local window_width, window_height = Application.back_buffer_size()
+			resolution_width = window_width
+			resolution_height = window_height
+		else
+			local resolution = Application.user_setting("screen_resolution")
+			resolution_width = resolution and resolution[1]
+			resolution_height = resolution and resolution[2]
 		end
 
-		if #resolution_options > 0 then
+		if resolution_options and #resolution_options > 0 then
+			for i = 1, #resolution_options do
+				local option = resolution_options[i]
+
+				if option.width == resolution_width and option.height == resolution_height then
+					return i
+				end
+			end
+
+			if Application.back_buffer_size then
+				local option = resolution_options[resolution_custom_return_value]
+
+				if option and (option.width ~= resolution_width or option.height ~= resolution_height) then
+					option.width = resolution_width
+					option.height = resolution_height
+					option.display_name = string.format("%s (%d x %d)", Localize(option.loc_display_name), resolution_width, resolution_height)
+				end
+
+				return resolution_custom_return_value
+			end
+
 			return 1
 		end
 
-		return resolution_undefiend_return_value
+		return resolution_undefined_return_value
 	end
 }
 
@@ -2817,17 +2862,26 @@ if IS_XBS and Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_ANACONDA th
 end
 
 local screen_mode_setting = {
-	tooltip_text = "loc_setting_screen_mode_mouseover",
 	display_name = "loc_setting_screen_mode",
-	id = "screen_mode",
+	tooltip_text = "loc_setting_screen_mode_mouseover",
 	default_value = "window",
 	apply_on_startup = true,
+	id = "screen_mode",
 	validation_function = function ()
 		return IS_WINDOWS and DisplayAdapter.num_adapters() > 0
 	end,
 	get_function = function (template)
-		local screen_mode = Application.user_setting("screen_mode")
-		local fullscreen = Application.user_setting("fullscreen")
+		local user_screen_mode = Application.user_setting("screen_mode")
+		local screen_mode = user_screen_mode
+		local is_fullscreen = Application.is_fullscreen and Application.is_fullscreen()
+		local fullscreen = nil
+
+		if is_fullscreen ~= nil then
+			fullscreen = is_fullscreen
+		else
+			fullscreen = Application.user_setting("fullscreen")
+		end
+
 		local borderless_fullscreen = Application.user_setting("borderless_fullscreen")
 
 		if borderless_fullscreen then
@@ -2838,7 +2892,52 @@ local screen_mode_setting = {
 			screen_mode = "window"
 		end
 
+		if screen_mode ~= user_screen_mode then
+			template.on_activated(screen_mode, template)
+		end
+
 		return screen_mode or template.default_value
+	end,
+	on_changed = function (value, template)
+		local dirty = false
+		local options = template.options
+		local option = nil
+
+		for i = 1, #options do
+			if options[i].id == value then
+				option = options[i]
+
+				break
+			end
+		end
+
+		if option == nil then
+			if default_value then
+				for i = 1, #options do
+					if options[i].id == default_value then
+						option = options[i]
+
+						break
+					end
+				end
+			else
+				option = options[1]
+			end
+		end
+
+		local current_value = Application.user_setting(template.id)
+
+		if not _is_same(current_value, value) then
+			set_user_setting(template.save_location, template.id, value)
+
+			if template.changed_callback then
+				template.changed_callback(value)
+			end
+
+			dirty = true
+		end
+
+		return dirty, option.require_apply
 	end,
 	options = {
 		{
@@ -2870,6 +2969,16 @@ local screen_mode_setting = {
 				borderless_fullscreen = false,
 				fullscreen = true
 			}
+		}
+	},
+	disable_rules = {
+		{
+			id = "resolution",
+			reason = "loc_disable_rule_borderless_window",
+			disable_value = 0,
+			validation_function = function (value)
+				return value == "borderless_fullscreen"
+			end
 		}
 	}
 }

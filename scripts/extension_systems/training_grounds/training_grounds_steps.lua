@@ -3102,10 +3102,11 @@ steps.combat_ability_loop_zealot_maniac = {
 			local has_dash_buff = false
 			local buffs = buff_extension:buffs()
 
-			for i = #buffs, 1, -1 do
-				local buff_template = buffs[i]:template()
+			for ii = #buffs, 1, -1 do
+				local buff_template = buffs[ii]:template()
+				local wanted_buff_name = "zealot_maniac_dash_buff"
 
-				if buff_template.name == "zealot_maniac_dash_buff" then
+				if buff_template.name == wanted_buff_name then
 					has_dash_buff = true
 
 					break

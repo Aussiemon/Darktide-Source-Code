@@ -220,7 +220,7 @@ BtGrenadierFollowAction._get_throw_position = function (self, unit, target_posit
 	target_position = target_position + z_offset
 
 	if action_data.throw_position_distance_fwd then
-		local to_target = Vector3.normalize(POSITION_LOOKUP[unit], target_position)
+		local to_target = Vector3.normalize(POSITION_LOOKUP[unit] - target_position)
 		local dot = Vector3.dot(to_target, randomized_direction)
 
 		if action_data.throw_position_distance_fwd_dot < dot then

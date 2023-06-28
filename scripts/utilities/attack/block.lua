@@ -52,9 +52,9 @@ Block.is_blocking = function (target_unit, attacking_unit, attack_type, weapon_t
 
 			if should_block then
 				local specialization = unit_data_extension:specialization()
-				local specialization_stamina_template = specialization.stamina
+				local base_stamina_template = specialization.stamina
 				local stamina_write_component = unit_data_extension:write_component("stamina")
-				local current_stamina = Stamina.current_and_max_value(target_unit, stamina_write_component, specialization_stamina_template)
+				local current_stamina = Stamina.current_and_max_value(target_unit, stamina_write_component, base_stamina_template)
 
 				if current_stamina > 0 then
 					is_blocking = true
@@ -148,8 +148,8 @@ Block.attempt_block_break = function (target_unit, attacking_unit, hit_world_pos
 			local stamina_write_component = unit_data_extension:write_component("stamina")
 			local warp_charge_component = unit_data_extension:write_component("warp_charge")
 			local specialization = unit_data_extension:specialization()
-			local specialization_stamina_template = specialization.stamina
-			local _, max_stamina = Stamina.current_and_max_value(target_unit, stamina_write_component, specialization_stamina_template)
+			local base_stamina_template = specialization.stamina
+			local _, max_stamina = Stamina.current_and_max_value(target_unit, stamina_write_component, base_stamina_template)
 			local current_warp_charge = warp_charge_component.current_percentage
 
 			if current_warp_charge < 0.97 then

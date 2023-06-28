@@ -341,6 +341,7 @@ RoamerPacing._create_sub_zone_location = function (self, spawn_position, density
 	return sub_zone_location, num_roamer_slots
 end
 
+local ZONE_BREED_LIMITATIONS_COUNT = {}
 local ZONE_BREED_COUNT = {}
 local ZONE_BREED_TAG_COUNT = {}
 
@@ -349,13 +350,38 @@ RoamerPacing._limit_roamer_breeds = function (self, breed_name, limit_settings, 
 		return
 	end
 
+	local replacements = limit_settings.replacements
+	local replacement_breeds = replacements[breed_name] and replacements[breed_name][faction]
 	local num_existing_breeds = ZONE_BREED_COUNT[breed_name] or 0
 	local new_value = num_existing_breeds + 1
 	local limit = limit_settings[breed_name]
-	local replacements = limit_settings.replacements
-	local replacement_breeds = replacements[breed_name] and replacements[breed_name][faction]
 
-	if limit and limit < new_value then
+	if limit and type(limit) == "table" then
+		local max_limit = limit.max
+
+		if max_limit < new_value then
+			local num_limitations_to_add_extra = limit.num_limitations_to_add_extra
+
+			if not ZONE_BREED_LIMITATIONS_COUNT[breed_name] then
+				ZONE_BREED_LIMITATIONS_COUNT[breed_name] = 1
+				local should_skip_roamer = true
+
+				return false, should_skip_roamer
+			else
+				ZONE_BREED_LIMITATIONS_COUNT[breed_name] = ZONE_BREED_LIMITATIONS_COUNT[breed_name] + 1
+
+				if num_limitations_to_add_extra <= ZONE_BREED_LIMITATIONS_COUNT[breed_name] then
+					ZONE_BREED_LIMITATIONS_COUNT[breed_name] = nil
+
+					return limit.extra_replacement
+				end
+
+				local should_skip_roamer = true
+
+				return false, should_skip_roamer
+			end
+		end
+	elseif limit and limit < new_value then
 		local replace_index = self:_random(1, #replacement_breeds)
 
 		return replacement_breeds[replace_index]
@@ -441,6 +467,7 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 						if group_id ~= old_group_id then
 							table.clear(ZONE_BREED_COUNT)
 							table.clear(ZONE_BREED_TAG_COUNT)
+							table.clear(ZONE_BREED_LIMITATIONS_COUNT)
 
 							old_group_id = group_id
 							num_patrols = PatrolSettings.num_patrols_per_zone
@@ -481,6 +508,18 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 							end
 						end
 
+						local stim_buff_name = nil
+						local stimmed_config = self._stimmed_config
+
+						if stimmed_config and num_to_spawn_in_pack > 0 then
+							local chance_to_stim_per_pack_size = stimmed_config.chance_to_stim_per_pack_size
+							local chance_to_stim = chance_to_stim_per_pack_size[math.min(num_to_spawn_in_pack, #chance_to_stim_per_pack_size)]
+
+							if math.random() < chance_to_stim then
+								stim_buff_name = stimmed_config.buff_name
+							end
+						end
+
 						for j = 0, num_to_spawn_in_pack - 1 do
 							if num_to_spawn == 0 then
 								break
@@ -488,36 +527,43 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 
 							local breed_index = j % num_breeds + 1
 							local breed_name = breed_names[breed_index]
-							local replaced_breed_name = self:_limit_roamer_breeds(breed_name, limit_settings, faction)
-							local side_id = 2
-							local roamer_slot = roamer_slots[j + 1]
-							local roamer_id = #roamers + 1
-							local roamer = {
-								aggro_sfx = aggro_sfx,
-								ambience_sfx = ambience_sfx,
-								breed_name = replaced_breed_name or breed_name,
-								faction = faction,
-								group_id = group_id,
-								patrol_id = patrol_id,
-								pause_spawn_type_when_aggroed = pause_spawn_type_when_aggroed,
-								position = roamer_slot.position,
-								roamer_id = roamer_id,
-								rotation = roamer_slot.rotation,
-								shared_aggro_trigger = shared_aggro_trigger,
-								zone_id = i,
-								sub_zone_id = sub_zone_index,
-								travel_distance = travel_distance,
-								density_type = density_type,
-								side_id = side_id
-							}
-							roamers[roamer_id] = roamer
+							local replaced_breed_name, should_skip_roamer = self:_limit_roamer_breeds(breed_name, limit_settings, faction)
 
-							if patrol and Breeds[breed_name].can_patrol then
-								patrol[#patrol + 1] = roamer_id
+							if not should_skip_roamer then
+								local side_id = 2
+								local roamer_slot = roamer_slots[j + 1]
+								local roamer_id = #roamers + 1
+								local roamer = {
+									aggro_sfx = aggro_sfx,
+									ambience_sfx = ambience_sfx,
+									breed_name = replaced_breed_name or breed_name,
+									faction = faction,
+									group_id = group_id,
+									patrol_id = patrol_id,
+									pause_spawn_type_when_aggroed = pause_spawn_type_when_aggroed,
+									position = roamer_slot.position,
+									roamer_id = roamer_id,
+									rotation = roamer_slot.rotation,
+									shared_aggro_trigger = shared_aggro_trigger,
+									zone_id = i,
+									sub_zone_id = sub_zone_index,
+									travel_distance = travel_distance,
+									density_type = density_type,
+									side_id = side_id,
+									stim_buff_name = stim_buff_name
+								}
+								roamers[roamer_id] = roamer
+
+								if patrol and Breeds[breed_name].can_patrol then
+									patrol[#patrol + 1] = roamer_id
+								end
+
+								num_to_spawn = num_to_spawn - 1
+								num_spawned = num_spawned + 1
+							else
+								num_to_spawn = num_to_spawn - 1
+								num_spawned = num_spawned + 1
 							end
-
-							num_to_spawn = num_to_spawn - 1
-							num_spawned = num_spawned + 1
 						end
 
 						if patrol then
@@ -739,7 +785,8 @@ RoamerPacing._try_activate_roamer = function (self, roamer, side_id)
 	local breed_name = roamer.breed_name
 	local rotation = roamer.rotation:unbox()
 	local group_id = roamer.group_id
-	local spawned_unit = self:_spawn_roamer(breed_name, position, rotation, group_id, side_id)
+	local stim_buff_name = roamer.stim_buff_name
+	local spawned_unit = self:_spawn_roamer(breed_name, position, rotation, group_id, side_id, stim_buff_name)
 	roamer.spawned_unit = spawned_unit
 	roamer.active = true
 	self._roamer_lookup[spawned_unit] = roamer
@@ -820,8 +867,17 @@ RoamerPacing._deactivate_roamer = function (self, roamer)
 	return false
 end
 
-RoamerPacing._spawn_roamer = function (self, breed_name, position, rotation, group_id, side_id)
+RoamerPacing._spawn_roamer = function (self, breed_name, position, rotation, group_id, side_id, stim_buff_name)
 	local unit = Managers.state.minion_spawn:spawn_minion(breed_name, position, rotation, side_id, nil, nil, nil, group_id)
+
+	if stim_buff_name then
+		local buff_extension = ScriptUnit.extension(unit, "buff_system")
+		local t = Managers.time:time("gameplay")
+
+		if not buff_extension:has_keyword("stimmed") then
+			buff_extension:add_internally_controlled_buff(stim_buff_name, t)
+		end
+	end
 
 	return unit
 end
@@ -995,6 +1051,10 @@ end
 
 RoamerPacing.current_density_type = function (self)
 	return self._current_density_type
+end
+
+RoamerPacing.set_stimmed_config = function (self, stimmed_config)
+	self._stimmed_config = stimmed_config
 end
 
 return RoamerPacing

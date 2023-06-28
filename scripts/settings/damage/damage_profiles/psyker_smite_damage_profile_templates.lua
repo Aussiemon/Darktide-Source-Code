@@ -168,47 +168,6 @@ damage_templates.psyker_biomancer_soul = {
 		}
 	}
 }
-damage_templates.psyker_gunslinger_smite = {
-	stagger_category = "killshot",
-	armor_damage_modifier = {
-		attack = {
-			[armor_types.unarmored] = damage_lerp_values.lerp_1,
-			[armor_types.armored] = damage_lerp_values.lerp_1,
-			[armor_types.resistant] = damage_lerp_values.lerp_0_5,
-			[armor_types.player] = damage_lerp_values.lerp_1,
-			[armor_types.berserker] = damage_lerp_values.lerp_1_5,
-			[armor_types.super_armor] = damage_lerp_values.no_damage,
-			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
-			[armor_types.prop_armor] = damage_lerp_values.lerp_1
-		},
-		impact = {
-			[armor_types.unarmored] = damage_lerp_values.lerp_1,
-			[armor_types.armored] = damage_lerp_values.lerp_0_5,
-			[armor_types.resistant] = damage_lerp_values.lerp_1,
-			[armor_types.player] = damage_lerp_values.lerp_1,
-			[armor_types.berserker] = damage_lerp_values.lerp_1,
-			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
-			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
-			[armor_types.void_shield] = damage_lerp_values.lerp_1,
-			[armor_types.prop_armor] = damage_lerp_values.lerp_1
-		}
-	},
-	cleave_distribution = {
-		attack = 1.25,
-		impact = 1.25
-	},
-	power_distribution = {
-		attack = 100,
-		impact = 5
-	},
-	targets = {
-		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default
-		},
-		boost_curve_multiplier_finesse = damage_lerp_values.lerp_1
-	}
-}
 
 return {
 	base_templates = damage_templates,

@@ -42,6 +42,12 @@ Account.get_selected_character = function (self)
 	return self:get_data("core", "selected_character")
 end
 
+Account.get = function (self)
+	return BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("")):next(function (data)
+		return data.body
+	end)
+end
+
 Account.set_data = function (self, section, data)
 	return BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("/data/"):path(section), {
 		method = "PUT",
@@ -53,18 +59,38 @@ Account.set_data = function (self, section, data)
 	end)
 end
 
-Account.get_data = function (self, section, part)
+local function _same_path(...)
+	local desired_path = {
+		...
+	}
+
+	return function (entry)
+		local real_path = entry.typePath
+
+		return table.array_equals(real_path, desired_path)
+	end
+end
+
+Account.get_data = function (self, section, part, ...)
+	local same_path = _same_path(section, ...)
+
 	return BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("/data/"):path(section)):next(function (data)
-		if part then
-			if #data.body.data > 0 then
-				return data.body.data[1].value[part]
-			else
-				return nil
-			end
+		local entries = data.body.data
+		local index = table.index_of_condition(entries, same_path)
+		local entry = entries[index]
+
+		if entry and part then
+			return entry.value[part]
 		else
-			return data
+			return entry
 		end
 	end)
+end
+
+Account.rename_account = function (self, requested_name)
+	return BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("/name/"):path(requested_name), {
+		method = "PUT"
+	})
 end
 
 implements(Account, Interface)

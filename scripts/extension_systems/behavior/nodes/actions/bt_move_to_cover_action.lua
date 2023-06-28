@@ -78,6 +78,12 @@ BtMoveToCoverAction.run = function (self, unit, breed, blackboard, scratchpad, a
 		return "running", evaluate
 	end
 
+	if scratchpad.start_move_event_anim_speed_duration and t < scratchpad.start_move_event_anim_speed_duration then
+		local navigation_extension = scratchpad.navigation_extension
+
+		MinionMovement.apply_animation_wanted_movement_speed(unit, navigation_extension, dt)
+	end
+
 	local move_state = behavior_component.move_state
 	local move_type = self:_get_move_type(scratchpad, action_data)
 
@@ -107,10 +113,11 @@ BtMoveToCoverAction._start_move_anim = function (self, unit, t, behavior_compone
 	local should_use_anim_driven_event = action_data.anim_driven_min_distance <= path_distance
 	local start_move_anim_events = action_data.start_move_anim_events
 	local anim_events = start_move_anim_events
+	local start_move_event = nil
 
 	if move_type == "jogging" and anim_events and should_use_anim_driven_event then
 		local moving_direction_name = MinionMovement.get_moving_direction_name(unit, scratchpad)
-		local start_move_event = anim_events[moving_direction_name]
+		start_move_event = anim_events[moving_direction_name]
 
 		animation_extension:anim_event(start_move_event)
 
@@ -125,7 +132,15 @@ BtMoveToCoverAction._start_move_anim = function (self, unit, t, behavior_compone
 			scratchpad.move_start_anim_event_name = nil
 		end
 	else
-		animation_extension:anim_event(action_data.sprint_anim_event)
+		start_move_event = action_data.sprint_anim_event
+
+		animation_extension:anim_event(start_move_event)
+	end
+
+	local start_move_event_anim_speed_duration = action_data.start_move_event_anim_speed_durations and action_data.start_move_event_anim_speed_durations[start_move_event]
+
+	if start_move_event_anim_speed_duration then
+		scratchpad.start_move_event_anim_speed_duration = t + start_move_event_anim_speed_duration
 	end
 
 	local speed = action_data.speeds[move_type]

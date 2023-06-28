@@ -1,6 +1,6 @@
 local ToughnessDepleted = require("scripts/utilities/toughness/toughness_depleted")
 local ToughnessSettings = require("scripts/settings/toughness/toughness_settings")
-local TalentSettings = require("scripts/settings/buff/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local replenish_types = ToughnessSettings.replenish_types
 local template_types = ToughnessSettings.template_types
 local archetype_toughness_templates = {

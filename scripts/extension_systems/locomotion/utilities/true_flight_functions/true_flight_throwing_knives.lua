@@ -2,7 +2,7 @@ local HitZone = require("scripts/utilities/attack/hit_zone")
 local TrueFlightDefaults = require("scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_defaults")
 local hit_zone_names = HitZone.hit_zone_names
 local true_flight_throwing_knives = {
-	throwing_knives_locomotion = function (physics_world, integration_data, dt, t)
+	throwing_knives_locomotion = function (physics_world, integration_data, dt, t, optional_validate_impact_func, optional_on_impact_func)
 		local velocity = integration_data.velocity
 		local position = integration_data.position
 		local new_position = position + velocity * dt
@@ -15,6 +15,7 @@ local true_flight_throwing_knives = {
 		local test_look = Quaternion.look(test_vector)
 		velocity = Quaternion.rotate(test_look, velocity)
 		integration_data.velocity = velocity
+		new_position = TrueFlightDefaults.default_check_collisions(physics_world, integration_data, position, new_position, dt, t, optional_validate_impact_func, optional_on_impact_func)
 
 		return new_position, new_rotation
 	end
@@ -122,8 +123,8 @@ end
 
 true_flight_throwing_knives.throwing_knives_on_impact = function (hit_unit, hit, integration_data, new_position, is_server, dt, t)
 	local true_flight_template = integration_data.true_flight_template
-	local hit_normal = hit.normal
-	local hit_position = hit.position
+	local hit_normal = hit.normal or hit[3]
+	local hit_position = hit.position or hit[1]
 	local velocity = integration_data.velocity
 	local current_speed = Vector3.length(velocity)
 	local travel_direction = Vector3.normalize(velocity)
@@ -165,7 +166,7 @@ true_flight_throwing_knives.throwing_knives_on_impact = function (hit_unit, hit,
 			local target_hit_zone = integration_data.target_hit_zone
 			local target_unit_position = TrueFlightDefaults.get_unit_position(target_unit, target_hit_zone)
 			local towards_target = Vector3.normalize(target_unit_position - hit_position)
-			local angle_to_target_from_hit = Vector3.angle(towards_target, hit.normal)
+			local angle_to_target_from_hit = Vector3.angle(towards_target, hit_normal)
 
 			if angle_to_target_from_hit < math.pi / 2 then
 				new_direction = Vector3.lerp(new_direction, towards_target, 0.5)
@@ -173,7 +174,6 @@ true_flight_throwing_knives.throwing_knives_on_impact = function (hit_unit, hit,
 		end
 
 		local new_velocity = current_speed * new_direction
-		new_position = bounce_pos + new_velocity * time_left
 		integration_data.velocity = new_velocity
 		integration_data.target_position = nil
 		local number_of_bounces = integration_data.number_of_bounces or 0

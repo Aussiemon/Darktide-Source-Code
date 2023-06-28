@@ -398,6 +398,8 @@ ViewElementGrid._draw_grid = function (self, dt, t, input_service, render_settin
 	UIRenderer.begin_pass(ui_resource_renderer, ui_scenegraph, input_service, dt, render_settings)
 
 	if self._resource_renderer_background then
+		self._stored_draw_renderer = ui_resource_renderer
+
 		UIWidget.draw(self._widgets_by_name.grid_background, ui_resource_renderer)
 	end
 
@@ -1014,6 +1016,19 @@ ViewElementGrid.destroy = function (self, ui_renderer)
 		self._present_grid_layout = nil
 	end
 
+	local widget_background = self._widgets_by_name.grid_background
+	local widgets_destroyed_by_name = {}
+
+	if widget_background then
+		if self._resource_renderer_background then
+			UIWidget.destroy(self._ui_resource_renderer, widget_background)
+		else
+			UIWidget.destroy(ui_renderer, widget_background)
+		end
+
+		widgets_destroyed_by_name[widget_background.name] = true
+	end
+
 	for _, icon_reference_id in pairs(self._loaded_icon_id_cache) do
 		Managers.ui:unload_item_icon(icon_reference_id)
 	end
@@ -1031,13 +1046,24 @@ ViewElementGrid.destroy = function (self, ui_renderer)
 
 			if widget_name ~= "grid_background" then
 				UIWidget.destroy(ui_grid_renderer, widget)
+
+				widgets_destroyed_by_name[widget.name] = true
 			end
 		end
 	end
 
 	self:_destroy_grid_widgets()
+
+	for i = 1, #self._widgets do
+		local widget = self._widgets[i]
+
+		if widget and widgets_destroyed_by_name[widget.name] then
+			table.remove(self._widgets, i)
+		end
+	end
+
 	self:_destroy_grid_gui()
-	ViewElementGrid.super.destroy(self)
+	ViewElementGrid.super.destroy(self, ui_renderer)
 end
 
 ViewElementGrid.element_by_index = function (self, index)

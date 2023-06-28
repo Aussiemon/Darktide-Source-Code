@@ -34,6 +34,8 @@ local function _player_name_or_status_change_function(content, style)
 				content.activity_id = activity_id
 			end
 		end
+	else
+		content.name_or_activity = content.parent:formatted_character_name(player_info)
 	end
 
 	style.font_size = no_character_name and style.font_size_small or style.font_size_default

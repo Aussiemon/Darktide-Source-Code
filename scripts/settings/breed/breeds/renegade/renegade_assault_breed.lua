@@ -4,6 +4,7 @@ local BreedCombatRanges = require("scripts/settings/breed/breed_combat_ranges")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BreedTerrorEventSettings = require("scripts/settings/breed/breed_terror_event_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionGibbingTemplates = require("scripts/managers/minion/minion_gibbing_templates")
 local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
@@ -26,13 +27,11 @@ local breed_data = {
 	spawn_anim_state = "to_assaulter",
 	unit_template_name = "minion",
 	faction_name = "chaos",
-	game_object_type = "minion_ranged",
+	detection_radius = 15,
 	sub_faction_name = "renegade",
 	broadphase_radius = 1,
-	ignore_attack_delay = false,
 	stagger_resistance = 1.15,
 	aggro_inventory_slot = "slot_ranged_weapon",
-	detection_radius = 15,
 	walk_speed = 2.3,
 	challenge_rating = 1,
 	use_avoidance = true,
@@ -41,6 +40,7 @@ local breed_data = {
 	player_locomotion_constrain_radius = 0.4,
 	ranged = true,
 	use_wounds = true,
+	game_object_type = "minion_ranged",
 	can_patrol = true,
 	slot_template = "renegade_melee",
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
@@ -105,27 +105,7 @@ local breed_data = {
 			close = true
 		}
 	},
-	suppress_config = {
-		max_value = {
-			melee = 50,
-			far = 15,
-			close = 30
-		},
-		threshold = {
-			melee = 44,
-			far = 10,
-			close = 25
-		},
-		decay_speeds = {
-			melee = 0.05,
-			far = 0.5,
-			close = 0.25
-		},
-		immunity_duration = {
-			0.25,
-			0.5
-		}
-	},
+	suppress_config = MinionDifficultySettings.suppression.renegade_assault,
 	attack_intensity_cooldowns = {
 		melee = {
 			0.2,

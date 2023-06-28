@@ -73,6 +73,26 @@ TestifySnippets.load_mission_in_mission_board = function (level_key, challenge, 
 	end
 end
 
+TestifySnippets.mission_circumstances = function (mission_name)
+	local mission_settings = Testify:make_request("mission_settings", mission_name)
+	local level = mission_settings.level
+	local mission_themes = Testify:make_request("mission_themes", level)
+	local circumstances = Testify:make_request("circumstances")
+	local mission_circumstances = {}
+	local i = 0
+
+	for circumstance_name, circumstance in pairs(circumstances) do
+		local theme_tag = circumstance.theme_tag
+
+		if mission_themes[theme_tag] ~= nil then
+			i = i + 1
+			mission_circumstances[i] = circumstance_name
+		end
+	end
+
+	return mission_circumstances, i
+end
+
 TestifySnippets.reload_current_mission = function ()
 	local current_mission = Testify:make_request("current_mission")
 

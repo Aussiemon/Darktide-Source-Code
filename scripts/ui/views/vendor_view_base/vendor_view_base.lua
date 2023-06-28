@@ -457,7 +457,7 @@ VendorViewBase._item_valid_by_current_profile = function (self, item)
 	local archetype_name = archetype.name
 	local breed_name = archetype.breed
 	local breed_valid = not item.breeds or table.contains(item.breeds, breed_name)
-	local archetype_valid = self:_item_valid_by_profile_archetype(archetype_name, item)
+	local archetype_valid = self:item_valid_by_profile_archetype(archetype_name, item)
 
 	if archetype_valid and breed_valid then
 		return true
@@ -533,43 +533,48 @@ VendorViewBase._convert_offers_to_layout_entries = function (self, item_offers)
 				local info = bundled[k]
 				local gear_id = info.description.gearId
 				local set_item = MasterItems.get_store_item_instance(info.description, gear_id)
-				items[#items + 1] = set_item
 
-				if self:is_item_owned(gear_id) then
-					owned_count = owned_count + 1
-				end
+				if set_item then
+					items[#items + 1] = set_item
 
-				total_count = total_count + 1
+					if self:is_item_owned(gear_id) then
+						owned_count = owned_count + 1
+					end
 
-				if set_item.rarity and set_item.rarity < rarity then
-					rarity = set_item.rarity
+					total_count = total_count + 1
+
+					if set_item.rarity and set_item.rarity < rarity then
+						rarity = set_item.rarity
+					end
 				end
 			end
 
-			table.sort(items, ItemUtils.compare_set_item_parts_presentation_order)
+			if #items == #bundled then
+				table.sort(items, ItemUtils.compare_set_item_parts_presentation_order)
 
-			local first_item = items[1]
-			local fake_set_item = {
-				name = "set_item",
-				gear_id = offer_id,
-				item_type = UISettings.ITEM_TYPES.SET,
-				items = items,
-				display_name = offer.sku.name or "n/a",
-				genders = first_item.genders,
-				breeds = first_item.breeds,
-				archetypes = first_item.archetypes,
-				rarity = rarity,
-				description = sku.description
-			}
-			layout[#layout + 1] = {
-				widget_type = "gear_set",
-				item = fake_set_item,
-				offer = offer,
-				offer_id = offer_id,
-				total_count = total_count,
-				owned_count = owned_count,
-				disable_equipped_status = self._disable_equipped_status
-			}
+				local first_item = items[1]
+				local fake_set_item = {
+					name = "set_item",
+					gear_id = offer_id,
+					item_type = UISettings.ITEM_TYPES.SET,
+					items = items,
+					display_name = offer.sku.name or "n/a",
+					genders = first_item.genders,
+					breeds = first_item.breeds,
+					archetypes = first_item.archetypes,
+					rarity = rarity,
+					description = sku.description
+				}
+				layout[#layout + 1] = {
+					widget_type = "gear_set",
+					item = fake_set_item,
+					offer = offer,
+					offer_id = offer_id,
+					total_count = total_count,
+					owned_count = owned_count,
+					disable_equipped_status = self._disable_equipped_status
+				}
+			end
 		end
 	end
 

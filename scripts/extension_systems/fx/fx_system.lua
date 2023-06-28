@@ -55,6 +55,8 @@ FxSystem.init = function (self, extension_system_creation_context, ...)
 	self._latest_player_particle_group_id = 0
 	self.unit_to_particle_group_lookup = Script.new_map(256)
 	self._spawned_impact_fx_units = Script.new_map(8)
+	local ambisonics_manual_source_id = WwiseWorld.make_manual_source(self._wwise_world, Vector3(0, 0, 0), Quaternion.identity())
+	self._ambisonics_manual_source_id = ambisonics_manual_source_id
 
 	if is_server then
 		self._next_global_effect_id = 0
@@ -127,6 +129,7 @@ FxSystem.destroy = function (self)
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
 
+	WwiseWorld.destroy_manual_source(self._wwise_world, self._ambisonics_manual_source_id)
 	FxSystem.super.destroy(self)
 end
 
@@ -258,6 +261,14 @@ FxSystem.stop_template_effect = function (self, global_effect_id)
 	template_effect.global_effect_id = nil
 
 	Managers.state.game_session:send_rpc_clients("rpc_stop_template_effect", buffer_index)
+end
+
+FxSystem.has_running_global_effect_id = function (self, global_effect_id)
+	local template_effects = self._template_effects
+	local buffer_index = global_effect_id % self._max_num_template_effects + 1
+	local template_effect = template_effects[buffer_index]
+
+	return template_effect.template ~= nil
 end
 
 FxSystem._stop_template_effect = function (self, template_effect, template)
@@ -416,7 +427,7 @@ FxSystem.trigger_vfx = function (self, vfx_name, position, optional_rotation)
 	Managers.state.game_session:send_rpc_clients("rpc_trigger_vfx", vfx_id, position, optional_rotation)
 end
 
-FxSystem.trigger_wwise_event = function (self, event_name, optional_position, optional_unit, optional_node, optional_parameter_name, optional_parameter_value)
+FxSystem.trigger_wwise_event = function (self, event_name, optional_position, optional_unit, optional_node, optional_parameter_name, optional_parameter_value, optional_ambisonics)
 	local wwise_world = self._wwise_world
 	local source_id = nil
 
@@ -428,6 +439,10 @@ FxSystem.trigger_wwise_event = function (self, event_name, optional_position, op
 		source_id = WwiseWorld.make_auto_source(wwise_world, optional_unit, optional_node)
 
 		WwiseWorld.trigger_resource_event(wwise_world, event_name, source_id)
+	elseif optional_ambisonics then
+		local ambisonics_manual_source_id = self._ambisonics_manual_source_id
+
+		WwiseWorld.trigger_resource_event(wwise_world, event_name, ambisonics_manual_source_id)
 	else
 		WwiseWorld.trigger_resource_event(wwise_world, event_name)
 	end
@@ -436,7 +451,7 @@ FxSystem.trigger_wwise_event = function (self, event_name, optional_position, op
 		WwiseWorld.set_source_parameter(wwise_world, source_id, optional_parameter_name, optional_parameter_value)
 	end
 
-	if optional_position or optional_unit then
+	if optional_position or optional_unit or optional_ambisonics then
 		local event_id = NetworkLookup.sound_events[event_name]
 		local optional_parameter_id = nil
 
@@ -446,7 +461,7 @@ FxSystem.trigger_wwise_event = function (self, event_name, optional_position, op
 
 		local optional_unit_id = Managers.state.unit_spawner:game_object_id(optional_unit)
 
-		Managers.state.game_session:send_rpc_clients("rpc_trigger_wwise_event", event_id, optional_position, optional_unit_id, optional_node, optional_parameter_id, optional_parameter_value)
+		Managers.state.game_session:send_rpc_clients("rpc_trigger_wwise_event", event_id, optional_position, optional_unit_id, optional_node, optional_parameter_id, optional_parameter_value, not not optional_ambisonics)
 	else
 		local event_id = NetworkLookup.sound_events_2d[event_name]
 
@@ -610,7 +625,7 @@ FxSystem.rpc_trigger_2d_wwise_event = function (self, channel_id, event_id)
 	WwiseWorld.trigger_resource_event(self._wwise_world, event_name)
 end
 
-FxSystem.rpc_trigger_wwise_event = function (self, channel_id, event_id, optional_position, optional_unit_id, optional_node, optional_parameter_id, optional_parameter_value)
+FxSystem.rpc_trigger_wwise_event = function (self, channel_id, event_id, optional_position, optional_unit_id, optional_node, optional_parameter_id, optional_parameter_value, optional_ambisonics)
 	local event_name = NetworkLookup.sound_events[event_id]
 	local wwise_world = self._wwise_world
 	local source_id = nil
@@ -624,6 +639,10 @@ FxSystem.rpc_trigger_wwise_event = function (self, channel_id, event_id, optiona
 		source_id = WwiseWorld.make_auto_source(wwise_world, unit, optional_node)
 
 		WwiseWorld.trigger_resource_event(wwise_world, event_name, source_id)
+	elseif optional_ambisonics then
+		local ambisonics_manual_source_id = self._ambisonics_manual_source_id
+
+		WwiseWorld.trigger_resource_event(wwise_world, event_name, ambisonics_manual_source_id)
 	end
 
 	if source_id and optional_parameter_id then

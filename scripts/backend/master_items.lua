@@ -99,6 +99,12 @@ local function _fallback_item(gear)
 	local slot = gear.slots and gear.slots[1]
 	local fallback_name = slot and FALLBACK_ITEMS_BY_SLOT[slot]
 
+	if not fallback_name then
+		Log.error("MasterItemCache", string.format("No fallback item found for %s in slot %s", instance_id, slot))
+
+		return nil
+	end
+
 	Log.warning("MasterItemCache", string.format("Using fallback with name %s", fallback_name))
 
 	local fallback = rawget(MasterItems.get_cached(), fallback_name)
@@ -185,7 +191,8 @@ local function _update_master_data(item_instance)
 		rawset(item_instance, "__master_item", clone)
 		rawset(item_instance, "set_temporary_overrides", function (self, new_temp_overrides)
 			rawset(item_instance, "__temp_overrides", new_temp_overrides)
-			_update_master_data(item_instance)
+
+			return _update_master_data(item_instance)
 		end)
 
 		return true

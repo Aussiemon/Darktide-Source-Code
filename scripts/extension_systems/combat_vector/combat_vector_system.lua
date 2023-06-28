@@ -232,7 +232,18 @@ CombatVectorSystem._update_combat_vector = function (self, dt, t)
 
 	if astar_data.astar_timer < t and astar_data.astar_finished then
 		local new_astar = astar_data.astar or GwNavAStar.create(nav_world)
-		local from_position = _calculate_from_position(nav_world, traverse_logic, self._locked_in_melee_unit or self._main_aggro_unit, self._last_known_positions)
+		local total_challenge_rating = Managers.state.pacing:total_challenge_rating()
+		local from_position = nil
+
+		if total_challenge_rating <= 0 then
+			local main_path_manager = Managers.state.main_path
+			local target_side_id = CombatVectorSettings.target_side_id
+			local _, _, ahead_position = main_path_manager:ahead_unit(target_side_id)
+			from_position = ahead_position
+		else
+			from_position = _calculate_from_position(nav_world, traverse_logic, self._locked_in_melee_unit or self._main_aggro_unit, self._last_known_positions)
+		end
+
 		local astar_frequency = CombatVectorSettings.astar_frequency
 
 		if not from_position then
@@ -597,21 +608,20 @@ function _calculate_to_position(from_position, nav_world, traverse_logic)
 		if perception_component.aggro_state == "aggroed" then
 			local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 			local breed = unit_data_extension:breed()
-			local is_in_melee = false
 
 			if breed.combat_range_data then
 				local behavior_component = blackboard.behavior
 				local combat_range = behavior_component.combat_range
-				is_in_melee = combat_range == "melee" and perception_component.target_distance <= CombatVectorSettings.melee_minion_range
-			end
+				local is_in_melee = combat_range == "melee" and perception_component.target_distance <= CombatVectorSettings.melee_minion_range
 
-			if not is_in_melee then
-				local unit_position = POSITION_LOOKUP[unit]
-				local distance_sq = Vector3_distance_squared(from_position, unit_position)
+				if not is_in_melee then
+					local unit_position = POSITION_LOOKUP[unit]
+					local distance_sq = Vector3_distance_squared(from_position, unit_position)
 
-				if min_distance_sq < distance_sq and distance_sq < max_distance_sq then
-					average_position = average_position + unit_position
-					num_aggroed = num_aggroed + 1
+					if min_distance_sq < distance_sq and distance_sq < max_distance_sq then
+						average_position = average_position + unit_position
+						num_aggroed = num_aggroed + 1
+					end
 				end
 			end
 		end

@@ -1,17 +1,15 @@
+local AchievementBreedGroups = require("scripts/settings/achievements/achievement_breed_groups")
 local AchievementStats = require("scripts/managers/stats/groups/achievement_stats")
 local AchievementTypes = require("scripts/settings/achievements/achievement_types")
 local BackendTrigger = require("scripts/managers/achievements/triggers/achievement_backend_trigger")
-local Breeds = require("scripts/settings/breed/breeds")
-local BreedGroups = require("scripts/settings/achievements/achievement_breed_groups")
 local Categories = require("scripts/settings/achievements/achievement_categories")
 local DecreasingStatTrigger = require("scripts/managers/achievements/triggers/achievement_decreasing_stat_trigger")
 local EventTrigger = require("scripts/managers/achievements/triggers/achievement_event_trigger")
 local Factory = require("scripts/managers/achievements/utility/achievement_factory")
 local IncreasingStatTrigger = require("scripts/managers/achievements/triggers/achievement_increasing_stat_trigger")
 local MetaTrigger = require("scripts/managers/achievements/triggers/achievement_meta_trigger")
-local UITypes = require("scripts/settings/achievements/achievement_ui_types")
-local WeaponCategories = require("scripts/settings/achievements/achievement_weapon_categories")
 local MissionTypes = require("scripts/settings/mission/mission_types")
+local UITypes = require("scripts/settings/achievements/achievement_ui_types")
 local AchievementList = {}
 
 local function _add_achievement(...)
@@ -507,13 +505,13 @@ _add_achievement("group_class_zealot_2_3_rework", UITypes.meta, "content/ui/text
 
 local category_name = "enemies"
 
-_add_achievement("all_renegade_specials_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0041", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.renegade_specials_killed, #BreedGroups.renegade_special), nil, {
+_add_achievement("all_renegade_specials_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0041", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.renegade_specials_killed, #AchievementBreedGroups.renegade_special), nil, {
 	target = 10
 })
-_add_achievement("all_renegade_elites_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0042", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.renegade_elites_killed, #BreedGroups.renegade_elite), nil, {
+_add_achievement("all_renegade_elites_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0042", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.renegade_elites_killed, #AchievementBreedGroups.renegade_elite), nil, {
 	target = 10
 })
-_add_achievement("all_renegades_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0043", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.renegade_killed, #BreedGroups.renegade))
+_add_achievement("all_renegades_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0043", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.renegade_killed, #AchievementBreedGroups.renegade))
 _add_achievement_family("kill_renegades_%s", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0044", category_name, IncreasingStatTrigger, AchievementStats.definitions.total_renegade_kills, {
 	1000,
 	5000,
@@ -531,13 +529,13 @@ _add_achievement("group_enemies_renegades", UITypes.meta, "content/ui/textures/i
 	"melee_renegade",
 	"executor_non_headshot"
 }))
-_add_achievement("all_cultist_specials_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0048", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.cultist_specials_killed, #BreedGroups.cultist_special), nil, {
+_add_achievement("all_cultist_specials_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0048", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.cultist_specials_killed, #AchievementBreedGroups.cultist_special), nil, {
 	target = 10
 })
-_add_achievement("all_cultist_elites_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0049", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.cultist_elites_killed, #BreedGroups.cultist_elite), nil, {
+_add_achievement("all_cultist_elites_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0049", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.cultist_elites_killed, #AchievementBreedGroups.cultist_elite), nil, {
 	target = 10
 })
-_add_achievement("all_cultists_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0050", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.cultist_killed, #BreedGroups.cultist))
+_add_achievement("all_cultists_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0050", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.cultist_killed, #AchievementBreedGroups.cultist))
 _add_achievement_family("kill_cultists_%s", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0051", category_name, IncreasingStatTrigger, AchievementStats.definitions.total_cultist_kills, {
 	1000,
 	5000,
@@ -553,13 +551,13 @@ _add_achievement("group_enemies_cultists", UITypes.meta, "content/ui/textures/ic
 	"kill_cultists_5",
 	"cultist_berzerker_head"
 }))
-_add_achievement("all_chaos_specials_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0054", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.chaos_specials_killed, #BreedGroups.chaos_special), nil, {
+_add_achievement("all_chaos_specials_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0054", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.chaos_specials_killed, #AchievementBreedGroups.chaos_special), nil, {
 	target = 10
 })
-_add_achievement("all_chaos_elites_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0055", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.chaos_elites_killed, #BreedGroups.chaos_elite), nil, {
+_add_achievement("all_chaos_elites_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0055", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.chaos_elites_killed, #AchievementBreedGroups.chaos_elite), nil, {
 	target = 10
 })
-_add_achievement("all_chaos_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0056", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.chaos_killed, #BreedGroups.chaos))
+_add_achievement("all_chaos_killed", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0056", category_name, IncreasingStatTrigger:new(AchievementStats.definitions.chaos_killed, #AchievementBreedGroups.chaos))
 _add_achievement_family("kill_chaos_%s", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0057", category_name, IncreasingStatTrigger, AchievementStats.definitions.total_chaos_kills, {
 	1000,
 	5000,

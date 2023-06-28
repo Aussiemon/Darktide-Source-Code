@@ -26,16 +26,20 @@ local chain_settings_charged = {
 	radius = 8,
 	jump_time = 0.1,
 	max_jumps = 3,
-	max_targets = {
-		2,
-		1,
+	max_targets_at_depth = {
 		{
-			0,
-			1
+			num_targets = 2
 		},
 		{
-			0,
-			1
+			num_targets = 1
+		},
+		{
+			num_targets_min = 0,
+			num_targets_max = 1
+		},
+		{
+			num_targets_min = 0,
+			num_targets_max = 1
 		}
 	},
 	max_angle = math.pi * 0.75
@@ -400,14 +404,14 @@ weapon_template.actions = {
 		weapon_handling_template = "forcestaff_p3_m1_chain_lightning",
 		shoot_at_time = 0.2,
 		increase_combo = true,
-		overload_module_class_name = "warp_charge",
-		delay_explosion_to_finish = true,
 		target_finder_module_class_name = "chain_lightning",
+		delay_explosion_to_finish = true,
+		crosshair_type = "none",
+		target_buff = "chain_lightning_interval",
 		anim_time_scale = 1,
 		minimum_hold_time = 0.4,
-		crosshair_type = "none",
 		anim_event = "attack_charge_shoot_lightning",
-		charge_template = "forcestaff_p3_m1_chain_ligthning",
+		charge_template = "forcestaff_p3_m1_chain_lightning",
 		can_crit = true,
 		anim_event_3p = "attack_charge_shoot_lightning",
 		anim_end_event = "attack_cancel",

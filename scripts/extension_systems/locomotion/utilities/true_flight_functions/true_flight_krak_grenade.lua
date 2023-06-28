@@ -8,7 +8,7 @@ local true_flight_krak_grenade = {
 
 		return position, rotation
 	end,
-	krak_update_towards_position = function (target_position, physics_world, integration_data, dt, t)
+	krak_update_towards_position = function (target_position, physics_world, integration_data, dt, t, optional_validate_impact_func, optional_on_impact_func)
 		local true_flight_template = integration_data.true_flight_template
 		local trigger_time = true_flight_template.trigger_time
 		local on_target_time = integration_data.on_target_time
@@ -47,7 +47,7 @@ local true_flight_krak_grenade = {
 			local speed_up = math.lerp(min_slow_down, 1, speed_up_lerp)
 			dt = dt * speed_up
 			local rotation = nil
-			position, rotation = TrueFlightDefaults.default_update_towards_position(target_position, physics_world, integration_data, dt, t)
+			position, rotation = TrueFlightDefaults.default_update_towards_position(target_position, physics_world, integration_data, dt, t, optional_validate_impact_func, optional_on_impact_func)
 
 			return position, rotation
 		end

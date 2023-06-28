@@ -20,6 +20,17 @@ end
 VoiceOverSpawnManager.on_gameplay_post_init = function (self, level)
 	self._level = level
 	local vo_classes_2d = DialogueBreedSettings.voice_classes_2d
+	local mission_info = Managers.state.mission:mission()
+	local mission_brief_vo = mission_info and mission_info.mission_brief_vo
+
+	if mission_brief_vo then
+		local mission_giver_packs = mission_brief_vo.mission_giver_packs
+
+		if mission_giver_packs then
+			local mission_giver = self:current_voice_profile()
+			vo_classes_2d = mission_giver_packs[mission_giver]
+		end
+	end
 
 	for i = 1, #vo_classes_2d do
 		local vo_class = vo_classes_2d[i]

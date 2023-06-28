@@ -286,7 +286,9 @@ ViewElementBase.destroy = function (self, ui_renderer)
 		for i = 1, num_widgets do
 			local widget = widgets[i]
 
-			UIWidget.destroy(ui_renderer, widget)
+			if widget then
+				UIWidget.destroy(ui_renderer, widget)
+			end
 		end
 	end
 

@@ -5,7 +5,8 @@ local ServoSkullSystem = class("ServoSkullSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_servo_skull_do_pulse_fx",
 	"rpc_servo_skull_player_nearby",
-	"rpc_servo_skull_activator_set_visibility"
+	"rpc_servo_skull_activator_set_visibility",
+	"rpc_servo_skull_set_scanning_active"
 }
 
 ServoSkullSystem.init = function (self, context, system_init_data, ...)
@@ -38,6 +39,12 @@ ServoSkullSystem.hot_join_sync = function (self, sender, channel)
 
 			RPC.rpc_servo_skull_activator_set_visibility(channel, level_unit_id, not hidden)
 		end
+
+		if extension.get_scanning_active and extension:get_scanning_active() then
+			local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+
+			RPC.rpc_servo_skull_set_scanning_active(channel, game_object_id, true)
+		end
 	end
 end
 
@@ -69,6 +76,14 @@ ServoSkullSystem.rpc_servo_skull_activator_set_visibility = function (self, chan
 	local extension = self._unit_to_extension_map[unit]
 
 	extension:set_visibility(value)
+end
+
+ServoSkullSystem.rpc_servo_skull_set_scanning_active = function (self, channel_id, game_object_id, active)
+	local is_level_unit = false
+	local unit = Managers.state.unit_spawner:unit(game_object_id, is_level_unit)
+	local extension = self._unit_to_extension_map[unit]
+
+	extension:set_scanning_active(active)
 end
 
 return ServoSkullSystem

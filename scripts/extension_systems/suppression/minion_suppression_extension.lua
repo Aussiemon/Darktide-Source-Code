@@ -133,7 +133,7 @@ MinionSuppressionExtension.add_suppress_value = function (self, value, suppressi
 	if new_value < 2 then
 		self._attack_delay = 0
 	else
-		self._attack_delay = breed.ignore_attack_delay and 0 or attack_delay
+		self._attack_delay = self._suppress_config.ignore_attack_delay and 0 or attack_delay
 	end
 
 	local is_suppressed = suppression_component.is_suppressed
@@ -145,6 +145,11 @@ MinionSuppressionExtension.add_suppress_value = function (self, value, suppressi
 
 	local combat_range = self._behavior_component.combat_range
 	local decay = self._suppress_decay_speeds[combat_range] or DEFAULT_SUPPRESS_DECAY
+
+	if type(decay) == "table" then
+		decay = Managers.state.difficulty:get_table_entry_by_challenge(decay)
+	end
+
 	self._next_suppress_decay_t = t + math.random() * 0.25 + decay
 
 	if not is_suppressed and self._flinch_threshold <= new_value and (not self._next_flinch_t or self._next_flinch_t < t) then
@@ -227,6 +232,11 @@ MinionSuppressionExtension._update_suppression = function (self, unit, blackboar
 		suppression_component.suppress_value = math.max(suppression_component.suppress_value - decay_amount, 0)
 		local combat_range = self._behavior_component.combat_range
 		local decay = self._suppress_decay_speeds[combat_range] or DEFAULT_SUPPRESS_DECAY
+
+		if type(decay) == "table" then
+			decay = Managers.state.difficulty:get_table_entry_by_challenge(decay)
+		end
+
 		self._next_suppress_decay_t = t + decay
 	end
 
@@ -248,12 +258,20 @@ MinionSuppressionExtension._get_threshold_and_max_value = function (self)
 
 	if type(threshold) == "table" then
 		threshold = threshold[combat_range]
+
+		if type(threshold) == "table" then
+			threshold = Managers.state.difficulty:get_table_entry_by_challenge(threshold)
+		end
 	end
 
 	local max_value = self._max_suppress_value
 
 	if type(max_value) == "table" then
 		max_value = max_value[combat_range]
+
+		if type(max_value) == "table" then
+			max_value = Managers.state.difficulty:get_table_entry_by_challenge(max_value)
+		end
 	end
 
 	return threshold, max_value

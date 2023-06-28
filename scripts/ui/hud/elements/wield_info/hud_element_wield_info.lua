@@ -114,6 +114,10 @@ HudElementWieldInfo._remove_entry = function (self, index)
 end
 
 HudElementWieldInfo.update = function (self, dt, t, ui_renderer, render_settings, input_service)
+	if not self._input_hints_enabled then
+		return
+	end
+
 	local parent = self._parent
 	local extensions = parent:player_extensions()
 
@@ -122,11 +126,10 @@ HudElementWieldInfo.update = function (self, dt, t, ui_renderer, render_settings
 	end
 
 	local player = self._parent:player()
-	local unit_data = extensions.unit_data
-	local inventory_component = unit_data:read_component("inventory")
+	local unit_data_extension = extensions.unit_data
+	local inventory_component = unit_data_extension:read_component("inventory")
 	local wielded_slot_id = inventory_component.wielded_slot
 	local visual_loadout_extension = extensions.visual_loadout
-	local ability_extension = extensions.ability
 	local weapon_extention = extensions.weapon
 	local active_wield_inputs = self._active_wield_inputs
 
@@ -134,13 +137,13 @@ HudElementWieldInfo.update = function (self, dt, t, ui_renderer, render_settings
 		active_wield_inputs[i].synced = false
 	end
 
-	local weapon_name, weapon_template, weapon_action_component, current_action_name, current_action, current_passive_wield_info_name = nil
+	local weapon_name, weapon_template, current_action_name, current_action, current_passive_wield_info_name = nil
 	local condition_func_params = weapon_extention:condition_func_params(wielded_slot_id)
 	weapon_name = wielded_slot_id ~= "none" and inventory_component[wielded_slot_id]
 	weapon_template = weapon_name and visual_loadout_extension:weapon_template_from_slot(wielded_slot_id)
 
 	if weapon_template then
-		local weapon_action_component = unit_data:read_component("weapon_action")
+		local weapon_action_component = unit_data_extension:read_component("weapon_action")
 		current_action_name, current_action = Action.current_action(weapon_action_component, weapon_template)
 	end
 

@@ -209,7 +209,7 @@ ViewElementLevelUpRewardPresentation.cb_start_reward_presentation = function (se
 	self._time = 0
 end
 
-ViewElementLevelUpRewardPresentation.destroy = function (self)
+ViewElementLevelUpRewardPresentation.destroy = function (self, ui_renderer)
 	if self._ui_popup_background_renderer then
 		self._ui_popup_background_renderer = nil
 
@@ -252,7 +252,7 @@ ViewElementLevelUpRewardPresentation.destroy = function (self)
 		self._world_spawner = nil
 	end
 
-	ViewElementLevelUpRewardPresentation.super.destroy(self)
+	ViewElementLevelUpRewardPresentation.super.destroy(self, ui_renderer)
 end
 
 ViewElementLevelUpRewardPresentation.draw = function (self, dt, t, ui_renderer, render_settings, input_service)

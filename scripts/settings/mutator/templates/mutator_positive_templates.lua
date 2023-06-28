@@ -10,6 +10,13 @@ local mutator_templates = {
 		buff_templates = {
 			"mutator_player_cooldown_reduction"
 		}
+	},
+	mutator_movement_speed_on_spawn = {
+		internally_controlled_buffs = true,
+		class = "scripts/managers/mutator/mutators/mutator_positive",
+		buff_templates = {
+			"mutator_movement_speed_on_spawn"
+		}
 	}
 }
 

@@ -288,24 +288,7 @@ local cost_text_font_style = table.clone(UIFontSettings.currency_title)
 cost_text_font_style.text_horizontal_alignment = "left"
 cost_text_font_style.text_vertical_alignment = "center"
 cost_text_font_style.font_size = 20
-cost_text_font_style.original_offset = {
-	28,
-	0,
-	1
-}
 local cost_definitions = UIWidget.create_definition({
-	{
-		style_id = "screen",
-		pass_type = "rect",
-		style = {
-			offset = {
-				0,
-				0,
-				0
-			},
-			color = Color.red(100, true)
-		}
-	},
 	{
 		value_id = "texture",
 		style_id = "texture",
@@ -313,16 +296,12 @@ local cost_definitions = UIWidget.create_definition({
 		value = "content/ui/materials/icons/currencies/marks_small",
 		style = {
 			vertical_alignment = "center",
+			horizontal_alignment = "right",
 			size = {
 				28,
 				20
 			},
 			offset = {
-				-28,
-				0,
-				1
-			},
-			original_offset = {
 				0,
 				0,
 				1

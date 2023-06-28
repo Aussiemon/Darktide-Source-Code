@@ -7,12 +7,12 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Catapulted = require("scripts/extension_systems/character_state_machine/character_states/utilities/catapulted")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
+local GroundImpact = require("scripts/utilities/attack/ground_impact")
 local Health = require("scripts/utilities/health")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionPerception = require("scripts/utilities/minion_perception")
-local GroundImpact = require("scripts/utilities/attack/ground_impact")
 local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -104,6 +104,10 @@ BtChaosSpawnGrabAction.run = function (self, unit, breed, blackboard, scratchpad
 			return "done"
 		end
 
+		if scratchpad.rotation_duration and t <= scratchpad.rotation_duration then
+			self:_rotate_towards_target_unit(unit, scratchpad, action_data)
+		end
+
 		local disabled_state_component = scratchpad.hit_unit_disabled_character_state_component
 
 		if disabled_state_component and ALIVE[disabled_state_component.disabling_unit] and disabled_state_component.disabling_unit ~= unit then
@@ -168,6 +172,8 @@ BtChaosSpawnGrabAction._start_grabbing = function (self, unit, scratchpad, actio
 	scratchpad.initial_grab_timing = t
 	scratchpad.grab_timing = t + action_data.grab_timings[breed_name][1]
 	scratchpad.grab_stop_timing = t + action_data.grab_timings[breed_name][2]
+	local rotation_duration = action_data.rotation_durations[grab_anim]
+	scratchpad.rotation_duration = t + rotation_duration
 end
 
 BtChaosSpawnGrabAction._update_grabbing = function (self, unit, scratchpad, action_data, t, dt)
@@ -481,8 +487,20 @@ BtChaosSpawnGrabAction._align_throwing = function (self, unit, scratchpad, actio
 		end
 	end
 
-	scratchpad.throw_rotation = QuaternionBox(Quaternion.inverse(Unit.local_rotation(unit, 1)))
+	local throw_rotation = Quaternion.inverse(Unit.local_rotation(unit, 1))
+	scratchpad.throw_rotation = QuaternionBox(throw_rotation)
+	local navigation_extension = scratchpad.navigation_extension
+	local traverse_logic = navigation_extension:traverse_logic()
+	local pos = POSITION_LOOKUP[unit] + Quaternion.forward(throw_rotation) * 2
+	local fallback_throw_position = NavQueries.position_on_mesh_with_outside_position(scratchpad.nav_world, traverse_logic, pos, 1, 2, 2) or POSITION_LOOKUP[unit]
+	scratchpad.fallback_throw_position = Vector3Box(fallback_throw_position)
+	local target_unit = scratchpad.grabbed_unit
+	local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+	local disabled_character_state_component = target_unit_data_extension:write_component("disabled_character_state")
+	disabled_character_state_component.target_drag_position = fallback_throw_position
 end
+
+local DISABLING_UNIT_LINK_NODE = "j_lefthand"
 
 BtChaosSpawnGrabAction._update_throwing = function (self, unit, scratchpad, action_data, breed, t)
 	local throw_direction = scratchpad.throw_direction:unbox()
@@ -494,14 +512,26 @@ BtChaosSpawnGrabAction._update_throwing = function (self, unit, scratchpad, acti
 		locomotion_extension:set_wanted_rotation(wanted_rotation)
 	end
 
+	local target_unit = scratchpad.grabbed_unit
+
 	if scratchpad.throw_at_t and scratchpad.throw_at_t < t then
 		scratchpad.throw_at_t = nil
 		local hit_unit_disabled_state_input = scratchpad.hit_unit_disabled_state_input
 		hit_unit_disabled_state_input.trigger_animation = "none"
+		local wants_catapult = not scratchpad.fallback_throw_position
+		scratchpad.wants_catapult = wants_catapult
+
+		if wants_catapult then
+			local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+			local wanted_node = Unit.node(unit, DISABLING_UNIT_LINK_NODE)
+			local teleport_position = Unit.world_position(unit, wanted_node)
+			local disabled_character_state_component = target_unit_data_extension:write_component("disabled_character_state")
+			disabled_character_state_component.target_drag_position = teleport_position
+		end
+
 		scratchpad.wants_catapult = true
 	else
 		if scratchpad.wants_catapult then
-			local target_unit = scratchpad.grabbed_unit
 			local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 			local catapult_force = action_data.catapult_force[scratchpad.grabbed_unit_breed_name]
 			local catapult_z_force = action_data.catapult_z_force[scratchpad.grabbed_unit_breed_name]
@@ -534,17 +564,13 @@ BtChaosSpawnGrabAction._update_throwing = function (self, unit, scratchpad, acti
 
 				self:_add_threat_to_other_targets(unit, breed, scratchpad, scratchpad.grabbed_unit)
 			end
-		elseif scratchpad.after_throw_taunt_duration then
-			local target_unit = scratchpad.grabbed_unit
+		elseif scratchpad.after_throw_taunt_duration and target_unit then
+			local flat_rotation = MinionMovement.rotation_towards_unit_flat(unit, target_unit)
 
-			if target_unit then
-				local flat_rotation = MinionMovement.rotation_towards_unit_flat(unit, target_unit)
+			locomotion_extension:set_wanted_rotation(flat_rotation)
 
-				locomotion_extension:set_wanted_rotation(flat_rotation)
-
-				if scratchpad.after_throw_taunt_duration <= t then
-					scratchpad.state = "done"
-				end
+			if scratchpad.after_throw_taunt_duration <= t then
+				scratchpad.state = "done"
 			end
 		end
 	end
@@ -617,8 +643,11 @@ BtChaosSpawnGrabAction._grab_target = function (self, unit, target_unit, scratch
 	scratchpad.hit_unit_disabled_state_input = disabled_state_input
 	local behavior_component = scratchpad.behavior_component
 	behavior_component.grabbed_unit = target_unit
-	local disabled_character_state_component = hit_unit_data_extension:read_component("disabled_character_state")
+	local disabled_character_state_component = hit_unit_data_extension:write_component("disabled_character_state")
 	scratchpad.hit_unit_disabled_character_state_component = disabled_character_state_component
+	local disabled_character_state_write_component = hit_unit_data_extension:write_component("disabled_character_state")
+	local init_target_drag_position = POSITION_LOOKUP[unit]
+	disabled_character_state_write_component.target_drag_position = init_target_drag_position
 
 	if scratchpad.is_anim_driven then
 		MinionMovement.set_anim_driven(scratchpad, false)
@@ -668,6 +697,17 @@ BtChaosSpawnGrabAction._add_threat_to_other_targets = function (self, unit, bree
 			perception_extension:add_threat(target_unit, max_threat)
 		end
 	end
+end
+
+BtChaosSpawnGrabAction._rotate_towards_target_unit = function (self, unit, scratchpad, action_data)
+	local target_unit = scratchpad.perception_component.target_unit
+	local flat_rotation = MinionMovement.rotation_towards_unit_flat(unit, target_unit)
+
+	if not action_data.dont_rotate_towards_target then
+		scratchpad.locomotion_extension:set_wanted_rotation(flat_rotation)
+	end
+
+	return flat_rotation
 end
 
 local COLLISION_FILTER = "filter_minion_shooting_geometry"

@@ -1,6 +1,5 @@
 local dialogue_lookup_concept_names = {
 	all_concepts = {
-		"aleterted_outnumbered",
 		"ammo_hog",
 		"assault",
 		"catching_net",

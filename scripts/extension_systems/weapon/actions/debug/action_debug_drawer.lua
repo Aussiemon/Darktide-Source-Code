@@ -82,8 +82,13 @@ end
 ActionDebugDrawer._draw_action_name = function (self, gui, anchor_position)
 	local font_size = 18
 	local text_pos = Vector3(anchor_position.x + 10, anchor_position.y + 5, DRAWER_LAYER + 1)
+	local weapon_action_component = self._weapon_action_component
+	local action_start_t = weapon_action_component.start_t
+	local latest_fixed_t = FixedFrame.get_latest_fixed_time()
+	local time_in_action = latest_fixed_t - action_start_t
+	local text = string.format("%s (running time: %.3f)", self._action_settings.name, time_in_action)
 
-	Gui.slug_text(gui, self._action_settings.name, DevParameters.debug_text_font, font_size, text_pos, nil, Color.cheeseburger())
+	Gui.slug_text(gui, text, DevParameters.debug_text_font, font_size, text_pos, nil, Color.cheeseburger())
 end
 
 ActionDebugDrawer._draw_chain_actions = function (self, gui, anchor_position, anchor_size)

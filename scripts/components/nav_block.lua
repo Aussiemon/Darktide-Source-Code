@@ -7,7 +7,7 @@ NavBlock.init = function (self, unit, is_server)
 	if nav_block_extension then
 		local start_blocked = self:get_data(unit, "start_blocked")
 
-		nav_block_extension:setup_from_component(start_blocked)
+		nav_block_extension:setup_from_component(unit, start_blocked)
 
 		self._nav_block_extension = nav_block_extension
 	end

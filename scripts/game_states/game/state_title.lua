@@ -1,12 +1,14 @@
-local MainMenuLoader = require("scripts/loading/loaders/main_menu_loader")
-local SigninLoader = require("scripts/loading/loaders/signin_loader")
 local HumanPlayer = require("scripts/managers/player/human_player")
-local StateMainMenu = require("scripts/game_states/game/state_main_menu")
+local MainMenuLoader = require("scripts/loading/loaders/main_menu_loader")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
-local SteamOfflineError = require("scripts/managers/error/errors/steam_offline_error")
+local Popups = require("scripts/utilities/ui/popups")
+local PrivilegesManager = require("scripts/managers/privileges/privileges_manager")
 local Promise = require("scripts/foundation/utilities/promise")
+local SigninLoader = require("scripts/loading/loaders/signin_loader")
+local StateMainMenu = require("scripts/game_states/game/state_main_menu")
+local SteamOfflineError = require("scripts/managers/error/errors/steam_offline_error")
 local StateTitle = class("StateTitle")
-local STATES = table.enum("idle", "account_signin", "signing_in", "loading_packages", "authenticating_eos", "legal_verification", "done", "error")
+local STATES = table.enum("idle", "account_signin", "signing_in", "loading_packages", "authenticating_eos", "legal_verification", "name_verification", "done", "error")
 
 local function _should_skip()
 	if IS_XBS and BUILD == "release" then
@@ -153,11 +155,34 @@ StateTitle._legal_verification = function (self)
 
 	local legal_promises = {
 		Managers.backend.interfaces.account:get_data("legal", "eula"),
+		[#legal_promises + 1] = Managers.backend.interfaces.account:get_data("legal", "cross_play_support"),
 		Managers.backend.interfaces.account:get_data("legal", "privacy_policy")
 	}
+	local save_manager = Managers.save
+	local cross_play_support_status, account_data = nil
+
+	if save_manager then
+		account_data = save_manager:account_data()
+		cross_play_support_status = account_data.crossplay_accepted
+	end
 
 	Promise.all(unpack(legal_promises)):next(function (results)
 		local eula_status, privacy_policy_status = unpack(results, 1, 2)
+		local cross_play_support_status_backend = unpack(results, 3)
+
+		if cross_play_support_status_backend and cross_play_support_status == false then
+			if account_data then
+				account_data.crossplay_accepted = true
+
+				save_manager:queue_save()
+			end
+
+			cross_play_support_status = true
+		end
+
+		if cross_play_support_status == nil then
+			cross_play_support_status = true
+		end
 
 		if not privacy_policy_status then
 			local options = {}
@@ -269,10 +294,59 @@ StateTitle._legal_verification = function (self)
 			}
 
 			Managers.event:trigger("event_show_ui_popup", context)
+		elseif not cross_play_support_status then
+			local options = {
+				[#options + 1] = {
+					text = "loc_cross_play_support_accept_button_label",
+					close_on_pressed = true,
+					callback = function ()
+						if account_data then
+							account_data.crossplay_accepted = true
+
+							save_manager:queue_save()
+						end
+
+						Managers.backend.interfaces.account:set_data("legal", {
+							cross_play_support = cross_play_support_status and cross_play_support_status + 1 or 1
+						})
+						self:_legal_verification()
+					end
+				}
+			}
+			local context = {
+				title_text = "loc_cross_play_support_title",
+				description_text = "loc_cross_play_support_information",
+				options = options
+			}
+
+			Managers.event:trigger("event_show_ui_popup", context)
+		else
+			self:_verify_name()
+		end
+	end):catch(function (error)
+		Managers.event:trigger("event_add_notification_message", "alert", {
+			text = Localize("loc_popup_description_backend_error")
+		})
+		self:_on_error()
+	end)
+end
+
+StateTitle._verify_name = function (self)
+	if GameParameters.testify then
+		return self:_set_state(STATES.done)
+	end
+
+	self:_set_state(STATES.name_verification)
+	Managers.backend.interfaces.account:get():next(function (account_data)
+		local rename_status = account_data.rename
+		local forced = rename_status and rename_status.forced
+
+		if forced then
+			Popups.rename(callback(self, "_set_state", STATES.done), true)
 		else
 			self:_set_state(STATES.done)
 		end
-	end):catch(function (error)
+	end):catch(function (_)
 		Managers.event:trigger("event_add_notification_message", "alert", {
 			text = Localize("loc_popup_description_backend_error")
 		})
@@ -316,6 +390,10 @@ StateTitle._reset_state = function (self)
 	end
 
 	Managers.data_service:reset()
+
+	if GameParameters.prod_like_backend then
+		Managers.presence:reset()
+	end
 end
 
 StateTitle.update = function (self, main_dt, main_t)
@@ -476,6 +554,7 @@ StateTitle._signin = function (self)
 		end
 
 		local account_id = result.account_id
+		local vivox_token = result.vivox_token
 		local profiles = result.profiles
 		local gear = result.gear
 		local selected_profile = result.selected_profile
@@ -512,8 +591,12 @@ StateTitle._signin = function (self)
 
 		self:_set_state(STATES.loading_packages)
 
-		if Managers.chat and not Managers.chat:is_initialized() then
-			Managers.chat:initialize()
+		if Managers.chat then
+			if not Managers.chat:is_initialized() then
+				Managers.chat:initialize()
+			elseif Managers.chat:is_connected() then
+				Managers.chat:login(Network.peer_id(), account_id, vivox_token)
+			end
 		end
 
 		if not DEDICATED_SERVER then
@@ -521,6 +604,20 @@ StateTitle._signin = function (self)
 		end
 
 		Managers.account:refresh_communication_restrictions()
+
+		if GameParameters.prod_like_backend then
+			Managers.presence:initialize()
+		end
+
+		if GameParameters.prod_like_backend then
+			local privileges_manager = PrivilegesManager:new()
+
+			privileges_manager:cross_play():next(function (res)
+				local cross_play_disabled = not res.has_privilege
+
+				Managers.presence:set_cross_play_disabled(cross_play_disabled)
+			end)
+		end
 	end)
 end
 

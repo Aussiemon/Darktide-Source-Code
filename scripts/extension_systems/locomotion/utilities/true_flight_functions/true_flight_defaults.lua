@@ -1,10 +1,17 @@
+local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionState = require("scripts/utilities/minion_state")
+local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
+local ProjectileLocomotionUtility = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion_utility")
+local projectile_impact_results = ProjectileLocomotionSettings.impact_results
 local true_flight_defaults = {}
 
 local function _get_center_of_all_actors(target_unit)
 	local Unit_get_node_actors = Unit.get_node_actors
 	local Unit_actor = Unit.actor
 	local Actor_center_of_mass = Actor.center_of_mass
+
+	Managers.state.extension:system("physics_unit_proximity_system"):activate_unit(target_unit)
+
 	local position = Vector3.zero()
 	local number_of_positions = 0
 	local number_of_nodes = Unit.num_scene_graph_items(target_unit)
@@ -43,6 +50,8 @@ local function get_center_of_hit_zone(target_unit, target_hit_zone)
 		local target_actor_names = target_unit_data:hit_zone_actors(target_hit_zone)
 
 		if target_actor_names then
+			Managers.state.extension:system("physics_unit_proximity_system"):activate_unit(target_unit)
+
 			for i = 1, #target_actor_names do
 				local target_actor = Unit_actor(target_unit, target_actor_names[i])
 				local target_position = Actor_center_of_mass(target_actor)
@@ -89,7 +98,7 @@ local function _lerp_modifier_func(true_flight_template)
 	return template_func or _lerp_modifier_func_default
 end
 
-true_flight_defaults.default_update_towards_position = function (target_position, physics_world, integration_data, dt, t)
+true_flight_defaults.default_update_towards_position = function (target_position, physics_world, integration_data, dt, t, optional_validate_impact_func, optional_on_impact_func)
 	local position = integration_data.position
 	local velocity = integration_data.velocity
 	local current_direction = Vector3.normalize(velocity)
@@ -116,15 +125,17 @@ true_flight_defaults.default_update_towards_position = function (target_position
 	local new_velocity = new_direction * new_speed
 	integration_data.velocity = new_velocity
 	local new_rotation = Quaternion.look(velocity)
+	new_position = true_flight_defaults.default_check_collisions(physics_world, integration_data, position, new_position, dt, t, optional_validate_impact_func, optional_on_impact_func)
 
 	return new_position, new_rotation
 end
 
-true_flight_defaults.default_update_position_velocity = function (physics_world, integration_data, dt, t)
+true_flight_defaults.default_update_position_velocity = function (physics_world, integration_data, dt, t, optional_validate_impact_func, optional_on_impact_func)
 	local velocity = integration_data.velocity
 	local position = integration_data.position
 	local new_position = position + velocity * dt
 	local new_rotation = Quaternion.look(velocity)
+	new_position = true_flight_defaults.default_check_collisions(physics_world, integration_data, position, new_position, dt, t, optional_validate_impact_func, optional_on_impact_func)
 
 	return new_position, new_rotation
 end
@@ -272,6 +283,83 @@ true_flight_defaults.retry_if_target_position = function (integration_data)
 	local target_unit = integration_data.target_unit
 
 	return not target_unit
+end
+
+true_flight_defaults.default_check_collisions = function (physics_world, integration_data, previus_position, new_position, dt, t, optional_validate_impact_func, optional_on_impact_func)
+	local true_flight_template = integration_data.true_flight_template
+	local radius = integration_data.radius
+	local collision_filter = integration_data.collision_filter
+	local target_unit_or_nil = integration_data.target_unit
+	local have_target = target_unit_or_nil ~= nil
+	local have_target_collision_filter_override = true_flight_template.have_target_collision_filter_override
+
+	if have_target and have_target_collision_filter_override then
+		collision_filter = have_target_collision_filter_override
+	end
+
+	local travel_vector = new_position - previus_position
+	local travel_direction = Vector3.normalize(travel_vector)
+	local travel_distance = Vector3.length(travel_vector)
+	local integrator_parameters = integration_data.integrator_parameters
+	local statics_radius = integrator_parameters.statics_radius
+	local statics_raycast = integrator_parameters.statics_raycast
+	local skip_static = false
+	local hits = ProjectileLocomotionUtility.projectile_cast(physics_world, previus_position, new_position, travel_direction, travel_distance, collision_filter, radius, skip_static, statics_radius, statics_raycast)
+
+	if hits and #hits > 0 then
+		local damage_extension = integration_data.damage_extension
+		local fx_extension = integration_data.fx_extension
+		local hit_direction = travel_direction
+		local current_speed = Vector3.length(integration_data.velocity)
+		local hit = hits[1]
+		local hit_position = hit.position or hit[1]
+		local hit_actor = hit.actor or hit[4]
+		local hit_unit = Actor.unit(hit_actor)
+		local is_valid_true_flight = not optional_validate_impact_func or optional_validate_impact_func(hit_unit, integration_data)
+		local is_valid_collision = is_valid_true_flight and ProjectileLocomotionUtility.check_collision(hit_unit, hit_position, integration_data)
+
+		if is_valid_collision then
+			local hit_normal = hit.normal or hit[3]
+			integration_data.has_hit = true
+			local force_delete = false
+
+			if optional_on_impact_func then
+				new_position, force_delete = optional_on_impact_func(hit_unit, hit, integration_data, new_position, dt, t)
+			else
+				new_position = hit_position
+			end
+
+			local impact_result = nil
+
+			if damage_extension then
+				local is_target_unit = true
+
+				if have_target and target_unit_or_nil ~= hit_unit then
+					is_target_unit = false
+				end
+
+				impact_result = damage_extension:on_impact(hit_position, hit_unit, hit_actor, hit_direction, hit_normal, current_speed, force_delete, is_target_unit)
+			end
+
+			if fx_extension then
+				fx_extension:on_impact(hit_position, hit_actor, hit_direction, hit_normal, current_speed)
+			end
+
+			if impact_result == projectile_impact_results.removed then
+				integration_data.integrate = false
+			end
+		else
+			integration_data.has_hit = false
+
+			return new_position
+		end
+
+		return new_position
+	else
+		integration_data.has_hit = false
+	end
+
+	return new_position
 end
 
 return true_flight_defaults

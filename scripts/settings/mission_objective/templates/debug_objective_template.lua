@@ -113,16 +113,16 @@ local mission_objective_templates = {
 				header = "Ensure Vox Array Data Transfer"
 			},
 			objective_harvest_hack_first = {
-				description = "Hack your way forward",
+				description = "Hack the gate",
 				progress_bar = true,
 				mission_objective_type = "decode",
-				header = "Hack your way forward"
+				header = "Hack the gate"
 			},
 			objective_harvest_hack_second = {
-				description = "Hack your way forward",
+				description = "Hack the gate",
 				progress_bar = true,
 				mission_objective_type = "decode",
-				header = "Hack your way forward"
+				header = "Hack the gate"
 			},
 			objective_harvest_hack_third = {
 				description = "Hack your way forward",

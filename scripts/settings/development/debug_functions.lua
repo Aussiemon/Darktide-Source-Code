@@ -26,6 +26,7 @@ local categories = {
 	"Buffs",
 	"Cinematics",
 	"Coherency Buffs",
+	"Crafting",
 	"Dev Combat",
 	"Dev Parameters",
 	"Error",
@@ -445,6 +446,24 @@ functions.remove_buffs_from_selected_unit = {
 		Debug:remove_coherency_buffs_from_unit(selected_unit)
 	end
 }
+functions.remove_all_traits = {
+	name = "Remove All Traits",
+	category = "Crafting",
+	on_activated = function ()
+		Managers.backend.interfaces.crafting:debug_remove_all_traits():next(function ()
+			Log.info("DebugFunctions", "All unlocked traits have been removed")
+		end)
+	end
+}
+functions.unlock_all_traits = {
+	name = "Unlock All Traits",
+	category = "Crafting",
+	on_activated = function ()
+		Managers.backend.interfaces.crafting:debug_unlock_all_traits():next(function ()
+			Log.info("DebugFunctions", "All traits have been unlocked")
+		end)
+	end
+}
 functions.prepare_ui_for_marketing = {
 	name = "Prepare UI for marketing",
 	category = "Marketing",
@@ -532,9 +551,7 @@ end
 
 local function circumstance_options()
 	local CircumstanceTemplates = require("scripts/settings/circumstance/circumstance_templates")
-	local circumstances = {
-		"default"
-	}
+	local circumstances = {}
 
 	for circumstance_name, _ in pairs(CircumstanceTemplates) do
 		if circumstance_name ~= "default" then
@@ -542,20 +559,24 @@ local function circumstance_options()
 		end
 	end
 
+	table.sort(circumstances)
+	table.insert(circumstances, 1, "default")
+
 	return circumstances
 end
 
 local function side_mission_options()
-	local mission_objective_templates = require("scripts/settings/mission_objective/templates/side_mission_objective_template")
-	local side_missions = {
-		"default"
-	}
+	local SideMissionObjectiveTemplate = require("scripts/settings/mission_objective/templates/side_mission_objective_template")
+	local side_missions = {}
 
-	for side_mission, _ in pairs(mission_objective_templates.side_mission.objectives) do
+	for side_mission, _ in pairs(SideMissionObjectiveTemplate.side_mission.objectives) do
 		if side_mission ~= "default" then
 			side_missions[#side_missions + 1] = side_mission
 		end
 	end
+
+	table.sort(side_missions)
+	table.insert(side_missions, 1, "default")
 
 	return side_missions
 end

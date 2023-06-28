@@ -299,7 +299,7 @@ local action_data = {
 		utility_weight = 5,
 		vo_event = "assault",
 		attack_type = "oobb",
-		collision_filter = "filter_minion_melee",
+		collision_filter = "filter_minion_melee_friendly_fire",
 		dodge_range = 2.75,
 		dodge_width = 1.1,
 		range = 4,
@@ -368,7 +368,7 @@ local action_data = {
 			attack_push_kick_01 = 0.7407407407407407
 		},
 		attack_anim_durations = {
-			attack_push_kick_01 = 2.6419753086419755
+			attack_push_kick_01 = 1.9753086419753085
 		},
 		attack_intensities = {
 			ranged = 1,
@@ -513,7 +513,7 @@ local action_data = {
 		vo_event = "assault",
 		ignore_blocked = true,
 		attack_type = "oobb",
-		collision_filter = "filter_minion_melee",
+		collision_filter = "filter_minion_melee_friendly_fire",
 		move_speed_variable_name = "moving_attack_fwd_speed",
 		moving_attack = true,
 		move_speed_variable_lerp_speed = 4,

@@ -68,9 +68,9 @@ ViewElementMissionInfoPanel.init = function (self, parent, draw_layer, start_sca
 	self:_create_offscreen_renderer()
 end
 
-ViewElementMissionInfoPanel.destroy = function (self)
+ViewElementMissionInfoPanel.destroy = function (self, ui_renderer)
 	self:_destroy_offscreen_renderer()
-	ViewElementMissionInfoPanel.super.destroy(self)
+	ViewElementMissionInfoPanel.super.destroy(self, ui_renderer)
 end
 
 ViewElementMissionInfoPanel.update = function (self, dt, t, input_service)

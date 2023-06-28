@@ -359,6 +359,8 @@ UIManager.create_player_hud = function (self, peer_id, local_player_id, elements
 		enable_world_bloom = enable_world_bloom
 	}
 	self._hud = UIHud:new(elements, visibility_groups, params)
+
+	Managers.event:trigger("event_player_hud_created")
 end
 
 UIManager.create_spectator_hud = function (self, world_viewport_name, peer_id, local_player_id, elements, visibility_groups)
@@ -1602,6 +1604,14 @@ UIManager.event_show_ui_popup = function (self, data, callback)
 
 	if callback then
 		callback(popup_id)
+	end
+end
+
+UIManager.event_pause_popup_input = function (self, popup_id, paused)
+	local popup = self:_popup_by_id(popup_id, false)
+
+	if popup then
+		popup.paused = paused ~= false
 	end
 end
 

@@ -353,6 +353,7 @@ MainPathManager.update_time_slice_generate_occluded_points = function (self)
 
 	if done then
 		Managers.state.pacing:on_spawn_points_generated()
+		Managers.state.mutator:on_spawn_points_generated()
 	end
 
 	return done

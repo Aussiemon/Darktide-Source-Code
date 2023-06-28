@@ -23,6 +23,7 @@ PlayerUnitSpecializationExtension.init = function (self, extension_init_context,
 	self._coherency_system = Managers.state.extension:system("coherency_system")
 	self._passive_buff_indices = {}
 	self._coherency_external_buff_indices = {}
+	self._buff_template_tiers = {}
 
 	self:_init_components()
 end
@@ -54,6 +55,10 @@ PlayerUnitSpecializationExtension.game_object_initialized = function (self, game
 	local fixed_t = self._initialized_fixed_frame_t
 
 	self:_apply_specialization_and_talents(self._archetype, self._specialization_name, self._talents, fixed_t)
+end
+
+PlayerUnitSpecializationExtension.buff_template_tier = function (self, buff_template_name)
+	return self._buff_template_tiers[buff_template_name] or 1
 end
 
 PlayerUnitSpecializationExtension.update = function (self, unit, dt, t)
@@ -88,8 +93,8 @@ PlayerUnitSpecializationExtension.select_new_specialization = function (self, sp
 	self._specialization_name = specialization_name
 	self._talents = talents
 
-	self:_apply_specialization_and_talents(self._archetype, specialization_name, talents, fixed_t)
 	self:_send_rpc_update_to_client(self._player, specialization_name, talents)
+	self:_apply_specialization_and_talents(self._archetype, specialization_name, talents, fixed_t)
 end
 
 PlayerUnitSpecializationExtension.remove_gameplay_features = function (self, fixed_t)
@@ -99,14 +104,15 @@ end
 PlayerUnitSpecializationExtension._apply_specialization_and_talents = function (self, archetype, specialization_name, talents, fixed_t)
 	local ability_extension = self._ability_extension
 	local buff_extension = self._buff_extension
-	local combat_ability, grenade_ability, passives, coherency_buffs, special_rules = nil
+	local combat_ability, grenade_ability, passives, coherency_buffs, special_rules, buff_template_tiers = nil
 
 	if Managers.state.game_mode:specializations_disabled() then
+		buff_template_tiers = {}
 		special_rules = {}
 		coherency_buffs = {}
 		passives = {}
 	else
-		combat_ability, grenade_ability, passives, coherency_buffs, special_rules = PlayerSpecialization.from_selected_talents(archetype, specialization_name, talents)
+		combat_ability, grenade_ability, passives, coherency_buffs, special_rules, buff_template_tiers = PlayerSpecialization.from_selected_talents(archetype, specialization_name, talents)
 	end
 
 	if combat_ability then
@@ -127,10 +133,18 @@ PlayerUnitSpecializationExtension._apply_specialization_and_talents = function (
 		active_special_rules[special_rule_name] = true
 	end
 
+	local active_buff_template_tiers = self._buff_template_tiers
+
+	table.clear(active_buff_template_tiers)
+
+	for buff_template_name, tier in pairs(buff_template_tiers) do
+		active_buff_template_tiers[buff_template_name] = tier
+	end
+
 	local passive_buff_indices = self._passive_buff_indices
 
 	for _, buff_template_name in pairs(passives) do
-		local _, local_index, component_index = buff_extension:add_externally_controlled_buff(buff_template_name, fixed_t)
+		local _, local_index, component_index = buff_extension:add_externally_controlled_buff(buff_template_name, fixed_t, "from_specialization", true)
 		passive_buff_indices[#passive_buff_indices + 1] = {
 			local_index = local_index,
 			component_index = component_index
@@ -141,7 +155,7 @@ PlayerUnitSpecializationExtension._apply_specialization_and_talents = function (
 	local coherency_external_buff_indices = self._coherency_external_buff_indices
 
 	for _, buff_template_name in pairs(coherency_buffs) do
-		coherency_external_buff_indices[#coherency_external_buff_indices + 1] = coherency_system:add_external_buff(unit, buff_template_name)
+		coherency_external_buff_indices[#coherency_external_buff_indices + 1] = coherency_system:add_external_buff(unit, buff_template_name, "from_specialization", true)
 	end
 end
 
@@ -198,7 +212,7 @@ PlayerUnitSpecializationExtension._send_rpc_update_to_client = function (self, p
 
 	local i = 0
 
-	for talent_name in pairs(talents) do
+	for talent_name, tier in pairs(talents) do
 		i = i + 1
 		temp_talent_id_array[i] = NetworkLookup.archetype_talent_names[talent_name]
 	end

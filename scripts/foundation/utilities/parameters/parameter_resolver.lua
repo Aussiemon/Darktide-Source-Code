@@ -241,7 +241,7 @@ ParameterResolver.resolve_dev_parameters = function ()
 
 	DevParameters = table.set_readonly(dev_parameters)
 
-	ParameterResolver.set_dev_parameter = function (param, value)
+	ParameterResolver.set_dev_parameter = function (param, value, skip_save)
 		local old_value = DevParameters[param]
 
 		if old_value == nil then
@@ -254,7 +254,7 @@ ParameterResolver.resolve_dev_parameters = function ()
 
 		dev_parameters[param] = value
 
-		if DefaultDevParameters[param] ~= nil and DefaultDevParameters[param].user_setting ~= false then
+		if DefaultDevParameters[param] ~= nil and DefaultDevParameters[param].user_setting ~= false and not skip_save then
 			debug("Setting locally saved development setting [%s] to [%s]", param, tostring(value))
 			Application.set_user_setting("development_settings", param, value)
 

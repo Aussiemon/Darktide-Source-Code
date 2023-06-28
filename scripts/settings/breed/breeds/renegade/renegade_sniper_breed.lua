@@ -5,6 +5,7 @@ local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BreedTerrorEventSettings = require("scripts/settings/breed/breed_terror_event_settings")
 local CoverSettings = require("scripts/settings/cover/cover_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionGibbingTemplates = require("scripts/managers/minion/minion_gibbing_templates")
 local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
 local SmartObjectSettings = require("scripts/settings/navigation/smart_object_settings")
@@ -114,22 +115,7 @@ local breed_data = {
 			far = true
 		}
 	},
-	suppress_config = {
-		threshold = 20,
-		max_value = 30,
-		decay_speeds = {
-			melee = 0.05,
-			far = 0.5,
-			close = 0.2
-		},
-		immunity_duration = {
-			2.75,
-			3.25
-		},
-		suppression_types_allowed = {
-			ability = true
-		}
-	},
+	suppress_config = MinionDifficultySettings.suppression.renegade_rifleman,
 	attack_intensity_cooldowns = {
 		melee = {
 			0.7,

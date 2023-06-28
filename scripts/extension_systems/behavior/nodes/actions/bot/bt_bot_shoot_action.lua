@@ -49,8 +49,14 @@ BtBotShootAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 	scratchpad.action_input_extension = ScriptUnit.extension(unit, "action_input_system")
 	scratchpad.aim_data = attack_meta_data.aim_data or DEFAULT_AIM_DATA
 	scratchpad.aim_data_charged = attack_meta_data.aim_data_charged or scratchpad.aim_data
-	scratchpad.aim_at_node = attack_meta_data.aim_at_node or "j_spine"
-	scratchpad.aim_at_node_charged = attack_meta_data.aim_at_node_charged or attack_meta_data.aim_at_node or "j_spine"
+	local aim_at_node = attack_meta_data.aim_at_node or "j_spine"
+
+	if type(aim_at_node) == "table" then
+		aim_at_node = aim_at_node[math.random(1, #aim_at_node)]
+	end
+
+	scratchpad.aim_at_node = aim_at_node or "j_spine"
+	scratchpad.aim_at_node_charged = attack_meta_data.aim_at_node_charged or aim_at_node or "j_spine"
 	scratchpad.aim_speed_yaw = 0
 	scratchpad.always_charge_before_firing = attack_meta_data.always_charge_before_firing
 	scratchpad.attack_meta_data = attack_meta_data
@@ -125,7 +131,23 @@ BtBotShootAction._set_new_aim_target = function (self, t, target_unit, scratchpa
 	end
 end
 
+local MIN_TARGET_ALLY_DISTANCE_FOR_AIM = 8
+
 BtBotShootAction._should_aim = function (self, t, scratchpad, action_data)
+	local perception_component = scratchpad.perception_component
+	local target_ally_unit = perception_component.target_ally
+	local target_ally_needs_aid = perception_component.target_ally_needs_aid
+
+	if ALIVE[target_ally_unit] and target_ally_needs_aid then
+		return false
+	end
+
+	local target_ally_distance = perception_component.target_ally_distance
+
+	if MIN_TARGET_ALLY_DISTANCE_FOR_AIM < target_ally_distance then
+		return false
+	end
+
 	local ranged_gestalt = scratchpad.ranged_gestalt
 	local gestalt_behavior = action_data.gestalt_behaviors[ranged_gestalt]
 
@@ -198,7 +220,7 @@ BtBotShootAction._update_aim = function (self, unit, scratchpad, action_data, dt
 	local first_person_component = scratchpad.first_person_component
 	local camera_position = first_person_component.position
 	local camera_rotation = first_person_component.rotation
-	local yaw_offset, pitch_offset, wanted_aim_rotation, actual_aim_rotation, actual_aim_position = self:_aim_position(unit, scratchpad, dt, camera_position, camera_rotation, target_unit)
+	local yaw_offset, pitch_offset, wanted_aim_rotation, actual_aim_rotation, actual_aim_position = self:_aim_position(unit, scratchpad, action_data, dt, camera_position, camera_rotation, target_unit)
 
 	if scratchpad.reevaluate_obstruction_time <= t then
 		local ranged_obstructed_by_static_component = scratchpad.ranged_obstructed_by_static_component
@@ -249,7 +271,7 @@ end
 local PI = math.pi
 local TWO_PI = math.two_pi
 
-BtBotShootAction._aim_position = function (self, self_unit, scratchpad, dt, current_position, current_rotation, target_unit)
+BtBotShootAction._aim_position = function (self, self_unit, scratchpad, action_data, dt, current_position, current_rotation, target_unit)
 	local projectile_template, aim_at_node = nil
 	local target_breed = scratchpad.target_breed
 
@@ -264,7 +286,7 @@ BtBotShootAction._aim_position = function (self, self_unit, scratchpad, dt, curr
 	local wanted_rotation, aim_position = self:_wanted_aim_rotation(self_unit, target_unit, target_breed, current_position, projectile_template, aim_at_node)
 	local current_yaw, current_pitch, _ = Quaternion.to_yaw_pitch_roll(current_rotation)
 	local wanted_yaw, wanted_pitch, _ = Quaternion.to_yaw_pitch_roll(wanted_rotation)
-	local yaw_speed, pitch_speed = self:_calculate_aim_speed(dt, current_yaw, current_pitch, wanted_yaw, wanted_pitch, scratchpad.aim_speed_yaw)
+	local yaw_speed, pitch_speed = self:_calculate_aim_speed(dt, current_yaw, current_pitch, wanted_yaw, wanted_pitch, scratchpad.aim_speed_yaw, action_data)
 	scratchpad.aim_speed_yaw = yaw_speed
 	local new_yaw = current_yaw + yaw_speed * dt
 	local new_pitch = current_pitch + pitch_speed * dt
@@ -316,11 +338,12 @@ BtBotShootAction._target_velocity = function (self, target_unit, target_breed)
 end
 
 local YAW_ACCELERATION = 7.5
-local YAW_DECELERATION = 25
+local YAW_DECELERATION = 35
 
-BtBotShootAction._calculate_aim_speed = function (self, dt, current_yaw, current_pitch, wanted_yaw, wanted_pitch, current_yaw_speed)
+BtBotShootAction._calculate_aim_speed = function (self, dt, current_yaw, current_pitch, wanted_yaw, wanted_pitch, current_yaw_speed, action_data)
 	local yaw_offset = (wanted_yaw - current_yaw + PI) % TWO_PI - PI
-	local wanted_yaw_speed = yaw_offset * math.pi * 10
+	local aim_speed = Managers.state.difficulty:get_table_entry_by_challenge(action_data.aim_speed)
+	local wanted_yaw_speed = yaw_offset * math.pi * aim_speed
 	local new_yaw_speed = nil
 	local yaw_offset_sign = math.sign(yaw_offset)
 	local yaw_speed_sign = math.sign(current_yaw_speed)

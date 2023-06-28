@@ -94,6 +94,10 @@ MinionToughnessExtension.toughness_damage = function (self)
 	return self._toughness_damage
 end
 
+MinionToughnessExtension.time_since_toughness_broken = function (self)
+	return math.huge
+end
+
 MinionToughnessExtension.current_toughness_percent = function (self)
 	local max_toughness = self:max_toughness()
 	local toughness_damage = self:toughness_damage()

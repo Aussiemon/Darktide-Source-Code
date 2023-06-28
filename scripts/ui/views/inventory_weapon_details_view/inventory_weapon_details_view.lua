@@ -371,6 +371,11 @@ InventoryWeaponDetailsView.on_back_pressed = function (self)
 end
 
 InventoryWeaponDetailsView.on_exit = function (self)
+	self:_destroy_weapon_preview()
+	self:_remove_element("weapon_info")
+	self:_remove_element("weapon_actions_extended")
+	self:_remove_element("attack_patterns")
+
 	if self._ui_default_renderer then
 		self._ui_default_renderer = nil
 
@@ -387,7 +392,6 @@ InventoryWeaponDetailsView.on_exit = function (self)
 		self._gui_world = nil
 	end
 
-	self:_destroy_weapon_preview()
 	self:_destroy_offscreen_gui()
 	InventoryWeaponDetailsView.super.on_exit(self)
 end
@@ -830,6 +834,27 @@ InventoryWeaponDetailsView._draw_weapon_stats = function (self, ui_renderer, inp
 			bar_stat_y_offset = bar_stat_y_offset + row_height * 2
 		end
 	end
+end
+
+InventoryWeaponDetailsView._remove_element = function (self, reference_name)
+	local elements = self._elements
+	local element = elements[reference_name]
+	local element_name = element.__class_name
+	local elements_array = self._elements_array
+
+	for i = 1, #elements_array do
+		if elements_array[i] == element then
+			table.remove(elements_array, i)
+
+			break
+		end
+	end
+
+	local ui_renderer = (element_name ~= "ViewElementInventoryWeaponPreview" or element_name ~= "ViewElementInputLegend") and self._ui_default_renderer or self._ui_renderer
+
+	element:destroy(ui_renderer)
+
+	elements[reference_name] = nil
 end
 
 return InventoryWeaponDetailsView

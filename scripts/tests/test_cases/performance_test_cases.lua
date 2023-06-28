@@ -82,7 +82,7 @@ PerformanceTestCases = {
 			TestifySnippets.send_telemetry_batch()
 		end)
 	end,
-	performance_milliseconds_per_frame = function (mission_key)
+	performance_milliseconds_per_frame = function (mission_key, circumstance)
 		Testify:run_case(function (dt, t)
 			Log.set_category_log_level("Telemetry", Log.DEBUG)
 
@@ -100,7 +100,7 @@ PerformanceTestCases = {
 				TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			end
 
-			TestifySnippets.load_mission(mission_key)
+			TestifySnippets.load_mission(mission_key, nil, nil, circumstance)
 			Testify:make_request("wait_for_state_gameplay_reached")
 			TestifySnippets.wait_for_mission_intro()
 
@@ -125,6 +125,10 @@ PerformanceTestCases = {
 				performance_measurements = Testify:make_request("stop_measuring_performance")
 				local mission_name = Testify:make_request("current_mission")
 
+				if circumstance then
+					mission_name = mission_name .. "_" .. circumstance
+				end
+
 				Testify:make_request("create_telemetry_event", telemetry_event_name, mission_name, camera, performance_measurements)
 			end
 
@@ -132,7 +136,7 @@ PerformanceTestCases = {
 			TestifySnippets.send_telemetry_batch()
 		end)
 	end,
-	performance_milliseconds_per_frame_mission_server = function (mission_key)
+	performance_milliseconds_per_frame_mission_server = function (mission_key, circumstance)
 		Testify:run_case(function (dt, t)
 			Log.set_category_log_level("Telemetry", Log.DEBUG)
 
@@ -158,6 +162,10 @@ PerformanceTestCases = {
 
 				performance_measurements = Testify:make_request("stop_measuring_performance")
 				local mission_name = Testify:make_request("current_mission")
+
+				if circumstance then
+					mission_name = mission_name .. "_" .. circumstance
+				end
 
 				Testify:make_request("create_telemetry_event", telemetry_event_name, mission_name, camera, performance_measurements)
 			end

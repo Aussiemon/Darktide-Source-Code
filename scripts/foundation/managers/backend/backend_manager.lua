@@ -14,6 +14,7 @@ local Interface = {
 	"url_request",
 	"get_server_time"
 }
+local SLOW_INTERNET_DELAY_NOTIFICATION_S = 300
 local LIMIT_RESPONSE_TIME_WARNING_MS = 2000
 local TITLE_REQUEST_RETRY_COUNT = 5
 local TIME_SYNC_STATES = table.enum("not_started", "running", "failed", "synced")
@@ -47,6 +48,7 @@ BackendManager.init = function (self, default_headers_ctr)
 	self._promises = {}
 	self._initialized = false
 	self._initialize_promise = nil
+	self._slow_internet_notification_delay = 0
 	self.interfaces = BackendInterface.new()
 	self._inflight_title_requests = {}
 	self._title_request_retry_queue = {}
@@ -109,6 +111,23 @@ BackendManager.update = function (self, dt, t)
 					end
 				else
 					self:sync_time_result(t, id, result_mapping)
+				end
+			end
+		end
+
+		if not DEDICATED_SERVER then
+			self._slow_internet_notification_delay = math.max(self._slow_internet_notification_delay - dt, 0)
+			local current_time = Managers.time:time("main")
+
+			for _, inflight_request in pairs(self._inflight_title_requests) do
+				local time_in_flight = 1000 * (current_time - inflight_request.start_time)
+
+				if self._slow_internet_notification_delay == 0 and LIMIT_RESPONSE_TIME_WARNING_MS < time_in_flight then
+					Managers.event:trigger("event_add_notification_message", "alert", {
+						text = Localize("loc_popup_description_slow_internet")
+					})
+
+					self._slow_internet_notification_delay = SLOW_INTERNET_DELAY_NOTIFICATION_S
 				end
 			end
 		end
@@ -349,7 +368,8 @@ BackendManager.title_request = function (self, path, options)
 			path = path,
 			options = options,
 			should_cache = should_cache,
-			operation_identifier = operation_identifier
+			operation_identifier = operation_identifier,
+			start_time = Managers.time:time("main")
 		}
 
 		promise:next(function (v)

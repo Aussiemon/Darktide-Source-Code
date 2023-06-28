@@ -1,6 +1,7 @@
 local SaveData = class("SaveData")
 local default_hold = PLATFORM == "win32"
 SaveData.default_account_data = {
+	crossplay_accepted = false,
 	input_settings = {
 		controller_layout = "default",
 		controller_look_scale = 1,

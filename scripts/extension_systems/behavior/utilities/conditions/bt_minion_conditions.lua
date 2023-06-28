@@ -517,6 +517,14 @@ conditions.daemonhost_can_warp_grab = function (unit, blackboard, scratchpad, co
 
 	local perception_component = blackboard.perception
 	local target_unit = perception_component.target_unit
+	local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+	local target_breed = target_unit_data_extension:breed()
+	local Breed = require("scripts/utilities/breed")
+
+	if not Breed.is_player(target_breed) then
+		return false
+	end
+
 	local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 	local character_state_component = unit_data_extension:read_component("character_state")
 	local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
@@ -717,6 +725,13 @@ conditions.beast_of_nurgle_has_consume_target = function (unit, blackboard, scra
 	local perception_component = blackboard.perception
 	local target_unit = perception_component.target_unit
 	local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+	local target_breed = target_unit_data_extension:breed()
+	local Breed = require("scripts/utilities/breed")
+
+	if not Breed.is_player(target_breed) then
+		return false
+	end
+
 	local character_state_component = target_unit_data_extension:read_component("character_state")
 	local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 	local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
@@ -803,6 +818,12 @@ conditions.beast_of_nurgle_should_vomit = function (unit, blackboard, scratchpad
 	local wanted_distance = condition_args.wanted_distance
 
 	if wanted_distance < target_distance then
+		return false
+	end
+
+	local consumed_unit = behavior_component.consumed_unit
+
+	if HEALTH_ALIVE[consumed_unit] and target_unit == consumed_unit then
 		return false
 	end
 
@@ -904,6 +925,7 @@ conditions.beast_of_nurgle_melee_tail_whip = function (unit, blackboard, scratch
 	local perception_extension = ScriptUnit.extension(unit, "perception_system")
 	local perception_component = blackboard.perception
 	local target_unit = perception_component.target_unit
+	local Breed = require("scripts/utilities/breed")
 
 	for i = 1, num_valid_target_units do
 		local player_unit = target_units[i]
@@ -913,8 +935,8 @@ conditions.beast_of_nurgle_melee_tail_whip = function (unit, blackboard, scratch
 
 			if has_line_of_sight_to_target then
 				local target_unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-				local character_state_component = target_unit_data_extension:read_component("character_state")
-				local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
+				local character_state_component = Breed.is_player(target_unit_data_extension:breed()) and target_unit_data_extension:read_component("character_state")
+				local is_disabled = character_state_component and PlayerUnitStatus.is_disabled(character_state_component)
 
 				if not is_disabled then
 					local player_position = POSITION_LOOKUP[player_unit]
@@ -979,8 +1001,9 @@ conditions.beast_of_nurgle_wants_to_run_away = function (unit, blackboard, scrat
 
 	local health_extension = ScriptUnit.extension(consumed_unit, "health_system")
 	local permanent_damage_taken_percent = health_extension:permanent_damage_taken_percent()
+	local required_permanent_damage_taken_percent = Managers.state.difficulty:get_table_entry_by_challenge(action_data.required_permanent_damage_taken_percent)
 
-	if permanent_damage_taken_percent >= 0.5 then
+	if required_permanent_damage_taken_percent <= permanent_damage_taken_percent then
 		return false
 	end
 
@@ -1191,8 +1214,10 @@ end
 
 conditions.chaos_spawn_should_leap = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	local behavior_component = blackboard.behavior
+	local perception_component = blackboard.perception
+	local target_unit = perception_component.target_unit
 
-	if not is_running and behavior_component.move_state == "attacking" then
+	if not is_running and (behavior_component.move_state == "attacking" or not HEALTH_ALIVE[target_unit]) then
 		return false
 	end
 
@@ -1293,6 +1318,13 @@ conditions.poxwalker_bomber_is_dead = function (unit, blackboard, scratchpad, co
 	end
 
 	return false
+end
+
+conditions.renegade_twin_captain_should_disappear = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local should_disappear = behavior_component.should_disappear
+
+	return should_disappear
 end
 
 return conditions

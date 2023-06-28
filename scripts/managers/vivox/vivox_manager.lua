@@ -31,7 +31,6 @@ VivoxManager.init = function (self)
 	self._channel_host_peer_id = {}
 	self._input_service = Managers.input:get_input_service("Ingame")
 	self._party_id_session_handles = {}
-	self._tx_session_state = nil
 	self._time_since_mute_local_mic = nil
 
 	Managers.event:register(self, "player_mute_status_changed", "player_mute_status_changed")
@@ -131,6 +130,16 @@ VivoxManager.login = function (self, peer_id, account_id, vivox_token)
 	else
 		Log.warning("VivoxManager", "Already logged in.")
 	end
+end
+
+VivoxManager.logout = function (self)
+	if not self:is_logged_in() then
+		Log.warning("VivoxManager", "Already logged out")
+
+		return
+	end
+
+	Vivox.logout(self._account_handle)
 end
 
 VivoxManager.join_chat_channel = function (self, channel, host_peer_id, voice, text, tag, vivox_token)
@@ -305,16 +314,6 @@ VivoxManager.update = function (self, dt, t)
 			self:_poll_party()
 		end
 	end
-
-	if self._tx_session_state and self._tx_session_state.tx_session_handle then
-		local sessiongroup_handles = table.keys(self._tx_session_state.no_tx_sessiongroup_handles)
-
-		if #sessiongroup_handles == 0 then
-			Vivox.set_tx_session(self._tx_session_state.tx_session_handle)
-
-			self._tx_session_state = nil
-		end
-	end
 end
 
 local function login_state_enum(vx_login_state_change_state)
@@ -417,6 +416,38 @@ VivoxManager.player_mute_status_changed = function (self, account_id)
 				participant.is_mute_status_set = false
 			end
 		end
+	end
+end
+
+VivoxManager.get_capture_devices = function (self)
+	return self._capture_devices
+end
+
+VivoxManager.set_capture_device = function (self, device_id)
+	local found_device, default_device = nil
+
+	for _, device in ipairs(self:get_capture_devices()) do
+		if device.device == device_id then
+			found_device = device
+		end
+
+		if device.device == "Default System Device" then
+			default_device = device
+		end
+	end
+
+	if not found_device then
+		Log.error("VivoxManager", "Could not find capture device with id: %s. Resetting to default", device_id)
+
+		self._current_capture_device = default_device
+
+		Vivox.set_capture_device(self._account_handle, default_device.device)
+	else
+		Log.info("VivoxManager", "Setting capture device to: %s, previously: %s", found_device.display_name, self._current_capture_device.display_name)
+
+		self._current_capture_device = found_device
+
+		Vivox.set_capture_device(self._account_handle, device_id)
 	end
 end
 
@@ -648,11 +679,13 @@ VivoxManager._handle_response = function (self, message)
 	elseif message.response == Vivox.ResponseType_GET_CAPTURE_DEVICES then
 		self._capture_devices = message.capture_devices
 		self._current_capture_device = message.current_capture_device
-	elseif message.response == Vivox.ResponseType_SET_TX_NO_SESSION then
-		local sessiongroup_handle = message.sessiongroup_handle
 
-		if self._tx_session_state then
-			self._tx_session_state.no_tx_sessiongroup_handles[sessiongroup_handle] = nil
+		if Application.user_setting and Application.user_setting("sound_settings") and Application.user_setting("sound_settings").capture_device then
+			local option = Application.user_setting("sound_settings").capture_device
+
+			if option ~= self._current_capture_device.device then
+				self:set_capture_device(option)
+			end
 		end
 	end
 end
@@ -663,10 +696,6 @@ VivoxManager._handle_response_error = function (self, message)
 	if message.response_type_string == "resp_session_set_participant_mute_for_me" and message.response_status_code == 20000 then
 		filter_exception = true
 	elseif message.response_type_string == "resp_sessiongroup_set_tx_no_session" and message.response_status_code == 1001 then
-		if self._tx_session_state then
-			self._tx_session_state.no_tx_sessiongroup_handles = {}
-		end
-
 		filter_exception = true
 	elseif message.response_status_code == 1001 then
 		filter_exception = true
@@ -782,18 +811,7 @@ VivoxManager._update_transmitting_channel_priority = function (self)
 	end
 
 	if priority_channel then
-		local sessiongroup_handles = {}
-
-		for _, session in pairs(self._sessions) do
-			sessiongroup_handles[session.sessiongroup_handle] = true
-
-			Vivox.set_tx_no_session(session.sessiongroup_handle)
-		end
-
-		self._tx_session_state = {
-			no_tx_sessiongroup_handles = sessiongroup_handles,
-			tx_session_handle = priority_channel.session_handle
-		}
+		Vivox.set_tx_session(priority_channel.session_handle)
 	end
 end
 

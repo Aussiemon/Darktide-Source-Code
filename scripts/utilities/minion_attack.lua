@@ -58,6 +58,15 @@ MinionAttack.aim_at_target = function (unit, scratchpad, t, action_data)
 end
 
 MinionAttack.aim_at_position = function (unit, scratchpad, t, action_data, target_position)
+	local perception_component = scratchpad.perception_component
+	local target_unit = perception_component.target_unit
+
+	if scratchpad.perception_extension:has_forced_aim(target_unit) then
+		scratchpad.perception_extension:reset_forced_aim(target_unit)
+
+		return false
+	end
+
 	local aim_node = Unit.node(unit, scratchpad.aim_node_name)
 	local unit_position = Unit.world_position(unit, aim_node)
 	local to_target = target_position - unit_position
@@ -293,7 +302,7 @@ MinionAttack.init_scratchpad_shooting_variables = function (unit, scratchpad, ac
 
 	if has_line_of_sight and action_data.attack_intensity_type then
 		local target_unit = perception_component.target_unit
-		local attack_allowed = AttackIntensity.minion_can_attack(unit, action_data.attack_intensity_type, target_unit)
+		local attack_allowed = ALIVE[target_unit] and AttackIntensity.minion_can_attack(unit, action_data.attack_intensity_type, target_unit)
 
 		if attack_allowed then
 			local ignore_attack_intensity = false
@@ -344,14 +353,19 @@ local DEFAULT_SHOOT_ALERT_ALLIES_RADIUS = 12
 local DEFAULT_FIRST_SHOOT_TIMING = 0.5
 
 MinionAttack.start_shooting = function (unit, scratchpad, t, action_data, optional_shoot_timing, optional_ignore_add_intensity)
+	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+	local stat_buffs = buff_extension:stat_buffs()
+	local ranged_attack_speed = stat_buffs.ranged_attack_speed or 1
 	scratchpad.shots_fired = 0
 	local first_shoot_timing = optional_shoot_timing or DEFAULT_FIRST_SHOOT_TIMING
-	scratchpad.next_shoot_timing = t + first_shoot_timing
+	scratchpad.next_shoot_timing = t + first_shoot_timing / ranged_attack_speed
 	local num_shots = action_data.num_shots
 
 	if num_shots then
 		local diff_num_shots = Managers.state.difficulty:get_table_entry_by_challenge(num_shots)
-		scratchpad.num_shots = math.random(diff_num_shots[1], diff_num_shots[2])
+		local shoot_template = action_data.shoot_template
+		local minion_num_shots_modifier = shoot_template.shotgun_blast and 1 or stat_buffs.minion_num_shots_modifier or 1
+		scratchpad.num_shots = math.random(diff_num_shots[1], diff_num_shots[2]) * minion_num_shots_modifier
 	end
 
 	scratchpad.shooting = true
@@ -383,6 +397,8 @@ MinionAttack.start_shooting = function (unit, scratchpad, t, action_data, option
 	if before_shoot_effect_template_timing and not scratchpad.before_shoot_effect_template_timing then
 		scratchpad.before_shoot_effect_template_timing = t + first_shoot_timing - before_shoot_effect_template_timing
 	end
+
+	scratchpad.shoot_attack_speed = ranged_attack_speed
 end
 
 local function _handle_shoot_dodge(unit, scratchpad, t, action_data, fx_system)
@@ -461,6 +477,7 @@ MinionAttack.update_shooting = function (unit, scratchpad, t, action_data)
 		local time_per_shot = action_data.time_per_shot
 		local diff_time_per_shot = Managers.state.difficulty:get_table_entry_by_challenge(time_per_shot)
 		time_per_shot = math.random_range(diff_time_per_shot[1], diff_time_per_shot[2])
+		time_per_shot = time_per_shot / scratchpad.shoot_attack_speed
 		scratchpad.shots_fired = scratchpad.shots_fired + 1
 		scratchpad.next_shoot_timing = t + time_per_shot
 

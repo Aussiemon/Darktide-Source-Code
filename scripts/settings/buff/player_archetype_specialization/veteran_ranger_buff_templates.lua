@@ -13,7 +13,7 @@ local SpecialRulesSetting = require("scripts/settings/ability/special_rules_sett
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local Stamina = require("scripts/utilities/attack/stamina")
 local Sway = require("scripts/utilities/sway")
-local TalentSettings = require("scripts/settings/buff/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local attack_types = AttackSettings.attack_types
@@ -791,7 +791,7 @@ templates.veteran_ranger_frag_grenade_bleed = {
 	end
 }
 
-local function is_in_weapon_alternate_fire_with_stammina(template_data, template_context)
+local function is_in_weapon_alternate_fire_with_stamina(template_data, template_context)
 	local wielded_slot = template_data.inventory_component.wielded_slot
 
 	if wielded_slot == "none" then
@@ -848,7 +848,7 @@ templates.veteran_ranger_ads_stamina_boost = {
 		return template_data.is_active
 	end,
 	update_func = function (template_data, template_context, dt, t)
-		local is_active, is_alternate_fire_active = is_in_weapon_alternate_fire_with_stammina(template_data, template_context)
+		local is_active, is_alternate_fire_active = is_in_weapon_alternate_fire_with_stamina(template_data, template_context)
 		template_data.is_active = is_active
 
 		if not is_alternate_fire_active then

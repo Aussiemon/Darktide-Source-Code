@@ -18,12 +18,6 @@ BaseInteraction.interactor_condition_func = function (self, interactor_unit, int
 end
 
 BaseInteraction.interactee_condition_func = function (self, interactee_unit)
-	local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
-
-	if interactee_extension:block_text() then
-		return false
-	end
-
 	return true
 end
 
@@ -40,7 +34,7 @@ end
 BaseInteraction.hud_block_text = function (self, interactor_unit, interactee_unit, target_node)
 	local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
 
-	return interactee_extension:block_text()
+	return interactee_extension:block_text(interactor_unit)
 end
 
 BaseInteraction.marker_offset = function (self)

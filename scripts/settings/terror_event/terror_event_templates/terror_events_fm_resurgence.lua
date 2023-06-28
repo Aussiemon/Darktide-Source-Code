@@ -36,6 +36,20 @@ local template = {
 			1,
 			"event_fort_resurgence_f",
 			1
+		},
+		fm_resurgence_fort_flush = {
+			"event_fort_upper_flush",
+			1,
+			"event_fort_upper_flush_2",
+			1,
+			"event_fort_upper_flush_3",
+			1
+		},
+		fm_resurgence_fort_ranged_flush = {
+			"event_fort_ranged_flush_1",
+			1,
+			"event_fort_ranged_flush_2",
+			1
 		}
 	},
 	events = {
@@ -655,13 +669,17 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_fort_event_right",
 				limit_spawners = 2,
-				points = 18,
+				points = 14,
 				breed_tags = {
 					{
 						"melee",
 						"horde"
 					}
 				}
+			},
+			{
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_fort_ranged_flush"
 			},
 			{
 				"try_inject_special_minion",
@@ -726,13 +744,17 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_fort_event_left",
 				limit_spawners = 2,
-				points = 18,
+				points = 14,
 				breed_tags = {
 					{
 						"melee",
 						"horde"
 					}
 				}
+			},
+			{
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_fort_ranged_flush"
 			},
 			{
 				"delay",
@@ -829,6 +851,10 @@ local template = {
 				template_name = "standard_melee"
 			},
 			{
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_fort_flush"
+			},
+			{
 				"delay",
 				duration = 7
 			},
@@ -919,7 +945,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_fort_event_right",
 				limit_spawners = 2,
-				points = 18,
+				points = 14,
 				breed_tags = {
 					{
 						"melee",
@@ -961,6 +987,14 @@ local template = {
 				}
 			},
 			{
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_fort_flush"
+			},
+			{
+				"delay",
+				duration = 3
+			},
+			{
 				"continue_when",
 				duration = 35,
 				condition = function ()
@@ -983,7 +1017,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_fort_event_wall",
 				limit_spawners = 2,
-				points = 10,
+				points = 6,
 				breed_tags = {
 					{
 						"melee",
@@ -1009,6 +1043,10 @@ local template = {
 				duration = 7
 			},
 			{
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_fort_ranged_flush"
+			},
+			{
 				"spawn_by_points",
 				spawner_group = "spawner_fort_event_left",
 				limit_spawners = 1,
@@ -1022,7 +1060,15 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 7
+				duration = 3
+			},
+			{
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_fort_flush"
+			},
+			{
+				"delay",
+				duration = 4
 			},
 			{
 				"spawn_by_points",
@@ -1104,7 +1150,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "spawner_fort_event_wall",
 				limit_spawners = 2,
-				points = 14,
+				points = 10,
 				breed_tags = {
 					{
 						"melee",
@@ -1127,7 +1173,15 @@ local template = {
 			},
 			{
 				"delay",
-				duration = 7
+				duration = 3
+			},
+			{
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_fort_flush"
+			},
+			{
+				"delay",
+				duration = 4
 			},
 			{
 				"spawn_by_points",
@@ -1140,6 +1194,14 @@ local template = {
 						"elite"
 					}
 				}
+			},
+			{
+				"start_random_terror_event",
+				start_event_name = "fm_resurgence_fort_ranged_flush"
+			},
+			{
+				"delay",
+				duration = 5
 			},
 			{
 				"continue_when",
@@ -1202,6 +1264,183 @@ local template = {
 				start_event_name = "fm_resurgence_fort_wave_2"
 			}
 		},
+		event_fort_upper_flush = {
+			{
+				"spawn_by_points",
+				proximity_spawners = true,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "traitor_base_upper_flush",
+				limit_spawners = 2,
+				points = 14,
+				breed_tags = {
+					{
+						"melee",
+						"horde"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 5
+			},
+			{
+				"try_inject_special_minion",
+				spawner_group = "traitor_base_side_flush",
+				max_breed_amount = 1,
+				points = 6,
+				breed_tags = {
+					{
+						"special"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 5
+			}
+		},
+		event_fort_upper_flush_2 = {
+			{
+				"spawn_by_points",
+				proximity_spawners = true,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "traitor_base_side_flush",
+				limit_spawners = 3,
+				points = 14,
+				breed_tags = {
+					{
+						"melee",
+						"roamer"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 5
+			},
+			{
+				"try_inject_special_minion",
+				spawner_group = "traitor_base_side_flush",
+				max_breed_amount = 1,
+				points = 6,
+				breed_tags = {
+					{
+						"special"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 5
+			}
+		},
+		event_fort_upper_flush_3 = {
+			{
+				"spawn_by_points",
+				proximity_spawners = true,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "traitor_base_side_flush",
+				limit_spawners = 3,
+				points = 10,
+				breed_tags = {
+					{
+						"melee",
+						"horde"
+					}
+				}
+			},
+			{
+				"spawn_by_points",
+				proximity_spawners = true,
+				spawner_group = "traitor_base_upper_flush",
+				limit_spawners = 2,
+				points = 6,
+				breed_tags = {
+					{
+						"melee",
+						"horde"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 5
+			}
+		},
+		event_fort_ranged_flush_1 = {
+			{
+				"spawn_by_points",
+				inverse_proximity_spawners = true,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "traitor_base_side_flush",
+				limit_spawners = 3,
+				points = 12,
+				breed_tags = {
+					{
+						"far",
+						"roamer"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 5
+			},
+			{
+				"spawn_by_points",
+				inverse_proximity_spawners = true,
+				spawner_group = "traitor_base_side_flush",
+				limit_spawners = 3,
+				points = 8,
+				breed_tags = {
+					{
+						"far",
+						"elite"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 5
+			}
+		},
+		event_fort_ranged_flush_2 = {
+			{
+				"spawn_by_points",
+				inverse_proximity_spawners = true,
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "traitor_base_side_flush",
+				limit_spawners = 3,
+				points = 16,
+				breed_tags = {
+					{
+						"far",
+						"roamer"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 5
+			},
+			{
+				"try_inject_special_minion",
+				inverse_proximity_spawners = true,
+				max_breed_amount = 1,
+				spawner_group = "traitor_base_side_flush",
+				limit_spawners = 1,
+				points = 6,
+				breed_tags = {
+					{
+						"special"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 5
+			}
+		},
 		event_fort_finale = {
 			{
 				"play_2d_sound",
@@ -1253,7 +1492,7 @@ local template = {
 			},
 			{
 				"continue_when",
-				duration = 300,
+				duration = 110,
 				condition = function ()
 					return TerrorEventQueries.num_alive_minions() == 0
 				end

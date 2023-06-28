@@ -137,6 +137,16 @@ Characters.set_specialization = function (self, character_id, specialization)
 	})
 end
 
+Characters.set_talents_v2 = function (self, character_id, talents)
+	return self:set_data(character_id, "vocation", {
+		talents = talents
+	})
+end
+
+Characters.get_talents_v2 = function (self, character_id)
+	return self:get_data(character_id, "vocation", "talents")
+end
+
 Characters.set_talents = function (self, character_id, talents)
 	return self:set_data(character_id, "career", {
 		talents = talents

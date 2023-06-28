@@ -121,7 +121,7 @@ ActionHandler.fixed_update = function (self, dt, t)
 			if action_complete then
 				local action_settings = running_action:action_settings()
 
-				self:_finish_action(handler_data, "action_complete", nil, t)
+				self:_finish_action(handler_data, "action_complete", nil, t, nil)
 
 				local stop_input = action_settings.stop_input
 
@@ -503,7 +503,7 @@ ActionHandler.stop_action = function (self, id, reason, data, t, actions, action
 
 	if finish_action then
 		self:_handle_action_input_on_stop_action(id, t, running_action)
-		self:_finish_action(handler_data, reason, data, t)
+		self:_finish_action(handler_data, reason, data, t, nil)
 	end
 end
 
@@ -906,7 +906,7 @@ ActionHandler._update_stop_input = function (self, id, handler_data, t, conditio
 
 	if action_input == stop_input then
 		action_input_extension:consume_next_input(action_component_name, t)
-		self:_finish_action(handler_data, "hold_input_released", nil, t)
+		self:_finish_action(handler_data, "hold_input_released", nil, t, nil)
 
 		return
 	end
@@ -922,7 +922,7 @@ ActionHandler._update_stop_input = function (self, id, handler_data, t, conditio
 			local running_action_input = running_action_chain_config.input_name
 
 			if running_action_input == stop_input then
-				self:_finish_action(handler_data, "hold_input_released", nil, t)
+				self:_finish_action(handler_data, "hold_input_released", nil, t, nil)
 
 				return running_action_input
 			end

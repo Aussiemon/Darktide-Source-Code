@@ -5,9 +5,9 @@ local ColorUtilities = require("scripts/utilities/ui/colors")
 local highlight_size_addition = 10
 
 local function list_item_focused_visibility_function(content, style)
-	local hotspot = content.hotspot or content.parent.hotspot
+	local hotspot = content.hotspot or content.parent and content.parent.hotspot
 
-	return (hotspot.is_hover or hotspot.is_selected) and not content.disabled or hotspot.is_focused
+	return hotspot and ((hotspot.is_hover or hotspot.is_selected) and not content.disabled or hotspot.is_focused)
 end
 
 local function list_item_highight_focused_visibility_function(content, style)
@@ -80,8 +80,11 @@ ListHeaderPassTemplates.list_header = function (header_width, height, use_is_foc
 
 				content.anim_exclusive_focus_progress = anim_exclusive_focus_progress
 			end
-		},
-		{
+		}
+	}
+
+	if header_width > 0 then
+		passes[#passes + 1] = {
 			pass_type = "texture",
 			style_id = "background_selected",
 			value = "content/ui/materials/buttons/background_selected_faded",
@@ -101,8 +104,8 @@ ListHeaderPassTemplates.list_header = function (header_width, height, use_is_foc
 				style.color[1] = 255 * content.highlight_progress
 			end,
 			visibility_function = list_item_focused_visibility_function
-		},
-		{
+		}
+		passes[#passes + 1] = {
 			pass_type = "texture",
 			style_id = "frame_highlight",
 			value = "content/ui/materials/buttons/background_selected_edge",
@@ -135,8 +138,8 @@ ListHeaderPassTemplates.list_header = function (header_width, height, use_is_foc
 				style.hdr = progress == 1
 			end,
 			visibility_function = list_item_focused_visibility_function
-		},
-		{
+		}
+		passes[#passes + 1] = {
 			style_id = "list_header",
 			pass_type = "text",
 			value = "n/a",
@@ -144,7 +147,7 @@ ListHeaderPassTemplates.list_header = function (header_width, height, use_is_foc
 			style = header_font_style,
 			change_function = highlight_color_change_function
 		}
-	}
+	end
 
 	return passes
 end

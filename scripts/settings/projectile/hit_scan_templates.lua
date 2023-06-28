@@ -19,7 +19,6 @@ WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ripperguns/settings_templates/rippergun_hitscan_templates", hit_scan_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/shotguns/settings_templates/shotgun_hitscan_templates", hit_scan_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_pistols/settings_templates/stub_pistol_hitscan_templates", hit_scan_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/stub_rifles/settings_templates/stub_rifle_hitscan_templates", hit_scan_templates, loaded_template_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/ogryn_heavystubbers/settings_templates/ogryn_heavystubber_hitscan_templates", hit_scan_templates, loaded_template_files)
 
 hit_scan_templates.lasgun_assault = {

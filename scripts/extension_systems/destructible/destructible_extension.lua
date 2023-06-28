@@ -37,13 +37,14 @@ DestructibleExtension._disable_nav_volume = function (self)
 	end
 end
 
-DestructibleExtension.setup_from_component = function (self, depawn_timer_duration, despawn_when_destroyed, mass, speed, force_direction_type, start_visible, is_nav_gate, broadphase_radius)
+DestructibleExtension.setup_from_component = function (self, depawn_timer_duration, despawn_when_destroyed, mass, speed, direction, force_direction_type, start_visible, is_nav_gate, broadphase_radius)
 	self._despawn_when_destroyed = despawn_when_destroyed
 	self._depawn_timer_duration = depawn_timer_duration
 	self._broadphase_radius = broadphase_radius
 	self._stages_info = {
 		mass = mass,
 		speed = speed,
+		direction = direction,
 		force_direction_type = force_direction_type,
 		start_visible = start_visible
 	}
@@ -60,7 +61,7 @@ DestructibleExtension.setup_stages = function (self)
 	local unit = self._unit
 	local health_extension = ScriptUnit.has_extension(unit, "health_system")
 	local info = self._stages_info
-	self._destruction_info = DestructibleUtilities.setup_stages(unit, info.mass, info.speed, info.force_direction_type, health_extension)
+	self._destruction_info = DestructibleUtilities.setup_stages(unit, info.mass, info.speed, info.direction, info.force_direction_type, health_extension)
 
 	self:set_visibility(self._stages_info.start_visible)
 end

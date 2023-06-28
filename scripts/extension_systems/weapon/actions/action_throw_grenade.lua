@@ -6,9 +6,7 @@ local LagCompensation = require("scripts/utilities/lag_compensation")
 local MasterItems = require("scripts/backend/master_items")
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
 local Vo = require("scripts/utilities/vo")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local ActionThrowGrenade = class("ActionThrowGrenade", "ActionWeaponBase")
-local locomotion_states = ProjectileLocomotionSettings.states
 
 ActionThrowGrenade.init = function (self, action_context, action_params, action_settings)
 	ActionThrowGrenade.super.init(self, action_context, action_params, action_settings)

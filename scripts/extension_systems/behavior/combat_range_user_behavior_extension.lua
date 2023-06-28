@@ -51,6 +51,7 @@ CombatRangeUserBehaviorExtension._init_blackboard_components = function (self, b
 	behavior_component.lock_combat_range_switch = false
 	self._behavior_component = behavior_component
 	self._perception_component = blackboard.perception
+	self._starting_combat_range = starting_combat_range
 
 	if self._phase_template then
 		local phase_component = Blackboard.write_component(blackboard, "phase")
@@ -111,11 +112,23 @@ CombatRangeUserBehaviorExtension.update_combat_range = function (self, unit, bla
 		end
 	end
 
+	local weapon_switch_component = self._weapon_switch_component
+
 	if switch_is_locked or not HEALTH_ALIVE[target_unit] or not HEALTH_ALIVE[unit] then
+		if not HEALTH_ALIVE[target_unit] and current_combat_range ~= self._starting_combat_range then
+			for i = 1, #combat_range_config do
+				local config = combat_range_config[i]
+
+				if config.switch_combat_range == self._starting_combat_range then
+					self:_switch_combat_range(unit, blackboard, config, weapon_switch_component, behavior_component, t)
+
+					break
+				end
+			end
+		end
+
 		return
 	end
-
-	local weapon_switch_component = self._weapon_switch_component
 
 	if weapon_switch_component.is_switching_weapons then
 		return
@@ -136,66 +149,7 @@ CombatRangeUserBehaviorExtension.update_combat_range = function (self, unit, bla
 			local should_switch_combat_range = _should_switch_combat_range(unit, blackboard, target_distance, config, target_unit, self._target_velocity_dot_duration)
 
 			if should_switch_combat_range then
-				local switch_weapon_slot = config.switch_weapon_slot
-				local wanted_combat_range = config.switch_combat_range
-
-				if switch_weapon_slot then
-					weapon_switch_component.wanted_weapon_slot = switch_weapon_slot
-					weapon_switch_component.wanted_combat_range = wanted_combat_range
-					weapon_switch_component.is_switching_weapons = true
-				else
-					behavior_component.combat_range = wanted_combat_range
-				end
-
-				if config.switch_phase then
-					local wanted_phase_name = self._phase_template[wanted_combat_range].entry_phase
-
-					if type(wanted_phase_name) == "table" then
-						local index = math.random(#wanted_phase_name)
-						wanted_phase_name = wanted_phase_name[index]
-					end
-
-					self._phase_component.wanted_phase = wanted_phase_name
-				end
-
-				local switch_anim_state = config.switch_anim_state
-
-				if switch_anim_state then
-					local animation_extension = ScriptUnit.extension(unit, "animation_system")
-
-					animation_extension:anim_event(switch_anim_state)
-				end
-
-				local fx_system = self._fx_system
-				local global_effect_id = self._global_effect_id
-
-				if global_effect_id then
-					fx_system:stop_template_effect(global_effect_id)
-				end
-
-				local wanted_combat_range_config = self._combat_range_config[wanted_combat_range]
-				local effect_template = wanted_combat_range_config.effect_template
-
-				if effect_template then
-					self._global_effect_id = fx_system:start_template_effect(effect_template, unit)
-				end
-
-				local sticky_time = config.sticky_time
-
-				if sticky_time then
-					behavior_component.combat_range_sticky_time = t + sticky_time
-				end
-
-				local enter_combat_range_flag = config.enter_combat_range_flag
-
-				if enter_combat_range_flag then
-					behavior_component.enter_combat_range_flag = true
-				end
-
-				local activate_slot_system = config.activate_slot_system
-				local slot_system = Managers.state.extension:system("slot_system")
-
-				slot_system:do_slot_search(unit, activate_slot_system)
+				self:_switch_combat_range(unit, blackboard, config, weapon_switch_component, behavior_component, t)
 
 				return
 			end
@@ -203,12 +157,75 @@ CombatRangeUserBehaviorExtension.update_combat_range = function (self, unit, bla
 	end
 end
 
+CombatRangeUserBehaviorExtension._switch_combat_range = function (self, unit, blackboard, config, weapon_switch_component, behavior_component, t)
+	local switch_weapon_slot = config.switch_weapon_slot
+	local wanted_combat_range = config.switch_combat_range
+
+	if switch_weapon_slot then
+		weapon_switch_component.wanted_weapon_slot = switch_weapon_slot
+		weapon_switch_component.wanted_combat_range = wanted_combat_range
+		weapon_switch_component.is_switching_weapons = true
+	else
+		behavior_component.combat_range = wanted_combat_range
+	end
+
+	if config.switch_phase then
+		local wanted_phase_name = self._phase_template[wanted_combat_range].entry_phase
+
+		if type(wanted_phase_name) == "table" then
+			local index = math.random(#wanted_phase_name)
+			wanted_phase_name = wanted_phase_name[index]
+		end
+
+		self._phase_component.wanted_phase = wanted_phase_name
+	end
+
+	local switch_anim_state = config.switch_anim_state
+
+	if switch_anim_state then
+		local animation_extension = ScriptUnit.extension(unit, "animation_system")
+
+		animation_extension:anim_event(switch_anim_state)
+	end
+
+	local fx_system = self._fx_system
+	local global_effect_id = self._global_effect_id
+
+	if global_effect_id then
+		fx_system:stop_template_effect(global_effect_id)
+	end
+
+	local wanted_combat_range_config = self._combat_range_config[wanted_combat_range]
+	local effect_template = wanted_combat_range_config.effect_template
+
+	if effect_template then
+		self._global_effect_id = fx_system:start_template_effect(effect_template, unit)
+	end
+
+	local sticky_time = config.sticky_time
+
+	if sticky_time then
+		behavior_component.combat_range_sticky_time = t + sticky_time
+	end
+
+	local enter_combat_range_flag = config.enter_combat_range_flag
+
+	if enter_combat_range_flag then
+		behavior_component.enter_combat_range_flag = true
+	end
+
+	local activate_slot_system = config.activate_slot_system
+	local slot_system = Managers.state.extension:system("slot_system")
+
+	slot_system:do_slot_search(unit, activate_slot_system)
+end
+
 function _get_combat_range_switch_distance(config, target_unit)
 	local locked_in_melee_distance = config.locked_in_melee_distance
 
 	if locked_in_melee_distance then
-		local attack_intensity_extension = ScriptUnit.extension(target_unit, "attack_intensity_system")
-		local is_locked_in_melee = attack_intensity_extension:locked_in_melee()
+		local attack_intensity_extension = ScriptUnit.has_extension(target_unit, "attack_intensity_system")
+		local is_locked_in_melee = attack_intensity_extension and attack_intensity_extension:locked_in_melee()
 
 		if is_locked_in_melee then
 			return locked_in_melee_distance

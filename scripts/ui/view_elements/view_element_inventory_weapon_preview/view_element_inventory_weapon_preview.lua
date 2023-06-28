@@ -362,7 +362,7 @@ ViewElementInventoryWeaponPreview.cb_start_experience_presentation = function (s
 	self._on_enter_anim_id = nil
 end
 
-ViewElementInventoryWeaponPreview.destroy = function (self)
+ViewElementInventoryWeaponPreview.destroy = function (self, ui_renderer)
 	if self._ui_background_renderer then
 		self._ui_background_renderer = nil
 
@@ -390,7 +390,7 @@ ViewElementInventoryWeaponPreview.destroy = function (self)
 		self._world_spawner = nil
 	end
 
-	ViewElementInventoryWeaponPreview.super.destroy(self)
+	ViewElementInventoryWeaponPreview.super.destroy(self, ui_renderer)
 end
 
 ViewElementInventoryWeaponPreview.draw = function (self, dt, t, ui_renderer, render_settings, input_service)

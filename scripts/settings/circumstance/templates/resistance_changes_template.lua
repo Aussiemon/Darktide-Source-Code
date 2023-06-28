@@ -54,16 +54,19 @@ local circumstance_templates = {
 		theme_tag = "default",
 		ui = {
 			description = "loc_circumstance_min_resistance_max_challenge_description",
-			icon = "content/ui/materials/icons/circumstances/more_resistance_01",
+			icon = "content/ui/materials/icons/circumstances/six_one_01",
 			display_name = "loc_circumstance_min_resistance_max_challenge_title"
 		},
 		mutators = {
-			"mutator_modify_challenge_resistance_scale_six_one",
+			"mutator_more_alive_specials",
+			"mutator_specials_required_challenge_rating",
 			"mutator_travel_distance_spawning_specials",
 			"mutator_travel_distance_spawning_hordes",
-			"mutator_more_alive_specials",
 			"mutator_higher_stagger_thresholds",
-			"mutator_no_encampments"
+			"mutator_no_encampments",
+			"mutator_move_specials_timer_when_horde_active",
+			"mutator_move_specials_timer_when_monster_active",
+			"mutator_modify_challenge_resistance_scale_six_one"
 		}
 	},
 	speedrun_challenge_01 = {
@@ -132,7 +135,10 @@ local circumstance_templates = {
 		mutators = {
 			"mutator_set_min_resistance",
 			"mutator_travel_distance_spawning_specials",
-			"mutator_travel_distance_spawning_hordes"
+			"mutator_travel_distance_spawning_hordes",
+			"mutator_no_hordes",
+			"mutator_only_none_roamer_packs",
+			"mutator_low_roamer_amount"
 		}
 	},
 	solo_mode_01 = {
@@ -148,7 +154,8 @@ local circumstance_templates = {
 			"mutator_travel_distance_spawning_specials",
 			"mutator_travel_distance_spawning_hordes",
 			"mutator_subtract_resistance_02",
-			"mutator_half_boss_health"
+			"mutator_half_boss_health",
+			"mutator_movement_speed_on_spawn"
 		}
 	},
 	only_melee_01 = {
@@ -178,6 +185,32 @@ local circumstance_templates = {
 			"mutator_only_ranged_roamers",
 			"mutator_only_ranged_trickle_hordes",
 			"mutator_only_ranged_terror_events"
+		}
+	},
+	monster_specials_01 = {
+		wwise_state = "None",
+		theme_tag = "default",
+		ui = {
+			description = "loc_circumstance_dummy_only_melee_description",
+			icon = "content/ui/materials/icons/circumstances/more_resistance_01",
+			display_name = "loc_circumstance_waves_of_specials_more_resistance_title"
+		},
+		mutators = {
+			"mutator_monster_specials"
+		}
+	},
+	monster_specials_more_specials_more_resistance_01 = {
+		wwise_state = "None",
+		theme_tag = "default",
+		ui = {
+			description = "loc_circumstance_dummy_only_melee_description",
+			icon = "content/ui/materials/icons/circumstances/more_resistance_01",
+			display_name = "loc_circumstance_waves_of_specials_more_resistance_title"
+		},
+		mutators = {
+			"mutator_monster_specials",
+			"mutator_waves_of_specials",
+			"mutator_add_resistance"
 		}
 	},
 	only_melee_no_ammo_01 = {

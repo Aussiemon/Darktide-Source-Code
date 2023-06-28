@@ -4,6 +4,7 @@ local BreedCombatRanges = require("scripts/settings/breed/breed_combat_ranges")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BreedTerrorEventSettings = require("scripts/settings/breed/breed_terror_event_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionGibbingTemplates = require("scripts/managers/minion/minion_gibbing_templates")
 local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
@@ -25,7 +26,7 @@ local breed_data = {
 	use_bone_lod = true,
 	game_object_type = "minion_melee",
 	spawn_anim_state = "to_melee",
-	power_level_type = "renegade_default_melee",
+	power_level_type = "horde_default_melee",
 	unit_template_name = "minion",
 	faction_name = "chaos",
 	detection_radius = 15,
@@ -61,7 +62,7 @@ local breed_data = {
 		0.75,
 		0.75,
 		0.75,
-		3
+		2
 	},
 	gib_template = MinionGibbingTemplates.chaos_newly_infected,
 	stagger_durations = {
@@ -78,7 +79,8 @@ local breed_data = {
 		[stagger_types.medium] = 0.2,
 		[stagger_types.heavy] = 1.75,
 		[stagger_types.light_ranged] = 0.2,
-		[stagger_types.killshot] = 0.5
+		[stagger_types.killshot] = 0.5,
+		[stagger_types.explosion] = 4
 	},
 	impact_anim_override = {
 		damaged = {
@@ -96,19 +98,7 @@ local breed_data = {
 		"moving_attack_fwd_speed"
 	},
 	combat_range_data = BreedCombatRanges.chaos_poxwalker,
-	suppress_config = {
-		threshold = 15,
-		max_value = 20,
-		decay_speeds = {
-			melee = 0.05,
-			far = 0.2,
-			close = 0.2
-		},
-		immunity_duration = {
-			0.75,
-			1.25
-		}
-	},
+	suppress_config = MinionDifficultySettings.suppression.cultist_assault,
 	attack_intensity_cooldowns = {
 		melee = {
 			0.5,
@@ -387,7 +377,7 @@ local breed_data = {
 			[hit_zone_names.lower_right_leg] = 0.75
 		}
 	},
-	blackboard_component_config = BreedBlackboardComponentTemplates.melee_base
+	blackboard_component_config = BreedBlackboardComponentTemplates.melee_can_be_suppressed
 }
 
 return breed_data

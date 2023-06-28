@@ -1,19 +1,13 @@
 require("scripts/extension_systems/weapon/actions/action_ability_base")
 
-local Attack = require("scripts/utilities/attack/attack")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
-local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
-local Suppression = require("scripts/utilities/attack/suppression")
-local Toughness = require("scripts/utilities/toughness/toughness")
+local ShoutAbilityImplementation = require("scripts/extension_systems/ability/utilities/shout_ability_implementation")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local Vo = require("scripts/utilities/vo")
-local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local proc_events = BuffSettings.proc_events
-local special_rules = SpecialRulesSetting.special_rules
 local ActionShout = class("ActionShout", "ActionAbilityBase")
 local broadphase_results = {}
+local EXTERNAL_PROPERTIES = {}
 
 ActionShout.init = function (self, action_context, action_params, action_settings)
 	ActionShout.super.init(self, action_context, action_params, action_settings)
@@ -32,7 +26,7 @@ ActionShout.start = function (self, action_settings, t, time_scale, action_start
 	local player_unit = self._player_unit
 	local rotation = self._first_person_component.rotation
 	local forward = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
-	self._shout_direction = forward
+	local shout_direction = forward
 	local ability_template_tweak_data = self._ability_template_tweak_data
 	local self_buff_to_add = ability_template_tweak_data.buff_to_add
 	local slot_to_wield = action_settings.auto_wield_slot
@@ -70,6 +64,17 @@ ActionShout.start = function (self, action_settings, t, time_scale, action_start
 		end
 	end
 
+	local source_name = action_settings.sound_source or "head"
+	local sync_to_clients = action_settings.has_husk_sound
+	local include_client = false
+
+	table.clear(EXTERNAL_PROPERTIES)
+
+	local ability = self._ability
+	EXTERNAL_PROPERTIES.ability_template = ability and ability.ability_template
+
+	self._fx_extension:trigger_gear_wwise_event_with_source("shout", EXTERNAL_PROPERTIES, source_name, sync_to_clients, include_client)
+
 	if slot_to_wield then
 		local inventory_comp = ScriptUnit.extension(player_unit, "unit_data_system"):read_component("inventory")
 		local wielded_slot = inventory_comp.wielded_slot
@@ -104,163 +109,7 @@ ActionShout.start = function (self, action_settings, t, time_scale, action_start
 		return
 	end
 
-	table.clear(broadphase_results)
-
-	local side_system = Managers.state.extension:system("side_system")
-	local side = side_system.side_by_unit[player_unit]
-	local target_enemies = action_settings.target_enemies
-	local target_allies = action_settings.target_allies
-
-	if target_allies then
-		local player_units = side.valid_player_units
-		local buff_to_add = action_settings.buff_to_add
-		local revive = action_settings.revive_allies
-		local radius = action_settings.radius
-
-		for i = 1, #player_units do
-			local unit = player_units[i]
-			local position = POSITION_LOOKUP[unit]
-			local distance_sq = Vector3.distance_squared(player_position, position)
-
-			if ALIVE[unit] and distance_sq < radius * radius then
-				if buff_to_add then
-					local buff_extension = ScriptUnit.extension(unit, "buff_system")
-
-					buff_extension:add_internally_controlled_buff(buff_to_add, t, "owner_unit", player_unit)
-				end
-
-				local specialization_extension = ScriptUnit.has_extension(player_unit, "specialization_system")
-
-				if revive then
-					local side_extension = ScriptUnit.has_extension(unit, "side_system")
-					local is_player_unit = side_extension.is_player_unit
-
-					if specialization_extension then
-						local revive_special_rule = special_rules.shout_revives_allies
-						local has_special_rule = specialization_extension:has_special_rule(revive_special_rule)
-
-						if has_special_rule and is_player_unit then
-							local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
-							local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
-
-							if character_state_component and PlayerUnitStatus.is_knocked_down(character_state_component) then
-								local assisted_state_input_component = unit_data_extension:write_component("assisted_state_input")
-								assisted_state_input_component.force_assist = true
-							end
-						end
-					end
-				end
-
-				local toughness_special_rule = special_rules.shout_restores_toughness
-				local has_special_rule = specialization_extension:has_special_rule(toughness_special_rule)
-
-				if has_special_rule then
-					local recover_toughness_effect = action_settings.recover_toughness_effect
-
-					if recover_toughness_effect then
-						local fx_extension = ScriptUnit.extension(unit, "fx_system")
-
-						fx_extension:spawn_exclusive_particle(recover_toughness_effect, Vector3(0, 0, 1))
-					end
-
-					local toughness_percent = action_settings.toughness_replenish_percent or 1
-
-					Toughness.replenish_percentage(unit, toughness_percent, nil, "ability_shout")
-				end
-			end
-		end
-	end
-
-	if target_enemies then
-		local enemy_side_names = side:relation_side_names("enemy")
-		local ai_target_units = side.ai_target_units
-		local player_units = side.valid_enemy_player_units
-		local broadphase_system = Managers.state.extension:system("broadphase_system")
-		local broadphase = broadphase_system.broadphase
-		local radius = action_settings.radius
-		local num_hits = broadphase:query(player_position, radius, broadphase_results, enemy_side_names)
-		local damage_profile = action_settings.damage_profile
-		local damage_type = action_settings.damage_type
-		local power_level = action_settings.power_level or DEFAULT_POWER_LEVEL
-		local buff_to_add = action_settings.buff_to_add
-		local shout_direction = self._shout_direction
-		local shout_dot = action_settings.shout_dot
-		local specialization_extension = ScriptUnit.has_extension(player_unit, "specialization_system")
-
-		for i = 1, num_hits do
-			repeat
-				local enemy_unit = broadphase_results[i]
-
-				if not ai_target_units[enemy_unit] or player_units[enemy_unit] then
-					break
-				end
-
-				local minion_position = POSITION_LOOKUP[enemy_unit]
-				local attack_direction = Vector3.normalize(Vector3.flat(minion_position - player_position))
-
-				if Vector3.length_squared(attack_direction) == 0 then
-					local player_rotation = locomotion_component.rotation
-					attack_direction = Quaternion.forward(player_rotation)
-				end
-
-				local dot = Vector3.dot(shout_direction, attack_direction)
-
-				if not shout_dot or shout_dot and shout_dot < dot then
-					if buff_to_add then
-						local buff_extension = ScriptUnit.extension(enemy_unit, "buff_system")
-
-						buff_extension:add_internally_controlled_buff(buff_to_add, t, "owner_unit", player_unit)
-					end
-
-					local buff_special_rule = special_rules.shout_applies_buff_to_enemies
-					local has_special_rule = specialization_extension:has_special_rule(buff_special_rule)
-
-					if has_special_rule then
-						local buff_extension = ScriptUnit.extension(enemy_unit, "buff_system")
-						local buff_name = nil
-						local monster_buff_name = action_settings.special_rule_buff_enemy_monster
-
-						if monster_buff_name then
-							local unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
-							local breed = unit_data_extension:breed()
-							local is_monster = breed.tags.monster
-
-							if is_monster then
-								buff_name = monster_buff_name
-							else
-								buff_name = action_settings.special_rule_buff_enemy
-							end
-						else
-							buff_name = action_settings.special_rule_buff_enemy
-						end
-
-						buff_extension:add_internally_controlled_buff(buff_name, t)
-					end
-
-					local hit_zone_name = "torso"
-
-					Attack.execute(enemy_unit, damage_profile, "attack_direction", attack_direction, "power_level", power_level, "hit_zone_name", hit_zone_name, "damage_type", damage_type, "attacking_unit", player_unit)
-
-					local specialization_extension = ScriptUnit.has_extension(player_unit, "specialization_system")
-
-					if specialization_extension then
-						local special_rule = special_rules.shout_causes_suppression
-						local has_special_rule = specialization_extension:has_special_rule(special_rule)
-
-						if has_special_rule then
-							Suppression.apply_suppression(enemy_unit, player_unit, damage_profile, POSITION_LOOKUP[player_unit])
-						end
-					end
-				end
-			until true
-		end
-	end
-
-	local suppress_enemies = action_settings.suppress_enemies
-
-	if suppress_enemies then
-		self:_suppress_units(action_settings, t)
-	end
+	ShoutAbilityImplementation.execute(action_settings, player_unit, t, locomotion_component, shout_direction)
 
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local param_table = buff_extension:request_proc_event_param_table()
@@ -277,70 +126,6 @@ ActionShout.finish = function (self, reason, data, t, time_in_action, action_set
 
 	if wwise_state then
 		Wwise.set_state(wwise_state.group, wwise_state.off_state)
-	end
-end
-
-local broadphase_results = {}
-
-ActionShout._suppress_units = function (self, action_settings, t)
-	table.clear(broadphase_results)
-
-	local player_unit = self._player_unit
-	local side_system = Managers.state.extension:system("side_system")
-	local side = side_system.side_by_unit[player_unit]
-	local enemy_side_names = side:relation_side_names("enemy")
-	local player_position = POSITION_LOOKUP[player_unit]
-	local cone_dot = action_settings.cone_dot
-	local cone_range = action_settings.cone_range
-	local broadphase_system = Managers.state.extension:system("broadphase_system")
-	local broadphase = broadphase_system.broadphase
-	local num_hits = broadphase:query(player_position, cone_range, broadphase_results, enemy_side_names)
-	local rotation = self._first_person_component.rotation
-	local forward = Vector3.normalize(Vector3.flat(Quaternion.forward(rotation)))
-	local specialization_extension = ScriptUnit.has_extension(player_unit, "specialization_system")
-	local buff_special_rule = special_rules.shout_applies_buff_to_enemies
-	local has_special_rule_to_add_buffs = specialization_extension:has_special_rule(buff_special_rule)
-
-	for i = 1, num_hits do
-		local enemy_unit = broadphase_results[i]
-		local enemy_unit_position = POSITION_LOOKUP[enemy_unit]
-		local flat_direction = Vector3.flat(enemy_unit_position - player_position)
-		local direction = Vector3.normalize(flat_direction)
-		local dot = Vector3.dot(forward, direction)
-
-		if cone_dot < dot then
-			local blackboard = BLACKBOARDS[enemy_unit]
-			local perception_component = blackboard.perception
-			local is_alerted = perception_component.target_unit
-
-			if is_alerted then
-				local damage_profile = action_settings.damage_profile
-
-				Suppression.apply_suppression(enemy_unit, player_unit, damage_profile, player_position)
-			end
-
-			if has_special_rule_to_add_buffs then
-				local buff_extension = ScriptUnit.extension(enemy_unit, "buff_system")
-				local buff_name = nil
-				local monster_buff_name = action_settings.special_rule_buff_enemy_monster
-
-				if monster_buff_name then
-					local unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
-					local breed = unit_data_extension:breed()
-					local is_monster = breed.tags.monster
-
-					if is_monster then
-						buff_name = monster_buff_name
-					else
-						buff_name = action_settings.special_rule_buff_enemy
-					end
-				else
-					buff_name = action_settings.special_rule_buff_enemy
-				end
-
-				buff_extension:add_internally_controlled_buff(buff_name, t)
-			end
-		end
 	end
 end
 

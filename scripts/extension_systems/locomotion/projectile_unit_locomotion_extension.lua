@@ -110,6 +110,10 @@ ProjectileUnitLocomotionExtension.init = function (self, extension_init_context,
 	game_object_data.position = self._position:unbox()
 	game_object_data.rotation = self._rotation:unbox()
 	game_object_data.projectile_locomotion_state_id = NetworkLookup.projectile_locomotion_states[self._current_state]
+	local gameplay_safe_extents = {
+		Vector3.to_elements(Managers.state.out_of_bounds:soft_cap_extents())
+	}
+	self._gameplay_safe_extents = gameplay_safe_extents
 
 	self:_hide_pin()
 end
@@ -125,7 +129,7 @@ ProjectileUnitLocomotionExtension.has_been_marked_for_deletion = function (self)
 end
 
 ProjectileUnitLocomotionExtension.pre_update = function (self, unit, dt, t)
-	self:_update_out_of_bounds()
+	self._send_snapshot_this_frame = false
 end
 
 ProjectileUnitLocomotionExtension.fixed_update = function (self, unit, dt, t)
@@ -154,18 +158,13 @@ ProjectileUnitLocomotionExtension.fixed_update = function (self, unit, dt, t)
 		end
 	end
 
+	self:_update_out_of_bounds()
+
 	if MAX_SYNCHRONIZE_COUNTER < self._current_synchronize_counter then
 		local snapshot_id = self._snapshot_id % MAX_SNAPSHOT_ID + 1
-		local snapshot_game_object_data = self._snapshot_game_object_data
-		snapshot_game_object_data.snapshot_id = snapshot_id
-		snapshot_game_object_data.position = self._position:unbox()
-		snapshot_game_object_data.rotation = self._rotation:unbox()
-		snapshot_game_object_data.projectile_locomotion_state_id = NetworkLookup.projectile_locomotion_states[self._current_state]
-
-		GameSession.set_game_object_fields(self._game_session, self._game_object_id, snapshot_game_object_data)
-
 		self._snapshot_id = snapshot_id
 		self._current_synchronize_counter = 1
+		self._send_snapshot_this_frame = true
 	else
 		self._current_synchronize_counter = self._current_synchronize_counter + 1
 	end
@@ -173,14 +172,20 @@ end
 
 ProjectileUnitLocomotionExtension._update_out_of_bounds = function (self)
 	local unit = self._projectile_unit
+	local position = self._position:unbox()
+	local safe_extents = self._gameplay_safe_extents
 
-	if self._soft_cap_out_of_bounds_units[unit] then
-		self:switch_to_sleep(Vector3.zero(), Quaternion.identity())
+	for i = 1, 3 do
+		if safe_extents[i] < math.abs(position[i]) then
+			self:switch_to_sleep(Vector3.zero(), Quaternion.identity())
 
-		if self._handle_oob_despawning then
-			Managers.state.unit_spawner:mark_for_deletion(unit)
+			if self._handle_oob_despawning and not self._marked_for_deletion then
+				Managers.state.unit_spawner:mark_for_deletion(unit)
 
-			self._marked_for_deletion = true
+				self._marked_for_deletion = true
+			end
+
+			break
 		end
 	end
 end
@@ -213,6 +218,27 @@ ProjectileUnitLocomotionExtension.update = function (self, unit, dt, t)
 
 	if fx_extension then
 		fx_extension:set_speed_paramater(self:current_speed())
+	end
+end
+
+ProjectileUnitLocomotionExtension.post_update = function (self, unit, dt, t)
+	if self._send_snapshot_this_frame then
+		local snapshot_id = self._snapshot_id
+		local clamped_position = self._position:unbox()
+		local network_min = NetworkConstants.min_position * 0.95
+		local network_max = NetworkConstants.max_position * 0.95
+
+		for i = 1, 3 do
+			clamped_position[i] = math.clamp(clamped_position[i], network_min, network_max)
+		end
+
+		local snapshot_game_object_data = self._snapshot_game_object_data
+		snapshot_game_object_data.snapshot_id = snapshot_id
+		snapshot_game_object_data.position = clamped_position
+		snapshot_game_object_data.rotation = self._rotation:unbox()
+		snapshot_game_object_data.projectile_locomotion_state_id = NetworkLookup.projectile_locomotion_states[self._current_state]
+
+		GameSession.set_game_object_fields(self._game_session, self._game_object_id, snapshot_game_object_data)
 	end
 end
 
@@ -315,6 +341,12 @@ ProjectileUnitLocomotionExtension._update_true_flight = function (self, unit, dt
 		self:_apply_changes(locomotion_states.manual_physics, new_position, new_rotation, new_velocity, Vector3.zero(), new_target_position, new_target_unit, new_target_hit_zone)
 	else
 		self:switch_to_sleep(new_position, new_rotation)
+	end
+
+	if integration_data.time_without_target >= 2 and not self._marked_for_deletion then
+		Managers.state.unit_spawner:mark_for_deletion(unit)
+
+		self._marked_for_deletion = true
 	end
 end
 

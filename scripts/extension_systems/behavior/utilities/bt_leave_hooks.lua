@@ -45,8 +45,11 @@ local BtLeaveHooks = {
 		end
 	end,
 	captain_grenade_exit = function (unit, breed, blackboard, scratchpad, action_data, t, args)
-		local phase_component = Blackboard.write_component(blackboard, "phase")
-		phase_component.lock = false
+		if breed.phase_template then
+			local phase_component = Blackboard.write_component(blackboard, "phase")
+			phase_component.lock = false
+		end
+
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 		local wielded_slot_name = visual_loadout_extension:wielded_slot_name()
 		local exit_anim_states = args.exit_anim_states

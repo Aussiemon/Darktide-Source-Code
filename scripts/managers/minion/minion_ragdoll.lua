@@ -188,7 +188,6 @@ MinionRagdoll._remove_ragdoll = function (self, unit)
 
 	self._num_ragdolls = self._num_ragdolls - 1
 
-	Managers.state.decal:remove_linked_decals(unit)
 	Managers.state.unit_spawner:mark_for_deletion(unit)
 
 	self._removed_ragdolls[unit] = true

@@ -40,13 +40,13 @@ HudElementBlocking._update_shield_amount = function (self)
 		local unit_data_extension = player_extensions.unit_data
 
 		if unit_data_extension then
-			local specialization = unit_data_extension:specialization()
 			local stamina_component = unit_data_extension:read_component("stamina")
-			local stamina_template = specialization.stamina
+			local specialization = unit_data_extension:specialization()
+			local base_stamina_template = specialization.stamina
 
-			if stamina_component and stamina_template then
+			if stamina_component and base_stamina_template then
 				local player_unit = player_extensions.unit
-				local current, max = Stamina.current_and_max_value(player_unit, stamina_component, stamina_template)
+				local current, max = Stamina.current_and_max_value(player_unit, stamina_component, base_stamina_template)
 				shield_amount = max
 			end
 		end

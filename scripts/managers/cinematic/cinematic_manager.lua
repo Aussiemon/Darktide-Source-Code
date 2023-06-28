@@ -352,6 +352,10 @@ CinematicManager._play_next_in_queue = function (self)
 	end
 end
 
+CinematicManager.has_queued_stories = function (self)
+	return self._queued_stories[1] ~= nil
+end
+
 CinematicManager.active_camera = function (self)
 	if self._active_testify_camera then
 		return self._active_testify_camera, CameraModes.testify

@@ -1,4 +1,5 @@
 local Attack = require("scripts/utilities/attack/attack")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local AttackingUnitResolver = require("scripts/utilities/attack/attacking_unit_resolver")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
@@ -9,6 +10,7 @@ local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionDeath = require("scripts/utilities/minion_death")
 local Suppression = require("scripts/utilities/attack/suppression")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
+local attack_types = AttackSettings.attack_types
 local proc_events = BuffSettings.proc_events
 local DEFAULT_LERP_VALUE = WeaponTweakTemplateSettings.DEFAULT_LERP_VALUE
 local DEFALT_FALLBACK_LERP_VALUE = WeaponTweakTemplateSettings.DEFALT_FALLBACK_LERP_VALUE
@@ -17,21 +19,25 @@ local Explosion = {}
 local _get_radii, _play_effects = nil
 local hit_units = {}
 
-Explosion.create_explosion = function (world, physics_world, source_position, impact_normal, attacking_unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item_or_nil, origin_slot_or_nil, optional_attack_result_table)
+Explosion.create_explosion = function (world, physics_world, source_position, optional_impact_normal, attacking_unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item_or_nil, origin_slot_or_nil, optional_attack_result_table)
 	power_level = explosion_template.static_power_level or power_level
 
 	Managers.server_metrics:add_annotation("explosion_create", {
 		power_level = power_level
 	})
 
+	local attacking_unit_owner_unit = AttackingUnitResolver.resolve(attacking_unit)
+	local attacking_owner_buff_extension = ScriptUnit.has_extension(attacking_unit_owner_unit, "buff_system")
+	local attacker_owner_stat_buffs = attacking_owner_buff_extension and attacking_owner_buff_extension:stat_buffs()
+	local attacker_unit_data_extension = ScriptUnit.has_extension(attacking_unit, "unit_data_system")
+	local attacker_breed_or_nil = attacker_unit_data_extension and attacker_unit_data_extension:breed()
 	local lerp_values = Explosion.lerp_values(attacking_unit, explosion_template.name)
 	local t = FixedFrame.get_latest_fixed_time()
 	local collision_filter = explosion_template.collision_filter
-	local radius, close_radius = _get_radii(explosion_template, charge_level, lerp_values)
+	local radius, close_radius = _get_radii(explosion_template, charge_level, lerp_values, attack_type, attacker_owner_stat_buffs, attacker_breed_or_nil)
 	local hit_actors, num_actors = PhysicsWorld.immediate_overlap(physics_world, "position", source_position, "size", radius, "shape", "sphere", "types", "both", "collision_filter", collision_filter)
 	local override_friendly_fire = explosion_template.override_friendly_fire
 	local side_system = Managers.state.extension:system("side_system")
-	local attacking_unit_owner_unit = AttackingUnitResolver.resolve(attacking_unit)
 
 	table.clear(hit_units)
 
@@ -136,8 +142,6 @@ Explosion.create_explosion = function (world, physics_world, source_position, im
 		end
 	end
 
-	local attacking_owner_buff_extension = ScriptUnit.has_extension(attacking_unit_owner_unit, "buff_system")
-
 	if attacking_owner_buff_extension then
 		local param_table = attacking_owner_buff_extension:request_proc_event_param_table()
 
@@ -162,7 +166,7 @@ Explosion.create_explosion = function (world, physics_world, source_position, im
 		Suppression.apply_area_explosion_suppression(attacking_unit_owner_unit, suppression_settings, source_position, optional_relation, optional_include_self, progressed_lerp_values)
 	end
 
-	_play_effects(world, attacking_unit_owner_unit, explosion_template, charge_level, source_position, impact_normal, radius)
+	_play_effects(world, attacking_unit_owner_unit, explosion_template, charge_level, source_position, optional_impact_normal, radius)
 end
 
 local NO_LERP_VALUES = {}
@@ -207,7 +211,7 @@ Explosion.lerp_entry = function (entry, lerp_value)
 	return math.lerp(min, max, t)
 end
 
-function _get_radii(explosion_template, charge_level, lerp_values)
+function _get_radii(explosion_template, charge_level, lerp_values, attack_type, attacker_stat_buffs, attacker_breed_or_nil)
 	local radius, close_radius = nil
 
 	if not explosion_template.scalable_radius then
@@ -261,10 +265,10 @@ function _get_radii(explosion_template, charge_level, lerp_values)
 	return radius, close_radius
 end
 
-function _play_effects(world, attacking_unit, explosion_template, charge_level, source_position, impact_normal, radius)
+function _play_effects(world, attacking_unit, explosion_template, charge_level, source_position, optional_impact_normal, radius)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local fx_extension = player_unit_spawn_manager:owner(attacking_unit) and ScriptUnit.extension(attacking_unit, "fx_system")
-	local rotation = impact_normal and Quaternion.look(impact_normal) or Quaternion.identity()
+	local rotation = optional_impact_normal and Quaternion.look(optional_impact_normal) or Quaternion.identity()
 	local fx_system = Managers.state.extension:system("fx_system")
 	local charge_wwise_parameter_name = explosion_template.charge_wwise_parameter_name
 	local scalable_vfx = explosion_template.scalable_vfx

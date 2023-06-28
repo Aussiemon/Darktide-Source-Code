@@ -39,6 +39,19 @@ local function _health_steps(health)
 	return health_steps
 end
 
+local function _horde_health_steps(health)
+	local health_steps = {
+		health * 0.65,
+		health * 0.8,
+		health * 1,
+		health * 1.5,
+		health * 2,
+		health * 3.25
+	}
+
+	return health_steps
+end
+
 local function _special_health_steps(health)
 	local health_steps = {
 		health * 0.65,
@@ -65,14 +78,53 @@ local function _elite_health_steps(health)
 	return health_steps
 end
 
-local function _step_dmg(damage)
+local function _step_dmg_horde_melee(damage)
 	local damage_steps = {
 		damage * 0.5,
 		damage * 0.75,
 		damage * 1,
 		damage * 1.5,
 		damage * 2,
-		damage * 6
+		damage * 3
+	}
+
+	return damage_steps
+end
+
+local function _step_dmg_roamer_melee(damage)
+	local damage_steps = {
+		damage * 0.5,
+		damage * 0.75,
+		damage * 1,
+		damage * 1.5,
+		damage * 2,
+		damage * 4
+	}
+
+	return damage_steps
+end
+
+local function _step_dmg_berzerker_melee(damage)
+	local damage_steps = {
+		damage * 0.5,
+		damage * 0.75,
+		damage * 1,
+		damage * 1.5,
+		damage * 2,
+		damage * 3
+	}
+
+	return damage_steps
+end
+
+local function _step_dmg_melee(damage)
+	local damage_steps = {
+		damage * 0.5,
+		damage * 0.75,
+		damage * 1,
+		damage * 1.5,
+		damage * 2,
+		damage * 4
 	}
 
 	return damage_steps
@@ -85,10 +137,36 @@ local function _step_dmg_ranged(damage)
 		damage * 1,
 		damage * 1.5,
 		damage * 2,
-		damage * 4
+		damage * 3
 	}
 
 	return damage_steps
+end
+
+local function _sup_scale(sup)
+	local t = {
+		sup * 1,
+		sup * 1,
+		sup * 1,
+		sup * 1,
+		sup * 1,
+		sup * 3
+	}
+
+	return t
+end
+
+local function _sup_div_scale(sup)
+	local t = {
+		sup * 1,
+		sup * 1,
+		sup * 1,
+		sup * 1,
+		sup * 1,
+		sup / 3
+	}
+
+	return t
 end
 
 local function _shoot_steps_asc(from, to, ceil)
@@ -142,8 +220,8 @@ local function _shoot_steps_desc(from, to, ceil)
 end
 
 minion_difficulty_settings.health = {
-	chaos_poxwalker = _health_steps(150),
-	chaos_newly_infected = _health_steps(100),
+	chaos_poxwalker = _horde_health_steps(150),
+	chaos_newly_infected = _horde_health_steps(100),
 	chaos_hound = _special_health_steps(900),
 	chaos_hound_mutator = _special_health_steps(150),
 	chaos_poxwalker_bomber = _special_health_steps(700),
@@ -175,29 +253,33 @@ minion_difficulty_settings.health = {
 	cultist_berzerker = _elite_health_steps(900)
 }
 minion_difficulty_settings.power_level = {
-	chaos_ogryn_executor_melee = _step_dmg(500),
+	horde_default_melee = _step_dmg_horde_melee(400),
+	renegade_default_melee = _step_dmg_roamer_melee(400),
+	chaos_ogryn_executor_melee = _step_dmg_melee(500),
 	chaos_poxwalker_bomber_explosion = {
 		200,
 		250,
 		300,
 		350,
-		400
+		400,
+		500
 	},
-	chaos_ogryn_default_melee = _step_dmg(500),
+	chaos_ogryn_default_melee = _step_dmg_melee(500),
 	chaos_ogryn_default_ranged = _step_dmg_ranged(320),
 	chaos_daemonhost_melee = {
 		350,
 		600,
 		800,
 		1000,
-		1250
+		1250,
+		1600
 	},
-	renegade_default_melee = _step_dmg(400),
 	renegade_default_shot = _step_dmg_ranged(320),
-	renegade_executor_melee = _step_dmg(500),
+	renegade_executor_melee = _step_dmg_melee(500),
 	renegade_gunner_shot = _step_dmg_ranged(300),
 	renegade_shotgun_shot = _step_dmg_ranged(300),
 	renegade_assault_shot = _step_dmg_ranged(225),
+	berzerker_default_melee = _step_dmg_berzerker_melee(400),
 	cultist_assault_shot = _step_dmg_ranged(270),
 	cultist_flamer_default = _step_dmg_ranged(50),
 	cultist_flamer_on_hit_fire = {
@@ -205,14 +287,16 @@ minion_difficulty_settings.power_level = {
 		50,
 		75,
 		100,
-		125
+		125,
+		200
 	},
 	cultist_flamer_fire = {
 		100,
 		125,
 		150,
 		175,
-		200
+		200,
+		300
 	},
 	renegade_flamer_default = _step_dmg_ranged(50),
 	renegade_flamer_on_hit_fire = {
@@ -235,7 +319,8 @@ minion_difficulty_settings.power_level = {
 		175,
 		200,
 		300,
-		350
+		350,
+		500
 	},
 	renegade_captain_melee_one_hand = {
 		75,
@@ -257,49 +342,56 @@ minion_difficulty_settings.power_level = {
 		15,
 		20,
 		30,
-		40
+		40,
+		60
 	},
 	chaos_spawn_melee = {
 		250,
 		400,
 		600,
 		700,
-		800
+		800,
+		1000
 	},
 	chaos_plague_ogryn_melee = {
 		250,
 		400,
 		600,
 		700,
-		800
+		800,
+		1000
 	},
 	chaos_beast_of_nurgle_melee = {
 		150,
 		250,
 		300,
 		350,
-		400
+		400,
+		600
 	},
 	chaos_beast_of_nurgle_ranged = {
 		25,
 		40,
 		50,
 		60,
-		70
+		70,
+		100
 	},
 	chaos_beast_of_nurgle_hit_by_vomit_tick = {
 		1,
 		2,
 		3,
 		6,
-		8
+		8,
+		12
 	},
 	chaos_beast_of_nurgle_being_eaten = {
 		0.35,
 		0.425,
 		0.5,
 		0.5,
-		0.5
+		0.5,
+		1
 	}
 }
 minion_difficulty_settings.shooting = {
@@ -413,6 +505,13 @@ minion_difficulty_settings.shooting = {
 		time_per_shot = _equal_difficulty_values(0.1, 0.1),
 		num_shots = _shoot_steps_asc(40, 40, true),
 		num_shots_cover = _shoot_steps_asc(40, 40, true)
+	},
+	renegade_twin_captain_las_pistol = {
+		aim_durations = _shoot_steps_desc(0.75, 0.75),
+		shoot_cooldown = _shoot_steps_desc(2, 2.5),
+		time_per_shot = _equal_difficulty_values(1.25, 1.25),
+		num_shots = _equal_difficulty_values(5, 5),
+		shoot_dodge_window = _equal_difficulty_values(0.5, 0.5)
 	},
 	renegade_captain_bolt_pistol = {
 		aim_durations = _shoot_steps_desc(0.75, 0.75),
@@ -572,6 +671,235 @@ minion_difficulty_settings.terror_event_point_costs = {
 	2,
 	2.5,
 	3
+}
+minion_difficulty_settings.suppression = {
+	renegade_rifleman = {
+		above_threshold_decay_multiplier = 2,
+		disable_cover_threshold = 25,
+		max_value = {
+			melee = _sup_scale(25),
+			close = _sup_scale(25),
+			far = _sup_scale(25)
+		},
+		threshold = {
+			melee = _sup_scale(10),
+			close = _sup_scale(10),
+			far = _sup_scale(10)
+		},
+		decay_speeds = {
+			melee = _sup_div_scale(0.05),
+			close = _sup_div_scale(0.3),
+			far = _sup_div_scale(0.5)
+		},
+		immunity_duration = {
+			0.25,
+			0.5
+		}
+	},
+	cultist_assault = {
+		above_threshold_decay_multiplier = 2,
+		max_value = {
+			melee = _sup_scale(40),
+			close = _sup_scale(40),
+			far = _sup_scale(25)
+		},
+		threshold = {
+			melee = _sup_scale(30),
+			close = _sup_scale(30),
+			far = _sup_scale(10)
+		},
+		decay_speeds = {
+			melee = _sup_div_scale(0.05),
+			close = _sup_div_scale(0.3),
+			far = _sup_div_scale(0.5)
+		},
+		disable_cover_threshold = {
+			melee = 20,
+			far = 15,
+			close = 20
+		},
+		immunity_duration = {
+			0.25,
+			0.5
+		}
+	},
+	renegade_assault = {
+		max_value = {
+			melee = _sup_scale(50),
+			close = _sup_scale(30),
+			far = _sup_scale(15)
+		},
+		threshold = {
+			melee = _sup_scale(44),
+			close = _sup_scale(25),
+			far = _sup_scale(10)
+		},
+		decay_speeds = {
+			melee = _sup_div_scale(0.05),
+			close = _sup_div_scale(0.25),
+			far = _sup_div_scale(0.5)
+		},
+		immunity_duration = {
+			0.25,
+			0.5
+		}
+	},
+	chaos_newly_infected = {
+		max_value = {
+			melee = _sup_scale(20),
+			close = _sup_scale(20),
+			far = _sup_scale(20)
+		},
+		threshold = {
+			melee = _sup_scale(20),
+			close = _sup_scale(20),
+			far = _sup_scale(20)
+		},
+		decay_speeds = {
+			melee = _sup_div_scale(0.05),
+			close = _sup_div_scale(0.2),
+			far = _sup_div_scale(0.2)
+		},
+		immunity_duration = {
+			0.75,
+			1.25
+		}
+	},
+	renegade_melee = {
+		max_value = {
+			melee = _sup_scale(20),
+			close = _sup_scale(20),
+			far = _sup_scale(20)
+		},
+		threshold = {
+			melee = _sup_scale(20),
+			close = _sup_scale(20),
+			far = _sup_scale(20)
+		},
+		decay_speeds = {
+			melee = _sup_div_scale(0.05),
+			close = _sup_div_scale(0.2),
+			far = _sup_div_scale(0.2)
+		},
+		immunity_duration = {
+			0.75,
+			1.25
+		}
+	},
+	chaos_ogryn_gunner = {
+		ignore_attack_delay = true,
+		max_value = {
+			melee = _sup_scale(50),
+			close = _sup_scale(50),
+			far = _sup_scale(50)
+		},
+		threshold = {
+			melee = _sup_scale(45),
+			close = _sup_scale(45),
+			far = _sup_scale(45)
+		},
+		decay_speeds = {
+			melee = _sup_div_scale(0.05),
+			close = _sup_div_scale(0.3),
+			far = _sup_div_scale(0.3)
+		},
+		immunity_duration = {
+			2.75,
+			3.25
+		}
+	},
+	cultist_gunner = {
+		above_threshold_decay_multiplier = 2,
+		disable_cover_threshold = 35,
+		max_value = {
+			melee = _sup_scale(40),
+			close = _sup_scale(40),
+			far = _sup_scale(40)
+		},
+		threshold = {
+			melee = _sup_scale(27.5),
+			close = _sup_scale(27.5),
+			far = _sup_scale(27.5)
+		},
+		decay_speeds = {
+			melee = _sup_div_scale(0.05),
+			close = _sup_div_scale(0.3),
+			far = _sup_div_scale(0.5)
+		},
+		immunity_duration = {
+			0.25,
+			0.5
+		}
+	},
+	renegade_gunner = {
+		above_threshold_decay_multiplier = 2,
+		disable_cover_threshold = 35,
+		max_value = {
+			melee = _sup_scale(40),
+			close = _sup_scale(40),
+			far = _sup_scale(40)
+		},
+		threshold = {
+			melee = _sup_scale(27.5),
+			close = _sup_scale(27.5),
+			far = _sup_scale(27.5)
+		},
+		decay_speeds = {
+			melee = _sup_div_scale(0.05),
+			close = _sup_div_scale(0.3),
+			far = _sup_div_scale(0.5)
+		},
+		immunity_duration = {
+			0.25,
+			0.5
+		}
+	},
+	renegade_executor = {
+		max_value = {
+			melee = _sup_scale(50),
+			close = _sup_scale(50),
+			far = _sup_scale(50)
+		},
+		threshold = {
+			melee = _sup_scale(40),
+			close = _sup_scale(40),
+			far = _sup_scale(40)
+		},
+		decay_speeds = {
+			melee = _sup_div_scale(0.05),
+			close = _sup_div_scale(0.2),
+			far = _sup_div_scale(0.5)
+		},
+		flinch_threshold = math.huge,
+		immunity_duration = {
+			2.75,
+			3.25
+		}
+	},
+	renegade_sniper = {
+		max_value = {
+			melee = _sup_scale(30),
+			close = _sup_scale(30),
+			far = _sup_scale(30)
+		},
+		threshold = {
+			melee = _sup_scale(20),
+			close = _sup_scale(20),
+			far = _sup_scale(20)
+		},
+		decay_speeds = {
+			melee = _sup_div_scale(0.05),
+			close = _sup_div_scale(0.2),
+			far = _sup_div_scale(0.5)
+		},
+		immunity_duration = {
+			2.75,
+			3.25
+		},
+		suppression_types_allowed = {
+			ability = true
+		}
+	}
 }
 
 return settings("MinionDifficultySettings", minion_difficulty_settings)

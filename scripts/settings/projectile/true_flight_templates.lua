@@ -55,24 +55,46 @@ local true_flight_templates = {
 			return distance < 1.5 and 1 or 1.5 / distance
 		end
 	},
+	throwing_knives = {
+		target_hit_zone = "head",
+		on_target_acceleration = 0,
+		speed_multiplier = 1,
+		on_impact = "throwing_knives_on_impact",
+		allowed_bounces = 0,
+		legitimate_target_func = "legitimate_always",
+		target_tracking_update_func = "smite_update_towards_position",
+		find_target_func = "throwing_knifes_find_highest_value_target",
+		is_alligned_offset = 0,
+		time_between_raycasts = 0.1,
+		impact_validate = "throwing_knives_impact_valid",
+		distance_to_owner_requirement = 30,
+		forward_search_distance_to_find_target = 0,
+		update_seeking_position_function = "default_update_position_velocity",
+		broadphase_radius = 0,
+		min_adjustment_speed = 25,
+		lerp_modifier_func = function (integration_data, distance)
+			local d = 1.5
+
+			return distance < d and 1 or d / distance
+		end
+	},
 	throwing_knives_true_flight = {
 		target_hit_zone = "head",
-		speed_multiplier = 1,
-		allowed_bounces = 20,
-		on_impact = "throwing_knives_on_impact",
-		find_target_func = "throwing_knifes_find_highest_value_target",
-		legitimate_target_func = "is_not_sleeping_demon_host",
-		target_tracking_update_func = "smite_update_towards_position",
-		is_alligned_offset = 0.01,
 		on_target_acceleration = 0,
+		speed_multiplier = 1,
+		on_impact = "throwing_knives_on_impact",
+		allowed_bounces = 20,
+		legitimate_target_func = "legitimate_always",
+		target_tracking_update_func = "smite_update_towards_position",
+		find_target_func = "throwing_knifes_find_highest_value_target",
+		is_alligned_offset = 0.01,
 		time_between_raycasts = 0.1,
 		impact_validate = "throwing_knives_impact_valid",
 		distance_to_owner_requirement = 30,
 		forward_search_distance_to_find_target = 0.25,
-		update_seeking_position_function = "throwing_knives_locomotion",
+		update_seeking_position_function = "default_update_position_velocity",
 		broadphase_radius = 10,
 		min_adjustment_speed = 25,
-		retry_target = "retry_if_target_position",
 		lerp_modifier_func = function (integration_data, distance)
 			local d = 1.5
 
@@ -94,27 +116,6 @@ local true_flight_templates = {
 		initial_target_hit_zone = "head",
 		time_between_raycasts = 0.1,
 		lerp_constant = 50
-	},
-	strike_missile = {
-		target_hit_zone = "torso",
-		target_tracking_update_func = "update_towards_strike_missile_target",
-		create_bot_threat = true,
-		lingering_duration = 0.4,
-		legitimate_target_func = "legitimate_always",
-		dot_threshold = 0.9999,
-		lerp_squared_distance_threshold = 2000,
-		speed_multiplier = 1,
-		initial_target_hit_zone = "torso",
-		time_between_raycasts = 0.1,
-		triggered_speed_mult = 2,
-		forward_search_distance_to_find_target = 5,
-		broadphase_radius = 7.5,
-		find_target_func = "find_closest_highest_value_target",
-		target_players = true,
-		lerp_constant = 50,
-		lerp_modifier_func = function (integration_data, distance)
-			return distance < 7 and 0.01 or 3 / distance
-		end
 	}
 }
 

@@ -27,7 +27,6 @@ local weapon_action_data = {
 		block = _require_weapon_action("action_block"),
 		buff_target = _require_weapon_action("action_buff_target"),
 		charge = _require_weapon_action("action_charge"),
-		charge_aim = _require_weapon_action("action_charge_aim"),
 		charge_ammo = _require_weapon_action("action_charge_ammo"),
 		chain_lightning = _require_weapon_action("action_chain_lightning"),
 		damage_target = _require_weapon_action("action_damage_target"),
@@ -46,11 +45,9 @@ local weapon_action_data = {
 		overload_target_finder = _require_weapon_action("action_overload_target_finder"),
 		place_deployable = _require_weapon_action("action_place_deployable"),
 		place_pickup = _require_weapon_action("action_place_pickup"),
-		place_force_field = _require_weapon_action("action_place_force_field"),
 		push = _require_weapon_action("action_push"),
 		ranged_load_special = _require_weapon_action("action_ranged_load_special"),
 		ranged_wield = _require_weapon_action("action_ranged_wield"),
-		recall = _require_weapon_action("action_recall"),
 		reload_shotgun = _require_weapon_action("action_reload_shotgun"),
 		reload_state = _require_weapon_action("action_reload_state"),
 		shoot_hit_scan = _require_weapon_action("action_shoot_hit_scan"),
@@ -61,7 +58,6 @@ local weapon_action_data = {
 		sweep = _require_weapon_action("action_sweep"),
 		scan = _require_weapon_action("action_scan"),
 		scan_confirm = _require_weapon_action("action_scan_confirm"),
-		target_ally = _require_weapon_action("action_target_ally"),
 		target_finder = _require_weapon_action("action_target_finder"),
 		throw = _require_weapon_action("action_throw"),
 		throw_grenade = _require_weapon_action("action_throw_grenade"),
@@ -70,7 +66,6 @@ local weapon_action_data = {
 		unwield = _require_weapon_action("action_unwield"),
 		unwield_to_previous = _require_weapon_action("action_unwield_to_previous"),
 		unwield_to_specific = _require_weapon_action("action_unwield_to_specific"),
-		use_syringe = _require_weapon_action("action_use_syringe"),
 		vent_overheat = _require_weapon_action("action_vent_overheat"),
 		vent_warp_charge = _require_weapon_action("action_vent_warp_charge"),
 		wield = _require_weapon_action("action_wield"),
@@ -288,15 +283,6 @@ weapon_action_data.action_kind_condition_funcs = {
 
 		return true
 	end,
-	recall = function (action_settings, condition_func_params, used_input)
-		local ability_extension = condition_func_params.ability_extension
-		local ability_type = action_settings.ability_type
-		local max = ability_extension:max_ability_charges(ability_type)
-		local remaining = ability_extension:remaining_ability_charges(ability_type)
-		local can_recall = remaining < max
-
-		return can_recall
-	end,
 	activate_special = function (action_settings, condition_func_params, used_input)
 		return _weapon_special_active_cooldown(action_settings, condition_func_params)
 	end,
@@ -434,13 +420,13 @@ local function _started_reload(condition_func_params, action_params, remaining_t
 end
 
 weapon_action_data.conditional_state_functions = {
-	no_grenade_ability_charge = function (condition_func_params, action_params)
+	no_grenade_ability_charge = function (condition_func_params, action_params, remaining_time, t)
 		local ability_extension = condition_func_params.ability_extension
 		local ability_type = "grenade_ability"
 
 		return not ability_extension:can_use_ability(ability_type)
 	end,
-	no_ammo = function (condition_func_params, action_params, remaining_time)
+	no_ammo = function (condition_func_params, action_params, remaining_time, t)
 		local no_ammo = _no_ammo(condition_func_params, action_params, remaining_time)
 		local no_sprinting = not _is_sprinting(condition_func_params, action_params, remaining_time)
 
@@ -453,14 +439,14 @@ weapon_action_data.conditional_state_functions = {
 
 		return delay_from_from_last_ammunition_usage and no_ammo and no_sprinting
 	end,
-	no_ammo_and_started_reload = function (condition_func_params, action_params, remaining_time)
+	no_ammo_and_started_reload = function (condition_func_params, action_params, remaining_time, t)
 		local no_ammo = _no_ammo(condition_func_params, action_params, remaining_time)
 		local no_sprinting = not _is_sprinting(condition_func_params, action_params, remaining_time)
 		local started_reload = _started_reload(condition_func_params, action_params, remaining_time)
 
 		return no_ammo and no_sprinting and started_reload
 	end,
-	no_ammo_no_alternate_fire = function (condition_func_params, action_params, remaining_time)
+	no_ammo_no_alternate_fire = function (condition_func_params, action_params, remaining_time, t)
 		local no_ammo = _no_ammo(condition_func_params, action_params, remaining_time)
 		local no_sprinting = not _is_sprinting(condition_func_params, action_params, remaining_time)
 		local no_alternate_fire = not _in_alternate_fire(condition_func_params, action_params, remaining_time)
@@ -475,7 +461,7 @@ weapon_action_data.conditional_state_functions = {
 
 		return delay_from_from_last_ammunition_usage and no_ammo and no_sprinting and no_alternate_fire
 	end,
-	no_ammo_and_started_reload_no_alternate_fire = function (condition_func_params, action_params, remaining_time)
+	no_ammo_and_started_reload_no_alternate_fire = function (condition_func_params, action_params, remaining_time, t)
 		local no_ammo = _no_ammo(condition_func_params, action_params, remaining_time)
 		local no_sprinting = not _is_sprinting(condition_func_params, action_params, remaining_time)
 		local started_reload = _started_reload(condition_func_params, action_params, remaining_time)
@@ -483,7 +469,7 @@ weapon_action_data.conditional_state_functions = {
 
 		return no_ammo and no_sprinting and started_reload and no_alternate_fire
 	end,
-	no_ammo_alternate_fire = function (condition_func_params, action_params, remaining_time)
+	no_ammo_alternate_fire = function (condition_func_params, action_params, remaining_time, t)
 		local no_ammo = _no_ammo(condition_func_params, action_params, remaining_time)
 		local in_alternate_fire = _in_alternate_fire(condition_func_params, action_params, remaining_time)
 
@@ -496,34 +482,34 @@ weapon_action_data.conditional_state_functions = {
 
 		return delay_from_from_last_ammunition_usage and no_ammo and in_alternate_fire
 	end,
-	no_ammo_and_started_reload_alternate_fire = function (condition_func_params, action_params, remaining_time)
+	no_ammo_and_started_reload_alternate_fire = function (condition_func_params, action_params, remaining_time, t)
 		local no_ammo = _no_ammo(condition_func_params, action_params, remaining_time)
 		local started_reload = _started_reload(condition_func_params, action_params, remaining_time)
 		local in_alternate_fire = _in_alternate_fire(condition_func_params, action_params, remaining_time)
 
 		return no_ammo and started_reload and in_alternate_fire
 	end,
-	started_reload = function (condition_func_params, action_params, remaining_time)
+	started_reload = function (condition_func_params, action_params, remaining_time, t)
 		local started_reload = _started_reload(condition_func_params, action_params, remaining_time)
 
 		return started_reload
 	end,
-	auto_chain = function (condition_func_params, action_params, remaining_time)
+	auto_chain = function (condition_func_params, action_params, remaining_time, t)
 		local no_time_left = remaining_time <= 0
 
 		return no_time_left
 	end,
-	no_mission_zone = function (condition_func_params, action_params, remaining_time)
+	no_mission_zone = function (condition_func_params, action_params, remaining_time, t)
 		return not Scanning.has_active_scanning_zone()
 	end,
-	no_running_action = function (condition_func_params, action_params, remaining_time)
+	no_running_action = function (condition_func_params, action_params, remaining_time, t)
 		local weapon_action_component = condition_func_params.weapon_action_component
 		local current_action = weapon_action_component.current_action_name
 		local no_running_action = current_action == "none"
 
 		return no_running_action
 	end,
-	auto_block = function (condition_func_params, action_params, remaining_time)
+	auto_block = function (condition_func_params, action_params, remaining_time, t)
 		local Managers = Managers
 
 		if Managers.input:cursor_active() then
@@ -570,9 +556,6 @@ weapon_action_data.action_kind_to_running_action_chain_event = {
 	},
 	overload_charge_target_finder = {
 		fully_charged = true
-	},
-	recall = {
-		fully_recalled = true
 	},
 	reload_shotgun = {
 		reload_loop = true

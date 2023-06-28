@@ -5,6 +5,7 @@ local ChatSettings = require("scripts/ui/constant_elements/elements/chat/constan
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local TextInputPassTemplates = require("scripts/ui/pass_templates/text_input_pass_templates")
+local InputDevice = require("scripts/managers/input/input_device")
 local window_margins = ChatSettings.window_margins
 local scrollbar_margins = ChatSettings.scrollbar_margins
 local scrollbar_width = ChatSettings.scrollbar_width
@@ -200,10 +201,17 @@ local animations = {
 			init = function (parent, ui_scenegraph, scenegraph_definition, widgets, params)
 				local input_field_widget = widgets.input_field
 				local input_field_content = input_field_widget.content
-				local active = input_field_content.is_writing
+				local is_controller_controlled = IS_XBS and InputDevice.gamepad_active
 				input_field_content.visible = true
-				params.input_field_source = input_field_widget.alpha_multiplier or 0
-				params.input_field_target = active and 1 or 0
+
+				if is_controller_controlled then
+					params.input_field_source = input_field_widget.alpha_multiplier or 0
+					params.input_field_target = params.target_alpha
+				else
+					local active = input_field_content.is_writing
+					params.input_field_source = input_field_widget.alpha_multiplier or 0
+					params.input_field_target = active and 1 or 0
+				end
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local eased_progress = math.easeCubic(progress)

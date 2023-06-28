@@ -81,10 +81,6 @@ ViewElementWeaponInfo._hide_dividers = function (self)
 	grid_divider_title.style.texture.color[1] = 0
 end
 
-ViewElementWeaponInfo.destroy = function (self)
-	ViewElementWeaponInfo.super.destroy(self)
-end
-
 local function add_presentation_perks(item, layout, grid_size)
 	local item_type = item.item_type
 	local perks = item.perks

@@ -19,7 +19,7 @@ end
 
 HealthStationInteraction.hud_block_text = function (self, interactor_unit, interactee_unit, interactable_actor_node_index)
 	local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
-	local block_text = interactee_extension:block_text()
+	local block_text = interactee_extension:block_text(interactor_unit)
 
 	if block_text then
 		return block_text

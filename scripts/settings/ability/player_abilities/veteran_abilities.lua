@@ -1,10 +1,10 @@
-local TalentSettings = require("scripts/settings/buff/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local ranger_talent_settings = TalentSettings.veteran_2
 local abilities = {
-	veteran_ranger_ranged_stance = {
+	veteran_combat_ability = {
 		required_weapon_type = "ranged",
 		hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_grunt_hud",
-		ability_template = "ranged_stance",
+		ability_template = "veteran_combat_ability",
 		ability_type = "combat_ability",
 		icon = "content/ui/materials/icons/abilities/ultimate/default",
 		ability_template_tweak_data = {
@@ -16,10 +16,10 @@ local abilities = {
 			"veteran"
 		}
 	},
-	veteran_ranger_ranged_stance_headhunter = {
+	veteran_combat_ability_headhunter = {
 		required_weapon_type = "ranged",
 		hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_grunt_hud",
-		ability_template = "ranged_stance",
+		ability_template = "veteran_combat_ability",
 		ability_type = "combat_ability",
 		icon = "content/ui/materials/icons/abilities/ultimate/default",
 		ability_template_tweak_data = {
@@ -31,10 +31,10 @@ local abilities = {
 			"veteran"
 		}
 	},
-	veteran_ranger_ranged_stance_big_game_hunter = {
+	veteran_combat_ability_big_game_hunter = {
 		required_weapon_type = "ranged",
 		hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_grunt_hud",
-		ability_template = "ranged_stance",
+		ability_template = "veteran_combat_ability",
 		ability_type = "combat_ability",
 		icon = "content/ui/materials/icons/abilities/ultimate/default",
 		ability_template_tweak_data = {
@@ -46,10 +46,10 @@ local abilities = {
 			"veteran"
 		}
 	},
-	veteran_ranger_ranged_stance_weapon_handling_improved = {
+	veteran_combat_ability_weapon_handling_improved = {
 		required_weapon_type = "ranged",
 		hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_grunt_hud",
-		ability_template = "ranged_stance",
+		ability_template = "veteran_combat_ability",
 		ability_type = "combat_ability",
 		icon = "content/ui/materials/icons/abilities/ultimate/default",
 		ability_template_tweak_data = {
@@ -61,10 +61,10 @@ local abilities = {
 			"veteran"
 		}
 	},
-	veteran_ranger_ranged_stance_rending = {
+	veteran_combat_ability_rending = {
 		required_weapon_type = "ranged",
 		hud_icon = "content/ui/textures/icons/abilities/hud/combat_ability_grunt_hud",
-		ability_template = "ranged_stance",
+		ability_template = "veteran_combat_ability",
 		ability_type = "combat_ability",
 		icon = "content/ui/materials/icons/abilities/ultimate/default",
 		ability_template_tweak_data = {

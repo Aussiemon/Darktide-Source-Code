@@ -5,9 +5,7 @@ local proc_events = BuffSettings.proc_events
 templates.weapon_trait_bespoke_flamer_p1_toughness_on_continuous_fire = {
 	weapon_trait_bespoke_flamer_p1_toughness_on_continuous_fire = {
 		{
-			stat_buffs = {
-				[stat_buffs.toughness_extra_regen_rate] = 0.35
-			}
+			toughness_fixed_percentage = 0.04
 		}
 	}
 }

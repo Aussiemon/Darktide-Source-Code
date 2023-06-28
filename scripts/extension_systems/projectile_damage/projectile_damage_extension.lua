@@ -126,16 +126,14 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 		self._reset_time = false
 	end
 
-	local fx_system = Managers.state.extension:system("fx_system")
-	local effects = projectile_template.effects
-	local sfx = effects and effects.sfx
 	local mark_for_deletion = false
 	local new_life_time = life_time + dt
 	local impact_triggered = fuse_damage_settings and fuse_damage_settings.impact_triggered
 	local min_lifetime = fuse_damage_settings.min_lifetime
-	local fuse_started = self._fuse_started
 	local sticking_to_unit, sticking_to_actor_index = locomotion_extension:sticking_to_unit()
 	local fuse_time = self._fuse_override_time or sticking_to_unit and fuse_damage_settings.sticky_fuse_time or fuse_damage_settings.fuse_time
+	local max_lifetime = fuse_damage_settings.max_lifetime or fuse_time * 2
+	local fuse_started = self._fuse_started
 
 	if min_lifetime then
 		if min_lifetime < new_life_time then
@@ -143,13 +141,21 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 		end
 	elseif impact_triggered then
 		if impact_triggered and not self._has_impacted then
-			if new_life_time > fuse_time * 2 then
+			if max_lifetime < new_life_time then
 				fuse_started = true
+
+				if not self._fuse_started then
+					new_life_time = 0
+				end
 			else
 				fuse_started = false
 			end
 		elseif impact_triggered and self._has_impacted then
 			fuse_started = true
+
+			if not self._fuse_started then
+				new_life_time = 0
+			end
 		end
 	elseif fuse_time < new_life_time then
 		fuse_started = true
@@ -223,7 +229,7 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 	self._life_time = new_life_time
 end
 
-ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hit_actor, hit_direction, hit_normal, current_speed, force_delete)
+ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hit_actor, hit_direction, hit_normal, current_speed, force_delete, is_target_unit)
 	local owner_unit = self._owner_unit
 	local projectile_unit = self._projectile_unit
 	local projectile_template = self._projectile_template
@@ -280,11 +286,16 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 				end
 
 				if impact_damage_settings.delete_on_hit_mass then
-					local hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name)
-					local hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(owner_unit, hit_unit, self._hit_mass_budget_attack, self._hit_mass_budget_impact, hit_weakspot)
-					hit_mass_stop = HitMass.stopped_attack(hit_unit, hit_zone_name, hit_mass_budget_attack, hit_mass_budget_impact, IMPACT_CONFIG)
-					self._hit_mass_budget_attack = hit_mass_budget_attack
-					self._hit_mass_budget_impact = hit_mass_budget_impact
+					local calculate_hit_mass = true
+
+					if calculate_hit_mass then
+						local hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name)
+						local hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(owner_unit, hit_unit, self._hit_mass_budget_attack, self._hit_mass_budget_impact, hit_weakspot)
+						hit_mass_stop = HitMass.stopped_attack(hit_unit, hit_zone_name, hit_mass_budget_attack, hit_mass_budget_impact, IMPACT_CONFIG)
+						self._hit_mass_budget_attack = hit_mass_budget_attack
+						self._hit_mass_budget_impact = hit_mass_budget_impact
+					end
+
 					do_impact_explosion = false
 					impact_result = "continue_straight"
 				end

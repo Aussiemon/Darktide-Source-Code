@@ -243,6 +243,23 @@ table.array_contains = function (t, element)
 	return false
 end
 
+table.array_equals = function (a, b)
+	local a_size = #a
+	local b_size = #b
+
+	if a_size ~= b_size then
+		return false
+	end
+
+	for i = 1, a_size do
+		if a[i] ~= b[i] then
+			return false
+		end
+	end
+
+	return true
+end
+
 table.contains = function (t, element)
 	for _, value in pairs(t) do
 		if value == element then

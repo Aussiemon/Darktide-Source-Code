@@ -234,7 +234,7 @@ local text_input_base = {
 			elseif input_service:get("select_all_text") then
 				content.selected_text = updated_input_text
 				updated_input_text = ""
-			else
+			elseif not input_service:is_null_service() then
 				local keystrokes = Keyboard.keystrokes()
 
 				for _, keystroke in ipairs(keystrokes) do
@@ -288,16 +288,20 @@ local text_input_base = {
 				local is_writing = not content.is_writing
 
 				if is_writing then
-					local x_game_ui = XAsyncBlock.new_block()
 					local title = content.virtual_keyboard_title or content.placeholder_text
 					local description = content.virtual_keyboard_description or ""
-					local input_text = content.input_text
+					local input_text = content.input_text or ""
 					content.input_text = ""
 					content.selected_text = input_text
 					local max_length = content.max_length
+					local x_game_ui = XAsyncBlock.new_block()
+					content.x_async_block = x_game_ui
 
 					XGameUI.show_text_entry_async(x_game_ui, title, description, input_text, "default", max_length)
-					Managers.xasync:wrap(x_game_ui, XAsyncBlock.release_block):next(function (async_block)
+
+					local virtual_keyboard_promise = Managers.xasync:wrap(x_game_ui, XAsyncBlock.release_block)
+
+					virtual_keyboard_promise:next(function (async_block)
 						local new_input_text = XGameUI.resolve_text_entry(async_block)
 						local last_char = string.sub(new_input_text, #new_input_text)
 
@@ -311,6 +315,7 @@ local text_input_base = {
 						content._selection_start = nil
 						content._selection_end = nil
 						content.is_writing = false
+						content.x_async_block = nil
 					end, function (hr_table)
 						local hr = hr_table[1]
 
@@ -322,6 +327,7 @@ local text_input_base = {
 						content._selection_start = nil
 						content._selection_end = nil
 						content.is_writing = false
+						content.x_async_block = nil
 					end)
 				end
 
@@ -843,7 +849,19 @@ table.append(TextInputPassTemplates.chat_input_field, {
 		content_id = "background",
 		style = {
 			color = ChatSettings.input_field_active_color
-		}
+		},
+		change_function = function (pass_content, style_data, animations, dt)
+			local widget_content = pass_content.parent or pass_content
+			local should_be_visible = widget_content.is_writing
+			local alpha = style_data.color[1]
+			local fade_step = dt * 1 / placeholder_fade_time * 255
+
+			if not should_be_visible and alpha > 0 then
+				style_data.color[1] = _math_max(alpha - fade_step, 0)
+			elseif should_be_visible and alpha < 255 then
+				style_data.color[1] = _math_min(alpha + fade_step, 255)
+			end
+		end
 	},
 	{
 		style_id = "frame",
@@ -870,6 +888,7 @@ table.append(TextInputPassTemplates.chat_input_field, {
 		pass_type = "rect",
 		content_id = "input_caret",
 		style = input_caret_style,
+		visibility_function = _input_active_visibility_function,
 		change_function = function (pass_content, style_data, animations, dt)
 			local widget_content = pass_content.parent or pass_content
 			local blink_time = (widget_content._blink_time or 0) + dt

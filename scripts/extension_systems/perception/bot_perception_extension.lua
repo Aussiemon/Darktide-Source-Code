@@ -60,6 +60,7 @@ BotPerceptionExtension.extensions_ready = function (self, world, unit)
 	self._locomotion_component = locomotion_component
 	self._slot_extension = ScriptUnit.extension(unit, "slot_system")
 	self._behavior_extension = ScriptUnit.extension(unit, "behavior_system")
+	self._toughness_extension = ScriptUnit.extension(unit, "toughness_system")
 	local player_unit_input_extension = ScriptUnit.extension(unit, "input_system")
 	local bot_unit_input = player_unit_input_extension:bot_unit_input()
 	self._bot_unit_input = bot_unit_input
@@ -344,7 +345,8 @@ BotPerceptionExtension._select_ally_by_utility = function (self, self_unit, self
 			local player = player_unit_spawn_manager:owner(player_unit)
 			local player_position = POSITION_LOOKUP[player_unit]
 			local is_bot = not player:is_human_controlled()
-			local in_need_type, look_at_ally, utility = self:_calculate_ally_need_type(self_position, self_health_utility, can_heal_other, can_give_healing_to_other, player_unit, player_position, target_enemy, is_bot, t)
+			local priority_target = perception_component.priority_target_enemy
+			local in_need_type, look_at_ally, utility = self:_calculate_ally_need_type(self_position, self_health_utility, can_heal_other, can_give_healing_to_other, player_unit, player_position, target_enemy, is_bot, t, priority_target)
 			local is_position_in_liquid = liquid_area_system:is_position_in_liquid(player_position)
 
 			if (in_need_type or not is_bot) and not is_position_in_liquid then
@@ -450,7 +452,7 @@ local STOP_BASE_UTILITY = 5
 local LOOK_AT_BASE_UTILITY = 2
 local MAX_ENEMIES_IN_PROXIMITY_TO_AID_BOT = 1
 
-BotPerceptionExtension._calculate_ally_need_type = function (self, self_position, self_health_utility, can_heal_other, can_give_healing_to_other, ally_unit, ally_position, target_enemy, ally_is_bot, t)
+BotPerceptionExtension._calculate_ally_need_type = function (self, self_position, self_health_utility, can_heal_other, can_give_healing_to_other, ally_unit, ally_position, target_enemy, ally_is_bot, t, priority_target_enemy)
 	local ally_unit_data_extension = ScriptUnit.extension(ally_unit, "unit_data_system")
 	local ally_character_state_component = ally_unit_data_extension:read_component("character_state")
 	local ally_disabled_character_state_component = ally_unit_data_extension:read_component("disabled_character_state")
@@ -461,8 +463,18 @@ BotPerceptionExtension._calculate_ally_need_type = function (self, self_position
 	local look_at_ally = false
 	local utility = 0
 
-	if ally_is_bot and MAX_ENEMIES_IN_PROXIMITY_TO_AID_BOT <= self._num_enemies_in_proximity then
-		return in_need_type, look_at_ally, utility
+	if ally_is_bot then
+		if MAX_ENEMIES_IN_PROXIMITY_TO_AID_BOT <= self._num_enemies_in_proximity then
+			return in_need_type, look_at_ally, utility
+		end
+
+		if priority_target_enemy then
+			return in_need_type, look_at_ally, utility
+		end
+
+		if self._toughness_extension:current_toughness_percent() < 0.2 then
+			return in_need_type, look_at_ally, utility
+		end
 	end
 
 	if being_assisted and interactee_component.interactor_unit ~= self._unit then

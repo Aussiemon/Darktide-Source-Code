@@ -10,40 +10,60 @@ local unarmored = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy_ogryn",
 				append_husk_to_event_name = true
 			},
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
+				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
 				only_1p = true
 			}
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy_ogryn",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
+				only_1p = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy_ogryn",
 				append_husk_to_event_name = true
 			},
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
+				only_1p = true
 			}
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy_ogryn",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
+				only_1p = true
 			}
 		},
 		damage_reduced = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_reduced_damage",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
+				only_1p = true
 			}
 		},
 		damage_negated = {
@@ -135,7 +155,7 @@ local armored = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy_ogryn",
 				append_husk_to_event_name = true
 			},
 			{
@@ -144,22 +164,30 @@ local armored = {
 			},
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
+				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
 				only_1p = true
 			}
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy_ogryn",
 				append_husk_to_event_name = true
 			},
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_armor_break",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
+				only_1p = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy_ogryn",
 				append_husk_to_event_name = true
 			},
 			{
@@ -169,16 +197,24 @@ local armored = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_armor",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
+				only_1p = true
 			}
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy_ogryn",
 				append_husk_to_event_name = true
 			},
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_armor",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
+				only_1p = true
 			}
 		},
 		damage_reduced = {
@@ -280,7 +316,7 @@ local super_armor = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy_ogryn",
 				append_husk_to_event_name = true
 			},
 			{
@@ -289,22 +325,30 @@ local super_armor = {
 			},
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
+				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
 				only_1p = true
 			}
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy_ogryn",
 				append_husk_to_event_name = true
 			},
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_armor_break",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
+				only_1p = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy_ogryn",
 				append_husk_to_event_name = true
 			},
 			{
@@ -314,16 +358,24 @@ local super_armor = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_armor",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
+				only_1p = true
 			}
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy_ogryn",
 				append_husk_to_event_name = true
 			},
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_armor",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
+				only_1p = true
 			}
 		},
 		damage_reduced = {
@@ -429,7 +481,7 @@ local disgustingly_resilient = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy_ogryn",
 				append_husk_to_event_name = true
 			},
 			{
@@ -439,11 +491,15 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
+				only_1p = true
 			}
 		},
 		died = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy_ogryn",
 				append_husk_to_event_name = true
 			},
 			{
@@ -453,26 +509,38 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_combat_weapon_hit_addon_bone",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
+				only_1p = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy_ogryn",
 				append_husk_to_event_name = true
 			},
 			{
 				event = "wwise/events/weapon/play_hit_indicator_weakspot_melee_blunt",
 				only_1p = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
+				only_1p = true
 			}
 		},
 		damage = {
 			{
-				event = "wwise/events/weapon/melee_hits_blunt_heavy",
+				event = "wwise/events/weapon/melee_hits_blunt_heavy_ogryn",
 				append_husk_to_event_name = true
 			},
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_resilient",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
+				only_1p = true
 			}
 		},
 		damage_reduced = {
@@ -483,6 +551,10 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/melee_hits_blunt_resilient",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_melee_hits_blood_add",
+				only_1p = true
 			}
 		},
 		damage_negated = {

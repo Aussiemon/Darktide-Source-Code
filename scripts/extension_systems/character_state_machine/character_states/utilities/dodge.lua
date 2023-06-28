@@ -8,7 +8,7 @@ local buff_keywords = BuffSettings.keywords
 local dodge_types = DodgeSettings.dodge_types
 local proc_events = BuffSettings.proc_events
 local Dodge = {
-	check = function (t, unit_data_extension, specialization_dodge_template, input_source)
+	check = function (t, unit_data_extension, base_dodge_template, input_source)
 		local sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
 
 		if Sprint.is_sprinting(sprint_character_state_component) then
@@ -33,7 +33,7 @@ local Dodge = {
 		local allow_diagonal_forward_dodge = input_source:get("diagonal_forward_dodge")
 		local move_length = Vector3.length(move)
 
-		if not allow_stationary_dodge and move_length < specialization_dodge_template.minimum_dodge_input then
+		if not allow_stationary_dodge and move_length < base_dodge_template.minimum_dodge_input then
 			return false
 		end
 
@@ -105,13 +105,13 @@ local Dodge = {
 		local dodge_character_state_component = unit_data_extension:read_component("dodge_character_state")
 		local dodge_time = dodge_character_state_component.dodge_time
 		local specialization = unit_data_extension:specialization()
-		local specialization_dodge_template = specialization.dodge
+		local base_dodge_template = specialization.dodge
 		local stat_buffs = buff_extension and buff_extension:stat_buffs()
 		local dodge_linger_time_modifier_base = stat_buffs and stat_buffs.dodge_linger_time_modifier or 1
 		local dodge_linger_time_melee_modifier = is_melee and stat_buffs and stat_buffs.dodge_linger_time_melee_modifier or 1
 		local dodge_linger_time_ranged_modifier = is_ranged and stat_buffs and stat_buffs.dodge_linger_time_ranged_modifier or 1
 		local dodge_linger_time_modifier = dodge_linger_time_modifier_base + dodge_linger_time_melee_modifier + dodge_linger_time_ranged_modifier - 2
-		local dodge_linger_time_base = specialization_dodge_template.dodge_linger_time
+		local dodge_linger_time_base = base_dodge_template.dodge_linger_time
 		local dodge_linger_time = dodge_linger_time_base * dodge_linger_time_modifier
 		local dodge_linger_end_time = dodge_time + dodge_linger_time
 

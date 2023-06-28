@@ -143,13 +143,13 @@ ActionSweep.init = function (self, action_context, action_params, action_setting
 	self._sweep_fx_source_name = weapon.fx_sources._sweep
 end
 
-ActionSweep.start = function (self, action_settings, t, time_scale, params)
-	ActionSweep.super.start(self, action_settings, t, time_scale, params)
+ActionSweep.start = function (self, action_settings, t, time_scale, action_start_params)
+	ActionSweep.super.start(self, action_settings, t, time_scale, action_start_params)
 
 	self._weapon_tweak_templates_component.charge_template_name = action_settings.charge_template or "none"
-	self._auto_completed = params.auto_completed
-	local is_chain_action = params.is_chain_action
-	local combo_count = params.combo_count
+	self._auto_completed = action_start_params.auto_completed
+	local is_chain_action = action_start_params.is_chain_action
+	local combo_count = action_start_params.combo_count
 	self._combo_count = combo_count
 
 	self:_check_for_critical_strike(true, false)
@@ -192,6 +192,7 @@ ActionSweep.start = function (self, action_settings, t, time_scale, params)
 		param_table.combo_count = combo_count
 		param_table.is_heavy = is_heavy
 		param_table.is_weapon_special_active = special_active
+		param_table.is_auto_completed = self._auto_completed
 
 		buff_extension:add_proc_event(proc_events.on_sweep_start, param_table)
 	end

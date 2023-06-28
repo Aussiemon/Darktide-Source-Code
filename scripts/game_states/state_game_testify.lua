@@ -192,6 +192,9 @@ local StateGameTestify = {
 
 		return circumstance_template.theme_tag
 	end,
+	circumstances = function ()
+		return CircumstanceTemplates
+	end,
 	console_command_lua_trace = function ()
 		_console_command("lua", "trace")
 	end,
@@ -271,15 +274,16 @@ local StateGameTestify = {
 
 		return results
 	end,
-	mission_circumstances = function (mission_name)
-		local circumstances = Missions[mission_name].circumstances
-
-		return circumstances
-	end,
 	mission_cutscenes = function (mission_name)
 		local cutscenes = Missions[mission_name].cinematics
 
 		return cutscenes
+	end,
+	mission_themes = function (mission_name)
+		local file_path = mission_name .. "_mission_themes"
+		local themes = require(file_path)
+
+		return themes
 	end,
 	mission_settings = function (mission_name)
 		local settings = Missions[mission_name]

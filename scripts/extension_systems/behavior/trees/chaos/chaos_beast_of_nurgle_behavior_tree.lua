@@ -141,8 +141,9 @@ local RUN_AWAY = {
 		leave_hook = "beast_of_nurgle_force_spit_out",
 		action_data = action_data.run_away
 	},
+	name = "run_away",
 	condition = "beast_of_nurgle_wants_to_run_away",
-	name = "run_away_sequence"
+	action_data = action_data.run_away
 }
 local ALERTED = {
 	"BtSequenceNode",

@@ -83,6 +83,7 @@ ActionVentOverheat._deal_damage = function (self)
 		return
 	end
 
+	local buff_extension = self._buff_extension
 	local vent_power_level = overheat_config.vent_power_level
 	local vent_damage_profile = overheat_config.vent_damage_profile
 	local vent_damage_type = overheat_config.vent_damage_type
@@ -90,7 +91,6 @@ ActionVentOverheat._deal_damage = function (self)
 	local max_power = vent_power_level[2]
 	local scaled_current_heat = (current_heat - low_threshold) / (1 - low_threshold)
 	local final_power_level = (max_power - min_power) * scaled_current_heat + min_power
-	local buff_extension = self._buff_extension
 	local stat_buffs = buff_extension and buff_extension:stat_buffs()
 	local venting_damage_reduction = stat_buffs.vent_overheat_damage_multiplier or 1
 	final_power_level = final_power_level * venting_damage_reduction

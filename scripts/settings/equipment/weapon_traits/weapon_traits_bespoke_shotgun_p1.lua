@@ -6,25 +6,25 @@ local proc_events = BuffSettings.proc_events
 templates.weapon_trait_bespoke_shotgun_p1_increase_power_on_close_kill = {
 	weapon_trait_bespoke_shotgun_p1_increase_power_on_close_kill_parent = {
 		{
-			child_duration = 2.75,
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.05
 			}
 		},
 		{
-			child_duration = 2.75,
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.055
 			}
 		},
 		{
-			child_duration = 2.75,
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.06
 			}
 		},
 		{
-			child_duration = 2.75,
+			child_duration = 1.75,
 			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.065
 			}

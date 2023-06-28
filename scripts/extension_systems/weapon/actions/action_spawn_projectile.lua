@@ -143,6 +143,21 @@ ActionSpawnProjectile.fixed_update = function (self, dt, t, time_in_action)
 
 	local should_pay = ActionUtility.is_within_trigger_time(time_in_action, dt, fire_time_scaled)
 
+	if should_pay and action_settings.psyker_smite then
+		local buff_extension = self._buff_extension
+		local psyker_empowered_grenade = buff_extension:has_keyword("psyker_empowered_grenade")
+
+		if psyker_empowered_grenade then
+			should_pay = false
+
+			self:_proc_buffs()
+
+			if self._is_server then
+				self._projectile_payed_for = true
+			end
+		end
+	end
+
 	if should_pay then
 		self:_pay_for_projectile(t)
 
@@ -154,6 +169,8 @@ ActionSpawnProjectile.fixed_update = function (self, dt, t, time_in_action)
 		if self._is_server then
 			self._projectile_payed_for = true
 		end
+
+		self:_proc_buffs()
 	end
 end
 
@@ -168,6 +185,7 @@ ActionSpawnProjectile.finish = function (self, reason, data, t, time_in_action)
 		if self._projectile_fired then
 			if not self._projectile_payed_for then
 				self:_pay_for_projectile(t)
+				self:_proc_buffs()
 			end
 		else
 			Managers.state.unit_spawner:mark_for_deletion(self._projectile_unit)
@@ -447,6 +465,23 @@ ActionSpawnProjectile._fire_projectile = function (self, t, time_difference_from
 		projectile_locomotion_extension:switch_to_true_flight(position, rotation, direction, speed, momentum, target_unit, target_position)
 	else
 		ferror("unknown starting state %q", starting_state)
+	end
+end
+
+ActionSpawnProjectile._proc_buffs = function (self)
+	local projectile_template = self:_get_projectile_template()
+	local buff_extension = self._buff_extension
+	local unit = self._player_unit
+	local action_component = self._action_component
+	local param_table = buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		param_table.attacking_unit = unit
+		param_table.projectile_template_name = projectile_template.name
+		param_table.num_shots_fired = action_component.num_shots_fired
+		param_table.combo_count = self._combo_count
+
+		buff_extension:add_proc_event(proc_events.on_shoot_projectile, param_table)
 	end
 end
 

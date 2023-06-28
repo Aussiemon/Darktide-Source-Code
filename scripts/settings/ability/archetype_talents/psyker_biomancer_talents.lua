@@ -1,5 +1,5 @@
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
-local TalentSettings = require("scripts/settings/buff/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local talent_settings = TalentSettings.psyker_2
 local math_round = math.round
 math_round = math_round or function (value)

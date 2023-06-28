@@ -18,6 +18,7 @@ local MutatorManager = require("scripts/managers/mutator/mutator_manager")
 local NetworkedFlowStateManager = require("scripts/managers/networked_flow_state/networked_flow_state_manager")
 local NetworkStoryManager = require("scripts/managers/network_story/network_story_manager")
 local PacingManager = require("scripts/managers/pacing/pacing_manager")
+local PlayerOverlapManager = require("scripts/managers/player/player_overlap_manager")
 local PlayerUnitSpawnManager = require("scripts/managers/player/player_unit_spawn_manager")
 local RoomsAndPortalsManager = require("scripts/managers/wwise/rooms_and_portals_manager")
 local TerrorEventManager = require("scripts/managers/terror_event/terror_event_manager")
@@ -73,9 +74,12 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 	Managers.state.chunk_lod = ChunkLodManager:new(world, mission, local_player)
 	Managers.state.network_story = NetworkStoryManager:new(world, is_server, network_event_delegate)
 	Managers.state.networked_flow_state = NetworkedFlowStateManager:new(world, is_server, network_event_delegate)
+	Managers.state.difficulty = DifficultyManager:new(is_server, resistance, challenge)
 	local mission_template = MissionTemplates[mission_name]
 	local game_mode_name = mission_template.game_mode_name
 	Managers.state.player_unit_spawn = PlayerUnitSpawnManager:new(is_server, level_seed, has_navmesh, game_mode_name, network_event_delegate, soft_cap_out_of_bounds_units)
+	Managers.state.player_overlap_manager = PlayerOverlapManager:new(physics_world)
+	Managers.state.decal = DecalManager:new(world)
 
 	if is_server then
 		Managers.state.bot_nav_transition = BotNavTransitionManager:new(world, physics_world, nav_world, is_server)
@@ -87,8 +91,6 @@ GameplayInitStepManagers._init_state_managers = function (self, world, physics_w
 
 	Managers.player:set_network(is_server, network_event_delegate)
 
-	Managers.state.difficulty = DifficultyManager:new(is_server, resistance, challenge)
-	Managers.state.decal = DecalManager:new(world)
 	Managers.state.minion_death = MinionDeathManager:new(is_server, network_event_delegate, soft_cap_out_of_bounds_units)
 	Managers.state.terror_event = TerrorEventManager:new(world, is_server, network_event_delegate, mission_template, level_name)
 	Managers.state.cinematic = CinematicManager:new(world, is_server, network_event_delegate)

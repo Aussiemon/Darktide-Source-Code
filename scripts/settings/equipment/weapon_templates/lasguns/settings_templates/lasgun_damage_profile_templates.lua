@@ -759,8 +759,8 @@ damage_templates.default_lasgun_snp = {
 	},
 	power_distribution = {
 		attack = {
-			30,
-			60
+			40,
+			70
 		},
 		impact = {
 			1,

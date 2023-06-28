@@ -3,6 +3,7 @@ local category_settings = {
 		path = "scripts/settings/options/interface_settings"
 	},
 	{
+		dofile = true,
 		path = "scripts/settings/options/sound_settings"
 	},
 	{
@@ -28,7 +29,14 @@ local function generate_settings(entries)
 
 	for _, entry in ipairs(entries) do
 		local path = entry.path
-		local config = require(path)
+		local config = nil
+
+		if entry.dofile then
+			config = dofile(path)
+		else
+			config = require(path)
+		end
+
 		local settings = config.settings
 		local reset_function = config.reset_function
 		local category_display_name = config.display_name or "n/a"

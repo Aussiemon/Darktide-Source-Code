@@ -1,4 +1,5 @@
 local templates = {
+	outline_types = table.enum("special_target", "psyker_marked_target", "smart_tagged_enemy", "smart_tagged_enemy_passive", "scanning", "knocked_down", "buff"),
 	MinionOutlineExtension = {
 		special_target = {
 			priority = 2,

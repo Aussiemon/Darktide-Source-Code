@@ -30,20 +30,19 @@ local breed_data = {
 	sub_faction_name = "renegade",
 	broadphase_radius = 1,
 	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_flamer",
-	ranged = true,
 	spawn_aggro_state = "aggroed",
 	stagger_resistance = 1,
+	ranged = true,
 	walk_speed = 2.3,
-	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	base_height = 1.9,
-	ignore_attack_delay = true,
-	stagger_reduction = 0,
+	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	player_locomotion_constrain_radius = 0.4,
+	stagger_reduction = 0,
 	challenge_rating = 1,
 	stagger_reduction_ranged = 5,
+	use_wounds = true,
 	smart_tag_target_type = "breed",
 	game_object_type = "minion_renegade_flamer",
-	use_wounds = true,
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
 	hit_mass = 2,
 	bone_lod_radius = 1.2,
@@ -103,20 +102,6 @@ local breed_data = {
 		default_combat_range = "close",
 		valid_combat_ranges = {
 			close = true
-		}
-	},
-	suppress_config = {
-		max_value = math.huge,
-		threshold = math.huge,
-		flinch_threshold = math.huge,
-		decay_speeds = {
-			melee = 0.05,
-			far = 0.1,
-			close = 0.1
-		},
-		immunity_duration = {
-			2.75,
-			3.25
 		}
 	},
 	attack_intensity_cooldowns = {

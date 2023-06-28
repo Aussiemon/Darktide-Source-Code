@@ -1,3 +1,4 @@
+local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinematic_scene_settings")
 local GameModeBase = require("scripts/managers/game_mode/game_modes/game_mode_base")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
@@ -246,6 +247,8 @@ GameModeCoopCompleteObjective.fail = function (self)
 	self._failed = true
 end
 
+local EMPTY_TABLE = {}
+
 GameModeCoopCompleteObjective.on_player_unit_spawn = function (self, player, unit, is_respawn)
 	GameModeCoopCompleteObjective.super.on_player_unit_spawn(self, player)
 
@@ -265,6 +268,17 @@ GameModeCoopCompleteObjective.on_player_unit_spawn = function (self, player, uni
 				local t = Managers.time:time("gameplay")
 
 				buff_extension:add_internally_controlled_buff("player_spawn_grace", t)
+			end
+		end
+
+		if not player:is_human_controlled() then
+			local bot_config_identifier = BotSpawning.get_bot_config_identifier()
+
+			if bot_config_identifier == "medium" or bot_config_identifier == "high" then
+				local t = Managers.time:time("gameplay")
+				local buff_extension = ScriptUnit.extension(player.player_unit, "buff_system")
+
+				buff_extension:add_internally_controlled_buff("bot_" .. bot_config_identifier .. "_buff", t)
 			end
 		end
 
@@ -338,7 +352,7 @@ GameModeCoopCompleteObjective._store_persistent_player_data = function (self, pl
 	local grenade_ability = equipped_abilities.grenade_ability
 	local grenades_percent = nil
 
-	if not grenade_ability.exclude_from_persistant_player_data then
+	if grenade_ability and not grenade_ability.exclude_from_persistant_player_data then
 		local num_grenades = ability_extension:remaining_ability_charges("grenade_ability")
 		local max_grenades = ability_extension:max_ability_charges("grenade_ability")
 		grenades_percent = num_grenades / max_grenades

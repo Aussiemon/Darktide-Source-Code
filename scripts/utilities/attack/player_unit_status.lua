@@ -1,5 +1,4 @@
 local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
-local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local critical_health = PlayerCharacterConstants.critical_health
 local HEALTH_PERCENT_LIMIT = critical_health.health_percent_limit
@@ -256,6 +255,7 @@ PlayerUnitStatus.is_in_lunging_aim_or_combat_ability = function (lunge_character
 		return false, nil
 	end
 
+	local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
 	local lunge_template_name = lunge_character_state_component.lunge_template
 	local lunge_template = LungeTemplates[lunge_template_name]
 

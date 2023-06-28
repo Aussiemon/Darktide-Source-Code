@@ -1,31 +1,29 @@
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local PlayerSpecialization = {
 	specialization_level_requirement = function ()
 		return 1
+	end,
+	talent_array_to_set = function (talent_array, talent_set)
+		table.clear(talent_set)
+
+		for i = 1, #talent_array do
+			local talent_name = talent_array[i]
+			talent_set[talent_name] = i
+		end
+
+		return talent_set
+	end,
+	talent_set_to_array = function (talent_set, talent_array)
+		table.clear(talent_array)
+
+		for talent_name in pairs(talent_set) do
+			talent_array[#talent_array + 1] = talent_name
+		end
+
+		return talent_array
 	end
 }
-
-PlayerSpecialization.talent_array_to_set = function (talent_array, talent_set)
-	table.clear(talent_set)
-
-	for i = 1, #talent_array do
-		local talent_name = talent_array[i]
-		talent_set[talent_name] = i
-	end
-
-	return talent_set
-end
-
-PlayerSpecialization.talent_set_to_array = function (talent_set, talent_array)
-	table.clear(talent_array)
-
-	for talent_name in pairs(talent_set) do
-		talent_array[#talent_array + 1] = talent_name
-	end
-
-	return talent_array
-end
-
 local _required_levels = {}
 
 PlayerSpecialization.talent_set_to_sorted_array = function (archetype, specialization_name, talent_set, talent_array)
@@ -107,6 +105,7 @@ PlayerSpecialization.from_selected_talents = function (archetype, specialization
 	local passives = {}
 	local coherency_buffs = {}
 	local special_rules = {}
+	local buff_template_tiers = {}
 	local archetype_name = archetype.name
 	local talent_definitions = ArchetypeTalents[archetype_name][specialization_name]
 	local talent_array = PlayerSpecialization.talent_set_to_sorted_array(archetype, specialization_name, talents, {})
@@ -129,13 +128,26 @@ PlayerSpecialization.from_selected_talents = function (archetype, specialization
 		local passive = talent_definition.passive
 
 		if passive then
-			passives[passive.identifier] = passive.buff_template_name
+			local identifier = passive.identifier
+
+			if type(identifier) == "table" then
+				local buff_template_names = passive.buff_template_name
+
+				for j = 1, #identifier do
+					local buff_template_name = buff_template_names[j]
+					passives[identifier[j]] = buff_template_name
+				end
+			else
+				local buff_template_name = passive.buff_template_name
+				passives[identifier] = buff_template_name
+			end
 		end
 
 		local coherency = talent_definition.coherency
 
 		if coherency then
-			coherency_buffs[coherency.identifier] = coherency.buff_template_name
+			local buff_template_name = coherency.buff_template_name
+			coherency_buffs[coherency.identifier] = buff_template_name
 		end
 
 		local special_rule = talent_definition.special_rule
@@ -154,7 +166,7 @@ PlayerSpecialization.from_selected_talents = function (archetype, specialization
 		end
 	end
 
-	return combat_ability, grenade_ability, passives, coherency_buffs, special_rules
+	return combat_ability, grenade_ability, passives, coherency_buffs, special_rules, buff_template_tiers
 end
 
 local function extract_all_talents()

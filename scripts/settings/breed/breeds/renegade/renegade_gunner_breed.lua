@@ -6,6 +6,7 @@ local BreedTerrorEventSettings = require("scripts/settings/breed/breed_terror_ev
 local CoverSettings = require("scripts/settings/cover/cover_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionGibbingTemplates = require("scripts/managers/minion/minion_gibbing_templates")
 local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
@@ -23,19 +24,19 @@ local weakspot_types = WeakspotSettings.types
 local breed_name = "renegade_gunner"
 local breed_data = {
 	detection_radius = 15,
-	volley_fire_target = true,
 	walk_speed = 2.3,
-	player_locomotion_constrain_radius = 0.5,
-	use_bone_lod = true,
 	spawn_inventory_slot = "slot_ranged_weapon",
+	use_bone_lod = true,
 	sub_faction_name = "renegade",
 	unit_template_name = "minion",
 	debug_spawn_category = "Roamer",
+	volley_fire_target = true,
 	debug_color_name = "cheeseburger",
 	spawn_anim_state = "to_ranged",
 	slot_template = "renegade_melee",
 	broadphase_radius = 1,
 	stagger_resistance = 1,
+	player_locomotion_constrain_radius = 0.5,
 	game_object_type = "minion_elite_ranged",
 	challenge_rating = 4,
 	bone_lod_radius = 1.2,
@@ -45,7 +46,6 @@ local breed_data = {
 	faction_name = "chaos",
 	base_height = 2,
 	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_elite_gunner",
-	ignore_attack_delay = false,
 	ranged = true,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 0,
@@ -53,7 +53,6 @@ local breed_data = {
 	can_patrol = true,
 	smart_tag_target_type = "breed",
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
-	hit_mass = 4,
 	reduced_hit_mass = 1,
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
@@ -69,6 +68,14 @@ local breed_data = {
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.armored,
+	hit_mass = {
+		4,
+		4,
+		4,
+		4,
+		4,
+		8
+	},
 	gib_template = MinionGibbingTemplates.renegade_gunner_gibbing,
 	stagger_durations = {
 		[stagger_types.light] = 0.75,
@@ -135,21 +142,7 @@ local breed_data = {
 			close = false
 		}
 	},
-	suppress_config = {
-		max_value = 40,
-		above_threshold_decay_multiplier = 2,
-		threshold = 27.5,
-		disable_cover_threshold = 35,
-		decay_speeds = {
-			melee = 0.05,
-			far = 0.5,
-			close = 0.3
-		},
-		immunity_duration = {
-			0.25,
-			0.5
-		}
-	},
+	suppress_config = MinionDifficultySettings.suppression.renegade_gunner,
 	attack_intensity_cooldowns = {
 		melee = {
 			0.7,

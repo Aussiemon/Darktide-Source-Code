@@ -1546,6 +1546,45 @@ local material_overrides = {
 			}
 		}
 	},
+	color_moebian_6th_02 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/color_moebian_6th_01"
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_brown_02"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/1_colour_brown_02"
+			}
+		}
+	},
+	color_elysian_01 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/2_colour_forest_03"
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/2_colour_forest_01"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/2_colour_forest_01"
+			}
+		}
+	},
+	color_elysian_02 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/3_colour_forest_10"
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/1_colour_forest_01"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/1_colour_forest_01"
+			}
+		}
+	},
 	color_cadia_01 = {
 		texture_overrides = {
 			color_gradient = {

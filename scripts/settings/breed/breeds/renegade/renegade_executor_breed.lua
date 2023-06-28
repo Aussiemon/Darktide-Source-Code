@@ -5,6 +5,7 @@ local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BreedTerrorEventSettings = require("scripts/settings/breed/breed_terror_event_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionGibbingTemplates = require("scripts/managers/minion/minion_gibbing_templates")
 local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
@@ -73,8 +74,8 @@ local breed_data = {
 		[stagger_types.sticky] = 0.6
 	},
 	stagger_immune_times = {
-		[stagger_types.light] = 0.5,
-		[stagger_types.medium] = 0.75,
+		[stagger_types.light] = 0.85,
+		[stagger_types.medium] = 1,
 		[stagger_types.heavy] = 3,
 		[stagger_types.light_ranged] = 5,
 		[stagger_types.killshot] = 2,
@@ -98,20 +99,7 @@ local breed_data = {
 		"anim_move_speed"
 	},
 	combat_range_data = BreedCombatRanges.renegade_executor,
-	suppress_config = {
-		threshold = 40,
-		max_value = 50,
-		decay_speeds = {
-			melee = 0.05,
-			far = 0.5,
-			close = 0.2
-		},
-		flinch_threshold = math.huge,
-		immunity_duration = {
-			2.75,
-			3.25
-		}
-	},
+	suppress_config = MinionDifficultySettings.suppression.renegade_executor,
 	attack_intensity_cooldowns = {
 		melee = {
 			0,
@@ -399,7 +387,7 @@ local breed_data = {
 		}
 	},
 	slot_template = breed_name,
-	blackboard_component_config = BreedBlackboardComponentTemplates.melee_patroller
+	blackboard_component_config = BreedBlackboardComponentTemplates.melee_patroller_can_be_suppressed
 }
 
 return breed_data

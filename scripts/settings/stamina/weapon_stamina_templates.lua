@@ -235,5 +235,26 @@ weapon_stamina_templates.ogryn_powermaul_slabshield_p1_m1 = {
 		lerp_basic = 1.5
 	}
 }
+weapon_stamina_templates.bot_linesman = {
+	stamina_modifier = 8,
+	sprint_cost_per_second = {
+		lerp_perfect = 0.75,
+		lerp_basic = 1.25
+	},
+	block_cost_default = {
+		inner = {
+			lerp_perfect = 0.5,
+			lerp_basic = 1
+		},
+		outer = {
+			lerp_perfect = 1,
+			lerp_basic = 3
+		}
+	},
+	push_cost = {
+		lerp_perfect = 1,
+		lerp_basic = 3
+	}
+}
 
 return settings("WeaponStaminaTemplates", weapon_stamina_templates)

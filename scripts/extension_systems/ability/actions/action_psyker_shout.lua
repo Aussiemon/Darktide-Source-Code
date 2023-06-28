@@ -7,7 +7,7 @@ local PowerLevelSettings = require("scripts/settings/damage/power_level_settings
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local Vo = require("scripts/utilities/vo")
 local WarpCharge = require("scripts/utilities/warp_charge")
-local TalentSettings = require("scripts/settings/buff/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local talent_settings = TalentSettings.psyker_2
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local proc_events = BuffSettings.proc_events
@@ -15,6 +15,7 @@ local special_rules = SpecialRulesSetting.special_rules
 local ActionPsykerShout = class("ActionPsykerShout", "ActionAbilityBase")
 local POWER_MODIFIER_PER_SOUL = 0.25
 local broadphase_results = {}
+local EXTERNAL_PROPERTIES = {}
 
 ActionPsykerShout.init = function (self, action_context, action_params, action_settings)
 	ActionPsykerShout.super.init(self, action_context, action_params, action_settings)
@@ -47,6 +48,9 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 	self._speed = action_settings.shout_range / action_settings.total_time * 2
 	self._shout_range = action_settings.shout_range
 	self._combat_ability_component.active = true
+	self._warp_charge_component = warp_charge_component
+	self._warp_charge_percent = warp_charge_component.current_percentage
+	self._num_hits = 0
 	local wwise_state = action_settings.wwise_state
 
 	if wwise_state then
@@ -56,7 +60,7 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 	local vo_tag = action_settings.vo_tag
 
 	if vo_tag then
-		if warp_charge_component.current_percentage >= 0.75 then
+		if self._warp_charge_percent >= 0.75 then
 			Vo.play_combat_ability_event(player_unit, vo_tag.high)
 		else
 			Vo.play_combat_ability_event(player_unit, vo_tag.low)
@@ -74,6 +78,16 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 			self._fx_extension:trigger_exclusive_wwise_event(sound_event, player_position)
 		end
 	end
+
+	local source_name = action_settings.sound_source or "head"
+	local sync_to_clients = action_settings.has_husk_sound
+	local include_client = false
+
+	table.clear(EXTERNAL_PROPERTIES)
+
+	EXTERNAL_PROPERTIES.ability_template = self._ability.ability_template
+
+	self._fx_extension:trigger_gear_wwise_event_with_source("shout", EXTERNAL_PROPERTIES, source_name, sync_to_clients, include_client)
 
 	local anim = action_settings.anim
 	local anim_3p = action_settings.anim_3p or anim
@@ -103,21 +117,22 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 		self:_handle_enemies(action_settings, side, t, specialization_extension)
 	end
 
+	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
+	local param_table = buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		param_table.unit = player_unit
+		param_table.warp_charge_percent = self._warp_charge_percent
+
+		buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
+	end
+
 	local shout_drains_warp_charge = specialization_extension:has_special_rule(special_rules.shout_drains_warp_charge)
 
 	if shout_drains_warp_charge then
 		local drain_amount = talent_settings.combat_ability.warpcharge_vent or 0.5
 
 		WarpCharge.decrease_immediate(drain_amount, warp_charge_component, player_unit)
-	end
-
-	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
-	local param_table = buff_extension:request_proc_event_param_table()
-
-	if param_table then
-		param_table.unit = player_unit
-
-		buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
 	end
 end
 
@@ -160,6 +175,15 @@ ActionPsykerShout.finish = function (self, reason, data, t, time_in_action, acti
 		Wwise.set_state(wwise_state.group, wwise_state.off_state)
 	end
 
+	local buff_extension = ScriptUnit.extension(self._player_unit, "buff_system")
+	local param_table = buff_extension:request_proc_event_param_table()
+
+	if param_table then
+		param_table.num_hits = self._num_hits
+
+		buff_extension:add_proc_event(proc_events.on_psyker_shout_finish, param_table)
+	end
+
 	self._combat_ability_component.active = false
 
 	table.clear(self._total_hits)
@@ -176,11 +200,8 @@ ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, sp
 	local damage_type = action_settings.damage_type
 	local attack_type = action_settings.attack_type
 	local power_level = action_settings.power_level or DEFAULT_POWER_LEVEL
-	local current_souls = self._specialization_resource_component.current_resource
-	local current_power_modifier = 1 + current_souls * POWER_MODIFIER_PER_SOUL
+	local current_power_modifier = 1 + self._warp_charge_percent
 	power_level = power_level * current_power_modifier
-	local damage_per_warpcharge = specialization_extension:has_special_rule(special_rules.psyker_biomancer_discharge_damage_per_warp_charge)
-	local initial_damage_profile = damage_per_warpcharge and action_settings.initial_damage_profile
 	local damage_profile = action_settings.damage_profile
 	self._damage_profile = damage_profile
 	self._player_position = player_position
@@ -204,7 +225,6 @@ ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, sp
 			total_range = total_range - range
 			previous_range = range
 			local position = player_position + shout_direction * range
-			local vfx = action_settings.vfx
 
 			table.clear(broadphase_results)
 
@@ -226,11 +246,8 @@ ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, sp
 				local close_range = 9
 
 				if (shout_dot < dot or distance_squared < close_range) and not total_hits[enemy_unit] then
+					self._num_hits = self._num_hits + 1
 					total_hits[enemy_unit] = distance_squared
-
-					if initial_damage_profile then
-						Attack.execute(enemy_unit, initial_damage_profile, "attack_direction", attack_direction, "power_level", power_level, "hit_zone_name", "torso", "damage_type", damage_type, "attack_type", attack_type, "attacking_unit", player_unit)
-					end
 				end
 			end
 		end

@@ -10,13 +10,16 @@ local Interface = {
 	"join_chat_channel",
 	"leave_channel",
 	"send_channel_message",
+	"send_loc_channel_message",
 	"sessions",
 	"connected_chat_channels",
 	"connected_voip_channels",
 	"channel_text_mute_participant",
 	"channel_voip_mute_participant",
 	"player_mute_status_changed",
-	"mic_volume_changed"
+	"mic_volume_changed",
+	"get_capture_devices",
+	"set_capture_device"
 }
 
 return Interface

@@ -1,10 +1,11 @@
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
+local ActionModules = require("scripts/extension_systems/weapon/actions/modules/action_modules")
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local AimAssist = require("scripts/utilities/aim_assist")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local ChargeActionModule = require("scripts/extension_systems/weapon/actions/modules/charge_action_module")
 local Component = require("scripts/utilities/component")
+local InputDevice = require("scripts/managers/input/input_device")
 local LagCompensation = require("scripts/utilities/lag_compensation")
 local Overheat = require("scripts/utilities/overheat")
 local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
@@ -15,7 +16,6 @@ local Spread = require("scripts/utilities/spread")
 local Suppression = require("scripts/utilities/attack/suppression")
 local Sway = require("scripts/utilities/sway")
 local Vo = require("scripts/utilities/vo")
-local InputDevice = require("scripts/managers/input/input_device")
 local ActionShoot = class("ActionShoot", "ActionWeaponBase")
 local proc_events = BuffSettings.proc_events
 local DEFUALT_NUM_CRITICAL_SHOTS = 1
@@ -48,7 +48,7 @@ ActionShoot.init = function (self, action_context, action_params, action_setting
 	local player_unit = self._player_unit
 	local first_person_unit = self._first_person_unit
 	local physics_world = self._physics_world
-	self._charge_module = ChargeActionModule:new(physics_world, player_unit, first_person_unit, self._action_module_charge_component, action_settings)
+	self._charge_module = ActionModules.charge:new(physics_world, player_unit, first_person_unit, self._action_module_charge_component, action_settings)
 	local weapon = action_params.weapon
 	self._muzzle_fx_source_name = weapon.fx_sources._muzzle
 	self._muzzle_fx_source_secondary_name = weapon.fx_sources._muzzle_secondary
@@ -299,16 +299,20 @@ ActionShoot._spend_ammunition = function (self, dt, t, charge_level)
 	local action_settings = self._action_settings
 	local inventory_slot_component = self._inventory_slot_component
 	local use_charge = action_settings.use_charge
+	local is_critical_strike = self._critical_strike_component.is_active
 	local buff_keywords = BuffSettings.keywords
 	local buff_extension = self._buff_extension
+	local has_no_ammo_keyword = buff_extension:has_keyword(buff_keywords.no_ammo_consumption)
+	local trigger_proc = has_no_ammo_keyword
 
-	if buff_extension:has_keyword(buff_keywords.no_ammo_consumption) then
+	if trigger_proc then
 		local param_table = buff_extension:request_proc_event_param_table()
 
 		if param_table then
 			param_table.t = t
 			param_table.ammo_usage = 0
 			param_table.charged_ammo = use_charge
+			param_table.is_critical_strike = is_critical_strike
 
 			buff_extension:add_proc_event(proc_events.on_ammo_consumed, param_table)
 		end
@@ -346,6 +350,7 @@ ActionShoot._spend_ammunition = function (self, dt, t, charge_level)
 		param_table.t = t
 		param_table.ammo_usage = ammo_usage
 		param_table.charged_ammo = use_charge
+		param_table.is_critical_strike = is_critical_strike
 
 		buff_extension:add_proc_event(proc_events.on_ammo_consumed, param_table)
 	end

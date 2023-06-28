@@ -1,4 +1,4 @@
-local TalentSettings = require("scripts/settings/buff/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local biomancer_talent_settings = TalentSettings.psyker_2
 local abilities = {
 	psyker_discharge_shout = {

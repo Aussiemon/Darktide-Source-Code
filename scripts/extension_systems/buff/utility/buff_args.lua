@@ -17,6 +17,9 @@ local ARGS = {
 	},
 	{
 		name = "source_item"
+	},
+	{
+		name = "from_specialization"
 	}
 }
 local NUM_ARGS = #ARGS
@@ -27,19 +30,20 @@ for i = 1, NUM_ARGS do
 	ARGS[arg_name] = ARGS[i]
 end
 
-BuffArgs.add_args_to_context = function (context, ...)
+BuffArgs.add_args_to_context = function (context, added_args, ...)
 	local num_args = select("#", ...)
 
 	for i = 1, num_args, 2 do
 		local arg, val = select(i, ...)
 		context[arg] = val
+		added_args[arg] = val
 	end
 end
 
 local EMPTY_TABLE = {}
 
 BuffArgs.is_only_predictable_data = function (...)
-	BuffArgs.add_args_to_context(EMPTY_TABLE, ...)
+	BuffArgs.add_args_to_context(EMPTY_TABLE, EMPTY_TABLE, ...)
 
 	local all_ok = true
 

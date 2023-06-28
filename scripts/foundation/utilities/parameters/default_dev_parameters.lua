@@ -78,6 +78,7 @@ local categories = {
 	"Networked Timer",
 	"Pacing",
 	"Party",
+	"Payload",
 	"Perception",
 	"PerfHud",
 	"Physics",
@@ -128,6 +129,10 @@ local function hang_ledge_toggle_draw(new_value, old_value)
 end
 
 local params = {
+	replace_input_settings_with_dev_parameters = {
+		value = false,
+		category = "Input"
+	},
 	controller_selection = {
 		value = "latest",
 		category = "Input",
@@ -704,34 +709,46 @@ params.disable_self_assist = {
 }
 params.allow_character_input_in_free_flight = {
 	value = false,
+	name = "allow_character_input_in_free_flight, Keybind: L-CTRL + SPACE",
 	category = "Player Character"
 }
 params.box_minion_collision = {
 	value = false,
 	category = "Player Character"
 }
+local force_local_profiles = false
 params.character_profile_selector_placeholder = {
 	category = "Player Character",
-	value = false,
+	value = force_local_profiles,
 	options_function = function ()
 		local options = {
-			false,
-			1,
-			2,
-			3,
-			4
+			[1.0] = false
 		}
+		local ProfileUtils = require("scripts/utilities/profile_utils")
+		local MasterItems = require("scripts/backend/master_items")
+		local placeholder_profiles = ProfileUtils.placeholder_profiles(MasterItems.get_cached())
+
+		for ii = 1, #placeholder_profiles do
+			options[#options + 1] = ii
+		end
 
 		return options
 	end,
 	options_texts_function = function ()
 		local options_texts = {
-			"Use backend profile",
-			"Sharpshooter (ranger)",
-			"Skullbreaker (bonebreaker)",
-			"Preacher (maniac)",
-			"Psykinetic (biomancer)"
+			[1.0] = "Backend profile"
 		}
+		local ProfileUtils = require("scripts/utilities/profile_utils")
+		local MasterItems = require("scripts/backend/master_items")
+		local placeholder_profiles = ProfileUtils.placeholder_profiles(MasterItems.get_cached())
+		local format_string = #placeholder_profiles >= 10 and "%-4s %s" or "%-3s %s"
+
+		for ii = 1, #placeholder_profiles do
+			local profile = placeholder_profiles[ii]
+			local index = string.format("[%d]", ii)
+			local text = string.format(format_string, index, profile.description or "N/A")
+			options_texts[#options_texts + 1] = text
+		end
 
 		return options_texts
 	end,
@@ -1173,6 +1190,10 @@ params.no_ability_cooldowns = {
 			RPC.rpc_debug_client_request_no_ability_cooldowns(channel, new_value)
 		end
 	end
+}
+params.debug_smoke_fog = {
+	value = false,
+	category = "Abilities"
 }
 params.debug_bots = {
 	value = false,
@@ -2455,6 +2476,10 @@ params.reconnect_to_ongoing_game_session = {
 params.verbose_party_log = {
 	value = false,
 	category = "Party"
+}
+params.debug_playload = {
+	value = false,
+	category = "Payload"
 }
 params.verbose_presence_log = {
 	value = false,
@@ -3758,6 +3783,57 @@ params.pong_timeout = {
 	category = "Network",
 	on_value_set = set_pong_timeout
 }
+local cached_network_functions = nil
+
+local function set_backend_delay(new_value)
+	local Promise = require("scripts/foundation/utilities/promise")
+	local has_saved_values = cached_network_functions ~= nil
+
+	if not new_value and has_saved_values then
+		Managers.backend.title_request = cached_network_functions.title_request
+		Managers.backend.url_request = cached_network_functions.url_request
+		cached_network_functions = nil
+
+		return
+	end
+
+	if new_value then
+		if not has_saved_values then
+			cached_network_functions = {
+				title_request = Managers.backend.title_request,
+				url_request = Managers.backend.url_request
+			}
+		end
+
+		Managers.backend.title_request = function (...)
+			local f = callback(cached_network_functions.title_request, ...)
+
+			return Promise.delay(new_value):next(function ()
+				return f()
+			end)
+		end
+
+		Managers.backend.url_request = function (...)
+			local f = callback(cached_network_functions.url_request, ...)
+
+			return Promise.delay(new_value):next(function ()
+				return f()
+			end)
+		end
+	end
+end
+
+params.backend_delay = {
+	value = false,
+	category = "Network",
+	options = {
+		false,
+		0.5,
+		2,
+		8
+	},
+	on_value_set = set_backend_delay
+}
 params.reliable_rpc_send_count_debug = {
 	value = false,
 	category = "Network"
@@ -3894,6 +3970,10 @@ params.immediate_chain_lightning_jumps = {
 	category = "Chain Lightning"
 }
 params.disable_chain_lightning_effects = {
+	value = false,
+	category = "Chain Lightning"
+}
+params.debug_chain_lightning_hand_effects = {
 	value = false,
 	category = "Chain Lightning"
 }
@@ -4554,7 +4634,7 @@ params.unlock_all_shooting_range_enemies = {
 	category = "Shooting Range"
 }
 params.trace_rumble_activation_events = {
-	value = false,
+	value = true,
 	category = "Rumble"
 }
 params.category_log_levels = {

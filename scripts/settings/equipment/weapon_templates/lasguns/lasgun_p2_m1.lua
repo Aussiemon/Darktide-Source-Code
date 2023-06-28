@@ -1197,7 +1197,7 @@ weapon_template.weapon_temperature_settings = {
 weapon_template.keywords = {
 	"ranged",
 	"lasgun",
-	"p1"
+	"p2"
 }
 weapon_template.can_use_while_vaulting = true
 weapon_template.dodge_template = "killshot"

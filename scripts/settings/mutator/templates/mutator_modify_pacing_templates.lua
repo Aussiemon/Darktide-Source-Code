@@ -11,11 +11,11 @@ local mutator_templates = {
 	mutator_more_alive_specials = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		modify_pacing = {
-			chance_of_coordinated_strike = 1,
+			chance_of_coordinated_strike = 0.2,
 			max_alive_specials_multiplier = {
 				1,
 				1,
-				1,
+				1.25,
 				1.25,
 				1.5,
 				2
@@ -107,6 +107,25 @@ local mutator_templates = {
 	mutator_travel_distance_spawning_hordes = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing"
 	},
+	mutator_move_specials_timer_when_horde_active = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing"
+	},
+	mutator_move_specials_timer_when_monster_active = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing"
+	},
+	mutator_specials_required_challenge_rating = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			specials_required_challenge_rating = {
+				5,
+				5,
+				5,
+				5,
+				5,
+				5
+			}
+		}
+	},
 	mutator_set_min_resistance = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		init_modify_pacing = {
@@ -179,6 +198,12 @@ local mutator_templates = {
 			override_faction = "renegade"
 		}
 	},
+	mutator_only_cultist_faction = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			override_faction = "cultist"
+		}
+	},
 	mutator_toxic_gas = {
 		class = "scripts/managers/mutator/mutators/mutator_toxic_gas",
 		gas_settings = {
@@ -191,6 +216,16 @@ local mutator_templates = {
 	},
 	mutator_toxic_gas_volumes = {
 		class = "scripts/managers/mutator/mutators/mutator_toxic_gas_volumes",
+		gas_settings = {
+			num_gas_clouds = 10,
+			cloud_spawn_distance_range = {
+				80,
+				140
+			}
+		}
+	},
+	mutator_toxic_gas_twins = {
+		class = "scripts/managers/mutator/mutators/mutator_toxic_gas_twins",
 		gas_settings = {
 			num_gas_clouds = 10,
 			cloud_spawn_distance_range = {
@@ -353,6 +388,32 @@ local mutator_templates = {
 				{
 					6,
 					2
+				}
+			}
+		},
+		client_dummy_challenge = {
+			3,
+			4,
+			5,
+			5,
+			6
+		}
+	},
+	mutator_monster_specials = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			specials_monster_spawn_config = {
+				max_monsters = 2,
+				chance_to_spawn_monster = 0.2,
+				health_modifiers = {
+					chaos_beast_of_nurgle = 0.25,
+					chaos_spawn = 0.25,
+					chaos_plague_ogryn = 0.25
+				},
+				breeds = {
+					"chaos_plague_ogryn",
+					"chaos_beast_of_nurgle",
+					"chaos_spawn"
 				}
 			}
 		}

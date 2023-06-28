@@ -66,7 +66,7 @@ end
 BtBeastOfNurgleConsumeMinionAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
 	local target_unit = scratchpad.target_unit
 
-	if not ALIVE[target_unit] or not HEALTH_ALIVE[target_unit] then
+	if not HEALTH_ALIVE[target_unit] then
 		scratchpad.state = "invalid_target_unit"
 	end
 

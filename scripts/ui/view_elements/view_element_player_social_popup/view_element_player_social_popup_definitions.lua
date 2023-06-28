@@ -163,6 +163,11 @@ local widget_definitions = {
 			pass_type = "text"
 		},
 		{
+			style_id = "user_fatshark_id",
+			value_id = "user_fatshark_id",
+			pass_type = "text"
+		},
+		{
 			style_id = "user_activity",
 			value_id = "user_activity",
 			pass_type = "text"

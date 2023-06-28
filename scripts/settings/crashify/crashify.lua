@@ -1,5 +1,5 @@
 local settings = {
-	branch = "rel_Patch1.1.0x_external",
+	branch = "rel_Patch1.1.1x_external",
 	project = "bishop"
 }
 

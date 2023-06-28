@@ -1205,9 +1205,9 @@ local CameraEffectSettings = {
 			octaves = 4.5
 		},
 		elven_ruins_ending_explosion = {
-			persistance = 1.2,
+			persistance = 0.9,
 			fade_out = 0.3,
-			amplitude = 0.8,
+			amplitude = 0.7,
 			duration = 1,
 			fade_in = 0.1,
 			octaves = 6

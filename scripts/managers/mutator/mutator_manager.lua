@@ -62,6 +62,14 @@ MutatorManager.on_gameplay_post_init = function (self, level, themes)
 	end
 end
 
+MutatorManager.on_spawn_points_generated = function (self, level, themes)
+	local mutators = self._mutators
+
+	for _, mutator in pairs(mutators) do
+		mutator:on_spawn_points_generated(level, themes)
+	end
+end
+
 MutatorManager.update = function (self, dt, t)
 	local mutators = self._mutators
 

@@ -395,8 +395,8 @@ BaseView._update_element_position = function (self, scenegraph_id, element, use_
 	end
 end
 
-BaseView._force_update_scenegraph = function (self)
-	UIScenegraph.update_scenegraph(self._ui_scenegraph, self._render_scale)
+BaseView._force_update_scenegraph = function (self, ui_scenegraph)
+	UIScenegraph.update_scenegraph(ui_scenegraph or self._ui_scenegraph, self._render_scale)
 end
 
 BaseView._update_animations = function (self, dt, t)
@@ -606,7 +606,7 @@ BaseView._remove_element = function (self, reference_name)
 		end
 	end
 
-	element:destroy()
+	element:destroy(self._ui_renderer)
 
 	elements[reference_name] = nil
 end

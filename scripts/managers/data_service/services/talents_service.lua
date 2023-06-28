@@ -23,8 +23,14 @@ local function _set_backend_response_success(player, extra_data)
 	return extra_data
 end
 
-local function _set_talents_backend_response_fail(error)
+local function _set_talents_backend_response_fail(result)
+	local errors = result and result.body and result.body.errors
+
 	Log.error("Talents", "couldn't set selected talents in backend")
+
+	if errors then
+		Log.error("Talents", "Message: %s", table.tostring(errors, 5))
+	end
 end
 
 TalentsService.set_talents = function (self, player, talent_names)
@@ -38,14 +44,14 @@ TalentsService.set_talents = function (self, player, talent_names)
 	local promise = backend:set_talents(character_id, talent_array)
 
 	promise:next(callback(_set_backend_response_success, player, talent_names), _set_talents_backend_response_fail):catch(function (err)
-		Log.error("Talents", "couldn't set selected talents in backend")
+		_set_talents_backend_response_fail(err)
 	end)
 
 	return promise
 end
 
 local function _set_specialization_backend_response_fail(error)
-	Log.error("Talents", "couldn't set selected talents in backend")
+	Log.error("Talents", "couldn't set selected specialization in backend")
 end
 
 TalentsService.set_specialization = function (self, player, specialization)

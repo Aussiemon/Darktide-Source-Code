@@ -3,7 +3,7 @@ local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionTargetSelection = require("scripts/utilities/minion_target_selection")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 
-local function _calculate_score(breed, unit, target_unit, distance_sq, is_new_target, threat_units, debug_target_weighting_or_nil, line_of_sight_lookup)
+local function _calculate_score(breed, unit, target_unit, distance_sq, is_new_target, threat_units, debug_target_weighting_or_nil, line_of_sight_lookup, t, perception_component)
 	local target_selection_weights = breed.target_selection_weights
 	local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 	local target_breed = target_unit_data_extension:breed()
@@ -22,6 +22,8 @@ local function _calculate_score(breed, unit, target_unit, distance_sq, is_new_ta
 	score = score + line_of_sight_weight
 	local weight_multiplier = MinionTargetSelection.weight_multiplier(target_unit)
 	score = score * weight_multiplier
+	local stickiness_weight = MinionTargetSelection.stickiness_weight(target_selection_weights, is_new_target, perception_component, t)
+	score = score + stickiness_weight
 
 	return math.max(score, 0)
 end
@@ -57,7 +59,7 @@ target_selection_template.cultist_mutant = function (unit, side, perception_comp
 				best_score = -math.huge
 			else
 				local is_new_target = false
-				best_score = _calculate_score(breed, unit, current_target_unit, distance_sq - stickiness, is_new_target, threat_units, debug_target_weighting_or_nil, line_of_sight_lookup)
+				best_score = _calculate_score(breed, unit, current_target_unit, distance_sq - stickiness, is_new_target, threat_units, debug_target_weighting_or_nil, line_of_sight_lookup, t, perception_component)
 			end
 		else
 			closest_z_distance = math.huge
@@ -113,7 +115,7 @@ target_selection_template.cultist_mutant = function (unit, side, perception_comp
 						local target_position = POSITION_LOOKUP[target_unit]
 						local distance_sq = Vector3_distance_squared(position, target_position)
 						local is_new_target = true
-						local score = _calculate_score(breed, unit, target_unit, distance_sq, is_new_target, threat_units, debug_target_weighting_or_nil, line_of_sight_lookup)
+						local score = _calculate_score(breed, unit, target_unit, distance_sq, is_new_target, threat_units, debug_target_weighting_or_nil, line_of_sight_lookup, t, perception_component)
 
 						if best_score < score then
 							local z_distance = math.abs(position.z - target_position.z)

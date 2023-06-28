@@ -244,18 +244,25 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 					local perception_component = blackboard.perception
 					local target_unit = perception_component.target_unit
 					local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
-					local character_state_component = target_unit_data_extension:read_component("character_state")
-					local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-					local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
+					local target_breed = target_unit_data_extension:breed()
+					local Breed = require("scripts/utilities/breed")
 
-					if is_disabled then
+					if not Breed.is_player(target_breed) then
 						condition_result = false
 					else
-						local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
-						local vomit_buff_name = "chaos_beast_of_nurgle_hit_by_vomit"
-						local current_stacks = buff_extension:current_stacks(vomit_buff_name)
-						local wants_to_eat = behavior_component.wants_to_eat
-						condition_result = current_stacks == 3 or wants_to_eat
+						local character_state_component = target_unit_data_extension:read_component("character_state")
+						local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+						local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
+
+						if is_disabled then
+							condition_result = false
+						else
+							local buff_extension = ScriptUnit.extension(target_unit, "buff_system")
+							local vomit_buff_name = "chaos_beast_of_nurgle_hit_by_vomit"
+							local current_stacks = buff_extension:current_stacks(vomit_buff_name)
+							local wants_to_eat = behavior_component.wants_to_eat
+							condition_result = current_stacks == 3 or wants_to_eat
+						end
 					end
 				end
 			end
@@ -378,8 +385,10 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 		return node_change_target
 	end
 
-	local node_run_away_sequence = children[11]
-	local is_running = last_leaf_node_running and last_running_node == node_run_away_sequence
+	local node_run_away = children[11]
+	local tree_node = node_run_away.tree_node
+	local action_data = tree_node.action_data
+	local is_running = last_leaf_node_running and last_running_node == node_run_away
 	local condition_result = nil
 
 	repeat
@@ -425,16 +434,17 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 			else
 				local health_extension = ScriptUnit.extension(consumed_unit, "health_system")
 				local permanent_damage_taken_percent = health_extension:permanent_damage_taken_percent()
-				condition_result = permanent_damage_taken_percent < 0.5
+				local required_permanent_damage_taken_percent = Managers.state.difficulty:get_table_entry_by_challenge(action_data.required_permanent_damage_taken_percent)
+				condition_result = required_permanent_damage_taken_percent > permanent_damage_taken_percent
 			end
 		end
 	until true
 
 	if condition_result then
-		local leaf_node = node_run_away_sequence:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
+		local leaf_node = node_run_away:evaluate(unit, blackboard, scratchpad, dt, t, evaluate_utility, node_data, old_running_child_nodes, new_running_child_nodes, last_leaf_node_running)
 
 		if leaf_node then
-			new_running_child_nodes[node_identifier] = node_run_away_sequence
+			new_running_child_nodes[node_identifier] = node_run_away
 
 			return leaf_node
 		end
@@ -621,7 +631,13 @@ BtChaosBeastOfNurgleSelectorNode.evaluate = function (self, unit, blackboard, sc
 						else
 							local target_distance = perception_component.target_distance
 							local wanted_distance = condition_args.wanted_distance
-							condition_result = wanted_distance >= target_distance
+
+							if wanted_distance < target_distance then
+								condition_result = false
+							else
+								local consumed_unit = behavior_component.consumed_unit
+								condition_result = not HEALTH_ALIVE[consumed_unit] or target_unit ~= consumed_unit
+							end
 						end
 					end
 				end

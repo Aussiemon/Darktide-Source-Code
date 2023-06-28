@@ -138,6 +138,14 @@ user_display_name_style.offset = {
 	0
 }
 user_display_name_style.text_vertical_alignment = "bottom"
+player_header_style.user_fatshark_id = table.clone(UIFontSettings.header_3)
+local user_fatshark_id_style = player_header_style.user_fatshark_id
+user_fatshark_id_style.offset = {
+	0,
+	100,
+	0
+}
+user_fatshark_id_style.text_vertical_alignment = "center"
 player_header_style.user_activity = table.clone(UIFontSettings.body_small)
 local user_activity_style = player_header_style.user_activity
 user_activity_style.offset = {
@@ -206,6 +214,20 @@ disabled_button_with_explanation_style.icon = {
 		64,
 		64
 	}
+}
+blueprint_styles.search_header = {}
+local search_header_style = blueprint_styles.search_header
+search_header_style.size = {
+	column_width,
+	64
+}
+search_header_style.search_text = table.clone(UIFontSettings.body)
+search_header_style.search_text.text_vertical_alignment = "center"
+local search_header_text_style = search_header_style.search_text
+search_header_text_style.offset = {
+	0,
+	0,
+	1
 }
 blueprint_styles.choice_header = {}
 local choice_header_style = blueprint_styles.choice_header
@@ -401,5 +423,144 @@ view_element_player_popup_style.change_function = function (content, style)
 		color_lerp(color, interaction_color, input_progress, color)
 	end
 end
+
+local social_menu_roster_view_styles = {
+	default_frame_material = "content/ui/textures/nameplates/portrait_frames/default",
+	roster_grid_mask_expansion = 20,
+	default_insignia_material = "content/ui/textures/nameplates/insignias/default",
+	panel_header_height = 58,
+	roster_panel_size = {
+		1030,
+		680
+	},
+	grid_margin = {
+		20,
+		20
+	},
+	grid_spacing = {
+		30,
+		20
+	},
+	player_panel_size = {
+		480,
+		80
+	},
+	portrait_size = {
+		72,
+		80
+	},
+	insignia_size = {
+		32,
+		80
+	}
+}
+blueprint_styles.player_plaque = {}
+local player_plaque_style = blueprint_styles.player_plaque
+player_plaque_style.size = {
+	480,
+	80
+}
+player_plaque_style.hotspot = DefaultPassStyles.hotspot
+player_plaque_style.background = {
+	offset = {
+		0,
+		0,
+		0
+	},
+	color = Color.ui_terminal(120, true),
+	default_color = Color.ui_terminal(120, true),
+	hover_color = Color.ui_terminal(255, true)
+}
+player_plaque_style.portrait = {
+	size = social_menu_roster_view_styles.portrait_size,
+	offset = {
+		0,
+		0,
+		1
+	},
+	material_values = {
+		use_placeholder_texture = 1,
+		rows = 1,
+		columns = 1,
+		grid_index = 1
+	}
+}
+player_plaque_style.portrait_overlay = {
+	size = social_menu_roster_view_styles.portrait_size,
+	offset = {
+		0,
+		0,
+		5
+	},
+	color = Color.ui_terminal(255, true)
+}
+player_plaque_style.character_insignia = {
+	horizontal_alignment = "left",
+	size = social_menu_roster_view_styles.insignia_size,
+	offset = {
+		-40,
+		0,
+		1
+	},
+	material_values = {}
+}
+player_plaque_style.name_or_activity = table.clone(UIFontSettings.body)
+local player_name_style = player_plaque_style.name_or_activity
+player_name_style.default_color = Color.ui_grey_light(255, true)
+player_name_style.not_in_party_color = Color.ui_grey_light(255, true)
+player_name_style.party_member_color = Color.ui_brown_light(255, true)
+player_name_style.own_player_color = Color.white(255, true)
+player_name_style.own_player_material = "content/ui/materials/font_gradients/slug_font_gradient_header"
+player_name_style.hover_color = Color.ui_brown_super_light(255, true)
+player_name_style.font_size_default = player_name_style.font_size
+player_name_style.font_size_small = UIFontSettings.body_small.font_size
+player_name_style.offset = {
+	85,
+	14,
+	1
+}
+player_plaque_style.search_status_text = table.clone(UIFontSettings.body)
+local search_status_style = player_plaque_style.search_status_text
+search_status_style.default_color = Color.ui_grey_light(255, true)
+search_status_style.text_horizontal_alignment = "center"
+search_status_style.text_vertical_alignment = "center"
+search_status_style.font_size_default = player_name_style.font_size
+player_plaque_style.account_name = table.clone(UIFontSettings.body_small)
+local account_name_style = player_plaque_style.account_name
+account_name_style.default_color_default = Color.ui_grey_medium(255, true)
+account_name_style.default_color_large = Color.ui_grey_light(255, true)
+account_name_style.hover_color = Color.ui_brown_super_light(255, true)
+account_name_style.font_size_default = account_name_style.font_size
+account_name_style.font_size_large = UIFontSettings.body.font_size
+account_name_style.offset = {
+	85,
+	48,
+	1
+}
+account_name_style.vertical_offset_default = 47
+account_name_style.vertical_offset_large = 40
+player_plaque_style.party_membership = table.clone(UIFontSettings.body)
+local party_membership_style = player_plaque_style.party_membership
+party_membership_style.default_color = Color.ui_grey_light(255, true)
+party_membership_style.hover_color = Color.ui_brown_super_light(255, true)
+party_membership_style.text_horizontal_alignment = "right"
+party_membership_style.offset = {
+	-16,
+	14,
+	1
+}
+player_plaque_style.highlight = {
+	highlight_size_addition = 10,
+	color = Color.ui_terminal(0, true),
+	size_addition = {
+		0,
+		0
+	},
+	offset = {
+		0,
+		0,
+		3
+	}
+}
 
 return settings("ViewElementPlayerPopupStyle", view_element_player_popup_style)

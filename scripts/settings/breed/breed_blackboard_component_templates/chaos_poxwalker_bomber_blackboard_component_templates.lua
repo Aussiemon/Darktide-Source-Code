@@ -7,11 +7,6 @@ local chaos_poxwalker_bomber = {
 		lock_combat_range_switch = "boolean",
 		combat_range_sticky_time = "number"
 	},
-	suppression = {
-		suppress_value = "number",
-		direction = "Vector3Box",
-		is_suppressed = "boolean"
-	},
 	weapon_switch = {
 		is_switching_weapons = "boolean",
 		last_weapon_switch_t = "number",

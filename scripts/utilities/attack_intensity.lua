@@ -1,18 +1,30 @@
 local AttackIntensity = {
 	add_intensity = function (target_unit, attack_intensities)
-		local target_attack_intensity_extension = ScriptUnit.extension(target_unit, "attack_intensity_system")
+		local target_attack_intensity_extension = ScriptUnit.has_extension(target_unit, "attack_intensity_system")
+
+		if not target_attack_intensity_extension then
+			return
+		end
 
 		for type, intensity in pairs(attack_intensities) do
 			target_attack_intensity_extension:add_intensity(type, intensity)
 		end
 	end,
 	set_attacked = function (target_unit)
-		local target_attack_intensity_extension = ScriptUnit.extension(target_unit, "attack_intensity_system")
+		local target_attack_intensity_extension = ScriptUnit.has_extension(target_unit, "attack_intensity_system")
+
+		if not target_attack_intensity_extension then
+			return
+		end
 
 		target_attack_intensity_extension:set_attacked()
 	end,
 	set_attacked_melee = function (target_unit)
-		local target_attack_intensity_extension = ScriptUnit.extension(target_unit, "attack_intensity_system")
+		local target_attack_intensity_extension = ScriptUnit.has_extension(target_unit, "attack_intensity_system")
+
+		if not target_attack_intensity_extension then
+			return
+		end
 
 		target_attack_intensity_extension:set_attacked_melee()
 	end,
@@ -60,7 +72,11 @@ local AttackIntensity = {
 		target_attack_intensity_extension:set_monster_attacker(attacker_unit)
 	end,
 	monster_attacker = function (target_unit)
-		local target_attack_intensity_extension = ScriptUnit.extension(target_unit, "attack_intensity_system")
+		local target_attack_intensity_extension = ScriptUnit.has_extension(target_unit, "attack_intensity_system")
+
+		if not target_attack_intensity_extension then
+			return
+		end
 
 		return target_attack_intensity_extension:monster_attacker()
 	end,

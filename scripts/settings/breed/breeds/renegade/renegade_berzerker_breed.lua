@@ -19,6 +19,7 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "renegade_berzerker"
 local breed_data = {
+	detection_radius = 15,
 	display_name = "loc_breed_display_name_renegade_berzerker",
 	run_speed = 6.5,
 	use_bone_lod = true,
@@ -26,25 +27,24 @@ local breed_data = {
 	spawn_anim_state = "to_melee",
 	volley_fire_target = true,
 	unit_template_name = "minion",
-	power_level_type = "renegade_default_melee",
+	power_level_type = "berzerker_default_melee",
 	faction_name = "chaos",
-	detection_radius = 15,
 	sub_faction_name = "renegade",
 	broadphase_radius = 1,
-	walk_speed = 2.3,
-	game_object_type = "minion_melee",
-	stagger_resistance = 1,
 	use_avoidance = true,
+	stagger_resistance = 1,
 	base_height = 1.9,
+	walk_speed = 2.3,
 	player_locomotion_constrain_radius = 0.4,
-	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	challenge_rating = 4,
+	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 1,
 	use_wounds = true,
 	slot_template = "cultist_berzerker",
+	activate_slot_system_on_spawn = true,
 	can_patrol = true,
 	smart_tag_target_type = "breed",
-	activate_slot_system_on_spawn = true,
+	game_object_type = "minion_melee",
 	base_unit = "content/characters/enemy/chaos_cultist_melee_elite/third_person/base",
 	hit_mass = 10,
 	bone_lod_radius = 1.1,
@@ -92,19 +92,6 @@ local breed_data = {
 		"anim_move_speed"
 	},
 	combat_range_data = BreedCombatRanges.cultist_berzerker,
-	suppress_config = {
-		max_value = math.huge,
-		threshold = math.huge,
-		decay_speeds = {
-			melee = 0.05,
-			far = 0.1,
-			close = 0.1
-		},
-		immunity_duration = {
-			0.75,
-			1.25
-		}
-	},
 	attack_intensity_cooldowns = {
 		melee = {
 			0,

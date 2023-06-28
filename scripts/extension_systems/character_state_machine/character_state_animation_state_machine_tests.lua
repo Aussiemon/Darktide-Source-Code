@@ -4,6 +4,8 @@ local WeaponTemplates = require("scripts/settings/equipment/weapon_templates/wea
 local REQUIRED_EVENTS = {
 	"slide_in",
 	"slide_out",
+	"to_cover",
+	"from_cover",
 	"dodge_bwd",
 	"dodge_right",
 	"dodge_left",

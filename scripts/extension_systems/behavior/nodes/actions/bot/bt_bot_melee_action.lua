@@ -450,8 +450,8 @@ end
 BtBotMeleeAction._should_push = function (self, defense_meta_data, scratchpad, in_melee_range, target_unit, target_breed, fixed_t)
 	local num_enemies = scratchpad.num_enemies_in_proximity
 	local stamina_component = scratchpad.stamina_component
-	local specialization_stamina_template = scratchpad.specialization_stamina_template
-	local current_stamina, _ = Stamina.current_and_max_value(target_unit, stamina_component, specialization_stamina_template)
+	local base_stamina_template = scratchpad.specialization_stamina_template
+	local current_stamina, _ = Stamina.current_and_max_value(target_unit, stamina_component, base_stamina_template)
 	local push_type = defense_meta_data.push
 	local low_stamina = current_stamina <= 1
 	local armor_type = Armor.armor_type(target_unit, target_breed)

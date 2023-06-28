@@ -460,19 +460,21 @@ local action_data = {
 			attack_grab_eat_minion = 2.5
 		},
 		heal_durations = {
-			attack_grab_eat_minion = 2
+			attack_grab_eat_minion = 1.3333333333333333
 		},
 		heal_amount = {
-			100,
-			200,
-			300,
-			500
+			250,
+			400,
+			600,
+			800,
+			1000
 		},
 		cooldown = {
 			15,
 			10,
 			8,
-			8
+			6,
+			4
 		},
 		effect_template = EffectTemplates.chaos_beast_of_nurgle_consume_minion
 	},
@@ -617,7 +619,14 @@ local action_data = {
 			move_start_bwd = 1.3333333333333333,
 			move_start_left = 0.4
 		},
-		push_enemies_damage_profile = DamageProfileTemplates.beast_of_nurgle_push_players
+		push_enemies_damage_profile = DamageProfileTemplates.beast_of_nurgle_push_players,
+		required_permanent_damage_taken_percent = {
+			0.25,
+			0.35,
+			0.5,
+			0.5,
+			0.65
+		}
 	},
 	climb = {
 		stagger_immune = true,

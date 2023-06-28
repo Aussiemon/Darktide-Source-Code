@@ -36,6 +36,38 @@ Social.unfriend_player = function (self, account_id)
 	end)
 end
 
+Social.get_fatshark_id = function (self)
+	return Managers.backend:authenticate():next(function (account)
+		if not account.sub then
+			local p = Promise:new()
+
+			p:reject(BackendUtilities.create_error(BackendError.UnknownError, "Missing account sub"))
+
+			return p
+		end
+
+		local url = string.format("/social/%s/friendcode", tostring(account.sub))
+
+		return Managers.backend:title_request(url)
+	end):next(function (data)
+		return data.body.friendCode
+	end)
+end
+
+Social.get_account_by_fatshark_id = function (self, fatshark_id)
+	local url = string.format("/social/friendcode/%s", tostring(fatshark_id))
+
+	return Managers.backend:title_request(url):next(function (data)
+		return data.body
+	end):catch(function (error)
+		if error.status == 404 then
+			return nil
+		else
+			return Promise.rejected(error)
+		end
+	end)
+end
+
 Social.fetch_recently_played = function (self, character_id)
 	return BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/recentlyplayed"), nil, nil, "social"):next(function (data)
 		return data.body

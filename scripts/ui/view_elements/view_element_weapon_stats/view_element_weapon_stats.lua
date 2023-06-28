@@ -72,8 +72,6 @@ ViewElementWeaponStats._replace_border = function (self)
 end
 
 ViewElementWeaponStats.destroy = function (self, ui_renderer)
-	ViewElementWeaponStats.super.destroy(self, ui_renderer)
-
 	if self._weapon_icon_renderer then
 		self._weapon_icon_renderer = nil
 
@@ -89,6 +87,8 @@ ViewElementWeaponStats.destroy = function (self, ui_renderer)
 
 		self._cosmetics_icon_renderer_id = nil
 	end
+
+	ViewElementWeaponStats.super.destroy(self, ui_renderer)
 end
 
 local function add_base_rating(item, layout, grid_size)

@@ -67,6 +67,21 @@ WwiseStateGroupGame.update = function (self, dt, t)
 					if in_character_create_state then
 						wwise_state = STATES.character_creation
 					end
+				elseif wwise_state == STATES.mission then
+					if self._current_wwise_state == STATES.loading then
+						self._initial_gameplay_setup = true
+					end
+
+					if self._initial_gameplay_setup then
+						local unit_spawner_manager = Managers.state.unit_spawner
+						local cinematic_manager = Managers.state.cinematic
+
+						if unit_spawner_manager and unit_spawner_manager.is_fully_hot_join_synced and not cinematic_manager:is_loading_cinematic_levels() and not cinematic_manager:has_queued_stories() then
+							self._initial_gameplay_setup = false
+						else
+							wwise_state = STATES.loading
+						end
+					end
 				elseif game_state_name == "StateVictoryDefeat" then
 					local end_result = Managers.mechanism:end_result()
 					wwise_state = self:_get_victory_defeat_wwise_state(end_result, wwise_state)

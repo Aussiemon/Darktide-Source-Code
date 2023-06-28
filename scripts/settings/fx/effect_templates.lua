@@ -47,5 +47,10 @@ _create_effect_template_entry("scripts/settings/fx/effect_templates/corruptor_am
 _create_effect_template_entry("scripts/settings/fx/effect_templates/corruptor_ambience_burrowed")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/void_shield_explosion")
 _create_effect_template_entry("scripts/settings/fx/effect_templates/glowing_eyes")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/green_stimmed")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/blue_stimmed")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/yellow_stimmed")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/red_stimmed")
+_create_effect_template_entry("scripts/settings/fx/effect_templates/purple_stimmed")
 
 return settings("EffectTemplates", effect_templates)

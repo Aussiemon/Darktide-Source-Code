@@ -10,16 +10,11 @@ MinionAttackIntensityExtension.init = function (self, extension_init_context, un
 	self._breed = breed
 	local difficulty_settings = {}
 	local allowed_attacks = {}
-	local uses_suppression = false
+	local uses_suppression = breed.suppress_config ~= nil
 
 	for intensity_type, _ in pairs(cooldowns) do
 		local settings = Managers.state.difficulty:get_table_entry_by_challenge(attack_intensities[intensity_type])
 		allowed_attacks[intensity_type] = true
-
-		if settings.disallow_when_suppressed then
-			uses_suppression = true
-		end
-
 		difficulty_settings[intensity_type] = settings
 	end
 
@@ -52,7 +47,7 @@ MinionAttackIntensityExtension.update = function (self, unit, dt, t)
 		target_movement_state = movement_state_component.method
 	end
 
-	local target_attack_intensity_extension = ScriptUnit.extension(target_unit, "attack_intensity_system")
+	local target_attack_intensity_extension = ScriptUnit.has_extension(target_unit, "attack_intensity_system")
 	local suppression_component = self._suppression_component
 	local cooldowns = self._cooldowns
 	local current_cooldowns = self._current_cooldowns
@@ -70,7 +65,8 @@ MinionAttackIntensityExtension.update = function (self, unit, dt, t)
 				local disallow_when_suppressed = difficulty_settings.disallow_when_suppressed
 				local is_suppressed = suppression_component.is_suppressed
 			else
-				local attack_allowed, ignore_cooldown = target_attack_intensity_extension:attack_allowed(intensity_type)
+				local attack_allowed = target_attack_intensity_extension and target_attack_intensity_extension:attack_allowed(intensity_type) or true
+				local ignore_cooldown = false
 
 				if attack_allowed then
 					if current_cooldowns[intensity_type] and t < current_cooldowns[intensity_type] then

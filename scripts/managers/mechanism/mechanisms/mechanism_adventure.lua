@@ -67,7 +67,7 @@ MechanismAdventure.init = function (self, ...)
 			}
 
 			Managers.voting:start_voting("mission_lobby_ready", voting_params):next(function (voting_id)
-				self._voting_id = voting_id
+				self._mission_ready_voting_id = voting_id
 			end):catch(function (error)
 				Log.error("MechanismAdventure", "Failed start voting 'mission_lobby_ready', skipping voting. Error: %s", table.tostring(error, 3))
 				self:_on_vote_finished()
@@ -166,12 +166,20 @@ MechanismAdventure.failed_fetching_session_report = function (self, peer_id)
 	Log.info("MechanismAdventure", "Peer %s failed fetching session report", peer_id)
 end
 
+MechanismAdventure.profile_changes_are_allowed = function (self)
+	if self._mission_ready_voting_id then
+		return true
+	else
+		return false
+	end
+end
+
 local not_ready_peers = {}
 
 MechanismAdventure._on_vote_finished = function (self)
 	Managers.mechanism:trigger_event("all_players_ready")
 
-	self._voting_id = nil
+	self._mission_ready_voting_id = nil
 	self._mechanism_data.ready_voting_completed = true
 end
 
@@ -179,8 +187,8 @@ MechanismAdventure._check_state_change = function (self, state, data)
 	local changed, done = nil
 
 	if state == "adventure_selected" then
-		if self._voting_id then
-			local finished, result, abort_reason = Managers.voting:voting_result(self._voting_id)
+		if self._mission_ready_voting_id then
+			local finished, result, abort_reason = Managers.voting:voting_result(self._mission_ready_voting_id)
 
 			if finished then
 				self:_on_vote_finished()

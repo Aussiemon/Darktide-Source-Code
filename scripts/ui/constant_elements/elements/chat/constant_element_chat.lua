@@ -104,7 +104,6 @@ ConstantElementChat.update = function (self, dt, t, ui_renderer, render_settings
 		input_widget.content.force_caret_update = true
 
 		self:_update_input_field(ui_renderer, input_widget)
-		self:_setup_input_labels()
 
 		self._refresh_to_channel_text = nil
 	end
@@ -401,31 +400,47 @@ ConstantElementChat._setup_input_labels = function (self)
 		end
 	end
 
+	local has_session = num_sessions > 0
 	local present_tab_to_cycle = num_sessions > 1
 
 	if num_sessions == 2 and in_mission and in_party then
 		present_tab_to_cycle = false
 	end
 
-	if present_tab_to_cycle then
+	local input_widget = self._input_field_widget
+	local show_controller = IS_XBS and InputDevice.gamepad_active
+	local is_writing = input_widget.content.is_writing
+	local active_placeholder_text = ""
+
+	if show_controller and not is_writing then
+		local open_chat_input = self:_get_localized_input_text("show_chat")
+		active_placeholder_text = self:_localize("loc_chat_idle_placeholder_text", true, {
+			input = open_chat_input
+		})
+	elseif show_controller and is_writing and has_session and not present_tab_to_cycle then
+		local confirm_input = self:_get_localized_input_text("confirm")
+		local back_input = self:_get_localized_input_text("back")
+		active_placeholder_text = self:_localize("loc_chat_instruction_placeholder_text", true, {
+			continue_input = confirm_input,
+			cancel_input = back_input
+		})
+	elseif present_tab_to_cycle then
 		local change_channel_input = self:_get_localized_input_text("cycle_chat_channel")
-		local active_placeholder_text = self:_localize("loc_chat_active_placeholder_text", true, {
+		active_placeholder_text = self:_localize("loc_chat_active_placeholder_text", true, {
 			input = change_channel_input
 		})
-		local input_widget = self._input_field_widget
-		input_widget.content.active_placeholder_text = active_placeholder_text
-	else
-		local input_widget = self._input_field_widget
-		input_widget.content.active_placeholder_text = ""
 	end
+
+	input_widget.content.active_placeholder_text = active_placeholder_text
 end
 
 ConstantElementChat._get_localized_input_text = function (self, action)
 	local service_type = DefaultViewInputSettings.service_type
 	local alias = Managers.input:alias_object(service_type)
 	local alias_array_index = 1
+	local show_controller = IS_XBS and InputDevice.gamepad_active
 	local device_types = {
-		"keyboard"
+		show_controller and "xbox_controller" or "keyboard"
 	}
 	local key_info = alias:get_keys_for_alias(action, alias_array_index, device_types)
 	local input_key = key_info and InputUtils.localized_string_from_key_info(key_info) or "n/a"
@@ -479,6 +494,7 @@ ConstantElementChat._handle_console_input = function (self, input_service, ui_re
 		input_widget.content.is_writing = false
 
 		self:_enable_mouse_cursor(false)
+		self:_update_input_field(ui_renderer, input_widget)
 
 		return
 	end
@@ -493,8 +509,6 @@ ConstantElementChat._handle_console_input = function (self, input_service, ui_re
 	end
 
 	if input_service:get("confirm_pressed") and not self._virtual_keyboard_promise then
-		local x_game_ui = XAsyncBlock.new_block()
-
 		if not self._selected_channel_handle then
 			return
 		end
@@ -505,11 +519,9 @@ ConstantElementChat._handle_console_input = function (self, input_service, ui_re
 			return
 		end
 
-		local channel_name = self:_channel_name(channel.tag, false, channel.channel_name)
-		local virtual_keyboard_title = Localize("loc_chat_virtual_keyboard_title")
-		local virtual_keyboard_description = Localize("loc_chat_virtual_keyboard_description", true, {
-			channel_name = channel_name
-		})
+		local virtual_keyboard_title = ""
+		local virtual_keyboard_description = ""
+		local x_game_ui = XAsyncBlock.new_block()
 
 		XGameUI.show_text_entry_async(x_game_ui, virtual_keyboard_title, virtual_keyboard_description, "", "default", ChatSettings.max_message_length)
 
@@ -527,6 +539,9 @@ ConstantElementChat._handle_console_input = function (self, input_service, ui_re
 
 			input_widget.content.input_text = ""
 			input_widget.content.is_writing = false
+
+			self:_update_input_field(ui_renderer, input_widget)
+
 			self._virtual_keyboard_promise = nil
 		end, function (hr_table)
 			local hr = hr_table[1]
@@ -537,6 +552,9 @@ ConstantElementChat._handle_console_input = function (self, input_service, ui_re
 
 			input_widget.content.input_text = ""
 			input_widget.content.is_writing = false
+
+			self:_update_input_field(ui_renderer, input_widget)
+
 			self._virtual_keyboard_promise = nil
 		end)
 
@@ -693,6 +711,8 @@ ConstantElementChat._update_input_field = function (self, ui_renderer, widget)
 	text_style.size = text_style.size or {}
 	text_style.size_addition[1] = -(offset + field_margin_right)
 	style.active_placeholder.offset[1] = offset
+
+	self:_setup_input_labels()
 end
 
 ConstantElementChat._update_message_widgets_sizes = function (self, ui_renderer)
@@ -799,6 +819,11 @@ ConstantElementChat._add_notification = function (self, message, channel_tag)
 		message_text = message,
 		channel_tag = channel_tag
 	}
+	local uses_controller = IS_XBS and InputDevice.gamepad_active
+
+	if uses_controller then
+		self._time_since_last_update = 0
+	end
 
 	self:_add_message_widget_to_message_list(messsage_parameters, widget)
 end

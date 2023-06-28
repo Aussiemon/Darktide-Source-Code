@@ -778,56 +778,6 @@ local action_data = {
 			}
 		}
 	},
-	suppressed = {
-		chance_of_jump_animation = 0.5,
-		anim_events = {
-			"melee_suppressed_loop_01",
-			"melee_suppressed_loop_02",
-			"melee_suppressed_loop_03"
-		},
-		durations = {
-			melee_suppressed_loop_01 = {
-				10.5,
-				11
-			},
-			melee_suppressed_loop_02 = {
-				10.5,
-				11
-			},
-			melee_suppressed_loop_03 = {
-				10.5,
-				11
-			}
-		},
-		jump_anim_events = {
-			fwd = {
-				"melee_suppressed_jump_fwd_01",
-				"melee_suppressed_jump_fwd_02"
-			},
-			right = {
-				"melee_suppressed_jump_right_01",
-				"melee_suppressed_jump_right_02"
-			},
-			bwd = {
-				"melee_suppressed_jump_bwd_01",
-				"melee_suppressed_jump_bwd_02"
-			},
-			left = {
-				"melee_suppressed_jump_left_01",
-				"melee_suppressed_jump_left_02"
-			}
-		},
-		jump_durations = {
-			melee_suppressed_jump_left_01 = 1.6533333333333333,
-			melee_suppressed_jump_fwd_01 = 1.0933333333333333,
-			melee_suppressed_jump_left_02 = 1.4133333333333333,
-			melee_suppressed_jump_right_01 = 1.68,
-			melee_suppressed_jump_fwd_02 = 1.68,
-			melee_suppressed_jump_bwd_01 = 1.6533333333333333,
-			melee_suppressed_jump_right_02 = 1.5733333333333333,
-			melee_suppressed_jump_bwd_02 = 1.7866666666666666
-		}
-	},
 	blocked = {
 		blocked_duration = 1.6666666666666667,
 		blocked_anims = {

@@ -22,6 +22,7 @@ local TextUtils = require("scripts/utilities/ui/text")
 local Breeds = require("scripts/settings/breed/breeds")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local INVENTORY_VIEW_NAME = "inventory_background_view"
+local SOCIAL_VIEW_NAME = "social_menu_view"
 local LobbyView = class("LobbyView", "BaseView")
 
 local function _generate_seed(player_id, mission_id)
@@ -1278,6 +1279,10 @@ LobbyView.trigger_on_exit_animation = function (self)
 
 		if Managers.ui:view_active(INVENTORY_VIEW_NAME) then
 			Managers.ui:close_view(INVENTORY_VIEW_NAME)
+		end
+
+		if Managers.ui:view_active(SOCIAL_VIEW_NAME) then
+			Managers.ui:close_view(SOCIAL_VIEW_NAME)
 		end
 
 		self._show_loadout = false

@@ -422,7 +422,6 @@ AchievementsView._populate_achievements_grid = function (self, achievements, gro
 			}
 			local is_completed = achievement.completed
 			local is_meta_achievement = achievement.type == AchievementUITypes.meta
-			local is_feat_of_strength = achievement.type == AchievementUITypes.feat_of_strength
 			local related_commendation_ids = achievement.related_commendation_ids
 
 			if related_commendation_ids then

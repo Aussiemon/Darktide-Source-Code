@@ -1,15 +1,14 @@
-local Hooks = require("scripts/managers/stats/groups/hook_stats")
-local Factory = require("scripts/managers/stats/utility/stat_factory")
-local Flags = require("scripts/settings/stats/stat_flags")
+local AchievementBreedGroups = require("scripts/settings/achievements/achievement_breed_groups")
 local Activations = require("scripts/managers/stats/utility/activation_functions")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Comparators = require("scripts/managers/stats/utility/comparator_functions")
 local Conditions = require("scripts/managers/stats/utility/conditional_functions")
-local Parameters = require("scripts/managers/stats/utility/parameter_functions")
-local Values = require("scripts/managers/stats/utility/value_functions")
-local BreedGroups = require("scripts/settings/achievements/achievement_breed_groups")
-local WeaponCategories = require("scripts/settings/achievements/achievement_weapon_categories")
+local Factory = require("scripts/managers/stats/utility/stat_factory")
+local Flags = require("scripts/settings/stats/stat_flags")
+local Hooks = require("scripts/managers/stats/groups/hook_stats")
 local MissionTypes = require("scripts/settings/mission/mission_types")
-local AttackSettings = require("scripts/settings/damage/attack_settings")
+local Values = require("scripts/managers/stats/utility/value_functions")
+local WeaponCategories = require("scripts/settings/achievements/achievement_weapon_categories")
 local AchievementStats = Factory.create_group()
 local FROM_START_OF_MISSION_PROGRESSION_CUTOFF = 0.05
 local _specializations = {
@@ -310,8 +309,8 @@ for i = 1, #_specializations do
 	end
 end
 
-for i = 1, #BreedGroups.all do
-	local breed_name = BreedGroups.all[i]
+for i = 1, #AchievementBreedGroups.all do
+	local breed_name = AchievementBreedGroups.all[i]
 	local stat_name = string.format("_echo_%s_kills", breed_name)
 
 	Factory.add_to_group(AchievementStats, Factory.create_echo(stat_name, Hooks.definitions.hook_kill, Conditions.param_has_value(Hooks.definitions.hook_kill, "breed_name", breed_name)))
@@ -337,15 +336,15 @@ local function _kill_group(id, needed_kills, breed_name_array)
 	}))
 end
 
-_kill_group("chaos_specials_killed", 10, BreedGroups.chaos_special)
-_kill_group("chaos_elites_killed", 10, BreedGroups.chaos_elite)
-_kill_group("chaos_killed", 1, BreedGroups.chaos)
-_kill_group("cultist_specials_killed", 10, BreedGroups.cultist_special)
-_kill_group("cultist_elites_killed", 10, BreedGroups.cultist_elite)
-_kill_group("cultist_killed", 1, BreedGroups.cultist)
-_kill_group("renegade_specials_killed", 10, BreedGroups.renegade_special)
-_kill_group("renegade_elites_killed", 10, BreedGroups.renegade_elite)
-_kill_group("renegade_killed", 1, BreedGroups.renegade)
+_kill_group("chaos_specials_killed", 10, AchievementBreedGroups.chaos_special)
+_kill_group("chaos_elites_killed", 10, AchievementBreedGroups.chaos_elite)
+_kill_group("chaos_killed", 1, AchievementBreedGroups.chaos)
+_kill_group("cultist_specials_killed", 10, AchievementBreedGroups.cultist_special)
+_kill_group("cultist_elites_killed", 10, AchievementBreedGroups.cultist_elite)
+_kill_group("cultist_killed", 1, AchievementBreedGroups.cultist)
+_kill_group("renegade_specials_killed", 10, AchievementBreedGroups.renegade_special)
+_kill_group("renegade_elites_killed", 10, AchievementBreedGroups.renegade_elite)
+_kill_group("renegade_killed", 1, AchievementBreedGroups.renegade)
 Factory.add_to_group(AchievementStats, Factory.create_simple("total_renegade_grenadier_melee", AchievementStats.definitions._echo_renegade_grenadier_kills, Activations.on_condition(Conditions.param_has_value(AchievementStats.definitions._echo_renegade_grenadier_kills, "weapon_attack_type", "melee"), Activations.clamp(Activations.increment, 0, 10)), {
 	Flags.save_to_backend
 }))

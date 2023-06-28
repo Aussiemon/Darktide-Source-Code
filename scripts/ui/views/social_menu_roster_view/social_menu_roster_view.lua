@@ -1,16 +1,17 @@
-local MasterItems = require("scripts/backend/master_items")
-local Promise = require("scripts/foundation/utilities/promise")
-local ScriptWorld = require("scripts/foundation/utilities/script_world")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
-local Definitions = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_definitions")
 local Blueprints = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_blueprints")
+local Definitions = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_definitions")
+local MasterItems = require("scripts/backend/master_items")
+local Popups = require("scripts/utilities/ui/popups")
+local Promise = require("scripts/foundation/utilities/promise")
 local RosterViewStyles = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_styles")
+local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local SocialMenuSettings = require("scripts/ui/views/social_menu_view/social_menu_view_settings")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UIScenegraph = require("scripts/managers/ui/ui_scenegraph")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local UIWidget = require("scripts/managers/ui/ui_widget")
+local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local ViewElementPlayerSocialPopup = require("scripts/ui/view_elements/view_element_player_social_popup/view_element_player_social_popup")
 local ViewSettings = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_settings")
 local XboxLive = require("scripts/foundation/utilities/xbox_live")
@@ -739,6 +740,43 @@ SocialMenuRosterView.cb_show_popup_menu_for_player = function (self, player_info
 	popup_menu:set_close_popup_request_callback(callback(self, "cb_close_popup_menu"))
 end
 
+SocialMenuRosterView.cb_show_rename_popup = function (self)
+	self:_close_popup_menu()
+	Popups.rename(function ()
+		return
+	end, false)
+end
+
+SocialMenuRosterView.handle_find_player = function (self)
+	local popup_menu = self._popup_menu
+
+	if popup_menu then
+		return
+	end
+
+	local start_layer = SocialMenuSettings.popup_start_layer
+	popup_menu = self:_add_element(ViewElementPlayerSocialPopup, POPUP_NAME, start_layer)
+	self._popup_menu = popup_menu
+
+	self:set_can_exit(false)
+	self:_fade_widgets("out")
+
+	local party_widgets = self._party_widgets
+	local player_info = party_widgets[1].content.player_info
+
+	for i = 1, #party_widgets do
+		local new_player_info = party_widgets[i].content.player_info
+
+		if new_player_info:is_own_player() then
+			player_info = new_player_info
+		end
+	end
+
+	popup_menu:setup_find_player(self, player_info)
+	popup_menu:on_navigation_input_changed(self._using_cursor_navigation)
+	popup_menu:set_close_popup_request_callback(callback(self, "cb_close_popup_menu"))
+end
+
 SocialMenuRosterView.on_back_pressed = function (self)
 	local back_pressed_handled = false
 
@@ -772,6 +810,7 @@ SocialMenuRosterView._cb_set_player_icon = function (self, widget, grid_index, r
 	widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base"
 	local portrait_style = widget.style.portrait
 	local material_values = portrait_style.material_values
+	material_values.portrait_frame_texture = material_values.portrait_frame_texture
 	material_values.use_placeholder_texture = 0
 	material_values.rows = rows
 	material_values.columns = columns
@@ -779,7 +818,11 @@ SocialMenuRosterView._cb_set_player_icon = function (self, widget, grid_index, r
 	material_values.texture_icon = render_target
 end
 
-SocialMenuRosterView._cb_unset_player_icon = function (self, widget)
+SocialMenuRosterView._cb_unset_player_icon = function (self, widget, ui_renderer)
+	local previously_visible = widget.content.visible
+
+	UIWidget.set_visible(widget, ui_renderer, false)
+
 	local material_values = widget.style.portrait.material_values
 	material_values.use_placeholder_texture = nil
 	material_values.rows = nil
@@ -787,6 +830,10 @@ SocialMenuRosterView._cb_unset_player_icon = function (self, widget)
 	material_values.grid_index = nil
 	material_values.texture_icon = nil
 	widget.content.portrait = "content/ui/materials/base/ui_portrait_frame_base_no_render"
+
+	if previously_visible then
+		UIWidget.set_visible(widget, ui_renderer, true)
+	end
 end
 
 SocialMenuRosterView._cb_set_player_frame = function (self, widget, item)
@@ -806,6 +853,23 @@ SocialMenuRosterView._cb_set_player_frame = function (self, widget, item)
 
 	local portrait_style = widget.style.portrait
 	portrait_style.material_values.portrait_frame_texture = icon
+	widget_content.portrait_frame_texture = icon
+end
+
+SocialMenuRosterView._cb_unset_player_frame = function (self, widget, ui_renderer)
+	local widget_style = widget.style
+	local widget_content = widget.content
+	local previously_visible = widget.content.visible
+
+	UIWidget.set_visible(widget, ui_renderer, false)
+
+	local material_values = widget_style.portrait.material_values
+	material_values.portrait_frame_texture = RosterViewStyles.default_frame_material
+	widget_content.portrait_frame_texture = RosterViewStyles.default_frame_material
+
+	if previously_visible then
+		UIWidget.set_visible(widget, ui_renderer, true)
+	end
 end
 
 SocialMenuRosterView._cb_set_player_insignia = function (self, widget, item)
@@ -873,7 +937,7 @@ SocialMenuRosterView._update_portraits = function (self)
 
 				if profile.character_id ~= content.portrait_character_id then
 					succeeded_in_updating_profile = self:_load_widget_portrait(widget, profile, content.portrait_renderer)
-				else
+				elseif profile.loadout.slot_portrait_frame and profile.loadout.slot_portrait_frame.name ~= content.portrait_frame_texture then
 					succeeded_in_updating_profile = self:_update_portrait_frame(widget, profile)
 				end
 
@@ -1077,7 +1141,8 @@ SocialMenuRosterView._update_portrait_frame = function (self, widget, profile)
 	if frame_item then
 		widget_content.awaiting_frame_callback = true
 		local cb = callback(self, "_cb_set_player_frame", widget)
-		widget_content.frame_load_id = Managers.ui:load_item_icon(frame_item, cb)
+		local unload_cb = callback(self, "_cb_unset_player_frame", widget, widget.content.portrait_renderer)
+		widget_content.frame_load_id = Managers.ui:load_item_icon(frame_item, cb, nil, nil, nil, unload_cb)
 	else
 		widget_content.awaiting_frame_callback = nil
 	end
@@ -1099,7 +1164,7 @@ SocialMenuRosterView._load_widget_portrait = function (self, widget, profile, po
 	end
 
 	local profile_icon_loaded_callback = callback(self, "_cb_set_player_icon", widget)
-	local profile_icon_unloaded_callback = callback(self, "_cb_unset_player_icon", widget)
+	local profile_icon_unloaded_callback = callback(self, "_cb_unset_player_icon", widget, portrait_renderer)
 	widget_content.awaiting_portrait_callback = true
 	widget_content.portrait_load_id = profile and Managers.ui:load_profile_portrait(profile, profile_icon_loaded_callback, nil, profile_icon_unloaded_callback)
 	widget_content.portrait_character_id = profile and profile.character_id
@@ -1144,8 +1209,6 @@ SocialMenuRosterView._queue_icons_for_unload = function (self, widget)
 	local widget_style = widget.style
 
 	if widget_content.frame_load_id then
-		local frame_material_values = widget_style.portrait.material_values
-		frame_material_values.portrait_frame_texture = RosterViewStyles.default_frame_material
 		icon_unload_queue[#icon_unload_queue + 1] = {
 			delay = ViewSettings.icon_unload_frame_delay,
 			load_id = widget_content.frame_load_id,
@@ -1173,11 +1236,6 @@ SocialMenuRosterView._unload_icons = function (self, force_unload)
 		local icon_data = icon_unload_queue[i]
 
 		if icon_data.delay == 0 or force_unload then
-			local widget = icon_data.widget
-			local portrait_renderer = widget.content.portrait_renderer
-
-			UIWidget.set_visible(widget, portrait_renderer, false)
-			UIWidget.set_visible(widget, portrait_renderer, true)
 			Managers.ui:unload_item_icon(icon_data.load_id)
 			table.remove(icon_unload_queue, i)
 		else
@@ -1389,15 +1447,48 @@ SocialMenuRosterView._get_roster_grid_first_visible_row = function (self)
 	return 0
 end
 
-local _list_dividers = {}
+local function _validate_roster_list_item(presence_myself, other_player_info)
+	local my_platform = presence_myself:platform()
+	local other_platform = other_player_info:platform()
 
-SocialMenuRosterView._prepare_list = function (self, roster_list_data, roster_list, new_list_items)
-	for i = 1, #new_list_items do
-		roster_list[i] = new_list_items[i]
+	if my_platform ~= other_platform and (presence_myself:cross_play_disabled() or other_player_info:cross_play_disabled()) then
+		return false
 	end
 
-	for i = #new_list_items + 1, #roster_list do
+	return true
+end
+
+local _list_dividers = {}
+
+SocialMenuRosterView._prepare_list = function (self, roster_list_data, roster_list, new_list_items, list_index)
+	local presence_myself = Managers.presence:presence_entry_myself()
+	local index = 0
+
+	for i = 1, #new_list_items do
+		local player_info = new_list_items[i]
+
+		if _validate_roster_list_item(presence_myself, player_info) then
+			index = index + 1
+			roster_list[index] = player_info
+		end
+	end
+
+	for i = index + 1, #roster_list do
 		roster_list[i] = nil
+	end
+
+	if list_index == FRIEND_INVITES_LIST then
+		local num_invites = 0
+
+		for i = 1, #roster_list do
+			local player_info = roster_list[i]
+
+			if player_info:friend_status() == FriendStatus.invite then
+				num_invites = num_invites + 1
+			end
+		end
+
+		self._num_pending_invites = num_invites
 	end
 
 	local sort_function = roster_list_data.primary_sort_function
@@ -1509,7 +1600,7 @@ SocialMenuRosterView._update_roster_list = function (self, list_index, new_list_
 	local roster_list_data = self._roster_lists[list_index]
 	local roster_list = roster_list_data.sorted_list
 
-	self:_prepare_list(roster_list_data, roster_list, new_list_items)
+	self:_prepare_list(roster_list_data, roster_list, new_list_items, list_index)
 
 	if should_update_widgets then
 		local widgets = self._roster_widgets
@@ -1666,18 +1757,6 @@ SocialMenuRosterView._refresh_roster_lists = function (self, force_refresh)
 	local player = self:_player()
 	local character_id = player:character_id()
 	local invites_promise = social_service:fetch_friend_invites(force_refresh):next(function (response)
-		local num_invites = 0
-
-		for i = 1, #response do
-			local player_info = response[i]
-
-			if player_info:friend_status() == FriendStatus.invite then
-				num_invites = num_invites + 1
-			end
-		end
-
-		self._num_pending_invites = num_invites
-
 		return response
 	end):catch(function (error_data)
 		Log.error("SocialMenuRosterView", "invites_promise failed")

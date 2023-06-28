@@ -34,10 +34,6 @@ ViewElementWeaponActionsExtended._hide_dividers = function (self)
 	grid_divider_title.style.texture.color[1] = 0
 end
 
-ViewElementWeaponActionsExtended.destroy = function (self)
-	ViewElementWeaponActionsExtended.super.destroy(self)
-end
-
 local EMPTY_TABLE = {}
 
 ViewElementWeaponActionsExtended.present_item = function (self, item)

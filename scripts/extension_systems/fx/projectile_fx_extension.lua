@@ -156,10 +156,20 @@ ProjectileFxExtension.on_impact = function (self, hit_position, hit_unit, hit_di
 	local effects = self._effects
 	local impact_fx = effects and effects.impact
 
-	if impact_fx and not self._has_impacted then
-		self:start_fx("impact")
+	if impact_fx then
+		local should_play_impact_fx = not self._has_impacted or not self._num_impact_left or self._num_impact_left ~= 0
 
-		self._life_times.impact = 0
+		if should_play_impact_fx then
+			self:start_fx("impact")
+
+			self._life_times.impact = 0
+
+			if impact_fx.num_impacts and not self._num_impact_left then
+				self._num_impact_left = impact_fx.num_impacts - 1
+			elseif self._num_impact_left then
+				self._num_impact_left = self._num_impact_left - 1
+			end
+		end
 	end
 
 	local impact_damage_type = self._projectile_template.impact_damage_type

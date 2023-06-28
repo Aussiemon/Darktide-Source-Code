@@ -653,7 +653,7 @@ function _play_gib_fx(gib_unit, settings, world, wwise_world)
 		local position = Matrix4x4.translation(world_pose)
 		local rotation = Matrix4x4.rotation(world_pose)
 		local effect_id = World.create_particles(world, particle_effect, position, rotation)
-		local linked = vfx.linked ~= nil and vfx.linked or true
+		local linked = vfx.linked == nil or vfx.linked == true
 
 		if linked then
 			local orphaned_policy = vfx.orphaned_policy or "destroy"

@@ -8,6 +8,7 @@ local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local WorldRenderUtils = require("scripts/utilities/world_render")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local TextInputPassTemplates = require("scripts/ui/pass_templates/text_input_pass_templates")
 local InputDevice = require("scripts/managers/input/input_device")
 local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local WalletSettings = require("scripts/settings/wallet_settings")
@@ -24,6 +25,7 @@ ConstantElementPopupHandler.init = function (self, parent, draw_layer, start_sca
 
 	self._content_widgets = {}
 	self._total_buttons_height = 0
+	self._content_blackboard = {}
 end
 
 ConstantElementPopupHandler.using_input = function (self)
@@ -129,6 +131,8 @@ ConstantElementPopupHandler._setup_presentation = function (self, data, ui_rende
 
 	if #self._content_widgets > 0 and not self._using_cursor_navigation then
 		self:_select_button_index(1)
+	else
+		self:_select_button_index(nil)
 	end
 
 	self._input_frame_delay = 1
@@ -254,11 +258,30 @@ ConstantElementPopupHandler._cb_on_button_pressed = function (self, widget)
 		return
 	end
 
+	local blackboard = self._content_blackboard
+
+	for i = 1, #blackboard do
+		blackboard[i] = nil
+	end
+
+	local blackboard_size = 0
+	local content_widgets = self._content_widgets
+
+	for i = 1, #content_widgets do
+		local type = content_widgets[i].type
+		local content = content_widgets[i].content
+
+		if TextInputPassTemplates[type] then
+			blackboard_size = blackboard_size + 1
+			blackboard[blackboard_size] = content.input_text
+		end
+	end
+
 	local content = widget.content
 	local callback = content.callback
 
 	if callback then
-		callback()
+		callback(unpack(blackboard))
 	end
 
 	if active_popup and content.close_on_pressed then
@@ -287,11 +310,13 @@ ConstantElementPopupHandler._create_popup_content = function (self, options, ui_
 
 	local total_buttons_height = 0
 	local max_row_length = ConstantElementPopupHandlerSettings.max_button_row_length
-	local total_row_length = 0
+	local current_group_length = 0
+	local widgets_in_group = 0
 	local current_row = 1
-	local current_column = 0
+	local total_row_length = 0
 	local widgets_on_row = 0
 	local total_height_spacing = ConstantElementPopupHandlerSettings.total_height_spacing
+	local total_width_spacing = ConstantElementPopupHandlerSettings.total_width_spacing
 	local options_missing_hotkeys = false
 	local num_options = #options
 
@@ -299,12 +324,27 @@ ConstantElementPopupHandler._create_popup_content = function (self, options, ui_
 		local option = options[i]
 		local widget_name = "popup_widget_" .. i
 		local widget, content, text_length, button_size = nil
+		local template_type = option.template_type or "terminal_button_small"
 
-		if option.template_type == "text" then
-			local text_style = table.clone(UIFontSettings.body)
+		if template_type == "text" then
+			local update_function = option.update
+			local text, color = nil
+
+			if update_function then
+				text, color = update_function()
+			end
+
+			color = color or option.color
+			text = text or option.text
+			local text_style = table.clone(UIFontSettings[option.font_name or "body"])
 			text_style.text_horizontal_alignment = "center"
 			text_style.text_vertical_alignment = "top"
-			local text = Localize(option.text)
+
+			if color then
+				text_style.text_color = color
+			end
+
+			text = option.no_localization and text or Localize(text)
 			local text_options = UIFonts.get_font_options_by_style(text_style)
 			local _, text_height = UIRenderer.text_size(ui_renderer, text, text_style.font_type, text_style.font_size, {
 				ConstantElementPopupHandlerSettings.text_max_width,
@@ -312,10 +352,10 @@ ConstantElementPopupHandler._create_popup_content = function (self, options, ui_
 			}, text_options)
 			local pass = {
 				{
-					style_id = "text",
 					value_id = "text",
 					pass_type = "text",
 					value = text,
+					style_id = i,
 					style = text_style
 				}
 			}
@@ -328,18 +368,35 @@ ConstantElementPopupHandler._create_popup_content = function (self, options, ui_
 			content_widgets[i] = widget
 			text_length = button_size[1]
 			content = widget.content
+
+			if update_function then
+				content.localize = not option.no_localization
+				content.update = update_function
+			end
+		elseif TextInputPassTemplates[template_type] then
+			local button_width = option.width or ConstantElementPopupHandlerSettings.max_button_row_length
+			button_size = {
+				button_width,
+				ConstantElementPopupHandlerSettings.button_height
+			}
+			text_length = button_size[1]
+			local pass_templates = TextInputPassTemplates[template_type]
+			local widget_definition = UIWidget.create_definition(pass_templates, "button_pivot", nil, button_size)
+			widget = self:_create_widget(widget_name, widget_definition)
+			content_widgets[i] = widget
+			content = widget.content
+			content.virtual_keyboard_title = Localize(option.keyboard_title)
+			content.max_length = option.max_length
 		else
-			local template_type = option.template_type or "terminal_button_small"
 			local pass_template = ButtonPassTemplates[template_type]
 			button_size = pass_template.size_function and pass_template.size_function(self, option, ui_renderer) or pass_template.size
-			local widget_definitions = UIWidget.create_definition(ButtonPassTemplates[template_type], "button_pivot", nil, button_size)
+			local widget_definitions = UIWidget.create_definition(pass_template, "button_pivot", nil, button_size)
 			widget = self:_create_widget(widget_name, widget_definitions)
 			content_widgets[i] = widget
-			widget.type = template_type
 			content = widget.content
 			local hotkey = option.hotkey
 			local text = nil
-			text = Localize(option.text, option.text_params ~= nil, option.text_params)
+			text = option.no_localization and option.text or Localize(option.text, option.text_params ~= nil, option.text_params)
 			options_missing_hotkeys = not hotkey or options_missing_hotkeys
 			content.text = text
 			content.hotkey = option.hotkey
@@ -355,8 +412,14 @@ ConstantElementPopupHandler._create_popup_content = function (self, options, ui_
 			end
 
 			local text_style = widget.style.text
-			local min_button_width = ConstantElementPopupHandlerSettings.min_button_width
-			text_length = min_button_width
+			local shrink_to_fit = option.shrink_to_fit
+			text_length = self:_get_text_width(text, text_style, ui_renderer) + 2 * total_width_spacing
+
+			if not shrink_to_fit then
+				local min_button_width = ConstantElementPopupHandlerSettings.min_button_width
+				text_length = math.max(text_length, min_button_width)
+			end
+
 			content.size[1] = text_length
 
 			if pass_template.init then
@@ -367,52 +430,69 @@ ConstantElementPopupHandler._create_popup_content = function (self, options, ui_
 			end
 		end
 
-		local change_row = max_row_length < total_row_length + text_length and widgets_on_row > 0
+		widget.type = template_type
 
-		if change_row then
-			local start_offset = -(total_row_length * 0.5)
-			local start_index = i - widgets_on_row
-			local end_index = start_index + widgets_on_row
+		local function close_row(is_last_row)
+			local start_offset = -0.5 * (total_row_length + total_width_spacing * math.max(widgets_on_row - 1, 0))
+			local start_index = i - widgets_on_row - widgets_in_group + 1
+			local end_index = start_index + widgets_on_row - 1
+			local tallest_widget = 0
 
 			for j = start_index, end_index do
-				local button_length = content_widgets[j].content.size[1]
-				content_widgets[j].offset[1] = start_offset
-				start_offset = start_offset + button_length
+				local column_widget = content_widgets[j]
+				local column_content = column_widget.content
+				local column_option = options[j]
+				tallest_widget = math.max(tallest_widget, column_content.size[2] + (column_option.margin_bottom or 0))
 			end
 
-			current_column = 1
-		else
-			current_column = current_column + 1
-		end
+			for j = start_index, end_index do
+				local column_widget = content_widgets[j]
+				local column_content = column_widget.content
+				local column_option = options[j]
+				column_content.column = start_index - j + 1
+				column_content.row = current_row
+				local button_length = column_content.size[1]
+				column_widget.offset[2] = total_buttons_height + 0.5 * (tallest_widget - column_content.size[2])
+				column_widget.offset[1] = start_offset
+				start_offset = start_offset + button_length + (j < end_index and total_width_spacing or 0)
+				tallest_widget = math.max(tallest_widget, column_content.size[2] + (column_option.margin_bottom or 0))
+			end
 
-		if change_row then
+			total_buttons_height = total_buttons_height + tallest_widget + (is_last_row and 0 or total_height_spacing)
 			current_row = current_row + 1
-			widgets_on_row = 1
-			total_row_length = text_length
-		else
-			total_row_length = total_row_length + text_length
-			widgets_on_row = widgets_on_row + 1
+			widgets_on_row = 0
+			total_row_length = 0
 		end
 
-		local offset = widget.offset
-		offset[2] = total_buttons_height
-		content.row = current_row
-		content.column = current_column
-		local margin_bottom = option.margin_bottom or 0
-		total_buttons_height = total_buttons_height + widget.content.size[2] + margin_bottom
+		local force_same_row = option.force_same_row
 
-		if i == num_options then
-			local start_offset = -(total_row_length * 0.5)
-			local start_index = i - widgets_on_row + 1
-			local end_index = num_options
+		if not force_same_row then
+			widgets_on_row = widgets_on_row + widgets_in_group
+			total_row_length = total_row_length + current_group_length
+			widgets_in_group = 0
+			current_group_length = 0
+		end
 
-			for j = start_index, end_index do
-				local button_length = content_widgets[j].content.size[1]
-				content_widgets[j].offset[1] = start_offset
-				start_offset = start_offset + button_length
-			end
-		else
-			total_buttons_height = total_buttons_height + total_height_spacing
+		current_group_length = current_group_length + text_length
+		widgets_in_group = widgets_in_group + 1
+		local row_has_widgets = widgets_on_row > 0
+		local row_length = total_row_length + current_group_length + total_width_spacing * math.max(widgets_on_row + widgets_in_group - 1, 0)
+		local fit_on_row = max_row_length >= row_length
+		local close_last_row = row_has_widgets and not fit_on_row
+
+		if close_last_row then
+			close_row(false)
+		end
+
+		local is_last_item = i == num_options
+
+		if is_last_item then
+			widgets_on_row = widgets_on_row + widgets_in_group
+			total_row_length = total_row_length + current_group_length
+			widgets_in_group = 0
+			current_group_length = 0
+
+			close_row(true)
 		end
 	end
 
@@ -551,7 +631,7 @@ ConstantElementPopupHandler._find_closest_neighbour_button_index = function (sel
 	end
 
 	if direction == self.INPUT_DIR_UP then
-		for i = starting_index, 1, -1 do
+		for i = starting_index - 1, 1, -1 do
 			local widget = content_widgets[i]
 			local content = widget.content
 
@@ -566,7 +646,7 @@ ConstantElementPopupHandler._find_closest_neighbour_button_index = function (sel
 			end
 		end
 	elseif direction == self.INPUT_DIR_DOWN then
-		for i = math.min(starting_index + 1, num_widgets), num_widgets do
+		for i = starting_index + 1, num_widgets do
 			local widget = content_widgets[i]
 			local content = widget.content
 
@@ -610,7 +690,7 @@ end
 ConstantElementPopupHandler._select_button_index = function (self, index)
 	local gamepad_active = InputDevice.gamepad_active
 
-	if gamepad_active and self._gamepad_hotkey_input then
+	if index ~= nil and gamepad_active and self._gamepad_hotkey_input then
 		return
 	end
 
@@ -618,9 +698,10 @@ ConstantElementPopupHandler._select_button_index = function (self, index)
 
 	for i = 1, #content_widgets do
 		local widget = content_widgets[i]
+		local hotspot = widget.content.hotspot
 
-		if widget.content.hotspot then
-			widget.content.hotspot.is_selected = i == index
+		if hotspot then
+			hotspot.is_selected = i == index
 		end
 	end
 
@@ -800,6 +881,12 @@ ConstantElementPopupHandler.update = function (self, dt, t, ui_renderer, render_
 		end
 	end
 
+	local active_popup = self._active_popup
+
+	if self._handling_popups and active_popup and active_popup.paused then
+		input_service = input_service:null_service()
+	end
+
 	local handle_input = handling_popups and not self._on_exit_anim_id and not self._on_enter_anim_id
 
 	if handle_input then
@@ -832,7 +919,9 @@ ConstantElementPopupHandler.draw = function (self, dt, t, ui_renderer, render_se
 		return
 	end
 
-	local disable_input = self._on_exit_anim_id ~= nil or self._input_frame_delay
+	local active_popup = self._active_popup
+	local is_paused = self._handling_popups and active_popup and active_popup.paused
+	local disable_input = self._on_exit_anim_id ~= nil or self._input_frame_delay or is_paused
 
 	if disable_input then
 		input_service = input_service:null_service()
@@ -855,12 +944,24 @@ ConstantElementPopupHandler._draw_widgets = function (self, dt, t, input_service
 		UIWidget.draw(widget, ui_renderer)
 
 		local widget_type = widget.type
+		local pass_template = ButtonPassTemplates[widget_type] or TextInputPassTemplates[widget_type]
 
-		if widget_type then
-			local pass_template = ButtonPassTemplates[widget_type]
+		if pass_template and pass_template.update then
+			pass_template.update(self, widget, ui_renderer, dt)
+		end
 
-			if pass_template.update then
-				pass_template.update(self, widget, ui_renderer, dt)
+		local content = widget.content
+		local style = widget.style
+
+		if widget_type == "text" and content.update then
+			local text, color = content.update()
+
+			if text then
+				content.text = content.localize and Localize(text) or text
+			end
+
+			if color then
+				style[i].text_color = color
 			end
 		end
 	end

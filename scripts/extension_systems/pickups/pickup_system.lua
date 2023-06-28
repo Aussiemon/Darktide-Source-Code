@@ -143,16 +143,8 @@ PickupSystem.on_gameplay_post_init = function (self, level)
 	end
 end
 
-PickupSystem._random = function (self, ...)
-	local seed, value = math.next_random(self._seed, ...)
-	self._seed = seed
-
-	return value
-end
-
-PickupSystem._shuffle = function (self, source)
-	local seed = self._seed
-	self._seed = table.shuffle(source, seed)
+PickupSystem._shuffle = function (self, source, seed)
+	return table.shuffle(source, seed)
 end
 
 PickupSystem._check_main_path = function (self, unit)
@@ -270,7 +262,7 @@ PickupSystem._populate_pickups = function (self)
 		end
 
 		for distribution_type, pickup_settings in pairs(mission_pickup_settings) do
-			self:_spawn_spread_pickups(distribution_type, pickup_settings)
+			self._seed = self:_spawn_spread_pickups(distribution_type, pickup_settings, self._seed)
 		end
 	end
 
@@ -284,8 +276,10 @@ PickupSystem._populate_pickups = function (self)
 		side_settings[pickup.group] = {
 			[unit_name] = side_mission.collect_amount
 		}
+		local time = Managers.backend:get_server_time(0) / 1000
+		local seed = os.date("%Y", time) * 55 + os.date("%V", time)
 
-		self:_spawn_spread_pickups(DISTRIBUTION_TYPES.side_mission, side_settings)
+		self:_spawn_spread_pickups(DISTRIBUTION_TYPES.side_mission, side_settings, seed)
 	end
 end
 
@@ -516,7 +510,7 @@ local section_spawners = {}
 local used_spawners = {}
 local usable_spawners = {}
 
-PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_pool)
+PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_pool, seed)
 	local num_spawners = #self._pickup_spawner_extensions
 	local pickup_spawners = self._pickup_spawner_extensions
 
@@ -559,7 +553,7 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_p
 				end
 			end
 
-			self:_shuffle(removal_options)
+			seed = self:_shuffle(removal_options, seed)
 
 			for i = direct_spawners_to_remove + 1, initial_usable_spawners do
 				removal_options[i] = nil
@@ -584,8 +578,7 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_p
 			end
 		end
 
-		self:_shuffle(pickups_to_spawn)
-
+		seed = self:_shuffle(pickups_to_spawn, seed)
 		local num_sections = #pickups_to_spawn
 		local section_size = 1 / num_sections
 		local section_start_point = 0
@@ -624,9 +617,7 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_p
 			if num_section_spawners > 0 and spawn_debt >= 0 then
 				local remaining_sections = num_sections - i + 1
 				local pickups_in_section = math.min(1 + math.ceil(spawn_debt / remaining_sections), num_section_spawners)
-
-				self:_shuffle(section_spawners)
-
+				seed = self:_shuffle(section_spawners, seed)
 				local num_spawned_pickups_in_section = 0
 				local previously_selected_spawner = nil
 
@@ -689,7 +680,7 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_p
 			local num_pickups_to_spawn = #pickups_to_spawn
 
 			if #usable_spawners > 0 then
-				self:_shuffle(usable_spawners)
+				seed = self:_shuffle(usable_spawners, seed)
 
 				for i = 1, num_pickups_to_spawn do
 					local num_pickup_spawners = #usable_spawners
@@ -716,6 +707,8 @@ PickupSystem._spawn_spread_pickups = function (self, distribution_type, pickup_p
 			self._rubberband_free_spots = self._rubberband_free_spots + 1
 		end
 	end
+
+	return seed
 end
 
 PickupSystem._check_spawn = function (self, spawner, pickup_type)

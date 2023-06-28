@@ -112,7 +112,9 @@ local button_options_definitions = {
 				}
 			}
 
-			self:_setup_tab_bar(tab_bar_params)
+			self:_setup_tab_bar(tab_bar_params, {
+				hide_price = true
+			})
 		end
 	}
 }

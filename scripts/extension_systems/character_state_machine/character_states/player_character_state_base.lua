@@ -61,6 +61,7 @@ PlayerCharacterStateBase.extensions_ready = function (self, world, unit)
 	self._suppression_extension = ScriptUnit.extension(unit, "suppression_system")
 	self._camera_extension = ScriptUnit.extension(unit, "camera_system")
 	self._locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+	self._specialization_extension = ScriptUnit.extension(unit, "specialization_system")
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	self._first_person_extension = first_person_extension
 end

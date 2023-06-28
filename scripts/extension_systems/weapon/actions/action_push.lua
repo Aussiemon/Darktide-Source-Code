@@ -50,7 +50,9 @@ ActionPush._push = function (self, t)
 	local action_settings = self._action_settings
 	local number_of_units_hit = 0
 	local weapon_stamina_template = self._weapon_extension:stamina_template()
-	local push_cost = weapon_stamina_template and weapon_stamina_template.push_cost or math.huge
+	local raw_push_cost = weapon_stamina_template and weapon_stamina_template.push_cost or math.huge
+	local buff_extension = self._buff_extension
+	local push_cost = raw_push_cost
 
 	if not self._unit_data_extension.is_resimulating then
 		local locomotion_component = self._locomotion_component
@@ -64,11 +66,11 @@ ActionPush._push = function (self, t)
 		local player_unit = self._player_unit
 		local weapon_item = self._weapon.item
 		local is_predicted = true
-		local unit_data_ext = ScriptUnit.extension(self._player_unit, "unit_data_system")
+		local unit_data_ext = ScriptUnit.extension(player_unit, "unit_data_system")
 		local stamina_read_component = unit_data_ext:read_component("stamina")
 		local specialization = unit_data_ext:specialization()
-		local specialization_stamina_template = specialization.stamina
-		local current_stamina, max_stamina = Stamina.current_and_max_value(self._player_unit, stamina_read_component, specialization_stamina_template)
+		local base_stamina_template = specialization.stamina
+		local current_stamina, max_stamina = Stamina.current_and_max_value(player_unit, stamina_read_component, base_stamina_template)
 		local weak_push = current_stamina < push_cost
 
 		if weak_push then
@@ -93,17 +95,13 @@ ActionPush._push = function (self, t)
 
 	self:_play_push_particles(t)
 
-	if not self._unit_data_extension.is_resimulating then
-		local buff_extension = self._buff_extension
+	if not self._unit_data_extension.is_resimulating and buff_extension then
+		local param_table = buff_extension:request_proc_event_param_table()
 
-		if buff_extension then
-			local param_table = buff_extension:request_proc_event_param_table()
+		if param_table then
+			param_table.num_hit_units = number_of_units_hit
 
-			if param_table then
-				param_table.num_hit_units = number_of_units_hit
-
-				buff_extension:add_proc_event(proc_events.on_push_finish, param_table)
-			end
+			buff_extension:add_proc_event(proc_events.on_push_finish, param_table)
 		end
 	end
 end

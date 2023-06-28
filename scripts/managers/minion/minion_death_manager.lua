@@ -7,6 +7,7 @@ local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local MinionRagdoll = require("scripts/managers/minion/minion_ragdoll")
 local Suppression = require("scripts/utilities/attack/suppression")
 local Vo = require("scripts/utilities/vo")
+local buff_keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
 local MinionDeathManager = class("MinionDeathManager")
 local _trigger_kill_vo, _trigger_on_kill_procs = nil
@@ -57,10 +58,20 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 
 	if was_alive then
 		local health_extension = ScriptUnit.extension(unit, "health_system")
+		local buff_extension = ScriptUnit.extension(unit, "buff_system")
 
-		health_extension:kill()
+		if buff_extension:has_keyword(buff_keywords.despawn_on_death) then
+			local minion_spawn_manager = Managers.state.minion_spawn
 
-		death_component.is_dead = true
+			minion_spawn_manager:despawn(unit)
+
+			return
+		else
+			health_extension:kill()
+
+			death_component.is_dead = true
+		end
+
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local breed = unit_data_extension:breed()
 
@@ -215,9 +226,13 @@ MinionDeathManager.client_finalize_death = function (self, unit, unit_id)
 
 	local death_data = self._minions_awaiting_death[unit]
 
-	self._minion_ragdoll:create_ragdoll(death_data)
+	if death_data.despawn_on_death then
+		Managers.state.unit_spawner:mark_for_deletion(unit)
+	else
+		self._minion_ragdoll:create_ragdoll(death_data)
 
-	self._minions_awaiting_death[unit] = nil
+		self._minions_awaiting_death[unit] = nil
+	end
 end
 
 MinionDeathManager.rpc_minion_set_dead = function (self, channel_id, unit_id, attack_direction, hit_zone_id, damage_profile_id, do_ragdoll_push, herding_template_id_or_nil)

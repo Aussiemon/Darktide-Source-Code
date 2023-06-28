@@ -27,8 +27,8 @@ ActionOverloadChargeTargetFinder.fixed_update = function (self, dt, t, time_in_a
 	self._targeting_module:fixed_update(dt, t)
 end
 
-ActionOverloadChargeTargetFinder.finish = function (self, reason, data, t, time_in_action, action_settings, chaining_action_params)
-	ActionOverloadChargeTargetFinder.super.finish(self, reason, data, t, time_in_action, chaining_action_params)
+ActionOverloadChargeTargetFinder.finish = function (self, reason, data, t, time_in_action, action_settings, next_action_params)
+	ActionOverloadChargeTargetFinder.super.finish(self, reason, data, t, time_in_action, next_action_params)
 	self._overload_module:finish(reason, data, t)
 	self._targeting_module:finish(reason, data, t)
 end

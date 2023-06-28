@@ -5,6 +5,7 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local Vo = require("scripts/utilities/vo")
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local buff_targets = BuffSettings.targets
@@ -58,6 +59,7 @@ end
 local templates = {
 	leaving_liquid_fire_spread_increase = {
 		unique_buff_id = "fire_spread_increase",
+		predicted = false,
 		hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
 		unique_buff_priority = 1,
 		duration = 1.75,
@@ -76,6 +78,7 @@ local templates = {
 	in_liquid_fire_burning_movement_slow = {
 		class_name = "interval_buff",
 		power_level_random = true,
+		predicted = true,
 		max_stacks = 1,
 		stat_buffs = {
 			[buff_stat_buffs.movement_speed] = 0.75
@@ -101,10 +104,10 @@ local templates = {
 		minion_effects = minion_burning_buff_effects.fire
 	},
 	fire_burninating = {
-		duration = 1,
 		power_level_random = true,
 		predicted = false,
 		max_stacks = 10,
+		duration = 1,
 		class_name = "interval_buff",
 		keywords = {
 			buff_keywords.burning
@@ -151,8 +154,11 @@ local templates = {
 	},
 	prop_in_corruptor_liquid_corruption = {
 		interval = 1,
+		predicted = false,
+		hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
 		max_stacks = 1,
 		class_name = "interval_buff",
+		is_negative = true,
 		power_level = {
 			default = {
 				50,
@@ -167,8 +173,9 @@ local templates = {
 		interval_func = _scaled_damage_interval_function
 	},
 	prop_in_liquid_fire_burning_movement_slow = {
-		interval = 0.5,
 		class_name = "interval_buff",
+		interval = 0.5,
+		predicted = true,
 		hud_priority = 1,
 		hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
 		max_stacks = 1,
@@ -202,8 +209,9 @@ local templates = {
 	},
 	renegade_grenadier_in_fire_liquid = {
 		class_name = "interval_buff",
-		interval = 0.2,
+		predicted = false,
 		hud_priority = 1,
+		interval = 0.2,
 		hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
 		max_stacks = 1,
 		is_negative = true,
@@ -233,6 +241,7 @@ local templates = {
 	},
 	cultist_flamer_in_fire_liquid = {
 		interval = 0.25,
+		predicted = false,
 		hud_priority = 1,
 		hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
 		max_stacks = 1,
@@ -261,6 +270,7 @@ local templates = {
 	},
 	renegade_flamer_in_fire_liquid = {
 		interval = 0.25,
+		predicted = false,
 		hud_priority = 1,
 		hud_icon = "content/ui/textures/icons/buffs/hud/states_fire_buff_hud",
 		max_stacks = 1,
@@ -288,8 +298,8 @@ local templates = {
 		minion_effects = minion_burning_buff_effects.fire
 	}
 }
-local PLAYER_SLIDING_IN_SLIME_POWER_LEVEL_MULTIPLIER = 4
-local PLAYER_SLIDING_INTERVAL_OVERRIDE = 0.15
+local PLAYER_SLIDING_IN_SLIME_POWER_LEVEL_MULTIPLIER = 1.25
+local PLAYER_SLIDING_INTERVAL_OVERRIDE = 0.25
 
 local function _beast_of_nurgle_in_slime_interval_function(template_data, template_context, template)
 	local unit = template_context.unit
@@ -355,7 +365,7 @@ end
 
 templates.beast_of_nurgle_in_slime = {
 	predicted = false,
-	interval = 0.5,
+	interval = 0.35,
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
 	max_stacks = 1,
 	class_name = "interval_buff",
@@ -367,16 +377,16 @@ templates.beast_of_nurgle_in_slime = {
 		buff_keywords.beast_of_nurgle_liquid_immunity
 	},
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 0.6,
+		[buff_stat_buffs.movement_speed] = 0.5,
 		[buff_stat_buffs.dodge_speed_multiplier] = 0.9
 	},
 	power_level = {
 		default = {
-			3,
-			6,
-			15,
+			10,
 			20,
-			25
+			30,
+			40,
+			50
 		}
 	},
 	damage_template = DamageProfileTemplates.beast_of_nurgle_slime_liquid,
@@ -443,7 +453,7 @@ local function _toxic_gas_interval_function(template_data, template_context, tem
 end
 
 templates.in_toxic_gas = {
-	predicted = false,
+	predicted = true,
 	hud_priority = 1,
 	interval = 0.5,
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
@@ -457,15 +467,16 @@ templates.in_toxic_gas = {
 	},
 	keywords = {
 		buff_keywords.concealed,
-		buff_keywords.hud_nameplates_disabled
+		buff_keywords.hud_nameplates_disabled,
+		buff_keywords.in_toxic_gas
 	},
 	power_level = {
 		default = {
-			4,
+			3,
+			5,
 			6,
 			8,
-			10,
-			12
+			10
 		}
 	},
 	damage_template = DamageProfileTemplates.toxic_gas_mutator,
@@ -496,6 +507,8 @@ templates.in_toxic_gas = {
 
 				outline_system:set_global_visibility(false)
 			end
+
+			Vo.coughing_event(unit)
 		end
 	end,
 	stop_func = function (template_data, template_context)
@@ -524,18 +537,19 @@ templates.in_toxic_gas = {
 
 				outline_system:set_global_visibility(true)
 			end
+
+			Vo.coughing_ends_event(unit)
 		end
 	end,
 	interval_func = _toxic_gas_interval_function,
 	player_effects = {
-		on_screen_effect = "content/fx/particles/environment/circumstances/toxic_gas/toxic_gas_screen",
-		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
 		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
+		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
 		stop_type = "stop"
 	}
 }
 templates.left_toxic_gas = {
-	predicted = false,
+	predicted = true,
 	hud_priority = 1,
 	interval = 0.5,
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
@@ -567,7 +581,7 @@ templates.left_toxic_gas = {
 	interval_func = _toxic_gas_interval_function
 }
 templates.in_cultist_grenadier_gas = {
-	predicted = false,
+	predicted = true,
 	hud_priority = 1,
 	interval = 0.75,
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
@@ -575,13 +589,12 @@ templates.in_cultist_grenadier_gas = {
 	class_name = "interval_buff",
 	is_negative = true,
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 0.9,
-		[buff_stat_buffs.dodge_speed_multiplier] = 0.9,
 		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
 	},
 	keywords = {
 		buff_keywords.concealed,
-		buff_keywords.hud_nameplates_disabled
+		buff_keywords.hud_nameplates_disabled,
+		buff_keywords.in_toxic_gas
 	},
 	power_level = {
 		default = {
@@ -620,6 +633,8 @@ templates.in_cultist_grenadier_gas = {
 
 				outline_system:set_global_visibility(false)
 			end
+
+			Vo.coughing_event(unit)
 		end
 	end,
 	stop_func = function (template_data, template_context)
@@ -648,6 +663,8 @@ templates.in_cultist_grenadier_gas = {
 
 				outline_system:set_global_visibility(true)
 			end
+
+			Vo.coughing_ends_event(unit)
 		end
 	end,
 	interval_func = _scaled_damage_interval_function,

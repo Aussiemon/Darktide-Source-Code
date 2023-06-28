@@ -23,9 +23,13 @@ ProcExtendableDurationBuff.update_proc_events = function (self, t, proc_events, 
 			local random_value = portable_random_to_use:next_random()
 
 			if random_value < proc_chance then
-				local check_proc_func = template.check_proc_func
+				local template_data = self._template_data
+				local template_context = self._template_context
+				local specific_proc_check = template.specific_check_proc_funcs and template.specific_check_proc_funcs[proc_event_name]
+				local check_proc_func = specific_proc_check or template.check_proc_func
+				local is_check_ok = not check_proc_func or check_proc_func(params, template_data, template_context, t)
 
-				if not check_proc_func or check_proc_func(params) then
+				if is_check_ok then
 					local buff_component = self._buff_component
 
 					if buff_component then
@@ -36,16 +40,13 @@ ProcExtendableDurationBuff.update_proc_events = function (self, t, proc_events, 
 						local new_proc_count = math.clamp(proc_count, 0, max_proc_stacks)
 						buff_component[proc_count_key] = new_proc_count
 					end
-				end
 
-				local specific_proc_func = template.specific_proc_func
+					local specific_proc_func = template.specific_proc_func and template.specific_proc_func[proc_event_name]
+					local proc_func = specific_proc_func or template.proc_func
 
-				if specific_proc_func and specific_proc_func[proc_event_name] then
-					local template_data = self._template_data
-					local template_context = self._template_context
-					local func = specific_proc_func[proc_event_name]
-
-					func(params, template_data, template_context)
+					if proc_func then
+						proc_func(params, template_data, template_context, t)
+					end
 				end
 			end
 		end

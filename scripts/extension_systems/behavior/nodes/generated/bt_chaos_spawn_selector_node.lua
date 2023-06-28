@@ -172,8 +172,10 @@ BtChaosSpawnSelectorNode.evaluate = function (self, unit, blackboard, scratchpad
 
 	repeat
 		local behavior_component = blackboard.behavior
+		local perception_component = blackboard.perception
+		local target_unit = perception_component.target_unit
 
-		if not is_running and behavior_component.move_state == "attacking" then
+		if not is_running and (behavior_component.move_state == "attacking" or not HEALTH_ALIVE[target_unit]) then
 			condition_result = false
 		else
 			condition_result = behavior_component.should_leap

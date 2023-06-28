@@ -1,8 +1,8 @@
-local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
-
 require("scripts/extension_systems/buff/buffs/proc_buff")
 
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
+local ConditionalFunctions = require("scripts/settings/buff/validation_functions/conditional_functions")
+local FixedFrame = require("scripts/utilities/fixed_frame")
 local WeaponTraitParentProcBuff = class("WeaponTraitParentProcBuff", "ProcBuff")
 
 WeaponTraitParentProcBuff.init = function (self, context, template, start_time, ...)
@@ -158,8 +158,6 @@ WeaponTraitParentProcBuff._remove_child_buff_stack = function (self, num_childre
 
 	self._num_child_stacks = num_child_stacks
 end
-
-local FixedFrame = require("scripts/utilities/fixed_frame")
 
 WeaponTraitParentProcBuff.duration_progress = function (self)
 	local template = self._template

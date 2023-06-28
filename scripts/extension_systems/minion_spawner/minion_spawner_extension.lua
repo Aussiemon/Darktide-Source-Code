@@ -21,7 +21,7 @@ MinionSpawnerExtension.init = function (self, extension_init_context, unit, exte
 	self._spawned_minions_by_queue_id = {}
 end
 
-MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, spawn_position, exit_position, exclude_from_pacing, spawn_type, exit_rotation_num_directions, exit_rotation_random_degree_range)
+MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, spawn_position, exit_position, exclude_from_pacing, exclude_from_specials_pacing, spawn_type, exit_rotation_num_directions, exit_rotation_random_degree_range)
 	local exit_position_on_nav_mesh = MinionSpawnerSpawnPosition.find_exit_position_on_nav_mesh(self._nav_world, spawn_position, exit_position, self._traverse_logic)
 
 	if not exit_position_on_nav_mesh then
@@ -85,6 +85,7 @@ MinionSpawnerExtension.setup_from_component = function (self, spawner_groups, sp
 
 	self._is_setup = true
 	self._excluded_from_pacing = exclude_from_pacing
+	self._exclude_from_specials_pacing = exclude_from_specials_pacing
 	self._spawn_type = spawn_type
 end
 
@@ -97,6 +98,10 @@ MinionSpawnerExtension.exit_position_boxed = function (self)
 end
 
 MinionSpawnerExtension.is_excluded_from_pacing = function (self)
+	return self._excluded_from_pacing
+end
+
+MinionSpawnerExtension.is_excluded_from_specials_pacing = function (self)
 	return self._excluded_from_pacing
 end
 

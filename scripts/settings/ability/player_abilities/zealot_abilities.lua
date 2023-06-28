@@ -1,5 +1,5 @@
 local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
-local TalentSettings = require("scripts/settings/buff/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local maniac_talent_settings = TalentSettings.zealot_2
 local abilities = {
 	zealot_dash = {

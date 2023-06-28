@@ -11,7 +11,7 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local Health = require("scripts/utilities/health")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-local TalentSettings = require("scripts/settings/buff/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local breed_types = BreedSettings.types
 local buff_keywords = BuffSettings.keywords
@@ -620,7 +620,7 @@ templates.ogryn_bonebreaker_revenge_damage = {
 	predicted = false,
 	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_player_hit_recieved] = 1
+		[proc_events.on_player_hit_received] = 1
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
@@ -808,7 +808,7 @@ templates.ogryn_bonebreaker_melee_revenge_damage = {
 	class_name = "proc_buff",
 	predicted = false,
 	proc_events = {
-		[proc_events.on_player_hit_recieved] = 1
+		[proc_events.on_player_hit_received] = 1
 	},
 	check_proc_func = CheckProcFunctions.on_melee_hit,
 	start_func = function (template_data, template_context)

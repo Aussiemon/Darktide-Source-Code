@@ -53,27 +53,28 @@ local action_data = {
 		}
 	},
 	leap = {
-		start_move_speed = 1,
-		push_minions_side_relation = "allied",
+		push_minions_radius = 2,
 		land_impact_timing = 0.16666666666666666,
-		utility_weight = 1,
 		push_enemies_radius = 2,
 		aoe_bot_threat_duration = 1,
+		push_minions_side_relation = "allied",
 		start_leap_anim_event = "attack_leap_start",
-		push_minions_radius = 2,
-		aoe_bot_threat_timing = 0.5,
 		shortest_start_leap_anim_event = "attack_leap_shortest_start",
 		push_enemies_power_level = 2000,
 		push_minions_power_level = 2000,
+		start_offset_distance = 2,
 		landing_duration = 0.6944444444444444,
-		speed = 18,
 		land_anim_event = "attack_leap_land",
 		short_start_leap_anim_event = "attack_leap_short_start",
-		considerations = UtilityConsiderations.chaos_spawn_leap,
-		start_duration = {
-			attack_leap_short_start = 0.5333333333333333,
-			attack_leap_start = 1.1111111111111112,
-			attack_leap_shortest_start = 0.4
+		start_movement_duration = {
+			attack_leap_short_start = 0,
+			attack_leap_start = 0.5555555555555556,
+			attack_leap_shortest_start = 0
+		},
+		start_leap_timing = {
+			attack_leap_short_start = 0.43333333333333335,
+			attack_leap_start = 0.7777777777777778,
+			attack_leap_shortest_start = 0.3333333333333333
 		},
 		stagger_type_reduction = {
 			melee = -20,
@@ -87,79 +88,6 @@ local action_data = {
 			speed = 10,
 			radius = 5,
 			angle = math.pi / 6
-		}
-	},
-	follow = {
-		idle_anim_events = "idle",
-		utility_weight = 1,
-		enter_walk_distance = 0,
-		leave_walk_distance = 4,
-		run_anim_event = "move_fwd",
-		rotation_speed = 6,
-		walk_anim_event = "move_fwd",
-		considerations = UtilityConsiderations.melee_follow,
-		start_move_anim_events = {
-			running = {
-				bwd = "move_start_bwd",
-				fwd = "move_start_fwd",
-				left = "move_start_left",
-				right = "move_start_right"
-			}
-		},
-		start_move_anim_data = {
-			move_start_fwd = {},
-			move_start_bwd = {
-				sign = 1,
-				rad = math.pi
-			},
-			move_start_left = {
-				sign = 1,
-				rad = math.pi / 2
-			},
-			move_start_right = {
-				sign = -1,
-				rad = math.pi / 2
-			},
-			walk_start_fwd = {},
-			walk_start_bwd = {
-				sign = -1,
-				rad = math.pi
-			},
-			walk_start_left = {
-				sign = 1,
-				rad = math.pi / 2
-			},
-			walk_start_right = {
-				sign = -1,
-				rad = math.pi / 2
-			}
-		},
-		start_move_rotation_timings = {
-			move_start_right = 0,
-			move_start_fwd = 0,
-			walk_start_fwd = 0,
-			move_start_left = 0,
-			walk_start_bwd = 0,
-			walk_start_left = 0,
-			move_start_bwd = 0,
-			walk_start_right = 0
-		},
-		start_rotation_durations = {
-			move_start_right = 0.3333333333333333,
-			move_start_fwd = 0,
-			walk_start_fwd = 0,
-			move_start_left = 0.3333333333333333,
-			walk_start_bwd = 0.7666666666666667,
-			walk_start_left = 0.7,
-			move_start_bwd = 0.6666666666666666,
-			walk_start_right = 0.7666666666666667
-		},
-		start_move_event_anim_speed_durations = {
-			walk_start_right = 0.7666666666666667,
-			walk_start_fwd = 0.9333333333333333,
-			walk_start_bwd = 0.7666666666666667,
-			walk_start_left = 0.7,
-			move_start_fwd = 0.9333333333333333
 		}
 	},
 	erratic_follow = {
@@ -441,7 +369,7 @@ local action_data = {
 		ignore_blocked = true,
 		utility_weight = 1,
 		attack_type = "oobb",
-		collision_filter = "filter_minion_melee",
+		collision_filter = "filter_minion_melee_friendly_fire",
 		range = 3.5,
 		bot_power_level_modifier = 0.4,
 		aoe_threat_timing = 0.4,
@@ -473,146 +401,6 @@ local action_data = {
 		damage_type = damage_types.minion_monster_sharp,
 		aoe_bot_threat_oobb_size = Vector3Box(1.5, 2.25, 2.5),
 		ground_impact_fx_template = GroundImpactFxTemplates.chaos_spawn_claw
-	},
-	tentacle_attack = {
-		utility_weight = 2.5,
-		ignore_blocked = true,
-		attack_type = "sweep",
-		collision_filter = "filter_minion_melee_friendly_fire",
-		rotate_towards_velocity_after_attack = true,
-		move_speed_variable_lerp_speed = 4,
-		weapon_reach = 1.5,
-		move_speed_variable_name = "moving_attack_fwd_speed",
-		sweep_node = "j_leftfinger4_jnt",
-		rotation_speed = 5,
-		ignore_dodge = true,
-		dodge_weapon_reach = 0.35,
-		considerations = UtilityConsiderations.chaos_spawn_tentacle_attack,
-		attack_anim_events = {
-			"attack_melee_sweep",
-			"attack_melee_sweep_2"
-		},
-		attack_sweep_damage_timings = {
-			attack_melee_sweep = {
-				1,
-				1.2
-			},
-			attack_melee_sweep_2 = {
-				0.8666666666666667,
-				1.0333333333333334
-			}
-		},
-		attack_anim_durations = {
-			attack_melee_sweep = 1.8333333333333333,
-			attack_melee_sweep_2 = 1.7333333333333334
-		},
-		attack_intensities = {
-			melee = 0.25,
-			running_melee = 2,
-			moving_melee = 1,
-			ranged = 1
-		},
-		move_start_timings = {
-			attack_catapult = 0
-		},
-		damage_profile = DamageProfileTemplates.chaos_spawn_tentacle,
-		damage_type = damage_types.minion_monster_blunt,
-		stagger_type_reduction = {
-			ranged = 100,
-			explosion = 100
-		},
-		animation_move_speed_configs = {
-			attack_sword_combo = {
-				{
-					value = 4,
-					distance = 8
-				},
-				{
-					value = 3,
-					distance = 6.4
-				},
-				{
-					value = 2,
-					distance = 4
-				},
-				{
-					value = 1,
-					distance = 2
-				},
-				{
-					value = 0,
-					distance = 0
-				}
-			}
-		}
-	},
-	moving_tentacle_attack = {
-		ignore_blocked = true,
-		utility_weight = 2.5,
-		weapon_reach = 1.5,
-		attack_type = "sweep",
-		dont_lock_slot_system = true,
-		collision_filter = "filter_minion_melee_friendly_fire",
-		rotate_towards_velocity_after_attack = true,
-		moving_attack = true,
-		move_speed_variable_lerp_speed = 4,
-		move_speed_variable_name = "moving_attack_fwd_speed",
-		sweep_node = "j_leftfinger4_jnt",
-		rotation_speed = 5,
-		ignore_dodge = true,
-		dodge_weapon_reach = 0.35,
-		considerations = UtilityConsiderations.chaos_spawn_tentacle_attack,
-		attack_anim_events = {
-			"attack_melee_sweep_move"
-		},
-		attack_sweep_damage_timings = {
-			attack_melee_sweep_move = {
-				0.8611111111111112,
-				1.0277777777777777
-			}
-		},
-		attack_anim_durations = {
-			attack_melee_sweep_move = 1.6944444444444444
-		},
-		attack_intensities = {
-			melee = 0.25,
-			running_melee = 2,
-			moving_melee = 1,
-			ranged = 1
-		},
-		move_start_timings = {
-			attack_catapult = 0
-		},
-		damage_profile = DamageProfileTemplates.chaos_spawn_tentacle,
-		damage_type = damage_types.minion_monster_blunt,
-		stagger_type_reduction = {
-			ranged = 100,
-			explosion = 100
-		},
-		animation_move_speed_configs = {
-			attack_sword_combo = {
-				{
-					value = 4,
-					distance = 8
-				},
-				{
-					value = 3,
-					distance = 6.4
-				},
-				{
-					value = 2,
-					distance = 4
-				},
-				{
-					value = 1,
-					distance = 2
-				},
-				{
-					value = 0,
-					distance = 0
-				}
-			}
-		}
 	},
 	grab = {
 		degree_per_throw_direction = 20,
@@ -668,6 +456,9 @@ local action_data = {
 		grab_durations = {
 			human = 1.3333333333333333,
 			ogryn = 1.9666666666666666
+		},
+		rotation_durations = {
+			attack_grab = 0.3333333333333333
 		},
 		smash_anims = {
 			human = "attack_grabbed_smash",
@@ -725,10 +516,10 @@ local action_data = {
 				}
 			}
 		},
-		damage_profile = DamageProfileTemplates.chaos_spawn_grab_smash_human,
+		damage_profile = DamageProfileTemplates.chaos_spawn_grab_smash,
 		smash_damage_profile = {
-			human = DamageProfileTemplates.chaos_spawn_grab_smash_ogryn,
-			ogryn = DamageProfileTemplates.chaos_spawn_grab_smash_ogryn
+			human = DamageProfileTemplates.chaos_spawn_grab_smash,
+			ogryn = DamageProfileTemplates.chaos_spawn_grab_smash
 		},
 		damage_type = damage_types.minion_monster_blunt,
 		aoe_bot_threat_oobb_size = Vector3Box(1.5, 2.25, 2.5),
@@ -855,7 +646,7 @@ local action_data = {
 		aoe_threat_timing = 0,
 		weapon_reach = 2.25,
 		utility_weight = 8,
-		collision_filter = "filter_minion_melee",
+		collision_filter = "filter_minion_melee_friendly_fire",
 		ignore_blocked = true,
 		rotation_speed = 5,
 		push_minions_power_level = 2000,
@@ -1162,7 +953,7 @@ local action_data = {
 		aoe_threat_timing = 0,
 		weapon_reach = 2.25,
 		utility_weight = 8,
-		collision_filter = "filter_minion_melee",
+		collision_filter = "filter_minion_melee_friendly_fire",
 		ignore_blocked = true,
 		rotation_speed = 5,
 		push_minions_power_level = 2000,

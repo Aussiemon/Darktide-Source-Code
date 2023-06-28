@@ -764,31 +764,31 @@ weapon_template.alternate_fire_settings = {
 	},
 	movement_speed_modifier = {
 		{
-			modifier = 0.275,
+			modifier = 0.175,
 			t = 0.05
 		},
 		{
-			modifier = 0.34,
+			modifier = 0.24,
 			t = 0.075
 		},
 		{
-			modifier = 0.29,
+			modifier = 0.19,
 			t = 0.25
 		},
 		{
-			modifier = 0.3,
+			modifier = 0.2,
 			t = 0.3
 		},
 		{
-			modifier = 0.5,
+			modifier = 0.4,
 			t = 0.4
 		},
 		{
-			modifier = 0.6,
+			modifier = 0.5,
 			t = 0.5
 		},
 		{
-			modifier = 0.75,
+			modifier = 0.5,
 			t = 2
 		}
 	}

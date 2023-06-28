@@ -137,26 +137,22 @@ local gadget_traits_common = {
 		gadget_damage_reduction_vs_grenadiers = {
 			{
 				stat_buffs = {
-					[buff_stat_buffs.damage_taken_by_renegade_grenadier_multiplier] = 0.95,
-					[buff_stat_buffs.damage_taken_by_cultist_grenadier_multiplier] = 0.95
+					[buff_stat_buffs.damage_taken_by_renegade_grenadier_multiplier] = 0.95
 				}
 			},
 			{
 				stat_buffs = {
-					[buff_stat_buffs.damage_taken_by_renegade_grenadier_multiplier] = 0.9,
-					[buff_stat_buffs.damage_taken_by_cultist_grenadier_multiplier] = 0.9
+					[buff_stat_buffs.damage_taken_by_renegade_grenadier_multiplier] = 0.9
 				}
 			},
 			{
 				stat_buffs = {
-					[buff_stat_buffs.damage_taken_by_renegade_grenadier_multiplier] = 0.85,
-					[buff_stat_buffs.damage_taken_by_cultist_grenadier_multiplier] = 0.85
+					[buff_stat_buffs.damage_taken_by_renegade_grenadier_multiplier] = 0.85
 				}
 			},
 			{
 				stat_buffs = {
-					[buff_stat_buffs.damage_taken_by_renegade_grenadier_multiplier] = 0.8,
-					[buff_stat_buffs.damage_taken_by_cultist_grenadier_multiplier] = 0.8
+					[buff_stat_buffs.damage_taken_by_renegade_grenadier_multiplier] = 0.8
 				}
 			}
 		}

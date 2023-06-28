@@ -17,7 +17,7 @@ local explosion_templates = {
 			"content/fx/particles/weapons/grenades/flame_grenade_initial_blast"
 		},
 		sfx = {
-			"wwise/events/weapon/play_explosion_grenade_flame",
+			"wwise/events/weapon/play_explosion_grenade_flame_minion",
 			"wwise/events/weapon/play_explosion_refl_small"
 		}
 	},
@@ -135,7 +135,7 @@ local explosion_templates = {
 			"content/fx/particles/weapons/grenades/flame_grenade_initial_blast"
 		},
 		sfx = {
-			"wwise/events/weapon/play_explosion_grenade_flame",
+			"wwise/events/weapon/play_explosion_grenade_flame_minion",
 			"wwise/events/weapon/play_explosion_refl_small"
 		}
 	},
@@ -210,6 +210,25 @@ local explosion_templates = {
 		damage_profile = DamageProfileTemplates.chaos_hound_push,
 		vfx = {
 			"content/fx/particles/enemies/chaos_hound/chaos_hound_pounce"
+		}
+	},
+	purple_stimmed_explosion = {
+		damage_falloff = false,
+		radius = 0.2,
+		min_radius = 0.1,
+		collision_filter = "filter_minion_explosion",
+		close_radius = 0.1,
+		static_power_level = 0,
+		scalable_radius = true,
+		min_close_radius = 0.05,
+		close_damage_profile = DamageProfileTemplates.chaos_hound_push,
+		damage_profile = DamageProfileTemplates.chaos_hound_push,
+		vfx = {
+			"content/fx/particles/enemies/purple_stimmed_explosion"
+		},
+		sfx = {
+			"wwise/events/weapon/play_explosion_grenade_gas",
+			"wwise/events/weapon/play_explosion_refl_small"
 		}
 	}
 }

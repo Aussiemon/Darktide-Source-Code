@@ -23,7 +23,7 @@ PartyImmateriumConnection.init = function (self, join_parameter, compatibility_s
 	self._party_vote = empty_object
 	self._party_vote_version = 0
 	self._game_state = empty_object
-	self._game_state_version = 0
+	self._game_state_version = -1
 	self._invite_list = nil
 	self._invite_list_version = 0
 end

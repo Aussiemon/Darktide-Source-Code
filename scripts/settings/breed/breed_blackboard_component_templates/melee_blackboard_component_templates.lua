@@ -7,11 +7,6 @@ local melee_base = {
 		lock_combat_range_switch = "boolean",
 		combat_range_sticky_time = "number"
 	},
-	suppression = {
-		suppress_value = "number",
-		direction = "Vector3Box",
-		is_suppressed = "boolean"
-	},
 	slot = {
 		has_ghost_slot = "boolean",
 		is_waiting_on_slot = "boolean",
@@ -54,11 +49,33 @@ melee_patroller.patrol = {
 	walk_position = "Vector3Box",
 	auto_patrol = "boolean"
 }
+local melee_can_be_suppressed = table.clone(melee_base)
+melee_can_be_suppressed.suppression = {
+	suppress_value = "number",
+	direction = "Vector3Box",
+	is_suppressed = "boolean"
+}
+local melee_patroller_can_be_suppressed = table.clone(melee_base)
+melee_patroller_can_be_suppressed.suppression = {
+	suppress_value = "number",
+	direction = "Vector3Box",
+	is_suppressed = "boolean"
+}
+melee_patroller_can_be_suppressed.patrol = {
+	patrol_leader_unit = "Unit",
+	patrol_index = "number",
+	should_patrol = "boolean",
+	patrol_id = "number",
+	walk_position = "Vector3Box",
+	auto_patrol = "boolean"
+}
 local templates = {
 	melee_base = melee_base,
 	melee_shield = melee_shield,
 	melee_patroller = melee_patroller,
-	melee_shield_patroller = melee_shield_patroller
+	melee_shield_patroller = melee_shield_patroller,
+	melee_can_be_suppressed = melee_can_be_suppressed,
+	melee_patroller_can_be_suppressed = melee_patroller_can_be_suppressed
 }
 
 return templates

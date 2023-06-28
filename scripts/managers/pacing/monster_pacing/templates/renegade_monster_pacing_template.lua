@@ -19,12 +19,12 @@ local monster_pacing_template = {
 				},
 				sound_events = {
 					renegade = {
-						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole",
-						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole"
+						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole_traitor",
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_traitor"
 					},
 					cultist = {
-						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole",
-						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole"
+						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole_cultist",
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_cultist"
 					}
 				},
 				num_boss_patrols_range = {
@@ -56,7 +56,7 @@ local monster_pacing_template = {
 				chaos_beast_of_nurgle = {
 					hordes = 60,
 					trickle_hordes = 40,
-					specials = 50
+					specials = 20
 				},
 				chaos_spawn = {
 					hordes = 60,
@@ -86,12 +86,12 @@ local monster_pacing_template = {
 				},
 				sound_events = {
 					renegade = {
-						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole",
-						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole"
+						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole_traitor",
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_traitor"
 					},
 					cultist = {
-						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole",
-						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole"
+						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole_cultist",
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_cultist"
 					}
 				},
 				num_boss_patrols_range = {
@@ -116,17 +116,17 @@ local monster_pacing_template = {
 			},
 			pause_pacing_on_spawn = {
 				chaos_plague_ogryn = {
-					hordes = 50,
+					hordes = 30,
 					trickle_hordes = 20,
 					specials = 20
 				},
 				chaos_beast_of_nurgle = {
-					hordes = 50,
+					hordes = 30,
 					trickle_hordes = 20,
 					specials = 20
 				},
 				chaos_spawn = {
-					hordes = 50,
+					hordes = 30,
 					trickle_hordes = 20,
 					specials = 20
 				}
@@ -153,12 +153,12 @@ local monster_pacing_template = {
 				},
 				sound_events = {
 					renegade = {
-						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole",
-						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole"
+						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole_traitor",
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_traitor"
 					},
 					cultist = {
-						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole",
-						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole"
+						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole_cultist",
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_cultist"
 					}
 				},
 				num_boss_patrols_range = {
@@ -183,16 +183,13 @@ local monster_pacing_template = {
 			},
 			pause_pacing_on_spawn = {
 				chaos_plague_ogryn = {
-					specials = 15,
-					hordes = 20
+					specials = 15
 				},
 				chaos_beast_of_nurgle = {
-					specials = 15,
-					hordes = 20
+					specials = 15
 				},
 				chaos_spawn = {
-					specials = 15,
-					hordes = 20
+					specials = 15
 				}
 			},
 			despawn_distance_when_passive = {
@@ -217,12 +214,12 @@ local monster_pacing_template = {
 				},
 				sound_events = {
 					renegade = {
-						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole",
-						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole"
+						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole_traitor",
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_traitor"
 					},
 					cultist = {
-						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole",
-						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole"
+						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole_cultist",
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_cultist"
 					}
 				},
 				num_boss_patrols_range = {
@@ -268,12 +265,12 @@ local monster_pacing_template = {
 				},
 				sound_events = {
 					renegade = {
-						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole",
-						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole"
+						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole_traitor",
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_traitor"
 					},
 					cultist = {
-						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole",
-						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole"
+						stop = "wwise/events/minions/stop_minion_group_sfx_elite_patrole_cultist",
+						start = "wwise/events/minions/play_minion_group_sfx_elite_patrole_cultist"
 					}
 				},
 				num_boss_patrols_range = {

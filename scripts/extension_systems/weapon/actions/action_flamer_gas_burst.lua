@@ -99,6 +99,7 @@ ActionFlamerGasBurst._shoot = function (self, position, rotation, power_level, c
 		param_table.attacking_unit = player_unit
 		param_table.num_shots_fired = action_component.num_shots_fired
 		param_table.combo_count = self._combo_count
+		param_table.is_critical_strike = self._critical_strike_component.is_active
 
 		attacker_buff_extension:add_proc_event(proc_events.on_shoot, param_table)
 	end

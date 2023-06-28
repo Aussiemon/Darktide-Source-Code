@@ -5,7 +5,9 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/ammo_be
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/ammo_count_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/auspex_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/auspex_scanning_effects")
-require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_lightning_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_lightning_hand_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_lightning_link_effects")
+require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_lightning_target_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/chain_weapon_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/charge_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/device")
@@ -25,7 +27,6 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/melee_i
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/overheat_display")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/plasmagun_overheat_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/power_weapon_effects")
-require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_chain_lightning_target_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/psyker_single_target_effects")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/servo_skull_hover")
 require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/skull_decoder_effects")
@@ -39,24 +40,42 @@ require("scripts/extension_systems/visual_loadout/wieldable_slot_scripts/weapon_
 
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WieldableSlotScripts = {}
+local all_wieldable_slot_scripts = {}
+local EMPTY_TABLE = {}
 
 WieldableSlotScripts.create = function (wieldable_slot_scripts_context, wieldable_slot_scripts, fx_sources, slot, item)
-	local item_wieldable_slot_scripts = item.wieldable_slot_scripts
+	table.clear(all_wieldable_slot_scripts)
 
-	if not item_wieldable_slot_scripts then
-		return
-	end
-
+	local item_wieldable_slot_scripts = item.wieldable_slot_scripts or EMPTY_TABLE
 	local num_scripts = #item_wieldable_slot_scripts
 
-	for ii = 1, num_scripts do
-		local script_name = item_wieldable_slot_scripts[ii]
+	for i = 1, num_scripts do
+		all_wieldable_slot_scripts[i] = item_wieldable_slot_scripts[i]
+	end
+
+	local weapon_template = WeaponTemplate.weapon_template_from_item(item)
+	local weapon_template_wieldable_slot_scripts = weapon_template.wieldable_slot_scripts or EMPTY_TABLE
+
+	for i = 1, #weapon_template_wieldable_slot_scripts do
+		local script_name = weapon_template_wieldable_slot_scripts[i]
+		local already_defined = table.find(all_wieldable_slot_scripts, script_name)
+
+		if not already_defined then
+			num_scripts = num_scripts + 1
+			all_wieldable_slot_scripts[num_scripts] = script_name
+		end
+	end
+
+	local actual_num_scripts = 0
+
+	for i = num_scripts, 1, -1 do
+		local script_name = all_wieldable_slot_scripts[i]
 		local script_class = CLASSES[script_name]
 
 		if script_class then
-			local weapon_template = WeaponTemplate.weapon_template_from_item(item)
 			local script = script_class:new(wieldable_slot_scripts_context, slot, weapon_template, fx_sources, item)
-			wieldable_slot_scripts[slot.name][ii] = script
+			actual_num_scripts = actual_num_scripts + 1
+			wieldable_slot_scripts[slot.name][actual_num_scripts] = script
 		end
 	end
 end

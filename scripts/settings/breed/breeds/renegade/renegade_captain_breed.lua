@@ -22,10 +22,11 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "renegade_captain"
 local breed_data = {
+	base_height = 2,
 	walk_speed = 2.5,
+	navigation_propagation_box_extent = 200,
 	ignore_stagger_accumulation = true,
 	use_bone_lod = true,
-	navigation_propagation_box_extent = 200,
 	sub_faction_name = "renegade",
 	target_stickiness_distance = 1,
 	spawn_aggro_state = "aggroed",
@@ -43,8 +44,6 @@ local breed_data = {
 	is_boss = true,
 	spawn_anim_state = "to_riflemen",
 	faction_name = "chaos",
-	base_height = 2,
-	ignore_attack_delay = true,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 500,
 	player_locomotion_constrain_radius = 0.7,
@@ -133,20 +132,6 @@ local breed_data = {
 		valid_combat_ranges = {
 			far = true,
 			close = true
-		}
-	},
-	suppress_config = {
-		max_value = math.huge,
-		threshold = math.huge,
-		flinch_threshold = math.huge,
-		decay_speeds = {
-			melee = 0.05,
-			far = 0.2,
-			close = 0.2
-		},
-		immunity_duration = {
-			2.75,
-			3.25
 		}
 	},
 	detection_radius = math.huge,

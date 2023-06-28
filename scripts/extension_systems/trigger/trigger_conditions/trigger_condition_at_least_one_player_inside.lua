@@ -1,5 +1,6 @@
 require("scripts/extension_systems/trigger/trigger_conditions/trigger_condition_base")
 
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local TriggerConditionAtLeastOnePlayerInside = class("TriggerConditionAtLeastOnePlayerInside", "TriggerConditionBase")
 
 TriggerConditionAtLeastOnePlayerInside.on_volume_enter = function (self, entering_unit, dt, t)
@@ -27,7 +28,10 @@ TriggerConditionAtLeastOnePlayerInside.filter_passed = function (self, filter_un
 		local player = alive_players[i]
 		local player_unit = player.player_unit
 		local is_bot = not player:is_human_controlled()
-		local valid_player = evaluates_bots and is_bot or not is_bot
+		local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
+		local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
+		local is_hogtied = character_state_component and PlayerUnitStatus.is_hogtied(character_state_component)
+		local valid_player = (evaluates_bots and is_bot or not is_bot) and not is_hogtied
 
 		if valid_player then
 			units_to_test[1] = player_unit

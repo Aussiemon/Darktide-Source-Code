@@ -103,10 +103,12 @@ damage_templates.liquid_area_fire_burning = {
 	}
 }
 damage_templates.liquid_area_fire_burning_barrel = {
-	override_allow_friendly_fire = true,
-	ignore_shield = true,
-	ignore_toughness = true,
+	disorientation_type = "burninating",
 	stagger_category = "melee",
+	ignore_shield = true,
+	override_allow_friendly_fire = true,
+	ignore_toughness = true,
+	ogryn_disorientation_type = "burninating",
 	armor_damage_modifier = {
 		attack = burninating_barrel_adm,
 		impact = burninating_barrel_adm

@@ -79,7 +79,7 @@ ViewElementKeybindPopup._setup_background_gui = function (self)
 	self._ui_popup_background_renderer = ui_manager:create_renderer(class_name .. "_ui_popup_background_renderer", self._background_world)
 end
 
-ViewElementKeybindPopup.destroy = function (self)
+ViewElementKeybindPopup.destroy = function (self, ui_renderer)
 	if self._ui_default_renderer then
 		self._ui_default_renderer = nil
 
@@ -110,7 +110,7 @@ ViewElementKeybindPopup.destroy = function (self)
 		self._background_world = nil
 	end
 
-	ViewElementKeybindPopup.super.destroy(self)
+	ViewElementKeybindPopup.super.destroy(self, ui_renderer)
 end
 
 ViewElementKeybindPopup._set_background_blur = function (self, fraction)

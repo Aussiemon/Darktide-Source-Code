@@ -323,7 +323,7 @@ FreeFlightManager._update_camera = function (self, input, dt, camera_data)
 			Matrix4x4.set_translation(cm, trans)
 		end
 	else
-		Debug:colored_text(Color.red(), "FREE FLIGHT CAMERA LOOK DISABLED. PRESS 'TAB' TO RE-ENABLE.")
+		Debug:colored_text(Color.red(), "FREE FLIGHT CAMERA LOCKED,     Keybind: TAB")
 	end
 
 	local rot = Matrix4x4.rotation(cm)
@@ -347,6 +347,16 @@ FreeFlightManager._update_camera = function (self, input, dt, camera_data)
 		else
 			Log.info("FreeFlightManager", "There is no free_flight_teleporter extension hooked to this manager")
 		end
+	end
+
+	if input:get("toggle_input_in_free_flight") then
+		local new_value = not DevParameters.allow_character_input_in_free_flight
+
+		ParameterResolver.set_dev_parameter("allow_character_input_in_free_flight", new_value)
+	end
+
+	if DevParameters.allow_character_input_in_free_flight then
+		Debug:colored_text(Color.orange_red(), "FREE FLIGHT INPUT ENABLED,     Keybind: L-CTRL + SPACE")
 	end
 
 	ScriptCamera.set_local_pose(cam, cm)

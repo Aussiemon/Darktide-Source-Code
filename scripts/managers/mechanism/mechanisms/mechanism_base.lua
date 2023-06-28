@@ -29,6 +29,10 @@ MechanismBase.settings = function (self)
 	return self._settings
 end
 
+MechanismBase.profile_changes_are_allowed = function (self)
+	return true
+end
+
 MechanismBase._set_state = function (self, state)
 	Log.info("MechanismBase", "Mechanism %s changing state %s -> %s", self.name, self._state, state)
 

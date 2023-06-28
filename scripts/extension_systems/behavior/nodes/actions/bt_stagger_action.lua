@@ -32,7 +32,9 @@ BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 			locomotion_extension:set_movement_type("constrained_by_mover", override_mover_move_distance)
 		end
 
-		scratchpad.original_rotation_speed = locomotion_extension:rotation_speed()
+		if not scratchpad.original_rotation_speed then
+			scratchpad.original_rotation_speed = locomotion_extension:rotation_speed()
+		end
 	end
 
 	behavior_component.move_state = "stagger"

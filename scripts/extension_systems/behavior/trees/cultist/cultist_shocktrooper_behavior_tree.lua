@@ -11,29 +11,8 @@ local FAR_COMBAT = {
 	},
 	action_data = action_data.assault
 }
-local SUPPRESSED = {
-	"BtSequenceNode",
-	{
-		"BtSuppressedAction",
-		name = "suppressed",
-		action_data = action_data.suppressed
-	},
-	{
-		"BtMoveToCombatVectorAction",
-		name = "move_to_combat_vector",
-		action_data = action_data.move_to_combat_vector
-	},
-	condition = "is_suppressed",
-	name = "suppressed"
-}
 local CLOSE_COMBAT = {
 	"BtSelectorNode",
-	{
-		"BtRangedFollowTargetAction",
-		name = "assault_close",
-		condition = "is_suppressed",
-		action_data = action_data.assault_close
-	},
 	{
 		"BtRunStopAndShootAction",
 		leave_hook = "reset_enter_combat_range_flag",
@@ -170,7 +149,6 @@ local behavior_tree = {
 		condition = "is_blocked",
 		action_data = action_data.blocked
 	},
-	SUPPRESSED,
 	MELEE_COMBAT,
 	FAR_COMBAT,
 	CLOSE_COMBAT,

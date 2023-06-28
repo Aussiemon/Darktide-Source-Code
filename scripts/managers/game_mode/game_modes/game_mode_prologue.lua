@@ -80,7 +80,7 @@ end
 
 GameModePrologue.cleanup_game_mode_units = function (self)
 	GameModePrologue.super.cleanup_game_mode_units(self)
-	self:_remove_all_bots()
+	Managers.state.player_unit_spawn:remove_all_bots()
 end
 
 GameModePrologue.fail = function (self)

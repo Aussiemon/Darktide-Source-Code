@@ -161,7 +161,7 @@ ViewElementTabMenu.update = function (self, dt, t, input_service)
 		end
 	end
 
-	if self._is_handling_navigation_input then
+	if self._is_handling_navigation_input and self._selected_index then
 		if self._input_action_right and input_service:get(self._input_action_right) and self._selected_index < self._entry_index then
 			self._entries[self._selected_index + 1].on_pressed_callback()
 		elseif self._input_action_left and input_service:get(self._input_action_left) and self._selected_index > 1 then

@@ -25,7 +25,7 @@ local double_cleave = DamageProfileSettings.double_cleave
 damage_templates.poxwalker = {
 	disorientation_type = "medium",
 	permanent_damage_ratio = 0.25,
-	melee_toughness_multiplier = 2,
+	melee_toughness_multiplier = 1.75,
 	ogryn_disorientation_type = "ogryn_medium",
 	interrupt_alternate_fire = true,
 	stagger_category = "melee",
@@ -38,7 +38,7 @@ damage_templates.poxwalker = {
 		impact = crit_impact_armor_mod
 	},
 	power_distribution = {
-		attack = 30,
+		attack = 35,
 		impact = 10
 	},
 	cleave_distribution = {
@@ -82,7 +82,7 @@ damage_templates.melee_fighter_default = {
 }
 damage_templates.horde_melee_default = {
 	ogryn_disorientation_type = "ogryn_medium",
-	melee_toughness_multiplier = 2,
+	melee_toughness_multiplier = 1.75,
 	stagger_category = "melee",
 	interrupt_alternate_fire = true,
 	disorientation_type = "medium",
@@ -91,7 +91,7 @@ damage_templates.horde_melee_default = {
 		impact = default_armor_mod
 	},
 	power_distribution = {
-		attack = 40,
+		attack = 35,
 		impact = 10
 	},
 	cleave_distribution = {
@@ -557,69 +557,7 @@ damage_templates.chaos_plague_ogryn_catapult = {
 		}
 	}
 }
-damage_templates.chaos_spawn_tentacle = {
-	block_cost_multiplier = 1,
-	stagger_category = "melee",
-	melee_toughness_multiplier = 2,
-	toughness_multiplier = 2,
-	interrupt_alternate_fire = true,
-	armor_damage_modifier = {
-		attack = default_armor_mod,
-		impact = default_armor_mod
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod
-	},
-	power_distribution = {
-		attack = 10,
-		impact = 50
-	},
-	cleave_distribution = {
-		attack = 0.25,
-		impact = 0.25
-	},
-	push_template = push_templates.chaos_spawn_tentacle,
-	ogryn_push_template = push_templates.chaos_spawn_tentacle,
-	force_look_function = ForcedLookSettings.look_functions.to_or_from_attack_direction,
-	targets = {
-		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default
-		}
-	}
-}
-damage_templates.chaos_spawn_grab_smash_human = {
-	block_cost_multiplier = 1,
-	stagger_category = "melee",
-	melee_toughness_multiplier = 2,
-	toughness_multiplier = 2,
-	interrupt_alternate_fire = true,
-	armor_damage_modifier = {
-		attack = default_armor_mod,
-		impact = default_armor_mod
-	},
-	crit_mods = {
-		attack = crit_armor_mod,
-		impact = crit_impact_armor_mod
-	},
-	power_distribution = {
-		attack = 10,
-		impact = 50
-	},
-	cleave_distribution = {
-		attack = 0.25,
-		impact = 0.25
-	},
-	push_template = push_templates.chaos_spawn_tentacle,
-	ogryn_push_template = push_templates.chaos_spawn_tentacle,
-	force_look_function = ForcedLookSettings.look_functions.to_or_from_attack_direction,
-	targets = {
-		default_target = {
-			boost_curve = PowerLevelSettings.boost_curves.default
-		}
-	}
-}
-damage_templates.chaos_spawn_grab_smash_ogryn = {
+damage_templates.chaos_spawn_grab_smash = {
 	block_cost_multiplier = 2,
 	melee_toughness_multiplier = 2,
 	stagger_category = "melee",
@@ -780,7 +718,7 @@ damage_templates.renegade_captain_punch = {
 damage_templates.renegade_captain_kick = {
 	disorientation_type = "heavy",
 	stagger_category = "melee",
-	toughness_multiplier = 2,
+	toughness_multiplier = 1,
 	unblockable = true,
 	interrupt_alternate_fire = true,
 	ogryn_disorientation_type = "ogryn_heavy",
@@ -3426,6 +3364,20 @@ damage_templates.daemonhost_corruption_aura = {
 		}
 	}
 }
+damage_templates.mutator_green_corruption = {
+	stagger_category = "ranged",
+	ignore_toughness = true,
+	permanent_damage_ratio = 1,
+	power_distribution = {
+		attack = 0.35,
+		impact = 4
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
 damage_templates.mutator_corruption = {
 	stagger_category = "ranged",
 	ignore_toughness = true,
@@ -3454,10 +3406,10 @@ damage_templates.mutator_gas_normal_damage = {
 	}
 }
 damage_templates.beast_of_nurgle_slime_liquid = {
-	ogryn_disorientation_type = "corruption",
+	ogryn_disorientation_type = "corruption_tick",
 	toughness_multiplier = 2,
 	permanent_damage_ratio = 1,
-	disorientation_type = "corruption",
+	disorientation_type = "corruption_tick",
 	ignore_toughness = true,
 	stagger_category = "melee",
 	armor_damage_modifier = {
@@ -3644,8 +3596,8 @@ damage_templates.beast_of_nurgle_self_gib = {
 	}
 }
 damage_templates.toxic_gas_mutator = {
-	ogryn_disorientation_type = "corruption",
-	disorientation_type = "corruption",
+	ogryn_disorientation_type = "corruption_tick",
+	disorientation_type = "corruption_tick",
 	toughness_multiplier = 3,
 	permanent_damage_ratio = 1,
 	ignore_mood_effects = true,
@@ -3690,8 +3642,8 @@ damage_templates.toxic_gas_mutator = {
 	}
 }
 damage_templates.cultist_grenadier_gas = {
-	ogryn_disorientation_type = "corruption",
-	disorientation_type = "corruption",
+	ogryn_disorientation_type = "corruption_tick",
+	disorientation_type = "corruption_tick",
 	toughness_multiplier = 3,
 	permanent_damage_ratio = 0.8,
 	ignore_mood_effects = true,
@@ -3729,6 +3681,71 @@ damage_templates.cultist_grenadier_gas = {
 		attack = 1,
 		impact = 0
 	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+damage_templates.mutator_yellow_stimmed_melee = {
+	disorientation_type = "heavy",
+	stagger_category = "melee",
+	toughness_multiplier = 2,
+	unblockable = true,
+	interrupt_alternate_fire = true,
+	ogryn_disorientation_type = "ogryn_heavy",
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod
+	},
+	crit_mods = {
+		attack = crit_armor_mod,
+		impact = crit_impact_armor_mod
+	},
+	power_distribution = {
+		attack = 60,
+		impact = 0.5
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25
+	},
+	force_look_function = ForcedLookSettings.look_functions.heavy,
+	push_template = push_templates.renegade_captain_heavy,
+	ogryn_push_template = push_templates.renegade_captain_heavy,
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+damage_templates.mutator_yellow_stimmed_melee_heavy = {
+	disorientation_type = "heavy",
+	stagger_category = "melee",
+	toughness_multiplier = 2,
+	unblockable = true,
+	interrupt_alternate_fire = true,
+	ogryn_disorientation_type = "ogryn_heavy",
+	armor_damage_modifier = {
+		attack = default_armor_mod,
+		impact = default_armor_mod
+	},
+	crit_mods = {
+		attack = crit_armor_mod,
+		impact = crit_impact_armor_mod
+	},
+	power_distribution = {
+		attack = 60,
+		impact = 0.5
+	},
+	cleave_distribution = {
+		attack = 0.25,
+		impact = 0.25
+	},
+	force_look_function = ForcedLookSettings.look_functions.heavy,
+	push_template = push_templates.renegade_captain_heavy,
+	ogryn_push_template = push_templates.renegade_captain_heavy,
+	catapulting_template = CatapultingTemplates.renegade_captain_powermaul_ground_slam_catapult,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default

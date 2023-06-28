@@ -21,12 +21,6 @@ value_font_style.offset = {
 	0,
 	8
 }
-local description_font_style = table.clone(UIFontSettings.list_button)
-description_font_style.offset = {
-	25,
-	0,
-	3
-}
 local header_font_style = table.clone(UIFontSettings.header_2)
 header_font_style.text_vertical_alignment = "bottom"
 local blueprints = {
@@ -523,8 +517,7 @@ blueprints.dropdown = {
 		local number_format = string.format("%%.%sf", optional_num_decimals or DEFAULT_NUM_DECIMALS)
 		local options_by_id = {}
 
-		for i = 1, num_options do
-			local option = options[i]
+		for index, option in pairs(options) do
 			options_by_id[option.id] = option
 		end
 
@@ -551,7 +544,6 @@ blueprints.dropdown = {
 		local spacing = 0
 		local scroll_amount = scroll_length > 0 and (size[2] + spacing) / scroll_length or 0
 		content.scroll_amount = scroll_amount
-		local value = entry.get_function and entry:get_function() or entry.default_value
 
 		entry.changed_callback = function (changed_value)
 			callback(parent, changed_callback_name, widget, entry, changed_value)()
@@ -776,7 +768,8 @@ blueprints.description = {
 		local style = widget.style
 		local text_style = style.text
 		local display_name = entry.display_name
-		local localized_text = Managers.localization:localize(display_name)
+		local display_params = entry.display_params
+		local localized_text = Managers.localization:localize(display_name, display_params ~= nil, display_params)
 		local ui_renderer = parent._ui_renderer
 		local size = content.size
 		local text_options = UIFonts.get_font_options_by_style(text_style)

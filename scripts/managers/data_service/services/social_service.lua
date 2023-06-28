@@ -463,6 +463,12 @@ SocialService.can_join_party = function (self, player_info)
 		return false, reason
 	end
 
+	local cross_play_ok, fail_reason = self:_check_cross_play_join(player_info)
+
+	if not cross_play_ok then
+		return false, fail_reason
+	end
+
 	local player_activity = player_info:player_activity_id()
 	local presence_settings = PresenceSettings.settings[player_activity]
 
@@ -556,6 +562,12 @@ SocialService.can_invite_to_party = function (self, player_info)
 		return false, reason
 	end
 
+	local cross_play_ok, fail_reason = self:_check_cross_play_invite(player_info)
+
+	if not cross_play_ok then
+		return false, fail_reason
+	end
+
 	if player_online_status == OnlineStatus.online then
 		local player_activity = player_info:player_activity_id()
 		local presence_settings = PresenceSettings.settings[player_activity]
@@ -570,6 +582,54 @@ SocialService.can_invite_to_party = function (self, player_info)
 
 	if not my_presence_settings.can_be_joined then
 		return false, my_presence_settings.fail_reason_myself
+	end
+
+	return true
+end
+
+SocialService._check_cross_play_invite = function (self, other_player_info)
+	local platform_myself = self:platform()
+	local platform_other = other_player_info:platform()
+	local presence_myself = Managers.presence:presence_entry_myself()
+
+	if other_player_info:cross_play_disabled() then
+		if platform_myself ~= platform_other then
+			return false, "loc_cross_play_disabled_by_other"
+		elseif presence_myself:is_cross_playing() then
+			return false, "loc_cross_play_disabled_by_other_my_team_is_cross_platform"
+		end
+	end
+
+	if presence_myself:cross_play_disabled_in_party() and platform_myself ~= platform_other then
+		if presence_myself:cross_play_disabled() then
+			return false, "loc_cross_play_disabled_by_me"
+		else
+			return false, "loc_cross_play_disabled_in_my_team"
+		end
+	end
+
+	return true
+end
+
+SocialService._check_cross_play_join = function (self, other_player_info)
+	local platform_myself = self:platform()
+	local platform_other = other_player_info:platform()
+	local presence_myself = Managers.presence:presence_entry_myself()
+
+	if presence_myself:cross_play_disabled() then
+		if platform_myself ~= platform_other then
+			return false, "loc_cross_play_disabled_by_me"
+		elseif other_player_info:is_cross_playing() then
+			return false, "loc_cross_play_disabled_by_me_other_team_is_cross_platform"
+		end
+	end
+
+	if other_player_info:cross_play_disabled_in_party() and platform_myself ~= platform_other then
+		if other_player_info:cross_play_disabled() then
+			return false, "loc_cross_play_disabled_by_other"
+		else
+			return false, "loc_cross_play_disabled_in_other_team"
+		end
 	end
 
 	return true
@@ -1157,6 +1217,24 @@ end
 
 SocialService._event_friend_removed = function (self, data)
 	self._friends_list_has_changed = true
+end
+
+SocialService.get_fatshark_id = function (self)
+	return self._backend_interfaces:get_fatshark_id()
+end
+
+SocialService.get_player_info_by_fatshark_id = function (self, fatshark_id)
+	return self._backend_interfaces:get_account_by_fatshark_id(fatshark_id):next(function (body)
+		if body then
+			local player_info = self:get_player_info_by_account_id(body.accountId)
+
+			player_info:set_account(body.accountId, body.accountName)
+
+			return player_info:first_update_promise()
+		else
+			return nil
+		end
+	end)
 end
 
 return SocialService

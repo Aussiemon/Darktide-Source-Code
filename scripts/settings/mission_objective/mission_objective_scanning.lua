@@ -13,7 +13,8 @@ local mission_objective_scanning = {
 	vo_trigger_ids = table.enum("scan_performed", "auspex_full", "event_scan_skull_waiting", "cmd_wandering_skull", "all_targets_scanned"),
 	zone_settings = {
 		vo_trigger_time = 30
-	}
+	},
+	go_to_marker_activation_range = 30
 }
 
 return mission_objective_scanning

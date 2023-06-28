@@ -615,19 +615,6 @@ local weapon_handling_templates = {
 			max_critical_shots = 3
 		}
 	},
-	autopistol_p1_m3 = {
-		fire_rate = {
-			fire_time = 0,
-			auto_fire_time = {
-				lerp_perfect = 0.061,
-				lerp_basic = 0.101
-			}
-		},
-		critical_strike = {
-			chance_modifier = -0.02,
-			max_critical_shots = 3
-		}
-	},
 	stubrevolver_single_shot = {
 		fire_rate = {
 			fire_time = 0

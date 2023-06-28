@@ -431,16 +431,18 @@ TabbedMenuViewBase._switch_tab = function (self, index)
 		active_view_callback()
 	end
 
-	self._world_spawner:set_story_speed(story_event_speed)
+	if self._world_spawner then
+		self._world_spawner:set_story_speed(story_event_speed)
 
-	if story_name then
-		if not self._previous_story_name or self._previous_story_name ~= story_name then
-			self._world_spawner:play_story(story_name, nil, nil, level_story_complete_callback, level_story_complete_callback_time_fraction)
+		if story_name then
+			if not self._previous_story_name or self._previous_story_name ~= story_name then
+				self._world_spawner:play_story(story_name, nil, nil, level_story_complete_callback, level_story_complete_callback_time_fraction)
 
-			self._previous_story_name = story_name
+				self._previous_story_name = story_name
+			end
+		else
+			self._previous_story_name = nil
 		end
-	else
-		self._previous_story_name = nil
 	end
 end
 

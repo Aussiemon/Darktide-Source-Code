@@ -18,11 +18,12 @@ Destructible.init = function (self, unit, is_server)
 			local despawn_when_destroyed = self:get_data(unit, "despawn_when_destroyed")
 			local mass = self:get_data(unit, "mass")
 			local speed = self:get_data(unit, "speed")
+			local direction = self:get_data(unit, "direction")
 			local force_direction = self:get_data(unit, "force_direction")
 			local is_nav_gate = self:get_data(unit, "is_nav_gate")
 			local broadphase_radius = self:get_data(unit, "broadphase_radius")
 
-			destructible_extension:setup_from_component(depawn_timer_duration, despawn_when_destroyed, mass, speed, force_direction, start_visible, is_nav_gate, broadphase_radius)
+			destructible_extension:setup_from_component(depawn_timer_duration, despawn_when_destroyed, mass, speed, direction, force_direction, start_visible, is_nav_gate, broadphase_radius)
 			destructible_extension:set_enabled(self._enabled)
 
 			self._destructible_extension = destructible_extension
@@ -168,18 +169,27 @@ Destructible.component_data = {
 		ui_name = "Speed (m/s)",
 		step = 10
 	},
+	direction = {
+		ui_type = "vector",
+		category = "Force on Destroy",
+		ui_name = "Direction",
+		step = 0.1,
+		value = Vector3Box(0, 0, 0)
+	},
 	force_direction = {
 		value = "random_direction",
 		ui_type = "combo_box",
 		category = "Force on Destroy",
-		ui_name = "Direction",
+		ui_name = "Direction Source",
 		options_keys = {
 			"Random Direction",
-			"Attack Direction"
+			"Attack Direction",
+			"Provided Direction"
 		},
 		options_values = {
 			"random_direction",
-			"attack_direction"
+			"attack_direction",
+			"provided_direction"
 		}
 	},
 	is_nav_gate = {

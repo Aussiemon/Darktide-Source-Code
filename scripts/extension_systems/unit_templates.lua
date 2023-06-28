@@ -1113,7 +1113,8 @@ local unit_templates = {
 			end
 
 			local has_health_bar = breed.has_health_bar
-			local health = Managers.state.difficulty:get_minion_max_health(breed_name)
+			local health_modifier = init_data.optional_health_modifier or 1
+			local health = Managers.state.difficulty:get_minion_max_health(breed_name) * health_modifier
 			local is_unkillable = false
 			local is_invulnerable = false
 
@@ -1184,6 +1185,8 @@ local unit_templates = {
 
 			config:add("FadeExtension")
 
+			local markable_target = breed.volley_fire_target
+
 			if breed.smart_tag_target_type then
 				config:add("SmartTagExtension", {
 					target_type = breed.smart_tag_target_type
@@ -1191,7 +1194,7 @@ local unit_templates = {
 				config:add("MinionOutlineExtension", {
 					breed = breed
 				})
-			elseif breed.volley_fire_target then
+			elseif markable_target then
 				config:add("MinionOutlineExtension", {
 					breed = breed
 				})
@@ -1390,6 +1393,9 @@ local unit_templates = {
 					breed = breed
 				})
 			end
+		end,
+		pre_unit_destroyed = function (unit)
+			Managers.state.decal:remove_linked_decals(unit)
 		end
 	},
 	liquid_area = {

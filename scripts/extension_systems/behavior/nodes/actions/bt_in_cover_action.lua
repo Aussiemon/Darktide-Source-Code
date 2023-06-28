@@ -129,7 +129,8 @@ BtInCoverAction._update_entering = function (self, unit, scratchpad, action_data
 	local cover_rotation = Quaternion.look(cover_component.direction:unbox())
 	local enter_cover_duration = scratchpad.enter_cover_duration
 	local min_peak_distance = action_data.min_peak_distance or DEFAULT_MIN_PEAK_DISTANCE
-	local can_peak = scratchpad.perception_component.target_distance < min_peak_distance
+	local perception_component = scratchpad.perception_component
+	local can_peak = ALIVE[perception_component.target_unit] and perception_component.target_distance < min_peak_distance
 
 	if can_peak and enter_cover_duration <= t then
 		self:_start_peeking(unit, scratchpad, action_data, cover_component, nil, t)
@@ -280,6 +281,10 @@ BtInCoverAction._start_peeking = function (self, unit, scratchpad, action_data, 
 end
 
 BtInCoverAction._update_peeking = function (self, unit, scratchpad, action_data, t, cover_component, perception_component, is_suppressed)
+	if not ALIVE[perception_component.target_unit] then
+		return
+	end
+
 	if is_suppressed then
 		local delayed_suppresed_anim = false
 		local teleport = true
@@ -381,6 +386,10 @@ BtInCoverAction._start_aiming = function (self, unit, scratchpad, action_data, t
 end
 
 BtInCoverAction._update_aiming = function (self, unit, breed, scratchpad, blackboard, action_data, t, cover_component)
+	if not ALIVE[scratchpad.perception_component.target_unit] then
+		return
+	end
+
 	if scratchpad.start_aiming_at_target_timing <= t then
 		self:_aim_at_target(unit, t, action_data, scratchpad, blackboard)
 	end
@@ -435,6 +444,10 @@ BtInCoverAction._start_shooting = function (self, unit, scratchpad, action_data,
 end
 
 BtInCoverAction._update_shooting = function (self, unit, breed, scratchpad, blackboard, action_data, t, cover_component, perception_component, is_suppressed)
+	if not ALIVE[perception_component.target_unit] then
+		return
+	end
+
 	if is_suppressed then
 		MinionAttack.stop_shooting(unit, scratchpad)
 

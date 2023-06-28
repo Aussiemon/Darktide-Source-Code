@@ -21,7 +21,11 @@ end
 local function _init_network_client(account_id)
 	local connection_manager = Managers.connection
 
-	if connection_manager.platform == "wan_client" and not connection_manager:is_initialized() then
+	if connection_manager.platform == "wan_client" then
+		if connection_manager:is_initialized() then
+			connection_manager:destroy_wan_client()
+		end
+
 		connection_manager:initialize_wan_client(account_id)
 	end
 end
@@ -86,6 +90,7 @@ AccountService.signin = function (self)
 			selected_profile = profile_data.selected_profile,
 			has_created_first_character = has_created_first_character,
 			account_id = auth_data.sub,
+			vivox_token = auth_data.vivox_token,
 			gear = profile_data.gear
 		})
 	end):catch(function (error_data)

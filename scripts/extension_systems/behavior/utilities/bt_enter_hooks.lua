@@ -53,8 +53,10 @@ BtEnterHooks.captain_grenade_enter = function (unit, breed, blackboard, scratchp
 
 	animation_extension:anim_event("to_grenade")
 
-	local phase_component = Blackboard.write_component(blackboard, "phase")
-	phase_component.lock = true
+	if breed.phase_template then
+		local phase_component = Blackboard.write_component(blackboard, "phase")
+		phase_component.lock = true
+	end
 end
 
 BtEnterHooks.bulwark_climb_enter = function (unit, breed, blackboard, scratchpad, action_data, t, args)

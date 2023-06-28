@@ -1,4 +1,4 @@
-local base_template = require("scripts/settings/breed/breed_blackboard_component_templates/base_blackboard_component_template")
+local BaseBlackboardComponentTemplate = require("scripts/settings/breed/breed_blackboard_component_templates/base_blackboard_component_template")
 local monster = {
 	behavior = {
 		move_state = "string"
@@ -12,15 +12,14 @@ local monster = {
 	}
 }
 
-table.merge(monster, base_template)
+table.merge(monster, BaseBlackboardComponentTemplate)
 
 local chaos_spawn = table.clone(monster)
 chaos_spawn.behavior = {
 	wants_to_catapult_grabbed_unit = "boolean",
-	move_state = "string",
 	grabbed_unit = "Unit",
+	move_state = "string",
 	grab_cooldown = "number",
-	leap_velocity = "Vector3Box",
 	should_leap = "boolean"
 }
 local templates = {

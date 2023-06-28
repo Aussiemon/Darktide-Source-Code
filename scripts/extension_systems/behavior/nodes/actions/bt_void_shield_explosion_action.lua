@@ -95,7 +95,7 @@ BtVoidShieldExplosionAction._deal_damage = function (self, t, unit, action_data)
 
 			local fx_extension = ScriptUnit.has_extension(hit_unit, "fx_system")
 
-			if fx_extension then
+			if fx_extension and fx_extension.spawn_particles then
 				local hit_effect = action_data.hit_effect
 				local position = Vector3(0, 0, 1)
 

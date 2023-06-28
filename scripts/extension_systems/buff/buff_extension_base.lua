@@ -12,6 +12,7 @@ local PROC_EVENTS_STRIDE = BuffSettings.proc_events_stride
 local BuffExtensionBase = class("BuffExtensionBase")
 local Unit_world_position = Unit.world_position
 local Unit_node = Unit.node
+local Unit_has_node = Unit.has_node
 local WwiseWorld_set_source_position = WwiseWorld.set_source_position
 local RPCS = {
 	"rpc_add_buff",
@@ -359,7 +360,7 @@ BuffExtensionBase._add_buff = function (self, template, t, ...)
 			existing_buff_instance:add_stack()
 			self:_on_add_buff_stack(existing_buff_instance, previous_stack_count)
 
-			if template.refresh_duration_on_stack then
+			if template.refresh_duration_on_stack or template.refresh_start_time_on_stack then
 				existing_buff_instance:set_start_time(t)
 				existing_buff_instance:refresh_func(t, previous_stack_count)
 			end
@@ -470,7 +471,7 @@ BuffExtensionBase._check_max_stacks_cap = function (self, template, t)
 		return true
 	end
 
-	if template.refresh_duration_on_stack then
+	if template.refresh_duration_on_stack or template.refresh_start_time_on_stack then
 		buff_instance:set_start_time(t)
 	end
 
@@ -491,6 +492,12 @@ BuffExtensionBase.current_stacks = function (self, buff_name)
 	local buff_instance = self._stacking_buffs[buff_name]
 
 	return buff_instance and buff_instance:stack_count() or 0
+end
+
+BuffExtensionBase.buff_start_time = function (self, buff_name)
+	local buff_instance = self._stacking_buffs[buff_name]
+
+	return buff_instance and buff_instance:start_time()
 end
 
 BuffExtensionBase.remove_externally_controlled_buff = function (self, local_index)
@@ -604,6 +611,57 @@ BuffExtensionBase._on_add_buff_stack = function (self, buff_instance, previous_s
 	end
 end
 
+BuffExtensionBase.has_buff_using_buff_template = function (self, buff_template_name)
+	local buffs = self._buffs
+
+	for i = 1, #buffs do
+		local buff_instance = buffs[i]
+		local instance_template = buff_instance:template()
+
+		if buff_template_name == instance_template.name then
+			return true
+		end
+	end
+
+	return false
+end
+
+BuffExtensionBase.has_buff_using_buff_templates = function (self, ...)
+	local buffs = self._buffs
+	local num_templates = select("#", ...)
+
+	for buff_i = 1, #buffs do
+		local buff_instance = buffs[buff_i]
+		local buff_template_name = buff_instance:template().name
+
+		for select_i = 1, num_templates do
+			if select(select_i, ...) == buff_template_name then
+				return true
+			end
+		end
+	end
+
+	return false
+end
+
+BuffExtensionBase.has_active_buff_with_buff_template = function (self, buff_template_name)
+	local any_active = false
+	local buffs = self._buffs
+
+	for buff_i = 1, #buffs do
+		local buff_instance = buffs[buff_i]
+		local instance_template = buff_instance:template()
+
+		if buff_template_name == instance_template.name and buff_instance:is_proc_active() then
+			any_active = true
+
+			break
+		end
+	end
+
+	return any_active
+end
+
 BuffExtensionBase.has_buff_id = function (self, buff_id)
 	local buffs = self._buffs
 
@@ -713,6 +771,10 @@ BuffExtensionBase.buffs = function (self)
 	return self._buffs
 end
 
+BuffExtensionBase.portable_random = function (self)
+	return self._portable_random
+end
+
 BuffExtensionBase.set_frame_unique_proc = function (self, event, unique_key)
 	if not self._unique_frame_proc[event] then
 		self._unique_frame_proc[event] = {}
@@ -798,70 +860,90 @@ BuffExtensionBase._start_node_effects = function (self, node_effects)
 	local num_effects = #node_effects
 
 	for i = 1, num_effects do
-		local effect = node_effects[i]
-		local node_name = effect.node_name
-		local node_index = Unit_node(unit, node_name)
-		local node_position = Unit_world_position(unit, node_index)
-		local sfx = effect.sfx
+		repeat
+			local effect = node_effects[i]
+			local node_name = effect.node_name
 
-		if sfx then
-			if not active_node_sfx_effects[node_index] then
-				local wwise_source_id = WwiseWorld.make_manual_source(wwise_world, node_position, Quaternion.identity())
-				active_node_sfx_effects[node_index] = {
-					wwise_source_id = wwise_source_id,
-					active_wwise_events = {}
-				}
+			if not Unit_has_node(unit, node_name) then
+				break
 			end
 
-			local active_node_source = active_node_sfx_effects[node_index]
-			local wwise_source_id = active_node_source.wwise_source_id
-			local active_wwise_events = active_node_source.active_wwise_events
-			local looping_wwise_start_event = sfx.looping_wwise_start_event
-			local ref_count = active_wwise_events[looping_wwise_start_event]
+			local node_index = Unit_node(unit, node_name)
+			local node_position = Unit_world_position(unit, node_index)
+			local sfx = effect.sfx
 
-			if not ref_count then
-				WwiseWorld.trigger_resource_event(wwise_world, looping_wwise_start_event, wwise_source_id)
-			end
-
-			active_wwise_events[looping_wwise_start_event] = (ref_count or 0) + 1
-		end
-
-		local vfx = effect.vfx
-
-		if vfx then
-			if not active_node_vfx_effects[node_index] then
-				active_node_vfx_effects[node_index] = {}
-			end
-
-			local particle_effect = vfx.particle_effect
-			local active_node_vfx = active_node_vfx_effects[node_index]
-
-			if not active_node_vfx[particle_effect] then
-				local effect_id = World.create_particles(world, particle_effect, node_position)
-
-				if vfx.material_emission then
-					local mesh_name_or_nil = vfx.emission_mesh_name
-					local material_name_or_nil = vfx.emission_material_name
-					local apply_for_children = true
-
-					World.set_particles_surface_effect(world, effect_id, unit, mesh_name_or_nil, material_name_or_nil, apply_for_children)
-				else
-					local orphaned_policy = vfx.orphaned_policy or "destroy"
-
-					World.link_particles(world, effect_id, unit, node_index, Matrix4x4.identity(), orphaned_policy)
+			if sfx then
+				if not active_node_sfx_effects[node_index] then
+					local wwise_source_id = WwiseWorld.make_manual_source(wwise_world, node_position, Quaternion.identity())
+					active_node_sfx_effects[node_index] = {
+						wwise_source_id = wwise_source_id,
+						active_wwise_events = {}
+					}
 				end
 
-				local stop_type = vfx.stop_type or "destroy"
-				active_node_vfx[particle_effect] = {
-					particle_id = effect_id,
-					stop_type = stop_type
-				}
+				local active_node_source = active_node_sfx_effects[node_index]
+				local wwise_source_id = active_node_source.wwise_source_id
+				local active_wwise_events = active_node_source.active_wwise_events
+				local looping_wwise_start_event = sfx.looping_wwise_start_event
+				local ref_count = active_wwise_events[looping_wwise_start_event]
+
+				if not ref_count then
+					WwiseWorld.trigger_resource_event(wwise_world, looping_wwise_start_event, wwise_source_id)
+				end
+
+				active_wwise_events[looping_wwise_start_event] = (ref_count or 0) + 1
 			end
 
-			local active_particle_node_effect = active_node_vfx[particle_effect]
-			local new_ref_count = (active_particle_node_effect.ref_count or 0) + 1
-			active_particle_node_effect.ref_count = new_ref_count
-		end
+			local vfx = effect.vfx
+
+			if vfx then
+				if not active_node_vfx_effects[node_index] then
+					active_node_vfx_effects[node_index] = {}
+				end
+
+				local particle_effect = vfx.particle_effect
+				local active_node_vfx = active_node_vfx_effects[node_index]
+
+				if not active_node_vfx[particle_effect] then
+					local effect_id = World.create_particles(world, particle_effect, node_position)
+
+					if vfx.material_emission then
+						local mesh_name_or_nil = vfx.emission_mesh_name
+						local material_name_or_nil = vfx.emission_material_name
+						local apply_for_children = true
+
+						World.set_particles_surface_effect(world, effect_id, unit, mesh_name_or_nil, material_name_or_nil, apply_for_children)
+					else
+						local orphaned_policy = vfx.orphaned_policy or "destroy"
+
+						World.link_particles(world, effect_id, unit, node_index, Matrix4x4.identity(), orphaned_policy)
+					end
+
+					local stop_type = vfx.stop_type or "destroy"
+					active_node_vfx[particle_effect] = {
+						particle_id = effect_id,
+						stop_type = stop_type
+					}
+					local material_variables = vfx.material_variables
+
+					if material_variables then
+						for j = 1, #material_variables do
+							local entry = material_variables[j]
+							local material_name = entry.material_name
+							local variable_name = entry.variable_name
+							local value = entry.value
+							local vector_value = Vector3(value[1], value[2], value[3])
+
+							World.set_particles_material_vector3(world, effect_id, material_name, variable_name, vector_value)
+						end
+					end
+				end
+
+				local active_particle_node_effect = active_node_vfx[particle_effect]
+				local new_ref_count = (active_particle_node_effect.ref_count or 0) + 1
+				active_particle_node_effect.ref_count = new_ref_count
+			end
+		until true
 	end
 end
 
@@ -875,6 +957,11 @@ BuffExtensionBase._stop_node_effects = function (self, node_effects)
 	for i = 1, #node_effects do
 		local effect = node_effects[i]
 		local node_name = effect.node_name
+
+		if not Unit_has_node(self._unit, node_name) then
+			break
+		end
+
 		local node_index = Unit_node(self._unit, node_name)
 		local sfx = effect.sfx
 
@@ -974,13 +1061,13 @@ BuffExtensionBase._check_stack_node_effects = function (self, stack_node_effects
 	end
 end
 
-BuffExtensionBase.rpc_add_buff = function (self, channel_id, game_object_id, buff_template_id, server_index, optional_lerp_value, optional_item_slot_id, optional_parent_buff_template_id)
+BuffExtensionBase.rpc_add_buff = function (self, channel_id, game_object_id, buff_template_id, server_index, optional_lerp_value, optional_item_slot_id, optional_parent_buff_template_id, from_specialization)
 	local template_name = NetworkLookup.buff_templates[buff_template_id]
 	local template = BuffTemplates[template_name]
 	local t = FixedFrame.get_latest_fixed_time()
 	local optional_item_slot_name = optional_item_slot_id and NetworkLookup.player_inventory_slot_names[optional_item_slot_id]
 	local optional_parent_buff_template = optional_parent_buff_template_id and NetworkLookup.buff_templates[optional_parent_buff_template_id]
-	local index = self:_add_buff(template, t, "buff_lerp_value", optional_lerp_value, "item_slot_name", optional_item_slot_name, "parent_buff_template", optional_parent_buff_template)
+	local index = self:_add_buff(template, t, "buff_lerp_value", optional_lerp_value, "item_slot_name", optional_item_slot_name, "parent_buff_template", optional_parent_buff_template, "from_specialization", from_specialization)
 	self._buff_index_map[server_index] = index
 end
 

@@ -67,6 +67,7 @@ local PlayerCharacterLoopingSoundAliases = {
 		}
 	},
 	weapon_temperature = {
+		exclude_from_unit_data_components = true,
 		has_husk_events = false,
 		start = {
 			event_alias = "play_weapon_temperature"

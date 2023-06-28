@@ -56,10 +56,12 @@ Buff.init = function (self, context, template, start_time, instance_id, ...)
 		breed = context.breed,
 		template = template
 	}
+	local additional_arguments = {}
 
-	BuffArgs.add_args_to_context(template_context, ...)
+	BuffArgs.add_args_to_context(template_context, additional_arguments, ...)
 
 	self._template_context = template_context
+	self._additional_arguments = additional_arguments
 	self._player = context.player
 	self._unit = context.unit
 	self._template = template
@@ -120,9 +122,12 @@ end
 Buff._calculate_template_override_data = function (self, template_context)
 	local override_data = {}
 	local item_slot_name = template_context.item_slot_name
+	local from_specialization = template_context.from_specialization
 
 	if item_slot_name then
 		self:_calculate_override_data(override_data, item_slot_name, template_context.parent_buff_template)
+	elseif from_specialization then
+		self:_calculate_specialization_override_data(override_data, template_context.parent_buff_template)
 	end
 
 	return override_data
@@ -191,6 +196,35 @@ Buff._calculate_override_data = function (self, override_data, item_slot_name, p
 	_add_overrides_from_item(perks, item_definitions, template_name, override_data, parent_buff_template_or_nil)
 
 	return override_data
+end
+
+Buff._calculate_specialization_override_data = function (self, override_data, parent_buff_template_or_nil)
+	local template = self._template
+	local specialization_overrides = template.specialization_overrides
+
+	if not specialization_overrides then
+		return
+	end
+
+	local num_specialization_overrides = #specialization_overrides
+
+	if num_specialization_overrides == 0 then
+		return
+	end
+
+	local specialization_extension = ScriptUnit.extension(self._unit, "specialization_system")
+	local tier = nil
+
+	if parent_buff_template_or_nil then
+		tier = specialization_extension:buff_template_tier(parent_buff_template_or_nil)
+	else
+		tier = specialization_extension:buff_template_tier(template.name)
+	end
+
+	local override_index = math.min(tier, num_specialization_overrides)
+	local override_def = specialization_overrides[override_index]
+
+	table.merge_recursive(override_data, override_def)
 end
 
 Buff.set_buff_component = function (self, buff_component, component_keys, component_index)
@@ -379,13 +413,15 @@ end
 
 Buff.duration_progress = function (self)
 	local template = self._template
+	local inverse_duration_progress = template.inverse_duration_progress
+	local duration_progress = self._duration_progress
 	local custom_duration_func = template.duration_func
 
 	if custom_duration_func then
-		return custom_duration_func(self._template_data, self._template_context)
+		duration_progress = custom_duration_func(self._template_data, self._template_context)
 	end
 
-	return self._duration_progress
+	return inverse_duration_progress and 1 - duration_progress or duration_progress
 end
 
 Buff.template_name = function (self)
@@ -424,6 +460,10 @@ end
 
 Buff.item_slot_name = function (self)
 	return self._template_context.item_slot_name
+end
+
+Buff.additional_arguments = function (self)
+	return self._additional_arguments
 end
 
 Buff.parent_buff_template = function (self)
@@ -667,6 +707,41 @@ Buff._hud_icon = function (self)
 end
 
 Buff._force_negative_frame = function (self)
+	return false
+end
+
+Buff.show_in_hud = function (self)
+	local hud_priority = self:hud_priority()
+
+	return hud_priority ~= nil
+end
+
+Buff.hud_priority = function (self)
+	local template = self._template
+
+	return template.hud_priority
+end
+
+Buff.hud_icon = function (self)
+	local template = self._template
+
+	return template.hud_icon
+end
+
+Buff.inactive = function (self)
+	local template = self._template
+	local conditional_stat_buffs_func = template.conditional_stat_buffs_func
+
+	if conditional_stat_buffs_func and not conditional_stat_buffs_func(self._template_data, self._template_context) then
+		return true
+	end
+
+	local check_active_func = template.check_active_func
+
+	if check_active_func then
+		return not check_active_func(self._template_data, self._template_context)
+	end
+
 	return false
 end
 

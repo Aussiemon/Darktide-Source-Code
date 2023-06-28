@@ -33,7 +33,7 @@ local function _include_talents_definition(file_name, base_talents)
 end
 
 local base_talents = _include_talents_definition("scripts/settings/ability/archetype_talents/base_talents")
-local ogryn_base_talents = _include_talents_definition("scripts/settings/ability/archetype_talents/ogryn_talents")
+local ogryn_base_talents = _include_talents_definition("scripts/settings/ability/archetype_talents/ogryn_talents", base_talents)
 
 _include_talents_definition("scripts/settings/ability/archetype_talents/ogryn_bonebreaker_talents", ogryn_base_talents)
 

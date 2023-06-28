@@ -7,6 +7,7 @@ local WWISE_GUN_START = "wwise/events/weapon/play_combat_weapon_heavy_stubber_au
 local WWISE_GUN_STOP = "wwise/events/weapon/stop_combat_weapon_heavy_stubber_auto_chaos"
 local SHOOT_VFX = "content/fx/particles/weapons/rifles/gunner/gunner_muzzle"
 local FIRE_RATE_PARAMETER_NAME = "wpn_fire_interval"
+local STIMMED_PARAMETER_NAME = "minion_stimmed"
 local resources = {
 	shoot_vfx = SHOOT_VFX,
 	wwise_gun_start = WWISE_GUN_START,
@@ -51,11 +52,26 @@ local effect_template = {
 
 		Unit.animation_event(unit, "offset_rifle_standing_shoot_loop_01")
 
+		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+		local fire_rate_modifier = 1
+
+		if buff_extension then
+			local stat_buffs = buff_extension:stat_buffs()
+
+			if stat_buffs.ranged_attack_speed then
+				fire_rate_modifier = stat_buffs.ranged_attack_speed
+			end
+
+			if buff_extension:has_keyword("stimmed") then
+				WwiseWorld.set_source_parameter(wwise_world, source_id, STIMMED_PARAMETER_NAME, 1)
+			end
+		end
+
 		local time_per_shot = shooting_difficulty_settings.time_per_shot
 		local diff_time_per_shot = Managers.state.difficulty:get_table_entry_by_challenge(time_per_shot)
 		local parameter_value = diff_time_per_shot[1]
 
-		WwiseWorld.set_source_parameter(wwise_world, source_id, FIRE_RATE_PARAMETER_NAME, parameter_value)
+		WwiseWorld.set_source_parameter(wwise_world, source_id, FIRE_RATE_PARAMETER_NAME, parameter_value / fire_rate_modifier)
 	end,
 	update = function (template_data, template_context, dt, t)
 		local wwise_world = template_context.wwise_world

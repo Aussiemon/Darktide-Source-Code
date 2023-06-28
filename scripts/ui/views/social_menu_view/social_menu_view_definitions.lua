@@ -137,6 +137,12 @@ local input_legend_params = {
 			on_pressed_callback = "cb_on_close_pressed",
 			display_name = "loc_settings_menu_close_menu",
 			alignment = "left_alignment"
+		},
+		{
+			input_action = "hotkey_menu_special_2",
+			on_pressed_callback = "cb_find_player_pressed",
+			display_name = "loc_social_menu_find_player",
+			alignment = "right_alignment"
 		}
 	}
 }

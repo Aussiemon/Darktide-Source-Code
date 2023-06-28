@@ -33,8 +33,8 @@ local zones = {
 		name = "loc_zone_throneside",
 		map_node = "throneside_01",
 		images = {
-			mission_vote = "content/ui/materials/icons/missions/zone_dust_standard",
-			default = "content/ui/materials/icons/missions/zone_dust_standard",
+			mission_vote = "content/ui/materials/icons/missions/zone_throneside_standard",
+			default = "content/ui/materials/icons/missions/zone_throneside_standard",
 			mission_board_details = "content/ui/materials/icons/zones/throneside"
 		}
 	},

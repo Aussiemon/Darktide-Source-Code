@@ -60,25 +60,25 @@ WorldTestCases = {
 				return output
 			end
 
-			local mission_circumstances = Testify:make_request("mission_circumstances", mission_name)
+			local mission_circumstances, length = TestifySnippets.mission_circumstances(mission_name)
 
-			for circumstance, is_testable in pairs(mission_circumstances) do
-				if is_testable then
-					TestifySnippets.load_mission(mission_name, nil, nil, circumstance)
+			for i = 1, length do
+				local circumstance = mission_circumstances[i]
 
-					if check_theme_loaded then
-						Testify:make_request("check_theme_loaded")
-					end
+				TestifySnippets.load_mission(mission_name, nil, nil, circumstance)
 
-					Testify:make_request("wait_for_state_gameplay_reached")
-
-					if num_peers > 0 then
-						TestifySnippets.wait_for_peers(num_peers)
-						TestifySnippets.wait_for_all_peers_reach_gameplay_state()
-					end
-
-					TestifySnippets.wait(2)
+				if check_theme_loaded then
+					Testify:make_request("check_theme_loaded")
 				end
+
+				Testify:make_request("wait_for_state_gameplay_reached")
+
+				if num_peers > 0 then
+					TestifySnippets.wait_for_peers(num_peers)
+					TestifySnippets.wait_for_all_peers_reach_gameplay_state()
+				end
+
+				TestifySnippets.wait(2)
 			end
 
 			TestifySnippets.wait(2)
@@ -156,10 +156,13 @@ WorldTestCases = {
 	end,
 	screenshots_for_timelapse_videos = function (case_settings)
 		Testify:run_case(function (dt, t)
-			local result = nil
-			local missions_missing_cameras = {}
+			local result = ""
 			local settings = cjson.decode(case_settings or "{}")
 			local missions = settings.missions
+			local flags = {
+				"screenshot"
+			}
+			local wait_time = 5
 			local screenshot_settings = settings.screenshot_settings or {
 				output_dir = "//filegw01.i.fatshark.se/tools/testify/screenshot_timelapse",
 				filetype = "png"
@@ -170,40 +173,38 @@ WorldTestCases = {
 				Testify:make_request("wait_for_state_gameplay_reached")
 
 				for _, mission in pairs(missions) do
-					local flag = TestifySnippets.mission_flag_of_type(mission, "screenshots")
+					local output = TestifySnippets.check_flags_for_mission(flags, mission)
 
-					if flag then
+					if output then
+						result = result .. "\n" .. output
+					else
 						TestifySnippets.load_mission(mission)
 						Testify:make_request("wait_for_state_gameplay_reached")
 
-						local cameras = Testify:make_request("all_cameras_of_type", "screenshot")
+						local cameras, length = Testify:make_request("all_cameras")
 
-						if table.is_empty(cameras) then
-							table.insert(missions_missing_cameras, mission)
-						else
+						if length ~= 0 then
 							screenshot_settings.output_dir = output_dir .. "/" .. mission
 
-							for index, camera in pairs(cameras) do
-								Testify:make_request("set_active_testify_camera", camera.unit)
-								TestifySnippets.wait(2)
+							for i = 1, length do
+								local camera = cameras[i]
 
-								screenshot_settings.filename = mission .. "-" .. index
+								Testify:make_request("set_active_testify_camera", camera.unit)
+								TestifySnippets.wait(wait_time)
+
+								screenshot_settings.filename = mission .. "-" .. i
 
 								Testify:make_request("take_a_screenshot", screenshot_settings)
 							end
 
 							Testify:make_request("deactivate_testify_camera")
 						end
-					else
-						Log.info("Testify", mission .. " does not have a screenshot flag, or it is set to false. The test was not run")
 					end
 				end
-			end
 
-			if not table.is_empty(missions_missing_cameras) then
-				result = "-These missions have flags but are missing cameras: " .. table.concat(missions_missing_cameras, ", ")
-
-				return result
+				if result ~= "" then
+					return result
+				end
 			end
 
 			result = "The test passed successfully"

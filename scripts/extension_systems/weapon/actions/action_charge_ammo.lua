@@ -31,31 +31,6 @@ ActionChargeAmmo.start = function (self, action_settings, t, time_scale, action_
 	else
 		self._action_module_charge_component.max_charge = 1
 	end
-
-	local charge_effects = action_settings.charge_effects
-
-	if charge_effects then
-		local charge_done_sound_alias = charge_effects.charge_done_sound_alias
-		self._is_charge_done_sound_played = charge_done_sound_alias == nil
-		self._charge_done_sound_alias = charge_done_sound_alias
-	end
-end
-
-ActionChargeAmmo.fixed_update = function (self, dt, t, time_in_action)
-	ActionChargeAmmo.super.fixed_update(self, dt, t, time_in_action)
-
-	if self._fx_muzzle_source_name and not self._is_charge_done_sound_played then
-		local charge_done = self._charge_component.max_charge <= self._charge_component.charge_level
-
-		if charge_done then
-			local sync_to_clients = false
-			local external_properties = nil
-
-			self._fx_extension:trigger_gear_wwise_event_with_source(self._charge_done_sound_alias, external_properties, self._fx_muzzle_source_name, sync_to_clients)
-
-			self._is_charge_done_sound_played = true
-		end
-	end
 end
 
 ActionChargeAmmo.running_action_state = function (self, t, time_in_action)

@@ -15,7 +15,7 @@ local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local MasterItems = require("scripts/backend/master_items")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
-local TalentSettings = require("scripts/settings/buff/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
@@ -168,7 +168,7 @@ end
 templates.psyker_biomancer_passive = {
 	predicted = false,
 	use_specialization_resource = true,
-	class_name = "psyker_biomancer_passive_buff",
+	class_name = "psyker_passive_buff",
 	keywords = {},
 	stat_buffs = {},
 	proc_events = {

@@ -138,9 +138,12 @@ Vo.head_shot_event = function (killer_unit, distance, damage_profile_name)
 			dialogue_extension:trigger_dialogue_event(event_name, event_data)
 
 			local killer_dialogue_extension = ScriptUnit.has_extension(killer_unit, "dialogue_system")
-			local timeset = Managers.time:time("gameplay") + 900
 
-			killer_dialogue_extension:store_in_memory("user_memory", "last_headshot", timeset)
+			if killer_dialogue_extension then
+				local timeset = Managers.time:time("gameplay") + 900
+
+				killer_dialogue_extension:store_in_memory("user_memory", "last_headshot", timeset)
+			end
 		end
 	end
 end
@@ -198,6 +201,30 @@ Vo.player_land_event = function (unit, time_in_falling)
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 
 		PlayerVoiceGrunts.trigger_voice("land_heavy_vce", visual_loadout_extension, fx_extension, false)
+	end
+end
+
+Vo.coughing_event = function (unit)
+	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
+	local event_name = "expression"
+
+	if _can_player_trigger_vo(dialogue_extension, event_name) then
+		local fx_extension = ScriptUnit.extension(unit, "fx_system")
+		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+
+		PlayerVoiceGrunts.trigger_voice("coughing_vce", visual_loadout_extension, fx_extension, false)
+	end
+end
+
+Vo.coughing_ends_event = function (unit)
+	local dialogue_extension = ScriptUnit.has_extension(unit, "dialogue_system")
+	local event_name = "expression"
+
+	if _can_player_trigger_vo(dialogue_extension, event_name) then
+		local fx_extension = ScriptUnit.extension(unit, "fx_system")
+		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+
+		PlayerVoiceGrunts.trigger_voice("coughing_ends_vce", visual_loadout_extension, fx_extension, false)
 	end
 end
 

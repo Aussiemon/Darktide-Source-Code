@@ -75,6 +75,12 @@ PlayerInfo.user_display_name = function (self, use_stale)
 	local presence = self:_get_presence()
 	local platform_social = self._platform_social
 	name = presence and presence:platform_persona_name_or_account_name() or platform_social and platform_social:name() or self._account_name or "N/A"
+	local platform_icon = self:platform_icon()
+
+	if platform_icon then
+		name = string.format("%s %s", platform_icon, name)
+	end
+
 	self._user_display_name = name
 
 	return name
@@ -181,6 +187,24 @@ end
 
 PlayerInfo.set_last_time_played_with = function (self, time)
 	self._last_time_played_with = time
+end
+
+PlayerInfo.cross_play_disabled = function (self)
+	local presence = self:_get_presence()
+
+	return presence and presence:cross_play_disabled()
+end
+
+PlayerInfo.cross_play_disabled_in_party = function (self)
+	local presence = self:_get_presence()
+
+	return presence and presence:cross_play_disabled_in_party()
+end
+
+PlayerInfo.is_cross_playing = function (self)
+	local presence = self:_get_presence()
+
+	return presence and presence:is_cross_playing()
 end
 
 PlayerInfo.is_myself = function (self)

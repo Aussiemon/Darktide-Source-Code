@@ -1614,21 +1614,6 @@ ButtonPassTemplates.terminal_button_hold_small = {
 			color_lerp(default_color, hover_color, progress, text_color)
 		end
 	},
-	{
-		style_id = "hold_text",
-		pass_type = "text",
-		value_id = "hold_text",
-		style = terminal_button_hold_small_text_style,
-		value = Localize("loc_button_hold_description"),
-		change_function = function (content, style)
-			local progress = content.hold_progress
-			local default_color = style.default_color
-			local hover_color = style.hover_color
-			local text_color = style.text_color
-
-			color_lerp(default_color, hover_color, progress, text_color)
-		end
-	},
 	size = {
 		280,
 		40
@@ -1666,7 +1651,7 @@ ButtonPassTemplates.terminal_button_hold_small = {
 			width,
 			height
 		}
-		widget.content.size[2] = height + 40
+		widget.content.size[2] = height
 		widget.style.text.offset[2] = -(widget.content.size[2] - height) * 0.5
 	end,
 	update = function (parent, widget, renderer, dt)

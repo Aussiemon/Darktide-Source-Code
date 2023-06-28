@@ -28,6 +28,7 @@ ServoSkullExtension.init = function (self, extension_init_context, unit, extensi
 	self._mission_objective_zone_system = Managers.state.extension:system("mission_objective_zone_system")
 	self._vo_line_interval = MissionObjectiveScanning.servo_skull.vo_trigger_time
 	self._vo_line_timer = 0
+	self._scanning_active = false
 end
 
 ServoSkullExtension.setup_from_component = function (self, pulse_interval)
@@ -94,6 +95,30 @@ ServoSkullExtension.update = function (self, unit, dt, t)
 			end
 
 			self._scannable_check_timer = scannable_check_timer
+		end
+	end
+
+	if not DEDICATED_SERVER and self._scanning_active then
+		local local_player = Managers.player:local_player(1)
+		local set_marker = false
+
+		if local_player and local_player.player_unit then
+			local skull_position = POSITION_LOOKUP[self._unit]
+			local player_position = POSITION_LOOKUP[local_player.player_unit]
+
+			if MissionObjectiveScanning.go_to_marker_activation_range <= Vector3.distance(skull_position, player_position) then
+				set_marker = true
+			end
+		end
+
+		local objective = self:_objective()
+
+		if objective then
+			if set_marker then
+				objective:set_go_to_marker(self._unit)
+			else
+				objective:set_go_to_marker(nil)
+			end
 		end
 	end
 end
@@ -197,6 +222,8 @@ end
 ServoSkullExtension.set_servo_skull_state = function (self, servo_skull_state)
 	if self._is_server then
 		self._servo_skull_state = servo_skull_state
+
+		self:set_scanning_active(servo_skull_state == STATES.scanning)
 	end
 end
 
@@ -221,6 +248,40 @@ ServoSkullExtension._play_vo = function (self, scanning_vo_line)
 	local concept = MissionObjectiveScanning.vo_settings.concept
 
 	Vo.mission_giver_vo_event(voice_profile, concept, scanning_vo_line)
+end
+
+ServoSkullExtension.set_scanning_active = function (self, active)
+	if self._scanning_active == active then
+		return
+	end
+
+	self._scanning_active = active
+
+	if self._is_server then
+		local unit = self._unit
+		local go_id = Managers.state.unit_spawner:game_object_id(unit)
+
+		Managers.state.game_session:send_rpc_clients("rpc_servo_skull_set_scanning_active", go_id, active)
+	end
+
+	if not active then
+		local objective = self:_objective()
+
+		if objective then
+			objective:set_go_to_marker(nil)
+		end
+	end
+end
+
+ServoSkullExtension._objective = function (self)
+	local current_objective_name = self._mission_objective_zone_system:current_objective_name()
+	self._mission_objective = self._mission_objective_system:get_active_objective(current_objective_name)
+
+	return self._mission_objective
+end
+
+ServoSkullExtension.get_scanning_active = function (self)
+	return self._scanning_active
 end
 
 ServoSkullExtension._servo_skull_is_wandering = function (self)

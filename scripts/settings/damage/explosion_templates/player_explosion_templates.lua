@@ -1,30 +1,9 @@
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
-local TalentSettings = require("scripts/settings/buff/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local damage_types = DamageSettings.damage_types
+local in_melee_range = DamageSettings.in_melee_range
 local explosion_templates = {
-	fire_grenade = {
-		static_power_level = 600,
-		radius = 1,
-		min_radius = 0.25,
-		damage_falloff = true,
-		collision_filter = "filter_player_character_explosion",
-		damage_profile = DamageProfileTemplates.default_grenade,
-		damage_type = damage_types.laser,
-		explosion_area_suppression = {
-			suppression_falloff = true,
-			instant_aggro = true,
-			distance = 10,
-			suppression_value = 12
-		},
-		vfx = {
-			"content/fx/particles/weapons/grenades/flame_grenade_initial_blast"
-		},
-		sfx = {
-			"wwise/events/weapon/play_explosion_grenade_flame",
-			"wwise/events/weapon/play_explosion_refl_small"
-		}
-	},
 	frag_grenade = {
 		damage_falloff = true,
 		radius = 10,
@@ -44,6 +23,9 @@ local explosion_templates = {
 			distance = 15,
 			suppression_value = 20
 		},
+		radius_stat_buffs = {
+			"explosion_radius_modifier_frag"
+		},
 		scalable_vfx = {
 			{
 				radius_variable_name = "radius",
@@ -55,33 +37,6 @@ local explosion_templates = {
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_frag",
-			"wwise/events/weapon/play_explosion_refl_gen"
-		}
-	},
-	krak_grenade = {
-		damage_falloff = true,
-		radius = 5,
-		min_radius = 1.5,
-		scalable_radius = true,
-		close_radius = 1.5,
-		collision_filter = "filter_player_character_explosion",
-		static_power_level = 500,
-		min_close_radius = 1.5,
-		close_damage_profile = DamageProfileTemplates.close_krak_grenade,
-		close_damage_type = damage_types.plasma,
-		damage_profile = DamageProfileTemplates.krak_grenade,
-		damage_type = damage_types.plasma,
-		explosion_area_suppression = {
-			suppression_falloff = true,
-			instant_aggro = true,
-			distance = 6,
-			suppression_value = 8
-		},
-		vfx = {
-			"content/fx/particles/weapons/grenades/krak_grenade/krak_grenade_explosion"
-		},
-		sfx = {
-			"wwise/events/weapon/play_explosion_grenade_krak",
 			"wwise/events/weapon/play_explosion_refl_gen"
 		}
 	},
@@ -110,39 +65,6 @@ local explosion_templates = {
 		},
 		sfx = {
 			"wwise/events/weapon/play_explosion_grenade_shock",
-			"wwise/events/weapon/play_explosion_refl_gen"
-		}
-	},
-	ogryn_grenade = {
-		damage_falloff = true,
-		radius = 12,
-		min_radius = 12,
-		scalable_radius = true,
-		close_radius = 4,
-		collision_filter = "filter_player_character_explosion",
-		static_power_level = 500,
-		min_close_radius = 4,
-		close_damage_profile = DamageProfileTemplates.close_ogryn_grenade,
-		close_damage_type = damage_types.laser,
-		damage_profile = DamageProfileTemplates.ogryn_grenade,
-		damage_type = damage_types.laser,
-		explosion_area_suppression = {
-			suppression_falloff = true,
-			instant_aggro = true,
-			distance = 15,
-			suppression_value = 20
-		},
-		scalable_vfx = {
-			{
-				radius_variable_name = "radius",
-				min_radius = 5,
-				effects = {
-					"content/fx/particles/explosions/frag_grenade_ogryn"
-				}
-			}
-		},
-		sfx = {
-			"wwise/events/weapon/play_explosion_grenade_frag",
 			"wwise/events/weapon/play_explosion_refl_gen"
 		}
 	},
@@ -223,6 +145,16 @@ local explosion_templates = {
 		close_damage_type = damage_types.ogryn_physical,
 		damage_profile = DamageProfileTemplates.ogryn_charge_finish,
 		damage_type = damage_types.ogryn_physical
+	},
+	veteran_combat_ability_stagger = {
+		static_power_level = 1000,
+		collision_filter = "filter_player_character_lunge",
+		radius = in_melee_range,
+		close_radius = in_melee_range * 0.4,
+		damage_profile = DamageProfileTemplates.shout_stagger_light,
+		damage_type = damage_types.ogryn_physical,
+		close_damage_profile = DamageProfileTemplates.shout_stagger,
+		close_damage_type = damage_types.ogryn_physical
 	},
 	zealot_charge_impact_with_burning = {
 		static_power_level = 1000,

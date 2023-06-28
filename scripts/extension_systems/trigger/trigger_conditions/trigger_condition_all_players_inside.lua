@@ -43,7 +43,7 @@ TriggerConditionAllPlayersInside.filter_passed = function (self, filter_unit, vo
 		local unit_data_extension = ScriptUnit.has_extension(player_unit, "unit_data_system")
 		local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
 		local is_hogtied = character_state_component and PlayerUnitStatus.is_hogtied(character_state_component)
-		local valid_player = evaluates_bots and is_bot or not is_bot and not is_hogtied
+		local valid_player = (evaluates_bots and is_bot or not is_bot) and not is_hogtied
 
 		if valid_player then
 			num_units_to_test = num_units_to_test + 1

@@ -89,7 +89,7 @@ conditions.can_activate_ability = function (unit, blackboard, scratchpad, condit
 
 	if ability_template_name == "zealot_shout" then
 		return conditions._can_activate_zealot_shout(unit, blackboard, scratchpad, condition_args, action_data, is_running)
-	elseif ability_template_name == "ranged_stance" then
+	elseif ability_template_name == "veteran_combat_ability" then
 		return conditions._can_activate_veteran_ranger_ability(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	else
 		return false

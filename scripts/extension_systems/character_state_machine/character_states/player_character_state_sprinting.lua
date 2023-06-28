@@ -57,7 +57,10 @@ PlayerCharacterStateSprinting.on_enter = function (self, unit, dt, t, previous_s
 	local ignore_immunity = true
 
 	Interrupt.ability_and_action(t, unit, "started_sprint", nil, ignore_immunity)
-	AcceleratedLocalSpaceMovement.refresh_local_move_variables(self._specialization_sprint_template.sprint_move_speed, locomotion_steering, self._locomotion_component, self._first_person_component)
+
+	local base_sprint_template = self._specialization_sprint_template
+
+	AcceleratedLocalSpaceMovement.refresh_local_move_variables(base_sprint_template.sprint_move_speed, locomotion_steering, self._locomotion_component, self._first_person_component)
 	Stamina.set_regeneration_paused(self._stamina_component, true)
 
 	local inventory_component = self._inventory_component
@@ -91,7 +94,7 @@ local WALK_MOVE_ANIM_THRESHOLD = 0.8
 PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
 	local locomotion = self._locomotion_component
 	local locomotion_steering = self._locomotion_steering_component
-	local specialization_sprint_template = self._specialization_sprint_template
+	local base_sprint_template = self._specialization_sprint_template
 	local constants = self._constants
 	local move_settings = self._movement_settings_component
 	local weapon_extension = self._weapon_extension
@@ -119,7 +122,7 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 	locomotion_steering.local_move_y = new_y
 	local movement_state = self._movement_state_component
 	local old_method = movement_state.method
-	local sprint_move_speed = specialization_sprint_template.sprint_move_speed
+	local sprint_move_speed = base_sprint_template.sprint_move_speed
 	local new_method, wants_sprint_camera = nil
 
 	if not decreasing_speed then
@@ -267,7 +270,7 @@ PlayerCharacterStateSprinting._wanted_movement = function (self, dt, sprint_char
 	local current_x = locomotion_steering.local_move_x
 	local current_y = locomotion_steering.local_move_y
 	local constants = self._constants
-	local specialization_sprint_template = self._specialization_sprint_template
+	local base_sprint_template = self._specialization_sprint_template
 	local weapon_sprint_template = weapon_extension:sprint_template()
 	local side_acc = weapon_sprint_template and weapon_sprint_template.sprint_sideway_acceleration or 1
 	local side_dec = weapon_sprint_template and weapon_sprint_template.sprint_sideway_deceleration or 1
@@ -275,7 +278,7 @@ PlayerCharacterStateSprinting._wanted_movement = function (self, dt, sprint_char
 	local normal_move_speed = constants.move_speed
 	local weapon_sprint_speed_mod = weapon_sprint_template and weapon_sprint_template.sprint_speed_mod or 1
 	local weapon_no_stamina_sprint_speed_mod = weapon_sprint_template and weapon_sprint_template.no_stamina_sprint_speed_mod or 1
-	local sprint_move_speed = specialization_sprint_template.sprint_move_speed
+	local sprint_move_speed = base_sprint_template.sprint_move_speed
 	local max_x = normal_move_speed / sprint_move_speed
 	new_x = math.clamp(new_x, -max_x, max_x)
 	local acc = weapon_sprint_template and weapon_sprint_template.sprint_forward_acceleration or 1
@@ -292,7 +295,7 @@ PlayerCharacterStateSprinting._wanted_movement = function (self, dt, sprint_char
 	end
 
 	local max_move_speed = sprint_move_speed + weapon_sprint_speed_mod
-	local specialization_stamina_template = self._specialization_stamina_template
+	local base_stamina_template = self._specialization_stamina_template
 	local weapon_stamina_template = self._weapon_extension:stamina_template()
 	local base_cost_per_second = weapon_stamina_template and weapon_stamina_template.sprint_cost_per_second or math.huge
 	local buff_cost_multiplier = stat_buffs.sprinting_cost_multiplier
@@ -304,8 +307,8 @@ PlayerCharacterStateSprinting._wanted_movement = function (self, dt, sprint_char
 		local previus_overtime = sprint_character_state_component.sprint_overtime
 		local overtime = previus_overtime + dt
 		sprint_character_state_component.sprint_overtime = overtime
-		local no_stamina_sprint_speed_multiplier = specialization_stamina_template.no_stamina_sprint_speed_multiplier + weapon_no_stamina_sprint_speed_mod - 1
-		local no_stamina_sprint_speed_deceleration_time = specialization_stamina_template.no_stamina_sprint_speed_deceleration_time
+		local no_stamina_sprint_speed_multiplier = base_stamina_template.no_stamina_sprint_speed_multiplier + weapon_no_stamina_sprint_speed_mod - 1
+		local no_stamina_sprint_speed_deceleration_time = base_stamina_template.no_stamina_sprint_speed_deceleration_time
 		local move_speed_time_lerp = math.lerp(1, no_stamina_sprint_speed_multiplier, math.min(overtime / no_stamina_sprint_speed_deceleration_time, 1))
 		max_move_speed = normal_move_speed + (max_move_speed - normal_move_speed) * move_speed_time_lerp
 		sprint_overtime_percentage = math.min(overtime / no_stamina_sprint_speed_deceleration_time, 1)

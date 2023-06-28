@@ -10,9 +10,9 @@ ViewElementVideo.init = function (self, parent, draw_layer, start_scale)
 	self._video_player_reference = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
 end
 
-ViewElementVideo.destroy = function (self)
+ViewElementVideo.destroy = function (self, ui_renderer)
 	self:_destroy_current_video()
-	ViewElementVideo.super.destroy(self)
+	ViewElementVideo.super.destroy(self, ui_renderer)
 end
 
 ViewElementVideo.set_pivot_offset = function (self, x, y)

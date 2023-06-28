@@ -170,7 +170,13 @@ CorruptorArmExtension.set_animation_target = function (self, target, speed_multi
 	local speed_multiplier = CorruptorSettings.animation_speed_multiplier[speed_multiplier_type]
 
 	if type(speed_multiplier) == "table" then
-		speed_multiplier = Managers.state.difficulty:get_table_entry_by_challenge(speed_multiplier)
+		local dummy_challenge = Managers.state.difficulty:get_dummy_challenge()
+
+		if dummy_challenge then
+			speed_multiplier = speed_multiplier[math.min(#speed_multiplier, dummy_challenge)]
+		else
+			speed_multiplier = Managers.state.difficulty:get_table_entry_by_challenge(speed_multiplier)
+		end
 	end
 
 	self._animation_speed_multiplier_type = speed_multiplier_type

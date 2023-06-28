@@ -157,6 +157,34 @@ local scenegraph_definition = {
 			-15,
 			2
 		}
+	},
+	vote_count_text = {
+		vertical_alignment = "bottom",
+		parent = "screen",
+		horizontal_alignment = "left",
+		size = {
+			72,
+			64
+		},
+		position = {
+			290,
+			-10,
+			2
+		}
+	},
+	vote_text = {
+		vertical_alignment = "bottom",
+		parent = "screen",
+		horizontal_alignment = "left",
+		size = {
+			550,
+			55
+		},
+		position = {
+			380,
+			-15,
+			2
+		}
 	}
 }
 local widget_definitions = {
@@ -210,11 +238,83 @@ local widget_definitions = {
 			visibility_function = function (content, style)
 				return content.hotspot.disabled or style.text_color[1] > 0
 			end
+		},
+		{
+			style_id = "vote_done_tooltip",
+			pass_type = "text",
+			value_id = "vote_done_tooltip",
+			value = Localize("loc_eor_stay_in_party_vote_done_tooltip"),
+			change_function = function (content, style)
+				local visibility_progress = 1 - (content.disabled_progress or 1)
+				style.text_color[1] = _math_floor(visibility_progress * 255)
+			end,
+			visibility_function = function (content, style)
+				return content.vote_completed
+			end
 		}
 	}, "continue_button", {
 		time = 0,
 		loc_string = "loc_settings_menu_continue"
-	}, nil, ViewStyles.continue_button)
+	}, nil, ViewStyles.continue_button),
+	stay_in_party_vote = UIWidget.create_definition({
+		{
+			style_id = "hotspot",
+			pass_type = "hotspot",
+			content_id = "hotspot"
+		},
+		{
+			style_id = "vote_text",
+			pass_type = "text",
+			value_id = "vote_text",
+			value = "",
+			change_function = function (content, style, _, dt)
+				local color_lerp = _color_lerp
+				local math_max = _math_max
+				local math_min = _math_min
+				local yes_vote_progress = content.yes_vote_progress or 0
+
+				if content.voted_yes then
+					yes_vote_progress = math_min(yes_vote_progress + dt / style.fade_time, 1)
+				else
+					yes_vote_progress = math_max(yes_vote_progress - dt / style.fade_time, 0)
+				end
+
+				content.yes_vote_progress = yes_vote_progress
+				local normal_color = style.normal_color
+				local voted_yes_color = style.voted_yes_color
+				local default_color = style.default_color
+
+				color_lerp(default_color, voted_yes_color, yes_vote_progress, normal_color)
+
+				local hover_progress = content.hotspot.anim_hover_progress or 0
+				local hover_color = style.hover_color
+				local text_color = style.text_color
+				local ignore_alpha = true
+
+				_color_lerp(normal_color, hover_color, hover_progress, text_color, ignore_alpha)
+			end
+		},
+		{
+			value_id = "vote_count_text",
+			scenegraph_id = "vote_count_text",
+			pass_type = "text",
+			style_id = "vote_count_text",
+			value = "0/4"
+		},
+		{
+			style_id = "tooltip",
+			pass_type = "text",
+			value_id = "tooltip",
+			value = Localize("loc_eor_stay_in_party_vote_tooltip"),
+			change_function = function (content, style)
+				local yes_vote_progress = content.yes_vote_progress or 0
+				style.text_color[1] = _math_floor(yes_vote_progress * 255)
+			end,
+			visibility_function = function (content, style)
+				return content.voted_yes and content.already_in_party or style.text_color[1] > 0
+			end
+		}
+	}, "vote_text", nil, nil, ViewStyles.stay_in_party_vote)
 }
 local player_panel_pass_template = {
 	{

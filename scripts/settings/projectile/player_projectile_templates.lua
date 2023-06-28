@@ -119,34 +119,6 @@ projectile_templates.ogryn_thumper_grenade_aim = {
 		}
 	}
 }
-projectile_templates.ogryn_grenade = {
-	locomotion_template = ProjectileLocomotionTemplates.grenade,
-	damage = {
-		fuse = {
-			min_lifetime = 0.6,
-			fuse_time = 1.75,
-			explosion_template = ExplosionTemplates.ogryn_grenade
-		},
-		impact = {
-			explosion_template = ExplosionTemplates.ogryn_grenade,
-			damage_profile = DamageProfileTemplates.ogryn_grenade_impact,
-			damage_type = damage_types.grenade_frag
-		}
-	},
-	effects = {
-		spawn = {
-			vfx = {
-				orphaned_policy = "destroy",
-				link = true,
-				particle_name = "content/fx/particles/weapons/grenades/grenade_trail"
-			},
-			sfx = {
-				looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
-				looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop"
-			}
-		}
-	}
-}
 projectile_templates.frag_grenade = {
 	locomotion_template = ProjectileLocomotionTemplates.grenade,
 	damage = {
@@ -169,92 +141,6 @@ projectile_templates.frag_grenade = {
 			sfx = {
 				looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
 				looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop"
-			}
-		}
-	}
-}
-projectile_templates.fire_grenade = {
-	locomotion_template = ProjectileLocomotionTemplates.grenade,
-	damage = {
-		fuse = {
-			fuse_time = 1.7,
-			explosion_template = ExplosionTemplates.fire_grenade,
-			liquid_area_template = LiquidAreaTemplates.fire_grenade
-		},
-		impact = {
-			damage_profile = DamageProfileTemplates.fire_grenade_impact,
-			damage_type = damage_types.grenade_fire
-		}
-	},
-	effects = {
-		spawn = {
-			vfx = {
-				orphaned_policy = "destroy",
-				link = true,
-				particle_name = "content/fx/particles/weapons/grenades/grenade_trail"
-			},
-			sfx = {
-				looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
-				looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop"
-			}
-		}
-	}
-}
-projectile_templates.krak_grenade = {
-	locomotion_template = ProjectileLocomotionTemplates.krak_grenade,
-	sticks_to_armor_types = {
-		[armor_types.resistant] = true,
-		[armor_types.armored] = true,
-		[armor_types.super_armor] = true
-	},
-	damage = {
-		fuse = {
-			fuse_time = 2,
-			sticky_fuse_time = 2,
-			explosion_template = ExplosionTemplates.krak_grenade,
-			default_explosion_normal = Vector3Box(0, 0, -1)
-		},
-		impact = {
-			damage_profile = DamageProfileTemplates.krak_grenade_impact,
-			damage_type = damage_types.grenade_krak
-		}
-	},
-	effects = {
-		spawn = {
-			vfx = {
-				orphaned_policy = "destroy",
-				link = true,
-				particle_name = "content/fx/particles/weapons/grenades/krak_grenade/krak_grenade_trail"
-			},
-			sfx = {
-				looping_event_name = "wwise/events/weapon/play_player_combat_weapon_grenader_loop",
-				looping_stop_event_name = "wwise/events/weapon/stop_player_combat_weapon_grenader_loop"
-			}
-		},
-		target_aquired = {
-			sfx = {
-				event_name = "wwise/events/weapon/play_krak_detected"
-			},
-			vfx = {
-				orphaned_policy = "destroy",
-				link = true,
-				particle_name = "content/fx/particles/weapons/grenades/krak_grenade/krak_grenade_prime"
-			}
-		},
-		stick = {
-			sfx = {
-				event_name = "wwise/events/weapon/play_krak_stuck"
-			}
-		},
-		build_up_start = {
-			sfx = {
-				event_name = "wwise/events/weapon/play_krak_build_up",
-				stop_build_up_event_name = "wwise/events/weapon/stop_krak_build_up"
-			}
-		},
-		build_up_stop = {
-			sfx = {
-				event_name = "wwise/events/weapon/stop_krak_build_up"
 			}
 		}
 	}
@@ -313,7 +199,6 @@ projectile_templates.ogryn_grenade_box_cluster = {
 	}
 }
 projectile_templates.ogryn_grenade_box = {
-	impact_damage_type = "blunt_heavy",
 	locomotion_template = ProjectileLocomotionTemplates.ogryn_grenade_box,
 	damage = {
 		fuse = {
@@ -358,7 +243,8 @@ projectile_templates.ogryn_grenade_box = {
 			}
 		},
 		cluster = {}
-	}
+	},
+	impact_damage_type = damage_types.blunt_heavy
 }
 projectile_templates.psyker_smite_light = {
 	locomotion_template = ProjectileLocomotionTemplates.smite_projectile_light,
@@ -509,41 +395,6 @@ projectile_templates.psyker_biomancer_soul = {
 			}
 		}
 	}
-}
-projectile_templates.psyker_gunslinger_throwing_knives = {
-	locomotion_template = ProjectileLocomotionTemplates.throwing_knife_projectile_true_flight,
-	sticks_to_armor_types = {},
-	damage = {
-		use_suppression = true,
-		impact = {
-			delete_on_hit_mass = true,
-			damage_profile = DamageProfileTemplates.psyker_gunslinger_smite,
-			damage_type = damage_types.throwing_knife,
-			suppression_settings = {
-				suppression_falloff = true,
-				instant_aggro = true,
-				distance = 5,
-				suppression_value = 5
-			}
-		},
-		fuse = {
-			fuse_time = 1.5
-		}
-	},
-	effects = {
-		spawn = {
-			vfx = {
-				orphaned_policy = "destroy",
-				link = true,
-				particle_name = "content/fx/particles/abilities/psyker_throwing_knife_trail"
-			},
-			sfx = {
-				looping_event_name = "wwise/events/weapon/play_throw_knife_loop",
-				looping_stop_event_name = "wwise/events/weapon/stop_throw_knife_loop"
-			}
-		}
-	},
-	unit_rotation_offset = QuaternionBox(0.5, 0, 0, -0.5)
 }
 projectile_templates.force_staff_ball = {
 	always_hidden = true,

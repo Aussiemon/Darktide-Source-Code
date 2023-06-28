@@ -5,6 +5,7 @@ local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BreedTerrorEventSettings = require("scripts/settings/breed/breed_terror_event_settings")
 local CoverSettings = require("scripts/settings/cover/cover_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionGibbingTemplates = require("scripts/managers/minion/minion_gibbing_templates")
 local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
@@ -126,33 +127,7 @@ local breed_data = {
 			close = true
 		}
 	},
-	suppress_config = {
-		above_threshold_decay_multiplier = 2,
-		max_value = {
-			melee = 40,
-			far = 25,
-			close = 40
-		},
-		threshold = {
-			melee = 30,
-			far = 10,
-			close = 30
-		},
-		decay_speeds = {
-			melee = 0.05,
-			far = 0.5,
-			close = 0.3
-		},
-		disable_cover_threshold = {
-			melee = 20,
-			far = 15,
-			close = 20
-		},
-		immunity_duration = {
-			0.25,
-			0.5
-		}
-	},
+	suppress_config = MinionDifficultySettings.suppression.cultist_assault,
 	attack_intensity_cooldowns = {
 		melee = {
 			0.2,

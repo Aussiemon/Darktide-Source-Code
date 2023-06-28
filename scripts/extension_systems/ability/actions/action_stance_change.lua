@@ -120,15 +120,8 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 	if self._is_server and refill_toughness then
 		Toughness.recover_max_toughness(player_unit, "ability stance")
 	end
-end
-
-ActionStanceChange.finish = function (self, reason, ...)
-	ActionStanceChange.super.finish(self, reason, ...)
-
-	local action_settings = self._action_settings
 
 	if action_settings then
-		local player_unit = self._player_unit
 		local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 		local param_table = buff_extension:request_proc_event_param_table()
 
@@ -138,6 +131,10 @@ ActionStanceChange.finish = function (self, reason, ...)
 			buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
 		end
 	end
+end
+
+ActionStanceChange.finish = function (self, reason, ...)
+	ActionStanceChange.super.finish(self, reason, ...)
 
 	if self._weapon_actions_blocked then
 		self._weapon_actions_blocked = nil

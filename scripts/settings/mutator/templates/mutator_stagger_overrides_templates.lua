@@ -8,40 +8,40 @@ local mutator_templates = {
 				renegade_melee = {
 					[stagger_types.light] = 1,
 					[stagger_types.medium] = 30,
-					[stagger_types.heavy] = 50,
-					[stagger_types.explosion] = 60,
+					[stagger_types.heavy] = 60,
+					[stagger_types.explosion] = 100,
 					[stagger_types.light_ranged] = 8,
 					[stagger_types.killshot] = 4
 				},
 				cultist_melee = {
 					[stagger_types.light] = 1,
 					[stagger_types.medium] = 30,
-					[stagger_types.heavy] = 50,
-					[stagger_types.explosion] = 60,
+					[stagger_types.heavy] = 60,
+					[stagger_types.explosion] = 100,
 					[stagger_types.light_ranged] = 8,
 					[stagger_types.killshot] = 4
 				},
 				renegade_rifleman = {
 					[stagger_types.light] = 1,
 					[stagger_types.medium] = 20,
-					[stagger_types.heavy] = 40,
-					[stagger_types.explosion] = 60,
+					[stagger_types.heavy] = 60,
+					[stagger_types.explosion] = 100,
 					[stagger_types.light_ranged] = 8,
 					[stagger_types.killshot] = 4
 				},
 				renegade_assault = {
 					[stagger_types.light] = 1,
 					[stagger_types.medium] = 20,
-					[stagger_types.heavy] = 40,
-					[stagger_types.explosion] = 60,
+					[stagger_types.heavy] = 60,
+					[stagger_types.explosion] = 100,
 					[stagger_types.light_ranged] = 8,
 					[stagger_types.killshot] = 4
 				},
 				cultist_assault = {
 					[stagger_types.light] = 1,
 					[stagger_types.medium] = 20,
-					[stagger_types.heavy] = 40,
-					[stagger_types.explosion] = 60,
+					[stagger_types.heavy] = 60,
+					[stagger_types.explosion] = 100,
 					[stagger_types.light_ranged] = 8,
 					[stagger_types.killshot] = 4
 				},
@@ -125,16 +125,16 @@ local mutator_templates = {
 					[stagger_types.explosion] = 200
 				},
 				chaos_ogryn_executor = {
-					[stagger_types.light] = 10,
-					[stagger_types.medium] = 50,
-					[stagger_types.heavy] = 100,
+					[stagger_types.light] = 50,
+					[stagger_types.medium] = 90,
+					[stagger_types.heavy] = 160,
 					[stagger_types.light_ranged] = 10,
 					[stagger_types.sticky] = 10,
 					[stagger_types.explosion] = 200
 				},
 				chaos_ogryn_bulwark = {
-					[stagger_types.light] = 20,
-					[stagger_types.medium] = 60,
+					[stagger_types.light] = 40,
+					[stagger_types.medium] = 80,
 					[stagger_types.heavy] = 120,
 					[stagger_types.light_ranged] = 5,
 					[stagger_types.killshot] = 5,

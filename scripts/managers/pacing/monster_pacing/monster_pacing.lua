@@ -25,6 +25,7 @@ MonsterPacing.init = function (self, nav_world)
 	self._num_spawn_type_sections = num_spawn_type_sections
 	self._spawn_type_point_sections = spawn_point_sections
 	self._health_modifier = 1
+	self._aggroed_monster_units = {}
 end
 
 MonsterPacing.destroy = function (self)
@@ -239,6 +240,10 @@ MonsterPacing.set_health_modifier = function (self, modifier)
 	self._health_modifier = modifier
 end
 
+MonsterPacing.set_stimmed_config = function (self, stimmed_config)
+	self._stimmed_config = stimmed_config
+end
+
 MonsterPacing.add_spawn_point = function (self, unit, position, path_position, travel_distance, section_index, spawn_type)
 	local above = 1
 	local below = 1
@@ -326,6 +331,7 @@ MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
 	end
 
 	local alive_monsters = self._alive_monsters
+	local aggroed_monster_units = self._aggroed_monster_units
 	local _, behind_travel_distance = Managers.state.main_path:behind_unit(target_side_id)
 
 	for i = 1, #alive_monsters do
@@ -334,6 +340,12 @@ MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
 
 		if not HEALTH_ALIVE[spawned_unit] then
 			table.remove(alive_monsters, i)
+
+			local aggroed_index = table.find(aggroed_monster_units, spawned_unit)
+
+			if aggroed_index then
+				table.remove(aggroed_monster_units, aggroed_index)
+			end
 
 			break
 		end
@@ -356,11 +368,23 @@ MonsterPacing.update = function (self, dt, t, side_id, target_side_id)
 					minion_spawn_manager:despawn(spawned_unit)
 					table.remove(alive_monsters, i)
 
+					local aggroed_index = table.find(aggroed_monster_units, spawned_unit)
+
+					if aggroed_index then
+						table.remove(aggroed_monster_units, aggroed_index)
+					end
+
 					break
 				end
 			end
 		end
 	end
+end
+
+MonsterPacing.num_aggroed_monsters = function (self)
+	local aggroed_monster_units = self._aggroed_monster_units
+
+	return #aggroed_monster_units
 end
 
 MonsterPacing._spawn_monster = function (self, monster, ahead_target_unit, side_id)
@@ -370,20 +394,16 @@ MonsterPacing._spawn_monster = function (self, monster, ahead_target_unit, side_
 	local aggro_states = template.aggro_states
 	local aggro_state = aggro_states[breed_name]
 	local spawned_unit = nil
-
-	if aggro_state then
-		spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, aggro_state, ahead_target_unit)
-	else
-		spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id)
-	end
-
 	local spawn_max_health_modifier = self._health_modifier
 
-	if spawn_max_health_modifier and spawn_max_health_modifier ~= 1 then
-		local spawned_unit_health_extension = ScriptUnit.extension(spawned_unit, "health_system")
-		local max_health = spawned_unit_health_extension:max_health()
+	if aggro_state then
+		spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, aggro_state, ahead_target_unit, nil, nil, nil, nil, spawn_max_health_modifier)
 
-		spawned_unit_health_extension:add_damage(max_health * spawn_max_health_modifier)
+		if aggro_state == perception_aggro_states.aggroed then
+			self._aggroed_monster_units[#self._aggroed_monster_units + 1] = spawned_unit
+		end
+	else
+		spawned_unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, nil, nil, nil, nil, nil, nil, spawn_max_health_modifier)
 	end
 
 	local pause_pacing_on_spawn_settings = template.pause_pacing_on_spawn
@@ -423,6 +443,17 @@ MonsterPacing._spawn_boss_patrol = function (self, boss_patrol, ahead_travel_dis
 		flood_fill_positions[#flood_fill_positions + 1] = position
 	end
 
+	local stimmed_config = self._stimmed_config
+	local stim_buff_name = nil
+
+	if stimmed_config then
+		local chance_to_stim = stimmed_config.chance_to_stim
+
+		if math.random() < chance_to_stim then
+			stim_buff_name = stimmed_config.buff_name
+		end
+	end
+
 	local group_system = Managers.state.extension:system("group_system")
 	local group_id = group_system:generate_group_id()
 	local spawned_minions = {}
@@ -430,7 +461,7 @@ MonsterPacing._spawn_boss_patrol = function (self, boss_patrol, ahead_travel_dis
 	for i = 1, num_positions do
 		local breed_name = spawn_list[i]
 		local spawn_position = flood_fill_positions[i]
-		local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, perception_aggro_states.passive, nil, nil, group_id, nil, nil, "trickle_horde")
+		local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, perception_aggro_states.passive, nil, nil, group_id, nil, nil)
 		local blackboard = BLACKBOARDS[unit]
 		local patrol_component = Blackboard.write_component(blackboard, "patrol")
 
@@ -446,6 +477,15 @@ MonsterPacing._spawn_boss_patrol = function (self, boss_patrol, ahead_travel_dis
 			patrol_component.patrol_leader_unit = follow_unit
 			patrol_component.patrol_index = i
 			patrol_component.should_patrol = true
+		end
+
+		if stim_buff_name then
+			local buff_extension = ScriptUnit.extension(unit, "buff_system")
+			local t = Managers.time:time("gameplay")
+
+			if not buff_extension:has_keyword("stimmed") then
+				buff_extension:add_internally_controlled_buff(stim_buff_name, t)
+			end
 		end
 
 		spawned_minions[i] = unit

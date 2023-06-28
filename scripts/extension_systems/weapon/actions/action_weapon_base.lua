@@ -1,11 +1,9 @@
 require("scripts/extension_systems/weapon/actions/action_base")
 
-local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local AimAssist = require("scripts/utilities/aim_assist")
 local AlternateFire = require("scripts/utilities/alternate_fire")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CriticalStrike = require("scripts/utilities/attack/critical_strike")
-local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local proc_events = BuffSettings.proc_events
 local EMPTY_TABLE = {}
@@ -207,7 +205,6 @@ ActionWeaponBase._pay_warp_charge_cost = function (self, t, charge_level, ignore
 
 	local warp_charge_component = self._warp_charge_component
 	local player_unit = self._player_unit
-	local action_settings = self._action_settings
 	local prevent_explosion = self._prevent_explosion
 
 	WarpCharge.increase_immediate(t, charge_level, warp_charge_component, charge_template, player_unit, nil, prevent_explosion)

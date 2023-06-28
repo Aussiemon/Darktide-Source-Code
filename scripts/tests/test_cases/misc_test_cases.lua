@@ -629,3 +629,36 @@ MiscTestCases.smoke = function ()
 		TestifySnippets.wait(5)
 	end)
 end
+
+MiscTestCases.stress_alt_combinations = function (case_settings)
+	Testify:run_case(function (dt, t)
+		local settings = cjson.decode(case_settings or "{}")
+		local key = settings.key or "tab"
+		local screen_mode = settings.screen_mode
+		local num_iterations_during_loading = settings.num_iterations_during_loading or 6
+		local num_iterations_during_gameplay_state = settings.num_iterations_during_gameplay_state or 10
+		local interval_time = settings.interval_time or 3
+
+		if TestifySnippets.is_debug_stripped() or BUILD == "release" then
+			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
+		end
+
+		if screen_mode then
+			TestifySnippets.set_render_settings("screen_mode", screen_mode, 1)
+		end
+
+		for i = 1, num_iterations_during_loading do
+			Testify:make_request_to_runner("press_keyboard_combination", "alt", key)
+			TestifySnippets.wait(interval_time)
+		end
+
+		Testify:make_request("wait_for_state_gameplay_reached")
+
+		for i = 1, num_iterations_during_gameplay_state do
+			Testify:make_request_to_runner("press_keyboard_combination", "alt", key)
+			TestifySnippets.wait(interval_time)
+		end
+
+		TestifySnippets.set_render_settings("screen_mode", "borderless_fullscreen", 1)
+	end)
+end

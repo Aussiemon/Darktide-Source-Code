@@ -264,12 +264,12 @@ mood_settings.moods = {
 				local unit_data_extension = ScriptUnit.has_extension(player.player_unit, "unit_data_system")
 
 				if unit_data_extension then
-					local specialization_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
+					local base_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
 					local weapon_warp_charge_template = WarpCharge.weapon_warp_charge_template(player.player_unit)
 					local dt = Managers.time:delta_time("gameplay")
 					local warp_charge_component = unit_data_extension:read_component("warp_charge")
 					local current_percent = warp_charge_component.current_percentage
-					local base_low_threshold = specialization_warp_charge_template.low_threshold
+					local base_low_threshold = base_warp_charge_template.low_threshold
 					local low_threshold_modifier = weapon_warp_charge_template.low_threshold_modifier or 1
 					local low_threshold = base_low_threshold * low_threshold_modifier
 					local wanted_value = math.normalize_01(current_percent, low_threshold, 1)

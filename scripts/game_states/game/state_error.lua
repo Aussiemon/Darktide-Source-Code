@@ -23,7 +23,9 @@ StateError._cleanup = function (self)
 	Managers.multiplayer_session:reset("reset_from_state_error")
 	Managers.mechanism:leave_mechanism()
 
-	if Managers.connection:is_initialized() then
+	local connection_manager = Managers.connection
+
+	if connection_manager:is_initialized() then
 		local peer_id = Network.peer_id()
 		local player_manager = Managers.player
 		local local_players = player_manager:players_at_peer(peer_id)
@@ -33,12 +35,18 @@ StateError._cleanup = function (self)
 				player_manager:remove_player(peer_id, local_player_id)
 			end
 		end
+
+		if connection_manager.platform == "wan_client" then
+			connection_manager:destroy_wan_client()
+		end
 	end
 
+	Managers.chat:logout()
 	Managers.backend:logout()
 
 	if GameParameters.prod_like_backend then
 		Managers.party_immaterium:reset()
+		Managers.presence:reset()
 	end
 
 	Managers.data_service:reset()

@@ -1,5 +1,6 @@
 local circumstance_templates = {
 	ember_01 = {
+		dialogue_id = "circumstance_vo_ember",
 		wwise_state = "ember_01",
 		theme_tag = "ember",
 		ui = {

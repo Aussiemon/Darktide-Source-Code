@@ -152,10 +152,6 @@ InteractorExtension.fixed_update = function (self, unit, dt, t, fixed_frame, con
 	local state = interaction_component.state
 
 	if state == interaction_states.waiting_to_interact then
-		if self._unit_data_extension.is_resimulating and fixed_frame < context.resimulate_to_frame then
-			return
-		end
-
 		local player = self._player
 
 		if player:is_human_controlled() then

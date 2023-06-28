@@ -164,7 +164,7 @@ local action_data = {
 		new_location_combat_range = "close",
 		speed = 4.2,
 		vo_event = "skulking",
-		throw_position_distance_fwd_dot = 0.25,
+		throw_position_distance_fwd_dot = 0.75,
 		min_distance_from_target = 6,
 		new_location_min_dist = 2,
 		start_move_anim_events = {
@@ -206,25 +206,20 @@ local action_data = {
 		},
 		throw_anim_events = {
 			close = {
-				"attack_throw_backhand_01",
-				"attack_throw_backhand_02",
-				"attack_throw_backhand_03"
+				"attack_throw_backhand_01"
 			},
 			medium = {
 				"attack_throw_low_01"
 			},
 			long = {
-				"attack_throw_long_01",
-				"attack_throw_long_02"
+				"cultist_grenadier_throw"
 			}
 		},
 		throw_node_local_offset = {
 			attack_throw_backhand_01 = Vector3Box(-0.3496, 0.6266, 1.3162),
-			attack_throw_backhand_02 = Vector3Box(-0.1743, 0.7025, 1.141),
-			attack_throw_backhand_03 = Vector3Box(-0.2337, 0.6418, 1.6299),
 			attack_throw_low_01 = Vector3Box(0.2501, 0.6223, 0.4472),
 			attack_throw_long_01 = Vector3Box(0.1338, 0.854, 1.8289),
-			attack_throw_long_02 = Vector3Box(0.3618, 0.8799, 1.8387)
+			cultist_grenadier_throw = Vector3Box(0.3618, 0.8799, 1.8387)
 		},
 		throw_config = {
 			acceptable_accuracy = 1,
@@ -233,8 +228,8 @@ local action_data = {
 			projectile_template = ProjectileTemplates.cultist_grenadier_grenade
 		},
 		throw_position_distance_fwd = {
-			2,
-			10
+			4,
+			15
 		},
 		throw_position_distance = {
 			1,
@@ -244,37 +239,70 @@ local action_data = {
 	},
 	move_to_combat_vector = {
 		idle_anim_events = "idle",
+		degree_per_direction = 10,
 		utility_weight = 10,
-		is_assaulting = true,
-		speed = 6.2,
-		move_anim_event = "move_fwd",
-		considerations = UtilityConsiderations.move_to_combat_vector_special
+		move_to_cooldown = 0.25,
+		move_to_fail_cooldown = 1,
+		randomized_direction_degree_range = 120,
+		speed = 4.2,
+		move_anim_events = "move_fwd",
+		considerations = UtilityConsiderations.move_to_combat_vector_special,
+		start_move_anim_events = {
+			bwd = "move_start_bwd",
+			fwd = "move_start_fwd",
+			left = "move_start_left",
+			right = "move_start_right"
+		},
+		start_move_anim_data = {
+			move_start_fwd = {},
+			move_start_bwd = {
+				sign = -1,
+				rad = math.pi
+			},
+			move_start_left = {
+				sign = 1,
+				rad = math.pi / 2
+			},
+			move_start_right = {
+				sign = -1,
+				rad = math.pi / 2
+			}
+		},
+		start_move_rotation_timings = {
+			move_start_right = 0,
+			move_start_fwd = 0,
+			move_start_bwd = 0,
+			move_start_left = 0
+		},
+		start_rotation_durations = {
+			move_start_right = 0.7,
+			move_start_fwd = 0.26666666666666666,
+			move_start_bwd = 1,
+			move_start_left = 0.7666666666666667
+		}
 	},
 	throw_grenade = {
 		vo_event = "throwing_grenade",
 		effect_template = EffectTemplates.cultist_grenadier_grenade,
 		effect_template_timings = {
-			attack_throw_long_02 = 0.20512820512820512,
-			attack_throw_backhand_01 = 0.28205128205128205,
-			attack_throw_backhand_02 = 0.1794871794871795,
 			attack_throw_low_01 = 0.358974358974359,
-			attack_throw_backhand_03 = 0.20512820512820512,
+			attack_throw_backhand_01 = 0.28205128205128205,
+			cultist_grenadier_throw = 0.5666666666666667,
+			attack_throw_long_02 = 0.20512820512820512,
 			attack_throw_long_01 = 0.2564102564102564
 		},
 		throw_timings = {
-			attack_throw_long_02 = 2.3076923076923075,
-			attack_throw_backhand_01 = 2.128205128205128,
-			attack_throw_backhand_02 = 2.076923076923077,
 			attack_throw_low_01 = 2.1794871794871793,
-			attack_throw_backhand_03 = 2.3846153846153846,
+			attack_throw_backhand_01 = 2.128205128205128,
+			cultist_grenadier_throw = 3,
+			attack_throw_long_02 = 2.3076923076923075,
 			attack_throw_long_01 = 2.3076923076923075
 		},
 		action_durations = {
-			attack_throw_long_02 = 3.2051282051282053,
-			attack_throw_backhand_01 = 2.641025641025641,
-			attack_throw_backhand_02 = 2.769230769230769,
 			attack_throw_low_01 = 2.871794871794872,
-			attack_throw_backhand_03 = 3.076923076923077,
+			attack_throw_backhand_01 = 2.641025641025641,
+			cultist_grenadier_throw = 5,
+			attack_throw_long_02 = 3.2051282051282053,
 			attack_throw_long_01 = 3.1538461538461537
 		},
 		throw_config = {

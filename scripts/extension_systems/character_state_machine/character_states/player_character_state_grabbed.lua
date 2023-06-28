@@ -111,8 +111,7 @@ PlayerCharacterStateGrabbed.on_exit = function (self, unit, t, next_state)
 	local teleport_position = nil
 
 	if ALIVE[disabling_unit] then
-		local wanted_node = Unit.node(disabling_unit, DISABLING_UNIT_LINK_NODE)
-		teleport_position = Unit.world_position(disabling_unit, wanted_node)
+		teleport_position = disabled_character_state_component.target_drag_position
 
 		PlayerMovement.teleport_fixed_update(unit, teleport_position)
 

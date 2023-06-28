@@ -247,8 +247,9 @@ end
 M.wwise_destroy_manual_source = function (t)
 	local id = t.Source_Id or t.source_id
 	local wwise_world = _get_flow_context_wwise_world()
+	local build = BUILD or Application.build()
 
-	if WwiseWorld.has_source(wwise_world, id) then
+	if build ~= "release" or WwiseWorld.has_source(wwise_world, id) then
 		WwiseWorld.destroy_manual_source(wwise_world, id)
 	end
 end

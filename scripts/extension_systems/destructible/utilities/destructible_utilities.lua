@@ -1,6 +1,6 @@
 local LightControllerUtilities = require("core/scripts/common/light_controller_utilities")
 local DestructibleUtilities = {
-	FORCE_DIRECTION = table.enum("random_direction", "attack_direction")
+	FORCE_DIRECTION = table.enum("random_direction", "attack_direction", "provided_direction")
 }
 
 local function _set_meshes_visiblity(unit, meshes, visible)
@@ -11,11 +11,12 @@ local function _set_meshes_visiblity(unit, meshes, visible)
 	end
 end
 
-DestructibleUtilities.setup_stages = function (unit, parts_mass, parts_speed, force_direction_type, health_extension)
+DestructibleUtilities.setup_stages = function (unit, parts_mass, parts_speed, force_direction, force_direction_type, health_extension)
 	local destructible_parameters = {
 		current_stage_index = 1,
 		parts_mass = parts_mass,
 		parts_speed = parts_speed,
+		force_direction = force_direction,
 		force_direction_type = force_direction_type
 	}
 	local initial_actor = Unit.actor(unit, "c_destructible")
@@ -96,14 +97,18 @@ local function _wake_up_dynamic_actors(actors)
 end
 
 local function _add_force_on_parts(actors, mass, speed, attack_direction)
+	local direction = attack_direction
+
 	for i = 1, #actors do
 		local actor = ActorBox.unbox(actors[i])
-		local random_x = math.random() * 2 - 1
-		local random_y = math.random() * 2 - 1
-		local random_z = math.random() * 2 - 1
-		local random_direction = Vector3(random_x, random_y, random_z)
-		random_direction = Vector3.normalize(random_direction)
-		local direction = attack_direction or random_direction
+
+		if not attack_direction then
+			local random_x = math.random() * 2 - 1
+			local random_y = math.random() * 2 - 1
+			local random_z = math.random() * 2 - 1
+			local random_direction = Vector3(random_x, random_y, random_z)
+			direction = Vector3.normalize(random_direction)
+		end
 
 		Actor.add_impulse(actor, direction * mass * speed)
 	end
@@ -129,6 +134,8 @@ local function _dequeue_stage(unit, destructible_parameters, visibility_info, at
 			if not DEDICATED_SERVER then
 				if destructible_parameters.force_direction_type == DestructibleUtilities.FORCE_DIRECTION.random_direction then
 					attack_direction = nil
+				elseif destructible_parameters.force_direction_type == DestructibleUtilities.FORCE_DIRECTION.provided_direction then
+					attack_direction = destructible_parameters.force_direction:unbox()
 				end
 
 				_add_force_on_parts(destructible_parameters.dynamic_actors, destructible_parameters.parts_mass, destructible_parameters.parts_speed, attack_direction)

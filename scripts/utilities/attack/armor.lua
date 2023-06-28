@@ -1,6 +1,9 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
+local buff_keywords = BuffSettings.keywords
 local Armor = {}
-local default_armor = ArmorSettings.types.unarmored
+local armor_types = ArmorSettings.types
+local default_armor = armor_types.unarmored
 local _check_toughness, _character_armor_type = nil
 
 Armor.armor_type = function (unit, breed_or_nil, hit_zone_name_or_nil, attack_type)
@@ -18,6 +21,13 @@ Armor.aborts_attack = function (unit, breed_or_nil, hit_zone_name_or_nil)
 end
 
 function _character_armor_type(unit, breed, hit_zone_name_or_nil, attack_type_or_nil)
+	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+	local buff_armor_override = buff_extension and buff_extension:has_keyword(buff_keywords.super_armor_override)
+
+	if buff_armor_override then
+		return armor_types.super_armor
+	end
+
 	local armor_type = nil
 	local has_toughess, toughness_armor_type = _check_toughness(unit, breed)
 

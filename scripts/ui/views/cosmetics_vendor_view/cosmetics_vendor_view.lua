@@ -137,6 +137,15 @@ end
 
 CosmeticsVendorView._set_element_purchase_info = function (self, element)
 	local previewed_item = self._previewed_item
+
+	if not previewed_item then
+		self._widgets_by_name.owned_info_text.content.visible = false
+		self._widgets_by_name.purchase_button.content.visible = false
+		self._widgets_by_name.no_class_info_text.content.visible = false
+
+		return
+	end
+
 	local is_owned = element.offer.state == "owned" or self:is_item_owned(previewed_item.gear_id)
 	local is_archetype_valid = false
 
@@ -295,6 +304,12 @@ CosmeticsVendorView._reset_set_item_parts_representation = function (self)
 end
 
 CosmeticsVendorView._setup_item_texts = function (self, item, restrictions_text)
+	if not item then
+		self:_setup_item_restrictions_text(restrictions_text)
+
+		return
+	end
+
 	local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
 	local item_size = {
 		700,
@@ -481,9 +496,6 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 	end
 
 	self:_clear_list()
-
-	self._selected_option_button_index = nil
-
 	self:_initialize_background_profile(optional_archetype_name)
 
 	local presentation_profile = self._presentation_profile
@@ -491,7 +503,7 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 	local ignore_focus_on_offer = true
 	local promises = {
 		self:_update_wallets(),
-		self:_fetch_store_items(ignore_focus_on_offer)
+		self:_fetch_store_items(ignore_focus_on_offer, optional_context)
 	}
 
 	if not self._player_available_archetypes then
@@ -510,25 +522,6 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 				self._player_available_archetypes[archetype_name] = true
 			end
 		end
-
-		if not self._spawned_profile then
-			local context = self._context
-			self._spawn_player = context and context.spawn_player
-			self._initial_rotation = nil
-		end
-
-		local options_tab_bar = self._options_tab_bar
-
-		if options_tab_bar then
-			local first_index = optional_context and optional_context.option_index or 1
-			local options_entries = options_tab_bar:entries()
-			local first_option_entry = options_entries[first_index]
-			local widget = first_option_entry.widget
-			local content = widget.content
-			local pressed_callback = content.hotspot.pressed_callback
-
-			pressed_callback()
-		end
 	end)
 
 	if not self._on_enter_anim_id then
@@ -541,6 +534,32 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 	local default_camera_settings = self._breeds_default_camera_settings[optional_camera_breed_name or breed_name]
 
 	self:_set_initial_viewport_camera_position(default_camera_settings)
+end
+
+CosmeticsVendorView._fetch_store_items = function (self, ignore_focus_on_offer, optional_context)
+	return CosmeticsVendorView.super._fetch_store_items(self, ignore_focus_on_offer):next(function (data)
+		if not self._spawned_profile then
+			local context = self._context
+			self._spawn_player = context and context.spawn_player
+			self._initial_rotation = nil
+		end
+
+		local options_tab_bar = self._options_tab_bar
+
+		if options_tab_bar then
+			local selected_index = optional_context and optional_context.option_index or self._selected_option_button_index or 1
+			local options_entries = options_tab_bar:entries()
+			local first_option_entry = options_entries[selected_index]
+			local widget = first_option_entry.widget
+			local content = widget.content
+			local pressed_callback = content.hotspot.pressed_callback
+			local options = self._context.option_button_definitions
+
+			pressed_callback(selected_index, options)
+		end
+
+		return data
+	end)
 end
 
 CosmeticsVendorView._set_initial_viewport_camera_position = function (self, default_camera_settings)
@@ -874,6 +893,9 @@ CosmeticsVendorView._setup_option_buttons = function (self, options)
 	options_tab_bar:set_is_handling_navigation_input(true)
 
 	self._options_tab_bar = options_tab_bar
+
+	self:on_option_button_pressed(1, options[1], true)
+
 	local total_height = button_size[2] * #options + button_spacing * #options
 
 	self:_set_scenegraph_size("button_pivot_background", nil, total_height + 30)
@@ -890,8 +912,8 @@ CosmeticsVendorView._update_options_tab_bar_position = function (self)
 	self._options_tab_bar:set_pivot_offset(position[1], position[2])
 end
 
-CosmeticsVendorView.on_option_button_pressed = function (self, index, option)
-	if index == self._selected_option_button_index then
+CosmeticsVendorView.on_option_button_pressed = function (self, index, option, force_selection)
+	if index == self._selected_option_button_index and not force_selection then
 		return
 	end
 
@@ -1078,11 +1100,16 @@ CosmeticsVendorView.cb_on_camera_zoom_toggled = function (self, id, input_presse
 end
 
 CosmeticsVendorView._can_zoom = function (self)
-	return not self._disable_zoom
+	return self._profile_spawner and not self._disable_zoom
 end
 
 CosmeticsVendorView._trigger_zoom_logic = function (self, instant, optional_slot_name)
 	local world_spawner = self._world_spawner
+
+	if not world_spawner then
+		return
+	end
+
 	local selected_slot = self._selected_slot
 	local selected_slot_name = optional_slot_name or selected_slot and selected_slot.name
 

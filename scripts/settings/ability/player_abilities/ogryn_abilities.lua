@@ -1,5 +1,5 @@
 local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
-local TalentSettings = require("scripts/settings/buff/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local bonebreaker_talent_settings = TalentSettings.ogryn_2
 local abilities = {
 	ogryn_charge = {
@@ -68,17 +68,6 @@ local abilities = {
 		},
 		cooldown = bonebreaker_talent_settings.combat_ability_3.cooldown,
 		max_charges = bonebreaker_talent_settings.combat_ability_3.max_charges,
-		archetypes = {
-			"ogryn"
-		}
-	},
-	ogryn_grenade = {
-		ability_type = "grenade_ability",
-		hud_icon = "content/ui/materials/icons/abilities/throwables/default",
-		stat_buff = "extra_max_amount_of_grenades",
-		inventory_item_name = "content/items/weapons/player/grenade_ogryn",
-		icon = "content/ui/materials/icons/abilities/combat/default",
-		max_charges = bonebreaker_talent_settings.grenade.max_charges,
 		archetypes = {
 			"ogryn"
 		}

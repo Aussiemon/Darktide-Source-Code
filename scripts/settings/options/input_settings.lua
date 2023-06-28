@@ -1,6 +1,8 @@
 local OptionsUtilities = require("scripts/utilities/ui/options")
 local SaveData = require("scripts/managers/save/save_data")
 local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
+local InputUtils = require("scripts/managers/input/input_utils")
 
 local function save_account_settings(location_name, settings_name, value)
 	local player = Managers.player:local_player(1)
@@ -355,6 +357,17 @@ local settings_definitions = {
 		end
 	},
 	{
+		display_name = "loc_xbox_controller_chat_button_description",
+		shrink_to_fit = true,
+		widget_type = "description",
+		display_params = {
+			input = "+"
+		},
+		validation_function = function ()
+			return IS_XBS and not Managers.ui.using_cursor_navigation()
+		end
+	},
+	{
 		step_size_value = 0.1,
 		display_name = "loc_setting_controller_look_scale",
 		num_decimals = 1,
@@ -363,9 +376,6 @@ local settings_definitions = {
 		widget_type = "value_slider",
 		id = "controller_look_scale",
 		save_location = "input_settings",
-		on_value_changed = function (value)
-			ParameterResolver.set_dev_parameter("controller_look_scale", value)
-		end,
 		validation_function = function ()
 			return not Managers.ui.using_cursor_navigation()
 		end
@@ -380,9 +390,6 @@ local settings_definitions = {
 		widget_type = "value_slider",
 		id = "controller_look_dead_zone",
 		save_location = "input_settings",
-		on_value_changed = function (value)
-			ParameterResolver.set_dev_parameter("controller_look_dead_zone", value)
-		end,
 		validation_function = function ()
 			return not Managers.ui.using_cursor_navigation()
 		end
@@ -392,9 +399,6 @@ local settings_definitions = {
 		display_name = "loc_setting_controller_invert_look_y",
 		id = "controller_invert_look_y",
 		widget_type = "boolean",
-		on_value_changed = function (value)
-			ParameterResolver.set_dev_parameter("controller_invert_look_y", value)
-		end,
 		validation_function = function ()
 			return not Managers.ui.using_cursor_navigation()
 		end
@@ -404,9 +408,6 @@ local settings_definitions = {
 		display_name = "loc_setting_controller_enable_acceleration",
 		id = "controller_enable_acceleration",
 		widget_type = "boolean",
-		on_value_changed = function (value)
-			ParameterResolver.set_dev_parameter("controller_enable_acceleration", value)
-		end,
 		validation_function = function ()
 			return not Managers.ui.using_cursor_navigation()
 		end

@@ -270,13 +270,13 @@ Ammo.move_clip_to_reserve = function (inventory_slot_component)
 end
 
 Ammo.add_to_all_slots = function (unit, percent)
-	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 	local weapon_slot_configuration = visual_loadout_extension:slot_configuration_by_type("weapon")
 	local ammo_gained = 0
 
 	for slot_name, config in pairs(weapon_slot_configuration) do
-		local wieldable_component = unit_data_ext:write_component(slot_name)
+		local wieldable_component = unit_data_extension:write_component(slot_name)
 
 		if wieldable_component.max_ammunition_reserve > 0 then
 			local ammo_reserve = wieldable_component.current_ammunition_reserve

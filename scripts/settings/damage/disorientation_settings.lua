@@ -412,6 +412,16 @@ local disorientation_settings = {
 				action_delay = 0
 			}
 		},
+		corruption_tick = {
+			sound_event = "wwise/events/player/play_player_get_hit_corruption_2d_tick",
+			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
+			stun = {
+				intoxication_level = 0,
+				stun_duration = 0,
+				stun_immunity_time_buff = "stun_immune_very_long",
+				action_delay = 0
+			}
+		},
 		ogryn_toughness = {
 			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
 			movement_speed_buff = "ogryn_stun_movement_speed_up",

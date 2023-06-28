@@ -23,6 +23,8 @@ ViewElementUniformGrid.init = function (self, parent, draw_layer, start_scale)
 	self._needs_grid_recalculation = false
 
 	ViewElementUniformGrid.super.init(self, parent, draw_layer, start_scale, Definitions)
+
+	self._num_base_widgets = #self._widgets
 end
 
 ViewElementUniformGrid.update = function (self, dt, t, input_service)
@@ -163,7 +165,7 @@ ViewElementUniformGrid.add_widget_to_grid = function (self, column, row, widget_
 
 	local widgets = self._widgets
 
-	self:_insert_widget_widget_in_grid(widget, column, row, 1, #widgets)
+	self:_insert_widget_widget_in_grid(widget, column, row, self._num_base_widgets + 1, #widgets)
 
 	init_callback = init_callback or widget_blueprint.init
 
@@ -178,7 +180,7 @@ ViewElementUniformGrid.remove_widget = function (self, widget)
 	local widgets = self._widgets
 	local focused_widget = self._focused_widget
 
-	for i = 1, #widgets do
+	for i = self._num_base_widgets + 1, #widgets do
 		if widgets[i] == widget then
 			self:_unregister_widget_name(widget.name)
 			table.remove(widgets, i)
@@ -199,14 +201,12 @@ end
 ViewElementUniformGrid.grid_widget = function (self, column, row)
 	local widgets = self._widgets
 
-	for i = 1, #widgets do
+	for i = self._num_base_widgets + 1, #widgets do
 		local widget = widgets[i]
 		local content = widget.content
 
 		if content.column == column and content.row == row then
 			return widget
-		elseif row < content.row then
-			return nil
 		end
 	end
 
@@ -232,7 +232,7 @@ ViewElementUniformGrid.set_focused_grid_cell = function (self, column, row)
 
 	local widgets = self._widgets
 
-	for i = 1, #widgets do
+	for i = self._num_base_widgets + 1, #widgets do
 		local widget = widgets[i]
 		local content = widget.content
 		local hotspot = content.hotspot or content.button_hotspot
@@ -268,7 +268,7 @@ ViewElementUniformGrid.set_focused_grid_widget = function (self, widget_to_focus
 
 	local widgets = self._widgets
 
-	for i = 1, #widgets do
+	for i = self._num_base_widgets + 1, #widgets do
 		local widget = widgets[i]
 		local content = widget.content
 		local hotspot = content.hotspot or content.button_hotspot
@@ -289,11 +289,42 @@ ViewElementUniformGrid.set_focused_grid_widget = function (self, widget_to_focus
 	end
 end
 
+ViewElementUniformGrid.grid_scenegraph_id = function (self, column, row)
+	return string.format(GRID_CELL_ID_FORMAT, column, row)
+end
+
 ViewElementUniformGrid.grid_cell_world_position = function (self, column, row, scale)
 	local scenegraph_id = string.format(GRID_CELL_ID_FORMAT, column, row)
 	local position = self:scenegraph_world_position(scenegraph_id, scale or 1)
 
 	return position[1], position[2], position[3]
+end
+
+ViewElementUniformGrid.column_row_from_world_position = function (self, world_position)
+	local column, row = nil
+
+	if self._is_hexagonal then
+		ferror("have not implemented this for hexagonal grid yet.")
+	else
+		local cell_size = self._cell_size
+		local cell_size_x = cell_size[1]
+		local cell_size_y = cell_size[2]
+		local num_cells = self._num_cells
+		local num_cells_x = num_cells[1]
+		local num_cells_y = num_cells[2]
+		local first_x, first_y = self:grid_cell_world_position(1, 1)
+		local x = world_position[1] - first_x
+		local y = world_position[2] - first_y
+
+		if x < 0 or x >= cell_size_x * num_cells_x or y < 0 or y >= cell_size_y * num_cells_y then
+			return nil, nil
+		end
+
+		column = 1 + math.floor(x / cell_size_x)
+		row = 1 + math.floor(y / cell_size_y)
+	end
+
+	return column, row
 end
 
 ViewElementUniformGrid.focus_first_index = function (self, start_column, start_row)
@@ -365,7 +396,7 @@ ViewElementUniformGrid._find_next_cell = function (self, start_column, start_row
 	local closest_distance = math.huge
 	local closest_widget = nil
 
-	for i = 1, #widgets do
+	for i = self._num_base_widgets + 1, #widgets do
 		local widget = widgets[i]
 		local content = widget.content
 		local hotspot = content.hotspot

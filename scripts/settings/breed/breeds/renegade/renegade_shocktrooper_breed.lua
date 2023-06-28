@@ -21,19 +21,19 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "renegade_shocktrooper"
 local breed_data = {
-	walk_speed = 2.3,
 	detection_radius = 15,
+	walk_speed = 2.3,
 	use_bone_lod = true,
+	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_elite_shocktrooper",
 	sub_faction_name = "renegade",
 	unit_template_name = "minion",
 	volley_fire_target = true,
 	spawn_anim_state = "to_ranged",
 	aggro_inventory_slot = "slot_ranged_weapon",
-	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_elite_shocktrooper",
 	slot_template = "renegade_melee",
 	broadphase_radius = 1,
-	stagger_resistance = 1,
 	spawn_inventory_slot = "slot_ranged_weapon",
+	stagger_resistance = 1,
 	game_object_type = "minion_ranged",
 	challenge_rating = 3,
 	bone_lod_radius = 1.05,
@@ -42,7 +42,6 @@ local breed_data = {
 	run_speed = 5.6,
 	faction_name = "chaos",
 	base_height = 1.9,
-	ignore_attack_delay = true,
 	ranged = true,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	stagger_reduction = 5,
@@ -51,7 +50,6 @@ local breed_data = {
 	can_patrol = true,
 	smart_tag_target_type = "breed",
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
-	hit_mass = 2,
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
 	breed_type = breed_types.minion,
@@ -66,6 +64,14 @@ local breed_data = {
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.armored,
+	hit_mass = {
+		2,
+		2,
+		2,
+		2,
+		2,
+		6
+	},
 	gib_template = MinionGibbingTemplates.renegade_shocktrooper_gibbing,
 	stagger_durations = {
 		[stagger_types.light] = 0.75,
@@ -116,19 +122,6 @@ local breed_data = {
 		valid_combat_ranges = {
 			far = true,
 			close = true
-		}
-	},
-	suppress_config = {
-		threshold = 20,
-		max_value = 15,
-		decay_speeds = {
-			melee = 0.05,
-			far = 0.5,
-			close = 0.3
-		},
-		immunity_duration = {
-			1.75,
-			2.25
 		}
 	},
 	attack_intensity_cooldowns = {
@@ -439,7 +432,7 @@ local breed_data = {
 			[hit_zone_names.lower_right_leg] = 0.5
 		}
 	},
-	blackboard_component_config = BreedBlackboardComponentTemplates.ranged_patroller
+	blackboard_component_config = BreedBlackboardComponentTemplates.ranged_patroller_no_suppression
 }
 
 return breed_data

@@ -609,7 +609,7 @@ end
 MissionBoardView._join_mission_data = function (self)
 	self:_clean_backend_data(self._backend_data)
 
-	local missions = self._backend_data.missions
+	local missions = self._backend_data.filtered_missions
 	local widgets_by_name = self._widgets_by_name
 	local mission_widgets = self._mission_widgets
 
@@ -634,6 +634,8 @@ MissionBoardView._join_mission_data = function (self)
 		if widgets_by_name[mission.id] then
 			-- Nothing
 		elseif t < mission.start_game_time then
+			Log.info("MissionBoardView", "Not showing mission '%s', it's from the future, (%s>%s)", mission.id, tostring(mission.start_game_time), tostring(t))
+
 			self._has_queued_missions = true
 			earliest_queued_mission_show_time = math.min(mission.start_game_time, earliest_queued_mission_show_time)
 		elseif mission.flags.flash and not has_flash_mission_changed and (not self._flash_mission_widget or self._flash_mission_widget.id ~= mission.id) then
@@ -655,6 +657,8 @@ MissionBoardView._join_mission_data = function (self)
 					mission_widgets[#mission_widgets + 1] = widget
 				end
 			else
+				Log.info("MissionBoardView", "Not showing mission '%s', due to lack of free spots", mission.id)
+
 				self._has_queued_missions = true
 			end
 		end
@@ -804,6 +808,7 @@ MissionBoardView._fetch_success = function (self, data)
 	self._backend_data_expiry_time = data.expiry_game_time
 	self._is_fetching_missions = false
 	self._do_widget_refresh = true
+	self._backend_data.filtered_missions = data.missions
 end
 
 MissionBoardView._fetch_failure = function (self, error_message)

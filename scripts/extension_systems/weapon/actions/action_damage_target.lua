@@ -31,8 +31,8 @@ ActionDamageTarget.start = function (self, action_settings, t, time_scale, start
 	local last_action_warp_charge_percent = start_params.starting_warp_charge_percent
 
 	if last_action_warp_charge_percent then
-		local specialization_warp_charge_template = WarpCharge.specialization_warp_charge_template(self._player)
-		local extreme_warp_charge_threshold = specialization_warp_charge_template.extreme_threshold
+		local base_warp_charge_template = WarpCharge.specialization_warp_charge_template(self._player)
+		local extreme_warp_charge_threshold = base_warp_charge_template.extreme_threshold
 		local dif = 1 - extreme_warp_charge_threshold
 		local stat_buffs = self._buff_extension:stat_buffs()
 		local warp_charge_reduction = stat_buffs.warp_charge_amount or 1

@@ -16,21 +16,21 @@ MissionPathBlocker.enable = function (self, unit)
 	end
 
 	if self._is_server then
-		local nav_graph_extension = ScriptUnit.fetch_component_extension(self._unit, "nav_graph_system")
+		local nav_graph_extension = ScriptUnit.fetch_component_extension(unit, "nav_graph_system")
 
 		nav_graph_extension:add_nav_graphs_to_database()
 
-		local nav_block_extension = ScriptUnit.fetch_component_extension(self._unit, "nav_block_system")
+		local nav_block_extension = ScriptUnit.fetch_component_extension(unit, "nav_block_system")
 
-		nav_block_extension:set_start_blocked(true)
+		nav_block_extension:set_block(true)
 	end
 
-	Unit.set_unit_visibility(self._unit, true)
+	Unit.set_unit_visibility(unit, true)
 
-	for ii = 1, Unit.num_actors(self._unit) do
-		local actor = Unit.actor(self._unit, ii)
+	for i = 1, Unit.num_actors(unit) do
+		local actor = Unit.actor(unit, i)
 
-		Unit.create_actor(self._unit, actor)
+		Unit.create_actor(unit, actor)
 	end
 
 	self._enabled = true
@@ -42,32 +42,32 @@ MissionPathBlocker.disable = function (self, unit)
 	end
 
 	if self._is_server then
-		local nav_graph_extension = ScriptUnit.fetch_component_extension(self._unit, "nav_graph_system")
+		local nav_graph_extension = ScriptUnit.fetch_component_extension(unit, "nav_graph_system")
 
 		nav_graph_extension:remove_nav_graphs_from_database()
 
-		local nav_block_extension = ScriptUnit.fetch_component_extension(self._unit, "nav_block_system")
+		local nav_block_extension = ScriptUnit.fetch_component_extension(unit, "nav_block_system")
 
-		nav_block_extension:set_start_blocked(false)
+		nav_block_extension:set_block(false)
 	end
 
-	Unit.set_unit_visibility(self._unit, false)
+	Unit.set_unit_visibility(unit, false)
 
-	for ii = 1, Unit.num_actors(self._unit) do
-		local actor = Unit.actor(self._unit, ii)
+	for i = 1, Unit.num_actors(unit) do
+		local actor = Unit.actor(unit, i)
 
-		Unit.destroy_actor(self._unit, actor)
+		Unit.destroy_actor(unit, actor)
 	end
 
 	self._enabled = false
 end
 
 MissionPathBlocker.mission_path_blocker_closed = function (self)
-	self:enable()
+	self:enable(self._unit)
 end
 
 MissionPathBlocker.mission_path_blocker_open = function (self)
-	self:disable()
+	self:disable(self._unit)
 end
 
 MissionPathBlocker.component_data = {

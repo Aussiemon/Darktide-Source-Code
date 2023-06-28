@@ -6,27 +6,22 @@ local dialogue_breed_settings = {
 		"explicator",
 		"training_ground_psyker",
 		"purser",
-		"contract_vendor"
-	},
-	voice_classes_npc = {
-		"sergeant",
-		"pilot",
-		"tech_priest",
-		"explicator",
-		"training_ground_psyker",
-		"purser",
-		"contract_vendor"
-	},
-	chaos_hound = {
-		trigger_seen_vo = true,
-		is_network_synced = false,
-		trigger_heard_vo = true,
-		vo_class_name = "chaos_hound",
-		vo_triggers_enemy_kill_query = true,
-		has_dialogue_extension = false,
-		can_trigger_vo = true,
-		dialogue_memory_faction_name = "enemy"
+		"contract_vendor",
+		"shipmistress",
+		"enemy_nemesis_wolfer",
+		"enemy_wolfer_adjutant"
 	}
+}
+dialogue_breed_settings.voice_classes_npc = dialogue_breed_settings.voice_classes_2d
+dialogue_breed_settings.chaos_hound = {
+	trigger_seen_vo = true,
+	is_network_synced = false,
+	trigger_heard_vo = true,
+	vo_class_name = "chaos_hound",
+	vo_triggers_enemy_kill_query = true,
+	has_dialogue_extension = false,
+	can_trigger_vo = true,
+	dialogue_memory_faction_name = "enemy"
 }
 dialogue_breed_settings.chaos_hound_mutator = table.clone(dialogue_breed_settings.chaos_hound)
 dialogue_breed_settings.chaos_plague_ogryn = {
@@ -183,11 +178,16 @@ dialogue_breed_settings.mission_giver = {
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
 		"sergeant_a",
+		"sergeant_b",
 		"pilot_a",
 		"tech_priest_a",
 		"explicator_a",
 		"purser_a",
-		"contract_vendor_a"
+		"contract_vendor_a",
+		"shipmistress_a",
+		"enemy_nemesis_wolfer_a",
+		"enemy_wolfer_adjutant_a",
+		"enemy_wolfer_adjutant_b"
 	}
 }
 dialogue_breed_settings.sergeant = {
@@ -202,7 +202,8 @@ dialogue_breed_settings.sergeant = {
 	can_trigger_vo = true,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
-		"sergeant_a"
+		"sergeant_a",
+		"sergeant_b"
 	}
 }
 dialogue_breed_settings.explicator = {
@@ -303,6 +304,52 @@ dialogue_breed_settings.interrogator = {
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
 		"interrogator_a"
+	}
+}
+dialogue_breed_settings.shipmistress = {
+	trigger_seen_vo = false,
+	is_network_synced = true,
+	trigger_heard_vo = false,
+	vo_class_name = "shipmistress",
+	has_dialogue_extension = true,
+	vo_triggers_enemy_kill_query = false,
+	dialogue_memory_faction_name = "npc",
+	prop_name = "voice_over_2d",
+	can_trigger_vo = true,
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"shipmistress_a"
+	}
+}
+dialogue_breed_settings.enemy_nemesis_wolfer = {
+	trigger_seen_vo = false,
+	is_network_synced = true,
+	trigger_heard_vo = false,
+	vo_class_name = "enemy_nemesis_wolfer",
+	has_dialogue_extension = true,
+	vo_triggers_enemy_kill_query = false,
+	dialogue_memory_faction_name = "npc",
+	prop_name = "voice_over_2d",
+	can_trigger_vo = true,
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"enemy_nemesis_wolfer_a"
+	}
+}
+dialogue_breed_settings.enemy_wolfer_adjutant = {
+	trigger_seen_vo = false,
+	is_network_synced = true,
+	trigger_heard_vo = false,
+	vo_class_name = "enemy_wolfer_adjutant",
+	has_dialogue_extension = true,
+	vo_triggers_enemy_kill_query = false,
+	dialogue_memory_faction_name = "npc",
+	prop_name = "voice_over_2d",
+	can_trigger_vo = true,
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"enemy_wolfer_adjutant_a",
+		"enemy_wolfer_adjutant_b"
 	}
 }
 dialogue_breed_settings.confessional = {
@@ -728,9 +775,10 @@ dialogue_breed_settings.cultist_grenadier = {
 	dialogue_memory_faction_name = "enemy",
 	spawn_vo_event = "spawned",
 	can_trigger_vo = true,
-	wwise_voice_switch_group = "switch_enemy_cultist_grenadier",
+	wwise_voice_switch_group = "switch_voice_enemy_cultist_grenadier",
 	wwise_voices = {
-		"enemy_cultist_grenadier_a"
+		"enemy_cultist_grenadier_a",
+		"enemy_cultist_grenadier_b"
 	}
 }
 dialogue_breed_settings.cultist_flamer = {
@@ -771,9 +819,10 @@ dialogue_breed_settings.cultist_berzerker = {
 	assault_vo_interval_t = 1,
 	dialogue_source_name = "cultist_berzerker",
 	can_trigger_vo = true,
-	wwise_voice_switch_group = "switch_enemy_cultist_berzerker",
+	wwise_voice_switch_group = "switch_voice_enemy_cultist_berzerker",
 	wwise_voices = {
-		"enemy_cultist_berzerker_a"
+		"enemy_cultist_berzerker_a",
+		"enemy_cultist_berzerker_b"
 	}
 }
 dialogue_breed_settings.renegade_berzerker = {
@@ -790,7 +839,8 @@ dialogue_breed_settings.renegade_berzerker = {
 	can_trigger_vo = true,
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_berzerker",
 	wwise_voices = {
-		"enemy_traitor_berzerker_a"
+		"enemy_traitor_berzerker_a",
+		"enemy_traitor_berzerker_b"
 	}
 }
 dialogue_breed_settings.contract_vendor = {

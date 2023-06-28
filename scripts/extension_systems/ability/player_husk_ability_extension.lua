@@ -118,6 +118,19 @@ PlayerHuskAbilityExtension.missing_ability_charges = function (self, ability_typ
 	return missing_charges
 end
 
+PlayerHuskAbilityExtension.is_cooldown_paused = function (self, ability_type)
+	local enabled = self:ability_enabled(ability_type)
+
+	if not enabled then
+		return true
+	end
+
+	local ability_components = self._ability_components
+	local component = ability_components[ability_type]
+
+	return component.cooldown_paused
+end
+
 PlayerHuskAbilityExtension.remaining_ability_cooldown = function (self, ability_type)
 	local enabled = self:ability_enabled(ability_type)
 

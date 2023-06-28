@@ -99,11 +99,11 @@ PlayerCharacterStateSliding.on_exit = function (self, unit, t, next_state)
 	local movement_state_component = self._movement_state_component
 	movement_state_component.is_dodging = false
 	local buff_extension = self._buff_extension
+	local base_dodge_template = self._specialization_dodge_template
+	local weapon_dodge_template = self._weapon_extension:dodge_template()
 
 	if self._slide_character_state_component.was_in_dodge_cooldown then
-		local specialization_dodge_template = self._specialization_dodge_template
-		local weapon_dodge_template = self._weapon_extension:dodge_template()
-		self._dodge_character_state_component.consecutive_dodges_cooldown = t + specialization_dodge_template.consecutive_dodges_reset + (weapon_dodge_template.consecutive_dodges_reset or 0)
+		self._dodge_character_state_component.consecutive_dodges_cooldown = t + base_dodge_template.consecutive_dodges_reset + (weapon_dodge_template.consecutive_dodges_reset or 0)
 	end
 
 	self._fx_extension:stop_looping_wwise_event(self._sliding_loop_alias)
@@ -132,8 +132,8 @@ PlayerCharacterStateSliding.fixed_update = function (self, unit, dt, t, next_sta
 	weapon_extension:update_weapon_actions(fixed_frame)
 
 	local max_mass_hit = false
-	local buff_extension = ScriptUnit.extension(unit, "buff_system")
-	local knock_enemies = buff_extension and buff_extension:has_keyword(buff_keywords.knock_down_on_slide)
+	local buff_extension = self._buff_extension
+	local knock_enemies = buff_extension:has_keyword(buff_keywords.knock_down_on_slide)
 
 	if knock_enemies and slide_knock_down_damage_settings and not self._unit_data_extension.is_resimulating then
 		max_mass_hit = self:_update_enemy_hit_detection(unit, slide_knock_down_damage_settings)
@@ -169,7 +169,7 @@ PlayerCharacterStateSliding.fixed_update = function (self, unit, dt, t, next_sta
 		locomotion_steering.velocity_wanted = velocity_current - friction
 	end
 
-	local next_state = self:_check_transition(unit, t, next_state_params, input_source, is_crouching, commit_period_over, max_mass_hit)
+	local next_state = self:_check_transition(unit, t, next_state_params, input_source, is_crouching, commit_period_over, max_mass_hit, speed)
 
 	return next_state
 end
@@ -190,7 +190,7 @@ PlayerCharacterStateSliding.update = function (self, unit, dt, t)
 	return
 end
 
-PlayerCharacterStateSliding._check_transition = function (self, unit, t, next_state_params, input_source, is_crouching, commit_period_over, max_mass_hit)
+PlayerCharacterStateSliding._check_transition = function (self, unit, t, next_state_params, input_source, is_crouching, commit_period_over, max_mass_hit, current_speed)
 	local unit_data_extension = self._unit_data_extension
 	local health_transition = HealthStateTransitions.poll(unit_data_extension, next_state_params)
 
@@ -225,7 +225,7 @@ PlayerCharacterStateSliding._check_transition = function (self, unit, t, next_st
 		return "walking"
 	end
 
-	if not is_crouching or Vector3.length_squared(self._locomotion_steering_component.velocity_wanted) < 0.01 then
+	if not is_crouching or current_speed < 0.01 then
 		return "walking"
 	end
 end

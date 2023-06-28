@@ -26,7 +26,7 @@ local template_names = {
 	"ogryn_charge",
 	"psyker_stance",
 	"psyker_shout",
-	"ranged_stance",
+	"veteran_combat_ability",
 	"targeted_dash"
 }
 

@@ -75,6 +75,7 @@ BtBeastOfNurgleSpitOutAction.leave = function (self, unit, breed, blackboard, sc
 		end
 	end
 
+	scratchpad.behavior_component.consumed_unit = nil
 	local locomotion_extension = scratchpad.locomotion_extension
 
 	locomotion_extension:set_rotation_speed(scratchpad.original_rotation_speed)
@@ -213,7 +214,6 @@ BtBeastOfNurgleSpitOutAction._update_throwing = function (self, unit, scratchpad
 			Catapulted.apply(catapulted_state_input, velocity)
 
 			scratchpad.wants_catapult = nil
-			scratchpad.behavior_component.consumed_unit = nil
 		end
 
 		if scratchpad.throw_duration and scratchpad.throw_duration < t then

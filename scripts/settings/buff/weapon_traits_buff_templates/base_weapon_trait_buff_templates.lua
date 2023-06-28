@@ -833,7 +833,7 @@ base_templates.increase_power_on_kill_parent = {
 	proc_events = {
 		[proc_events.on_kill] = 1
 	},
-	check_proc_func = CheckProcFunctions.on_kill,
+	check_proc_func = CheckProcFunctions.on_melee_kill,
 	add_child_proc_events = {
 		[proc_events.on_kill] = 1
 	},
@@ -1466,19 +1466,28 @@ base_templates.crit_weakspot_finesse = {
 
 local function _continuous_fire_start_func(template_data, template_context)
 	local unit = template_context.unit
+	local item_slot_name = template_context.item_slot_name
 	local unit_data_extension = unit and ScriptUnit.has_extension(unit, "unit_data_system")
 	template_data.shooting_status_component = unit_data_extension and unit_data_extension:read_component("shooting_status")
 	template_data.weapon_action_component = unit_data_extension and unit_data_extension:read_component("weapon_action")
+	template_data.inventory_slot_component = unit_data_extension and unit_data_extension:read_component(item_slot_name)
 end
 
-local function _get_number_of_continuous_fire_steps(template_data, template_context)
+local function _get_number_of_continuous_fire_steps(template_data, template_context, uncapped_fire_steps)
 	local template = template_context.template
 	local use_combo = template.use_combo
 
 	if not use_combo then
 		local shooting_status_component = template_data.shooting_status_component
 		local num_shots = shooting_status_component.num_shots
-		local continuous_fire_step = template_context.template.continuous_fire_step or 1
+		local continuous_fire_step = nil
+		local continuous_fire_step_func = template.continuous_fire_step_func
+
+		if continuous_fire_step_func then
+			continuous_fire_step = continuous_fire_step_func(template_data, template_context)
+		end
+
+		continuous_fire_step = continuous_fire_step or template_context.template.continuous_fire_step or 1
 
 		if continuous_fire_step == 0 then
 			return 0
@@ -1486,10 +1495,22 @@ local function _get_number_of_continuous_fire_steps(template_data, template_cont
 
 		local steps = math.floor(num_shots / continuous_fire_step)
 
+		if uncapped_fire_steps then
+			return steps
+		end
+
+		steps = math.min(steps, 5)
+
 		return steps
 	else
 		local shooting_status_component = template_data.weapon_action_component
 		local combo_count = shooting_status_component.combo_count
+
+		if uncapped_fire_steps then
+			return combo_count
+		end
+
+		combo_count = math.min(combo_count, 5)
 
 		return combo_count
 	end
@@ -1522,6 +1543,61 @@ base_templates.stacking_buff_on_continuous_fire = {
 		return 0, 5
 	end,
 	bonus_step_func = _get_number_of_continuous_fire_steps
+}
+base_templates.stacking_buff_on_continuous_alternative_fire = {
+	predicted = false,
+	stack_offset = -1,
+	max_stacks = 1,
+	class_name = "stepped_stat_buff",
+	conditional_stepped_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_alternative_fire,
+	start_func = _continuous_fire_start_func,
+	min_max_step_func = function (template_data, template_context)
+		return 0, 5
+	end,
+	bonus_step_func = _get_number_of_continuous_fire_steps
+}
+base_templates.toughness_on_continuous_fire = {
+	show_in_hud_if_slot_is_wielded = true,
+	predicted = false,
+	hud_always_show_stacks = true,
+	class_name = "proc_buff",
+	always_show_in_hud = true,
+	proc_events = {
+		[proc_events.on_ammo_consumed] = 1,
+		[proc_events.on_shoot_finish] = 1
+	},
+	start_func = _continuous_fire_start_func,
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	specific_check_proc_funcs = {
+		[proc_events.on_ammo_consumed] = function (params, template_data, template_context, t)
+			local current_num_fire_steps = template_data.num_fire_steps or 0
+			local uncapped_fire_steps = true
+			local num_fire_steps = _get_number_of_continuous_fire_steps(template_data, template_context, uncapped_fire_steps)
+			local give_the_thing = false
+			give_the_thing = template_context.template.use_combo and num_fire_steps == NetworkConstants.action_combo_count.max and true or current_num_fire_steps < num_fire_steps
+			template_data.num_fire_steps = num_fire_steps
+
+			return give_the_thing
+		end,
+		[proc_events.on_shoot_finish] = function (params, template_data, template_context, t)
+			return true
+		end
+	},
+	specific_proc_func = {
+		on_ammo_consumed = function (params, template_data, template_context)
+			local num_fire_steps = template_data.num_fire_steps or 0
+			template_data.toughness_regain_multiplier = math.min(num_fire_steps, 5)
+
+			_regain_toughness_proc_func(params, template_data, template_context)
+		end,
+		on_shoot_finish = function (params, template_data, template_context)
+			return
+		end
+	},
+	visual_stack_count = function (template_data, template_context)
+		return _get_number_of_continuous_fire_steps(template_data, template_context) or 0
+	end
 }
 base_templates.bleed_on_crit_ranged = {
 	predicted = false,

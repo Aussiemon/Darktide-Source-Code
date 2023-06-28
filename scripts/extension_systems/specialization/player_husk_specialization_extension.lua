@@ -33,6 +33,7 @@ PlayerHuskSpecializationExtension.init = function (self, extension_init_context,
 	self._network_event_delegate:register_session_unit_events(self, self._game_object_id, unpack(RPCS))
 
 	self._active_special_rules = {}
+	self._buff_template_tiers = {}
 
 	self:_init_components()
 end
@@ -60,6 +61,10 @@ PlayerHuskSpecializationExtension.extensions_ready = function (self, world, unit
 	self._first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 
 	self:_update_specialization_and_talents(self._specialization_name, self._talents)
+end
+
+PlayerHuskSpecializationExtension.buff_template_tier = function (self, buff_template_name)
+	return self._buff_template_tiers[buff_template_name] or 1
 end
 
 PlayerHuskSpecializationExtension.fixed_update = function (self, unit, dt, t, fixed_frame, context, ...)
@@ -96,12 +101,13 @@ end
 PlayerHuskSpecializationExtension._update_specialization_and_talents = function (self, specialization_name, talents)
 	self._specialization_name = specialization_name
 	self._talents = talents
-	local _, special_rules = nil
+	local _, special_rules, buff_template_tiers = nil
 
 	if Managers.state.game_mode:specializations_disabled() then
+		buff_template_tiers = {}
 		special_rules = {}
 	else
-		_, _, _, _, special_rules = PlayerSpecialization.from_selected_talents(self._archetype, specialization_name, talents)
+		_, _, _, _, special_rules, buff_template_tiers = PlayerSpecialization.from_selected_talents(self._archetype, specialization_name, talents)
 	end
 
 	local active_special_rules = self._active_special_rules
@@ -110,6 +116,14 @@ PlayerHuskSpecializationExtension._update_specialization_and_talents = function 
 
 	for _, special_rule_name in pairs(special_rules) do
 		active_special_rules[special_rule_name] = true
+	end
+
+	local active_buff_template_tiers = self._buff_template_tiers
+
+	table.clear(active_buff_template_tiers)
+
+	for buff_template_name, tier in pairs(buff_template_tiers) do
+		active_buff_template_tiers[buff_template_name] = tier
 	end
 end
 

@@ -99,39 +99,44 @@ Trajectory.get_trajectory_velocity = function (from_position, target_position, g
 	return velocity, time_in_flight, angle
 end
 
+local DEFAULT_NUM_SECTIONS = 4
+local LAST_SECTION_EPSILON_SQ = 1e-08
 local SEGMENT_LIST = {}
 
 Trajectory.check_trajectory_collisions = function (physics_world, from_position, target_position, gravity, projectile_speed, angle, sections, collision_filter, time_in_flight, ignored_unit_collisions, debug_draw_trajectory, optional_unit, optional_extra_ray_check_up, optional_extra_ray_check_down)
-	table.clear(SEGMENT_LIST)
+	table.clear_array(SEGMENT_LIST, #SEGMENT_LIST)
 
 	local to_target = target_position - from_position
 	local to_target_flat = Vector3.normalize(Vector3.flat(to_target))
 	local x_vel_0 = math.cos(angle) * projectile_speed
 	local y_vel_0 = math.sin(angle) * projectile_speed
-	sections = sections or 4
-	local segment_pos1 = Vector3(from_position.x, from_position.y, from_position.z)
-	local segment_pos2 = nil
+	local segment_pos1 = from_position
 	SEGMENT_LIST[1] = from_position
-	local t = nil
+	sections = sections or DEFAULT_NUM_SECTIONS
 
 	for i = 1, sections do
-		t = time_in_flight * i / sections
+		local t = time_in_flight * i / sections
 		local x = x_vel_0 * t
 		local z = y_vel_0 * t - 0.5 * gravity * t^2
-		segment_pos2 = from_position + to_target_flat * x
+		local segment_pos2 = from_position + to_target_flat * x
 		segment_pos2.z = segment_pos2.z + z
 		local current_velocity = segment_pos2 - segment_pos1
 		local length = Vector3.length(current_velocity)
-		local result, hit_pos, _, _, actor = PhysicsWorld.raycast(physics_world, segment_pos1, current_velocity, length, "closest", "collision_filter", collision_filter)
+		local hit, hit_pos, _, _, actor = PhysicsWorld.raycast(physics_world, segment_pos1, current_velocity, length, "closest", "collision_filter", collision_filter)
 
-		if result then
+		if hit then
+			local fail_on_collision = true
+
 			if ignored_unit_collisions then
 				local hit_unit = Actor.unit(actor)
+				fail_on_collision = not ignored_unit_collisions[hit_unit]
+			end
 
-				if not ignored_unit_collisions[hit_unit] then
-					return false, hit_pos, SEGMENT_LIST
-				end
-			else
+			if fail_on_collision and i == sections then
+				fail_on_collision = LAST_SECTION_EPSILON_SQ < Vector3.distance_squared(hit_pos, target_position)
+			end
+
+			if fail_on_collision then
 				return false, hit_pos, SEGMENT_LIST
 			end
 		end
@@ -145,7 +150,7 @@ Trajectory.check_trajectory_collisions = function (physics_world, from_position,
 			end
 		end
 
-		if i > 1 and i < sections and optional_extra_ray_check_up and optional_extra_ray_check_down then
+		if i < sections and optional_extra_ray_check_up and optional_extra_ray_check_down then
 			local ray_from = segment_pos2 + optional_extra_ray_check_down
 			local ray_to = segment_pos2 + optional_extra_ray_check_up
 			local extra_ray_length = Vector3.distance(ray_from, ray_to)
@@ -157,11 +162,11 @@ Trajectory.check_trajectory_collisions = function (physics_world, from_position,
 			end
 		end
 
-		segment_pos1 = Vector3(segment_pos2.x, segment_pos2.y, segment_pos2.z)
-		SEGMENT_LIST[i + 1] = segment_pos1
+		SEGMENT_LIST[i + 1] = segment_pos2
+		segment_pos1 = segment_pos2
 	end
 
-	return true, time_in_flight, SEGMENT_LIST
+	return true, nil, SEGMENT_LIST
 end
 
 local SEGMENTS = {}

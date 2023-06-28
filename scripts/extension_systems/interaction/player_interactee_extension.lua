@@ -257,7 +257,7 @@ PlayerInteracteeExtension.description = function (self)
 	return override_config and override_config.description or interaction:description()
 end
 
-PlayerInteracteeExtension.block_text = function (self)
+PlayerInteracteeExtension.block_text = function (self, interactor_unit)
 	local unit_has_context = self._unit_has_context
 
 	if not unit_has_context then
@@ -268,6 +268,10 @@ PlayerInteracteeExtension.block_text = function (self)
 
 	if interaction_type == "none" then
 		return
+	end
+
+	if self._is_being_used and interactor_unit ~= self._interactor_unit then
+		return "loc_action_interaction_player_being_helped"
 	end
 
 	local override_config = self._override_contexts_by_type[interaction_type]

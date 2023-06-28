@@ -16,4 +16,12 @@ SocialMenuView.on_exit = function (self)
 	SocialMenuView.super.on_exit(self)
 end
 
+SocialMenuView.cb_find_player_pressed = function (self)
+	local active_view_instance = self._active_view_instance
+
+	if active_view_instance and active_view_instance.handle_find_player then
+		active_view_instance:handle_find_player()
+	end
+end
+
 return SocialMenuView

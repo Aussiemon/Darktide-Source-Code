@@ -549,7 +549,7 @@ local action_data = {
 			ranged = 20,
 			killshot = 20
 		},
-		damage_profile = DamageProfileTemplates.melee_fighter_default,
+		damage_profile = DamageProfileTemplates.horde_melee_default,
 		damage_type = damage_types.minion_melee_sharp
 	},
 	moving_melee_attack = {
@@ -591,7 +591,7 @@ local action_data = {
 			attack_move_04 = 0.12345679012345678,
 			attack_move_02 = 0.12345679012345678
 		},
-		damage_profile = DamageProfileTemplates.melee_fighter_default,
+		damage_profile = DamageProfileTemplates.horde_melee_default,
 		damage_type = damage_types.minion_melee_sharp,
 		stagger_type_reduction = {
 			ranged = 20,
@@ -720,7 +720,7 @@ local action_data = {
 			attack_run_03 = 0,
 			attack_run_02 = 0
 		},
-		damage_profile = DamageProfileTemplates.melee_fighter_default,
+		damage_profile = DamageProfileTemplates.horde_melee_default,
 		damage_type = damage_types.minion_melee_sharp,
 		stagger_type_reduction = {
 			ranged = 20,
@@ -1034,7 +1034,7 @@ local action_data = {
 			attack_07 = 2.0987654320987654,
 			attack_02 = 2.5977011494252875
 		},
-		damage_profile = DamageProfileTemplates.melee_fighter_default
+		damage_profile = DamageProfileTemplates.horde_melee_default
 	},
 	open_door = {
 		rotation_duration = 0.1,

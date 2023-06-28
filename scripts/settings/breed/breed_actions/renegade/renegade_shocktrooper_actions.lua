@@ -197,68 +197,6 @@ local action_data = {
 			}
 		}
 	},
-	suppressed = {
-		chance_of_jump_animation = 0.5,
-		anim_events = {
-			"suppressed_loop_01",
-			"suppressed_loop_02",
-			"suppressed_loop_03",
-			"suppressed_loop_knee_01",
-			"suppressed_loop_knee_02"
-		},
-		durations = {
-			suppressed_loop_01 = {
-				10.5,
-				11
-			},
-			suppressed_loop_02 = {
-				10.5,
-				11
-			},
-			suppressed_loop_03 = {
-				10.5,
-				11
-			},
-			suppressed_loop_knee_01 = {
-				10.5,
-				11
-			},
-			suppressed_loop_knee_02 = {
-				10.5,
-				11
-			}
-		},
-		jump_anim_events = {
-			fwd = {
-				"suppressed_jump_fwd_01",
-				"suppressed_jump_fwd_02"
-			},
-			right = {
-				"suppressed_jump_right_01",
-				"suppressed_jump_right_02"
-			},
-			bwd = {
-				"suppressed_jump_bwd_01",
-				"suppressed_jump_bwd_02",
-				"suppressed_jump_bwd_03"
-			},
-			left = {
-				"suppressed_jump_left_01",
-				"suppressed_jump_left_02"
-			}
-		},
-		jump_durations = {
-			suppressed_jump_bwd_02 = 1.8933333333333333,
-			suppressed_jump_bwd_03 = 2,
-			suppressed_jump_right_01 = 1.36,
-			suppressed_jump_fwd_01 = 1.4666666666666666,
-			suppressed_jump_right_02 = 0.8533333333333334,
-			suppressed_jump_left_01 = 1.2,
-			suppressed_jump_fwd_02 = 1.2266666666666666,
-			suppressed_jump_left_02 = 1.2,
-			suppressed_jump_bwd_01 = 1.1466666666666667
-		}
-	},
 	jump_across = {
 		stagger_immune = true,
 		rotation_duration = 0.1,

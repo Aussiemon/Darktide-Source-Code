@@ -10,7 +10,7 @@ WorldInteractionManager.init = function (self, world)
 
 	self:_setup_gui()
 
-	self._foliage_interaction = FoliageInteraction:new(self.gui, WorldInteractionSettings.foliage)
+	self._foliage_interaction = FoliageInteraction:new(self._gui, WorldInteractionSettings.foliage)
 end
 
 WorldInteractionManager._setup_gui = function (self)

@@ -205,9 +205,7 @@ local action_data = {
 		},
 		throw_anim_events = {
 			close = {
-				"attack_throw_backhand_01",
-				"attack_throw_backhand_02",
-				"attack_throw_backhand_03"
+				"attack_throw_backhand_01"
 			},
 			medium = {
 				"attack_throw_low_01"
@@ -219,8 +217,6 @@ local action_data = {
 		},
 		throw_node_local_offset = {
 			attack_throw_backhand_01 = Vector3Box(-0.3496, 0.6266, 1.3162),
-			attack_throw_backhand_02 = Vector3Box(-0.1743, 0.7025, 1.141),
-			attack_throw_backhand_03 = Vector3Box(-0.2337, 0.6418, 1.6299),
 			attack_throw_low_01 = Vector3Box(0.2501, 0.6223, 0.4472),
 			attack_throw_long_01 = Vector3Box(0.1338, 0.854, 1.8289),
 			attack_throw_long_02 = Vector3Box(0.3618, 0.8799, 1.8387)
@@ -285,27 +281,21 @@ local action_data = {
 		vo_event = "throwing_grenade",
 		effect_template = EffectTemplates.renegade_grenadier_grenade,
 		effect_template_timings = {
-			attack_throw_long_02 = 0.20512820512820512,
-			attack_throw_backhand_01 = 0.28205128205128205,
-			attack_throw_backhand_02 = 0.1794871794871795,
 			attack_throw_low_01 = 0.358974358974359,
-			attack_throw_backhand_03 = 0.20512820512820512,
+			attack_throw_backhand_01 = 0.28205128205128205,
+			attack_throw_long_02 = 0.20512820512820512,
 			attack_throw_long_01 = 0.2564102564102564
 		},
 		throw_timings = {
-			attack_throw_long_02 = 2.3076923076923075,
-			attack_throw_backhand_01 = 2.128205128205128,
-			attack_throw_backhand_02 = 2.076923076923077,
 			attack_throw_low_01 = 2.1794871794871793,
-			attack_throw_backhand_03 = 2.3846153846153846,
+			attack_throw_backhand_01 = 2.128205128205128,
+			attack_throw_long_02 = 2.3076923076923075,
 			attack_throw_long_01 = 2.3076923076923075
 		},
 		action_durations = {
-			attack_throw_long_02 = 3.2051282051282053,
-			attack_throw_backhand_01 = 2.641025641025641,
-			attack_throw_backhand_02 = 2.769230769230769,
 			attack_throw_low_01 = 2.871794871794872,
-			attack_throw_backhand_03 = 3.076923076923077,
+			attack_throw_backhand_01 = 2.641025641025641,
+			attack_throw_long_02 = 3.2051282051282053,
 			attack_throw_long_01 = 3.1538461538461537
 		},
 		throw_config = {

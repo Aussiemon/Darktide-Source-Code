@@ -1,6 +1,7 @@
 local Attack = require("scripts/utilities/attack/attack")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
+local Breed = require("scripts/utilities/breed")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
@@ -133,18 +134,22 @@ templates.daemonhost_corruption_aura = {
 
 				if HEALTH_ALIVE[nearby_enemy] then
 					local hit_unit_data_extension = ScriptUnit.extension(nearby_enemy, "unit_data_system")
-					local disabled_character_state_component = hit_unit_data_extension:read_component("disabled_character_state")
-					local is_warp_grabbed = PlayerUnitStatus.is_warp_grabbed(disabled_character_state_component)
+					local is_player_character = Breed.is_player(hit_unit_data_extension:breed())
 
-					if not is_warp_grabbed then
-						local health_extension = ScriptUnit.extension(nearby_enemy, "health_system")
-						local permanent_damage_taken_percent = health_extension:permanent_damage_taken_percent()
-						local allowed_permanent_percent = Managers.state.difficulty:get_table_entry_by_challenge(CORRUPTION_AURA_PERMANENT_PERCENT)
+					if is_player_character then
+						local disabled_character_state_component = hit_unit_data_extension:read_component("disabled_character_state")
+						local is_warp_grabbed = PlayerUnitStatus.is_warp_grabbed(disabled_character_state_component)
 
-						if permanent_damage_taken_percent < allowed_permanent_percent then
-							local attack_direction = Vector3.normalize(POSITION_LOOKUP[nearby_enemy] - position)
+						if not is_warp_grabbed then
+							local health_extension = ScriptUnit.extension(nearby_enemy, "health_system")
+							local permanent_damage_taken_percent = health_extension:permanent_damage_taken_percent()
+							local allowed_permanent_percent = Managers.state.difficulty:get_table_entry_by_challenge(CORRUPTION_AURA_PERMANENT_PERCENT)
 
-							Attack.execute(nearby_enemy, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_direction", attack_direction, "hit_zone_name", "torso", "damage_type", CORRUPTION_AURA_DAMAGE_TYPE)
+							if permanent_damage_taken_percent < allowed_permanent_percent then
+								local attack_direction = Vector3.normalize(POSITION_LOOKUP[nearby_enemy] - position)
+
+								Attack.execute(nearby_enemy, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_direction", attack_direction, "hit_zone_name", "torso", "damage_type", CORRUPTION_AURA_DAMAGE_TYPE)
+							end
 						end
 					end
 				end

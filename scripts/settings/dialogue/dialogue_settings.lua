@@ -23,10 +23,12 @@ local DialogueSettings = {
 	},
 	level_specific_load_files = {
 		om_hub_01 = {
-			"mission_vo_om_hub_01"
+			"mission_vo_om_hub_01",
+			"cutscenes_vo"
 		},
 		om_hub_02 = {
-			"mission_vo_om_hub_02"
+			"mission_vo_om_hub_02",
+			"cutscenes_vo"
 		},
 		om_basic_combat_01 = {
 			"on_demand_vo",
@@ -209,6 +211,7 @@ local DialogueSettings = {
 	short_story_ticker_enabled = true,
 	short_story_start_delay = 181,
 	short_story_tick_time = 3.9,
+	decaying_tension_delay = 2,
 	npc_story_ticker_enabled = true,
 	npc_story_ticker_start_delay = 127,
 	npc_story_tick_time = 607,

@@ -642,8 +642,8 @@ ogryn_grenade.armor_damage_modifier_ranged.near.attack[armor_types.armored] = {
 	1.3
 }
 ogryn_grenade.armor_damage_modifier_ranged.far.attack[armor_types.armored] = {
-	0,
-	0.1
+	0.1,
+	0.5
 }
 ogryn_grenade.armor_damage_modifier_ranged.near.impact[armor_types.armored] = {
 	2,
@@ -651,7 +651,7 @@ ogryn_grenade.armor_damage_modifier_ranged.near.impact[armor_types.armored] = {
 }
 ogryn_grenade.armor_damage_modifier_ranged.far.impact[armor_types.armored] = {
 	0.2,
-	0.4
+	0.8
 }
 ogryn_grenade.armor_damage_modifier_ranged.near.attack[armor_types.super_armor] = {
 	0.2,
@@ -669,8 +669,8 @@ ogryn_grenade.armor_damage_modifier_ranged.far.impact[armor_types.super_armor] =
 	0.2,
 	0.4
 }
-ogryn_grenade.power_distribution_ranged.attack.near = 300
-ogryn_grenade.power_distribution_ranged.attack.far = 50
+ogryn_grenade.power_distribution_ranged.attack.near = 500
+ogryn_grenade.power_distribution_ranged.attack.far = 150
 damage_templates.ogryn_grenade = ogryn_grenade
 local close_ogryn_grenade = table.clone(damage_templates.close_grenade)
 close_ogryn_grenade.armor_damage_modifier.attack[armor_types.armored] = {
@@ -681,6 +681,14 @@ close_ogryn_grenade.armor_damage_modifier.impact[armor_types.armored] = {
 	1,
 	1
 }
+close_ogryn_grenade.armor_damage_modifier.attack[armor_types.resistant] = {
+	1,
+	1.3
+}
+close_ogryn_grenade.armor_damage_modifier.attack[armor_types.berserker] = {
+	0.7,
+	1.3
+}
 close_ogryn_grenade.armor_damage_modifier.attack[armor_types.super_armor] = {
 	0.2,
 	0.5
@@ -689,7 +697,7 @@ close_ogryn_grenade.armor_damage_modifier.impact[armor_types.super_armor] = {
 	1,
 	1
 }
-close_ogryn_grenade.power_distribution.attack = 800
+close_ogryn_grenade.power_distribution.attack = 1000
 damage_templates.close_ogryn_grenade = close_ogryn_grenade
 
 return {

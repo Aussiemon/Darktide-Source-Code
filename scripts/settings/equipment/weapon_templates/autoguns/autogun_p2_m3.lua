@@ -124,14 +124,14 @@ weapon_template.action_input_hierarchy = {
 		shoot_release = "base"
 	},
 	zoom = {
-		special_action = "stay",
+		special_action = "base",
 		wield = "base",
 		grenade_ability = "base",
 		zoom_release = "base",
 		reload = "base",
 		combat_ability = "base",
 		zoom_shoot = {
-			special_action = "previous",
+			special_action = "base",
 			wield = "base",
 			zoom_release = "base",
 			grenade_ability = "base",

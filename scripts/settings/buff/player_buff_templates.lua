@@ -227,13 +227,14 @@ templates.sprint_with_stamina_buff = {
 		local unit = template_context.unit
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local specialization = unit_data_extension:specialization()
-		template_data.specialization_stamina_template = specialization.stamina
+		local base_stamina_template = specialization.stamina
+		template_data.base_stamina_template = base_stamina_template
 		template_data.stamina_component = unit_data_extension:read_component("stamina")
 		template_data.sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
 	end,
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local unit = template_context.unit
-		local current_stamina, _ = Stamina.current_and_max_value(unit, template_data.stamina_component, template_data.specialization_stamina_template)
+		local current_stamina, _ = Stamina.current_and_max_value(unit, template_data.stamina_component, template_data.base_stamina_template)
 		local is_sprinting = Sprint.is_sprinting(template_data.sprint_character_state_component)
 
 		return is_sprinting and current_stamina > 0
@@ -264,6 +265,188 @@ templates.player_spawn_grace = {
 	},
 	stat_buffs = {
 		[buff_stat_buffs.damage_taken_modifier] = 0
+	}
+}
+templates.player_toughness_node_buff_1 = {
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.toughness] = 25
+	}
+}
+templates.player_toughness_node_buff_2 = table.clone(templates.player_toughness_node_buff_1)
+templates.player_toughness_node_buff_2.stats_buffs = {
+	[stat_buffs.toughness] = 50
+}
+templates.player_toughness_node_buff_3 = table.clone(templates.player_toughness_node_buff_1)
+templates.player_toughness_node_buff_3.stats_buffs = {
+	[stat_buffs.toughness] = 75
+}
+templates.player_toughness_node_buff_4 = table.clone(templates.player_toughness_node_buff_1)
+templates.player_toughness_node_buff_4.stats_buffs = {
+	[stat_buffs.toughness] = 100
+}
+templates.player_toughness_damage_reduction_node_buff_1 = {
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.toughness_damage_taken_modifier] = 0.1
+	}
+}
+templates.player_toughness_damage_reduction_node_buff_2 = table.clone(templates.player_toughness_damage_reduction_node_buff_1)
+templates.player_toughness_damage_reduction_node_buff_2.stats_buffs = {
+	[stat_buffs.toughness_damage_taken_modifier] = 0.2
+}
+templates.player_reload_speed_node_buff_1 = {
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.reload_speed] = 0.1
+	}
+}
+templates.player_reload_speed_node_buff_2 = table.clone(templates.player_reload_speed_node_buff_1)
+templates.player_reload_speed_node_buff_2.stats_buffs = {
+	[stat_buffs.reload_speed] = 0.2
+}
+templates.player_ranged_damage_node_buff_1 = {
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.ranged_damage] = 0.1
+	}
+}
+templates.player_ranged_damage_node_buff_2 = table.clone(templates.player_ranged_damage_node_buff_1)
+templates.player_ranged_damage_node_buff_2.stats_buffs = {
+	[stat_buffs.ranged_damage] = 0.15
+}
+templates.player_ranged_damage_node_buff_3 = table.clone(templates.player_ranged_damage_node_buff_1)
+templates.player_ranged_damage_node_buff_3.stats_buffs = {
+	[stat_buffs.ranged_damage] = 0.2
+}
+templates.player_ranged_damage_node_buff_4 = table.clone(templates.player_ranged_damage_node_buff_1)
+templates.player_ranged_damage_node_buff_4.stats_buffs = {
+	[stat_buffs.ranged_damage] = 0.25
+}
+templates.player_movement_speed_node_buff_1 = {
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.movement_speed] = 1.1
+	}
+}
+templates.player_movement_speed_node_buff_2 = table.clone(templates.player_movement_speed_node_buff_1)
+templates.player_movement_speed_node_buff_2.stats_buffs = {
+	[stat_buffs.movement_speed] = 1.15
+}
+templates.player_HP_node_buff_1 = {
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.max_health_modifier] = 0.05
+	}
+}
+templates.player_HP_node_buff_2 = table.clone(templates.player_HP_node_buff_1)
+templates.player_HP_node_buff_2.stats_buffs = {
+	[stat_buffs.max_health_modifier] = 0.1
+}
+templates.player_melee_damage_node_buff_1 = {
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.melee_damage] = 0.05
+	}
+}
+templates.player_melee_damage_node_buff_2 = table.clone(templates.player_melee_damage_node_buff_1)
+templates.player_melee_damage_node_buff_2.stats_buffs = {
+	[stat_buffs.melee_damage] = 0.1
+}
+templates.player_melee_heavy_damage_node_buff_1 = {
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.melee_heavy_damage] = 0.05
+	}
+}
+templates.player_melee_heavy_damage_node_buff_2 = table.clone(templates.player_melee_heavy_damage_node_buff_1)
+templates.player_melee_heavy_damage_node_buff_2.stats_buffs = {
+	[stat_buffs.melee_heavy_damage] = 0.1
+}
+templates.player_wounds_node_buff_1 = {
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.extra_max_amount_of_wounds] = 1
+	}
+}
+templates.player_wounds_node_buff_2 = table.clone(templates.player_wounds_node_buff_1)
+templates.player_wounds_node_buff_2.stats_buffs = {
+	[stat_buffs.extra_max_amount_of_wounds] = 2
+}
+templates.player_stamina_node_buff_1 = {
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.stamina_modifier] = 1
+	}
+}
+templates.player_wounds_node_buff_2 = table.clone(templates.player_wounds_node_buff_1)
+templates.player_wounds_node_buff_2.stats_buffs = {
+	[stat_buffs.stamina_modifier] = 2
+}
+templates.player_max_warp_charge_node_buff_1 = {
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.warp_charge_amount] = 1
+	}
+}
+templates.player_max_warp_charge_node_buff_2 = table.clone(templates.player_max_warp_charge_node_buff_1)
+templates.player_max_warp_charge_node_buff_2.stats_buffs = {
+	[stat_buffs.warp_charge_amount] = 2
+}
+templates.player_dodge_count_node_buff_1 = {
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.extra_consecutive_dodges] = 1
+	}
+}
+templates.player_dodge_count_node_buff_2 = table.clone(templates.player_dodge_count_node_buff_1)
+templates.player_dodge_count_node_buff_2.stats_buffs = {
+	[stat_buffs.extra_consecutive_dodges] = 2
+}
+templates.player_crit_chance_node_buff_1 = {
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.critical_strike_chance] = 0.1
+	}
+}
+templates.player_crit_chance_node_buff_2 = table.clone(templates.player_crit_chance_node_buff_1)
+templates.player_crit_chance_node_buff_2.stats_buffs = {
+	[stat_buffs.critical_strike_chance] = 0.2
+}
+templates.player_max_ammo_node_buff_1 = {
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.ammo_reserve_capacity] = 0.1
+	}
+}
+templates.player_crit_chance_node_buff_2 = table.clone(templates.player_max_ammo_node_buff_1)
+templates.player_crit_chance_node_buff_2.stats_buffs = {
+	[stat_buffs.ammo_reserve_capacity] = 0.2
+}
+templates.player_coherency_regen_node_buff_1 = {
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.toughness_coherency_regen_rate_multiplier] = 0.1
+	}
+}
+templates.player_coherency_regen_node_buff_2 = table.clone(templates.player_coherency_regen_node_buff_1)
+templates.player_coherency_regen_node_buff_2.stats_buffs = {
+	[stat_buffs.toughness_coherency_regen_rate_multiplier] = 0.2
+}
+templates.bot_medium_buff = {
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.max_health_modifier] = 0.4,
+		[stat_buffs.extra_max_amount_of_wounds] = 1,
+		[buff_stat_buffs.toughness_regen_rate_modifier] = 0.15
+	}
+}
+templates.bot_high_buff = {
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.max_health_modifier] = 0.6,
+		[stat_buffs.extra_max_amount_of_wounds] = 2,
+		[buff_stat_buffs.toughness_regen_rate_modifier] = 0.3
 	}
 }
 

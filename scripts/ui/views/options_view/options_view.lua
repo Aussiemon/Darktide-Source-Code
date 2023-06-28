@@ -2,7 +2,6 @@ local definition_path = "scripts/ui/views/options_view/options_view_definitions"
 local ViewElementKeybindPopup = require("scripts/ui/view_elements/view_element_keybind_popup/view_element_keybind_popup")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local ContentBlueprints = require("scripts/ui/views/options_view/options_view_content_blueprints")
-local OptionsTemplates = require("scripts/settings/options/options_templates")
 local OptionsViewSettings = require("scripts/ui/views/options_view/options_view_settings")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
@@ -30,7 +29,7 @@ OptionsView.on_enter = function (self)
 
 	self._default_category = nil
 	self._using_cursor_navigation = Managers.ui:using_cursor_navigation()
-	self._options_templates = OptionsTemplates
+	self._options_templates = dofile("scripts/settings/options/options_templates")
 	self._validation_mapping = self:_map_validations(self._options_templates)
 
 	self:_setup_settings_config(self._options_templates)
@@ -945,6 +944,10 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 		if init then
 			init(self, widget, config, callback_name, changed_callback_name)
 		end
+	end
+
+	if config.shrink_to_fit then
+		size[2] = math.min(size[2], widget.content.size[2])
 	end
 
 	if widget then

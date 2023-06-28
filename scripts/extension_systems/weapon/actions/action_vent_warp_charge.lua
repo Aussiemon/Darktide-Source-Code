@@ -2,7 +2,7 @@ require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
 local Attack = require("scripts/utilities/attack/attack")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
-local TalentSettings = require("scripts/settings/buff/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local Vo = require("scripts/utilities/vo")
 local WarpCharge = require("scripts/utilities/warp_charge")
@@ -18,7 +18,6 @@ ActionVentWarpCharge.init = function (self, action_context, action_params, actio
 	ActionVentWarpCharge.super.init(self, action_context, action_params, action_settings)
 
 	self._warp_charge_component = self._unit_data_extension:write_component("warp_charge")
-	self._specialization_warp_charge_template = WarpCharge.specialization_warp_charge_template(self._player)
 	self._buff_extension = ScriptUnit.has_extension(self._player_unit, "buff_system")
 	self._specialization_extension = ScriptUnit.has_extension(self._player_unit, "specialization_system")
 end

@@ -38,10 +38,17 @@ local DamageProfile = {
 		local cleave_distribution = damage_profile.cleave_distribution or PowerLevelSettings.default_cleave_distribution
 		local max_hit_mass_attack, attack_distribution = _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, cleave_distribution, "attack", lerp_values)
 		local max_hit_mass_impact, impact_distribution = _max_hit_mass(cleave_min, cleave_range, scaled_cleave_power_level, cleave_distribution, "impact", lerp_values)
+		local psyker_smite_increase = damage_profile.psyker_smite
+		local attack_modifier = nil
 		local max_hit_mass_attack_modifier = stat_buffs_or_nil and stat_buffs_or_nil.max_hit_mass_attack_modifier or 1
-		max_hit_mass_attack = max_hit_mass_attack * max_hit_mass_attack_modifier
+		local psyker_smite_max_hit_mass_attack_modifier = stat_buffs_or_nil and psyker_smite_increase and stat_buffs_or_nil.psyker_smite_max_hit_mass_attack_modifier or 1
+		attack_modifier = max_hit_mass_attack_modifier + psyker_smite_max_hit_mass_attack_modifier - 1
+		max_hit_mass_attack = max_hit_mass_attack * attack_modifier
+		local impact_modifier = nil
 		local max_hit_mass_impact_modifier = stat_buffs_or_nil and stat_buffs_or_nil.max_hit_mass_impact_modifier or 1
-		max_hit_mass_impact = max_hit_mass_impact * max_hit_mass_impact_modifier
+		local psyker_smite_max_hit_mass_impact_modifier = stat_buffs_or_nil and psyker_smite_increase and stat_buffs_or_nil.psyker_smite_max_hit_mass_impact_modifier or 1
+		impact_modifier = max_hit_mass_impact_modifier + psyker_smite_max_hit_mass_impact_modifier - 1
+		max_hit_mass_impact = max_hit_mass_impact * impact_modifier
 		local crit_infinite_cleave_keyword = buff_extension and buff_extension:has_keyword(buff_keywords.critical_hit_infinite_hit_mass)
 
 		if is_critical_strike and crit_infinite_cleave_keyword then

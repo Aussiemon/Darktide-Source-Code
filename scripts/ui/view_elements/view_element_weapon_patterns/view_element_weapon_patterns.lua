@@ -33,10 +33,6 @@ ViewElementWeaponPatterns._hide_dividers = function (self)
 	grid_divider_title.style.texture.color[1] = 0
 end
 
-ViewElementWeaponPatterns.destroy = function (self)
-	ViewElementWeaponPatterns.super.destroy(self)
-end
-
 ViewElementWeaponPatterns.present_item = function (self, item)
 	local menu_settings = self._menu_settings
 	local grid_size = menu_settings.grid_size

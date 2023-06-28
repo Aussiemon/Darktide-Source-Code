@@ -110,6 +110,146 @@ local damage_trait_templates = {
 			}
 		}
 	},
+	high_bot_dps_stat = {
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			armor_types.unarmored,
+			{
+				max = 0.75,
+				min = 0.75
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
+			armor_types.unarmored,
+			{
+				max = 0.75,
+				min = 0.75
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			armor_types.disgustingly_resilient,
+			{
+				max = 0.75,
+				min = 0.75
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
+			armor_types.disgustingly_resilient,
+			{
+				max = 0.75,
+				min = 0.75
+			}
+		},
+		{
+			"power_distribution",
+			"attack",
+			{
+				max = 0.8,
+				min = 0.8
+			}
+		}
+	},
+	high_bot_power_stat = {
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			armor_types.armored,
+			{
+				max = 0.95,
+				min = 0.8
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
+			armor_types.armored,
+			{
+				max = 0.95,
+				min = 0.8
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			armor_types.super_armor,
+			{
+				max = 0.95,
+				min = 0.8
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
+			armor_types.super_armor,
+			{
+				max = 0.95,
+				min = 0.8
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			armor_types.resistant,
+			{
+				max = 0.95,
+				min = 0.8
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
+			armor_types.resistant,
+			{
+				max = 0.95,
+				min = 0.8
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			armor_types.berserker,
+			{
+				max = 0.95,
+				min = 0.8
+			}
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
+			armor_types.berserker,
+			{
+				max = 0.95,
+				min = 0.8
+			}
+		},
+		{
+			"power_distribution",
+			"impact",
+			{
+				max = 0.95,
+				min = 0.95
+			}
+		}
+	},
 	default_melee_dps_perk = {
 		{
 			"targets",

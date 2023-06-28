@@ -71,9 +71,11 @@ netgunner.record_state = {
 }
 netgunner.slot = nil
 netgunner.blocked = nil
+netgunner.suppression = nil
 local cultist_flamer = table.clone(ranged_base)
 cultist_flamer.slot = nil
 cultist_flamer.blocked = nil
+cultist_flamer.suppression = nil
 local grenadier = table.clone(ranged_base)
 grenadier.throw_grenade = {
 	anim_event = "string",
@@ -84,6 +86,7 @@ grenadier.throw_grenade = {
 }
 grenadier.slot = nil
 grenadier.blocked = nil
+grenadier.suppression = nil
 local sniper = table.clone(ranged_cover_user)
 sniper.perception.has_good_last_los_position = "boolean"
 sniper.slot = nil
@@ -106,9 +109,20 @@ ranged_patroller.patrol = {
 	walk_position = "Vector3Box",
 	auto_patrol = "boolean"
 }
+local ranged_patroller_no_suppression = table.clone(ranged_base)
+ranged_patroller_no_suppression.patrol = {
+	patrol_leader_unit = "Unit",
+	patrol_index = "number",
+	should_patrol = "boolean",
+	patrol_id = "number",
+	walk_position = "Vector3Box",
+	auto_patrol = "boolean"
+}
+ranged_patroller_no_suppression.suppression = nil
 local renegade_flamer = table.clone(ranged_patroller)
 renegade_flamer.slot = nil
 renegade_flamer.blocked = nil
+renegade_flamer.suppression = nil
 local templates = {
 	cultist_flamer = cultist_flamer,
 	grenadier = grenadier,
@@ -117,6 +131,7 @@ local templates = {
 	ranged_cover_user = ranged_cover_user,
 	ranged_patroller = ranged_patroller,
 	renegade_flamer = renegade_flamer,
+	ranged_patroller_no_suppression = ranged_patroller_no_suppression,
 	riflemen = riflemen,
 	sniper = sniper
 }

@@ -213,8 +213,8 @@ PlayerCharacterStateMinigame._check_transition = function (self, unit, t, next_s
 		return "falling"
 	end
 
-	local specialization_dodge_template = self._specialization_dodge_template
-	local should_dodge, local_dodge_direction = Dodge.check(t, self._unit_data_extension, specialization_dodge_template, input_source)
+	local base_dodge_template = self._specialization_dodge_template
+	local should_dodge, local_dodge_direction = Dodge.check(t, self._unit_data_extension, base_dodge_template, input_source)
 
 	if should_dodge then
 		next_state_params.dodge_direction = local_dodge_direction

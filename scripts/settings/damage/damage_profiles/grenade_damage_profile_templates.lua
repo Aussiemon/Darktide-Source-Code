@@ -81,8 +81,8 @@ damage_templates.ogryn_grenade_impact = {
 		}
 	},
 	power_distribution = {
-		attack = 30,
-		impact = 15
+		attack = 70,
+		impact = 20
 	},
 	on_kill_area_suppression = {
 		distance = 8,

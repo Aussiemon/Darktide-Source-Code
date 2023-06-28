@@ -1,5 +1,5 @@
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local TalentSettings = require("scripts/settings/buff/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local talent_settings = TalentSettings.veteran_3
 local ability_template = {
 	action_inputs = {

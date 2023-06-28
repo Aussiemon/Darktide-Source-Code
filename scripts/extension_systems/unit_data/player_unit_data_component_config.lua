@@ -860,14 +860,16 @@ local PlayerComponentConfig = {
 		grenade_ability = PLAYER_ABILITIES
 	},
 	grenade_ability = {
-		cooldown = "fixed_frame_time",
 		enabled = "bool",
+		cooldown_paused = "bool",
+		cooldown = "fixed_frame_time",
 		active = "bool",
 		num_charges = "ability_charges"
 	},
 	combat_ability = {
-		cooldown = "fixed_frame_time",
 		enabled = "bool",
+		cooldown_paused = "bool",
+		cooldown = "fixed_frame_time",
 		active = "bool",
 		num_charges = "ability_charges"
 	},

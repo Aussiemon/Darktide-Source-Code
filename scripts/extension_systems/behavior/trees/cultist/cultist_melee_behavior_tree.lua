@@ -15,12 +15,6 @@ local CLOSE_COMBAT = {
 	"BtSelectorNode",
 	{
 		"BtMeleeFollowTargetAction",
-		name = "follow",
-		condition = "is_suppressed",
-		action_data = action_data.follow
-	},
-	{
-		"BtMeleeFollowTargetAction",
 		name = "assault_follow",
 		action_data = action_data.assault_follow
 	},
@@ -143,12 +137,6 @@ local behavior_tree = {
 		name = "blocked",
 		condition = "is_blocked",
 		action_data = action_data.blocked
-	},
-	{
-		"BtSuppressedAction",
-		name = "suppressed",
-		condition = "is_suppressed",
-		action_data = action_data.suppressed
 	},
 	FAR_COMBAT,
 	CLOSE_COMBAT,

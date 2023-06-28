@@ -30,6 +30,7 @@ local integration_data_interface = {
 	"inertia",
 	"use_generous_bouncing",
 	"have_bounced",
+	"bounced_this_frame",
 	"true_flight_template",
 	"initial_position",
 	"target_position",
@@ -39,6 +40,8 @@ local integration_data_interface = {
 	"height_offset",
 	"time_since_start",
 	"on_target_time",
+	"time_without_bounce",
+	"time_without_target",
 	"missile_triggered",
 	"missile_striking",
 	"missile_lingering",
@@ -79,8 +82,10 @@ ProjectileIntegrationData.allocate_integration_data = function (store_data)
 	integration_data.collision_filter = nil
 	integration_data.use_generous_bouncing = nil
 	integration_data.have_bounced = nil
+	integration_data.bounced_this_frame = false
 	integration_data.rotate_towards_direction = nil
 	integration_data.hit_zone_priority = nil
+	integration_data.number_of_bounces = 0
 	integration_data.last_hit_detection_position = nil
 	integration_data.integrator_parameters = nil
 	integration_data.true_flight_template = nil
@@ -93,6 +98,8 @@ ProjectileIntegrationData.allocate_integration_data = function (store_data)
 	integration_data.height_offset = 0
 	integration_data.time_since_start = 0
 	integration_data.on_target_time = 0
+	integration_data.time_without_target = 0
+	integration_data.time_without_bounce = 0
 	integration_data.raycast_timer = 0
 	integration_data.damage_extension = nil
 	integration_data.suppression_settings = nil

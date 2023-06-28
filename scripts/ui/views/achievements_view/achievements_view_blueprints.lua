@@ -376,7 +376,8 @@ local function _small_reward_icon_template_init(widget_content, widget_style, re
 	local rarity = reward_item.rarity
 
 	if rarity then
-		small_reward_icon_style.color = table.clone(ItemUtils.rarity_color(reward_item))
+		local rarity_color, dark_rarity_color = ItemUtils.rarity_color(reward_item)
+		small_reward_icon_style.color = table.clone(rarity_color)
 	end
 end
 
@@ -595,9 +596,8 @@ local function _reward_detail_pass_template_init(widget_content, widget_style, a
 		reward_item_group
 	}
 	local display_name = ItemUtils.display_name(reward_item)
-	local sub_display_name = ItemUtils.sub_display_name(reward_item)
+	local item_type = ItemUtils.type_display_name(reward_item)
 	widget_content.reward_display_name = display_name
-	widget_content.reward_sub_display_name = sub_display_name
 	local reward_icon_frame_style = widget_style.reward_icon_frame
 	local reward_icon_frame_offset = reward_icon_frame_style.offset
 	local top_margin = reward_icon_frame_offset[2]
@@ -605,6 +605,17 @@ local function _reward_detail_pass_template_init(widget_content, widget_style, a
 	local reward_icon_background_style = widget_style.reward_icon_background
 	local reward_icon_background_offset = reward_icon_background_style.offset
 	reward_icon_background_offset[2] = reward_icon_background_offset[2] + offset_y
+	local rarity = reward_item.rarity
+
+	if rarity then
+		local rarity_color, dark_rarity_color = ItemUtils.rarity_color(reward_item)
+		widget_style.reward_icon_background.color = table.clone(dark_rarity_color)
+		local rarity_display_name = ItemUtils.rarity_display_name(reward_item)
+		widget_content.reward_sub_display_name = string.format("{#color(%d, %d, %d)}%s{#reset()} • %s", rarity_color[2], rarity_color[3], rarity_color[4], rarity_display_name, item_type)
+	else
+		widget_content.reward_sub_display_name = item_type
+	end
+
 	local reward_icon_style = widget_style.reward_icon
 	reward_icon_style.use_placeholder_texture = 1
 	reward_icon_style.offset[2] = reward_icon_style.offset[2] + offset_y
@@ -871,6 +882,12 @@ local function _add_family_rewards_pass_template(pass_template, config)
 					value_id = name_prefix .. "display_name",
 					style_id = name_prefix .. "display_name",
 					visibility_function = _foldout_visibility_function
+				},
+				{
+					pass_type = "text",
+					value_id = name_prefix .. "sub_display_name",
+					style_id = name_prefix .. "sub_display_name",
+					visibility_function = _foldout_visibility_function
 				}
 			})
 
@@ -975,6 +992,22 @@ local function _family_sub_rewards_pass_template_init(widget_content, widget_sty
 			local display_name_offset = display_name_style.offset
 			display_name_offset[1] = rewards_offset_x + display_name_offset[1]
 			display_name_offset[2] = rewards_offset_y + display_name_offset[2]
+			local reward_sub_display_name_id = string.format("reward_%d_sub_display_name", reward_count)
+			local sub_display_name_style = widget_style[reward_sub_display_name_id]
+			local sub_display_name_offset = sub_display_name_style.offset
+			sub_display_name_offset[1] = rewards_offset_x + sub_display_name_offset[1]
+			sub_display_name_offset[2] = rewards_offset_y + sub_display_name_offset[2]
+			local rarity = reward_item.rarity
+			local item_type = ItemUtils.type_display_name(reward_item)
+
+			if rarity then
+				local rarity_color, dark_rarity_color = ItemUtils.rarity_color(reward_item)
+				icon_background_style.color = table.clone(dark_rarity_color)
+				local rarity_display_name = ItemUtils.rarity_display_name(reward_item)
+				widget_content[reward_sub_display_name_id] = string.format("{#color(%d, %d, %d)}%s{#reset()} • %s", rarity_color[2], rarity_color[3], rarity_color[4], rarity_display_name, item_type)
+			else
+				widget_content[reward_sub_display_name_id] = item_type
+			end
 
 			if sub_achievement.completed then
 				small_icon_item = reward_item

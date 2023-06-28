@@ -978,7 +978,6 @@ ItemUtils.compare_set_item_parts_presentation_order = function (a, b)
 end
 
 ItemUtils.compare_item_type = function (a, b)
-	local Localize = Localize
 	local a_item_type = a.item_type or ""
 	local b_type = b.item_type or ""
 
@@ -992,9 +991,8 @@ ItemUtils.compare_item_type = function (a, b)
 end
 
 ItemUtils.compare_item_name = function (a, b)
-	local Localize = Localize
-	local a_display_name = Localize(a.display_name)
-	local b_display_name = Localize(b.display_name)
+	local a_display_name = a.display_name and Localize(a.display_name) or ""
+	local b_display_name = b.display_name and Localize(b.display_name) or ""
 
 	if a_display_name < b_display_name then
 		return true

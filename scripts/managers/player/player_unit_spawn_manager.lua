@@ -1,3 +1,4 @@
+local BotSpawning = require("scripts/managers/bot/bot_spawning")
 local Breeds = require("scripts/settings/breed/breeds")
 local UnitSpawnerManager = require("scripts/foundation/managers/unit_spawner/unit_spawner_manager")
 local DELETION_STATES = UnitSpawnerManager.DELETION_STATES
@@ -24,11 +25,31 @@ PlayerUnitSpawnManager.init = function (self, is_server, level_seed, has_navmesh
 
 		self._network_event_delegate = network_event_delegate
 	end
+
+	if self._is_server then
+		local settings = Managers.state.game_mode:settings()
+		local bot_backfilling_allowed = settings.bot_backfilling_allowed
+		self._queued_bots_n = 0
+
+		if bot_backfilling_allowed then
+			self:_register_bot_events()
+			self:_validate_bot_backfill()
+			self:_handle_initial_bot_spawning()
+		end
+	end
 end
 
 PlayerUnitSpawnManager.destroy = function (self)
 	if not self._is_server then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
+	end
+
+	if self._is_server then
+		local settings = Managers.state.game_mode:settings()
+
+		if settings.bot_backfilling_allowed then
+			self:_unregister_bot_events()
+		end
 	end
 end
 
@@ -56,6 +77,10 @@ end
 
 PlayerUnitSpawnManager.update = function (self, dt, t)
 	self:_update_ragdolls(self._frozen_ragdolls, self._soft_cap_out_of_bounds_units)
+
+	if self._is_server then
+		self:_handle_bot_spawning()
+	end
 end
 
 PlayerUnitSpawnManager.process_queued_despawns = function (self)
@@ -313,6 +338,155 @@ PlayerUnitSpawnManager._on_player_soft_oob = function (self, unit)
 		Managers.state.unit_spawner:mark_for_deletion(unit)
 	else
 		self:despawn_safe(unit_owner)
+	end
+end
+
+PlayerUnitSpawnManager._register_bot_events = function (self)
+	Managers.event:register(self, "host_game_session_manager_player_joined", "_on_client_joined")
+	Managers.event:register(self, "multiplayer_session_client_disconnected", "_on_client_left")
+end
+
+PlayerUnitSpawnManager._unregister_bot_events = function (self)
+	Managers.event:unregister(self, "host_game_session_manager_player_joined")
+	Managers.event:unregister(self, "multiplayer_session_client_disconnected")
+end
+
+PlayerUnitSpawnManager._validate_bot_backfill = function (self)
+	local available_slots = self:_num_available_bot_slots()
+
+	if available_slots < 0 then
+		for ii = 0, available_slots + 1, -1 do
+			if self._queued_bots_n > 0 then
+				self._queued_bots_n = self._queued_bots_n - 1
+			else
+				BotSpawning.despawn_best_bot()
+			end
+		end
+	elseif available_slots > 0 then
+		self._queued_bots_n = self._queued_bots_n + available_slots
+	end
+end
+
+PlayerUnitSpawnManager._on_client_joined = function (self, peer_id)
+	local players_at_peer = Managers.player:players_at_peer(peer_id)
+	local num_players_joining = table.size(players_at_peer)
+	local available_slots = self:_num_available_bot_slots()
+	local bots_to_remove = math.min(num_players_joining, -available_slots)
+
+	for i = 1, bots_to_remove do
+		if self._queued_bots_n > 0 then
+			self._queued_bots_n = self._queued_bots_n - 1
+		else
+			BotSpawning.despawn_best_bot()
+		end
+	end
+end
+
+PlayerUnitSpawnManager._on_client_left = function (self, removed_players_data)
+	if not Managers.bot then
+		return
+	end
+
+	local available_slots = self:_num_available_bot_slots()
+	local num_players_leaving = #removed_players_data
+	local bots_to_add = math.min(available_slots, num_players_leaving)
+	self._queued_bots_n = self._queued_bots_n + bots_to_add
+end
+
+PlayerUnitSpawnManager._num_available_bot_slots = function (self)
+	local settings = Managers.state.game_mode:settings()
+	local bot_backfilling_allowed = settings.bot_backfilling_allowed
+	local max_players = GameParameters.max_players
+	local num_players = Managers.player:num_ready_human_players()
+	local bot_synchronizer_host = Managers.bot:synchronizer_host()
+	local max_bots = bot_backfilling_allowed and settings.max_bots or 0
+	local num_bots = bot_synchronizer_host:num_bots() + self._queued_bots_n
+	local desired_bot_count = max_players - num_players
+	desired_bot_count = math.clamp(desired_bot_count, 0, max_bots)
+
+	return desired_bot_count - num_bots
+end
+
+PlayerUnitSpawnManager.remove_all_bots = function (self)
+	local bot_manager = Managers.bot
+	local bot_synchronizer_host = bot_manager:synchronizer_host()
+
+	if bot_synchronizer_host then
+		local bot_ids = bot_synchronizer_host:active_bot_ids()
+
+		for local_player_id, _ in pairs(bot_ids) do
+			bot_synchronizer_host:remove_bot(local_player_id)
+		end
+	end
+end
+
+PlayerUnitSpawnManager._handle_bot_spawning = function (self)
+	if self._queued_bots_n > 0 then
+		local profile_id = math.random(1, 6)
+		local profile_name = "bot_" .. profile_id
+
+		BotSpawning.spawn_bot_character(profile_name)
+
+		self._queued_bots_n = self._queued_bots_n - 1
+	end
+end
+
+PlayerUnitSpawnManager._handle_initial_bot_spawning = function (self)
+	local initial_bot_id_table = {
+		1,
+		2,
+		3,
+		4,
+		5,
+		6
+	}
+
+	table.shuffle(initial_bot_id_table)
+
+	while self._queued_bots_n > 0 do
+		local bot_id = initial_bot_id_table[1]
+		local bot_config_identifier = BotSpawning.get_bot_config_identifier()
+		local profile_name = bot_config_identifier .. "_bot_" .. bot_id
+
+		BotSpawning.spawn_bot_character(profile_name)
+		table.remove(initial_bot_id_table, 1)
+
+		self._queued_bots_n = self._queued_bots_n - 1
+	end
+end
+
+local BOT_PROFILE_NAME_TABLE = {}
+
+PlayerUnitSpawnManager._handle_bot_spawning = function (self)
+	if self._queued_bots_n > 0 then
+		local bot_config_identifier = BotSpawning.get_bot_config_identifier()
+
+		table.clear(BOT_PROFILE_NAME_TABLE)
+
+		for i = 1, 6 do
+			BOT_PROFILE_NAME_TABLE[i] = bot_config_identifier .. "_bot_" .. i
+		end
+
+		table.shuffle(BOT_PROFILE_NAME_TABLE)
+
+		local players = Managers.player:players()
+
+		for _, player in pairs(players) do
+			if not player:is_human_controlled() then
+				local profile = player:profile()
+				local key = table.find(BOT_PROFILE_NAME_TABLE, profile.identifier)
+
+				if key then
+					table.remove(BOT_PROFILE_NAME_TABLE, key)
+				end
+			end
+		end
+
+		local profile_name = BOT_PROFILE_NAME_TABLE[1]
+
+		BotSpawning.spawn_bot_character(profile_name)
+
+		self._queued_bots_n = self._queued_bots_n - 1
 	end
 end
 

@@ -225,6 +225,27 @@ local view_element_player_social_popup_content_list = {
 			_add_communication_management_items(parent, player_info, is_blocked)
 		end
 
+		if is_own_player then
+			local rename_item = _get_next_list_item()
+			rename_item.blueprint = "button"
+			rename_item.label = Localize("loc_social_menu_rename")
+			rename_item.callback = callback(parent, "cb_show_rename_popup")
+		end
+
+		return popup_menu_items, _num_menu_items
+	end,
+	find_player_menu_items = function (parent)
+		local popup_menu_items = _new_menu_items_list()
+		local player_profile_item = _get_next_list_item()
+		player_profile_item.blueprint = "search_header"
+		player_profile_item.label = Localize("loc_social_menu_find_player_input_id_title")
+		local player_profile_item = _get_next_list_item()
+		player_profile_item.blueprint = "text_entry_field"
+		player_profile_item.label = "fatshark_id_entry"
+		local player_profile_item = _get_next_list_item()
+		player_profile_item.blueprint = "player_plaque"
+		player_profile_item.label = "player_plaque"
+
 		return popup_menu_items, _num_menu_items
 	end
 }

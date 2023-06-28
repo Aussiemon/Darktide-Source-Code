@@ -106,9 +106,6 @@ local particles = {
 				[armor_types.super_armor] = "content/fx/particles/impacts/weapons/chainsword/chainsword_grinding_sparks_loop_01",
 				[armor_types.disgustingly_resilient] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01",
 				[armor_types.void_shield] = "content/fx/particles/impacts/flesh/poxwalker_blood_chainsword_loop_01"
-			},
-			powermaul_p1_m1 = {
-				default = "content/fx/particles/enemies/buff_chainlightning"
 			}
 		}
 	},
@@ -139,14 +136,12 @@ local particles = {
 			"wielded_weapon_template"
 		},
 		particles = {
-			plasmagun_p1_m1 = "content/fx/particles/weapons/rifles/plasma_gun/plasma_gun_charge",
 			psyker_smite = "content/fx/particles/abilities/psyker_smite_chargeup_hands_01",
-			lasgun_p2_m2 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargeup",
-			psyker_chain_lightning = "content/fx/particles/abilities/protectorate_chainlightning_charging_hands",
 			forcestaff_p2_m1 = "content/fx/particles/weapons/flame_staff/psyker_flame_staff_charge",
+			plasmagun_p1_m1 = "content/fx/particles/weapons/rifles/plasma_gun/plasma_gun_charge",
 			lasgun_p2_m1 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargeup",
-			forcestaff_p2_m2 = "content/fx/particles/weapons/flame_staff/psyker_flame_staff_charge",
 			forcestaff_p4_m1 = "content/fx/particles/weapons/bfg_staff/psyker_bfg_projectile_charge_01",
+			lasgun_p2_m2 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargeup",
 			forcestaff_p3_m1 = "content/fx/particles/abilities/protectorate_chainlightning_charging_hands",
 			lasgun_p2_m3 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargeup"
 		}

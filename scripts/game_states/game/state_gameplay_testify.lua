@@ -18,6 +18,16 @@ local WeaponTraitsRangedWarpCharge = require("scripts/settings/equipment/weapon_
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local gibbing_power = GibbingSettings.gibbing_power
 local level_trigger_event = Level.trigger_event
+local level_units = Level.units
+local quaternion_to_elements = Quaternion.to_elements
+local string_format = string.format
+local unit_get_data = Unit.get_data
+local unit_has_data = Unit.has_data
+local unit_id_string = Unit.id_string
+local unit_num_cameras = Unit.num_cameras
+local unit_world_position = Unit.world_position
+local unit_world_rotation = Unit.world_rotation
+local world_get_data = World.get_data
 local melee_damage_type_index = 1
 local melee_damage_types = {
 	"blunt_thunder",
@@ -59,48 +69,69 @@ local ranged_damage_types = {
 	"biomancer_soul",
 	"throwing_knife"
 }
-local StateGameplayTestify = {
-	all_cameras_of_type = function (camera_type, state_gameplay)
-		local cameras = {}
-		local data_check = "is_" .. camera_type .. "_camera"
-		local world = Managers.world:world("level_world")
-		local levels_data = World.get_data(world, "levels")
 
-		for level_name, level_data in pairs(levels_data) do
-			local level = level_data.level
-			local go_to_level_link = "fslevel://" .. level_name
-			local all_units_in_level = Level.units(level)
+local function _all_cameras(camera_types)
+	local cameras = {}
+	local i = 0
+	local data_check_performance = camera_types.performance and "is_" .. camera_types.performance .. "_camera" or nil
+	local data_check_screenshot = camera_types.screenshot and "is_" .. camera_types.screenshot .. "_camera" or nil
+	local world = Managers.world:world("level_world")
+	local levels_data = world_get_data(world, "levels")
 
-			for _, unit in pairs(all_units_in_level) do
-				if Unit.num_cameras(unit) > 0 and Unit.get_data(unit, data_check) then
-					local position = Unit.world_position(unit, 1)
-					local rotation = Unit.world_rotation(unit, 1)
-					local x, y, z, w = Quaternion.to_elements(rotation)
-					local go_to_camera_position_link = string.format("%s&pos=Vector3(%s,%s,%s)&rot=Quaternion.from_elements(%s,%s,%s,%s)", go_to_level_link, position.x, position.y, position.z, x, y, z, w)
-					local camera = {
-						name = Unit.get_data(unit, "camera_id"),
-						unit = unit,
-						id_string = Unit.id_string(unit),
-						position = {
-							x = position.x,
-							y = position.y,
-							z = position.z
-						},
-						rotation = {
-							x = x,
-							y = y,
-							z = z,
-							w = w
-						},
-						go_to_camera_position_link = go_to_camera_position_link
-					}
+	for level_name, level_data in pairs(levels_data) do
+		local level = level_data.level
+		local go_to_level_link = "fslevel://" .. level_name
+		local all_units_in_level = level_units(level)
 
-					table.insert(cameras, camera)
-				end
+		for _, unit in pairs(all_units_in_level) do
+			if unit_num_cameras(unit) > 0 and (data_check_performance and unit_has_data(unit, data_check_performance) or data_check_screenshot and unit_has_data(unit, data_check_screenshot)) then
+				local position = unit_world_position(unit, 1)
+				local rotation = unit_world_rotation(unit, 1)
+				local x, y, z, w = quaternion_to_elements(rotation)
+				local go_to_camera_position_link = string_format("%s&pos=Vector3(%s,%s,%s)&rot=Quaternion.from_elements(%s,%s,%s,%s)", go_to_level_link, position.x, position.y, position.z, x, y, z, w)
+				local camera = {
+					name = unit_get_data(unit, "camera_id"),
+					unit = unit,
+					id_string = unit_id_string(unit),
+					position = {
+						x = position.x,
+						y = position.y,
+						z = position.z
+					},
+					rotation = {
+						x = x,
+						y = y,
+						z = z,
+						w = w
+					},
+					go_to_camera_position_link = go_to_camera_position_link
+				}
+				i = i + 1
+				cameras[i] = camera
 			end
 		end
+	end
 
-		return cameras
+	return cameras, i
+end
+
+local StateGameplayTestify = {
+	all_cameras = function ()
+		local camera_types = {
+			performance = "performance",
+			screenshot = "screenshot"
+		}
+		local cameras, length = _all_cameras(camera_types)
+
+		return cameras, length
+	end,
+	all_cameras_of_type = function (camera_type, _)
+		local camera_types = {
+			[camera_type] = camera_type
+		}
+		local cameras, length = _all_cameras(camera_types)
+
+		return cameras, length
 	end,
 	delete_unit = function (unit, _)
 		local spawner_manager = Managers.state.unit_spawner

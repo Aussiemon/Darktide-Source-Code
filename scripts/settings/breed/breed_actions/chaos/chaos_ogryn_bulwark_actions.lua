@@ -615,32 +615,32 @@ local action_data = {
 				}
 			},
 			light_ranged = {
+				fwd = {
+					"stagger_shield_block_01",
+					"stagger_shield_block_02",
+					"stagger_shield_block_03",
+					"stagger_shield_block_04",
+					"stagger_shield_block_05"
+				},
 				bwd = {
-					"stagger_shield_damage_01",
-					"stagger_shield_damage_02",
-					"stagger_shield_damage_03",
-					"stagger_shield_damage_04"
+					"stagger_shield_block_01",
+					"stagger_shield_block_02",
+					"stagger_shield_block_03",
+					"stagger_shield_block_04",
+					"stagger_shield_block_05"
 				},
 				left = {
-					"stagger_shield_damage_01",
-					"stagger_shield_damage_02",
-					"stagger_shield_damage_03",
-					"stagger_shield_damage_04"
+					"stagger_shield_block_left"
 				},
 				right = {
-					"stagger_shield_damage_01",
-					"stagger_shield_damage_02",
-					"stagger_shield_damage_03",
-					"stagger_shield_damage_04"
+					"stagger_shield_block_right"
 				},
 				dwn = {
-					"stagger_shield_damage_01",
-					"stagger_shield_damage_02",
-					"stagger_shield_damage_03",
-					"stagger_shield_damage_04"
-				},
-				fwd = {
-					"stagger_fwd_light"
+					"stagger_shield_block_01",
+					"stagger_shield_block_02",
+					"stagger_shield_block_03",
+					"stagger_shield_block_04",
+					"stagger_shield_block_05"
 				}
 			},
 			explosion = {

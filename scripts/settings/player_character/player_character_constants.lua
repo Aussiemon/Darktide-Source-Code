@@ -1,12 +1,10 @@
-local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local HubMovementSettingsTemplates = require("scripts/settings/player_character/hub_movement_settings_templates")
 local ReloadTemplates = require("scripts/settings/equipment/reload_templates/reload_templates")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
-local damage_types = DamageSettings.damage_types
 local buff_target_component_lookups = WeaponTweakTemplateSettings.buff_target_component_lookups
-local keywords = BuffSettings.keywords
+local damage_types = DamageSettings.damage_types
 local RELOAD_STATES = {
 	"none"
 }
@@ -23,10 +21,6 @@ for _, reload_template in pairs(ReloadTemplates) do
 	end
 end
 
-local SPRINT_SLIDE_TWEAK_VALUES = {
-	ninja_fencer = {},
-	no_tweak_values = {}
-}
 local SLIDE_TWEAK_VALUES = {
 	ninja_fencer = {},
 	no_tweak_values = {}

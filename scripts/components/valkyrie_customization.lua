@@ -139,6 +139,74 @@ ValkyrieCustomization.destroy = function (self, unit)
 	end
 end
 
+ValkyrieCustomization.VFX_off = function (self)
+	Unit.flow_event(self._body_unit, "VFX_off")
+end
+
+ValkyrieCustomization.VFX_vtol_thrusters_on = function (self)
+	Unit.flow_event(self._body_unit, "VFX_vtol_thrusters_on")
+end
+
+ValkyrieCustomization.VFX_vtol_thrusters_off = function (self)
+	Unit.flow_event(self._body_unit, "VFX_vtol_thrusters_off")
+end
+
+ValkyrieCustomization.VFX_thrusters_on = function (self)
+	Unit.flow_event(self._body_unit, "VFX_thrusters_on")
+end
+
+ValkyrieCustomization.VFX_thrusters_off = function (self)
+	Unit.flow_event(self._body_unit, "VFX_thrusters_off")
+end
+
+ValkyrieCustomization.VFX_ignition_on = function (self)
+	Unit.flow_event(self._body_unit, "VFX_ignition_on")
+end
+
+ValkyrieCustomization.VFX_ignition_off = function (self)
+	Unit.flow_event(self._body_unit, "VFX_ignition_off")
+end
+
+ValkyrieCustomization.SFX_lift = function (self)
+	Unit.flow_event(self._body_unit, "SFX_lift")
+end
+
+ValkyrieCustomization.SFX_land = function (self)
+	Unit.flow_event(self._body_unit, "SFX_land")
+end
+
+ValkyrieCustomization.SFX_land_finish = function (self)
+	Unit.flow_event(self._body_unit, "SFX_land_finish")
+end
+
+ValkyrieCustomization.SFX_idle = function (self)
+	Unit.flow_event(self._body_unit, "SFX_idle")
+end
+
+ValkyrieCustomization.SFX_jets = function (self)
+	Unit.flow_event(self._body_unit, "SFX_jets")
+end
+
+ValkyrieCustomization.SFX_intro_gen = function (self)
+	Unit.flow_event(self._body_unit, "SFX_intro_gen")
+end
+
+ValkyrieCustomization.SFX_lascannon_charge = function (self)
+	Unit.flow_event(self._body_unit, "SFX_lascannon_charge")
+end
+
+ValkyrieCustomization.SFX_lascannon_fire = function (self)
+	Unit.flow_event(self._body_unit, "SFX_lascannon_fire")
+end
+
+ValkyrieCustomization.SFX_rocket_launch = function (self)
+	Unit.flow_event(self._body_unit, "SFX_rocket_launch")
+end
+
+ValkyrieCustomization.SFX_off = function (self)
+	Unit.flow_event(self._body_unit, "SFX_off")
+end
+
 ValkyrieCustomization.fx_takeoff = function (self)
 	Unit.flow_event(self._body_unit, "fx_takeoff")
 end
@@ -431,6 +499,74 @@ ValkyrieCustomization.component_data = {
 		category = "Parts"
 	},
 	inputs = {
+		VFX_off = {
+			accessibility = "public",
+			type = "event"
+		},
+		VFX_vtol_thrusters_on = {
+			accessibility = "public",
+			type = "event"
+		},
+		VFX_vtol_thrusters_off = {
+			accessibility = "public",
+			type = "event"
+		},
+		VFX_thrusters_on = {
+			accessibility = "public",
+			type = "event"
+		},
+		VFX_thrusters_off = {
+			accessibility = "public",
+			type = "event"
+		},
+		VFX_ignition_on = {
+			accessibility = "public",
+			type = "event"
+		},
+		VFX_ignition_off = {
+			accessibility = "public",
+			type = "event"
+		},
+		SFX_lift = {
+			accessibility = "public",
+			type = "event"
+		},
+		SFX_land = {
+			accessibility = "public",
+			type = "event"
+		},
+		SFX_land_finish = {
+			accessibility = "public",
+			type = "event"
+		},
+		SFX_idle = {
+			accessibility = "public",
+			type = "event"
+		},
+		SFX_jets = {
+			accessibility = "public",
+			type = "event"
+		},
+		SFX_intro_gen = {
+			accessibility = "public",
+			type = "event"
+		},
+		SFX_lascannon_charge = {
+			accessibility = "public",
+			type = "event"
+		},
+		SFX_lascannon_fire = {
+			accessibility = "public",
+			type = "event"
+		},
+		SFX_rocket_launch = {
+			accessibility = "public",
+			type = "event"
+		},
+		SFX_off = {
+			accessibility = "public",
+			type = "event"
+		},
 		fx_takeoff = {
 			accessibility = "public",
 			type = "event"

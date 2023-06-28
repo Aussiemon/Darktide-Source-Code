@@ -2074,6 +2074,14 @@ FlowCallbacks.light_controller_set_light_flicker_config = function (params)
 	extension:set_flicker_state(flicker_enabled, flicker_configuration, false)
 end
 
+FlowCallbacks.get_render_config = function (params)
+	local type = params.type
+	local variable = params.variable
+	flow_return_table.enabled = Application.render_config(type, variable, false)
+
+	return flow_return_table
+end
+
 FlowCallbacks.make_respawn_point_priority = function (params)
 	local respawn_beacon_system = Managers.state.extension:system("respawn_beacon_system")
 	local respawn_beacon = params.respawn_beacon

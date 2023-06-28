@@ -128,6 +128,8 @@ MinionTargetSelection.occupied_slots_weight = function (target_selection_weights
 			local slot_extension = ScriptUnit.extension(target_unit, "slot_system")
 			local num_occupied_slots = slot_extension.num_occupied_slots
 			total_occupied_slots_weight = num_occupied_slots * occupied_slot_weight
+		elseif is_new_target and target_breed.count_num_enemies_targeting then
+			-- Nothing
 		end
 
 		if optional_inverse_radius then

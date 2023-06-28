@@ -73,12 +73,6 @@ LightControllerExtension.set_enabled = function (self, is_enabled, is_determinis
 		end
 
 		self._enabled = is_enabled
-
-		if is_enabled then
-			Unit.flow_event(self._unit, "lua_light_controller_enabled")
-		else
-			Unit.flow_event(self._unit, "lua_light_controller_disabled")
-		end
 	end
 
 	if self._deterministic_setup_only then

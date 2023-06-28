@@ -1,5 +1,5 @@
-local TalentsUISettings = require("scripts/ui/views/talents_view/talents_view_settings")
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
+local TalentsUISettings = require("scripts/ui/views/talents_view/talents_view_settings")
 local archetype_specializations_name = "ArchetypeSpecializations"
 local specializations = {}
 
@@ -26,7 +26,7 @@ local function _include_speciality_definition(file_name, base_specialization)
 end
 
 local base_specialization = _include_speciality_definition("scripts/settings/ability/archetype_specializations/base_specialization")
-local ogryn_base_specialization = _include_speciality_definition("scripts/settings/ability/archetype_specializations/ogryn_no_specialization")
+local ogryn_base_specialization = _include_speciality_definition("scripts/settings/ability/archetype_specializations/ogryn_no_specialization", base_specialization)
 
 _include_speciality_definition("scripts/settings/ability/archetype_specializations/ogryn_bonebreaker_specialization", ogryn_base_specialization)
 

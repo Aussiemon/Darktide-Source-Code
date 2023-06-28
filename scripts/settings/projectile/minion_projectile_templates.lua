@@ -113,8 +113,10 @@ local projectile_templates = {
 				damage_type = damage_types.physical
 			},
 			fuse = {
-				fuse_time = 1.4,
+				fuse_time = 2,
+				max_lifetime = 12,
 				impact_triggered = true,
+				skipp_reset = true,
 				explosion_template = ExplosionTemplates.cultist_grenadier_gas_grenade_impact,
 				liquid_area_template = LiquidAreaTemplates.cultist_grenadier_gas
 			}
@@ -131,6 +133,7 @@ local projectile_templates = {
 				}
 			},
 			impact = {
+				num_impacts = 5,
 				sfx = {
 					event_name = "wwise/events/weapon/play_minion_grenadier_gas_grenade_ground_impact"
 				}

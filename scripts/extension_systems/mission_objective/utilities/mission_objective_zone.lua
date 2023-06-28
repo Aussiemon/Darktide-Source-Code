@@ -10,6 +10,7 @@ MissionObjectiveZone.init = function (self, peer_id)
 	self._current_zone_progression = 0
 	self._start_counter = false
 	self._zone_type = ZONE_TYPES.none
+	self._override_marked_units = nil
 end
 
 MissionObjectiveZone.start_stage = function (self, stage)
@@ -95,6 +96,27 @@ MissionObjectiveZone.update_progression = function (self)
 	if self:max_progression_achieved() then
 		self:stage_done()
 	end
+end
+
+MissionObjectiveZone.set_go_to_marker = function (self, unit)
+	if unit then
+		if not self._override_marked_units or not self._override_marked_units[unit] then
+			self._override_marked_units = {
+				unit,
+				[unit] = true
+			}
+		end
+	else
+		self._override_marked_units = nil
+	end
+end
+
+MissionObjectiveZone.marked_units = function (self)
+	if self._override_marked_units then
+		return self._override_marked_units
+	end
+
+	return MissionObjectiveZone.super.marked_units(self)
 end
 
 MissionObjectiveZone.propagate_objective_increment = function (self)

@@ -309,7 +309,8 @@ ProcBuff.update_proc_events = function (self, t, proc_events, num_proc_events, p
 				local is_check_ok = not check_proc_func or check_proc_func(params, template_data, template_context, t)
 
 				if is_check_ok then
-					local proc_func = template.proc_func
+					local specific_proc_func = template.specific_proc_func and template.specific_proc_func[proc_event_name]
+					local proc_func = specific_proc_func or template.proc_func
 
 					if proc_func then
 						proc_func(params, template_data, template_context, t)
@@ -328,14 +329,6 @@ ProcBuff.update_proc_events = function (self, t, proc_events, num_proc_events, p
 							buff_component[active_start_time_key] = t
 						end
 					end
-				end
-
-				local specific_proc_func = template.specific_proc_func
-
-				if specific_proc_func and specific_proc_func[proc_event_name] then
-					local func = specific_proc_func[proc_event_name]
-
-					func(params, template_data, template_context, t)
 				end
 
 				local proc_extends_time = template.proc_extends_time

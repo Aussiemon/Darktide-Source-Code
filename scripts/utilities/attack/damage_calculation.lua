@@ -19,10 +19,10 @@ local stagger_strength_output = PowerLevelSettings.stagger_strength_output
 local keywords = BuffSettings.keywords
 local melee_attack_strengths = AttackSettings.melee_attack_strength
 local DamageCalculation = {}
-local _apply_damage_type_buffs_to_damage, _apply_armor_type_buffs_to_damage, _backstab_damage, _base_damage, _damage_multiplier_from_breed, _rending_multiplier, _base_rending_damage, _boost_curve_multiplier, _calculate_damage_buff, _finesse_boost_damage, _hit_zone_damage_multiplier, _rending_damage, _power_level_scaled_damage = nil
+local _apply_damage_type_buffs_to_damage, _apply_armor_type_buffs_to_damage, _backstab_damage, _flanking_damage, _base_damage, _damage_multiplier_from_breed, _rending_multiplier, _base_rending_damage, _boost_curve_multiplier, _calculate_damage_buff, _finesse_boost_damage, _hit_zone_damage_multiplier, _rending_damage, _power_level_scaled_damage = nil
 local EMPTY_STAT_BUFFS = {}
 
-DamageCalculation.calculate = function (damage_profile, damage_type, target_settings, lerp_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action)
+DamageCalculation.calculate = function (damage_profile, damage_type, target_settings, lerp_values, hit_zone_name, power_level, charge_level, breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, target_unit, auto_completed_action, stagger_impact)
 	attacker_stat_buffs = attacker_stat_buffs or EMPTY_STAT_BUFFS
 	target_stat_buffs = target_stat_buffs or EMPTY_STAT_BUFFS
 	local blackboard = BLACKBOARDS[target_unit]
@@ -33,11 +33,11 @@ DamageCalculation.calculate = function (damage_profile, damage_type, target_sett
 		power_level = power_level * power_level_multiplier
 	end
 
-	local base_damage, base_buff_damage, attack_power_level = _base_damage(damage_profile, damage_type, target_settings, power_level, charge_level, armor_type, is_critical_strike, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, lerp_values, num_triggered_staggers, is_attacked_unit_suppressed, breed_or_nil, attacker_breed_or_nil, distance, auto_completed_action, blackboard, target_stagger_count)
+	local base_damage, base_buff_damage, attack_power_level = _base_damage(damage_profile, damage_type, target_settings, power_level, charge_level, armor_type, is_critical_strike, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, lerp_values, num_triggered_staggers, is_attacked_unit_suppressed, breed_or_nil, attacker_breed_or_nil, distance, auto_completed_action, blackboard, target_stagger_count, stagger_impact)
 	local is_target_staggered = num_triggered_staggers > 0
 	local rending_multiplier, is_rending = _rending_multiplier(attacker_stat_buffs, target_stat_buffs, is_backstab, is_flanking, is_critical_strike, is_target_staggered)
 	local damage = base_damage + base_buff_damage
-	local backstab_damage = _backstab_damage(base_damage, attacker_stat_buffs, is_backstab)
+	local backstab_damage = _backstab_damage(base_damage, attack_type, attacker_stat_buffs, is_backstab)
 	local flanking_damage = _flanking_damage(base_damage, attacker_stat_buffs, is_flanking)
 	local rending_damage = 0
 	local finesse_boost_damage = 0
@@ -259,7 +259,7 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 	return damage_stat_buffs
 end
 
-function _base_damage(damage_profile, damage_type, target_settings, power_level, charge_level, armor_type, is_critical_strike, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, lerp_values, num_triggered_staggers, is_attacked_unit_suppressed, attacked_breed_or_nil, attacker_breed_or_nil, distance, auto_completed_action, blackboard, stagger_count)
+function _base_damage(damage_profile, damage_type, target_settings, power_level, charge_level, armor_type, is_critical_strike, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, lerp_values, num_triggered_staggers, is_attacked_unit_suppressed, attacked_breed_or_nil, attacker_breed_or_nil, distance, auto_completed_action, blackboard, stagger_count, stagger_impact)
 	local base_damage, attack_power_level = _power_level_scaled_damage(damage_profile, target_settings, power_level, charge_level, armor_type, is_critical_strike, dropoff_scalar, lerp_values, attacker_stat_buffs, attack_type)
 	local damage_stat_buffs = _calculate_damage_buff(damage_profile, damage_type, target_settings, power_level, charge_level, armor_type, is_critical_strike, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, lerp_values, num_triggered_staggers, is_attacked_unit_suppressed, attacked_breed_or_nil, attacker_breed_or_nil, distance, auto_completed_action, blackboard, stagger_count)
 	local damage_taken_multiplier = target_stat_buffs and target_stat_buffs.damage_taken_multiplier or 1
@@ -416,7 +416,8 @@ function _finesse_boost_damage(base_damage, base_rending_damage, rending_damage,
 	end
 
 	local finesse_modifier_bonus = stat_buffs.finesse_modifier_bonus or 1
-	local finesse_buff_damage_multiplier = weakspot_damage_stat_buff + critical_damage_stat_buff + crit_weakspot_damage_stat_buff + finesse_modifier_bonus - 3
+	local finesse_buff_damage_multiplier = weakspot_damage_stat_buff
+	finesse_buff_damage_multiplier = finesse_buff_damage_multiplier + critical_damage_stat_buff + crit_weakspot_damage_stat_buff + finesse_modifier_bonus - 3
 	local final_finesse_damage = base_finesse_damage * finesse_buff_damage_multiplier
 
 	return final_finesse_damage, final_finesse_damage - base_finesse_damage

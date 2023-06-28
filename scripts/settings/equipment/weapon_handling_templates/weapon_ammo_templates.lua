@@ -13,26 +13,6 @@ local weapon_ammo_templates = {
 			lerp_basic = 40
 		}
 	},
-	bolter_p1_m2 = {
-		ammunition_clip = {
-			lerp_perfect = 10,
-			lerp_basic = 10
-		},
-		ammunition_reserve = {
-			lerp_perfect = 60,
-			lerp_basic = 40
-		}
-	},
-	bolter_p1_m3 = {
-		ammunition_clip = {
-			lerp_perfect = 22,
-			lerp_basic = 18
-		},
-		ammunition_reserve = {
-			lerp_perfect = 176,
-			lerp_basic = 108
-		}
-	},
 	autogun_p1_m1 = {
 		ammunition_clip = {
 			lerp_perfect = 35,
@@ -121,16 +101,6 @@ local weapon_ammo_templates = {
 		ammunition_reserve = {
 			lerp_perfect = 600,
 			lerp_basic = 400
-		}
-	},
-	autopistol_p1_m2 = {
-		ammunition_clip = {
-			lerp_perfect = 50,
-			lerp_basic = 30
-		},
-		ammunition_reserve = {
-			lerp_perfect = 500,
-			lerp_basic = 300
 		}
 	},
 	flamer_p1_m1 = {

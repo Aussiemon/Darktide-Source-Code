@@ -91,7 +91,14 @@ local function _sort_spawners_by_distance(s1, s2)
 	return distance_1 < distance_2
 end
 
-MinionSpawnerSystem.spawners_in_group_distance_sorted = function (self, group, position)
+local function _sort_spawners_by_inverse_distance(s1, s2)
+	local distance_1 = s1.distance
+	local distance_2 = s2.distance
+
+	return distance_2 < distance_1
+end
+
+MinionSpawnerSystem.spawners_in_group_distance_sorted = function (self, group, position, optional_inverse)
 	local spawners = self._spawner_group_extensions[group]
 
 	if spawners then
@@ -103,7 +110,7 @@ MinionSpawnerSystem.spawners_in_group_distance_sorted = function (self, group, p
 			spawner.distance = distance
 		end
 
-		table.sort(spawners_table, _sort_spawners_by_distance)
+		table.sort(spawners_table, optional_inverse and _sort_spawners_by_inverse_distance or _sort_spawners_by_distance)
 
 		return spawners_table
 	end
@@ -132,7 +139,7 @@ end
 
 local broadphase_results = {}
 
-MinionSpawnerSystem.spawners_in_range = function (self, position, radius)
+MinionSpawnerSystem.spawners_in_range = function (self, position, radius, optional_spawn_type)
 	local broadphase = self._broadphase
 	local extension_broadphase_lookup = self._extension_broadphase_lookup
 	local num_results = broadphase:query(position, radius, broadphase_results, BROADPHASE_CATEGORIES)
@@ -142,8 +149,13 @@ MinionSpawnerSystem.spawners_in_range = function (self, position, radius)
 	for i = 1, num_results do
 		local hit_id = broadphase_results[i]
 		local extension = extension_broadphase_lookup[hit_id]
+		local allowed = not extension:is_excluded_from_pacing()
 
-		if not extension:is_excluded_from_pacing() then
+		if optional_spawn_type and optional_spawn_type == "specials" and not extension:is_excluded_from_specials_pacing() then
+			allowed = false
+		end
+
+		if allowed then
 			num_extensions = num_extensions + 1
 			hit_extensions[num_extensions] = extension_broadphase_lookup[hit_id]
 		end

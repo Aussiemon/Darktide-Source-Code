@@ -3,9 +3,9 @@ local Catapulted = require("scripts/extension_systems/character_state_machine/ch
 local LiquidArea = require("scripts/extension_systems/liquid_area/utilities/liquid_area")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
 local NavQueries = require("scripts/utilities/nav_queries")
-local Trajectory = require("scripts/utilities/trajectory")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerMovement = require("scripts/utilities/player_movement")
+local Trajectory = require("scripts/utilities/trajectory")
 local LIQUID_PAINT_ID = "movement_liquid_paint_id"
 local LIQUID_TEMPLATE = LiquidAreaTemplates.beast_of_nurgle_slime
 local LIQUID_BRUSH_SIZE = 1
@@ -41,15 +41,10 @@ local template = {
 		local blackboard = BLACKBOARDS[unit]
 		local behavior_component = Blackboard.write_component(blackboard, "behavior")
 		template_data.behavior_component = behavior_component
-		local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
-		local nav_world = navigation_extension:nav_world()
-		template_data.nav_world = nav_world
-		template_data.navigation_extension = navigation_extension
+		template_data.navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 		template_data.next_paint_update_t = 0
 		behavior_component[LIQUID_PAINT_ID] = LiquidArea.start_paint()
 		template_data.has_first_line_of_sight = false
-		local spawn_component = blackboard.spawn
-		template_data.physics_world = spawn_component.physics_world
 
 		Unit.set_vector4_for_materials(unit, MATERIAL_VARIABLE, Color(WEAKSPOT_COLOR[1], WEAKSPOT_COLOR[2], WEAKSPOT_COLOR[3], WEAKSPOT_COLOR[4]), true)
 	end,
@@ -66,7 +61,7 @@ local template = {
 			local liquid_paint_id = behavior_component[LIQUID_PAINT_ID]
 			local max_liquid_paint_distance = MAX_LIQUID_PAINT_DISTANCE
 			local liquid_position = position + Vector3.up() * 0.5
-			local nav_world = template_data.nav_world
+			local nav_world = template_context.nav_world
 			local allow_liquid_unit_creation = true
 			local liquid_paint_brush_size = LIQUID_BRUSH_SIZE
 			local not_on_other_liquids = true
@@ -90,14 +85,14 @@ local template = {
 				if not is_disabled then
 					local hit_unit_breed_name = consumed_unit_data_extension:breed().name
 					local gravity = PlayerCharacterConstants.gravity
-					local physics_world = template_data.physics_world
+					local physics_world = template_context.physics_world
 					local test_direction = Quaternion.forward(Unit.local_rotation(unit, 1))
 					local to = POSITION_LOOKUP[unit] + test_direction * THROW_TEST_DISTANCE
 					local hit, segment_list, hit_position = Trajectory.test_throw_trajectory(unit, hit_unit_breed_name, physics_world, FORCE, Z_FORCE, test_direction, to, gravity, THROW_TELEPORT_UP_OFFSET_HUMAN, THROW_TELEPORT_UP_OFFSET_OGRYN, MAX_STEPS, MAX_TIME)
 
 					if hit then
 						local navigation_extension = template_data.navigation_extension
-						local nav_world = template_data.nav_world
+						local nav_world = template_context.nav_world
 						local traverse_logic = navigation_extension:traverse_logic()
 						local spawn_navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, traverse_logic, POSITION_LOOKUP[unit], 1, 1, 1)
 

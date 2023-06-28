@@ -262,6 +262,7 @@ TerrorEventNodes.spawn_by_points = {
 			local spawner_group = node.spawner_group
 			local proximity_spawners = node.proximity_spawners
 			local limit_spawners = node.limit_spawners
+			local inverse_proximity_spawners = node.inverse_proximity_spawners
 			local delay_until_all_spawned = node.delay_until_all_spawned
 			local mission_objective_id = node.mission_objective_id
 			local spawn_side_name = TEMP_SPAWN_SIDE_NAME
@@ -288,9 +289,10 @@ TerrorEventNodes.spawn_by_points = {
 			local target_side_id = target_side.side_id
 			local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
 			local spawners = nil
+			local proximity_spawning = proximity_spawners or inverse_proximity_spawners
 
 			if spawner_group then
-				if proximity_spawners then
+				if proximity_spawning then
 					local average_position = Vector3(0, 0, 0)
 					local side = side_system:get_side(target_side_id)
 					local valid_player_units = side.valid_player_units
@@ -303,13 +305,14 @@ TerrorEventNodes.spawn_by_points = {
 					end
 
 					average_position = average_position / num_valid_player_units
-					spawners = proximity_spawners and minion_spawn_system:spawners_in_group_distance_sorted(spawner_group, average_position)
+					local optional_inverse = inverse_proximity_spawners
+					spawners = minion_spawn_system:spawners_in_group_distance_sorted(spawner_group, average_position, optional_inverse)
 				else
 					spawners = minion_spawn_system:spawners_in_group(spawner_group)
 				end
 			end
 
-			if not proximity_spawners then
+			if not proximity_spawning then
 				table.shuffle(spawners)
 			end
 
@@ -319,7 +322,7 @@ TerrorEventNodes.spawn_by_points = {
 				end
 			end
 
-			if proximity_spawners then
+			if proximity_spawning then
 				table.shuffle(spawners)
 			end
 

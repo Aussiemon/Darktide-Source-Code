@@ -495,7 +495,7 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 					local condition_result = can_activate
 					sub_condition_result_01 = condition_result
 					condition_result = sub_condition_result_01
-				elseif ability_template_name == "ranged_stance" then
+				elseif ability_template_name == "veteran_combat_ability" then
 					local sub_condition_result_02, condition_result = nil
 
 					repeat
@@ -594,7 +594,7 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 					local condition_result = can_activate
 					sub_condition_result_01 = condition_result
 					condition_result = sub_condition_result_01
-				elseif ability_template_name == "ranged_stance" then
+				elseif ability_template_name == "veteran_combat_ability" then
 					local sub_condition_result_02, condition_result = nil
 
 					repeat

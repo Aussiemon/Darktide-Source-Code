@@ -1,6 +1,6 @@
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
-local TalentSettings = require("scripts/settings/buff/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings")
 local talent_settings = TalentSettings.veteran_2
 local special_rules = SpecialRulesSetting.special_rules
 local math_round = math.round
@@ -27,7 +27,7 @@ local archetype_talents = {
 			},
 			player_ability = {
 				ability_type = "combat_ability",
-				ability = PlayerAbilities.veteran_ranger_ranged_stance
+				ability = PlayerAbilities.veteran_combat_ability
 			}
 		},
 		veteran_2_frag_grenade = {
@@ -311,7 +311,7 @@ local archetype_talents = {
 			},
 			player_ability = {
 				ability_type = "combat_ability",
-				ability = PlayerAbilities.veteran_ranger_ranged_stance_headhunter
+				ability = PlayerAbilities.veteran_combat_ability_headhunter
 			},
 			special_rule = {
 				identifier = {
@@ -334,7 +334,7 @@ local archetype_talents = {
 			},
 			player_ability = {
 				ability_type = "combat_ability",
-				ability = PlayerAbilities.veteran_ranger_ranged_stance_big_game_hunter
+				ability = PlayerAbilities.veteran_combat_ability_big_game_hunter
 			},
 			special_rule = {
 				identifier = {

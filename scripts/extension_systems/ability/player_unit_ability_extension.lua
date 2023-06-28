@@ -70,10 +70,12 @@ PlayerUnitAbilityExtension._init_action_components = function (self, unit_data_e
 	combat_ability_component.num_charges = 0
 	combat_ability_component.active = false
 	combat_ability_component.enabled = true
+	combat_ability_component.cooldown_paused = false
 	grenade_ability_component.cooldown = 0
 	grenade_ability_component.num_charges = 0
 	grenade_ability_component.active = false
 	grenade_ability_component.enabled = true
+	grenade_ability_component.cooldown_paused = false
 	self._ability_components = {
 		combat_ability = combat_ability_component,
 		grenade_ability = grenade_ability_component
@@ -133,6 +135,13 @@ PlayerUnitAbilityExtension.extensions_ready = function (self, world, unit)
 	action_context.movement_state_component = unit_data_extension:read_component("movement_state")
 
 	action_handler:set_action_context(action_context)
+
+	self._pause_cooldown_context = {
+		unit = unit,
+		unit_data_extension = unit_data_extension,
+		specialization_extension = ScriptUnit.extension(unit, "specialization_system"),
+		buff_extension = ScriptUnit.extension(unit, "buff_system")
+	}
 end
 
 PlayerUnitAbilityExtension.game_object_initialized = function (self, session, object_id)
@@ -336,6 +345,13 @@ end
 
 local action_params = {}
 
+function _fill_action_params(params, data, component_name, unit_data_extension, ability_components)
+	local ability = data.ability
+	local ability_type = ability.ability_type
+	params.ability = ability
+	params.ability_component = ability_components[ability_type]
+end
+
 PlayerUnitAbilityExtension.server_correction_occurred = function (self, unit, from_frame)
 	table.clear(action_params)
 
@@ -362,12 +378,16 @@ PlayerUnitAbilityExtension.server_correction_occurred = function (self, unit, fr
 		end
 	end
 
-	for id, data in pairs(self._abilities) do
+	local ability_components = self._ability_components
+	local unit_data_extension = self._unit_data_extension
+
+	for component_name, data in pairs(self._abilities) do
 		local action_objects, actions = nil
 		action_objects = data.actions
 		actions = data.ability_template.actions
 
-		self._action_handler:server_correction_occurred(id, action_objects, action_params, actions)
+		_fill_action_params(action_params, data, component_name, unit_data_extension, ability_components)
+		self._action_handler:server_correction_occurred(component_name, action_objects, action_params, actions)
 	end
 end
 
@@ -390,12 +410,15 @@ PlayerUnitAbilityExtension.update_ability_actions = function (self, fixed_frame)
 	table.clear(action_params)
 
 	local condition_func_params = self:_condition_func_params()
+	local ability_components = self._ability_components
 	local abilities = self._abilities
 	local unit_data_extension = self._unit_data_extension
 
 	for component_name, data in pairs(abilities) do
 		local component = unit_data_extension:read_component(component_name)
-		action_params.ability = data.ability
+
+		_fill_action_params(action_params, data, component_name, unit_data_extension, ability_components)
+
 		local template_name = component.template_name
 
 		if template_name ~= "none" then
@@ -415,21 +438,35 @@ PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t)
 		local ability = abilities[ability_type]
 
 		if ability and ability.cooldown then
-			local current_charges = self:remaining_ability_charges(ability_type)
 			local cooldown = component.cooldown
-			local max_charges = self:_ability_max_charges(ability)
 
-			if current_charges < max_charges and cooldown == 0 then
-				local ability_cooldown = self:max_ability_cooldown(ability_type)
-				cooldown = t + ability_cooldown
+			if cooldown ~= 0 and component.cooldown_paused then
+				local pause_cooldown_settings = ability.pause_cooldown_settings
+
+				if pause_cooldown_settings.pause_fulfilled_func(self._pause_cooldown_context) then
+					component.cooldown_paused = false
+				else
+					local ability_cooldown = self:max_ability_cooldown(ability_type)
+					cooldown = t + ability_cooldown
+				end
+
+				component.cooldown = cooldown
+			else
+				local current_charges = self:remaining_ability_charges(ability_type)
+				local max_charges = self:_ability_max_charges(ability)
+
+				if current_charges < max_charges and cooldown == 0 then
+					local ability_cooldown = self:max_ability_cooldown(ability_type)
+					cooldown = t + ability_cooldown
+				end
+
+				if cooldown ~= 0 and cooldown < t then
+					component.num_charges = math.min(max_charges, component.num_charges + 1)
+					cooldown = 0
+				end
+
+				component.cooldown = cooldown
 			end
-
-			if cooldown ~= 0 and cooldown < t then
-				component.num_charges = math.min(max_charges, component.num_charges + 1)
-				cooldown = 0
-			end
-
-			component.cooldown = cooldown
 		end
 	end
 end
@@ -522,6 +559,19 @@ PlayerUnitAbilityExtension.action_input_is_currently_valid = function (self, com
 	return self._action_handler:action_input_is_currently_valid(component_name, actions, condition_func_params, current_fixed_t, action_input, used_input)
 end
 
+PlayerUnitAbilityExtension.is_cooldown_paused = function (self, ability_type)
+	local enabled = self:ability_enabled(ability_type)
+
+	if not enabled then
+		return true
+	end
+
+	local ability_components = self._ability_components
+	local component = ability_components[ability_type]
+
+	return component.cooldown_paused
+end
+
 PlayerUnitAbilityExtension.remaining_ability_cooldown = function (self, ability_type)
 	local enabled = self:ability_enabled(ability_type)
 
@@ -531,11 +581,16 @@ PlayerUnitAbilityExtension.remaining_ability_cooldown = function (self, ability_
 
 	local ability_components = self._ability_components
 	local component = ability_components[ability_type]
-	local cooldown = component.cooldown
-	local fixed_frame_t = FixedFrame.get_latest_fixed_time()
-	local remaining_cooldown = math.max(cooldown - fixed_frame_t, 0)
 
-	return remaining_cooldown
+	if component.cooldown_paused then
+		return 0
+	else
+		local cooldown = component.cooldown
+		local fixed_frame_t = FixedFrame.get_latest_fixed_time()
+		local remaining_cooldown = math.max(cooldown - fixed_frame_t, 0)
+
+		return remaining_cooldown
+	end
 end
 
 PlayerUnitAbilityExtension.max_ability_cooldown = function (self, ability_type)

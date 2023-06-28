@@ -69,40 +69,42 @@ StateLoadRenderSettings._check_render_settings = function (self, settings, setti
 end
 
 StateLoadRenderSettings._verify_disabled_status = function (self, settings)
-	local valid_disables = {}
+	if not DEDICATED_SERVER then
+		local valid_disables = {}
 
-	for i = 1, #settings do
-		local setting = settings[i]
+		for i = 1, #settings do
+			local setting = settings[i]
 
-		if setting.disable_rules and setting.get_function then
-			local value = setting:get_function(setting)
+			if setting.disable_rules and setting.get_function then
+				local value = setting:get_function(setting)
 
-			for i = 1, #setting.disable_rules do
-				local disable_rule = setting.disable_rules[i]
+				for i = 1, #setting.disable_rules do
+					local disable_rule = setting.disable_rules[i]
 
-				if disable_rule.validation_function and disable_rule.validation_function(value) and (not valid_disables[disable_rule.id] or not valid_disables[disable_rule.id][setting.id]) then
-					valid_disables[disable_rule.id] = valid_disables[disable_rule.id] or {
-						{}
-					}
-					valid_disables[disable_rule.id][setting.id] = disable_rule
+					if disable_rule.validation_function and disable_rule.validation_function(value) and (not valid_disables[disable_rule.id] or not valid_disables[disable_rule.id][setting.id]) then
+						valid_disables[disable_rule.id] = valid_disables[disable_rule.id] or {
+							{}
+						}
+						valid_disables[disable_rule.id][setting.id] = disable_rule
+					end
 				end
 			end
 		end
-	end
 
-	for i = 1, #settings do
-		local setting = settings[i]
-		local id = setting.id
+		for i = 1, #settings do
+			local setting = settings[i]
+			local id = setting.id
 
-		if setting.get_function and valid_disables[id] then
-			local value = setting:get_function(setting)
+			if setting.get_function and valid_disables[id] then
+				local value = setting:get_function(setting)
 
-			for origin_id, disable_rule in pairs(valid_disables[id]) do
-				if disable_rule.disable_value == value then
-					setting.disabled = true
-					setting.disabled_by = setting.disabled_by or {}
-					setting.disabled_by[origin_id] = disable_rule.reason
-					setting.value_on_enabled = setting.value_on_enabled or value
+				for origin_id, disable_rule in pairs(valid_disables[id]) do
+					if disable_rule.disable_value == value then
+						setting.disabled = true
+						setting.disabled_by = setting.disabled_by or {}
+						setting.disabled_by[origin_id] = disable_rule.reason
+						setting.value_on_enabled = setting.value_on_enabled or value
+					end
 				end
 			end
 		end

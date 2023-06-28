@@ -513,6 +513,10 @@ PacingManager.num_aggroed_minions = function (self)
 	return self._num_aggroed_minions
 end
 
+PacingManager.num_aggroed_monsters = function (self)
+	return self._monster_pacing:num_aggroed_monsters()
+end
+
 PacingManager.tension = function (self)
 	return self._tension
 end
@@ -649,6 +653,42 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 	if replace_terror_event_tags then
 		Managers.state.terror_event:replace_terror_event_tags(replace_terror_event_tags)
 	end
+
+	local specials_required_challenge_rating = modify_settings.specials_required_challenge_rating
+
+	if specials_required_challenge_rating then
+		self._specials_pacing:set_required_challenge_rating(specials_required_challenge_rating)
+	end
+
+	local specials_monster_spawn_config = modify_settings.specials_monster_spawn_config
+
+	if specials_monster_spawn_config then
+		self._specials_pacing:set_monster_spawn_config(specials_monster_spawn_config)
+	end
+
+	local roamer_stimmed_config = modify_settings.roamer_stimmed_config
+
+	if roamer_stimmed_config then
+		self._roamer_pacing:set_stimmed_config(roamer_stimmed_config)
+	end
+
+	local specials_stimmed_config = modify_settings.specials_stimmed_config
+
+	if specials_stimmed_config then
+		self._specials_pacing:set_stimmed_config(specials_stimmed_config)
+	end
+
+	local trickle_horde_stimmed_config = modify_settings.trickle_horde_stimmed_config
+
+	if trickle_horde_stimmed_config then
+		self._horde_pacing:set_stimmed_config(trickle_horde_stimmed_config)
+	end
+
+	local boss_patrol_stimmed_config = modify_settings.boss_patrol_stimmed_config
+
+	if boss_patrol_stimmed_config then
+		self._monster_pacing:set_stimmed_config(boss_patrol_stimmed_config)
+	end
 end
 
 PacingManager.aggro_roamer_zone_range = function (self, target_unit, range)
@@ -709,6 +749,14 @@ end
 
 PacingManager.get_minions_listening_for_player_deaths = function (self)
 	return self._minions_listening_for_player_deaths
+end
+
+PacingManager.set_specials_timing_multiplier = function (self, modifier)
+	return self._specials_pacing:set_timer_multiplier(modifier)
+end
+
+PacingManager.set_specials_force_move_timer = function (self, should_force_move_timer)
+	return self._specials_pacing:set_force_move_timer(should_force_move_timer)
 end
 
 return PacingManager

@@ -57,7 +57,7 @@ ConditionalFunctions.is_item_slot_not_wielded = function (template_data, templat
 	return not ConditionalFunctions.is_item_slot_wielded(template_data, template_context)
 end
 
-ConditionalFunctions.has_full_toughness = function (tempalte_data, template_context)
+ConditionalFunctions.has_full_toughness = function (template_data, template_context)
 	local unit = template_context.unit
 	local toughness_extension = ScriptUnit.extension(unit, "toughness_system")
 	local current_toughness = toughness_extension:current_toughness_percent()

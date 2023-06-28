@@ -215,6 +215,7 @@ GameplayStateRun._fixed_update = function (self, extension_manager, player_manag
 
 		player_manager:state_fixed_update(fixed_dt, fixed_t, frame)
 		player_unit_spawn_manager:fixed_update(fixed_dt, fixed_t, frame)
+		Managers.state.player_overlap_manager:fixed_update(fixed_dt, fixed_t, frame)
 		extension_manager:fixed_update(fixed_dt, fixed_t, frame)
 
 		self._fixed_frame_parsed = true

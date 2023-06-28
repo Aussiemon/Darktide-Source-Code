@@ -23,24 +23,25 @@ local breed_data = {
 	run_speed = 5,
 	use_bone_lod = true,
 	challenge_rating = 2,
-	game_object_type = "minion_special_melee",
-	unit_template_name = "minion",
+	volley_fire_target = true,
 	power_level_type = "chaos_poxwalker_bomber_explosion",
+	unit_template_name = "minion",
 	can_be_used_for_all_factions = true,
 	faction_name = "chaos",
-	volley_fire_target = true,
 	uses_wwise_special_targeting_parameter = true,
 	sub_faction_name = "chaos",
 	broadphase_radius = 1,
-	spawn_aggro_state = "aggroed",
 	walk_speed = 2,
+	spawn_aggro_state = "aggroed",
 	stagger_resistance = 2,
 	navigation_propagation_box_extent = 200,
 	base_height = 1.7,
 	player_locomotion_constrain_radius = 0.35,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
-	stagger_reduction = 15,
+	stagger_reduction = 1,
+	stagger_reduction_ranged = 15,
 	smart_tag_target_type = "breed",
+	game_object_type = "minion_special_melee",
 	base_unit = "content/characters/enemy/chaos_poxwalker_bomber/third_person/base",
 	hit_mass = 2.5,
 	bone_lod_radius = 1.1,
@@ -78,7 +79,7 @@ local breed_data = {
 		[stagger_types.wall_collision] = 0
 	},
 	stagger_thresholds = {
-		[stagger_types.light] = 5,
+		[stagger_types.light] = 1,
 		[stagger_types.medium] = 5,
 		[stagger_types.heavy] = 5,
 		[stagger_types.light_ranged] = 100,
@@ -90,19 +91,6 @@ local breed_data = {
 	vfx = require("scripts/settings/breed/breeds/chaos/chaos_common_vfx"),
 	behavior_tree_name = breed_name,
 	combat_range_data = BreedCombatRanges.chaos_poxwalker_bomber,
-	suppress_config = {
-		threshold = 40,
-		max_value = 50,
-		decay_speeds = {
-			melee = 0.05,
-			far = 0.3,
-			close = 0.3
-		},
-		immunity_duration = {
-			2.75,
-			3.25
-		}
-	},
 	attack_intensity_cooldowns = {
 		melee = {
 			1.7,

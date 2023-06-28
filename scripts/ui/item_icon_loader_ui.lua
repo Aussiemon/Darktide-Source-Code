@@ -100,6 +100,7 @@ ItemIconLoaderUI._unload_icon = function (self, id)
 	local references_array = data.references_array
 	local references_lookup = data.references_lookup
 	local callbacks = data.callbacks
+	local destroy_callbacks = data.destroy_callbacks
 
 	if #references_array == 1 then
 		local package_manager = Managers.package
@@ -127,6 +128,12 @@ ItemIconLoaderUI._unload_icon = function (self, id)
 			end
 		end
 	else
+		if destroy_callbacks and destroy_callbacks[id] then
+			destroy_callbacks[id]()
+
+			destroy_callbacks[id] = nil
+		end
+
 		if callbacks then
 			callbacks[id] = nil
 		end

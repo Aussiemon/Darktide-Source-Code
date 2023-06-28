@@ -41,28 +41,34 @@ local CheckProcFunctions = {
 			return false
 		end
 	end,
-	on_kill = function (params)
+	always = function (params, template_data, template_context, t)
+		return true
+	end,
+	never = function (params, template_data, template_context, t)
+		return false
+	end,
+	on_kill = function (params, template_data, template_context, t)
 		if params.attack_result ~= attack_results.died then
 			return false
 		end
 
 		return true
 	end,
-	on_one_hit_kill = function (params)
+	on_one_hit_kill = function (params, template_data, template_context, t)
 		if params.attack_result ~= attack_results.died then
 			return false
 		end
 
 		return params.one_hit_kill
 	end,
-	on_non_kill = function (params)
+	on_non_kill = function (params, template_data, template_context, t)
 		if params.attack_result == attack_results.died then
 			return false
 		end
 
 		return true
 	end,
-	on_weakspot_kill = function (params)
+	on_weakspot_kill = function (params, template_data, template_context, t)
 		if params.attack_result ~= attack_results.died then
 			return false
 		end
@@ -73,7 +79,7 @@ local CheckProcFunctions = {
 
 		return true
 	end,
-	on_elite_kill = function (params)
+	on_elite_kill = function (params, template_data, template_context, t)
 		if params.attack_result ~= attack_results.died then
 			return false
 		end
@@ -84,7 +90,7 @@ local CheckProcFunctions = {
 
 		return true
 	end,
-	on_special_kill = function (params)
+	on_special_kill = function (params, template_data, template_context, t)
 		if params.attack_result ~= attack_results.died then
 			return false
 		end
@@ -95,7 +101,7 @@ local CheckProcFunctions = {
 
 		return true
 	end,
-	on_elite_or_special_kill = function (params)
+	on_elite_or_special_kill = function (params, template_data, template_context, t)
 		if params.attack_result ~= attack_results.died then
 			return false
 		end
@@ -110,7 +116,7 @@ local CheckProcFunctions = {
 
 		return true
 	end,
-	on_ranged_kill = function (params)
+	on_ranged_kill = function (params, template_data, template_context, t)
 		if params.attack_result ~= attack_results.died then
 			return false
 		end
@@ -121,7 +127,7 @@ local CheckProcFunctions = {
 
 		return true
 	end,
-	on_melee_kill = function (params)
+	on_melee_kill = function (params, template_data, template_context, t)
 		if params.attack_result ~= attack_results.died then
 			return false
 		end
@@ -132,7 +138,7 @@ local CheckProcFunctions = {
 
 		return true
 	end,
-	on_sticky_kill = function (params)
+	on_sticky_kill = function (params, template_data, template_context, t)
 		local sticky = params.sticky_attack
 
 		if not sticky then
@@ -145,7 +151,7 @@ local CheckProcFunctions = {
 
 		return true
 	end,
-	on_weapon_special_kill = function (params)
+	on_weapon_special_kill = function (params, template_data, template_context, t)
 		if params.attack_result ~= attack_results.died then
 			return false
 		end
@@ -156,7 +162,7 @@ local CheckProcFunctions = {
 
 		return true
 	end,
-	on_special_smite_kill = function (params)
+	on_special_smite_kill = function (params, template_data, template_context, t)
 		local killed = params.attack_result == attack_results.died
 
 		if not killed then
@@ -178,10 +184,10 @@ local CheckProcFunctions = {
 
 		return true
 	end,
-	on_smite_attack = function (params)
+	on_smite_attack = function (params, template_data, template_context, t)
 		return params.damage_type == damage_types.smite
 	end,
-	on_smite_kill = function (params)
+	on_smite_kill = function (params, template_data, template_context, t)
 		if params.damage_type ~= damage_types.smite then
 			return false
 		end
@@ -195,7 +201,7 @@ local CheckProcFunctions = {
 }
 local warp_damage_types = DamageSettings.warp_damage_types
 
-CheckProcFunctions.on_warp_kill = function (params)
+CheckProcFunctions.on_warp_kill = function (params, template_data, template_context, t)
 	if params.attack_result ~= attack_results.died then
 		return false
 	end
@@ -209,7 +215,7 @@ CheckProcFunctions.on_warp_kill = function (params)
 	return false
 end
 
-CheckProcFunctions.on_ranged_close_kill = function (params)
+CheckProcFunctions.on_ranged_close_kill = function (params, template_data, template_context, t)
 	if params.attack_result ~= attack_results.died then
 		return false
 	end
@@ -234,43 +240,43 @@ CheckProcFunctions.on_ranged_close_kill = function (params)
 	return is_within_distance
 end
 
-CheckProcFunctions.on_block_broken = function (params)
+CheckProcFunctions.on_block_broken = function (params, template_data, template_context, t)
 	return params.block_broken
 end
 
-CheckProcFunctions.on_crit = function (params)
+CheckProcFunctions.on_crit = function (params, template_data, template_context, t)
 	return params.is_critical_strike
 end
 
-CheckProcFunctions.on_crit_ranged = function (params)
+CheckProcFunctions.on_crit_ranged = function (params, template_data, template_context, t)
 	return params.is_critical_strike and params.attack_type == attack_types.ranged
 end
 
-CheckProcFunctions.on_crit_kills = function (params)
+CheckProcFunctions.on_crit_kills = function (params, template_data, template_context, t)
 	return params.is_critical_strike and params.attack_result == attack_results.died
 end
 
-CheckProcFunctions.on_ranged_hit = function (params)
+CheckProcFunctions.on_ranged_hit = function (params, template_data, template_context, t)
 	return params.attack_type == attack_types.ranged
 end
 
-CheckProcFunctions.on_melee_hit = function (params)
+CheckProcFunctions.on_melee_hit = function (params, template_data, template_context, t)
 	return params.attack_type == attack_types.melee
 end
 
-CheckProcFunctions.on_push_hit = function (params)
+CheckProcFunctions.on_push_hit = function (params, template_data, template_context, t)
 	return params.attack_type == attack_types.push
 end
 
-CheckProcFunctions.on_exploion_hit = function (params)
+CheckProcFunctions.on_exploion_hit = function (params, template_data, template_context, t)
 	return params.attack_type == attack_types.explosion
 end
 
-CheckProcFunctions.on_melee_weapon_special_hit = function (params)
+CheckProcFunctions.on_melee_weapon_special_hit = function (params, template_data, template_context, t)
 	return params.weapon_special and params.attack_type == attack_types.melee
 end
 
-CheckProcFunctions.on_melee_crit_hit = function (params)
+CheckProcFunctions.on_melee_crit_hit = function (params, template_data, template_context, t)
 	return params.is_critical_strike and params.attack_type == attack_types.melee
 end
 
@@ -298,15 +304,15 @@ CheckProcFunctions.on_multiple_melee_hit = function (params, template_data, temp
 	return target_index and required_num_hits <= target_index
 end
 
-CheckProcFunctions.on_ranged_crit_hit = function (params)
+CheckProcFunctions.on_ranged_crit_hit = function (params, template_data, template_context, t)
 	return params.is_critical_strike and params.attack_type == attack_types.ranged
 end
 
-CheckProcFunctions.on_explosion_hit = function (params)
+CheckProcFunctions.on_explosion_hit = function (params, template_data, template_context, t)
 	return params.attack_type == attack_types.explosion
 end
 
-CheckProcFunctions.on_heavy_hit = function (params)
+CheckProcFunctions.on_heavy_hit = function (params, template_data, template_context, t)
 	if params.is_heavy then
 		return true
 	end
@@ -320,75 +326,75 @@ CheckProcFunctions.on_damaging_hit = function (params)
 	return params.damage > 0
 end
 
-CheckProcFunctions.on_weakspot_hit = function (params)
+CheckProcFunctions.on_weakspot_hit = function (params, template_data, template_context, t)
 	return params.hit_weakspot
 end
 
-CheckProcFunctions.on_non_weakspot_hit = function (params)
+CheckProcFunctions.on_non_weakspot_hit = function (params, template_data, template_context, t)
 	return not params.hit_weakspot
 end
 
-CheckProcFunctions.on_non_weakspot_hit_melee = function (params)
+CheckProcFunctions.on_non_weakspot_hit_melee = function (params, template_data, template_context, t)
 	return not params.hit_weakspot and params.attack_type == attack_types.melee
 end
 
-CheckProcFunctions.on_non_weakspot_hit_ranged = function (params)
+CheckProcFunctions.on_non_weakspot_hit_ranged = function (params, template_data, template_context, t)
 	return not params.hit_weakspot and params.attack_type == attack_types.ranged
 end
 
-CheckProcFunctions.on_weakspot_crit = function (params)
+CheckProcFunctions.on_weakspot_crit = function (params, template_data, template_context, t)
 	return params.hit_weakspot and params.is_critical_strike
 end
 
-CheckProcFunctions.on_ranged_weakspot_kills = function (params)
+CheckProcFunctions.on_ranged_weakspot_kills = function (params, template_data, template_context, t)
 	return CheckProcFunctions.on_weakspot_hit(params) and CheckProcFunctions.on_ranged_kill(params)
 end
 
-CheckProcFunctions.on_alternative_fire_hit = function (params)
+CheckProcFunctions.on_alternative_fire_hit = function (params, template_data, template_context, t)
 	return params.alternative_fire
 end
 
-CheckProcFunctions.on_ranged_hit_weakspot = function (params)
+CheckProcFunctions.on_ranged_hit_weakspot = function (params, template_data, template_context, t)
 	return params.hit_weakspot and params.attack_type == attack_types.ranged
 end
 
-CheckProcFunctions.on_stagger_hit = function (params)
+CheckProcFunctions.on_stagger_hit = function (params, template_data, template_context, t)
 	local attacked_unit = params.attacked_unit
 
 	return MinionState.is_minion(attacked_unit) and MinionState.is_staggered(attacked_unit)
 end
 
-CheckProcFunctions.on_staggering_hit = function (params)
+CheckProcFunctions.on_staggering_hit = function (params, template_data, template_context, t)
 	local stagger_result = params.stagger_result
 
 	return stagger_result == stagger_results.stagger
 end
 
-CheckProcFunctions.on_meelee_stagger_hit = function (params)
+CheckProcFunctions.on_meelee_stagger_hit = function (params, template_data, template_context, t)
 	return CheckProcFunctions.on_melee_hit and CheckProcFunctions.on_stagger_hit
 end
 
-CheckProcFunctions.on_weapon_special_kill = function (params)
+CheckProcFunctions.on_weapon_special_kill = function (params, template_data, template_context, t)
 	return params.weapon_special and params.attack_result == attack_results.died
 end
 
-CheckProcFunctions.on_weapon_special_melee_stagger_hit = function (params)
+CheckProcFunctions.on_weapon_special_melee_stagger_hit = function (params, template_data, template_context, t)
 	return CheckProcFunctions.on_melee_weapon_special_hit(params) and CheckProcFunctions.on_stagger_hit(params)
 end
 
-CheckProcFunctions.on_ranged_stagger_hit = function (params)
+CheckProcFunctions.on_ranged_stagger_hit = function (params, template_data, template_context, t)
 	return CheckProcFunctions.on_ranged_hit(params) and CheckProcFunctions.on_stagger_hit(params)
 end
 
-CheckProcFunctions.on_chain_lightning_hit = function (params)
+CheckProcFunctions.on_chain_lightning_hit = function (params, template_data, template_context, t)
 	return params.damage_type == damage_types.electrocution
 end
 
-CheckProcFunctions.on_shoot_hit_multiple = function (params)
+CheckProcFunctions.on_shoot_hit_multiple = function (params, template_data, template_context, t)
 	return ON_SHOOT_HIT_MULTIPLE_THRESHOLD < params.num_hit_units
 end
 
-CheckProcFunctions.on_hit_all_pellets_on_same = function (params)
+CheckProcFunctions.on_hit_all_pellets_on_same = function (params, template_data, template_context, t)
 	return params.hit_all_pellets_on_same
 end
 
@@ -396,11 +402,11 @@ CheckProcFunctions.attacked_unit_is_minion = function (params)
 	return MinionState.is_minion(params.attacked_unit)
 end
 
-CheckProcFunctions.is_weapon_special = function (params)
+CheckProcFunctions.is_weapon_special = function (params, template_data, template_context, t)
 	return params.weapon_special
 end
 
-CheckProcFunctions.on_elite_hit = function (params)
+CheckProcFunctions.on_elite_hit = function (params, template_data, template_context, t)
 	if not params.tags or not params.tags.elite then
 		return false
 	end

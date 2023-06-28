@@ -382,4 +382,14 @@ MechanismManager.backend_mission_id = function (self)
 	return backend_mission_id
 end
 
+MechanismManager.profile_changes_are_allowed = function (self)
+	local mechanism = self._mechanism
+
+	if not mechanism then
+		return true
+	end
+
+	return mechanism:profile_changes_are_allowed()
+end
+
 return MechanismManager

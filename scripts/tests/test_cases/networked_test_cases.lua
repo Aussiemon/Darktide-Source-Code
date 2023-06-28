@@ -21,6 +21,8 @@ NetworkedTestCases = {
 			local settings = cjson.decode(case_settings or "{}")
 			local mission_key = settings.mission
 			local store_mission_in_cache = settings.store_mission_in_cache == true or false
+			local circumstance = settings.circumstance or "default"
+			local side_mission = settings.side_mission or "default"
 			local flags = settings.flags or {}
 			local output = TestifySnippets.check_flags_for_mission(flags, mission_key)
 
@@ -31,7 +33,7 @@ NetworkedTestCases = {
 			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
 			Testify:make_request("wait_for_state_gameplay_reached")
 			Testify:make_request("fail_on_not_authenticated")
-			TestifySnippets.load_mission_in_mission_board(mission_key, 1, 1, "default", "default")
+			TestifySnippets.load_mission_in_mission_board(mission_key, 1, 1, circumstance, side_mission)
 			Testify:make_request("accept_mission_board_vote")
 			Testify:make_request("wait_for_view", "lobby_view")
 			Testify:make_request("lobby_set_ready_status", true)

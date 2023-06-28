@@ -23,22 +23,22 @@ local breed_data = {
 	detection_radius = 12,
 	display_name = "loc_breed_display_name_chaos_poxwalker",
 	run_speed = 3.5,
-	spawn_inventory_slot = "slot_melee_weapon",
+	challenge_rating = 0.4,
 	use_bone_lod = true,
 	spawn_anim_state = "to_1h_weapon",
+	power_level_type = "horde_default_melee",
 	unit_template_name = "minion",
-	power_level_type = "renegade_default_melee",
 	faction_name = "chaos",
+	walk_speed = 2.3,
 	sub_faction_name = "chaos",
 	broadphase_radius = 1,
 	ignore_ally_alerts = true,
 	stagger_resistance = 0.75,
 	use_avoidance = true,
 	base_height = 1.7,
-	walk_speed = 2.3,
+	spawn_inventory_slot = "slot_melee_weapon",
 	player_locomotion_constrain_radius = 0.6,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
-	challenge_rating = 0.4,
 	use_wounds = true,
 	activate_slot_system_on_spawn = true,
 	game_object_type = "minion_melee",
@@ -61,7 +61,7 @@ local breed_data = {
 		1,
 		1,
 		1,
-		3
+		2
 	},
 	gib_template = MinionGibbingTemplates.chaos_poxwalker,
 	stagger_durations = {
@@ -78,7 +78,7 @@ local breed_data = {
 		[stagger_types.medium] = 0.2,
 		[stagger_types.heavy] = 2.25,
 		[stagger_types.light_ranged] = 0.2,
-		[stagger_types.explosion] = 3,
+		[stagger_types.explosion] = 4,
 		[stagger_types.killshot] = 0.5
 	},
 	inventory = MinionVisualLoadoutTemplates.chaos_poxwalker,
@@ -89,21 +89,6 @@ local breed_data = {
 		"moving_attack_fwd_speed"
 	},
 	combat_range_data = BreedCombatRanges.chaos_poxwalker,
-	suppress_config = {
-		marker_icon = "content/ui/vector_textures/hud/icon_objective_warning",
-		flinch_threshold = math.huge,
-		max_value = math.huge,
-		threshold = math.huge,
-		decay_speeds = {
-			melee = 0.05,
-			far = 0.2,
-			close = 0.2
-		},
-		immunity_duration = {
-			2.75,
-			3.25
-		}
-	},
 	attack_intensity_cooldowns = {
 		melee = {
 			0.7,

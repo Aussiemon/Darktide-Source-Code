@@ -174,6 +174,8 @@ local minion_target_selection_weights = {
 		line_of_sight_weight = 8,
 		occupied_slots = -1,
 		max_distance = 50,
+		stickiness_bonus = 20,
+		stickiness_duration = 10,
 		distance_to_target = 2
 	},
 	cultist_shocktrooper = {
@@ -200,6 +202,15 @@ local minion_target_selection_weights = {
 		stickiness_duration = 10,
 		max_distance = 20,
 		stickiness_bonus = 100,
+		taunt_weight_multiplier = 2,
+		threat_multiplier = 1.5,
+		distance_to_target = 50
+	},
+	renegade_twin_captain = {
+		occupied_slots = -1,
+		stickiness_duration = 8,
+		max_distance = 20,
+		stickiness_bonus = 10,
 		taunt_weight_multiplier = 2,
 		threat_multiplier = 1.5,
 		distance_to_target = 50

@@ -55,6 +55,10 @@ local default_free_flight_input_settings = {
 			raw = "keyboard_tab",
 			type = "pressed"
 		},
+		toggle_input_in_free_flight = {
+			raw = "keyboard_left ctrl+keyboard_space",
+			type = "pressed"
+		},
 		move_controller = {
 			raw = "xbox_controller_left",
 			type = "axis"

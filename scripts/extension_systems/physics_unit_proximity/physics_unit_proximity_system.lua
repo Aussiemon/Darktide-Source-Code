@@ -31,6 +31,7 @@ PhysicsUnitProximitySystem.on_add_extension = function (self, world, unit, exten
 		PhysicsProximitySystem.add_actor(self._physics_world, unit, time_caching_enabled)
 	end
 
+	extension.extension_name = extension_name
 	self._unit_to_extension_map[unit] = extension
 
 	return extension
@@ -53,6 +54,14 @@ PhysicsUnitProximitySystem.on_remove_extension = function (self, unit, extension
 	self._unit_to_extension_map[unit] = nil
 
 	ScriptUnit.remove_extension(unit, self._name)
+end
+
+PhysicsUnitProximitySystem.activate_unit = function (self, unit)
+	local extension = self._unit_to_extension_map[unit]
+
+	if extension.extension_name == "PhysicsUnitProximityActorExtension" then
+		PhysicsProximitySystem.activate_actor(self._physics_world, unit)
+	end
 end
 
 local DEFAULT_OBSERVER_RADIUS = 5

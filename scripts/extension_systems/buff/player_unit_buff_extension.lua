@@ -62,8 +62,9 @@ PlayerUnitBuffExtension.game_object_initialized = function (self, game_session, 
 			local optional_lerp_value = buff_added_before_game_object_creation.optional_lerp_value
 			local optional_slot_id = buff_added_before_game_object_creation.optional_slot_id
 			local optional_parent_buff_template_id = buff_added_before_game_object_creation.optional_parent_buff_template_id
+			local from_specialization = buff_added_before_game_object_creation.from_specialization
 
-			RPC.rpc_add_buff(channel_id, game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id)
+			RPC.rpc_add_buff(channel_id, game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id, from_specialization)
 		end
 
 		self._buffs_added_before_game_object_creation = nil
@@ -178,7 +179,7 @@ PlayerUnitBuffExtension._add_predicted_buff = function (self, template, t, ...)
 			Log.warning("PlayerUnitBuffExtension", "Buff stack count of %s exceeding %d (%d)", template.name, warning_stack_count, stack_count)
 		end
 
-		if template.refresh_duration_on_stack then
+		if template.refresh_duration_on_stack or template.refresh_start_time_on_stack then
 			local start_time_key = component_keys.start_time_key
 			buff_component[start_time_key] = buff_instance:start_time()
 		end
@@ -378,25 +379,28 @@ PlayerUnitBuffExtension._add_rpc_synced_buff = function (self, template, t, ...)
 	local template_name = template.name
 	local buff_template_id = NetworkLookup.buff_templates[template_name]
 	local buff_instance = self._buffs_by_index[index]
+	local additional_arguments = buff_instance:additional_arguments()
 	local optional_lerp_value = buff_instance:buff_lerp_value()
 	local optional_item_slot = buff_instance:item_slot_name()
 	local optional_slot_id = optional_item_slot and NetworkLookup.player_inventory_slot_names[optional_item_slot]
 	local optional_parent_buff_template = buff_instance.parent_buff_template and buff_instance:parent_buff_template()
 	local optional_parent_buff_template_id = optional_parent_buff_template and NetworkLookup.buff_templates[optional_parent_buff_template]
+	local from_specialization = additional_arguments.from_specialization or false
 	local player = self._player
 
 	if player.remote then
 		if game_object_id then
 			local channel_id = player:channel_id()
 
-			RPC.rpc_add_buff(channel_id, game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id)
+			RPC.rpc_add_buff(channel_id, game_object_id, buff_template_id, index, optional_lerp_value, optional_slot_id, optional_parent_buff_template_id, from_specialization)
 		else
 			local buff_added_before_game_object_creation = {
 				buff_template_id = buff_template_id,
 				index = index,
 				optional_lerp_value = optional_lerp_value,
 				optional_slot_id = optional_slot_id,
-				optional_parent_buff_template_id = optional_parent_buff_template_id
+				optional_parent_buff_template_id = optional_parent_buff_template_id,
+				from_specialization = from_specialization
 			}
 			local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
 			buffs_added_before_game_object_creation[#buffs_added_before_game_object_creation + 1] = buff_added_before_game_object_creation

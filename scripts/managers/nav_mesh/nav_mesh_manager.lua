@@ -1,4 +1,5 @@
 local Attack = require("scripts/utilities/attack/attack")
+local Breed = require("scripts/utilities/breed")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local GameplayInitTimeSlice = require("scripts/game_states/game/utilities/gameplay_init_time_slice")
 local Navigation = require("scripts/extension_systems/navigation/utilities/navigation")
@@ -469,12 +470,16 @@ NavMeshManager.set_allowed_nav_tag_layer = function (self, layer_name, allowed)
 	local nav_world = self._nav_world
 	local damage_profile = DamageProfileTemplates.default
 	local slot_system = Managers.state.extension:system("slot_system")
-	local minion_navigation_extensions = Managers.state.extension:get_entities("MinionNavigationExtension")
+	local navigation_system = Managers.state.extension:system("navigation_system")
+	local unit_to_navigation_extension_map = navigation_system:unit_to_extension_map()
 
-	for unit, extension in pairs(minion_navigation_extensions) do
+	for unit, extension in pairs(unit_to_navigation_extension_map) do
 		extension:allow_nav_tag_layer(layer_name, allowed)
 
-		if not allowed then
+		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+		local breed = unit_data_extension:breed()
+
+		if not allowed and Breed.is_minion(breed) then
 			local unit_position = POSITION_LOOKUP[unit]
 
 			if Navigation.inside_nav_tag_volume_layer(nav_world, unit_position, NAV_MESH_ABOVE, NAV_MESH_BELOW, layer_id) then
@@ -509,13 +514,6 @@ NavMeshManager.set_allowed_nav_tag_layer = function (self, layer_name, allowed)
 	Managers.state.pacing:allow_nav_tag_layer(layer_name, allowed)
 	Managers.state.main_path:allow_nav_tag_layer(layer_name, allowed)
 	Managers.state.bot_nav_transition:allow_nav_tag_layer(layer_name, allowed)
-
-	local bot_navigation_extensions = Managers.state.extension:get_entities("BotNavigationExtension")
-
-	for unit, extension in pairs(bot_navigation_extensions) do
-		extension:allow_nav_tag_layer(layer_name, allowed)
-	end
-
 	Managers.state.game_session:send_rpc_clients("rpc_set_allowed_nav_tag_layer", layer_id, allowed)
 end
 

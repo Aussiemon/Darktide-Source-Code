@@ -342,7 +342,15 @@ BtShootAction._start_shooting = function (self, unit, t, scratchpad, action_data
 end
 
 BtShootAction._update_shooting = function (self, unit, t, scratchpad, action_data)
-	local _, aim_dot, flat_to_target = MinionAttack.aim_at_target(unit, scratchpad, t, action_data)
+	local valid_angle, aim_dot, flat_to_target = MinionAttack.aim_at_target(unit, scratchpad, t, action_data)
+
+	if not valid_angle then
+		MinionAttack.stop_shooting(unit, scratchpad)
+		self:_start_aiming(unit, t, scratchpad, action_data)
+
+		return true
+	end
+
 	local aim_rotation_anims = action_data.aim_rotation_anims
 
 	if aim_dot and aim_rotation_anims then

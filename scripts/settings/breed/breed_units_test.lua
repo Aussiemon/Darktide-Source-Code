@@ -20,11 +20,13 @@ local REQUIRED_MINION_RANGED_NODES = {
 local FX_SOURCE_NAME = "muzzle"
 
 local function _init_and_run_tests()
+	if BUILD == "release" or PLATFORM == "xbs" then
+		return
+	end
+
 	local world = Application.new_world()
 
-	if BUILD ~= "release" then
-		World.set_flow_enabled(world, false)
-	end
+	World.set_flow_enabled(world, false)
 
 	local trigger_flow = false
 	local attach_settings = {

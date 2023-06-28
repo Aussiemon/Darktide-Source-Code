@@ -38,8 +38,8 @@ local breed_data = {
 	player_locomotion_constrain_radius = 0.5,
 	stagger_reduction = 0,
 	volley_fire_target = true,
-	stagger_reduction_ranged = 20,
 	use_wounds = true,
+	stagger_reduction_ranged = 20,
 	smart_tag_target_type = "breed",
 	game_object_type = "minion_ranged",
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
@@ -99,20 +99,6 @@ local breed_data = {
 		default_combat_range = "far",
 		valid_combat_ranges = {
 			far = true
-		}
-	},
-	suppress_config = {
-		max_value = math.huge,
-		threshold = math.huge,
-		flinch_threshold = math.huge,
-		decay_speeds = {
-			melee = 0.05,
-			far = 0.5,
-			close = 0.5
-		},
-		immunity_duration = {
-			2.75,
-			3.25
 		}
 	},
 	attack_intensity_cooldowns = {

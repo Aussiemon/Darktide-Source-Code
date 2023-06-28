@@ -352,8 +352,7 @@ templates.gadget_damage_reduction_vs_grenadiers = {
 	predicted = false,
 	keywords = {},
 	stat_buffs = {
-		[stat_buffs.damage_taken_by_renegade_grenadier_multiplier] = 0.8,
-		[stat_buffs.damage_taken_by_cultist_grenadier_multiplier] = 0.8
+		[stat_buffs.damage_taken_by_renegade_grenadier_multiplier] = 0.8
 	},
 	localization_info = {
 		[stat_buffs.damage_taken_by_renegade_grenadier_multiplier] = DISPLAY.percentage

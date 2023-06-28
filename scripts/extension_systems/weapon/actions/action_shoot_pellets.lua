@@ -209,6 +209,7 @@ ActionShootPellets._shoot = function (self, position, rotation, power_level, cha
 			param_table.num_hit_units = number_of_units_hit
 			param_table.hit_all_pellets = hit_all_pellets
 			param_table.hit_all_pellets_on_same = hit_all_pellets_on_same
+			param_table.is_critical_strike = self._critical_strike_component.is_active
 
 			attacker_buff_extension:add_proc_event(proc_events.on_shoot, param_table)
 		end

@@ -62,6 +62,7 @@ DialogueSystem.init = function (self, extension_system_creation_context, system_
 		player_voice_profiles = nil,
 		team_lowest_player_level = nil
 	}
+	self._decaying_tension_hold_time = 0
 	local network_event_delegate = extension_system_creation_context.network_event_delegate
 
 	if network_event_delegate and self._is_rule_db_enabled then
@@ -261,6 +262,22 @@ DialogueSystem._update_global_context_player_voices = function (self, in_game_pl
 	end)
 
 	self.global_context.player_voice_profiles = unique_voice_profiles
+end
+
+DialogueSystem._update_decaying_tension = function (self, dt, t)
+	local is_decaying_tension = Managers.state.pacing:is_decaying_tension()
+
+	if is_decaying_tension then
+		self.global_context.is_decaying_tension = "true"
+		local decaying_tension_delay = DialogueSettings.decaying_tension_delay
+		self._decaying_tension_hold_time = decaying_tension_delay
+	else
+		self._decaying_tension_hold_time = self._decaying_tension_hold_time - dt
+
+		if self._decaying_tension_hold_time <= 0 then
+			self.global_context.is_decaying_tension = "false"
+		end
+	end
 end
 
 DialogueSystem.extensions_ready = function (self, world, unit)
@@ -524,8 +541,9 @@ DialogueSystem.physics_async_update = function (self, context, dt, t)
 	self.global_context.level_time = t
 	self.global_context.pacing_tension = Managers.state.pacing:tension()
 	self.global_context.team_threat_level = Managers.state.pacing:combat_state()
-	local is_decaying_tension = Managers.state.pacing:is_decaying_tension()
-	self.global_context.is_decaying_tension = tostring(is_decaying_tension)
+
+	self:_update_decaying_tension(dt, t)
+
 	self.global_context.pacing_state = Managers.state.pacing:state()
 	self._LOCAL_GAMETIME = t + 900
 	self.global_context.active_hordes = Managers.state.horde:num_active_hordes()

@@ -208,14 +208,22 @@ BtChaosDaemonhostSelectorNode.evaluate = function (self, unit, blackboard, scrat
 		else
 			local perception_component = blackboard.perception
 			local target_unit = perception_component.target_unit
-			local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
-			local character_state_component = unit_data_extension:read_component("character_state")
-			local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-			local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
-			local hit_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
-			local disabled_state_input = hit_unit_data_extension:read_component("disabled_state_input")
-			local is_disabled_by_this_deamonhost = disabled_state_input.disabling_unit == unit
-			condition_result = is_knocked_down or is_disabled_by_this_deamonhost
+			local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+			local target_breed = target_unit_data_extension:breed()
+			local Breed = require("scripts/utilities/breed")
+
+			if not Breed.is_player(target_breed) then
+				condition_result = false
+			else
+				local unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+				local character_state_component = unit_data_extension:read_component("character_state")
+				local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+				local is_knocked_down = PlayerUnitStatus.is_knocked_down(character_state_component)
+				local hit_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+				local disabled_state_input = hit_unit_data_extension:read_component("disabled_state_input")
+				local is_disabled_by_this_deamonhost = disabled_state_input.disabling_unit == unit
+				condition_result = is_knocked_down or is_disabled_by_this_deamonhost
+			end
 		end
 	until true
 

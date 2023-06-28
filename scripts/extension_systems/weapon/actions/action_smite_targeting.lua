@@ -141,15 +141,15 @@ ActionSmiteTargeting._calculate_charge_duration_of_target_health = function (sel
 	end
 end
 
-ActionSmiteTargeting.finish = function (self, reason, data, t, time_in_action, action_settings, chaining_action_params)
+ActionSmiteTargeting.finish = function (self, reason, data, t, time_in_action, action_settings, next_action_params)
 	self._should_fade_kill = false
 
-	ActionSmiteTargeting.super.finish(self, reason, data, t, time_in_action, chaining_action_params)
+	ActionSmiteTargeting.super.finish(self, reason, data, t, time_in_action, next_action_params)
 	self._targeting_module:finish(reason, data, t)
 	self._overload_module:finish(reason, data, t)
 
-	if chaining_action_params then
-		chaining_action_params.starting_warp_charge_percent = self._starting_warp_charge_percent
+	if next_action_params then
+		next_action_params.starting_warp_charge_percent = self._starting_warp_charge_percent
 	end
 end
 

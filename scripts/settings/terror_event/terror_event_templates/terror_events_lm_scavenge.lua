@@ -1318,7 +1318,7 @@ local template = {
 				"spawn_by_points",
 				spawner_group = "scavenge_escape_d",
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				points = 3,
+				points = 4,
 				breed_tags = {
 					{
 						"close",

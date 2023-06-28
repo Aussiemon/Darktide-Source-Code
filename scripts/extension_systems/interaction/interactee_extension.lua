@@ -141,6 +141,10 @@ InteracteeExtension.can_interact = function (self, interactor_unit)
 		return false
 	end
 
+	if active_override_context.block_text then
+		return false
+	end
+
 	local is_active = self._active
 
 	if not is_active then
@@ -381,7 +385,7 @@ InteracteeExtension.set_block_text = function (self, text, block_text_context)
 	end
 end
 
-InteracteeExtension.block_text = function (self)
+InteracteeExtension.block_text = function (self, interactor_unit)
 	local active_interaction_type = self._active_interaction_type
 
 	if not active_interaction_type then

@@ -163,9 +163,7 @@ ViewElementWeaponExperiencePresentation.set_pivot_offset = function (self, x, y)
 	self:_force_update_scenegraph()
 end
 
-ViewElementWeaponExperiencePresentation.destroy = function (self)
-	ViewElementWeaponExperiencePresentation.super.destroy(self)
-
+ViewElementWeaponExperiencePresentation.destroy = function (self, ui_renderer)
 	if self._ui_weapon_spawner then
 		self._ui_weapon_spawner:destroy()
 
@@ -183,6 +181,8 @@ ViewElementWeaponExperiencePresentation.destroy = function (self)
 
 		self._playing_experience_sound = false
 	end
+
+	ViewElementWeaponExperiencePresentation.super.destroy(self, ui_renderer)
 end
 
 ViewElementWeaponExperiencePresentation.draw = function (self, dt, t, ui_renderer, render_settings, input_service)

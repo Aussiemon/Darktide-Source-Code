@@ -17,10 +17,11 @@ PickupInteraction.stop = function (self, world, interactor_unit, unit_data_compo
 		self:_picked_up(interactee_unit, interactor_session_id_or_nil)
 		self:_trigger_sound(interactor_unit, pickup_data)
 
-		local pickup_animation_system = Managers.state.extension:system("pickup_animation_system")
+		local extension_manager = Managers.state.extension
+		local pickup_animation_system = extension_manager:system("pickup_animation_system")
 
 		if not pickup_animation_system:start_animation_to_unit(interactee_unit, interactor_unit) then
-			local pickup_system = Managers.state.extension:system("pickup_system")
+			local pickup_system = extension_manager:system("pickup_system")
 
 			pickup_system:despawn_pickup(interactee_unit)
 		end
@@ -28,9 +29,9 @@ PickupInteraction.stop = function (self, world, interactor_unit, unit_data_compo
 end
 
 PickupInteraction.interactee_show_marker_func = function (self, interactor_unit, interactee_unit)
-	local interactee_ext = ScriptUnit.extension(interactee_unit, "interactee_system")
+	local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
 
-	if interactee_ext:used() then
+	if interactee_extension:used() then
 		return false
 	end
 
@@ -51,31 +52,34 @@ PickupInteraction._update_stats = function (self, target_unit, interactor_sessio
 		return
 	end
 
+	local player_manager = Managers.player
+	local stats_manager = Managers.stats
+	local telemetry_reporters_manager = Managers.telemetry_reporters
 	local pickup_name = Unit.get_data(target_unit, "pickup_type")
-	local player_or_nil = Managers.player:player_from_session_id(interactor_session_id)
+	local player_or_nil = player_manager:player_from_session_id(interactor_session_id)
 
 	if player_or_nil then
-		Managers.telemetry_reporters:reporter("picked_items"):register_event(player_or_nil, pickup_name)
+		telemetry_reporters_manager:reporter("picked_items"):register_event(player_or_nil, pickup_name)
 
 		local is_human_player = player_or_nil:is_human_controlled()
 
-		if Managers.stats.can_record_stats() and is_human_player then
-			Managers.stats:record_pickup_item(player_or_nil, pickup_name)
+		if stats_manager.can_record_stats() and is_human_player then
+			stats_manager:record_pickup_item(player_or_nil, pickup_name)
 		end
 	end
 
 	local pickup_system = Managers.state.extension:system("pickup_system")
 	local owner_session_id_or_nil = pickup_system:get_owner(target_unit)
-	local owning_player_or_nil = owner_session_id_or_nil and Managers.player:player_from_session_id(owner_session_id_or_nil)
+	local owning_player_or_nil = owner_session_id_or_nil and player_manager:player_from_session_id(owner_session_id_or_nil)
 	local is_human_owner = owning_player_or_nil and owning_player_or_nil:is_human_controlled()
 	local interacted_before = pickup_system:has_interacted(target_unit, interactor_session_id)
 	local interactor_is_owner = interactor_session_id == owner_session_id_or_nil
 
 	if owning_player_or_nil and not interacted_before and not interactor_is_owner then
-		Managers.telemetry_reporters:reporter("shared_items"):register_event(owning_player_or_nil, pickup_name)
+		telemetry_reporters_manager:reporter("shared_items"):register_event(owning_player_or_nil, pickup_name)
 
-		if Managers.stats.can_record_stats() and is_human_owner then
-			Managers.stats:record_share_item(owning_player_or_nil, pickup_name)
+		if stats_manager.can_record_stats() and is_human_owner then
+			stats_manager:record_share_item(owning_player_or_nil, pickup_name)
 		end
 	end
 end
@@ -105,15 +109,16 @@ PickupInteraction._use_charge = function (self, target_unit, interactor_unit)
 		GameSession.set_game_object_field(game_session, game_object_id, "charges", remaining_charges - 1)
 		self:_interact_with(target_unit, interactor_session_id_or_nil)
 	else
-		local interactee_ext = ScriptUnit.extension(target_unit, "interactee_system")
+		local interactee_extension = ScriptUnit.extension(target_unit, "interactee_system")
 
-		interactee_ext:set_used()
+		interactee_extension:set_used()
 		self:_picked_up(target_unit, interactor_session_id_or_nil)
 
-		local pickup_animation_system = Managers.state.extension:system("pickup_animation_system")
+		local extension_manager = Managers.state.extension
+		local pickup_animation_system = extension_manager:system("pickup_animation_system")
 
 		if not pickup_animation_system:start_animation_to_unit(target_unit, interactor_unit) then
-			local pickup_system = Managers.state.extension:system("pickup_system")
+			local pickup_system = extension_manager:system("pickup_system")
 
 			pickup_system:despawn_pickup(target_unit)
 		end

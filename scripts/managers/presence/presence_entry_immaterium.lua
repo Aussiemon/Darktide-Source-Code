@@ -203,6 +203,18 @@ PresenceEntryImmaterium.party_id = function (self)
 	return self:_key_value_string("party_id")
 end
 
+PresenceEntryImmaterium.cross_play_disabled = function (self)
+	return self:_key_value_string("cross_play_disabled") == "true"
+end
+
+PresenceEntryImmaterium.cross_play_disabled_in_party = function (self)
+	return self:_key_value_string("cross_play_disabled_in_party") == "true"
+end
+
+PresenceEntryImmaterium.is_cross_playing = function (self)
+	return self:_key_value_string("is_cross_playing") == "true"
+end
+
 PresenceEntryImmaterium.is_alive = function (self)
 	if self._alive then
 		self._alive_queried = true
