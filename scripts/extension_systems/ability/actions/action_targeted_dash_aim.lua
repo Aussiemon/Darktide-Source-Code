@@ -16,20 +16,13 @@ end
 ActionTargetedDashAim.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionTargetedDashAim.super.start(self, action_settings, t, time_scale, action_start_params)
 
-	local lunge_template = self:get_lunge_template()
 	self._lunge_character_state_component.is_aiming = true
-	self._lunge_character_state_component.lunge_template = lunge_template.name
 end
 
 ActionTargetedDashAim.finish = function (self, reason, data, t, time_in_action)
 	ActionTargetedDashAim.super.finish(self, reason, data, t, time_in_action)
 
 	self._lunge_character_state_component.is_aiming = false
-	self._lunge_character_state_component.lunge_template = "none"
-
-	if self._unit_data_extension.is_resimulating then
-		return
-	end
 end
 
 ActionTargetedDashAim.fixed_update = function (self, dt, t, time_in_action)

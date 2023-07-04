@@ -166,9 +166,9 @@ ConditionalFunctions.is_lunging = function (template_data, template_context)
 		template_data.lunge_component = lunge_component
 	end
 
-	local is_lungeing = lunge_component.is_lunging
+	local is_lunging = lunge_component.is_lunging
 
-	return is_lungeing
+	return is_lunging
 end
 
 ConditionalFunctions.is_sprinting = function (template_data, template_context)

@@ -77,6 +77,7 @@ local sound_events = {
 	"wwise/events/weapon/play_explosion_force_med_husk",
 	"wwise/events/weapon/play_explosion_force_med",
 	"wwise/events/weapon/play_explosion_grenade_flame_minion",
+	"wwise/events/weapon/play_explosion_grenade_flame",
 	"wwise/events/weapon/play_explosion_grenade_frag",
 	"wwise/events/weapon/play_explosion_grenade_gas",
 	"wwise/events/weapon/play_explosion_grenade_shock",

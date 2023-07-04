@@ -88,8 +88,11 @@ Account.get_data = function (self, section, part, ...)
 end
 
 Account.rename_account = function (self, requested_name)
-	return BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("/name/"):path(requested_name), {
-		method = "PUT"
+	return BackendUtilities.make_account_title_request("account", BackendUtilities.url_builder("/name"), {
+		method = "POST",
+		body = {
+			accountName = requested_name
+		}
 	})
 end
 

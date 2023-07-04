@@ -247,19 +247,17 @@ PlayerUnitStatus.is_in_critical_health = function (health_extension, toughness_e
 	return is_in_critical_health, critical_health_status
 end
 
-PlayerUnitStatus.is_in_lunging_aim_or_combat_ability = function (lunge_character_state_component)
-	local is_lunging = lunge_character_state_component.is_lunging
-	local is_lunging_aiming = lunge_character_state_component.is_aiming
+local AbilityTemplate, Action = nil
 
-	if not is_lunging and not is_lunging_aiming then
-		return false, nil
-	end
+PlayerUnitStatus.is_aiming_lunge = function (combat_ability_action_read_component)
+	AbilityTemplate = AbilityTemplate or require("scripts/utilities/ability/ability_template")
+	Action = Action or require("scripts/utilities/weapon/action")
+	local ability_template = AbilityTemplate.current_ability_template(combat_ability_action_read_component)
+	local _, current_action_settings = Action.current_action(combat_ability_action_read_component, ability_template)
+	local current_action_kind = current_action_settings and current_action_settings.kind
+	local correct_action_kind = current_action_kind == "targeted_dash_aim" or current_action_kind == "directional_dash_aim"
 
-	local LungeTemplates = require("scripts/settings/lunge/lunge_templates")
-	local lunge_template_name = lunge_character_state_component.lunge_template
-	local lunge_template = LungeTemplates[lunge_template_name]
-
-	return lunge_template.combat_ability, lunge_template
+	return correct_action_kind
 end
 
 PlayerUnitStatus.can_interact_with_objective = function (player_unit)

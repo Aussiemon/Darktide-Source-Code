@@ -261,16 +261,16 @@ HumanGameplay.pre_update = function (self, main_dt, main_t)
 
 	if player_unit_is_alive then
 		local player_unit = player.player_unit
-		local unit_data = ScriptUnit.extension(player_unit, "unit_data_system")
+		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 		local weapon_ext = ScriptUnit.extension(player_unit, "weapon_system")
 		local weapon_system_sensitivity_modifier = weapon_ext:sensitivity_modifier()
 		local weapon_system_rotation_contraints = weapon_ext:rotation_contraints()
 		sensitivity_modifier = weapon_system_sensitivity_modifier or 1
 		rotation_contraints = weapon_system_rotation_contraints
-		local lunge_data = unit_data:read_component("lunge_character_state")
+		local lunge_character_state_component = unit_data_extension:read_component("lunge_character_state")
 
-		if lunge_data and lunge_data.is_lunging then
-			local lunge_template = LungeTemplates[lunge_data.lunge_template]
+		if lunge_character_state_component and lunge_character_state_component.is_lunging then
+			local lunge_template = LungeTemplates[lunge_character_state_component.lunge_template]
 
 			if lunge_template then
 				local lunge_sensitivity_modifier = lunge_template.sensitivity_modifier or 1

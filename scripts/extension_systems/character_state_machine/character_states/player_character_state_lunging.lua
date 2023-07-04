@@ -51,7 +51,6 @@ PlayerCharacterStateLunging.init = function (self, character_state_init_context,
 	self._locomotion_push_component = character_state_init_context.unit_data:write_component("locomotion_push")
 	self._push_sfx_cooldown = 0
 	self._hit_enemy_units = {}
-	self._number_of_units_hit = 0
 	self._last_hit_unit = nil
 	self._moving_backwards = nil
 	self._has_pushback = nil
@@ -636,7 +635,7 @@ function _max_hit_mass(damage_settings, lunge_template, unit)
 	return max_hit_mass
 end
 
-local function _was_charging_plauge_ogryn_that_is_now_staggered(unit, optional_action)
+local function _was_charging_plague_ogryn_that_is_now_staggered(unit, optional_action)
 	if not unit then
 		return false
 	end
@@ -674,7 +673,7 @@ function _record_stat_on_lunge_hit(player, enemy_unit, attack_result, optional_a
 	local character_id = player:character_id()
 	local specialization = player:profile().specialization
 
-	if specialization == "ogryn_2" and _was_charging_plauge_ogryn_that_is_now_staggered(enemy_unit, optional_action) then
+	if specialization == "ogryn_2" and _was_charging_plague_ogryn_that_is_now_staggered(enemy_unit, optional_action) then
 		Managers.achievements:trigger_event(account_id, character_id, "ogryn_2_bull_rushed_charging_ogryn_event")
 	end
 end

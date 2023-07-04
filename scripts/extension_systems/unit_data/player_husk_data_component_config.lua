@@ -34,6 +34,10 @@ local husk_data_component_config = {
 		"template_name",
 		"time_scale"
 	},
+	combat_ability_action = {
+		"current_action_name",
+		"template_name"
+	},
 	sway = {
 		"pitch",
 		"yaw",

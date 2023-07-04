@@ -27,17 +27,6 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						22,
-						27
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_poxwalker",
-					amount = {
 						27,
 						32
 					}
@@ -49,8 +38,19 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						32,
-						35
+						34,
+						38
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						38,
+						40
 					}
 				}
 			}
@@ -84,17 +84,6 @@ local horde_compositions = {
 				{
 					name = "chaos_newly_infected",
 					amount = {
-						22,
-						27
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_newly_infected",
-					amount = {
 						27,
 						32
 					}
@@ -106,8 +95,19 @@ local horde_compositions = {
 				{
 					name = "chaos_newly_infected",
 					amount = {
-						32,
-						35
+						34,
+						38
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_newly_infected",
+					amount = {
+						38,
+						40
 					}
 				}
 			}
@@ -119,17 +119,6 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						30,
-						35
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_poxwalker",
-					amount = {
 						35,
 						40
 					}
@@ -141,19 +130,8 @@ local horde_compositions = {
 				{
 					name = "chaos_poxwalker",
 					amount = {
-						40,
-						55
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_poxwalker",
-					amount = {
-						45,
-						50
+						43,
+						48
 					}
 				}
 			}
@@ -164,7 +142,29 @@ local horde_compositions = {
 					name = "chaos_poxwalker",
 					amount = {
 						50,
-						55
+						58
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						55,
+						60
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						60,
+						65
 					}
 				}
 			}
@@ -176,41 +176,8 @@ local horde_compositions = {
 				{
 					name = "chaos_newly_infected",
 					amount = {
-						30,
-						35
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_newly_infected",
-					amount = {
-						35,
-						40
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_newly_infected",
-					amount = {
-						40,
-						55
-					}
-				}
-			}
-		},
-		{
-			breeds = {
-				{
-					name = "chaos_newly_infected",
-					amount = {
-						45,
-						50
+						42,
+						48
 					}
 				}
 			}
@@ -222,6 +189,39 @@ local horde_compositions = {
 					amount = {
 						50,
 						55
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_newly_infected",
+					amount = {
+						60,
+						65
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_newly_infected",
+					amount = {
+						65,
+						70
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_newly_infected",
+					amount = {
+						70,
+						75
 					}
 				}
 			}

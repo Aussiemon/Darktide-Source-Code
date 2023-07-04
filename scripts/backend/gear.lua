@@ -6,14 +6,30 @@ local Interface = {
 }
 local Gear = class("Gear")
 
-Gear.fetch = function (self)
-	Log.warning("Gear", "Deprecated, use fetch_paged instead")
+Gear.fetch = function (self, wrapped, promise, all_items)
+	if not wrapped then
+		local new_promise = Promise.new()
 
-	return self:_gear_path():next(function (path)
-		return Managers.backend:title_request(path)
-	end):next(function (data)
-		return data.body.gearList
-	end)
+		self:fetch_paged(500):next(function (w)
+			self:fetch(w, new_promise, {})
+		end):catch(function (error)
+			new_promise:reject(error)
+		end)
+
+		return new_promise
+	else
+		for _, item in pairs(wrapped.items) do
+			all_items[item.uuid] = item
+		end
+
+		if wrapped.has_next then
+			wrapped.next_page():next(function (w)
+				self:fetch(w, promise, all_items)
+			end)
+		else
+			promise:resolve(all_items)
+		end
+	end
 end
 
 Gear.fetch_by_id = function (self, account_id, gear_id)

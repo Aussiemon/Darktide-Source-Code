@@ -15,33 +15,33 @@ end
 LungeEffects.destroy = function (self)
 	if self._is_sfx_active then
 		self:_stop_effects()
-		self:_reset_lunge_parameter()
+		self:_reset_wwise_state()
 	end
 end
 
 LungeEffects.update = function (self, unit, dt, t)
 	local lunge_character_state_component = self._lunge_character_state_component
-	local is_lungeing = lunge_character_state_component.is_lunging
+	local is_lunging = lunge_character_state_component.is_lunging
 	local is_sfx_active = self._is_sfx_active
 
-	if is_lungeing and not is_sfx_active then
+	if is_lunging and not is_sfx_active then
 		self._is_sfx_active = true
-		local lunnge_template_name = lunge_character_state_component.lunge_template
-		self._lunge_template = LungeTemplates[lunnge_template_name]
+		local lunge_template_name = lunge_character_state_component.lunge_template
+		self._lunge_template = LungeTemplates[lunge_template_name]
 
 		self:_start_effects()
-		self:_set_lunge_parameter()
-	elseif not is_lungeing and is_sfx_active then
+		self:_set_wwise_state()
+	elseif not is_lunging and is_sfx_active then
 		self._is_sfx_active = false
 
 		self:_stop_effects()
-		self:_reset_lunge_parameter()
+		self:_reset_wwise_state()
 	end
 end
 
 LungeEffects._start_effects = function (self)
 	local lunge_template = self._lunge_template
-	local start_sound_event = lunge_template.start_sound_event
+	local start_sound_event = lunge_template and lunge_template.start_sound_event
 
 	if start_sound_event and self._is_local_unit then
 		self._fx_extension:trigger_wwise_event(start_sound_event, false)
@@ -50,25 +50,25 @@ end
 
 LungeEffects._stop_effects = function (self)
 	local lunge_template = self._lunge_template
-	local stop_sound_event = lunge_template.stop_sound_event
+	local stop_sound_event = lunge_template and lunge_template.stop_sound_event
 
 	if stop_sound_event and self._is_local_unit then
 		self._fx_extension:trigger_wwise_event(stop_sound_event, false)
 	end
 end
 
-LungeEffects._set_lunge_parameter = function (self)
+LungeEffects._set_wwise_state = function (self)
 	local lunge_template = self._lunge_template
-	local wwise_state = lunge_template.wwise_state
+	local wwise_state = lunge_template and lunge_template.wwise_state
 
 	if wwise_state and self._is_local_unit then
 		Wwise.set_state(wwise_state.group, wwise_state.on_state)
 	end
 end
 
-LungeEffects._reset_lunge_parameter = function (self)
+LungeEffects._reset_wwise_state = function (self)
 	local lunge_template = self._lunge_template
-	local wwise_state = lunge_template.wwise_state
+	local wwise_state = lunge_template and lunge_template.wwise_state
 
 	if wwise_state and self._is_local_unit then
 		Wwise.set_state(wwise_state.group, wwise_state.off_state)

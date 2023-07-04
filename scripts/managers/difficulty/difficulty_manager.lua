@@ -6,6 +6,7 @@ DifficultyManager.init = function (self, is_server, resistance, challenge)
 	self._is_server = is_server
 	self._resistance = resistance
 	self._challenge = challenge
+	self._initial_challenge = challenge
 
 	Log.info("DifficultyManager", "Difficulty initialized to challenge %s, resistance %s", challenge, resistance)
 end
@@ -49,7 +50,7 @@ DifficultyManager.get_resistance = function (self)
 end
 
 DifficultyManager.get_difficulty = function (self)
-	return self:get_challenge()
+	return self._initial_challenge
 end
 
 DifficultyManager.get_dummy_challenge = function (self)

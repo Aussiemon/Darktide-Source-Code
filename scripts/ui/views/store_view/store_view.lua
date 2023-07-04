@@ -260,29 +260,12 @@ StoreView._set_panels_store = function (self)
 	self:_update_panel_positions()
 end
 
-StoreView._update_account_items = function (self, wrapped, promise)
-	if not wrapped then
-		self._account_items = {}
-		local promise = Promise.new()
-
-		Managers.data_service.gear:fetch_account_items_paged(100):next(function (wrapped)
-			self:_update_account_items(wrapped, promise)
-		end)
-
-		return promise
-	else
-		for _, item in pairs(wrapped.items) do
+StoreView._update_account_items = function (self)
+	return Managers.data_service.gear:fetch_inventory():next(function (items)
+		for _, item in pairs(items) do
 			self._account_items[#self._account_items + 1] = item
 		end
-
-		if wrapped.has_next then
-			wrapped.next_page():next(function (wrapped)
-				self:_update_account_items(wrapped, promise)
-			end)
-		else
-			promise:resolve()
-		end
-	end
+	end)
 end
 
 StoreView._initialize_opening_page = function (self)

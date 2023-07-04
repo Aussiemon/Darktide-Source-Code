@@ -953,8 +953,11 @@ local function generate_blueprints_function(grid_size)
 				icon_offset[1] = icon_offset[1] - icon_size[1] * 0.3
 			end
 
-			local item_level = presentation_item and ItemUtils.item_level(presentation_item)
-			local has_item_level = nil
+			local item_level, has_item_level = nil
+
+			if presentation_item then
+				item_level, has_item_level = ItemUtils.item_level(presentation_item)
+			end
 
 			if content.item_level then
 				content.item_level = has_item_level and item_level or ""

@@ -21,12 +21,14 @@ PlayerUnitMoodExtension.init = function (self, extension_init_context, unit, ext
 	self._player = player
 	self._is_local_human = not player.remote and self._player:is_human_controlled()
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-	self._character_state_read_component = unit_data_extension:read_component("character_state")
-	self._warp_charge_component = unit_data_extension:read_component("warp_charge")
-	self._lunge_character_state_component = unit_data_extension:read_component("lunge_character_state")
-	self._sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
-	self._combat_ability_component = unit_data_extension:read_component("combat_ability")
+	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
 	self._unit_data_extension = unit_data_extension
+	self._character_state_read_component = unit_data_extension:read_component("character_state")
+	self._warp_charge_read_component = unit_data_extension:read_component("warp_charge")
+	self._lunge_character_state_read_component = unit_data_extension:read_component("lunge_character_state")
+	self._combat_ability_action_read_component = unit_data_extension:read_component("combat_ability_action")
+	self._sprint_character_state_read_component = unit_data_extension:read_component("sprint_character_state")
+	self._combat_ability_read_component = unit_data_extension:read_component("combat_ability")
 	self._health_extension = ScriptUnit.has_extension(unit, "health_system")
 	self._toughness_extension = ScriptUnit.extension(unit, "toughness_system")
 	self._suppression_extension = ScriptUnit.extension(unit, "suppression_system")
@@ -96,6 +98,8 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	local no_toughness_left = PlayerUnitStatus.no_toughness_left(self._toughness_extension)
 	local is_suppressed = self._suppression_extension:has_high_suppression()
 	local player = self._player
+	local unit = self._unit
+	local buff_extension = self._buff_extension
 	local base_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
 	local weapon_warp_charge_template = WarpCharge.weapon_warp_charge_template(player.player_unit)
 	local base_low_threshold = base_warp_charge_template.low_threshold
@@ -107,32 +111,30 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	local base_critical_threshold = base_warp_charge_template.critical_threshold
 	local critical_threshold_modifier = weapon_warp_charge_template.critical_threshold_modifier or 1
 	local warped_critical_threshold = base_critical_threshold * critical_threshold_modifier
-	local current_warp_percentage = self._warp_charge_component.current_percentage
+	local current_warp_percentage = self._warp_charge_read_component.current_percentage
 	local warped = current_warp_percentage > 0
 	local warped_low_to_high = warped_low_threshold < current_warp_percentage
 	local warped_high_to_critical = warped_high_threshold < current_warp_percentage
 	local warped_critical = warped_critical_threshold < current_warp_percentage
 	local num_wounds = self._health_extension:num_wounds()
 	local last_wound = num_wounds == 1
-	local is_in_lunging, lunging_template = PlayerUnitStatus.is_in_lunging_aim_or_combat_ability(self._lunge_character_state_component)
-	local lunging_mood = is_in_lunging and lunging_template.mood
-	local buff_extension = ScriptUnit.extension(self._unit, "buff_system")
+	local archetype_name = self._player:archetype_name()
+	local is_aiming_lunge = PlayerUnitStatus.is_aiming_lunge(self._combat_ability_action_read_component)
 	local is_in_veteran_ranger_stance = buff_extension:has_keyword(buff_keywords.veteran_ranger_combat_ability)
 	local is_in_stealth = buff_extension:has_keyword(buff_keywords.invisible)
-	local combat_ability_active = self._combat_ability_component.active
+	local combat_ability_active = self._combat_ability_read_component.active
 	local is_in_psyker_biomancer_combat_ability = nil
 
 	if combat_ability_active then
-		local specialization_extension = ScriptUnit.extension(self._unit, "specialization_system")
+		local specialization_extension = ScriptUnit.extension(unit, "specialization_system")
 		local specialization_name = specialization_extension:get_specialization_name()
-		local archetype_name = self._player:archetype_name()
 
 		if archetype_name == "psyker" and (specialization_name == "none" or specialization_name == "psyker_2") then
 			is_in_psyker_biomancer_combat_ability = true
 		end
 	end
 
-	local sprint_character_state_component = self._sprint_character_state_component
+	local sprint_character_state_component = self._sprint_character_state_read_component
 	local is_sprinting = sprint_character_state_component.is_sprinting
 	local have_sprint_overtime = sprint_character_state_component.sprint_overtime > 0
 	local is_effective_sprinting = is_sprinting and not have_sprint_overtime
@@ -182,15 +184,15 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 		self:_remove_mood(t, mood_types.sprinting_overtime)
 	end
 
-	if lunging_mood == mood_types.zealot_maniac_combat_ability then
+	if is_aiming_lunge and archetype_name == "zealot" then
 		self:_add_mood(t, mood_types.zealot_maniac_combat_ability)
-	elseif lunging_mood ~= mood_types.zealot_maniac_combat_ability then
+	elseif not is_aiming_lunge or archetype_name ~= "zealot" then
 		self:_remove_mood(t, mood_types.zealot_maniac_combat_ability)
 	end
 
-	if lunging_mood == mood_types.ogryn_bonebreaker_combat_ability then
+	if is_aiming_lunge and archetype_name == "ogryn" then
 		self:_add_mood(t, mood_types.ogryn_bonebreaker_combat_ability)
-	elseif lunging_mood ~= mood_types.ogryn_bonebreaker_combat_ability then
+	elseif not is_aiming_lunge or archetype_name ~= "ogryn" then
 		self:_remove_mood(t, mood_types.ogryn_bonebreaker_combat_ability)
 	end
 
