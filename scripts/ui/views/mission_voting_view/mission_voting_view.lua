@@ -186,7 +186,7 @@ MissionVotingView.cb_on_toggle_details_pressed = function (self)
 			source_heights = show_details_flag and self._main_page_heights or self._details_page_heights,
 			target_heights = show_details_flag and self._details_page_heights or self._main_page_heights
 		}
-		self._toggle_details_page_animation_id = self:_start_animation("switch_page", nil, params)
+		self._toggle_details_page_animation_id = self:_start_animation("switch_page", self._widgets_by_name, params)
 	end
 end
 
@@ -203,9 +203,13 @@ MissionVotingView.toggle_details = function (self, show_details_flag)
 
 	if show_details_flag then
 		self._additional_widgets = self._details_static_widgets
+		self._additional_text_styles = {}
 		text = Localize(MissionDetailsBlueprints.button_strings.hide_details)
 	else
 		self._additional_widgets = self._mission_info_widgets
+		self._additional_text_styles = {
+			[#self._additional_text_styles + 1] = self._widgets_by_name.title_bar_bottom.style.text
+		}
 		text = Localize(MissionDetailsBlueprints.button_strings.show_details)
 	end
 
@@ -412,7 +416,8 @@ local function calculate_danger_level(mission_data)
 end
 
 local function calculate_quickplay_danger_level(backend_mission_id)
-	local challenge = tonumber(string.sub(backend_mission_id, -1))
+	local lookup_position = string.find(backend_mission_id, "=") + 1
+	local challenge = tonumber(string.sub(backend_mission_id, lookup_position, lookup_position))
 	local dangel_level_text = DangerSettings.by_index[challenge].display_name
 
 	return challenge, dangel_level_text
@@ -483,6 +488,10 @@ MissionVotingView._set_mission_data = function (self, mission_data)
 	danger_level_widget.content.danger_text = Utf8.upper(Localize(danger_level_text))
 	local accept_confirmation_widget = self._widgets_by_name.accept_confirmation
 	accept_confirmation_widget.visible = false
+	local has_flash_mission = not not mission_data.flags.flash
+	local title_bar_bottom_widget = self._widgets_by_name.title_bar_bottom
+	title_bar_bottom_widget.visible = has_flash_mission
+	title_bar_bottom_widget.content.text = Localize("loc_mission_board_maelstrom_header")
 end
 
 MissionVotingView._set_button_callbacks = function (self)
@@ -545,7 +554,6 @@ MissionVotingView._setup_mission_info_icons = function (self, mission_data)
 			return
 		end
 
-		local has_flash_mission = not not mission_data.flags.flash
 		local has_side_mission = not not mission_data.sideMission
 		local has_circumstance = mission_data.circumstance and mission_data.circumstance ~= "default"
 		local mission_type = MissionTypes[mission_template.mission_type]
@@ -558,18 +566,6 @@ MissionVotingView._setup_mission_info_icons = function (self, mission_data)
 				153
 			}
 		}
-
-		if has_flash_mission then
-			mission_icon_settings[#mission_icon_settings + 1] = {
-				icon = MissionDetailsBlueprints.icons.flash,
-				color = {
-					255,
-					169,
-					191,
-					153
-				}
-			}
-		end
 
 		if has_side_mission then
 			local side_missions = MissionObjectiveTemplates.side_mission.objectives
@@ -785,6 +781,7 @@ MissionVotingView._calculate_page_heights = function (self, details_page_needed_
 	local _, zone_image_bottom_fade_height = self:_scenegraph_size("zone_image_bottom_fade")
 	local _, circumstance_icon_height = self:_scenegraph_size("circumstance_icon")
 	local _, zone_image_panel_height = self:_scenegraph_size("zone_image_panel")
+	local _, title_bar_bottom_height = self:_scenegraph_size("title_bar_bottom")
 	self._main_page_heights = {
 		outer_panel_height = outer_panel_height,
 		inner_panel_height = inner_panel_height,
@@ -793,6 +790,7 @@ MissionVotingView._calculate_page_heights = function (self, details_page_needed_
 		mission_info_panel_height = mission_info_panel_height,
 		outer_panel_y_offset = outer_panel_y_offset,
 		body_y_offset = body_y_offset,
+		title_bar_bottom_height = title_bar_bottom_height,
 		zone_image_panel_height = zone_image_panel_height,
 		zone_image_bottom_fade_height = zone_image_bottom_fade_height,
 		circumstance_icon_height = circumstance_icon_height
@@ -812,10 +810,11 @@ MissionVotingView._calculate_page_heights = function (self, details_page_needed_
 	end
 
 	self._details_page_heights = {
-		zone_image_panel_height = 0,
+		title_bar_bottom_height = 0,
 		zone_image_height = 0,
 		circumstance_icon_height = 0,
 		zone_image_bottom_fade_height = 0,
+		zone_image_panel_height = 0,
 		outer_panel_height = outer_panel_height + details_page_overhang,
 		inner_panel_height = inner_panel_height + details_page_overhang,
 		body_height = details_page_height,

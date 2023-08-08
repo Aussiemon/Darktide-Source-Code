@@ -1,4 +1,5 @@
 local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
+local Promise = require("scripts/foundation/utilities/promise")
 local Interface = {}
 local Account = class("Account")
 
@@ -94,6 +95,43 @@ Account.rename_account = function (self, requested_name)
 			accountName = requested_name
 		}
 	})
+end
+
+Account._get_migration_status = function (self, account_id)
+	return Managers.backend:title_request(BackendUtilities.url_builder("/data/"):path(account_id):path("/account/migrations/status"):to_string()):next(function (data)
+		local body = data.body
+		local status = body.status
+
+		return {
+			has_pending = status.hasPending,
+			is_blocking = status.isBlocking,
+			migrate_link = BackendUtilities.fetch_link(body, "migrate"),
+			latest_completed = status.latestCompleted
+		}
+	end)
+end
+
+Account.check_and_run_migrations = function (self, account_id)
+	return self:_get_migration_status(account_id):next(function (result)
+		if result.has_pending then
+			local migrate_promise = Managers.backend:title_request(result.migrate_link, {
+				method = "POST"
+			})
+
+			if result.is_blocking then
+				return migrate_promise:next(function (data)
+					return {
+						migrations = data.body.migrations,
+						latest_completed = result.latest_completed
+					}
+				end)
+			end
+		end
+
+		return Promise.resolved({
+			latest_completed = result.latest_completed
+		})
+	end)
 end
 
 implements(Account, Interface)

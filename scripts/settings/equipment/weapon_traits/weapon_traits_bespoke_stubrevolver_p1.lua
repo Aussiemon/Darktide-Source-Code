@@ -127,23 +127,27 @@ templates.weapon_trait_bespoke_stubrevolver_p1_crit_chance_based_on_ammo_left = 
 templates.weapon_trait_bespoke_stubrevolver_p1_chained_weakspot_hits_increases_power = {
 	weapon_trait_bespoke_stubrevolver_p1_chained_weakspot_hits_increases_power_parent = {
 		{
+			max_stacks = 4,
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.02
+				[stat_buffs.power_level_modifier] = 0.025
 			}
 		},
 		{
+			max_stacks = 4,
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.03
+				[stat_buffs.power_level_modifier] = 0.0375
 			}
 		},
 		{
-			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.04
-			}
-		},
-		{
+			max_stacks = 4,
 			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.05
+			}
+		},
+		{
+			max_stacks = 4,
+			stat_buffs = {
+				[stat_buffs.power_level_modifier] = 0.0625
 			}
 		}
 	}

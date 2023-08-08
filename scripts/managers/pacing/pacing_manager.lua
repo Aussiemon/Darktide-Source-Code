@@ -36,9 +36,9 @@ end
 
 PacingManager.on_gameplay_post_init = function (self, level_name)
 	local template = self._template
-	local combat_state_settings = Managers.state.difficulty:get_table_entry_by_resistance(template.combat_state_settings)
+	local combat_state_settings = Managers.state.difficulty:get_table_entry_by_challenge(template.combat_state_settings)
 	self._combat_state_settings = combat_state_settings
-	local state_settings = Managers.state.difficulty:get_table_entry_by_resistance(template.state_settings)
+	local state_settings = Managers.state.difficulty:get_table_entry_by_challenge(template.state_settings)
 	self._state_settings = state_settings
 	local starting_state = template.starting_state
 	self._next_state = starting_state
@@ -46,8 +46,8 @@ PacingManager.on_gameplay_post_init = function (self, level_name)
 
 	self:_change_state(0, starting_state)
 
-	self._max_tension = Managers.state.difficulty:get_table_entry_by_resistance(template.max_tension)
-	self._ramp_up_frequency_settings = Managers.state.difficulty:get_table_entry_by_resistance(template.ramp_up_frequency_modifiers)
+	self._max_tension = Managers.state.difficulty:get_table_entry_by_challenge(template.max_tension)
+	self._ramp_up_frequency_settings = Managers.state.difficulty:get_table_entry_by_challenge(template.ramp_up_frequency_modifiers)
 	self._ramp_up_frequency_modifiers = {}
 	local challenge_rating_thresholds = {}
 

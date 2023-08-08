@@ -94,9 +94,9 @@ end
 local function add_base_rating(item, layout, grid_size)
 	local base_stats_rating = ItemUtils.calculate_stats_rating(item)
 	layout[#layout + 1] = {
-		header = "Modifiers",
 		widget_type = "rating_info",
-		rating = base_stats_rating
+		rating = base_stats_rating,
+		header = Localize("loc_item_information_stats_title_modifiers")
 	}
 end
 
@@ -105,7 +105,8 @@ local function add_presentation_perks(item, layout, grid_size)
 	local perks = item.perks
 	local num_perks = perks and #perks or 0
 	local add_end_margin = false
-	local has_perk_modification, _ = ItemUtils.has_crafting_modification(item)
+	local num_modifications, max_modifications = ItemUtils.modifications_by_rarity(item)
+	local item_locked = num_modifications == max_modifications
 
 	if num_perks > 0 then
 		layout[#layout + 1] = {
@@ -139,7 +140,8 @@ local function add_presentation_perks(item, layout, grid_size)
 		local perk_item = MasterItems.get_item(perk_id)
 
 		if perk_item then
-			local is_locked = has_perk_modification and not perk.modified
+			local is_locked = item_locked and not perk.modified
+			local is_modified = perk.modified
 			local show_glow = perk.is_fake
 			layout[#layout + 1] = {
 				widget_type = "weapon_perk",
@@ -148,7 +150,8 @@ local function add_presentation_perks(item, layout, grid_size)
 				perk_rarity = perk_rarity,
 				perk_index = i,
 				show_glow = show_glow,
-				is_locked = is_locked
+				is_locked = is_locked,
+				is_modified = is_modified
 			}
 		end
 
@@ -175,7 +178,8 @@ local function add_presentation_traits(item, layout, grid_size)
 	local add_end_margin = false
 	local traits = item.traits
 	local num_traits = traits and #traits or 0
-	local _, has_trait_modification = ItemUtils.has_crafting_modification(item)
+	local num_modifications, max_modifications = ItemUtils.modifications_by_rarity(item)
+	local item_locked = num_modifications == max_modifications
 
 	if num_traits > 0 then
 		local rating = item.override_trait_rating_string or ItemUtils.item_trait_rating(item)
@@ -213,7 +217,8 @@ local function add_presentation_traits(item, layout, grid_size)
 
 		if trait_item then
 			local widget_type = item_type == "GADGET" and "gadget_trait" or "weapon_trait"
-			local is_locked = has_trait_modification and not trait.modified
+			local is_locked = item_locked and not trait.modified
+			local is_modified = trait.modified
 			local show_glow = trait.is_fake
 			layout[#layout + 1] = {
 				add_background = true,
@@ -224,6 +229,7 @@ local function add_presentation_traits(item, layout, grid_size)
 				trait_index = i,
 				show_glow = show_glow,
 				is_locked = is_locked,
+				is_modified = is_modified,
 				trait_category = trait_category
 			}
 

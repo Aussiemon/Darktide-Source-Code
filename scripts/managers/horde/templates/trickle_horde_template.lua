@@ -65,7 +65,7 @@ local MIN_DISTANCE_FROM_PLAYERS = 25
 local DEFAULT_MAIN_PATH_OFFSET = 35
 local OCCLUDED_POINTS_COLLISION_FILTER = "filter_ray_aim_assist_line_of_sight"
 
-local function _try_find_occluded_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, try_find_on_main_path, optional_main_path_offset)
+local function _try_find_occluded_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, try_find_on_main_path, optional_main_path_offset, optional_disallowed_positions)
 	local target_side_id = target_side.side_id
 	local main_path_manager = Managers.state.main_path
 	local target_unit, travel_distance, path_position = main_path_manager:ahead_unit(target_side_id)
@@ -90,7 +90,7 @@ local function _try_find_occluded_position(nav_world, physics_world, nav_spawn_p
 	end
 
 	local only_search_forward = true
-	local random_occluded_position = SpawnPointQueries.get_random_occluded_position(nav_world, nav_spawn_points, wanted_position, side, occluded_spawn_range, num_spawn_groups, MIN_DISTANCE_FROM_PLAYERS, nil, nil, only_search_forward)
+	local random_occluded_position = SpawnPointQueries.get_random_occluded_position(nav_world, nav_spawn_points, wanted_position, side, occluded_spawn_range, num_spawn_groups, MIN_DISTANCE_FROM_PLAYERS, nil, nil, only_search_forward, optional_disallowed_positions)
 
 	if not random_occluded_position then
 		return false, nil, nil, nil
@@ -114,21 +114,21 @@ end
 local DEFAULT_NUM_TRIES = 1
 local MAINPATH_OFFSET = 10
 
-local function _try_find_horde_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, optional_main_path_offset, optional_num_tries)
+local function _try_find_horde_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, optional_main_path_offset, optional_num_tries, optional_disallowed_positions)
 	local try_find_on_main_path = true
 	local num_tries = optional_num_tries or DEFAULT_NUM_TRIES
 	local success, horde_position, target_direction, target_unit = nil
 
 	for i = 1, num_tries do
 		optional_main_path_offset = optional_main_path_offset and optional_main_path_offset + (i > 1 and i * MAINPATH_OFFSET or 0)
-		success, horde_position, target_direction, target_unit = _try_find_occluded_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, try_find_on_main_path, optional_main_path_offset)
+		success, horde_position, target_direction, target_unit = _try_find_occluded_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, try_find_on_main_path, optional_main_path_offset, optional_disallowed_positions)
 
 		if success then
 			return horde_position, target_direction, target_unit
 		end
 	end
 
-	success, horde_position, target_direction, target_unit = _try_find_occluded_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, not try_find_on_main_path)
+	success, horde_position, target_direction, target_unit = _try_find_occluded_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_spawn_groups, not try_find_on_main_path, optional_disallowed_positions)
 
 	if success then
 		return horde_position, target_direction, target_unit
@@ -139,7 +139,7 @@ end
 
 local PATROL_CHALLENGE_RAITNG_THRESHOLD = 30
 
-horde_template.execute = function (physics_world, nav_world, side, target_side, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries)
+horde_template.execute = function (physics_world, nav_world, side, target_side, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier)
 	local target_side_id = target_side.side_id
 	local main_path_manager = Managers.state.main_path
 	local _, ahead_travel_distance, ahead_position = main_path_manager:ahead_unit(target_side_id)
@@ -151,7 +151,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local nav_spawn_points = main_path_manager:nav_spawn_points()
 	local num_groups = GwNavSpawnPoints.get_count(nav_spawn_points)
 	local occluded_spawn_range = horde_template.occluded_spawn_range
-	local horde_position, horde_direction, target_unit = _try_find_horde_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_groups, optional_main_path_offset, optional_num_tries)
+	local horde_position, horde_direction, target_unit = _try_find_horde_position(nav_world, physics_world, nav_spawn_points, side, target_side, occluded_spawn_range, num_groups, optional_main_path_offset, optional_num_tries, optional_disallowed_positions)
 
 	if not horde_position then
 		return nil, nil, nil
@@ -196,7 +196,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 		for i = 1, num_positions do
 			local breed_name = spawn_list[i]
 			local spawn_position = flood_fill_positions[i]
-			local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, aggro_states.passive, nil, nil, group_id, nil, nil)
+			local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, aggro_states.passive, nil, nil, group_id, nil, nil, optional_spawn_max_health_modifier)
 			local blackboard = BLACKBOARDS[unit]
 			local patrol_component = Blackboard.write_component(blackboard, "patrol")
 
@@ -220,7 +220,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 		for i = 1, num_positions do
 			local breed_name = spawn_list[i]
 			local spawn_position = flood_fill_positions[i]
-			local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, aggro_states.aggroed, target_unit, nil, group_id, nil, nil)
+			local unit = minion_spawn_manager:spawn_minion(breed_name, spawn_position, spawn_rotation, side_id, aggro_states.aggroed, target_unit, nil, group_id, nil, nil, optional_spawn_max_health_modifier)
 			spawned_minions[i] = unit
 		end
 	end

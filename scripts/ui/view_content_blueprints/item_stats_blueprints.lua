@@ -239,8 +239,10 @@ local function generate_blueprints_function(grid_size, optional_item)
 	}
 	modification_lock_style.font_size = 24
 	modification_lock_style.text_vertical_alignment = "bottom"
-	modification_lock_style.text_color = Color.ui_red_light(255, true)
+	modification_lock_style.text_color = Color.terminal_corner(255, true)
 	modification_lock_style.visible = false
+	local modification_modified_style = table.clone(modification_lock_style)
+	modification_modified_style.text_color = Color.terminal_icon(255, true)
 	local weapon_perk_style = table.clone(UIFontSettings.body)
 	weapon_perk_style.offset = {
 		98,
@@ -4407,6 +4409,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 					style = modification_lock_style
 				},
 				{
+					style_id = "modified",
+					value_id = "modified",
+					pass_type = "text",
+					value = "",
+					style = modification_modified_style
+				},
+				{
 					pass_type = "texture",
 					style_id = "glow",
 					value = "content/ui/materials/frames/frame_glow_01",
@@ -4480,6 +4489,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				content.text = description
 				content.rank = ItemUtils.perk_textures(perk_item, perk_rarity)
 				style.locked.visible = element.is_locked or false
+				style.modified.visible = element.is_modified or false
 				style.glow.visible = element.show_glow or false
 				style.glow_background.visible = element.show_glow or false
 
@@ -4552,6 +4562,13 @@ local function generate_blueprints_function(grid_size, optional_item)
 					pass_type = "text",
 					value = "",
 					style = modification_lock_style
+				},
+				{
+					style_id = "modified",
+					value_id = "modified",
+					pass_type = "text",
+					value = "",
+					style = modification_modified_style
 				},
 				{
 					value = "n/a",
@@ -4652,6 +4669,7 @@ local function generate_blueprints_function(grid_size, optional_item)
 				local description = ItemUtils.trait_description(trait_item, trait_rarity, trait_value)
 				content.description = description
 				style.locked.visible = element.is_locked or false
+				style.modified.visible = element.is_modified or false
 				style.glow.visible = element.show_glow or false
 				style.glow_background.visible = element.show_glow or false
 

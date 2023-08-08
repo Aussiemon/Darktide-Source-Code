@@ -260,7 +260,7 @@ local narrative = {
 			{
 				name = "level_unlock_mission_board_popup_difficulty_increased_1",
 				backend_id = 2,
-				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_3)
+				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_unlocks.normal[3])
 			},
 			{
 				name = "level_unlock_crafting_station_popup",
@@ -273,14 +273,14 @@ local narrative = {
 				requirement = level_at_least(PlayerProgressionUnlocks.talent_1)
 			},
 			{
-				name = "level_unlock_mission_board_popup_difficulty_increased_2",
+				name = "level_unlock_gadget_slot_1",
 				backend_id = 5,
-				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_4)
+				requirement = beyond_story_chapter("path_of_trust", "pot_gadgets")
 			},
 			{
-				name = "level_unlock_gadget_slot_1",
+				name = "level_unlock_mission_board_popup_difficulty_increased_2",
 				backend_id = 6,
-				requirement = beyond_story_chapter("path_of_trust", "pot_gadgets")
+				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_unlocks.normal[4])
 			},
 			{
 				name = "level_unlock_talent_tier_2",
@@ -295,7 +295,7 @@ local narrative = {
 			{
 				name = "level_unlock_mission_board_popup_difficulty_increased_3",
 				backend_id = 9,
-				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_5)
+				requirement = level_at_least(PlayerProgressionUnlocks.mission_difficulty_unlocks.normal[5])
 			},
 			{
 				name = "level_unlock_gadget_slot_2",

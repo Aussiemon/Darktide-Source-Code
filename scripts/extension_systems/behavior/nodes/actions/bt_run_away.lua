@@ -1,6 +1,7 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local Health = require("scripts/utilities/health")
 local MinionAttack = require("scripts/utilities/minion_attack")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local Vo = require("scripts/utilities/vo")
@@ -197,6 +198,28 @@ BtRunAwayAction.run = function (self, unit, breed, blackboard, scratchpad, actio
 		local direction = Vector3.normalize(wanted_position - POSITION_LOOKUP[unit])
 
 		MinionMovement.update_ground_normal_rotation(unit, scratchpad, direction)
+	end
+
+	if action_data.heal_frequency then
+		local consumed_unit = scratchpad.behavior_component.consumed_unit
+
+		if consumed_unit and ALIVE[consumed_unit] then
+			if not scratchpad.heal_frequency then
+				local heal_frequency = Managers.state.difficulty:get_table_entry_by_challenge(action_data.heal_frequency)
+				scratchpad.heal_frequency = t + heal_frequency
+			end
+
+			if scratchpad.heal_frequency <= t then
+				local heal_amount = Managers.state.difficulty:get_table_entry_by_challenge(action_data.heal_amount)
+				local heal_type = nil
+
+				Health.add(unit, heal_amount, heal_type)
+
+				scratchpad.heal_frequency = nil
+				local heal_frequency = Managers.state.difficulty:get_table_entry_by_challenge(action_data.heal_frequency)
+				scratchpad.heal_frequency = t + heal_frequency
+			end
+		end
 	end
 
 	return "running", should_evaluate

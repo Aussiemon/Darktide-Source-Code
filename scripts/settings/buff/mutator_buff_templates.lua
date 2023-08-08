@@ -16,15 +16,21 @@ local templates = {
 	mutator_minion_nurgle_blessing_tougher = {
 		class_name = "buff",
 		target = buff_targets.minion_only,
+		keywords = {
+			buff_keywords.empowered
+		},
 		stat_buffs = {
-			[buff_stat_buffs.unarmored_damage] = -0.5,
-			[buff_stat_buffs.resistant_damage] = -0.5,
-			[buff_stat_buffs.disgustingly_resilient_damage] = -0.5,
-			[buff_stat_buffs.berserker_damage] = -0.5,
-			[buff_stat_buffs.armored_damage] = -0.5,
-			[buff_stat_buffs.super_armor_damage] = -0.75,
+			[buff_stat_buffs.unarmored_damage] = -0.35,
+			[buff_stat_buffs.resistant_damage] = -0.35,
+			[buff_stat_buffs.disgustingly_resilient_damage] = -0.35,
+			[buff_stat_buffs.berserker_damage] = -0.35,
+			[buff_stat_buffs.armored_damage] = -0.35,
+			[buff_stat_buffs.super_armor_damage] = -0.35,
 			[buff_stat_buffs.consumed_hit_mass_modifier] = 10,
-			[buff_stat_buffs.impact_modifier] = -1
+			[buff_stat_buffs.impact_modifier] = -1,
+			[buff_stat_buffs.ranged_attack_speed] = 0.2,
+			[buff_stat_buffs.minion_num_shots_modifier] = 2,
+			[buff_stat_buffs.movement_speed] = 1.25
 		},
 		minion_effects = {
 			node_effects = {
@@ -40,9 +46,9 @@ local templates = {
 			material_vector = {
 				name = "stimmed_color",
 				value = {
-					0.1,
-					0.3,
-					0.1
+					0.358,
+					0.786,
+					0.22
 				}
 			}
 		}
@@ -97,7 +103,7 @@ templates.mutator_player_cooldown_reduction = {
 	class_name = "buff",
 	target = buff_targets.player_only,
 	stat_buffs = {
-		[buff_stat_buffs.ability_cooldown_modifier] = -0.5
+		[buff_stat_buffs.ability_cooldown_modifier] = -0.2
 	}
 }
 templates.mutator_movement_speed_on_spawn = {

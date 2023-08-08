@@ -721,7 +721,7 @@ InventoryWeaponCosmeticsView._preview_element = function (self, element)
 	self:_preview_item(presentation_item)
 
 	local widgets_by_name = self._widgets_by_name
-	widgets_by_name.sub_display_name.content.text = ItemUtils.display_name(item)
+	widgets_by_name.sub_display_name.content.text = ItemUtils.display_name(self._selected_item)
 	widgets_by_name.display_name.content.text = real_item and ItemUtils.display_name(real_item) or Localize("loc_weapon_cosmetic_empty")
 end
 

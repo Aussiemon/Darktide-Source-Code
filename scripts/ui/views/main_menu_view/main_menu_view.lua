@@ -13,6 +13,8 @@ local TextUtils = require("scripts/utilities/ui/text")
 local MasterItems = require("scripts/backend/master_items")
 local SocialConstants = require("scripts/managers/data_service/services/social/social_constants")
 local InputDevice = require("scripts/managers/input/input_device")
+local ViewElementWallet = require("scripts/ui/view_elements/view_element_wallet/view_element_wallet")
+local ViewElementServerMigration = require("scripts/ui/view_elements/view_element_server_migration/view_element_server_migration")
 local MainMenuView = class("MainMenuView", "BaseView")
 
 MainMenuView.init = function (self, settings, context)
@@ -59,6 +61,93 @@ MainMenuView.on_enter = function (self)
 	self:_register_event("event_main_menu_selected_profile_changed", "_event_selected_profile_changed")
 	self:_register_event("update_character_sync_state", "_event_profile_sync_changed")
 	Managers.event:trigger("event_main_menu_entered")
+
+	local save_manager = Managers.save
+	local save_data = save_manager:account_data()
+
+	if save_data.latest_backend_migration_index >= 0 then
+		self:_create_wallet_element()
+	end
+
+	if self._context.migration_data then
+		for i = 1, #self._context.migration_data do
+			local migration_to_check = self._context.migration_data[i]
+
+			if migration_to_check.name == "wallet-migration" then
+				local data = self._context.migration_data[1].data
+				local should_present_data = false
+
+				if data.wallets then
+					for j = 1, #data.wallets do
+						local wallet = data.wallets[j]
+
+						if wallet.amount and wallet.amount > 0 then
+							should_present_data = true
+
+							break
+						end
+					end
+				end
+
+				if should_present_data then
+					self:_create_server_migration_element(data)
+				end
+
+				break
+			end
+		end
+	end
+end
+
+MainMenuView._create_server_migration_element = function (self, data)
+	self._server_migration_element = self:_add_element(ViewElementServerMigration, "server_migration_element", 200, {
+		on_destroy_callback = callback(self, "on_server_migration_removed")
+	})
+
+	self._server_migration_element:present(data)
+end
+
+MainMenuView.on_server_migration_removed = function (self)
+	for i = 1, #self._context.migration_data do
+		local migration_to_check = self._context.migration_data[i]
+
+		if migration_to_check.name == "wallet-migration" then
+			self._context.migration_data[i] = nil
+
+			break
+		end
+	end
+
+	self:_destroy_migration_element()
+end
+
+MainMenuView._destroy_migration_element = function (self)
+	self:_remove_element("server_migration_element")
+
+	self._server_migration_element = nil
+end
+
+MainMenuView._create_wallet_element = function (self)
+	self._wallet_element = self:_add_element(ViewElementWallet, "wallet_element", 100)
+
+	self:_update_element_position("wallet_element_pivot", self._wallet_element, true)
+
+	local currencies = {
+		"credits",
+		"marks",
+		"plasteel",
+		"diamantine"
+	}
+
+	self._wallet_element:_generate_currencies(currencies, {
+		150,
+		30
+	}, #currencies, {
+		nil,
+		10
+	})
+
+	self._widgets_by_name.wallet_element_background.content.visible = true
 end
 
 MainMenuView._setup_input_legend = function (self)
@@ -98,6 +187,10 @@ MainMenuView._update_counts_refreshes = function (self, dt, t)
 end
 
 MainMenuView.cb_on_open_main_menu_pressed = function (self)
+	if self._server_migration_element then
+		return
+	end
+
 	Managers.ui:open_view("system_view")
 end
 
@@ -398,16 +491,65 @@ MainMenuView.update = function (self, dt, t, input_service)
 		self:_play_sound(UISoundEvents.main_menu_start_button_hover_leave)
 	end
 
+	if self._wallet_element then
+		local wallet_size = self._wallet_element:get_size()
+		local size_addition = {
+			20,
+			20
+		}
+		local width = math.max(wallet_size[1] + size_addition[1], 0)
+		local height = wallet_size[2] + size_addition[2]
+		local scenegraph_size = self._ui_scenegraph.wallet_element_background.size
+
+		if width ~= scenegraph_size[1] or height ~= scenegraph_size[2] then
+			self:_set_scenegraph_size("wallet_element_background", width, height)
+		end
+	end
+
 	return MainMenuView.super.update(self, dt, t, input_service)
 end
 
 MainMenuView.draw = function (self, dt, t, input_service, layer)
-	if self._character_wait_overlay_active then
+	local stored_service = input_service
+
+	if self._character_wait_overlay_active or self._server_migration_element then
 		input_service = input_service:null_service()
 	end
 
 	self:_draw_character_list(dt, t, input_service, layer)
 	MainMenuView.super.draw(self, dt, t, input_service, layer)
+
+	if self._server_migration_element then
+		local elements_array = self._elements_array
+
+		for i = 1, #elements_array do
+			local element = elements_array[i]
+
+			if element then
+				local element_name = element.__class_name
+
+				if element_name == "ViewElemenServerMigration" then
+					element:draw(dt, t, self._ui_renderer, self._render_settings, stored_service)
+				end
+			end
+		end
+	end
+end
+
+MainMenuView._draw_elements = function (self, dt, t, ui_renderer, render_settings, input_service)
+	local elements_array = self._elements_array
+
+	for i = 1, #elements_array do
+		local element = elements_array[i]
+
+		if element then
+			local element_name = element.__class_name
+
+			if element_name ~= "ViewElemenServerMigration" then
+				element:draw(dt, t, ui_renderer, render_settings, input_service)
+			end
+		end
+	end
 end
 
 MainMenuView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
@@ -439,7 +581,13 @@ MainMenuView._on_navigation_input_changed = function (self)
 	end
 end
 
-MainMenuView._handle_input = function (self, input_service)
+MainMenuView._handle_input = function (self, input_service, dt, t)
+	if self._character_wait_overlay_active or self._server_migration_element then
+		input_service = input_service:null_service()
+	end
+
+	MainMenuView.super._handle_input(self, input_service, dt, t)
+
 	local selected_character_list_index = self._selected_character_list_index
 	local create_button = self._widgets_by_name.create_button.content
 	local play_button = self._widgets_by_name.play_button.content
@@ -497,6 +645,10 @@ MainMenuView._on_create_character_pressed = function (self)
 end
 
 MainMenuView._on_delete_selected_character_pressed = function (self)
+	if self._server_migration_element then
+		return
+	end
+
 	local profile = self._selected_profile
 	local popup_params = {
 		title_text = "loc_main_menu_delete_character_popup_title",
@@ -631,6 +783,8 @@ MainMenuView._draw_character_list = function (self, dt, t, input_service, layer)
 				UIWidget.draw(widget, offscreen_renderer)
 			end
 		end
+
+		UIRenderer.end_pass(offscreen_renderer)
 	end
 end
 

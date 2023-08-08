@@ -31,9 +31,9 @@ CraftingService.upgrade_weapon_rarity = function (self, gear_id, costs)
 			Managers.data_service.gear:on_gear_updated(gear_id, gear)
 		end
 
-		Managers.data_service.store:on_crafting_done(costs)
-
-		return results
+		return Managers.data_service.store:on_crafting_done(costs):next(function ()
+			return results
+		end)
 	end):catch(function (err)
 		Managers.data_service.gear:invalidate_gear_cache()
 		Managers.data_service.store:invalidate_wallets_cache()
@@ -53,9 +53,9 @@ CraftingService.upgrade_gadget_rarity = function (self, gear_id, costs)
 			Managers.data_service.gear:on_gear_updated(gear_id, gear)
 		end
 
-		Managers.data_service.store:on_crafting_done(costs)
-
-		return results
+		return Managers.data_service.store:on_crafting_done(costs):next(function ()
+			return results
+		end)
 	end):catch(function (err)
 		Managers.data_service.gear:invalidate_gear_cache()
 		Managers.data_service.store:invalidate_wallets_cache()
@@ -75,9 +75,9 @@ CraftingService.reroll_perk_in_item = function (self, gear_id, existing_perk_ind
 			Managers.data_service.gear:on_gear_updated(gear_id, gear)
 		end
 
-		Managers.data_service.store:on_crafting_done(costs)
-
-		return results
+		return Managers.data_service.store:on_crafting_done(costs):next(function ()
+			return results
+		end)
 	end):catch(function (err)
 		Managers.data_service.gear:invalidate_gear_cache()
 		Managers.data_service.store:invalidate_wallets_cache()
@@ -97,9 +97,31 @@ CraftingService.replace_trait_in_weapon = function (self, gear_id, existing_trai
 			Managers.data_service.gear:on_gear_updated(gear_id, gear)
 		end
 
-		Managers.data_service.store:on_crafting_done(costs)
+		return Managers.data_service.store:on_crafting_done(costs):next(function ()
+			return results
+		end)
+	end):catch(function (err)
+		Managers.data_service.gear:invalidate_gear_cache()
+		Managers.data_service.store:invalidate_wallets_cache()
 
-		return results
+		return Promise.rejected(err)
+	end)
+end
+
+CraftingService.replace_perk_in_weapon = function (self, gear_id, existing_trait_index, new_trait_id, costs, new_trait_tier)
+	return self._backend_interface.crafting:replace_perk_in_weapon(gear_id, existing_trait_index, new_trait_id, new_trait_tier):next(function (results)
+		local items = results.items
+
+		for i = 1, #items do
+			local item = items[i]
+			local gear = item.gear
+
+			Managers.data_service.gear:on_gear_updated(gear_id, gear)
+		end
+
+		return Managers.data_service.store:on_crafting_done(costs):next(function ()
+			return results
+		end)
 	end):catch(function (err)
 		Managers.data_service.gear:invalidate_gear_cache()
 		Managers.data_service.store:invalidate_wallets_cache()
@@ -111,10 +133,12 @@ end
 CraftingService.extract_trait_from_weapon = function (self, gear_id, trait_index, costs)
 	return self._backend_interface.crafting:extract_trait_from_weapon(gear_id, trait_index):next(function (result)
 		Managers.data_service.gear:on_gear_deleted(gear_id)
-		Managers.data_service.store:on_crafting_done(costs)
-		self:_on_trait_extracted(result.traits)
 
-		return result
+		return Managers.data_service.store:on_crafting_done(costs):next(function ()
+			self:_on_trait_extracted(result.traits)
+
+			return result
+		end)
 	end):catch(function (err)
 		Managers.data_service.gear:invalidate_gear_cache()
 		Managers.data_service.store:invalidate_wallets_cache()
@@ -210,6 +234,14 @@ CraftingService.on_gear_created = function (self, gear_id, gear)
 			end)
 		end
 	end
+end
+
+CraftingService.get_item_crafting_metadata = function (self, gear_id)
+	return self._backend_interface.crafting:get_item_crafting_metadata(gear_id):next(function (result)
+		return result
+	end):catch(function (err)
+		return Promise.rejected(err)
+	end)
 end
 
 return CraftingService

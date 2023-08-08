@@ -7,9 +7,9 @@ end
 
 ContractsService.reroll_task = function (self, character_id, task_id, last_transaction_id, reroll_cost)
 	return self._backend_interface.contracts:reroll_task(character_id, task_id, last_transaction_id):next(function (result)
-		Managers.data_service.store:on_contract_task_rerolled(reroll_cost)
-
-		return result
+		return Managers.data_service.store:on_contract_task_rerolled(reroll_cost):next(function ()
+			return result
+		end)
 	end):catch(function (err)
 		Managers.data_service.store:invalidate_wallets_cache()
 
@@ -19,9 +19,9 @@ end
 
 ContractsService.complete_contract = function (self, character_id)
 	return self._backend_interface.contracts:complete_contract(character_id):next(function (result)
-		Managers.data_service.store:on_contract_completed(result)
-
-		return result
+		return Managers.data_service.store:on_contract_completed(result):next(function ()
+			return result
+		end)
 	end):catch(function (err)
 		Managers.data_service.store:invalidate_wallets_cache()
 

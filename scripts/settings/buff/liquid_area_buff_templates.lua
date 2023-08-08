@@ -452,6 +452,9 @@ local function _toxic_gas_interval_function(template_data, template_context, tem
 	end
 end
 
+local EMPOWERED_BREEDS = {
+	chaos_poxwalker = true
+}
 templates.in_toxic_gas = {
 	predicted = true,
 	hud_priority = 1,
@@ -492,6 +495,21 @@ templates.in_toxic_gas = {
 			return
 		end
 
+		if template_context.is_server then
+			local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+			local breed = unit_data_extension:breed()
+
+			if EMPOWERED_BREEDS[breed.name] then
+				local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+				if buff_extension and not buff_extension:has_keyword("empowered") then
+					local t = Managers.time:time("gameplay")
+					local _, buff_id = buff_extension:add_externally_controlled_buff("empowered_poxwalker", t)
+					template_data.empowered_buff_id = buff_id
+				end
+			end
+		end
+
 		local is_local_unit = template_context.is_local_unit
 
 		if not is_local_unit then
@@ -520,6 +538,18 @@ templates.in_toxic_gas = {
 
 		if DEDICATED_SERVER then
 			return
+		end
+
+		if template_context.is_server and template_data.empowered_buff_id then
+			local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+			if buff_extension then
+				buff_extension:remove_externally_controlled_buff(template_data.empowered_buff_id)
+
+				local t = Managers.time:time("gameplay")
+
+				buff_extension:add_internally_controlled_buff("empowered_poxwalker_with_duration", t)
+			end
 		end
 
 		local is_local_unit = template_context.is_local_unit

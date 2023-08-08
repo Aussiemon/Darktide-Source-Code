@@ -289,10 +289,12 @@ base_templates.chained_weakspot_hits_increases_power_parent = {
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded
 }
 base_templates.chained_weakspot_hits_increases_power_ranged_parent = {
+	max_stacks = 1,
 	child_buff_template = "chained_weakspot_hits_increases_power_child",
+	child_duration = 1,
 	predicted = false,
 	stack_offset = -1,
-	max_stacks = 1,
+	stacks_to_remove = 5,
 	class_name = "weapon_trait_activated_parent_proc_buff",
 	proc_events = {
 		[proc_events.on_shoot] = 1
@@ -305,8 +307,7 @@ base_templates.chained_weakspot_hits_increases_power_ranged_parent = {
 			return params.hit_weakspot
 		end
 	},
-	start_func = chained_hits_start_func,
-	reset_update_func = chain_hits_reset_update_func,
+	check_proc_func = CheckProcFunctions.on_weakspot_hit,
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded
 }
 base_templates.chained_weakspot_hits_increases_power_child = {

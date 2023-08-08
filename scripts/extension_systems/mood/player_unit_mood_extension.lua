@@ -96,6 +96,7 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	local is_in_critical_health, critical_health_status = PlayerUnitStatus.is_in_critical_health(self._health_extension, self._toughness_extension)
 	local critical_health = is_in_critical_health and CRITICAL_HEALTH_LIMIT <= critical_health_status
 	local no_toughness_left = PlayerUnitStatus.no_toughness_left(self._toughness_extension)
+	local entered_toughness_cooldown = self._entered_toughness_cooldown and t < self._entered_toughness_cooldown
 	local is_suppressed = self._suppression_extension:has_high_suppression()
 	local player = self._player
 	local unit = self._unit
@@ -161,7 +162,11 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	local use_toughness_mood = no_toughness_left and not critical_health and not is_knocked_down
 
 	if use_toughness_mood then
-		self:_add_mood(t, mood_types.no_toughness)
+		if not entered_toughness_cooldown then
+			self:_add_mood(t, mood_types.no_toughness)
+
+			self._entered_toughness_cooldown = t + 2
+		end
 	elseif not use_toughness_mood then
 		self:_remove_mood(t, mood_types.no_toughness)
 	end

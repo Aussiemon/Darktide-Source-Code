@@ -76,6 +76,10 @@ ViewElementBase._is_animation_active = function (self, animation_id)
 	return self._ui_sequence_animator:is_animation_active(animation_id)
 end
 
+ViewElementBase._is_animation_completed = function (self, animation_id)
+	return self._ui_sequence_animator:is_animation_completed(animation_id)
+end
+
 ViewElementBase._start_animation = function (self, animation_sequence_name, widgets, params, callback, speed)
 	speed = speed or 1
 	widgets = widgets or self._widgets_by_name

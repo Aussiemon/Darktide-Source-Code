@@ -14,6 +14,9 @@ local MasterItems = require("scripts/backend/master_items")
 local Promise = require("scripts/foundation/utilities/promise")
 local ContentBlueprints = require("scripts/ui/views/crafting_modify_options_view/crafting_modify_options_view_blueprints")
 local RaritySettings = require("scripts/settings/item/rarity_settings")
+
+require("scripts/ui/views/item_grid_view_base/item_grid_view_base")
+
 local crafting_options = {
 	{
 		type = "upgrade"

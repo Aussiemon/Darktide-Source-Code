@@ -95,7 +95,7 @@ StoreFront._decorate_offer = function (self, offer, is_personal)
 			latestTransactionId = wallet.lastTransactionId,
 			ownedSkus = offer.owned_skus
 		}
-		local builder = BackendUtilities.url_builder():path("/store/"):path(store_front.account_id):path("/wallets/"):path(store_front.wallet_owner):path("/purchases")
+		local builder = BackendUtilities.url_builder():path("/store/"):path(store_front.account_id):path("/wallets/"):path(wallet.owner or store_front.wallet_owner):path("/purchases")
 
 		return Managers.backend:title_request(builder:to_string(), {
 			method = "POST",

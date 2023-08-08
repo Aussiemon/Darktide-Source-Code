@@ -426,6 +426,7 @@ SpecialsPacing._spawn_special = function (self, specials_slot, side_id, target_s
 		return true, nil, spawner_queue_id, spawner
 	end
 
+	local optional_health_modifier = specials_slot.optional_health_modifier
 	local randomize = specials_slot.coordinated_strike
 	local spawn_position, closest_target_unit = self:_find_spawn_position(side_id, breed_name, target_side_id, check_ahead, optional_mainpath_offset, randomize)
 
@@ -436,7 +437,7 @@ SpecialsPacing._spawn_special = function (self, specials_slot, side_id, target_s
 			local nearby_spawner = self:_find_nearby_spawner(target_side_id)
 
 			if nearby_spawner then
-				local spawner_queue_id = self:_add_spawner_special(nearby_spawner, breed_name, side_id, target_side_id)
+				local spawner_queue_id = self:_add_spawner_special(nearby_spawner, breed_name, side_id, target_side_id, optional_health_modifier)
 
 				return true, nil, spawner_queue_id, nearby_spawner
 			else
@@ -449,7 +450,6 @@ SpecialsPacing._spawn_special = function (self, specials_slot, side_id, target_s
 
 	local slot_target_unit = specials_slot.target_unit
 	local target_unit = ALIVE[slot_target_unit] and slot_target_unit or closest_target_unit
-	local optional_health_modifier = specials_slot.optional_health_modifier
 	local unit = Managers.state.minion_spawn:spawn_minion(breed_name, spawn_position, Quaternion.identity(), side_id, aggro_states.aggroed, target_unit, nil, nil, nil, nil, optional_health_modifier)
 
 	return true, unit
@@ -630,6 +630,8 @@ SpecialsPacing._find_spawn_position = function (self, side_id, breed_name, targe
 	return random_occluded_position, target_unit
 end
 
+local ALLOWED_Z_DIFF = 5
+
 SpecialsPacing._find_nearby_spawner = function (self, target_side_id)
 	local main_path_manager = Managers.state.main_path
 	local target_unit = main_path_manager:ahead_unit(target_side_id)
@@ -659,12 +661,16 @@ SpecialsPacing._find_nearby_spawner = function (self, target_side_id)
 		for j = 1, num_target_units do
 			local player_unit = target_units[j]
 			local player_position = POSITION_LOOKUP[player_unit]
-			local distance = Vector3.distance(spawner_position, player_position)
+			local z_diff = math.abs(spawner_position.z - player_position.z)
 
-			if distance < spawners_min_range then
-				is_valid_spawner = false
+			if z_diff < ALLOWED_Z_DIFF then
+				local distance = Vector3.distance(spawner_position, player_position)
 
-				break
+				if distance < spawners_min_range then
+					is_valid_spawner = false
+
+					break
+				end
 			end
 		end
 
@@ -678,10 +684,10 @@ SpecialsPacing._find_nearby_spawner = function (self, target_side_id)
 	return nearby_valid_spawner
 end
 
-SpecialsPacing._add_spawner_special = function (self, spawner, breed_name, side_id, target_side_id)
+SpecialsPacing._add_spawner_special = function (self, spawner, breed_name, side_id, target_side_id, optional_health_modifier)
 	local spawner_queue_id = spawner:add_spawns({
 		breed_name
-	}, side_id, target_side_id)
+	}, side_id, target_side_id, nil, nil, nil, nil, nil, optional_health_modifier)
 
 	return spawner_queue_id, spawner
 end

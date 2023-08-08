@@ -52,8 +52,12 @@ local push_settings = {
 			max_speed_override = 8
 		},
 		chaos_ogryn_gunner_bullet = {
-			speed = 6,
-			max_speed_override = 6
+			speed = 5,
+			max_speed_override = 5
+		},
+		chaos_ogryn_gunner_bullet_ogryn = {
+			speed = 2,
+			max_speed_override = 2
 		},
 		renegade_captain = {
 			speed = 10,

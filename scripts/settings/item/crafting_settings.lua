@@ -314,23 +314,30 @@ CraftingSettings.recipes = {
 		end,
 		can_craft = function (ingredients, additional_context)
 			local item = ingredients.item
+			local item_traits = item.traits
+			local has_perk_modification, has_trait_modification = ItemUtils.has_crafting_modification(item)
+			local num_modifications, max_modifications = ItemUtils.modifications_by_rarity(item)
+			local item_locked = num_modifications == max_modifications
 
 			if not CraftingSettings.recipes.replace_trait.is_valid_item(item) then
 				return false, "loc_crafting_failure"
 			end
 
+			if item_locked and not has_trait_modification then
+				return false, "loc_crafting_modification_not_available"
+			end
+
 			local new_trait_item = additional_context.trait_items and additional_context.trait_items[1]
 
 			if not ingredients.trait_ids or not ingredients.trait_ids[1] or not new_trait_item then
-				return false, "loc_crafting_no_trait_selected"
+				return false, false
 			end
 
-			local item_traits = item.traits
 			local existing_trait_index = ingredients.existing_trait_index
 			local trait = item_traits[existing_trait_index]
 
 			if not trait then
-				return false, "loc_crafting_no_trait_selected"
+				return false, false
 			end
 
 			for i = 1, #item_traits do
@@ -343,9 +350,7 @@ CraftingSettings.recipes = {
 				return false, "loc_crafting_not_allowed_wasteful"
 			end
 
-			local _, has_trait_modification = ItemUtils.has_crafting_modification(item)
-
-			if has_trait_modification and not trait.modified then
+			if item_locked and not trait.modified then
 				return false, "loc_crafting_error_trait_replaced"
 			end
 
@@ -377,18 +382,17 @@ local dummy_fuse_costs = {
 		amount = 0
 	}
 }
-CraftingSettings.recipes.reroll_perk = {
-	name = "reroll_perk",
+CraftingSettings.recipes.replace_perk = {
+	view_name = "crafting_replace_perk_view",
 	display_name = "loc_crafting_reroll_perk_option",
-	view_name = "crafting_reroll_perk_view",
+	ui_hidden = false,
+	name = "replace_perk",
+	success_text = "loc_crafting_reroll_success",
 	requires_perk_selection = true,
 	overlay_texture = "content/ui/textures/effects/crafting/recipe_background_overlay_03",
-	icon = "content/ui/materials/icons/crafting/reroll_perk",
-	description_text = "loc_crafting_reroll_perk_description",
-	success_text = "loc_crafting_reroll_success",
-	ui_hidden = false,
 	button_text = "loc_crafting_reroll_perk_button",
-	modification_warning = "loc_crafting_warning_reroll",
+	icon = "content/ui/materials/icons/crafting/reroll_perk",
+	description_text = "loc_crafting_replace_perk_description",
 	ui_disabled = false,
 	sound_event = UISoundEvents.crafting_view_on_reroll_perk,
 	is_valid_item = function (item)
@@ -396,52 +400,72 @@ CraftingSettings.recipes.reroll_perk = {
 	end,
 	get_costs = function (ingredients)
 		local crafting_costs = Managers.backend.interfaces.crafting:crafting_costs()
+		local tier = ingredients.tiers and ingredients.tiers[1]
+
+		if not tier then
+			return nil
+		end
+
 		local item = ingredients.item
+		local rarity = tostring(tier)
 		local item_type = item.item_type == "GADGET" and "gadget" or "weapon"
-		local item_crafting_costs = crafting_costs[item_type]
-		local reroll_perk_costs = item_crafting_costs.rerollPerk
-		local start_cost = reroll_perk_costs.startCost
-		local cost_increase = (reroll_perk_costs.costIncreaseInt or reroll_perk_costs.costIncrease) / (reroll_perk_costs.costIncreaseScale or 1)
-		local reroll_count = item.reroll_count
-		local rarity = tostring(ingredients.item.rarity)
-		local cost_multiplier = cost_increase^(reroll_count or 0)
-		local final_costs = calculate_costs(start_cost and start_cost[rarity] or {}, item, item_crafting_costs, cost_multiplier, reroll_perk_costs.clamping)
+		local cost_config = crafting_costs[item_type]
+		local start_costs = cost_config.perkReplace.startCost
+		local final_costs = calculate_costs(start_costs and start_costs[rarity] or {}, item, cost_config)
 
 		return final_costs
 	end,
-	can_craft = function (ingredients)
+	can_craft = function (ingredients, additional_context)
 		local item = ingredients.item
+		local has_perk_modification, has_trait_modification = ItemUtils.has_crafting_modification(item)
+		local num_modifications, max_modifications = ItemUtils.modifications_by_rarity(item)
+		local item_locked = num_modifications == max_modifications
 
-		if not CraftingSettings.recipes.reroll_perk.is_valid_item(item) then
+		if not CraftingSettings.recipes.replace_perk.is_valid_item(item) then
 			return false, "loc_crafting_failure"
 		end
 
-		local perk = item.perks[ingredients.existing_perk_index]
-
-		if not perk then
-			return false, "loc_crafting_no_perk_selected"
+		if item_locked and not has_perk_modification then
+			return false, "loc_crafting_modification_not_available"
 		end
 
-		local has_perk_modification, _ = ItemUtils.has_crafting_modification(item)
+		local new_perk_item = additional_context.perk_items and additional_context.perk_items[1]
 
-		if has_perk_modification and not perk.modified then
-			return false, "loc_crafting_error_trait_replaced"
+		if not ingredients.perk_ids or not ingredients.perk_ids[1] or not new_perk_item then
+			return false, false
+		end
+
+		local item_perks = item.perks
+		local existing_perk_index = ingredients.existing_perk_index
+		local perk = item_perks[existing_perk_index]
+
+		if not perk then
+			return false, false
+		end
+
+		for i = 1, #item_perks do
+			if i ~= existing_perk_index and item_perks[i].id == new_perk_item.name or i == existing_perk_index and item_perks[i].id == new_perk_item.name and item_perks[i].rarity == new_perk_item.rarity then
+				return false, "loc_crafting_replace_perk_not_allowed_wasteful"
+			end
+		end
+
+		if item_locked and not perk.modified then
+			return false, "loc_crafting_error_perk_rerolled"
 		end
 
 		return true
 	end,
 	craft = function (ingredients)
-		local costs = CraftingSettings.recipes.reroll_perk.get_costs(ingredients)
+		local costs = CraftingSettings.recipes.replace_perk.get_costs(ingredients)
 		local item = ingredients.item
-		local is_gadget = item.item_type == "GADGET"
-		local promise = Managers.data_service.crafting:reroll_perk_in_item(item.gear_id, ingredients.existing_perk_index, is_gadget, costs)
+		local promise = Managers.data_service.crafting:replace_perk_in_weapon(item.gear_id, ingredients.existing_perk_index, ingredients.perk_master_ids[1], costs, ingredients.tiers[1])
 
 		return promise
 	end
 }
 CraftingSettings.recipes_ui_order = {
 	CraftingSettings.recipes.upgrade_item,
-	CraftingSettings.recipes.reroll_perk,
+	CraftingSettings.recipes.replace_perk,
 	CraftingSettings.recipes.replace_trait,
 	CraftingSettings.recipes.extract_trait,
 	CraftingSettings.recipes.fuse_traits

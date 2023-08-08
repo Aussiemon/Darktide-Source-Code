@@ -120,6 +120,7 @@ local mutator_templates = {
 				stinger_duration = 8,
 				num_trickle_hordes_active_for_cooldown = 20,
 				min_players_alive = 2,
+				disallow_spawning_too_close_to_other_spawn = true,
 				not_during_terror_events = true,
 				optional_num_tries = 6,
 				stinger = "wwise/events/minions/play_minion_special_sniper_spawn_circumstance",
@@ -165,7 +166,7 @@ local mutator_templates = {
 					45
 				},
 				optional_main_path_offset = {
-					40,
+					30,
 					70
 				},
 				pause_pacing_on_spawn = {
@@ -228,6 +229,7 @@ local mutator_templates = {
 			{
 				num_trickle_hordes_active_for_cooldown = 20,
 				not_during_terror_events = true,
+				disallow_spawning_too_close_to_other_spawn = true,
 				spawn_max_health_modifier = 0.9,
 				optional_num_tries = 6,
 				ignore_disallowance = true,
@@ -323,8 +325,8 @@ local mutator_templates = {
 					}
 				},
 				time_between_waves = {
-					1,
-					4
+					0.25,
+					1
 				}
 			}
 		}
@@ -335,9 +337,10 @@ local mutator_templates = {
 			{
 				num_trickle_hordes_active_for_cooldown = 20,
 				min_players_alive = 2,
-				not_during_terror_events = true,
+				disallow_spawning_too_close_to_other_spawn = true,
 				spawn_max_health_modifier = 0.4,
 				optional_num_tries = 6,
+				not_during_terror_events = true,
 				ignore_disallowance = true,
 				horde_compositions = {
 					trickle_horde = {
@@ -431,8 +434,8 @@ local mutator_templates = {
 					}
 				},
 				time_between_waves = {
-					2,
-					4
+					0.25,
+					1
 				}
 			}
 		}

@@ -1,6 +1,7 @@
 local RaritySettings = {
 	[0] = {
 		display_name = "<undefined item_rarity>",
+		max_modifications = 0,
 		color = {
 			255,
 			255,
@@ -24,6 +25,7 @@ local RaritySettings = {
 	},
 	{
 		display_name = "loc_item_weapon_rarity_1",
+		max_modifications = 2,
 		color = Color.item_rarity_1(255, true),
 		color_dark = Color.item_rarity_dark_1(255, true),
 		weapon = {
@@ -37,6 +39,7 @@ local RaritySettings = {
 	},
 	{
 		display_name = "loc_item_weapon_rarity_2",
+		max_modifications = 2,
 		color = Color.item_rarity_2(255, true),
 		color_dark = Color.item_rarity_dark_2(255, true),
 		weapon = {
@@ -50,6 +53,7 @@ local RaritySettings = {
 	},
 	{
 		display_name = "loc_item_weapon_rarity_3",
+		max_modifications = 2,
 		color = Color.item_rarity_3(255, true),
 		color_dark = Color.item_rarity_dark_3(255, true),
 		weapon = {
@@ -63,6 +67,7 @@ local RaritySettings = {
 	},
 	{
 		display_name = "loc_item_weapon_rarity_4",
+		max_modifications = 2,
 		color = Color.item_rarity_4(255, true),
 		color_dark = Color.item_rarity_dark_4(255, true),
 		weapon = {
@@ -76,6 +81,7 @@ local RaritySettings = {
 	},
 	{
 		display_name = "loc_item_weapon_rarity_5",
+		max_modifications = 2,
 		color = Color.item_rarity_5(255, true),
 		color_dark = Color.item_rarity_dark_5(255, true),
 		weapon = {
@@ -89,6 +95,7 @@ local RaritySettings = {
 	},
 	{
 		display_name = "loc_item_weapon_rarity_6",
+		max_modifications = 2,
 		color = Color.item_rarity_6(255, true),
 		color_dark = Color.item_rarity_dark_6(255, true),
 		weapon = {

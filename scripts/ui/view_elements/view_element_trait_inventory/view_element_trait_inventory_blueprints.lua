@@ -194,9 +194,9 @@ ViewElementTraitInventoryBlueprints.trait = {
 			}
 		},
 		{
-			value = "content/ui/materials/icons/traits/traits_container",
-			style_id = "icon",
 			pass_type = "texture",
+			style_id = "icon",
+			value = "content/ui/materials/icons/traits/traits_container",
 			style = {
 				vertical_alignment = "center",
 				horizontal_alignment = "center",
@@ -211,7 +211,10 @@ ViewElementTraitInventoryBlueprints.trait = {
 					5
 				},
 				color = Color.terminal_icon(255, true)
-			}
+			},
+			change_function = function (content, style)
+				style.color[1] = content.is_wasteful and 60 or 255
+			end
 		}
 	},
 	init = function (parent, widget, config, callback_name)
@@ -268,6 +271,18 @@ ViewElementTraitInventoryBlueprints.trait = {
 
 		if is_hover then
 			parent:_on_trait_hover(content.config)
+		end
+
+		content.is_wasteful = false
+		local item_traits = ingredients.item.traits
+
+		for i = 1, #item_traits do
+			local item_trait = item_traits[i]
+			local selected_index = ingredients.existing_trait_index
+
+			if i == selected_index and item_trait.id == trait_item.name and trait_item.rarity == item_trait.rarity or i ~= selected_index and item_trait.id == trait_item.name then
+				content.is_wasteful = true
+			end
 		end
 	end
 }

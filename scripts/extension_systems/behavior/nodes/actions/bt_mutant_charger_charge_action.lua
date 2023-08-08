@@ -8,6 +8,7 @@ local Blackboard = require("scripts/extension_systems/blackboard/utilities/black
 local Breed = require("scripts/utilities/breed")
 local Catapulted = require("scripts/extension_systems/character_state_machine/character_states/utilities/catapulted")
 local Dodge = require("scripts/extension_systems/character_state_machine/character_states/utilities/dodge")
+local Health = require("scripts/utilities/health")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionPerception = require("scripts/utilities/minion_perception")
@@ -268,6 +269,11 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 
 	navigation_extension:set_max_speed(wanted_charge_speed)
 
+	local animation_charge_speed = action_data.animation_charge_speed
+	local animation_variable = wanted_charge_speed / animation_charge_speed
+
+	scratchpad.animation_extension:set_variable("anim_move_speed", math.clamp(animation_variable, action_data.min_animation_variable, action_data.max_animation_variable))
+
 	scratchpad.current_charge_speed = wanted_charge_speed
 
 	if scratchpad.anim_move_speed_duration then
@@ -464,10 +470,6 @@ BtMutantChargerChargeAction._update_navigating = function (self, unit, scratchpa
 		self:_move_to_position(scratchpad, target_position)
 
 		scratchpad.move_to_timer = t + MOVE_FREQUENCY
-
-		if not_facing_target then
-			scratchpad.started_charge_anim = nil
-		end
 	end
 
 	local should_start_idle, should_be_idling = MinionMovement.should_start_idle(scratchpad, scratchpad.behavior_component)
@@ -557,6 +559,11 @@ BtMutantChargerChargeAction._update_navigating = function (self, unit, scratchpa
 	local new_max_speed = max_speed * slowdown_percentage
 
 	navigation_extension:set_max_speed(new_max_speed)
+
+	local animation_charge_speed = action_data.animation_charge_speed
+	local animation_variable = new_max_speed / animation_charge_speed
+
+	scratchpad.animation_extension:set_variable("anim_move_speed", math.clamp(animation_variable, action_data.min_animation_variable, action_data.max_animation_variable))
 end
 
 BtMutantChargerChargeAction._update_charged_past = function (self, unit, scratchpad, action_data, t, dt)
@@ -584,6 +591,20 @@ local SMASH_SPACE_NAV_BELOW = 1
 
 BtMutantChargerChargeAction._update_grabbed_target = function (self, unit, scratchpad, action_data, t, dt)
 	if scratchpad.grab_target_duration < t then
+		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+		if not scratchpad.skip_taunt and buff_extension and buff_extension:has_keyword("empowered") then
+			local current_health_percent = Health.current_health_percent(scratchpad.grabbed_target)
+
+			if current_health_percent > 0 then
+				self:_play_smash_anim(scratchpad, action_data, t)
+
+				scratchpad.grab_target_duration = t + action_data.smash_anim_duration[scratchpad.hit_unit_breed_name]
+
+				return
+			end
+		end
+
 		self:_align_throwing(unit, scratchpad, action_data)
 
 		scratchpad.grab_target_duration = nil
@@ -1108,6 +1129,26 @@ BtMutantChargerChargeAction._add_threat_to_other_targets = function (self, unit,
 			perception_extension:add_threat(target_unit, max_threat)
 		end
 	end
+end
+
+BtMutantChargerChargeAction._get_min_charge_speed = function (self, scratchpad, action_data)
+	local min_speed = action_data.charge_speed_min
+	local buff_extension = scratchpad.buff_extension
+	local stat_buffs = buff_extension:stat_buffs()
+	local movement_speed = stat_buffs.movement_speed or 1
+	min_speed = min_speed * movement_speed
+
+	return min_speed
+end
+
+BtMutantChargerChargeAction._get_max_charge_speed = function (self, scratchpad, action_data)
+	local max_speed = action_data.charge_speed_max
+	local buff_extension = scratchpad.buff_extension
+	local stat_buffs = buff_extension:stat_buffs()
+	local movement_speed = stat_buffs.movement_speed or 1
+	max_speed = max_speed * movement_speed
+
+	return max_speed
 end
 
 return BtMutantChargerChargeAction

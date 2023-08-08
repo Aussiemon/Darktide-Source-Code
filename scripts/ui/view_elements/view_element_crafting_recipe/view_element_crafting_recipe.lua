@@ -123,13 +123,52 @@ ViewElementCraftingRecipe.present_recipe_navigation = function (self, recipes, l
 	self:present_grid_layout(layout, ViewElementCraftingRecipeBlueprints, left_click_callback, nil, nil, nil, optional_on_present_callback)
 end
 
-local function _push_traitlike_items(layout, widget_type, traits, has_crafting_modification)
+ViewElementCraftingRecipe.present_recipe_navigation_with_item = function (self, recipes, left_click_callback, optional_on_present_callback, item)
+	local layout = {
+		{
+			widget_type = "spacing_vertical"
+		}
+	}
+	local active_recipes = {}
+	layout[#layout + 1] = {
+		text = "loc_crafting_item_modifications_description",
+		widget_type = "description"
+	}
+	layout[#layout + 1] = {
+		widget_type = "modifications_counter",
+		item = item
+	}
+	layout[#layout + 1] = {
+		widget_type = "spacing_vertical"
+	}
+
+	for i, recipe in ipairs(recipes) do
+		if not recipe.ui_hidden and not recipe.ui_show_in_vendor_view then
+			layout[#layout + 1] = {
+				widget_type = "navigation_button",
+				recipe = recipe
+			}
+			active_recipes[#active_recipes + 1] = recipe
+		end
+	end
+
+	layout[#layout + 1] = {
+		widget_type = "spacing_vertical"
+	}
+	self.content.recipes = active_recipes
+
+	self:set_selected_item(item)
+	self:_pre_present_height_adjust()
+	self:present_grid_layout(layout, ViewElementCraftingRecipeBlueprints, left_click_callback, nil, nil, nil, optional_on_present_callback)
+end
+
+local function _push_traitlike_items(layout, widget_type, traits, item_is_locked)
 	if not traits then
 		return
 	end
 
 	for i, trait in ipairs(traits) do
-		if trait.modified or not has_crafting_modification then
+		if trait.modified or not item_is_locked then
 			layout[#layout + 1] = {
 				widget_type = widget_type,
 				item = MasterItems.get_item(trait.id),
@@ -143,14 +182,13 @@ end
 
 ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, main_action_callback, select_trait_callback, optional_on_present_callback, additional_data)
 	local item = ingredients.item
-	local has_perk_modification = false
-	local has_trait_modification = false
+	local item_locked = nil
 
 	if item then
-		has_perk_modification, has_trait_modification = ItemUtils.has_crafting_modification(item)
+		local num_modifications, max_modifications = ItemUtils.modifications_by_rarity(item)
+		item_locked = num_modifications == max_modifications
 	end
 
-	local has_any_modification = has_perk_modification or has_trait_modification
 	self.content.recipe = recipe
 	self.content.ingredients = ingredients
 	self.content.additional_data = additional_data
@@ -181,18 +219,20 @@ ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, 
 		end
 	end
 
+	if item and recipe.view_name ~= "crafting_extract_trait_view" and recipe.view_name ~= "crafting_upgrade_item_view" then
+		layout[#layout + 1] = {
+			widget_type = "modifications_counter",
+			item = item
+		}
+		layout[#layout + 1] = {
+			widget_type = "spacing_vertical"
+		}
+	end
+
 	layout[#layout + 1] = {
 		widget_type = "description",
 		text = recipe.description_text
 	}
-
-	if recipe.modification_warning and not has_any_modification then
-		layout[#layout + 1] = {
-			widget_type = "description",
-			text = recipe.modification_warning,
-			color = Color.ui_red_super_light(nil, true)
-		}
-	end
 
 	if item and recipe.requires_perk_selection then
 		local filter_modified = recipe.requires_perk_selection ~= "all"
@@ -200,7 +240,7 @@ ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, 
 			widget_type = "spacing_vertical_small"
 		}
 
-		_push_traitlike_items(layout, "perk_button", item and item.perks, filter_modified and has_perk_modification)
+		_push_traitlike_items(layout, "perk_button", item and item.perks, filter_modified and item_locked)
 	end
 
 	if item and recipe.requires_trait_selection then
@@ -209,7 +249,7 @@ ViewElementCraftingRecipe.present_recipe = function (self, recipe, ingredients, 
 			widget_type = "spacing_vertical_small"
 		}
 
-		_push_traitlike_items(layout, "trait_button", item and item.traits, filter_modified and has_trait_modification)
+		_push_traitlike_items(layout, "trait_button", item and item.traits, filter_modified and item_locked)
 	end
 
 	local costs = recipe.get_costs(ingredients, additional_data) or {}
@@ -377,8 +417,8 @@ ViewElementCraftingRecipe.cb_on_grid_entry_right_pressed = function (self, widge
 	local menu_settings = self._menu_settings
 
 	if menu_settings.refresh_on_grid_pressed then
-		self:refresh_can_craft(self.content.additional_data)
 		self:refresh_cost(self.content.additional_data)
+		self:refresh_can_craft(self.content.additional_data)
 	end
 
 	self:_play_sound(UISoundEvents.default_click)

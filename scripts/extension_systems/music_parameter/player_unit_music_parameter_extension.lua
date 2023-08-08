@@ -63,10 +63,14 @@ PlayerUnitMusicParameterExtension._check_is_boss_near = function (self, alive_mo
 
 	for i = 1, alive_monsters.size do
 		local monster_unit = alive_monsters[i]
-		local distance_sq = Vector3.distance_squared(player_position, POSITION_LOOKUP[monster_unit])
+		local is_weakened = ScriptUnit.extension(monster_unit, "boss_system"):is_weakened()
 
-		if not alive_witches_lookup[monster_unit] and distance_sq <= boss_trigger_distance_sq then
-			return true
+		if not is_weakened then
+			local distance_sq = Vector3.distance_squared(player_position, POSITION_LOOKUP[monster_unit])
+
+			if not alive_witches_lookup[monster_unit] and distance_sq <= boss_trigger_distance_sq then
+				return true
+			end
 		end
 	end
 

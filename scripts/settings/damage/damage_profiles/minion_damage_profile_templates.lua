@@ -2954,7 +2954,7 @@ damage_templates.chaos_ogryn_gunner_bullet = {
 	},
 	force_look_function = ForcedLookSettings.look_functions.heavy,
 	push_template = push_templates.chaos_ogryn_gunner_bullet,
-	ogryn_push_template = push_templates.chaos_ogryn_gunner_bullet,
+	ogryn_push_template = push_templates.chaos_ogryn_gunner_bullet_ogryn,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default

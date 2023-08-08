@@ -151,7 +151,7 @@ MinionSpawnerSystem.spawners_in_range = function (self, position, radius, option
 		local extension = extension_broadphase_lookup[hit_id]
 		local allowed = not extension:is_excluded_from_pacing()
 
-		if optional_spawn_type and optional_spawn_type == "specials" and not extension:is_excluded_from_specials_pacing() then
+		if optional_spawn_type and optional_spawn_type == "specials" and extension:is_excluded_from_specials_pacing() then
 			allowed = false
 		end
 

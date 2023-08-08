@@ -307,13 +307,11 @@ StoreItemDetailView._setup_item_presentation = function (self)
 			end
 
 			element.dummy_profile = profile
-			local title_text = Localize(entry.item.display_name) or ""
-			local item_type = Utf8.upper(entry.item.item_type)
-			local item_type_localization_key = UISettings.item_type_localization_lookup[item_type]
-			local item_type_display_name_localized = item_type_localization_key and Localize(item_type_localization_key) or "<undefined item_type>"
+			local title_text = ItemUtils.display_name(entry.real_item)
+			local item_type = ItemUtils.type_display_name(entry.real_item)
 			description_text = Localize(self._selected_element.item.description)
 
-			self:_setup_details(title_text, item_type_display_name_localized)
+			self:_setup_details(title_text, item_type)
 			self:_setup_description_grid(description_text)
 			self:_present_single_item()
 		end
@@ -383,13 +381,15 @@ StoreItemDetailView._setup_details = function (self, title, type)
 
 	self:_set_scenegraph_position("grid_divider", nil, start_description_position)
 	self:_set_scenegraph_position("description_grid", nil, start_description_position + self._ui_scenegraph.grid_divider.size[2])
+
+	local mask_added_height = 10
+
 	self:_set_scenegraph_size("description_grid", nil, grid_height)
-	self:_set_scenegraph_size("description_mask", nil, grid_height)
+	self:_set_scenegraph_size("description_mask", nil, grid_height + mask_added_height)
 	self:_set_scenegraph_size("description_scrollbar", nil, grid_height)
 
 	local grid_title_height = math.abs(self._widgets_by_name.grid_title.style.text.offset[2])
 	local scrollbar_removed_height = 30
-	local mask_added_height = 10
 
 	self:_set_scenegraph_position("grid_background", nil, start_description_position + self._ui_scenegraph.grid_divider.size[2] + grid_title_height)
 	self:_set_scenegraph_size("grid_background", nil, grid_height - grid_title_height)
@@ -433,13 +433,14 @@ StoreItemDetailView._setup_item_price = function (self)
 			1920,
 			1080
 		}, text_options)
+		local extra_width = 10
 		content.size = {
-			text_width,
+			text_width + extra_width,
 			text_height
 		}
 		self._details_widget = owned_widget
 
-		self:_set_scenegraph_size("details_pivot", text_width, text_height)
+		self:_set_scenegraph_size("details_pivot", text_width + extra_width, text_height)
 	else
 		local price_pass = Definitions.price_text_definition
 		local price_definition = UIWidget.create_definition(price_pass, "details_pivot", nil, {

@@ -11,8 +11,7 @@ local DangerSettings = require("scripts/settings/difficulty/danger_settings")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local blueprint_styles = ViewStyles.blueprints
 local icons = {
-	loot = "content/ui/materials/icons/generic/loot",
-	flash = "content/ui/materials/icons/generic/flash"
+	loot = "content/ui/materials/icons/generic/loot"
 }
 local quickplay_data = {
 	icon = "content/ui/materials/icons/mission_types/mission_type_09",

@@ -13,6 +13,8 @@ local difficulty_picker_stepper_hotspot_content = {
 	on_hover_sound = UISoundEvents.default_mouse_hover,
 	on_pressed_sound = UISoundEvents.default_select
 }
+local MIN_DANGER = 1
+local MAX_DANGER = 5
 local difficulty_picker_hotspot_ids = {
 	"hotspot_1",
 	"hotspot_2",
@@ -23,12 +25,25 @@ local difficulty_picker_hotspot_ids = {
 
 local function _make_difficulty_picker_rect_change_function(index)
 	return function (content, style)
-		if index <= content._hover_index_1 then
+		local min_danger = content.min_danger or MIN_DANGER
+		local max_danger = content.max_danger or MAX_DANGER
+
+		if index < min_danger or max_danger < index then
+			style.color[1] = 127
+			style.size[1] = 10
+			style.size[2] = 10
+		elseif index <= content._hover_index_1 then
 			style.color[1] = 255
+			style.size[1] = 18
+			style.size[2] = 36
 		elseif index <= content._hover_index_2 then
 			style.color[1] = 127
+			style.size[1] = 18
+			style.size[2] = 36
 		else
 			style.color[1] = 64
+			style.size[1] = 18
+			style.size[2] = 36
 		end
 	end
 end
@@ -38,18 +53,24 @@ StepperPassTemplates.difficulty_stepper = {
 		pass_type = "logic",
 		value = function (pass, ui_renderer, logic_style, content, position, size)
 			if not content.disabled then
+				local min_danger = math.clamp(content.min_danger or MIN_DANGER, MIN_DANGER, MAX_DANGER)
+				local max_danger = math.clamp(content.max_danger or MAX_DANGER, MIN_DANGER, MAX_DANGER)
+				min_danger = min_danger <= max_danger and min_danger or max_danger
+				content.min_danger = min_danger
+				content.max_danger = max_danger
+				content.danger = min_danger <= content.danger and content.danger <= max_danger and content.danger or min_danger
 				local danger = content.danger
 				local input_service = ui_renderer.input_service
 
-				if (content.hotspot_left.on_released or input_service:get("navigate_primary_left_pressed")) and danger > 1 then
+				if (content.hotspot_left.on_released or input_service:get("navigate_primary_left_pressed")) and min_danger < danger then
 					danger = danger - 1
-				elseif (content.hotspot_right.on_released or input_service:get("navigate_primary_right_pressed")) and danger < 5 then
+				elseif (content.hotspot_right.on_released or input_service:get("navigate_primary_right_pressed")) and danger < max_danger then
 					danger = danger + 1
 				end
 
 				local hover_index = content.danger
 
-				for i = 1, 5 do
+				for i = min_danger, max_danger do
 					local hotspot_content = content[difficulty_picker_hotspot_ids[i]]
 
 					if hotspot_content.on_pressed then
@@ -86,16 +107,69 @@ StepperPassTemplates.difficulty_stepper = {
 		end
 	},
 	{
-		value = "<",
-		value_id = "stepper_left",
-		pass_type = "text",
+		style_id = "stepper_left",
+		pass_type = "texture_uv",
+		value = "content/ui/materials/buttons/arrow_01",
 		style = {
-			font_size = 32,
-			text_vertical_alignment = "center",
-			horizontal_alignment = "center",
-			text_horizontal_alignment = "center",
 			vertical_alignment = "center",
-			font_type = "proxima_nova_bold",
+			horizontal_alignment = "center",
+			size = {
+				32,
+				32
+			},
+			color = color_terminal_text_header,
+			offset = {
+				-120,
+				15,
+				2
+			},
+			uvs = {
+				{
+					1,
+					0
+				},
+				{
+					0,
+					1
+				}
+			}
+		},
+		visibility_function = function (parent, content)
+			return Managers.ui:using_cursor_navigation()
+		end
+	},
+	{
+		style_id = "stepper_right",
+		pass_type = "texture",
+		value = "content/ui/materials/buttons/arrow_01",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			size = {
+				32,
+				32
+			},
+			color = color_terminal_text_header,
+			offset = {
+				115,
+				15,
+				2
+			}
+		},
+		visibility_function = function (parent, content)
+			return Managers.ui:using_cursor_navigation()
+		end
+	},
+	{
+		value_id = "stepper_left_text",
+		pass_type = "text",
+		value = "",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			text_vertical_alignment = "center",
+			font_size = 32,
+			text_horizontal_alignment = "center",
 			text_color = color_terminal_text_header,
 			size = {
 				75,
@@ -103,33 +177,38 @@ StepperPassTemplates.difficulty_stepper = {
 			},
 			offset = {
 				-120,
-				30,
+				15,
 				1
 			}
-		}
+		},
+		visibility_function = function (parent, content)
+			return not Managers.ui:using_cursor_navigation()
+		end
 	},
 	{
-		value = ">",
-		value_id = "stepper_right",
+		value_id = "stepper_right_text",
 		pass_type = "text",
+		value = "",
 		style = {
-			font_size = 32,
-			text_vertical_alignment = "center",
-			horizontal_alignment = "center",
-			text_horizontal_alignment = "center",
 			vertical_alignment = "center",
-			font_type = "proxima_nova_bold",
+			horizontal_alignment = "center",
+			text_vertical_alignment = "center",
+			font_size = 32,
+			text_horizontal_alignment = "center",
 			text_color = color_terminal_text_header,
 			size = {
 				75,
 				75
 			},
 			offset = {
-				120,
-				30,
+				115,
+				15,
 				1
 			}
-		}
+		},
+		visibility_function = function (parent, content)
+			return not Managers.ui:using_cursor_navigation()
+		end
 	},
 	{
 		pass_type = "hotspot",
@@ -144,7 +223,7 @@ StepperPassTemplates.difficulty_stepper = {
 			},
 			offset = {
 				-140,
-				30,
+				15,
 				1
 			}
 		}
@@ -162,13 +241,14 @@ StepperPassTemplates.difficulty_stepper = {
 			},
 			offset = {
 				140,
-				30,
+				15,
 				1
 			}
 		}
 	},
 	{
 		value = "content/ui/materials/icons/generic/danger",
+		style_id = "danger",
 		pass_type = "texture",
 		style = {
 			vertical_alignment = "center",
@@ -180,7 +260,7 @@ StepperPassTemplates.difficulty_stepper = {
 			},
 			offset = {
 				-65,
-				30,
+				15,
 				2
 			}
 		}
@@ -197,7 +277,7 @@ StepperPassTemplates.difficulty_stepper = {
 			},
 			offset = {
 				-22,
-				30,
+				15,
 				2
 			}
 		}
@@ -214,7 +294,7 @@ StepperPassTemplates.difficulty_stepper = {
 			},
 			offset = {
 				2,
-				30,
+				15,
 				2
 			}
 		}
@@ -231,7 +311,7 @@ StepperPassTemplates.difficulty_stepper = {
 			},
 			offset = {
 				26,
-				30,
+				15,
 				2
 			}
 		}
@@ -248,7 +328,7 @@ StepperPassTemplates.difficulty_stepper = {
 			},
 			offset = {
 				50,
-				30,
+				15,
 				2
 			}
 		}
@@ -265,12 +345,13 @@ StepperPassTemplates.difficulty_stepper = {
 			},
 			offset = {
 				74,
-				30,
+				15,
 				2
 			}
 		}
 	},
 	{
+		style_id = "difficulty_bar_1",
 		pass_type = "rect",
 		change_function = _make_difficulty_picker_rect_change_function(1),
 		style = {
@@ -283,12 +364,13 @@ StepperPassTemplates.difficulty_stepper = {
 			},
 			offset = {
 				-22,
-				30,
+				15,
 				2
 			}
 		}
 	},
 	{
+		style_id = "difficulty_bar_2",
 		pass_type = "rect",
 		change_function = _make_difficulty_picker_rect_change_function(2),
 		style = {
@@ -301,12 +383,13 @@ StepperPassTemplates.difficulty_stepper = {
 			},
 			offset = {
 				2,
-				30,
+				15,
 				2
 			}
 		}
 	},
 	{
+		style_id = "difficulty_bar_3",
 		pass_type = "rect",
 		change_function = _make_difficulty_picker_rect_change_function(3),
 		style = {
@@ -319,12 +402,13 @@ StepperPassTemplates.difficulty_stepper = {
 			},
 			offset = {
 				26,
-				30,
+				15,
 				2
 			}
 		}
 	},
 	{
+		style_id = "difficulty_bar_4",
 		pass_type = "rect",
 		change_function = _make_difficulty_picker_rect_change_function(4),
 		style = {
@@ -337,12 +421,13 @@ StepperPassTemplates.difficulty_stepper = {
 			},
 			offset = {
 				50,
-				30,
+				15,
 				2
 			}
 		}
 	},
 	{
+		style_id = "difficulty_bar_5",
 		pass_type = "rect",
 		change_function = _make_difficulty_picker_rect_change_function(5),
 		style = {
@@ -355,7 +440,7 @@ StepperPassTemplates.difficulty_stepper = {
 			},
 			offset = {
 				74,
-				30,
+				15,
 				2
 			}
 		}
@@ -372,7 +457,7 @@ StepperPassTemplates.difficulty_stepper = {
 			text_color = color_terminal_text_header,
 			offset = {
 				0,
-				-20,
+				-25,
 				3
 			}
 		}

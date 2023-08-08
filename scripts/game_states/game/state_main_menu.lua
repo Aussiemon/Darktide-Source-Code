@@ -23,6 +23,7 @@ StateMainMenu.on_enter = function (self, parent, params, creation_context)
 	self._profiles = {}
 	self._selected_profile = nil
 	self._character_is_syncing = false
+	self._migration_data = params.migration_data
 
 	self:_register_menu_events()
 
@@ -371,7 +372,8 @@ StateMainMenu._open_character_create_state_views = function (self, index)
 		local view_context = {
 			character_create = self._character_create,
 			parent = self,
-			force_character_creation = self._force_create_first_character
+			force_character_creation = self._force_create_first_character,
+			migration_data = self._migration_data
 		}
 
 		for i = 1, #next_views do
@@ -433,7 +435,8 @@ StateMainMenu._set_view_state_cb = function (self, state)
 
 	if new_state_views then
 		local view_context = {
-			parent = self
+			parent = self,
+			migration_data = self._migration_data
 		}
 
 		for i = 1, #new_state_views do

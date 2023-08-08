@@ -626,6 +626,20 @@ local action_data = {
 			0.5,
 			0.5,
 			0.65
+		},
+		heal_frequency = {
+			2,
+			1.5,
+			1.25,
+			1,
+			0.85
+		},
+		heal_amount = {
+			50,
+			75,
+			100,
+			125,
+			150
 		}
 	},
 	climb = {

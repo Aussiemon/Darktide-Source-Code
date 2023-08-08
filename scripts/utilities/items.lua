@@ -1224,6 +1224,39 @@ ItemUtils.has_crafting_modification = function (item)
 	return has_perk_modification, has_trait_modification
 end
 
+ItemUtils.count_crafting_modification = function (item)
+	local perks = item.perks
+	local count = 0
+
+	if perks then
+		for i = 1, #perks do
+			if perks[i].modified then
+				count = count + 1
+			end
+		end
+	end
+
+	local traits = item.traits
+
+	if traits then
+		for i = 1, #traits do
+			if traits[i].modified then
+				count = count + 1
+			end
+		end
+	end
+
+	return count
+end
+
+ItemUtils.modifications_by_rarity = function (item)
+	local rarity_settings = RaritySettings[item.rarity]
+	local count_modifications = ItemUtils.count_crafting_modification(item)
+	local max_modifications = rarity_settings.max_modifications
+
+	return count_modifications, max_modifications
+end
+
 ItemUtils.create_mannequin_profile_by_item = function (item, prefered_gender, prefered_archetype)
 	local item_gender, item_breed, item_archetype = nil
 

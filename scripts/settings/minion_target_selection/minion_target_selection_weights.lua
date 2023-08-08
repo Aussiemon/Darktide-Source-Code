@@ -105,10 +105,12 @@ local minion_target_selection_weights = {
 		taunt_weight_multiplier = 2
 	},
 	chaos_poxwalker_bomber = {
-		distance_to_target = 2,
+		near_distance = 5,
 		occupied_slots = -0.1,
 		disabled = -10,
-		max_distance = 50
+		max_distance = 50,
+		near_distance_bonus = 30,
+		distance_to_target = 2
 	},
 	chaos_poxwalker = {
 		occupied_slots = -2,

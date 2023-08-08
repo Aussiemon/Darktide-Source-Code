@@ -1580,21 +1580,17 @@ ButtonPassTemplates.terminal_button_hold_small = {
 		style_id = "outer_shadow",
 		pass_type = "texture",
 		style = {
-			vertical_alignment = "top",
+			vertical_alignment = "center",
 			horizontal_alignment = "center",
 			scale_to_material = true,
 			color = Color.black(200, true),
-			size = {
-				nil,
-				40
-			},
 			size_addition = {
 				20,
 				20
 			},
 			offset = {
 				0,
-				-10,
+				0,
 				3
 			}
 		}
@@ -1609,6 +1605,19 @@ ButtonPassTemplates.terminal_button_hold_small = {
 			local default_color = hotspot.disabled and style.disabled_color or style.default_color
 			local hover_color = style.hover_color
 			local text_color = style.text_color
+			local gamepad_active = hotspot.gamepad_active
+			local button_text = content.original_text or ""
+			local gamepad_action = content.input_action
+
+			if gamepad_active and gamepad_action and not hotspot.disabled and not content.ignore_gamepad_on_text then
+				local service_type = "View"
+				local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
+				local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+				content.text = string.format("{#color(226,199,126)}%s %s{#reset()} %s", Localize("loc_input_hold"), input_text, button_text)
+			else
+				content.text = string.format("{#color(226,199,126)}%s{#reset()} %s", Localize("loc_input_hold"), button_text)
+			end
+
 			local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
 			color_lerp(default_color, hover_color, progress, text_color)
@@ -1625,6 +1634,8 @@ ButtonPassTemplates.terminal_button_hold_small = {
 		widget.content.complete_function = options.complete_function
 		widget.content.hotspot.pressed_callback = nil
 		widget.content.input_action = options.input_action or "confirm_hold"
+		widget.content.original_text = options.text
+		widget.content.ignore_gamepad_on_text = options.ignore_gamepad_on_text
 		local width = widget.content.size[1]
 		local height = widget.content.size[2]
 		widget.style.background.size = {

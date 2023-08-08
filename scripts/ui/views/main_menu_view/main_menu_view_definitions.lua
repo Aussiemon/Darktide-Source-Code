@@ -107,6 +107,20 @@ gamertag_input_style.text_color = {
 	255,
 	255
 }
+local wallet_title = table.clone(UIFontSettings.header_1)
+wallet_title.offset = {
+	-10,
+	-20,
+	1
+}
+wallet_title.text_vertical_alignment = "bottom"
+wallet_title.text_horizontal_alignment = "right"
+wallet_title.horizontal_alignment = "right"
+wallet_title.font_size = 24
+wallet_title.size = {
+	300,
+	0
+}
 local scenegraph_definition = {
 	screen = {
 		scale = "fit",
@@ -395,6 +409,48 @@ local scenegraph_definition = {
 			0,
 			40,
 			2
+		}
+	},
+	wallet_element_pivot = {
+		vertical_alignment = "center",
+		parent = "screen",
+		horizontal_alignment = "right",
+		size = {
+			0,
+			0
+		},
+		position = {
+			0,
+			-90,
+			0
+		}
+	},
+	wallet_element_background = {
+		vertical_alignment = "center",
+		parent = "wallet_element_pivot",
+		horizontal_alignment = "right",
+		size = {
+			0,
+			0
+		},
+		position = {
+			0,
+			0,
+			0
+		}
+	},
+	wallet_merge_data_pivot = {
+		vertical_alignment = "center",
+		parent = "canvas",
+		horizontal_alignment = "center",
+		size = {
+			0,
+			0
+		},
+		position = {
+			0,
+			0,
+			0
 		}
 	}
 }
@@ -944,7 +1000,94 @@ local widget_definitions = {
 			value = Localize("loc_main_menu_fetching_profiles"),
 			style = overlay_text_style
 		}
-	}, "screen")
+	}, "screen"),
+	wallet_element_background = UIWidget.create_definition({
+		{
+			value = "content/ui/materials/backgrounds/terminal_basic",
+			style_id = "background",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				scale_to_material = true,
+				size_addition = {
+					40,
+					40
+				},
+				offset = {
+					0,
+					0,
+					0
+				},
+				color = Color.terminal_grid_background(255, true)
+			}
+		},
+		{
+			pass_type = "text",
+			value = Localize("loc_main_menu_account_wallet_title"),
+			style = wallet_title
+		},
+		{
+			value_id = "top_divider",
+			style_id = "top_divider",
+			pass_type = "texture_uv",
+			value = "content/ui/materials/dividers/horizontal_frame_big_lower",
+			style = {
+				vertical_alignment = "top",
+				scale_to_material = true,
+				horizontal_alignment = "center",
+				size_addition = {
+					30,
+					0
+				},
+				size = {
+					nil,
+					36
+				},
+				offset = {
+					0,
+					-20,
+					2
+				},
+				uvs = {
+					{
+						0,
+						1
+					},
+					{
+						1,
+						0
+					}
+				}
+			}
+		},
+		{
+			value_id = "bottom_divider",
+			style_id = "bottom_divider",
+			pass_type = "texture",
+			value = "content/ui/materials/dividers/horizontal_frame_big_lower",
+			style = {
+				vertical_alignment = "bottom",
+				scale_to_material = true,
+				horizontal_alignment = "center",
+				size_addition = {
+					30,
+					0
+				},
+				size = {
+					nil,
+					36
+				},
+				offset = {
+					0,
+					20,
+					2
+				}
+			}
+		}
+	}, "wallet_element_background", {
+		visible = false
+	})
 }
 local legend_inputs = {
 	{

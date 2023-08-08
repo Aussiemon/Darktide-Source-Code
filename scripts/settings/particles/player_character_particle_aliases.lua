@@ -142,7 +142,7 @@ local particles = {
 			lasgun_p2_m1 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargeup",
 			forcestaff_p4_m1 = "content/fx/particles/weapons/bfg_staff/psyker_bfg_projectile_charge_01",
 			lasgun_p2_m2 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargeup",
-			forcestaff_p3_m1 = "content/fx/particles/abilities/protectorate_chainlightning_charging_hands",
+			forcestaff_p3_m1 = "content/fx/particles/weapons/force_staff/force_staff_chainlightning_charging_hands",
 			lasgun_p2_m3 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargeup"
 		}
 	},
@@ -254,11 +254,20 @@ local particles = {
 				high = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level02",
 				critical = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level03",
 				low = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level01"
-			},
-			plasmagun_p2_m1 = {
-				high = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level02",
-				critical = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level03",
-				low = "content/fx/particles/weapons/rifles/plasma_gun/plasma_overcharge_level01"
+			}
+		}
+	},
+	chain_lightning_link = {
+		switch = {
+			"wielded_weapon_template",
+			"power"
+		},
+		particles = {
+			default = "content/fx/particles/weapons/force_staff/force_staff_chainlightning_attacking_link_03",
+			forcestaff_p3_m1 = {
+				high = "content/fx/particles/weapons/force_staff/force_staff_chainlightning_attacking_link_03",
+				mid = "content/fx/particles/weapons/force_staff/force_staff_chainlightning_attacking_link_02",
+				low = "content/fx/particles/weapons/force_staff/force_staff_chainlightning_attacking_link_01"
 			}
 		}
 	},

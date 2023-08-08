@@ -41,6 +41,8 @@ MissionBoardService.fetch = function (self, on_expiry, pause_time)
 			mission.side_mission = mission.sideMission
 			mission.mission_xp = mission.xp
 			mission.mission_reward = mission.credits
+			mission.start_server_time = start
+			mission.expiry_server_time = expiry
 			local flags = mission.flags
 			flags.happening_mission = flags.event and flags.altered
 		end
@@ -49,6 +51,10 @@ MissionBoardService.fetch = function (self, on_expiry, pause_time)
 	end
 
 	return Promise.all(missions_promise, happening_promise):next(format_missions_data)
+end
+
+MissionBoardService.get_rewards = function (self)
+	return self._backend_interface.mission_board:get_rewards()
 end
 
 return MissionBoardService

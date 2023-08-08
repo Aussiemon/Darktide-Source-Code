@@ -90,6 +90,10 @@ MinionAnimationExtension.anim_event_with_variable_float = function (self, event_
 	Managers.state.game_session:send_rpc_clients("rpc_minion_anim_event_variable_float", game_object_id, event_index, variable_index, variable_value)
 end
 
+MinionAnimationExtension.has_variable = function (self, name)
+	return self._variables[name]
+end
+
 MinionAnimationExtension.set_variable = function (self, name, value)
 	local unit = self._unit
 	local game_session = self._game_session

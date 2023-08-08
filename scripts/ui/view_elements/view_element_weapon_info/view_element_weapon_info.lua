@@ -8,6 +8,9 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIAnimation = require("scripts/managers/ui/ui_animation")
 local ItemUtils = require("scripts/utilities/items")
+
+require("scripts/ui/view_elements/view_element_grid/view_element_grid")
+
 local ViewElementWeaponInfo = class("ViewElementWeaponInfo", "ViewElementGrid")
 local EMPTY_TABLE = {}
 

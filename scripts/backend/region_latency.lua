@@ -1,22 +1,32 @@
 local Promise = require("scripts/foundation/utilities/promise")
 local Interface = {
 	"pre_get_region_latencies",
-	"get_region_latencies"
+	"get_region_latencies",
+	"get_preferred_reef",
+	"get_reef_info_based_on_region_latencies"
 }
 local RegionLatency = class("RegionLatency")
 
 RegionLatency.pre_get_region_latencies = function (self)
-	if not self._promise then
+	if not self._promise or self._promise:is_rejected() then
 		self._promise = self:_do_refresh()
 	end
 end
 
 RegionLatency.get_region_latencies = function (self)
-	if not self._promise then
-		self._promise = self:_do_refresh()
-	end
+	self:pre_get_region_latencies()
 
-	return self._promise
+	return self._promise:next(function (result)
+		return result.region_latencies
+	end)
+end
+
+RegionLatency.get_preferred_reef = function (self)
+	self:pre_get_region_latencies()
+
+	return self._promise:next(function (result)
+		return result.preferred_reef
+	end)
 end
 
 RegionLatency._ping_targets = function (self, timeout, regions)
@@ -196,11 +206,52 @@ RegionLatency._do_refresh = function (self)
 		end
 
 		return region_latencies
+	end):next(function (region_latencies)
+		return Managers.backend:title_request("/matchmaker/preferredreef", {
+			method = "POST",
+			body = {
+				latencyList = region_latencies
+			}
+		}):next(function (data)
+			return data.body.reefName
+		end):next(function (reef_name)
+			return {
+				region_latencies = region_latencies,
+				preferred_reef = reef_name
+			}
+		end)
 	end):next(function (result)
-		return Promise.resolved(result)
+		return result
 	end):catch(function (e)
 		Log.error("RegionLatency", "Could not refresh latencies: %s", table.tostring(e, 3))
+
+		return Promise.rejected(e)
 	end)
+end
+
+RegionLatency.get_reef_info_based_on_region_latencies = function (self, region_latencies)
+	local reefs = {}
+
+	for i, region_latency in ipairs(region_latencies) do
+		for _, reef_name in ipairs(region_latency.reefs) do
+			local reef = reefs[reef_name]
+
+			if not reef then
+				reef = {}
+				reefs[reef_name] = reef
+			end
+
+			if not reef.min_latency or region_latency.latency < reef.min_latency then
+				reef.min_latency = region_latency.latency
+			end
+
+			if not reef.max_latency or reef.max_latency < region_latency.latency then
+				reef.max_latency = region_latency.latency
+			end
+		end
+	end
+
+	return reefs
 end
 
 implements(RegionLatency, Interface)

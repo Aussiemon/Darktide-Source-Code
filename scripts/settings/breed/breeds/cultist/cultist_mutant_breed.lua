@@ -35,18 +35,18 @@ local breed_data = {
 	spawn_aggro_state = "aggroed",
 	stagger_resistance = 2000,
 	walk_speed = 2.3,
+	use_navigation_path_splines = true,
 	use_avoidance = true,
 	base_height = 2.4,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
-	player_locomotion_constrain_radius = 0.7,
 	half_extent_right = 0.5,
 	challenge_rating = 6,
 	use_wounds = true,
 	navigation_propagation_box_extent = 200,
 	hit_reacts_min_damage = 300,
 	smart_tag_target_type = "breed",
-	use_navigation_path_splines = true,
 	game_object_type = "minion_special_melee",
+	player_locomotion_constrain_radius = 0.7,
 	half_extent_forward = 0.5,
 	base_unit = "content/characters/enemy/chaos_mutant_charger/third_person/base",
 	hit_mass = 10,
@@ -82,6 +82,9 @@ local breed_data = {
 	vfx = require("scripts/settings/breed/breeds/cultist/cultist_common_vfx"),
 	look_at_tag = breed_name,
 	behavior_tree_name = breed_name,
+	animation_variables = {
+		"anim_move_speed"
+	},
 	attack_intensity_cooldowns = {
 		disabling = {
 			1.7,

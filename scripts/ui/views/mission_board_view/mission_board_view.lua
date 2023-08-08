@@ -16,15 +16,50 @@ local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local Promise = require("scripts/foundation/utilities/promise")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
+local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
+local WalletSettings = require("scripts/settings/wallet_settings")
+local TextUtils = require("scripts/utilities/ui/text")
+local ViewElementMissionBoardOptions = require("scripts/ui/view_elements/view_element_mission_board_options/view_element_mission_board_options")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
+local ColorUtilities = require("scripts/utilities/ui/colors")
 local MissionBoardView = class("MissionBoardView", "BaseView")
+local mission_types = {
+	"normal",
+	"auric"
+}
+local mission_type_by_id = {}
+
+for i = 1, #mission_types do
+	local mission_type = mission_types[i]
+	mission_type_by_id[mission_type] = i
+end
+
+local mission_type_font = table.clone(UIFontSettings.header_1)
+mission_type_font.material = "content/ui/materials/font_gradients/slug_font_gradient_header"
+mission_type_font.text_horizontal_alignment = "center"
+mission_type_font.text_vertical_alignment = "center"
+mission_type_font.font_size = 32
+local mission_type_auric_font = table.clone(mission_type_font)
+mission_type_auric_font.material = "content/ui/materials/font_gradients/slug_font_gradient_gold"
+local mission_type_data = {
+	normal = {
+		title = "loc_mission_board_view_header_tertium_hive",
+		display_name = "loc_mission_board_type_normal",
+		display_style = mission_type_font
+	},
+	auric = {
+		title = "loc_mission_board_view_header_tertium_hive_auric",
+		display_name = "loc_mission_board_type_auric",
+		display_style = mission_type_auric_font
+	}
+}
 
 MissionBoardView.init = function (self, settings)
 	MissionBoardView.super.init(self, MissionBoardViewDefinitions, settings)
 
 	self._mission_widgets = {}
 	self.can_start_mission = false
-	self._free_widget_positions = table.merge({}, MissionBoardViewSettings.mission_positions)
-	self._allow_close_hotkey = true
 	self._backend_data_expiry_time = -1
 	self._has_queued_missions = false
 	self._queued_mission_show_time = math.huge
@@ -38,8 +73,79 @@ MissionBoardView.init = function (self, settings)
 	self._cb_fetch_failure = callback(self, "_fetch_failure")
 end
 
+MissionBoardView._on_view_requirements_complete = function (self)
+	self._can_close = true
+	self._render_scale = Managers.ui:view_render_scale()
+	local definitions = self._definitions
+	self._ui_scenegraph = self:_create_scenegraph(definitions)
+	self._widgets_by_name = {}
+	self._widgets = {}
+	local filtered_definitions = {}
+
+	for name, widget_definition in pairs(definitions.widget_definitions) do
+		if not definitions.dynamic_widget_definitions[name] then
+			filtered_definitions[name] = widget_definition
+		end
+	end
+
+	for name, function_definitions in pairs(definitions.dynamic_widget_definitions) do
+		filtered_definitions[name] = function_definitions("normal")
+	end
+
+	self:_create_widgets(filtered_definitions, self._widgets, self._widgets_by_name)
+
+	self._ui_sequence_animator = self:_create_sequence_animator(definitions)
+	self._render_settings = {}
+
+	self:on_enter()
+end
+
+MissionBoardView._create_widgets = function (self, filtered_definitions, widgets, widgets_by_name)
+	local widget_definitions = filtered_definitions
+	widgets = widgets or {}
+	widgets_by_name = widgets_by_name or {}
+
+	for name, definition in pairs(widget_definitions) do
+		local widget = self:_create_widget(name, definition)
+		widgets[#widgets + 1] = widget
+	end
+
+	return widgets, widgets_by_name
+end
+
+MissionBoardView._generate_widgets_by_mission_type = function (self, mission_Type)
+	local definitions = self._definitions
+
+	for name, function_definitions in pairs(definitions.dynamic_widget_definitions) do
+		self:_unregister_widget_name(name)
+
+		for i = 1, #self._widgets do
+			local widget = self._widgets[i]
+
+			if widget.name == name then
+				table.remove(self._widgets, i)
+
+				break
+			end
+		end
+
+		local definition = function_definitions(mission_Type)
+		local widget = self:_create_widget(name, definition)
+		self._widgets[#self._widgets + 1] = widget
+	end
+
+	self:_setup_widgets()
+end
+
 MissionBoardView.on_enter = function (self)
 	MissionBoardView.super.on_enter(self)
+
+	local save_data = Managers.save:account_data()
+	save_data.mission_board = save_data.mission_board or {}
+	self._mission_board_save_data = save_data.mission_board
+	self._mission_board_save_data.private_matchmaking = self._mission_board_save_data.private_matchmaking or false
+	self._private_match = self._mission_board_save_data.private_matchmaking
+
 	Managers.event:register(self, "event_register_camera", "event_register_camera")
 
 	local world_spawner_settings = MissionBoardViewSettings.world_spawner_settings
@@ -72,37 +178,439 @@ MissionBoardView.on_enter = function (self)
 		narrative_manager:complete_event(narrative_event_name)
 	end
 
-	self._quickplay_widget = self:_create_widget("quickplay", MissionBoardViewDefinitions.mission_medium_widget_template)
-	self._quickplay_widget.offset[1] = MissionBoardViewSettings.quickplay_mission_position[1]
-	self._quickplay_widget.offset[2] = MissionBoardViewSettings.quickplay_mission_position[2]
-	local quickplay_content = self._quickplay_widget.content
-	quickplay_content.objective_icon = "content/ui/materials/icons/mission_types/mission_type_09"
-	quickplay_content.objective_2_icon = nil
-	quickplay_content.circumstance_icon = nil
-	quickplay_content.is_quickplay = true
-	self._mission_widgets[-1] = self._quickplay_widget
-	self._flash_mission_widget = self:_create_widget("flash", MissionBoardViewDefinitions.mission_medium_widget_template)
-	self._flash_mission_widget.offset[1] = MissionBoardViewSettings.flash_mission_position[1]
-	self._flash_mission_widget.offset[2] = MissionBoardViewSettings.flash_mission_position[2]
-	self._flash_mission_widget.content.title = Localize("loc_mission_board_flash_mission")
-	self._flash_mission_widget.visible = false
-	self._mission_widgets[0] = self._flash_mission_widget
-	local save_data = Managers.save:account_data()
-	save_data.mission_board = save_data.mission_board or {}
-	self._mission_board_save_data = save_data.mission_board
-	save_data.mission_board.quickplay_difficulty = save_data.mission_board.quickplay_difficulty or 1
-	self._quickplay_difficulty = save_data.mission_board.quickplay_difficulty
-	self._widgets_by_name.difficulty_stepper.content.danger = save_data.mission_board.quickplay_difficulty
+	self:_update_bonus_rewards():next(function ()
+		self:_set_selected_quickplay(true)
+	end)
+	self:_set_play_button_game_mode_text(self._solo_play, self._private_match)
+	self:fetch_regions()
+	self:_setup_widgets()
+end
+
+MissionBoardView._setup_widgets = function (self)
+	self._mission_board_save_data.quickplay_difficulty = self._mission_board_save_data.quickplay_difficulty or 1
+	self._quickplay_difficulty = self._mission_board_save_data.quickplay_difficulty
+	self._widgets_by_name.difficulty_stepper.content.danger = self._mission_board_save_data.quickplay_difficulty
 	self._widgets_by_name.difficulty_stepper.content.on_changed_callback = callback(self, "_callback_on_danger_changed")
-	save_data.mission_board.private_matchmaking = save_data.mission_board.private_matchmaking or false
-	self._private_match = save_data.mission_board.private_matchmaking
 	local gamepad_cursor = self._widgets_by_name.gamepad_cursor
 	gamepad_cursor.visible = InputDevice.gamepad_active
 	self._widgets_by_name.game_settings.visible = false
 	self._widgets_by_name.play_team_button.content.hotspot.pressed_callback = callback(self, "_callback_start_selected_mission")
+	local mission_medium_widget_template = MissionBoardViewDefinitions.widget_definitions_functions.mission_medium_widget_pass_function(self._selected_mission_type or "normal")
 
-	self:_set_selected_quickplay(true)
-	self:_set_play_button_game_mode_text(self._solo_play, self._private_match)
+	if self._quickplay_widget then
+		self:_unregister_widget_name(self._quickplay_widget.name)
+	end
+
+	self._quickplay_widget = self:_create_widget("quickplay", mission_medium_widget_template)
+	local quickplay_content = self._quickplay_widget.content
+	quickplay_content.objective_1_icon = "content/ui/materials/icons/mission_types/mission_type_09"
+	quickplay_content.objective_2_icon = nil
+	quickplay_content.circumstance_icon = nil
+	quickplay_content.is_quickplay = true
+	self._mission_widgets[-1] = self._quickplay_widget
+	local mission_type = self._selected_mission_type or "normal"
+	quickplay_content.mission_type = mission_type
+	self._quickplay_widget.offset[1] = MissionBoardViewSettings.mission_positions[mission_type].quickplay_mission_position[1]
+	self._quickplay_widget.offset[2] = MissionBoardViewSettings.mission_positions[mission_type].quickplay_mission_position[2]
+	local localization_id = mission_type_data[mission_type].title
+	local title = Localize(localization_id)
+	self._widgets_by_name.planet.content.title = title
+	self._widgets_by_name.difficulty_stepper.content.min_danger = MissionBoardViewSettings.stepper_difficulty[mission_type].min_danger
+	self._widgets_by_name.difficulty_stepper.content.max_danger = MissionBoardViewSettings.stepper_difficulty[mission_type].max_danger
+
+	self:_add_bonus_data()
+end
+
+MissionBoardView._generate_mission_type_selection = function (self)
+	if self._mission_type_selection_widget then
+		local widget = self._mission_type_selection_widget
+
+		self:_unregister_widget_name(widget.name)
+
+		self._mission_type_selection_widget = nil
+	end
+
+	local max_text_size = 200
+	local size = {
+		max_text_size + 100,
+		60
+	}
+	local selection_margin = 6
+	local selection_size = {
+		30,
+		selection_margin
+	}
+	local level_requirement_font = table.clone(UIFontSettings.body)
+	level_requirement_font.text_horizontal_alignment = "center"
+	level_requirement_font.text_vertical_alignment = "center"
+	level_requirement_font.offset = {
+		0,
+		-45,
+		0
+	}
+	level_requirement_font.text_color = Color.ui_orange_light(255, true)
+	level_requirement_font.font_size = 18
+	local pass_definitions = {
+		{
+			style_id = "background",
+			pass_type = "rect",
+			style = {
+				color = Color.black(170, true)
+			}
+		},
+		{
+			value_id = "level_requirement",
+			pass_type = "text",
+			value = "",
+			style_id = "level_requirement",
+			style = level_requirement_font,
+			visibility_function = function (content)
+				return content.level and self._player_level < content.level
+			end,
+			change_function = function (content, style)
+				content.level_requirement = content.level and Localize("loc_mission_board_mission_mode_level_requirement", true, {
+					player_level = content.level
+				}) or ""
+			end
+		},
+		{
+			style_id = "hotspot_arrow_left",
+			pass_type = "hotspot",
+			content_id = "hotspot_arrow_left",
+			content = {
+				on_hover_sound = UISoundEvents.default_mouse_hover,
+				on_pressed_sound = UISoundEvents.default_click,
+				on_select_sound = UISoundEvents.default_click
+			},
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "left",
+				size = {
+					30
+				},
+				offset = {
+					0,
+					0,
+					1
+				}
+			}
+		},
+		{
+			style_id = "arrow_background_left",
+			pass_type = "rect",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "left",
+				size = {
+					30
+				},
+				default_color = Color.terminal_frame(127.5, true),
+				color = Color.terminal_frame(127.5, true),
+				hover_color = Color.terminal_frame_hover(255, true),
+				offset = {
+					0,
+					0,
+					1
+				}
+			},
+			visibility_function = function (parent, content)
+				return Managers.ui:using_cursor_navigation()
+			end,
+			change_function = function (content, style)
+				local is_disabled = content.hotspot_arrow_left.disabled
+				local is_hover = content.hotspot_arrow_left.is_hover
+				local disabled_color = table.clone(style.default_color)
+				disabled_color[1] = 127.5
+				local color = is_disabled and disabled_color or is_hover and style.hover_color or style.default_color
+
+				ColorUtilities.color_copy(color, style.color, true)
+			end
+		},
+		{
+			value_id = "arrow_left",
+			pass_type = "texture_uv",
+			value = "content/ui/materials/buttons/arrow_01",
+			style_id = "arrow_left",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "left",
+				size = {
+					16,
+					20
+				},
+				uvs = {
+					{
+						1,
+						0
+					},
+					{
+						0,
+						1
+					}
+				},
+				offset = {
+					6,
+					0,
+					2
+				},
+				default_color = Color.terminal_text_header(255, true),
+				disabled_color = Color.terminal_text_header_disabled(255, true)
+			},
+			visibility_function = function (parent, content)
+				return Managers.ui:using_cursor_navigation()
+			end,
+			change_function = function (content, style)
+				local is_disabled = content.hotspot_arrow_left.disabled
+				local color = is_disabled and style.disabled_color or style.default_color
+
+				ColorUtilities.color_copy(color, style.color, true)
+			end
+		},
+		{
+			style_id = "arrow_left_text",
+			value_id = "arrow_left_text",
+			pass_type = "text",
+			value = "",
+			style = {
+				font_size = 24,
+				text_vertical_alignment = "center",
+				text_horizontal_alignment = "left",
+				offset = {
+					20,
+					0,
+					1
+				},
+				text_color = Color.terminal_text_header(255, true)
+			},
+			visibility_function = function (parent, content)
+				return not Managers.ui:using_cursor_navigation()
+			end
+		},
+		{
+			style_id = "arrow_right_text",
+			value_id = "arrow_right_text",
+			pass_type = "text",
+			value = "",
+			style = {
+				font_size = 24,
+				text_vertical_alignment = "center",
+				text_horizontal_alignment = "right",
+				offset = {
+					-20,
+					0,
+					1
+				},
+				text_color = Color.terminal_text_header(255, true)
+			},
+			visibility_function = function (parent, content)
+				return not Managers.ui:using_cursor_navigation()
+			end
+		},
+		{
+			style_id = "hotspot_arrow_right",
+			pass_type = "hotspot",
+			content_id = "hotspot_arrow_right",
+			content = {
+				on_hover_sound = UISoundEvents.default_mouse_hover,
+				on_pressed_sound = UISoundEvents.default_click,
+				on_select_sound = UISoundEvents.default_click
+			},
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "right",
+				size = {
+					30
+				},
+				offset = {
+					-0,
+					0,
+					1
+				}
+			}
+		},
+		{
+			style_id = "arrow_background_right",
+			pass_type = "rect",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "right",
+				size = {
+					30
+				},
+				default_color = Color.terminal_frame(127.5, true),
+				color = Color.terminal_frame(127.5, true),
+				hover_color = Color.terminal_frame_hover(255, true),
+				offset = {
+					0,
+					0,
+					1
+				}
+			},
+			visibility_function = function (parent, content)
+				return Managers.ui:using_cursor_navigation()
+			end,
+			change_function = function (content, style)
+				local is_disabled = content.hotspot_arrow_right.disabled
+				local is_hover = content.hotspot_arrow_right.is_hover
+				local disabled_color = table.clone(style.default_color)
+				disabled_color[1] = 127.5
+				local color = is_disabled and disabled_color or is_hover and style.hover_color or style.default_color
+
+				ColorUtilities.color_copy(color, style.color, true)
+			end
+		},
+		{
+			value_id = "arrow_right",
+			pass_type = "texture",
+			value = "content/ui/materials/buttons/arrow_01",
+			style_id = "arrow_right",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "right",
+				size = {
+					16,
+					20
+				},
+				offset = {
+					-6,
+					0,
+					2
+				},
+				default_color = Color.terminal_text_header(255, true),
+				disabled_color = Color.terminal_text_header_disabled(255, true)
+			},
+			visibility_function = function (parent, content)
+				return Managers.ui:using_cursor_navigation()
+			end,
+			change_function = function (content, style)
+				local is_disabled = content.hotspot_arrow_right.disabled
+				local color = is_disabled and style.disabled_color or style.default_color
+
+				ColorUtilities.color_copy(color, style.color, true)
+			end
+		}
+	}
+
+	for i = 1, #mission_types do
+		local total_size_selection = #mission_types * (selection_size[1] + selection_margin) - selection_margin
+		local selection_offset = (selection_size[1] + selection_margin) * (i - 1) - total_size_selection * 0.5 + selection_size[1] * 0.5
+		local mission_type = mission_types[i]
+		local data = mission_type_data[mission_type]
+		pass_definitions[#pass_definitions + 1] = {
+			pass_type = "text",
+			style_id = "title_" .. i,
+			value = Localize(data.display_name),
+			value_id = "title_" .. i,
+			style = data.display_style
+		}
+		pass_definitions[#pass_definitions + 1] = {
+			pass_type = "hotspot",
+			content_id = "hotspot_selection_" .. i,
+			style_id = "hotspot_selection_" .. i,
+			content = {
+				on_hover_sound = UISoundEvents.default_mouse_hover,
+				on_pressed_sound = UISoundEvents.default_click,
+				on_select_sound = UISoundEvents.default_click
+			},
+			style = {
+				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
+				size = selection_size,
+				offset = {
+					selection_offset,
+					selection_size[2] + selection_margin
+				}
+			}
+		}
+		pass_definitions[#pass_definitions + 1] = {
+			pass_type = "rect",
+			style_id = "selection_" .. i,
+			style = {
+				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
+				color = Color.terminal_text_header(255, true),
+				size = selection_size,
+				offset = {
+					selection_offset,
+					selection_size[2] + selection_margin
+				}
+			}
+		}
+	end
+
+	local widget_definition = UIWidget.create_definition(pass_definitions, "mission_type_selection_pivot", nil, size)
+	local widget = self:_create_widget("mission_type_selection", widget_definition)
+	widget.content.index_length = #mission_types
+
+	local function change_mission_type(next_index)
+		local content = widget.content
+		local selected_index = math.clamp(next_index, 1, content.index_length)
+		local first_run = false
+
+		if selected_index ~= widget.content.selected_index then
+			if not widget.content.selected_index then
+				first_run = true
+			end
+
+			widget.content.selected_index = selected_index
+
+			for i = 1, widget.content.index_length do
+				local title_id = "title_" .. i
+				local selection_id = "selection_" .. i
+				widget.style[title_id].visible = selected_index == i
+				widget.style[selection_id].color = selected_index == i and Color.terminal_text_header(255, true) or Color.terminal_text_header_disabled(204, true)
+			end
+
+			widget.style.arrow_left.visible = true
+			widget.style.arrow_left_text.visible = true
+			widget.content.hotspot_arrow_left.disabled = false
+			widget.style.arrow_right.visible = true
+			widget.style.arrow_right_text.visible = true
+			widget.content.hotspot_arrow_right.disabled = false
+			widget.style.arrow_background_left.visible = true
+			widget.style.arrow_background_right.visible = true
+
+			if selected_index == 1 then
+				widget.content.hotspot_arrow_left.disabled = true
+				widget.style.arrow_left_text.visible = false
+			end
+
+			if selected_index == widget.content.index_length then
+				widget.content.hotspot_arrow_right.disabled = true
+				widget.style.arrow_right_text.visible = false
+			end
+
+			local mission_type = mission_types[selected_index]
+			widget.content.level = PlayerProgressionUnlocks.mission_type_unlocks[mission_type]
+			self._selected_mission_type = mission_type
+
+			if not first_run then
+				self:_callback_switch_mission_board(mission_type)
+			end
+		end
+	end
+
+	widget.content.hotspot_arrow_left.pressed_callback = function ()
+		change_mission_type(widget.content.selected_index - 1)
+	end
+
+	widget.content.hotspot_arrow_right.pressed_callback = function ()
+		change_mission_type(widget.content.selected_index + 1)
+	end
+
+	widget.content.hotspot_selection_1.pressed_callback = function ()
+		change_mission_type(1)
+	end
+
+	widget.content.hotspot_selection_2.pressed_callback = function ()
+		change_mission_type(2)
+	end
+
+	local selected_mission_type_id = self._selected_mission_type and mission_type_by_id[self._selected_mission_type] or 1
+
+	change_mission_type(selected_mission_type_id)
+
+	self._mission_type_selection_widget = widget
 end
 
 MissionBoardView.on_exit = function (self)
@@ -135,6 +643,12 @@ MissionBoardView.on_exit = function (self)
 		self._ui_resource_renderer = nil
 	end
 
+	if self._region_confirm_popup_id then
+		Managers.event:trigger("event_remove_ui_popup", self._region_confirm_popup_id)
+
+		self._region_confirm_popup_id = nil
+	end
+
 	MissionBoardView.super.on_exit(self)
 end
 
@@ -144,14 +658,30 @@ MissionBoardView.update = function (self, dt, t, input_service)
 	self:_update_happening(t)
 	self:_update_can_start_mission()
 
+	if self._widgets_by_name.region then
+		local widget = self._widgets_by_name.region
+
+		self:_update_server_list(widget, input_service)
+	end
+
 	local world_spawner = self._world_spawner
 
 	if world_spawner then
 		world_spawner:update(dt, t)
 	end
+
+	self._is_in_matchmaking = self:_get_matchmaking_status()
+end
+
+MissionBoardView._get_matchmaking_status = function (self)
+	return not self._party_manager:are_all_members_in_hub()
 end
 
 MissionBoardView._handle_input = function (self, input_service, dt, t)
+	if self._mission_board_options then
+		input_service = input_service:null_service()
+	end
+
 	MissionBoardView.super._handle_input(self, input_service, dt, t)
 
 	local mission_widgets = self._mission_widgets
@@ -174,8 +704,20 @@ MissionBoardView._handle_input = function (self, input_service, dt, t)
 
 	local flash_mission_widget = self._flash_mission_widget
 
-	if flash_mission_widget.visible and flash_mission_widget.content.hotspot.on_pressed then
-		self:_set_selected_mission(flash_mission_widget.content.mission, true)
+	if flash_mission_widget and flash_mission_widget.visible and flash_mission_widget.content.hotspot.on_pressed then
+		self:_set_selected_mission(flash_mission_widget.content.mission, true, true)
+	end
+
+	if not Managers.ui:using_cursor_navigation() then
+		if input_service:get("confirm_pressed") and self._widgets_by_name.play_team_button and not self._widgets_by_name.play_team_button.content.hotspot.disabled then
+			self._widgets_by_name.play_team_button.content.hotspot.pressed_callback()
+		elseif self._mission_type_selection_widget then
+			if input_service:get("navigate_secondary_left_pressed") then
+				self._mission_type_selection_widget.content.hotspot_arrow_left.pressed_callback()
+			elseif input_service:get("navigate_secondary_right_pressed") then
+				self._mission_type_selection_widget.content.hotspot_arrow_right.pressed_callback()
+			end
+		end
 	end
 
 	local last_pressed_device = InputDevice.last_pressed_device
@@ -219,7 +761,7 @@ MissionBoardView._handle_input = function (self, input_service, dt, t)
 		for i = -1, #mission_widgets do
 			local widget = mission_widgets[i]
 
-			if widget.visible then
+			if widget and widget.visible then
 				local widget_pos = Vector2(widget.offset[1], widget.offset[2])
 				local widget_size = Vector3.from_array_flat(scenegraph[widget.scenegraph_id].size)
 				local widget_center = widget_pos + 0.5 * widget_size
@@ -303,7 +845,8 @@ MissionBoardView._update_can_start_mission = function (self)
 		required_level = selected_mission.requiredLevel
 	else
 		local danger = self._quickplay_difficulty
-		required_level = DangerSettings.by_index[danger].required_level
+		local mission_mode = self._selected_mission_type
+		required_level = DangerSettings.required_level_by_mission_type(danger, mission_mode)
 	end
 
 	local widgets_by_name = self._widgets_by_name
@@ -362,8 +905,12 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 	self._selected_mission = nil
 	local mission_widgets = self._mission_widgets
 
-	for i = 1, #mission_widgets do
-		mission_widgets[i].content.hotspot.is_selected_mission_board = false
+	for i = 0, #mission_widgets do
+		local widget = mission_widgets[i]
+
+		if widget then
+			widget.content.hotspot.is_selected_mission_board = false
+		end
 	end
 
 	self._quickplay_widget.content.hotspot.is_selected_mission_board = true
@@ -375,20 +922,69 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 	local widget = self._widgets_by_name.detail
 	widget.dirty = true
 	local content = widget.content
-	content.header_subtitle = Localize("loc_mission_board_view_header_tertium_hive")
+	local style = widget.style
+	content.header_subtitle = self._widgets_by_name.planet.content.title
 	content.header_title = Localize("loc_mission_board_quickplay_header")
 	content.danger = nil
 	content.is_locked = false
 	content.start_game_time = nil
 	content.circumstance_icon = nil
+	content.is_flash = false
 	local location_image_material_values = widget.style.location_image.material_values
 	location_image_material_values.texture_map = "content/ui/textures/missions/quickplay"
 	location_image_material_values.show_static = 0
+
+	if self._bonus_data and self._bonus_data.quickplay then
+		if self._bonus_widgets then
+			for i = 1, #self._bonus_widgets do
+				local widget = self._bonus_widgets[i]
+
+				self:_unregister_widget_name(widget.name)
+			end
+
+			self._bonus_widgets = nil
+		end
+
+		style.bonus_title.visible = true
+		local bonus_widgets = {}
+		local count = 0
+		local start_offset = 40
+
+		for type, value in pairs(self._bonus_data.quickplay) do
+			local currency_name, currency_icon = nil
+
+			if type == "xp" then
+				currency_name = Localize("loc_mission_board_view_experience")
+				currency_icon = "content/ui/materials/icons/currencies/experience_small"
+			else
+				currency_name = WalletSettings[type] and Localize(WalletSettings[type].display_name) or type
+				currency_icon = WalletSettings[type].icon_texture_small
+			end
+
+			local bonus_definition = MissionBoardViewDefinitions.bonus_data_widget_definitons
+			local widget = self:_create_widget("bonus_data_" .. type, bonus_definition)
+			widget.content.text = string.format("+ %d%% %s", value, currency_name)
+			widget.content.icon = currency_icon
+			widget.offset = {
+				20,
+				start_offset + 35 * count,
+				2
+			}
+			count = count + 1
+			bonus_widgets[#bonus_widgets + 1] = widget
+		end
+
+		self._bonus_widgets = bonus_widgets
+	else
+		style.bonus_title.visible = false
+	end
+
 	local vo_profile = MissionBoardViewSettings.quickplay_vo_profile
 	local speaker_settings = DialogueSpeakerVoiceSettings[vo_profile]
 	local widget = self._widgets_by_name.objective_1
 	widget.dirty = true
 	local content = widget.content
+	local style = widget.style
 	content.header_icon = "content/ui/materials/icons/mission_types/mission_type_09"
 	content.header_subtitle = Localize("loc_mission_board_quickplay_header")
 	content.body_text = Localize("loc_mission_board_quickplay_description")
@@ -396,25 +992,51 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 	content.speaker_text = Localize(speaker_settings.full_name)
 	content.xp = nil
 	content.credits = nil
+	local description_style_options = UIFonts.get_font_options_by_style(style.body_text)
+	local margin = 20
+	local bottom_spacing = content.speaker_icon and 15 or 0
+	local max_width = self._ui_scenegraph.objective.size[1] - margin * 2
+	local description_width, description_height = UIRenderer.text_size(self._ui_renderer, content.body_text, style.body_text.font_type, style.body_text.font_size, {
+		max_width,
+		1080
+	}, description_style_options)
+	widget.content.size = {
+		self._ui_scenegraph.objective.size[1],
+		self._ui_scenegraph.objective_header.size[2] + description_height + margin * 2 + bottom_spacing
+	}
+	widget.style.reward_background.offset[2] = widget.content.size[2]
+	widget.style.reward_gradient.offset[2] = widget.content.size[2]
+	widget.style.reward_frame.offset[2] = widget.content.size[2]
+	widget.style.reward_icon.offset[2] = widget.content.size[2]
+	widget.style.reward_text.offset[2] = widget.content.size[2]
+	widget.style.speaker_frame.offset[2] = widget.content.size[2]
+	widget.style.speaker_corner.offset[2] = widget.content.size[2]
+	widget.style.speaker_icon.offset[2] = widget.content.size[2]
+	widget.offset[2] = self._ui_scenegraph.detail.size[2] + margin
+	self._widgets_by_name.difficulty_stepper_window.offset[2] = widget.offset[2] + widget.content.size[2] + margin
+	self._widgets_by_name.difficulty_stepper.offset[2] = widget.offset[2] + widget.content.size[2] + margin
 	self._widgets_by_name.objective_2.visible = false
 	self._widgets_by_name.difficulty_stepper.visible = true
 	self._widgets_by_name.difficulty_stepper_window.visible = true
 end
 
-MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_cursor)
+MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_cursor, is_flash)
 	self._selected_mission = mission
 	local selected_mission_id = mission.id
 	local mission_widgets = self._mission_widgets
 
-	for i = 1, #mission_widgets do
+	for i = 0, #mission_widgets do
 		local widget = mission_widgets[i]
-		local content = widget.content
-		local widget_mission = content.mission
-		local is_selected = widget_mission.id == selected_mission_id
-		content.hotspot.is_selected_mission_board = is_selected
 
-		if is_selected and move_gamepad_cursor then
-			self:_set_gamepad_cursor(widget)
+		if widget then
+			local content = widget.content
+			local widget_mission = content.mission
+			local is_selected = widget_mission.id == selected_mission_id
+			content.hotspot.is_selected_mission_board = is_selected
+
+			if is_selected and move_gamepad_cursor then
+				self:_set_gamepad_cursor(widget)
+			end
 		end
 	end
 
@@ -427,6 +1049,7 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 	local widget = self._widgets_by_name.detail
 	widget.dirty = true
 	local content = widget.content
+	local style = widget.style
 	local mission_type = MissionTypes[mission_template.mission_type]
 	content.header_icon = mission_type.icon
 	content.header_subtitle = Localize(Zones[mission_template.zone_id].name)
@@ -435,6 +1058,7 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 	content.is_locked = is_locked
 	content.start_game_time = mission.start_game_time
 	content.expiry_game_time = mission.expiry_game_time
+	content.is_flash = mission.flags.flash
 	local circumstance = mission.circumstance
 
 	if circumstance ~= "default" then
@@ -450,7 +1074,6 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 		content.circumstance_description = Localize(circumstance_ui_data.description)
 		content.circumstance_icon = circumstance_ui_data.icon
 		local description_margin = 5
-		local style = widget.style
 		local default_height = 100
 		local description_text_box_size = {
 			self._ui_scenegraph.detail_circumstance.size[1],
@@ -499,19 +1122,53 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 	local location_image_material_values = widget.style.location_image.material_values
 	location_image_material_values.texture_map = mission_template.texture_big
 	location_image_material_values.show_static = is_locked and 1 or 0
+	style.bonus_title.visible = false
+
+	if self._bonus_widgets then
+		for i = 1, #self._bonus_widgets do
+			local widget = self._bonus_widgets[i]
+
+			self:_unregister_widget_name(widget.name)
+		end
+
+		self._bonus_widgets = nil
+	end
+
 	local vo_profile = mission.missionGiver or mission_template.mission_brief_vo.vo_profile
 	local speaker_settings = DialogueSpeakerVoiceSettings[vo_profile]
 	local mission_type = MissionTypes[mission_template.mission_type]
 	local widget = self._widgets_by_name.objective_1
 	widget.dirty = true
 	local content = widget.content
+	local style = widget.style
 	content.header_icon = mission_type.icon
 	content.header_subtitle = Localize(mission_type.name)
 	content.body_text = Localize(mission_template.mission_description)
 	content.speaker_icon = speaker_settings.material_small
 	content.speaker_text = Localize(speaker_settings.full_name)
-	content.xp = xp
-	content.credits = credits
+	content.xp = TextUtils.format_currency(xp)
+	content.credits = TextUtils.format_currency(credits)
+	local description_style_options = UIFonts.get_font_options_by_style(style.body_text)
+	local margin = 20
+	local bottom_spacing = (content.speaker_icon or extraRewards) and 15 or 0
+	local max_width = self._ui_scenegraph.objective.size[1] - margin * 2
+	local description_width, description_height = UIRenderer.text_size(self._ui_renderer, content.body_text, style.body_text.font_type, style.body_text.font_size, {
+		max_width,
+		1080
+	}, description_style_options)
+	widget.content.size = {
+		self._ui_scenegraph.objective.size[1],
+		self._ui_scenegraph.objective_header.size[2] + description_height + margin * 2 + bottom_spacing
+	}
+	widget.style.reward_background.offset[2] = widget.content.size[2]
+	widget.style.reward_gradient.offset[2] = widget.content.size[2]
+	widget.style.reward_frame.offset[2] = widget.content.size[2]
+	widget.style.reward_icon.offset[2] = widget.content.size[2]
+	widget.style.reward_text.offset[2] = widget.content.size[2]
+	widget.style.speaker_frame.offset[2] = widget.content.size[2]
+	widget.style.speaker_corner.offset[2] = widget.content.size[2]
+	widget.style.speaker_icon.offset[2] = widget.content.size[2]
+	widget.offset[2] = self._ui_scenegraph.detail.size[2] + margin
 	local side_mission_template = MissionObjectiveTemplates.side_mission.objectives[mission.sideMission]
 	local widget = self._widgets_by_name.objective_2
 	widget.dirty = true
@@ -520,6 +1177,7 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 	if widget.visible then
 		local extraRewards = mission.extraRewards.sideMission
 		local content = widget.content
+		local style = widget.style
 		content.header_icon = side_mission_template.icon
 		content.header_subtitle = Localize(side_mission_template.header)
 		content.body_text = Localize(side_mission_template.description)
@@ -527,6 +1185,29 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 		content.speaker_icon = nil
 		content.xp = extraRewards and extraRewards.xp or 0
 		content.credits = extraRewards and extraRewards.credits or 0
+		content.xp = TextUtils.format_currency(content.xp)
+		content.credits = TextUtils.format_currency(content.credits)
+		local description_style_options = UIFonts.get_font_options_by_style(style.body_text)
+		local margin = 20
+		local bottom_spacing = (content.speaker_icon or extraRewards) and 15 or 0
+		local max_width = self._ui_scenegraph.objective.size[1] - margin * 2
+		local description_width, description_height = UIRenderer.text_size(self._ui_renderer, content.body_text, style.body_text.font_type, style.body_text.font_size, {
+			max_width,
+			1080
+		}, description_style_options)
+		widget.content.size = {
+			self._ui_scenegraph.objective.size[1],
+			self._ui_scenegraph.objective_header.size[2] + description_height + margin * 2 + bottom_spacing
+		}
+		widget.style.reward_background.offset[2] = widget.content.size[2]
+		widget.style.reward_gradient.offset[2] = widget.content.size[2]
+		widget.style.reward_frame.offset[2] = widget.content.size[2]
+		widget.style.reward_icon.offset[2] = widget.content.size[2]
+		widget.style.reward_text.offset[2] = widget.content.size[2]
+		widget.style.speaker_frame.offset[2] = widget.content.size[2]
+		widget.style.speaker_corner.offset[2] = widget.content.size[2]
+		widget.style.speaker_icon.offset[2] = widget.content.size[2]
+		widget.offset[2] = self._widgets_by_name.objective_1.offset[2] + self._widgets_by_name.objective_1.content.size[2] + margin
 	end
 
 	self._widgets_by_name.difficulty_stepper.visible = false
@@ -539,22 +1220,79 @@ MissionBoardView.draw = function (self, dt, t, input_service, layer)
 	end
 
 	local ui_renderer = self:_begin_render_offscreen()
+	local stored_service = input_service
+
+	if self._mission_board_options then
+		input_service = input_service:null_service()
+	end
 
 	UIRenderer.begin_pass(ui_renderer, self._ui_scenegraph, input_service, dt, self._render_settings)
 
 	local mission_widgets = self._mission_widgets
 
-	for i = 1, #mission_widgets do
+	for i = 0, #mission_widgets do
 		local widget = mission_widgets[i]
+
+		if widget then
+			UIWidget.draw(widget, ui_renderer)
+		end
+	end
+
+	UIWidget.draw(self._quickplay_widget, ui_renderer)
+
+	if self._widgets_by_name.region then
+		UIWidget.draw(self._widgets_by_name.region, ui_renderer)
+	end
+
+	if self._bonus_widgets then
+		for i = 1, #self._bonus_widgets do
+			local widget = self._bonus_widgets[i]
+
+			UIWidget.draw(widget, ui_renderer)
+		end
+	end
+
+	if self._mission_type_selection_widget then
+		local widget = self._mission_type_selection_widget
 
 		UIWidget.draw(widget, ui_renderer)
 	end
 
-	UIWidget.draw(self._quickplay_widget, ui_renderer)
-	UIWidget.draw(self._flash_mission_widget, ui_renderer)
 	UIRenderer.end_pass(ui_renderer)
 	self:_end_render_offscreen()
 	MissionBoardView.super.draw(self, dt, t, input_service, layer)
+
+	if self._mission_board_options then
+		local elements_array = self._elements_array
+
+		for i = 1, #elements_array do
+			local element = elements_array[i]
+
+			if element then
+				local element_name = element.__class_name
+
+				if element_name == "ViewElemenMissionBoardOptions" then
+					element:draw(dt, t, ui_renderer, self._render_settings, stored_service)
+				end
+			end
+		end
+	end
+end
+
+MissionBoardView._draw_elements = function (self, dt, t, ui_renderer, render_settings, input_service)
+	local elements_array = self._elements_array
+
+	for i = 1, #elements_array do
+		local element = elements_array[i]
+
+		if element then
+			local element_name = element.__class_name
+
+			if element_name ~= "ViewElemenMissionBoardOptions" then
+				element:draw(dt, t, ui_renderer, render_settings, input_service)
+			end
+		end
+	end
 end
 
 MissionBoardView._begin_render_offscreen = function (self, dt, input_service)
@@ -583,14 +1321,26 @@ MissionBoardView._end_render_offscreen = function (self)
 end
 
 MissionBoardView._destroy_mission_widget = function (self, widget)
-	local content = widget.content
-	local id = content.mission.id
-	local mission_widgets = self._mission_widgets
-	self._free_widget_positions[content.position.index] = content.position
+	if not widget then
+		return
+	end
 
-	UIWidget.destroy(self._ui_resource_renderer, widget)
-	table.swap_delete(mission_widgets, table.find(mission_widgets, widget))
-	self:_unregister_widget_name(id)
+	local content = widget.content
+	local mission_widgets = self._mission_widgets
+
+	if widget ~= self._flash_mission_widget then
+		if content.mission_type == (self._selected_mission_type or "normal") then
+			self._free_widget_positions[content.position.index] = content.position
+		end
+
+		UIWidget.destroy(self._ui_resource_renderer, widget)
+		table.swap_delete(mission_widgets, table.find(mission_widgets, widget))
+	elseif widget == self._flash_mission_widget then
+		mission_widgets[0] = nil
+		self._flash_mission_widget = nil
+	end
+
+	self:_unregister_widget_name(widget.name)
 end
 
 MissionBoardView._clean_backend_data = function (self, backend_data)
@@ -612,20 +1362,32 @@ MissionBoardView._join_mission_data = function (self)
 	local missions = self._backend_data.filtered_missions
 	local widgets_by_name = self._widgets_by_name
 	local mission_widgets = self._mission_widgets
+	local found_removed_mission = false
 
-	for i = #mission_widgets, 1, -1 do
+	for i = #mission_widgets, 0, -1 do
 		local widget = mission_widgets[i]
-		local id = widget.content.mission.id
 
-		if not table.find_by_key(missions, "id", id) and not widget.content.exit_anim_id then
-			widget.content.exit_anim_id = self:_start_animation("mission_small_exit", widget, self, nil, 1, math.random_range(0, 0.5))
+		if widget and widget.content.mission and widget.content.mission.id then
+			local id = widget.content.mission.id
+
+			if not table.find_by_key(missions, "id", id) then
+				found_removed_mission = true
+
+				if not widget.content.exit_anim_id then
+					widget.content.exit_anim_id = self:_start_animation("mission_exit", widget, self, nil, 1, math.random_range(0, 0.5))
+				end
+			end
 		end
+	end
+
+	if found_removed_mission then
+		return
 	end
 
 	self._has_queued_missions = false
 	local earliest_queued_mission_show_time = math.huge
 	local t = Managers.time:time("main")
-	local mission_small_widget_template = MissionBoardViewDefinitions.mission_small_widget_template
+	local mission_small_widget_template = MissionBoardViewDefinitions.widget_definitions_functions.mission_small_widget_pass_function(self._selected_mission_type or "normal")
 	local has_flash_mission_changed = false
 
 	for i = 1, #missions do
@@ -634,17 +1396,36 @@ MissionBoardView._join_mission_data = function (self)
 		if widgets_by_name[mission.id] then
 			-- Nothing
 		elseif t < mission.start_game_time then
-			Log.info("MissionBoardView", "Not showing mission '%s', it's from the future, (%s>%s)", mission.id, tostring(mission.start_game_time), tostring(t))
+			local server_time = Managers.backend:get_server_time(t)
+
+			Log.info("MissionBoardView", "Not showing mission '%s', it's from the future, (%s>%s)", mission.id, tostring(mission.start_server_time), tostring(server_time))
 
 			self._has_queued_missions = true
 			earliest_queued_mission_show_time = math.min(mission.start_game_time, earliest_queued_mission_show_time)
-		elseif mission.flags.flash and not has_flash_mission_changed and (not self._flash_mission_widget or self._flash_mission_widget.id ~= mission.id) then
-			self:_populate_mission_widget(self._flash_mission_widget, mission, self._flash_mission_widget.offset, true)
+		elseif mission.flags.flash and not has_flash_mission_changed then
+			if not self._flash_mission_widget or not self._flash_mission_widget.content.mission or self._flash_mission_widget.content.mission.id ~= mission.id then
+				if not self._flash_mission_widget then
+					local mission_medium_widget_template = MissionBoardViewDefinitions.widget_definitions_functions.mission_medium_widget_pass_function(self._selected_mission_type or "normal")
+					self._flash_mission_widget = self:_create_widget("flash", mission_medium_widget_template)
+					self._flash_mission_widget.content.title = Localize("loc_mission_board_maelstrom_header")
+					local mission_type = self._selected_mission_type or "normal"
+					self._flash_mission_widget.offset[1] = MissionBoardViewSettings.mission_positions[mission_type].flash_mission_position[1]
+					self._flash_mission_widget.offset[2] = MissionBoardViewSettings.mission_positions[mission_type].flash_mission_position[2]
+				end
 
-			self._flash_mission_widget.visible = true
+				self._flash_mission_widget.visible = false
+
+				if self:_populate_mission_widget(self._flash_mission_widget, mission, self._flash_mission_widget.offset, true) then
+					self:_start_animation("mission_enter", self._flash_mission_widget, self, nil, 1, math.random_range(0, 0.5))
+
+					mission_widgets[0] = self._flash_mission_widget
+				end
+			end
+
 			has_flash_mission_changed = true
 		else
-			local position = self:_get_free_position(mission.displayIndex or math.random(#self._free_widget_positions))
+			local danger = DangerSettings.calculate_danger(mission.challenge, mission.resistance)
+			local position = self:_get_free_position(mission.displayIndex, danger)
 
 			if position then
 				local widget = self:_create_widget(mission.id, mission_small_widget_template)
@@ -652,7 +1433,7 @@ MissionBoardView._join_mission_data = function (self)
 				if self:_populate_mission_widget(widget, mission, position) then
 					widget.visible = false
 
-					self:_start_animation("mission_small_enter", widget, self, nil, 1, math.random_range(0, 0.5))
+					self:_start_animation("mission_enter", widget, self, nil, 1, math.random_range(0, 0.5))
 
 					mission_widgets[#mission_widgets + 1] = widget
 				end
@@ -667,10 +1448,34 @@ MissionBoardView._join_mission_data = function (self)
 	self._queued_mission_show_time = earliest_queued_mission_show_time
 end
 
-MissionBoardView._get_free_position = function (self, preferred_index)
+MissionBoardView._get_free_position = function (self, preferred_index, prefered_danger)
 	local free_widget_positions = self._free_widget_positions
-	local index = preferred_index
+	local index = preferred_index or math.random(#free_widget_positions)
 	local free_widget_positions_len = #free_widget_positions
+	local available_prefered_danger = {}
+
+	for i = 1, free_widget_positions_len do
+		local free_widget_position = free_widget_positions[i]
+		local free_widget_prefered_danger = free_widget_position and free_widget_position.prefered_danger
+
+		if type(free_widget_prefered_danger) == "number" and prefered_danger == free_widget_prefered_danger then
+			available_prefered_danger[#available_prefered_danger + 1] = free_widget_position
+		end
+	end
+
+	local available_prefered_danger_len = #available_prefered_danger
+
+	for i = 0, available_prefered_danger_len do
+		local rand_index = (index - 1 + 47 * i) % available_prefered_danger_len + 1
+		local position = available_prefered_danger[rand_index]
+
+		if position then
+			local position_index = position.index
+			free_widget_positions[position_index] = false
+
+			return position
+		end
+	end
 
 	for i = 0, free_widget_positions_len do
 		local rand_index = (index - 1 + 47 * i) % free_widget_positions_len + 1
@@ -742,6 +1547,7 @@ MissionBoardView._populate_mission_widget = function (self, widget, mission, pos
 	content.expiry_game_time = mission.expiry_game_time
 	content.is_flash = mission.flags.flash
 	content.fluff_frame = math.random_array_entry(MissionBoardViewSettings.fluff_frames, seed)
+	content.mission_type = self._selected_mission_type or "normal"
 
 	return true
 end
@@ -798,17 +1604,115 @@ MissionBoardView._update_fetch_missions = function (self, t)
 		return achievement_data_promise:next(function (achievements_data)
 			self._achievements_data = achievements_data
 
-			return Promise.resolved(mission_data)
+			return self:_update_bonus_rewards():next(function ()
+				return Promise.resolved(mission_data)
+			end)
 		end)
 	end):next(self._cb_fetch_success):catch(self._cb_fetch_failure)
 end
 
+MissionBoardView._update_bonus_rewards = function (self)
+	return Managers.data_service.mission_board:get_rewards():next(function (bonus_data)
+		local filtered_bonus_data = {}
+
+		for mission_type, values in pairs(bonus_data) do
+			for type, value in pairs(values) do
+				local percentile_value = math.floor(value * 100 - 100)
+
+				if percentile_value > 0 then
+					filtered_bonus_data[mission_type] = filtered_bonus_data[mission_type] or {}
+					filtered_bonus_data[mission_type][type] = percentile_value
+				end
+			end
+		end
+
+		self._bonus_data = filtered_bonus_data
+	end):catch(function ()
+		self._bonus_data = {}
+	end)
+end
+
 MissionBoardView._fetch_success = function (self, data)
+	local has_mission_types = false
+
+	for i = 1, #data.missions do
+		if has_mission_types == true then
+			break
+		end
+
+		local mission = data.missions[i]
+
+		for j = 1, #mission_types do
+			if mission.category == mission_types[j] then
+				has_mission_types = true
+
+				break
+			end
+		end
+	end
+
 	self._backend_data = data
 	self._backend_data_expiry_time = data.expiry_game_time
 	self._is_fetching_missions = false
 	self._do_widget_refresh = true
-	self._backend_data.filtered_missions = data.missions
+
+	self:_filter_mission_board(self._selected_mission_type)
+
+	if has_mission_types then
+		self:_generate_mission_type_selection()
+	end
+
+	self:_add_bonus_data()
+end
+
+MissionBoardView._add_bonus_data = function (self)
+	if self._bonus_data then
+		if self._bonus_data.quickplay and self._quickplay_widget then
+			local max_bonus = 0
+			local min_bonus = math.huge
+
+			for type, value in pairs(self._bonus_data.quickplay) do
+				min_bonus = math.min(min_bonus, value)
+				max_bonus = math.max(max_bonus, value)
+			end
+
+			if min_bonus == max_bonus then
+				local localized_bonus = Localize("loc_mission_board_card_bonus_text", true, {
+					bonus_text = tostring(max_bonus)
+				})
+				self._quickplay_widget.content.bonus = localized_bonus
+			else
+				local bonus_range_text = string.format("%d-%d", min_bonus, max_bonus)
+				local localized_bonus = Localize("loc_mission_board_card_bonus_text", true, {
+					bonus_text = bonus_range_text
+				})
+				self._quickplay_widget.content.bonus = localized_bonus
+			end
+		end
+
+		if self._bonus_data.flash then
+			local max_bonus = 0
+			local min_bonus = math.huge
+
+			for type, value in pairs(self._bonus_data.flash) do
+				min_bonus = math.min(min_bonus, value)
+				max_bonus = math.max(max_bonus, value)
+			end
+
+			if min_bonus == max_bonus then
+				local localized_bonus = Localize("loc_mission_board_card_bonus_text", true, {
+					bonus_text = tostring(max_bonus)
+				})
+				self._flash_mission_widget.content.bonus = localized_bonus
+			else
+				local bonus_range_text = string.format("%d-%d", min_bonus, max_bonus)
+				local localized_bonus = Localize("loc_mission_board_card_bonus_text", true, {
+					bonus_text = bonus_range_text
+				})
+				self._flash_mission_widget.content.bonus = localized_bonus
+			end
+		end
+	end
 end
 
 MissionBoardView._fetch_failure = function (self, error_message)
@@ -843,6 +1747,169 @@ MissionBoardView._update_happening = function (self, t)
 	widget.visible = false
 end
 
+MissionBoardView._callback_open_options = function (self, region_data)
+	self._mission_board_options = self:_add_element(ViewElementMissionBoardOptions, "mission_board_options_element", 200, {
+		on_destroy_callback = callback(self, "_callback_close_options")
+	})
+	local regions_latency = self._regions_latency
+	local region_localization_mapping = {
+		["us-west"] = "loc_matchmaking_region_us_west",
+		sa = "loc_matchmaking_region_sa",
+		["ap-south"] = "loc_matchmaking_region_ap_south",
+		["ap-central"] = "loc_matchmaking_region_ap_central",
+		eu = "loc_matchmaking_region_eu",
+		mei = "loc_matchmaking_region_mei",
+		["us-east"] = "loc_matchmaking_region_us_east",
+		["ap-north"] = "loc_matchmaking_region_ap_north"
+	}
+	local presentation_data = {
+		{
+			widget_type = "dropdown",
+			display_name = "loc_mission_board_view_options_Matchmaking_Location",
+			id = "region_matchmaking",
+			tooltip_text = "loc_matchmaking_change_region_confirmation_desc",
+			validation_function = function ()
+				return
+			end,
+			on_activated = function (value, template)
+				BackendUtilities.prefered_mission_region = value
+			end,
+			get_function = function (template)
+				local options = template.options_function()
+
+				for i = 1, #options do
+					local option = options[i]
+
+					if option.value == BackendUtilities.prefered_mission_region then
+						return option.id
+					end
+				end
+
+				return 1
+			end,
+			options_function = function (template)
+				local options = {}
+
+				for region_name, latency_data in pairs(regions_latency) do
+					local ignore_localization, region_display_name = nil
+
+					if region_localization_mapping[region_name] then
+						region_display_name = Localize(region_localization_mapping[region_name])
+						ignore_localization = true
+					else
+						region_display_name = region_name
+						ignore_localization = true
+					end
+
+					if math.abs(latency_data.min_latency - latency_data.max_latency) < 5 then
+						region_display_name = string.format("%s %dms", region_display_name, latency_data.min_latency)
+					else
+						region_display_name = string.format("%s %d-%dms", region_display_name, latency_data.min_latency, latency_data.max_latency)
+					end
+
+					options[#options + 1] = {
+						id = region_name,
+						display_name = region_display_name,
+						ignore_localization = ignore_localization,
+						value = region_name,
+						latency_order = latency_data.min_latency
+					}
+				end
+
+				table.sort(options, function (a, b)
+					return a.latency_order < b.latency_order
+				end)
+
+				return options
+			end,
+			on_changed = function (value)
+				BackendUtilities.prefered_mission_region = value
+			end
+		},
+		{
+			id = "private_match",
+			display_name = "loc_private_tag_name",
+			tooltip_text = "loc_mission_board_view_options_private_game_desc",
+			widget_type = "checkbox",
+			start_value = self._private_match,
+			get_function = function ()
+				return self._private_match
+			end,
+			on_activated = function (value, data)
+				data.changed_callback(value)
+			end,
+			on_changed = function (value)
+				self:_callback_toggle_private_matchmaking()
+			end
+		}
+	}
+
+	self._mission_board_options:present(presentation_data)
+end
+
+MissionBoardView._callback_close_options = function (self)
+	self:_destroy_options_element()
+end
+
+MissionBoardView._destroy_options_element = function (self)
+	self:_remove_element("mission_board_options_element")
+
+	self._mission_board_options = nil
+end
+
+MissionBoardView._callback_switch_mission_board = function (self, mission_type)
+	self._free_widget_positions = nil
+
+	self:_filter_mission_board(mission_type)
+
+	self._widgets_by_name.difficulty_stepper.content.min_danger = MissionBoardViewSettings.stepper_difficulty[mission_type].min_danger
+	self._widgets_by_name.difficulty_stepper.content.max_danger = MissionBoardViewSettings.stepper_difficulty[mission_type].max_danger
+
+	self:_generate_widgets_by_mission_type(mission_type)
+	self:_set_selected_quickplay(true)
+	self:_join_mission_data()
+end
+
+MissionBoardView._filter_mission_board = function (self, board_type)
+	if board_type == "normal" then
+		board_type = nil
+	end
+
+	if not self._backend_data or not self._backend_data.missions then
+		return {}
+	end
+
+	local filtered_missions = {}
+
+	for i = 1, #self._backend_data.missions do
+		local mission = self._backend_data.missions[i]
+
+		if mission.category == board_type then
+			filtered_missions[#filtered_missions + 1] = mission
+		end
+	end
+
+	self._free_widget_positions = self._free_widget_positions or table.clone(MissionBoardViewSettings.mission_positions[board_type or "normal"])
+	self._quickplay_widget.offset[1] = self._free_widget_positions.quickplay_mission_position[1]
+	self._quickplay_widget.offset[2] = self._free_widget_positions.quickplay_mission_position[2]
+
+	if self._flash_mission_widget then
+		self._flash_mission_widget.offset[1] = self._free_widget_positions.flash_mission_position[1]
+		self._flash_mission_widget.offset[2] = self._free_widget_positions.flash_mission_position[2]
+	end
+
+	local localization_id = mission_type_data[self._selected_mission_type] and mission_type_data[self._selected_mission_type].title or mission_type_data.normal.title
+	local title = Localize(localization_id)
+	self._widgets_by_name.planet.content.title = title
+	self._backend_data.filtered_missions = filtered_missions
+end
+
+MissionBoardView._on_back_pressed = function (self)
+	if not self._mission_board_options then
+		self:_callback_close_view()
+	end
+end
+
 MissionBoardView._callback_close_view = function (self)
 	Managers.ui:close_view(self.view_name)
 end
@@ -862,9 +1929,15 @@ MissionBoardView._callback_start_selected_mission = function (self)
 	local quickplay_difficulty = self._quickplay_difficulty
 
 	if self._selected_mission then
-		self._party_manager:wanted_mission_selected(self._selected_mission.id, self._private_match)
+		self._party_manager:wanted_mission_selected(self._selected_mission.id, self._private_match, BackendUtilities.prefered_mission_region)
 	else
-		self._party_manager:wanted_mission_selected("qp:challenge=" .. quickplay_difficulty, self._private_match)
+		local quickplay_data = "qp:challenge=" .. quickplay_difficulty
+
+		if self._selected_mission_type and self._selected_mission_type ~= "normal" then
+			quickplay_data = quickplay_data .. "|" .. self._selected_mission_type
+		end
+
+		self._party_manager:wanted_mission_selected(quickplay_data, self._private_match, BackendUtilities.prefered_mission_region)
 	end
 end
 
@@ -897,15 +1970,16 @@ end
 
 MissionBoardView._set_play_button_game_mode_text = function (self, is_solo_play, is_private_match)
 	local play_button_content = self._widgets_by_name.play_team_button.content
+	local play_button_legend_content = self._widgets_by_name.play_team_button_legend.content
 	local play_button_text = Utf8.upper(Localize("loc_mission_board_view_accept_mission"))
 	local sub_text_color = Color.terminal_text_body_sub_header(255, true)
 
 	if not is_solo_play and not is_private_match then
-		play_button_content.original_text = string.format("%s\n{#color(%d,%d,%d);size(15)}[%s]{#reset()}", play_button_text, sub_text_color[2], sub_text_color[3], sub_text_color[4], Utf8.upper(Localize("loc_mission_board_play_public")))
+		play_button_legend_content.text = Utf8.upper(Localize("loc_mission_board_play_public"))
 	elseif is_solo_play then
-		play_button_content.original_text = string.format("%s\n{#color(%d,%d,%d);size(15)}[%s]{#reset()}", play_button_text, sub_text_color[2], sub_text_color[3], sub_text_color[4], Utf8.upper(Localize("loc_mission_board_toggle_solo_play")))
+		play_button_legend_content.text = Utf8.upper(Localize("loc_mission_board_toggle_solo_play"))
 	else
-		play_button_content.original_text = string.format("%s\n{#color(%d,%d,%d);size(15)}[%s]{#reset()}", play_button_text, sub_text_color[2], sub_text_color[3], sub_text_color[4], Utf8.upper(Localize("loc_mission_board_play_private")))
+		play_button_legend_content.text = Utf8.upper(Localize("loc_mission_board_play_private"))
 	end
 end
 
@@ -916,9 +1990,37 @@ MissionBoardView._callback_mission_widget_exit_done = function (self, widget)
 		self:_set_selected_quickplay()
 	end
 
-	if self._has_queued_missions then
-		self:_join_mission_data()
+	local mission_widgets = self._mission_widgets
+
+	for i = 0, #mission_widgets do
+		local widget = mission_widgets[i]
+
+		if widget and widget.content.exit_anim_id then
+			return
+		end
 	end
+
+	self:_join_mission_data()
+end
+
+MissionBoardView.fetch_regions = function (self)
+	local region_promise = Managers.backend.interfaces.region_latency:get_region_latencies()
+
+	region_promise:next(function (regions_data)
+		local prefered_region_promise = nil
+
+		if BackendUtilities.prefered_mission_region == "" then
+			prefered_region_promise = Managers.backend.interfaces.region_latency:get_preferred_reef()
+		else
+			prefered_region_promise = Promise.resolved()
+		end
+
+		prefered_region_promise:next(function (prefered_region)
+			BackendUtilities.prefered_mission_region = BackendUtilities.prefered_mission_region ~= "" and BackendUtilities.prefered_mission_region or prefered_region or regions_data[1].reefs[1]
+			local regions_latency = Managers.backend.interfaces.region_latency:get_reef_info_based_on_region_latencies(regions_data)
+			self._regions_latency = regions_latency
+		end)
+	end)
 end
 
 return MissionBoardView

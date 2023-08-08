@@ -50,7 +50,7 @@ CraftingModifyView._setup_crafting_recipe = function (self, reference_name, scen
 	local layer = 10
 	local edge_padding = 30
 	local grid_width = 430
-	local grid_height = 400
+	local grid_height = 600
 	local context = {
 		scrollbar_width = 7,
 		hide_continue_button = true,
@@ -259,7 +259,7 @@ end
 
 CraftingModifyView._preview_item = function (self, item)
 	CraftingModifyView.super._preview_item(self, item)
-	self._crafting_recipe:set_selected_item(item)
+	self._crafting_recipe:present_recipe_navigation_with_item(CraftingSettings.recipes_ui_order, callback(self, "cb_on_recipe_button_pressed"), callback(self, "_update_weapon_stats_position", "crafting_recipe_pivot", self._crafting_recipe), item)
 
 	local weapon_stats = self:_element("weapon_stats")
 	local grid_height = weapon_stats:grid_height()

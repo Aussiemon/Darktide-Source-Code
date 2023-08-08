@@ -19,6 +19,43 @@ StoreService.init = function (self, backend_interface)
 		diamantine = GameParameters.wallet_cap_diamantine,
 		aquilas = GameParameters.wallet_cap_aquilas
 	}
+	self._wallet_caps_backend_updated = false
+end
+
+StoreService.update_wallet_caps = function (self)
+	if Managers.backend:authenticated() then
+		local backend_interface = self._backend_interface
+
+		return backend_interface.wallet:get_currency_configuration():next(function (data)
+			if data then
+				for i = 1, #data do
+					local currency = data[i]
+
+					if self._wallet_caps[currency.name] and currency.cap then
+						self._wallet_caps[currency.name] = currency.cap
+					end
+				end
+
+				self._wallet_caps_backend_updated = true
+			end
+		end)
+	end
+end
+
+StoreService.verify_wallet_caps = function (self)
+	local wallet_caps_promise = nil
+
+	if not self._wallet_caps_backend_updated then
+		wallet_caps_promise = self:update_wallet_caps()
+	end
+
+	wallet_caps_promise = wallet_caps_promise or Promise.resolved()
+
+	return wallet_caps_promise
+end
+
+StoreService.get_wallet_caps_backend_updated_status = function (self)
+	return self._wallet_caps_backend_updated
 end
 
 StoreService.reset = function (self)
@@ -293,7 +330,7 @@ StoreService.purchase_item = function (self, offer)
 	local wallet_promise = nil
 
 	if wallet_type == "credits" or wallet_type == "marks" then
-		wallet_promise = self:character_wallets()
+		wallet_promise = self:combined_wallets()
 	else
 		wallet_promise = self:account_wallets()
 	end
@@ -357,9 +394,11 @@ StoreService.purchase_currency = function (self, offer)
 
 			return backend_result
 		else
-			self:_change_cached_wallet_balance(currency_type, currency_amount, true, "purchase_currency")
+			return self:verify_wallet_caps():next(function ()
+				self:_change_cached_wallet_balance(currency_type, currency_amount, true, "purchase_currency")
 
-			return backend_result
+				return backend_result
+			end)
 		end
 	end):catch(function (err)
 		Log.error("StoreService", "Error purchase_currency: %s", table.tostring(err))
@@ -392,12 +431,12 @@ StoreService.combined_wallets = function (self)
 		local account_wallets = result[2]
 		local wallets = {}
 
-		for i = 1, #character_wallets do
-			wallets[#wallets + 1] = character_wallets[i]
-		end
-
 		for i = 1, #account_wallets do
 			wallets[#wallets + 1] = account_wallets[i]
+		end
+
+		for i = 1, #character_wallets do
+			wallets[#wallets + 1] = character_wallets[i]
 		end
 
 		return self:_decorate_wallets(wallets)
@@ -518,13 +557,19 @@ StoreService.on_gear_deleted = function (self, backend_result)
 	local rewards = backend_result and backend_result.rewards
 
 	if rewards then
-		for i = 1, #rewards do
-			local reward = rewards[i]
-			local reward_type = reward.type
-			local reward_amount = reward.amount
+		return self:verify_wallet_caps():next(function ()
+			for i = 1, #rewards do
+				local reward = rewards[i]
+				local reward_type = reward.type
+				local reward_amount = reward.amount
 
-			self:_change_cached_wallet_balance(reward_type, reward_amount, true, "on_gear_deleted")
-		end
+				self:_change_cached_wallet_balance(reward_type, reward_amount, true, "on_gear_deleted")
+
+				return backend_result
+			end
+		end)
+	else
+		return Promise.resolved(backend_result)
 	end
 end
 
@@ -532,7 +577,9 @@ StoreService.on_contract_task_rerolled = function (self, reroll_cost)
 	local cost_type = reroll_cost.type
 	local cost_amount = reroll_cost.amount
 
-	self:_change_cached_wallet_balance(cost_type, -cost_amount, true, "on_contract_task_rerolled")
+	return self:verify_wallet_caps():next(function ()
+		self:_change_cached_wallet_balance(cost_type, -cost_amount, true, "on_contract_task_rerolled")
+	end)
 end
 
 StoreService.on_contract_completed = function (self, backend_result)
@@ -542,21 +589,29 @@ StoreService.on_contract_completed = function (self, backend_result)
 		local reward_type = reward.type
 		local reward_amount = reward.amount
 
-		self:_change_cached_wallet_balance(reward_type, reward_amount, true, "on_contract_completed")
+		return self:verify_wallet_caps():next(function ()
+			self:_change_cached_wallet_balance(reward_type, reward_amount, true, "on_contract_completed")
+		end)
+	else
+		return Promise.resolved()
 	end
 end
 
 StoreService.on_crafting_done = function (self, costs)
 	if costs then
-		for i = 1, #costs do
-			local cost = costs[i]
-			local cost_type = cost.type
-			local cost_amount = cost.amount
+		return self:verify_wallet_caps():next(function ()
+			for i = 1, #costs do
+				local cost = costs[i]
+				local cost_type = cost.type
+				local cost_amount = cost.amount
 
-			if cost_amount ~= 0 then
-				self:_change_cached_wallet_balance(cost_type, -cost_amount, true, "on_crafting_done")
+				if cost_amount ~= 0 then
+					self:_change_cached_wallet_balance(cost_type, -cost_amount, true, "on_crafting_done")
+				end
 			end
-		end
+		end)
+	else
+		return Promise.resolved()
 	end
 end
 

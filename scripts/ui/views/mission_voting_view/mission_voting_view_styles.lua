@@ -18,6 +18,17 @@ title_font_style.offset = {
 	12
 }
 title_font_style.text_horizontal_alignment = "center"
+local flash_title_style = table.clone(title_font_style)
+flash_title_style.size_addition = {
+	-20,
+	-20
+}
+flash_title_style.horizontal_alignment = "center"
+flash_title_style.vertical_alignment = "center"
+flash_title_style.text_vertical_alignment = "center"
+flash_title_style.text_horizontal_alignment = "center"
+flash_title_style.fade_out_text_color = Color.terminal_text_header(0, true)
+flash_title_style.fade_in_text_color = flash_title_style.default_color
 local mission_detail_top = {
 	vertical_alignment = "top",
 	size = {
@@ -171,6 +182,7 @@ local styles = {
 	mission_detail_bottom = mission_detail_bottom,
 	challenge_text_font_style = challenge_text_font_style,
 	mission_rewards_title_text_style = mission_rewards_title_text_style,
+	flash_title_style = flash_title_style,
 	inner_panel_border_style = {
 		color = ui_brown_medium,
 		offset = {

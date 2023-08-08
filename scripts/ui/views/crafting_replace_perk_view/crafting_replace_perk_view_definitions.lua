@@ -18,6 +18,20 @@ local scenegraph_definition = {
 			0
 		}
 	},
+	perks_item_pivot = {
+		vertical_alignment = "bottom",
+		parent = "canvas",
+		horizontal_alignment = "left",
+		size = {
+			0,
+			650
+		},
+		position = {
+			620,
+			-110,
+			1
+		}
+	},
 	weapon_stats_pivot = {
 		vertical_alignment = "bottom",
 		parent = "canvas",

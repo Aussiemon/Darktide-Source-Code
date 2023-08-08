@@ -5,6 +5,9 @@ local UISettings = require("scripts/settings/ui/ui_settings")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local Item = require("scripts/utilities/items")
 local UIAnimation = require("scripts/managers/ui/ui_animation")
+
+require("scripts/ui/view_elements/view_element_grid/view_element_grid")
+
 local ViewElementWeaponPatterns = class("ViewElementWeaponPatterns", "ViewElementGrid")
 
 ViewElementWeaponPatterns.init = function (self, parent, draw_layer, start_scale, optional_menu_settings)

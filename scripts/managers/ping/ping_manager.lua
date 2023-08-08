@@ -6,7 +6,7 @@ PingManager.init = function (self)
 end
 
 PingManager.ping = function (self, timeout, targets)
-	local id, error = Ping.ping(2, unpack(targets))
+	local id, error = Ping.ping(timeout, unpack(targets))
 
 	if error then
 		return Promise.rejected(error)

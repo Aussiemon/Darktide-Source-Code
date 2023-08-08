@@ -47,6 +47,14 @@ MissionBoard.create_mission = function (self, mission_data)
 	end)
 end
 
+MissionBoard.get_rewards = function (self, on_expiry, pause_time)
+	return Managers.backend:title_request(missionboard_path .. "/rewards", {
+		method = "GET"
+	}):next(function (data)
+		return data.body
+	end)
+end
+
 implements(MissionBoard, Interface)
 
 return MissionBoard

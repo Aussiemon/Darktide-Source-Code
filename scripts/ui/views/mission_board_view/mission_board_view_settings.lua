@@ -47,110 +47,327 @@ local MissionBoardViewSettings = {
 	},
 	color_text_title = Color.terminal_text_header(nil, true),
 	color_text_body = Color.terminal_text_body(nil, true),
-	mission_positions = {
-		{
-			1095,
-			861,
-			index = 1
+	colors_by_mission_type = {
+		normal = {
+			color_background = {
+				200,
+				0,
+				0,
+				0
+			},
+			color_corner = Color.terminal_corner(nil, true),
+			color_frame = Color.terminal_frame(nil, true),
+			color_main = {
+				255,
+				169,
+				211,
+				158
+			},
+			color_accent = Color.golden_rod(nil, true),
+			color_disabled = {
+				30,
+				78,
+				87,
+				80
+			},
+			color_gray = {
+				200,
+				135,
+				153,
+				131
+			},
+			color_cursor = Color.golden_rod(nil, true),
+			color_dark_opacity = {
+				75,
+				0,
+				0,
+				0
+			},
+			color_green_faded = {
+				128,
+				169,
+				211,
+				158
+			},
+			color_text_title = Color.terminal_text_header(nil, true),
+			color_text_body = Color.terminal_text_body(nil, true)
 		},
-		{
-			506,
-			679,
-			index = 2
-		},
-		{
-			615,
-			881,
-			index = 3
-		},
-		{
-			719,
-			692,
-			index = 4
-		},
-		{
-			173,
-			353,
-			index = 5
-		},
-		{
-			245,
-			775,
-			index = 6
-		},
-		{
-			884,
-			383,
-			index = 7
-		},
-		{
-			1102,
-			485,
-			index = 8
-		},
-		{
-			788,
-			190,
-			index = 9
-		},
-		{
-			401,
-			323,
-			index = 10
-		},
-		{
-			553,
-			107,
-			index = 11
-		},
-		{
-			933,
-			602,
-			index = 12
-		},
-		{
-			888,
-			836,
-			index = 13
-		},
-		{
-			405,
-			864,
-			index = 14
-		},
-		{
-			1062,
-			301,
-			index = 15
-		},
-		{
-			281,
-			129,
-			index = 16
-		},
-		{
-			615,
-			297,
-			index = 17
-		},
-		{
-			1152,
-			669,
-			index = 18
-		},
-		{
-			951,
-			113,
-			index = 19
+		auric = {
+			color_background = {
+				200,
+				0,
+				0,
+				0
+			},
+			color_corner = {
+				255,
+				249,
+				231,
+				115
+			},
+			color_frame = {
+				255,
+				164,
+				139,
+				86
+			},
+			color_main = {
+				255,
+				228,
+				197,
+				130
+			},
+			color_accent = Color.golden_rod(nil, true),
+			color_disabled = {
+				30,
+				78,
+				87,
+				80
+			},
+			color_gray = {
+				200,
+				135,
+				153,
+				131
+			},
+			color_cursor = Color.golden_rod(nil, true),
+			color_dark_opacity = {
+				75,
+				0,
+				0,
+				0
+			},
+			color_green_faded = {
+				255,
+				171,
+				146,
+				92
+			},
+			color_text_title = Color.terminal_text_header(nil, true),
+			color_text_body = Color.terminal_text_body(nil, true)
 		}
 	},
-	flash_mission_position = {
-		520,
-		480
-	},
-	quickplay_mission_position = {
-		120,
-		550
+	mission_positions = {
+		normal = {
+			{
+				83,
+				631,
+				index = 1,
+				prefered_danger = 1
+			},
+			{
+				246,
+				701,
+				index = 2,
+				prefered_danger = 1
+			},
+			{
+				345,
+				550,
+				index = 3,
+				prefered_danger = 1
+			},
+			{
+				467,
+				420,
+				index = 4,
+				prefered_danger = 1
+			},
+			{
+				485,
+				612,
+				index = 5,
+				prefered_danger = 1
+			},
+			{
+				630,
+				685,
+				index = 6,
+				prefered_danger = 2
+			},
+			{
+				468,
+				820,
+				index = 7,
+				prefered_danger = 2
+			},
+			{
+				820,
+				730,
+				index = 8,
+				prefered_danger = 2
+			},
+			{
+				950,
+				645,
+				index = 9,
+				prefered_danger = 2
+			},
+			{
+				700,
+				855,
+				index = 10,
+				prefered_danger = 2
+			},
+			{
+				989,
+				840,
+				index = 11,
+				prefered_danger = 3
+			},
+			{
+				1092,
+				616,
+				index = 12,
+				prefered_danger = 3
+			},
+			{
+				1229,
+				682,
+				index = 13,
+				prefered_danger = 3
+			},
+			{
+				1004,
+				8400,
+				index = 14,
+				prefered_danger = 3
+			},
+			{
+				1160,
+				860,
+				index = 15,
+				prefered_danger = 3
+			},
+			{
+				1094,
+				70,
+				index = 16,
+				prefered_danger = 4
+			},
+			{
+				1054,
+				271,
+				index = 17,
+				prefered_danger = 4
+			},
+			{
+				1150,
+				430,
+				index = 18,
+				prefered_danger = 4
+			},
+			{
+				925,
+				208,
+				index = 19,
+				prefered_danger = 4
+			},
+			{
+				950,
+				445,
+				index = 20,
+				prefered_danger = 4
+			},
+			{
+				850,
+				45,
+				index = 21,
+				prefered_danger = 5
+			},
+			{
+				467,
+				147,
+				index = 22,
+				prefered_danger = 5
+			},
+			{
+				590,
+				271,
+				index = 23,
+				prefered_danger = 5
+			},
+			{
+				685,
+				96,
+				index = 24,
+				prefered_danger = 5
+			},
+			{
+				785,
+				281,
+				index = 25,
+				prefered_danger = 5
+			},
+			flash_mission_position = {
+				600,
+				500
+			},
+			quickplay_mission_position = {
+				120,
+				175
+			}
+		},
+		auric = {
+			{
+				431,
+				420,
+				index = 1
+			},
+			{
+				560,
+				290,
+				index = 2
+			},
+			{
+				830,
+				290,
+				index = 3
+			},
+			{
+				954,
+				420,
+				index = 4
+			},
+			{
+				954,
+				620,
+				index = 5
+			},
+			{
+				830,
+				735,
+				index = 6
+			},
+			{
+				695,
+				820,
+				index = 7
+			},
+			{
+				560,
+				735,
+				index = 8
+			},
+			{
+				431,
+				620,
+				index = 9
+			},
+			{
+				695,
+				220,
+				index = 10
+			},
+			flash_mission_position = {
+				600,
+				500
+			},
+			quickplay_mission_position = {
+				120,
+				175
+			}
+		}
 	},
 	fluff_frames = {
 		"content/ui/materials/fluff/hologram/frames/fluff_frame_01",
@@ -161,6 +378,16 @@ local MissionBoardViewSettings = {
 		"content/ui/materials/fluff/hologram/frames/fluff_frame_06",
 		"content/ui/materials/fluff/hologram/frames/fluff_frame_07",
 		"content/ui/materials/fluff/hologram/frames/fluff_frame_08"
+	},
+	stepper_difficulty = {
+		normal = {
+			max_danger = 5,
+			min_danger = 1
+		},
+		auric = {
+			max_danger = 5,
+			min_danger = 4
+		}
 	},
 	gamepad_cursor_settings = {
 		snap_selection_speed_threshold = 10,

@@ -96,7 +96,7 @@ local monster_pacing_template = {
 				},
 				num_boss_patrols_range = {
 					0,
-					1
+					2
 				}
 			},
 			breed_names = {
@@ -162,8 +162,8 @@ local monster_pacing_template = {
 					}
 				},
 				num_boss_patrols_range = {
-					0,
-					1
+					1,
+					2
 				}
 			},
 			breed_names = {

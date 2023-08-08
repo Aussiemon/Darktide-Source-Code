@@ -35,11 +35,15 @@ MinionAttack.get_aim_position = function (unit, scratchpad, optional_line_of_sig
 			target_position = Unit.world_position(target_unit, Unit.node(target_unit, optional_aim_node_name or DEFAULT_ENEMY_AIM_NODE))
 		elseif perception_component.has_last_los_position then
 			target_position = perception_component.last_los_position:unbox()
+		elseif scratchpad.perception_extension:last_los_position(target_unit) ~= nil then
+			target_position = scratchpad.perception_extension:last_los_position(target_unit)
 		end
 	elseif perception_component.has_line_of_sight then
 		target_position = Unit.world_position(target_unit, Unit.node(target_unit, optional_aim_node_name or DEFAULT_ENEMY_AIM_NODE))
 	elseif perception_component.has_last_los_position then
 		target_position = perception_component.last_los_position:unbox()
+	elseif scratchpad.perception_extension:last_los_position(target_unit) ~= nil then
+		target_position = scratchpad.perception_extension:last_los_position(target_unit)
 	end
 
 	return target_position

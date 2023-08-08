@@ -7,7 +7,7 @@ local ViewStyles = require("scripts/ui/view_elements/view_element_mission_info_p
 local panel_style = ViewStyles.panel
 local panel_size = panel_style.size
 local infoarea_height = panel_style.max_size[2] - ViewStyles.panel_header.size[2]
-local scrollbar_width = ScrollbarPassTemplates.metal_scrollbar.default_width
+local scrollbar_width = ScrollbarPassTemplates.terminal_scrollbar.default_width
 local button_template = ButtonPassTemplates.default_button
 local sg_panel_wrapper = {
 	vertical_alignment = "center",
@@ -205,7 +205,7 @@ local widget_definitions = {
 			scenegraph_id = "panel_bottom"
 		}
 	}, "panel", nil, nil, panel_style),
-	panel_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.metal_scrollbar, "panel_scrollbar"),
+	panel_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "panel_scrollbar"),
 	list_interaction = UIWidget.create_definition({
 		{
 			pass_type = "hotspot",

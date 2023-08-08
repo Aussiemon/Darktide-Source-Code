@@ -154,7 +154,7 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_01_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_01",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_flash_mission_01_title"
 		}
 	},
@@ -166,7 +166,7 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_02_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_01",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_flash_mission_02_title"
 		}
 	},
@@ -178,7 +178,7 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_03_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_01",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_flash_mission_03_title"
 		}
 	},
@@ -191,7 +191,7 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_04_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_01",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_flash_mission_04_title"
 		}
 	},
@@ -206,7 +206,7 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_05_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_01",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_flash_mission_05_title"
 		}
 	},
@@ -221,7 +221,7 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_06_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_01",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_flash_mission_06_title"
 		}
 	},
@@ -230,7 +230,7 @@ local circumstance_templates = {
 		theme_tag = "default",
 		ui = {
 			description = "loc_circumstance_flash_mission_07_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_01",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_flash_mission_07_title"
 		},
 		mutators = {
@@ -247,7 +247,7 @@ local circumstance_templates = {
 		theme_tag = "default",
 		ui = {
 			description = "loc_circumstance_flash_mission_08_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_01",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_flash_mission_08_title"
 		},
 		mutators = {
@@ -255,8 +255,7 @@ local circumstance_templates = {
 			"mutator_waves_of_specials",
 			"mutator_mutants",
 			"mutator_ability_cooldown_reduction"
-		},
-		mission_overrides = only_melee_mission_overrides
+		}
 	},
 	flash_mission_09 = {
 		dialogue_id = "circumstance_vo_ventilation_purge",
@@ -273,7 +272,7 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_09_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_01",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_flash_mission_09_title"
 		}
 	},
@@ -289,7 +288,7 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_10_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_01",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_flash_mission_10_title"
 		}
 	},
@@ -297,7 +296,7 @@ local circumstance_templates = {
 		theme_tag = "default",
 		ui = {
 			description = "loc_circumstance_flash_mission_11_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_01",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_flash_mission_11_title"
 		},
 		mutators = {
@@ -318,7 +317,7 @@ local circumstance_templates = {
 		theme_tag = "default",
 		ui = {
 			description = "loc_circumstance_flash_mission_12_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_01",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_flash_mission_12_title"
 		},
 		mutators = {
@@ -339,7 +338,7 @@ local circumstance_templates = {
 		theme_tag = "default",
 		ui = {
 			description = "loc_circumstance_flash_mission_13_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_01",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_flash_mission_13_title"
 		},
 		mutators = {
@@ -361,7 +360,7 @@ local circumstance_templates = {
 		theme_tag = "default",
 		ui = {
 			description = "loc_circumstance_flash_mission_14_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_01",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_flash_mission_14_title"
 		},
 		mutators = {
@@ -383,7 +382,7 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_01_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_02",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 			display_name = "loc_circumstance_flash_mission_01_title"
 		}
 	},
@@ -396,7 +395,7 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_02_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_02",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 			display_name = "loc_circumstance_flash_mission_02_title"
 		}
 	},
@@ -409,7 +408,7 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_03_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_02",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 			display_name = "loc_circumstance_flash_mission_03_title"
 		}
 	},
@@ -423,7 +422,7 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_04_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_02",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 			display_name = "loc_circumstance_flash_mission_04_title"
 		}
 	},
@@ -439,7 +438,7 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_05_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_02",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 			display_name = "loc_circumstance_flash_mission_05_title"
 		}
 	},
@@ -455,7 +454,7 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_06_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_02",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 			display_name = "loc_circumstance_flash_mission_06_title"
 		}
 	},
@@ -464,7 +463,7 @@ local circumstance_templates = {
 		theme_tag = "default",
 		ui = {
 			description = "loc_circumstance_flash_mission_07_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_02",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 			display_name = "loc_circumstance_flash_mission_07_title"
 		},
 		mutators = {
@@ -482,7 +481,7 @@ local circumstance_templates = {
 		theme_tag = "default",
 		ui = {
 			description = "loc_circumstance_flash_mission_08_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_02",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 			display_name = "loc_circumstance_flash_mission_08_title"
 		},
 		mutators = {
@@ -491,8 +490,7 @@ local circumstance_templates = {
 			"mutator_add_resistance",
 			"mutator_mutants",
 			"mutator_ability_cooldown_reduction"
-		},
-		mission_overrides = only_melee_mission_overrides
+		}
 	},
 	high_flash_mission_09 = {
 		dialogue_id = "circumstance_vo_ventilation_purge",
@@ -510,7 +508,7 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_09_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_02",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 			display_name = "loc_circumstance_flash_mission_09_title"
 		}
 	},
@@ -527,7 +525,7 @@ local circumstance_templates = {
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_10_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_02",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 			display_name = "loc_circumstance_flash_mission_10_title"
 		}
 	},
@@ -535,7 +533,7 @@ local circumstance_templates = {
 		theme_tag = "default",
 		ui = {
 			description = "loc_circumstance_flash_mission_11_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_02",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 			display_name = "loc_circumstance_flash_mission_11_title"
 		},
 		mutators = {
@@ -557,7 +555,7 @@ local circumstance_templates = {
 		theme_tag = "default",
 		ui = {
 			description = "loc_circumstance_flash_mission_12_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_02",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 			display_name = "loc_circumstance_flash_mission_12_title"
 		},
 		mutators = {
@@ -579,7 +577,7 @@ local circumstance_templates = {
 		theme_tag = "default",
 		ui = {
 			description = "loc_circumstance_flash_mission_13_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_02",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 			display_name = "loc_circumstance_flash_mission_13_title"
 		},
 		mutators = {
@@ -602,7 +600,7 @@ local circumstance_templates = {
 		theme_tag = "default",
 		ui = {
 			description = "loc_circumstance_flash_mission_14_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_02",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_02",
 			display_name = "loc_circumstance_flash_mission_14_title"
 		},
 		mutators = {
@@ -621,7 +619,7 @@ local circumstance_templates = {
 		theme_tag = "default",
 		ui = {
 			description = "loc_circumstance_six_one_flash_mission_01_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_03",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_six_one_flash_mission_01_title"
 		},
 		mutators = {
@@ -640,7 +638,7 @@ local circumstance_templates = {
 		theme_tag = "ventilation_purge",
 		ui = {
 			description = "loc_circumstance_six_one_flash_mission_02_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_03",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_six_one_flash_mission_02_title"
 		},
 		mutators = {
@@ -660,7 +658,7 @@ local circumstance_templates = {
 		theme_tag = "darkness",
 		ui = {
 			description = "loc_circumstance_six_one_flash_mission_03_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_03",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_six_one_flash_mission_03_title"
 		},
 		mutators = {
@@ -679,7 +677,7 @@ local circumstance_templates = {
 		theme_tag = "default",
 		ui = {
 			description = "loc_circumstance_six_one_flash_mission_04_description",
-			icon = "content/ui/materials/icons/circumstances/special_waves_03",
+			icon = "content/ui/materials/icons/circumstances/maelstrom_01",
 			display_name = "loc_circumstance_six_one_flash_mission_04_title"
 		},
 		mutators = {
@@ -694,5 +692,7 @@ local circumstance_templates = {
 		}
 	}
 }
+circumstance_templates.flash_mission_14 = table.clone(circumstance_templates.flash_mission_01)
+circumstance_templates.high_flash_mission_14 = table.clone(circumstance_templates.high_flash_mission_01)
 
 return circumstance_templates

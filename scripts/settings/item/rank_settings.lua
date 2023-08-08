@@ -41,7 +41,8 @@ local RankSettings = {
 		perk_icon = "content/ui/materials/icons/perks/perk_level_05",
 		perk_rating = -999
 	},
-	max_trait_rank = 4
+	max_trait_rank = 4,
+	max_perk_rank = 4
 }
 
 return settings("RankSettings", RankSettings)

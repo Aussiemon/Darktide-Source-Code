@@ -291,16 +291,23 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 				if trickle_horde.next_wave_at_t < t then
 					local optional_main_path_offset = template.optional_main_path_offset
 					local optional_num_tries = template.optional_num_tries
-
-					self:_spawn_trickle_horde_wave(side_id, target_side_id, optional_main_path_offset, optional_num_tries, template, trickle_horde, t)
-
+					local success, horde_position = self:_spawn_trickle_horde_wave(side_id, target_side_id, optional_main_path_offset, optional_num_tries, template, trickle_horde, t)
 					trickle_horde.num_waves = trickle_horde.num_waves - 1
 
 					if trickle_horde.num_waves > 0 then
 						trickle_horde.next_wave_at_t = t + math.random_range(template.time_between_waves[1], template.time_between_waves[2])
+
+						if success then
+							local disallow_spawning_too_close_to_other_spawn = template.disallow_spawning_too_close_to_other_spawn
+
+							if disallow_spawning_too_close_to_other_spawn then
+								trickle_horde.disallowed_spawn_positions[#trickle_horde.disallowed_spawn_positions + 1] = Vector3Box(horde_position)
+							end
+						end
 					else
 						trickle_horde.num_waves = nil
 						trickle_horde.next_wave_at_t = nil
+						trickle_horde.disallowed_spawn_positions = nil
 					end
 				end
 			else
@@ -395,6 +402,13 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 
 									trickle_horde.num_waves = math.random(num_trickle_waves[1], num_trickle_waves[2]) - 1
 									trickle_horde.next_wave_at_t = t + math.random_range(template.time_between_waves[1], template.time_between_waves[2])
+									local disallow_spawning_too_close_to_other_spawn = template.disallow_spawning_too_close_to_other_spawn
+
+									if disallow_spawning_too_close_to_other_spawn then
+										trickle_horde.disallowed_spawn_positions = {
+											Vector3Box(horde_position)
+										}
+									end
 								end
 							end
 						end
@@ -410,13 +424,13 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 	end
 end
 
-HordePacing._spawn_horde = function (self, horde_type, horde_template, composition, side_id, target_side_id, optional_main_path_offset, optional_num_tries)
+HordePacing._spawn_horde = function (self, horde_type, horde_template, composition, side_id, target_side_id, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier)
 	local main_path_available = Managers.state.main_path:is_main_path_available()
 
 	if horde_template.requires_main_path and main_path_available or not horde_template.requires_main_path then
 		local horde_manager = Managers.state.horde
 		local towards_combat_vector = true
-		local success, horde_position, target_unit, group_id = horde_manager:horde(horde_type, horde_template.name, side_id, target_side_id, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries)
+		local success, horde_position, target_unit, group_id = horde_manager:horde(horde_type, horde_template.name, side_id, target_side_id, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier)
 
 		return success, horde_position, target_unit, group_id
 	end
@@ -430,7 +444,9 @@ HordePacing._spawn_trickle_horde_wave = function (self, side_id, target_side_id,
 	local faction_composition = trickle_horde_compositions[current_faction][current_density_type]
 	local chosen_compositions = faction_composition[math.random(1, #faction_composition)]
 	local resistance_scaled_composition = Managers.state.difficulty:get_table_entry_by_resistance(chosen_compositions)
-	local success, horde_position, target_unit, group_id = self:_spawn_horde(HORDE_TYPES.trickle_horde, trickle_horde_template, resistance_scaled_composition, side_id, target_side_id, optional_main_path_offset, optional_num_tries)
+	local optional_disallowed_positions = trickle_horde.disallowed_spawn_positions
+	local spawn_max_health_modifier = template.spawn_max_health_modifier
+	local success, horde_position, target_unit, group_id = self:_spawn_horde(HORDE_TYPES.trickle_horde, trickle_horde_template, resistance_scaled_composition, side_id, target_side_id, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, spawn_max_health_modifier)
 
 	if success then
 		local horde_group_sound_event_names = template.group_sound_event_names
@@ -457,20 +473,6 @@ HordePacing._spawn_trickle_horde_wave = function (self, side_id, target_side_id,
 
 			for spawn_type, duration in pairs(pause_pacing_on_spawn) do
 				Managers.state.pacing:pause_spawn_type(spawn_type, true, "trickle_horde", duration)
-			end
-		end
-
-		local spawn_max_health_modifier = template.spawn_max_health_modifier
-
-		if spawn_max_health_modifier then
-			local members = group.members
-
-			for j = 1, #members do
-				local unit = members[j]
-				local spawned_unit_health_extension = ScriptUnit.extension(unit, "health_system")
-				local max_health = spawned_unit_health_extension:max_health()
-
-				spawned_unit_health_extension:add_damage(max_health * spawn_max_health_modifier)
 			end
 		end
 

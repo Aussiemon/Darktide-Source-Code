@@ -424,6 +424,7 @@ ConstantElementPopupHandler._create_popup_content = function (self, options, ui_
 
 			if pass_template.init then
 				pass_template.init(self, widget, ui_renderer, {
+					ignore_gamepad_on_text = true,
 					text = text,
 					complete_function = callback(self, "_cb_on_button_pressed", widget)
 				})

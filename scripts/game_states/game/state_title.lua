@@ -373,6 +373,7 @@ StateTitle._reset_state = function (self)
 	next_state_params.profiles = nil
 	next_state_params.selected_profile = nil
 	next_state_params.has_created_first_character = nil
+	next_state_params.migration_data = nil
 
 	if self._narrative_promise and self._narrative_promise:is_pending() then
 		self._narrative_promise:cancel()
@@ -559,11 +560,20 @@ StateTitle._signin = function (self)
 		local gear = result.gear
 		local selected_profile = result.selected_profile
 		local has_created_first_character = result.has_created_first_character
+		local migration_data = result.migration_data
 		local save_manager = Managers.save
 
 		save_manager:set_save_data_account_id(account_id)
 
 		local account_data = save_manager:account_data()
+
+		if account_data and migration_data then
+			local current_index = migration_data.latest_completed and migration_data.latest_completed.index or -1
+			local added_index = migration_data.migrations and #migration_data.migrations or 0
+			account_data.latest_backend_migration_index = current_index + added_index
+
+			save_manager:queue_save()
+		end
 
 		Managers.event:trigger("event_player_authenticated")
 
@@ -588,6 +598,7 @@ StateTitle._signin = function (self)
 		next_state_params.gear = gear
 		next_state_params.selected_profile = selected_profile
 		next_state_params.has_created_first_character = has_created_first_character
+		next_state_params.migration_data = migration_data and migration_data.migrations
 
 		self:_set_state(STATES.loading_packages)
 

@@ -175,9 +175,10 @@ end
 GearService.delete_gear = function (self, gear_id)
 	return self._backend_interface.gear:delete_gear(gear_id):next(function (result)
 		self:on_gear_deleted(gear_id)
-		Managers.data_service.store:on_gear_deleted(result)
 
-		return result
+		return Managers.data_service.store:on_gear_deleted(result):next(function ()
+			return result
+		end)
 	end):catch(function (err)
 		self:invalidate_gear_cache()
 		Managers.data_service.store:invalidate_wallets_cache()

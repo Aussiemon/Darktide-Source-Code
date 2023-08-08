@@ -86,7 +86,8 @@ local breed_data = {
 	vfx = require("scripts/settings/breed/breeds/chaos/chaos_common_vfx"),
 	behavior_tree_name = breed_name,
 	animation_variables = {
-		"moving_attack_fwd_speed"
+		"moving_attack_fwd_speed",
+		"anim_move_speed"
 	},
 	combat_range_data = BreedCombatRanges.chaos_poxwalker,
 	attack_intensity_cooldowns = {

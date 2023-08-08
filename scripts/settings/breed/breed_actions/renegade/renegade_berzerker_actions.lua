@@ -295,17 +295,17 @@ local action_data = {
 			}
 		},
 		attack_anim_durations = {
-			attack_01 = 1.5666666666666667,
+			attack_01 = 1.1666666666666667,
 			attack_down_01 = 2.1,
-			attack_04 = 1.8333333333333333,
-			attack_03 = 1.8333333333333333,
+			attack_04 = 1.3333333333333333,
+			attack_03 = 1.1666666666666667,
 			attack_reach_up = 1.6666666666666667,
-			attack_02 = 1.6666666666666667,
-			attack_combo_standing_06 = 1.8666666666666667
+			attack_02 = 1.1666666666666667,
+			attack_combo_standing_06 = 1.5
 		},
 		attack_intensities = {
 			ranged = 1,
-			melee = 2
+			melee = 0.5
 		},
 		stagger_type_reduction = {
 			ranged = 20,

@@ -41,6 +41,12 @@ Crafting.refresh_crafting_costs = function (self)
 	end)
 end
 
+Crafting.get_item_crafting_metadata = function (self, master_id)
+	return Managers.backend:title_request(BackendUtilities.url_builder("/data/crafting/items/"):path(Http.url_encode(master_id)):path("/meta"):to_string()):next(function (data)
+		return data.body
+	end)
+end
+
 Crafting.crafting_costs = function (self)
 	return self._crafting_costs
 end
@@ -118,13 +124,14 @@ Crafting.replace_trait_in_weapon = function (self, gear_id, existing_trait_index
 	})
 end
 
-Crafting.replace_perk_in_weapon = function (self, gear_id, existing_trait_index, new_trait_id)
+Crafting.replace_perk_in_weapon = function (self, gear_id, existing_trait_index, new_trait_id, new_trait_tier)
 	return _send_crafting_operation({
 		traitType = "perks",
 		op = "replaceTrait",
 		gearId = gear_id,
 		traitIndex = existing_trait_index - 1,
-		traitId = new_trait_id
+		traitId = new_trait_id,
+		traitTier = new_trait_tier
 	})
 end
 

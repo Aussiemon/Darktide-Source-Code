@@ -2,6 +2,7 @@ local Promise = require("scripts/foundation/utilities/promise")
 local BackendError = require("scripts/foundation/managers/backend/backend_error")
 local BackendUtilities = {}
 local TEMPLATE_PATTERN = "{(%a+)}"
+BackendUtilities.prefered_mission_region = ""
 BackendUtilities.ERROR_METATABLE = {
 	__tostring = function (t)
 		local msg = "Backend error:\n"

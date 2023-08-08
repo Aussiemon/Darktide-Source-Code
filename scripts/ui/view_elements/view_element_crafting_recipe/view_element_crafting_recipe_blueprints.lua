@@ -1402,5 +1402,86 @@ ViewElementCraftingRecipeBlueprints.trait_background = {
 		end
 	end
 }
+local counter_size = {
+	430,
+	90
+}
+ViewElementCraftingRecipeBlueprints.modifications_counter = {
+	size = counter_size,
+	pass_template = {
+		{
+			pass_type = "rect",
+			style = {
+				color = Color.terminal_frame(255, true)
+			}
+		},
+		{
+			value_id = "counter",
+			style_id = "counter",
+			pass_type = "text",
+			value = "",
+			style = {
+				font_size = 28,
+				text_vertical_alignment = "top",
+				horizontal_alignment = "center",
+				text_horizontal_alignment = "center",
+				vertical_alignment = "center",
+				font_type = "proxima_nova_bold",
+				text_color = Color.ui_hud_green_super_light(255, true),
+				disabled_color = Color.terminal_frame(255, true),
+				enabled_color = Color.ui_hud_green_super_light(255, true),
+				size = {
+					counter_size[1] - 30,
+					counter_size[2] - 30
+				},
+				offset = {
+					0,
+					0,
+					1
+				}
+			}
+		},
+		{
+			value_id = "description",
+			style_id = "description",
+			pass_type = "text",
+			value = Localize("loc_crafting_item_modifications_text"),
+			style = {
+				font_size = 18,
+				text_vertical_alignment = "bottom",
+				horizontal_alignment = "center",
+				text_horizontal_alignment = "center",
+				vertical_alignment = "center",
+				font_type = "proxima_nova_bold",
+				text_color = Color.terminal_text_body(255, true),
+				size = {
+					counter_size[1] - 30,
+					counter_size[2] - 30
+				},
+				offset = {
+					0,
+					0,
+					1
+				}
+			}
+		}
+	},
+	init = function (parent, widget, config, callback_name)
+		local item = config.item
+
+		if item then
+			local num_modifications, max_modifications = ItemUtils.modifications_by_rarity(item)
+			widget.content.counter = string.format(" %d/%d", num_modifications, max_modifications)
+		end
+	end,
+	update = function (parent, widget, input_service, dt, t, ui_renderer)
+		local item = widget.content.item
+
+		if item then
+			local num_modifications, max_modifications = ItemUtils.modifications_by_rarity(item)
+			widget.content.counter = string.format(" %d/%d", num_modifications, max_modifications)
+		end
+	end
+}
 
 return ViewElementCraftingRecipeBlueprints

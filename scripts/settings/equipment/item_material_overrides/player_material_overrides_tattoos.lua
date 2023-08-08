@@ -44,6 +44,66 @@ local material_overrides = {
 			}
 		}
 	},
+	dirt_tattoo_02_face = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/dirt_tattoo_02/dirt_tattoo_02_face"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0.15,
+				0.08,
+				0,
+				0.2
+			}
+		}
+	},
+	dirt_tattoo_03_face = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/dirt_tattoo_03/dirt_tattoo_03_face"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0.15,
+				0.03,
+				0,
+				0.2
+			}
+		}
+	},
+	dirt_tattoo_04_face = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/dirt_tattoo_04/dirt_tattoo_04_face"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0.07,
+				0.02,
+				0,
+				0.2
+			}
+		}
+	},
+	dirt_tattoo_05_face = {
+		texture_overrides = {
+			tatoo_mask = {
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/dirt_tattoo_05/dirt_tattoo_05_face"
+			}
+		},
+		property_overrides = {
+			rgb_tatoo = {
+				0.15,
+				0.01,
+				0,
+				0.2
+			}
+		}
+	},
 	face_tattoo_traitor = {
 		texture_overrides = {
 			tatoo_mask = {

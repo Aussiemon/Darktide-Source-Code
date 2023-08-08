@@ -13,7 +13,7 @@ local FireStepFunctions = {
 
 		local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
 
-		return math.ceil(max_ammunition_clip * 0.1)
+		return math.max(1, math.floor(max_ammunition_clip * 0.1))
 	end,
 	toughness_regen_continuous_fire_step_func = function (template_data, template_context)
 		if ConditionalFunctions.is_reloading(template_data, template_context) then
@@ -28,7 +28,7 @@ local FireStepFunctions = {
 
 		local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
 
-		return math.ceil(max_ammunition_clip * 0.1)
+		return math.max(1, math.floor(max_ammunition_clip * 0.1))
 	end,
 	movement_speed_continuous_fire_step_func = function (template_data, template_context)
 		if ConditionalFunctions.is_reloading(template_data, template_context) then
@@ -43,7 +43,7 @@ local FireStepFunctions = {
 
 		local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
 
-		return math.ceil(max_ammunition_clip * 0.05)
+		return math.max(1, math.floor(max_ammunition_clip * 0.05))
 	end,
 	suppression_continuous_fire_step_func = function (template_data, template_context)
 		if ConditionalFunctions.is_reloading(template_data, template_context) then
@@ -58,7 +58,7 @@ local FireStepFunctions = {
 
 		local max_ammunition_clip = inventory_slot_component.max_ammunition_clip
 
-		return math.ceil(max_ammunition_clip * 0.025)
+		return math.max(1, math.floor(max_ammunition_clip * 0.025))
 	end
 }
 

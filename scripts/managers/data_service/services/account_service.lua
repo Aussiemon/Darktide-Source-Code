@@ -49,6 +49,7 @@ AccountService.signin = function (self)
 			Log.warning("AccountService", "Store account mismatch detected")
 		end
 
+		local migrations_promise = Managers.backend.interfaces.account:check_and_run_migrations(account_id)
 		local status_promise = Managers.backend.interfaces.version_check:status()
 		local settings_promise = Managers.backend.interfaces.game_settings:resolve_backend_game_settings()
 		local items_promise = MasterItems.refresh()
@@ -57,25 +58,30 @@ AccountService.signin = function (self)
 		local sync_achievement_rewards_promise = Managers.achievements:sync_achievement_data(account_id)
 		local crafting_costs_promise = Managers.backend.interfaces.crafting:refresh_crafting_costs()
 
-		return Promise.all(status_promise, settings_promise, items_promise, auth_data_promise, immaterium_connection_info, sync_achievement_rewards_promise, crafting_costs_promise)
+		return migrations_promise:next(function (data)
+			local migration_data_promise = Promise.resolved(data)
+
+			return Promise.all(status_promise, settings_promise, items_promise, auth_data_promise, immaterium_connection_info, sync_achievement_rewards_promise, crafting_costs_promise, migration_data_promise)
+		end)
 	end):next(function (results)
-		local status, _, _, auth_data, immaterium_connection_info = unpack(results, 1, 5)
+		local status, _, _, auth_data, immaterium_connection_info, _, _, migration_data = unpack(results, 1, 8)
 
 		if status then
 			local profiles_promise = Managers.data_service.profiles:fetch_all_profiles()
 			local has_created_first_character_promise = self:_has_created_first_character()
 			local has_completed_onboarding_promise = Managers.backend.interfaces.account:get_has_completed_onboarding()
 			local auth_data_promise = Promise.resolved(auth_data)
+			local migration_data_promise = Promise.resolved(migration_data)
 			local immaterium_connect_promise = Managers.grpc:connect_to_immaterium(immaterium_connection_info)
 
-			return Promise.all(profiles_promise, has_created_first_character_promise, has_completed_onboarding_promise, auth_data_promise, immaterium_connect_promise)
+			return Promise.all(profiles_promise, has_created_first_character_promise, has_completed_onboarding_promise, auth_data_promise, immaterium_connect_promise, migration_data_promise)
 		else
 			return Promise.rejected({
 				description = "VERSION_ERROR"
 			})
 		end
 	end):next(function (results)
-		local profile_data, has_created_first_character, has_completed_onboarding, auth_data, immaterium_connect_error = unpack(results, 1, 5)
+		local profile_data, has_created_first_character, has_completed_onboarding, auth_data, immaterium_connect_error, migration_data = unpack(results, 1, 6)
 
 		if immaterium_connect_error then
 			return Promise.rejected({
@@ -91,7 +97,8 @@ AccountService.signin = function (self)
 			has_created_first_character = has_created_first_character,
 			account_id = auth_data.sub,
 			vivox_token = auth_data.vivox_token,
-			gear = profile_data.gear
+			gear = profile_data.gear,
+			migration_data = migration_data
 		})
 	end):catch(function (error_data)
 		if error_data.description == "VERSION_ERROR" then

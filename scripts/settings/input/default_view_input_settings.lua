@@ -49,7 +49,6 @@ local default_view_input_settings = {
 			"xbox_controller_back",
 			"ps4_controller_touch",
 			description = "loc_alias_view_hotkey_inventory",
-			bindable = false,
 			group = "input_group_hotkeys"
 		},
 		hotkey_loadout = {
@@ -57,7 +56,8 @@ local default_view_input_settings = {
 			"xbox_controller_y",
 			"ps4_controller_triangle",
 			description = "loc_alias_view_hotkey_loadout",
-			bindable = false
+			bindable = false,
+			group = "input_group_hotkeys"
 		},
 		hotkey_item_discard = {
 			"keyboard_x",

@@ -4,6 +4,7 @@ local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
 local ScrollbarPassTemplates = require("scripts/ui/pass_templates/scrollbar_pass_templates")
 local ViewStyles = require("scripts/ui/views/mission_voting_view/mission_voting_view_styles")
+local ColorUtilities = require("scripts/utilities/ui/colors")
 local outer_panel_size = {
 	638,
 	850
@@ -124,6 +125,10 @@ local secondary_button_size = {
 	398,
 	64
 }
+local title_bar_bottom_size = {
+	zone_image_panel_size[1],
+	40
+}
 local outer_panel_y_offset = -(UIWorkspaceSettings.screen.size[2] * 0.075)
 local outer_panel_position = {
 	0,
@@ -144,6 +149,11 @@ local title_bar_position = {
 	0,
 	0,
 	20
+}
+local title_bar_bottom_position = {
+	0,
+	300 - title_bar_bottom_size[2],
+	30
 }
 local mission_info_panel_position = {
 	0,
@@ -318,6 +328,13 @@ local scenegraph_definition = {
 		horizontal_alignment = "left",
 		size = title_bar_size,
 		position = title_bar_position
+	},
+	title_bar_bottom = {
+		vertical_alignment = "top",
+		parent = "outer_panel",
+		horizontal_alignment = "center",
+		size = title_bar_bottom_size,
+		position = title_bar_bottom_position
 	},
 	zone_image_panel = {
 		vertical_alignment = "top",
@@ -561,6 +578,21 @@ local widget_definitions = {
 			style = ViewStyles.title_font_style
 		}
 	}, "title_bar"),
+	title_bar_bottom = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style = {
+				color = Color.black(76.5, true)
+			}
+		},
+		{
+			value_id = "text",
+			style_id = "text",
+			pass_type = "text",
+			value = "",
+			style = ViewStyles.flash_title_style
+		}
+	}, "title_bar_bottom"),
 	zone_image = UIWidget.create_definition({
 		{
 			style_id = "texture",
@@ -790,6 +822,14 @@ local animations = {
 					widget.alpha_multiplier = anim_progress
 				end
 
+				local styles_to_fade = parent._additional_text_styles
+
+				for i = 1, #styles_to_fade do
+					local style = styles_to_fade[i]
+
+					ColorUtilities.color_lerp(style.fade_out_text_color, style.text_color, anim_progress, style.text_color)
+				end
+
 				if params.show_details_flag then
 					local icons_widgets = parent._mission_icons_widgets
 
@@ -816,6 +856,7 @@ local animations = {
 				local inner_panel_height = lerp(source.inner_panel_height, targets.inner_panel_height, anim_progress)
 				local outer_panel_height = lerp(source.outer_panel_height, targets.outer_panel_height, anim_progress)
 				local outer_panel_y_offset = lerp(source.outer_panel_y_offset, targets.outer_panel_y_offset, anim_progress)
+				local title_bar_bottom_height = lerp(source.title_bar_bottom_height, targets.title_bar_bottom_height, anim_progress)
 				local bottom_fade_height = lerp(source.zone_image_bottom_fade_height, targets.zone_image_bottom_fade_height, anim_progress)
 				local circumstance_icon_height = lerp(source.circumstance_icon_height, targets.circumstance_icon_height, anim_progress)
 				local zone_image_panel_height = lerp(source.zone_image_panel_height, targets.zone_image_panel_height, anim_progress)
@@ -826,6 +867,7 @@ local animations = {
 				ui_scenegraph.outer_panel.size[2] = outer_panel_height
 				ui_scenegraph.outer_panel.position[2] = outer_panel_y_offset
 				ui_scenegraph.zone_image.size[2] = zone_image_height
+				ui_scenegraph.title_bar_bottom.size[2] = title_bar_bottom_height
 				ui_scenegraph.zone_image_panel.size[2] = zone_image_panel_height
 				ui_scenegraph.zone_image_bottom_fade.size[2] = bottom_fade_height
 				ui_scenegraph.circumstance_icon.size[2] = circumstance_icon_height
@@ -842,14 +884,19 @@ local animations = {
 			end,
 			update = function (parent, ui_scenegraph, scenegraph_definition, widgets, progress, params)
 				local anim_progress = progress
-
-				math.easeOutCubic(progress)
-
 				local widgets_to_fade = parent._additional_widgets
 
 				for i = 1, #widgets_to_fade do
 					local widget = widgets_to_fade[i]
 					widget.alpha_multiplier = anim_progress
+				end
+
+				local styles_to_fade = parent._additional_text_styles
+
+				for i = 1, #styles_to_fade do
+					local style = styles_to_fade[i]
+
+					ColorUtilities.color_lerp(style.fade_in_text_color, style.text_color, anim_progress, style.text_color)
 				end
 
 				if not params.show_details_flag then
