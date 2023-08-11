@@ -30,7 +30,7 @@ local conversations_hub_mourningstar_officer_male_b = {
 	},
 	hub_idle_greeting_like_a = {
 		randomize_indexes_n = 0,
-		sound_events_n = 10,
+		sound_events_n = 9,
 		sound_events = {
 			"loc_mourningstar_officer_male_b__hub_idle_greeting_like_a_01",
 			"loc_mourningstar_officer_male_b__hub_idle_greeting_like_a_02",
@@ -38,7 +38,6 @@ local conversations_hub_mourningstar_officer_male_b = {
 			"loc_mourningstar_officer_male_b__hub_idle_greeting_like_a_04",
 			"loc_mourningstar_officer_male_b__hub_idle_greeting_like_a_05",
 			"loc_mourningstar_officer_male_b__hub_idle_greeting_like_a_06",
-			"loc_mourningstar_officer_male_b__hub_idle_greeting_like_a_07",
 			"loc_mourningstar_officer_male_b__hub_idle_greeting_like_a_08",
 			"loc_mourningstar_officer_male_b__hub_idle_greeting_like_a_09",
 			"loc_mourningstar_officer_male_b__hub_idle_greeting_like_a_10"
@@ -50,7 +49,6 @@ local conversations_hub_mourningstar_officer_male_b = {
 			3.273646,
 			3.1315,
 			3.07125,
-			3.671771,
 			2.949583,
 			4.972271,
 			5.141042

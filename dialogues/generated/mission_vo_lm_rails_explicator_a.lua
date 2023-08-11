@@ -92,18 +92,14 @@ local mission_vo_lm_rails_explicator_a = {
 	},
 	mission_rails_end_event_conversation_two_b = {
 		randomize_indexes_n = 0,
-		sound_events_n = 4,
+		sound_events_n = 2,
 		sound_events = {
-			"loc_explicator_a__mission_rails_end_event_conversation_two_b_01",
-			"loc_explicator_a__mission_rails_end_event_conversation_two_b_02",
-			"loc_explicator_a__mission_rails_end_event_conversation_two_b_03",
-			"loc_explicator_a__mission_rails_end_event_conversation_two_b_04"
+			[1.0] = "loc_explicator_a__mission_rails_end_event_conversation_two_b_01",
+			[2.0] = "loc_explicator_a__mission_rails_end_event_conversation_two_b_04"
 		},
 		sound_events_duration = {
-			5.603625,
-			4.548125,
-			4.258292,
-			4.902271
+			[1.0] = 5.603625,
+			[2.0] = 4.902271
 		},
 		randomize_indexes = {}
 	},

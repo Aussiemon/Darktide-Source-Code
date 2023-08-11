@@ -99,13 +99,12 @@ local conversations_hub_barber_a = {
 	},
 	barber_hello = {
 		randomize_indexes_n = 0,
-		sound_events_n = 20,
+		sound_events_n = 19,
 		sound_events = {
 			"loc_barber_a__barber_hello_01",
 			"loc_barber_a__barber_hello_02",
 			"loc_barber_a__barber_hello_03",
 			"loc_barber_a__barber_hello_04",
-			"loc_barber_a__barber_hello_05",
 			"loc_barber_a__barber_hello_06",
 			"loc_barber_a__barber_hello_07",
 			"loc_barber_a__barber_hello_08",
@@ -127,7 +126,6 @@ local conversations_hub_barber_a = {
 			1.659479,
 			3.21975,
 			2.884333,
-			3.768292,
 			0.510271,
 			1.139771,
 			3.015188,
