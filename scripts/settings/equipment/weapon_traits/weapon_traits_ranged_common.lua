@@ -227,17 +227,17 @@ weapon_traits_ranged_common.weapon_trait_ranged_increase_stamina = {
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.stamina_modifier] = 1
+				[buff_stat_buffs.stamina_modifier] = 1.25
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.stamina_modifier] = 1
+				[buff_stat_buffs.stamina_modifier] = 1.5
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.stamina_modifier] = 1
+				[buff_stat_buffs.stamina_modifier] = 2
 			}
 		}
 	}

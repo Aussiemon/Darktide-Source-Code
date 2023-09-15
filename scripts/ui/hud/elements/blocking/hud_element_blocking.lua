@@ -33,6 +33,7 @@ end
 
 HudElementBlocking._update_shield_amount = function (self)
 	local shield_amount = 0
+	local shield_amount_ceiled = 0
 	local parent = self._parent
 	local player_extensions = parent:player_extensions()
 
@@ -48,18 +49,19 @@ HudElementBlocking._update_shield_amount = function (self)
 				local player_unit = player_extensions.unit
 				local current, max = Stamina.current_and_max_value(player_unit, stamina_component, base_stamina_template)
 				shield_amount = max
+				shield_amount_ceiled = math.ceil(max)
 			end
 		end
 	end
 
-	if shield_amount ~= self._shield_amount then
-		local amount_difference = (self._shield_amount or 0) - shield_amount
-		self._shield_amount = shield_amount
+	if shield_amount_ceiled ~= self._shield_amount then
+		local amount_difference = (self._shield_amount or 0) - shield_amount_ceiled
+		self._shield_amount = shield_amount_ceiled
 		local bar_size = HudElementBlockingSettings.bar_size
 		local segment_spacing = HudElementBlockingSettings.spacing
-		local total_segment_spacing = segment_spacing * math.max(shield_amount - 1, 0)
+		local total_segment_spacing = segment_spacing * math.max(shield_amount_ceiled - 1, 0)
 		local total_bar_length = bar_size[1] - total_segment_spacing
-		self._shield_width = math.round(shield_amount > 0 and total_bar_length / shield_amount or total_bar_length)
+		self._shield_width = math.round(shield_amount_ceiled > 0 and total_bar_length / shield_amount_ceiled or total_bar_length)
 		local widget = self._shield_widget
 
 		self:_set_scenegraph_size("shield", self._shield_width)
@@ -73,6 +75,8 @@ HudElementBlocking._update_shield_amount = function (self)
 				self:_remove_shield()
 			end
 		end
+
+		self._start_on_half_bar = shield_amount ~= shield_amount_ceiled
 	end
 end
 
@@ -162,6 +166,11 @@ HudElementBlocking._draw_shields = function (self, dt, t, ui_renderer)
 	local gauge_widget = self._widgets_by_name.gauge
 	gauge_widget.content.value_text = string.format("%.0f%%", math.clamp(stamina_fraction, 0, 1) * 100)
 	local step_fraction = 1 / num_shields
+
+	if self._start_on_half_bar then
+		stamina_fraction = stamina_fraction - step_fraction * 0.51
+	end
+
 	local spacing = HudElementBlockingSettings.spacing
 	local x_offset = (shield_width + spacing) * (num_shields - 1) * 0.5
 	local shields = self._shields

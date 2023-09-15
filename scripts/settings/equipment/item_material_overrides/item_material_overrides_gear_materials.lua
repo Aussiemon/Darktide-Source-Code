@@ -3346,6 +3346,87 @@ local material_overrides = {
 			}
 		}
 	},
+	fabric_wool_01_leather_tint_01_wear_01 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/leather_tintable_01/leather_tintable_01_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/leather_tintable_01/leather_tintable_01_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/leather_tintable_01/leather_tintable_01_orm"
+			}
+		},
+		property_overrides = {
+			dirt = {
+				0.1
+			}
+		}
+	},
+	fabric_wool_01_leather_tint_01_wear_02 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/leather_tintable_01/leather_tintable_01_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/leather_tintable_01/leather_tintable_01_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/leather_tintable_01/leather_tintable_01_orm"
+			}
+		},
+		property_overrides = {
+			dirt = {
+				0.3
+			}
+		}
+	},
+	fabric_wool_01_leather_tint_01_wear_03 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/leather_tintable_01/leather_tintable_01_bc"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/leather_tintable_01/leather_tintable_01_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/leather_tintable_01/leather_tintable_01_orm"
+			}
+		},
+		property_overrides = {
+			dirt = {
+				0.6
+			}
+		}
+	},
 	fabric_wool_01_leather_02_wear_01 = {
 		texture_overrides = {
 			mat1_bc = {
@@ -3424,6 +3505,87 @@ local material_overrides = {
 		property_overrides = {
 			dirt = {
 				0.3
+			}
+		}
+	},
+	fabric_wool_01_leather_05_wear_01 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/leather_04/leather_04_bca"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/leather_04/leather_04_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/leather_04/leather_04_orm"
+			}
+		},
+		property_overrides = {
+			dirt = {
+				0.1
+			}
+		}
+	},
+	fabric_wool_01_leather_05_wear_02 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/leather_04/leather_04_bca"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/leather_04/leather_04_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/leather_04/leather_04_orm"
+			}
+		},
+		property_overrides = {
+			dirt = {
+				0.3
+			}
+		}
+	},
+	fabric_wool_01_leather_05_wear_03 = {
+		texture_overrides = {
+			mat1_bc = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_bc"
+			},
+			mat1_nm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_nm"
+			},
+			mat1_orm = {
+				resource = "content/characters/tiling_materials/fabric_wool_01/wool_01_orm"
+			},
+			mat2_bc = {
+				resource = "content/characters/tiling_materials/leather_04/leather_04_bca"
+			},
+			mat2_nm = {
+				resource = "content/characters/tiling_materials/leather_04/leather_04_nm"
+			},
+			mat2_orm = {
+				resource = "content/characters/tiling_materials/leather_04/leather_04_orm"
+			}
+		},
+		property_overrides = {
+			dirt = {
+				0.6
 			}
 		}
 	},
