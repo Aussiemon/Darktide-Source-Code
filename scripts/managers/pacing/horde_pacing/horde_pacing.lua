@@ -4,6 +4,7 @@ local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Vo = require("scripts/utilities/vo")
 local HordePacing = class("HordePacing")
 local HORDE_TYPES = HordeSettings.horde_types
+local COORDINATED_HORDE_STRIKE_TYPES = HordeSettings.coordinated_horde_strike_types
 
 HordePacing.init = function (self, nav_world)
 	self._nav_world = nav_world
@@ -11,12 +12,17 @@ HordePacing.init = function (self, nav_world)
 	self._trickle_horde_travel_distance = math.huge
 	self._fx_system = Managers.state.extension:system("fx_system")
 	self._timer_modifier = 1
+	self._rate_modifier = 1
 	self._old_furthest_travel_distance = 0
 end
 
 HordePacing.on_gameplay_post_init = function (self, level, template)
 	local template_first_spawn_timer_modifer = math.random_range(template.first_spawn_timer_modifer[1], template.first_spawn_timer_modifer[2])
 	local first_spawn_timer_modifer = template_first_spawn_timer_modifer and self._timer_modifier * template_first_spawn_timer_modifer
+	self._coordinated_horde_strikes = {}
+
+	self:_init_coordinated_horde_strikes(template)
+
 	self._horde_timer = 0
 
 	self:_setup_next_horde(template, first_spawn_timer_modifer)
@@ -28,124 +34,91 @@ HordePacing.on_gameplay_post_init = function (self, level, template)
 	self._template = template
 	self._current_wave = 0
 	self._triggered_hordes = 0
-	self._total_num_long_hordes = 0
-
-	if template.long_horde_settings then
-		local num_long_hordes_allowed = template.long_horde_settings.total_num_long_hordes_allowed
-		self._total_num_long_hordes_allowed = math.random(num_long_hordes_allowed[1], num_long_hordes_allowed[2])
-	end
 end
 
 HordePacing.update = function (self, dt, t, side_id, target_side_id)
-	self:_update_horde_pacing(t, dt, side_id, target_side_id)
+	local hordes_allowed = self:_update_horde_allowance(t, dt, side_id, target_side_id)
+
+	if hordes_allowed then
+		self:_update_horde_pacing(t, dt, side_id, target_side_id)
+	end
+
 	self:_update_trickle_horde_pacing(t, dt, side_id, target_side_id)
 end
 
 local HORDE_FAILED_WAIT_TIME = 3
 local TRAVEL_DISTANCE_CHANGE_ALLOWANCE_MIN = 5
 local TRAVEL_DISTANCE_CHANGE_ALLOWANCE_MAX = 8
+local TIME_SINCE_FORWARD_TRAVEL_CHANGE_MOVE_TIMER_OVERRIDE = 30
 
-HordePacing._update_horde_pacing = function (self, t, dt, side_id, target_side_id)
-	local horde_manager = Managers.state.horde
-	local num_active_hordes = 0
-
-	for horde_type, _ in pairs(HORDE_TYPES) do
-		if horde_type ~= "trickle_horde" then
-			num_active_hordes = num_active_hordes + horde_manager:num_active_hordes(horde_type)
-		end
-	end
-
-	local template = self._template
-	local max_active_hordes = type(template.max_active_hordes) == "table" and template.max_active_hordes[self._current_horde_type] or template.max_active_hordes
-	local total_minions_spawned = Managers.state.minion_spawn:num_spawned_minions()
-	local minion_spawn_limit_reached = template.max_active_minions <= total_minions_spawned
+HordePacing._update_horde_allowance = function (self, t, dt, side_id, target_side_id)
 	local main_path_manager = Managers.state.main_path
 	local pacing_manager = Managers.state.pacing
+	local template = self._template
+	local total_minions_spawned = Managers.state.minion_spawn:num_spawned_minions()
+	local minion_spawn_limit_reached = template.max_active_minions <= total_minions_spawned
 	local furthest_travel_distance = main_path_manager:furthest_travel_distance(target_side_id)
 	local allowed_hordes_per_travel_distance = math.ceil(furthest_travel_distance / self._required_travel_distance) - self._triggered_hordes
-	local num_hordes_limit_reached = max_active_hordes <= num_active_hordes
-	local hordes_enabled = pacing_manager:spawn_type_enabled("hordes") and allowed_hordes_per_travel_distance > 0 and not num_hordes_limit_reached
+	local hordes_enabled = pacing_manager:spawn_type_enabled("hordes") and allowed_hordes_per_travel_distance > 0
 	local time_since_forward_travel_changed = main_path_manager:time_since_forward_travel_changed(target_side_id)
 	local travel_distance_allowed = time_since_forward_travel_changed < TRAVEL_DISTANCE_CHANGE_ALLOWANCE_MIN or TRAVEL_DISTANCE_CHANGE_ALLOWANCE_MAX < time_since_forward_travel_changed
 	local triggered_pre_stinger = self._triggered_pre_stinger
 	local current_wave = self._current_wave
 	local horde_started = triggered_pre_stinger or current_wave > 0
-	local hordes_allowed = not num_hordes_limit_reached and horde_started or not minion_spawn_limit_reached and hordes_enabled and travel_distance_allowed
+	local hordes_allowed = not minion_spawn_limit_reached and horde_started or not minion_spawn_limit_reached and hordes_enabled and travel_distance_allowed
 	local traveled_this_frame = furthest_travel_distance - self._old_furthest_travel_distance
 	self._old_furthest_travel_distance = furthest_travel_distance
+	self._time_since_forward_travel_changed = time_since_forward_travel_changed
+	self._traveled_this_frame = traveled_this_frame
+	self._horde_started = horde_started
 
-	if not hordes_allowed then
-		return
-	end
+	return hordes_allowed
+end
 
+HordePacing._update_horde_pacing = function (self, t, dt, side_id, target_side_id)
+	local template = self._template
+	local traveled_this_frame = self._traveled_this_frame
+	local pacing_manager = Managers.state.pacing
+	local time_since_forward_travel_changed = self._time_since_forward_travel_changed
 	local ramp_up_timer_modifier = pacing_manager:_get_ramp_up_frequency_modifier("hordes")
 	local has_monster_active = pacing_manager:num_aggroed_monsters() > 0
-	local has_travel_distance_spawn_mutator = not has_monster_active and (template.travel_distance_spawning or Managers.state.mutator:mutator("mutator_travel_distance_spawning_hordes"))
+	local move_timer_override = TIME_SINCE_FORWARD_TRAVEL_CHANGE_MOVE_TIMER_OVERRIDE <= time_since_forward_travel_changed
+	local has_travel_distance_spawn_mutator = not move_timer_override and not has_monster_active and (template.travel_distance_spawning or Managers.state.mutator:mutator("mutator_travel_distance_spawning_hordes"))
+	local horde_started = self._horde_started
 
 	if has_travel_distance_spawn_mutator and not horde_started then
-		self._horde_timer = self._horde_timer + traveled_this_frame * ramp_up_timer_modifier
+		self._horde_timer = self._horde_timer + traveled_this_frame * ramp_up_timer_modifier * self._rate_modifier
 	else
-		self._horde_timer = self._horde_timer + dt * ramp_up_timer_modifier
+		self._horde_timer = self._horde_timer + dt * ramp_up_timer_modifier * self._rate_modifier
 	end
+
+	local current_wave = self._current_wave
 
 	if self._next_horde_pre_stinger_at and self._next_horde_pre_stinger_at <= self._horde_timer then
-		self:_trigger_pre_stinger(template, target_side_id)
-
-		self._next_horde_pre_stinger_at = nil
-		self._triggered_pre_stinger = true
+		self:_start_horde(t, dt, side_id, target_side_id, template)
 	end
 
-	if self._next_horde_at <= self._horde_timer then
-		local success, horde_position, target_unit, group_id = self:_start_horde_wave(template, side_id, target_side_id)
+	if self._coordinated_horde_strike_active then
+		self:_update_coordinated_horde_strike(t, dt, side_id, target_side_id, template)
+	elseif self._next_horde_at <= self._horde_timer then
+		local horde_template = self._current_horde_template
+		local horde_type = self._current_horde_type
+		local compositions = self._current_compositions
+		local success, horde_position, target_unit, group_id = self:_spawn_horde_wave(template, side_id, target_side_id, current_wave, horde_type, horde_template, compositions)
 
 		if success then
 			self._current_wave = current_wave + 1
 
 			if self._current_wave == 1 then
-				self:_trigger_stinger(template, horde_position)
-
-				local aggro_nearby_roamers_zone_range = template.aggro_nearby_roamers_zone_range
-
-				if aggro_nearby_roamers_zone_range then
-					pacing_manager:aggro_roamer_zone_range(target_unit, aggro_nearby_roamers_zone_range)
-				end
-
-				local trigger_heard_dialogue = template.trigger_heard_dialogue
-
-				if trigger_heard_dialogue and success then
-					Vo.heard_horde(target_unit, self._current_horde_type)
-				end
-
-				local long_horde_settings = template.long_horde_settings
-				local long_horde_chance = long_horde_settings and long_horde_settings.chances[self._current_horde_type]
-
-				if long_horde_chance then
-					local total_num_long_hordes = self._total_num_long_hordes
-
-					if total_num_long_hordes < self._total_num_long_hordes_allowed and math.random() < long_horde_chance then
-						self._long_horde = true
-						self._total_num_long_hordes = self._total_num_long_hordes + 1
-					else
-						self._long_horde = false
-					end
-				end
+				self:_first_horde_wave_spawn(template, horde_position, target_unit)
 			end
 
-			local group_system = Managers.state.extension:system("group_system")
-			local group = group_system:group_from_id(group_id)
-			local horde_group_sound_event_names = template.horde_group_sound_events[self._current_compositions.name]
-			local start_event = horde_group_sound_event_names.start
-			local stop_event = horde_group_sound_event_names.stop
-			group.group_start_sound_event = start_event
-			group.group_stop_sound_event = stop_event
-			local num_waves = nil
-
-			if self._long_horde then
-				local long_horde_waves = template.long_horde_settings.num_waves[self._current_horde_type]
-				num_waves = math.random(long_horde_waves[1], long_horde_waves[2])
-			else
-				num_waves = template.num_waves[self._current_horde_type]
+			if group_id then
+				self:_set_horde_wave_group_sounds(template, group_id)
 			end
+
+			local num_waves = self._override_num_waves
+			num_waves = num_waves or template.num_waves[self._current_horde_type]
 
 			if self._current_wave < num_waves then
 				self._next_horde_at = template.time_between_waves
@@ -156,6 +129,7 @@ HordePacing._update_horde_pacing = function (self, t, dt, side_id, target_side_i
 
 				self._triggered_pre_stinger = nil
 				self._triggered_hordes = self._triggered_hordes + 1
+				self._override_num_waves = nil
 			end
 		else
 			self._next_horde_at = HORDE_FAILED_WAIT_TIME
@@ -165,12 +139,305 @@ HordePacing._update_horde_pacing = function (self, t, dt, side_id, target_side_i
 	end
 end
 
-HordePacing._start_horde_wave = function (self, template, side_id, target_side_id)
-	local current_wave = self._current_wave
-	local horde_template = self._current_horde_template
-	local horde_type = self._current_horde_type
-	local compositions = Managers.state.difficulty:get_table_entry_by_challenge(self._current_compositions)
-	local success, horde_position, target_unit, group_id = self:_spawn_horde(horde_type, horde_template, compositions, side_id, target_side_id)
+HordePacing._init_coordinated_horde_strikes = function (self, template)
+	local coordinated_horde_strike_settings = template.coordinated_horde_strike_settings
+
+	if not coordinated_horde_strike_settings then
+		return
+	end
+
+	self._coordinated_horde_strikes_total_num_allowed = {}
+	self._coordinated_horde_strike_eval_prio = {}
+
+	for setting_name, setting in pairs(coordinated_horde_strike_settings) do
+		local total_num_allowed = setting.total_num_allowed
+
+		if total_num_allowed then
+			self._coordinated_horde_strikes_total_num_allowed[setting_name] = math.random(total_num_allowed[1], total_num_allowed[2])
+		end
+	end
+end
+
+local TEMP_SETTINGS = {}
+
+HordePacing._evaluate_coordinated_horde_strike = function (self, target_side_id)
+	local template = self._template
+	local coordinated_horde_strike_settings = template.coordinated_horde_strike_settings
+
+	if not coordinated_horde_strike_settings then
+		return
+	end
+
+	table.clear(TEMP_SETTINGS)
+
+	local chosen_setting = nil
+
+	for setting_name, setting in pairs(coordinated_horde_strike_settings) do
+		repeat
+			local num_allowed = self._coordinated_horde_strikes_total_num_allowed[setting_name]
+
+			if num_allowed <= 0 then
+				Log.info("HordePacing", "Coordinated horde condition not allowed")
+			else
+				local conditions = setting.conditions
+				local passed_conditions = true
+
+				for j = 1, #conditions do
+					passed_conditions = conditions[j](target_side_id)
+
+					if not passed_conditions then
+						Log.info("HordePacing", "Coordinated horde condition %s failed..", setting.name)
+
+						break
+					end
+				end
+
+				if not passed_conditions then
+					break
+				end
+
+				TEMP_SETTINGS[#TEMP_SETTINGS + 1] = setting
+			end
+		until true
+	end
+
+	table.shuffle(TEMP_SETTINGS)
+
+	for i = 1, #TEMP_SETTINGS do
+		local setting = TEMP_SETTINGS[i]
+		local high_chance_conditions = setting.high_chance_conditions
+		local high_chance = nil
+
+		if high_chance_conditions then
+			local passed_high_chance_conditions = true
+
+			for j = 1, #high_chance_conditions do
+				passed_high_chance_conditions = high_chance_conditions[j](target_side_id)
+
+				if not passed_high_chance_conditions then
+					break
+				end
+			end
+
+			if passed_high_chance_conditions then
+				high_chance = setting.high_chance
+			end
+		end
+
+		local chance = high_chance or setting.chance
+
+		if math.random() < chance then
+			chosen_setting = setting
+
+			break
+		end
+	end
+
+	if not chosen_setting then
+		return
+	end
+
+	Log.info("HordePacing", "Coordinated horde strike! %s", chosen_setting.name)
+
+	return chosen_setting
+end
+
+HordePacing._start_coordinated_horde_strike = function (self, setting, target_side_id)
+	local horde_setup = setting.horde_setup
+
+	for i = 1, #horde_setup do
+		local setup = horde_setup[i]
+		local horde_type = setup.horde_type
+		local num_waves = setup.num_waves
+
+		if type(num_waves) == "table" then
+			num_waves = math.random(num_waves[1], num_waves[2])
+		end
+
+		local time_between_waves = setup.time_between_waves
+
+		if type(time_between_waves) == "table" then
+			time_between_waves = math.random(time_between_waves[1], time_between_waves[2])
+		end
+
+		local composition = setup.composition
+		local faction_composition = setup.faction_composition
+
+		if faction_composition then
+			local current_faction = Managers.state.pacing:current_faction()
+			composition = faction_composition[current_faction]
+		end
+
+		local time_to_next_wave = setup.time_to_first_wave
+
+		if type(time_to_next_wave) == "table" then
+			time_to_next_wave = math.random(time_to_next_wave[1], time_to_next_wave[2])
+		end
+
+		local prefered_direction = setup.prefered_direction
+		local stinger = setup.stinger
+		local random_targets = setup.random_targets
+		local two_waves_ahead_and_behind = setup.two_waves_ahead_and_behind
+
+		if two_waves_ahead_and_behind then
+			prefered_direction = "ahead"
+			self._coordinated_horde_strikes[#self._coordinated_horde_strikes + 1] = {
+				current_wave = 1,
+				time_between_waves = 1,
+				horde_type = horde_type,
+				num_waves = num_waves,
+				composition = composition,
+				time_to_next_wave = time_to_next_wave,
+				prefered_direction = prefered_direction,
+				stinger = stinger,
+				random_targets = random_targets,
+				two_waves_ahead_and_behind = two_waves_ahead_and_behind,
+				two_waves_time_between_waves = time_between_waves
+			}
+		else
+			self._coordinated_horde_strikes[#self._coordinated_horde_strikes + 1] = {
+				current_wave = 1,
+				horde_type = horde_type,
+				num_waves = num_waves,
+				composition = composition,
+				time_between_waves = time_between_waves,
+				time_to_next_wave = time_to_next_wave,
+				prefered_direction = prefered_direction,
+				stinger = stinger,
+				random_targets = random_targets
+			}
+		end
+
+		local trigger_special_coordinated_attack_on_first_wave = setup.trigger_special_coordinated_attack_on_first_wave
+
+		if trigger_special_coordinated_attack_on_first_wave then
+			local trigger_special_coordinated_attack_num_breeds = setup.trigger_special_coordinated_attack_num_breeds
+			local trigger_special_coordinated_attack_timer_offset = setup.trigger_special_coordinated_attack_timer_offset
+
+			Managers.state.pacing:force_coordinated_special_strike(time_to_next_wave + trigger_special_coordinated_attack_timer_offset, trigger_special_coordinated_attack_num_breeds)
+		end
+	end
+
+	self._coordinated_horde_strikes_total_num_allowed[setting.name] = self._coordinated_horde_strikes_total_num_allowed[setting.name] - 1
+	self._coordinated_horde_strike_active = true
+	self._override_max_active_hordes = setting.max_active_hordes
+end
+
+HordePacing._update_coordinated_horde_strike = function (self, t, dt, side_id, target_side_id, template)
+	local side_system = Managers.state.extension:system("side_system")
+	local side = side_system:get_side(target_side_id)
+	local target_units = side.valid_player_units
+	local num_target_units = #target_units
+	local coordinated_horde_strikes = self._coordinated_horde_strikes
+
+	for i = #coordinated_horde_strikes, 1, -1 do
+		repeat
+			local strike = coordinated_horde_strikes[i]
+
+			if strike.time_to_next_wave > 0 then
+				strike.time_to_next_wave = strike.time_to_next_wave - dt
+			else
+				local current_wave = strike.current_wave
+				local horde_type = strike.horde_type
+				local horde_template = HordeTemplates[horde_type]
+				local composition = strike.composition
+				local prefered_direction = strike.prefered_direction
+				local optional_target_unit = nil
+				local random_targets = strike.random_targets
+
+				if random_targets then
+					optional_target_unit = target_units[math.random(1, num_target_units)]
+				end
+
+				local success, horde_position, target_unit, group_id, spawned_direction = self:_spawn_horde_wave(template, side_id, target_side_id, current_wave, horde_type, horde_template, composition, nil, nil, nil, nil, prefered_direction, optional_target_unit)
+
+				if success then
+					strike.current_wave = strike.current_wave + 1
+
+					if strike.stinger and current_wave == 1 then
+						local stinger = strike.stinger
+
+						self:_first_horde_wave_spawn(template, horde_position, target_unit, stinger, horde_type)
+					end
+
+					if group_id then
+						self:_set_horde_wave_group_sounds(template, group_id)
+					end
+
+					local num_waves = strike.num_waves
+
+					if strike.current_wave < num_waves then
+						local two_waves_ahead_and_behind = strike.two_waves_ahead_and_behind
+
+						if two_waves_ahead_and_behind then
+							if current_wave == 2 and spawned_direction and spawned_direction == strike.prefered_direction then
+								self:_trigger_stinger(template, horde_position)
+							end
+
+							if strike.prefered_direction == "ahead" then
+								prefered_direction = "behind"
+							else
+								prefered_direction = "ahead"
+							end
+
+							strike.prefered_direction = prefered_direction
+							strike.time_between_waves = current_wave % 2 == 0 and strike.two_waves_time_between_waves or 1
+						end
+
+						strike.time_to_next_wave = strike.time_between_waves
+
+						break
+					end
+
+					strike.current_wave = 0
+
+					table.remove(self._coordinated_horde_strikes, i)
+
+					if #self._coordinated_horde_strikes == 0 then
+						self:_setup_next_horde(template)
+
+						self._triggered_pre_stinger = nil
+						self._triggered_hordes = self._triggered_hordes + 1
+						self._override_num_waves = nil
+						self._coordinated_horde_strike_active = false
+						self._override_max_active_hordes = nil
+					end
+
+					break
+				else
+					strike.time_to_next_wave = HORDE_FAILED_WAIT_TIME
+				end
+			end
+		until true
+	end
+
+	self._horde_timer = 0
+end
+
+HordePacing._start_horde = function (self, t, dt, side_id, target_side_id, template)
+	local coordinated_horde_strike_setting = nil
+	coordinated_horde_strike_setting = self:_evaluate_coordinated_horde_strike(target_side_id)
+
+	if coordinated_horde_strike_setting then
+		self:_start_coordinated_horde_strike(coordinated_horde_strike_setting, target_side_id)
+
+		local pre_stinger = coordinated_horde_strike_setting.pre_stinger
+
+		self:_trigger_pre_stinger(template, target_side_id, pre_stinger)
+
+		self._next_horde_pre_stinger_at = nil
+		self._triggered_pre_stinger = true
+	else
+		self:_trigger_pre_stinger(template, target_side_id)
+
+		self._next_horde_pre_stinger_at = nil
+		self._triggered_pre_stinger = true
+	end
+end
+
+HordePacing._spawn_horde_wave = function (self, template, side_id, target_side_id, current_wave, horde_type, horde_template, compositions, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit)
+	local challenge_scaled_compositions = Managers.state.difficulty:get_table_entry_by_challenge(compositions)
+	local success, horde_position, target_unit, group_id, spawned_direction = self:_spawn_horde(horde_type, horde_template, challenge_scaled_compositions, side_id, target_side_id, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit)
 
 	if success then
 		Managers.server_metrics:add_annotation("start_horde_wave", {
@@ -180,7 +447,19 @@ HordePacing._start_horde_wave = function (self, template, side_id, target_side_i
 		})
 	end
 
-	return success, horde_position, target_unit, group_id
+	return success, horde_position, target_unit, group_id, spawned_direction
+end
+
+HordePacing._spawn_horde = function (self, horde_type, horde_template, composition, side_id, target_side_id, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit)
+	local main_path_available = Managers.state.main_path:is_main_path_available()
+
+	if horde_template.requires_main_path and main_path_available or not horde_template.requires_main_path then
+		local horde_manager = Managers.state.horde
+		local towards_combat_vector = true
+		local success, horde_position, target_unit, group_id, spawned_direction = horde_manager:horde(horde_type, horde_template.name, side_id, target_side_id, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit)
+
+		return success, horde_position, target_unit, group_id, spawned_direction
+	end
 end
 
 HordePacing._setup_next_horde = function (self, template, optional_timer_modifier)
@@ -224,6 +503,10 @@ HordePacing.add_trickle_horde = function (self, template)
 	self._trickle_hordes[#self._trickle_hordes + 1] = trickle_horde
 end
 
+HordePacing.set_rate_modifier = function (self, modifier)
+	self._rate_modifier = modifier
+end
+
 HordePacing.set_timer_modifier = function (self, modifier)
 	self._timer_modifier = modifier
 
@@ -257,8 +540,8 @@ HordePacing._trigger_pre_stinger = function (self, template, side_id, optional_s
 	self._fx_system:trigger_wwise_event(stinger_sound_event, nil, nil, nil, nil, nil, optional_ambisonics)
 end
 
-HordePacing._trigger_stinger = function (self, template, position)
-	local stinger_sound_event = template.stinger_sound_events[self._current_compositions.name]
+HordePacing._trigger_stinger = function (self, template, position, optional_stinger_override)
+	local stinger_sound_event = optional_stinger_override or template.stinger_sound_events[self._current_compositions.name]
 
 	if not stinger_sound_event then
 		return
@@ -424,18 +707,6 @@ HordePacing._update_trickle_horde_pacing = function (self, t, dt, side_id, targe
 	end
 end
 
-HordePacing._spawn_horde = function (self, horde_type, horde_template, composition, side_id, target_side_id, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier)
-	local main_path_available = Managers.state.main_path:is_main_path_available()
-
-	if horde_template.requires_main_path and main_path_available or not horde_template.requires_main_path then
-		local horde_manager = Managers.state.horde
-		local towards_combat_vector = true
-		local success, horde_position, target_unit, group_id = horde_manager:horde(horde_type, horde_template.name, side_id, target_side_id, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier)
-
-		return success, horde_position, target_unit, group_id
-	end
-end
-
 HordePacing._spawn_trickle_horde_wave = function (self, side_id, target_side_id, optional_main_path_offset, optional_num_tries, template, trickle_horde, t)
 	local trickle_horde_template = HordeTemplates.trickle_horde
 	local trickle_horde_compositions = self._override_trickle_horde_compositions or template.horde_compositions.trickle_horde
@@ -475,26 +746,6 @@ HordePacing._spawn_trickle_horde_wave = function (self, side_id, target_side_id,
 				Managers.state.pacing:pause_spawn_type(spawn_type, true, "trickle_horde", duration)
 			end
 		end
-
-		local stimmed_config = self._stimmed_config
-
-		if stimmed_config then
-			local chance_to_stim = stimmed_config.chance_to_stim
-
-			if math.random() < chance_to_stim then
-				local stim_buff_name = stimmed_config.buff_name
-				local members = group.members
-
-				for j = 1, #members do
-					local unit = members[j]
-					local buff_extension = ScriptUnit.extension(unit, "buff_system")
-
-					if not buff_extension:has_keyword("stimmed") then
-						buff_extension:add_internally_controlled_buff(stim_buff_name, t)
-					end
-				end
-			end
-		end
 	end
 
 	trickle_horde.stinger_duration = nil
@@ -510,8 +761,30 @@ HordePacing._can_spawn = function (self, horde_type, horde_template, composition
 	return can_spawn
 end
 
-HordePacing.set_stimmed_config = function (self, stimmed_config)
-	self._stimmed_config = stimmed_config
+HordePacing._set_horde_wave_group_sounds = function (self, template, group_id)
+	local group_system = Managers.state.extension:system("group_system")
+	local group = group_system:group_from_id(group_id)
+	local horde_group_sound_event_names = template.horde_group_sound_events[self._current_compositions.name]
+	local start_event = horde_group_sound_event_names.start
+	local stop_event = horde_group_sound_event_names.stop
+	group.group_start_sound_event = start_event
+	group.group_stop_sound_event = stop_event
+end
+
+HordePacing._first_horde_wave_spawn = function (self, template, horde_position, target_unit, optional_stinger_override, optional_horde_type_override)
+	self:_trigger_stinger(template, horde_position, optional_stinger_override)
+
+	local aggro_nearby_roamers_zone_range = template.aggro_nearby_roamers_zone_range
+
+	if aggro_nearby_roamers_zone_range then
+		Managers.state.pacing:aggro_roamer_zone_range(target_unit, aggro_nearby_roamers_zone_range)
+	end
+
+	local trigger_heard_dialogue = template.trigger_heard_dialogue
+
+	if trigger_heard_dialogue and target_unit then
+		Vo.heard_horde(target_unit, optional_horde_type_override or self._current_horde_type)
+	end
 end
 
 return HordePacing

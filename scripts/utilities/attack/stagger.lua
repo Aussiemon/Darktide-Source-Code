@@ -150,8 +150,9 @@ end
 
 local RUNNING_STAGGER_DEFAULT_MIN_DISTANCE = 5
 local CONTROLLED_STAGGER_IGNORED_STAGGER_TYPES = {
+	explosion = true,
 	sticky = true,
-	explosion = true
+	electrocuted = true
 }
 
 function _get_action_data_overrides(unit, blackboard, breed, damage_profile, attacking_unit)
@@ -289,6 +290,11 @@ function _apply_stagger(unit, attacker_unit, breed, stagger_type, attack_directi
 		duration = duration * stagger_duration_multiplier + stagger_duration_modifier
 		local stagger_immune_times = breed.stagger_immune_times
 		local immune_time = stagger_immune_times[stagger_type]
+
+		if damage_profile.no_immune_time then
+			immune_time = nil
+		end
+
 		stagger_component.immune_time = t + (immune_time or 0)
 		stagger_component.type = stagger_type
 

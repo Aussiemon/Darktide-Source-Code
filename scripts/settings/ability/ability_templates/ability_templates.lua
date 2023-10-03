@@ -18,16 +18,15 @@ end
 
 local path_prefix = "scripts/settings/ability/ability_templates/%s"
 local template_names = {
-	"base_shout",
-	"base_combat_attack",
-	"base_stance",
-	"dash",
-	"melee_stance",
 	"ogryn_charge",
-	"psyker_stance",
+	"ogryn_gunlugger_stance",
+	"ogryn_taunt_shout",
+	"psyker_overcharge_stance",
 	"psyker_shout",
+	"psyker_stance",
 	"veteran_combat_ability",
-	"targeted_dash"
+	"zealot_dash",
+	"zealot_invisibility"
 }
 
 _require_ability_templates(path_prefix, template_names)

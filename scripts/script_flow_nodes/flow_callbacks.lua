@@ -121,9 +121,10 @@ end
 FlowCallbacks.call_script_component = function (params)
 	local guid = params.guid
 	local unit = params.unit
+	local value = params.value
 	local function_name = params.event
 
-	Managers.state.extension:system("component_system"):flow_call_component(unit, guid, function_name)
+	Managers.state.extension:system("component_system"):flow_call_component(unit, guid, function_name, value)
 end
 
 FlowCallbacks.get_component_data = function (params)
@@ -317,7 +318,7 @@ FlowCallbacks.minion_fx = function (params)
 				local is_playing_vo = dialogue_extension:is_currently_playing_dialogue()
 
 				if is_playing_vo then
-					local suppress_vo = params.suppress_vo
+					local suppress_vo = params.sound_suppress_vo
 
 					if suppress_vo then
 						dialogue_extension:stop_currently_playing_vo()
@@ -1593,6 +1594,10 @@ FlowCallbacks.stop_unit_vo = function (params)
 	local unit = params.source
 
 	Vo.stop_currently_playing_vo(unit)
+end
+
+FlowCallbacks.stop_all_vo = function (params)
+	Vo.stop_all_currently_playing_vo()
 end
 
 FlowCallbacks.is_currently_playing_dialogue = function (params)

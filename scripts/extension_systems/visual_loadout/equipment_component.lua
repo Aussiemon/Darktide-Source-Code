@@ -157,17 +157,32 @@ EquipmentComponent._spawn_item_units = function (self, slot, unit_3p, unit_1p, a
 	if _should_spawn_3p(slot) then
 		self:_fill_attach_settings_3p(attach_settings, slot)
 
-		local item_unit_3p, attachment_units_3p = nil
+		local item_unit_3p, attachment_units_3p, attachment_name_to_unit_3p, _ = nil
 		local item_data = slot.item
 
 		if skip_attachments then
 			item_unit_3p = VisualLoadoutCustomization.spawn_base_unit(item_data, attach_settings, unit_3p, optional_mission_template)
 		else
-			item_unit_3p, attachment_units_3p = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, unit_3p, nil, optional_mission_template)
+			item_unit_3p, attachment_units_3p, _, attachment_name_to_unit_3p = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, unit_3p, true, nil, optional_mission_template)
 		end
 
 		slot.unit_3p = item_unit_3p
 		slot.attachments_3p = attachment_units_3p
+
+		if attachment_name_to_unit_3p then
+			local keys = {}
+
+			table.keys(attachment_name_to_unit_3p, keys)
+
+			for ii = 1, #keys do
+				local key = keys[ii]
+				local unit = attachment_name_to_unit_3p[key]
+				attachment_name_to_unit_3p[unit] = key
+			end
+
+			slot.attachments_name_lookup_3p = attachment_name_to_unit_3p
+		end
+
 		local dynamic_id = Unit.find_actor(item_unit_3p, "dynamic")
 
 		if dynamic_id then
@@ -198,17 +213,32 @@ EquipmentComponent._spawn_item_units = function (self, slot, unit_3p, unit_1p, a
 	if _should_spawn_1p(unit_1p, item, slot) then
 		self:_fill_attach_settings_1p(attach_settings, slot.breed_name)
 
-		local item_unit_1p, attachment_units_1p = nil
+		local item_unit_1p, attachment_units_1p, attachment_name_to_unit_1p, _ = nil
 		local item_data = slot.item
 
 		if skip_attachments then
 			item_unit_1p = VisualLoadoutCustomization.spawn_base_unit(item_data, attach_settings, unit_1p, optional_mission_template)
 		else
-			item_unit_1p, attachment_units_1p = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, unit_1p, nil, optional_mission_template)
+			item_unit_1p, attachment_units_1p, _, attachment_name_to_unit_1p = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, unit_1p, true, nil, optional_mission_template)
 		end
 
 		slot.unit_1p = item_unit_1p
 		slot.attachments_1p = attachment_units_1p
+
+		if attachment_name_to_unit_1p then
+			local keys = {}
+
+			table.keys(attachment_name_to_unit_1p, keys)
+
+			for ii = 1, #keys do
+				local key = keys[ii]
+				local unit = attachment_name_to_unit_1p[key]
+				attachment_name_to_unit_1p[unit] = key
+			end
+
+			slot.attachments_name_lookup_1p = attachment_name_to_unit_1p
+		end
+
 		local dynamic_id = Unit.find_actor(item_unit_1p, "dynamic")
 
 		if dynamic_id then
@@ -245,7 +275,7 @@ EquipmentComponent._spawn_attachments = function (self, slot, optional_mission_t
 		local weapon_skin_item = item.slot_weapon_skin
 		local skin_data = weapon_skin_item and weapon_skin_item ~= "" and rawget(attach_settings.item_definitions, weapon_skin_item)
 		local skin_overrides = VisualLoadoutCustomization.generate_attachment_overrides_lookup(item, skin_data)
-		local attachment_units_3p = VisualLoadoutCustomization.spawn_item_attachments(item, skin_overrides, attach_settings, unit_3p, nil, optional_mission_template)
+		local attachment_units_3p, attachment_name_to_unit_3p = VisualLoadoutCustomization.spawn_item_attachments(item, skin_overrides, attach_settings, unit_3p, true, nil, optional_mission_template)
 		local parent_unit = slot.parent_unit_3p
 
 		VisualLoadoutCustomization.apply_material_overrides(item, unit_3p, parent_unit, attach_settings)
@@ -265,6 +295,20 @@ EquipmentComponent._spawn_attachments = function (self, slot, optional_mission_t
 		end
 
 		slot.attachments_3p = attachment_units_3p
+
+		if attachment_name_to_unit_3p then
+			local keys = {}
+
+			table.keys(attachment_name_to_unit_3p, keys)
+
+			for ii = 1, #keys do
+				local key = keys[ii]
+				local unit = attachment_name_to_unit_3p[key]
+				attachment_name_to_unit_3p[unit] = key
+			end
+
+			slot.attachments_name_lookup_3p = attachment_name_to_unit_3p
+		end
 	end
 
 	local parent_unit_1p = slot.parent_unit_1p
@@ -278,7 +322,7 @@ EquipmentComponent._spawn_attachments = function (self, slot, optional_mission_t
 		local weapon_skin_item = item.slot_weapon_skin
 		local skin_data = weapon_skin_item and weapon_skin_item ~= "" and rawget(attach_settings.item_definitions, weapon_skin_item)
 		local skin_overrides = VisualLoadoutCustomization.generate_attachment_overrides_lookup(item, skin_data)
-		local attachment_units_1p = VisualLoadoutCustomization.spawn_item_attachments(item, skin_overrides, attach_settings, unit_1p, nil, optional_mission_template)
+		local attachment_units_1p, attachment_name_to_unit_1p = VisualLoadoutCustomization.spawn_item_attachments(item, skin_overrides, attach_settings, unit_1p, true, nil, optional_mission_template)
 
 		VisualLoadoutCustomization.apply_material_overrides(item, unit_1p, parent_unit_1p, attach_settings)
 
@@ -298,6 +342,20 @@ EquipmentComponent._spawn_attachments = function (self, slot, optional_mission_t
 		end
 
 		slot.attachments_1p = attachment_units_1p
+
+		if attachment_name_to_unit_1p then
+			local keys = {}
+
+			table.keys(attachment_name_to_unit_1p, keys)
+
+			for ii = 1, #keys do
+				local key = keys[ii]
+				local unit = attachment_name_to_unit_1p[key]
+				attachment_name_to_unit_1p[unit] = key
+			end
+
+			slot.attachments_name_lookup_1p = attachment_name_to_unit_1p
+		end
 	end
 
 	slot.attachment_spawn_status = ATTACHMENT_SPAWN_STATUS.fully_spawned
@@ -697,6 +755,23 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 
 				VisualLoadoutCustomization.apply_material_override(slot_body_face_unit, unit_3p, false, mask_hair, false)
 			end
+
+			if item and item.mask_hair_override ~= nil then
+				local mask_hair_override = item.mask_hair_override
+
+				for i = 1, #mask_hair_override do
+					local mask_hair_item = item.mask_hair_override[i].HairItem
+					local current_hair_item = equipment.slot_body_hair.item
+
+					if current_hair_item and mask_hair_item == current_hair_item.name then
+						local mask_hair = item.mask_hair_override[i].HairMaskOverride
+
+						if mask_hair and item.mask_hair_override ~= "" then
+							VisualLoadoutCustomization.apply_material_override(slot_body_face_unit, unit_3p, false, mask_hair, false)
+						end
+					end
+				end
+			end
 		end
 
 		if item and item.stabilize_neck ~= nil and Unit.has_animation_event(unit_3p, "lock_head") and Unit.has_animation_event(unit_3p, "unlock_head") then
@@ -759,22 +834,43 @@ EquipmentComponent.update_item_visibility = function (equipment, wielded_slot, u
 					VisualLoadoutCustomization.apply_material_override(arms_unit, unit_3p, false, mask_arms, false)
 				end
 			end
+		else
+			local torso_unit = equipment.slot_body_torso.unit_3p
+			local arms_unit = equipment.slot_body_arms.unit_3p
+			local default_mask = "mask_default"
+
+			if torso_unit then
+				VisualLoadoutCustomization.apply_material_override(torso_unit, unit_3p, false, default_mask, false)
+			end
+
+			if arms_unit then
+				VisualLoadoutCustomization.apply_material_override(arms_unit, unit_3p, false, default_mask, false)
+			end
 		end
 
 		local slot_gear_lowerbody = equipment.slot_gear_lowerbody
 		local gear_lowerbody_item = slot_gear_lowerbody.item
 
-		if gear_lowerbody_item and slot_names_to_hide.slot_body_legs == nil then
+		if gear_lowerbody_item then
+			if slot_names_to_hide.slot_body_legs == nil then
+				local legs_unit = equipment.slot_body_legs.unit_3p
+
+				if legs_unit then
+					local mask_legs = gear_lowerbody_item.mask_legs
+
+					if mask_legs == "" or mask_legs == nil then
+						mask_legs = "mask_default"
+					end
+
+					VisualLoadoutCustomization.apply_material_override(legs_unit, unit_3p, false, mask_legs, false)
+				end
+			end
+		else
 			local legs_unit = equipment.slot_body_legs.unit_3p
+			local default_mask = "mask_default"
 
 			if legs_unit then
-				local mask_legs = gear_lowerbody_item.mask_legs
-
-				if mask_legs == "" or mask_legs == nil then
-					mask_legs = "mask_default"
-				end
-
-				VisualLoadoutCustomization.apply_material_override(legs_unit, unit_3p, false, mask_legs, false)
+				VisualLoadoutCustomization.apply_material_override(legs_unit, unit_3p, false, default_mask, false)
 			end
 		end
 	end

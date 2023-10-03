@@ -38,6 +38,7 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 	local seed = extension_init_data.buff_seed
 	self._portable_random = PortableRandom:new(seed)
 	self._local_portable_random = PortableRandom:new(seed)
+	self._buff_system = Managers.state.extension:system("buff_system")
 	self._buff_context = {
 		world = extension_init_context.world,
 		physics_world = extension_init_context.physics_world,
@@ -47,7 +48,8 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 		buff_extension = self,
 		is_local_unit = extension_init_data.is_local_unit,
 		is_server = is_server,
-		breed = extension_init_data.breed
+		breed = extension_init_data.breed,
+		fixed_time_step = Managers.state.game_session.fixed_time_step
 	}
 	self._index = 0
 	self._buffs = {}
@@ -100,6 +102,8 @@ BuffExtensionBase.init = function (self, extension_init_context, unit, extension
 		self._rpcs_registered = true
 		self._buff_index_map = {}
 	end
+
+	self._fixed_time_step = Managers.state.game_session.fixed_time_step
 end
 
 BuffExtensionBase.destroy = function (self)
@@ -609,6 +613,16 @@ BuffExtensionBase._on_add_buff_stack = function (self, buff_instance, previous_s
 			self:_check_stack_node_effects(stack_node_effects, current_stack_count, previous_stack_count)
 		end
 	end
+
+	local on_stack_added_func = template.on_stack_added_func
+
+	if on_stack_added_func then
+		local buff_context = buff_instance:template_context()
+		local buff_data = buff_instance:template_data()
+		local current_stack_count = buff_instance:stack_count()
+
+		on_stack_added_func(buff_data, buff_context, current_stack_count)
+	end
 end
 
 BuffExtensionBase.has_buff_using_buff_template = function (self, buff_template_name)
@@ -619,6 +633,23 @@ BuffExtensionBase.has_buff_using_buff_template = function (self, buff_template_n
 		local instance_template = buff_instance:template()
 
 		if buff_template_name == instance_template.name then
+			return true
+		end
+	end
+
+	return false
+end
+
+BuffExtensionBase.has_buff_using_buff_template_with_owner = function (self, buff_template_name, owner_unit)
+	local buffs = self._buffs
+
+	for i = 1, #buffs do
+		local buff_instance = buffs[i]
+		local instance_template = buff_instance:template()
+		local buff_context = buff_instance:template_context()
+		local buff_owner_unit = buff_context.owner_unit
+
+		if buff_template_name == instance_template.name and buff_owner_unit == owner_unit then
 			return true
 		end
 	end
@@ -955,65 +986,67 @@ BuffExtensionBase._stop_node_effects = function (self, node_effects)
 	local world = buff_context.world
 
 	for i = 1, #node_effects do
-		local effect = node_effects[i]
-		local node_name = effect.node_name
+		repeat
+			local effect = node_effects[i]
+			local node_name = effect.node_name
 
-		if not Unit_has_node(self._unit, node_name) then
-			break
-		end
-
-		local node_index = Unit_node(self._unit, node_name)
-		local sfx = effect.sfx
-
-		if sfx then
-			local active_node_sfx = active_node_sfx_effects[node_index]
-			local looping_wwise_start_event = sfx.looping_wwise_start_event
-			local active_wwise_events = active_node_sfx.active_wwise_events
-			local new_ref_count = active_wwise_events[looping_wwise_start_event] - 1
-			active_wwise_events[looping_wwise_start_event] = new_ref_count
-			local wwise_source_id = active_node_sfx.wwise_source_id
-
-			if new_ref_count < 1 then
-				local looping_wwise_stop_event = sfx.looping_wwise_stop_event
-
-				WwiseWorld.trigger_resource_event(wwise_world, looping_wwise_stop_event, wwise_source_id)
-
-				active_wwise_events[looping_wwise_start_event] = nil
+			if not Unit_has_node(self._unit, node_name) then
+				break
 			end
 
-			if next(active_wwise_events) == nil then
-				WwiseWorld.destroy_manual_source(wwise_world, wwise_source_id)
+			local node_index = Unit_node(self._unit, node_name)
+			local sfx = effect.sfx
 
-				active_node_sfx_effects[node_index] = nil
-			end
-		end
+			if sfx then
+				local active_node_sfx = active_node_sfx_effects[node_index]
+				local looping_wwise_start_event = sfx.looping_wwise_start_event
+				local active_wwise_events = active_node_sfx.active_wwise_events
+				local new_ref_count = active_wwise_events[looping_wwise_start_event] - 1
+				active_wwise_events[looping_wwise_start_event] = new_ref_count
+				local wwise_source_id = active_node_sfx.wwise_source_id
 
-		local vfx = effect.vfx
+				if new_ref_count < 1 then
+					local looping_wwise_stop_event = sfx.looping_wwise_stop_event
 
-		if vfx then
-			local active_node_vfx = active_node_vfx_effects[node_index]
-			local particle_effect = vfx.particle_effect
-			local active_particle_effect = active_node_vfx[particle_effect]
-			local new_ref_count = (active_particle_effect.ref_count or 0) - 1
-			active_particle_effect.ref_count = new_ref_count
+					WwiseWorld.trigger_resource_event(wwise_world, looping_wwise_stop_event, wwise_source_id)
 
-			if new_ref_count < 1 then
-				local particle_id = active_particle_effect.particle_id
-				local stop_type = active_particle_effect.stop_type
-
-				if stop_type == "stop" then
-					World.stop_spawning_particles(world, particle_id)
-				else
-					World.destroy_particles(world, particle_id)
+					active_wwise_events[looping_wwise_start_event] = nil
 				end
 
-				active_node_vfx[particle_effect] = nil
+				if next(active_wwise_events) == nil then
+					WwiseWorld.destroy_manual_source(wwise_world, wwise_source_id)
+
+					active_node_sfx_effects[node_index] = nil
+				end
 			end
 
-			if next(active_node_vfx) == nil then
-				active_node_vfx_effects[node_index] = nil
+			local vfx = effect.vfx
+
+			if vfx then
+				local active_node_vfx = active_node_vfx_effects[node_index]
+				local particle_effect = vfx.particle_effect
+				local active_particle_effect = active_node_vfx[particle_effect]
+				local new_ref_count = (active_particle_effect.ref_count or 0) - 1
+				active_particle_effect.ref_count = new_ref_count
+
+				if new_ref_count < 1 then
+					local particle_id = active_particle_effect.particle_id
+					local stop_type = active_particle_effect.stop_type
+
+					if stop_type == "stop" then
+						World.stop_spawning_particles(world, particle_id)
+					else
+						World.destroy_particles(world, particle_id)
+					end
+
+					active_node_vfx[particle_effect] = nil
+				end
+
+				if next(active_node_vfx) == nil then
+					active_node_vfx_effects[node_index] = nil
+				end
 			end
-		end
+		until true
 	end
 end
 
@@ -1100,7 +1133,7 @@ end
 
 BuffExtensionBase.rpc_buff_proc_set_active_time = function (self, channel_id, game_object_id, server_index, activation_frame)
 	local index = self._buff_index_map[server_index]
-	local activation_time = activation_frame * GameParameters.fixed_time_step
+	local activation_time = activation_frame * self._fixed_time_step
 
 	self:_set_proc_active_start_time(index, activation_time)
 end

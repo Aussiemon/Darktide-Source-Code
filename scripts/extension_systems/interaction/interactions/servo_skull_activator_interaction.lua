@@ -1,24 +1,17 @@
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
 local InteractionSettings = require("scripts/settings/interaction/interaction_settings")
-local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local ServoSkullActivatorInteraction = class("ServoSkullActivatorInteraction", "BaseInteraction")
 local interaction_results = InteractionSettings.results
 
 ServoSkullActivatorInteraction.start = function (self, world, interactor_unit, unit_data_component, t, interactor_is_server)
 	if interactor_is_server then
-		local unit_data_extension = ScriptUnit.extension(interactor_unit, "unit_data_system")
-		local inventory_component = unit_data_extension:read_component("inventory")
-		local visual_loadout_extension = ScriptUnit.extension(interactor_unit, "visual_loadout_system")
 		local target_unit = unit_data_component.target_unit
 		local interactee_extension = ScriptUnit.extension(target_unit, "interactee_system")
 		local item = interactee_extension:interactor_item_to_equip()
 
-		if PlayerUnitVisualLoadout.slot_equipped(inventory_component, visual_loadout_extension, "slot_device") then
-			PlayerUnitVisualLoadout.unequip_item_from_slot(interactor_unit, "slot_device", t)
-		end
-
+		self:_unequip_slot(t, interactor_unit, "slot_device")
 		PlayerUnitVisualLoadout.equip_item_to_slot(interactor_unit, item, "slot_device", nil, t)
 	end
 end

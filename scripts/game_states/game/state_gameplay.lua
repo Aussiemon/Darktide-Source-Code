@@ -23,23 +23,24 @@ StateGameplay.on_enter = function (self, parent, params, creation_context)
 		mission_giver_vo = mechanism_data.mission_giver_vo_override or "none",
 		physics_world = World.physics_world(world),
 		level_seed = GameParameters.level_seed or Managers.connection:session_seed(),
-		vo_sources_cache = creation_context.vo_sources_cache,
-		fixed_frame_time = GameParameters.fixed_time_step,
-		is_dedicated_server = Managers.connection:is_dedicated_hub_server() or Managers.connection:is_dedicated_mission_server(),
-		is_dedicated_mission_server = Managers.connection:is_dedicated_mission_server(),
-		spawn_group_id = params.spawn_group_id,
-		pacing_control = mechanism_data.pacing_control,
-		nav_world = nil,
-		nav_data = nil,
-		hard_cap_out_of_bounds_units = nil,
-		soft_cap_out_of_bounds_units = nil,
-		nvidia_ai_agent = nil,
-		free_flight_teleporter = nil,
-		clock_handler_client = nil,
-		breed_unit_tester = nil,
-		network_receive_function = creation_context.network_receive_function,
-		network_transmit_function = creation_context.network_transmit_function
+		vo_sources_cache = creation_context.vo_sources_cache
 	}
+	local tick_rate = Managers.connection:tick_rate()
+	shared_state.fixed_time_step = 1 / tick_rate
+	shared_state.is_dedicated_server = Managers.connection:is_dedicated_hub_server() or Managers.connection:is_dedicated_mission_server()
+	shared_state.is_dedicated_mission_server = Managers.connection:is_dedicated_mission_server()
+	shared_state.spawn_group_id = params.spawn_group_id
+	shared_state.pacing_control = mechanism_data.pacing_control
+	shared_state.nav_world = nil
+	shared_state.nav_data = nil
+	shared_state.hard_cap_out_of_bounds_units = nil
+	shared_state.soft_cap_out_of_bounds_units = nil
+	shared_state.nvidia_ai_agent = nil
+	shared_state.free_flight_teleporter = nil
+	shared_state.clock_handler_client = nil
+	shared_state.breed_unit_tester = nil
+	shared_state.network_receive_function = creation_context.network_receive_function
+	shared_state.network_transmit_function = creation_context.network_transmit_function
 
 	Crashify.print_property("mission", tostring(params.mission_name))
 

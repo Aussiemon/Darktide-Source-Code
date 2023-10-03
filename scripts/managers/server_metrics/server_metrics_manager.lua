@@ -2,7 +2,7 @@ local ServerMetricsManager = class("ServerMetricsManager")
 local ServerMetricNames = require("scripts/managers/server_metrics/server_metrics_names")
 local ServerMetricsManagerInterface = require("scripts/managers/server_metrics/server_metrics_manager_dummy")
 local full_flush_interval = 300
-local target_frame_time = GameParameters.fixed_time_step + 0.0005
+local target_frame_time = 1 / GameParameters.tick_rate + 0.0005
 local update_interval = 1
 local _log = nil
 
@@ -17,7 +17,9 @@ ServerMetricsManager.init = function (self)
 		end
 	end
 
-	self:set_gauge(ServerMetricNames.gauge.target_frame_time, GameParameters.fixed_time_step)
+	local fixed_time_step = 1 / GameParameters.tick_rate
+
+	self:set_gauge(ServerMetricNames.gauge.target_frame_time, fixed_time_step)
 end
 
 ServerMetricsManager.destroy = function (self)

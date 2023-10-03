@@ -3,7 +3,7 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
-local TalentSettings = require("scripts/settings/talent/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings_new")
 local armor_types = ArmorSettings.types
 local damage_types = DamageSettings.damage_types
 local talent_settings = TalentSettings.zealot_2
@@ -21,7 +21,7 @@ local zealot_lunge_templates = {
 		block_input_cancel = true,
 		combat_ability = true,
 		block_input_cancel_time_threshold = 0.4,
-		add_delayed_buff = "zealot_maniac_dash_buff",
+		add_delayed_buff = "zealot_dash_buff",
 		hit_dot_check = 0.7,
 		stop_sound_event = "wwise/events/player/play_ability_zealot_maniac_dash_exit",
 		directional_lunge = false,
@@ -84,7 +84,7 @@ local zealot_lunge_templates = {
 			armor_types.void_shield,
 			armor_types.resistant
 		},
-		mood = MoodSettings.mood_types.zealot_maniac_combat_ability
+		mood = MoodSettings.mood_types.zealot_combat_ability_dash
 	},
 	zealot_dash_with_burning = {
 		has_target_distance = 15,
@@ -147,7 +147,7 @@ local zealot_lunge_templates = {
 			armor_types.void_shield,
 			armor_types.resistant
 		},
-		mood = MoodSettings.mood_types.zealot_maniac_combat_ability
+		mood = MoodSettings.mood_types.zealot_combat_ability_dash
 	}
 }
 

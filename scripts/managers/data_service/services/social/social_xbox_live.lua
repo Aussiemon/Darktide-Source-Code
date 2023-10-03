@@ -108,7 +108,7 @@ SocialXboxLive.fetch_blocked_list = function (self)
 
 	self._blocked_promise = Promise:new()
 
-	XboxLiveUtils.get_block_list():next(function (xuids)
+	Managers.account:xbox_live_block_list():next(function (xuids)
 		if #xuids > 0 then
 			return XboxLiveUtils.get_user_profiles(xuids)
 		else
@@ -135,7 +135,7 @@ SocialXboxLive.fetch_blocked_list = function (self)
 end
 
 SocialXboxLive.fetch_blocked_list_ids_forced = function (self)
-	return XboxLiveUtils.get_block_list()
+	return Managers.account:xbox_live_block_list()
 end
 
 SocialXboxLive.update_recent_players = function (self, account_id)

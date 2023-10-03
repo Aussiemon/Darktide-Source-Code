@@ -16,6 +16,10 @@ PlayerSpawner.editor_init = function (self, unit)
 	return
 end
 
+PlayerSpawner.editor_validate = function (self, unit)
+	return true, ""
+end
+
 PlayerSpawner.enable = function (self, unit)
 	return
 end

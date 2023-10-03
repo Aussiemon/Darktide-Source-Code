@@ -62,6 +62,11 @@ local MinionState = {
 		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
 		return buff_extension and buff_extension:has_keyword(buff_keywords.burning)
+	end,
+	is_electrocuted = function (unit)
+		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+
+		return buff_extension and buff_extension:has_keyword(buff_keywords.electrocuted)
 	end
 }
 

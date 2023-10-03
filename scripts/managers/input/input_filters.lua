@@ -18,6 +18,43 @@ local function _input_threshold(input_axis, threshold)
 	end
 end
 
+local min = -100
+local max = 100
+
+local function _k_value(k_min, k_max, strength)
+	local lerp_t = (strength - min) / (max - min)
+
+	return math.lerp(k_min, k_max, lerp_t)
+end
+
+local _response_curve_funcs = {
+	linear = function (n, strength)
+		return n
+	end,
+	exponential = function (n, strength)
+		local k = _k_value(0.5, 2, strength)
+		local abs_n = math.abs(n)
+		local mod = abs_n^k * math.sign(n)
+
+		return mod
+	end,
+	dynamic = function (n, strength)
+		local k = _k_value(0.7, -0.7, strength)
+		local mod = nil
+		local abs_n = math.abs(n)
+
+		if abs_n > 0.5 then
+			local numerator = -k * 2 * (abs_n - 0.5) - 2 * (abs_n - 0.5)
+			local denominator = 2 * -k * 2 * (abs_n - 0.5) + k - 1
+			mod = (numerator / denominator * 0.5 + 0.5) * math.sign(n)
+		else
+			mod = (k * 2 * abs_n - 2 * abs_n) / (2 * k * 2 * abs_n - k - 1) * 0.5 * math.sign(n)
+		end
+
+		return mod
+	end
+}
+
 InputFilters.vector3_default = function (default_value)
 	return default_value:unbox()
 end
@@ -88,11 +125,15 @@ InputFilters.scale_vector3 = {
 		return table.clone(filter_data)
 	end,
 	update = function (filter_data, input_service)
+		local settings = Managers.save:account_data().input_settings
+		local invert_look_y = settings[filter_data.invert_look_y] and 1 or -1
+		local multiplier = settings[filter_data.multiplier]
 		local val = input_service:get(filter_data.input_mappings)
+		val = Vector3.multiply_elements(val, Vector3(1, invert_look_y, 1))
 
-		_input_threshold(val, filter_data.input_threshold or 0)
+		_input_threshold(val, settings[filter_data.input_threshold] or 0)
 
-		return val * filter_data.multiplier
+		return val * multiplier
 	end,
 	edit_types = {
 		{
@@ -101,7 +142,7 @@ InputFilters.scale_vector3 = {
 		}
 	}
 }
-InputFilters.scale_vector3_xy_accelerated_x_dev_params = {
+InputFilters.scale_vector3_xy_accelerated_x = {
 	init = function (filter_data)
 		local internal_filter_data = table.clone(filter_data)
 		internal_filter_data.input_x = 0
@@ -115,6 +156,7 @@ InputFilters.scale_vector3_xy_accelerated_x_dev_params = {
 		local settings = Managers.save:account_data().input_settings
 		local invert_look_y = settings[filter_data.invert_look_y] and -1 or 1
 		local multiplier = settings[filter_data.multiplier]
+		local response_curve_strength = settings[filter_data.response_curve_strength]
 		local val = input_service:get(filter_data.input_mappings)
 		val = Vector3.multiply_elements(val, Vector3(1, invert_look_y, 1))
 
@@ -147,6 +189,16 @@ InputFilters.scale_vector3_xy_accelerated_x_dev_params = {
 
 		if math_abs(val.x) > 0.75 then
 			val.y = val.y * (1 - (math_abs(val.x) - 0.75) / 0.25)
+		end
+
+		local response_curve = settings[filter_data.response_curve]
+
+		if val.x ~= 0 then
+			val.x = _response_curve_funcs[response_curve](val.x, response_curve_strength)
+		end
+
+		if val.y ~= 0 then
+			val.y = _response_curve_funcs[response_curve](val.y, response_curve_strength)
 		end
 
 		if not settings[filter_data.enable_acceleration] then
@@ -184,8 +236,9 @@ InputFilters.scale_vector3_xy_accelerated_x_dev_params = {
 			end
 		end
 
+		y = val.y
 		x = x * multiplier * mean_dt
-		y = val.y * multiplier_y * multiplier * mean_dt
+		y = y * multiplier_y * multiplier * mean_dt
 		z = val.z
 
 		return Vector3(x, y, z)

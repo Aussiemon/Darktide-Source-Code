@@ -10,6 +10,7 @@ local hud_element_player_weapon_settings = {
 	ammo_font_size_default = 30,
 	ammo_font_size_default_small = 20,
 	bar_edge_width = 5,
+	max_ammo_digits = 4,
 	overheat_segment_spacing = -2,
 	ammo_urgent_threshold = 0.2,
 	urgent_color = get_hud_color("color_tint_alert_2", 255),

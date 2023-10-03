@@ -136,12 +136,13 @@ local particles = {
 			"wielded_weapon_template"
 		},
 		particles = {
-			psyker_smite = "content/fx/particles/abilities/psyker_smite_chargeup_hands_01",
-			forcestaff_p2_m1 = "content/fx/particles/weapons/flame_staff/psyker_flame_staff_charge",
 			plasmagun_p1_m1 = "content/fx/particles/weapons/rifles/plasma_gun/plasma_gun_charge",
+			psyker_smite = "content/fx/particles/abilities/psyker_smite_chargeup_hands_01",
+			lasgun_p2_m2 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargeup",
+			psyker_chain_lightning = "content/fx/particles/abilities/chainlightning_charge_loop",
+			forcestaff_p2_m1 = "content/fx/particles/weapons/flame_staff/psyker_flame_staff_charge",
 			lasgun_p2_m1 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargeup",
 			forcestaff_p4_m1 = "content/fx/particles/weapons/bfg_staff/psyker_bfg_projectile_charge_01",
-			lasgun_p2_m2 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargeup",
 			forcestaff_p3_m1 = "content/fx/particles/weapons/force_staff/force_staff_chainlightning_charging_hands",
 			lasgun_p2_m3 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargeup"
 		}
@@ -152,10 +153,11 @@ local particles = {
 			"wielded_weapon_template"
 		},
 		particles = {
-			lasgun_p2_m3 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargefull",
+			psyker_chain_lightning = "content/fx/particles/abilities/chainlightning/protectorate_chainlightning_charge_done",
 			lasgun_p2_m2 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargefull",
+			lasgun_p2_m1 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargefull",
 			forcestaff_p4_m1 = "content/fx/particles/weapons/bfg_staff/psyker_bfg_projectile_charge_done_01",
-			lasgun_p2_m1 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargefull"
+			lasgun_p2_m3 = "content/fx/particles/weapons/rifles/lasgun/lasgun_chargefull"
 		}
 	},
 	psyker_biomancer_soul = {
@@ -265,10 +267,27 @@ local particles = {
 		particles = {
 			default = "content/fx/particles/weapons/force_staff/force_staff_chainlightning_attacking_link_03",
 			forcestaff_p3_m1 = {
-				high = "content/fx/particles/weapons/force_staff/force_staff_chainlightning_attacking_link_03",
+				no_target = "content/fx/particles/weapons/force_staff/force_staff_chainlightning_attacking_link_01",
 				mid = "content/fx/particles/weapons/force_staff/force_staff_chainlightning_attacking_link_02",
-				low = "content/fx/particles/weapons/force_staff/force_staff_chainlightning_attacking_link_01"
+				low = "content/fx/particles/weapons/force_staff/force_staff_chainlightning_attacking_link_01",
+				high = "content/fx/particles/weapons/force_staff/force_staff_chainlightning_attacking_link_03"
+			},
+			psyker_chain_lightning = {
+				no_target = "content/fx/particles/abilities/chainlightning/protectorate_chainlightning_attack_looping_no_target",
+				high = "content/fx/particles/abilities/chainlightning/protectorate_chainlightning_bfg_01",
+				low = "content/fx/particles/abilities/chainlightning/protectorate_chainlightning_attack_looping_01"
 			}
+		}
+	},
+	chain_lightning_impact = {
+		no_default = true,
+		switch = {
+			"wielded_weapon_template",
+			"power"
+		},
+		particles = {
+			forcestaff_p3_m1 = "content/fx/particles/weapons/force_staff/force_staff_chainlightning_impact_looping",
+			psyker_chain_lightning = "content/fx/particles/abilities/chainlightning/protectorate_chainlightning_impact_looping"
 		}
 	},
 	sweep_trail_extra = {
@@ -304,17 +323,11 @@ local particles = {
 			"wielded_weapon_template"
 		},
 		particles = {
+			zealot_relic = "content/fx/particles/abilities/zealot_relic_emit_01",
+			psyker_throwing_knives = "content/fx/particles/abilities/psyker_throwing_knife_idle",
 			servo_skull = "content/fx/particles/interacts/servoskull_visibility_hover",
-			grimoire_pocketable = "content/fx/particles/interacts/grimoire_idle",
-			flamer_p1_m1 = "content/fx/particles/weapons/rifles/zealot_flamer/zealot_flamer_pilot_light"
-		}
-	},
-	gunslinger_knife_gleam = {
-		switch = {
-			"wielded_weapon_template"
-		},
-		particles = {
-			default = "content/fx/particles/abilities/psyker_throwing_knife_equip"
+			flamer_p1_m1 = "content/fx/particles/weapons/rifles/zealot_flamer/zealot_flamer_pilot_light",
+			grimoire_pocketable = "content/fx/particles/interacts/grimoire_idle"
 		}
 	},
 	melee_blocked_attack = {

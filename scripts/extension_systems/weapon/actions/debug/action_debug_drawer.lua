@@ -105,9 +105,11 @@ ActionDebugDrawer._draw_chain_actions = function (self, gui, anchor_position, an
 		local chain_time = chain_action.chain_time or 0
 		local chain_start_t = chain_time / time_scale
 		local chain_end_t = action_settings.total_time / time_scale
-		local chain_time_window = chain_end_t == math.huge and 1 or (chain_end_t - chain_start_t) / action_timeline
+		local chain_time_window = chain_end_t == math.huge and 1 or chain_end_t - chain_start_t
+		chain_time_window = action_timeline > 0 and chain_time_window / action_timeline or 0
 		local offset_y = CHAIN_ACTION_BAR_OFFSET_Y * (chain_action_index - 1)
 		local chain_time_start = bar_size_x * chain_start_t / action_timeline
+		chain_time_start = action_timeline > 0 and chain_time_start / action_timeline or 0
 		local pos = Vector3(anchor_position.x + anchor_size.x / 2 - bar_size_x / 2 + chain_time_start, anchor_position.y + CHAIN_ACTION_BAR_POS_Y + offset_y, DRAWER_LAYER + 1)
 		local chain_bar_size_x = bar_size_x * chain_time_window
 		local size = Vector2(chain_bar_size_x, CHAIN_ACTION_BAR_SIZE_Y)
@@ -166,7 +168,7 @@ ActionDebugDrawer._draw_timeline_bars = function (self, gui, anchor_position, an
 
 		for indicator_i = 1, #indicators do
 			local indicator = indicators[indicator_i]
-			local p = indicator.time / action_timeline
+			local p = action_timeline > 0 and indicator.time / action_timeline or 0
 			local x = pos_x + bar_size_x * p
 			local y = pos_y + TIMELINEBAR_INDICATOR_Y
 			local indicator_pos = Vector3(x, y, timeline_bar_layer + 1)

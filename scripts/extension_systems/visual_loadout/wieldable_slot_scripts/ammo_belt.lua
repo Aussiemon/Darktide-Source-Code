@@ -56,13 +56,13 @@ AmmoBelt.update = function (self, unit, dt, t)
 	local num_components = #unit_components
 
 	for ii = 1, num_components do
-		local display = unit_components[ii]
+		local ammo_belt = unit_components[ii]
 
 		if is_reloading then
 			current_ammo_clip = math.min(max_ammo_clip, current_ammo_reserve) or current_ammo_clip
 		end
 
-		display.component:set_ammo(display.unit, current_ammo_clip, max_ammo_clip)
+		ammo_belt.component:set_ammo(ammo_belt.unit, current_ammo_clip, max_ammo_clip)
 	end
 end
 

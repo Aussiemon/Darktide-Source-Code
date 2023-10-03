@@ -261,8 +261,8 @@ StatsManager.record_team_kill = function (self, breed_name, weapon_attack_type)
 	self:_trigger_global_hook("hook_team_kill", 1, breed_name, weapon_attack_type)
 end
 
-StatsManager.record_toughness_regen = function (self, player, amount, starting_ammount, reason)
-	self:_trigger_hook(player, "hook_toughness_regenerated", amount, starting_ammount, reason, player:profile().specialization)
+StatsManager.record_toughness_regen = function (self, player, amount, starting_amount, reason)
+	self:_trigger_hook(player, "hook_toughness_regenerated", amount, starting_amount, reason, player:profile().specialization)
 end
 
 StatsManager.record_toughness_broken = function (self, player)
@@ -417,8 +417,8 @@ StatsManager.record_zealot_2_martyrdom_stacks = function (self, martyrdom_stacks
 	self:_trigger_hook(player, "hook_zealot_2_martyrdom_stacks", martyrdom_stacks, player:profile().specialization)
 end
 
-StatsManager.record_zealot_2_health_healed_with_leech_during_resist_death = function (self, player, health_ammount_percentage)
-	local round_health_percentage_to_int = math.round(health_ammount_percentage * 100)
+StatsManager.record_zealot_2_health_healed_with_leech_during_resist_death = function (self, player, health_amount_percentage)
+	local round_health_percentage_to_int = math.round(health_amount_percentage * 100)
 
 	self:_trigger_hook(player, "hook_zealot_2_health_healed_with_leech_during_resist_death", round_health_percentage_to_int, player:profile().specialization)
 end

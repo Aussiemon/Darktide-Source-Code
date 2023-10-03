@@ -9,27 +9,28 @@ local MIN_MAX_POWER_LEVEL_DIFF = MAX_POWER_LEVEL - MIN_POWER_LEVEL
 local POWER_LEVEL_CURVE_CONSTANTS = PowerLevelSettings.power_level_curve_constants
 local POWER_LEVEL_DIFF_RATIO = PowerLevelSettings.power_level_diff_ratio
 local PowerLevel = {
-	power_level = function ()
+	default_power_level = function ()
 		return DEFAULT_POWER_LEVEL
 	end,
 	power_level_percentage = function (power_level)
 		return (power_level - MIN_POWER_LEVEL) / MIN_MAX_POWER_LEVEL_DIFF
 	end,
-	power_level_buff_modifier = function (stat_buffs_or_nil, attack_type_or_nil)
+	power_level_buff_modifier = function (stat_buffs_or_nil, attack_type_or_nil, weakspot_or_nil)
 		if not stat_buffs_or_nil then
 			return 1
 		end
 
 		local power_level_modifier_stat_buff = stat_buffs_or_nil.power_level_modifier or 1
 		local melee_power_level_modifier_stat_buff = attack_type_or_nil == attack_types.melee and stat_buffs_or_nil.melee_power_level_modifier or 1
+		local weakspot_power_level_modifier = weakspot_or_nil and stat_buffs_or_nil.weakspot_power_level_modifier or 1
 		local ranged_power_level_modifier_stat_buff = attack_type_or_nil == attack_types.ranged and stat_buffs_or_nil.ranged_power_level_modifier or 1
-		local power_level_modifier = power_level_modifier_stat_buff + melee_power_level_modifier_stat_buff + ranged_power_level_modifier_stat_buff - 2
+		local power_level_modifier = power_level_modifier_stat_buff + melee_power_level_modifier_stat_buff + ranged_power_level_modifier_stat_buff + weakspot_power_level_modifier - 3
 
 		return power_level_modifier
 	end
 }
 
-PowerLevel.scale_power_level_to_power_type_curve = function (power_level, power_type, stat_buffs_or_nil, attack_type_or_nil)
+PowerLevel.scale_power_level_to_power_type_curve = function (power_level, power_type, stat_buffs_or_nil, attack_type_or_nil, weakspot_or_nil)
 	local scaled_power_level = nil
 
 	if MIN_POWER_LEVEL_CAP <= power_level then
@@ -52,7 +53,7 @@ PowerLevel.scale_power_level_to_power_type_curve = function (power_level, power_
 		scaled_power_level = power_level
 	end
 
-	local power_level_buff_modifier = PowerLevel.power_level_buff_modifier(stat_buffs_or_nil, attack_type_or_nil)
+	local power_level_buff_modifier = PowerLevel.power_level_buff_modifier(stat_buffs_or_nil, attack_type_or_nil, weakspot_or_nil)
 	scaled_power_level = scaled_power_level * power_level_buff_modifier
 
 	return scaled_power_level

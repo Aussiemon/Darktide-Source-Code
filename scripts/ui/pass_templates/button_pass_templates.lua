@@ -90,9 +90,9 @@ ButtonPassTemplates.terminal_button_change_function = terminal_button_change_fun
 
 local function terminal_button_hover_change_function(content, style)
 	local hotspot = content.hotspot
-	local anim_hover_progress = hotspot.anim_hover_progress
-	local anim_select_progress = hotspot.anim_select_progress
-	local anim_focus_progress = hotspot.anim_focus_progress
+	local anim_hover_progress = hotspot.anim_hover_progress or 0
+	local anim_select_progress = hotspot.anim_select_progress or 0
+	local anim_focus_progress = hotspot.anim_focus_progres or 0
 	local default_alpha = 155
 	local hover_alpha = anim_hover_progress * 100
 	local select_alpha = math.max(anim_select_progress, anim_focus_progress) * 50
@@ -813,12 +813,28 @@ ButtonPassTemplates.aquila_button = {
 		style = aquila_button_text_style,
 		change_function = function (content, style)
 			local hotspot = content.hotspot
-			local default_color = hotspot.disabled and style.disabled_color or style.default_color
+			local is_disabled = hotspot.disabled
+			local gamepad_active = hotspot.gamepad_active
+			local button_text = content.original_text or ""
+			local gamepad_action = content.gamepad_action
+
+			if gamepad_active and gamepad_action and not is_disabled then
+				local service_type = "View"
+				local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
+				local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+				content.text = string.format(Localize("loc_input_legend_text_template"), input_text, button_text)
+			else
+				content.text = button_text
+			end
+
+			local default_color = is_disabled and style.disabled_color or style.default_color
 			local hover_color = style.hover_color
-			local text_color = style.text_color
+			local color = style.text_color
 			local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
 
-			color_lerp(default_color, hover_color, progress, text_color)
+			if color and default_color and hover_color then
+				color_lerp(default_color, hover_color, progress, color)
+			end
 		end
 	},
 	{
@@ -1480,7 +1496,10 @@ ButtonPassTemplates.terminal_button_hold_small = {
 		style_id = "hotspot",
 		pass_type = "hotspot",
 		content_id = "hotspot",
-		content = default_button_content,
+		content = {
+			on_hover_sound = UISoundEvents.default_mouse_hover,
+			on_complete_sound = UISoundEvents.default_click
+		},
 		style = {
 			vertical_alignment = "top",
 			horizontal_alignment = "center"
@@ -1691,6 +1710,8 @@ ButtonPassTemplates.terminal_button_hold_small = {
 				widget.content.current_timer = 0
 				widget.content.hold_progress = 0
 				widget.content.hold_active = false
+
+				Managers.ui:play_2d_sound(widget.content.hotspot.on_complete_sound)
 
 				if widget.content.complete_function then
 					widget.content.complete_function()
@@ -2645,7 +2666,7 @@ ButtonPassTemplates.list_button_with_icon = {
 		style_id = "background_selected",
 		value = "content/ui/materials/buttons/background_selected",
 		style = {
-			color = Color.ui_terminal(0, true),
+			color = Color.terminal_corner_hover(0, true),
 			offset = {
 				0,
 				0,
@@ -2664,7 +2685,7 @@ ButtonPassTemplates.list_button_with_icon = {
 		style = {
 			hdr = true,
 			scale_to_material = true,
-			color = Color.ui_terminal(255, true),
+			color = Color.terminal_corner_hover(255, true),
 			offset = {
 				0,
 				0,
@@ -2873,8 +2894,7 @@ menu_panel_button_style.offset = {
 	3
 }
 local menu_panel_button_hotspot_content = {
-	on_hover_sound = UISoundEvents.tab_button_hovered,
-	on_pressed_sound = UISoundEvents.tab_button_pressed
+	on_hover_sound = UISoundEvents.tab_button_hovered
 }
 ButtonPassTemplates.menu_panel_button = {
 	{
@@ -3499,7 +3519,7 @@ ButtonPassTemplates.settings_button = function (width, height, settings_area_wid
 			style = {
 				hdr = true,
 				scale_to_material = true,
-				color = Color.ui_terminal(255, true),
+				color = Color.terminal_corner(255, true),
 				offset = {
 					header_width,
 					0,
@@ -3529,7 +3549,22 @@ ButtonPassTemplates.settings_button = function (width, height, settings_area_wid
 					settings_area_width,
 					height
 				},
-				color = Color.ui_terminal(255, true)
+				color = Color.terminal_corner(255, true)
+			}
+		},
+		{
+			pass_type = "rect",
+			style = {
+				size = {
+					settings_area_width,
+					height
+				},
+				offset = {
+					header_width,
+					0,
+					2
+				},
+				color = Color.terminal_corner(25.5, true)
 			}
 		},
 		{

@@ -65,7 +65,8 @@ local operator_lookup = {
 	NEQ = RuleDatabase.OPERATOR_NOT_EQUAL,
 	RAND = RuleDatabase.OPERATOR_RAND,
 	SET_INCLUDES = RuleDatabase.OPERATOR_SET_INCLUDES,
-	SET_INTERSECTS = RuleDatabase.OPERATOR_SET_INTERSECTS
+	SET_INTERSECTS = RuleDatabase.OPERATOR_SET_INTERSECTS,
+	SET_NOT_INTERSECTS = RuleDatabase.OPERATOR_SET_NOT_INTERSECTS
 }
 local context_indexes = table.mirror_array_inplace({
 	"global_context",

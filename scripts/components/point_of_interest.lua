@@ -21,6 +21,10 @@ PointOfInterest.editor_init = function (self, unit)
 	return
 end
 
+PointOfInterest.editor_validate = function (self, unit)
+	return true, ""
+end
+
 PointOfInterest.enable = function (self, unit)
 	return
 end

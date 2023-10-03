@@ -3,10 +3,10 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local Orientation = {}
 local _mouse_input, _gamepad_input = nil
 
-Orientation.look_delta = function (main_dt, input, sensitivity, mouse_scale, look_delta_context)
-	local mouse_input = _mouse_input(input, mouse_scale)
+Orientation.look_delta = function (main_dt, input, fov_sensitivity, mouse_scale, look_delta_context)
+	local mouse_input = _mouse_input(input, look_delta_context)
 	local gamepad_input = _gamepad_input(input, look_delta_context)
-	local look_delta = (mouse_input + gamepad_input) * sensitivity
+	local look_delta = (mouse_input * mouse_scale + gamepad_input) * fov_sensitivity
 
 	return look_delta
 end
@@ -31,21 +31,26 @@ Orientation.clamp_from_origin = function (current_rad, delta_rad, origin_rad, co
 	return new_value
 end
 
-function _mouse_input(input, mouse_scale)
-	local mouse_input_raw = input:get("look_raw")
-	local mouse_sensitivity = 1
-	local look_orientation = -1
-	local save_manager = Managers.save
+function _mouse_input(input, look_delta_context)
+	local weapon_action_component = look_delta_context.weapon_action_component
+	local alternate_fire_component = look_delta_context.alternate_fire_component
+	local weapon_template = weapon_action_component and WeaponTemplate.current_weapon_template(weapon_action_component)
+	local ranged_weapon_wielded = weapon_template and WeaponTemplate.is_ranged(weapon_template)
+	local grenade_weapon_wielded = weapon_template and WeaponTemplate.is_grenade(weapon_template)
+	local use_ranged_filter = ranged_weapon_wielded or grenade_weapon_wielded
+	local alternate_fire_is_active = alternate_fire_component and alternate_fire_component.is_active
+	local input_filter_name = nil
 
-	if save_manager then
-		local account_data = save_manager:account_data()
-		mouse_sensitivity = account_data.input_settings.mouse_look_scale
-		look_orientation = account_data.input_settings.mouse_invert_look_y and 1 or -1
+	if use_ranged_filter and alternate_fire_is_active then
+		input_filter_name = "look_ranged_alternate_fire"
+	elseif use_ranged_filter then
+		input_filter_name = "look_ranged"
+	else
+		input_filter_name = "look"
 	end
 
-	local vector_x = mouse_input_raw.x * mouse_scale * mouse_sensitivity
-	local vector_y = look_orientation * mouse_input_raw.y * mouse_scale * mouse_sensitivity
-	local mouse_input = Vector3(vector_x, vector_y, 0)
+	local mouse_input = input:get(input_filter_name)
+	mouse_input.z = 0
 
 	return mouse_input
 end
@@ -62,7 +67,10 @@ function _gamepad_input(input, look_delta_context)
 	local targeting_data = look_delta_context.targeting_data
 	local weapon_template = weapon_action_component and WeaponTemplate.current_weapon_template(weapon_action_component)
 	local ranged_weapon_wielded = weapon_template and WeaponTemplate.is_ranged(weapon_template)
+	local grenade_weapon_wielded = weapon_template and WeaponTemplate.is_grenade(weapon_template)
 	local melee_weapon_wielded = weapon_template and WeaponTemplate.is_melee(weapon_template)
+	local use_ranged_filter = ranged_weapon_wielded or grenade_weapon_wielded
+	local use_melee_filter = melee_weapon_wielded
 	local alternate_fire_is_active = alternate_fire_component and alternate_fire_component.is_active
 	local targets_within_range = targeting_data and targeting_data.targets_within_range
 	local is_sticky = look_delta_context.is_sticky
@@ -79,20 +87,20 @@ function _gamepad_input(input, look_delta_context)
 	if new_input_filter_method then
 		if is_lunging then
 			input_filter_name = "look_controller_lunging"
-		elseif ranged_weapon_wielded and alternate_fire_is_active then
+		elseif use_ranged_filter and alternate_fire_is_active then
 			input_filter_name = "look_controller_ranged_alternate_fire_improved"
-		elseif ranged_weapon_wielded then
+		elseif use_ranged_filter then
 			input_filter_name = "look_controller_ranged_improved"
 		else
 			input_filter_name = "look_controller_improved"
 		end
 	elseif is_lunging then
 		input_filter_name = "look_controller_lunging"
-	elseif ranged_weapon_wielded and alternate_fire_is_active then
+	elseif use_ranged_filter and alternate_fire_is_active then
 		input_filter_name = "look_controller_ranged_alternate_fire"
-	elseif ranged_weapon_wielded then
+	elseif use_ranged_filter then
 		input_filter_name = "look_controller_ranged"
-	elseif melee_weapon_wielded and targets_within_range then
+	elseif use_melee_filter and targets_within_range then
 		if is_sticky then
 			input_filter_name = "look_controller_melee_sticky"
 		else

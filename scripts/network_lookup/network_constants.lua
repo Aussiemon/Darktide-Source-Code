@@ -40,6 +40,7 @@ _check_network_lookup_boundaries("optional_sound_switch_name_id", "sound_switche
 _check_network_lookup_boundaries("optional_sound_switch_value_id", "sound_switch_values")
 _check_network_lookup_boundaries("player_ability_id", "player_abilities")
 _check_network_lookup_boundaries("player_character_fx_source_id", "player_character_fx_sources")
+_check_network_lookup_boundaries("optional_player_character_fx_source_id", "player_character_fx_sources")
 _check_network_lookup_boundaries("player_character_particle_id", "player_character_particles")
 _check_network_lookup_boundaries("player_character_sound_event_id", "player_character_sounds")
 _check_network_lookup_boundaries("player_inventory_slot_name", "player_inventory_slot_names")
@@ -95,6 +96,7 @@ _check_network_lookup_boundaries("hit_type_id", "surface_hit_types")
 _check_network_lookup_boundaries("voting_template_id", "voting_templates")
 _check_network_lookup_boundaries("lookup_1bit", "weapon_blood_amounts")
 _check_network_lookup_boundaries("optional_wounds_shape_id", "wounds_shapes")
+_check_network_lookup_boundaries("camera_shake_id", "camera_shake_events")
 
 NetworkConstants.check_network_lookup_boundaries = _check_network_lookup_boundaries
 local max_mechanism_events = Network.type_info("mechanism_event_id").max
@@ -196,6 +198,8 @@ NetworkConstants.fixed_frame_offset_start_t_9bit = Network.type_info("fixed_fram
 NetworkConstants.fixed_frame_offset_end_t_4bit = Network.type_info("fixed_frame_offset_end_t_4bit")
 NetworkConstants.fixed_frame_offset_end_t_6bit = Network.type_info("fixed_frame_offset_end_t_6bit")
 NetworkConstants.fixed_frame_offset_end_t_7bit = Network.type_info("fixed_frame_offset_end_t_7bit")
+local prd_state = Network.type_info("prd_state")
+NetworkConstants.max_prd_state = prd_state.max
 local ability_charges = Network.type_info("ability_charges")
 local ability_cooldown = Network.type_info("ability_cooldown")
 

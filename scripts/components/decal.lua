@@ -8,6 +8,10 @@ Decal.init = function (self, unit)
 	end
 end
 
+Decal.editor_validate = function (self, unit)
+	return true, ""
+end
+
 Decal.enable = function (self, unit)
 	return
 end

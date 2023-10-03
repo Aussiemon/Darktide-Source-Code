@@ -422,7 +422,7 @@ local weapon_handling_templates = {
 			}
 		},
 		critical_strike = {
-			chance_modifier = -0.02,
+			chance_modifier = 0.02,
 			max_critical_shots = 4
 		}
 	},
@@ -435,7 +435,7 @@ local weapon_handling_templates = {
 			}
 		},
 		critical_strike = {
-			chance_modifier = -0.02,
+			chance_modifier = 0.02,
 			max_critical_shots = 3
 		}
 	},
@@ -448,7 +448,7 @@ local weapon_handling_templates = {
 			}
 		},
 		critical_strike = {
-			chance_modifier = -0.02,
+			chance_modifier = 0.02,
 			max_critical_shots = 5
 		}
 	},
@@ -639,7 +639,7 @@ local weapon_handling_templates = {
 		},
 		critical_strike = {
 			chance_modifier = -0.02,
-			max_critical_shots = 3
+			max_critical_shots = 6
 		}
 	},
 	ogryn_heavystubber_p1_m1_hip_fire = {
@@ -649,7 +649,7 @@ local weapon_handling_templates = {
 		},
 		critical_strike = {
 			chance_modifier = -0.02,
-			max_critical_shots = 3
+			max_critical_shots = 6
 		}
 	},
 	ogryn_heavystubber_p1_m2_full_auto = {
@@ -659,7 +659,7 @@ local weapon_handling_templates = {
 		},
 		critical_strike = {
 			chance_modifier = -0.02,
-			max_critical_shots = 3
+			max_critical_shots = 6
 		}
 	},
 	ogryn_heavystubber_p1_m2_hip_fire = {
@@ -669,7 +669,7 @@ local weapon_handling_templates = {
 		},
 		critical_strike = {
 			chance_modifier = -0.02,
-			max_critical_shots = 3
+			max_critical_shots = 6
 		}
 	},
 	ogryn_heavystubber_p1_m3_full_auto = {
@@ -679,7 +679,7 @@ local weapon_handling_templates = {
 		},
 		critical_strike = {
 			chance_modifier = -0.02,
-			max_critical_shots = 3
+			max_critical_shots = 6
 		}
 	},
 	ogryn_heavystubber_p1_m3_hip_fire = {
@@ -689,7 +689,7 @@ local weapon_handling_templates = {
 		},
 		critical_strike = {
 			chance_modifier = -0.02,
-			max_critical_shots = 3
+			max_critical_shots = 6
 		}
 	}
 }

@@ -49,6 +49,11 @@ PlayerUnitToughnessExtension.update = function (self, context, dt, t)
 
 	if self._game_session and self._game_object_id then
 		GameSession.set_game_object_field(self._game_session, self._game_object_id, "toughness", self:max_toughness())
+
+		local buffs = self._buff_extension and self._buff_extension:stat_buffs()
+		local buff_extra = buffs and buffs.toughness_bonus_flat or 0
+
+		GameSession.set_game_object_field(self._game_session, self._game_object_id, "toughness_bonus", buff_extra)
 	end
 end
 
@@ -56,19 +61,20 @@ PlayerUnitToughnessExtension.max_toughness_visual = function (self)
 	local buffs = self._buff_extension and self._buff_extension:stat_buffs()
 	local buff_extra = buffs and buffs.toughness or 0
 	local toughness_bonus = buffs and buffs.toughness_bonus or 1
-	local max_toughness = self._max_toughness * toughness_bonus
+	local max_toughness = (self._max_toughness + buff_extra) * toughness_bonus
 
-	return max_toughness + buff_extra
+	return max_toughness
 end
 
 PlayerUnitToughnessExtension.max_toughness = function (self)
 	local buffs = self._buff_extension and self._buff_extension:stat_buffs()
-	local buff_extra = buffs and buffs.toughness + buffs.toughness_bonus_flat or 0
+	local buff_extra = buffs and buffs.toughness or 0
+	local buff_extra_flat = buffs and buffs.toughness_bonus_flat or 0
 	local toughness_bonus = buffs and buffs.toughness_bonus or 1
-	local max_toughness = self._max_toughness * toughness_bonus
-	max_toughness = math.ceil(max_toughness)
+	local max_toughness = (self._max_toughness + buff_extra) * toughness_bonus
+	max_toughness = math.ceil(max_toughness) + buff_extra_flat
 
-	return max_toughness + buff_extra
+	return max_toughness
 end
 
 PlayerUnitToughnessExtension.toughness_damage = function (self)
@@ -104,7 +110,7 @@ PlayerUnitToughnessExtension._update_toughness = function (self, dt, t)
 	local num_occupied_slots = slot_extension.num_occupied_slots
 	local toughness_regen_disabled = self:_toughness_regen_disabled()
 	local max_toughness = self:max_toughness()
-	local starting_ammount = max_toughness - toughness_damage
+	local starting_amount = max_toughness - toughness_damage
 
 	if num_occupied_slots == 0 and toughness_damage > 0 and toughness_regen_delay < t and not toughness_regen_disabled then
 		local weapon_toughness_template = self._weapon_extension:toughness_template()
@@ -128,7 +134,7 @@ PlayerUnitToughnessExtension._update_toughness = function (self, dt, t)
 		GameSession.set_game_object_field(self._game_session, self._game_object_id, "toughness_damage", self._toughness_damage)
 
 		if regen_amount > 0 then
-			self:_record_stat(regen_amount, starting_ammount, "coherency")
+			self:_record_stat(regen_amount, starting_amount, "coherency")
 			self:_handle_procs(wanted_regen_amount, regen_amount, "coherency")
 		end
 	end
@@ -147,6 +153,17 @@ PlayerUnitToughnessExtension._initialize_toughness = function (self, toughness_t
 	end
 end
 
+PlayerUnitToughnessExtension.handle_max_toughness_changes_due_to_buffs = function (self, max_toughness_before, max_toughness_after)
+	if max_toughness_after < max_toughness_before then
+		local diff = max_toughness_before - max_toughness_after
+		local new_toughness_damage = math.max(self._toughness_damage - diff, 0)
+		local network_toughness_damage = math.min(new_toughness_damage, NetworkConstants.toughness.max)
+		self._toughness_damage = network_toughness_damage
+
+		GameSession.set_game_object_field(self._game_session, self._game_object_id, "toughness_damage", network_toughness_damage)
+	end
+end
+
 PlayerUnitToughnessExtension.toughness_templates = function (self)
 	local weapon_toughness_template = self._weapon_extension:toughness_template()
 
@@ -161,7 +178,7 @@ PlayerUnitToughnessExtension.recover_toughness = function (self, recovery_type)
 	local toughness_template = self._toughness_template
 	local max_toughness = self:max_toughness()
 	local toughness_damage = self._toughness_damage
-	local starting_ammount = max_toughness - toughness_damage
+	local starting_amount = max_toughness - toughness_damage
 	local weapon_toughness_template = self._weapon_extension:toughness_template()
 	local modifier = weapon_toughness_template and weapon_toughness_template.recovery_percentage_modifiers[recovery_type] or 1
 	local stat_buffs = self._buff_extension:stat_buffs()
@@ -180,7 +197,7 @@ PlayerUnitToughnessExtension.recover_toughness = function (self, recovery_type)
 	local recovered_tougness = toughness_damage - network_toughness_damage
 
 	if recovered_tougness > 0 then
-		self:_record_stat(recovered_tougness, starting_ammount, recovery_type)
+		self:_record_stat(recovered_tougness, starting_amount, recovery_type)
 		self:_handle_procs(wanted_amount, recovered_tougness, recovery_type)
 	end
 end
@@ -192,7 +209,7 @@ PlayerUnitToughnessExtension.recover_percentage_toughness = function (self, fixe
 
 	local max_toughness = self:max_toughness()
 	local toughness_damage = self._toughness_damage
-	local starting_ammount = max_toughness - toughness_damage
+	local starting_amount = max_toughness - toughness_damage
 
 	if not ignore_stat_buffs then
 		local stat_buffs = self._buff_extension:stat_buffs()
@@ -210,7 +227,7 @@ PlayerUnitToughnessExtension.recover_percentage_toughness = function (self, fixe
 	local recovered_tougness = toughness_damage - network_toughness_damage
 
 	if recovered_tougness > 0 then
-		self:_record_stat(recovered_tougness, starting_ammount, reason or "unknown")
+		self:_record_stat(recovered_tougness, starting_amount, reason or "unknown")
 		self:_handle_procs(wanted_amount, recovered_tougness, reason)
 	end
 end
@@ -222,7 +239,7 @@ PlayerUnitToughnessExtension.recover_flat_toughness = function (self, amount, ig
 
 	local max_toughness = self:max_toughness()
 	local toughness_damage = self._toughness_damage
-	local starting_ammount = max_toughness - toughness_damage
+	local starting_amount = max_toughness - toughness_damage
 
 	if not ignore_stat_buffs then
 		local stat_buffs = self._buff_extension:stat_buffs()
@@ -239,7 +256,7 @@ PlayerUnitToughnessExtension.recover_flat_toughness = function (self, amount, ig
 	local recovered_tougness = toughness_damage - network_toughness_damage
 
 	if recovered_tougness > 0 then
-		self:_record_stat(recovered_tougness, starting_ammount, reason or "unknown")
+		self:_record_stat(recovered_tougness, starting_amount, reason or "unknown")
 		self:_handle_procs(amount, recovered_tougness, reason)
 	end
 end
@@ -251,7 +268,7 @@ PlayerUnitToughnessExtension.recover_max_toughness = function (self, reason, ign
 
 	local max_toughness = self:max_toughness()
 	local toughness_damage = self._toughness_damage
-	local starting_ammount = max_toughness - toughness_damage
+	local starting_amount = max_toughness - toughness_damage
 	self._toughness_damage = 0
 
 	GameSession.set_game_object_field(self._game_session, self._game_object_id, "toughness_damage", 0)
@@ -259,7 +276,7 @@ PlayerUnitToughnessExtension.recover_max_toughness = function (self, reason, ign
 	local recovered_tougness = toughness_damage
 
 	if recovered_tougness > 0 then
-		self:_record_stat(recovered_tougness, starting_ammount, reason or "unknown")
+		self:_record_stat(recovered_tougness, starting_amount, reason or "unknown")
 		self:_handle_procs(max_toughness, recovered_tougness, reason or "unknown")
 	end
 end
@@ -339,12 +356,12 @@ PlayerUnitToughnessExtension._handle_procs = function (self, amount, recovered_a
 	end
 end
 
-PlayerUnitToughnessExtension._record_stat = function (self, amount, starting_ammount, reason)
+PlayerUnitToughnessExtension._record_stat = function (self, amount, starting_amount, reason)
 	if Managers.stats.can_record_stats() then
 		local player = Managers.state.player_unit_spawn:owner(self._unit)
 
 		if player and player:is_human_controlled() then
-			Managers.stats:record_toughness_regen(player, amount, starting_ammount, reason)
+			Managers.stats:record_toughness_regen(player, amount, starting_amount, reason)
 		end
 	end
 end

@@ -24,6 +24,7 @@ local no_cleave = DamageProfileSettings.no_cleave
 local double_cleave = DamageProfileSettings.double_cleave
 local light_cleave = DamageProfileSettings.light_cleave
 local medium_cleave = DamageProfileSettings.medium_cleave
+local large_cleave = DamageProfileSettings.large_cleave
 local cutting_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -74,7 +75,7 @@ local shovel_am = {
 }
 damage_templates.heavy_axe = {
 	ragdoll_only = true,
-	finesse_ability_damage_multiplier = 1.75,
+	finesse_ability_damage_multiplier = 2,
 	ragdoll_push_force = 500,
 	stagger_category = "uppercut",
 	cleave_distribution = single_cleave,
@@ -402,8 +403,8 @@ damage_templates.default_light_axe = {
 			},
 			power_distribution = {
 				attack = {
-					100,
-					250
+					140,
+					280
 				},
 				impact = {
 					8,
@@ -411,8 +412,8 @@ damage_templates.default_light_axe = {
 				}
 			},
 			boost_curve_multiplier_finesse = {
-				0.2,
-				0.8
+				0.4,
+				1
 			},
 			power_level_multiplier = {
 				0.5,
@@ -420,28 +421,31 @@ damage_templates.default_light_axe = {
 			}
 		},
 		{
-			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					35,
-					50
+					100,
+					200
 				},
 				impact = {
-					4,
-					8
+					7,
+					14
 				}
+			},
+			boost_curve_multiplier_finesse = {
+				0.4,
+				1
 			}
 		},
 		default_target = {
-			boost_curve_multiplier_finesse = 0.25,
+			boost_curve_multiplier_finesse = 0.5,
 			power_distribution = {
 				attack = {
-					20,
-					40
+					80,
+					160
 				},
 				impact = {
-					3,
-					5
+					6,
+					12
 				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
@@ -482,7 +486,7 @@ overrides.light_axe_sticky = {
 		},
 		{
 			"melee_attack_strength",
-			melee_attack_strengths.heavy
+			melee_attack_strengths.light
 		},
 		{
 			"targets",
@@ -500,7 +504,7 @@ damage_templates.medium_axe_tank = {
 	ragdoll_push_force = 500,
 	ignore_stagger_reduction = true,
 	stagger_category = "melee",
-	cleave_distribution = light_cleave,
+	cleave_distribution = large_cleave,
 	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
@@ -570,8 +574,8 @@ damage_templates.medium_axe_tank = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					10,
-					15
+					15,
+					30
 				},
 				impact = {
 					4,
@@ -582,8 +586,8 @@ damage_templates.medium_axe_tank = {
 		default_target = {
 			power_distribution = {
 				attack = {
-					0,
-					0
+					10,
+					20
 				},
 				impact = {
 					3,
@@ -601,7 +605,7 @@ damage_templates.medium_axe_linesman = {
 	ragdoll_push_force = 500,
 	ignore_stagger_reduction = true,
 	stagger_category = "melee",
-	cleave_distribution = medium_cleave,
+	cleave_distribution = large_cleave,
 	gibbing_power = GibbingPower.light,
 	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
@@ -683,8 +687,8 @@ damage_templates.medium_axe_linesman = {
 		default_target = {
 			power_distribution = {
 				attack = {
-					0,
-					0
+					10,
+					20
 				},
 				impact = {
 					3,
@@ -1170,7 +1174,7 @@ damage_templates.medium_hatchet = {
 	},
 	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.sawing,
-	melee_attack_strength = melee_attack_strengths.light,
+	melee_attack_strength = melee_attack_strengths.heavy,
 	wounds_template = WoundsTemplates.combat_axe,
 	armor_damage_modifier = cutting_am,
 	crit_mod = crit_armor_mod,
@@ -1405,8 +1409,8 @@ damage_templates.heavy_shovel_tank = {
 					160
 				},
 				impact = {
-					6,
-					12
+					10,
+					20
 				}
 			},
 			power_level_multiplier = {
@@ -1421,15 +1425,39 @@ damage_templates.heavy_shovel_tank = {
 					100
 				},
 				impact = {
-					5,
-					10
+					7,
+					14
 				}
 			}
 		},
 		{
 			power_distribution = {
 				attack = {
-					10,
+					40,
+					80
+				},
+				impact = {
+					6,
+					12
+				}
+			}
+		},
+		{
+			power_distribution = {
+				attack = {
+					25,
+					50
+				},
+				impact = {
+					4,
+					8
+				}
+			}
+		},
+		{
+			power_distribution = {
+				attack = {
+					20,
 					30
 				},
 				impact = {
@@ -1441,8 +1469,8 @@ damage_templates.heavy_shovel_tank = {
 		default_target = {
 			power_distribution = {
 				attack = {
-					0,
-					0
+					10,
+					20
 				},
 				impact = {
 					4,
@@ -1612,7 +1640,7 @@ overrides.light_shovel_sticky = {
 		},
 		{
 			"melee_attack_strength",
-			melee_attack_strengths.heavy
+			melee_attack_strengths.light
 		},
 		{
 			"targets",

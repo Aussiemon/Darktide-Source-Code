@@ -7,13 +7,13 @@ local stat_buff_types = BuffSettings.stat_buff_types
 local stat_buff_base_values = BuffSettings.stat_buff_base_values
 local Buff = class("Buff")
 
-local function update_conditional_exit_func(self, template, template_data, template_context)
+local function _update_conditional_exit_func(self, template, template_data, template_context)
 	if template.conditional_exit_func(template_data, template_context) then
 		self._finished = true
 	end
 end
 
-local function update_conditional_stack_exit_func(self, template, template_data, template_context)
+local function _update_conditional_stack_exit_func(self, template, template_data, template_context)
 	local should_remove_stack = self._should_remove_stack
 
 	if not should_remove_stack and template.conditional_stack_exit_func(template_data, template_context) then
@@ -23,7 +23,7 @@ local function update_conditional_stack_exit_func(self, template, template_data,
 	end
 end
 
-local function update_duration(self, template, template_data, template_context, t, dt)
+local function _update_duration(self, template, template_data, template_context, t, dt)
 	local duration = self:duration()
 	local extra_duration = template_data.extra_duration or 0
 	local total_duration = duration + extra_duration
@@ -35,7 +35,7 @@ local function update_duration(self, template, template_data, template_context, 
 	end
 end
 
-local function update_buff_func(self, template, template_data, template_context, t, dt)
+local function _update_buff_func(self, template, template_data, template_context, t, dt)
 	template.update_func(template_data, template_context, dt, t, template)
 end
 
@@ -92,22 +92,22 @@ Buff.init = function (self, context, template, start_time, instance_id, ...)
 
 	if template.conditional_exit_func then
 		num_update_funcs = num_update_funcs + 1
-		update_funcs[num_update_funcs] = update_conditional_exit_func
+		update_funcs[num_update_funcs] = _update_conditional_exit_func
 	end
 
 	if template.conditional_stack_exit_func then
 		num_update_funcs = num_update_funcs + 1
-		update_funcs[num_update_funcs] = update_conditional_stack_exit_func
+		update_funcs[num_update_funcs] = _update_conditional_stack_exit_func
 	end
 
 	if self:duration() then
 		num_update_funcs = num_update_funcs + 1
-		update_funcs[num_update_funcs] = update_duration
+		update_funcs[num_update_funcs] = _update_duration
 	end
 
 	if template.update_func then
 		num_update_funcs = num_update_funcs + 1
-		update_funcs[num_update_funcs] = update_buff_func
+		update_funcs[num_update_funcs] = _update_buff_func
 	end
 
 	self._update_funcs = update_funcs
@@ -185,13 +185,13 @@ Buff._calculate_override_data = function (self, override_data, item_slot_name, p
 	local template_name = template.name
 	local player = self._player
 	local profile = player:profile()
-	local equiped_item = profile.loadout[item_slot_name]
+	local equipped_item = profile.loadout[item_slot_name]
 	local item_definitions = MasterItems.get_cached()
-	local traits = equiped_item and equiped_item.traits or EMPTY_TABLE
+	local traits = equipped_item and equipped_item.traits or EMPTY_TABLE
 
 	_add_overrides_from_item(traits, item_definitions, template_name, override_data, parent_buff_template_or_nil)
 
-	local perks = equiped_item and equiped_item.perks or EMPTY_TABLE
+	local perks = equipped_item and equipped_item.perks or EMPTY_TABLE
 
 	_add_overrides_from_item(perks, item_definitions, template_name, override_data, parent_buff_template_or_nil)
 
@@ -323,7 +323,7 @@ end
 
 Buff.stat_buff_stacking_count = function (self)
 	local stack_count = self:stack_count()
-	local max_stacks = self:max_stacks() or 1
+	local max_stacks = self._template.max_stat_stacks or self:max_stacks() or 1
 	local stack_offset = self._template.stack_offset or 0
 	local clamped_stack_count = math.clamp(stack_count + stack_offset, 0, max_stacks)
 
@@ -586,6 +586,10 @@ Buff.template_context = function (self)
 	return self._template_context
 end
 
+Buff.template_data = function (self)
+	return self._template_data
+end
+
 Buff.has_hud = function (self)
 	local template = self._template
 	local hide_in_hud = template.hide_icon_in_hud
@@ -605,6 +609,7 @@ Buff.get_hud_data = function (self)
 	return_table.show = self:_show_in_hud()
 	return_table.is_active = self:_is_hud_active()
 	return_table.hud_icon = self:_hud_icon()
+	return_table.hud_icon_gradient_map = self:hud_icon_gradient_map()
 	return_table.hud_priority = self:hud_priority()
 	local stack_count = self:visual_stack_count()
 	return_table.stack_count = stack_count
@@ -726,6 +731,12 @@ Buff.hud_icon = function (self)
 	local template = self._template
 
 	return template.hud_icon
+end
+
+Buff.hud_icon_gradient_map = function (self)
+	local template = self._template
+
+	return template.hud_icon_gradient_map
 end
 
 Buff.inactive = function (self)

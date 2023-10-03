@@ -96,6 +96,22 @@ local step_info_lookup = {
 			TrainingGroundsObjectivesLookup.biomancer_blitz
 		}
 	},
+	squad_leader_blitz = {
+		description = "loc_ability_krak_grenade_description",
+		title = "loc_talents_category_tactical",
+		input_descriptions = TrainingGroundsActionsLookup.wield_grenade,
+		objectives = {
+			TrainingGroundsObjectivesLookup.grenade
+		}
+	},
+	protectorate_blitz = {
+		description = "loc_psyker_ability_desc",
+		title = "loc_talents_category_tactical",
+		input_descriptions = TrainingGroundsActionsLookup.wield_psyker_ability,
+		objectives = {
+			TrainingGroundsObjectivesLookup.protectorate_blitz
+		}
+	},
 	ranged_grenade = {
 		description = "loc_ranged_grenade_desc",
 		title = "loc_talents_category_tactical",
@@ -194,6 +210,31 @@ local step_info_lookup = {
 		objectives = {
 			TrainingGroundsObjectivesLookup.combat_ability_psyker_3_1,
 			TrainingGroundsObjectivesLookup.combat_ability_psyker_3_2
+		}
+	},
+	combat_ability_gun_lugger = {
+		description = "loc_combat_ability_tutorial_ogryn_1_desc",
+		title = "loc_combat_ability_tutorial",
+		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
+		objectives = {
+			TrainingGroundsObjectivesLookup.combat_ability_ogryn_1_1,
+			TrainingGroundsObjectivesLookup.combat_ability_ogryn_1_2
+		}
+	},
+	combat_ability_preacher = {
+		description = "loc_combat_ability_tutorial_zealot_3_desc",
+		title = "loc_combat_ability_tutorial",
+		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
+		objectives = {
+			TrainingGroundsObjectivesLookup.combat_ability_zealot_3_1
+		}
+	},
+	combat_ability_squad_leader = {
+		description = "loc_combat_ability_tutorial_veteran_3_desc",
+		title = "loc_combat_ability_tutorial",
+		input_descriptions = TrainingGroundsActionsLookup.activate_combat_ability,
+		objectives = {
+			TrainingGroundsObjectivesLookup.combat_ability_veteran_3_1
 		}
 	},
 	combat_ability_maniac = {

@@ -318,6 +318,8 @@ BtBeastOfNurgleMovementAction._calculate_randomized_move_to_directions = functio
 end
 
 BtBeastOfNurgleMovementAction._paint_liquid = function (self, unit, scratchpad, action_data)
+	local side_system = Managers.state.extension:system("side_system")
+	local side = side_system.side_by_unit[unit]
 	local position = POSITION_LOOKUP[unit]
 	local liquid_paint_id = scratchpad.behavior_component[action_data.liquid_paint_id_from_component]
 	local max_liquid_paint_distance = action_data.max_liquid_paint_distance
@@ -328,8 +330,9 @@ BtBeastOfNurgleMovementAction._paint_liquid = function (self, unit, scratchpad, 
 	local liquid_paint_brush_size = action_data.liquid_paint_brush_size
 	local not_on_other_liquids = true
 	local source_unit = unit
+	local source_side = side and side:name()
 
-	LiquidArea.paint(liquid_paint_id, max_liquid_paint_distance, liquid_position, nav_world, liquid_area_template, allow_liquid_unit_creation, liquid_paint_brush_size, not_on_other_liquids, source_unit)
+	LiquidArea.paint(liquid_paint_id, max_liquid_paint_distance, liquid_position, nav_world, liquid_area_template, allow_liquid_unit_creation, liquid_paint_brush_size, not_on_other_liquids, source_unit, nil, source_side)
 end
 
 return BtBeastOfNurgleMovementAction

@@ -19,6 +19,12 @@ local category_settings = {
 		end
 	},
 	{
+		path = "scripts/settings/options/controller_settings",
+		validation_function = function ()
+			return IS_GDK or IS_XBS or IS_WINDOWS
+		end
+	},
+	{
 		path = "scripts/settings/options/input_settings"
 	}
 }

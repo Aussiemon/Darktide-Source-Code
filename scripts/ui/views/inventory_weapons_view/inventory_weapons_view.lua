@@ -264,7 +264,9 @@ InventoryWeaponsView.cb_on_customize_pressed = function (self)
 
 		Managers.ui:open_view("inventory_weapon_cosmetics_view", nil, nil, nil, nil, {
 			player = self._preview_player,
-			preview_item = self._previewed_item
+			preview_item = self._previewed_item,
+			parent = self._parent,
+			new_items_gear_ids = self._parent and self._parent._new_items_gear_ids
 		})
 	end
 end
@@ -416,6 +418,13 @@ InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
 			if self:_item_valid_by_current_profile(item) then
 				local slots = item.slots
 				local valid = true
+				local gear_id = item.gear_id
+				local is_new = self._context and self._context.new_items_gear_ids and self._context.new_items_gear_ids[gear_id]
+				local remove_new_marker_callback = nil
+
+				if is_new then
+					remove_new_marker_callback = self._parent and callback(self._parent, "remove_new_item_mark")
+				end
 
 				if valid and slots then
 					for j = 1, #slots do
@@ -423,7 +432,9 @@ InventoryWeaponsView._fetch_inventory_items = function (self, selected_slot)
 							layout[#layout + 1] = {
 								widget_type = "item",
 								item = item,
-								slot = selected_slot
+								slot = selected_slot,
+								new_item_marker = is_new,
+								remove_new_marker_callback = remove_new_marker_callback
 							}
 						end
 					end

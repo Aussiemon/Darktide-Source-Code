@@ -1,17 +1,23 @@
 local ServoSkullActivator = component("ServoSkullActivator")
 
 ServoSkullActivator.init = function (self, unit)
-	local servo_skull_activator_extension = ScriptUnit.fetch_component_extension(unit, "servo_skull_system")
-
-	if servo_skull_activator_extension then
-		local hide_timer = self:get_data(unit, "hide_timer")
-
-		servo_skull_activator_extension:setup_from_component(hide_timer)
-	end
+	return
 end
 
 ServoSkullActivator.editor_init = function (self, unit)
 	return
+end
+
+ServoSkullActivator.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if rawget(_G, "LevelEditor") and not Unit.has_visibility_group(unit, "main") then
+		success = false
+		error_message = error_message .. "\nCouldn't find visibility group 'main'"
+	end
+
+	return success, error_message
 end
 
 ServoSkullActivator.enable = function (self, unit)
@@ -27,11 +33,6 @@ ServoSkullActivator.destroy = function (self, unit)
 end
 
 ServoSkullActivator.component_data = {
-	hide_timer = {
-		ui_type = "number",
-		value = 10,
-		ui_name = "Hide Delay (in sec.)"
-	},
 	extensions = {
 		"ServoSkullActivatorExtension"
 	}

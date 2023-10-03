@@ -43,6 +43,18 @@ RespawnBeacon.editor_init = function (self, unit)
 	return true
 end
 
+RespawnBeacon.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if rawget(_G, "LevelEditor") and not Unit.has_volume(unit, "c_respawn_volume") then
+		success = false
+		error_message = error_message .. "\nMissing volume 'c_respawn_volume'"
+	end
+
+	return success, error_message
+end
+
 RespawnBeacon.editor_update = function (self, unit)
 	if not rawget(_G, "LevelEditor") then
 		return

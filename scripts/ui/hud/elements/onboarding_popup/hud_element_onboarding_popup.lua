@@ -17,9 +17,9 @@ HudElementOnboardingPopup.init = function (self, parent, draw_layer, start_scale
 	self:_register_events()
 end
 
-HudElementOnboardingPopup.destroy = function (self)
+HudElementOnboardingPopup.destroy = function (self, ui_renderer)
 	self:_unregister_events()
-	HudElementOnboardingPopup.super.destroy(self)
+	HudElementOnboardingPopup.super.destroy(self, ui_renderer)
 end
 
 HudElementOnboardingPopup.update = function (self, dt, t, ui_renderer, render_settings, input_service)

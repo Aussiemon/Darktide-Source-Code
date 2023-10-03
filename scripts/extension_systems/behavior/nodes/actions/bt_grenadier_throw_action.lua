@@ -103,7 +103,7 @@ BtGrenadierThrowAction._throw_grenade = function (self, unit, scratchpad, action
 	local projectile_template = throw_config.projectile_template
 	local locomotion_template = projectile_template.locomotion_template
 	local throw_parameters = locomotion_template.throw_parameters[throw_type]
-	local speed = throw_parameters.speed_inital or throw_parameters.speed
+	local speed = throw_parameters.speed_initial or throw_parameters.speed
 
 	if optional_owner_velocity then
 		local velocity = speed * throw_direction
@@ -130,8 +130,12 @@ BtGrenadierThrowAction._throw_grenade = function (self, unit, scratchpad, action
 	local item = item_definitions[item_name]
 	local grenade_unit_name = item.base_unit
 	local locomotion_state = throw_parameters.locomotion_state
+	local side_system = Managers.state.extension:system("side_system")
+	local side = side_system.side_by_unit[unit]
+	local is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item_or_nil, fuse_override_time_or_nil = nil
+	local owner_side = side and side:name()
 
-	Managers.state.unit_spawner:spawn_network_unit(grenade_unit_name, "item_projectile", throw_position, nil, nil, item, projectile_template, locomotion_state, throw_direction, speed, angular_velocity, unit)
+	Managers.state.unit_spawner:spawn_network_unit(grenade_unit_name, "item_projectile", throw_position, nil, nil, item, projectile_template, locomotion_state, throw_direction, speed, angular_velocity, unit, is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item_or_nil, fuse_override_time_or_nil, owner_side)
 
 	local throw_grenade_component = scratchpad.throw_grenade_component
 	local cooldown = Managers.state.difficulty:get_table_entry_by_challenge(action_data.cooldown or MinionDifficultySettings.cooldowns.grenadier_throw)

@@ -61,6 +61,69 @@ BeastOfNurgle.editor_init = function (self, unit)
 	end
 end
 
+local TEMP_MISSING_NODE_NAMES = {}
+
+BeastOfNurgle.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+	local num_missing_node_names = 0
+
+	if not Unit.has_node(unit, "j_gut") then
+		num_missing_node_names = num_missing_node_names + 1
+		TEMP_MISSING_NODE_NAMES[num_missing_node_names] = "j_gut"
+	end
+
+	if not Unit.has_node(unit, "j_gut_bind") then
+		num_missing_node_names = num_missing_node_names + 1
+		TEMP_MISSING_NODE_NAMES[num_missing_node_names] = "j_gut_bind"
+	end
+
+	local spline_blend_node = self:get_data(unit, "spline_blend_node")
+
+	if spline_blend_node == "" then
+		error_message = error_message .. "\nspline_blend_node can't be empty"
+		success = false
+	elseif not Unit.has_node(unit, spline_blend_node) then
+		num_missing_node_names = num_missing_node_names + 1
+		TEMP_MISSING_NODE_NAMES[num_missing_node_names] = spline_blend_node
+	end
+
+	for i = 1, #SPLINE_JOINT_NAMES do
+		if not Unit.has_node(unit, SPLINE_JOINT_NAMES[i]) then
+			num_missing_node_names = num_missing_node_names + 1
+			TEMP_MISSING_NODE_NAMES[num_missing_node_names] = SPLINE_JOINT_NAMES[i]
+		end
+	end
+
+	for i = 1, #ANIM_JOINT_NAMES do
+		if not Unit.has_node(unit, ANIM_JOINT_NAMES[i]) then
+			num_missing_node_names = num_missing_node_names + 1
+			TEMP_MISSING_NODE_NAMES[num_missing_node_names] = ANIM_JOINT_NAMES[i]
+		end
+	end
+
+	for i = 1, #BIND_JOINT_NAMES do
+		if not Unit.has_node(unit, BIND_JOINT_NAMES[i]) then
+			num_missing_node_names = num_missing_node_names + 1
+			TEMP_MISSING_NODE_NAMES[num_missing_node_names] = BIND_JOINT_NAMES[i]
+		end
+	end
+
+	if num_missing_node_names > 0 then
+		success = false
+
+		table.sort(TEMP_MISSING_NODE_NAMES)
+
+		local missing_node_names_string = table.concat(TEMP_MISSING_NODE_NAMES, "\n\t")
+
+		table.clear_array(TEMP_MISSING_NODE_NAMES, #TEMP_MISSING_NODE_NAMES)
+
+		error_message = error_message .. string.format("\nThe following unit nodes are missing:\n\t%s", missing_node_names_string)
+	end
+
+	return success, error_message
+end
+
 BeastOfNurgle.enable = function (self, unit)
 	return
 end

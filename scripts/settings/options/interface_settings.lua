@@ -1,72 +1,6 @@
 local OptionsUtilities = require("scripts/utilities/ui/options")
-
-local function save_account_settings(location_name, settings_name, value)
-	local player = Managers.player:local_player(1)
-	local save_manager = Managers.save
-
-	if player and save_manager then
-		local account_data = save_manager:account_data()
-
-		if location_name then
-			account_data[location_name][settings_name] = value
-		else
-			account_data[settings_name] = value
-		end
-
-		save_manager:queue_save()
-
-		return true
-	end
-
-	return false
-end
-
-local function save_local_settings(settings_name, value)
-	Application.set_user_setting("interface_settings", settings_name, value)
-	Application.save_user_settings()
-	Application.apply_user_settings()
-end
-
-local function get_local_settings(settings_name)
-	return Application.user_setting("interface_settings", settings_name)
-end
-
-local function get_account_settings(location_name, settings_name)
-	local player = Managers.player:local_player(1)
-	local save_manager = Managers.save
-
-	if player and save_manager then
-		local account_data = save_manager:account_data()
-
-		if location_name then
-			return account_data[location_name][settings_name]
-		else
-			return account_data[settings_name]
-		end
-	end
-end
-
-local function _is_same(current, new)
-	if current == new then
-		return true
-	elseif type(current) == "table" and type(new) == "table" then
-		for k, v in pairs(current) do
-			if new[k] ~= v then
-				return false
-			end
-		end
-
-		for k, v in pairs(new) do
-			if current[k] ~= v then
-				return false
-			end
-		end
-
-		return true
-	else
-		return false
-	end
-end
+local SettingsUtilitiesFunction = require("scripts/settings/options/settings_utils")
+local SettingsUtilities = {}
 
 local function construct_interface_settings_boolean(template)
 	local entry = {
@@ -76,7 +10,8 @@ local function construct_interface_settings_boolean(template)
 		indentation_level = template.indentation_level,
 		tooltip_text = template.tooltip_text,
 		disable_rules = template.disable_rules,
-		validation_function = template.validation_function
+		validation_function = template.validation_function,
+		apply_on_startup = template.apply_on_startup
 	}
 	local id = template.id
 	local save_location = template.save_location
@@ -86,9 +21,9 @@ local function construct_interface_settings_boolean(template)
 		local old_value = nil
 
 		if template.use_local_save then
-			old_value = get_local_settings(id)
+			old_value = SettingsUtilities.get_local_settings(id)
 		else
-			old_value = get_account_settings(save_location, id)
+			old_value = SettingsUtilities.get_account_settings(save_location, id)
 		end
 
 		if old_value == nil then
@@ -102,20 +37,20 @@ local function construct_interface_settings_boolean(template)
 		local current_value = nil
 
 		if template.use_local_save then
-			current_value = get_local_settings(id)
+			current_value = SettingsUtilities.get_local_settings(id)
 		else
-			current_value = get_account_settings(save_location, id)
+			current_value = SettingsUtilities.get_account_settings(save_location, id)
 		end
 
 		if current_value == nil then
 			current_value = default_value
 		end
 
-		if not _is_same(current_value, new_value) then
+		if not SettingsUtilities.is_same(current_value, new_value) then
 			if template.use_local_save then
-				save_local_settings(id, new_value)
+				SettingsUtilities.save_local_settings(id, new_value)
 			else
-				save_account_settings(save_location, id, new_value)
+				SettingsUtilities.save_account_settings(save_location, id, new_value)
 			end
 
 			if entry.on_value_changed then
@@ -131,15 +66,15 @@ local function construct_interface_settings_percent_slider(template)
 	local min_value = template.min_value or 0
 	local max_value = template.max_value or 100
 	local value_range = max_value - min_value
-	local convertion_value = value_range / 100
+	local conversion_value = value_range / 100
 	local step_size = template.step_size_value or 1
-	local percent_step_size = step_size / convertion_value
-	local default_value = ((template.default_value or min_value) - min_value) / convertion_value
+	local percent_step_size = step_size / conversion_value
+	local default_value = ((template.default_value or min_value) - min_value) / conversion_value
 	local id = template.id
 	local save_location = template.save_location
 
 	local function explode_value(percent_value)
-		local exploded_value = min_value + percent_value * convertion_value
+		local exploded_value = min_value + percent_value * conversion_value
 		exploded_value = math.round(exploded_value / step_size) * step_size
 
 		return exploded_value
@@ -151,9 +86,9 @@ local function construct_interface_settings_percent_slider(template)
 		local exploded_value = explode_value(percent_value)
 
 		if template.use_local_save then
-			save_local_settings(id, exploded_value)
+			SettingsUtilities.save_local_settings(id, exploded_value)
 		else
-			save_account_settings(save_location, id, exploded_value)
+			SettingsUtilities.save_account_settings(save_location, id, exploded_value)
 		end
 
 		if on_value_changed then
@@ -165,16 +100,16 @@ local function construct_interface_settings_percent_slider(template)
 		local exploded_value = nil
 
 		if template.use_local_save then
-			exploded_value = get_local_settings(id)
+			exploded_value = SettingsUtilities.get_local_settings(id)
 		else
-			exploded_value = get_account_settings(save_location, id)
+			exploded_value = SettingsUtilities.get_account_settings(save_location, id)
 		end
 
 		if exploded_value == nil then
 			exploded_value = default_value
 		end
 
-		local percent_value = (exploded_value - min_value) / convertion_value
+		local percent_value = (exploded_value - min_value) / conversion_value
 
 		return percent_value
 	end
@@ -195,7 +130,8 @@ local function construct_interface_settings_percent_slider(template)
 		indentation_level = template.indentation_level,
 		validation_function = template.validation_function,
 		tooltip_text = template.tooltip_text,
-		disable_rules = template.disable_rules
+		disable_rules = template.disable_rules,
+		apply_on_startup = template.apply_on_startup
 	}
 
 	return OptionsUtilities.create_percent_slider_template(params)
@@ -213,9 +149,9 @@ local function construct_interface_settings_value_slider(template)
 
 	local function on_value_changed_function(value)
 		if template.use_local_save then
-			save_local_settings(id, value)
+			SettingsUtilities.save_local_settings(id, value)
 		else
-			save_account_settings(save_location, id, value)
+			SettingsUtilities.save_account_settings(save_location, id, value)
 		end
 
 		if on_value_changed then
@@ -227,9 +163,9 @@ local function construct_interface_settings_value_slider(template)
 		local value = nil
 
 		if template.use_local_save then
-			value = get_local_settings(id)
+			value = SettingsUtilities.get_local_settings(id)
 		else
-			value = get_account_settings(save_location, id)
+			value = SettingsUtilities.get_account_settings(save_location, id)
 		end
 
 		return value or default_value
@@ -248,7 +184,8 @@ local function construct_interface_settings_value_slider(template)
 		indentation_level = template.indentation_level,
 		validation_function = template.validation_function,
 		tooltip_text = template.tooltip_text,
-		disable_rules = template.disable_rules
+		disable_rules = template.disable_rules,
+		apply_on_startup = template.apply_on_startup
 	}
 
 	return OptionsUtilities.create_value_slider_template(params)
@@ -260,6 +197,32 @@ local template_functions = {
 	value_slider = construct_interface_settings_value_slider
 }
 local settings_definitions = {
+	{
+		group_name = "gameplay_settings",
+		display_name = "loc_settings_menu_group_gameplay_settings",
+		widget_type = "group_header"
+	},
+	{
+		save_location = "interface_settings",
+		default_value = false,
+		display_name = "loc_interface_setting_forced_dot_crosshair",
+		id = "forced_dot_crosshair_enabled",
+		tooltip_text = "loc_settings_forced_dot_crosshair_mouseover",
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_forced_dot_crosshair", value)
+		end
+	},
+	{
+		save_location = "interface_settings",
+		display_name = "loc_interface_setting_input_hints_enabled",
+		id = "input_hints_enabled",
+		default_value = false,
+		widget_type = "boolean",
+		on_value_changed = function (value)
+			Managers.event:trigger("event_update_input_hints_enabled", value)
+		end
+	},
 	{
 		group_name = "subtitle_settings",
 		display_name = "loc_settings_menu_group_subtitle_settings",
@@ -409,6 +372,17 @@ local settings_definitions = {
 		on_value_changed = function (value)
 			Managers.event:trigger("event_portrait_render_change", value)
 		end
+	},
+	{
+		save_location = "interface_settings",
+		tooltip_text = "loc_interface_settings_flash_taskbar_mouseover",
+		display_name = "loc_interface_setting_flash_taskbar_enabled",
+		id = "flash_taskbar_enabled",
+		default_value = true,
+		widget_type = "boolean",
+		validation_function = function ()
+			return IS_WINDOWS
+		end
 	}
 }
 local settings = {}
@@ -420,13 +394,18 @@ for i = 1, #settings_definitions do
 
 	if template_function then
 		settings[#settings + 1] = template_function(definition)
+		settings[#settings].id = definition.id
 	else
 		settings[#settings + 1] = definition
 	end
 end
 
+SettingsUtilities = SettingsUtilitiesFunction(settings)
+
 return {
 	icon = "content/ui/materials/icons/system/settings/category_interface",
 	display_name = "loc_settings_menu_category_interface",
+	settings_utilities = SettingsUtilities,
+	settings_by_id = SettingsUtilities.settings_by_id,
 	settings = settings
 }

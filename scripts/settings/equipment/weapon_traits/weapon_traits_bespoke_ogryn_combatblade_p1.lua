@@ -29,22 +29,22 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill = {
 	weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill_parent = {
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.075
+				[stat_buffs.power_level_modifier] = 0.05
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.1
+				[stat_buffs.power_level_modifier] = 0.06
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.125
+				[stat_buffs.power_level_modifier] = 0.07
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.15
+				[stat_buffs.power_level_modifier] = 0.08
 			}
 		}
 	}
@@ -52,33 +52,21 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_increase_power_on_kill = {
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_increased_attack_cleave_on_multiple_hits = {
 	weapon_trait_bespoke_ogryn_combatblade_p1_increased_attack_cleave_on_multiple_hits = {
 		{
-			buff_data = {
-				required_num_hits = 3
-			},
 			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 1
+				[stat_buffs.max_hit_mass_attack_modifier] = 1.4
 			}
 		},
 		{
-			buff_data = {
-				required_num_hits = 3
-			},
 			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 1.5
+				[stat_buffs.max_hit_mass_attack_modifier] = 1.6
 			}
 		},
 		{
-			buff_data = {
-				required_num_hits = 3
-			},
 			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 1.75
+				[stat_buffs.max_hit_mass_attack_modifier] = 1.8
 			}
 		},
 		{
-			buff_data = {
-				required_num_hits = 3
-			},
 			stat_buffs = {
 				[stat_buffs.max_hit_mass_attack_modifier] = 2
 			}
@@ -119,6 +107,30 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_cri
 		{}
 	}
 }
+templates.weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_crit = {
+	weapon_trait_bespoke_ogryn_combatblade_p1_infinite_melee_cleave_on_crit = {
+		{
+			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.65
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.7
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.75
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.8
+			}
+		}
+	}
+}
 templates.weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_chained_attacks = {
 	weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_chained_attacks = {
 		{
@@ -139,19 +151,19 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_multip
 	weapon_trait_bespoke_ogryn_combatblade_p1_toughness_recovery_on_multiple_hits = {
 		{
 			buff_data = {
-				replenish_percentage = 0.075,
+				replenish_percentage = 0.12,
 				required_num_hits = 3
 			}
 		},
 		{
 			buff_data = {
-				replenish_percentage = 0.1,
+				replenish_percentage = 0.13,
 				required_num_hits = 3
 			}
 		},
 		{
 			buff_data = {
-				replenish_percentage = 0.125,
+				replenish_percentage = 0.13,
 				required_num_hits = 3
 			}
 		},

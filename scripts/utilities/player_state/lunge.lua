@@ -30,7 +30,7 @@ local Lunge = {
 }
 
 Lunge.calculate_lunge_total_time = function (distance, lunge_speed_at_times)
-	local time_step = GameParameters.fixed_time_step
+	local time_step = Managers.state.game_session.fixed_time_step
 	local hit_end = false
 	local time_in_lunge = 0
 	local distance_travelled = 0

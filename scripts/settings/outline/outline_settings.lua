@@ -15,6 +15,19 @@ local templates = {
 				return true
 			end
 		},
+		psyker_marked_target = {
+			priority = 1,
+			material_layers = {
+				"minion_outline_psyker"
+			},
+			visibility_check = function (unit)
+				if not HEALTH_ALIVE[unit] then
+					return false
+				end
+
+				return true
+			end
+		},
 		smart_tagged_enemy = {
 			priority = 1,
 			material_layers = {

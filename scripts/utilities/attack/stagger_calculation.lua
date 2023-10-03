@@ -30,7 +30,15 @@ StaggerCalculation.calculate = function (damage_profile, target_settings, lerp_v
 	local current_hit_stagger_strength = stagger_strength
 	local sum_stagger_strength = stagger_strength + stagger_strength_pool - 0.5 * stagger_reduction
 	local stagger_resistance = breed.stagger_resistance or StaggerSettings.default_stagger_resistance
-	local stagger_type, stagger_threshold = _get_stagger_type(sum_stagger_strength, damage_profile, breed, stagger_resistance, hit_shield, optional_mutator_stagger_overrides)
+	local stagger_type, stagger_threshold = _get_stagger_type(sum_stagger_strength, damage_profile, breed, stagger_resistance, hit_shield, optional_mutator_stagger_overrides, hit_weakspot)
+
+	if damage_profile.no_stagger_breed_tag then
+		local exclude_this = damage_profile.no_stagger_breed_tag
+
+		if breed.tags[exclude_this] then
+			stagger_type = nil
+		end
+	end
 
 	if not stagger_type then
 		return nil, nil, nil, nil, stagger_strength * armor_damage_modifier
@@ -69,7 +77,7 @@ function _calculate_stagger_strength(damage_profile, target_settings, power_leve
 	local is_rending = rending_multiplier > 0
 
 	if is_rending then
-		stagger_strength = stagger_strength * rending_stagger_strength_modifier * rending_multiplier
+		stagger_strength = stagger_strength * (rending_stagger_strength_modifier * rending_multiplier + 1)
 	end
 
 	if optional_stagger_strength_multiplier then
@@ -111,7 +119,7 @@ end
 
 local stagger_categories = StaggerSettings.stagger_categories
 
-function _get_stagger_type(stagger_strength, damage_profile, breed, stagger_resistance, hit_shield, optional_mutator_stagger_overrides)
+function _get_stagger_type(stagger_strength, damage_profile, breed, stagger_resistance, hit_shield, optional_mutator_stagger_overrides, hit_weakspot)
 	local stagger_category = hit_shield and damage_profile.shield_stagger_category or damage_profile.stagger_category
 	local stagger_list = stagger_categories[stagger_category]
 	local chosen_stagger_type = nil
@@ -126,7 +134,8 @@ function _get_stagger_type(stagger_strength, damage_profile, breed, stagger_resi
 		local stagger_threshold = stagger_thresholds[stagger_type] or default_stagger_thresholds[stagger_type]
 
 		if stagger_threshold >= 0 then
-			stagger_threshold = stagger_threshold * stagger_resistance
+			local stagger_resistance_modifier = hit_weakspot and damage_profile.weakspot_stagger_resistance_modifier or damage_profile.stagger_resistance_modifier or 1
+			stagger_threshold = stagger_threshold * stagger_resistance * stagger_resistance_modifier
 
 			if chosen_stagger_threshold < stagger_threshold and stagger_threshold < stagger_strength then
 				chosen_stagger_type = stagger_type

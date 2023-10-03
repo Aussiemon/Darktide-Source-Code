@@ -21,9 +21,9 @@ PocketableUtils.validate_give_pockatable_target_func = function (target_unit)
 	local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
 	local target_inventory_component = target_unit_data_extension:read_component("inventory")
 	local target_visual_loadout_extension = ScriptUnit.extension(target_unit, "visual_loadout_system")
-	local is_equiped = PlayerUnitVisualLoadout.slot_equipped(target_inventory_component, target_visual_loadout_extension, "slot_pocketable")
+	local is_equipped = PlayerUnitVisualLoadout.slot_equipped(target_inventory_component, target_visual_loadout_extension, "slot_pocketable")
 
-	return not is_equiped
+	return not is_equipped
 end
 
 return PocketableUtils

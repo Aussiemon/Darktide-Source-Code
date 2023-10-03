@@ -19,6 +19,46 @@ table.insert(AdvancedSettings, require("scripts/settings/input/advanced_ingame_i
 table.insert(AdvancedSettings, require("scripts/settings/input/default_imgui_input_settings"))
 table.insert(AdvancedSettings, require("scripts/settings/input/default_view_input_settings"))
 
+local V2Settings = {}
+
+table.insert(V2Settings, require("scripts/settings/input/default_debug_input_settings"))
+table.insert(V2Settings, require("scripts/settings/input/default_free_flight_input_settings"))
+table.insert(V2Settings, require("scripts/settings/input/v2_ingame_input_settings"))
+table.insert(V2Settings, require("scripts/settings/input/default_imgui_input_settings"))
+table.insert(V2Settings, require("scripts/settings/input/default_view_input_settings"))
+
+local BlitzFocus = {}
+
+table.insert(BlitzFocus, require("scripts/settings/input/default_debug_input_settings"))
+table.insert(BlitzFocus, require("scripts/settings/input/default_free_flight_input_settings"))
+table.insert(BlitzFocus, require("scripts/settings/input/blitz_focus_ingame_input_settings"))
+table.insert(BlitzFocus, require("scripts/settings/input/default_imgui_input_settings"))
+table.insert(BlitzFocus, require("scripts/settings/input/default_view_input_settings"))
+
+local TriggerDodgerBumperAttacker = {}
+
+table.insert(TriggerDodgerBumperAttacker, require("scripts/settings/input/default_debug_input_settings"))
+table.insert(TriggerDodgerBumperAttacker, require("scripts/settings/input/default_free_flight_input_settings"))
+table.insert(TriggerDodgerBumperAttacker, require("scripts/settings/input/trigger_dodger_bumper_attacker_ingame_input_settings"))
+table.insert(TriggerDodgerBumperAttacker, require("scripts/settings/input/default_imgui_input_settings"))
+table.insert(TriggerDodgerBumperAttacker, require("scripts/settings/input/default_view_input_settings"))
+
+local BumperAttackerBlocker = {}
+
+table.insert(BumperAttackerBlocker, require("scripts/settings/input/default_debug_input_settings"))
+table.insert(BumperAttackerBlocker, require("scripts/settings/input/default_free_flight_input_settings"))
+table.insert(BumperAttackerBlocker, require("scripts/settings/input/bumper_attack_and_block_input_settings"))
+table.insert(BumperAttackerBlocker, require("scripts/settings/input/default_imgui_input_settings"))
+table.insert(BumperAttackerBlocker, require("scripts/settings/input/default_view_input_settings"))
+
+local TomsSettings = {}
+
+table.insert(TomsSettings, require("scripts/settings/input/default_debug_input_settings"))
+table.insert(TomsSettings, require("scripts/settings/input/default_free_flight_input_settings"))
+table.insert(TomsSettings, require("scripts/settings/input/toms_ingame_input_settings"))
+table.insert(TomsSettings, require("scripts/settings/input/default_imgui_input_settings"))
+table.insert(TomsSettings, require("scripts/settings/input/default_view_input_settings"))
+
 local InputManager = class("InputManager")
 InputManager.DEBUG_TAG = "Input Manager"
 InputManager.SELECTION_LOGIC = table.enum("fixed", "latest", "combined")
@@ -33,12 +73,39 @@ InputManager.init = function (self)
 	self._used_input_devices = {}
 	self._available_layouts = {
 		default = {
+			sort_order = 1,
 			display_name = "loc_setting_controller_layout_default",
 			settings = DefaultSettings
 		},
 		advanced = {
-			display_name = "loc_setting_controller_layout_advanced",
+			sort_order = 2,
+			display_name = "loc_setting_controller_layout_advanced_new",
 			settings = AdvancedSettings
+		},
+		BlitzFocus = {
+			sort_order = 4,
+			display_name = "loc_setting_controller_layout_blitz_focus",
+			settings = BlitzFocus
+		},
+		BumperAttackerBlocker = {
+			sort_order = 5,
+			display_name = "loc_setting_controller_layout_bumper_attacker",
+			settings = BumperAttackerBlocker
+		},
+		TriggerDodgerBumperAttacker = {
+			sort_order = 6,
+			display_name = "loc_setting_controller_layout_bumper_attacker_dodger",
+			settings = TriggerDodgerBumperAttacker
+		},
+		v2 = {
+			sort_order = 7,
+			display_name = "loc_setting_controller_layout_v2",
+			settings = V2Settings
+		},
+		toms = {
+			sort_order = 3,
+			display_name = "loc_setting_controller_layout_toms",
+			settings = TomsSettings
 		}
 	}
 	self._input_services = {}
@@ -47,6 +114,11 @@ InputManager.init = function (self)
 	self._key_watch_result = nil
 	self._key_watch_devices = {}
 	self._key_watch = false
+	self._user_rumble_state = true
+	self._wwise_rumble_state = nil
+	self._device_wwise_rumble_state = false
+	self._wwise_rumble_suppression = nil
+	self._rumble_device = nil
 	self._selection = {
 		logic = InputManager.SELECTION_LOGIC.latest,
 		controller_type = "keyboard",
@@ -56,6 +128,9 @@ InputManager.init = function (self)
 
 	event_manager:register(self, "device_activated", "_cb_device_activated")
 	event_manager:register(self, "device_deactivated", "_cb_device_deactivated")
+	event_manager:register(self, "event_update_rumble_enabled", "_event_update_rumble_enabled")
+	event_manager:register(self, "event_update_rumble_intensity", "_event_update_rumble_intensity")
+	event_manager:register(self, "event_player_authenticated", "_event_player_authenticated")
 
 	self._use_last_pressed = true
 
@@ -73,6 +148,15 @@ InputManager.init = function (self)
 		self:_set_allow_cursor_rendering(allow_cursor_rendering)
 		self:_update_clip_cursor()
 	end
+end
+
+InputManager._event_player_authenticated = function (self)
+	if DEDICATED_SERVER then
+		return
+	end
+
+	self:_event_update_rumble_enabled()
+	self:_event_update_rumble_intensity()
 end
 
 InputManager.software_cursor_active = function (self)
@@ -116,6 +200,8 @@ InputManager._update_selection = function (self)
 	else
 		self:_select_combined()
 	end
+
+	self:_update_wwise_rumble()
 end
 
 InputManager._select_fixed = function (self)
@@ -123,6 +209,7 @@ InputManager._select_fixed = function (self)
 	local device = self:_find_active_device(self._selection.controller_type, self._selection.slot)
 
 	if device then
+		self:_set_wwise_rumble_state_from_device(device)
 		table.clear(used_devices)
 
 		local extra_device = nil
@@ -147,6 +234,8 @@ InputManager._select_latest = function (self)
 	local latest = InputDevice.last_pressed_device
 
 	if latest then
+		self:_set_wwise_rumble_state_from_device(latest)
+
 		local used_devices = self._used_input_devices
 
 		if table.array_contains(used_devices, latest) then
@@ -573,6 +662,9 @@ InputManager.destroy = function (self)
 
 	event_manager:unregister(self, "device_activated")
 	event_manager:unregister(self, "device_deactivated")
+	event_manager:unregister(self, "event_update_rumble_enabled")
+	event_manager:unregister(self, "event_update_rumble_intensity")
+	event_manager:unregister(self, "event_player_authenticated")
 end
 
 InputManager.change_input_layout = function (self, layout_name)
@@ -597,11 +689,92 @@ InputManager.get_input_layout_names = function (self)
 	for name, values in pairs(self._available_layouts) do
 		layout_names[#layout_names + 1] = {
 			name = name,
-			display_name = values.display_name
+			display_name = values.display_name,
+			sort_order = values.sort_order
 		}
+
+		table.sort(layout_names, function (a, b)
+			return a.sort_order < b.sort_order
+		end)
 	end
 
 	return layout_names
+end
+
+InputManager._set_wwise_rumble_state_from_device = function (self, device)
+	if device:can_rumble() then
+		if device ~= self._rumble_device then
+			self._device_wwise_rumble_state = true
+			self._rumble_device = device
+		end
+	elseif self._rumble_device then
+		self._device_wwise_rumble_state = false
+		self._rumble_device = nil
+	end
+end
+
+InputManager._event_update_rumble_enabled = function (self)
+	if DEDICATED_SERVER then
+		return
+	end
+
+	local save_data = Managers.save:account_data()
+	local input_settings = save_data.input_settings
+	local rumble_enabled = not not input_settings.rumble_enabled
+	self._user_rumble_state = rumble_enabled
+end
+
+InputManager._event_update_rumble_intensity = function (self)
+	if DEDICATED_SERVER then
+		return
+	end
+
+	local save_data = Managers.save:account_data()
+	local input_settings = save_data.input_settings
+	local rumble_intensity = (input_settings.rumble_intensity or 50) / 100
+	local rumble_intensity_gameplay = (input_settings.rumble_intensity_gameplay or 100) / 100
+	local rumble_intensity_immersive = (input_settings.rumble_intensity_immersive or 100) / 100
+
+	Wwise.set_parameter("options_rumble_slider", rumble_intensity)
+	Wwise.set_parameter("options_rumble_slider_gameplay", rumble_intensity_gameplay)
+	Wwise.set_parameter("options_rumble_slider_immersive", rumble_intensity_immersive)
+end
+
+InputManager._set_wwise_rumble_enabled = function (self, enabled)
+	if DEDICATED_SERVER then
+		return
+	end
+
+	Wwise.set_rumble_enabled(enabled)
+end
+
+InputManager._update_wwise_rumble = function (self)
+	local user_rumble_state = self._user_rumble_state
+	local device_wwise_rumble_state = self._device_wwise_rumble_state
+	local wwise_rumble_suppression = self._wwise_rumble_suppression
+	local wanted_wwise_rumble_state = user_rumble_state and device_wwise_rumble_state and not wwise_rumble_suppression
+
+	if wanted_wwise_rumble_state ~= self._wwise_rumble_state then
+		Wwise.set_rumble_enabled(wanted_wwise_rumble_state)
+
+		self._wwise_rumble_state = wanted_wwise_rumble_state
+	end
+end
+
+InputManager.start_suppress_wwise_rumble = function (self)
+	if DEDICATED_SERVER then
+		return
+	end
+
+	self._wwise_rumble_suppression = true
+end
+
+InputManager.stop_suppress_wwise_rumble = function (self)
+	if DEDICATED_SERVER then
+		return
+	end
+
+	self._wwise_rumble_suppression = nil
 end
 
 return InputManager

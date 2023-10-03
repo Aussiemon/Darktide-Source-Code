@@ -1,5 +1,4 @@
 local FrameRateManager = class("FrameRateManager")
-local INVERTED_FIXED_TIME_STEP = 1 / GameParameters.fixed_time_step
 
 FrameRateManager.init = function (self)
 	self._reasons = {}
@@ -7,7 +6,7 @@ FrameRateManager.init = function (self)
 
 	Application.set_time_step_policy(unpack(GameParameters.time_step_policy))
 
-	local fps = DEDICATED_SERVER and INVERTED_FIXED_TIME_STEP or 60
+	local fps = DEDICATED_SERVER and GameParameters.tick_rate or 60
 
 	Log.info("FrameRateManager", "Initializing framerate cap to %i fps.", fps)
 	Application.set_time_step_policy("throttle", fps)
@@ -18,7 +17,7 @@ FrameRateManager.relinquish_request = function (self, reason)
 	self._num_reasons = self._num_reasons - 1
 
 	if self._num_reasons == 0 then
-		local fps = DEDICATED_SERVER and INVERTED_FIXED_TIME_STEP or 60
+		local fps = DEDICATED_SERVER and GameParameters.tick_rate or 60
 
 		Log.info("FrameRateManager", "Reason %q relinquished, Setting frame rate to %d", reason, fps)
 		Application.set_time_step_policy("throttle", fps)
@@ -32,7 +31,7 @@ FrameRateManager.request_full_frame_rate = function (self, reason)
 
 	if self._num_reasons == 0 then
 		self._num_reasons = 1
-		local fps = DEDICATED_SERVER and INVERTED_FIXED_TIME_STEP or 0
+		local fps = DEDICATED_SERVER and GameParameters.tick_rate or 0
 
 		Log.info("FrameRateManager", "Reason %q requested. Setting frame rate to %d", reason, fps)
 

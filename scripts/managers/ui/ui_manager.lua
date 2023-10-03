@@ -1,23 +1,25 @@
+local Archetypes = require("scripts/settings/archetype/archetypes")
+local InputDevice = require("scripts/managers/input/input_device")
+local InputHoldTracker = require("scripts/managers/input/input_hold_tracker")
+local ItemIconLoaderUI = require("scripts/ui/item_icon_loader_ui")
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
+local ItemUtils = require("scripts/utilities/items")
 local LoadingIcon = require("scripts/ui/loading_icon")
 local MasterItems = require("scripts/backend/master_items")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
+local PortraitUI = require("scripts/ui/portrait_ui")
+local RenderTargetAtlasGenerator = require("scripts/ui/render_target_atlas_generator")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
+local TaskbarFlash = require("scripts/utilities/taskbar_flash")
 local UIConstantElements = require("scripts/managers/ui/ui_constant_elements")
 local UIFonts = require("scripts/managers/ui/ui_fonts")
 local UIHud = require("scripts/managers/ui/ui_hud")
 local UIManagerTestify = GameParameters.testify and require("scripts/managers/ui/ui_manager_testify")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIViewHandler = require("scripts/managers/ui/ui_view_handler")
-local PortraitUI = require("scripts/ui/portrait_ui")
-local WeaponIconUI = require("scripts/ui/weapon_icon_ui")
-local ItemIconLoaderUI = require("scripts/ui/item_icon_loader_ui")
-local Views = require("scripts/ui/views/views")
-local InputDevice = require("scripts/managers/input/input_device")
 local UISettings = require("scripts/settings/ui/ui_settings")
-local Archetypes = require("scripts/settings/archetype/archetypes")
-local ItemUtils = require("scripts/utilities/items")
-local RenderTargetAtlasGenerator = require("scripts/ui/render_target_atlas_generator")
+local UIViewHandler = require("scripts/managers/ui/ui_view_handler")
+local Views = require("scripts/ui/views/views")
+local WeaponIconUI = require("scripts/ui/weapon_icon_ui")
 local UIManager = class("UIManager")
 UIManager.DEBUG_TAG = "UI Manager"
 local DEBUG_RELOAD = false
@@ -77,6 +79,17 @@ UIManager.init = function (self)
 	Managers.event:register(self, "event_on_render_settings_applied", "event_on_render_settings_applied")
 	Managers.event:register(self, "event_cinematic_skip_state", "event_cinematic_skip_state")
 	Managers.event:register(self, "event_portrait_render_change", "event_portrait_render_change")
+
+	self._input_hold_tracker = InputHoldTracker:new(input_service_name)
+	self._client_waiting_loadout = false
+end
+
+UIManager.update_client_loadout_waiting_state = function (self, state)
+	self._client_waiting_loadout = state
+end
+
+UIManager.get_client_loadout_waiting_state = function (self)
+	return self._client_waiting_loadout
 end
 
 UIManager.get_delta_time = function (self)
@@ -408,7 +421,19 @@ UIManager.input_service = function (self)
 		input_service = null_service
 	end
 
+	if self._disable_input then
+		input_service = null_service
+	end
+
 	return input_service, null_service, gamepad_active
+end
+
+UIManager.start_tracking_input_hold = function (self, action_name, time_completed, cb_completed)
+	return self._input_hold_tracker:start_tracking(action_name, time_completed, cb_completed)
+end
+
+UIManager.stop_tracking_input_hold = function (self, tracking_id)
+	self._input_hold_tracker:stop_tracking(tracking_id)
 end
 
 UIManager.get_input_alias_key = function (self, action, optional_service_name)
@@ -771,6 +796,10 @@ UIManager.destroy = function (self)
 	Managers.time:unregister_timer(self._timer_name)
 
 	self._timer_name = nil
+
+	self._input_hold_tracker:delete()
+
+	self._input_hold_tracker = nil
 end
 
 UIManager.play_3d_sound = function (self, event_name, position)
@@ -826,6 +855,8 @@ end
 UIManager.update = function (self, dt, t)
 	self._render_target_atlas_generator:update(dt, t)
 	self:_handle_single_icon_renderer_destruction()
+
+	self._disable_input = self._input_hold_tracker:update(dt)
 
 	if self._update_hotkeys then
 		self:_update_view_hotkeys()
@@ -952,6 +983,10 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 		return
 	end
 
+	if self:view_active("talent_builder_view") then
+		return
+	end
+
 	local gui = ui_renderer.gui
 	local w = RESOLUTION_LOOKUP.width
 	local h = RESOLUTION_LOOKUP.height
@@ -1059,8 +1094,7 @@ UIManager._debug_draw_version_info = function (self, dt, t)
 
 	if host_type and host_type == "hub_server" then
 		local members = connection_manager:num_members()
-		local max_members = GameParameters.max_players_hub
-		num_hub_players = string.format("Hub Players: %d/%d", members, max_members)
+		num_hub_players = string.format("Hub Players: %d", members)
 	end
 
 	local _unique_instance_id = Managers.connection:unique_instance_id()
@@ -1605,6 +1639,8 @@ UIManager.event_show_ui_popup = function (self, data, callback)
 	if callback then
 		callback(popup_id)
 	end
+
+	TaskbarFlash.flash_window()
 end
 
 UIManager.event_pause_popup_input = function (self, popup_id, paused)
@@ -1677,6 +1713,7 @@ UIManager.event_player_profile_updated = function (self, peer_id, local_player_i
 	local instance = self._back_buffer_render_handlers.portraits
 
 	instance:profile_updated(profile)
+	self:update_client_loadout_waiting_state(false)
 end
 
 UIManager.event_portrait_render_change = function (self, value)

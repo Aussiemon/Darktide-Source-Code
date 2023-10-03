@@ -1,9 +1,11 @@
 local InputDevice = require("scripts/managers/input/input_device")
 local XboxPrivileges = require("scripts/managers/account/xbox_privileges")
 local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
-local render_settings = require("scripts/settings/options/render_settings")
+local RenderSettings = require("scripts/settings/options/render_settings")
+local SoundSettings = require("scripts/settings/options/sound_settings")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live")
 local FGRLLimits = require("scripts/foundation/utilities/fgrl_limits")
+local Promise = require("scripts/foundation/utilities/promise")
 local AccountManagerXboxLive = class("AccountManagerXboxLive")
 local SIGNIN_STATES = {
 	fetching_sandbox_id = "loc_signin_fetch_sandbox_id",
@@ -27,6 +29,14 @@ AccountManagerXboxLive.reset = function (self)
 		XSocialManager.remove_local_user(self._social_groups_created_id)
 	end
 
+	if self._popup_id then
+		Managers.event:trigger("event_remove_ui_popup", self._popup_id)
+	end
+
+	if self._info_popup_id then
+		Managers.event:trigger("event_remove_ui_popup", self._info_popup_id)
+	end
+
 	self._social_groups_created_id = nil
 
 	table.clear(self._friends)
@@ -46,6 +56,7 @@ AccountManagerXboxLive.reset = function (self)
 	self._user_device_association_changed = nil
 	self._mute_list = {}
 	self._block_list = {}
+	self._block_list_refreshed = false
 	self._communication_restriction_iteration = self._communication_restriction_iteration or 1
 
 	if not self._do_re_signin then
@@ -107,6 +118,7 @@ AccountManagerXboxLive.update = function (self, dt, t)
 
 	self:_handle_user_changes()
 	self:verify_connection()
+	self._xbox_privileges:update(dt, t)
 end
 
 AccountManagerXboxLive.verify_connection = function (self)
@@ -239,12 +251,30 @@ AccountManagerXboxLive.xuid = function (self)
 	return self._xuid
 end
 
+AccountManagerXboxLive.xbox_live_block_list = function (self)
+	local promise = Promise:new()
+
+	if self._block_list_refreshed then
+		promise:resolve(table.clone(self._block_list))
+	else
+		XboxLiveUtils.get_block_list():next(function (block_list)
+			self._block_list = block_list
+			self._block_list_refreshed = true
+
+			promise:resolve(table.clone(block_list))
+		end):catch(function (err)
+			promise:reject(err)
+		end)
+	end
+
+	return promise
+end
+
 AccountManagerXboxLive.refresh_communication_restrictions = function (self)
 	XboxLiveUtils.get_mute_list():next(function (mute_list)
 		self._mute_list = mute_list
 
-		XboxLiveUtils.get_block_list():next(function (block_list)
-			self._block_list = block_list
+		self:xbox_live_block_list():next(function ()
 			self._communication_restriction_iteration = self._communication_restriction_iteration + 1
 
 			self:fetch_crossplay_restrictions()
@@ -280,6 +310,10 @@ end
 
 AccountManagerXboxLive.verify_user_restriction = function (self, xuid, restriction, optional_callback)
 	self._xbox_privileges:verify_user_restriction(xuid, restriction, optional_callback)
+end
+
+AccountManagerXboxLive.verify_user_restriction_batched = function (self, xuid, restriction, batch_type)
+	self._xbox_privileges:verify_user_restriction_batched(xuid, restriction, batch_type)
 end
 
 AccountManagerXboxLive.user_has_restriction = function (self, xuid, restriction)
@@ -421,7 +455,7 @@ AccountManagerXboxLive._cb_query_storage_results = function (self, success, data
 
 		self._signin_state = SIGNIN_STATES.loading_save
 	else
-		self:_setup_friends_list()
+		self:_finalize_signin()
 	end
 end
 
@@ -432,7 +466,7 @@ AccountManagerXboxLive._cb_save_loaded = function (self, success)
 		return
 	end
 
-	self:_setup_friends_list()
+	self:_finalize_signin()
 end
 
 AccountManagerXboxLive._cb_storage_deleted = function (self, success)
@@ -442,7 +476,7 @@ AccountManagerXboxLive._cb_storage_deleted = function (self, success)
 		return
 	end
 
-	self:_setup_friends_list()
+	self:_finalize_signin()
 end
 
 AccountManagerXboxLive._setup_friends_list = function (self)
@@ -465,7 +499,7 @@ AccountManagerXboxLive._setup_friends_list = function (self)
 		return
 	end
 
-	self:_finalize_signin()
+	self:cb_signin_complete()
 end
 
 AccountManagerXboxLive._finalize_signin = function (self)
@@ -473,15 +507,16 @@ AccountManagerXboxLive._finalize_signin = function (self)
 		ParameterResolver.resolve_dev_parameters()
 	end
 
-	local settings = render_settings.settings
+	local render_settings = RenderSettings.settings
 
-	self:_apply_render_settings(settings)
+	self:_apply_render_settings(render_settings)
+	self:_apply_audio_settings()
 	self:_show_gamertag_popup()
 end
 
 AccountManagerXboxLive._show_gamertag_popup = function (self)
 	if GameParameters.skip_gamertag_popup then
-		self:cb_signin_complete()
+		self:_setup_friends_list()
 	else
 		local context = {
 			title_text = "loc_popup_info",
@@ -493,7 +528,7 @@ AccountManagerXboxLive._show_gamertag_popup = function (self)
 				{
 					text = "loc_popup_button_confirm",
 					close_on_pressed = true,
-					callback = callback(self, "cb_signin_complete")
+					callback = callback(self, "_setup_friends_list")
 				},
 				{
 					text = "loc_exit_to_title_display_name",
@@ -512,6 +547,8 @@ end
 
 AccountManagerXboxLive.cb_signin_complete = function (self)
 	self._info_popup_id = nil
+
+	self._xbox_privileges:push_telemetry()
 
 	if self._signin_callback then
 		self._signin_callback()
@@ -549,6 +586,26 @@ AccountManagerXboxLive._apply_render_settings = function (self, settings)
 							on_activated(value, setting)
 						end
 					end
+				end
+			end
+		end
+	end
+end
+
+AccountManagerXboxLive._apply_audio_settings = function (self)
+	local settings = SoundSettings.settings
+
+	for _, setting in ipairs(settings) do
+		local get_function = setting.get_function
+
+		if get_function then
+			local value = get_function()
+
+			if value ~= nil then
+				local commit = setting.commit
+
+				if commit then
+					commit(value)
 				end
 			end
 		end

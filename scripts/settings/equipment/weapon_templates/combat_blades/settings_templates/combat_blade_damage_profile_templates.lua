@@ -65,8 +65,8 @@ damage_templates.combat_blade_heavy_smiter = {
 					[armor_types.armored] = damage_lerp_values.lerp_0_8,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
+					[armor_types.berserker] = damage_lerp_values.lerp_1,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 					[armor_types.prop_armor] = damage_lerp_values.lerp_0_8
@@ -85,8 +85,8 @@ damage_templates.combat_blade_heavy_smiter = {
 			},
 			power_distribution = {
 				attack = {
-					150,
-					300
+					200,
+					400
 				},
 				impact = {
 					15,
@@ -117,7 +117,7 @@ damage_templates.combat_blade_heavy_smiter = {
 					[armor_types.armored] = damage_lerp_values.lerp_0_5,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.no_damage,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_5,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
@@ -158,7 +158,7 @@ damage_templates.combat_blade_heavy_smiter = {
 					[armor_types.armored] = damage_lerp_values.lerp_0_5,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.no_damage,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.no_damage,
 					[armor_types.void_shield] = 0,
@@ -246,7 +246,7 @@ damage_templates.combat_blade_light_smiter = {
 			[armor_types.armored] = damage_lerp_values.lerp_0_5,
 			[armor_types.resistant] = damage_lerp_values.lerp_1,
 			[armor_types.player] = damage_lerp_values.lerp_1,
-			[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.no_damage,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 			[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -293,8 +293,8 @@ damage_templates.combat_blade_light_smiter = {
 			},
 			power_distribution = {
 				attack = {
-					90,
-					180
+					100,
+					200
 				},
 				impact = {
 					6,
@@ -345,8 +345,8 @@ damage_templates.combat_blade_light_smiter = {
 			},
 			power_distribution = {
 				attack = {
-					25,
-					75
+					40,
+					80
 				},
 				impact = {
 					4,
@@ -423,7 +423,7 @@ overrides.combat_blade_light_smiter_stab = {
 			"armor_damage_modifier",
 			"attack",
 			"armored",
-			damage_lerp_values.lerp_1
+			damage_lerp_values.lerp_1_25
 		},
 		{
 			"targets",
@@ -431,7 +431,7 @@ overrides.combat_blade_light_smiter_stab = {
 			"armor_damage_modifier",
 			"attack",
 			"super_armor",
-			damage_lerp_values.lerp_0_25
+			damage_lerp_values.lerp_0_5
 		},
 		{
 			"targets",
@@ -440,6 +440,14 @@ overrides.combat_blade_light_smiter_stab = {
 			"attack",
 			"resistant",
 			damage_lerp_values.lerp_1_1
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"berserker",
+			damage_lerp_values.lerp_0_75
 		}
 	}
 }

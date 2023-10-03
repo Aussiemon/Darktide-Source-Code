@@ -335,7 +335,7 @@ ViewElementPerksItemBlueprints.perk = {
 			local item_perk = item_perks[i]
 			local selected_index = ingredients.existing_perk_index
 
-			if i == selected_index and item_perk.id == perk_item.name and perk_item.rarity == item_perk.rarity or i ~= selected_index and item_perk.id == perk_item.name then
+			if i == selected_index and item_perk.id == perk_item.name and perk_item.rarity <= item_perk.rarity or i ~= selected_index and item_perk.id == perk_item.name then
 				content.is_wasteful = true
 			end
 		end

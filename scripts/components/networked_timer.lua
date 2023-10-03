@@ -20,6 +20,10 @@ NetworkedTimer.editor_init = function (self, unit)
 	return
 end
 
+NetworkedTimer.editor_validate = function (self, unit)
+	return true, ""
+end
+
 NetworkedTimer.editor_update = function (self, unit, dt, t)
 	return
 end

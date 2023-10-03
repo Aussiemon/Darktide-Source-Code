@@ -362,8 +362,8 @@ local action_data = {
 		},
 		attack_anim_durations = {
 			attack_combo_01 = 3.7333333333333334,
-			attack_combo_08 = 4.5,
-			attack_combo_04 = 3.8333333333333335
+			attack_combo_08 = 3.6666666666666665,
+			attack_combo_04 = 3.2666666666666666
 		},
 		attack_intensities = {
 			ranged = 1,
@@ -672,6 +672,23 @@ local action_data = {
 				}
 			},
 			sticky = {
+				fwd = {
+					"stagger_bwd_sticky"
+				},
+				bwd = {
+					"stagger_front_sticky"
+				},
+				right = {
+					"stagger_left_sticky"
+				},
+				left = {
+					"stagger_right_sticky"
+				},
+				dwn = {
+					"stagger_bwd_sticky"
+				}
+			},
+			electrocuted = {
 				fwd = {
 					"stagger_bwd_sticky"
 				},

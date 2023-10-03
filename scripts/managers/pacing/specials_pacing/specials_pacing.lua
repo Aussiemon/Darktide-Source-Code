@@ -15,6 +15,7 @@ SpecialsPacing.init = function (self, nav_world)
 	self._timer_modifier = 1
 	self._timer_multiplier = 1
 	self._max_alive_specials_multiplier = 1
+	self._max_alive_specials_bonus = 0
 	self._rush_prevention_cooldown = 0
 	self._frozen = false
 	self._speed_running_prevention_cooldown = 0
@@ -22,6 +23,7 @@ SpecialsPacing.init = function (self, nav_world)
 	self._num_speed_running_checks = 0
 	self._old_furthest_travel_distance = 0
 	self._specials_slots = {}
+	self._num_failed_attempts = 0
 end
 
 SpecialsPacing.on_spawn_points_generated = function (self, template)
@@ -42,6 +44,10 @@ SpecialsPacing.on_spawn_points_generated = function (self, template)
 	end
 
 	self._destroy_special_distance_sq = template.destroy_special_distance^2
+	local has_move_timer_when_horde_active_mutator = Managers.state.mutator:mutator("mutator_move_specials_timer_when_horde_active")
+	local has_move_timer_when_monster_active_mutator = Managers.state.mutator:mutator("mutator_move_specials_timer_when_monster_active")
+	self._has_move_timer_when_horde_active_mutator = has_move_timer_when_horde_active_mutator
+	self._has_move_timer_when_monster_active_mutator = has_move_timer_when_monster_active_mutator
 end
 
 local MIN_TIMER_DIFF_RANGE = {
@@ -158,7 +164,7 @@ end
 
 SpecialsPacing._setup = function (self, template, optional_first_spawn_modifier)
 	self._template = template
-	local max_alive_specials = math.ceil(template.max_alive_specials * self._max_alive_specials_multiplier)
+	local max_alive_specials = math.ceil(template.max_alive_specials * self._max_alive_specials_multiplier + self._max_alive_specials_bonus)
 	local specials_slots = Script.new_array(max_alive_specials)
 	self._num_spawned_specials = 0
 	self._max_alive_specials = max_alive_specials
@@ -211,10 +217,57 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 	local max_alive_specials = self._max_alive_specials
 	local template = self._template
 	local has_travel_distance_mutator = Managers.state.mutator:mutator("mutator_travel_distance_spawning_specials")
-	local has_move_timer_when_horde_active_mutator = Managers.state.mutator:mutator("mutator_move_specials_timer_when_horde_active")
-	local has_move_timer_when_monster_active_mutator = Managers.state.mutator:mutator("mutator_move_specials_timer_when_monster_active")
-	local move_timer_when_horde_active = template.move_timer_when_horde_active or has_move_timer_when_horde_active_mutator
-	local move_timer_when_monster_active = template.move_timer_when_monster_active or has_move_timer_when_monster_active_mutator
+	local move_timer_when_horde_active = template.move_timer_when_horde_active or self._has_move_timer_when_horde_active_mutator
+	local move_timer_when_monster_active = template.move_timer_when_monster_active or self._has_move_timer_when_monster_active_mutator
+	local move_timer_when_terror_event_active = template.move_timer_when_terror_event_active
+	local move_timer_override = false
+	local pacing_manager = Managers.state.pacing
+	local move_timer_when_challenge_rating_above = self._override_move_timer_when_challenge_rating_above or template.move_timer_when_challenge_rating_above
+
+	if move_timer_when_challenge_rating_above then
+		local delay_is_active = self._move_timer_when_challenge_rating_above_delay and self._move_timer_when_challenge_rating_above_delay > 0
+
+		if delay_is_active or move_timer_when_challenge_rating_above < pacing_manager:total_challenge_rating() then
+			move_timer_override = true
+
+			if not delay_is_active then
+				self._move_timer_when_challenge_rating_above_delay = template.move_timer_when_challenge_rating_above_delay or 30
+			end
+		end
+	end
+
+	if self._always_move_timer then
+		move_timer_override = true
+	end
+
+	if not move_timer_override and move_timer_when_horde_active then
+		local horde_manager = Managers.state.horde
+		local num_active_hordes = 0
+
+		for horde_type, _ in pairs(HORDE_TYPES) do
+			if horde_type ~= "trickle_horde" then
+				num_active_hordes = num_active_hordes + horde_manager:num_active_hordes(horde_type)
+
+				if num_active_hordes > 0 then
+					move_timer_override = true
+				end
+			end
+		end
+	end
+
+	if not move_timer_override and move_timer_when_monster_active then
+		if pacing_manager:num_aggroed_monsters() > 0 then
+			move_timer_override = true
+		end
+
+		if self._force_move_timer then
+			move_timer_override = true
+		end
+	end
+
+	if not move_timer_override and move_timer_when_terror_event_active and Managers.state.terror_event:num_active_events() > 0 then
+		move_timer_override = true
+	end
 
 	for i = 1, max_alive_specials do
 		local specials_slot = specials_slots[i]
@@ -271,52 +324,20 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 				})
 			end
 		else
+			local total_challenge_rating = pacing_manager:total_challenge_rating()
+			local include_travel_distance_in_timer = nil
+
+			if not move_timer_override and template.always_update_breeds then
+				local breed_name = self:_get_special_slot_breed_name(specials_slot)
+				local required_challenge_rating = template.always_update_breeds[breed_name]
+				move_timer_override = required_challenge_rating and required_challenge_rating <= total_challenge_rating
+				include_travel_distance_in_timer = move_timer_override
+			end
+
 			local foreshadow_stinger = specials_slot.foreshadow_stinger
 			local foreshadow_stinger_available = foreshadow_stinger and not specials_slot.foreshadow_triggered
 			local can_update_foreshadow_stinger_timer = foreshadow_stinger_available and (specials_allowed or specials_slot.injected)
-			local move_timer_override = false
-			local pacing_manager = Managers.state.pacing
-			local move_timer_when_challenge_rating_above = template.move_timer_when_challenge_rating_above
-
-			if move_timer_when_challenge_rating_above then
-				local delay_is_active = self._move_timer_when_challenge_rating_above_delay and self._move_timer_when_challenge_rating_above_delay > 0
-
-				if delay_is_active or move_timer_when_challenge_rating_above < pacing_manager:total_challenge_rating() then
-					move_timer_override = true
-
-					if not delay_is_active then
-						self._move_timer_when_challenge_rating_above_delay = template.move_timer_when_challenge_rating_above_delay
-					end
-				end
-			end
-
-			if not move_timer_override and move_timer_when_horde_active then
-				local horde_manager = Managers.state.horde
-				local num_active_hordes = 0
-
-				for horde_type, _ in pairs(HORDE_TYPES) do
-					if horde_type ~= "trickle_horde" then
-						num_active_hordes = num_active_hordes + horde_manager:num_active_hordes(horde_type)
-
-						if num_active_hordes > 0 then
-							move_timer_override = true
-						end
-					end
-				end
-			end
-
-			if not move_timer_override and move_timer_when_monster_active then
-				if pacing_manager:num_aggroed_monsters() > 0 then
-					move_timer_override = true
-				end
-
-				if self._force_move_timer then
-					move_timer_override = true
-				end
-			end
-
-			local total_challenge_rating = pacing_manager:total_challenge_rating()
-			local coordinated_strike_challenge_rating = template.coordinated_strike_challenge_rating
+			local coordinated_strike_challenge_rating = self._override_move_timer_when_challenge_rating_above or template.coordinated_strike_challenge_rating
 			local coordinated_strike_update_override = specials_slot.coordinated_strike and (not coordinated_strike_challenge_rating or coordinated_strike_challenge_rating < total_challenge_rating)
 			local should_update_by_travel_distance = not coordinated_strike_update_override and not move_timer_override and (template.travel_distance_spawning or has_travel_distance_mutator)
 			local pause_spawn = false
@@ -329,7 +350,9 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 
 			if can_update_foreshadow_stinger_timer then
 				if should_update_by_travel_distance then
-					specials_slot.foreshadow_stinger_timer = math.max(specials_slot.foreshadow_stinger_timer - traveled_this_frame, 0)
+					specials_slot.foreshadow_stinger_timer = math.max(specials_slot.foreshadow_stinger_timer - traveled_this_frame * ramp_up_timer_modifier, 0)
+				elseif include_travel_distance_in_timer then
+					specials_slot.foreshadow_stinger_timer = math.max(specials_slot.foreshadow_stinger_timer - (dt + traveled_this_frame) * ramp_up_timer_modifier * self._timer_multiplier, 0)
 				else
 					specials_slot.foreshadow_stinger_timer = math.max(specials_slot.foreshadow_stinger_timer - dt * ramp_up_timer_modifier * self._timer_multiplier, 0)
 				end
@@ -368,7 +391,9 @@ SpecialsPacing.update = function (self, dt, t, side_id, target_side_id)
 				local new_spawn_timer = nil
 
 				if should_update_by_travel_distance and not specials_slot.foreshadow_triggered then
-					new_spawn_timer = specials_slot.spawn_timer - traveled_this_frame
+					new_spawn_timer = specials_slot.spawn_timer - traveled_this_frame * ramp_up_timer_modifier
+				elseif include_travel_distance_in_timer then
+					new_spawn_timer = specials_slot.spawn_timer - (dt + traveled_this_frame) * ramp_up_timer_modifier * self._timer_multiplier
 				else
 					new_spawn_timer = specials_slot.spawn_timer - dt * ramp_up_timer_modifier * self._timer_multiplier
 				end
@@ -405,6 +430,11 @@ SpecialsPacing._spawn_special = function (self, specials_slot, side_id, target_s
 	local breed_name = self:_get_special_slot_breed_name(specials_slot)
 	local optional_prefered_spawn_direction = specials_slot.optional_prefered_spawn_direction
 	local optional_mainpath_offset = specials_slot.optional_mainpath_offset
+
+	if Managers.state.terror_event:num_active_events() > 0 then
+		optional_mainpath_offset = 0
+	end
+
 	local prefered_ahead_override = optional_prefered_spawn_direction and optional_prefered_spawn_direction == "ahead"
 	local prefered_behind_override = optional_prefered_spawn_direction and optional_prefered_spawn_direction == "behind"
 	local check_ahead = nil
@@ -415,18 +445,18 @@ SpecialsPacing._spawn_special = function (self, specials_slot, side_id, target_s
 		check_ahead = math.random() > 0.5
 	end
 
-	local spawner_group = specials_slot.spawner_group
+	local optional_health_modifier = specials_slot.optional_health_modifier
+	local specials_slot_spawner_group = specials_slot.spawner_group
 
-	if spawner_group then
+	if specials_slot_spawner_group then
 		local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
-		local spawners = minion_spawn_system:spawners_in_group(spawner_group)
+		local spawners = minion_spawn_system:spawners_in_group(specials_slot_spawner_group)
 		local spawner = spawners[math.random(1, #spawners)]
-		local spawner_queue_id = self:_add_spawner_special(spawner, breed_name, side_id, target_side_id)
+		local spawner_queue_id = self:_add_spawner_special(spawner, breed_name, side_id, target_side_id, optional_health_modifier)
 
 		return true, nil, spawner_queue_id, spawner
 	end
 
-	local optional_health_modifier = specials_slot.optional_health_modifier
 	local randomize = specials_slot.coordinated_strike
 	local spawn_position, closest_target_unit = self:_find_spawn_position(side_id, breed_name, target_side_id, check_ahead, optional_mainpath_offset, randomize)
 
@@ -434,16 +464,28 @@ SpecialsPacing._spawn_special = function (self, specials_slot, side_id, target_s
 		spawn_position, closest_target_unit = self:_find_spawn_position(side_id, breed_name, target_side_id, not check_ahead, nil, randomize)
 
 		if not spawn_position then
-			local nearby_spawner = self:_find_nearby_spawner(target_side_id)
+			local spawner_groups = self._spawner_groups
 
-			if nearby_spawner then
-				local spawner_queue_id = self:_add_spawner_special(nearby_spawner, breed_name, side_id, target_side_id, optional_health_modifier)
+			if spawner_groups then
+				local spawner_group = spawner_groups[math.random(1, #spawner_groups)]
+				local minion_spawn_system = Managers.state.extension:system("minion_spawner_system")
+				local spawners = minion_spawn_system:spawners_in_group(spawner_group)
+				local spawner = spawners[math.random(1, #spawners)]
+				local spawner_queue_id = self:_add_spawner_special(spawner, breed_name, side_id, target_side_id, optional_health_modifier)
 
-				return true, nil, spawner_queue_id, nearby_spawner
+				return true, nil, spawner_queue_id, spawner
 			else
-				Log.info("SpecialsPacing", "Failed to spawn special %s. No occluded positions OR spawners nearby.", breed_name)
+				local nearby_spawner = self:_find_nearby_spawner(target_side_id)
 
-				return false
+				if nearby_spawner then
+					local spawner_queue_id = self:_add_spawner_special(nearby_spawner, breed_name, side_id, target_side_id, optional_health_modifier)
+
+					return true, nil, spawner_queue_id, nearby_spawner
+				else
+					Log.info("SpecialsPacing", "Failed to spawn special %s. No occluded positions OR spawners nearby.", breed_name)
+
+					return false
+				end
 			end
 		end
 	end
@@ -471,23 +513,6 @@ SpecialsPacing._on_special_spawned = function (self, specials_slot, spawned_unit
 
 	if tags.disabler then
 		specials_slot.disabler_is_active = true
-	end
-
-	local stimmed_config = self._stimmed_config
-
-	if stimmed_config then
-		local buff_extension = ScriptUnit.extension(spawned_unit, "buff_system")
-
-		if not buff_extension:has_keyword("stimmed") then
-			local chance_to_stim = stimmed_config.chance_to_stim
-
-			if math.random() < chance_to_stim then
-				local stim_buff_name = stimmed_config.buff_name
-				local t = Managers.time:time("gameplay")
-
-				buff_extension:add_internally_controlled_buff(stim_buff_name, t)
-			end
-		end
 	end
 end
 
@@ -570,8 +595,11 @@ SpecialsPacing._find_spawn_position = function (self, side_id, breed_name, targe
 			local target_units = side.valid_player_units
 			local num_target_units = #target_units
 			local random_target_unit = target_units[math.random(1, num_target_units)]
-			travel_distance = _find_travel_distance(nav_world, random_target_unit, self._nav_spawn_points)
-			target_unit = random_target_unit
+
+			if random_target_unit then
+				travel_distance = _find_travel_distance(nav_world, random_target_unit, self._nav_spawn_points)
+				target_unit = random_target_unit
+			end
 		elseif check_ahead then
 			target_unit, travel_distance = main_path_manager:ahead_unit(target_side_id)
 		else
@@ -618,14 +646,18 @@ SpecialsPacing._find_spawn_position = function (self, side_id, breed_name, targe
 
 	local nav_spawn_points = self._nav_spawn_points
 	local side = side_system:get_side(side_id)
-	local max_spawn_group_offset_range = template.max_spawn_group_offset_range
+	local max_spawn_group_offset_range = template.max_spawn_group_offset_range + math.min(self._num_failed_attempts, 12)
 	local num_spawn_point_groups = self._num_spawn_point_groups
 	local min_distance_from_target = template.min_distances_from_target[breed_name]
 	local random_occluded_position = SpawnPointQueries.get_random_occluded_position(nav_world, nav_spawn_points, navmesh_position, side, max_spawn_group_offset_range, num_spawn_point_groups, min_distance_from_target)
 
 	if not random_occluded_position then
+		self._num_failed_attempts = self._num_failed_attempts + 1
+
 		return
 	end
+
+	self._num_failed_attempts = 0
 
 	return random_occluded_position, target_unit
 end
@@ -824,6 +856,16 @@ SpecialsPacing._check_disabler_override = function (self, template, target_side_
 end
 
 SpecialsPacing._check_monster_override = function (self, template)
+	local t = Managers.time:time("gameplay")
+
+	if self._max_monster_duration then
+		if self._max_monster_duration < t then
+			self._max_monster_duration = nil
+		else
+			return
+		end
+	end
+
 	if not self._specials_slots then
 		return
 	end
@@ -859,6 +901,10 @@ SpecialsPacing._check_monster_override = function (self, template)
 	end
 
 	if max_monsters <= num_monsters then
+		if not self._max_monster_duration then
+			self._max_monster_duration = t + math.random_range(monster_spawn_config.max_monster_duration[1], monster_spawn_config.max_monster_duration[2])
+		end
+
 		return
 	end
 
@@ -929,7 +975,7 @@ SpecialsPacing._check_and_activate_coordinated_strike = function (self, template
 
 	local coordinated_strike_num_breeds = template.coordinated_strike_num_breeds
 	local num_breeds = type(coordinated_strike_num_breeds) == "table" and math.random(coordinated_strike_num_breeds[1], coordinated_strike_num_breeds[2]) or coordinated_strike_num_breeds
-	num_breeds = math.min(num_breeds * self._max_alive_specials_multiplier, #specials_slots)
+	num_breeds = math.min(num_breeds * self._max_alive_specials_multiplier + self._max_alive_specials_bonus, #specials_slots)
 
 	for i = 1, num_breeds do
 		local specials_slot = specials_slots[i]
@@ -970,6 +1016,24 @@ SpecialsPacing._update_rush_prevention = function (self, target_side_id, templat
 	local second_behind_distance = math.huge
 
 	if num_target_units == 1 then
+		if not self._extra_scrambler_cooldown or self._extra_scrambler_cooldown < t then
+			local player_unit = target_units[1]
+			local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+			local disabled_character_state_component = unit_data_extension:read_component("disabled_character_state")
+
+			if disabled_character_state_component then
+				local is_pounced = PlayerUnitStatus.is_pounced(disabled_character_state_component)
+
+				if is_pounced then
+					if math.random() < 0.4 then
+						self:try_inject_special("chaos_poxwalker_bomber", "behind", player_unit)
+					end
+
+					self._extra_scrambler_cooldown = t + math.random_range(20, 50)
+				end
+			end
+		end
+
 		return
 	elseif num_target_units == 2 then
 		second_ahead_distance = behind_travel_distance
@@ -1181,6 +1245,10 @@ SpecialsPacing.set_monster_spawn_config = function (self, monster_spawn_config)
 	self._monster_spawn_config = monster_spawn_config
 end
 
+SpecialsPacing.set_always_move_timer = function (self, always_move)
+	self._always_move_timer = always_move
+end
+
 local REFUND_TIMER = 15
 
 SpecialsPacing.refund_special_slot = function (self)
@@ -1202,12 +1270,38 @@ SpecialsPacing.refund_special_slot = function (self)
 	end
 end
 
-SpecialsPacing.set_stimmed_config = function (self, stimmed_config)
-	self._stimmed_config = stimmed_config
-end
-
 SpecialsPacing.set_force_move_timer = function (self, should_force_move_timer)
 	self._force_move_timer = should_force_move_timer
+end
+
+SpecialsPacing.force_coordinated_strike = function (self, timer, override_num_breeds)
+	Log.info("SpecialsPacing", "Forced Coordinated strike in %.02f", timer)
+
+	local specials_slots = self._specials_slots
+	local template = self._template
+	local coordinated_strike_num_breeds = template.coordinated_strike_num_breeds
+	local num_breeds = override_num_breeds or type(coordinated_strike_num_breeds) == "table" and math.random(coordinated_strike_num_breeds[1], coordinated_strike_num_breeds[2]) or coordinated_strike_num_breeds
+	num_breeds = math.min(num_breeds * self._max_alive_specials_multiplier + self._max_alive_specials_bonus, #specials_slots)
+
+	for i = 1, num_breeds do
+		local specials_slot = specials_slots[i]
+
+		if not ALIVE[specials_slot.spawned_unit] then
+			local optional_coordinated_strike = true
+
+			self:_setup_specials_slot(specials_slots, specials_slot, template, self._timer_modifier, nil, timer, nil, optional_coordinated_strike)
+
+			timer = timer + math.random_range(COORDINATED_STRIKE_TIMER_OFFSET_RANGE[1], COORDINATED_STRIKE_TIMER_OFFSET_RANGE[2])
+		end
+	end
+end
+
+SpecialsPacing.set_spawner_groups = function (self, spawner_groups)
+	self._spawner_groups = spawner_groups
+end
+
+SpecialsPacing.set_move_timer_when_challenge_rating_above = function (self, challenge_rating)
+	self._override_move_timer_when_challenge_rating_above = challenge_rating
 end
 
 return SpecialsPacing

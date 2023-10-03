@@ -35,9 +35,14 @@ RoamerPacing.init = function (self, nav_world, level_path, seed, pacing_control)
 	self._roamer_pack_probabilities = roamer_pack_probabilities
 	self._faction_travel_distances = {}
 	self._density_type_travel_distances = {}
-	local faction_index = self:_random(1, #RoamerSettings.faction_types)
-	local current_faction = RoamerSettings.faction_types[faction_index]
-	self._current_faction = current_faction
+
+	if not self._override_faction then
+		local faction_index = self:_random(1, #RoamerSettings.faction_types)
+		local current_faction = RoamerSettings.faction_types[faction_index]
+		self._current_faction = current_faction
+	else
+		self._current_faction = self._override_faction
+	end
 end
 
 local FORBIDDEN_NAV_TAG_VOLUME_TYPES = {
@@ -345,7 +350,7 @@ local ZONE_BREED_LIMITATIONS_COUNT = {}
 local ZONE_BREED_COUNT = {}
 local ZONE_BREED_TAG_COUNT = {}
 
-RoamerPacing._limit_roamer_breeds = function (self, breed_name, limit_settings, faction)
+RoamerPacing._limit_roamer_breeds = function (self, breed_name, limit_settings, faction, tag_limits)
 	if not limit_settings then
 		return
 	end
@@ -387,7 +392,7 @@ RoamerPacing._limit_roamer_breeds = function (self, breed_name, limit_settings, 
 		return replacement_breeds[replace_index]
 	end
 
-	local tag_limits = limit_settings.tag_limits
+	local tag_limit_bonus = self._tag_limit_bonus
 
 	if tag_limits then
 		local breed = Breeds[breed_name]
@@ -395,6 +400,11 @@ RoamerPacing._limit_roamer_breeds = function (self, breed_name, limit_settings, 
 
 		for tag_name, _ in pairs(tags) do
 			local tag_limit = tag_limits[tag_name]
+
+			if tag_limit_bonus and tag_limit_bonus[tag_name] then
+				tag_limit = math.ceil(tag_limit * (1 + tag_limit_bonus[tag_name]))
+			end
+
 			local current_tag_count = ZONE_BREED_TAG_COUNT[tag_name] or 0
 
 			if tag_limit and tag_limit <= current_tag_count then
@@ -448,6 +458,17 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 				local density_type = zone.density_type
 				local spawn_point_index = zone.spawn_point_index
 				local limit_settings = limit_difficulty_settings and Managers.state.difficulty:get_table_entry_by_challenge(limit_difficulty_settings)
+				limit_settings = limit_difficulty_settings and Managers.state.difficulty:get_table_entry_by_resistance(limit_difficulty_settings)
+				local tag_limits = limit_settings and table.clone(limit_settings.tag_limits)
+
+				if tag_limits then
+					for tag, limit in pairs(tag_limits) do
+						if type(limit) == "table" then
+							tag_limits[tag] = math.random(limit[1], limit[2])
+						end
+					end
+				end
+
 				local tries = 0
 				local roamers_per_sub_zone = num_to_spawn > 1 and math.floor(num_to_spawn / num_sub_zones) or 1
 				num_to_spawn = roamers_per_sub_zone * num_sub_zones
@@ -508,18 +529,6 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 							end
 						end
 
-						local stim_buff_name = nil
-						local stimmed_config = self._stimmed_config
-
-						if stimmed_config and num_to_spawn_in_pack > 0 then
-							local chance_to_stim_per_pack_size = stimmed_config.chance_to_stim_per_pack_size
-							local chance_to_stim = chance_to_stim_per_pack_size[math.min(num_to_spawn_in_pack, #chance_to_stim_per_pack_size)]
-
-							if math.random() < chance_to_stim then
-								stim_buff_name = stimmed_config.buff_name
-							end
-						end
-
 						for j = 0, num_to_spawn_in_pack - 1 do
 							if num_to_spawn == 0 then
 								break
@@ -527,7 +536,7 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 
 							local breed_index = j % num_breeds + 1
 							local breed_name = breed_names[breed_index]
-							local replaced_breed_name, should_skip_roamer = self:_limit_roamer_breeds(breed_name, limit_settings, faction)
+							local replaced_breed_name, should_skip_roamer = self:_limit_roamer_breeds(breed_name, limit_settings, faction, tag_limits)
 
 							if not should_skip_roamer then
 								local side_id = 2
@@ -549,8 +558,7 @@ RoamerPacing._generate_roamers = function (self, zones, roamers)
 									sub_zone_id = sub_zone_index,
 									travel_distance = travel_distance,
 									density_type = density_type,
-									side_id = side_id,
-									stim_buff_name = stim_buff_name
+									side_id = side_id
 								}
 								roamers[roamer_id] = roamer
 
@@ -867,17 +875,8 @@ RoamerPacing._deactivate_roamer = function (self, roamer)
 	return false
 end
 
-RoamerPacing._spawn_roamer = function (self, breed_name, position, rotation, group_id, side_id, stim_buff_name)
+RoamerPacing._spawn_roamer = function (self, breed_name, position, rotation, group_id, side_id)
 	local unit = Managers.state.minion_spawn:spawn_minion(breed_name, position, rotation, side_id, nil, nil, nil, group_id)
-
-	if stim_buff_name then
-		local buff_extension = ScriptUnit.extension(unit, "buff_system")
-		local t = Managers.time:time("gameplay")
-
-		if not buff_extension:has_keyword("stimmed") then
-			buff_extension:add_internally_controlled_buff(stim_buff_name, t)
-		end
-	end
 
 	return unit
 end
@@ -1053,8 +1052,12 @@ RoamerPacing.current_density_type = function (self)
 	return self._current_density_type
 end
 
-RoamerPacing.set_stimmed_config = function (self, stimmed_config)
-	self._stimmed_config = stimmed_config
+RoamerPacing.set_tag_limit_bonus = function (self, tag_limit_bonus)
+	if self._tag_limit_bonus then
+		table.append(self._tag_limit_bonus, tag_limit_bonus)
+	else
+		self._tag_limit_bonus = tag_limit_bonus
+	end
 end
 
 return RoamerPacing

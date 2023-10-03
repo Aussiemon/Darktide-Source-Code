@@ -238,7 +238,7 @@ local legend_inputs = {
 		alignment = "left_alignment"
 	},
 	{
-		input_action = "cycle_list_secondary",
+		input_action = "hotkey_menu_special_1",
 		display_name = "loc_menu_show_attack_patterns",
 		alignment = "right_alignment",
 		on_pressed_callback = "_toggle_view",

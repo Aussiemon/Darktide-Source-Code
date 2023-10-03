@@ -13,7 +13,7 @@ GameplayInitStepStateWaitForGroup.on_enter = function (self, parent, params)
 	self._is_server = is_server
 
 	if Managers.connection:host_type() == "hub_server" then
-		self._report_time_out = 10
+		self._report_time_out = 60
 	end
 
 	if not is_server then
@@ -51,7 +51,7 @@ GameplayInitStepStateWaitForGroup.update = function (self, main_dt, main_t)
 		self._report_time_out = self._report_time_out - main_dt
 
 		if self._report_time_out < 0 then
-			Crashify.print_exception("GameplayInitStepStateWaitForGroup", "No rpc_group_loaded within 10 seconds on hub server")
+			Crashify.print_exception("GameplayInitStepStateWaitForGroup", "No rpc_group_loaded within 60 seconds")
 
 			self._report_time_out = nil
 		end

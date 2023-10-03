@@ -25,12 +25,14 @@ ImmateriumMissionMatchmakingError.loc_title = function (self)
 end
 
 ImmateriumMissionMatchmakingError.loc_description = function (self)
-	if self._error_reason == "FAILED_CROSS_PLAY_DISABLED_GLOBALLY" then
+	local error_reason = self._error_reason
+
+	if error_reason == "FAILED_CROSS_PLAY_DISABLED_GLOBALLY" then
 		return "loc_cross_play_disabled_globally"
-	elseif self._error_reason == "CROSS_PLAY_DISABLED_BY_PARTICIPANT" then
+	elseif error_reason == "CROSS_PLAY_DISABLED_BY_PARTICIPANT" then
 		return "loc_cross_play_disabled_by_a_player"
 	else
-		local error_code_string = ErrorCodes.get_error_code_string_from_reason(self._error_reason)
+		local error_code_string = ErrorCodes.get_error_code_string_from_reason(error_reason)
 
 		return "loc_matchmaking_failed", {
 			error_code = error_code_string

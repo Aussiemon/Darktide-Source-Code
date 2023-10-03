@@ -9,6 +9,7 @@ local AchievementsManager = require("scripts/managers/achievements/achievements_
 local ApproveChannelDelegate = require("scripts/managers/multiplayer/approve_channel_delegate")
 local BackendManager = require("scripts/foundation/managers/backend/backend_manager")
 local BotManager = require("scripts/managers/bot/bot_manager")
+local ChatManager = require("scripts/managers/chat/chat_manager")
 local ConnectionManager = require("scripts/managers/multiplayer/connection_manager")
 local ContractsManager = require("scripts/managers/contracts/contracts_manager")
 local DataServiceManager = require("scripts/managers/data_service/data_service_manager")
@@ -54,7 +55,6 @@ local TransitionManager = require("scripts/managers/transition/transition_manage
 local UIFontManager = require("scripts/managers/ui/ui_font_manager")
 local UIManager = require("scripts/managers/ui/ui_manager")
 local UrlLoaderManager = require("scripts/managers/url_loader/url_loader_manager")
-local VivoxManager = require("scripts/managers/vivox/vivox_manager")
 local VOSourcesCache = require("scripts/extension_systems/dialogue/vo_sources_cache")
 local VotingManager = require("scripts/managers/voting/voting_manager")
 local WorldLevelDespawnManager = require("scripts/managers/world_level_despawn/world_level_despawn_manager")
@@ -161,7 +161,7 @@ StateGame._init_managers = function (self, package_manager, localization_manager
 	Managers.input = InputManager:new()
 
 	if not DEDICATED_SERVER then
-		Managers.chat = VivoxManager:new()
+		Managers.chat = ChatManager:new()
 		Managers.url_loader = UrlLoaderManager:new()
 	end
 

@@ -36,6 +36,14 @@ BtMeleeAttackAction.enter = function (self, unit, breed, blackboard, scratchpad,
 
 	scratchpad.behavior_component = behavior_component
 	scratchpad.perception_component = perception_component
+	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+	local stat_buffs = buff_extension:stat_buffs()
+	local melee_attack_speed = stat_buffs.melee_attack_speed or 1
+
+	if melee_attack_speed > 1 then
+		scratchpad.melee_attack_speed = melee_attack_speed
+	end
+
 	local slot_system = Managers.state.extension:system("slot_system")
 	local is_slot_searching = slot_system:is_slot_searching(unit)
 	scratchpad.was_slot_searching = is_slot_searching
@@ -93,11 +101,12 @@ local DEFAULT_DOWN_Z_THRESHOLD = -2
 local DEFAULT_UP_Z_THRESHOLD = 1.9
 local DEFAULT_ATTACK_ANIM_EVENT = "attack"
 local DEFAULT_BACKSTAB_TIMING = 0.6
-local DEFAULT_BOT_AOE_THREAT_TIMING = 0.2
+local DEFAULT_BOT_AOE_THREAT_TIMING = 0.15
 local DEFAULT_SET_ATTACKED_MELEE_TIMING = {
 	0.2,
 	0.5
 }
+local ATTACK_SPEED_THRESHOLD_FRAME_OFFSET = 0.26666666666666666
 
 BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_unit, t, spawn_component, scratchpad, action_data)
 	local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
@@ -142,14 +151,14 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 	end
 
 	local attack_event = Animation.random_event(wanted_events)
-	local attack_anim_durations = action_data.attack_anim_durations
-	local attack_duration = attack_anim_durations[attack_event]
-	local attack_duration_t = t + attack_duration
-	scratchpad.attack_duration = attack_duration_t
 
 	scratchpad.animation_extension:anim_event(attack_event)
 
 	scratchpad.attack_event = attack_event
+	local attack_anim_durations = action_data.attack_anim_durations
+	local attack_duration = attack_anim_durations[attack_event]
+	local attack_duration_t = t + attack_duration
+	scratchpad.attack_duration = attack_duration_t
 
 	if action_data.set_weapon_intensity then
 		local game_session = spawn_component.game_session
@@ -177,11 +186,13 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 		local attack_sweep_damage_timings = action_data.attack_sweep_damage_timings
 		local attack_sweep_timings = attack_sweep_damage_timings[attack_event]
 		scratchpad.attack_sweep_timings = attack_sweep_timings
+		local frame_timing = nil
 		local attack_sweep_start_or_table = attack_sweep_timings[1]
 
 		if type(attack_sweep_start_or_table) == "table" then
+			frame_timing = attack_sweep_start_or_table[2]
 			scratchpad.start_sweep_t = math.min(t + attack_sweep_start_or_table[1], attack_duration_t)
-			scratchpad.stop_sweep_t = math.min(t + attack_sweep_start_or_table[2], attack_duration_t)
+			scratchpad.stop_sweep_t = math.min(t + frame_timing, attack_duration_t)
 			scratchpad.multiple_attacks = true
 			scratchpad.attack_index = 1
 			scratchpad.start_time = t
@@ -191,8 +202,9 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 				Vo.player_vo_enemy_attack_event(unit, breed.name, vo_event)
 			end
 		else
+			frame_timing = attack_sweep_start_or_table
 			local attack_sweep_stop = attack_sweep_timings[2]
-			scratchpad.start_sweep_t = math.min(t + attack_sweep_start_or_table, attack_duration_t)
+			scratchpad.start_sweep_t = math.min(t + frame_timing, attack_duration_t)
 			scratchpad.stop_sweep_t = math.min(t + attack_sweep_stop, attack_duration_t)
 		end
 
@@ -225,13 +237,27 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 			scratchpad.aoe_threat_window = (scratchpad.start_time or scratchpad.start_sweep_t) + aoe_threat_timing
 			scratchpad.should_create_aoe_threat = true
 		end
+
+		local melee_attack_speed = scratchpad.melee_attack_speed
+
+		if melee_attack_speed then
+			local timing = frame_timing
+
+			if type(attack_sweep_start_or_table) == "table" then
+				timing = attack_sweep_start_or_table[2]
+			end
+
+			local new_duration = math.max(attack_duration / melee_attack_speed, timing + ATTACK_SPEED_THRESHOLD_FRAME_OFFSET)
+			scratchpad.attack_duration = t + new_duration
+		end
 	else
 		local attack_anim_damage_timings = action_data.attack_anim_damage_timings
 		local attack_timing_or_table = attack_anim_damage_timings[attack_event]
+		local frame_timing = nil
 
 		if type(attack_timing_or_table) == "table" then
-			local first_timing = attack_timing_or_table[1]
-			scratchpad.attack_timing = math.min(t + first_timing, attack_duration_t)
+			frame_timing = attack_timing_or_table[1]
+			scratchpad.attack_timing = math.min(t + frame_timing, attack_duration_t)
 			scratchpad.multiple_attacks = true
 			scratchpad.attack_timings = attack_timing_or_table
 			scratchpad.attack_index = 1
@@ -242,7 +268,8 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 				Vo.player_vo_enemy_attack_event(unit, breed.name, vo_event)
 			end
 		else
-			scratchpad.attack_timing = math.min(t + attack_timing_or_table, attack_duration_t)
+			frame_timing = attack_timing_or_table
+			scratchpad.attack_timing = math.min(t + frame_timing, attack_duration_t)
 		end
 
 		local dodge_window = (action_data.dodge_window or DEFAULT_DODGE_WINDOW) + extra_timing
@@ -277,6 +304,18 @@ BtMeleeAttackAction._start_attack_anim = function (self, unit, breed, target_uni
 		end
 
 		scratchpad.set_attacked_melee_timing = scratchpad.attack_timing - math.random_range(DEFAULT_SET_ATTACKED_MELEE_TIMING[1], DEFAULT_SET_ATTACKED_MELEE_TIMING[2])
+		local melee_attack_speed = scratchpad.melee_attack_speed
+
+		if melee_attack_speed then
+			local timing = frame_timing
+
+			if type(attack_timing_or_table) == "table" then
+				timing = attack_timing_or_table[#attack_timing_or_table]
+			end
+
+			local new_duration = math.max(attack_duration / melee_attack_speed, timing + ATTACK_SPEED_THRESHOLD_FRAME_OFFSET)
+			scratchpad.attack_duration = t + new_duration
+		end
 	end
 
 	local moving_attack = action_data.moving_attack
@@ -560,10 +599,19 @@ BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, a
 			local rotation = self:_rotate_towards_target_unit(unit, scratchpad, action_data)
 			local is_dodging = Dodge.is_dodging(target_unit, attack_types.melee)
 
-			if scratchpad.dodge_window then
-				if is_dodging and t < scratchpad.dodge_window then
-					scratchpad.dodge_window = nil
-				elseif not action_data.ignore_dodge and scratchpad.dodge_window < t and is_dodging and not scratchpad.target_dodged_during_attack then
+			if scratchpad.dodge_window and not action_data.ignore_dodge and scratchpad.dodge_window <= t then
+				local too_early = false
+
+				if not scratchpad.entered_dodge_window then
+					if is_dodging then
+						too_early = true
+						scratchpad.dodge_window = nil
+					end
+
+					scratchpad.entered_dodge_window = true
+				end
+
+				if not too_early and is_dodging and not scratchpad.target_dodged_during_attack then
 					scratchpad.target_dodged_during_attack = true
 					scratchpad.stored_dodge_rotation = QuaternionBox(rotation)
 				end

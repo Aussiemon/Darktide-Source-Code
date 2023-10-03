@@ -48,10 +48,10 @@ local presence_settings = {
 			can_be_invited = false
 		},
 		matchmaking = {
-			advertise_playing = false,
-			can_be_joined = false,
+			advertise_playing = true,
+			can_be_joined = true,
 			hud_localization = "loc_hud_presence_matchmaking",
-			can_be_invited = false,
+			can_be_invited = true,
 			fail_reason_myself = "loc_social_party_join_rejection_reason_you_are_in_matchmaking",
 			fail_reason_other = "loc_social_party_join_rejection_reason_player_in_matchmaking"
 		},
@@ -59,16 +59,16 @@ local presence_settings = {
 			advertise_playing = true,
 			can_be_joined = true,
 			hud_localization = "loc_hud_presence_mission",
-			can_be_invited = false,
+			can_be_invited = true,
 			fail_reason_myself = "loc_social_party_join_rejection_reason_you_are_in_mission",
 			fail_reason_other = "loc_social_party_join_rejection_reason_player_in_mission"
 		},
 		training_grounds = {
-			split_party = true,
-			can_be_joined = false,
+			split_party = false,
+			can_be_joined = true,
 			hud_localization = "loc_hud_presence_training_grounds",
-			can_be_invited = false,
-			advertise_playing = false
+			can_be_invited = true,
+			advertise_playing = true
 		},
 		end_of_round = {
 			advertise_playing = false,

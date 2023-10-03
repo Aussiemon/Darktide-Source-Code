@@ -15,13 +15,14 @@ local ability_template = {
 	},
 	actions = {
 		action_stance_change = {
-			use_ability_charge = true,
-			ability_type = "combat_ability",
-			start_input = "stance_pressed",
 			allowed_during_sprint = true,
+			use_ability_charge = true,
+			start_input = "stance_pressed",
 			kind = "stance_change",
 			sprint_ready_up_time = 0,
+			vo_tag = "ability_buff_stance",
 			uninterruptible = true,
+			ability_type = "combat_ability",
 			total_time = 0.1
 		}
 	},

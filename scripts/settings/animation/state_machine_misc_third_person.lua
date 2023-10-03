@@ -33,12 +33,6 @@ local state_machine_settings = {
 	["content/characters/player/human/third_person/animations/psyker_smite"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	},
-	["content/characters/player/human/third_person/animations/throwing_knives"] = {
-		blend_time = DEFAULT_BLEND_TIME
-	},
-	["content/characters/player/human/third_person/animations/chain_lightning"] = {
-		blend_time = DEFAULT_BLEND_TIME
-	},
 	["content/characters/player/human/third_person/animations/unarmed"] = {
 		blend_time = DEFAULT_BLEND_TIME
 	},

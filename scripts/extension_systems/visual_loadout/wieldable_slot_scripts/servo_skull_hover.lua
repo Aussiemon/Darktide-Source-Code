@@ -1,4 +1,3 @@
-local Action = require("scripts/utilities/weapon/action")
 local ServoSkullHover = class("ServoSkullHover")
 local LOOPING_PARTICLE_ALIAS = "equipped_item_passive"
 local FX_SOURCE_NAME = "_antigrav"

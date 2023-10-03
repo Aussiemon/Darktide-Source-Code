@@ -80,7 +80,15 @@ local attack_intensity_settings = {
 		3,
 		5,
 		8,
-		30
+		20
+	},
+	toughness_broken_grace_power_multiplier = {
+		0.15,
+		0.175,
+		0.175,
+		0.2,
+		0.25,
+		0.3
 	},
 	attack_intensities = {
 		melee = {

@@ -125,7 +125,7 @@ local StateGameplayTestify = {
 
 		return cameras, length
 	end,
-	all_cameras_of_type = function (camera_type, _)
+	all_cameras_of_type = function (_, camera_type)
 		local camera_types = {
 			[camera_type] = camera_type
 		}
@@ -133,12 +133,12 @@ local StateGameplayTestify = {
 
 		return cameras, length
 	end,
-	delete_unit = function (unit, _)
+	delete_unit = function (_, unit)
 		local spawner_manager = Managers.state.unit_spawner
 
 		spawner_manager:mark_for_deletion(unit)
 	end,
-	fast_forward_end_of_round = function (_, end_view)
+	fast_forward_end_of_round = function ()
 		local mission = Managers.state.mission:mission_name()
 		local game_mode_name = Managers.state.game_mode:game_mode_name()
 		local is_in_hub = game_mode_name == "hub"
@@ -149,7 +149,7 @@ local StateGameplayTestify = {
 			return Testify.RETRY
 		end
 	end,
-	fetch_weapon_traits = function (params)
+	fetch_weapon_traits = function (_, params)
 		local traits = {
 			melee_traits = {},
 			activated_traits = {},
@@ -193,7 +193,7 @@ local StateGameplayTestify = {
 
 		return traits
 	end,
-	apply_select_talents = function (params)
+	apply_select_talents = function (_, params)
 		local player = params.player
 		local specialization_name = params.specialization_name
 		local talents = params.talents
@@ -201,10 +201,10 @@ local StateGameplayTestify = {
 
 		specialization_system:debug_select_talents(player, specialization_name, talents)
 	end,
-	current_mission = function (_, state_gameplay)
+	current_mission = function (state_gameplay)
 		return Managers.state.mission:mission_name()
 	end,
-	fetch_portal_position = function (portal_name, _)
+	fetch_portal_position = function (_, portal_name)
 		local level_name = rawget(_G, "SPAWNED_LEVEL_NAME")
 
 		if level_name then
@@ -224,12 +224,12 @@ local StateGameplayTestify = {
 
 		return nil
 	end,
-	fetch_unit_and_extensions_from_system = function (system_name, state_gameplay)
+	fetch_unit_and_extensions_from_system = function (state_gameplay, system_name)
 		local system = Managers.state.extension:system(system_name)
 
 		return system:unit_to_extension_map()
 	end,
-	hit_minion_with_random_melee = function (params)
+	hit_minion_with_random_melee = function (_, params)
 		local unit = params.unit
 		local player_unit = params.player_unit
 		local crit = params.crit
@@ -240,13 +240,13 @@ local StateGameplayTestify = {
 			local hit_position = POSITION_LOOKUP[unit]
 			local damage_type = melee_damage_types[melee_damage_type_index]
 
-			Attack.execute(unit, damage_profile, "target_index", 1, "power_level", 5000, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "melee", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", crit)
+			Attack.execute(unit, damage_profile, "target_index", 1, "target_number", 1, "power_level", 5000, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "melee", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", crit)
 			Attack.execute(unit, damage_profile, "instakill", true)
 
 			melee_damage_type_index = melee_damage_type_index + 1 > #melee_damage_types and 1 or melee_damage_type_index + 1
 		end
 	end,
-	hit_minion_with_random_ranged = function (params, _)
+	hit_minion_with_random_ranged = function (_, params)
 		local unit = params.unit
 		local player_unit = params.player_unit
 		local crit = params.crit
@@ -257,12 +257,12 @@ local StateGameplayTestify = {
 			local hit_position = POSITION_LOOKUP[unit]
 			local damage_type = ranged_damage_types[ranged_damage_type_index]
 
-			Attack.execute(unit, damage_profile, "target_index", 1, "power_level", 5000, "charge_level", 1, "dropoff_scalar", 0, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", crit)
+			Attack.execute(unit, damage_profile, "target_index", 1, "target_number", 1, "power_level", 5000, "charge_level", 1, "dropoff_scalar", 0, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", crit)
 
 			ranged_damage_type_index = ranged_damage_type_index + 1 > #ranged_damage_types and 1 or ranged_damage_type_index + 1
 		end
 	end,
-	hit_minion_with_ranged_alternative_fire_attack = function (params, _)
+	hit_minion_with_ranged_alternative_fire_attack = function (_, params)
 		local unit = params.unit
 		local player_unit = params.player_unit
 
@@ -272,10 +272,10 @@ local StateGameplayTestify = {
 			local hit_position = POSITION_LOOKUP[unit]
 			local damage_type = "laser"
 
-			Attack.execute(unit, damage_profile, "target_index", 1, "power_level", 500, "charge_level", 1, "dropoff_scalar", 0, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", true)
+			Attack.execute(unit, damage_profile, "target_index", 1, "target_number", 1, "power_level", 500, "charge_level", 1, "dropoff_scalar", 0, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", true)
 		end
 	end,
-	hit_minion_with_melee_weapon_special_attack = function (params, _)
+	hit_minion_with_melee_weapon_special_attack = function (_, params)
 		local unit = params.unit
 		local player_unit = params.player_unit
 
@@ -285,10 +285,10 @@ local StateGameplayTestify = {
 			local hit_position = POSITION_LOOKUP[unit]
 			local damage_type = "metal_slashing_heavy"
 
-			Attack.execute(unit, damage_profile, "target_index", 1, "power_level", 500, "charge_level", 1, "dropoff_scalar", 0, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", true)
+			Attack.execute(unit, damage_profile, "target_index", 1, "target_number", 1, "power_level", 500, "charge_level", 1, "dropoff_scalar", 0, "hit_world_position", hit_position, "attack_direction", Vector3(1, 0, 0), "hit_zone_name", "head", "instakill", false, "attacking_unit", player_unit, "hit_actor", hit_actor, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", true)
 		end
 	end,
-	hit_minion_with_plasmagun_attack = function (params, _)
+	hit_minion_with_plasmagun_attack = function (_, params)
 		local unit = params.unit
 		local player_unit = params.player_unit
 
@@ -298,10 +298,10 @@ local StateGameplayTestify = {
 			local hit_position = POSITION_LOOKUP[unit]
 			local damage_type = "plasma"
 
-			Attack.execute(unit, damage_profile, "target_index", 1, "power_level", 500, "charge_level", 1, "dropoff_scalar", 0, "attack_direction", Vector3(1, 0, 0), "instakill", false, "hit_zone_name", "head", "hit_actor", hit_actor, "hit_world_position", hit_position, "attacking_unit", player_unit, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", true)
+			Attack.execute(unit, damage_profile, "target_index", 1, "target_number", 1, "power_level", 500, "charge_level", 1, "dropoff_scalar", 0, "attack_direction", Vector3(1, 0, 0), "instakill", false, "hit_zone_name", "head", "hit_actor", hit_actor, "hit_world_position", hit_position, "attacking_unit", player_unit, "attack_type", "ranged", "herding_template", HerdingTemplates.thunder_hammer_left_heavy, "damage_type", damage_type, "is_critical_strike", true)
 		end
 	end,
-	hit_minion_with_warp_charge_explosion = function (params, _)
+	hit_minion_with_warp_charge_explosion = function (_, params)
 		local unit = params.unit
 		local player_unit = params.player_unit
 		local hit_position = POSITION_LOOKUP[unit]
@@ -313,7 +313,7 @@ local StateGameplayTestify = {
 
 		Explosion.create_explosion(world, physics_world, hit_position, Vector3.up(), player_unit, explosion_template, DEFAULT_POWER_LEVEL, charge_level, attack_type)
 	end,
-	apply_select_traits = function (params)
+	apply_select_traits = function (_, params)
 		local player = params.player
 		local weapon_system = Managers.state.extension:system("weapon_system")
 		local slot_name = params.slot_name
@@ -325,7 +325,7 @@ local StateGameplayTestify = {
 
 		weapon_system:debug_set_weapon_override(player, selected_overrides, slot_name)
 	end,
-	set_alternate_fire = function (params)
+	set_alternate_fire = function (_, params)
 		local unit = params.unit
 		local active = params.active
 		local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
@@ -337,17 +337,17 @@ local StateGameplayTestify = {
 			AlternateFire.debug_set_alternate_fire(alternate_fire_component, active)
 		end
 	end,
-	is_unit_alive = function (unit, _)
+	is_unit_alive = function (_, unit)
 		return HEALTH_ALIVE[unit]
 	end,
-	kill_minion = function (unit, _)
+	kill_minion = function (_, unit)
 		if HEALTH_ALIVE[unit] then
 			local damage_profile = DamageProfileTemplates.minion_instakill
 
 			Attack.execute(unit, damage_profile, "instakill", true)
 		end
 	end,
-	gib_minion = function (parameters, _)
+	gib_minion = function (_, parameters)
 		local unit = parameters.unit
 
 		if HEALTH_ALIVE[unit] then
@@ -370,7 +370,7 @@ local StateGameplayTestify = {
 
 		return memory_usage
 	end,
-	play_cutscene = function (cutscene_name)
+	play_cutscene = function (_, cutscene_name)
 		Log.info("StateGameplayTestify", "Playing cutscene %s", cutscene_name)
 
 		local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
@@ -381,22 +381,22 @@ local StateGameplayTestify = {
 		Log.info("StateGameplayTestify", "Showing players")
 		PlayerVisibility.show_players()
 	end,
-	spawn_unit = function (unit_name, position, _)
+	spawn_unit = function (_, unit_name, position)
 		local spawner_manager = Managers.state.unit_spawner
 		local unit = spawner_manager:spawn_unit(unit_name, position:unbox())
 
 		return unit
 	end,
-	spawn_and_destroy_unit = function (unit_name, position, _)
+	spawn_and_destroy_unit = function (_, unit_name, position)
 		local world = Managers.world:world("level_world")
 		local unit = World.spawn_unit_ex(world, unit_name, nil, position:unbox())
 
 		World.destroy_unit(world, unit)
 	end,
-	start_measuring_performance = function (values_to_measure, state_gameplay)
+	start_measuring_performance = function (state_gameplay, values_to_measure)
 		state_gameplay:init_performance_reporter(values_to_measure)
 	end,
-	stop_measuring_performance = function (_, state_gameplay)
+	stop_measuring_performance = function (state_gameplay)
 		local performance_reporter = state_gameplay:performance_reporter()
 		local performance_measurements = performance_reporter:performance_measurements()
 
@@ -404,11 +404,11 @@ local StateGameplayTestify = {
 
 		return performance_measurements
 	end,
-	trigger_external_event = function (event_name)
+	trigger_external_event = function (_, event_name)
 		Log.info("StateGameplayTestify", "Triggering external event %s", event_name)
 		level_trigger_event(Managers.state.mission:mission_level(), event_name)
 	end,
-	unit_health_values = function (unit, _)
+	unit_health_values = function (_, unit)
 		local health_extension = ScriptUnit.has_extension(unit, "health_system")
 
 		if health_extension then
@@ -423,7 +423,7 @@ local StateGameplayTestify = {
 			}
 		end
 	end,
-	wait_for_cutscene_to_finish = function (cutscene_name)
+	wait_for_cutscene_to_finish = function (_, cutscene_name)
 		local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
 		local is_cinematic_active = cinematic_scene_system:is_cinematic_active(cutscene_name)
 
@@ -433,7 +433,7 @@ local StateGameplayTestify = {
 
 		Log.info("StateGameplayTestify", "Cutscene %s has finished playing", cutscene_name)
 	end,
-	wait_for_cutscene_to_start = function (cutscene_name)
+	wait_for_cutscene_to_start = function (_, cutscene_name)
 		local cinematic_scene_system = Managers.state.extension:system("cinematic_scene_system")
 		local is_cinematic_active = cinematic_scene_system:is_cinematic_active(cutscene_name)
 
@@ -441,7 +441,27 @@ local StateGameplayTestify = {
 			return Testify.RETRY
 		end
 	end,
-	wait_for_state_gameplay_reached = function (_, _)
+	wait_for_in_hub = function ()
+		local game_mode_name = Managers.state.game_mode:game_mode_name()
+		local is_in_hub = game_mode_name == "hub" or game_mode_name == "prologue_hub"
+
+		if is_in_hub then
+			return
+		else
+			return Testify.RETRY
+		end
+	end,
+	wait_for_in_psychanium = function ()
+		local game_mode_name = Managers.state.game_mode:game_mode_name()
+		local is_in_psychanium = game_mode_name == "training_grounds" or game_mode_name == "shooting_range"
+
+		if is_in_psychanium then
+			return
+		else
+			return Testify.RETRY
+		end
+	end,
+	wait_for_state_gameplay_reached = function ()
 		return
 	end
 }

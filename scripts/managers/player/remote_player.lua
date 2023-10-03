@@ -150,9 +150,9 @@ RemotePlayer.lag_compensation_rewind_s = function (self)
 	return ms and ms * MILLISECONDS_TO_SECONDS or nil
 end
 
-RemotePlayer.create_input_handler = function (self)
+RemotePlayer.create_input_handler = function (self, fixed_time_step)
 	if self.is_server then
-		self.input_handler = AuthoritativePlayerInputHandler:new(self, self.is_server)
+		self.input_handler = AuthoritativePlayerInputHandler:new(self, self.is_server, fixed_time_step)
 	end
 end
 

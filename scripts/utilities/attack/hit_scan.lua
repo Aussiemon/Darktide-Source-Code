@@ -42,10 +42,7 @@ end
 
 HitScan.sphere_sweep = function (physics_world, position, direction, max_distance, optional_test_against, optional_collision_filter, optional_rewind_ms, optional_radius)
 	local end_position = position + direction * max_distance
-
-	PhysicsProximitySystem.prepare_for_overlap(physics_world, position, 0.1, optional_rewind_ms or 0)
-
-	local hits = PhysicsWorld.linear_sphere_sweep(physics_world, position, end_position, optional_radius or 0.1, MAX_HITS, "types", optional_test_against or DEFAULT_TEST_AGAINST, "collision_filter", optional_collision_filter or DEFAULT_COLLISION_FILTER, "report_initial_overlap", true)
+	local hits = PhysicsWorld.linear_sphere_sweep(physics_world, position, end_position, optional_radius or 0.1, MAX_HITS, "types", optional_test_against or DEFAULT_TEST_AGAINST, "collision_filter", optional_collision_filter or DEFAULT_COLLISION_FILTER, "rewind_ms", optional_rewind_ms or 0, "report_initial_overlap", true)
 
 	return hits
 end

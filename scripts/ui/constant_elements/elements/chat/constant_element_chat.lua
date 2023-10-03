@@ -1,14 +1,14 @@
-local Definitions = require("scripts/ui/constant_elements/elements/chat/constant_element_chat_definitions")
 local ChatManagerConstants = require("scripts/foundation/managers/chat/chat_manager_constants")
-local InputUtils = require("scripts/managers/input/input_utils")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
-local UIWidget = require("scripts/managers/ui/ui_widget")
-local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local ChatSettings = require("scripts/ui/constant_elements/elements/chat/constant_element_chat_settings")
+local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
+local Definitions = require("scripts/ui/constant_elements/elements/chat/constant_element_chat_definitions")
+local InputDevice = require("scripts/managers/input/input_device")
+local InputUtils = require("scripts/managers/input/input_utils")
 local Promise = require("scripts/foundation/utilities/promise")
 local StringVerification = require("scripts/managers/localization/string_verification")
-local InputDevice = require("scripts/managers/input/input_device")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UIWidget = require("scripts/managers/ui/ui_widget")
 local ConstantElementChat = class("ConstantElementChat", "ConstantElementBase")
 local States = table.enum("hidden", "idle", "active")
 local StateSettings = {
@@ -388,7 +388,7 @@ ConstantElementChat._setup_input_labels = function (self)
 	local in_mission = false
 	local in_party = false
 
-	for channel_handle, channel in pairs(Managers.chat:sessions()) do
+	for _, channel in pairs(Managers.chat:sessions()) do
 		num_sessions = num_sessions + 1
 
 		if channel.tag == ChatManagerConstants.ChannelTag.MISSION then
@@ -408,21 +408,26 @@ ConstantElementChat._setup_input_labels = function (self)
 	end
 
 	local input_widget = self._input_field_widget
-	local show_controller = IS_XBS and InputDevice.gamepad_active
+	local has_virtual_keyboard = IS_XBS and InputDevice.gamepad_active
 	local is_writing = input_widget.content.is_writing
 	local active_placeholder_text = ""
 
-	if show_controller and not is_writing then
+	if has_virtual_keyboard and not is_writing then
 		local open_chat_input = self:_get_localized_input_text("show_chat")
 		active_placeholder_text = self:_localize("loc_chat_idle_placeholder_text", true, {
 			input = open_chat_input
 		})
-	elseif show_controller and is_writing and has_session and not present_tab_to_cycle then
+	elseif has_virtual_keyboard and is_writing and has_session and not present_tab_to_cycle then
 		local confirm_input = self:_get_localized_input_text("confirm")
 		local back_input = self:_get_localized_input_text("back")
 		active_placeholder_text = self:_localize("loc_chat_instruction_placeholder_text", true, {
 			continue_input = confirm_input,
 			cancel_input = back_input
+		})
+	elseif has_virtual_keyboard and not has_session or not has_virtual_keyboard and InputDevice.gamepad_active and is_writing then
+		local back_input = self:_get_localized_input_text("back")
+		active_placeholder_text = self:_localize("loc_chat_empty_placeholder_text", true, {
+			input = back_input
 		})
 	elseif present_tab_to_cycle then
 		local change_channel_input = self:_get_localized_input_text("cycle_chat_channel")
@@ -438,7 +443,7 @@ ConstantElementChat._get_localized_input_text = function (self, action)
 	local service_type = DefaultViewInputSettings.service_type
 	local alias = Managers.input:alias_object(service_type)
 	local alias_array_index = 1
-	local show_controller = IS_XBS and InputDevice.gamepad_active
+	local show_controller = InputDevice.gamepad_active
 	local device_types = {
 		show_controller and "xbox_controller" or "keyboard"
 	}
@@ -576,27 +581,28 @@ ConstantElementChat._handle_active_chat_input = function (self, input_service, u
 	local input_widget = self._input_field_widget
 	local input_text = input_widget.content.input_text
 	local is_input_field_active = true
+	local can_send_message = self._selected_channel_handle and #input_text > 0
 
 	if input_service:get("cycle_chat_channel") then
 		self._selected_channel_handle = self:_next_connected_channel_handle()
 		input_widget.content.force_caret_update = true
 
 		self:_update_input_field(ui_renderer, input_widget)
-	elseif input_service:get("send_chat_message") then
-		if self._selected_channel_handle and #input_text > 0 then
-			local command, params = self:_parse_slash_commands(input_text)
+	elseif input_service:get("send_chat_message") and can_send_message then
+		local command, params = self:_parse_slash_commands(input_text)
 
-			if command then
-				self:_handle_slash_command(command, params)
-			else
-				input_text = self:_scrub(input_text)
+		if command then
+			self:_handle_slash_command(command, params)
+		else
+			input_text = self:_scrub(input_text)
 
-				Managers.chat:send_channel_message(self._selected_channel_handle, input_text)
-			end
+			Managers.chat:send_channel_message(self._selected_channel_handle, input_text)
 		end
 
 		is_input_field_active = false
-	elseif input_service:get("hotkey_system") then
+	elseif input_service:get("send_chat_message") and #input_text == 0 then
+		is_input_field_active = false
+	elseif input_service:get("hotkey_system") or input_service:get("back") then
 		is_input_field_active = false
 	else
 		local keystrokes = Keyboard.keystrokes()
@@ -681,7 +687,7 @@ ConstantElementChat._next_connected_channel_handle = function (self, current_pri
 
 	local next_channel = channels[math.index_wrapper(current_selected_channel_handle_index + 1, #channels)]
 
-	return next_channel and next_channel.session_handle or nil
+	return next_channel and next_channel.session_handle
 end
 
 ConstantElementChat._update_input_field = function (self, ui_renderer, widget)
@@ -748,6 +754,8 @@ ConstantElementChat._update_scrollbar = function (self, render_settings)
 	local scrollbar_content = scrollbar_widget.content
 	local scroll_value = scrollbar_content.scroll_value
 	local total_scroll_length = total_chat_height - chat_window_height
+	scrollbar_content.hotspot.is_focused = not InputDevice.gamepad_active or self:using_input()
+	scrollbar_content.focused = InputDevice.gamepad_active and self:using_input()
 	scrollbar_content.scroll_length = total_scroll_length
 	scrollbar_content.area_length = chat_window_height
 	scrollbar_content.scroll_amount = 1 / (total_num_messages * 3)

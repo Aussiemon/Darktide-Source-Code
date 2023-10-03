@@ -42,6 +42,7 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 	local setup_settings_by_slot = HudElementPlayerAbilityHandlerSettings.setup_settings_by_slot
 	local unit = player.player_unit
 	local is_player_alive = ALIVE[unit]
+	local force_alignment_update = false
 
 	if is_player_alive then
 		for ability_id, ability_settings in pairs(equipped_abilities) do
@@ -51,14 +52,19 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 
 			if has_scenegraph then
 				local hud_icon = ability_settings.hud_icon
+				local ability_name = ability_settings.name
+				local instance_data = instance_data_tables[ability_id]
+				local name_differs = instance_data and instance_data.ability_name ~= ability_name
 
-				if not instance_data_tables[ability_id] then
+				if not instance_data then
 					local can_add_abilities = num_slots < self._max_slots
 
 					if can_add_abilities then
+						force_alignment_update = true
 						local definition_path = setup_settings.definition_path
 						local data = {
 							synced = true,
+							ability_name = ability_name,
 							player = player,
 							scenegraph_id = slot_id,
 							slot_id = slot_id,
@@ -69,7 +75,7 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 						instance_data_tables[ability_id] = data
 						data.instance = HudElementPlayerAbility:new(parent, draw_layer, scale, data)
 					end
-				else
+				elseif not name_differs or instance_data_tables[ability_id].ability_name == ability_name then
 					instance_data_tables[ability_id].synced = true
 				end
 
@@ -128,10 +134,11 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 		if not data.synced then
 			local instance = data.instance
 
-			instance:destroy()
+			instance:destroy(ui_renderer)
 
 			instance_data_tables[id] = nil
 			ability_removed = true
+			force_alignment_update = true
 		else
 			data.synced = false
 		end
@@ -141,15 +148,15 @@ HudElementPlayerAbilityHandler._player_scan = function (self, ui_renderer)
 		self:_on_abilities_removed()
 	end
 
-	self:_update_ability_count(num_slots)
+	self:_update_ability_count(num_slots, force_alignment_update)
 end
 
 HudElementPlayerAbilityHandler._on_abilities_removed = function (self)
 	return
 end
 
-HudElementPlayerAbilityHandler._update_ability_count = function (self, new_ability_count)
-	if new_ability_count ~= self._num_slots then
+HudElementPlayerAbilityHandler._update_ability_count = function (self, new_ability_count, force_alignment_update)
+	if new_ability_count ~= self._num_slots or force_alignment_update then
 		self._num_slots = new_ability_count
 
 		self:_align_abilities()

@@ -50,7 +50,6 @@ table.add_missing(pockatables_template_settings.action_input_hierarchy, BaseTemp
 
 pockatables_template_settings.actions = {
 	action_unwield = {
-		continue_sprinting = true,
 		allowed_during_sprint = true,
 		start_input = "wield",
 		uninterruptible = true,

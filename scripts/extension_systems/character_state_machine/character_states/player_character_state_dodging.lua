@@ -110,7 +110,7 @@ local function _find_current_dodge_speed(time_in_dodge, speed_settings_index, do
 end
 
 local function _calculate_dodge_total_time(base_dodge_template, diminishing_return_factor, weapon_dodge_template, buff_extension)
-	local time_step = GameParameters.fixed_time_step
+	local time_step = Managers.state.game_session.fixed_time_step
 	local hit_end = false
 	local time_in_dodge = 0
 	local distance_travelled = 0
@@ -147,7 +147,7 @@ local tg_on_dodge_data = {}
 local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
 
 PlayerCharacterStateDodging.on_enter = function (self, unit, dt, t, previous_state, params)
-	local base_dodge_template = self._specialization_dodge_template
+	local base_dodge_template = self._archetype_dodge_template
 	local dodge_character_state_component = self._dodge_character_state_component
 	local weapon_dodge_template = self._weapon_extension:dodge_template()
 	local dodge_direction = params.dodge_direction
@@ -197,13 +197,17 @@ end
 PlayerCharacterStateDodging.on_exit = function (self, unit, t, next_state)
 	local dodge_character_state_component = self._dodge_character_state_component
 	local weapon_dodge_template = self._weapon_extension:dodge_template()
-	local base_dodge_template = self._specialization_dodge_template
+	local base_dodge_template = self._archetype_dodge_template
 	local buff_extension = self._buff_extension
 	local time_in_dodge = t - self._character_state_component.entered_t
 	local cd = math.max(base_dodge_template.dodge_cooldown, base_dodge_template.dodge_jump_override_timer - time_in_dodge)
 	dodge_character_state_component.cooldown = t + cd
 	local weapon_consecutive_dodges_reset = weapon_dodge_template and weapon_dodge_template.consecutive_dodges_reset or 0
-	dodge_character_state_component.consecutive_dodges_cooldown = t + base_dodge_template.consecutive_dodges_reset + weapon_consecutive_dodges_reset
+	local stat_buffs = self._buff_extension:stat_buffs()
+	local buff_modifier = stat_buffs.dodge_cooldown_reset_modifier
+	local buff_dodge_cooldown_reset_modifier = buff_modifier and 1 - (buff_modifier - 1) or 1
+	local cooldown = (base_dodge_template.consecutive_dodges_reset + weapon_consecutive_dodges_reset) * buff_dodge_cooldown_reset_modifier
+	dodge_character_state_component.consecutive_dodges_cooldown = t + cooldown
 	dodge_character_state_component.dodge_time = t
 	self._movement_state_component.is_dodging = false
 	self._locomotion_steering_component.disable_velocity_rotation = false
@@ -294,7 +298,7 @@ PlayerCharacterStateDodging._check_transition = function (self, unit, t, input_e
 end
 
 PlayerCharacterStateDodging._update_dodge = function (self, unit, dt, time_in_dodge, has_slide_input)
-	local base_dodge_template = self._specialization_dodge_template
+	local base_dodge_template = self._archetype_dodge_template
 	local dodge_character_state_component = self._dodge_character_state_component
 	local weapon_dodge_template = self._weapon_extension:dodge_template()
 	local locomotion_steering_component = self._locomotion_steering_component
@@ -316,12 +320,13 @@ PlayerCharacterStateDodging._update_dodge = function (self, unit, dt, time_in_do
 
 	local speed_at_times = weapon_dodge_template and weapon_dodge_template.dodge_speed_at_times or base_dodge_template.dodge_speed_at_times
 	local start_point = 1
+	local stat_buffs = self._buff_extension:stat_buffs()
+	local buff_distance_modifier = stat_buffs.dodge_distance_modifier
 	local diminishing_return_factor = _calculate_dodge_diminishing_return(dodge_character_state_component, weapon_dodge_template, self._buff_extension)
-	local distance_scale = (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * diminishing_return_factor
+	local distance_scale = (weapon_dodge_template and weapon_dodge_template.distance_scale or 1) * buff_distance_modifier * diminishing_return_factor
 	local current_speed_setting_index = _find_speed_settings_index(time_in_dodge, start_point, speed_at_times, distance_scale)
 	local speed_modifier = weapon_dodge_template and weapon_dodge_template.speed_modifier or 1
 	local base_speed = _find_current_dodge_speed(time_in_dodge, current_speed_setting_index, speed_at_times, speed_modifier, diminishing_return_factor, distance_scale)
-	local stat_buffs = self._buff_extension:stat_buffs()
 	local buff_speed_modifier = stat_buffs.dodge_speed_multiplier
 	local speed = base_speed * buff_speed_modifier
 	local unit_rotation = self._first_person_component.rotation

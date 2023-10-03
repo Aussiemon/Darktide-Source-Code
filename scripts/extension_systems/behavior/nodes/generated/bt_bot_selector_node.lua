@@ -460,7 +460,7 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 
 				if not action_input_is_valid then
 					condition_result = false
-				elseif ability_template_name == "zealot_shout" then
+				elseif ability_template_name == "zealot_relic" then
 					local sub_condition_result_01 = nil
 					local max_distance_sq = 100
 					local challenge_threshold = 1.75
@@ -559,7 +559,7 @@ BtBotSelectorNode.evaluate = function (self, unit, blackboard, scratchpad, dt, t
 
 				if not action_input_is_valid then
 					condition_result = false
-				elseif ability_template_name == "zealot_shout" then
+				elseif ability_template_name == "zealot_relic" then
 					local sub_condition_result_01 = nil
 					local max_distance_sq = 100
 					local challenge_threshold = 1.75

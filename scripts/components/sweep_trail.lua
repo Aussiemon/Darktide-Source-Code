@@ -29,6 +29,10 @@ SweepTrail.editor_init = function (self, unit)
 	self:init(unit)
 end
 
+SweepTrail.editor_validate = function (self, unit)
+	return true, ""
+end
+
 SweepTrail.enable = function (self, unit)
 	self:set_critical_strike(unit, false)
 	self:set_powered(unit, false)

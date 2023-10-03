@@ -2,20 +2,19 @@ require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local Attack = require("scripts/utilities/attack/attack")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
-local Interrupt = require("scripts/utilities/attack/interrupt")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local Vo = require("scripts/utilities/vo")
 local WarpCharge = require("scripts/utilities/warp_charge")
-local TalentSettings = require("scripts/settings/talent/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings_new")
 local talent_settings = TalentSettings.psyker_2
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
+local CLOSE_RANGE = 9
 local proc_events = BuffSettings.proc_events
 local special_rules = SpecialRulesSetting.special_rules
 local ActionPsykerShout = class("ActionPsykerShout", "ActionAbilityBase")
-local POWER_MODIFIER_PER_SOUL = 0.25
 local broadphase_results = {}
-local EXTERNAL_PROPERTIES = {}
+local external_properties = {}
 
 ActionPsykerShout.init = function (self, action_context, action_params, action_settings)
 	ActionPsykerShout.super.init(self, action_context, action_params, action_settings)
@@ -36,6 +35,7 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 	ActionPsykerShout.super.start(self, action_settings, t, time_scale, action_start_params)
 
 	local warp_charge_component = self._unit_data_extension:write_component("warp_charge")
+	local warp_charge_percent = warp_charge_component.current_percentage
 	local locomotion_component = self._locomotion_component
 	local locomotion_position = locomotion_component.position
 	local player_position = locomotion_position
@@ -49,7 +49,7 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 	self._shout_range = action_settings.shout_range
 	self._combat_ability_component.active = true
 	self._warp_charge_component = warp_charge_component
-	self._warp_charge_percent = warp_charge_component.current_percentage
+	self._warp_charge_percent = warp_charge_percent
 	self._num_hits = 0
 	local wwise_state = action_settings.wwise_state
 
@@ -60,22 +60,10 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 	local vo_tag = action_settings.vo_tag
 
 	if vo_tag then
-		if self._warp_charge_percent >= 0.75 then
+		if warp_charge_percent >= 0.75 then
 			Vo.play_combat_ability_event(player_unit, vo_tag.high)
 		else
 			Vo.play_combat_ability_event(player_unit, vo_tag.low)
-		end
-	end
-
-	local sound_event = action_settings.sound_event
-
-	if sound_event and self._is_server then
-		if type(sound_event) == "table" then
-			for _, event_name in pairs(sound_event) do
-				self._fx_extension:trigger_exclusive_wwise_event(event_name, player_position)
-			end
-		else
-			self._fx_extension:trigger_exclusive_wwise_event(sound_event, player_position)
 		end
 	end
 
@@ -83,11 +71,11 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 	local sync_to_clients = action_settings.has_husk_sound
 	local include_client = false
 
-	table.clear(EXTERNAL_PROPERTIES)
+	table.clear(external_properties)
 
-	EXTERNAL_PROPERTIES.ability_template = self._ability.ability_template
+	external_properties.ability_template = self._ability.ability_template
 
-	self._fx_extension:trigger_gear_wwise_event_with_source("shout", EXTERNAL_PROPERTIES, source_name, sync_to_clients, include_client)
+	self._fx_extension:trigger_gear_wwise_event_with_source("ability_shout", external_properties, source_name, sync_to_clients, include_client)
 
 	local anim = action_settings.anim
 	local anim_3p = action_settings.anim_3p or anim
@@ -122,7 +110,7 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 
 	if param_table then
 		param_table.unit = player_unit
-		param_table.warp_charge_percent = self._warp_charge_percent
+		param_table.warp_charge_percent = warp_charge_percent
 
 		buff_extension:add_proc_event(proc_events.on_combat_ability, param_table)
 	end
@@ -130,7 +118,7 @@ ActionPsykerShout.start = function (self, action_settings, t, time_scale, action
 	local shout_drains_warp_charge = specialization_extension:has_special_rule(special_rules.shout_drains_warp_charge)
 
 	if shout_drains_warp_charge then
-		local drain_amount = talent_settings.combat_ability.warpcharge_vent or 0.5
+		local drain_amount = talent_settings.combat_ability.warpcharge_vent
 
 		WarpCharge.decrease_immediate(drain_amount, warp_charge_component, player_unit)
 	end
@@ -145,6 +133,7 @@ ActionPsykerShout.fixed_update = function (self, dt, t, time_in_action)
 	local damage_type = self._damage_type
 	local attack_type = self._attack_type
 	local attack_direction = self._attack_direction:unbox()
+	local shout_range = self._shout_range
 	local distance_traveled_squared = shout_distance_traveled * shout_distance_traveled
 
 	for unit, distance in pairs(total_hits) do
@@ -153,8 +142,8 @@ ActionPsykerShout.fixed_update = function (self, dt, t, time_in_action)
 		elseif distance <= distance_traveled_squared then
 			local hit_zone_name = "torso"
 			local actual_distance = math.sqrt(distance)
-			local min_range = 0.15 * self._shout_range
-			local scale_factor = 1 - (math.max(actual_distance, min_range) - min_range) / (self._shout_range - min_range)
+			local min_range = 0.15 * shout_range
+			local scale_factor = 1 - (math.max(actual_distance, min_range) - min_range) / (shout_range - min_range)
 			local scaled_powerlevel = power_level * (0.25 + 0.75 * scale_factor * scale_factor)
 
 			Attack.execute(unit, damage_profile, "attack_direction", attack_direction, "power_level", scaled_powerlevel, "hit_zone_name", hit_zone_name, "damage_type", damage_type, "attack_type", attack_type, "attacking_unit", player_unit)
@@ -191,7 +180,6 @@ end
 
 ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, specialization_extension)
 	local enemy_side_names = side:relation_side_names("enemy")
-	local player_unit = self._player_unit
 	local locomotion_component = self._locomotion_component
 	local locomotion_position = locomotion_component.position
 	local player_position = locomotion_position
@@ -200,9 +188,9 @@ ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, sp
 	local damage_type = action_settings.damage_type
 	local attack_type = action_settings.attack_type
 	local power_level = action_settings.power_level or DEFAULT_POWER_LEVEL
-	local current_power_modifier = 1 + self._warp_charge_percent
-	power_level = power_level * current_power_modifier
-	local damage_profile = action_settings.damage_profile
+	power_level = power_level * (1 + self._warp_charge_percent)
+	local damage_per_warp_charge = specialization_extension:has_special_rule(special_rules.psyker_discharge_damage_per_warp_charge)
+	local damage_profile = damage_per_warp_charge and action_settings.damaging_damage_profile or action_settings.damage_profile
 	self._damage_profile = damage_profile
 	self._player_position = player_position
 	self._power_level = power_level
@@ -231,8 +219,8 @@ ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, sp
 			local num_hits = broadphase:query(position, slice_radius, broadphase_results, enemy_side_names)
 			total_num_hits = total_num_hits + num_hits
 
-			for i = 1, num_hits do
-				local enemy_unit = broadphase_results[i]
+			for ii = 1, num_hits do
+				local enemy_unit = broadphase_results[ii]
 				local enemy_unit_position = POSITION_LOOKUP[enemy_unit]
 				local distance_squared = Vector3.distance_squared(enemy_unit_position, player_position)
 				local attack_direction = Vector3.normalize(Vector3.flat(enemy_unit_position - player_position))
@@ -243,9 +231,8 @@ ActionPsykerShout._handle_enemies = function (self, action_settings, side, t, sp
 				end
 
 				local dot = Vector3.dot(shout_direction, attack_direction)
-				local close_range = 9
 
-				if (shout_dot < dot or distance_squared < close_range) and not total_hits[enemy_unit] then
+				if (shout_dot < dot or distance_squared < CLOSE_RANGE) and not total_hits[enemy_unit] then
 					self._num_hits = self._num_hits + 1
 					total_hits[enemy_unit] = distance_squared
 				end

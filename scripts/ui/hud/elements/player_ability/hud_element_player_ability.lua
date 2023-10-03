@@ -32,9 +32,9 @@ HudElementPlayerAbility.init = function (self, parent, draw_layer, start_scale, 
 	self:_register_events()
 end
 
-HudElementPlayerAbility.destroy = function (self)
+HudElementPlayerAbility.destroy = function (self, ui_renderer)
 	self:_unregister_events()
-	HudElementPlayerAbility.super.destroy(self)
+	HudElementPlayerAbility.super.destroy(self, ui_renderer)
 end
 
 HudElementPlayerAbility._update_input = function (self)

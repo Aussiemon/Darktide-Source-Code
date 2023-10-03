@@ -17,6 +17,7 @@ MinionPerceptionExtension.init = function (self, extension_init_context, unit, e
 	self._blackboard_system = extension_manager:system("blackboard_system")
 	self._broadphase_system = extension_manager:system("broadphase_system")
 	self._perception_system = extension_manager:system("perception_system")
+	self._smoke_fog_system = Managers.state.extension:system("smoke_fog_system")
 	local breed = extension_init_data.breed
 	self._breed = breed
 	self._unit = unit
@@ -300,14 +301,14 @@ MinionPerceptionExtension.aggro = function (self)
 			end
 		end
 
-		Managers.state.pacing:add_aggroed_minion(unit)
-
 		if breed.trigger_boss_health_bar_on_aggro then
 			local boss_extension = ScriptUnit.extension(unit, "boss_system")
 
 			boss_extension:start_boss_encounter()
 			Managers.state.game_session:send_rpc_clients("rpc_start_boss_encounter", self._game_object_id)
 		end
+
+		Managers.state.pacing:add_aggroed_minion(unit)
 	end
 end
 
@@ -709,6 +710,12 @@ MinionPerceptionExtension._within_detection_los_range = function (self, unit, un
 	local is_within_range = not detection_los_requirement or Vector3.distance(unit_position, target_position) <= detection_los_requirement
 
 	if not is_within_range then
+		return false
+	end
+
+	local is_looking_trough_fog = self._smoke_fog_system:check_fog_los(unit_position, target_position)
+
+	if is_looking_trough_fog then
 		return false
 	end
 

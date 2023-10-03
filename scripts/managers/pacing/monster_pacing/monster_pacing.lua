@@ -45,7 +45,9 @@ local function _sort_spawners(spawner_1, spawner_2)
 	return spawner_1.spawn_travel_distance < spawner_2.spawn_travel_distance
 end
 
-local TEMP_SECTIONS = {}
+local TEMP_SECTIONS_MONSTERS = {}
+local TEMP_SECTIONS_WITCHES = {}
+local NUM_SECTIONS = {}
 
 MonsterPacing._generate_spawns = function (self, template)
 	local main_path_available = Managers.state.main_path:is_main_path_available()
@@ -88,59 +90,85 @@ MonsterPacing._generate_spawns = function (self, template)
 	end
 
 	for i = 1, num_sections do
-		TEMP_SECTIONS[i] = i
+		TEMP_SECTIONS_MONSTERS[i] = i
+		TEMP_SECTIONS_WITCHES[i] = i
 	end
 
+	NUM_SECTIONS.monsters = num_sections
+	NUM_SECTIONS.witches = num_sections
 	local monsters = {}
 	local breed_names = table.clone(template.breed_names)
+	local allow_witches_spawned_with_monsters = template.allow_witches_spawned_with_monsters
 	local boss_patrols = nil
 
 	for i = 1, num_valid_spawn_types do
-		local spawn_type = valid_spawn_types[i]
-		local num_spawns = template.num_spawns[spawn_type]
-		local num_to_spawn = math.min(num_sections, type(num_spawns) == "table" and math.random(num_spawns[1], num_spawns[2]) or num_spawns)
+		repeat
+			local spawn_type = valid_spawn_types[i]
+			local num_spawns = template.num_spawns[spawn_type] or 0
+			local current_num_sections = allow_witches_spawned_with_monsters and NUM_SECTIONS[spawn_type] or num_sections
+			local num_to_spawn = math.min(current_num_sections, type(num_spawns) == "table" and math.random(num_spawns[1], num_spawns[2]) or num_spawns)
+			local is_monster = spawn_type == "monsters"
 
-		for j = 1, num_to_spawn do
-			local spawn_point_sections = spawn_type_point_sections[spawn_type]
-			local temp_section_index = math.random(#TEMP_SECTIONS)
-			local section_index = TEMP_SECTIONS[temp_section_index]
-			local section = spawn_point_sections[section_index]
-			local spawn_point = section[math.random(#section)]
-			local travel_distance = spawn_point.spawn_travel_distance
-			local spawn_type_breed_names = breed_names[spawn_type]
-
-			if #spawn_type_breed_names > 0 then
-				local breed_name = spawn_type_breed_names[math.random(#spawn_type_breed_names)]
-				local position = spawn_point.position
-				local despawn_distance_when_passive = template.despawn_distance_when_passive and template.despawn_distance_when_passive[breed_name]
-				local monster = {
-					travel_distance = travel_distance,
-					breed_name = breed_name,
-					position = position,
-					section = section_index,
-					despawn_distance_when_passive = despawn_distance_when_passive,
-					spawn_type = spawn_type
-				}
-				monsters[#monsters + 1] = monster
-
-				table.swap_delete(TEMP_SECTIONS, temp_section_index)
-
-				num_sections = num_sections - 1
+			if is_monster and self._num_monsters_override then
+				num_to_spawn = self._num_monsters_override
+			elseif spawn_type == "witches" and self._num_witches_override then
+				num_to_spawn = self._num_witches_override
 			end
-		end
+
+			local temp_sections_table = is_monster and TEMP_SECTIONS_MONSTERS or TEMP_SECTIONS_WITCHES
+
+			for j = 1, num_to_spawn do
+				local spawn_point_sections = spawn_type_point_sections[spawn_type]
+				local temp_section_index = math.random(#temp_sections_table)
+				local section_index = temp_sections_table[temp_section_index]
+				local section = spawn_point_sections[section_index]
+				local spawn_point = section[math.random(#section)]
+				local travel_distance = spawn_point.spawn_travel_distance
+				local spawn_type_breed_names = breed_names[spawn_type]
+
+				if #spawn_type_breed_names > 0 then
+					local breed_name = spawn_type_breed_names[math.random(#spawn_type_breed_names)]
+					local position = spawn_point.position
+					local despawn_distance_when_passive = template.despawn_distance_when_passive and template.despawn_distance_when_passive[breed_name]
+					local monster = {
+						travel_distance = travel_distance,
+						breed_name = breed_name,
+						position = position,
+						section = section_index,
+						despawn_distance_when_passive = despawn_distance_when_passive,
+						spawn_type = spawn_type
+					}
+					monsters[#monsters + 1] = monster
+
+					table.swap_delete(temp_sections_table, temp_section_index)
+
+					if allow_witches_spawned_with_monsters then
+						NUM_SECTIONS[spawn_type] = NUM_SECTIONS[spawn_type] - 1
+					else
+						num_sections = num_sections - 1
+					end
+				end
+			end
+		until true
 	end
 
 	local boss_patrol_settings = template.boss_patrols
 
 	if boss_patrol_settings then
+		local monster_num_sections = allow_witches_spawned_with_monsters and NUM_SECTIONS.monsters or num_sections
 		local num_boss_patrols_range = boss_patrol_settings.num_boss_patrols_range
-		local num_boss_patrols = math.min(math.random(num_boss_patrols_range[1], num_boss_patrols_range[2]), num_sections)
+		local num_boss_patrols = math.min(math.random(num_boss_patrols_range[1], num_boss_patrols_range[2]), monster_num_sections)
+
+		if self._num_boss_patrol_override then
+			num_boss_patrols = self._num_boss_patrol_override
+		end
+
 		boss_patrols = {}
 		local spawn_point_sections = spawn_type_point_sections.monsters
 
 		for i = 1, num_boss_patrols do
-			local temp_section_index = math.random(#TEMP_SECTIONS)
-			local section_index = TEMP_SECTIONS[temp_section_index]
+			local temp_section_index = math.random(#TEMP_SECTIONS_MONSTERS)
+			local section_index = TEMP_SECTIONS_MONSTERS[temp_section_index]
 			local section = spawn_point_sections[section_index]
 			local spawn_point = section[math.random(#section)]
 			local travel_distance = spawn_point.spawn_travel_distance - MonsterSettings.boss_patrol_extra_spawn_distance
@@ -156,13 +184,19 @@ MonsterPacing._generate_spawns = function (self, template)
 			}
 			boss_patrols[#boss_patrols + 1] = boss_patrol
 
-			table.swap_delete(TEMP_SECTIONS, temp_section_index)
+			table.swap_delete(TEMP_SECTIONS_MONSTERS, temp_section_index)
 
-			num_sections = num_sections - 1
+			if allow_witches_spawned_with_monsters then
+				NUM_SECTIONS.monsters = NUM_SECTIONS.monsters - 1
+			else
+				num_sections = num_sections - 1
+			end
 		end
 	end
 
-	table.clear_array(TEMP_SECTIONS, #TEMP_SECTIONS)
+	table.clear_array(TEMP_SECTIONS_MONSTERS, #TEMP_SECTIONS_MONSTERS)
+	table.clear_array(TEMP_SECTIONS_WITCHES, #TEMP_SECTIONS_WITCHES)
+	table.clear(NUM_SECTIONS)
 
 	self._monsters = monsters
 	self._boss_patrols = boss_patrols
@@ -183,7 +217,13 @@ MonsterPacing.fill_spawns_by_travel_distance = function (self, breed_name, spawn
 	local monsters = self._monsters
 	local spawn_point_sections = self._spawn_type_point_sections[spawn_type]
 
-	table.clear_array(monsters, #monsters)
+	for i = #monsters, 1, -1 do
+		local monster = monsters[i]
+
+		if monster.spawn_type == spawn_type then
+			table.remove(monsters, i)
+		end
+	end
 
 	local current_travel_distance = monster_per_travel_distance
 	local num_spawn_points = 0
@@ -227,7 +267,8 @@ MonsterPacing.fill_spawns_by_travel_distance = function (self, breed_name, spawn
 						travel_distance = travel_distance,
 						breed_name = monster_breed_name,
 						position = position,
-						section = i
+						section = i,
+						spawn_type = spawn_type
 					}
 					monsters[#monsters + 1] = monster
 				end
@@ -236,12 +277,77 @@ MonsterPacing.fill_spawns_by_travel_distance = function (self, breed_name, spawn
 	end
 end
 
-MonsterPacing.set_health_modifier = function (self, modifier)
-	self._health_modifier = modifier
+MonsterPacing.fill_boss_patrols_by_travel_distance = function (self, per_travel_distance)
+	if type(per_travel_distance) == "table" then
+		per_travel_distance = math.random_range(per_travel_distance[1], per_travel_distance[2])
+	end
+
+	if not self._boss_patrols then
+		return
+	end
+
+	local boss_patrols = self._boss_patrols
+	local spawn_point_sections = self._spawn_type_point_sections.monsters
+
+	table.clear(boss_patrols)
+
+	local current_travel_distance = per_travel_distance
+	local num_spawn_points = 0
+	local matching_spawn_points = {}
+	local boss_patrol_settings = self._template.boss_patrols
+
+	if not boss_patrol_settings then
+		return
+	end
+
+	for i = 1, #spawn_point_sections do
+		local section = spawn_point_sections[i]
+		num_spawn_points = num_spawn_points + #section
+
+		for j = 1, #section do
+			table.clear(matching_spawn_points)
+
+			for h = 1, #section do
+				local spawn_point = section[h]
+				local travel_distance = spawn_point.spawn_travel_distance
+
+				if current_travel_distance <= travel_distance then
+					matching_spawn_points[#matching_spawn_points + 1] = spawn_point
+				end
+			end
+
+			local spawn_point = #matching_spawn_points > 0 and matching_spawn_points[math.random(1, #matching_spawn_points)]
+
+			if spawn_point then
+				local travel_distance = spawn_point.spawn_travel_distance
+
+				if current_travel_distance <= travel_distance then
+					if type(per_travel_distance) == "table" then
+						per_travel_distance = math.random_range(per_travel_distance[1], per_travel_distance[2])
+					end
+
+					current_travel_distance = travel_distance + per_travel_distance
+					local breed_list = boss_patrol_settings.breed_lists
+					local spawn_point_travel_distance = spawn_point.spawn_point_travel_distance
+					local sound_events = boss_patrol_settings.sound_events
+					local boss_patrol = {
+						travel_distance = travel_distance - MonsterSettings.boss_patrol_extra_spawn_distance,
+						breed_list = breed_list,
+						section = i,
+						spawn_point_travel_distance = spawn_point_travel_distance,
+						sound_events = sound_events
+					}
+					boss_patrols[#boss_patrols + 1] = boss_patrol
+				end
+			end
+		end
+	end
+
+	self._boss_patrols = boss_patrols
 end
 
-MonsterPacing.set_stimmed_config = function (self, stimmed_config)
-	self._stimmed_config = stimmed_config
+MonsterPacing.set_health_modifier = function (self, modifier)
+	self._health_modifier = modifier
 end
 
 MonsterPacing.add_spawn_point = function (self, unit, position, path_position, travel_distance, section_index, spawn_type)
@@ -275,6 +381,10 @@ MonsterPacing.add_spawn_point = function (self, unit, position, path_position, t
 			spawn_point
 		}
 		self._num_spawn_type_sections[spawn_type] = self._num_spawn_type_sections[spawn_type] + 1
+	end
+
+	if spawn_type == "monsters" then
+		self:add_spawn_point(unit, position, path_position, travel_distance, section_index, "captains")
 	end
 
 	return true
@@ -387,6 +497,18 @@ MonsterPacing.num_aggroed_monsters = function (self)
 	return #aggroed_monster_units
 end
 
+MonsterPacing.set_num_monsters_override = function (self, override)
+	self._num_monsters_override = override
+end
+
+MonsterPacing.set_num_witches_override = function (self, override)
+	self._num_witches_override = override
+end
+
+MonsterPacing.set_num_boss_patrol_override = function (self, override)
+	self._num_boss_patrol_override = override
+end
+
 MonsterPacing._spawn_monster = function (self, monster, ahead_target_unit, side_id)
 	local template = self._template
 	local breed_name = monster.breed_name
@@ -443,17 +565,6 @@ MonsterPacing._spawn_boss_patrol = function (self, boss_patrol, ahead_travel_dis
 		flood_fill_positions[#flood_fill_positions + 1] = position
 	end
 
-	local stimmed_config = self._stimmed_config
-	local stim_buff_name = nil
-
-	if stimmed_config then
-		local chance_to_stim = stimmed_config.chance_to_stim
-
-		if math.random() < chance_to_stim then
-			stim_buff_name = stimmed_config.buff_name
-		end
-	end
-
 	local group_system = Managers.state.extension:system("group_system")
 	local group_id = group_system:generate_group_id()
 	local spawned_minions = {}
@@ -477,15 +588,6 @@ MonsterPacing._spawn_boss_patrol = function (self, boss_patrol, ahead_travel_dis
 			patrol_component.patrol_leader_unit = follow_unit
 			patrol_component.patrol_index = i
 			patrol_component.should_patrol = true
-		end
-
-		if stim_buff_name then
-			local buff_extension = ScriptUnit.extension(unit, "buff_system")
-			local t = Managers.time:time("gameplay")
-
-			if not buff_extension:has_keyword("stimmed") then
-				buff_extension:add_internally_controlled_buff(stim_buff_name, t)
-			end
 		end
 
 		spawned_minions[i] = unit

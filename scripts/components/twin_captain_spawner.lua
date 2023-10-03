@@ -27,6 +27,10 @@ TwinCaptainSpawner.editor_init = function (self, unit)
 	return true
 end
 
+TwinCaptainSpawner.editor_validate = function (self, unit)
+	return true, ""
+end
+
 TwinCaptainSpawner.editor_destroy = function (self, unit)
 	if not rawget(_G, "LevelEditor") then
 		return

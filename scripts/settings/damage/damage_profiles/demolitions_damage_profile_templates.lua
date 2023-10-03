@@ -105,7 +105,7 @@ damage_templates.close_grenade = {
 		attack = {
 			[armor_types.unarmored] = 1,
 			[armor_types.armored] = 0.5,
-			[armor_types.resistant] = 0.75,
+			[armor_types.resistant] = 1.25,
 			[armor_types.player] = 1,
 			[armor_types.berserker] = 1,
 			[armor_types.super_armor] = 0,
@@ -213,7 +213,10 @@ damage_templates.frag_grenade = {
 		}
 	},
 	gibbing_type = GibbingTypes.explosion,
-	damage_type = damage_types.grenade_frag
+	damage_type = damage_types.grenade_frag,
+	stat_buffs = {
+		"frag_damage"
+	}
 }
 damage_templates.close_frag_grenade = {
 	suppression_value = 10,
@@ -259,7 +262,10 @@ damage_templates.close_frag_grenade = {
 	},
 	gibbing_type = GibbingTypes.explosion,
 	gibbing_power = GibbingPower.heavy,
-	damage_type = damage_types.grenade_frag
+	damage_type = damage_types.grenade_frag,
+	stat_buffs = {
+		"frag_damage"
+	}
 }
 damage_templates.krak_grenade = {
 	stagger_category = "explosion",
@@ -337,11 +343,15 @@ damage_templates.krak_grenade = {
 	},
 	gibbing_type = GibbingTypes.explosion,
 	gibbing_power = GibbingPower.medium,
-	damage_type = damage_types.grenade_krak
+	gib_push_force = GibbingSettings.gib_push_force.explosive,
+	damage_type = damage_types.grenade_krak,
+	stat_buffs = {
+		"krak_damage"
+	}
 }
 damage_templates.close_krak_grenade = {
-	suppression_value = 10,
 	ignore_shield = true,
+	suppression_value = 10,
 	ragdoll_push_force = 1250,
 	ignore_stagger_reduction = true,
 	stagger_category = "explosion",
@@ -353,12 +363,12 @@ damage_templates.close_krak_grenade = {
 		attack = {
 			[armor_types.unarmored] = 1,
 			[armor_types.armored] = 2,
-			[armor_types.resistant] = 2,
+			[armor_types.resistant] = 1.65,
 			[armor_types.player] = 1,
-			[armor_types.berserker] = 1,
+			[armor_types.berserker] = 1.3,
 			[armor_types.super_armor] = 2,
 			[armor_types.disgustingly_resilient] = 0.75,
-			[armor_types.void_shield] = 0.75,
+			[armor_types.void_shield] = 1.1,
 			[armor_types.prop_armor] = 2
 		},
 		impact = {
@@ -374,7 +384,138 @@ damage_templates.close_krak_grenade = {
 		}
 	},
 	power_distribution = {
-		attack = 750,
+		attack = 2000,
+		impact = 100
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	},
+	gibbing_type = GibbingTypes.explosion,
+	gibbing_power = GibbingPower.infinite,
+	gib_push_force = GibbingSettings.gib_push_force.explosive_heavy,
+	damage_type = damage_types.grenade_krak,
+	stat_buffs = {
+		"krak_damage"
+	}
+}
+damage_templates.ogryn_box_cluster_frag_grenade = {
+	gibbing_power = 0,
+	stagger_category = "explosion",
+	suppression_value = 10,
+	ragdoll_push_force = 600,
+	ignore_stagger_reduction = true,
+	cleave_distribution = {
+		attack = 0.15,
+		impact = 0.15
+	},
+	armor_damage_modifier_ranged = {
+		near = {
+			attack = {
+				[armor_types.unarmored] = 0.7,
+				[armor_types.armored] = 0.5,
+				[armor_types.resistant] = 1.1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1.5,
+				[armor_types.super_armor] = 0.7,
+				[armor_types.disgustingly_resilient] = 0.6,
+				[armor_types.void_shield] = 0.75,
+				[armor_types.prop_armor] = 1
+			},
+			impact = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 3,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 2,
+				[armor_types.super_armor] = 2,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+				[armor_types.prop_armor] = 1
+			}
+		},
+		far = {
+			attack = {
+				[armor_types.unarmored] = 0,
+				[armor_types.armored] = 0,
+				[armor_types.resistant] = 0,
+				[armor_types.player] = 0,
+				[armor_types.berserker] = 0,
+				[armor_types.super_armor] = 0,
+				[armor_types.disgustingly_resilient] = 0,
+				[armor_types.void_shield] = 0,
+				[armor_types.prop_armor] = 0
+			},
+			impact = {
+				[armor_types.unarmored] = 0.2,
+				[armor_types.armored] = 0.2,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 0.2,
+				[armor_types.berserker] = 0.2,
+				[armor_types.super_armor] = 0.2,
+				[armor_types.disgustingly_resilient] = 0.2,
+				[armor_types.void_shield] = 0.2,
+				[armor_types.prop_armor] = 0.2
+			}
+		}
+	},
+	power_distribution_ranged = {
+		attack = {
+			far = 50,
+			near = 150
+		},
+		impact = {
+			far = 5,
+			near = 15
+		}
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	},
+	gibbing_type = GibbingTypes.explosion,
+	damage_type = damage_types.grenade_frag,
+	stat_buffs = {
+		"frag_damage"
+	}
+}
+damage_templates.ogryn_box_cluster_close_frag_grenade = {
+	suppression_value = 10,
+	ragdoll_push_force = 850,
+	ignore_stagger_reduction = true,
+	stagger_category = "explosion",
+	cleave_distribution = {
+		attack = 0.15,
+		impact = 0.15
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 0.5,
+			[armor_types.resistant] = 0.75,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 0.2,
+			[armor_types.disgustingly_resilient] = 0.75,
+			[armor_types.void_shield] = 0.75,
+			[armor_types.prop_armor] = 1
+		},
+		impact = {
+			[armor_types.unarmored] = 2,
+			[armor_types.armored] = 2,
+			[armor_types.resistant] = 10,
+			[armor_types.player] = 2,
+			[armor_types.berserker] = 2,
+			[armor_types.super_armor] = 5,
+			[armor_types.disgustingly_resilient] = 2,
+			[armor_types.void_shield] = 2,
+			[armor_types.prop_armor] = 2
+		}
+	},
+	power_distribution = {
+		attack = 10,
 		impact = 100
 	},
 	targets = {
@@ -384,7 +525,10 @@ damage_templates.close_krak_grenade = {
 	},
 	gibbing_type = GibbingTypes.explosion,
 	gibbing_power = GibbingPower.heavy,
-	damage_type = damage_types.grenade_krak
+	damage_type = damage_types.grenade_frag,
+	stat_buffs = {
+		"frag_damage"
+	}
 }
 damage_templates.plasma_demolition = {
 	ragdoll_push_force = 1250,
@@ -628,22 +772,38 @@ ogryn_thumper_p1_m2_close_instant.armor_damage_modifier.impact[armor_types.super
 	1.5
 }
 ogryn_thumper_p1_m2_close_instant.power_distribution.attack = {
-	250,
-	500
+	500,
+	1000
 }
 ogryn_thumper_p1_m2_close_instant.power_distribution.impact = {
-	25,
-	75
+	40,
+	80
 }
 damage_templates.ogryn_thumper_p1_m2_close_instant = ogryn_thumper_p1_m2_close_instant
 local ogryn_grenade = table.clone(damage_templates.default_grenade)
 ogryn_grenade.armor_damage_modifier_ranged.near.attack[armor_types.armored] = {
-	0.7,
-	1.3
+	1,
+	1.6
 }
 ogryn_grenade.armor_damage_modifier_ranged.far.attack[armor_types.armored] = {
-	0.1,
+	0.25,
 	0.5
+}
+ogryn_grenade.armor_damage_modifier_ranged.far.attack[armor_types.unarmored] = {
+	2,
+	2
+}
+ogryn_grenade.armor_damage_modifier_ranged.near.attack[armor_types.unarmored] = {
+	2,
+	2
+}
+ogryn_grenade.armor_damage_modifier_ranged.near.attack[armor_types.berserker] = {
+	2,
+	2.6
+}
+ogryn_grenade.armor_damage_modifier_ranged.far.attack[armor_types.berserker] = {
+	0.75,
+	0.95
 }
 ogryn_grenade.armor_damage_modifier_ranged.near.impact[armor_types.armored] = {
 	2,
@@ -651,31 +811,52 @@ ogryn_grenade.armor_damage_modifier_ranged.near.impact[armor_types.armored] = {
 }
 ogryn_grenade.armor_damage_modifier_ranged.far.impact[armor_types.armored] = {
 	0.2,
-	0.8
-}
-ogryn_grenade.armor_damage_modifier_ranged.near.attack[armor_types.super_armor] = {
-	0.2,
 	0.5
 }
+ogryn_grenade.armor_damage_modifier_ranged.near.attack[armor_types.super_armor] = {
+	0.6,
+	0.9
+}
 ogryn_grenade.armor_damage_modifier_ranged.far.attack[armor_types.super_armor] = {
-	0,
-	0.1
+	0.25,
+	0.5
 }
 ogryn_grenade.armor_damage_modifier_ranged.near.impact[armor_types.super_armor] = {
 	1,
 	1
 }
 ogryn_grenade.armor_damage_modifier_ranged.far.impact[armor_types.super_armor] = {
-	0.2,
-	0.4
+	0.25,
+	0.5
 }
-ogryn_grenade.power_distribution_ranged.attack.near = 500
-ogryn_grenade.power_distribution_ranged.attack.far = 150
+ogryn_grenade.armor_damage_modifier_ranged.near.attack[armor_types.resistant] = {
+	1.5,
+	2.25
+}
+ogryn_grenade.armor_damage_modifier_ranged.far.attack[armor_types.resistant] = {
+	1,
+	1
+}
+ogryn_grenade.armor_damage_modifier_ranged.near.impact[armor_types.resistant] = {
+	1.5,
+	1.5
+}
+ogryn_grenade.armor_damage_modifier_ranged.far.impact[armor_types.resistant] = {
+	3,
+	3
+}
+ogryn_grenade.power_distribution_ranged.attack.near = 1250
+ogryn_grenade.power_distribution_ranged.attack.far = 600
+ogryn_grenade.power_distribution_ranged.impact.near = 200
+ogryn_grenade.power_distribution_ranged.impact.far = 10
+ogryn_grenade.damage_type = damage_types.grenade_frag
+ogryn_grenade.gibbing_power = GibbingPower.heavy
+ogryn_grenade.ragdoll_push_force = 1200
 damage_templates.ogryn_grenade = ogryn_grenade
 local close_ogryn_grenade = table.clone(damage_templates.close_grenade)
 close_ogryn_grenade.armor_damage_modifier.attack[armor_types.armored] = {
-	0.7,
-	1.3
+	1.25,
+	1.85
 }
 close_ogryn_grenade.armor_damage_modifier.impact[armor_types.armored] = {
 	1,
@@ -685,19 +866,34 @@ close_ogryn_grenade.armor_damage_modifier.attack[armor_types.resistant] = {
 	1,
 	1.3
 }
-close_ogryn_grenade.armor_damage_modifier.attack[armor_types.berserker] = {
-	0.7,
+close_ogryn_grenade.armor_damage_modifier.attack[armor_types.resistant] = {
+	1,
 	1.3
 }
+close_ogryn_grenade.armor_damage_modifier.attack[armor_types.berserker] = {
+	1.35,
+	2
+}
 close_ogryn_grenade.armor_damage_modifier.attack[armor_types.super_armor] = {
-	0.2,
-	0.5
+	0.8,
+	1.25
 }
 close_ogryn_grenade.armor_damage_modifier.impact[armor_types.super_armor] = {
 	1,
 	1
 }
-close_ogryn_grenade.power_distribution.attack = 1000
+close_ogryn_grenade.armor_damage_modifier.attack[armor_types.resistant] = {
+	2,
+	2
+}
+close_ogryn_grenade.armor_damage_modifier.impact[armor_types.resistant] = {
+	3,
+	3
+}
+close_ogryn_grenade.power_distribution.attack = 1500
+close_ogryn_grenade.damage_type = damage_types.grenade_frag
+close_ogryn_grenade.gibbing_power = GibbingPower.heavy
+ogryn_grenade.ragdoll_push_force = 2000
 damage_templates.close_ogryn_grenade = close_ogryn_grenade
 
 return {

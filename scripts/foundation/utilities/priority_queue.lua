@@ -85,4 +85,11 @@ PriorityQueue.push = function (self, key, data)
 	end
 end
 
+PriorityQueue.clear = function (self)
+	self._size = 0
+
+	table.clear(self._keys)
+	table.clear(self._data)
+end
+
 return PriorityQueue

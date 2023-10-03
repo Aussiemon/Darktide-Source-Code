@@ -4,7 +4,7 @@ local quick_wield_configuration = PlayerCharacterConstants.quick_wield_configura
 local scroll_wield_order = PlayerCharacterConstants.scroll_wield_order
 local unit_flow_event = Unit.flow_event
 local PlayerUnitVisualLoadout = {}
-local _unwield_slot = nil
+local _can_wield_from_scroll_input, _unwield_slot = nil
 
 PlayerUnitVisualLoadout.wield_slot = function (slot_to_wield, player_unit, t, skip_wield_action)
 	local visual_loadout_extension = ScriptUnit.extension(player_unit, "visual_loadout_system")
@@ -101,7 +101,7 @@ PlayerUnitVisualLoadout.unequip_item_from_slot = function (player_unit, slot_nam
 		gadget_extension:on_slot_unequipped(item, slot_name)
 	end
 
-	local fixed_frame = t / GameParameters.fixed_time_step
+	local fixed_frame = t / Managers.state.game_session.fixed_time_step
 
 	visual_loadout_extension:unequip_item_from_slot(slot_name, fixed_frame)
 end
@@ -172,25 +172,7 @@ PlayerUnitVisualLoadout.has_weapon_keyword_from_slot = function (visual_loadout_
 	return has_keyword
 end
 
-local function _can_wield(slot_name, visual_loadout_extension, weapon_extension, ability_extension)
-	if not visual_loadout_extension:can_wield(slot_name) then
-		return false
-	end
-
-	if not weapon_extension:can_wield(slot_name) then
-		return false
-	end
-
-	if not ability_extension:can_wield(slot_name) then
-		return false
-	end
-
-	return true
-end
-
-local SCROLL_WRAP_ENABLED = true
-
-PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inventory_component, visual_loadout_extension, weapon_extension, ability_extension)
+PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inventory_component, visual_loadout_extension, weapon_extension, ability_extension, input_extension)
 
 	-- Decompilation error in this vicinity:
 	--- BLOCK #0 1-4, warpins: 1 ---
@@ -297,7 +279,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 	--- BLOCK #7 17-18, warpins: 1 ---
 	--- END OF BLOCK #7 ---
 
-	slot8 = if wield_scroll_up then
+	slot9 = if wield_scroll_up then
 	JUMP TO BLOCK #8
 	else
 	JUMP TO BLOCK #23
@@ -309,7 +291,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 	--- BLOCK #8 19-20, warpins: 2 ---
 	--- END OF BLOCK #8 ---
 
-	slot9 = if slot_index then
+	slot10 = if slot_index then
 	JUMP TO BLOCK #9
 	else
 	JUMP TO BLOCK #23
@@ -322,7 +304,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 	local scroll_size = #scroll_wield_order
 	--- END OF BLOCK #9 ---
 
-	slot8 = if wield_scroll_up then
+	slot9 = if wield_scroll_up then
 	JUMP TO BLOCK #10
 	else
 	JUMP TO BLOCK #11
@@ -332,7 +314,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 	-- Decompilation error in this vicinity:
 	--- BLOCK #10 25-26, warpins: 1 ---
-	slot11 = 1
+	slot12 = 1
 	--- END OF BLOCK #10 ---
 
 	UNCONDITIONAL JUMP; TARGET BLOCK #12
@@ -349,8 +331,8 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #12 28-29, warpins: 2 ---
-	local wrap = SCROLL_WRAP_ENABLED
+	--- BLOCK #12 28-32, warpins: 2 ---
+	local wrap = input_extension:get("weapon_switch_scroll_wrap")
 	local next_slot_index = slot_index
 	--- END OF BLOCK #12 ---
 
@@ -359,7 +341,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #13 30-30, warpins: 2 ---
+	--- BLOCK #13 33-33, warpins: 2 ---
 	--- END OF BLOCK #13 ---
 
 	FLOW; TARGET BLOCK #13
@@ -367,11 +349,11 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #14 31-33, warpins: 1 ---
+	--- BLOCK #14 34-36, warpins: 1 ---
 	next_slot_index = next_slot_index + index_change
 	--- END OF BLOCK #14 ---
 
-	slot12 = if wrap then
+	slot13 = if wrap then
 	JUMP TO BLOCK #15
 	else
 	JUMP TO BLOCK #16
@@ -380,7 +362,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #15 34-39, warpins: 1 ---
+	--- BLOCK #15 37-42, warpins: 1 ---
 	next_slot_index = math.index_wrapper(next_slot_index, scroll_size)
 	--- END OF BLOCK #15 ---
 
@@ -389,12 +371,12 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #16 40-43, warpins: 2 ---
+	--- BLOCK #16 43-46, warpins: 2 ---
 	local scroll_slot_name = scroll_wield_order[next_slot_index]
 
 	--- END OF BLOCK #16 ---
 
-	slot14 = if not scroll_slot_name then
+	slot15 = if not scroll_slot_name then
 	JUMP TO BLOCK #17
 	else
 	JUMP TO BLOCK #18
@@ -403,7 +385,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #17 44-44, warpins: 1 ---
+	--- BLOCK #17 47-47, warpins: 1 ---
 	break
 
 	--- END OF BLOCK #17 ---
@@ -413,11 +395,11 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #18 45-52, warpins: 1 ---
-	local can_wield = _can_wield(scroll_slot_name, visual_loadout_extension, weapon_extension, ability_extension)
+	--- BLOCK #18 48-55, warpins: 1 ---
+	local can_wield = _can_wield_from_scroll_input(scroll_slot_name, visual_loadout_extension, weapon_extension, ability_extension)
 	--- END OF BLOCK #18 ---
 
-	slot15 = if can_wield then
+	slot16 = if can_wield then
 	JUMP TO BLOCK #19
 	else
 	JUMP TO BLOCK #20
@@ -426,7 +408,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #19 53-54, warpins: 1 ---
+	--- BLOCK #19 56-57, warpins: 1 ---
 	next_slot_name = scroll_slot_name
 
 	break
@@ -437,7 +419,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #20 55-56, warpins: 1 ---
+	--- BLOCK #20 58-59, warpins: 1 ---
 	--- END OF BLOCK #20 ---
 
 	if next_slot_index == slot_index then
@@ -449,10 +431,10 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #21 57-58, warpins: 3 ---
+	--- BLOCK #21 60-61, warpins: 3 ---
 	--- END OF BLOCK #21 ---
 
-	slot6 = if not next_slot_name then
+	slot7 = if not next_slot_name then
 	JUMP TO BLOCK #22
 	else
 	JUMP TO BLOCK #23
@@ -461,7 +443,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #22 59-59, warpins: 1 ---
+	--- BLOCK #22 62-62, warpins: 1 ---
 	next_slot_name = wielded_slot
 
 	--- END OF BLOCK #22 ---
@@ -471,10 +453,10 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #23 60-61, warpins: 4 ---
+	--- BLOCK #23 63-64, warpins: 4 ---
 	--- END OF BLOCK #23 ---
 
-	slot6 = if next_slot_name then
+	slot7 = if next_slot_name then
 	JUMP TO BLOCK #24
 	else
 	JUMP TO BLOCK #25
@@ -483,7 +465,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #24 62-63, warpins: 1 ---
+	--- BLOCK #24 65-66, warpins: 1 ---
 	return next_slot_name
 
 	--- END OF BLOCK #24 ---
@@ -493,7 +475,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #25 64-65, warpins: 1 ---
+	--- BLOCK #25 67-68, warpins: 1 ---
 	--- END OF BLOCK #25 ---
 
 	if wield_input ~= "quick_wield" then
@@ -505,10 +487,10 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #26 66-67, warpins: 1 ---
+	--- BLOCK #26 69-70, warpins: 1 ---
 	--- END OF BLOCK #26 ---
 
-	slot7 = if not wield_scroll_down then
+	slot8 = if not wield_scroll_down then
 	JUMP TO BLOCK #27
 	else
 	JUMP TO BLOCK #28
@@ -517,10 +499,10 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #27 68-69, warpins: 1 ---
+	--- BLOCK #27 71-72, warpins: 1 ---
 	--- END OF BLOCK #27 ---
 
-	slot8 = if wield_scroll_up then
+	slot9 = if wield_scroll_up then
 	JUMP TO BLOCK #28
 	else
 	JUMP TO BLOCK #32
@@ -529,10 +511,10 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #28 70-71, warpins: 2 ---
+	--- BLOCK #28 73-74, warpins: 2 ---
 	--- END OF BLOCK #28 ---
 
-	slot6 = if not next_slot_name then
+	slot7 = if not next_slot_name then
 	JUMP TO BLOCK #29
 	else
 	JUMP TO BLOCK #32
@@ -541,11 +523,11 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #29 72-75, warpins: 2 ---
+	--- BLOCK #29 75-78, warpins: 2 ---
 	next_slot_name = quick_wield_configuration[wielded_slot]
 	--- END OF BLOCK #29 ---
 
-	slot6 = if not next_slot_name then
+	slot7 = if not next_slot_name then
 	JUMP TO BLOCK #30
 	else
 	JUMP TO BLOCK #31
@@ -554,7 +536,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #30 76-77, warpins: 1 ---
+	--- BLOCK #30 79-80, warpins: 1 ---
 	next_slot_name = quick_wield_configuration.default
 
 	--- END OF BLOCK #30 ---
@@ -564,7 +546,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #31 78-79, warpins: 2 ---
+	--- BLOCK #31 81-82, warpins: 2 ---
 	return next_slot_name
 
 	--- END OF BLOCK #31 ---
@@ -574,7 +556,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #32 80-83, warpins: 2 ---
+	--- BLOCK #32 83-86, warpins: 2 ---
 	--- END OF BLOCK #32 ---
 
 	FLOW; TARGET BLOCK #33
@@ -582,14 +564,14 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #33 84-92, warpins: 0 ---
+	--- BLOCK #33 87-95, warpins: 0 ---
 	for slot_name, config in pairs(slot_configuration) do
 
 		-- Decompilation error in this vicinity:
-		--- BLOCK #0 84-86, warpins: 1 ---
+		--- BLOCK #0 87-89, warpins: 1 ---
 		--- END OF BLOCK #0 ---
 
-		slot15 = if config.wieldable then
+		slot16 = if config.wieldable then
 		JUMP TO BLOCK #1
 		else
 		JUMP TO BLOCK #3
@@ -598,7 +580,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 		-- Decompilation error in this vicinity:
-		--- BLOCK #1 87-89, warpins: 1 ---
+		--- BLOCK #1 90-92, warpins: 1 ---
 		--- END OF BLOCK #1 ---
 
 		if config.wield_input == wield_input then
@@ -610,7 +592,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 		-- Decompilation error in this vicinity:
-		--- BLOCK #2 90-90, warpins: 1 ---
+		--- BLOCK #2 93-93, warpins: 1 ---
 		return slot_name
 		--- END OF BLOCK #2 ---
 
@@ -619,7 +601,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 		-- Decompilation error in this vicinity:
-		--- BLOCK #3 91-92, warpins: 4 ---
+		--- BLOCK #3 94-95, warpins: 4 ---
 		--- END OF BLOCK #3 ---
 
 
@@ -633,7 +615,7 @@ PlayerUnitVisualLoadout.slot_name_from_wield_input = function (wield_input, inve
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #34 93-93, warpins: 3 ---
+	--- BLOCK #34 96-96, warpins: 3 ---
 	return
 	--- END OF BLOCK #34 ---
 
@@ -886,20 +868,6 @@ PlayerUnitVisualLoadout.slot_flow_event = function (first_person_extension, visu
 
 end
 
-function _unwield_slot(slot_to_unwield, visual_loadout_extension, weapon_extension, t)
-
-	-- Decompilation error in this vicinity:
-	--- BLOCK #0 1-10, warpins: 1 ---
-	weapon_extension:on_slot_unwielded(slot_to_unwield, t)
-	visual_loadout_extension:unwield_slot(slot_to_unwield)
-
-	return
-	--- END OF BLOCK #0 ---
-
-
-
-end
-
 PlayerUnitVisualLoadout.slot_to_slot_type = function (slot)
 
 	-- Decompilation error in this vicinity:
@@ -984,6 +952,126 @@ PlayerUnitVisualLoadout.slot_config_from_slot_name = function (slot_name)
 	-- Decompilation error in this vicinity:
 	--- BLOCK #0 1-3, warpins: 1 ---
 	return slot_configuration[slot_name]
+	--- END OF BLOCK #0 ---
+
+
+
+end
+
+function _can_wield_from_scroll_input(slot_name, visual_loadout_extension, weapon_extension, ability_extension)
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #0 1-6, warpins: 1 ---
+	--- END OF BLOCK #0 ---
+
+	slot4 = if not visual_loadout_extension:can_wield(slot_name)
+
+	 then
+	JUMP TO BLOCK #1
+	else
+	JUMP TO BLOCK #2
+	end
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #1 7-8, warpins: 1 ---
+	return false
+
+	--- END OF BLOCK #1 ---
+
+	FLOW; TARGET BLOCK #2
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #2 9-14, warpins: 2 ---
+	--- END OF BLOCK #2 ---
+
+	slot4 = if not weapon_extension:can_wield(slot_name)
+
+	 then
+	JUMP TO BLOCK #3
+	else
+	JUMP TO BLOCK #4
+	end
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #3 15-16, warpins: 1 ---
+	return false
+
+	--- END OF BLOCK #3 ---
+
+	FLOW; TARGET BLOCK #4
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #4 17-22, warpins: 2 ---
+	--- END OF BLOCK #4 ---
+
+	slot4 = if not ability_extension:can_wield(slot_name)
+
+	 then
+	JUMP TO BLOCK #5
+	else
+	JUMP TO BLOCK #6
+	end
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #5 23-24, warpins: 1 ---
+	return false
+
+	--- END OF BLOCK #5 ---
+
+	FLOW; TARGET BLOCK #6
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #6 25-30, warpins: 2 ---
+	--- END OF BLOCK #6 ---
+
+	slot4 = if not ability_extension:can_be_scroll_wielded(slot_name)
+
+	 then
+	JUMP TO BLOCK #7
+	else
+	JUMP TO BLOCK #8
+	end
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #7 31-32, warpins: 1 ---
+	return false
+	--- END OF BLOCK #7 ---
+
+	FLOW; TARGET BLOCK #8
+
+
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #8 33-34, warpins: 2 ---
+	return true
+	--- END OF BLOCK #8 ---
+
+
+
+end
+
+function _unwield_slot(slot_to_unwield, visual_loadout_extension, weapon_extension, t)
+
+	-- Decompilation error in this vicinity:
+	--- BLOCK #0 1-10, warpins: 1 ---
+	weapon_extension:on_slot_unwielded(slot_to_unwield, t)
+	visual_loadout_extension:unwield_slot(slot_to_unwield)
+
+	return
 	--- END OF BLOCK #0 ---
 
 

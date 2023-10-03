@@ -255,44 +255,6 @@ local blueprints = {
 				}
 			},
 			{
-				pass_type = "rotated_texture",
-				style_id = "arrow_selected",
-				value = "content/ui/materials/buttons/arrow_01",
-				style = {
-					horizontal_alignment = "right",
-					vertical_alignment = "center",
-					color = Color.terminal_text_body(255, true),
-					default_color = Color.terminal_text_body(255, true),
-					selected_color = Color.terminal_text_header_selected(255, true),
-					hover_color = Color.terminal_text_header(255, true),
-					angle = -math.pi / 2,
-					offset = {
-						-20,
-						0,
-						3
-					},
-					size = {
-						16,
-						20
-					}
-				},
-				change_function = function (content, style)
-					local hotspot = content.hotspot
-
-					if hotspot.is_selected then
-						ColorUtilities.color_copy(style.selected_color, style.color)
-
-						style.angle = 0
-					else
-						local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
-
-						ColorUtilities.color_lerp(style.default_color, style.hover_color, progress, style.color)
-
-						style.angle = -math.pi / 2
-					end
-				end
-			},
-			{
 				value_id = "icon",
 				pass_type = "texture",
 				value = "",
@@ -404,6 +366,30 @@ local blueprints = {
 					offset[1] = -size_addition
 					offset[2] = -size_addition
 					style.hdr = progress == 1
+				end
+			},
+			{
+				pass_type = "texture",
+				style_id = "button_gradient",
+				value = "content/ui/materials/gradients/gradient_diagonal_down_right",
+				style = {
+					vertical_alignment = "center",
+					horizontal_alignment = "center",
+					default_color = Color.black(nil, true),
+					hover_color = Color.terminal_background_gradient(nil, true),
+					selected_color = Color.terminal_frame_selected(nil, true),
+					offset = {
+						0,
+						0,
+						1
+					}
+				},
+				change_function = function (content, style)
+					ButtonPassTemplates.terminal_button_change_function(content, style)
+					ButtonPassTemplates.terminal_button_hover_change_function(content, style)
+				end,
+				visibility_function = function (content, style)
+					return content.hotspot.is_hover or content.hotspot.is_focused
 				end
 			},
 			{
@@ -528,7 +514,7 @@ local blueprints = {
 						6
 					}
 				},
-				change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -551,14 +537,49 @@ local blueprints = {
 						9
 					}
 				},
-				change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
-				value_id = "marker",
-				style_id = "marker",
-				pass_type = "text",
-				value = "",
-				style = CharacterAppearanceViewFontStyle.marker_icon_font_style,
+				pass_type = "texture",
+				style_id = "button_gradient",
+				value = "content/ui/materials/gradients/gradient_diagonal_down_right",
+				style = {
+					vertical_alignment = "center",
+					horizontal_alignment = "center",
+					default_color = Color.black(nil, true),
+					hover_color = Color.terminal_background_gradient(nil, true),
+					selected_color = Color.terminal_frame_selected(nil, true),
+					offset = {
+						0,
+						0,
+						10
+					}
+				},
+				change_function = function (content, style)
+					ButtonPassTemplates.terminal_button_change_function(content, style)
+					ButtonPassTemplates.terminal_button_hover_change_function(content, style)
+				end,
+				visibility_function = function (content, style)
+					return content.hotspot.is_hover or content.hotspot.is_focused
+				end
+			},
+			{
+				style_id = "equipped_icon",
+				pass_type = "texture",
+				value = "content/ui/materials/icons/items/equipped_label",
+				style = {
+					vertical_alignment = "top",
+					horizontal_alignment = "right",
+					size = {
+						32,
+						32
+					},
+					offset = {
+						0,
+						0,
+						8
+					}
+				},
 				visibility_function = function (content, style)
 					return content.element_selected
 				end
@@ -641,6 +662,30 @@ local blueprints = {
 				end
 			},
 			{
+				pass_type = "texture",
+				style_id = "button_gradient",
+				value = "content/ui/materials/gradients/gradient_diagonal_down_right",
+				style = {
+					vertical_alignment = "center",
+					horizontal_alignment = "center",
+					default_color = Color.black(nil, true),
+					hover_color = Color.terminal_background_gradient(nil, true),
+					selected_color = Color.terminal_frame_selected(nil, true),
+					offset = {
+						0,
+						0,
+						4
+					}
+				},
+				change_function = function (content, style)
+					ButtonPassTemplates.terminal_button_change_function(content, style)
+					ButtonPassTemplates.terminal_button_hover_change_function(content, style)
+				end,
+				visibility_function = function (content, style)
+					return content.hotspot.is_hover or content.hotspot.is_focused
+				end
+			},
+			{
 				value_id = "icon",
 				pass_type = "texture",
 				value = "content/ui/materials/base/ui_default_base",
@@ -697,7 +742,7 @@ local blueprints = {
 						6
 					}
 				},
-				change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -720,14 +765,25 @@ local blueprints = {
 						9
 					}
 				},
-				change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
-				value_id = "marker",
-				style_id = "marker",
-				pass_type = "text",
-				value = "",
-				style = CharacterAppearanceViewFontStyle.marker_icon_font_style,
+				style_id = "equipped_icon",
+				pass_type = "texture",
+				value = "content/ui/materials/icons/items/equipped_label",
+				style = {
+					vertical_alignment = "top",
+					horizontal_alignment = "right",
+					size = {
+						32,
+						32
+					},
+					offset = {
+						0,
+						0,
+						8
+					}
+				},
 				visibility_function = function (content, style)
 					return content.element_selected
 				end
@@ -818,7 +874,7 @@ local blueprints = {
 						6
 					}
 				},
-				change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -841,16 +897,51 @@ local blueprints = {
 						9
 					}
 				},
-				change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
-				value_id = "marker",
-				style_id = "marker",
-				pass_type = "text",
-				value = "",
-				style = CharacterAppearanceViewFontStyle.marker_font_style,
+				style_id = "equipped_icon",
+				pass_type = "texture",
+				value = "content/ui/materials/icons/items/equipped_label",
+				style = {
+					vertical_alignment = "top",
+					horizontal_alignment = "right",
+					size = {
+						32,
+						32
+					},
+					offset = {
+						0,
+						0,
+						8
+					}
+				},
 				visibility_function = function (content, style)
 					return content.element_selected
+				end
+			},
+			{
+				pass_type = "texture",
+				style_id = "button_gradient",
+				value = "content/ui/materials/gradients/gradient_diagonal_down_right",
+				style = {
+					vertical_alignment = "center",
+					horizontal_alignment = "center",
+					default_color = Color.black(nil, true),
+					hover_color = Color.terminal_background_gradient(nil, true),
+					selected_color = Color.terminal_frame_selected(nil, true),
+					offset = {
+						0,
+						0,
+						4
+					}
+				},
+				change_function = function (content, style)
+					ButtonPassTemplates.terminal_button_change_function(content, style)
+					ButtonPassTemplates.terminal_button_hover_change_function(content, style)
+				end,
+				visibility_function = function (content, style)
+					return content.hotspot.is_hover or content.hotspot.is_focused
 				end
 			},
 			{
@@ -942,7 +1033,7 @@ local blueprints = {
 						6
 					}
 				},
-				change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
 				pass_type = "texture",
@@ -965,16 +1056,51 @@ local blueprints = {
 						9
 					}
 				},
-				change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function
+				change_function = ButtonPassTemplates.terminal_button_change_function
 			},
 			{
-				value_id = "marker",
-				style_id = "marker",
-				pass_type = "text",
-				value = "",
-				style = CharacterAppearanceViewFontStyle.marker_font_style,
+				style_id = "equipped_icon",
+				pass_type = "texture",
+				value = "content/ui/materials/icons/items/equipped_label",
+				style = {
+					vertical_alignment = "top",
+					horizontal_alignment = "right",
+					size = {
+						32,
+						32
+					},
+					offset = {
+						0,
+						0,
+						8
+					}
+				},
 				visibility_function = function (content, style)
 					return content.element_selected
+				end
+			},
+			{
+				pass_type = "texture",
+				style_id = "button_gradient",
+				value = "content/ui/materials/gradients/gradient_diagonal_down_right",
+				style = {
+					vertical_alignment = "center",
+					horizontal_alignment = "center",
+					default_color = Color.black(nil, true),
+					hover_color = Color.terminal_background_gradient(nil, true),
+					selected_color = Color.terminal_frame_selected(nil, true),
+					offset = {
+						0,
+						0,
+						4
+					}
+				},
+				change_function = function (content, style)
+					ButtonPassTemplates.terminal_button_change_function(content, style)
+					ButtonPassTemplates.terminal_button_hover_change_function(content, style)
+				end,
+				visibility_function = function (content, style)
+					return content.hotspot.is_hover or content.hotspot.is_focused
 				end
 			},
 			{
@@ -1373,7 +1499,7 @@ local blueprints = {
 						6
 					}
 				},
-				change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function,
 				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
 			},
 			{
@@ -1395,7 +1521,7 @@ local blueprints = {
 						9
 					}
 				},
-				change_function = ButtonPassTemplates.terminal_list_button_frame_hover_change_function,
+				change_function = ButtonPassTemplates.terminal_button_change_function,
 				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
 			},
 			{

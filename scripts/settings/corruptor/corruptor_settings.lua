@@ -40,7 +40,7 @@ local corruptor_settings = {
 			0.5,
 			0.75,
 			1,
-			2
+			1.5
 		}
 	},
 	liquid_area_template = LiquidAreaTemplates.prop_corruptor

@@ -1,6 +1,7 @@
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Threat = require("scripts/utilities/threat")
 local MinionSuppressionExtension = class("MinionSuppressionExtension")
+local _get_suppresor_decay_multiplier = nil
 
 MinionSuppressionExtension.init = function (self, extension_init_context, unit, extension_init_data, game_session, nil_or_game_object_id)
 	local is_server = extension_init_context.is_server
@@ -19,6 +20,7 @@ MinionSuppressionExtension.init = function (self, extension_init_context, unit, 
 	self._enabled = true
 	self._unit = unit
 	self._game_object_id = nil_or_game_object_id
+	self._suppressor_decay_multiplier = 1
 end
 
 MinionSuppressionExtension._init_blackboard_components = function (self, blackboard, breed)
@@ -184,6 +186,10 @@ MinionSuppressionExtension.add_suppress_value = function (self, value, suppressi
 	end
 
 	self._last_suppressing_unit = attacking_unit
+
+	if entered_suppressed and attacking_unit then
+		self._suppressor_decay_multiplier = _get_suppresor_decay_multiplier(attacking_unit)
+	end
 end
 
 local DEFAULT_FLINCH_ANIM_EVENTS = {
@@ -220,6 +226,16 @@ MinionSuppressionExtension._play_flinch_anim = function (self, breed, direction)
 end
 
 MinionSuppressionExtension._update_suppression = function (self, unit, blackboard, dt, t)
+	if self._decay_delay then
+		self._decay_delay = self._decay_delay - dt
+
+		if self._decay_delay <= 0 then
+			self._decay_delay = nil
+		else
+			return
+		end
+	end
+
 	local suppression_component = self._suppression_component
 	local current_suppress_value = suppression_component.suppress_value
 	local suppress_threshold = self:_get_threshold_and_max_value()
@@ -228,7 +244,8 @@ MinionSuppressionExtension._update_suppression = function (self, unit, blackboar
 	if current_suppress_value > 0 and self._next_suppress_decay_t < t then
 		local suppression_config = self._suppress_config
 		local decay_multiplier = was_suppressed and suppression_config.above_threshold_decay_multiplier or 1
-		local decay_amount = (suppression_config.decay_amount or 1) * decay_multiplier
+		local suppressor_decay_multiplier = was_suppressed and self._suppressor_decay_multiplier or 1
+		local decay_amount = (suppression_config.decay_amount or 1) * decay_multiplier * suppressor_decay_multiplier
 		suppression_component.suppress_value = math.max(suppression_component.suppress_value - decay_amount, 0)
 		local combat_range = self._behavior_component.combat_range
 		local decay = self._suppress_decay_speeds[combat_range] or DEFAULT_SUPPRESS_DECAY
@@ -249,6 +266,8 @@ MinionSuppressionExtension._update_suppression = function (self, unit, blackboar
 		self._suppressed_immunity_t = t + math.random_range(self._suppressed_immunity_duration[1], self._suppressed_immunity_duration[2])
 
 		self:handle_unit_suppression(is_suppressed)
+
+		self._suppressor_decay_multiplier = 1
 	end
 end
 
@@ -291,6 +310,22 @@ end
 
 MinionSuppressionExtension.last_suppressing_unit = function (self)
 	return self._last_suppressing_unit
+end
+
+MinionSuppressionExtension.apply_suppression_decay_delay = function (self, decay_delay)
+	self._decay_delay = decay_delay
+end
+
+function _get_suppresor_decay_multiplier(attacking_unit)
+	local attacking_unit_buff_extension = ScriptUnit.has_extension(attacking_unit, "buff_system")
+
+	if attacking_unit_buff_extension then
+		local stat_buffs = attacking_unit_buff_extension:stat_buffs()
+
+		return stat_buffs.suppressor_decay_multiplier or 1
+	end
+
+	return 1
 end
 
 return MinionSuppressionExtension

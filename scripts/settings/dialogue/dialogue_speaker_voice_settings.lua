@@ -181,8 +181,10 @@ local dialogue_speaker_voice_settings = {
 	},
 	interrogator_a = {
 		full_name = "loc_npc_full_name_interrogator_a",
-		short_name = "loc_npc_short_name_interrogator_a",
+		material_small = "content/ui/materials/icons/npc_portraits/mission_givers/rannick_a_small",
 		subtitles_enabled = true,
+		short_name = "loc_npc_short_name_interrogator_a",
+		icon = "content/ui/textures/icons/npc_portraits/mission_givers/rannick_a",
 		player_voice = false
 	},
 	shipmistress_a = {
@@ -534,6 +536,35 @@ local dialogue_speaker_voice_settings = {
 	},
 	archive_servitor_a = {
 		short_name = "loc_npc_short_name_servitor_male_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	archive_servitor_a = {
+		short_name = "loc_npc_short_name_servitor_male_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	captain_twin_female_a = {
+		full_name = "loc_npc_full_name_captain_twin_female_a",
+		short_name = "loc_npc_short_name_captain_twin_female_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	captain_twin_male_a = {
+		full_name = "loc_npc_full_name_captain_twin_male_a",
+		short_name = "loc_npc_short_name_captain_twin_male_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	reject_npc_a = {
+		full_name = "loc_npc_full_name_reject_npc_a",
+		short_name = "loc_npc_short_name_reject_npc_a",
+		subtitles_enabled = true,
+		player_voice = false
+	},
+	reject_npc_servitor_a = {
+		full_name = "loc_npc_full_name_reject_npc_servitor_a",
+		short_name = "loc_npc_short_name_reject_npc_servitor_a",
 		subtitles_enabled = true,
 		player_voice = false
 	}

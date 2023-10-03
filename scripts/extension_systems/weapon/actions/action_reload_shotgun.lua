@@ -21,7 +21,7 @@ ActionReloadShotgun.start = function (self, action_settings, t, time_scale, ...)
 	ActionReloadShotgun.super.start(self, action_settings, t, time_scale, ...)
 
 	if action_settings.stop_alternate_fire and self._alternate_fire_component.is_active then
-		AlternateFire.stop(self._alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, false, self._player_unit)
+		AlternateFire.stop(self._alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, false, self._player_unit)
 	end
 
 	local action_reload_component = self._action_reload_component

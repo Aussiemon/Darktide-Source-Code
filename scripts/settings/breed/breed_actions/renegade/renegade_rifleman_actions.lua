@@ -505,12 +505,11 @@ local action_data = {
 	},
 	move_to_cover = {
 		move_type_switch_stickiness = 2,
-		sprint_anim_event = "assault_fwd",
 		anim_driven_min_distance = 3,
-		sprint_target_distance = 14,
-		controlled_stagger_min_speed = 2,
+		sprint_anim_event = "assault_fwd",
 		use_animation_running_stagger_speed = true,
 		controlled_stagger = true,
+		controlled_stagger_min_speed = 2,
 		idle_anim_events = {
 			"idle",
 			"idle_2",
@@ -856,6 +855,10 @@ local action_data = {
 			moving_melee = 2,
 			ranged = 1
 		},
+		stagger_type_reduction = {
+			ranged = 60,
+			killshot = 60
+		},
 		move_start_timings = {
 			bayonet_charge_hit = 0
 		},
@@ -1067,6 +1070,33 @@ local action_data = {
 				}
 			},
 			sticky = {
+				bwd = {
+					"stagger_front_sticky",
+					"stagger_front_sticky_2",
+					"stagger_front_sticky_3"
+				},
+				fwd = {
+					"stagger_bwd_sticky",
+					"stagger_bwd_sticky_2",
+					"stagger_bwd_sticky_3"
+				},
+				left = {
+					"stagger_left_sticky",
+					"stagger_left_sticky_2",
+					"stagger_left_sticky_3"
+				},
+				right = {
+					"stagger_right_sticky",
+					"stagger_right_sticky_2",
+					"stagger_right_sticky_3"
+				},
+				dwn = {
+					"stagger_bwd_sticky",
+					"stagger_bwd_sticky_2",
+					"stagger_bwd_sticky_3"
+				}
+			},
+			electrocuted = {
 				bwd = {
 					"stagger_front_sticky",
 					"stagger_front_sticky_2",

@@ -13,6 +13,7 @@ StateSplash.on_enter = function (self, parent, params, creation_context)
 	self._creation_context = creation_context
 	self._next_state = StateTitle
 	self._next_state_params = params
+	params.skip_title_screen_on_invite = true
 	local should_skip = _should_skip()
 	self._should_skip = should_skip
 

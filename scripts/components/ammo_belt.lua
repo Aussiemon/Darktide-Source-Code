@@ -16,6 +16,10 @@ AmmoBelt.editor_init = function (self, unit)
 	self:_update_ammo_representation(unit, true)
 end
 
+AmmoBelt.editor_validate = function (self, unit)
+	return true, ""
+end
+
 AmmoBelt.init = function (self, unit)
 	self._anim_speed = self:get_data(unit, "anim_speed")
 	self._use_simple_animation_length = self:get_data(unit, "use_simple_animation_length")

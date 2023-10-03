@@ -681,7 +681,7 @@ local _terminal_input_placeholder_text_style = table.clone(_terminal_input_text_
 _terminal_input_placeholder_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
 local _terminal_input_limit_text_style = table.clone(_terminal_input_text_style)
 _terminal_input_limit_text_style.text_horizontal_alignment = "right"
-_terminal_input_limit_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
+_terminal_input_limit_text_style.text_color = Color.terminal_text_header(255, true)
 _terminal_input_limit_text_style.font_size = 18
 TextInputPassTemplates.terminal_input_field = table.clone(text_input_base)
 

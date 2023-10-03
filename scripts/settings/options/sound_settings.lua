@@ -1,73 +1,38 @@
 local OptionsUtilities = require("scripts/utilities/ui/options")
-
-local function get_user_setting(location, key)
-	if location then
-		return Application.user_setting(location, key)
-	else
-		return Application.user_setting(key)
-	end
-end
-
-local function set_user_setting(location, key, value)
-	if location then
-		Application.set_user_setting(location, key, value)
-	else
-		Application.set_user_setting(key, value)
-	end
-end
-
-local function _is_same(current, new)
-	if current == new then
-		return true
-	elseif type(current) == "table" and type(new) == "table" then
-		for k, v in pairs(current) do
-			if new[k] ~= v then
-				return false
-			end
-		end
-
-		for k, v in pairs(new) do
-			if current[k] ~= v then
-				return false
-			end
-		end
-
-		return true
-	else
-		return false
-	end
-end
+local SettingsUtilitiesFunction = require("scripts/settings/options/settings_utils")
+local SettingsUtilities = {}
 
 local function construct_audio_settings_dropdown(template)
-	local entry = {
-		default_value = template.default_value,
-		display_name = template.display_name,
-		options = template.options,
-		commit = template.commit,
-		indentation_level = template.indentation_level,
-		tooltip_text = template.tooltip_text,
-		disable_rules = template.disable_rules
-	}
+	local entry = {}
 	local id = template.id
 	local save_location = template.save_location
 	local default_value = template.default_value
+	entry.default_value = template.default_value
+	entry.display_name = template.display_name
+	entry.options = template.options
+	entry.commit = template.commit
+	entry.indentation_level = template.indentation_level
+	entry.tooltip_text = template.tooltip_text
+	entry.disable_rules = template.disable_rules
+	entry.apply_on_startup = template.apply_on_startup
+	entry.id = id
 
 	entry.on_activated = function (new_value)
-		local current_value = get_user_setting(save_location, id)
+		local current_value = SettingsUtilities.get_user_setting(save_location, id)
 
 		if current_value == nil then
 			current_value = default_value
 		end
 
-		if not _is_same(current_value, new_value) then
+		if not SettingsUtilities.is_same(current_value, new_value) then
 			entry.commit(new_value)
-			set_user_setting(save_location, id, new_value)
+			SettingsUtilities.set_user_setting(save_location, id, new_value)
 			Application.save_user_settings()
 		end
 	end
 
 	entry.get_function = function ()
-		local old_value = get_user_setting(save_location, id)
+		local old_value = SettingsUtilities.get_user_setting(save_location, id)
 
 		if old_value == nil then
 			return default_value
@@ -80,20 +45,21 @@ local function construct_audio_settings_dropdown(template)
 end
 
 local function construct_audio_settings_boolean(template)
-	local entry = {
-		default_value = template.default_value,
-		display_name = template.display_name,
-		indentation_level = template.indentation_level,
-		tooltip_text = template.tooltip_text,
-		disable_rules = template.disable_rules,
-		commit = template.commit
-	}
+	local entry = {}
 	local id = template.id
 	local save_location = template.save_location
 	local default_value = template.default_value
+	entry.default_value = template.default_value
+	entry.display_name = template.display_name
+	entry.indentation_level = template.indentation_level
+	entry.tooltip_text = template.tooltip_text
+	entry.disable_rules = template.disable_rules
+	entry.apply_on_startup = template.apply_on_startup
+	entry.id = id
+	entry.commit = template.commit
 
 	entry.get_function = function ()
-		local old_value = get_user_setting(save_location, id)
+		local old_value = SettingsUtilities.get_user_setting(save_location, id)
 
 		if old_value == nil then
 			return default_value
@@ -103,15 +69,15 @@ local function construct_audio_settings_boolean(template)
 	end
 
 	entry.on_activated = function (new_value)
-		local current_value = get_user_setting(save_location, id)
+		local current_value = SettingsUtilities.get_user_setting(save_location, id)
 
 		if current_value == nil then
 			current_value = default_value
 		end
 
-		if not _is_same(current_value, new_value) then
+		if not SettingsUtilities.is_same(current_value, new_value) then
 			entry.commit(new_value)
-			set_user_setting(save_location, id, new_value)
+			SettingsUtilities.set_user_setting(save_location, id, new_value)
 			Application.save_user_settings()
 		end
 	end
@@ -146,7 +112,8 @@ local master_volume_slider_params = {
 	display_name = master_volume_display_name,
 	default_value = default_sound_volume,
 	value_get_function = master_volume_value_get_function,
-	on_value_changed_function = master_volume_value_change_function
+	on_value_changed_function = master_volume_value_change_function,
+	id = master_volume_value_name
 }
 local master_volume_template = OptionsUtilities.create_percent_slider_template(master_volume_slider_params)
 
@@ -173,7 +140,8 @@ local sfx_volume_slider_params = {
 	display_name = sfx_volume_display_name,
 	default_value = default_sound_volume,
 	value_get_function = sfx_volume_value_get_function,
-	on_value_changed_function = sfx_volume_value_change_function
+	on_value_changed_function = sfx_volume_value_change_function,
+	id = sfx_volume_value_name
 }
 local sfx_volume_template = OptionsUtilities.create_percent_slider_template(sfx_volume_slider_params)
 
@@ -200,7 +168,8 @@ local music_volume_slider_params = {
 	display_name = music_volume_display_name,
 	default_value = default_sound_volume,
 	value_get_function = music_volume_value_get_function,
-	on_value_changed_function = music_volume_value_change_function
+	on_value_changed_function = music_volume_value_change_function,
+	id = music_volume_value_name
 }
 local music_volume_template = OptionsUtilities.create_percent_slider_template(music_volume_slider_params)
 
@@ -209,10 +178,46 @@ music_volume_template.commit = function (value)
 end
 
 settings[#settings + 1] = music_volume_template
+local sound_device = nil
+
+if not IS_XBS and Wwise.get_device_list and Wwise.get_device_list() then
+	sound_device = {
+		display_name = "loc_setting_sound_device",
+		id = "sound_device",
+		default_value = 0,
+		save_location = "sound_settings",
+		options = {
+			{
+				id = 0,
+				display_name = "loc_setting_default_device"
+			}
+		},
+		commit = function (value)
+			if value == 0 then
+				Wwise.set_active_device(0)
+			else
+				local option = sound_device.options[value + 1]
+				local device_id = option.device_id
+
+				Wwise.set_active_device(device_id)
+			end
+		end
+	}
+
+	for i, device in ipairs(Wwise.get_device_list()) do
+		sound_device.options[i + 1] = {
+			ignore_localization = true,
+			id = i,
+			display_name = device.device_name,
+			device_id = device.device_id
+		}
+	end
+end
+
 local speaker_settings = {
 	display_name = "loc_setting_speaker_settings",
 	id = "speaker_settings",
-	default_value = 3,
+	default_value = 0,
 	save_location = "sound_settings",
 	options = {
 		{
@@ -448,6 +453,11 @@ settings[#settings + 1] = {
 	display_name = "loc_settings_menu_group_audio_settings",
 	widget_type = "group_header"
 }
+
+if sound_device then
+	settings[#settings + 1] = construct_audio_settings_dropdown(sound_device)
+end
+
 settings[#settings + 1] = construct_audio_settings_dropdown(speaker_settings)
 settings[#settings + 1] = construct_audio_settings_dropdown(mix_presets_settings)
 settings[#settings + 1] = dialogue_volume_template
@@ -495,6 +505,42 @@ chat_volume_template.commit = function (value)
 end
 
 settings[#settings + 1] = chat_volume_template
+
+if not IS_XBS and rawget(_G, "Managers") and Managers.chat and Managers.chat.get_capture_devices then
+	local capture_device = nil
+	capture_device = {
+		display_name = "loc_setting_microphone_device",
+		id = "capture_device",
+		default_value = "Default System Device",
+		save_location = "sound_settings",
+		options = {
+			{
+				id = "Default System Device",
+				display_name = "loc_setting_default_device"
+			}
+		},
+		commit = function (value)
+			if Managers.chat then
+				Managers.chat:set_capture_device(value)
+			end
+		end
+	}
+	local i = 1
+
+	for _, device in ipairs(Managers.chat:get_capture_devices()) do
+		if device.device ~= "Default System Device" and device.device ~= "Default Communication Device" then
+			capture_device.options[i + 1] = {
+				ignore_localization = true,
+				id = device.device,
+				display_name = device.display_name
+			}
+			i = i + 1
+		end
+	end
+
+	settings[#settings + 1] = construct_audio_settings_dropdown(capture_device)
+end
+
 local voice_chat_settings = {
 	display_name = "loc_setting_voice_chat_presets",
 	id = "voice_chat",
@@ -544,9 +590,12 @@ if IS_XBS then
 end
 
 settings[#settings + 1] = construct_audio_settings_dropdown(voice_chat_settings)
+SettingsUtilities = SettingsUtilitiesFunction(settings)
 
 return {
 	icon = "content/ui/materials/icons/system/settings/category_audio",
 	display_name = "loc_settings_menu_category_sound",
+	settings_utilities = SettingsUtilities,
+	settings_by_id = SettingsUtilities.settings_by_id,
 	settings = settings
 }

@@ -60,6 +60,34 @@ Flamer.start_shooting_fx = function (t, unit, vfx, sfx, wwise_world, world, data
 				data.parabola_particle_variables = parabola_particle_variables
 			end
 		end
+
+		local muzzle_velocity_variable_name = vfx.muzzle_velocity_variable_name
+
+		if muzzle_particle_name and muzzle_velocity_variable_name then
+			data.muzzle_velocity_variable = World.find_particles_variable(world, muzzle_particle_name, muzzle_velocity_variable_name)
+		end
+
+		local flamer_velocity_variable_name = vfx.flamer_velocity_variable_name
+
+		if flamer_particle_name and flamer_velocity_variable_name then
+			data.flamer_velocity_variable = World.find_particles_variable(world, flamer_particle_name, flamer_velocity_variable_name)
+		end
+
+		local hit_dynamic_particle_name = vfx.hit_dynamic_particle
+		local hit_dynamic_velocity_variable_name = vfx.hit_dynamic_velocity_variable_name
+
+		if hit_dynamic_particle_name and hit_dynamic_velocity_variable_name then
+			data.hit_dynamic_velocity_variable = World.find_particles_variable(world, hit_dynamic_particle_name, hit_dynamic_velocity_variable_name)
+		end
+
+		local ground_impact_particle_name = vfx.ground_impact_particle
+		local ground_impact_velocity_variable_name = vfx.ground_impact_velocity_variable_name
+
+		if ground_impact_particle_name and ground_impact_velocity_variable_name then
+			data.ground_impact_velocity_variable = World.find_particles_variable(world, ground_impact_particle_name, ground_impact_velocity_variable_name)
+		end
+
+		data.force_field_system = Managers.state.extension:system("force_field_system")
 	end
 
 	if sfx then
@@ -99,6 +127,12 @@ Flamer.update_shooting_fx = function (t, unit, vfx, sfx, wwise_world, world, phy
 			else
 				data.dynamic_hit_particle_id = World.create_particles(world, vfx.hit_dynamic_particle, dynamic_hit_position, directional_rotation)
 			end
+
+			local hit_dynamic_velocity_variable = data.hit_dynamic_velocity_variable
+
+			if hit_dynamic_velocity_variable and data.force_field_system:is_object_inside_force_field(dynamic_hit_position, 1, true) then
+				World.set_particles_variable(world, data.dynamic_hit_particle_id, hit_dynamic_velocity_variable, Vector3.zero())
+			end
 		elseif dynamic_hit_particle_id then
 			World.stop_spawning_particles(world, dynamic_hit_particle_id)
 
@@ -122,6 +156,12 @@ Flamer.update_shooting_fx = function (t, unit, vfx, sfx, wwise_world, world, phy
 				World.move_particles(world, ground_impact_particle_id, ground_hit_position, tangent_rotation)
 			else
 				data.ground_impact_particle_id = World.create_particles(world, ground_impact_particle_name, ground_hit_position, tangent_rotation)
+			end
+
+			local ground_impact_velocity_variable = data.ground_impact_velocity_variable
+
+			if ground_impact_velocity_variable and data.force_field_system:is_object_inside_force_field(ground_hit_position, 1, true) then
+				World.set_particles_variable(world, data.ground_impact_particle_id, ground_impact_velocity_variable, Vector3.zero())
 			end
 		elseif ground_impact_particle_id then
 			World.stop_spawning_particles(world, ground_impact_particle_id)
@@ -156,10 +196,7 @@ Flamer.update_shooting_fx = function (t, unit, vfx, sfx, wwise_world, world, phy
 	local parabola_particle_variables = data.parabola_particle_variables
 
 	if parabola_particle_variables then
-		local flamer_particle_id = data.flamer_particle_id
-		local flamer_start_position = data.set_muzzle_as_control_point_1 and control_point_1 or start_position
-
-		_set_flamer_parabola(world, from_unit, from_node, flamer_particle_id, parabola_particle_variables, flamer_start_position, control_point_1, control_point_2, aim_position)
+		_set_flamer_parabola(world, data, start_position, control_point_1, control_point_2, aim_position)
 	end
 
 	local muzzle_source_id = data.muzzle_source_id
@@ -247,19 +284,23 @@ function _query_ground_impact(physics_world, aim_position, optional_sample_range
 	local range = optional_sample_range or DEFAULT_GROUND_SAMPLE_RANGE
 	local from = aim_position + Vector3.up() * range
 	local to = aim_position + Vector3.down() * range
-	local hit, material, position, normal, hit_unit, hit_actor = MaterialQuery.query_material(physics_world, from, to, "flamer")
+	local hit, material, position, normal, _, _ = MaterialQuery.query_material(physics_world, from, to, "flamer")
 
 	return hit, material, position, normal
 end
 
-function _set_flamer_parabola(world, from_unit, source_node, flamer_particle_id, parabola_particle_variables, start_position, control_point_1, control_point_2, aim_position)
+function _set_flamer_parabola(world, data, start_position, control_point_1, control_point_2, aim_position)
+	local parabola_particle_variables = data.parabola_particle_variables
+	local flamer_particle_id = data.flamer_particle_id
+	local flamer_velocity_variable = data.flamer_velocity_variable
 	local num_variables = #parabola_particle_variables
 
 	for i = 1, num_variables do
 		local position = nil
 
 		if i == 1 then
-			position = start_position
+			local flamer_start_position = data.set_muzzle_as_control_point_1 and control_point_1 or start_position
+			position = flamer_start_position
 		elseif i == 2 then
 			position = control_point_1
 		elseif i == num_variables then
@@ -271,6 +312,10 @@ function _set_flamer_parabola(world, from_unit, source_node, flamer_particle_id,
 		local control_point_variable_id = parabola_particle_variables[i]
 
 		World.set_particles_variable(world, flamer_particle_id, control_point_variable_id, position)
+
+		if flamer_velocity_variable and data.force_field_system:is_object_inside_force_field(position, 1, true) then
+			World.set_particles_variable(world, flamer_particle_id, flamer_velocity_variable, Vector3.zero())
+		end
 	end
 end
 

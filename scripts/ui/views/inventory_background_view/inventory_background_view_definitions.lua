@@ -38,7 +38,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			62
+			92
 		}
 	},
 	corner_top_right = {
@@ -52,7 +52,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			62
+			92
 		}
 	},
 	corner_bottom_left = {
@@ -66,7 +66,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			62
+			92
 		}
 	},
 	corner_bottom_right = {
@@ -80,7 +80,7 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			62
+			92
 		}
 	},
 	profile_presets_pivot = {
@@ -94,7 +94,7 @@ local scenegraph_definition = {
 		position = {
 			-60,
 			94,
-			62
+			92
 		}
 	},
 	character_insigna = {
@@ -108,7 +108,7 @@ local scenegraph_definition = {
 		position = {
 			52,
 			15,
-			64
+			94
 		}
 	},
 	character_portrait = {
@@ -136,7 +136,7 @@ local scenegraph_definition = {
 		position = {
 			200,
 			25,
-			63
+			93
 		}
 	},
 	character_title = {
@@ -150,7 +150,7 @@ local scenegraph_definition = {
 		position = {
 			200,
 			63,
-			63
+			93
 		}
 	},
 	character_level = {
@@ -164,7 +164,7 @@ local scenegraph_definition = {
 		position = {
 			113,
 			97,
-			63
+			93
 		}
 	},
 	character_level_next = {
@@ -178,7 +178,7 @@ local scenegraph_definition = {
 		position = {
 			381,
 			97,
-			63
+			93
 		}
 	},
 	character_experience = {
@@ -189,7 +189,21 @@ local scenegraph_definition = {
 		position = {
 			175,
 			116,
-			63
+			93
+		}
+	},
+	loading = {
+		vertical_alignment = "center",
+		scale = "fit",
+		horizontal_alignment = "center",
+		size = {
+			1920,
+			1080
+		},
+		position = {
+			0,
+			0,
+			200
 		}
 	}
 }
@@ -209,6 +223,33 @@ character_level_next_style.text_horizontal_alignment = "center"
 character_level_next_style.text_vertical_alignment = "center"
 character_level_next_style.text_color = Color.terminal_text_header(255, true)
 local widget_definitions = {
+	loading = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style = {
+				color = Color.black(127.5, true)
+			}
+		},
+		{
+			value = "content/ui/materials/loading/loading_icon",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				size = {
+					256,
+					256
+				},
+				offset = {
+					0,
+					0,
+					1
+				}
+			}
+		}
+	}, "loading", {
+		visible = false
+	}),
 	character_portrait = UIWidget.create_definition({
 		{
 			value_id = "texture",
@@ -237,7 +278,7 @@ local widget_definitions = {
 	}, "character_insigna"),
 	character_name = UIWidget.create_definition({
 		{
-			value = "text",
+			value = "",
 			value_id = "text",
 			pass_type = "text",
 			style = character_name_style
@@ -245,7 +286,7 @@ local widget_definitions = {
 	}, "character_name"),
 	character_title = UIWidget.create_definition({
 		{
-			value = "text",
+			value = "",
 			value_id = "text",
 			pass_type = "text",
 			style = character_title_style
@@ -253,7 +294,7 @@ local widget_definitions = {
 	}, "character_title"),
 	character_level = UIWidget.create_definition({
 		{
-			value = "text",
+			value = "",
 			value_id = "text",
 			pass_type = "text",
 			style = character_level_style
@@ -261,7 +302,7 @@ local widget_definitions = {
 	}, "character_level"),
 	character_level_next = UIWidget.create_definition({
 		{
-			value = "text",
+			value = "",
 			value_id = "text",
 			pass_type = "text",
 			style = character_level_next_style
@@ -308,7 +349,16 @@ local legend_inputs = {
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_weapon_swap_pressed",
 		visibility_function = function (parent)
-			return parent._active_view ~= "talents_view"
+			return parent._active_view ~= "talent_builder_view" and not parent._is_readonly and parent:is_inventory_synced()
+		end
+	},
+	{
+		display_name = "loc_talent_menu_action_clear_all_points",
+		input_action = "hotkey_menu_special_1",
+		alignment = "right_alignment",
+		on_pressed_callback = "cb_on_clear_all_talents_pressed",
+		visibility_function = function (parent, id)
+			return parent._active_view == "talent_builder_view" and not parent._is_readonly
 		end
 	},
 	{
@@ -317,7 +367,7 @@ local legend_inputs = {
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_profile_preset_cycle",
 		visibility_function = function (parent)
-			return InputDevice.gamepad_active and parent:can_cycle_profile_preset()
+			return InputDevice.gamepad_active and parent:can_cycle_profile_preset() and not parent._is_readonly
 		end
 	},
 	{
@@ -326,7 +376,7 @@ local legend_inputs = {
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_profile_preset_add",
 		visibility_function = function (parent)
-			return InputDevice.gamepad_active and parent:can_add_profile_preset()
+			return InputDevice.gamepad_active and parent:can_add_profile_preset() and not parent._is_readonly
 		end
 	},
 	{
@@ -335,7 +385,7 @@ local legend_inputs = {
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_profile_preset_customize",
 		visibility_function = function (parent)
-			return InputDevice.gamepad_active and parent:can_customize_profile_preset()
+			return InputDevice.gamepad_active and parent:can_customize_profile_preset() and not parent._is_readonly
 		end
 	}
 }

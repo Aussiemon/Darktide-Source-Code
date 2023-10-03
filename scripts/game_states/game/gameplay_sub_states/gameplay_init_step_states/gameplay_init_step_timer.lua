@@ -27,7 +27,8 @@ GameplayInitStepTimer._register_timer = function (self, is_server, out_shared_st
 	else
 		local connection_manager = Managers.connection
 		local network_event_delegate = connection_manager:network_event_delegate()
-		out_shared_state.clock_handler_client = AdaptiveClockHandlerClient:new(network_event_delegate)
+		local fixed_time_step = out_shared_state.fixed_time_step
+		out_shared_state.clock_handler_client = AdaptiveClockHandlerClient:new(network_event_delegate, fixed_time_step)
 	end
 end
 

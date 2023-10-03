@@ -54,10 +54,8 @@ EndPlayerView.on_enter = function (self)
 
 	local weapon_preview_size = ViewStyles.blueprints.pass_styles.item_icon_landscape.size
 	local weapons_render_settings = {
-		weapon_width = weapon_preview_size[1],
-		weapon_height = weapon_preview_size[2],
-		target_resolution_width = weapon_preview_size[1] * 4,
-		target_resolution_height = weapon_preview_size[2] * 4
+		width = weapon_preview_size[1],
+		height = weapon_preview_size[2]
 	}
 	local icon_render_type = "weapon"
 	self._weapon_icon_renderer_id = "EndPlayerView_weapons_" .. math.uuid()
@@ -365,7 +363,7 @@ end
 EndPlayerView._create_card_widget = function (self, index, card_type, card_data)
 	local blueprints = self._definitions.blueprints
 	local scenegraph_id = CARD_CAROUSEL_SCENEGRAPH_ID
-	local blueprint_name = nil
+	local blueprint_name, optional_icon_size = nil
 
 	if card_type == CARD_TYPES.xp then
 		blueprint_name = "experience"
@@ -376,12 +374,18 @@ EndPlayerView._create_card_widget = function (self, index, card_type, card_data)
 		card_data.reward_item = self:_get_item(card_data)
 		card_data.item_group = "weapon_skin"
 	elseif card_type == CARD_TYPES.talents_unlock then
+		return
+
 		blueprint_name = "talents_unlocked"
 		card_data.talent_group_name, card_data.unlocked_talents = self:_get_unlocked_talents(card_data)
 	elseif card_type == CARD_TYPES.weaponDrop then
 		blueprint_name = "item_reward"
 		card_data.reward_item, card_data.item_group, card_data.rarity, card_data.item_level = self:_get_item(card_data.rewards[1])
 		card_data.label = card_type
+		optional_icon_size = {
+			math.floor(UISettings.weapon_icon_size[1] * 2),
+			math.floor(UISettings.weapon_icon_size[2] * 2)
+		}
 	else
 		return
 	end
@@ -392,11 +396,12 @@ EndPlayerView._create_card_widget = function (self, index, card_type, card_data)
 	local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, blueprint.size, style)
 	local widget_name = "card_" .. index
 	local widget = UIWidget.init(widget_name, widget_definition)
+	widget.content.blueprint_name = blueprint_name
 
 	blueprint.init(self, widget, index, card_data)
 
 	if blueprint.load_icon then
-		blueprint.load_icon(self, widget)
+		blueprint.load_icon(self, widget, nil, optional_icon_size)
 	end
 
 	return widget

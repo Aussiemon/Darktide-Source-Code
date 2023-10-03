@@ -4,6 +4,18 @@ VolumetricFog.init = function (self, unit)
 	self:enable(unit)
 end
 
+VolumetricFog.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if not Unit.has_mesh(unit, "g_fog") then
+		success = false
+		error_message = error_message .. "\nMissing mesh 'g_fog'"
+	end
+
+	return success, error_message
+end
+
 VolumetricFog.enable = function (self, unit)
 	local mesh = Unit.mesh(unit, "g_fog")
 	local material = Mesh.material(mesh, "mtr_fog")

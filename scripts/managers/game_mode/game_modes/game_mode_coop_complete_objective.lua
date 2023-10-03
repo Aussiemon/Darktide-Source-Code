@@ -247,8 +247,6 @@ GameModeCoopCompleteObjective.fail = function (self)
 	self._failed = true
 end
 
-local EMPTY_TABLE = {}
-
 GameModeCoopCompleteObjective.on_player_unit_spawn = function (self, player, unit, is_respawn)
 	GameModeCoopCompleteObjective.super.on_player_unit_spawn(self, player)
 
@@ -355,7 +353,12 @@ GameModeCoopCompleteObjective._store_persistent_player_data = function (self, pl
 	if grenade_ability and not grenade_ability.exclude_from_persistant_player_data then
 		local num_grenades = ability_extension:remaining_ability_charges("grenade_ability")
 		local max_grenades = ability_extension:max_ability_charges("grenade_ability")
-		grenades_percent = num_grenades / max_grenades
+
+		if max_grenades > 0 then
+			grenades_percent = num_grenades / max_grenades
+		else
+			grenades_percent = 1
+		end
 	end
 
 	local data = {

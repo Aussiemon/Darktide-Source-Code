@@ -188,8 +188,8 @@ local categories_grid_settings = {
 	grid_spacing = ViewStyles.categories_grid_spacing,
 	grid_size = categories_grid_size,
 	mask_size = categories_mask_size,
-	scrollbar_width = ScrollbarPassTemplates.metal_scrollbar.default_width,
-	scrollbar_pass_templates = ScrollbarPassTemplates.metal_scrollbar,
+	scrollbar_width = ScrollbarPassTemplates.terminal_scrollbar.default_width,
+	scrollbar_pass_templates = ScrollbarPassTemplates.terminal_scrollbar,
 	edge_padding = categories_grid_margin * 2
 }
 local achievements_grid_settings = {
@@ -205,13 +205,13 @@ local achievements_grid_settings = {
 	},
 	grid_size = achievements_grid_size,
 	mask_size = achievements_mask_size,
-	scrollbar_width = ScrollbarPassTemplates.metal_scrollbar.default_width,
-	scrollbar_pass_templates = ScrollbarPassTemplates.metal_scrollbar,
+	scrollbar_width = ScrollbarPassTemplates.terminal_scrollbar.default_width,
+	scrollbar_pass_templates = ScrollbarPassTemplates.terminal_scrollbar,
 	edge_padding = achievements_grid_margin * 2
 }
 local legend_inputs = {
 	{
-		input_action = "hotkey_menu_special_1",
+		input_action = "confirm_pressed",
 		display_name = "loc_achievements_view_button_hint_fold_achievement",
 		visibility_function = function (parent)
 			local active_view = parent._active_view_instance
@@ -222,7 +222,7 @@ local legend_inputs = {
 		end
 	},
 	{
-		input_action = "hotkey_menu_special_1",
+		input_action = "confirm_pressed",
 		display_name = "loc_achievements_view_button_hint_unfold_achievement",
 		visibility_function = function (parent)
 			local active_view = parent._active_view_instance

@@ -305,6 +305,16 @@ damage_profile_settings.medium_cleave = {
 		8.5
 	}
 }
+damage_profile_settings.large_cleave = {
+	attack = {
+		5,
+		10
+	},
+	impact = {
+		5,
+		10
+	}
+}
 damage_profile_settings.big_cleave = {
 	attack = {
 		8.5,

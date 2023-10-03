@@ -130,6 +130,10 @@ HuskHealthExtension.max_wounds = function (self)
 	return 1
 end
 
+HuskHealthExtension.hit_mass = function (self)
+	return GameSession.game_object_field(self.game_session, self.game_object_id, "hit_mass")
+end
+
 implements(HuskHealthExtension, HealthExtensionInterface)
 
 return HuskHealthExtension

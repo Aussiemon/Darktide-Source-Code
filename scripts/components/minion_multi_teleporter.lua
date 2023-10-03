@@ -151,6 +151,10 @@ MinionMultiTeleporter.editor_init = function (self, unit)
 	return update_enabled
 end
 
+MinionMultiTeleporter.editor_validate = function (self, unit)
+	return true, ""
+end
+
 MinionMultiTeleporter.editor_destroy = function (self, unit)
 	if not rawget(_G, "LevelEditor") then
 		return

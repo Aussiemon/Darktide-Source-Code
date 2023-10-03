@@ -153,15 +153,16 @@ PlayerUnitHealthExtension.total_damage_taken = function (self)
 end
 
 PlayerUnitHealthExtension.max_health = function (self, force_knocked_down_health)
+	local stat_buffs = self._buff_extension:stat_buffs()
 	local health = nil
 
 	if self._is_knocked_down or force_knocked_down_health then
-		health = self._knocked_down_health
+		local knocked_down_health_modifier = stat_buffs.knocked_down_health_modifier or 1
+		health = self._knocked_down_health * knocked_down_health_modifier
 	else
 		health = self._health
 	end
 
-	local stat_buffs = self._buff_extension:stat_buffs()
 	local max_health_multiplier = stat_buffs.max_health_multiplier
 	local max_health_modifier = stat_buffs.max_health_modifier
 	health = health * max_health_multiplier * max_health_modifier
@@ -224,7 +225,7 @@ PlayerUnitHealthExtension.reduce_permanent_damage = function (self, amount)
 	local max_health = self:max_health()
 	local max_wounds = self:max_wounds()
 	local current_wounds = self:num_wounds()
-	local fixed_permanent_damage = math.floor(max_health * (1 - current_wounds / max_wounds) + 0.5)
+	local fixed_permanent_damage = math.floor(max_health * (1 - current_wounds / max_wounds) + 1)
 	local new_permanent_damage = math.max(fixed_permanent_damage, permanent_damage_taken - amount)
 
 	self:_set_permanent_damage(new_permanent_damage)
@@ -365,7 +366,7 @@ PlayerUnitHealthExtension.max_wounds = function (self)
 	local stat_buffs = buff_extension:stat_buffs()
 	local extra_wounds = stat_buffs.extra_max_amount_of_wounds or 0
 
-	return self._base_max_wounds + extra_wounds
+	return math.max(self._base_max_wounds + extra_wounds, 1)
 end
 
 PlayerUnitHealthExtension._set_damage = function (self, damage)

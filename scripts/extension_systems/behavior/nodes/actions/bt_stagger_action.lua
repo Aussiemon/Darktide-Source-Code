@@ -4,10 +4,16 @@ local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local MinionShield = require("scripts/utilities/minion_shield")
 local NavQueries = require("scripts/utilities/nav_queries")
+local StaggerSettings = require("scripts/settings/damage/stagger_settings")
 local DEFAULT_IN_AIR_MOVER_CHECK_RADIUS = 0.35
 local ROTATION_SPEED = 100
 local BtStaggerAction = class("BtStaggerAction", "BtNode")
 local BASE_LAYER_EMPTY_EVENT = "base_layer_to_empty"
+local IMPACT_HIT_MASS_MODIFIERS = {
+	0.9,
+	0.75,
+	0.5
+}
 
 BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
@@ -35,6 +41,24 @@ BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 		if not scratchpad.original_rotation_speed then
 			scratchpad.original_rotation_speed = locomotion_extension:rotation_speed()
 		end
+	end
+
+	local stagger_impact_comparison = StaggerSettings.stagger_impact_comparison
+	local current_stagger_type = stagger_component.type
+	local current_stagger_impact = stagger_impact_comparison[current_stagger_type]
+	local hit_mass_modifier = IMPACT_HIT_MASS_MODIFIERS[math.min(current_stagger_impact, #IMPACT_HIT_MASS_MODIFIERS)]
+
+	if not scratchpad.current_hit_mass_modifier then
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+		local current_hit_mass = health_extension:hit_mass()
+		scratchpad.original_hit_mass = current_hit_mass
+		scratchpad.current_hit_mass_modifier = hit_mass_modifier
+
+		health_extension:set_hit_mass(current_hit_mass * hit_mass_modifier)
+	elseif hit_mass_modifier < scratchpad.current_hit_mass_modifier then
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+
+		health_extension:set_hit_mass(scratchpad.original_hit_mass * hit_mass_modifier)
 	end
 
 	behavior_component.move_state = "stagger"
@@ -170,8 +194,13 @@ BtStaggerAction.leave = function (self, unit, breed, blackboard, scratchpad, act
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
 	stagger_component.count = 0
 	stagger_component.num_triggered_staggers = 0
+	stagger_component.type = ""
 
 	MinionShield.reset_block_timings(scratchpad, unit)
+
+	local health_extension = ScriptUnit.extension(unit, "health_system")
+
+	health_extension:set_hit_mass(scratchpad.original_hit_mass)
 end
 
 BtStaggerAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)

@@ -1,10 +1,11 @@
-local DaemonhostActionData = require("scripts/settings/breed/breed_actions/chaos/chaos_daemonhost_actions")
-local DaemonhostSettings = require("scripts/settings/specials/daemonhost_settings")
+local BreedActions = require("scripts/settings/breed/breed_actions")
+local ChaosDaemonhostSettings = require("scripts/settings/monster/chaos_daemonhost_settings")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
 local MonsterSettings = require("scripts/settings/monster/monster_settings")
 local NavQueries = require("scripts/utilities/nav_queries")
 local NavTagVolumeBox = require("scripts/extension_systems/navigation/utilities/nav_tag_volume_box")
 local SharedNav = require("scripts/components/utilities/shared_nav")
+local action_data = BreedActions.chaos_daemonhost
 local MonsterSpawner = component("MonsterSpawner")
 
 local function _calculate_positions(unit)
@@ -88,6 +89,18 @@ MonsterSpawner.editor_init = function (self, unit)
 	self._selected = false
 
 	return true
+end
+
+MonsterSpawner.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if not Unit.has_node(unit, "main_path_connection") then
+		error_message = error_message .. "\nmissing unit node 'main_path_connection'"
+		success = false
+	end
+
+	return success, error_message
 end
 
 MonsterSpawner.editor_destroy = function (self, unit)
@@ -322,7 +335,7 @@ MonsterSpawner._debug_draw_witch_spawner = function (self, unit, drawer)
 	Matrix4x4.set_translation(pose, center_position)
 	drawer:box(pose, half_extents, Color.orange())
 
-	local anger_distances = DaemonhostSettings.anger_distances.passive
+	local anger_distances = ChaosDaemonhostSettings.anger_distances.passive
 
 	for _, v in pairs(anger_distances) do
 		local distance = v.distance
@@ -330,7 +343,7 @@ MonsterSpawner._debug_draw_witch_spawner = function (self, unit, drawer)
 		drawer:circle(position, distance, Vector3.up() * 1.15, Color.magenta())
 	end
 
-	local passive_data = DaemonhostActionData.passive
+	local passive_data = action_data.passive
 	local flashlight_range = passive_data.flashlight_settings.range
 
 	drawer:circle(position, flashlight_range, Vector3.up() * 1.15, Color.yellow())

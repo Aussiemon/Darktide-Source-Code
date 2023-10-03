@@ -1,6 +1,6 @@
 local CharacterCreate = require("scripts/utilities/character_create")
 local StateMainMenuTestify = {
-	create_character_by_archetype_and_gender = function (archetype_name, gender, state_main_menu)
+	create_character_by_archetype_and_gender = function (state_main_menu, archetype_name, gender)
 		local character_create = state_main_menu:character_create_instance()
 
 		character_create:set_name("Testify")
@@ -33,7 +33,7 @@ local StateMainMenuTestify = {
 	end
 }
 
-StateMainMenuTestify.create_random_character = function (_, state_main_menu)
+StateMainMenuTestify.create_random_character = function (state_main_menu)
 	local character_create = state_main_menu:character_create_instance()
 
 	character_create:set_name("Testify")
@@ -53,13 +53,13 @@ StateMainMenuTestify.create_random_character = function (_, state_main_menu)
 	state_main_menu:set_wait_for_character_profile_upload(true)
 end
 
-StateMainMenuTestify.wait_for_profile_synchronization = function (_, state_main_menu)
+StateMainMenuTestify.wait_for_profile_synchronization = function (state_main_menu)
 	if state_main_menu:waiting_for_profile_synchronization() then
 		return Testify.RETRY
 	end
 end
 
-StateMainMenuTestify.wait_for_narrative_loaded = function (_, state_main_menu)
+StateMainMenuTestify.wait_for_narrative_loaded = function (state_main_menu)
 	if not Managers.narrative:is_narrative_loaded_for_player_character() then
 		return Testify.RETRY
 	end

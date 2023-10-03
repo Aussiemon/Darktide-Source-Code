@@ -51,12 +51,14 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	local block_component = unit_data:write_component("block")
 	block_component.is_blocking = false
 	block_component.has_blocked = false
+	block_component.is_perfect_blocking = false
 	self._block_component = unit_data:read_component("block")
 	local alternate_fire_component = unit_data:write_component("alternate_fire")
 	alternate_fire_component.is_active = false
 	alternate_fire_component.start_t = 0
 	self._alternate_fire_write_component = alternate_fire_component
 	self._alternate_fire_read_component = unit_data:read_component("alternate_fire")
+	self._peeking_component = unit_data:write_component("peeking")
 	self._stamina_read_component = unit_data:read_component("stamina")
 	self._character_state_component = unit_data:read_component("character_state")
 	self._stunned_character_state_component = unit_data:read_component("stunned_character_state")
@@ -132,6 +134,7 @@ PlayerUnitWeaponExtension.init = function (self, extension_init_context, unit, e
 	self._sway_weapon_module = SwayWeaponModule:new(unit, unit_data)
 	self._last_fixed_t = extension_init_context.fixed_frame_t
 	self._wwise_ammo_parameter_value = 0
+	self._fixed_time_step = Managers.state.game_session.fixed_time_step
 end
 
 PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_extension)
@@ -198,9 +201,9 @@ PlayerUnitWeaponExtension._init_action_components = function (self, unit_data_ex
 	action_module_targeting.target_unit_2 = nil
 	action_module_targeting.target_unit_3 = nil
 	self._action_module_targeting_component = action_module_targeting
-	local action_throw = unit_data_extension:write_component("action_throw")
-	action_throw.thrown = false
-	action_throw.slot_to_wield = "none"
+	local action_throw_luggable = unit_data_extension:write_component("action_throw_luggable")
+	action_throw_luggable.thrown = false
+	action_throw_luggable.slot_to_wield = "none"
 	local weapon_tweak_templates = unit_data_extension:write_component("weapon_tweak_templates")
 	weapon_tweak_templates.sway_template_name = "none"
 	weapon_tweak_templates.spread_template_name = "none"
@@ -236,6 +239,8 @@ PlayerUnitWeaponExtension.extensions_ready = function (self, world, unit)
 	self._first_person_unit = first_person_unit
 	local health_extension = ScriptUnit.extension(unit, "health_system")
 	self._health_extension = health_extension
+	local specialization_extension = ScriptUnit.extension(unit, "specialization_system")
+	self._specialization_extension = specialization_extension
 	local weapon_recoil_system = ScriptUnit.extension(unit, "weapon_recoil_system")
 	self._weapon_recoil_system = weapon_recoil_system
 	local unit_data_ext = self._unit_data_extension
@@ -275,8 +280,8 @@ PlayerUnitWeaponExtension.extensions_ready = function (self, world, unit)
 	self._action_handler:set_action_context(action_context)
 	self._sway_weapon_module:extensions_ready(world, unit)
 
-	local specialization = unit_data_ext:specialization()
-	self._specialization_stamina_template = specialization.stamina
+	local archetype = unit_data_ext:archetype()
+	self._archetype_stamina_template = archetype.stamina
 end
 
 PlayerUnitWeaponExtension.on_player_unit_spawn = function (self, spawn_ammo_percentage)
@@ -360,7 +365,7 @@ PlayerUnitWeaponExtension.fixed_update = function (self, unit, dt, t, fixed_fram
 	local alternate_fire_component = self._alternate_fire_write_component
 
 	if AlternateFire.check_exit(alternate_fire_component, weapon_template, self._input_extension, self._stunned_character_state_component, t) then
-		AlternateFire.stop(alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, weapon_template, false, self._unit)
+		AlternateFire.stop(alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, weapon_template, false, self._unit)
 	end
 
 	self:_update_overheat(dt, t)
@@ -538,7 +543,7 @@ PlayerUnitWeaponExtension.on_slot_unwielded = function (self, slot_name, t)
 	local alternate_fire = self._alternate_fire_write_component
 
 	if alternate_fire.is_active then
-		AlternateFire.stop(alternate_fire, self._weapon_tweak_templates_component, self._animation_extension, weapon_template, false, self._unit)
+		AlternateFire.stop(alternate_fire, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, weapon_template, false, self._unit)
 	end
 
 	self._weapon_recoil_system:snap_camera_and_reset_recoil()
@@ -673,7 +678,7 @@ function _get_block_anim_event(weapon_template, attack_type, event_name)
 	return event_name
 end
 
-PlayerUnitWeaponExtension.blocked_attack = function (self, attacking_unit, hit_world_position, block_broken, weapon_template, attack_type, block_cost)
+PlayerUnitWeaponExtension.blocked_attack = function (self, attacking_unit, hit_world_position, block_broken, weapon_template, attack_type, block_cost, is_perfect_block)
 	local weapon = self:_wielded_weapon(self._inventory_component, self._weapons)
 	local wanted_weapon_template_name = weapon_template.name
 	local current_weapon_template_name = weapon.weapon_template.name
@@ -700,8 +705,22 @@ PlayerUnitWeaponExtension.blocked_attack = function (self, attacking_unit, hit_w
 		param_table.block_broken = block_broken
 		param_table.attacking_unit = attacking_unit
 		param_table.block_cost = block_cost
+		param_table.attack_type = attack_type
 
 		buff_extension:add_proc_event(proc_events.on_block, param_table)
+	end
+
+	if is_perfect_block then
+		param_table = buff_extension:request_proc_event_param_table()
+
+		if param_table then
+			param_table.block_broken = block_broken
+			param_table.attacking_unit = attacking_unit
+			param_table.block_cost = block_cost
+			param_table.attack_type = attack_type
+
+			buff_extension:add_proc_event(proc_events.on_perfect_block, param_table)
+		end
 	end
 
 	local first_person = self._first_person_component
@@ -797,6 +816,9 @@ PlayerUnitWeaponExtension.condition_func_params = function (self, wielded_slot)
 	local inventory_slot_component = weapon and weapon.inventory_slot_component
 	temp_table.ability_extension = self._ability_extension
 	temp_table.health_extension = self._health_extension
+	temp_table.input_extension = self._input_extension
+	temp_table.specialization_extension = self._specialization_extension
+	temp_table.unit_data_extension = self._unit_data_extension
 	temp_table.visual_loadout_extension = self._visual_loadout_extension
 	temp_table.weapon_extension = self
 	temp_table.action_place_component = self._action_place_component
@@ -833,7 +855,7 @@ PlayerUnitWeaponExtension.update_weapon_actions = function (self, fixed_frame)
 
 	action_params.weapon = weapon
 	action_params.player_unit = self._unit
-	local fixed_time_step = GameParameters.fixed_time_step
+	local fixed_time_step = self._fixed_time_step
 	local dt = fixed_time_step
 	local t = fixed_frame * fixed_time_step
 
@@ -882,14 +904,14 @@ PlayerUnitWeaponExtension._apply_buffs = function (self, buffs, buff_target, slo
 				if component_index then
 					inventory_slot_component[component_name] = component_index
 				elseif is_server then
-					local serler_slot_buff_target_indexes = server_slot_buff_indexes[buff_target]
+					local server_slot_buff_target_indexes = server_slot_buff_indexes[buff_target]
 
-					if not serler_slot_buff_target_indexes then
-						serler_slot_buff_target_indexes = {}
-						server_slot_buff_indexes[buff_target] = serler_slot_buff_target_indexes
+					if not server_slot_buff_target_indexes then
+						server_slot_buff_target_indexes = {}
+						server_slot_buff_indexes[buff_target] = server_slot_buff_target_indexes
 					end
 
-					serler_slot_buff_target_indexes[#serler_slot_buff_target_indexes + 1] = local_index
+					server_slot_buff_target_indexes[#server_slot_buff_target_indexes + 1] = local_index
 				end
 			end
 		end
@@ -957,7 +979,7 @@ PlayerUnitWeaponExtension._update_overheat = function (self, dt, t)
 end
 
 PlayerUnitWeaponExtension._update_stamina = function (self, dt, t, fixed_frame)
-	local base_stamina_template = self._specialization_stamina_template
+	local base_stamina_template = self._archetype_stamina_template
 
 	Stamina.update(t, dt, self._stamina_component, base_stamina_template, self._unit, fixed_frame)
 end

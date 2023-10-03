@@ -294,13 +294,6 @@ local widget_definitions = {
 			change_function = ViewStyles.task_info_change_function
 		},
 		{
-			style_id = "description",
-			pass_type = "text",
-			value_id = "description",
-			value = "",
-			change_function = ViewStyles.task_info_change_function
-		},
-		{
 			value_id = "reward_label",
 			style_id = "reward_label",
 			pass_type = "text",
@@ -374,8 +367,9 @@ local widget_definitions = {
 		visible = false
 	}, nil, ViewStyles.task_info),
 	reroll_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "reroll_button", {
-		text = "",
-		visible = false
+		visible = false,
+		text = Utf8.upper(Localize("loc_contracts_reroll_button")),
+		gamepad_action = ViewSettings.reroll_input_action
 	})
 }
 local widget_blueprints = {

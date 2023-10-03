@@ -41,6 +41,64 @@ FootIk.editor_init = function (self, unit)
 	end
 end
 
+local TEMP_MISSING_NODE_NAMES = {}
+
+FootIk.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+	local num_missing_node_names = 0
+	local node_names_to_validate = {
+		self:get_data(unit, "hips_handle"),
+		self:get_data(unit, "left_handle"),
+		self:get_data(unit, "right_handle"),
+		self:get_data(unit, "left_handle_ref"),
+		self:get_data(unit, "hips_handle_ref"),
+		self:get_data(unit, "right_handle_ref"),
+		self:get_data(unit, "left_orient_ref"),
+		self:get_data(unit, "right_orient_ref"),
+		self:get_data(unit, "left_orient_handle"),
+		self:get_data(unit, "right_orient_handle"),
+		self:get_data(unit, "grounded_node"),
+		"j_leftupleg",
+		"j_rightupleg",
+		"j_leftleg",
+		"j_rightleg",
+		"j_leftfoot",
+		"j_rightfoot"
+	}
+	local contains_empty = false
+
+	for i = 1, #node_names_to_validate do
+		local node_name = node_names_to_validate[i]
+
+		if node_name == "" then
+			contains_empty = true
+		elseif not Unit.has_node(unit, node_name) then
+			num_missing_node_names = num_missing_node_names + 1
+			TEMP_MISSING_NODE_NAMES[num_missing_node_names] = node_name
+		end
+	end
+
+	if contains_empty then
+		success = false
+		error_message = "\nComponent contains empty node name"
+	end
+
+	if num_missing_node_names > 0 then
+		success = false
+
+		table.sort(TEMP_MISSING_NODE_NAMES)
+
+		local missing_node_names_string = table.concat(TEMP_MISSING_NODE_NAMES, "\n\t")
+
+		table.clear_array(TEMP_MISSING_NODE_NAMES, #TEMP_MISSING_NODE_NAMES)
+
+		error_message = error_message .. string.format("\nThe following unit nodes are missing:\n\t%s", missing_node_names_string)
+	end
+
+	return success, error_message
+end
+
 FootIk._instantiate_ik_data = function (self)
 	self._detect_surface_enabled = self:get_data(self._unit, "detect_surface_enabled")
 	self._lean_in_acceleration_enabled = self:get_data(self._unit, "lean_in_acceleration_enabled")

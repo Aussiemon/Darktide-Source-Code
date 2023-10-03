@@ -5,7 +5,21 @@ HoloSight.editor_init = function (self, unit)
 	self._unit = unit
 	self._glass_visible = nil
 
-	self:set_glass_visibility(true)
+	if Unit.has_visibility_group(unit, self._glass_visibility_group_name) then
+		self:set_glass_visibility(true)
+	end
+end
+
+HoloSight.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if self:get_data(unit, "glass_visibility_group_name") == "" then
+		success = false
+		error_message = error_message .. "\nMissing unit data 'glass_visibility_group_name' it can't be empty"
+	end
+
+	return success, error_message
 end
 
 HoloSight.init = function (self, unit)

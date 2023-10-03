@@ -10,9 +10,12 @@ HealthExtension.init = function (self, extension_init_context, unit, extension_i
 	self._last_hit_was_critical = false
 	self._was_hit_by_critical_hit_this_render_frame = false
 	self._damage = 0
+	local hit_mass = extension_init_data.hit_mass or 1
+	self._hit_mass = hit_mass
 	self._is_dead = false
 	game_object_data.health = self._health
 	game_object_data.damage = self._damage
+	game_object_data.hit_mass = self._hit_mass
 	game_object_data.is_dead = self._is_dead
 	local has_health_bar = extension_init_data.has_health_bar
 
@@ -202,6 +205,16 @@ end
 
 HealthExtension.damaging_players = function (self)
 	return self._damaging_players
+end
+
+HealthExtension.hit_mass = function (self)
+	return self._hit_mass
+end
+
+HealthExtension.set_hit_mass = function (self, hit_mass)
+	self._hit_mass = hit_mass
+
+	GameSession.set_game_object_field(self._game_session, self._game_object_id, "hit_mass", hit_mass)
 end
 
 implements(HealthExtension, HealthExtensionInterface)

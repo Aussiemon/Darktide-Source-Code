@@ -21,7 +21,6 @@ _create_breed_action_entry("scripts/settings/breed/breed_actions/chaos/chaos_spa
 _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_assault_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_berzerker_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_flamer_actions")
-_create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_grenadier_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_gunner_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_melee_actions")
 _create_breed_action_entry("scripts/settings/breed/breed_actions/cultist/cultist_mutant_actions")

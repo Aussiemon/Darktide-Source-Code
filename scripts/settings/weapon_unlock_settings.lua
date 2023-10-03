@@ -1,4 +1,8 @@
 local weapon_unlock_settings = {
+	psyker_1 = {},
+	zealot_1 = {},
+	ogryn_1 = {},
+	veteran_1 = {},
 	psyker_2 = {
 		{},
 		{
@@ -292,7 +296,11 @@ local weapon_unlock_settings = {
 		{},
 		{},
 		{}
-	}
+	},
+	psyker_3 = {},
+	zealot_3 = {},
+	veteran_3 = {},
+	ogryn_3 = {}
 }
 
 return settings("weapon_unlock_settings", weapon_unlock_settings)

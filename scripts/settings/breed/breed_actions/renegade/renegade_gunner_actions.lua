@@ -382,9 +382,8 @@ local action_data = {
 		}
 	},
 	move_to_cover = {
-		sprint_target_distance = 15,
-		anim_driven_min_distance = 3,
 		move_type_switch_stickiness = 2,
+		anim_driven_min_distance = 3,
 		sprint_anim_event = "assault_fwd",
 		idle_anim_events = {
 			"idle",
@@ -497,6 +496,10 @@ local action_data = {
 		shoot_template = BreedShootTemplates.renegade_gunner_shoot_spray_n_pray,
 		stagger_type_reduction = {
 			ranged = 20
+		},
+		stagger_type_reduction = {
+			ranged = 60,
+			killshot = 60
 		}
 	},
 	in_cover = {
@@ -537,6 +540,10 @@ local action_data = {
 		shoot_template = BreedShootTemplates.renegade_gunner_aimed,
 		stagger_type_reduction = {
 			ranged = 20
+		},
+		stagger_type_reduction = {
+			ranged = 60,
+			killshot = 60
 		},
 		clear_shot_offset_from_peeking = {
 			high = {
@@ -809,6 +816,33 @@ local action_data = {
 				}
 			},
 			sticky = {
+				bwd = {
+					"stagger_front_sticky",
+					"stagger_front_sticky_2",
+					"stagger_front_sticky_3"
+				},
+				fwd = {
+					"stagger_bwd_sticky",
+					"stagger_bwd_sticky_2",
+					"stagger_bwd_sticky_3"
+				},
+				left = {
+					"stagger_left_sticky",
+					"stagger_left_sticky_2",
+					"stagger_left_sticky_3"
+				},
+				right = {
+					"stagger_right_sticky",
+					"stagger_right_sticky_2",
+					"stagger_right_sticky_3"
+				},
+				dwn = {
+					"stagger_bwd_sticky",
+					"stagger_bwd_sticky_2",
+					"stagger_bwd_sticky_3"
+				}
+			},
+			electrocuted = {
 				bwd = {
 					"stagger_front_sticky",
 					"stagger_front_sticky_2",

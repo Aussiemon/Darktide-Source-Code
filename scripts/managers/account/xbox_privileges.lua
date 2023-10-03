@@ -9,6 +9,12 @@ local ANONYMOUSE_USER_TYPES_LUT = ANONYMOUSE_USER_TYPES_LUT or {}
 local DEFAULT_PERMISSIONS = DEFAULT_PERMISSIONS or {}
 local DEFAULT_ANONYMOUS_USER_TYPES = DEFAULT_ANONYMOUS_USER_TYPES or {}
 local XBOX_PERMISSION_DENY_REASON_LUT = XBOX_PERMISSION_DENY_REASON_LUT or {}
+local BATCH_WAIT_TIMES = {
+	CHAT_HUB = 10,
+	CHAT_PARTY = 0,
+	CHAT_MISSION = 0
+}
+local BATCH_SEND_DELAY = 3
 
 local function debug_log(...)
 	return
@@ -25,15 +31,135 @@ XboxPrivileges.reset = function (self)
 	self._async_privileges = {}
 	self._crossplay_restrictions = {}
 	self._user_restrictions = {}
+	self._batched_user_restrictions = {}
+	self._batch_wait_timer = {}
+	self._batch_send_timer = {}
+end
+
+XboxPrivileges.verify_user_restriction_batched = function (self, xuid, restriction, batch_type)
+	if Managers.account:user_detached() then
+		return
+	end
+
+	local user_data = self._user_restrictions[xuid]
+
+	if user_data and user_data[restriction] ~= nil then
+		return
+	end
+
+	local batch = self._batched_user_restrictions[batch_type]
+
+	if not batch then
+		batch = {
+			restrictions = {},
+			xuids = {}
+		}
+		self._batched_user_restrictions[batch_type] = batch
+	end
+
+	batch.restrictions[restriction] = true
+	batch.xuids[xuid] = true
+end
+
+XboxPrivileges._update_batched_user_restrictions = function (self, dt, t)
+	local batches = self._batched_user_restrictions
+
+	if table.is_empty(batches) then
+		return
+	end
+
+	for batch_type, data in pairs(batches) do
+		local wait_timer = self._batch_wait_timer[batch_type] or 0
+		local send_timer = self._batch_send_timer[batch_type] or nil
+
+		if wait_timer <= t and not send_timer then
+			self._batch_wait_timer[batch_type] = t + BATCH_WAIT_TIMES[batch_type]
+			self._batch_send_timer[batch_type] = t + BATCH_SEND_DELAY
+		elseif send_timer and send_timer <= t then
+			self:_send_batched_user_restrictions(batch_type, t)
+		end
+	end
+end
+
+XboxPrivileges._send_batched_user_restrictions = function (self, batch_type, t)
+	local batch = self._batched_user_restrictions[batch_type]
+	local xuids = table.keys(batch.xuids)
+	local restrictions = table.keys(batch.restrictions)
+	self._batched_user_restrictions[batch_type] = nil
+	self._batch_send_timer[batch_type] = nil
+
+	if Managers.account:user_detached() then
+		return
+	end
+
+	Log.info("XboxPrivileges", "Sending batch %q, checking %s xuid's for restrictions %s", batch_type, #xuids, table.tostring(restrictions))
+
+	local async_task, error_code, error_message = XboxLivePrivacy.batch_check_permission(Managers.account:user_id(), restrictions, xuids, {})
+
+	if error_code then
+		Log.warning("XboxPrivileges", "batch_check_permission failed with error code: %s", error_code)
+
+		return
+	elseif error_message then
+		Log.warning("XboxPrivileges", "batch_check_permission failed with error message: %s", error_message)
+
+		return
+	end
+
+	if async_task then
+		Managers.xasync:wrap(async_task, XboxLivePrivacy.release_block):next(function (async_block)
+			local results, error_code = XboxLivePrivacy.batch_check_permission_result(async_block)
+
+			if error_code then
+				Log.warning("XboxPrivileges", "batch_check_permission_result failed with error code: %s", error_code)
+
+				return
+			end
+
+			local user_restrictions = self._user_restrictions
+
+			for i = 1, #results do
+				local result = results[i]
+				local xuid = result.target_xuid
+				local permission = result.permission_requested
+				local is_allowed = result.is_allowed
+				user_restrictions[xuid] = self._user_restrictions[xuid] or {}
+				user_restrictions[xuid][permission] = not result.is_allowed
+
+				if not is_allowed then
+					local reasons = result.reasons
+
+					if reasons then
+						for _, reason_data in ipairs(reasons) do
+							local reason = reason_data.reason
+							local restricted_privilege = reason_data.restricted_privilege
+
+							Log.info("XboxPrivileges", "You are not allowed to %q with %q because of %q", XBOX_PERMISSION_LUT[permission], xuid, XBOX_PERMISSION_DENY_REASON_LUT[reason] or "Unknown")
+							Log.info("XboxPrivileges", "This affects the %q privilege", XBOX_PRIVILEGE_LUT[restricted_privilege] or "Unknown")
+						end
+					end
+				end
+			end
+
+			Managers.chat:player_mute_status_changed()
+		end):catch(function (err)
+			Log.warning("XboxPrivileges", "batch_check_permission async task failed with error: %s", table.tostring(err, 3))
+		end)
+	end
+end
+
+XboxPrivileges.update = function (self, dt, t)
+	self:_update_batched_user_restrictions(dt, t)
 end
 
 XboxPrivileges.fetch_all_privileges = function (self, user_id, fetch_done_cb)
 	self:reset()
 
 	for _, privilege in pairs(DEFAULT_PRIVILEGES) do
-		local attempt_resolution = false
+		local has_privilege, deny_reason, resolution_required = XUser.check_privilege(user_id, XUserPrivilegeOptions.None, privilege)
+		local attempt_resolution = ATTEMPT_RESOLUTION_PRIVILEGES[privilege] and not has_privilege
 
-		if ATTEMPT_RESOLUTION_PRIVILEGES[privilege] then
+		if attempt_resolution then
 			debug_log(XBOX_PRIVILEGE_LUT[privilege] .. " using attempt_resolution=true")
 
 			local async_task, h_result, error_message = XUser.resolve_privilege_async(user_id, XUserPrivilegeOptions.None, privilege)
@@ -49,14 +175,11 @@ XboxPrivileges.fetch_all_privileges = function (self, user_id, fetch_done_cb)
 				self._has_error = h_result or error_message
 			end
 		else
-			local has_privilege, deny_reason, resolution_required = XUser.check_privilege(user_id, XUserPrivilegeOptions.None, privilege)
 			self._privileges_data[privilege] = {
 				has_privilege = has_privilege,
 				deny_reason = HRESULT.S_OK < deny_reason and PrivilegesManagerConstants.DenyReason[deny_reason] or "OK",
 				resolution_required = resolution_required
 			}
-
-			debug_log("[XboxPrivileges] User %q %s the privilege to %q - Reason: %s", tostring(user_id), has_privilege and "has" or "do NOT have", XBOX_PRIVILEGE_LUT[privilege] or "unknown", HRESULT.S_OK < deny_reason and PrivilegesManagerConstants.DenyReason[deny_reason] or "UNKNOWN")
 		end
 	end
 
@@ -290,6 +413,21 @@ XboxPrivileges.user_has_restriction = function (self, xuid, restriction)
 	local has_restriction = user_restrictions[restriction]
 
 	return has_restriction
+end
+
+XboxPrivileges.push_telemetry = function (self)
+	local telemetry_data = {}
+
+	for code, data in pairs(self._privileges_data) do
+		local privilege_name = XBOX_PRIVILEGE_LUT[code]
+		local has_privilege = data.has_privilege
+
+		if privilege_name then
+			telemetry_data[privilege_name] = not not has_privilege
+		end
+	end
+
+	Managers.telemetry_events:xbox_privileges(telemetry_data)
 end
 
 local function setup_lookup_tables()

@@ -311,7 +311,7 @@ local action_data = {
 		aim_anim_events = {
 			"attack_throw_low_01"
 		},
-		aim_duration = {
+		throw_timing = {
 			attack_throw_low_01 = 2.230769230769231
 		},
 		action_durations = {
@@ -515,6 +515,33 @@ local action_data = {
 				}
 			},
 			sticky = {
+				bwd = {
+					"stagger_front_sticky",
+					"stagger_front_sticky_2",
+					"stagger_front_sticky_3"
+				},
+				fwd = {
+					"stagger_bwd_sticky",
+					"stagger_bwd_sticky_2",
+					"stagger_bwd_sticky_3"
+				},
+				left = {
+					"stagger_left_sticky",
+					"stagger_left_sticky_2",
+					"stagger_left_sticky_3"
+				},
+				right = {
+					"stagger_right_sticky",
+					"stagger_right_sticky_2",
+					"stagger_right_sticky_3"
+				},
+				dwn = {
+					"stagger_bwd_sticky",
+					"stagger_bwd_sticky_2",
+					"stagger_bwd_sticky_3"
+				}
+			},
+			electrocuted = {
 				bwd = {
 					"stagger_front_sticky",
 					"stagger_front_sticky_2",

@@ -2,13 +2,13 @@ require("scripts/extension_systems/weapon/actions/action_ability_base")
 
 local ActionModules = require("scripts/extension_systems/weapon/actions/modules/action_modules")
 local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
-local AlternateFire = require("scripts/utilities/alternate_fire")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local MasterItems = require("scripts/backend/master_items")
+local PlayerVoiceGrunts = require("scripts/utilities/player_voice_grunts")
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
+local Vo = require("scripts/utilities/vo")
 local keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
-local stat_buff_types = BuffSettings.stat_buffs
 local projectile_locomotion_states = ProjectileLocomotionSettings.states
 local EXTERNAL_PROPERTIES = nil
 local SYNC_TO_CLIENTS = true
@@ -38,14 +38,31 @@ ActionSpawnProjectile.init = function (self, action_context, action_params, acti
 		local target_finder_module_class_name = action_settings.target_finder_module_class_name
 		self._targeting_module = ActionModules[target_finder_module_class_name]:new(physics_world, player_unit, targeting_component, action_settings)
 	end
+
+	self._side_system = Managers.state.extension:system("side_system")
+
+	if self._is_server then
+		self._projectiles_fire_offsets = {}
+		self._projectiles_fired = {}
+		self._projectile_units = {}
+		self._projectile_locomotion_extensions = {}
+		self._projectiles_paid_for = false
+	end
 end
 
 ActionSpawnProjectile.start = function (self, action_settings, t, ...)
 	ActionSpawnProjectile.super.start(self, action_settings, t, ...)
-	self:_check_for_critical_strike(false, true)
+
+	local should_crit = action_settings.should_crit
+
+	self:_check_for_critical_strike(false, true, false, should_crit)
 
 	if self._targeting_module then
-		self._targeting_module:start(t)
+		local prefer_previous_action_targeting_result = action_settings.prefer_previous_action_targeting_result
+
+		if not prefer_previous_action_targeting_result or self._targeting_component.target_unit_1 == nil then
+			self._targeting_module:start(t)
+		end
 	end
 
 	local use_ability_charge = action_settings.use_ability_charge
@@ -73,24 +90,34 @@ ActionSpawnProjectile.start = function (self, action_settings, t, ...)
 	end
 
 	if self._is_server then
+		table.clear(self._projectiles_fire_offsets)
+		table.clear(self._projectiles_fired)
+		table.clear(self._projectile_units)
+		table.clear(self._projectile_locomotion_extensions)
+
+		self._projectiles_paid_for = false
+		local num_projectiles = action_settings.num_projectiles or 1
 		local is_critical_strike = self._critical_strike_component.is_active or self._buff_extension:has_keyword(keywords.guaranteed_smite_critical_strike)
-		self._projectile_fired = false
-		self._projectile_fired_2 = false
-		self._projectile_payed_for = false
-		local projectile_unit = self:_spawn_projectile_unit(is_critical_strike)
-		self._projectile_unit = projectile_unit
-		self._projectile_locomotion_extension = ScriptUnit.extension(projectile_unit, "locomotion_system")
-		local buff_extension = self._buff_extension
-		local spawn_second_projectile = is_critical_strike and buff_extension:has_keyword("critical_hit_second_projectile")
+		local spawn_second_projectile = is_critical_strike and self._buff_extension:has_keyword("critical_strike_second_projectile")
 
 		if spawn_second_projectile then
-			local projectile_unit_2 = self:_spawn_projectile_unit(false)
-			self._projectile_unit_2 = projectile_unit_2
-			self._projectile_locomotion_extension_2 = ScriptUnit.extension(projectile_unit_2, "locomotion_system")
-		else
-			self._projectile_unit_2 = nil
-			self._projectile_locomotion_extension_2 = nil
+			num_projectiles = num_projectiles + 1
 		end
+
+		for ii = 1, num_projectiles do
+			local projectile_unit = self:_spawn_projectile_unit(is_critical_strike)
+			local projectile_locomotion_extension = ScriptUnit.extension(projectile_unit, "locomotion_system")
+			self._projectiles_fire_offsets[ii] = (ii - 1) * 0.1
+			self._projectiles_fired[ii] = false
+			self._projectile_units[ii] = projectile_unit
+			self._projectile_locomotion_extensions[ii] = projectile_locomotion_extension
+		end
+	end
+
+	local vo_tag = action_settings.vo_tag
+
+	if vo_tag then
+		Vo.play_combat_ability_event(self._player_unit, vo_tag)
 	end
 end
 
@@ -113,30 +140,24 @@ ActionSpawnProjectile.fixed_update = function (self, dt, t, time_in_action)
 			spawn_projectile_time = math.max(spawn_projectile_time - rewind_s, 0)
 		end
 
-		if not self._projectile_fired then
-			local spawn_projectile_time_scaled = spawn_projectile_time / time_scale
-			local should_fire_projectile = time_in_action >= spawn_projectile_time_scaled
+		local projectiles_fire_offsets = self._projectiles_fire_offsets
+		local projectiles_fired = self._projectiles_fired
+		local projectile_locomotion_extensions = self._projectile_locomotion_extensions
 
-			if should_fire_projectile then
+		for ii = 1, #projectiles_fired do
+			local time_offset = projectiles_fire_offsets[ii]
+			local has_fired = projectiles_fired[ii]
+			local spawn_projectile_time_scaled = (spawn_projectile_time + time_offset) / time_scale
+			local should_fire = not has_fired and spawn_projectile_time_scaled <= time_in_action
+
+			if should_fire then
+				local projectile_unit = self._projectile_units[ii]
 				local time_diff_from_payment = fire_time_scaled - spawn_projectile_time_scaled
+				local spawn_offset = nil
 
-				self:_fire_projectile(t, time_diff_from_payment, self._projectile_locomotion_extension)
+				self:_fire_projectile(t, projectile_unit, time_diff_from_payment, projectile_locomotion_extensions[ii], spawn_offset)
 
-				self._projectile_fired = true
-			end
-		end
-
-		if not self._projectile_fired_2 and self._projectile_locomotion_extension_2 then
-			local spawn_projectile_time_scaled = (spawn_projectile_time + 0.1) / time_scale
-			local should_fire_projectile_2 = time_in_action >= spawn_projectile_time_scaled
-
-			if should_fire_projectile_2 then
-				local time_diff_from_payment = fire_time_scaled - spawn_projectile_time_scaled
-				local offset = nil
-
-				self:_fire_projectile(t, time_diff_from_payment, self._projectile_locomotion_extension_2, offset)
-
-				self._projectile_fired_2 = true
+				projectiles_fired[ii] = true
 			end
 		end
 	end
@@ -153,7 +174,7 @@ ActionSpawnProjectile.fixed_update = function (self, dt, t, time_in_action)
 			self:_proc_buffs()
 
 			if self._is_server then
-				self._projectile_payed_for = true
+				self._projectiles_paid_for = true
 			end
 		end
 	end
@@ -167,10 +188,8 @@ ActionSpawnProjectile.fixed_update = function (self, dt, t, time_in_action)
 		shooting_status_component.shooting_end_time = t
 
 		if self._is_server then
-			self._projectile_payed_for = true
+			self._projectiles_paid_for = true
 		end
-
-		self:_proc_buffs()
 	end
 end
 
@@ -182,13 +201,29 @@ ActionSpawnProjectile.finish = function (self, reason, data, t, time_in_action)
 	end
 
 	if self._is_server then
-		if self._projectile_fired then
-			if not self._projectile_payed_for then
+		local projectiles_fired = self._projectiles_fired
+		local projectile_units = self._projectile_units
+		local any_projectile_fired = nil
+		local index = 1
+
+		repeat
+			any_projectile_fired = projectiles_fired[index]
+			index = index + 1
+		until any_projectile_fired or index >= #projectiles_fired
+
+		if any_projectile_fired then
+			if not self._projectiles_paid_for then
 				self:_pay_for_projectile(t)
-				self:_proc_buffs()
 			end
 		else
-			Managers.state.unit_spawner:mark_for_deletion(self._projectile_unit)
+			for ii = 1, #projectiles_fired do
+				if not projectiles_fired[ii] then
+					local projectile_unit = projectile_units[ii]
+
+					Managers.state.player_unit_spawn:relinquish_unit_ownership(projectile_unit)
+					Managers.state.unit_spawner:mark_for_deletion(projectile_unit)
+				end
+			end
 		end
 	end
 
@@ -250,14 +285,6 @@ ActionSpawnProjectile._get_projectile_template = function (self)
 	return projectile_template
 end
 
-ActionSpawnProjectile._pay_ability_charge_cost = function (self)
-	local action_settings = self._action_settings
-	local ability_type = action_settings.ability_type
-	local ability_extension = self._ability_extension
-
-	ability_extension:use_ability_charge(ability_type)
-end
-
 local COLLISION_FILTER = "filter_player_character_shooting_projectile"
 
 ActionSpawnProjectile._target_unit_and_position = function (self)
@@ -279,7 +306,7 @@ ActionSpawnProjectile._target_unit_and_position = function (self)
 		local direction = Quaternion.forward(look_rotation)
 		local distance = action_settings.target_position_distance or 50
 		local physics_world = self._physics_world
-		local result, hit_position, hit_distance, normal, _ = PhysicsWorld.raycast(physics_world, from, direction, distance, "closest", "collision_filter", COLLISION_FILTER)
+		local result, hit_position, _, _, _ = PhysicsWorld.raycast(physics_world, from, direction, distance, "closest", "collision_filter", COLLISION_FILTER)
 
 		if result then
 			target_position = hit_position
@@ -299,7 +326,14 @@ ActionSpawnProjectile._spawn_projectile_unit = function (self, is_critical_strik
 	local action_settings = self._action_settings
 	local material = projectile_template.material or nil
 	local inventory_item_name = action_settings.projectile_item
-	local item = self._item_definitions[inventory_item_name]
+	local item = nil
+
+	if inventory_item_name then
+		item = self._item_definitions[inventory_item_name]
+	else
+		item = ActionUtility.get_ability_item(action_settings, self._ability_extension)
+	end
+
 	local starting_state = projectile_locomotion_states.sleep
 	local buff_extension = self._buff_extension
 	local stat_buffs = buff_extension:stat_buffs()
@@ -319,9 +353,21 @@ ActionSpawnProjectile._spawn_projectile_unit = function (self, is_critical_strik
 	local max = NetworkConstants.weapon_charge_level.max
 	charge_level = math.clamp(charge_level * buff_charge_level_modifier, min, max)
 	local target_unit, target_position = nil
-	local weapon_item = self._weapon.item
 
-	return Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item)
+	if action_settings.prefer_previous_action_targeting_result then
+		target_unit, target_position = self:_target_unit_and_position()
+	end
+
+	local weapon_item = self._weapon.item
+	local owner_side = self._side_system.side_by_unit[self._player_unit]
+	local owner_side_name = owner_side and owner_side:name()
+	local projectile_unit = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot, charge_level, target_unit, target_position, weapon_item, nil, owner_side_name)
+
+	if Unit.alive(projectile_unit) then
+		Unit.set_unit_visibility(projectile_unit, false, true)
+	end
+
+	return projectile_unit
 end
 
 ActionSpawnProjectile._pay_for_projectile = function (self, t)
@@ -331,7 +377,7 @@ ActionSpawnProjectile._pay_for_projectile = function (self, t)
 	local charge_template = action_settings.charge_template
 
 	if charge_template then
-		self:_pay_warp_charge_cost(t, charge_level)
+		self:_pay_warp_charge_cost_immediate(t, charge_level)
 	end
 
 	local fx_settings = action_settings.fx
@@ -356,31 +402,26 @@ ActionSpawnProjectile._pay_for_projectile = function (self, t)
 		charge_component.charge_level = 0
 	end
 
-	local projectile_template = self:_get_projectile_template()
-	local buff_extension = self._buff_extension
-	local unit = self._player_unit
-	local action_component = self._action_component
-	local param_table = buff_extension:request_proc_event_param_table()
+	local use_ability_charge = action_settings.use_ability_charge
+	local should_use_charge = not action_settings.use_charge_at_start
 
-	if param_table then
-		param_table.attacking_unit = unit
-		param_table.projectile_template_name = projectile_template.name
-		param_table.num_shots_fired = action_component.num_shots_fired
-		param_table.combo_count = self._combo_count
+	if use_ability_charge and should_use_charge then
+		local num_charges = action_settings.num_projectiles or 1
 
-		buff_extension:add_proc_event(proc_events.on_shoot_projectile, param_table)
+		self:_use_ability_charge(num_charges)
 	end
 
+	self:_proc_buffs()
 	self._weapon_spread_extension:randomized_spread(Quaternion.identity())
 end
 
-ActionSpawnProjectile._fire_projectile = function (self, t, time_difference_from_paying, projectile_locomotion_extension, offset)
+ActionSpawnProjectile._fire_projectile = function (self, t, projectile_unit, time_difference_from_paying, projectile_locomotion_extension, offset)
 	local action_settings = self._action_settings
 	local unit = self._player_unit
 	local target_unit, target_position = self:_target_unit_and_position()
 	local projectile_template = self:_get_projectile_template()
-	local projetile_locomotion_template = projectile_template.locomotion_template
-	local shoot_parameters = projetile_locomotion_template.shoot_parameters
+	local projectile_locomotion_template = projectile_template.locomotion_template
+	local shoot_parameters = projectile_locomotion_template.shoot_parameters
 	local first_person = self._first_person_component
 	local position = nil
 	local spawn_node = action_settings.spawn_node
@@ -398,6 +439,13 @@ ActionSpawnProjectile._fire_projectile = function (self, t, time_difference_from
 
 	if local_spawn_offset then
 		local spawn_offset = Quaternion.rotate(first_person.rotation, local_spawn_offset)
+		position = position + spawn_offset
+	end
+
+	local action_spawn_offset = action_settings.spawn_offset and action_settings.spawn_offset:unbox()
+
+	if action_spawn_offset then
+		local spawn_offset = Quaternion.rotate(first_person.rotation, action_spawn_offset)
 		position = position + spawn_offset
 	end
 
@@ -441,6 +489,16 @@ ActionSpawnProjectile._fire_projectile = function (self, t, time_difference_from
 		local direction_right = -Vector3.cross(Vector3.up(), Quaternion.forward(look_rotation))
 		local pitch_rotation = Quaternion.axis_angle(direction_right, random_pitch)
 		shoot_rotation = Quaternion.multiply(pitch_rotation, shoot_rotation)
+
+		if shoot_parameters.yaw_offset then
+			local yaw_settings = shoot_parameters.yaw_offset
+			local max_angle_yaw = math.degrees_to_radians(yaw_settings.max)
+			local min_angle_yaw = math.degrees_to_radians(yaw_settings.min)
+			local random_yaw = math.random() * (max_angle_yaw - min_angle_yaw) + min_angle_yaw
+			local yaw_rotation = Quaternion.axis_angle(Vector3.up(), random_yaw)
+			shoot_rotation = Quaternion.multiply(shoot_rotation, yaw_rotation)
+		end
+
 		local skip_update_component_data = true
 		shoot_rotation = self._weapon_spread_extension:randomized_spread(shoot_rotation, skip_update_component_data)
 	end
@@ -457,6 +515,10 @@ ActionSpawnProjectile._fire_projectile = function (self, t, time_difference_from
 		position = position + Quaternion.rotate(rotation, offset)
 	end
 
+	if Unit.alive(projectile_unit) then
+		Unit.set_unit_visibility(projectile_unit, true, true)
+	end
+
 	if starting_state == projectile_locomotion_states.manual_physics then
 		projectile_locomotion_extension:switch_to_manual(position, rotation, direction, speed, momentum)
 	elseif starting_state == projectile_locomotion_states.engine_physics then
@@ -465,6 +527,13 @@ ActionSpawnProjectile._fire_projectile = function (self, t, time_difference_from
 		projectile_locomotion_extension:switch_to_true_flight(position, rotation, direction, speed, momentum, target_unit, target_position)
 	else
 		ferror("unknown starting state %q", starting_state)
+	end
+
+	if projectile_template.play_vce then
+		local fx_extension = ScriptUnit.extension(unit, "fx_system")
+		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+
+		PlayerVoiceGrunts.trigger_voice("attack_short_vce", visual_loadout_extension, fx_extension, false)
 	end
 end
 

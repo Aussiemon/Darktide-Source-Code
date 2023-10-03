@@ -10,6 +10,7 @@ local WWISE_PARAMETER_NAME_SPEED = "projectile_speed"
 local SYNC_EFFECT = {
 	impact = true,
 	build_up_start = true,
+	target_aquired = true,
 	build_up_stop = true,
 	stick = true,
 	fuse = true,
@@ -191,6 +192,8 @@ ProjectileFxExtension.on_fuse_started = function (self)
 		self:start_fx("fuse")
 
 		self._life_times.fuse = 0
+
+		Unit.flow_event(self._unit, "fuse_started")
 	end
 end
 
@@ -289,12 +292,6 @@ ProjectileFxExtension.start_fx = function (self, effect_type)
 				World.set_particles_variable(world, effect_id, variable_index, Vector3(variable_charge_level, variable_charge_level, variable_charge_level))
 			end
 		end
-
-		local set_group_invisible = vfx.set_group_invisible
-
-		if set_group_invisible then
-			Unit.set_visibility(unit, set_group_invisible, false)
-		end
 	end
 
 	if self._is_server and self._game_object_id then
@@ -310,6 +307,11 @@ end
 
 ProjectileFxExtension._stop_fx = function (self, effect_type)
 	local effects = self._effects[effect_type]
+
+	if not effects then
+		return
+	end
+
 	local sfx = effects.sfx
 	local playing_id = self._looping_playing_ids[effect_type]
 

@@ -3,7 +3,8 @@ local CLIENT_RPCS = {
 	"rpc_add_liquid",
 	"rpc_add_liquid_multiple",
 	"rpc_set_liquid_filled",
-	"rpc_set_liquid_filled_multiple"
+	"rpc_set_liquid_filled_multiple",
+	"rpc_remove_liquid_multiple"
 }
 local HuskLiquidAreaExtension = class("HuskLiquidAreaExtension")
 
@@ -66,10 +67,16 @@ HuskLiquidAreaExtension.destroy = function (self)
 	local world = self._world
 
 	for _, liquid in pairs(self._flow) do
-		local particle_id = liquid.particle_id
+		local rim_particle_id = liquid.rim_particle_id
 
-		if particle_id then
-			World.stop_spawning_particles(world, particle_id)
+		if rim_particle_id then
+			World.stop_spawning_particles(world, rim_particle_id)
+		end
+
+		local filled_particle_id = liquid.filled_particle_id
+
+		if filled_particle_id then
+			World.stop_spawning_particles(world, filled_particle_id)
 		end
 	end
 
@@ -165,18 +172,18 @@ end
 HuskLiquidAreaExtension._add_liquid = function (self, unit_position, real_index, offset_position, is_filled)
 	local position = unit_position + offset_position
 	local rotation = self:_rotation_from_nav_mesh(position)
-	local particle_id = nil
+	local rim_particle_id = nil
 	local vfx_name_rim = self._vfx_name_rim
 
 	if vfx_name_rim then
-		particle_id = World.create_particles(self._world, vfx_name_rim, position, rotation)
+		rim_particle_id = World.create_particles(self._world, vfx_name_rim, position, rotation)
 	end
 
 	self._flow[real_index] = {
 		full = is_filled,
 		position = Vector3Box(position),
 		rotation = QuaternionBox(rotation),
-		particle_id = particle_id
+		rim_particle_id = rim_particle_id
 	}
 
 	if is_filled then
@@ -200,6 +207,28 @@ HuskLiquidAreaExtension.rpc_add_liquid_multiple = function (self, channel, go_id
 	end
 end
 
+HuskLiquidAreaExtension.rpc_remove_liquid_multiple = function (self, channel, go_id, real_index_array)
+	local flow = self._flow
+
+	for i = 1, #real_index_array do
+		local real_index = real_index_array[i]
+		local liquid = flow[real_index_array[i]]
+		local rim_particle_id = liquid.rim_particle_id
+
+		if rim_particle_id then
+			World.stop_spawning_particles(self._world, rim_particle_id)
+		end
+
+		local filled_particle_id = liquid.filled_particle_id
+
+		if filled_particle_id then
+			World.stop_spawning_particles(self._world, filled_particle_id)
+		end
+
+		self._flow[real_index] = nil
+	end
+end
+
 HuskLiquidAreaExtension.rpc_set_liquid_filled = function (self, channel, go_id, real_index)
 	self:_set_liquid_filled(real_index)
 end
@@ -218,9 +247,10 @@ HuskLiquidAreaExtension._set_liquid_filled = function (self, real_index)
 	if vfx_name_filled then
 		local position = liquid.position:unbox()
 		local rotation = liquid.rotation:unbox()
-		liquid.particle_id = World.create_particles(self._world, vfx_name_filled, position, rotation)
+		local filled_particle_id = World.create_particles(self._world, vfx_name_filled, position, rotation)
+		liquid.filled_particle_id = filled_particle_id
 	else
-		liquid.particle_id = nil
+		liquid.filled_particle_id = nil
 	end
 end
 

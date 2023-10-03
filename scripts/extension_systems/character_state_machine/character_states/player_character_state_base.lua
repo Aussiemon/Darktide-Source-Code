@@ -1,3 +1,4 @@
+local Crouch = require("scripts/extension_systems/character_state_machine/character_states/utilities/crouch")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local PlayerCharacterStateBase = class("PlayerCharacterStateBase")
@@ -40,8 +41,8 @@ PlayerCharacterStateBase.init = function (self, character_state_init_context, na
 	self._unit_data_extension = character_state_init_context.unit_data
 	self._constants = character_state_init_context.player_character_constants
 	self._breed = character_state_init_context.breed
-	self._specialization = character_state_init_context.specialization
-	self._specialization_dodge_template = self._specialization.dodge
+	self._archetype = character_state_init_context.archetype
+	self._archetype_dodge_template = self._archetype.dodge
 	self._game_session = character_state_init_context.game_session
 	self._game_object_id = character_state_init_context.game_object_id
 end
@@ -82,7 +83,14 @@ PlayerCharacterStateBase._air_movement = function (self, velocity_current, x, y,
 	local air_directional_speed_scale_angle = constants.air_directional_speed_scale_angle
 	local directional_speed_scale = math.min(move_angle / air_directional_speed_scale_angle, 1)
 	local air_acceleration = constants.air_acceleration
-	local speed_diff_scale = math.max(1 - current_speed / move_speed, 0)
+	local speed_diff_scale = nil
+
+	if move_speed == 0 then
+		speed_diff_scale = 1
+	else
+		speed_diff_scale = math.clamp01(math.max(1 - current_speed / move_speed, 0))
+	end
+
 	local speed_scale = math.max(directional_speed_scale, speed_diff_scale)
 	local added_velocity = world_move_direction * move_speed * player_speed_scale * air_acceleration * speed_scale * dt
 	local predicted_velocity_flat = velocity_current_flat + added_velocity
@@ -95,7 +103,7 @@ PlayerCharacterStateBase._air_movement = function (self, velocity_current, x, y,
 		if air_move_speed == 0 then
 			drag_scale = 1
 		else
-			drag_scale = math.max(predicted_speed / air_move_speed, 1)
+			drag_scale = math.clamp01(math.max(predicted_speed / air_move_speed, 1))
 		end
 
 		local air_drag_angle = constants.air_drag_angle
@@ -256,8 +264,9 @@ PlayerCharacterStateBase._is_wielding_minigame_device = function (self)
 	return false
 end
 
+local EPSILON_SQUARED_MOVEMENT_SPEED_TO_IDLE_ANIM = 0.0025000000000000005
+
 PlayerCharacterStateBase._update_move_method = function (self, movement_state_component, velocity_current, moving_backwards, wants_move, stopped, anim_extension, previous_frame_state)
-	local EPSILON_SQUARED_MOVEMENT_SPEED_TO_IDLE_ANIM = 0.0025000000000000005
 	local old_method = movement_state_component.method
 	local move_vector = self._input_extension:get("move")
 	local move_method = nil
@@ -291,6 +300,32 @@ PlayerCharacterStateBase._update_move_method = function (self, movement_state_co
 
 		anim_extension:anim_event_1p(move_method)
 	end
+end
+
+PlayerCharacterStateBase._poll_ability_state_transitions = function (self, unit, t)
+	local wanted_ability_transition, ability_transition_params = self._ability_extension:wanted_character_state_transition()
+
+	if not wanted_ability_transition then
+		return nil, nil
+	end
+
+	if wanted_ability_transition == "lunging" then
+		local movement_state_component = self._movement_state_component
+		local input_extension = self._input_extension
+		local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t)
+
+		if is_crouching then
+			local can_exit = Crouch.can_exit(unit)
+
+			if not can_exit then
+				return nil, nil
+			else
+				Crouch.exit(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
+			end
+		end
+	end
+
+	return wanted_ability_transition, ability_transition_params
 end
 
 return PlayerCharacterStateBase

@@ -26,7 +26,6 @@ local weapon_template = {
 	action_input_hierarchy = table.clone(MeleeActionInputSetupSlow.action_input_hierarchy),
 	actions = {
 		action_unwield = {
-			continue_sprinting = true,
 			allowed_during_sprint = true,
 			start_input = "wield",
 			uninterruptible = true,
@@ -35,9 +34,8 @@ local weapon_template = {
 			allowed_chain_actions = {}
 		},
 		action_wield = {
-			continue_sprinting = true,
-			allowed_during_sprint = true,
 			kind = "wield",
+			allowed_during_sprint = true,
 			uninterruptible = true,
 			anim_event = "equip",
 			sprint_ready_up_time = 0,
@@ -47,7 +45,12 @@ local weapon_template = {
 					action_name = "combat_ability"
 				},
 				grenade_ability = {
-					action_name = "grenade_ability"
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
 				},
 				wield = {
 					action_name = "action_unwield"
@@ -911,7 +914,12 @@ local weapon_template = {
 					action_name = "combat_ability"
 				},
 				grenade_ability = {
-					action_name = "grenade_ability"
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
 				},
 				wield = {
 					action_name = "action_unwield"
@@ -965,7 +973,12 @@ local weapon_template = {
 					action_name = "combat_ability"
 				},
 				grenade_ability = {
-					action_name = "grenade_ability"
+					{
+						action_name = "grenade_ability"
+					},
+					{
+						action_name = "grenade_ability_quick_throw"
+					}
 				},
 				wield = {
 					action_name = "action_unwield"
@@ -1147,7 +1160,7 @@ local weapon_template = {
 			start_input = "inspect_start",
 			anim_end_event = "inspect_end",
 			kind = "inspect",
-			crosshair_type = "none",
+			crosshair_type = "inspect",
 			anim_event = "inspect_start",
 			stop_input = "inspect_stop",
 			total_time = math.huge

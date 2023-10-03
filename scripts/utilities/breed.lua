@@ -68,13 +68,11 @@ end
 Breed.unit_breed_or_nil = function (unit)
 	local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
 
-	if unit_data_extension then
-		local breed = unit_data_extension:breed()
-
-		return breed
+	if not unit_data_extension then
+		return nil
 	end
 
-	return nil
+	return unit_data_extension:breed()
 end
 
 return Breed

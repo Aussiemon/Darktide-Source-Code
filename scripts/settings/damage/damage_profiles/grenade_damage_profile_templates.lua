@@ -6,6 +6,7 @@ local GibbingTypes = GibbingSettings.gibbing_types
 local DamageProfileSettings = require("scripts/settings/damage/damage_profile_settings")
 local armor_types = ArmorSettings.types
 local medium_cleave = DamageProfileSettings.medium_cleave
+local no_cleave = DamageProfileSettings.no_cleave
 local damage_templates = {}
 local overrides = {}
 local damage_lerp_values = DamageProfileSettings.damage_lerp_values
@@ -167,7 +168,7 @@ damage_templates.ogryn_grenade_box_impact = {
 		}
 	},
 	power_distribution = {
-		attack = 1500,
+		attack = 1850,
 		impact = 65
 	},
 	on_kill_area_suppression = {
@@ -196,15 +197,23 @@ damage_templates.ogryn_grenade_box_impact = {
 		renegade_executor = true
 	}
 }
+overrides.ogryn_grenade_box_cluster_impact = {
+	parent_template_name = "ogryn_grenade_box_impact",
+	overrides = {
+		{
+			"cleave_distribution",
+			no_cleave
+		}
+	}
+}
 damage_templates.krak_grenade_impact = {
-	ignore_stagger_reduction = true,
 	gibbing_power = 0,
 	suppression_value = 4,
-	stagger_override = "medium",
+	stagger_override = "light",
 	ignore_shield = true,
 	ragdoll_push_force = 750,
-	shield_override_stagger_strength = 120,
-	stagger_category = "ranged",
+	ignore_stagger_reduction = true,
+	stagger_category = "melee",
 	cleave_distribution = {
 		attack = 0.1,
 		impact = 0.1
@@ -231,7 +240,7 @@ damage_templates.krak_grenade_impact = {
 				[armor_types.armored] = 5,
 				[armor_types.resistant] = 2,
 				[armor_types.player] = 2,
-				[armor_types.berserker] = 2,
+				[armor_types.berserker] = 1,
 				[armor_types.super_armor] = 0.5,
 				[armor_types.disgustingly_resilient] = 2.5,
 				[armor_types.void_shield] = 2.5,
@@ -256,7 +265,7 @@ damage_templates.krak_grenade_impact = {
 				[armor_types.resistant] = 2,
 				[armor_types.player] = 2,
 				[armor_types.berserker] = 2,
-				[armor_types.super_armor] = 2,
+				[armor_types.super_armor] = 1,
 				[armor_types.disgustingly_resilient] = 2.5,
 				[armor_types.void_shield] = 2.5,
 				[armor_types.prop_armor] = 5
@@ -265,7 +274,7 @@ damage_templates.krak_grenade_impact = {
 	},
 	power_distribution = {
 		attack = 2,
-		impact = 300
+		impact = 10
 	},
 	gibbing_type = GibbingTypes.explosion,
 	on_kill_area_suppression = {
@@ -422,6 +431,100 @@ overrides.fire_grenade_impact = {
 			"gibbing_power",
 			0
 		}
+	}
+}
+damage_templates.ogryn_friendly_rock_impact = {
+	shield_override_stagger_strength = 200,
+	gibbing_power = 0,
+	suppression_value = 4,
+	ignore_shield = true,
+	ragdoll_push_force = 2500,
+	ragdoll_only = true,
+	ignore_stagger_reduction = true,
+	stagger_category = "ranged",
+	gibbing_type = 0,
+	cleave_distribution = medium_cleave,
+	ranges = {
+		max = 35,
+		min = 12
+	},
+	armor_damage_modifier_ranged = {
+		near = {
+			attack = {
+				[armor_types.unarmored] = damage_lerp_values.lerp_1,
+				[armor_types.armored] = damage_lerp_values.lerp_1,
+				[armor_types.resistant] = damage_lerp_values.lerp_1,
+				[armor_types.player] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_1,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+				[armor_types.void_shield] = damage_lerp_values.lerp_1,
+				[armor_types.prop_armor] = damage_lerp_values.lerp_1
+			},
+			impact = {
+				[armor_types.unarmored] = 2,
+				[armor_types.armored] = 5,
+				[armor_types.resistant] = 2,
+				[armor_types.player] = 2,
+				[armor_types.berserker] = 2,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 2.5,
+				[armor_types.void_shield] = 2.5,
+				[armor_types.prop_armor] = 5
+			}
+		},
+		far = {
+			attack = {
+				[armor_types.unarmored] = damage_lerp_values.lerp_1,
+				[armor_types.armored] = damage_lerp_values.lerp_0_5,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_75,
+				[armor_types.player] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_1,
+				[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
+				[armor_types.void_shield] = damage_lerp_values.lerp_1,
+				[armor_types.prop_armor] = damage_lerp_values.lerp_1
+			},
+			impact = {
+				[armor_types.unarmored] = 2,
+				[armor_types.armored] = 5,
+				[armor_types.resistant] = 2,
+				[armor_types.player] = 2,
+				[armor_types.berserker] = 2,
+				[armor_types.super_armor] = 2,
+				[armor_types.disgustingly_resilient] = 2.5,
+				[armor_types.void_shield] = 2.5,
+				[armor_types.prop_armor] = 5
+			}
+		}
+	},
+	power_distribution = {
+		attack = 1200,
+		impact = 80
+	},
+	on_kill_area_suppression = {
+		distance = 8,
+		suppression_value = 15
+	},
+	targets = {
+		default_target = {
+			boost_curve_multiplier_finesse = 0.5,
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			finesse_boost = {
+				[armor_types.resistant] = 0.2
+			}
+		}
+	},
+	breed_instakill_overrides = {
+		cultist_gunner = true,
+		renegade_shocktrooper = true,
+		renegade_gunner = true,
+		cultist_shocktrooper = true,
+		cultist_berzerker = true,
+		cultist_mutant = true,
+		chaos_hound = true,
+		poxwalker_bomber = true,
+		corruptor_body = true
 	}
 }
 

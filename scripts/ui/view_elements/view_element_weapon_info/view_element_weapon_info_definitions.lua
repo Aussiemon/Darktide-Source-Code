@@ -178,8 +178,8 @@ local bar_breakdown_widgets_definitions = {
 			pass_type = "text",
 			value = "N/A",
 			style = table.merge_recursive(table.clone(header_style), {
-				horizontal_alignemt = "left",
 				vertical_alignment = "top",
+				horizontal_alignment = "left",
 				offset = {
 					20,
 					10,
@@ -193,8 +193,8 @@ local bar_breakdown_widgets_definitions = {
 			pass_type = "text",
 			value = "",
 			style = table.merge_recursive(table.clone(description_style), {
-				horizontal_alignemt = "left",
 				vertical_alignment = "bottom",
+				horizontal_alignment = "left",
 				size_addition = {
 					-40,
 					0

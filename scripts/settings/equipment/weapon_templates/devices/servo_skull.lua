@@ -17,20 +17,19 @@ local weapon_template = {
 	},
 	actions = {
 		action_unwield = {
-			continue_sprinting = true,
 			allowed_during_sprint = true,
+			anim_event = "unequip",
 			start_input = "wield",
 			uninterruptible = true,
-			anim_event = "unequip",
 			kind = "unwield",
 			total_time = 0,
 			allowed_chain_actions = {}
 		},
 		action_wield = {
-			kind = "wield",
-			allowed_during_sprint = true,
 			uninterruptible = true,
 			anim_event = "servo_deploy",
+			allowed_during_sprint = true,
+			kind = "wield",
 			total_time = 0.9
 		}
 	},

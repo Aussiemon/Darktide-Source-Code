@@ -3,34 +3,35 @@ local ClassSelectionViewSettings = require("scripts/ui/views/class_selection_vie
 local main_title_style = table.clone(UIFontSettings.header_1)
 main_title_style.text_horizontal_alignment = "center"
 main_title_style.text_vertical_alignment = "top"
-local domain_title_style = table.clone(UIFontSettings.grid_title)
-domain_title_style.text_horizontal_alignment = "center"
-domain_title_style.text_vertical_alignment = "top"
-domain_title_style.font_size = 40
-domain_title_style.size_addition = {
+local archetype_title_style = table.clone(UIFontSettings.grid_title)
+archetype_title_style.text_horizontal_alignment = "center"
+archetype_title_style.text_vertical_alignment = "top"
+archetype_title_style.font_size = 40
+archetype_title_style.size_addition = {
 	-40,
 	0
 }
-domain_title_style.horizontal_alignment = "center"
-domain_title_style.offset = {
+archetype_title_style.horizontal_alignment = "center"
+archetype_title_style.offset = {
 	0,
-	10,
+	20,
 	1
 }
-local domain_description_style = table.clone(UIFontSettings.body)
-domain_description_style.text_horizontal_alignment = "center"
-domain_description_style.text_vertical_alignment = "top"
-domain_description_style.color = Color.white(255, true)
-domain_description_style.offset = {
+local archetype_description_style = table.clone(UIFontSettings.body)
+archetype_description_style.text_horizontal_alignment = "center"
+archetype_description_style.text_vertical_alignment = "top"
+archetype_description_style.color = Color.white(255, true)
+archetype_description_style.offset = {
 	0,
 	120,
 	1
 }
-domain_description_style.size_addition = {
+archetype_description_style.size_addition = {
 	-40,
 	0
 }
-domain_description_style.horizontal_alignment = "center"
+archetype_description_style.horizontal_alignment = "center"
+archetype_description_style.font_size = 22
 local select_style = table.clone(UIFontSettings.symbol)
 select_style.text_horizontal_alignment = "center"
 select_style.text_vertical_alignment = "center"
@@ -38,16 +39,16 @@ select_style.size = {
 	50,
 	90
 }
-local class_domain_title_style = table.clone(UIFontSettings.grid_title)
-class_domain_title_style.text_horizontal_alignment = "center"
-class_domain_title_style.text_vertical_alignment = "top"
-class_domain_title_style.offset = {
+local class_archetype_title_style = table.clone(UIFontSettings.grid_title)
+class_archetype_title_style.text_horizontal_alignment = "center"
+class_archetype_title_style.text_vertical_alignment = "top"
+class_archetype_title_style.offset = {
 	0,
 	0,
 	1
 }
-class_domain_title_style.line_spacing = 1
-class_domain_title_style.text_color = class_domain_title_style.disabled_color
+class_archetype_title_style.line_spacing = 1
+class_archetype_title_style.text_color = class_archetype_title_style.disabled_color
 local class_title_style = table.clone(UIFontSettings.grid_title)
 class_title_style.text_horizontal_alignment = "center"
 class_title_style.text_vertical_alignment = "bottom"
@@ -65,7 +66,7 @@ class_attributes_style.offset = {
 	0,
 	2
 }
-class_attributes_style.font_size = 28
+class_attributes_style.font_size = 20
 local class_description_style = table.clone(UIFontSettings.body)
 class_description_style.text_horizontal_alignment = "center"
 class_description_style.horizontal_alignment = "left"
@@ -126,12 +127,12 @@ class_weapon_title.vertical_alignment = "top"
 return {
 	class_title_style = class_title_style,
 	class_attributes_style = class_attributes_style,
-	domain_description_style = domain_description_style,
+	archetype_description_style = archetype_description_style,
 	class_description_style = class_description_style,
 	select_style = select_style,
 	class_option_title = class_option_title,
-	domain_title_style = domain_title_style,
-	class_domain_title_style = class_domain_title_style,
+	archetype_title_style = archetype_title_style,
+	class_archetype_title_style = class_archetype_title_style,
 	class_abilities_group = class_abilities_group,
 	class_abilities_title = class_abilities_title,
 	class_abilities_description = class_abilities_description,

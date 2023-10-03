@@ -3,14 +3,14 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
 local Daemonhost = require("scripts/utilities/daemonhost")
-local DaemonhostSettings = require("scripts/settings/specials/daemonhost_settings")
+local ChaosDaemonhostSettings = require("scripts/settings/monster/chaos_daemonhost_settings")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local Suppression = require("scripts/utilities/attack/suppression")
 local Threat = require("scripts/utilities/threat")
 local Vo = require("scripts/utilities/vo")
-local STAGES = DaemonhostSettings.stages
+local STAGES = ChaosDaemonhostSettings.stages
 local BtChaosDaemonhostPassiveAction = class("BtChaosDaemonhostPassiveAction", "BtNode")
 
 BtChaosDaemonhostPassiveAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)

@@ -154,7 +154,15 @@ PlayerSpawnerSystem._find_progression_spawn_point = function (self)
 	local num_players = 0
 
 	for _, player in pairs(players) do
-		self:_add_progression_player(player)
+		self:_add_progression_player(player, false)
+
+		num_players = num_players + 1
+	end
+
+	local bot_players = player_manager:bot_players()
+
+	for _, bot_player in pairs(bot_players) do
+		self:_add_progression_player(bot_player, true)
 
 		num_players = num_players + 1
 	end
@@ -166,8 +174,10 @@ PlayerSpawnerSystem._find_progression_spawn_point = function (self)
 	end
 
 	for i = 1, #progression_players do
-		if not progression_players[i].disabled then
-			local found, position, rotation, parent, side = self:_player_spawn_point(progression_players[i].unit)
+		local player = progression_players[i]
+
+		if not player.disabled and not player.bot then
+			local found, position, rotation, parent, side = self:_player_spawn_point(player.unit)
 
 			if found then
 				return found, position, rotation, parent, side
@@ -176,12 +186,23 @@ PlayerSpawnerSystem._find_progression_spawn_point = function (self)
 	end
 
 	for i = 1, #progression_players do
-		if progression_players[i].disabled then
-			local found, position, rotation, parent, side = self:_player_spawn_point(progression_players[i].unit)
+		local player = progression_players[i]
+
+		if not player.disabled then
+			local found, position, rotation, parent, side = self:_player_spawn_point(player.unit)
 
 			if found then
 				return found, position, rotation, parent, side
 			end
+		end
+	end
+
+	for i = 1, #progression_players do
+		local player = progression_players[i]
+		local found, position, rotation, parent, side = self:_player_spawn_point(player.unit)
+
+		if found then
+			return found, position, rotation, parent, side
 		end
 	end
 
@@ -190,13 +211,13 @@ PlayerSpawnerSystem._find_progression_spawn_point = function (self)
 	for i = 1, #progression_players do
 		local info = progression_players[i]
 
-		Log.info("PlayerSpawnerSystem", "[_find_progression_spawn_point] eligible unit: %s, distance: %s, disabled: %s", info.unit, info.distance, info.disabled)
+		Log.info("PlayerSpawnerSystem", "[_find_progression_spawn_point] eligible unit: %s, distance: %s, disabled: %s, bot: %s", info.unit, info.distance, info.disabled, info.bot)
 	end
 
 	return false
 end
 
-PlayerSpawnerSystem._add_progression_player = function (self, player)
+PlayerSpawnerSystem._add_progression_player = function (self, player, bot)
 	local player_unit = player.player_unit
 
 	if player_unit then
@@ -221,7 +242,8 @@ PlayerSpawnerSystem._add_progression_player = function (self, player)
 				table.insert(progression_players, index, {
 					unit = player_unit,
 					distance = travel_distance,
-					disabled = PlayerUnitStatus.requires_help(character_state_component)
+					disabled = PlayerUnitStatus.requires_help(character_state_component),
+					bot = bot
 				})
 			end
 		end
@@ -240,7 +262,9 @@ PlayerSpawnerSystem._player_spawn_point = function (self, unit)
 		local look_at_position = first_person_component.position
 		local spawn_direction = Vector3.normalize(Vector3.flat(look_at_position - nav_position))
 		local spawn_rotation = Quaternion.look(spawn_direction)
-		local query_direction = -Quaternion.forward(first_person_component.rotation)
+		local player_yaw = Quaternion.yaw(first_person_component.rotation)
+		local flat_player_rotation = Quaternion.from_yaw_pitch_roll(player_yaw, 0, 0)
+		local query_direction = -Quaternion.forward(flat_player_rotation)
 		local nav_world = navigation_extension:nav_world()
 		local traverse_logic = navigation_extension:traverse_logic()
 		local spawn_position = NavQueries.empty_space_near_nav_position(nav_position, query_direction, nav_world, traverse_logic, self._physics_world)

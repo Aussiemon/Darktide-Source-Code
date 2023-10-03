@@ -354,13 +354,7 @@ BtChargeAction._update_attacking = function (self, unit, scratchpad, action_data
 		local power_level = action_data.power_level
 		local unit_position = POSITION_LOOKUP[unit]
 		local target_position = POSITION_LOOKUP[hit_target]
-		local direction, ray_length = Vector3.direction_length(target_position, unit_position)
-
-		if ray_length < 0.001 then
-			local current_rotation = Unit.local_rotation(unit, 1)
-			direction = Quaternion.forward(current_rotation)
-		end
-
+		local direction = Vector3.normalize(target_position - unit_position)
 		local head_node = Unit.node(hit_target, "j_head")
 		local hit_world_position = Unit.world_position(hit_target, head_node)
 		local damage, result, damage_efficiency = Attack.execute(hit_target, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_type", attack_types.melee, "attack_direction", direction, "hit_world_position", hit_world_position, "damage_type", damage_type, "hit_zone_name", action_data.hit_zone_name)

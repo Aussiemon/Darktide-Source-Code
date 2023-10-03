@@ -360,9 +360,9 @@ HealthStationExtension._teleport_battery_to_socket = function (self)
 	local socket_position = Unit.world_position(unit, socket_node)
 	local socket_rotation = Unit.world_rotation(unit, socket_node)
 	local battery_unit = self._battery_unit
-	local battery_locomotion_ext = ScriptUnit.extension(battery_unit, "locomotion_system")
+	local projectile_locomotion_extension = ScriptUnit.extension(battery_unit, "locomotion_system")
 
-	battery_locomotion_ext:switch_to_sleep(socket_position, socket_rotation)
+	projectile_locomotion_extension:switch_to_sleep(socket_position, socket_rotation)
 end
 
 HealthStationExtension.register_socket_unit = function (self, socket_unit)

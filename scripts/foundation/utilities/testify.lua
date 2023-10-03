@@ -20,6 +20,18 @@ Testify = {
 	RETRY = newproxy(false)
 }
 local __raw_print = print
+local cjson_decode = cjson.decode
+local cjson_encode = cjson.encode
+local coroutine_resume = coroutine.resume
+local coroutine_yield = coroutine.yield
+local string_format = string.format
+local table_dump = table.dump
+local table_keys = table.keys
+local table_merge_varargs = table.merge_varargs
+local table_pack = table.pack
+local table_size = table.size
+local tostring = tostring
+local unpack = unpack
 
 Testify.init = function (self)
 	self._requests = {}
@@ -55,7 +67,7 @@ Testify.update = function (self, dt, t)
 	end
 
 	if self._test_case then
-		local success, result, end_suite = coroutine.resume(self._test_case, dt, t)
+		local success, result, end_suite = coroutine_resume(self._test_case, dt, t)
 
 		if not success then
 			ferror(debug.traceback(self._test_case, result))
@@ -72,7 +84,7 @@ Testify.update = function (self, dt, t)
 end
 
 Testify.make_request = function (self, request_name, ...)
-	local request_parameters, num_parameters = table.pack(...)
+	local request_parameters, num_parameters = table_pack(...)
 	request_parameters.length = num_parameters
 
 	self:_print("Requesting %s", request_name)
@@ -84,7 +96,7 @@ Testify.make_request = function (self, request_name, ...)
 end
 
 Testify.make_request_to_runner = function (self, request_name, ...)
-	local request_parameters = table.pack(...)
+	local request_parameters = table_pack(...)
 
 	self:_print("Requesting %s to the Testify Runner", request_name)
 
@@ -95,7 +107,7 @@ Testify.make_request_to_runner = function (self, request_name, ...)
 		parameters = request_parameters
 	}
 
-	Testify:_signal(SIGNALS.request, cjson.encode(request))
+	self:_signal(SIGNALS.request, cjson_encode(request))
 
 	return self:_wait_for_response(request_name)
 end
@@ -104,7 +116,7 @@ Testify._wait_for_response = function (self, request_name)
 	self:_print("Waiting for response %s", request_name)
 
 	while true do
-		coroutine.yield()
+		coroutine_yield()
 
 		local response = self._responses[request_name]
 
@@ -120,19 +132,15 @@ Testify.poll_requests_through_handler = function (self, callback_table, ...)
 	local RETRY = Testify.RETRY
 
 	for request, callback in pairs(callback_table) do
-		local args, num_args = Testify:poll_request(request)
+		local request_args, num_request_args = self:poll_request(request)
 
-		if args then
-			if num_args == 0 then
-				args = {}
-				num_args = 1
-			end
-
-			local merged_args, num_merged_args = table.merge_varargs(args, num_args, ...)
-			local responses, num_responses = table.pack(callback(unpack(merged_args, 1, num_merged_args)))
+		if request_args then
+			local poll_args, num_poll_args = table_pack(...)
+			local merged_args, num_merged_args = table_merge_varargs(poll_args, num_poll_args, unpack(request_args))
+			local responses, num_responses = table_pack(callback(unpack(merged_args, 1, num_merged_args)))
 
 			if responses[1] ~= RETRY then
-				Testify:respond_to_request(request, responses, num_responses)
+				self:respond_to_request(request, responses, num_responses)
 			end
 
 			return
@@ -179,8 +187,8 @@ end
 
 Testify.inspect = function (self)
 	self:_print("Test case running? %s", self._thread ~= nil)
-	table.dump(self._requests, "[Testify] Requests", 2)
-	table.dump(self._responses, "[Testify] Responses", 2)
+	table_dump(self._requests, "[Testify] Requests", 2)
+	table_dump(self._responses, "[Testify] Responses", 2)
 end
 
 Testify._set_time_scale = function (self)
@@ -214,7 +222,7 @@ end
 
 Testify._print = function (self, ...)
 	if GameParameters.debug_testify then
-		Log.info("Testify", "%s", string.format(...))
+		Log.info("Testify", "%s", string_format(...))
 	end
 end
 
@@ -232,12 +240,12 @@ end
 
 Testify.make_request_on_client = function (self, peer_id, request_name, wait_for_response, ...)
 	wait_for_response = wait_for_response == true or false
-	local request_parameters, num_parameters = table.pack(...)
+	local request_parameters, num_parameters = table_pack(...)
 
 	self:_print("Requesting %s on peer %s", request_name, peer_id)
 
 	self._responses[request_name] = nil
-	request_parameters = cjson.encode(request_parameters)
+	request_parameters = cjson_encode(request_parameters)
 	local channel_id = self._peers[peer_id]
 
 	if not channel_id then
@@ -254,17 +262,17 @@ end
 Testify.rpc_testify_make_request = function (self, channel_id, peer_id, request_name, wait_for_response, request_parameters, num_parameters)
 	self:_print("Request received from server %s", request_name)
 
-	local parameters = cjson.decode(request_parameters)
+	local parameters = cjson_decode(request_parameters)
 
-	Testify:run_case(function (dt, t)
+	self:run_case(function (dt, t)
 		self:make_request(request_name, unpack(parameters, 1, num_parameters))
 
-		local responses, num_responses = table.pack(self:_wait_for_response(request_name))
+		local responses, num_responses = table_pack(self:_wait_for_response(request_name))
 
 		if wait_for_response then
 			self:_print("Responding to the server for request %s on channel %s", request_name, channel_id)
 
-			responses = cjson.encode(responses)
+			responses = cjson_encode(responses)
 
 			RPC.rpc_testify_wait_for_response(channel_id, request_name, responses, num_responses)
 		end
@@ -272,7 +280,7 @@ Testify.rpc_testify_make_request = function (self, channel_id, peer_id, request_
 end
 
 Testify.rpc_testify_wait_for_response = function (self, channel_id, request_name, responses, num_responses)
-	responses = cjson.decode(responses)
+	responses = cjson_decode(responses)
 
 	self:_print("Request %s response received from the peer on channel %s", request_name, channel_id)
 	self:respond_to_request(request_name, responses, num_responses)
@@ -301,12 +309,12 @@ end
 Testify.peers = function (self)
 	local peers = self._peers
 
-	return table.keys(peers)
+	return table_keys(peers)
 end
 
 Testify.num_peers = function (self)
 	local peers = self._peers
-	local num_peers = table.size(peers)
+	local num_peers = table_size(peers)
 
 	return num_peers
 end

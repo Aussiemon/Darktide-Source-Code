@@ -14,6 +14,10 @@ WeaponFlashlight.init = function (self, unit)
 	end
 end
 
+WeaponFlashlight.editor_validate = function (self, unit)
+	return true, ""
+end
+
 WeaponFlashlight.enable = function (self, unit)
 	local light = self._light
 

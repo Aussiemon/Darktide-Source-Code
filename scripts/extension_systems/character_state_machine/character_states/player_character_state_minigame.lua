@@ -9,6 +9,8 @@ local Interrupt = require("scripts/utilities/attack/interrupt")
 local Luggable = require("scripts/utilities/luggable")
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
+local INTERACTION_STATES = InteractionSettings.states
+local MINIGAME_STATES = MinigameSettings.states
 local INTERRUPT_REASON = "minigame"
 local PlayerCharacterStateMinigame = class("PlayerCharacterStateMinigame", "PlayerCharacterStateBase")
 
@@ -59,7 +61,7 @@ PlayerCharacterStateMinigame.on_enter = function (self, unit, dt, t, previous_st
 
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local interaction_component = unit_data_extension:write_component("interaction")
-	interaction_component.state = InteractionSettings.states.none
+	interaction_component.state = INTERACTION_STATES.none
 end
 
 PlayerCharacterStateMinigame.on_exit = function (self, unit, t, next_state)
@@ -71,9 +73,13 @@ PlayerCharacterStateMinigame.on_exit = function (self, unit, t, next_state)
 
 	PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
 
+	if PlayerUnitVisualLoadout.slot_equipped(inventory_component, self._visual_loadout_extension, "slot_device") then
+		PlayerUnitVisualLoadout.unequip_item_from_slot(unit, "slot_device", t)
+	end
+
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local interaction_component = unit_data_extension:write_component("interaction")
-	interaction_component.state = InteractionSettings.states.waiting_to_interact
+	interaction_component.state = INTERACTION_STATES.waiting_to_interact
 end
 
 PlayerCharacterStateMinigame.on_enter_server_corrected_state = function (self, unit)
@@ -111,7 +117,7 @@ PlayerCharacterStateMinigame._update_input = function (self, t)
 
 			local current_minigame_state = minigame_extension:current_state()
 
-			if current_minigame_state == MinigameSettings.states.completed then
+			if current_minigame_state == MINIGAME_STATES.completed then
 				animation_extension:anim_event_1p("scan_end")
 			end
 		end
@@ -139,13 +145,13 @@ end
 PlayerCharacterStateMinigame._is_minigame_active = function (self)
 	local minigame_extension = self._minigame_extension
 
-	if minigame_extension then
-		local is_active = minigame_extension:current_state() == MinigameSettings.states.active
-
-		return is_active
+	if not minigame_extension then
+		return true
 	end
 
-	return true
+	local current_state = minigame_extension:current_state()
+
+	return current_state == MINIGAME_STATES.active
 end
 
 local HALF_PI = math.pi * 0.5
@@ -213,7 +219,7 @@ PlayerCharacterStateMinigame._check_transition = function (self, unit, t, next_s
 		return "falling"
 	end
 
-	local base_dodge_template = self._specialization_dodge_template
+	local base_dodge_template = self._archetype_dodge_template
 	local should_dodge, local_dodge_direction = Dodge.check(t, self._unit_data_extension, base_dodge_template, input_source)
 
 	if should_dodge then
@@ -222,11 +228,25 @@ PlayerCharacterStateMinigame._check_transition = function (self, unit, t, next_s
 		return "dodging"
 	end
 
+	if cancelled then
+		return "walking"
+	end
+
 	local is_looking_away_from_device = self:_is_looking_away_from_device()
+
+	if is_looking_away_from_device then
+		return "walking"
+	end
+
 	local is_wielding_minigame_device = self:_is_wielding_minigame_device()
+
+	if not is_wielding_minigame_device then
+		return "walking"
+	end
+
 	local is_minigame_active = self:_is_minigame_active()
 
-	if cancelled or is_looking_away_from_device or not is_wielding_minigame_device or not is_minigame_active then
+	if not is_minigame_active then
 		return "walking"
 	end
 
@@ -253,7 +273,7 @@ end
 PlayerCharacterStateMinigame._deinitialize_minigame = function (self)
 	local minigame_extension = self._minigame_extension
 
-	if minigame_extension and minigame_extension:current_state() == MinigameSettings.states.active then
+	if minigame_extension and minigame_extension:current_state() == MINIGAME_STATES.active then
 		minigame_extension:stop(self._player)
 	end
 

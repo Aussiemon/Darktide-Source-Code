@@ -18,6 +18,22 @@ Broadphase.editor_init = function (self, unit)
 	self:enable(unit)
 end
 
+Broadphase.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+	local broadphase_node_name = self:get_data(unit, "broadphase_node_name")
+
+	if broadphase_node_name == "" then
+		error_message = error_message .. "\nBroadphase Node Name can't be empty"
+		success = false
+	elseif not Unit.has_node(unit, broadphase_node_name) then
+		error_message = error_message .. "\nmissing unit node '" .. broadphase_node_name .. "'"
+		success = false
+	end
+
+	return success, error_message
+end
+
 Broadphase.enable = function (self, unit)
 	return
 end

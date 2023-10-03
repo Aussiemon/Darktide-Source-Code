@@ -21,6 +21,10 @@ VectorFieldEffect.init = function (self, unit)
 	self:enable(unit)
 end
 
+VectorFieldEffect.editor_validate = function (self, unit)
+	return true, ""
+end
+
 VectorFieldEffect.enable = function (self, unit)
 	local parameters = self:create_paramaters(unit, self._effect, self._speed, self._duration)
 	local vector_field_id = VectorField.add(self._vector_field, self._effect_path, parameters, self._settings)

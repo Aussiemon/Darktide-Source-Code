@@ -365,9 +365,10 @@ TalentsView._setup_grid = function (self)
 	local scale = self._render_scale or 1
 end
 
-TalentsView.event_on_profile_preset_changed = function (self, profile_preset_talents)
+TalentsView.event_on_profile_preset_changed = function (self, profile_preset)
 	local player = self._preview_player
 	local profile = player:profile()
+	local profile_preset_talents = profile_preset and profile_preset.talents
 	local selected_talents = table.create_copy(table.clone(self._selected_talents), profile_preset_talents)
 	self._selected_talents = selected_talents
 	local talent_widgets = self._talent_widgets

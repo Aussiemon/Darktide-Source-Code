@@ -12,43 +12,32 @@ local action_data = {
 		instant_ragdoll_chance = 1
 	},
 	leap = {
-		push_minions_radius = 2,
-		stop_duration = 0.5,
 		land_impact_timing = 0,
 		controlled_stagger_min_distance = 0,
-		wall_land_duration = 0.5333333333333333,
-		wall_raycast_distance = 3,
-		collision_radius = 0.8,
-		start_leap_anim_event = "attack_leap_start",
-		start_duration = 0.6666666666666666,
-		max_pounce_dot = 0.1,
-		wall_jump_anim_event = "leap_hit_wall",
 		aoe_bot_threat_duration = 1,
-		leap_speed = 21,
-		start_duration_short = 0.8,
-		in_air_stagger_duration = 0.9,
-		push_enemies_power_level = 2000,
-		start_leap_anim_event_short = "attack_leap_short",
-		wall_land_anim_event = "leap_hit_wall_land",
-		acceptable_accuracy = 0.1,
-		landing_duration = 1.5,
-		controlled_stagger = true,
-		start_move_speed = 12,
-		z_offset = -0.1,
-		telegraph_timing = 0,
-		push_enemies_radius = 2,
+		wall_raycast_distance = 3,
 		wall_raycast_node_name = "j_neck",
 		push_minions_side_relation = "allied",
-		aoe_bot_threat_timing = 0.5,
-		dodge_collision_radius = 0.65,
-		short_distance = 6,
-		gravity = 13.82,
+		start_duration = 0.6666666666666666,
 		push_minions_power_level = 2000,
-		raycast_collision_check_offset = 0.5,
-		long_leap_min_velocity = 6,
-		target_node_name = "j_spine",
+		push_minions_radius = 2,
+		start_leap_anim_event = "attack_leap_start",
+		aoe_bot_threat_timing = 0.5,
+		start_leap_anim_event_short = "attack_leap_short",
+		start_duration_short = 0.8,
+		push_enemies_power_level = 2000,
+		wall_land_anim_event = "leap_hit_wall_land",
 		land_anim_event = "leap_land",
+		in_air_stagger_duration = 0.9,
+		push_enemies_radius = 1,
+		wall_land_duration = 0.5333333333333333,
+		stop_duration = 0.5,
+		wall_jump_anim_event = "leap_hit_wall",
+		max_pounce_dot = 0.1,
+		controlled_stagger = true,
+		start_move_speed = 12,
 		stop_anim = "run_to_stop",
+		landing_duration = 1.5,
 		stagger_type_reduction = {
 			melee = -200,
 			ranged = 20
@@ -62,32 +51,30 @@ local action_data = {
 		land_ground_impact_fx_template = GroundImpactFxTemplates.chaos_hound_leap_land
 	},
 	approach_target = {
-		controlled_stagger = true,
-		reposition_distance = 5,
-		controlled_stagger_max_distance = 6,
-		default_lean_value = 1,
-		rotation_speed = 20,
-		lean_speed = 5,
-		degree_per_direction = 10,
-		left_lean_value = 0,
-		max_dot_lean_value = 0.1,
-		move_to_navmesh_raycast = true,
-		running_stagger_duration = 1.1666666666666667,
-		path_lean_node_offset = 8,
-		move_to_fail_cooldown = 0.5,
-		randomized_direction_degree_range = 180,
-		speed = 10,
-		lean_variable_name = "gallop_lean",
-		max_distance_to_target = 10,
 		too_close_distance = 1.5,
 		trigger_player_alert_vo_distance = 20,
-		approach_distance = 10,
-		running_stagger_anim_left = "stagger_running_left",
+		max_dot_lean_value = 0.1,
+		default_lean_value = 1,
+		degree_per_direction = 10,
+		left_lean_value = 0,
+		lean_speed = 5,
+		move_to_navmesh_raycast = true,
+		controlled_stagger_max_distance = 6,
+		running_stagger_anim_right = "stagger_running_right",
+		rotation_speed = 20,
 		trigger_player_alert_vo_frequency = 5,
+		running_stagger_duration = 1.1666666666666667,
+		min_distance_to_target = 6.5,
+		running_stagger_anim_left = "stagger_running_left",
+		path_lean_node_offset = 8,
+		max_distance_to_target = 10,
+		move_to_fail_cooldown = 0.5,
+		randomized_direction_degree_range = 180,
 		right_lean_value = 2,
 		leave_distance = 16,
-		running_stagger_anim_right = "stagger_running_right",
-		min_distance_to_target = 6.5,
+		lean_variable_name = "gallop_lean",
+		speed = 10,
+		controlled_stagger = true,
 		start_move_anim_events = {
 			bwd = "run_start_bwd",
 			fwd = "run_start_fwd",
@@ -189,12 +176,12 @@ local action_data = {
 		}
 	},
 	target_pounced = {
-		damage_start_time = 1,
 		hit_position_node = "j_jaw",
 		tension_to_add = 20,
 		explosion_power_level = 500,
 		damage_frequency = 1.3333333333333333,
 		lerp_position_time = 0.06666666666666667,
+		damage_start_time = 1,
 		pounce_anim_event = {
 			human = "leap_attack",
 			ogryn = "leap_attack_ogryn"
@@ -214,6 +201,7 @@ local action_data = {
 			300
 		},
 		damage_profile = DamageProfileTemplates.chaos_hound_pounce,
+		initial_damage_profile = DamageProfileTemplates.chaos_hound_initial_pounce,
 		damage_type = damage_types.chaos_hound_tearing,
 		enter_explosion_template = ExplosionTemplates.chaos_hound_pounced_explosion,
 		stagger_type_reduction = {
@@ -384,6 +372,23 @@ local action_data = {
 				}
 			},
 			sticky = {
+				fwd = {
+					"hit_reaction_forward"
+				},
+				bwd = {
+					"hit_reaction_backward"
+				},
+				left = {
+					"hit_reaction_left"
+				},
+				right = {
+					"hit_reaction_right"
+				},
+				dwn = {
+					"hit_reaction_backward"
+				}
+			},
+			electrocuted = {
 				fwd = {
 					"hit_reaction_forward"
 				},

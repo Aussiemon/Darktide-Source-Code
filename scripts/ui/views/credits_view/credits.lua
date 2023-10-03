@@ -133,6 +133,10 @@ local Credits = {
 				type = "person"
 			},
 			{
+				text = "Juan Martinez",
+				type = "person"
+			},
+			{
 				text = " ",
 				type = "person"
 			},
@@ -150,6 +154,10 @@ local Credits = {
 				type = "person"
 			},
 			{
+				text = " ",
+				type = "person"
+			},
+			{
 				text = "loc_credits_view_additional_producer_title",
 				localized = true,
 				type = "title"
@@ -160,10 +168,6 @@ local Credits = {
 			},
 			{
 				text = "Scott Rhodes",
-				type = "person"
-			},
-			{
-				text = "Juan Martinez Pinilla",
 				type = "person"
 			},
 			{
@@ -219,6 +223,19 @@ local Credits = {
 			},
 			{
 				text = "Marina Lázaro López",
+				type = "person"
+			},
+			{
+				text = " ",
+				type = "person"
+			},
+			{
+				text = "loc_credits_view_outsource_manager_title",
+				localized = true,
+				type = "title"
+			},
+			{
+				text = "Anton Aleksandrov",
 				type = "person"
 			},
 			{
@@ -886,6 +903,10 @@ local Credits = {
 			},
 			{
 				text = "Maria Odell",
+				type = "person"
+			},
+			{
+				text = "Jacob Vaknin",
 				type = "person"
 			},
 			{
@@ -2138,7 +2159,8 @@ local Credits = {
 				type = "person"
 			},
 			{
-				text = "Music",
+				text = "loc_credits_view_music_title",
+				localized = true,
 				type = "header"
 			},
 			{
@@ -2805,6 +2827,19 @@ local Credits = {
 			},
 			{
 				text = "Harry Myers",
+				type = "person"
+			},
+			{
+				text = " ",
+				type = "person"
+			},
+			{
+				text = "loc_credits_view_mara_vinci_title",
+				localized = true,
+				type = "title"
+			},
+			{
+				text = "Lauren O'Neill",
 				type = "person"
 			},
 			{
@@ -4454,6 +4489,10 @@ local Credits = {
 				type = "person"
 			},
 			{
+				text = "Anna Noskova-Dukelskaia",
+				type = "person"
+			},
+			{
 				text = " ",
 				type = "person"
 			},
@@ -4477,6 +4516,10 @@ local Credits = {
 			},
 			{
 				text = "Yuriy Karpenko",
+				type = "person"
+			},
+			{
+				text = "Vasiliy Trushin",
 				type = "person"
 			},
 			{
@@ -4505,29 +4548,11 @@ local Credits = {
 				type = "person"
 			},
 			{
-				text = " ",
-				type = "person"
-			},
-			{
-				text = "loc_credits_view_sr_3D_artist_title",
-				localized = true,
-				type = "title"
-			},
-			{
-				text = "Vasiliy Trushin",
-				type = "person"
-			},
-			{
-				text = " ",
-				type = "person"
-			},
-			{
-				text = "loc_credits_view_3D_art_title",
-				localized = true,
-				type = "title"
-			},
-			{
 				text = "Ilya Dobarskiy",
+				type = "person"
+			},
+			{
+				text = "Ksenia Afanasieva",
 				type = "person"
 			},
 			{
@@ -4541,6 +4566,19 @@ local Credits = {
 			},
 			{
 				text = "Andrey Ignatov",
+				type = "person"
+			},
+			{
+				text = " ",
+				type = "person"
+			},
+			{
+				text = "loc_credits_view_art_specialist_title",
+				localized = true,
+				type = "title"
+			},
+			{
+				text = "Anatoly Ponomarev",
 				type = "person"
 			},
 			{
@@ -6363,6 +6401,10 @@ local Credits = {
 			},
 			{
 				text = "Elise",
+				type = "person"
+			},
+			{
+				text = "Eyvind",
 				type = "person"
 			},
 			{

@@ -100,6 +100,10 @@ local unarmored = {
 			{
 				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_player_wpn_refl_thunder",
+				append_husk_to_event_name = false
 			}
 		},
 		shield_blocked = {
@@ -353,6 +357,10 @@ local armored = {
 			{
 				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_player_wpn_refl_thunder",
+				append_husk_to_event_name = false
 			}
 		},
 		shield_blocked = {
@@ -604,6 +612,10 @@ local disgustingly_resilient = {
 			{
 				event = "wwise/events/weapon/play_combat_shared_gore_blood_small",
 				append_husk_to_event_name = true
+			},
+			{
+				event = "wwise/events/weapon/play_player_wpn_refl_thunder",
+				append_husk_to_event_name = false
 			}
 		},
 		shield_blocked = {

@@ -43,6 +43,10 @@ Annotation.editor_init = function (self, unit)
 	return false
 end
 
+Annotation.editor_validate = function (self, unit)
+	return true, ""
+end
+
 Annotation.editor_destroy = function (self)
 	local gui = self._gui
 

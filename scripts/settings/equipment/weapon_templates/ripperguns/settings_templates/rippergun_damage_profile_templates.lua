@@ -122,7 +122,7 @@ damage_templates.default_rippergun_assault = {
 	},
 	targets = {
 		default_target = {
-			boost_curve_multiplier_finesse = 0.1,
+			boost_curve_multiplier_finesse = 0.5,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
 				[armor_types.unarmored] = 0.25
@@ -238,7 +238,7 @@ damage_templates.rippergun_p1_m2_assault = {
 	},
 	targets = {
 		default_target = {
-			boost_curve_multiplier_finesse = 0.1,
+			boost_curve_multiplier_finesse = 0.5,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
 				[armor_types.unarmored] = 0.25
@@ -354,7 +354,7 @@ damage_templates.default_rippergun_snp = {
 	},
 	targets = {
 		default_target = {
-			boost_curve_multiplier_finesse = 0.1,
+			boost_curve_multiplier_finesse = 0.5,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			finesse_boost = {
 				[armor_types.unarmored] = 0.25
@@ -404,7 +404,7 @@ damage_templates.rippergun_weapon_special = {
 	},
 	targets = {
 		{
-			boost_curve_multiplier_finesse = 0.25,
+			boost_curve_multiplier_finesse = 0.5,
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -446,7 +446,7 @@ damage_templates.rippergun_weapon_special = {
 			}
 		},
 		{
-			boost_curve_multiplier_finesse = 0.25,
+			boost_curve_multiplier_finesse = 0.5,
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -477,7 +477,7 @@ damage_templates.rippergun_weapon_special = {
 			}
 		},
 		default_target = {
-			boost_curve_multiplier_finesse = 0.25,
+			boost_curve_multiplier_finesse = 0.5,
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,

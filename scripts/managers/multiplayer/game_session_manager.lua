@@ -13,7 +13,8 @@ end
 
 GameSessionManager.DELAYED_DISCONNECT_TIME = 1
 
-GameSessionManager.init = function (self)
+GameSessionManager.init = function (self, fixed_time_step)
+	self.fixed_time_step = fixed_time_step
 	self._peer_id = Network.peer_id()
 	self._session_disconnected = false
 	self._is_server = nil
@@ -461,7 +462,7 @@ GameSessionManager._client_joined = function (self, channel_id, peer_id)
 	local local_player_id = 1
 	local player = Managers.player:player(peer_id, local_player_id)
 
-	player:create_input_handler()
+	player:create_input_handler(self.fixed_time_step)
 	Managers.state.game_mode:hot_join_sync(peer_id, channel_id)
 	Managers.state.extension:hot_join_sync(peer_id, channel_id)
 	Managers.state.nav_mesh:hot_join_sync(peer_id, channel_id)

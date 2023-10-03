@@ -19,7 +19,7 @@ local templates = {
 			[buff_proc_events.on_hit] = 0.1
 		},
 		proc_stat_buffs = {
-			[buff_stat_buffs.movement_speed] = 2
+			[buff_stat_buffs.movement_speed] = 1
 		},
 		check_proc_func = function (params, template_data, template_context)
 			local result = params.attack_result

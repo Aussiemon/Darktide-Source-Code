@@ -13,7 +13,6 @@ PartyImmateriumConnection.init = function (self, join_parameter, compatibility_s
 	self._resolve_optional_ticket_promise_func = resolve_optional_ticket_promise_func
 	self._started = false
 	self._aborted = false
-	self._party_operation = nil
 	self._optional_matchmaking_ticket = nil
 	self._join_promises = {}
 	self._error = nil
@@ -40,6 +39,7 @@ PartyImmateriumConnection._internal_start = function (self, optional_matchmaking
 	local party_id = nil
 	local context_account_id = ""
 	local invite_token = ""
+	local current_game_session_id = nil
 
 	if self._party.party_id then
 		party_id = self._party.party_id
@@ -49,52 +49,18 @@ PartyImmateriumConnection._internal_start = function (self, optional_matchmaking
 		party_id = self._requested_join_parameter.party_id
 		context_account_id = self._requested_join_parameter.context_account_id or ""
 		invite_token = self._requested_join_parameter.invite_token or ""
+		current_game_session_id = self._requested_join_parameter.current_game_session_id
 	end
 
-	local promise, operation_id = Managers.grpc:join_party(party_id, context_account_id, invite_token, self._compatibility_string, optional_matchmaking_ticket)
-	self._party_operation = operation_id
-
-	promise:next(function ()
-		self._party_operation = nil
-
-		if self._aborted then
-			return
-		end
-
-		return Managers.grpc:delay_with_jitter_and_backoff("party_stream"):next(function ()
-			return self:_internal_start()
-		end)
-	end):catch(function (error)
-		self._party_operation = nil
-
-		if self._aborted then
-			return
-		end
-
-		if Managers.grpc:should_retry(error) then
-			return Managers.grpc:delay_with_jitter_and_backoff("party_stream"):next(function ()
-				return self:_internal_start()
-			end)
-		else
-			local session_id = self:_requires_mission_hot_join_ticket_error(error)
-
-			if session_id then
-				return self._resolve_optional_ticket_promise_func(session_id):next(function (ticket)
-					return self:_internal_start(ticket)
-				end):catch(function (error)
-					self:_on_error(error)
-				end)
-			else
-				self:_on_error(error)
-			end
-		end
-	end)
+	self._stream = Managers.grpc:join_party(party_id, context_account_id, invite_token, self._compatibility_string, optional_matchmaking_ticket, current_game_session_id)
 end
 
 PartyImmateriumConnection.abort = function (self)
 	if not self._aborted then
-		if self._party_operation then
-			Managers.grpc:abort_operation(self._party_operation)
+		if self._stream then
+			self._stream:abort()
+
+			self._stream = nil
 		end
 
 		self:_on_error({
@@ -168,12 +134,41 @@ PartyImmateriumConnection.start = function (self)
 end
 
 PartyImmateriumConnection.update = function (self, dt)
-	if self._party_operation then
-		local party_events = Managers.grpc:get_party_events(self._party_operation)
+	if self._stream then
+		if self._stream:alive() then
+			local party_events = self._stream:get_stream_messages()
 
-		if party_events then
-			for i, event in ipairs(party_events) do
-				self:_handle_party_event(event)
+			if party_events then
+				for i, event in ipairs(party_events) do
+					self:_handle_party_event(event)
+				end
+			end
+		else
+			local error = self._stream:error()
+			self._stream = nil
+
+			if error then
+				if Managers.grpc:should_retry(error) then
+					return Managers.grpc:delay_with_jitter_and_backoff("party_stream"):next(function ()
+						return self:_internal_start()
+					end)
+				else
+					local session_id = self:_requires_mission_hot_join_ticket_error(error)
+
+					if session_id then
+						return self._resolve_optional_ticket_promise_func(session_id):next(function (ticket)
+							return self:_internal_start(ticket)
+						end):catch(function (error)
+							self:_on_error(error)
+						end)
+					else
+						self:_on_error(error)
+					end
+				end
+			else
+				Managers.grpc:delay_with_jitter_and_backoff("party_stream"):next(function ()
+					return self:_internal_start()
+				end)
 			end
 		end
 	end
@@ -233,6 +228,10 @@ PartyImmateriumConnection._handle_party_vote_update_event = function (self, even
 	self._party_vote_version = event.version
 
 	table.insert(self._event_buffer, event)
+end
+
+PartyImmateriumConnection.have_recieved_game_state = function (self)
+	return self._game_state_version > -1
 end
 
 PartyImmateriumConnection._handle_party_game_state_update_event = function (self, event)

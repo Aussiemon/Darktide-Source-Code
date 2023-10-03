@@ -4,11 +4,13 @@ local monster_settings = {
 	max_sections = 20,
 	spawn_types = {
 		"monsters",
-		"witches"
+		"witches",
+		"captains"
 	},
 	used_spawn_types = {
 		"monsters",
-		"witches"
+		"witches",
+		"captains"
 	},
 	no_spawn_volume_half_extents = {
 		witches = Vector3Box(2, 2, 0.5)

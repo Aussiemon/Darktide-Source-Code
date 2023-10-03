@@ -1,20 +1,20 @@
-local PlayerMovement = require("scripts/utilities/player_movement")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
+local PlayerMovement = require("scripts/utilities/player_movement")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PlayerManagerTestify = {
-	character_state_component = function (unit_data_extension, _)
+	character_state_component = function (_, unit_data_extension)
 		return unit_data_extension:read_component("character_state")
 	end,
-	unit_data_extension = function (player_unit, _)
+	unit_data_extension = function (_, player_unit)
 		return ScriptUnit.extension(player_unit, "unit_data_system")
 	end,
-	has_placeholder_profile = function (player, _)
-		return player:has_placeholder_profile()
+	has_local_profile = function (_, player)
+		return player:has_local_profile()
 	end,
-	is_party_full = function (_, player_manager)
+	is_party_full = function (player_manager)
 		return player_manager._num_players >= 4
 	end,
-	local_player = function (id, player_manager)
+	local_player = function (player_manager, id)
 		local local_player_id = id
 		local local_player = player_manager:local_player(local_player_id)
 
@@ -22,14 +22,14 @@ local PlayerManagerTestify = {
 	end
 }
 
-PlayerManagerTestify.local_player_archetype_name = function (id, player_manager)
+PlayerManagerTestify.local_player_archetype_name = function (player_manager, id)
 	local local_player_id = id
 	local local_player = player_manager:local_player(local_player_id)
 
 	return local_player:archetype_name()
 end
 
-PlayerManagerTestify.make_players_invulnerable = function (_, player_manager)
+PlayerManagerTestify.make_players_invulnerable = function (player_manager)
 	for _, player in pairs(player_manager._players) do
 		if player:unit_is_alive() then
 			local player_unit = player.player_unit
@@ -40,7 +40,7 @@ PlayerManagerTestify.make_players_invulnerable = function (_, player_manager)
 	end
 end
 
-PlayerManagerTestify.make_players_unkillable = function (_, player_manager)
+PlayerManagerTestify.make_players_unkillable = function (player_manager)
 	for _, player in pairs(player_manager._players) do
 		if player:unit_is_alive() then
 			local player_unit = player.player_unit
@@ -51,7 +51,7 @@ PlayerManagerTestify.make_players_unkillable = function (_, player_manager)
 	end
 end
 
-PlayerManagerTestify.move_bots_to_position = function (position, player_manager)
+PlayerManagerTestify.move_bots_to_position = function (player_manager, position)
 	local pos = position:unbox()
 	local players = player_manager:players()
 	local bots = table.filter(players, function (player)
@@ -68,19 +68,19 @@ PlayerManagerTestify.move_bots_to_position = function (position, player_manager)
 	end
 end
 
-PlayerManagerTestify.num_bots = function (_, player_manager)
+PlayerManagerTestify.num_bots = function (player_manager)
 	local num_bots = player_manager:num_players() - player_manager:num_human_players()
 
 	return num_bots
 end
 
-PlayerManagerTestify.player_current_position = function (_, player_manager)
+PlayerManagerTestify.player_current_position = function (player_manager)
 	local _, player = next(player_manager._human_players)
 
 	return POSITION_LOOKUP[player.player_unit]
 end
 
-PlayerManagerTestify.player_unit = function (_, player_manager)
+PlayerManagerTestify.player_unit = function (player_manager)
 	local players = player_manager:players()
 	local human_players = table.filter(players, function (player)
 		return player:is_human_controlled()
@@ -91,7 +91,7 @@ PlayerManagerTestify.player_unit = function (_, player_manager)
 	return player_unit
 end
 
-PlayerManagerTestify.players_are_alive = function (_, player_manager)
+PlayerManagerTestify.players_are_alive = function (player_manager)
 	local human_players = player_manager:human_players()
 
 	for _, human_player in pairs(human_players) do
@@ -103,7 +103,7 @@ PlayerManagerTestify.players_are_alive = function (_, player_manager)
 	return true
 end
 
-PlayerManagerTestify.teleport_bots_forward_on_main_path_if_blocked = function (bots_data, player_manager)
+PlayerManagerTestify.teleport_bots_forward_on_main_path_if_blocked = function (player_manager, bots_data)
 	local bots_stuck_data = bots_data.bots_stuck_data
 	local main_path_point = bots_data.main_path_point
 	local bots_blocked_time_before_teleportation = bots_data.bots_blocked_time_before_teleportation or 6
@@ -146,7 +146,7 @@ PlayerManagerTestify.teleport_bots_forward_on_main_path_if_blocked = function (b
 	end
 end
 
-PlayerManagerTestify.teleport_players_to_main_path_point = function (main_path_point, player_manager)
+PlayerManagerTestify.teleport_players_to_main_path_point = function (player_manager, main_path_point)
 	local players = player_manager:players()
 	local human_players = table.filter(players, function (player)
 		return player:is_human_controlled()
@@ -179,7 +179,7 @@ PlayerManagerTestify.teleport_players_to_main_path_point = function (main_path_p
 	end
 end
 
-PlayerManagerTestify.teleport_player_to_position = function (position, player_manager)
+PlayerManagerTestify.teleport_player_to_position = function (player_manager, position)
 	local players = player_manager:players()
 	local human_players = table.filter(players, function (player)
 		return player:is_human_controlled()
@@ -193,7 +193,7 @@ PlayerManagerTestify.teleport_player_to_position = function (position, player_ma
 	end
 end
 
-PlayerManagerTestify.wait_for_bots_to_reach_position = function (wait_for_bots_position_data, player_manager)
+PlayerManagerTestify.wait_for_bots_to_reach_position = function (player_manager, wait_for_bots_position_data)
 	local position_boxed = wait_for_bots_position_data.position
 	local radius = wait_for_bots_position_data.radius
 	local position = position_boxed:unbox()
@@ -216,7 +216,7 @@ PlayerManagerTestify.wait_for_bots_to_reach_position = function (wait_for_bots_p
 	end
 end
 
-PlayerManagerTestify.wait_for_item_equipped = function (data, time, timeout)
+PlayerManagerTestify.wait_for_item_equipped = function (_, data, time, timeout)
 	local TIMEOUT = type(timeout) == "number" and timeout or 0.4
 
 	if type(time) == "number" and TIMEOUT < os.clock() - time then

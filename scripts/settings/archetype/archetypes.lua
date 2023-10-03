@@ -1,7 +1,7 @@
 local archetypes = {}
 
 local function _fill_required_entries(archetype)
-	return
+	archetype.base_talents = archetype.base_talents or {}
 end
 
 local function _create_archetype_entry(path)
@@ -10,8 +10,8 @@ local function _create_archetype_entry(path)
 
 	_fill_required_entries(archetype_data)
 
-	local archetype_entry = archetype_data
-	archetypes[archetype_name] = archetype_entry
+	local entry = archetype_data
+	archetypes[archetype_name] = entry
 end
 
 _create_archetype_entry("scripts/settings/archetype/archetypes/veteran_archetype")

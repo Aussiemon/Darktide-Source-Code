@@ -85,7 +85,11 @@ PlayerCharacterStateJumping.on_exit = function (self, unit, t, next_state)
 
 	if next_state ~= "falling" then
 		local sprint_character_state_component = self._sprint_character_state_component
-		sprint_character_state_component.is_sprint_jumping = false
+
+		if sprint_character_state_component.is_sprint_jumping then
+			sprint_character_state_component.is_sprint_jumping = false
+		end
+
 		local anim_ext = self._animation_extension
 
 		anim_ext:anim_event("land_still")
@@ -120,6 +124,16 @@ PlayerCharacterStateJumping.fixed_update = function (self, unit, dt, t, next_sta
 	local fall_speed = velocity_wanted.z - gravity_acceleration * dt
 	velocity_wanted.z = fall_speed
 	locomotion_steering.velocity_wanted = velocity_wanted
+	local sprint_character_state_component = self._sprint_character_state_component
+
+	if self._sprint_character_state_component.is_sprint_jumping then
+		local flat_speed_sq = Vector3.length_squared(Vector3.flat(velocity_current))
+
+		if flat_speed_sq < constants.sprint_jump_speed_threshold_sq then
+			sprint_character_state_component.is_sprint_jumping = false
+			sprint_character_state_component.wants_sprint_camera = false
+		end
+	end
 
 	return self:_check_transition(unit, t, next_state_params, input_extension, velocity_current)
 end

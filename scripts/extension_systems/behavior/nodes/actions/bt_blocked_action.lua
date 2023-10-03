@@ -16,6 +16,10 @@ BtBlockedAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 
 	animation_extension:anim_event(block_anim)
 
+	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+	local stat_buffs = buff_extension:stat_buffs()
+	local melee_attack_speed = stat_buffs.melee_attack_speed or 1
+	scratchpad.melee_attack_speed = melee_attack_speed
 	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.locomotion_extension = locomotion_extension
 	local behavior_component = Blackboard.write_component(blackboard, "behavior")
@@ -35,14 +39,22 @@ BtBlockedAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	locomotion_extension:set_wanted_velocity(Vector3.zero())
 	locomotion_extension:use_lerp_rotation(false)
 
+	local blocked_duration_timing = nil
 	local durations = action_data.blocked_duration
 
 	if type(durations) == "table" then
-		local blocked_duration = t + durations[block_anim]
+		blocked_duration_timing = durations[block_anim]
+		local blocked_duration = t + blocked_duration_timing
 		scratchpad.blocked_duration = blocked_duration
 	else
-		local blocked_duration = t + durations
+		blocked_duration_timing = durations
+		local blocked_duration = t + blocked_duration_timing
 		scratchpad.blocked_duration = blocked_duration
+	end
+
+	if melee_attack_speed then
+		local new_duration = blocked_duration_timing / melee_attack_speed
+		scratchpad.blocked_duration = t + new_duration
 	end
 
 	MinionShield.init_block_timings(scratchpad, action_data, block_anim, t)

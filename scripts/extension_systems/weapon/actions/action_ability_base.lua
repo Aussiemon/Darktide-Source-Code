@@ -23,7 +23,7 @@ ActionAbilityBase.start = function (self, action_settings, t, time_scale, action
 	local use_ability_charge = action_settings.use_ability_charge
 
 	if use_ability_charge and action_settings.use_charge_at_start then
-		self:_use_charge()
+		self:_use_ability_charge()
 	end
 end
 
@@ -38,17 +38,9 @@ ActionAbilityBase.finish = function (self, reason, data, t, time_in_action)
 		local should_use_charge = not ability_interrupted_reasons[reason] and not action_settings.use_charge_at_start
 
 		if use_ability_charge and should_use_charge then
-			self:_use_charge()
+			self:_use_ability_charge()
 		end
 	end
-end
-
-ActionAbilityBase._use_charge = function (self)
-	local action_settings = self._action_settings
-	local ability_type = action_settings.ability_type
-	local ability_extension = self._ability_extension
-
-	ability_extension:use_ability_charge(ability_type)
 end
 
 return ActionAbilityBase

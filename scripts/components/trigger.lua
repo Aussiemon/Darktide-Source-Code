@@ -18,7 +18,7 @@ Trigger.init = function (self, unit)
 		local action_player_side = self:get_data(unit, "action_player_side")
 		local volume_type = self:get_data(unit, "volume_type")
 		local target_extension_name = self:get_data(unit, "target_extension_name")
-		local parameters = {
+		local action_parameters = {
 			action_target = action_target,
 			action_location_name_full = action_location_name_full,
 			action_location_name_short = action_location_name_short,
@@ -26,7 +26,7 @@ Trigger.init = function (self, unit)
 			action_machine_target = action_on_machine
 		}
 
-		trigger_extension:setup_from_component(trigger_condition, condition_evaluates_bots, trigger_action, parameters, only_once, start_active, volume_type, target_extension_name)
+		trigger_extension:setup_from_component(trigger_condition, condition_evaluates_bots, trigger_action, action_parameters, only_once, start_active, volume_type, target_extension_name)
 
 		self._trigger_extension = trigger_extension
 	end
@@ -34,6 +34,18 @@ end
 
 Trigger.editor_init = function (self, unit)
 	self:enable(unit)
+end
+
+Trigger.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if rawget(_G, "LevelEditor") and not Unit.has_volume(unit, "c_volume") then
+		success = false
+		error_message = error_message .. "\nMissing volume 'c_volume'"
+	end
+
+	return success, error_message
 end
 
 Trigger.enable = function (self, unit)
@@ -73,49 +85,15 @@ Trigger.reset = function (self)
 end
 
 Trigger.component_data = {
-	only_once = {
-		value = "none",
-		ui_type = "combo_box",
-		ui_name = "Trigger Only Once",
-		options_keys = {
-			"false",
-			"only_once_per_unit",
-			"only_once_for_all_units"
-		},
-		options_values = {
-			"none",
-			"only_once_per_unit",
-			"only_once_for_all_units"
-		}
-	},
-	action_on_machine = {
-		value = "server_and_client",
-		ui_type = "combo_box",
-		ui_name = "Where to Activate",
-		options_keys = {
-			"server",
-			"client",
-			"server_and_client"
-		},
-		options_values = {
-			"server",
-			"client",
-			"server_and_client"
-		}
-	},
 	start_active = {
 		ui_type = "check_box",
 		value = true,
 		ui_name = "Start Active"
 	},
-	condition_evaluates_bots = {
-		ui_type = "check_box",
-		value = false,
-		ui_name = "Include Bots in Condition"
-	},
 	trigger_condition = {
-		value = "at_least_one_player_inside",
 		ui_type = "combo_box",
+		category = "Condition",
+		value = "at_least_one_player_inside",
 		ui_name = "Trigger Condition",
 		options_keys = {
 			"all_alive_players_inside",
@@ -134,10 +112,33 @@ Trigger.component_data = {
 			"luggable_inside"
 		}
 	},
-	trigger_action = {
-		value = "send_flow",
+	only_once = {
 		ui_type = "combo_box",
-		ui_name = "Trigger Action",
+		category = "Condition",
+		value = "none",
+		ui_name = " Condition Behaviour",
+		options_keys = {
+			"false",
+			"only_once_per_unit",
+			"only_once_for_all_units"
+		},
+		options_values = {
+			"none",
+			"only_once_per_unit",
+			"only_once_for_all_units"
+		}
+	},
+	condition_evaluates_bots = {
+		ui_type = "check_box",
+		value = false,
+		ui_name = "Include Bots",
+		category = "Condition"
+	},
+	trigger_action = {
+		ui_type = "combo_box",
+		category = "Action",
+		value = "send_flow",
+		ui_name = "Action on Trigger",
 		options_keys = {
 			"send_flow",
 			"set_location",
@@ -152,8 +153,9 @@ Trigger.component_data = {
 		}
 	},
 	action_target = {
-		value = "player_side",
 		ui_type = "combo_box",
+		category = "Action",
+		value = "player_side",
 		ui_name = "Action Target",
 		options_keys = {
 			"none",
@@ -171,6 +173,46 @@ Trigger.component_data = {
 			"entering_and_exiting_unit",
 			"units_in_volume"
 		}
+	},
+	action_on_machine = {
+		ui_type = "combo_box",
+		category = "Action",
+		value = "server_and_client",
+		ui_name = "Where to Activate",
+		options_keys = {
+			"server",
+			"client",
+			"server_and_client"
+		},
+		options_values = {
+			"server",
+			"client",
+			"server_and_client"
+		}
+	},
+	action_location_name = {
+		ui_type = "text_box",
+		value = "loc_location_name",
+		ui_name = "Location Name",
+		category = "Action"
+	},
+	action_location_name_full = {
+		ui_type = "text_box",
+		value = "loc_location_name_full",
+		ui_name = "Location Name (Full)",
+		category = "Action"
+	},
+	action_location_name_short = {
+		ui_type = "text_box",
+		value = "loc_location_name_short",
+		ui_name = "Location Name (Short)",
+		category = "Action"
+	},
+	action_player_side = {
+		ui_type = "text_box",
+		value = "heroes",
+		ui_name = "Player Side",
+		category = "Action"
 	},
 	volume_type = {
 		value = "content/volume_types/player_trigger",
@@ -211,26 +253,6 @@ Trigger.component_data = {
 			"MinionVolumeEventExtension",
 			"TriggerVolumeEventExtension"
 		}
-	},
-	action_location_name = {
-		ui_type = "text_box",
-		value = "loc_location_name",
-		ui_name = "Location Name"
-	},
-	action_location_name_full = {
-		ui_type = "text_box",
-		value = "loc_location_name_full",
-		ui_name = "Location Name (Full)"
-	},
-	action_location_name_short = {
-		ui_type = "text_box",
-		value = "loc_location_name_short",
-		ui_name = "Location Name (Short)"
-	},
-	action_player_side = {
-		ui_type = "text_box",
-		value = "heroes",
-		ui_name = "Player Side"
 	},
 	inputs = {
 		activate = {

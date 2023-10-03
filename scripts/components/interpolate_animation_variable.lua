@@ -22,6 +22,30 @@ InterpolateAnimationVariable.editor_init = function (self, unit)
 	return
 end
 
+InterpolateAnimationVariable.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if rawget(_G, "LevelEditor") and not Unit.has_animation_state_machine(unit) then
+		success = false
+		error_message = error_message .. "\nMissing unit animation state machine"
+	end
+
+	local variable_name = self:get_data(unit, "variable_name")
+
+	if variable_name ~= "" then
+		if rawget(_G, "LevelEditor") and Unit.has_animation_state_machine(unit) and Unit.animation_find_variable(unit, variable_name) == nil then
+			success = false
+			error_message = error_message .. "\nCan't find animation variable " .. variable_name
+		end
+	else
+		success = false
+		error_message = error_message .. "\nMissing unit data 'variable_name' it can't be empty"
+	end
+
+	return success, error_message
+end
+
 InterpolateAnimationVariable.enable = function (self, unit)
 	return
 end

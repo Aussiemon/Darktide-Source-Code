@@ -106,7 +106,7 @@ local widget_definitions = {
 					nil,
 					2
 				},
-				color = Color.ui_terminal(255, true)
+				color = Color.terminal_corner(255, true)
 			}
 		}
 	}, "screen"),
@@ -126,7 +126,7 @@ local widget_definitions = {
 					nil,
 					2
 				},
-				color = Color.ui_terminal(255, true)
+				color = Color.terminal_corner(255, true)
 			}
 		}
 	}, "screen"),
@@ -169,7 +169,7 @@ return {
 					0,
 					start_layer - 1
 				},
-				color = Color.ui_terminal(30, true)
+				color = Color.terminal_corner(30, true)
 			}
 		}
 	}, "screen"),

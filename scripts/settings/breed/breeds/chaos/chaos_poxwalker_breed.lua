@@ -4,6 +4,7 @@ local BreedCombatRanges = require("scripts/settings/breed/breed_combat_ranges")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BreedTerrorEventSettings = require("scripts/settings/breed/breed_terror_event_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionGibbingTemplates = require("scripts/managers/minion/minion_gibbing_templates")
 local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
 local NavigationCostSettings = require("scripts/settings/navigation/navigation_cost_settings")
@@ -20,7 +21,6 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "chaos_poxwalker"
 local breed_data = {
-	detection_radius = 12,
 	display_name = "loc_breed_display_name_chaos_poxwalker",
 	run_speed = 3.5,
 	challenge_rating = 0.4,
@@ -29,16 +29,17 @@ local breed_data = {
 	power_level_type = "horde_default_melee",
 	unit_template_name = "minion",
 	faction_name = "chaos",
-	walk_speed = 2.3,
+	ignore_ally_alerts = true,
 	sub_faction_name = "chaos",
 	broadphase_radius = 1,
-	ignore_ally_alerts = true,
+	walk_speed = 2.3,
+	spawn_inventory_slot = "slot_melee_weapon",
 	stagger_resistance = 0.75,
 	use_avoidance = true,
 	base_height = 1.7,
-	spawn_inventory_slot = "slot_melee_weapon",
-	player_locomotion_constrain_radius = 0.6,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
+	detection_radius = 12,
+	player_locomotion_constrain_radius = 0.6,
 	use_wounds = true,
 	activate_slot_system_on_spawn = true,
 	game_object_type = "minion_melee",
@@ -55,14 +56,7 @@ local breed_data = {
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.disgustingly_resilient,
-	hit_mass = {
-		1,
-		1,
-		1,
-		1,
-		1,
-		2
-	},
+	hit_mass = MinionDifficultySettings.hit_mass[breed_name],
 	gib_template = MinionGibbingTemplates.chaos_poxwalker,
 	stagger_durations = {
 		[stagger_types.light] = 0.5,
@@ -72,6 +66,14 @@ local breed_data = {
 		[stagger_types.explosion] = 8.3,
 		[stagger_types.killshot] = 1,
 		[stagger_types.sticky] = 1
+	},
+	stagger_thresholds = {
+		[stagger_types.light] = 1,
+		[stagger_types.medium] = 10,
+		[stagger_types.heavy] = 20,
+		[stagger_types.explosion] = 40,
+		[stagger_types.light_ranged] = 8,
+		[stagger_types.killshot] = 4
 	},
 	stagger_immune_times = {
 		[stagger_types.light] = 0.2,
@@ -88,6 +90,15 @@ local breed_data = {
 	animation_variables = {
 		"moving_attack_fwd_speed",
 		"anim_move_speed"
+	},
+	animation_variable_bounds = {
+		anim_move_speed = {
+			1,
+			85
+		}
+	},
+	animation_variable_init = {
+		anim_move_speed = 1
 	},
 	combat_range_data = BreedCombatRanges.chaos_poxwalker,
 	attack_intensity_cooldowns = {

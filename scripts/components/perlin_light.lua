@@ -10,6 +10,10 @@ PerlinLight.init = function (self, unit)
 	end
 end
 
+PerlinLight.editor_validate = function (self, unit)
+	return true, ""
+end
+
 PerlinLight.enable = function (self, unit)
 	local config_name = self:get_data(unit, "flicker_config")
 

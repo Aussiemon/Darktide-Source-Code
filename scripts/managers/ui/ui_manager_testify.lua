@@ -1,19 +1,17 @@
 local Views = require("scripts/ui/views/views")
 local UIManagerTestify = {
-	all_views = function (_, ui_manager)
+	all_views = function (ui_manager)
 		return Views
+	end,
+	close_view = function (ui_manager, view_name)
+		ui_manager:close_view(view_name)
+	end,
+	is_view_active = function (ui_manager, view_name)
+		return ui_manager:view_active(view_name)
 	end
 }
 
-UIManagerTestify.close_view = function (view_name, ui_manager)
-	ui_manager:close_view(view_name)
-end
-
-UIManagerTestify.is_view_active = function (view_name, ui_manager)
-	return ui_manager:view_active(view_name)
-end
-
-UIManagerTestify.open_view = function (view, ui_manager)
+UIManagerTestify.open_view = function (ui_manager, view)
 	local context = view.dummy_data or {
 		debug_preview = true,
 		can_exit = true
@@ -22,13 +20,13 @@ UIManagerTestify.open_view = function (view, ui_manager)
 	ui_manager:open_view(view.view_name, nil, nil, nil, nil, context)
 end
 
-UIManagerTestify.wait_for_view = function (view_name, ui_manager)
+UIManagerTestify.wait_for_view = function (ui_manager, view_name)
 	if not ui_manager:view_active(view_name) then
 		return Testify.RETRY
 	end
 end
 
-UIManagerTestify.wait_for_view_to_close = function (view_name, ui_manager)
+UIManagerTestify.wait_for_view_to_close = function (ui_manager, view_name)
 	if ui_manager:view_active(view_name) then
 		return Testify.RETRY
 	end

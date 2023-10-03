@@ -6,6 +6,10 @@ OnboardingObjectiveTarget.init = function (self, unit)
 	self:enable(unit)
 end
 
+OnboardingObjectiveTarget.editor_validate = function (self, unit)
+	return true, ""
+end
+
 OnboardingObjectiveTarget.enable = function (self, unit)
 	return
 end

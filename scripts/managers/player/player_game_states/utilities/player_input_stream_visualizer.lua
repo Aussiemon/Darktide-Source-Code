@@ -115,7 +115,7 @@ PlayerInputStreamVisualizer.draw = function (self, dt, index, server_clock_offse
 	local late_color = Color.red()
 	local in_time_color = Color.white()
 	local frame_perfect_color = Color.yellow()
-	local time_step = GameParameters.fixed_time_step
+	local time_step = Managers.state.game_session.fixed_time_step
 
 	for i = 1, BUFFER_SIZE do
 		local cache_index = self:_raw_index(self._start_frame + i - 1)

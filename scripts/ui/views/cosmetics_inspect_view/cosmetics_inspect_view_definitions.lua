@@ -389,7 +389,7 @@ local legend_inputs = {
 		display_name = "loc_inventory_menu_swap_weapon",
 		store_appearance_option = true,
 		alignment = "right_alignment",
-		input_action = "hotkey_menu_special_2",
+		input_action = "hotkey_menu_special_1",
 		on_pressed_callback = "cb_on_weapon_swap_pressed",
 		visibility_function = function (parent)
 			return parent:_can_swap_weapon()
@@ -397,7 +397,7 @@ local legend_inputs = {
 	},
 	{
 		display_name = "loc_inventory_menu_zoom_in",
-		input_action = "hotkey_menu_special_1",
+		input_action = "hotkey_menu_special_2",
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_camera_zoom_toggled",
 		visibility_function = function (parent, id)

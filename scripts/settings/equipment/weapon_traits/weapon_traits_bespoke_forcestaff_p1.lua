@@ -4,16 +4,16 @@ local stat_buffs = BuffSettings.stat_buffs
 templates.weapon_trait_bespoke_forcestaff_p1_vents_warpcharge_on_weakspot_hits = {
 	weapon_trait_bespoke_forcestaff_p1_vents_warpcharge_on_weakspot_hits = {
 		{
-			vent_percentage = 0.02
+			vent_percentage = 0.07
 		},
 		{
-			vent_percentage = 0.03
+			vent_percentage = 0.08
 		},
 		{
-			vent_percentage = 0.04
+			vent_percentage = 0.09
 		},
 		{
-			vent_percentage = 0.05
+			vent_percentage = 0.1
 		}
 	}
 }
@@ -21,34 +21,34 @@ templates.weapon_trait_bespoke_forcestaff_p1_suppression_on_close_kill = {
 	weapon_trait_bespoke_forcestaff_p1_suppression_on_close_kill = {
 		{
 			suppression_settings = {
-				suppression_falloff = true,
+				suppression_falloff = false,
 				instant_aggro = true,
-				distance = 5,
-				suppression_value = 10
-			}
-		},
-		{
-			suppression_settings = {
-				suppression_falloff = true,
-				instant_aggro = true,
-				distance = 6,
+				distance = 12,
 				suppression_value = 15
 			}
 		},
 		{
 			suppression_settings = {
-				suppression_falloff = true,
+				suppression_falloff = false,
 				instant_aggro = true,
-				distance = 7,
+				distance = 12,
 				suppression_value = 20
 			}
 		},
 		{
 			suppression_settings = {
-				suppression_falloff = true,
+				suppression_falloff = false,
 				instant_aggro = true,
-				distance = 8,
+				distance = 12,
 				suppression_value = 25
+			}
+		},
+		{
+			suppression_settings = {
+				suppression_falloff = false,
+				instant_aggro = true,
+				distance = 12,
+				suppression_value = 30
 			}
 		}
 	}
@@ -62,22 +62,22 @@ templates.weapon_trait_bespoke_forcestaff_p1_followup_shots_ranged_damage = {
 	weapon_trait_bespoke_forcestaff_p1_followup_shots_ranged_damage = {
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.charge_level_modifier] = 0.075
+				[stat_buffs.ranged_damage] = 0.14
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.charge_level_modifier] = 0.1
+				[stat_buffs.ranged_damage] = 0.16
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.charge_level_modifier] = 0.125
+				[stat_buffs.ranged_damage] = 0.18
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.charge_level_modifier] = 0.15
+				[stat_buffs.ranged_damage] = 0.2
 			}
 		}
 	}
@@ -95,17 +95,17 @@ templates.weapon_trait_bespoke_forcestaff_p1_warp_charge_critical_strike_chance_
 	weapon_trait_bespoke_forcestaff_p1_warp_charge_critical_strike_chance_bonus = {
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.02
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.03
+				[stat_buffs.critical_strike_chance] = 0.035
 			}
 		},
 		{
 			stat_buffs = {
 				[stat_buffs.critical_strike_chance] = 0.04
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.critical_strike_chance] = 0.045
 			}
 		},
 		{
@@ -148,22 +148,46 @@ templates.weapon_trait_bespoke_forcestaff_p1_faster_charge_on_chained_secondary_
 	weapon_trait_bespoke_forcestaff_p1_faster_charge_on_chained_secondary_attacks = {
 		{
 			stat_buffs = {
-				[stat_buffs.charge_up_time] = -0.04
+				[stat_buffs.charge_up_time] = -0.055
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.charge_up_time] = -0.06
+				[stat_buffs.charge_up_time] = -0.065
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.charge_up_time] = -0.08
+				[stat_buffs.charge_up_time] = -0.075
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.charge_up_time] = -0.1
+				[stat_buffs.charge_up_time] = -0.085
+			}
+		}
+	}
+}
+templates.weapon_trait_bespoke_forcestaff_p1_faster_charge_on_chained_secondary_attacks = {
+	weapon_trait_bespoke_forcestaff_p1_faster_charge_on_chained_secondary_attacks_parent = {
+		{
+			stat_buffs = {
+				[stat_buffs.charge_up_time] = -0.055
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.charge_up_time] = -0.065
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.charge_up_time] = -0.075
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.charge_up_time] = -0.085
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 local Ammo = require("scripts/utilities/ammo")
 local Overheat = require("scripts/utilities/overheat")
 local conditions = {
-	_can_activate_zealot_shout = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	_can_activate_zealot_relic = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
 		local max_distance_sq = 100
 		local challenge_threshold = 1.75
 		local targeting_multiplier = 1.25
@@ -87,8 +87,8 @@ conditions.can_activate_ability = function (unit, blackboard, scratchpad, condit
 		return false
 	end
 
-	if ability_template_name == "zealot_shout" then
-		return conditions._can_activate_zealot_shout(unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	if ability_template_name == "zealot_relic" then
+		return conditions._can_activate_zealot_relic(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	elseif ability_template_name == "veteran_combat_ability" then
 		return conditions._can_activate_veteran_ranger_ability(unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	else

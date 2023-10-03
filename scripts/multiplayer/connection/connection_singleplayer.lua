@@ -4,13 +4,14 @@ local ProfileSynchronizerHost = require("scripts/loading/profile_synchronizer_ho
 local SingleplayerLobby = require("scripts/multiplayer/connection/singleplayer_lobby")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 
-ConnectionSingleplayer.init = function (self, event_delegate, host_type, optional_backend_session_id, optional_backend_mission_data)
+ConnectionSingleplayer.init = function (self, event_delegate, host_type, tick_rate, optional_backend_session_id, optional_backend_mission_data)
 	self._event_delegate = event_delegate
 	self._host_type = host_type
 	self._session_id = optional_backend_session_id
 	self._mission_data = optional_backend_mission_data
 	self._peer_id = Network.peer_id()
 	self._lobby = SingleplayerLobby:new()
+	self._tick_rate = tick_rate
 	self._profile_synchronizer_host = ProfileSynchronizerHost:new(event_delegate)
 	self._session_seed = math.random_seed()
 
@@ -77,6 +78,10 @@ end
 
 ConnectionSingleplayer.max_members = function (self)
 	return 1
+end
+
+ConnectionSingleplayer.tick_rate = function (self)
+	return self._tick_rate
 end
 
 ConnectionSingleplayer.remove = function (self, channel_id)

@@ -24,7 +24,9 @@ local buff_classes = {
 	weapon_trait_activated_parent_proc_buff = _require_buff_class("weapon_trait_activated_parent_proc_buff"),
 	weapon_trait_target_number_parent_proc_buff = _require_buff_class("weapon_trait_target_number_parent_proc_buff"),
 	psyker_passive_buff = _require_buff_class("psyker_passive_buff"),
-	zealot_passive_buff = _require_buff_class("zealot_passive_buff")
+	zealot_passive_buff = _require_buff_class("zealot_passive_buff"),
+	parent_proc_buff = _require_buff_class("parent_proc_buff"),
+	veteran_stealth_bonuses_buff = _require_buff_class("veteran_stealth_bonuses_buff")
 }
 
 return buff_classes

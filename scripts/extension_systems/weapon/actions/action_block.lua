@@ -18,6 +18,8 @@ ActionBlock.start = function (self, action_settings, t, time_scale, action_start
 
 	self._block_component.is_blocking = true
 	self._block_component.has_blocked = false
+	self._block_component.is_perfect_blocking = true
+	self._perfect_block_duration = 0.3
 
 	if action_settings.can_jump ~= nil then
 		self._movement_state_component.can_jump = action_settings.can_jump
@@ -58,6 +60,15 @@ ActionBlock.fixed_update = function (self, dt, t, time_in_action)
 
 	if action_settings.disallow_dodging then
 		self._dodge_character_state_component.cooldown = t + 0.1
+	end
+
+	if self._perfect_block_duration then
+		self._perfect_block_duration = self._perfect_block_duration - dt
+
+		if self._perfect_block_duration <= 0 then
+			self._block_component.is_perfect_blocking = false
+			self._perfect_block_duration = nil
+		end
 	end
 end
 

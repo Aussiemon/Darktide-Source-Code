@@ -233,6 +233,7 @@ ActionFlamerGas._damage_targets = function (self, dt, t, force_damage)
 	local target_frame_counts = self._target_frame_counts
 	local target_indexes = self._target_indexes
 	local ALIVE = ALIVE
+	local fixed_time_step = Managers.state.game_session.fixed_time_step
 
 	for target_unit, current_index in pairs(target_indexes) do
 		repeat
@@ -246,7 +247,7 @@ ActionFlamerGas._damage_targets = function (self, dt, t, force_damage)
 			elseif current_damage_time <= 0 or force_damage then
 				local damage_time_index = math.min(current_index, #damage_times)
 				local damage_time = damage_times[damage_time_index]
-				local aim_at_percent = frame_count / (damage_time / GameParameters.fixed_time_step)
+				local aim_at_percent = frame_count / (damage_time / fixed_time_step)
 				local new_damage_time, new_frame_count, new_target_index = nil
 
 				if aim_at_percent > 0.33 then
@@ -295,6 +296,15 @@ ActionFlamerGas._damage_target = function (self, target_unit)
 	local charge_level = 1
 	local weapon_item = self._weapon.item
 	local damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, player_unit, target_unit, actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name, damage_profile, damage_profile_lerp_values, DEFAULT_POWER_LEVEL, charge_level, penetrated, damage_config, instakill, damage_type, is_critical_strike, weapon_item)
+
+	if damage_dealt then
+		local buff_extension = self._buff_extension
+		local param_table = buff_extension:request_proc_event_param_table()
+		param_table.attacked_unit = target_unit
+
+		buff_extension:add_proc_event(proc_events.on_direct_flamer_hit, param_table)
+	end
+
 	local killing_blow = attack_result == AttackSettings.attack_results.died
 	self._killing_blow = self._killing_blow or killing_blow
 end

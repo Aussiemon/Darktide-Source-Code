@@ -9,7 +9,6 @@ local mission_intro_view_settings = {
 	field_of_view = 40,
 	world_name = "ui_mission_intro_world",
 	world_custom_flags = {
-		Application.ENABLE_MOC,
 		Application.ENABLE_VOLUMETRICS,
 		Application.ENABLE_RAY_TRACING
 	},

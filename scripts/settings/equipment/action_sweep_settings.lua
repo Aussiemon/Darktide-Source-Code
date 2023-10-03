@@ -2,7 +2,6 @@ local HitZone = require("scripts/utilities/attack/hit_zone")
 local hit_zone_names = HitZone.hit_zone_names
 local WORST_HIT_ZONE_PRIORITY = math.huge
 local action_sweep_settings = {
-	proximity_overlap_radius = 10,
 	sweep_height_mod = 1,
 	sweep_range_mod = 1,
 	sweep_width_mod = 1,

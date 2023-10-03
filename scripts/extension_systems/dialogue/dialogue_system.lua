@@ -223,6 +223,10 @@ DialogueSystem.on_add_extension = function (self, world, unit, extension_name, e
 		Log.error("DialogueSystem", "According to dialogue_breed_settings.lua unit %s should not get a dialogue extension, please contact the Audio Team")
 	end
 
+	if Managers.state.extension then
+		self:_update_lowest_player_level()
+	end
+
 	local new_extension = DialogueExtension:new(self, self._dialogue_system_wwise, self._extension_per_breed_wwise_voice_index, self._vo_sources_cache, unit, extension_init_data, self._wwise_world)
 
 	if self._is_rule_db_enabled then
@@ -246,10 +250,6 @@ DialogueSystem.on_add_extension = function (self, world, unit, extension_name, e
 	end
 
 	ScriptUnit.set_extension(unit, "dialogue_system", new_extension)
-
-	if Managers.state.extension then
-		self:_update_lowest_player_level()
-	end
 
 	return new_extension
 end
@@ -477,6 +477,34 @@ DialogueSystem._update_currently_playing_dialogues = function (self, t, dt)
 									local default_mission_giver_unit = voice_over_spawn_manager:voice_over_unit(default_mission_giver_voice_profile)
 
 									self:append_targeted_source_event(default_mission_giver_unit, "heard_speak", temp_event_data, nil)
+								elseif heard_speak_target == "mission_giver_default_class" then
+									local voice_over_spawn_manager = Managers.state.voice_over_spawn
+									local default_mission_giver_voice_profile = voice_over_spawn_manager:current_voice_profile()
+									local default_mission_giver_unit = voice_over_spawn_manager:voice_over_unit(default_mission_giver_voice_profile)
+									local default_mission_giver_dialogue_extension = ScriptUnit.has_extension(default_mission_giver_unit, "dialogue_system")
+									local default_mission_giver_class = default_mission_giver_dialogue_extension._context.class_name
+									local breed_setting = DialogueBreedSettings[default_mission_giver_class]
+									local voices = breed_setting.wwise_voices
+
+									for _, voice in pairs(voices) do
+										local mission_giver_unit = voice_over_spawn_manager:voice_over_unit(voice)
+
+										if mission_giver_unit and mission_giver_unit ~= unit then
+											self:append_targeted_source_event(mission_giver_unit, "heard_speak", temp_event_data, nil)
+										end
+									end
+								elseif heard_speak_target == "mission_givers" then
+									local voice_over_spawn_manager = Managers.state.voice_over_spawn
+									local mission_giver_breed_settings = DialogueBreedSettings.mission_giver
+									local mission_giver_voices = mission_giver_breed_settings.wwise_voices
+
+									for _, voice in pairs(mission_giver_voices) do
+										local mission_giver_unit = voice_over_spawn_manager:voice_over_unit(voice)
+
+										if mission_giver_unit and mission_giver_unit ~= unit then
+											self:append_targeted_source_event(mission_giver_unit, "heard_speak", temp_event_data, nil)
+										end
+									end
 								else
 									Log.warning("DialogueSystem", "heard_speak_routing.target %s is wrong or unrecognized", heard_speak_target)
 								end
@@ -730,7 +758,7 @@ DialogueSystem.random_player = function (self)
 end
 
 DialogueSystem.force_stop_all = function (self)
-	if self._is_server then
+	if DEDICATED_SERVER then
 		return
 	end
 
@@ -1690,23 +1718,26 @@ end
 
 DialogueSystem.load_player_resource = function (self, profile_name)
 	local player_load_files = DialogueSettings.player_load_files[profile_name]
-	local loaded_player_files_tracker = self._loaded_player_files_tracker
-	local has_loaded = false
 
-	for _, filename in ipairs(player_load_files) do
-		if not loaded_player_files_tracker[filename] then
-			loaded_player_files_tracker[filename] = 1
+	if player_load_files then
+		local loaded_player_files_tracker = self._loaded_player_files_tracker
+		local has_loaded = false
 
-			self:load_dialogue_resource(filename)
+		for _, filename in ipairs(player_load_files) do
+			if not loaded_player_files_tracker[filename] then
+				loaded_player_files_tracker[filename] = 1
 
-			has_loaded = true
-		else
-			loaded_player_files_tracker[filename] = loaded_player_files_tracker[filename] + 1
+				self:load_dialogue_resource(filename)
+
+				has_loaded = true
+			else
+				loaded_player_files_tracker[filename] = loaded_player_files_tracker[filename] + 1
+			end
 		end
-	end
 
-	if has_loaded and self._is_rule_db_enabled then
-		self._tagquery_database:finalize_rules()
+		if has_loaded and self._is_rule_db_enabled then
+			self._tagquery_database:finalize_rules()
+		end
 	end
 end
 
@@ -1714,18 +1745,20 @@ DialogueSystem.unload_player_resource = function (self, profile_name)
 	local loaded_player_files_tracker = self._loaded_player_files_tracker
 	local unload_candidates = DialogueSettings.player_load_files[profile_name]
 
-	for _, filename in ipairs(unload_candidates) do
-		loaded_player_files_tracker[filename] = loaded_player_files_tracker[filename] - 1
+	if unload_candidates then
+		for _, filename in ipairs(unload_candidates) do
+			loaded_player_files_tracker[filename] = loaded_player_files_tracker[filename] - 1
 
-		if loaded_player_files_tracker[filename] == 0 then
-			loaded_player_files_tracker[filename] = nil
+			if loaded_player_files_tracker[filename] == 0 then
+				loaded_player_files_tracker[filename] = nil
 
-			self._vo_sources_cache:remove_rule_file(filename)
+				self._vo_sources_cache:remove_rule_file(filename)
 
-			local rule_file_path = DialogueSettings.default_rule_path .. filename
+				local rule_file_path = DialogueSettings.default_rule_path .. filename
 
-			if self._is_rule_db_enabled then
-				self._tagquery_loader:unload_file(rule_file_path)
+				if self._is_rule_db_enabled then
+					self._tagquery_loader:unload_file(rule_file_path)
+				end
 			end
 		end
 	end

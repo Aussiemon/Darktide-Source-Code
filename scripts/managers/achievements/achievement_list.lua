@@ -423,7 +423,7 @@ _add_achievement("zealot_2_kills_of_shocked_enemies_last_15", UITypes.increasing
 	time_window = 10
 })
 _add_achievement("zealot_2_not_use_ranged_attacks", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0038", category, IncreasingStatTrigger:new(AchievementStats.definitions.zealot_2_not_use_ranged_attacks, 1))
-_add_achievement("zealot_2_healed_up_after_resisting_death", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0036", category, IncreasingStatTrigger:new(AchievementStats.definitions.max_zealot_2_health_healed_with_leech_during_resist_death, 75))
+_add_achievement("zealot_2_healed_up_after_resisting_death", UITypes.increasing_stat, "content/ui/textures/icons/achievements/achievement_icon_0036", category, IncreasingStatTrigger:new(AchievementStats.definitions.max_zealot_2_health_healed_with_leech_during_resist_death, 20))
 _add_achievement("zealot_2_health_on_last_segment_enough_during_mission", UITypes.event, "content/ui/textures/icons/achievements/achievement_icon_0034", category, IncreasingStatTrigger:new(AchievementStats.definitions.zealot_2_health_on_last_segment_enough_mission_end, 1), nil, {
 	tag_color_b = 20,
 	tag_color_g = 140,

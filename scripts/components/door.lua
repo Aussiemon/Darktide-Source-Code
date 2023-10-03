@@ -97,6 +97,18 @@ Door.editor_init = function (self, unit)
 	end
 end
 
+Door.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if rawget(_G, "LevelEditor") and not Unit.has_animation_state_machine(unit) then
+		success = false
+		error_message = error_message .. "\nMissing unit animation state machine"
+	end
+
+	return success, error_message
+end
+
 Door._editor_set_open_or_closed = function (self, unit, door_type, start_state, DoorSettings)
 	local TYPES = DoorSettings.TYPES
 	local STATES = DoorSettings.STATES

@@ -105,6 +105,13 @@ template.fade_settings = {
 }
 local template_visual_definitions = {
 	default = {
+		template_settings_overrides = {
+			position_offset = {
+				0,
+				0,
+				0
+			}
+		},
 		colors = {
 			background = Color.terminal_background(200, true),
 			ring = {
@@ -158,6 +165,11 @@ local template_visual_definitions = {
 	},
 	point_of_interest = {
 		template_settings_overrides = {
+			position_offset = {
+				0,
+				0,
+				0
+			},
 			min_size = {
 				size[1] * scale_fraction * 1.5,
 				size[2] * scale_fraction * 1.5
@@ -206,8 +218,13 @@ local template_visual_definitions = {
 	},
 	critical = {
 		template_settings_overrides = {
-			check_line_of_sight = true,
 			screen_clamp = true,
+			check_line_of_sight = true,
+			position_offset = {
+				0,
+				0,
+				0
+			},
 			fade_settings = {
 				fade_to = 1,
 				fade_from = 0,
@@ -281,8 +298,6 @@ local function setup_marker_by_interaction_type(widget, marker, ui_interaction_t
 	for content_id, value in pairs(default_textures) do
 		content[content_id] = value ~= StrictNil and value or nil
 	end
-
-	marker.template.default_position_offset = marker.template.position_offset
 end
 
 template.get_smart_tag_id = function (marker)
@@ -470,15 +485,6 @@ template.update_function = function (parent, ui_renderer, widget, marker, self, 
 	if distance <= evolve_distance or is_tagged then
 		local player_extensions = hud:player_extensions()
 		local interactor_extension = player_extensions and player_extensions.interactor
-		local marker_offset = interactor_extension and interactor_extension:marker_offset()
-
-		if marker_offset then
-			local default_position_offset = self.default_position_offset
-			self.position_offset[1] = default_position_offset[1] + marker_offset.x
-			self.position_offset[2] = default_position_offset[2] + marker_offset.y
-			self.position_offset[3] = default_position_offset[3] + marker_offset.z
-		end
-
 		local show_interaction_ui = interactor_extension and interactor_extension:show_interaction_ui()
 		local show_counter_ui = interactor_extension and interactor_extension:show_counter_ui()
 

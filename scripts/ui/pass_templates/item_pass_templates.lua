@@ -250,7 +250,7 @@ gear_item_price_style.offset = {
 	-3,
 	12
 }
-gear_item_owned_count_style = table.clone(item_price_style)
+local gear_item_owned_count_style = table.clone(item_price_style)
 gear_item_owned_count_style.offset = {
 	-8,
 	-35,
@@ -260,14 +260,15 @@ gear_item_owned_count_style.text_color = Color.terminal_text_body(255, true)
 local item_sold_style = table.clone(UIFontSettings.body)
 item_sold_style.text_horizontal_alignment = "right"
 item_sold_style.text_vertical_alignment = "bottom"
-item_sold_style.horizontal_alignment = "left"
+item_sold_style.horizontal_alignment = "right"
 item_sold_style.vertical_alignment = "center"
 item_sold_style.offset = {
-	-28,
-	-5,
+	-15,
+	-7,
 	15
 }
 item_sold_style.text_color = Color.terminal_text_header(255, true)
+item_sold_style.font_size = 20
 local item_lock_symbol_text_style = table.clone(UIFontSettings.header_3)
 item_lock_symbol_text_style.text_color = Color.terminal_icon(255, true)
 item_lock_symbol_text_style.default_color = Color.terminal_icon(255, true)
@@ -634,6 +635,44 @@ ItemPassTemplates.gear_item = {
 
 			ColorUtilities.color_lerp(text_color, color, progress, text_color)
 		end
+	},
+	{
+		pass_type = "texture",
+		value = "content/ui/materials/symbols/new_item_indicator",
+		style = {
+			vertical_alignment = "top",
+			horizontal_alignment = "right",
+			size = {
+				100,
+				100
+			},
+			offset = {
+				30,
+				-30,
+				5
+			},
+			color = Color.terminal_corner_selected(255, true)
+		},
+		visibility_function = function (content, style)
+			return content.element.new_item_marker
+		end,
+		change_function = function (content, style)
+			local speed = 5
+			local anim_progress = 1 - (0.5 + math.sin(Application.time_since_launch() * speed) * 0.5)
+			local hotspot = content.hotspot
+			style.color[1] = 150 + anim_progress * 80
+			local hotspot = content.hotspot
+
+			if hotspot.is_selected or hotspot.on_hover_exit then
+				content.element.new_item_marker = nil
+				local element = content.element
+				local item = element and (element.real_item or element.item)
+
+				if content.element.remove_new_marker_callback and item then
+					content.element.remove_new_marker_callback(item)
+				end
+			end
+		end
 	}
 }
 ItemPassTemplates.gear_item_slot = {
@@ -723,6 +762,26 @@ ItemPassTemplates.gear_item_slot = {
 				2
 			}
 		}
+	},
+	{
+		pass_type = "texture",
+		style_id = "button_gradient",
+		value = "content/ui/materials/gradients/gradient_diagonal_down_right",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			offset = {
+				0,
+				0,
+				1
+			}
+		},
+		change_function = function (content, style)
+			ButtonPassTemplates.terminal_button_change_function(content, style)
+			ButtonPassTemplates.terminal_button_hover_change_function(content, style)
+		end
 	},
 	{
 		value = "content/ui/materials/icons/generic/aquila",
@@ -865,6 +924,28 @@ ItemPassTemplates.gear_item_slot = {
 			}
 		},
 		change_function = item_change_function
+	},
+	{
+		style_id = "new_indicator",
+		pass_type = "texture",
+		value = "content/ui/materials/symbols/new_item_indicator",
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "center",
+			size = {
+				90,
+				90
+			},
+			offset = {
+				0,
+				60,
+				4
+			},
+			color = Color.terminal_corner_selected(255, true)
+		},
+		visibility_function = function (content, style)
+			return content.has_new_items
+		end
 	}
 }
 ItemPassTemplates.ui_item = {
@@ -1131,6 +1212,44 @@ ItemPassTemplates.ui_item = {
 
 			ColorUtilities.color_lerp(text_color, color, progress, text_color)
 		end
+	},
+	{
+		pass_type = "texture",
+		value = "content/ui/materials/symbols/new_item_indicator",
+		style = {
+			vertical_alignment = "top",
+			horizontal_alignment = "right",
+			size = {
+				100,
+				100
+			},
+			offset = {
+				30,
+				-30,
+				5
+			},
+			color = Color.terminal_corner_selected(255, true)
+		},
+		visibility_function = function (content, style)
+			return content.element.new_item_marker
+		end,
+		change_function = function (content, style)
+			local speed = 5
+			local anim_progress = 1 - (0.5 + math.sin(Application.time_since_launch() * speed) * 0.5)
+			local hotspot = content.hotspot
+			style.color[1] = 150 + anim_progress * 80
+			local hotspot = content.hotspot
+
+			if hotspot.is_selected or hotspot.on_hover_exit then
+				content.element.new_item_marker = nil
+				local element = content.element
+				local item = element and (element.real_item or element.item)
+
+				if content.element.remove_new_marker_callback and item then
+					content.element.remove_new_marker_callback(item)
+				end
+			end
+		end
 	}
 }
 ItemPassTemplates.ui_item_slot = {
@@ -1221,6 +1340,26 @@ ItemPassTemplates.ui_item_slot = {
 				2
 			}
 		}
+	},
+	{
+		pass_type = "texture",
+		style_id = "button_gradient",
+		value = "content/ui/materials/gradients/gradient_diagonal_down_right",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			offset = {
+				0,
+				0,
+				1
+			}
+		},
+		change_function = function (content, style)
+			ButtonPassTemplates.terminal_button_change_function(content, style)
+			ButtonPassTemplates.terminal_button_hover_change_function(content, style)
+		end
 	},
 	{
 		value = "content/ui/materials/icons/generic/aquila",
@@ -1318,6 +1457,28 @@ ItemPassTemplates.ui_item_slot = {
 		change_function = function (content, style)
 			local hotspot = content.hotspot
 			style.color[1] = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress) * 255
+		end
+	},
+	{
+		style_id = "new_indicator",
+		pass_type = "texture",
+		value = "content/ui/materials/symbols/new_item_indicator",
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "center",
+			size = {
+				90,
+				90
+			},
+			offset = {
+				0,
+				60,
+				4
+			},
+			color = Color.terminal_corner_selected(255, true)
+		},
+		visibility_function = function (content, style)
+			return content.has_new_items
 		end
 	},
 	{
@@ -1449,6 +1610,26 @@ ItemPassTemplates.ui_item_emote_slot = {
 		}
 	},
 	{
+		pass_type = "texture",
+		style_id = "button_gradient",
+		value = "content/ui/materials/gradients/gradient_diagonal_down_right",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			offset = {
+				0,
+				0,
+				1
+			}
+		},
+		change_function = function (content, style)
+			ButtonPassTemplates.terminal_button_change_function(content, style)
+			ButtonPassTemplates.terminal_button_hover_change_function(content, style)
+		end
+	},
+	{
 		value = "content/ui/materials/icons/generic/aquila",
 		pass_type = "texture",
 		style = {
@@ -1544,6 +1725,28 @@ ItemPassTemplates.ui_item_emote_slot = {
 		change_function = function (content, style)
 			local hotspot = content.hotspot
 			style.color[1] = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress) * 255
+		end
+	},
+	{
+		style_id = "new_indicator",
+		pass_type = "texture",
+		value = "content/ui/materials/symbols/new_item_indicator",
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "center",
+			size = {
+				90,
+				90
+			},
+			offset = {
+				0,
+				60,
+				4
+			},
+			color = Color.terminal_corner_selected(255, true)
+		},
+		visibility_function = function (content, style)
+			return content.has_new_items
 		end
 	},
 	{
@@ -1773,6 +1976,28 @@ ItemPassTemplates.ui_item_pose_slot = {
 		end
 	},
 	{
+		style_id = "new_indicator",
+		pass_type = "texture",
+		value = "content/ui/materials/symbols/new_item_indicator",
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "center",
+			size = {
+				90,
+				90
+			},
+			offset = {
+				0,
+				60,
+				4
+			},
+			color = Color.terminal_corner_selected(255, true)
+		},
+		visibility_function = function (content, style)
+			return content.has_new_items
+		end
+	},
+	{
 		pass_type = "texture",
 		style_id = "frame",
 		value = "content/ui/materials/frames/frame_tile_2px",
@@ -1895,6 +2120,29 @@ ItemPassTemplates.item_slot = {
 		end
 	},
 	{
+		pass_type = "texture",
+		style_id = "inner_highlight",
+		value = "content/ui/materials/frames/inner_shadow_medium",
+		style = {
+			vertical_alignment = "top",
+			scale_to_material = true,
+			horizontal_alignment = "center",
+			color = Color.terminal_background_gradient_selected(255, true),
+			size = {
+				[2] = weapon_item_size[2]
+			},
+			offset = {
+				0,
+				0,
+				4
+			}
+		},
+		change_function = function (content, style)
+			local hotspot = content.hotspot
+			style.color[1] = math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress) * 255
+		end
+	},
+	{
 		value_id = "icon",
 		style_id = "icon",
 		pass_type = "texture_uv",
@@ -1926,7 +2174,7 @@ ItemPassTemplates.item_slot = {
 		visibility_function = function (content, style)
 			local use_placeholder_texture = content.use_placeholder_texture
 
-			if use_placeholder_texture and use_placeholder_texture == 0 then
+			if use_placeholder_texture and use_placeholder_texture == 0 and content.item and not content.item.is_fallback_item then
 				return true
 			end
 
@@ -2302,11 +2550,7 @@ ItemPassTemplates.item = {
 				return false
 			end
 
-			local element = content.element
-			local item = element and element.item
-			local gear_id = item and item.gear_id
-
-			return gear_id and ItemUtils.is_item_id_new(gear_id)
+			return content.element.new_item_marker
 		end,
 		change_function = function (content, style)
 			if content.store_item then
@@ -2320,11 +2564,13 @@ ItemPassTemplates.item = {
 			local hotspot = content.hotspot
 
 			if hotspot.is_selected or hotspot.on_hover_exit then
+				content.element.new_item_marker = nil
 				local element = content.element
-				local item = element and element.item
-				local gear_id = item and item.gear_id
+				local item = element and (element.real_item or element.item)
 
-				ItemUtils.unmark_item_id_as_new(gear_id)
+				if content.element.remove_new_marker_callback and item then
+					content.element.remove_new_marker_callback(item)
+				end
 			end
 		end
 	},
@@ -2718,7 +2964,7 @@ ItemPassTemplates.item = {
 		value_id = "owned_text",
 		style_id = "owned_text",
 		pass_type = "text",
-		value = Localize("loc_item_owned"),
+		value = string.format("%s %s", Localize("loc_item_owned"), ""),
 		style = item_sold_style,
 		visibility_function = function (content, style)
 			return content.sold or content.owned
@@ -3584,11 +3830,7 @@ ItemPassTemplates.item_icon = {
 			color = Color.terminal_corner_selected(255, true)
 		},
 		visibility_function = function (content, style)
-			local element = content.element
-			local item = element and (element.real_item or element.item)
-			local gear_id = item and item.gear_id
-
-			return gear_id and ItemUtils.is_item_id_new(gear_id)
+			return content.element.new_item_marker
 		end,
 		change_function = function (content, style)
 			local speed = 5
@@ -3598,11 +3840,13 @@ ItemPassTemplates.item_icon = {
 			local hotspot = content.hotspot
 
 			if hotspot.is_selected or hotspot.on_hover_exit then
+				content.element.new_item_marker = nil
 				local element = content.element
 				local item = element and (element.real_item or element.item)
-				local gear_id = item and item.gear_id
 
-				ItemUtils.unmark_item_id_as_new(gear_id)
+				if content.element.remove_new_marker_callback and item then
+					content.element.remove_new_marker_callback(item)
+				end
 			end
 		end
 	}
@@ -3867,6 +4111,28 @@ ItemPassTemplates.animation_item_slot = {
 				1
 			}
 		}
+	},
+	{
+		style_id = "new_indicator",
+		pass_type = "texture",
+		value = "content/ui/materials/symbols/new_item_indicator",
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "center",
+			size = {
+				90,
+				90
+			},
+			offset = {
+				0,
+				60,
+				4
+			},
+			color = Color.terminal_corner_selected(255, true)
+		},
+		visibility_function = function (content, style)
+			return content.has_new_items
+		end
 	}
 }
 local gadget_size = ItemPassTemplates.gadget_size
@@ -3977,6 +4243,26 @@ ItemPassTemplates.gadget_item_slot = {
 				5
 			}
 		}
+	},
+	{
+		pass_type = "texture",
+		style_id = "button_gradient",
+		value = "content/ui/materials/gradients/gradient_diagonal_down_right",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			default_color = Color.terminal_background_gradient(nil, true),
+			selected_color = Color.terminal_frame_selected(nil, true),
+			offset = {
+				0,
+				0,
+				4
+			}
+		},
+		change_function = function (content, style)
+			ButtonPassTemplates.terminal_button_change_function(content, style)
+			ButtonPassTemplates.terminal_button_hover_change_function(content, style)
+		end
 	},
 	{
 		value_id = "icon",
@@ -4135,7 +4421,7 @@ ItemPassTemplates.gadget_item_slot = {
 		value = "content/ui/materials/frames/inner_shadow_medium",
 		style = {
 			scale_to_material = true,
-			color = Color.terminal_frame(255, true),
+			color = Color.terminal_frame_selected(255, true),
 			offset = {
 				0,
 				0,
@@ -4245,7 +4531,7 @@ item_name_title_style.text_horizontal_alignment = "right"
 item_name_title_style.text_vertical_alignment = "top"
 item_name_title_style.horizontal_alignment = "right"
 item_name_title_style.offset = {
-	-100,
+	-70,
 	0,
 	2
 }
@@ -4256,7 +4542,7 @@ item_name_description_style.text_horizontal_alignment = "right"
 item_name_description_style.text_vertical_alignment = "top"
 item_name_description_style.horizontal_alignment = "right"
 item_name_description_style.offset = {
-	-100,
+	-70,
 	0,
 	2
 }

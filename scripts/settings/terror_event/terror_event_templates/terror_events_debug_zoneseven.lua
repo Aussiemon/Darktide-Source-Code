@@ -121,6 +121,72 @@ local template = {
 				"flow_event",
 				flow_event_name = "trickle_m2_test_completed"
 			}
+		},
+		trickle_ship_1_test = {
+			{
+				"spawn_by_points",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "event_ship_1",
+				limit_spawners = 2,
+				points = 22,
+				breed_tags = {
+					{
+						"far",
+						"roamer"
+					}
+				}
+			},
+			{
+				"continue_when",
+				duration = 35,
+				condition = function ()
+					return TerrorEventQueries.num_alive_minions() < 3
+				end
+			},
+			{
+				"continue_when",
+				duration = 120,
+				condition = function ()
+					return TerrorEventQueries.num_alive_minions() < 10
+				end
+			},
+			{
+				"start_terror_event",
+				start_event_name = "trickle_ship_1_test"
+			}
+		},
+		trickle_ship_2_test = {
+			{
+				"spawn_by_points",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "event_ship_2",
+				limit_spawners = 2,
+				points = 22,
+				breed_tags = {
+					{
+						"far",
+						"roamer"
+					}
+				}
+			},
+			{
+				"continue_when",
+				duration = 35,
+				condition = function ()
+					return TerrorEventQueries.num_alive_minions() < 3
+				end
+			},
+			{
+				"continue_when",
+				duration = 120,
+				condition = function ()
+					return TerrorEventQueries.num_alive_minions() < 10
+				end
+			},
+			{
+				"start_terror_event",
+				start_event_name = "trickle_ship_2_test"
+			}
 		}
 	}
 }

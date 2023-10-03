@@ -14,9 +14,7 @@ InvitesXboxLive.update = function (self)
 
 	for i = 1, #invites do
 		local invite = invites[i]
-
-		table.insert(self._invites, invite.connection_string)
-
+		self._invites[#self._invites + 1] = invite
 		self._has_invite = true
 	end
 end
@@ -27,7 +25,8 @@ end
 
 InvitesXboxLive.get_invite = function (self)
 	if self._has_invite then
-		local address = table.remove(self._invites)
+		local invite = table.remove(self._invites)
+		local address = invite.connection_string
 		self._has_invite = #self._invites > 0
 
 		return address
@@ -55,6 +54,25 @@ InvitesXboxLive.reset = function (self)
 	table.clear(self._invites)
 
 	self._has_invite = false
+end
+
+InvitesXboxLive.xbox_profile_signed_in = function (self, xuid)
+	local my_xuid = xuid and XboxLive.xuid_hex_to_dec(xuid)
+	local invites = self._invites
+
+	for i = #invites, 1, -1 do
+		local invite = invites[i]
+		local invited_user = invite.invited_user
+		local joiner_xuid = invite.joiner_xuid
+		local recipient_xuid = invited_user ~= "0" and invited_user or joiner_xuid ~= "0" and joiner_xuid
+
+		if recipient_xuid and my_xuid and recipient_xuid ~= my_xuid then
+			Log.info("InvitesXboxLive", "Clearing invite lingering from previous profile. my_xuid: %s, invite: %s", my_xuid, table.tostring(invite))
+			table.remove(invites, i)
+		end
+	end
+
+	self._has_invite = #invites > 0
 end
 
 InvitesXboxLive.destroy = function (self)

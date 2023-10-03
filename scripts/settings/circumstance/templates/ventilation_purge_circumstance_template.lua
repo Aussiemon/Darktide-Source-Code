@@ -126,7 +126,11 @@ local circumstance_templates = {
 			"mutator_toxic_gas_twins",
 			"mutator_no_hordes",
 			"mutator_only_none_roamer_packs",
-			"mutator_low_roamer_amount"
+			"mutator_low_roamer_amount",
+			"mutator_no_monsters",
+			"mutator_no_witches",
+			"mutator_no_boss_patrols",
+			"mutator_only_traitor_guard_faction"
 		},
 		ui = {
 			description = "loc_circumstance_toxic_gas_description",

@@ -23,6 +23,7 @@ local weapon_template = {
 	},
 	uses_ammunition = false,
 	uses_overheat = false,
+	crosshair_type = "ironsight",
 	sprint_ready_up_time = 0,
 	max_first_person_anim_movement_speed = 6,
 	fx_sources = {},

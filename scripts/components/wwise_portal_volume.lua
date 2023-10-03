@@ -48,6 +48,18 @@ WwisePortalVolume.editor_init = function (self, unit)
 	return true
 end
 
+WwisePortalVolume.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if rawget(_G, "LevelEditor") and not Unit.has_volume(unit, "portal_volume") then
+		success = false
+		error_message = error_message .. "\nMissing volume 'portal_volume'"
+	end
+
+	return success, error_message
+end
+
 WwisePortalVolume.enable = function (self, unit)
 	if Managers then
 		self._open = true
@@ -139,6 +151,14 @@ WwisePortalVolume.editor_toggle_debug_draw = function (self, enable)
 	self._should_debug_draw = enable
 end
 
+WwisePortalVolume.events.portal_added = function (self)
+	local unit = self._unit
+
+	if not self:get_data(unit, "start_enabled") then
+		self:disable(unit)
+	end
+end
+
 WwisePortalVolume.flow_enable = function (self)
 	local unit = self._unit
 
@@ -195,6 +215,11 @@ WwisePortalVolume.door_apply_portal_obstruction = function (self, door_is_closed
 end
 
 WwisePortalVolume.component_data = {
+	start_enabled = {
+		ui_type = "check_box",
+		value = true,
+		ui_name = "Start Enabled"
+	},
 	register_portal = {
 		ui_type = "check_box",
 		value = true,

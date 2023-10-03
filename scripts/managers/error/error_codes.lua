@@ -39,7 +39,14 @@ local ErrorCodesLookup = {
 		code = 1013
 	},
 	afk = {
-		code = 1014
+		description = "loc_popup_description_afk_kicked",
+		code = 1014,
+		level = "error"
+	},
+	vote_kick = {
+		description = "loc_disconnect_by_kick",
+		code = 1015,
+		title = false
 	},
 	nonexisting_channel = {
 		code = 2001
@@ -117,7 +124,10 @@ local ErrorCodesLookup = {
 		code = 3011
 	},
 	mission_not_found = {
-		code = 3012
+		description = "loc_popup_description_missing_mission",
+		code = 3012,
+		title = "loc_popup_header_missing_mission",
+		level = "warning_popup"
 	},
 	failed_found_no_lobby = {
 		code = 3013
@@ -144,7 +154,6 @@ local ErrorCodesLookup = {
 		code = 4007
 	},
 	failed_handshake_timeout = {
-		report_to_crashify = true,
 		code = 4008
 	},
 	failed_mission_not_healthy = {
@@ -160,6 +169,11 @@ local ErrorCodesLookup = {
 		code = 9999
 	}
 }
+
+local function echo(...)
+	return ...
+end
+
 local ErrorCodes = {
 	_config_from_error_string = function (error_string)
 		local error_string_lower = string.lower(error_string)
@@ -173,11 +187,56 @@ local ErrorCodes = {
 ErrorCodes.get_error_code_string_from_reason = function (error_string)
 	local error_config = ErrorCodes._config_from_error_string(error_string)
 	local error_code = error_config.code
-	local error_code_string = Localize("loc_error_code_with_line_break", true, {
+
+	return Localize("loc_error_code_with_line_break", true, {
 		error_code = error_code
 	})
+end
 
-	return error_code_string
+ErrorCodes.get_error_code_description_from_reason = function (error_string, localized)
+	local error_config = ErrorCodes._config_from_error_string(error_string)
+	local loc_function = localized and Localize or echo
+
+	if error_config.description ~= nil then
+		return true, loc_function(error_config.description), error_config.format
+	end
+
+	return false
+end
+
+ErrorCodes.get_error_code_title_from_reason = function (error_string, localized)
+	local error_config = ErrorCodes._config_from_error_string(error_string)
+	local loc_function = localized and Localize or echo
+
+	if error_config.title ~= nil then
+		return true, loc_function(error_config.title)
+	end
+
+	return false
+end
+
+ErrorCodes.get_error_code_level_from_reason = function (error_string)
+	local error_config = ErrorCodes._config_from_error_string(error_string)
+
+	return error_config.error_level or "warning"
+end
+
+ErrorCodes.apply_backend_game_settings = function ()
+	local error_codes = GameParameters.error_codes_crashifyreport
+
+	if error_codes and type(error_codes) == "string" and error_codes ~= "" then
+		local codes_array = string.split(error_codes, ",")
+
+		for _, code in ipairs(codes_array) do
+			local err = ErrorCodesLookup[code]
+
+			if err then
+				err.report_to_crashify = true
+
+				Log.info("ErrorCodes", "Crashify exception enabled from backend for error_code: %q", code)
+			end
+		end
+	end
 end
 
 ErrorCodes.should_report_to_crashify = function (error_string)
@@ -185,6 +244,13 @@ ErrorCodes.should_report_to_crashify = function (error_string)
 	local report_to_crashify = not not error_config.report_to_crashify
 
 	return report_to_crashify
+end
+
+ErrorCodes.should_leave_party = function (error_string)
+	local error_config = ErrorCodes._config_from_error_string(error_string)
+	local leave_party = not not error_config.leave_party
+
+	return leave_party
 end
 
 return ErrorCodes

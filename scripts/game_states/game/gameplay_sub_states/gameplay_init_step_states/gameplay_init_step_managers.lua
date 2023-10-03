@@ -7,9 +7,9 @@ local CinematicManager = require("scripts/managers/cinematic/cinematic_manager")
 local CircumstanceManager = require("scripts/managers/circumstance/circumstance_manager")
 local DecalManager = require("scripts/managers/decal/decal_manager")
 local DifficultyManager = require("scripts/managers/difficulty/difficulty_manager")
+local EmoteManager = require("scripts/managers/emote/emote_manager")
 local GameplayInitStepInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_state_interface")
 local GameplayInitStepNvidiaAiAgent = require("scripts/game_states/game/gameplay_sub_states/gameplay_init_step_states/gameplay_init_step_nvidia_ai_agent")
-local EmoteManager = require("scripts/managers/emote/emote_manager")
 local HordeManager = require("scripts/managers/horde/horde_manager")
 local MinionDeathManager = require("scripts/managers/minion/minion_death_manager")
 local MinionSpawnManager = require("scripts/managers/minion/minion_spawn_manager")
@@ -43,13 +43,13 @@ GameplayInitStepManagers.on_enter = function (self, parent, params)
 	local circumstance_name = shared_state.circumstance_name
 	local side_mission = shared_state.side_mission
 	local vo_sources_cache = shared_state.vo_sources_cache
-	local fixed_frame_time = shared_state.fixed_frame_time
+	local fixed_time_step = shared_state.fixed_time_step
 	local mission_giver_vo = shared_state.mission_giver_vo
 	local nav_world = shared_state.nav_world
 	local has_navmesh = not table.is_empty(shared_state.nav_data)
 	local pacing_control = shared_state.pacing_control
 
-	self:_init_state_managers(world, physics_world, nav_world, has_navmesh, level, level_name, level_seed, is_server, mission_name, mission_giver_vo, challenge, resistance, circumstance_name, side_mission, shared_state.soft_cap_out_of_bounds_units, vo_sources_cache, pacing_control, fixed_frame_time, time_query_handle)
+	self:_init_state_managers(world, physics_world, nav_world, has_navmesh, level, level_name, level_seed, is_server, mission_name, mission_giver_vo, challenge, resistance, circumstance_name, side_mission, shared_state.soft_cap_out_of_bounds_units, vo_sources_cache, pacing_control, fixed_time_step, time_query_handle)
 end
 
 GameplayInitStepManagers.update = function (self, main_dt, main_t)
@@ -60,7 +60,7 @@ GameplayInitStepManagers.update = function (self, main_dt, main_t)
 	return GameplayInitStepNvidiaAiAgent, next_step_params
 end
 
-GameplayInitStepManagers._init_state_managers = function (self, world, physics_world, nav_world, has_navmesh, level, level_name, level_seed, is_server, mission_name, mission_giver_vo, challenge, resistance, circumstance_name, side_mission, soft_cap_out_of_bounds_units, vo_sources_cache, pacing_control, fixed_frame_time, time_query_handle)
+GameplayInitStepManagers._init_state_managers = function (self, world, physics_world, nav_world, has_navmesh, level, level_name, level_seed, is_server, mission_name, mission_giver_vo, challenge, resistance, circumstance_name, side_mission, soft_cap_out_of_bounds_units, vo_sources_cache, pacing_control, fixed_time_step, time_query_handle)
 	local connection_manager = Managers.connection
 	local network_event_delegate = connection_manager:network_event_delegate()
 

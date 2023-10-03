@@ -108,9 +108,9 @@ ActionOverloadExplosion._explode = function (self, action_settings)
 		local weapon = self._weapon
 		local item = weapon and weapon.item
 		local wielded_slot = weapon and self._inventory_component.wielded_slot
+		local queue_index = Explosion.create_explosion(self._world, self._physics_world, position, impact_normal, self._player_unit, explosion_template, power_level, charge_level, attack_types.explosion, is_critical_strike, ignore_cover, item, wielded_slot, explosion_results)
 
-		Explosion.create_explosion(self._world, self._physics_world, position, impact_normal, self._player_unit, explosion_template, power_level, charge_level, attack_types.explosion, is_critical_strike, ignore_cover, item, wielded_slot, explosion_results)
-		self:_handle_exposion_stats(explosion_results)
+		Managers.state.extension:system("weapon_system"):queue_perils_of_the_warp_elite_kills_achievement(self._player, queue_index)
 	end
 
 	if action_settings.death_on_explosion then
@@ -123,32 +123,6 @@ ActionOverloadExplosion._explode = function (self, action_settings)
 
 		if is_alive then
 			Attack.execute(unit, action_settings.death_damage_profile, "instakill", true, "damage_type", action_settings.death_damage_type, "item", nil)
-		end
-	end
-end
-
-ActionOverloadExplosion._handle_exposion_stats = function (self, explosion_attack_result_table)
-	if Managers.stats.can_record_stats() then
-		local player = self._player
-		local difficulty = Managers.state.difficulty:get_difficulty()
-
-		if difficulty >= 3 then
-			local count = 0
-			local requirement = 1
-
-			for hit_unit, attack_result in pairs(explosion_attack_result_table) do
-				if attack_result == attack_results.died then
-					local breed = Breed.unit_breed_or_nil(hit_unit)
-
-					if breed and breed.tags and breed.tags.elite then
-						count = count + 1
-					end
-				end
-			end
-
-			if requirement <= count then
-				Managers.achievements:trigger_event(player:account_id(), player:character_id(), "psyker_2_perils_of_the_warp_elite_kills_event")
-			end
 		end
 	end
 end

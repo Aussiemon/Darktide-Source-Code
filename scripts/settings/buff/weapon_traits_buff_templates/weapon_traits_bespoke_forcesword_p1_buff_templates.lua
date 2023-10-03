@@ -43,11 +43,11 @@ templates.weapon_trait_bespoke_forcesword_p1_increase_power_on_kill_child = tabl
 templates.weapon_trait_bespoke_forcesword_p1_dodge_grants_finesse_bonus = table.clone(BaseWeaponTraitBuffTemplates.dodge_grants_finesse_bonus)
 templates.weapon_trait_bespoke_forcesword_p1_dodge_grants_critical_strike_chance = table.clone(BaseWeaponTraitBuffTemplates.dodge_grants_critical_strike_chance)
 templates.weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_parent = {
-	child_duration = 5,
+	child_duration = 7,
 	predicted = false,
 	child_buff_template = "weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_child",
 	allow_proc_while_active = true,
-	stacks_to_remove = 5,
+	stacks_to_remove = 1,
 	class_name = "weapon_trait_parent_proc_buff",
 	proc_events = {
 		[proc_events.on_kill] = 1
@@ -64,11 +64,41 @@ templates.weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_
 templates.weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_child = {
 	hide_icon_in_hud = true,
 	stack_offset = -1,
-	max_stacks = 5,
+	max_stacks = 3,
 	predicted = false,
 	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.power_level_modifier] = 0.05
+		[stat_buffs.power_level_modifier] = 0.1
+	},
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
+}
+templates.weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_parent = {
+	child_duration = 7,
+	predicted = false,
+	child_buff_template = "weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_child",
+	allow_proc_while_active = true,
+	stacks_to_remove = 1,
+	class_name = "weapon_trait_parent_proc_buff",
+	proc_events = {
+		[proc_events.on_kill] = 1
+	},
+	add_child_proc_events = {
+		[proc_events.on_kill] = 1
+	},
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded,
+	specific_check_proc_funcs = {
+		[proc_events.on_kill] = CheckProcFunctions.on_elite_kill
+	}
+}
+templates.weapon_trait_bespoke_forcesword_p1_elite_kills_grants_stackable_power_child = {
+	hide_icon_in_hud = true,
+	stack_offset = -1,
+	max_stacks = 3,
+	predicted = false,
+	class_name = "buff",
+	conditional_stat_buffs = {
+		[stat_buffs.power_level_modifier] = 0.12
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }

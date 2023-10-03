@@ -1,11 +1,12 @@
-local NavQueries = require("scripts/utilities/nav_queries")
 local MainPathQueries = require("scripts/utilities/main_path_queries")
+local NavQueries = require("scripts/utilities/nav_queries")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
+local PlayerMovement = require("scripts/utilities/player_movement")
+local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local RespawnBeaconGuardSettings = require("scripts/extension_systems/respawn_beacon/respawn_beacon_guard_settings")
 local RespawnBeaconQueries = require("scripts/extension_systems/respawn_beacon/utilities/respawn_beacon_queries")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local RespawnBeaconExtension = class("RespawnBeaconExtension")
-RespawnBeaconExtension.UPDATE_DISABLED_BY_DEFAULT = true
 local _player_max_radius_height = nil
 
 RespawnBeaconExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -20,14 +21,61 @@ RespawnBeaconExtension.init = function (self, extension_init_context, unit, exte
 	self._guards = {}
 end
 
-RespawnBeaconExtension.update = function (self, unit, dt, t)
-	return
+local HOGTIED_PLAYERS = {}
+
+RespawnBeaconExtension.update = function (self, unit, dt, t, context)
+	table.clear(HOGTIED_PLAYERS)
+
+	local players = Managers.player:players()
+
+	for _, player in pairs(players) do
+		local player_unit = player.player_unit
+
+		if ALIVE[player_unit] then
+			local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+			local character_state_component = unit_data_extension:read_component("character_state")
+
+			if PlayerUnitStatus.is_hogtied(character_state_component) then
+				HOGTIED_PLAYERS[#HOGTIED_PLAYERS + 1] = player
+			end
+		end
+	end
+
+	for i = 1, #self._valid_spawn_positions do
+		local occupied_unit = self._valid_spawn_positions[i].occupied_unit
+
+		if occupied_unit then
+			local is_still_hogtied = false
+
+			for j = 1, #HOGTIED_PLAYERS do
+				local hogtied_player = HOGTIED_PLAYERS[j]
+				local hogtied_player_unit = hogtied_player.player_unit
+				is_still_hogtied = occupied_unit == hogtied_player_unit
+
+				if is_still_hogtied then
+					break
+				end
+			end
+
+			if not is_still_hogtied then
+				self._valid_spawn_positions[i].occupied_unit = nil
+			end
+		end
+	end
 end
 
 RespawnBeaconExtension.setup_from_component = function (self, side)
 	self._side = side
 	local max_player_radius, max_player_height = _player_max_radius_height()
 	local valid_spawn_positions, _, _, _ = RespawnBeaconQueries.spawn_locations(self._nav_world, self._physics_world, self._unit, max_player_radius, max_player_height)
+	local num_valid_spawn_positions = #valid_spawn_positions
+	self._valid_spawn_positions = {}
+
+	for i = 1, #valid_spawn_positions do
+		self._valid_spawn_positions[#self._valid_spawn_positions + 1] = {
+			position = Vector3Box(valid_spawn_positions[i])
+		}
+	end
 end
 
 RespawnBeaconExtension.respawn_players = function (self)
@@ -42,24 +90,75 @@ RespawnBeaconExtension.respawn_players = function (self)
 
 	for i = 1, #players_to_spawn do
 		local player = players_to_spawn[i]
-		local spawn_position = valid_spawn_positions[i]
 
-		if spawn_position then
-			self:_try_spawn_guards(spawn_position, beacon_unit, valid_spawn_positions)
+		for j = 1, #valid_spawn_positions do
+			local valid_position = valid_spawn_positions[j]
 
-			local spawn_parent = nil
-			local spawn_rotation = Quaternion.look(beacon_position - spawn_position, Vector3.up())
+			if not valid_position.occupied_unit then
+				local spawn_position = valid_position.position:unbox()
 
-			player_unit_spawn_manager:spawn_player(player, spawn_position, spawn_rotation, spawn_parent, force_spawn, side, nil, "hogtied", is_respawn)
+				if spawn_position then
+					self:_try_spawn_guards(spawn_position, beacon_unit, valid_spawn_positions)
+
+					local spawn_parent = nil
+					local spawn_rotation = Quaternion.look(beacon_position - spawn_position, Vector3.up())
+
+					player_unit_spawn_manager:spawn_player(player, spawn_position, spawn_rotation, spawn_parent, force_spawn, side, nil, "hogtied", is_respawn)
+
+					valid_position.occupied_unit = player.player_unit
+
+					break
+				end
+			end
 		end
+	end
+end
+
+RespawnBeaconExtension.move_hogtied_players = function (self, players)
+	local valid_spawn_positions = self:best_respawn_positions()
+
+	for i = 1, #players do
+		local player = players[i]
+
+		for j = 1, #self._valid_spawn_positions do
+			if player.player_unit == self._valid_spawn_positions[j].occupied_unit then
+				return
+			end
+		end
+
+		for j = 1, #valid_spawn_positions do
+			local valid_position = valid_spawn_positions[j]
+
+			if not valid_position.occupied_unit then
+				local move_position = valid_position.position:unbox()
+
+				if move_position then
+					local player_unit = player.player_unit
+					local rotation = Unit.world_rotation(player_unit, 1)
+
+					PlayerMovement.teleport_fixed_update(player_unit, move_position, rotation)
+
+					valid_position.occupied_unit = player_unit
+
+					break
+				end
+			end
+		end
+	end
+end
+
+RespawnBeaconExtension.clear_occupied_units = function (self)
+	for i = 1, #self._valid_spawn_positions do
+		self._valid_spawn_positions[i].occupied_unit = nil
 	end
 end
 
 RespawnBeaconExtension.best_respawn_positions = function (self)
 	local max_player_radius, max_player_height = _player_max_radius_height()
-	local valid_spawn_positions, _, _, _ = RespawnBeaconQueries.spawn_locations(self._nav_world, self._physics_world, self._unit, max_player_radius, max_player_height)
+	local valid_spawn_positions, navmesh_positions, fitting_positions, spawn_volume_positions = RespawnBeaconQueries.spawn_locations(self._nav_world, self._physics_world, self._unit, max_player_radius, max_player_height)
+	valid_spawn_positions = self._valid_spawn_positions
 
-	return valid_spawn_positions
+	return valid_spawn_positions, navmesh_positions, fitting_positions, spawn_volume_positions
 end
 
 local NAV_ABOVE = 1
@@ -120,7 +219,7 @@ RespawnBeaconExtension._try_spawn_guards = function (self, spawn_position, beaco
 			local too_close_to_spawn_position = false
 
 			for j = 1, #valid_spawn_positions do
-				local distance_to_spawn_position = Vector3.distance(navmesh_position, valid_spawn_positions[j])
+				local distance_to_spawn_position = Vector3.distance(navmesh_position, valid_spawn_positions[j].position:unbox())
 
 				if distance_to_spawn_position <= TOO_CLOSE_TO_SPAWN_POSITION_DISTANCE then
 					too_close_to_spawn_position = true

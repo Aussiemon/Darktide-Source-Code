@@ -1,9 +1,10 @@
 local BloodSettings = require("scripts/settings/blood/blood_settings")
-local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local blood_ball_settings = BloodSettings.blood_ball
 local damage_type_speed = BloodSettings.blood_ball.damage_type_speed
 local BloodManager = class("BloodManager")
 local BLOOD_BALL_ACTOR_NAME = "blood_ball"
+local DEFAULT_NUM_BLOOD_BALL_UNITS = 64
+local DEFAULT_NUM_WEAPON_BLOOD_ENTRIES = 4
 local CLIENT_RPCS = {
 	"rpc_add_weapon_blood"
 }
@@ -15,8 +16,9 @@ BloodManager.init = function (self, world, is_server, network_event_delegate)
 
 	self:_create_blood_ball_buffer()
 
-	self._blood_system = Blood.init(self._world, BLOOD_BALL_ACTOR_NAME)
-	self._weapon_blood = {}
+	self._blood_ball_units = Script.new_map(DEFAULT_NUM_BLOOD_BALL_UNITS)
+	self._blood_system = Blood.init(world, BLOOD_BALL_ACTOR_NAME)
+	self._weapon_blood = Script.new_map(DEFAULT_NUM_WEAPON_BLOOD_ENTRIES)
 
 	if not is_server then
 		network_event_delegate:register_session_events(self, unpack(CLIENT_RPCS))
@@ -46,21 +48,30 @@ BloodManager._create_blood_ball_buffer = function (self)
 end
 
 BloodManager.delete_units = function (self)
-	Blood.destroy(self._blood_system)
+	local world = self._world
+	local blood_ball_units = self._blood_ball_units
+
+	for unit, _ in pairs(blood_ball_units) do
+		World.destroy_unit(world, unit)
+
+		blood_ball_units[unit] = nil
+	end
 end
 
 BloodManager.destroy = function (self)
 	if not self._is_server then
 		self._network_event_delegate:unregister_events(unpack(CLIENT_RPCS))
 	end
+
+	Blood.destroy(self._blood_system)
 end
 
 BloodManager.update = function (self, dt, t)
-	self:_update_blood_balls(dt, t)
-	self:_update_weapon_blood(dt, t)
+	self:_update_blood_balls()
+	self:_update_weapon_blood(dt)
 end
 
-BloodManager._update_blood_balls = function (self, dt, t)
+BloodManager._update_blood_balls = function (self)
 	local blood_ball_ring_buffer = self._blood_ball_ring_buffer
 	local size = blood_ball_ring_buffer.size
 
@@ -131,6 +142,8 @@ BloodManager.queue_blood_ball = function (self, position, direction, blood_ball_
 end
 
 BloodManager.remove_blood_ball = function (self, unit)
+	self._blood_ball_units[unit] = nil
+
 	Blood.despawn_blood_ball(self._blood_system, unit)
 end
 
@@ -145,14 +158,13 @@ BloodManager.blood_ball_collision = function (self, unit, position, normal, velo
 		return
 	end
 
-	local dot_value = Vector3.dot(normal, Vector3.normalize(velocity))
-	local tangent = Vector3.normalize(Vector3.normalize(velocity) - dot_value * normal)
-	local tangent_rotation = Quaternion.look(tangent, normal)
-	local decals = blood_ball_settings.blood_type_decal[blood_type]
-	local decal_unit_name = decals[math.random(1, #decals)]
-	local extents = Vector3(2.5, 2.5, 2.5)
-
 	if Managers.state.decal ~= nil then
+		local dot_value = Vector3.dot(normal, Vector3.normalize(velocity))
+		local tangent = Vector3.normalize(Vector3.normalize(velocity) - dot_value * normal)
+		local tangent_rotation = Quaternion.look(tangent, normal)
+		local decals = blood_ball_settings.blood_type_decal[blood_type]
+		local decal_unit_name = decals[math.random(1, #decals)]
+		local extents = Vector3(2.5, 2.5, 2.5)
 		local t = Managers.time:time("gameplay")
 
 		Managers.state.decal:add_projection_decal(decal_unit_name, position, tangent_rotation, normal, extents, nil, nil, t)
@@ -169,15 +181,15 @@ BloodManager._spawn_blood_ball = function (self, blood_ball_data)
 	local rotation = Quaternion.look(direction, Vector3.up())
 	local speed = blood_ball_data.speed
 	local unit_name = blood_ball_data.unit_name
-
-	Blood.spawn_blood_ball(self._blood_system, unit_name, position, rotation, direction, speed)
+	local blood_ball_unit = Blood.spawn_blood_ball(self._blood_system, unit_name, position, rotation, direction, speed)
+	self._blood_ball_units[blood_ball_unit] = true
 end
 
-BloodManager._update_weapon_blood = function (self, dt, t)
+BloodManager._update_weapon_blood = function (self, dt)
 	local weapon_blood = self._weapon_blood
 
 	for player_unit, slots in pairs(weapon_blood) do
-		local visual_loadout_extension = ALIVE[player_unit] and ScriptUnit.has_extension(player_unit, "visual_loadout_system")
+		local visual_loadout_extension = ScriptUnit.has_extension(player_unit, "visual_loadout_system")
 
 		if visual_loadout_extension then
 			for slot_name, blood_amount in pairs(slots) do
@@ -197,10 +209,10 @@ end
 
 BloodManager._set_weapon_blood_intensity = function (self, visual_loadout_extension, slot_name, blood_amount)
 	local unit_1p, unit_3p = visual_loadout_extension:unit_and_attachments_from_slot(slot_name)
-	local material_value = Quaternion.identity()
 
 	if unit_1p and unit_3p then
-		Quaternion.set_xyzw(material_value, 0.05, 0.004, 0.004, blood_amount)
+		local material_value = Quaternion.from_elements(0.05, 0.004, 0.004, blood_amount)
+
 		Unit.set_vector4_for_materials(unit_1p, "blood_color", material_value, true)
 		Unit.set_vector4_for_materials(unit_3p, "blood_color", material_value, true)
 
@@ -245,7 +257,7 @@ BloodManager._blood_decals_enabled = function (self)
 	local blood_decals_enabled_locally = Application.user_setting("gore_settings", "blood_decals_enabled")
 
 	if blood_decals_enabled_locally == nil then
-		blood_decals_enabled_locally = DefaultGameParameters.blood_decals_enabled
+		blood_decals_enabled_locally = GameParameters.blood_decals_enabled
 	end
 
 	return blood_decals_enabled_locally

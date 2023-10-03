@@ -44,19 +44,19 @@ local function _target_damaged_or_died(event_data)
 	return event_data.attack_result == attack_results.damaged or event_data.attack_result == attack_results.died
 end
 
-local function add_objective_marker(unit, marker_type, remove_when_dead, optional_data)
+local function _add_objective_marker(unit, marker_type, remove_when_dead, optional_data)
 	local scenario_system = Managers.state.extension:system("scripted_scenario_system")
 
 	scenario_system:add_unit_marker(unit, marker_type, remove_when_dead, optional_data)
 end
 
-local function remove_objective_marker(unit)
+local function _remove_objective_marker(unit)
 	local scenario_system = Managers.state.extension:system("scripted_scenario_system")
 
 	scenario_system:add_unit_marker(unit, nil)
 end
 
-local function display_info(info_data)
+local function _display_info(info_data)
 	local is_server = Managers.state.game_session:is_server()
 	local local_player = Managers.player:local_player(1)
 
@@ -67,7 +67,7 @@ local function display_info(info_data)
 	Managers.event:trigger("event_player_display_prologue_tutorial_info_box", local_player, info_data)
 end
 
-local function hide_info()
+local function _hide_info()
 	local is_server = Managers.state.game_session:is_server()
 	local local_player = Managers.player:local_player(1)
 
@@ -78,7 +78,7 @@ local function hide_info()
 	Managers.event:trigger("event_player_hide_prologue_tutorial_info_box", local_player)
 end
 
-local function add_objective_tracker(objective_id, play_sound)
+local function _add_objective_tracker(objective_id, play_sound)
 	if play_sound then
 		Managers.ui:play_2d_sound(TrainingGroundsSoundEvents.tg_objective_new)
 	end
@@ -88,7 +88,7 @@ local function add_objective_tracker(objective_id, play_sound)
 	Managers.event:trigger("event_player_add_objective_tracker", objective)
 end
 
-local function remove_objective_tracker(objective_id, play_sound)
+local function _remove_objective_tracker(objective_id, play_sound)
 	if play_sound then
 		Managers.ui:play_2d_sound(TrainingGroundsSoundEvents.tg_objective_complete)
 	end
@@ -108,27 +108,7 @@ local function remove_objective_tracker(objective_id, play_sound)
 	Managers.event:trigger("event_player_remove_current_objectives")
 end
 
-local function show_step_tracker(step_description)
-	local is_server = Managers.state.game_session:is_server()
-
-	if not is_server or not step_description then
-		return
-	end
-
-	Managers.event:trigger("event_player_add_step_tracker")
-end
-
-local function remove_step_tracker(step_description)
-	local is_server = Managers.state.game_session:is_server()
-
-	if not is_server or not step_description then
-		return
-	end
-
-	Managers.event:trigger("event_player_remove_tracker")
-end
-
-local function show_transition(show)
+local function _show_transition(show)
 	local is_server = Managers.state.game_session:is_server()
 
 	if not is_server then
@@ -142,7 +122,7 @@ local function show_transition(show)
 	end
 end
 
-local function set_objective_tracker_value(objective_id, new_value, play_sound)
+local function _set_objective_tracker_value(objective_id, new_value, play_sound)
 	if play_sound then
 		Managers.ui:play_2d_sound(TrainingGroundsSoundEvents.tg_objective_progress)
 	end
@@ -150,7 +130,7 @@ local function set_objective_tracker_value(objective_id, new_value, play_sound)
 	Managers.event:trigger("event_player_update_objectives_tracker", objective_id, new_value)
 end
 
-local function get_relative_position_rotation(reference_unit, relative_position, relative_look_direction, ground_position, ignore_unit_rotation)
+local function _get_relative_position_rotation(reference_unit, relative_position, relative_look_direction, ground_position, ignore_unit_rotation)
 	local is_player = Managers.player:player_by_unit(reference_unit)
 	local unit_position = Unit.local_position(reference_unit, 1)
 	local unit_rotation = nil
@@ -184,7 +164,7 @@ local function get_relative_position_rotation(reference_unit, relative_position,
 	return position, rotation
 end
 
-local function valid_position(reference_unit, position)
+local function _valid_position(reference_unit, position)
 	local scenario_system = Managers.state.extension:system("scripted_scenario_system")
 	local nav_world = scenario_system:nav_world()
 	local traverse_logic = scenario_system:traverse_logic()
@@ -194,13 +174,13 @@ local function valid_position(reference_unit, position)
 	return MinionSpawnerSpawnPosition.validate_exit_position(nav_world, validation_pos, traverse_logic)
 end
 
-local function spawn_breed_position_rotation(breed_name, position, rotation, t, duration, apply_objective_marker)
+local function _spawn_breed_position_rotation(breed_name, position, rotation, t, duration, apply_objective_marker)
 	local scenario_system = Managers.state.extension:system("scripted_scenario_system")
 	local side_id = 2
 	local unit = scenario_system:spawn_breed_ramping(breed_name, position, rotation, t, duration, side_id)
 
 	if apply_objective_marker then
-		add_objective_marker(unit, "training_grounds", true, {
+		_add_objective_marker(unit, "training_grounds", true, {
 			ui_target_type = "enemy"
 		})
 	end
@@ -208,7 +188,7 @@ local function spawn_breed_position_rotation(breed_name, position, rotation, t, 
 	return unit
 end
 
-local function teleport_player(scenario_system, player, directional_unit_identifier)
+local function _teleport_player(scenario_system, player, directional_unit_identifier)
 	local directional_unit = scenario_system:get_directional_unit(directional_unit_identifier)
 	local position = Unit.local_position(directional_unit, 1)
 	local rotation = Unit.local_rotation(directional_unit, 1)
@@ -222,16 +202,16 @@ local function teleport_player(scenario_system, player, directional_unit_identif
 	World.create_particles(world, player_spawn_vfx, position, rotation)
 end
 
-local function spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, reset_directional_unit_identifier, t, duration, apply_objective_marker, spawn_datas)
+local function _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, reset_directional_unit_identifier, t, duration, apply_objective_marker, spawn_datas)
 	local spawned_enemies = {}
 
 	for i = 1, #spawn_datas do
 		local spawn_data = spawn_datas[i]
 		local relative_position = spawn_data.relative_position
-		local position = get_relative_position_rotation(reference_unit, relative_position, Vector3.forward(), DEFAULT_GROUND_POSITION)
+		local position = _get_relative_position_rotation(reference_unit, relative_position, Vector3.forward(), DEFAULT_GROUND_POSITION)
 
-		if not valid_position(reference_unit, position) then
-			teleport_player(scenario_system, player, reset_directional_unit_identifier)
+		if not _valid_position(reference_unit, position) then
+			_teleport_player(scenario_system, player, reset_directional_unit_identifier)
 
 			reference_unit = scenario_system:get_directional_unit(reset_directional_unit_identifier)
 
@@ -244,14 +224,14 @@ local function spawn_enemies_relative_position_safe(scenario_system, player, ref
 		local breed_name = spawn_data.breed_name
 		local relative_position = spawn_data.relative_position
 		local relative_look_direction = spawn_data.relative_look_direction
-		local position, rotation = get_relative_position_rotation(reference_unit, relative_position, relative_look_direction, DEFAULT_GROUND_POSITION)
-		spawned_enemies[i] = spawn_breed_position_rotation(breed_name, position, rotation, t, duration, apply_objective_marker)
+		local position, rotation = _get_relative_position_rotation(reference_unit, relative_position, relative_look_direction, DEFAULT_GROUND_POSITION)
+		spawned_enemies[i] = _spawn_breed_position_rotation(breed_name, position, rotation, t, duration, apply_objective_marker)
 	end
 
 	return spawned_enemies
 end
 
-local function spawn_breed_directional_unit(breed_name, directional_unit_identifier, t, duration, apply_objective_marker, side_id)
+local function _spawn_breed_directional_unit(breed_name, directional_unit_identifier, t, duration, apply_objective_marker, side_id)
 	local scenario_system = Managers.state.extension:system("scripted_scenario_system")
 	local directional_unit = scenario_system:get_directional_unit(directional_unit_identifier)
 	local position = Unit.local_position(directional_unit, 1)
@@ -259,7 +239,7 @@ local function spawn_breed_directional_unit(breed_name, directional_unit_identif
 	local unit = scenario_system:spawn_breed_ramping(breed_name, position, rotation, t, duration, side_id)
 
 	if apply_objective_marker then
-		add_objective_marker(unit, "training_grounds", true, {
+		_add_objective_marker(unit, "training_grounds", true, {
 			ui_target_type = "enemy"
 		})
 	end
@@ -267,12 +247,12 @@ local function spawn_breed_directional_unit(breed_name, directional_unit_identif
 	return unit
 end
 
-local function spawn_pickup(pickup_name, position, rotation, apply_objective_marker)
+local function _spawn_pickup(pickup_name, position, rotation, apply_objective_marker)
 	local pickup_system = Managers.state.extension:system("pickup_system")
 	local pickup_unit, pickup_unit_go_id = pickup_system:spawn_pickup(pickup_name, position, rotation)
 
 	if apply_objective_marker then
-		add_objective_marker(pickup_unit, "training_grounds", false, {
+		_add_objective_marker(pickup_unit, "training_grounds", false, {
 			ui_target_type = "interact"
 		})
 	end
@@ -280,24 +260,24 @@ local function spawn_pickup(pickup_name, position, rotation, apply_objective_mar
 	return pickup_unit, pickup_unit_go_id
 end
 
-local function spawn_pickup_relative_safe(scenario_system, player, reference_unit, pickup_name, relative_position, relative_look_direction, apply_objective_marker, reset_directional_unit_identifier)
-	local position, rotation = get_relative_position_rotation(reference_unit, relative_position, relative_look_direction, DEFAULT_GROUND_POSITION)
+local function _spawn_pickup_relative_safe(scenario_system, player, reference_unit, pickup_name, relative_position, relative_look_direction, apply_objective_marker, reset_directional_unit_identifier)
+	local position, rotation = _get_relative_position_rotation(reference_unit, relative_position, relative_look_direction, DEFAULT_GROUND_POSITION)
 
-	if not valid_position(reference_unit, position) then
-		teleport_player(scenario_system, player, reset_directional_unit_identifier)
+	if not _valid_position(reference_unit, position) then
+		_teleport_player(scenario_system, player, reset_directional_unit_identifier)
 
 		reference_unit = scenario_system:get_directional_unit(reset_directional_unit_identifier)
-		position, rotation = get_relative_position_rotation(reference_unit, relative_position, relative_look_direction, DEFAULT_GROUND_POSITION)
+		position, rotation = _get_relative_position_rotation(reference_unit, relative_position, relative_look_direction, DEFAULT_GROUND_POSITION)
 	end
 
-	return spawn_pickup(pickup_name, position, rotation, apply_objective_marker)
+	return _spawn_pickup(pickup_name, position, rotation, apply_objective_marker)
 end
 
-local function despawn_pickup(pickup_unit)
+local function _despawn_pickup(pickup_unit)
 	if ALIVE[pickup_unit] then
-		local pickup_extension = ScriptUnit.extension(pickup_unit, "pickup_animation_system")
+		local pickup_extension = ScriptUnit.has_extension(pickup_unit, "pickup_animation_system")
 
-		if not pickup_extension:pickup_animation_started() then
+		if pickup_extension and not pickup_extension:pickup_animation_started() then
 			local pickup_system = Managers.state.extension:system("pickup_system")
 
 			pickup_system:despawn_pickup(pickup_unit)
@@ -305,15 +285,15 @@ local function despawn_pickup(pickup_unit)
 	end
 end
 
-local function spawn_unit_relative_position_safe(reference_unit, player, unit_name_optional, template_name_optional, relative_position, relative_look_direction, t, spawn_duration, reset_directional_unit_identifier)
-	local position, rotation = get_relative_position_rotation(reference_unit, relative_position, relative_look_direction, DEFAULT_GROUND_POSITION)
+local function _spawn_unit_relative_position_safe(reference_unit, player, unit_name_optional, template_name_optional, relative_position, relative_look_direction, t, spawn_duration, reset_directional_unit_identifier)
+	local position, rotation = _get_relative_position_rotation(reference_unit, relative_position, relative_look_direction, DEFAULT_GROUND_POSITION)
 	local scenario_system = Managers.state.extension:system("scripted_scenario_system")
 
-	if not valid_position(reference_unit, position) then
-		teleport_player(scenario_system, player, reset_directional_unit_identifier)
+	if not _valid_position(reference_unit, position) then
+		_teleport_player(scenario_system, player, reset_directional_unit_identifier)
 
 		local directional_unit = scenario_system:get_directional_unit(reset_directional_unit_identifier)
-		position, rotation = get_relative_position_rotation(directional_unit, relative_position, relative_look_direction, DEFAULT_GROUND_POSITION)
+		position, rotation = _get_relative_position_rotation(directional_unit, relative_position, relative_look_direction, DEFAULT_GROUND_POSITION)
 	end
 
 	local ramping_spawn_data = {
@@ -329,7 +309,7 @@ local function spawn_unit_relative_position_safe(reference_unit, player, unit_na
 	return ramping_spawn_data
 end
 
-local function spawn_unit_directional_unit(player, unit_name_optional, template_name_optional, directional_unit_identifier, t, spawn_duration)
+local function _spawn_unit_directional_unit(player, unit_name_optional, template_name_optional, directional_unit_identifier, t, spawn_duration)
 	local scenario_system = Managers.state.extension:system("scripted_scenario_system")
 	local directional_unit = scenario_system:get_directional_unit(directional_unit_identifier)
 	local position = Unit.local_position(directional_unit, 1)
@@ -347,7 +327,7 @@ local function spawn_unit_directional_unit(player, unit_name_optional, template_
 	return ramping_spawn_data
 end
 
-local function add_unique_buff(unit, buff_name, scenario_data, t)
+local function _add_unique_buff(unit, buff_name, scenario_data, t)
 	scenario_data.unique_buffs = scenario_data.unique_buffs or {}
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
 	local _, buff_id, component_index = buff_extension:add_externally_controlled_buff(buff_name, t)
@@ -358,7 +338,7 @@ local function add_unique_buff(unit, buff_name, scenario_data, t)
 	scenario_data.unique_buffs[buff_name] = buff_data
 end
 
-local function remove_unique_buff(unit, buff_name, scenario_data)
+local function _remove_unique_buff(unit, buff_name, scenario_data)
 	local buff_data = scenario_data.unique_buffs[buff_name]
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
 
@@ -367,13 +347,13 @@ local function remove_unique_buff(unit, buff_name, scenario_data)
 	scenario_data.unique_buffs[buff_name] = nil
 end
 
-local function dissolve_unit(unit, t)
+local function _dissolve_unit(unit, t)
 	local scenario_system = Managers.state.extension:system("scripted_scenario_system")
 
 	return scenario_system:dissolve_unit(unit, t)
 end
 
-local function equip_item(player, slot_name, item_name)
+local function _equip_item(player, slot_name, item_name)
 	local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
 	local peer_id = player:peer_id()
 	local local_player_id = player:local_player_id()
@@ -381,14 +361,14 @@ local function equip_item(player, slot_name, item_name)
 	profile_synchronizer_host:override_slot(peer_id, local_player_id, slot_name, item_name)
 end
 
-local function ensure_has_ammo(player)
+local function _ensure_has_ammo(player)
 	local player_unit = player.player_unit
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 	local inventory_slot_component = unit_data_extension:write_component("slot_secondary")
 	inventory_slot_component.current_ammunition_reserve = inventory_slot_component.max_ammunition_reserve
 end
 
-local function reset_if_knocked_down(scenario_system, unit, t, reset_delay)
+local function _reset_if_knocked_down(scenario_system, unit, t, reset_delay)
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local knocked_down_state_input = unit_data_extension:read_component("knocked_down_state_input")
 
@@ -399,7 +379,7 @@ local function reset_if_knocked_down(scenario_system, unit, t, reset_delay)
 	return knocked_down_state_input.knock_down
 end
 
-local function unit_has_buff(unit, name)
+local function _unit_has_buff(unit, name)
 	local buff_extension = ScriptUnit.extension(unit, "buff_system")
 	local buffs = buff_extension:buffs()
 
@@ -414,7 +394,7 @@ local function unit_has_buff(unit, name)
 	return false
 end
 
-local function ensure_has_combat_ability(player, step_data, t, delay)
+local function _ensure_has_combat_ability(player, step_data, t, delay)
 	local ability_extension = ScriptUnit.extension(player.player_unit, "ability_system")
 
 	if ability_extension:remaining_ability_cooldown("combat_ability") > 0 then
@@ -428,7 +408,7 @@ local function ensure_has_combat_ability(player, step_data, t, delay)
 	end
 end
 
-local function spawn_spawn_vfx(scenario_system, position)
+local function _spawn_spawn_vfx(scenario_system, position)
 	local world = scenario_system:world()
 	local vfx_name = "content/fx/particles/weapons/force_staff/force_staff_explosion"
 
@@ -436,7 +416,7 @@ local function spawn_spawn_vfx(scenario_system, position)
 	Managers.ui:play_3d_sound(TrainingGroundsSoundEvents.tg_generic_spawn, position)
 end
 
-local function spawn_despawn_vfx(scenario_system, position)
+local function _spawn_despawn_vfx(scenario_system, position)
 	local world = scenario_system:world()
 	local vfx_name = "content/fx/particles/weapons/force_staff/force_staff_explosion"
 
@@ -444,7 +424,7 @@ local function spawn_despawn_vfx(scenario_system, position)
 	Managers.ui:play_3d_sound(TrainingGroundsSoundEvents.tg_generic_despawn, position)
 end
 
-local function teleport_servitor_if_far_away(scenario_system, servitor_handler, reference_unit)
+local function _teleport_servitor_if_far_away(scenario_system, servitor_handler, reference_unit)
 	local servitor_unit = servitor_handler:unit()
 	local reference_pos = Unit.local_position(reference_unit, 1)
 	local servitor_pos = Unit.local_position(servitor_unit, 1)
@@ -452,17 +432,17 @@ local function teleport_servitor_if_far_away(scenario_system, servitor_handler, 
 	local threshold_sq = 400
 
 	if distance_sq > threshold_sq then
-		spawn_despawn_vfx(scenario_system, servitor_pos)
+		_spawn_despawn_vfx(scenario_system, servitor_pos)
 
-		local position, rotation = get_relative_position_rotation(reference_unit, Vector3(0, 15, 5.5), -Vector3.forward(), false, false)
+		local position, rotation = _get_relative_position_rotation(reference_unit, Vector3(0, 15, 5.5), -Vector3.forward(), false, false)
 
 		Unit.set_local_position(servitor_unit, 1, position)
 		Unit.set_local_rotation(servitor_unit, 1, rotation)
-		spawn_spawn_vfx(scenario_system, position)
+		_spawn_spawn_vfx(scenario_system, position)
 	end
 end
 
-local function display_radius(scenario_system, position, radius, parent_unit)
+local function _display_radius(scenario_system, position, radius, parent_unit)
 	local world = scenario_system:world()
 	local decal_unit_name = "content/levels/training_grounds/fx/decal_aoe_indicator"
 	local decal_unit = World.spawn_unit_ex(world, decal_unit_name, nil, position + Vector3(0, 0, 0.1))
@@ -480,13 +460,7 @@ local function display_radius(scenario_system, position, radius, parent_unit)
 	return decal_unit, is_linked
 end
 
-local function destroy_radius(scenario_system, fx_id)
-	local world = scenario_system:world()
-
-	World.destroy_particles(world, fx_id)
-end
-
-local function fadeout_radius(decal_unit, t, start_t, duration)
+local function _fadeout_radius(decal_unit, t, start_t, duration)
 	local max_color_intensity = 6
 	local multiplier = math.clamp01((t - start_t) / duration)
 	multiplier = math.smoothstep(multiplier, 0, 1)
@@ -497,11 +471,11 @@ end
 
 steps.hide_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		hide_info()
+		_hide_info()
 
 		local cleaning_up = scenario_data.cleaning_up
 
-		remove_objective_tracker(nil, not cleaning_up)
+		_remove_objective_tracker(nil, not cleaning_up)
 	end
 }
 steps.make_player_invulnerable = {
@@ -587,7 +561,7 @@ steps.dynamic.add_unique_buff = function (buff_name)
 	return {
 		name = "add_unique_buff",
 		start_func = function (scenario_system, player, scenario_data, step_data, t)
-			add_unique_buff(player.player_unit, buff_name, scenario_data, t)
+			_add_unique_buff(player.player_unit, buff_name, scenario_data, t)
 		end
 	}
 end
@@ -596,7 +570,7 @@ steps.dynamic.remove_unique_buff = function (buff_name)
 	return {
 		name = "remove_unique_buff",
 		start_func = function (scenario_system, player, scenario_data, step_data, t)
-			remove_unique_buff(player.player_unit, buff_name, scenario_data)
+			_remove_unique_buff(player.player_unit, buff_name, scenario_data)
 		end
 	}
 end
@@ -609,7 +583,7 @@ steps.dynamic.remove_unique_buff_safe = function (buff_name)
 			local has_buff = exists and scenario_data.unique_buffs and scenario_data.unique_buffs[buff_name]
 
 			if has_buff then
-				remove_unique_buff(player.player_unit, buff_name, scenario_data)
+				_remove_unique_buff(player.player_unit, buff_name, scenario_data)
 			end
 		end
 	}
@@ -642,7 +616,7 @@ steps.dynamic.equip_item = function (slot_name, item_name)
 				return
 			end
 
-			equip_item(player, slot_name, item_name)
+			_equip_item(player, slot_name, item_name)
 		end,
 		condition_func = function (scenario_system, player, scenario_data, step_data, t)
 			if step_data.already_equipped then
@@ -739,7 +713,7 @@ steps.dynamic.teleport_player = function (directional_unit_identifier)
 	return {
 		name = "teleport_player",
 		start_func = function (scenario_system, player, scenario_data, step_data, t)
-			teleport_player(scenario_system, player, directional_unit_identifier)
+			_teleport_player(scenario_system, player, directional_unit_identifier)
 		end
 	}
 end
@@ -793,7 +767,7 @@ steps._condition.archetype_is = function (...)
 	}
 end
 
-steps._condition.archetype_specialization_is = function (...)
+steps._condition.specialization_is = function (...)
 	local specialization_names = {
 		...
 	}
@@ -801,7 +775,7 @@ steps._condition.archetype_specialization_is = function (...)
 	return {
 		condition_func = function (scenario_system, player, scenario_data, step_data, t)
 			local specialization_extension = ScriptUnit.has_extension(player.player_unit, "specialization_system")
-			local specialization_name = specialization_extension:get_specialization_name()
+			local specialization_name = specialization_extension:specialization_name()
 
 			for i = 1, #specialization_names do
 				if specialization_names[i] == specialization_name then
@@ -844,7 +818,7 @@ steps.init_servitor_wait_interact = {
 	},
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		local servitor_handler = scenario_system:servitor_handler()
-		local position, rotation = get_relative_position_rotation(player.player_unit, Vector3(0, 100, -50), -Vector3.forward(), false)
+		local position, rotation = _get_relative_position_rotation(player.player_unit, Vector3(0, 100, -50), -Vector3.forward(), false)
 		local servitor_unit = servitor_handler:unit() or servitor_handler:spawn_servitor(position, rotation)
 		local first_person_unit = ScriptUnit.extension(player.player_unit, "first_person_system"):first_person_unit()
 		local camera_position = Unit.local_position(first_person_unit, 1)
@@ -856,14 +830,14 @@ steps.init_servitor_wait_interact = {
 
 		interactee_extension:set_active(true)
 		interactee_extension:set_description("loc_training_grounds_start_training")
-		add_objective_marker(servitor_unit, "training_grounds", false, {
+		_add_objective_marker(servitor_unit, "training_grounds", false, {
 			ui_target_type = "servitor"
 		})
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
 		local servitor_handler = scenario_system:servitor_handler()
 
-		teleport_servitor_if_far_away(scenario_system, servitor_handler, player.player_unit)
+		_teleport_servitor_if_far_away(scenario_system, servitor_handler, player.player_unit)
 
 		return step_data.interacted
 	end,
@@ -875,7 +849,7 @@ steps.init_servitor_wait_interact = {
 
 		servitor_handler:move_idle(player.player_unit, true)
 		servitor_handler:interactee_extension():set_active(false)
-		remove_objective_marker(servitor_handler:unit())
+		_remove_objective_marker(servitor_handler:unit())
 	end
 }
 steps.basic_training = {
@@ -931,7 +905,7 @@ steps.attack_chains_kill_infected_loop = {
 
 				step_data.kill_count = step_data.kill_count + 1
 
-				set_objective_tracker_value("attack_chain", step_data.kill_count, true)
+				_set_objective_tracker_value("attack_chain", step_data.kill_count, true)
 
 				if weapon_action_write_component then
 					weapon_action_write_component.combo_count = 0
@@ -947,11 +921,11 @@ steps.attack_chains_kill_infected_loop = {
 		local enemy = step_data.enemy
 
 		if not HEALTH_ALIVE[enemy] then
-			dissolve_unit(enemy, t)
+			_dissolve_unit(enemy, t)
 
 			local reference_unit = not step_data.spawned_once and scenario_system:get_directional_unit("player_reset") or player.player_unit
 			step_data.spawned_once = true
-			local spawned_enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+			local spawned_enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 				{
 					breed_name = "renegade_melee",
 					relative_position = Vector3(0, 6, 0),
@@ -971,7 +945,7 @@ steps.attack_chains_kill_infected_loop = {
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
 		local enemy = step_data.enemy
 
-		dissolve_unit(enemy, t)
+		_dissolve_unit(enemy, t)
 	end
 }
 steps.attack_chains_kill_infected_loop_heavy = {
@@ -1009,7 +983,7 @@ steps.attack_chains_kill_infected_loop_heavy = {
 
 				step_data.kill_count_heavy = step_data.kill_count_heavy + 1
 
-				set_objective_tracker_value("attack_chain_2", step_data.kill_count_heavy, true)
+				_set_objective_tracker_value("attack_chain_2", step_data.kill_count_heavy, true)
 
 				if weapon_action_write_component then
 					weapon_action_write_component.combo_count = 0
@@ -1025,11 +999,11 @@ steps.attack_chains_kill_infected_loop_heavy = {
 		local enemy = step_data.enemy
 
 		if not HEALTH_ALIVE[enemy] then
-			dissolve_unit(enemy, t)
+			_dissolve_unit(enemy, t)
 
 			local reference_unit = not step_data.spawned_once and scenario_system:get_directional_unit("player_reset") or player.player_unit
 			step_data.spawned_once = true
-			local spawned_enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+			local spawned_enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 				{
 					breed_name = "renegade_melee",
 					relative_position = Vector3(0, 6, 0),
@@ -1049,7 +1023,7 @@ steps.attack_chains_kill_infected_loop_heavy = {
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
 		local enemy = step_data.enemy
 
-		dissolve_unit(enemy, t)
+		_dissolve_unit(enemy, t)
 	end
 }
 steps.armor_types_heavy_armored_loop = {
@@ -1071,7 +1045,7 @@ steps.armor_types_heavy_armored_loop = {
 		if progress_step then
 			step_data.hit_count = step_data.hit_count + 1
 
-			set_objective_tracker_value("armor_objective_2", step_data.hit_count, true)
+			_set_objective_tracker_value("armor_objective_2", step_data.hit_count, true)
 		end
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
@@ -1084,11 +1058,11 @@ steps.armor_types_heavy_armored_loop = {
 		local enemy_unit = step_data.enemy_unit
 
 		if not HEALTH_ALIVE[enemy_unit] then
-			dissolve_unit(enemy_unit, t)
+			_dissolve_unit(enemy_unit, t)
 
 			local reference_unit = not step_data.spawned_once and scenario_system:get_directional_unit("player_reset") or player.player_unit
 			step_data.spawned_once = true
-			local spawned_enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+			local spawned_enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 				{
 					breed_name = "chaos_ogryn_executor",
 					relative_position = Vector3(0, 6, 0),
@@ -1107,13 +1081,13 @@ steps.armor_types_heavy_armored_loop = {
 		return false
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
-		set_objective_tracker_value("armor_objective_1", 1, true)
-		dissolve_unit(step_data.enemy_unit, t)
+		_set_objective_tracker_value("armor_objective_1", 1, true)
+		_dissolve_unit(step_data.enemy_unit, t)
 	end
 }
 steps.armor_types_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.armor_types)
+		_display_info(TrainingGroundsInfoLookup.armor_types)
 	end
 }
 steps.use_activated_weapon_special_attack = {
@@ -1133,12 +1107,12 @@ steps.use_activated_weapon_special_attack = {
 			if not step_data.grace_timer then
 				step_data.grace_timer = t + 1
 
-				dissolve_unit(step_data.enemy_unit, t)
+				_dissolve_unit(step_data.enemy_unit, t)
 			elseif step_data.grace_timer < t then
 				step_data.grace_timer = nil
 				local reference_unit = not step_data.spawned_once and scenario_system:get_directional_unit("player_reset") or player.player_unit
 				step_data.spawned_once = true
-				local spawned_enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+				local spawned_enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 					{
 						breed_name = "chaos_newly_infected",
 						relative_position = Vector3(0, 6, 0),
@@ -1161,6 +1135,11 @@ steps.use_activated_weapon_special_attack = {
 		local attack_result = event_data.attack_result
 		local inventory_component = unit_data_extension:read_component("inventory")
 		local wielded_slot = inventory_component.wielded_slot
+
+		if wielded_slot == "slot_unarmed" then
+			return
+		end
+
 		local inventory_slot_component = unit_data_extension:read_component(wielded_slot)
 		local weapon_action_component = unit_data_extension:write_component("weapon_action")
 		local special_active = inventory_slot_component.special_active
@@ -1171,11 +1150,11 @@ steps.use_activated_weapon_special_attack = {
 		if progress_step then
 			step_data.hit_count = step_data.hit_count + 1
 
-			set_objective_tracker_value("weapon_special", step_data.hit_count, true)
+			_set_objective_tracker_value("weapon_special", step_data.hit_count, true)
 		end
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
-		dissolve_unit(step_data.enemy_unit, t)
+		_dissolve_unit(step_data.enemy_unit, t)
 	end
 }
 steps.use_weapon_special_attack = {
@@ -1195,11 +1174,11 @@ steps.use_weapon_special_attack = {
 			if not step_data.grace_timer then
 				step_data.grace_timer = t + 1
 
-				dissolve_unit(step_data.enemy_unit, t)
+				_dissolve_unit(step_data.enemy_unit, t)
 			elseif step_data.grace_timer < t then
 				step_data.grace_timer = nil
 				local reference_unit = not step_data.spawned_once and scenario_system:get_directional_unit("player_reset") or player.player_unit
-				local spawned_enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+				local spawned_enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 					{
 						breed_name = "chaos_newly_infected",
 						relative_position = Vector3(0, 6, 0),
@@ -1220,16 +1199,16 @@ steps.use_weapon_special_attack = {
 		if is_weapon_special and _target_damaged_or_died(event_data) then
 			step_data.hit_count = step_data.hit_count + 1
 
-			set_objective_tracker_value("weapon_special", step_data.hit_count, true)
+			_set_objective_tracker_value("weapon_special", step_data.hit_count, true)
 		end
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
-		dissolve_unit(step_data.enemy_unit, t)
+		_dissolve_unit(step_data.enemy_unit, t)
 	end
 }
 steps.push_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.pushing)
+		_display_info(TrainingGroundsInfoLookup.pushing)
 	end
 }
 steps.push_enemies_loop = {
@@ -1257,14 +1236,14 @@ steps.push_enemies_loop = {
 
 		if not enemies_alive then
 			for i = 1, #enemies do
-				dissolve_unit(enemies[i], t)
+				_dissolve_unit(enemies[i], t)
 
 				enemies[i] = nil
 			end
 
 			local reference_unit = not step_data.spawned_once and scenario_system:get_directional_unit("player_reset") or player.player_unit
 			step_data.spawned_once = true
-			step_data.enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+			step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 				{
 					breed_name = "chaos_newly_infected",
 					relative_position = Vector3(-1, 6, 0),
@@ -1299,7 +1278,7 @@ steps.push_enemies_loop = {
 				step_data.last_sound_t = t
 			end
 
-			set_objective_tracker_value("push", step_data.push_count, play_sound)
+			_set_objective_tracker_value("push", step_data.push_count, play_sound)
 		end
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
@@ -1314,14 +1293,14 @@ steps.push_clean_enemies = {
 
 		if enemies then
 			for i = 1, #enemies do
-				dissolve_unit(enemies[i], t)
+				_dissolve_unit(enemies[i], t)
 			end
 		end
 	end
 }
 steps.push_follow_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.push_follow_up)
+		_display_info(TrainingGroundsInfoLookup.push_follow_up)
 	end
 }
 steps.push_follow_enemies_loop = {
@@ -1351,14 +1330,14 @@ steps.push_follow_enemies_loop = {
 
 		if not enemies_alive then
 			for i = 1, #enemies do
-				dissolve_unit(enemies[i], t)
+				_dissolve_unit(enemies[i], t)
 
 				enemies[i] = nil
 			end
 
 			local reference_unit = not step_data.spawned_once and scenario_system:get_directional_unit("player_reset") or player.player_unit
 			step_data.spawned_once = true
-			step_data.enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+			step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 				{
 					breed_name = "renegade_melee",
 					relative_position = Vector3(-2.5, 6, 0),
@@ -1409,21 +1388,21 @@ steps.push_follow_enemies_loop = {
 		if from_push and _target_damaged_or_died(event_data) then
 			step_data.hit_count = step_data.hit_count + 1
 
-			set_objective_tracker_value("push_follow", step_data.hit_count, play_sound)
+			_set_objective_tracker_value("push_follow", step_data.hit_count, play_sound)
 		end
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
 		local enemies = step_data.enemies
 
 		for i = 1, #enemies do
-			dissolve_unit(enemies[i], t)
+			_dissolve_unit(enemies[i], t)
 		end
 	end
 }
 local _camera_pos_hit_target_offset = Vector3Box(0, 0, -0.3)
 steps.incoming_supression_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.incoming_suppression)
+		_display_info(TrainingGroundsInfoLookup.incoming_suppression)
 	end
 }
 steps.incoming_suppression_crouch = {
@@ -1433,11 +1412,11 @@ steps.incoming_suppression_crouch = {
 		scenario_data.cover_middle_spawned = true
 		step_data.incoming_suppression_indicator = scenario_system:get_directional_unit("incoming_suppression_crouch_indicator")
 
-		add_objective_marker(step_data.incoming_suppression_indicator, "training_grounds", false)
+		_add_objective_marker(step_data.incoming_suppression_indicator, "training_grounds", false)
 
 		step_data.incoming_suppression_cover_unit = scenario_system:get_directional_unit_extension("incoming_suppression_cover"):attached_unit()
 		local side_id = 2
-		scenario_data.enemy = spawn_breed_directional_unit("renegade_gunner", "suppression_3", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, side_id)
+		scenario_data.enemy = _spawn_breed_directional_unit("renegade_gunner", "suppression_3", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, side_id)
 		local health_extension = ScriptUnit.extension(scenario_data.enemy, "health_system")
 
 		health_extension:set_invulnerable(true)
@@ -1500,7 +1479,7 @@ steps.incoming_suppression_crouch = {
 			local perception_extension = ScriptUnit.extension(enemy_unit, "perception_system")
 
 			MinionPerception.attempt_aggro(perception_extension)
-			set_objective_tracker_value("incoming_suppression_objective_0", 1, true)
+			_set_objective_tracker_value("incoming_suppression_objective_0", 1, true)
 
 			return true
 		end
@@ -1508,7 +1487,7 @@ steps.incoming_suppression_crouch = {
 		return false
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
-		remove_objective_marker(step_data.incoming_suppression_indicator)
+		_remove_objective_marker(step_data.incoming_suppression_indicator)
 	end
 }
 steps.incoming_suppression_loop = {
@@ -1519,11 +1498,11 @@ steps.incoming_suppression_loop = {
 		step_data.suppressed_shots = 10
 		step_data.current_shots = 0
 
-		remove_objective_tracker("incoming_suppression_objective_0", true)
-		add_objective_tracker("incoming_suppression_objective_1", true)
+		_remove_objective_tracker("incoming_suppression_objective_0", true)
+		_add_objective_tracker("incoming_suppression_objective_1", true)
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
-		ensure_has_ammo(player)
+		_ensure_has_ammo(player)
 
 		local enemy_unit = scenario_data.enemy
 		local first_person_unit = ScriptUnit.extension(player.player_unit, "first_person_system"):first_person_unit()
@@ -1546,18 +1525,18 @@ steps.incoming_suppression_loop = {
 	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
 		step_data.current_shots = step_data.current_shots + 1
 
-		set_objective_tracker_value("incoming_suppression_objective_1", step_data.current_shots, true)
+		_set_objective_tracker_value("incoming_suppression_objective_1", step_data.current_shots, true)
 	end
 }
 steps.incoming_suppression_loop_2 = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		remove_objective_tracker("incoming_suppression_objective_1", true)
-		add_objective_tracker("incoming_suppression_objective_2", true)
+		_remove_objective_tracker("incoming_suppression_objective_1", true)
+		_add_objective_tracker("incoming_suppression_objective_2", true)
 
-		step_data.cover_spawn_data = spawn_unit_directional_unit(player, nil, nil, "arena_b_cover_right_unit_1", t, DEFAULT_SPAWN_DURATION)
+		step_data.cover_spawn_data = _spawn_unit_directional_unit(player, nil, nil, "arena_b_cover_right_unit_1", t, DEFAULT_SPAWN_DURATION)
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
-		ensure_has_ammo(player)
+		_ensure_has_ammo(player)
 
 		local first_person_unit = ScriptUnit.extension(player.player_unit, "first_person_system"):first_person_unit()
 		local camera_pos = Unit.local_position(first_person_unit, 1)
@@ -1579,7 +1558,7 @@ steps.incoming_suppression_loop_2 = {
 			scenario_data.cover_right_spawned = true
 			local end_directional_unit = scenario_system:get_directional_unit("incoming_suppression_end")
 
-			add_objective_marker(end_directional_unit, "training_grounds", false)
+			_add_objective_marker(end_directional_unit, "training_grounds", false)
 
 			step_data.end_rotation = QuaternionBox(Unit.local_rotation(end_directional_unit, 1))
 			step_data.end_position = Vector3Box(Unit.local_position(end_directional_unit, 1))
@@ -1595,7 +1574,7 @@ steps.incoming_suppression_loop_2 = {
 			local sq_dist_player = Vector3.distance_squared(player_pos, enemy_pos)
 
 			if dot_behind_cover < player_dot_from_cover and sq_dist_cover < sq_dist_player then
-				set_objective_tracker_value("incoming_suppression_objective_2", 1, true)
+				_set_objective_tracker_value("incoming_suppression_objective_2", 1, true)
 
 				local incoming_suppression_cover_unit = scenario_system:get_directional_unit("incoming_suppression_crouch_indicator")
 				local cover_pos = POSITION_LOOKUP[incoming_suppression_cover_unit] + Vector3(0, 0, 1.5)
@@ -1615,7 +1594,7 @@ steps.incoming_suppression_loop_2 = {
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
 		local end_directional_unit = scenario_system:get_directional_unit("incoming_suppression_end")
 
-		remove_objective_marker(end_directional_unit)
+		_remove_objective_marker(end_directional_unit)
 	end
 }
 steps.incoming_suppression_loop_3 = {
@@ -1623,8 +1602,8 @@ steps.incoming_suppression_loop_3 = {
 		"tg_on_attack_execute"
 	},
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		remove_objective_tracker("incoming_suppression_objective_2", true)
-		add_objective_tracker("incoming_suppression_objective_3", true)
+		_remove_objective_tracker("incoming_suppression_objective_2", true)
+		_add_objective_tracker("incoming_suppression_objective_3", true)
 
 		local enemy_unit = scenario_data.enemy
 
@@ -1635,7 +1614,7 @@ steps.incoming_suppression_loop_3 = {
 		end
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
-		ensure_has_ammo(player)
+		_ensure_has_ammo(player)
 
 		if HEALTH_ALIVE[scenario_data.enemy] then
 			return false
@@ -1644,11 +1623,11 @@ steps.incoming_suppression_loop_3 = {
 		return true
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
-		dissolve_unit(scenario_data.enemy, t)
+		_dissolve_unit(scenario_data.enemy, t)
 	end,
 	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
 		if _target_died(event_data) then
-			set_objective_tracker_value("incoming_suppression_objective_3", 1, true)
+			_set_objective_tracker_value("incoming_suppression_objective_3", 1, true)
 		end
 	end
 }
@@ -1665,7 +1644,7 @@ steps.cleanup_incoming_suppression = {
 }
 steps.ranged_suppression_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.ranged_suppression)
+		_display_info(TrainingGroundsInfoLookup.ranged_suppression)
 	end
 }
 steps.ranged_suppression_enemies_loop = {
@@ -1682,10 +1661,10 @@ steps.ranged_suppression_enemies_loop = {
 
 		for i = 1, num_enemies do
 			if not HEALTH_ALIVE[enemies[i]] then
-				dissolve_unit(enemies[i], t)
+				_dissolve_unit(enemies[i], t)
 
 				local side_id = 2
-				enemies[i] = spawn_breed_directional_unit("renegade_rifleman", "suppression_" .. i, t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, side_id)
+				enemies[i] = _spawn_breed_directional_unit("renegade_rifleman", "suppression_" .. i, t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, side_id)
 				local health_extension = ScriptUnit.extension(enemies[i], "health_system")
 
 				health_extension:set_invulnerable(true)
@@ -1698,7 +1677,7 @@ steps.ranged_suppression_enemies_loop = {
 		if event_name == "tg_on_claim_cover_slot" and not units_in_cover[event_data.unit] then
 			units_in_cover[event_data.unit] = true
 
-			remove_objective_marker(event_data.unit)
+			_remove_objective_marker(event_data.unit)
 		end
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
@@ -1707,7 +1686,7 @@ steps.ranged_suppression_enemies_loop = {
 		if num_using_cover ~= step_data.num_enemies_in_cover then
 			step_data.num_enemies_in_cover = num_using_cover
 
-			set_objective_tracker_value("suppression_objective_1", num_using_cover, true)
+			_set_objective_tracker_value("suppression_objective_1", num_using_cover, true)
 		end
 
 		if step_data.num_enemies <= num_using_cover then
@@ -1718,7 +1697,7 @@ steps.ranged_suppression_enemies_loop = {
 			return step_data.grace_timer < t
 		end
 
-		ensure_has_ammo(player)
+		_ensure_has_ammo(player)
 
 		return false
 	end,
@@ -1726,18 +1705,28 @@ steps.ranged_suppression_enemies_loop = {
 		local enemies = step_data.enemies
 
 		for i = 1, #enemies do
-			dissolve_unit(enemies[i], t)
+			_dissolve_unit(enemies[i], t)
 		end
 	end
 }
 steps.veteran_ranger_blitz_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.grunt_blitz)
+		_display_info(TrainingGroundsInfoLookup.grunt_blitz)
 	end
 }
 steps.zealot_maniac_blitz_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.maniac_blitz)
+		_display_info(TrainingGroundsInfoLookup.maniac_blitz)
+	end
+}
+steps.veteran_squad_leader_blitz_prompt = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.squad_leader_blitz)
+	end
+}
+steps.psyker_protectorate_blitz_prompt = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.protectorate_blitz)
 	end
 }
 steps.stun_enemies_grenade_loop = {
@@ -1745,7 +1734,7 @@ steps.stun_enemies_grenade_loop = {
 		step_data.last_frame_num_staggered = 0
 		step_data.stun_count = 5
 		local reference_unit = scenario_system:get_directional_unit("player_reset")
-		step_data.enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+		step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 			{
 				breed_name = "chaos_newly_infected",
 				relative_position = Vector3(-4, 12, 0),
@@ -1804,7 +1793,7 @@ steps.stun_enemies_grenade_loop = {
 			step_data.last_frame_num_staggered = num_staggered_enemies
 			local play_sound = true
 
-			set_objective_tracker_value(step_data.grenade_objective, num_staggered_enemies, play_sound)
+			_set_objective_tracker_value(step_data.grenade_objective, num_staggered_enemies, play_sound)
 		end
 
 		local player_unit = player.player_unit
@@ -1815,7 +1804,7 @@ steps.stun_enemies_grenade_loop = {
 
 			if not grenade_pack_exists then
 				local reference_unit = player.player_unit
-				step_data.grenade_pack_unit = spawn_pickup_relative_safe(scenario_system, player, reference_unit, "small_grenade", Vector3(0, 2, 0), -Vector3.forward(), DEFAULT_APPLY_MARKER, "player_reset")
+				step_data.grenade_pack_unit = _spawn_pickup_relative_safe(scenario_system, player, reference_unit, "small_grenade", Vector3(0, 2, 0), -Vector3.forward(), DEFAULT_APPLY_MARKER, "player_reset")
 			end
 		end
 
@@ -1825,15 +1814,15 @@ steps.stun_enemies_grenade_loop = {
 		local enemies = step_data.enemies
 
 		for i = 1, #enemies do
-			dissolve_unit(enemies[i], t)
+			_dissolve_unit(enemies[i], t)
 		end
 
-		despawn_pickup(step_data.grenade_pack_unit)
+		_despawn_pickup(step_data.grenade_pack_unit)
 	end
 }
 steps.ranged_grenade_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.ranged_grenade)
+		_display_info(TrainingGroundsInfoLookup.ranged_grenade)
 	end
 }
 steps.kill_enemies_grenade_loop = {
@@ -1844,7 +1833,7 @@ steps.kill_enemies_grenade_loop = {
 		step_data.kill_count = 0
 		step_data.target_kill_count = 5
 		local reference_unit = scenario_system:get_directional_unit("player_reset")
-		step_data.enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+		step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 			{
 				breed_name = "chaos_newly_infected",
 				relative_position = Vector3(-2, 10, 0),
@@ -1887,7 +1876,7 @@ steps.kill_enemies_grenade_loop = {
 
 			if not grenade_pack_exists then
 				local reference_unit = player.player_unit
-				step_data.grenade_pack_unit = spawn_pickup_relative_safe(scenario_system, player, reference_unit, "small_grenade", Vector3(0, 2, 0), -Vector3.forward(), DEFAULT_APPLY_MARKER, "player_reset")
+				step_data.grenade_pack_unit = _spawn_pickup_relative_safe(scenario_system, player, reference_unit, "small_grenade", Vector3(0, 2, 0), -Vector3.forward(), DEFAULT_APPLY_MARKER, "player_reset")
 			end
 		end
 
@@ -1904,22 +1893,22 @@ steps.kill_enemies_grenade_loop = {
 				play_sound = true
 			end
 
-			set_objective_tracker_value("grenade", step_data.kill_count, play_sound)
+			_set_objective_tracker_value("grenade", step_data.kill_count, play_sound)
 		end
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
 		local enemies = step_data.enemies
 
 		for i = 1, #enemies do
-			dissolve_unit(enemies[i], t)
+			_dissolve_unit(enemies[i], t)
 		end
 
-		despawn_pickup(step_data.grenade_pack_unit)
+		_despawn_pickup(step_data.grenade_pack_unit)
 	end
 }
 steps.ogryn_bonebreaker_blitz_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.bonebreaker_blitz)
+		_display_info(TrainingGroundsInfoLookup.bonebreaker_blitz)
 	end
 }
 steps.kill_enemies_grenade_loop_ogryn_bonebreaker = {
@@ -1930,7 +1919,7 @@ steps.kill_enemies_grenade_loop_ogryn_bonebreaker = {
 		step_data.kill_count = 0
 		step_data.target_kill_count = 1
 		local reference_unit = scenario_system:get_directional_unit("player_reset")
-		step_data.enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+		step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 			{
 				breed_name = "renegade_executor",
 				relative_position = Vector3(-1, 10, 0),
@@ -1958,7 +1947,7 @@ steps.kill_enemies_grenade_loop_ogryn_bonebreaker = {
 
 			if not grenade_pack_exists then
 				local reference_unit = player.player_unit
-				step_data.grenade_pack_unit = spawn_pickup_relative_safe(scenario_system, player, reference_unit, "small_grenade", Vector3(0, 2, 0), -Vector3.forward(), DEFAULT_APPLY_MARKER, "player_reset")
+				step_data.grenade_pack_unit = _spawn_pickup_relative_safe(scenario_system, player, reference_unit, "small_grenade", Vector3(0, 2, 0), -Vector3.forward(), DEFAULT_APPLY_MARKER, "player_reset")
 			end
 		end
 
@@ -1975,22 +1964,22 @@ steps.kill_enemies_grenade_loop_ogryn_bonebreaker = {
 				play_sound = true
 			end
 
-			set_objective_tracker_value("bonebreaker_blitz", step_data.kill_count, play_sound)
+			_set_objective_tracker_value("bonebreaker_blitz", step_data.kill_count, play_sound)
 		end
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
 		local enemies = step_data.enemies
 
 		for i = 1, #enemies do
-			dissolve_unit(enemies[i], t)
+			_dissolve_unit(enemies[i], t)
 		end
 
-		despawn_pickup(step_data.grenade_pack_unit)
+		_despawn_pickup(step_data.grenade_pack_unit)
 	end
 }
 steps.psyker_biomancer_blitz_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.biomancer_blitz)
+		_display_info(TrainingGroundsInfoLookup.biomancer_blitz)
 	end
 }
 steps.psyker_biomancer_blitz_loop = {
@@ -2022,13 +2011,13 @@ steps.psyker_biomancer_blitz_loop = {
 
 		if not enemies_alive and not step_data.ramping_spawn_ids then
 			for i = 1, #enemies do
-				dissolve_unit(enemies[i], t)
+				_dissolve_unit(enemies[i], t)
 
 				enemies[i] = nil
 			end
 
 			local reference_unit = scenario_system:get_directional_unit("player_reset")
-			step_data.enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+			step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 				{
 					breed_name = "renegade_rifleman",
 					relative_position = Vector3(-3, 10, 0),
@@ -2057,20 +2046,101 @@ steps.psyker_biomancer_blitz_loop = {
 		if wielded_slot == "slot_grenade_ability" and _target_died(event_data) then
 			step_data.kill_count = step_data.kill_count + 1
 
-			set_objective_tracker_value("biomancer_blitz", step_data.kill_count, true)
+			_set_objective_tracker_value("biomancer_blitz", step_data.kill_count, true)
 		end
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
 		local enemies = step_data.enemies
 
 		for i = 1, #enemies do
-			dissolve_unit(enemies[i], t)
+			_dissolve_unit(enemies[i], t)
+		end
+	end
+}
+steps.psyker_3_ability_loop = {
+	events = {
+		"tg_on_attack_execute"
+	},
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		step_data.kill_count = 0
+		step_data.target_kill_count = 3
+		step_data.enemies = {}
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		local condition_met = step_data.target_kill_count <= step_data.kill_count
+
+		if condition_met then
+			return true
+		end
+
+		local enemies = step_data.enemies
+		local enemies_alive = false
+
+		for i = 1, #enemies do
+			if HEALTH_ALIVE[enemies[i]] then
+				enemies_alive = true
+
+				break
+			end
+		end
+
+		if not enemies_alive and not step_data.ramping_spawn_ids then
+			for i = 1, #enemies do
+				_dissolve_unit(enemies[i], t)
+
+				enemies[i] = nil
+			end
+
+			local reference_unit = scenario_system:get_directional_unit("player_reset")
+			step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+				{
+					breed_name = "renegade_rifleman",
+					relative_position = Vector3(-3, 10, 0),
+					relative_look_direction = -Vector3.forward()
+				},
+				{
+					breed_name = "renegade_rifleman",
+					relative_position = Vector3(0, 10, 0),
+					relative_look_direction = -Vector3.forward()
+				},
+				{
+					breed_name = "renegade_rifleman",
+					relative_position = Vector3(3, 10, 0),
+					relative_look_direction = -Vector3.forward()
+				},
+				{
+					breed_name = "renegade_rifleman",
+					relative_position = Vector3(-6, 10, 0),
+					relative_look_direction = -Vector3.forward()
+				},
+				{
+					breed_name = "renegade_rifleman",
+					relative_position = Vector3(6, 10, 0),
+					relative_look_direction = -Vector3.forward()
+				}
+			})
+		end
+
+		return false
+	end,
+	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
+		if _target_died(event_data) then
+			step_data.kill_count = step_data.kill_count + 1
+
+			_set_objective_tracker_value("protectorade_grenade", step_data.kill_count, true)
+		end
+	end,
+	stop_func = function (scenario_system, player, scenario_data, step_data, t)
+		local enemies = step_data.enemies
+
+		for i = 1, #enemies do
+			_dissolve_unit(enemies[i], t)
 		end
 	end
 }
 steps.tagging_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.tagging)
+		_display_info(TrainingGroundsInfoLookup.tagging)
 	end
 }
 steps.sniper_tag_loop = {
@@ -2085,10 +2155,10 @@ steps.sniper_tag_loop = {
 		local enemy_unit = step_data.enemy_unit
 
 		if not HEALTH_ALIVE[enemy_unit] and not step_data.pinged_target then
-			dissolve_unit(enemy_unit, t)
+			_dissolve_unit(enemy_unit, t)
 
 			local reference_unit = scenario_system:get_directional_unit("player_reset")
-			local spawned_enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+			local spawned_enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 				{
 					breed_name = "renegade_sniper",
 					relative_position = Vector3(0, 10, 0),
@@ -2114,24 +2184,24 @@ steps.sniper_tag_loop = {
 		local target_unit = tag_event_data.target_unit
 
 		if target_unit and not step_data.pinged_target then
-			set_objective_tracker_value("tag_sniper", 1, true)
+			_set_objective_tracker_value("tag_sniper", 1, true)
 
 			step_data.pinged_target = true
 
-			remove_objective_marker(target_unit)
+			_remove_objective_marker(target_unit)
 		elseif not step_data.pinged_world then
-			set_objective_tracker_value("tag_world", 1, true)
+			_set_objective_tracker_value("tag_world", 1, true)
 
 			step_data.pinged_world = true
 		end
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
-		dissolve_unit(step_data.enemy_unit, t)
+		_dissolve_unit(step_data.enemy_unit, t)
 	end
 }
 steps.dodge_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.dodge)
+		_display_info(TrainingGroundsInfoLookup.dodge)
 	end
 }
 steps.dodge_loop = {
@@ -2166,11 +2236,11 @@ steps.dodge_loop = {
 		local enemy_unit = step_data.enemy_unit
 
 		if not HEALTH_ALIVE[enemy_unit] and step_data.dodge_left and step_data.dodge_right and step_data.dodge_backward then
-			dissolve_unit(enemy_unit, t)
+			_dissolve_unit(enemy_unit, t)
 
 			local reference_unit = player.player_unit
 			local apply_marker = false
-			local spawned_enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, apply_marker, {
+			local spawned_enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, apply_marker, {
 				{
 					breed_name = "renegade_executor",
 					relative_position = Vector3(0, 8, 0),
@@ -2253,14 +2323,14 @@ steps.dodge_loop = {
 
 		if not step_data.do_once and step_data.dodge_left and step_data.dodge_right and step_data.dodge_backward then
 			if not step_data.grace_timer then
-				remove_objective_tracker(nil, true)
+				_remove_objective_tracker(nil, true)
 
 				step_data.grace_timer = t + 1.5
 			end
 
 			if step_data.grace_timer and step_data.grace_timer < t then
-				remove_unique_buff(player.player_unit, "tg_player_unperceivable", scenario_data)
-				add_objective_tracker("dodge_melee", true)
+				_remove_unique_buff(player.player_unit, "tg_player_unperceivable", scenario_data)
+				_add_objective_tracker("dodge_melee", true)
 
 				step_data.do_once = true
 			end
@@ -2291,33 +2361,33 @@ steps.dodge_loop = {
 				if not step_data.dodge_backward and direction.y and direction.y < 0 then
 					step_data.dodge_backward = true
 
-					set_objective_tracker_value("dodge_backward", 1, true)
+					_set_objective_tracker_value("dodge_backward", 1, true)
 				end
 
 				if not step_data.dodge_left and direction.x and direction.x < -0.707 then
 					step_data.dodge_left = true
 
-					set_objective_tracker_value("dodge_left", 1, true)
+					_set_objective_tracker_value("dodge_left", 1, true)
 				elseif not step_data.dodge_right and direction.x and direction.x > 0.707 then
 					step_data.dodge_right = true
 
-					set_objective_tracker_value("dodge_right", 1, true)
+					_set_objective_tracker_value("dodge_right", 1, true)
 				end
 			end
 		else
 			step_data.dodge_melee = step_data.dodge_melee + 1
 
-			set_objective_tracker_value("dodge_melee", step_data.dodge_melee, true)
+			_set_objective_tracker_value("dodge_melee", step_data.dodge_melee, true)
 		end
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
-		dissolve_unit(step_data.enemy_unit, t)
+		_dissolve_unit(step_data.enemy_unit, t)
 		step_data.time_manager:set_local_scale("gameplay", 1)
 	end
 }
 steps.sprint_slide_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.sprint_slide)
+		_display_info(TrainingGroundsInfoLookup.sprint_slide)
 	end
 }
 steps.sprint_slide = {
@@ -2335,7 +2405,7 @@ steps.sprint_slide = {
 		if event_name == "tg_on_slide" and step_data.slide_count < step_data.slide_target then
 			step_data.slide_count = step_data.slide_count + 1
 
-			set_objective_tracker_value("slide", step_data.slide_count, true)
+			_set_objective_tracker_value("slide", step_data.slide_count, true)
 		end
 	end
 }
@@ -2364,7 +2434,7 @@ steps.sprint_dodge_run_through_corridor = {
 		"tg_on_attack_execute"
 	},
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.sprint_dodge)
+		_display_info(TrainingGroundsInfoLookup.sprint_dodge)
 
 		step_data.transition_time = 0.7
 
@@ -2378,13 +2448,13 @@ steps.sprint_dodge_run_through_corridor = {
 
 		local end_directional_unit = scenario_system:get_directional_unit("sprint_player_end")
 
-		add_objective_marker(end_directional_unit, "training_grounds", false)
+		_add_objective_marker(end_directional_unit, "training_grounds", false)
 
 		local enemy_side_id = 2
 		local apply_marker = false
 		scenario_data.enemies = {
-			spawn_breed_directional_unit("renegade_rifleman", "sprint_dodge_enemy_1", t, DEFAULT_SPAWN_DURATION, apply_marker, enemy_side_id),
-			spawn_breed_directional_unit("renegade_rifleman", "sprint_dodge_enemy_2", t, DEFAULT_SPAWN_DURATION, apply_marker, enemy_side_id)
+			_spawn_breed_directional_unit("renegade_rifleman", "sprint_dodge_enemy_1", t, DEFAULT_SPAWN_DURATION, apply_marker, enemy_side_id),
+			_spawn_breed_directional_unit("renegade_rifleman", "sprint_dodge_enemy_2", t, DEFAULT_SPAWN_DURATION, apply_marker, enemy_side_id)
 		}
 
 		_setup_sprint_dodge_enemy(scenario_system, player, scenario_data.enemies[1], "sprint_dodge_target_1", t)
@@ -2420,7 +2490,7 @@ steps.sprint_dodge_run_through_corridor = {
 			step_data.initiate_teleport = nil
 
 			Managers.time:set_local_scale("gameplay", 1)
-			teleport_player(scenario_system, player, "sprint_player_start")
+			_teleport_player(scenario_system, player, "sprint_player_start")
 		end
 
 		local player_unit = player.player_unit
@@ -2437,7 +2507,7 @@ steps.sprint_dodge_run_through_corridor = {
 		local distance_from_end = end_rotated_diff[2]
 
 		if distance_from_end < 4 then
-			set_objective_tracker_value("sprint", 1, true)
+			_set_objective_tracker_value("sprint", 1, true)
 
 			return true
 		end
@@ -2491,18 +2561,18 @@ steps.sprint_dodge_run_through_corridor = {
 
 		local end_directional_unit = scenario_system:get_directional_unit("sprint_player_end")
 
-		remove_objective_marker(end_directional_unit)
+		_remove_objective_marker(end_directional_unit)
 	end
 }
 steps.sprint_dodge_flank_enemies = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		local end_directional_unit = scenario_system:get_directional_unit("sprint_override_brain")
 
-		add_objective_marker(end_directional_unit, "training_grounds", false)
+		_add_objective_marker(end_directional_unit, "training_grounds", false)
 
 		step_data.end_rotation = QuaternionBox(Unit.local_rotation(end_directional_unit, 1))
 		step_data.end_position = Vector3Box(Unit.local_position(end_directional_unit, 1))
-		step_data.bridge_spawn_data = spawn_unit_directional_unit(player, nil, nil, "sprint_dodge_bridge_vfx", t, DEFAULT_SPAWN_DURATION)
+		step_data.bridge_spawn_data = _spawn_unit_directional_unit(player, nil, nil, "sprint_dodge_bridge_vfx", t, DEFAULT_SPAWN_DURATION)
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
 		local bridge_ready = step_data.bridge_spawn_data.done
@@ -2548,7 +2618,7 @@ steps.sprint_dodge_flank_enemies = {
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
 		local end_directional_unit = scenario_system:get_directional_unit("sprint_override_brain")
 
-		remove_objective_marker(end_directional_unit)
+		_remove_objective_marker(end_directional_unit)
 	end
 }
 steps.sprint_dodge_kill_enemies = {
@@ -2579,7 +2649,7 @@ steps.sprint_dodge_kill_enemies = {
 						locked_enemies[enemy_unit] = true
 						step_data.num_locked_enemies = step_data.num_locked_enemies + 1
 
-						set_objective_tracker_value("lock_in_melee", step_data.num_locked_enemies, true)
+						_set_objective_tracker_value("lock_in_melee", step_data.num_locked_enemies, true)
 					end
 				end
 			end
@@ -2595,7 +2665,7 @@ steps.sprint_dodge_kill_enemies = {
 		if _target_died(event_data) then
 			step_data.killed_enemies = step_data.killed_enemies + 1
 
-			set_objective_tracker_value("lock_in_melee_2", step_data.killed_enemies, true)
+			_set_objective_tracker_value("lock_in_melee_2", step_data.killed_enemies, true)
 		end
 	end
 }
@@ -2625,21 +2695,21 @@ steps.sprint_dodge_cleanup = {
 
 		if enemies then
 			for i = 1, #enemies do
-				dissolve_unit(enemies[i], t)
+				_dissolve_unit(enemies[i], t)
 			end
 		end
 	end
 }
 steps.end_of_tg_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.end_of_tg)
+		_display_info(TrainingGroundsInfoLookup.end_of_tg)
 	end
 }
 steps.end_of_tg_loop = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		local reference_unit = scenario_system:get_directional_unit("arena_middle")
 
-		add_objective_marker(reference_unit, "training_grounds", false, {
+		_add_objective_marker(reference_unit, "training_grounds", false, {
 			ui_target_type = "portal"
 		})
 
@@ -2665,7 +2735,7 @@ steps.end_of_tg_loop = {
 			local local_player = Managers.player:local_player(1)
 
 			Managers.event:trigger("event_cutscene_fade_in", local_player, 1, math.easeCubic)
-			set_objective_tracker_value("end_of_tg", 1, false)
+			_set_objective_tracker_value("end_of_tg", 1, false)
 
 			return true
 		end
@@ -2677,12 +2747,12 @@ steps.end_of_tg_loop = {
 
 		local reference_unit = scenario_system:get_directional_unit("player_reset")
 
-		remove_objective_marker(reference_unit)
+		_remove_objective_marker(reference_unit)
 	end
 }
 steps.lock_in_melee_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.lock_in_melee)
+		_display_info(TrainingGroundsInfoLookup.lock_in_melee)
 	end
 }
 steps.toughness_damage = {
@@ -2694,7 +2764,7 @@ steps.toughness_damage = {
 }
 steps.toughness_pre_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.toughness_pre)
+		_display_info(TrainingGroundsInfoLookup.toughness_pre)
 	end
 }
 steps.toughness_pre_loop = {
@@ -2724,7 +2794,7 @@ steps.toughness_pre_loop = {
 		if not HEALTH_ALIVE[step_data.enemy] then
 			local reference_unit = scenario_system:get_directional_unit("player_reset")
 			local apply_marker = false
-			local spawned_enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, apply_marker, {
+			local spawned_enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, apply_marker, {
 				{
 					breed_name = "renegade_rifleman",
 					relative_position = Vector3(0, 16, 0),
@@ -2745,7 +2815,7 @@ steps.toughness_pre_loop = {
 				local max_health = health_extension:max_health()
 
 				if current_health < max_health then
-					set_objective_tracker_value("toughness_pre_3", 1, true)
+					_set_objective_tracker_value("toughness_pre_3", 1, true)
 
 					step_data.took_health_damage = true
 				end
@@ -2760,7 +2830,7 @@ steps.toughness_pre_loop = {
 			end
 
 			if not step_data.took_toughness_damage then
-				set_objective_tracker_value("toughness_pre_1", 1, true)
+				_set_objective_tracker_value("toughness_pre_1", 1, true)
 
 				step_data.took_toughness_damage = true
 			end
@@ -2773,7 +2843,7 @@ steps.toughness_pre_loop = {
 						health_extension:set_invulnerable(false)
 					end
 
-					set_objective_tracker_value("toughness_pre_2", 1, true)
+					_set_objective_tracker_value("toughness_pre_2", 1, true)
 
 					step_data.toughness_broken = true
 				end
@@ -2781,12 +2851,12 @@ steps.toughness_pre_loop = {
 		end
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
-		dissolve_unit(step_data.enemy, t)
+		_dissolve_unit(step_data.enemy, t)
 	end
 }
 steps.toughness_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.toughness)
+		_display_info(TrainingGroundsInfoLookup.toughness)
 	end
 }
 steps.toughness_wait_for_kill = {
@@ -2797,7 +2867,7 @@ steps.toughness_wait_for_kill = {
 		step_data.kill_count = 0
 		step_data.target_kill_count = 2
 		local reference_unit = scenario_system:get_directional_unit("player_reset")
-		step_data.enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+		step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 			{
 				breed_name = "renegade_rifleman",
 				relative_position = Vector3(-2, 6, 0),
@@ -2817,14 +2887,14 @@ steps.toughness_wait_for_kill = {
 		if _target_died(event_data) then
 			step_data.kill_count = step_data.kill_count + 1
 
-			set_objective_tracker_value("toughness_melee", step_data.kill_count, true)
+			_set_objective_tracker_value("toughness_melee", step_data.kill_count, true)
 		end
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
 		local enemies = step_data.enemies
 
 		for i = 1, #enemies do
-			dissolve_unit(enemies[i], t)
+			_dissolve_unit(enemies[i], t)
 		end
 	end
 }
@@ -2832,7 +2902,7 @@ steps.toughness_spawn_bot = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
 		step_data.bot_local_id = scenario_system:queue_bot_addition()
 
-		add_objective_tracker("toughness_coherency", true)
+		_add_objective_tracker("toughness_coherency", true)
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
 		local peer_id = Network.peer_id()
@@ -2849,7 +2919,7 @@ steps.toughness_spawn_bot = {
 		if not step_data.do_once then
 			step_data.do_once = true
 			local reference_unit = scenario_system:get_directional_unit("player_reset")
-			local position, rotation = get_relative_position_rotation(reference_unit, Vector3(0, 18, 0), -Vector3.forward(), DEFAULT_GROUND_POSITION)
+			local position, rotation = _get_relative_position_rotation(reference_unit, Vector3(0, 18, 0), -Vector3.forward(), DEFAULT_GROUND_POSITION)
 			step_data.boxed_position = Vector3Box(position)
 
 			PlayerMovement.teleport_fixed_update(bot_player.player_unit, position, rotation)
@@ -2857,7 +2927,7 @@ steps.toughness_spawn_bot = {
 			local radius, limit = coherency_extension:current_radius()
 			radius = radius + 1
 			step_data.decal_radius_sq = radius * radius
-			step_data.decal_unit, step_data.decal_is_linked = display_radius(scenario_system, position, radius, bot_player.player_unit)
+			step_data.decal_unit, step_data.decal_is_linked = _display_radius(scenario_system, position, radius, bot_player.player_unit)
 			local behavior_extension = ScriptUnit.extension(bot_player.player_unit, "behavior_system")
 
 			behavior_extension:set_hold_position(position, math.huge)
@@ -2874,7 +2944,7 @@ steps.toughness_spawn_bot = {
 		if step_data.fadeout_t then
 			local duration = 1
 
-			fadeout_radius(step_data.decal_unit, t, step_data.fadeout_t, duration)
+			_fadeout_radius(step_data.decal_unit, t, step_data.fadeout_t, duration)
 		end
 
 		if not step_data.bot_teleported and step_data.boxed_position and Vector3.distance(bot_position, Vector3Box.unbox(step_data.boxed_position)) < 1 then
@@ -2882,27 +2952,26 @@ steps.toughness_spawn_bot = {
 			local bot_unit = bot_player.player_unit
 			bot_position = POSITION_LOOKUP[bot_unit]
 
-			spawn_spawn_vfx(scenario_system, bot_position)
+			_spawn_spawn_vfx(scenario_system, bot_position)
 		end
 
 		if not step_data.buffs_swapped and (step_data.coherency_area_entered or coherency_extension:num_units_in_coherency() == 0) then
 			step_data.buffs_swapped = true
 
-			remove_unique_buff(player.player_unit, "tg_no_coherency", scenario_data)
+			_remove_unique_buff(player.player_unit, "tg_no_coherency", scenario_data)
 
-			local specialization_extension = ScriptUnit.has_extension(player.player_unit, "specialization_system")
-			local specialization_name = specialization_extension:get_specialization_name()
+			local archetype_name = player:archetype_name()
 
-			if specialization_name == "ogryn_2" then
-				add_unique_buff(player.player_unit, "tg_increased_coherency_ogryn_2", scenario_data, t)
-			elseif specialization_name == "psyker_2" then
-				add_unique_buff(player.player_unit, "tg_increased_coherency_psyker_2", scenario_data, t)
-			elseif specialization_name == "zealot_2" then
-				add_unique_buff(player.player_unit, "tg_increased_coherency_zealot_2", scenario_data, t)
-			elseif specialization_name == "veteran_2" then
-				add_unique_buff(player.player_unit, "tg_increased_coherency_veteran_2", scenario_data, t)
+			if archetype_name == "ogryn" then
+				_add_unique_buff(player.player_unit, "tg_increased_coherency_ogryn", scenario_data, t)
+			elseif archetype_name == "psyker" then
+				_add_unique_buff(player.player_unit, "tg_increased_coherency_psyker", scenario_data, t)
+			elseif archetype_name == "zealot" then
+				_add_unique_buff(player.player_unit, "tg_increased_coherency_zealot", scenario_data, t)
+			elseif archetype_name == "veteran" then
+				_add_unique_buff(player.player_unit, "tg_increased_coherency_veteran", scenario_data, t)
 			else
-				add_unique_buff(player.player_unit, "tg_increased_coherency", scenario_data, t)
+				_add_unique_buff(player.player_unit, "tg_increased_coherency", scenario_data, t)
 			end
 		end
 
@@ -2913,7 +2982,7 @@ steps.toughness_spawn_bot = {
 			local toughness_percent = toughness_extension:current_toughness_percent()
 
 			if toughness_percent >= 1 then
-				set_objective_tracker_value("toughness_coherency", 1, true)
+				_set_objective_tracker_value("toughness_coherency", 1, true)
 
 				return true
 			end
@@ -2944,28 +3013,53 @@ steps.toughness_remove_bot = {
 		local bot_unit = bot_player.player_unit
 		local bot_position = POSITION_LOOKUP[bot_unit]
 
-		spawn_despawn_vfx(scenario_system, bot_position)
+		_spawn_despawn_vfx(scenario_system, bot_position)
 		scenario_system:queue_bot_removal(bot_local_id)
 	end
 }
 steps.combat_ability_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.combat_ability)
+		_display_info(TrainingGroundsInfoLookup.combat_ability)
 	end
 }
 steps.combat_ability_prompt_ogryn_bonebreaker = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.combat_ability_bone_breaker)
+		_display_info(TrainingGroundsInfoLookup.combat_ability_bone_breaker)
 	end
 }
 steps.combat_ability_prompt_psyker_biomancer = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.combat_ability_biomancer)
+		_display_info(TrainingGroundsInfoLookup.combat_ability_biomancer)
 	end
 }
 steps.combat_ability_prompt_zealot_maniac = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.combat_ability_maniac)
+		_display_info(TrainingGroundsInfoLookup.combat_ability_maniac)
+	end
+}
+steps.combat_ability_prompt_psyker_protectorate = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.combat_ability_protectorate)
+	end
+}
+steps.combat_ability_prompt_ogryn_gun_lugger = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.combat_ability_gun_lugger)
+	end
+}
+steps.combat_ability_prompt_zealot_preacher = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.combat_ability_preacher)
+	end
+}
+steps.combat_ability_prompt_zealot_preacher_2 = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		return
+	end
+}
+steps.combat_ability_prompt_veteran_squad_leader = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_display_info(TrainingGroundsInfoLookup.combat_ability_squad_leader)
 	end
 }
 steps.combat_ability_loop_veteran_ranger = {
@@ -2978,7 +3072,7 @@ steps.combat_ability_loop_veteran_ranger = {
 		step_data.enemies = {}
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
-		ensure_has_ammo(player)
+		_ensure_has_ammo(player)
 
 		if step_data.target_kill_count <= step_data.kill_count then
 			return true
@@ -2997,13 +3091,13 @@ steps.combat_ability_loop_veteran_ranger = {
 
 		if not enemies_alive then
 			for i = 1, #enemies do
-				dissolve_unit(enemies[i], t)
+				_dissolve_unit(enemies[i], t)
 
 				enemies[i] = nil
 			end
 
 			local reference_unit = scenario_system:get_directional_unit("player_reset")
-			step_data.enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+			step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 				{
 					breed_name = "renegade_sniper",
 					relative_position = Vector3(-0.5, 15, 0),
@@ -3044,10 +3138,10 @@ steps.combat_ability_loop_veteran_ranger = {
 			local player_unit = player.player_unit
 			local buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
 
-			if buff_extension and buff_extension:has_keyword("veteran_ranger_combat_ability") then
+			if buff_extension and buff_extension:has_keyword("veteran_combat_ability_stance") then
 				step_data.kill_count = step_data.kill_count + 1
 
-				set_objective_tracker_value("combat_ability", step_data.kill_count, true)
+				_set_objective_tracker_value("combat_ability", step_data.kill_count, true)
 			end
 		end
 	end,
@@ -3055,7 +3149,7 @@ steps.combat_ability_loop_veteran_ranger = {
 		local enemies = step_data.enemies
 
 		for i = 1, #enemies do
-			dissolve_unit(enemies[i], t)
+			_dissolve_unit(enemies[i], t)
 		end
 	end
 }
@@ -3070,7 +3164,7 @@ steps.combat_ability_loop_zealot_maniac = {
 		step_data.dash_count = 0
 		step_data.dash_count_target = 2
 		local reference_unit = scenario_system:get_directional_unit("player_reset")
-		step_data.enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+		step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 			{
 				breed_name = "renegade_rifleman",
 				relative_position = Vector3(-3.5, 14, 0),
@@ -3091,7 +3185,7 @@ steps.combat_ability_loop_zealot_maniac = {
 			return true
 		end
 
-		ensure_has_combat_ability(player, step_data, t, 1.5)
+		_ensure_has_combat_ability(player, step_data, t, 1.5)
 
 		return false
 	end,
@@ -3104,7 +3198,7 @@ steps.combat_ability_loop_zealot_maniac = {
 
 			for ii = #buffs, 1, -1 do
 				local buff_template = buffs[ii]:template()
-				local wanted_buff_name = "zealot_maniac_dash_buff"
+				local wanted_buff_name = "zealot_dash_buff"
 
 				if buff_template.name == wanted_buff_name then
 					has_dash_buff = true
@@ -3122,19 +3216,19 @@ steps.combat_ability_loop_zealot_maniac = {
 
 				step_data.crit_count = step_data.crit_count + 1
 
-				set_objective_tracker_value("combat_ability_zealot_2", step_data.crit_count, true)
+				_set_objective_tracker_value("combat_ability_zealot_2", step_data.crit_count, true)
 			end
 		else
 			step_data.dash_count = step_data.dash_count + 1
 
-			set_objective_tracker_value("combat_ability_zealot_1", step_data.dash_count, true)
+			_set_objective_tracker_value("combat_ability_zealot_1", step_data.dash_count, true)
 		end
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
 		local enemies = step_data.enemies
 
 		for i = 1, #enemies do
-			dissolve_unit(enemies[i], t)
+			_dissolve_unit(enemies[i], t)
 		end
 	end
 }
@@ -3147,7 +3241,7 @@ steps.combat_ability_loop_ogryn_bonebreaker = {
 		step_data.target_stagger_count = 5
 		step_data.big_stagger = false
 		local reference_unit = scenario_system:get_directional_unit("player_reset")
-		step_data.enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+		step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 			{
 				breed_name = "chaos_newly_infected",
 				relative_position = Vector3(-1, 7, 0),
@@ -3220,11 +3314,11 @@ steps.combat_ability_loop_ogryn_bonebreaker = {
 		if breed and breed.name and breed.name == "chaos_ogryn_executor" then
 			step_data.big_stagger = true
 
-			set_objective_tracker_value("combat_ability_ogryn_2", 1, play_sound)
+			_set_objective_tracker_value("combat_ability_ogryn_2", 1, play_sound)
 		else
 			step_data.small_stagger_count = step_data.small_stagger_count + 1
 
-			set_objective_tracker_value("combat_ability_ogryn_1", step_data.small_stagger_count, play_sound)
+			_set_objective_tracker_value("combat_ability_ogryn_1", step_data.small_stagger_count, play_sound)
 		end
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
@@ -3236,7 +3330,92 @@ steps.combat_ability_ogryn_bonebreaker_remove = {
 		local enemies = scenario_data.enemies
 
 		for i = 1, #enemies do
-			dissolve_unit(enemies[i], t)
+			_dissolve_unit(enemies[i], t)
+		end
+	end
+}
+steps.combat_ability_ogryn_gun_lugger = {
+	events = {
+		"tg_on_attack_execute"
+	},
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		local enemy_count = 10
+		step_data.target_enemy_killed = enemy_count
+		step_data.kill_count = 0
+		local from_angle = -math.pi * 0.25
+		local to_angle = -from_angle
+		local delta_angle = (to_angle - from_angle) / enemy_count
+		local distance = 10
+		local distance_vec = Vector3(0, distance, 0)
+		scenario_data.enemies = {}
+		scenario_data.enemy_indices = {}
+		scenario_data.enemy_positions = {}
+		scenario_data.enemy_rotations = {}
+		local reference_unit = scenario_system:get_directional_unit("player_reset")
+
+		for i = 1, enemy_count do
+			local angle = from_angle + delta_angle * (i - 1)
+			local delta_pos = Quaternion.rotate(Quaternion.axis_angle(Vector3.up(), angle), distance_vec)
+			local position, rotation = _get_relative_position_rotation(reference_unit, delta_pos, -Vector3.forward(), DEFAULT_GROUND_POSITION)
+			local unit = _spawn_breed_position_rotation("chaos_newly_infected", position, rotation, t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER)
+			scenario_data.enemy_positions[i] = Vector3Box(position)
+			scenario_data.enemy_rotations[i] = QuaternionBox(rotation)
+			scenario_data.enemy_indices[unit] = i
+			scenario_data.enemies[i] = unit
+		end
+	end,
+	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_data)
+		if _target_died(event_data) then
+			if step_data.ability_used then
+				step_data.kill_count = step_data.kill_count + 1
+			else
+				local enemy_unit = event_data.attacked_unit
+				local index = scenario_data.enemy_indices[enemy_unit]
+
+				if not index then
+					return
+				end
+
+				local position = scenario_data.enemy_positions[index]:unbox()
+				local rotation = scenario_data.enemy_rotations[index]:unbox()
+				local t = FixedFrame.get_latest_fixed_time()
+				local unit = _spawn_breed_position_rotation("chaos_newly_infected", position, rotation, t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER)
+				scenario_data.enemy_indices[unit] = index
+				scenario_data.enemies[index] = unit
+
+				_dissolve_unit(enemy_unit, t)
+			end
+		end
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		local enemies = scenario_data.enemies
+		local enemies_alive = false
+
+		for i = 1, #enemies do
+			if HEALTH_ALIVE[enemies[i]] then
+				enemies_alive = true
+			end
+		end
+
+		local buff_extension = ScriptUnit.has_extension(player.player_unit, "buff_system")
+
+		if not step_data.ability_used and buff_extension:has_unique_buff_id("ogryn_ranged_stance") then
+			_set_objective_tracker_value("combat_ability_ogryn_1_1", 1, true)
+
+			step_data.ability_used = true
+		end
+
+		if step_data.ability_used and enemies_alive == false and not step_data.do_once then
+			_set_objective_tracker_value("combat_ability_ogryn_1_2", 1, true)
+		end
+
+		return step_data.target_enemy_killed <= step_data.kill_count or enemies_alive == false and step_data.ability_used and step_data.kill_count > 2
+	end,
+	stop_func = function (scenario_system, player, scenario_data, step_data, t)
+		local enemies = scenario_data.enemies
+
+		for i = 1, #enemies do
+			_dissolve_unit(enemies[i], t)
 		end
 	end
 }
@@ -3272,13 +3451,13 @@ steps.combat_ability_loop_psyker_biomancer_pre = {
 
 		if not enemies_alive then
 			for i = 1, #enemies do
-				dissolve_unit(enemies[i], t)
+				_dissolve_unit(enemies[i], t)
 
 				enemies[i] = nil
 			end
 
 			local reference_unit = scenario_system:get_directional_unit("player_reset")
-			step_data.enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+			step_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 				{
 					breed_name = "renegade_melee",
 					relative_position = Vector3(-2, 8, 0),
@@ -3308,10 +3487,10 @@ steps.combat_ability_loop_psyker_biomancer_pre = {
 		local enemies = step_data.enemies
 
 		for i = 1, #enemies do
-			dissolve_unit(enemies[i], t)
+			_dissolve_unit(enemies[i], t)
 		end
 
-		remove_objective_tracker(nil, true)
+		_remove_objective_tracker(nil, true)
 	end
 }
 steps.combat_ability_loop_psyker_biomancer = {
@@ -3344,7 +3523,7 @@ steps.combat_ability_loop_psyker_biomancer = {
 			end
 		end
 
-		ensure_has_combat_ability(player, step_data, t, 1.5)
+		_ensure_has_combat_ability(player, step_data, t, 1.5)
 
 		if not step_data.timer or step_data.timer < t and not step_data.do_once then
 			step_data.timer = t + 0.2
@@ -3356,13 +3535,13 @@ steps.combat_ability_loop_psyker_biomancer = {
 
 		if not enemies_alive then
 			for i = 1, #enemies do
-				dissolve_unit(enemies[i], t)
+				_dissolve_unit(enemies[i], t)
 
 				enemies[i] = nil
 			end
 
 			local reference_unit = scenario_system:get_directional_unit("player_reset")
-			scenario_data.enemies = spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+			scenario_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
 				{
 					breed_name = "chaos_newly_infected",
 					relative_position = Vector3(-2, 6, 0),
@@ -3428,7 +3607,7 @@ steps.combat_ability_loop_psyker_biomancer = {
 			if attack_type and attack_type == "shout" then
 				step_data.knock_back_count = step_data.knock_back_count + 1
 
-				set_objective_tracker_value("combat_ability_psyker_3", step_data.knock_back_count, play_sound)
+				_set_objective_tracker_value("combat_ability_psyker_3", step_data.knock_back_count, play_sound)
 			end
 		end
 	end
@@ -3438,7 +3617,170 @@ steps.combat_ability_biomancer_remove = {
 		local enemies = scenario_data.enemies
 
 		for i = 1, #enemies do
-			dissolve_unit(enemies[i], t)
+			_dissolve_unit(enemies[i], t)
+		end
+	end
+}
+steps.combat_ability_psyker_protectorate = {
+	events = {
+		"tg_on_combat_ability"
+	},
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		_equip_item(player, "slot_primary", TrainingGroundsItemNames.unarmed_training_grounds)
+		_equip_item(player, "slot_secondary", TrainingGroundsItemNames.unarmed_training_grounds)
+
+		scenario_data.enemies = {}
+	end,
+	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_params)
+		local wall_unit = event_params.force_field_unit
+		local wall_pos = event_params.position:unbox()
+		local wall_rot = event_params.rotation:unbox()
+		local player_pos = POSITION_LOOKUP[player.player_unit]
+		local wall_dir = Vector3.normalize(wall_pos - player_pos)
+		local dist_to_wall = Vector3.length(wall_pos - player_pos)
+		local distance_margin = 0.9
+		local wall_half_width = 3
+		local dir_to_edge = Vector3.normalize(wall_pos + Quaternion.rotate(wall_rot, Vector3(wall_half_width, 0, 0)) - player_pos)
+		local wall_edge_dot = Vector3.dot(wall_dir, dir_to_edge)
+		local enemies = scenario_data.enemies
+
+		for i = 1, #enemies do
+			local enemy = enemies[i]
+			local enemy_pos = POSITION_LOOKUP[enemy]
+			local enemy_vec = enemy_pos - player_pos
+			local enemy_is_behind = dist_to_wall < Vector3.dot(enemy_vec, wall_dir) - distance_margin
+			local enemy_is_within = wall_edge_dot < Vector3.dot(Vector3.normalize(enemy_vec), wall_dir)
+
+			if not enemy_is_behind or not enemy_is_within then
+				Managers.state.unit_spawner:mark_for_deletion(wall_unit)
+
+				local ability_extension = ScriptUnit.extension(player.player_unit, "ability_system")
+
+				ability_extension:reduce_ability_cooldown_percentage("combat_ability", 1)
+
+				return
+			end
+		end
+
+		scenario_data.wall_unit = wall_unit
+
+		_set_objective_tracker_value("combat_ability_psyker_3_1", 1, true)
+
+		step_data.wall_placed = true
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		local enemies = scenario_data.enemies
+		local enemies_alive = false
+
+		for i = 1, #enemies do
+			if HEALTH_ALIVE[enemies[i]] then
+				enemies_alive = true
+
+				break
+			end
+		end
+
+		if not enemies_alive then
+			for i = 1, #enemies do
+				_dissolve_unit(enemies[i], t)
+
+				enemies[i] = nil
+			end
+
+			local reference_unit = scenario_system:get_directional_unit("player_reset")
+			scenario_data.enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+				{
+					breed_name = "renegade_rifleman",
+					relative_position = Vector3(-1.5, 8, 0),
+					relative_look_direction = -Vector3.forward()
+				},
+				{
+					breed_name = "renegade_rifleman",
+					relative_position = Vector3(0, 8, 0),
+					relative_look_direction = -Vector3.forward()
+				},
+				{
+					breed_name = "renegade_rifleman",
+					relative_position = Vector3(1.5, 8, 0),
+					relative_look_direction = -Vector3.forward()
+				}
+			})
+		end
+
+		return step_data.wall_placed
+	end
+}
+steps.combat_ability_psyker_protectorate_kill_enemies = {
+	events = {
+		"tg_on_attack_execute"
+	},
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		step_data.transition_time = 0.7
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		if step_data.manipulate_time then
+			local raw_t = Managers.time:time("main")
+			local dt = raw_t - step_data.raw_t
+			step_data.lerp_t = step_data.lerp_t + dt / step_data.transition_time
+			local new_scale = math.lerp(1, 0.05, step_data.lerp_t)
+			new_scale = math.clamp(new_scale, 0.05, 1)
+			step_data.raw_t = raw_t
+
+			if math.abs(new_scale - 0.05) < 0.01 then
+				Managers.time:set_local_scale("gameplay", 0.05)
+				scenario_system:reset_scenario(t, 0.1)
+
+				step_data.manipulate_time = false
+			else
+				Managers.time:set_local_scale("gameplay", new_scale)
+			end
+		end
+
+		local reset = _reset_if_knocked_down(scenario_system, player.player_unit, t, 3)
+
+		if reset then
+			return false
+		end
+
+		local enemies = scenario_data.enemies
+
+		for i = 1, #enemies do
+			if HEALTH_ALIVE[enemies[i]] then
+				return false
+			end
+		end
+
+		_set_objective_tracker_value("combat_ability_psyker_3_2", 1, true)
+
+		return true
+	end,
+	on_event = function (scenario_system, player, scenario_data, step_data, event_name, event_params)
+		if event_params.attacked_unit == player.player_unit then
+			step_data.raw_t = Managers.time:time("main")
+			step_data.manipulate_time = true
+			local current_scale = Managers.time:local_scale("gameplay")
+			local current_lerp_t = math.ilerp(1, 0.05, current_scale)
+			step_data.lerp_t = current_lerp_t
+		end
+	end,
+	stop_func = function (scenario_system, player, scenario_data, step_data, t)
+		Managers.time:set_local_scale("gameplay", 1)
+
+		local enemies = scenario_data.enemies
+
+		for i = 1, #enemies do
+			_dissolve_unit(enemies[i], t)
+
+			enemies[i] = nil
+		end
+	end
+}
+steps.combat_ability_psyker_protectorate_cleanup = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		local wall_unit = scenario_data.wall_unit
+
+		if ALIVE[wall_unit] then
+			Managers.state.unit_spawner:mark_for_deletion(wall_unit)
 		end
 	end
 }
@@ -3448,39 +3790,39 @@ steps.generic_dissolve_scenario_enemies = {
 
 		if enemies then
 			for i = 1, #enemies do
-				dissolve_unit(enemies[i], t)
+				_dissolve_unit(enemies[i], t)
 			end
 		end
 	end
 }
 steps.weapon_special_prompt_chainsword = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.weapon_special_chainsword)
+		_display_info(TrainingGroundsInfoLookup.weapon_special_chainsword)
 	end
 }
 steps.weapon_special_prompt_forcesword = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.weapon_special_forcesword)
+		_display_info(TrainingGroundsInfoLookup.weapon_special_forcesword)
 	end
 }
 steps.weapon_special_prompt_ogrynknife = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.weapon_special_ogrynknife)
+		_display_info(TrainingGroundsInfoLookup.weapon_special_ogrynknife)
 	end
 }
 steps.m1_chain_attack_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.chain_attack)
+		_display_info(TrainingGroundsInfoLookup.chain_attack)
 	end
 }
 steps.chain_attack_heavy_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.chain_attack_heavy)
+		_display_info(TrainingGroundsInfoLookup.chain_attack_heavy)
 	end
 }
 steps.reviving_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.reviving)
+		_display_info(TrainingGroundsInfoLookup.reviving)
 	end
 }
 steps.reviving_spawn_bot = {
@@ -3503,19 +3845,19 @@ steps.reviving_spawn_bot = {
 		end
 
 		local reference_unit = scenario_system:get_directional_unit("player_reset")
-		local position, rotation = get_relative_position_rotation(reference_unit, Vector3(0, 6, 0), -Vector3.forward(), DEFAULT_GROUND_POSITION)
+		local position, rotation = _get_relative_position_rotation(reference_unit, Vector3(0, 6, 0), -Vector3.forward(), DEFAULT_GROUND_POSITION)
 
 		PlayerMovement.teleport_fixed_update(bot_player.player_unit, position, rotation)
 
 		local bot_unit = bot_player.player_unit
 		local bot_position = POSITION_LOOKUP[bot_unit]
 
-		spawn_spawn_vfx(scenario_system, bot_position)
+		_spawn_spawn_vfx(scenario_system, bot_position)
 
 		scenario_data.bot_unit = bot_unit
 
 		PlayerDeath.knock_down(bot_unit)
-		add_unique_buff(bot_unit, "tg_player_resist_death", scenario_data, t)
+		_add_unique_buff(bot_unit, "tg_player_resist_death", scenario_data, t)
 
 		return true
 	end
@@ -3532,8 +3874,8 @@ steps.reviving_wait_for_bot_revival = {
 				return false
 			end
 
-			set_objective_tracker_value("reviving", 1, true)
-			remove_unique_buff(bot_unit, "tg_player_resist_death", scenario_data)
+			_set_objective_tracker_value("reviving", 1, true)
+			_remove_unique_buff(bot_unit, "tg_player_resist_death", scenario_data)
 
 			return true
 		end
@@ -3553,8 +3895,8 @@ steps.reviving_spawn_servitor = {
 		local relative_camera_height = camera_position[3] - POSITION_LOOKUP[player.player_unit][3]
 
 		servitor_handler:spawn_servitor(Vector3(100, 100, -100), Quaternion.identity())
-		teleport_servitor_if_far_away(scenario_system, servitor_handler, player.player_unit)
-		add_objective_marker(servitor_handler:unit(), "training_grounds", false, {
+		_teleport_servitor_if_far_away(scenario_system, servitor_handler, player.player_unit)
+		_add_objective_marker(servitor_handler:unit(), "training_grounds", false, {
 			ui_target_type = "servitor"
 		})
 		servitor_handler:move_to_unit_relative_arc(player.player_unit, Vector3(0, 1, relative_camera_height), true, false, true)
@@ -3565,7 +3907,7 @@ steps.reviving_spawn_servitor = {
 		interactee_extension:set_description("loc_training_grounds_force_down")
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
-		teleport_servitor_if_far_away(scenario_system, step_data.servitor_handler, player.player_unit)
+		_teleport_servitor_if_far_away(scenario_system, step_data.servitor_handler, player.player_unit)
 
 		if step_data.interacted then
 			if not step_data.grace_timer then
@@ -3580,12 +3922,12 @@ steps.reviving_spawn_servitor = {
 	on_event = function (scenario_system, player, scenario_data, step_data, event_name)
 		step_data.interacted = true
 
-		set_objective_tracker_value("corruption", 1, true)
+		_set_objective_tracker_value("corruption", 1, true)
 
 		local player_unit = player.player_unit
 
 		PlayerDeath.knock_down(player_unit)
-		remove_objective_marker(step_data.servitor_handler:unit())
+		_remove_objective_marker(step_data.servitor_handler:unit())
 
 		local peer_id = Network.peer_id()
 		local bot_local_id = scenario_data.bot_local_id
@@ -3634,26 +3976,16 @@ steps.reviving_wait_for_player_revival = {
 		end
 
 		return false
-	end,
-	stop_func = function (scenario_system, player, scenario_data, step_data, t)
-		local player_unit = player.player_unit
-		local health_extension = ScriptUnit.has_extension(player_unit, "health_system")
-
-		if health_extension then
-			local heal_amount = 5000
-			local heal_type = DamageSettings.heal_types.blessing
-			local heal_type = DamageSettings.heal_types.healing_station
-		end
 	end
 }
 steps.corruption_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.corruption)
+		_display_info(TrainingGroundsInfoLookup.corruption)
 	end
 }
 steps.health_station_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.health_station)
+		_display_info(TrainingGroundsInfoLookup.health_station)
 	end
 }
 steps.reviving_spawn_health_station = {
@@ -3664,8 +3996,8 @@ steps.reviving_spawn_health_station = {
 		local unit_name = "content/environment/gameplay/health_station/health_station"
 		local template_name = "health_station"
 		local reference_unit = player.player_unit
-		step_data.station_spawn_data = spawn_unit_relative_position_safe(reference_unit, player, unit_name, template_name, Vector3(0, 9, 0), Vector3.forward(), t, DEFAULT_SPAWN_DURATION, "player_reset")
-		step_data.battery_spawn_data = spawn_unit_relative_position_safe(reference_unit, player, nil, nil, Vector3(-1.5, 7, 0), Vector3.forward(), t, DEFAULT_SPAWN_DURATION, "player_reset")
+		step_data.station_spawn_data = _spawn_unit_relative_position_safe(reference_unit, player, unit_name, template_name, Vector3(0, 9, 0), Vector3.forward(), t, DEFAULT_SPAWN_DURATION, "player_reset")
+		step_data.battery_spawn_data = _spawn_unit_relative_position_safe(reference_unit, player, nil, nil, Vector3(-1.5, 7, 0), Vector3.forward(), t, DEFAULT_SPAWN_DURATION, "player_reset")
 	end,
 	condition_func = function (scenario_system, player, scenario_data, step_data, t)
 		local station_spawn_data = step_data.station_spawn_data
@@ -3689,7 +4021,7 @@ steps.reviving_spawn_health_station = {
 			wanted_pos[3] = battery_pos[3]
 
 			Unit.set_local_position(battery_unit, 1, wanted_pos)
-			add_objective_marker(health_station_extension:battery_unit(), "training_grounds", false)
+			_add_objective_marker(health_station_extension:battery_unit(), "training_grounds", false)
 
 			step_data.battery_marked = true
 		end
@@ -3705,14 +4037,14 @@ steps.reviving_spawn_health_station = {
 				step_data.battery_marked = true
 				step_data.station_marked = false
 
-				add_objective_marker(health_station_extension:battery_unit(), "training_grounds", false)
-				remove_objective_marker(socket_unit)
+				_add_objective_marker(health_station_extension:battery_unit(), "training_grounds", false)
+				_remove_objective_marker(socket_unit)
 			elseif carrying_battery and not step_data.station_marked then
 				step_data.battery_marked = false
 				step_data.station_marked = true
 
-				add_objective_marker(socket_unit, "training_grounds", false)
-				remove_objective_marker(health_station_extension:battery_unit())
+				_add_objective_marker(socket_unit, "training_grounds", false)
+				_remove_objective_marker(health_station_extension:battery_unit())
 			end
 
 			return false
@@ -3723,7 +4055,7 @@ steps.reviving_spawn_health_station = {
 
 		if is_full_health then
 			if not step_data.despawn_grace_t then
-				set_objective_tracker_value("health_staton_objective_2", 1, true)
+				_set_objective_tracker_value("health_station_objective_2", 1, true)
 
 				step_data.despawn_grace_t = t + 1.5
 			elseif step_data.despawn_grace_t < t then
@@ -3734,7 +4066,7 @@ steps.reviving_spawn_health_station = {
 		return false
 	end,
 	on_event = function (scenario_system, player, scenario_data, step_data, event_name)
-		set_objective_tracker_value("health_staton_objective_1", 1, true)
+		_set_objective_tracker_value("health_station_objective_1", 1, true)
 	end,
 	stop_func = function (scenario_system, player, scenario_data, step_data, t)
 		local health_station_unit = step_data.station_spawn_data.unit
@@ -3743,7 +4075,7 @@ steps.reviving_spawn_health_station = {
 			local health_station_extension = ScriptUnit.extension(health_station_unit, "health_station_system")
 			local socket_unit = health_station_extension:socket_unit()
 
-			remove_objective_marker(socket_unit)
+			_remove_objective_marker(socket_unit)
 		end
 
 		scenario_data.health_station_unit = health_station_unit
@@ -3766,7 +4098,7 @@ steps.reviving_cleanup = {
 }
 steps.healing_self_and_others_prompt = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		display_info(TrainingGroundsInfoLookup.healing_self_and_others)
+		_display_info(TrainingGroundsInfoLookup.healing_self_and_others)
 	end
 }
 steps.healing_self_and_others_spawn_bot = {
@@ -3787,11 +4119,11 @@ steps.healing_self_and_others_spawn_bot = {
 			local bot_unit = bot_player.player_unit
 			local bot_position = POSITION_LOOKUP[bot_unit]
 
-			spawn_spawn_vfx(scenario_system, bot_position)
+			_spawn_spawn_vfx(scenario_system, bot_position)
 		end
 
 		local reference_unit = scenario_system:get_directional_unit("player_reset")
-		local position, rotation = get_relative_position_rotation(reference_unit, Vector3(0, 6, 0), -Vector3.forward(), DEFAULT_GROUND_POSITION)
+		local position, rotation = _get_relative_position_rotation(reference_unit, Vector3(0, 6, 0), -Vector3.forward(), DEFAULT_GROUND_POSITION)
 
 		PlayerMovement.teleport_fixed_update(bot_player.player_unit, position, rotation)
 
@@ -3856,23 +4188,23 @@ steps.wait_for_full_health_and_ammo = {
 		local held_pocketable = inventory_component.slot_pocketable
 
 		if held_pocketable ~= "not_equipped" then
-			remove_objective_marker(scenario_data.med_kit_unit)
+			_remove_objective_marker(scenario_data.med_kit_unit)
 		end
 
 		if not step_data.spawned_med and not step_data.heal_once and not ALIVE[scenario_data.placed_med_kit] then
 			step_data.spawned_med = true
 			local reference_unit = scenario_system:get_directional_unit("player_reset")
-			scenario_data.med_kit_unit = spawn_pickup_relative_safe(scenario_system, player, reference_unit, "medical_crate_pocketable", Vector3(0, 5, 0), -Vector3.forward(), DEFAULT_APPLY_MARKER, "player_reset")
+			scenario_data.med_kit_unit = _spawn_pickup_relative_safe(scenario_system, player, reference_unit, "medical_crate_pocketable", Vector3(0, 5, 0), -Vector3.forward(), DEFAULT_APPLY_MARKER, "player_reset")
 		end
 
 		local health_extension = ScriptUnit.extension(player_unit, "health_system")
 		local health_is_full = health_extension:current_health_percent() == 1
 
-		if health_is_full and not step_data.heal_once then
+		if health_is_full and not step_data.heal_once and scenario_data.placed_med_kit then
 			step_data.heal_once = true
 
-			set_objective_tracker_value("healing_objective_3", 1, true)
-			remove_objective_marker(scenario_data.placed_med_kit)
+			_set_objective_tracker_value("healing_objective_3", 1, true)
+			_remove_objective_marker(scenario_data.placed_med_kit)
 		end
 
 		if #scenario_data.placed_units >= 1 then
@@ -3894,7 +4226,7 @@ steps.wait_for_full_health_and_ammo = {
 			local side_relation_extension = ScriptUnit.has_extension(unit_placed, "proximity_system")
 
 			if side_relation_extension then
-				set_objective_tracker_value("healing_objective_1", 1, true)
+				_set_objective_tracker_value("healing_objective_1", 1, true)
 
 				scenario_data.placed_med_kit = unit_placed
 				step_data.spawned_med = false
@@ -3902,7 +4234,7 @@ steps.wait_for_full_health_and_ammo = {
 				step_data.placed_med_pos:store(POSITION_LOOKUP[unit_placed])
 			end
 
-			add_objective_marker(unit_placed, "training_grounds", false, {
+			_add_objective_marker(unit_placed, "training_grounds", false, {
 				ui_target_type = "interact"
 			})
 		end
@@ -3910,7 +4242,7 @@ steps.wait_for_full_health_and_ammo = {
 		scenario_data.placed_units[#scenario_data.placed_units + 1] = unit_placed
 
 		if ALIVE[scenario_data.med_kit_unit] then
-			add_objective_marker(scenario_data.med_kit_unit, "training_grounds", false, {
+			_add_objective_marker(scenario_data.med_kit_unit, "training_grounds", false, {
 				ui_target_type = "interact"
 			})
 		end
@@ -3925,9 +4257,9 @@ steps.wait_for_full_ammo = {
 		step_data.spawn_frequency = 15
 		step_data.time_out = 30
 
-		remove_objective_tracker(nil, true)
-		add_objective_tracker("healing_objective_2", true)
-		add_objective_tracker("healing_objective_4", false)
+		_remove_objective_tracker(nil, true)
+		_add_objective_tracker("healing_objective_2", true)
+		_add_objective_tracker("healing_objective_4", false)
 
 		step_data.placed_ammo_pos = Vector3Box()
 		scenario_data.placed_units = {}
@@ -3939,13 +4271,13 @@ steps.wait_for_full_ammo = {
 		local held_pocketable = inventory_component.slot_pocketable
 
 		if held_pocketable ~= "not_equipped" then
-			remove_objective_marker(scenario_data.ammo_kit_unit)
+			_remove_objective_marker(scenario_data.ammo_kit_unit)
 		end
 
 		if not step_data.spawned_ammo and not step_data.ammo_once and not ALIVE[scenario_data.placed_ammo_kit] then
 			step_data.spawned_ammo = true
 			local reference_unit = scenario_system:get_directional_unit("player_reset")
-			scenario_data.ammo_kit_unit = spawn_pickup_relative_safe(scenario_system, player, reference_unit, "ammo_cache_pocketable", Vector3(0, 9.5, 0), -Vector3.forward(), DEFAULT_APPLY_MARKER, "player_reset")
+			scenario_data.ammo_kit_unit = _spawn_pickup_relative_safe(scenario_system, player, reference_unit, "ammo_cache_pocketable", Vector3(0, 9.5, 0), -Vector3.forward(), DEFAULT_APPLY_MARKER, "player_reset")
 		end
 
 		local ammo_percentage = Ammo.current_slot_percentage(player_unit, "slot_secondary")
@@ -3953,8 +4285,8 @@ steps.wait_for_full_ammo = {
 		if ammo_percentage > 0.5 and not step_data.ammo_once then
 			step_data.ammo_once = true
 
-			set_objective_tracker_value("healing_objective_4", 1, true)
-			remove_objective_marker(scenario_data.placed_ammo_kit)
+			_set_objective_tracker_value("healing_objective_4", 1, true)
+			_remove_objective_marker(scenario_data.placed_ammo_kit)
 		end
 
 		if #scenario_data.placed_units >= 1 then
@@ -3964,7 +4296,7 @@ steps.wait_for_full_ammo = {
 
 			if step_data.timeout_t < t then
 				Log.warning("TrainingGrounds", "Pocketables were placed but scenario timed out. Unreachable? Ammo: %s, Medcrate: %s", step_data.placed_ammo_pos, step_data.placed_med_pos)
-				ensure_has_ammo(player)
+				_ensure_has_ammo(player)
 
 				return true
 			end
@@ -3974,13 +4306,13 @@ steps.wait_for_full_ammo = {
 	end,
 	on_event = function (scenario_system, player, scenario_data, step_data, event_name, unit_placed)
 		if ALIVE[unit_placed] then
-			set_objective_tracker_value("healing_objective_2", 1, true)
+			_set_objective_tracker_value("healing_objective_2", 1, true)
 
 			scenario_data.placed_ammo_kit = unit_placed
 			step_data.spawned_ammo = false
 
 			step_data.placed_ammo_pos:store(POSITION_LOOKUP[unit_placed])
-			add_objective_marker(unit_placed, "training_grounds", false, {
+			_add_objective_marker(unit_placed, "training_grounds", false, {
 				ui_target_type = "interact"
 			})
 		end
@@ -3988,7 +4320,7 @@ steps.wait_for_full_ammo = {
 		scenario_data.placed_units[#scenario_data.placed_units + 1] = unit_placed
 
 		if ALIVE[scenario_data.ammo_kit_unit] then
-			add_objective_marker(scenario_data.ammo_kit_unit, "training_grounds", false, {
+			_add_objective_marker(scenario_data.ammo_kit_unit, "training_grounds", false, {
 				ui_target_type = "interact"
 			})
 		end
@@ -4002,10 +4334,10 @@ steps.health_and_ammo_cleanup = {
 			local peer_id = Network.peer_id()
 			local bot_player = Managers.player:player(peer_id, bot_local_id)
 			local bot_unit = bot_player.player_unit
-			local bot_position = POSITION_LOOKUP[bot_unit]
+			local bot_position = Unit.world_position(bot_unit, 1)
 
 			if bot_position then
-				spawn_despawn_vfx(scenario_system, bot_position)
+				_spawn_despawn_vfx(scenario_system, bot_position)
 			end
 
 			scenario_system:queue_bot_removal(bot_local_id)
@@ -4015,14 +4347,14 @@ steps.health_and_ammo_cleanup = {
 
 		if ALIVE[ammo_kit] then
 			Unit.set_local_position(ammo_kit, 1, Vector3(0, 0, 0))
-			despawn_pickup(ammo_kit)
+			_despawn_pickup(ammo_kit)
 		end
 
 		local med_kit = scenario_data.med_kit_unit
 
 		if ALIVE[med_kit] then
 			Unit.set_local_position(med_kit, 1, Vector3(0, 0, 0))
-			despawn_pickup(med_kit)
+			_despawn_pickup(med_kit)
 		end
 
 		local placed_med_kit = scenario_data.placed_med_kit
@@ -4041,7 +4373,7 @@ steps.health_and_ammo_cleanup = {
 
 		if ALIVE[placed_ammo_kit] then
 			Unit.set_local_position(placed_ammo_kit, 1, Vector3(0, 0, 0))
-			despawn_pickup(placed_ammo_kit)
+			_despawn_pickup(placed_ammo_kit)
 		end
 	end
 }
@@ -4057,7 +4389,7 @@ steps.remove_all_bots = {
 			if bot_player and bot_player.player_unit then
 				local bot_position = Unit.local_position(bot_player.player_unit, 1)
 
-				spawn_despawn_vfx(scenario_system, bot_position)
+				_spawn_despawn_vfx(scenario_system, bot_position)
 			end
 
 			scenario_data.bot_local_id = scenario_system:queue_bot_removal(bot_local_id)
@@ -4066,12 +4398,12 @@ steps.remove_all_bots = {
 }
 steps.transition_show = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		show_transition(true)
+		_show_transition(true)
 	end
 }
 steps.transition_hide = {
 	start_func = function (scenario_system, player, scenario_data, step_data, t)
-		show_transition(false)
+		_show_transition(false)
 	end
 }
 steps.part_1_completed_decide_continue = {
@@ -4138,7 +4470,7 @@ steps.ensure_player_healthy = {
 			if not step_data.transition_shown then
 				step_data.transition_shown = true
 
-				show_transition(true)
+				_show_transition(true)
 
 				step_data.force_assist_t = t + 0.5
 			elseif step_data.force_assist_t < t then
@@ -4157,7 +4489,7 @@ steps.ensure_player_healthy = {
 		end
 
 		if step_data.transition_shown then
-			show_transition(false)
+			_show_transition(false)
 		end
 
 		local toughness_extension = ScriptUnit.extension(player.player_unit, "toughness_system")
@@ -4174,6 +4506,294 @@ steps.ensure_player_healthy = {
 		health_ext:add_damage(-damage_taken, 0)
 
 		return true
+	end
+}
+steps.combat_ability_zealot_preacher_use_on_ally = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		step_data.bot_local_id = scenario_system:queue_bot_addition()
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		local peer_id = Network.peer_id()
+		local local_bot_player_id = step_data.bot_local_id
+		local bot_player = Managers.player:player(peer_id, local_bot_player_id)
+		local bot_is_spawned = bot_player and bot_player.player_unit
+
+		if not bot_is_spawned then
+			return false
+		end
+
+		if not step_data.bot_teleported then
+			step_data.bot_teleported = true
+			local reference_unit = scenario_system:get_directional_unit("player_reset")
+			local position, rotation = _get_relative_position_rotation(reference_unit, Vector3(1, 10, 0), Vector3.forward(), DEFAULT_GROUND_POSITION)
+			step_data.boxed_position = Vector3Box(position)
+
+			PlayerMovement.teleport_fixed_update(bot_player.player_unit, position, rotation)
+		end
+
+		if not step_data.vfx_once and step_data.boxed_position and Vector3.distance(POSITION_LOOKUP[bot_player.player_unit], Vector3Box.unbox(step_data.boxed_position)) < 1 then
+			step_data.vfx_once = true
+			local bot_unit = bot_player.player_unit
+			local bot_position = POSITION_LOOKUP[bot_unit]
+
+			_spawn_spawn_vfx(scenario_system, bot_position)
+		end
+
+		if not step_data.enemy_spawned then
+			step_data.enemy_spawned = true
+			local reference_unit = scenario_system:get_directional_unit("player_reset")
+			local spawned_enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, DEFAULT_APPLY_MARKER, {
+				{
+					breed_name = "chaos_newly_infected",
+					relative_position = Vector3(-1, 10, 0),
+					relative_look_direction = Vector3.right()
+				}
+			})
+			step_data.enemy = spawned_enemies[1]
+
+			PlayerDeath.knock_down(bot_player.player_unit)
+			_add_unique_buff(bot_player.player_unit, "tg_player_resist_death", scenario_data, t)
+
+			local interactee_extension = ScriptUnit.has_extension(bot_player.player_unit, "interactee_system")
+
+			interactee_extension:set_active(false)
+
+			local enemy_health_extension = ScriptUnit.extension(step_data.enemy, "health_system")
+
+			enemy_health_extension:set_invulnerable(true)
+		end
+
+		local had_buff = step_data.has_buff
+		local has_buff = _unit_has_buff(bot_player.player_unit, "zealot_preacher_shield")
+
+		if has_buff then
+			step_data.has_buff = true
+
+			if not step_data.has_counted then
+				step_data.has_counted = true
+
+				_set_objective_tracker_value("combat_ability_zealot_3_1", 1, true)
+			end
+
+			local enemy_health_extension = ScriptUnit.has_extension(step_data.enemy, "health_system")
+
+			if enemy_health_extension then
+				enemy_health_extension:set_invulnerable(false)
+			end
+
+			return false
+		elseif had_buff then
+			step_data.grace_t = step_data.grace_t or t + 1.5
+
+			return step_data.grace_t < t
+		end
+
+		_ensure_has_combat_ability(player, step_data, t, 1.5)
+
+		return false
+	end,
+	stop_func = function (scenario_system, player, scenario_data, step_data, t)
+		local bot_local_id = step_data.bot_local_id
+		local peer_id = Network.peer_id()
+		local bot_player = Managers.player:player(peer_id, bot_local_id)
+		local bot_unit = bot_player.player_unit
+		local bot_position = POSITION_LOOKUP[bot_unit]
+
+		_spawn_despawn_vfx(scenario_system, bot_position)
+		scenario_system:queue_bot_removal(bot_local_id)
+
+		if HEALTH_ALIVE[step_data.enemy] then
+			local enemy_health_extension = ScriptUnit.extension(step_data.enemy, "health_system")
+
+			enemy_health_extension:set_invulnerable(false)
+		end
+
+		_dissolve_unit(step_data.enemy, t)
+	end
+}
+
+local function _zealot_spawn_wave(player, scenario_system, enemies, t)
+	local directional_unit = scenario_system:get_directional_unit("player_reset")
+	local rotation = Unit.local_rotation(directional_unit, 1)
+	local left_vec = -Quaternion.right(rotation)
+	local delta_vec = left_vec * 9
+	local num_enemies = 12
+	local from_angle = -math.pi * 0.5
+	local to_angle = math.pi * 0.5
+	local reference_unit = scenario_system:get_directional_unit("player_reset")
+
+	for i = 1, num_enemies do
+		local step = (i - 1) / (num_enemies - 1)
+		local angle = math.lerp(from_angle, to_angle, step)
+		local delta_rot = Quaternion.axis_angle(Vector3.up(), angle)
+		local delta_pos = Quaternion.rotate(delta_rot, delta_vec)
+		local relative_position, relative_rotation = _get_relative_position_rotation(reference_unit, delta_pos, -delta_pos, DEFAULT_GROUND_POSITION, false)
+		enemies[#enemies + 1] = _spawn_breed_position_rotation("chaos_newly_infected", relative_position, relative_rotation, t, 3, false)
+	end
+end
+
+steps.combat_ability_zealot_preacher_use_on_self = {
+	events = {
+		"tg_on_attack_execute"
+	},
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		step_data.player_damaged_counter = 0
+		step_data.player_damaged_target = 2
+		local enemies = scenario_data.enemies
+
+		for i = 1, #enemies do
+			local enemy_unit = enemies[i]
+
+			if HEALTH_ALIVE[enemy_unit] then
+				local blackboard = BLACKBOARDS[enemy_unit]
+				local perception_component = Blackboard.write_component(blackboard, "perception")
+				perception_component.target_unit = player.player_unit
+				local perception_extension = ScriptUnit.extension(enemy_unit, "perception_system")
+
+				MinionPerception.attempt_aggro(perception_extension)
+			end
+		end
+	end,
+	on_event = function (scenario_system, player, scenario_data, step_data, event_name)
+		step_data.player_damaged_counter = step_data.player_damaged_counter + 1
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		local reset = _reset_if_knocked_down(scenario_system, player.player_unit, t, 3)
+
+		if reset then
+			return false
+		end
+
+		_ensure_has_combat_ability(player, step_data, t, 1)
+
+		local has_buff = _unit_has_buff(player.player_unit, "zealot_preacher_shield")
+
+		if has_buff and not step_data.do_once then
+			step_data.do_once = true
+
+			_set_objective_tracker_value("combat_ability_zealot_3_2", 1, true)
+		end
+
+		local reached_max_damaged = step_data.player_damaged_target <= step_data.player_damaged_counter
+
+		if not has_buff and reached_max_damaged and not step_data.scaled_time then
+			step_data.scaled_time = true
+
+			local function revert_condition()
+				local input_service = Managers.input:get_input_service("Ingame")
+				local combat_ability_pressed = input_service:get("combat_ability_release")
+
+				if combat_ability_pressed then
+					return true, 2
+				end
+
+				return false
+			end
+
+			scenario_system:start_time_scale(1, 0.05, 2, revert_condition)
+		end
+
+		return has_buff
+	end,
+	stop_func = function (scenario_system, player, scenario_data, step_data)
+		scenario_system:start_time_scale(0.05, 1, 2)
+	end
+}
+steps.combat_ability_zealot_preacher_spawn_enemies = {
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		scenario_data.enemies = {}
+
+		_zealot_spawn_wave(player, scenario_system, scenario_data.enemies, t)
+	end
+}
+steps.combat_ability_zealot_preacher_wait_buff_end = {
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		local has_buff = _unit_has_buff(player.player_unit, "zealot_preacher_shield")
+
+		return not has_buff
+	end
+}
+local squad_leader_spawn_positions = {
+	Vector3Box(0, 7, 0),
+	Vector3Box(-1.5, 9, 0),
+	Vector3Box(1, 8, 0),
+	Vector3Box(2.2, 6, 0),
+	Vector3Box(-3, 5, 0),
+	Vector3Box(4, 5, 0),
+	Vector3Box(-2, 9, 0),
+	Vector3Box(3, 8, 0)
+}
+steps.combat_ability_veteran_squad_leader = {
+	events = {
+		"tg_on_combat_ability",
+		"tg_on_attack_execute"
+	},
+	start_func = function (scenario_system, player, scenario_data, step_data, t)
+		step_data.last_spawn_t = t
+		step_data.last_spawned_i = 0
+		step_data.player_damaged_counter = 0
+		step_data.enemies = {}
+	end,
+	condition_func = function (scenario_system, player, scenario_data, step_data, t)
+		_ensure_has_combat_ability(player, step_data, t, 1.5)
+
+		if _reset_if_knocked_down(scenario_system, player.player_unit, t, 3) then
+			return false
+		end
+
+		if not step_data.scaled_time and step_data.player_damaged_counter > 2 then
+			step_data.scaled_time = true
+
+			local function revert_condition()
+				local input_service = Managers.input:get_input_service("Ingame")
+				local combat_ability_pressed = input_service:get("combat_ability_release")
+
+				if combat_ability_pressed then
+					return true, 2
+				end
+
+				return false
+			end
+
+			scenario_system:start_time_scale(1, 0.02, 2, revert_condition)
+		end
+
+		if t - step_data.last_spawn_t > 0.5 then
+			step_data.last_spawn_t = t
+			local spawn_i = step_data.last_spawned_i % 8 + 1
+			step_data.last_spawned_i = spawn_i
+			local enemies = step_data.enemies
+			local delta_pos = squad_leader_spawn_positions[spawn_i]:unbox()
+			local reference_unit = scenario_system:get_directional_unit("player_reset")
+			local spawned_enemies = _spawn_enemies_relative_position_safe(scenario_system, player, reference_unit, "player_reset", t, DEFAULT_SPAWN_DURATION, false, {
+				{
+					breed_name = "chaos_newly_infected",
+					relative_position = delta_pos,
+					relative_look_direction = -delta_pos
+				}
+			})
+			enemies[#enemies + 1] = spawned_enemies[1]
+		end
+
+		return step_data.used_ability
+	end,
+	on_event = function (scenario_system, player, scenario_data, step_data, event_name)
+		if event_name == "tg_on_combat_ability" then
+			_set_objective_tracker_value("combat_ability_veteran_3_1", 1, true)
+
+			step_data.used_ability = true
+		elseif event_name == "tg_on_attack_execute" then
+			step_data.player_damaged_counter = step_data.player_damaged_counter + 1
+		end
+	end,
+	stop_func = function (scenario_system, player, scenario_data, step_data, t)
+		local enemies = step_data.enemies
+
+		for i = 1, #enemies do
+			_dissolve_unit(enemies[i], t)
+		end
+
+		scenario_system:start_time_scale(0.02, 1, 2)
 	end
 }
 steps.condition_if = {}

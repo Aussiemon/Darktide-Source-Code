@@ -62,14 +62,7 @@ local breed_data = {
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.unarmored,
-	hit_mass = {
-		1.25,
-		1.25,
-		1.25,
-		1.25,
-		1.25,
-		2.5
-	},
+	hit_mass = MinionDifficultySettings.hit_mass[breed_name],
 	gib_template = MinionGibbingTemplates.cultist_assault,
 	stagger_durations = {
 		[stagger_types.light] = 0.75,

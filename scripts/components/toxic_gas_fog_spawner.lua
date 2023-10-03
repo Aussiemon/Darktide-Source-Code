@@ -33,6 +33,10 @@ ToxicGasFogSpawner.editor_init = function (self, unit)
 	return true
 end
 
+ToxicGasFogSpawner.editor_validate = function (self, unit)
+	return true, ""
+end
+
 ToxicGasFogSpawner.editor_destroy = function (self, unit)
 	if not rawget(_G, "LevelEditor") then
 		return

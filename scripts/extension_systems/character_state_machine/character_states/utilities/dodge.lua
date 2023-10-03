@@ -39,6 +39,8 @@ local Dodge = {
 
 		local moving_forward = move.y > 0
 		local allow_dodge_while_moving_forward = allow_diagonal_forward_dodge
+		local allow_always_dodge = input_source:get("always_dodge")
+		allow_dodge_while_moving_forward = allow_dodge_while_moving_forward or allow_always_dodge
 
 		if not allow_dodge_while_moving_forward and moving_forward then
 			return false
@@ -61,6 +63,8 @@ local Dodge = {
 				else
 					dodge_direction = normalized_move
 				end
+			elseif allow_always_dodge then
+				dodge_direction = -Vector3.forward()
 			end
 		end
 
@@ -74,13 +78,13 @@ local Dodge = {
 		local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
 
 		if not unit_data_extension then
-			return false
+			return false, nil
 		end
 
 		local breed = unit_data_extension:breed()
 
 		if not Breed.is_player(breed) then
-			return false
+			return false, nil
 		end
 
 		local is_melee = attack_type == attack_types.melee
@@ -104,8 +108,8 @@ local Dodge = {
 		local t = Managers.time:time("gameplay")
 		local dodge_character_state_component = unit_data_extension:read_component("dodge_character_state")
 		local dodge_time = dodge_character_state_component.dodge_time
-		local specialization = unit_data_extension:specialization()
-		local base_dodge_template = specialization.dodge
+		local archetype = unit_data_extension:archetype()
+		local base_dodge_template = archetype.dodge
 		local stat_buffs = buff_extension and buff_extension:stat_buffs()
 		local dodge_linger_time_modifier_base = stat_buffs and stat_buffs.dodge_linger_time_modifier or 1
 		local dodge_linger_time_melee_modifier = is_melee and stat_buffs and stat_buffs.dodge_linger_time_melee_modifier or 1
@@ -119,7 +123,7 @@ local Dodge = {
 			return true, dodge_types.linger
 		end
 
-		return false
+		return false, nil
 	end
 }
 local _sucessful_dodge_parameters = {}

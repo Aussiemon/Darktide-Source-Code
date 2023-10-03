@@ -31,6 +31,7 @@ end
 WwiseStateGroupObjective.update = function (self, dt, t)
 	WwiseStateGroupObjective.super.update(self, dt, t)
 
+	local player_unit = self._player_unit
 	local mission_objective_system = self._mission_objective_system
 	local music_parameter_extension = self._music_parameter_extension
 	local wwise_state = nil
@@ -38,7 +39,7 @@ WwiseStateGroupObjective.update = function (self, dt, t)
 	local is_valid_game_mode = game_mode_name == "coop_complete_objective"
 
 	if is_valid_game_mode and music_parameter_extension then
-		local last_man_standing = music_parameter_extension:last_man_standing()
+		local last_man_standing = ALIVE[player_unit] and music_parameter_extension:last_man_standing()
 
 		if last_man_standing then
 			wwise_state = "last_man_standing"
@@ -70,9 +71,11 @@ WwiseStateGroupObjective.update = function (self, dt, t)
 end
 
 WwiseStateGroupObjective.set_followed_player_unit = function (self, player_unit)
-	if player_unit then
+	local music_parameter_extension = player_unit and ScriptUnit.has_extension(player_unit, "music_parameter_system")
+
+	if music_parameter_extension then
 		self._player_unit = player_unit
-		self._music_parameter_extension = ScriptUnit.extension(player_unit, "music_parameter_system")
+		self._music_parameter_extension = music_parameter_extension
 	else
 		self._player_unit = nil
 		self._music_parameter_extension = nil

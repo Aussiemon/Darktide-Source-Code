@@ -22,17 +22,17 @@ local weapon_action_data = {
 	actions = {
 		activate_special = _require_weapon_action("action_activate_special"),
 		aim = _require_weapon_action("action_aim"),
-		aim_place = _require_weapon_action("action_aim_place"),
+		aim_force_field = _require_weapon_action("action_aim_force_field"),
 		aim_projectile = _require_weapon_action("action_aim_projectile"),
 		block = _require_weapon_action("action_block"),
 		buff_target = _require_weapon_action("action_buff_target"),
 		charge = _require_weapon_action("action_charge"),
 		charge_ammo = _require_weapon_action("action_charge_ammo"),
-		chain_lightning = _require_weapon_action("action_chain_lightning"),
+		chain_lightning = _require_weapon_action("action_chain_lightning_new"),
+		chain_lightning_powerup = _require_weapon_action("action_chain_lightning_powerup"),
 		damage_target = _require_weapon_action("action_damage_target"),
 		discard = _require_weapon_action("action_discard"),
 		dummy = _require_weapon_action("action_dummy"),
-		explosion = _require_weapon_action("action_explosion"),
 		flamer_gas = _require_weapon_action("action_flamer_gas"),
 		flamer_gas_burst = _require_weapon_action("action_flamer_gas_burst"),
 		heal_target_over_time = _require_weapon_action("action_heal_target_over_time"),
@@ -45,6 +45,7 @@ local weapon_action_data = {
 		overload_target_finder = _require_weapon_action("action_overload_target_finder"),
 		place_deployable = _require_weapon_action("action_place_deployable"),
 		place_pickup = _require_weapon_action("action_place_pickup"),
+		place_force_field = _require_weapon_action("action_place_force_field"),
 		push = _require_weapon_action("action_push"),
 		ranged_load_special = _require_weapon_action("action_ranged_load_special"),
 		ranged_wield = _require_weapon_action("action_ranged_wield"),
@@ -58,10 +59,12 @@ local weapon_action_data = {
 		sweep = _require_weapon_action("action_sweep"),
 		scan = _require_weapon_action("action_scan"),
 		scan_confirm = _require_weapon_action("action_scan_confirm"),
+		target_ally = _require_weapon_action("action_target_ally"),
 		target_finder = _require_weapon_action("action_target_finder"),
-		throw = _require_weapon_action("action_throw"),
 		throw_grenade = _require_weapon_action("action_throw_grenade"),
+		throw_luggable = _require_weapon_action("action_throw_luggable"),
 		toggle_special = _require_weapon_action("action_toggle_weapon_special"),
+		trigger_explosion = _require_weapon_action("action_trigger_explosion"),
 		unaim = _require_weapon_action("action_unaim"),
 		unwield = _require_weapon_action("action_unwield"),
 		unwield_to_previous = _require_weapon_action("action_unwield_to_previous"),
@@ -69,7 +72,8 @@ local weapon_action_data = {
 		vent_overheat = _require_weapon_action("action_vent_overheat"),
 		vent_warp_charge = _require_weapon_action("action_vent_warp_charge"),
 		wield = _require_weapon_action("action_wield"),
-		windup = _require_weapon_action("action_windup")
+		windup = _require_weapon_action("action_windup"),
+		zealot_channel = _require_weapon_action("action_zealot_channel")
 	}
 }
 
@@ -103,7 +107,15 @@ local function _has_ability_charge(action_settings, condition_func_params)
 	local ability_extension = condition_func_params.ability_extension
 	local ability_type = action_settings.ability_type
 
-	if ability_type and not ability_extension:can_use_ability(ability_type) then
+	if not ability_type then
+		return false
+	end
+
+	if not ability_extension:has_ability_type(ability_type) then
+		return false
+	end
+
+	if not ability_extension:can_use_ability(ability_type) then
 		return false
 	end
 
@@ -184,17 +196,18 @@ weapon_action_data.action_kind_condition_funcs = {
 		return _ammo_check(action_settings, condition_func_params)
 	end,
 	unwield = function (action_settings, condition_func_params, used_input)
-		local visual_loadout_extension = condition_func_params.visual_loadout_extension
 		local inventory_read_component = condition_func_params.inventory_read_component
 		local weapon_extension = condition_func_params.weapon_extension
+		local visual_loadout_extension = condition_func_params.visual_loadout_extension
 		local ability_extension = condition_func_params.ability_extension
-		local slot_to_wield = PlayerUnitVisualLoadout.slot_name_from_wield_input(used_input, inventory_read_component, visual_loadout_extension, weapon_extension, ability_extension)
+		local input_extension = condition_func_params.input_extension
+		local slot_to_wield = PlayerUnitVisualLoadout.slot_name_from_wield_input(used_input, inventory_read_component, visual_loadout_extension, weapon_extension, ability_extension, input_extension)
 
-		if not visual_loadout_extension:can_wield(slot_to_wield) then
+		if not weapon_extension:can_wield(slot_to_wield) then
 			return false
 		end
 
-		if not weapon_extension:can_wield(slot_to_wield) then
+		if not visual_loadout_extension:can_wield(slot_to_wield) then
 			return false
 		end
 
@@ -205,14 +218,18 @@ weapon_action_data.action_kind_condition_funcs = {
 		return true
 	end,
 	unwield_to_specific = function (action_settings, condition_func_params, used_input)
-		local visual_loadout_extension = condition_func_params.visual_loadout_extension
 		local slot_to_wield = action_settings.slot_to_wield
+		local weapon_extension = condition_func_params.weapon_extension
+		local visual_loadout_extension = condition_func_params.visual_loadout_extension
+		local ability_extension = condition_func_params.ability_extension
+
+		if not weapon_extension:can_wield(slot_to_wield) then
+			return false
+		end
 
 		if not visual_loadout_extension:can_wield(slot_to_wield) then
 			return false
 		end
-
-		local ability_extension = condition_func_params.ability_extension
 
 		if not ability_extension:can_wield(slot_to_wield) then
 			return false
@@ -246,7 +263,7 @@ weapon_action_data.action_kind_condition_funcs = {
 		return _has_ammo(condition_func_params)
 	end,
 	overload_charge = function (action_settings, condition_func_params, used_input)
-		if condition_func_params.inventory_slot_component.max_ammunition_clip <= 0 then
+		if action_settings.psyker_smite or condition_func_params.inventory_slot_component.max_ammunition_clip <= 0 then
 			return true
 		end
 
@@ -333,6 +350,14 @@ weapon_action_data.action_kind_condition_funcs = {
 			can_use = ability_extension:can_use_ability(ability_type)
 		end
 
+		local required_charge_level = action_settings.required_charge_level
+
+		if required_charge_level then
+			local action_module_charge_component = condition_func_params.action_module_charge_component
+			local charge_level = action_module_charge_component.charge_level
+			can_use = can_use and required_charge_level <= charge_level
+		end
+
 		return can_use
 	end,
 	smite_targeting = function (action_settings, condition_func_params, used_input)
@@ -362,16 +387,6 @@ weapon_action_data.action_kind_total_time_funcs = {
 	end
 }
 local DEFAULT_NO_AMMO_DELAY_TIME = 1
-
-local function _delay_from_last_action(condition_func_params, action_params, remaining_time, t)
-	local weapon_action_component = condition_func_params.weapon_action_component
-	local weapon = action_params.weapon
-	local weapon_template = weapon and weapon.weapon_template
-	local no_ammo_delay = weapon_template and weapon_template.no_ammo_delay or DEFAULT_NO_AMMO_DELAY_TIME
-	local end_t = weapon_action_component.end_t
-
-	return t >= end_t + no_ammo_delay
-end
 
 local function _delay_from_last_ammunition_usage(condition_func_params, action_params, remaining_time, t)
 	local weapon = action_params.weapon
@@ -420,11 +435,39 @@ local function _started_reload(condition_func_params, action_params, remaining_t
 end
 
 weapon_action_data.conditional_state_functions = {
-	no_grenade_ability_charge = function (condition_func_params, action_params, remaining_time, t)
+	unwield_from_grenade_slot = function (condition_func_params, action_params, remaining_time, t)
+		local no_time_left = remaining_time <= 0
 		local ability_extension = condition_func_params.ability_extension
 		local ability_type = "grenade_ability"
+		local no_grenades_left = not ability_extension:can_use_ability(ability_type)
+		local input_extension = condition_func_params.input_extension
+		local wield_previous_slot_after_grenade = input_extension:get("wield_previous_slot_after_grenade")
 
-		return not ability_extension:can_use_ability(ability_type)
+		return no_time_left and (no_grenades_left or wield_previous_slot_after_grenade)
+	end,
+	no_grenades_and_got_grenade = function (condition_func_params, action_params, remaining_time, t)
+		local ability_extension = condition_func_params.ability_extension
+		local ability_type = "grenade_ability"
+		local charge_replenished = ability_extension:charge_replenished(ability_type)
+		local remaining_charges = ability_extension:remaining_ability_charges(ability_type)
+
+		return charge_replenished and remaining_charges == 1
+	end,
+	no_combat_ability_charges_left = function (condition_func_params, action_params, remaining_time, t)
+		local ability_extension = condition_func_params.ability_extension
+		local ability_type = "combat_ability"
+		local remaining_charges = ability_extension:remaining_ability_charges(ability_type)
+
+		return remaining_charges <= 0
+	end,
+	no_combat_ability_charges_left_and_not_end_anim = function (condition_func_params, action_params, remaining_time, t)
+		local ability_extension = condition_func_params.ability_extension
+		local ability_type = "combat_ability"
+		local remaining_charges = ability_extension:remaining_ability_charges(ability_type)
+		local combat_ability_component = condition_func_params.unit_data_extension:write_component("combat_ability")
+		local is_in_end_anim = combat_ability_component.active
+
+		return remaining_charges <= 0 and not is_in_end_anim
 	end,
 	no_ammo = function (condition_func_params, action_params, remaining_time, t)
 		local no_ammo = _no_ammo(condition_func_params, action_params, remaining_time)
@@ -534,7 +577,13 @@ weapon_action_data.action_kind_to_running_action_chain_event = {
 	},
 	chain_lightning = {
 		stop_time_reached = true,
-		charge_depleted = true
+		charge_depleted = true,
+		force_vent = true
+	},
+	chain_lightning_powerup = {
+		stop_time_reached = true,
+		charge_depleted = true,
+		force_vent = true
 	},
 	charge = {
 		fully_charged = true
@@ -571,7 +620,8 @@ weapon_action_data.action_kind_to_running_action_chain_event = {
 		fully_charged = true
 	},
 	spawn_projectile = {
-		out_of_charges = true
+		out_of_charges = true,
+		force_vent = true
 	},
 	vent_overheat = {
 		fully_vented = true

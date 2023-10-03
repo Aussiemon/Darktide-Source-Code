@@ -50,10 +50,13 @@ WeaponTraitParentProcBuff.update_proc_events = function (self, t, proc_events, n
 		local template = self._template
 		local child_template = BuffTemplates[self._child_buff_template]
 
-		for add_child_event, num_wanted_stacks_to_add in pairs(template.add_child_proc_events) do
-			if procced_proc_events[add_child_event] then
+		for add_child_event, num_wanted_stacks_to_add_per_proc in pairs(template.add_child_proc_events) do
+			local number_of_times_proced = procced_proc_events[add_child_event]
+
+			if number_of_times_proced and number_of_times_proced > 0 then
 				local max_child_stacks = (self._template_override_data.max_stacks or child_template.max_stacks or 1 or 1) + math.abs(child_template.stack_offset or 0)
 				local stacks_to_max = max_child_stacks - self._num_child_stacks
+				local num_wanted_stacks_to_add = num_wanted_stacks_to_add_per_proc * number_of_times_proced
 				local num_stacks_to_add = math.min(num_wanted_stacks_to_add, stacks_to_max)
 
 				self:_add_child_buff_stack(t, num_stacks_to_add)

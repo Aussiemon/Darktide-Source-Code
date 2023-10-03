@@ -18,21 +18,6 @@ local default_armor_decal = {
 		"content/fx/units/weapons/vfx_decal_plasma_scorchmark"
 	}
 }
-local default_shield_block_decal = {
-	extents = {
-		min = {
-			x = 1,
-			y = 1
-		},
-		max = {
-			x = 1,
-			y = 1
-		}
-	},
-	units = {
-		"content/fx/units/weapons/vfx_decal_plasma_scorchmark"
-	}
-}
 local blood_ball = {
 	"content/decals/blood_ball/blood_ball"
 }
@@ -531,48 +516,47 @@ local player = {
 	linked_decal = {},
 	blood_ball = {}
 }
-local default_surface_decal = {
-	Vector3(0.2, 0.2, 0.2),
-	Vector3(0.2, 0.2, 0.2),
-	{
-		"content/fx/units/weapons/decal_cross_01"
-	}
-}
+local surface_fx = {}
 local default_surface_fx = {
-	sfx = {
-		{
-			group = "surface_material",
-			append_husk_to_event_name = true,
-			event = "wwise/events/weapon/play_weapon_impact_lasgun_material",
-			normal_rotation = true
-		}
-	},
-	vfx = {
-		{
-			effects = {
-				"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_small"
+	[hit_types.stop] = {
+		sfx = {
+			{
+				group = "surface_material",
+				append_husk_to_event_name = true,
+				event = "wwise/events/weapon/play_weapon_impact_lasgun_material",
+				normal_rotation = true
+			}
+		},
+		vfx = {
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_small"
+				}
 			}
 		}
-	}
-}
-local penetrate_surface_fx = {
-	sfx = {
-		{
-			group = "surface_material",
-			append_husk_to_event_name = true,
-			event = "wwise/events/weapon/play_bullet_hits_gen",
-			normal_rotation = true
-		}
 	},
-	vfx = {
-		{
-			normal_rotation = true,
-			effects = {
-				"content/fx/particles/weapons/rifles/plasma_gun/plasma_rifle_penetrating_impact"
+	[hit_types.penetration_entry] = {
+		sfx = {
+			{
+				group = "surface_material",
+				append_husk_to_event_name = true,
+				event = "wwise/events/weapon/play_weapon_impact_lasgun_material",
+				normal_rotation = true
+			}
+		},
+		vfx = {
+			{
+				effects = {
+					"content/fx/particles/weapons/rifles/plasma_gun/plasma_charged_explosion_small"
+				}
 			}
 		}
-	}
+	},
+	[hit_types.penetration_exit] = nil
 }
+
+ImpactFxHelper.create_missing_surface_fx(surface_fx, default_surface_fx)
+
 local surface_decal = {}
 
 ImpactFxHelper.create_missing_surface_decals(surface_decal)
@@ -588,10 +572,6 @@ return {
 		[armor_types.unarmored] = unarmored,
 		[armor_types.prop_armor] = prop_armor
 	},
-	surface = {
-		[hit_types.stop] = default_surface_fx,
-		[hit_types.penetration_entry] = default_surface_fx,
-		[hit_types.penetration_exit] = nil
-	},
+	surface = surface_fx,
 	surface_decal = surface_decal
 }

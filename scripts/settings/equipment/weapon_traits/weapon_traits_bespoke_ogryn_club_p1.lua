@@ -68,16 +68,24 @@ local templates = {
 	weapon_trait_bespoke_ogryn_club_p1_infinite_melee_cleave_on_weakspot_kill = {
 		weapon_trait_bespoke_ogryn_club_p1_infinite_melee_cleave_on_weakspot_kill = {
 			{
-				active_duration = 1.5
+				stat_buffs = {
+					[stat_buffs.melee_weakspot_damage] = 0.075
+				}
 			},
 			{
-				active_duration = 2.5
+				stat_buffs = {
+					[stat_buffs.melee_weakspot_damage] = 0.1
+				}
 			},
 			{
-				active_duration = 3.5
+				stat_buffs = {
+					[stat_buffs.melee_weakspot_damage] = 0.125
+				}
 			},
 			{
-				active_duration = 4.5
+				stat_buffs = {
+					[stat_buffs.melee_weakspot_damage] = 0.15
+				}
 			}
 		}
 	},
@@ -108,6 +116,58 @@ local templates = {
 	weapon_trait_bespoke_ogryn_club_p1_pass_past_armor_on_crit = {
 		weapon_trait_bespoke_ogryn_club_p1_pass_past_armor_on_crit = {
 			{}
+		}
+	},
+	weapon_trait_bespoke_ogryn_club_p1_rending_vs_staggered = {
+		weapon_trait_bespoke_ogryn_club_p1_rending_vs_staggered = {
+			{
+				conditional_stat_buffs = {
+					[stat_buffs.rending_vs_staggered_multiplier] = 0.1
+				}
+			},
+			{
+				conditional_stat_buffs = {
+					[stat_buffs.rending_vs_staggered_multiplier] = 0.15
+				}
+			},
+			{
+				conditional_stat_buffs = {
+					[stat_buffs.rending_vs_staggered_multiplier] = 0.2
+				}
+			},
+			{
+				conditional_stat_buffs = {
+					[stat_buffs.rending_vs_staggered_multiplier] = 0.25
+				}
+			}
+		}
+	},
+	weapon_trait_bespoke_ogryn_club_p1_increased_crit_chance_on_weapon_special_hit = {
+		weapon_trait_bespoke_ogryn_club_p1_increased_crit_chance_on_weapon_special_hit = {
+			{
+				active_duration = 3,
+				proc_stat_buffs = {
+					[stat_buffs.melee_critical_strike_chance] = 0.075
+				}
+			},
+			{
+				active_duration = 3,
+				proc_stat_buffs = {
+					[stat_buffs.melee_critical_strike_chance] = 0.1
+				}
+			},
+			{
+				active_duration = 3,
+				proc_stat_buffs = {
+					[stat_buffs.melee_critical_strike_chance] = 0.125
+				}
+			},
+			{
+				active_duration = 3,
+				proc_stat_buffs = {
+					[stat_buffs.melee_critical_strike_chance] = 0.15
+				}
+			}
 		}
 	}
 }

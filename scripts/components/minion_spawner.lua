@@ -172,6 +172,10 @@ MinionSpawner.editor_update = function (self, unit)
 	return true
 end
 
+MinionSpawner.editor_validate = function (self, unit)
+	return true, ""
+end
+
 MinionSpawner._editor_debug_draw = function (self, unit)
 	local drawer = self._drawer
 

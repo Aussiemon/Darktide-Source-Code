@@ -14,6 +14,15 @@ ColorUtilities.color_lerp = function (source, target, p, out, ignore_alpha)
 	return out
 end
 
+ColorUtilities.format_color_to_material = function (source)
+	return {
+		source[2] / 255,
+		source[3] / 255,
+		source[4] / 255,
+		source[1] / 255
+	}
+end
+
 ColorUtilities.color_copy = function (source, target, ignore_alpha)
 	if not ignore_alpha then
 		target[1] = source[1]

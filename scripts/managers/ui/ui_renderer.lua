@@ -1088,8 +1088,22 @@ UIRenderer.text_height = function (self, text, font_type, font_size, optional_si
 	local font = font_data.path
 	local flags = font_data.render_flags or 0
 	optional_size = optional_size and Vector2(optional_size[1], optional_size[2])
-	local min, max, _ = Gui.slug_text_max_extents(self.gui, text, font, font_size, optional_size, "flags", flags, unpack(options or dummy_text_options))
-	local height = max.y - min.y
+	local additional_settings = nil
+
+	if not options then
+		table.clear(optional_gui_args)
+
+		additional_settings = optional_gui_args
+	else
+		additional_settings = options
+	end
+
+	additional_settings.flags = flags
+	additional_settings.optional_size = optional_size
+	local min, max, _ = Gui2.slug_text_max_extents(self.gui, text, font, font_size, additional_settings)
+	local min_x, min_y = Vector3.to_elements(min)
+	local max_x, max_y = Vector3.to_elements(max)
+	local height = max_y - min_y
 
 	return height
 end
@@ -1121,6 +1135,8 @@ UIRenderer.text_size = function (self, text, font_type, font_size, optional_size
 end
 
 UIRenderer.draw_video = function (self, material_name, position, size, color, video_player_reference, y_slot_name, uv_slot_name, optional_video_player)
+	table.clear(optional_gui_args)
+
 	local gui = self.gui
 	local video_player = optional_video_player or self.video_players[video_player_reference]
 	local pixel_snap = true
@@ -1135,7 +1151,22 @@ UIRenderer.draw_video = function (self, material_name, position, size, color, vi
 		position[3] = (render_settings.start_layer or 0) + position[3]
 	end
 
-	Gui.video(gui, material_name, video_player, y_slot_name, uv_slot_name, position, UIResolution.scale_vector(size, scale, pixel_snap), color)
+	local material_flags = type(material_name) == STRING_IDENTIFIER and _get_material_flag(render_settings, nil, self.render_pass_flag) or 0
+	local render_pass = self.base_render_pass
+
+	if render_pass then
+		if render_settings.hdr then
+			optional_gui_args.render_pass = render_pass .. "_hdr"
+		else
+			optional_gui_args.render_pass = render_pass
+		end
+	end
+
+	if render_pass then
+		Gui.video(gui, material_name, video_player, y_slot_name, uv_slot_name, "render_pass", render_pass, position, UIResolution.scale_vector(size, scale, pixel_snap), color)
+	else
+		Gui.video(gui, material_name, video_player, y_slot_name, uv_slot_name, position, UIResolution.scale_vector(size, scale, pixel_snap), color)
+	end
 
 	local is_complete = VideoPlayer.current_frame(video_player) == VideoPlayer.number_of_frames(video_player)
 

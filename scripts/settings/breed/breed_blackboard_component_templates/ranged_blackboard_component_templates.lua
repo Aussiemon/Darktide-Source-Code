@@ -91,6 +91,7 @@ local sniper = table.clone(ranged_cover_user)
 sniper.perception.has_good_last_los_position = "boolean"
 sniper.slot = nil
 sniper.blocked = nil
+sniper.suppression = nil
 local riflemen = table.clone(ranged_cover_user)
 riflemen.patrol = {
 	patrol_leader_unit = "Unit",

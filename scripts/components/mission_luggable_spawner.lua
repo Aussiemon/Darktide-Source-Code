@@ -9,6 +9,10 @@ MissionLuggableSpawner.editor_init = function (self, unit)
 	return
 end
 
+MissionLuggableSpawner.editor_validate = function (self, unit)
+	return true, ""
+end
+
 MissionLuggableSpawner.enable = function (self, unit)
 	return
 end

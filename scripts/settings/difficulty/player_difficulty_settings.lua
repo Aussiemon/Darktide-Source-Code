@@ -1,5 +1,5 @@
 local player_difficulty_settings = {
-	specialization_wounds = {
+	archetype_wounds = {
 		none = {
 			1,
 			1,
@@ -7,28 +7,28 @@ local player_difficulty_settings = {
 			1,
 			1
 		},
-		veteran_2 = {
+		veteran = {
 			4,
 			3,
 			3,
 			2,
 			2
 		},
-		ogryn_2 = {
+		ogryn = {
 			5,
 			4,
 			4,
 			3,
 			3
 		},
-		zealot_2 = {
+		zealot = {
 			4,
 			3,
 			3,
 			2,
 			2
 		},
-		psyker_2 = {
+		psyker = {
 			4,
 			3,
 			3,

@@ -223,20 +223,17 @@ local function create_definitions(settings)
 	local sort_button_style = table.clone(UIFontSettings.body_small)
 	sort_button_style.text_horizontal_alignment = "left"
 	sort_button_style.text_vertical_alignment = "center"
-	sort_button_style.text_color = Color.ui_grey_light(255, true)
-	sort_button_style.default_text_color = Color.ui_grey_light(255, true)
-	sort_button_style.hover_color = {
-		255,
-		255,
-		255,
-		255
-	}
+	sort_button_style.text_color = Color.terminal_text_body(255, true)
+	sort_button_style.default_text_color = Color.terminal_text_body(255, true)
+	sort_button_style.hover_color = Color.terminal_text_header_selected(255, true)
 	local empty_message_style = table.clone(UIFontSettings.grid_title)
 	empty_message_style.text_horizontal_alignment = "center"
 	empty_message_style.text_vertical_alignment = "center"
 	local timer_text_style = table.clone(sort_button_style)
 	timer_text_style.text_horizontal_alignment = "right"
 	timer_text_style.font_size = 24
+	timer_text_style.text_color = Color.terminal_text_body_sub_header(255, true)
+	timer_text_style.default_text_color = Color.terminal_text_body_sub_header(255, true)
 	local widget_definitions = {
 		title_text = UIWidget.create_definition({
 			{

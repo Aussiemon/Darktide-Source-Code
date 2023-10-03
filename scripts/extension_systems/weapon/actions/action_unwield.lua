@@ -50,7 +50,7 @@ ActionUnwield.start = function (self, action_settings, t, time_scale, action_sta
 	local alternate_fire_component = self._alternate_fire_component
 
 	if alternate_fire_component.is_active then
-		AlternateFire.stop(alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, false, self._player_unit)
+		AlternateFire.stop(alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, false, self._player_unit)
 	end
 
 	AimAssist.reset_ramp_multiplier(self._aim_assist_ramp_component)
@@ -80,7 +80,7 @@ ActionUnwield.fixed_update = function (self, dt, t, time_in_action)
 end
 
 ActionUnwield._next_slot = function (self, used_input, action_settings)
-	return PlayerUnitVisualLoadout.slot_name_from_wield_input(used_input, self._inventory_component, self._visual_loadout_extension, self._weapon_extension, self._ability_extension)
+	return PlayerUnitVisualLoadout.slot_name_from_wield_input(used_input, self._inventory_component, self._visual_loadout_extension, self._weapon_extension, self._ability_extension, self._input_extension)
 end
 
 ActionUnwield.finish = function (self, reason, data, t, time_in_action)

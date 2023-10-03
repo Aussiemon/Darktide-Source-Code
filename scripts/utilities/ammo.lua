@@ -233,6 +233,16 @@ Ammo.add_to_clip = function (inventory_slot_component, ammunition_to_add)
 	return actual_ammo_added
 end
 
+Ammo.add_to_reserve = function (inventory_slot_component, ammunition_to_add)
+	local max_ammo_in_reserve = inventory_slot_component.max_ammunition_reserve
+	local current_ammo_in_reserve = inventory_slot_component.current_ammunition_reserve
+	local new_ammo_reserve_size = math.clamp(math.min(ammunition_to_add + current_ammo_in_reserve, max_ammo_in_reserve), 0, max_ammo_in_reserve)
+	inventory_slot_component.current_ammunition_reserve = new_ammo_reserve_size
+	local actual_ammo_added = new_ammo_reserve_size - current_ammo_in_reserve
+
+	return actual_ammo_added
+end
+
 Ammo.transfer_from_reserve_to_clip = function (inventory_slot_component, ammunition_to_transfer)
 	if Managers.state.game_mode:infinite_ammo_reserve() then
 		inventory_slot_component.current_ammunition_reserve = inventory_slot_component.max_ammunition_reserve + inventory_slot_component.max_ammunition_clip
@@ -274,6 +284,8 @@ Ammo.add_to_all_slots = function (unit, percent)
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 	local weapon_slot_configuration = visual_loadout_extension:slot_configuration_by_type("weapon")
 	local ammo_gained = 0
+	local weapon_system = Managers.state.extension:system("weapon_system")
+	local give_ammo_carryover_percentages = weapon_system:give_ammo_carryover_percentages(unit, weapon_slot_configuration)
 
 	for slot_name, config in pairs(weapon_slot_configuration) do
 		local wieldable_component = unit_data_extension:write_component(slot_name)
@@ -284,8 +296,12 @@ Ammo.add_to_all_slots = function (unit, percent)
 			local ammo_clip = wieldable_component.current_ammunition_clip
 			local max_ammo_clip = wieldable_component.max_ammunition_clip
 			local missing_clip = max_ammo_clip - ammo_clip
-			local amount = math.ceil(percent * max_ammo_reserve)
-			local new_ammo_amount = math.min(ammo_reserve + amount, max_ammo_reserve + missing_clip)
+			local carryover_percentage = give_ammo_carryover_percentages[slot_name]
+			local amount = percent * max_ammo_reserve + carryover_percentage
+			local ammo_to_gain = math.floor(amount)
+			local new_carryover_percentage = amount - ammo_to_gain
+			give_ammo_carryover_percentages[slot_name] = new_carryover_percentage
+			local new_ammo_amount = math.min(ammo_reserve + ammo_to_gain, max_ammo_reserve + missing_clip)
 			wieldable_component.current_ammunition_reserve = new_ammo_amount
 			ammo_gained = ammo_gained + new_ammo_amount - ammo_reserve
 		end

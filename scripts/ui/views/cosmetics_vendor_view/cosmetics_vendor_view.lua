@@ -212,9 +212,6 @@ CosmeticsVendorView._preview_item = function (self, element)
 		self:_setup_set_item_parts_representation(set_items)
 	end
 
-	local title_display_name_localized = previewed_item and previewed_item.display_name and Localize(previewed_item.display_name) or ""
-	local item_type_localization_key = UISettings.item_type_localization_lookup[item_type]
-	local item_type_display_name_localized = item_type_localization_key and Localize(item_type_localization_key) or "<undefined item_type>"
 	local restrictions_text, present_restrictions_text = nil
 
 	if item_type == "WEAPON_SKIN" then
@@ -730,7 +727,8 @@ CosmeticsVendorView._on_purchase_complete = function (self, items)
 	local parent = self._parent
 
 	if parent then
-		parent:play_vo_events(CosmeticsVendorViewSettings.vo_event_vendor_purchase, "credit_store_servitor_a", nil, 1.4)
+		parent:play_vo_events(CosmeticsVendorViewSettings.vo_event_vendor_purchase, "reject_npc_a", nil, 1.4)
+		parent:play_vo_events(CosmeticsVendorViewSettings.vo_event_vendor_purchase, "reject_npc_servitor_a", nil, 0)
 	end
 end
 

@@ -6,8 +6,8 @@ local cinematic_scene_templates = {
 		instant_black_screen_during_cutscene_loading = false,
 		music = "cinematic_pot",
 		hide_players = true,
-		set_random_weapon_event = false,
-		randomize_equipped_weapon = false,
+		set_random_weapon_event = true,
+		randomize_equipped_weapon = true,
 		include_bots = true,
 		mission_outro = false,
 		ignored_slots = {
@@ -19,6 +19,15 @@ local cinematic_scene_templates = {
 			"slot_attachment_1",
 			"slot_attachment_2",
 			"slot_attachment_3"
+		},
+		available_inventory_animation_events = {
+			"cin_ready",
+			"unready_idle",
+			"ready"
+		},
+		available_weapon_animation_events = {
+			"hero_walk_01",
+			"hero_walk_02"
 		}
 	}
 }

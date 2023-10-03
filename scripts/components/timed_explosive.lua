@@ -54,6 +54,10 @@ TimedExplosive.editor_init = function (self, unit)
 	return
 end
 
+TimedExplosive.editor_validate = function (self, unit)
+	return true, ""
+end
+
 TimedExplosive._play_sfx = function (self, event)
 	local wwise_world = self._wwise_world
 

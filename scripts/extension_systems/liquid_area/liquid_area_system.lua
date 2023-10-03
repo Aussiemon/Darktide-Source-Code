@@ -144,6 +144,12 @@ LiquidAreaSystem.traverse_logic = function (self)
 	return self._traverse_logic
 end
 
+LiquidAreaSystem.remove_any_cell_inside_of_radius = function (self, position, radius)
+	for _, extension in pairs(self._unit_to_extension_map) do
+		extension:remove_any_cell_inside_of_radius(position, radius)
+	end
+end
+
 LiquidAreaSystem.allow_nav_tag_layer = function (self, layer_name, layer_allowed)
 	local layer_id = Managers.state.nav_mesh:nav_tag_layer_id(layer_name)
 	local nav_tag_cost_table = self._nav_tag_cost_table

@@ -179,7 +179,6 @@ table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.a
 
 weapon_template.actions = {
 	action_unwield = {
-		continue_sprinting = true,
 		allowed_during_sprint = true,
 		start_input = "wield",
 		uninterruptible = true,
@@ -188,18 +187,20 @@ weapon_template.actions = {
 		allowed_chain_actions = {}
 	},
 	action_wield = {
-		continue_sprinting = true,
-		allowed_during_sprint = true,
 		kind = "wield",
+		allowed_during_sprint = true,
 		uninterruptible = true,
 		anim_event = "equip",
-		total_time = 0.5,
+		total_time = 0,
 		allowed_chain_actions = {
 			wield = {
 				action_name = "action_unwield"
 			},
 			combat_ability = {
 				action_name = "combat_ability"
+			},
+			vent = {
+				action_name = "action_vent"
 			}
 		}
 	},
@@ -307,7 +308,7 @@ weapon_template.actions = {
 			wwise_event_stop = "wwise/events/weapon/stop_force_staff_single_target",
 			has_husk_events = true,
 			wwise_event_start = "wwise/events/weapon/play_force_staff_single_target",
-			husk_effect_name = "content/fx/particles/weapons/force_staff/force_staff_channel_charge",
+			husk_effect_name = "content/fx/particles/abilities/husk/husk_psyker_target_headpop",
 			effect_name = "content/fx/particles/weapons/force_staff/force_staff_channel_charge"
 		},
 		charge_effects = {
@@ -386,7 +387,7 @@ weapon_template.actions = {
 			wwise_event_stop = "wwise/events/weapon/stop_force_staff_single_target",
 			has_husk_events = true,
 			wwise_event_start = "wwise/events/weapon/play_force_staff_single_target",
-			husk_effect_name = "content/fx/particles/weapons/force_staff/force_staff_channel_charge",
+			husk_effect_name = "content/fx/particles/abilities/husk/husk_psyker_target_headpop",
 			effect_name = "content/fx/particles/weapons/force_staff/force_staff_channel_charge"
 		},
 		charge_effects = {
@@ -463,7 +464,7 @@ weapon_template.actions = {
 			wwise_event_stop = "wwise/events/weapon/stop_force_staff_single_target",
 			has_husk_events = true,
 			wwise_event_start = "wwise/events/weapon/play_force_staff_single_target",
-			husk_effect_name = "content/fx/particles/weapons/force_staff/force_staff_channel_charge",
+			husk_effect_name = "content/fx/particles/abilities/husk/husk_psyker_target_headpop",
 			effect_name = "content/fx/particles/weapons/force_staff/force_staff_channel_charge"
 		},
 		charge_effects = {
@@ -549,7 +550,7 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "none",
+		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
 		total_time = math.huge

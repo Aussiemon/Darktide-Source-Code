@@ -80,9 +80,11 @@ local action_data = {
 		controlled_stagger_ignored_combat_range = "melee",
 		stagger_duration_modifier_during_lunge = 0.175,
 		controlled_stagger_min_speed = 2,
-		fuse_timer = 1.5,
+		ignore_running_stagger_combat_range_lock = true,
 		lunge_duration = 1.2222222222222223,
 		enter_lunge_distance = 6,
+		fuse_timer = 1.5,
+		push_enemies_power_level = 2000,
 		use_animation_running_stagger_speed = true,
 		effect_template_stop_distance = 18,
 		run_anim_event = "move_fwd",
@@ -108,7 +110,8 @@ local action_data = {
 			run_stagger_3 = 1.4333333333333333,
 			run_stagger_2 = 1.4333333333333333,
 			run_stagger_1 = 1.3666666666666667
-		}
+		},
+		push_enemies_damage_profile = DamageProfileTemplates.chaos_hound_push
 	},
 	explode = {
 		explode_position_node = "j_spine2",
@@ -219,6 +222,23 @@ local action_data = {
 				}
 			},
 			sticky = {
+				fwd = {
+					"stagger_fwd"
+				},
+				bwd = {
+					"stagger_bwd"
+				},
+				left = {
+					"stagger_left"
+				},
+				right = {
+					"stagger_right"
+				},
+				dwn = {
+					"stun_down"
+				}
+			},
+			electrocuted = {
 				fwd = {
 					"stagger_fwd"
 				},

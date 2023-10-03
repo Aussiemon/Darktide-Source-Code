@@ -864,7 +864,6 @@ local function generate_blueprints_function(grid_size, optional_item)
 
 		pass_templates = {
 			{
-				value = "Attack Patterns",
 				pass_type = "text",
 				value_id = "header",
 				style = table.merge_recursive(table.clone(weapon_display_name_header_style), {
@@ -875,7 +874,8 @@ local function generate_blueprints_function(grid_size, optional_item)
 						0,
 						1
 					}
-				})
+				}),
+				value = Localize("loc_weapon_stats_attack_pattern")
 			},
 			{
 				value_id = "rating_divider",

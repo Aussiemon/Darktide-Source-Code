@@ -6,6 +6,7 @@ local LagCompensation = require("scripts/utilities/lag_compensation")
 local MasterItems = require("scripts/backend/master_items")
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
 local Vo = require("scripts/utilities/vo")
+local locomotion_states = ProjectileLocomotionSettings.states
 local ActionThrowGrenade = class("ActionThrowGrenade", "ActionWeaponBase")
 
 ActionThrowGrenade.init = function (self, action_context, action_params, action_settings)
@@ -17,6 +18,7 @@ ActionThrowGrenade.init = function (self, action_context, action_params, action_
 	self._action_settings = action_settings
 	self._ability_extension = action_context.ability_extension
 	self._weapon_template = action_params.weapon.weapon_template
+	self._side_system = Managers.state.extension:system("side_system")
 end
 
 ActionThrowGrenade.start = function (self, action_settings, t, ...)
@@ -81,12 +83,44 @@ ActionThrowGrenade._spawn_projectile = function (self)
 			position = Unit.world_position(first_person_unit, node)
 		end
 
-		local throw_parameters = locomotion_template and locomotion_template.throw_parameters and locomotion_template.throw_parameters.throw
+		local throw_type = action_settings.throw_type
+		local throw_parameters = locomotion_template and locomotion_template.throw_parameters and locomotion_template.throw_parameters[throw_type]
 		local starting_state = throw_parameters and throw_parameters.locomotion_state or locomotion_states.manual_physics
 		local is_critical_strike = self._critical_strike_component.is_active
 
 		if self._is_server then
-			local projectile_unit, _ = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot)
+			local owner_side = self._side_system.side_by_unit[self._player_unit]
+			local owner_side_name = owner_side and owner_side:name()
+			local buff_extension = self._buff_extension
+			local stat_buffs = buff_extension:stat_buffs()
+			local extra_grenade_throw_chance = stat_buffs.extra_grenade_throw_chance
+			local extra_direction = direction
+			local extra_grenade = extra_grenade_throw_chance > 0 and math.random() < extra_grenade_throw_chance
+
+			if extra_grenade then
+				local split_settings = projectile_template.split_settings
+				local split_angle = split_settings and split_settings.split_angle or math.pi * 0.05
+				local angle = split_angle * (math.random() < 0.5 and -1 or 1)
+				extra_direction = Quaternion.rotate(Quaternion.axis_angle(Vector3.up(), angle), extra_direction)
+
+				if split_settings and split_settings.even_split then
+					direction = Quaternion.rotate(Quaternion.axis_angle(Vector3.up(), -angle), direction)
+				end
+			end
+
+			local projectile_unit, _ = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot, nil, nil, nil, nil, nil, owner_side_name)
+			local buff_extension = self._buff_extension
+			local stat_buffs = buff_extension:stat_buffs()
+			local extra_grenade_throw_chance = stat_buffs.extra_grenade_throw_chance
+
+			if extra_grenade then
+				local damage_settings = projectile_template.damage
+				local fuse_settings = damage_settings and damage_settings.fuse
+				local fuse_base_time = fuse_settings and fuse_settings.fuse_time
+				local fuse_time_override = fuse_base_time and fuse_base_time + 0.3 or nil
+				local extra_speed = speed
+				local extra_projectile_unit, _ = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, extra_direction, extra_speed, momentum, owner_unit, is_critical_strike, origin_item_slot, nil, nil, nil, nil, fuse_time_override, owner_side_name)
+			end
 		end
 	end
 end

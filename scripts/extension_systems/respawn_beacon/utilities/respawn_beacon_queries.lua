@@ -1,3 +1,4 @@
+local NavQueries = require("scripts/utilities/nav_queries")
 local RespawnBeaconQueries = {}
 local _generate_spawn_volume_positions, _find_fitting_positions, _validate_navmesh_positions, _move_positions_outside_exclusion_volume, _sort_positions_on_closeness = nil
 
@@ -44,7 +45,7 @@ local temp_fitting_positions = {}
 
 function _find_fitting_positions(physics_world, beacon_unit, positions, player_radius, player_height)
 	local raycast_direction = Vector3.down()
-	local capsule_size = Vector3(player_radius * 1.5, player_height * 1.5, player_radius * 1.5)
+	local capsule_size = Vector3(player_radius * 0.5, player_height * 0.5, player_radius * 0.5)
 	local capsule_rotation = Quaternion.axis_angle(Vector3.up(), 0)
 	local volume_node = Unit.node(beacon_unit, "c_respawn_volume")
 	local volume_scale = Unit.world_scale(beacon_unit, volume_node)
@@ -69,23 +70,15 @@ function _find_fitting_positions(physics_world, beacon_unit, positions, player_r
 end
 
 local ABOVE_LIMIT = 0.5
-local BELOW_LIMIT = 0.1
+local BELOW_LIMIT = 0.25
 local temp_navmesh_positions = {}
 
 function _validate_navmesh_positions(nav_world, positions)
-	local GwNavQueries_triangle_from_position = GwNavQueries.triangle_from_position
-
 	table.clear(temp_navmesh_positions)
 
 	for ii = 1, #positions do
 		local position = positions[ii]
-		local navmesh_position = nil
-		local altitude = GwNavQueries_triangle_from_position(nav_world, position, ABOVE_LIMIT, BELOW_LIMIT)
-
-		if altitude then
-			navmesh_position = position
-			navmesh_position.z = altitude
-		end
+		local navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, position, 1, ABOVE_LIMIT, BELOW_LIMIT)
 
 		if navmesh_position then
 			temp_navmesh_positions[#temp_navmesh_positions + 1] = navmesh_position

@@ -190,6 +190,7 @@ HudElementPlayerBuffs._return_widget = function (self, widget, ui_renderer)
 	content.duration_progress = 1
 	local style = widget.style
 	style.icon.material_values.talent_icon = nil
+	style.icon.material_values.gradient_map = nil
 	style.text_background.size[1] = 0
 	local text_style = style.text
 	text_style.size[1] = 0
@@ -271,6 +272,7 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 				local show = buff_hud_data.show
 				local is_active = buff_hud_data.is_active
 				local icon = buff_hud_data.hud_icon
+				local icon_gradient_map = buff_hud_data.hud_icon_gradient_map
 				local hud_priority = buff_hud_data.hud_priority
 				local stack_count = buff_hud_data.stack_count
 				local show_stack_count = buff_hud_data.show_stack_count
@@ -284,6 +286,7 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 
 				if icon ~= buff_data.icon or buff_data.icon == nil then
 					style.icon.material_values.talent_icon = icon
+					style.icon.material_values.gradient_map = icon_gradient_map
 					buff_data.icon = icon
 					widget.dirty = true
 				end

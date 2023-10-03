@@ -24,5 +24,24 @@ templates.weapon_trait_bespoke_forcestaff_p3_faster_charge_on_chained_secondary_
 	action_charge = true,
 	action_shoot_charged = true
 }
+templates.weapon_trait_bespoke_forcestaff_p3_faster_charge_on_chained_secondary_attacks_parent = table.clone(BaseWeaponTraitBuffTemplates.faster_charge_on_chained_secondary_attacks_parent)
+templates.weapon_trait_bespoke_forcestaff_p3_faster_charge_on_chained_secondary_attacks_parent.child_buff_template = "weapon_trait_bespoke_forcestaff_p3_faster_charge_on_chained_secondary_attacks_child"
+templates.weapon_trait_bespoke_forcestaff_p3_faster_charge_on_chained_secondary_attacks_child = table.clone(BaseWeaponTraitBuffTemplates.faster_charge_on_chained_secondary_attacks_child)
+templates.weapon_trait_bespoke_forcestaff_p3_faster_charge_on_chained_secondary_attacks_parent.specific_check_proc_funcs = {
+	[proc_events.on_action_start] = function (params, template_data, template_context)
+		local action_settings = params.action_settings
+		local name = action_settings.name
+
+		return name and name == "action_shoot_charged"
+	end
+}
+templates.weapon_trait_bespoke_forcestaff_p3_increased_max_jumps = {
+	predicted = false,
+	class_name = "buff",
+	stat_buffs = {
+		[stat_buffs.chain_lightning_max_jumps] = 1
+	}
+}
+templates.weapon_trait_bespoke_forcestaff_p3_electrocuted_targets_receive_increased_damage_debuff = table.clone(BaseWeaponTraitBuffTemplates.electrocuted_targets_receive_increased_damage_debuff)
 
 return templates

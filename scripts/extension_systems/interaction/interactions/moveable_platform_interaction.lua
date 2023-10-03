@@ -49,19 +49,4 @@ MoveablePlatformInteraction.stop = function (self, world, interactor_unit, unit_
 	end
 end
 
-MoveablePlatformInteraction.marker_offset = function (self, interactee_unit, interactable_actor_node_index)
-	local result = Vector3.zero()
-
-	if interactable_actor_node_index then
-		local moveable_platform_extension = ScriptUnit.extension(interactee_unit, "moveable_platform_system")
-		local actor_offset = MoveablePlatformQueries.interaction_offset(interactee_unit, moveable_platform_extension, interactable_actor_node_index)
-
-		if actor_offset then
-			result = actor_offset
-		end
-	end
-
-	return result
-end
-
 return MoveablePlatformInteraction

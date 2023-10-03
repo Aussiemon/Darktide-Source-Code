@@ -1,7 +1,7 @@
 local GameModeBase = require("scripts/managers/game_mode/game_modes/game_mode_base")
+local GameModeManagerTestify = GameParameters.testify and require("scripts/managers/game_mode/game_mode_manager_testify")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
-local GameModeManagerTestify = GameParameters.testify and require("scripts/managers/game_mode/game_mode_manager_testify")
 local GAME_MODES = {}
 
 for name, settings in pairs(GameModeSettings) do
@@ -93,10 +93,10 @@ GameModeManager._async_raycast_result_cb = function (self, id, hits, num_hits)
 	queue[index - 2] = nil
 	index = index - 2
 
-	for i = 1, num_args do
-		local j = index - i
-		data_buffer[i] = queue[j]
-		queue[j] = nil
+	for ii = 1, num_args do
+		local jj = index - ii
+		data_buffer[ii] = queue[jj]
+		queue[jj] = nil
 	end
 
 	cb(id, hits, num_hits, data_buffer)
@@ -121,8 +121,8 @@ GameModeManager.add_safe_raycast = function (self, raycast_object, pos, dir, len
 	queue[tail - 10] = num_args
 	tail = tail - 10
 
-	for i = 1, num_args do
-		queue[tail - i] = select(i, ...)
+	for ii = 1, num_args do
+		queue[tail - ii] = select(ii, ...)
 	end
 
 	self._raycast_queue_tail = tail - num_args
@@ -147,8 +147,8 @@ GameModeManager._do_raycasts = function (self)
 		local id = raycast_object:cast(raycast_pos, raycast_dir, length)
 		self._async_raycast_handles[id] = head - 8
 
-		for i = head - 1, head - 8, -1 do
-			queue[i] = nil
+		for ii = head - 1, head - 8, -1 do
+			queue[ii] = nil
 		end
 
 		head = head - 10 - queue[head - 10]
@@ -164,8 +164,8 @@ GameModeManager._do_physics_callbacks = function (self)
 	if num_callbacks > 0 then
 		local safe_callbacks = self._physics_safe_callbacks
 
-		for i = 1, num_callbacks do
-			safe_callbacks[i]()
+		for ii = 1, num_callbacks do
+			safe_callbacks[ii]()
 		end
 
 		table.clear(safe_callbacks)
@@ -451,6 +451,13 @@ GameModeManager.set_init_scenario = function (self, scenario_alias, scenario_nam
 	if game_mode.set_init_scenario then
 		game_mode:set_init_scenario(scenario_alias, scenario_name)
 	end
+end
+
+GameModeManager.player_unit_template_name = function (self)
+	local game_mode_settings = self._game_mode:settings()
+	local template_name = game_mode_settings.player_unit_template_name_override or "player_character"
+
+	return template_name
 end
 
 return GameModeManager

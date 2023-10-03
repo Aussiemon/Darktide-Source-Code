@@ -12,6 +12,10 @@ PlasmaCoil.editor_init = function (self, unit)
 	self:init(unit)
 end
 
+PlasmaCoil.editor_validate = function (self, unit)
+	return true, ""
+end
+
 PlasmaCoil.enable = function (self, unit)
 	self:set_overheat(unit, 0)
 end

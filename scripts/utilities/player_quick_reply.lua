@@ -1,3 +1,0 @@
-local PlayerQuickReply = {}
-
-return PlayerQuickReply

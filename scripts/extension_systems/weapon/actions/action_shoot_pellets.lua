@@ -22,7 +22,6 @@ local attack_types = AttackSettings.attack_types
 local hit_types = SurfaceMaterialSettings.hit_types
 local proc_events = BuffSettings.proc_events
 local ActionShootPellets = class("ActionShootPellets", "ActionShoot")
-local EMPTY_TABLE = {}
 local IMPACT_FX_DATA = {
 	will_be_predicted = true
 }
@@ -325,6 +324,7 @@ local unit_to_index_lookup = {
 	penetration_exit = {},
 	stop = {}
 }
+local triggered_proc_events = {}
 
 ActionShootPellets._process_hits = function (self, power_level, t)
 	local is_server = self._is_server
@@ -467,9 +467,11 @@ ActionShootPellets._process_hits = function (self, power_level, t)
 						if should_deal_damage then
 							local hit_zone_power_levels = scaled_power_levels[hit_unit]
 
+							table.clear(triggered_proc_events)
+
 							for hit_zone_name, hit_zone_power_level in pairs(hit_zone_power_levels) do
 								local previous_hit_weakspot = hit_weakspot
-								local damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, player_unit, hit_unit, hit_actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name, damage_profile, damage_profile_lerp_values, hit_zone_power_level, charge_level, penetrated, damage_config, instakill, damage_type, is_critical_strike, weapon_item)
+								local damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, player_unit, hit_unit, hit_actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name, damage_profile, damage_profile_lerp_values, hit_zone_power_level, charge_level, penetrated, damage_config, instakill, damage_type, is_critical_strike, weapon_item, triggered_proc_events)
 								total_damage_dealt = total_damage_dealt + damage_dealt
 								damage_per_unit[hit_unit] = (damage_per_unit[hit_unit] or 0) + damage_dealt
 								best_attack_result = attack_result
@@ -742,10 +744,9 @@ end
 ActionShootPellets._next_fire_state = function (self, dt, t)
 	local action_component = self._action_component
 	local action_settings = self._action_settings
-	local weapon_handling_template = self._weapon_extension:weapon_handling_template() or EMPTY_TABLE
-	local fire_rate_settings = weapon_handling_template.fire_rate or EMPTY_TABLE
+	local fire_rate_settings = self:_fire_rate_settings()
 	local max_num_shots = fire_rate_settings.max_shots or math.huge
-	local auto_fire_timing = fire_rate_settings.auto_fire_time
+	local auto_fire_time = fire_rate_settings.auto_fire_time
 	local num_pellets_fired = self._action_shoot_pellets_component.num_pellets_fired
 	local fire_config = action_settings.fire_configuration
 	local shotshell_template = _shotshell_template(fire_config, self._inventory_slot_component)
@@ -757,8 +758,9 @@ ActionShootPellets._next_fire_state = function (self, dt, t)
 		self:_set_weapon_special(false, t)
 
 		return "shot"
-	elseif auto_fire_timing then
-		action_component.fire_at_time = t + auto_fire_timing
+	elseif auto_fire_time then
+		auto_fire_time = self:_scale_auto_fire_time_with_buffs(auto_fire_time)
+		action_component.fire_at_time = t + auto_fire_time
 
 		return "waiting_to_shoot"
 	else

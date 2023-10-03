@@ -1,8 +1,10 @@
 local cinematic_video_template = {
 	cs06 = {
-		video_name = "content/videos/cs06",
-		stop_only_player_skip = true,
 		loop_video = false,
+		music = "cinematic_pot",
+		video_name = "content/videos/cs06",
+		post_video_action = false,
+		stop_only_player_skip = true,
 		start_sound_name = "wwise/events/cinematics/play_cs06_surround_mix",
 		stop_sound_name = "wwise/events/cinematics/stop_cs06_surround_mix",
 		packages = {

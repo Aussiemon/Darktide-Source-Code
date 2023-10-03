@@ -132,6 +132,10 @@ local default_debug_input_settings = {
 			raw = "keyboard_left shift+keyboard_m",
 			type = "pressed"
 		},
+		trigger_next_horde_pacing_wave = {
+			raw = "keyboard_left shift+keyboard_e",
+			type = "pressed"
+		},
 		remove_monster_warning = {
 			raw = "keyboard_left shift+keyboard_v",
 			type = "pressed"

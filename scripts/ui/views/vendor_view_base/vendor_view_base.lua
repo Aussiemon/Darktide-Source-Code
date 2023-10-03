@@ -833,14 +833,13 @@ VendorViewBase._on_purchase_complete = function (self, items)
 
 		if item then
 			local gear_id = item.gear_id
-			local item_type = item.item_type
 			self._account_items[gear_id] = item
 
 			if offer_items_layout then
 				self:_update_layout_list_on_item_purchase(offer_items_layout, item)
 			end
 
-			ItemUtils.mark_item_id_as_new(gear_id, item_type)
+			ItemUtils.mark_item_id_as_new(item)
 			Managers.event:trigger("event_vendor_view_purchased_item")
 			self:_update_wallets()
 		end
@@ -891,15 +890,18 @@ VendorViewBase._handle_input = function (self, input_service, dt, t)
 		local is_mouse = self._using_cursor_navigation
 
 		if not is_mouse then
-			if self._previewed_offer and input_service:get("confirm_pressed") then
+			local grid = self._item_grid
+			local button_widget = self._widgets_by_name.purchase_button
+			local is_purchase_disabled = button_widget.content.hotspot.disabled
+
+			if self._previewed_offer and input_service:get("confirm_pressed") and not is_purchase_disabled then
 				self:_cb_on_purchase_pressed()
-			elseif self._item_grid then
-				local grid = self._item_grid
+			elseif grid then
 				local selected_index = grid:selected_grid_index()
 
 				if self._current_select_grid_index ~= selected_index then
 					self._current_select_grid_index = selected_index
-					local widgets = self._item_grid:widgets()
+					local widgets = grid:widgets()
 					local widget = widgets[selected_index]
 
 					if widget and widget.content.hotspot.pressed_callback then

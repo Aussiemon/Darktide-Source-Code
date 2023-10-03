@@ -3,7 +3,7 @@ local FixedFrame = {
 		return Managers.state.extension:latest_fixed_t()
 	end,
 	clamp_to_fixed_time = function (not_fixed_t)
-		local fixed_time_step = GameParameters.fixed_time_step
+		local fixed_time_step = Managers.state.game_session.fixed_time_step
 
 		return math.round(not_fixed_t / fixed_time_step) * fixed_time_step
 	end

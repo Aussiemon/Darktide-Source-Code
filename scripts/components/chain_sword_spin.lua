@@ -1,33 +1,37 @@
 local ChainSwordSpin = component("ChainSwordSpin")
-local DEFAULT_MIN_SPEED = 1
+local DEFAULT_SPEED = 1
 
 ChainSwordSpin.init = function (self, unit)
 	if not Unit.has_animation_state_machine(unit) then
+		self._initialized = false
+
 		return
 	end
 
+	self._initialized = true
 	self._unit = unit
-	self._speed = Unit.get_data(unit, "speed")
 	self._speed_variable_index = Unit.animation_find_variable(unit, "speed")
 
 	self:_set_speed()
 end
 
+ChainSwordSpin.editor_validate = function (self, unit)
+	return true, ""
+end
+
 ChainSwordSpin._set_speed = function (self, speed)
-	speed = speed or DEFAULT_MIN_SPEED
-	self._speed = speed
+	speed = speed or DEFAULT_SPEED
+	local unit = self._unit
 
-	if self._speed >= 0 then
-		Unit.animation_event(self._unit, "forward")
+	if speed >= 0 then
+		Unit.animation_event(unit, "forward")
 	else
-		Unit.animation_event(self._unit, "backward")
+		Unit.animation_event(unit, "backward")
+
+		speed = -speed
 	end
 
-	if self._speed < 0 then
-		self._speed = self._speed * -1
-	end
-
-	Unit.animation_set_variable(self._unit, self._speed_variable_index, self._speed)
+	Unit.animation_set_variable(unit, self._speed_variable_index, speed)
 end
 
 ChainSwordSpin.enable = function (self, unit)
@@ -42,15 +46,13 @@ ChainSwordSpin.destroy = function (self, unit)
 	return
 end
 
-ChainSwordSpin.update = function (self, unit, dt, t)
-	return
-end
-
-ChainSwordSpin.changed = function (self, unit)
-	return
-end
-
 ChainSwordSpin.events.set_speed = function (self, speed)
+	if not self._initialized then
+		Log.error("ChainSwordSpin", "Trying to set speed for a unit without an animation state machine")
+
+		return
+	end
+
 	self:_set_speed(speed)
 end
 

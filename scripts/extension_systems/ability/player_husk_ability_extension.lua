@@ -1,3 +1,5 @@
+local AbilityTemplates = require("scripts/settings/ability/ability_templates/ability_templates")
+local EquippedAbilityEffectScripts = require("scripts/extension_systems/ability/utilities/equipped_ability_effect_scripts")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
 local PlayerHuskAbilityExtension = class("PlayerHuskAbilityExtension")
@@ -23,10 +25,26 @@ PlayerHuskAbilityExtension.init = function (self, extension_init_context, unit, 
 		grenade_ability = unit_data_extension:read_component("grenade_ability"),
 		combat_ability = unit_data_extension:read_component("combat_ability")
 	}
+	self._equipped_ability_effect_scripts = {}
+	self._equipped_ability_effect_scripts_context = {
+		world = extension_init_context.world,
+		physics_world = extension_init_context.physics_world,
+		wwise_world = extension_init_context.wwise_world,
+		unit = unit,
+		unit_data_extension = unit_data_extension,
+		is_local_unit = extension_init_data.is_server,
+		is_server = extension_init_data.is_local_unit
+	}
 
 	self:_read_game_object(game_session, game_object_id)
 
 	self._last_read_t = 0
+end
+
+PlayerHuskAbilityExtension.extensions_ready = function (self, world, unit)
+	for ability_type, ability_effect_scripts in pairs(self._equipped_ability_effect_scripts) do
+		EquippedAbilityEffectScripts.extensions_ready(ability_effect_scripts, world, unit)
+	end
 end
 
 local READ_GAME_OBJECT_FREQUENCY = 0.5
@@ -36,6 +54,22 @@ PlayerHuskAbilityExtension.update = function (self, unit, dt, t)
 		self._last_read_t = t
 
 		self:_read_game_object(self._game_session, self._game_object_id)
+	end
+
+	for ability_type, ability_effect_scripts in pairs(self._equipped_ability_effect_scripts) do
+		EquippedAbilityEffectScripts.update(ability_effect_scripts, unit, dt, t)
+	end
+end
+
+PlayerHuskAbilityExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
+	for ability_type, ability_effect_scripts in pairs(self._equipped_ability_effect_scripts) do
+		EquippedAbilityEffectScripts.fixed_update(ability_effect_scripts, unit, dt, t)
+	end
+end
+
+PlayerHuskAbilityExtension.post_update = function (self, unit, dt, t, fixed_frame)
+	for ability_type, ability_effect_scripts in pairs(self._equipped_ability_effect_scripts) do
+		EquippedAbilityEffectScripts.post_update(ability_effect_scripts, unit, dt, t)
 	end
 end
 
@@ -75,12 +109,30 @@ PlayerHuskAbilityExtension._handle_ability_equip = function (self, equipped_abil
 
 	if equipped_ability == "not_equipped" and current_equipped_ability ~= nil then
 		equipped_abilities[ability_type] = nil
+		local equipped_ability_effect_scripts = self._equipped_ability_effect_scripts[ability_type]
+
+		if equipped_ability_effect_scripts then
+			EquippedAbilityEffectScripts.destroy(equipped_ability_effect_scripts)
+
+			self._equipped_ability_effect_scripts[ability_type] = nil
+		end
 
 		return
 	end
 
 	if equipped_ability ~= "not_equipped" and (not current_equipped_ability or current_equipped_ability.name ~= equipped_ability) then
-		equipped_abilities[ability_type] = PlayerAbilities[equipped_ability]
+		local ability = PlayerAbilities[equipped_ability]
+		equipped_abilities[ability_type] = ability
+		local ability_template_name = ability.ability_template
+
+		if ability_template_name then
+			local ability_template = AbilityTemplates[ability_template_name]
+			local equipped_ability_effect_scripts = {}
+			self._equipped_ability_effect_scripts[ability_type] = equipped_ability_effect_scripts
+			local equipped_ability_effect_scripts_context = self._equipped_ability_effect_scripts_context
+
+			EquippedAbilityEffectScripts.create(equipped_ability_effect_scripts_context, equipped_ability_effect_scripts, ability_template, ability_type)
+		end
 	end
 end
 
@@ -213,6 +265,10 @@ PlayerHuskAbilityExtension.can_wield = function (self)
 	error("not allowed to call on husk")
 end
 
+PlayerHuskAbilityExtension.can_be_scroll_wielded = function (self)
+	error("not allowed to call on husk")
+end
+
 PlayerHuskAbilityExtension.server_correction_occurred = function (self)
 	error("not allowed to call on husk")
 end
@@ -223,6 +279,10 @@ end
 
 PlayerHuskAbilityExtension.get_slot_name = function (self)
 	error("not implemented.")
+end
+
+PlayerHuskAbilityExtension.charge_replenished = function (self)
+	error("not allowed to call on husk")
 end
 
 return PlayerHuskAbilityExtension

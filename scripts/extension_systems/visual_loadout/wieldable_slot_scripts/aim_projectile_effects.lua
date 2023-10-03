@@ -2,8 +2,8 @@ local Action = require("scripts/utilities/weapon/action")
 local AimProjectile = require("scripts/utilities/aim_projectile")
 local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local ProjectileIntegration = require("scripts/extension_systems/locomotion/utilities/projectile_integration")
 local ProjectileIntegrationData = require("scripts/extension_systems/locomotion/utilities/projectile_integration_data")
-local ProjectileLocomotion = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion")
 local ProjectileLocomotionTemplates = require("scripts/settings/projectile_locomotion/projectile_locomotion_templates")
 local ProjectileTrajectory = require("scripts/utilities/projectile_trajectory")
 local Recoil = require("scripts/utilities/recoil")
@@ -43,18 +43,18 @@ AimProjectileEffects.init = function (self, context, slot, weapon_template, fx_s
 	self._fx_extension = ScriptUnit.extension(owner_unit, "fx_system")
 	self._weapon_extension = ScriptUnit.extension(owner_unit, "weapon_system")
 	self._integration_data = ProjectileIntegrationData.allocate_integration_data()
-	self._last_non_stuned_offset_box = Vector3Box()
+	self._last_non_stunned_offset_box = Vector3Box()
 	self._out_of_stunned_state_time = 1
 	self._aim_data = {}
 
-	for i = 1, MAX_INTEGRATION_STEPS do
-		self._aim_data[i] = {}
+	for ii = 1, MAX_INTEGRATION_STEPS do
+		self._aim_data[ii] = {}
 	end
 
 	self._position_data = {}
 
-	for i = 1, MAX_POSITION_STEPS do
-		self._position_data[i] = {}
+	for ii = 1, MAX_POSITION_STEPS do
+		self._position_data[ii] = {}
 	end
 
 	self._splines = {}
@@ -183,7 +183,7 @@ AimProjectileEffects._update_trajectory = function (self, trajectory_settings, d
 
 	if fx_spawner_name then
 		if is_stunned then
-			arc_offset = self._last_non_stuned_offset_box:unbox()
+			arc_offset = self._last_non_stunned_offset_box:unbox()
 			self._out_of_stunned_state_time = 0
 		else
 			local fx_extension = self._fx_extension
@@ -195,9 +195,9 @@ AimProjectileEffects._update_trajectory = function (self, trajectory_settings, d
 			self._out_of_stunned_state_time = out_of_stunned_state_time
 
 			if out_of_stunned_state_time >= 0.99 then
-				self._last_non_stuned_offset_box:store(offset)
+				self._last_non_stunned_offset_box:store(offset)
 			else
-				local last_safe_offset = self._last_non_stuned_offset_box:unbox()
+				local last_safe_offset = self._last_non_stunned_offset_box:unbox()
 				offset = Vector3.lerp(last_safe_offset, offset, out_of_stunned_state_time)
 			end
 
@@ -248,7 +248,7 @@ local _arc_distances = {}
 
 AimProjectileEffects._get_trajactory_data = function (self, integration_data, max_iterations, stop_on_impact, time_step_multiplier, max_number_of_bounces)
 	max_iterations = math.min(max_iterations, MAX_INTEGRATION_STEPS)
-	local fixed_frame_time = DefaultGameParameters.fixed_time_step
+	local fixed_frame_time = Managers.state.game_session.fixed_time_step
 	local number_of_iterations_done = 0
 	local number_of_bounces = 0
 	local distance_traveled = 0
@@ -262,10 +262,10 @@ AimProjectileEffects._get_trajactory_data = function (self, integration_data, ma
 	local aim_data = self._aim_data
 	local num_iterations_to_do = max_iterations - 2 * MAX_NUMBER_OF_SPLINE
 
-	for i = 1, num_iterations_to_do do
+	for ii = 1, num_iterations_to_do do
 		local old_position = integration_data.position
 
-		ProjectileLocomotion.integrate(self._physics_world, integration_data, fixed_frame_time, fake_t, is_server, time_step_multiplier, true)
+		ProjectileIntegration.integrate(self._physics_world, integration_data, fixed_frame_time, fake_t, is_server, time_step_multiplier, true)
 
 		fake_t = fake_t + fixed_frame_time * time_step_multiplier
 		local new_position = integration_data.position
@@ -300,7 +300,7 @@ AimProjectileEffects._get_trajactory_data = function (self, integration_data, ma
 			break
 		end
 
-		if i == max_iterations then
+		if ii == max_iterations then
 			break
 		end
 	end
@@ -346,10 +346,10 @@ end
 
 AimProjectileEffects._stop_trajectory_spline = function (self)
 	if self._splines and #self._splines > 0 then
-		for i = 1, MAX_NUMBER_OF_SPLINE do
-			World.destroy_spline_object_drawer(self._world, self._splines[i])
+		for ii = 1, MAX_NUMBER_OF_SPLINE do
+			World.destroy_spline_object_drawer(self._world, self._splines[ii])
 
-			self._splines[i] = nil
+			self._splines[ii] = nil
 		end
 	end
 end
@@ -362,8 +362,8 @@ local position_tabel = {}
 
 AimProjectileEffects._set_trajectory_positions_spline = function (self, start_position, aim_data, number_of_aim_data, arc_offset, total_distance, arc_distances, dt)
 	if number_of_aim_data == 1 then
-		for i = 1, MAX_NUMBER_OF_SPLINE do
-			local spline = self._splines[i]
+		for ii = 1, MAX_NUMBER_OF_SPLINE do
+			local spline = self._splines[ii]
 
 			SplineObjectDrawer.reset(spline)
 			SplineObjectDrawer.dispatch(spline)
@@ -378,14 +378,14 @@ AimProjectileEffects._set_trajectory_positions_spline = function (self, start_po
 	local arc_lerp = math.clamp01(first_arc_distance / 3 - 0.2)
 	arc_offset = Vector3.lerp(Vector3.zero(), arc_offset, arc_lerp)
 
-	for j = 1, MAX_NUMBER_OF_SPLINE do
-		local spline = self._splines[j]
+	for jj = 1, MAX_NUMBER_OF_SPLINE do
+		local spline = self._splines[jj]
 		local number_of_aim_data_left = number_of_aim_data - spline_start_index
 
-		if j <= #arc_distances and number_of_aim_data_left > 1 then
-			local arc_distance = arc_distances[j]
+		if jj <= #arc_distances and number_of_aim_data_left > 1 then
+			local arc_distance = arc_distances[jj]
 			local distance_between_points = arc_distance / (number_of_points - 1)
-			local is_first_arc = j == 1
+			local is_first_arc = jj == 1
 
 			table.clear(position_tabel)
 
@@ -400,9 +400,9 @@ AimProjectileEffects._set_trajectory_positions_spline = function (self, start_po
 				local current_step = first_aim_data.distance_in_arc + (is_first_arc and 0 or 0.5 * distance_between_points)
 				local next_pos = 2
 
-				for i = spline_start_index + 1, number_of_aim_data do
-					local current_aim_data = aim_data[i]
-					spline_start_index = i
+				for ii = spline_start_index + 1, number_of_aim_data do
+					local current_aim_data = aim_data[ii]
+					spline_start_index = ii
 					current_step = current_step + current_aim_data.detla_distance
 
 					if distance_between_points < current_step or current_aim_data.has_hit then

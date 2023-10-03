@@ -50,7 +50,7 @@ end
 
 local PlayerManagerFixedTestify = {}
 
-PlayerManagerFixedTestify.apply_weapon_progression_to_current_weapon_template = function (data, _, t)
+PlayerManagerFixedTestify.apply_weapon_progression_to_current_weapon_template = function (_, _, data)
 	local player = data.player
 	local player_unit = player.player_unit
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
@@ -60,7 +60,7 @@ PlayerManagerFixedTestify.apply_weapon_progression_to_current_weapon_template = 
 	_apply_all_weapon_modifiers(player, weapon_template)
 end
 
-PlayerManagerFixedTestify.remove_weapon_progression_from_current_weapon_template = function (data, _, t)
+PlayerManagerFixedTestify.remove_weapon_progression_from_current_weapon_template = function (_, _, data)
 	local player = data.player
 	local weapon_system = Managers.state.extension:system("weapon_system")
 	local new_modifiers = {}
@@ -68,7 +68,7 @@ PlayerManagerFixedTestify.remove_weapon_progression_from_current_weapon_template
 	weapon_system:debug_set_weapon_override(player, new_modifiers)
 end
 
-PlayerManagerFixedTestify.reset_grenade_charges = function (data, _, t)
+PlayerManagerFixedTestify.reset_grenade_charges = function (_, _, data)
 	local player = data.player
 	local player_unit = player.player_unit
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
@@ -80,7 +80,7 @@ PlayerManagerFixedTestify.reset_grenade_charges = function (data, _, t)
 	end
 end
 
-PlayerManagerFixedTestify.reset_magazine_ammo = function (data, _, t)
+PlayerManagerFixedTestify.reset_magazine_ammo = function (_, _, data)
 	local player = data.player
 	local player_unit = player.player_unit
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
@@ -94,13 +94,13 @@ PlayerManagerFixedTestify.reset_magazine_ammo = function (data, _, t)
 	end
 end
 
-PlayerManagerFixedTestify.trigger_animation_event = function (player_unit, animation_event)
+PlayerManagerFixedTestify.trigger_animation_event = function (_, _, player_unit, animation_event)
 	local animation_extension = ScriptUnit.extension(player_unit, "animation_system")
 
 	animation_extension:anim_event(animation_event)
 end
 
-PlayerManagerFixedTestify.wait_for_action_completed = function (data, _, t)
+PlayerManagerFixedTestify.wait_for_action_completed = function (_, _, data)
 	local player = data.player
 	local player_unit = player.player_unit
 	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
@@ -119,7 +119,7 @@ PlayerManagerFixedTestify.wait_for_action_completed = function (data, _, t)
 	end
 end
 
-PlayerManagerFixedTestify.wield_slot = function (data, _, t)
+PlayerManagerFixedTestify.wield_slot = function (_, t, data)
 	local player_unit = data.player.player_unit
 	local slot = data.slot
 	local inventory_component = ScriptUnit.extension(player_unit, "unit_data_system"):read_component("inventory")

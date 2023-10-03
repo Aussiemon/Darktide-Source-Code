@@ -29,6 +29,8 @@ ViewElementProfilePresets.init = function (self, parent, draw_layer, start_scale
 		0
 	}
 	self._costumization_open = false
+	self._presets_id_warning = {}
+	self._presets_id_modified = {}
 
 	self:_setup_tooltip_grid()
 	self:_setup_preset_buttons()
@@ -40,26 +42,33 @@ ViewElementProfilePresets.init = function (self, parent, draw_layer, start_scale
 	local save_manager = Managers.save
 	local character_data = character_id and save_manager and save_manager:character_data(character_id)
 	local profile_presets = character_data and character_data.profile_presets
-	local intro_presented = profile_presets and profile_presets.intro_presented
+	local account_data = save_manager and save_manager:account_data()
+	local intro_presented = account_data and account_data.profile_preset_intro_presented
 
-	if not intro_presented then
+	if character_data and not intro_presented then
 		self:_setup_intro_grid()
 
 		local pulse_tooltip = true
 
 		self:_set_tooltip_visibility(true, pulse_tooltip)
 
-		if not profile_presets and character_data then
+		local trigger_save = false
+
+		if not profile_presets then
 			local default_character_data = SaveData.default_character_data
 			local default_profile_presets = default_character_data.profile_presets
 			profile_presets = table.clone(default_profile_presets)
 			character_data.profile_presets = profile_presets
-
-			Managers.save:queue_save()
+			trigger_save = true
 		end
 
 		if profile_presets then
-			profile_presets.intro_presented = true
+			account_data.profile_preset_intro_presented = true
+			trigger_save = true
+		end
+
+		if trigger_save then
+			Managers.save:queue_save()
 		end
 	else
 		self:_setup_custom_icons_grid()
@@ -266,6 +275,7 @@ ViewElementProfilePresets._setup_preset_buttons = function (self)
 
 	for i = num_profile_presets, 1, -1 do
 		local profile_preset = profile_presets[i]
+		local profile_preset_id = profile_preset and profile_preset.id
 		local custom_icon_key = profile_preset and profile_preset.custom_icon_key
 		local widget_name = "profile_button_" .. i
 		local widget = self:_create_widget(widget_name, profile_preset_button)
@@ -276,10 +286,10 @@ ViewElementProfilePresets._setup_preset_buttons = function (self)
 		local hotspot = content.hotspot
 		hotspot.pressed_callback = callback(self, "on_profile_preset_index_change", i)
 		hotspot.right_pressed_callback = callback(self, "on_profile_preset_index_customize", i)
-		local is_selected = i == active_profile_preset_id
+		local is_selected = profile_preset_id == active_profile_preset_id
 
 		if is_selected then
-			self._active_profile_preset_id = i
+			self._active_profile_preset_id = profile_preset_id
 		end
 
 		hotspot.is_selected = is_selected
@@ -287,6 +297,7 @@ ViewElementProfilePresets._setup_preset_buttons = function (self)
 		local default_icon_key = optional_preset_icon_reference_keys[default_icon_index]
 		local default_icon = optional_preset_icons_lookup[custom_icon_key or default_icon_key]
 		content.icon = default_icon
+		content.profile_preset_id = profile_preset_id
 		total_width = total_width + button_width
 
 		if i > 1 then
@@ -299,11 +310,6 @@ ViewElementProfilePresets._setup_preset_buttons = function (self)
 
 	self:_set_scenegraph_size("profile_preset_button_panel", panel_width)
 	self:_force_update_scenegraph()
-
-	local widgets_by_name = self._widgets_by_name
-	local add_button_widget = widgets_by_name.profile_preset_add_button
-	add_button_widget.content.hotspot.disabled = ViewElementProfilePresetsSettings.max_profile_presets <= num_profile_presets
-
 	self:_sync_profile_buttons_items_status()
 end
 
@@ -314,40 +320,60 @@ ViewElementProfilePresets._sync_profile_buttons_items_status = function (self)
 
 	if num_profile_presets > 0 and profile_buttons_widgets then
 		for i = 1, #profile_buttons_widgets do
-			local profile_preset = profile_presets[i]
 			local widget = profile_buttons_widgets[i]
 			local content = widget.content
-			content.missing_content = self:is_profile_preset_missing_items(profile_preset)
+			local profile_preset_id = content.profile_preset_id
+			content.missing_content = self._presets_id_warning[profile_preset_id]
+			content.modified_content = self._presets_id_modified[profile_preset_id]
 		end
 	end
 end
 
-ViewElementProfilePresets.is_profile_preset_missing_items = function (self, profile_preset)
-	local parent = self._parent
-	local loadout = profile_preset.loadout
-	local missing_slots = {}
+ViewElementProfilePresets.set_current_profile_loadout_status = function (self, show_warning, show_modified)
+	self._current_profile_loadout_warning = show_warning
+	self._current_profile_loadout_modified = show_modified
+end
 
-	if loadout then
-		for slot_id, gear_id in pairs(loadout) do
-			local item = parent:_get_inventory_item_by_id(gear_id)
+ViewElementProfilePresets.show_profile_preset_missing_items_warning = function (self, is_missing_content, is_modified_content, optional_preset_id)
+	local preset_id = optional_preset_id or self._active_profile_preset_id
 
-			if not item then
-				missing_slots[slot_id] = true
-			end
-		end
+	if not preset_id then
+		return
 	end
 
-	return not table.is_empty(missing_slots), missing_slots
+	local profile_buttons_widgets = self._profile_buttons_widgets
+
+	for i = 1, #profile_buttons_widgets do
+		local widget = profile_buttons_widgets[i]
+		local content = widget.content
+		local profile_preset_id = content.profile_preset_id
+
+		if profile_preset_id == preset_id then
+			content.missing_content = is_missing_content
+			content.modified_content = is_modified_content
+			self._presets_id_warning[preset_id] = is_missing_content
+			self._presets_id_modified[preset_id] = is_modified_content
+
+			break
+		end
+	end
 end
 
 ViewElementProfilePresets.can_add_profile_preset = function (self)
 	local profile_presets = ProfileUtils.get_profile_presets()
+	local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 
-	if #profile_presets < ViewElementProfilePresetsSettings.max_profile_presets then
-		return true
+	if ViewElementProfilePresetsSettings.max_profile_presets <= #profile_presets or self._current_profile_loadout_warning then
+		return false
 	end
 
-	return false
+	local active_profile_button_widget = active_profile_preset_id and self:_get_widget_by_preset_id(active_profile_preset_id)
+
+	if active_profile_button_widget and active_profile_button_widget.content.missing_content then
+		return false
+	end
+
+	return true
 end
 
 ViewElementProfilePresets.cb_add_new_profile_preset = function (self)
@@ -355,6 +381,7 @@ ViewElementProfilePresets.cb_add_new_profile_preset = function (self)
 		self:_set_tooltip_visibility(false)
 
 		self._intro_active = nil
+		self._close_intro_popup = nil
 	end
 
 	local profile_presets = ProfileUtils.get_profile_presets()
@@ -364,56 +391,19 @@ ViewElementProfilePresets.cb_add_new_profile_preset = function (self)
 		return
 	end
 
+	Managers.event:trigger("event_player_save_changes_to_current_preset")
+
+	local profile_preset_id = ProfileUtils.add_profile_preset()
+
 	self:_play_sound(UISoundEvents.add_profile_preset)
-
-	local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
-	local active_profile_preset = active_profile_preset_id and ProfileUtils.get_profile_preset(active_profile_preset_id)
-	local new_loadout = {}
-	local new_talents = nil
-	local parent = self._parent
-
-	if active_profile_preset then
-		local loadout = active_profile_preset.loadout
-		local talents = active_profile_preset.talents
-		new_loadout = table.create_copy(nil, loadout)
-		new_talents = table.create_copy(nil, talents)
-	else
-		local player = parent:_player()
-		local profile = player:profile()
-		local loadout = profile.loadout
-		local talents = profile.talents
-		new_talents = table.create_copy(nil, talents)
-
-		for slot_id, item in pairs(loadout) do
-			local slot = ItemSlotSettings[slot_id]
-
-			if slot.equipped_in_inventory and item.gear_id then
-				new_loadout[slot_id] = item.gear_id
-			end
-		end
-
-		local presentation_loadout = parent._preview_profile_equipped_items
-
-		for slot_id, item in pairs(presentation_loadout) do
-			local slot = ItemSlotSettings[slot_id]
-
-			if slot.equipped_in_inventory and item.gear_id then
-				new_loadout[slot_id] = item.gear_id
-			end
-		end
-	end
-
-	local optional_preset_icon_reference_keys = ViewElementProfilePresetsSettings.optional_preset_icon_reference_keys
-	local icon_index = math.index_wrapper(num_profile_presets + 1, #optional_preset_icon_reference_keys)
-	local icon_key = optional_preset_icon_reference_keys[icon_index]
-	local profile_preset_id = ProfileUtils.add_profile_preset(new_loadout, new_talents, icon_key)
-
-	if profile_preset_id == 1 then
-		ProfileUtils.save_active_profile_preset_id(profile_preset_id)
-	end
-
+	Managers.event:trigger("event_on_player_preset_created", profile_preset_id)
 	self:_setup_preset_buttons()
-	self:on_profile_preset_index_change(profile_preset_id)
+
+	self._active_profile_preset_id = nil
+	local _, profile_preset_widget_index = self:_get_widget_by_preset_id(profile_preset_id)
+
+	self:on_profile_preset_index_change(profile_preset_widget_index)
+	Managers.save:queue_save()
 end
 
 ViewElementProfilePresets._remove_profile_preset = function (self, widget, element)
@@ -423,6 +413,7 @@ ViewElementProfilePresets._remove_profile_preset = function (self, widget, eleme
 		return
 	end
 
+	local profile_preset_id = self:_get_profile_preset_id_by_widget_index(active_customize_preset_index)
 	local widget_content = widget.content
 	local widget_hotspot = widget_content.hotspot
 	widget_hotspot.anim_hover_progress = 0
@@ -432,23 +423,27 @@ ViewElementProfilePresets._remove_profile_preset = function (self, widget, eleme
 	local previously_active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 	self._active_profile_preset_id = nil
 
-	ProfileUtils.remove_profile_preset(active_customize_preset_index)
+	ProfileUtils.remove_profile_preset(profile_preset_id)
 
-	local new_active_profile_preset_id = previously_active_profile_preset_id and math.max(previously_active_profile_preset_id - 1, 1)
-
-	if new_active_profile_preset_id and not ProfileUtils.get_profile_preset(new_active_profile_preset_id) then
-		new_active_profile_preset_id = nil
+	if previously_active_profile_preset_id then
+		self._presets_id_warning[previously_active_profile_preset_id] = nil
+		self._presets_id_modified[previously_active_profile_preset_id] = nil
 	end
 
 	self:on_profile_preset_index_customize()
 	self:_setup_preset_buttons()
 
-	if new_active_profile_preset_id then
-		self:on_profile_preset_index_change(new_active_profile_preset_id)
-	else
-		ProfileUtils.save_active_profile_preset_id(nil)
+	local next_widget_index = math.max(active_customize_preset_index - 1, 1)
+	local new_active_profile_preset_id = self:_get_profile_preset_id_by_widget_index(next_widget_index)
+
+	if new_active_profile_preset_id and not ProfileUtils.get_profile_preset(new_active_profile_preset_id) then
+		new_active_profile_preset_id = nil
+		next_widget_index = nil
 	end
 
+	local on_preset_deleted = true
+
+	self:on_profile_preset_index_change(next_widget_index, nil, on_preset_deleted)
 	self:_play_sound(UISoundEvents.remove_profile_preset)
 
 	self._costumization_open = false
@@ -460,7 +455,7 @@ ViewElementProfilePresets.cb_on_profile_preset_icon_grid_layout_changed = functi
 	local menu_settings = grid:menu_settings()
 	local grid_size = menu_settings.grid_size
 	local mask_size = menu_settings.mask_size
-	local new_grid_height = math.clamp(grid_length, 0, 700)
+	local new_grid_height = math.clamp(grid_length + 10, 0, 700)
 	grid_size[2] = new_grid_height
 	mask_size[2] = new_grid_height
 
@@ -483,7 +478,8 @@ ViewElementProfilePresets.cb_on_profile_preset_icon_grid_left_pressed = function
 		return
 	end
 
-	local profile_preset = ProfileUtils.get_profile_preset(active_customize_preset_index)
+	local profile_preset_id = self:_get_profile_preset_id_by_widget_index(active_customize_preset_index)
+	local profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
 
 	if not profile_preset then
 		return
@@ -537,10 +533,11 @@ ViewElementProfilePresets.has_active_profile_preset = function (self)
 end
 
 ViewElementProfilePresets.customize_active_profile_presets = function (self)
-	local index = self._active_profile_preset_id
+	local active_profile_preset_id = self._active_profile_preset_id
+	local profile_preset_widget, profile_preset_widget_index = self:_get_widget_by_preset_id(active_profile_preset_id)
 
-	if index then
-		self:on_profile_preset_index_customize(index)
+	if profile_preset_widget_index then
+		self:on_profile_preset_index_customize(profile_preset_widget_index)
 	end
 end
 
@@ -549,8 +546,13 @@ ViewElementProfilePresets.on_profile_preset_index_customize = function (self, in
 		return
 	end
 
+	local profile_buttons_widgets = self._profile_buttons_widgets
+
 	if index then
-		local profile_preset = ProfileUtils.get_profile_preset(index)
+		local widget = profile_buttons_widgets[index]
+		local content = widget and widget.content
+		local profile_preset_id = content and content.profile_preset_id
+		local profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
 
 		if not profile_preset then
 			return
@@ -562,8 +564,6 @@ ViewElementProfilePresets.on_profile_preset_index_customize = function (self, in
 
 		self:_play_sound(UISoundEvents.default_click)
 	end
-
-	local profile_buttons_widgets = self._profile_buttons_widgets
 
 	if profile_buttons_widgets then
 		for i = 1, #profile_buttons_widgets do
@@ -608,6 +608,10 @@ ViewElementProfilePresets.on_profile_preset_index_customize = function (self, in
 end
 
 ViewElementProfilePresets.handling_input = function (self)
+	if self._intro_active then
+		return true
+	end
+
 	if self._active_customize_preset_index ~= nil then
 		return true
 	elseif self._release_input_frame_delay and self._release_input_frame_delay > 0 then
@@ -636,12 +640,40 @@ ViewElementProfilePresets.cycle_next_profile_preset = function (self)
 		return
 	end
 
-	local next_profile_preset_index = math.index_wrapper(active_profile_preset_id + 1, #profile_buttons_widgets)
+	local _, index = self:_get_widget_by_preset_id(active_profile_preset_id)
+	local next_profile_preset_index = math.index_wrapper(index + 1, #profile_buttons_widgets)
 
 	self:on_profile_preset_index_change(next_profile_preset_index)
 end
 
-ViewElementProfilePresets.on_profile_preset_index_change = function (self, index, ignore_activation, ignore_sound)
+ViewElementProfilePresets._get_widget_by_preset_id = function (self, id)
+	local profile_buttons_widgets = self._profile_buttons_widgets
+
+	if profile_buttons_widgets then
+		for index = 1, #profile_buttons_widgets do
+			local widget = profile_buttons_widgets[index]
+
+			if widget.content.profile_preset_id == id then
+				return widget, index
+			end
+		end
+	end
+end
+
+ViewElementProfilePresets._get_profile_preset_id_by_widget_index = function (self, index)
+	local profile_buttons_widgets = self._profile_buttons_widgets
+
+	if profile_buttons_widgets then
+		local widget = profile_buttons_widgets[index]
+		local content = widget and widget.content
+		local profile_preset_id = content and content.profile_preset_id
+
+		return profile_preset_id
+	end
+end
+
+ViewElementProfilePresets.on_profile_preset_index_change = function (self, index, ignore_activation, on_preset_deleted, ignore_sound)
+	local profile_preset_id = nil
 	local profile_buttons_widgets = self._profile_buttons_widgets
 
 	if profile_buttons_widgets then
@@ -649,7 +681,12 @@ ViewElementProfilePresets.on_profile_preset_index_change = function (self, index
 			local widget = profile_buttons_widgets[i]
 			local content = widget.content
 			local hotspot = content.hotspot
-			hotspot.is_selected = i == index
+			local is_selected = i == index
+			hotspot.is_selected = is_selected
+
+			if is_selected then
+				profile_preset_id = content.profile_preset_id
+			end
 		end
 	end
 
@@ -661,41 +698,20 @@ ViewElementProfilePresets.on_profile_preset_index_change = function (self, index
 		end
 
 		if not ignore_sound then
-			self:_play_sound(UISoundEvents.default_click)
+			self:_play_sound(UISoundEvents.profile_preset_clicked)
+			self:_play_sound(UISoundEvents.switch_profile_preset)
 		end
 	end
 
-	if not ignore_activation and index ~= self._active_profile_preset_id then
-		self._active_profile_preset_id = index
+	if not ignore_activation and (on_preset_deleted or profile_preset_id ~= self._active_profile_preset_id) then
+		self._active_profile_preset_id = profile_preset_id
 
-		ProfileUtils.save_active_profile_preset_id(index)
+		ProfileUtils.save_active_profile_preset_id(profile_preset_id)
 
 		local parent = self._parent
-		local profile_preset = ProfileUtils.get_profile_preset(index)
+		local profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
 
-		if profile_preset then
-			local profile_preset_loadout = profile_preset.loadout
-
-			for slot_id, gear_id in pairs(profile_preset_loadout) do
-				local item = parent:_get_inventory_item_by_id(gear_id)
-
-				if item then
-					parent:_equip_slot_item(slot_id, item)
-				end
-			end
-
-			local profile_preset_talents = profile_preset.talents
-			local player = parent:_player()
-			local profile = player:profile()
-			local talents = profile.talents
-			local combined_talents = table.create_copy(table.clone(talents), profile_preset_talents)
-
-			Managers.event:trigger("event_on_profile_preset_changed", profile_preset_talents)
-
-			local talent_service = Managers.data_service.talents
-
-			talent_service:set_talents(player, combined_talents)
-		end
+		Managers.event:trigger("event_on_profile_preset_changed", profile_preset, on_preset_deleted)
 	end
 end
 
@@ -765,7 +781,53 @@ ViewElementProfilePresets.on_resolution_modified = function (self, scale)
 	self._profile_preset_tooltip_grid:set_render_scale(scale)
 end
 
+local _device_list = {
+	Pad1,
+	Keyboard,
+	Mouse
+}
+
 ViewElementProfilePresets.update = function (self, dt, t, input_service)
+	if self._close_intro_popup then
+		self:_set_tooltip_visibility(false)
+
+		self._intro_active = nil
+		self._close_intro_popup = nil
+	end
+
+	if self._intro_active and not self._close_intro_popup then
+		local any_input_pressed = false
+
+		if IS_XBS then
+			local input_device_list = InputUtils.input_device_list
+			local xbox_controllers = input_device_list.xbox_controller
+
+			for i = 1, #xbox_controllers do
+				local xbox_controller = xbox_controllers[i]
+
+				if xbox_controller.active() and xbox_controller.any_pressed() then
+					any_input_pressed = true
+
+					break
+				end
+			end
+		end
+
+		if not any_input_pressed then
+			for _, device in pairs(_device_list) do
+				if device and device.active and device.any_pressed() then
+					any_input_pressed = true
+
+					break
+				end
+			end
+		end
+
+		if any_input_pressed then
+			self._close_intro_popup = true
+		end
+	end
+
 	if not self._is_inventory_ready then
 		local parent = self._parent
 
@@ -828,6 +890,20 @@ ViewElementProfilePresets.update = function (self, dt, t, input_service)
 			end
 
 			input_service = input_service:null_service()
+		end
+	end
+
+	local add_button_widget = self._widgets_by_name.profile_preset_add_button
+
+	if add_button_widget then
+		add_button_widget.content.hotspot.disabled = not self:can_add_profile_preset()
+		local index = self._active_profile_preset_id
+		local widget = self._profile_buttons_widgets[index]
+
+		if widget then
+			add_button_widget.content.missing_content = widget.content.missing_content or self._current_profile_loadout_warning
+		else
+			add_button_widget.content.missing_content = self._current_profile_loadout_warning
 		end
 	end
 

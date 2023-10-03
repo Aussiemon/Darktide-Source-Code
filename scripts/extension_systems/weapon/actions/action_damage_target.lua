@@ -31,7 +31,7 @@ ActionDamageTarget.start = function (self, action_settings, t, time_scale, start
 	local last_action_warp_charge_percent = start_params.starting_warp_charge_percent
 
 	if last_action_warp_charge_percent then
-		local base_warp_charge_template = WarpCharge.specialization_warp_charge_template(self._player)
+		local base_warp_charge_template = WarpCharge.archetype_warp_charge_template(self._player)
 		local extreme_warp_charge_threshold = base_warp_charge_template.extreme_threshold
 		local dif = 1 - extreme_warp_charge_threshold
 		local stat_buffs = self._buff_extension:stat_buffs()
@@ -60,7 +60,7 @@ ActionDamageTarget.fixed_update = function (self, dt, t, time_in_action)
 			local dealt_damage = self:_deal_damage(charge_level)
 
 			if prevent_explosion and dealt_damage then
-				self:_pay_warp_charge_cost(t, charge_level)
+				self:_pay_warp_charge_cost_immediate(t, charge_level)
 			else
 				self._charge_level = charge_level
 				self._dealt_damage = dealt_damage
@@ -75,7 +75,7 @@ ActionDamageTarget.fixed_update = function (self, dt, t, time_in_action)
 		local should_add_warp_charge = ActionUtility.is_within_trigger_time(time_in_action, dt, warp_charge_time)
 
 		if self._dealt_damage and should_add_warp_charge then
-			self:_pay_warp_charge_cost(t, self._charge_level, true)
+			self:_pay_warp_charge_cost_immediate(t, self._charge_level, true)
 		end
 	end
 end
@@ -133,11 +133,6 @@ ActionDamageTarget._deal_damage = function (self, charge_level)
 		end
 	end
 
-	local herding_template = action_settings.herding_template
-	local damage_dealt, attack_result, damage_efficiency = Attack.execute(target_unit, damage_profile, "power_level", power_level, "charge_level", charge_level, "hit_world_position", hit_world_position, "hit_zone_name", hit_zone_name, "hit_actor", hit_actor, "attacking_unit", player_unit, "attack_direction", attack_direction, "herding_template", herding_template, "attack_type", AttackSettings.attack_types.ranged, "damage_type", damage_type, "item", self._weapon.item)
-
-	ImpactEffect.play(target_unit, hit_actor, damage_dealt, damage_type, hit_zone_name, attack_result, hit_world_position, nil, attack_direction, player_unit, nil, nil, nil, damage_efficiency, damage_profile)
-
 	local param_table = self._buff_extension:request_proc_event_param_table()
 
 	if param_table then
@@ -147,6 +142,11 @@ ActionDamageTarget._deal_damage = function (self, charge_level)
 
 		self._buff_extension:add_proc_event(proc_events.on_action_damage_target, param_table)
 	end
+
+	local herding_template = action_settings.herding_template
+	local damage_dealt, attack_result, damage_efficiency = Attack.execute(target_unit, damage_profile, "power_level", power_level, "charge_level", charge_level, "hit_world_position", hit_world_position, "hit_zone_name", hit_zone_name, "hit_actor", hit_actor, "attacking_unit", player_unit, "attack_direction", attack_direction, "herding_template", herding_template, "attack_type", AttackSettings.attack_types.ranged, "damage_type", damage_type, "item", self._weapon.item)
+
+	ImpactEffect.play(target_unit, hit_actor, damage_dealt, damage_type, hit_zone_name, attack_result, hit_world_position, nil, attack_direction, player_unit, nil, nil, nil, damage_efficiency, damage_profile)
 
 	return true
 end
@@ -158,7 +158,7 @@ ActionDamageTarget.finish = function (self, reason, data, t, time_in_action)
 		local warp_charge_time = action_settings.pay_warp_charge_time or 0.5
 
 		if time_in_action < warp_charge_time then
-			self:_pay_warp_charge_cost(t, self._charge_level or 1)
+			self:_pay_warp_charge_cost_immediate(t, self._charge_level or 1)
 		end
 	end
 

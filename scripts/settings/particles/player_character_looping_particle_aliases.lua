@@ -41,6 +41,11 @@ local PlayerCharacterLoopingParticleAliases = {
 		particle_alias = "chain_lightning_link",
 		external_properties = {}
 	},
+	chain_lightning_impact = {
+		exclude_from_unit_data_components = true,
+		particle_alias = "chain_lightning_impact",
+		external_properties = {}
+	},
 	plasma_venting = {
 		particle_alias = "plasma_venting",
 		external_properties = {}

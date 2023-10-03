@@ -14,6 +14,10 @@ SideMissionPickupSynchronizer.editor_init = function (self, unit)
 	return
 end
 
+SideMissionPickupSynchronizer.editor_validate = function (self, unit)
+	return true, ""
+end
+
 SideMissionPickupSynchronizer.enable = function (self, unit)
 	return
 end

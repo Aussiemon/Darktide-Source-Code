@@ -20,6 +20,7 @@ _extract_circumstance_templates("scripts/settings/circumstance/templates/gas_cir
 _extract_circumstance_templates("scripts/settings/circumstance/templates/noir_circumstance_template")
 _extract_circumstance_templates("scripts/settings/circumstance/templates/ember_circumstance_template")
 _extract_circumstance_templates("scripts/settings/circumstance/templates/hub_skulls_circumstance_template")
+_extract_circumstance_templates("scripts/settings/circumstance/templates/stealth_circumstance_template")
 _extract_circumstance_templates("scripts/settings/circumstance/templates/extra_trickle_circumstance_template")
 _extract_circumstance_templates("scripts/settings/circumstance/templates/more_specials_circumstance_template")
 _extract_circumstance_templates("scripts/settings/circumstance/templates/more_hordes_circumstance_template")

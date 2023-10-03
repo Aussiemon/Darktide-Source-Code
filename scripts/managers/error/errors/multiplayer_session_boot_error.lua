@@ -23,11 +23,9 @@ MultiplayerSessionBootError.init = function (self, error_source, error_reason, o
 end
 
 MultiplayerSessionBootError.level = function (self)
-	if self._error_reason == "mission_not_found" then
-		return ErrorManager.ERROR_LEVEL.warning_popup
-	end
+	local error_level = ErrorCodes.get_error_code_level_from_reason(self._error_reason)
 
-	return ErrorManager.ERROR_LEVEL.warning
+	return ErrorManager.ERROR_LEVEL[error_level]
 end
 
 MultiplayerSessionBootError.log_message = function (self)
@@ -35,19 +33,24 @@ MultiplayerSessionBootError.log_message = function (self)
 end
 
 MultiplayerSessionBootError.loc_title = function (self)
-	if self._error_reason == "mission_not_found" then
-		return "loc_popup_header_missing_mission"
+	local override, title = ErrorCodes.get_error_code_title_from_reason(self._error_reason, false)
+
+	if override then
+		return title
 	end
 
 	return "loc_failed_joining_server"
 end
 
 MultiplayerSessionBootError.loc_description = function (self)
-	if self._error_reason == "mission_not_found" then
-		return "loc_popup_description_missing_mission"
+	local error_reason = self._error_reason
+	local override, title, format = ErrorCodes.get_error_code_description_from_reason(error_reason, false)
+
+	if override then
+		return title, format
 	end
 
-	local error_code_string = ErrorCodes.get_error_code_string_from_reason(self._error_reason)
+	local error_code_string = ErrorCodes.get_error_code_string_from_reason(error_reason)
 	local string_format = "%s %s"
 
 	return "loc_error_reason", {

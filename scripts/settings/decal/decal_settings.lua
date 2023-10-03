@@ -1,6 +1,6 @@
 local decal_settings = {
 	blood = {
-		sort_order_base = 2000000,
+		sort_order_base = 6000000,
 		units = {
 			"content/fx/units/blood_decal_dir_01",
 			"content/fx/units/blood_decal_omni_01",

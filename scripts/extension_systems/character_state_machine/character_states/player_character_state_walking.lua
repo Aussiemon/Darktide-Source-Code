@@ -8,6 +8,7 @@ local Dodge = require("scripts/extension_systems/character_state_machine/charact
 local HealthStateTransitions = require("scripts/extension_systems/character_state_machine/character_states/utilities/health_state_transitions")
 local Interacting = require("scripts/extension_systems/character_state_machine/character_states/utilities/interacting")
 local LedgeVaulting = require("scripts/extension_systems/character_state_machine/character_states/utilities/ledge_vaulting")
+local PlayerUnitPeeking = require("scripts/utilities/player_unit_peeking")
 local Sprint = require("scripts/extension_systems/character_state_machine/character_states/utilities/sprint")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local PlayerCharacterStateWalking = class("PlayerCharacterStateWalking", "PlayerCharacterStateBase")
@@ -23,6 +24,7 @@ PlayerCharacterStateWalking.init = function (self, character_state_init_context,
 	self._walking_character_state_component = walking_character_state_component
 	local ledge_vault_tweak_values = self._breed.ledge_vault_tweak_values
 	self._ledge_vault_tweak_values = ledge_vault_tweak_values
+	self._peeking_component = unit_data:write_component("peeking")
 end
 
 PlayerCharacterStateWalking.on_enter = function (self, unit, dt, t, previous_state, params)
@@ -55,6 +57,14 @@ PlayerCharacterStateWalking.on_enter = function (self, unit, dt, t, previous_sta
 end
 
 PlayerCharacterStateWalking.on_exit = function (self, unit, t, next_state)
+	local height_time_to_change = nil
+
+	if next_state == "dodging" then
+		height_time_to_change = 0.4
+	end
+
+	PlayerUnitPeeking.leaving_peekable_character_state(self._peeking_component, self._animation_extension, self._first_person_extension, height_time_to_change, "ease_in_cubic")
+
 	if next_state ~= "jumping" then
 		self._animation_extension:anim_event_1p("idle")
 
@@ -79,6 +89,9 @@ PlayerCharacterStateWalking.fixed_update = function (self, unit, dt, t, next_sta
 
 	local is_crouching = Crouch.check(unit, first_person_extension, anim_extension, weapon_extension, move_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t)
 	local buff_extension = self._buff_extension
+
+	PlayerUnitPeeking.fixed_update(self._peeking_component, self._ledge_finder_extension, anim_extension, first_person_extension, self._specialization_extension, is_crouching, self._breed)
+
 	local move_direction, move_speed, new_x, new_y, wants_move, stopped, moving_backwards, wants_slide = AcceleratedLocalSpaceMovement.wanted_movement(self._constants, input_extension, locomotion_steering, move_settings, self._first_person_component, is_crouching, velocity_current, dt)
 	local action_move_speed_modifier = weapon_extension:move_speed_modifier(t)
 	move_speed = move_speed * action_move_speed_modifier
@@ -122,12 +135,12 @@ PlayerCharacterStateWalking._check_transition = function (self, unit, t, next_st
 		return "minigame"
 	end
 
-	local wanted_ability_transition, ability_transition_params = self._ability_extension:wanted_character_state_transition()
+	local ability_transition, ability_transition_params = self:_poll_ability_state_transitions(unit, t)
 
-	if wanted_ability_transition then
+	if ability_transition then
 		table.merge(next_state_params, ability_transition_params)
 
-		return wanted_ability_transition
+		return ability_transition
 	end
 
 	local is_colliding_on_hang_ledge, hang_ledge_unit = self:_should_hang_on_ledge(unit, t)
@@ -162,7 +175,7 @@ PlayerCharacterStateWalking._check_transition = function (self, unit, t, next_st
 		return "sliding"
 	end
 
-	local base_dodge_template = self._specialization_dodge_template
+	local base_dodge_template = self._archetype_dodge_template
 	local should_dodge, local_dodge_direction = Dodge.check(t, self._unit_data_extension, base_dodge_template, input_source)
 
 	if should_dodge then

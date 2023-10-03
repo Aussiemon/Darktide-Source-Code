@@ -156,6 +156,11 @@ UIViewHandler.wwise_music_state = function (self, wwise_state_group_name)
 
 			if wwise_state then
 				return wwise_state
+			elseif view_settings.wwise_state_query then
+				local view_data = self._active_views_data[view_name]
+				local view_instance = view_data.instance
+
+				return view_instance:wwise_music_state()
 			end
 		end
 	end
@@ -579,7 +584,7 @@ UIViewHandler._draw_views = function (self, dt, t, allow_input, transitioning_in
 		local view_data = active_views_data[view_name]
 		local can_draw_view = self:_can_draw_view(view_name)
 		local draw_view = allow_draw and can_draw_view
-		local view_instance = view_data.instance
+		local view_instance = view_data and view_data.instance
 
 		if view_instance then
 			local draw_layer = 1
@@ -606,8 +611,8 @@ UIViewHandler._draw_views = function (self, dt, t, allow_input, transitioning_in
 			end
 		end
 
-		local allow_next_input = view_data.allow_next_input
-		local allow_next_draw = view_data.allow_next_draw
+		local allow_next_input = view_data and view_data.allow_next_input
+		local allow_next_draw = view_data and view_data.allow_next_draw
 
 		if can_draw_view then
 			allow_draw = allow_draw and allow_next_draw or false
@@ -644,6 +649,7 @@ UIViewHandler._force_close = function (self, view_name)
 		instance:on_exit()
 	end
 
+	view_data.instance = nil
 	active_views_data[view_name] = nil
 
 	for i = 1, self._num_active_views do

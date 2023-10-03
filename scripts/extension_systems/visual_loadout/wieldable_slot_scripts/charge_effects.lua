@@ -16,8 +16,7 @@ ChargeEffects.init = function (self, context, slot, weapon_template, fx_sources)
 end
 
 ChargeEffects.fixed_update = function (self, unit, dt, t, frame)
-	local action_module_charge_component = self._action_module_charge_component
-	local charge_level = action_module_charge_component.charge_level
+	local charge_level = self:_charge_level(t)
 	local have_charge = charge_level > 0
 
 	if not self._played_start_effects and have_charge then
@@ -36,7 +35,7 @@ ChargeEffects.fixed_update = function (self, unit, dt, t, frame)
 end
 
 ChargeEffects.update = function (self, unit, dt, t)
-	self:_update_sfx_parameter()
+	self:_update_sfx_parameter(t)
 end
 
 ChargeEffects.update_first_person_mode = function (self, first_person_mode)
@@ -159,10 +158,15 @@ ChargeEffects._play_charged_done_effects = function (self)
 	end
 end
 
-ChargeEffects._update_sfx_parameter = function (self)
-	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
+ChargeEffects._charge_level = function (self, t)
 	local action_module_charge_component = self._action_module_charge_component
 	local charge_level = action_module_charge_component.charge_level
+
+	return charge_level
+end
+
+ChargeEffects._update_sfx_parameter = function (self, t)
+	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
 	local charge_effects = action_settings and action_settings.charge_effects or self._weapon_template_charge_effects
 	local charge_sfx_parameter = charge_effects and charge_effects.sfx_parameter
 
@@ -174,10 +178,9 @@ ChargeEffects._update_sfx_parameter = function (self)
 	local source_name = self._fx_sources[fx_source_name]
 	local wwise_world = self._wwise_world
 	local source = self._fx_extension:sound_source(source_name)
-	local parameter = charge_sfx_parameter
-	local parameter_value = charge_level
+	local charge_level = self:_charge_level(t)
 
-	WwiseWorld.set_source_parameter(wwise_world, source, parameter, parameter_value)
+	WwiseWorld.set_source_parameter(wwise_world, source, charge_sfx_parameter, charge_level)
 end
 
 return ChargeEffects

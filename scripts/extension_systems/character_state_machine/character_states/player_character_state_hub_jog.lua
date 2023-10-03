@@ -48,10 +48,6 @@ PlayerCharacterStateHubJog.on_exit = function (self, unit, t, next_state)
 end
 
 PlayerCharacterStateHubJog.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
-	if self._unit_data_extension.is_resimulating then
-		return
-	end
-
 	local anim_extension = self._animation_extension
 	local locomotion_steering = self._locomotion_steering_component
 	local locomotion = self._locomotion_component

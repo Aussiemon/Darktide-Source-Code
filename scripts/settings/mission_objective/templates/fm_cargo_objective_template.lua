@@ -55,11 +55,10 @@ local mission_objective_templates = {
 				mission_objective_type = "timed"
 			},
 			objective_fm_cargo_clear_area = {
-				use_music_event = "fortification_event",
 				description = "loc_objective_fm_cargo_clear_area_desc",
-				header = "loc_objective_fm_cargo_clear_area_header",
 				event_type = "end_event",
-				mission_objective_type = "goal"
+				mission_objective_type = "goal",
+				header = "loc_objective_fm_cargo_clear_area_header"
 			},
 			objective_fm_cargo_reach_valkyrie = {
 				description = "loc_objective_fm_cargo_reach_valkyrie_desc",

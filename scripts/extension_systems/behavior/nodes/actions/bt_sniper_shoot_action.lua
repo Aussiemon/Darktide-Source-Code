@@ -172,8 +172,10 @@ BtSniperShootAction._start_aiming = function (self, unit, t, scratchpad, action_
 	end
 end
 
+local MAX_LAG_COMPENSATION = 0.35
+
 BtSniperShootAction._update_aiming = function (self, unit, t, dt, scratchpad, action_data)
-	local target_is_in_sight = self:_aim(unit, t, dt, scratchpad, action_data)
+	local target_is_in_sight, has_laser_on_target = self:_aim(unit, t, dt, scratchpad, action_data)
 
 	if scratchpad.scope_reflection_timing and t < scratchpad.scope_reflection_timing then
 		return
@@ -200,13 +202,21 @@ BtSniperShootAction._update_aiming = function (self, unit, t, dt, scratchpad, ac
 			scratchpad.next_threat_timing = nil
 		end
 	elseif target_is_in_sight then
-		if not target_is_in_sight_duration then
+		if not target_is_in_sight_duration or not has_laser_on_target then
 			scratchpad.target_is_in_sight_duration = 0
 		else
 			scratchpad.target_is_in_sight_duration = target_is_in_sight_duration + dt
 			local in_sight_duration_shoot_requirement = Managers.state.difficulty:get_table_entry_by_challenge(action_data.in_sight_duration_shoot_requirement)
+			local extra_timing = 0
+			local target_unit = scratchpad.perception_component.target_unit
+			local player = Managers.state.player_unit_spawn:owner(target_unit)
 
-			if scratchpad.target_is_in_sight_duration < in_sight_duration_shoot_requirement then
+			if player and player.remote then
+				local lag_compensation_rewind = player:lag_compensation_rewind_s()
+				extra_timing = math.min(lag_compensation_rewind, MAX_LAG_COMPENSATION)
+			end
+
+			if scratchpad.target_is_in_sight_duration < in_sight_duration_shoot_requirement + extra_timing then
 				return
 			end
 
@@ -222,7 +232,6 @@ BtSniperShootAction._update_aiming = function (self, unit, t, dt, scratchpad, ac
 			fx_system:trigger_vfx(scope_reflection_vfx_name, source_position, source_rotation)
 
 			local scope_reflection_timing_sfx = action_data.scope_reflection_timing_sfx
-			local target_unit = scratchpad.perception_component.target_unit
 
 			if scope_reflection_timing_sfx then
 				local is_ranged_attack = true
@@ -239,14 +248,6 @@ BtSniperShootAction._update_aiming = function (self, unit, t, dt, scratchpad, ac
 			MinionAttack.check_and_trigger_backstab_sound(unit, action_data, target_unit, wwise_event, dot_threshold, ignore_attack_intensity)
 
 			scratchpad.scope_reflection_timing = nil
-			local extra_timing = 0
-			local player_unit_spawn_manager = Managers.state.player_unit_spawn
-			local player = player_unit_spawn_manager:owner(target_unit)
-
-			if player and player.remote then
-				extra_timing = player:lag_compensation_rewind_s()
-			end
-
 			scratchpad.dodge_window = t + action_data.scope_reflection_timing_before_shooting + extra_timing
 			scratchpad.shoot_at_t = scratchpad.dodge_window
 			scratchpad.next_threat_timing = scratchpad.shoot_at_t - 0.4
@@ -333,9 +334,11 @@ BtSniperShootAction._aim = function (self, unit, t, dt, scratchpad, action_data)
 
 	GameSession.set_game_object_field(game_session, game_object_id, "laser_aim_position", laser_aim_position)
 
+	local laser_aim_position_to_aim_distance = has_line_of_sight and Vector3.distance(shoot_node_position, laser_aim_position) or math.huge
+	local has_laser_on_target = laser_aim_position_to_aim_distance < 1
 	local target_is_in_sight = has_line_of_sight and (raycast_hit_target or locked_to_target)
 
-	return target_is_in_sight
+	return target_is_in_sight, has_laser_on_target
 end
 
 BtSniperShootAction._ray_cast = function (self, scratchpad, from, to, distance)

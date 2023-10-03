@@ -75,7 +75,7 @@ MinionDeathManager.die = function (self, unit, attacking_unit_or_nil, attack_dir
 		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 		local breed = unit_data_extension:breed()
 
-		_trigger_kill_vo(unit, attacking_unit_or_nil, hit_zone_name_or_nil, attack_type_or_nil, damage_profile_name)
+		_trigger_kill_vo(unit, attacking_unit_or_nil, hit_zone_name_or_nil, attack_type_or_nil, damage_profile)
 		_trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_or_nil, damage_profile, damage_type_or_nil)
 
 		local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
@@ -248,7 +248,7 @@ MinionDeathManager.minion_ragdoll = function (self)
 	return self._minion_ragdoll
 end
 
-function _trigger_kill_vo(unit, attacking_unit_or_nil, hit_zone_name_or_nil, attack_type_or_nil, damage_profile_name)
+function _trigger_kill_vo(unit, attacking_unit_or_nil, hit_zone_name_or_nil, attack_type_or_nil, damage_profile)
 	if attacking_unit_or_nil == nil then
 		return
 	end
@@ -256,11 +256,18 @@ function _trigger_kill_vo(unit, attacking_unit_or_nil, hit_zone_name_or_nil, att
 	Vo.enemy_kill_event(attacking_unit_or_nil, unit)
 
 	if attack_type_or_nil == AttackSettings.attack_types.ranged and hit_zone_name_or_nil == "head" then
-		local attacking_unit_position = POSITION_LOOKUP[attacking_unit_or_nil]
-		local unit_position = POSITION_LOOKUP[unit]
-		local distance = Vector3.distance(unit_position, attacking_unit_position)
+		local vo_no_headshot = damage_profile.vo_no_headshot
 
-		Vo.head_shot_event(attacking_unit_or_nil, distance, damage_profile_name)
+		if vo_no_headshot then
+			return
+		else
+			local attacking_unit_position = POSITION_LOOKUP[attacking_unit_or_nil]
+			local unit_position = POSITION_LOOKUP[unit]
+			local distance = Vector3.distance(unit_position, attacking_unit_position)
+			local damage_profile_name = damage_profile.name
+
+			Vo.head_shot_event(attacking_unit_or_nil, distance, damage_profile_name)
+		end
 	end
 end
 
@@ -324,6 +331,7 @@ function _trigger_on_kill_procs(unit, breed, attacking_unit_or_nil, attack_type_
 				param_table.breed_name = breed.name
 				param_table.side_name = victim_side:name()
 				param_table.position = Vector3Box(victim_position)
+				param_table.tags = breed.tags
 
 				buff_extension:add_proc_event(proc_events.on_minion_death, param_table)
 			end

@@ -54,6 +54,11 @@ local catapulting_templates = {
 		force = 13,
 		z_force = 8,
 		direction_from_node = "j_head"
+	},
+	breach_charge_catapult = {
+		force = 8,
+		z_force = 2,
+		direction_from_node = "j_spine"
 	}
 }
 

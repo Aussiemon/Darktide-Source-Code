@@ -416,6 +416,13 @@ conditions.is_suppressed = function (unit, blackboard, scratchpad, condition_arg
 	return is_suppressed
 end
 
+conditions.is_not_suppressed = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local suppression_component = blackboard.suppression
+	local is_suppressed = suppression_component.is_suppressed
+
+	return not is_suppressed
+end
+
 conditions.is_staggered = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
 	local stagger_component = blackboard.stagger
 	local is_staggered = stagger_component.num_triggered_staggers > 0
@@ -612,8 +619,8 @@ conditions.daemonhost_wants_to_leave = function (unit, blackboard, scratchpad, c
 	end
 
 	local player_deaths = statistics_component.player_deaths
-	local DaemonhostSettings = require("scripts/settings/specials/daemonhost_settings")
-	local num_player_kills_for_despawn = Managers.state.difficulty:get_table_entry_by_challenge(DaemonhostSettings.num_player_kills_for_despawn)
+	local ChaosDaemonhostSettings = require("scripts/settings/monster/chaos_daemonhost_settings")
+	local num_player_kills_for_despawn = Managers.state.difficulty:get_table_entry_by_challenge(ChaosDaemonhostSettings.num_player_kills_for_despawn)
 	local wants_to_leave = num_player_kills_for_despawn <= player_deaths
 
 	return wants_to_leave
@@ -910,10 +917,9 @@ conditions.beast_of_nurgle_melee_tail_whip = function (unit, blackboard, scratch
 		return true
 	end
 
-	local target_side_id = 1
 	local side_system = Managers.state.extension:system("side_system")
-	local side = side_system:get_side(target_side_id)
-	local target_units = side.valid_player_units
+	local side = side_system.side_by_unit[unit]
+	local target_units = side.ai_target_units
 	local num_valid_target_units = #target_units
 	local position = POSITION_LOOKUP[unit]
 	local fwd = Quaternion.forward(Unit.local_rotation(unit, 1))
@@ -923,14 +929,13 @@ conditions.beast_of_nurgle_melee_tail_whip = function (unit, blackboard, scratch
 	local consumed_unit = behavior_component.consumed_unit
 	local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 	local perception_extension = ScriptUnit.extension(unit, "perception_system")
-	local perception_component = blackboard.perception
-	local target_unit = perception_component.target_unit
 	local Breed = require("scripts/utilities/breed")
+	local target_unit = blackboard.perception.target_unit
 
 	for i = 1, num_valid_target_units do
 		local player_unit = target_units[i]
 
-		if HEALTH_ALIVE[player_unit] and player_unit ~= consumed_unit and player_unit ~= target_unit then
+		if HEALTH_ALIVE[player_unit] and player_unit ~= consumed_unit and (ALIVE[consumed_unit] or player_unit ~= target_unit) then
 			local has_line_of_sight_to_target = perception_extension:has_line_of_sight(player_unit)
 
 			if has_line_of_sight_to_target then
@@ -1318,6 +1323,13 @@ conditions.poxwalker_bomber_is_dead = function (unit, blackboard, scratchpad, co
 	end
 
 	return false
+end
+
+conditions.has_move_to_position = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)
+	local behavior_component = blackboard.behavior
+	local has_move_to_position = behavior_component.has_move_to_position
+
+	return has_move_to_position
 end
 
 conditions.renegade_twin_captain_should_disappear = function (unit, blackboard, scratchpad, condition_args, action_data, is_running)

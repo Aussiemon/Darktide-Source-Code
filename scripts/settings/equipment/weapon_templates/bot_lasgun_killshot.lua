@@ -108,7 +108,6 @@ table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.a
 
 weapon_template.actions = {
 	action_unwield = {
-		continue_sprinting = true,
 		allowed_during_sprint = true,
 		start_input = "wield",
 		uninterruptible = true,
@@ -117,12 +116,11 @@ weapon_template.actions = {
 		allowed_chain_actions = {}
 	},
 	action_wield = {
+		wield_reload_anim_event = "equip_reload",
 		allowed_during_sprint = true,
 		wield_anim_event = "equip",
-		wield_reload_anim_event = "equip_reload",
-		kind = "ranged_wield",
-		continue_sprinting = true,
 		uninterruptible = true,
+		kind = "ranged_wield",
 		total_time = 0.2,
 		conditional_state_to_action_input = {
 			started_reload = {
@@ -134,7 +132,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -210,7 +213,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -237,7 +245,7 @@ weapon_template.actions = {
 		kind = "shoot_hit_scan",
 		weapon_handling_template = "immediate_single_shot",
 		ammunition_usage = 1,
-		crosshair_type = "none",
+		crosshair_type = "ironsight",
 		start_input = "zoom_shoot",
 		total_time = 0.3,
 		action_movement_curve = {
@@ -284,7 +292,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -307,7 +320,7 @@ weapon_template.actions = {
 		}
 	},
 	action_zoom = {
-		crosshair_type = "none",
+		crosshair_type = "ironsight",
 		start_input = "zoom",
 		kind = "aim",
 		total_time = 0.3,
@@ -317,7 +330,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -332,7 +350,7 @@ weapon_template.actions = {
 		}
 	},
 	action_unzoom = {
-		crosshair_type = "none",
+		crosshair_type = "ironsight",
 		start_input = "zoom_release",
 		kind = "unaim",
 		total_time = 0.2,
@@ -341,7 +359,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -397,7 +420,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -424,7 +452,7 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "none",
+		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
 		total_time = math.huge
@@ -466,7 +494,7 @@ weapon_template.fx_sources = {
 weapon_template.crosshair_type = "cross"
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
-	crosshair_type = "none",
+	crosshair_type = "ironsight",
 	sway_template = "default_lasgun_killshot",
 	recoil_template = "default_lasgun_killshot",
 	stop_anim_event = "to_unaim_reflex",

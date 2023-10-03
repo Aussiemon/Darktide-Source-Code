@@ -139,6 +139,14 @@ InputAliases.set_keys_for_alias = function (self, name, index, device_types, new
 	end
 end
 
+InputAliases.hide_in_controller_layout = function (self, name)
+	local alias_row = self._aliases[name]
+
+	if alias_row then
+		return alias_row.hide_in_controller_layout or false
+	end
+end
+
 InputAliases.description = function (self, name)
 	local alias_row = self._aliases[name]
 

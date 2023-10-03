@@ -102,6 +102,29 @@ local template = {
 				}
 			}
 		},
+		event_set_specials_pacing_spawner_groups = {
+			{
+				"delay",
+				duration = 2
+			},
+			{
+				"set_specials_pacing_spawner_groups",
+				spawner_groups = {
+					"shaft_start_side_up",
+					"shaft_survival_trickle",
+					"shaft_end_side_up"
+				}
+			}
+		},
+		event_reset_specials_pacing_spawner_groups = {
+			{
+				"delay",
+				duration = 2
+			},
+			{
+				"reset_specials_pacing_spawner_groups"
+			}
+		},
 		lugging_trickle_a_1 = {
 			{
 				"delay",

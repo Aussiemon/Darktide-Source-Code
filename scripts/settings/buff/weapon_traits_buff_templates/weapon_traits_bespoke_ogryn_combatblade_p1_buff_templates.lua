@@ -65,12 +65,14 @@ templates.weapon_trait_bespoke_ogryn_combatblade_p1_pass_past_armor_on_heavy_att
 	class_name = "proc_buff",
 	predicted = false,
 	force_predicted_proc = true,
+	keywords = {
+		keywords.fully_charged_attacks_infinite_cleave
+	},
 	proc_events = {
 		[proc_events.on_sweep_start] = 1,
 		[proc_events.on_sweep_finish] = 1
 	},
 	conditional_keywords = {
-		keywords.use_reduced_hit_mass,
 		keywords.ignore_armor_aborts_attack
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)

@@ -47,7 +47,7 @@ local scenegraph_definition = {
 			2
 		}
 	},
-	domain = {
+	archetype = {
 		vertical_alignment = "bottom",
 		parent = "canvas",
 		horizontal_alignment = "left",
@@ -61,9 +61,9 @@ local scenegraph_definition = {
 			2
 		}
 	},
-	domain_options = {
+	archetype_options = {
 		vertical_alignment = "bottom",
-		parent = "domain",
+		parent = "archetype",
 		horizontal_alignment = "center",
 		size = {
 			0,
@@ -75,9 +75,9 @@ local scenegraph_definition = {
 			10
 		}
 	},
-	domain_info = {
+	archetype_info = {
 		vertical_alignment = "bottom",
-		parent = "domain",
+		parent = "archetype",
 		horizontal_alignment = "center",
 		size = {
 			600,
@@ -144,9 +144,9 @@ local scenegraph_definition = {
 	},
 	details_button = {
 		vertical_alignment = "bottom",
-		parent = "domain",
+		parent = "archetype",
 		horizontal_alignment = "center",
-		size = ButtonPassTemplates.default_button.size,
+		size = ButtonPassTemplates.terminal_button.size,
 		position = {
 			0,
 			125,
@@ -181,14 +181,14 @@ local scenegraph_definition = {
 	class_details_mask = {
 		vertical_alignment = "center",
 		parent = "class_details",
-		horizontal_alignment = "center",
+		horizontal_alignment = "left",
 		size = {
-			ClassSelectionViewSettings.class_size[1],
+			ClassSelectionViewSettings.class_size[1] - 50,
 			ClassSelectionViewSettings.class_size[2]
 		},
 		position = {
-			0,
-			0,
+			20,
+			-12,
 			3
 		}
 	},
@@ -350,13 +350,13 @@ local widget_definitions = {
 			style = ClassSelectionViewFontStyle.main_title_style
 		}
 	}, "main_title"),
-	domain_info = UIWidget.create_definition({
+	archetype_info = UIWidget.create_definition({
 		{
 			value_id = "title",
 			style_id = "title",
 			pass_type = "text",
 			value = "",
-			style = ClassSelectionViewFontStyle.domain_title_style
+			style = ClassSelectionViewFontStyle.archetype_title_style
 		},
 		{
 			value_id = "divider",
@@ -372,7 +372,7 @@ local widget_definitions = {
 				},
 				offset = {
 					0,
-					90,
+					100,
 					1
 				},
 				color = Color.terminal_frame(255, true)
@@ -421,7 +421,7 @@ local widget_definitions = {
 			style_id = "description",
 			pass_type = "text",
 			value = "",
-			style = ClassSelectionViewFontStyle.domain_description_style
+			style = ClassSelectionViewFontStyle.archetype_description_style
 		},
 		{
 			value = "content/ui/materials/effects/class_selection_top_candles",
@@ -459,7 +459,7 @@ local widget_definitions = {
 				}
 			}
 		}
-	}, "domain_info"),
+	}, "archetype_info"),
 	class_background = UIWidget.create_definition({
 		{
 			value_id = "background",
@@ -542,28 +542,16 @@ local widget_definitions = {
 	class_details_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "class_details_scrollbar", {
 		axis = 2
 	}),
-	class_details_mask = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/offscreen_masks/ui_overlay_offscreen_straight_blur",
-			pass_type = "texture",
-			style = {
-				color = {
-					255,
-					255,
-					255,
-					255
-				}
-			}
-		}
-	}, "class_details_mask"),
-	details_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "details_button", {
-		text = Utf8.upper(Localize("loc_mission_voting_view_show_details"))
+	details_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "details_button", {
+		gamepad_action = "secondary_action_pressed",
+		original_text = Utf8.upper(Localize("loc_mission_voting_view_show_details"))
 	}),
 	continue_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "continue_button", {
+		gamepad_action = "confirm_pressed",
 		text = Utf8.upper(Localize("loc_character_creator_continue"))
 	})
 }
-local domain_option_definition = UIWidget.create_definition({
+local archetype_option_definition = UIWidget.create_definition({
 	{
 		pass_type = "hotspot",
 		content_id = "hotspot"
@@ -576,8 +564,8 @@ local domain_option_definition = UIWidget.create_definition({
 			vertical_alignment = "center",
 			horizontal_alignment = "center",
 			hdr = true,
-			original_size = ClassSelectionViewSettings.domain_option_icon_size,
-			size = ClassSelectionViewSettings.domain_option_icon_size,
+			original_size = ClassSelectionViewSettings.archetype_option_icon_size,
+			size = ClassSelectionViewSettings.archetype_option_icon_size,
 			offset = {
 				0,
 				0,
@@ -629,8 +617,8 @@ local domain_option_definition = UIWidget.create_definition({
 			return content.hotspot.is_focused or content.hotspot.is_hover
 		end
 	}
-}, "domain_options", nil, ClassSelectionViewSettings.domain_option_icon_size)
-local domain_selection_definition = {
+}, "archetype_options", nil, ClassSelectionViewSettings.archetype_option_icon_size)
+local archetype_selection_definition = {
 	left = UIWidget.create_definition({
 		{
 			value_id = "text",
@@ -639,7 +627,7 @@ local domain_selection_definition = {
 			value = "",
 			style = ClassSelectionViewFontStyle.select_style
 		}
-	}, "domain_option"),
+	}, "archetype_option"),
 	right = UIWidget.create_definition({
 		{
 			value_id = "text",
@@ -648,7 +636,7 @@ local domain_selection_definition = {
 			value = "",
 			style = ClassSelectionViewFontStyle.select_style
 		}
-	}, "domain_option")
+	}, "archetype_option")
 }
 local class_option_definition = UIWidget.create_definition({
 	{
@@ -787,8 +775,8 @@ return {
 	legend_inputs = legend_inputs,
 	widget_definitions = widget_definitions,
 	scenegraph_definition = scenegraph_definition,
-	domain_option_definition = domain_option_definition,
-	domain_selection_definition = domain_selection_definition,
+	archetype_option_definition = archetype_option_definition,
+	archetype_selection_definition = archetype_selection_definition,
 	class_option_definition = class_option_definition,
 	animations = animations
 }

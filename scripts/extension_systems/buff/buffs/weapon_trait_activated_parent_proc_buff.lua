@@ -37,7 +37,8 @@ WeaponTraitActivatedParentProcBuff.update_proc_events = function (self, t, proc_
 			local random_value = portable_random_to_use:next_random()
 
 			if random_value < proc_chance then
-				local check_proc_func = template.check_proc_func
+				local specific_proc_check = template.specific_check_proc_funcs and template.specific_check_proc_funcs[proc_event_name]
+				local check_proc_func = specific_proc_check or template.check_proc_func
 				local is_check_ok = not check_proc_func or check_proc_func(params, template_data, template_context)
 				local conditional_proc_func = template.conditional_proc_func
 				local condition_ok = not conditional_proc_func or conditional_proc_func(template_data, template_context)
@@ -51,7 +52,7 @@ WeaponTraitActivatedParentProcBuff.update_proc_events = function (self, t, proc_
 
 					if active then
 						activated_proc = true
-						procced_proc_events[proc_event_name] = WeaponTraitActivatedParentProcBuff
+						procced_proc_events[proc_event_name] = (procced_proc_events[proc_event_name] or 0) + 1
 						self._active_start_time = t
 						local num_wanted_stacks_to_add = template_add_child_proc_events[proc_event_name]
 
@@ -76,7 +77,15 @@ WeaponTraitActivatedParentProcBuff.update_proc_events = function (self, t, proc_
 		local clear_child_stacks_proc_events = template.clear_child_stacks_proc_events
 
 		if clear_child_stacks_proc_events and clear_child_stacks_proc_events[proc_event_name] then
-			self:_remove_child_buff_stack(self._num_child_stacks - 1)
+			local specific_proc_check = template.specific_check_proc_funcs and template.specific_check_proc_funcs[proc_event_name]
+
+			if specific_proc_check then
+				if specific_proc_check(params, template_data, template_context) then
+					self:_remove_child_buff_stack(self._num_child_stacks - 1)
+				end
+			else
+				self:_remove_child_buff_stack(self._num_child_stacks - 1)
+			end
 		end
 	end
 

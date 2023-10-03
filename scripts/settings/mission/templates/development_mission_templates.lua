@@ -279,7 +279,7 @@ local mission_templates = {
 	debug_zoneseven = {
 		mission_name = "loc_mission_name_placeholder",
 		zone_id = "placeholder",
-		game_mode_name = "default",
+		game_mode_name = "coop_complete_objective",
 		mechanism_name = "adventure",
 		is_dev_mission = true,
 		level = "content/levels/debug/jacopo/missions/debug_zoneseven",
@@ -633,6 +633,23 @@ local mission_templates = {
 		},
 		terror_event_templates = {
 			"terror_events_ship_port_arena"
+		}
+	},
+	km_twins_test = {
+		mission_name = "loc_mission_name_placeholder",
+		zone_id = "placeholder",
+		game_mode_name = "default",
+		mechanism_name = "adventure",
+		is_dev_mission = true,
+		level = "content/levels/debug/km_twins_test/world",
+		pickup_settings = {},
+		health_station = {
+			charges_to_distribute = 4
+		},
+		hazard_prop_settings = {
+			explosion = 1,
+			fire = 1,
+			none = 0
 		}
 	}
 }

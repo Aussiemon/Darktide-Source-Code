@@ -77,14 +77,14 @@ MissionObjectiveZoneSystem.hot_join_sync = function (self, sender, channel)
 			local level_unit_id = Managers.state.unit_spawner:level_index(unit)
 
 			if level_unit_id then
-				local scanned_objects_per_player = extension:scanned_objects_per_player()
+				local num_scanned_objects_per_player = extension:num_scanned_objects_per_player()
 
-				for player, num_scannable in pairs(scanned_objects_per_player) do
-					if num_scannable > 0 then
+				for player, num_scanned_objects in pairs(num_scanned_objects_per_player) do
+					if num_scanned_objects > 0 then
 						local peer_id = player:peer_id()
 						local local_player_id = player:local_player_id()
 
-						RPC.rpc_mission_objective_zone_scan_add_player_scanned_object(channel, level_unit_id, peer_id, local_player_id, num_scannable)
+						RPC.rpc_mission_objective_zone_scan_add_player_scanned_object(channel, level_unit_id, peer_id, local_player_id, num_scanned_objects)
 					end
 				end
 

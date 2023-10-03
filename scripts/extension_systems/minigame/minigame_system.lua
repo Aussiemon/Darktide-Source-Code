@@ -8,7 +8,7 @@ local CLIENT_RPCS = {
 	"rpc_minigame_sync_start",
 	"rpc_minigame_sync_stop",
 	"rpc_minigame_sync_completed",
-	"rpc_minigame_sync_decode_symbols_set_stage",
+	"rpc_minigame_sync_decode_set_stage",
 	"rpc_minigame_sync_decode_symbols_set_start_time",
 	"rpc_minigame_sync_decode_symbols_set_symbols",
 	"rpc_minigame_sync_decode_symbols_set_target"
@@ -18,6 +18,7 @@ MinigameSystem.init = function (self, context, system_init_data, ...)
 	MinigameSystem.super.init(self, context, system_init_data, ...)
 
 	self._seed = self._is_server and system_init_data.level_seed or nil
+	self._default_minigame_type = system_init_data.mission.minigame_type or MinigameSettings.default_minigame_type
 	local network_event_delegate = self._network_event_delegate
 
 	if not self._is_server and network_event_delegate then
@@ -45,6 +46,10 @@ MinigameSystem.on_add_extension = function (self, world, unit, extension_name, e
 	end
 
 	return extension
+end
+
+MinigameSystem.default_minigame_type = function (self)
+	return self._default_minigame_type
 end
 
 MinigameSystem.rpc_minigame_hot_join = function (self, channel_id, unit_id, is_level_unit, state_id)
@@ -92,18 +97,10 @@ MinigameSystem.rpc_minigame_sync_decode_search_set_cursor = function (self, chan
 	minigame:set_cursor_position(x, y)
 end
 
-MinigameSystem.rpc_minigame_sync_decode_search_set_stage = function (self, channel_id, unit_id, is_level_unit, stage)
+MinigameSystem.rpc_minigame_sync_decode_set_stage = function (self, channel_id, unit_id, is_level_unit, stage)
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 	local extension = self._unit_to_extension_map[unit]
-	local minigame = extension:minigame(MinigameSettings.types.decode_search)
-
-	minigame:set_current_stage(stage)
-end
-
-MinigameSystem.rpc_minigame_sync_decode_symbols_set_stage = function (self, channel_id, unit_id, is_level_unit, stage)
-	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
-	local extension = self._unit_to_extension_map[unit]
-	local minigame = extension:minigame(MinigameSettings.types.decode_symbols)
+	local minigame = extension:minigame()
 
 	minigame:set_current_stage(stage)
 end
@@ -112,7 +109,7 @@ MinigameSystem.rpc_minigame_sync_decode_symbols_set_start_time = function (self,
 	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
 	local extension = self._unit_to_extension_map[unit]
 	local minigame = extension:minigame(MinigameSettings.types.decode_symbols)
-	local start_time = fixed_frame_id * GameParameters.fixed_time_step
+	local start_time = fixed_frame_id * Managers.state.game_session.fixed_time_step
 
 	minigame:set_start_time(start_time)
 end
@@ -131,6 +128,22 @@ MinigameSystem.rpc_minigame_sync_decode_symbols_set_target = function (self, cha
 	local minigame = extension:minigame(MinigameSettings.types.decode_symbols)
 
 	minigame:set_target(stage, target)
+end
+
+MinigameSystem.rpc_minigame_sync_frequency_set_frequency = function (self, channel_id, unit_id, is_level_unit, frequency_x, frequency_y)
+	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+	local extension = self._unit_to_extension_map[unit]
+	local minigame = extension:minigame(MinigameSettings.types.frequency)
+
+	minigame:set_frequency(frequency_x, frequency_y)
+end
+
+MinigameSystem.rpc_minigame_sync_frequency_set_target_frequency = function (self, channel_id, unit_id, is_level_unit, frequency_x, frequency_y)
+	local unit = Managers.state.unit_spawner:unit(unit_id, is_level_unit)
+	local extension = self._unit_to_extension_map[unit]
+	local minigame = extension:minigame(MinigameSettings.types.frequency)
+
+	minigame:set_target_frequency(frequency_x, frequency_y)
 end
 
 return MinigameSystem

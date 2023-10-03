@@ -107,10 +107,10 @@ NavGraph.editor_init = function (self, unit)
 	self._physics_world = World.physics_world(world)
 	self._line_object = World.create_line_object(world)
 	self._drawer = DebugDrawer(self._line_object, "retained")
-	self._entrance_position = Vector3Box()
-	self._exit_position = Vector3Box()
 	self._active_debug_draw = false
-	self._should_debug_draw = false
+	self._debug_draw_enabled = false
+	self._debug_data_smart_objects = {}
+	self._calculation_items = {}
 
 	if NavGraph._nav_info == nil then
 		NavGraph._nav_info = SharedNav.create_nav_info()
@@ -119,9 +119,11 @@ NavGraph.editor_init = function (self, unit)
 	self._my_nav_gen_guid = nil
 	self._unit = unit
 
-	self:_reset_data()
-
 	return true
+end
+
+NavGraph.editor_validate = function (self, unit)
+	return true, ""
 end
 
 NavGraph.editor_destroy = function (self, unit)
@@ -135,15 +137,9 @@ NavGraph.editor_destroy = function (self, unit)
 	LineObject.reset(line_object)
 	LineObject.dispatch(world, line_object)
 	World.destroy_line_object(world, line_object)
-
-	self._line_object = nil
-	self._world = nil
 end
 
-NavGraph._reset_data = function (self)
-	self._debug_data_smart_objects = {}
-	self._calculation_items = {}
-end
+local MAX_DEBUG_DRAW_CAMERA_DISTANCE_SQ = 2500
 
 NavGraph.editor_update = function (self, unit)
 	if not rawget(_G, "LevelEditor") then
@@ -159,7 +155,13 @@ NavGraph.editor_update = function (self, unit)
 		self:_generate_positions(unit)
 	end
 
-	local should_debug_draw = self._should_debug_draw
+	local should_debug_draw = self._debug_draw_enabled
+
+	if should_debug_draw then
+		local camera_position = LevelEditor:get_camera_location()
+		local unit_position = Unit.local_position(unit, 1)
+		should_debug_draw = Vector3.distance_squared(camera_position, unit_position) < MAX_DEBUG_DRAW_CAMERA_DISTANCE_SQ
+	end
 
 	if should_debug_draw ~= self._active_debug_draw then
 		self._active_debug_draw = should_debug_draw
@@ -184,7 +186,7 @@ NavGraph.editor_toggle_debug_draw = function (self, enable)
 		return
 	end
 
-	self._should_debug_draw = enable
+	self._debug_draw_enabled = enable
 end
 
 NavGraph._editor_debug_draw = function (self, unit)
@@ -193,13 +195,15 @@ NavGraph._editor_debug_draw = function (self, unit)
 	drawer:reset()
 
 	if self._active_debug_draw then
-		for _, debug_data_smart_object in ipairs(self._debug_data_smart_objects) do
-			local draw_warning = debug_data_smart_object.draw_warning
+		local debug_data_smart_objects = self._debug_data_smart_objects
+
+		for i = 1, #debug_data_smart_objects do
+			local debug_data_smart_object = debug_data_smart_objects[i]
 			local is_one_way = debug_data_smart_object.is_one_way
 			local entrance_position = debug_data_smart_object.entrance_position:unbox()
 			local exit_position = debug_data_smart_object.exit_position:unbox()
 
-			NavGraphDebug.draw_nav_graph(drawer, unit, draw_warning, is_one_way, entrance_position, exit_position)
+			NavGraphDebug.draw_nav_graph(drawer, unit, is_one_way, entrance_position, exit_position)
 		end
 
 		local calculation_items = self._calculation_items
@@ -207,37 +211,34 @@ NavGraph._editor_debug_draw = function (self, unit)
 		NavGraphDebug.draw_item_list(drawer, calculation_items)
 	end
 
-	local world = self._world
-
-	drawer:update(world)
+	drawer:update(self._world)
 end
 
 NavGraph._generate_positions = function (self, unit)
-	self:_reset_data()
+	local calculation_items = self._calculation_items
+	local debug_data_smart_objects = self._debug_data_smart_objects
+
+	table.clear_array(debug_data_smart_objects, #debug_data_smart_objects)
+	table.clear_array(calculation_items, #calculation_items)
 
 	local nav_world = NavGraph._nav_info.nav_world
 
 	if nav_world then
-		local physics_world = self._physics_world
-		local smart_objects, calculation_items = NavGraphQueries.generate_smart_objects(unit, nav_world, physics_world, self)
-		local is_one_way = self:get_data(unit, "is_one_way")
-		self._calculation_items = table.clone(calculation_items)
+		local smart_objects, debug_draw_list = NavGraphQueries.generate_smart_objects(unit, nav_world, self._physics_world, self)
 
-		for _, smart_object in ipairs(smart_objects) do
+		table.merge_array(calculation_items, debug_draw_list)
+
+		local is_one_way = self:get_data(unit, "is_one_way")
+
+		for i = 1, #smart_objects do
+			local smart_object = smart_objects[i]
+			local entrance_position, exit_position = smart_object:get_entrance_exit_positions()
 			local debug_data_smart_object = {
-				draw_warning = true,
-				entrance_position = Vector3Box(Vector3.invalid_vector()),
-				exit_position = Vector3Box(Vector3.invalid_vector()),
+				entrance_position = Vector3Box(entrance_position),
+				exit_position = Vector3Box(exit_position),
 				is_one_way = is_one_way
 			}
-			local entrance_position, exit_position = smart_object:get_entrance_exit_positions()
-
-			if entrance_position and exit_position then
-				debug_data_smart_object.entrance_position:store(entrance_position)
-				debug_data_smart_object.exit_position:store(exit_position)
-			end
-
-			self._debug_data_smart_objects[#self._debug_data_smart_objects + 1] = debug_data_smart_object
+			debug_data_smart_objects[i] = debug_data_smart_object
 		end
 	end
 end

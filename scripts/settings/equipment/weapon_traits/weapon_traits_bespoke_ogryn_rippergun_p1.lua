@@ -5,34 +5,34 @@ local templates = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_suppression_on_close_kill = {
 			{
 				suppression_settings = {
-					suppression_falloff = true,
+					suppression_falloff = false,
 					instant_aggro = true,
-					distance = 5,
-					suppression_value = 10
-				}
-			},
-			{
-				suppression_settings = {
-					suppression_falloff = true,
-					instant_aggro = true,
-					distance = 6,
+					distance = 12,
 					suppression_value = 15
 				}
 			},
 			{
 				suppression_settings = {
-					suppression_falloff = true,
+					suppression_falloff = false,
 					instant_aggro = true,
-					distance = 7,
+					distance = 12,
 					suppression_value = 20
 				}
 			},
 			{
 				suppression_settings = {
-					suppression_falloff = true,
+					suppression_falloff = false,
 					instant_aggro = true,
-					distance = 8,
+					distance = 12,
 					suppression_value = 25
+				}
+			},
+			{
+				suppression_settings = {
+					suppression_falloff = false,
+					instant_aggro = true,
+					distance = 12,
+					suppression_value = 30
 				}
 			}
 		}
@@ -40,27 +40,27 @@ local templates = {
 	weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close_kill = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_increase_close_damage_on_close_kill_parent = {
 			{
-				child_duration = 2.75,
+				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.damage_near] = 0.075
+					[stat_buffs.ranged_attack_speed] = 0.07
 				}
 			},
 			{
-				child_duration = 2.75,
+				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.damage_near] = 0.1
+					[stat_buffs.ranged_attack_speed] = 0.08
 				}
 			},
 			{
-				child_duration = 2.75,
+				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.damage_near] = 0.125
+					[stat_buffs.ranged_attack_speed] = 0.09
 				}
 			},
 			{
-				child_duration = 2.75,
+				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.damage_near] = 0.15
+					[stat_buffs.ranged_attack_speed] = 0.1
 				}
 			}
 		}
@@ -68,16 +68,16 @@ local templates = {
 	weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_close_range_kills = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_close_range_kills = {
 			{
-				toughness_fixed_percentage = 0.015
+				toughness_fixed_percentage = 0.045
 			},
 			{
-				toughness_fixed_percentage = 0.02
+				toughness_fixed_percentage = 0.05
 			},
 			{
-				toughness_fixed_percentage = 0.025
+				toughness_fixed_percentage = 0.055
 			},
 			{
-				toughness_fixed_percentage = 0.03
+				toughness_fixed_percentage = 0.06
 			}
 		}
 	},
@@ -85,17 +85,17 @@ local templates = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_armor_rending_bayonette = {
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 2
-				}
-			},
-			{
-				target_buff_data = {
-					num_stacks_on_proc = 4
+					num_stacks_on_proc = 5
 				}
 			},
 			{
 				target_buff_data = {
 					num_stacks_on_proc = 6
+				}
+			},
+			{
+				target_buff_data = {
+					num_stacks_on_proc = 7
 				}
 			},
 			{
@@ -109,17 +109,17 @@ local templates = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_stacking_crit_bonus_on_continuous_fire = {
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.02
-				}
-			},
-			{
-				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.03
+					[stat_buffs.critical_strike_chance] = 0.035
 				}
 			},
 			{
 				stat_buffs = {
 					[stat_buffs.critical_strike_chance] = 0.04
+				}
+			},
+			{
+				stat_buffs = {
+					[stat_buffs.critical_strike_chance] = 0.045
 				}
 			},
 			{
@@ -133,6 +133,15 @@ local templates = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_toughness_on_continuous_fire = {
 			{
 				toughness_fixed_percentage = 0.04
+			},
+			{
+				toughness_fixed_percentage = 0.04
+			},
+			{
+				toughness_fixed_percentage = 0.04
+			},
+			{
+				toughness_fixed_percentage = 0.04
 			}
 		}
 	},
@@ -140,7 +149,22 @@ local templates = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_power_bonus_on_continuous_fire = {
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.1
+					[stat_buffs.power_level_modifier] = 0.08
+				}
+			},
+			{
+				stat_buffs = {
+					[stat_buffs.power_level_modifier] = 0.08
+				}
+			},
+			{
+				stat_buffs = {
+					[stat_buffs.power_level_modifier] = 0.08
+				}
+			},
+			{
+				stat_buffs = {
+					[stat_buffs.power_level_modifier] = 0.08
 				}
 			}
 		}

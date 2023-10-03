@@ -3,6 +3,7 @@ require("scripts/extension_systems/door_control_panel/door_control_panel_extensi
 local NetworkLookup = require("scripts/network_lookup/network_lookup")
 local DoorControlPanelSystem = class("DoorControlPanelSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
+	"rpc_door_panel_register_door",
 	"rpc_sync_door_control_panel_state"
 }
 
@@ -39,6 +40,16 @@ DoorControlPanelSystem.rpc_sync_door_control_panel_state = function (self, chann
 	local extension = self._unit_to_extension_map[unit]
 
 	extension:rpc_sync_door_control_panel_state(state)
+end
+
+DoorControlPanelSystem.rpc_door_panel_register_door = function (self, channel_id, unit_object_id, door_level_index)
+	local is_level_unit = false
+	local spawner_manager = Managers.state.unit_spawner
+	local unit = spawner_manager:unit(unit_object_id, is_level_unit)
+	local door_unit = spawner_manager:unit(door_level_index, true)
+	local extension = self._unit_to_extension_map[unit]
+
+	extension:register_door(door_unit)
 end
 
 return DoorControlPanelSystem

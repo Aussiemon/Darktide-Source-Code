@@ -66,6 +66,7 @@ InputService.ACTION_TYPES = InputService.ACTION_TYPES or {
 }
 
 InputService.init = function (self, type, mappings, filter_mappings, aliases)
+	self.get = self._get
 	self.type = type
 	self._connected_devices = {}
 	self._actions = {}
@@ -75,6 +76,7 @@ InputService.init = function (self, type, mappings, filter_mappings, aliases)
 	self._filter_mappings = filter_mappings or {}
 	self._null_service = NullInputService:new(self)
 	self._last_time = 0
+	self._simulated_actions = {}
 
 	self:_rework_actions()
 end
@@ -399,7 +401,7 @@ InputService.has = function (self, action_name)
 	return self._actions[action_name] ~= nil
 end
 
-InputService.get = function (self, action_name)
+InputService._get = function (self, action_name)
 	local action_rule = self._actions[action_name]
 
 	if action_rule.filter then
@@ -415,6 +417,34 @@ InputService.get = function (self, action_name)
 
 		return out
 	end
+end
+
+InputService._get_simulate = function (self, action_name)
+	local value = self._simulated_actions[action_name]
+
+	if value ~= nil then
+		return value
+	else
+		return self:_get(action_name)
+	end
+end
+
+InputService.start_simulate_action = function (self, action_name, value)
+	self._simulated_actions[action_name] = value
+	self.get = self._get_simulate
+end
+
+InputService.stop_simulate_action = function (self, action_name)
+	local simulated_actions = self._simulated_actions
+	simulated_actions[action_name] = nil
+
+	if table.is_empty(simulated_actions) then
+		self.get = self._get
+	end
+end
+
+InputService.actions = function (self)
+	return self._actions
 end
 
 InputService.get_default = function (self, action_name)

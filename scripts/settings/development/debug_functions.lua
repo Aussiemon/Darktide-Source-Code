@@ -56,6 +56,7 @@ local categories = {
 	"Stagger",
 	"Suppression",
 	"Sweep Spline",
+	"Talents",
 	"Time",
 	"Scripted Scenarios",
 	"UI",
@@ -423,7 +424,7 @@ functions.apply_coherency_buff_to_selected_unit = {
 		Debug:add_coherency_buff_to_unit(selected_unit, new_value)
 	end
 }
-functions.remove_buffs_from_self = {
+functions.remove_coherency_buffs_from_self = {
 	name = "Remove Coherency Buffs From Self",
 	category = "Coherency Buffs",
 	on_activated = function ()
@@ -433,7 +434,7 @@ functions.remove_buffs_from_self = {
 		Debug:remove_coherency_buffs_from_unit(local_player_unit)
 	end
 }
-functions.remove_buffs_from_selected_unit = {
+functions.remove_coherency_buffs_from_selected_unit = {
 	name = "Remove Coherency Buffs From Selected Unit",
 	category = "Coherency Buffs",
 	on_activated = function (new_value, old_value)
@@ -682,7 +683,7 @@ local function _print_camera_teleport_cmd()
 			local camera_position_string = string.format("Vector3(%.2f, %.2f, %.2f)", camera_pos.x, camera_pos.y, camera_pos.z)
 			local camera_rotation_string = string.format("Quaternion.from_yaw_pitch_roll(%.4f, %.4f, %.4f)", yaw, pitch, roll)
 
-			Log.info("DebugFunctions", "DebugSingleton.teleport_to_coordinates(%s,  %s)", camera_position_string, camera_rotation_string)
+			Log.info("DebugFunctions", "DebugSingleton.teleport_to_coordinates(%s, %s)", camera_position_string, camera_rotation_string)
 		else
 			Log.info("DebugFunctions", "No camera available.")
 		end
@@ -1161,7 +1162,7 @@ local function _equip_slot_on_value_set_function(item_name, old_item_name, slot_
 	local peer_id = local_player:peer_id()
 	local local_player_id = local_player:local_player_id()
 
-	if not local_player:has_placeholder_profile() then
+	if not local_player:has_local_profile() then
 		if item_data then
 			Managers.data_service.profiles:equip_item_slot_debug(character_id, slot_name, item_data.name):next(function (v)
 				Log.debug("DebugFunctions", "Equipped!")
@@ -1174,7 +1175,7 @@ local function _equip_slot_on_value_set_function(item_name, old_item_name, slot_
 					Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
 				end
 			end):catch(function (errors)
-				Log.error("DebugFunctions", "Equipping %s to %s failed. You probably have Steam running togehter with a local character profile! %s", item_data.name, slot_name, errors)
+				Log.error("DebugFunctions", "Equipping %s to %s failed. You probably have Steam running together with a local character profile! %s", item_data.name, slot_name, errors)
 			end)
 		end
 	elseif is_server then
@@ -1380,7 +1381,7 @@ local function _equip_emote_on_value_set_function(item_name, slot_name)
 	local peer_id = local_player:peer_id()
 	local local_player_id = local_player:local_player_id()
 
-	if not local_player:has_placeholder_profile() then
+	if not local_player:has_local_profile() then
 		Managers.data_service.profiles:equip_item_slot_debug(character_id, slot_name, item_name):next(function (v)
 			Log.debug("DebugFunctions", "Equipped Empote %s", item_name)
 
@@ -1878,25 +1879,6 @@ local function _select_player_voice(selected_voice)
 	local game_object_id = Managers.state.unit_spawner:game_object_id(local_player_unit)
 
 	if is_server then
-		local profile = local_player:profile()
-		profile.selected_voice = selected_voice
-		local peer_id = local_player:peer_id()
-		local profile_synchronizer_host = Managers.profile_loading:synchronizer_host()
-
-		profile_synchronizer_host:set_player_profile(peer_id, local_player_id, profile)
-
-		local function callback()
-			Managers.state.game_session:send_rpc_clients("rpc_player_select_voice", game_object_id, voice_id)
-
-			local dialogue_extension = ScriptUnit.extension(local_player_unit, "dialogue_system")
-
-			dialogue_extension:set_vo_profile(selected_voice)
-		end
-
-		profile_synchronizer_host:do_when_synced(peer_id, callback, "selected_voice")
-	else
-		Managers.state.game_session:send_rpc_server("rpc_player_select_voice_server", game_object_id, voice_id)
-
 		local dialogue_extension = ScriptUnit.extension(local_player_unit, "dialogue_system")
 
 		dialogue_extension:set_vo_profile(selected_voice)
@@ -2139,6 +2121,41 @@ functions.sweep_spline_editor = {
 	category = "Sweep Spline",
 	options_function = actions_options,
 	on_activated = run_sweep_spline_editor
+}
+
+local function _dump_selected_talents_on_activated(new_value, old_value)
+	local local_player = Managers.player:local_player(1)
+	local profile = local_player and local_player:profile()
+
+	if profile then
+		local account_id = local_player:account_id()
+		local character_id = local_player:character_id()
+		local name = HAS_STEAM and Steam.user_name(Steam.user_id()) or local_player:name()
+		local archetype = local_player:archetype_name()
+		local talents = profile.talents
+		local s = string.format([[
+Account ID: %s
+Character ID: %s
+Name: %s
+Archetype: %s
+Talents:]], account_id, character_id, name, archetype)
+
+		for talent_name, _ in pairs(talents) do
+			s = string.format("%s\n%s", s, talent_name)
+		end
+
+		Log.info("DebugFunctions", "%s", s)
+
+		if not Clipboard.put(s) then
+			Log.warning("DebugFunctions (Dump Selected Talents)", "Failed to copy string to clipboard.")
+		end
+	end
+end
+
+functions.dump_selected_talents = {
+	name = "Dump Selected Talents",
+	category = "Talents",
+	on_activated = _dump_selected_talents_on_activated
 }
 functions.reset_time_scale = {
 	name = "Reset Time Scale",

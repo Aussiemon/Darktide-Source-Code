@@ -1,6 +1,7 @@
 local FirstPersonLookDeltaAnimationControl = require("scripts/extension_systems/first_person/first_person_look_delta_animation_control")
 local FirstPersonRunSpeedAnimationControl = require("scripts/extension_systems/first_person/first_person_run_speed_animation_control")
 local Footstep = require("scripts/utilities/footstep")
+local PlayerUnitPeeking = require("scripts/utilities/player_unit_peeking")
 local PlayerHuskFirstPersonExtension = class("PlayerHuskFirstPersonExtension")
 local FOOTSTEP_SOUND_ALIAS = "footstep"
 local UPPER_BODY_FOLEY = "sfx_foley_upper_body"
@@ -62,6 +63,8 @@ PlayerHuskFirstPersonExtension.init = function (self, extension_init_context, un
 		feet_source_id = feet_source_id
 	}
 	self._previous_frame_character_state_name = character_state_component.state_name
+	self._3p_peeking_animation_data = {}
+	self._1p_peeking_animation_data = {}
 end
 
 PlayerHuskFirstPersonExtension.extensions_ready = function (self, world, unit)
@@ -103,11 +106,14 @@ PlayerHuskFirstPersonExtension.update = function (self, unit, dt, t)
 	if is_in_first_person_mode then
 		self._run_animation_speed_control:update(dt, t)
 		self._look_delta_animation_control:update(dt, t)
+		PlayerUnitPeeking.update_first_person_animations(self._first_person_unit, self._1p_peeking_animation_data, dt, t)
 	else
 		local position_root = Unit.local_position(unit, 1)
 
 		self:update_unit_position_and_rotation(position_root, false)
 	end
+
+	PlayerUnitPeeking.update_third_person_animations(unit, self._3p_peeking_animation_data, dt)
 
 	if not self._unit_data_extension.is_resimulating then
 		local previous_frame_character_state_name = self._previous_frame_character_state_name

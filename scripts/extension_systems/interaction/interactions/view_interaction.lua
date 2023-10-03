@@ -1,5 +1,6 @@
 require("scripts/extension_systems/interaction/interactions/base_interaction")
 
+HubLocationIntroductionSettings = require("scripts/settings/cinematic_video/hub_location_introduction_settings")
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
 local ViewInteraction = class("ViewInteraction", "BaseInteraction")
 local ui_view_level_requirement = {
@@ -39,11 +40,24 @@ ViewInteraction.start = function (self, world, interactor_unit, unit_data_compon
 		local ui_manager = Managers.ui
 
 		if not ui_manager:view_active(ui_interaction) and not ui_manager:is_view_closing(ui_interaction) and not ui_manager:has_active_view() then
-			local context = {
-				hub_interaction = true
-			}
+			local hli_settings = HubLocationIntroductionSettings[ui_interaction]
+			local narrative_event = hli_settings and Managers.narrative.EVENTS[hli_settings.narrative_event_name]
 
-			ui_manager:open_view(ui_interaction, nil, nil, nil, nil, context)
+			if hli_settings and not Managers.narrative:is_event_complete(narrative_event) then
+				local context = {
+					allow_skip_input = true,
+					template = hli_settings.video_template
+				}
+
+				ui_manager:open_view("video_view", nil, nil, nil, nil, context)
+				Managers.narrative:complete_event(narrative_event)
+			else
+				local context = {
+					hub_interaction = true
+				}
+
+				ui_manager:open_view(ui_interaction, nil, nil, nil, nil, context)
+			end
 		end
 	end
 end

@@ -128,6 +128,46 @@ local objectives_lookup = {
 		name = "loc_ability_zealot_objective_2",
 		objective_id = "combat_ability_zealot_2"
 	},
+	combat_ability_psyker_3_1 = {
+		max_value = 1,
+		name = "loc_combat_ability_tutorial_psyker_3_objective_1",
+		play_sound = true,
+		objective_id = "combat_ability_psyker_3_1"
+	},
+	combat_ability_psyker_3_2 = {
+		max_value = 1,
+		name = "loc_combat_ability_tutorial_psyker_3_objective_2",
+		objective_id = "combat_ability_psyker_3_2"
+	},
+	combat_ability_ogryn_1_1 = {
+		max_value = 1,
+		name = "loc_combat_ability_tutorial_ogryn_1_objective_1",
+		play_sound = true,
+		objective_id = "combat_ability_ogryn_1_1"
+	},
+	combat_ability_ogryn_1_2 = {
+		max_value = 1,
+		name = "loc_combat_ability_tutorial_ogryn_1_objective_2",
+		objective_id = "combat_ability_ogryn_1_2"
+	},
+	combat_ability_zealot_3_1 = {
+		max_value = 1,
+		name = "loc_combat_ability_tutorial_zealot_3_objective_1",
+		play_sound = true,
+		objective_id = "combat_ability_zealot_3_1"
+	},
+	combat_ability_zealot_3_2 = {
+		max_value = 1,
+		name = "loc_combat_ability_tutorial_zealot_3_objective_2",
+		play_sound = true,
+		objective_id = "combat_ability_zealot_3_2"
+	},
+	combat_ability_veteran_3_1 = {
+		max_value = 1,
+		name = "loc_combat_ability_tutorial_veteran_3_objective_1",
+		play_sound = true,
+		objective_id = "combat_ability_veteran_3_1"
+	},
 	attack_chain = {
 		max_value = 3,
 		name = "loc_melee_chain_objective",
@@ -262,6 +302,12 @@ local objectives_lookup = {
 		play_sound = true,
 		objective_id = "grenade"
 	},
+	protectorate_blitz = {
+		max_value = 5,
+		name = "loc_psyker_ability_objective_protectorate",
+		play_sound = true,
+		objective_id = "protectorate_blitz"
+	},
 	biomancer_blitz = {
 		max_value = 3,
 		name = "loc_psyker_ability_objective",
@@ -305,12 +351,12 @@ local objectives_lookup = {
 		max_value = 1,
 		name = "loc_health_staton_objective_1",
 		play_sound = true,
-		objective_id = "health_staton_objective_1"
+		objective_id = "health_station_objective_1"
 	},
 	health_station_objective_2 = {
 		max_value = 1,
 		name = "loc_health_staton_objective_2",
-		objective_id = "health_staton_objective_2"
+		objective_id = "health_station_objective_2"
 	},
 	end_of_tg_objective = {
 		max_value = 1,

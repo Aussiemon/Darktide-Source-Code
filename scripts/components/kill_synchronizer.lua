@@ -17,6 +17,10 @@ KillSynchronizer.editor_init = function (self, unit)
 	return
 end
 
+KillSynchronizer.editor_validate = function (self, unit)
+	return true, ""
+end
+
 KillSynchronizer.start_kill_event = function (self)
 	if self._kill_synchronizer_extension then
 		self._kill_synchronizer_extension:start_event()

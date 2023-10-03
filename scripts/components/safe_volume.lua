@@ -27,6 +27,18 @@ SafeVolume.editor_init = function (self, unit)
 	return
 end
 
+SafeVolume.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if rawget(_G, "LevelEditor") and not Unit.has_volume(unit, "c_volume") then
+		success = false
+		error_message = error_message .. "\nMissing volume 'c_volume'"
+	end
+
+	return success, error_message
+end
+
 SafeVolume.enable = function (self, unit)
 	return
 end

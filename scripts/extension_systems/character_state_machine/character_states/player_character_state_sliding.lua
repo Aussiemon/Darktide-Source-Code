@@ -14,6 +14,7 @@ local HitMass = require("scripts/utilities/attack/hit_mass")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local LagCompensation = require("scripts/utilities/lag_compensation")
 local MaterialQuery = require("scripts/utilities/material_query")
+local PlayerUnitPeeking = require("scripts/utilities/player_unit_peeking")
 local buff_keywords = BuffSettings.keywords
 local damage_types = DamageSettings.damage_types
 local proc_events = BuffSettings.proc_events
@@ -45,6 +46,7 @@ PlayerCharacterStateSliding.init = function (self, character_state_init_context,
 	self._dodge_character_state_component = unit_data:write_component("dodge_character_state")
 	local breed = unit_data:breed()
 	self._sliding_loop_alias = breed.sfx.sliding_alias
+	self._peeking_component = unit_data:write_component("peeking")
 	self._hit_enemy_units = {}
 end
 
@@ -99,7 +101,7 @@ PlayerCharacterStateSliding.on_exit = function (self, unit, t, next_state)
 	local movement_state_component = self._movement_state_component
 	movement_state_component.is_dodging = false
 	local buff_extension = self._buff_extension
-	local base_dodge_template = self._specialization_dodge_template
+	local base_dodge_template = self._archetype_dodge_template
 	local weapon_dodge_template = self._weapon_extension:dodge_template()
 
 	if self._slide_character_state_component.was_in_dodge_cooldown then
@@ -108,8 +110,12 @@ PlayerCharacterStateSliding.on_exit = function (self, unit, t, next_state)
 
 	self._fx_extension:stop_looping_wwise_event(self._sliding_loop_alias)
 
-	if next_state == "walking" and movement_state_component.is_crouching then
-		self._first_person_extension:set_wanted_player_height("crouch", 0.3)
+	if next_state == "walking" then
+		if movement_state_component.is_crouching then
+			self._first_person_extension:set_wanted_player_height("crouch", 0.3)
+		end
+	else
+		PlayerUnitPeeking.leaving_peekable_character_state(self._peeking_component, self._animation_extension, self._first_person_extension)
 	end
 
 	local param_table = buff_extension:request_proc_event_param_table()
@@ -130,6 +136,7 @@ PlayerCharacterStateSliding.fixed_update = function (self, unit, dt, t, next_sta
 	local velocity_current = locomotion.velocity_current
 
 	weapon_extension:update_weapon_actions(fixed_frame)
+	self._ability_extension:update_ability_actions(fixed_frame)
 
 	local max_mass_hit = false
 	local buff_extension = self._buff_extension
@@ -149,6 +156,8 @@ PlayerCharacterStateSliding.fixed_update = function (self, unit, dt, t, next_sta
 	if commit_period_over or flat_move_speed_sq < 4 then
 		is_crouching = Crouch.check(unit, first_person_extension, anim_extension, weapon_extension, move_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_source, t)
 	end
+
+	PlayerUnitPeeking.fixed_update(self._peeking_component, self._ledge_finder_extension, anim_extension, first_person_extension, self._specialization_extension, is_crouching, self._breed)
 
 	local speed = Vector3.length(Vector3.flat(velocity_current))
 

@@ -44,9 +44,9 @@ return {
 		[armor_types.berserker] = berserker,
 		[armor_types.disgustingly_resilient] = disgustingly_resilient,
 		[armor_types.player] = player,
-		[armor_types.prop_armor] = prop_armor,
 		[armor_types.resistant] = resistant,
 		[armor_types.super_armor] = super_armor,
-		[armor_types.unarmored] = unarmored
+		[armor_types.unarmored] = unarmored,
+		[armor_types.prop_armor] = prop_armor
 	}
 }

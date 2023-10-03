@@ -11,6 +11,7 @@ if rawget(_G, "RuleDatabase") then
 		SET_INTERSECTS = "SET_INTERSECTS",
 		LTEQ = "LTEQ",
 		GTEQ = "GTEQ",
+		SET_NOT_INTERSECTS = "SET_NOT_INTERSECTS",
 		TIMEDIFF = "TIMEDIFF",
 		EQ = "EQ",
 		NOT = "NOT",

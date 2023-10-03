@@ -55,7 +55,6 @@ local weapon_template = {
 			input_sequence = {
 				{
 					value = true,
-					hold_input = "action_two_hold",
 					input = "action_one_pressed"
 				}
 			}
@@ -65,7 +64,13 @@ local weapon_template = {
 			input_sequence = {
 				{
 					value = true,
-					input = "action_two_hold"
+					input = "action_two_hold",
+					input_setting = {
+						value = true,
+						input = "action_two_pressed",
+						setting_value = true,
+						setting = "toggle_ads"
+					}
 				}
 			}
 		},
@@ -75,7 +80,14 @@ local weapon_template = {
 				{
 					value = false,
 					input = "action_two_hold",
-					time_window = math.huge
+					time_window = math.huge,
+					input_setting = {
+						setting_value = true,
+						setting = "toggle_ads",
+						value = true,
+						input = "action_two_pressed",
+						time_window = math.huge
+					}
 				}
 			}
 		},
@@ -185,7 +197,6 @@ table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.a
 
 weapon_template.actions = {
 	action_unwield = {
-		continue_sprinting = true,
 		allowed_during_sprint = true,
 		start_input = "wield",
 		uninterruptible = true,
@@ -194,12 +205,11 @@ weapon_template.actions = {
 		allowed_chain_actions = {}
 	},
 	action_wield = {
+		wield_reload_anim_event = "equip_reload",
 		allowed_during_sprint = true,
 		wield_anim_event = "equip",
-		wield_reload_anim_event = "equip_reload",
-		kind = "ranged_wield",
-		continue_sprinting = true,
 		uninterruptible = true,
+		kind = "ranged_wield",
 		total_time = 1,
 		conditional_state_to_action_input = {
 			started_reload = {
@@ -211,7 +221,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -292,7 +307,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -365,7 +385,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
@@ -389,7 +414,7 @@ weapon_template.actions = {
 		aim_assist_ramp_template = AimAssistTemplates.killshot_fire
 	},
 	action_zoom = {
-		crosshair_type = "none",
+		crosshair_type = "ironsight",
 		start_input = "zoom",
 		kind = "aim",
 		total_time = 0.3,
@@ -398,7 +423,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -414,7 +444,7 @@ weapon_template.actions = {
 		aim_assist_ramp_template = AimAssistTemplates.killshot_aim
 	},
 	action_unzoom = {
-		crosshair_type = "none",
+		crosshair_type = "ironsight",
 		start_input = "zoom_release",
 		kind = "unaim",
 		total_time = 0.2,
@@ -423,7 +453,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -476,7 +511,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -547,7 +587,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -629,7 +674,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -720,7 +770,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -764,7 +819,7 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "none",
+		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
 		total_time = math.huge
@@ -808,10 +863,11 @@ weapon_template.fx_sources = {
 weapon_template.crosshair_type = "cross"
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
-	stop_anim_event = "to_unaim_ironsight",
+	peeking_mechanics = true,
 	sway_template = "fullauto_autogun_killshot",
-	recoil_template = "ads_autogun_burst",
+	stop_anim_event = "to_unaim_ironsight",
 	start_anim_event_3p = "to_ironsight",
+	recoil_template = "ads_autogun_burst",
 	spread_template = "default_autogun_alternate_fire_killshot",
 	suppression_template = "fullauto_autogun_killshot",
 	crosshair_type = "ironsight",

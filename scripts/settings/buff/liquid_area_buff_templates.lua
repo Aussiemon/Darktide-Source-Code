@@ -75,30 +75,27 @@ local templates = {
 			return math.smoothstep(t, start_time, start_time + duration)
 		end
 	},
-	in_liquid_fire_burning_movement_slow = {
-		class_name = "interval_buff",
+	flame_grenade_liquid_area = {
 		power_level_random = true,
-		predicted = true,
+		predicted = false,
 		max_stacks = 1,
-		stat_buffs = {
-			[buff_stat_buffs.movement_speed] = 0.75
-		},
+		class_name = "interval_buff",
 		keywords = {
 			buff_keywords.burning
 		},
 		power_level = {
 			default = {
-				250,
-				375,
+				500,
 				625,
-				750
+				750,
+				875
 			}
 		},
-		damage_template = DamageProfileTemplates.liquid_area_fire_burning,
+		damage_template = DamageProfileTemplates.flame_grenade_liquid_area_fire_burning,
 		damage_type = damage_types.burning,
 		interval = {
 			0.5,
-			1.5
+			1.25
 		},
 		interval_func = _scaled_damage_interval_function,
 		minion_effects = minion_burning_buff_effects.fire
@@ -126,29 +123,6 @@ local templates = {
 			0.5,
 			1.5
 		},
-		interval_func = _scaled_damage_interval_function,
-		minion_effects = minion_burning_buff_effects.fire
-	},
-	fire_burninating_long = {
-		interval = 1,
-		predicted = false,
-		max_stacks = 10,
-		duration = 7.5,
-		class_name = "interval_buff",
-		keywords = {
-			buff_keywords.burning
-		},
-		power_level = {
-			default = {
-				500,
-				500,
-				500,
-				500,
-				500
-			}
-		},
-		damage_template = DamageProfileTemplates.liquid_area_fire_burning,
-		damage_type = damage_types.burning,
 		interval_func = _scaled_damage_interval_function,
 		minion_effects = minion_burning_buff_effects.fire
 	},
@@ -181,7 +155,7 @@ local templates = {
 		max_stacks = 1,
 		is_negative = true,
 		stat_buffs = {
-			[buff_stat_buffs.movement_speed] = 0.75
+			[buff_stat_buffs.movement_speed] = -0.25
 		},
 		keywords = {
 			buff_keywords.burning
@@ -216,7 +190,7 @@ local templates = {
 		max_stacks = 1,
 		is_negative = true,
 		stat_buffs = {
-			[buff_stat_buffs.movement_speed] = 0.8
+			[buff_stat_buffs.movement_speed] = -0.19999999999999996
 		},
 		keywords = {
 			buff_keywords.burning
@@ -377,7 +351,7 @@ templates.beast_of_nurgle_in_slime = {
 		buff_keywords.beast_of_nurgle_liquid_immunity
 	},
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 0.5,
+		[buff_stat_buffs.movement_speed] = -0.5,
 		[buff_stat_buffs.dodge_speed_multiplier] = 0.9
 	},
 	power_level = {
@@ -458,13 +432,13 @@ local EMPOWERED_BREEDS = {
 templates.in_toxic_gas = {
 	predicted = true,
 	hud_priority = 1,
-	interval = 0.5,
+	interval = 0.25,
 	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
 	max_stacks = 1,
 	class_name = "interval_buff",
 	is_negative = true,
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 0.9,
+		[buff_stat_buffs.movement_speed] = -0.09999999999999998,
 		[buff_stat_buffs.dodge_speed_multiplier] = 0.9,
 		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
 	},
@@ -475,11 +449,11 @@ templates.in_toxic_gas = {
 	},
 	power_level = {
 		default = {
-			3,
-			5,
-			6,
-			8,
-			10
+			10,
+			12,
+			14,
+			16,
+			18
 		}
 	},
 	damage_template = DamageProfileTemplates.toxic_gas_mutator,
@@ -589,7 +563,7 @@ templates.left_toxic_gas = {
 	is_negative = true,
 	target = buff_targets.player_only,
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 0.9,
+		[buff_stat_buffs.movement_speed] = -0.09999999999999998,
 		[buff_stat_buffs.dodge_speed_multiplier] = 0.9,
 		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
 	},
@@ -609,100 +583,6 @@ templates.left_toxic_gas = {
 	damage_template = DamageProfileTemplates.toxic_gas_mutator,
 	damage_type = damage_types.corruption,
 	interval_func = _toxic_gas_interval_function
-}
-templates.in_cultist_grenadier_gas = {
-	predicted = true,
-	hud_priority = 1,
-	interval = 0.75,
-	hud_icon = "content/ui/textures/icons/buffs/hud/states_knocked_down_buff_hud",
-	max_stacks = 1,
-	class_name = "interval_buff",
-	is_negative = true,
-	stat_buffs = {
-		[buff_stat_buffs.toughness_regen_rate_multiplier] = 0
-	},
-	keywords = {
-		buff_keywords.concealed,
-		buff_keywords.hud_nameplates_disabled,
-		buff_keywords.in_toxic_gas
-	},
-	power_level = {
-		default = {
-			4,
-			6,
-			8,
-			10,
-			12
-		}
-	},
-	damage_template = DamageProfileTemplates.cultist_grenadier_gas,
-	damage_type = damage_types.corruption,
-	start_func = function (template_data, template_context)
-		local unit = template_context.unit
-
-		if not HEALTH_ALIVE[unit] then
-			return
-		end
-
-		if DEDICATED_SERVER then
-			return
-		end
-
-		local is_local_unit = template_context.is_local_unit
-
-		if not is_local_unit then
-			return
-		end
-
-		if template_context.is_player then
-			local player = Managers.state.player_unit_spawn:owner(unit)
-			local is_bot = player and not player:is_human_controlled()
-
-			if not is_bot then
-				local outline_system = Managers.state.extension:system("outline_system")
-
-				outline_system:set_global_visibility(false)
-			end
-
-			Vo.coughing_event(unit)
-		end
-	end,
-	stop_func = function (template_data, template_context)
-		local unit = template_context.unit
-
-		if not HEALTH_ALIVE[unit] then
-			return
-		end
-
-		if DEDICATED_SERVER then
-			return
-		end
-
-		local is_local_unit = template_context.is_local_unit
-
-		if not is_local_unit then
-			return
-		end
-
-		if template_context.is_player then
-			local player = Managers.state.player_unit_spawn:owner(unit)
-			local is_bot = player and not player:is_human_controlled()
-
-			if not is_bot then
-				local outline_system = Managers.state.extension:system("outline_system")
-
-				outline_system:set_global_visibility(true)
-			end
-
-			Vo.coughing_ends_event(unit)
-		end
-	end,
-	interval_func = _scaled_damage_interval_function,
-	player_effects = {
-		looping_wwise_stop_event = "wwise/events/player/play_player_gas_exit",
-		looping_wwise_start_event = "wwise/events/player/play_player_gas_enter",
-		stop_type = "stop"
-	}
 }
 local cultist_flamer_leaving_liquid_fire_spread_increase = table.clone(templates.leaving_liquid_fire_spread_increase)
 cultist_flamer_leaving_liquid_fire_spread_increase.forbidden_keywords = {

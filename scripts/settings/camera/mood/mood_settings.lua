@@ -1,11 +1,13 @@
 local WarpCharge = require("scripts/utilities/warp_charge")
 local mood_settings = {}
-local types = table.enum("last_wound", "critical_health", "knocked_down", "toughness_broken", "no_toughness", "suppression_ongoing", "suppression_low", "suppression_high", "damage_taken", "toughness_absorbed", "toughness_absorbed_melee", "corruption_taken", "corruption", "sprinting", "sprinting_overtime", "stealth", "zealot_maniac_combat_ability", "ogryn_bonebreaker_combat_ability", "veteran_ranger_combat_ability", "psyker_biomancer_combat_ability", "corruptor_proximity", "warped", "warped_low_to_high", "warped_high_to_critical", "warped_critical")
+local types = table.enum("corruption_taken", "corruption", "corruptor_proximity", "critical_health", "damage_taken", "knocked_down", "last_wound", "no_toughness", "sprinting_overtime", "sprinting", "suppression_high", "suppression_low", "suppression_ongoing", "toughness_absorbed_melee", "toughness_absorbed", "toughness_broken", "warped_critical", "warped_high_to_critical", "warped_low_to_high", "warped", "ogryn_combat_ability_charge", "ogryn_combat_ability_shout", "ogryn_combat_ability_stance", "psyker_combat_ability_shout", "psyker_force_field_sphere", "stealth", "veteran_stealth", "veteran_combat_ability_stance", "veteran_stealth_and_stance", "zealot_combat_ability_dash")
 local status = table.enum("active", "inactive", "removing")
 mood_settings.mood_types = types
 mood_settings.status = status
 mood_settings.priority = {
 	types.stealth,
+	types.veteran_stealth,
+	types.veteran_stealth_and_stance,
 	types.last_wound,
 	types.critical_health,
 	types.knocked_down,
@@ -24,16 +26,19 @@ mood_settings.priority = {
 	types.warped_low_to_high,
 	types.warped_high_to_critical,
 	types.warped_critical,
-	types.zealot_maniac_combat_ability,
-	types.veteran_ranger_combat_ability,
-	types.psyker_biomancer_combat_ability,
+	types.ogryn_combat_ability_charge,
+	types.ogryn_combat_ability_shout,
+	types.ogryn_combat_ability_stance,
+	types.psyker_combat_ability_shout,
+	types.veteran_combat_ability_stance,
+	types.zealot_combat_ability_dash,
 	types.corruptor_proximity
 }
 mood_settings.moods = {
 	[types.stealth] = {
 		blend_in_time = 0.35,
 		blend_out_time = 0.8,
-		shading_environment = "content/shading_environments/moods/last_wound_mood",
+		shading_environment = "content/shading_environments/moods/stealth_mood",
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
 		particle_effects_looping = {
 			"content/fx/particles/screenspace/screen_zealot_stealth"
@@ -43,6 +48,36 @@ mood_settings.moods = {
 		},
 		looping_sound_stop_events = {
 			"wwise/events/player/play_zealot_ability_invisible_off"
+		}
+	},
+	[types.veteran_stealth] = {
+		blend_in_time = 0.35,
+		blend_out_time = 0.8,
+		shading_environment = "content/shading_environments/moods/veteran_stealth_mood",
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		particle_effects_looping = {
+			"content/fx/particles/screenspace/screen_veteran_stealth"
+		},
+		looping_sound_start_events = {
+			"wwise/events/player/play_veteran_ability_stealth_on"
+		},
+		looping_sound_stop_events = {
+			"wwise/events/player/play_veteran_ability_stealth_off"
+		}
+	},
+	[types.veteran_stealth_and_stance] = {
+		blend_in_time = 0.35,
+		blend_out_time = 0.8,
+		shading_environment = "content/shading_environments/moods/stealth_mood",
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		particle_effects_looping = {
+			"content/fx/particles/screenspace/screen_veteran_stealth"
+		},
+		looping_sound_start_events = {
+			"wwise/events/player/play_veteran_ability_stealth_and_stance_on"
+		},
+		looping_sound_stop_events = {
+			"wwise/events/player/play_veteran_ability_stealth_and_stance_off"
 		}
 	},
 	[types.last_wound] = {
@@ -177,25 +212,51 @@ mood_settings.moods = {
 		blend_in_time = 0.1,
 		blend_out_time = 0.1
 	},
-	[types.zealot_maniac_combat_ability] = {
+	[types.zealot_combat_ability_dash] = {
 		shading_environment = "content/shading_environments/moods/zealot_combat_ability_mood",
 		blend_in_time = 0.1,
 		blend_out_time = 0.2,
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
-	[types.ogryn_bonebreaker_combat_ability] = {
+	[types.ogryn_combat_ability_charge] = {
 		shading_environment = "content/shading_environments/moods/zealot_combat_ability_mood",
 		blend_in_time = 0.1,
 		blend_out_time = 0.2,
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
-	[types.veteran_ranger_combat_ability] = {
+	[types.ogryn_combat_ability_shout] = {
+		shading_environment = "content/shading_environments/moods/ogryn_taunt_mood",
+		blend_in_time = 0.1,
+		blend_out_time = 0.2,
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
+	},
+	[types.ogryn_combat_ability_stance] = {
+		blend_in_time = 0.03,
+		blend_out_time = 0.03,
+		shading_environment = "content/shading_environments/moods/ogryn_taunt_mood",
+		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES,
+		particle_effects_looping = {
+			"content/fx/particles/screenspace/screen_ogryn_gunlugger"
+		},
+		looping_sound_start_events = {
+			"wwise/events/player/play_ability_ogryn_speshul_ammo"
+		},
+		looping_sound_stop_events = {
+			"wwise/events/player/stop_ability_ogryn_speshul_ammo"
+		},
+		wwise_state = {
+			group = "player_ability",
+			on_state = "ogryn_stance",
+			off_state = "none"
+		}
+	},
+	[types.veteran_combat_ability_stance] = {
 		shading_environment = "content/shading_environments/moods/veteran_combat_ability_mood",
 		blend_in_time = 0.1,
 		blend_out_time = 0.2,
 		blend_mask = ShadingEnvironmentBlendMask.OVERRIDES
 	},
-	[types.psyker_biomancer_combat_ability] = {
+	[types.psyker_combat_ability_shout] = {
 		blend_in_time = 0.03,
 		blend_out_time = 0.15,
 		shading_environment = "content/shading_environments/moods/psyker_shout_mood",
@@ -264,7 +325,7 @@ mood_settings.moods = {
 				local unit_data_extension = ScriptUnit.has_extension(player.player_unit, "unit_data_system")
 
 				if unit_data_extension then
-					local base_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
+					local base_warp_charge_template = WarpCharge.archetype_warp_charge_template(player)
 					local weapon_warp_charge_template = WarpCharge.weapon_warp_charge_template(player.player_unit)
 					local dt = Managers.time:delta_time("gameplay")
 					local warp_charge_component = unit_data_extension:read_component("warp_charge")
@@ -300,6 +361,21 @@ mood_settings.moods = {
 		blend_out_time = 0.03,
 		particle_effects_looping = {
 			"content/fx/particles/screenspace/screen_psyker_overheat_critical"
+		}
+	},
+	[types.psyker_force_field_sphere] = {
+		blend_in_time = 0.03,
+		blend_out_time = 0.03,
+		looping_sound_start_events = {
+			"wwise/events/player/play_psyker_shield_dome_enter"
+		},
+		looping_sound_stop_events = {
+			"wwise/events/player/play_psyker_shield_dome_exit"
+		},
+		wwise_state = {
+			group = "player_state",
+			on_state = "psyker_shield",
+			off_state = "none"
 		}
 	}
 }

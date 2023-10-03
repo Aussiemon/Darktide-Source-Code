@@ -13,12 +13,14 @@ MinionAnimationExtension.init = function (self, extension_init_context, unit, ex
 	end
 
 	local breed = extension_init_data.breed
+	self._breed = breed
 	local state_machine = breed.state_machine
 
 	if state_machine then
 		Unit.set_animation_state_machine(unit, state_machine)
 	end
 
+	self._animation_variable_bounds = breed.animation_variable_bounds
 	local next_seed = extension_init_data.random_seed
 	local seeds, num_seeds = Unit.animation_get_seeds(unit)
 
@@ -57,6 +59,12 @@ end
 MinionAnimationExtension.game_object_initialized = function (self, game_session, game_object_id)
 	self._game_object_id = game_object_id
 	self._game_session = game_session
+
+	if self._breed.animation_variable_init then
+		for name, value in pairs(self._breed.animation_variable_init) do
+			self:set_variable(name, value)
+		end
+	end
 end
 
 MinionAnimationExtension.hot_join_sync = function (self, unit, sender, channel)
@@ -91,7 +99,7 @@ MinionAnimationExtension.anim_event_with_variable_float = function (self, event_
 end
 
 MinionAnimationExtension.has_variable = function (self, name)
-	return self._variables[name]
+	return self._variables and self._variables[name]
 end
 
 MinionAnimationExtension.set_variable = function (self, name, value)
@@ -100,6 +108,11 @@ MinionAnimationExtension.set_variable = function (self, name, value)
 	local game_object_id = self._game_object_id
 	local variables = self._variables
 	local index = variables[name]
+	local variable_bounds = self._animation_variable_bounds
+
+	if variable_bounds and variable_bounds[name] then
+		value = math.clamp(value, variable_bounds[name][1], variable_bounds[name][2])
+	end
 
 	Unit_animation_set_variable(unit, index, value)
 	GameSession.set_game_object_field(game_session, game_object_id, name, value)

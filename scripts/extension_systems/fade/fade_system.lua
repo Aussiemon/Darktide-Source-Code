@@ -81,4 +81,8 @@ FadeSystem.update = function (self, context, dt, t, ...)
 	Fade.update(self._fade_system, fade_position or Vector3.zero())
 end
 
+FadeSystem.set_min_fade = function (self, unit, min_fade)
+	Fade.set_min_fade(self._fade_system, unit, min_fade)
+end
+
 return FadeSystem

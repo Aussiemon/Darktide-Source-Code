@@ -52,7 +52,6 @@ local function show_popup(on_success, is_forced)
 					local _next = _rename_states[next_state]
 					local _text = _next.text
 					local _color = _next.color
-					next_state = nil
 
 					return _text, _color
 				end

@@ -10,22 +10,22 @@ templates.weapon_trait_bespoke_forcesword_p1_can_block_ranged = {
 	weapon_trait_bespoke_forcesword_p1_can_block_ranged = {
 		{
 			stat_buffs = {
-				[stat_buffs.block_cost_ranged_multiplier] = 0.97
+				[stat_buffs.block_cost_ranged_multiplier] = 0.775
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.block_cost_ranged_multiplier] = 0.94
+				[stat_buffs.block_cost_ranged_multiplier] = 0.75
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.block_cost_ranged_multiplier] = 0.91
+				[stat_buffs.block_cost_ranged_multiplier] = 0.725
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.block_cost_ranged_multiplier] = 0.88
+				[stat_buffs.block_cost_ranged_multiplier] = 0.7
 			}
 		}
 	}
@@ -34,12 +34,7 @@ templates.weapon_trait_bespoke_forcesword_p1_warp_charge_power_bonus = {
 	weapon_trait_bespoke_forcesword_p1_warp_charge_power_bonus = {
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.02
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.03
+				[stat_buffs.power_level_modifier] = 0.035
 			}
 		},
 		{
@@ -49,31 +44,12 @@ templates.weapon_trait_bespoke_forcesword_p1_warp_charge_power_bonus = {
 		},
 		{
 			stat_buffs = {
+				[stat_buffs.power_level_modifier] = 0.045
+			}
+		},
+		{
+			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.05
-			}
-		}
-	}
-}
-templates.weapon_trait_bespoke_forcesword_p1_chained_hits_increases_crit_chance = {
-	weapon_trait_bespoke_forcesword_p1_chained_hits_increases_crit_chance_parent = {
-		{
-			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.02
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.035
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.045
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.05
 			}
 		}
 	}
@@ -83,19 +59,13 @@ templates.weapon_trait_bespoke_forcesword_p1_stacking_rending_on_weakspot = {
 		{
 			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.rending_multiplier] = 0.05
+				[stat_buffs.rending_multiplier] = 0.12
 			}
 		},
 		{
 			max_stacks = 5,
 			stat_buffs = {
-				[stat_buffs.rending_multiplier] = 0.1
-			}
-		},
-		{
-			max_stacks = 5,
-			stat_buffs = {
-				[stat_buffs.rending_multiplier] = 0.15
+				[stat_buffs.rending_multiplier] = 0.16
 			}
 		},
 		{
@@ -103,33 +73,35 @@ templates.weapon_trait_bespoke_forcesword_p1_stacking_rending_on_weakspot = {
 			stat_buffs = {
 				[stat_buffs.rending_multiplier] = 0.2
 			}
+		},
+		{
+			max_stacks = 5,
+			stat_buffs = {
+				[stat_buffs.rending_multiplier] = 0.24
+			}
 		}
 	}
 }
 templates.weapon_trait_bespoke_forcesword_p1_increase_power_on_kill = {
 	weapon_trait_bespoke_forcesword_p1_increase_power_on_kill_parent = {
 		{
-			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.075
+				[stat_buffs.power_level_modifier] = 0.05
 			}
 		},
 		{
-			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.1
+				[stat_buffs.power_level_modifier] = 0.06
 			}
 		},
 		{
-			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.125
+				[stat_buffs.power_level_modifier] = 0.07
 			}
 		},
 		{
-			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.15
+				[stat_buffs.power_level_modifier] = 0.08
 			}
 		}
 	}
@@ -139,25 +111,25 @@ templates.weapon_trait_bespoke_forcesword_p1_dodge_grants_finesse_bonus = {
 		{
 			active_duration = 2,
 			proc_stat_buffs = {
-				[stat_buffs.finesse_modifier_bonus] = 0.04
+				[stat_buffs.finesse_modifier_bonus] = 0.45
 			}
 		},
 		{
 			active_duration = 2,
 			proc_stat_buffs = {
-				[stat_buffs.finesse_modifier_bonus] = 0.06
+				[stat_buffs.finesse_modifier_bonus] = 0.5
 			}
 		},
 		{
 			active_duration = 2,
 			proc_stat_buffs = {
-				[stat_buffs.finesse_modifier_bonus] = 0.08
+				[stat_buffs.finesse_modifier_bonus] = 0.55
 			}
 		},
 		{
 			active_duration = 2,
 			proc_stat_buffs = {
-				[stat_buffs.finesse_modifier_bonus] = 0.1
+				[stat_buffs.finesse_modifier_bonus] = 0.6
 			}
 		}
 	}
@@ -165,25 +137,21 @@ templates.weapon_trait_bespoke_forcesword_p1_dodge_grants_finesse_bonus = {
 templates.weapon_trait_bespoke_forcesword_p1_dodge_grants_critical_strike_chance = {
 	weapon_trait_bespoke_forcesword_p1_dodge_grants_critical_strike_chance = {
 		{
-			active_duration = 2,
 			proc_stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.05
+				[stat_buffs.critical_strike_chance] = 0.125
 			}
 		},
 		{
-			active_duration = 2,
-			proc_stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.1
-			}
-		},
-		{
-			active_duration = 2,
 			proc_stat_buffs = {
 				[stat_buffs.critical_strike_chance] = 0.15
 			}
 		},
 		{
-			active_duration = 2,
+			proc_stat_buffs = {
+				[stat_buffs.critical_strike_chance] = 0.175
+			}
+		},
+		{
 			proc_stat_buffs = {
 				[stat_buffs.critical_strike_chance] = 0.2
 			}
@@ -199,7 +167,7 @@ templates.weapon_trait_bespoke_forcesword_p1_chained_hits_increases_crit_chance 
 	weapon_trait_bespoke_forcesword_p1_chained_hits_increases_crit_chance_parent = {
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.02
+				[stat_buffs.critical_strike_chance] = 0.025
 			}
 		},
 		{
@@ -209,12 +177,12 @@ templates.weapon_trait_bespoke_forcesword_p1_chained_hits_increases_crit_chance 
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.04
+				[stat_buffs.critical_strike_chance] = 0.035
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.05
+				[stat_buffs.critical_strike_chance] = 0.04
 			}
 		}
 	}
@@ -223,22 +191,22 @@ templates.weapon_trait_bespoke_forcesword_p1_chained_weakspot_hits_increases_pow
 	weapon_trait_bespoke_forcesword_p1_chained_weakspot_hits_increases_power_parent = {
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.02
+				[stat_buffs.melee_power_level_modifier] = 0.045
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.03
+				[stat_buffs.melee_power_level_modifier] = 0.05
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.04
+				[stat_buffs.melee_power_level_modifier] = 0.055
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.05
+				[stat_buffs.melee_power_level_modifier] = 0.06
 			}
 		}
 	}

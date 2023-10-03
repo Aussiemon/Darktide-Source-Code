@@ -5,6 +5,7 @@ ConstantElementOnboardingHandler.init = function (self, parent, draw_layer, star
 	self:_initialize_settings()
 
 	self._current_state_name = nil
+	self._once_per_state_tracker = {}
 end
 
 ConstantElementOnboardingHandler._initialize_settings = function (self)
@@ -59,9 +60,12 @@ ConstantElementOnboardingHandler._on_state_changed = function (self, new_state_n
 
 	self._current_state_name = new_state_name
 	self._current_state_tutorial_settings = new_tutorial_settings
+
+	table.clear(self._once_per_state_tracker)
 end
 
 ConstantElementOnboardingHandler._sync_state_settings = function (self, on_destroy)
+	local once_per_state_tracker = self._once_per_state_tracker
 	local current_state_tutorial_settings = self._current_state_tutorial_settings
 
 	if current_state_tutorial_settings then
@@ -69,7 +73,9 @@ ConstantElementOnboardingHandler._sync_state_settings = function (self, on_destr
 			local settings = current_state_tutorial_settings[i]
 
 			if settings:validation_func() then
-				if not settings.active then
+				local settings_name = settings.name
+
+				if not settings.active and not once_per_state_tracker[settings_name] then
 					settings.should_activate = true
 				end
 
@@ -127,6 +133,11 @@ ConstantElementOnboardingHandler._sync_state_settings = function (self, on_destr
 				settings:on_activation()
 
 				settings.active = true
+
+				if settings.once_per_state then
+					once_per_state_tracker[settings.name] = true
+				end
+
 				local sync_on_events = settings.sync_on_events
 
 				if sync_on_events then

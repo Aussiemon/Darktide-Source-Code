@@ -23,6 +23,7 @@ local dialogue_lookup_concept_names = {
 		"heard_horde",
 		"heard_speak",
 		"higher_elite_threat",
+		"hub_story_talk",
 		"interaction_vo",
 		"kill_spree_self",
 		"knocked_down",

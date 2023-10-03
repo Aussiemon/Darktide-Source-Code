@@ -10,22 +10,22 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_bleed_on_activated_hit = {
 	weapon_trait_bespoke_chainsword_2h_p1_bleed_on_activated_hit = {
 		{
 			target_buff_data = {
-				num_stacks_on_proc = 8
+				num_stacks_on_proc = 3
 			}
 		},
 		{
 			target_buff_data = {
-				num_stacks_on_proc = 10
+				num_stacks_on_proc = 4
 			}
 		},
 		{
 			target_buff_data = {
-				num_stacks_on_proc = 12
+				num_stacks_on_proc = 5
 			}
 		},
 		{
 			target_buff_data = {
-				num_stacks_on_proc = 14
+				num_stacks_on_proc = 6
 			}
 		}
 	}
@@ -33,27 +33,27 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_bleed_on_activated_hit = {
 templates.weapon_trait_bespoke_chainsword_2h_p1_movement_speed_on_activation = {
 	weapon_trait_bespoke_chainsword_2h_p1_movement_speed_on_activation = {
 		{
-			active_duration = 3,
+			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.movement_speed] = 1.075
+				[stat_buffs.movement_speed] = 0.17
 			}
 		},
 		{
-			active_duration = 3,
+			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.movement_speed] = 1.1
+				[stat_buffs.movement_speed] = 0.18
 			}
 		},
 		{
-			active_duration = 3,
+			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.movement_speed] = 1.125
+				[stat_buffs.movement_speed] = 0.19
 			}
 		},
 		{
-			active_duration = 3,
+			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.movement_speed] = 1.15
+				[stat_buffs.movement_speed] = 0.2
 			}
 		}
 	}
@@ -62,19 +62,19 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_toughness_recovery_on_multiple_h
 	weapon_trait_bespoke_chainsword_2h_p1_toughness_recovery_on_multiple_hits = {
 		{
 			buff_data = {
-				replenish_percentage = 0.075,
+				replenish_percentage = 0.12,
 				required_num_hits = 3
 			}
 		},
 		{
 			buff_data = {
-				replenish_percentage = 0.1,
+				replenish_percentage = 0.13,
 				required_num_hits = 3
 			}
 		},
 		{
 			buff_data = {
-				replenish_percentage = 0.125,
+				replenish_percentage = 0.13,
 				required_num_hits = 3
 			}
 		},
@@ -89,35 +89,27 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_toughness_recovery_on_multiple_h
 templates.weapon_trait_bespoke_chainsword_2h_p1_increased_melee_damage_on_multiple_hits = {
 	weapon_trait_bespoke_chainsword_2h_p1_increased_melee_damage_on_multiple_hits = {
 		{
-			buff_data = {
-				required_num_hits = 3
-			},
+			active_duration = 3.5,
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.125
+				[stat_buffs.melee_power_level_modifier] = 0.24
 			}
 		},
 		{
-			buff_data = {
-				required_num_hits = 3
-			},
+			active_duration = 3.5,
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.15
+				[stat_buffs.melee_power_level_modifier] = 0.28
 			}
 		},
 		{
-			buff_data = {
-				required_num_hits = 3
-			},
+			active_duration = 3.5,
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.175
+				[stat_buffs.melee_power_level_modifier] = 0.32
 			}
 		},
 		{
-			buff_data = {
-				required_num_hits = 3
-			},
+			active_duration = 3.5,
 			stat_buffs = {
-				[stat_buffs.melee_damage] = 0.2
+				[stat_buffs.melee_power_level_modifier] = 0.36
 			}
 		}
 	}
@@ -125,33 +117,21 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_increased_melee_damage_on_multip
 templates.weapon_trait_bespoke_chainsword_2h_p1_increased_attack_cleave_on_multiple_hits = {
 	weapon_trait_bespoke_chainsword_2h_p1_increased_attack_cleave_on_multiple_hits = {
 		{
-			buff_data = {
-				required_num_hits = 3
-			},
 			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 1
+				[stat_buffs.max_hit_mass_attack_modifier] = 1.4
 			}
 		},
 		{
-			buff_data = {
-				required_num_hits = 3
-			},
 			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 1.5
+				[stat_buffs.max_hit_mass_attack_modifier] = 1.6
 			}
 		},
 		{
-			buff_data = {
-				required_num_hits = 3
-			},
 			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 1.75
+				[stat_buffs.max_hit_mass_attack_modifier] = 1.8
 			}
 		},
 		{
-			buff_data = {
-				required_num_hits = 3
-			},
 			stat_buffs = {
 				[stat_buffs.max_hit_mass_attack_modifier] = 2
 			}
@@ -162,22 +142,22 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_chained_hits_increases_melee_cle
 	weapon_trait_bespoke_chainsword_2h_p1_chained_hits_increases_melee_cleave_parent = {
 		{
 			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 0.05
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.25
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 0.1
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.3
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 0.15
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.35
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.max_hit_mass_attack_modifier] = 0.2
+				[stat_buffs.max_hit_mass_attack_modifier] = 0.4
 			}
 		}
 	}
@@ -186,7 +166,7 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_chained_hits_increases_crit_chan
 	weapon_trait_bespoke_chainsword_2h_p1_chained_hits_increases_crit_chance_parent = {
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.02
+				[stat_buffs.critical_strike_chance] = 0.025
 			}
 		},
 		{
@@ -196,12 +176,12 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_chained_hits_increases_crit_chan
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.04
+				[stat_buffs.critical_strike_chance] = 0.035
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.05
+				[stat_buffs.critical_strike_chance] = 0.04
 			}
 		}
 	}
@@ -209,6 +189,30 @@ templates.weapon_trait_bespoke_chainsword_2h_p1_chained_hits_increases_crit_chan
 templates.weapon_trait_bespoke_chainsword_2h_p1_pass_past_armor_on_crit = {
 	weapon_trait_bespoke_chainsword_2h_p1_pass_past_armor_on_crit = {
 		{}
+	}
+}
+templates.weapon_trait_bespoke_chainsword_2h_p1_rending_vs_staggered = {
+	weapon_trait_bespoke_chainsword_2h_p1_rending_vs_staggered = {
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.rending_vs_staggered_multiplier] = 0.1
+			}
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.rending_vs_staggered_multiplier] = 0.15
+			}
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.rending_vs_staggered_multiplier] = 0.2
+			}
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.rending_vs_staggered_multiplier] = 0.25
+			}
+		}
 	}
 }
 

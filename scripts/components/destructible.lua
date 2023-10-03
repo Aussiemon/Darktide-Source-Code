@@ -16,6 +16,7 @@ Destructible.init = function (self, unit, is_server)
 			local start_visible = self:get_data(unit, "start_visible")
 			local depawn_timer_duration = self:get_data(unit, "depawn_timer_duration")
 			local despawn_when_destroyed = self:get_data(unit, "despawn_when_destroyed")
+			local collision_actors = self:get_data(unit, "collision_actors")
 			local mass = self:get_data(unit, "mass")
 			local speed = self:get_data(unit, "speed")
 			local direction = self:get_data(unit, "direction")
@@ -23,7 +24,7 @@ Destructible.init = function (self, unit, is_server)
 			local is_nav_gate = self:get_data(unit, "is_nav_gate")
 			local broadphase_radius = self:get_data(unit, "broadphase_radius")
 
-			destructible_extension:setup_from_component(depawn_timer_duration, despawn_when_destroyed, mass, speed, direction, force_direction, start_visible, is_nav_gate, broadphase_radius)
+			destructible_extension:setup_from_component(depawn_timer_duration, despawn_when_destroyed, collision_actors, mass, speed, direction, force_direction, start_visible, is_nav_gate, broadphase_radius)
 			destructible_extension:set_enabled(self._enabled)
 
 			self._destructible_extension = destructible_extension
@@ -97,6 +98,25 @@ Destructible.editor_init = function (self, unit)
 	self:enable(unit)
 end
 
+Destructible.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if rawget(_G, "LevelEditor") then
+		if Unit.find_actor(unit, "c_destructible") == nil then
+			success = false
+			error_message = error_message .. "\nCouldn't find actor 'c_destructible'"
+		end
+
+		if not Unit.has_visibility_group(unit, "main") then
+			success = false
+			error_message = error_message .. "\nCouldn't find visibility group 'main'"
+		end
+	end
+
+	return success, error_message
+end
+
 Destructible.events.add_damage = function (self, damage, hit_actor, attack_direction)
 	if self._destructible_extension and self._enabled then
 		self._destructible_extension:add_damage(damage, hit_actor, attack_direction)
@@ -149,6 +169,12 @@ Destructible.component_data = {
 		ui_name = "Depawn Timer Duration (sec.)",
 		step = 5
 	},
+	collision_actors = {
+		ui_type = "text_box_array",
+		size = 0,
+		ui_name = "Collision Actors to Remove",
+		values = {}
+	},
 	mass = {
 		ui_type = "number",
 		min = 0,
@@ -184,12 +210,14 @@ Destructible.component_data = {
 		options_keys = {
 			"Random Direction",
 			"Attack Direction",
-			"Provided Direction"
+			"Relative - Provided Direction",
+			"World space - Provided Direction"
 		},
 		options_values = {
 			"random_direction",
 			"attack_direction",
-			"provided_direction"
+			"provided_direction_relative",
+			"provided_direction_world"
 		}
 	},
 	is_nav_gate = {

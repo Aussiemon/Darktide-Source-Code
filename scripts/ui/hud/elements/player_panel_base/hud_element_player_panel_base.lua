@@ -108,6 +108,9 @@ HudElementPlayerPanelBase._player_extensions = function (self, player)
 	return self._extensions
 end
 
+local DEFAULT_TOUGHNESS_COLOR = UIHudSettings.color_tint_6
+local OVERSHIELDED_TOUGHNESS_COLOR = UIHudSettings.color_tint_10
+
 HudElementPlayerPanelBase._update_player_features = function (self, dt, t, player, ui_renderer)
 	local supported_features = self._supported_features
 	local data = self._data
@@ -119,6 +122,7 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 	local toughness_extension = extensions and extensions.toughness
 	local ability_extension = extensions and extensions.ability
 	local coherency_extension = extensions and extensions.coherency
+	local buff_extension = extensions and extensions.buff
 	self._player = player
 
 	if supported_features.name then
@@ -325,16 +329,21 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 
 	local toughness_percentage = toughness_extension and toughness_extension:current_toughness_percent() or 0
 	local max_toughness = toughness_extension and toughness_extension.max_toughness and toughness_extension:max_toughness() or 0
+	local max_toughness_visual = toughness_extension and toughness_extension.max_toughness_visual and toughness_extension:max_toughness_visual() or 0
 
 	if supported_features.toughness then
 		local update_max_toughness = max_toughness ~= self._max_toughness
+		local current_toughness = toughness_percentage * max_toughness
+		local current_toughness_visual = toughness_percentage * max_toughness_visual
+		local overshield_amount = max_toughness > current_toughness_visual and math.max(current_toughness - max_toughness_visual, 0) or 0
+		local has_overshield = math.floor(overshield_amount) > 0
 		local toughness_bar_logic = self._toughness_bar_logic
 
 		toughness_bar_logic:update(dt, t, toughness_percentage, 1)
 
 		local bar_fraction, bar_ghost_fraction, bar_max_fraction = toughness_bar_logic:animated_health_fractions()
 
-		if bar_fraction and bar_ghost_fraction or update_max_toughness then
+		if bar_fraction and bar_ghost_fraction or update_max_toughness or overshield_amount ~= self._overshield_amount then
 			local toughness_percentage_bar = toughness_extension and toughness_extension:current_toughness_percent_visual() or 0
 			bar_fraction = bar_fraction or self._toughness_fraction or 0
 			bar_ghost_fraction = bar_ghost_fraction or self._toughness_ghost_fraction or 0
@@ -342,12 +351,53 @@ HudElementPlayerPanelBase._update_player_features = function (self, dt, t, playe
 			self:_apply_toughness_fraction(toughness_percentage_bar, bar_ghost_fraction, bar_max_fraction)
 
 			if supported_features.toughness_text and (bar_fraction ~= self._toughness_fraction or update_max_toughness) then
-				self:_apply_widget_number_text("toughness_text", toughness_percentage * max_toughness)
+				if has_overshield then
+					self:_apply_widget_number_text("toughness_text", max_toughness_visual)
+				else
+					self:_apply_widget_number_text("toughness_text", toughness_percentage * max_toughness)
+				end
 			end
 
 			self._max_toughness = max_toughness
 			self._toughness_fraction = bar_fraction
 			self._toughness_ghost_fraction = bar_ghost_fraction
+
+			if has_overshield and not self._has_overshield and toughness_percentage_bar >= 1 then
+				self:_set_overshielded(supported_features, true, ui_renderer, overshield_amount)
+
+				self._has_overshield = true
+			elseif not has_overshield and self._has_overshield or toughness_percentage_bar and toughness_percentage_bar < 1 then
+				self:_set_overshielded(supported_features, false, ui_renderer, overshield_amount)
+
+				self._has_overshield = false
+			end
+
+			if overshield_amount ~= self._overshield_amount then
+				local text_widget = self._widgets_by_name.bonus_toughness_text
+
+				if text_widget then
+					local text_widget_style = text_widget.style
+					local key = "text_1"
+					text_widget.dirty = true
+					self._overshield_amount = overshield_amount
+
+					if has_overshield then
+						self:_set_widget_visible(text_widget, true, ui_renderer)
+
+						text_widget_style[key].text_color = OVERSHIELDED_TOUGHNESS_COLOR
+						text_widget.content[key] = math.floor(overshield_amount)
+						text_widget.content.plus_sign = "+"
+
+						if overshield_amount < 100 then
+							text_widget_style[key].offset[1] = 75
+						else
+							text_widget_style[key].offset[1] = 82
+						end
+					else
+						self:_set_widget_visible(text_widget, false, ui_renderer)
+					end
+				end
+			end
 		end
 	end
 
@@ -625,6 +675,27 @@ HudElementPlayerPanelBase._set_dead = function (self, is_dead, show_as_dead, ui_
 		self:_set_widget_visible(widgets_by_name.toughness_ghost, is_alive, ui_renderer)
 		self:_set_widget_visible(widgets_by_name.toughness_bar_background, is_alive, ui_renderer)
 	end
+end
+
+HudElementPlayerPanelBase._set_overshielded = function (self, supported_features, is_overshielded, ui_renderer, overshield_amount)
+	local widget = self._widgets_by_name.toughness
+	local texture_style = widget.style.texture
+	local color = is_overshielded and OVERSHIELDED_TOUGHNESS_COLOR or DEFAULT_TOUGHNESS_COLOR
+	texture_style.color = color
+
+	if supported_features.toughness_text and overshield_amount then
+		local text_widget = self._widgets_by_name.bonus_toughness_text
+
+		if text_widget then
+			local text_widget_style = text_widget.style
+			local key = "text_1"
+			text_widget.content[key] = overshield_amount
+			text_widget_style[key].text_color = color
+			text_widget.dirty = true
+		end
+	end
+
+	widget.dirty = true
 end
 
 HudElementPlayerPanelBase._set_shadowing_portrait = function (self, should_shadow)

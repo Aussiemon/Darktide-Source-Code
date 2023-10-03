@@ -39,6 +39,7 @@ _system_require("door_control_panel", "door_control_panel_system")
 _system_require("event_synchronizer", "event_synchronizer_system")
 _system_require("fade", "fade_system")
 _system_require("first_person", "player_unit_first_person_extension", "player_husk_first_person_extension")
+_system_require("force_field", "force_field_system")
 _system_require("fx", "fx_system")
 _system_require("gadget", "gadget_system")
 _system_require("group", "group_system")
@@ -91,13 +92,14 @@ _system_require("side_mission", "side_mission_pickup_extension")
 _system_require("slot", "slot_system")
 _system_require("smart_tag", "smart_tag_system")
 _system_require("smart_targeting", "player_unit_smart_targeting_extension")
+_system_require("smoke_fog", "smoke_fog_system", "smoke_fog_extension", "smoke_fog_husk_extension")
 _system_require("specialization", "specialization_system")
 _system_require("spline_group", "spline_group_system")
 _system_require("spread", "player_unit_weapon_spread_extension")
 _system_require("suppression", "minion_suppression_extension", "minion_suppression_husk_extension", "player_suppression_extension")
 _system_require("scripted_scenario", "scripted_scenario_system")
 _system_require("trigger", "trigger_system")
-_system_require("toughness", "player_unit_toughness_extension", "player_husk_toughness_extension", "minion_toughness_extension", "minion_toughness_husk_extension")
+_system_require("toughness", "player_unit_toughness_extension", "player_husk_toughness_extension", "player_hub_toughness_extension", "minion_toughness_extension", "minion_toughness_husk_extension")
 _system_require("unit_data", "minion_unit_data_extension", "player_unit_data_extension", "player_husk_data_extension", "prop_unit_data_extension")
 _system_require("visual_loadout", "visual_loadout_system")
 _system_require("volume_event", "volume_event_system")
@@ -261,15 +263,27 @@ local systems = {
 	{
 		"buff_system",
 		"ExtensionSystemBase",
-		false,
 		true,
-		false,
+		true,
+		true,
 		true,
 		false,
 		{
 			"PlayerUnitBuffExtension",
 			"PlayerHuskBuffExtension",
 			"MinionBuffExtension"
+		}
+	},
+	{
+		"action_input_system",
+		"ExtensionSystemBase",
+		false,
+		true,
+		false,
+		true,
+		false,
+		{
+			"PlayerUnitActionInputExtension"
 		}
 	},
 	{
@@ -298,22 +312,10 @@ local systems = {
 		}
 	},
 	{
-		"action_input_system",
-		"ExtensionSystemBase",
-		false,
-		true,
-		false,
-		true,
-		false,
-		{
-			"PlayerUnitActionInputExtension"
-		}
-	},
-	{
 		"ledge_finder_system",
 		"ExtensionSystemBase",
 		false,
-		true,
+		false,
 		false,
 		true,
 		false,
@@ -372,7 +374,10 @@ local systems = {
 			"HuskHealthExtension",
 			"PropHealthExtension",
 			"PlayerUnitHealthExtension",
-			"PlayerHuskHealthExtension"
+			"PlayerHuskHealthExtension",
+			"PlayerHubHealthExtension",
+			"ForceFieldHealthExtension",
+			"ForceFieldHuskHealthExtension"
 		}
 	},
 	{
@@ -398,6 +403,7 @@ local systems = {
 		{
 			"PlayerUnitToughnessExtension",
 			"PlayerHuskToughnessExtension",
+			"PlayerHubToughnessExtension",
 			"MinionToughnessExtension",
 			"MinionToughnessHuskExtension"
 		}
@@ -722,6 +728,31 @@ local systems = {
 		false,
 		{
 			"ScannerDisplayExtension"
+		}
+	},
+	{
+		"force_field_system",
+		"ForceFieldSystem",
+		false,
+		true,
+		false,
+		true,
+		false,
+		{
+			"ForceFieldExtension"
+		}
+	},
+	{
+		"smoke_fog_system",
+		"SmokeFogSystem",
+		false,
+		true,
+		false,
+		true,
+		false,
+		{
+			"SmokeFogExtension",
+			"SmokeFogHuskExtension"
 		}
 	},
 	{

@@ -30,6 +30,7 @@ VideoView.init = function (self, settings, context)
 	self._hold_timer = 0
 	self._legend_active = 0
 	self._input_legend_element = nil
+	self._wait_for_video = 0
 
 	VideoView.super.init(self, Definitions, settings)
 end
@@ -52,18 +53,20 @@ VideoView._load_template = function (self, template)
 		template = VideoViewSettings.templates[template_name]
 	end
 
-	local video_name = template.video_name
-	local loop_video = template.loop_video or false
+	self._video_name = template.video_name
+	self._loop_video = template.loop_video or false
 	local sound_name = template.start_sound_name
 	local subtitles = template.subtitles
-
-	self:_setup_video(video_name, loop_video)
+	local post_video_action = template.post_video_action
+	local wwise_music_state = template.music
 
 	if sound_name then
 		self._current_sound_id = self:_play_sound(sound_name)
 	end
 
 	self._subtitles = subtitles
+	self._post_video_action = post_video_action
+	self._wwise_music_state = wwise_music_state
 	self._current_subtitle_index = 1
 end
 
@@ -117,7 +120,7 @@ VideoView.on_exit = function (self)
 	local template = VideoViewSettings.templates[template_name]
 	local stop_sound_name = template.stop_sound_name
 
-	if not template.stop_only_player_skip or self._player_skipped then
+	if not template.stop_only_player_skip or self._player_skipped or not self._widgets_by_name.video.content.video_completed then
 		if stop_sound_name then
 			self:_play_sound(stop_sound_name)
 		elseif self._current_sound_id then
@@ -141,6 +144,20 @@ VideoView.on_exit = function (self)
 		self._world_spawner:destroy()
 
 		self._world_spawner = nil
+	end
+
+	if self._post_video_action and self._widgets_by_name.video.content.video_completed then
+		local action = self._post_video_action
+
+		if action.action_type == "open_hub_view" then
+			local hub_view_context = {
+				hub_interaction = true
+			}
+
+			Managers.ui:open_view(action.view_name, nil, nil, nil, nil, hub_view_context)
+		else
+			ferror("Unsupported action type %q", action.action_type)
+		end
 	end
 end
 
@@ -184,9 +201,18 @@ VideoView._update_input = function (self)
 	end
 end
 
+local MAX_NUMBER_OF_LOOP = 3
+
 VideoView.update = function (self, dt, t, input_service)
 	if self._loading_packages then
 		self:_update_package_loading()
+	elseif self._wait_for_video and self._wait_for_video < MAX_NUMBER_OF_LOOP then
+		self._wait_for_video = self._wait_for_video + 1
+	elseif self._wait_for_video and MAX_NUMBER_OF_LOOP <= self._wait_for_video then
+		self:_setup_video(self._video_name, self._loop_video)
+
+		self._video_start_time = t
+		self._wait_for_video = nil
 	else
 		local context = self._context
 		local allow_skip_input = context.allow_skip_input
@@ -459,6 +485,10 @@ VideoView.draw = function (self, dt, t, input_service, layer)
 
 		UIRenderer.end_pass(ui_renderer)
 	end
+end
+
+VideoView.wwise_music_state = function (self)
+	return self._wwise_music_state
 end
 
 return VideoView

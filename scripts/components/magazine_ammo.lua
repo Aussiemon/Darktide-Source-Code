@@ -19,6 +19,18 @@ MagazineAmmo.editor_init = function (self, unit)
 	self:_update_ammo_representation(unit, true)
 end
 
+MagazineAmmo.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if rawget(_G, "LevelEditor") and not Unit.has_visibility_group(unit, top_bullet_visibility_group_name) then
+		success = false
+		error_message = error_message .. "\nCouldn't find visibility group '" .. top_bullet_visibility_group_name .. "'"
+	end
+
+	return success, error_message
+end
+
 MagazineAmmo.init = function (self, unit)
 	self._anim_speed = self:get_data(unit, "anim_speed")
 	self._use_simple_animation_length = self:get_data(unit, "use_simple_animation_length")

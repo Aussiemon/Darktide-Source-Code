@@ -9,7 +9,12 @@ MinionCustomization.editor_init = function (self, unit)
 	self._unit = unit
 	self._world = world
 	self._in_editor = in_editor
+	self._is_corpse = self:get_data(unit, "is_corpse")
 	self._attach_settings = self:_construct_attach_settings(unit, world, in_editor)
+end
+
+MinionCustomization.editor_validate = function (self, unit)
+	return true, ""
 end
 
 MinionCustomization.init = function (self, unit)
@@ -22,6 +27,7 @@ MinionCustomization.init = function (self, unit)
 	self._unit = unit
 	self._world = world
 	self._in_editor = in_editor
+	self._is_corpse = self:get_data(unit, "is_corpse")
 	self._attach_settings = self:_construct_attach_settings(unit, world, in_editor)
 
 	if not DEDICATED_SERVER then
@@ -102,6 +108,7 @@ MinionCustomization.spawn_items = function (self, items)
 	local item_definitions = attach_settings.item_definitions
 	local is_first_person = attach_settings.is_first_person
 	local in_editor = self._in_editor
+	local is_corpse = self._is_corpse
 
 	for i, item_name in pairs(items) do
 		if item_name ~= "" then
@@ -109,7 +116,7 @@ MinionCustomization.spawn_items = function (self, items)
 
 			if item_data then
 				if not is_first_person or item_data.show_in_1p then
-					local item_unit, attachment_units = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, unit)
+					local item_unit, attachment_units = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, unit, nil, nil, nil)
 
 					if item_unit then
 						Unit.set_data(unit, "attached_items", i, item_unit)
@@ -126,6 +133,18 @@ MinionCustomization.spawn_items = function (self, items)
 					VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_1", i), in_editor)
 					VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_2", i), in_editor)
 					VisualLoadoutCustomization.apply_material_override(item_unit, unit, false, self:get_data(unit, "attachment_material_override_3", i), in_editor)
+
+					if is_corpse then
+						local num_lights = Unit.num_lights(item_unit)
+
+						for jj = 1, num_lights do
+							local light = Unit.light(item_unit, jj)
+
+							Light.set_enabled(light, false)
+						end
+
+						Unit.set_vector4_for_materials(item_unit, "emissive_color_intensity", Color(0, 0, 0, 0), true)
+					end
 				end
 			else
 				Log.error("MinionCustomization", "Item definition for %s missing", item_name)
@@ -182,6 +201,12 @@ MinionCustomization.component_data = {
 		ui_type = "check_box",
 		value = false,
 		ui_name = "Is First Person",
+		category = "Settings"
+	},
+	is_corpse = {
+		ui_type = "check_box",
+		value = false,
+		ui_name = "Is Corpse",
 		category = "Settings"
 	},
 	attachment_items = {

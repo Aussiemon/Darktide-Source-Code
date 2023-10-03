@@ -25,6 +25,8 @@ InteractorExtension.init = function (self, extension_init_context, unit, extensi
 	self._player = extension_init_data.player
 	self._physics_world = extension_init_context.physics_world
 	self._input_extension = ScriptUnit.extension(unit, "input_system")
+	self._action_input_extension = ScriptUnit.extension(unit, "action_input_system")
+	self._weapon_extension = ScriptUnit.extension(unit, "weapon_system")
 	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
 	self._show_interaction_ui = false
 	self._show_counter_ui = false
@@ -207,6 +209,34 @@ InteractorExtension.fixed_update = function (self, unit, dt, t, fixed_frame, con
 	end
 end
 
+local ACTION_KINDS_TO_CONSUME = {
+	reload_shotgun = true,
+	reload_state = true
+}
+
+InteractorExtension._consume_conflicting_gamepad_inputs = function (self, t)
+	if not Managers.input:device_in_use("gamepad") and not DEDICATED_SERVER then
+		return
+	end
+
+	local action_input_extension = self._action_input_extension
+	local weapon_extension = self._weapon_extension
+	local peek_input = action_input_extension:peek_next_input("weapon_action")
+	local action_settings = weapon_extension:action_settings_from_action_input(peek_input)
+
+	if not action_settings then
+		return
+	end
+
+	local action_kind = action_settings.kind
+
+	if not ACTION_KINDS_TO_CONSUME[action_kind] then
+		return
+	end
+
+	action_input_extension:consume_next_input("weapon_action", t)
+end
+
 InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_target, state)
 	local input_extension = self._input_extension
 	local world = self._world
@@ -216,6 +246,8 @@ InteractorExtension._check_current_state = function (self, unit, dt, t, chosen_t
 		local interaction_button_pressed = input_extension:get("interact_pressed")
 
 		if interaction_button_pressed then
+			self:_consume_conflicting_gamepad_inputs(t)
+
 			local interaction_component = self._interaction_component
 			local interaction_type = interaction_component.type
 			local interaction = self:interaction()
@@ -721,15 +753,6 @@ InteractorExtension.hud_block_text = function (self)
 	local hud_block_text, hud_block_text_context = interaction:hud_block_text(self._unit, target_unit, actor_node_index)
 
 	return hud_block_text, hud_block_text_context
-end
-
-InteractorExtension.marker_offset = function (self)
-	local interaction_component = self._interaction_component
-	local target_unit = interaction_component.target_unit
-	local actor_node_index = interaction_component.target_actor_node_index
-	local interaction = self:interaction()
-
-	return interaction:marker_offset(target_unit, actor_node_index)
 end
 
 InteractorExtension.is_interacting = function (self)

@@ -52,7 +52,8 @@ function _template_settings_test(weapon_template)
 		local network_type = weapon_component_data.overheat_last_charge_at_t.network_type
 		local network_type_info = Network.type_info(network_type)
 		local min = network_type_info.min
-		local time_network_type_can_represent_backwards_in_time = math.abs(min * GameParameters.fixed_time_step)
+		local fixed_time_step = 1 / GameParameters.tick_rate
+		local time_network_type_can_represent_backwards_in_time = math.abs(min * fixed_time_step)
 		local vent_interval = overheat_configuration.vent_interval
 
 		if not vent_interval then
@@ -68,7 +69,7 @@ function _template_settings_test(weapon_template)
 		network_type = weapon_component_data.overheat_remove_at_t.network_type
 		network_type_info = Network.type_info(network_type)
 		local max = network_type_info.max
-		local time_network_type_can_represent_forwards_in_time = math.abs(max * GameParameters.fixed_time_step)
+		local time_network_type_can_represent_forwards_in_time = math.abs(max * fixed_time_step)
 
 		if time_network_type_can_represent_forwards_in_time < vent_interval then
 			return false, string.format("vent_interval is larger than what the current network_type (%q) can represent forwards in time (%.5f). Change what network_type \"overheat_remove_at_t\" to something that can represent it.", network_type, time_network_type_can_represent_forwards_in_time)
@@ -96,19 +97,19 @@ function _action_settings_test(weapon_template)
 		action_kind_tests(action_settings, weapon_template, action_name)
 
 		local start_input = action_settings.start_input
-		local priority = action_settings.priority
+		local action_priority = action_settings.action_priority
 
 		if start_input then
 			local previus_exist = not not start_inputs[start_input]
 			local start_input_does_not_have_priority = start_inputs_no_priority[start_input]
 
-			if priority then
-				local priority_key = start_input .. "_" .. priority
+			if action_priority then
+				local priority_key = start_input .. "_" .. action_priority
 				start_inputs_priority[priority_key] = action_name
 			end
 
 			start_inputs[start_input] = action_name
-			start_inputs_no_priority[start_input] = start_input_does_not_have_priority or not priority
+			start_inputs_no_priority[start_input] = start_input_does_not_have_priority or not action_priority
 		end
 
 		local s, m = _validate_hit_zone_priority(weapon_template, action_settings)
@@ -121,7 +122,8 @@ function _action_settings_test(weapon_template)
 
 		if stop_input then
 			local stop_input_config = action_inputs[stop_input]
-			local safe_stop_input_buffer_time = minimum_hold_time + GameParameters.fixed_time_step
+			local fixed_time_step = 1 / GameParameters.tick_rate
+			local safe_stop_input_buffer_time = minimum_hold_time + fixed_time_step
 			local action_input_sequence_total_time = _action_input_sequence_total_time(stop_input_config)
 		end
 	end
@@ -216,16 +218,42 @@ function _validate_chain_actions(weapon_template, action_settings)
 			chain_action_error_msg = chain_action_error_msg .. "key is not a string. "
 		end
 
-		local action_name = chain_action.action_name
+		local num_chain_actions = #chain_action
 
-		if action_name then
-			if not actions[action_name] then
+		if num_chain_actions == 0 then
+			local action_name = chain_action.action_name
+
+			if action_name then
+				if not actions[action_name] then
+					chain_action_success = false
+					chain_action_error_msg = chain_action_error_msg .. "action_name is not an action. "
+				end
+			else
 				chain_action_success = false
-				chain_action_error_msg = chain_action_error_msg .. "action_name is not an action. "
+				chain_action_error_msg = chain_action_error_msg .. "missing action_name. "
 			end
 		else
-			chain_action_success = false
-			chain_action_error_msg = chain_action_error_msg .. "missing action_name. "
+			for ii = 1, num_chain_actions do
+				local action = chain_action[ii]
+				local action_type = type(action)
+
+				if action_type == "table" then
+					local action_name = action.action_name
+
+					if action_name then
+						if not actions[action_name] then
+							chain_action_success = false
+							chain_action_error_msg = chain_action_error_msg .. "action_name is not an action. "
+						end
+					else
+						chain_action_success = false
+						chain_action_error_msg = chain_action_error_msg .. "missing action_name. "
+					end
+				else
+					chain_action_success = false
+					chain_action_error_msg = chain_action_error_msg .. "has indexed values that aren't chain action tables. "
+				end
+			end
 		end
 
 		local from_action_input = action_inputs[input] ~= nil
@@ -324,7 +352,7 @@ function _validate_running_action_state_to_action_input(weapon_template, action_
 
 			if not allowed_running_action_chain_events[running_action_event] then
 				running_action_chain_event_success = false
-				running_action_chain_event_error_msg = running_action_chain_event_error_msg .. string.format("%q is not a valid runing action chain event for action kind %q. ", running_action_event, action_kind)
+				running_action_chain_event_error_msg = running_action_chain_event_error_msg .. string.format("%q is not a valid running action chain event for action kind %q. ", running_action_event, action_kind)
 			end
 
 			local input_name = config.input_name

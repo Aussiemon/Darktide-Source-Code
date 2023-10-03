@@ -1,3 +1,4 @@
+local BallisticRaycast = require("scripts/extension_systems/weapon/actions/utilities/ballistic_raycast")
 local BallisticRaycastPostionFinderActionModule = class("BallisticRaycastPostionFinderActionModule")
 
 BallisticRaycastPostionFinderActionModule.init = function (self, physics_world, player_unit, component, action_settings)
@@ -18,7 +19,7 @@ end
 BallisticRaycastPostionFinderActionModule.fixed_update = function (self, dt, t)
 	local physics_world = self._physics_world
 	local collision_filter = "filter_player_character_ballistic_raycast"
-	local hit, hit_position, _, normal = self:_ballistic_raycast(physics_world, collision_filter)
+	local hit, hit_position, _, normal, _ = BallisticRaycast.cast(physics_world, collision_filter, self._first_person_component, nil, nil, nil, nil, nil)
 
 	if hit then
 		local up = Vector3.up()
@@ -44,35 +45,6 @@ BallisticRaycastPostionFinderActionModule.finish = function (self, reason, data,
 		local action_component = self._component
 		action_component.position = Vector3.zero()
 	end
-end
-
-BallisticRaycastPostionFinderActionModule._ballistic_raycast = function (self, physics_world, collision_filter)
-	local max_steps = 10
-	local max_time = 1.5
-	local speed = 15
-	local angle = 0
-	local gravity = Vector3(0, 0, -9.82)
-	local time_step = max_time / max_steps
-	local first_person_position = self._first_person_component.position
-	local first_person_rotation = self._first_person_component.rotation
-	local velocity = Quaternion.forward(Quaternion.multiply(first_person_rotation, Quaternion(Vector3.right(), angle))) * speed
-	local position = first_person_position
-
-	for ii = 1, max_steps do
-		local new_position = position + velocity * time_step
-		local delta = new_position - position
-		local direction, distance = Vector3.direction_length(delta)
-		local hit, hit_position, hit_distance, normal, hit_actor = PhysicsWorld.raycast(physics_world, position, direction, distance, "closest", "types", "both", "collision_filter", collision_filter)
-
-		if hit_position then
-			return hit, hit_position, hit_distance, normal, hit_actor
-		end
-
-		velocity = velocity + gravity * time_step
-		position = new_position
-	end
-
-	return false, position
 end
 
 return BallisticRaycastPostionFinderActionModule

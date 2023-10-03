@@ -30,7 +30,7 @@ templates.weapon_trait_bespoke_chainsword_p1_movement_speed_on_activated_hit = {
 		[proc_events.on_hit] = 1
 	},
 	proc_stat_buffs = {
-		[stat_buffs.movement_speed] = 1.5
+		[stat_buffs.movement_speed] = 0.5
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
 	check_proc_func = function (params, template_data, template_context)

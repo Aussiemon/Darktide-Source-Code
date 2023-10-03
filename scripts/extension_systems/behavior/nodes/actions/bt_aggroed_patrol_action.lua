@@ -762,6 +762,8 @@ BtAggroedPatrolAction._update_shooting_liquid_beam = function (self, unit, t, dt
 	end
 
 	if scratchpad.place_liquid_timing and end_position and scratchpad.place_liquid_timing < t then
+		local side_system = Managers.state.extension:system("side_system")
+		local side = side_system.side_by_unit[unit]
 		local liquid_paint_id_from_component = action_data.liquid_paint_id_from_component
 		local liquid_paint_id = liquid_paint_id_from_component and scratchpad.behavior_component[liquid_paint_id_from_component] or scratchpad.liquid_paint_id
 		local max_liquid_paint_distance = action_data.max_liquid_paint_distance
@@ -772,8 +774,9 @@ BtAggroedPatrolAction._update_shooting_liquid_beam = function (self, unit, t, dt
 		local liquid_paint_brush_size = action_data.liquid_paint_brush_size
 		local not_on_other_liquids = true
 		local source_unit = unit
+		local source_side = side and side:name()
 
-		LiquidArea.paint(liquid_paint_id, max_liquid_paint_distance, liquid_position, nav_world, liquid_area_template, allow_liquid_unit_creation, liquid_paint_brush_size, not_on_other_liquids, source_unit)
+		LiquidArea.paint(liquid_paint_id, max_liquid_paint_distance, liquid_position, nav_world, liquid_area_template, allow_liquid_unit_creation, liquid_paint_brush_size, not_on_other_liquids, source_unit, nil, source_side)
 
 		if action_data.push_minions_radius then
 			MinionAttack.push_friendly_minions(unit, scratchpad, action_data, t, end_position)

@@ -74,6 +74,24 @@ local weapon_charge_templates = {
 			lerp_basic = 0.02
 		}
 	},
+	psyker_throwing_knives = {
+		psyker_smite = true,
+		warp_charge_percent = 0.1
+	},
+	psyker_throwing_knives_homing = {
+		psyker_smite = true,
+		warp_charge_percent = 0.25
+	},
+	psyker_overcharge_stance_hit = {
+		warp_charge_percent = 0.02
+	},
+	psyker_overcharge_stance_kill = {
+		warp_charge_percent = 0.04
+	},
+	psyker_overcharge_stance_passive = {
+		use_charge = true,
+		warp_charge_percent = 0.00075
+	},
 	handgun_push_charge = {
 		warp_charge_percent = 0.1
 	},
@@ -164,8 +182,8 @@ local weapon_charge_templates = {
 	forcestaff_p3_m1_charge = {
 		charge_on_action_start = true,
 		charge_duration = {
-			lerp_perfect = 1.5,
-			lerp_basic = 3
+			lerp_perfect = 0.7,
+			lerp_basic = 1.4
 		},
 		warp_charge_percent = {
 			lerp_perfect = 0.1,
@@ -179,8 +197,8 @@ local weapon_charge_templates = {
 	forcestaff_p3_m1_chain_lightning = {
 		chain_lightning = true,
 		warp_charge_percent = {
-			lerp_perfect = 0.1,
-			lerp_basic = 0.2
+			lerp_perfect = 0.075,
+			lerp_basic = 0.15
 		}
 	},
 	forcestaff_p4_m1_projectile = {
@@ -229,6 +247,34 @@ local weapon_charge_templates = {
 	forcesword_p1_m1_push = {
 		use_charge = true,
 		warp_charge_percent = 0.08
+	},
+	chain_lightning_ability_spread = {
+		warp_charge_percent = 0.0075,
+		extra_warp_charge_percent = 0.18,
+		psyker_smite = true,
+		charge_duration = 0.1,
+		charge_on_action_start = true
+	},
+	chain_lightning_ability_activated = {
+		warp_charge_percent = 0.6,
+		extra_warp_charge_percent = 0.6,
+		psyker_smite = true,
+		charge_duration = 0.001,
+		charge_on_action_start = true
+	},
+	chain_lightning_charge_heavy = {
+		warp_charge_percent = 0.05,
+		charge_duration = 0.8,
+		psyker_smite = true,
+		extra_warp_charge_percent = 0.01,
+		charge_on_action_start = true
+	},
+	chain_lightning_attack_heavy = {
+		warp_charge_percent = 0.12,
+		start_warp_charge_percent = 0.05,
+		charge_duration = 0.5,
+		psyker_smite = true,
+		extra_warp_charge_percent = 0.01
 	}
 }
 

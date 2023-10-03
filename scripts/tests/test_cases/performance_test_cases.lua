@@ -173,5 +173,65 @@ PerformanceTestCases = {
 			Testify:make_request("deactivate_testify_camera")
 			TestifySnippets.send_telemetry_batch()
 		end)
+	end,
+	meat_grind_stress = function (case_settings)
+		Testify:run_case(function (dt, t)
+			local settings = cjson.decode(case_settings or "{}")
+			local num_iterations = settings.num_iterations or 10
+			local wait_time_in_hub = settings.wait_time_in_hub or 1
+			local wait_time_in_psychanium = settings.wait_time_in_psychanium or 1
+
+			TestifySnippets.skip_title_and_main_menu_and_create_character_if_none()
+			Testify:make_request("wait_for_in_hub")
+			Testify:make_request("fail_on_not_authenticated")
+
+			local training_grounds_view_name = "training_grounds_view"
+			local training_grounds_view_data = {
+				view_name = training_grounds_view_name
+			}
+			local system_view_name = "system_view"
+			local system_view_data = {
+				view_name = system_view_name
+			}
+
+			for i = 1, num_iterations do
+				Testify:make_request("open_view", training_grounds_view_data)
+				Testify:make_request("wait_for_view", training_grounds_view_name)
+
+				local meat_grinder_button_widget_name = "option_button_3"
+
+				Testify:make_request("trigger_widget_callback", meat_grinder_button_widget_name)
+				Testify:make_request("wait_for_view", "training_grounds_options_view")
+				TestifySnippets.wait(0.5)
+
+				local play_button_widget_name = "play_button"
+
+				Testify:make_request("trigger_widget_callback", play_button_widget_name)
+				Testify:make_request("wait_for_in_psychanium")
+				TestifySnippets.wait(wait_time_in_psychanium)
+
+				local memory_usage = Testify:make_request("memory_usage")
+
+				Log.info("Testify", string.format("In the Psychanium\nIteration %i - Memory: %s", i, table.tostring(memory_usage, 4)))
+				Testify:make_request("open_view", system_view_data)
+				Testify:make_request("wait_for_view", system_view_name)
+				TestifySnippets.wait(0.5)
+
+				local exit_psychanium_button_widget_name = "grid_content_pivot_widget_18"
+
+				Testify:make_request("trigger_widget_callback", exit_psychanium_button_widget_name)
+				TestifySnippets.wait(0.5)
+
+				local confirm_exit_psychanium_popup_widget_name = "popup_widget_1"
+
+				Testify:make_request("select_popup_option", confirm_exit_psychanium_popup_widget_name)
+				Testify:make_request("wait_for_in_hub")
+				TestifySnippets.wait(wait_time_in_hub)
+
+				local memory_usage = Testify:make_request("memory_usage")
+
+				Log.info("Testify", string.format("In the hub\nIteration %i - Memory: %s", i, table.tostring(memory_usage, 4)))
+			end
+		end)
 	end
 }

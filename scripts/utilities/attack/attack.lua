@@ -88,6 +88,10 @@ ARGS = {
 		name = "target_index"
 	},
 	{
+		default = 0,
+		name = "target_number"
+	},
+	{
 		name = "power_level",
 		default = min_power_level,
 		min = min_power_level,
@@ -140,6 +144,9 @@ ARGS = {
 	},
 	{
 		name = "wounds_shape"
+	},
+	{
+		name = "triggered_proc_events"
 	}
 }
 NUM_ARGS = #ARGS
@@ -152,7 +159,7 @@ end
 
 local TRAINING_GROUNDS_GAME_MODE_NAME = "training_grounds"
 
-function _execute(attacked_unit, damage_profile, target_index, power_level, charge_level, is_critical_strike, dropoff_scalar, attack_direction, instakill, hit_zone_name, hit_world_position, hit_actor, attacking_unit, attack_type, herding_template, damage_type, auto_completed_action, item, wounds_shape)
+function _execute(attacked_unit, damage_profile, target_index, target_number, power_level, charge_level, is_critical_strike, dropoff_scalar, attack_direction, instakill, hit_zone_name, hit_world_position, hit_actor, attacking_unit, attack_type, herding_template, damage_type, auto_completed_action, item, wounds_shape, triggered_proc_events_or_nil)
 	local was_alive_at_attack_start = HEALTH_ALIVE[attacked_unit]
 	attacking_unit = ALIVE[attacking_unit] and attacking_unit
 	local target_settings = DamageProfile.target_settings(damage_profile, target_index)
@@ -160,10 +167,10 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 	local unit_data_extension = ScriptUnit.has_extension(attacked_unit, "unit_data_system")
 	local target_breed_or_nil = unit_data_extension and unit_data_extension:breed()
 	local is_player_character = Breed.is_player(target_breed_or_nil)
-	local attacking_unit_data_extension = ScriptUnit.has_extension(attacking_unit, "unit_data_system")
+	local attacking_unit_owner_unit, apply_owner_buffs = AttackingUnitResolver.resolve(attacking_unit)
+	local attacking_unit_data_extension = ScriptUnit.has_extension(attacking_unit_owner_unit, "unit_data_system")
 	local attacker_breed_or_nil = attacking_unit_data_extension and attacking_unit_data_extension:breed()
-	local attacking_unit_owner_unit = AttackingUnitResolver.resolve(attacking_unit)
-	local attacker_buff_extension = ScriptUnit.has_extension(attacking_unit_owner_unit, "buff_system")
+	local attacker_buff_extension = ScriptUnit.has_extension(apply_owner_buffs and attacking_unit_owner_unit or attacking_unit, "buff_system")
 	local target_buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
 	local is_backstab = AttackPositioning.is_backstabbing(attacked_unit, attacking_unit, attack_type)
 
@@ -238,7 +245,8 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 				power_level_damage_multiplier = target_breed_or_nil.explosion_power_multiplier
 			end
 
-			calculated_damage, damage_efficiency = DamageCalculation.calculate(damage_profile, damage_type, target_settings, damage_profile_lerp_values, hit_zone_name, power_level * power_level_damage_multiplier, charge_level, target_breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, attacked_unit, auto_completed_action, current_stagger_impact)
+			local stagger_impact_bonus = nil
+			calculated_damage, damage_efficiency = DamageCalculation.calculate(damage_profile, damage_type, target_settings, damage_profile_lerp_values, hit_zone_name, power_level * power_level_damage_multiplier, charge_level, target_breed_or_nil, attacker_breed_or_nil, is_critical_strike, hit_weakspot, hit_shield, is_backstab, is_flanking, dropoff_scalar, attack_type, attacker_stat_buffs, target_stat_buffs, target_buff_extension, armor_penetrating, target_toughness_extension, armor_type, target_stagger_count, num_triggered_staggers, is_attacked_unit_suppressed, distance, attacked_unit, auto_completed_action, current_stagger_impact, stagger_impact_bonus)
 		end
 	end
 
@@ -260,14 +268,14 @@ function _execute(attacked_unit, damage_profile, target_index, power_level, char
 		target_weapon_template = WeaponTemplate.current_weapon_template(weapon_action_component)
 	end
 
-	attack_result, damage_dealt, damage_absorbed, damage, permanent_damage, one_hit_kill, actual_damage_dealt = _handle_attack(is_server, instakill, target_is_assisted, target_is_hogtied, attacked_unit, target_breed_or_nil, calculated_damage, attacking_unit, attacking_unit_owner_unit, hit_zone_name, damage_profile, attack_direction, hit_actor, attack_type, herding_template, is_critical_strike, hit_world_position, damage_type, target_weapon_template, unit_data_extension, wounds_shape)
+	attack_result, damage_dealt, damage_absorbed, damage, permanent_damage, one_hit_kill, actual_damage_dealt = _handle_attack(is_server, instakill, target_is_assisted, target_is_hogtied, attacked_unit, target_breed_or_nil, calculated_damage, attacking_unit, attacking_unit_owner_unit, hit_zone_name, damage_profile, attack_direction, hit_actor, attack_type, herding_template, is_critical_strike, hit_world_position, damage_type, target_weapon_template, unit_data_extension, wounds_shape, attacker_buff_extension)
 
 	if is_server then
 		stagger_result, stagger_type = HitReaction.apply(damage_profile, damage_profile_lerp_values, target_weapon_template, target_breed_or_nil, target_buff_extension, attack_result, attacked_unit, attacking_unit, attack_direction, hit_world_position, target_settings, power_level, charge_level, is_critical_strike, is_backstab, is_flanking, hit_weakspot, dropoff_scalar, attack_type, herding_template, hit_shield)
 	end
 
 	if was_alive_at_attack_start and target_breed_or_nil then
-		_handle_buffs(is_server, damage_profile, attacker_buff_extension, target_buff_extension, attacked_unit, damage_dealt, damage_absorbed, attack_result, stagger_result, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_unit_owner_unit, attack_direction, damage_efficiency, target_index, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position)
+		_handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_buff_extension, target_buff_extension, attacked_unit, damage_dealt, damage_absorbed, attack_result, stagger_result, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_unit_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position)
 
 		if is_server then
 			_handle_result(attacking_unit_owner_unit, attacked_unit, attack_result, attack_type, attacker_breed_or_nil, target_breed_or_nil, damage_dealt, damage_absorbed, damage_profile, damage_type, actual_damage_dealt)
@@ -334,7 +342,7 @@ function _has_armor_penetrating_buff(attacker_buff_extension, attack_type, is_we
 	return false
 end
 
-function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogtied, attacked_unit, target_breed_or_nil, calculated_damage, attacking_unit, attacking_unit_owner_unit, hit_zone_name, damage_profile, attack_direction, hit_actor, attack_type, herding_template_or_nil, is_critical_strike, hit_world_position_or_nil, damage_type, target_weapon_template, unit_data_extension, wounds_shape)
+function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogtied, attacked_unit, target_breed_or_nil, calculated_damage, attacking_unit, attacking_unit_owner_unit, hit_zone_name, damage_profile, attack_direction, hit_actor, attack_type, herding_template_or_nil, is_critical_strike, hit_world_position_or_nil, damage_type, target_weapon_template, unit_data_extension, wounds_shape, attacker_buff_extension)
 	local damage_dealt, actual_damage_dealt, result, damage_absorbed, damage, permanent_damage, one_hit_kill = nil
 	local past_blocking = true
 	local damage_through_block = nil
@@ -356,8 +364,8 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 		elseif target_is_player and is_server then
 			local t = Managers.time:time("gameplay")
 			local stamina_read_component = unit_data_extension:read_component("stamina")
-			local specialization = unit_data_extension:specialization()
-			local base_stamina_template = specialization.stamina
+			local archetype = unit_data_extension:archetype()
+			local base_stamina_template = archetype.stamina
 			local current_stamina, max_stamina = Stamina.current_and_max_value(attacked_unit, stamina_read_component, base_stamina_template)
 
 			Stamina.drain(attacked_unit, max_stamina, t)
@@ -385,9 +393,9 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 			damage_absorbed = 0
 			result = attack_results.dodged
 		else
-			local is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords = DamageTakenCalculation.get_calculation_parameters(attacked_unit, target_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor)
+			local is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacking_unit_stat_buffs = DamageTakenCalculation.get_calculation_parameters(attacked_unit, target_breed_or_nil, damage_profile, attacking_unit, attacking_unit_owner_unit, hit_actor, attacker_buff_extension)
 			local tougness_damage = nil
-			result, damage, permanent_damage, tougness_damage, damage_absorbed = DamageTakenCalculation.calculate_attack_result(calculated_damage, damage_profile, attack_type, attack_direction, instakill, is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacked_unit, damage_type)
+			result, damage, permanent_damage, tougness_damage, damage_absorbed = DamageTakenCalculation.calculate_attack_result(calculated_damage, damage_profile, attack_type, attack_direction, instakill, is_invulnerable, is_damage_allowed, health_setting, current_health_damage, current_permanent_damage, max_health, max_wounds, toughness_template, weapon_toughness_template, current_toughness_damage, movement_state, shield_setting, attacked_unit_stat_buffs, attacked_unit_keywords, attacked_unit, damage_type, attacking_unit_stat_buffs)
 			damage_dealt = damage + permanent_damage
 			one_hit_kill = result == attack_results.died and max_health <= damage_dealt and current_health_damage <= 0
 
@@ -397,8 +405,8 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 				if target_is_player then
 					local is_blockable = Block.attack_is_blockable(damage_profile, attacked_unit, target_weapon_template)
 					local stamina_read_component = unit_data_extension:read_component("stamina")
-					local specialization = unit_data_extension:specialization()
-					local base_stamina_template = specialization.stamina
+					local archetype = unit_data_extension:archetype()
+					local base_stamina_template = archetype.stamina
 					local current_stamina, max_stamina = Stamina.current_and_max_value(attacked_unit, stamina_read_component, base_stamina_template)
 
 					if is_blockable and current_stamina <= 0.5 * max_stamina then
@@ -418,12 +426,20 @@ function _handle_attack(is_server, instakill, target_is_assisted, target_is_hogt
 	return result, damage_dealt, damage_absorbed, damage, permanent_damage, one_hit_kill, actual_damage_dealt
 end
 
-function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil, target_buff_extension_or_nil, attacked_unit, damage, damage_absorbed, attack_result, stagger_result, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_owner_unit, attack_direction, damage_efficiency, target_index, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position_or_nil)
+function _already_procced(triggered_proc_events_or_nil, proc_event)
+	if not triggered_proc_events_or_nil then
+		return false
+	end
+
+	return triggered_proc_events_or_nil[proc_event]
+end
+
+function _handle_buffs(is_server, triggered_proc_events_or_nil, damage_profile, attacker_buff_extension_or_nil, target_buff_extension_or_nil, attacked_unit, damage, damage_absorbed, attack_result, stagger_result, hit_zone_name, is_critical_strike, is_backstab, hit_weakspot, one_hit_kill, attack_type, attacking_unit, attacking_owner_unit, attack_direction, damage_efficiency, target_index, target_number, attacker_breed_or_nil, target_breed_or_nil, damage_type, charge_level, hit_world_position_or_nil)
 	if not attacker_buff_extension_or_nil and not target_buff_extension_or_nil then
 		return
 	end
 
-	local attacker_unit_data_extension = ScriptUnit.has_extension(attacking_unit, "unit_data_system")
+	local attacker_unit_data_extension = ScriptUnit.has_extension(attacking_owner_unit, "unit_data_system")
 	local attacker_is_player = Breed.is_player(attacker_breed_or_nil)
 	local alternative_fire = false
 
@@ -436,7 +452,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 	local hit_world_position_box_or_nil = hit_world_position_or_nil and Vector3Box(hit_world_position_or_nil)
 	local should_proc = not damage_type or not damage_types_no_proc[damage_type]
 
-	if should_proc and attacker_buff_extension_or_nil and not damage_profile.skip_on_hit_proc then
+	if should_proc and attacker_buff_extension_or_nil and not damage_profile.skip_on_hit_proc and not _already_procced(triggered_proc_events_or_nil, proc_events.on_hit) then
 		local attacker_param_table = attacker_buff_extension_or_nil:request_proc_event_param_table()
 
 		if attacker_param_table then
@@ -462,6 +478,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 			attacker_param_table.sticky_attack = damage_profile.sticky_attack
 			attacker_param_table.tags = target_breed_or_nil and target_breed_or_nil.tags
 			attacker_param_table.target_index = target_index
+			attacker_param_table.target_number = target_number
 			attacker_param_table.weapon_special = damage_profile.weapon_special
 			attacker_param_table.charge_level = charge_level
 			attacker_param_table.hit_zone_name = hit_zone_name
@@ -470,7 +487,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 		end
 	end
 
-	if attack_result == attack_results.died and attacker_buff_extension_or_nil then
+	if attack_result == attack_results.died and attacker_buff_extension_or_nil and not _already_procced(triggered_proc_events_or_nil, proc_events.on_kill) then
 		local attacker_param_table = attacker_buff_extension_or_nil:request_proc_event_param_table()
 
 		if attacker_param_table then
@@ -496,6 +513,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 			attacker_param_table.sticky_attack = damage_profile.sticky_attack
 			attacker_param_table.tags = target_breed_or_nil and target_breed_or_nil.tags
 			attacker_param_table.target_index = target_index
+			attacker_param_table.target_number = target_number
 			attacker_param_table.weapon_special = damage_profile.weapon_special
 			attacker_param_table.charge_level = charge_level
 
@@ -503,7 +521,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 		end
 	end
 
-	if damage > 0 and attacker_buff_extension_or_nil then
+	if damage > 0 and attacker_buff_extension_or_nil and not _already_procced(triggered_proc_events_or_nil, proc_events.on_damage_dealt) then
 		local attacker_param_table = attacker_buff_extension_or_nil:request_proc_event_param_table()
 
 		if attacker_param_table then
@@ -528,6 +546,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 			attacker_param_table.sticky_attack = damage_profile.sticky_attack
 			attacker_param_table.tags = target_breed_or_nil and target_breed_or_nil.tags
 			attacker_param_table.target_index = target_index
+			attacker_param_table.target_number = target_number
 			attacker_param_table.weapon_special = damage_profile.weapon_special
 			attacker_param_table.charge_level = charge_level
 
@@ -535,7 +554,7 @@ function _handle_buffs(is_server, damage_profile, attacker_buff_extension_or_nil
 		end
 	end
 
-	if is_server and should_proc then
+	if is_server and should_proc and not _already_procced(triggered_proc_events_or_nil, proc_events.on_player_hit_received) then
 		local target_is_player = Breed.is_player(target_breed_or_nil)
 
 		if target_buff_extension_or_nil and target_is_player then
@@ -769,7 +788,7 @@ function _trigger_backstab_interfacing(attacking_unit, attack_type)
 		_backstab_gear_wwise_event_options.attack_type = attack_type
 		local optional_position = nil
 
-		attacking_unit_fx_extension:trigger_exclusive_gear_wwise_event("play_trigger_backstab", _backstab_gear_wwise_event_options, optional_position, except_sender)
+		attacking_unit_fx_extension:trigger_exclusive_gear_wwise_event("backstab_interfacing", _backstab_gear_wwise_event_options, optional_position, except_sender)
 	end
 end
 
@@ -786,7 +805,7 @@ function _trigger_flank_interfacing(attacking_unit, attack_type)
 		_flank_gear_wwise_event_options.attack_type = attack_type
 		local optional_position = nil
 
-		attacking_unit_fx_extension:trigger_exclusive_gear_wwise_event("play_trigger_flank", _flank_gear_wwise_event_options, optional_position, except_sender)
+		attacking_unit_fx_extension:trigger_exclusive_gear_wwise_event("flank_interfacing", _flank_gear_wwise_event_options, optional_position, except_sender)
 	end
 end
 

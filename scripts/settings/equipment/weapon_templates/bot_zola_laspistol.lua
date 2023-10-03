@@ -83,7 +83,7 @@ local weapon_template = {
 				}
 			}
 		},
-		special_action_quick_throw = {
+		special_action_push = {
 			buffer_time = 0.2,
 			input_sequence = {
 				{
@@ -99,17 +99,17 @@ table.add_missing(weapon_template.action_inputs, BaseTemplateSettings.action_inp
 
 weapon_template.action_input_hierarchy = {
 	wield = "stay",
-	special_action_quick_throw = "stay",
 	reload = "stay",
 	shoot_pressed = "stay",
+	special_action_push = "stay",
 	zoom = {
-		special_action_quick_throw = "stay",
-		wield = "base",
 		zoom_shoot = "stay",
+		wield = "base",
 		zoom_release = "previous",
 		grenade_ability = "base",
 		reload = "base",
-		combat_ability = "base"
+		combat_ability = "base",
+		special_action_push = "stay"
 	}
 }
 
@@ -117,7 +117,6 @@ table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.a
 
 weapon_template.actions = {
 	action_unwield = {
-		continue_sprinting = true,
 		allowed_during_sprint = true,
 		start_input = "wield",
 		uninterruptible = true,
@@ -126,12 +125,11 @@ weapon_template.actions = {
 		allowed_chain_actions = {}
 	},
 	action_wield = {
+		wield_reload_anim_event = "equip_reload",
 		allowed_during_sprint = true,
 		wield_anim_event = "equip",
-		wield_reload_anim_event = "equip_reload",
-		kind = "ranged_wield",
-		continue_sprinting = true,
 		uninterruptible = true,
+		kind = "ranged_wield",
 		total_time = 1,
 		conditional_state_to_action_input = {
 			started_reload = {
@@ -143,7 +141,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -219,7 +222,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -235,8 +243,8 @@ weapon_template.actions = {
 				action_name = "action_zoom",
 				chain_time = 0.2
 			},
-			special_action_quick_throw = {
-				action_name = "action_quick_throw_grenade",
+			special_action_push = {
+				action_name = "action_normal_push",
 				chain_time = 0.2
 			}
 		}
@@ -294,7 +302,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -310,14 +323,14 @@ weapon_template.actions = {
 				action_name = "action_unzoom",
 				chain_time = 0.225
 			},
-			special_action_quick_throw = {
-				action_name = "action_quick_throw_grenade",
+			special_action_push = {
+				action_name = "action_normal_push",
 				chain_time = 0.2
 			}
 		}
 	},
 	action_zoom = {
-		crosshair_type = "none",
+		crosshair_type = "ironsight",
 		start_input = "zoom",
 		kind = "aim",
 		total_time = 0.3,
@@ -359,7 +372,7 @@ weapon_template.actions = {
 		}
 	},
 	action_unzoom = {
-		crosshair_type = "none",
+		crosshair_type = "ironsight",
 		start_input = "zoom_release",
 		kind = "unaim",
 		total_time = 0.2,
@@ -368,7 +381,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			reload = {
 				action_name = "action_reload"
@@ -379,8 +397,8 @@ weapon_template.actions = {
 			zoom = {
 				action_name = "action_zoom"
 			},
-			special_action_quick_throw = {
-				action_name = "action_quick_throw_grenade"
+			special_action_push = {
+				action_name = "action_normal_push"
 			}
 		}
 	},
@@ -429,7 +447,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -442,81 +465,23 @@ weapon_template.actions = {
 				action_name = "action_zoom",
 				chain_time = 2
 			},
-			special_action_quick_throw = {
-				action_name = "action_quick_throw_grenade",
+			special_action_push = {
+				action_name = "action_normal_push",
 				chain_time = 2
 			}
 		}
 	},
-	action_quick_throw_grenade = {
-		use_ability_charge = true,
-		kind = "throw_grenade",
-		start_input = "special_action_quick_throw",
-		spawn_node = "fx_spawn_lefthand",
-		weapon_handling_template = "time_scale_1_5",
-		throw_type = "quick_throw",
-		ability_keyword = "grenade",
-		crosshair_type = "none",
-		spawn_at_time = 0.4,
-		allowed_during_sprint = true,
-		ability_type = "grenade_ability",
-		priority = 1,
-		recoil_template = "default_shotgun_killshot",
-		uninterruptible = true,
-		anim_event = "weapon_special",
-		total_time = 0.7,
-		fire_configuration = {
-			skip_aiming = true
-		},
-		allowed_chain_actions = {
-			wield = {
-				action_name = "action_unwield",
-				chain_time = 0.6
-			},
-			reload = {
-				action_name = "action_reload",
-				chain_time = 0.6
-			},
-			special_action_quick_throw = {
-				action_name = "action_quick_throw_grenade",
-				chain_time = 0.65
-			},
-			shoot_pressed = {
-				action_name = "action_shoot_hip",
-				chain_time = 0.5
-			},
-			zoom_shoot = {
-				action_name = "action_shoot_zoomed",
-				chain_time = 0.5
-			},
-			zoom_release = {
-				action_name = "action_unzoom",
-				chain_time = 0.7
-			},
-			zoom = {
-				action_name = "action_zoom",
-				chain_time = 0.65
-			}
-		},
-		anim_end_event_condition_func = function (unit, data, end_reason)
-			return false
-		end
-	},
-	action_psyker_push = {
-		push_radius = 10,
-		start_input = "special_action_quick_throw",
+	action_normal_push = {
+		push_radius = 2.5,
+		start_input = "special_action_push",
 		block_duration = 0.5,
 		kind = "push",
-		priority = 0,
-		charge_template = "handgun_push_charge",
-		ability_keyword = "psyker",
-		crosshair_type = "dot",
-		ability_type = "grenade_ability",
-		activation_cooldown = 2.3,
+		crosshair_type = "ironsight",
+		activation_cooldown = 0.1,
 		activate_special = true,
-		damage_time = 0.4,
+		damage_time = 0.1,
 		uninterruptible = true,
-		anim_event = "weapon_special_psyker",
+		anim_event = "weapon_special",
 		total_time = 1,
 		action_movement_curve = {
 			{
@@ -544,21 +509,21 @@ weapon_template.actions = {
 			reload = {
 				action_name = "action_reload"
 			},
-			special_action_quick_throw = {
-				action_name = "action_quick_throw_grenade",
+			special_action_push = {
+				action_name = "action_normal_push",
 				chain_time = 0.8
 			},
 			shoot_pressed = {
 				action_name = "action_shoot_hip",
-				chain_time = 0.5
+				chain_time = 0.25
 			},
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
-				chain_time = 0.5
+				chain_time = 0.25
 			},
 			zoom_release = {
 				action_name = "action_unzoom",
-				chain_time = 0.9
+				chain_time = 0.6
 			},
 			zoom = {
 				action_name = "action_zoom",
@@ -567,14 +532,10 @@ weapon_template.actions = {
 		},
 		inner_push_rad = math.pi * 0.04,
 		outer_push_rad = math.pi * 0.1,
-		inner_damage_profile = DamageProfileTemplates.push_psyker,
+		inner_damage_profile = DamageProfileTemplates.ninja_push,
 		inner_damage_type = damage_types.physical,
-		outer_damage_profile = DamageProfileTemplates.push_psyker_outer,
-		outer_damage_type = damage_types.physical,
-		fx = {
-			fx_source = "fx_left_hand",
-			vfx_effect = "content/fx/particles/weapons/swords/forcesword/psyker_push"
-		}
+		outer_damage_profile = DamageProfileTemplates.light_push,
+		outer_damage_type = damage_types.physical
 	},
 	action_inspect = {
 		skip_3p_anims = false,
@@ -582,7 +543,7 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "none",
+		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
 		total_time = math.huge
@@ -709,7 +670,7 @@ weapon_template.fx_sources = {
 weapon_template.crosshair_type = "assault"
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
-	crosshair_type = "none",
+	crosshair_type = "ironsight",
 	sway_template = "default_laspistol_killshot",
 	recoil_template = "default_laspistol_killshot",
 	stop_anim_event = "to_unaim_reflex",

@@ -108,6 +108,10 @@ local template = {
 			{
 				"start_terror_event",
 				start_event_name = "event_stop_scan_loop_hab_b"
+			},
+			{
+				"freeze_specials_pacing",
+				enabled = false
 			}
 		},
 		event_stop_trickle = {
@@ -289,7 +293,7 @@ local template = {
 				limit_spawners = 3,
 				max_breed_amount = 1,
 				spawner_group = "spawner_habs_close",
-				points = 6,
+				points = 8,
 				breed_tags = {
 					{
 						"melee",
@@ -538,6 +542,18 @@ local template = {
 				duration = 23
 			},
 			{
+				"try_inject_special_minion",
+				spawner_group = "spawner_habs_end",
+				max_breed_amount = 1,
+				points = 12,
+				breed_tags = {
+					{
+						"special",
+						"disabler"
+					}
+				}
+			},
+			{
 				"continue_when",
 				duration = 25,
 				condition = function ()
@@ -573,7 +589,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_habs_end_east",
 				limit_spawners = 3,
-				points = 8,
+				points = 14,
 				breed_tags = {
 					{
 						"melee",
@@ -587,7 +603,7 @@ local template = {
 			},
 			{
 				"try_inject_special_minion",
-				spawner_group = "spawner_habs_end",
+				spawner_group = "spawner_habs_end_east",
 				max_breed_amount = 1,
 				points = 12,
 				breed_tags = {
@@ -643,7 +659,7 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_habs_end_south",
 				limit_spawners = 3,
-				points = 8,
+				points = 14,
 				breed_tags = {
 					{
 						"close",
@@ -676,6 +692,18 @@ local template = {
 			{
 				"delay",
 				duration = 23
+			},
+			{
+				"try_inject_special_minion",
+				spawner_group = "spawner_habs_end",
+				max_breed_amount = 1,
+				points = 12,
+				breed_tags = {
+					{
+						"special",
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",
@@ -777,11 +805,24 @@ local template = {
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_habs_end_west",
 				limit_spawners = 3,
-				points = 26,
+				points = 12,
 				breed_tags = {
 					{
 						"melee",
 						"horde"
+					}
+				}
+			},
+			{
+				"spawn_by_points",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
+				spawner_group = "spawner_habs_end_west",
+				limit_spawners = 3,
+				points = 14,
+				breed_tags = {
+					{
+						"melee",
+						"elite"
 					}
 				}
 			},
@@ -810,6 +851,18 @@ local template = {
 			{
 				"delay",
 				duration = 23
+			},
+			{
+				"try_inject_special_minion",
+				spawner_group = "spawner_habs_end",
+				max_breed_amount = 1,
+				points = 12,
+				breed_tags = {
+					{
+						"special",
+						"disabler"
+					}
+				}
 			},
 			{
 				"continue_when",

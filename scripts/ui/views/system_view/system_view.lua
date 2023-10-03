@@ -52,7 +52,7 @@ SystemView._setup_input_legend = function (self)
 		local legend_input = legend_inputs[i]
 		local on_pressed_callback = legend_input.on_pressed_callback and callback(self, legend_input.on_pressed_callback)
 
-		self._input_legend_element:add_entry(legend_input.display_name, legend_input.input_action, legend_input.visibility_function, on_pressed_callback, legend_input.alignment)
+		self._input_legend_element:add_entry(legend_input.display_name, legend_input.input_action, legend_input.visibility_function, on_pressed_callback, legend_input.alignment, nil, nil, legend_input.extra_input_actions)
 	end
 end
 

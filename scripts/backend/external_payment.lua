@@ -47,25 +47,33 @@ end
 
 local function get_platform_token()
 	if is_xbox_live() then
-		local async_block, error_code = XUser.get_xbs_token_async(Managers.account:user_id())
+		local user_id = Managers.account:user_id()
 
-		if error_code then
-			return Promise.rejected({
-				message = string.format("get_xbs_token_async returned error_code=0x%x", error_code)
-			})
-		end
-
-		return Managers.xasync:wrap(async_block, XUser.release_async_block):next(function (async_block)
-			local token, error_code = XUser.get_xbs_token_async_result(async_block)
-
-			if token then
-				return token
-			end
+		if user_id then
+			local async_block, error_code = XUser.get_xbs_token_async(user_id)
 
 			if error_code then
-				return nil, string.format("get_xbs_token_async_result returned error_code=0x%x", error_code)
+				return Promise.rejected({
+					message = string.format("get_xbs_token_async returned error_code=0x%x", error_code)
+				})
 			end
-		end):catch(_handle_error)
+
+			return Managers.xasync:wrap(async_block, XUser.release_async_block):next(function (async_block)
+				local token, error_code = XUser.get_xbs_token_async_result(async_block)
+
+				if token then
+					return token
+				end
+
+				if error_code then
+					return nil, string.format("get_xbs_token_async_result returned error_code=0x%x", error_code)
+				end
+			end):catch(_handle_error)
+		else
+			return Promise.rejected({
+				message = string.format("get_xbs_token_async rejecte with invalid user id")
+			})
+		end
 	else
 		return Promise.resolved(nil)
 	end
@@ -395,12 +403,13 @@ ExternalPayment._decorate_option = function (self, option, platform_entitlements
 
 	option.make_purchase = function (self)
 		if self.pending_txn_promise then
-			return Promise:rejected({
+			return Promise.rejected({
 				message = "Called init transaction when a transaction was already pending"
 			})
 		end
 
-		self.pending_txn_promise = Promise:new()
+		local pending_txn_promise = Promise:new()
+		self.pending_txn_promise = pending_txn_promise
 
 		Managers.backend.interfaces.external_payment:init_txn(self.id):next(function (order_id)
 			if is_steam() then
@@ -409,7 +418,7 @@ ExternalPayment._decorate_option = function (self, option, platform_entitlements
 				local success = Managers.account:verify_gdk_store_account()
 
 				if not success then
-					return Promise:rejected({
+					return Promise.rejected({
 						message = "Could not verify store profile match"
 					})
 				end
@@ -447,14 +456,26 @@ ExternalPayment._decorate_option = function (self, option, platform_entitlements
 								return data
 							end)
 						end
+					end):catch(function (error)
+						Log.warning("ExternalPayment", "Failed to open purchase ui with error: %s", table.tostring(error, 3))
+						self.pending_txn_promise:resolve(FAILED_TXN)
+
+						self.pending_txn_promise = nil
 					end)
 				else
 					Log.error("ExternalPayment", "Attempted to make purchase on xbox but microsoft product id was missing")
+					self.pending_txn_promise:resolve(FAILED_TXN)
+
+					self.pending_txn_promise = nil
 				end
 			end
+		end):catch(function (_)
+			self.pending_txn_promise:resolve(FAILED_TXN)
+
+			self.pending_txn_promise = nil
 		end)
 
-		return self.pending_txn_promise
+		return pending_txn_promise
 	end
 end
 

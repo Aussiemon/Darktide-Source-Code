@@ -1,8 +1,8 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
+local ImpactFxHelper = require("scripts/utilities/impact_fx_helper")
 local armor_types = ArmorSettings.types
 local hit_types = SurfaceMaterialSettings.hit_types
-local surface_types = SurfaceMaterialSettings.surface_types
 local blood_ball = {
 	"content/decals/blood_ball/blood_ball"
 }
@@ -373,24 +373,49 @@ local resistant = table.clone(unarmored)
 local berserker = table.clone(unarmored)
 local prop_armor = table.clone(armored)
 local player = nil
+local surface_fx = {}
 local default_surface_fx = {
-	sfx = {
-		{
-			group = "surface_material",
-			append_husk_to_event_name = true,
-			event = "wwise/events/weapon/play_bullet_hits_thumper_bounce",
-			normal_rotation = true
-		}
-	},
-	vfx = {
-		{
-			normal_rotation = true,
-			effects = {
-				"content/fx/particles/impacts/weapons/autogun/autogun_impact_wall"
+	[hit_types.stop] = {
+		sfx = {
+			{
+				group = "surface_material",
+				append_husk_to_event_name = true,
+				event = "wwise/events/weapon/play_bullet_hits_thumper_bounce",
+				normal_rotation = true
+			}
+		},
+		vfx = {
+			{
+				normal_rotation = true,
+				effects = {
+					"content/fx/particles/impacts/weapons/autogun/autogun_impact_wall"
+				}
 			}
 		}
-	}
+	},
+	[hit_types.penetration_entry] = {
+		sfx = {
+			{
+				group = "surface_material",
+				append_husk_to_event_name = true,
+				event = "wwise/events/weapon/play_bullet_hits_thumper_bounce",
+				normal_rotation = true
+			}
+		},
+		vfx = {
+			{
+				normal_rotation = true,
+				effects = {
+					"content/fx/particles/impacts/weapons/autogun/autogun_impact_wall"
+				}
+			}
+		}
+	},
+	[hit_types.penetration_exit] = nil
 }
+
+ImpactFxHelper.create_missing_surface_fx(surface_fx, default_surface_fx)
+
 local surface_decal = {}
 
 return {
@@ -404,10 +429,6 @@ return {
 		[armor_types.unarmored] = unarmored,
 		[armor_types.prop_armor] = prop_armor
 	},
-	surface = {
-		[hit_types.stop] = default_surface_fx,
-		[hit_types.penetration_entry] = default_surface_fx,
-		[hit_types.penetration_exit] = nil
-	},
+	surface = surface_fx,
 	surface_decal = surface_decal
 }

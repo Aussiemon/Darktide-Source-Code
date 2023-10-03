@@ -29,9 +29,11 @@ PlayerUnitMoodExtension.init = function (self, extension_init_context, unit, ext
 	self._combat_ability_action_read_component = unit_data_extension:read_component("combat_ability_action")
 	self._sprint_character_state_read_component = unit_data_extension:read_component("sprint_character_state")
 	self._combat_ability_read_component = unit_data_extension:read_component("combat_ability")
+	self._first_person_component = unit_data_extension:read_component("first_person")
 	self._health_extension = ScriptUnit.has_extension(unit, "health_system")
 	self._toughness_extension = ScriptUnit.extension(unit, "toughness_system")
 	self._suppression_extension = ScriptUnit.extension(unit, "suppression_system")
+	self._force_field_system = Managers.state.extension:system("force_field_system")
 	local moods_data = Script.new_map(num_moods)
 
 	for mood_type, _ in pairs(mood_types) do
@@ -101,7 +103,7 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	local player = self._player
 	local unit = self._unit
 	local buff_extension = self._buff_extension
-	local base_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
+	local base_warp_charge_template = WarpCharge.archetype_warp_charge_template(player)
 	local weapon_warp_charge_template = WarpCharge.weapon_warp_charge_template(player.player_unit)
 	local base_low_threshold = base_warp_charge_template.low_threshold
 	local low_threshold_modifier = weapon_warp_charge_template.low_threshold_modifier or 1
@@ -118,20 +120,31 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	local warped_high_to_critical = warped_high_threshold < current_warp_percentage
 	local warped_critical = warped_critical_threshold < current_warp_percentage
 	local num_wounds = self._health_extension:num_wounds()
-	local last_wound = num_wounds == 1
+	local max_wounds = self._health_extension:max_wounds()
+	local last_wound = num_wounds == 1 and max_wounds > 1
 	local archetype_name = self._player:archetype_name()
 	local is_aiming_lunge = PlayerUnitStatus.is_aiming_lunge(self._combat_ability_action_read_component)
-	local is_in_veteran_ranger_stance = buff_extension:has_keyword(buff_keywords.veteran_ranger_combat_ability)
-	local is_in_stealth = buff_extension:has_keyword(buff_keywords.invisible)
+	local veteran_combat_ability_stance_active = buff_extension:has_keyword(buff_keywords.veteran_combat_ability_stance)
+	local ogryn_combat_ability_stance_active = buff_extension:has_keyword(buff_keywords.ogryn_combat_ability_stance)
+	local is_in_stealth = archetype_name == "zealot" and buff_extension:has_keyword(buff_keywords.invisible)
+	local is_in_veteran_stealth = archetype_name == "veteran" and buff_extension:has_keyword(buff_keywords.invisible)
+	local is_in_veteran_stealth_and_stance = is_in_veteran_stealth and veteran_combat_ability_stance_active
+	local is_in_psyker_force_field, _, force_field_extension = self._force_field_system:is_object_inside_force_field(self._first_person_component.position, 0.1, true)
+	local is_in_psyker_force_field_sphere = is_in_psyker_force_field and force_field_extension:is_sphere_shield()
+
+	if is_in_veteran_stealth_and_stance then
+		is_in_veteran_stealth = false
+		veteran_combat_ability_stance_active = false
+	end
+
+	local psyker_combat_ability_shout_active, ogryn_combat_ability_shout_active = nil
 	local combat_ability_active = self._combat_ability_read_component.active
-	local is_in_psyker_biomancer_combat_ability = nil
 
 	if combat_ability_active then
-		local specialization_extension = ScriptUnit.extension(unit, "specialization_system")
-		local specialization_name = specialization_extension:get_specialization_name()
-
-		if archetype_name == "psyker" and (specialization_name == "none" or specialization_name == "psyker_2") then
-			is_in_psyker_biomancer_combat_ability = true
+		if archetype_name == "psyker" then
+			psyker_combat_ability_shout_active = true
+		elseif archetype_name == "ogryn" then
+			ogryn_combat_ability_shout_active = true
 		end
 	end
 
@@ -190,21 +203,33 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	end
 
 	if is_aiming_lunge and archetype_name == "zealot" then
-		self:_add_mood(t, mood_types.zealot_maniac_combat_ability)
+		self:_add_mood(t, mood_types.zealot_combat_ability_dash)
 	elseif not is_aiming_lunge or archetype_name ~= "zealot" then
-		self:_remove_mood(t, mood_types.zealot_maniac_combat_ability)
+		self:_remove_mood(t, mood_types.zealot_combat_ability_dash)
 	end
 
 	if is_aiming_lunge and archetype_name == "ogryn" then
-		self:_add_mood(t, mood_types.ogryn_bonebreaker_combat_ability)
+		self:_add_mood(t, mood_types.ogryn_combat_ability_charge)
 	elseif not is_aiming_lunge or archetype_name ~= "ogryn" then
-		self:_remove_mood(t, mood_types.ogryn_bonebreaker_combat_ability)
+		self:_remove_mood(t, mood_types.ogryn_combat_ability_charge)
 	end
 
-	if is_in_veteran_ranger_stance then
-		self:_add_mood(t, mood_types.veteran_ranger_combat_ability)
-	elseif not is_in_veteran_ranger_stance then
-		self:_remove_mood(t, mood_types.veteran_ranger_combat_ability)
+	if ogryn_combat_ability_shout_active then
+		self:_add_mood(t, mood_types.ogryn_combat_ability_shout)
+	elseif not ogryn_combat_ability_shout_active then
+		self:_remove_mood(t, mood_types.ogryn_combat_ability_shout)
+	end
+
+	if ogryn_combat_ability_stance_active then
+		self:_add_mood(t, mood_types.ogryn_combat_ability_stance)
+	elseif not ogryn_combat_ability_stance_active then
+		self:_remove_mood(t, mood_types.ogryn_combat_ability_stance)
+	end
+
+	if veteran_combat_ability_stance_active then
+		self:_add_mood(t, mood_types.veteran_combat_ability_stance)
+	elseif not veteran_combat_ability_stance_active then
+		self:_remove_mood(t, mood_types.veteran_combat_ability_stance)
 	end
 
 	if is_in_stealth then
@@ -213,10 +238,22 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 		self:_remove_mood(t, mood_types.stealth)
 	end
 
-	if is_in_psyker_biomancer_combat_ability then
-		self:_add_mood(t, mood_types.psyker_biomancer_combat_ability)
-	elseif not is_in_psyker_biomancer_combat_ability then
-		self:_remove_mood(t, mood_types.psyker_biomancer_combat_ability)
+	if is_in_veteran_stealth then
+		self:_add_mood(t, mood_types.veteran_stealth)
+	elseif not is_in_stealth then
+		self:_remove_mood(t, mood_types.veteran_stealth)
+	end
+
+	if is_in_veteran_stealth_and_stance then
+		self:_add_mood(t, mood_types.veteran_stealth_and_stance)
+	elseif not is_in_veteran_stealth_and_stance then
+		self:_remove_mood(t, mood_types.veteran_stealth_and_stance)
+	end
+
+	if psyker_combat_ability_shout_active then
+		self:_add_mood(t, mood_types.psyker_combat_ability_shout)
+	elseif not psyker_combat_ability_shout_active then
+		self:_remove_mood(t, mood_types.psyker_combat_ability_shout)
 	end
 
 	if warped then
@@ -241,6 +278,12 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 		self:_add_mood(t, mood_types.warped_critical)
 	elseif not warped_critical then
 		self:_remove_mood(t, mood_types.warped_critical)
+	end
+
+	if is_in_psyker_force_field_sphere then
+		self:_add_mood(t, mood_types.psyker_force_field_sphere)
+	elseif not warped_critical then
+		self:_remove_mood(t, mood_types.psyker_force_field_sphere)
 	end
 end
 

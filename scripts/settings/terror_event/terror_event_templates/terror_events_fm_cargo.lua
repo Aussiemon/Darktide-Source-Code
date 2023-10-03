@@ -22,6 +22,12 @@ local template = {
 			1,
 			"event_fortification_d",
 			1
+		},
+		fm_cargo_fortification_monsters = {
+			"event_fortification_spawn_cs",
+			1,
+			"event_fortification_spawn_po",
+			1
 		}
 	},
 	events = {
@@ -85,6 +91,27 @@ local template = {
 					"specials",
 					"monsters"
 				}
+			}
+		},
+		event_set_specials_pacing_spawner_groups = {
+			{
+				"set_specials_pacing_spawner_groups",
+				spawner_groups = {
+					"spawner_fortification_cargo_south_a",
+					"spawner_fortification_cargo_south_b",
+					"spawner_fortification_cargo_north_a",
+					"spawner_fortification_cargo_north_b"
+				}
+			}
+		},
+		event_reset_specials_pacing_spawner_groups = {
+			{
+				"reset_specials_pacing_spawner_groups"
+			}
+		},
+		event_stop_trickle = {
+			{
+				"stop_terror_trickle"
 			}
 		},
 		event_hacking_cargo_a = {
@@ -447,26 +474,13 @@ local template = {
 			{
 				"spawn_by_points",
 				passive = true,
-				limit_spawners = 1,
-				max_breed_amount = 1,
+				limit_spawners = 3,
+				max_breed_amount = 3,
 				spawner_group = "spawner_fortification_guard_elite_a",
-				points = 6,
+				points = 22,
 				breed_tags = {
 					{
 						"elite"
-					}
-				}
-			},
-			{
-				"spawn_by_points",
-				passive = true,
-				limit_spawners = 2,
-				max_breed_amount = 2,
-				spawner_group = "spawner_fortification_guard_a",
-				points = 3,
-				breed_tags = {
-					{
-						"roamer"
 					}
 				}
 			},
@@ -479,26 +493,13 @@ local template = {
 			{
 				"spawn_by_points",
 				passive = true,
-				limit_spawners = 1,
-				max_breed_amount = 1,
+				limit_spawners = 3,
+				max_breed_amount = 3,
 				spawner_group = "spawner_fortification_guard_elite_b",
-				points = 6,
+				points = 22,
 				breed_tags = {
 					{
 						"elite"
-					}
-				}
-			},
-			{
-				"spawn_by_points",
-				passive = true,
-				limit_spawners = 2,
-				max_breed_amount = 2,
-				spawner_group = "spawner_fortification_guard_b",
-				points = 3,
-				breed_tags = {
-					{
-						"roamer"
 					}
 				}
 			},
@@ -511,26 +512,13 @@ local template = {
 			{
 				"spawn_by_points",
 				passive = true,
-				limit_spawners = 1,
-				max_breed_amount = 1,
+				limit_spawners = 3,
+				max_breed_amount = 3,
 				spawner_group = "spawner_fortification_guard_elite_c",
-				points = 6,
+				points = 22,
 				breed_tags = {
 					{
 						"elite"
-					}
-				}
-			},
-			{
-				"spawn_by_points",
-				passive = true,
-				limit_spawners = 2,
-				max_breed_amount = 2,
-				spawner_group = "spawner_fortification_guard_c",
-				points = 3,
-				breed_tags = {
-					{
-						"roamer"
 					}
 				}
 			},
@@ -543,26 +531,13 @@ local template = {
 			{
 				"spawn_by_points",
 				passive = true,
-				limit_spawners = 1,
-				max_breed_amount = 1,
+				limit_spawners = 3,
+				max_breed_amount = 3,
 				spawner_group = "spawner_fortification_guard_elite_d",
-				points = 6,
+				points = 22,
 				breed_tags = {
 					{
 						"elite"
-					}
-				}
-			},
-			{
-				"spawn_by_points",
-				passive = true,
-				limit_spawners = 2,
-				max_breed_amount = 2,
-				spawner_group = "spawner_fortification_guard_d",
-				points = 3,
-				breed_tags = {
-					{
-						"roamer"
 					}
 				}
 			},
@@ -622,35 +597,116 @@ local template = {
 				condition = function ()
 					return TerrorEventQueries.num_aggroed_minions_in_level() < 2
 				end
-			},
-			{
-				"flow_event",
-				flow_event_name = "event_fortification_final_completed"
 			}
 		},
 		event_fortification_elite_a = {
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_fortification_elite_a",
-				max_breed_amount = 3,
-				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
-				points = 26,
+				limit_spawners = 4,
+				proximity_spawners = true,
+				spawner_group = "spawner_fortification_cargo_hatches",
+				points = 16,
 				breed_tags = {
 					{
-						"elite"
+						"horde"
 					}
 				}
 			},
 			{
+				"delay",
+				duration = 10
+			},
+			{
+				"spawn_by_points",
+				spawner_group = "spawner_fortification_elite_a",
+				points = 10,
+				breed_tags = {
+					{
+						"melee",
+						"roamer"
+					}
+				}
+			},
+			{
+				"delay",
+				duration = 20
+			},
+			{
 				"continue_when",
-				duration = 300,
+				duration = 15,
 				condition = function ()
-					return TerrorEventQueries.num_aggroed_minions_in_level() < 2
+					return TerrorEventQueries.num_alive_minions() < 5
+				end
+			},
+			{
+				"delay",
+				duration = 10
+			},
+			{
+				"flow_event",
+				flow_event_name = "event_fortification_final_wave"
+			}
+		},
+		event_fortification_spawn_cs = {
+			{
+				"spawn_by_breed_name",
+				breed_amount = 1,
+				breed_name = "chaos_spawn",
+				spawner_group = "spawner_fortification_monster_cs"
+			},
+			{
+				"play_3d_sound_from_spawners",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm_monster_01",
+				spawner_group = "spawner_fortification_monster_cs"
+			},
+			{
+				"delay",
+				duration = 2
+			},
+			{
+				"flow_event",
+				flow_event_name = "event_fortification_spawned_cs"
+			},
+			{
+				"continue_when",
+				condition = function ()
+					return TerrorEventQueries.num_alive_minions() == 0
 				end
 			},
 			{
 				"flow_event",
-				flow_event_name = "event_fortification_final_completed"
+				flow_event_name = "event_fortification_monster_dead"
+			}
+		},
+		event_fortification_spawn_po = {
+			{
+				"spawn_by_breed_name",
+				breed_amount = 1,
+				breed_name = "chaos_plague_ogryn",
+				spawner_group = "spawner_fortification_monster_po"
+			},
+			{
+				"play_3d_sound_from_spawners",
+				sound_event_name = "wwise/events/minions/play_terror_event_alarm_monster_01",
+				spawner_group = "spawner_fortification_monster_cs"
+			},
+			{
+				"delay",
+				duration = 2
+			},
+			{
+				"flow_event",
+				flow_event_name = "event_fortification_spawned_po"
+			},
+			{
+				"continue_when",
+				condition = function ()
+					return TerrorEventQueries.num_alive_minions() == 0
+				end
+			},
+			{
+				"flow_event",
+				flow_event_name = "event_fortification_monster_dead"
 			}
 		},
 		event_fortification_a = {
@@ -662,7 +718,7 @@ local template = {
 				"spawn_by_points",
 				sound_event_name = "wwise/events/minions/play_terror_event_alarm",
 				spawner_group = "spawner_fortification_cargo_south_a",
-				limit_spawners = 3,
+				limit_spawners = 2,
 				points = 8,
 				breed_tags = {
 					{
@@ -678,7 +734,7 @@ local template = {
 			{
 				"spawn_by_points",
 				spawner_group = "spawner_fortification_cargo_south_a",
-				limit_spawners = 3,
+				limit_spawners = 2,
 				points = 8,
 				breed_tags = {
 					{
@@ -693,13 +749,13 @@ local template = {
 			},
 			{
 				"spawn_by_points",
-				spawner_group = "spawner_fortification_cargo_south_a",
-				limit_spawners = 3,
-				points = 8,
+				limit_spawners = 4,
+				proximity_spawners = true,
+				spawner_group = "spawner_fortification_cargo_hatches",
+				points = 15,
 				breed_tags = {
 					{
-						"melee",
-						"roamer"
+						"horde"
 					}
 				}
 			},
@@ -748,8 +804,8 @@ local template = {
 				duration = 5
 			},
 			{
-				"start_random_terror_event",
-				start_event_name = "fm_cargo_fortification_wave_1"
+				"flow_event",
+				flow_event_name = "event_fortification_wave_dead"
 			}
 		},
 		event_fortification_b = {
@@ -798,6 +854,18 @@ local template = {
 				duration = 4
 			},
 			{
+				"spawn_by_points",
+				limit_spawners = 4,
+				proximity_spawners = true,
+				spawner_group = "spawner_fortification_cargo_hatches",
+				points = 15,
+				breed_tags = {
+					{
+						"horde"
+					}
+				}
+			},
+			{
 				"try_inject_special_minion",
 				spawner_group = "spawner_fortification_cargo_sniper_2",
 				max_breed_amount = 1,
@@ -827,8 +895,8 @@ local template = {
 				duration = 5
 			},
 			{
-				"start_random_terror_event",
-				start_event_name = "fm_cargo_fortification_wave_1"
+				"flow_event",
+				flow_event_name = "event_fortification_wave_dead"
 			}
 		},
 		event_fortification_c = {
@@ -877,6 +945,18 @@ local template = {
 				duration = 4
 			},
 			{
+				"spawn_by_points",
+				limit_spawners = 4,
+				proximity_spawners = true,
+				spawner_group = "spawner_fortification_cargo_hatches",
+				points = 15,
+				breed_tags = {
+					{
+						"horde"
+					}
+				}
+			},
+			{
 				"try_inject_special_minion",
 				spawner_group = "spawner_fortification_cargo_sniper_2",
 				max_breed_amount = 1,
@@ -905,8 +985,8 @@ local template = {
 				duration = 5
 			},
 			{
-				"start_random_terror_event",
-				start_event_name = "fm_cargo_fortification_wave_1"
+				"flow_event",
+				flow_event_name = "event_fortification_wave_dead"
 			}
 		},
 		event_fortification_d = {
@@ -942,6 +1022,18 @@ local template = {
 				duration = 4
 			},
 			{
+				"spawn_by_points",
+				limit_spawners = 4,
+				proximity_spawners = true,
+				spawner_group = "spawner_fortification_cargo_hatches",
+				points = 15,
+				breed_tags = {
+					{
+						"horde"
+					}
+				}
+			},
+			{
 				"try_inject_special_minion",
 				spawner_group = "spawner_fortification_cargo_special_1",
 				max_breed_amount = 1,
@@ -970,8 +1062,21 @@ local template = {
 				duration = 5
 			},
 			{
-				"start_random_terror_event",
-				start_event_name = "fm_cargo_fortification_wave_1"
+				"flow_event",
+				flow_event_name = "event_fortification_wave_dead"
+			}
+		},
+		event_fortification_final_timer = {
+			{
+				"continue_when",
+				duration = 30,
+				condition = function ()
+					return TerrorEventQueries.num_aggroed_minions_in_level() < 7
+				end
+			},
+			{
+				"flow_event",
+				flow_event_name = "event_fortification_spawn_final"
 			}
 		}
 	}

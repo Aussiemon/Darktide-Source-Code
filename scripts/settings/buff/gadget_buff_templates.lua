@@ -536,10 +536,10 @@ templates.gadget_toughness_increase_on_revive = {
 
 		unit_buff_extension:add_internally_controlled_buff("gadget_toughness_buff", t)
 
-		local revived_unit = params.revived_unit
-		local revived_unit_buff_extension = ScriptUnit.extension(revived_unit, "buff_system")
+		local target_unit = params.target_unit
+		local target_unit_buff_extension = ScriptUnit.extension(target_unit, "buff_system")
 
-		revived_unit_buff_extension:add_internally_controlled_buff("gadget_toughness_buff", t)
+		target_unit_buff_extension:add_internally_controlled_buff("gadget_toughness_buff", t)
 	end,
 	localization_info = {
 		proc_buff_name = "gadget_toughness_buff"

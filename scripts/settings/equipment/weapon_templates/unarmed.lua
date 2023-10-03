@@ -81,6 +81,7 @@ local weapon_template = {
 	},
 	uses_ammunition = false,
 	uses_overheat = false,
+	crosshair_type = "ironsight",
 	sprint_ready_up_time = 0.1,
 	max_first_person_anim_movement_speed = 5.8,
 	fx_sources = {},

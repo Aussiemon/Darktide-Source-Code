@@ -16,6 +16,10 @@ SmartTagTarget.editor_init = function (self, unit)
 	self:enable(unit)
 end
 
+SmartTagTarget.editor_validate = function (self, unit)
+	return true, ""
+end
+
 SmartTagTarget.enable = function (self, unit)
 	return
 end

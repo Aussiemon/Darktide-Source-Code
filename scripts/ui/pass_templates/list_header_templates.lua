@@ -48,7 +48,10 @@ ListHeaderPassTemplates.list_header = function (header_width, height, use_is_foc
 		header_width,
 		height
 	}
-	header_font_style.disabled_color = Color.ui_chalk_grey(255, true)
+	header_font_style.default_color = Color.terminal_text_body(255, true)
+	header_font_style.text_color = Color.terminal_text_body(255, true)
+	header_font_style.hover_color = Color.terminal_text_header_selected(255, true)
+	header_font_style.disabled_color = Color.terminal_text_body_dark(255, true)
 	local passes = {
 		{
 			style_id = "hotspot",
@@ -89,7 +92,7 @@ ListHeaderPassTemplates.list_header = function (header_width, height, use_is_foc
 			style_id = "background_selected",
 			value = "content/ui/materials/buttons/background_selected_faded",
 			style = {
-				color = Color.ui_terminal(0, true),
+				color = Color.terminal_corner_hover(0, true),
 				offset = {
 					0,
 					0,
@@ -111,7 +114,7 @@ ListHeaderPassTemplates.list_header = function (header_width, height, use_is_foc
 			value = "content/ui/materials/buttons/background_selected_edge",
 			style = {
 				hdr = true,
-				color = Color.ui_terminal(255, true),
+				color = Color.terminal_corner_hover(255, true),
 				offset = {
 					0,
 					0,

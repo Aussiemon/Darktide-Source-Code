@@ -4,6 +4,7 @@ local ChunkLodManager = class("ChunkLodManager")
 
 ChunkLodManager.init = function (self, world, mission, local_player)
 	self._local_player = local_player
+	self._level_unit = nil
 	self._world = world
 	self._physics_world = World.physics_world(world)
 	self._raycast_interval = 2
@@ -23,6 +24,14 @@ ChunkLodManager.init = function (self, world, mission, local_player)
 	self._safe_raycast_cb = callback(self, "_async_raycast_result_cb")
 	self._raycast_object = Managers.state.game_mode:create_safe_raycast_object("all", "types", "statics", "collision_filter", "filter_player_mover")
 	self._chunk_units = {}
+end
+
+ChunkLodManager.player = function (self)
+	return self._local_player
+end
+
+ChunkLodManager.set_level_unit = function (self, unit)
+	self._level_unit = unit
 end
 
 ChunkLodManager.register_unit = function (self, unit, callback_function)
@@ -82,6 +91,10 @@ ChunkLodManager._try_update_level = function (self, hit_unit, force_show_all, is
 	end
 end
 
+ChunkLodManager.reset_timer = function (self)
+	self._raycast_timer = Managers.time:time("main")
+end
+
 ChunkLodManager._do_level_check = function (self, force_show_all, t)
 	local cinematic_manager = Managers.state.cinematic
 	local cinematic_camera, is_testify_camera = cinematic_manager:active_camera()
@@ -90,6 +103,8 @@ ChunkLodManager._do_level_check = function (self, force_show_all, t)
 
 	if not is_using_cinematic_levels and cinematic_camera ~= nil and not is_testify_camera then
 		self:_try_update_level(cinematic_camera, force_show_all, is_using_cinematic_levels)
+	elseif self._level_unit then
+		self:_try_update_level(self._level_unit, force_show_all, is_using_cinematic_levels)
 	else
 		self:_detect_level_unit(force_show_all, is_using_cinematic_levels)
 	end

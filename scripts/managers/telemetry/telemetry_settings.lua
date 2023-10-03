@@ -47,7 +47,8 @@ local settings = {
 		"debug_view",
 		"splash_view",
 		"cutscene_view",
-		"main_menu_background_view"
+		"main_menu_background_view",
+		"mission_board_view"
 	}
 }
 

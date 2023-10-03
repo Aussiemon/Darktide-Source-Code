@@ -434,10 +434,10 @@ end
 
 local _value_to_string_array, _table_tostring_array = nil
 
-function _value_to_string_array(v, depth, max_depth, skip_private)
+function _value_to_string_array(v, depth, max_depth, skip_private, sort_keys)
 	if type(v) == "table" then
 		if depth <= max_depth then
-			return _table_tostring_array(v, depth + 1, max_depth, skip_private)
+			return _table_tostring_array(v, depth + 1, max_depth, skip_private, sort_keys)
 		else
 			return {
 				"(rec-limit)"
@@ -456,7 +456,7 @@ function _value_to_string_array(v, depth, max_depth, skip_private)
 	end
 end
 
-function _table_tostring_array(t, depth, max_depth, skip_private)
+function _table_tostring_array(t, depth, max_depth, skip_private, sort_keys)
 	local str = {
 		"{\n"
 	}
@@ -467,15 +467,27 @@ function _table_tostring_array(t, depth, max_depth, skip_private)
 	for i = 1, len do
 		str[#str + 1] = tabs
 
-		table.append(str, _value_to_string_array(t[i], depth, max_depth, skip_private))
+		table.append(str, _value_to_string_array(t[i], depth, max_depth, skip_private, sort_keys))
 
 		str[#str + 1] = ",\n"
 	end
 
-	for key, value in pairs(t) do
-		local is_number = type(key) == "number"
+	local string_key_count = 0
+	local string_keys = {}
 
-		if (is_number or not skip_private or key:sub(1, 1) ~= "_") and (not is_number or key < 1 or len < key) then
+	for key, value in pairs(t) do
+		local key_type = type(key)
+		local is_string = key_type == "string"
+		local is_number = key_type == "number"
+
+		if is_string and skip_private and key:sub(1, 1) == "_" then
+			-- Nothing
+		elseif is_number and key > 0 and key <= len then
+			-- Nothing
+		elseif is_string then
+			string_keys[string_key_count + 1] = key
+			string_key_count = string_key_count + 1
+		else
 			local key_str = nil
 
 			if is_number then
@@ -488,10 +500,26 @@ function _table_tostring_array(t, depth, max_depth, skip_private)
 			str[#str + 1] = key_str
 			str[#str + 1] = " = "
 
-			table.append(str, _value_to_string_array(value, depth, max_depth, skip_private))
+			table.append(str, _value_to_string_array(value, depth, max_depth, skip_private, sort_keys))
 
 			str[#str + 1] = ",\n"
 		end
+	end
+
+	if sort_keys then
+		table.sort(string_keys)
+	end
+
+	for i = 1, string_key_count do
+		local key_str = string_keys[i]
+		local value = t[key_str]
+		str[#str + 1] = tabs
+		str[#str + 1] = key_str
+		str[#str + 1] = " = "
+
+		table.append(str, _value_to_string_array(value, depth, max_depth, skip_private, sort_keys))
+
+		str[#str + 1] = ",\n"
 	end
 
 	str[#str + 1] = last_tabs
@@ -500,8 +528,8 @@ function _table_tostring_array(t, depth, max_depth, skip_private)
 	return str
 end
 
-table.tostring = function (t, max_depth, skip_private)
-	return table.concat(_table_tostring_array(t, 1, max_depth or 1, skip_private))
+table.tostring = function (t, max_depth, skip_private, sort_keys)
+	return table.concat(_table_tostring_array(t, 1, max_depth or 1, skip_private, sort_keys ~= false))
 end
 
 local _buffer = {}

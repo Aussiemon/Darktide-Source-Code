@@ -338,8 +338,11 @@ local function _achievement_foldout_pass_template_init(widget, widget_content, w
 		arrow_style.angle = math.degrees_to_radians(unfolded and 90 or -90)
 
 		Managers.ui:play_2d_sound(unfolded and arrow_style.unfold_sound or arrow_style.fold_sound)
-		parent:select_grid_widget(widget)
 		parent:force_update_list_size()
+
+		if parent._grid then
+			parent._grid:clear_scroll_progress()
+		end
 	end
 
 	widget_content.hotspot.pressed_callback = function ()
@@ -1186,11 +1189,10 @@ achievements_view_blueprints.normal_achievement = {
 	pass_template_function = function (parent, config)
 		local achievement_types = AchievementUITypes
 		local achievement = config.achievement
+		local is_completed = config.completed
 		local pass_template = _get_achievement_common_pass_templates(config.is_summary)
 
-		if not config.completed then
-			table.append(pass_template, _in_progress_overlay_pass_template)
-
+		if not is_completed then
 			local achievement_type = achievement.type
 
 			if achievement_type == achievement_types.increasing_stat then
@@ -1198,6 +1200,8 @@ achievements_view_blueprints.normal_achievement = {
 			elseif achievement_type == achievement_types.time_trial then
 				table.append(pass_template, _achievement_time_trial_template)
 			end
+		else
+			table.append(pass_template, _in_progress_overlay_pass_template)
 		end
 
 		if config.reward_item then
@@ -1259,12 +1263,12 @@ achievements_view_blueprints.foldout_achievement = {
 
 		table.append(pass_template, _achievement_foldout_pass_template)
 
-		if not config.completed then
-			table.append(pass_template, _in_progress_overlay_pass_template)
-
+		if not is_completed then
 			if achievement_type == achievement_types.increasing_stat then
 				table.append(pass_template, _achievement_progress_bar_template)
 			end
+		else
+			table.append(pass_template, _in_progress_overlay_pass_template)
 		end
 
 		if achievement_type == achievement_types.meta then

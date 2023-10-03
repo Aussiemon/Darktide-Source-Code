@@ -1,3 +1,4 @@
+local Action = require("scripts/utilities/weapon/action")
 local Attack = require("scripts/utilities/attack/attack")
 local AttackIntensity = require("scripts/utilities/attack_intensity")
 local AttackIntensitySettings = require("scripts/settings/attack_intensity/attack_intensity_settings")
@@ -260,6 +261,18 @@ MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit,
 	local hit_scan_template = shoot_template.hit_scan_template
 	local range = hit_scan_template.range
 	local collision_filter = shoot_template.collision_filter
+
+	if shoot_template.bot_power_level_modifier then
+		local player_unit_spawn_manager = Managers.state.player_unit_spawn
+		local target_unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
+		local target_breed_or_nil = unit_data_extension and target_unit_data_extension:breed()
+		local is_player_character = Breed.is_player(target_breed_or_nil)
+
+		if is_player_character and not player_unit_spawn_manager:owner(target_unit):is_human_controlled() then
+			power_level = power_level * shoot_template.bot_power_level_modifier
+		end
+	end
+
 	local hits = HitScan.raycast(physics_world, from_position, spread_direction, range, nil, collision_filter)
 	local is_server = true
 	local end_position = nil
@@ -267,7 +280,8 @@ MinionAttack.shoot_hit_scan = function (world, physics_world, unit, target_unit,
 	if should_hit then
 		end_position = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil)
 	elseif hits then
-		end_position = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level * 0.175, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil)
+		local diff_toughness_broken_grace_power_multiplier = Managers.state.difficulty:get_table_entry_by_challenge(AttackIntensitySettings.toughness_broken_grace_power_multiplier)
+		end_position = HitScan.process_hits(is_server, world, physics_world, unit, shoot_template, hits, from_position, spread_direction, power_level * diff_toughness_broken_grace_power_multiplier, charge_level, IMPACT_FX_DATA, range, nil, nil, nil, nil, nil, nil)
 	end
 
 	end_position = end_position or from_position + spread_direction * range
@@ -439,11 +453,22 @@ local function _handle_shoot_dodge(unit, scratchpad, t, action_data, fx_system)
 		end
 
 		if not scratchpad.target_dodged_too_early and not scratchpad.scope_reflection_timing then
-			local is_dodging = Dodge.is_dodging(target_unit, attack_types.ranged)
+			local is_dodging, dodge_type = Dodge.is_dodging(target_unit, attack_types.ranged)
 
 			if is_dodging and not scratchpad.dodge_position then
 				local aim_pos = scratchpad.current_aim_position:unbox()
 				scratchpad.dodge_position = Vector3Box(aim_pos)
+
+				if not scratchpad.successful_dodge then
+					local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+					local breed = unit_data_extension:breed()
+
+					if not scratchpad.successful_dodge then
+						Dodge.sucessful_dodge(target_unit, unit, attack_types.melee, dodge_type, breed)
+
+						scratchpad.successful_dodge = true
+					end
+				end
 			end
 		end
 	end
@@ -504,6 +529,8 @@ MinionAttack.update_shooting = function (unit, scratchpad, t, action_data)
 			scratchpad.dodge_position = nil
 			scratchpad.triggered_dodge_tell_sfx = nil
 			scratchpad.target_dodged_too_early = nil
+			scratchpad.successful_dodge = nil
+			scratchpad.scope_reflection_timing = nil
 
 			return true, true
 		else
@@ -551,6 +578,9 @@ MinionAttack.shoot = function (unit, scratchpad, action_data)
 
 	if action_data.reset_dodge_check_after_each_shot then
 		scratchpad.dodge_position = nil
+		scratchpad.successful_dodge = nil
+		scratchpad.target_dodged_too_early = nil
+		scratchpad.scope_reflection_timing = nil
 
 		_set_shoot_dodge_window(unit, scratchpad, target_unit, action_data.dodge_window)
 	end
@@ -800,10 +830,11 @@ MinionAttack.sweep = function (unit, breed, sweep_node, scratchpad, blackboard, 
 				end
 			end
 
-			if not hit and is_dodging then
+			if not hit and is_dodging and not scratchpad.successful_dodge then
 				Dodge.sucessful_dodge(hit_unit, unit, attack_types.melee, dodge_type, breed)
 
 				sweep_hit_units_cache[hit_unit] = true
+				scratchpad.successful_dodge = true
 			end
 		end
 	end
@@ -940,6 +971,16 @@ MinionAttack.melee_broadphase_extents = function (unit, action_data)
 	return from_position, broadphase_radius
 end
 
+local MELEE_DOGPILE_POWER_LEVEL_MODIFIER = {
+	1,
+	1,
+	0.9,
+	0.85,
+	0.7,
+	0.65,
+	0.5
+}
+
 function _melee_hit(unit, breed, scratchpad, blackboard, target_unit, hit_position, action_data, override_damage_profile_or_nil, override_damage_type_or_nil, offtarget_hit_or_nil)
 	local side_system = Managers.state.extension:system("side_system")
 	local is_ally = side_system:is_ally(unit, target_unit)
@@ -993,12 +1034,35 @@ function _melee_hit(unit, breed, scratchpad, blackboard, target_unit, hit_positi
 		power_level = power_level * action_data.bot_power_level_modifier
 	end
 
+	if is_player_character then
+		local slot_extension = ScriptUnit.extension(target_unit, "slot_system")
+		local num_occupied_slots = slot_extension.num_occupied_slots
+
+		if num_occupied_slots > 0 then
+			local dogpile_power_level_modifier = MELEE_DOGPILE_POWER_LEVEL_MODIFIER[math.min(num_occupied_slots, #MELEE_DOGPILE_POWER_LEVEL_MODIFIER)]
+			power_level = power_level * dogpile_power_level_modifier
+		end
+	end
+
 	local damage_type = override_damage_type_or_nil or action_data.damage_type
 	local damage, result, damage_efficiency = Attack.execute(target_unit, damage_profile, "power_level", power_level, "attacking_unit", unit, "hit_world_position", hit_position, "attack_direction", attack_direction, "attack_type", attack_type, "damage_type", damage_type, "hit_zone_name", action_data.hit_zone_name)
 
 	ImpactEffect.play(target_unit, nil, damage, damage_type, nil, result, hit_position, nil, attack_direction, unit, nil, nil, nil, damage_efficiency, damage_profile)
 
 	if result == attack_results.blocked and not action_data.ignore_blocked and not damage_profile.unblockable then
+		if is_player_character then
+			local weapon_action_component = unit_data_extension:read_component("weapon_action")
+			local weapon_template = weapon_action_component and WeaponTemplate.current_weapon_template(weapon_action_component)
+
+			if weapon_template then
+				local _, action_setting = Action.current_action(weapon_action_component, weapon_template)
+
+				if action_setting and action_setting.ignore_setting_blocked_on_minions then
+					return result
+				end
+			end
+		end
+
 		local blocked_component = Blackboard.write_component(blackboard, "blocked")
 		blocked_component.is_blocked = true
 	end
@@ -1079,8 +1143,10 @@ function _melee_with_weapon_reach(unit, breed, scratchpad, blackboard, target_un
 		end
 	end
 
-	if not hit and is_dodging then
+	if not hit and is_dodging and not scratchpad.successful_dodge then
 		Dodge.sucessful_dodge(target_unit, unit, attack_types.melee, dodge_type, breed)
+
+		scratchpad.successful_dodge = true
 	end
 
 	return hit
@@ -1096,6 +1162,7 @@ function _melee_with_oobb(unit, breed, scratchpad, blackboard, target_unit, acti
 	local hit = false
 	local point_in_box = math.point_in_box
 	local hits_one_target = action_data.hits_one_target
+	local hit_target_unit = false
 
 	table.clear(CHECKED_OOBB_UNITS)
 
@@ -1116,21 +1183,35 @@ function _melee_with_oobb(unit, breed, scratchpad, blackboard, target_unit, acti
 				in_reach = point_in_box(hit_unit_position, dodge_hit_pose, dodge_hit_size)
 			end
 
+			if not scratchpad.successful_dodge and not in_reach and (is_dodging or scratchpad.target_dodged_during_attack) then
+				Dodge.sucessful_dodge(hit_unit, unit, attack_types.melee, dodge_type, breed)
+
+				if hit_unit == target_unit then
+					scratchpad.successful_dodge = true
+				end
+			end
+
 			if in_reach then
 				local offtarget_hit = hit_unit ~= target_unit
 				hit = true
 
 				_melee_hit(unit, breed, scratchpad, blackboard, hit_unit, hit_unit_position, action_data, override_damage_profile_or_nil, override_damage_type_or_nil, offtarget_hit)
 
+				if hit_unit == hit_target_unit then
+					hit_target_unit = true
+				end
+
 				if hits_one_target then
 					break
 				end
 			end
-
-			if not hit and is_dodging then
-				Dodge.sucessful_dodge(hit_unit, unit, attack_types.melee, dodge_type, breed)
-			end
 		end
+	end
+
+	if not hit_target_unit and not scratchpad.successful_dodge and scratchpad.target_dodged_during_attack then
+		Dodge.sucessful_dodge(target_unit, unit, attack_types.melee, nil, breed)
+
+		scratchpad.successful_dodge = true
 	end
 
 	return hit
@@ -1173,8 +1254,10 @@ function _melee_with_broadphase(unit, breed, scratchpad, action_data, blackboard
 				end
 			end
 
-			if not hit and is_dodging then
+			if not hit and is_dodging and not scratchpad.successful_dodge then
 				Dodge.sucessful_dodge(hit_unit, unit, attack_types.melee, dodge_type, breed)
+
+				scratchpad.successful_dodge = true
 			end
 		end
 	end

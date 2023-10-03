@@ -133,6 +133,10 @@ NullAccountManager.verify_user_restriction = function (self)
 	return
 end
 
+NullAccountManager.verify_user_restriction_batched = function (self)
+	return
+end
+
 NullAccountManager.user_has_restriction = function (self)
 	return false
 end

@@ -1,29 +1,23 @@
-local Attack = require("scripts/utilities/attack/attack")
 local Component = require("scripts/utilities/component")
-local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local DamageSettings = require("scripts/settings/damage/damage_settings")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local PlayerMovement = require("scripts/utilities/player_movement")
 local PlayerProgressionUnlocks = require("scripts/settings/player/player_progression_unlocks")
-local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
-local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local ScriptedScenarioUtility = require("scripts/extension_systems/scripted_scenario/scripted_scenario_utility")
 local TrainingGroundsSoundEvents = require("scripts/settings/training_grounds/training_grounds_sound_events")
 local aggro_states = PerceptionSettings.aggro_states
-local damage_types = DamageSettings.damage_types
 local ShootingRangeSteps = {
 	dynamic = {},
 	_condition = {}
 }
 
 local function reset_enemies(scenario_system, breed_name, spawn_group_name, enemies, t)
-	for i = 1, #enemies do
-		local unit = enemies[i]
+	for ii = 1, #enemies do
+		local unit = enemies[ii]
 
 		scenario_system:dissolve_unit(unit, t)
 
-		enemies[i] = nil
+		enemies[ii] = nil
 	end
 
 	local duration = 2

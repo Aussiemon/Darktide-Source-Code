@@ -3,7 +3,7 @@ local function _is_host(connection_manager)
 end
 
 local ConnectionManagerTestify = {
-	is_host = function (_, connection_manager)
+	is_host = function (connection_manager)
 		return _is_host(connection_manager)
 	end
 }

@@ -1,5 +1,6 @@
 require("scripts/extension_systems/weapon/actions/action_weapon_base")
 
+local PlayerUnitPeeking = require("scripts/utilities/player_unit_peeking")
 local ReloadStates = require("scripts/extension_systems/weapon/utilities/reload_states")
 local ActionRangedWield = class("ActionRangedWield", "ActionWeaponBase")
 
@@ -26,6 +27,10 @@ ActionRangedWield.start = function (self, action_settings, t, time_scale, action
 	weapon_tweak_templates_component.recoil_template_name = weapon_template.recoil_template or "none"
 	weapon_tweak_templates_component.sway_template_name = weapon_template.sway_template or "none"
 	weapon_tweak_templates_component.suppression_template_name = weapon_template.suppression_template or "none"
+
+	if self._peeking_component.in_cover then
+		PlayerUnitPeeking.on_enter_cover(self._animation_extension)
+	end
 end
 
 return ActionRangedWield

@@ -147,7 +147,7 @@ PlayerCharacterStateFalling.fixed_update = function (self, unit, dt, t, next_sta
 	if self._sprint_character_state_component.is_sprint_jumping then
 		local flat_speed_sq = Vector3.length_squared(Vector3.flat(velocity_current))
 
-		if flat_speed_sq < constants.move_speed_sq then
+		if flat_speed_sq < constants.sprint_jump_speed_threshold_sq then
 			sprint_character_state_component.is_sprint_jumping = false
 			sprint_character_state_component.wants_sprint_camera = false
 		end

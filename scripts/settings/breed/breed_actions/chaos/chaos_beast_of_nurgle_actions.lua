@@ -422,11 +422,11 @@ local action_data = {
 			ogryn = 4
 		},
 		power_level = {
-			70,
+			50,
+			75,
 			100,
-			120,
-			150,
-			200
+			125,
+			150
 		},
 		damage_profile = DamageProfileTemplates.beast_of_nurgle_hit_by_vomit,
 		damage_type = {
@@ -547,8 +547,8 @@ local action_data = {
 			0.25,
 			0.35,
 			0.5,
-			0.5,
-			0.65
+			0.65,
+			0.75
 		}
 	},
 	run_away = {
@@ -624,8 +624,8 @@ local action_data = {
 			0.25,
 			0.35,
 			0.5,
-			0.5,
-			0.65
+			0.65,
+			0.75
 		},
 		heal_frequency = {
 			2,
@@ -1033,6 +1033,23 @@ local action_data = {
 				}
 			},
 			sticky = {
+				fwd = {
+					"stagger_fwd_heavy"
+				},
+				bwd = {
+					"stagger_fwd_heavy"
+				},
+				left = {
+					"stagger_fwd_heavy"
+				},
+				right = {
+					"stagger_fwd_heavy"
+				},
+				dwn = {
+					"stagger_fwd_heavy"
+				}
+			},
+			electrocuted = {
 				fwd = {
 					"stagger_fwd_heavy"
 				},

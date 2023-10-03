@@ -14,7 +14,6 @@ local GrimoireEffects = class("GrimoireEffects")
 
 GrimoireEffects.init = function (self, context, slot, weapon_template, fx_sources)
 	self._is_husk = context.is_husk
-	self._is_local_unit = context.is_local_unit
 	self._world = context.world
 	self._wwise_world = context.wwise_world
 	self._weapon_actions = weapon_template.actions

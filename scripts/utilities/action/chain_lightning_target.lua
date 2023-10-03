@@ -18,6 +18,7 @@ ChainLightningTarget.init = function (self, chain_settings, optional_depth, use_
 	self._children = {}
 	self._num_children = 0
 	self._chain_settings = chain_settings
+	self._has_variable_num_children = not not chain_settings.max_targets_at_time
 	self._use_random = use_random
 	local time_active = 0
 	self._max_num_children = ChainLightning.max_targets(time_active, chain_settings, depth + 1, use_random)
@@ -119,6 +120,15 @@ ChainLightningTarget.set_max_num_children = function (self, max_num_children)
 	self._max_num_children = max_num_children
 end
 
+ChainLightningTarget.recalculate_max_num_children = function (self, t, start_t)
+	if not self._has_variable_num_children or not t or not start_t then
+		return
+	end
+
+	local time_active = t - start_t
+	self._max_num_children = ChainLightning.max_targets(time_active, self._chain_settings, self._depth, self._use_random)
+end
+
 ChainLightningTarget.is_empty = function (self)
 	return self._num_children == 0
 end
@@ -178,6 +188,25 @@ ChainLightningTarget.remove_child_nodes_marked_for_deletion = function (root, on
 		else
 			ChainLightningTarget.remove_child_nodes_marked_for_deletion(child_node, on_remove_func, func_context)
 		end
+	end
+end
+
+ChainLightningTarget.remove_node_and_transfer_all_child_nodes_to_parent = function (node, on_transfer_func, on_remove_func, func_context)
+	local parent_node = node:parent()
+
+	if parent_node then
+		for child_node, _ in pairs(node:children()) do
+			parent_node:transfer_child_to_node(child_node, true, on_transfer_func, func_context)
+		end
+
+		parent_node:remove_child(node, on_remove_func, func_context)
+	end
+end
+
+ChainLightningTarget.move_all_child_nodes_to_new_root = function (old_root_node, new_root_node, on_transfer_func, on_remove_func, func_context)
+	for child_node, _ in pairs(old_root_node:children()) do
+		new_root_node:transfer_child_to_node(child_node, true, on_transfer_func, func_context)
+		old_root_node:remove_child(child_node, on_remove_func, func_context)
 	end
 end
 

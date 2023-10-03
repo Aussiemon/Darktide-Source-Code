@@ -26,6 +26,10 @@ Dialogue.editor_init = function (self, unit)
 	end
 end
 
+Dialogue.editor_validate = function (self, unit)
+	return true, ""
+end
+
 Dialogue.enable = function (self, unit)
 	return
 end
@@ -87,7 +91,10 @@ Dialogue.component_data = {
 			"Zealot",
 			"Credit Store Servitor",
 			"Mourningstar Soldier",
-			"Barber"
+			"Barber",
+			"Captain Twin Female",
+			"Captain Twin Male",
+			"Reject NPC"
 		},
 		options_values = {
 			"none",
@@ -116,7 +123,10 @@ Dialogue.component_data = {
 			"zealot",
 			"credit_store_servitor",
 			"mourningstar_soldier",
-			"barber"
+			"barber",
+			"captain_twin_female",
+			"captain_twin_male",
+			"reject_npc"
 		}
 	},
 	dialogue_profile = {
@@ -181,7 +191,11 @@ Dialogue.component_data = {
 			"Mourningstar Initiate B",
 			"Mourningstar Officer A",
 			"Mourningstar Officer B",
-			"Barber A"
+			"Barber A",
+			"Captain Twin Female",
+			"Captain Twin Male",
+			"Reject NPC",
+			"Reject NPC Servitor"
 		},
 		options_values = {
 			"none",
@@ -240,7 +254,11 @@ Dialogue.component_data = {
 			"mourningstar_initiate_b",
 			"mourningstar_officer_male_a",
 			"mourningstar_officer_male_b",
-			"barber_a"
+			"barber_a",
+			"captain_twin_female_a",
+			"captain_twin_male_a",
+			"reject_npc_a",
+			"reject_npc_servitor_a"
 		}
 	},
 	faction_memory_name = {

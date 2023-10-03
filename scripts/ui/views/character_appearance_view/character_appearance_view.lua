@@ -192,6 +192,9 @@ CharacterAppearanceView.on_enter = function (self)
 						self:_show_default_page(page)
 						self:_update_appearance_selection()
 						self:_handle_continue_button_text()
+
+						self._continue_input_override = "secondary_action_pressed"
+						self._widgets_by_name.continue_button.content.gamepad_action = "secondary_action_pressed"
 					end,
 					title = Localize("loc_character_create_title_appearance"),
 					top_frame = {
@@ -490,14 +493,14 @@ CharacterAppearanceView._on_continue_pressed = function (self)
 			end)
 		end
 	else
-		local num_pages = #self._pages
 		local active_page_number = self._active_page_number
+		local active_page = self._pages[self._active_page_number]
 
-		if active_page_number == num_pages then
+		if active_page.name == "final" then
 			self:_stop_character_name_input()
 		end
 
-		if active_page_number == num_pages and self._await_validation then
+		if active_page.name == "final" and self._await_validation then
 			self._block_continue[self._active_page_number] = {
 				true
 			}
@@ -536,7 +539,7 @@ CharacterAppearanceView._on_continue_pressed = function (self)
 				WwiseWorld.stop_event(wwise_world, self._current_sound_id)
 			end
 
-			if active_page_number == num_pages then
+			if active_page.name == "final" then
 				if not self._popup_finish_open then
 					self._popup_finish_open = true
 					local context = {
@@ -645,7 +648,6 @@ end
 CharacterAppearanceView._handle_continue_button_text = function (self)
 	local widgets_by_name = self._widgets_by_name
 	local service_type = DefaultViewInputSettings.service_type
-	local continue_button_action = "secondary_action_pressed"
 	local continue_button_action_display_name, continue_button_text = nil
 
 	if self._backstory_selection_page then
@@ -660,12 +662,7 @@ CharacterAppearanceView._handle_continue_button_text = function (self)
 		continue_button_action_display_name = "loc_button_barber_confirm"
 	end
 
-	if not self._using_cursor_navigation then
-		continue_button_text = TextUtils.localize_with_button_hint(continue_button_action, continue_button_action_display_name, nil, service_type, Localize("loc_input_legend_text_template"))
-	else
-		continue_button_text = Localize(continue_button_action_display_name)
-	end
-
+	continue_button_text = Localize(continue_button_action_display_name)
 	widgets_by_name.continue_button.content.text = Utf8.upper(continue_button_text)
 end
 
@@ -1001,7 +998,9 @@ CharacterAppearanceView._populate_page_grid = function (self, index, entry)
 	local options = entry.options
 	local focused_value = entry.get_value_function and entry.get_value_function()
 	local widget_definitions = {
-		scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, grid_start_name .. "scrollbar"),
+		scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, grid_start_name .. "scrollbar", {
+			using_custom_gamepad_navigation = true
+		}),
 		interaction = UIWidget.create_definition({
 			{
 				pass_type = "hotspot",
@@ -1901,10 +1900,6 @@ CharacterAppearanceView._on_entry_pressed = function (self, current_widget, opti
 		widget.content.hotspot.is_selected = element_selected
 	end
 
-	if self._using_cursor_navigation then
-		self:_update_current_navigation_position(grid_index, current_widget.index)
-	end
-
 	self:_check_widget_choice_detail_visibility(current_widget)
 
 	local on_pressed_function = option.on_pressed_function
@@ -1948,7 +1943,6 @@ end
 
 CharacterAppearanceView._on_navigation_input_changed = function (self)
 	CharacterAppearanceView.super._on_navigation_input_changed(self)
-	self:_handle_continue_button_text()
 
 	if self._page_widgets then
 		local randomize_button_widget = self:_create_randomize_button()
@@ -2025,6 +2019,16 @@ CharacterAppearanceView._update_current_navigation_position = function (self, gr
 		index = widget_index,
 		grid = grid_index
 	}
+
+	if new_widget and new_widget.content.entry then
+		if new_widget.content.entry.select_on_navigation and new_widget.content.hotspot then
+			new_widget.content.hotspot.pressed_callback()
+		end
+
+		if new_widget.content.entry.on_preview_function then
+			new_widget.content.entry.on_preview_function(new_widget)
+		end
+	end
 end
 
 CharacterAppearanceView._update_load_appearance_icon_priority = function (self, widget, prioritized)
@@ -2158,7 +2162,7 @@ CharacterAppearanceView._on_close_pressed = function (self)
 	if self._backstory_selection_page then
 		self._backstory_selection_page.leave(true)
 		self:_open_page(self._active_page_number)
-	elseif self._using_cursor_navigation == false and #self._page_grids > 1 and #self._page_grids[2].widgets > 0 and self._active_page_name == "appearance" then
+	elseif not self._using_cursor_navigation and #self._page_grids > 1 and self._navigation.grid > 1 and self._active_page_name == "appearance" then
 		local current_navigation_position = 1
 
 		for i = 1, #self._page_grids[1].widgets do
@@ -2171,7 +2175,6 @@ CharacterAppearanceView._on_close_pressed = function (self)
 			end
 		end
 
-		self:_open_page(self._active_page_number)
 		self:_update_current_navigation_position(1, current_navigation_position)
 	elseif self._active_page_number > 1 then
 		local previous_index = self._active_page_number - 1
@@ -2835,8 +2838,33 @@ CharacterAppearanceView._set_character_height = function (self, scale_factor)
 end
 
 CharacterAppearanceView._get_appearance_category_options = function (self, category_entry_options)
+	local selected_data_slot = {}
+
 	local function on_pressed_function(function_name, value, value_key)
 		local character_create = self._character_create
+
+		if value_key and selected_data_slot[value_key] then
+			selected_data_slot[value_key] = nil
+		end
+
+		if value_key then
+			character_create[function_name](character_create, value_key, value)
+		else
+			character_create[function_name](character_create, value)
+		end
+	end
+
+	local function on_preview_function(function_name, value, value_key)
+		if not value_key then
+			return
+		end
+
+		local character_create = self._character_create
+
+		if not selected_data_slot[value_key] then
+			local current_value = character_create:slot_item(value_key)
+			selected_data_slot[value_key] = current_value
+		end
 
 		if value_key then
 			character_create[function_name](character_create, value_key, value)
@@ -2852,6 +2880,16 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 			return character_create[function_name](character_create, value_key)
 		else
 			return character_create[function_name](character_create)
+		end
+	end
+
+	local function preview_reset()
+		local character_create = self._character_create
+
+		for key, value in pairs(selected_data_slot) do
+			character_create:set_item_per_slot(key, value)
+
+			selected_data_slot[key] = nil
 		end
 	end
 
@@ -2943,12 +2981,26 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 
 						self:_check_appearance_continue_block(page.content)
 						self:_update_appearance_icon()
+					end,
+					on_preview_function = function (widget)
+						if not self._using_cursor_navigation then
+							on_preview_function("set_item_per_slot", option, entry_slot_name)
+							self:_check_widget_choice_detail_visibility(widget)
+						end
 					end
 				}
 			end
 
 			category_options[i].get_value_function = callback(get_value_function, "slot_item", entry_slot_name)
 			category_options[i].texture = "content/ui/materials/icons/appearances/skin_color"
+
+			category_options[i].leave = function (page_grid)
+				if entry_leave then
+					entry_leave(page_grid)
+				end
+
+				preview_reset()
+			end
 		elseif entry_type == "eye_type" then
 			for j = 1, #entry_options do
 				local option = entry_options[j]
@@ -2980,11 +3032,25 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 
 						self:_check_appearance_continue_block(page.content)
 						self:_update_appearance_icon()
+					end,
+					on_preview_function = function (widget)
+						if not self._using_cursor_navigation then
+							select_eye_by_type(option, entry_slot_name)
+							self:_check_widget_choice_detail_visibility(widget)
+						end
 					end
 				}
 			end
 
 			category_options[i].get_value_function = callback(get_type_by_eye, entry_slot_name)
+
+			category_options[i].leave = function (page_grid)
+				if entry_leave then
+					entry_leave(page_grid)
+				end
+
+				preview_reset()
+			end
 		elseif entry_type == "eye_color" then
 			for j = 1, #entry_options do
 				local option = entry_options[j]
@@ -3001,12 +3067,26 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 
 						self:_check_appearance_continue_block(page.content)
 						self:_update_appearance_icon()
+					end,
+					on_preview_function = function (widget)
+						if not self._using_cursor_navigation then
+							on_preview_function("set_item_per_slot", option, entry_slot_name)
+							self:_check_widget_choice_detail_visibility(widget)
+						end
 					end
 				}
 			end
 
 			category_options[i].get_value_function = callback(get_value_function, "slot_item", entry_slot_name)
 			category_options[i].texture = "content/ui/materials/icons/appearances/eye_color"
+
+			category_options[i].leave = function (page_grid)
+				if entry_leave then
+					entry_leave(page_grid)
+				end
+
+				preview_reset()
+			end
 		elseif entry_type == "hair_color" then
 			for j = 1, #entry_options do
 				local option = entry_options[j]
@@ -3029,12 +3109,26 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 
 						self:_check_appearance_continue_block(page.content)
 						self:_update_appearance_icon()
+					end,
+					on_preview_function = function (widget)
+						if not self._using_cursor_navigation then
+							on_preview_function("set_item_per_slot", option, entry_slot_name)
+							self:_check_widget_choice_detail_visibility(widget)
+						end
 					end
 				}
 			end
 
 			category_options[i].get_value_function = callback(get_value_function, "slot_item", entry_slot_name)
 			category_options[i].texture = "content/ui/materials/icons/appearances/hair_color"
+
+			category_options[i].leave = function (page_grid)
+				if entry_leave then
+					entry_leave(page_grid)
+				end
+
+				preview_reset()
+			end
 		elseif entry_type == "gender" then
 			local gender_display_name = {
 				male = "loc_gender_display_name_male",
@@ -3076,9 +3170,6 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 							self:_set_character_height(height)
 
 							self._height_changed = true
-
-							self:_update_current_navigation_position(1, current_navigation_position)
-
 							local current_widget = self._page_grids[1].widgets[current_navigation_position]
 							current_widget.content.element_selected = true
 							current_widget.content.hotspot.is_selected = true
@@ -3121,11 +3212,26 @@ CharacterAppearanceView._get_appearance_category_options = function (self, categ
 						local page = self._pages[self._active_page_number]
 
 						self:_check_appearance_continue_block(page.content)
+						self:_update_appearance_icon()
+					end,
+					on_preview_function = function (widget)
+						if not self._using_cursor_navigation then
+							on_preview_function("set_item_per_slot", option, entry_slot_name)
+							self:_check_widget_choice_detail_visibility(widget)
+						end
 					end
 				}
 			end
 
 			category_options[i].get_value_function = callback(get_value_function, "slot_item", entry_slot_name)
+
+			category_options[i].leave = function (page_grid)
+				if entry_leave then
+					entry_leave(page_grid)
+				end
+
+				preview_reset()
+			end
 		end
 	end
 
@@ -3142,6 +3248,7 @@ CharacterAppearanceView._get_planet_content = function (self)
 		local option = planets[i]
 		local planet_settings = HomePlanets[option]
 		planet_options[i] = {
+			select_on_navigation = true,
 			text = Localize(planet_settings.display_name),
 			value = option,
 			on_pressed_function = function ()
@@ -3176,6 +3283,7 @@ CharacterAppearanceView._get_childhood_content = function (self)
 			local option = childhood[i]
 			local childhood_settings = Childhood[option]
 			childhood_options[#childhood_options + 1] = {
+				select_on_navigation = true,
 				text = Localize(childhood_settings.display_name),
 				value = option,
 				on_pressed_function = function ()
@@ -3222,6 +3330,7 @@ CharacterAppearanceView._get_growing_up_content = function (self)
 			local option = growing_up[i]
 			local growing_up_settings = GrowingUp[option]
 			growing_up_options[#growing_up_options + 1] = {
+				select_on_navigation = true,
 				text = Localize(growing_up_settings.display_name),
 				value = option,
 				on_pressed_function = function ()
@@ -3269,6 +3378,7 @@ CharacterAppearanceView._get_formative_event_content = function (self)
 			local option = formative_events[i]
 			local formative_events_settings = FormativeEvent[option]
 			formative_events_options[#formative_events_options + 1] = {
+				select_on_navigation = true,
 				text = Localize(formative_events_settings.display_name),
 				value = option,
 				on_pressed_function = function ()
@@ -3429,6 +3539,7 @@ CharacterAppearanceView._get_appearance_content = function (self)
 
 	if not self._is_barber and gender_options and #gender_options > 1 then
 		appearance_options[#appearance_options + 1] = {
+			select_on_navigation = true,
 			icon = "content/ui/materials/icons/item_types/body_types",
 			text = Localize("loc_gender"),
 			on_pressed_function = function (widget)
@@ -3455,6 +3566,7 @@ CharacterAppearanceView._get_appearance_content = function (self)
 		table.sort(skin_color_options, sort_by_order)
 
 		appearance_options[#appearance_options + 1] = {
+			select_on_navigation = true,
 			camera_focus = "slot_body_face",
 			icon = "content/ui/materials/icons/item_types/face_types",
 			text = Localize("loc_face"),
@@ -3540,6 +3652,7 @@ CharacterAppearanceView._get_appearance_content = function (self)
 		table.sort(filtered_eye_colors, sort_by_order)
 
 		appearance_options[#appearance_options + 1] = {
+			select_on_navigation = true,
 			camera_focus = "slot_body_face",
 			icon = "content/ui/materials/icons/item_types/eye_color",
 			text = Localize("loc_eye_color"),
@@ -3574,6 +3687,7 @@ CharacterAppearanceView._get_appearance_content = function (self)
 		table.sort(hair_color_options, sort_by_order)
 
 		appearance_options[#appearance_options + 1] = {
+			select_on_navigation = true,
 			camera_focus = "slot_body_face",
 			icon = "content/ui/materials/icons/item_types/hair_styles",
 			text = Localize("loc_hair"),
@@ -3607,6 +3721,7 @@ CharacterAppearanceView._get_appearance_content = function (self)
 		table.sort(facial_hair_color_options, sort_by_order)
 
 		appearance_options[#appearance_options + 1] = {
+			select_on_navigation = true,
 			camera_focus = "slot_body_face",
 			icon = "content/ui/materials/icons/item_types/facial_hair_styles",
 			text = Localize("loc_face_hair"),
@@ -3638,6 +3753,7 @@ CharacterAppearanceView._get_appearance_content = function (self)
 		table.sort(face_tattoo_options, sort_by_order)
 
 		appearance_options[#appearance_options + 1] = {
+			select_on_navigation = true,
 			camera_focus = "slot_body_face",
 			icon = "content/ui/materials/icons/item_types/face_tattoos",
 			text = Localize("loc_face_tattoo"),
@@ -3664,6 +3780,7 @@ CharacterAppearanceView._get_appearance_content = function (self)
 		table.sort(body_tattoo_options, sort_by_order)
 
 		appearance_options[#appearance_options + 1] = {
+			select_on_navigation = true,
 			icon = "content/ui/materials/icons/item_types/body_tattoos",
 			text = Localize("loc_body_tattoo"),
 			on_pressed_function = function (widget)
@@ -3689,6 +3806,7 @@ CharacterAppearanceView._get_appearance_content = function (self)
 		table.sort(face_scar_options, sort_by_order)
 
 		appearance_options[#appearance_options + 1] = {
+			select_on_navigation = true,
 			camera_focus = "slot_body_face",
 			icon = "content/ui/materials/icons/item_types/scars",
 			text = Localize("loc_face_scar"),
@@ -3711,6 +3829,7 @@ CharacterAppearanceView._get_appearance_content = function (self)
 	if not self._is_barber then
 		appearance_options[#appearance_options + 1] = {
 			icon = "content/ui/materials/icons/item_types/height",
+			select_on_navigation = true,
 			text = Localize("loc_body_height"),
 			on_pressed_function = function (widget)
 				self:_open_appearance_options(widget.index)
@@ -3787,6 +3906,7 @@ CharacterAppearanceView._get_personality_content = function (self)
 			local option = personalities[i]
 			local personality_settings = Personalities[option]
 			personality_options[i] = {
+				select_on_navigation = true,
 				text = Localize(personality_settings.display_name),
 				value = option,
 				on_changed_function = function ()
@@ -3831,6 +3951,7 @@ CharacterAppearanceView._get_crime_content = function (self)
 			local option = crimes[i]
 			local crime_settings = Crimes[option]
 			crime_options[i] = {
+				select_on_navigation = true,
 				text = Localize(crime_settings.display_name),
 				value = option,
 				on_pressed_function = function ()
@@ -4207,6 +4328,9 @@ CharacterAppearanceView._get_pages = function (self)
 				self:_check_appearance_continue_block(page.content)
 				self:_populate_page_grid(1, page.content)
 				self:_show_default_page(page)
+
+				self._widgets_by_name.continue_button.content.gamepad_action = "secondary_action_pressed"
+				self._continue_input_override = "secondary_action_pressed"
 			end,
 			title = Localize("loc_character_create_title_appearance"),
 			top_frame = {
@@ -4243,6 +4367,13 @@ CharacterAppearanceView._get_pages = function (self)
 			end,
 			leave = function ()
 				self._selected_appearance_option_index = nil
+				self._widgets_by_name.continue_button.content.gamepad_action = "confirm_pressed"
+				self._continue_input_override = nil
+				local current_grid_index = self._navigation.grid
+
+				if current_grid_index and self._page_grids[current_grid_index].entry and self._page_grids[current_grid_index].entry.leave then
+					self._page_grids[current_grid_index].entry.leave(self._page_grids[current_grid_index])
+				end
 			end
 		},
 		{
@@ -4313,7 +4444,11 @@ CharacterAppearanceView._get_pages = function (self)
 					self._character_name_status.archetype = selected_archetype
 					self._character_name_status.gender = selected_gender
 
-					self._character_create:_fetch_suggested_names_by_profile()
+					self._character_create:_fetch_suggested_names_by_profile():next(function ()
+						if self._character_name_status.custom == false then
+							self:_randomize_character_name()
+						end
+					end)
 				end
 
 				self:_populate_page_grid(1, page.content)
@@ -4375,11 +4510,17 @@ CharacterAppearanceView._get_pages = function (self)
 				self:_update_character_name()
 				self:_move_camera()
 				self:_handle_continue_button_text()
+
+				self._widgets_by_name.continue_button.content.gamepad_action = "secondary_action_pressed"
+				self._continue_input_override = "secondary_action_pressed"
 			end,
 			leave = function ()
 				self:_move_camera(true)
 				self:_create_errors_name_input()
 				self:_destroy_support_page_widgets()
+
+				self._continue_input_override = nil
+				self._widgets_by_name.continue_button.content.gamepad_action = "confirm_pressed"
 			end
 		}
 	}
@@ -4680,12 +4821,16 @@ CharacterAppearanceView._handle_input = function (self, input_service)
 		self:_grid_navigation("left")
 	elseif input_service:get("navigate_right_continuous") then
 		self:_grid_navigation("right")
-	elseif not self._using_cursor_navigation and input_service:get("secondary_action_pressed") then
+	elseif self._using_cursor_navigation and input_service:get("confirm_pressed") and self._active_page_name == "final" and self._page_widgets and self._page_widgets[1].content.is_writing then
 		if not self._widgets_by_name.continue_button.content.hotspot.disabled then
 			self:_on_continue_pressed()
 		end
-	elseif self._using_cursor_navigation and input_service:get("confirm_pressed") and self._active_page_name == "final" and self._page_widgets and self._page_widgets[1].content.is_writing and not self._widgets_by_name.continue_button.content.hotspot.disabled then
-		self:_on_continue_pressed()
+	elseif not self._using_cursor_navigation then
+		local action_input = self._continue_input_override or "confirm_pressed"
+
+		if input_service:get(action_input) and not self._widgets_by_name.continue_button.content.hotspot.disabled then
+			self:_on_continue_pressed()
+		end
 	end
 end
 

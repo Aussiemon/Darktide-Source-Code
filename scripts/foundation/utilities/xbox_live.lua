@@ -252,12 +252,7 @@ XboxLiveUtils.set_activity = function (connection_string, party_id, num_other_me
 	Log.info("XboxLive", "Setting activity... connection_string: %s, party_id %s, num_members %s", connection_string, party_id, num_members)
 	XboxLiveUtils.user_id():next(function (user_id)
 		local group_id = party_id
-
-		if not join_restriction then
-			local max_num_members = XblMultiplayerActivityJoinRestriction.JOIN_RESTRICTION_PUBLIC
-		end
-
-		join_restriction = max_num_members
+		join_restriction = join_restriction or XblMultiplayerActivityJoinRestriction.JOIN_RESTRICTION_PUBLIC
 		local max_num_members = 4
 		local allow_cross_platform_join = true
 		local async_block, error_code, error_message = XboxLiveMPA.set_activity(user_id, connection_string, group_id, join_restriction, num_members, max_num_members, allow_cross_platform_join)
@@ -366,12 +361,6 @@ XboxLiveUtils.show_player_profile_card = function (xuid)
 		XGameUI.show_player_profile_card(user_id, async_block, xuid)
 
 		return Managers.xasync:wrap(async_block, XAsyncBlock.release_block)
-	end):next(function (async_block)
-		local h_result = XGameUI.show_player_profile_card_results(async_block)
-
-		if h_result == HRESULT.S_OK then
-			Managers.account:refresh_communication_restrictions()
-		end
 	end):catch(function (error_data)
 		error_data.header = "XboxLiveUtils.show_player_profile_card"
 
@@ -548,22 +537,24 @@ XboxLiveUtils.get_entitlements = function ()
 				}
 			end
 
-			if result ~= nil and error_code == nil then
-				slot0, slot1, slot2 = ipairs(result)
+			if result ~= nil then
+				if error_code == nil then
+					slot0, slot1, slot2 = ipairs(result)
 
-				for _, v in slot0, slot1, slot2 do
-					result_by_id[v.storeId] = v
+					for _, v in slot0, slot1, slot2 do
+						result_by_id[v.storeId] = v
+					end
+
+					if async_job_next_page then
+						return false
+					end
+
+					slot0.data = result_by_id
+
+					return {
+						success = true
+					}
 				end
-
-				if async_job_next_page then
-					return false
-				end
-
-				slot0.data = result_by_id
-
-				return {
-					success = true
-				}
 			end
 
 			return false
@@ -614,24 +605,22 @@ XboxLiveUtils.get_associated_products = function ()
 				}
 			end
 
-			if result ~= nil then
-				if error_code == nil then
-					slot0, slot1, slot2 = ipairs(result)
+			if result ~= nil and error_code == nil then
+				slot0, slot1, slot2 = ipairs(result)
 
-					for _, v in slot0, slot1, slot2 do
-						result_by_id[v.storeId] = v
-					end
-
-					if async_job_next_page then
-						return false
-					end
-
-					slot0.data = result_by_id
-
-					return {
-						success = true
-					}
+				for _, v in slot0, slot1, slot2 do
+					result_by_id[v.storeId] = v
 				end
+
+				if async_job_next_page then
+					return false
+				end
+
+				slot0.data = result_by_id
+
+				return {
+					success = true
+				}
 			end
 
 			return false

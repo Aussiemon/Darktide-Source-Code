@@ -5,57 +5,68 @@ local player = {
 	sfx = {
 		weakspot_died = {
 			{
-				event = "wwise/events/player/play_player_get_hit_light_2d"
+				event = "wwise/events/player/play_player_get_hit_light_2d",
+				only_1p = true
 			}
 		},
 		died = {
 			{
-				event = "wwise/events/player/play_player_get_hit_light_2d"
+				event = "wwise/events/player/play_player_get_hit_light_2d",
+				only_1p = true
 			}
 		},
 		weakspot_damage = {
 			{
-				event = "wwise/events/player/play_player_get_hit_light_2d"
+				event = "wwise/events/player/play_player_get_hit_light_2d",
+				only_1p = true
 			}
 		},
 		damage = {
 			{
-				event = "wwise/events/player/play_player_get_hit_light_2d"
+				event = "wwise/events/player/play_player_get_hit_light_2d",
+				only_1p = true
 			}
 		},
 		damage_reduced = {
 			{
-				event = "wwise/events/player/play_player_get_hit_light_2d"
+				event = "wwise/events/player/play_player_get_hit_light_2d",
+				only_1p = true
 			}
 		},
 		damage_negated = {
 			{
-				event = "wwise/events/player/play_player_get_hit_light_2d"
+				event = "wwise/events/player/play_player_get_hit_light_2d",
+				only_1p = true
 			}
 		},
 		toughness_absorbed = {
 			{
-				event = "wwise/events/player/play_player_get_hit_light_2d"
+				event = "wwise/events/player/play_player_get_hit_light_2d",
+				only_1p = true
 			}
 		},
 		shield_blocked = {
 			{
-				event = "wwise/events/player/play_player_get_hit_light_2d"
+				event = "wwise/events/player/play_player_get_hit_light_2d",
+				only_1p = true
 			}
 		},
 		blocked = {
 			{
-				event = "wwise/events/player/play_player_get_hit_light_2d"
+				event = "wwise/events/player/play_player_get_hit_light_2d",
+				only_1p = true
 			}
 		},
 		dead = {
 			{
-				event = "wwise/events/player/play_player_get_hit_light_2d"
+				event = "wwise/events/player/play_player_get_hit_light_2d",
+				only_1p = true
 			}
 		},
 		shove = {
 			{
-				event = "wwise/events/player/play_player_get_hit_light_2d"
+				event = "wwise/events/player/play_player_get_hit_light_2d",
+				only_1p = true
 			}
 		}
 	},

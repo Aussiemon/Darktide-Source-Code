@@ -5,6 +5,33 @@ local LobbyViewFontStyle = require("scripts/ui/views/lobby_view/lobby_view_font_
 local ColorUtilities = require("scripts/utilities/ui/colors")
 local scenegraph_definition = {
 	screen = UIWorkspaceSettings.screen,
+	canvas = {
+		vertical_alignment = "center",
+		parent = "screen",
+		horizontal_alignment = "center",
+		size = {
+			1920,
+			1080
+		},
+		position = {
+			0,
+			0,
+			0
+		}
+	},
+	canvas_height = {
+		scale = "fit_height",
+		horizontal_alignment = "center",
+		size = {
+			1920,
+			0
+		},
+		position = {
+			0,
+			0,
+			0
+		}
+	},
 	grid_background = {
 		vertical_alignment = "bottom",
 		parent = "screen",
@@ -60,7 +87,7 @@ local scenegraph_definition = {
 	},
 	panel_pivot = {
 		vertical_alignment = "bottom",
-		parent = "screen",
+		parent = "canvas_height",
 		horizontal_alignment = "left",
 		size = {
 			0,
@@ -85,7 +112,7 @@ local scenegraph_definition = {
 	},
 	loading_pivot = {
 		vertical_alignment = "bottom",
-		parent = "screen",
+		parent = "canvas_height",
 		horizontal_alignment = "left",
 		size = {
 			0,
@@ -110,7 +137,7 @@ local scenegraph_definition = {
 	},
 	loadout_pivot = {
 		vertical_alignment = "bottom",
-		parent = "screen",
+		parent = "canvas_height",
 		horizontal_alignment = "left",
 		size = {
 			0,
@@ -135,7 +162,7 @@ local scenegraph_definition = {
 	},
 	inspect_button_pivot = {
 		vertical_alignment = "bottom",
-		parent = "screen",
+		parent = "canvas_height",
 		horizontal_alignment = "left",
 		size = {
 			0,
@@ -157,9 +184,205 @@ local scenegraph_definition = {
 			0,
 			1
 		}
+	},
+	talent_tooltip = {
+		vertical_alignment = "top",
+		parent = "screen",
+		horizontal_alignment = "left",
+		size = {
+			400,
+			110
+		},
+		position = {
+			0,
+			0,
+			63
+		}
 	}
 }
 local widget_definitions = {
+	talent_tooltip = UIWidget.create_definition({
+		{
+			pass_type = "rect",
+			style = {
+				color = {
+					220,
+					0,
+					0,
+					0
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/backgrounds/default_square",
+			style_id = "background",
+			pass_type = "texture",
+			style = {
+				color = Color.terminal_background(nil, true)
+			}
+		},
+		{
+			value = "content/ui/materials/gradients/gradient_vertical",
+			style_id = "background_gradient",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				color = Color.terminal_background_gradient(180, true),
+				offset = {
+					0,
+					0,
+					1
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/frames/dropshadow_medium",
+			style_id = "outer_shadow",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				scale_to_material = true,
+				color = Color.black(200, true),
+				size_addition = {
+					20,
+					20
+				},
+				offset = {
+					0,
+					0,
+					3
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/frames/frame_tile_2px",
+			style_id = "frame",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				color = Color.terminal_frame(nil, true),
+				offset = {
+					0,
+					0,
+					2
+				}
+			}
+		},
+		{
+			value = "content/ui/materials/frames/frame_corner_2px",
+			style_id = "corner",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				color = Color.terminal_corner(nil, true),
+				offset = {
+					0,
+					0,
+					3
+				}
+			}
+		},
+		{
+			value_id = "title",
+			pass_type = "text",
+			style_id = "title",
+			value = "n/a",
+			style = {
+				text_vertical_alignment = "center",
+				horizontal_alignment = "center",
+				font_size = 24,
+				text_horizontal_alignment = "left",
+				vertical_alignment = "top",
+				font_type = "proxima_nova_bold",
+				text_color = Color.terminal_text_header(255, true),
+				color = {
+					100,
+					255,
+					200,
+					50
+				},
+				size = {
+					nil,
+					0
+				},
+				offset = {
+					0,
+					0,
+					5
+				},
+				size_addition = {
+					-40,
+					0
+				}
+			}
+		},
+		{
+			value_id = "description",
+			pass_type = "text",
+			style_id = "description",
+			value = "n/a",
+			style = {
+				font_size = 20,
+				text_vertical_alignment = "center",
+				horizontal_alignment = "center",
+				text_horizontal_alignment = "left",
+				vertical_alignment = "top",
+				font_type = "proxima_nova_bold",
+				text_color = Color.terminal_text_body(255, true),
+				size = {
+					nil,
+					0
+				},
+				offset = {
+					0,
+					0,
+					5
+				},
+				color = {
+					100,
+					100,
+					255,
+					0
+				},
+				size_addition = {
+					-40,
+					0
+				}
+			}
+		},
+		{
+			value_id = "talent_type_title",
+			pass_type = "text",
+			style_id = "talent_type_title",
+			value = "",
+			style = {
+				font_size = 16,
+				horizontal_alignment = "center",
+				text_vertical_alignment = "center",
+				text_horizontal_alignment = "left",
+				vertical_alignment = "top",
+				font_type = "proxima_nova_bold",
+				text_color = Color.terminal_text_body_sub_header(255, true),
+				size = {
+					nil,
+					0
+				},
+				offset = {
+					0,
+					0,
+					5
+				},
+				size_addition = {
+					-40,
+					0
+				}
+			}
+		}
+	}, "talent_tooltip"),
 	mission_title = UIWidget.create_definition({
 		{
 			value_id = "title",
@@ -286,6 +509,10 @@ local widget_definitions = {
 			}
 		}
 	}, "screen")
+}
+local panel_talent_size = {
+	64,
+	64
 }
 local panel_definition = UIWidget.create_definition({
 	{
@@ -499,6 +726,192 @@ local panel_definition = UIWidget.create_definition({
 		visibility_function = function (content, style)
 			return content.hotspot.is_focused or content.hotspot.is_hover
 		end
+	},
+	{
+		value_id = "talent_1",
+		style_id = "talent_1",
+		pass_type = "texture",
+		value = "content/ui/materials/frames/talents/talent_icon_container",
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "center",
+			size = panel_talent_size,
+			offset = {
+				-66,
+				40,
+				2
+			},
+			color = Color.white(255, true),
+			material_values = {}
+		},
+		visibility_function = function (content, style)
+			return true
+		end
+	},
+	{
+		value_id = "frame_selected_talent_1",
+		style_id = "frame_selected_talent_1",
+		pass_type = "texture",
+		value = "content/ui/materials/frames/talents/circular_frame_selected",
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "center",
+			color = Color.ui_terminal(255, true),
+			size = panel_talent_size,
+			size_addition = {
+				0,
+				0
+			},
+			offset = {
+				-66,
+				40,
+				3
+			}
+		},
+		visibility_function = function (content)
+			return content.hotspot_talent_1.is_hover
+		end
+	},
+	{
+		pass_type = "hotspot",
+		content_id = "hotspot_talent_1",
+		content = {
+			disabled = false
+		},
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "center",
+			size = panel_talent_size,
+			offset = {
+				-66,
+				25,
+				2
+			}
+		}
+	},
+	{
+		value_id = "talent_2",
+		style_id = "talent_2",
+		pass_type = "texture",
+		value = "content/ui/materials/frames/talents/talent_icon_container",
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "center",
+			size = panel_talent_size,
+			offset = {
+				0,
+				40,
+				2
+			},
+			color = Color.white(255, true),
+			material_values = {}
+		},
+		visibility_function = function (content, style)
+			return true
+		end
+	},
+	{
+		value_id = "frame_selected_talent_2",
+		style_id = "frame_selected_talent_2",
+		pass_type = "texture",
+		value = "content/ui/materials/frames/talents/circular_frame_selected",
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "center",
+			color = Color.ui_terminal(255, true),
+			size = panel_talent_size,
+			size_addition = {
+				0,
+				0
+			},
+			offset = {
+				0,
+				40,
+				3
+			}
+		},
+		visibility_function = function (content)
+			return content.hotspot_talent_2.is_hover
+		end
+	},
+	{
+		pass_type = "hotspot",
+		content_id = "hotspot_talent_2",
+		content = {
+			disabled = false
+		},
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "center",
+			size = panel_talent_size,
+			offset = {
+				0,
+				25,
+				2
+			}
+		}
+	},
+	{
+		value_id = "talent_3",
+		style_id = "talent_3",
+		pass_type = "texture",
+		value = "content/ui/materials/frames/talents/talent_icon_container",
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "center",
+			size = panel_talent_size,
+			offset = {
+				64,
+				40,
+				2
+			},
+			color = Color.white(255, true),
+			material_values = {}
+		},
+		visibility_function = function (content, style)
+			return true
+		end
+	},
+	{
+		value_id = "frame_selected_talent_3",
+		style_id = "frame_selected_talent_3",
+		pass_type = "texture",
+		value = "content/ui/materials/frames/talents/circular_frame_selected",
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "center",
+			color = Color.ui_terminal(255, true),
+			size = panel_talent_size,
+			size_addition = {
+				0,
+				0
+			},
+			offset = {
+				64,
+				40,
+				3
+			}
+		},
+		visibility_function = function (content)
+			return content.hotspot_talent_3.is_hover
+		end
+	},
+	{
+		pass_type = "hotspot",
+		content_id = "hotspot_talent_3",
+		content = {
+			disabled = false
+		},
+		style = {
+			vertical_alignment = "bottom",
+			horizontal_alignment = "center",
+			size = panel_talent_size,
+			offset = {
+				64,
+				25,
+				2
+			}
+		}
 	}
 }, "panel")
 local loading_definition = UIWidget.create_definition({

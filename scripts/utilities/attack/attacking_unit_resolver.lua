@@ -11,7 +11,7 @@ AttackingUnitResolver.resolve = function (attacking_unit)
 		local owner_unit = projectile_extension:owner_unit()
 
 		if alive[owner_unit] then
-			return owner_unit
+			return owner_unit, true
 		end
 	end
 
@@ -24,7 +24,7 @@ AttackingUnitResolver.resolve = function (attacking_unit)
 		local last_damaging_unit = health_extension.last_damaging_unit and health_extension:last_damaging_unit()
 
 		if alive[last_damaging_unit] then
-			return last_damaging_unit
+			return last_damaging_unit, false
 		end
 	end
 
@@ -34,11 +34,11 @@ AttackingUnitResolver.resolve = function (attacking_unit)
 		local player_unit = owner.player_unit
 
 		if alive[player_unit] then
-			return player_unit
+			return player_unit, true
 		end
 	end
 
-	return attacking_unit
+	return attacking_unit, true
 end
 
 return AttackingUnitResolver

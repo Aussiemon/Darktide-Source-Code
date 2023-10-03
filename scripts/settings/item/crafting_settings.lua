@@ -444,7 +444,7 @@ CraftingSettings.recipes.replace_perk = {
 		end
 
 		for i = 1, #item_perks do
-			if i ~= existing_perk_index and item_perks[i].id == new_perk_item.name or i == existing_perk_index and item_perks[i].id == new_perk_item.name and item_perks[i].rarity == new_perk_item.rarity then
+			if i ~= existing_perk_index and item_perks[i].id == new_perk_item.name or i == existing_perk_index and item_perks[i].id == new_perk_item.name and new_perk_item.rarity <= item_perks[i].rarity then
 				return false, "loc_crafting_replace_perk_not_allowed_wasteful"
 			end
 		end

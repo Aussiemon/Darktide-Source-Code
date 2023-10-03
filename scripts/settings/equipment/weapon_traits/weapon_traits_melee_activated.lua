@@ -105,22 +105,22 @@ local weapon_traits_melee_activated = {
 		weapon_trait_melee_activated_wield_during_weapon_special_increased_movement_speed = {
 			{
 				stat_buffs = {
-					[buff_stat_buffs.movement_speed] = 1.1
+					[buff_stat_buffs.movement_speed] = 0.1
 				}
 			},
 			{
 				stat_buffs = {
-					[buff_stat_buffs.movement_speed] = 1.2
+					[buff_stat_buffs.movement_speed] = 0.2
 				}
 			},
 			{
 				stat_buffs = {
-					[buff_stat_buffs.movement_speed] = 1.3
+					[buff_stat_buffs.movement_speed] = 0.3
 				}
 			},
 			{
 				stat_buffs = {
-					[buff_stat_buffs.movement_speed] = 1.4
+					[buff_stat_buffs.movement_speed] = 0.4
 				}
 			}
 		}

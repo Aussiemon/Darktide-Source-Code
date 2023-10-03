@@ -23,6 +23,10 @@ PropHealth.editor_init = function (self)
 	return
 end
 
+PropHealth.editor_validate = function (self, unit)
+	return true, ""
+end
+
 PropHealth.enable = function (self, unit)
 	return
 end

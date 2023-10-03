@@ -58,6 +58,33 @@ Ladder.editor_init = function (self, unit)
 	return true
 end
 
+Ladder.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if not Unit.has_node(unit, "node_top") then
+		error_message = error_message .. "\nmissing unit node 'node_top'"
+		success = false
+	end
+
+	if not Unit.has_node(unit, "node_bottom") then
+		error_message = error_message .. "\nmissing unit node 'node_bottom'"
+		success = false
+	end
+
+	if not Unit.has_node(unit, "node_leave") then
+		error_message = error_message .. "\nmissing unit node 'node_leave'"
+		success = false
+	end
+
+	if not Unit.has_node(unit, "node_enter_end") then
+		error_message = error_message .. "\nmissing unit node 'node_enter_end'"
+		success = false
+	end
+
+	return success, error_message
+end
+
 Ladder.editor_update = function (self, unit)
 	if not rawget(_G, "LevelEditor") then
 		return

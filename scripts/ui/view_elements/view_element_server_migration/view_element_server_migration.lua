@@ -626,7 +626,7 @@ ViewElemenServerMigration.present = function (self, migration_data)
 				}
 				local order_id = table.find(currency_order, currency_type)
 
-				if order_id > -1 then
+				if order_id ~= nil then
 					wallet_by_order[order_id] = wallet_currencies[currency_type]
 				end
 

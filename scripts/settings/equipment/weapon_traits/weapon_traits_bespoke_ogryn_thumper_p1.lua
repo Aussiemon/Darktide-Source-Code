@@ -10,40 +10,49 @@ local templates = {
 		weapon_trait_bespoke_ogryn_thumper_p1_suppression_on_close_kill = {
 			{
 				suppression_settings = {
-					suppression_falloff = true,
+					suppression_falloff = false,
 					instant_aggro = true,
-					distance = 5,
-					suppression_value = 10
-				}
-			},
-			{
-				suppression_settings = {
-					suppression_falloff = true,
-					instant_aggro = true,
-					distance = 6,
+					distance = 12,
 					suppression_value = 15
 				}
 			},
 			{
 				suppression_settings = {
-					suppression_falloff = true,
+					suppression_falloff = false,
 					instant_aggro = true,
-					distance = 7,
+					distance = 12,
 					suppression_value = 20
 				}
 			},
 			{
 				suppression_settings = {
-					suppression_falloff = true,
+					suppression_falloff = false,
 					instant_aggro = true,
-					distance = 8,
+					distance = 12,
 					suppression_value = 25
+				}
+			},
+			{
+				suppression_settings = {
+					suppression_falloff = false,
+					instant_aggro = true,
+					distance = 12,
+					suppression_value = 30
 				}
 			}
 		}
 	},
 	weapon_trait_bespoke_ogryn_thumper_p1_toughness_on_continuous_fire = {
 		weapon_trait_bespoke_ogryn_thumper_p1_toughness_on_continuous_fire = {
+			{
+				toughness_fixed_percentage = 0.04
+			},
+			{
+				toughness_fixed_percentage = 0.04
+			},
+			{
+				toughness_fixed_percentage = 0.04
+			},
 			{
 				toughness_fixed_percentage = 0.04
 			}
@@ -53,7 +62,22 @@ local templates = {
 		weapon_trait_bespoke_ogryn_thumper_p1_power_bonus_on_continuous_fire = {
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.1
+					[stat_buffs.power_level_modifier] = 0.08
+				}
+			},
+			{
+				stat_buffs = {
+					[stat_buffs.power_level_modifier] = 0.08
+				}
+			},
+			{
+				stat_buffs = {
+					[stat_buffs.power_level_modifier] = 0.08
+				}
+			},
+			{
+				stat_buffs = {
+					[stat_buffs.power_level_modifier] = 0.08
 				}
 			}
 		}
@@ -61,27 +85,27 @@ local templates = {
 	weapon_trait_bespoke_ogryn_thumper_p1_crit_chance_based_on_aim_time = {
 		weapon_trait_bespoke_ogryn_thumper_p1_crit_chance_based_on_aim_time = {
 			{
-				duration_per_stack = 0.25,
+				duration_per_stack = 0.35,
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.02
+					[stat_buffs.critical_strike_chance] = 0.1
+				}
+			},
+			{
+				duration_per_stack = 0.3,
+				stat_buffs = {
+					[stat_buffs.critical_strike_chance] = 0.1
 				}
 			},
 			{
 				duration_per_stack = 0.25,
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.03
+					[stat_buffs.critical_strike_chance] = 0.1
 				}
 			},
 			{
-				duration_per_stack = 0.25,
+				duration_per_stack = 0.2,
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.04
-				}
-			},
-			{
-				duration_per_stack = 0.25,
-				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.05
+					[stat_buffs.critical_strike_chance] = 0.1
 				}
 			}
 		}
@@ -91,25 +115,25 @@ local templates = {
 			{
 				active_duration = 3.5,
 				proc_stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.25
-				}
-			},
-			{
-				active_duration = 3.5,
-				proc_stat_buffs = {
 					[stat_buffs.melee_power_level_modifier] = 0.3
 				}
 			},
 			{
 				active_duration = 3.5,
 				proc_stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.35
+					[stat_buffs.melee_power_level_modifier] = 0.34
 				}
 			},
 			{
 				active_duration = 3.5,
 				proc_stat_buffs = {
-					[stat_buffs.melee_power_level_modifier] = 0.4
+					[stat_buffs.melee_power_level_modifier] = 0.38
+				}
+			},
+			{
+				active_duration = 3.5,
+				proc_stat_buffs = {
+					[stat_buffs.melee_power_level_modifier] = 0.42
 				}
 			}
 		}
@@ -118,22 +142,22 @@ local templates = {
 		weapon_trait_bespoke_ogryn_thumper_p1_power_bonus_on_hitting_single_enemy_with_all = {
 			{
 				proc_stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.075
+					[stat_buffs.power_level_modifier] = 0.18
 				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.125
+					[stat_buffs.power_level_modifier] = 0.22
 				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.175
+					[stat_buffs.power_level_modifier] = 0.26
 				}
 			},
 			{
 				proc_stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.225
+					[stat_buffs.power_level_modifier] = 0.3
 				}
 			}
 		}

@@ -22,6 +22,10 @@ NetworkedUniqueRandomize.editor_init = function (self, unit)
 	self:enable(unit)
 end
 
+NetworkedUniqueRandomize.editor_validate = function (self, unit)
+	return true, ""
+end
+
 NetworkedUniqueRandomize.enable = function (self, unit)
 	return
 end

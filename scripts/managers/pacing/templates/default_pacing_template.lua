@@ -87,66 +87,66 @@ local DEFAULT_ALLOWED_SPAWN_TYPES = {
 local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 	{
 		travel_change_pause_time = 5,
-		ramp_duration = 600,
+		ramp_duration = 500,
 		max_duration = 50,
 		ramp_up_states = {
 			build_up_tension = true,
 			build_up_tension_low = true
 		},
 		ramp_modifiers = {
-			hordes = 1.5,
+			hordes = 1.25,
 			specials = 1.5
 		}
 	},
 	{
 		travel_change_pause_time = 7,
-		ramp_duration = 600,
+		ramp_duration = 500,
 		max_duration = 50,
 		ramp_up_states = {
 			build_up_tension = true,
 			build_up_tension_low = true
 		},
 		ramp_modifiers = {
-			hordes = 1.5,
+			hordes = 1.25,
 			specials = 2
 		}
 	},
 	{
 		travel_change_pause_time = 9,
-		ramp_duration = 500,
-		max_duration = 75,
+		ramp_duration = 400,
+		max_duration = 60,
+		ramp_up_states = {
+			build_up_tension = true,
+			build_up_tension_low = true
+		},
+		ramp_modifiers = {
+			hordes = 1.25,
+			specials = 2
+		}
+	},
+	{
+		travel_change_pause_time = 11,
+		ramp_duration = 300,
+		max_duration = 70,
 		ramp_up_states = {
 			build_up_tension = true,
 			build_up_tension_low = true
 		},
 		ramp_modifiers = {
 			hordes = 1.5,
-			specials = 2
+			specials = 2.5
 		}
 	},
 	{
-		travel_change_pause_time = 11,
-		ramp_duration = 400,
-		max_duration = 100,
+		travel_change_pause_time = 13,
+		ramp_duration = 200,
+		max_duration = 80,
 		ramp_up_states = {
 			build_up_tension = true,
 			build_up_tension_low = true
 		},
 		ramp_modifiers = {
 			hordes = 1.75,
-			specials = 2.5
-		}
-	},
-	{
-		travel_change_pause_time = 13,
-		ramp_duration = 300,
-		max_duration = 120,
-		ramp_up_states = {
-			build_up_tension = true,
-			build_up_tension_low = true
-		},
-		ramp_modifiers = {
-			hordes = 2,
 			specials = 3
 		}
 	}
@@ -162,7 +162,8 @@ local pacing_template = {
 		specials = _challenge_rating_multiplier_steps(40),
 		hordes = _challenge_rating_multiplier_steps(30),
 		trickle_hordes = _challenge_rating_multiplier_steps(20),
-		roamers = _challenge_rating_multiplier_steps(90)
+		roamers = _challenge_rating_multiplier_steps(90),
+		terror_events = _challenge_rating_multiplier_steps(90)
 	},
 	ramp_up_frequency_modifiers = DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS,
 	state_settings = {
@@ -234,11 +235,7 @@ local pacing_template = {
 			build_up_tension_low = {
 				decay_tension_delay = 3,
 				next_conditions = {
-					tension_threshold = 12,
-					duration = {
-						50,
-						60
-					}
+					tension_threshold = 12
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension_low,
 				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_low[2]
@@ -302,11 +299,7 @@ local pacing_template = {
 			build_up_tension_low = {
 				decay_tension_delay = 3,
 				next_conditions = {
-					tension_threshold = 13.5,
-					duration = {
-						30,
-						40
-					}
+					tension_threshold = 13.5
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension_low,
 				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_low[3]
@@ -370,11 +363,7 @@ local pacing_template = {
 			build_up_tension_low = {
 				decay_tension_delay = 3,
 				next_conditions = {
-					tension_threshold = 15,
-					duration = {
-						30,
-						40
-					}
+					tension_threshold = 15
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension_low,
 				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_low[4]
@@ -442,11 +431,7 @@ local pacing_template = {
 			build_up_tension_low = {
 				decay_tension_delay = 3,
 				next_conditions = {
-					tension_threshold = 17.5,
-					duration = {
-						30,
-						40
-					}
+					tension_threshold = 26.25
 				},
 				allowed_spawn_types = DEFAULT_ALLOWED_SPAWN_TYPES.build_up_tension_low,
 				decay_tension_rate = DECAY_TENSION_RATES.build_up_tension_low[5]

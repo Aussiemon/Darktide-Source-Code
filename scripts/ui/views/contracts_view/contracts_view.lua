@@ -69,8 +69,6 @@ ContractsView._on_navigation_input_changed = function (self)
 
 		task_grid:focus_grid_index(selected_grid_index, scroll_progress, true)
 	end
-
-	self:_update_reroll_button_text(not using_cursor_navigation)
 end
 
 ContractsView.on_resolution_modified = function (self, scale)
@@ -191,17 +189,6 @@ ContractsView._display_task_info = function (self, task_widget, task_info)
 	if label_default_size[2] < label_height then
 		height_addition = label_height - label_default_size[2]
 		label_size[2] = label_height
-	end
-
-	local description_style = task_info_style.description
-	description_style.offset[2] = description_style.default_offset[2] + height_addition
-	local description = content.task_description
-	task_info_content.description = description
-	local description_size = description_style.size
-	local _, description_height = self:_text_size_for_style(description, description_style, description_size)
-
-	if description_size[2] < description_height then
-		height_addition = height_addition + description_height - description_size[2]
 	end
 
 	local reward_text = string.format(ViewSettings.task_info_reward_string_format, task_info.reward.amount)
@@ -519,22 +506,6 @@ ContractsView._update_contract_time_left = function (self, t)
 
 		self._task_grid:set_expire_time(total_seconds_left)
 	end
-end
-
-ContractsView._update_reroll_button_text = function (self, using_gamepad)
-	local button_label = nil
-
-	if using_gamepad then
-		local service_type = DefaultViewInputSettings.service_type
-		local action = ViewSettings.reroll_input_action
-		button_label = TextUtils.localize_with_button_hint(action, "loc_contracts_reroll_button", nil, service_type, Localize("loc_input_legend_text_template"))
-	else
-		button_label = Localize("loc_contracts_reroll_button")
-	end
-
-	local reroll_button = self._widgets_by_name.reroll_button
-	local button_content = reroll_button.content
-	button_content.text = Utf8.upper(button_label)
 end
 
 ContractsView._fetch_wallet = function (self, type)

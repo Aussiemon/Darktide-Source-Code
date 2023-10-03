@@ -238,7 +238,8 @@ local circumstance_templates = {
 			"mutator_only_melee_trickle_hordes",
 			"mutator_only_melee_terror_events",
 			"mutator_waves_of_specials",
-			"mutator_only_traitor_guard_faction"
+			"mutator_only_traitor_guard_faction",
+			"mutator_more_ogryns"
 		},
 		mission_overrides = only_melee_mission_overrides
 	},
@@ -365,12 +366,9 @@ local circumstance_templates = {
 		},
 		mutators = {
 			"mutator_no_encampments",
-			"mutator_more_specials",
-			"mutator_no_hordes",
-			"mutator_only_none_roamer_packs",
-			"mutator_low_roamer_amount",
-			"mutator_corruption_over_time_2",
-			"mutator_ability_cooldown_reduction"
+			"mutator_waves_of_specials",
+			"mutator_more_boss_patrols",
+			"mutator_more_ogryns"
 		}
 	},
 	high_flash_mission_01 = {
@@ -378,7 +376,9 @@ local circumstance_templates = {
 		mutators = {
 			"mutator_monster_specials",
 			"mutator_waves_of_specials",
-			"mutator_add_resistance"
+			"mutator_add_resistance",
+			"mutator_increase_terror_event_points",
+			"mutator_auric_tension_modifier"
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_01_description",
@@ -391,7 +391,9 @@ local circumstance_templates = {
 		mutators = {
 			"mutator_minion_nurgle_blessing",
 			"mutator_waves_of_specials",
-			"mutator_add_resistance"
+			"mutator_add_resistance",
+			"mutator_increase_terror_event_points",
+			"mutator_auric_tension_modifier"
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_02_description",
@@ -404,7 +406,9 @@ local circumstance_templates = {
 		mutators = {
 			"mutator_waves_of_specials",
 			"mutator_chaos_hounds",
-			"mutator_add_resistance"
+			"mutator_add_resistance",
+			"mutator_increase_terror_event_points",
+			"mutator_auric_tension_modifier"
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_03_description",
@@ -418,7 +422,9 @@ local circumstance_templates = {
 			"mutator_chaos_hounds",
 			"mutator_minion_nurgle_blessing",
 			"mutator_add_resistance",
-			"mutator_ability_cooldown_reduction"
+			"mutator_ability_cooldown_reduction",
+			"mutator_increase_terror_event_points",
+			"mutator_auric_tension_modifier"
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_04_description",
@@ -434,7 +440,9 @@ local circumstance_templates = {
 			"mutator_monster_specials",
 			"mutator_add_resistance",
 			"mutator_waves_of_specials",
-			"mutator_darkness_los"
+			"mutator_darkness_los",
+			"mutator_increase_terror_event_points",
+			"mutator_auric_tension_modifier"
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_05_description",
@@ -450,7 +458,9 @@ local circumstance_templates = {
 			"mutator_waves_of_specials",
 			"mutator_add_resistance",
 			"mutator_ventilation_purge_los",
-			"mutator_snipers"
+			"mutator_snipers",
+			"mutator_increase_terror_event_points",
+			"mutator_auric_tension_modifier"
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_06_description",
@@ -472,7 +482,10 @@ local circumstance_templates = {
 			"mutator_only_melee_terror_events",
 			"mutator_add_resistance",
 			"mutator_waves_of_specials",
-			"mutator_only_traitor_guard_faction"
+			"mutator_only_traitor_guard_faction",
+			"mutator_more_ogryns",
+			"mutator_increase_terror_event_points",
+			"mutator_auric_tension_modifier"
 		},
 		mission_overrides = only_melee_mission_overrides
 	},
@@ -489,7 +502,9 @@ local circumstance_templates = {
 			"mutator_waves_of_specials",
 			"mutator_add_resistance",
 			"mutator_mutants",
-			"mutator_ability_cooldown_reduction"
+			"mutator_ability_cooldown_reduction",
+			"mutator_increase_terror_event_points",
+			"mutator_auric_tension_modifier"
 		}
 	},
 	high_flash_mission_09 = {
@@ -504,7 +519,9 @@ local circumstance_templates = {
 			"mutator_add_resistance",
 			"mutator_only_traitor_guard_faction",
 			"mutator_ability_cooldown_reduction",
-			"mutator_ventilation_purge_los"
+			"mutator_ventilation_purge_los",
+			"mutator_increase_terror_event_points",
+			"mutator_auric_tension_modifier"
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_09_description",
@@ -521,7 +538,9 @@ local circumstance_templates = {
 			"mutator_minion_nurgle_blessing",
 			"mutator_only_traitor_guard_faction",
 			"mutator_monster_specials",
-			"mutator_enchanced_grenade_ability"
+			"mutator_enchanced_grenade_ability",
+			"mutator_increase_terror_event_points",
+			"mutator_auric_tension_modifier"
 		},
 		ui = {
 			description = "loc_circumstance_flash_mission_10_description",
@@ -541,7 +560,9 @@ local circumstance_templates = {
 			"mutator_snipers",
 			"mutator_waves_of_specials",
 			"mutator_add_resistance",
-			"mutator_enchanced_grenade_ability"
+			"mutator_enchanced_grenade_ability",
+			"mutator_increase_terror_event_points",
+			"mutator_auric_tension_modifier"
 		},
 		mission_overrides = {
 			hazard_prop_settings = {
@@ -563,7 +584,9 @@ local circumstance_templates = {
 			"mutator_mutants",
 			"mutator_chaos_hounds",
 			"mutator_add_resistance",
-			"mutator_enchanced_grenade_ability"
+			"mutator_enchanced_grenade_ability",
+			"mutator_increase_terror_event_points",
+			"mutator_auric_tension_modifier"
 		},
 		mission_overrides = {
 			hazard_prop_settings = {
@@ -585,7 +608,9 @@ local circumstance_templates = {
 			"mutator_minion_nurgle_blessing",
 			"mutator_add_resistance",
 			"mutator_waves_of_specials",
-			"mutator_ability_cooldown_reduction"
+			"mutator_ability_cooldown_reduction",
+			"mutator_increase_terror_event_points",
+			"mutator_auric_tension_modifier"
 		},
 		mission_overrides = {
 			hazard_prop_settings = {
@@ -605,13 +630,11 @@ local circumstance_templates = {
 		},
 		mutators = {
 			"mutator_no_encampments",
-			"mutator_more_specials",
-			"mutator_no_hordes",
-			"mutator_only_none_roamer_packs",
-			"mutator_low_roamer_amount",
-			"mutator_corruption_over_time_2",
-			"mutator_add_resistance",
-			"mutator_ability_cooldown_reduction"
+			"mutator_waves_of_specials",
+			"mutator_more_boss_patrols",
+			"mutator_more_ogryns",
+			"mutator_increase_terror_event_points",
+			"mutator_auric_tension_modifier"
 		}
 	},
 	six_one_flash_mission_01 = {
@@ -692,7 +715,5 @@ local circumstance_templates = {
 		}
 	}
 }
-circumstance_templates.flash_mission_14 = table.clone(circumstance_templates.flash_mission_01)
-circumstance_templates.high_flash_mission_14 = table.clone(circumstance_templates.high_flash_mission_01)
 
 return circumstance_templates

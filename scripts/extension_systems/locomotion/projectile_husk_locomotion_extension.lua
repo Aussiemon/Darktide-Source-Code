@@ -1,7 +1,7 @@
 local Luggable = require("scripts/utilities/luggable")
 local ProjectileHuskLocomotion = require("scripts/extension_systems/locomotion/utilities/projectile_husk_locomotion")
+local ProjectileLocomotion = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion")
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
-local ProjectileLocomotionUtility = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion_utility")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
 local locomotion_states = ProjectileLocomotionSettings.states
 local MAX_SYNCHRONIZE_COUNTER = ProjectileLocomotionSettings.MAX_SYNCHRONIZE_COUNTER
@@ -23,6 +23,7 @@ ProjectileHuskLocomotionExtension.init = function (self, extension_init_context,
 	self._projectile_template = projectile_template
 	local projectile_locomotion_template = projectile_template.locomotion_template
 	self._projectile_locomotion_template = projectile_locomotion_template
+	self._unit_rotation_offset = projectile_template.unit_rotation_offset
 	local item_or_nil = extension_init_data.optional_item
 
 	if item_or_nil then
@@ -42,7 +43,7 @@ ProjectileHuskLocomotionExtension.init = function (self, extension_init_context,
 	local dynamic_actor_id = self._dynamic_actor_id
 
 	if dynamic_actor_id then
-		ProjectileLocomotionUtility.set_kinematic(unit, dynamic_actor_id, true)
+		ProjectileLocomotion.set_kinematic(unit, dynamic_actor_id, true)
 	end
 
 	if projectile_template.always_hidden then
@@ -54,6 +55,9 @@ ProjectileHuskLocomotionExtension.init = function (self, extension_init_context,
 	end
 
 	self:_switch_locomotion_state(snapshot.locomotion_state, unit)
+
+	self._fixed_time_step = Managers.state.game_session.fixed_time_step
+
 	self:_hide_pin()
 end
 
@@ -97,12 +101,13 @@ end
 ProjectileHuskLocomotionExtension._num_snapshots_buffered = function (self, initial_received_snapshot_id, t)
 	local snapshot_ring_buffer = self._snapshot_ring_buffer
 	local iteration_times = 0
+	local fixed_time_step = self._fixed_time_step
 
 	repeat
 		local snapshot_id = _snapshot_id_add(initial_received_snapshot_id, -iteration_times)
 		local snapshot = snapshot_ring_buffer[snapshot_id]
 
-		if ProjectileHuskLocomotion.snapshot_is_outdated(snapshot, t) then
+		if ProjectileHuskLocomotion.snapshot_is_outdated(snapshot, t, fixed_time_step) then
 			return iteration_times
 		end
 
@@ -133,7 +138,7 @@ ProjectileHuskLocomotionExtension._update_interpolation = function (self, unit, 
 end
 
 ProjectileHuskLocomotionExtension._update_interpolation_time = function (self, interpolation_data, snapshot_ring_buffer, unit, dt, t)
-	local snapshot_time = (MAX_SYNCHRONIZE_COUNTER + 1) * GameParameters.fixed_time_step
+	local snapshot_time = (MAX_SYNCHRONIZE_COUNTER + 1) * self._fixed_time_step
 	local old_interpolation_t = interpolation_data.t
 	local time_left_in_current_snapshot = snapshot_time - old_interpolation_t
 	local num_buffered_snapshots = _snapshot_id_diff(interpolation_data.target_snapshot_id, self._latest_received_snapshot_id)
@@ -166,7 +171,7 @@ ProjectileHuskLocomotionExtension._step_interpolation_snapshots = function (self
 	local target_snapshot = snapshot_ring_buffer[target_snapshot_id]
 	local new_snapshot_t = nil
 
-	if not ProjectileHuskLocomotion.snapshot_is_outdated(target_snapshot, t) then
+	if not ProjectileHuskLocomotion.snapshot_is_outdated(target_snapshot, t, self._fixed_time_step) then
 		new_snapshot_t = snapshot_t - num_snapshots_to_jump
 		interpolation_data.t = snapshot_time * new_snapshot_t
 		interpolation_data.start_snapshot_id = start_snapshot_id
@@ -230,6 +235,11 @@ ProjectileHuskLocomotionExtension._interpolate = function (self, unit, interpola
 	local target_pos, target_rot = self:_unbox_snapshot(target_snapshot)
 	local current_pos = Vector3.lerp(start_pos, target_pos, snapshot_t)
 	local current_rot = Quaternion.lerp(start_rot, target_rot, snapshot_t)
+	local rotation_offset_box = self._unit_rotation_offset
+
+	if rotation_offset_box then
+		current_rot = Quaternion.multiply(current_rot, rotation_offset_box:unbox())
+	end
 
 	Unit.set_local_position(unit, 1, current_pos)
 	Unit.set_local_rotation(unit, 1, current_rot)
@@ -328,7 +338,7 @@ ProjectileHuskLocomotionExtension._read_latest_snapshot = function (self, unit, 
 		local base_snapshot = snapshot_ring_buffer[latest_received_snapshot_id]
 		local base_pos, base_rot = self:_unbox_snapshot(base_snapshot)
 		local target_pos, target_rot, target_loc_state = self:_unbox_snapshot(snapshot)
-		local approximation_timeline = GameParameters.fixed_time_step * num_snapshots_ahead_of_latest
+		local approximation_timeline = self._fixed_time_step * num_snapshots_ahead_of_latest
 		local approximated = true
 
 		for i = 1, num_snapshots_ahead_of_latest - 1 do

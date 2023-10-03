@@ -43,8 +43,9 @@ MinionBuffExtension.hot_join_sync = function (self, unit, sender, channel)
 		local template_name = template.name
 		local buff_template_id = network_lookup_buff_templates[template_name]
 		local optional_lerp_value = buff_instance:buff_lerp_value()
+		local num_index_array = #index_array
 
-		if #index_array == 1 then
+		if num_index_array == 1 then
 			local index = index_array[1]
 
 			RPC.rpc_add_buff(channel, game_object_id, buff_template_id, index, optional_lerp_value, nil, nil, false)
@@ -119,6 +120,20 @@ MinionBuffExtension._on_remove_buff_stack = function (self, buff_instance, previ
 
 			self:_check_stack_node_effects(stack_node_effects, current_stack_count, previous_stack_count)
 		end
+
+		local stack_material_vectors = minion_effects.stack_material_vectors
+
+		if stack_material_vectors then
+			local current_stack_count = buff_instance:stack_count()
+			local material_vector = stack_material_vectors[math.min(current_stack_count, #stack_material_vectors)]
+
+			if material_vector then
+				local name = material_vector.name
+				local value = material_vector.value
+
+				Unit.set_vector3_for_materials(self._unit, name, Vector3(value[1], value[2], value[3]), true)
+			end
+		end
 	end
 
 	MinionBuffExtension.super._on_remove_buff_stack(self, buff_instance, previous_stack_count)
@@ -135,6 +150,20 @@ MinionBuffExtension._on_add_buff_stack = function (self, buff_instance, previous
 			local current_stack_count = buff_instance:stack_count()
 
 			self:_check_stack_node_effects(stack_node_effects, current_stack_count, previous_stack_count)
+		end
+
+		local stack_material_vectors = minion_effects.stack_material_vectors
+
+		if stack_material_vectors then
+			local current_stack_count = buff_instance:stack_count()
+			local material_vector = stack_material_vectors[math.min(current_stack_count, #stack_material_vectors)]
+
+			if material_vector then
+				local name = material_vector.name
+				local value = material_vector.value
+
+				Unit.set_vector3_for_materials(self._unit, name, Vector3(value[1], value[2], value[3]), true)
+			end
 		end
 	end
 
@@ -272,7 +301,7 @@ end
 
 MinionBuffExtension._set_proc_active_start_time = function (self, index, activation_time)
 	if self._is_server then
-		local activation_frame = activation_time / GameParameters.fixed_time_step
+		local activation_frame = activation_time / self._fixed_time_step
 		local game_object_id = self._game_object_id
 
 		Managers.state.game_session:send_rpc_clients("rpc_buff_proc_set_active_time", game_object_id, index, activation_frame)

@@ -1,5 +1,6 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
+local ImpactFxHelper = require("scripts/utilities/impact_fx_helper")
 local armor_types = ArmorSettings.types
 local hit_types = SurfaceMaterialSettings.hit_types
 local blood_ball = {
@@ -594,23 +595,25 @@ local resistant = table.clone(unarmored)
 local berserker = table.clone(unarmored)
 local prop_armor = table.clone(armored)
 local player = nil
+local surface_fx = {}
 local default_surface_fx = {
-	sfx = {
-		{
-			group = "surface_material",
-			append_husk_to_event_name = false,
-			event = "wwise/events/weapon/melee_hits_blunt_no_damage",
-			normal_rotation = true
+	[hit_types.stop] = {
+		sfx = {
+			{
+				group = "surface_material",
+				append_husk_to_event_name = false,
+				event = "wwise/events/weapon/melee_hits_blunt_no_damage",
+				normal_rotation = true
+			}
 		}
-	}
+	},
+	[hit_types.penetration_entry] = nil,
+	[hit_types.penetration_exit] = nil
 }
 
+ImpactFxHelper.create_missing_surface_fx(surface_fx, default_surface_fx)
+
 return {
-	surface = {
-		[hit_types.stop] = default_surface_fx,
-		[hit_types.penetration_entry] = nil,
-		[hit_types.penetration_exit] = nil
-	},
 	armor = {
 		[armor_types.armored] = armored,
 		[armor_types.berserker] = berserker,
@@ -620,5 +623,6 @@ return {
 		[armor_types.super_armor] = super_armor,
 		[armor_types.unarmored] = unarmored,
 		[armor_types.prop_armor] = prop_armor
-	}
+	},
+	surface = surface_fx
 }

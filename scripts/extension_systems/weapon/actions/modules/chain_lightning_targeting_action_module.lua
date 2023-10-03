@@ -22,9 +22,10 @@ ChainLightningTargetingActionModule.start = function (self, action_settings, t)
 	component.target_unit_3 = nil
 end
 
-local DEFAULT_RADIUS = 20
-local DEFAULT_MAX_Z_DIFF = DEFAULT_RADIUS
-local DEFAULT_MAX_ANGLE = math.pi * 0.1
+local DEFAULT_RADIUS = 4
+local DEFAULT_MAX_Z_DIFF = 10
+local DEFAULT_MAX_ANGLE = math.pi * 0.25
+local DEFAULT_MAX_VERTICAL_ANGLE = math.pi * 0.33
 local BROADPHASE_RESULTS = {}
 local hit_units = {}
 
@@ -38,10 +39,11 @@ ChainLightningTargetingActionModule.fixed_update = function (self, dt, t)
 	local query_position = POSITION_LOOKUP[player_unit]
 	local rotation = self._first_person_component.rotation
 	local forward_direction = Vector3_normalize(Vector3_flat(Quaternion.forward(rotation)))
-	local max_angle = DEFAULT_MAX_ANGLE
-	local close_max_angle = DEFAULT_MAX_ANGLE
-	local max_z_diff = DEFAULT_MAX_Z_DIFF
-	local radius = DEFAULT_RADIUS
+	local stat_buffs = self._buff_extension:stat_buffs()
+	local action_settings = self._action_settings
+	local chain_settings = action_settings and action_settings.chain_settings_targeting or action_settings.chain_settings
+	local time_in_action = t - self._weapon_action_component.start_t
+	local max_angle, close_max_angle, vertical_max_angle, max_z_diff, max_jumps, radius, jump_time, max_targets = ChainLightning.targeting_parameters(time_in_action, chain_settings, stat_buffs)
 
 	table.clear(BROADPHASE_RESULTS)
 	table.clear(hit_units)
@@ -49,30 +51,45 @@ ChainLightningTargetingActionModule.fixed_update = function (self, dt, t)
 	local num_results = broadphase:query(query_position, radius, BROADPHASE_RESULTS, enemy_side_names)
 	local component = self._component
 	local num_targets = 0
+	local precision_angle = math.pi * 0.001
+	local test_angle = precision_angle
 
-	for i = 1, num_results do
-		local target_unit = BROADPHASE_RESULTS[i]
+	for maddafakka = 1, 2 do
+		for i = 1, num_results do
+			local target_unit = BROADPHASE_RESULTS[i]
 
-		if target_unit and not hit_units[target_unit] then
-			local valid_target, debug_reason = ChainLightning.is_valid_target(self._physics_world, player_unit, target_unit, query_position, -forward_direction, max_angle, close_max_angle, max_z_diff, nil, nil, nil)
+			if target_unit and not hit_units[target_unit] then
+				local min_distance = 1
+				local valid_target, debug_reason = ChainLightning.is_valid_target(self._physics_world, player_unit, target_unit, query_position, -forward_direction, test_angle, close_max_angle, nil, nil, nil, min_distance)
 
-			if valid_target then
-				num_targets = num_targets + 1
-				hit_units[target_unit] = true
+				if valid_target then
+					num_targets = num_targets + 1
+					hit_units[target_unit] = true
 
-				if num_targets == 1 then
-					component.target_unit_1 = target_unit
-				elseif num_targets == 2 then
-					component.target_unit_2 = target_unit
-				elseif num_targets == 3 then
-					component.target_unit_3 = target_unit
-				end
+					if num_targets == 1 then
+						component.target_unit_1 = target_unit
+					elseif num_targets == 2 then
+						component.target_unit_2 = target_unit
+					elseif num_targets == 3 then
+						component.target_unit_3 = target_unit
+					end
 
-				if num_targets >= 3 then
-					break
+					if max_targets and num_targets == max_targets then
+						break
+					end
+
+					if num_targets >= 3 then
+						break
+					end
 				end
 			end
 		end
+
+		if num_targets >= 3 then
+			break
+		end
+
+		test_angle = max_angle
 	end
 end
 

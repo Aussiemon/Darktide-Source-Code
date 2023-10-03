@@ -2,14 +2,14 @@ local AchievementData = require("scripts/managers/achievements/achievement_data"
 local AchievementStats = require("scripts/managers/stats/groups/achievement_stats")
 local AchievementUITypes = require("scripts/settings/achievements/achievement_ui_types")
 local BackendError = require("scripts/managers/error/errors/backend_error")
-local CraftingSettings = require("scripts/settings/item/crafting_settings")
+local ErrorCodes = require("scripts/managers/error/error_codes")
 local GameVersionError = require("scripts/managers/error/errors/game_version_error")
+local InitializeWanError = require("scripts/managers/error/errors/initialize_wan_error")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local Promise = require("scripts/foundation/utilities/promise")
 local ServiceUnavailableError = require("scripts/managers/error/errors/service_unavailable_error")
 local SignInError = require("scripts/managers/error/errors/sign_in_error")
-local XboxLiveUtilities = require("scripts/foundation/utilities/xbox_live")
 local AccountService = class("AccountService")
 
 AccountService.init = function (self, backend_interface)
@@ -26,15 +26,29 @@ local function _init_network_client(account_id)
 			connection_manager:destroy_wan_client()
 		end
 
-		connection_manager:initialize_wan_client(account_id)
+		return connection_manager:initialize_wan_client(account_id)
+	else
+		return true
 	end
+end
+
+local function _resolve_backend_game_settings()
+	return Managers.backend.interfaces.game_settings:resolve_backend_game_settings():next(function ()
+		ErrorCodes.apply_backend_game_settings()
+
+		return nil
+	end)
 end
 
 AccountService.signin = function (self)
 	return Managers.backend:authenticate():next(function (auth_data)
 		local account_id = auth_data.sub
 
-		_init_network_client(account_id)
+		if not _init_network_client(account_id) then
+			return Promise.rejected({
+				description = "INITIALIZE_WAN_ERROR"
+			})
+		end
 
 		local store_account_verified = Managers.account:verify_gdk_store_account(nil, true)
 
@@ -51,7 +65,7 @@ AccountService.signin = function (self)
 
 		local migrations_promise = Managers.backend.interfaces.account:check_and_run_migrations(account_id)
 		local status_promise = Managers.backend.interfaces.version_check:status()
-		local settings_promise = Managers.backend.interfaces.game_settings:resolve_backend_game_settings()
+		local settings_promise = _resolve_backend_game_settings()
 		local items_promise = MasterItems.refresh()
 		local auth_data_promise = Promise.resolved(auth_data)
 		local immaterium_connection_info = Managers.backend.interfaces.immaterium:fetch_connection_info()
@@ -103,6 +117,8 @@ AccountService.signin = function (self)
 	end):catch(function (error_data)
 		if error_data.description == "VERSION_ERROR" then
 			Managers.error:report_error(GameVersionError:new(error_data))
+		elseif error_data.description == "INITIALIZE_WAN_ERROR" then
+			Managers.error:report_error(InitializeWanError:new(error_data))
 		elseif error_data.code == 503 then
 			Managers.error:report_error(ServiceUnavailableError:new(error_data))
 		else

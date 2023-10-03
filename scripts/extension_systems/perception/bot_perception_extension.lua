@@ -58,7 +58,6 @@ BotPerceptionExtension.extensions_ready = function (self, world, unit)
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 	local locomotion_component = unit_data_extension:read_component("locomotion")
 	self._locomotion_component = locomotion_component
-	self._slot_extension = ScriptUnit.extension(unit, "slot_system")
 	self._behavior_extension = ScriptUnit.extension(unit, "behavior_system")
 	self._toughness_extension = ScriptUnit.extension(unit, "toughness_system")
 	local player_unit_input_extension = ScriptUnit.extension(unit, "input_system")

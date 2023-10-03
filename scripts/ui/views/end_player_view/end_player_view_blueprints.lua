@@ -353,7 +353,7 @@ local function _remove_live_item_icon_cb_func(widget, ui_renderer)
 	UIWidget.set_visible(widget, ui_renderer, true)
 end
 
-local function _reward_load_icon_func(parent, widget, config)
+local function _reward_load_icon_func(parent, widget, config, optional_icon_size)
 	local content = widget.content
 	local reward_item = content.reward_item
 
@@ -364,7 +364,8 @@ local function _reward_load_icon_func(parent, widget, config)
 		local render_context = {
 			camera_focus_slot_name = slot_name,
 			state_machine = item_state_machine,
-			animation_event = item_animation_event
+			animation_event = item_animation_event,
+			size = optional_icon_size
 		}
 		local item_group = content.item_group
 		local cb = nil
@@ -378,7 +379,8 @@ local function _reward_load_icon_func(parent, widget, config)
 			content.icon_load_id = parent:load_weapon_pattern_icon(preview_item or reward_item, cb, render_context)
 		else
 			cb = callback(_apply_live_item_icon_cb_func, widget)
-			content.icon_load_id = Managers.ui:load_item_icon(reward_item, cb, render_context)
+			local prioritize = true
+			content.icon_load_id = Managers.ui:load_item_icon(reward_item, cb, render_context, prioritize)
 		end
 	end
 end

@@ -87,10 +87,7 @@ local dialogue_category_config = {
 	},
 	player_on_demand_vo = {
 		mutually_exclusive = false,
-		interrupted_by = {
-			conversations_prio_0 = true,
-			vox_prio_0 = true
-		},
+		interrupted_by = {},
 		playable_during_category = {
 			default = true,
 			enemy_high_prio = true,
@@ -245,6 +242,7 @@ local dialogue_category_config = {
 			player_prio_1 = true,
 			enemy_vo_prio_1 = true,
 			enemy_vo_prio_0 = true,
+			on_demand_vo = true,
 			enemy_alerts_prio_1 = true,
 			player_prio_2 = true,
 			cutscene = true,
@@ -263,6 +261,7 @@ local dialogue_category_config = {
 			player_prio_1 = true,
 			enemy_vo_prio_1 = true,
 			enemy_vo_prio_0 = true,
+			on_demand_vo = true,
 			enemy_alerts_prio_1 = true,
 			player_prio_2 = true,
 			cutscene = true,

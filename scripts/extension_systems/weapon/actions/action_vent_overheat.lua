@@ -87,6 +87,14 @@ ActionVentOverheat._deal_damage = function (self)
 	local vent_power_level = overheat_config.vent_power_level
 	local vent_damage_profile = overheat_config.vent_damage_profile
 	local vent_damage_type = overheat_config.vent_damage_type
+	local proficiency_keyword = overheat_config.proficiency_keyword
+
+	if proficiency_keyword and buff_extension:has_keyword(proficiency_keyword) then
+		vent_power_level = overheat_config.proficiency_vent_power_level or vent_power_level
+		vent_damage_profile = overheat_config.proficiency_vent_damage_profile or vent_damage_profile
+		vent_damage_type = overheat_config.proficiency_vent_damage_type or vent_damage_type
+	end
+
 	local min_power = vent_power_level[1]
 	local max_power = vent_power_level[2]
 	local scaled_current_heat = (current_heat - low_threshold) / (1 - low_threshold)

@@ -17,10 +17,11 @@ end
 
 local PartyImmateriumMissionSessionBoot = class("PartyImmateriumMissionSessionBoot", "SessionBootBase")
 
-PartyImmateriumMissionSessionBoot.init = function (self, event_object, matched_game_session_id)
+PartyImmateriumMissionSessionBoot.init = function (self, event_object, matched_game_session_id, party_id)
 	PartyImmateriumMissionSessionBoot.super.init(self, STATES, event_object)
 
 	self._matched_game_session_id = matched_game_session_id
+	self._party_id = party_id
 	self._backend_interface = BackendInterface:new()
 
 	self:_set_state(STATES.idle)
@@ -138,7 +139,7 @@ PartyImmateriumMissionSessionBoot._create_connection = function (self)
 		Network.leave_lan_lobby(lobby)
 	end
 
-	self._connection_client = ConnectionClient:new(event_delegate, self._engine_lobby, cleanup, network_hash, self._host_type, nil, self._jwt_ticket, self._matched_game_session_id, self._accelerated)
+	self._connection_client = ConnectionClient:new(event_delegate, self._engine_lobby, cleanup, network_hash, self._host_type, nil, self._jwt_ticket, self._matched_game_session_id, self._accelerated, self._party_id)
 end
 
 PartyImmateriumMissionSessionBoot._start_reserve = function (self)
@@ -214,6 +215,7 @@ PartyImmateriumMissionSessionBoot.update = function (self, dt)
 				_info("Joined lobby %s", host_peer_id)
 				self:_create_connection()
 				self:_set_state(STATES.ready)
+				self._event_object:set_booted()
 			else
 				_info("Failed to join lobby due to missing host_peer_id")
 				self:_failed("failed_joining_lobby_no_host_peer")

@@ -420,7 +420,7 @@ TestifySnippets.wait_for_end_of_dialogue = function (num_dialogues)
 	return has_played
 end
 
-TestifySnippets.equip_all_traits_support_snippet = function (player, slot_name, traits, has_placeholder_profile, weapon_name, units_to_spawn)
+TestifySnippets.equip_all_traits_support_snippet = function (player, slot_name, traits, has_local_profile, weapon_name, units_to_spawn)
 	local weapon = Testify:make_request("weapon", weapon_name)
 	local data = {
 		player = player,
@@ -440,7 +440,7 @@ TestifySnippets.equip_all_traits_support_snippet = function (player, slot_name, 
 		spawn_position = Vector3Box(Vector3.zero())
 	}
 
-	if not has_placeholder_profile then
+	if not has_local_profile then
 		Testify:make_request("equip_item_backend", data)
 	else
 		Testify:make_request("equip_item", data)

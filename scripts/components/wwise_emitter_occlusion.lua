@@ -24,6 +24,10 @@ WwiseEmitterOcclusion.editor_init = function (self, unit)
 	self:enable(unit)
 end
 
+WwiseEmitterOcclusion.editor_validate = function (self, unit)
+	return true, ""
+end
+
 WwiseEmitterOcclusion.editor_destroy = function (self, unit)
 	if not rawget(_G, "LevelEditor") then
 		return

@@ -66,6 +66,10 @@ CorruptorArm.editor_init = function (self, unit)
 	return true
 end
 
+CorruptorArm.editor_validate = function (self, unit)
+	return true, ""
+end
+
 CorruptorArm.editor_destroy = function (self, unit)
 	if self._in_level_editor then
 		if self._line_render then

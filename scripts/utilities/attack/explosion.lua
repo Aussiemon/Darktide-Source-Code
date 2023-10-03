@@ -1,12 +1,13 @@
 local Attack = require("scripts/utilities/attack/attack")
-local AttackSettings = require("scripts/settings/damage/attack_settings")
 local AttackingUnitResolver = require("scripts/utilities/attack/attacking_unit_resolver")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local Health = require("scripts/utilities/health")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local MaterialQuery = require("scripts/utilities/material_query")
 local MinionDeath = require("scripts/utilities/minion_death")
 local Suppression = require("scripts/utilities/attack/suppression")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
@@ -18,8 +19,15 @@ local HIT_DISTANCE_EPSILON = 0.001
 local Explosion = {}
 local _get_radii, _play_effects = nil
 local hit_units = {}
+local attack_units_distance_sq = {}
+local attack_units_hit_actors = {}
+local attack_units_array = {}
 
-Explosion.create_explosion = function (world, physics_world, source_position, optional_impact_normal, attacking_unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item_or_nil, origin_slot_or_nil, optional_attack_result_table)
+local function attack_units_sort_function(a, b)
+	return attack_units_distance_sq[a] < attack_units_distance_sq[b]
+end
+
+Explosion.create_explosion = function (world, physics_world, source_position, optional_impact_normal, attacking_unit, explosion_template, power_level, charge_level, attack_type, is_critical_strike, ignore_cover, item_or_nil, origin_slot_or_nil, optional_hit_units_table)
 	power_level = explosion_template.static_power_level or power_level
 
 	Managers.server_metrics:add_annotation("explosion_create", {
@@ -32,109 +40,45 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 	local attacker_unit_data_extension = ScriptUnit.has_extension(attacking_unit, "unit_data_system")
 	local attacker_breed_or_nil = attacker_unit_data_extension and attacker_unit_data_extension:breed()
 	local lerp_values = Explosion.lerp_values(attacking_unit, explosion_template.name)
-	local t = FixedFrame.get_latest_fixed_time()
 	local collision_filter = explosion_template.collision_filter
 	local radius, close_radius = _get_radii(explosion_template, charge_level, lerp_values, attack_type, attacker_owner_stat_buffs, attacker_breed_or_nil)
 	local hit_actors, num_actors = PhysicsWorld.immediate_overlap(physics_world, "position", source_position, "size", radius, "shape", "sphere", "types", "both", "collision_filter", collision_filter)
+	local weapon_system = Managers.state.extension:system("weapon_system")
+	local queue_index, data = weapon_system:prepare_queued_explosion()
 	local override_friendly_fire = explosion_template.override_friendly_fire
 	local side_system = Managers.state.extension:system("side_system")
 
 	table.clear(hit_units)
+	table.clear(attack_units_distance_sq)
+	table.clear(attack_units_array)
+	table.clear(attack_units_hit_actors)
 
-	local number_of_hit_units = 0
+	local number_of_attack_units = 0
 
 	for i = 1, num_actors do
 		local hit_actor = hit_actors[i]
 		local hit_unit = Actor.unit(hit_actor)
 
-		if hit_unit ~= attacking_unit_owner_unit or override_friendly_fire then
-			local damage_allowed = side_system and not side_system:is_ally(attacking_unit_owner_unit, hit_unit) or override_friendly_fire
+		if not hit_units[hit_unit] then
+			local hit_zone_or_nil = HitZone.get(hit_unit, hit_actor)
+			local is_ragdolled = Health.is_ragdolled(hit_unit)
+			local is_valid_target = is_ragdolled or not hit_zone_or_nil or hit_zone_or_nil.name == HitZone.hit_zone_names.center_mass
 
-			if damage_allowed then
-				local hit_position = Unit.world_position(hit_unit, Actor.node(hit_actor))
-				local direction = Vector3.normalize(hit_position - source_position)
-				local hit_zone_or_nil = HitZone.get(hit_unit, hit_actor)
-				local hit_zone_name_or_nil = hit_zone_or_nil and hit_zone_or_nil.name
-				local has_health = ScriptUnit.has_extension(hit_unit, "health_system")
-				local hit_distance = Vector3.distance(source_position, hit_position)
-				local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
-				local breed_or_nil = unit_data_extension and unit_data_extension:breed()
+			if is_valid_target then
+				hit_units[hit_unit] = true
 
-				if breed_or_nil and breed_or_nil.explosion_radius then
-					hit_distance = math.max(hit_distance - breed_or_nil.explosion_radius, 0)
-				end
+				if hit_unit ~= attacking_unit_owner_unit or override_friendly_fire then
+					local damage_allowed = side_system and not side_system:is_ally(attacking_unit_owner_unit, hit_unit) or override_friendly_fire
+					local has_health = ScriptUnit.has_extension(hit_unit, "health_system")
 
-				local close_hit = close_radius > 0 and hit_distance < close_radius
+					if damage_allowed and has_health then
+						attack_units_distance_sq[hit_unit] = Vector3.distance_squared(source_position, Actor.position(hit_actor))
+						attack_units_hit_actors[hit_unit] = hit_actor
+						number_of_attack_units = number_of_attack_units + 1
+						attack_units_array[number_of_attack_units] = hit_unit
 
-				if Health.is_ragdolled(hit_unit) and not hit_units[hit_unit] then
-					if close_hit then
-						MinionDeath.attack_ragdoll(hit_unit, direction, explosion_template.close_damage_profile, nil, hit_zone_name_or_nil, nil, nil)
-					else
-						MinionDeath.attack_ragdoll(hit_unit, direction, explosion_template.damage_profile, nil, hit_zone_name_or_nil, nil, nil)
-					end
-
-					hit_units[hit_unit] = true
-				elseif not hit_units[hit_unit] then
-					local is_valid_target = not hit_zone_or_nil or hit_zone_or_nil.name == HitZone.hit_zone_names.center_mass
-
-					if is_valid_target and has_health then
-						local intervening_cover = false
-						local cover_actor, _ = nil
-
-						if not ignore_cover and HIT_DISTANCE_EPSILON < hit_distance then
-							intervening_cover, _, _, _, cover_actor = PhysicsWorld.raycast(physics_world, hit_position, -direction, 0.95 * hit_distance, "closest", "types", "statics", "collision_filter", "filter_explosion_cover")
-						end
-
-						if intervening_cover and cover_actor then
-							local cover_unit = Actor.unit(cover_actor)
-							local cover_has_health = ScriptUnit.has_extension(cover_unit, "health_system")
-							intervening_cover = not cover_has_health
-						end
-
-						local valid_target = true
-
-						if Breed.is_prop(breed_or_nil) then
-							valid_target = close_hit
-						end
-
-						if valid_target and not intervening_cover then
-							hit_units[hit_unit] = true
-							local damage_profile, damage_type = nil
-
-							if close_hit then
-								damage_profile = explosion_template.close_damage_profile
-								damage_type = explosion_template.close_damage_type
-							else
-								damage_profile = explosion_template.damage_profile
-								damage_type = explosion_template.damage_type
-							end
-
-							local dropoff_scalar = false
-
-							if not close_hit and explosion_template.damage_falloff then
-								dropoff_scalar = (hit_distance - close_radius) / (radius - close_radius)
-								dropoff_scalar = math.clamp(dropoff_scalar * dropoff_scalar, 0, 1)
-							end
-
-							if HEALTH_ALIVE[hit_unit] then
-								number_of_hit_units = number_of_hit_units + 1
-							end
-
-							local _, attack_result = Attack.execute(hit_unit, damage_profile, "power_level", power_level, "charge_level", charge_level, "attack_direction", direction, "dropoff_scalar", dropoff_scalar, "hit_zone_name", hit_zone_name_or_nil, "hit_actor", hit_actor, "attack_type", attack_type, "attacking_unit", attacking_unit, "damage_type", damage_type, "is_critical_strike", is_critical_strike, "item", item_or_nil, "hit_world_position", source_position)
-
-							if optional_attack_result_table then
-								optional_attack_result_table[hit_unit] = attack_result
-							end
-
-							local on_hit_buff_template_name = explosion_template.on_hit_buff_template_name
-
-							if on_hit_buff_template_name and HEALTH_ALIVE[hit_unit] then
-								local enemy_buff_extension = ScriptUnit.has_extension(hit_unit, "buff_system")
-
-								if enemy_buff_extension then
-									enemy_buff_extension:add_internally_controlled_buff(on_hit_buff_template_name, t, "owner_unit", attacking_unit_owner_unit, "source_item", item_or_nil)
-								end
-							end
+						if optional_hit_units_table then
+							optional_hit_units_table[hit_unit] = true
 						end
 					end
 				end
@@ -142,11 +86,37 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 		end
 	end
 
+	table.sort(attack_units_array, attack_units_sort_function)
+
+	for i = 1, number_of_attack_units do
+		local strided_i = (i - 1) * 2
+		local attack_unit = attack_units_array[i]
+		data[strided_i + 1] = attack_unit
+		data[strided_i + 2] = attack_units_hit_actors[attack_unit]
+	end
+
+	data.num_hit_units = number_of_attack_units
+	local x, y, z = Vector3.to_elements(source_position)
+	data.source_position_x = x
+	data.source_position_y = y
+	data.source_position_z = z
+	data.radius = radius
+	data.close_radius = close_radius
+	data.explosion_template = explosion_template
+	data.ignore_cover = ignore_cover
+	data.power_level = power_level
+	data.charge_level = charge_level
+	data.attack_type = attack_type
+	data.attacking_unit = attacking_unit
+	data.attacking_unit_owner_unit = attacking_unit_owner_unit
+	data.is_critical_strike = is_critical_strike
+	data.item_or_nil = item_or_nil
+
 	if attacking_owner_buff_extension then
 		local param_table = attacking_owner_buff_extension:request_proc_event_param_table()
 
 		if param_table then
-			param_table.number_of_hit_units = number_of_hit_units
+			param_table.number_of_hit_units = number_of_attack_units
 			param_table.attacking_unit = attacking_unit_owner_unit
 			param_table.attack_instigator_unit = attacking_unit
 			param_table.item_slot_origin = origin_slot_or_nil
@@ -166,7 +136,9 @@ Explosion.create_explosion = function (world, physics_world, source_position, op
 		Suppression.apply_area_explosion_suppression(attacking_unit_owner_unit, suppression_settings, source_position, optional_relation, optional_include_self, progressed_lerp_values)
 	end
 
-	_play_effects(world, attacking_unit_owner_unit, explosion_template, charge_level, source_position, optional_impact_normal, radius)
+	_play_effects(world, physics_world, attacking_unit_owner_unit, explosion_template, charge_level, source_position, optional_impact_normal, radius)
+
+	return queue_index, number_of_attack_units
 end
 
 local NO_LERP_VALUES = {}
@@ -262,10 +234,27 @@ function _get_radii(explosion_template, charge_level, lerp_values, attack_type, 
 		close_radius = 0
 	end
 
+	local is_prop = Breed.is_prop(attacker_breed_or_nil)
+
+	if not is_prop and attacker_stat_buffs and attack_type == attack_types.explosion then
+		local explosion_radius_modifier = attacker_stat_buffs.explosion_radius_modifier or 1
+		local radius_stat_buffs = explosion_template.radius_stat_buffs
+
+		if radius_stat_buffs then
+			for index, stat_buff in pairs(radius_stat_buffs) do
+				local radius_stat_buffs = (attacker_stat_buffs[stat_buff] or 1) - 1
+				explosion_radius_modifier = explosion_radius_modifier + radius_stat_buffs
+			end
+		end
+
+		radius = radius * explosion_radius_modifier
+		close_radius = close_radius * explosion_radius_modifier
+	end
+
 	return radius, close_radius
 end
 
-function _play_effects(world, attacking_unit, explosion_template, charge_level, source_position, optional_impact_normal, radius)
+function _play_effects(world, physics_world, attacking_unit, explosion_template, charge_level, source_position, optional_impact_normal, radius)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local fx_extension = player_unit_spawn_manager:owner(attacking_unit) and ScriptUnit.extension(attacking_unit, "fx_system")
 	local rotation = optional_impact_normal and Quaternion.look(optional_impact_normal) or Quaternion.identity()
@@ -322,14 +311,21 @@ function _play_effects(world, attacking_unit, explosion_template, charge_level, 
 			local event_name_or_table = sfx[i]
 
 			if type(event_name_or_table) == "string" then
-				fx_system:trigger_wwise_event(event_name_or_table, source_position, nil, nil, charge_wwise_parameter_name, charge_level)
+				if fx_extension then
+					local _, material, _, _, _, _ = MaterialQuery.query_material(physics_world, source_position + Vector3.up() * 0.5, source_position + Vector3.down() * 0.5)
+
+					fx_extension:trigger_explosion_wwise_event_server_controlled(event_name_or_table, false, source_position, charge_wwise_parameter_name, charge_level, material)
+				else
+					fx_system:trigger_wwise_event(event_name_or_table, source_position, nil, nil, charge_wwise_parameter_name, charge_level)
+				end
 			else
 				local event_name = event_name_or_table.event_name
 
 				if fx_extension then
 					local has_husk_events = event_name_or_table.has_husk_events
+					local _, material, _, _, _, _ = MaterialQuery.query_material(physics_world, source_position + Vector3.up() * 0.5, source_position + Vector3.down() * 0.5)
 
-					fx_extension:trigger_wwise_event_server_controlled(event_name, has_husk_events, source_position, charge_wwise_parameter_name, charge_level)
+					fx_extension:trigger_explosion_wwise_event_server_controlled(event_name, has_husk_events, source_position, charge_wwise_parameter_name, charge_level, material)
 				else
 					fx_system:trigger_wwise_event(event_name_or_table, source_position, nil, nil, charge_wwise_parameter_name, charge_level)
 				end

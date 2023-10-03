@@ -9,6 +9,10 @@ AmmoDisplay.editor_init = function (self, unit)
 	self:enable(unit)
 end
 
+AmmoDisplay.editor_validate = function (self, unit)
+	return true, ""
+end
+
 AmmoDisplay.init = function (self, unit)
 	self._max_ammo = self:get_data(unit, "max_ammo")
 	self._ammo = self:get_data(unit, "ammo")

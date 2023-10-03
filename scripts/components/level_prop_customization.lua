@@ -17,6 +17,10 @@ LevelPropCustomization.init = function (self, unit)
 	end
 end
 
+LevelPropCustomization.editor_validate = function (self, unit)
+	return true, ""
+end
+
 LevelPropCustomization.on_chunk_visibility_state_changed = function (self, is_visible)
 	local static_map = self._child_is_static
 

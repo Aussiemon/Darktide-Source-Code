@@ -15,16 +15,16 @@ local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_t
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local armor_types = ArmorSettings.types
 local template_types = WeaponTweakTemplateSettings.template_types
+local buff_stat_buffs = BuffSettings.stat_buffs
+local buff_targets = WeaponTweakTemplateSettings.buff_targets
+local damage_types = DamageSettings.damage_types
+local wield_inputs = PlayerCharacterConstants.wield_inputs
 local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local explosion_trait_templates = WeaponTraitTemplates[template_types.explosion]
 local dodge_trait_templates = WeaponTraitTemplates[template_types.dodge]
 local sprint_trait_templates = WeaponTraitTemplates[template_types.sprint]
 local movement_curve_modifier_trait_templates = WeaponTraitTemplates[template_types.movement_curve_modifier]
-local buff_stat_buffs = BuffSettings.stat_buffs
-local buff_targets = WeaponTweakTemplateSettings.buff_targets
-local damage_types = DamageSettings.damage_types
-local wield_inputs = PlayerCharacterConstants.wield_inputs
 local weapon_template = {
 	action_inputs = {
 		wield = {
@@ -50,7 +50,6 @@ local weapon_template = {
 			input_sequence = {
 				{
 					value = true,
-					hold_input = "action_two_hold",
 					input = "action_one_pressed"
 				}
 			}
@@ -60,7 +59,13 @@ local weapon_template = {
 			input_sequence = {
 				{
 					value = true,
-					input = "action_two_hold"
+					input = "action_two_hold",
+					input_setting = {
+						value = true,
+						input = "action_two_pressed",
+						setting_value = true,
+						setting = "toggle_ads"
+					}
 				}
 			}
 		},
@@ -70,7 +75,14 @@ local weapon_template = {
 				{
 					value = false,
 					input = "action_two_hold",
-					time_window = math.huge
+					time_window = math.huge,
+					input_setting = {
+						setting_value = true,
+						setting = "toggle_ads",
+						value = true,
+						input = "action_two_pressed",
+						time_window = math.huge
+					}
 				}
 			}
 		},
@@ -117,12 +129,11 @@ table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.a
 
 weapon_template.actions = {
 	action_wield = {
+		uninterruptible = true,
 		allowed_during_sprint = true,
 		wield_anim_event = "equip",
 		wield_reload_anim_event = "equip_reload",
 		kind = "ranged_wield",
-		continue_sprinting = true,
-		uninterruptible = true,
 		total_time = 1,
 		conditional_state_to_action_input = {
 			started_reload = {
@@ -156,7 +167,6 @@ weapon_template.actions = {
 		}
 	},
 	action_unwield = {
-		continue_sprinting = true,
 		allowed_during_sprint = true,
 		start_input = "wield",
 		uninterruptible = true,
@@ -244,7 +254,7 @@ weapon_template.actions = {
 		}
 	},
 	action_zoom = {
-		crosshair_type = "none",
+		crosshair_type = "ironsight",
 		start_input = "zoom",
 		kind = "aim",
 		total_time = 0.3,
@@ -253,7 +263,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -281,7 +296,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -303,8 +323,9 @@ weapon_template.actions = {
 		allowed_during_sprint = false,
 		start_input = "zoom_shoot",
 		kind = "shoot_projectile",
+		weapon_handling_template = "immediate_single_shot",
 		throw_type = "shoot",
-		crosshair_type = "none",
+		crosshair_type = "ironsight",
 		spawn_at_time = 0,
 		uninterruptible = true,
 		total_time = 0.75,
@@ -313,7 +334,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -366,7 +392,7 @@ weapon_template.actions = {
 		weapon_handling_template = "time_scale_1",
 		stop_alternate_fire = true,
 		start_input = "reload",
-		crosshair_type = "ironsight",
+		crosshair_type = "none",
 		uninterruptible = true,
 		total_time = 2.333,
 		reload_settings = {
@@ -423,7 +449,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		},
 		time_scale_stat_buffs = {
@@ -501,7 +532,7 @@ weapon_template.actions = {
 			},
 			bash = {
 				action_name = "action_bash_right",
-				chain_time = 1
+				chain_time = 0.8
 			},
 			zoom = {
 				chain_time = 1.2,
@@ -537,14 +568,15 @@ weapon_template.actions = {
 	action_bash_right = {
 		damage_window_start = 0.6,
 		hit_armor_anim = "attack_hit_shield",
-		crosshair_type = "dot",
-		sprint_requires_press_to_interrupt = true,
-		first_person_hit_anim = "hit_right_shake",
-		range_mod = 1.15,
-		first_person_hit_stop_anim = "attack_hit",
-		allowed_during_sprint = true,
+		weapon_handling_template = "time_scale_1_1",
 		kind = "sweep",
+		first_person_hit_anim = "hit_right_shake",
+		first_person_hit_stop_anim = "attack_hit",
+		crosshair_type = "dot",
+		allowed_during_sprint = true,
+		range_mod = 1.15,
 		damage_window_end = 0.8,
+		sprint_requires_press_to_interrupt = true,
 		attack_direction_override = "right",
 		abort_sprint = true,
 		uninterruptible = true,
@@ -610,7 +642,7 @@ weapon_template.actions = {
 			},
 			bash = {
 				action_name = "action_bash",
-				chain_time = 1
+				chain_time = 0.8
 			},
 			zoom = {
 				chain_time = 1,
@@ -641,7 +673,7 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "none",
+		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
 		total_time = math.huge
@@ -655,7 +687,7 @@ weapon_template.anim_state_machine_1p = "content/characters/player/ogryn/first_p
 weapon_template.alternate_fire_settings = {
 	sway_template = "default_thumper_killshot",
 	stop_anim_event = "to_unaim_braced",
-	crosshair_type = "none",
+	crosshair_type = "ironsight",
 	spread_template = "thumper_aim_demolition",
 	toughness_template = "killshot_zoomed",
 	start_anim_event = "to_braced",

@@ -1,9 +1,10 @@
 local Attack = require("scripts/utilities/attack/attack")
+local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BurningSettings = require("scripts/settings/burning/burning_settings")
-local Breed = require("scripts/utilities/breed")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
+local FixedFrame = require("scripts/utilities/fixed_frame")
 local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local buff_keywords = BuffSettings.keywords
@@ -173,7 +174,7 @@ templates.chaos_beast_of_nurgle_hit_by_vomit = {
 		buff_keywords.beast_of_nurgle_liquid_immunity
 	},
 	stat_buffs = {
-		[buff_stat_buffs.movement_speed] = 0.85,
+		[buff_stat_buffs.movement_speed] = -0.15000000000000002,
 		[buff_stat_buffs.dodge_speed_multiplier] = 0.9
 	},
 	player_effects = {
@@ -202,16 +203,25 @@ templates.chaos_beast_of_nurgle_being_eaten = {
 	},
 	damage_template = DamageProfileTemplates.beast_of_nurgle_slime_liquid,
 	damage_type = damage_types.minion_vomit,
+	start_func = function (template_data, template_context)
+		local t = Managers.time:time("gameplay")
+		template_data.start_t = t
+	end,
 	interval_func = function (template_data, template_context)
 		local unit = template_context.unit
 
 		if HEALTH_ALIVE[unit] then
+			local t = Managers.time:time("gameplay")
+			local scale_duration = 30
+			local duration_scale = math.abs(template_data.start_t - t) / scale_duration
+			local max_scale = 2
+			local scale_amount = math.min(duration_scale * max_scale, max_scale)
 			local health_extension = ScriptUnit.extension(unit, "health_system")
 			local max_health = health_extension:max_health()
 			local optional_owner_unit = template_context.is_server and template_context.owner_unit or nil
 			local damage_template = DamageProfileTemplates.beast_of_nurgle_slime_liquid
 			local power_level_table = MinionDifficultySettings.power_level.chaos_beast_of_nurgle_being_eaten
-			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table) * max_health
+			local power_level = Managers.state.difficulty:get_table_entry_by_challenge(power_level_table) * max_health * (1 + scale_amount)
 
 			Attack.execute(unit, damage_template, "power_level", power_level, "damage_type", "burning", "attacking_unit", optional_owner_unit)
 		end

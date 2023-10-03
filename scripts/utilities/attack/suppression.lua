@@ -2,7 +2,7 @@ local Breed = require("scripts/utilities/breed")
 local DamageProfile = require("scripts/utilities/attack/damage_profile")
 local MinionPerception = require("scripts/utilities/minion_perception")
 local Suppression = {}
-local _apply_suppression_falloff, _apply_suppression_minion, _apply_suppression_player, _get_breed, _debug_draw_area_suppression_falloff = nil
+local _apply_suppression_falloff, _apply_suppression_minion, _apply_suppression_player, _get_breed = nil
 local DEFAULT_SUPPRESSION_VALUE = 1
 local DEFAULT_SUPPRESSION_ATTACK_DELAY = 0.35
 
@@ -41,6 +41,16 @@ Suppression.apply_suppression = function (hit_unit, attacking_unit, damage_profi
 
 		_apply_suppression_minion(hit_unit, suppression_value, suppression_type, suppression_attack_delay, attacking_unit, hit_position)
 	end
+end
+
+Suppression.apply_suppression_decay_delay = function (suppressed_unit, decay_delay)
+	local suppression_extension = ScriptUnit.has_extension(suppressed_unit, "suppression_system")
+
+	if not suppression_extension then
+		return
+	end
+
+	suppression_extension:apply_suppression_decay_delay(decay_delay)
 end
 
 Suppression.apply_area_explosion_suppression = function (attacking_unit, suppression_settings, from_position, optional_relation, optional_include_self, optional_lerp_values)

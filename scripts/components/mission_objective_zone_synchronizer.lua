@@ -16,6 +16,10 @@ MissionObjectiveZoneSynchronizer.editor_init = function (self, unit)
 	return
 end
 
+MissionObjectiveZoneSynchronizer.editor_validate = function (self, unit)
+	return true, ""
+end
+
 MissionObjectiveZoneSynchronizer.start_mission_objective_zone_event = function (self)
 	self._mission_objective_zone_synchronizer_extension:start_event()
 end

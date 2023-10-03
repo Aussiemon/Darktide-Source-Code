@@ -1,6 +1,6 @@
 local ProfileSynchronizationManagerTestify = {}
 
-ProfileSynchronizationManagerTestify.equip_item = function (data, profile_synchronization_manager)
+ProfileSynchronizationManagerTestify.equip_item = function (profile_synchronization_manager, data)
 	local player = data.player
 	local item = data.item
 	local profile_synchronizer_host = profile_synchronization_manager:synchronizer_host()
@@ -8,7 +8,7 @@ ProfileSynchronizationManagerTestify.equip_item = function (data, profile_synchr
 	profile_synchronizer_host:override_slot(player:peer_id(), player:local_player_id(), item.slots[1], item.name)
 end
 
-ProfileSynchronizationManagerTestify.equip_item_backend = function (data, profile_synchronization_manager)
+ProfileSynchronizationManagerTestify.equip_item_backend = function (profile_synchronization_manager, data)
 	local item = data.item
 	local player = data.player
 	local peer_id = player:peer_id()

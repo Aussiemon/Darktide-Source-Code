@@ -79,6 +79,10 @@ LoadingHost.update = function (self, dt)
 		return
 	end
 
+	if not Managers.profile_synchronization:is_ready() then
+		return
+	end
+
 	local spawn_group = self._spawn_queue:ready_group()
 
 	if spawn_group then

@@ -1,439 +1,8 @@
 local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local OptionsUtilities = require("scripts/utilities/ui/options")
+local SettingsUtilitiesFunction = require("scripts/settings/options/settings_utils")
 local render_settings = {}
-local render_settings_by_id = {}
-
-local function print_func(format, ...)
-	print(string.format("[RenderSettings] " .. format, ...))
-end
-
-local function _is_same(current, new)
-	if current == new then
-		return true
-	elseif type(current) == "table" and type(new) == "table" then
-		for k, v in pairs(current) do
-			if new[k] ~= v then
-				return false
-			end
-		end
-
-		for k, v in pairs(new) do
-			if current[k] ~= v then
-				return false
-			end
-		end
-
-		return true
-	else
-		return false
-	end
-end
-
-local function get_user_setting(location, key)
-	if location then
-		return Application.user_setting(location, key)
-	else
-		return Application.user_setting(key)
-	end
-end
-
-local function set_user_setting(location, key, value)
-	local perf_counter = Application.query_performance_counter()
-
-	if location then
-		Application.set_user_setting(location, key, value)
-
-		if location == "render_settings" and type(value) ~= "table" then
-			Application.set_render_setting(key, tostring(value))
-		end
-	else
-		Application.set_user_setting(key, value)
-	end
-
-	local settings_parse_duration = Application.time_since_query(perf_counter)
-
-	print_func("Time to parse setting [%s] with new value (%s): %.1fms.", key, value, settings_parse_duration)
-end
-
-local function apply_user_settings()
-	local perf_counter = Application.query_performance_counter()
-
-	Application.apply_user_settings()
-
-	local user_settings_apply_duration = Application.time_since_query(perf_counter)
-
-	print_func("Time to apply settings: %.1fms", user_settings_apply_duration)
-	Renderer.bake_static_shadows()
-
-	local event_manager = rawget(_G, "Managers") and Managers.event
-
-	if event_manager then
-		event_manager:trigger("event_on_render_settings_applied")
-	end
-end
-
-local function save_user_settings()
-	local perf_counter = Application.query_performance_counter()
-
-	Application.save_user_settings()
-
-	local user_settings_save_duration = Application.time_since_query(perf_counter)
-
-	print_func("Time to save settings: %.1fms", user_settings_save_duration)
-end
-
-local function remove_repeated_entries(changes_list, start_index)
-	if not changes_list or #changes_list < 1 then
-		return {}
-	end
-
-	local start_index = start_index or 1
-
-	if start_index >= #changes_list then
-		return changes_list
-	else
-		local occurences = {}
-		local entry = changes_list[start_index]
-
-		for i = start_index + 1, #changes_list do
-			local stored_change = changes_list[i]
-
-			if stored_change and stored_change.id == entry.id then
-				occurences[#occurences + 1] = i
-			end
-		end
-
-		local new_table = {}
-
-		if #occurences > 0 then
-			local count = #changes_list
-
-			for i = 1, #occurences do
-				local index = occurences[i]
-				changes_list[index] = nil
-			end
-
-			for i = 1, count do
-				if changes_list[i] then
-					new_table[#new_table + 1] = changes_list[i]
-				end
-			end
-		else
-			new_table = changes_list
-		end
-
-		return remove_repeated_entries(new_table, start_index + 1)
-	end
-end
-
-local function verify_and_apply_changes(changed_setting, new_value, affected_settings, origin_id)
-	local changes_list = {}
-	local first_level = not affected_settings
-
-	if first_level then
-		changes_list[#changes_list + 1] = {
-			id = changed_setting.id,
-			value = new_value,
-			save_location = changed_setting.save_location,
-			require_apply = changed_setting.require_apply
-		}
-	end
-
-	local settings_list = affected_settings or {}
-	local changed_setting_valid = not changed_setting.validation_function or changed_setting.validation_function and changed_setting:validation_function()
-
-	if changed_setting_valid and (not changed_setting.disabled or changed_setting.disabled and changed_setting.disabled_origin == origin_id) then
-		if changed_setting.disable_rules then
-			local disabled_by_id = {}
-			local enabled_by_id = {}
-			local affected_ids = {}
-
-			for i = 1, #changed_setting.disable_rules do
-				local disabled_rule = changed_setting.disable_rules[i]
-				local disabled_setting = render_settings_by_id[disabled_rule.id]
-
-				if disabled_setting and (not disabled_setting.validation_function or disabled_setting.validation_function and disabled_setting:validation_function()) then
-					if disabled_rule.validation_function(new_value) then
-						if not disabled_by_id[disabled_rule.id] then
-							affected_ids[disabled_rule.id] = true
-							disabled_by_id[disabled_rule.id] = {
-								disabled_origin_id = changed_setting.id,
-								affected_setting = disabled_setting,
-								disabled_rule = disabled_rule
-							}
-						end
-					elseif not disabled_rule.validation_function(new_value) and (not disabled_setting.disabled_by or disabled_setting.disabled_by and disabled_setting.disabled_by[changed_setting.id]) and not enabled_by_id[disabled_rule.id] then
-						affected_ids[disabled_rule.id] = true
-						enabled_by_id[disabled_rule.id] = {
-							disabled_origin_id = changed_setting.id,
-							affected_setting = disabled_setting,
-							disabled_rule = disabled_rule
-						}
-					end
-				end
-			end
-
-			for id, _ in pairs(affected_ids) do
-				local disabled_data = disabled_by_id[id]
-				local enabled_data = enabled_by_id[id]
-
-				if disabled_data then
-					local disabled_setting = disabled_data.affected_setting
-					local disabled_origin_id = disabled_data.disabled_origin_id
-					local disabled_rule = disabled_data.disabled_rule
-					disabled_setting.disabled_by = disabled_setting.disabled_by or {}
-
-					if table.is_empty(disabled_setting.disabled_by) then
-						disabled_setting.value_on_enabled = disabled_setting:get_function()
-						disabled_setting.disabled_origin = disabled_origin_id
-					end
-
-					disabled_setting.disabled_by[changed_setting.id] = disabled_rule.reason
-					disabled_setting.disabled = true
-					changes_list[#changes_list + 1] = {
-						id = disabled_rule.id,
-						value = disabled_rule.disable_value,
-						save_location = disabled_setting.save_location,
-						require_apply = disabled_setting.require_apply
-					}
-				elseif enabled_data then
-					local enabled_setting = enabled_data.affected_setting
-					local enabled_origin_id = enabled_data.disabled_origin_id
-					local disabled_rule = enabled_data.disabled_rule
-
-					if enabled_setting.disabled_by and enabled_setting.disabled_by[enabled_origin_id] then
-						enabled_setting.disabled_by[enabled_origin_id] = nil
-						enabled_setting.disabled = not table.is_empty(enabled_setting.disabled_by)
-					end
-
-					if enabled_setting.disabled == false then
-						enabled_setting.disabled_origin = nil
-						changes_list[#changes_list + 1] = {
-							id = disabled_rule.id,
-							value = enabled_setting.value_on_enabled,
-							save_location = enabled_setting.save_location,
-							require_apply = enabled_setting.require_apply
-						}
-					end
-				end
-			end
-		end
-
-		if changed_setting.options then
-			for i = 1, #changed_setting.options do
-				local option = changed_setting.options[i]
-
-				if option.id == new_value then
-					if option.values then
-						for id, value in pairs(option.values) do
-							if type(value) == "table" then
-								for inner_id, inner_value in pairs(value) do
-									if render_settings_by_id[inner_id] and (not render_settings_by_id[inner_id].validation_function or render_settings_by_id[inner_id].validation_function and render_settings_by_id[inner_id].validation_function()) then
-										if not render_settings_by_id[inner_id].disabled then
-											changes_list[#changes_list + 1] = {
-												id = inner_id,
-												value = inner_value,
-												save_location = render_settings_by_id[inner_id].save_location,
-												require_apply = render_settings_by_id[inner_id].require_apply
-											}
-										elseif render_settings_by_id[inner_id].disabled then
-											render_settings_by_id[inner_id].value_on_enabled = inner_value
-										end
-									elseif not render_settings_by_id[inner_id] then
-										changes_list[#changes_list + 1] = {
-											id = inner_id,
-											value = inner_value,
-											save_location = id
-										}
-									end
-								end
-							elseif render_settings_by_id[id] and (not render_settings_by_id[id].validation_function or render_settings_by_id[id].validation_function and render_settings_by_id[id].validation_function()) then
-								if not render_settings_by_id[id].disabled then
-									changes_list[#changes_list + 1] = {
-										id = id,
-										value = value,
-										save_location = render_settings_by_id[id].save_location,
-										require_apply = render_settings_by_id[id].require_apply
-									}
-								elseif render_settings_by_id[id].disabled then
-									render_settings_by_id[id].value_on_enabled = value
-								end
-							elseif not render_settings_by_id[id] then
-								changes_list[#changes_list + 1] = {
-									id = id,
-									value = value
-								}
-							end
-						end
-					end
-
-					if option.apply_values_on_edited then
-						for id, value in pairs(option.apply_values_on_edited) do
-							if render_settings_by_id[id] and (not render_settings_by_id[id].validation_function or render_settings_by_id[id].validation_function and render_settings_by_id[id].validation_function()) then
-								if not render_settings_by_id[id].disabled then
-									changes_list[#changes_list + 1] = {
-										id = id,
-										value = value,
-										save_location = render_settings_by_id[id].save_location,
-										require_apply = render_settings_by_id[id].require_apply
-									}
-								elseif render_settings_by_id[id] and render_settings_by_id[id].disabled then
-									render_settings_by_id[id].value_on_enabled = value
-								end
-							end
-						end
-					end
-
-					break
-				end
-			end
-		end
-
-		if changed_setting.apply_values_on_edited then
-			for id, value in pairs(changed_setting.apply_values_on_edited) do
-				if render_settings_by_id[id] and (not render_settings_by_id[id].validation_function or render_settings_by_id[id].validation_function and render_settings_by_id[id].validation_function()) then
-					if not render_settings_by_id[id].disabled then
-						changes_list[#changes_list + 1] = {
-							id = id,
-							value = value,
-							save_location = render_settings_by_id[id].save_location,
-							require_apply = render_settings_by_id[id].require_apply
-						}
-					elseif render_settings_by_id[id].disabled then
-						render_settings_by_id[id].value_on_enabled = value
-					end
-				end
-			end
-		end
-
-		for i = 1, #changes_list do
-			local change = changes_list[i]
-			settings_list[#settings_list + 1] = change
-
-			if render_settings_by_id[change.id] then
-				local should_verifiy = first_level and i > 1 or not first_level
-
-				if should_verifiy then
-					verify_and_apply_changes(render_settings_by_id[change.id], change.value, settings_list, changed_setting.id)
-				end
-			end
-		end
-	end
-
-	if first_level then
-		local filtered_changes = remove_repeated_entries(settings_list)
-		local dirty = true
-		local require_apply = nil
-
-		for i = 1, #filtered_changes do
-			local setting_changed = filtered_changes[i]
-
-			if setting_changed.require_apply then
-				require_apply = true
-			end
-
-			local id = setting_changed.id
-			local new_value = setting_changed.value
-
-			if render_settings_by_id[id] and render_settings_by_id[id].on_changed then
-				local saved, needs_apply = render_settings_by_id[id].on_changed(new_value, render_settings_by_id[id])
-				dirty = dirty or saved
-
-				if not require_apply then
-					require_apply = needs_apply
-				end
-			else
-				local save_location = setting_changed.save_location
-				local current_value = get_user_setting(save_location, id)
-
-				if not _is_same(current_value, new_value) then
-					set_user_setting(save_location, id, new_value)
-
-					dirty = true
-					require_apply = require_apply or setting_changed.require_apply
-				end
-			end
-		end
-
-		if dirty then
-			if require_apply then
-				apply_user_settings()
-			end
-
-			save_user_settings()
-		end
-	end
-end
-
-local brightness_options = {
-	{
-		display_name = "loc_brightness_gamma_title",
-		entries = {
-			{
-				display_name = "loc_setting_brightness_gamma_description",
-				widget_type = "description"
-			},
-			{
-				id = "checker",
-				default_value = 1,
-				widget_type = "gamma_texture",
-				update = function (template)
-					return Application.user_setting("gamma") + 1 or template.default_value
-				end
-			},
-			{
-				apply_on_startup = true,
-				widget_type = "value_slider",
-				focusable = true,
-				num_decimals = 2,
-				max_value = 1,
-				default_value = 0,
-				min_value = -1,
-				step_size_value = 0.01,
-				apply_on_drag = true,
-				id = "min_brightness_value",
-				get_function = function (template)
-					return Application.user_setting("gamma") or template.default_value
-				end,
-				on_value_changed = function (value, template)
-					if template.min_value > value or value > template.max_value then
-						Application.set_user_setting("gamma", template.default_value)
-					else
-						Application.set_user_setting("gamma", value)
-					end
-
-					if template.changed_callback then
-						template.changed_callback(value)
-					end
-
-					save_user_settings()
-				end,
-				on_activated = function (value, template)
-					template.on_changed(value, template)
-				end,
-				on_changed = function (value, template)
-					return template.on_value_changed(value, template)
-				end,
-				explode_function = function (normalized_value, template)
-					local value_range = template.max_value - template.min_value
-					local exploded_value = template.min_value + normalized_value * value_range
-					local step_size = template.step_size_value or 0.1
-					exploded_value = math.round(exploded_value / step_size) * step_size
-
-					return exploded_value
-				end,
-				format_value_function = function (value)
-					local number_format = string.format("%%.%sf", 2)
-
-					return string.format(number_format, value)
-				end,
-				validation_function = function ()
-					return true
-				end
-			}
-		}
-	}
-}
+local SettingsUtilities = {}
 local RENDER_TEMPLATES = {
 	{
 		require_restart = false,
@@ -455,11 +24,12 @@ local RENDER_TEMPLATES = {
 			xbs = true
 		},
 		pressed_function = function (parent, widget, template)
+			local pages_templates = require("scripts/ui/views/custom_settings_view/custom_settings_view_pages")
+
 			Managers.ui:open_view("custom_settings_view", nil, nil, nil, nil, {
-				pages = template.pages
+				pages = pages_templates.brightness_render_option_settings
 			})
-		end,
-		pages = brightness_options
+		end
 	},
 	{
 		group_name = "performance",
@@ -1096,6 +666,7 @@ local RENDER_TEMPLATES = {
 		save_location = "render_settings"
 	},
 	{
+		default_value = 0,
 		require_apply = true,
 		display_name = "loc_setting_anti_ailiasing",
 		id = "anti_aliasing_solution",
@@ -2423,7 +1994,7 @@ local function create_render_settings_entry(template)
 			options = options,
 			display_name = display_name,
 			on_activated = function (value, template)
-				verify_and_apply_changes(template, value)
+				SettingsUtilities.verify_and_apply_changes(template, value)
 			end,
 			on_changed = on_changed or function (value, template)
 				local option = nil
@@ -2453,8 +2024,8 @@ local function create_render_settings_entry(template)
 				local dirty = false
 				local current_value = template:get_function()
 
-				if not _is_same(current_value, value) then
-					set_user_setting(template.save_location, template.id, value)
+				if not SettingsUtilities.is_same(current_value, value) then
+					SettingsUtilities.set_user_setting(template.save_location, template.id, value)
 
 					if template.changed_callback then
 						template.changed_callback(value)
@@ -2466,7 +2037,7 @@ local function create_render_settings_entry(template)
 				return dirty, option.require_apply
 			end,
 			get_function = get_function or function (template)
-				local old_value = get_user_setting(template.save_location, template.id)
+				local old_value = SettingsUtilities.get_user_setting(template.save_location, template.id)
 
 				if old_value == nil then
 					return default_value
@@ -2480,23 +2051,23 @@ local function create_render_settings_entry(template)
 			local dirty = false
 			local current_value = template:get_function()
 
-			if not _is_same(current_value, value) then
+			if not SettingsUtilities.is_same(current_value, value) then
 				dirty = true
 			end
 
 			if dirty then
-				set_user_setting(template.save_location, template.id, value)
+				SettingsUtilities.set_user_setting(template.save_location, template.id, value)
 
 				if template.require_apply then
-					apply_user_settings()
+					SettingsUtilities.apply_user_settings()
 				end
 
-				save_user_settings()
+				SettingsUtilities.save_user_settings()
 			end
 		end
 
 		local get_function = get_function or function (template)
-			return get_user_setting(template.save_location, template.id) or default_value
+			return SettingsUtilities.get_user_setting(template.save_location, template.id) or default_value
 		end
 		local slider_params = {
 			display_name = display_name,
@@ -2511,7 +2082,7 @@ local function create_render_settings_entry(template)
 		entry = OptionsUtilities.create_value_slider_template(slider_params)
 
 		entry.on_activated = function (value, template)
-			verify_and_apply_changes(template, value)
+			SettingsUtilities.verify_and_apply_changes(template, value)
 		end
 
 		entry.type = "slider"
@@ -2519,7 +2090,7 @@ local function create_render_settings_entry(template)
 		entry = {
 			display_name = display_name,
 			on_activated = function (value, template)
-				verify_and_apply_changes(template, value)
+				SettingsUtilities.verify_and_apply_changes(template, value)
 			end,
 			on_changed = on_changed or function (value, template)
 				local dirty = false
@@ -2529,8 +2100,8 @@ local function create_render_settings_entry(template)
 					current_value = template.default_value
 				end
 
-				if not _is_same(current_value, value) then
-					set_user_setting(template.save_location, template.id, value)
+				if not SettingsUtilities.is_same(current_value, value) then
+					SettingsUtilities.set_user_setting(template.save_location, template.id, value)
 
 					dirty = true
 				end
@@ -2538,7 +2109,7 @@ local function create_render_settings_entry(template)
 				return dirty, template.require_apply
 			end,
 			get_function = get_function or function (template)
-				local old_value = get_user_setting(template.save_location, template.id)
+				local old_value = SettingsUtilities.get_user_setting(template.save_location, template.id)
 
 				if old_value == nil then
 					return default_value
@@ -2557,11 +2128,11 @@ local function create_render_settings_entry(template)
 	entry.indentation_level = indentation_level
 	entry.tooltip_text = tooltip_text
 	entry.disable_rules = template.disable_rules
-	entry.id = template.id
 	entry.save_location = save_location
 	entry.apply_values_on_edited = template.apply_values_on_edited
 	entry.startup_prio = template.startup_prio
 	entry.require_apply = template.require_apply
+	entry.id = id
 
 	return entry
 end
@@ -2677,7 +2248,7 @@ render_settings[#render_settings + 1] = {
 	min_value = min_value,
 	max_value = max_value,
 	on_activated = function (value, template)
-		verify_and_apply_changes(template, value)
+		SettingsUtilities.verify_and_apply_changes(template, value)
 	end,
 	on_changed = function (value, template)
 		Application.set_user_setting("render_settings", "vertical_fov", value)
@@ -2728,7 +2299,7 @@ render_settings[#render_settings + 1] = {
 		return IS_WINDOWS and DisplayAdapter.num_adapters() > 0
 	end,
 	on_activated = function (value, template)
-		verify_and_apply_changes(template, value)
+		SettingsUtilities.verify_and_apply_changes(template, value)
 	end,
 	on_changed = function (value, template)
 		if value == resolution_undefined_return_value or value == resolution_custom_return_value then
@@ -2800,19 +2371,11 @@ if IS_XBS and Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_ANACONDA th
 	render_settings[#render_settings + 1] = {
 		require_apply = true,
 		display_name = "loc_setting_xbs_quality_preset",
-		apply_on_startup = true,
 		id = "xbox_quality_preset",
+		default_value = "performance",
+		apply_on_startup = true,
 		tooltip_text = "loc_setting_xbs_quality_preset_mouseover",
 		options = {
-			{
-				id = "quality",
-				display_name = "loc_setting_xbs_quality_preset_quality",
-				data = {
-					target_fps = 40,
-					height = 2160,
-					width = 3840
-				}
-			},
 			{
 				id = "performance",
 				display_name = "loc_setting_xbs_quality_preset_performance",
@@ -2821,10 +2384,19 @@ if IS_XBS and Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_ANACONDA th
 					height = 1440,
 					width = 2560
 				}
+			},
+			{
+				id = "quality",
+				display_name = "loc_setting_xbs_quality_preset_quality",
+				data = {
+					target_fps = 40,
+					height = 2160,
+					width = 3840
+				}
 			}
 		},
 		on_activated = function (value, template)
-			verify_and_apply_changes(template, value)
+			SettingsUtilities.verify_and_apply_changes(template, value)
 		end,
 		on_changed = function (value, template)
 			local options = template.options
@@ -2854,7 +2426,7 @@ if IS_XBS and Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_ANACONDA th
 			return true, template.require_apply
 		end,
 		get_function = function (template)
-			local xbox_quality_preset = Application.user_setting("render_settings", "xbox_quality_preset") or "quality"
+			local xbox_quality_preset = Application.user_setting("render_settings", "xbox_quality_preset") or "performance"
 
 			return xbox_quality_preset
 		end
@@ -2927,8 +2499,8 @@ local screen_mode_setting = {
 
 		local current_value = Application.user_setting(template.id)
 
-		if not _is_same(current_value, value) then
-			set_user_setting(template.save_location, template.id, value)
+		if not SettingsUtilities.is_same(current_value, value) then
+			SettingsUtilities.set_user_setting(template.save_location, template.id, value)
 
 			if template.changed_callback then
 				template.changed_callback(value)
@@ -2937,7 +2509,9 @@ local screen_mode_setting = {
 			dirty = true
 		end
 
-		return dirty, option.require_apply
+		local require_apply = option and option.require_apply
+
+		return dirty, require_apply
 	end,
 	options = {
 		{
@@ -2993,17 +2567,53 @@ for i = 1, #RENDER_TEMPLATES do
 	end
 end
 
-for i = 1, #render_settings do
-	local render_setting = render_settings[i]
+SettingsUtilities = SettingsUtilitiesFunction(render_settings)
 
-	if render_setting.id then
-		render_settings_by_id[render_setting.id] = render_setting
+local function reset_function()
+	local settings_to_run = {}
+
+	for i = 1, #render_settings do
+		local setting = render_settings[i]
+		local is_valid = nil
+
+		if setting.validation_function then
+			is_valid = setting.validation_function()
+		else
+			is_valid = true
+		end
+
+		if setting.default_value and setting.on_activated and is_valid then
+			settings_to_run[#settings_to_run + 1] = setting
+		end
 	end
+
+	local function sort_function(setting_a, setting_b)
+		local prio_a = setting_a.startup_prio or math.huge
+		local prio_b = setting_b.startup_prio or math.huge
+
+		return prio_a < prio_b
+	end
+
+	table.sort(settings_to_run, sort_function)
+
+	for i = 1, #settings_to_run do
+		local setting = settings_to_run[i]
+		local default_value = setting.default_value
+
+		setting.on_activated(default_value, setting)
+	end
+
+	Application.set_user_setting("gamma", 0)
+	SettingsUtilities.apply_user_settings()
+	SettingsUtilities.save_user_settings()
 end
 
 return {
 	icon = "content/ui/materials/icons/system/settings/category_video",
 	display_name = "loc_settings_menu_category_render",
-	can_be_reset = false,
-	settings = render_settings
+	reset_function = reset_function,
+	settings_utilities = SettingsUtilities,
+	settings_by_id = SettingsUtilities.settings_by_id,
+	settings = render_settings,
+	can_be_reset = IS_XBS
 }

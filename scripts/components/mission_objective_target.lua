@@ -94,6 +94,10 @@ MissionObjectiveTarget.editor_init = function (self, unit)
 	return
 end
 
+MissionObjectiveTarget.editor_validate = function (self, unit)
+	return true, ""
+end
+
 MissionObjectiveTarget.editor_update = function (self, unit, dt)
 	return
 end

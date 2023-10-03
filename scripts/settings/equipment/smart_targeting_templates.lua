@@ -198,6 +198,27 @@ local smart_targeting_templates = {
 			max_angle = _degrees_to_radians(15)
 		}
 	},
+	force_staff_p1_single_target = {
+		precision_target = {
+			max_range = 25,
+			min_range = 1,
+			min_angle = _degrees_to_radians(0.05),
+			max_angle = _degrees_to_radians(0.1),
+			wanted_target = TORSO
+		},
+		aim_assist = {
+			base_multiplier = 0.07,
+			no_aim_input_multiplier = 0,
+			always_auto_aim = true
+		},
+		trajectory_assist = {
+			range = 35,
+			assist_multiplier = 1,
+			falloff_func = Range.power_4,
+			min_angle = _degrees_to_radians(3),
+			max_angle = _degrees_to_radians(15)
+		}
+	},
 	force_sword_single_target = {
 		precision_target = {
 			max_range = 3,
@@ -275,6 +296,127 @@ local smart_targeting_templates = {
 			falloff_func = Range.power_4,
 			min_angle = _degrees_to_radians(3),
 			max_angle = _degrees_to_radians(15)
+		}
+	},
+	chain_lightning_single_target = {
+		precision_target = {
+			max_range = 15,
+			within_distance_to_box_y = 0.15,
+			min_range = 1,
+			within_distance_to_box_x = 0.3,
+			breed_weights = {
+				chaos_poxwalker_bomber = 20,
+				renegade_netgunner = 20,
+				renegade_grenadier = 20,
+				chaos_ogryn_executor = 10,
+				chaos_hound_mutator = 20,
+				renegade_flamer = 20,
+				chaos_daemonhost = 5,
+				chaos_plague_ogryn = 5,
+				cultist_mutant = 20,
+				chaos_poxwalker = 1,
+				chaos_spawn = 5,
+				cultist_shocktrooper = 10,
+				chaos_ogryn_gunner = 10,
+				renegade_berzerker = 10,
+				chaos_newly_infected = 1,
+				renegade_sniper = 20,
+				chaos_beast_of_nurgle = 5,
+				renegade_shocktrooper = 10,
+				renegade_gunner = 10,
+				cultist_assault = 1,
+				cultist_berzerker = 10,
+				cultist_melee = 1,
+				renegade_assault = 1,
+				renegade_captain = 5,
+				renegade_rifleman = 1,
+				chaos_hound = 20,
+				chaos_ogryn_bulwark = 10,
+				cultist_gunner = 10,
+				renegade_melee = 1,
+				renegade_executor = 10,
+				cultist_flamer = 20
+			},
+			min_angle = _degrees_to_radians(0.05),
+			max_angle = _degrees_to_radians(0.1),
+			wanted_target = TORSO,
+			wanted_target_fallback = TORSO
+		},
+		aim_assist = {
+			base_multiplier = 0.07,
+			no_aim_input_multiplier = 0,
+			always_auto_aim = true
+		},
+		trajectory_assist = {
+			range = 35,
+			assist_multiplier = 1,
+			falloff_func = Range.power_4,
+			min_angle = _degrees_to_radians(3),
+			max_angle = _degrees_to_radians(15)
+		}
+	},
+	target_ally = {
+		precision_target = {
+			max_range = 100,
+			min_range = 1,
+			collision_filter = "filter_player_unit",
+			min_angle = _degrees_to_radians(0.05),
+			max_angle = _degrees_to_radians(0.1),
+			wanted_target = TORSO,
+			wanted_target_fallback = HEAD
+		},
+		aim_assist = {
+			base_multiplier = 0.07,
+			no_aim_input_multiplier = 0,
+			always_auto_aim = true
+		},
+		trajectory_assist = {
+			range = 35,
+			assist_multiplier = 1,
+			falloff_func = Range.power_4,
+			min_angle = _degrees_to_radians(3),
+			max_angle = _degrees_to_radians(15)
+		}
+	},
+	target_ally_close = {
+		precision_target = {
+			max_range = 2,
+			min_range = 0.5,
+			collision_filter = "filter_player_unit",
+			min_angle = _degrees_to_radians(0.05),
+			max_angle = _degrees_to_radians(0.1),
+			wanted_target = TORSO,
+			wanted_target_fallback = HEAD
+		},
+		aim_assist = {
+			base_multiplier = 0.07,
+			no_aim_input_multiplier = 0,
+			always_auto_aim = true
+		},
+		trajectory_assist = {
+			range = 35,
+			assist_multiplier = 1,
+			falloff_func = Range.power_4,
+			min_angle = _degrees_to_radians(3),
+			max_angle = _degrees_to_radians(15)
+		}
+	},
+	throwing_knives_default = {
+		precision_target = {
+			max_range = 100,
+			min_range = 1,
+			min_angle = _degrees_to_radians(0.05),
+			max_angle = _degrees_to_radians(0.1),
+			wanted_target = HEAD
+		}
+	},
+	throwing_knifes_single_target = {
+		precision_target = {
+			max_range = 50,
+			min_range = 1,
+			min_angle = _degrees_to_radians(0.05),
+			max_angle = _degrees_to_radians(0.1),
+			wanted_target = HEAD
 		}
 	},
 	smart_tag_target = {

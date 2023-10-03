@@ -147,6 +147,24 @@ local widget_definitions = {
 					0
 				}
 			}
+		},
+		{
+			pass_type = "rect",
+			style = {
+				vertical_alignment = "center",
+				scenegraph_id = "screen",
+				horizontal_alignment = "center",
+				color = Color.black(100, true),
+				size_addition = {
+					0,
+					0
+				},
+				offset = {
+					0,
+					0,
+					80
+				}
+			}
 		}
 	}, "profile_preset_tooltip"),
 	profile_preset_add_button = UIWidget.create_definition({
@@ -158,8 +176,8 @@ local widget_definitions = {
 			}
 		},
 		{
-			value = "content/ui/materials/icons/presets/preset_new",
 			pass_type = "texture",
+			value = "content/ui/materials/icons/presets/preset_new",
 			style = {
 				color = Color.terminal_frame(nil, true),
 				default_color = Color.terminal_corner_hover(nil, true),
@@ -180,6 +198,36 @@ local widget_definitions = {
 				local ignore_alpha = true
 
 				ColorUtilities.color_lerp(default_color, hover_color, hover_progress, color, ignore_alpha)
+			end,
+			visibility_function = function (content, style)
+				return not content.missing_content
+			end
+		},
+		{
+			value_id = "exclamation_mark",
+			pass_type = "texture",
+			value = "content/ui/materials/icons/generic/exclamation_mark",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					0,
+					0,
+					7
+				},
+				color = {
+					255,
+					246,
+					69,
+					69
+				},
+				size = {
+					16,
+					28
+				}
+			},
+			visibility_function = function (content, style)
+				return content.missing_content
 			end
 		},
 		{
@@ -251,6 +299,7 @@ local profile_preset_button = UIWidget.create_definition({
 	},
 	{
 		value_id = "exclamation_mark",
+		style_id = "exclamation_mark",
 		pass_type = "texture",
 		value = "content/ui/materials/icons/generic/exclamation_mark",
 		style = {
@@ -274,6 +323,41 @@ local profile_preset_button = UIWidget.create_definition({
 		},
 		visibility_function = function (content, style)
 			return content.missing_content
+		end
+	},
+	{
+		style_id = "modified_exclamation_mark",
+		pass_type = "texture",
+		value = "content/ui/materials/icons/generic/exclamation_mark",
+		value_id = "modified_exclamation_mark",
+		style = {
+			vertical_alignment = "center",
+			horizontal_alignment = "center",
+			offset = {
+				10,
+				10,
+				7
+			},
+			color = {
+				255,
+				246,
+				202,
+				69
+			},
+			size = {
+				16,
+				28
+			}
+		},
+		visibility_function = function (content, style)
+			return content.modified_content
+		end,
+		change_function = function (content, style)
+			if content.missing_content then
+				style.offset[1] = 0
+			else
+				style.offset[1] = 10
+			end
 		end
 	},
 	{

@@ -11,6 +11,10 @@ OverheatDisplay.editor_init = function (self, unit)
 	self:enable(unit)
 end
 
+OverheatDisplay.editor_validate = function (self, unit)
+	return true, ""
+end
+
 OverheatDisplay.init = function (self, unit)
 	local overheat = self:get_data(unit, "overheat")
 	local overheat_display_steps = self:get_data(unit, "overheat_display_steps")

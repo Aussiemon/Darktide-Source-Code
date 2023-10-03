@@ -45,7 +45,6 @@ completed_styles.size = {
 }
 completed_styles.total_score = table.clone(UIFontSettings.header_2)
 local completed_score_style = completed_styles.total_score
-completed_score_style.font_type = "itc_novarese_bold"
 completed_score_style.font_size = 55
 completed_score_style.text_horizontal_alignment = "center"
 local categories_grid_margin = 16
@@ -79,6 +78,11 @@ gamepad_unfold_hint_style.text = table.clone(UIFontSettings.body)
 local gamepad_unfold_hint_text_style = gamepad_unfold_hint_style.text
 gamepad_unfold_hint_text_style.text_horizontal_alignment = "center"
 gamepad_unfold_hint_text_style.text_vertical_alignment = "center"
+gamepad_unfold_hint_text_style.offset = {
+	0,
+	0,
+	10
+}
 achievements_view_styles.blueprints = {}
 local blueprint_styles = achievements_view_styles.blueprints
 blueprint_styles.pass_template = {}
@@ -669,6 +673,13 @@ normal_achievement_style.hotspot = {}
 local normal_achievement_hotspot_style = normal_achievement_style.hotspot
 normal_achievement_hotspot_style.on_hover_sound = UISoundEvents.default_mouse_hover
 normal_achievement_hotspot_style.on_select_sound = UISoundEvents.default_click
+local normal_achievement_icon_style = normal_achievement_style.icon
+normal_achievement_icon_style.icon_default_color = Color.ui_achievement_icon_completed(nil, true)
+normal_achievement_icon_style.icon_hover_color = Color.ui_achievement_icon_completed_hover(nil, true)
+normal_achievement_icon_style.material_values = {
+	frame = "content/ui/textures/icons/achievements/frames/achieved",
+	icon_color = table.clone(normal_achievement_icon_style.icon_default_color)
+}
 normal_achievement_style.in_progress_overlay = table.clone(pass_template_styles.completed_overlay)
 blueprint_styles.foldout_achievement = table.clone(normal_achievement_style)
 local foldout_achievement_style = blueprint_styles.foldout_achievement
@@ -703,13 +714,6 @@ completed_achievement_style.size = {
 	90
 }
 completed_achievement_style.margin_bottom = 30
-local completed_achievement_icon_style = completed_achievement_style.icon
-completed_achievement_icon_style.icon_default_color = Color.ui_achievement_icon_completed(nil, true)
-completed_achievement_icon_style.icon_hover_color = Color.ui_achievement_icon_completed_hover(nil, true)
-completed_achievement_icon_style.material_values = {
-	frame = "content/ui/textures/icons/achievements/frames/achieved",
-	icon_color = table.clone(completed_achievement_icon_style.icon_default_color)
-}
 completed_achievement_style.reward = table.clone(reward_icon_small_style)
 blueprint_styles.completed_foldout_achievement = table.clone(completed_achievement_style)
 local completed_foldout_achievement_style = blueprint_styles.completed_foldout_achievement

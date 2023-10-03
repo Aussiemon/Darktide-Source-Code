@@ -20,7 +20,10 @@ local mechanism_settings = {
 			"init",
 			"gameplay",
 			"game_mode_ended",
-			"joining_hub_server"
+			"joining_hub_server",
+			"joining_party_game_session",
+			"client_exit_gameplay",
+			"client_wait_for_server"
 		},
 		player_package_synchronization_settings = {
 			prioritization_template = "default"
@@ -61,7 +64,8 @@ local mechanism_settings = {
 			"client_exit_gameplay",
 			"client_wait_for_server",
 			"adventure",
-			"score"
+			"score",
+			"joining_party_game_session"
 		},
 		game_states = {
 			score = StateGameScore,

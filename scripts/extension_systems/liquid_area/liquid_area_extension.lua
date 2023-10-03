@@ -53,8 +53,20 @@ LiquidAreaExtension.init = function (self, extension_init_context, unit, extensi
 	self._buff_affected_units = {}
 	local extension_manager = Managers.state.extension
 	local side_system = extension_manager:system("side_system")
-	self._side_names = side_system:side_names()
+	local side_names = nil
+	local buff_target_side_relation = template.buff_target_side_relation
+	local source_side_name = extension_init_data.optional_source_side
+
+	if buff_target_side_relation and source_side_name then
+		local source_side = side_system:get_side_from_name(source_side_name)
+
+		if source_side then
+			side_names = source_side:relation_side_names(buff_target_side_relation)
+		end
+	end
+
 	self._sides = side_system:sides()
+	self._side_names = side_names or side_system:side_names()
 	local broadphase_system = extension_manager:system("broadphase_system")
 	self._broadphase = broadphase_system.broadphase
 	self._broadphase_radius = 0
@@ -229,7 +241,8 @@ LiquidAreaExtension._create_liquid = function (self, real_index, angle)
 		position = Vector3Box(from),
 		rotation = QuaternionBox(rotation),
 		particle_id = particle_id,
-		angle = angle
+		angle = angle,
+		real_index = real_index
 	}
 	self._flow[real_index] = liquid
 	self._inactive_flow[real_index] = liquid
@@ -914,6 +927,49 @@ end
 
 LiquidAreaExtension.liquid_paint_id = function (self)
 	return self._liquid_paint_id
+end
+
+local TEMP_RI_TO_REMOVE = {}
+
+LiquidAreaExtension.remove_any_cell_inside_of_radius = function (self, from_position, radius)
+	if not self._flow_done then
+		return
+	end
+
+	table.clear(TEMP_RI_TO_REMOVE)
+
+	local flow = self._flow
+	local size = 0
+
+	for _, liquid in pairs(flow) do
+		local position = liquid.position:unbox()
+
+		if liquid.full then
+			local distance = Vector3.distance(from_position, position)
+
+			if distance < radius then
+				TEMP_RI_TO_REMOVE[#TEMP_RI_TO_REMOVE + 1] = liquid.real_index
+				size = size + 1
+			end
+		end
+
+		if max_size <= size then
+			break
+		end
+	end
+
+	for i = 1, #TEMP_RI_TO_REMOVE do
+		local liquid = flow[TEMP_RI_TO_REMOVE[i]]
+		local particle_id = liquid.particle_id
+
+		if particle_id then
+			World.stop_spawning_particles(self._world, particle_id)
+		end
+
+		self._flow[liquid.real_index] = nil
+	end
+
+	Managers.state.game_session:send_rpc_clients("rpc_remove_liquid_multiple", self._game_object_id, TEMP_RI_TO_REMOVE)
 end
 
 return LiquidAreaExtension

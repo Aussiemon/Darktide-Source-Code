@@ -666,6 +666,15 @@ overrides.autogun_p3_m1 = {
 				200,
 				250
 			}
+		},
+		{
+			"targets",
+			"default_target",
+			"boost_curve_multiplier_finesse",
+			{
+				1.5,
+				3
+			}
 		}
 	}
 }
@@ -704,8 +713,8 @@ overrides.autogun_p3_m2 = {
 			"default_target",
 			"boost_curve_multiplier_finesse",
 			{
-				1,
-				2
+				1.5,
+				3
 			}
 		}
 	}
@@ -734,6 +743,15 @@ overrides.autogun_p3_m3 = {
 			{
 				200,
 				250
+			}
+		},
+		{
+			"targets",
+			"default_target",
+			"boost_curve_multiplier_finesse",
+			{
+				1.5,
+				3
 			}
 		}
 	}

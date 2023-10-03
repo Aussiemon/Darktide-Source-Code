@@ -9,8 +9,8 @@ local function _add_template_entries(path)
 	end
 end
 
-_add_template_entries("scripts/settings/liquid_area/liquid_area_templates/player_liquid_area_templates")
 _add_template_entries("scripts/settings/liquid_area/liquid_area_templates/minion_liquid_area_templates")
+_add_template_entries("scripts/settings/liquid_area/liquid_area_templates/player_liquid_area_templates")
 _add_template_entries("scripts/settings/liquid_area/liquid_area_templates/prop_liquid_area_templates")
 
 return settings("LiquidAreaTemplates", liquid_area_templates)

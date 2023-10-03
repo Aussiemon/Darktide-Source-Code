@@ -131,7 +131,7 @@ function _player_hit_reaction(attack_result, damage_profile, target_weapon_templ
 
 		if block_broken then
 			if catapulting_template and catapulting_template.catapult_through_block then
-				local pushed, catapulted = _push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position)
+				local pushed, catapulted = _push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position, ignore_stun_immunity)
 				was_catapulted = catapulted
 				was_pushed = pushed
 			end
@@ -149,13 +149,13 @@ function _player_hit_reaction(attack_result, damage_profile, target_weapon_templ
 			local push_through_block = push_template and push_template.push_through_block
 
 			if push_through_block then
-				_push(target_unit_data_extension, attacked_unit, push_template, attack_direction, attack_type)
+				_push(target_unit_data_extension, attacked_unit, push_template, attack_direction, attack_type, ignore_stun_immunity)
 			end
 		end
 	elseif attack_result == attack_results.toughness_broken then
 		_drop_luggable(attacked_unit, target_unit_data_extension, attack_type)
 
-		local _, was_catapulted = _push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position)
+		local _, was_catapulted = _push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position, ignore_stun_immunity)
 
 		if not was_catapulted then
 			_toughness_broken_disorient(target_unit_data_extension, target_weapon_template, attacked_unit, attack_direction, attack_type, stun_allowed, ignore_stun_immunity)
@@ -164,12 +164,12 @@ function _player_hit_reaction(attack_result, damage_profile, target_weapon_templ
 			_force_look(target_unit_data_extension, force_look_function, attacked_unit, attack_direction)
 		end
 	elseif attack_result == attack_results.toughness_absorbed then
-		_push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position)
+		_push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position, ignore_stun_immunity)
 		_toughness_absorbed_disorient(target_unit_data_extension, target_weapon_template, attacked_unit, attack_direction, attack_type, stun_allowed, ignore_stun_immunity)
 	elseif attack_result == attack_results.toughness_absorbed_melee then
 		_drop_luggable(attacked_unit, target_unit_data_extension, attack_type)
 
-		local _, was_catapulted = _push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position)
+		local _, was_catapulted = _push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position, ignore_stun_immunity)
 
 		if not was_catapulted then
 			local hit_reaction_stun_types = breed.hit_reaction_stun_types
@@ -182,7 +182,7 @@ function _player_hit_reaction(attack_result, damage_profile, target_weapon_templ
 	elseif attack_result == attack_results.damaged then
 		_drop_luggable(attacked_unit, target_unit_data_extension, attack_type)
 
-		local _, was_catapulted = _push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position)
+		local _, was_catapulted = _push_or_catapult(target_unit_data_extension, attacked_unit, attacking_unit_owner_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position, ignore_stun_immunity)
 
 		if not was_catapulted then
 			HitReaction.disorient_player(attacked_unit, target_unit_data_extension, disorientation_type, stun_allowed, ignore_stun_immunity, attack_direction, attack_type, target_weapon_template, false)
@@ -252,7 +252,10 @@ function _interrupt_alternate_fire(unit_data_extension, target_weapon_template, 
 		local animation_extension = ScriptUnit.has_extension(attacked_unit, "animation_system")
 
 		if not alternate_fire_settings or not alternate_fire_settings.uninterruptible then
-			AlternateFire.stop(alternate_fire, weapon_tweak_templates_component, animation_extension, target_weapon_template, false, attacked_unit)
+			local peeking_component = unit_data_extension:write_component("peeking")
+			local first_person_extension = ScriptUnit.extension(attacked_unit, "first_person_system")
+
+			AlternateFire.stop(alternate_fire, peeking_component, first_person_extension, weapon_tweak_templates_component, animation_extension, target_weapon_template, false, attacked_unit)
 		end
 	end
 end
@@ -272,7 +275,7 @@ function _interrupt_interaction(attacked_unit, damage_profile, uninterruptible)
 	end
 end
 
-function _push_or_catapult(unit_data_extension, attacked_unit, attacking_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position)
+function _push_or_catapult(unit_data_extension, attacked_unit, attacking_unit, push_template, catapulting_template, force_look_function, attack_direction, attack_type, hit_position, ignore_stun_immunity)
 	local was_pushed, was_catapulted = nil
 
 	if catapulting_template then
@@ -280,7 +283,7 @@ function _push_or_catapult(unit_data_extension, attacked_unit, attacking_unit, p
 
 		was_catapulted = true
 	else
-		_push(unit_data_extension, attacked_unit, push_template, attack_direction, attack_type)
+		_push(unit_data_extension, attacked_unit, push_template, attack_direction, attack_type, ignore_stun_immunity)
 
 		was_pushed = true
 	end
@@ -288,12 +291,12 @@ function _push_or_catapult(unit_data_extension, attacked_unit, attacking_unit, p
 	return was_pushed, was_catapulted
 end
 
-function _push(unit_data_extension, attacked_unit, push_template, attack_direction, attack_type)
+function _push(unit_data_extension, attacked_unit, push_template, attack_direction, attack_type, ignore_stun_immunity)
 	if push_template then
 		local buff_extension = ScriptUnit.has_extension(attacked_unit, "buff_system")
 		local has_buff = buff_extension:has_keyword(buff_keywords.stun_immune)
 
-		if not has_buff then
+		if ignore_stun_immunity or not has_buff then
 			local locomotion_push_component = unit_data_extension:write_component("locomotion_push")
 
 			Push.add(attacked_unit, locomotion_push_component, attack_direction, push_template, attack_type)
@@ -301,11 +304,24 @@ function _push(unit_data_extension, attacked_unit, push_template, attack_directi
 	end
 end
 
-function _catapult(attacked_unit_data_extension, catapulting_settings, force_look_function, attacking_unit, attacked_unit, hit_position)
-	local attacking_unit_position = catapulting_settings.use_hit_position and hit_position or POSITION_LOOKUP[attacking_unit]
+function _catapult(attacked_unit_data_extension, catapulting_settings, force_look_function, attacking_unit_or_nil, attacked_unit, hit_position)
+	local catapult_source_position = nil
+
+	if catapulting_settings.use_hit_position then
+		catapult_source_position = hit_position
+	else
+		local attacking_unit_position = POSITION_LOOKUP[attacking_unit_or_nil]
+
+		if attacking_unit_position then
+			catapult_source_position = attacking_unit_position
+		else
+			catapult_source_position = hit_position
+		end
+	end
+
 	local node = Unit.node(attacked_unit, catapulting_settings.direction_from_node)
 	local catapult_position = Unit.world_position(attacked_unit, node)
-	local direction = Vector3.normalize(catapult_position - attacking_unit_position)
+	local direction = Vector3.normalize(catapult_position - catapult_source_position)
 	local catapult_force = catapulting_settings.force
 	local catapult_z_force = catapulting_settings.z_force
 	local velocity = direction * catapult_force

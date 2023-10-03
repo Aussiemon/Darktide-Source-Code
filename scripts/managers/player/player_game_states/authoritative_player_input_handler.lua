@@ -8,7 +8,7 @@ end
 
 local _default_input_value = nil
 
-AuthoritativePlayerInputHandler.init = function (self, player, is_server)
+AuthoritativePlayerInputHandler.init = function (self, player, is_server, fixed_time_step)
 	self._owner_peer_id = player:peer_id()
 	self._frame = 0
 	self._player = player
@@ -68,13 +68,13 @@ AuthoritativePlayerInputHandler.init = function (self, player, is_server)
 	self._input_cache_size = #input_cache
 	self._first_frame_received = false
 
-	self:_create_clock()
+	self:_create_clock(fixed_time_step)
 end
 
-AuthoritativePlayerInputHandler._create_clock = function (self)
-	local clock_handler, clock_start = AdaptiveClockHandlerServer:new(self._player)
+AuthoritativePlayerInputHandler._create_clock = function (self, fixed_time_step)
+	local clock_handler, clock_start = AdaptiveClockHandlerServer:new(self._player, fixed_time_step)
 	self._clock_handler = clock_handler
-	local last_frame = math.floor(clock_start / GameParameters.fixed_time_step)
+	local last_frame = math.floor(clock_start / fixed_time_step)
 	self._received_frame = last_frame
 	self._last_acked_frame = last_frame
 	self._parsed_frame = last_frame

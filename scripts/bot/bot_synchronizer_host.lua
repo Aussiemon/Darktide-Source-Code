@@ -171,9 +171,11 @@ BotSynchronizerHost.add_peer = function (self, channel_id)
 end
 
 BotSynchronizerHost.remove_peer = function (self, channel_id)
-	self._connected_peers[channel_id] = nil
+	if self._connected_peers[channel_id] then
+		self._connected_peers[channel_id] = nil
 
-	self._network_delegate:unregister_channel_events(channel_id, unpack(RPCS))
+		self._network_delegate:unregister_channel_events(channel_id, unpack(RPCS))
+	end
 end
 
 return BotSynchronizerHost

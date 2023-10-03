@@ -9,6 +9,7 @@ local settings = {
 	host_singleplay = false,
 	bot_backfilling_allowed = false,
 	use_side_color = false,
+	player_unit_template_name_override = "player_character_social_hub",
 	is_social_hub = true,
 	disable_hologram = true,
 	vaulting_allowed = false,

@@ -192,19 +192,19 @@ local power_level_settings = {
 		[armor_types.prop_armor] = 0.5
 	},
 	default_crit_boost_amount = 0.5,
-	default_boost_curve_multiplier = 0.25,
+	default_boost_curve_multiplier = 0.5,
 	rending_armor_conversion = {
 		[armor_types.unarmored] = armor_types.unarmored,
 		[armor_types.armored] = armor_types.unarmored,
 		[armor_types.resistant] = armor_types.resistant,
 		[armor_types.player] = armor_types.player,
 		[armor_types.berserker] = armor_types.unarmored,
-		[armor_types.super_armor] = armor_types.unarmored,
+		[armor_types.super_armor] = armor_types.armored,
 		[armor_types.disgustingly_resilient] = armor_types.unarmored,
 		[armor_types.void_shield] = armor_types.unarmored,
 		[armor_types.prop_armor] = armor_types.unarmored
 	},
-	finesse_min_damage_multiplier = 0.5
+	finesse_min_damage_multiplier = 0.2
 }
 
 return settings("PowerLevelSettings", power_level_settings)

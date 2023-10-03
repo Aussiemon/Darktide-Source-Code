@@ -99,6 +99,9 @@ CombatVectorSystem.init = function (self, ...)
 			}
 		}
 		self._next_update_at = 0
+		self._current_update_unit = nil
+		self._current_update_extension = nil
+		self._unit_extension_data = {}
 	end
 end
 
@@ -162,6 +165,37 @@ CombatVectorSystem.destroy = function (self, ...)
 	CombatVectorSystem.super.destroy(self, ...)
 end
 
+CombatVectorSystem.on_add_extension = function (self, world, unit, extension_name, extension_init_data, ...)
+	local extension = CombatVectorSystem.super.on_add_extension(self, world, unit, extension_name, extension_init_data, ...)
+
+	if extension_name == "CombatVectorUserExtension" then
+		self._unit_extension_data[unit] = extension
+		local current_update_unit = self._current_update_unit
+		local unit_extension_data = self._unit_extension_data
+
+		if current_update_unit == unit then
+			self._current_update_unit, self._current_update_extension = next(unit_extension_data, current_update_unit)
+		end
+	end
+
+	return extension
+end
+
+CombatVectorSystem.on_remove_extension = function (self, unit, extension_name)
+	if extension_name == "CombatVectorUserExtension" then
+		local current_update_unit = self._current_update_unit
+		local unit_extension_data = self._unit_extension_data
+
+		if current_update_unit == unit then
+			self._current_update_unit, self._current_update_extension = next(unit_extension_data, current_update_unit)
+		end
+
+		unit_extension_data[unit] = nil
+	end
+
+	CombatVectorSystem.super.on_remove_extension(self, unit, extension_name)
+end
+
 CombatVectorSystem.update = function (self, context, dt, t)
 	if not self._is_server or not Managers.state.main_path:is_main_path_ready() then
 		return
@@ -172,8 +206,17 @@ CombatVectorSystem.update = function (self, context, dt, t)
 	local claimed_location_counters = self._claimed_location_counters
 	local flank_positions = self._flank_positions
 	local combat_vector_position = self._current_to_position
+	local unit_extension_data = self._unit_extension_data
+	local current_update_unit = self._current_update_unit
+	local current_update_extension = self._current_update_extension
 
-	CombatVectorSystem.super.update(self, context, dt, t, nav_mesh_locations, claimed_location_counters, changed, flank_positions, combat_vector_position)
+	if current_update_unit then
+		current_update_extension:update(current_update_unit, context, dt, t, nav_mesh_locations, claimed_location_counters, changed, flank_positions, combat_vector_position)
+	end
+
+	current_update_unit, current_update_extension = next(unit_extension_data, current_update_unit)
+	self._current_update_unit = current_update_unit
+	self._current_update_extension = current_update_extension
 end
 
 CombatVectorSystem._reset = function (self)
@@ -252,7 +295,7 @@ CombatVectorSystem._update_combat_vector = function (self, dt, t)
 			return changed
 		end
 
-		local to_position = _calculate_to_position(from_position, nav_world, traverse_logic)
+		local to_position, num_aggroed = _calculate_to_position(from_position, nav_world, traverse_logic)
 
 		if to_position then
 			local from_position_distance_sq = Vector3.distance_squared(from_position, self._current_from_position:unbox())
@@ -273,6 +316,7 @@ CombatVectorSystem._update_combat_vector = function (self, dt, t)
 			end
 		end
 
+		self._num_aggroed_combat_vector_minions = num_aggroed
 		astar_data.astar_timer = t + astar_frequency
 	end
 
@@ -427,6 +471,10 @@ CombatVectorSystem.set_last_known_position = function (self, unit, position)
 	else
 		self._last_known_positions[unit]:store(position)
 	end
+end
+
+CombatVectorSystem.num_aggroed_combat_vector_minions = function (self)
+	return self._num_aggroed_combat_vector_minions
 end
 
 local ABOVE = 4
@@ -599,6 +647,7 @@ function _calculate_to_position(from_position, nav_world, traverse_logic)
 	local average_position = Vector3(0, 0, 0)
 	local num_alive_minions = alive_minions.size
 	local num_aggroed = 0
+	local total_minions = 0
 
 	for i = 1, num_alive_minions do
 		local unit = alive_minions[i]
@@ -608,8 +657,9 @@ function _calculate_to_position(from_position, nav_world, traverse_logic)
 		if perception_component.aggro_state == "aggroed" then
 			local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 			local breed = unit_data_extension:breed()
+			local tags = breed.tags
 
-			if breed.combat_range_data then
+			if breed.combat_range_data and not tags.melee then
 				local behavior_component = blackboard.behavior
 				local combat_range = behavior_component.combat_range
 				local is_in_melee = combat_range == "melee" and perception_component.target_distance <= CombatVectorSettings.melee_minion_range
@@ -622,6 +672,8 @@ function _calculate_to_position(from_position, nav_world, traverse_logic)
 						average_position = average_position + unit_position
 						num_aggroed = num_aggroed + 1
 					end
+
+					total_minions = total_minions + 1
 				end
 			end
 		end
@@ -648,7 +700,7 @@ function _calculate_to_position(from_position, nav_world, traverse_logic)
 		end
 	end
 
-	return to_position
+	return to_position, total_minions
 end
 
 function _calculate_main_aggro_unit(nav_world, dt, aggro_unit_scores, current_main_aggro_unit, decay_speed)

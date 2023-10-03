@@ -156,6 +156,7 @@ PlayerUnitVisualLoadoutExtension.init = function (self, extension_init_context, 
 	local default_wielded_slot_name = extension_init_data.default_wielded_slot_name
 	self._default_wielded_slot_name = default_wielded_slot_name
 	self._initialized_fixed_t = fixed_frame_t
+	self._fixed_time_step = Managers.state.game_session.fixed_time_step
 end
 
 PlayerUnitVisualLoadoutExtension.extensions_ready = function (self, world, unit)
@@ -397,7 +398,7 @@ PlayerUnitVisualLoadoutExtension.server_correction_occurred = function (self, un
 	local self_fx_sources = self._fx_sources
 	local fx_extension = self._fx_extension
 	local mispredicted_frame = from_frame - 1
-	local mispredicted_frame_t = mispredicted_frame * GameParameters.fixed_time_step
+	local mispredicted_frame_t = mispredicted_frame * self._fixed_time_step
 	local from_server_correction_occurred = true
 	local slot_configuration = self._slot_configuration
 
@@ -425,7 +426,7 @@ PlayerUnitVisualLoadoutExtension.server_correction_occurred = function (self, un
 					end
 				end
 
-				self:_unequip_item_from_slot(slot_name, from_server_correction_occurred, from_frame)
+				self:_unequip_item_from_slot(slot_name, from_server_correction_occurred, from_frame, false)
 			elseif is_locally_wielded_slot then
 				rewield = true
 			end
@@ -463,7 +464,7 @@ PlayerUnitVisualLoadoutExtension.server_correction_occurred = function (self, un
 end
 
 PlayerUnitVisualLoadoutExtension.destroy = function (self)
-	local fixed_time_step = GameParameters.fixed_time_step
+	local fixed_time_step = self._fixed_time_step
 	local gameplay_time = Managers.time:time("gameplay")
 	local latest_frame = math.floor(gameplay_time / fixed_time_step)
 	local mispredict_package_handler = self._mispredict_package_handler
@@ -504,7 +505,7 @@ PlayerUnitVisualLoadoutExtension.destroy = function (self)
 					Pocketable.drop_pocketable(latest_frame, self._physics_world, is_server, unit, inventory_component, self)
 				end
 			else
-				self:_unequip_item_from_slot(slot_name, false, latest_frame)
+				self:_unequip_item_from_slot(slot_name, false, latest_frame, true)
 			end
 		end
 	end
@@ -638,7 +639,7 @@ end
 PlayerUnitVisualLoadoutExtension.unequip_item_from_slot = function (self, slot_name, fixed_frame)
 	local from_server_correction_occurred = false
 
-	self:_unequip_item_from_slot(slot_name, from_server_correction_occurred, fixed_frame)
+	self:_unequip_item_from_slot(slot_name, from_server_correction_occurred, fixed_frame, false)
 
 	self._inventory_component[slot_name] = self.UNEQUIPPED_SLOT
 	local inventory_component = self._inventory_component
@@ -661,7 +662,7 @@ PlayerUnitVisualLoadoutExtension.unequip_item_from_slot = function (self, slot_n
 	end
 end
 
-PlayerUnitVisualLoadoutExtension._unequip_item_from_slot = function (self, slot_name, from_server_correction_occurred, fixed_frame)
+PlayerUnitVisualLoadoutExtension._unequip_item_from_slot = function (self, slot_name, from_server_correction_occurred, fixed_frame, from_destroy)
 	local equipment = self._equipment
 	local slot = equipment[slot_name]
 	local item = slot.item
@@ -708,9 +709,11 @@ PlayerUnitVisualLoadoutExtension._unequip_item_from_slot = function (self, slot_
 		end
 	end
 
-	local is_in_first_person_mode = self._is_in_first_person_mode
+	if not from_destroy then
+		local is_in_first_person_mode = self._is_in_first_person_mode
 
-	self:_update_item_visibility(is_in_first_person_mode)
+		self:_update_item_visibility(is_in_first_person_mode)
+	end
 
 	local slot_configuration = self._slot_configuration[slot_name]
 	local mispredict_packages = slot_configuration.mispredict_packages

@@ -1,5 +1,5 @@
 local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
-local TalentSettings = require("scripts/settings/talent/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings_new")
 local PlayerSpecialization = {
 	specialization_level_requirement = function ()
 		return 1
@@ -24,39 +24,26 @@ local PlayerSpecialization = {
 		return talent_array
 	end
 }
-local _required_levels = {}
 
-PlayerSpecialization.talent_set_to_sorted_array = function (archetype, specialization_name, talent_set, talent_array)
-	table.clear(talent_array)
-	table.clear(_required_levels)
-
-	local specialization = archetype.specializations[specialization_name]
-	local talent_groups = specialization.talent_groups
-	local i = 0
-
-	for j = 1, #talent_groups do
-		local talent_group = talent_groups[j]
-		local required_level = talent_group.required_level
-		local talents_in_group = talent_group.talents
-
-		for k = 1, #talents_in_group do
-			local talent_name = talents_in_group[k]
-
-			if talent_set[talent_name] then
-				i = i + 1
-				talent_array[i] = talent_name
-				_required_levels[talent_name] = required_level
-			end
-		end
+PlayerSpecialization.talents_with_tiers_set_to_array = function (talent_set, talents_with_tiers)
+	for talent_name, tier in pairs(talent_set) do
+		local new_key = talent_name .. "--" .. tier
+		talents_with_tiers[new_key] = true
 	end
 
-	local function _talent_sort_function(a, b)
-		return _required_levels[a] < _required_levels[b]
+	return PlayerSpecialization.talent_set_to_array(talents_with_tiers, {})
+end
+
+PlayerSpecialization.talent_array_to_list_with_tiers = function (talent_array, talents_with_tiers)
+	for i = 1, #talent_array do
+		local key = talent_array[i]
+		local talent_name_sections = string.split(key, "--")
+		local talent_name = talent_name_sections[1] or key
+		local talent_tier = tonumber(talent_name_sections[2]) or 1
+		talents_with_tiers[talent_name] = talent_tier
 	end
 
-	table.sort(talent_array, _talent_sort_function)
-
-	return talent_array
+	return talents_with_tiers
 end
 
 PlayerSpecialization.add_nonselected_talents = function (archetype, specialization_name, player_level, talents)
@@ -71,12 +58,61 @@ PlayerSpecialization.add_nonselected_talents = function (archetype, specializati
 
 			for j = 1, #talents_in_group do
 				local talent_name = talents_in_group[j]
-				talents[talent_name] = true
+				talents[talent_name] = 1
 			end
 		end
 	end
 
 	return talents
+end
+
+PlayerSpecialization.add_archetype_base_talents = function (archetype, talents)
+	local talent_definitions = archetype.talents
+	local has_combat_ability = false
+	local has_grenade_ability = false
+	local combat_ability_talent, grenade_ability_talent = nil
+
+	for talent_name, _ in pairs(talents) do
+		local talent = talent_definitions[talent_name]
+		local player_ability = talent.player_ability
+
+		if player_ability then
+			local ability_type = player_ability.ability_type
+
+			if ability_type == "combat_ability" then
+				has_combat_ability = true
+				combat_ability_talent = talent_name
+			elseif ability_type == "grenade_ability" then
+				has_grenade_ability = true
+				grenade_ability_talent = talent_name
+			else
+				ferror("Unknown ability_type(%q) found in talent(%q) for archetype(%q)", ability_type, talent_name, archetype.name)
+			end
+		end
+	end
+
+	local base_talents = archetype.base_talents
+
+	for talent_name, tier in pairs(base_talents) do
+		local apply_talent = true
+		local talent = talent_definitions[talent_name]
+		local player_ability = talent.player_ability
+
+		if player_ability then
+			local ability_type = player_ability.ability_type
+
+			if ability_type == "combat_ability" and has_combat_ability then
+				apply_talent = false
+			elseif ability_type == "grenade_ability" and has_grenade_ability then
+				apply_talent = false
+			end
+		end
+
+		if apply_talent then
+			local prev_tier = talents[talent_name] or 0
+			talents[talent_name] = prev_tier + tier
+		end
+	end
 end
 
 PlayerSpecialization.filter_nonselectable_talents = function (archetype, specialization_name, player_level, talents)
@@ -99,19 +135,31 @@ PlayerSpecialization.filter_nonselectable_talents = function (archetype, special
 	return talents
 end
 
-PlayerSpecialization.from_selected_talents = function (archetype, specialization_name, talents)
+PlayerSpecialization.from_selected_talents = function (archetype, talents)
 	local combat_ability = archetype.combat_ability
 	local grenade_ability = archetype.grenade_ability
 	local passives = {}
 	local coherency_buffs = {}
 	local special_rules = {}
 	local buff_template_tiers = {}
+	local combat_ability_prio = -1
+	local current_coherency = nil
+	local coherency_prio = -1
 	local archetype_name = archetype.name
-	local talent_definitions = ArchetypeTalents[archetype_name][specialization_name]
-	local talent_array = PlayerSpecialization.talent_set_to_sorted_array(archetype, specialization_name, talents, {})
+	local talent_definitions = ArchetypeTalents[archetype_name]
+	local talent_and_tiers = {}
 
-	for i = 1, #talent_array do
-		local talent_name = talent_array[i]
+	for talent_name, tier in pairs(talents) do
+		if type(tier) == "boolean" then
+			tier = 1
+		end
+
+		if tier > 0 then
+			talent_and_tiers[talent_name] = tier
+		end
+	end
+
+	for talent_name, tier in pairs(talent_and_tiers) do
 		local talent_definition = talent_definitions[talent_name]
 		local player_ability = talent_definition.player_ability
 
@@ -136,18 +184,42 @@ PlayerSpecialization.from_selected_talents = function (archetype, specialization
 				for j = 1, #identifier do
 					local buff_template_name = buff_template_names[j]
 					passives[identifier[j]] = buff_template_name
+					buff_template_tiers[buff_template_name] = tier
 				end
 			else
 				local buff_template_name = passive.buff_template_name
 				passives[identifier] = buff_template_name
+				buff_template_tiers[buff_template_name] = tier
 			end
 		end
 
 		local coherency = talent_definition.coherency
 
 		if coherency then
-			local buff_template_name = coherency.buff_template_name
-			coherency_buffs[coherency.identifier] = buff_template_name
+			local priority = coherency.priority
+
+			if priority then
+				if coherency_prio < priority then
+					if current_coherency then
+						buff_template_tiers[current_coherency.buff_template_name] = nil
+						coherency_buffs[current_coherency.identifier] = nil
+					end
+
+					local buff_template_name = coherency.buff_template_name
+
+					if buff_template_name then
+						coherency_buffs[coherency.identifier] = buff_template_name
+						buff_template_tiers[buff_template_name] = tier
+					end
+
+					current_coherency = coherency
+					coherency_prio = priority
+				end
+			else
+				local buff_template_name = coherency.buff_template_name
+				coherency_buffs[coherency.identifier] = buff_template_name
+				buff_template_tiers[buff_template_name] = tier
+			end
 		end
 
 		local special_rule = talent_definition.special_rule
@@ -169,33 +241,6 @@ PlayerSpecialization.from_selected_talents = function (archetype, specialization
 	return combat_ability, grenade_ability, passives, coherency_buffs, special_rules, buff_template_tiers
 end
 
-local function extract_all_talents()
-	local id_to_talents = {}
-	local name_to_id = {}
-	local archetypes = ArchetypeTalents
-
-	for archetype_name, archetype_talents in pairs(archetypes) do
-		for specialization_name, specialization_talents in pairs(archetype_talents) do
-			for talent_id, talent in pairs(specialization_talents) do
-				local talent_name = talent.name or talent_id
-				name_to_id[talent_name] = talent_id
-				id_to_talents[talent_id] = talent
-			end
-		end
-	end
-
-	return id_to_talents, name_to_id
-end
-
-local talent_id_to_talent_lookup, talent_name_to_talent_id_lookup = extract_all_talents()
-
-PlayerSpecialization.talent_from_name = function (talent_name)
-	local talent_id = talent_name_to_talent_id_lookup[talent_name]
-	local talent = talent_id_to_talent_lookup[talent_id]
-
-	return talent_id, talent
-end
-
 PlayerSpecialization.talent_group_unlocked_by_level = function (archetype, specialization_name, player_level, mark_unlocked_group_as_new)
 	local specialization = archetype.specializations[specialization_name]
 	local talent_groups = specialization.talent_groups
@@ -209,6 +254,28 @@ PlayerSpecialization.talent_group_unlocked_by_level = function (archetype, speci
 	end
 
 	return nil
+end
+
+PlayerSpecialization.get_talent_value = function (archetype_name, specialization_name, talent_name, value_key)
+	specialization_name = specialization_name or "none"
+	local talent_definitions = ArchetypeTalents[archetype_name][specialization_name]
+	local talent = talent_definitions[talent_name]
+	local tier_level = PlayerSpecialization.get_talent_tier(talent_name)
+
+	if talent.tiers and talent.tiers[tier_level][value_key] then
+		return talent.tiers[tier_level][value_key]
+	end
+
+	return TalentSettings[archetype_name][talent_name][value_key]
+end
+
+PlayerSpecialization.get_talent_tier = function (player, talent_name)
+	local local_player = Managers.player:local_player(1)
+	local profile = local_player:profile()
+	local talents = profile.talents
+	local talent_tier = talents[talent_name] or 0
+
+	return talent_tier
 end
 
 PlayerSpecialization.talent_group_from_id = function (archetype, specialization_name, group_id)

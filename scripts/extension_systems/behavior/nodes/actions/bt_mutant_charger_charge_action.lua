@@ -37,9 +37,11 @@ BtMutantChargerChargeAction.enter = function (self, unit, breed, blackboard, scr
 	scratchpad.locomotion_extension = locomotion_extension
 	scratchpad.navigation_extension = ScriptUnit.extension(unit, "navigation_system")
 	scratchpad.nav_world = scratchpad.navigation_extension:nav_world()
+	scratchpad.buff_extension = ScriptUnit.extension(unit, "buff_system")
 	scratchpad.broadphase_system = Managers.state.extension:system("broadphase_system")
 	scratchpad.side_system = Managers.state.extension:system("side_system")
 	scratchpad.pushed_minions = {}
+	scratchpad.dodged_targets = {}
 	scratchpad.fx_system = Managers.state.extension:system("fx_system")
 	local throw_directions = self:_calculate_randomized_throw_directions(action_data)
 	scratchpad.throw_directions = throw_directions
@@ -151,7 +153,7 @@ BtMutantChargerChargeAction._is_facing_target = function (self, unit, scratchpad
 	local forward = Quaternion.forward(Unit.local_rotation(unit, 1))
 	local to_target_normalized = Vector3.normalize(Vector3.flat(target_position - unit_position))
 	local dot = Vector3.dot(forward, to_target_normalized)
-	local facing_target = dot > 0.75
+	local facing_target = dot > 0.5
 
 	return facing_target
 end
@@ -172,17 +174,21 @@ BtMutantChargerChargeAction._start_charging = function (self, unit, scratchpad, 
 	scratchpad.charge_aborted = not_facing_target
 end
 
+local MIN_DISTANCE_FOR_MOVE_TO = 3
+local MOVE_FREQUENCY = 1
+
 BtMutantChargerChargeAction._start_navigating = function (self, unit, scratchpad, action_data, t)
 	local navigation_extension = scratchpad.navigation_extension
-	local speed = scratchpad.current_charge_speed or action_data.charge_speed_min
+	local speed = scratchpad.current_charge_speed or self:_get_min_charge_speed(scratchpad, action_data)
 
 	navigation_extension:set_enabled(true, speed)
 
 	scratchpad.state = "navigating"
 	scratchpad.min_time_navigating = t + action_data.min_time_navigating
 
-	scratchpad.locomotion_extension:set_rotation_speed(action_data.rotation_speed)
+	scratchpad.locomotion_extension:set_rotation_speed(action_data.navigating_rotation_speed)
 
+	scratchpad.move_to_timer = t
 	local behavior_component = scratchpad.behavior_component
 	behavior_component.move_state = "moving"
 	scratchpad.target_dodged_during_attack = nil
@@ -235,21 +241,25 @@ BtMutantChargerChargeAction._start_throwing_target = function (self, unit, scrat
 	AttackIntensity.add_intensity(scratchpad.grabbed_target, action_data.attack_intensities)
 end
 
+local LAG_COMPENSATION_CHECK_RADIUS = 2
+
 BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scratchpad, action_data, t, dt)
-	if not scratchpad.navmesh_ray_can_go then
+	local locomotion_extension = scratchpad.locomotion_extension
+	local current_speed = Vector3.length(locomotion_extension:current_velocity())
+	local charge_started_at_t = scratchpad.charge_started_at_t
+	local time_spent_charging = t - charge_started_at_t
+
+	if not scratchpad.navmesh_ray_can_go and (not scratchpad.played_prepare_grab_anim or current_speed < 0.5) and action_data.min_time_spent_charging <= time_spent_charging then
 		self:_start_navigating(unit, scratchpad, action_data, t)
 
 		return
 	end
 
 	local target_unit = scratchpad.perception_component.target_unit
-	local locomotion_extension = scratchpad.locomotion_extension
 	local navigation_extension = scratchpad.navigation_extension
 	local self_position = POSITION_LOOKUP[unit]
-	local charge_started_at_t = scratchpad.charge_started_at_t
-	local time_spent_charging = t - charge_started_at_t
-	local charge_speed_min = action_data.charge_speed_min
-	local charge_speed_max = action_data.charge_speed_max
+	local charge_speed_min = self:_get_min_charge_speed(scratchpad, action_data)
+	local charge_speed_max = self:_get_max_charge_speed(scratchpad, action_data)
 	local charge_max_speed_at = action_data.charge_max_speed_at
 	local charge_scale = time_spent_charging / charge_max_speed_at
 	local wanted_charge_speed = math.min(charge_speed_min + charge_scale * (charge_speed_max - charge_speed_min), charge_speed_max)
@@ -261,11 +271,7 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 	local distance_to_extrapolated_position = Vector3.distance(self_position, extrapolated_position)
 	local close_distance = action_data.close_distance
 	local is_close = distance_to_extrapolated_position < close_distance
-
-	if not is_close then
-		local slowdown_percentage = self:_get_turn_slowdown_percentage(unit, direction_to_target, action_data)
-		wanted_charge_speed = wanted_charge_speed * slowdown_percentage
-	end
+	local slowdown_percentage = self:_get_turn_slowdown_percentage(unit, direction_to_target, action_data)
 
 	navigation_extension:set_max_speed(wanted_charge_speed)
 
@@ -278,7 +284,7 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 
 	if scratchpad.anim_move_speed_duration then
 		if t < scratchpad.anim_move_speed_duration then
-			wanted_charge_speed = MinionMovement.get_animation_wanted_movement_speed(unit, dt, action_data.charge_speed_max)
+			wanted_charge_speed = MinionMovement.get_animation_wanted_movement_speed(unit, dt, self:_get_max_charge_speed(scratchpad, action_data))
 		else
 			scratchpad.anim_move_speed_duration = nil
 		end
@@ -290,11 +296,39 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 	locomotion_extension:set_wanted_velocity(new_velocity)
 	scratchpad.velocity_stored:store(new_velocity)
 
-	if scratchpad.start_colliding_with_players_timing and scratchpad.start_colliding_with_players_timing <= t then
+	if scratchpad.current_lag_compensation_target_timing then
+		if scratchpad.current_lag_compensation_target_timing <= t then
+			local dodge_radius = action_data.dodge_collision_radius
+			local hit_unit = scratchpad.current_lag_compensation_target
+			local distance = Vector3.distance(POSITION_LOOKUP[unit], POSITION_LOOKUP[hit_unit])
+			local is_dodging = Dodge.is_dodging(hit_unit)
+
+			if is_dodging then
+				if distance <= dodge_radius then
+					self:_hit_target(unit, hit_unit, scratchpad, action_data, t)
+				end
+			elseif distance < LAG_COMPENSATION_CHECK_RADIUS then
+				self:_hit_target(unit, hit_unit, scratchpad, action_data, t)
+			end
+
+			scratchpad.current_lag_compensation_target_timing = nil
+			scratchpad.current_lag_compensation_target = nil
+
+			return
+		end
+	elseif action_data.min_time_spent_charging <= time_spent_charging and scratchpad.start_colliding_with_players_timing and scratchpad.start_colliding_with_players_timing <= t then
 		local colliding_unit = self:_check_colliding_players(unit, scratchpad, action_data)
 
 		if colliding_unit then
-			self:_hit_target(unit, colliding_unit, scratchpad, action_data, t)
+			local player = Managers.state.player_unit_spawn:owner(colliding_unit)
+
+			if player and player.remote then
+				local lag_compensation_rewind = player:lag_compensation_rewind_s() * 0.5
+				scratchpad.current_lag_compensation_target_timing = t + lag_compensation_rewind
+				scratchpad.current_lag_compensation_target = colliding_unit
+			else
+				self:_hit_target(unit, colliding_unit, scratchpad, action_data, t)
+			end
 
 			return
 		else
@@ -311,6 +345,10 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 				end
 			end
 		end
+	end
+
+	if ALIVE[scratchpad.grabbed_target] then
+		return
 	end
 
 	if not scratchpad.started_charge_anim then
@@ -392,12 +430,14 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 			scratchpad.played_prepare_grab_anim = true
 		end
 
-		locomotion_extension:set_rotation_speed(scratchpad.target_dodged_during_attack and action_data.dodge_rotation_speed or action_data.close_rotation_speed)
+		local new_rotation_speed = (scratchpad.target_dodged_during_attack and action_data.dodge_rotation_speed or action_data.close_rotation_speed) * slowdown_percentage
 
-		if action_data.min_time_spent_charging <= time_spent_charging or scratchpad.charge_aborted then
+		locomotion_extension:set_rotation_speed(new_rotation_speed)
+
+		if action_data.min_time_spent_charging <= time_spent_charging or scratchpad.charge_aborted and not scratchpad.target_dodged_during_attack and Vector3.distance(self_position, target_position) < 5 then
 			local dot = Vector3.dot(wanted_direction, true_direction_to_target)
 
-			if dot < action_data.charged_past_dot_threshold then
+			if dot < action_data.charged_past_dot_threshold and not scratchpad.current_lag_compensation_target_timing then
 				local miss_animation = Animation.random_event(action_data.miss_animations)
 
 				scratchpad.animation_extension:anim_event(miss_animation)
@@ -411,14 +451,16 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 				if scratchpad.target_dodged_during_attack then
 					dodge_type = scratchpad.target_dodged_type
 
-					Dodge.sucessful_dodge(target_unit, unit, nil, dodge_type, breed)
+					Dodge.sucessful_dodge(target_unit, unit, "melee", dodge_type, breed)
 				end
 
 				return
 			end
 		end
 	else
-		locomotion_extension:set_rotation_speed(action_data.rotation_speed)
+		local new_rotation_speed = action_data.rotation_speed * slowdown_percentage
+
+		locomotion_extension:set_rotation_speed(new_rotation_speed)
 	end
 
 	locomotion_extension:set_wanted_rotation(rotation)
@@ -442,10 +484,6 @@ BtMutantChargerChargeAction._update_charging = function (self, unit, breed, scra
 	end
 end
 
-local MIN_DISTANCE_FOR_MOVE_TO = 3
-local MOVE_FREQUENCY = 1
-local MIN_DISTANCE_FOR_MOVE_TO_NOT_FACING = 5
-
 BtMutantChargerChargeAction._update_navigating = function (self, unit, scratchpad, action_data, t, dt, breed)
 	local can_exit_navigating = not scratchpad.min_time_navigating or scratchpad.min_time_navigating < t
 
@@ -460,13 +498,12 @@ BtMutantChargerChargeAction._update_navigating = function (self, unit, scratchpa
 	local navigation_extension = scratchpad.navigation_extension
 	local target_unit = scratchpad.perception_component.target_unit
 	local target_position = POSITION_LOOKUP[target_unit]
-	local not_facing_target = not self:_is_facing_target(unit, scratchpad)
 	local destination = navigation_extension:destination()
 	local distance = Vector3.distance(target_position, destination)
-	local should_force_move = scratchpad.behavior_component.move_state ~= "moving" or navigation_extension:has_reached_destination() or not not_facing_target and (not scratchpad.move_to_timer or t < scratchpad.move_to_timer)
-	local min_distance = not_facing_target and MIN_DISTANCE_FOR_MOVE_TO_NOT_FACING or MIN_DISTANCE_FOR_MOVE_TO
+	local should_force_move = scratchpad.behavior_component.move_state ~= "moving" or navigation_extension:has_reached_destination()
+	local min_distance = MIN_DISTANCE_FOR_MOVE_TO
 
-	if min_distance < distance or should_force_move then
+	if (min_distance < distance or should_force_move) and scratchpad.move_to_timer <= t then
 		self:_move_to_position(scratchpad, target_position)
 
 		scratchpad.move_to_timer = t + MOVE_FREQUENCY
@@ -544,11 +581,11 @@ BtMutantChargerChargeAction._update_navigating = function (self, unit, scratchpa
 		end
 	end
 
-	local max_speed = scratchpad.current_charge_speed or action_data.charge_speed_min
+	local max_speed = scratchpad.current_charge_speed or self:_get_min_charge_speed(scratchpad, action_data)
 
 	if scratchpad.anim_move_speed_duration then
 		if t < scratchpad.anim_move_speed_duration then
-			max_speed = MinionMovement.get_animation_wanted_movement_speed(unit, dt, action_data.charge_speed_max)
+			max_speed = MinionMovement.get_animation_wanted_movement_speed(unit, dt, self:_get_max_charge_speed(scratchpad, action_data))
 		else
 			scratchpad.anim_move_speed_duration = nil
 		end
@@ -572,7 +609,7 @@ BtMutantChargerChargeAction._update_charged_past = function (self, unit, scratch
 	end
 
 	local charge_direction = Vector3.normalize(scratchpad.velocity_stored:unbox())
-	local wanted_speed = MinionMovement.get_animation_wanted_movement_speed(unit, dt, action_data.charge_speed_max)
+	local wanted_speed = MinionMovement.get_animation_wanted_movement_speed(unit, dt, self:_get_max_charge_speed(scratchpad, action_data))
 
 	scratchpad.locomotion_extension:set_wanted_velocity(charge_direction * wanted_speed)
 
@@ -591,20 +628,6 @@ local SMASH_SPACE_NAV_BELOW = 1
 
 BtMutantChargerChargeAction._update_grabbed_target = function (self, unit, scratchpad, action_data, t, dt)
 	if scratchpad.grab_target_duration < t then
-		local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
-
-		if not scratchpad.skip_taunt and buff_extension and buff_extension:has_keyword("empowered") then
-			local current_health_percent = Health.current_health_percent(scratchpad.grabbed_target)
-
-			if current_health_percent > 0 then
-				self:_play_smash_anim(scratchpad, action_data, t)
-
-				scratchpad.grab_target_duration = t + action_data.smash_anim_duration[scratchpad.hit_unit_breed_name]
-
-				return
-			end
-		end
-
 		self:_align_throwing(unit, scratchpad, action_data)
 
 		scratchpad.grab_target_duration = nil
@@ -617,10 +640,11 @@ BtMutantChargerChargeAction._update_grabbed_target = function (self, unit, scrat
 	local locomotion_extension = scratchpad.locomotion_extension
 
 	if scratchpad.charge_with_target_t then
+		local position = POSITION_LOOKUP[unit]
+		local forward = Quaternion.forward(Unit.local_rotation(unit, 1))
+
 		if scratchpad.charge_with_target_t < t then
 			local nav_world = scratchpad.nav_world
-			local position = POSITION_LOOKUP[unit]
-			local forward = Quaternion.forward(Unit.local_rotation(unit, 1))
 			local check_position = position + forward
 			local has_space_to_smash = NavQueries.position_on_mesh(nav_world, check_position, SMASH_SPACE_NAV_ABOVE, SMASH_SPACE_NAV_BELOW)
 
@@ -637,10 +661,22 @@ BtMutantChargerChargeAction._update_grabbed_target = function (self, unit, scrat
 				return
 			end
 		else
-			local wanted_speed = MinionMovement.get_animation_wanted_movement_speed(unit, dt, action_data.charge_speed_max)
-			local velocity = Vector3.normalize(scratchpad.velocity_stored:unbox()) * wanted_speed
+			local from = position + Vector3.up()
+			local fwd_hit = self:_ray_cast(scratchpad.physics_world, from, from + forward)
 
-			locomotion_extension:set_wanted_velocity(velocity)
+			if fwd_hit then
+				locomotion_extension:set_wanted_velocity(Vector3(0, 0, 0))
+			else
+				local wanted_speed = MinionMovement.get_animation_wanted_movement_speed(unit, dt, self:_get_max_charge_speed(scratchpad, action_data))
+				local velocity = Vector3.normalize(scratchpad.velocity_stored:unbox()) * wanted_speed
+
+				locomotion_extension:set_wanted_velocity(velocity)
+
+				local grabbed_target = scratchpad.grabbed_target
+				local target_unit_data_extension = ScriptUnit.extension(grabbed_target, "unit_data_system")
+				local disabled_character_state_component = target_unit_data_extension:write_component("disabled_character_state")
+				disabled_character_state_component.target_drag_position = POSITION_LOOKUP[unit]
+			end
 		end
 	elseif scratchpad.next_smash_anim_t < t then
 		self:_play_smash_anim(scratchpad, action_data, t)
@@ -903,23 +939,24 @@ BtMutantChargerChargeAction._check_colliding_players = function (self, unit, scr
 		repeat
 			local hit_actor = hit_actors[i]
 			local hit_unit = Actor.unit(hit_actor)
+
+			if scratchpad.dodged_targets[hit_unit] then
+				break
+			end
+
 			local is_dodging = Dodge.is_dodging(hit_unit)
 
 			if is_dodging then
 				local distance = Vector3.distance(pos, POSITION_LOOKUP[hit_unit])
+			else
+				local target_unit_data_extension = ScriptUnit.extension(hit_unit, "unit_data_system")
+				local character_state_component = target_unit_data_extension:read_component("character_state")
+				local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
+				local is_enemy = scratchpad.side_system:is_enemy(unit, hit_unit)
 
-				if dodge_radius < distance then
-					break
+				if not is_disabled and is_enemy then
+					return hit_unit
 				end
-			end
-
-			local target_unit_data_extension = ScriptUnit.extension(hit_unit, "unit_data_system")
-			local character_state_component = target_unit_data_extension:read_component("character_state")
-			local is_disabled = PlayerUnitStatus.is_disabled(character_state_component)
-			local is_enemy = scratchpad.side_system:is_enemy(unit, hit_unit)
-
-			if not is_disabled and is_enemy then
-				return hit_unit
 			end
 		until true
 	end
@@ -1024,6 +1061,7 @@ BtMutantChargerChargeAction._push_friendly_minions = function (self, unit, actio
 	local damage_profile = action_data.push_minions_damage_profile
 	local damage_type = action_data.push_minions_damage_type
 	local pushed_minions = scratchpad.pushed_minions
+	local push_minions_ignored_breeds = action_data.push_minions_ignored_breeds
 
 	for i = 1, num_results do
 		local hit_unit = BROADPHASE_RESULTS[i]
@@ -1041,9 +1079,11 @@ BtMutantChargerChargeAction._push_friendly_minions = function (self, unit, actio
 			local hit_unit_breed = unit_data_extension:breed()
 
 			if Breed.is_minion(hit_unit_breed) then
+				local hit_unit_breed_name = hit_unit_breed.name
+				local should_ignore = push_minions_ignored_breeds and push_minions_ignored_breeds[hit_unit_breed_name]
 				local tags = hit_unit_breed.tags
 
-				if not tags.monster then
+				if not tags.monster and not should_ignore then
 					Attack.execute(hit_unit, damage_profile, "power_level", power_level, "attacking_unit", unit, "attack_direction", direction, "hit_zone_name", "torso", "damage_type", damage_type)
 
 					pushed_minions[hit_unit] = true

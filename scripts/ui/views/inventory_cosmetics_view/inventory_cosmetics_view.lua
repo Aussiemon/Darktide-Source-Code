@@ -38,13 +38,18 @@ local WIDGET_TYPE_BY_SLOT = {
 local InventoryCosmeticsView = class("InventoryCosmeticsView", "ItemGridViewBase")
 
 InventoryCosmeticsView.init = function (self, settings, context)
-	self._context = context
 	self._preview_profile_equipped_items = context.preview_profile_equipped_items
 	self._current_profile_equipped_items = context.current_profile_equipped_items or {}
 	self._is_readonly = context and context.is_readonly
 	self._sort_options = {}
+	self._debug = context.debug
+	context.preview_player = context.player or Managers.player:local_player(1)
+	context.preview_loadout = self._preview_profile_equipped_items or context.preview_player.loadout
+	context.character_id = "cosmetics_view_preview_character"
 
-	if not context.debug then
+	InventoryCosmeticsView.super.init(self, Definitions, settings, context)
+
+	if not self._debug then
 		self._selected_slot = context.selected_slot
 		self._selected_slots = context.selected_slots or {
 			context.selected_slot
@@ -54,23 +59,18 @@ InventoryCosmeticsView.init = function (self, settings, context)
 		self._animation_event_name_suffix = context.animation_event_name_suffix
 		self._animation_event_variable_data = context.animation_event_variable_data
 		self.item_type = context.item_type
-		self._preview_player = context.player
-		self._is_own_player = self._preview_player == Managers.player:local_player(1)
-		local player = self._preview_player
-		local profile = player:profile()
-		self._presentation_profile = table.clone_instance(profile)
-		self._presentation_profile.character_id = "cosmetics_view_preview_character"
-		self._presentation_profile.loadout = self._preview_profile_equipped_items and table.clone_instance(self._preview_profile_equipped_items) or {}
 		local is_gear = not not string.find(self._selected_slot.name, "slot_gear")
 		self._camera_zoomed_in = true
 		self._initialize_zoom = is_gear
 	else
-		self._preview_player = Managers.player:local_player(1)
-		local profile = self._preview_player:profile()
-		self._presentation_profile = table.clone_instance(profile)
+		self._selected_slot = {
+			name = "slot_gear_upperbody"
+		}
+		self._selected_slots = {
+			self._selected_slot
+		}
+		self._initial_rotation = 0
 	end
-
-	InventoryCosmeticsView.super.init(self, Definitions, settings)
 
 	self._pass_input = false
 	self._pass_draw = false
@@ -619,9 +619,25 @@ InventoryCosmeticsView._start_show_layout = function (self)
 		self._offer_items_layout = self._cosmetic_layout
 	end
 
+	local start_index = 1
 	local selected_slot = self._selected_slot
 	local selected_slot_name = selected_slot.name
 	local slot_display_name = selected_slot and selected_slot.display_name
+	local equipped_item = start_index and self:equipped_item_in_slot(selected_slot_name)
+
+	if equipped_item then
+		start_index = self:item_grid_index(equipped_item) or start_index
+
+		if start_index then
+			self._selected_gear_id = equipped_item and equipped_item.gear_id
+		end
+	else
+		local first_item = self:first_grid_item()
+
+		if first_item then
+			self._selected_gear_id = first_item and first_item.gear_id
+		end
+	end
 
 	self:_present_layout_by_slot_filter(nil, nil, slot_display_name)
 end
@@ -709,6 +725,13 @@ InventoryCosmeticsView._fetch_inventory_items = function (self, selected_slots)
 	local local_player_id = 1
 	local player = Managers.player:local_player(local_player_id)
 	local character_id = player:character_id()
+
+	if self._debug then
+		self._cosmetic_layout = {}
+
+		return Promise.resolved()
+	end
+
 	local filter = {}
 
 	for i = 1, #selected_slots do
@@ -857,12 +880,22 @@ InventoryCosmeticsView._prepare_cosmetic_layout_data = function (self, result)
 			end
 		end
 
+		local gear_id = inventory_item.gear_id
+		local is_new = self._context and self._context.new_items_gear_ids and self._context.new_items_gear_ids[gear_id]
+		local remove_new_marker_callback = nil
+
+		if is_new then
+			remove_new_marker_callback = self._parent and callback(self._parent, "remove_new_item_mark")
+		end
+
 		layout[#layout + 1] = {
 			item = inventory_item,
 			slot = selected_slot,
 			widget_type = WIDGET_TYPE_BY_SLOT[selected_slot_name],
 			achievement = found_achievement,
-			store = found_store
+			store = found_store,
+			new_item_marker = is_new,
+			remove_new_marker_callback = remove_new_marker_callback
 		}
 	end
 

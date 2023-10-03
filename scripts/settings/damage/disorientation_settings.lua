@@ -243,19 +243,19 @@ local disorientation_settings = {
 			sound_event = "wwise/events/player/play_player_get_hit_heavy_2d",
 			movement_speed_buff = "grenadier_stun_movement_slow",
 			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_heavy",
-			hit_react_anim_1p = "shake_heavy",
+			hit_react_anim_1p = "shake_medium",
 			hit_react_anim_3p = "hit_react",
 			stun = {
 				start_anim_3p = "hit_stun_medium",
-				intoxication_level = 4,
+				intoxication_level = 1,
 				start_anim = "hit_stun",
 				end_anim_3p = "hit_stun_finished",
-				interrupt_delay = 0.05,
+				interrupt_delay = 0,
 				end_anim = "hit_stun_recover",
-				end_stun_early_time = 0.7,
+				end_stun_early_time = 0.5,
 				stun_immunity_time_buff = "stun_immune_very_long",
-				stun_duration = 1,
-				action_delay = 0.5
+				stun_duration = 0.5,
+				action_delay = 0
 			}
 		},
 		fortitude_broken = {
@@ -382,7 +382,22 @@ local disorientation_settings = {
 				stun_duration = 1.3,
 				self_stun = true,
 				interrupt_delay = false,
-				action_delay = 0.6
+				action_delay = 0.5
+			}
+		},
+		thunder_hammer_m2 = {
+			sound_event = "wwise/events/player/play_player_get_hit_heavy_2d",
+			movement_speed_buff = "heavy_stun_movement_slow",
+			screen_space_effect = "content/fx/particles/screenspace/screen_stunned_light",
+			hit_react_anim_1p = "shake_heavy",
+			stun = {
+				end_stun_early_time = 0.5,
+				intoxication_level = 2,
+				stun_immunity_time_buff = "stun_immune_short",
+				stun_duration = 0.7,
+				self_stun = true,
+				interrupt_delay = false,
+				action_delay = 0.2
 			}
 		},
 		shocktrooper_frag = {

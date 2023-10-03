@@ -61,6 +61,16 @@ local mission_templates = {
 			},
 			path_of_trust_09 = {
 				"path_of_trust_09_office"
+			},
+			hub_location_intro_barber = {
+				"hub_location_intro_barber"
+			},
+			hub_location_intro_mission_board = {
+				"hub_location_intro_mission_board_part_01",
+				"hub_location_intro_mission_board_part_02"
+			},
+			hub_location_intro_training_grounds = {
+				"hub_location_intro_training_grounds"
 			}
 		},
 		testify_flags = {

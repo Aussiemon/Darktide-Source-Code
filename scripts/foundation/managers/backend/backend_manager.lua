@@ -1,8 +1,9 @@
 local BackendError = require("scripts/foundation/managers/backend/backend_error")
 local BackendInterface = require("scripts/backend/backend_interface")
-local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
-local Promise = require("scripts/foundation/utilities/promise")
 local BackendManagerTestify = GameParameters.testify and require("scripts/foundation/managers/backend/backend_manager_testify")
+local BackendUtilities = require("scripts/foundation/managers/backend/utilities/backend_utilities")
+local PriorityQueue = require("scripts/foundation/utilities/priority_queue")
+local Promise = require("scripts/foundation/utilities/promise")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live")
 local Interface = {
 	"authenticated",
@@ -15,6 +16,9 @@ local Interface = {
 	"get_server_time"
 }
 local SLOW_INTERNET_DELAY_NOTIFICATION_S = 300
+local SLOW_INTERNET_SPAN_S = 90
+local SLOW_INTERNET_TIME_MS = 2000
+local SLOW_INTERNET_COUNT = 3
 local LIMIT_RESPONSE_TIME_WARNING_MS = 2000
 local TITLE_REQUEST_RETRY_COUNT = 5
 local TIME_SYNC_STATES = table.enum("not_started", "running", "failed", "synced")
@@ -48,8 +52,9 @@ BackendManager.init = function (self, default_headers_ctr)
 	self._promises = {}
 	self._initialized = false
 	self._initialize_promise = nil
-	self._slow_internet_notification_delay = 0
 	self.interfaces = BackendInterface.new()
+	self._slow_internet_notification_delay = 0
+	self._slow_internet_ticks = PriorityQueue:new()
 	self._inflight_title_requests = {}
 	self._title_request_retry_queue = {}
 	self.time_sync_state = TIME_SYNC_STATES.not_started
@@ -115,23 +120,6 @@ BackendManager.update = function (self, dt, t)
 			end
 		end
 
-		if not DEDICATED_SERVER then
-			self._slow_internet_notification_delay = math.max(self._slow_internet_notification_delay - dt, 0)
-			local current_time = Managers.time:time("main")
-
-			for _, inflight_request in pairs(self._inflight_title_requests) do
-				local time_in_flight = 1000 * (current_time - inflight_request.start_time)
-
-				if self._slow_internet_notification_delay == 0 and LIMIT_RESPONSE_TIME_WARNING_MS < time_in_flight then
-					Managers.event:trigger("event_add_notification_message", "alert", {
-						text = Localize("loc_popup_description_slow_internet")
-					})
-
-					self._slow_internet_notification_delay = SLOW_INTERNET_DELAY_NOTIFICATION_S
-				end
-			end
-		end
-
 		local remove_indices = {}
 		local title_request_retry_queue = self._title_request_retry_queue
 
@@ -177,6 +165,40 @@ BackendManager.update = function (self, dt, t)
 		end
 	end
 
+	local was_slow_frame = dt >= 0.5
+
+	if not DEDICATED_SERVER and not was_slow_frame then
+		local slow_internet_ticks = self._slow_internet_ticks
+		self._slow_internet_notification_delay = math.max(self._slow_internet_notification_delay - dt, 0)
+		local current_time = Managers.time:time("main")
+
+		if self._slow_internet_notification_delay == 0 then
+			for _, inflight_request in pairs(self._inflight_title_requests) do
+				local time_in_flight = 1000 * (current_time - inflight_request.start_time)
+
+				if SLOW_INTERNET_TIME_MS < time_in_flight and not inflight_request._triggered_slow_internet then
+					slow_internet_ticks:push(current_time + SLOW_INTERNET_SPAN_S)
+
+					inflight_request._triggered_slow_internet = true
+				end
+			end
+		end
+
+		while not slow_internet_ticks:empty() and slow_internet_ticks:peek() < current_time do
+			slow_internet_ticks:pop()
+		end
+
+		if SLOW_INTERNET_COUNT < slow_internet_ticks:size() then
+			Managers.event:trigger("event_add_notification_message", "alert", {
+				text = Localize("loc_popup_description_slow_internet")
+			})
+
+			self._slow_internet_notification_delay = SLOW_INTERNET_DELAY_NOTIFICATION_S
+
+			slow_internet_ticks:clear()
+		end
+	end
+
 	if GameParameters.testify then
 		Testify:poll_requests_through_handler(BackendManagerTestify, self)
 	end
@@ -187,6 +209,8 @@ BackendManager.on_reload = function (self, refreshed_resources)
 end
 
 BackendManager.logout = function (self)
+	Promise.reset()
+
 	if self._initialized then
 		for _, promise in pairs(self._promises) do
 			promise:cancel()

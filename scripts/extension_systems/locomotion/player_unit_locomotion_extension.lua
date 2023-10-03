@@ -106,6 +106,7 @@ PlayerUnitLocomotionExtension.init = function (self, extension_init_context, uni
 	self._soft_cap_z = soft_cap_z
 	self._soft_cap_y = soft_cap_y
 	self._soft_cap_x = soft_cap_x
+	self._fixed_time_step = Managers.state.game_session.fixed_time_step
 end
 
 PlayerUnitLocomotionExtension.game_object_initialized = function (self, session, object_id)
@@ -698,7 +699,7 @@ PlayerUnitLocomotionExtension.post_update = function (self, unit, dt, t)
 			simulated_pos = abs_pos + extrapolation
 		elseif mode == "interpolate" then
 			local old_pos = self._old_position:unbox()
-			local t_value = remainder_t / GameParameters.fixed_time_step
+			local t_value = remainder_t / self._fixed_time_step
 			simulated_pos = Vector3.lerp(old_pos, abs_pos, math.min(t_value, 1))
 		elseif mode == "raw" then
 			simulated_pos = abs_pos
@@ -881,7 +882,7 @@ PlayerUnitLocomotionExtension.extensions_ready = function (self, world, unit)
 end
 
 PlayerUnitLocomotionExtension.server_correction_occurred = function (self, unit, from_frame)
-	self._last_fixed_t = from_frame * GameParameters.fixed_time_step
+	self._last_fixed_t = from_frame * self._fixed_time_step
 	local mover = Unit.mover(unit)
 	local position = self._locomotion_component.position
 	local inair_state_component = self._inair_state_component

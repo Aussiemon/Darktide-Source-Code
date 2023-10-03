@@ -20,6 +20,7 @@ local COVER_COMBAT = {
 	{
 		"BtShootAction",
 		name = "move_to_cover_shoot",
+		condition = "is_not_suppressed",
 		action_data = action_data.move_to_cover_shoot
 	},
 	name = "cover_combat",
@@ -188,13 +189,13 @@ local behavior_tree = {
 		action_data = action_data.switch_weapon
 	},
 	COVER_COMBAT,
-	MELEE_COMBAT,
 	{
 		"BtSuppressedAction",
 		name = "suppressed",
 		condition = "is_suppressed",
 		action_data = action_data.suppressed
 	},
+	MELEE_COMBAT,
 	FAR_COMBAT,
 	CLOSE_COMBAT,
 	{

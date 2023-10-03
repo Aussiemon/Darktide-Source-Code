@@ -1,6 +1,5 @@
 local Attack = require("scripts/utilities/attack/attack")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local MoverController = require("scripts/extension_systems/locomotion/utilities/mover_controller")
 local LOCOMOTION_GRAVITY = 20
 local MinionLocomotionExtension = class("MinionLocomotionExtension")
 
@@ -10,14 +9,9 @@ MinionLocomotionExtension.init = function (self, extension_init_context, unit, e
 	local game_object_type = breed.game_object_type
 	local sync_full_rotation = Network.object_has_field(game_object_type, "rotation")
 	self._engine_extension_id = MinionLocomotion.register_extension(unit, LOCOMOTION_GRAVITY, sync_full_rotation)
-	local mover_state = MoverController.create_mover_state()
-
-	MoverController.set_active_mover(unit, mover_state, "mover")
-
-	self._mover_state = mover_state
 	self.movement_type = "snap_to_navmesh"
 
-	self:set_mover_disable_reason("not_constrained_by_mover", true)
+	Unit._set_mover(unit, nil)
 end
 
 MinionLocomotionExtension.game_object_initialized = function (self, game_session, game_object_id)
@@ -102,13 +96,12 @@ MinionLocomotionExtension.set_movement_type = function (self, movement_type, ove
 	end
 
 	self.movement_type = movement_type
+	local unit = self._unit
 
-	if movement_type == "script_driven" then
-		MoverController.set_disable_reason(self._unit, self._mover_state, "not_constrained_by_mover", true)
-	elseif movement_type == "snap_to_navmesh" then
-		MoverController.set_disable_reason(self._unit, self._mover_state, "not_constrained_by_mover", true)
-	elseif movement_type == "constrained_by_mover" then
-		MoverController.set_disable_reason(self._unit, self._mover_state, "not_constrained_by_mover", false)
+	if movement_type == "constrained_by_mover" then
+		Unit._set_mover(unit, "mover")
+	else
+		Unit._set_mover(unit, nil)
 	end
 
 	local kill = MinionLocomotion.set_movement_type(self._engine_extension_id, movement_types[movement_type], override_mover_separate_distance)
@@ -116,7 +109,7 @@ MinionLocomotionExtension.set_movement_type = function (self, movement_type, ove
 	if kill and not ignore_forced_mover_kill then
 		local damage_profile = DamageProfileTemplates.default
 
-		Attack.execute(self._unit, damage_profile, "instakill", true)
+		Attack.execute(unit, damage_profile, "instakill", true)
 	end
 
 	return not kill
@@ -144,10 +137,6 @@ end
 
 MinionLocomotionExtension.anim_translation_scale = function (self)
 	return MinionLocomotion.animation_translation_scale(self._engine_extension_id)
-end
-
-MinionLocomotionExtension.set_mover_disable_reason = function (self, reason, state)
-	MoverController.set_disable_reason(self._unit, self._mover_state, reason, state)
 end
 
 MinionLocomotionExtension.set_traverse_logic = function (self, traverse_logic)

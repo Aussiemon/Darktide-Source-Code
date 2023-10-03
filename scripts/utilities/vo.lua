@@ -1041,6 +1041,7 @@ Vo.play_npc_story = function (trigger_id)
 		event_data.trigger_id = trigger_id
 
 		dialogue_extension:trigger_dialogue_event(event_name, event_data)
+		Vo.mission_giver_conversation_starter(vox_unit, event_name)
 	end
 end
 
@@ -1244,6 +1245,14 @@ Vo.stop_currently_playing_vo = function (unit)
 
 	if dialogue_extension then
 		dialogue_extension:stop_currently_playing_vo()
+	end
+end
+
+Vo.stop_all_currently_playing_vo = function ()
+	local dialogue_system = Managers.state.extension:system_by_extension("DialogueActorExtension")
+
+	if dialogue_system then
+		dialogue_system:force_stop_all()
 	end
 end
 

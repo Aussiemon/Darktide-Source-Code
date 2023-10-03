@@ -22,6 +22,25 @@ LuggableSocket.editor_init = function (self, unit)
 	self:enable(unit)
 end
 
+LuggableSocket.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if rawget(_G, "LevelEditor") then
+		if Unit.find_actor(unit, "g_slot") == nil then
+			success = false
+			error_message = error_message .. "\nCouldn't find actor 'g_slot'"
+		end
+
+		if not Unit.has_visibility_group(unit, "main") then
+			success = false
+			error_message = error_message .. "\nCouldn't find visibility group 'main'"
+		end
+	end
+
+	return success, error_message
+end
+
 LuggableSocket.enable = function (self, unit)
 	return
 end

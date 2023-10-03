@@ -1,5 +1,5 @@
-local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
 local MissionSoundEvents = require("scripts/settings/sound/mission_sound_events")
+local WwiseGameSyncSettings = require("scripts/settings/wwise_game_sync/wwise_game_sync_settings")
 local MissionObjectiveBase = class("MissionObjectiveBase")
 local last_activation_order = 1
 local MUSIC_OBJECTIVE_NONE = WwiseGameSyncSettings.state_groups.music_game_state.none

@@ -38,6 +38,10 @@ CinematicScene.editor_init = function (self, unit)
 	return
 end
 
+CinematicScene.editor_validate = function (self, unit)
+	return true, ""
+end
+
 CinematicScene.editor_destroy = function (self, unit)
 	return
 end
@@ -116,7 +120,13 @@ CinematicScene.component_data = {
 			"Path of Trust 07",
 			"Path of Trust 08",
 			"Path of Trust 09",
-			"Traitor Captain Intro"
+			"Traitor Captain Intro",
+			"Hub Location Intro Barber",
+			"Hub Location Intro Mission Board",
+			"Hub Location Intro Training Grounds",
+			"Hub Location Intro Contracts",
+			"Hub Location Intro Crafting",
+			"Hub Location Intro Gun Shop"
 		},
 		options_values = {
 			"none",
@@ -143,7 +153,13 @@ CinematicScene.component_data = {
 			"path_of_trust_07",
 			"path_of_trust_08",
 			"path_of_trust_09",
-			"traitor_captain_intro"
+			"traitor_captain_intro",
+			"hub_location_intro_barber",
+			"hub_location_intro_mission_board",
+			"hub_location_intro_training_grounds",
+			"hub_location_intro_contracts",
+			"hub_location_intro_crafting",
+			"hub_location_intro_gun_shop"
 		}
 	},
 	cinematic_category = {
@@ -194,7 +210,14 @@ CinematicScene.component_data = {
 			"Path of Trust 08 Corridor 01",
 			"Path of Trust 08 Part 02",
 			"Path of Trust 09 Office",
-			"Traitor Captain Intro"
+			"Traitor Captain Intro",
+			"Hub Location Intro Barber",
+			"Hub Location Intro Mission Board Part 01",
+			"Hub Location Intro Mission Board Part 02",
+			"Hub Location Intro Training Grounds",
+			"Hub Location Intro Contracts",
+			"Hub Location Intro Crafting",
+			"Hub Location Intro Gun Shop"
 		},
 		options_values = {
 			"none",
@@ -240,7 +263,14 @@ CinematicScene.component_data = {
 			"path_of_trust_08_corridor_01",
 			"path_of_trust_08_part_02",
 			"path_of_trust_09_office",
-			"traitor_captain_intro"
+			"traitor_captain_intro",
+			"hub_location_intro_barber",
+			"hub_location_intro_mission_board_part_01",
+			"hub_location_intro_mission_board_part_02",
+			"hub_location_intro_training_grounds",
+			"hub_location_intro_contracts",
+			"hub_location_intro_crafting",
+			"hub_location_intro_gun_shop"
 		}
 	},
 	origin_level_name = {

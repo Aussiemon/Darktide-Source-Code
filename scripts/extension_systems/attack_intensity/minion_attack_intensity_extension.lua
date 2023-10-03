@@ -65,7 +65,7 @@ MinionAttackIntensityExtension.update = function (self, unit, dt, t)
 				local disallow_when_suppressed = difficulty_settings.disallow_when_suppressed
 				local is_suppressed = suppression_component.is_suppressed
 			else
-				local attack_allowed = target_attack_intensity_extension and target_attack_intensity_extension:attack_allowed(intensity_type) or true
+				local attack_allowed = not target_attack_intensity_extension or target_attack_intensity_extension:attack_allowed(intensity_type)
 				local ignore_cooldown = false
 
 				if attack_allowed then

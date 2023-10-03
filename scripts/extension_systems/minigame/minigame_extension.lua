@@ -29,6 +29,10 @@ MinigameExtension.on_add_extension = function (self, seed)
 end
 
 MinigameExtension.setup_from_component = function (self, minigame_type)
+	if minigame_type == "default" then
+		minigame_type = self._owner_system:default_minigame_type()
+	end
+
 	self._minigame_type = minigame_type
 	local minigame_class = MinigameClasses[minigame_type]
 	self._minigame = minigame_class:new(self._unit, self._is_server, self._seed)

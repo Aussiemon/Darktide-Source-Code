@@ -58,19 +58,19 @@ local templates = {
 		weapon_trait_bespoke_ogryn_club_p2_toughness_recovery_on_multiple_hits = {
 			{
 				buff_data = {
-					replenish_percentage = 0.075,
+					replenish_percentage = 0.12,
 					required_num_hits = 3
 				}
 			},
 			{
 				buff_data = {
-					replenish_percentage = 0.1,
+					replenish_percentage = 0.13,
 					required_num_hits = 3
 				}
 			},
 			{
 				buff_data = {
-					replenish_percentage = 0.125,
+					replenish_percentage = 0.13,
 					required_num_hits = 3
 				}
 			},
@@ -155,22 +155,50 @@ local templates = {
 		weapon_trait_bespoke_ogryn_club_p2_increased_crit_chance_on_staggered_weapon_special_hit_parent = {
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.04
+					[stat_buffs.critical_strike_chance] = 0.125
 				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.06
+					[stat_buffs.critical_strike_chance] = 0.15
 				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.08
+					[stat_buffs.critical_strike_chance] = 0.175
 				}
 			},
 			{
 				stat_buffs = {
-					[stat_buffs.critical_strike_chance] = 0.1
+					[stat_buffs.critical_strike_chance] = 0.2
+				}
+			}
+		}
+	},
+	weapon_trait_bespoke_ogryn_club_p2_toughness_regen_on_wepon_special_elites = {
+		weapon_trait_bespoke_ogryn_club_p2_toughness_regen_on_wepon_special_elites = {
+			{
+				active_duration = 2,
+				proc_stat_buffs = {
+					[stat_buffs.toughness_extra_regen_rate] = 0.5
+				}
+			},
+			{
+				active_duration = 3,
+				proc_stat_buffs = {
+					[stat_buffs.toughness_extra_regen_rate] = 0.5
+				}
+			},
+			{
+				active_duration = 4,
+				proc_stat_buffs = {
+					[stat_buffs.toughness_extra_regen_rate] = 0.5
+				}
+			},
+			{
+				active_duration = 5,
+				proc_stat_buffs = {
+					[stat_buffs.toughness_extra_regen_rate] = 0.5
 				}
 			}
 		}

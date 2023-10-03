@@ -142,7 +142,7 @@ Damage.deal_damage = function (unit, breed_or_nil, attacking_unit, attacking_uni
 	end
 
 	if (is_minion or is_prop) and attacking_unit_owner_unit and health_extension.set_last_damaging_unit then
-		health_extension:set_last_damaging_unit(attacking_unit_owner_unit, hit_zone_name, is_critical_strike, hit_world_position_or_nil)
+		health_extension:set_last_damaging_unit(attacking_unit_owner_unit, hit_zone_name, is_critical_strike, hit_world_position_or_nil, damage_profile)
 	end
 
 	local absorbed_attack = damage == 0 and permanent_damage == 0

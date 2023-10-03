@@ -49,7 +49,13 @@ local weapon_template = {
 			input_sequence = {
 				{
 					value = true,
-					input = "action_two_hold"
+					input = "action_two_hold",
+					input_setting = {
+						value = true,
+						input = "action_two_pressed",
+						setting_value = true,
+						setting = "toggle_ads"
+					}
 				}
 			}
 		},
@@ -59,7 +65,14 @@ local weapon_template = {
 				{
 					value = false,
 					input = "action_two_hold",
-					time_window = math.huge
+					time_window = math.huge,
+					input_setting = {
+						setting_value = true,
+						setting = "toggle_ads",
+						value = true,
+						input = "action_two_pressed",
+						time_window = math.huge
+					}
 				}
 			}
 		},
@@ -68,7 +81,6 @@ local weapon_template = {
 			input_sequence = {
 				{
 					value = true,
-					hold_input = "action_two_hold",
 					input = "action_one_pressed"
 				}
 			}
@@ -181,7 +193,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -246,7 +263,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -320,7 +342,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -392,7 +419,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -468,7 +500,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -549,7 +586,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield",
@@ -602,7 +644,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield",
@@ -628,7 +675,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -670,7 +722,7 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "none",
+		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
 		total_time = math.huge
@@ -860,13 +912,13 @@ weapon_template.fx_sources = {
 weapon_template.crosshair_type = "bfg"
 weapon_template.hit_marker_type = "center"
 weapon_template.overheat_configuration = {
-	vent_duration = 3,
-	low_threshold_decay_rate_modifier = 0.8,
-	vent_interval = 0.6,
 	auto_vent_delay = 1,
+	vent_duration = 3,
 	explode_action = "action_overheat_explode",
 	high_threshold_decay_rate_modifier = 0.5,
 	auto_vent_duration = 15,
+	low_threshold_decay_rate_modifier = 0.8,
+	vent_interval = 0.6,
 	critical_threshold_decay_rate_modifier = 0.25,
 	thresholds = {
 		high = 0.6,
@@ -877,11 +929,17 @@ weapon_template.overheat_configuration = {
 		remove_canister = 1
 	},
 	vent_power_level = {
-		125,
-		500
+		250,
+		1000
 	},
 	vent_damage_profile = DamageProfileTemplates.plasma_vent_damage,
 	vent_damage_type = damage_types.overheat,
+	proficiency_keyword = BuffSettings.keywords.plasma_proficiency,
+	proficiency_vent_power_level = {
+		125,
+		250
+	},
+	proficiency_vent_damage_profile = DamageProfileTemplates.plasma_vent_damage_proficiency,
 	explosion_template = ExplosionTemplates.plasma_rifle_overheat,
 	fx = {
 		on_screen_effect = "content/fx/particles/screenspace/screen_plasma_rifle_warning",

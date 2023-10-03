@@ -60,34 +60,34 @@ local templates = {
 			[stat_buffs.ability_cooldown_modifier] = -0.6
 		}
 	},
-	tg_increased_coherency = {
+	tg_increased_coherency_veteran = {
 		class_name = "buff",
 		stat_buffs = {
 			[stat_buffs.toughness_regen_rate_modifier] = 25
 		}
 	},
-	tg_increased_coherency_veteran_2 = {
-		class_name = "buff",
-		stat_buffs = {
-			[stat_buffs.toughness_regen_rate_modifier] = 25
-		}
-	},
-	tg_increased_coherency_ogryn_2 = {
+	tg_increased_coherency_ogryn = {
 		class_name = "buff",
 		stat_buffs = {
 			[stat_buffs.toughness_regen_rate_modifier] = 12
 		}
 	},
-	tg_increased_coherency_zealot_2 = {
+	tg_increased_coherency_zealot = {
 		class_name = "buff",
 		stat_buffs = {
 			[stat_buffs.toughness_regen_rate_modifier] = 7
 		}
 	},
-	tg_increased_coherency_psyker_2 = {
+	tg_increased_coherency_psyker = {
 		class_name = "buff",
 		stat_buffs = {
 			[stat_buffs.toughness_regen_rate_modifier] = 7
+		}
+	},
+	tg_increased_coherency = {
+		class_name = "buff",
+		stat_buffs = {
+			[stat_buffs.toughness_regen_rate_modifier] = 10
 		}
 	},
 	tg_no_coherency = {

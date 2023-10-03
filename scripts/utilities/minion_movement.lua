@@ -1,52 +1,58 @@
 local Animation = require("scripts/utilities/animation")
 local Breed = require("scripts/utilities/breed")
 local NavQueries = require("scripts/utilities/nav_queries")
-local MinionMovement = {
-	get_relative_direction_name = function (right_vector, forward_vector, direction)
-		local right_dot = Vector3.dot(right_vector, direction)
-		local fwd_dot = Vector3.dot(forward_vector, direction)
-		local abs_right = math.abs(right_dot)
-		local abs_fwd = math.abs(fwd_dot)
-		local relative_direction_name = nil
+local MinionMovement = {}
+local RELATIVE_DIR_NAME_RIGHT = "right"
+local RELATIVE_DIR_NAME_LEFT = "left"
+local RELATIVE_DIR_NAME_FWD = "fwd"
+local RELATIVE_DIR_NAME_BWD = "bwd"
 
-		if abs_fwd < abs_right and right_dot > 0 then
-			relative_direction_name = "right"
-		elseif abs_fwd < abs_right then
-			relative_direction_name = "left"
-		elseif fwd_dot > 0 then
-			relative_direction_name = "fwd"
-		else
-			relative_direction_name = "bwd"
-		end
+MinionMovement.get_relative_direction_name = function (right_vector, forward_vector, direction)
+	local right_dot = Vector3.dot(right_vector, direction)
+	local fwd_dot = Vector3.dot(forward_vector, direction)
+	local abs_right = math.abs(right_dot)
+	local abs_fwd = math.abs(fwd_dot)
+	local relative_direction_name = nil
 
-		return relative_direction_name
-	end,
-	rotation_towards_unit_flat = function (unit, target_unit)
-		local target_position = POSITION_LOOKUP[target_unit]
-		local unit_position = POSITION_LOOKUP[unit]
-		local flat_to_target_unit = Vector3.flat(target_position - unit_position)
-		local direction = Vector3.normalize(flat_to_target_unit)
-		local flat_rotation = Quaternion.look(direction)
-
-		return flat_rotation
-	end,
-	target_velocity = function (target_unit)
-		local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
-		local target_current_velocity = nil
-		local breed = target_unit_data_extension:breed()
-		local is_player_character = Breed.is_player(breed)
-
-		if is_player_character then
-			local locomotion_component = target_unit_data_extension:read_component("locomotion")
-			target_current_velocity = locomotion_component.velocity_current
-		else
-			local locomotion_extension = ScriptUnit.extension(target_unit, "locomotion_system")
-			target_current_velocity = locomotion_extension:current_velocity()
-		end
-
-		return target_current_velocity
+	if abs_fwd < abs_right and right_dot > 0 then
+		relative_direction_name = RELATIVE_DIR_NAME_RIGHT
+	elseif abs_fwd < abs_right then
+		relative_direction_name = RELATIVE_DIR_NAME_LEFT
+	elseif fwd_dot > 0 then
+		relative_direction_name = RELATIVE_DIR_NAME_FWD
+	else
+		relative_direction_name = RELATIVE_DIR_NAME_BWD
 	end
-}
+
+	return relative_direction_name
+end
+
+MinionMovement.rotation_towards_unit_flat = function (unit, target_unit)
+	local target_position = POSITION_LOOKUP[target_unit]
+	local unit_position = POSITION_LOOKUP[unit]
+	local flat_to_target_unit = Vector3.flat(target_position - unit_position)
+	local direction = Vector3.normalize(flat_to_target_unit)
+	local flat_rotation = Quaternion.look(direction)
+
+	return flat_rotation
+end
+
+MinionMovement.target_velocity = function (target_unit)
+	local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+	local target_current_velocity = nil
+	local breed = target_unit_data_extension:breed()
+	local is_player_character = Breed.is_player(breed)
+
+	if is_player_character then
+		local locomotion_component = target_unit_data_extension:read_component("locomotion")
+		target_current_velocity = locomotion_component.velocity_current
+	else
+		local locomotion_extension = ScriptUnit.extension(target_unit, "locomotion_system")
+		target_current_velocity = locomotion_extension:current_velocity()
+	end
+
+	return target_current_velocity
+end
 
 MinionMovement.target_speed_away = function (unit, target_unit)
 	local target_current_velocity = MinionMovement.target_velocity(target_unit)
@@ -158,6 +164,19 @@ MinionMovement.get_moving_direction_name = function (unit, scratchpad, optional_
 	if not destination then
 		local current_node, next_node_in_path = scratchpad.navigation_extension:current_and_next_node_positions_in_path()
 		destination = next_node_in_path or current_node
+
+		if not destination then
+			local perception_component = scratchpad.perception_component
+
+			if perception_component then
+				local target_unit = perception_component.target_unit
+				destination = POSITION_LOOKUP[target_unit]
+			end
+
+			if not destination then
+				return "fwd"
+			end
+		end
 	end
 
 	local self_position = POSITION_LOOKUP[unit]
@@ -224,6 +243,8 @@ MinionMovement.get_lean_animation_variable_value = function (unit, scratchpad, a
 	end
 end
 
+local IDLE_MOVE_STATE = "idle"
+
 MinionMovement.should_start_idle = function (scratchpad, behavior_component)
 	local is_following_path = scratchpad.navigation_extension:is_following_path()
 
@@ -232,7 +253,7 @@ MinionMovement.should_start_idle = function (scratchpad, behavior_component)
 	end
 
 	local move_state = behavior_component.move_state
-	local is_in_idle = move_state == "idle"
+	local is_in_idle = move_state == IDLE_MOVE_STATE
 	local should_start_idle = not is_in_idle
 
 	return should_start_idle, is_in_idle
@@ -253,7 +274,7 @@ MinionMovement.start_idle = function (scratchpad, behavior_component, action_dat
 	end
 
 	scratchpad.moving_direction_name = nil
-	behavior_component.move_state = "idle"
+	behavior_component.move_state = IDLE_MOVE_STATE
 end
 
 MinionMovement.get_change_target_direction = function (unit, target_position)
@@ -265,14 +286,14 @@ MinionMovement.get_change_target_direction = function (unit, target_position)
 	local inv_sqrt_2 = 0.707
 
 	if dot_product >= inv_sqrt_2 then
-		return "fwd"
+		return RELATIVE_DIR_NAME_FWD
 	elseif dot_product > -inv_sqrt_2 then
 		local is_to_the_left = Vector3.cross(forward_vector_flat, target_vector_flat).z > 0
 
-		return is_to_the_left and "left" or "right"
+		return is_to_the_left and RELATIVE_DIR_NAME_LEFT or RELATIVE_DIR_NAME_RIGHT
 	end
 
-	return "bwd"
+	return RELATIVE_DIR_NAME_BWD
 end
 
 MinionMovement.update_anim_driven_change_target_rotation = function (unit, scratchpad, action_data, t, target_position)
@@ -362,7 +383,10 @@ MinionMovement.update_running_stagger = function (unit, t, dt, scratchpad, actio
 		end
 
 		scratchpad.original_movement_speed = scratchpad.navigation_extension:max_speed()
-		behavior_component.lock_combat_range_switch = true
+
+		if not action_data.ignore_running_stagger_combat_range_lock then
+			behavior_component.lock_combat_range_switch = true
+		end
 
 		if optional_reset_stagger_immune_time then
 			stagger_component.immune_time = 0
@@ -515,7 +539,7 @@ MinionMovement.update_move_to_ranged_position = function (unit, t, scratchpad, a
 	local target_position = POSITION_LOOKUP[target_unit]
 	local distance_to_destination_sq = Vector3.distance_squared(destination, target_position)
 	local move_state = scratchpad.behavior_component.move_state
-	local is_in_idle = move_state == "idle"
+	local is_in_idle = move_state == IDLE_MOVE_STATE
 	local has_line_of_sight = nil
 	local line_of_sight_id = action_data.line_of_sight_id
 

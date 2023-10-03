@@ -308,7 +308,7 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 			for i = 1, #item_rewards do
 				local reward = item_rewards[i]
 
-				ItemUtils.mark_item_id_as_new(reward.gear_id, reward.item_type)
+				ItemUtils.mark_item_id_as_new(reward)
 			end
 		end
 	end):catch(function (errors)
@@ -330,7 +330,7 @@ ProgressionManager._parse_report = function (self, eor, account_wallets)
 			for i = 1, #item_rewards do
 				local reward = item_rewards[i]
 
-				ItemUtils.mark_item_id_as_new(reward.gear_id, reward.item_type)
+				ItemUtils.mark_item_id_as_new(reward)
 			end
 		end
 	end)

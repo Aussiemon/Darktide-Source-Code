@@ -42,6 +42,11 @@ local push_settings = {
 			speed = 4,
 			max_speed_override = 4
 		},
+		melee_executor_default = {
+			speed = 6,
+			max_speed_override = 6,
+			push_through_block = true
+		},
 		ogryn_executor_push = {
 			speed = 8,
 			max_speed_override = 8,
@@ -50,6 +55,10 @@ local push_settings = {
 		shield_push = {
 			speed = 8,
 			max_speed_override = 8
+		},
+		chaos_hound_push = {
+			speed = 4,
+			max_speed_override = 4
 		},
 		chaos_ogryn_gunner_bullet = {
 			speed = 5,
@@ -124,6 +133,11 @@ local push_settings = {
 		chaos_spawn_light = {
 			speed = 5.5,
 			max_speed_override = 5,
+			push_through_block = true
+		},
+		chaos_spawn_leap = {
+			speed = 8,
+			max_speed_override = 8,
 			push_through_block = true
 		},
 		ranged_light = {

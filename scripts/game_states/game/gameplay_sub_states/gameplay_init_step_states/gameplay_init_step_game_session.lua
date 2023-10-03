@@ -26,7 +26,8 @@ GameplayInitStepGameSession._init_game_session = function (self, is_server, netw
 	local connection_manager = Managers.connection
 	local approve_channel_delegate = connection_manager:approve_channel_delegate()
 	local engine_lobby = connection_manager:engine_lobby()
-	local game_session_manager = GameSessionManager:new()
+	local fixed_time_step = self._shared_state.fixed_time_step
+	local game_session_manager = GameSessionManager:new(fixed_time_step)
 	local game_session = game_session_manager:game_session()
 
 	if is_server then

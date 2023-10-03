@@ -5,6 +5,7 @@ local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local ViewElementMenuPanelSettings = require("scripts/ui/view_elements/view_element_menu_panel/view_element_menu_panel_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local ViewElementMenuPanel = class("ViewElementMenuPanel", "ViewElementBase")
 local button_template = {
 	size = ViewElementMenuPanelSettings.button_max_size,
@@ -207,6 +208,7 @@ ViewElementMenuPanel._on_entry_pressed_cb = function (self, widget, entry)
 		end
 
 		self:set_selected_panel_index(index)
+		self:_play_sound(UISoundEvents.tab_button_pressed)
 	end
 end
 

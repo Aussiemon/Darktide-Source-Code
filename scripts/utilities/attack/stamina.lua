@@ -11,8 +11,8 @@ local Stamina = {
 Stamina.drain = function (unit, amount, t)
 	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
 	local stamina_write_component = unit_data_ext:write_component("stamina")
-	local specialization = unit_data_ext:specialization()
-	local base_stamina_template = specialization.stamina
+	local archetype = unit_data_ext:archetype()
+	local base_stamina_template = archetype.stamina
 	local current_value, max_value = Stamina.current_and_max_value(unit, stamina_write_component, base_stamina_template)
 	local stamina_depleted = current_value <= amount
 	local new_value = math.clamp(math.max(0, current_value - amount), 0, max_value)
@@ -56,8 +56,8 @@ end
 Stamina.add_stamina = function (unit, amount)
 	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
 	local stamina_write_component = unit_data_ext:write_component("stamina")
-	local specialization = unit_data_ext:specialization()
-	local base_stamina_template = specialization.stamina
+	local archetype = unit_data_ext:archetype()
+	local base_stamina_template = archetype.stamina
 	local current_value, max_value = Stamina.current_and_max_value(unit, stamina_write_component, base_stamina_template)
 	local new_value = math.clamp(math.max(0, current_value + amount), 0, max_value)
 	local new_fraction = new_value / max_value
@@ -67,8 +67,8 @@ end
 Stamina.add_stamina_percent = function (unit, percent_amount)
 	local unit_data_ext = ScriptUnit.extension(unit, "unit_data_system")
 	local stamina_write_component = unit_data_ext:write_component("stamina")
-	local specialization = unit_data_ext:specialization()
-	local base_stamina_template = specialization.stamina
+	local archetype = unit_data_ext:archetype()
+	local base_stamina_template = archetype.stamina
 	local current_value, max_value = Stamina.current_and_max_value(unit, stamina_write_component, base_stamina_template)
 	local amount = math.ceil(percent_amount * max_value)
 	local new_value = math.clamp(math.max(0, current_value + amount), 0, max_value)
@@ -81,16 +81,19 @@ Stamina.update = function (t, dt, stamina_write_component, specialization_stamin
 		return
 	end
 
-	if t < stamina_write_component.last_drain_time + specialization_stamina_template.regeneration_delay then
+	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
+	local stat_buffs = buff_extension and buff_extension:stat_buffs()
+	local regen_stat = stat_buffs and stat_buffs.stamina_regeneration_delay or 0
+	local stamina_regen_delay = specialization_stamina_template.regeneration_delay + regen_stat
+
+	if t < stamina_write_component.last_drain_time + stamina_regen_delay then
 		return
 	end
 
 	local current_value, max_value = Stamina.current_and_max_value(unit, stamina_write_component, specialization_stamina_template)
 	local regeneration_per_second = specialization_stamina_template.regeneration_per_second
-	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
 
-	if buff_extension then
-		local stat_buffs = buff_extension:stat_buffs()
+	if stat_buffs then
 		local stamina_regeneration_modifier = stat_buffs.stamina_regeneration_modifier
 		local stamina_regeneration_multiplier = stat_buffs.stamina_regeneration_multiplier
 		regeneration_per_second = regeneration_per_second * stamina_regeneration_modifier * stamina_regeneration_multiplier

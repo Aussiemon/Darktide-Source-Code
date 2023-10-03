@@ -87,7 +87,7 @@ local templates = {
 			[buff_proc_events.on_kill] = 1
 		},
 		proc_stat_buffs = {
-			[buff_stat_buffs.movement_speed] = 1.25
+			[buff_stat_buffs.movement_speed] = 0.25
 		},
 		check_proc_func = CheckProcFunctions.on_kill
 	},

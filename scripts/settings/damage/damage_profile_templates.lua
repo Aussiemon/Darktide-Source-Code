@@ -20,6 +20,7 @@ WeaponTweaks.extract_weapon_tweaks("scripts/settings/damage/damage_profiles/tank
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/damage/damage_profiles/grenade_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/damage/damage_profiles/luggable_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/damage/damage_profiles/psyker_smite_damage_profile_templates", templates, loaded_files)
+WeaponTweaks.extract_weapon_tweaks("scripts/settings/damage/damage_profiles/zealot_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/autoguns/settings_templates/autogun_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/autopistols/settings_templates/autopistol_damage_profile_templates", templates, loaded_files)
 WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolters/settings_templates/bolter_damage_profile_templates", templates, loaded_files)

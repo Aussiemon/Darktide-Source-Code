@@ -141,7 +141,7 @@ local function reset_function()
 end
 
 return {
-	icon = "content/ui/materials/icons/system/settings/category_controls",
+	icon = "content/ui/materials/icons/system/settings/category_keybindings",
 	display_name = "loc_settings_menu_category_keybind",
 	settings = settings,
 	reset_function = reset_function

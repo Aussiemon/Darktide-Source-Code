@@ -23,7 +23,7 @@ templates.weapon_trait_bespoke_combataxe_p1_targets_receive_rending_debuff = tab
 templates.weapon_trait_bespoke_combataxe_p1_stacking_rending_on_one_hit_kill_parent = {
 	class_name = "weapon_trait_parent_proc_buff",
 	child_buff_template = "weapon_trait_bespoke_combataxe_p1_rending_on_one_hit_kill_child",
-	child_duration = 5,
+	child_duration = 8,
 	predicted = false,
 	stacks_to_remove = 5,
 	proc_events = {
@@ -42,7 +42,7 @@ templates.weapon_trait_bespoke_combataxe_p1_rending_on_one_hit_kill_child = {
 	predicted = false,
 	class_name = "buff",
 	conditional_stat_buffs = {
-		[stat_buffs.rending_multiplier] = 0.1
+		[stat_buffs.melee_finesse_modifier_bonus] = 0.1
 	},
 	conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 }

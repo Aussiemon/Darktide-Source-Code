@@ -112,7 +112,7 @@ local DEFAULT_MIN_DISTANCES_FROM_TARGET = {
 	renegade_sniper = 30
 }
 local DEFAULT_MIN_SPAWNERS_RANGES = {
-	max = 40,
+	max = 49,
 	min = 12
 }
 local DEFAULT_NUM_ALLOWED_DISABLED_PER_ALIVE_TARGETS = {
@@ -404,6 +404,359 @@ local specials_pacing_template = {
 				140
 			},
 			coordinated_strike_breeds = DEFAULT_COORDINATED_STRIKE_BREEDS,
+			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
+			rush_prevention_cooldown = {
+				30,
+				50
+			},
+			rush_prevention_failed_cooldown = {
+				5,
+				10
+			},
+			faction_bound_breeds = FACTION_BOUND_BREEDS,
+			speed_running_prevention_breeds = DEFAULT_SPEED_RUNNING_PREVENTION_BREEDS,
+			speed_running_prevention_cooldown = {
+				10,
+				15
+			},
+			speed_running_prevention_failed_cooldown = {
+				5,
+				10
+			}
+		}
+	}
+}
+local DEFAULT_MAX_OF_SAME = {
+	chaos_poxwalker_bomber = 2,
+	renegade_sniper = 2,
+	renegade_grenadier = 2,
+	renegade_flamer = 2,
+	renegade_netgunner = 2,
+	chaos_plague_ogryn = 2,
+	chaos_spawn = 2,
+	cultist_grenadier = 1,
+	cultist_mutant = 3,
+	chaos_hound = 2,
+	chaos_beast_of_nurgle = 1,
+	cultist_flamer = 2
+}
+local HIGH_MAX_OF_SAME = {
+	chaos_poxwalker_bomber = 3,
+	renegade_sniper = 3,
+	renegade_grenadier = 2,
+	renegade_flamer = 2,
+	renegade_netgunner = 2,
+	chaos_plague_ogryn = 2,
+	chaos_spawn = 2,
+	cultist_grenadier = 2,
+	cultist_mutant = 4,
+	chaos_hound = 2,
+	chaos_beast_of_nurgle = 1,
+	cultist_flamer = 2
+}
+local ALWAYS_UPDATE_AT_CHALLANGE_RATING_BREEDS = {
+	cultist_mutant = 5,
+	renegade_sniper = 0,
+	renegade_grenadier = 2,
+	cultist_grenadier = 2
+}
+specials_pacing_template = {
+	name = "renegade_specials",
+	resistance_templates = {
+		{
+			destroy_special_distance = 100,
+			move_timer_when_challenge_rating_above = 30,
+			first_spawn_timer_modifer = 0.75,
+			rushing_distance = 80,
+			travel_distance_spawning = true,
+			move_timer_when_challenge_rating_above_delay = 20,
+			coordinated_strike_challenge_rating = 5,
+			chance_for_coordinated_strike = 0.1,
+			max_alive_specials = 3,
+			max_spawn_group_offset_range = 6,
+			move_timer_when_horde_active = true,
+			move_timer_when_monster_active = true,
+			spawn_failed_wait_time = 5,
+			timer_range = {
+				200,
+				420
+			},
+			always_update_breeds = ALWAYS_UPDATE_AT_CHALLANGE_RATING_BREEDS,
+			max_of_same = DEFAULT_MAX_OF_SAME,
+			min_distances_from_target = DEFAULT_MIN_DISTANCES_FROM_TARGET,
+			breeds = DEFAULT_BREEDS,
+			disabler_target_alone_player_chance = DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE,
+			num_allowed_disablers_per_alive_targets = DEFAULT_NUM_ALLOWED_DISABLED_PER_ALIVE_TARGETS,
+			disabler_override_duration = DEFAULT_DISABLER_OVERRIDE_DURATION,
+			foreshadow_stingers = DEFAULT_FORESHADOW_STINGERS,
+			foreshadow_stinger_timers = DEFAULT_FORESHADOW_STINGER_TIMERS,
+			optional_prefered_spawn_direction = DEFAULT_OPTIONAL_PREFERED_SPAWN_DIRECTION,
+			optional_mainpath_offset = DEFAULT_OPTIONAL_MAINPATH_OFFSET,
+			spawn_stingers = DEFAULT_SPAWN_STINGERS,
+			spawners_min_range = DEFAULT_MIN_SPAWNERS_RANGES.min,
+			spawners_max_range = DEFAULT_MIN_SPAWNERS_RANGES.max,
+			coordinated_strike_timer_range = {
+				180,
+				240
+			},
+			coordinated_strike_breeds = DEFAULT_COORDINATED_STRIKE_BREEDS,
+			coordinated_strike_num_breeds = {
+				2,
+				3
+			},
+			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
+			rush_prevention_cooldown = {
+				150,
+				250
+			},
+			rush_prevention_failed_cooldown = {
+				5,
+				10
+			},
+			faction_bound_breeds = FACTION_BOUND_BREEDS
+		},
+		{
+			destroy_special_distance = 100,
+			move_timer_when_challenge_rating_above = 30,
+			first_spawn_timer_modifer = 0.65,
+			speed_running_required_challenge_rating = 50,
+			speed_running_required_distance = 12,
+			rushing_distance = 60,
+			travel_distance_spawning = true,
+			num_required_speed_running_checks = 4,
+			move_timer_when_challenge_rating_above_delay = 20,
+			coordinated_strike_challenge_rating = 5,
+			chance_for_coordinated_strike = 0.15,
+			max_alive_specials = 4,
+			max_spawn_group_offset_range = 6,
+			speed_running_check_frequency = 5,
+			move_timer_when_horde_active = true,
+			move_timer_when_monster_active = true,
+			spawn_failed_wait_time = 5,
+			timer_range = {
+				200,
+				420
+			},
+			always_update_breeds = ALWAYS_UPDATE_AT_CHALLANGE_RATING_BREEDS,
+			max_of_same = DEFAULT_MAX_OF_SAME,
+			min_distances_from_target = DEFAULT_MIN_DISTANCES_FROM_TARGET,
+			breeds = DEFAULT_BREEDS,
+			disabler_target_alone_player_chance = DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE,
+			num_allowed_disablers_per_alive_targets = DEFAULT_NUM_ALLOWED_DISABLED_PER_ALIVE_TARGETS,
+			disabler_override_duration = DEFAULT_DISABLER_OVERRIDE_DURATION,
+			foreshadow_stingers = DEFAULT_FORESHADOW_STINGERS,
+			foreshadow_stinger_timers = DEFAULT_FORESHADOW_STINGER_TIMERS,
+			optional_prefered_spawn_direction = DEFAULT_OPTIONAL_PREFERED_SPAWN_DIRECTION,
+			optional_mainpath_offset = DEFAULT_OPTIONAL_MAINPATH_OFFSET,
+			spawn_stingers = DEFAULT_SPAWN_STINGERS,
+			spawners_min_range = DEFAULT_MIN_SPAWNERS_RANGES.min,
+			spawners_max_range = DEFAULT_MIN_SPAWNERS_RANGES.max,
+			coordinated_strike_timer_range = {
+				100,
+				350
+			},
+			coordinated_strike_breeds = DEFAULT_COORDINATED_STRIKE_BREEDS,
+			coordinated_strike_num_breeds = {
+				3,
+				4
+			},
+			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
+			rush_prevention_cooldown = {
+				80,
+				120
+			},
+			rush_prevention_failed_cooldown = {
+				5,
+				10
+			},
+			faction_bound_breeds = FACTION_BOUND_BREEDS,
+			speed_running_prevention_breeds = DEFAULT_SPEED_RUNNING_PREVENTION_BREEDS,
+			speed_running_prevention_cooldown = {
+				20,
+				40
+			},
+			speed_running_prevention_failed_cooldown = {
+				5,
+				10
+			}
+		},
+		{
+			destroy_special_distance = 100,
+			move_timer_when_challenge_rating_above = 30,
+			first_spawn_timer_modifer = 0.65,
+			speed_running_required_challenge_rating = 50,
+			speed_running_required_distance = 12,
+			rushing_distance = 50,
+			travel_distance_spawning = true,
+			num_required_speed_running_checks = 4,
+			move_timer_when_challenge_rating_above_delay = 20,
+			coordinated_strike_challenge_rating = 5,
+			chance_for_coordinated_strike = 0.2,
+			max_alive_specials = 5,
+			max_spawn_group_offset_range = 6,
+			speed_running_check_frequency = 5,
+			move_timer_when_horde_active = true,
+			move_timer_when_monster_active = true,
+			spawn_failed_wait_time = 5,
+			timer_range = {
+				180,
+				400
+			},
+			always_update_breeds = ALWAYS_UPDATE_AT_CHALLANGE_RATING_BREEDS,
+			max_of_same = DEFAULT_MAX_OF_SAME,
+			min_distances_from_target = DEFAULT_MIN_DISTANCES_FROM_TARGET,
+			breeds = DEFAULT_BREEDS,
+			disabler_target_alone_player_chance = DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE,
+			num_allowed_disablers_per_alive_targets = DEFAULT_NUM_ALLOWED_DISABLED_PER_ALIVE_TARGETS,
+			disabler_override_duration = DEFAULT_DISABLER_OVERRIDE_DURATION,
+			foreshadow_stingers = DEFAULT_FORESHADOW_STINGERS,
+			foreshadow_stinger_timers = DEFAULT_FORESHADOW_STINGER_TIMERS,
+			optional_prefered_spawn_direction = DEFAULT_OPTIONAL_PREFERED_SPAWN_DIRECTION,
+			optional_mainpath_offset = DEFAULT_OPTIONAL_MAINPATH_OFFSET,
+			spawn_stingers = DEFAULT_SPAWN_STINGERS,
+			spawners_min_range = DEFAULT_MIN_SPAWNERS_RANGES.min,
+			spawners_max_range = DEFAULT_MIN_SPAWNERS_RANGES.max,
+			coordinated_strike_timer_range = {
+				100,
+				280
+			},
+			coordinated_strike_breeds = DEFAULT_COORDINATED_STRIKE_BREEDS,
+			coordinated_strike_num_breeds = {
+				4,
+				5
+			},
+			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
+			rush_prevention_cooldown = {
+				60,
+				100
+			},
+			rush_prevention_failed_cooldown = {
+				5,
+				10
+			},
+			faction_bound_breeds = FACTION_BOUND_BREEDS,
+			speed_running_prevention_breeds = DEFAULT_SPEED_RUNNING_PREVENTION_BREEDS,
+			speed_running_prevention_cooldown = {
+				20,
+				40
+			},
+			speed_running_prevention_failed_cooldown = {
+				5,
+				10
+			}
+		},
+		{
+			move_timer_when_terror_event_active = true,
+			destroy_special_distance = 100,
+			move_timer_when_challenge_rating_above = 30,
+			first_spawn_timer_modifer = 0.6,
+			speed_running_required_challenge_rating = 40,
+			speed_running_required_distance = 10,
+			rushing_distance = 45,
+			travel_distance_spawning = true,
+			num_required_speed_running_checks = 4,
+			move_timer_when_challenge_rating_above_delay = 20,
+			coordinated_strike_challenge_rating = 5,
+			chance_for_coordinated_strike = 0.225,
+			max_alive_specials = 6,
+			max_spawn_group_offset_range = 6,
+			speed_running_check_frequency = 5,
+			move_timer_when_horde_active = true,
+			move_timer_when_monster_active = true,
+			spawn_failed_wait_time = 5,
+			timer_range = {
+				120,
+				320
+			},
+			always_update_breeds = ALWAYS_UPDATE_AT_CHALLANGE_RATING_BREEDS,
+			max_of_same = HIGH_MAX_OF_SAME,
+			min_distances_from_target = DEFAULT_MIN_DISTANCES_FROM_TARGET,
+			breeds = DEFAULT_BREEDS,
+			disabler_target_alone_player_chance = DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE,
+			num_allowed_disablers_per_alive_targets = DEFAULT_NUM_ALLOWED_DISABLED_PER_ALIVE_TARGETS,
+			disabler_override_duration = DEFAULT_DISABLER_OVERRIDE_DURATION,
+			foreshadow_stingers = DEFAULT_FORESHADOW_STINGERS,
+			foreshadow_stinger_timers = DEFAULT_FORESHADOW_STINGER_TIMERS,
+			optional_prefered_spawn_direction = DEFAULT_OPTIONAL_PREFERED_SPAWN_DIRECTION,
+			optional_mainpath_offset = DEFAULT_OPTIONAL_MAINPATH_OFFSET,
+			spawn_stingers = DEFAULT_SPAWN_STINGERS,
+			spawners_min_range = DEFAULT_MIN_SPAWNERS_RANGES.min,
+			spawners_max_range = DEFAULT_MIN_SPAWNERS_RANGES.max,
+			coordinated_strike_timer_range = {
+				100,
+				200
+			},
+			coordinated_strike_breeds = DEFAULT_COORDINATED_STRIKE_BREEDS,
+			coordinated_strike_num_breeds = {
+				4,
+				6
+			},
+			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
+			rush_prevention_cooldown = {
+				50,
+				80
+			},
+			rush_prevention_failed_cooldown = {
+				5,
+				10
+			},
+			faction_bound_breeds = FACTION_BOUND_BREEDS,
+			speed_running_prevention_breeds = DEFAULT_SPEED_RUNNING_PREVENTION_BREEDS,
+			speed_running_prevention_cooldown = {
+				10,
+				20
+			},
+			speed_running_prevention_failed_cooldown = {
+				5,
+				10
+			}
+		},
+		{
+			move_timer_when_terror_event_active = true,
+			destroy_special_distance = 100,
+			move_timer_when_challenge_rating_above = 20,
+			first_spawn_timer_modifer = 0.6,
+			speed_running_required_challenge_rating = 40,
+			speed_running_required_distance = 12,
+			rushing_distance = 40,
+			travel_distance_spawning = true,
+			num_required_speed_running_checks = 4,
+			move_timer_when_challenge_rating_above_delay = 20,
+			coordinated_strike_challenge_rating = 5,
+			chance_for_coordinated_strike = 0.25,
+			max_alive_specials = 8,
+			max_spawn_group_offset_range = 6,
+			speed_running_check_frequency = 5,
+			move_timer_when_horde_active = true,
+			move_timer_when_monster_active = true,
+			spawn_failed_wait_time = 5,
+			timer_range = {
+				80,
+				240
+			},
+			always_update_breeds = ALWAYS_UPDATE_AT_CHALLANGE_RATING_BREEDS,
+			max_of_same = HIGH_MAX_OF_SAME,
+			min_distances_from_target = DEFAULT_MIN_DISTANCES_FROM_TARGET,
+			breeds = DEFAULT_BREEDS,
+			disabler_target_alone_player_chance = DEFAULT_DISABLER_TARGET_ALONE_PLAYER_CHANCE,
+			num_allowed_disablers_per_alive_targets = DEFAULT_NUM_ALLOWED_DISABLED_PER_ALIVE_TARGETS,
+			disabler_override_duration = DEFAULT_DISABLER_OVERRIDE_DURATION,
+			foreshadow_stingers = DEFAULT_FORESHADOW_STINGERS,
+			foreshadow_stinger_timers = DEFAULT_FORESHADOW_STINGER_TIMERS,
+			optional_prefered_spawn_direction = DEFAULT_OPTIONAL_PREFERED_SPAWN_DIRECTION,
+			optional_mainpath_offset = DEFAULT_OPTIONAL_MAINPATH_OFFSET,
+			spawn_stingers = DEFAULT_SPAWN_STINGERS,
+			spawners_min_range = DEFAULT_MIN_SPAWNERS_RANGES.min,
+			spawners_max_range = DEFAULT_MIN_SPAWNERS_RANGES.max,
+			coordinated_strike_timer_range = {
+				100,
+				200
+			},
+			coordinated_strike_breeds = DEFAULT_COORDINATED_STRIKE_BREEDS,
+			coordinated_strike_num_breeds = {
+				6,
+				8
+			},
 			rush_prevention_breeds = DEFAULT_RUSH_PREVENTION_BREEDS,
 			rush_prevention_cooldown = {
 				30,

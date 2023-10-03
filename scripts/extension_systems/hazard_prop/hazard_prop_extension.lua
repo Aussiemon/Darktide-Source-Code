@@ -178,14 +178,14 @@ HazardPropExtension._update_mesh_visuals = function (self)
 
 	local intact_colliders = self._intact_colliders
 
-	for ii = 1, #intact_colliders do
-		Actor.set_scene_query_enabled(intact_colliders[ii], intact)
+	for i = 1, #intact_colliders do
+		Actor.set_scene_query_enabled(intact_colliders[i], intact)
 	end
 
 	local broken_colliders = self._broken_colliders
 
-	for ii = 1, #broken_colliders do
-		Actor.set_scene_query_enabled(broken_colliders[ii], not intact)
+	for i = 1, #broken_colliders do
+		Actor.set_scene_query_enabled(broken_colliders[i], not intact)
 	end
 end
 

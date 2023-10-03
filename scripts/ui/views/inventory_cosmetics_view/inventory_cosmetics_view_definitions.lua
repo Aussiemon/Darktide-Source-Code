@@ -255,7 +255,7 @@ local scenegraph_definition = {
 		parent = "toggle_locked_pivot",
 		horizontal_alignment = "left",
 		size = {
-			300,
+			400,
 			20
 		},
 		position = {
@@ -281,7 +281,7 @@ unlock_details_style.text_vertical_alignment = "top"
 unlock_details_style.text_color = Color.terminal_text_body(255, true)
 local input_legend_button_style = table.clone(UIFontSettings.body_small)
 input_legend_button_style.text_horizontal_alignment = "left"
-input_legend_button_style.text_vertical_alignment = "center"
+input_legend_button_style.text_vertical_alignment = "top"
 input_legend_button_style.text_color = Color.ui_grey_light(255, true)
 input_legend_button_style.default_text_color = Color.ui_grey_light(255, true)
 input_legend_button_style.hover_color = Color.white(255, true)

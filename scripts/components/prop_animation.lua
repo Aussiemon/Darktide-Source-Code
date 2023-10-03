@@ -15,6 +15,18 @@ PropAnimation.editor_init = function (self, unit)
 	self:enable(unit)
 end
 
+PropAnimation.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if rawget(_G, "LevelEditor") and not Unit.has_animation_state_machine(unit) then
+		success = false
+		error_message = error_message .. "\nMissing unit animation state machine"
+	end
+
+	return success, error_message
+end
+
 PropAnimation.enable = function (self, unit)
 	return
 end

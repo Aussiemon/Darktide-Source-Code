@@ -393,7 +393,7 @@ local scenegraph_definition = {
 			50
 		},
 		position = {
-			0,
+			-70,
 			0,
 			0
 		}
@@ -450,6 +450,20 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
+			30,
+			1
+		}
+	},
+	aquilas_background = {
+		vertical_alignment = "center",
+		parent = "grid_aquilas_pivot",
+		horizontal_alignment = "center",
+		size = {
+			1920,
+			0
+		},
+		position = {
+			0,
 			0,
 			1
 		}
@@ -465,20 +479,6 @@ local scenegraph_definition = {
 		position = {
 			0,
 			0,
-			1
-		}
-	},
-	aquilas_required = {
-		vertical_alignment = "top",
-		parent = "grid_aquilas_content",
-		horizontal_alignment = "center",
-		size = {
-			1920,
-			120
-		},
-		position = {
-			0,
-			-250,
 			1
 		}
 	},
@@ -692,22 +692,27 @@ owned_item_text_style.offset = {
 }
 owned_item_text_style.text_color = Color.terminal_text_header(255, true)
 local required_aquilas_title_style = table.clone(UIFontSettings.header_1)
+required_aquilas_title_style.font_size = 40
+required_aquilas_title_style.offset = {
+	0,
+	0,
+	1
+}
 required_aquilas_title_style.text_horizontal_alignment = "center"
 required_aquilas_title_style.text_vertical_alignment = "top"
 required_aquilas_title_style.offset = {
 	0,
-	123,
+	-55,
 	2
 }
-required_aquilas_title_style.font_size = 40
 local required_aquilas_text_style = table.clone(UIFontSettings.terminal_header_3)
 required_aquilas_text_style.text_horizontal_alignment = "center"
-required_aquilas_text_style.text_vertical_alignment = "bottom"
+required_aquilas_text_style.text_vertical_alignment = "top"
 required_aquilas_text_style.horizontal_alignment = "center"
-required_aquilas_text_style.vertical_alignment = "bottom"
+required_aquilas_text_style.vertical_alignment = "top"
 required_aquilas_text_style.offset = {
 	0,
-	105,
+	25,
 	2
 }
 required_aquilas_text_style.text_color = Color.terminal_text_body(255, true)
@@ -1018,146 +1023,10 @@ local widget_definitions = {
 			}
 		}
 	}, "description_mask"),
-	purchase_item_button = UIWidget.create_definition({
-		{
-			pass_type = "hotspot",
-			content_id = "hotspot",
-			content = {
-				use_is_focused = true
-			}
-		},
-		{
-			pass_type = "texture",
-			style_id = "background",
-			value = "content/ui/materials/backgrounds/default_square",
-			style = {
-				default_color = Color.terminal_background(nil, true),
-				selected_color = Color.terminal_background_selected(nil, true)
-			},
-			change_function = ButtonPassTemplates.terminal_button_change_function
-		},
-		{
-			pass_type = "texture",
-			style_id = "background_gradient",
-			value = "content/ui/materials/gradients/gradient_vertical",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				default_color = Color.terminal_background_gradient(nil, true),
-				selected_color = Color.terminal_frame_selected(nil, true),
-				disabled_color = Color.ui_grey_medium(255, true),
-				offset = {
-					0,
-					0,
-					1
-				}
-			},
-			change_function = function (content, style)
-				ButtonPassTemplates.terminal_button_change_function(content, style)
-				ButtonPassTemplates.terminal_button_hover_change_function(content, style)
-			end
-		},
-		{
-			value = "content/ui/materials/frames/dropshadow_medium",
-			style_id = "outer_shadow",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				scale_to_material = true,
-				color = Color.black(200, true),
-				size_addition = {
-					20,
-					20
-				},
-				offset = {
-					0,
-					0,
-					3
-				}
-			}
-		},
-		{
-			pass_type = "texture",
-			style_id = "frame",
-			value = "content/ui/materials/frames/frame_tile_2px",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				default_color = Color.terminal_frame(nil, true),
-				selected_color = Color.terminal_frame_selected(nil, true),
-				disabled_color = Color.ui_grey_medium(255, true),
-				offset = {
-					0,
-					0,
-					2
-				}
-			},
-			change_function = ButtonPassTemplates.terminal_button_change_function
-		},
-		{
-			pass_type = "texture",
-			style_id = "corner",
-			value = "content/ui/materials/frames/frame_corner_2px",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				default_color = Color.terminal_corner(nil, true),
-				selected_color = Color.terminal_corner_selected(nil, true),
-				disabled_color = Color.ui_grey_light(255, true),
-				offset = {
-					0,
-					0,
-					3
-				}
-			},
-			change_function = ButtonPassTemplates.terminal_button_change_function
-		},
-		{
-			pass_type = "rect",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				color = {
-					150,
-					0,
-					0,
-					0
-				},
-				offset = {
-					0,
-					0,
-					3
-				}
-			},
-			visibility_function = function (content, style)
-				return content.hotspot.disabled
-			end
-		},
-		{
-			style_id = "text",
-			pass_type = "text",
-			value_id = "text",
-			value = "",
-			style = purchase_button_text_style,
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local default_color = hotspot.disabled and style.disabled_color or style.default_color
-				local hover_color = style.hover_color
-				local text_color = style.text_color
-				local progress = math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_select_progress), math.max(hotspot.anim_hover_progress, hotspot.anim_input_progress))
-
-				ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
-			end
-		},
-		{
-			style_id = "legend",
-			pass_type = "text",
-			value_id = "legend",
-			value = "",
-			style = purchase_button_legend_text_style
-		}
-	}, "purchase_button"),
+	purchase_item_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "purchase_button", {
+		gamepad_action = "confirm_pressed",
+		original_text = ""
+	}),
 	timer_widget = UIWidget.create_definition({
 		{
 			value = "",
@@ -1228,81 +1097,6 @@ local widget_definitions = {
 	}, "owned_info_text", {
 		visible = false
 	}),
-	aquilas_required = UIWidget.create_definition({
-		{
-			value = "content/ui/materials/backgrounds/terminal_basic",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "top",
-				scale_to_material = true,
-				horizontal_alignment = "center",
-				color = Color.terminal_frame(255, true),
-				size = {
-					700,
-					120
-				},
-				size_addition = {
-					0,
-					0
-				},
-				offset = {
-					0,
-					60,
-					0
-				}
-			}
-		},
-		{
-			style_id = "title",
-			pass_type = "text",
-			value_id = "",
-			style = required_aquilas_title_style,
-			value = Utf8.upper(Localize("loc_premium_store_purchase_credits_storefront_button"))
-		},
-		{
-			value_id = "top",
-			style_id = "top",
-			pass_type = "texture",
-			value = "content/ui/materials/frames/premium_store/currency_upper",
-			style = {
-				horizontal_alignment = "center",
-				size = {
-					954,
-					152
-				},
-				offset = {
-					0,
-					30,
-					1
-				}
-			}
-		},
-		{
-			style_id = "price",
-			pass_type = "text",
-			value_id = "price",
-			value = "",
-			style = required_aquilas_text_style
-		},
-		{
-			value_id = "bottom",
-			style_id = "bottom",
-			pass_type = "texture",
-			value = "content/ui/materials/frames/premium_store/currency_lower",
-			style = {
-				horizontal_alignment = "center",
-				size = {
-					354,
-					78
-				},
-				offset = {
-					0,
-					670,
-					1
-				}
-			}
-		}
-	}, "aquilas_required"),
 	promo = UIWidget.create_definition({
 		{
 			value_id = "discount_percent_1",
@@ -1439,7 +1233,89 @@ local widget_definitions = {
 				return style.material_values.texture_map
 			end
 		}
-	}, "canvas")
+	}, "canvas"),
+	aquilas_background = UIWidget.create_definition({
+		{
+			value = "content/ui/materials/backgrounds/terminal_basic",
+			pass_type = "texture",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				color = Color.terminal_frame(255, true),
+				size = {
+					700,
+					120
+				},
+				size_addition = {
+					0,
+					0
+				},
+				offset = {
+					0,
+					-120,
+					0
+				}
+			}
+		},
+		{
+			style_id = "title",
+			pass_type = "text",
+			value_id = "",
+			style = required_aquilas_title_style,
+			value = Utf8.upper(Localize("loc_premium_store_purchase_credits_storefront_button"))
+		},
+		{
+			value_id = "top",
+			style_id = "top",
+			pass_type = "texture",
+			value = "content/ui/materials/frames/premium_store/currency_upper",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				size = {
+					954,
+					152
+				},
+				offset = {
+					0,
+					-152,
+					1
+				}
+			}
+		},
+		{
+			value_id = "bottom",
+			style_id = "bottom",
+			pass_type = "texture",
+			value = "content/ui/materials/frames/premium_store/currency_lower",
+			style = {
+				vertical_alignment = "bottom",
+				horizontal_alignment = "center",
+				size = {
+					354,
+					78
+				},
+				offset = {
+					0,
+					78,
+					1
+				}
+			}
+		}
+	}, "aquilas_background", {
+		visible = false
+	}),
+	required_aquilas_text = UIWidget.create_definition({
+		{
+			style_id = "text",
+			pass_type = "text",
+			value_id = "text",
+			value = "",
+			style = required_aquilas_text_style
+		}
+	}, "screen", {
+		visible = false
+	})
 }
 local price_text_definition = {
 	{
@@ -1768,7 +1644,7 @@ local legend_inputs = {
 		end
 	},
 	{
-		input_action = "cycle_list_primary",
+		input_action = "hotkey_menu_special_1",
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_weapon_skin_preview_pressed",
 		display_name = weapon_preview_skin_off,
@@ -1781,7 +1657,7 @@ local legend_inputs = {
 		end
 	},
 	{
-		input_action = "hotkey_menu_special_2",
+		input_action = "hotkey_menu_special_1",
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_preview_with_gear_toggled",
 		display_name = menu_preview_with_gear_off,
@@ -1795,7 +1671,7 @@ local legend_inputs = {
 	},
 	{
 		display_name = "loc_inventory_menu_zoom_in",
-		input_action = "hotkey_menu_special_1",
+		input_action = "hotkey_menu_special_2",
 		alignment = "right_alignment",
 		on_pressed_callback = "cb_on_camera_zoom_toggled",
 		visibility_function = function (parent, id)

@@ -24,6 +24,7 @@ PlayerUnitMusicParameterExtension.init = function (self, extension_init_context,
 	self._num_aggroed_minions_near = 0
 	self._next_aggroed_check = 0.123456
 	self._next_last_man_standing_check = 0.45678
+	self._next_boss_near_check = 1
 	self._max_aggro_count = WwiseGameSyncSettings.minion_aggro_intensity_settings.num_threshold_high
 	local is_server = extension_init_context.is_server
 
@@ -148,21 +149,18 @@ PlayerUnitMusicParameterExtension._shortest_horde_distance = function (self, pos
 end
 
 PlayerUnitMusicParameterExtension._update_horde_near = function (self, t)
-	if self._update_horde_near_time < t then
-		local ambush_horde_positions = self._horde_manager:horde_positions(HORDE_TYPES.ambush_horde)
-		local ambush_horde_near = self:_shortest_horde_distance(ambush_horde_positions) <= WwiseGameSyncSettings.ambush_horde_trigger_distance
-		local vector_horde_positions = self._horde_manager:horde_positions(HORDE_TYPES.far_vector_horde)
-		local vector_horde_near = self:_shortest_horde_distance(vector_horde_positions) <= WwiseGameSyncSettings.vector_horde_trigger_distance
-		local game_session = self._game_session
-		local game_object_id = self._music_parameters_game_object_id
+	local ambush_horde_positions = self._horde_manager:horde_positions(HORDE_TYPES.ambush_horde)
+	local ambush_horde_near = self:_shortest_horde_distance(ambush_horde_positions) <= WwiseGameSyncSettings.ambush_horde_trigger_distance
+	local vector_horde_positions = self._horde_manager:horde_positions(HORDE_TYPES.far_vector_horde)
+	local vector_horde_near = self:_shortest_horde_distance(vector_horde_positions) <= WwiseGameSyncSettings.vector_horde_trigger_distance
+	local game_session = self._game_session
+	local game_object_id = self._music_parameters_game_object_id
 
-		GameSession.set_game_object_field(game_session, game_object_id, "vector_horde_near", vector_horde_near)
-		GameSession.set_game_object_field(game_session, game_object_id, "ambush_horde_near", ambush_horde_near)
+	GameSession.set_game_object_field(game_session, game_object_id, "vector_horde_near", vector_horde_near)
+	GameSession.set_game_object_field(game_session, game_object_id, "ambush_horde_near", ambush_horde_near)
 
-		self._vector_horde_near = vector_horde_near
-		self._ambush_horde_near = ambush_horde_near
-		self._update_horde_near_time = t + self._horde_update_interval
-	end
+	self._vector_horde_near = vector_horde_near
+	self._ambush_horde_near = ambush_horde_near
 end
 
 PlayerUnitMusicParameterExtension._update_last_man_standing = function (self)
@@ -213,8 +211,17 @@ PlayerUnitMusicParameterExtension.update = function (self, unit, dt, t)
 	local game_object_id = self._music_parameters_game_object_id
 	local attack_intensity_extension = self._attack_intensity_extension
 
-	self:_update_boss_near(unit)
-	self:_update_horde_near(t)
+	if self._next_boss_near_check < t then
+		self:_update_boss_near(unit)
+
+		self._next_boss_near_check = t + 1
+	end
+
+	if self._update_horde_near_time < t then
+		self:_update_horde_near(t)
+
+		self._update_horde_near_time = t + self._horde_update_interval
+	end
 
 	if self._next_last_man_standing_check < t then
 		self:_update_last_man_standing()
@@ -229,24 +236,38 @@ PlayerUnitMusicParameterExtension.update = function (self, unit, dt, t)
 	end
 
 	local health_percent = self._health_extension:current_health_percent()
-	local intensity_percent = attack_intensity_extension:total_intensity_percent()
-	local locked_in_melee = attack_intensity_extension:locked_in_melee()
-	local tension_percent = self._pacing_manager:player_tension(self._unit)
 	self._health_percent = health_percent
-	self._intensity_percent = intensity_percent
-	self._locked_in_melee = locked_in_melee
+	local intensity_percent = attack_intensity_extension:total_intensity_percent()
 
-	GameSession.set_game_object_field(game_session, game_object_id, "intensity_percent", intensity_percent)
-	GameSession.set_game_object_field(game_session, game_object_id, "locked_in_melee", locked_in_melee)
+	if intensity_percent ~= self._intensity_percent then
+		self._intensity_percent = intensity_percent
+
+		GameSession.set_game_object_field(game_session, game_object_id, "intensity_percent", intensity_percent)
+	end
+
+	local locked_in_melee = attack_intensity_extension:locked_in_melee()
+
+	if locked_in_melee ~= self._locked_in_melee then
+		self._locked_in_melee = locked_in_melee
+
+		GameSession.set_game_object_field(game_session, game_object_id, "locked_in_melee", locked_in_melee)
+	end
 
 	local num_aggroed_minions = self._pacing_manager:num_aggroed_minions()
-	self._num_aggroed_minions = num_aggroed_minions
 
-	GameSession.set_game_object_field(game_session, game_object_id, "num_aggroed_minions", num_aggroed_minions)
+	if num_aggroed_minions ~= self._num_aggroed_minions then
+		self._num_aggroed_minions = num_aggroed_minions
 
-	self._tension_percent = tension_percent
+		GameSession.set_game_object_field(game_session, game_object_id, "num_aggroed_minions", num_aggroed_minions)
+	end
 
-	GameSession.set_game_object_field(game_session, game_object_id, "tension_percent", tension_percent)
+	local tension_percent = self._pacing_manager:player_tension(self._unit)
+
+	if tension_percent ~= self._tension_percent then
+		self._tension_percent = tension_percent
+
+		GameSession.set_game_object_field(game_session, game_object_id, "tension_percent", tension_percent)
+	end
 end
 
 PlayerUnitMusicParameterExtension.num_aggroed_minions_near = function (self)

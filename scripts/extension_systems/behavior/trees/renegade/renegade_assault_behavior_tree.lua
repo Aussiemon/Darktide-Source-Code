@@ -184,8 +184,8 @@ local behavior_tree = {
 		condition = "should_switch_weapon",
 		action_data = action_data.switch_weapon
 	},
-	MELEE_COMBAT,
 	SUPPRESSED,
+	MELEE_COMBAT,
 	FAR_COMBAT,
 	CLOSE_COMBAT,
 	{

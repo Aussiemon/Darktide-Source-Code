@@ -27,13 +27,13 @@ HordeManager.horde = function (self, horde_type, horde_template_name, side_id, t
 	local horde_template = HordeTemplates[horde_template_name]
 	local physics_world = self._physics_world
 	local nav_world = self._nav_world
-	local horde, horde_position, target_unit = horde_template.execute(physics_world, nav_world, side, target_side, composition, ...)
+	local horde, horde_position, target_unit, spawned_direction = horde_template.execute(physics_world, nav_world, side, target_side, composition, ...)
 	local hordes = self._hordes
 	hordes[horde_type][#hordes[horde_type] + 1] = horde
 	local success = horde ~= nil
 	local group_id = horde and horde.group_id
 
-	return success, horde_position, target_unit, group_id
+	return success, horde_position, target_unit, group_id, spawned_direction
 end
 
 HordeManager.can_spawn = function (self, horde_type, horde_template_name, side_id, target_side_id, composition, ...)

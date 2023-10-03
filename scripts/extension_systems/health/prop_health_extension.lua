@@ -78,7 +78,6 @@ PropHealthExtension.add_damage = function (self, damage_amount, permanent_damage
 		end
 
 		Component.event(self._unit, "add_damage", damage_amount, hit_actor, attack_direction)
-		Unit.flow_event(self._unit, "lua_prop_damaged")
 
 		if self._health <= 0 then
 			self:set_dead()

@@ -1,3 +1,4 @@
+local Component = require("scripts/utilities/component")
 local Interactions = require("scripts/settings/interaction/interactions")
 local InteractionSettings = require("scripts/settings/interaction/interaction_settings")
 local InteractionTemplates = require("scripts/settings/interaction/interaction_templates")
@@ -216,6 +217,7 @@ InteracteeExtension.hot_join_setup = function (self, is_active, is_used, active_
 	end
 
 	self:update_light()
+	Component.event(self._unit, "interactee_hot_joined")
 end
 
 InteracteeExtension.set_used = function (self)
@@ -393,6 +395,11 @@ InteracteeExtension.block_text = function (self, interactor_unit)
 	end
 
 	local override_context = self._override_contexts[active_interaction_type]
+	local is_being_used = self._is_being_used and not override_context.shared_interaction and interactor_unit ~= self._interactor_unit
+
+	if is_being_used then
+		return "loc_action_interaction_already_in_use"
+	end
 
 	if not override_context.block_text then
 		return

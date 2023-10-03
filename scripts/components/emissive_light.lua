@@ -24,6 +24,10 @@ EmissiveLight.destroy = function (self, unit)
 	return
 end
 
+EmissiveLight.editor_validate = function (self, unit)
+	return true, ""
+end
+
 EmissiveLight.component_data = {}
 
 return EmissiveLight

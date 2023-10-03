@@ -12,7 +12,7 @@ MoveablePlatform.init = function (self, unit, is_server)
 		local require_all_players_onboard = self:get_data(unit, "require_all_players_onboard")
 		local interactable_story_actions = self:get_data(unit, "interactable_story_actions")
 		local interactable_hud_descriptions = self:get_data(unit, "interactable_hud_descriptions")
-		local story_speed_forward, story_speed_backward = self:_calculateStorySpeed(unit)
+		local story_speed_forward, story_speed_backward = self:_calculate_story_speed(unit)
 		local end_sound_time = self:get_data(unit, "end_sound_time")
 		local nav_handling_enabled = self:get_data(unit, "nav_handling_enabled")
 		local stop_position = self:get_data(unit, "stop_position")
@@ -34,6 +34,25 @@ MoveablePlatform.editor_init = function (self, unit)
 
 		self:_spawn_stop_points()
 	end
+end
+
+MoveablePlatform.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if rawget(_G, "LevelEditor") then
+		if Unit.find_actor(unit, "c_wall_1") == nil then
+			success = false
+			error_message = error_message .. "\nCouldn't find any wall actors on unit"
+		end
+
+		if Unit.find_actor(unit, "c_box_center") == nil then
+			success = false
+			error_message = error_message .. "\nCouldn't find actor 'c_box_center' on unit"
+		end
+	end
+
+	return success, error_message
 end
 
 MoveablePlatform.get_navgen_units = function (self)
@@ -112,7 +131,7 @@ MoveablePlatform._setup_change = function (self, unit)
 		return
 	end
 
-	self:_calculateStorySpeed(unit)
+	self:_calculate_story_speed(unit)
 	self:_unspawn_stop_points()
 	self:_spawn_stop_points()
 end
@@ -159,7 +178,7 @@ MoveablePlatform.editor_reset_physics = function (self, unit)
 	end
 end
 
-MoveablePlatform._calculateStorySpeed = function (self, unit)
+MoveablePlatform._calculate_story_speed = function (self, unit)
 	if unit == nil then
 		self:_draw_warning(unit, "Unit null")
 
@@ -260,6 +279,14 @@ MoveablePlatform._draw_warning = function (self, unit, text)
 		end
 	else
 		Log.error("MovablePlatform", text)
+	end
+end
+
+MoveablePlatform.set_story = function (self, story_name)
+	local moveable_platform_extension = self._moveable_platform_extension
+
+	if moveable_platform_extension and self._is_server then
+		moveable_platform_extension:set_story(story_name)
 	end
 end
 

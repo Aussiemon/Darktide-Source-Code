@@ -92,21 +92,20 @@ slots_count_text_style.offset = {
 	0
 }
 local gamertag_style = table.clone(UIFontSettings.header_2)
-gamertag_style.text_horizontal_alignment = "center"
-gamertag_style.text_color = {
-	255,
-	128,
-	192,
-	255
-}
+gamertag_style.text_horizontal_alignment = "right"
+gamertag_style.text_vertical_alignment = "top"
+gamertag_style.text_color = Color.terminal_text_body_sub_header(255, true)
+gamertag_style.font_size = 24
 local gamertag_input_style = table.clone(UIFontSettings.body)
-gamertag_input_style.text_horizontal_alignment = "center"
+gamertag_input_style.text_horizontal_alignment = "right"
+gamertag_input_style.text_vertical_alignment = "top"
 gamertag_input_style.text_color = {
 	255,
 	255,
 	255,
 	255
 }
+gamertag_input_style.font_size = 20
 local wallet_title = table.clone(UIFontSettings.header_1)
 wallet_title.offset = {
 	-10,
@@ -360,12 +359,12 @@ local scenegraph_definition = {
 		parent = "character_list_background",
 		horizontal_alignment = "center",
 		size = {
-			430,
-			70
+			412,
+			54
 		},
 		position = {
 			0,
-			82,
+			73,
 			2
 		}
 	},
@@ -385,22 +384,22 @@ local scenegraph_definition = {
 	},
 	gamertag = {
 		vertical_alignment = "top",
-		parent = "character_info_pivot",
-		horizontal_alignment = "center",
+		parent = "canvas",
+		horizontal_alignment = "right",
 		size = {
 			600,
 			40
 		},
 		position = {
-			0,
-			120,
+			-200,
+			30,
 			2
 		}
 	},
 	gamertag_input = {
 		vertical_alignment = "top",
 		parent = "gamertag",
-		horizontal_alignment = "center",
+		horizontal_alignment = "right",
 		size = {
 			600,
 			40
@@ -647,7 +646,7 @@ local widget_definitions = {
 				offset = {
 					0,
 					114,
-					6
+					50
 				}
 			}
 		}
@@ -677,168 +676,10 @@ local widget_definitions = {
 		gamepad_action = "confirm_pressed",
 		text = Utf8.upper(Localize("loc_main_menu_play_button"))
 	}),
-	create_button = UIWidget.create_definition({
-		{
-			pass_type = "hotspot",
-			content_id = "hotspot",
-			content = {
-				use_is_focused = true
-			}
-		},
-		{
-			value = "content/ui/materials/backgrounds/terminal_basic",
-			style_id = "background",
-			pass_type = "texture",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				scale_to_material = true,
-				size_addition = {
-					20,
-					20
-				},
-				offset = {
-					0,
-					0,
-					0
-				},
-				color = Color.terminal_grid_background(255, true)
-			}
-		},
-		{
-			pass_type = "texture",
-			style_id = "background_gradient",
-			value = "content/ui/materials/gradients/gradient_vertical",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				size_addition = {
-					-25,
-					-20
-				},
-				color = Color.terminal_background_gradient(nil, true),
-				offset = {
-					0,
-					0,
-					1
-				}
-			},
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				style.color[1] = 100 + math.max(hotspot.anim_hover_progress, content.hotspot.anim_select_progress) * 155
-			end,
-			visibility_function = function (content, style)
-				return not content.hotspot.disabled
-			end
-		},
-		{
-			pass_type = "texture",
-			value = "content/ui/materials/frames/frame_tile_2px",
-			style_id = "frame",
-			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
-				horizontal_alignment = "center",
-				size_addition = {
-					-25,
-					-20
-				},
-				default_color = Color.terminal_frame(nil, true),
-				hover_color = Color.terminal_frame_hover(nil, true),
-				offset = {
-					0,
-					0,
-					3
-				}
-			},
-			visibility_function = function (content, style)
-				return not content.hotspot.disabled
-			end,
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local default_color = hotspot.disabled and style.disabled_color or style.default_color
-				local hover_color = style.hover_color
-				local color = style.text_color or style.color
-				local progress = math.max(math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress), hotspot.anim_input_progress), hotspot.anim_select_progress)
-
-				ColorUtilities.color_lerp(default_color, hover_color, progress, color)
-			end
-		},
-		{
-			pass_type = "texture",
-			value = "content/ui/materials/frames/frame_corner_2px",
-			style_id = "corner",
-			style = {
-				vertical_alignment = "center",
-				scale_to_material = true,
-				horizontal_alignment = "center",
-				size_addition = {
-					-25,
-					-20
-				},
-				default_color = Color.terminal_corner(nil, true),
-				hover_color = Color.terminal_corner_hover(nil, true),
-				offset = {
-					0,
-					0,
-					4
-				}
-			},
-			visibility_function = function (content, style)
-				return not content.hotspot.disabled
-			end,
-			change_function = function (content, style)
-				local hotspot = content.hotspot
-				local default_color = hotspot.disabled and style.disabled_color or style.default_color
-				local hover_color = style.hover_color
-				local color = style.text_color or style.color
-				local progress = math.max(math.max(math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress), hotspot.anim_input_progress), hotspot.anim_select_progress)
-
-				ColorUtilities.color_lerp(default_color, hover_color, progress, color)
-			end
-		},
-		{
-			pass_type = "rect",
-			style = {
-				vertical_alignment = "center",
-				horizontal_alignment = "center",
-				size_addition = {
-					20,
-					20
-				},
-				color = {
-					150,
-					0,
-					0,
-					0
-				},
-				offset = {
-					0,
-					0,
-					3
-				}
-			},
-			visibility_function = function (content, style)
-				return content.hotspot.disabled
-			end
-		},
-		{
-			style_id = "text",
-			pass_type = "text",
-			value = "",
-			value_id = "text",
-			style = new_button_text_style,
-			change_function = function (content, style, _, dt)
-				local hotspot = content.hotspot
-				local default_color = hotspot.disabled and style.disabled_color or style.default_color
-				local hover_color = style.hover_color
-				local text_color = style.text_color
-				local progress = math.max(hotspot.anim_focus_progress, hotspot.anim_hover_progress)
-
-				ColorUtilities.color_lerp(default_color, hover_color, progress, text_color)
-			end
-		}
-	}, "create_button"),
+	create_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "create_button", {
+		gamepad_action = "hotkey_menu_special_1",
+		original_text = Utf8.upper(Localize("loc_main_menu_create_button"))
+	}),
 	slots_count = UIWidget.create_definition({
 		{
 			value_id = "text",

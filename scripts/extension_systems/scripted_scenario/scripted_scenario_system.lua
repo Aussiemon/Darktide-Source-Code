@@ -708,9 +708,9 @@ ScriptedScenarioSystem._remove_directional_unit = function (self, unit)
 end
 
 ScriptedScenarioSystem.get_directional_unit = function (self, identifier)
-	local ext = self._directional_unit_extensions[identifier]
+	local extension = self._directional_unit_extensions[identifier]
 
-	return ext:unit()
+	return extension:unit()
 end
 
 ScriptedScenarioSystem.get_directional_unit_extension = function (self, identifier)

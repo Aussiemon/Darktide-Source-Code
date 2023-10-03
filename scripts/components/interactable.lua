@@ -279,6 +279,10 @@ Interactable.editor_update = function (self, unit, dt, t)
 	return
 end
 
+Interactable.editor_validate = function (self, unit)
+	return true, ""
+end
+
 Interactable.events.client_play_animation = function (self, anim_time, anim_time_to, speed)
 	self:_client_play_animation(anim_time, anim_time_to, speed)
 end

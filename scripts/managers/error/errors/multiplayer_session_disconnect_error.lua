@@ -23,11 +23,9 @@ MultiplayerSessionDisconnectError.init = function (self, error_source, error_rea
 end
 
 MultiplayerSessionDisconnectError.level = function (self)
-	if self._error_reason == "afk" then
-		return ErrorManager.ERROR_LEVEL.error
-	else
-		return ErrorManager.ERROR_LEVEL.warning
-	end
+	local error_level = ErrorCodes.get_error_code_level_from_reason(self._error_reason)
+
+	return ErrorManager.ERROR_LEVEL[error_level]
 end
 
 MultiplayerSessionDisconnectError.log_message = function (self)
@@ -35,20 +33,29 @@ MultiplayerSessionDisconnectError.log_message = function (self)
 end
 
 MultiplayerSessionDisconnectError.loc_title = function (self)
+	local override, title = ErrorCodes.get_error_code_title_from_reason(self._error_reason, false)
+
+	if override then
+		return title
+	end
+
 	return "loc_disconnected_from_server"
 end
 
 MultiplayerSessionDisconnectError.loc_description = function (self)
-	if self._error_reason == "afk" then
-		return "loc_popup_description_afk_kicked"
-	else
-		local error_code_string = ErrorCodes.get_error_code_string_from_reason(self._error_reason)
-		local string_format = "%s %s"
+	local error_reason = self._error_reason
+	local override, title, format = ErrorCodes.get_error_code_description_from_reason(error_reason, false)
 
-		return "loc_error_reason", {
-			error_reason = error_code_string
-		}, string_format
+	if override then
+		return title, format
 	end
+
+	local error_code_string = ErrorCodes.get_error_code_string_from_reason(error_reason)
+	local string_format = "%s %s"
+
+	return "loc_error_reason", {
+		error_reason = error_code_string
+	}, string_format
 end
 
 MultiplayerSessionDisconnectError.options = function (self)

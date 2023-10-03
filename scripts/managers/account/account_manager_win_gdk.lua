@@ -1,6 +1,7 @@
 local XboxPrivileges = require("scripts/managers/account/xbox_privileges")
 local render_settings = require("scripts/settings/options/render_settings")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live")
+local Promise = require("scripts/foundation/utilities/promise")
 local AccountManagerWinGDK = class("AccountManagerWinGDK")
 local SIGNIN_STATES = {
 	fetching_privileges = "loc_signin_fetch_privileges",
@@ -40,6 +41,7 @@ AccountManagerWinGDK.reset = function (self)
 	self._gamertag = nil
 	self._mute_list = {}
 	self._block_list = {}
+	self._block_list_refreshed = false
 	self._communication_restriction_iteration = self._communication_restriction_iteration or 1
 end
 
@@ -157,12 +159,30 @@ AccountManagerWinGDK.xuid = function (self)
 	return self._xuid
 end
 
+AccountManagerWinGDK.xbox_live_block_list = function (self)
+	local promise = Promise:new()
+
+	if self._block_list_refreshed then
+		promise:resolve(table.clone(self._block_list))
+	else
+		XboxLiveUtils.get_block_list():next(function (block_list)
+			self._block_list = block_list
+			self._block_list_refreshed = true
+
+			promise:resolve(table.clone(block_list))
+		end):catch(function (err)
+			promise:reject(err)
+		end)
+	end
+
+	return promise
+end
+
 AccountManagerWinGDK.refresh_communication_restrictions = function (self)
 	XboxLiveUtils.get_mute_list():next(function (mute_list)
 		self._mute_list = mute_list
 
-		XboxLiveUtils.get_block_list():next(function (block_list)
-			self._block_list = block_list
+		self:xbox_live_block_list():next(function ()
 			self._communication_restriction_iteration = self._communication_restriction_iteration + 1
 
 			self:fetch_crossplay_restrictions()
@@ -231,6 +251,10 @@ AccountManagerWinGDK.verify_user_restriction = function (self, xuid, restriction
 	self._xbox_privileges:verify_user_restriction(xuid, restriction, optional_callback)
 end
 
+AccountManagerWinGDK.verify_user_restriction_batched = function (self, xuid, restriction, batch_type)
+	self._xbox_privileges:verify_user_restriction_batched(xuid, restriction, batch_type)
+end
+
 AccountManagerWinGDK.user_has_restriction = function (self, xuid, restriction)
 	return self._xbox_privileges:user_has_restriction(xuid, restriction)
 end
@@ -245,6 +269,7 @@ AccountManagerWinGDK.update = function (self, dt, t)
 	end
 
 	self:verify_connection()
+	self._xbox_privileges:update(dt, t)
 end
 
 KILL = false
@@ -375,6 +400,8 @@ AccountManagerWinGDK._finalize_signin = function (self)
 
 	self._signin_callback = nil
 	self._signin_state = SIGNIN_STATES.idle
+
+	self._xbox_privileges:push_telemetry()
 end
 
 AccountManagerWinGDK._show_fatal_error = function (self, title_text, description_text)

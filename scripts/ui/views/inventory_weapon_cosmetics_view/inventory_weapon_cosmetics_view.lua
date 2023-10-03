@@ -58,7 +58,7 @@ local InventoryWeaponCosmeticsView = class("InventoryWeaponCosmeticsView", "Item
 InventoryWeaponCosmeticsView.init = function (self, settings, context)
 	local class_name = self.__class_name
 	self._unique_id = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
-	self._context = context
+	self._parent = context.parent
 	self._visibility_toggled_on = true
 	self._preview_player = context.player or Managers.player:local_player(1)
 	self._selected_item = context.preview_item
@@ -124,7 +124,7 @@ InventoryWeaponCosmeticsView.init = function (self, settings, context)
 		}
 	}
 
-	InventoryWeaponCosmeticsView.super.init(self, Definitions, settings)
+	InventoryWeaponCosmeticsView.super.init(self, Definitions, settings, context)
 
 	self._grow_direction = "down"
 	self._always_visible_widget_names = Definitions.always_visible_widget_names
@@ -544,11 +544,21 @@ InventoryWeaponCosmeticsView._fetch_inventory_items = function (self, slot_name,
 
 			if valid then
 				local visual_item = generate_visual_item_function(item, selected_item)
+				local gear_id = item.gear_id
+				local is_new = self._context and self._context.new_items_gear_ids and self._context.new_items_gear_ids[gear_id]
+				local remove_new_marker_callback = nil
+
+				if is_new then
+					remove_new_marker_callback = self._parent and callback(self._parent, "remove_new_item_mark")
+				end
+
 				layout[#layout + 1] = {
 					widget_type = "item_icon",
 					item = visual_item,
 					real_item = item,
-					slot_name = slot_name
+					slot_name = slot_name,
+					new_item_marker = is_new,
+					remove_new_marker_callback = remove_new_marker_callback
 				}
 			end
 		end

@@ -1,4 +1,3 @@
-local ArchetypeTalents = require("scripts/settings/ability/archetype_talents/archetype_talents")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local GameModeBase = require("scripts/managers/game_mode/game_modes/game_mode_base")
 local GameModeTrainingGrounds = class("GameModeTrainingGrounds", "GameModeBase")
@@ -94,19 +93,7 @@ GameModeTrainingGrounds._force_base_talents = function (self, player)
 	local profile = player:profile()
 	local fixed_t = FixedFrame.get_latest_fixed_time()
 	local specialization_name = profile.specialization
-	local talent_groups = profile.archetype.specializations[specialization_name].talent_groups
-	local base_talents = {}
-
-	for _, group in ipairs(talent_groups) do
-		if not group.required_level or group.required_level <= 1 then
-			local talents = group.talents
-
-			for _, talent_name in ipairs(talents) do
-				base_talents[talent_name] = true
-			end
-		end
-	end
-
+	local base_talents = profile.archetype.base_talents
 	local specialization_extension = ScriptUnit.extension(player.player_unit, "specialization_system")
 
 	specialization_extension:select_new_specialization(specialization_name, base_talents, fixed_t)

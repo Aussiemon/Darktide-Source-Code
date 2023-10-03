@@ -102,7 +102,7 @@ local function _should_be_in_coherency_with_all(unit)
 
 	if is_invisible then
 		local specialization_extension = ScriptUnit.has_extension(unit, "specialization_system")
-		local has_special_rule = specialization_extension and specialization_extension:has_special_rule(special_rules.in_coherency_when_invisible)
+		local has_special_rule = specialization_extension and specialization_extension:has_special_rule(special_rules.zealot_in_coherency_when_invisible)
 
 		if has_special_rule then
 			return true

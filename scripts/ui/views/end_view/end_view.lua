@@ -20,7 +20,7 @@ local _math_clamp01 = math.clamp01
 local _math_floor = math.floor
 local _math_max = math.max
 local _math_min = math.min
-local _continue_button_action = "next"
+local _continue_button_action = "confirm_pressed"
 local _vote_button_action = EndViewSettings.stay_in_party_vote_button
 local SUMMARY_VIEW_NAME = "end_player_view"
 local STAY_IN_PARTY = table.enum("yes", "no")
@@ -580,6 +580,8 @@ EndView._setup_spawn_slots = function (self, players)
 	for unique_id, player_info in pairs(players) do
 		player_index = player_index + 1
 		local profile_spawner = UIProfileSpawner:new("EndView_" .. player_index, world, camera, unit_spawner)
+
+		profile_spawner:disable_rotation_input()
 
 		for j = 1, #ignored_slots do
 			local slot_name = ignored_slots[j]

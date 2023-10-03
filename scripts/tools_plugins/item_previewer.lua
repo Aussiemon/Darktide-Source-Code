@@ -196,7 +196,7 @@ ItemPreviewer._spawn_item = function (self, item_data, root_unit)
 
 	if VisualLoadoutCustomization then
 		local attached_units = {}
-		EditorApi.preview_resource, attached_units = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, root_unit)
+		EditorApi.preview_resource, attached_units = VisualLoadoutCustomization.spawn_item(item_data, attach_settings, root_unit, nil, nil, nil)
 		self.attached_units_table = self.attached_units_table or {}
 
 		if EditorApi.preview_resource then

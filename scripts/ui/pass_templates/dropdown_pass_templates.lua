@@ -65,22 +65,47 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 
 	local drowdown_button_passes = {
 		{
-			value = "content/ui/materials/buttons/background_selected",
-			style_id = "background",
 			pass_type = "texture",
+			style_id = "background",
+			value = "content/ui/materials/buttons/background_selected",
 			style = {
 				horizontal_alignment = "right",
 				size = {
 					settings_area_width,
 					height
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.terminal_corner(255, true),
 				offset = {
 					0,
 					0,
 					1
 				}
-			}
+			},
+			change_function = function (content, style)
+				local default_alpha = 255
+				local disabled_alpha = default_alpha * 0.8
+				local current_alpha = content.disabled and disabled_alpha or default_alpha
+				style.color[1] = current_alpha
+			end
+		},
+		{
+			pass_type = "rect",
+			style = {
+				horizontal_alignment = "right",
+				size = {
+					settings_area_width,
+					height
+				},
+				offset = {
+					0,
+					0,
+					0
+				},
+				color = Color.terminal_corner(25.5, true)
+			},
+			visibility_function = function (content, style)
+				return not content.disabled
+			end
 		},
 		{
 			value = "content/ui/materials/buttons/dropdown_fill",
@@ -106,9 +131,9 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 				vertical_alignment = "center",
 				horizontal_alignment = "right",
 				size = DROPDOWN_BUTTON_SIZE,
-				default_color = Color.ui_brown_light(255, true),
-				disabled_color = Color.ui_grey_light(255, true),
-				hover_color = Color.ui_brown_super_light(255, true),
+				default_color = Color.terminal_icon(255, true),
+				disabled_color = Color.terminal_text_body_dark(255, true),
+				hover_color = Color.terminal_icon_selected(255, true),
 				offset = {
 					-DROPDOWN_BUTTON_MARGIN,
 					0,
@@ -133,7 +158,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 					0,
 					0
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.terminal_corner(255, true),
 				offset = {
 					0,
 					0,
@@ -238,7 +263,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 					0,
 					12
 				},
-				color = Color.black(255, true)
+				color = Color.terminal_frame(255, true)
 			},
 			visibility_function = scrollbar_visibility_function,
 			change_function = dropdown_content_foldout_function
@@ -263,7 +288,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 					0,
 					11
 				},
-				color = Color.ui_grey_light(255, true)
+				color = Color.terminal_text_body(255, true)
 			},
 			visibility_function = scrollbar_visibility_function,
 			change_function = function (content, style)
@@ -481,6 +506,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 			0
 		}
 		local option_font_style = table.clone(value_font_style)
+		option_font_style.default_color = Color.terminal_text_body(255, true)
 		option_font_style.offset = {
 			DROPDOWN_BUTTON_MARGIN,
 			height * i,
@@ -523,7 +549,7 @@ DropdownPassTemplates.settings_dropdown = function (width, height, settings_area
 					height * i,
 					13
 				},
-				color = Color.ui_terminal(255, true)
+				color = Color.terminal_corner(255, true)
 			},
 			change_function = function (content, style)
 				local hotspot = content[hotspot_id]

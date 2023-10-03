@@ -12,40 +12,41 @@ local action_data = {
 		instant_ragdoll_chance = 1
 	},
 	charge = {
-		close_distance = 5,
-		after_throw_taunt_duration = 2.5,
 		close_rotation_speed = 3,
-		wall_raycast_distance = 2,
-		max_slowdown_percentage = 0.2,
-		navigating_anim = "charge_fwd",
-		prepare_grab_anim = "charge_grab_prep",
-		min_time_navigating = 0.5,
-		charge_max_speed_at = 4.5,
 		degree_per_throw_direction = 20,
+		navigating_anim = "charge_fwd",
+		wall_raycast_distance = 2,
+		min_time_navigating = 0.2,
+		charge_max_speed_at = 4.5,
 		collision_radius = 1,
-		dodge_rotation_speed = 0.01,
-		grab_close_up_distance = 3,
-		charged_past_dot_threshold = 0.1,
-		target_extrapolation_length_scale = 0.25,
+		min_time_spent_charging = 0.1,
 		push_minions_power_level = 2000,
+		charged_past_dot_threshold = 0.1,
+		navigating_rotation_speed = 6,
 		max_slowdown_angle = 60,
-		push_minions_side_relation = "allied",
-		min_animation_variable = 0.9,
-		aoe_bot_threat_duration = 1,
-		max_animation_variable = 1.2,
-		wall_raycast_node_name = "j_spine",
-		throw_test_distance = 8,
-		charge_speed_min = 8,
-		dodge_collision_radius = 0.75,
-		min_time_spent_charging = 0.25,
-		animation_charge_speed = 8,
-		wall_stun_time = 3.5,
 		min_slowdown_angle = 20,
+		aoe_bot_threat_distance = 8,
+		wall_raycast_node_name = "j_spine",
+		push_minions_side_relation = "allied",
+		throw_test_distance = 8,
+		dodge_collision_radius = 0.5,
 		rotation_speed = 4.5,
 		charge_speed_max = 12,
 		after_throw_taunt_anim = "idle_shout",
-		aoe_bot_threat_distance = 8,
+		animation_charge_speed = 8,
+		close_distance = 5,
+		after_throw_taunt_duration = 2.5,
+		max_slowdown_percentage = 0.5,
+		prepare_grab_anim = "charge_grab_prep",
+		dodge_rotation_speed = 0.01,
+		grab_close_up_distance = 3,
+		target_extrapolation_length_scale = 0.25,
+		min_animation_variable = 0.9,
+		aoe_bot_threat_duration = 1,
+		max_animation_variable = 1.2,
+		charge_speed_min = 8,
 		push_minions_radius = 2,
+		wall_stun_time = 3.5,
 		charge_anims = {
 			bwd = "change_target_bwd",
 			fwd = "change_target_fwd",
@@ -196,6 +197,9 @@ local action_data = {
 			ogryn = damage_types.minion_mutant_smash_ogryn
 		},
 		push_minions_damage_profile = DamageProfileTemplates.cultist_mutant_minion_charge_push,
+		push_minions_ignored_breeds = {
+			chaos_poxwalker_bomber = true
+		},
 		attack_intensities = {
 			melee = 20,
 			running_melee = 20,
@@ -267,12 +271,6 @@ local action_data = {
 			jump_up_fence_5m = 0.1,
 			jump_down_1m = 0.1,
 			jump_up_1m = 0.1
-		},
-		catapult_units = {
-			speed = 5,
-			radius = 4,
-			speed_z = 10,
-			angle = math.pi / 6
 		}
 	},
 	jump_across = {
@@ -390,6 +388,23 @@ local action_data = {
 				}
 			},
 			sticky = {
+				fwd = {
+					"stagger_medium_fwd_01"
+				},
+				bwd = {
+					"stagger_medium_bwd_01"
+				},
+				left = {
+					"stagger_medium_left_01"
+				},
+				right = {
+					"stagger_medium_right_01"
+				},
+				dwn = {
+					"stagger_medium_bwd_01"
+				}
+			},
+			electrocuted = {
 				fwd = {
 					"stagger_medium_fwd_01"
 				},

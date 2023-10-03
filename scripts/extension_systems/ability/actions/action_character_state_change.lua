@@ -18,36 +18,12 @@ end
 
 ActionCharacterStateChange.start = function (self, action_settings, t, time_scale, action_start_params)
 	self._wanted_state_name = action_settings.state_name
-	local unit = self._player_unit
-	local valid = true
+	local ability_template_tweak_data = self._ability_template_tweak_data
 
-	if self._wanted_state_name == "lunging" then
-		local input_extension = ScriptUnit.extension(unit, "input_system")
-		local movement_state_component = self._unit_data_extension:write_component("movement_state")
-		local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t)
-
-		if is_crouching then
-			local can_exit = Crouch.can_exit(unit)
-
-			if can_exit then
-				Crouch.exit(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, t)
-			end
-
-			valid = can_exit
-		end
-	end
-
-	if valid then
-		local ability_template_tweak_data = self._ability_template_tweak_data
-
-		if next(ability_template_tweak_data) then
-			self._wanted_state_params = ability_template_tweak_data
-		elseif action_settings.state_params then
-			self._wanted_state_params = action_settings.state_params
-		end
-	else
-		self._wanted_state_name = "walking"
-		self._wanted_state_params = {}
+	if next(ability_template_tweak_data) then
+		self._wanted_state_params = ability_template_tweak_data
+	elseif action_settings.state_params then
+		self._wanted_state_params = action_settings.state_params
 	end
 end
 

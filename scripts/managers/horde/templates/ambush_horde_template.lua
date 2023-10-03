@@ -1,3 +1,4 @@
+local NavQueries = require("scripts/utilities/nav_queries")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
 local SpawnPointQueries = require("scripts/managers/main_path/utilities/spawn_point_queries")
 local aggro_states = PerceptionSettings.aggro_states
@@ -37,13 +38,13 @@ local function _compose_spawn_list(composition)
 	return breeds_to_spawn, #breeds_to_spawn
 end
 
-local MIN_DISTANCE_FROM_PLAYERS = 16
-local MAX_DISTANCE_FROM_PLAYERS = 30
+local MIN_DISTANCE_FROM_PLAYERS = 12
+local MAX_DISTANCE_FROM_PLAYERS = 25
 local INITIAL_GROUP_OFFSET = 2
 local nearby_spawners = {}
 local nearby_occluded_positions = {}
 
-horde_template.execute = function (physics_world, nav_world, side, target_side, composition, towards_combat_vector)
+horde_template.execute = function (physics_world, nav_world, side, target_side, composition, towards_combat_vector, optional_main_path_offset, optional_num_tries, optional_disallowed_positions, optional_spawn_max_health_modifier, optional_prefered_direction, optional_target_unit)
 	local target_side_id = target_side.side_id
 	local side_id = side.side_id
 	local main_path_manager = Managers.state.main_path
@@ -59,12 +60,36 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 	local num_groups = GwNavSpawnPoints.get_count(nav_spawn_points)
 	local minion_spawner_radius_checks = horde_template.minion_spawner_radius_checks
 	local max_spawn_locations = horde_template.max_spawn_locations
-	local target_unit, _, path_position = main_path_manager:ahead_unit(target_side_id)
+	local target_unit = optional_target_unit
+	target_unit = target_unit or main_path_manager:ahead_unit(target_side_id)
 
 	if not target_unit then
 		Log.info("AmbushHorde", "\t\tNo main path tracked unit for target side %q.", target_side:name())
 
-		return false
+		return
+	end
+
+	local target_position = POSITION_LOOKUP[target_unit]
+	local navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, target_position, 1, 1, 1)
+
+	if not navmesh_position then
+		local target_units = side.valid_player_units
+		local num_target_units = #target_units
+
+		for j = 1, num_target_units do
+			target_unit = target_units[j]
+			navmesh_position = NavQueries.position_on_mesh_with_outside_position(nav_world, nil, POSITION_LOOKUP[target_unit], 1, 1, 1)
+
+			if navmesh_position then
+				break
+			end
+		end
+
+		if not navmesh_position then
+			Log.info("AmbushHorde", "\t\tNo navmesh on target side %q.", target_side:name())
+
+			return
+		end
 	end
 
 	local spawn_list, num_to_spawn = _compose_spawn_list(composition)
@@ -82,7 +107,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 
 	for i = 1, #minion_spawner_radius_checks do
 		local radius = minion_spawner_radius_checks[i]
-		local spawners = minion_spawn_system:spawners_in_range(path_position, radius)
+		local spawners = minion_spawn_system:spawners_in_range(navmesh_position, radius)
 
 		if spawners then
 			for j = 1, #spawners do
@@ -101,7 +126,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 
 		for i = 1, #minion_spawner_radius_checks do
 			local radius = minion_spawner_radius_checks[i]
-			local occluded_positions = SpawnPointQueries.get_occluded_positions(nav_world, nav_spawn_points, path_position, side, radius, num_groups, MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS, INITIAL_GROUP_OFFSET)
+			local occluded_positions = SpawnPointQueries.get_occluded_positions(nav_world, nav_spawn_points, navmesh_position, side, radius, num_groups, MIN_DISTANCE_FROM_PLAYERS, MAX_DISTANCE_FROM_PLAYERS, INITIAL_GROUP_OFFSET)
 
 			if occluded_positions then
 				for j = 1, #occluded_positions do
@@ -164,7 +189,7 @@ horde_template.execute = function (physics_world, nav_world, side, target_side, 
 
 	Log.info("AmbushHorde", "Managed to spawn %d/%d horde enemies.", num_spawned, num_to_spawn)
 
-	return horde, path_position, target_unit
+	return horde, navmesh_position, target_unit
 end
 
 return horde_template

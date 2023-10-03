@@ -18,11 +18,14 @@ local StateLoadRenderSettings = require("scripts/game_states/boot/state_load_ren
 local StateRequireScripts = require("scripts/game_states/boot/state_require_scripts")
 
 Main.init = function (self)
-	Script.configure_garbage_collection(Script.ACCEPTABLE_GARBAGE, 0.1, Script.MAXIMUM_GARBAGE, 0.5, Script.FORCE_FULL_COLLECT_GARBAGE_LEVEL, 1, Script.MINIMUM_COLLECT_TIME_MS, 0.1, Script.MAXIMUM_COLLECT_TIME_MS, 0.5)
+	Script.configure_garbage_collection(Script.ACCEPTABLE_GARBAGE, 0.1, Script.MAXIMUM_GARBAGE, 0.5, Script.FORCE_FULL_COLLECT_GARBAGE_LEVEL, 1, Script.MINIMUM_COLLECT_TIME_MS, 0.5, Script.MAXIMUM_COLLECT_TIME_MS, 1)
 	ParameterResolver.resolve_command_line()
 	ParameterResolver.resolve_game_parameters()
 	ParameterResolver.resolve_dev_parameters()
-	Application.set_time_step_policy("throttle", DEDICATED_SERVER and 1 / GameParameters.fixed_time_step or 30)
+
+	local fps = DEDICATED_SERVER and GameParameters.tick_rate or 30
+
+	Application.set_time_step_policy("throttle", fps)
 
 	if type(GameParameters.window_title) == "string" and GameParameters.window_title ~= "" then
 		Window.set_title(GameParameters.window_title)
@@ -158,7 +161,25 @@ function on_close()
 end
 
 function on_suspend()
-	return
+	if Managers then
+		local update_grpc = false
+
+		if Managers.party_immaterium then
+			Managers.party_immaterium:reset()
+
+			update_grpc = true
+		end
+
+		if Managers.presence then
+			Managers.presence:reset()
+
+			update_grpc = true
+		end
+
+		if update_grpc and Managers.grpc then
+			Managers.grpc:update(0)
+		end
+	end
 end
 
 function on_resume()

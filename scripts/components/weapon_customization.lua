@@ -13,6 +13,10 @@ WeaponCustomization.editor_init = function (self, unit)
 	self._slot_name_by_unit = {}
 end
 
+WeaponCustomization.editor_validate = function (self, unit)
+	return true, ""
+end
+
 WeaponCustomization.init = function (self, unit)
 	if self:get_data(unit, "editor_only") then
 		return

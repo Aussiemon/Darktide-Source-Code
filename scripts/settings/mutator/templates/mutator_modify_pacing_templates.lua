@@ -40,6 +40,25 @@ local mutator_templates = {
 			}
 		}
 	},
+	mutator_waves_of_specials = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			specials_move_timer_when_challenge_rating_above = 12,
+			max_alive_specials_multiplier = 1.6,
+			chance_of_coordinated_strike = 1,
+			specials_timer_modifier = 0.75,
+			max_of_same_override = {
+				cultist_mutant = 6,
+				chaos_hound = 4,
+				renegade_grenadier = 4,
+				chaos_poxwalker_bomber = 4,
+				renegade_netgunner = 3,
+				renegade_sniper = 5,
+				renegade_flamer = 3,
+				cultist_flamer = 3
+			}
+		}
+	},
 	mutator_more_hordes = {
 		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
 		modify_pacing = {
@@ -67,6 +86,28 @@ local mutator_templates = {
 			},
 			monster_breed_name = {
 				"chaos_daemonhost"
+			}
+		}
+	},
+	mutator_more_captains = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		modify_pacing = {
+			monster_spawn_type = "captains",
+			monsters_per_travel_distance = {
+				120,
+				240
+			},
+			monster_breed_name = {
+				"renegade_captain"
+			}
+		}
+	},
+	mutator_more_boss_patrols = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		modify_pacing = {
+			boss_patrols_per_travel_distance = {
+				60,
+				120
 			}
 		}
 	},
@@ -324,7 +365,6 @@ local mutator_templates = {
 			replace_terror_event_tags = {
 				horde = "roamer",
 				melee = {
-					"far",
 					"close"
 				}
 			}
@@ -410,12 +450,118 @@ local mutator_templates = {
 					chaos_spawn = 0.25,
 					chaos_plague_ogryn = 0.25
 				},
+				max_monster_duration = {
+					90,
+					180
+				},
 				breeds = {
 					"chaos_plague_ogryn",
 					"chaos_beast_of_nurgle",
 					"chaos_spawn"
 				}
 			}
+		}
+	},
+	mutator_no_monsters = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			num_monsters_override = 0
+		}
+	},
+	mutator_no_witches = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			num_witches_override = 0
+		}
+	},
+	mutator_no_boss_patrols = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			num_boss_patrol_override = 0
+		}
+	},
+	mutator_more_ogryns = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			tag_limit_bonus = {
+				elite = 8,
+				ogryn = 8
+			}
+		}
+	},
+	mutator_more_elites = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			tag_limit_bonus = {
+				elite = 20
+			}
+		}
+	},
+	mutator_increase_terror_event_points = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			terror_event_point_multiplier = 0.25
+		}
+	},
+	mutator_always_allow_all_spawn_types = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			override_allowed_spawn_types = {
+				build_up_tension_low = {
+					monsters = true,
+					terror_events = true,
+					specials = true,
+					roamers = true,
+					hordes = true,
+					trickle_hordes = true
+				},
+				build_up_tension = {
+					monsters = true,
+					terror_events = true,
+					specials = true,
+					roamers = true,
+					hordes = true,
+					trickle_hordes = true
+				},
+				build_up_tension_high = {
+					monsters = true,
+					terror_events = true,
+					specials = true,
+					roamers = true,
+					hordes = true,
+					trickle_hordes = true
+				},
+				sustain_tension_peak = {
+					monsters = true,
+					terror_events = true,
+					specials = true,
+					roamers = true,
+					hordes = true,
+					trickle_hordes = true
+				},
+				tension_peak_fade = {
+					monsters = true,
+					terror_events = true,
+					specials = true,
+					roamers = true,
+					hordes = true,
+					trickle_hordes = true
+				},
+				relax = {
+					monsters = true,
+					terror_events = true,
+					specials = true,
+					roamers = true,
+					hordes = true,
+					trickle_hordes = true
+				}
+			}
+		}
+	},
+	mutator_auric_tension_modifier = {
+		class = "scripts/managers/mutator/mutators/mutator_modify_pacing",
+		init_modify_pacing = {
+			tension_modifier = 0.5
 		}
 	}
 }

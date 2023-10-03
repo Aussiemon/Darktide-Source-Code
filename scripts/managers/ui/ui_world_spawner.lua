@@ -286,7 +286,6 @@ end
 UIWorldSpawner._create_world = function (self, world_name, layer, timer_name, optional_view_name, optional_flags)
 	if not optional_flags then
 		local flags = {
-			Application.ENABLE_MOC,
 			Application.ENABLE_VOLUMETRICS
 		}
 	end

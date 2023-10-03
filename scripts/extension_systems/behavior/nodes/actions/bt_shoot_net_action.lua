@@ -37,6 +37,7 @@ BtShootNetAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 	scratchpad.aim_target_node = breed.aim_config.target_node
 	scratchpad.fx_system = Managers.state.extension:system("fx_system")
 	scratchpad.fx_extension = ScriptUnit.extension(unit, "fx_system")
+	scratchpad.force_field_system = Managers.state.extension:system("force_field_system")
 	local num_shots = action_data.num_shots
 	scratchpad.num_shots = Managers.state.difficulty:get_table_entry_by_challenge(num_shots)
 	scratchpad.num_shots_fired = 0
@@ -243,7 +244,7 @@ BtShootNetAction._update_shooting = function (self, unit, breed, dt, t, scratchp
 		if dot_to_target < 0 and scratchpad.target_dodged_during_attack then
 			dodge_type = scratchpad.target_dodged_type
 
-			Dodge.sucessful_dodge(target_unit, unit, nil, dodge_type, breed)
+			Dodge.sucessful_dodge(target_unit, unit, "ranged", dodge_type, breed)
 
 			scratchpad.dodged_attack = true
 		end
@@ -265,6 +266,12 @@ BtShootNetAction._update_shooting = function (self, unit, breed, dt, t, scratchp
 		if is_valid_hit then
 			self:_start_dragging(unit, t, scratchpad, action_data, hit_unit)
 		end
+	end
+
+	if scratchpad.force_field_system:is_object_inside_force_field(new_sweep_position, radius, true) then
+		scratchpad.internal_state = "shot_finished"
+
+		return
 	end
 
 	if new_available_travel_distance <= 0 then

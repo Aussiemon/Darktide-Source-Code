@@ -14,6 +14,10 @@ Chest.editor_init = function (self, unit)
 	return
 end
 
+Chest.editor_validate = function (self, unit)
+	return true, ""
+end
+
 Chest.enable = function (self, unit)
 	return
 end

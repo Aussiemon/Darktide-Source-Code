@@ -3,7 +3,6 @@ local ServoSkullActivatorExtension = class("ServoSkullActivatorExtension")
 ServoSkullActivatorExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._is_server = extension_init_context.is_server
 	self._unit = unit
-	self._hide_timer = 0
 	self._hidden = true
 	self._interactee_extension = nil
 	self._mission_objective_target_extension = nil
@@ -33,10 +32,6 @@ ServoSkullActivatorExtension.on_gameplay_post_init = function (self, unit, level
 		synchronizer_unit_extension:register_servor_skull_activator_extension(self)
 		self._interactee_extension:set_active(false)
 	end
-end
-
-ServoSkullActivatorExtension.setup_from_component = function (self, hide_timer)
-	self._hide_timer = hide_timer
 end
 
 ServoSkullActivatorExtension.on_start_event = function (self)

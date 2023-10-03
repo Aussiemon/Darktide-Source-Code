@@ -13,6 +13,7 @@ PlayerHuskBuffExtension.init = function (self, extension_init_context, unit, ext
 	self._game_object_id = game_object_id
 	self._game_session = game_session
 	self._player = extension_init_data.player
+	self._keywords = {}
 	local network_event_delegate = extension_init_context.network_event_delegate
 
 	network_event_delegate:register_session_unit_events(self, self._game_object_id, unpack(RPCS))
@@ -24,6 +25,21 @@ PlayerHuskBuffExtension.destroy = function (self)
 	self._network_event_delegate:unregister_unit_events(self._game_object_id, unpack(RPCS))
 end
 
+PlayerHuskBuffExtension.pre_update = function (self, unit, dt, t, fixed_frame)
+	local active_keywords = self._keywords
+
+	table.clear(active_keywords)
+
+	local game_object_buff_keywords = GameSession.game_object_field(self._game_session, self._game_object_id, "buff_keywords")
+
+	for ii = 1, #game_object_buff_keywords do
+		if game_object_buff_keywords[ii] then
+			local keyword = NetworkLookup.synced_buff_keywords[ii]
+			active_keywords[keyword] = true
+		end
+	end
+end
+
 PlayerHuskBuffExtension.has_buff_id = function (self)
 	return
 end
@@ -32,12 +48,12 @@ PlayerHuskBuffExtension.has_unique_buff_id = function (self)
 	return
 end
 
-PlayerHuskBuffExtension.has_keyword = function (self)
-	return
+PlayerHuskBuffExtension.has_keyword = function (self, keyword)
+	return not not self._keywords[keyword]
 end
 
 PlayerHuskBuffExtension.keywords = function (self)
-	return
+	return self._keywords
 end
 
 PlayerHuskBuffExtension.rpc_add_buff = function (self, channel_id, game_object_id)

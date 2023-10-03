@@ -143,8 +143,9 @@ damage_templates.default_light_chainaxe = {
 		{
 			armor_damage_modifier = {
 				attack = {
-					[armor_types.armored] = damage_lerp_values.lerp_1,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_4
+					[armor_types.armored] = damage_lerp_values.lerp_1_5,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
+					[armor_types.resistant] = damage_lerp_values.lerp_1_5
 				},
 				impact = {
 					[armor_types.super_armor] = {
@@ -155,8 +156,8 @@ damage_templates.default_light_chainaxe = {
 			},
 			power_distribution = {
 				attack = {
-					50,
-					100
+					80,
+					160
 				},
 				impact = {
 					4,
@@ -299,7 +300,7 @@ overrides.light_chainaxe_active_sticky = {
 		},
 		{
 			"melee_attack_strength",
-			melee_attack_strengths.heavy
+			melee_attack_strengths.light
 		},
 		{
 			"targets",
@@ -307,8 +308,8 @@ overrides.light_chainaxe_active_sticky = {
 			"power_distribution",
 			"attack",
 			{
-				50,
-				100
+				100,
+				200
 			}
 		},
 		{
@@ -378,7 +379,7 @@ overrides.light_chainaxe_active_sticky_last = {
 		},
 		{
 			"melee_attack_strength",
-			melee_attack_strengths.heavy
+			melee_attack_strengths.light
 		},
 		{
 			"targets",
@@ -386,8 +387,8 @@ overrides.light_chainaxe_active_sticky_last = {
 			"power_distribution",
 			"attack",
 			{
-				200,
-				400
+				300,
+				500
 			}
 		},
 		{
@@ -453,7 +454,7 @@ overrides.light_chainaxe_sticky = {
 		},
 		{
 			"melee_attack_strength",
-			melee_attack_strengths.heavy
+			melee_attack_strengths.light
 		},
 		{
 			"targets",
@@ -518,7 +519,7 @@ overrides.light_chainaxe_sticky_last_quick = {
 		},
 		{
 			"melee_attack_strength",
-			melee_attack_strengths.heavy
+			melee_attack_strengths.light
 		},
 		{
 			"targets",
@@ -568,8 +569,8 @@ damage_templates.heavy_chainaxe = {
 			},
 			power_distribution = {
 				attack = {
-					102,
-					170
+					150,
+					300
 				},
 				impact = {
 					7,
@@ -593,8 +594,8 @@ damage_templates.heavy_chainaxe = {
 			},
 			power_distribution = {
 				attack = {
-					55,
-					100
+					100,
+					200
 				},
 				impact = {
 					6,
@@ -613,8 +614,8 @@ damage_templates.heavy_chainaxe = {
 			},
 			power_distribution = {
 				attack = {
-					20,
-					75
+					75,
+					140
 				},
 				impact = {
 					5,
@@ -1067,8 +1068,8 @@ damage_templates.chainaxe_tank = {
 			},
 			power_distribution = {
 				attack = {
-					80,
-					160
+					100,
+					200
 				},
 				impact = {
 					6,
@@ -1083,8 +1084,8 @@ damage_templates.chainaxe_tank = {
 		{
 			power_distribution = {
 				attack = {
-					10,
-					40
+					50,
+					100
 				},
 				impact = {
 					5,
@@ -1095,8 +1096,8 @@ damage_templates.chainaxe_tank = {
 		{
 			power_distribution = {
 				attack = {
-					5,
-					30
+					30,
+					60
 				},
 				impact = {
 					4,
@@ -1107,8 +1108,8 @@ damage_templates.chainaxe_tank = {
 		default_target = {
 			power_distribution = {
 				attack = {
-					0,
-					0
+					5,
+					20
 				},
 				impact = {
 					4,

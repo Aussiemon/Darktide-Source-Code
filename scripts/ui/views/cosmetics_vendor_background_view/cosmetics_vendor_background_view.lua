@@ -26,7 +26,8 @@ CosmeticsVendorBackgroundView.on_enter = function (self)
 		narrative_manager:complete_event(narrative_event_name)
 	end
 
-	self:play_vo_events(ViewSettings.vo_event_vendor_greeting, "credit_store_servitor_a", nil, 1)
+	self:play_vo_events(ViewSettings.vo_event_vendor_greeting, "reject_npc_a", nil, 1)
+	self:play_vo_events(ViewSettings.vo_event_vendor_greeting, "reject_npc_servitor_a", nil, 0)
 end
 
 CosmeticsVendorBackgroundView.on_exit = function (self)

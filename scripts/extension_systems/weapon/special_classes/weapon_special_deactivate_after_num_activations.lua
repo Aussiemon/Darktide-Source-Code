@@ -1,6 +1,8 @@
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local WeaponSpecial = require("scripts/utilities/weapon_special")
 local WeaponSpecialInterface = require("scripts/extension_systems/weapon/special_classes/weapon_special_interface")
+local stat_buff_types = BuffSettings.stat_buffs
 local WeaponSpecialDeactivateAfterNumActivations = class("WeaponSpecialDeactivateAfterNumActivations")
 
 WeaponSpecialDeactivateAfterNumActivations.init = function (self, context, init_data)
@@ -39,6 +41,8 @@ WeaponSpecialDeactivateAfterNumActivations.on_exit_damage_window = function (sel
 	if self._inventory_slot_component.special_active and num_hit_enemies > 0 then
 		self._inventory_slot_component.num_special_activations = self._inventory_slot_component.num_special_activations + 1
 		self._inventory_slot_component.special_active_start_t = t
+
+		WeaponSpecial.update_active(t, self._tweak_data, self._inventory_slot_component, self._buff_extension, self._input_extension)
 	end
 end
 

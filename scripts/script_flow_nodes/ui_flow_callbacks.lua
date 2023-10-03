@@ -5,7 +5,8 @@ local flow_callback_white_list = {
 	"get_component_data",
 	"set_component_data",
 	"trigger_lua_unit_event",
-	"trigger_lua_string_event"
+	"trigger_lua_string_event",
+	"local_player_level_larger_than"
 }
 
 for function_name, func in pairs(MainFlowCallbacks) do
@@ -71,6 +72,17 @@ UIFlowCallbacks.register_extensions = function (params)
 	local extension_manager = Managers.ui:world_extension_manager(world)
 
 	extension_manager:register_unit(world, unit, "flow_spawned")
+end
+
+UIFlowCallbacks.delete_extension_registered_unit = function (params)
+	local unit = params.unit
+	local world = Application.flow_callback_context_world()
+	local extension_manager = Managers.ui:world_extension_manager(world)
+
+	Unit.flow_event(unit, "cleanup_before_destroy")
+	Unit.flow_event(unit, "unit_despawned")
+	extension_manager:unregister_unit(unit)
+	World.destroy_unit(world, unit)
 end
 
 UIFlowCallbacks.spawn_unit = function (params)

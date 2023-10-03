@@ -1,11 +1,10 @@
-local HitZone = require("scripts/utilities/attack/hit_zone")
 local MinionState = require("scripts/utilities/minion_state")
+local ProjectileLocomotion = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion")
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
-local ProjectileLocomotionUtility = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion_utility")
 local projectile_impact_results = ProjectileLocomotionSettings.impact_results
 local true_flight_defaults = {}
 
-local function _get_center_of_all_actors(target_unit)
+local function _center_of_all_actors(target_unit)
 	local Unit_get_node_actors = Unit.get_node_actors
 	local Unit_actor = Unit.actor
 	local Actor_center_of_mass = Actor.center_of_mass
@@ -38,7 +37,7 @@ local function _get_center_of_all_actors(target_unit)
 	return nil
 end
 
-local function get_center_of_hit_zone(target_unit, target_hit_zone)
+local function _center_of_hit_zone(target_unit, target_hit_zone)
 	local target_unit_data = ScriptUnit.has_extension(target_unit, "unit_data_system")
 	local target_breed = target_unit_data and target_unit_data:breed()
 	local position = Vector3.zero()
@@ -71,13 +70,13 @@ local function get_center_of_hit_zone(target_unit, target_hit_zone)
 end
 
 true_flight_defaults.get_unit_position = function (target_unit, target_hit_zone)
-	local center_of_hit_zone = get_center_of_hit_zone(target_unit, target_hit_zone)
+	local center_of_hit_zone = _center_of_hit_zone(target_unit, target_hit_zone)
 
 	if center_of_hit_zone then
 		return center_of_hit_zone
 	end
 
-	local center_of_all_actors = _get_center_of_all_actors(target_unit)
+	local center_of_all_actors = _center_of_all_actors(target_unit)
 
 	if center_of_all_actors then
 		return center_of_all_actors
@@ -120,8 +119,8 @@ true_flight_defaults.default_update_towards_position = function (target_position
 	local new_direction = Quaternion.forward(new_rotation)
 	local acceleration = true_flight_template.on_target_acceleration or 0
 	local new_speed = speed + acceleration * dt
-	local dsitance = (speed + new_speed) * dt * 0.5
-	local new_position = position + new_direction * dsitance
+	local distance = (speed + new_speed) * dt * 0.5
+	local new_position = position + new_direction * distance
 	local new_velocity = new_direction * new_speed
 	integration_data.velocity = new_velocity
 	local new_rotation = Quaternion.look(velocity)
@@ -219,6 +218,35 @@ true_flight_defaults.legitimate_never = function (integration_data, target_unit,
 	return false
 end
 
+true_flight_defaults.legitimate_line_of_sight_from_player = function (integration_data, target_unit, target_position, position)
+	local player_unit = integration_data.owner_unit
+
+	if not HEALTH_ALIVE[player_unit] then
+		return false
+	end
+
+	local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+	local first_person_component = unit_data_extension:read_component("first_person")
+	local fp_position = first_person_component.position
+	local fp_rotation = first_person_component.rotation
+	local hit_something = false
+	local smart_target_extension = ScriptUnit.has_extension(player_unit, "smart_targeting_system")
+
+	if smart_target_extension then
+		hit_something = not smart_target_extension:has_line_of_sight(target_unit)
+	end
+
+	local fp_direction = Quaternion.forward(fp_rotation)
+	local raycast_direction = target_position - fp_position
+	local dot_value = Vector3.dot(Vector3.normalize(fp_direction), Vector3.normalize(raycast_direction))
+
+	if dot_value < 0.95 then
+		return false
+	end
+
+	return not hit_something
+end
+
 true_flight_defaults.legitimate_dot_check = function (integration_data, target_unit, target_position, position)
 	local velocity = integration_data.velocity
 	local current_direction = Vector3.normalize(velocity)
@@ -256,7 +284,7 @@ true_flight_defaults.is_not_sleeping_demon_host = function (integration_data, ta
 	return is_not_sleeping_deamonhost and is_angle_ok
 end
 
-true_flight_defaults.impact_is_awlays_valid = function (hit_unit, integration_data)
+true_flight_defaults.impact_is_always_valid = function (hit_unit, integration_data)
 	return true
 end
 
@@ -304,7 +332,7 @@ true_flight_defaults.default_check_collisions = function (physics_world, integra
 	local statics_radius = integrator_parameters.statics_radius
 	local statics_raycast = integrator_parameters.statics_raycast
 	local skip_static = false
-	local hits = ProjectileLocomotionUtility.projectile_cast(physics_world, previus_position, new_position, travel_direction, travel_distance, collision_filter, radius, skip_static, statics_radius, statics_raycast)
+	local hits = ProjectileLocomotion.projectile_cast(physics_world, previus_position, new_position, travel_direction, travel_distance, collision_filter, radius, skip_static, statics_radius, statics_raycast)
 
 	if hits and #hits > 0 then
 		local damage_extension = integration_data.damage_extension
@@ -316,7 +344,7 @@ true_flight_defaults.default_check_collisions = function (physics_world, integra
 		local hit_actor = hit.actor or hit[4]
 		local hit_unit = Actor.unit(hit_actor)
 		local is_valid_true_flight = not optional_validate_impact_func or optional_validate_impact_func(hit_unit, integration_data)
-		local is_valid_collision = is_valid_true_flight and ProjectileLocomotionUtility.check_collision(hit_unit, hit_position, integration_data)
+		local is_valid_collision = is_valid_true_flight and ProjectileLocomotion.check_collision(hit_unit, hit_position, integration_data)
 
 		if is_valid_collision then
 			local hit_normal = hit.normal or hit[3]

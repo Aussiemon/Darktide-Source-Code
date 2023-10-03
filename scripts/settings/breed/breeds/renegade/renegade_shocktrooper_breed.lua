@@ -5,6 +5,7 @@ local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BreedTerrorEventSettings = require("scripts/settings/breed/breed_terror_event_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionGibbingTemplates = require("scripts/managers/minion/minion_gibbing_templates")
 local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
@@ -64,14 +65,7 @@ local breed_data = {
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.armored,
-	hit_mass = {
-		2,
-		2,
-		2,
-		2,
-		2,
-		6
-	},
+	hit_mass = MinionDifficultySettings.hit_mass[breed_name],
 	gib_template = MinionGibbingTemplates.renegade_shocktrooper_gibbing,
 	stagger_durations = {
 		[stagger_types.light] = 0.75,
@@ -99,6 +93,14 @@ local breed_data = {
 		[stagger_types.killshot] = 10,
 		[stagger_types.light_ranged] = 15,
 		[stagger_types.sticky] = 5
+	},
+	stagger_thresholds = {
+		[stagger_types.light] = 5,
+		[stagger_types.medium] = 40,
+		[stagger_types.heavy] = 60,
+		[stagger_types.explosion] = 80,
+		[stagger_types.light_ranged] = 15,
+		[stagger_types.killshot] = 5
 	},
 	inventory = MinionVisualLoadoutTemplates.renegade_shocktrooper,
 	sounds = require("scripts/settings/breed/breeds/renegade/renegade_shocktrooper_sounds"),

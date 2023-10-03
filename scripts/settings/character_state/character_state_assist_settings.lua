@@ -5,8 +5,9 @@ local character_state_assist_settings = {
 			abort_anim_event = "captured_revived_abort"
 		},
 		knocked_down = {
+			abort_anim_event = "revive_abort",
 			start_anim_event = "revive_start",
-			abort_anim_event = "revive_abort"
+			start_anim_event_fast = "revive_fast_start"
 		},
 		ledge_hanging = {
 			start_anim_event = "ledge_exit",

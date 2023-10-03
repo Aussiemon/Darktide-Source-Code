@@ -248,4 +248,16 @@ InputUtils.is_gamepad = function (device_type)
 	return _gamepad_devices[device_type] ~= nil
 end
 
+InputUtils.start_simulate_action = function (input_service_name, action_name, value)
+	local input_service = Managers.input:get_input_service(input_service_name)
+
+	input_service:start_simulate_action(action_name, value)
+end
+
+InputUtils.stop_simulate_action = function (input_service_name, action_name)
+	local input_service = Managers.input:get_input_service(input_service_name)
+
+	input_service:stop_simulate_action(action_name)
+end
+
 return InputUtils

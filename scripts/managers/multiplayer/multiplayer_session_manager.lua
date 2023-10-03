@@ -41,7 +41,7 @@ MultiplayerSessionManager._rpc_ignore_slot_reservation = function (self, leave_r
 	local rpc_sent = false
 	local host_type = self:host_type()
 
-	if host_type == HOST_TYPES.mission_server and leave_reason == "leave_mission" then
+	if host_type == HOST_TYPES.mission_server and (leave_reason == "leave_mission" or leave_reason == "leave_mission_stay_in_party") then
 		local host_channel = Managers.connection:host_channel()
 
 		if host_channel then
@@ -116,11 +116,11 @@ MultiplayerSessionManager.party_immaterium_hot_join_hub_server = function (self)
 	return new_session
 end
 
-MultiplayerSessionManager.party_immaterium_join_server = function (self, matched_game_session_id)
+MultiplayerSessionManager.party_immaterium_join_server = function (self, matched_game_session_id, party_id)
 	self:clear_session_boot()
 
 	local new_session = MultiplayerSession:new()
-	self._session_boot = PartyImmateriumMissionSessionBoot:new(new_session, matched_game_session_id)
+	self._session_boot = PartyImmateriumMissionSessionBoot:new(new_session, matched_game_session_id, party_id)
 
 	return new_session
 end
@@ -342,6 +342,10 @@ MultiplayerSessionManager._show_session_error = function (self, disconnection_in
 	else
 		Managers.error:report_error(MultiplayerSessionDisconnectError:new(source, reason, error_details))
 	end
+end
+
+MultiplayerSessionManager.is_leaving = function (self)
+	return not not self._leave_reason
 end
 
 MultiplayerSessionManager.post_update = function (self)

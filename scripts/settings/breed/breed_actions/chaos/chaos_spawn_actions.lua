@@ -56,9 +56,9 @@ local action_data = {
 		push_minions_radius = 2,
 		land_impact_timing = 0.16666666666666666,
 		push_enemies_radius = 2,
-		aoe_bot_threat_duration = 1,
 		push_minions_side_relation = "allied",
 		start_leap_anim_event = "attack_leap_start",
+		aoe_bot_threat_duration = 1,
 		shortest_start_leap_anim_event = "attack_leap_shortest_start",
 		push_enemies_power_level = 2000,
 		push_minions_power_level = 2000,
@@ -84,10 +84,14 @@ local action_data = {
 		push_enemies_damage_profile = DamageProfileTemplates.chaos_hound_push,
 		aoe_bot_threat_size = Vector3Box(1.5, 2, 2),
 		land_ground_impact_fx_template = GroundImpactFxTemplates.chaos_spawn_leap,
-		catapult_units = {
-			speed = 10,
-			radius = 5,
-			angle = math.pi / 6
+		catapult_or_push_players = {
+			speed = 6,
+			radius = 4,
+			angle = math.pi / 6,
+			catapult_breed_names = {
+				human = true
+			},
+			push_template = PushSettings.push_templates.chaos_spawn_leap
 		}
 	},
 	erratic_follow = {
@@ -387,8 +391,8 @@ local action_data = {
 			attack_melee_claw = 0.6666666666666666
 		},
 		attack_anim_durations = {
-			attack_melee_claw_02 = 1,
-			attack_melee_claw = 1
+			attack_melee_claw_02 = 1.1666666666666667,
+			attack_melee_claw = 1.1666666666666667
 		},
 		attack_intensities = {
 			ranged = 5,
@@ -405,29 +409,29 @@ local action_data = {
 	grab = {
 		degree_per_throw_direction = 20,
 		after_throw_taunt_duration = 0,
+		after_throw_taunt_anim = "change_target_fwd",
 		start_eat_anim = "attack_grabbed_eat_start",
-		check_for_smash_radius = 3,
 		collision_filter = "filter_minion_melee_friendly_fire",
 		oobb_use_unit_rotation = true,
 		range = 2,
-		after_throw_taunt_anim = "change_target_fwd",
 		grab_node = "j_leftfinger4_jnt",
-		grab_target_node = "j_hips",
 		sweep_node = "j_leftfinger3_jnt",
-		dodge_grab_check_radius = 1,
+		grab_target_node = "j_hips",
 		dodge_weapon_reach = 1.25,
 		width = 2,
 		aoe_threat_duration = 0.75,
+		dodge_grab_check_radius = 0.75,
 		height = 2,
 		utility_weight = 200,
 		cooldown = 10,
 		attack_type = "oobb",
 		throw_test_distance = 15,
-		grab_check_radius = 2.25,
+		grab_check_radius = 1.75,
 		oobb_node = "j_leftfinger4_jnt",
-		ignore_blocked = true,
+		check_for_smash_radius = 3,
 		weapon_reach = 2.25,
 		bot_power_level_modifier = 0.4,
+		ignore_blocked = true,
 		rotation_speed = 6,
 		aoe_threat_timing = 0.4,
 		considerations = UtilityConsiderations.chaos_spawn_grab_attack,
@@ -456,6 +460,10 @@ local action_data = {
 		grab_durations = {
 			human = 1.3333333333333333,
 			ogryn = 1.9666666666666666
+		},
+		grab_durations_missed = {
+			human = 1.9,
+			ogryn = 1.9
 		},
 		rotation_durations = {
 			attack_grab = 0.3333333333333333
@@ -644,7 +652,7 @@ local action_data = {
 	combo_attack = {
 		move_speed = 4,
 		aoe_threat_timing = 0,
-		weapon_reach = 2.25,
+		weapon_reach = 2,
 		utility_weight = 8,
 		collision_filter = "filter_minion_melee_friendly_fire",
 		ignore_blocked = true,
@@ -701,7 +709,7 @@ local action_data = {
 		attack_anim_durations = {
 			attack_turn_left = 2.3333333333333335,
 			attack_turn_bwd = 2.3333333333333335,
-			attack_melee_combo_4 = 2.3333333333333335,
+			attack_melee_combo_4 = 2.5,
 			attack_turn_right = 2,
 			attack_melee_combo_3 = 2.4,
 			attack_melee_combo_2 = 2,
@@ -951,7 +959,7 @@ local action_data = {
 	change_target_combo = {
 		move_speed = 4,
 		aoe_threat_timing = 0,
-		weapon_reach = 2.25,
+		weapon_reach = 2,
 		utility_weight = 8,
 		collision_filter = "filter_minion_melee_friendly_fire",
 		ignore_blocked = true,
@@ -1008,7 +1016,7 @@ local action_data = {
 		attack_anim_durations = {
 			attack_turn_left = 2.3333333333333335,
 			attack_turn_bwd = 2.3333333333333335,
-			attack_melee_combo_4 = 2.3333333333333335,
+			attack_melee_combo_4 = 2.5,
 			attack_turn_right = 2,
 			attack_melee_combo_3 = 2.4,
 			attack_melee_combo_2 = 2,
@@ -1362,6 +1370,23 @@ local action_data = {
 				}
 			},
 			sticky = {
+				fwd = {
+					"stagger_fwd_exp"
+				},
+				bwd = {
+					"stagger_bwd_exp"
+				},
+				left = {
+					"stagger_left_exp"
+				},
+				right = {
+					"stagger_right_exp"
+				},
+				dwn = {
+					"stagger_bwd_exp"
+				}
+			},
+			electrocuted = {
 				fwd = {
 					"stagger_fwd_exp"
 				},

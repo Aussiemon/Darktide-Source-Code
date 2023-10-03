@@ -114,14 +114,14 @@ local templates = {
 		predicted = false,
 		class_name = "buff",
 		stat_buffs = {
-			[buff_stat_buffs.movement_speed] = 1.5
+			[buff_stat_buffs.movement_speed] = 0.5
 		}
 	},
 	weapon_trait_melee_common_wield_increase_movement_speed_buff = {
 		predicted = false,
 		class_name = "buff",
 		conditional_stat_buffs = {
-			[buff_stat_buffs.movement_speed] = 1.5
+			[buff_stat_buffs.movement_speed] = 0.5
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 	},

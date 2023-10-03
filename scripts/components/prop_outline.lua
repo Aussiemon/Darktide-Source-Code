@@ -4,6 +4,10 @@ PropOutline.init = function (self, unit)
 	return
 end
 
+PropOutline.editor_validate = function (self, unit)
+	return true, ""
+end
+
 PropOutline.enable = function (self, unit)
 	return
 end

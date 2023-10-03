@@ -1,6 +1,6 @@
 require("scripts/game_states/boot/state_boot_sub_state_base")
 
-local render_settings = require("scripts/settings/options/render_settings")
+local render_options = require("scripts/settings/options/render_settings")
 local StateLoadRenderSettings = class("StateLoadRenderSettings", "StateBootSubStateBase")
 
 local function sort_function(setting_a, setting_b)
@@ -11,20 +11,27 @@ local function sort_function(setting_a, setting_b)
 end
 
 StateLoadRenderSettings._state_update = function (self, dt)
-	local settings = render_settings.settings
-	local settings_to_run = {}
+	local render_settings = render_options.settings
+	local settings = {
+		render_settings
+	}
 
-	self:_check_render_settings(settings, settings_to_run)
-	table.sort(settings_to_run, sort_function)
+	for i = 1, #settings do
+		local setting = settings[i]
+		local settings_to_run = {}
 
-	for i = 1, #settings_to_run do
-		local setting = settings_to_run[i]
-		local value = setting:get_function()
+		self:_check_settings_to_tun(setting, settings_to_run)
+		table.sort(settings_to_run, sort_function)
 
-		setting.on_activated(value, setting)
+		for i = 1, #settings_to_run do
+			local setting = settings_to_run[i]
+			local value = setting:get_function()
+
+			setting.on_activated(value, setting)
+		end
+
+		self:_verify_disabled_status(setting)
 	end
-
-	self:_verify_disabled_status(settings)
 
 	local error = false
 	local done = true
@@ -32,14 +39,14 @@ StateLoadRenderSettings._state_update = function (self, dt)
 	return done, error
 end
 
-StateLoadRenderSettings._check_render_settings = function (self, settings, settings_to_run)
+StateLoadRenderSettings._check_settings_to_tun = function (self, settings, settings_to_run)
 	if not DEDICATED_SERVER then
 		for _, setting in ipairs(settings) do
 			if setting.pages then
 				for i = 1, #setting.pages do
 					local page_setting = setting.pages[i].entries
 
-					self:_check_render_settings(page_setting, settings_to_run)
+					self:_check_settings_to_tun(page_setting, settings_to_run)
 				end
 			end
 
@@ -82,9 +89,7 @@ StateLoadRenderSettings._verify_disabled_status = function (self, settings)
 					local disable_rule = setting.disable_rules[i]
 
 					if disable_rule.validation_function and disable_rule.validation_function(value) and (not valid_disables[disable_rule.id] or not valid_disables[disable_rule.id][setting.id]) then
-						valid_disables[disable_rule.id] = valid_disables[disable_rule.id] or {
-							{}
-						}
+						valid_disables[disable_rule.id] = valid_disables[disable_rule.id] or {}
 						valid_disables[disable_rule.id][setting.id] = disable_rule
 					end
 				end

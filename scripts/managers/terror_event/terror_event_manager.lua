@@ -16,6 +16,7 @@ TerrorEventManager.init = function (self, world, is_server, network_event_delega
 	self._level_name = level_name
 	self._wwise_world = Managers.world:wwise_world(world)
 	self._level = nil
+	self._point_modifier = 1
 	self._terror_trickle_data = {
 		spawned_minion_data = {}
 	}
@@ -185,7 +186,10 @@ TerrorEventManager._event_has_minion_spawners = function (self, event_name)
 end
 
 TerrorEventManager.num_active_events = function (self)
-	return #self._active_events
+	local has_terror_trickle = self._terror_trickle_data.active
+	local num_active_events = #self._active_events + (has_terror_trickle and 1 or 0)
+
+	return num_active_events
 end
 
 TerrorEventManager.update = function (self, dt, t)
@@ -253,6 +257,14 @@ TerrorEventManager.stop_terror_trickle = function (self)
 	self._terror_trickle_data.active = false
 
 	Managers.event:trigger("terror_event_stopped")
+end
+
+TerrorEventManager.set_terror_event_point_modifier = function (self, point_modifier)
+	self._point_modifier = self._point_modifier + point_modifier
+end
+
+TerrorEventManager.get_terror_event_point_modifier = function (self)
+	return self._point_modifier
 end
 
 TerrorEventManager.replace_terror_event_tags = function (self, tags_to_replace)

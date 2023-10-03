@@ -357,12 +357,12 @@ damage_templates.ogryn_shield_push = {
 	is_push = true,
 	shield_override_stagger_strength = 30,
 	ignore_stagger_reduction = true,
-	stagger_category = "uppercut",
+	stagger_category = "melee",
 	power_distribution = {
 		attack = 0,
 		impact = {
-			8,
-			16
+			16,
+			32
 		}
 	},
 	armor_damage_modifier = {
@@ -396,7 +396,7 @@ damage_templates.ogryn_shield_push = {
 damage_templates.default_shield_push = {
 	is_push = true,
 	shield_override_stagger_strength = 20,
-	stagger_category = "uppercut",
+	stagger_category = "melee",
 	power_distribution = {
 		attack = 0,
 		impact = {
@@ -437,6 +437,50 @@ damage_templates.default_shield_push = {
 	}
 }
 damage_templates.plasma_vent_damage = {
+	toughness_multiplier = 2,
+	ignore_shield = true,
+	ignore_toughness = false,
+	stagger_category = "ranged",
+	ignore_depleting_toughness = true,
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+			[armor_types.prop_armor] = 1
+		},
+		impact = {
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+			[armor_types.prop_armor] = 0
+		}
+	},
+	power_distribution = {
+		attack = 8,
+		impact = 0
+	},
+	cleave_distribution = {
+		attack = 1,
+		impact = 0
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+damage_templates.plasma_vent_damage_proficiency = {
 	toughness_multiplier = 2,
 	ignore_shield = true,
 	ignore_toughness = false,

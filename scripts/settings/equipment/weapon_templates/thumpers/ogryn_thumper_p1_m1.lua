@@ -13,13 +13,13 @@ local SmartTargetingTemplates = require("scripts/settings/equipment/smart_target
 local WeaponTraitsBespokeThumperP1 = require("scripts/settings/equipment/weapon_traits/weapon_traits_bespoke_ogryn_thumper_p1")
 local WeaponTweakTemplateSettings = require("scripts/settings/equipment/weapon_templates/weapon_tweak_template_settings")
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
+local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local armor_types = ArmorSettings.types
 local buff_keywords = BuffSettings.keywords
 local buff_stat_buffs = BuffSettings.stat_buffs
 local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 local template_types = WeaponTweakTemplateSettings.template_types
-local WeaponTraitTemplates = require("scripts/settings/equipment/weapon_templates/weapon_trait_templates/weapon_trait_templates")
 local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
 local recoil_trait_templates = WeaponTraitTemplates[template_types.recoil]
 local spread_trait_templates = WeaponTraitTemplates[template_types.spread]
@@ -52,7 +52,6 @@ local weapon_template = {
 			input_sequence = {
 				{
 					value = true,
-					hold_input = "action_two_hold",
 					input = "action_one_pressed"
 				}
 			}
@@ -62,7 +61,13 @@ local weapon_template = {
 			input_sequence = {
 				{
 					value = true,
-					input = "action_two_hold"
+					input = "action_two_hold",
+					input_setting = {
+						value = true,
+						input = "action_two_pressed",
+						setting_value = true,
+						setting = "toggle_ads"
+					}
 				}
 			}
 		},
@@ -72,7 +77,14 @@ local weapon_template = {
 				{
 					value = false,
 					input = "action_two_hold",
-					time_window = math.huge
+					time_window = math.huge,
+					input_setting = {
+						setting_value = true,
+						setting = "toggle_ads",
+						value = true,
+						input = "action_two_pressed",
+						time_window = math.huge
+					}
 				}
 			}
 		},
@@ -119,12 +131,11 @@ table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.a
 
 weapon_template.actions = {
 	action_wield = {
+		uninterruptible = true,
 		allowed_during_sprint = true,
 		wield_anim_event = "equip",
 		wield_reload_anim_event = "equip_reload",
 		kind = "ranged_wield",
-		continue_sprinting = true,
-		uninterruptible = true,
 		total_time = 1,
 		conditional_state_to_action_input = {
 			started_reload = {
@@ -154,7 +165,6 @@ weapon_template.actions = {
 		}
 	},
 	action_unwield = {
-		continue_sprinting = true,
 		allowed_during_sprint = true,
 		start_input = "wield",
 		uninterruptible = true,
@@ -215,7 +225,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			reload = {
 				action_name = "action_reload"
@@ -252,7 +267,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -280,7 +300,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -311,7 +336,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -367,7 +397,7 @@ weapon_template.actions = {
 		weapon_handling_template = "time_scale_1_1",
 		stop_alternate_fire = true,
 		start_input = "reload",
-		crosshair_type = "ironsight",
+		crosshair_type = "none",
 		uninterruptible = true,
 		total_time = 2.333,
 		action_movement_curve = {
@@ -409,7 +439,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			zoom = {
 				action_name = "action_zoom",
@@ -491,7 +526,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			reload = {
 				chain_time = 0.8,
@@ -505,7 +545,7 @@ weapon_template.actions = {
 			},
 			bash = {
 				action_name = "action_bash_right",
-				chain_time = 1
+				chain_time = 0.8
 			},
 			zoom = {
 				chain_time = 1.2,
@@ -541,15 +581,16 @@ weapon_template.actions = {
 	action_bash_right = {
 		damage_window_start = 0.6,
 		hit_armor_anim = "attack_hit_shield",
-		crosshair_type = "dot",
-		sprint_requires_press_to_interrupt = true,
+		weapon_handling_template = "time_scale_1_1",
+		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
 		first_person_hit_stop_anim = "attack_hit",
-		range_mod = 1.15,
+		crosshair_type = "dot",
 		allowed_during_sprint = true,
-		kind = "sweep",
-		attack_direction_override = "right",
+		range_mod = 1.15,
 		damage_window_end = 0.8,
+		sprint_requires_press_to_interrupt = true,
+		attack_direction_override = "right",
 		abort_sprint = true,
 		uninterruptible = true,
 		anim_event = "attack_bash_right",
@@ -598,7 +639,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			reload = {
 				chain_time = 0.8,
@@ -612,7 +658,7 @@ weapon_template.actions = {
 			},
 			bash = {
 				action_name = "action_bash",
-				chain_time = 1
+				chain_time = 0.8
 			},
 			zoom = {
 				chain_time = 1,
@@ -651,7 +697,7 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "none",
+		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
 		total_time = math.huge

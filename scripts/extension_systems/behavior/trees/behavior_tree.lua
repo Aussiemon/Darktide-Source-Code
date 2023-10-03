@@ -40,6 +40,7 @@ require("scripts/extension_systems/behavior/nodes/actions/bt_melee_attack_action
 require("scripts/extension_systems/behavior/nodes/actions/bt_melee_follow_target_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_move_to_combat_vector_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_move_to_cover_action")
+require("scripts/extension_systems/behavior/nodes/actions/bt_move_to_position_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_move_to_target_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_mutant_charger_charge_action")
 require("scripts/extension_systems/behavior/nodes/actions/bt_open_door_action")

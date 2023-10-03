@@ -514,31 +514,49 @@ local player = {
 	linked_decal = {},
 	blood_ball = {}
 }
-local default_surface_decal = {
-	Vector3(0.2, 0.2, 0.2),
-	Vector3(0.2, 0.2, 0.2),
-	{
-		"content/fx/units/weapons/decal_cross_01"
-	}
-}
+local surface_fx = {}
 local default_surface_fx = {
-	sfx = {
-		{
-			group = "surface_material",
-			append_husk_to_event_name = true,
-			event = "wwise/events/weapon/play_bullet_hits_gen",
-			normal_rotation = true
-		}
-	},
-	vfx = {
-		{
-			normal_rotation = true,
-			effects = {
-				"content/fx/particles/weapons/rifles/shotgun/combat_shotgun_ogryn_heavy_impact"
+	[hit_types.stop] = {
+		sfx = {
+			{
+				group = "surface_material",
+				append_husk_to_event_name = true,
+				event = "wwise/events/weapon/play_bullet_hits_gen",
+				normal_rotation = true
+			}
+		},
+		vfx = {
+			{
+				normal_rotation = true,
+				effects = {
+					"content/fx/particles/weapons/rifles/shotgun/combat_shotgun_ogryn_heavy_impact"
+				}
 			}
 		}
-	}
+	},
+	[hit_types.penetration_entry] = {
+		sfx = {
+			{
+				group = "surface_material",
+				append_husk_to_event_name = true,
+				event = "wwise/events/weapon/play_bullet_hits_gen",
+				normal_rotation = true
+			}
+		},
+		vfx = {
+			{
+				normal_rotation = true,
+				effects = {
+					"content/fx/particles/weapons/rifles/shotgun/combat_shotgun_ogryn_heavy_impact"
+				}
+			}
+		}
+	},
+	[hit_types.penetration_exit] = nil
 }
+
+ImpactFxHelper.create_missing_surface_fx(surface_fx, default_surface_fx)
+
 local surface_decal = {
 	concrete = {
 		[hit_types.stop] = {
@@ -816,10 +834,6 @@ return {
 		[armor_types.unarmored] = unarmored,
 		[armor_types.prop_armor] = prop_armor
 	},
-	surface = {
-		[hit_types.stop] = default_surface_fx,
-		[hit_types.penetration_entry] = default_surface_fx,
-		[hit_types.penetration_exit] = nil
-	},
+	surface = surface_fx,
 	surface_decal = surface_decal
 }

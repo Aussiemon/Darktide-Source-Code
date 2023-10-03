@@ -50,11 +50,9 @@ PlayerHuskToughnessExtension.current_toughness_percent_visual = function (self)
 end
 
 PlayerHuskToughnessExtension.max_toughness_visual = function (self)
-	local buff_extension = ScriptUnit.has_extension(self._unit, "buff_system")
-	local buffs = buff_extension and buff_extension:stat_buffs()
-	local bonus = buffs and buffs.toughness_bonus_flat or 0
+	local toughness_bonus = GameSession.game_object_field(self._game_session, self._game_object_id, "toughness_bonus")
 	local max_toughness = self:max_toughness()
-	local max_toughness_visual = max_toughness - bonus
+	local max_toughness_visual = max_toughness - toughness_bonus
 
 	return max_toughness_visual
 end

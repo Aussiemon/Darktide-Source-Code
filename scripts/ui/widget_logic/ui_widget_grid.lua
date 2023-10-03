@@ -167,7 +167,7 @@ UIWidgetGrid._update_scrollbar_sizes = function (self)
 
 		if not self._use_custom_scroll_amount then
 			local spacing = self._spacing
-			local scroll_step_length = self._scroll_step_length or self._smallest_widget_length
+			local scroll_step_length = 100
 			local scroll_amount = (scroll_step_length + spacing[axis]) / scroll_length
 			scrollbar_widget.content.scroll_amount = scroll_amount
 		end

@@ -215,7 +215,7 @@ OptionsView._setup_content_grid_scrollbar = function (self, grid, widget_id, gri
 	local widgets_by_name = self._widgets_by_name
 	local scrollbar_widget = widgets_by_name[widget_id]
 
-	grid:assign_scrollbar(scrollbar_widget, grid_pivot_scenegraph_id, grid_scenegraph_id, true)
+	grid:assign_scrollbar(scrollbar_widget, grid_pivot_scenegraph_id, grid_scenegraph_id)
 	grid:set_scrollbar_progress(0)
 end
 
@@ -251,8 +251,9 @@ OptionsView._setup_content_widgets = function (self, content, scenegraph_id, cal
 			local widget_type = entry.widget_type
 			local widget = nil
 			local template = ContentBlueprints[widget_type]
-			local size = template.size
-			local pass_template = template.pass_template
+			local size = template.size_function and template.size_function(self, entry) or template.size
+			local pass_template_function = template.pass_template_function
+			local pass_template = pass_template_function and pass_template_function(self, entry, size) or template.pass_template
 
 			if pass_template and not widget_definitions[widget_type] then
 				local scenegraph_definition = definitions.scenegraph_definition
@@ -469,9 +470,20 @@ OptionsView.update = function (self, dt, t, input_service, view_data)
 		end
 	end
 
-	if self._tooltip_data and self._tooltip_data.widget and not self._tooltip_data.widget.content.hotspot.is_hover then
+	if self._tooltip_data and self._tooltip_data.widget and (self._using_cursor_navigation and not self._tooltip_data.widget.content.hotspot.is_hover or not self._using_cursor_navigation and not self._tooltip_data.widget.content.hotspot.is_focused) then
 		self._tooltip_data = {}
 		self._widgets_by_name.tooltip.content.visible = false
+	end
+
+	local active_views = Managers.ui:active_views()
+	local active_view = active_views and active_views[#active_views]
+
+	if self._tooltip_data and self._tooltip_data.widget and active_view then
+		if active_view ~= self.view_name and self._widgets_by_name.tooltip.content.visible then
+			self._widgets_by_name.tooltip.content.visible = false
+		elseif active_view == self.view_name and self._tooltip_data.widget and not self._widgets_by_name.tooltip.content.visible then
+			self._widgets_by_name.tooltip.content.visible = true
+		end
 	end
 
 	return OptionsView.super.update(self, dt, t, input_service)
@@ -850,7 +862,6 @@ OptionsView._set_tooltip_data = function (self, widget)
 		}
 		self._widgets_by_name.tooltip.offset[1] = x_pos - width * 0.8
 		self._widgets_by_name.tooltip.offset[2] = math.max(new_y - height, 20)
-		self._widgets_by_name.tooltip.content.visible = true
 	end
 end
 
@@ -925,6 +936,7 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 	local widget = nil
 	local template = ContentBlueprints[widget_type]
 	local size = template.size_function and template.size_function(self, config) or template.size
+	config.size = size
 	local indentation_level = config.indentation_level or 0
 	local indentation_spacing = OptionsViewSettings.indentation_spacing * indentation_level
 	local new_size = {
@@ -932,7 +944,7 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 		size[2]
 	}
 	local pass_template_function = template.pass_template_function
-	local pass_template = pass_template_function and pass_template_function(self, config, new_size) or template.pass_template
+	local pass_template = pass_template_function and pass_template_function(self, config, size) or template.pass_template
 	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, new_size)
 	local name = "widget_" .. suffix
 
@@ -1073,10 +1085,34 @@ OptionsView.cb_on_settings_pressed = function (self, widget, entry)
 		pressed_function(self, widget, entry)
 	end
 
+	if self._selected_settings_widget then
+		local selected_widget = self._selected_settings_widget
+		selected_widget.offset[3] = 0
+		local dependent_focus_ids = selected_widget.content and selected_widget.content.entry and selected_widget.content.entry.dependent_focus_ids
+
+		if dependent_focus_ids then
+			for i = 1, #dependent_focus_ids do
+				local id = dependent_focus_ids[i]
+				self._current_settings_widgets_by_id[id].offset[3] = 0
+			end
+		end
+	end
+
 	if not entry.ignore_focus then
 		local widget_name = widget.name
 		local selected_widget = self:_set_exclusive_focus_on_grid_widget(widget_name)
-		selected_widget.offset[3] = selected_widget and 90 or 0
+
+		if selected_widget then
+			selected_widget.offset[3] = 90
+			local dependent_focus_ids = selected_widget.content.entry and selected_widget.content.entry.dependent_focus_ids
+
+			if dependent_focus_ids then
+				for i = 1, #dependent_focus_ids do
+					local id = dependent_focus_ids[i]
+					self._current_settings_widgets_by_id[id].offset[3] = 90
+				end
+			end
+		end
 	end
 end
 

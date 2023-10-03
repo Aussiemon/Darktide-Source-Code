@@ -13,6 +13,7 @@ MoveablePlatformExtension.init = function (self, extension_init_context, unit, e
 	self._unit = unit
 	self._network_story_manager = Managers.state.network_story
 	self._story_name = nil
+	self._story_changed = false
 	self._story_direction = MOVEABLE_PLATFORM_DIRECTION.none
 	self._walls = {}
 	self._player_side = nil
@@ -42,6 +43,8 @@ MoveablePlatformExtension.init = function (self, extension_init_context, unit, e
 	self._broadphase_system = Managers.state.extension:system("broadphase_system")
 	local broadphase_system = extension_manager:system("broadphase_system")
 	self._broadphase = broadphase_system.broadphase
+	self._chunk_lod_manager = Managers.state.chunk_lod
+	self._locked_chunk_lod = false
 
 	self:_update_broadphase()
 
@@ -470,6 +473,18 @@ MoveablePlatformExtension._lock_units_on_platform = function (self)
 	if has_passengers then
 		self._units_locked = true
 	end
+
+	local camera_player = self._chunk_lod_manager:player()
+
+	if camera_player then
+		local camera_player_unit = camera_player.player_unit
+
+		if self._passenger_units[camera_player_unit] then
+			self._chunk_lod_manager:set_level_unit(self._unit)
+
+			self._locked_chunk_lod = true
+		end
+	end
 end
 
 MoveablePlatformExtension.units_locked = function (self)
@@ -564,6 +579,12 @@ MoveablePlatformExtension._unlock_units_on_platform = function (self)
 	self._units_locked = false
 
 	self:_unparent_all_passengers()
+
+	if self._locked_chunk_lod then
+		self._chunk_lod_manager:set_level_unit(nil)
+
+		self._locked_chunk_lod = false
+	end
 end
 
 MoveablePlatformExtension.add_passenger = function (self, unit, place_on_platform)
@@ -642,6 +663,35 @@ MoveablePlatformExtension._unparent_all_passengers = function (self)
 	table.clear(self._passenger_units)
 end
 
+MoveablePlatformExtension.set_story = function (self, story_name)
+	self._network_story_manager:unregister_story(self._story_name, self._level)
+
+	self._story_name = story_name
+
+	self._network_story_manager:register_story(story_name, self._level)
+
+	if self._is_server then
+		local unit = self._unit
+		local unit_level_index = Managers.state.unit_spawner:level_index(unit)
+		local game_session_manager = Managers.state.game_session
+
+		game_session_manager:send_rpc_clients("rpc_moveable_platform_set_story", unit_level_index, story_name)
+	end
+
+	self._network_story_manager:play_story(story_name, self._level, 0)
+
+	self._story_changed = true
+	self._story_length = self._network_story_manager:get_story_length(story_name, self._level)
+end
+
+MoveablePlatformExtension.get_story = function (self)
+	return self._story_name
+end
+
+MoveablePlatformExtension.should_sync_story_name = function (self)
+	return self._story_changed
+end
+
 MoveablePlatformExtension.move_forward = function (self)
 	self:_set_direction(MOVEABLE_PLATFORM_DIRECTION.forward)
 end
@@ -668,6 +718,11 @@ MoveablePlatformExtension.destroy = function (self)
 	end
 
 	self._overlap_result[self._box] = overlap_manager:remove_listening_actor(self._box)
+
+	if self._locked_chunk_lod then
+		self._chunk_lod_manager:set_level_unit(nil)
+	end
+
 	self._unit = nil
 	self._story_name = nil
 	self._walls = nil

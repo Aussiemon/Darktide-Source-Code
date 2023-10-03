@@ -57,7 +57,7 @@ InventoryView.init = function (self, settings, context)
 	self._wallet_widgets = {}
 	self._using_cursor_navigation = Managers.ui:using_cursor_navigation()
 
-	InventoryView.super.init(self, Definitions, settings)
+	InventoryView.super.init(self, Definitions, settings, context)
 
 	self._allow_close_hotkey = false
 	self._pass_input = true
@@ -85,7 +85,6 @@ InventoryView.on_enter = function (self)
 
 	self:_register_event("event_inventory_view_set_camera_focus")
 	self:_register_event("event_force_wallet_update")
-	self:_register_event("event_inventory_profile_preset_changed")
 end
 
 InventoryView._get_inventory_item_by_id = function (self, gear_id)
@@ -144,7 +143,7 @@ InventoryView._on_item_hover_start = function (self, item)
 		local item_type = item and item.item_type
 		local is_gear = item_type == "GEAR_UPPERBODY" or item_type == "GEAR_LOWERBODY" or item_type == "GEAR_HEAD" or item_type == "GEAR_EXTRA_COSMETIC" or item_type == "END_OF_ROUND" or item_type == "PORTRAIT_FRAME" or item_type == "CHARACTER_INSIGNIA" or item_type == "EMOTE" or item_type == "END_OF_ROUND"
 
-		if not is_gear then
+		if not is_gear and not item.is_fallback_item then
 			self._item_stats:present_item(item)
 		end
 	end
@@ -415,10 +414,6 @@ InventoryView.event_force_wallet_update = function (self)
 	self:_request_wallets_update()
 end
 
-InventoryView.event_inventory_profile_preset_changed = function (self, missing_slots)
-	self._missing_preset_content = missing_slots
-end
-
 InventoryView.cb_on_grid_entry_right_pressed = function (self, widget, element)
 	if not self._is_own_player or self._is_readonly then
 		return
@@ -471,7 +466,8 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 					animation_event_name_suffix = animation_event_name_suffix,
 					animation_event_variable_data = animation_event_variable_data,
 					item_type = item_type,
-					parent = self._parent
+					parent = self._parent,
+					new_items_gear_ids = self._parent and self._parent._new_items_gear_ids
 				}
 
 				Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
@@ -489,7 +485,8 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 				preview_profile_equipped_items = self._preview_profile_equipped_items,
 				selected_slot = slot,
 				initial_rotation = initial_rotation,
-				parent = self._parent
+				parent = self._parent,
+				new_items_gear_ids = self._parent and self._parent._new_items_gear_ids
 			}
 
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
@@ -511,7 +508,8 @@ InventoryView.cb_on_grid_entry_pressed = function (self, widget, element)
 			player_specialization = self._chosen_specialization,
 			preview_profile_equipped_items = self._preview_profile_equipped_items,
 			selected_slots = slots,
-			parent = self._parent
+			parent = self._parent,
+			new_items_gear_ids = self._parent and self._parent._new_items_gear_ids
 		}
 
 		Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
@@ -757,10 +755,6 @@ InventoryView._create_entry_widget_from_config = function (self, config, suffix,
 		if init then
 			init(self, widget, config, callback_name, secondary_callback_name)
 		end
-
-		if widget.content.hotspot then
-			widget.content.hotspot.disabled = not self._is_own_player or self._is_readonly
-		end
 	end
 
 	if widget then
@@ -798,12 +792,21 @@ InventoryView._draw_loadout_widgets = function (self, dt, t, input_service, ui_r
 		UIWidget.draw(widget, ui_renderer)
 	end
 
-	if exclamation_widgets and self._missing_preset_content and self._entry_animation_id and not self:_is_animation_active(self._entry_animation_id) then
+	local invalid_slots = self._parent and self._parent._invalid_slots
+	local modified_slots = self._parent and self._parent._modified_slots
+
+	if exclamation_widgets and (invalid_slots or modified_slots) and self._entry_animation_id and not self:_is_animation_active(self._entry_animation_id) then
 		for i = 1, #exclamation_widgets do
 			local widget = exclamation_widgets[i]
 			local slot_name = widget.content.slot.name
 
-			if self._missing_preset_content[slot_name] then
+			if invalid_slots[slot_name] then
+				widget.content.modified_content = false
+
+				UIWidget.draw(widget, ui_renderer)
+			elseif modified_slots[slot_name] then
+				widget.content.modified_content = true
+
 				UIWidget.draw(widget, ui_renderer)
 			end
 		end
@@ -914,6 +917,11 @@ end
 InventoryView._update_blueprint_widgets = function (self, widgets, dt, t, input_service, ui_renderer)
 	if widgets then
 		local allow_item_hover_information = self._allow_item_hover_information
+
+		if self._parent and self._parent.is_inventory_synced and not self._parent:is_inventory_synced() then
+			allow_item_hover_information = false
+		end
+
 		local handle_input = false
 		local hovered_item = nil
 
@@ -1214,7 +1222,7 @@ InventoryView.on_resolution_modified = function (self, scale)
 end
 
 InventoryView.update = function (self, dt, t, input_service)
-	if self:profile_preset_handling_input() then
+	if self:profile_preset_handling_input() or self._parent and self._parent.is_inventory_synced and not self._parent:is_inventory_synced() then
 		input_service = input_service:null_service()
 	end
 
@@ -1264,7 +1272,7 @@ InventoryView.update = function (self, dt, t, input_service)
 end
 
 InventoryView.draw = function (self, dt, t, input_service, layer)
-	if self:profile_preset_handling_input() then
+	if self:profile_preset_handling_input() or self._parent and self._parent.is_inventory_synced and not self._parent:is_inventory_synced() then
 		input_service = input_service:null_service()
 	end
 

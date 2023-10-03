@@ -4,10 +4,16 @@ local inventory_background_view = {
 	total_blur_duration = 0.5,
 	timer_name = "ui",
 	viewport_type = "default",
+	default_slot = "slot_primary",
 	viewport_name = "ui_inventory_viewport",
 	viewport_layer = 1,
 	level_name = "content/levels/ui/inventory/inventory",
+	loadout_update_timeout = 3,
 	world_name = "ui_inventory",
+	allowed_slots = {
+		"slot_primary",
+		"slot_secondary"
+	},
 	ignored_slots = {
 		"slot_pocketable",
 		"slot_luggable",

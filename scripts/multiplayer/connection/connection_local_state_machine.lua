@@ -12,6 +12,7 @@ local LocalProfilesSyncState = require("scripts/multiplayer/connection/local_sta
 local LocalRequestHostTypeState = require("scripts/multiplayer/connection/local_states/local_request_host_type_state")
 local LocalSlotClaimState = require("scripts/multiplayer/connection/local_states/local_slot_claim_state")
 local LocalSlotReserveState = require("scripts/multiplayer/connection/local_states/local_slot_reserve_state")
+local LocalTickRateSyncState = require("scripts/multiplayer/connection/local_states/local_tick_rate_sync_state")
 local LocalVersionCheckState = require("scripts/multiplayer/connection/local_states/local_version_check_state")
 local LocalWaitForClaimState = require("scripts/multiplayer/connection/local_states/local_wait_for_claim_state")
 local StateMachine = require("scripts/foundation/utilities/state_machine")
@@ -72,9 +73,12 @@ ConnectionLocalStateMachine.init = function (self, event_delegate, engine_lobby,
 	state_machine:add_transition("LocalSlotClaimState", "slot rejected", LocalDisconnectedState)
 	state_machine:add_transition("LocalSlotClaimState", "timeout", LocalDisconnectedState)
 	state_machine:add_transition("LocalSlotClaimState", "disconnected", LocalDisconnectedState)
-	state_machine:add_transition("LocalPlayersSyncState", "players synced", LocalEacCheckState)
+	state_machine:add_transition("LocalPlayersSyncState", "players synced", LocalTickRateSyncState)
 	state_machine:add_transition("LocalPlayersSyncState", "timeout", LocalDisconnectedState)
 	state_machine:add_transition("LocalPlayersSyncState", "disconnected", LocalDisconnectedState)
+	state_machine:add_transition("LocalTickRateSyncState", "tick_rate synced", LocalEacCheckState)
+	state_machine:add_transition("LocalTickRateSyncState", "timeout", LocalDisconnectedState)
+	state_machine:add_transition("LocalTickRateSyncState", "disconnected", LocalDisconnectedState)
 	state_machine:add_transition("LocalEacCheckState", "eac approved", LocalProfilesSyncState)
 	state_machine:add_transition("LocalEacCheckState", "eac mismatch", LocalDisconnectedState)
 	state_machine:add_transition("LocalEacCheckState", "timeout", LocalDisconnectedState)
@@ -122,6 +126,10 @@ end
 
 ConnectionLocalStateMachine.max_members = function (self)
 	return self._shared_state.max_members
+end
+
+ConnectionLocalStateMachine.tick_rate = function (self)
+	return self._shared_state.tick_rate
 end
 
 ConnectionLocalStateMachine.session_seed = function (self)

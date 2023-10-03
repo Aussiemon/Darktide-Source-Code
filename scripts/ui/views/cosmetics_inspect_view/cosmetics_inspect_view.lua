@@ -21,6 +21,7 @@ local CosmeticsInspectView = class("CosmeticsInspectView", "BaseView")
 
 CosmeticsInspectView.init = function (self, settings, context)
 	self._context = context
+	self._preview_player = context.preview_player or self:_player()
 	local is_in_debug = context.debug
 	local class_name = self.__class_name
 	self._unique_id = class_name .. "_" .. string.gsub(tostring(self), "table: ", "")
@@ -831,7 +832,7 @@ CosmeticsInspectView._start_preview_item = function (self)
 		end
 
 		local title_item_data = {
-			item_type = self._bundle_data.type,
+			item_type = Localize(UISettings.item_type_localization_lookup[Utf8.upper(self._bundle_data.type)]),
 			display_name = self._bundle_data.title
 		}
 

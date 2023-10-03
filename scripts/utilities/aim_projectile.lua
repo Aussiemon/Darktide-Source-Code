@@ -1,6 +1,5 @@
-local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
-local locomotion_states = ProjectileLocomotionSettings.states
 local AimProjectile = {}
+local PI = math.pi
 local parameter_table = {}
 
 AimProjectile.aim_parameters = function (initial_position, initial_rotation, look_rotation, locomotion_template, throw_type, time_in_action)
@@ -8,12 +7,12 @@ AimProjectile.aim_parameters = function (initial_position, initial_rotation, loo
 	local local_shoot_offset = Vector3(throw_config.offset_right or 0, throw_config.offset_forward or 0, throw_config.offset_up or 0)
 	local offset = Quaternion.rotate(look_rotation, local_shoot_offset)
 	local position = initial_position + offset
-	local speed_inital = throw_config.speed_inital
+	local speed_initial = throw_config.speed_initial
 	local speed_maximal = throw_config.speed_maximal
 	local speed_charge_duration = throw_config.speed_charge_duration
 
-	if speed_maximal < speed_inital then
-		speed_maximal = speed_inital
+	if speed_maximal < speed_initial then
+		speed_maximal = speed_initial
 	end
 
 	local speed = nil
@@ -23,7 +22,7 @@ AimProjectile.aim_parameters = function (initial_position, initial_rotation, loo
 	else
 		local alpha = time_in_action / speed_charge_duration
 		alpha = math.clamp(alpha, 0, 1)
-		speed = math.lerp(speed_inital, speed_maximal, alpha)
+		speed = math.lerp(speed_initial, speed_maximal, alpha)
 	end
 
 	local rotation_offset_initial = throw_config.rotation_offset_initial:unbox()
@@ -49,8 +48,8 @@ AimProjectile.aim_parameters = function (initial_position, initial_rotation, loo
 		local current_pitch = Quaternion.pitch(look_rotation)
 		local offset_pitch = Quaternion.pitch(offset)
 		local offseted_pitch = current_pitch + offset_pitch + current_pitch * 0.5
-		local pitch_limit = math.pi / 2 * 0.73
-		local actual_pitch = math.min(offseted_pitch, math.pi / 2 * 0.73)
+		local pitch_limit = PI / 2 * 0.73
+		local actual_pitch = math.min(offseted_pitch, PI / 2 * 0.73)
 		local pitch_scale = math.max(actual_pitch - pitch_limit * 0.75, 0) / (pitch_limit * 0.25)
 		speed = speed + 0.5 * speed * pitch_scale * pitch_scale
 		local yaw = Quaternion.yaw(look_rotation)

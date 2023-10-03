@@ -2,11 +2,11 @@ require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Animation = require("scripts/utilities/animation")
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local DaemonhostSettings = require("scripts/settings/specials/daemonhost_settings")
+local ChaosDaemonhostSettings = require("scripts/settings/monster/chaos_daemonhost_settings")
 local MinionDeath = require("scripts/utilities/minion_death")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local Vo = require("scripts/utilities/vo")
-local STAGES = DaemonhostSettings.stages
+local STAGES = ChaosDaemonhostSettings.stages
 local BtChaosDaemonhostDieAction = class("BtChaosDaemonhostDieAction", "BtNode")
 
 BtChaosDaemonhostDieAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)

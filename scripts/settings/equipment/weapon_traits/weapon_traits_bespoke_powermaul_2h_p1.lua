@@ -4,21 +4,25 @@ local stat_buffs = BuffSettings.stat_buffs
 templates.weapon_trait_bespoke_powermaul_2h_p1_stacking_increase_impact_on_hit = {
 	weapon_trait_bespoke_powermaul_2h_p1_stacking_increase_impact_on_hit_parent = {
 		{
+			child_duration = 3.5,
 			stat_buffs = {
-				[stat_buffs.melee_impact_modifier] = 0.1
+				[stat_buffs.melee_impact_modifier] = 0.19
 			}
 		},
 		{
+			child_duration = 3.5,
 			stat_buffs = {
-				[stat_buffs.melee_impact_modifier] = 0.15
+				[stat_buffs.melee_impact_modifier] = 0.21
 			}
 		},
 		{
+			child_duration = 3.5,
 			stat_buffs = {
-				[stat_buffs.melee_impact_modifier] = 0.2
+				[stat_buffs.melee_impact_modifier] = 0.23
 			}
 		},
 		{
+			child_duration = 3.5,
 			stat_buffs = {
 				[stat_buffs.melee_impact_modifier] = 0.25
 			}
@@ -100,6 +104,30 @@ templates.weapon_trait_bespoke_powermaul_2h_p1_staggered_targets_receive_increas
 templates.weapon_trait_bespoke_powermaul_2h_p1_taunt_target_on_hit = {
 	weapon_trait_bespoke_powermaul_2h_p1_taunt_target_on_hit = {
 		{}
+	}
+}
+templates.weapon_trait_bespoke_powermaul_2h_p1_rending_vs_staggered = {
+	weapon_trait_bespoke_powermaul_2h_p1_rending_vs_staggered = {
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.rending_vs_staggered_multiplier] = 0.1
+			}
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.rending_vs_staggered_multiplier] = 0.15
+			}
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.rending_vs_staggered_multiplier] = 0.2
+			}
+		},
+		{
+			conditional_stat_buffs = {
+				[stat_buffs.rending_vs_staggered_multiplier] = 0.25
+			}
+		}
 	}
 }
 

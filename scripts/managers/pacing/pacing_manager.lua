@@ -12,6 +12,7 @@ PacingManager.init = function (self, world, nav_world, level_name, level_seed, p
 	self._total_challenge_rating = 0
 	self._num_aggroed_minions = 0
 	self._aggroed_minions = {}
+	self._ramp_up_enabled = true
 	self._switch_state_conditions = {
 		back = {},
 		next = {}
@@ -32,6 +33,8 @@ PacingManager.init = function (self, world, nav_world, level_name, level_seed, p
 	self._disabled = false
 	self._backend_pacing_control = pacing_control
 	self._minions_listening_for_player_deaths = {}
+	self._saved_challenge_ratings = {}
+	self._frozen_spawn_types = {}
 end
 
 PacingManager.on_gameplay_post_init = function (self, level_name)
@@ -132,7 +135,10 @@ PacingManager.update = function (self, dt, t)
 		self._horde_pacing:update(dt, t, side_id, target_side_id)
 		self._specials_pacing:update(dt, t, side_id, target_side_id)
 		self._monster_pacing:update(dt, t, side_id, target_side_id)
-		self:_update_ramp_up_frequency(dt, target_side_id)
+
+		if self._ramp_up_enabled then
+			self:_update_ramp_up_frequency(dt, target_side_id)
+		end
 	end
 
 	local switch_state_conditions = self._switch_state_conditions
@@ -198,7 +204,18 @@ PacingManager._change_state = function (self, t, state_name)
 	end
 
 	local allowed_spawn_types = state_setting.allowed_spawn_types
+	local override_allowed_spawn_type_settings = self._override_allowed_spawn_type_settings
+
+	if override_allowed_spawn_type_settings then
+		allowed_spawn_types = override_allowed_spawn_type_settings[state_name]
+	end
+
 	self._allowed_spawn_types = allowed_spawn_types
+
+	if t > 0 and self._state ~= state_name and not self._in_safe_zone then
+		self._state_entered_t = t
+	end
+
 	self._state = state_name
 	self._state_setting = state_setting
 	self._state_order = self._state_orders[state_name]
@@ -228,6 +245,10 @@ PacingManager.pause_spawn_type = function (self, spawn_type, paused, reason, opt
 	end
 end
 
+PacingManager.override_allowed_spawn_types = function (self, override_settings)
+	self._override_allowed_spawn_type_settings = override_settings
+end
+
 PacingManager.set_enabled = function (self, enabled)
 	self._disabled = not enabled
 end
@@ -238,6 +259,10 @@ end
 
 PacingManager._event_intro_cinematic_started = function (self, cinematic_name)
 	self._disabled = true
+end
+
+PacingManager.is_enabled = function (self)
+	return not self._disabled
 end
 
 PacingManager._event_intro_cinematic_played = function (self, cinematic_name)
@@ -284,6 +309,10 @@ PacingManager.add_tension = function (self, tension, optional_player_unit, reaso
 	if decay_tension_delay then
 		local t = Managers.time:time("gameplay")
 		self._decay_tension_delay_duration = t + decay_tension_delay
+	end
+
+	if self._tension_modifier then
+		tension = tension * self._tension_modifier
 	end
 
 	self._tension = math.min(self._tension + tension, self._max_tension)
@@ -435,6 +464,7 @@ PacingManager._update_ramp_up_frequency = function (self, dt, target_side_id)
 
 		if self._max_ramp_up_duration <= 0 then
 			self._current_ramp_up_duration = ramp_duration
+			self._max_ramp_up_duration = nil
 		end
 	end
 
@@ -460,15 +490,40 @@ PacingManager.state = function (self)
 	return self._state
 end
 
+PacingManager._get_challenge_rating = function (self, unit)
+	if self._saved_challenge_ratings[unit] then
+		return self._saved_challenge_ratings[unit]
+	end
+
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	local breed = unit_data_extension:breed()
+	local challenge_rating = breed.challenge_rating
+
+	if not challenge_rating then
+		return
+	end
+
+	if breed.is_boss then
+		local boss_extension = ScriptUnit.has_extension(unit, "boss_system")
+		local is_weakened = boss_extension and boss_extension:is_weakened()
+
+		if is_weakened then
+			challenge_rating = challenge_rating * 0.2
+		end
+	end
+
+	return challenge_rating
+end
+
 PacingManager.add_aggroed_minion = function (self, unit)
 	local aggroed_minions = self._aggroed_minions
 
 	if not aggroed_minions[unit] then
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local challenge_rating = unit_data_extension:breed().challenge_rating
+		local challenge_rating = self:_get_challenge_rating(unit)
 
 		if challenge_rating then
 			self._total_challenge_rating = self._total_challenge_rating + challenge_rating
+			self._saved_challenge_ratings[unit] = challenge_rating
 		end
 
 		self._num_aggroed_minions = self._num_aggroed_minions + 1
@@ -481,6 +536,9 @@ PacingManager.add_aggroed_minion = function (self, unit)
 			self:pause_spawn_type("hordes", false)
 			self:pause_spawn_type("trickle_hordes", false)
 			self:set_in_safe_zone(false)
+
+			local t = Managers.time:time("gameplay")
+			self._state_entered_t = t
 		end
 	end
 end
@@ -489,15 +547,15 @@ PacingManager.remove_aggroed_minion = function (self, unit)
 	local aggroed_minions = self._aggroed_minions
 
 	if aggroed_minions[unit] then
-		local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-		local challenge_rating = unit_data_extension:breed().challenge_rating
+		local challenge_rating = self:_get_challenge_rating(unit)
 
 		if challenge_rating then
-			self._total_challenge_rating = self._total_challenge_rating - challenge_rating
+			self._total_challenge_rating = math.max(self._total_challenge_rating - challenge_rating, 0)
 		end
 
 		self._num_aggroed_minions = self._num_aggroed_minions - 1
 		aggroed_minions[unit] = nil
+		self._saved_challenge_ratings[unit] = nil
 
 		self._side_system:remove_aggroed_minion(unit)
 	end
@@ -511,6 +569,10 @@ end
 
 PacingManager.num_aggroed_minions = function (self)
 	return self._num_aggroed_minions
+end
+
+PacingManager.aggroed_minions = function (self)
+	return self._aggroed_minions
 end
 
 PacingManager.num_aggroed_monsters = function (self)
@@ -529,6 +591,10 @@ end
 
 PacingManager.add_trickle_horde = function (self, template)
 	self._horde_pacing:add_trickle_horde(template)
+end
+
+PacingManager.set_horde_rate_modifier = function (self, horde_rate_modifier)
+	self._horde_pacing:set_rate_modifier(horde_rate_modifier)
 end
 
 PacingManager.add_pacing_modifiers = function (self, modify_settings)
@@ -591,6 +657,18 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 		self._specials_pacing:set_chance_of_coordinated_strike(chance_of_coordinated_strike)
 	end
 
+	local specials_always_move_timer = modify_settings.specials_always_move_timer
+
+	if specials_always_move_timer then
+		self._specials_pacing:set_always_move_timer(specials_always_move_timer)
+	end
+
+	local specials_move_timer_when_challenge_rating_above = modify_settings.specials_move_timer_when_challenge_rating_above
+
+	if specials_move_timer_when_challenge_rating_above then
+		self._specials_pacing:set_move_timer_when_challenge_rating_above(specials_move_timer_when_challenge_rating_above)
+	end
+
 	local max_of_same_override = modify_settings.max_of_same_override
 
 	if max_of_same_override then
@@ -603,6 +681,12 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 
 	if monsters_per_travel_distance and monster_breed_name then
 		self._monster_pacing:fill_spawns_by_travel_distance(monster_breed_name, monster_spawn_type, monsters_per_travel_distance)
+	end
+
+	local boss_patrols_per_travel_distance = modify_settings.boss_patrols_per_travel_distance
+
+	if boss_patrols_per_travel_distance then
+		self._monster_pacing:fill_boss_patrols_by_travel_distance(boss_patrols_per_travel_distance)
 	end
 
 	local override_faction = modify_settings.override_faction
@@ -666,28 +750,46 @@ PacingManager.add_pacing_modifiers = function (self, modify_settings)
 		self._specials_pacing:set_monster_spawn_config(specials_monster_spawn_config)
 	end
 
-	local roamer_stimmed_config = modify_settings.roamer_stimmed_config
+	local num_monsters_override = modify_settings.num_monsters_override
 
-	if roamer_stimmed_config then
-		self._roamer_pacing:set_stimmed_config(roamer_stimmed_config)
+	if num_monsters_override then
+		self._monster_pacing:set_num_monsters_override(num_monsters_override)
 	end
 
-	local specials_stimmed_config = modify_settings.specials_stimmed_config
+	local num_witches_override = modify_settings.num_witches_override
 
-	if specials_stimmed_config then
-		self._specials_pacing:set_stimmed_config(specials_stimmed_config)
+	if num_witches_override then
+		self._monster_pacing:set_num_witches_override(num_witches_override)
 	end
 
-	local trickle_horde_stimmed_config = modify_settings.trickle_horde_stimmed_config
+	local num_boss_patrol_override = modify_settings.num_boss_patrol_override
 
-	if trickle_horde_stimmed_config then
-		self._horde_pacing:set_stimmed_config(trickle_horde_stimmed_config)
+	if num_boss_patrol_override then
+		self._monster_pacing:set_num_boss_patrol_override(num_boss_patrol_override)
 	end
 
-	local boss_patrol_stimmed_config = modify_settings.boss_patrol_stimmed_config
+	local tag_limit_bonus = modify_settings.tag_limit_bonus
 
-	if boss_patrol_stimmed_config then
-		self._monster_pacing:set_stimmed_config(boss_patrol_stimmed_config)
+	if tag_limit_bonus then
+		self:set_roamer_tag_limit_bonus(tag_limit_bonus)
+	end
+
+	local terror_event_point_multiplier = modify_settings.terror_event_point_multiplier
+
+	if terror_event_point_multiplier then
+		Managers.state.terror_event:set_terror_event_point_modifier(terror_event_point_multiplier)
+	end
+
+	local override_allowed_spawn_types = modify_settings.override_allowed_spawn_types
+
+	if override_allowed_spawn_types then
+		self:override_allowed_spawn_types(override_allowed_spawn_types)
+	end
+
+	local tension_modifier = modify_settings.tension_modifier
+
+	if tension_modifier then
+		self._tension_modifier = tension_modifier
 	end
 end
 
@@ -729,10 +831,16 @@ end
 
 PacingManager.freeze_specials_pacing = function (self, enabled)
 	self._specials_pacing:freeze(enabled)
+
+	self._frozen_spawn_types.specials = enabled
 end
 
 PacingManager.roamer_traverse_logic = function (self)
 	return self._roamer_pacing:traverse_logic()
+end
+
+PacingManager.set_roamer_tag_limit_bonus = function (self, tag_limit_bonus)
+	return self._roamer_pacing:set_tag_limit_bonus(tag_limit_bonus)
 end
 
 PacingManager.get_backend_pacing_control_flag = function (self, flag)
@@ -757,6 +865,33 @@ end
 
 PacingManager.set_specials_force_move_timer = function (self, should_force_move_timer)
 	return self._specials_pacing:set_force_move_timer(should_force_move_timer)
+end
+
+PacingManager.set_ramp_up_enabled = function (self, is_enabled)
+	self._ramp_up_enabled = is_enabled
+end
+
+PacingManager.force_coordinated_special_strike = function (self, timer, num_breeds)
+	self._specials_pacing:force_coordinated_strike(timer, num_breeds)
+end
+
+PacingManager.state_duration = function (self)
+	if not self._state_entered_t then
+		return 0
+	end
+
+	local t = Managers.time:time("gameplay")
+	local state_duration = t - self._state_entered_t
+
+	return state_duration
+end
+
+PacingManager.set_specials_pacing_spawner_groups = function (self, spawner_groups)
+	self._specials_pacing:set_spawner_groups(spawner_groups)
+end
+
+PacingManager.reset_specials_pacing_spawner_groups = function (self)
+	self._specials_pacing:set_spawner_groups(nil)
 end
 
 return PacingManager

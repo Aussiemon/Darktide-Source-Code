@@ -12,6 +12,10 @@ ValkyrieCustomization.init = function (self, unit)
 	self:enable(unit)
 end
 
+ValkyrieCustomization.editor_validate = function (self, unit)
+	return true, ""
+end
+
 ValkyrieCustomization._attach_units = function (self, unit, world)
 	self:_build_valkyrie(1, unit, world, self:get_data(unit, "body_node"), self:_combine_string(self:get_data(unit, "body")))
 	self:_build_valkyrie(2, unit, world, self:get_data(unit, "cockpit_node"), self:_combine_string(self:get_data(unit, "cockpit")))

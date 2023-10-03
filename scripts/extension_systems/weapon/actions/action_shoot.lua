@@ -16,8 +16,11 @@ local Spread = require("scripts/utilities/spread")
 local Suppression = require("scripts/utilities/attack/suppression")
 local Sway = require("scripts/utilities/sway")
 local Vo = require("scripts/utilities/vo")
+local TalentSettings = require("scripts/settings/talent/talent_settings_new")
+local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local ActionShoot = class("ActionShoot", "ActionWeaponBase")
 local proc_events = BuffSettings.proc_events
+local special_rules = SpecialRulesSetting.special_rules
 local DEFUALT_NUM_CRITICAL_SHOTS = 1
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local EMPTY_TABLE = {}
@@ -29,7 +32,7 @@ local EXTERNAL_PROPERTIES = {}
 local TAIL_SOURCE_POS = Vector3Box(0, 0, 0)
 local DONT_SYNC_TO_SENDER = true
 local SYNC_TO_CLIENTS = true
-local _fire_rate_settings, _set_charge_level, _trigger_gear_sound, _trigger_exclusive_gear_sound, _trigger_gear_tail_sound, _trigger_critical_sound, _update_alt_fire_state = nil
+local _set_charge_level, _trigger_gear_sound, _trigger_exclusive_gear_sound, _trigger_gear_tail_sound, _trigger_critical_sound, _update_alt_fire_state = nil
 
 ActionShoot.init = function (self, action_context, action_params, action_settings)
 	ActionShoot.super.init(self, action_context, action_params, action_settings)
@@ -45,6 +48,7 @@ ActionShoot.init = function (self, action_context, action_params, action_setting
 	self._alternate_fire_component = action_context.unit_data_extension:write_component("alternate_fire")
 	self._shooting_status_component = unit_data_extension:write_component("shooting_status")
 	self._buff_extension = ScriptUnit.extension(self._player_unit, "buff_system")
+	self._specialization_extension = ScriptUnit.has_extension(self._player_unit, "specialization_system")
 	local player_unit = self._player_unit
 	local first_person_unit = self._first_person_unit
 	local physics_world = self._physics_world
@@ -55,6 +59,7 @@ ActionShoot.init = function (self, action_context, action_params, action_setting
 	self._eject_fx_spawner_name = weapon.fx_sources._eject
 	self._eject_fx_spawner_secondary_name = weapon.fx_sources._eject_secondary
 	self._expression_vo_triggered = false
+	self._leadbelcher_shot = false
 	local fx_settings = action_settings.fx
 
 	if fx_settings then
@@ -75,12 +80,12 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 	local action_component = self._action_component
 	local weapon_tweak_templates_component = self._weapon_tweak_templates_component
 	local fx_extension = self._fx_extension
-	local weapon_extension = self._weapon_extension
 	local muzzle_fx_source_name = self:_muzzle_fx_source()
 	local weapon_template = self._weapon_template
-	local fire_rate_settings = _fire_rate_settings(weapon_extension)
+	local fire_rate_settings = self:_fire_rate_settings()
 	local fire_time = fire_rate_settings.fire_time or 0
 	local auto_fire_time = fire_rate_settings.auto_fire_time
+	auto_fire_time = auto_fire_time and self:_scale_auto_fire_time_with_buffs(auto_fire_time)
 	local max_shots = fire_rate_settings.max_shots
 	self._is_auto_fire_weapon = (max_shots == nil or max_shots == math.huge) and not not auto_fire_time
 	local combo_count = params.combo_count
@@ -88,8 +93,30 @@ ActionShoot.start = function (self, action_settings, t, time_scale, params)
 
 	self:_start_warp_charge_action(t)
 
+	local specialization_extension = self._specialization_extension
+	local check_leadbelcher = specialization_extension:has_special_rule(special_rules.ogryn_leadbelcher)
+	local check_leadbelcher_improved = specialization_extension:has_special_rule(special_rules.ogryn_leadbelcher_improved)
+
+	if check_leadbelcher or check_leadbelcher_improved then
+		local leadbelcher_chance = 0
+
+		if check_leadbelcher then
+			leadbelcher_chance = TalentSettings.ogryn_1.passive_1.free_ammo_proc_chance
+		elseif check_leadbelcher_improved then
+			leadbelcher_chance = TalentSettings.ogryn_1.spec_passive_2.increased_passive_proc_chance
+		end
+
+		self._leadbelcher_shot = self:_check_for_lucky_strike(false, true, leadbelcher_chance)
+	end
+
 	if not self._is_auto_fire_weapon then
-		self:_check_for_critical_strike(false, true)
+		local leadbelcher_auto_crit = false
+
+		if self._leadbelcher_shot then
+			leadbelcher_auto_crit = specialization_extension:has_special_rule(special_rules.ogryn_leadbelcher_auto_crit)
+		end
+
+		self:_check_for_critical_strike(false, true, leadbelcher_auto_crit)
 	end
 
 	self:_set_fire_state(t, "waiting_to_shoot")
@@ -135,7 +162,7 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 
 	if action_settings.ammunition_usage then
 		local buff_keywords = BuffSettings.keywords
-		local no_ammo_consumption = self._buff_extension:has_keyword(buff_keywords.no_ammo_consumption)
+		local no_ammo_consumption = self._buff_extension:has_keyword(buff_keywords.no_ammo_consumption) or self._leadbelcher_shot
 		local has_ammo = ActionUtility.has_ammunition(self._inventory_slot_component, action_settings)
 
 		if not has_ammo and not no_ammo_consumption then
@@ -159,7 +186,7 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 
 	if action_component.fire_state == "prepare_shooting" then
 		local buff_keywords = BuffSettings.keywords
-		local no_ammo_consumption = self._buff_extension:has_keyword(buff_keywords.no_ammo_consumption)
+		local no_ammo_consumption = self._buff_extension:has_keyword(buff_keywords.no_ammo_consumption) or self._leadbelcher_shot
 
 		if no_ammo_consumption or ActionUtility.has_ammunition(self._inventory_slot_component, action_settings) then
 			self:_set_fire_state(t, "start_shooting")
@@ -195,7 +222,7 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 		if next_fire_state == "waiting_to_shoot" or next_fire_state == "shot" then
 			self:_spend_ammunition(dt, t, charge_level)
 			self:_add_heat(dt, t, charge_level)
-			self:_pay_warp_charge_cost(t, charge_level)
+			self:_pay_warp_charge_cost_immediate(t, charge_level)
 			self:_trigger_new_charge(t)
 			self:_handle_shot_concluded_stats()
 		end
@@ -204,14 +231,14 @@ end
 
 ActionShoot._next_fire_state = function (self, dt, t)
 	local action_component = self._action_component
-	local weapon_extension = self._weapon_extension
-	local fire_rate_settings = _fire_rate_settings(weapon_extension)
+	local fire_rate_settings = self:_fire_rate_settings()
 	local max_num_shots = fire_rate_settings.max_shots or math.huge
 	local auto_fire_time = fire_rate_settings.auto_fire_time
 
 	if max_num_shots <= action_component.num_shots_fired then
 		return "shot"
 	elseif auto_fire_time then
+		auto_fire_time = self:_scale_auto_fire_time_with_buffs(auto_fire_time)
 		action_component.fire_at_time = t + auto_fire_time
 
 		return "waiting_to_shoot"
@@ -302,8 +329,10 @@ ActionShoot._spend_ammunition = function (self, dt, t, charge_level)
 	local is_critical_strike = self._critical_strike_component.is_active
 	local buff_keywords = BuffSettings.keywords
 	local buff_extension = self._buff_extension
-	local has_no_ammo_keyword = buff_extension:has_keyword(buff_keywords.no_ammo_consumption)
+	local has_no_ammo_keyword = self._leadbelcher_shot or buff_extension:has_keyword(buff_keywords.no_ammo_consumption)
+	local has_no_ammo_on_crit_keyword = buff_extension:has_keyword(buff_keywords.no_ammo_consumption_on_crits)
 	local trigger_proc = has_no_ammo_keyword
+	trigger_proc = trigger_proc or is_critical_strike and has_no_ammo_on_crit_keyword
 
 	if trigger_proc then
 		local param_table = buff_extension:request_proc_event_param_table()
@@ -313,6 +342,7 @@ ActionShoot._spend_ammunition = function (self, dt, t, charge_level)
 			param_table.ammo_usage = 0
 			param_table.charged_ammo = use_charge
 			param_table.is_critical_strike = is_critical_strike
+			param_table.is_leadbelcher_shot = self._leadbelcher_shot
 
 			buff_extension:add_proc_event(proc_events.on_ammo_consumed, param_table)
 		end
@@ -449,8 +479,7 @@ ActionShoot.finish = function (self, reason, data, t, time_in_action)
 	end
 
 	self._expression_vo_triggered = false
-	local weapon_extension = self._weapon_extension
-	local fire_rate_settings = _fire_rate_settings(weapon_extension)
+	local fire_rate_settings = self:_fire_rate_settings()
 	local fire_time = fire_rate_settings.fire_time or 0
 	local past_fire_time = time_in_action >= fire_time
 	local action_settings = self._action_settings
@@ -468,7 +497,9 @@ ActionShoot.finish = function (self, reason, data, t, time_in_action)
 
 	if fire_rate_settings.auto_fire_time and action_component.num_shots_fired > 0 then
 		local semi_fire_factor = weapon_template.semi_auto_chain_factor or 1.5
-		action_component.fire_at_time = action_component.fire_at_time + fire_rate_settings.auto_fire_time * semi_fire_factor
+		local auto_fire_time = fire_rate_settings.auto_fire_time
+		auto_fire_time = self:_scale_auto_fire_time_with_buffs(auto_fire_time)
+		action_component.fire_at_time = action_component.fire_at_time + auto_fire_time * semi_fire_factor
 	end
 
 	local buff_extension = self._buff_extension
@@ -478,6 +509,7 @@ ActionShoot.finish = function (self, reason, data, t, time_in_action)
 		buff_extension:add_proc_event(proc_events.on_shoot_finish, param_table)
 	end
 
+	self._leadbelcher_shot = false
 	action_component.num_shots_fired = 0
 end
 
@@ -594,7 +626,6 @@ ActionShoot._update_looping_shoot_sound = function (self)
 	local action_component = self._action_component
 	local inventory_slot_component = self._inventory_slot_component
 	local fx_extension = self._fx_extension
-	local weapon_extension = self._weapon_extension
 	local action_settings = self._action_settings
 	local muzzle_fx_source_name = self:_muzzle_fx_source()
 	local fx_settings = action_settings.fx or EMPTY_TABLE
@@ -611,11 +642,13 @@ ActionShoot._update_looping_shoot_sound = function (self)
 	local stopped_shooting = not shooting and is_looping_shoot_sfx_playing
 
 	if started_shooting then
-		local fire_rate_settings = _fire_rate_settings(weapon_extension)
+		local fire_rate_settings = self:_fire_rate_settings()
 		local auto_fire_time = fire_rate_settings.auto_fire_time
 		local parameter_name = fx_settings.auto_fire_time_parameter_name
 
 		if auto_fire_time and parameter_name then
+			auto_fire_time = self:_scale_auto_fire_time_with_buffs(auto_fire_time)
+
 			fx_extension:set_source_parameter(parameter_name, auto_fire_time, muzzle_fx_source_name)
 		end
 
@@ -754,6 +787,22 @@ ActionShoot._check_for_auto_critical_strike = function (self)
 		return
 	end
 
+	local specialization_extension = self._specialization_extension
+	local check_leadbelcher = specialization_extension:has_special_rule(special_rules.ogryn_leadbelcher)
+	local check_leadbelcher_improved = specialization_extension:has_special_rule(special_rules.ogryn_leadbelcher_improved)
+
+	if check_leadbelcher or check_leadbelcher_improved then
+		local leadbelcher_chance = 0
+
+		if check_leadbelcher then
+			leadbelcher_chance = TalentSettings.ogryn_1.passive_1.free_ammo_proc_chance
+		elseif check_leadbelcher_improved then
+			leadbelcher_chance = TalentSettings.ogryn_1.spec_passive_2.increased_passive_proc_chance
+		end
+
+		self._leadbelcher_shot = self:_check_for_lucky_strike(false, true, leadbelcher_chance)
+	end
+
 	local critical_strike_component = self._critical_strike_component
 	local is_critical_strike = critical_strike_component.is_active
 	local num_critical_shots = critical_strike_component.num_critical_shots
@@ -772,7 +821,13 @@ ActionShoot._check_for_auto_critical_strike = function (self)
 		return
 	end
 
-	self:_check_for_critical_strike(false, true)
+	local leadbelcher_auto_crit = false
+
+	if self._leadbelcher_shot then
+		leadbelcher_auto_crit = specialization_extension:has_special_rule(special_rules.ogryn_leadbelcher_auto_crit)
+	end
+
+	self:_check_for_critical_strike(false, true, leadbelcher_auto_crit)
 
 	if critical_strike_component.is_active then
 		critical_strike_component.num_critical_shots = num_critical_shots + 1
@@ -911,11 +966,22 @@ ActionShoot._handle_shot_concluded_stats = function (self)
 	end
 end
 
-function _fire_rate_settings(weapon_extension)
-	local weapon_handling_template = weapon_extension:weapon_handling_template() or EMPTY_TABLE
+ActionShoot._fire_rate_settings = function (self)
+	local weapon_handling_template = self._weapon_extension:weapon_handling_template() or EMPTY_TABLE
 	local fire_rate = weapon_handling_template.fire_rate or EMPTY_TABLE
 
 	return fire_rate
+end
+
+ActionShoot._scale_auto_fire_time_with_buffs = function (self, auto_fire_time)
+	local stat_buffs = self._buff_extension:stat_buffs()
+	local attack_speed_factor = 1
+	local ranged_attack_speed = stat_buffs and stat_buffs.ranged_attack_speed or 1
+	local attack_speed = stat_buffs and stat_buffs.attack_speed or 1
+	attack_speed_factor = attack_speed_factor + ranged_attack_speed + attack_speed - 2
+	local scaled_auto_fire_time = auto_fire_time * 1 / attack_speed_factor
+
+	return scaled_auto_fire_time
 end
 
 function _set_charge_level(fx_extension, fx_source_name, parameter_name, action_module_charge_component)

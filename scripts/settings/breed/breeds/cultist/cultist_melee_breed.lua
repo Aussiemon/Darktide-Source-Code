@@ -4,6 +4,7 @@ local BreedCombatRanges = require("scripts/settings/breed/breed_combat_ranges")
 local BreedSettings = require("scripts/settings/breed/breed_settings")
 local BreedTerrorEventSettings = require("scripts/settings/breed/breed_terror_event_settings")
 local HitZone = require("scripts/utilities/attack/hit_zone")
+local MinionDifficultySettings = require("scripts/settings/difficulty/minion_difficulty_settings")
 local MinionGibbingTemplates = require("scripts/managers/minion/minion_gibbing_templates")
 local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
 local PerceptionSettings = require("scripts/settings/perception/perception_settings")
@@ -19,31 +20,32 @@ local stagger_types = StaggerSettings.stagger_types
 local weakspot_types = WeakspotSettings.types
 local breed_name = "cultist_melee"
 local breed_data = {
-	detection_radius = 15,
 	display_name = "loc_breed_display_name_cultist_melee",
 	run_speed = 5.6,
-	challenge_rating = 0.75,
 	use_bone_lod = true,
 	spawn_anim_state = "to_melee",
 	power_level_type = "renegade_default_melee",
 	unit_template_name = "minion",
 	faction_name = "chaos",
-	walk_speed = 2.3,
+	detection_radius = 15,
 	sub_faction_name = "cultist",
 	broadphase_radius = 1,
 	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_cultist",
-	base_height = 1.9,
+	use_avoidance = true,
 	stagger_resistance = 1,
-	spawn_inventory_slot = "slot_melee_weapon",
+	base_height = 1.9,
+	psyker_mark_target = true,
+	walk_speed = 2.3,
 	player_locomotion_constrain_radius = 0.4,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
 	use_wounds = true,
-	use_avoidance = true,
+	spawn_inventory_slot = "slot_melee_weapon",
 	slot_template = "renegade_melee",
 	activate_slot_system_on_spawn = true,
 	can_patrol = true,
 	game_object_type = "minion_melee",
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
+	challenge_rating = 0.75,
 	bone_lod_radius = 1.1,
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
@@ -55,14 +57,7 @@ local breed_data = {
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.unarmored,
-	hit_mass = {
-		1.5,
-		1.5,
-		1.5,
-		1.5,
-		1.5,
-		4
-	},
+	hit_mass = MinionDifficultySettings.hit_mass[breed_name],
 	gib_template = MinionGibbingTemplates.cultist_melee,
 	stagger_durations = {
 		[stagger_types.light] = 0.75,
@@ -72,6 +67,14 @@ local breed_data = {
 		[stagger_types.light_ranged] = 0.5,
 		[stagger_types.killshot] = 1,
 		[stagger_types.sticky] = 1
+	},
+	stagger_thresholds = {
+		[stagger_types.light] = 1,
+		[stagger_types.medium] = 10,
+		[stagger_types.heavy] = 20,
+		[stagger_types.explosion] = 40,
+		[stagger_types.light_ranged] = 8,
+		[stagger_types.killshot] = 4
 	},
 	stagger_immune_times = {
 		[stagger_types.light] = 0.2,

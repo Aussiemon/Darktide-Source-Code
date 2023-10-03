@@ -67,7 +67,7 @@ end
 ExtensionSystemBase.initialize_client_fixed_frame = function (self, fixed_frame)
 	if self._extension_init_context then
 		self._extension_init_context.fixed_frame = fixed_frame
-		self._extension_init_context.fixed_frame_t = fixed_frame * GameParameters.fixed_time_step
+		self._extension_init_context.fixed_frame_t = fixed_frame * Managers.state.game_session.fixed_time_step
 	end
 end
 
@@ -200,7 +200,7 @@ ExtensionSystemBase.fixed_update = function (self, context, dt, t, ...)
 	local update_list = self._update_list
 	local fixed_frame = context.fixed_frame
 	self._extension_init_context.fixed_frame = fixed_frame
-	self._extension_init_context.fixed_frame_t = fixed_frame * GameParameters.fixed_time_step
+	self._extension_init_context.fixed_frame_t = fixed_frame * Managers.state.game_session.fixed_time_step
 
 	for extension_name, _ in pairs(self._extensions) do
 		local profiler_name = self._profiler_names[extension_name]

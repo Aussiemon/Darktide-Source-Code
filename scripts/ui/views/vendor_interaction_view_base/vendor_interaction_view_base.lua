@@ -547,12 +547,15 @@ VendorInteractionViewBase._update_vo = function (self, dt, t)
 	end
 
 	local unit = self._vo_unit
-	local dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
-	local is_playing = dialogue_extension:is_playing(current_vo_id)
 
-	if not is_playing then
-		self._current_vo_id = nil
-		self._current_vo_event = nil
+	if unit then
+		local dialogue_extension = ScriptUnit.extension(unit, "dialogue_system")
+		local is_playing = dialogue_extension:is_playing(current_vo_id)
+
+		if not is_playing then
+			self._current_vo_id = nil
+			self._current_vo_event = nil
+		end
 	end
 end
 

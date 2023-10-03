@@ -49,6 +49,18 @@ Characters.equip_items_in_slots = function (self, character_id, item_gear_ids_by
 	end)
 end
 
+Characters.unequip_slots = function (self, character_id, slots)
+	local promises = {}
+
+	for slot_name, _ in pairs(slots) do
+		promises[#promises + 1] = BackendUtilities.make_account_title_request("characters", BackendUtilities.url_builder(character_id):path("/inventory/"):path(slot_name), {
+			method = "DELETE"
+		})
+	end
+
+	return Promise.all(unpack(promises))
+end
+
 Characters.equip_master_items_in_slots = function (self, character_id, item_master_ids_by_slots)
 	local body = {}
 

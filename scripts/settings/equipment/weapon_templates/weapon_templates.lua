@@ -202,6 +202,12 @@ local template_groups = {
 		"stubrevolver_p1_m1"
 	},
 	{
+		"combat_abilities",
+		"psyker_force_field",
+		"psyker_force_field_dome",
+		"zealot_relic"
+	},
+	{
 		"devices",
 		"auspex_scanner",
 		"skull_decoder",
@@ -212,7 +218,16 @@ local template_groups = {
 		"frag_grenade",
 		"shock_grenade",
 		"ogryn_grenade_box",
-		"psyker_smite"
+		"psyker_smite",
+		"fire_grenade",
+		"krak_grenade",
+		"smoke_grenade",
+		"ogryn_grenade_box_cluster",
+		"ogryn_grenade_frag",
+		"ogryn_grenade_friend_rock",
+		"psyker_chain_lightning",
+		"psyker_throwing_knives",
+		"zealot_throwing_knives"
 	},
 	{
 		"luggables",
@@ -237,10 +252,10 @@ local template_names = {
 	"bot_combatsword_linesman_p1",
 	"bot_combatsword_linesman_p2",
 	"bot_lasgun_killshot",
-	"high_bot_lasgun_killshot",
-	"high_bot_autogun_killshot",
 	"bot_laspistol_killshot",
 	"bot_zola_laspistol",
+	"high_bot_autogun_killshot",
+	"high_bot_lasgun_killshot",
 	"unarmed_hub_ogryn",
 	"unarmed_hub_psyker",
 	"unarmed_hub_veteran",

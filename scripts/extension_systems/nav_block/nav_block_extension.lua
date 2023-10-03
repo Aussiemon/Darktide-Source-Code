@@ -2,23 +2,24 @@ local NavBlockExtension = class("NavBlockExtension")
 
 NavBlockExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._is_server = extension_init_context.is_server
-	self._layer_name = ""
+	self._layer_names = {}
 end
 
 NavBlockExtension.destroy = function (self)
 	if self._is_server then
 		local nav_mesh_manager = Managers.state.nav_mesh
-		local layer_name = self._layer_name
 
-		if not nav_mesh_manager:is_nav_tag_volume_layer_allowed(layer_name) then
-			nav_mesh_manager:set_allowed_nav_tag_layer(layer_name, true)
+		for volume_name, layer_name in pairs(self._layer_names) do
+			if not nav_mesh_manager:is_nav_tag_volume_layer_allowed(layer_name) then
+				nav_mesh_manager:set_allowed_nav_tag_layer(layer_name, true)
+			end
 		end
 	end
 end
 
-NavBlockExtension.setup_from_component = function (self, unit, start_blocked)
+NavBlockExtension.setup_from_component = function (self, unit, volume_name, start_blocked)
 	local unit_level_index = Managers.state.unit_spawner:level_index(unit)
-	local layer_name = "nav_block_volume_" .. tostring(unit_level_index)
+	local layer_name = "nav_block_volume_" .. tostring(unit_level_index) .. "_" .. volume_name
 	local volume_layer_allowed = nil
 
 	if self._is_server then
@@ -27,19 +28,19 @@ NavBlockExtension.setup_from_component = function (self, unit, start_blocked)
 		volume_layer_allowed = true
 	end
 
-	local volume_points = Unit.volume_points(unit, "g_volume_block")
-	local volume_height = Unit.volume_height(unit, "g_volume_block")
+	local volume_points = Unit.volume_points(unit, volume_name)
+	local volume_height = Unit.volume_height(unit, volume_name)
 	local volume_alt_min, volume_alt_max = self:_get_volume_alt_min_max(unit, volume_points, volume_height)
 
 	Managers.state.nav_mesh:add_nav_tag_volume(volume_points, volume_alt_min, volume_alt_max, layer_name, volume_layer_allowed)
 
-	self._layer_name = layer_name
+	self._layer_names[volume_name] = layer_name
 end
 
-NavBlockExtension.set_block = function (self, block)
+NavBlockExtension.set_block = function (self, volume_name, block)
 	local is_allowed = not block
 
-	Managers.state.nav_mesh:set_allowed_nav_tag_layer(self._layer_name, is_allowed)
+	Managers.state.nav_mesh:set_allowed_nav_tag_layer(self._layer_names[volume_name], is_allowed)
 end
 
 NavBlockExtension._get_volume_alt_min_max = function (self, unit, volume_points, volume_height)

@@ -12,6 +12,10 @@ ScannerDisplay.editor_init = function (self, unit)
 	return
 end
 
+ScannerDisplay.editor_validate = function (self, unit)
+	return true, ""
+end
+
 ScannerDisplay.enable = function (self, unit)
 	return
 end

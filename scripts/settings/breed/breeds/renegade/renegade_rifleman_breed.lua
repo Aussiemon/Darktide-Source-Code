@@ -64,14 +64,7 @@ local breed_data = {
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.armored,
-	hit_mass = {
-		1.5,
-		1.5,
-		1.5,
-		1.5,
-		1.5,
-		3
-	},
+	hit_mass = MinionDifficultySettings.hit_mass[breed_name],
 	gib_template = MinionGibbingTemplates.renegade_rifleman_gibbing,
 	stagger_durations = {
 		[stagger_types.light] = 0.75,

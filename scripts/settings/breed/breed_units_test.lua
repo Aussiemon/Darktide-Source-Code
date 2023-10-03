@@ -20,14 +20,7 @@ local REQUIRED_MINION_RANGED_NODES = {
 local FX_SOURCE_NAME = "muzzle"
 
 local function _init_and_run_tests()
-	if BUILD == "release" or PLATFORM == "xbs" then
-		return
-	end
-
 	local world = Application.new_world()
-
-	World.set_flow_enabled(world, false)
-
 	local trigger_flow = false
 	local attach_settings = {
 		from_script_component = true,
@@ -72,7 +65,7 @@ local function _init_and_run_tests()
 				for i = 1, #items do
 					local item_name = items[i]
 					local item = item_definitions[item_name]
-					local item_unit, attachment_units = VisualLoadoutCustomization.spawn_item(item, attach_settings, unit)
+					local item_unit, attachment_units = VisualLoadoutCustomization.spawn_item(item, attach_settings, unit, nil, nil, nil)
 
 					for _, node_name in ipairs(REQUIRED_MINION_RANGED_NODES) do
 						if not Unit.has_node(item_unit, node_name) then

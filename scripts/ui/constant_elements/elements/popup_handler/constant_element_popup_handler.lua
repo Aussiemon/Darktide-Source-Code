@@ -244,10 +244,13 @@ ConstantElementPopupHandler._cleanup_presentation = function (self, active_popup
 		additional_widgets = self._offer_price_widgets
 	}
 	self._on_exit_anim_id = self:_start_animation("on_exit", self._widgets_by_name, params)
-	local exit_popup_sound = active_popup.data.exit_popup_sound or UISoundEvents.system_popup_exit
 
-	if not active_popup.stop_exit_sound then
-		self:_play_sound(exit_popup_sound)
+	if not active_popup.data.no_exit_sound then
+		local exit_popup_sound = active_popup.data.exit_popup_sound or UISoundEvents.system_popup_exit
+
+		if not active_popup.stop_exit_sound then
+			self:_play_sound(exit_popup_sound)
+		end
 	end
 end
 
@@ -406,9 +409,14 @@ ConstantElementPopupHandler._create_popup_content = function (self, options, ui_
 			local hotspot = content.hotspot
 			hotspot.pressed_callback = callback(self, "_cb_on_button_pressed", widget)
 			local on_pressed_sound = option.on_pressed_sound
+			local on_complete_sound = option.on_complete_sound
 
 			if on_pressed_sound then
 				hotspot.on_pressed_sound = on_pressed_sound
+			end
+
+			if on_complete_sound then
+				hotspot.on_complete_sound = on_complete_sound
 			end
 
 			local text_style = widget.style.text

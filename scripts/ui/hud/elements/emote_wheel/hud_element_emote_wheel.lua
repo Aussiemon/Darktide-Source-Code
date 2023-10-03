@@ -300,7 +300,7 @@ HudElementEmoteWheel.using_input = function (self)
 end
 
 HudElementEmoteWheel._handle_com_wheel = function (self, t, ui_renderer, render_settings, input_service)
-	local input_pressed = input_service:get("jump_held")
+	local input_pressed = input_service:get("com_wheel")
 	local wheel_context = self._wheel_context
 	local start_time = wheel_context.input_start_time
 
@@ -345,7 +345,7 @@ HudElementEmoteWheel._handle_com_wheel = function (self, t, ui_renderer, render_
 end
 
 HudElementEmoteWheel._should_draw_wheel = function (self, input_service)
-	return input_service:get("jump_held")
+	return input_service:get("com_wheel")
 end
 
 HudElementEmoteWheel._should_draw_wheel_gamepad = function (self, input_service)

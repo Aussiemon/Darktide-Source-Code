@@ -71,14 +71,10 @@ _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_stubrevolver_p1_buff_templates")
 _create_entry("scripts/settings/buff/weapon_traits_buff_templates/weapon_traits_bespoke_thunderhammer_2h_p1_buff_templates")
 _create_entry("scripts/settings/buff/player_archetype_specialization/common_player_specialization_buffs")
-_create_entry("scripts/settings/buff/player_archetype_specialization/ogryn_buff_templates")
-_create_entry("scripts/settings/buff/player_archetype_specialization/ogryn_bonebreaker_buff_templates")
-_create_entry("scripts/settings/buff/player_archetype_specialization/psyker_buff_templates")
-_create_entry("scripts/settings/buff/player_archetype_specialization/psyker_biomancer_buff_templates")
-_create_entry("scripts/settings/buff/player_archetype_specialization/veteran_buff_templates")
-_create_entry("scripts/settings/buff/player_archetype_specialization/veteran_ranger_buff_templates")
-_create_entry("scripts/settings/buff/player_archetype_specialization/zealot_buff_templates")
-_create_entry("scripts/settings/buff/player_archetype_specialization/zealot_maniac_buff_templates")
+_create_entry("scripts/settings/buff/player_archetype_specialization/ogryn_buff_templates_new")
+_create_entry("scripts/settings/buff/player_archetype_specialization/psyker_buff_templates_new")
+_create_entry("scripts/settings/buff/player_archetype_specialization/veteran_buff_templates_new")
+_create_entry("scripts/settings/buff/player_archetype_specialization/zealot_buff_templates_new")
 
 local default_buff_icon = "content/ui/materials/icons/abilities/default"
 

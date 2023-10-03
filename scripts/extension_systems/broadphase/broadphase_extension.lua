@@ -3,7 +3,6 @@ local unit_node = Unit.node
 local unit_world_position = Unit.world_position
 local broadphase_add = Broadphase.add
 local broadphase_remove = Broadphase.remove
-local broadphase_move = Broadphase.move
 
 BroadphaseExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	self._unit = unit

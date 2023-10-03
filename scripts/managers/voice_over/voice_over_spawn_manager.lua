@@ -1,6 +1,5 @@
 local DialogueBreedSettings = require("scripts/settings/dialogue/dialogue_breed_settings")
 local LevelProps = require("scripts/settings/level_prop/level_props")
-local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local Vo = require("scripts/utilities/vo")
 local VoiceOverSpawnManager = class("VoiceOverSpawnManager")
 local _default_vo_profile = "sergeant_a"
@@ -11,10 +10,6 @@ VoiceOverSpawnManager.init = function (self, is_server, mission_giver_vo_overrid
 	self._unit_spawner_manager = Managers.state.unit_spawner
 	self._voice_over_units = {}
 	self.mission_giver_vo_override = mission_giver_vo_override
-end
-
-VoiceOverSpawnManager.destroy = function (self)
-	self._unit_spawner_manager = nil
 end
 
 VoiceOverSpawnManager.on_gameplay_post_init = function (self, level)
@@ -43,13 +38,14 @@ VoiceOverSpawnManager.on_gameplay_post_init = function (self, level)
 end
 
 VoiceOverSpawnManager.delete_units = function (self)
+	local voice_over_units = self._voice_over_units
 	local unit_spawner_manager = self._unit_spawner_manager
 
-	for _, vo_unit in pairs(self._voice_over_units) do
+	for voice_profile, vo_unit in pairs(voice_over_units) do
 		unit_spawner_manager:mark_for_deletion(vo_unit)
-	end
 
-	self._voice_over_units = {}
+		voice_over_units[voice_profile] = nil
+	end
 end
 
 VoiceOverSpawnManager._create_units = function (self, dialogue_breed_settings)
@@ -59,16 +55,17 @@ VoiceOverSpawnManager._create_units = function (self, dialogue_breed_settings)
 	local unit_template_name = props_settings.unit_template_name
 	local voice_over_settings = table.clone(props_settings)
 	local voice_profiles = dialogue_breed_settings.wwise_voices
+	local voice_over_units = self._voice_over_units
 
 	for _, voice_profile in pairs(voice_profiles) do
 		local vo_unit = unit_spawner_manager:spawn_network_unit(unit_name, unit_template_name, nil, nil, nil, voice_over_settings)
-		local dialogue_extension = ScriptUnit.has_extension(vo_unit, "dialogue_system")
+		local dialogue_extension = ScriptUnit.extension(vo_unit, "dialogue_system")
 
 		dialogue_extension:set_voice_profile_data(dialogue_breed_settings.vo_class_name, dialogue_breed_settings.wwise_voice_switch_group, voice_profile)
 		dialogue_extension:init_faction_memory(dialogue_breed_settings.dialogue_memory_faction_name)
 
 		dialogue_extension._is_network_synced = dialogue_breed_settings.is_network_synced
-		self._voice_over_units[voice_profile] = vo_unit
+		voice_over_units[voice_profile] = vo_unit
 	end
 end
 

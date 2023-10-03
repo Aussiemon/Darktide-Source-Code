@@ -1,5 +1,6 @@
 local PseudoRandomDistribution = {}
 local P2C = nil
+local MAX_PRD_STATE = NetworkConstants.max_prd_state
 
 PseudoRandomDistribution.flip_coin = function (chance, state, seed)
 	if chance >= 1 then
@@ -24,7 +25,7 @@ PseudoRandomDistribution.flip_coin = function (chance, state, seed)
 	if value < n * c then
 		return true, 1, new_seed
 	else
-		return false, 1 + n, new_seed
+		return false, math.clamp(1 + n, 1, MAX_PRD_STATE), new_seed
 	end
 end
 

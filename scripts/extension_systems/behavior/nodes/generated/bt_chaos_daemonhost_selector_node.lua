@@ -90,8 +90,8 @@ BtChaosDaemonhostSelectorNode.evaluate = function (self, unit, blackboard, scrat
 				condition_result = true
 			else
 				local player_deaths = statistics_component.player_deaths
-				local DaemonhostSettings = require("scripts/settings/specials/daemonhost_settings")
-				local num_player_kills_for_despawn = Managers.state.difficulty:get_table_entry_by_challenge(DaemonhostSettings.num_player_kills_for_despawn)
+				local ChaosDaemonhostSettings = require("scripts/settings/monster/chaos_daemonhost_settings")
+				local num_player_kills_for_despawn = Managers.state.difficulty:get_table_entry_by_challenge(ChaosDaemonhostSettings.num_player_kills_for_despawn)
 				local wants_to_leave = num_player_kills_for_despawn <= player_deaths
 				condition_result = wants_to_leave
 			end

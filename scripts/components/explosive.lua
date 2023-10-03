@@ -21,20 +21,15 @@ Explosive.init = function (self, unit, is_server)
 end
 
 Explosive.events.died = function (self)
-	if not self._exploded then
-		local attack_type = AttackSettings.attack_types.explosion
-		local unit = self._unit
-		local explosion_position = Unit.local_position(unit, 1)
-		local power_level = self._power_level
-		local charge_level = self._charge_level
-		self._exploded = true
-
-		Explosion.create_explosion(self._world, self._physics_world, explosion_position, Vector3.up(), unit, self._explosion_template, power_level, charge_level, attack_type)
-	end
+	self:explosive_trigger()
 end
 
 Explosive.editor_init = function (self, unit)
 	self:enable(unit)
+end
+
+Explosive.editor_validate = function (self, unit)
+	return true, ""
 end
 
 Explosive.enable = function (self, unit)
@@ -49,17 +44,35 @@ Explosive.destroy = function (self, unit)
 	return
 end
 
+Explosive.explosive_trigger = function (self)
+	if not self._is_server then
+		return
+	end
+
+	if not self._exploded then
+		local attack_type = AttackSettings.attack_types.explosion
+		local unit = self._unit
+		local explosion_position = nil
+
+		if Unit.has_node(unit, "c_explosion") then
+			explosion_position = Unit.world_position(unit, Unit.node(unit, "c_explosion"))
+		else
+			explosion_position = Unit.local_position(unit, 1)
+		end
+
+		local power_level = self._power_level
+		local charge_level = self._charge_level
+		self._exploded = true
+
+		Explosion.create_explosion(self._world, self._physics_world, explosion_position, Vector3.up(), unit, self._explosion_template, power_level, charge_level, attack_type)
+	end
+end
+
 Explosive.component_data = {
 	explosion_template_name = {
+		ui_type = "text_box",
 		value = "explosive_barrel",
-		ui_type = "combo_box",
-		ui_name = "Explosion Template Name",
-		options_keys = {
-			"explosive_barrel"
-		},
-		options_values = {
-			"explosive_barrel"
-		}
+		ui_name = "Explosion Template Name"
 	},
 	power_level = {
 		ui_type = "number",
@@ -74,6 +87,12 @@ Explosive.component_data = {
 		value = 1,
 		ui_name = "Charge Level",
 		step = 1
+	},
+	inputs = {
+		explosive_trigger = {
+			accessibility = "private",
+			type = "event"
+		}
 	},
 	extensions = {}
 }

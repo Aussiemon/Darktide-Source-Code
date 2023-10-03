@@ -60,6 +60,7 @@ local action_data = {
 		leave_walk_distance = 4,
 		left_lean_value = 0,
 		max_dot_lean_value = 0.25,
+		lean_speed = 1,
 		walk_anim_event = "move_fwd",
 		path_lean_node_offset = 8,
 		right_lean_value = 2,
@@ -219,11 +220,11 @@ local action_data = {
 		attack_type = "broadphase",
 		utility_weight = 10,
 		anim_driven = true,
-		weapon_reach = 4,
+		weapon_reach = 4.75,
 		broadphase_node = "j_leftfoot",
 		bot_power_level_modifier = 0.5,
 		aoe_bot_threat_broadphase_size = 5,
-		dodge_weapon_reach = 3.5,
+		dodge_weapon_reach = 3.75,
 		aoe_threat_duration = 1.5,
 		considerations = UtilityConsiderations.chaos_plague_ogryn_plague_stomp,
 		attack_anim_events = {
@@ -253,36 +254,37 @@ local action_data = {
 		close_rotation_speed = 5,
 		close_distance = 8,
 		max_dot_lean_value = 0.1,
+		right_lean_value = 2,
 		wall_raycast_distance = 4.25,
 		max_slowdown_percentage = 0.25,
 		default_lean_value = 1,
 		left_lean_value = 0,
 		min_time_navigating = 0.5,
-		charged_past_dot = 0.1,
+		lean_variable_name = "lean",
 		push_minions_radius = 4,
 		charge_max_speed_at = 2,
 		attack_anim = "attack_charge_hit_player",
 		charged_past_duration = 1.5,
 		collision_radius = 2,
-		lean_variable_name = "lean",
-		power_level = 150,
-		attack_anim_damage_timing = 0.06666666666666667,
-		min_time_spent_charging = 1,
 		dodge_rotation_speed = 0.01,
+		attack_anim_damage_timing = 0.06060606060606061,
+		power_level = 150,
+		charged_past_dot = 0.1,
 		target_extrapolation_length_scale = 0.5,
-		right_lean_value = 2,
+		min_time_spent_charging = 1,
 		max_slowdown_angle = 40,
-		wall_stun_time = 3,
+		lean_speed = 1,
 		min_slowdown_angle = 20,
+		wall_stun_time = 3,
 		utility_weight = 1,
 		max_duration = 8,
 		wall_raycast_node_name = "j_spine",
 		push_minions_side_relation = "allied",
-		charge_speed_min = 7,
-		attack_anim_duration = 1.3333333333333333,
+		charge_speed_min = 7.700000000000001,
+		attack_anim_duration = 1.2121212121212122,
 		push_minions_power_level = 2000,
 		rotation_speed = 6,
-		charge_speed_max = 11,
+		charge_speed_max = 12.100000000000001,
 		considerations = UtilityConsiderations.chaos_plague_ogryn_charge,
 		charge_direction_anim_events = {
 			bwd = "attack_charge_start_bwd",
@@ -306,20 +308,20 @@ local action_data = {
 			}
 		},
 		start_move_rotation_timings = {
-			attack_charge_start_right = 0.17391304347826086,
-			attack_charge_start_bwd = 0.17391304347826086,
-			attack_charge_start_left = 0.17391304347826086
+			attack_charge_start_right = 0.16,
+			attack_charge_start_bwd = 0.16,
+			attack_charge_start_left = 0.16
 		},
 		start_rotation_durations = {
-			attack_charge_start_right = 0.7536231884057971,
-			attack_charge_start_bwd = 1.0434782608695652,
-			attack_charge_start_left = 0.5797101449275363
+			attack_charge_start_right = 0.6933333333333334,
+			attack_charge_start_bwd = 0.96,
+			attack_charge_start_left = 0.5333333333333333
 		},
 		charge_direction_durations = {
-			attack_charge_start_bwd = 2.3768115942028984,
-			attack_charge_start_fwd = 2.0869565217391304,
-			attack_charge_start_right = 2.0869565217391304,
-			attack_charge_start_left = 2.260869565217391
+			attack_charge_start_bwd = 2.1866666666666665,
+			attack_charge_start_fwd = 1.92,
+			attack_charge_start_right = 1.92,
+			attack_charge_start_left = 2.08
 		},
 		push_minions_damage_profile = DamageProfileTemplates.chaos_plague_ogryn_minion_charge_push,
 		collision_angle = math.degrees_to_radians(100),
@@ -592,6 +594,23 @@ local action_data = {
 				}
 			},
 			sticky = {
+				fwd = {
+					"stagger_fwd_heavy"
+				},
+				bwd = {
+					"stagger_bwd_heavy"
+				},
+				left = {
+					"stagger_left_heavy"
+				},
+				right = {
+					"stagger_right_heavy"
+				},
+				dwn = {
+					"stagger_bwd_heavy"
+				}
+			},
+			electrocuted = {
 				fwd = {
 					"stagger_fwd_heavy"
 				},

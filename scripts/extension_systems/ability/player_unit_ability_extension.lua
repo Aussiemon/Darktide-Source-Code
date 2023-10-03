@@ -1,14 +1,16 @@
-local ActionHandler = require("scripts/utilities/action/action_handler")
 local AbilityActionHandlerData = require("scripts/settings/ability/ability_action_handler_data")
 local AbilityTemplates = require("scripts/settings/ability/ability_templates/ability_templates")
+local ActionHandler = require("scripts/utilities/action/action_handler")
+local EquippedAbilityEffectScripts = require("scripts/extension_systems/ability/utilities/equipped_ability_effect_scripts")
 local FixedFrame = require("scripts/utilities/fixed_frame")
 local ItemUtils = require("scripts/utilities/items")
 local PlayerAbilities = require("scripts/settings/ability/player_abilities/player_abilities")
 local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-local EquippedAbilityEffectScripts = require("scripts/extension_systems/ability/utilities/equipped_ability_effect_scripts")
+local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local MasterItems = require("scripts/backend/master_items")
 local ability_configuration = PlayerCharacterConstants.ability_configuration
+local special_rules = SpecialRulesSetting.special_rules
 local PlayerUnitAbilityExtension = class("PlayerUnitAbilityExtension")
 
 PlayerUnitAbilityExtension.init = function (self, extension_init_context, unit, extension_init_data, game_object_data_or_game_session, nil_or_game_object_id)
@@ -25,17 +27,19 @@ PlayerUnitAbilityExtension.init = function (self, extension_init_context, unit, 
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	self._first_person_extension = first_person_extension
 	self._input_extension = ScriptUnit.extension(unit, "input_system")
-	local unit_data = ScriptUnit.extension(unit, "unit_data_system")
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
 
-	self:_init_action_components(unit_data)
+	self:_init_action_components(unit_data_extension)
 
-	self._unit_data_extension = unit_data
+	self._unit_data_extension = unit_data_extension
 	local is_server = extension_init_data.is_server
 	self._is_server = is_server
 	local is_local_unit = extension_init_data.is_local_unit
 	self._is_local_unit = is_local_unit
 	self._abilities = {}
 	self._equipped_abilities = {}
+	self._slot_name_lookup = {}
+	self._charge_replenished = {}
 	local action_handler = ActionHandler:new(unit, AbilityActionHandlerData)
 
 	action_handler:add_component("combat_ability_action")
@@ -43,13 +47,13 @@ PlayerUnitAbilityExtension.init = function (self, extension_init_context, unit, 
 
 	self._action_handler = action_handler
 	self._item_definitions = MasterItems.get_cached()
-	self._equiped_ability_effect_scripts = {}
-	self._equiped_ability_effect_scripts_context = {
+	self._equipped_ability_effect_scripts = {}
+	self._equipped_ability_effect_scripts_context = {
 		world = world,
 		physics_world = physics_world,
 		wwise_world = wwise_world,
 		unit = unit,
-		unit_data_extension = unit_data,
+		unit_data_extension = unit_data_extension,
 		is_local_unit = is_local_unit,
 		is_server = is_server
 	}
@@ -108,8 +112,11 @@ PlayerUnitAbilityExtension.extensions_ready = function (self, world, unit)
 	local first_person_extension = ScriptUnit.extension(unit, "first_person_system")
 	local first_person_unit = first_person_extension:first_person_unit()
 	local visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+	local specialization_extension = ScriptUnit.extension(unit, "specialization_system")
 	self._visual_loadout_extension = visual_loadout_extension
 	self._buff_extension = ScriptUnit.extension(unit, "buff_system")
+	self._specialization_extension = specialization_extension
+	self._fx_extension = ScriptUnit.extension(unit, "fx_system")
 	action_context.first_person_unit = first_person_unit
 	action_context.world = self._world
 	action_context.physics_world = self._physics_world
@@ -121,7 +128,7 @@ PlayerUnitAbilityExtension.extensions_ready = function (self, world, unit)
 	action_context.smart_targeting_extension = ScriptUnit.extension(unit, "smart_targeting_system")
 	action_context.input_extension = self._input_extension
 	action_context.first_person_extension = self._first_person_extension
-	action_context.fx_extension = ScriptUnit.extension(unit, "fx_system")
+	action_context.fx_extension = self._fx_extension
 	action_context.animation_extension = ScriptUnit.extension(unit, "animation_system")
 	action_context.camera_extension = ScriptUnit.extension(unit, "camera_system")
 	action_context.ability_extension = self
@@ -139,7 +146,7 @@ PlayerUnitAbilityExtension.extensions_ready = function (self, world, unit)
 	self._pause_cooldown_context = {
 		unit = unit,
 		unit_data_extension = unit_data_extension,
-		specialization_extension = ScriptUnit.extension(unit, "specialization_system"),
+		specialization_extension = specialization_extension,
 		buff_extension = ScriptUnit.extension(unit, "buff_system")
 	}
 end
@@ -183,6 +190,7 @@ PlayerUnitAbilityExtension._equip_ability = function (self, ability_type, abilit
 	Log.info("PlayerUnitAbilityExtension", "Equipping ability %q of type %q%s", ability.name, ability_type, from_server_correction and " from server correction" or "")
 
 	self._equipped_abilities[ability_type] = ability
+	self._slot_name_lookup[ability_type] = string.format("slot_%s", ability_type)
 	local inventory_item_name = ability.inventory_item_name
 	from_server_correction = not not from_server_correction
 
@@ -207,16 +215,16 @@ PlayerUnitAbilityExtension._equip_ability = function (self, ability_type, abilit
 			ability = ability,
 			actions = {}
 		}
-		local equiped_ability_effect_scripts = {}
-		self._equiped_ability_effect_scripts[ability_type] = equiped_ability_effect_scripts
-		local equiped_ability_effect_scripts_context = self._equiped_ability_effect_scripts_context
+		local equipped_ability_effect_scripts = {}
+		self._equipped_ability_effect_scripts[ability_type] = equipped_ability_effect_scripts
+		local equipped_ability_effect_scripts_context = self._equipped_ability_effect_scripts_context
 
-		EquippedAbilityEffectScripts.create(equiped_ability_effect_scripts_context, equiped_ability_effect_scripts, ability_template, ability_type)
+		EquippedAbilityEffectScripts.create(equipped_ability_effect_scripts_context, equipped_ability_effect_scripts, ability_template, ability_type)
 	end
 
 	if not from_server_correction then
 		local component = self._ability_components[ability_type]
-		component.num_charges = self:_ability_max_charges(ability)
+		component.num_charges = self:max_ability_charges(ability_type)
 	end
 
 	if self._is_server then
@@ -254,11 +262,11 @@ PlayerUnitAbilityExtension._unequip_ability = function (self, ability_type, abil
 		end
 
 		self._abilities[component_name] = nil
-		local equiped_ability_effect_scripts = self._equiped_ability_effect_scripts[ability_type]
+		local equipped_ability_effect_scripts = self._equipped_ability_effect_scripts[ability_type]
 
-		EquippedAbilityEffectScripts.destroy(equiped_ability_effect_scripts)
+		EquippedAbilityEffectScripts.destroy(equipped_ability_effect_scripts)
 
-		self._equiped_ability_effect_scripts[ability_type] = nil
+		self._equipped_ability_effect_scripts[ability_type] = nil
 	end
 
 	self._equipped_abilities[ability_type] = nil
@@ -289,7 +297,7 @@ end
 PlayerUnitAbilityExtension.update = function (self, unit, dt, t)
 	self._action_handler:update(dt, t)
 
-	for ability_type, ability_effect_scripts in pairs(self._equiped_ability_effect_scripts) do
+	for ability_type, ability_effect_scripts in pairs(self._equipped_ability_effect_scripts) do
 		EquippedAbilityEffectScripts.update(ability_effect_scripts, unit, dt, t)
 	end
 end
@@ -298,13 +306,13 @@ PlayerUnitAbilityExtension.fixed_update = function (self, unit, dt, t, fixed_fra
 	self._action_handler:fixed_update(dt, t)
 	self:_update_ability_cooldowns(t)
 
-	for ability_type, ability_effect_scripts in pairs(self._equiped_ability_effect_scripts) do
+	for ability_type, ability_effect_scripts in pairs(self._equipped_ability_effect_scripts) do
 		EquippedAbilityEffectScripts.fixed_update(ability_effect_scripts, unit, dt, t)
 	end
 end
 
 PlayerUnitAbilityExtension.post_update = function (self, unit, dt, t, fixed_frame)
-	for ability_type, ability_effect_scripts in pairs(self._equiped_ability_effect_scripts) do
+	for ability_type, ability_effect_scripts in pairs(self._equipped_ability_effect_scripts) do
 		EquippedAbilityEffectScripts.post_update(ability_effect_scripts, unit, dt, t)
 	end
 
@@ -319,12 +327,16 @@ PlayerUnitAbilityExtension._handle_sync = function (self)
 
 		if max_ability_charges ~= self._grenade_ability_max_charges_sync_value then
 			GameSession.set_game_object_field(self._game_session, self._game_object_id, "grenade_ability_max_charges", max_ability_charges)
+
+			self._grenade_ability_max_charges_sync_value = max_ability_charges
 		end
 
 		local max_ability_cooldown = self:max_ability_cooldown("grenade_ability")
 
 		if max_ability_cooldown ~= self._grenade_ability_max_cooldown_sync_value then
 			GameSession.set_game_object_field(self._game_session, self._game_object_id, "grenade_ability_max_cooldown", max_ability_cooldown)
+
+			self._grenade_ability_max_cooldown_sync_value = max_ability_cooldown
 		end
 	end
 
@@ -333,12 +345,16 @@ PlayerUnitAbilityExtension._handle_sync = function (self)
 
 		if max_ability_charges ~= self._combat_ability_max_charges_sync_value then
 			GameSession.set_game_object_field(self._game_session, self._game_object_id, "combat_ability_max_charges", max_ability_charges)
+
+			self._combat_ability_max_charges_sync_value = max_ability_charges
 		end
 
 		local max_ability_cooldown = self:max_ability_cooldown("combat_ability")
 
 		if max_ability_cooldown ~= self._combat_ability_max_cooldown_sync_value then
 			GameSession.set_game_object_field(self._game_session, self._game_object_id, "combat_ability_max_cooldown", max_ability_cooldown)
+
+			self._combat_ability_max_cooldown_sync_value = max_ability_cooldown
 		end
 	end
 end
@@ -357,7 +373,7 @@ PlayerUnitAbilityExtension.server_correction_occurred = function (self, unit, fr
 
 	local equipped_abilities_component = self._equipped_abilities_component
 	local from_server_correction = true
-	local fixed_t = from_frame * GameParameters.fixed_time_step
+	local fixed_t = from_frame * Managers.state.game_session.fixed_time_step
 	local locally_equipped_abilities = self._equipped_abilities
 
 	for ability_type, _ in pairs(ability_configuration) do
@@ -401,7 +417,9 @@ PlayerUnitAbilityExtension._condition_func_params = function (self)
 	table.clear(temp_table)
 
 	temp_table.ability_extension = self
+	temp_table.input_extension = self._input_extension
 	temp_table.unit_data_extension = self._unit_data_extension
+	temp_table.specialization_extension = self._specialization_extension
 
 	return temp_table
 end
@@ -430,43 +448,51 @@ PlayerUnitAbilityExtension.update_ability_actions = function (self, fixed_frame)
 	end
 end
 
+PlayerUnitAbilityExtension.charge_replenished = function (self, ability_type)
+	return self._charge_replenished[ability_type]
+end
+
 PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t)
+	table.clear(self._charge_replenished)
+
 	local ability_components = self._ability_components
 	local abilities = self._equipped_abilities
+	local pause_cooldown_context = self._pause_cooldown_context
 
 	for ability_type, component in pairs(ability_components) do
 		local ability = abilities[ability_type]
 
 		if ability and ability.cooldown then
+			local max_ability_cooldown = self:max_ability_cooldown(ability_type)
 			local cooldown = component.cooldown
+			local in_cooldown = cooldown ~= 0
 
-			if cooldown ~= 0 and component.cooldown_paused then
+			if in_cooldown and component.cooldown_paused then
 				local pause_cooldown_settings = ability.pause_cooldown_settings
 
-				if pause_cooldown_settings.pause_fulfilled_func(self._pause_cooldown_context) then
+				if pause_cooldown_settings.pause_fulfilled_func(pause_cooldown_context) then
 					component.cooldown_paused = false
 				else
-					local ability_cooldown = self:max_ability_cooldown(ability_type)
+					local ability_cooldown = max_ability_cooldown
 					cooldown = t + ability_cooldown
 				end
-
-				component.cooldown = cooldown
 			else
 				local current_charges = self:remaining_ability_charges(ability_type)
-				local max_charges = self:_ability_max_charges(ability)
+				local max_charges = self:max_ability_charges(ability_type)
 
 				if current_charges < max_charges and cooldown == 0 then
-					local ability_cooldown = self:max_ability_cooldown(ability_type)
+					local ability_cooldown = max_ability_cooldown
 					cooldown = t + ability_cooldown
 				end
 
-				if cooldown ~= 0 and cooldown < t then
-					component.num_charges = math.min(max_charges, component.num_charges + 1)
+				if in_cooldown and cooldown < t then
+					component.num_charges = math.max(0, math.min(max_charges, component.num_charges + 1))
 					cooldown = 0
+					self._charge_replenished[ability_type] = true
 				end
-
-				component.cooldown = cooldown
 			end
+
+			component.cooldown = cooldown
 		end
 	end
 end
@@ -478,8 +504,25 @@ PlayerUnitAbilityExtension.can_wield = function (self, slot_name, previous_check
 			local ability = equipped_abilities[ability_type]
 			local can_be_wielded_when_depleted = ability.can_be_wielded_when_depleted
 			local can_be_previously_wielded_to = not previous_check or ability.can_be_previously_wielded_to
+			local can_use_ability = self:can_use_ability(ability_type)
 
-			return self:remaining_ability_charges(ability_type) > 0 and can_be_previously_wielded_to or can_be_wielded_when_depleted and can_be_previously_wielded_to
+			return can_use_ability and can_be_previously_wielded_to or can_be_wielded_when_depleted and can_be_previously_wielded_to
+		end
+	end
+
+	return true
+end
+
+PlayerUnitAbilityExtension.can_be_scroll_wielded = function (self, slot_name)
+	local specialization_extension = self._specialization_extension
+
+	for _, ability_slot_name in pairs(ability_configuration) do
+		if ability_slot_name == slot_name then
+			local allows_quick_throwing = specialization_extension:has_special_rule(special_rules.enable_quick_throw_grenades)
+
+			if allows_quick_throwing then
+				return false
+			end
 		end
 	end
 
@@ -518,6 +561,10 @@ PlayerUnitAbilityExtension.can_use_ability = function (self, ability_type)
 
 	if not enabled then
 		return false
+	end
+
+	if self:max_ability_charges(ability_type) <= 0 then
+		return true
 	end
 
 	if self:remaining_ability_charges(ability_type) <= 0 then
@@ -596,6 +643,11 @@ end
 PlayerUnitAbilityExtension.max_ability_cooldown = function (self, ability_type)
 	local abilities = self._equipped_abilities
 	local ability = abilities[ability_type]
+
+	if not ability then
+		return 0
+	end
+
 	local base_cooldown = ability.cooldown
 
 	if not base_cooldown then
@@ -605,6 +657,15 @@ PlayerUnitAbilityExtension.max_ability_cooldown = function (self, ability_type)
 	local stat_buffs = self._buff_extension:stat_buffs()
 	local ability_cooldown_flat_reduction = stat_buffs.ability_cooldown_flat_reduction or 0
 	local ability_cooldown_modifier = stat_buffs.ability_cooldown_modifier or 1
+
+	if ability_type == "combat_ability" then
+		local combat_ability_cooldown_modifier = stat_buffs.combat_ability_cooldown_modifier or 1
+		ability_cooldown_modifier = ability_cooldown_modifier * combat_ability_cooldown_modifier
+	elseif ability_type == "grenade_ability" then
+		local grenade_ability_cooldown_modifier = stat_buffs.grenade_ability_cooldown_modifier or 1
+		ability_cooldown_modifier = grenade_ability_cooldown_modifier
+	end
+
 	local max_ability_cooldown = math.max(0, base_cooldown * ability_cooldown_modifier - ability_cooldown_flat_reduction)
 
 	return max_ability_cooldown
@@ -635,12 +696,6 @@ end
 PlayerUnitAbilityExtension.max_ability_charges = function (self, ability_type)
 	local equipped_abilities = self._equipped_abilities
 	local ability = equipped_abilities[ability_type]
-	local max_charges = self:_ability_max_charges(ability)
-
-	return max_charges
-end
-
-PlayerUnitAbilityExtension._ability_max_charges = function (self, ability)
 	local max_charges = ability.max_charges
 	local ability_stat_buff = ability.stat_buff
 
@@ -655,17 +710,13 @@ end
 
 PlayerUnitAbilityExtension.restore_ability_charge = function (self, ability_type, num_charges_restored)
 	local ability_component = self._ability_components[ability_type]
-	local equipped_abilities = self._equipped_abilities
-	local ability = equipped_abilities[ability_type]
-	local max_charges = self:_ability_max_charges(ability)
+	local max_charges = self:max_ability_charges(ability_type)
 	ability_component.num_charges = math.clamp(ability_component.num_charges + num_charges_restored, 0, max_charges)
 end
 
 PlayerUnitAbilityExtension.set_ability_charges = function (self, ability_type, num_charges)
 	local ability_component = self._ability_components[ability_type]
-	local equipped_abilities = self._equipped_abilities
-	local ability = equipped_abilities[ability_type]
-	local max_charges = self:_ability_max_charges(ability)
+	local max_charges = self:max_ability_charges(ability_type)
 	ability_component.num_charges = math.clamp(num_charges, 0, max_charges)
 end
 
@@ -678,14 +729,14 @@ end
 
 PlayerUnitAbilityExtension.reduce_ability_cooldown_time = function (self, ability_type, reduce_time)
 	local ability_component = self._ability_components[ability_type]
-	local current_cool_down = ability_component.cooldown
-	local new_cooldown = current_cool_down - reduce_time
+	local current_cooldown = ability_component.cooldown
+	local new_cooldown = current_cooldown - reduce_time
 	local fixed_frame_t = FixedFrame.get_latest_fixed_time()
 	new_cooldown = math.max(new_cooldown, fixed_frame_t)
 	ability_component.cooldown = new_cooldown
 end
 
-PlayerUnitAbilityExtension.use_ability_charge = function (self, ability_type)
+PlayerUnitAbilityExtension.use_ability_charge = function (self, ability_type, optional_num_charges)
 	local ability_components = self._ability_components
 	local component = ability_components[ability_type]
 	local equipped_abilities_component = self._equipped_abilities_component
@@ -697,7 +748,8 @@ PlayerUnitAbilityExtension.use_ability_charge = function (self, ability_type)
 		Managers.telemetry_reporters:reporter("grenade_ability"):register_event(self._player, ability_name)
 	end
 
-	component.num_charges = math.max(component.num_charges - 1, 0)
+	local num_charges_to_deduct = optional_num_charges or 1
+	component.num_charges = math.max(component.num_charges - num_charges_to_deduct, 0)
 end
 
 PlayerUnitAbilityExtension.running_action_settings = function (self)
@@ -709,7 +761,7 @@ PlayerUnitAbilityExtension.wanted_character_state_transition = function (self)
 end
 
 PlayerUnitAbilityExtension.get_slot_name = function (self, ability_type)
-	return "slot_" .. ability_type
+	return self._slot_name_lookup[ability_type]
 end
 
 return PlayerUnitAbilityExtension

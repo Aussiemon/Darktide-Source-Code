@@ -1,6 +1,6 @@
 local PlayerAssistNotifications = require("scripts/utilities/player_assist_notifications")
 local Assist = class("Assist")
-local FORCE_ASSIST_TIME = 0.75
+local FORCE_ASSIST_DURATION = 1.5
 
 Assist.init = function (self, anim_settings, is_server, unit, game_session_or_nil, game_object_id_or_nil, assist_type_or_nil)
 	self._is_server = is_server
@@ -77,10 +77,11 @@ Assist._try_start_anim = function (self)
 	local in_progress = assisted_state_input_component.in_progress
 	local interactee_extension = self._interactee_extension
 	local force_assist = self._assisted_state_input_component.force_assist
-	local duration = force_assist and FORCE_ASSIST_TIME or interactee_extension:interaction_length()
+	local duration = force_assist and FORCE_ASSIST_DURATION or interactee_extension:interaction_length()
 
 	if not was_in_progress and in_progress then
-		local anim_event = self._anim_settings.start_anim_event
+		local anim_settings = self._anim_settings
+		local anim_event = force_assist and anim_settings.start_anim_event_fast or anim_settings.start_anim_event
 
 		if anim_event then
 			self._animation_extension:anim_event_with_variable_float(anim_event, "assist_interaction_duration", duration)
@@ -100,10 +101,11 @@ Assist._try_abort_anim = function (self)
 	local interactee_component = self._interactee_component
 	local was_in_progress = self._was_in_progress
 	local in_progress = assisted_state_input_component.in_progress
+	local force_assist = assisted_state_input_component.force_assist
 	local success = assisted_state_input_component.success
 	local being_assisted = interactee_component.interacted_with
 
-	if was_in_progress and (not in_progress or not being_assisted) and not success then
+	if was_in_progress and (not in_progress or not being_assisted and not force_assist) and not success then
 		local anim_event = self._anim_settings.abort_anim_event
 
 		if anim_event then
@@ -148,7 +150,7 @@ Assist._synchronize_interaction_duration = function (self)
 end
 
 Assist._update_force_assist = function (self, dt)
-	if self._force_assist_timer <= FORCE_ASSIST_TIME then
+	if self._force_assist_timer <= FORCE_ASSIST_DURATION then
 		self._force_assist_timer = self._force_assist_timer + dt
 
 		return false

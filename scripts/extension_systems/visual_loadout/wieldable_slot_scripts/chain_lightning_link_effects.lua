@@ -1,7 +1,7 @@
 local Action = require("scripts/utilities/weapon/action")
-local BuffSettings = require("scripts/settings/buff/buff_settings")
 local ChainLightning = require("scripts/utilities/action/chain_lightning")
 local ChainLightningTarget = require("scripts/utilities/action/chain_lightning_target")
+local Spread = require("scripts/utilities/spread")
 local ChainLightningLinkEffects = class("ChainLightningLinkEffects")
 local Quaternion_look = Quaternion.look
 local Unit_node = Unit.node
@@ -10,34 +10,156 @@ local Vector3_direction_length = Vector3.direction_length
 local Vector3_flat = Vector3.flat
 local Vector3_normalize = Vector3.normalize
 local World_create_particles = World.create_particles
-local World_destroy_particles = World.destroy_particles
 local World_find_particles_variable = World.find_particles_variable
-local World_link_particles = World.link_particles
 local World_move_particles = World.move_particles
-local World_set_particles_use_custom_fov = World.set_particles_use_custom_fov
 local World_set_particles_variable = World.set_particles_variable
 local World_stop_spawning_particles = World.stop_spawning_particles
-local BUFF_KEYWORDS = BuffSettings.keywords
+local BREADTH_FIRST_VALIDATION = ChainLightning.breadth_first_validation_functions
+local DEPTH_FIRST_VALIDATION = ChainLightning.depth_first_validation_functions
+local JUMP_VALIDATION = ChainLightning.jump_validation_functions
+local ACTION_MODULE_TARGETING_COMPONENT_KEYS = {
+	"target_unit_1",
+	"target_unit_2",
+	"target_unit_3"
+}
+local ROOT_CHAIN_SETTINGS = {
+	max_targets = {
+		num_targets = #ACTION_MODULE_TARGETING_COMPONENT_KEYS
+	}
+}
 local LOOPING_LINK_VFX_ALIAS = "chain_lightning_link"
 local PARTICLE_VARIABLE_NAME = "length"
-local ATTACK_VFX = "content/fx/particles/weapons/force_staff/force_staff_chainlightning_attacking_hands"
-local NO_TARGET_VFX = "content/fx/particles/weapons/force_staff/force_staff_chainlightning_notarget"
-local TARGET_NODE = "enemy_aim_target_02"
+local TARGET_NODE_NAME = "enemy_aim_target_02"
 local DEFAULT_HAND = "both"
 local VISUAL_JUMP_TIME = 0.05
+local NO_TARGET_JUMP_TIME = 0.2
 local vfx_external_properties = {}
-local _target_finding_func, _jump_validation_func, _traverse_validation_func, _on_add_func, _on_delete_func, _effect_name = nil
-local MAX_NUM_FX_data_TABLES = 128
-local FxDataTables = class("FxDataTables")
+local _on_add_func, _root_on_add_func, _on_remove_func, _link_effect_name = nil
+local MAX_NUM_FX_DATA_TABLES = 128
+local MAX_NUM_EFFECTS_PER_TABLE = 4
+local FxData = class("FxDataChainLightning")
+
+FxData.init = function (self, index)
+	self.index = index
+	self.active = false
+	local effects = Script.new_array(MAX_NUM_EFFECTS_PER_TABLE)
+
+	for jj = 1, MAX_NUM_EFFECTS_PER_TABLE do
+		effects[jj] = {}
+	end
+
+	self._num_effects = 0
+	self._effects = effects
+end
+
+FxData.spawn_vfx = function (self, world, link_effect_name, source_unit, source_node, target_unit, target_node)
+	local num_effects = self._num_effects + 1
+	local entry = self._effects[num_effects]
+	self._num_effects = num_effects
+	local source_pos = Unit_world_position(source_unit, source_node)
+	local target_pos = Unit_world_position(target_unit, target_node)
+	local line = target_pos - source_pos
+	local direction, length = Vector3_direction_length(line)
+	local rotation = Quaternion_look(direction)
+	local particle_length = Vector3(length, 1, 1)
+	local effect_id = World_create_particles(world, link_effect_name, source_pos, rotation)
+	local length_variable_index = World_find_particles_variable(world, link_effect_name, PARTICLE_VARIABLE_NAME)
+
+	World_set_particles_variable(world, effect_id, length_variable_index, particle_length)
+
+	entry.source_unit = source_unit
+	entry.target_unit = target_unit
+	entry.source_node_index = source_node
+	entry.target_node_index = target_node
+	entry.effect_id = effect_id
+	entry.link_effect_name = link_effect_name
+end
+
+FxData.spawn_vfx_world_position = function (self, world, link_effect_name, source_unit, source_node, target_pos)
+	local num_effects = self._num_effects + 1
+	local entry = self._effects[num_effects]
+	self._num_effects = num_effects
+	local source_pos = Unit_world_position(source_unit, source_node)
+	local line = target_pos - source_pos
+	local direction, length = Vector3_direction_length(line)
+	local rotation = Quaternion_look(direction)
+	local particle_length = Vector3(length, 1, 1)
+	local effect_id = World_create_particles(world, link_effect_name, source_pos, rotation)
+	local length_variable_index = World_find_particles_variable(world, link_effect_name, PARTICLE_VARIABLE_NAME)
+
+	World_set_particles_variable(world, effect_id, length_variable_index, particle_length)
+
+	entry.source_unit = source_unit
+	entry.target_pos = Vector3Box(target_pos)
+	entry.source_node_index = source_node
+	entry.effect_id = effect_id
+	entry.link_effect_name = link_effect_name
+end
+
+FxData.update_world_position = function (self, world_pos)
+	local effects = self._effects
+
+	for ii = 1, self._num_effects do
+		local entry = effects[ii]
+
+		entry.target_pos:store(world_pos)
+	end
+end
+
+FxData.stop_vfx = function (self, world)
+	local effects = self._effects
+
+	for ii = 1, self._num_effects do
+		local entry = effects[ii]
+		local effect_id = entry.effect_id
+
+		World_stop_spawning_particles(world, effect_id)
+		table.clear(entry)
+	end
+
+	self._num_effects = 0
+end
+
+FxData.update_vfx = function (self, t, world)
+	local effects = self._effects
+
+	for ii = 1, self._num_effects do
+		local entry = effects[ii]
+		local source_unit = entry.source_unit
+		local source_node_index = entry.source_node_index
+		local target_unit = entry.target_unit
+		local target_node_index = entry.target_node_index
+		local effect_id = entry.effect_id
+		local link_effect_name = entry.link_effect_name
+		local source_pos = Unit_world_position(source_unit, source_node_index)
+		local target_pos = entry.target_pos and entry.target_pos:unbox() or Unit_world_position(target_unit, target_node_index)
+		local line = target_pos - source_pos
+		local direction, length = Vector3_direction_length(line)
+		local rotation = Quaternion_look(direction)
+		local particle_length = Vector3(length, 1, 1)
+		local length_variable_index = World_find_particles_variable(world, link_effect_name, PARTICLE_VARIABLE_NAME)
+
+		World_move_particles(world, effect_id, source_pos, rotation)
+		World_set_particles_variable(world, effect_id, length_variable_index, particle_length)
+	end
+end
+
+FxData.clear = function (self)
+	self.active = false
+	local effects = self._effects
+
+	for jj = 1, MAX_NUM_EFFECTS_PER_TABLE do
+		table.clear(effects[jj])
+	end
+end
+
+local FxDataTables = class("FxDataTablesChainLightning")
 
 FxDataTables.init = function (self)
-	local fx_data_tables = Script.new_array(MAX_NUM_FX_data_TABLES)
+	local fx_data_tables = Script.new_array(MAX_NUM_FX_DATA_TABLES)
 
-	for ii = 1, MAX_NUM_FX_data_TABLES do
-		fx_data_tables[ii] = {
-			active = false,
-			index = ii
-		}
+	for ii = 1, MAX_NUM_FX_DATA_TABLES do
+		fx_data_tables[ii] = FxData:new(ii)
 	end
 
 	self._fx_data_tables = fx_data_tables
@@ -46,7 +168,7 @@ end
 FxDataTables.next_table = function (self)
 	local fx_data_tables = self._fx_data_tables
 
-	for ii = 1, MAX_NUM_FX_data_TABLES do
+	for ii = 1, MAX_NUM_FX_DATA_TABLES do
 		local fx_data_table = fx_data_tables[ii]
 
 		if not fx_data_table.active then
@@ -58,56 +180,92 @@ FxDataTables.next_table = function (self)
 end
 
 FxDataTables.return_table = function (self, fx_data_table)
-	self._fx_data_tables[fx_data_table.index].active = false
+	fx_data_table:clear()
 end
 
 ChainLightningLinkEffects.init = function (self, context, slot, weapon_template, fx_sources)
-	local is_husk = context.is_husk
 	local owner_unit = context.owner_unit
 	self._world = context.world
 	self._physics_world = context.physics_world
-	self._physics_world = context.physics_world
-	self._is_server = context.is_server
-	self._is_husk = is_husk
+	self._is_husk = context.is_husk
 	self._is_local_unit = context.is_local_unit
 	self._owner_unit = owner_unit
-	self._slot_name = slot.name
+	self._weapon_template = weapon_template
 	self._weapon_actions = weapon_template.actions
-	self._wwise_world = context.wwise_world
-	self._first_person_unit = context.first_person_unit
-	local weapon_chain_settings = weapon_template.chain_settings
-	local right_fx_source_name = weapon_chain_settings.right_fx_source_name
-	self._right_fx_source_name = weapon_chain_settings.right_fx_source_name_is_base_unit and right_fx_source_name or fx_sources[right_fx_source_name]
-	local left_fx_source_name = weapon_chain_settings.left_fx_source_name
-	self._left_fx_source_name = weapon_chain_settings.left_fx_source_name_is_base_unit and left_fx_source_name or fx_sources[left_fx_source_name]
-	self._is_in_first_person = nil
-	self._target_1_right_particle_id = nil
-	self._target_2_right_particle_id = nil
-	self._target_3_right_particle_id = nil
-	self._target_1_left_particle_id = nil
-	self._target_2_left_particle_id = nil
-	self._target_3_left_particle_id = nil
-	self._right_hand_particle_id = nil
-	self._left_hand_particle_id = nil
-	self._fx_extension = context.fx_extension
 	self._buff_extension = ScriptUnit.extension(owner_unit, "buff_system")
+	self._fx_extension = context.fx_extension
 	self._visual_loadout_extension = context.visual_loadout_extension
-	local unit_data_extension = ScriptUnit.extension(owner_unit, "unit_data_system")
-	self._action_module_targeting_component = unit_data_extension:read_component("action_module_targeting")
+	local unit_data_extension = context.unit_data_extension
+	self._targeting_module_component = unit_data_extension:read_component("action_module_targeting")
 	self._weapon_action_component = unit_data_extension:read_component("weapon_action")
 	self._critical_strike_component = unit_data_extension:read_component("critical_strike")
-	self._action_module_charge_component = unit_data_extension:read_component("action_module_charge")
-	self._chain_targets = {}
+	self._first_person_component = unit_data_extension:read_component("first_person")
+	self._chain_root_node = nil
 	self._hit_units = {}
+	self._temp_targets = {}
+	self._attacking = false
 	self._next_jump_time = 0
+	self._next_no_target_jump_time = 0
+	self._no_target_position = Vector3Box(0, 0, 0)
+	self._charge_level = false
+	local weapon_chain_settings = weapon_template.chain_settings
+	local right_fx_source_name = fx_sources[weapon_chain_settings.right_fx_source_name]
+	local left_fx_source_name = fx_sources[weapon_chain_settings.left_fx_source_name]
+
+	if weapon_chain_settings.left_fx_source_name_base_unit then
+		left_fx_source_name = weapon_chain_settings.left_fx_source_name_base_unit
+	end
+
+	if weapon_chain_settings.right_fx_source_name_base_unit then
+		right_fx_source_name = weapon_chain_settings.right_fx_source_name_base_unit
+	end
+
 	self._fx_data_tables = FxDataTables:new()
 	self._func_context = {
+		fx_hand = "none",
 		charge_level = self._charge_level,
 		fx_data_tables = self._fx_data_tables,
 		hit_units = self._hit_units,
 		world = self._world,
-		visual_loadout_extension = self._visual_loadout_extension
+		right_fx_source_name = right_fx_source_name,
+		left_fx_source_name = left_fx_source_name,
+		fx_extension = self._fx_extension,
+		visual_loadout_extension = self._visual_loadout_extension,
+		weapon_action_component = self._weapon_action_component,
+		weapon_template = self._weapon_template,
+		weapon_actions = self._weapon_actions
 	}
+
+	self:_create_chain_root_node()
+end
+
+ChainLightningLinkEffects._create_chain_root_node = function (self)
+	if not self._chain_root_node then
+		local depth = 0
+		local use_random = false
+		local chain_root_node = ChainLightningTarget:new(ROOT_CHAIN_SETTINGS, depth, use_random, nil, "unit", self._owner_unit)
+
+		for ii = 1, #ACTION_MODULE_TARGETING_COMPONENT_KEYS do
+			local key = ACTION_MODULE_TARGETING_COMPONENT_KEYS[ii]
+
+			chain_root_node:set_value(key, false)
+		end
+
+		self._chain_root_node = chain_root_node
+	end
+
+	self:_clear_initial_targets()
+	self:_clear_no_target()
+end
+
+ChainLightningLinkEffects._clear_initial_targets = function (self)
+	local chain_root_node = self._chain_root_node
+
+	for ii = 1, #ACTION_MODULE_TARGETING_COMPONENT_KEYS do
+		local key = ACTION_MODULE_TARGETING_COMPONENT_KEYS[ii]
+
+		chain_root_node:set_value(key, false)
+	end
 end
 
 ChainLightningLinkEffects.destroy = function (self)
@@ -122,10 +280,6 @@ ChainLightningLinkEffects.unwield = function (self)
 	self:_reset()
 end
 
-ChainLightningLinkEffects.fixed_update = function (self, unit, dt, t, frame)
-	return
-end
-
 ChainLightningLinkEffects.update_unit_position = function (self, unit, dt, t)
 	if DEDICATED_SERVER then
 		return
@@ -138,174 +292,171 @@ ChainLightningLinkEffects.update_unit_position = function (self, unit, dt, t)
 end
 
 ChainLightningLinkEffects._find_root_targets = function (self, t)
-	local weapon_action_component = self._weapon_action_component
-	local action_settings = Action.current_action_settings_from_component(weapon_action_component, self._weapon_actions)
-	local chain_settings = action_settings and action_settings.chain_settings
-	local fx_settings = action_settings and action_settings.fx
-	local is_critical_strike = self._critical_strike_component.is_active
+	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
 	local action_kind = action_settings and action_settings.kind
-	local time_in_action = t - weapon_action_component.start_t
-	local depth = 1
-	local use_random = false
-	local max_targets = ChainLightning.max_targets(time_in_action, chain_settings, depth, use_random)
-	local fx_hand = fx_settings and (is_critical_strike and fx_settings.fx_hand_critical_strike or fx_settings.fx_hand) or DEFAULT_HAND
-	local use_charge = fx_settings and fx_settings.use_charge
-	local action_module_charge_component = self._action_module_charge_component
-	local charge_level = use_charge and action_module_charge_component.charge_level or 1
-	self._charge_level = charge_level
-	local targeting = action_kind == "overload_charge_target_finder" or action_kind == "overload_target_finder"
-	local attacking = action_kind == "chain_lightning"
+	local attacking = action_kind == "chain_lightning" or action_kind == "chain_lightning_powerup"
 
 	if attacking then
-		local action_module_targeting_component = self._action_module_targeting_component
-		local target_unit_1 = action_module_targeting_component.target_unit_1
-		local target_unit_2 = action_module_targeting_component.target_unit_2
-		local target_unit_3 = action_module_targeting_component.target_unit_3
-
-		if target_unit_1 and not self._hit_units[target_unit_1] and max_targets >= 1 then
-			self._chain_targets[#self._chain_targets + 1] = ChainLightningTarget:new(chain_settings, 1, use_random, nil, "unit", target_unit_1)
-			self._hit_units[target_unit_1] = true
-		end
-
-		if target_unit_2 and not self._hit_units[target_unit_2] and max_targets >= 2 then
-			self._chain_targets[#self._chain_targets + 1] = ChainLightningTarget:new(chain_settings, 1, use_random, nil, "unit", target_unit_2)
-			self._hit_units[target_unit_2] = true
-		end
-
-		if target_unit_3 and not self._hit_units[target_unit_3] and max_targets >= 3 then
-			self._chain_targets[#self._chain_targets + 1] = ChainLightningTarget:new(chain_settings, 1, use_random, nil, "unit", target_unit_3)
-			self._hit_units[target_unit_3] = true
-		end
-
-		local spawner_unit_right, spawner_node_right = self._fx_extension:vfx_spawner_unit_and_node(self._right_fx_source_name)
-		local spawner_unit_left, spawner_node_left = self._fx_extension:vfx_spawner_unit_and_node(self._left_fx_source_name)
-
-		if fx_hand == "right" or fx_hand == "both" then
-			self._target_1_right_particle_id, self._target_1_right_particle_name = self:_update_vfx(t, self._world, self._target_1_right_particle_id, self._target_1_right_particle_name, spawner_unit_right, spawner_node_right, max_targets >= 1 and action_module_targeting_component.target_unit_1)
-			self._target_2_right_particle_id, self._target_2_right_particle_name = self:_update_vfx(t, self._world, self._target_2_right_particle_id, self._target_2_right_particle_name, spawner_unit_right, spawner_node_right, max_targets >= 2 and action_module_targeting_component.target_unit_2)
-			self._target_3_right_particle_id, self._target_3_right_particle_name = self:_update_vfx(t, self._world, self._target_3_right_particle_id, self._target_3_right_particle_name, spawner_unit_right, spawner_node_right, max_targets >= 3 and action_module_targeting_component.target_unit_3)
-			self._right_hand_particle_id = self:_update_hand_vfx(t, self._world, self._right_hand_particle_id, spawner_unit_right, spawner_node_right, true)
-			local has_any_particle_effect = self._target_1_right_particle_id or self._target_2_right_particle_id or self._target_3_right_particle_id
-			self._no_target_particle_right_id, self._no_target_particle_right_name = self:_update_no_target_vfx(t, self._world, self._no_target_particle_right_id, self._no_target_particle_right_name, has_any_particle_effect, spawner_unit_right, spawner_node_right)
-		end
-
-		if fx_hand == "left" or fx_hand == "both" then
-			self._target_1_left_particle_id, self._target_1_left_particle_name = self:_update_vfx(t, self._world, self._target_1_left_particle_id, self._target_1_left_particle_name, spawner_unit_left, spawner_node_left, max_targets >= 1 and action_module_targeting_component.target_unit_1)
-			self._target_2_left_particle_id, self._target_2_left_particle_name = self:_update_vfx(t, self._world, self._target_2_left_particle_id, self._target_2_left_particle_name, spawner_unit_left, spawner_node_left, max_targets >= 2 and action_module_targeting_component.target_unit_2)
-			self._target_3_left_particle_id, self._target_3_left_particle_name = self:_update_vfx(t, self._world, self._target_3_left_particle_id, self._target_3_left_particle_name, spawner_unit_left, spawner_node_left, max_targets >= 3 and action_module_targeting_component.target_unit_3)
-			self._left_hand_particle_id = self:_update_hand_vfx(t, self._world, self._left_hand_particle_id, spawner_unit_left, spawner_node_left, true)
-			local has_any_particle_effect = self._target_1_left_particle_id or self._target_2_left_particle_id or self._target_3_left_particle_id
-			self._no_target_particle_left_id, self._no_target_particle_left_name = self:_update_no_target_vfx(t, self._world, self._no_target_particle_left_id, self._no_target_particle_left_name, has_any_particle_effect, spawner_unit_left, spawner_node_left)
-		end
-	elseif targeting then
-		local spawner_unit_right, spawner_node_right = self._fx_extension:vfx_spawner_unit_and_node(self._right_fx_source_name)
-		local spawner_unit_left, spawner_node_left = self._fx_extension:vfx_spawner_unit_and_node(self._left_fx_source_name)
-
-		if fx_hand == "right" or fx_hand == "both" then
-			self._right_hand_particle_id = self:_update_hand_vfx(t, self._world, self._right_hand_particle_id, spawner_unit_right, spawner_node_right)
-		end
-
-		if fx_hand == "left" or fx_hand == "both" then
-			self._left_hand_particle_id = self:_update_hand_vfx(t, self._world, self._left_hand_particle_id, spawner_unit_left, spawner_node_left)
-		end
-
-		self._target_1_right_particle_id, self._target_1_right_particle_name = self:_stop_vfx(self._world, self._target_1_right_particle_id)
-		self._target_2_right_particle_id, self._target_2_right_particle_name = self:_stop_vfx(self._world, self._target_2_right_particle_id)
-		self._target_3_right_particle_id, self._target_3_right_particle_name = self:_stop_vfx(self._world, self._target_3_right_particle_id)
-		self._target_1_left_particle_id, self._target_1_left_particle_name = self:_stop_vfx(self._world, self._target_1_left_particle_id)
-		self._target_2_left_particle_id, self._target_2_left_particle_name = self:_stop_vfx(self._world, self._target_2_left_particle_id)
-		self._target_3_left_particle_id, self._target_3_left_particle_name = self:_stop_vfx(self._world, self._target_3_left_particle_id)
-		self._no_target_particle_right_id, self._no_target_particle_right_name = self:_stop_vfx(self._world, self._no_target_particle_right_id)
-		self._no_target_particle_left_id, self._no_target_particle_left_name = self:_stop_vfx(self._world, self._no_target_particle_left_id)
-	else
-		local chain_targets = self._chain_targets
+		local hit_units = self._hit_units
+		local chain_root_node = self._chain_root_node
+		local time_in_action = t - self._weapon_action_component.start_t
+		local chain_settings = action_settings.chain_settings
+		local depth = 0
+		local use_random = true
+		local max_targets = ChainLightning.max_targets(time_in_action, chain_settings, depth, use_random)
+		local targeting_module_component = self._targeting_module_component
 		local func_context = self._func_context
+		local is_critical_strike = self._critical_strike_component.is_active
+		local fx_settings = action_settings and action_settings.fx
+		local fx_hand = fx_settings and (is_critical_strike and fx_settings.fx_hand_critical_strike or fx_settings.fx_hand) or DEFAULT_HAND
+		func_context.fx_hand = fx_hand
 
-		for ii = 1, #chain_targets do
-			ChainLightningTarget.remove_all_child_nodes(chain_targets[ii], _on_delete_func, func_context)
-		end
-
-		self._target_1_right_particle_id, self._target_1_right_particle_name = self:_stop_vfx(self._world, self._target_1_right_particle_id)
-		self._target_2_right_particle_id, self._target_2_right_particle_name = self:_stop_vfx(self._world, self._target_2_right_particle_id)
-		self._target_3_right_particle_id, self._target_3_right_particle_name = self:_stop_vfx(self._world, self._target_3_right_particle_id)
-		self._target_1_left_particle_id, self._target_1_left_particle_name = self:_stop_vfx(self._world, self._target_1_left_particle_id)
-		self._target_2_left_particle_id, self._target_2_left_particle_name = self:_stop_vfx(self._world, self._target_2_left_particle_id)
-		self._target_3_left_particle_id, self._target_3_left_particle_name = self:_stop_vfx(self._world, self._target_3_left_particle_id)
-		self._no_target_particle_right_id, self._no_target_particle_right_name = self:_stop_vfx(self._world, self._no_target_particle_right_id)
-		self._no_target_particle_left_id, self._no_target_particle_left_name = self:_stop_vfx(self._world, self._no_target_particle_left_id)
-		self._right_hand_particle_id = self:_stop_vfx(self._world, self._right_hand_particle_id)
-		self._left_hand_particle_id = self:_stop_vfx(self._world, self._left_hand_particle_id)
-
-		table.clear(self._chain_targets)
-		table.clear(self._hit_units)
-
-		self._charge_level = nil
-	end
-end
-
-local valid_sources = {}
-
-ChainLightningLinkEffects._find_new_chain_targets = function (self, t, broadphase, enemy_side_names, max_angle, close_max_angle, max_z_diff, max_jumps, radius, root_target, initial_travel_direction)
-	local hit_units = self._hit_units
-	local func_context = self._func_context
-	local physics_world = self._physics_world
-
-	table.clear(valid_sources)
-	ChainLightningTarget.traverse_breadth_first(t, root_target, valid_sources, _target_finding_func, max_jumps)
-
-	for ii = 1, #valid_sources do
-		local source = valid_sources[ii]
-
-		ChainLightning.jump(t, physics_world, source, hit_units, broadphase, enemy_side_names, initial_travel_direction, radius, max_angle, close_max_angle, max_z_diff, _on_add_func, func_context, _jump_validation_func)
-	end
-end
-
-local deletion_targets = {}
-local validation_targets = {}
-
-ChainLightningLinkEffects._validate_targets = function (self, t)
-	local chain_targets = self._chain_targets
-	local func_context = self._func_context
-
-	for ii = #chain_targets, 1, -1 do
-		local target = chain_targets[ii]
-		local target_unit = target:value("unit")
-		local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
-		local valid_target = buff_extension and buff_extension:has_keyword(BUFF_KEYWORDS.electrocuted)
-
-		if not valid_target or not HEALTH_ALIVE[target_unit] then
-			table.clear(deletion_targets)
-			ChainLightningTarget.traverse_depth_first(t, chain_targets[ii], deletion_targets)
-
-			for jj = 1, #deletion_targets do
-				local child_target = deletion_targets[jj]
-
-				_on_delete_func(child_target, func_context)
+		for ii = 1, #ACTION_MODULE_TARGETING_COMPONENT_KEYS do
+			if max_targets <= chain_root_node:num_children() then
+				break
 			end
 
-			table.swap_delete(chain_targets, ii)
+			local key = ACTION_MODULE_TARGETING_COMPONENT_KEYS[ii]
+			local target_unit = targeting_module_component[key]
 
-			self._hit_units[target_unit] = nil
+			if target_unit and not hit_units[target_unit] and JUMP_VALIDATION.target_alive_and_electrocuted(target_unit) then
+				local slot_target_node = chain_root_node:value(key)
+				local slot_target_unit_alive = HEALTH_ALIVE[chain_root_node:value("target_unit")]
+
+				if slot_target_node and not slot_target_unit_alive then
+					ChainLightningTarget.remove_all_child_nodes(slot_target_node, _on_remove_func, func_context)
+					chain_root_node:remove_child(slot_target_node, _on_remove_func, func_context)
+
+					hit_units[target_unit] = nil
+					slot_target_node = false
+				end
+
+				if not slot_target_node then
+					local child_node = chain_root_node:add_child(_root_on_add_func, func_context, "unit", target_unit, "start_t", t)
+
+					chain_root_node:set_value(key, child_node)
+
+					hit_units[target_unit] = true
+				end
+			end
 		end
+
+		self:_find_no_target(t)
+	elseif self._attacking and not attacking then
+		ChainLightningTarget.remove_all_child_nodes(self._chain_root_node, _on_remove_func, self._func_context)
+		self:_clear_initial_targets()
+		self:_clear_no_target()
 	end
 
-	table.clear(validation_targets)
+	self._attacking = attacking
+end
 
-	for ii = 1, #chain_targets do
-		ChainLightningTarget.traverse_depth_first(t, chain_targets[ii], validation_targets, _traverse_validation_func)
+ChainLightningLinkEffects._find_no_target = function (self, t)
+	local owner_unit = self._owner_unit
+	local chain_root_node = self._chain_root_node
+	local context = self._func_context
+
+	if chain_root_node:num_children() == 0 then
+		local target_pos = self:_find_no_target_pos(t)
+
+		if not chain_root_node:value("fx_data") then
+			local fx_data_table = context.fx_data_tables:next_table()
+			local link_effect_name = _link_effect_name(context, "no_target")
+			local fx_hand = context.fx_hand
+			local spawn_left = fx_hand == "both" or fx_hand == "left"
+			local spawn_right = fx_hand == "both" or fx_hand == "right"
+
+			if spawn_left then
+				local parent_unit, source_node_index = context.fx_extension:vfx_spawner_unit_and_node(context.left_fx_source_name)
+
+				fx_data_table:spawn_vfx_world_position(context.world, link_effect_name, parent_unit, source_node_index, target_pos)
+			end
+
+			if spawn_right then
+				local parent_unit, source_node_index = context.fx_extension:vfx_spawner_unit_and_node(context.right_fx_source_name)
+
+				fx_data_table:spawn_vfx_world_position(context.world, link_effect_name, parent_unit, source_node_index, target_pos)
+			end
+
+			chain_root_node:set_value("fx_data", fx_data_table)
+		else
+			local fx_data_table = chain_root_node:value("fx_data")
+
+			fx_data_table:update_world_position(target_pos)
+		end
+	else
+		self:_clear_no_target()
+	end
+end
+
+local COLLISION_FILTER = "filter_player_character_shooting_raycast_statics"
+
+ChainLightningLinkEffects._no_target_raycast = function (self, position, rotation, max_lenght)
+	local spread_angle = 5
+	local bullseye = false
+	local ray_rotation = Spread.target_style_spread(rotation, 1, 1, 2, bullseye, spread_angle, spread_angle, nil, false, nil, math.random_seed())
+	local direction = Quaternion.forward(ray_rotation)
+	local hit, hit_position, distance, hit_normal, _ = PhysicsWorld.raycast(self._physics_world, position, direction, max_lenght, "closest", "collision_filter", COLLISION_FILTER)
+
+	if not hit then
+		hit_position = position + direction * max_lenght
+		distance = max_lenght
 	end
 
-	local num_validation_targets = #validation_targets
+	return hit, hit_position, distance, hit_normal
+end
 
-	for ii = num_validation_targets, 1, -1 do
-		local target = validation_targets[ii]
+ChainLightningLinkEffects._find_no_target_pos = function (self, t)
+	if t < self._next_no_target_jump_time then
+		return self._no_target_position:unbox()
+	end
+
+	local position = self._first_person_component.position
+	local rotation = self._first_person_component.rotation
+	local hit, hit_position = self:_no_target_raycast(position, rotation, 10)
+
+	if not hit then
+		local right = Quaternion.right(rotation)
+		local downwards_rotation = Quaternion.multiply(Quaternion.axis_angle(right, -math.pi * 0.1), rotation)
+		hit, hit_position = self:_no_target_raycast(position, downwards_rotation, 10)
+	end
+
+	local jump_time = NO_TARGET_JUMP_TIME
+	self._next_no_target_jump_time = t + jump_time
+
+	self._no_target_position:store(hit_position)
+
+	return hit_position
+end
+
+ChainLightningLinkEffects._clear_no_target = function (self)
+	local world = self._world
+	local chain_root_node = self._chain_root_node
+	local fx_data_table = chain_root_node:value("fx_data")
+
+	if fx_data_table and fx_data_table.active then
+		fx_data_table:stop_vfx(world)
+		chain_root_node:set_value("fx_data", nil)
+		self._fx_data_tables:return_table(fx_data_table)
+	end
+end
+
+ChainLightningLinkEffects._validate_targets = function (self, t)
+	local chain_root_node = self._chain_root_node
+	local temp_targets = self._temp_targets
+
+	table.clear(temp_targets)
+	ChainLightningTarget.traverse_depth_first(t, chain_root_node, temp_targets, DEPTH_FIRST_VALIDATION.node_target_not_electrocuted_or_not_alive)
+
+	local num_targets = #temp_targets
+
+	for ii = num_targets, 1, -1 do
+		local target = temp_targets[ii]
 
 		target:mark_for_deletion()
 	end
 
-	for ii = 1, #chain_targets do
-		ChainLightningTarget.remove_child_nodes_marked_for_deletion(chain_targets[ii], _on_delete_func, func_context)
-	end
+	ChainLightningTarget.remove_child_nodes_marked_for_deletion(chain_root_node, _on_remove_func, self._func_context)
 end
 
 ChainLightningLinkEffects._find_new_targets = function (self, t)
@@ -313,242 +464,136 @@ ChainLightningLinkEffects._find_new_targets = function (self, t)
 		return
 	end
 
-	local weapon_action_component = self._weapon_action_component
 	local owner_unit = self._owner_unit
+	local chain_root_node = self._chain_root_node
+	local owner_unit_position = POSITION_LOOKUP[owner_unit]
 	local broadphase_system = Managers.state.extension:system("broadphase_system")
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system.side_by_unit[owner_unit]
 	local enemy_side_names = side:relation_side_names("enemy")
 	local broadphase = broadphase_system.broadphase
+	local weapon_action_component = self._weapon_action_component
 	local action_settings = Action.current_action_settings_from_component(weapon_action_component, self._weapon_actions)
-	local time_in_action = t - weapon_action_component.start_t
-	local chain_settings = action_settings and action_settings.chain_settings
 	local stat_buffs = self._buff_extension:stat_buffs()
-	local max_angle, close_max_angle, max_z_diff, max_jumps, radius, jump_time = ChainLightning.targeting_parameters(time_in_action, chain_settings, stat_buffs)
+	local chain_settings = action_settings and action_settings.chain_settings
+	local time_in_action = t - weapon_action_component.start_t
+	local max_angle, close_max_angle, vertical_max_angle, max_z_diff, max_jumps, radius, jump_time = ChainLightning.targeting_parameters(time_in_action, chain_settings, stat_buffs)
 	jump_time = VISUAL_JUMP_TIME
 
-	for ii = 1, #self._chain_targets do
-		local attack_direction = Vector3_normalize(Vector3_flat(POSITION_LOOKUP[owner_unit] - POSITION_LOOKUP[self._chain_targets[ii]:value("unit")]))
+	for child_node, _ in pairs(chain_root_node:children()) do
+		local travel_direction = Vector3_normalize(Vector3_flat(owner_unit_position - POSITION_LOOKUP[child_node:value("unit")]))
 
-		self:_find_new_chain_targets(t, broadphase, enemy_side_names, max_angle, close_max_angle, max_z_diff, max_jumps, radius, self._chain_targets[ii], attack_direction)
+		self:_find_new_chain_targets(t, broadphase, enemy_side_names, max_angle, close_max_angle, vertical_max_angle, max_z_diff, max_jumps, radius, child_node, travel_direction)
 	end
 
 	self._next_jump_time = t + jump_time
 end
 
-local effect_targets = {}
+ChainLightningLinkEffects._find_new_chain_targets = function (self, t, broadphase, enemy_side_names, max_angle, close_max_angle, vertical_max_angle, max_z_diff, max_jumps, radius, root_target, initial_travel_direction)
+	local func_context = self._func_context
+	local hit_units = self._hit_units
+	local temp_targets = self._temp_targets
+	local physics_world = self._physics_world
+
+	table.clear(temp_targets)
+	ChainLightningTarget.traverse_breadth_first(t, root_target, temp_targets, BREADTH_FIRST_VALIDATION.node_available_within_depth, max_jumps)
+
+	for ii = 1, #temp_targets do
+		local source = temp_targets[ii]
+
+		ChainLightning.jump(t, physics_world, source, hit_units, broadphase, enemy_side_names, initial_travel_direction, radius, max_angle, close_max_angle, vertical_max_angle, max_z_diff, _on_add_func, func_context, JUMP_VALIDATION.target_alive_and_electrocuted)
+	end
+end
 
 ChainLightningLinkEffects._update_fx = function (self, t)
+	local temp_targets = self._temp_targets
+
+	table.clear(temp_targets)
+
 	local world = self._world
+	local chain_root_node = self._chain_root_node
 
-	table.clear(effect_targets)
+	ChainLightningTarget.traverse_breadth_first(t, chain_root_node, temp_targets)
 
-	local chain_targets = self._chain_targets
+	for ii = 1, #temp_targets do
+		local target = temp_targets[ii]
+		local fx_data_table = target:value("fx_data")
 
-	for ii = 1, #chain_targets do
-		ChainLightningTarget.traverse_breadth_first(t, chain_targets[ii], effect_targets)
-	end
-
-	for ii = 1, #effect_targets do
-		local target = effect_targets[ii]
-		local data = target:value("parent_effect_data")
-
-		if data then
-			local source_pos = Unit_world_position(data.source_unit, data.source_node_index)
-			local target_pos = Unit_world_position(data.target_unit, data.target_node_index)
-			local line = target_pos - source_pos
-			local direction, length = Vector3_direction_length(line)
-			local rotation = Quaternion_look(direction)
-			local particle_length = Vector3(length, 1, 1)
-			local length_variable_index = World_find_particles_variable(world, data.effect_name, PARTICLE_VARIABLE_NAME)
-
-			World_move_particles(world, data.effect_id, source_pos, rotation)
-			World_set_particles_variable(world, data.effect_id, length_variable_index, particle_length)
+		if fx_data_table and fx_data_table.active then
+			fx_data_table:update_vfx(t, world)
 		end
 	end
 end
 
 ChainLightningLinkEffects.update_first_person_mode = function (self, first_person_mode)
-	self._is_in_first_person = first_person_mode
-end
-
-ChainLightningLinkEffects._update_vfx = function (self, t, world, current_effect_id, current_effect_name, node_unit, node, target_unit)
-	if target_unit then
-		local from_pos = Unit_world_position(node_unit, node)
-		local target_pos = Unit_world_position(target_unit, Unit_node(target_unit, TARGET_NODE))
-		local line = target_pos - from_pos
-		local direction, length = Vector3_direction_length(line)
-		local rotation = Quaternion_look(direction)
-		local particle_length = Vector3(length, 1, 1)
-
-		if current_effect_id then
-			local length_variable_index = World_find_particles_variable(world, current_effect_name, PARTICLE_VARIABLE_NAME)
-
-			World_move_particles(world, current_effect_id, from_pos, rotation)
-			World_set_particles_variable(world, current_effect_id, length_variable_index, particle_length)
-
-			return current_effect_id, current_effect_name
-		else
-			local effect_name = _effect_name(self._charge_level, self._visual_loadout_extension)
-			local length_variable_index = World_find_particles_variable(world, effect_name, PARTICLE_VARIABLE_NAME)
-			local effect_id = World_create_particles(world, effect_name, Vector3.zero())
-
-			World_set_particles_variable(world, effect_id, length_variable_index, particle_length)
-
-			return effect_id, effect_name
-		end
-	elseif current_effect_id then
-		World_stop_spawning_particles(world, current_effect_id)
-
-		return nil, nil
-	end
-end
-
-ChainLightningLinkEffects._update_no_target_vfx = function (self, t, world, current_particle_id, current_effect_name, has_any_particle_effect, node_unit, node)
-	if not has_any_particle_effect then
-		if current_particle_id then
-			local from_pos = Unit_world_position(node_unit, node)
-			local first_person_unit = self._first_person_unit
-			local rotation = Unit.world_rotation(first_person_unit, 1)
-			local length_variable_index = World_find_particles_variable(world, NO_TARGET_VFX, PARTICLE_VARIABLE_NAME)
-
-			World_move_particles(world, current_particle_id, from_pos, rotation)
-			World_set_particles_variable(world, current_particle_id, length_variable_index, Vector3(0.2, 1, 1))
-
-			return current_particle_id, current_effect_name
-		else
-			local effect_id = World_create_particles(world, NO_TARGET_VFX, Vector3.zero())
-
-			World_link_particles(world, effect_id, node_unit, node, Matrix4x4.identity(), "destroy")
-
-			local in_first_person = self._is_in_first_person
-
-			if in_first_person then
-				World_set_particles_use_custom_fov(world, effect_id, true)
-			end
-
-			return effect_id, NO_TARGET_VFX
-		end
-	elseif current_particle_id then
-		World_stop_spawning_particles(world, current_particle_id)
-
-		return nil, nil
-	end
-end
-
-ChainLightningLinkEffects._update_hand_vfx = function (self, t, world, current_particle_id, node_unit, node, charge_level)
-	if current_particle_id then
-		return current_particle_id
-	else
-		local effect_id = World_create_particles(world, ATTACK_VFX, Vector3.zero())
-
-		World_link_particles(world, effect_id, node_unit, node, Matrix4x4.identity(), "destroy")
-
-		local in_first_person = self._is_in_first_person
-
-		if in_first_person then
-			World_set_particles_use_custom_fov(world, effect_id, true)
-		end
-
-		return effect_id
-	end
-end
-
-ChainLightningLinkEffects._stop_vfx = function (self, world, particle_id)
-	if particle_id then
-		World_destroy_particles(world, particle_id)
-	end
-
-	return nil, nil
+	return
 end
 
 ChainLightningLinkEffects._reset = function (self)
 	self._next_jump_time = 0
-	self._target_1_right_particle_id, self._target_1_right_particle_name = self:_stop_vfx(self._world, self._target_1_right_particle_id)
-	self._target_2_right_particle_id, self._target_2_right_particle_name = self:_stop_vfx(self._world, self._target_2_right_particle_id)
-	self._target_3_right_particle_id, self._target_3_right_particle_name = self:_stop_vfx(self._world, self._target_3_right_particle_id)
-	self._target_1_left_particle_id, self._target_1_left_particle_name = self:_stop_vfx(self._world, self._target_1_left_particle_id)
-	self._target_2_left_particle_id, self._target_2_left_particle_name = self:_stop_vfx(self._world, self._target_2_left_particle_id)
-	self._target_3_left_particle_id, self._target_3_left_particle_name = self:_stop_vfx(self._world, self._target_3_left_particle_id)
-	self._no_target_particle_right_id, self._no_target_particle_right_name = self:_stop_vfx(self._world, self._no_target_particle_right_id)
-	self._no_target_particle_left_id, self._no_target_particle_left_name = self:_stop_vfx(self._world, self._no_target_particle_left_id)
-	self._right_hand_particle_id = self:_stop_vfx(self._world, self._right_hand_particle_id)
-	self._left_hand_particle_id = self:_stop_vfx(self._world, self._left_hand_particle_id)
-	local chain_targets = self._chain_targets
-	local func_context = self._func_context
 
-	for ii = 1, #chain_targets do
-		ChainLightningTarget.remove_all_child_nodes(chain_targets[ii], _on_delete_func, func_context)
-	end
-
-	table.clear(self._chain_targets)
+	ChainLightningTarget.remove_all_child_nodes(self._chain_root_node, _on_remove_func, self._func_context)
+	self:_clear_initial_targets()
+	self:_clear_no_target()
 	table.clear(self._hit_units)
-end
 
-function _jump_validation_func(target_unit)
-	local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
-	local valid_target = buff_extension and buff_extension:has_keyword(BUFF_KEYWORDS.electrocuted)
-
-	return valid_target
-end
-
-function _target_finding_func(t, node, max_jumps)
-	return not node:is_full() and node:depth() <= max_jumps
-end
-
-function _traverse_validation_func(t, node, player_unit)
-	local target_unit = node:value("unit")
-	local buff_extension = ScriptUnit.has_extension(target_unit, "buff_system")
-	local valid_target = buff_extension and buff_extension:has_keyword(BUFF_KEYWORDS.electrocuted)
-
-	return not valid_target or not HEALTH_ALIVE[target_unit]
+	self._hit_units[self._owner_unit] = true
 end
 
 function _on_add_func(node, context)
-	local parent_unit = node:parent():value("unit")
 	local child_unit = node:value("unit")
 
-	if not node:value("parent_effect_data") then
-		local world = context.world
-		local source_node_index = Unit_node(parent_unit, TARGET_NODE)
-		local target_node_index = Unit_node(child_unit, TARGET_NODE)
-		local source_pos = Unit_world_position(parent_unit, source_node_index)
-		local target_pos = Unit_world_position(child_unit, target_node_index)
-		local line = target_pos - source_pos
-		local direction, length = Vector3_direction_length(line)
-		local rotation = Quaternion_look(direction)
-		local particle_length = Vector3(length, 1, 1)
-		local effect_name = _effect_name(context.charge_level, context.visual_loadout_extension)
-
-		if not effect_name then
-			return
-		end
-
-		local length_variable_index = World_find_particles_variable(world, effect_name, PARTICLE_VARIABLE_NAME)
-		local effect_id = World_create_particles(world, effect_name, source_pos, rotation)
-
-		World_set_particles_variable(world, effect_id, length_variable_index, particle_length)
-
+	if not node:value("fx_data") then
+		local parent_node = node:parent()
+		local parent_unit = parent_node:value("unit")
+		local source_node_index = Unit_node(parent_unit, TARGET_NODE_NAME)
+		local target_node_index = Unit_node(child_unit, TARGET_NODE_NAME)
 		local fx_data_table = context.fx_data_tables:next_table()
-		fx_data_table.source_unit = parent_unit
-		fx_data_table.target_unit = child_unit
-		fx_data_table.source_node_index = source_node_index
-		fx_data_table.target_node_index = target_node_index
-		fx_data_table.effect_id = effect_id
-		fx_data_table.effect_name = effect_name
+		local link_effect_name = _link_effect_name(context)
 
-		node:set_value("parent_effect_data", fx_data_table)
+		fx_data_table:spawn_vfx(context.world, link_effect_name, parent_unit, source_node_index, child_unit, target_node_index)
+		node:set_value("fx_data", fx_data_table)
 	end
 
 	context.hit_units[child_unit] = true
 end
 
-function _on_delete_func(node, context)
-	local fx_data_table = node:value("parent_effect_data")
+function _root_on_add_func(node, context)
+	local child_unit = node:value("unit")
+
+	if not node:value("fx_data") then
+		local fx_hand = context.fx_hand
+		local spawn_left = fx_hand == "both" or fx_hand == "left"
+		local spawn_right = fx_hand == "both" or fx_hand == "right"
+		local target_node_index = Unit_node(child_unit, TARGET_NODE_NAME)
+		local fx_data_table = context.fx_data_tables:next_table()
+		local link_effect_name = _link_effect_name(context)
+
+		if spawn_left then
+			local parent_unit, source_node_index = context.fx_extension:vfx_spawner_unit_and_node(context.left_fx_source_name)
+
+			fx_data_table:spawn_vfx(context.world, link_effect_name, parent_unit, source_node_index, child_unit, target_node_index)
+		end
+
+		if spawn_right then
+			local parent_unit, source_node_index = context.fx_extension:vfx_spawner_unit_and_node(context.right_fx_source_name)
+
+			fx_data_table:spawn_vfx(context.world, link_effect_name, parent_unit, source_node_index, child_unit, target_node_index)
+		end
+
+		node:set_value("fx_data", fx_data_table)
+	end
+
+	context.hit_units[child_unit] = true
+end
+
+function _on_remove_func(node, context)
+	local world = context.world
+	local fx_data_table = node:value("fx_data")
 
 	if fx_data_table and fx_data_table.active then
-		World_stop_spawning_particles(context.world, fx_data_table.effect_id)
-		node:set_value("parent_effect_data", nil)
+		fx_data_table:stop_vfx(world)
+		node:set_value("fx_data", nil)
 		context.fx_data_tables:return_table(fx_data_table)
 	end
 
@@ -556,9 +601,37 @@ function _on_delete_func(node, context)
 	context.hit_units[unit] = nil
 end
 
-function _effect_name(charge_level, visual_loadout_extension)
-	local power = not charge_level and "high" or charge_level > 0.86 and "high" or charge_level > 0.33 and "mid" or "low"
-	vfx_external_properties.power = power
+function _link_effect_name(context, power_override)
+	local action_settings = Action.current_action_settings_from_component(context.weapon_action_component, context.weapon_actions)
+	local chain_lightning_link_effects = action_settings and action_settings.chain_lightning_link_effects or context.weapon_template.chain_lightning_link_effects
+	local power = power_override
+
+	if not power and chain_lightning_link_effects then
+		local charge_level_to_power = chain_lightning_link_effects.charge_level_to_power
+
+		if charge_level_to_power then
+			local charge_level = context.charge_level
+
+			if charge_level then
+				for ii = #charge_level_to_power, 1, -1 do
+					local entry = charge_level_to_power[ii]
+
+					if entry.charge_level < charge_level then
+						power = entry.power
+
+						break
+					end
+				end
+			else
+				power = "high"
+			end
+		else
+			power = chain_lightning_link_effects.power or "high"
+		end
+	end
+
+	vfx_external_properties.power = power or "high"
+	local visual_loadout_extension = context.visual_loadout_extension
 	local resolved, effect_name = visual_loadout_extension:resolve_gear_particle(LOOPING_LINK_VFX_ALIAS, vfx_external_properties)
 
 	if resolved then

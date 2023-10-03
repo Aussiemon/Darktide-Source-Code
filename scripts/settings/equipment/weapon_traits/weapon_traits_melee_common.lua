@@ -664,32 +664,32 @@ weapon_traits_melee_common.weapon_trait_melee_common_equip_increase_movement_spe
 	weapon_trait_melee_common_equip_increase_movement_speed_buff = {
 		{
 			stat_buffs = {
-				[buff_stat_buffs.movement_speed] = 1.1
+				[buff_stat_buffs.movement_speed] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.movement_speed] = 1.2
+				[buff_stat_buffs.movement_speed] = 0.2
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.movement_speed] = 1.3
+				[buff_stat_buffs.movement_speed] = 0.3
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.movement_speed] = 1.4
+				[buff_stat_buffs.movement_speed] = 0.4
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.movement_speed] = 1.5
+				[buff_stat_buffs.movement_speed] = 0.5
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.movement_speed] = 1.6
+				[buff_stat_buffs.movement_speed] = 0.6
 			}
 		}
 	}
@@ -698,32 +698,32 @@ weapon_traits_melee_common.weapon_trait_melee_common_wield_increase_movement_spe
 	weapon_trait_melee_common_wield_increase_movement_speed_buff = {
 		{
 			stat_buffs = {
-				[buff_stat_buffs.movement_speed] = 1.1
+				[buff_stat_buffs.movement_speed] = 0.1
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.movement_speed] = 1.2
+				[buff_stat_buffs.movement_speed] = 0.2
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.movement_speed] = 1.3
+				[buff_stat_buffs.movement_speed] = 0.3
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.movement_speed] = 1.4
+				[buff_stat_buffs.movement_speed] = 0.4
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.movement_speed] = 1.5
+				[buff_stat_buffs.movement_speed] = 0.5
 			}
 		},
 		{
 			stat_buffs = {
-				[buff_stat_buffs.movement_speed] = 1.6
+				[buff_stat_buffs.movement_speed] = 0.6
 			}
 		}
 	}

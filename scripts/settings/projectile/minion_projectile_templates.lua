@@ -104,47 +104,6 @@ local projectile_templates = {
 			}
 		}
 	},
-	cultist_grenadier_grenade = {
-		spawn_flow_event = "grenade_thrown",
-		locomotion_template = ProjectileLocomotionTemplates.minion_grenade_cultist_grenadier,
-		damage = {
-			impact = {
-				damage_profile = DamageProfileTemplates.renegade_grenadier_grenade_blunt,
-				damage_type = damage_types.physical
-			},
-			fuse = {
-				fuse_time = 2,
-				max_lifetime = 12,
-				impact_triggered = true,
-				skipp_reset = true,
-				explosion_template = ExplosionTemplates.cultist_grenadier_gas_grenade_impact,
-				liquid_area_template = LiquidAreaTemplates.cultist_grenadier_gas
-			}
-		},
-		effects = {
-			spawn = {
-				vfx = {
-					orphaned_policy = "stop",
-					link = true,
-					particle_name = "content/fx/particles/enemies/cultist_blight_grenadier/cultist_gas_grenade_trail"
-				},
-				sfx = {
-					event_name = "wwise/events/weapon/play_enemy_combat_cultist_grenadier_throw_beep"
-				}
-			},
-			impact = {
-				num_impacts = 5,
-				sfx = {
-					event_name = "wwise/events/weapon/play_minion_grenadier_gas_grenade_ground_impact"
-				}
-			},
-			fuse = {
-				sfx = {
-					event_name = "wwise/events/weapon/play_minion_grenadier_gas_grenade_fuse"
-				}
-			}
-		}
-	},
 	renegade_shocktrooper_frag_grenade = {
 		spawn_flow_event = "grenade_thrown",
 		locomotion_template = ProjectileLocomotionTemplates.minion_grenade,

@@ -16,7 +16,10 @@ MechanismAdventure.init = function (self, ...)
 	if context.server_channel then
 		self._is_owner = false
 		self._is_syncing = true
+		self._game_session_id = Managers.connection:matched_game_session_id()
+		self._party_id = Managers.connection:initial_party_id()
 
+		Log.info("MechanismAdventure", "Entered mechanism with party_id: %s, game_session_id: %s", self._party_id, self._game_session_id)
 		self._network_event_delegate:register_connection_channel_events(self, context.server_channel, "rpc_sync_mechanism_data_adventure")
 	else
 		self._is_owner = true
@@ -36,8 +39,8 @@ MechanismAdventure.init = function (self, ...)
 		else
 			challenge = context.challenge or DevParameters.challenge
 			resistance = context.resistance or DevParameters.resistance
-			circumstance_name = context.circumstance_name or GameParameters.circumstance
-			side_mission = context.side_mission or GameParameters.side_mission
+			circumstance_name = context.circumstance_name or GameParameters.circumstance or DevParameters.circumstance
+			side_mission = context.side_mission or GameParameters.side_mission or DevParameters.side_mission
 			backend_mission_id = nil
 
 			Log.info("MechanismAdventure", "Using context or dev parameters for challenge(%s), resistance (%s), circumstance(%s), side_mission(%s)", challenge, resistance, circumstance_name, side_mission)
@@ -81,6 +84,14 @@ end
 MechanismAdventure.destroy = function (self)
 	if self._is_syncing then
 		self._network_event_delegate:unregister_channel_events(self._context.server_channel, "rpc_sync_mechanism_data_adventure")
+	end
+
+	self._joining_party_game_session = nil
+
+	if self._retry_popup_id then
+		Managers.event:trigger("event_remove_ui_popup", self._retry_popup_id)
+
+		self._retry_popup_id = nil
 	end
 end
 
@@ -208,6 +219,13 @@ MechanismAdventure._check_state_change = function (self, state, data)
 			changed = true
 			done = false
 
+			if self._retry_popup_id then
+				Managers.event:trigger("event_remove_ui_popup", self._retry_popup_id)
+
+				self._retry_popup_id = nil
+				self._retrying = nil
+			end
+
 			if GameParameters.enable_stay_in_party_feature and self._is_owner and self._is_owner_mission_server then
 				Managers.grpc:create_empty_party(Managers.connection.combined_hash):next(function (response)
 					Log.info("MechanismAdventure", "response:%s", table.tostring(response))
@@ -221,6 +239,45 @@ MechanismAdventure._check_state_change = function (self, state, data)
 						self._stay_in_party_voting_id = voting_id
 					end)
 				end)
+			end
+		end
+
+		if not changed and self._is_owner == false then
+			if self._joining_party_game_session then
+				if self._joining_party_game_session:is_dead() then
+					self._joining_party_game_session = nil
+
+					self:_show_retry_popup()
+				end
+			elseif not self._retrying and not Managers.multiplayer_session:is_leaving() then
+				local party_immaterium = Managers.party_immaterium
+				local has_game_state = party_immaterium and party_immaterium:have_recieved_game_state() or false
+
+				if has_game_state then
+					local game_state = party_immaterium:party_game_state()
+					local party_id = game_state.party_id
+
+					if self._party_id ~= party_id then
+						Log.info("MechanismAdventure", "Changed party %s -> %s", self._party_id, party_id)
+
+						local game_session_id = party_immaterium:current_game_session_id()
+
+						if self._game_session_id ~= game_session_id then
+							if game_session_id then
+								Log.info("MechanismAdventure", "New party is in another game session %s, joining it...", game_session_id)
+
+								self._joining_party_game_session = Managers.party_immaterium:join_game_session()
+							else
+								Log.info("MechanismAdventure", "New party is not in a game session, leaving to hub...")
+								Managers.multiplayer_session:leave("leave_mission_stay_in_party")
+							end
+						else
+							Log.info("MechanismAdventure", "New party is my current game session, staying in mission")
+						end
+
+						self._party_id = party_id
+					end
+				end
 			end
 		end
 	elseif state == "score" then
@@ -342,6 +399,55 @@ end
 
 MechanismAdventure.peer_freed_slot = function (self, peer_id)
 	return
+end
+
+MechanismAdventure._show_retry_popup = function (self)
+	self._retrying = true
+	local context = {
+		title_text = "loc_popup_header_failed_joining_session",
+		description_text = "loc_popup_description_failed_joining_session",
+		options = {
+			{
+				text = "loc_popup_failed_joining_session_retry_button",
+				close_on_pressed = true,
+				callback = function ()
+					self._retry_popup_id = nil
+					self._retrying = nil
+
+					if Managers.party_immaterium:game_session_in_progress() then
+						self._joining_party_game_session = Managers.party_immaterium:join_game_session()
+					else
+						Managers.multiplayer_session:leave("leave_mission_stay_in_party")
+
+						self._joining_party_game_session = nil
+					end
+				end
+			},
+			{
+				text = "loc_popup_failed_joining_session_stay_button",
+				close_on_pressed = true,
+				hotkey = "back",
+				callback = function ()
+					self._retry_popup_id = nil
+					self._joining_party_game_session = nil
+
+					Managers.party_immaterium:join_party({
+						party_id = "",
+						current_game_session_id = self._game_session_id
+					}):next(function ()
+						self._retrying = nil
+					end):catch(function (error)
+						Log.info("MechanismAdventure", "Failed joining party in old game session, leaving to hub")
+						Managers.multiplayer_session:leave("leave_mission")
+					end)
+				end
+			}
+		}
+	}
+
+	Managers.event:trigger("event_show_ui_popup", context, function (id)
+		self._retry_popup_id = id
+	end)
 end
 
 implements(MechanismAdventure, MechanismBase.INTERFACE)

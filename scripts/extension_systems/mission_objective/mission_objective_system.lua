@@ -7,9 +7,7 @@ local MissionObjectiveGoal = require("scripts/extension_systems/mission_objectiv
 local MissionObjectiveKill = require("scripts/extension_systems/mission_objective/utilities/mission_objective_kill")
 local MissionObjectiveLuggable = require("scripts/extension_systems/mission_objective/utilities/mission_objective_luggable")
 local MissionObjectiveSide = require("scripts/extension_systems/mission_objective/utilities/mission_objective_side")
-local MissionObjectiveSystemTestify = GameParameters.testify and require("scripts/extension_systems/mission_objective/mission_objective_system_testify")
 local MissionObjectiveTemplates = require("scripts/settings/mission_objective/mission_objective_templates")
-local MissionObjectiveTestify = GameParameters.testify and require("scripts/extension_systems/mission_objective/mission_objective_testify")
 local MissionObjectiveTimed = require("scripts/extension_systems/mission_objective/utilities/mission_objective_timed")
 local MissionObjectiveZone = require("scripts/extension_systems/mission_objective/utilities/mission_objective_zone")
 local proc_events = BuffSettings.proc_events
@@ -129,11 +127,6 @@ MissionObjectiveSystem.update = function (self, system_context, dt, t)
 			if not objective:is_updated_externally() then
 				objective:update(dt)
 				objective:update_progression()
-
-				if GameParameters.testify then
-					Testify:poll_requests_through_handler(MissionObjectiveTestify, self, objective_name)
-				end
-
 				self:_propagate_objective_progression(objective)
 
 				if objective:max_progression_achieved() and not objective:evaluate_at_level_end() then
@@ -141,10 +134,6 @@ MissionObjectiveSystem.update = function (self, system_context, dt, t)
 				end
 			end
 		end
-	end
-
-	if GameParameters.testify then
-		Testify:poll_requests_through_handler(MissionObjectiveSystemTestify, self)
 	end
 end
 

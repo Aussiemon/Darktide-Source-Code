@@ -401,6 +401,10 @@ math.ease_sine = function (t)
 	return 0.5 + 0.5 * math_cos((1 + t) * pi)
 end
 
+math.ease_in_sine = function (t)
+	return 1 - math.cos(t * pi / 2)
+end
+
 math.ease_exp = function (t)
 	if t < 0.5 then
 		return 0.5 * 2^(20 * (t - 0.5))
@@ -455,6 +459,10 @@ math.ease_out_quad = function (t)
 	return -1 * t * (t - 2)
 end
 
+math.ease_in_quad = function (t)
+	return t * t
+end
+
 local math_ease_cubic = math.easeCubic
 
 math.ease_pulse = function (t)
@@ -467,6 +475,37 @@ end
 
 math.bounce = function (t)
 	return math_abs(math_sin(6.28 * (t + 1) * (t + 1)) * (1 - t))
+end
+
+math.ease_out_bounce = function (t)
+	local n1 = 7.5625
+	local d1 = 2.75
+
+	if t < 1 / d1 then
+		return n1 * t * t
+	elseif t < 2 / d1 then
+		local x = t - 1.5 / d1
+
+		return n1 * x * x + 0.75
+	elseif t < 2.5 / d1 then
+		local x = t - 2.25 / d1
+
+		return n1 * x * x + 0.9375
+	else
+		local x = t - 2.625 / d1
+
+		return n1 * x * x + 0.984375
+	end
+end
+
+local math_ease_cubic = math.ease_out_bounce
+
+math.ease_in_out_bounce = function (t)
+	if t < 0.5 then
+		return (1 - math_ease_cubic(1 - 2 * t)) / 2
+	else
+		return (1 + math_ease_cubic(2 * t - 1)) / 2
+	end
 end
 
 math.ease_out_elastic = function (t)

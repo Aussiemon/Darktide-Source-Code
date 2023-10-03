@@ -538,7 +538,7 @@ local action_data = {
 			ranged = 20,
 			killshot = 20
 		},
-		damage_profile = DamageProfileTemplates.melee_fighter_default,
+		damage_profile = DamageProfileTemplates.melee_bruiser_default,
 		damage_type = damage_types.minion_melee_blunt
 	},
 	moving_melee_attack = {
@@ -580,11 +580,15 @@ local action_data = {
 			attack_move_04 = 0.12345679012345678,
 			attack_move_02 = 0.12345679012345678
 		},
-		damage_profile = DamageProfileTemplates.melee_fighter_default,
+		damage_profile = DamageProfileTemplates.melee_bruiser_default,
 		damage_type = damage_types.minion_melee_blunt,
 		stagger_type_reduction = {
 			ranged = 20,
 			killshot = 20
+		},
+		stagger_type_reduction = {
+			ranged = 60,
+			killshot = 60
 		},
 		animation_move_speed_configs = {
 			attack_move_01 = {
@@ -713,11 +717,15 @@ local action_data = {
 			attack_run_02 = 0,
 			attack_run_01 = 0
 		},
-		damage_profile = DamageProfileTemplates.melee_fighter_default,
+		damage_profile = DamageProfileTemplates.melee_bruiser_default,
 		damage_type = damage_types.minion_melee_blunt,
 		stagger_type_reduction = {
 			ranged = 20,
 			killshot = 20
+		},
+		stagger_type_reduction = {
+			ranged = 60,
+			killshot = 60
 		},
 		animation_move_speed_configs = {
 			attack_run_01 = {
@@ -986,6 +994,33 @@ local action_data = {
 					"stagger_bwd_sticky_2",
 					"stagger_bwd_sticky_3"
 				}
+			},
+			electrocuted = {
+				bwd = {
+					"stagger_front_sticky",
+					"stagger_front_sticky_2",
+					"stagger_front_sticky_3"
+				},
+				fwd = {
+					"stagger_bwd_sticky",
+					"stagger_bwd_sticky_2",
+					"stagger_bwd_sticky_3"
+				},
+				left = {
+					"stagger_left_sticky",
+					"stagger_left_sticky_2",
+					"stagger_left_sticky_3"
+				},
+				right = {
+					"stagger_right_sticky",
+					"stagger_right_sticky_2",
+					"stagger_right_sticky_3"
+				},
+				dwn = {
+					"stagger_bwd_sticky",
+					"stagger_bwd_sticky_2",
+					"stagger_bwd_sticky_3"
+				}
 			}
 		}
 	},
@@ -1014,7 +1049,7 @@ local action_data = {
 			attack_07 = 2.0987654320987654,
 			attack_02 = 2.5977011494252875
 		},
-		damage_profile = DamageProfileTemplates.melee_fighter_default,
+		damage_profile = DamageProfileTemplates.melee_bruiser_default,
 		damage_type = damage_types.minion_melee_blunt
 	},
 	open_door = {

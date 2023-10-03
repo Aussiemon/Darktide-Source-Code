@@ -91,8 +91,8 @@ DifficultyManager.friendly_fire_enabled = function (self, target_is_player, targ
 	return true
 end
 
-DifficultyManager.player_wounds = function (self, specialization)
-	local wounds_settings = PlayerDifficultySettings.specialization_wounds[specialization]
+DifficultyManager.player_wounds = function (self, archetype)
+	local wounds_settings = PlayerDifficultySettings.archetype_wounds[archetype]
 	local challenge = self._challenge
 	local max_wounds = wounds_settings[math.min(#wounds_settings, challenge)]
 

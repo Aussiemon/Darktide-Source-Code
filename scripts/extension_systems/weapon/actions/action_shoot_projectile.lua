@@ -1,4 +1,3 @@
-local ActionUtility = require("scripts/extension_systems/weapon/actions/utilities/action_utility")
 local AimProjectile = require("scripts/utilities/aim_projectile")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local MasterItems = require("scripts/backend/master_items")
@@ -18,6 +17,7 @@ ActionShootProjectile.init = function (self, action_context, action_params, acti
 	self._item_definitions = MasterItems.get_cached()
 	local unit_data_extension = action_context.unit_data_extension
 	self._action_aim_projectile_component = unit_data_extension:read_component("action_aim_projectile")
+	self._side_system = Managers.state.extension:system("side_system")
 end
 
 ActionShootProjectile._shoot = function (self)
@@ -46,7 +46,6 @@ ActionShootProjectile._shoot = function (self)
 	local position, rotation, direction, speed, momentum = nil
 
 	if skip_aiming then
-		local action_component = self._action_component
 		local shoot_position = action_component.shooting_position
 		local shoot_rotation = action_component.shooting_rotation
 		position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_current_aim(action_settings, shoot_position, shoot_rotation, locomotion_template)
@@ -61,7 +60,9 @@ ActionShootProjectile._shoot = function (self)
 	local origin_item_slot = self._inventory_component.wielded_slot
 
 	if self._is_server then
-		local projectile_unit, _ = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot, nil, nil, nil, weapon_item)
+		local owner_side = self._side_system.side_by_unit[self._player_unit]
+		local owner_side_name = owner_side and owner_side:name()
+		local projectile_unit, _ = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, rotation, material, item, projectile_template, starting_state, direction, speed, momentum, owner_unit, is_critical_strike, origin_item_slot, nil, nil, nil, weapon_item, nil, owner_side_name)
 	end
 end
 

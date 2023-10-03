@@ -283,7 +283,7 @@ PickupSystem._populate_pickups = function (self)
 	end
 end
 
-local function current_grenade_percentage(player_unit)
+local function _current_grenade_percentage(player_unit)
 	local ABILITY_TYPE = "grenade_ability"
 	local ability_extension = ScriptUnit.has_extension(player_unit, "ability_system")
 
@@ -298,6 +298,11 @@ local function current_grenade_percentage(player_unit)
 	end
 
 	local max_grenade_charges = ability_extension:max_ability_charges(ABILITY_TYPE)
+
+	if max_grenade_charges <= 0 then
+		return 1
+	end
+
 	local remaining_grenade_charges = ability_extension:remaining_ability_charges(ABILITY_TYPE)
 
 	return remaining_grenade_charges / max_grenade_charges
@@ -338,7 +343,7 @@ PickupSystem.get_rubberband_pickup = function (self, distribution_type, percenta
 		if player_unit then
 			player_count = player_count + 1
 			total_ammo = total_ammo + 1 - Ammo.current_total_percentage(player_unit)
-			total_grenades = total_grenades + 1 - current_grenade_percentage(player_unit)
+			total_grenades = total_grenades + 1 - _current_grenade_percentage(player_unit)
 			total_health = total_health + 1 - Health.current_health_percent(player_unit)
 			local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 			local inventory_component = unit_data_extension:read_component("inventory")

@@ -1,6 +1,6 @@
 local RaritySettings = {
 	[0] = {
-		display_name = "<undefined item_rarity>",
+		display_name = "",
 		max_modifications = 0,
 		color = {
 			255,

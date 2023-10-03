@@ -112,10 +112,10 @@ ProcBuff.duration_progress = function (self)
 		return 0.001
 	end
 
-	return 1 - self:activate_percentage(t)
+	return 1 - self:_active_percentage(t)
 end
 
-ProcBuff.activate_percentage = function (self, t)
+ProcBuff._active_percentage = function (self, t)
 	local is_active = self:_is_proc_active(t)
 	local active_duration = self:_active_duration()
 
@@ -183,7 +183,7 @@ ProcBuff.update = function (self, dt, t, portable_random)
 	local template = self._template
 	local template_data = self._template_data
 	local template_context = self._template_context
-	template_context.active_percentage = self:activate_percentage(t)
+	template_context.active_percentage = self:_active_percentage(t)
 	local is_active = self:_is_proc_active(t)
 	local has_activated = self._has_activated
 	local proc_update_func = template.proc_update_func
@@ -316,7 +316,7 @@ ProcBuff.update_proc_events = function (self, t, proc_events, num_proc_events, p
 						proc_func(params, template_data, template_context, t)
 					end
 
-					procced_proc_events[proc_event_name] = true
+					procced_proc_events[proc_event_name] = (procced_proc_events[proc_event_name] or 0) + 1
 
 					if not is_local_proc_event then
 						activated_proc = true

@@ -6,6 +6,10 @@ MissionPathBlocker.init = function (self, unit, is_server)
 	self._enabled = true
 end
 
+MissionPathBlocker.editor_validate = function (self, unit)
+	return true, ""
+end
+
 MissionPathBlocker.destroy = function (self, unit)
 	return
 end
@@ -22,7 +26,7 @@ MissionPathBlocker.enable = function (self, unit)
 
 		local nav_block_extension = ScriptUnit.fetch_component_extension(unit, "nav_block_system")
 
-		nav_block_extension:set_block(true)
+		nav_block_extension:set_block("g_volume_block", true)
 	end
 
 	Unit.set_unit_visibility(unit, true)
@@ -48,7 +52,7 @@ MissionPathBlocker.disable = function (self, unit)
 
 		local nav_block_extension = ScriptUnit.fetch_component_extension(unit, "nav_block_system")
 
-		nav_block_extension:set_block(false)
+		nav_block_extension:set_block("g_volume_block", false)
 	end
 
 	Unit.set_unit_visibility(unit, false)

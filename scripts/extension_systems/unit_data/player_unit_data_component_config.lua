@@ -688,7 +688,7 @@ local PlayerComponentConfig = {
 		current_action_name = ABILITY_ACTIONS,
 		previous_action_name = ABILITY_ACTIONS
 	},
-	action_throw = {
+	action_throw_luggable = {
 		thrown = "bool",
 		slot_to_wield = INVENTORY_SLOTS
 	},
@@ -824,6 +824,7 @@ local PlayerComponentConfig = {
 	},
 	block = {
 		has_blocked = "bool",
+		is_perfect_blocking = "bool",
 		is_blocking = "bool"
 	},
 	alternate_fire = {

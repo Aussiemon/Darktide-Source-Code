@@ -57,6 +57,8 @@ local template = {
 
 		if template_data.next_paint_update_t <= t then
 			local unit = template_data.unit
+			local side_system = Managers.state.extension:system("side_system")
+			local side = side_system.side_by_unit[unit]
 			local position = POSITION_LOOKUP[unit]
 			local liquid_paint_id = behavior_component[LIQUID_PAINT_ID]
 			local max_liquid_paint_distance = MAX_LIQUID_PAINT_DISTANCE
@@ -66,8 +68,9 @@ local template = {
 			local liquid_paint_brush_size = LIQUID_BRUSH_SIZE
 			local not_on_other_liquids = true
 			local source_unit = unit
+			local source_side = side and side:name()
 
-			LiquidArea.paint(liquid_paint_id, max_liquid_paint_distance, liquid_position, nav_world, LIQUID_TEMPLATE, allow_liquid_unit_creation, liquid_paint_brush_size, not_on_other_liquids, source_unit)
+			LiquidArea.paint(liquid_paint_id, max_liquid_paint_distance, liquid_position, nav_world, LIQUID_TEMPLATE, allow_liquid_unit_creation, liquid_paint_brush_size, not_on_other_liquids, source_unit, nil, source_side)
 
 			template_data.next_paint_update_t = t + PAINT_UPDATE_FREQ
 		end

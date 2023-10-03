@@ -1,5 +1,4 @@
 local AttackSettings = require("scripts/settings/damage/attack_settings")
-local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local attack_results = AttackSettings.attack_results
 local damage_efficiencies = AttackSettings.damage_efficiencies
@@ -33,7 +32,7 @@ MinionDeath.attack_ragdoll = function (ragdoll_unit, attack_direction, damage_pr
 		local attack_ragdolls_enabled_locally = Application.user_setting("gore_settings", "attack_ragdolls_enabled")
 
 		if attack_ragdolls_enabled_locally == nil then
-			attack_ragdolls_enabled_locally = DefaultGameParameters.attack_ragdolls_enabled
+			attack_ragdolls_enabled_locally = GameParameters.attack_ragdolls_enabled
 		end
 
 		if not attack_ragdolls_enabled_locally then

@@ -35,5 +35,25 @@ templates.weapon_trait_bespoke_combatsword_p2_increase_power_on_hit_parent.child
 templates.weapon_trait_bespoke_combatsword_p2_increase_power_on_hit_child = table.clone(BaseWeaponTraitBuffTemplates.increase_power_on_hit_child)
 templates.weapon_trait_bespoke_combatsword_p2_infinite_melee_cleave_on_weakspot_kill = table.clone(BaseWeaponTraitBuffTemplates.infinite_melee_cleave_on_weakspot_kill)
 templates.weapon_trait_bespoke_combatsword_p2_pass_past_armor_on_crit = table.clone(BaseWeaponTraitBuffTemplates.pass_past_armor_on_crit)
+templates.weapon_trait_bespoke_combatsword_p2_rending_on_multiple_hits_parent = table.clone(BaseWeaponTraitBuffTemplates.rending_on_multiple_hits_parent)
+templates.weapon_trait_bespoke_combatsword_p2_rending_on_multiple_hits_parent.child_buff_template = "weapon_trait_bespoke_combatsword_p2_rending_on_multiple_hits_child"
+templates.weapon_trait_bespoke_combatsword_p2_rending_on_multiple_hits_child = table.clone(BaseWeaponTraitBuffTemplates.rending_on_multiple_hits_child)
+templates.weapon_trait_bespoke_combatsword_p2_windup_increases_power_parent = table.clone(BaseWeaponTraitBuffTemplates.windup_increases_power_parent)
+templates.weapon_trait_bespoke_combatsword_p2_windup_increases_power_parent.child_buff_template = "weapon_trait_bespoke_combatsword_p2_windup_increases_power_child"
+templates.weapon_trait_bespoke_combatsword_p2_windup_increases_power_child = table.clone(BaseWeaponTraitBuffTemplates.windup_increases_power_child)
+templates.weapon_trait_bespoke_combatsword_p2_increased_crit_chance_on_weakspot_kill = {
+	allow_proc_while_active = true,
+	predicted = false,
+	class_name = "proc_buff",
+	active_duration = 3,
+	proc_events = {
+		[proc_events.on_kill] = 1
+	},
+	proc_stat_buffs = {
+		[stat_buffs.melee_critical_strike_chance] = 0.1
+	},
+	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
+	check_proc_func = CheckProcFunctions.on_weakspot_kill
+}
 
 return templates

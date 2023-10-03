@@ -1,12 +1,12 @@
-local BackendManagerTestify = {
-	fail_on_not_authenticated = function (_, backend_manager)
-		if not backend_manager:authenticated() then
-			ferror("The client is not authenticated. The test needs client authentification to run.\n" .. "Check that testify has correctly started Steam and that the steam_appid.txt file is present " .. "in the engine directory. eg: C:\\BitSquidBinaries\\bishop\\engine\\win64\\dev.\n" .. "If those 2 conditions are met and the problem persists, ping @TestAutomation on Slack.")
-		end
-	end
-}
+local BackendManagerTestify = {}
 
-BackendManagerTestify.load_mission_in_mission_board = function (params, backend_manager)
+BackendManagerTestify.fail_on_not_authenticated = function (backend_manager)
+	if not backend_manager:authenticated() then
+		ferror("The client is not authenticated. The test needs client authentification to run.\n" .. "Check that testify has correctly started Steam and that the steam_appid.txt file is present " .. "in the engine directory. eg: C:\\BitSquidBinaries\\bishop\\engine\\win64\\dev.\n" .. "If those 2 conditions are met and the problem persists, ping @TestAutomation on Slack.")
+	end
+end
+
+BackendManagerTestify.load_mission_in_mission_board = function (backend_manager, params)
 	local map = params.map
 	local challenge = params.challenge
 	local resistance = params.resistance

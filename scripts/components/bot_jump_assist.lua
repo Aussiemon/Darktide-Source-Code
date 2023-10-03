@@ -64,6 +64,23 @@ BotJumpAssist.editor_init = function (self, unit)
 	return true
 end
 
+BotJumpAssist.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if not Unit.has_node(unit, "waypoint") then
+		error_message = error_message .. "\nmissing unit node 'waypoint'"
+		success = false
+	end
+
+	if not Unit.has_node(unit, "destination") then
+		error_message = error_message .. "\nmissing unit node 'destination'"
+		success = false
+	end
+
+	return success, error_message
+end
+
 BotJumpAssist.editor_destroy = function (self, unit)
 	if not rawget(_G, "LevelEditor") then
 		return

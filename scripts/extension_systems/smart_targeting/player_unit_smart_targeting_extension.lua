@@ -17,6 +17,7 @@ PlayerUnitSmartTargetingExtension.init = function (self, extension_init_context,
 	self._player = extension_init_data.player
 	self._is_server = extension_init_data.is_server
 	self._is_local_unit = extension_init_data.is_local_unit
+	self._is_social_hub = extension_init_data.is_social_hub
 	local physics_world = extension_init_context.physics_world
 	self._physics_world = physics_world
 	self._latest_fixed_frame = extension_init_context.fixed_frame
@@ -37,6 +38,7 @@ PlayerUnitSmartTargetingExtension.init = function (self, extension_init_context,
 	self._target_position_box = Vector3Box(Vector3.zero())
 	self._target_rotation_box = QuaternionBox(Quaternion.identity())
 	self._visibility_raycast_object = PhysicsWorld.make_raycast(physics_world, "closest", "types", "statics", "collision_filter", "filter_ray_aim_assist_line_of_sight")
+	self._line_of_sight_cache = {}
 	self._visibility_cache = {}
 	self._visibility_check_frame = {}
 end
@@ -64,11 +66,22 @@ PlayerUnitSmartTargetingExtension.fixed_update = function (self, unit, dt, t, fi
 	local smart_targeting_template = SmartTargeting.smart_targeting_template(t, self._weapon_action_component)
 	self._num_visibility_checks_this_frame = 0
 	local ray_origin, forward, right, up = self:_targeting_parameters()
+	local line_of_sight_cache = self._line_of_sight_cache
 
-	self:_update_precision_target(unit, smart_targeting_template, ray_origin, forward, right, up, self._targeting_data, fixed_frame)
+	for los_unit, time in pairs(line_of_sight_cache) do
+		time = time - dt
+
+		if time < 0 then
+			line_of_sight_cache[los_unit] = nil
+		else
+			line_of_sight_cache[los_unit] = time
+		end
+	end
+
+	self:_update_precision_target(unit, smart_targeting_template, ray_origin, forward, right, up, self._targeting_data, fixed_frame, line_of_sight_cache)
 	self:_update_proximity(unit, smart_targeting_template, ray_origin, forward, right, up)
 
-	if not DEDICATED_SERVER and self._is_local_unit then
+	if not DEDICATED_SERVER and self._is_local_unit and not self._is_social_hub then
 		local update_tag_targets = self._smart_tag_targeting_time <= t
 
 		if update_tag_targets then
@@ -109,7 +122,7 @@ PlayerUnitSmartTargetingExtension._targeting_parameters = function (self)
 	return ray_origin, forward, right, up
 end
 
-PlayerUnitSmartTargetingExtension._update_precision_target = function (self, unit, smart_targeting_template, ray_origin, forward, right, up, targeting_data, fixed_frame)
+PlayerUnitSmartTargetingExtension._update_precision_target = function (self, unit, smart_targeting_template, ray_origin, forward, right, up, targeting_data, fixed_frame, optional_line_of_sight_cache)
 	local static_hit_position_box = targeting_data.static_hit_position or Vector3Box()
 
 	table.clear(targeting_data)
@@ -247,6 +260,10 @@ PlayerUnitSmartTargetingExtension._update_precision_target = function (self, uni
 
 					if breed then
 						visible_target, aim_position = self:_target_visibility_and_aim_position(ray_origin, forward, right, up, hit_unit_center_pos, distance, half_width, half_height, x_diff_no_abs, hit_unit, fixed_frame, visibility_cache, visibility_check_frame)
+
+						if optional_line_of_sight_cache and visible_target then
+							optional_line_of_sight_cache[hit_unit] = 0.3
+						end
 					else
 						aim_position = hit_unit_center_pos
 						visible_target = true
@@ -504,6 +521,10 @@ end
 
 PlayerUnitSmartTargetingExtension.smart_tag_targeting_data = function (self)
 	return self._smart_tag_targeting_data
+end
+
+PlayerUnitSmartTargetingExtension.has_line_of_sight = function (self, unit)
+	return self._line_of_sight_cache[unit] ~= nil
 end
 
 PlayerUnitSmartTargetingExtension.force_update_smart_tag_targets = function (self)

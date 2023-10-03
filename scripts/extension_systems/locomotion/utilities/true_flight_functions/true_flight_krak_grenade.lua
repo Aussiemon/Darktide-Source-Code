@@ -1,10 +1,11 @@
 local Armor = require("scripts/utilities/attack/armor")
-local ProjectileLocomotion = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion")
+local ProjectileIntegration = require("scripts/extension_systems/locomotion/utilities/projectile_integration")
 local TrueFlightDefaults = require("scripts/extension_systems/locomotion/utilities/true_flight_functions/true_flight_defaults")
+local _check_target_armor, _broadphase_query, _play_fx_target_found_fx = nil
 local true_flight_krak_grenade = {
 	krak_projectile_locomotion = function (physics_world, integration_data, dt, t)
-		local position = ProjectileLocomotion.integrate_position(physics_world, integration_data, dt, t)
-		local rotation = ProjectileLocomotion.integrate_rotation(physics_world, integration_data, dt, t)
+		local position = ProjectileIntegration.integrate_position(physics_world, integration_data, dt, t)
+		local rotation = ProjectileIntegration.integrate_rotation(physics_world, integration_data, dt, t)
 
 		return position, rotation
 	end,
@@ -31,7 +32,7 @@ local true_flight_krak_grenade = {
 			dt = dt * slow_down
 
 			if dt > 0 then
-				ProjectileLocomotion.integrate(physics_world, integration_data, dt, t, false)
+				ProjectileIntegration.integrate(physics_world, integration_data, dt, t, false)
 			end
 
 			integration_data.integrate = true
@@ -53,73 +54,6 @@ local true_flight_krak_grenade = {
 		end
 	end
 }
-
-local function _check_target_armor(unit, target_armor_types, default_hit_zone, current_position, check_all_hit_zones)
-	local health_extension = ScriptUnit.has_extension(unit, "health_system")
-
-	if not health_extension then
-		return false, nil, nil
-	end
-
-	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
-	local breed = unit_data_extension:breed()
-
-	if check_all_hit_zones then
-		local vector3_distance_squared = Vector3.distance_squared
-		local breed_hit_zones = breed.hit_zones
-		local cloest_hit_zone_name = nil
-		local closest_distance = math.huge
-		local closest_position = nil
-
-		for i = 1, #breed_hit_zones do
-			local hit_zone_name = breed_hit_zones[i].name
-			local hit_zone_armor_type = Armor.armor_type(unit, breed, hit_zone_name)
-			local can_stick = target_armor_types[hit_zone_armor_type]
-
-			if can_stick then
-				local hit_zone_position = TrueFlightDefaults.get_unit_position(unit, hit_zone_name)
-				local distance_squared = vector3_distance_squared(current_position, hit_zone_position)
-
-				if distance_squared < closest_distance then
-					cloest_hit_zone_name = hit_zone_name
-					closest_distance = distance_squared
-					closest_position = hit_zone_position
-				end
-			end
-		end
-
-		if cloest_hit_zone_name then
-			return true, cloest_hit_zone_name, closest_position
-		end
-	end
-
-	local base_armor_type = Armor.armor_type(unit, breed, nil)
-	local position = TrueFlightDefaults.get_unit_position(unit, default_hit_zone)
-	local can_stick = target_armor_types[base_armor_type]
-
-	return can_stick, default_hit_zone, position
-end
-
-local function _broadphase_query(owner_unit, position, radius, query_results)
-	local extension_manager = Managers.state.extension
-	local broadphase_system = extension_manager:system("broadphase_system")
-	local broadphase = broadphase_system.broadphase
-	local side = ScriptUnit.extension(owner_unit, "side_system").side
-	local relation_side_names = side:relation_side_names("enemy")
-	local num_hits = Broadphase.query(broadphase, position, radius, query_results, relation_side_names)
-
-	return num_hits
-end
-
-local function _play_fx_target_found_fx(integration_data)
-	local projectile_unit = integration_data.projectile_unit
-	local projectile_fx = ScriptUnit.has_extension(projectile_unit, "fx_system")
-
-	if projectile_fx then
-		projectile_fx:on_target_aquired()
-	end
-end
-
 local broadphase_results = {}
 
 true_flight_krak_grenade.krak_find_armored_target = function (integration_data, position, is_valid_and_legitimate_targe_func)
@@ -178,6 +112,72 @@ true_flight_krak_grenade.krak_find_armored_target = function (integration_data, 
 	end
 
 	return nil, nil
+end
+
+function _check_target_armor(unit, target_armor_types, default_hit_zone, current_position, check_all_hit_zones)
+	local health_extension = ScriptUnit.has_extension(unit, "health_system")
+
+	if not health_extension then
+		return false, nil, nil
+	end
+
+	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")
+	local breed = unit_data_extension:breed()
+
+	if check_all_hit_zones then
+		local vector3_distance_squared = Vector3.distance_squared
+		local breed_hit_zones = breed.hit_zones
+		local cloest_hit_zone_name = nil
+		local closest_distance = math.huge
+		local closest_position = nil
+
+		for i = 1, #breed_hit_zones do
+			local hit_zone_name = breed_hit_zones[i].name
+			local hit_zone_armor_type = Armor.armor_type(unit, breed, hit_zone_name)
+			local can_stick = target_armor_types[hit_zone_armor_type]
+
+			if can_stick then
+				local hit_zone_position = TrueFlightDefaults.get_unit_position(unit, hit_zone_name)
+				local distance_squared = vector3_distance_squared(current_position, hit_zone_position)
+
+				if distance_squared < closest_distance then
+					cloest_hit_zone_name = hit_zone_name
+					closest_distance = distance_squared
+					closest_position = hit_zone_position
+				end
+			end
+		end
+
+		if cloest_hit_zone_name then
+			return true, cloest_hit_zone_name, closest_position
+		end
+	end
+
+	local base_armor_type = Armor.armor_type(unit, breed, nil)
+	local position = TrueFlightDefaults.get_unit_position(unit, default_hit_zone)
+	local can_stick = target_armor_types[base_armor_type]
+
+	return can_stick, default_hit_zone, position
+end
+
+function _broadphase_query(owner_unit, position, radius, query_results)
+	local extension_manager = Managers.state.extension
+	local broadphase_system = extension_manager:system("broadphase_system")
+	local broadphase = broadphase_system.broadphase
+	local side = ScriptUnit.extension(owner_unit, "side_system").side
+	local relation_side_names = side:relation_side_names("enemy")
+	local num_hits = Broadphase.query(broadphase, position, radius, query_results, relation_side_names)
+
+	return num_hits
+end
+
+function _play_fx_target_found_fx(integration_data)
+	local projectile_unit = integration_data.projectile_unit
+	local projectile_fx = ScriptUnit.has_extension(projectile_unit, "fx_system")
+
+	if projectile_fx then
+		projectile_fx:on_target_aquired()
+	end
 end
 
 return true_flight_krak_grenade

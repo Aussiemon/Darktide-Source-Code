@@ -173,7 +173,13 @@ TrainingGroundsOptionsView._setup_info = function (self)
 		widgets_by_name.select_difficulty_text.content.visible = false
 	end
 
-	local rewards_claimed_content = widgets_by_name.rewards_claimed_text.content
+	if Managers.narrative:is_chapter_complete("onboarding", "play_training") then
+		widgets_by_name.rewards_header.visible = false
+		widgets_by_name.separator.content.visible = false
+	else
+		widgets_by_name.separator.content.visible = true
+		widgets_by_name.rewards_header.visible = true
+	end
 
 	if self.training_grounds_settings ~= "basic" then
 		if self.training_grounds_settings == "advanced" then
@@ -184,7 +190,6 @@ TrainingGroundsOptionsView._setup_info = function (self)
 		widgets_by_name.rewards_header.content.visible = false
 		widgets_by_name.reward_1.content.visible = false
 		widgets_by_name.reward_2.content.visible = false
-		rewards_claimed_content.visible = false
 		local panel_size_small = view_settings.panel_size.small
 
 		self:_resize_background(panel_size_small)
@@ -194,14 +199,10 @@ TrainingGroundsOptionsView._setup_info = function (self)
 		if Managers.narrative:is_chapter_complete("onboarding", "play_training") then
 			widgets_by_name.reward_1.content.visible = false
 			widgets_by_name.reward_2.content.visible = false
-			rewards_claimed_content.visible = true
-			rewards_claimed_content.text = Localize(view_settings.rewards_claimed_text)
 			local panel_size_small = view_settings.panel_size.small
 
 			self:_resize_background(panel_size_small)
 		else
-			rewards_claimed_content.visible = false
-
 			self:_load_reward_item_icons()
 		end
 	end

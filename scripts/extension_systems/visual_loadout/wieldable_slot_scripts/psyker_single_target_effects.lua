@@ -59,8 +59,10 @@ PsykerSingleTargetEffects._update_targeting_effects = function (self)
 	local action_settings = Action.current_action_settings_from_component(self._weapon_action_component, self._weapon_actions)
 	local targeting_fx = action_settings and action_settings.targeting_fx
 	local target_unit = self._action_module_targeting_component.target_unit_1
+	local charge_level = self:_charge_level()
+	local show_effect = targeting_fx and (not targeting_fx.show_on_full_charge or charge_level >= 1)
 
-	if not targeting_fx or not target_unit then
+	if not targeting_fx or not target_unit or not show_effect then
 		self:_destroy_effects()
 
 		return
@@ -79,7 +81,8 @@ PsykerSingleTargetEffects._update_targeting_effects = function (self)
 	local new_effect_name = effect_name and effect_name ~= last_effect_name
 
 	if effect_name and (new_effect_name or not old_effect_id) then
-		effect_id = World.create_particles(world, (not self._is_local_unit or self._is_husk) and husk_effect_name or effect_name, spawn_pos)
+		local is_husk = not self._is_local_unit or self._is_husk
+		effect_id = World.create_particles(world, is_husk and husk_effect_name or effect_name, spawn_pos)
 		self._targeting_effect_id = effect_id
 		self._last_effect_name = effect_name
 
@@ -115,7 +118,8 @@ PsykerSingleTargetEffects._update_targeting_effects = function (self)
 		self._targeting_playing_id = nil
 	end
 
-	local node = Unit.node(target_unit, "j_head")
+	local target_node = targeting_fx.target_node or "j_head"
+	local node = Unit.node(target_unit, target_node)
 	local position = Unit.world_position(target_unit, node)
 
 	self:_update_effect_positions(position, self._targeting_effect_id, self._targeting_source_id, wwise_parameter_name)
@@ -128,7 +132,7 @@ PsykerSingleTargetEffects._update_effect_positions = function (self, target_posi
 
 	local world = self._world
 	local wwise_world = self._wwise_world
-	local charge_level = self._action_module_charge_component.charge_level
+	local charge_level = self:_charge_level()
 
 	if effect_id then
 		World.move_particles(world, effect_id, target_position)
@@ -172,6 +176,13 @@ PsykerSingleTargetEffects._destroy_effects = function (self)
 
 		self._targeting_playing_id = nil
 	end
+end
+
+PsykerSingleTargetEffects._charge_level = function (self)
+	local action_module_charge_component = self._action_module_charge_component
+	local charge_level = action_module_charge_component.charge_level
+
+	return charge_level
 end
 
 return PsykerSingleTargetEffects

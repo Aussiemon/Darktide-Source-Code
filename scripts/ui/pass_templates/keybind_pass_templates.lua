@@ -51,7 +51,7 @@ local KeybindPassTemplates = {
 						settings_area_width,
 						height
 					},
-					color = Color.ui_terminal(255, true),
+					color = Color.terminal_corner(255, true),
 					size_addition = {
 						0,
 						0
@@ -75,7 +75,24 @@ local KeybindPassTemplates = {
 						settings_area_width,
 						height
 					},
-					color = Color.ui_terminal(255, true),
+					color = Color.terminal_corner_hover(255, true),
+					offset = {
+						0,
+						0,
+						1
+					}
+				}
+			},
+			{
+				pass_type = "rect",
+				style = {
+					vertical_alignment = "center",
+					horizontal_alignment = "right",
+					size = {
+						settings_area_width,
+						height
+					},
+					color = Color.terminal_corner(25.5, true),
 					offset = {
 						0,
 						0,

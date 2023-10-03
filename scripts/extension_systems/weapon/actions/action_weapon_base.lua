@@ -2,9 +2,11 @@ require("scripts/extension_systems/weapon/actions/action_base")
 
 local AimAssist = require("scripts/utilities/aim_assist")
 local AlternateFire = require("scripts/utilities/alternate_fire")
+local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local CriticalStrike = require("scripts/utilities/attack/critical_strike")
 local WarpCharge = require("scripts/utilities/warp_charge")
+local attack_types = AttackSettings.attack_types
 local proc_events = BuffSettings.proc_events
 local EMPTY_TABLE = {}
 local ActionWeaponBase = class("ActionWeaponBase", "ActionBase")
@@ -24,6 +26,7 @@ ActionWeaponBase.init = function (self, action_context, action_params, action_se
 	self._weapon_tweak_templates_component = unit_data_extension:write_component("weapon_tweak_templates")
 	self._warp_charge_component = unit_data_extension:write_component("warp_charge")
 	self._alternate_fire_component = unit_data_extension:write_component("alternate_fire")
+	self._peeking_component = unit_data_extension:write_component("peeking")
 	local weapon = action_params.weapon
 	self._weapon = weapon
 	self._weapon_unit = weapon.weapon_unit
@@ -55,26 +58,19 @@ ActionWeaponBase.start = function (self, action_settings, t, time_scale, action_
 	if action_settings.unaim and self._alternate_fire_component.is_active then
 		local skip_unaim_anim = action_settings.skip_unaim_anim
 
-		AlternateFire.stop(self._alternate_fire_component, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, skip_unaim_anim, self._player_unit)
+		AlternateFire.stop(self._alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, self._weapon_template, skip_unaim_anim, self._player_unit)
 	end
 
 	local use_ability_charge = action_settings.use_ability_charge
+	local use_charge_at_start = action_settings.use_charge_at_start
 
-	if use_ability_charge then
+	if use_ability_charge and use_charge_at_start then
 		self:_use_ability_charge()
 	end
 
 	if action_settings.delay_explosion_to_finish then
 		self._prevent_explosion = true
 	end
-end
-
-ActionWeaponBase._use_ability_charge = function (self)
-	local action_settings = self._action_settings
-	local ability_type = action_settings.ability_type
-	local ability_extension = self._ability_extension
-
-	ability_extension:use_ability_charge(ability_type)
 end
 
 ActionWeaponBase.finish = function (self, reason, data, t, time_in_action)
@@ -103,7 +99,13 @@ ActionWeaponBase.finish = function (self, reason, data, t, time_in_action)
 	end
 end
 
-ActionWeaponBase._check_for_critical_strike = function (self, is_melee, is_ranged)
+ActionWeaponBase._check_for_critical_strike = function (self, is_melee, is_ranged, action_auto_crit, should_crit)
+	local wielded_slot = self._inventory_component.wielded_slot
+
+	if not should_crit and (wielded_slot == "slot_combat_ability" or wielded_slot == "slot_grenade_ability") then
+		return
+	end
+
 	local critical_strike_component = self._critical_strike_component
 	local player = self._player
 	local weapon_extension = self._weapon_extension
@@ -111,7 +113,7 @@ ActionWeaponBase._check_for_critical_strike = function (self, is_melee, is_range
 	local weapon_handling_template = weapon_extension:weapon_handling_template() or EMPTY_TABLE
 	local seed = critical_strike_component.seed
 	local prd_state = critical_strike_component.prd_state
-	local guaranteed_crit = buff_extension:has_keyword("guaranteed_critical_strike") or is_ranged and buff_extension:has_keyword("guaranteed_ranged_critical_strike") or is_melee and buff_extension:has_keyword("guaranteed_melee_critical_strike")
+	local guaranteed_crit = buff_extension:has_keyword("guaranteed_critical_strike") or is_ranged and buff_extension:has_keyword("guaranteed_ranged_critical_strike") or is_melee and buff_extension:has_keyword("guaranteed_melee_critical_strike") or action_auto_crit
 	local chance = nil
 
 	if guaranteed_crit then
@@ -126,6 +128,7 @@ ActionWeaponBase._check_for_critical_strike = function (self, is_melee, is_range
 		local param_table = self._buff_extension:request_proc_event_param_table()
 
 		if param_table then
+			param_table.attack_type = is_melee and attack_types.melee or is_ranged and attack_types.ranged
 			param_table.attacker_unit = self._player_unit
 
 			self._buff_extension:add_proc_event(proc_events.on_critical_strike, param_table)
@@ -135,6 +138,26 @@ ActionWeaponBase._check_for_critical_strike = function (self, is_melee, is_range
 	self._critical_strike_component.prd_state = new_prd_state
 	self._critical_strike_component.seed = new_seed
 	self._critical_strike_component.is_active = is_critical_strike
+end
+
+ActionWeaponBase._check_for_lucky_strike = function (self, is_melee, is_ranged, chance)
+	local wielded_slot = self._inventory_component.wielded_slot
+
+	if wielded_slot == "slot_combat_ability" or wielded_slot == "slot_grenade_ability" then
+		return
+	end
+
+	local critical_strike_component = self._critical_strike_component
+	local seed = critical_strike_component.seed
+	local prd_state = critical_strike_component.prd_state
+	local is_lucky_strike, new_prd_state, new_seed = CriticalStrike.is_critical_strike(chance, prd_state, seed)
+	self._critical_strike_component.seed = new_seed
+
+	if is_lucky_strike then
+		self._critical_strike_component.prd_state = new_prd_state
+	end
+
+	return is_lucky_strike
 end
 
 ActionWeaponBase._increase_action_duration = function (self, additional_time)
@@ -192,7 +215,7 @@ ActionWeaponBase._start_warp_charge_action = function (self, t)
 	WarpCharge.start_warp_action(t, warp_charge_component)
 end
 
-ActionWeaponBase._pay_warp_charge_cost = function (self, t, charge_level, ignore_clients)
+ActionWeaponBase._pay_warp_charge_cost_immediate = function (self, t, charge_level, ignore_clients)
 	local charge_template = self._weapon_extension:charge_template()
 
 	if not charge_template then
@@ -208,6 +231,24 @@ ActionWeaponBase._pay_warp_charge_cost = function (self, t, charge_level, ignore
 	local prevent_explosion = self._prevent_explosion
 
 	WarpCharge.increase_immediate(t, charge_level, warp_charge_component, charge_template, player_unit, nil, prevent_explosion)
+end
+
+ActionWeaponBase._pay_warp_charge_cost_over_time = function (self, dt, t, charge_level, ignore_clients, first_charge)
+	local charge_template = self._weapon_extension:charge_template()
+
+	if not charge_template then
+		return
+	end
+
+	if ignore_clients and not self._is_server then
+		return
+	end
+
+	local warp_charge_component = self._warp_charge_component
+	local player_unit = self._player_unit
+	local prevent_explosion = self._prevent_explosion
+
+	WarpCharge.increase_over_time(dt, t, charge_level, warp_charge_component, charge_template, player_unit, first_charge)
 end
 
 return ActionWeaponBase

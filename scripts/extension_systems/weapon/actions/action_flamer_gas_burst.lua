@@ -273,6 +273,15 @@ ActionFlamerGasBurst._damage_target = function (self, target_unit)
 	local charge_level = 1
 	local weapon_item = self._weapon.item
 	local damage_dealt, attack_result, damage_efficiency, hit_weakspot = RangedAction.execute_attack(target_index, player_unit, target_unit, actor, hit_position, hit_distance, direction, hit_normal, hit_zone_name, damage_profile, damage_profile_lerp_values, DEFAULT_POWER_LEVEL, charge_level, penetrated, damage_config, instakill, damage_type, is_critical_strike, weapon_item)
+
+	if damage_dealt then
+		local buff_extension = self._buff_extension
+		local param_table = buff_extension:request_proc_event_param_table()
+		param_table.attacked_unit = target_unit
+
+		buff_extension:add_proc_event(proc_events.on_direct_flamer_hit, param_table)
+	end
+
 	local killing_blow = attack_result == AttackSettings.attack_results.died
 	self._killing_blow = self._killing_blow or killing_blow
 end

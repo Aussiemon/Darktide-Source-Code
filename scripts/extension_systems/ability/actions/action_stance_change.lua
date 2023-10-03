@@ -36,6 +36,7 @@ end
 ActionStanceChange.start = function (self, action_settings, t, time_scale, action_start_params)
 	ActionStanceChange.super.start(self, action_settings, t, time_scale, action_start_params)
 
+	local reload_secondary = action_settings.reload_secondary
 	local stop_reload = action_settings.stop_reload
 	local stop_current_action = action_settings.stop_current_action
 	local anim = action_settings.anim
@@ -87,10 +88,14 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 		buff_extension:add_internally_controlled_buff(buff_to_add, t)
 	end
 
+	if self._ability_pause_cooldown_setting then
+		self._ability_component.cooldown_paused = true
+	end
+
 	local specialization_extension = self._specialization_extension
 	local reload_weapon = specialization_extension:has_special_rule(special_rules.veteran_ranger_combat_ability_reloads_weapon)
 
-	if reload_weapon then
+	if reload_secondary or reload_weapon then
 		local inventory_slot_secondary_component = self._inventory_slot_secondary_component
 		local max_ammo_in_clip = inventory_slot_secondary_component.max_ammunition_clip
 		local current_ammo_in_clip = inventory_slot_secondary_component.current_ammunition_clip
@@ -133,8 +138,8 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 	end
 end
 
-ActionStanceChange.finish = function (self, reason, ...)
-	ActionStanceChange.super.finish(self, reason, ...)
+ActionStanceChange.finish = function (self, reason, data, t, time_in_action, action_settings)
+	ActionStanceChange.super.finish(self, reason, data, t, time_in_action, action_settings)
 
 	if self._weapon_actions_blocked then
 		self._weapon_actions_blocked = nil

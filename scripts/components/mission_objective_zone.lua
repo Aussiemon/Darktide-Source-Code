@@ -27,6 +27,23 @@ MissionObjectiveZone.editor_init = function (self, unit)
 	return
 end
 
+MissionObjectiveZone.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if rawget(_G, "LevelEditor") and not Unit.has_volume(unit, "g_mission_objective_zone_volume") then
+		success = false
+		error_message = error_message .. "\nMissing volume 'g_mission_objective_zone_volume'"
+	end
+
+	if self:get_data(unit, "zone_type") == "default" then
+		success = false
+		error_message = error_message .. "\nNeed to choose a zone type for Unit"
+	end
+
+	return success, error_message
+end
+
 MissionObjectiveZone.enable = function (self, unit)
 	return
 end

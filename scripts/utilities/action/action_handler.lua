@@ -156,8 +156,6 @@ ActionHandler._update_action = function (self, handler_data, action, dt, t)
 	return false
 end
 
-local fixed_time_step = GameParameters.fixed_time_step
-
 ActionHandler._update_timeline_anims = function (self, action, t, start_t, end_t)
 	local action_settings = action:action_settings()
 	local anims = action_settings.timeline_anims
@@ -167,6 +165,7 @@ ActionHandler._update_timeline_anims = function (self, action, t, start_t, end_t
 	end
 
 	local total_time = end_t - start_t
+	local fixed_time_step = Managers.state.game_session.fixed_time_step
 
 	for time_percentage, anim_events in pairs(anims) do
 		local time_to_play = nil
@@ -316,8 +315,8 @@ ActionHandler._calculate_time_scale = function (self, action_settings)
 	local total_modifier = 0
 
 	for ii = 1, #action_time_scale_stat_buffs do
-		local keyword = action_time_scale_stat_buffs[ii]
-		local stat_buff_value = stat_buffs[keyword]
+		local stat_buff = action_time_scale_stat_buffs[ii]
+		local stat_buff_value = stat_buffs[stat_buff]
 
 		if stat_buff_value then
 			total_modifier = total_modifier + stat_buff_value
@@ -556,13 +555,13 @@ ActionHandler.action_settings_from_action_input = function (self, id, actions, a
 
 		for name, settings in pairs(actions) do
 			local start_input = settings.start_input
-			local priority = settings.priority or math.huge
+			local priority = settings.action_priority or math.huge
 
 			if start_input == action_input and current_priority < priority then
 				current_settings = settings
 				current_priority = priority
 
-				if not settings.priority then
+				if not settings.action_priority then
 					break
 				end
 			end
@@ -571,8 +570,8 @@ ActionHandler.action_settings_from_action_input = function (self, id, actions, a
 		action_settings = current_settings
 	else
 		local current_action_settings = running_action:action_settings()
-		local allowed_chain_actions = current_action_settings.allowed_chain_actions
-		local chain_action = allowed_chain_actions and allowed_chain_actions[action_input]
+		local allowed_chain_actions = current_action_settings.allowed_chain_actions or EMPTY_TABLE
+		local chain_action = allowed_chain_actions[action_input]
 
 		if chain_action then
 			action_settings = actions[chain_action.action_name]
@@ -583,7 +582,7 @@ ActionHandler.action_settings_from_action_input = function (self, id, actions, a
 end
 
 ActionHandler.update_actions = function (self, fixed_frame, id, condition_func_params, actions, action_objects, action_params)
-	local t = fixed_frame * GameParameters.fixed_time_step
+	local t = fixed_frame * Managers.state.game_session.fixed_time_step
 	local registered_components = self._registered_components
 	local handler_data = registered_components[id]
 	local action_name, action_settings, used_input, transition_type, automatic_input, reset_combo = self:_check_new_actions(handler_data, actions, condition_func_params, t, action_params)
@@ -613,9 +612,9 @@ ActionHandler._validate_action = function (self, action_settings, condition_func
 		return false
 	end
 
-	local condition_func = action_settings.condition_func
+	local action_condition_func = action_settings.action_condition_func
 
-	if condition_func and not condition_func(action_settings, condition_func_params, used_input) then
+	if action_condition_func and not action_condition_func(action_settings, condition_func_params, used_input) then
 		return false
 	end
 
@@ -750,6 +749,23 @@ ActionHandler._check_chain_actions = function (self, handler_data, current_actio
 end
 
 ActionHandler._validate_chain_action = function (self, chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input, running_action_state)
+	local num_chain_actions = #chain_action
+
+	if num_chain_actions == 0 then
+		return self:_validate_single_chain_action(chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input, running_action_state)
+	else
+		for ii = 1, num_chain_actions do
+			local action = chain_action[ii]
+			local action_is_validated, action_name, action_settings, reset_combo = self:_validate_single_chain_action(action, t, current_action_t, time_scale, actions, condition_func_params, used_input, running_action_state)
+
+			if action_is_validated then
+				return action_is_validated, action_name, action_settings, reset_combo
+			end
+		end
+	end
+end
+
+ActionHandler._validate_single_chain_action = function (self, chain_action, t, current_action_t, time_scale, actions, condition_func_params, used_input, running_action_state)
 	local chain_time = chain_action.chain_time and chain_action.chain_time / time_scale
 	local chain_until = chain_action.chain_until and chain_action.chain_until / time_scale
 	local chain_validated = nil
@@ -774,7 +790,7 @@ ActionHandler._valid_action_from_action_input = function (self, actions, action_
 
 	for name, settings in pairs(actions) do
 		local start_input = settings.start_input
-		local priority = settings.priority or math.huge
+		local priority = settings.action_priority or math.huge
 
 		if start_input == action_input and current_priority < priority then
 			local is_validated = self:_validate_action(settings, condition_func_params, t, used_input)
@@ -784,7 +800,7 @@ ActionHandler._valid_action_from_action_input = function (self, actions, action_
 				current_name = name
 				current_priority = priority
 
-				if not settings.priority then
+				if not settings.action_priority then
 					break
 				end
 			end

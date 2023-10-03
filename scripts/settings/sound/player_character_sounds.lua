@@ -53,11 +53,13 @@ player_character_sounds.resolve_sound = function (sound_alias, properties, optio
 		local events = settings.events
 		local switches = settings.switch
 		local no_default = settings.no_default
-		local has_husk_events = settings.has_husk_events or false
+		local has_husk_events = not not settings.has_husk_events
 		local num_switches = #switches
 
 		if num_switches == 0 then
-			return true, events.default, has_husk_events
+			local event = events.default
+
+			return true, event, has_husk_events
 		end
 
 		for i = 1, num_switches do
@@ -79,8 +81,10 @@ player_character_sounds.resolve_sound = function (sound_alias, properties, optio
 	end
 
 	local allow_default = settings and not settings.no_default
+	local event = allow_default and settings.events.default
+	local has_husk_events = settings and not not settings.has_husk_events
 
-	return allow_default, allow_default and settings.events.default, settings and settings.has_husk_events or false
+	return allow_default, event, has_husk_events
 end
 
 local function _valid_events_recursive(events, relevant_events)

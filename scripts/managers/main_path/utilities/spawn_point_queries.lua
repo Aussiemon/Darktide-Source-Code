@@ -158,6 +158,7 @@ SpawnPointQueries.occluded_positions_in_group = function (nav_world, nav_spawn_p
 end
 
 local DISALLOWED_DISTANCE = 8
+local ALLOWED_Z_DIFF = 5
 
 local function _remove_invalid_occluded_positions(valid_enemy_player_units_positions, occluded_positions, num_occluded_positions, min_distance, max_distance, optional_disallowed_positions)
 	for k = 1, #valid_enemy_player_units_positions do
@@ -169,9 +170,13 @@ local function _remove_invalid_occluded_positions(valid_enemy_player_units_posit
 				local distance = Vector3.distance(player_position, occluded_position)
 
 				if min_distance and distance < min_distance or max_distance and max_distance < distance then
-					table.remove(occluded_positions, j)
+					local z_diff = math.abs(player_position.z - occluded_position.z)
 
-					num_occluded_positions = num_occluded_positions - 1
+					if z_diff < ALLOWED_Z_DIFF then
+						table.remove(occluded_positions, j)
+
+						num_occluded_positions = num_occluded_positions - 1
+					end
 				elseif optional_disallowed_positions then
 					for h = 1, #optional_disallowed_positions do
 						local disallowed_position = optional_disallowed_positions[h]:unbox()

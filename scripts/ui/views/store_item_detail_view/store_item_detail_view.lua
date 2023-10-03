@@ -318,8 +318,9 @@ StoreItemDetailView._setup_item_presentation = function (self)
 	else
 		local title_text = offer.sku.name or ""
 		local item_type_lookup = offer.description.type
-		local item_type_localization_key = UISettings.item_type_localization_lookup[Utf8.upper(item_type_lookup)]
-		local item_type_display_name_localized = item_type_localization_key and Localize(item_type_localization_key) or "<undefined item_type>"
+		local item_type_display_name_localized = ItemUtils.type_display_name({
+			item_type = item_type_lookup
+		})
 
 		self:_setup_details(title_text, item_type_display_name_localized)
 		self:_setup_item_grid()
@@ -843,8 +844,9 @@ StoreItemDetailView._present_single_item = function (self)
 		end
 
 		local item_type_lookup = offer.description.type
-		local item_type_localization_key = UISettings.item_type_localization_lookup[Utf8.upper(item_type_lookup)]
-		local item_type_display_name_localized = item_type_localization_key and Localize(item_type_localization_key) or "<undefined item_type>"
+		local item_type_display_name_localized = ItemUtils.type_display_name({
+			item_type = item_type_lookup
+		})
 		self._widgets_by_name.item_restrictions.content.visible = false
 		local item_size = {
 			700,
@@ -1553,18 +1555,34 @@ StoreItemDetailView._handle_input = function (self, input_service)
 		self._reset_navigation = true
 
 		if self._aquilas_showing then
-			local new_selection_index = nil
+			local new_selection_index, new_selection_row = nil
 
-			if input_service:get("navigate_left_continuous") then
-				new_selection_index = self._selected_aquila_index > 1 and self._selected_aquila_index - 1 or 1
+			if input_service:get("navigate_up_continuous") then
+				if self._selected_aquila_row > 1 then
+					new_selection_row = "up"
+				else
+					new_selection_row = false
+				end
+			elseif input_service:get("navigate_down_continuous") then
+				if self._selected_aquila_row < self._aquilas_navigation_data.num_rows then
+					new_selection_row = "down"
+				else
+					new_selection_row = false
+				end
+			elseif input_service:get("navigate_left_continuous") then
+				if self._selected_aquila_index > 1 then
+					new_selection_index = self._selected_aquila_index - 1
+				else
+					new_selection_index = false
+				end
 			elseif input_service:get("navigate_right_continuous") then
-				new_selection_index = self._selected_aquila_index < #self._aquilas_widgets and self._selected_aquila_index + 1 or #self._aquilas_widgets
+				new_selection_index = self._selected_aquila_index < self._aquilas_navigation_data.total_widgets and self._selected_aquila_index + 1
 			end
 
 			if new_selection_index then
 				self:_select_aquila_widget_by_index(new_selection_index)
-
-				self._selected_aquila_index = new_selection_index
+			elseif new_selection_row then
+				self:_select_aquila_widget_by_row(new_selection_row)
 			end
 		elseif self._selected_grid_index and input_service:get("navigate_up_continuous") then
 			if self._details_widget.content.hotspot and not self._grid:can_move_vertical("up") then
@@ -1602,8 +1620,6 @@ StoreItemDetailView._on_navigation_input_changed = function (self)
 			self:_select_aquila_widget_by_index(self._selected_aquila_index)
 		end
 	elseif self._aquilas_showing then
-		self._selected_aquila_index = nil
-
 		self:_select_aquila_widget_by_index()
 	end
 end
@@ -2299,14 +2315,7 @@ StoreItemDetailView._update_purchase_buttons = function (self)
 		purchase_button_text = Utf8.upper(Localize("loc_item_owned"))
 	end
 
-	if not self._using_cursor_navigation then
-		local service_type = DefaultViewInputSettings.service_type
-		local alias_key = Managers.ui:get_input_alias_key("confirm_pressed", service_type)
-		local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
-		purchase_button_text = string.format("%s %s", input_text, purchase_button_text)
-	end
-
-	self._widgets_by_name.purchase_item_button.content.text = purchase_button_text
+	self._widgets_by_name.purchase_item_button.content.original_text = purchase_button_text
 end
 
 StoreItemDetailView._update_wallets = function (self)
@@ -2341,9 +2350,9 @@ StoreItemDetailView.cb_on_purchase_pressed = function (self)
 
 	if not is_bundle then
 		local sub_type = self._selected_element.item.item_type
-		local item_type_2 = sub_type and Utf8.upper(sub_type) or ""
-		local item_type_localization_key = UISettings.item_type_localization_lookup[item_type_2]
-		local item_type_display_name_localized = item_type_localization_key and Localize(item_type_localization_key) or "<undefined item_type>"
+		local item_type_display_name_localized = ItemUtils.type_display_name({
+			item_type = sub_type
+		})
 		item_name = Localize(self._selected_element.item.display_name)
 		item_type = item_type_display_name_localized
 	else
@@ -2533,17 +2542,28 @@ StoreItemDetailView._create_aquilas_presentation = function (self, offer, item_n
 	local scenegraph_id = "grid_aquilas_content"
 	local widgets = {}
 	local template = ContentBlueprints.aquila_button
+	local size_addition = {
+		20,
+		20
+	}
 	local spacing = {
 		20,
-		10
+		25
 	}
-	local size = {
+	local large_size = {
 		260,
-		400
+		350
 	}
+	local small_size = {
+		260,
+		250
+	}
+	local medium_size = {
+		260,
+		300
+	}
+	local size_per_row = {}
 	local pass_template = template.pass_template
-	local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
-	local offset = 0
 	local store_service = Managers.data_service.store
 	self._store_promise = store_service:get_premium_store("hard_currency_store"):next(function (data)
 		if self._destroyed or not self._store_promise then
@@ -2551,7 +2571,7 @@ StoreItemDetailView._create_aquilas_presentation = function (self, offer, item_n
 		end
 
 		self._store_promise = nil
-		local available_aquilas = data.offers
+		local all_aquila_offers = data.offers
 		local platform = nil
 		local authenticate_method = Managers.backend:get_auth_method()
 
@@ -2565,90 +2585,203 @@ StoreItemDetailView._create_aquilas_presentation = function (self, offer, item_n
 			platform = "steam"
 		end
 
+		local bonus_offer_count = 0
+		local valid_offers = 0
+		local non_bonus_offer_count = 0
 		local cost = offer.price.amount.amount
 		local currency = offer.price.amount.type
 		local current_balance = self._wallet_element:get_amount_by_currency(currency)
 		local money_required = cost - current_balance
-		local i = 1
+		local available_aquilas = {}
+		local widget_grid_position_by_index = {}
+		local widgets_count_per_row = {}
 
-		for offerIdx = 1, #available_aquilas do
-			local offer = available_aquilas[offerIdx]
-			local element = {}
+		for offerIdx = 1, #all_aquila_offers do
+			local offer = all_aquila_offers[offerIdx]
+			local amount = offer.value.amount
 
-			if offer[platform] then
-				local values = offer[platform]
-
-				if values and values.priceCents and values.currency then
-					element.formattedPrice = string.format("%.2f %s", values.priceCents / 100, values.currency)
-				else
-					element.formattedPrice = offer.price.amount.formattedPrice
-				end
-
-				element.title = offer.value.amount
-				local description = ""
+			if offer[platform] and money_required <= amount then
+				available_aquilas[#available_aquilas + 1] = offer
+				valid_offers = valid_offers + 1
 				local bonus_aquila = offer.bonus or UISettings.bonus_aquila_values[offerIdx] or 0
 
 				if bonus_aquila and bonus_aquila > 0 then
-					local aquilas = offer.value.amount
-					local aquila_minus_bonus = aquilas - bonus_aquila
-					local bonus_text = Localize("loc_premium_store_credits_bonus", true, {
-						amount = bonus_aquila
-					})
-					description = string.format("%d  \n %s", aquila_minus_bonus, bonus_text)
-				end
-
-				element.description = description
-				element.offer = offer
-				local amount = element.offer.value.amount
-
-				if money_required <= amount then
-					local name = "currency_widget_" .. i
-					local widget = self:_create_widget(name, widget_definition)
-					widget.type = "aquila_button"
-					widget.offset = {
-						offset,
-						0,
-						0
-					}
-					offset = offset + size[1] + spacing[1]
-					local init = template.init
-					element.media_url = offer.mediaUrl
-
-					if element.media_url then
-						Managers.url_loader:load_texture(element.media_url):next(function (data)
-							element.texture_map = data.texture
-							self._url_textures[#self._url_textures + 1] = data
-
-							if init then
-								init(self, widget, element, "cb_on_aquila_pressed")
-							end
-						end)
-					end
-
-					if init then
-						init(self, widget, element, "cb_on_aquila_pressed")
-					end
-
-					widgets[#widgets + 1] = widget
-					i = i + 1
+					bonus_offer_count = bonus_offer_count + 1
+				else
+					non_bonus_offer_count = non_bonus_offer_count + 1
 				end
 			end
 		end
 
-		local total_width = offset - spacing[1]
+		local canvas_width = self._ui_scenegraph.canvas.size[1]
+		local max_allowed_large_per_row = math.floor(canvas_width / (large_size[1] + spacing[1]))
+		local max_allowed_small_per_row = math.floor(canvas_width / (small_size[1] + spacing[1]))
+		local max_allowed_medium_per_row = math.floor(canvas_width / (medium_size[1] + spacing[1]))
+		local large_needed_rows = math.ceil(bonus_offer_count / max_allowed_large_per_row)
+		local small_needed_rows = math.ceil(non_bonus_offer_count / max_allowed_small_per_row)
+		local use_same_size_on_all_offers = large_needed_rows > 1 and non_bonus_offer_count > 0 or small_needed_rows > 1 and bonus_offer_count > 0
 
-		self:_set_scenegraph_size(scenegraph_id, total_width, size[2])
+		table.sort(available_aquilas, function (a, b)
+			return b.value.amount < a.value.amount
+		end)
+
+		local i = 0
+
+		for offerIdx = 1, #available_aquilas do
+			local offer = available_aquilas[offerIdx]
+			local element = {}
+			i = i + 1
+			local values = offer[platform]
+
+			if values and values.priceCents and values.currency then
+				element.formattedPrice = string.format("%.2f %s", values.priceCents / 100, values.currency)
+			else
+				element.formattedPrice = offer.price.amount.formattedPrice
+			end
+
+			element.title = offer.value.amount
+			local description = ""
+			local bonus_aquila = offer.bonus or UISettings.bonus_aquila_values[offerIdx] or 0
+
+			if bonus_aquila and bonus_aquila > 0 then
+				local aquilas = offer.value.amount
+				local aquila_minus_bonus = aquilas - bonus_aquila
+				local bonus_text = Localize("loc_premium_store_credits_bonus", true, {
+					amount = bonus_aquila
+				})
+				description = string.format("%d\n%s", aquila_minus_bonus, bonus_text)
+			end
+
+			element.description = description
+			element.offer = offer
+			element.item_types = {
+				"currency"
+			}
+			local size, max_allowed_items_per_row, total_elements_in_row = nil
+
+			if use_same_size_on_all_offers then
+				size = medium_size
+				max_allowed_items_per_row = max_allowed_medium_per_row
+			elseif description ~= "" then
+				size = large_size
+				max_allowed_items_per_row = max_allowed_large_per_row
+				total_elements_in_row = bonus_offer_count
+			else
+				size = small_size
+				max_allowed_items_per_row = max_allowed_small_per_row
+				total_elements_in_row = non_bonus_offer_count
+			end
+
+			local widget_definition = UIWidget.create_definition(pass_template, scenegraph_id, nil, size)
+			local name = "currency_widget_" .. i
+			local widget = self:_create_widget(name, widget_definition)
+			widget.type = "aquila_button"
+			local row = not use_same_size_on_all_offers and (size == large_size and 1 or 2) or math.ceil(i / max_allowed_items_per_row)
+			local start_row = not use_same_size_on_all_offers and (row == 1 and 0 or bonus_offer_count) or (row - 1) * max_allowed_items_per_row
+			total_elements_in_row = total_elements_in_row or row == 1 and max_allowed_items_per_row or valid_offers - max_allowed_items_per_row
+			local end_row = start_row + total_elements_in_row
+			local element_position = end_row - i
+			widget.row = row
+			size_per_row[row] = size_per_row[row] or {}
+			size_per_row[row][1] = (size_per_row[row][1] or 0) + size[1] + spacing[1]
+			size_per_row[row][2] = math.max(size_per_row[row][2] or 0, size[2])
+			widget.offset = {
+				element_position * (size[1] + spacing[1]),
+				0,
+				0
+			}
+			local init = template.init
+			element.media_url = offer.mediaUrl
+
+			if element.media_url then
+				Managers.url_loader:load_texture(element.media_url):next(function (data)
+					element.texture_map = data.texture
+					self._url_textures[#self._url_textures + 1] = data
+
+					if init then
+						init(self, widget, element, "cb_on_aquila_pressed")
+					end
+				end)
+			end
+
+			if init then
+				init(self, widget, element, "cb_on_aquila_pressed")
+			end
+
+			local description_style_options = UIFonts.get_font_options_by_style(widget.style.bonus_description)
+			local description_width, description_height = self:_text_size(widget.content.bonus_description, widget.style.bonus_description.font_type, widget.style.bonus_description.font_size, {
+				1920,
+				1080
+			}, description_style_options)
+			widget.style.bonus_description_background.size = {
+				description_width,
+				description_height
+			}
+			widget.style.bonus_description_background_line.size = {
+				description_width,
+				description_height
+			}
+			widgets[i] = widget
+			widget_grid_position_by_index[#widget_grid_position_by_index + 1] = {
+				row = row,
+				element_position_in_row = total_elements_in_row - element_position,
+				grid_index = start_row + element_position + 1
+			}
+			widgets_count_per_row[row] = widgets_count_per_row[row] and widgets_count_per_row[row] + 1 or 1
+		end
+
+		local needed_rows = #size_per_row
+		local total_width = 0
+		local total_height = (needed_rows - 1) * spacing[2]
+
+		for i = 1, needed_rows do
+			total_width = math.max(total_width, size_per_row[i][1] - spacing[1])
+			total_height = total_height + size_per_row[i][2]
+		end
+
+		for i = 1, #widgets do
+			local widget = widgets[i]
+			local row = widget.row - 1
+			local offset_height_value = 0
+			local row_width_value = size_per_row[widget.row][1]
+
+			if row > 0 then
+				for f = 1, row do
+					offset_height_value = offset_height_value + size_per_row[f][2]
+				end
+
+				offset_height_value = offset_height_value + spacing[2] * row
+			end
+
+			widget.offset[1] = widget.offset[1] + (total_width - row_width_value) * 0.5
+			widget.offset[2] = offset_height_value
+		end
+
+		self:_set_scenegraph_size(scenegraph_id, total_width, total_height)
+
+		local aquilas_frame_element_vertical_margin = 40
+		local min_aquilas_frame_element_height = 0
+
+		self:_set_scenegraph_size("aquilas_background", total_width, math.max(min_aquilas_frame_element_height, total_height + aquilas_frame_element_vertical_margin + size_addition[2] * needed_rows))
 
 		self._aquilas_widgets = widgets
+		self._aquilas_navigation_data = {
+			widgets_position_by_index = widget_grid_position_by_index,
+			num_rows = needed_rows,
+			widgets_count_per_row = widgets_count_per_row,
+			total_widgets = #self._aquilas_widgets
+		}
 
 		if not self._using_cursor_navigation then
 			self._selected_aquila_index = 1
+			self._selected_aquila_row = 1
 
 			self:_select_aquila_widget_by_index(self._selected_aquila_index)
 		end
 
-		self._widgets_by_name.aquilas_required.content.visible = true
-		self._widgets_by_name.aquilas_required.content.price = string.format("%s ", Localize("loc_premium_store_required_credits", true, {
+		self._widgets_by_name.aquilas_background.content.visible = true
+		self._widgets_by_name.required_aquilas_text.content.visible = true
+		self._widgets_by_name.required_aquilas_text.content.text = string.format("%s ", Localize("loc_premium_store_required_credits", true, {
 			offer = item_name,
 			value = money_required
 		}))
@@ -2701,7 +2834,45 @@ StoreItemDetailView._destroy_aquilas_presentation = function (self)
 		self._aquilas_widgets = nil
 	end
 
-	self._widgets_by_name.aquilas_required.content.visible = false
+	self._widgets_by_name.required_aquilas_text.content.visible = false
+	self._widgets_by_name.aquilas_background.content.visible = false
+end
+
+StoreItemDetailView._select_aquila_widget_by_row = function (self, direction)
+	if not self._aquilas_widgets then
+		return
+	end
+
+	local new_selection_row, new_selection_index = nil
+
+	if direction == "up" then
+		new_selection_row = self._selected_aquila_row > 1 and self._selected_aquila_row - 1 or self._selected_aquila_row
+	elseif direction == "down" then
+		new_selection_row = self._selected_aquila_row < self._aquilas_navigation_data.num_rows and self._selected_aquila_row + 1 or self._selected_aquila_row
+	end
+
+	if new_selection_row then
+		local row_size_top = self._aquilas_navigation_data.widgets_count_per_row[1]
+		local row_size_bottom = self._aquilas_navigation_data.widgets_count_per_row[2]
+
+		if direction == "up" then
+			local start_row_position = 1
+			local end_row_position = start_row_position + row_size_top - 1
+			local grid_diff = (row_size_bottom - row_size_top) * 0.5
+			local new_position = math.floor(self._selected_aquila_index - row_size_top - grid_diff)
+			new_selection_index = math.clamp(new_position, start_row_position, end_row_position)
+		elseif direction == "down" then
+			local start_row_position = row_size_top + 1
+			local end_row_position = start_row_position + row_size_bottom - 1
+			local grid_diff = (row_size_top - row_size_bottom) * 0.5
+			local new_position = math.floor(self._selected_aquila_index + row_size_top - grid_diff)
+			new_selection_index = math.clamp(new_position, start_row_position, end_row_position)
+		end
+
+		self._selected_aquila_row = new_selection_row
+
+		self:_select_aquila_widget_by_index(new_selection_index)
+	end
 end
 
 StoreItemDetailView._select_aquila_widget_by_index = function (self, index)
@@ -2709,9 +2880,37 @@ StoreItemDetailView._select_aquila_widget_by_index = function (self, index)
 		return
 	end
 
+	if not index then
+		for i = 1, #self._aquilas_widgets do
+			local widget = self._aquilas_widgets[i]
+			widget.content.hotspot.is_focused = false
+		end
+
+		return
+	end
+
+	local widgets_position_by_index = self._aquilas_navigation_data.widgets_position_by_index
+	local focused_index = nil
+
 	for i = 1, #self._aquilas_widgets do
-		local widget = self._aquilas_widgets[i]
-		widget.content.hotspot.is_focused = i == index
+		local data = widgets_position_by_index[i]
+
+		if index == data.grid_index then
+			if data.row == self._selected_aquila_row then
+				focused_index = i
+			end
+
+			break
+		end
+	end
+
+	if focused_index then
+		for i = 1, #self._aquilas_widgets do
+			local widget = self._aquilas_widgets[i]
+			widget.content.hotspot.is_focused = i == focused_index
+		end
+
+		self._selected_aquila_index = index
 	end
 end
 

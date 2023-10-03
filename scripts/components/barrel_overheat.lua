@@ -1,6 +1,10 @@
 local BarrelOverheat = component("BarrelOverheat")
 local BARREL_OVERHEAT_MATERIAL_VARIABLE = "overheat"
 
+BarrelOverheat.editor_validate = function (self, unit)
+	return true, ""
+end
+
 BarrelOverheat.init = function (self, unit)
 	self:enable(unit)
 

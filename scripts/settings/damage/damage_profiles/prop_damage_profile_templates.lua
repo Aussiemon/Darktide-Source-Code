@@ -16,12 +16,12 @@ table.make_unique(overrides)
 
 local barrel_explosion_close_admr = {
 	attack = {
-		[armor_types.unarmored] = 1,
-		[armor_types.armored] = 1,
-		[armor_types.resistant] = 8,
+		[armor_types.unarmored] = 2,
+		[armor_types.armored] = 2,
+		[armor_types.resistant] = 10,
 		[armor_types.player] = 0.15,
-		[armor_types.berserker] = 1,
-		[armor_types.super_armor] = 1,
+		[armor_types.berserker] = 2,
+		[armor_types.super_armor] = 3,
 		[armor_types.disgustingly_resilient] = 3,
 		[armor_types.void_shield] = 0.75,
 		[armor_types.prop_armor] = 0
@@ -40,12 +40,12 @@ local barrel_explosion_close_admr = {
 }
 local barrel_explosion_far_admr = {
 	attack = {
-		[armor_types.unarmored] = 1,
-		[armor_types.armored] = 1,
-		[armor_types.resistant] = 4,
+		[armor_types.unarmored] = 1.5,
+		[armor_types.armored] = 1.5,
+		[armor_types.resistant] = 6,
 		[armor_types.player] = 0.15,
-		[armor_types.berserker] = 1,
-		[armor_types.super_armor] = 0.6,
+		[armor_types.berserker] = 1.5,
+		[armor_types.super_armor] = 2,
 		[armor_types.disgustingly_resilient] = 2,
 		[armor_types.void_shield] = 0.75,
 		[armor_types.prop_armor] = 0
@@ -103,6 +103,30 @@ local fire_barrel_explosion_far_admr = {
 		[armor_types.armored] = 1,
 		[armor_types.resistant] = 1,
 		[armor_types.player] = 2,
+		[armor_types.berserker] = 1,
+		[armor_types.super_armor] = 1,
+		[armor_types.disgustingly_resilient] = 1,
+		[armor_types.void_shield] = 1,
+		[armor_types.prop_armor] = 1
+	}
+}
+local breach_charge_explosion_close = {
+	attack = {
+		[armor_types.unarmored] = 1,
+		[armor_types.armored] = 1,
+		[armor_types.resistant] = 2,
+		[armor_types.player] = 1,
+		[armor_types.berserker] = 1,
+		[armor_types.super_armor] = 0.2,
+		[armor_types.disgustingly_resilient] = 0.75,
+		[armor_types.void_shield] = 0.75,
+		[armor_types.prop_armor] = 0
+	},
+	impact = {
+		[armor_types.unarmored] = 1,
+		[armor_types.armored] = 1,
+		[armor_types.resistant] = 1,
+		[armor_types.player] = 0,
 		[armor_types.berserker] = 1,
 		[armor_types.super_armor] = 1,
 		[armor_types.disgustingly_resilient] = 1,
@@ -267,6 +291,40 @@ damage_templates.corruptor_damage_tick = {
 		attack = 0.3,
 		impact = 4
 	}
+}
+damage_templates.breach_charge_explosion = {
+	interrupt_alternate_fire = true,
+	suppression_value = 3,
+	ogryn_disorientation_type = "grenadier",
+	ignore_stun_immunity = true,
+	ignore_toughness = false,
+	stagger_category = "explosion",
+	ignore_stagger_reduction = true,
+	disorientation_type = "grenadier",
+	ragdoll_push_force = 1000,
+	cleave_distribution = {
+		attack = 0.15,
+		impact = 0.15
+	},
+	armor_damage_modifier_ranged = {
+		near = breach_charge_explosion_close,
+		far = breach_charge_explosion_close
+	},
+	targets = {
+		default_target = {
+			armor_damage_modifier_ranged = {
+				near = breach_charge_explosion_close,
+				far = breach_charge_explosion_close
+			}
+		}
+	},
+	power_distribution = {
+		attack = 1,
+		impact = 4
+	},
+	force_look_function = ForcedLookSettings.look_functions.to_or_from_attack_direction,
+	push_template = push_templates.grenadier_explosion,
+	catapulting_template = CatapultingTemplates.breach_charge_catapult
 }
 
 return {

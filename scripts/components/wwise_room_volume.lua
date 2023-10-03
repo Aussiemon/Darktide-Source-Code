@@ -34,6 +34,18 @@ WwiseRoomVolume.editor_init = function (self, unit)
 	end
 end
 
+WwiseRoomVolume.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if rawget(_G, "LevelEditor") and not Unit.has_volume(unit, "room_volume") then
+		success = false
+		error_message = error_message .. "\nMissing volume 'room_volume'"
+	end
+
+	return success, error_message
+end
+
 WwiseRoomVolume.enable = function (self, unit)
 	return
 end

@@ -1,0 +1,7 @@
+local force_field_weapon_template_generator = require("scripts/settings/equipment/weapon_templates/weapon_template_generators/force_field_weapon_template_generator")
+local weapon_template = force_field_weapon_template_generator()
+weapon_template.actions.action_place_force_field.functional_unit = "content/characters/player/human/attachments_combat/psyker_shield/shield_sphere_functional"
+weapon_template.actions.action_aim_force_field.visual_unit = "content/characters/player/human/attachments_combat/psyker_shield/shield_sphere_visual"
+weapon_template.actions.action_aim_force_field.place_configuration.allow_rotation = false
+
+return weapon_template

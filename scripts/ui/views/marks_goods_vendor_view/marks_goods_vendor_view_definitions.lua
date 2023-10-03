@@ -58,6 +58,7 @@ local scenegraph_definition = {
 }
 local widget_definitions = {
 	purchase_button = UIWidget.create_definition(table.clone(ButtonPassTemplates.default_button), "purchase_button", {
+		gamepad_action = "confirm_pressed",
 		text = Utf8.upper(Localize("loc_vendor_purchase_button")),
 		purchase_sound = UISoundEvents.credits_vendor_on_purchase,
 		hotspot = {

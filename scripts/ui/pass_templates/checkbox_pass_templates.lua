@@ -37,7 +37,7 @@ local CheckboxPassTemplates = {
 					settings_area_width,
 					height
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.terminal_corner_hover(255, true),
 				size_addition = {
 					0,
 					0
@@ -91,13 +91,36 @@ local CheckboxPassTemplates = {
 						0,
 						1
 					},
-					color = Color.ui_terminal(255, true)
+					color = Color.terminal_corner_hover(255, true)
 				},
 				change_function = function (content, style)
-					style.color[1] = 255 * content[hotspot_id].anim_select_progress
+					local default_alpha = 255
+					local disabled_alpha = default_alpha * 0.8
+					local current_alpha = content.disabled and disabled_alpha or default_alpha
+					style.color[1] = current_alpha * content[hotspot_id].anim_select_progress
 				end,
 				visibility_function = function (content, style)
 					return content[hotspot_id].is_selected
+				end
+			}
+			passes[#passes + 1] = {
+				pass_type = "rect",
+				style = {
+					vertical_alignment = "top",
+					horizontal_alignment = "right",
+					size = option_size,
+					offset = {
+						horizontal_offset,
+						0,
+						9
+					},
+					color = Color.terminal_corner(25.5, true)
+				},
+				change_function = function (content, style)
+					style.color[1] = 25.5 * content[hotspot_id].anim_select_progress
+				end,
+				visibility_function = function (content, style)
+					return content[hotspot_id].is_selected and not content.disabled
 				end
 			}
 			passes[#passes + 1] = {

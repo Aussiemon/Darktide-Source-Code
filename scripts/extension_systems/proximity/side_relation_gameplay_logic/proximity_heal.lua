@@ -3,6 +3,8 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Health = require("scripts/utilities/health")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local Toughness = require("scripts/utilities/toughness/toughness")
+local buff_keywords = BuffSettings.keywords
+local improved_medical_crate_settings = BuffSettings.keyword_settings[buff_keywords.improved_medical_crate]
 local ProximityHeal = class("ProximityHeal")
 
 ProximityHeal.init = function (self, logic_context, init_data, owner_unit_or_nil)
@@ -22,7 +24,6 @@ ProximityHeal.init = function (self, logic_context, init_data, owner_unit_or_nil
 	local side_system = Managers.state.extension:system("side_system")
 	local side = side_system:get_side_from_name(self._side_name)
 	local player_units = side.player_units
-	local buff_keywords = BuffSettings.keywords
 
 	for _, player_unit in pairs(player_units) do
 		local buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
@@ -38,7 +39,7 @@ ProximityHeal.init = function (self, logic_context, init_data, owner_unit_or_nil
 		end
 	end
 
-	self._heal_amount_modifier = players_have_improved_keyword and 2 or 1
+	self._heal_amount_modifier = players_have_improved_keyword and improved_medical_crate_settings.heal_multiplier or 1
 	self._heal_reserve = med_kit_settings.optional_heal_reserve
 	self._heal_time = med_kit_settings.optional_heal_time
 	self._players_have_improved_keyword = players_have_improved_keyword
@@ -122,8 +123,8 @@ ProximityHeal.update = function (self, dt, t)
 			end
 
 			if players_have_improved_keyword then
-				health_extension:reduce_permanent_damage(heal_amount * 0.5)
-				Toughness.replenish_percentage(unit, 0.0016, false, "proximity_heal")
+				health_extension:reduce_permanent_damage(heal_amount * improved_medical_crate_settings.permanent_damage_multiplier)
+				Toughness.replenish_percentage(unit, improved_medical_crate_settings.toughness_percentage_per_second * dt, false, "proximity_heal")
 			end
 
 			if health_added > 0 then

@@ -287,12 +287,54 @@ local widget_definitions = {
 		{
 			pass_type = "rect",
 			style = {
+				color = Color.black(255, true)
+			},
+			offset = {
+				0,
+				0,
+				2
+			}
+		},
+		{
+			value = "content/ui/vector_textures/symbols/cog_skull_01",
+			pass_type = "slug_icon",
+			style = {
+				vertical_alignment = "center",
+				horizontal_alignment = "center",
+				offset = {
+					0,
+					0,
+					1
+				},
 				color = {
-					255,
+					40,
 					0,
 					0,
 					0
+				},
+				size = {
+					1250,
+					1250
 				}
+			}
+		},
+		{
+			value = "content/ui/materials/backgrounds/terminal_basic",
+			pass_type = "texture",
+			style = {
+				horizontal_alignemt = "center",
+				scale_to_material = true,
+				vertical_alignemnt = "center",
+				size_addition = {
+					40,
+					40
+				},
+				offset = {
+					-20,
+					-20,
+					0
+				},
+				color = Color.terminal_grid_background_gradient(204, true)
 			}
 		}
 	}, "screen"),
@@ -341,7 +383,7 @@ local widget_definitions = {
 					0,
 					0
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.terminal_corner(255, true),
 				size_addition = {
 					23,
 					23
@@ -375,7 +417,7 @@ local widget_definitions = {
 	}, "tooltip", {
 		visible = false
 	}),
-	scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "scrollbar", {
+	scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "scrollbar", {
 		scroll_speed = 10
 	}),
 	grid_mask = UIWidget.create_definition({
@@ -398,7 +440,7 @@ local widget_definitions = {
 			content_id = "hotspot"
 		}
 	}, "grid_interaction"),
-	settings_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.default_scrollbar, "settings_scrollbar", {
+	settings_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "settings_scrollbar", {
 		scroll_speed = 10
 	}),
 	settings_grid_mask = UIWidget.create_definition({
@@ -430,7 +472,7 @@ local legend_inputs = {
 		alignment = "left_alignment"
 	},
 	{
-		input_action = "next",
+		input_action = "hotkey_menu_special_2",
 		display_name = "loc_settings_menu_reset_to_default",
 		on_pressed_callback = "cb_reset_category_to_default",
 		visibility_function = function (parent)

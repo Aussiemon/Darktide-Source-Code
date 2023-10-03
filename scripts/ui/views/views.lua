@@ -49,7 +49,6 @@ local views = {
 		display_name = "loc_news_view_display_name",
 		class = "NewsView",
 		state_bound = true,
-		game_world_blur = 1.1,
 		path = "scripts/ui/views/news_view/news_view",
 		wwise_states = {
 			options = WwiseGameSyncSettings.state_groups.options.ingame_menu
@@ -378,12 +377,14 @@ local views = {
 		}
 	},
 	video_view = {
-		package = "packages/ui/views/video_view/video_view",
-		display_name = "loc_video_view_display_name",
 		class = "VideoView",
+		display_name = "loc_video_view_display_name",
+		state_bound = true,
 		use_transition_ui = true,
-		load_in_hub = true,
 		path = "scripts/ui/views/video_view/video_view",
+		package = "packages/ui/views/video_view/video_view",
+		wwise_state_query = true,
+		load_in_hub = true,
 		testify_flags = {
 			ui_views = false
 		}
@@ -876,6 +877,28 @@ local views = {
 		path = "scripts/ui/views/credits_view/credits_view",
 		testify_flags = {
 			ui_views = false
+		},
+		wwise_states = {
+			music_game_state = WwiseGameSyncSettings.state_groups.music_game_state.credits,
+			options = WwiseGameSyncSettings.state_groups.options.credits
+		}
+	},
+	talent_builder_view = {
+		display_name = "loc_talent_builder_view_display_name",
+		state_bound = true,
+		path = "scripts/ui/views/talent_builder_view/talent_builder_view",
+		package = "packages/ui/views/talent_builder_view/talent_builder_view",
+		class = "TalentBuilderView",
+		disable_game_world = true,
+		load_in_hub = true,
+		testify_flags = {
+			ui_views = false
+		},
+		enter_sound_events = {
+			UISoundEvents.talent_menu_enter
+		},
+		exit_sound_events = {
+			UISoundEvents.talent_menu_exit
 		}
 	}
 }

@@ -557,12 +557,12 @@ local disgustingly_resilient = {
 		}
 	},
 	blood_ball = {
-		weakspot_died = blood_ball,
-		died = blood_ball,
-		weakspot_damage = blood_ball,
-		damage = blood_ball,
-		damage_reduced = blood_ball,
-		dead = blood_ball
+		weakspot_died = disgusting_blood_ball,
+		died = disgusting_blood_ball,
+		weakspot_damage = disgusting_blood_ball,
+		damage = disgusting_blood_ball,
+		damage_reduced = disgusting_blood_ball,
+		dead = disgusting_blood_ball
 	}
 }
 local resistant = table.clone(unarmored)

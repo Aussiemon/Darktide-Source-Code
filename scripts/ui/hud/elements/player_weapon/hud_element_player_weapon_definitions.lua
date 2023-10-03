@@ -143,6 +143,16 @@ local widget_definitions = {
 			}, ammo_text_style)
 		},
 		{
+			value_id = "ammo_amount_4",
+			style_id = "ammo_amount_4",
+			pass_type = "text",
+			value = "<ammo_amount_4>",
+			style = table.merge({
+				index = 4,
+				primary_counter = true
+			}, ammo_text_style)
+		},
+		{
 			value_id = "ammo_spare_1",
 			style_id = "ammo_spare_1",
 			pass_type = "text",
@@ -167,6 +177,15 @@ local widget_definitions = {
 			value = "",
 			style = table.merge({
 				index = 3
+			}, ammo_spare_text_style)
+		},
+		{
+			value_id = "ammo_spare_4",
+			style_id = "ammo_spare_4",
+			pass_type = "text",
+			value = "",
+			style = table.merge({
+				index = 4
 			}, ammo_spare_text_style)
 		}
 	}, "background"),

@@ -1,5 +1,4 @@
 local AttackSettings = require("scripts/settings/damage/attack_settings")
-local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local WoundMaterials = require("scripts/extension_systems/wounds/utilities/wound_materials")
 local WoundsTemplates = require("scripts/settings/damage/wounds_templates")
 local attack_results = AttackSettings.attack_results
@@ -139,7 +138,7 @@ WoundsExtension.add_wounds = function (self, wounds_template, hit_world_position
 	local wounds_enabled_locally = Application.user_setting("gore_settings", "minion_wounds_enabled")
 
 	if wounds_enabled_locally == nil then
-		wounds_enabled_locally = DefaultGameParameters.minion_wounds_enabled
+		wounds_enabled_locally = GameParameters.minion_wounds_enabled
 	end
 
 	if not DEDICATED_SERVER and wounds_enabled_locally then

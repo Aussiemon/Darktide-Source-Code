@@ -28,21 +28,11 @@ BtIdleAction.enter = function (self, unit, breed, blackboard, scratchpad, action
 	if vo_event and perception_component.aggro_state == "passive" then
 		Vo.enemy_vo_event(unit, vo_event)
 	end
-
-	if action_data.idle_duration then
-		scratchpad.idle_exit_t = t + action_data.idle_duration
-	end
 end
 
 BtIdleAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)
 	if not action_data.ignore_rotate_towards_target then
 		MinionMovement.rotate_towards_target_unit(unit, scratchpad)
-	end
-
-	local idle_exit_t = scratchpad.idle_exit_t
-
-	if idle_exit_t and idle_exit_t < t then
-		return "done"
 	end
 
 	return "running"

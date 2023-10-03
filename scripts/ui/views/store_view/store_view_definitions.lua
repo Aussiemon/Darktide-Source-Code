@@ -222,7 +222,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			0,
+			30,
 			1
 		}
 	},
@@ -232,11 +232,11 @@ local scenegraph_definition = {
 		horizontal_alignment = "center",
 		size = {
 			1920,
-			120
+			0
 		},
 		position = {
 			0,
-			-370,
+			0,
 			1
 		}
 	},
@@ -255,7 +255,7 @@ local scenegraph_definition = {
 		}
 	},
 	loading = {
-		vertical_alignment = "cemter",
+		vertical_alignment = "center",
 		scale = "fit",
 		horizontal_alignment = "center",
 		size = {
@@ -306,7 +306,7 @@ required_aquilas_title_style.text_horizontal_alignment = "center"
 required_aquilas_title_style.text_vertical_alignment = "top"
 required_aquilas_title_style.offset = {
 	0,
-	123,
+	-55,
 	2
 }
 local widget_definitions = {
@@ -350,7 +350,7 @@ local widget_definitions = {
 				},
 				offset = {
 					0,
-					60,
+					-120,
 					0
 				}
 			}
@@ -368,6 +368,7 @@ local widget_definitions = {
 			pass_type = "texture",
 			value = "content/ui/materials/frames/premium_store/currency_upper",
 			style = {
+				vertical_alignment = "top",
 				horizontal_alignment = "center",
 				size = {
 					954,
@@ -375,7 +376,7 @@ local widget_definitions = {
 				},
 				offset = {
 					0,
-					30,
+					-152,
 					1
 				}
 			}
@@ -386,6 +387,7 @@ local widget_definitions = {
 			pass_type = "texture",
 			value = "content/ui/materials/frames/premium_store/currency_lower",
 			style = {
+				vertical_alignment = "bottom",
 				horizontal_alignment = "center",
 				size = {
 					354,
@@ -393,7 +395,7 @@ local widget_definitions = {
 				},
 				offset = {
 					0,
-					670,
+					78,
 					1
 				}
 			}
@@ -522,7 +524,8 @@ local widget_definitions = {
 		}
 	}, "screen"),
 	aquila_button = UIWidget.create_definition(ButtonPassTemplates.aquila_button, "aquila_button", {
-		text = Utf8.upper(Localize("loc_premium_store_purchase_credits_storefront_button"))
+		gamepad_action = "hotkey_menu_special_2",
+		original_text = Utf8.upper(Localize("loc_premium_store_purchase_credits_storefront_button"))
 	}),
 	navigation_arrow_left = UIWidget.create_definition({
 		{

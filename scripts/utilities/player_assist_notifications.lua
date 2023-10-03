@@ -1,5 +1,9 @@
 local PlayerAssistNotifications = {
 	show_notification = function (assisted_unit, assisting_unit, assist_type)
+		if assisted_unit == assisting_unit then
+			return
+		end
+
 		if not assisting_unit or not ALIVE[assisting_unit] then
 			return
 		end

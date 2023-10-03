@@ -17,6 +17,14 @@ MultiplayerSession.init = function (self)
 	self._vivox_backend_info = nil
 end
 
+MultiplayerSession.set_booted = function (self)
+	self._booted = true
+end
+
+MultiplayerSession.is_booted = function (self)
+	return self._booted
+end
+
 MultiplayerSession.became_host = function (self, host_type, lobby_id)
 	self._state = self.STATES.host
 	self._host_type = host_type
@@ -46,7 +54,7 @@ MultiplayerSession.became_host = function (self, host_type, lobby_id)
 		end
 
 		if tag then
-			local text = not IS_XBS or tag ~= ChatManagerConstants.ChannelTag.HUB
+			local text = true
 			local voice = host_type == HOST_TYPES.mission_server
 			local vivox_backend_info = self:vivox_backend_info()
 
@@ -230,7 +238,7 @@ MultiplayerSession.joined_host = function (self, channel_id, host_peer_id, host_
 		end
 
 		if tag then
-			local text = not IS_XBS or tag ~= ChatManagerConstants.ChannelTag.HUB
+			local text = true
 			local voice = host_type == HOST_TYPES.mission_server
 			local vivox_backend_info = self:vivox_backend_info()
 

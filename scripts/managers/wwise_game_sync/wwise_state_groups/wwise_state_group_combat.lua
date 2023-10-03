@@ -44,9 +44,11 @@ WwiseStateGroupCombat.update = function (self, dt, t)
 end
 
 WwiseStateGroupCombat.set_followed_player_unit = function (self, player_unit)
-	if player_unit then
+	local music_parameter_extension = player_unit and ScriptUnit.has_extension(player_unit, "music_parameter_system")
+
+	if music_parameter_extension then
 		self._player_unit = player_unit
-		self._music_parameter_extension = ScriptUnit.extension(player_unit, "music_parameter_system")
+		self._music_parameter_extension = music_parameter_extension
 	else
 		self._player_unit = nil
 		self._music_parameter_extension = nil

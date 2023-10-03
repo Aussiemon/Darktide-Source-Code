@@ -7,6 +7,13 @@ local PlayerManager = require("scripts/foundation/managers/player/player_manager
 local SINGLEPLAY_TYPES = MatchmakingConstants.SINGLEPLAY_TYPES
 local StateMainMenu = class("StateMainMenu")
 
+local function _set_player_profile(profile)
+	local local_player_id = 1
+	local local_player = Managers.player:local_player(local_player_id)
+
+	local_player:set_profile(profile)
+end
+
 StateMainMenu.on_enter = function (self, parent, params, creation_context)
 	self._creation_context = creation_context
 	local profiles = params.profiles
@@ -62,15 +69,17 @@ end
 StateMainMenu._register_menu_events = function (self)
 	local event_manager = Managers.event
 
-	event_manager:register(self, "event_state_main_menu_continue", "event_continue_cb")
-	event_manager:register(self, "event_create_new_character_start", "event_create_new_character_start")
-	event_manager:register(self, "event_create_new_character_continue", "event_create_new_character_continue")
-	event_manager:register(self, "event_create_new_character_back", "event_create_new_character_back")
-	event_manager:register(self, "event_request_select_new_profile", "event_request_select_new_profile")
-	event_manager:register(self, "event_request_delete_character", "event_request_delete_character")
-	event_manager:register(self, "event_main_menu_entered", "event_main_menu_entered")
+	if not self._events_registered then
+		event_manager:register(self, "event_state_main_menu_continue", "event_continue_cb")
+		event_manager:register(self, "event_create_new_character_start", "event_create_new_character_start")
+		event_manager:register(self, "event_create_new_character_continue", "event_create_new_character_continue")
+		event_manager:register(self, "event_create_new_character_back", "event_create_new_character_back")
+		event_manager:register(self, "event_request_select_new_profile", "event_request_select_new_profile")
+		event_manager:register(self, "event_request_delete_character", "event_request_delete_character")
+		event_manager:register(self, "event_main_menu_entered", "event_main_menu_entered")
 
-	self._events_registered = true
+		self._events_registered = true
+	end
 end
 
 StateMainMenu._unregister_menu_events = function (self)
@@ -91,7 +100,9 @@ end
 
 StateMainMenu.event_request_select_new_profile = function (self, profile)
 	if profile ~= self._selected_profile then
-		self:_set_selected_profile(profile)
+		_set_player_profile(profile)
+
+		self._selected_profile = profile
 	end
 end
 
@@ -163,11 +174,12 @@ StateMainMenu.event_continue_cb = function (self)
 
 	local set_selected_character_promise = Managers.data_service.account:set_selected_character_id(character_id)
 	local load_narrative_promise = Managers.narrative:load_character_narrative(character_id)
+	self._promise = Promise.all(set_selected_character_promise, load_narrative_promise)
 
-	Promise.all(set_selected_character_promise, load_narrative_promise):next(function (_)
+	self._promise:next(function (_)
 		self:_start_game_or_onboarding()
 	end):catch(function ()
-		return
+		self:_register_menu_events()
 	end)
 end
 
@@ -197,13 +209,6 @@ StateMainMenu._set_profiles = function (self, profiles)
 	self._profiles = profiles
 
 	Managers.event:trigger("event_main_menu_profiles_changed", profiles)
-end
-
-local function _set_player_profile(profile)
-	local local_player_id = 1
-	local local_player = Managers.player:local_player(local_player_id)
-
-	local_player:set_profile(profile)
 end
 
 StateMainMenu._set_selected_profile = function (self, profile)
@@ -430,13 +435,20 @@ end
 StateMainMenu._set_view_state_cb = function (self, state)
 	self:_close_current_state_views()
 
+	local show_news_popup = false
+
+	if state == "main_menu" and self._is_booting then
+		show_news_popup = self:_should_open_news()
+	end
+
 	self._current_view_state = state
 	local new_state_views = state_views[state]
 
 	if new_state_views then
 		local view_context = {
 			parent = self,
-			migration_data = self._migration_data
+			migration_data = self._migration_data,
+			show_news_popup = show_news_popup
 		}
 
 		for i = 1, #new_state_views do
@@ -444,10 +456,6 @@ StateMainMenu._set_view_state_cb = function (self, state)
 
 			Managers.ui:open_view(view_name, nil, nil, nil, nil, view_context)
 		end
-	end
-
-	if state == "main_menu" and self._is_booting then
-		self:_should_open_news()
 	end
 end
 
@@ -541,13 +549,7 @@ StateMainMenu._start_onboarding = function (self, mission_name)
 end
 
 StateMainMenu._should_open_news = function (self)
-	local save_manager = Managers.save
-	local save_data = save_manager:account_data()
-	local news_feed_enabled = save_data.interface_settings.news_enabled
-
-	if news_feed_enabled then
-		Managers.event:trigger("event_main_menu_load_news")
-	end
+	return true
 end
 
 StateMainMenu.on_exit = function (self)
@@ -576,6 +578,12 @@ StateMainMenu.on_exit = function (self)
 
 		self._reconnect_popup_id = nil
 	end
+
+	local promise = self._promise
+
+	if promise and promise:is_pending() then
+		promise:cancel()
+	end
 end
 
 StateMainMenu._rejoin_game = function (self)
@@ -594,11 +602,12 @@ StateMainMenu._rejoin_game = function (self)
 
 	local set_selected_character_promise = Managers.data_service.account:set_selected_character_id(character_id)
 	local load_narrative_promise = Managers.narrative:load_character_narrative(character_id)
+	self._promise = Promise.all(set_selected_character_promise, load_narrative_promise)
 
-	Promise.all(set_selected_character_promise, load_narrative_promise):next(function (_)
+	self._promise:next(function (_)
 		self:_start_game()
 	end):catch(function ()
-		return
+		self:_register_menu_events()
 	end)
 end
 

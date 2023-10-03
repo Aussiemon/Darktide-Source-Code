@@ -67,6 +67,8 @@ StateRequireScripts._init_crashify = function (self)
 	elseif PLATFORM == "linux" then
 		Crashify.print_property("machine_id", Application.machine_id())
 	end
+
+	Log.info("INFO", "Crashify Ready")
 end
 
 StateRequireScripts._init_testify = function (self)

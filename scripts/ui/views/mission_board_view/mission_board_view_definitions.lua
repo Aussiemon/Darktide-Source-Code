@@ -566,6 +566,20 @@ MissionBoardViewDefinitions.scenegraph_definition = {
 			0
 		}
 	},
+	search_text = {
+		vertical_alignment = "center",
+		parent = "canvas",
+		horizontal_alignment = "center",
+		size = {
+			1600,
+			500
+		},
+		position = {
+			0,
+			0,
+			5
+		}
+	},
 	play_team_button = {
 		vertical_alignment = "bottom",
 		parent = "detail_location",
@@ -1559,12 +1573,18 @@ MissionBoardViewDefinitions.widget_definitions.info_box = UIWidget.create_defini
 		style_id = "text"
 	}
 }, "info_box", nil, nil, MissionBoardViewStyles.info_box_widget_style)
+MissionBoardViewDefinitions.widget_definitions.search_text = UIWidget.create_definition({
+	{
+		value_id = "text",
+		pass_type = "text",
+		style_id = "text",
+		value = Localize("loc_social_menu_find_player_searching")
+	}
+}, "search_text", nil, nil, MissionBoardViewStyles.search_text_style)
 MissionBoardViewDefinitions.widget_definitions.play_team_button = UIWidget.create_definition(ButtonPassTemplates.terminal_button, "play_team_button", {
 	gamepad_action = "confirm_pressed",
 	original_text = Utf8.upper(Localize("loc_mission_board_view_accept_mission")),
-	hotspot = {
-		on_pressed_sound = UISoundEvents.mission_board_start_mission
-	}
+	hotspot = {}
 }, nil, {
 	text = {
 		line_spacing = 0.7
@@ -2364,7 +2384,7 @@ MissionBoardViewDefinitions.legend_inputs = {
 		alignment = "left_alignment"
 	},
 	{
-		input_action = "hotkey_character_delete",
+		input_action = "hotkey_menu_special_1",
 		display_name = "loc_mission_board_view_options",
 		alignment = "right_alignment",
 		on_pressed_callback = "_callback_open_options",

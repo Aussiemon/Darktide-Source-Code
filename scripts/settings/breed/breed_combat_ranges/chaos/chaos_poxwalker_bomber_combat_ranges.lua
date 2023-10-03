@@ -14,7 +14,7 @@ local combat_ranges = {
 			{
 				switch_combat_range = "melee",
 				distance_operator = "lesser",
-				distance = 8,
+				distance = 9,
 				sticky_time = 1
 			},
 			{
@@ -28,7 +28,7 @@ local combat_ranges = {
 			{
 				switch_combat_range = "close",
 				distance_operator = "greater",
-				distance = 12,
+				distance = 13,
 				sticky_time = 0
 			}
 		}

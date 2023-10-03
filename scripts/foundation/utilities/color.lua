@@ -2018,6 +2018,12 @@ local color_definitions = {
 		143,
 		155
 	},
+	ui_toughness_buffed = {
+		255,
+		196,
+		195,
+		108
+	},
 	ui_highlight_color = {
 		255,
 		245,
@@ -2047,6 +2053,12 @@ local color_definitions = {
 		226,
 		199,
 		126
+	},
+	ui_terminal_dark = {
+		255,
+		192,
+		169,
+		106
 	},
 	ui_terminal_highlight = {
 		255,
@@ -2314,27 +2326,51 @@ local color_definitions = {
 	},
 	player_slot_1 = {
 		255,
-		153,
-		20,
-		255
+		226,
+		210,
+		117
 	},
 	player_slot_2 = {
 		255,
-		159,
-		177,
-		57
+		180,
+		88,
+		108
 	},
 	player_slot_3 = {
 		255,
-		76,
-		110,
-		221
+		84,
+		172,
+		121
 	},
 	player_slot_4 = {
 		255,
-		233,
-		114,
-		56
+		126,
+		153,
+		230
+	},
+	player_slot_1_bright = {
+		255,
+		255,
+		240,
+		24
+	},
+	player_slot_2_bright = {
+		255,
+		224,
+		54,
+		82
+	},
+	player_slot_3_bright = {
+		255,
+		79,
+		216,
+		132
+	},
+	player_slot_4_bright = {
+		255,
+		96,
+		138,
+		255
 	},
 	text_default = {
 		255,

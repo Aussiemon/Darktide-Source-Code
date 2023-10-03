@@ -12,9 +12,9 @@ local RETURN_TO_SERVO_SKULL_DESC = "loc_objective_zone_scanning_return_to_servos
 MissionObjectiveZoneScanExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
 	MissionObjectiveZoneScanExtension.super.init(self, extension_init_context, unit, extension_init_data, ...)
 
-	self._is_server = extension_init_context.is_server
-	self._players_with_scanned_objects = {}
-	self._scanned_objects_per_player = {}
+	local is_server = extension_init_context.is_server
+	self._is_server = is_server
+	self._num_scanned_objects_per_player = {}
 	self._registered_players = 0
 	self._num_scannables_in_zone = 0
 	self._check_player_condition_timer = 0
@@ -30,7 +30,8 @@ MissionObjectiveZoneScanExtension.init = function (self, extension_init_context,
 	self._vo_line_timer = self._vo_line_interval
 	self._mission_objective_system = Managers.state.extension:system("mission_objective_system")
 
-	if self._is_server then
+	if is_server then
+		self._players_with_scanned_objects = {}
 		local event_manager = Managers.event
 
 		event_manager:register(self, "player_unit_despawned", "_on_player_unit_despawned")
@@ -98,7 +99,7 @@ MissionObjectiveZoneScanExtension.update = function (self, unit, dt, t)
 
 				self:set_is_waiting_for_player_confirmation()
 				self:_set_skull_to_wait_for_players()
-				self:_dequip_auspex_from_players()
+				self:_unequip_auspex_from_players()
 				self:_play_vo(nil, SCANNING_VO_LINES.all_targets_scanned, true)
 			end
 
@@ -186,7 +187,7 @@ end
 MissionObjectiveZoneScanExtension._last_scanned_object = function (self)
 	local total_scanned = 0
 
-	for _, points in pairs(self._scanned_objects_per_player) do
+	for _, points in pairs(self._num_scanned_objects_per_player) do
 		total_scanned = total_scanned + points
 	end
 
@@ -290,13 +291,13 @@ MissionObjectiveZoneScanExtension.release_scanned_object_from_player = function 
 end
 
 MissionObjectiveZoneScanExtension.player_scanned_objects = function (self, player)
-	local scanned_objects = self._scanned_objects_per_player[player] or 0
+	local scanned_objects = self._num_scanned_objects_per_player[player] or 0
 
 	return scanned_objects
 end
 
-MissionObjectiveZoneScanExtension.scanned_objects_per_player = function (self)
-	return self._scanned_objects_per_player
+MissionObjectiveZoneScanExtension.num_scanned_objects_per_player = function (self)
+	return self._num_scanned_objects_per_player
 end
 
 MissionObjectiveZoneScanExtension.max_scannable_objects_per_player = function (self)
@@ -307,11 +308,11 @@ MissionObjectiveZoneScanExtension.add_scanned_points_to_player = function (self,
 	local new_scan_points = nil
 
 	if scanned_points > 0 then
-		local current_scanned_points = self._scanned_objects_per_player[player]
+		local current_scanned_points = self._num_scanned_objects_per_player[player]
 		new_scan_points = current_scanned_points and current_scanned_points + scanned_points or scanned_points
 	end
 
-	self._scanned_objects_per_player[player] = new_scan_points
+	self._num_scanned_objects_per_player[player] = new_scan_points
 	local is_mission_giver_line = false
 
 	self:_play_vo(player, SCANNING_VO_LINES.scan_performed, is_mission_giver_line)
@@ -482,12 +483,12 @@ MissionObjectiveZoneScanExtension._equip_auspex_to_players = function (self)
 			local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
 			local inventory_component = unit_data_extension:read_component("inventory")
 			local item_name = inventory_component[SLOT_NAME]
-			local is_auspex = item_name == item_to_equip
+			local is_equipped = item_name == item_to_equip
 
-			if not is_auspex then
-				local dequip_current_device = item_name ~= "not_equipped"
+			if not is_equipped then
+				local unequip_current_device = item_name ~= "not_equipped"
 
-				if dequip_current_device then
+				if unequip_current_device then
 					PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, SLOT_NAME, t)
 				end
 
@@ -497,7 +498,7 @@ MissionObjectiveZoneScanExtension._equip_auspex_to_players = function (self)
 	end
 end
 
-MissionObjectiveZoneScanExtension._dequip_auspex_from_players = function (self)
+MissionObjectiveZoneScanExtension._unequip_auspex_from_players = function (self)
 	local t = Managers.time:time("gameplay")
 	local players = Managers.player:players()
 
@@ -513,11 +514,11 @@ MissionObjectiveZoneScanExtension._dequip_auspex_from_players = function (self)
 				PlayerUnitVisualLoadout.wield_previous_weapon_slot(inventory_component, player_unit, t)
 			end
 
-			local item_to_dequip = self._item_to_equip
+			local item_to_unequip = self._item_to_equip
 			local item_name = inventory_component[SLOT_NAME]
-			local dequip_device = item_name == item_to_dequip
+			local unequip_device = item_name == item_to_unequip
 
-			if dequip_device then
+			if unequip_device then
 				PlayerUnitVisualLoadout.unequip_item_from_slot(player_unit, SLOT_NAME, t)
 			end
 		end

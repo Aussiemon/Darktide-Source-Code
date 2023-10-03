@@ -2,7 +2,7 @@ local SweepSplineVisualizer = {}
 
 SweepSplineVisualizer.draw_splines = function (sweep_spline, drawer, time, combined_spline, control_splines, color)
 	color = color or Color.white()
-	local time_step = GameParameters.fixed_time_step
+	local time_step = Managers.state.game_session.fixed_time_step
 	local t = 0
 	local prev_pos, _, prev_outer_pos, prev_inner_pos = sweep_spline:position_and_rotation(t)
 

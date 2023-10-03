@@ -315,32 +315,32 @@ local weapon_ammo_templates = {
 	},
 	ogryn_heavystubber_p1_m1 = {
 		ammunition_clip = {
-			lerp_perfect = 150,
-			lerp_basic = 100
+			lerp_perfect = 130,
+			lerp_basic = 80
 		},
 		ammunition_reserve = {
-			lerp_perfect = 600,
-			lerp_basic = 300
+			lerp_perfect = 520,
+			lerp_basic = 240
 		}
 	},
 	ogryn_heavystubber_p1_m2 = {
 		ammunition_clip = {
-			lerp_perfect = 100,
-			lerp_basic = 60
+			lerp_perfect = 90,
+			lerp_basic = 50
 		},
 		ammunition_reserve = {
-			lerp_perfect = 400,
-			lerp_basic = 180
+			lerp_perfect = 360,
+			lerp_basic = 150
 		}
 	},
 	ogryn_heavystubber_p1_m3 = {
 		ammunition_clip = {
-			lerp_perfect = 170,
-			lerp_basic = 120
+			lerp_perfect = 150,
+			lerp_basic = 95
 		},
 		ammunition_reserve = {
-			lerp_perfect = 680,
-			lerp_basic = 360
+			lerp_perfect = 600,
+			lerp_basic = 285
 		}
 	}
 }

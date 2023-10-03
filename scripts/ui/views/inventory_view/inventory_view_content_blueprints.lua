@@ -85,7 +85,7 @@ local function _apply_live_item_icon_cb_func(widget, grid_index, rows, columns, 
 	material_values.use_render_target = 1
 	material_values.rows = rows
 	material_values.columns = columns
-	material_values.grid_index = grid_index - 1
+	material_values.grid_index = type(grid_index) == "number" and grid_index - 1 or nil
 	material_values.render_target = render_target
 	widget.content.use_placeholder_texture = material_values.use_placeholder_texture
 end
@@ -381,6 +381,8 @@ local blueprints = {
 					content.name_text = Localize("loc_item_slot_empty")
 				end
 			end
+
+			content.has_new_items_update_callback = element.has_new_items_update_callback
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
@@ -408,6 +410,10 @@ local blueprints = {
 					end
 				end
 			end
+
+			local item_type = element.item_type
+			local has_new_items = item_type and content.has_new_items_update_callback and content.has_new_items_update_callback(item_type) or false
+			content.has_new_items = has_new_items
 		end
 	},
 	ui_item = {
@@ -523,6 +529,8 @@ local blueprints = {
 					content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
 				end
 			end
+
+			content.has_new_items_update_callback = element.has_new_items_update_callback
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
@@ -570,6 +578,10 @@ local blueprints = {
 					end
 				end
 			end
+
+			local item_type = element.item_type
+			local has_new_items = item_type and content.has_new_items_update_callback and content.has_new_items_update_callback(item_type) or false
+			content.has_new_items = has_new_items
 		end,
 		destroy = function (parent, widget, element, ui_renderer)
 			local content = widget.content
@@ -698,6 +710,8 @@ local blueprints = {
 					style.background_gradient.color = style.background_gradient.default_color
 				end
 			end
+
+			content.has_new_items_update_callback = element.has_new_items_update_callback
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
@@ -748,6 +762,10 @@ local blueprints = {
 					end
 				end
 			end
+
+			local item_type = element.item_type
+			local has_new_items = item_type and content.has_new_items_update_callback and content.has_new_items_update_callback(item_type) or false
+			content.has_new_items = has_new_items
 		end,
 		destroy = function (parent, widget, element, ui_renderer)
 			local content = widget.content
@@ -803,6 +821,8 @@ local blueprints = {
 					style.background_gradient.color = style.background_gradient.default_color
 				end
 			end
+
+			content.has_new_items_update_callback = element.has_new_items_update_callback
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
@@ -853,6 +873,10 @@ local blueprints = {
 					end
 				end
 			end
+
+			local item_type = element.item_type
+			local has_new_items = item_type and content.has_new_items_update_callback and content.has_new_items_update_callback(item_type) or false
+			content.has_new_items = has_new_items
 		end,
 		destroy = function (parent, widget, element, ui_renderer)
 			local content = widget.content
@@ -891,8 +915,15 @@ local blueprints = {
 				end
 
 				if equipped_item then
-					local cb = callback(_apply_live_item_icon_cb_func, widget)
-					content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
+					if not equipped_item.is_fallback_item then
+						local cb = callback(_apply_live_item_icon_cb_func, widget)
+						content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
+					else
+						content.use_placeholder_texture = 0
+						local material_values = style.icon.material_values
+						material_values.use_placeholder_texture = 0
+					end
+
 					local rarity_color = ItemUtils.rarity_color(equipped_item)
 					style.sub_display_name.text_color = table.clone(rarity_color)
 					style.background_gradient.color = table.clone(rarity_color)
@@ -998,30 +1029,63 @@ local blueprints = {
 					end
 
 					local traits = equipped_item.traits
+					local max_traits = 3
+
+					for i = 1, max_traits do
+						local pass_id = "trait_" .. i
+						local trait = traits and traits[i]
+
+						if trait then
+							local trait_id = trait.id
+							local rarity = trait.rarity
+							local trait_item = MasterItems.get_item(trait_id)
+							local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
+							local trait_style = style[pass_id]
+
+							if trait_style then
+								local material_values = trait_style.material_values
+								material_values.icon = texture_icon
+								material_values.frame = texture_frame
+								trait_style.material_values.overlay = 0
+							end
+
+							content[pass_id] = trait_id
+						else
+							content[pass_id] = nil
+						end
+					end
 
 					if traits then
-						for i = 1, #traits do
-							local pass_id = "trait_" .. i
-							local trait = traits[i]
+						local trait_category = ItemUtils.trait_category(content.item)
 
-							if trait then
-								local trait_id = trait.id
-								local rarity = trait.rarity
-								local trait_item = MasterItems.get_item(trait_id)
-								local texture_icon, texture_frame = ItemUtils.trait_textures(trait_item, rarity)
-								local trait_style = style[pass_id]
+						Managers.data_service.crafting:trait_sticker_book(trait_category):next(function (seen_traits)
+							if seen_traits then
+								for i = 1, #traits do
+									local pass_id = "trait_" .. i
+									local trait = traits[i]
+									local trait_id = trait.id
+									local trait_rarity = trait.rarity
 
-								if trait_style then
-									local material_values = trait_style.material_values
-									material_values.icon = texture_icon
-									material_values.frame = texture_frame
+									if trait then
+										for seen_trait_name, status in pairs(seen_traits) do
+											if seen_trait_name == trait_id and status ~= nil then
+												local trait_status = status[trait_rarity]
+
+												if trait_status == "unseen" then
+													local trait_style = style[pass_id]
+
+													if trait_style then
+														trait_style.material_values.overlay = 1
+													end
+
+													break
+												end
+											end
+										end
+									end
 								end
-
-								content[pass_id] = trait_id
-							else
-								content[pass_id] = nil
 							end
-						end
+						end)
 					end
 
 					if content.icon_load_id then
@@ -1031,9 +1095,18 @@ local blueprints = {
 						content.icon_load_id = nil
 					end
 
-					if equipped_item then
+					if equipped_item and not equipped_item.is_fallback_item then
 						local cb = callback(_apply_live_item_icon_cb_func, widget)
 						content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
+					else
+						content.use_placeholder_texture = 0
+						local material_values = style.icon.material_values
+						material_values.use_placeholder_texture = 0
+						material_values.use_render_target = 1
+						material_values.rows = nil
+						material_values.columns = nil
+						material_values.grid_index = nil
+						material_values.render_target = nil
 					end
 				end
 			end
@@ -1107,14 +1180,6 @@ local blueprints = {
 
 				if update and content.unlocked then
 					content.item = equipped_item
-					local display_name = equipped_item and equipped_item.display_name
-
-					if display_name then
-						content.display_name = ItemUtils.display_name(equipped_item)
-						content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
-					end
-
-					style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
 
 					if content.icon_load_id then
 						_remove_live_item_icon_cb_func(widget, ui_renderer)
@@ -1126,10 +1191,23 @@ local blueprints = {
 					if equipped_item then
 						local cb = callback(_apply_live_item_icon_cb_func, widget)
 						content.icon_load_id = Managers.ui:load_item_icon(equipped_item, cb)
-					end
+						style.background_gradient.color = table.clone(ItemUtils.rarity_color(equipped_item))
 
-					if style.item_level then
-						content.item_level = ItemUtils.item_level(equipped_item)
+						if style.item_level then
+							content.item_level = ItemUtils.item_level(equipped_item)
+						end
+
+						local display_name = equipped_item and equipped_item.display_name
+
+						if display_name then
+							content.display_name = ItemUtils.display_name(equipped_item)
+							content.sub_display_name = ItemUtils.sub_display_name(equipped_item)
+						end
+					else
+						style.background_gradient.color = style.background_gradient.default_color
+						content.item_level = ""
+						content.display_name = ""
+						content.sub_display_name = ""
 					end
 				end
 			end
@@ -1211,6 +1289,7 @@ local blueprints = {
 			content.element = element
 			content.localized_display_name = text
 			content.text = text
+			content.has_new_items_update_callback = element.has_new_items_update_callback
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
@@ -1225,6 +1304,9 @@ local blueprints = {
 			end
 
 			content.text = text
+			local item_type = element.item_type
+			local has_new_items = item_type and content.has_new_items_update_callback and content.has_new_items_update_callback(item_type) or false
+			content.has_new_items = has_new_items
 		end
 	},
 	sub_header = {
@@ -1326,40 +1408,53 @@ local blueprints = {
 			content.element = element
 			content.localized_display_name = text
 			content.text = text
+			content.has_new_items_update_callback = element.has_new_items_update_callback
 		end,
 		update = function (parent, widget, input_service, dt, t, ui_renderer)
 			local content = widget.content
 			local element = content.element
 			local item_type = element.item_type
-			local has_new_items = item_type and ItemUtils.has_new_items_by_type(item_type) or false
+			local has_new_items = item_type and content.has_new_items_update_callback and content.has_new_items_update_callback(item_type) or false
 			content.has_new_items = has_new_items
 		end
 	},
 	exclamation_mark = {
 		pass_template = {
 			{
+				style_id = "exclamation_mark",
+				pass_type = "texture",
 				value = "content/ui/materials/icons/generic/exclamation_mark",
 				value_id = "exclamation_mark",
-				pass_type = "texture",
 				style = {
-					vertical_alignment = "bottom",
 					horizontal_alignment = "right",
+					vertical_alignment = "bottom",
 					offset = {
 						-2,
 						-2,
 						7
 					},
-					color = {
+					warning_color = {
 						255,
 						246,
 						69,
+						69
+					},
+					modified_color = {
+						255,
+						246,
+						202,
 						69
 					},
 					size = {
 						16,
 						28
 					}
-				}
+				},
+				change_function = function (content, style)
+					local color = content.modified_content and style.modified_color or style.warning_color
+
+					ColorUtilities.color_copy(color, style.color, true)
+				end
 			}
 		}
 	}

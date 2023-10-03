@@ -23,6 +23,33 @@ DecoderDevice.editor_init = function (self, unit)
 	return
 end
 
+DecoderDevice.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if self:get_data(unit, "material_slot") == "" then
+		success = false
+		error_message = error_message .. "\nMissing unit data 'material_slot' it can't be empty"
+	end
+
+	if self:get_data(unit, "main_material") == "" then
+		success = false
+		error_message = error_message .. "\nMissing unit data 'main_material' it can't be empty"
+	end
+
+	if self:get_data(unit, "ghost_material") == "" then
+		success = false
+		error_message = error_message .. "\nMissing unit data 'ghost_material' it can't be empty"
+	end
+
+	if self:get_data(unit, "install_anim_event") == "" then
+		success = false
+		error_message = error_message .. "\nMissing unit data 'install_anim_event' it can't be empty"
+	end
+
+	return success, error_message
+end
+
 DecoderDevice.enable = function (self, unit)
 	return
 end

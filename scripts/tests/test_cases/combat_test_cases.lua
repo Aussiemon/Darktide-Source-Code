@@ -65,7 +65,7 @@ local base_talents = {
 	psyker_3 = {}
 }
 
-local function form_trait_list(traits, existing_traits)
+local function _form_trait_list(traits, existing_traits)
 	local new_traits = existing_traits or {}
 	local num_existing_traits = #new_traits
 

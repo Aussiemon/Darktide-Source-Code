@@ -12,10 +12,10 @@ DefaultGameParameters.time_step_policy = {
 DefaultGameParameters.mission = false
 DefaultGameParameters.debug_mission = false
 DefaultGameParameters.disable_flow_timescale = false
-DefaultGameParameters.fixed_time_step = 0.016
+DefaultGameParameters.tick_rate = 50
 DefaultGameParameters.level_seed = false
 DefaultGameParameters.max_players = 4
-DefaultGameParameters.max_players_hub = 25
+DefaultGameParameters.max_players_hub = 16
 DefaultGameParameters.skip_cinematics = false
 DefaultGameParameters.skip_first_character_creation = false
 DefaultGameParameters.crash_countdown = -1
@@ -79,34 +79,10 @@ DefaultGameParameters.min_vertical_fov = 45
 DefaultGameParameters.max_vertical_fov = 85
 DefaultGameParameters.min_console_vertical_fov = 45
 DefaultGameParameters.max_console_vertical_fov = 85
-slot0 = DefaultGameParameters
-
-if DEDICATED_SERVER then
-	-- Nothing
-end
-
-slot0.blood_decals_enabled = true
-slot0 = DefaultGameParameters
-
-if DEDICATED_SERVER then
-	-- Nothing
-end
-
-slot0.attack_ragdolls_enabled = true
-slot0 = DefaultGameParameters
-
-if DEDICATED_SERVER then
-	-- Nothing
-end
-
-slot0.minion_wounds_enabled = true
-slot0 = DefaultGameParameters
-
-if DEDICATED_SERVER then
-	-- Nothing
-end
-
-slot0.gibbing_enabled = true
+DefaultGameParameters.blood_decals_enabled = not DEDICATED_SERVER
+DefaultGameParameters.attack_ragdolls_enabled = not DEDICATED_SERVER
+DefaultGameParameters.minion_wounds_enabled = not DEDICATED_SERVER
+DefaultGameParameters.gibbing_enabled = not DEDICATED_SERVER
 DefaultGameParameters.enable_afk_check = BUILD == "release"
 DefaultGameParameters.afk_warning_time_hub = 10
 DefaultGameParameters.afk_kick_time_hub = 15
@@ -119,6 +95,7 @@ DefaultGameParameters.wallet_cap_marks = 100000
 DefaultGameParameters.wallet_cap_plasteel = 1000000
 DefaultGameParameters.wallet_cap_diamantine = 1000000
 DefaultGameParameters.wallet_cap_aquilas = false
+DefaultGameParameters.error_codes_crashifyreport = false
 DefaultGameParameters.prod_like_backend = true
 DefaultGameParameters.backend_fetch_master_items = true
 

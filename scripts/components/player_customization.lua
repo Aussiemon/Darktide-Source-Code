@@ -15,6 +15,10 @@ PlayerCustomization.editor_init = function (self, unit)
 	self._face_sm_override = ""
 end
 
+PlayerCustomization.editor_validate = function (self, unit)
+	return true, ""
+end
+
 PlayerCustomization.init = function (self, unit)
 	if self:get_data(unit, "editor_only") then
 		return
@@ -177,7 +181,7 @@ PlayerCustomization.spawn_items = function (self, items, optional_mission_templa
 			local item_data_clone = table.clone_instance(item)
 
 			if not is_first_person or item_data_clone.show_in_1p then
-				local item_unit, attachment_units = VisualLoadoutCustomization.spawn_item(item_data_clone, attach_settings, unit, nil, optional_mission_template)
+				local item_unit, attachment_units = VisualLoadoutCustomization.spawn_item(item_data_clone, attach_settings, unit, nil, nil, optional_mission_template)
 
 				if item_unit then
 					attachment_count = attachment_count + 1
@@ -250,7 +254,7 @@ PlayerCustomization._spawn_facial_items = function (self, face_item_name, face_a
 			}
 		end
 
-		face_unit, face_attachment_units = VisualLoadoutCustomization.spawn_item(face_item_data_clone, self._attach_settings, self._unit)
+		face_unit, face_attachment_units = VisualLoadoutCustomization.spawn_item(face_item_data_clone, self._attach_settings, self._unit, nil, nil, nil)
 
 		if face_unit then
 			attachment_count = attachment_count + 1

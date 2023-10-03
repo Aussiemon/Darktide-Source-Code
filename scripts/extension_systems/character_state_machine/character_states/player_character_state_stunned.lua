@@ -128,7 +128,7 @@ PlayerCharacterStateStunned.fixed_update = function (self, unit, dt, t, next_sta
 		local action_input, raw_input = self._action_input_extension:peek_next_input("weapon_action")
 		local is_wield_input = action_input and action_input == WIELD_ACTION_INPUT
 		local inventory_component = self._inventory_component
-		local wanted_slot_name_or_nil = is_wield_input and PlayerUnitVisualLoadout.slot_name_from_wield_input(raw_input, inventory_component, self._visual_loadout_extension, self._weapon_extension, self._ability_extension)
+		local wanted_slot_name_or_nil = is_wield_input and PlayerUnitVisualLoadout.slot_name_from_wield_input(raw_input, inventory_component, self._visual_loadout_extension, self._weapon_extension, self._ability_extension, input_extension)
 		local wielded_slot = inventory_component.wielded_slot
 		local wanted_weapon_template_or_nil = wanted_slot_name_or_nil and self._visual_loadout_extension:weapon_template_from_slot(wanted_slot_name_or_nil)
 		local weapon_keywords = wanted_weapon_template_or_nil and wanted_weapon_template_or_nil.keywords or NO_KEYWORDS
@@ -235,16 +235,16 @@ PlayerCharacterStateStunned._check_transition = function (self, unit, t, next_st
 		return "walking"
 	end
 
-	local wanted_ability_transition, ability_transition_params = self._ability_extension:wanted_character_state_transition()
+	local ability_transition, ability_transition_params = self:_poll_ability_state_transitions(unit, t)
 
-	if wanted_ability_transition then
+	if ability_transition then
 		table.merge(next_state_params, ability_transition_params)
 
 		if not stunned_character_state_component.exit_event_played then
 			self:_play_end_animation()
 		end
 
-		return wanted_ability_transition
+		return ability_transition
 	end
 end
 

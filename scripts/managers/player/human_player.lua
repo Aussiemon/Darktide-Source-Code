@@ -133,7 +133,7 @@ HumanPlayer.profile = function (self)
 	return self._profile
 end
 
-HumanPlayer.has_placeholder_profile = function (self)
+HumanPlayer.has_local_profile = function (self)
 	return self._account_id == PlayerManager.NO_ACCOUNT_ID or type(self:character_id()) == "number"
 end
 

@@ -28,6 +28,10 @@ NpcAnimation.init = function (self, unit)
 	end
 end
 
+NpcAnimation.editor_validate = function (self, unit)
+	return true, ""
+end
+
 NpcAnimation.enable = function (self, unit)
 	return
 end

@@ -37,42 +37,69 @@ ItemUtils.calculate_stats_rating = function (item)
 	return math.max(0, rating_budget - rating_contribution)
 end
 
-ItemUtils.mark_item_id_as_new = function (gear_id, item_type, skip_notification)
+ItemUtils.is_character_bound = function (item_type)
+	return item_type == "WEAPON_MELEE" or item_type == "WEAPON_RANGED" or item_type == "GADGET"
+end
+
+ItemUtils.mark_item_id_as_new = function (item, skip_notification)
+	local gear_id = item.gear_id
+	local item_type = item.item_type
+	local is_character_bound = ItemUtils.is_character_bound(item_type)
 	local character_data = _character_save_data()
 
 	if not character_data then
 		return
 	end
 
-	if not character_data.new_items then
-		character_data.new_items = {}
+	if is_character_bound then
+		if not character_data.new_items then
+			character_data.new_items = {}
+		end
+
+		if not character_data.new_item_notifications then
+			character_data.new_item_notifications = {}
+		end
+
+		local new_items = character_data.new_items
+		new_items[gear_id] = true
+
+		if item_type then
+			if not character_data.new_items_by_type then
+				character_data.new_items_by_type = {}
+			end
+
+			local new_items_by_type = character_data.new_items_by_type
+
+			if not new_items_by_type[item_type] then
+				new_items_by_type[item_type] = {}
+			end
+
+			new_items_by_type[item_type][gear_id] = true
+		end
+	else
+		local item_archetypes = item.archetypes or {}
+
+		if table.is_empty(item_archetypes) then
+			for archetype_name, _ in pairs(Archetypes) do
+				item_archetypes[#item_archetypes + 1] = archetype_name
+			end
+		end
+
+		local save_manager = Managers.save
+		local account_data = save_manager:account_data()
+
+		for i = 1, #item_archetypes do
+			local archetype_name = item_archetypes[i]
+			account_data.new_account_items_by_archetype[archetype_name] = account_data.new_account_items_by_archetype[archetype_name] or {}
+			account_data.new_account_items_by_archetype[archetype_name][gear_id] = true
+		end
 	end
 
-	if not character_data.new_item_notifications then
-		character_data.new_item_notifications = {}
-	end
-
-	local new_items = character_data.new_items
-	new_items[gear_id] = true
 	local new_item_notifications = character_data.new_item_notifications
 	local show_notification = skip_notification and not skip_notification or true
 	new_item_notifications[gear_id] = {
 		show_notification = show_notification
 	}
-
-	if item_type then
-		if not character_data.new_items_by_type then
-			character_data.new_items_by_type = {}
-		end
-
-		local new_items_by_type = character_data.new_items_by_type
-
-		if not new_items_by_type[item_type] then
-			new_items_by_type[item_type] = {}
-		end
-
-		new_items_by_type[item_type][gear_id] = true
-	end
 
 	Managers.save:queue_save()
 	Managers.event:trigger("event_resync_character_news_feed")
@@ -100,9 +127,20 @@ ItemUtils.unmark_item_id_as_new = function (gear_id)
 				end
 			end
 		end
-
-		Managers.save:queue_save()
 	end
+
+	local save_manager = Managers.save
+	local account_data = save_manager:account_data()
+	local player_manager = Managers.player
+	local local_player_id = 1
+	local player = player_manager and player_manager:local_player(local_player_id)
+	local archetype_name = player:archetype_name()
+
+	if account_data.new_account_items_by_archetype[archetype_name] and account_data.new_account_items_by_archetype[archetype_name][gear_id] then
+		account_data.new_account_items_by_archetype[archetype_name][gear_id] = nil
+	end
+
+	Managers.save:queue_save()
 end
 
 ItemUtils.unmark_all_items_as_new = function ()
@@ -122,6 +160,17 @@ ItemUtils.unmark_all_items_as_new = function ()
 
 	if new_items_by_type then
 		table.clear(new_items_by_type)
+	end
+
+	local save_manager = Managers.save
+	local account_data = save_manager:account_data()
+	local player_manager = Managers.player
+	local local_player_id = 1
+	local player = player_manager and player_manager:local_player(local_player_id)
+	local archetype_name = player:archetype_name()
+
+	if account_data.new_account_items_by_archetype[archetype_name] then
+		table.clear(account_data.new_account_items_by_archetype[archetype_name])
 	end
 
 	Managers.save:queue_save()
@@ -418,9 +467,9 @@ ItemUtils.is_weapon_template_ranged = function (item)
 end
 
 ItemUtils.type_display_name = function (item)
-	local item_type = item.item_type
+	local item_type = item.item_type and Utf8.upper(item.item_type)
 	local item_type_localization_key = UISettings.item_type_localization_lookup[item_type]
-	local item_type_display_name_localized = item_type_localization_key and Localize(item_type_localization_key) or "<undefined item_type>"
+	local item_type_display_name_localized = item_type_localization_key and Localize(item_type_localization_key) or ""
 
 	return item_type_display_name_localized
 end
@@ -444,7 +493,7 @@ end
 ItemUtils.variant_display_name = function (item)
 	local variant = item.variant
 	local variant_localization_key = UISettings.item_variant_localization_lookup[variant]
-	local variant_display_name_localized = variant_localization_key and Localize(variant_localization_key) or "<undefined item_variant>"
+	local variant_display_name_localized = variant_localization_key and Localize(variant_localization_key) or ""
 
 	return variant_display_name_localized
 end
@@ -452,7 +501,7 @@ end
 ItemUtils.pattern_display_name = function (item)
 	local pattern = item.pattern
 	local pattern_localization_key = UISettings.item_pattern_localization_lookup[pattern]
-	local pattern_display_name_localized = pattern_localization_key and Localize(pattern_localization_key) or "<undefined item_pattern>"
+	local pattern_display_name_localized = pattern_localization_key and Localize(pattern_localization_key) or ""
 
 	return pattern_display_name_localized
 end
@@ -460,8 +509,9 @@ end
 ItemUtils.rarity_display_name = function (item)
 	local rarity_settings = RaritySettings[item.rarity]
 	local loc_key = rarity_settings and rarity_settings.display_name
+	local rarity_display_name_localized = loc_key and Localize(loc_key) or ""
 
-	return loc_key and Localize(loc_key) or "<undefined item_rarity>"
+	return rarity_display_name_localized
 end
 
 ItemUtils.rarity_color = function (item)
@@ -725,13 +775,43 @@ ItemUtils.equip_weapon_trinket = function (weapon_item, trinket_item, optional_p
 	return Managers.data_service.gear:attach_item_as_override(weapon_gear_id, attach_point .. ".item", trinket_gear_id)
 end
 
+ItemUtils.unequip_slots = function (unequip_sots)
+	local peer_id = Network.peer_id()
+	local local_player_id = 1
+	local player_manager = Managers.player
+	local player = player_manager:player(peer_id, local_player_id)
+	local character_id = player:character_id()
+
+	return Managers.data_service.profiles:unequip_slots(character_id, unequip_sots):next(function (v)
+		Log.debug("ItemUtils", "Unequipped loadout slots")
+
+		if Managers.connection:is_host() then
+			local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
+
+			profile_synchronizer_host:profile_changed(peer_id, local_player_id)
+		elseif Managers.connection:is_client() then
+			local ui_manager = Managers.ui
+
+			if ui_manager then
+				ui_manager:update_client_loadout_waiting_state(true)
+			end
+
+			Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
+		end
+
+		return true
+	end):catch(function (errors)
+		Log.error("ItemUtils", "Failed uneequipping loadout slots", errors)
+
+		return false
+	end)
+end
+
 ItemUtils.equip_slot_items = function (items)
 	local peer_id = Network.peer_id()
 	local local_player_id = 1
 	local player_manager = Managers.player
 	local player = player_manager:player(peer_id, local_player_id)
-	local player_unit = player.player_unit
-	local is_server = Managers.state.game_session and Managers.state.game_session:is_server()
 	local profile = player:profile()
 	local archetype = profile.archetype
 	local breed_name = archetype.breed
@@ -742,16 +822,18 @@ ItemUtils.equip_slot_items = function (items)
 		local item_gear_names_by_slots = {}
 
 		for slot_name, item in pairs(items) do
-			local breeds = item and item.breeds
-			local breed_valid = not breeds or table.contains(breeds, breed_name)
-			local slots = item and item.slots
-			local slot_valid = not slots or table.contains(slots, slot_name)
+			if item then
+				local breeds = item and item.breeds
+				local breed_valid = not breeds or table.contains(breeds, breed_name)
+				local slots = item and item.slots
+				local slot_valid = not slots or table.contains(slots, slot_name)
 
-			if breed_valid and slot_valid then
-				if item.gear_id then
-					item_gear_ids_by_slots[slot_name] = item.gear_id
-				elseif item.name then
-					item_gear_names_by_slots[slot_name] = item.name
+				if breed_valid and slot_valid then
+					if item.gear_id then
+						item_gear_ids_by_slots[slot_name] = item.gear_id
+					elseif item.name then
+						item_gear_names_by_slots[slot_name] = item.name
+					end
 				end
 			end
 		end
@@ -759,11 +841,17 @@ ItemUtils.equip_slot_items = function (items)
 		return Managers.data_service.profiles:equip_items_in_slots(character_id, item_gear_ids_by_slots, item_gear_names_by_slots):next(function (v)
 			Log.debug("ItemUtils", "Items equipped in loadout slots")
 
-			if is_server then
+			if Managers.connection:is_host() then
 				local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
 
 				profile_synchronizer_host:profile_changed(peer_id, local_player_id)
-			else
+			elseif Managers.connection:is_client() then
+				local ui_manager = Managers.ui
+
+				if ui_manager then
+					ui_manager:update_client_loadout_waiting_state(true)
+				end
+
 				Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
 			end
 
@@ -776,6 +864,58 @@ ItemUtils.equip_slot_items = function (items)
 	end
 end
 
+ItemUtils.is_item_compatible_with_profile = function (item, profile)
+	local item_gender, item_breed, item_archetype = nil
+
+	if item.genders and not table.is_empty(item.genders) then
+		for i = 1, #item.genders do
+			local gender = item.genders[i]
+
+			if gender == profile.gender then
+				item_gender = profile.gender
+
+				break
+			end
+		end
+	else
+		item_gender = profile.gender
+	end
+
+	if item.breeds and not table.is_empty(item.breeds) then
+		for i = 1, #item.breeds do
+			local breed = item.breeds[i]
+
+			if breed == profile.breed then
+				item_breed = profile.breed
+
+				break
+			end
+		end
+	else
+		item_breed = profile.breed
+	end
+
+	if item.archetypes and not table.is_empty(item.archetypes) then
+		for i = 1, #item.archetypes do
+			local archetype = item.archetypes[i]
+
+			if archetype == profile.archetype.name then
+				item_archetype = profile.archetype
+
+				break
+			end
+		end
+	else
+		item_archetype = profile.archetype
+	end
+
+	if not item_breed and not profile.breed then
+		item_breed = profile.archetype and profile.archetype.breed
+	end
+
+	return item_gender and item_breed and not not item_archetype
+end
+
 ItemUtils.equip_slot_master_items = function (items)
 	local peer_id = Network.peer_id()
 	local local_player_id = 1
@@ -786,7 +926,6 @@ ItemUtils.equip_slot_master_items = function (items)
 		return
 	end
 
-	local is_server = Managers.state.game_session and Managers.state.game_session:is_server()
 	local profile = player:profile()
 	local archetype = profile.archetype
 	local breed_name = archetype.breed
@@ -809,11 +948,17 @@ ItemUtils.equip_slot_master_items = function (items)
 		Managers.data_service.profiles:equip_master_items_in_slots(character_id, item_master_ids_by_slots):next(function (v)
 			Log.debug("ItemUtils", "Master items equipped in loadout slots")
 
-			if is_server then
+			if Managers.connection:is_host() then
 				local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
 
 				profile_synchronizer_host:profile_changed(peer_id, local_player_id)
-			else
+			elseif Managers.connection:is_client() then
+				local ui_manager = Managers.ui
+
+				if ui_manager then
+					ui_manager:update_client_loadout_waiting_state(true)
+				end
+
 				Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
 			end
 
@@ -836,7 +981,6 @@ ItemUtils.equip_item_in_slot = function (slot_name, item)
 		return
 	end
 
-	local is_server = Managers.state.game_session and Managers.state.game_session:is_server()
 	local profile = player:profile()
 	local archetype = profile.archetype
 	local breed_name = archetype.breed
@@ -853,15 +997,25 @@ ItemUtils.equip_item_in_slot = function (slot_name, item)
 		Managers.backend.interfaces.characters:equip_item_slot(character_id, slot_name, item.gear_id or item.name):next(function (v)
 			Log.debug("ItemUtils", "Equipped!")
 
-			if is_server then
+			if Managers.connection:is_host() then
 				local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
 
 				profile_synchronizer_host:profile_changed(peer_id, local_player_id)
-			else
+			elseif Managers.connection:is_client() then
+				local ui_manager = Managers.ui
+
+				if ui_manager then
+					ui_manager:update_client_loadout_waiting_state(true)
+				end
+
 				Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
 			end
+
+			return true
 		end):catch(function (errors)
 			Log.error("ItemUtils", "Equipping %s (ID: %s) to %s failed. User should be shown some error message! %s", item.name, item.gear_id, slot_name, errors)
+
+			return false
 		end)
 	end
 end
@@ -869,13 +1023,18 @@ end
 ItemUtils.refresh_equipped_items = function ()
 	local peer_id = Network.peer_id()
 	local local_player_id = 1
-	local is_server = Managers.state.game_session and Managers.state.game_session:is_server()
 
-	if is_server then
+	if Managers.connection:is_host() then
 		local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
 
 		profile_synchronizer_host:profile_changed(peer_id, local_player_id)
-	else
+	elseif Managers.connection:is_client() then
+		local ui_manager = Managers.ui
+
+		if ui_manager then
+			ui_manager:update_client_loadout_waiting_state(true)
+		end
+
 		Managers.connection:send_rpc_server("rpc_notify_profile_changed", peer_id, local_player_id)
 	end
 end
@@ -939,6 +1098,22 @@ end
 ItemUtils.compare_offer_owned = function (a_offer, b_offer)
 	if a_offer and b_offer then
 		local owned_key = "owned"
+		local a_owned = a_offer.state and a_offer.state == owned_key
+		local b_owned = b_offer.state and b_offer.state == owned_key
+
+		if a_owned and not b_owned then
+			return true
+		elseif b_owned and not a_owned then
+			return false
+		end
+	end
+
+	return nil
+end
+
+ItemUtils.compare_credits_offer_owned = function (a_offer, b_offer)
+	if a_offer and b_offer then
+		local owned_key = "completed"
 		local a_owned = a_offer.state and a_offer.state == owned_key
 		local b_owned = b_offer.state and b_offer.state == owned_key
 
@@ -1250,11 +1425,15 @@ ItemUtils.count_crafting_modification = function (item)
 end
 
 ItemUtils.modifications_by_rarity = function (item)
-	local rarity_settings = RaritySettings[item.rarity]
-	local count_modifications = ItemUtils.count_crafting_modification(item)
-	local max_modifications = rarity_settings.max_modifications
+	if item and item.rarity then
+		local rarity_settings = RaritySettings[item.rarity]
+		local count_modifications = ItemUtils.count_crafting_modification(item)
+		local max_modifications = rarity_settings.max_modifications
 
-	return count_modifications, max_modifications
+		return count_modifications, max_modifications
+	end
+
+	return 0, 0
 end
 
 ItemUtils.create_mannequin_profile_by_item = function (item, prefered_gender, prefered_archetype)

@@ -164,13 +164,14 @@ VotingByNetworkImpl.cast_vote = function (self, voting_id, option)
 	end
 
 	local voting = self._votings[voting_id]
+	local params = voting:params()
 
 	if voting:is_host() then
 		voting:register_vote(voter_peer_id, option)
 
 		local template = voting:template()
 
-		template.on_vote_casted(voting_id, template, voter_peer_id, option)
+		template.on_vote_casted(voting_id, template, voter_peer_id, option, params)
 	else
 		voting:request_vote(option)
 	end
@@ -197,10 +198,6 @@ VotingByNetworkImpl.update = function (self, dt, t)
 			}
 			local template = voting:template()
 
-			template.on_completed(voting_id, template, table.clone(voting:params()), result)
-
-			delete_votings[#delete_votings + 1] = voting_id
-
 			if DEDICATED_SERVER then
 				local votes = {}
 
@@ -208,8 +205,14 @@ VotingByNetworkImpl.update = function (self, dt, t)
 					votes[value] = (votes[value] or 0) + 1
 				end
 
-				Managers.telemetry_events:vote_completed(template.name, result, votes)
+				local params = voting:params()
+
+				Managers.telemetry_events:vote_completed(template.name, result, votes, params)
 			end
+
+			template.on_completed(voting_id, template, table.clone(voting:params()), result)
+
+			delete_votings[#delete_votings + 1] = voting_id
 		elseif state == "aborted" then
 			local abort_reason = voting:abort_reason()
 			self._voting_results[voting_id] = {
@@ -415,8 +418,9 @@ VotingByNetworkImpl.rpc_request_vote = function (self, channel_id, voting_id, op
 	voting:register_vote(voter_peer_id, option)
 
 	local template = voting:template()
+	local params = voting:params()
 
-	template.on_vote_casted(voting_id, template, voter_peer_id, option)
+	template.on_vote_casted(voting_id, template, voter_peer_id, option, params)
 end
 
 VotingByNetworkImpl.rpc_voting_accepted = function (self, channel_id, voting_id, member_list, initial_votes_list, time_left)
@@ -505,8 +509,9 @@ VotingByNetworkImpl.rpc_register_vote = function (self, channel_id, voting_id, v
 		voting:register_vote(voter_peer_id, option)
 
 		local template = voting:template()
+		local params = voting:params()
 
-		template.on_vote_casted(voting_id, template, voter_peer_id, option)
+		template.on_vote_casted(voting_id, template, voter_peer_id, option, params)
 	end
 end
 

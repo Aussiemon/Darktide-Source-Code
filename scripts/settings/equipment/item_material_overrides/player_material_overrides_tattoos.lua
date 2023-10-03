@@ -1472,7 +1472,7 @@ local material_overrides = {
 	body_tattoo_creator_program = {
 		texture_overrides = {
 			tatoo_mask = {
-				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_creator_program/face_tattoo_creator_program"
+				resource = "content/characters/player/human/attachments_base/tattoos/textures/body_tattoo_creator_program/body_tattoo_creator_program"
 			}
 		},
 		property_overrides = {

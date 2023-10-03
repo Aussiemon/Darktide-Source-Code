@@ -152,13 +152,14 @@ PlayerCharacterStateInteracting.on_exit = function (self, unit, t, next_state)
 	end
 
 	local was_interrupted = next_state == "stunned"
-	local anim_event = was_interrupted and interrupt_anim_event or stop_anim_event
-	local anim_event_3p = was_interrupted and interrupt_anim_event_3p or stop_anim_event_3p
 	local animation_extension = self._animation_extension
+	local anim_event = was_interrupted and interrupt_anim_event or stop_anim_event
 
 	if anim_event then
 		animation_extension:anim_event_1p(anim_event)
 	end
+
+	local anim_event_3p = was_interrupted and interrupt_anim_event_3p or stop_anim_event_3p
 
 	if anim_event_3p then
 		animation_extension:anim_event(anim_event_3p)
@@ -166,6 +167,11 @@ PlayerCharacterStateInteracting.on_exit = function (self, unit, t, next_state)
 
 	if next_state ~= "dead" then
 		local inventory_component = self._inventory_component
+		local template_wield_slot = template.wield_slot
+
+		if template_wield_slot and PlayerUnitVisualLoadout.slot_equipped(inventory_component, self._visual_loadout_extension, "slot_device") then
+			PlayerUnitVisualLoadout.unequip_item_from_slot(unit, "slot_device", t)
+		end
 
 		PlayerUnitVisualLoadout.wield_previous_slot(inventory_component, unit, t)
 	end

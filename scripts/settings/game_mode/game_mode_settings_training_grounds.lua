@@ -36,7 +36,7 @@ local settings = {
 		}
 	},
 	hud_settings = {
-		player_composition = "players"
+		player_composition = "party"
 	},
 	hotkeys = {
 		hotkey_system = "system_view"

@@ -266,12 +266,12 @@ PlayerCharacterStateLunging.on_exit = function (self, unit, t, next_state)
 		local add_debuff_on_hit = lunge_template.add_debuff_on_hit
 		local number_of_stacks = lunge_template.add_debuff_on_hit_stacks or 1
 
-		for hit_unit, attack_result in pairs(temp_hit_units) do
-			if add_debuff_on_hit and attack_result ~= "died" and not hit_enemy_units[hit_unit] then
+		for hit_unit, _ in pairs(temp_hit_units) do
+			if add_debuff_on_hit and not hit_enemy_units[hit_unit] then
 				_apply_buff_to_hit_unit(hit_unit, add_debuff_on_hit, number_of_stacks, t, unit)
 			end
 
-			hit_enemy_units[hit_unit] = attack_result
+			hit_enemy_units[hit_unit] = true
 		end
 
 		table.clear(temp_hit_units)
@@ -491,9 +491,6 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 	local use_armor_type = not not lunge_template.stop_armor_types
 	local rewind_ms = LagCompensation.rewind_ms(self._is_server, self._is_local_unit, self._player)
 	local radius = damage_settings.radius
-
-	PhysicsProximitySystem.prepare_for_overlap(self._physics_world, locomotion_position, radius)
-
 	local actors, num_actors = PhysicsWorld.immediate_overlap(self._physics_world, "shape", "sphere", "position", locomotion_position, "size", radius, "collision_filter", DAMAGE_COLLISION_FILTER, "rewind_ms", rewind_ms)
 	local character_state_hit_mass_component = self._character_state_hit_mass_component
 	local max_hit_mass = _max_hit_mass(damage_settings, lunge_template, unit)
@@ -548,9 +545,9 @@ PlayerCharacterStateLunging._update_enemy_hit_detection = function (self, unit, 
 				_apply_buff_to_hit_unit(hit_unit, add_debuff_on_hit, number_of_stacks, t, unit)
 			end
 
-			hit_enemy_units[hit_unit] = attack_result
+			hit_enemy_units[hit_unit] = true
 
-			_record_stat_on_lunge_hit(self._player, hit_unit, attack_result, hit_unit_action, lunge_template)
+			_record_stat_on_lunge_hit(self._player, hit_unit, hit_unit_action, lunge_template)
 
 			current_mass_hit = current_mass_hit + HitMass.target_hit_mass(unit, hit_unit, HIT_WEAKSPOT)
 
@@ -664,7 +661,7 @@ local function _was_charging_plague_ogryn_that_is_now_staggered(unit, optional_a
 	return true
 end
 
-function _record_stat_on_lunge_hit(player, enemy_unit, attack_result, optional_action, lunge_template)
+function _record_stat_on_lunge_hit(player, enemy_unit, optional_action, lunge_template)
 	if not Managers.stats.can_record_stats() then
 		return
 	end
@@ -691,7 +688,7 @@ function _record_stat_on_lunge_complete(player, hit_units, lunge_template)
 	local number_of_hit_ogryns = 0
 	local number_of_hit_ranged = 0
 
-	for hit_unit, attack_result in pairs(hit_units) do
+	for hit_unit, _ in pairs(hit_units) do
 		number_of_hit_units = number_of_hit_units + 1
 		local unit_data_extension = ScriptUnit.has_extension(hit_unit, "unit_data_system")
 		local breed = unit_data_extension and unit_data_extension:breed()

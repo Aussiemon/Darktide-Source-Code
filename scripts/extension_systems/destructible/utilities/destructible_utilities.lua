@@ -1,6 +1,6 @@
 local LightControllerUtilities = require("core/scripts/common/light_controller_utilities")
 local DestructibleUtilities = {
-	FORCE_DIRECTION = table.enum("random_direction", "attack_direction", "provided_direction")
+	FORCE_DIRECTION = table.enum("random_direction", "attack_direction", "provided_direction_relative", "provided_direction_world")
 }
 
 local function _set_meshes_visiblity(unit, meshes, visible)
@@ -11,14 +11,9 @@ local function _set_meshes_visiblity(unit, meshes, visible)
 	end
 end
 
-DestructibleUtilities.setup_stages = function (unit, parts_mass, parts_speed, force_direction, force_direction_type, health_extension)
-	local destructible_parameters = {
-		current_stage_index = 1,
-		parts_mass = parts_mass,
-		parts_speed = parts_speed,
-		force_direction = force_direction,
-		force_direction_type = force_direction_type
-	}
+DestructibleUtilities.setup_stages = function (unit, parameters, health_extension)
+	local destructible_parameters = table.shallow_copy(parameters)
+	destructible_parameters.current_stage_index = 1
 	local initial_actor = Unit.actor(unit, "c_destructible")
 	destructible_parameters.initial_actor = ActorBox(initial_actor)
 
@@ -134,11 +129,21 @@ local function _dequeue_stage(unit, destructible_parameters, visibility_info, at
 			if not DEDICATED_SERVER then
 				if destructible_parameters.force_direction_type == DestructibleUtilities.FORCE_DIRECTION.random_direction then
 					attack_direction = nil
-				elseif destructible_parameters.force_direction_type == DestructibleUtilities.FORCE_DIRECTION.provided_direction then
+				elseif destructible_parameters.force_direction_type == DestructibleUtilities.FORCE_DIRECTION.provided_direction_world then
 					attack_direction = destructible_parameters.force_direction:unbox()
+				elseif destructible_parameters.force_direction_type == DestructibleUtilities.FORCE_DIRECTION.provided_direction_relative then
+					local local_direction = destructible_parameters.force_direction:unbox()
+					local unit_rotation = Unit.world_rotation(unit, 1)
+					attack_direction = Quaternion.rotate(unit_rotation, local_direction)
 				end
 
 				_add_force_on_parts(destructible_parameters.dynamic_actors, destructible_parameters.parts_mass, destructible_parameters.parts_speed, attack_direction)
+			end
+
+			local collision_actors = destructible_parameters.collision_actors
+
+			for i = 1, #collision_actors do
+				Actor.set_scene_query_enabled(collision_actors[i], false)
 			end
 
 			Unit.flow_event(unit, "lua_last_destruction")

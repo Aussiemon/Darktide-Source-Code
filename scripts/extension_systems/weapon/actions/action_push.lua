@@ -52,7 +52,9 @@ ActionPush._push = function (self, t)
 	local weapon_stamina_template = self._weapon_extension:stamina_template()
 	local raw_push_cost = weapon_stamina_template and weapon_stamina_template.push_cost or math.huge
 	local buff_extension = self._buff_extension
-	local push_cost = raw_push_cost
+	local stat_buffs = buff_extension:stat_buffs()
+	local push_cost_multiplier = stat_buffs.push_cost_multiplier or 1
+	local push_cost = raw_push_cost * push_cost_multiplier
 
 	if not self._unit_data_extension.is_resimulating then
 		local locomotion_component = self._locomotion_component
@@ -68,8 +70,8 @@ ActionPush._push = function (self, t)
 		local is_predicted = true
 		local unit_data_ext = ScriptUnit.extension(player_unit, "unit_data_system")
 		local stamina_read_component = unit_data_ext:read_component("stamina")
-		local specialization = unit_data_ext:specialization()
-		local base_stamina_template = specialization.stamina
+		local archetype = unit_data_ext:archetype()
+		local base_stamina_template = archetype.stamina
 		local current_stamina, max_stamina = Stamina.current_and_max_value(player_unit, stamina_read_component, base_stamina_template)
 		local weak_push = current_stamina < push_cost
 
@@ -80,6 +82,8 @@ ActionPush._push = function (self, t)
 		local push_offset = action_settings.push_offset or 0
 		local push_posisition = player_position + player_direction * push_offset
 		number_of_units_hit = PushAttack.push(self._physics_world, push_posisition, player_direction, rewind_ms, power_level, action_settings, player_unit, is_predicted, weapon_item, weak_push)
+
+		self:_play_push_rumble(number_of_units_hit)
 	end
 
 	if not action_settings.block_duration then
@@ -87,7 +91,7 @@ ActionPush._push = function (self, t)
 	end
 
 	Stamina.drain(self._player_unit, push_cost, t)
-	self:_pay_warp_charge_cost(t, 1)
+	self:_pay_warp_charge_cost_immediate(t, 1)
 
 	if action_settings.activate_special then
 		self:_set_weapon_special(true, t)
@@ -131,6 +135,18 @@ ActionPush._play_push_particles = function (self, t)
 	local rotation_offset = fx.fx_rotation_offset and fx.fx_rotation_offset:unbox()
 
 	fx_extension:spawn_unit_particles(effect_name, spawner_name, link, orphaned_policy, position_offset, rotation_offset)
+end
+
+local _external_properties = {}
+
+ActionPush._play_push_rumble = function (self, number_of_units_hit)
+	local hit_enemies = number_of_units_hit > 0
+
+	table.clear(_external_properties)
+
+	_external_properties.hit_enemies = hit_enemies and "true" or "false"
+
+	self._fx_extension:trigger_exclusive_gear_wwise_event("rumble_push", _external_properties)
 end
 
 return ActionPush

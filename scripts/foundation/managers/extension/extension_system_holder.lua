@@ -3,11 +3,11 @@ require("scripts/foundation/managers/extension/extension_system_base")
 local GameplayInitTimeSlice = require("scripts/game_states/game/utilities/gameplay_init_time_slice")
 local ExtensionSystemHolder = class("ExtensionSystemHolder")
 
-ExtensionSystemHolder.init = function (self, extension_system_creation_context, system_configuration, system_init_data, fixed_frame_time, use_time_slice)
+ExtensionSystemHolder.init = function (self, extension_system_creation_context, system_configuration, system_init_data, fixed_time_step, use_time_slice)
 	self._extension_manager = extension_system_creation_context.extension_manager
 	self._world = extension_system_creation_context.world
 	self._is_server = extension_system_creation_context.is_server
-	self._fixed_frame_time = fixed_frame_time
+	self._fixed_time_step = fixed_time_step
 	self._dt = nil
 	self._t = nil
 	self._systems = {}
@@ -176,7 +176,7 @@ ExtensionSystemHolder.initialize_client_fixed_frame = function (self, fixed_fram
 end
 
 ExtensionSystemHolder.latest_fixed_t = function (self)
-	return self._system_update_context.fixed_frame * self._fixed_frame_time
+	return self._system_update_context.fixed_frame * self._fixed_time_step
 end
 
 local TEMP_SYSTEM_LIST = {}
@@ -208,7 +208,7 @@ ExtensionSystemHolder.fixed_update_resimulate_unit = function (self, unit, from_
 		end
 	end
 
-	local dt = self._fixed_frame_time
+	local dt = self._fixed_time_step
 	context.resimulate_from_frame = from_frame
 	context.resimulate_to_frame = to_frame
 

@@ -4,9 +4,12 @@ local Ammo = require("scripts/utilities/ammo")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local DialogueSettings = require("scripts/settings/dialogue/dialogue_settings")
 local Pickups = require("scripts/settings/pickup/pickups")
+local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local Vo = require("scripts/utilities/vo")
 local buff_proc_events = BuffSettings.proc_events
+local special_rules = SpecialRulesSetting.special_rules
 local AmmunitionInteraction = class("AmmunitionInteraction", "PickupInteraction")
+local _ammo_refills_grenades = nil
 
 AmmunitionInteraction.stop = function (self, world, interactor_unit, unit_data_component, t, result, interactor_is_server)
 	if interactor_is_server then
@@ -26,11 +29,27 @@ end
 AmmunitionInteraction.interactor_condition_func = function (self, interactor_unit, interactee_unit)
 	local ammo_full = Ammo.ammo_is_full(interactor_unit)
 
+	if ammo_full then
+		local can_refill, missing_grenades = _ammo_refills_grenades(interactor_unit)
+
+		if can_refill and missing_grenades then
+			ammo_full = false
+		end
+	end
+
 	return not ammo_full and AmmunitionInteraction.super.interactor_condition_func(self, interactor_unit, interactee_unit)
 end
 
 AmmunitionInteraction.hud_block_text = function (self, interactor_unit, interactee_unit, interactable_actor_node_index)
 	local ammo_full = Ammo.ammo_is_full(interactor_unit)
+
+	if ammo_full then
+		local can_refill, missing_grenades = _ammo_refills_grenades(interactor_unit)
+
+		if can_refill and missing_grenades then
+			ammo_full = false
+		end
+	end
 
 	if ammo_full then
 		if Ammo.uses_ammo(interactor_unit) then
@@ -81,6 +100,62 @@ AmmunitionInteraction._add_ammo = function (self, interactor_unit, pickup_data)
 			end
 		end
 	end
+
+	local ammo_refills_grenades = _ammo_refills_grenades(interactor_unit)
+
+	if not ammo_refills_grenades and pickup_data.ammo_crate then
+		local side_system = Managers.state.extension:system("side_system")
+		local side = side_system.side_by_unit[interactor_unit]
+		local player_units = side.player_units
+		local buff_keywords = BuffSettings.keywords
+
+		for _, player_unit in pairs(player_units) do
+			local buff_extension = ScriptUnit.has_extension(player_unit, "buff_system")
+
+			if buff_extension then
+				local improved_keyword = buff_extension:has_keyword(buff_keywords.improved_ammo_pickups)
+
+				if improved_keyword then
+					ammo_refills_grenades = true
+
+					break
+				end
+			end
+		end
+	end
+
+	if ammo_refills_grenades then
+		local ability_extension = ScriptUnit.has_extension(interactor_unit, "ability_system")
+
+		if ability_extension then
+			local max_grenade_charges = ability_extension:max_ability_charges("grenade_ability")
+			local num_charges = pickup_data.ammo_amount_func(max_grenade_charges, 0, pickup_data)
+			num_charges = math.clamp(num_charges, 0, max_grenade_charges)
+
+			ability_extension:restore_ability_charge("grenade_ability", num_charges)
+		end
+	end
+end
+
+function _ammo_refills_grenades(interactor_unit)
+	local specialization_extension = ScriptUnit.has_extension(interactor_unit, "specialization_system")
+	local ability_extension = ScriptUnit.has_extension(interactor_unit, "ability_system")
+
+	if not specialization_extension or not ability_extension then
+		return false, false
+	end
+
+	local ammo_pickups_refills_grenades = specialization_extension:has_special_rule(special_rules.ammo_pickups_refills_grenades)
+
+	if not ammo_pickups_refills_grenades then
+		return false, false
+	end
+
+	local max_grenade_charges = ability_extension:max_ability_charges("grenade_ability")
+	local remaining_grenade_charges = ability_extension:remaining_ability_charges("grenade_ability")
+	local has_missing_charges = remaining_grenade_charges < max_grenade_charges
+
+	return true, has_missing_charges
 end
 
 return AmmunitionInteraction

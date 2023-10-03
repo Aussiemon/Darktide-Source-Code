@@ -14,7 +14,7 @@ local CLIENT_RPCS = {
 	"rpc_play_player_sound",
 	"rpc_play_player_sound_with_position",
 	"rpc_play_exclusive_player_sound",
-	"rpc_play_server_controlled_player_sound",
+	"rpc_play_player_server_controlled_explosion_sound",
 	"rpc_spawn_exclusive_particle",
 	"rpc_spawn_looping_player_particles",
 	"rpc_spawn_player_particles",
@@ -700,8 +700,8 @@ end
 local function _register_sound_source_from_attachments(wwise_source_node_cache, parent_unit, attachments, node_name, wwise_world, source_name)
 	local num_attachments = #attachments
 
-	for i = 1, num_attachments do
-		local unit = attachments[i]
+	for ii = 1, num_attachments do
+		local unit = attachments[ii]
 
 		if Unit.has_node(unit, node_name) then
 			local source = _register_sound_source(wwise_source_node_cache, unit, node_name, wwise_world, source_name)
@@ -717,6 +717,15 @@ local function _register_sound_source_from_attachments(wwise_source_node_cache, 
 			return source
 		end
 	end
+
+	local attachment_string = ""
+
+	for ii = 1, num_attachments do
+		local unit = attachments[ii]
+		attachment_string = string.format("%s%s, ", attachment_string, tostring(unit))
+	end
+
+	Log.exception("PlayerUnitFxExtension", "Could not register sound source %q. Node %q could not be found in any of the given attachment (%q) units nor parent unit (%q)", source_name, node_name, attachment_string, tostring(parent_unit))
 
 	local fallback_source = _register_sound_source(wwise_source_node_cache, parent_unit, "root", wwise_world, source_name)
 
@@ -996,13 +1005,13 @@ PlayerUnitFxExtension._trigger_wwise_event_synced = function (self, event_name, 
 	end
 end
 
-PlayerUnitFxExtension.trigger_wwise_event_server_controlled = function (self, event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value)
-	Managers.state.game_session:send_rpc_clients("rpc_play_server_controlled_player_sound", self._game_object_id, NetworkLookup.player_character_sounds[event_name], append_husk_to_event_name, optional_position, optional_parameter_name and NetworkLookup.sound_parameters[optional_parameter_name] or nil, optional_parameter_value)
+PlayerUnitFxExtension.trigger_explosion_wwise_event_server_controlled = function (self, event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value, optional_surface_material)
+	Managers.state.game_session:send_rpc_clients("rpc_play_player_server_controlled_explosion_sound", self._game_object_id, NetworkLookup.sound_events[event_name] or NetworkLookup.player_character_sounds[event_name], append_husk_to_event_name, optional_position, optional_parameter_name and NetworkLookup.sound_parameters[optional_parameter_name] or nil, optional_parameter_value, optional_surface_material and NetworkLookup.surface_materials[optional_surface_material] or nil)
 
-	return self:_trigger_wwise_event_server_controlled(event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value)
+	return self:_trigger_explosion_wwise_event_server_controlled(event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value, optional_surface_material)
 end
 
-PlayerUnitFxExtension._trigger_wwise_event_server_controlled = function (self, event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value)
+PlayerUnitFxExtension._trigger_explosion_wwise_event_server_controlled = function (self, event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value, optional_surface_material)
 	local wwise_world = self._wwise_world
 	local source_id = nil
 
@@ -1012,6 +1021,10 @@ PlayerUnitFxExtension._trigger_wwise_event_server_controlled = function (self, e
 
 	if optional_parameter_name and source_id and optional_position then
 		WwiseWorld.set_source_parameter(wwise_world, source_id, optional_parameter_name, optional_parameter_value)
+	end
+
+	if optional_surface_material then
+		WwiseWorld.set_switch(wwise_world, "surface_material", optional_surface_material, source_id)
 	end
 
 	return self:trigger_wwise_event(event_name, append_husk_to_event_name, source_id)
@@ -1678,8 +1691,8 @@ end
 local function _register_vfx_spawner_from_attachments(parent_unit, attachments, node_name, spawner_name)
 	local num_attachments = #attachments
 
-	for i = 1, num_attachments do
-		local unit = attachments[i]
+	for ii = 1, num_attachments do
+		local unit = attachments[ii]
 
 		if Unit.has_node(unit, node_name) then
 			local node = Unit.node(unit, node_name)
@@ -1701,6 +1714,15 @@ local function _register_vfx_spawner_from_attachments(parent_unit, attachments, 
 
 		return spawner
 	end
+
+	local attachment_string = ""
+
+	for ii = 1, num_attachments do
+		local unit = attachments[ii]
+		attachment_string = string.format("%s%s, ", attachment_string, tostring(unit))
+	end
+
+	Log.exception("PlayerUnitFxExtension", "Could not register vfx spawner %q. Node %q could not be found in any of the given attachment (%q) units nor parent unit (%q)", spawner_name, node_name, attachment_string, tostring(parent_unit))
 
 	local fallback_spawner = {
 		node = 1,
@@ -2070,11 +2092,12 @@ PlayerUnitFxExtension.rpc_player_trigger_wwise_event_synced = function (self, ch
 	self:_trigger_wwise_event_synced(event_name, append_husk_to_event_name, optional_occlusion, optional_unit, optional_node_index, optional_position, optional_rotation, optional_parameter_name, optional_parameter_value, optional_switch_name, optional_switch_value)
 end
 
-PlayerUnitFxExtension.rpc_play_server_controlled_player_sound = function (self, channel_id, game_object_id, event_id, append_husk_to_event_name, optional_position, optional_parameter_name_id, optional_parameter_value)
-	local event_name = NetworkLookup.player_character_sounds[event_id]
+PlayerUnitFxExtension.rpc_play_player_server_controlled_explosion_sound = function (self, channel_id, game_object_id, event_id, append_husk_to_event_name, optional_position, optional_parameter_name_id, optional_parameter_value, optional_surface_material_id)
+	local event_name = NetworkLookup.sound_events[event_id] or NetworkLookup.player_character_sounds[event_id]
 	local optional_parameter_name = optional_parameter_name_id and NetworkLookup.sound_parameters[optional_parameter_name_id] or nil
+	local optional_surface_material = optional_surface_material_id and NetworkLookup.surface_materials[optional_surface_material_id] or nil
 
-	self:_trigger_wwise_event_server_controlled(event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value)
+	self:_trigger_explosion_wwise_event_server_controlled(event_name, append_husk_to_event_name, optional_position, optional_parameter_name, optional_parameter_value, optional_surface_material)
 end
 
 PlayerUnitFxExtension.rpc_set_source_parameter = function (self, channel_id, game_object_id, source_id, parameter_id, parameter_value)

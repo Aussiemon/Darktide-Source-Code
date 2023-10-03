@@ -255,6 +255,10 @@ local widget_definitions = {
 			style = {
 				horizontal_alignment = "left",
 				color = Color.terminal_background_gradient(178.5, true),
+				size_addition = {
+					0,
+					0
+				},
 				offset = {
 					110,
 					0,
@@ -397,6 +401,38 @@ local widget_definitions = {
 				dimmed_color = UIHudSettings.color_tint_7,
 				offset = {
 					16
+				}
+			})
+		}
+	}, "toughness_bar"),
+	bonus_toughness_text = UIWidget.create_definition({
+		{
+			value = "+",
+			value_id = "plus_sign",
+			pass_type = "text",
+			style = table.merge_recursive(table.clone(value_text_style), {
+				index = 3,
+				text_color = UIHudSettings.color_tint_10,
+				default_color = UIHudSettings.color_tint_10,
+				dimmed_color = UIHudSettings.color_tint_7,
+				offset = {
+					55
+				}
+			})
+		},
+		{
+			value_id = "text_1",
+			style_id = "text_1",
+			pass_type = "text",
+			value = "0",
+			style = table.merge_recursive(table.clone(value_text_style), {
+				horizontal_alignment = "center",
+				index = 1,
+				text_color = UIHudSettings.color_tint_6,
+				default_color = UIHudSettings.color_tint_6,
+				dimmed_color = UIHudSettings.color_tint_7,
+				offset = {
+					80
 				}
 			})
 		}

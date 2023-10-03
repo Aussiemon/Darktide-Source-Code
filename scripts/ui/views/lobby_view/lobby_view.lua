@@ -1,26 +1,31 @@
 local definition_path = "scripts/ui/views/lobby_view/lobby_view_definitions"
+local Breeds = require("scripts/settings/breed/breeds")
+local CharacterSheet = require("scripts/utilities/character_sheet")
+local Circumstances = require("scripts/settings/circumstance/circumstance_templates")
 local ContentBlueprints = require("scripts/ui/views/lobby_view/lobby_view_content_blueprints")
+local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
 local LobbyViewSettings = require("scripts/ui/views/lobby_view/lobby_view_settings")
 local LobbyViewTestify = GameParameters.testify and require("scripts/ui/views/lobby_view/lobby_view_testify")
 local MasterItems = require("scripts/backend/master_items")
 local Missions = require("scripts/settings/mission/mission_templates")
-local Circumstances = require("scripts/settings/circumstance/circumstance_templates")
 local MissionTypes = require("scripts/settings/mission/mission_types")
+local ProfileUtils = require("scripts/utilities/profile_utils")
+local TalentBuilderViewSettings = require("scripts/ui/views/talent_builder_view/talent_builder_view_settings")
+local TaskbarFlash = require("scripts/utilities/taskbar_flash")
+local TextUtilities = require("scripts/utilities/ui/text")
+local TextUtils = require("scripts/utilities/ui/text")
 local UIProfileSpawner = require("scripts/managers/ui/ui_profile_spawner")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UISettings = require("scripts/settings/ui/ui_settings")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local UIWorldSpawner = require("scripts/managers/ui/ui_world_spawner")
 local ViewElementInputLegend = require("scripts/ui/view_elements/view_element_input_legend/view_element_input_legend")
 local Zones = require("scripts/settings/zones/zones")
-local ProfileUtils = require("scripts/utilities/profile_utils")
 local generate_blueprints_function = require("scripts/ui/view_content_blueprints/item_blueprints")
-local UISettings = require("scripts/settings/ui/ui_settings")
-local TextUtilities = require("scripts/utilities/ui/text")
-local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
-local TextUtils = require("scripts/utilities/ui/text")
-local Breeds = require("scripts/settings/breed/breeds")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
 local INVENTORY_VIEW_NAME = "inventory_background_view"
 local SOCIAL_VIEW_NAME = "social_menu_view"
 local LobbyView = class("LobbyView", "BaseView")
@@ -61,6 +66,8 @@ LobbyView.init = function (self, settings, context)
 	self._can_exit = not context or context.can_exit
 
 	self:_register_event("event_lobby_vote_started")
+
+	self._talent_hover_data = {}
 end
 
 LobbyView.on_enter = function (self)
@@ -72,6 +79,7 @@ LobbyView.on_enter = function (self)
 	self._item_definitions = MasterItems.get_cached()
 
 	Managers.frame_rate:request_full_frame_rate("lobby_view")
+	TaskbarFlash.flash_window()
 end
 
 LobbyView._initialize_background_world = function (self)
@@ -355,6 +363,8 @@ LobbyView._setup_spawn_slots = function (self)
 	for i = 1, num_players do
 		local profile_spawner = UIProfileSpawner:new("LobbyView_" .. i, world, camera, unit_spawner)
 
+		profile_spawner:disable_rotation_input()
+
 		for j = 1, #ignored_slots do
 			local slot_name = ignored_slots[j]
 
@@ -378,6 +388,9 @@ LobbyView._setup_spawn_slots = function (self)
 			loadout_widgets = {}
 		}
 		spawn_slots[i] = spawn_slot
+		local widget_offset_x = 300 + (i - 1) * 320
+		spawn_slot.panel_widget.offset[1] = widget_offset_x
+		spawn_slot.loading_widget.offset[1] = widget_offset_x
 	end
 
 	self._spawn_slots = spawn_slots
@@ -431,7 +444,7 @@ LobbyView.update = function (self, dt, t, input_service)
 			self:_sync_players()
 		end
 
-		self:_update_player_slots(dt, t)
+		self:_update_player_slots(dt, t, input_service)
 
 		if self._menu_list_widgets then
 			self:_update_menu_list(dt, t)
@@ -484,6 +497,10 @@ LobbyView._all_ready_countdown = function (self, dt)
 end
 
 LobbyView._update_player_slots = function (self, dt, t, input_service)
+	local previous_hovered_slot_talent_data = self._hovered_slot_talent_data
+	local previous_hovered_slot_talent = previous_hovered_slot_talent_data and previous_hovered_slot_talent_data.talent
+	self._hovered_slot_talent_data = nil
+	self._hovered_tooltip_panel_widget = nil
 	local spawn_slots = self._spawn_slots
 
 	for i = 1, #spawn_slots do
@@ -493,6 +510,100 @@ LobbyView._update_player_slots = function (self, dt, t, input_service)
 			local profile_spawner = slot.profile_spawner
 
 			profile_spawner:update(dt, t, input_service)
+			self:_update_slot_talent_presentation(slot)
+		end
+	end
+
+	local draw_tooltip = false
+
+	if self._hovered_slot_talent_data and self._hovered_tooltip_panel_widget then
+		if not previous_hovered_slot_talent or self._hovered_slot_talent_data.talent ~= previous_hovered_slot_talent then
+			self:_setup_tooltip_info(self._hovered_slot_talent_data)
+		end
+
+		self:_update_talent_tooltip_position()
+
+		draw_tooltip = true
+	end
+
+	local widgets_by_name = self._widgets_by_name
+	widgets_by_name.talent_tooltip.content.visible = draw_tooltip
+	widgets_by_name.talent_tooltip.alpha_multiplier = draw_tooltip and (self._tooltip_alpha_multiplier or 0) or 0
+
+	if draw_tooltip then
+		if not self._tooltip_draw_delay or self._tooltip_draw_delay < 0 then
+			local tooltip_fade_speed = LobbyViewSettings.tooltip_fade_speed
+			self._tooltip_alpha_multiplier = math.clamp((self._tooltip_alpha_multiplier or 0) + dt * tooltip_fade_speed, 0, 1)
+		else
+			self._tooltip_draw_delay = self._tooltip_draw_delay - dt
+		end
+	end
+end
+
+local talents_presentation_style_id_list = {
+	"talent_1",
+	"talent_2",
+	"talent_3"
+}
+local loadout_presentation_order = {
+	"ability",
+	"blitz",
+	"aura"
+}
+local class_loadout = {
+	ability = {},
+	blitz = {},
+	aura = {}
+}
+local loadout_to_type = {
+	ability = "ability",
+	blitz = "tactical",
+	aura = "aura"
+}
+
+LobbyView._update_slot_talent_presentation = function (self, slot)
+	local panel_widget = slot.panel_widget
+
+	if not panel_widget then
+		return
+	end
+
+	local player = slot.player
+	local profile = player:profile()
+
+	CharacterSheet.class_loadout(profile, class_loadout)
+
+	local widget_style = panel_widget.style
+	local widget_content = panel_widget.content
+	local talent_hover_data = self._talent_hover_data
+	local settings_by_node_type = TalentBuilderViewSettings.settings_by_node_type
+
+	for i = 1, #talents_presentation_style_id_list do
+		local style_id = talents_presentation_style_id_list[i]
+		local talent_widget_style = widget_style[style_id]
+		local talent_style_material_values = talent_widget_style.material_values
+		local loadout_id = loadout_presentation_order[i]
+		local loadout = class_loadout[loadout_id]
+		local node_type = loadout_to_type[loadout_id]
+
+		if talent_widget_style.loadout ~= loadout then
+			local node_type_settings = settings_by_node_type[node_type]
+			talent_style_material_values.icon = loadout.icon
+			talent_style_material_values.gradient_map = node_type_settings.gradient_map
+			talent_style_material_values.frame = node_type_settings.frame
+			talent_style_material_values.icon_mask = node_type_settings.icon_mask
+			widget_content["frame_selected_" .. style_id] = node_type_settings.selected_material
+			talent_widget_style.loadout = loadout
+		end
+
+		local hotspot_content_id = "hotspot_" .. style_id
+		local hotspot_content = widget_content[hotspot_content_id]
+
+		if hotspot_content.is_hover then
+			self._hovered_tooltip_panel_widget = panel_widget
+			talent_hover_data.talent = loadout.talent
+			talent_hover_data.type = node_type
+			self._hovered_slot_talent_data = talent_hover_data
 		end
 	end
 end
@@ -863,8 +974,6 @@ LobbyView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
 			local loading_widget = slot.loading_widget
 			local x, _ = self:_convert_world_to_screen_position(camera, position)
 			local widget_offset_x = x * inverse_scale
-			panel_widget.offset[1] = widget_offset_x
-			loading_widget.offset[1] = widget_offset_x
 
 			for f = 1, #slot.loadout_widgets do
 				local loadout_widgets = slot.loadout_widgets[f]
@@ -1325,6 +1434,82 @@ LobbyView._start_animation_unready = function (self, spawn_slot)
 	end
 
 	spawn_slot.profile_spawner:assign_animation_event("unready")
+end
+
+local FALLBACK_DISPLAY_NAME = "loc_talent_display_name_fallback"
+local FALLBACK_DESCRIPTION = "loc_talent_description_fallback"
+local FALLBACK_ICON = "content/ui/textures/icons/talents/fallback"
+local dummy_tooltip_text_size = {
+	400,
+	20
+}
+
+LobbyView._setup_tooltip_info = function (self, talent_hover_data)
+	self._tooltip_alpha_multiplier = self._tooltip_alpha_multiplier or 0
+	self._tooltip_draw_delay = self._using_cursor_navigation and 0 or LobbyViewSettings.tooltip_fade_delay
+	local widgets_by_name = self._widgets_by_name
+	local widget = widgets_by_name.talent_tooltip
+	local content = widget.content
+	local style = widget.style
+	content.title = "title"
+	content.description = "<<UNASSIGNED TALENT NODE>>"
+	local talent = talent_hover_data.talent
+
+	if talent then
+		local text_vertical_offset = 14
+		local points_spent = 1
+		local node_settings = TalentBuilderViewSettings.settings_by_node_type[talent_hover_data.type]
+		content.talent_type_title = Localize(node_settings.display_name) or ""
+		local talent_type_title_height = self:_get_text_height(content.talent_type_title, style.talent_type_title, dummy_tooltip_text_size)
+		style.talent_type_title.offset[2] = text_vertical_offset
+		style.talent_type_title.size[2] = talent_type_title_height
+		text_vertical_offset = text_vertical_offset + talent_type_title_height
+		local description = TalentLayoutParser.talent_description(talent, points_spent, Color.ui_terminal(255, true))
+		local localized_title = self:_localize(talent.display_name)
+		content.title = localized_title
+		content.description = description
+		local widget_width, _ = self:_scenegraph_size(widget.scenegraph_id, self._ui_scenegraph)
+		local text_size_addition = style.title.size_addition
+		dummy_tooltip_text_size[1] = widget_width + text_size_addition[1]
+		local title_height = self:_get_text_height(content.title, style.title, dummy_tooltip_text_size)
+		style.title.offset[2] = text_vertical_offset
+		style.title.size[2] = title_height
+		text_vertical_offset = text_vertical_offset + title_height + 10
+		local description_height = self:_get_text_height(content.description, style.description, dummy_tooltip_text_size)
+		style.description.offset[2] = text_vertical_offset
+		style.description.size[2] = description_height
+		text_vertical_offset = text_vertical_offset + description_height
+		content.exculsive_group_description = ""
+		text_vertical_offset = text_vertical_offset + 20
+
+		self:_set_scenegraph_size(widget.scenegraph_id, nil, text_vertical_offset, self._ui_scenegraph)
+	end
+end
+
+LobbyView._get_text_height = function (self, text, text_style, optional_text_size)
+	local ui_renderer = self._ui_renderer
+	local text_options = UIFonts.get_font_options_by_style(text_style)
+	local text_height = UIRenderer.text_height(ui_renderer, text, text_style.font_type, text_style.font_size, optional_text_size or text_style.size, text_options)
+
+	return text_height
+end
+
+LobbyView._update_talent_tooltip_position = function (self)
+	local widgets_by_name = self._widgets_by_name
+	local hovered_tooltip_panel_widget = self._hovered_tooltip_panel_widget
+
+	if hovered_tooltip_panel_widget then
+		local ui_scenegraph = self._ui_scenegraph
+		local panel_scenegraph_id = hovered_tooltip_panel_widget.scenegraph_id
+		local panel_scenegraph_world_position = self:_scenegraph_world_position(panel_scenegraph_id)
+		local panel_offset = hovered_tooltip_panel_widget.offset
+		local tooltip_widget = widgets_by_name.talent_tooltip
+		local tooltip_offset = tooltip_widget.offset
+		local panel_width, panel_height = self:_scenegraph_size(panel_scenegraph_id, ui_scenegraph)
+		local tooltip_width, tooltip_height = self:_scenegraph_size(tooltip_widget.scenegraph_id, ui_scenegraph)
+		tooltip_offset[1] = panel_scenegraph_world_position[1] + panel_offset[1] + panel_width * 0.5 - tooltip_width * 0.5
+		tooltip_offset[2] = panel_scenegraph_world_position[2] + panel_height - tooltip_height - 40
+	end
 end
 
 return LobbyView

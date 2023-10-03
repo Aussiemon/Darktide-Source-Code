@@ -4,27 +4,27 @@ local templates = {
 	weapon_trait_bespoke_combataxe_p3_chained_hits_increases_power = {
 		weapon_trait_bespoke_combataxe_p3_chained_hits_increases_power_parent = {
 			{
-				max_stacks = 5,
+				max_stacks = 10,
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.04
+					[stat_buffs.melee_power_level_modifier] = 0.02
 				}
 			},
 			{
-				max_stacks = 5,
+				max_stacks = 10,
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.06
+					[stat_buffs.melee_power_level_modifier] = 0.03
 				}
 			},
 			{
-				max_stacks = 5,
+				max_stacks = 10,
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.08
+					[stat_buffs.melee_power_level_modifier] = 0.04
 				}
 			},
 			{
-				max_stacks = 5,
+				max_stacks = 10,
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.1
+					[stat_buffs.melee_power_level_modifier] = 0.05
 				}
 			}
 		}
@@ -121,26 +121,62 @@ local templates = {
 			}
 		}
 	},
+	weapon_trait_bespoke_combataxe_p3_power_bonus_on_first_attack = {
+		weapon_trait_bespoke_combataxe_p3_power_bonus_on_first_attack = {
+			{
+				no_power_duration = 5,
+				conditional_stat_buffs = {
+					{
+						[stat_buffs.melee_power_level_modifier] = 0.6
+					}
+				}
+			},
+			{
+				no_power_duration = 4.5,
+				conditional_stat_buffs = {
+					{
+						[stat_buffs.melee_power_level_modifier] = 0.6
+					}
+				}
+			},
+			{
+				no_power_duration = 4,
+				conditional_stat_buffs = {
+					{
+						[stat_buffs.melee_power_level_modifier] = 0.6
+					}
+				}
+			},
+			{
+				no_power_duration = 3.5,
+				conditional_stat_buffs = {
+					{
+						[stat_buffs.melee_power_level_modifier] = 0.6
+					}
+				}
+			}
+		}
+	},
 	weapon_trait_bespoke_combataxe_p3_power_bonus_scaled_on_stamina = {
 		weapon_trait_bespoke_combataxe_p3_power_bonus_scaled_on_stamina = {
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.015
+					[stat_buffs.melee_power_level_modifier] = 0.05
 				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.02
+					[stat_buffs.melee_power_level_modifier] = 0.06
 				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.03
+					[stat_buffs.melee_power_level_modifier] = 0.07
 				}
 			},
 			{
 				conditional_stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.04
+					[stat_buffs.melee_power_level_modifier] = 0.08
 				}
 			}
 		}
@@ -148,21 +184,25 @@ local templates = {
 	weapon_trait_bespoke_combataxe_p3_stacking_increase_impact_on_hit = {
 		weapon_trait_bespoke_combataxe_p3_stacking_increase_impact_on_hit_parent = {
 			{
+				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.melee_impact_modifier] = 0.1
+					[stat_buffs.melee_impact_modifier] = 0.19
 				}
 			},
 			{
+				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.melee_impact_modifier] = 0.15
+					[stat_buffs.melee_impact_modifier] = 0.21
 				}
 			},
 			{
+				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.melee_impact_modifier] = 0.2
+					[stat_buffs.melee_impact_modifier] = 0.23
 				}
 			},
 			{
+				child_duration = 3.5,
 				stat_buffs = {
 					[stat_buffs.melee_impact_modifier] = 0.25
 				}
@@ -174,25 +214,25 @@ local templates = {
 			{
 				max_stacks = 5,
 				stat_buffs = {
-					[stat_buffs.rending_multiplier] = 0.05
+					[stat_buffs.rending_multiplier] = 0.12
 				}
 			},
 			{
 				max_stacks = 5,
 				stat_buffs = {
-					[stat_buffs.rending_multiplier] = 0.1
-				}
-			},
-			{
-				max_stacks = 5,
-				stat_buffs = {
-					[stat_buffs.rending_multiplier] = 0.15
+					[stat_buffs.rending_multiplier] = 0.16
 				}
 			},
 			{
 				max_stacks = 5,
 				stat_buffs = {
 					[stat_buffs.rending_multiplier] = 0.2
+				}
+			},
+			{
+				max_stacks = 5,
+				stat_buffs = {
+					[stat_buffs.rending_multiplier] = 0.24
 				}
 			}
 		}
@@ -225,17 +265,17 @@ local templates = {
 		weapon_trait_bespoke_combataxe_p3_increased_weakspot_damage_on_push = {
 			{
 				proc_stat_buffs = {
-					[stat_buffs.weakspot_damage] = 0.3
-				}
-			},
-			{
-				proc_stat_buffs = {
-					[stat_buffs.weakspot_damage] = 0.4
+					[stat_buffs.weakspot_damage] = 0.45
 				}
 			},
 			{
 				proc_stat_buffs = {
 					[stat_buffs.weakspot_damage] = 0.5
+				}
+			},
+			{
+				proc_stat_buffs = {
+					[stat_buffs.weakspot_damage] = 0.55
 				}
 			},
 			{

@@ -4,6 +4,10 @@ BakedPhysics.editor_init = function (self, unit)
 	return
 end
 
+BakedPhysics.editor_validate = function (self, unit)
+	return true, ""
+end
+
 BakedPhysics.editor_reset_physics = function (self, unit)
 	self:enable_actors(unit)
 end

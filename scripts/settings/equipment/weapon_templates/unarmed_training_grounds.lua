@@ -30,9 +30,8 @@ table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.a
 
 weapon_template.actions = {
 	action_wield = {
-		continue_sprinting = true,
-		allowed_during_sprint = true,
 		kind = "wield",
+		allowed_during_sprint = true,
 		uninterruptible = true,
 		anim_event = "equip",
 		total_time = 0.5,
@@ -41,12 +40,16 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		}
 	},
 	action_unwield = {
-		continue_sprinting = true,
 		allowed_during_sprint = true,
 		start_input = "wield",
 		uninterruptible = true,

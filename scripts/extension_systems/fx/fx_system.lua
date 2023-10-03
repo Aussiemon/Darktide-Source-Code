@@ -5,12 +5,13 @@ require("scripts/extension_systems/fx/projectile_fx_extension")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local ImpactEffect = require("scripts/utilities/attack/impact_effect")
 local ImpactEffectSettings = require("scripts/settings/damage/impact_effect_settings")
-local MaterialQuery = require("scripts/utilities/material_query")
+local MaterialQuerySettings = require("scripts/settings/material_query_settings")
 local FxSystem = class("FxSystem", "ExtensionSystemBase")
 local INTERFACE_POSITION_OFFSET_DISTANCE = 2
 local IS_DIRECTION_INTERFACE = true
 local PI = math.pi
 local impact_fx_templates = ImpactEffectSettings.impact_fx_templates
+local surface_material_groups_lookup = MaterialQuerySettings.surface_material_groups_lookup
 local _create_impact_sfx, _create_impact_vfx, _create_material_switch_sfx, _create_projection_decal, _impact_fx, _play_material_switch_sfx, _play_impact_fx_template = nil
 local CLIENT_RPCS = {
 	"rpc_play_impact_fx",
@@ -103,7 +104,7 @@ FxSystem.on_remove_extension = function (self, unit, extension_name)
 	if extension_name == "PlayerUnitFxExtension" then
 		local unit_to_particle_group_id = unit_to_particle_group_lookup[unit]
 
-		self:delete_units_beloniong_to_particle_group(unit_to_particle_group_id)
+		self:_delete_units_belonging_to_particle_group(unit_to_particle_group_id)
 
 		unit_to_particle_group_lookup[unit] = nil
 	end
@@ -474,7 +475,7 @@ FxSystem.trigger_ground_impact_fx = function (self, ground_impact_fx_template, i
 	local impact_effects = material_fx_templates[impact_material_or_nil]
 
 	if not impact_effects then
-		local group = MaterialQuery.groups_lookup[impact_material_or_nil]
+		local group = surface_material_groups_lookup[impact_material_or_nil]
 		impact_effects = group and material_fx_templates[group]
 	end
 
@@ -510,7 +511,7 @@ FxSystem.trigger_ground_impact_fx = function (self, ground_impact_fx_template, i
 	end
 end
 
-FxSystem.delete_units_beloniong_to_particle_group = function (self, particle_group_id)
+FxSystem._delete_units_belonging_to_particle_group = function (self, particle_group_id)
 	local spawned_impact_fx_units = self._spawned_impact_fx_units
 
 	for unit, unit_particle_group_id in pairs(spawned_impact_fx_units) do

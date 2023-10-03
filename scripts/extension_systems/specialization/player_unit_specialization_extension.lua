@@ -1,3 +1,4 @@
+local CharacterSheet = require("scripts/utilities/character_sheet")
 local PlayerSpecialization = require("scripts/utilities/player_specialization/player_specialization")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local PlayerUnitSpecializationExtension = class("PlayerUnitSpecializationExtension")
@@ -24,6 +25,7 @@ PlayerUnitSpecializationExtension.init = function (self, extension_init_context,
 	self._passive_buff_indices = {}
 	self._coherency_external_buff_indices = {}
 	self._buff_template_tiers = {}
+	self._latest_fixed_frame = extension_init_context.fixed_frame
 
 	self:_init_components()
 end
@@ -66,19 +68,17 @@ PlayerUnitSpecializationExtension.update = function (self, unit, dt, t)
 end
 
 PlayerUnitSpecializationExtension.fixed_update = function (self, unit, dt, t, fixed_frame, context, ...)
+	self._latest_fixed_frame = fixed_frame
+
 	WarpCharge.update(dt, t, self._warp_charge_component, self._player, self._unit, self._first_person_unit, self._is_local_unit, self._wwise_world)
 end
 
 PlayerUnitSpecializationExtension.destroy = function (self)
-	return
+	self:_remove_gameplay_features(self._latest_fixed_frame)
 end
 
-PlayerUnitSpecializationExtension.get_specialization_name = function (self)
+PlayerUnitSpecializationExtension.specialization_name = function (self)
 	return self._specialization_name
-end
-
-PlayerUnitSpecializationExtension.get_talents = function (self)
-	return self._talents
 end
 
 PlayerUnitSpecializationExtension.has_special_rule = function (self, special_rule_name)
@@ -101,18 +101,41 @@ PlayerUnitSpecializationExtension.remove_gameplay_features = function (self, fix
 	self:_remove_gameplay_features(fixed_t)
 end
 
+local class_loadout = {
+	passives = {},
+	coherency = {},
+	special_rules = {},
+	buff_template_tiers = {}
+}
+
 PlayerUnitSpecializationExtension._apply_specialization_and_talents = function (self, archetype, specialization_name, talents, fixed_t)
 	local ability_extension = self._ability_extension
 	local buff_extension = self._buff_extension
 	local combat_ability, grenade_ability, passives, coherency_buffs, special_rules, buff_template_tiers = nil
+	local game_mode_manager = Managers.state.game_mode
+	local game_mode_settings = game_mode_manager:settings()
 
-	if Managers.state.game_mode:specializations_disabled() then
+	if game_mode_manager:specializations_disabled() then
 		buff_template_tiers = {}
 		special_rules = {}
 		coherency_buffs = {}
 		passives = {}
 	else
-		combat_ability, grenade_ability, passives, coherency_buffs, special_rules, buff_template_tiers = PlayerSpecialization.from_selected_talents(archetype, specialization_name, talents)
+		local profile = self._player:profile()
+		local skip_selected_nodes = false
+
+		if game_mode_settings and game_mode_settings.force_base_talents then
+			skip_selected_nodes = true
+		end
+
+		CharacterSheet.class_loadout(profile, class_loadout, skip_selected_nodes)
+
+		combat_ability = class_loadout.combat_ability
+		grenade_ability = class_loadout.grenade_ability
+		passives = class_loadout.passives
+		coherency_buffs = class_loadout.coherency
+		special_rules = class_loadout.special_rules
+		buff_template_tiers = class_loadout.buff_template_tiers
 	end
 
 	if combat_ability then
@@ -198,6 +221,7 @@ PlayerUnitSpecializationExtension._remove_gameplay_features = function (self, fi
 end
 
 local temp_talent_id_array = {}
+local temp_talent_tier_array = {}
 
 PlayerUnitSpecializationExtension._send_rpc_update_to_client = function (self, player, specialization_name, talents)
 	local player = self._player
@@ -215,12 +239,13 @@ PlayerUnitSpecializationExtension._send_rpc_update_to_client = function (self, p
 	for talent_name, tier in pairs(talents) do
 		i = i + 1
 		temp_talent_id_array[i] = NetworkLookup.archetype_talent_names[talent_name]
+		temp_talent_tier_array[i] = tier
 	end
 
 	local channel_id = player:channel_id()
 	local unit_id = Managers.state.unit_spawner:game_object_id(self._unit)
 
-	RPC.rpc_update_talents(channel_id, unit_id, specialization_name_id, temp_talent_id_array)
+	RPC.rpc_update_talents(channel_id, unit_id, specialization_name_id, temp_talent_id_array, temp_talent_tier_array)
 end
 
 return PlayerUnitSpecializationExtension

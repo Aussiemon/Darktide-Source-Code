@@ -2,6 +2,7 @@ local Attack = require("scripts/utilities/attack/attack")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local PowerLevelSettings = require("scripts/settings/damage/power_level_settings")
 local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
+local Stagger = require("scripts/utilities/attack/stagger")
 local Suppression = require("scripts/utilities/attack/suppression")
 local Toughness = require("scripts/utilities/toughness/toughness")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
@@ -19,10 +20,11 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 	local target_allies = shout_settings.target_allies
 	local player_position = locomotion_component.position
 	local player_rotation = locomotion_component.rotation
+	local player_buff_extension = ScriptUnit.extension(player_unit, "buff_system")
+	local stat_buffs = player_buff_extension:stat_buffs()
 
 	if target_allies then
 		local buff_to_add = shout_settings.buff_to_add
-		local revive = shout_settings.revive_allies
 		local coherency_extension = ScriptUnit.has_extension(player_unit, "coherency_system")
 		local in_coherence_units = coherency_extension:in_coherence_units()
 
@@ -35,27 +37,6 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 				end
 
 				local specialization_extension = ScriptUnit.has_extension(player_unit, "specialization_system")
-
-				if revive then
-					local side_extension = ScriptUnit.has_extension(unit, "side_system")
-					local is_player_unit = side_extension.is_player_unit
-
-					if specialization_extension then
-						local revive_special_rule = special_rules.shout_revives_allies
-						local has_special_rule = specialization_extension:has_special_rule(revive_special_rule)
-
-						if has_special_rule and is_player_unit then
-							local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
-							local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
-
-							if character_state_component and PlayerUnitStatus.is_knocked_down(character_state_component) then
-								local assisted_state_input_component = unit_data_extension:write_component("assisted_state_input")
-								assisted_state_input_component.force_assist = true
-							end
-						end
-					end
-				end
-
 				local toughness_special_rule = special_rules.shout_restores_toughness
 				local has_special_rule = specialization_extension:has_special_rule(toughness_special_rule)
 
@@ -74,6 +55,39 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 				end
 			end
 		end
+
+		local revive = shout_settings.revive_allies
+		local specialization_extension = ScriptUnit.has_extension(player_unit, "specialization_system")
+
+		if revive then
+			local allied_side_names = side:relation_side_names("allied")
+			local broadphase_system = Managers.state.extension:system("broadphase_system")
+			local broadphase = broadphase_system.broadphase
+			local radius_modifier = stat_buffs.shout_radius_modifier or 1
+			local radius = shout_settings.radius * radius_modifier
+			local num_hits = broadphase:query(player_position, radius, broadphase_results, allied_side_names)
+
+			for ii = 1, num_hits do
+				local unit = broadphase_results[ii]
+				local side_extension = ScriptUnit.has_extension(unit, "side_system")
+				local is_player_unit = side_extension.is_player_unit
+
+				if specialization_extension then
+					local revive_special_rule = special_rules.shout_revives_allies
+					local has_special_rule = specialization_extension:has_special_rule(revive_special_rule)
+
+					if has_special_rule and is_player_unit then
+						local unit_data_extension = ScriptUnit.has_extension(unit, "unit_data_system")
+						local character_state_component = unit_data_extension and unit_data_extension:read_component("character_state")
+
+						if character_state_component and PlayerUnitStatus.is_knocked_down(character_state_component) then
+							local assisted_state_input_component = unit_data_extension:write_component("assisted_state_input")
+							assisted_state_input_component.force_assist = true
+						end
+					end
+				end
+			end
+		end
 	end
 
 	if target_enemies then
@@ -82,7 +96,8 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 		local player_units = side.valid_enemy_player_units
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
 		local broadphase = broadphase_system.broadphase
-		local radius = shout_settings.radius
+		local radius_modifier = stat_buffs.shout_radius_modifier or 1
+		local radius = shout_settings.radius * radius_modifier
 		local num_hits = broadphase:query(player_position, radius, broadphase_results, enemy_side_names)
 		local damage_profile = shout_settings.damage_profile
 		local damage_type = shout_settings.damage_type
@@ -92,18 +107,20 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 		local shout_dot = shout_settings.shout_dot
 		local specialization_extension = ScriptUnit.has_extension(player_unit, "specialization_system")
 
-		for i = 1, num_hits do
+		for ii = 1, num_hits do
 			repeat
-				local enemy_unit = broadphase_results[i]
+				local enemy_unit = broadphase_results[ii]
 
 				if not ai_target_units[enemy_unit] or player_units[enemy_unit] then
 					break
 				end
 
 				local minion_position = POSITION_LOOKUP[enemy_unit]
-				local attack_direction = Vector3.normalize(Vector3.flat(minion_position - player_position))
+				local flat_to_target = Vector3.flat(minion_position - player_position)
+				local attack_direction = Vector3.normalize(flat_to_target)
+				local length_squared = Vector3.length_squared(flat_to_target)
 
-				if Vector3.length_squared(attack_direction) == 0 then
+				if length_squared == 0 then
 					attack_direction = Quaternion.forward(player_rotation)
 				end
 
@@ -142,9 +159,18 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 						buff_extension:add_internally_controlled_buff(special_rule_buff_name, t)
 					end
 
+					local lerp_t = math.clamp01(1 - length_squared / (radius * radius), 0, 1)
+					local scaled_power_level = math.lerp(power_level * 0.1, power_level, lerp_t)
 					local hit_zone_name = "torso"
 
-					Attack.execute(enemy_unit, damage_profile, "attack_direction", attack_direction, "power_level", power_level, "hit_zone_name", hit_zone_name, "damage_type", damage_type, "attacking_unit", player_unit)
+					Attack.execute(enemy_unit, damage_profile, "attack_direction", attack_direction, "power_level", scaled_power_level, "hit_zone_name", hit_zone_name, "damage_type", damage_type, "attacking_unit", player_unit)
+
+					local force_stagger_type = shout_settings.force_stagger_type
+					local force_stagger_duration = shout_settings.force_stagger_duration
+
+					if force_stagger_type then
+						Stagger.force_stagger(enemy_unit, force_stagger_type, attack_direction, force_stagger_duration, 1, force_stagger_duration)
+					end
 
 					if specialization_extension then
 						local shout_causes_suppression = specialization_extension:has_special_rule(special_rules.shout_causes_suppression)

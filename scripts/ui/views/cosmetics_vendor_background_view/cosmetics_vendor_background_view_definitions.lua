@@ -265,7 +265,7 @@ local cosmetics_vendor_option_tab_definition = {
 	input_legend_buttons = {
 		{
 			display_name = "loc_inventory_menu_zoom_in",
-			input_action = "hotkey_menu_special_1",
+			input_action = "hotkey_menu_special_2",
 			alignment = "right_alignment",
 			on_pressed_callback = "cb_on_camera_zoom_toggled",
 			visibility_function = function (parent, id)
@@ -315,7 +315,7 @@ local cosmetics_vendor_option_tab_definition = {
 			end
 		},
 		{
-			input_action = "hotkey_menu_special_2",
+			input_action = "hotkey_menu_special_1",
 			alignment = "right_alignment",
 			gear_toggle_option = true,
 			on_pressed_callback = "cb_on_preview_with_gear_toggled",

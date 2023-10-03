@@ -1,5 +1,5 @@
+local CharacterSheet = require("scripts/utilities/character_sheet")
 local PlayerSpecialization = require("scripts/utilities/player_specialization/player_specialization")
-local PlayerUnitData = require("scripts/extension_systems/unit_data/utilities/player_unit_data")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local RPCS = {
 	"rpc_update_talents"
@@ -23,6 +23,7 @@ PlayerHuskSpecializationExtension.init = function (self, extension_init_context,
 	local archetype = extension_init_data.archetype
 	local specialization_name = extension_init_data.specialization_name
 	local talents = extension_init_data.talents
+	self._package_synchronizer_client = extension_init_data.package_synchronizer_client
 	self._archetype = archetype
 	self._specialization_name = specialization_name
 	self._talents = talents
@@ -88,7 +89,7 @@ PlayerHuskSpecializationExtension.destroy = function (self)
 	self._network_event_delegate:unregister_unit_events(self._game_object_id, unpack(RPCS))
 end
 
-PlayerHuskSpecializationExtension.get_specialization_name = function (self)
+PlayerHuskSpecializationExtension.specialization_name = function (self)
 	return self._specialization_name
 end
 
@@ -97,6 +98,13 @@ PlayerHuskSpecializationExtension.has_special_rule = function (self, special_rul
 
 	return active_special_rules[special_rule_name]
 end
+
+local class_loadout = {
+	passives = {},
+	coherency = {},
+	special_rules = {},
+	buff_template_tiers = {}
+}
 
 PlayerHuskSpecializationExtension._update_specialization_and_talents = function (self, specialization_name, talents)
 	self._specialization_name = specialization_name
@@ -107,7 +115,21 @@ PlayerHuskSpecializationExtension._update_specialization_and_talents = function 
 		buff_template_tiers = {}
 		special_rules = {}
 	else
-		_, _, _, _, special_rules, buff_template_tiers = PlayerSpecialization.from_selected_talents(self._archetype, specialization_name, talents)
+		local player = self._player
+		local peer_id = player:peer_id()
+		local local_player_id = player:local_player_id()
+		local profile = self._package_synchronizer_client:chached_profile(peer_id, local_player_id)
+		local skip_selected_nodes = false
+		local game_mode_settings = Managers.state.game_mode:settings()
+
+		if game_mode_settings and game_mode_settings.force_base_talents then
+			skip_selected_nodes = true
+		end
+
+		CharacterSheet.class_loadout(profile, class_loadout, skip_selected_nodes)
+
+		special_rules = class_loadout.special_rules
+		buff_template_tiers = class_loadout.buff_template_tiers
 	end
 
 	local active_special_rules = self._active_special_rules
@@ -129,7 +151,7 @@ end
 
 local temp_talent_name_set = {}
 
-PlayerHuskSpecializationExtension.rpc_update_talents = function (self, channel_id, unit_id, specialization_name_id, talent_id_array)
+PlayerHuskSpecializationExtension.rpc_update_talents = function (self, channel_id, unit_id, specialization_name_id, talent_id_array, talent_tier_array)
 	local specialization_name = NetworkLookup.archetype_specialization_names[specialization_name_id]
 
 	table.clear(temp_talent_name_set)
@@ -137,7 +159,7 @@ PlayerHuskSpecializationExtension.rpc_update_talents = function (self, channel_i
 	for i = 1, #talent_id_array do
 		local talent_name_id = talent_id_array[i]
 		local talent_name = NetworkLookup.archetype_talent_names[talent_name_id]
-		temp_talent_name_set[talent_name] = true
+		temp_talent_name_set[talent_name] = talent_tier_array[i]
 	end
 
 	self:_update_specialization_and_talents(specialization_name, temp_talent_name_set)

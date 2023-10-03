@@ -1,6 +1,6 @@
-local DaemonhostSettings = require("scripts/settings/specials/daemonhost_settings")
+local ChaosDaemonhostSettings = require("scripts/settings/monster/chaos_daemonhost_settings")
 local Vo = require("scripts/utilities/vo")
-local STAGES = DaemonhostSettings.stages
+local STAGES = ChaosDaemonhostSettings.stages
 local vo_settings = {
 	vo_event = "chaos_daemonhost_aggro",
 	cooldown_duration = {

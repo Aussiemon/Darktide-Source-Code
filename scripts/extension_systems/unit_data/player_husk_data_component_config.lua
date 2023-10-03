@@ -70,7 +70,7 @@ local husk_data_component_config = {
 	action_flamer_gas = {
 		"range"
 	},
-	action_throw = {
+	action_throw_luggable = {
 		"thrown"
 	},
 	block = {

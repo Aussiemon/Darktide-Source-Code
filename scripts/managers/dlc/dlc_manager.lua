@@ -391,6 +391,7 @@ DLCStates.present_rewards = function (dlc_manager, dt, t)
 	end
 
 	local item_rewards = {}
+	local currency_rewarded = false
 
 	for i = 1, #dlc_manager._reward_queue do
 		local reward_data = dlc_manager._reward_queue[i]
@@ -405,6 +406,8 @@ DLCStates.present_rewards = function (dlc_manager, dt, t)
 					currency = reward.currencyType,
 					amount = reward.amount
 				})
+
+				currency_rewarded = true
 			elseif reward.rewardType == "item" then
 				local gear_id = reward.gearId
 				local master_id = reward.masterId
@@ -432,8 +435,12 @@ DLCStates.present_rewards = function (dlc_manager, dt, t)
 		for i = 1, #item_rewards do
 			local reward = item_rewards[i]
 
-			ItemUtils.mark_item_id_as_new(reward.gear_id, reward.item_type)
+			ItemUtils.mark_item_id_as_new(reward)
 		end
+	end
+
+	if currency_rewarded then
+		Managers.data_service.store:invalidate_wallets_cache()
 	end
 
 	dlc_manager:_handle_dangling_pending_dlcs()

@@ -129,6 +129,27 @@ local mission_objective_templates = {
 				progress_bar = true,
 				mission_objective_type = "decode",
 				header = "Hack your way forward"
+			},
+			objective_kristoffer_plant_charges = {
+				description = "Plant the charges.",
+				mission_objective_type = "goal",
+				header = "Plant the charges."
+			},
+			objective_kristoffer_use_detonator = {
+				description = "Use your detonator.",
+				mission_objective_type = "goal",
+				header = "Use your detonator (Capslock)"
+			},
+			objective_kristoffer_lower_side_platforms = {
+				description = "Lower the side platforms.",
+				progress_bar = true,
+				mission_objective_type = "decode",
+				header = "Lower the side platforms."
+			},
+			objective_kristoffer_proceed_forward = {
+				description = "Fight your way forward.",
+				mission_objective_type = "goal",
+				header = "Fight your way forward."
 			}
 		}
 	}

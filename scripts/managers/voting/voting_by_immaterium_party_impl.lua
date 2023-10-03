@@ -141,7 +141,7 @@ VotingManagerImmateriumParty.update = function (self, dt, t)
 	end
 
 	if GameParameters.testify then
-		Testify:poll_requests_through_handler(VotingManagerImmateriumPartyTestify, self, true)
+		Testify:poll_requests_through_handler(VotingManagerImmateriumPartyTestify, self)
 	end
 
 	local current_vote = self:_current_vote()
@@ -169,7 +169,7 @@ VotingManagerImmateriumParty.update = function (self, dt, t)
 				if v.state ~= "WAITING" and not self._casted_votes[k] then
 					local option = v.state:lower()
 
-					template.on_vote_casted(vote_id, template, k, option)
+					template.on_vote_casted(vote_id, template, k, option, current_vote.params)
 					_info("Party Member Voted: %s", option)
 
 					self._casted_votes[k] = true
@@ -183,7 +183,6 @@ VotingManagerImmateriumParty.update = function (self, dt, t)
 
 				if result == "approved" or result == "rejected" then
 					_info("Party Vote Completed: %s", result)
-					template.on_completed(vote_id, template, current_vote, result)
 
 					if DEDICATED_SERVER then
 						local votes = {}
@@ -192,8 +191,12 @@ VotingManagerImmateriumParty.update = function (self, dt, t)
 							votes[value] = (votes[value] or 0) + 1
 						end
 
-						Managers.telemetry_events:vote_completed(template.name, result, votes)
+						local params = current_vote.params
+
+						Managers.telemetry_events:vote_completed(template.name, result, votes, params)
 					end
+
+					template.on_completed(vote_id, template, current_vote, result)
 				else
 					_info("Party Vote Aborted: %s:%s", result, abort_reason)
 					template.on_aborted(vote_id, template, current_vote.params, abort_reason)

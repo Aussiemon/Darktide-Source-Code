@@ -19,7 +19,7 @@ ViewElementInputLegend.init = function (self, parent, draw_layer, start_scale)
 	self._entries = {}
 end
 
-ViewElementInputLegend.add_entry = function (self, display_name, input_action, visibility_function, on_pressed_callback, side_optional, sound_overrides, use_mouse_hold)
+ViewElementInputLegend.add_entry = function (self, display_name, input_action, visibility_function, on_pressed_callback, side_optional, sound_overrides, use_mouse_hold, extra_input_actions)
 	local id = "entry_" .. self._entry_index
 	local scenegraph_id = "entry_pivot"
 	local pass_template = ButtonPassTemplates.input_legend_button
@@ -44,7 +44,8 @@ ViewElementInputLegend.add_entry = function (self, display_name, input_action, v
 		on_pressed_callback = on_pressed_callback,
 		side = side_optional,
 		is_visible = not visibility_function,
-		use_mouse_hold = use_mouse_hold
+		use_mouse_hold = use_mouse_hold,
+		extra_input_actions = extra_input_actions
 	}
 	local content = widget.content
 
@@ -123,8 +124,25 @@ ViewElementInputLegend._handle_input = function (self, dt, t, input_service)
 		for i = 1, #entries do
 			local entry = entries[i]
 			local input_action = entry.input_action
+			local using_extra_input_action = false
 
-			if input_action and input_service:get(input_action) and entry.is_visible or entry.use_mouse_hold and entry.is_visible and entry.widget.content.hotspot.is_held then
+			if entry.extra_input_actions then
+				for type, actions in pairs(entry.extra_input_actions) do
+					if self._using_cursor_navigation and type == "keyboard" or not self._using_cursor_navigation and type == "gamepad" then
+						for j = 1, #actions do
+							local extra_input_action = actions[j]
+
+							if input_service:get(extra_input_action) then
+								using_extra_input_action = true
+
+								break
+							end
+						end
+					end
+				end
+			end
+
+			if input_action and input_service:get(input_action) and entry.is_visible or entry.use_mouse_hold and entry.is_visible and entry.widget.content.hotspot.is_held or using_extra_input_action and entry.is_visible then
 				local on_pressed_callback = entry.on_pressed_callback
 
 				if on_pressed_callback then

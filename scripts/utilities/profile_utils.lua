@@ -5,8 +5,10 @@ local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local MasterItems = require("scripts/backend/master_items")
 local PlayerSpecialization = require("scripts/utilities/player_specialization/player_specialization")
 local PrologueCharacterProfileOverride = require("scripts/settings/prologue_character_profile_override")
+local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local TestifyCharacterProfiles = not EDITOR and DevParameters.use_testify_profiles and require("scripts/settings/testify_character_profiles")
 local UISettings = require("scripts/settings/ui/ui_settings")
+local ViewElementProfilePresetsSettings = require("scripts/ui/view_elements/view_element_profile_presets/view_element_profile_presets_settings")
 local ProfileUtils = {
 	character_names = {
 		male_names_1 = {
@@ -143,6 +145,19 @@ local ProfileUtils = {
 	}
 }
 
+local function _fill_talents_and_selected_nodes(profile, character, archetype_name)
+	local archetype = Archetypes[archetype_name]
+	local talents = profile.talents
+	local talent_layout_file_path = archetype.talent_layout_file_path
+	local active_layout = require(talent_layout_file_path)
+	local backend_talents = character.vocation and character.vocation.talents or ""
+	local selected_nodes = profile.selected_nodes
+
+	TalentLayoutParser.unpack_backend_data(active_layout, backend_talents, selected_nodes)
+	TalentLayoutParser.selected_talents_from_selected_nodes(active_layout, selected_nodes, talents)
+	PlayerSpecialization.add_archetype_base_talents(archetype, talents)
+end
+
 local function profile_from_backend_data(backend_profile_data)
 	local profile_data = table.clone(backend_profile_data)
 	local character = profile_data.character
@@ -163,6 +178,7 @@ local function profile_from_backend_data(backend_profile_data)
 		loadout_item_ids = item_ids,
 		loadout_item_data = {},
 		lore = character.lore,
+		selected_nodes = {},
 		talents = {},
 		current_level = current_level,
 		talent_points = talent_points,
@@ -194,15 +210,7 @@ local function profile_from_backend_data(backend_profile_data)
 		end
 	end
 
-	local character_talents = character.career and character.career.talents
-	local profile_talents = backend_profile.talents
-
-	if character_talents then
-		for i = 1, #character_talents do
-			local talent_name = character_talents[i]
-			profile_talents[#profile_talents + 1] = talent_name
-		end
-	end
+	_fill_talents_and_selected_nodes(backend_profile, character, archetype_name)
 
 	return backend_profile
 end
@@ -216,7 +224,7 @@ end
 
 local _combine_item = nil
 
-function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair, mask_hair)
+function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair, mask_hair, mask_hair_override)
 	for child_slot_name, child_entry in pairs(entry) do
 		if child_slot_name ~= "parent_slot_names" then
 			local child_attachments = {}
@@ -251,6 +259,10 @@ function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_pre
 
 			if data.item.mask_hair then
 				mask_hair[1] = mask_hair[1] or data.item.mask_hair
+			end
+
+			if data.item.mask_hair_override then
+				mask_hair_override[1] = mask_hair_override[1] or data.item.mask_hair_override
 			end
 		end
 	end
@@ -310,8 +322,9 @@ local function _generate_visual_loadout(visual_items)
 			local stabilize_neck = {}
 			local mask_facial_hair = {}
 			local mask_hair = {}
+			local mask_hair_override = {}
 
-			_combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair, mask_hair)
+			_combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair, mask_hair, mask_hair_override)
 
 			local data = visual_items[slot_name]
 			local gear = data.gear
@@ -366,6 +379,11 @@ local function _generate_visual_loadout(visual_items)
 			if mask_hair then
 				overrides = overrides or {}
 				overrides.mask_hair = mask_hair[1]
+			end
+
+			if mask_hair_override then
+				overrides = overrides or {}
+				overrides.mask_hair_override = mask_hair_override[1]
 			end
 
 			gear.masterDataInstance.overrides = overrides
@@ -435,16 +453,21 @@ local function _generate_visual_loadout_from_data(loadout_item_ids, loadout_item
 end
 
 local function _validate_talent_items(talents, archetype_name, specialization_name)
-	local talent_definitions = ArchetypeTalents[archetype_name][specialization_name]
+	local talent_definitions = ArchetypeTalents[archetype_name]
 	local item_definitions = MasterItems.get_cached()
 
 	for talent_name, _ in pairs(talents) do
 		local talent_definition = talent_definitions[talent_name]
-		local player_ability = talent_definition and talent_definition.player_ability
-		local ability = player_ability and player_ability.ability
-		local inventory_item_name = ability and ability.inventory_item_name
 
-		if inventory_item_name and not item_definitions[inventory_item_name] then
+		if talent_definition then
+			local player_ability = talent_definition and talent_definition.player_ability
+			local ability = player_ability and player_ability.ability
+			local inventory_item_name = ability and ability.inventory_item_name
+
+			if inventory_item_name and not item_definitions[inventory_item_name] then
+				talents[talent_name] = nil
+			end
+		else
 			talents[talent_name] = nil
 		end
 	end
@@ -461,13 +484,6 @@ local function convert_profile_from_lookups_to_data(profile)
 	local visual_loadout = _generate_visual_loadout_from_data(loadout_item_ids, loadout_item_data)
 	profile.visual_loadout = visual_loadout
 	local talents = profile.talents
-	local num_talents = #talents
-
-	for i = num_talents, 1, -1 do
-		local talent_name = talents[i]
-		talents[talent_name] = true
-		talents[i] = nil
-	end
 
 	PlayerSpecialization.add_nonselected_talents(archetype, profile.specialization, profile.current_level, talents)
 	_validate_talent_items(talents, archetype_name, profile.specialization)
@@ -622,6 +638,7 @@ ProfileUtils.character_to_profile = function (character, gear_list, progression)
 		loadout_item_ids = item_ids,
 		loadout_item_data = {},
 		lore = character.lore,
+		selected_nodes = {},
 		talents = {},
 		name = character.name,
 		personal = character.personal
@@ -652,15 +669,10 @@ ProfileUtils.character_to_profile = function (character, gear_list, progression)
 
 	local visual_loadout = _generate_visual_loadout_from_data(profile.loadout_item_ids, profile.loadout_item_data)
 	profile.visual_loadout = visual_loadout
-	local profile_talents = profile.talents
-	local character_talents = character.career and character.career.talents
 
-	if character_talents then
-		for i = 1, #character_talents do
-			local talent_name = character_talents[i]
-			profile_talents[talent_name] = true
-		end
-	end
+	_fill_talents_and_selected_nodes(profile, character, archetype_name)
+
+	local profile_talents = profile.talents
 
 	PlayerSpecialization.add_nonselected_talents(archetype, specialization, current_level, profile_talents)
 	_validate_talent_items(profile_talents, archetype_name, profile.specialization)
@@ -680,7 +692,6 @@ ProfileUtils.generate_random_name = function (profile)
 end
 
 ProfileUtils.character_title = function (profile, exlude_symbol)
-	local specialization_key = profile.specialization
 	local archetype = profile.archetype
 	local archetype_name = nil
 
@@ -690,16 +701,7 @@ ProfileUtils.character_title = function (profile, exlude_symbol)
 		archetype_name = Localize(archetype.archetype_name)
 	end
 
-	if specialization_key and specialization_key ~= "none" then
-		local specializations = archetype.specializations
-		local specialization = specializations[specialization_key]
-		local title = specialization.title
-		local specialization_name = title and Localize(title) or ""
-
-		return archetype_name .. " " .. specialization_name
-	else
-		return archetype_name
-	end
+	return archetype_name
 end
 
 local function _character_save_data()
@@ -725,14 +727,21 @@ ProfileUtils.save_active_profile_preset_id = function (profile_preset_id)
 	Managers.save:queue_save()
 end
 
-ProfileUtils.add_profile_preset = function (loadout, talents, custom_icon_key)
+ProfileUtils.get_available_profile_preset_id = function ()
+	return math.uuid()
+end
+
+ProfileUtils.add_profile_preset = function ()
 	local profile_presets = ProfileUtils.get_profile_presets()
 	local num_profile_presets = #profile_presets
-	local profile_preset_id = num_profile_presets + 1
-	profile_presets[profile_preset_id] = {
-		loadout = loadout or {},
-		talents = talents or {},
-		custom_icon_key = custom_icon_key,
+	local optional_preset_icon_reference_keys = ViewElementProfilePresetsSettings.optional_preset_icon_reference_keys
+	local icon_index = math.index_wrapper(num_profile_presets + 1, #optional_preset_icon_reference_keys)
+	local icon_key = optional_preset_icon_reference_keys[icon_index]
+	local profile_preset_id = ProfileUtils.get_available_profile_preset_id()
+	profile_presets[num_profile_presets + 1] = {
+		loadout = {},
+		talents = {},
+		custom_icon_key = icon_key,
 		id = profile_preset_id
 	}
 
@@ -742,13 +751,26 @@ ProfileUtils.add_profile_preset = function (loadout, talents, custom_icon_key)
 end
 
 ProfileUtils.remove_profile_preset = function (profile_preset_id)
-	local profile_presets = ProfileUtils.get_profile_presets()
+	local profile_preset = profile_preset_id and ProfileUtils.get_profile_preset(profile_preset_id)
 
-	if not profile_preset_id or not profile_presets[profile_preset_id] then
+	if not profile_preset then
 		return
 	end
 
-	table.remove(profile_presets, profile_preset_id)
+	local profile_presets = ProfileUtils.get_profile_presets()
+
+	for i = 1, #profile_presets do
+		if profile_presets[i].id == profile_preset_id then
+			table.remove(profile_presets, i)
+
+			if profile_preset_id == ProfileUtils.get_active_profile_preset_id() then
+				ProfileUtils.save_active_profile_preset_id(nil)
+			end
+
+			break
+		end
+	end
+
 	Managers.save:queue_save()
 end
 
@@ -774,12 +796,13 @@ ProfileUtils.save_item_id_for_profile_preset = function (profile_preset_id, slot
 	end
 
 	local profile_presets = character_data.profile_presets
+	local profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
 
-	if not profile_presets[profile_preset_id] then
-		profile_presets[profile_preset_id] = {}
+	if not profile_preset then
+		profile_presets[#profile_presets + 1] = {}
 	end
 
-	local profile_preset = profile_presets[profile_preset_id]
+	profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
 
 	if not profile_preset.loadout then
 		profile_preset.loadout = {}
@@ -803,19 +826,115 @@ ProfileUtils.save_talent_id_for_profile_preset = function (profile_preset_id, ta
 	end
 
 	local profile_presets = character_data.profile_presets
+	local profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
 
-	if not profile_presets[profile_preset_id] then
-		profile_presets[profile_preset_id] = {}
+	if not profile_preset then
+		profile_presets[#profile_presets + 1] = {}
 	end
 
-	local profile_preset = profile_presets[profile_preset_id]
+	profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
+
+	if not profile_preset.talents then
+		profile_preset.talents = {}
+	end
+
+	Managers.save:queue_save()
+end
+
+ProfileUtils.save_talent_nodes_for_profile_preset = function (profile_preset_id, talent_nodes, talents_version)
+	local character_data = _character_save_data()
+
+	if not character_data then
+		return
+	end
+
+	if not character_data.profile_presets then
+		character_data.profile_presets = {}
+
+		return
+	end
+
+	local profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
+
+	if not profile_preset then
+		return
+	end
+
+	if not profile_preset.talents then
+		profile_preset.talents = {}
+	elseif profile_preset.talents ~= talent_nodes then
+		table.clear(profile_preset.talents)
+	end
+
+	local talents = profile_preset.talents
+
+	for talent_node_name, points_spent in pairs(talent_nodes) do
+		talents[talent_node_name] = points_spent and points_spent > 0 and points_spent or nil
+	end
+
+	profile_preset.talents_version = talents_version
+
+	Managers.save:queue_save()
+end
+
+ProfileUtils.save_talent_node_for_profile_preset = function (profile_preset_id, talent_node_name, points_spent)
+	local character_data = _character_save_data()
+
+	if not character_data then
+		return
+	end
+
+	if points_spent and type(points_spent) ~= "number" then
+		return
+	end
+
+	if not character_data.profile_presets then
+		character_data.profile_presets = {}
+
+		return
+	end
+
+	local profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
+
+	if not profile_preset then
+		return
+	end
 
 	if not profile_preset.talents then
 		profile_preset.talents = {}
 	end
 
 	local talents = profile_preset.talents
-	talents[talent_name] = activated
+	talents[talent_node_name] = points_spent and points_spent > 0 and points_spent or nil
+
+	Managers.save:queue_save()
+end
+
+ProfileUtils.clear_all_talent_nodes_for_profile_preset = function (profile_preset_id)
+	local character_data = _character_save_data()
+
+	if not character_data then
+		return
+	end
+
+	if not character_data.profile_presets then
+		character_data.profile_presets = {}
+	end
+
+	local profile_presets = character_data.profile_presets
+	local profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
+
+	if not profile_preset then
+		profile_presets[#profile_presets + 1] = {}
+	end
+
+	profile_preset = ProfileUtils.get_profile_preset(profile_preset_id)
+
+	if not profile_preset.talents then
+		profile_preset.talents = {}
+	else
+		table.clear(profile_preset.talents)
+	end
 
 	Managers.save:queue_save()
 end
@@ -833,7 +952,17 @@ ProfileUtils.get_profile_preset = function (profile_preset_id)
 		return
 	end
 
-	local profile_preset = profile_presets and profile_presets[profile_preset_id]
+	local profile_preset = nil
+
+	for i = 1, #profile_presets do
+		local preset = profile_presets[i]
+
+		if preset.id == profile_preset_id then
+			profile_preset = preset
+
+			break
+		end
+	end
 
 	return profile_preset
 end
@@ -852,6 +981,33 @@ ProfileUtils.get_profile_presets = function ()
 		character_data.profile_presets = profile_presets
 
 		Managers.save:queue_save()
+	end
+
+	return profile_presets
+end
+
+ProfileUtils.verify_saved_profile_presets_talents_version = function (character_id, archetype_name)
+	local archetype = Archetypes[archetype_name]
+	local talent_layout_file_path = archetype.talent_layout_file_path
+	local talent_layout = require(talent_layout_file_path)
+	local talent_layout_version = talent_layout.version
+	local save_manager = Managers.save
+	local character_data = character_id and save_manager and save_manager:character_data(character_id)
+
+	if not character_data then
+		return
+	end
+
+	local profile_presets = character_data.profile_presets
+
+	if profile_presets then
+		for i = 1, #profile_presets do
+			local preset = profile_presets[i]
+
+			if preset.talents_version and preset.talents_version ~= talent_layout_version then
+				-- Nothing
+			end
+		end
 	end
 
 	return profile_presets

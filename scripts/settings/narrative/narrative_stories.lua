@@ -359,7 +359,12 @@ local narrative = {
 		},
 		level_unlock_cosmetic_store_popup = {
 			requirement = level_at_least(PlayerProgressionUnlocks.cosmetics_vendor)
-		}
+		},
+		hli_mission_board_viewed = {},
+		hli_barbershop_viewed = {},
+		hli_contracts_viewed = {},
+		hli_crafting_station_underground_viewed = {},
+		hli_gun_shop_viewed = {}
 	}
 }
 

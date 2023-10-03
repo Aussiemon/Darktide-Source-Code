@@ -640,9 +640,11 @@ TelemetryEvents.open_view = function (self, view_name)
 	end
 
 	local event = self:_create_event("open_view")
+	local active_views = Managers.ui:active_views()
 
 	event:set_data({
-		name = view_name
+		name = view_name,
+		active_views = active_views
 	})
 	self._manager:register_event(event)
 end
@@ -653,9 +655,11 @@ TelemetryEvents.close_view = function (self, view_name)
 	end
 
 	local event = self:_create_event("close_view")
+	local active_views = Managers.ui:active_views()
 
 	event:set_data({
-		name = view_name
+		name = view_name,
+		active_views = active_views
 	})
 	self._manager:register_event(event)
 end
@@ -798,13 +802,25 @@ TelemetryEvents.smart_tag_report = function (self, reports)
 	end
 end
 
-TelemetryEvents.vote_completed = function (self, name, result, votes)
+TelemetryEvents.vote_completed = function (self, name, result, votes, params)
 	local event = self:_create_event("vote_completed")
+	local kick_peer_id = params.kick_peer_id
+	local players_at_peer = kick_peer_id and Managers.player:players_at_peer(kick_peer_id)
+	local kicked_accounts = nil
+
+	if kick_peer_id and players_at_peer then
+		kicked_accounts = {}
+
+		for _, player in pairs(players_at_peer) do
+			kicked_accounts[#kicked_accounts + 1] = player:account_id()
+		end
+	end
 
 	event:set_data({
 		name = name,
 		result = result,
-		votes = votes
+		votes = votes,
+		kicked_accounts = kicked_accounts
 	})
 	self._manager:register_event(event)
 end
@@ -854,6 +870,13 @@ TelemetryEvents.fixed_update_missed_inputs_report = function (self, reports)
 		})
 		self._manager:register_event(event)
 	end
+end
+
+TelemetryEvents.xbox_privileges = function (self, privileges)
+	local event = self:_create_event("xbox_privileges")
+
+	event:set_data(privileges)
+	self._manager:register_event(event)
 end
 
 return TelemetryEvents

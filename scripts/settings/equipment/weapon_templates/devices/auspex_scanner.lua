@@ -17,12 +17,11 @@ local weapon_template = {
 	},
 	actions = {
 		action_unwield = {
-			continue_sprinting = true,
 			allowed_during_sprint = true,
+			anim_event = "unequip",
 			start_input = "wield",
 			uninterruptible = true,
 			kind = "unwield",
-			anim_event = "unequip",
 			total_time = 0,
 			allowed_chain_actions = {}
 		},
@@ -34,6 +33,7 @@ local weapon_template = {
 			total_time = 0.1
 		}
 	},
+	ammo_template = "no_ammo",
 	keywords = {
 		"devices"
 	},
@@ -56,7 +56,29 @@ local weapon_template = {
 	look_delta_template = "auspex_scanner",
 	hud_icon = "content/ui/materials/icons/pickups/default",
 	require_minigame = true,
-	not_player_wieldable = true
+	not_player_wieldable = true,
+	action_move_screen_ui_validation = function (wielded_slot_id, item, current_action, current_action_name, player)
+		local player_unit = player.player_unit
+
+		if not player_unit then
+			return false
+		end
+
+		local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
+		local minigame_character_state_component = unit_data_extension:read_component("minigame_character_state")
+		local is_level_unit = true
+		local level_unit_id = minigame_character_state_component.interface_unit_id
+		local interface_unit = Managers.state.unit_spawner:unit(level_unit_id, is_level_unit)
+
+		if not interface_unit then
+			return false
+		end
+
+		local minigame_extension = interface_unit and ScriptUnit.has_extension(interface_unit, "minigame_system")
+		local minigame = minigame_extension:minigame()
+
+		return minigame and minigame:uses_joystick()
+	end
 }
 
 return weapon_template

@@ -48,6 +48,21 @@ SharedGibbingTemplates.vfx.warp_stump = {
 	node_name = "fx_blood",
 	particle_effect = "content/fx/particles/impacts/flesh/gib_splatter_force_01"
 }
+SharedGibbingTemplates.vfx.warp_gib_lightning = {
+	particle_effect = "content/fx/particles/impacts/flesh/gib_splatter_protectorate_chainlightning_01"
+}
+SharedGibbingTemplates.vfx.warp_stump_lightning = {
+	particle_effect = "content/fx/particles/impacts/flesh/protectorate_chainlightning_gib_torso_small_01",
+	linked = false
+}
+SharedGibbingTemplates.vfx.warp_gib_shard = {
+	node_name = "fx_blood",
+	particle_effect = "content/fx/particles/impacts/flesh/gib_splatter_force_01"
+}
+SharedGibbingTemplates.vfx.warp_stump_shard = {
+	node_name = "fx_blood",
+	particle_effect = "content/fx/particles/impacts/flesh/gib_splatter_force_01"
+}
 SharedGibbingTemplates.vfx.blood_splatter = {
 	particle_effect = "content/fx/particles/impacts/flesh/blood_splatter_gib_torso_small_01",
 	linked = false
@@ -57,6 +72,12 @@ SharedGibbingTemplates.vfx.poxwalker_splatter = {
 	linked = false
 }
 SharedGibbingTemplates.sfx = {
+	warp_gib_lightning = {
+		sound_event = "wwise/events/weapon/play_psyker_lightning_bolt_impact_death"
+	},
+	warp_stump_lightning = {
+		sound_event = "wwise/events/weapon/play_psyker_lightning_bolt_impact_death"
+	},
 	dismember_head_off = {
 		sound_event = "wwise/events/weapon/play_combat_dismember_head_off"
 	},

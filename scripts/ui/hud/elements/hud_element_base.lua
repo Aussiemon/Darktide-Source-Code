@@ -240,6 +240,17 @@ HudElementBase._play_3d_sound = function (self, event_name, position)
 end
 
 HudElementBase.destroy = function (self, ui_renderer)
+	if ui_renderer then
+		local widgets = self._widgets
+		local num_widgets = #widgets
+
+		for i = 1, num_widgets do
+			local widget = widgets[i]
+
+			UIWidget.destroy(ui_renderer, widget)
+		end
+	end
+
 	self:_unregister_events()
 
 	self.destroyed = true

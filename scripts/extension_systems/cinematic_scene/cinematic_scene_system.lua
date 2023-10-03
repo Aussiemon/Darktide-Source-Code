@@ -40,7 +40,13 @@ local CINEMATIC_VIEWS = {
 	[CINEMATIC_NAMES.path_of_trust_07] = "cutscene_view",
 	[CINEMATIC_NAMES.path_of_trust_08] = "cutscene_view",
 	[CINEMATIC_NAMES.path_of_trust_09] = "cutscene_view",
-	[CINEMATIC_NAMES.traitor_captain_intro] = "cutscene_view"
+	[CINEMATIC_NAMES.traitor_captain_intro] = "cutscene_view",
+	[CINEMATIC_NAMES.hub_location_intro_barber] = "cutscene_view",
+	[CINEMATIC_NAMES.hub_location_intro_mission_board] = "cutscene_view",
+	[CINEMATIC_NAMES.hub_location_intro_training_grounds] = "cutscene_view",
+	[CINEMATIC_NAMES.hub_location_intro_contracts] = "cutscene_view",
+	[CINEMATIC_NAMES.hub_location_intro_crafting] = "cutscene_view",
+	[CINEMATIC_NAMES.hub_location_intro_gun_shop] = "cutscene_view"
 }
 
 local function get_origin_level_names(cinematic_name)

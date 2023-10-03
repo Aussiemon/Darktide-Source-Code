@@ -1,17 +1,18 @@
 local ArmorSettings = require("scripts/settings/damage/armor_settings")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ImpactFxInjector = require("scripts/settings/damage/impact_fx_injector")
+local MaterialQuerySettings = require("scripts/settings/material_query_settings")
 local SurfaceMaterialSettings = require("scripts/settings/surface_material_settings")
 local armor_hit_types = ArmorSettings.hit_types
 local damage_types = DamageSettings.damage_types
 local surface_hit_types = SurfaceMaterialSettings.hit_types
-local surface_types = SurfaceMaterialSettings.surface_types
+local surface_types = table.enum(unpack(MaterialQuerySettings.surface_materials))
 local EMPTY_TABLE = {}
 local damage_type_fx_configs = {}
 local surface_material_fx_configs = {}
 
-local function _include_impact_fx_configs(target_table, types, path)
-	for damage_type_or_surface_material, _ in pairs(types) do
+local function _include_impact_fx_configs(target_table, damage_or_surface_types, path)
+	for damage_type_or_surface_material, _ in pairs(damage_or_surface_types) do
 		local full_path = string.format(path, damage_type_or_surface_material)
 		local exists = Application.can_get_resource("lua", full_path)
 
@@ -237,14 +238,15 @@ local function _create_armor_impact_fx_templates(lookup_table, templates_table, 
 end
 
 local function _create_surface_impact_fx_templates(lookup_table, templates_table, damage_type, damage_type_fx_config)
-	local surface_damage_fx_config = damage_type_fx_config.surface or EMPTY_TABLE
+	local surface_fx = damage_type_fx_config.surface or EMPTY_TABLE
 	local surface_decal = damage_type_fx_config.surface_decal or EMPTY_TABLE
 
 	for material_type, surface_material_fx_config in pairs(surface_material_fx_configs) do
+		local surface_material_fx = surface_fx[material_type] or EMPTY_TABLE
 		local surface_material_decal = surface_decal[material_type] or EMPTY_TABLE
 
 		for hit_type, _ in pairs(surface_hit_types) do
-			local damage_fx = surface_damage_fx_config[hit_type]
+			local damage_fx = surface_material_fx[hit_type]
 			local material_fx = surface_material_fx_config[hit_type]
 			local decal = surface_material_decal[hit_type]
 			local fx_table = _create_surface_impact_fx_entry(material_type, damage_fx, material_fx, decal)

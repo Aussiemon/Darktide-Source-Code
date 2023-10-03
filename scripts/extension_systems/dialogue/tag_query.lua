@@ -96,6 +96,11 @@ TagQuery.OP = TagQuery.OP or {
 		__tostring = function ()
 			return "SET_INTERSECTS"
 		end
+	}),
+	SET_NOT_INTERSECTS = setmetatable({}, {
+		__tostring = function ()
+			return "SET_NOT_INTERSECTS"
+		end
 	})
 }
 

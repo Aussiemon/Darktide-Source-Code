@@ -21,7 +21,10 @@ local TerrorEventNodes = {
 	},
 	delay = {
 		init = function (node, event, t)
-			event.scratchpad.ends_at = t + node.duration
+			local duration = node.duration
+			local difficulty_scale = Managers.state.difficulty:get_table_entry_by_resistance(MinionDifficultySettings.terror_event_duration_modifier)
+			duration = duration * difficulty_scale
+			event.scratchpad.ends_at = t + duration
 		end,
 		update = function (node, scratchpad, t, dt)
 			if scratchpad.ends_at < t then
@@ -140,6 +143,32 @@ local TerrorEventNodes = {
 			return string.format("%q from spawners %q", node.sound_event_name, node.spawner_group)
 		end
 	},
+	set_specials_pacing_spawner_groups = {
+		init = function (node, event, t)
+			local pacing_manager = Managers.state.pacing
+
+			pacing_manager:set_specials_pacing_spawner_groups(node.spawner_groups)
+		end,
+		update = function (node, scratchpad, t, dt)
+			return true
+		end,
+		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
+			return string.format("set_specials_pacing_spawner_groups %q", node.spawner_group)
+		end
+	},
+	reset_specials_pacing_spawner_groups = {
+		init = function (node, event, t)
+			local pacing_manager = Managers.state.pacing
+
+			pacing_manager:set_specials_pacing_spawner_groups(nil)
+		end,
+		update = function (node, scratchpad, t, dt)
+			return true
+		end,
+		debug_text = function (node, is_completed, is_running, scratchpad, t, dt)
+			return string.format("reset_specials_pacing_spawner_groups")
+		end
+	},
 	control_pacing_spawns = {
 		init = function (node, event, t)
 			local pacing_manager = Managers.state.pacing
@@ -219,12 +248,21 @@ local GROUP_SOUNDS_BY_BREED_NAME = {
 		start = "wwise/events/minions/play_minion_terror_event_group_sfx_poxwalkers"
 	}
 }
+local MAX_TERROR_EVENT_THRESHOLD = 100
+local MAX_POINTS = 60
 TerrorEventNodes.spawn_by_points = {
 	init = function (node, event, t)
 		event.scratchpad.spawned_minion_data = event.spawned_minion_data
 	end,
 	update = function (node, scratchpad, t, dt)
 		local terror_events_allowed = Managers.state.pacing:spawn_type_allowed("terror_events")
+
+		if not terror_events_allowed then
+			return false
+		end
+
+		local total_minions_spawned = Managers.state.minion_spawn:num_spawned_minions()
+		terror_events_allowed = total_minions_spawned < MAX_TERROR_EVENT_THRESHOLD
 
 		if not terror_events_allowed then
 			return false
@@ -258,7 +296,7 @@ TerrorEventNodes.spawn_by_points = {
 			end
 
 			local difficulty_scale = Managers.state.difficulty:get_table_entry_by_resistance(MinionDifficultySettings.terror_event_point_costs)
-			local points = node.points * difficulty_scale
+			local points = math.min(node.points * difficulty_scale * Managers.state.terror_event:get_terror_event_point_modifier(), MAX_POINTS)
 			local spawner_group = node.spawner_group
 			local proximity_spawners = node.proximity_spawners
 			local limit_spawners = node.limit_spawners

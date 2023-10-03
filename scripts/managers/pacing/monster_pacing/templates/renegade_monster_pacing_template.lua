@@ -197,6 +197,7 @@ local monster_pacing_template = {
 			}
 		},
 		{
+			allow_witches_spawned_with_monsters = true,
 			num_spawns = {
 				monsters = {
 					1,
@@ -248,6 +249,7 @@ local monster_pacing_template = {
 			}
 		},
 		{
+			allow_witches_spawned_with_monsters = true,
 			num_spawns = {
 				monsters = {
 					1,

@@ -118,17 +118,22 @@ ConnectionManager.default_game_udp_cert = function (self)
 end
 
 ConnectionManager.initialize_wan_client = function (self, peer_id)
-	if peer_id then
-		self._client = Network.init_wan_client(self.config_file_name, peer_id, self.oodle_net_file_name)
+	peer_id = peer_id or WAN_RANDOM_PEER_ID
+	local client = Network.init_wan_client(self.config_file_name, peer_id, self.oodle_net_file_name)
+
+	if client then
+		self._client = client
 
 		Log.info("ConnectionManager", "Initialized wan_client with peer_id %s", Network.peer_id())
+
+		self._client_destructor = Network.shutdown_lan_client
+
+		return true
 	else
-		self._client = Network.init_wan_client(self.config_file_name, WAN_RANDOM_PEER_ID, self.oodle_net_file_name)
+		Log.error("ConnectionManager", "Failed initializing wan_client")
 
-		Log.info("ConnectionManager", "Initializing wan_client with random peer_id %s", Network.peer_id())
+		return false
 	end
-
-	self._client_destructor = Network.shutdown_lan_client
 end
 
 ConnectionManager.destroy_wan_client = function (self)
@@ -190,6 +195,16 @@ ConnectionManager.max_members = function (self)
 	elseif self:is_client() then
 		return self._connection_client:max_members()
 	end
+end
+
+ConnectionManager.tick_rate = function (self)
+	if self:is_host() then
+		return self._connection_host:tick_rate()
+	elseif self:is_client() then
+		return self._connection_client:tick_rate()
+	end
+
+	ferror("Asked for tick_rate before we have network context.")
 end
 
 ConnectionManager.update = function (self, dt)
@@ -267,6 +282,18 @@ end
 ConnectionManager.accelerated_endpoint = function (self)
 	if self:is_client() then
 		return self._connection_client:accelerated_endpoint()
+	end
+end
+
+ConnectionManager.matched_game_session_id = function (self)
+	if self:is_client() then
+		return self._connection_client:matched_game_session_id()
+	end
+end
+
+ConnectionManager.initial_party_id = function (self)
+	if self:is_client() then
+		return self._connection_client:initial_party_id()
 	end
 end
 
@@ -627,7 +654,7 @@ ConnectionManager._peer_disconnected = function (self, channel_id, peer_id, disc
 end
 
 ConnectionManager._joined_host = function (self, channel_id, peer_id, host_type)
-	_info("Joined host; channel(%d), peer(%s), host_type(%s)", channel_id, peer_id, host_type)
+	_info("Joined host channel(%d), peer(%s), host_type(%s)", channel_id, peer_id, host_type)
 	self._connection_client_event_object:joined_host(channel_id, peer_id, host_type)
 	self._connection_client:register_profile_synchronizer()
 end

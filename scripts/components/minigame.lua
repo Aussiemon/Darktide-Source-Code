@@ -16,6 +16,10 @@ Minigame.editor_init = function (self, unit)
 	self:enable(unit)
 end
 
+Minigame.editor_validate = function (self, unit)
+	return true, ""
+end
+
 Minigame.enable = function (self, unit)
 	return
 end
@@ -35,11 +39,13 @@ Minigame.component_data = {
 		ui_name = "Minigame Type",
 		options_keys = {
 			"None",
+			"Default",
 			"Scan",
 			"Decode Symbols"
 		},
 		options_values = {
 			"none",
+			"default",
 			"scan",
 			"decode_symbols"
 		}

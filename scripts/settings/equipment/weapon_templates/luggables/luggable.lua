@@ -98,7 +98,6 @@ table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.a
 
 weapon_template.actions = {
 	action_unwield = {
-		continue_sprinting = true,
 		allowed_during_sprint = true,
 		start_input = "wield",
 		uninterruptible = true,
@@ -159,7 +158,7 @@ weapon_template.actions = {
 		}
 	},
 	action_throw = {
-		kind = "throw",
+		kind = "throw_luggable",
 		throw_time = 0.32,
 		start_input = "throw",
 		uninterruptible = true,
@@ -275,7 +274,7 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "none",
+		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
 		total_time = math.huge

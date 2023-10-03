@@ -10,7 +10,7 @@ SingleplayerSessionBoot.init = function (self, event_object)
 
 	local connection_manager = Managers.connection
 	local event_delegate = connection_manager:network_event_delegate()
-	self._connection_singleplayer = ConnectionSingleplayer:new(event_delegate, HOST_TYPES.singleplay)
+	self._connection_singleplayer = ConnectionSingleplayer:new(event_delegate, HOST_TYPES.singleplay, GameParameters.tick_rate)
 
 	self:_set_state(STATES.ready)
 end

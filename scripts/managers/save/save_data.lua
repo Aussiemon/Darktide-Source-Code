@@ -1,18 +1,35 @@
 local SaveData = class("SaveData")
 local default_hold = PLATFORM == "win32"
 SaveData.default_account_data = {
-	crossplay_accepted = false,
 	latest_backend_migration_index = -1,
+	crossplay_accepted = false,
+	profile_preset_intro_presented = false,
 	input_settings = {
-		controller_layout = "default",
+		weapon_switch_scroll_wrap = true,
+		mouse_look_scale = 1,
 		controller_look_scale = 1,
+		wield_previous_slot_after_grenade = true,
+		mouse_look_scale_ranged_alternate_fire = 1,
+		mouse_look_scale_ranged = 1,
+		controller_look_scale_ranged = 1,
+		controller_response_curve_strength = 50,
+		controller_layout = "default",
 		controller_aim_assist = "new_full",
+		controller_look_dead_zone = 0.1,
+		controller_response_curve_ranged = "linear",
+		controller_invert_look_y = false,
+		rumble_enabled = true,
+		rumble_intensity = 50,
+		rumble_intensity_gameplay = 100,
+		controller_look_scale_ranged_alternate_fire = 1,
+		controller_response_curve_strength_ranged = 50,
+		controller_response_curve = "linear",
 		controller_enable_acceleration = true,
+		rumble_intensity_immersive = 100,
 		mouse_invert_look_y = false,
 		com_wheel_delay = 0.3,
-		controller_look_dead_zone = 0.1,
-		mouse_look_scale = 1,
-		controller_invert_look_y = false,
+		always_dodge = false,
+		toggle_ads = false,
 		stationary_dodge = false,
 		diagonal_forward_dodge = true,
 		hold_to_sprint = default_hold,
@@ -22,32 +39,32 @@ SaveData.default_account_data = {
 		subtitle_enabled = true,
 		news_enabled = true,
 		subtitle_font_size = 32,
-		profanity_filter_enabled = true,
+		forced_dot_crosshair_enabled = false,
 		subtitle_text_opacity = 100,
+		input_hints_enabled = true,
 		subtitle_speaker_enabled = true,
 		show_crafting_pickup_notification = true,
 		portrait_rendering_enabled = true,
+		profanity_filter_enabled = true,
 		camera_movement_offset_sway_intensity = 100,
 		subtitle_background_opacity = 60,
-		warp_charge_effects_intensity = 100
+		warp_charge_effects_intensity = 100,
+		flash_taskbar_enabled = IS_WINDOWS
 	},
 	completed_profile_prologues = {},
 	viewed_news_slides = {},
 	key_bindings = {},
-	character_data = {}
+	character_data = {},
+	new_account_items_by_archetype = {}
 }
 SaveData.default_character_data = {
+	profile_presets_version = 3,
 	new_items = {},
 	new_items_by_type = {},
 	new_item_notifications = {},
 	new_completed_contracts = {},
 	new_unlocked_talent_groups = {},
-	profile_presets = {
-		intro_presented = true,
-		loadout = {},
-		talents = {}
-	},
-	favorite_items = {}
+	profile_presets = {}
 }
 
 SaveData.init = function (self)
@@ -70,6 +87,26 @@ SaveData.populate = function (self, save_data)
 				for account_id, account_data in pairs(data.account_data) do
 					local new_data = table.clone(SaveData.default_account_data)
 					data.account_data[account_id] = table.merge_recursive(new_data, account_data)
+					local character_data = data.account_data[account_id].character_data
+
+					if character_data then
+						local default_character_data = SaveData.default_character_data
+
+						for character_id, character_id_data in pairs(character_data) do
+							local incorrect_profile_presets_version = character_id_data.profile_presets_version ~= default_character_data.profile_presets_version
+
+							if incorrect_profile_presets_version then
+								character_id_data.profile_presets_version = default_character_data.profile_presets_version
+								character_id_data.active_profile_preset_id = nil
+
+								if character_id_data.profile_presets then
+									table.clear(character_id_data.profile_presets)
+								else
+									character_id_data.profile_presets = {}
+								end
+							end
+						end
+					end
 				end
 			else
 				for account_id, account_data in pairs(data.account_data) do

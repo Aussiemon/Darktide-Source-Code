@@ -17,6 +17,19 @@ ItemGridViewBase.init = function (self, definitions, settings, context)
 		self._wallet_type = context.wallet_type
 	end
 
+	local player = context.preview_player or self:_player()
+	self._preview_player = player
+	self._presentation_profile = table.clone_instance(self._preview_player:profile())
+
+	if context.preview_loadout then
+		self._presentation_profile.loadout = table.clone_instance(context.preview_loadout)
+	end
+
+	if context.character_id then
+		self._presentation_profile.character_id = context.character_id
+	end
+
+	self._is_own_player = self._preview_player == Managers.player:local_player(1)
 	local merged_definitions = table.clone(Definitions)
 
 	if definitions then
@@ -972,10 +985,9 @@ ItemGridViewBase.cb_on_inspect_pressed = function (self)
 			local context = nil
 
 			if item_type == "WEAPON_SKIN" then
-				local player = self:_player()
-				local player_profile = player:profile()
 				local include_skin_item_texts = true
 				local visual_item = ItemUtils.weapon_skin_preview_item(previewed_item, include_skin_item_texts)
+				local player_profile = self._presentation_profile
 				local is_item_supported_on_played_character = false
 
 				if visual_item.archetypes and not table.is_empty(visual_item.archetypes) then
@@ -993,7 +1005,7 @@ ItemGridViewBase.cb_on_inspect_pressed = function (self)
 				end
 
 				local preffered_gender = player_profile and player_profile.gender
-				local profile = is_item_supported_on_played_character and table.clone_instance(player_profile) or ItemUtils.create_mannequin_profile_by_item(visual_item, preffered_gender)
+				local profile = is_item_supported_on_played_character and player_profile or ItemUtils.create_mannequin_profile_by_item(visual_item, preffered_gender)
 				local slots = visual_item.slots
 				local slot_name = slots[1]
 				profile.loadout[slot_name] = visual_item
@@ -1012,8 +1024,7 @@ ItemGridViewBase.cb_on_inspect_pressed = function (self)
 					preview_item = visual_item
 				}
 			else
-				local player = self:_player()
-				local profile = player:profile()
+				local profile = self._presentation_profile
 				local is_item_supported_on_played_character = false
 
 				if previewed_item.archetypes and not table.is_empty(previewed_item.archetypes) then

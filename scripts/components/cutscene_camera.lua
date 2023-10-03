@@ -18,6 +18,38 @@ CutsceneCamera.init = function (self, unit)
 	self._cinematic_category = self:get_data(unit, "cinematic_category")
 end
 
+CutsceneCamera.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if not Unit.has_node(unit, "Enabled") then
+		error_message = error_message .. "\nmissing unit node 'Enabled'"
+		success = false
+	end
+
+	if not Unit.has_node(unit, "Distance") then
+		error_message = error_message .. "\nmissing unit node 'Distance'"
+		success = false
+	end
+
+	if not Unit.has_node(unit, "Region") then
+		error_message = error_message .. "\nmissing unit node 'Region'"
+		success = false
+	end
+
+	if not Unit.has_node(unit, "Padding") then
+		error_message = error_message .. "\nmissing unit node 'Padding'"
+		success = false
+	end
+
+	if not Unit.has_node(unit, "Scale") then
+		error_message = error_message .. "\nmissing unit node 'Scale'"
+		success = false
+	end
+
+	return success, error_message
+end
+
 CutsceneCamera.editor_world_transform_modified = function (self, unit)
 	local dof_enabled = math.ceil(Unit.local_position(unit, Unit.node(unit, "Enabled")).y)
 
@@ -97,7 +129,14 @@ CutsceneCamera.component_data = {
 			"Path of Trust 08 Corridor 01",
 			"Path of Trust 08 Part 02",
 			"Path of Trust 09 Office",
-			"Traitor Captain Intro"
+			"Traitor Captain Intro",
+			"Hub Location Intro Barber",
+			"Hub Location Intro Mission Board Part 01",
+			"Hub Location Intro Mission Board Part 02",
+			"Hub Location Intro Training Grounds",
+			"Hub Location Intro Contracts",
+			"Hub Location Intro Crafting",
+			"Hub Location Intro Gun Shop"
 		},
 		options_values = {
 			"none",
@@ -143,7 +182,14 @@ CutsceneCamera.component_data = {
 			"path_of_trust_08_corridor_01",
 			"path_of_trust_08_part_02",
 			"path_of_trust_09_office",
-			"traitor_captain_intro"
+			"traitor_captain_intro",
+			"hub_location_intro_barber",
+			"hub_location_intro_mission_board_part_01",
+			"hub_location_intro_mission_board_part_02",
+			"hub_location_intro_training_grounds",
+			"hub_location_intro_contracts",
+			"hub_location_intro_crafting",
+			"hub_location_intro_gun_shop"
 		}
 	}
 }

@@ -76,28 +76,6 @@ local scenegraph_definition = {
 local widget_definitions = {
 	background = UIWidget.create_definition({
 		{
-			value = "content/ui/materials/frames/screen/social_01_upper",
-			scenegraph_id = "corner_top_left",
-			pass_type = "texture"
-		},
-		{
-			value = "content/ui/materials/frames/screen/social_01_upper",
-			pass_type = "texture_uv",
-			scenegraph_id = "corner_top_right",
-			style = {
-				uvs = {
-					{
-						1,
-						0
-					},
-					{
-						0,
-						1
-					}
-				}
-			}
-		},
-		{
 			value = "content/ui/materials/frames/screen/social_01_lower",
 			scenegraph_id = "corner_bottom_left",
 			pass_type = "texture"
@@ -122,6 +100,7 @@ local widget_definitions = {
 	}, "screen")
 }
 local tab_bar_params = {
+	hide_tabs = true,
 	layer = 10,
 	tabs_params = {
 		{
@@ -139,10 +118,13 @@ local input_legend_params = {
 			alignment = "left_alignment"
 		},
 		{
-			input_action = "hotkey_menu_special_2",
-			on_pressed_callback = "cb_find_player_pressed",
+			input_action = "hotkey_menu_special_1",
 			display_name = "loc_social_menu_find_player",
-			alignment = "right_alignment"
+			alignment = "right_alignment",
+			on_pressed_callback = "cb_find_player_pressed",
+			visibility_function = function (parent)
+				return not parent._active_view_instance or not parent._active_view_instance._popup_menu
+			end
 		}
 	}
 }

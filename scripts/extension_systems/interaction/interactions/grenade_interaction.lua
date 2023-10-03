@@ -1,8 +1,11 @@
 require("scripts/extension_systems/interaction/interactions/pickup_interaction")
 
 local Pickups = require("scripts/settings/pickup/pickups")
+local SpecialRulesSetting = require("scripts/settings/ability/special_rules_settings")
 local GrenadeInteraction = class("GrenadeInteraction", "PickupInteraction")
 local ABILITY_TYPE = "grenade_ability"
+local special_rules = SpecialRulesSetting.special_rules
+local _grenades_disabled = nil
 
 GrenadeInteraction.stop = function (self, world, interactor_unit, unit_data_component, t, result, interactor_is_server)
 	if interactor_is_server then
@@ -34,6 +37,10 @@ GrenadeInteraction.interactor_condition_func = function (self, interactor_unit, 
 		return false
 	end
 
+	if _grenades_disabled(interactor_unit) then
+		return false
+	end
+
 	local max_grenade_charges = ability_extension:max_ability_charges(ABILITY_TYPE)
 	local remaining_grenade_charges = ability_extension:remaining_ability_charges(ABILITY_TYPE)
 	local full_charges = max_grenade_charges <= remaining_grenade_charges
@@ -48,10 +55,19 @@ GrenadeInteraction.hud_block_text = function (self, interactor_unit, interactee_
 		return "loc_action_interaction_inactive_no_grenades"
 	end
 
+	if _grenades_disabled(interactor_unit) then
+		return "loc_action_interaction_inactive_no_grenades"
+	end
+
 	local ability_equipped = ability_extension:ability_is_equipped(ABILITY_TYPE)
+
+	if not ability_equipped then
+		return "loc_action_interaction_inactive_no_grenades"
+	end
+
 	local max_grenade_charges = ability_extension:max_ability_charges(ABILITY_TYPE)
 
-	if not ability_equipped or max_grenade_charges <= 0 then
+	if max_grenade_charges <= 0 then
 		return "loc_action_interaction_inactive_no_grenades"
 	end
 
@@ -63,6 +79,16 @@ GrenadeInteraction.hud_block_text = function (self, interactor_unit, interactee_
 	end
 
 	return GrenadeInteraction.super.hud_block_text(self, interactor_unit, interactee_unit, interactable_actor_node_index)
+end
+
+function _grenades_disabled(interactor_unit)
+	local specialization_extension = ScriptUnit.has_extension(interactor_unit, "specialization_system")
+
+	if specialization_extension then
+		return specialization_extension:has_special_rule(special_rules.disable_grenade_pickups)
+	end
+
+	return false
 end
 
 return GrenadeInteraction

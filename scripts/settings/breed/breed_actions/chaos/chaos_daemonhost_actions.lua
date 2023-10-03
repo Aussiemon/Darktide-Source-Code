@@ -1,10 +1,10 @@
-local DaemonhostSettings = require("scripts/settings/specials/daemonhost_settings")
+local ChaosDaemonhostSettings = require("scripts/settings/monster/chaos_daemonhost_settings")
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local EffectTemplates = require("scripts/settings/fx/effect_templates")
 local UtilityConsiderations = require("scripts/extension_systems/behavior/utility_considerations")
 local damage_types = DamageSettings.damage_types
-local STAGES = DaemonhostSettings.stages
+local STAGES = ChaosDaemonhostSettings.stages
 local action_data = {
 	name = "chaos_daemonhost",
 	idle = {
@@ -696,6 +696,23 @@ local action_data = {
 				}
 			},
 			sticky = {
+				fwd = {
+					"stagger_01"
+				},
+				bwd = {
+					"stagger_01"
+				},
+				left = {
+					"stagger_01"
+				},
+				right = {
+					"stagger_01"
+				},
+				dwn = {
+					"stagger_01"
+				}
+			},
+			electrocuted = {
 				fwd = {
 					"stagger_01"
 				},

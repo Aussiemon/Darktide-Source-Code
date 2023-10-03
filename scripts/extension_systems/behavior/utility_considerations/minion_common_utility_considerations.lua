@@ -707,6 +707,13 @@ local considerations = {
 			blackboard_component = "perception",
 			is_condition = true
 		}
+	},
+	has_line_of_sight = {
+		has_line_of_sight = {
+			component_field = "has_line_of_sight",
+			blackboard_component = "perception",
+			is_condition = true
+		}
 	}
 }
 

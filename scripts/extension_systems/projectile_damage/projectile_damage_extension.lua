@@ -23,6 +23,7 @@ local armor_types = ArmorSettings.types
 local attack_results = AttackSettings.attack_results
 local attack_types = AttackSettings.attack_types
 local buff_keywords = BuffSettings.keywords
+local locomotion_states = ProjectileLocomotionSettings.states
 local projectile_impact_results = ProjectileLocomotionSettings.impact_results
 local surface_hit_types = SurfaceMaterialSettings.hit_types
 local ProjectileDamageExtension = class("ProjectileDamageExtension")
@@ -44,7 +45,8 @@ ProjectileDamageExtension.init = function (self, extension_init_context, unit, e
 	self._is_critical_strike = extension_init_data.is_critical_strike
 	self._origin_item_slot = extension_init_data.origin_item_slot
 	self._weapon_item_or_nil = extension_init_data.weapon_item_or_nil
-	self._fuse_override_time = extension_init_data.fuse_override_time
+	self._owner_side_or_nil = extension_init_data.owner_side_or_nil
+	self._fuse_override_time_or_nil = extension_init_data.fuse_override_time_or_nil
 	local world = extension_init_context.world
 	self._world = world
 	self._physics_world = World.physics_world(world)
@@ -63,7 +65,7 @@ ProjectileDamageExtension.init = function (self, extension_init_context, unit, e
 	local projectile_template = self._projectile_template
 	local damage_settings = projectile_template.damage
 	local fuse_damage_settings = damage_settings and damage_settings.fuse
-	self._fuse_started = not fuse_damage_settings.impact_triggered
+	self._fuse_started = not fuse_damage_settings.impact_triggered and not fuse_damage_settings.proximity_triggered
 	local hit_mass_budget_attack, hit_mass_budget_impact = self:_calculate_hit_mass()
 	self._hit_mass_budget_attack = hit_mass_budget_attack
 	self._hit_mass_budget_impact = hit_mass_budget_impact
@@ -99,7 +101,8 @@ ProjectileDamageExtension.extensions_ready = function (self)
 	self._fx_extension = ScriptUnit.extension(projectile_unit, "fx_system")
 end
 
-local _explosion_attack_result_table = {}
+local _explosion_hit_units_table = {}
+local BROADPHASE_RESULTS = {}
 
 ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 	if self._marked_for_deletion then
@@ -121,7 +124,7 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 	local fuse_damage_settings = damage_settings and damage_settings.fuse
 	local _, position = locomotion_extension:previous_and_current_positions()
 
-	if self._reset_time and not fuse_damage_settings.skipp_reset then
+	if self._reset_time and not fuse_damage_settings.skip_reset then
 		life_time = 0
 		self._reset_time = false
 	end
@@ -129,10 +132,17 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 	local mark_for_deletion = false
 	local new_life_time = life_time + dt
 	local impact_triggered = fuse_damage_settings and fuse_damage_settings.impact_triggered
+	local proximity_triggered = fuse_damage_settings and fuse_damage_settings.proximity_triggered
 	local min_lifetime = fuse_damage_settings.min_lifetime
 	local sticking_to_unit, sticking_to_actor_index = locomotion_extension:sticking_to_unit()
-	local fuse_time = self._fuse_override_time or sticking_to_unit and fuse_damage_settings.sticky_fuse_time or fuse_damage_settings.fuse_time
+	local fuse_time = self._fuse_override_time_or_nil or sticking_to_unit and fuse_damage_settings.sticky_fuse_time or self._has_impacted and impact_triggered and fuse_damage_settings.impact_fuse_time or fuse_damage_settings.fuse_time
 	local max_lifetime = fuse_damage_settings.max_lifetime or fuse_time * 2
+	local kill_at_lifetime = fuse_damage_settings.kill_at_lifetime
+
+	if kill_at_lifetime and kill_at_lifetime < new_life_time then
+		mark_for_deletion = true
+	end
+
 	local fuse_started = self._fuse_started
 
 	if min_lifetime then
@@ -140,7 +150,7 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 			fuse_started = true
 		end
 	elseif impact_triggered then
-		if impact_triggered and not self._has_impacted then
+		if not self._has_impacted then
 			if max_lifetime < new_life_time then
 				fuse_started = true
 
@@ -150,12 +160,34 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 			else
 				fuse_started = false
 			end
-		elseif impact_triggered and self._has_impacted then
+		elseif self._has_impacted then
 			fuse_started = true
 
 			if not self._fuse_started then
 				new_life_time = 0
 			end
+		end
+	elseif proximity_triggered then
+		if self._proximity_check_started and not self._proximity_check_done and self._arm_time <= t then
+			table.clear(BROADPHASE_RESULTS)
+
+			local broadphase_system = Managers.state.extension:system("broadphase_system")
+			local broadphase = broadphase_system.broadphase
+			local proximity_radius = fuse_damage_settings.proximity_radius
+			local side_system = Managers.state.extension:system("side_system")
+			local side = side_system:get_side_from_name(self._owner_side_or_nil)
+			local enemy_side_names = side:relation_side_names("enemy")
+			local num_hits = broadphase:query(position, proximity_radius, BROADPHASE_RESULTS, enemy_side_names)
+
+			if num_hits > 0 then
+				fuse_started = true
+				self._proximity_check_done = true
+				self._reset_time = true
+				new_life_time = 0
+			end
+		elseif self._has_impacted and not self._proximity_check_started then
+			self._proximity_check_started = true
+			self._arm_time = t + fuse_damage_settings.arm_time
 		end
 	elseif fuse_time < new_life_time then
 		fuse_started = true
@@ -192,8 +224,8 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 					explosion_normal = default_explosion_normal:unbox()
 				end
 
-				table.clear(_explosion_attack_result_table)
-				Explosion.create_explosion(world, physics_world, position, explosion_normal, projectile_unit, fuse_explosion_template, DEFAULT_POWER_LEVEL, charge_level, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_attack_result_table)
+				table.clear(_explosion_hit_units_table)
+				Explosion.create_explosion(world, physics_world, position, explosion_normal, projectile_unit, fuse_explosion_template, DEFAULT_POWER_LEVEL, charge_level, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_hit_units_table)
 			end
 
 			local critical_strike_fuse_settings = is_critical_strike and damage_settings.critical_strike and damage_settings.critical_strike.fuse
@@ -205,12 +237,18 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 				self:_spawn_cluster(cluster_settings, direction)
 			end
 
+			local spawn_unit_settings = fuse_damage_settings.spawn_unit
+
+			if spawn_unit_settings then
+				self:_spawn_unit(spawn_unit_settings)
+			end
+
 			if player then
-				self:_handle_explosion_achivements(player, _explosion_attack_result_table)
+				self:_handle_explosion_achivements(player, _explosion_hit_units_table)
 			end
 
 			if fuse_liquid_area_template then
-				LiquidArea.try_create(position, Vector3.down(), self._nav_world, fuse_liquid_area_template, owner_unit, nil, nil, weapon_item_or_nil)
+				LiquidArea.try_create(position, Vector3.down(), self._nav_world, fuse_liquid_area_template, owner_unit, nil, nil, weapon_item_or_nil, self._owner_side_or_nil)
 			end
 
 			self._fx_extension:on_build_up_stop()
@@ -219,9 +257,9 @@ ProjectileDamageExtension.fixed_update = function (self, unit, dt, t)
 		end
 	end
 
-	if mark_for_deletion and not self._marked_for_deletion and not self._locomotion_extension:has_been_marked_for_deletion() then
+	if mark_for_deletion and not self._marked_for_deletion then
 		self:_record_impact_concluded_stats()
-		Managers.state.unit_spawner:mark_for_deletion(projectile_unit)
+		self._locomotion_extension:mark_for_deletion()
 
 		self._marked_for_deletion = true
 	end
@@ -248,11 +286,18 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 	local impact_result = nil
 
 	if impact_damage_settings then
+		local non_target_overrides = impact_damage_settings.non_target_overrides
 		local impact_damage_profile = impact_damage_settings.damage_profile
 		local impact_damage_type = impact_damage_settings.damage_type
 		local impact_explosion_template = impact_damage_settings.explosion_template
 		local impact_liquid_area_template = impact_damage_settings.liquid_area_template
 		local impact_suppression_settings = impact_damage_settings.suppression_settings
+
+		if non_target_overrides and not is_target_unit then
+			impact_damage_profile = non_target_overrides.damage_profile or impact_damage_profile
+			impact_damage_type = non_target_overrides.damage_type or impact_damage_type
+		end
+
 		local hit_units = self._hit_units
 		local have_unit_been_hit = hit_units[hit_unit]
 		local is_not_self = hit_unit ~= owner_unit
@@ -288,9 +333,14 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 				if impact_damage_settings.delete_on_hit_mass then
 					local calculate_hit_mass = true
 
+					if non_target_overrides and non_target_overrides.ignore_hit_mass and not is_target_unit then
+						calculate_hit_mass = false
+					end
+
 					if calculate_hit_mass then
 						local hit_weakspot = Weakspot.hit_weakspot(target_breed_or_nil, hit_zone_name)
-						local hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(owner_unit, hit_unit, self._hit_mass_budget_attack, self._hit_mass_budget_impact, hit_weakspot)
+						local hit_mass_override = impact_damage_profile.hit_mass_override
+						local hit_mass_budget_attack, hit_mass_budget_impact = HitMass.consume_hit_mass(owner_unit, hit_unit, self._hit_mass_budget_attack, self._hit_mass_budget_impact, hit_weakspot, hit_mass_override)
 						hit_mass_stop = HitMass.stopped_attack(hit_unit, hit_zone_name, hit_mass_budget_attack, hit_mass_budget_impact, IMPACT_CONFIG)
 						self._hit_mass_budget_attack = hit_mass_budget_attack
 						self._hit_mass_budget_impact = hit_mass_budget_impact
@@ -300,7 +350,7 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 					impact_result = "continue_straight"
 				end
 
-				local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(hit_unit, impact_damage_profile, "attack_direction", hit_direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "target_index", 1, "charge_level", impact_charge_level, "is_critical_strike", is_critical_strike, "hit_actor", hit_actor, "hit_world_position", hit_position, "attack_type", attack_types.ranged, "damage_type", impact_damage_type, "attacking_unit", projectile_unit, "item", weapon_item_or_nil)
+				local damage_dealt, attack_result, damage_efficiency, stagger_result, hit_weakspot = Attack.execute(hit_unit, impact_damage_profile, "attack_direction", hit_direction, "power_level", DEFAULT_POWER_LEVEL, "hit_zone_name", hit_zone_name, "target_index", 1, "target_number", 1, "charge_level", impact_charge_level, "is_critical_strike", is_critical_strike, "hit_actor", hit_actor, "hit_world_position", hit_position, "attack_type", attack_types.ranged, "damage_type", impact_damage_type, "attacking_unit", projectile_unit, "item", weapon_item_or_nil)
 				self._impact_hit = true
 				self._impact_hit_weakspot = self._impact_hit_weakspot + 1
 				self._num_impact_hit_kill = self._num_impact_hit_kill + (attack_result == attack_results.died and 1 or 0)
@@ -322,35 +372,41 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 				hit_hard_target = true
 			end
 
+			local fuse_damage_settings = damage_settings and damage_settings.fuse
 			local sticking_to_unit, _ = locomotion_extension:sticking_to_unit()
-			local stick_to_func_ok = not sticks_to_func or sticks_to_func(projectile_unit, hit_unit, hit_zone_name)
-			local can_projectile_stick = not sticking_to_unit and (sticks_to_armor_types or sticks_to_breeds or sticks_to_tags) and stick_to_func_ok
+			local sticks_to_func_ok = not sticks_to_func or sticks_to_func(projectile_unit, hit_unit, hit_zone_name)
+			local can_projectile_stick = not sticking_to_unit and (sticks_to_armor_types or sticks_to_breeds or sticks_to_tags) and sticks_to_func_ok
 
 			if can_projectile_stick and HEALTH_ALIVE[hit_unit] and unit_data_extension then
 				local armor_type = Armor.armor_type(hit_unit, target_breed_or_nil, hit_zone_name)
-				local stick_to_armor = sticks_to_armor_types and sticks_to_armor_types[armor_type]
-				local stick_to_breed = sticks_to_breeds and sticks_to_breeds[target_breed_or_nil.name]
-				local stick_to_tag = false
+				local sticks_to_armor = sticks_to_armor_types and sticks_to_armor_types[armor_type]
+				local sticks_to_breed = sticks_to_breeds and sticks_to_breeds[target_breed_or_nil.name]
+				local sticks_to_tag = false
 
 				if sticks_to_tags and target_breed_or_nil.tags then
 					for tag, _ in pairs(target_breed_or_nil.tags) do
 						if sticks_to_tags[tag] then
-							stick_to_tag = true
+							sticks_to_tag = true
 
 							break
 						end
 					end
 				end
 
-				if stick_to_armor or stick_to_breed or stick_to_tag then
+				if sticks_to_armor or sticks_to_breed or sticks_to_tag then
 					local hit_actor_index = Actor.node(hit_actor)
 
-					locomotion_extension:switch_to_sticky(hit_unit, hit_actor_index, hit_position, rotation)
+					locomotion_extension:switch_to_sticky(hit_unit, hit_actor_index, hit_position, rotation, hit_normal, hit_direction)
 
 					self._life_time = 0
 
 					self._fx_extension:on_stick()
-					self._fx_extension:on_build_up_start()
+
+					local play_build_up = not fuse_damage_settings.impact_triggered and not fuse_damage_settings.proximity_triggered or not self._fuse_started
+
+					if play_build_up then
+						self._fx_extension:on_build_up_start()
+					end
 
 					impact_result = projectile_impact_results.stick
 				end
@@ -364,7 +420,6 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 			end
 
 			local physics_world = self._physics_world
-			local fuse_damage_settings = damage_settings and damage_settings.fuse
 
 			if fuse_damage_settings then
 				local min_lifetime = fuse_damage_settings.min_lifetime
@@ -383,14 +438,14 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 			end
 
 			if do_impact_explosion then
-				table.clear(_explosion_attack_result_table)
-				Explosion.create_explosion(self._world, physics_world, hit_position, nil, projectile_unit, impact_explosion_template, DEFAULT_POWER_LEVEL, charge_level, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_attack_result_table)
+				table.clear(_explosion_hit_units_table)
+				Explosion.create_explosion(self._world, physics_world, hit_position, nil, projectile_unit, impact_explosion_template, DEFAULT_POWER_LEVEL, charge_level, AttackSettings.attack_types.explosion, is_critical_strike, false, weapon_item_or_nil, origin_slot_or_nil, _explosion_hit_units_table)
 
 				mark_for_deletion = true
 				local player = Managers.state.player_unit_spawn:owner(owner_unit)
 
 				if player then
-					self:_handle_explosion_achivements(player, _explosion_attack_result_table)
+					self:_handle_explosion_achivements(player, _explosion_hit_units_table)
 				end
 			else
 				self._reset_time = true
@@ -414,8 +469,16 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 				end
 			end
 
+			local cluster_settings = impact_damage_settings.cluster
+
+			if cluster_settings then
+				local cluster_direction = hit_hard_target and hit_normal or Vector3.lerp(hit_normal, Vector3.up(), 0.5)
+
+				self:_spawn_cluster(cluster_settings, cluster_direction)
+			end
+
 			if impact_liquid_area_template then
-				LiquidArea.try_create(hit_position, hit_direction, self._nav_world, impact_liquid_area_template, owner_unit, nil, nil, weapon_item_or_nil)
+				LiquidArea.try_create(hit_position, hit_direction, self._nav_world, impact_liquid_area_template, owner_unit, nil, nil, weapon_item_or_nil, self._owner_side_or_nil)
 
 				mark_for_deletion = true
 			end
@@ -428,9 +491,9 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 		end
 	end
 
-	if (mark_for_deletion or force_delete) and not self._marked_for_deletion and not self._locomotion_extension:has_been_marked_for_deletion() then
+	if (mark_for_deletion or force_delete) and not self._marked_for_deletion then
 		self:_record_impact_concluded_stats()
-		Managers.state.unit_spawner:mark_for_deletion(projectile_unit)
+		self._locomotion_extension:mark_for_deletion()
 
 		self._marked_for_deletion = true
 		impact_result = projectile_impact_results.removed
@@ -445,20 +508,21 @@ ProjectileDamageExtension.on_impact = function (self, hit_position, hit_unit, hi
 end
 
 ProjectileDamageExtension._spawn_cluster = function (self, cluster_settings, direction)
+	local owner_unit = self._owner_unit
+	local buff_extension = ScriptUnit.has_extension(owner_unit, "buff_system")
 	local locomotion_extension = self._locomotion_extension
 	local _, position = locomotion_extension:previous_and_current_positions()
 	local rotation, _ = locomotion_extension:current_rotation_and_direction()
 	local material = nil
 	local item_name = cluster_settings.item
+	local projectile_template = cluster_settings.projectile_template
 	local item_definitions = MasterItems.get_cached()
 	local item = item_definitions[item_name]
-	local projectile_template = cluster_settings.projectile_template
-	local starting_state = "manual_physics"
+	local starting_state = locomotion_states.manual_physics
 	local start_speed = cluster_settings.start_speed
 	local speed = math.lerp(start_speed.min, start_speed.max, math.random())
 	local max = cluster_settings.randomized_angular_velocity or math.pi / 20
 	local angular_velocity = Vector3(math.random() * max, math.random() * max, math.random() * max)
-	local owner_unit = self._owner_unit
 	local is_critical_strike = false
 	local origin_item_slot = self._origin_item_slot
 	local weapon_item_or_nil = self._weapon_item_or_nil
@@ -477,10 +541,23 @@ ProjectileDamageExtension._spawn_cluster = function (self, cluster_settings, dir
 		local start_fuse_time = cluster_settings.start_fuse_time
 		local times_steps = cluster_settings.fuse_time_steps
 		local fuse_override_time = start_fuse_time + math.lerp(times_steps.min * i, times_steps.max * i, math.random())
-		local projectile_unit, _ = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, random_rotation, material, item, projectile_template, starting_state, current_direction, speed, angular_velocity, owner_unit, is_critical_strike, origin_item_slot, nil, nil, nil, weapon_item_or_nil, fuse_override_time)
+		local projectile_unit, _ = Managers.state.unit_spawner:spawn_network_unit(nil, "item_projectile", position, random_rotation, material, item, projectile_template, starting_state, current_direction, speed, angular_velocity, owner_unit, is_critical_strike, origin_item_slot, nil, nil, nil, weapon_item_or_nil, fuse_override_time, self._owner_side_or_nil)
 	end
 
 	self._fx_extension:on_cluster()
+end
+
+ProjectileDamageExtension._spawn_unit = function (self, spawn_unit_settings)
+	local locomotion_extension = self._locomotion_extension
+	local _, position = locomotion_extension:previous_and_current_positions()
+	local rotation, _ = Quaternion.identity()
+	local owner_unit = self._owner_unit
+	local unit_name = spawn_unit_settings.unit_name
+	local husk_unit_name = spawn_unit_settings.unit_husk_name or unit_name
+	local unit_template = spawn_unit_settings.unit_template
+	local material, placed_on_unit = nil
+	local unit_template_parameters = spawn_unit_settings.unit_template_parameters
+	local unit = Managers.state.unit_spawner:spawn_network_unit(unit_name, unit_template, position, rotation, material, husk_unit_name, placed_on_unit, owner_unit, unit_template_parameters)
 end
 
 ProjectileDamageExtension.use_suppression = function (self)
@@ -536,14 +613,14 @@ ProjectileDamageExtension._get_sticking_explosion_normal = function (self, stick
 	return explostion_direction
 end
 
-ProjectileDamageExtension._handle_explosion_achivements = function (self, player, explosion_attack_result_table)
+ProjectileDamageExtension._handle_explosion_achivements = function (self, player, explosion_hit_units_table)
 	local profile = player:profile()
 	local specializtion_name = profile.specialization
 
 	if specializtion_name == "veteran_2" and not self._has_impacted then
 		local count = 0
 
-		for _, attack_result in pairs(explosion_attack_result_table) do
+		for hit_unit, _ in pairs(explosion_hit_units_table) do
 			count = count + 1
 		end
 
@@ -568,6 +645,10 @@ ProjectileDamageExtension._record_impact_concluded_stats = function (self)
 
 		Managers.stats:record_projectile_impact_concluded_stats(player, impact_hit, num_impact_hit_weakspot, num_impact_hit_kill, num_impact_hit_elite, num_impact_hit_special, weapon_template_name)
 	end
+end
+
+ProjectileDamageExtension.get_hit_units = function (self)
+	return self._hit_units
 end
 
 return ProjectileDamageExtension

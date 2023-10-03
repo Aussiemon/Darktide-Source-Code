@@ -1,7 +1,10 @@
-local TextStyles = require("scripts/ui/views/news_view/news_view_text_styles")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIWorkspaceSettings = require("scripts/settings/ui/ui_workspace_settings")
 local ButtonPassTemplates = require("scripts/ui/pass_templates/button_pass_templates")
+local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
+local title_text_style = table.clone(UIFontSettings.header_2)
+title_text_style.text_horizontal_alignment = "center"
+title_text_style.text_vertical_alignment = "top"
 local scenegraph_definitions = {
 	screen = UIWorkspaceSettings.screen,
 	title_text = {
@@ -109,7 +112,7 @@ local widget_definitions = {
 			style_id = "text",
 			pass_type = "text",
 			value = "Gamma Settings",
-			style = TextStyles.title_text_style
+			style = title_text_style
 		}
 	}, "title_text"),
 	page_number = UIWidget.create_definition({
@@ -118,7 +121,7 @@ local widget_definitions = {
 			style_id = "text",
 			pass_type = "text",
 			value = "",
-			style = TextStyles.title_text_style
+			style = title_text_style
 		}
 	}, "page_number"),
 	next_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "next_button", {
@@ -132,7 +135,7 @@ local accessibility_widget_definitions = {
 			style_id = "text",
 			pass_type = "text",
 			value = "Gamma Settings",
-			style = TextStyles.title_text_style
+			style = title_text_style
 		}
 	}, "title_text")
 }

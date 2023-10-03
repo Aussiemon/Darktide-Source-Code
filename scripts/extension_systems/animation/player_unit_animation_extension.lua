@@ -24,6 +24,7 @@ PlayerUnitAnimationExtension.init = function (self, extension_init_context, unit
 	self._local_wielded_weapon_template = ""
 	self._anim_variable_ids_third_person = {}
 	self._anim_variable_ids_first_person = {}
+	self._fixed_time_step = Managers.state.game_session.fixed_time_step
 end
 
 PlayerUnitAnimationExtension.extensions_ready = function (self, world, unit)
@@ -192,7 +193,7 @@ PlayerUnitAnimationExtension.server_correction_occurred = function (self, unit, 
 		end
 
 		if override_3p or override_1p then
-			local fixed_time_step = GameParameters.fixed_time_step
+			local fixed_time_step = self._fixed_time_step
 			local start_t = from_frame * fixed_time_step
 			local end_t = to_frame * fixed_time_step
 			local simulated_time = end_t - start_t

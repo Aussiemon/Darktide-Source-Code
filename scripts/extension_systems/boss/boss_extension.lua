@@ -33,14 +33,6 @@ BossExtension.game_object_initialized = function (self, session, object_id)
 	end
 
 	self._game_object_id = object_id
-	local health_extension = ScriptUnit.extension(self._unit, "health_system")
-	local max_health = health_extension:max_health()
-	local breed_name = ScriptUnit.extension(self._unit, "unit_data_system"):breed().name
-	local initial_max_health = Managers.state.difficulty:get_minion_max_health(breed_name)
-
-	if max_health < initial_max_health then
-		self._is_weakened = true
-	end
 end
 
 BossExtension.extensions_ready = function (self)
@@ -48,6 +40,15 @@ BossExtension.extensions_ready = function (self)
 
 	if not breed.trigger_boss_health_bar_on_aggro and not breed.trigger_boss_health_bar_on_damaged and not breed.boss_health_bar_disabled then
 		self:start_boss_encounter()
+	end
+
+	local health_extension = ScriptUnit.extension(self._unit, "health_system")
+	local max_health = health_extension:max_health()
+	local breed_name = ScriptUnit.extension(self._unit, "unit_data_system"):breed().name
+	local initial_max_health = Managers.state.difficulty:get_minion_max_health(breed_name)
+
+	if max_health < initial_max_health then
+		self._is_weakened = true
 	end
 end
 

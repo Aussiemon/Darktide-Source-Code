@@ -83,6 +83,22 @@ BtPoxwalkerBomberApproachAction.run = function (self, unit, breed, blackboard, s
 	end
 
 	if state == "lunging" then
+		local unit_data_extension = ScriptUnit.has_extension(target_unit, "unit_data_system")
+
+		if unit_data_extension then
+			local action_push_component = unit_data_extension:read_component("action_push")
+			local target_is_pushing = action_push_component and action_push_component.has_pushed
+
+			if not scratchpad.extra_push_applied and target_is_pushing and Vector3.distance(POSITION_LOOKUP[unit], POSITION_LOOKUP[target_unit]) < 5 then
+				local damage_profile = action_data.push_enemies_damage_profile
+				local power_level = action_data.push_enemies_power_level
+
+				Attack.execute(unit, damage_profile, "power_level", power_level, "attacking_unit", target_unit, "attack_direction", Vector3.normalize(POSITION_LOOKUP[unit] - POSITION_LOOKUP[target_unit]), "hit_zone_name", "torso")
+
+				scratchpad.extra_push_applied = true
+			end
+		end
+
 		self:_update_lunge(unit, scratchpad, action_data, dt, t, blackboard, breed)
 
 		return "running"
@@ -386,6 +402,7 @@ BtPoxwalkerBomberApproachAction._start_lunge = function (self, unit, blackboard,
 	local stagger_component = Blackboard.write_component(blackboard, "stagger")
 	stagger_component.immune_time = 0
 	stagger_component.controlled_stagger = false
+	stagger_component.controlled_stagger_finished = true
 	local death_component = Blackboard.write_component(blackboard, "death")
 	death_component.fuse_timer = t + action_data.fuse_timer
 	local shape = "sphere"

@@ -5,11 +5,11 @@ DoorControlPanelExtension.init = function (self, extension_init_context, unit, e
 	self._is_server = extension_init_context.is_server
 	self._unit = unit
 	self._state = STATES.inactive
+	self._door_unit = nil
 	self._door_extension = nil
 	self._animation_extension = nil
 	self._light_active = nil
 	self._interaction_interlude = 0
-	self._last_interaction = -100
 end
 
 DoorControlPanelExtension.setup_from_component = function (self, start_active, interaction_interlude)
@@ -47,6 +47,12 @@ end
 
 DoorControlPanelExtension.hot_join_sync = function (self, unit, sender)
 	self:_sync_server_state(sender, self._state)
+
+	local object_id = Managers.state.unit_spawner:game_object_id(unit)
+	local door_level_index = Managers.state.unit_spawner:level_index(self._door_unit)
+	local channel = Managers.state.game_session:peer_to_channel(sender)
+
+	RPC.rpc_door_panel_register_door(channel, object_id, door_level_index)
 end
 
 DoorControlPanelExtension.is_active = function (self)
@@ -56,7 +62,11 @@ DoorControlPanelExtension.is_active = function (self)
 end
 
 DoorControlPanelExtension.is_on_hold = function (self)
-	return Managers.time:time("gameplay") < self._last_interaction + self._interaction_interlude
+	if not self._door_extension then
+		return false
+	end
+
+	return Managers.time:time("gameplay") < self._door_extension:get_last_state_change_time() + self._interaction_interlude
 end
 
 DoorControlPanelExtension.set_active = function (self, active)
@@ -93,8 +103,17 @@ DoorControlPanelExtension._deactivate = function (self)
 	self:_update_appearance()
 end
 
-DoorControlPanelExtension.register_door = function (self, door_extension)
-	self._door_extension = door_extension
+DoorControlPanelExtension.register_door = function (self, door_unit)
+	self._door_unit = door_unit
+	self._door_extension = ScriptUnit.extension(door_unit, "door_system")
+
+	if self._is_server then
+		local object_id = Managers.state.unit_spawner:game_object_id(self._unit)
+		local door_level_index = Managers.state.unit_spawner:level_index(door_unit)
+		local game_session_manager = Managers.state.game_session
+
+		game_session_manager:send_rpc_clients("rpc_door_panel_register_door", object_id, door_level_index)
+	end
 end
 
 DoorControlPanelExtension.toggle_door_state = function (self, interactor_unit)
@@ -107,10 +126,6 @@ DoorControlPanelExtension.toggle_door_state = function (self, interactor_unit)
 	end
 
 	self:_play_anim("handle_push")
-end
-
-DoorControlPanelExtension.trigger_interlude = function (self)
-	self._last_interaction = Managers.time:time("gameplay")
 end
 
 DoorControlPanelExtension._activate_lightbulbs = function (self, val)

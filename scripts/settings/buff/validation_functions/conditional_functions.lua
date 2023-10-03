@@ -71,6 +71,17 @@ local reloading_states = {
 	reload_state = true
 }
 
+ConditionalFunctions.has_stamina = function (template_data, template_context)
+	local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+	template_data.stamina_read_component = unit_data_extension:read_component("stamina")
+	local current_stamina_fraction = template_data.stamina_read_component.current_fraction
+	local buff_template = template_context.template
+	local override_data = template_context.template_override_data
+	local condtional_threshold = override_data.condtional_threshold or buff_template.condtional_threshold or 0
+
+	return current_stamina_fraction >= condtional_threshold
+end
+
 ConditionalFunctions.is_reloading = function (template_data, template_context)
 	local unit = template_context.unit
 	local unit_data_extension = ScriptUnit.extension(unit, "unit_data_system")

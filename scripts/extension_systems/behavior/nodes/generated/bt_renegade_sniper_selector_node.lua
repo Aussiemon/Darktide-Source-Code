@@ -110,18 +110,7 @@ BtRenegadeSniperSelectorNode.evaluate = function (self, unit, blackboard, scratc
 		return node_stagger
 	end
 
-	local node_suppressed = children[5]
-	local suppression_component = blackboard.suppression
-	local is_suppressed = suppression_component.is_suppressed
-	local condition_result = is_suppressed
-
-	if condition_result then
-		new_running_child_nodes[node_identifier] = node_suppressed
-
-		return node_suppressed
-	end
-
-	local node_melee_combat = children[6]
+	local node_melee_combat = children[5]
 	local tree_node = node_melee_combat.tree_node
 	local condition_args = tree_node.condition_args
 	local is_running = last_leaf_node_running and last_running_node == node_melee_combat
@@ -179,7 +168,7 @@ BtRenegadeSniperSelectorNode.evaluate = function (self, unit, blackboard, scratc
 		end
 	end
 
-	local node_COMBAT = children[7]
+	local node_COMBAT = children[6]
 	local is_running = last_leaf_node_running and last_running_node == node_COMBAT
 	local condition_result = nil
 
@@ -219,7 +208,7 @@ BtRenegadeSniperSelectorNode.evaluate = function (self, unit, blackboard, scratc
 		end
 	end
 
-	local node_idle = children[8]
+	local node_idle = children[7]
 	new_running_child_nodes[node_identifier] = node_idle
 
 	return node_idle

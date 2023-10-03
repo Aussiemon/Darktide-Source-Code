@@ -216,7 +216,7 @@ UIWeaponSpawner._spawn_weapon = function (self, item, link_unit_name, loader, po
 		extension_manager = extension_manager,
 		spawn_with_extensions = extension_manager ~= nil
 	}
-	local item_unit_3p, attachment_units_3p = VisualLoadoutCustomization.spawn_item(item, attach_settings, link_unit)
+	local item_unit_3p, attachment_units_3p = VisualLoadoutCustomization.spawn_item(item, attach_settings, link_unit, nil, nil, nil)
 	local spawn_data = {
 		visible = false,
 		streaming_complete = false,
@@ -267,12 +267,6 @@ UIWeaponSpawner._update_input_rotation = function (self, dt)
 
 	if not weapon_spawn_data then
 		return
-	end
-
-	if not self._is_rotating and self._rotation_angle ~= self._default_rotation_angle then
-		local rotation_angle = math.lerp(self._rotation_angle, self._default_rotation_angle, dt)
-
-		self:_set_rotation(rotation_angle)
 	end
 end
 

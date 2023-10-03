@@ -1,6 +1,6 @@
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local PlayerSpecializationUtil = require("scripts/utilities/player_specialization/player_specialization")
-local PACKAGE_BASE_PATH = "packages/ui/views/talents_view/"
+local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utilities/talent_layout_parser")
 local TalentsService = class("TalentsService")
 
 TalentsService.init = function (self, backend_interface)
@@ -39,11 +39,23 @@ TalentsService.set_talents = function (self, player, talent_names)
 
 	PlayerSpecializationUtil.filter_nonselectable_talents(profile.archetype, profile.specialization, profile.current_level, talent_names)
 
-	local talent_array = PlayerSpecializationUtil.talent_set_to_array(talent_names, {})
 	local backend = self._backend_interface.characters
-	local promise = backend:set_talents(character_id, talent_array)
+	local talent_array = PlayerSpecializationUtil.talents_with_tiers_set_to_array(talent_names, {})
 
 	promise:next(callback(_set_backend_response_success, player, talent_names), _set_talents_backend_response_fail):catch(function (err)
+		_set_talents_backend_response_fail(err)
+	end)
+
+	return promise
+end
+
+TalentsService.set_talents_v2 = function (self, player, layout, points_spent)
+	local character_id = player:character_id()
+	local talents = TalentLayoutParser.pack_backend_data(layout, points_spent)
+	local backend = self._backend_interface.characters
+	local promise = backend:set_talents_v2(character_id, talents)
+
+	promise:next(callback(_set_backend_response_success, player), _set_talents_backend_response_fail):catch(function (err)
 		_set_talents_backend_response_fail(err)
 	end)
 
@@ -63,9 +75,9 @@ TalentsService.set_specialization = function (self, player, specialization)
 end
 
 TalentsService.load_icons_for_profile = function (self, profile, reference_name, callback, prioritize)
-	local specialization = profile.specialization
-	local package_name = PACKAGE_BASE_PATH .. specialization
-	local load_id = Managers.package:load(package_name, reference_name, callback, prioritize)
+	local archetype = profile.archetype
+	local talents_package_path = archetype.talents_package_path
+	local load_id = Managers.package:load(talents_package_path, reference_name, callback, prioritize)
 
 	return load_id
 end

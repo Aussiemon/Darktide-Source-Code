@@ -51,8 +51,8 @@ Block.is_blocking = function (target_unit, attacking_unit, attack_type, weapon_t
 			local should_block = interaction_type and auto_block_interactions[interaction_type]
 
 			if should_block then
-				local specialization = unit_data_extension:specialization()
-				local base_stamina_template = specialization.stamina
+				local archetype = unit_data_extension:archetype()
+				local base_stamina_template = archetype.stamina
 				local stamina_write_component = unit_data_extension:write_component("stamina")
 				local current_stamina = Stamina.current_and_max_value(target_unit, stamina_write_component, base_stamina_template)
 
@@ -105,7 +105,7 @@ Block.attack_is_blockable = function (damage_profile, optional_target_unit, opti
 		local weapon_action_component = unit_data_extension:read_component("weapon_action")
 		local _, action_setting = Action.current_action(weapon_action_component, optional_weapon_template)
 		local block_unblockable = action_setting and action_setting.block_unblockable
-		local block_goes_brrr = action_setting and action_setting.block_goes_brrr
+		local block_goes_brrr = action_setting and action_setting.block_goes_brrr or action_setting and action_setting.parry_block
 
 		return block_unblockable or block_goes_brrr
 	else
@@ -132,9 +132,12 @@ Block.attempt_block_break = function (target_unit, attacking_unit, hit_world_pos
 
 	local weapon_action_component = unit_data_extension:read_component("weapon_action")
 	local _, action_setting = Action.current_action(weapon_action_component, weapon_template)
+	local block_component = unit_data_extension:read_component("block")
+	local is_perfect_block = block_component.is_perfect_blocking
 
-	if action_setting and action_setting.parry_block then
-		block_cost = math.clamp(block_cost, 0, 2)
+	if action_setting and action_setting.parry_block and is_perfect_block then
+		local no_block_cost = is_perfect_block and buff_extension:has_keyword(buff_keywords.no_parry_block_cost)
+		block_cost = no_block_cost and 0 or math.clamp(block_cost, 0, 2)
 	end
 
 	if action_setting and action_setting.block_goes_brrr then
@@ -147,8 +150,8 @@ Block.attempt_block_break = function (target_unit, attacking_unit, hit_world_pos
 		if use_warp_charge and block_cost > 0 then
 			local stamina_write_component = unit_data_extension:write_component("stamina")
 			local warp_charge_component = unit_data_extension:write_component("warp_charge")
-			local specialization = unit_data_extension:specialization()
-			local base_stamina_template = specialization.stamina
+			local archetype = unit_data_extension:archetype()
+			local base_stamina_template = archetype.stamina
 			local _, max_stamina = Stamina.current_and_max_value(target_unit, stamina_write_component, base_stamina_template)
 			local current_warp_charge = warp_charge_component.current_percentage
 
@@ -191,13 +194,13 @@ Block.attempt_block_break = function (target_unit, attacking_unit, hit_world_pos
 	local weapon_template_id = NetworkLookup.weapon_templates[weapon_template.name]
 	local attack_type_id = NetworkLookup.attack_types[attack_type]
 
-	Block.player_blocked_attack(target_unit, attacking_unit, hit_world_position, block_broken, weapon_template, attack_type, block_cost)
+	Block.player_blocked_attack(target_unit, attacking_unit, hit_world_position, block_broken, weapon_template, attack_type, block_cost, is_perfect_block)
 	Managers.state.game_session:send_rpc_clients("rpc_player_blocked_attack", unit_id, attacking_unit_id, hit_world_position, block_broken, weapon_template_id, attack_type_id)
 
 	return block_broken
 end
 
-Block.player_blocked_attack = function (target_unit, attacking_unit, hit_world_position, block_broken, weapon_template, attack_type, block_cost)
+Block.player_blocked_attack = function (target_unit, attacking_unit, hit_world_position, block_broken, weapon_template, attack_type, block_cost, is_perfect_block)
 	local player_unit_spawn_manager = Managers.state.player_unit_spawn
 	local player = player_unit_spawn_manager:owner(target_unit)
 
@@ -208,7 +211,7 @@ Block.player_blocked_attack = function (target_unit, attacking_unit, hit_world_p
 	local weapon_extension = ScriptUnit.has_extension(target_unit, "weapon_system")
 
 	if weapon_extension then
-		weapon_extension:blocked_attack(attacking_unit, hit_world_position, block_broken, weapon_template, attack_type, block_cost)
+		weapon_extension:blocked_attack(attacking_unit, hit_world_position, block_broken, weapon_template, attack_type, block_cost, is_perfect_block)
 	end
 end
 

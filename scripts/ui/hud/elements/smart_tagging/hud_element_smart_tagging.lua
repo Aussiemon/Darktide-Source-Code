@@ -34,16 +34,13 @@ HudElementSmartTagging.init = function (self, parent, draw_layer, start_scale)
 
 	local wheel_options = {
 		{
-			display_name = "loc_communication_wheel_display_name_thanks",
-			icon = "content/ui/materials/hud/communication_wheel/icons/thanks",
-			chat_message_data = {
-				text = "loc_communication_wheel_thanks",
-				channel = ChannelTags.MISSION
-			},
+			icon = "content/ui/materials/hud/communication_wheel/icons/for_the_emperor",
+			display_name = "loc_communication_wheel_display_name_cheer",
 			voice_event_data = {
 				voice_tag_concept = VOQueryConstants.concepts.on_demand_com_wheel,
-				voice_tag_id = VOQueryConstants.trigger_ids.com_wheel_vo_thank_you
-			}
+				voice_tag_id = VOQueryConstants.trigger_ids.com_wheel_vo_for_the_emperor
+			},
+			start_angle = -(math.pi / 8) * 3
 		},
 		{
 			display_name = "loc_communication_wheel_display_name_need_health",
@@ -57,34 +54,19 @@ HudElementSmartTagging.init = function (self, parent, draw_layer, start_scale)
 				voice_tag_id = VOQueryConstants.trigger_ids.com_wheel_vo_need_health
 			}
 		},
-		[4] = {
-			icon = "content/ui/materials/hud/communication_wheel/icons/enemy",
-			display_name = "loc_communication_wheel_display_name_enemy",
-			tag_type = "location_threat",
+		{
+			display_name = "loc_communication_wheel_display_name_thanks",
+			icon = "content/ui/materials/hud/communication_wheel/icons/thanks",
+			chat_message_data = {
+				text = "loc_communication_wheel_thanks",
+				channel = ChannelTags.MISSION
+			},
 			voice_event_data = {
 				voice_tag_concept = VOQueryConstants.concepts.on_demand_com_wheel,
-				voice_tag_id = VOQueryConstants.trigger_ids.com_wheel_vo_enemy_over_here
+				voice_tag_id = VOQueryConstants.trigger_ids.com_wheel_vo_thank_you
 			}
 		},
-		[5] = {
-			icon = "content/ui/materials/hud/communication_wheel/icons/location",
-			display_name = "loc_communication_wheel_display_name_location",
-			tag_type = "location_ping",
-			voice_event_data = {
-				voice_tag_concept = VOQueryConstants.concepts.on_demand_com_wheel,
-				voice_tag_id = VOQueryConstants.trigger_ids.com_wheel_vo_lets_go_this_way
-			}
-		},
-		[6] = {
-			icon = "content/ui/materials/hud/communication_wheel/icons/attention",
-			display_name = "loc_communication_wheel_display_name_attention",
-			tag_type = "location_attention",
-			voice_event_data = {
-				voice_tag_concept = VOQueryConstants.concepts.on_demand_com_wheel,
-				voice_tag_id = VOQueryConstants.trigger_ids.com_wheel_vo_over_here
-			}
-		},
-		[8] = {
+		{
 			display_name = "loc_communication_wheel_display_name_need_ammo",
 			icon = "content/ui/materials/hud/communication_wheel/icons/ammo",
 			chat_message_data = {
@@ -94,6 +76,34 @@ HudElementSmartTagging.init = function (self, parent, draw_layer, start_scale)
 			voice_event_data = {
 				voice_tag_concept = VOQueryConstants.concepts.on_demand_com_wheel,
 				voice_tag_id = VOQueryConstants.trigger_ids.com_wheel_vo_need_ammo
+			}
+		},
+		{
+			display_name = "loc_communication_wheel_display_name_enemy",
+			icon = "content/ui/materials/hud/communication_wheel/icons/enemy",
+			tag_type = "location_threat",
+			voice_event_data = {
+				voice_tag_concept = VOQueryConstants.concepts.on_demand_com_wheel,
+				voice_tag_id = VOQueryConstants.trigger_ids.com_wheel_vo_enemy_over_here
+			},
+			start_angle = -(math.pi / 8) * 2
+		},
+		{
+			icon = "content/ui/materials/hud/communication_wheel/icons/location",
+			display_name = "loc_communication_wheel_display_name_location",
+			tag_type = "location_ping",
+			voice_event_data = {
+				voice_tag_concept = VOQueryConstants.concepts.on_demand_com_wheel,
+				voice_tag_id = VOQueryConstants.trigger_ids.com_wheel_vo_lets_go_this_way
+			}
+		},
+		{
+			icon = "content/ui/materials/hud/communication_wheel/icons/attention",
+			display_name = "loc_communication_wheel_display_name_attention",
+			tag_type = "location_attention",
+			voice_event_data = {
+				voice_tag_concept = VOQueryConstants.concepts.on_demand_com_wheel,
+				voice_tag_id = VOQueryConstants.trigger_ids.com_wheel_vo_over_here
 			}
 		}
 	}
@@ -167,7 +177,7 @@ end
 
 HudElementSmartTagging.destroy = function (self)
 	self:_clear_all_smart_tag_presentations()
-	self:_pop_cursor()
+	self:_on_wheel_closed()
 	HudElementSmartTagging.super.destroy(self)
 end
 
@@ -234,14 +244,14 @@ HudElementSmartTagging._on_tag_stop_callback = function (self, t, ui_renderer, r
 	local force_update_targets = true
 	local target_marker, target_unit, target_position = self:_find_best_smart_tag_interaction(ui_renderer, render_settings, force_update_targets)
 
-	if target_marker then
-		self:_handle_selected_marker(target_marker)
-
-		tag_context.marker_handled = true
-	elseif target_unit then
+	if target_unit then
 		self:_handle_selected_unit(target_unit)
 
 		tag_context.enemy_tagged = true
+	elseif target_marker then
+		self:_handle_selected_marker(target_marker)
+
+		tag_context.marker_handled = true
 	end
 
 	tag_context.input_stop_time = t
@@ -486,6 +496,16 @@ HudElementSmartTagging._should_draw_wheel_gamepad = function (self, input_servic
 	return should_instant_draw
 end
 
+HudElementSmartTagging._on_wheel_closed = function (self)
+	if self._wheel_active or self._close_delay then
+		self:_pop_cursor()
+		Managers.event:trigger("event_set_communication_wheel_state", false)
+	end
+
+	self._wheel_active = false
+	self._close_delay = nil
+end
+
 HudElementSmartTagging._handle_selected_marker = function (self, marker)
 	local marker_template = marker.template
 	local tag_id = marker_template.get_smart_tag_id(marker)
@@ -718,6 +738,12 @@ HudElementSmartTagging._update_widget_locations = function (self)
 		local entry = entries[i]
 
 		if entry then
+			local option = entry.option
+
+			if option then
+				start_angle = option.start_angle or start_angle
+			end
+
 			local widget = entry.widget
 			local angle = start_angle + (i - 1) * radians_per_widget
 			local position_x = math.sin(angle) * radius
@@ -1002,6 +1028,7 @@ HudElementSmartTagging._add_smart_tag_presentation = function (self, tag_instanc
 		tag_instance = tag_instance,
 		tag_id = tag_id,
 		player = player,
+		tagger_player = tagger_player,
 		is_my_tag = is_my_tag
 	}
 	presented_smart_tags_by_tag_id[tag_id] = data

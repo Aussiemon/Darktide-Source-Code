@@ -217,10 +217,7 @@ local templates = {
 			}
 
 			for _, item in pairs(new_items) do
-				local gear_id = item.gear_id
-				local item_type = item.item_type
-
-				ItemUtils.mark_item_id_as_new(gear_id, item_type)
+				ItemUtils.mark_item_id_as_new(item)
 			end
 
 			Managers.narrative:complete_current_chapter("onboarding", "training_reward")
@@ -732,44 +729,6 @@ local templates = {
 		sync_on_events = {}
 	},
 	{
-		name = "Level 5/10/15/20/25/30 Unlocks Popup - Talent Tier Up",
-		valid_states = {
-			"GameplayStateRun"
-		},
-		validation_func = function (self)
-			return _is_in_hub() and (_is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_1") or _is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_2") or _is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_3") or _is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_4") or _is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_5") or _is_on_story_chapter("level_unlock_popups", "level_unlock_talent_tier_6"))
-		end,
-		on_activation = function (self)
-			local player = _get_player()
-			local localization_key = "loc_onboarding_popup_talents"
-			local no_cache = true
-			local param = {
-				input_key = "{#color(226, 199, 126)}" .. _get_view_input_text("hotkey_inventory") .. "{#reset()}"
-			}
-			local localized_text = Localize(localization_key, no_cache, param)
-			local duration = UI_POPUP_INFO_DURATION
-
-			local function close_callback_function()
-				_complete_current_story_chapter("level_unlock_popups")
-			end
-
-			local close_callback = callback(close_callback_function)
-
-			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration, close_callback)
-		end,
-		close_condition = function (self)
-			local input_service = Managers.input:get_input_service("View")
-
-			return input_service:get("hotkey_inventory")
-		end,
-		on_deactivation = function (self)
-			local player = _get_player()
-
-			Managers.event:trigger("event_player_hide_onboarding_message", player)
-		end,
-		sync_on_events = {}
-	},
-	{
 		name = "Level 8 / 15 / 23 Unlocks Popup - New Device Slot",
 		valid_states = {
 			"GameplayStateRun"
@@ -861,6 +820,65 @@ local templates = {
 		sync_on_events = {
 			"event_on_path_of_trust_updated"
 		}
+	},
+	{
+		name = "Unspent Talent points available",
+		once_per_state = true,
+		valid_states = {
+			"GameplayStateRun"
+		},
+		validation_func = function (self)
+			if _is_in_hub() then
+				local player = _get_player()
+				local profile = player and player:profile()
+
+				if profile then
+					local talent_points = profile.talent_points or 0
+					local points_spent = 0
+
+					for widget_name, points_spent_on_node in pairs(profile.selected_nodes) do
+						points_spent = points_spent + points_spent_on_node
+					end
+
+					if points_spent < talent_points then
+						return true
+					end
+				end
+
+				return false
+			end
+
+			return false
+		end,
+		on_activation = function (self)
+			local player = _get_player()
+			local localization_key = "loc_onboarding_popup_talent_points_reminder"
+			local no_cache = true
+			local param = {
+				input_key = "{#color(226, 199, 126)}" .. _get_view_input_text("hotkey_inventory") .. "{#reset()}"
+			}
+			local localized_text = Localize(localization_key, no_cache, param)
+			local duration = UI_POPUP_INFO_DURATION
+
+			local function close_callback_function()
+				return
+			end
+
+			local close_callback = callback(close_callback_function)
+
+			Managers.event:trigger("event_player_display_onboarding_message", player, localized_text, duration, close_callback)
+		end,
+		close_condition = function (self)
+			local input_service = Managers.input:get_input_service("View")
+
+			return input_service:get("hotkey_inventory")
+		end,
+		on_deactivation = function (self)
+			local player = _get_player()
+
+			Managers.event:trigger("event_player_hide_onboarding_message", player)
+		end,
+		sync_on_events = {}
 	}
 }
 

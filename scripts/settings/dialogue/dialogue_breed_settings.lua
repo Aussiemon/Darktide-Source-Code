@@ -9,7 +9,8 @@ local dialogue_breed_settings = {
 		"contract_vendor",
 		"shipmistress",
 		"enemy_nemesis_wolfer",
-		"enemy_wolfer_adjutant"
+		"enemy_wolfer_adjutant",
+		"interrogator"
 	}
 }
 dialogue_breed_settings.voice_classes_npc = dialogue_breed_settings.voice_classes_2d
@@ -29,16 +30,6 @@ dialogue_breed_settings.chaos_plague_ogryn = {
 	is_network_synced = false,
 	trigger_heard_vo = true,
 	vo_class_name = "chaos_plague_ogryn",
-	vo_triggers_enemy_kill_query = true,
-	has_dialogue_extension = true,
-	can_trigger_vo = true,
-	dialogue_memory_faction_name = "enemy"
-}
-dialogue_breed_settings.chaos_plague_ogryn_sprayer = {
-	trigger_seen_vo = true,
-	is_network_synced = false,
-	trigger_heard_vo = true,
-	vo_class_name = "chaos_plague_ogryn_sprayer",
 	vo_triggers_enemy_kill_query = true,
 	has_dialogue_extension = true,
 	can_trigger_vo = true,
@@ -187,7 +178,9 @@ dialogue_breed_settings.mission_giver = {
 		"shipmistress_a",
 		"enemy_nemesis_wolfer_a",
 		"enemy_wolfer_adjutant_a",
-		"enemy_wolfer_adjutant_b"
+		"enemy_wolfer_adjutant_b",
+		"interrogator_a",
+		"training_ground_psyker_a"
 	}
 }
 dialogue_breed_settings.sergeant = {
@@ -300,6 +293,7 @@ dialogue_breed_settings.interrogator = {
 	has_dialogue_extension = true,
 	vo_triggers_enemy_kill_query = false,
 	dialogue_memory_faction_name = "npc",
+	prop_name = "voice_over_2d",
 	can_trigger_vo = true,
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
@@ -645,20 +639,6 @@ dialogue_breed_settings.renegade_shocktrooper = {
 		"enemy_traitor_scout_shocktrooper_a"
 	}
 }
-dialogue_breed_settings.renegade_plasma_shocktrooper = {
-	trigger_seen_vo = true,
-	is_network_synced = false,
-	trigger_heard_vo = false,
-	vo_class_name = "renegade_plasma_shocktrooper",
-	has_dialogue_extension = true,
-	vo_triggers_enemy_kill_query = true,
-	dialogue_memory_faction_name = "enemy",
-	can_trigger_vo = true,
-	wwise_voice_switch_group = "switch_voice_enemy_traitor_shocktrooper",
-	wwise_voices = {
-		"enemy_traitor_scout_shocktrooper_a"
-	}
-}
 dialogue_breed_settings.renegade_flamer = {
 	trigger_seen_vo = true,
 	is_network_synced = false,
@@ -672,24 +652,6 @@ dialogue_breed_settings.renegade_flamer = {
 	wwise_voice_switch_group = "switch_voice_enemy_traitor_flamer",
 	wwise_voices = {
 		"enemy_traitor_guard_flamer_a"
-	}
-}
-dialogue_breed_settings.renegade_flamer_mutator = {
-	trigger_seen_vo = true,
-	is_network_synced = false,
-	trigger_heard_vo = false,
-	vo_class_name = "renegade_flamer",
-	has_dialogue_extension = true,
-	vo_triggers_enemy_kill_query = true,
-	dialogue_memory_faction_name = "enemy",
-	spawn_vo_event = "spawned",
-	can_trigger_vo = true,
-	wwise_voice_switch_group = "switch_voice_enemy_traitor_flamer_mutator",
-	wwise_voices = {
-		"enemy_traitor_guard_flamer_a",
-		"enemy_traitor_guard_flamer_mutator_b",
-		"enemy_traitor_guard_flamer_mutator_c",
-		"enemy_traitor_guard_flamer_mutator_d"
 	}
 }
 dialogue_breed_settings.unknown_breed_name = {
@@ -1008,6 +970,22 @@ dialogue_breed_settings.barber = {
 	wwise_voice_switch_group = "voice_profile",
 	wwise_voices = {
 		"barber_a"
+	}
+}
+dialogue_breed_settings.reject_npc = {
+	trigger_seen_vo = false,
+	is_network_synced = true,
+	trigger_heard_vo = false,
+	vo_class_name = "reject_npc",
+	has_dialogue_extension = true,
+	vo_triggers_enemy_kill_query = false,
+	dialogue_memory_faction_name = "npc",
+	level_requirement = 0,
+	can_trigger_vo = true,
+	wwise_voice_switch_group = "voice_profile",
+	wwise_voices = {
+		"reject_npc_a",
+		"reject_npc_servitor_a"
 	}
 }
 

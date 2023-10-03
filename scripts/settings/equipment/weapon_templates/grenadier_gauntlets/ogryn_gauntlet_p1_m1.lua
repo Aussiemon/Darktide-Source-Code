@@ -17,133 +17,146 @@ local BuffSettings = require("scripts/settings/buff/buff_settings")
 local armor_types = ArmorSettings.types
 local template_types = WeaponTweakTemplateSettings.template_types
 local buff_stat_buffs = BuffSettings.stat_buffs
-local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
-local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
-local explosion_trait_templates = WeaponTraitTemplates[template_types.explosion]
 local buff_targets = WeaponTweakTemplateSettings.buff_targets
 local damage_types = DamageSettings.damage_types
 local wield_inputs = PlayerCharacterConstants.wield_inputs
-local weapon_template = {}
 local wounds_shapes = WoundsSettings.shapes
-weapon_template.action_inputs = {
-	start_attack = {
-		buffer_time = 0.75,
-		max_queue = 1,
-		input_sequence = {
-			{
-				value = true,
-				input = "action_one_pressed"
+local ammo_trait_templates = WeaponTraitTemplates[template_types.ammo]
+local damage_trait_templates = WeaponTraitTemplates[template_types.damage]
+local explosion_trait_templates = WeaponTraitTemplates[template_types.explosion]
+local weapon_template = {
+	action_inputs = {
+		start_attack = {
+			buffer_time = 0.75,
+			max_queue = 1,
+			input_sequence = {
+				{
+					value = true,
+					input = "action_one_pressed"
+				}
 			}
-		}
-	},
-	attack_cancel = {
-		buffer_time = 0.1,
-		input_sequence = {
-			{
-				value = true,
-				hold_input = "action_one_hold",
-				input = "action_two_pressed"
+		},
+		attack_cancel = {
+			buffer_time = 0.1,
+			input_sequence = {
+				{
+					value = true,
+					hold_input = "action_one_hold",
+					input = "action_two_pressed"
+				}
 			}
-		}
-	},
-	light_attack = {
-		buffer_time = 0.3,
-		max_queue = 1,
-		input_sequence = {
-			{
-				value = false,
-				time_window = 0.25,
-				input = "action_one_hold"
+		},
+		light_attack = {
+			buffer_time = 0.3,
+			max_queue = 1,
+			input_sequence = {
+				{
+					value = false,
+					time_window = 0.25,
+					input = "action_one_hold"
+				}
 			}
-		}
-	},
-	heavy_attack = {
-		buffer_time = 0.5,
-		max_queue = 1,
-		input_sequence = {
-			{
-				value = true,
-				duration = 0.25,
-				input = "action_one_hold"
-			},
-			{
-				value = false,
-				time_window = 1.5,
-				auto_complete = true,
-				input = "action_one_hold"
+		},
+		heavy_attack = {
+			buffer_time = 0.5,
+			max_queue = 1,
+			input_sequence = {
+				{
+					value = true,
+					duration = 0.25,
+					input = "action_one_hold"
+				},
+				{
+					value = false,
+					time_window = 1.5,
+					auto_complete = true,
+					input = "action_one_hold"
+				}
 			}
-		}
-	},
-	special_action_start = {
-		buffer_time = 0.2,
-		input_sequence = {
-			{
-				value = true,
-				input = "weapon_extra_pressed"
+		},
+		special_action_start = {
+			buffer_time = 0.2,
+			input_sequence = {
+				{
+					value = true,
+					input = "weapon_extra_pressed"
+				}
 			}
-		}
-	},
-	special_action_execute = {
-		buffer_time = 0.2,
-		input_sequence = {
-			{
-				value = true,
-				duration = 0,
-				input = "weapon_extra_hold"
-			},
-			{
-				value = false,
-				time_window = 2.8,
-				auto_complete = true,
-				input = "weapon_extra_hold"
+		},
+		special_action_execute = {
+			buffer_time = 0.2,
+			input_sequence = {
+				{
+					value = true,
+					duration = 0,
+					input = "weapon_extra_hold"
+				},
+				{
+					value = false,
+					time_window = 2.8,
+					auto_complete = true,
+					input = "weapon_extra_hold"
+				}
 			}
-		}
-	},
-	zoom_shoot = {
-		buffer_time = 0.46,
-		max_queue = 2,
-		input_sequence = {
-			{
-				value = true,
-				hold_input = "action_two_hold",
-				input = "action_one_pressed"
+		},
+		zoom_shoot = {
+			buffer_time = 0.46,
+			max_queue = 2,
+			input_sequence = {
+				{
+					value = true,
+					input = "action_one_pressed"
+				}
 			}
-		}
-	},
-	zoom = {
-		buffer_time = 0.4,
-		input_sequence = {
-			{
-				value = true,
-				input = "action_two_hold"
+		},
+		zoom = {
+			buffer_time = 0.4,
+			input_sequence = {
+				{
+					value = true,
+					input = "action_two_hold",
+					input_setting = {
+						value = true,
+						input = "action_two_pressed",
+						setting_value = true,
+						setting = "toggle_ads"
+					}
+				}
 			}
-		}
-	},
-	zoom_release = {
-		buffer_time = 0.3,
-		input_sequence = {
-			{
-				value = false,
-				input = "action_two_hold",
-				time_window = math.huge
+		},
+		zoom_release = {
+			buffer_time = 0.3,
+			input_sequence = {
+				{
+					value = false,
+					input = "action_two_hold",
+					time_window = math.huge,
+					input_setting = {
+						setting_value = true,
+						setting = "toggle_ads",
+						value = true,
+						input = "action_two_pressed",
+						time_window = math.huge
+					}
+				}
 			}
-		}
-	},
-	reload = {
-		buffer_time = 0,
-		clear_input_queue = true,
-		input_sequence = {
-			{
-				value = true,
-				input = "weapon_reload"
+		},
+		reload = {
+			buffer_time = 0,
+			clear_input_queue = true,
+			input_sequence = {
+				{
+					value = true,
+					input = "weapon_reload"
+				}
 			}
-		}
-	},
-	wield = {
-		buffer_time = 0.2,
-		input_sequence = {
-			{
-				inputs = wield_inputs
+		},
+		wield = {
+			buffer_time = 0.2,
+			input_sequence = {
+				{
+					inputs = wield_inputs
+				}
 			}
 		}
 	}
@@ -181,12 +194,11 @@ table.add_missing(weapon_template.action_input_hierarchy, BaseTemplateSettings.a
 
 weapon_template.actions = {
 	action_wield = {
-		wield_reload_anim_event = "equip_reload",
+		uninterruptible = true,
 		allowed_during_sprint = true,
 		wield_anim_event = "equip",
+		wield_reload_anim_event = "equip_reload",
 		kind = "ranged_wield",
-		continue_sprinting = true,
-		uninterruptible = true,
 		total_time = 1,
 		allowed_chain_actions = {
 			start_attack = {
@@ -205,7 +217,12 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			}
 		},
 		conditional_state_to_action_input = {
@@ -218,7 +235,6 @@ weapon_template.actions = {
 		}
 	},
 	action_unwield = {
-		continue_sprinting = true,
 		allowed_during_sprint = true,
 		start_input = "wield",
 		uninterruptible = true,
@@ -236,7 +252,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -263,7 +284,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -291,7 +317,12 @@ weapon_template.actions = {
 				action_name = "combat_ability"
 			},
 			grenade_ability = {
-				action_name = "grenade_ability"
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
 			},
 			wield = {
 				action_name = "action_unwield"
@@ -328,14 +359,18 @@ weapon_template.actions = {
 		action_keywords = {
 			"braced",
 			"braced_shooting"
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.attack_speed,
+			buff_stat_buffs.ranged_attack_speed
 		}
 	},
 	action_reload = {
 		kind = "reload_state",
-		uninterruptible = true,
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
 		stop_alternate_fire = true,
+		uninterruptible = true,
 		abort_sprint = true,
 		crosshair_type = "none",
 		allowed_during_sprint = true,
@@ -380,13 +415,22 @@ weapon_template.actions = {
 				chain_time = 0.25
 			},
 			grenade_ability = {
-				action_name = "grenade_ability",
-				chain_time = 0.25
+				{
+					action_name = "grenade_ability",
+					chain_time = 0.25
+				},
+				{
+					action_name = "grenade_ability_quick_throw",
+					chain_time = 0.25
+				}
 			},
 			special_action_start = {
 				action_name = "action_start_special",
 				chain_time = 0.25
 			}
+		},
+		time_scale_stat_buffs = {
+			buff_stat_buffs.reload_speed
 		}
 	},
 	action_melee_start_left = {
@@ -441,8 +485,14 @@ weapon_template.actions = {
 				chain_time = 0.8
 			},
 			grenade_ability = {
-				action_name = "grenade_ability",
-				chain_time = 0.8
+				{
+					action_name = "grenade_ability",
+					chain_time = 0.8
+				},
+				{
+					action_name = "grenade_ability_quick_throw",
+					chain_time = 0.8
+				}
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -502,8 +552,14 @@ weapon_template.actions = {
 				chain_time = 0.8
 			},
 			grenade_ability = {
-				action_name = "grenade_ability",
-				chain_time = 0.8
+				{
+					action_name = "grenade_ability",
+					chain_time = 0.8
+				},
+				{
+					action_name = "grenade_ability_quick_throw",
+					chain_time = 0.8
+				}
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -563,8 +619,14 @@ weapon_template.actions = {
 				chain_time = 0.7
 			},
 			grenade_ability = {
-				action_name = "grenade_ability",
-				chain_time = 0.8
+				{
+					action_name = "grenade_ability",
+					chain_time = 0.8
+				},
+				{
+					action_name = "grenade_ability_quick_throw",
+					chain_time = 0.8
+				}
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -578,9 +640,8 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		weapon_handling_template = "time_scale_1_05",
 		attack_direction_override = "left",
-		continue_sprinting = false,
-		allowed_during_sprint = true,
 		range_mod = 1.15,
+		allowed_during_sprint = true,
 		damage_window_end = 0.36666666666666664,
 		uninterruptible = true,
 		anim_event = "attack_swing_right",
@@ -644,8 +705,14 @@ weapon_template.actions = {
 				chain_time = 0.6
 			},
 			grenade_ability = {
-				action_name = "grenade_ability",
-				chain_time = 0.6
+				{
+					action_name = "grenade_ability",
+					chain_time = 0.6
+				},
+				{
+					action_name = "grenade_ability_quick_throw",
+					chain_time = 0.6
+				}
 			}
 		},
 		weapon_box = {
@@ -737,8 +804,14 @@ weapon_template.actions = {
 				chain_time = 0.6
 			},
 			grenade_ability = {
-				action_name = "grenade_ability",
-				chain_time = 0.6
+				{
+					action_name = "grenade_ability",
+					chain_time = 0.6
+				},
+				{
+					action_name = "grenade_ability_quick_throw",
+					chain_time = 0.6
+				}
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -832,8 +905,14 @@ weapon_template.actions = {
 				chain_time = 0.8
 			},
 			grenade_ability = {
-				action_name = "grenade_ability",
-				chain_time = 0.8
+				{
+					action_name = "grenade_ability",
+					chain_time = 0.8
+				},
+				{
+					action_name = "grenade_ability_quick_throw",
+					chain_time = 0.8
+				}
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -911,8 +990,14 @@ weapon_template.actions = {
 				chain_time = 0.8
 			},
 			grenade_ability = {
-				action_name = "grenade_ability",
-				chain_time = 0.8
+				{
+					action_name = "grenade_ability",
+					chain_time = 0.8
+				},
+				{
+					action_name = "grenade_ability_quick_throw",
+					chain_time = 0.8
+				}
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -990,8 +1075,14 @@ weapon_template.actions = {
 				chain_time = 0.8
 			},
 			grenade_ability = {
-				action_name = "grenade_ability",
-				chain_time = 0.8
+				{
+					action_name = "grenade_ability",
+					chain_time = 0.8
+				},
+				{
+					action_name = "grenade_ability_quick_throw",
+					chain_time = 0.8
+				}
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1069,8 +1160,14 @@ weapon_template.actions = {
 				chain_time = 0.8
 			},
 			grenade_ability = {
-				action_name = "grenade_ability",
-				chain_time = 0.8
+				{
+					action_name = "grenade_ability",
+					chain_time = 0.8
+				},
+				{
+					action_name = "grenade_ability_quick_throw",
+					chain_time = 0.8
+				}
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1212,8 +1309,14 @@ weapon_template.actions = {
 				chain_time = 0.8
 			},
 			grenade_ability = {
-				action_name = "grenade_ability",
-				chain_time = 0.8
+				{
+					action_name = "grenade_ability",
+					chain_time = 0.8
+				},
+				{
+					action_name = "grenade_ability_quick_throw",
+					chain_time = 0.8
+				}
 			}
 		},
 		weapon_box = {
@@ -1241,7 +1344,7 @@ weapon_template.actions = {
 		start_input = "inspect_start",
 		anim_end_event = "inspect_end",
 		kind = "inspect",
-		crosshair_type = "none",
+		crosshair_type = "inspect",
 		anim_event = "inspect_start",
 		stop_input = "inspect_stop",
 		total_time = math.huge

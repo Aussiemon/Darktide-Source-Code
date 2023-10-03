@@ -10,7 +10,7 @@ local templates = {
 		allow_proc_while_active = true,
 		predicted = false,
 		class_name = "proc_buff",
-		active_duration = 0.5,
+		active_duration = 2,
 		proc_events = {
 			[proc_events.on_hit] = 1
 		},

@@ -1,5 +1,5 @@
 local stagger_settings = {}
-local stagger_types = table.enum("light", "medium", "heavy", "light_ranged", "sticky", "killshot", "shield_block", "shield_heavy_block", "shield_broken", "explosion", "wall_collision")
+local stagger_types = table.enum("light", "medium", "heavy", "light_ranged", "sticky", "electrocuted", "killshot", "shield_block", "shield_heavy_block", "shield_broken", "explosion", "wall_collision")
 stagger_settings.stagger_types = stagger_types
 stagger_settings.stagger_categories = {
 	melee = {
@@ -14,6 +14,9 @@ stagger_settings.stagger_categories = {
 	},
 	sticky = {
 		stagger_types.sticky
+	},
+	electrocuted = {
+		stagger_types.electrocuted
 	},
 	flamer = {
 		stagger_types.killshot,
@@ -61,6 +64,7 @@ stagger_settings.default_stagger_thresholds = {
 	[stagger_types.explosion] = 40,
 	[stagger_types.light_ranged] = 5,
 	[stagger_types.sticky] = 0.25,
+	[stagger_types.electrocuted] = 0.25,
 	[stagger_types.killshot] = 2,
 	[stagger_types.shield_block] = 0.25,
 	[stagger_types.shield_heavy_block] = 5,
@@ -78,7 +82,8 @@ stagger_settings.stagger_impact_comparison = {
 	[stagger_types.light] = 1,
 	[stagger_types.light_ranged] = 1,
 	[stagger_types.shield_block] = 1,
-	[stagger_types.sticky] = 3
+	[stagger_types.sticky] = 3,
+	[stagger_types.electrocuted] = 1
 }
 stagger_settings.default_stagger_resistance = 1
 stagger_settings.max_excessive_force = 5

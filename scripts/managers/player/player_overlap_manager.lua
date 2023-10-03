@@ -13,7 +13,7 @@ end
 
 PlayerOverlapManager.add_listening_actor = function (self, actor)
 	if self._overlap_result[actor] then
-		Log.warning("PlayerOverlapManager", "Trying to listen to the a alraedy registered actor")
+		Log.warning("PlayerOverlapManager", "Trying to listen to an already registered actor")
 
 		return
 	end

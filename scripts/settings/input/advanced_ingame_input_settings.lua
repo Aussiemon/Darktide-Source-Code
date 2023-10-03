@@ -41,8 +41,8 @@ local advanced_ingame_input_settings = {
 		},
 		interact = {
 			"keyboard_e",
-			"ps4_controller_cross",
-			"xbox_controller_a",
+			"ps4_controller_square",
+			"xbox_controller_x",
 			group = "input_group_combat",
 			description = "loc_ingame_interact",
 			sort_order = 4
@@ -132,7 +132,7 @@ local advanced_ingame_input_settings = {
 			"ps4_controller_d_up",
 			"xbox_controller_d_up",
 			group = "input_group_combat",
-			description = "loc_ingame_smart_tag",
+			description = "loc_ingame_com_wheel",
 			sort_order = 16
 		},
 		tactical_overlay = {
@@ -142,6 +142,13 @@ local advanced_ingame_input_settings = {
 			group = "input_group_combat",
 			description = "loc_ingame_tactical_overlay",
 			sort_order = 17
+		},
+		menu = {
+			"xbox_controller_start",
+			"ps4_controller_options",
+			group = "input_group_hotkeys",
+			bindable = false,
+			description = "loc_alias_view_hotkey_system"
 		},
 		weapon_inspect = {
 			"keyboard_x",
@@ -156,7 +163,8 @@ local advanced_ingame_input_settings = {
 			"xbox_controller_a",
 			group = "input_group_combat",
 			description = "loc_ingame_spectate_next",
-			sort_order = 19
+			sort_order = 19,
+			hide_in_controller_layout = true
 		},
 		voip_push_to_talk = {
 			"keyboard_v",
@@ -198,8 +206,8 @@ local advanced_ingame_input_settings = {
 		},
 		jump = {
 			"keyboard_space",
-			"ps4_controller_l1",
-			"xbox_controller_left_shoulder",
+			"ps4_controller_cross",
+			"xbox_controller_a",
 			group = "input_group_movement",
 			description = "loc_ingame_jump",
 			sort_order = 6
@@ -212,19 +220,25 @@ local advanced_ingame_input_settings = {
 			description = "loc_ingame_crouch",
 			sort_order = 7
 		},
+		slide = {
+			"xbox_controller_b",
+			group = "input_group_movement",
+			description = "loc_ingame_slide",
+			sort_order = 8
+		},
 		sprint = {
 			"keyboard_left shift",
 			"ps4_controller_l3",
 			"xbox_controller_left_thumb",
 			group = "input_group_movement",
 			description = "loc_ingame_sprint",
-			sort_order = 8
+			sort_order = 9
 		},
 		look_raw = {
 			"mouse_mouse",
 			group = "input_group_movement",
 			bindable = false,
-			sort_order = 9,
+			sort_order = 10,
 			description = "loc_ingame_look_raw"
 		},
 		look_raw_controller = {
@@ -232,7 +246,7 @@ local advanced_ingame_input_settings = {
 			"ps4_controller_right",
 			group = "input_group_movement",
 			bindable = false,
-			sort_order = 10,
+			sort_order = 11,
 			description = "loc_ingame_look_raw_controller"
 		},
 		move_controller = {
@@ -240,7 +254,7 @@ local advanced_ingame_input_settings = {
 			"ps4_controller_left",
 			group = "input_group_movement",
 			bindable = false,
-			sort_order = 11,
+			sort_order = 12,
 			description = "loc_ingame_move_controller"
 		}
 	},

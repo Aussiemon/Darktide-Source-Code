@@ -100,18 +100,16 @@ Trajectory.get_trajectory_velocity = function (from_position, target_position, g
 end
 
 local DEFAULT_NUM_SECTIONS = 4
+local DEFAULT_SPHERE_SWEEP_FPS = 60
+local DEFAULT_SPHERE_SWEEP_TIME_STEP = 1 / DEFAULT_SPHERE_SWEEP_FPS
 local LAST_SECTION_EPSILON_SQ = 1e-08
-local SEGMENT_LIST = {}
 
-Trajectory.check_trajectory_collisions = function (physics_world, from_position, target_position, gravity, projectile_speed, angle, sections, collision_filter, time_in_flight, ignored_unit_collisions, debug_draw_trajectory, optional_unit, optional_extra_ray_check_up, optional_extra_ray_check_down)
-	table.clear_array(SEGMENT_LIST, #SEGMENT_LIST)
-
+Trajectory.check_trajectory_collisions = function (physics_world, from_position, target_position, gravity, projectile_speed, angle, sections, collision_filter, time_in_flight, debug_draw, optional_radius, optional_relax_distance)
 	local to_target = target_position - from_position
 	local to_target_flat = Vector3.normalize(Vector3.flat(to_target))
 	local x_vel_0 = math.cos(angle) * projectile_speed
 	local y_vel_0 = math.sin(angle) * projectile_speed
 	local segment_pos1 = from_position
-	SEGMENT_LIST[1] = from_position
 	sections = sections or DEFAULT_NUM_SECTIONS
 
 	for i = 1, sections do
@@ -122,51 +120,84 @@ Trajectory.check_trajectory_collisions = function (physics_world, from_position,
 		segment_pos2.z = segment_pos2.z + z
 		local current_velocity = segment_pos2 - segment_pos1
 		local length = Vector3.length(current_velocity)
-		local hit, hit_pos, _, _, actor = PhysicsWorld.raycast(physics_world, segment_pos1, current_velocity, length, "closest", "collision_filter", collision_filter)
+		local hit, hit_pos, _, _, _ = PhysicsWorld.raycast(physics_world, segment_pos1, current_velocity, length, "closest", "collision_filter", collision_filter)
 
 		if hit then
 			local fail_on_collision = true
 
-			if ignored_unit_collisions then
-				local hit_unit = Actor.unit(actor)
-				fail_on_collision = not ignored_unit_collisions[hit_unit]
-			end
-
-			if fail_on_collision and i == sections then
+			if i == sections then
 				fail_on_collision = LAST_SECTION_EPSILON_SQ < Vector3.distance_squared(hit_pos, target_position)
 			end
 
 			if fail_on_collision then
-				return false, hit_pos, SEGMENT_LIST
+				return false, hit_pos
 			end
 		end
 
-		if optional_unit then
-			local mover_test_position = (segment_pos1 + segment_pos2) / 2
-			local mover_fits = Unit.mover_fits_at(optional_unit, "mover", mover_test_position)
-
-			if not mover_fits then
-				return false, nil, SEGMENT_LIST
-			end
-		end
-
-		if i < sections and optional_extra_ray_check_up and optional_extra_ray_check_down then
-			local ray_from = segment_pos2 + optional_extra_ray_check_down
-			local ray_to = segment_pos2 + optional_extra_ray_check_up
-			local extra_ray_length = Vector3.distance(ray_from, ray_to)
-			local extra_ray_direction = Vector3.normalize(optional_extra_ray_check_up)
-			local extra_raycast_result, extra_raycast_hit_pos = PhysicsWorld.raycast(physics_world, ray_from, extra_ray_direction, extra_ray_length, "closest", "collision_filter", collision_filter)
-
-			if extra_raycast_result then
-				return false, extra_raycast_hit_pos, SEGMENT_LIST
-			end
-		end
-
-		SEGMENT_LIST[i + 1] = segment_pos2
 		segment_pos1 = segment_pos2
 	end
 
-	return true, nil, SEGMENT_LIST
+	if not optional_radius then
+		return true, nil
+	end
+
+	local start_t = 0
+	local end_t = time_in_flight - DEFAULT_SPHERE_SWEEP_TIME_STEP * DEFAULT_SPHERE_SWEEP_TIME_STEP
+	local hit_position, _, new_position = Trajectory.sphere_sweep_collision_check(physics_world, from_position, to_target_flat, x_vel_0, y_vel_0, gravity, optional_radius, collision_filter, start_t, end_t, debug_draw)
+	local success = hit_position == nil or optional_relax_distance ~= nil and Vector3.distance_squared(new_position, target_position) <= optional_relax_distance * optional_relax_distance
+
+	return success, hit_position
+end
+
+local MAX_SPHERE_SWEEP_HITS = 1
+local SPHERE_SWEEP_POSITIONS = {}
+
+Trajectory.sphere_sweep_collision_check = function (physics_world, start_position, flat_direction, x_vel_0, y_vel_0, gravity, radius, collision_filter, start_t, end_t, debug_draw)
+	table.clear_array(SPHERE_SWEEP_POSITIONS, #SPHERE_SWEEP_POSITIONS)
+
+	local flat_direction_x, flat_direction_y, _ = Vector3.to_elements(flat_direction)
+	local start_position_x, start_position_y, start_position_z = Vector3.to_elements(start_position)
+	local t = start_t
+	local x = x_vel_0 * t
+	local z = y_vel_0 * t - 0.5 * gravity * t^2
+	local segment_pos1_x = start_position_x + flat_direction_x * x
+	local segment_pos1_y = start_position_y + flat_direction_y * x
+	local segment_pos1_z = start_position_z + z + radius
+	local segment_pos1 = Vector3(segment_pos1_x, segment_pos1_y, segment_pos1_z)
+	local num_positions = math.ceil((end_t - start_t) * DEFAULT_SPHERE_SWEEP_FPS) * 2
+
+	for i = 1, num_positions, 2 do
+		t = math.min(t + DEFAULT_SPHERE_SWEEP_TIME_STEP, end_t)
+		x = x_vel_0 * t
+		z = y_vel_0 * t - 0.5 * gravity * t^2
+		local segment_pos2_x = start_position_x + flat_direction_x * x
+		local segment_pos2_y = start_position_y + flat_direction_y * x
+		local segment_pos2_z = start_position_z + z + radius
+		local segment_pos2 = Vector3(segment_pos2_x, segment_pos2_y, segment_pos2_z)
+		SPHERE_SWEEP_POSITIONS[i] = segment_pos1
+		SPHERE_SWEEP_POSITIONS[i + 1] = segment_pos2
+		segment_pos1 = segment_pos2
+	end
+
+	local hit_position_index, hits = PhysicsWorld.multi_linear_sphere_sweep(physics_world, SPHERE_SWEEP_POSITIONS, radius, MAX_SPHERE_SWEEP_HITS, "collision_filter", collision_filter)
+
+	if hits then
+		local hit = hits[1]
+		local hit_position = hit.position
+		local hit_normal = hit.normal
+		local hit_distance = hit.distance
+		local from = SPHERE_SWEEP_POSITIONS[hit_position_index]
+		local to = SPHERE_SWEEP_POSITIONS[hit_position_index + 1]
+		local check_direction = Vector3.normalize(to - from)
+		local new_position = from + check_direction * hit_distance
+		new_position.z = new_position.z - radius
+
+		return hit_position, hit_normal, new_position
+	end
+
+	segment_pos1.z = segment_pos1.z - radius
+
+	return nil, nil, segment_pos1
 end
 
 local SEGMENTS = {}

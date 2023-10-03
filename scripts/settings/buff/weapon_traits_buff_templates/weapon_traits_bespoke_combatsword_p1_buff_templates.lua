@@ -39,9 +39,17 @@ templates.weapon_trait_bespoke_combatsword_p1_increase_stagger_per_hit_in_sweep_
 		[proc_events.on_sweep_finish] = true
 	},
 	conditional_proc_func = ConditionalFunctions.is_item_slot_wielded,
-	check_proc_func = function (params, template_data, template_context)
-		return template_data.active
-	end,
+	specific_check_proc_func = {
+		[proc_events.on_sweep_start] = function (params, template_data, template_context, t)
+			return true
+		end,
+		[proc_events.on_hit] = function (params, template_data, template_context, t)
+			return template_data.active
+		end,
+		[proc_events.on_sweep_finish] = function (params, template_data, template_context, t)
+			return true
+		end
+	},
 	specific_proc_func = {
 		[proc_events.on_sweep_start] = function (params, template_data, template_context)
 			template_data.active = ConditionalFunctions.is_item_slot_wielded(template_data, template_context)

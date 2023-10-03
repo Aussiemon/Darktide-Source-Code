@@ -1,11 +1,12 @@
 local AdaptiveClockHandlerServer = class("AdaptiveClockHandlerServer")
 local BUFFER_MIN = 2
 
-AdaptiveClockHandlerServer.init = function (self, player)
+AdaptiveClockHandlerServer.init = function (self, player, fixed_time_step)
 	local channel_id = player:channel_id()
 	self._player = player
 	self._channel_id = channel_id
 	self._peer_id = Managers.state.game_session:channel_to_peer(channel_id)
+	self._fixed_time_step = fixed_time_step
 	local ping = Network.ping(self._peer_id)
 
 	Log.info("AdaptiveClockHandlerServer", "Ping(%s) %ims", self._peer_id, ping * 1000)
@@ -17,7 +18,7 @@ AdaptiveClockHandlerServer.init = function (self, player)
 	self._latest_buffer_ceiling = BUFFER_MIN
 	local clock_offset = self:_offset()
 	local clock_start = Managers.time:time("gameplay") + clock_offset + self._estimated_ping * 0.5
-	local start_frame = math.floor(clock_start / GameParameters.fixed_time_step)
+	local start_frame = math.floor(clock_start / fixed_time_step)
 
 	Log.info("AdaptiveClockHandlerServer", "[%s:%i] Sync clock value: %f offset: %f start frame:%i ping:%f", self._peer_id, channel_id, clock_start, clock_offset, start_frame, ping)
 
@@ -30,7 +31,7 @@ AdaptiveClockHandlerServer.init = function (self, player)
 	RPC.rpc_sync_clock(channel_id, clock_start, clock_offset)
 
 	self._synced_offset = clock_offset
-	self._sync_epsilon = GameParameters.fixed_time_step * 0.5
+	self._sync_epsilon = fixed_time_step * 0.5
 	local size = 32
 	self._ping_buffer_size = size
 	self._ping_buffer = Script.new_array(size)
@@ -47,7 +48,7 @@ AdaptiveClockHandlerServer.init = function (self, player)
 end
 
 AdaptiveClockHandlerServer._offset = function (self)
-	return self._estimated_ping * 0.5 + self._buffer * GameParameters.fixed_time_step
+	return self._estimated_ping * 0.5 + self._buffer * self._fixed_time_step
 end
 
 AdaptiveClockHandlerServer.frame_received = function (self, frame)
@@ -109,10 +110,10 @@ AdaptiveClockHandlerServer._calibrate_rewind_ms = function (self, frame)
 	local constant_offset = 0.03
 	local ping = Network.ping(self._peer_id)
 	local client_unit_latency = ping * 0.5
-	local current_server_frame = Managers.time:time("gameplay") / GameParameters.fixed_time_step
+	local current_server_frame = Managers.time:time("gameplay") / self._fixed_time_step
 	local last_client_frame = frame
 	local server_client_offset = math.max(last_client_frame - current_server_frame, 0)
-	local server_client_offset_time = server_client_offset * GameParameters.fixed_time_step + ping * 0.5
+	local server_client_offset_time = server_client_offset * self._fixed_time_step + ping * 0.5
 	local buffer_index = self._rewind_ms_buffer_index
 	self._rewind_ms_buffer[buffer_index + 1] = (server_client_offset_time + client_unit_latency + constant_offset) * 1000
 	self._rewind_ms_buffer_index = (buffer_index + 1) % buffer_size

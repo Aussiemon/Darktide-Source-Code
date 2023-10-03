@@ -10,13 +10,14 @@ local ProfileSynchronizerClient = require("scripts/loading/profile_synchronizer_
 local EACError = require("scripts/managers/error/errors/eac_error")
 local ConnectionClient = class("ConnectionClient")
 
-ConnectionClient.init = function (self, event_delegate, engine_lobby, destroy_lobby_function, network_hash, host_type, optional_reservations, jwt_ticket, optional_matched_game_session_id, optional_accelerated_endpoint)
+ConnectionClient.init = function (self, event_delegate, engine_lobby, destroy_lobby_function, network_hash, host_type, optional_reservations, jwt_ticket, optional_matched_game_session_id, optional_accelerated_endpoint, optional_initial_party_id)
 	self._event_delegate = event_delegate
 	self._engine_lobby = engine_lobby
 	self._destroy_lobby_function = destroy_lobby_function
 	self._host_type = host_type
 	self._matched_game_session_id = optional_matched_game_session_id
 	self._accelerated_endpoint = optional_accelerated_endpoint
+	self._initial_party_id = optional_initial_party_id
 	local profile_synchronizer_client = ProfileSynchronizerClient:new(event_delegate)
 	self._profile_synchronizer_client = profile_synchronizer_client
 	self._region = nil
@@ -128,6 +129,10 @@ ConnectionClient.max_members = function (self)
 	return self._host_connection:max_members()
 end
 
+ConnectionClient.tick_rate = function (self)
+	return self._host_connection:tick_rate()
+end
+
 ConnectionClient.host_channel = function (self)
 	return self._host_channel_id
 end
@@ -142,6 +147,10 @@ end
 
 ConnectionClient.matched_game_session_id = function (self)
 	return self._matched_game_session_id
+end
+
+ConnectionClient.initial_party_id = function (self)
+	return self._initial_party_id
 end
 
 ConnectionClient.has_disconnected = function (self)

@@ -41,7 +41,7 @@ local function _remove_live_item_icon_cb_func(widget)
 end
 
 local ConstantElementNotificationFeed = class("ConstantElementNotificationFeed", "ConstantElementBase")
-local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "matchmaking", "voting")
+local MESSAGE_TYPES = table.enum("default", "alert", "mission", "item_granted", "currency", "achievement", "contract", "custom", "voting", "matchmaking")
 
 ConstantElementNotificationFeed.init = function (self, parent, draw_layer, start_scale)
 	ConstantElementNotificationFeed.super.init(self, parent, draw_layer, start_scale, Definitions)
@@ -278,14 +278,15 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		local item_type = item.item_type
 		local visual_item = item
 		local has_rarity = not not visual_item.rarity
-		local texts, rarity_color = nil
+		local texts, rarity_color, background_rarity_color = nil
 		local enter_sound_event = UISoundEvents.notification_item_received_rarity_1
 		local icon_material_values = nil
 
 		if has_rarity then
 			local sound_event_name = string.format("notification_item_received_rarity_%d", visual_item.rarity)
 			enter_sound_event = UISoundEvents[sound_event_name] or enter_sound_event
-			rarity_color = table.clone(ItemUtils.rarity_color(visual_item))
+			rarity_color, background_rarity_color = ItemUtils.rarity_color(visual_item)
+			rarity_color = table.clone(rarity_color)
 			texts = {
 				{
 					display_name = ItemUtils.display_name(visual_item),
@@ -353,9 +354,8 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 			icon_size = "large_cosmetic"
 		end
 
-		local background_rarity_color = rarity_color and table.clone(rarity_color)
-
 		if background_rarity_color then
+			background_rarity_color = table.clone(background_rarity_color)
 			background_rarity_color[1] = background_rarity_color[1] * ConstantElementNotificationFeedSettings.default_alpha_value
 		end
 
@@ -379,11 +379,19 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		local player_name = data.player_name
 		local optional_localization_key = data.optional_localization_key
 		local wallet_settings = WalletSettings[currency_type]
+		local ignore_wallet_display_name = false
+
+		if amount_size and type(amount_size) == "string" and wallet_settings then
+			local pickup_localization_by_size = wallet_settings.pickup_localization_by_size
+			local localization_key = pickup_localization_by_size[amount_size]
+			amount_size = Localize(localization_key)
+			ignore_wallet_display_name = true
+		end
 
 		if wallet_settings then
 			local icon_texture_large = wallet_settings and wallet_settings.icon_texture_big
 			local selected_color = Color.terminal_corner_selected(255, true)
-			amount = string.format("{#color(%d,%d,%d)}%s %s{#reset()}", selected_color[2], selected_color[3], selected_color[4], amount_size or TextUtils.format_currency(amount), Localize(wallet_settings.display_name))
+			amount = string.format("{#color(%d,%d,%d)}%s %s{#reset()}", selected_color[2], selected_color[3], selected_color[4], amount_size or TextUtils.format_currency(amount), not ignore_wallet_display_name and Localize(wallet_settings.display_name) or "")
 			local text = Localize(optional_localization_key or "loc_notification_feed_currency_acquired", true, {
 				amount = amount,
 				player_name = player_name
@@ -528,32 +536,24 @@ ConstantElementNotificationFeed._generate_notification_data = function (self, me
 		notification_data = {
 			texts = {
 				{
+					font_size = 22,
 					display_name = data.texts[1],
 					color = {
 						255,
-						200,
-						200,
-						200
+						232,
+						238,
+						219
 					}
 				},
 				{
-					font_size = 18,
+					font_size = 20,
 					display_name = data.texts[2],
-					color = {
-						255,
-						140,
-						140,
-						140
-					}
+					color = Color.text_default(255, true)
 				},
 				{
+					font_size = 20,
 					display_name = data.texts[3],
-					color = {
-						255,
-						200,
-						182,
-						149
-					}
+					color = Color.text_default(255, true)
 				}
 			}
 		}

@@ -21,11 +21,14 @@ OptionsUtilities.create_percent_slider_template = function (params)
 		display_name = params.display_name,
 		default_value = default_value,
 		on_activated = value_change_function,
+		on_changed = value_change_function,
 		get_function = value_get_function,
 		format_value_function = format_value_function,
 		validation_function = params.validation_function,
 		normalized_step_size = normalized_step_size,
-		apply_on_drag = params.apply_on_drag
+		apply_on_drag = params.apply_on_drag,
+		tooltip_text = params.tooltip_text,
+		id = params.id
 	}
 
 	return slider_template
@@ -73,7 +76,9 @@ OptionsUtilities.create_value_slider_template = function (params)
 		validation_function = params.validation_function,
 		step_size = step_size,
 		normalized_step_size = normalized_step_size,
-		apply_on_drag = params.apply_on_drag
+		apply_on_drag = params.apply_on_drag,
+		tooltip_text = params.tooltip_text,
+		id = params.id
 	}
 
 	return slider_template

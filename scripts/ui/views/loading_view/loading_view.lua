@@ -1,8 +1,9 @@
 local definition_path = "scripts/ui/views/loading_view/loading_view_definitions"
-local LoadingViewSettings = require("scripts/ui/views/loading_view/loading_view_settings")
-local UIRenderer = require("scripts/managers/ui/ui_renderer")
-local UIFonts = require("scripts/managers/ui/ui_fonts")
 local InputUtils = require("scripts/managers/input/input_utils")
+local LoadingViewSettings = require("scripts/ui/views/loading_view/loading_view_settings")
+local TaskbarFlash = require("scripts/utilities/taskbar_flash")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
+local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local temp_loading_hints = {
 	"loc_loading_hint_000",
 	"loc_loading_hint_001",
@@ -355,6 +356,7 @@ end
 
 LoadingView.on_exit = function (self)
 	LoadingView.super.on_exit(self)
+	TaskbarFlash.flash_window()
 end
 
 LoadingView.event_on_input_changed = function (self)
@@ -367,7 +369,7 @@ LoadingView._update_input_display = function (self)
 	local text_widget = widgets_by_name.hint_input_description
 	local localized_text = self:_localize(text)
 	local service_type = "View"
-	local alias_name = "next"
+	local alias_name = "next_hint"
 	local color_tint_text = true
 	local input_key = InputUtils.input_text_for_current_input_device(service_type, alias_name, color_tint_text)
 	text_widget.content.text = input_key .. " " .. localized_text
@@ -389,7 +391,7 @@ LoadingView._widget_text_length = function (self, widget_id)
 end
 
 LoadingView._handle_input = function (self, input_service)
-	if input_service:get("next") then
+	if input_service:get("next_hint") then
 		self:_cycle_next_hint()
 	end
 end

@@ -6,6 +6,7 @@ local TextUtils = require("scripts/utilities/ui/text")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
 local ViewStyles = require("scripts/ui/views/achievements_view/achievements_view_styles")
+local InputUtils = require("scripts/managers/input/input_utils")
 local CATEGORIES_GRID = 1
 local ACHIEVEMENT_GRID = 2
 local AchievementsView = class("AchievementsView", "BaseView")
@@ -158,7 +159,11 @@ AchievementsView._on_navigation_input_changed = function (self)
 	if unfold_hints_visible then
 		local show_sub_categories = category.widget.content.show_sub_categories
 		local button_hint_text = show_sub_categories and "loc_achievements_view_button_hint_fold_category" or "loc_achievements_view_button_hint_unfold_category"
-		gamepad_unfold_hint_widget.content.text = TextUtils.localize_with_button_hint("secondary_action_pressed", button_hint_text)
+		local gamepad_action = "confirm_pressed"
+		local service_type = "View"
+		local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
+		local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+		gamepad_unfold_hint_widget.content.text = string.format(Localize("loc_input_legend_text_template"), input_text, Localize(button_hint_text))
 	end
 
 	self._focused_grid_id = focused_grid_id
@@ -177,7 +182,7 @@ AchievementsView._handle_input = function (self, input_service, dt, t)
 		if input_service:get("navigate_left_continuous") or input_service:get("back") then
 			focused_grid_id = CATEGORIES_GRID
 			grid_has_changed = true
-		elseif input_service:get("secondary_action_pressed") then
+		elseif input_service:get("confirm_pressed") then
 			local grid = self._grids[focused_grid_id]
 			local focused_widget = grid:selected_grid_widget()
 			local fold_callback = focused_widget and focused_widget.content.fold_callback
@@ -187,7 +192,7 @@ AchievementsView._handle_input = function (self, input_service, dt, t)
 			end
 		end
 	elseif focused_grid_id == CATEGORIES_GRID then
-		if input_service:get("navigate_right_continuous") or input_service:get("confirm_pressed") then
+		if input_service:get("navigate_right_continuous") then
 			local grid = self._grids[ACHIEVEMENT_GRID]
 
 			if self._current_achievements and grid:first_interactable_grid_index() then
@@ -197,7 +202,7 @@ AchievementsView._handle_input = function (self, input_service, dt, t)
 			end
 
 			grid_has_changed = true
-		elseif input_service:get("secondary_action_pressed") then
+		elseif input_service:get("confirm_pressed") then
 			local current_category_id = self._current_category_id
 
 			if current_category_id then
@@ -310,8 +315,6 @@ AchievementsView._fold_or_unfold_subcategories = function (self, category_id)
 	if not sub_categories or #sub_categories == 0 then
 		local categories_grid = self._grids[CATEGORIES_GRID]
 
-		categories_grid:scroll_to_grid_widget(category_widget)
-
 		return
 	end
 
@@ -340,7 +343,6 @@ AchievementsView._fold_or_unfold_subcategories = function (self, category_id)
 	local categories_grid = self._grids[CATEGORIES_GRID]
 
 	categories_grid:force_update_list_size()
-	categories_grid:scroll_to_grid_widget(category_widget, nil, show_sub_categories)
 end
 
 AchievementsView._show_summary = function (self)

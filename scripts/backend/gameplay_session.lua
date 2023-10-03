@@ -114,7 +114,7 @@ GameplaySession.update = function (self, session_id, participants, kicked_partic
 		}
 	}
 
-	Log.info("GameplaySession", "Posting gameplay session update with body: %s", table.tostring(data, 5))
+	Log.info("GameplaySession", "Posting gameplay session update (%s) with participant_count=%s, kicked_participants_count=%s, backfill_wanted=%s", session_id, #participants, kicked_participants_account_ids and #kicked_participants_account_ids or -1, backfill_wanted and "true" or "false")
 
 	return Managers.backend:title_request("/gameplay/sessions/" .. session_id .. "/update", {
 		method = "POST",

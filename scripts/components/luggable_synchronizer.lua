@@ -30,6 +30,18 @@ LuggableSynchronizer.editor_init = function (self, unit)
 	self:enable(unit)
 end
 
+LuggableSynchronizer.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if rawget(_G, "LevelEditor") and not Unit.has_volume(unit, "g_luggable_safe_zone") then
+		success = false
+		error_message = error_message .. "\nMissing volume 'g_luggable_safe_zone'"
+	end
+
+	return success, error_message
+end
+
 LuggableSynchronizer.enable = function (self, unit)
 	return
 end

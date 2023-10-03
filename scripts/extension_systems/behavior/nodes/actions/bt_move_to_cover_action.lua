@@ -156,6 +156,10 @@ BtMoveToCoverAction._get_move_type = function (self, scratchpad, action_data)
 	local target_distance = perception_component.target_distance
 	local sprint_target_distance = action_data.sprint_target_distance
 
+	if not sprint_target_distance then
+		return "jogging"
+	end
+
 	if has_line_of_sight and target_distance <= sprint_target_distance then
 		return "sprinting"
 	else

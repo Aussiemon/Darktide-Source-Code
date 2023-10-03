@@ -26,6 +26,7 @@ MainMenuView.init = function (self, settings, context)
 	self._parent = context and context.parent
 	self._pass_draw = true
 	self._keybind_is_reset_on_start = false
+	self._show_news_popup = context.show_news_popup
 end
 
 MainMenuView.on_enter = function (self)
@@ -34,9 +35,9 @@ MainMenuView.on_enter = function (self)
 	self._character_list_widgets = {}
 	self._character_slot_spawn_id = 0
 	self._character_wait_overlay_active = self._parent and self._parent._character_is_syncing or false
-	self._news_list_requested = false
 	self._is_main_menu_open = false
 	self._character_list_grid = nil
+	self._news_list_requested = false
 	self._news_list = self:_reset_news_list()
 
 	self:_create_character_list_renderer()
@@ -73,7 +74,7 @@ MainMenuView.on_enter = function (self)
 		for i = 1, #self._context.migration_data do
 			local migration_to_check = self._context.migration_data[i]
 
-			if migration_to_check.name == "wallet-migration" then
+			if migration_to_check and migration_to_check.name == "wallet-migration" then
 				local data = self._context.migration_data[1].data
 				local should_present_data = false
 
@@ -96,6 +97,10 @@ MainMenuView.on_enter = function (self)
 				break
 			end
 		end
+	end
+
+	if self._show_news_popup then
+		self:_update_news_list()
 	end
 end
 
@@ -278,10 +283,6 @@ MainMenuView._set_waiting_for_characters = function (self, waiting)
 	end
 end
 
-MainMenuView.event_main_menu_load_news = function (self)
-	self:_update_news_list()
-end
-
 MainMenuView._event_profiles_changed = function (self, profiles)
 	self._character_profiles = profiles
 
@@ -301,6 +302,7 @@ MainMenuView._event_profiles_changed = function (self, profiles)
 end
 
 MainMenuView._event_selected_profile_changed = function (self, profile)
+	local ignore_sound_trigger = not self._selected_profile
 	self._selected_profile = profile
 
 	if profile then
@@ -319,29 +321,32 @@ MainMenuView._event_selected_profile_changed = function (self, profile)
 			end
 		end
 
-		self:_on_character_widget_selected(selected_index)
+		self:_on_character_widget_selected(selected_index, ignore_sound_trigger)
 	else
-		self:_on_character_widget_selected(1)
+		self:_on_character_widget_selected(1, ignore_sound_trigger)
 	end
 end
 
-MainMenuView._on_character_widget_selected = function (self, index)
+MainMenuView._on_character_widget_selected = function (self, index, ignore_sound_trigger)
 	local character_list_widgets = self._character_list_widgets
 	local widget = character_list_widgets[index]
 	local profile = widget and widget.content.profile
 
 	if profile then
-		if profile == self._selected_profile then
-			self:_set_selected_character_list_index(index)
-		else
-			Managers.event:trigger("event_request_select_new_profile", profile)
-		end
+		self:_set_selected_character_list_index(index)
 
 		local scroll_progress = self._character_list_grid:get_scrollbar_percentage_by_index(index)
 		local is_using_gampepad = not self._using_cursor_navigation
 
 		self._character_list_grid:select_grid_index(index, scroll_progress, true, is_using_gampepad)
-		self:_play_sound(UISoundEvents.main_menu_select_character)
+
+		if not ignore_sound_trigger then
+			self:_play_sound(UISoundEvents.main_menu_select_character)
+		end
+
+		Managers.event:trigger("event_request_select_new_profile", profile)
+
+		self._selected_profile = profile
 	end
 end
 
@@ -370,70 +375,37 @@ end
 
 MainMenuView._reset_news_list = function (self)
 	return {
-		slides = {},
-		viewed_slides_id = {}
+		slides = {}
 	}
 end
 
 MainMenuView._populate_news_list = function (self)
-	local save_manager = Managers.save
-	local save_data = save_manager:account_data()
-	local viewed_news_slides_id = save_data.viewed_news_slides or {}
-	local slides = {}
-	local valid_viewed_slides_id = {}
+	Managers.data_service.news:get_news():next(function (raw_news)
+		local starting_slide_index = self:_get_news_starting_slide_index(raw_news)
 
-	for i = 1, #viewed_news_slides_id do
-		local read_id = viewed_news_slides_id[i]
-
-		for d = 1, #slides do
-			local slide = slides[d]
-
-			if read_id == slide.id then
-				valid_viewed_slides_id[#valid_viewed_slides_id + 1] = read_id
-			end
+		if starting_slide_index then
+			self._news_list = {
+				slides = raw_news,
+				starting_slide_index = starting_slide_index
+			}
+		else
+			self._news_list = self:_reset_news_list()
 		end
-	end
 
-	local starting_slide_index = self:_get_news_starting_slide_index(slides, valid_viewed_slides_id)
-
-	if starting_slide_index then
-		self._news_list = {
-			slides = slides,
-			viewed_slides_id = valid_viewed_slides_id,
-			starting_slide_index = starting_slide_index
-		}
-	end
-
-	self._news_list_requested = false
+		self._news_list_requested = false
+	end)
 end
 
-MainMenuView._get_news_starting_slide_index = function (self, slides, viewed_slides)
-	if #viewed_slides == #slides then
-		return nil
-	elseif #viewed_slides == 0 then
-		return 1
-	end
+MainMenuView._get_news_starting_slide_index = function (self, news)
+	for i = 1, #news do
+		local news_item = news[i]
 
-	local starting_slide_index = #slides
-
-	for i = 1, #slides do
-		local slide = slides[i]
-		local found = false
-
-		for d = 1, #viewed_slides do
-			local read_slide_id = viewed_slides[d]
-
-			if read_slide_id == slide.id then
-				found = true
-			end
-		end
-
-		if not found and i < starting_slide_index then
-			starting_slide_index = i
+		if not news_item:is_read() then
+			return i
 		end
 	end
 
-	return starting_slide_index
+	return nil
 end
 
 MainMenuView._is_processing_backend_request = function (self)
@@ -461,10 +433,11 @@ MainMenuView.update = function (self, dt, t, input_service)
 
 	self._is_main_menu_open = Managers.ui:view_active("system_view")
 
-	if not self:_is_processing_backend_request() and self._news_list.starting_slide_index then
+	if not self._server_migration_element and not self:_is_processing_backend_request() and self._news_list.starting_slide_index then
 		local slide_data = table.clone(self._news_list)
 
 		Managers.ui:open_view("news_view", nil, nil, nil, nil, {
+			on_startup = true,
 			slide_data = slide_data
 		})
 
@@ -560,24 +533,17 @@ MainMenuView._on_navigation_input_changed = function (self)
 	MainMenuView.super._on_navigation_input_changed(self)
 
 	local is_mouse = self._using_cursor_navigation
-	local create_input_action = "hotkey_menu_special_1"
 	local character_list_grid = self._character_list_grid
 
 	if is_mouse then
-		self._widgets_by_name.create_button.content.text = Utf8.upper(Localize("loc_main_menu_create_button"))
-
 		if character_list_grid then
 			character_list_grid:focus_grid_index(nil)
 		end
-	else
-		self._widgets_by_name.create_button.content.text = Utf8.upper(TextUtils.localize_with_button_hint(create_input_action, "loc_main_menu_create_button"))
+	elseif character_list_grid then
+		local selected_index = self._selected_character_list_index
+		local scroll_progress = character_list_grid:get_scrollbar_percentage_by_index(selected_index)
 
-		if character_list_grid then
-			local selected_index = self._selected_character_list_index
-			local scroll_progress = character_list_grid:get_scrollbar_percentage_by_index(selected_index)
-
-			character_list_grid:focus_grid_index(selected_index, scroll_progress, true)
-		end
+		character_list_grid:focus_grid_index(selected_index, scroll_progress, true)
 	end
 end
 
@@ -660,11 +626,11 @@ MainMenuView._on_delete_selected_character_pressed = function (self)
 		type = "warning",
 		options = {
 			{
+				text = "loc_main_menu_delete_character_popup_confirm",
 				template_type = "terminal_button_hold_small",
 				stop_exit_sound = true,
 				close_on_pressed = true,
-				text = "loc_main_menu_delete_character_popup_confirm",
-				on_pressed_sound = UISoundEvents.delete_character_confirm,
+				on_complete_sound = UISoundEvents.delete_character_confirm,
 				callback = callback(function ()
 					local character_id = profile.character_id
 
@@ -717,6 +683,7 @@ MainMenuView.on_exit = function (self)
 
 	self:_destroy_character_grid()
 	self:_destroy_character_list_renderer()
+	Managers.event:unregister(self, "event_main_menu_load_news")
 	Managers.event:unregister(self, "event_main_menu_profiles_changed")
 	Managers.event:unregister(self, "event_main_menu_selected_profile_changed")
 	Managers.event:unregister(self, "update_character_sync_state")

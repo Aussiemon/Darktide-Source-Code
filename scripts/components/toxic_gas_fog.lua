@@ -117,6 +117,26 @@ ToxicGasFog.editor_init = function (self, unit)
 	return true
 end
 
+ToxicGasFog.editor_toggle_visibility_state = function (self, visible)
+	if visible and not self._volume_enabled then
+		self:set_volume_enabled(true)
+	elseif not visible and self._volume_enabled then
+		self:set_volume_enabled(false)
+	end
+end
+
+ToxicGasFog.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if not Unit.has_mesh(unit, "g_fog") then
+		success = false
+		error_message = error_message .. "\nMissing mesh 'g_fog'"
+	end
+
+	return success, error_message
+end
+
 ToxicGasFog.editor_destroy = function (self, unit)
 	if not rawget(_G, "LevelEditor") then
 		return
@@ -288,6 +308,12 @@ ToxicGasFog.component_data = {
 		ui_type = "check_box",
 		value = true,
 		ui_name = "Trigger Clouds",
+		category = "Circumstance Gameplay Data"
+	},
+	dont_trigger_this_cloud = {
+		ui_type = "check_box",
+		value = false,
+		ui_name = "Don't trigger this cloud",
 		category = "Circumstance Gameplay Data"
 	},
 	albedo = {

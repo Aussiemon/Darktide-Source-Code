@@ -303,6 +303,7 @@ local action_data = {
 		dodge_range = 2.75,
 		dodge_width = 1.1,
 		range = 4,
+		bot_power_level_modifier = 0.5,
 		width = 2,
 		considerations = UtilityConsiderations.chaos_ogryn_executor_cleave_melee_attack,
 		attack_anim_events = {
@@ -511,16 +512,17 @@ local action_data = {
 		height = 3,
 		utility_weight = 2,
 		vo_event = "assault",
-		ignore_blocked = true,
+		bot_power_level_modifier = 0.5,
 		attack_type = "oobb",
 		collision_filter = "filter_minion_melee_friendly_fire",
-		move_speed_variable_name = "moving_attack_fwd_speed",
 		moving_attack = true,
+		move_speed_variable_name = "moving_attack_fwd_speed",
 		move_speed_variable_lerp_speed = 4,
 		dodge_width = 1.1,
 		range = 4,
-		dodge_range = 2.75,
+		ignore_blocked = true,
 		move_speed = 4,
+		dodge_range = 2.75,
 		width = 2,
 		considerations = UtilityConsiderations.chaos_ogryn_executor_moving_melee_attack,
 		attack_anim_events = {
@@ -673,6 +675,33 @@ local action_data = {
 				}
 			},
 			sticky = {
+				bwd = {
+					"stagger_front_sticky",
+					"stagger_front_sticky_2",
+					"stagger_front_sticky_3"
+				},
+				fwd = {
+					"stagger_bwd_sticky",
+					"stagger_bwd_sticky_2",
+					"stagger_bwd_sticky_3"
+				},
+				left = {
+					"stagger_left_sticky",
+					"stagger_left_sticky_2",
+					"stagger_left_sticky_3"
+				},
+				right = {
+					"stagger_right_sticky",
+					"stagger_right_sticky_2",
+					"stagger_right_sticky_3"
+				},
+				dwn = {
+					"stagger_bwd_sticky",
+					"stagger_bwd_sticky_2",
+					"stagger_bwd_sticky_3"
+				}
+			},
+			electrocuted = {
 				bwd = {
 					"stagger_front_sticky",
 					"stagger_front_sticky_2",

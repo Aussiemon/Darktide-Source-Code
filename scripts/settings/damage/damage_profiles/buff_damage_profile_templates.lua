@@ -46,11 +46,11 @@ local burninating_barrel_adm = {
 local bleeding_adm = {
 	[armor_types.unarmored] = 0.5,
 	[armor_types.armored] = 0.75,
-	[armor_types.resistant] = 4,
+	[armor_types.resistant] = 1,
 	[armor_types.player] = 1,
 	[armor_types.berserker] = 1,
-	[armor_types.super_armor] = 0.5,
-	[armor_types.disgustingly_resilient] = 0.25,
+	[armor_types.super_armor] = 0.25,
+	[armor_types.disgustingly_resilient] = 0.5,
 	[armor_types.void_shield] = 1,
 	[armor_types.prop_armor] = 0.75
 }
@@ -115,6 +115,53 @@ damage_templates.liquid_area_fire_burning_barrel = {
 	},
 	power_distribution = {
 		attack = 20,
+		impact = 0
+	},
+	cleave_distribution = {
+		attack = 0.125,
+		impact = 0
+	},
+	suppression_value = {
+		100,
+		100
+	},
+	on_kill_area_suppression = {
+		suppression_value = {
+			1,
+			2
+		},
+		distance = {
+			3,
+			5
+		}
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+damage_templates.flame_grenade_liquid_area_fire_burning = {
+	override_allow_friendly_fire = true,
+	ignore_shield = true,
+	ignore_toughness = true,
+	stagger_category = "melee",
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 2,
+			[armor_types.armored] = 1.5,
+			[armor_types.resistant] = 3.5,
+			[armor_types.player] = 0.125,
+			[armor_types.berserker] = 2,
+			[armor_types.super_armor] = 0.1,
+			[armor_types.disgustingly_resilient] = 2,
+			[armor_types.void_shield] = 1,
+			[armor_types.prop_armor] = 0.75
+		},
+		impact = burninating_adm
+	},
+	power_distribution = {
+		attack = 50,
 		impact = 0
 	},
 	cleave_distribution = {
@@ -308,7 +355,7 @@ damage_templates.bleeding = {
 		impact = bleeding_adm
 	},
 	power_distribution = {
-		attack = 40,
+		attack = 200,
 		impact = 0
 	},
 	cleave_distribution = {

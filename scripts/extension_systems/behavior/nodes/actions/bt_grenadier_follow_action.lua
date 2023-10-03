@@ -177,7 +177,7 @@ BtGrenadierFollowAction._check_grenade_trajectory = function (self, unit, blackb
 	local locomotion_template = projectile_template.locomotion_template
 	local throw_parameters = locomotion_template.throw_parameters.throw
 	local integrator_parameters = locomotion_template.integrator_parameters
-	local speed = throw_parameters.speed_inital
+	local speed = throw_parameters.speed_initial
 	local gravity = integrator_parameters.gravity
 	local acceptable_accuracy = throw_config.acceptable_accuracy
 	local target_velocity = MinionMovement.target_velocity(target_unit)
@@ -189,7 +189,7 @@ BtGrenadierFollowAction._check_grenade_trajectory = function (self, unit, blackb
 
 	local debug = false
 	local velocity, time_in_flight = Trajectory.get_trajectory_velocity(throw_node_position, estimated_position, gravity, speed, angle_to_hit_target)
-	local trajectory_is_ok = Trajectory.check_trajectory_collisions(scratchpad.physics_world, throw_node_position, estimated_position, gravity, speed, angle_to_hit_target, SECTIONS, COLLISION_FILTER, time_in_flight, nil, debug)
+	local trajectory_is_ok = Trajectory.check_trajectory_collisions(scratchpad.physics_world, throw_node_position, estimated_position, gravity, speed, angle_to_hit_target, SECTIONS, COLLISION_FILTER, time_in_flight, debug)
 
 	if trajectory_is_ok then
 		local throw_direction = Vector3.normalize(velocity)

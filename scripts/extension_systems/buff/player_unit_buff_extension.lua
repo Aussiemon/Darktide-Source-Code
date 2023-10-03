@@ -17,12 +17,21 @@ PlayerUnitBuffExtension.init = function (self, extension_init_context, unit, ext
 	local buff_component = unit_data_extension:write_component("buff")
 	self._buff_component = buff_component
 	self._on_screen_effects = {}
+	self._active_effect_templates = {}
 	local buff_context = self._buff_context
 	buff_context.player = extension_init_data.player
 	self._max_component_buffs = MAX_COMPONENT_BUFFS
 	self._component_buffs = Script.new_array(MAX_COMPONENT_BUFFS)
+	self._fx_system = Managers.state.extension:system("fx_system")
 
 	self:_init_components(buff_component)
+
+	if self._is_server then
+		self:_init_sync_data(game_object_data_or_game_session)
+	else
+		self._game_session = game_object_data_or_game_session
+		self._game_object_id = nil_or_game_object_id
+	end
 end
 
 PlayerUnitBuffExtension._init_components = function (self, buff_component)
@@ -45,11 +54,23 @@ PlayerUnitBuffExtension._init_components = function (self, buff_component)
 	buff_component.seed = seed
 end
 
+PlayerUnitBuffExtension._init_sync_data = function (self, game_object_data)
+	local game_object_buff_keywords = {}
+	local synced_buff_keywords = NetworkLookup.synced_buff_keywords
+
+	for ii = 1, #synced_buff_keywords do
+		game_object_buff_keywords[ii] = false
+	end
+
+	game_object_data.buff_keywords = game_object_buff_keywords
+end
+
 PlayerUnitBuffExtension.hot_join_sync = function (self, unit, sender, channel_id)
 	return
 end
 
 PlayerUnitBuffExtension.game_object_initialized = function (self, game_session, game_object_id)
+	self._game_session = game_session
 	self._game_object_id = game_object_id
 	local channel_id = self._player:channel_id()
 	local buffs_added_before_game_object_creation = self._buffs_added_before_game_object_creation
@@ -71,7 +92,19 @@ PlayerUnitBuffExtension.game_object_initialized = function (self, game_session, 
 	end
 end
 
+PlayerUnitBuffExtension.extensions_ready = function (self, world, unit)
+	self._toughness_extension = ScriptUnit.has_extension(unit, "toughness_system")
+end
+
 PlayerUnitBuffExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
+	local is_server = self._is_server
+	local toughness_extension = self._toughness_extension
+	local max_toughness_before = nil
+
+	if is_server and toughness_extension then
+		max_toughness_before = toughness_extension:max_toughness()
+	end
+
 	self:_update_buffs(dt, t)
 	self:_move_looping_sfx_sources(unit)
 	self:_update_proc_events(t)
@@ -80,6 +113,32 @@ PlayerUnitBuffExtension.fixed_update = function (self, unit, dt, t, fixed_frame)
 	local portable_random = self._portable_random
 	local buff_component = self._buff_component
 	buff_component.seed = portable_random:seed()
+
+	if is_server and toughness_extension then
+		local max_toughness_after = toughness_extension:max_toughness()
+
+		if max_toughness_before ~= max_toughness_after then
+			toughness_extension:handle_max_toughness_changes_due_to_buffs(max_toughness_before, max_toughness_after)
+		end
+	end
+end
+
+local game_object_buff_keywords = {}
+
+PlayerUnitBuffExtension.post_update = function (self, unit, dt, t)
+	if not self._is_server then
+		return
+	end
+
+	local synced_buff_keywords = NetworkLookup.synced_buff_keywords
+	local active_keywords = self._keywords
+
+	for ii = 1, #synced_buff_keywords do
+		local buff_keyword = synced_buff_keywords[ii]
+		game_object_buff_keywords[ii] = not not active_keywords[buff_keyword]
+	end
+
+	GameSession.set_game_object_field(self._game_session, self._game_object_id, "buff_keywords", game_object_buff_keywords)
 end
 
 PlayerUnitBuffExtension.add_internally_controlled_buff = function (self, template_name, t, ...)
@@ -426,7 +485,7 @@ end
 
 PlayerUnitBuffExtension._set_proc_active_start_time = function (self, index, activation_time)
 	if self._is_server then
-		local activation_frame = activation_time / GameParameters.fixed_time_step
+		local activation_frame = activation_time / self._fixed_time_step
 		local player = self._player
 
 		if player.remote then
@@ -450,6 +509,7 @@ PlayerUnitBuffExtension._start_fx = function (self, index, template)
 
 	local buff_context = self._buff_context
 	local is_local_unit = buff_context.is_local_unit
+	local unit = buff_context.unit
 	local player_effects = template.player_effects
 	local player = buff_context.player
 	local is_human_controlled = player:is_human_controlled()
@@ -470,6 +530,14 @@ PlayerUnitBuffExtension._start_fx = function (self, index, template)
 				particle_id = on_screen_effect_id,
 				stop_type = stop_type
 			}
+		end
+
+		local on_add_wwise_event = player_effects.on_add_wwise_event
+
+		if on_add_wwise_event then
+			local wwise_world = buff_context.wwise_world
+
+			WwiseWorld.trigger_resource_event(wwise_world, on_add_wwise_event)
 		end
 
 		local player_looping_wwise_start_event = player_effects.looping_wwise_start_event
@@ -498,6 +566,16 @@ PlayerUnitBuffExtension._start_fx = function (self, index, template)
 			for parameter_name, parameter_value in pairs(wwise_parameters) do
 				Wwise.set_parameter(parameter_name, parameter_value)
 			end
+		end
+	end
+
+	if player_effects and self._is_server then
+		local active_effect_templates = self._active_effect_templates
+		local effect_template = player_effects.effect_template
+
+		if effect_template and not active_effect_templates[index] then
+			local effect_template_id = self._fx_system:start_template_effect(effect_template, unit)
+			active_effect_templates[index] = effect_template_id
 		end
 	end
 end
@@ -559,6 +637,19 @@ PlayerUnitBuffExtension._stop_fx = function (self, index, template)
 		end
 
 		self._on_screen_effects[index] = nil
+	end
+
+	if player_effects and self._is_server then
+		local active_effect_templates = self._active_effect_templates
+		local fx_system = self._fx_system
+		local effect_template_id = active_effect_templates[index]
+		local effect_template = player_effects.effect_template
+
+		if effect_template and effect_template_id and fx_system:has_running_global_effect_id(effect_template_id) then
+			fx_system:stop_template_effect(effect_template_id)
+
+			active_effect_templates[index] = nil
+		end
 	end
 
 	PlayerUnitBuffExtension.super._stop_fx(self, index, template)

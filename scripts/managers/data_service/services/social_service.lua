@@ -92,10 +92,6 @@ SocialService.destroy = function (self)
 	Managers.event:unregister(self, "backend_friend_removed")
 end
 
-SocialService.reset = function (self)
-	self._invites:reset()
-end
-
 SocialService.update = function (self, dt, t)
 	if self._voting_id and not Managers.voting:voting_exists(self._voting_id) then
 		self._voting_id = nil
@@ -103,6 +99,10 @@ SocialService.update = function (self, dt, t)
 
 	self._invites:update()
 	self:_check_split_party()
+end
+
+SocialService.xbox_profile_signed_in = function (self, xuid)
+	self._invites:xbox_profile_signed_in(xuid)
 end
 
 SocialService.platform = function (self)
@@ -308,6 +308,7 @@ SocialService.fetch_friend_invites = function (self, force_update)
 	return friend_invites_promise
 end
 
+local _seen_account_ids = {}
 local _fetch_recent_companions_recent_companions = {}
 
 SocialService.fetch_recent_companions = function (self, character_id, force_refresh)
@@ -319,10 +320,16 @@ SocialService.fetch_recent_companions = function (self, character_id, force_refr
 
 	recent_companions_promise = self._backend_interfaces:fetch_recently_played(character_id):next(function (data)
 		local recent_companions = _fetch_recent_companions_recent_companions
+		local seen_account_ids = _seen_account_ids
 
+		table.clear(seen_account_ids)
 		table.clear_array(recent_companions, #recent_companions)
 
 		local recent_participants = data.recentParticipants
+
+		table.sort(recent_participants, function (a, b)
+			return b.playedAt < a.playedAt
+		end)
 
 		for i = 1, #recent_participants do
 			local recent_companion = recent_participants[i]
@@ -332,11 +339,12 @@ SocialService.fetch_recent_companions = function (self, character_id, force_refr
 
 			player_info:set_account(account_id, account_name)
 
-			local last_time_played_with = math.floor(tonumber(recent_companion.playedAt) / 1000)
+			if not _seen_account_ids[account_id] and not player_info:is_blocked() then
+				local last_time_played_with = math.floor(tonumber(recent_companion.playedAt) / 1000)
 
-			player_info:set_last_time_played_with(last_time_played_with)
+				player_info:set_last_time_played_with(last_time_played_with)
 
-			if not player_info:is_blocked() then
+				_seen_account_ids[account_id] = true
 				recent_companions[#recent_companions + 1] = player_info
 			end
 		end

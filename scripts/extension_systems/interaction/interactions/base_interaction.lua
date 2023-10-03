@@ -1,4 +1,5 @@
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
+local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local BaseInteraction = class("BaseInteraction")
 
 BaseInteraction.init = function (self, template)
@@ -35,10 +36,6 @@ BaseInteraction.hud_block_text = function (self, interactor_unit, interactee_uni
 	local interactee_extension = ScriptUnit.extension(interactee_unit, "interactee_system")
 
 	return interactee_extension:block_text(interactor_unit)
-end
-
-BaseInteraction.marker_offset = function (self)
-	return nil
 end
 
 BaseInteraction.type = function (self)
@@ -78,6 +75,16 @@ BaseInteraction._interactor_disabled = function (self, interactor_unit)
 	local character_state_component = unit_data_extension:read_component("character_state")
 
 	return PlayerUnitStatus.is_disabled(character_state_component)
+end
+
+BaseInteraction._unequip_slot = function (self, t, interactor_unit, slot_name)
+	local unit_data_extension = ScriptUnit.extension(interactor_unit, "unit_data_system")
+	local inventory_component = unit_data_extension:read_component("inventory")
+	local visual_loadout_extension = ScriptUnit.extension(interactor_unit, "visual_loadout_system")
+
+	if PlayerUnitVisualLoadout.slot_equipped(inventory_component, visual_loadout_extension, slot_name) then
+		PlayerUnitVisualLoadout.unequip_item_from_slot(interactor_unit, slot_name, t)
+	end
 end
 
 return BaseInteraction

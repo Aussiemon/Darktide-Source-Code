@@ -597,6 +597,10 @@ local action_data = {
 			ranged = 20,
 			killshot = 20
 		},
+		stagger_type_reduction = {
+			ranged = 60,
+			killshot = 60
+		},
 		animation_move_speed_configs = {
 			attack_move_01 = {
 				{
@@ -725,6 +729,10 @@ local action_data = {
 		stagger_type_reduction = {
 			ranged = 20,
 			killshot = 20
+		},
+		stagger_type_reduction = {
+			ranged = 60,
+			killshot = 60
 		},
 		animation_move_speed_configs = {
 			attack_run_01 = {
@@ -981,6 +989,33 @@ local action_data = {
 				}
 			},
 			sticky = {
+				bwd = {
+					"stagger_front_sticky",
+					"stagger_front_sticky_2",
+					"stagger_front_sticky_3"
+				},
+				fwd = {
+					"stagger_bwd_sticky",
+					"stagger_bwd_sticky_2",
+					"stagger_bwd_sticky_3"
+				},
+				left = {
+					"stagger_left_sticky",
+					"stagger_left_sticky_2",
+					"stagger_left_sticky_3"
+				},
+				right = {
+					"stagger_right_sticky",
+					"stagger_right_sticky_2",
+					"stagger_right_sticky_3"
+				},
+				dwn = {
+					"stagger_bwd_sticky",
+					"stagger_bwd_sticky_2",
+					"stagger_bwd_sticky_3"
+				}
+			},
+			electrocuted = {
 				bwd = {
 					"stagger_front_sticky",
 					"stagger_front_sticky_2",

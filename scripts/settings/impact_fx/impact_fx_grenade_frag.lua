@@ -158,25 +158,23 @@ local resistant = table.clone(unarmored)
 local berserker = table.clone(armored)
 local prop_armor = table.clone(armored)
 local player = table.clone(unarmored)
-local default_surface_decal = {
-	Vector3(0.2, 0.2, 0.2),
-	Vector3(0.2, 0.2, 0.2),
-	{
-		"content/fx/units/weapons/decal_cross_01"
-	}
-}
+local surface_fx = {}
 local default_surface_fx = {
-	sfx = {
-		{
-			group = "surface_material",
-			append_husk_to_event_name = true,
-			event = "wwise/events/weapon/play_grenade_surface_impact",
-			normal_rotation = true
+	[hit_types.stop] = {
+		sfx = {
+			{
+				group = "surface_material",
+				append_husk_to_event_name = true,
+				event = "wwise/events/weapon/play_grenade_surface_impact",
+				normal_rotation = true
+			}
 		}
 	},
-	vfx = {}
+	[hit_types.penetration_entry] = nil,
+	[hit_types.penetration_exit] = nil
 }
-local surface_decal = {}
+
+ImpactFxHelper.create_missing_surface_fx(surface_fx, default_surface_fx)
 
 return {
 	armor = {
@@ -189,10 +187,5 @@ return {
 		[armor_types.unarmored] = unarmored,
 		[armor_types.prop_armor] = prop_armor
 	},
-	surface = {
-		[hit_types.stop] = default_surface_fx,
-		[hit_types.penetration_entry] = default_surface_fx,
-		[hit_types.penetration_exit] = default_surface_fx
-	},
-	surface_decal = surface_decal
+	surface = surface_fx
 }

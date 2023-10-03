@@ -152,6 +152,12 @@ ProfilesService.equip_items_in_slots = function (self, character_id, item_gear_i
 	end
 end
 
+ProfilesService.unequip_slots = function (self, character_id, unequipped_slots)
+	local promise = self._backend_interface.characters:unequip_slots(character_id, unequipped_slots)
+
+	return _invalidate_gear_cache(promise)
+end
+
 ProfilesService.equip_master_items_in_slots = function (self, character_id, item_master_ids_by_slots)
 	return _invalidate_gear_cache(self._backend_interface.characters:equip_master_items_in_slots(character_id, item_master_ids_by_slots))
 end

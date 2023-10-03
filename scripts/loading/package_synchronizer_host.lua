@@ -1,11 +1,12 @@
 local FixedFrame = require("scripts/utilities/fixed_frame")
+local Interrupt = require("scripts/utilities/attack/interrupt")
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local ItemSlotSettings = require("scripts/settings/item/item_slot_settings")
 local MissionTemplates = require("scripts/settings/mission/mission_templates")
 local PackagePrioritizationTemplates = require("scripts/loading/package_prioritization_templates")
+local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local PlayerPackageAliases = require("scripts/settings/player/player_package_aliases")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
-local PlayerCharacterConstants = require("scripts/settings/player_character/player_character_constants")
 local ability_configuration = PlayerCharacterConstants.ability_configuration
 local unit_alive = Unit.alive
 local PackageSynchronizerHost = class("PackageSynchronizerHost")
@@ -421,8 +422,8 @@ PackageSynchronizerHost._calculate_changed_talents = function (self, old_profile
 	local new_talents = new_profile.talents
 	local talents_changed = false
 
-	for talent_name, _ in pairs(old_talents) do
-		if not new_talents[talent_name] then
+	for talent_name, tier in pairs(old_talents) do
+		if not new_talents[talent_name] or new_talents[talent_name] ~= tier then
 			talents_changed = true
 
 			break
@@ -430,8 +431,8 @@ PackageSynchronizerHost._calculate_changed_talents = function (self, old_profile
 	end
 
 	if not talents_changed then
-		for talent_name, _ in pairs(new_talents) do
-			if not old_talents[talent_name] then
+		for talent_name, tier in pairs(new_talents) do
+			if not old_talents[talent_name] or old_talents[talent_name] ~= tier then
 				talents_changed = true
 
 				break
@@ -544,6 +545,12 @@ PackageSynchronizerHost._handle_profile_changes_before_sync = function (self, pl
 
 	if changed_talents then
 		self:_handle_talent_changes_before_sync(player, sync_data)
+	end
+
+	local cleanup_owned_units = changed_inventory_items or changed_talents or changed_profile_fields.player_unit_respawn
+
+	if cleanup_owned_units then
+		self:_cleanup_owned_units(player)
 	end
 end
 
@@ -719,6 +726,26 @@ PackageSynchronizerHost._handle_talent_changes_after_sync = function (self, tale
 	local specialization_extension = ScriptUnit.extension(player_unit, "specialization_system")
 
 	specialization_extension:select_new_specialization(specialization_name, talents, fixed_t)
+end
+
+PackageSynchronizerHost._cleanup_owned_units = function (self, player)
+	local unit_spawner_manager = Managers.state.unit_spawner
+
+	if not unit_spawner_manager then
+		return
+	end
+
+	local owned_units = player.owned_units
+	local player_unit = player.player_unit
+	local t = FixedFrame.get_latest_fixed_time()
+
+	Interrupt.ability_and_action(t, player_unit, "PackageSynchronizer", nil, true)
+
+	for unit, _ in pairs(owned_units) do
+		if unit ~= player_unit then
+			unit_spawner_manager:mark_for_deletion(unit)
+		end
+	end
 end
 
 PackageSynchronizerHost.is_peer_synced = function (self, peer_id, debug_log)

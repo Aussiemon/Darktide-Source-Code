@@ -76,7 +76,11 @@ ViewElementGrid.set_expire_time = function (self, time)
 
 	if timer_loc_string then
 		local timer_params = _timer_params
+		local timer_color = Color.terminal_text_body_sub_header(255, true)
 		timer_params.timer_text = timer_text
+		timer_params.timer_color_r = timer_color[2]
+		timer_params.timer_color_g = timer_color[3]
+		timer_params.timer_color_b = timer_color[4]
 		timer_text = Localize(timer_loc_string, true, timer_params)
 	end
 
@@ -104,7 +108,11 @@ ViewElementGrid._cb_on_sort_button_pressed = function (self, start_index)
 	local next_index = start_index or self._active_sort_index and math.index_wrapper(self._active_sort_index + 1, #options) or 1
 	local next_option = options[next_index]
 	local sort_display_name = next_option.display_name
+	local sort_color = Color.terminal_text_body_sub_header(255, true)
 	local text = Localize("loc_inventory_item_grid_sort_format_key", true, {
+		sort_color_r = sort_color[2],
+		sort_color_g = sort_color[3],
+		sort_color_b = sort_color[4],
 		name = sort_display_name
 	})
 	self._sort_button_text = text
@@ -398,8 +406,6 @@ ViewElementGrid._draw_grid = function (self, dt, t, input_service, render_settin
 	UIRenderer.begin_pass(ui_resource_renderer, ui_scenegraph, input_service, dt, render_settings)
 
 	if self._resource_renderer_background then
-		self._stored_draw_renderer = ui_resource_renderer
-
 		UIWidget.draw(self._widgets_by_name.grid_background, ui_resource_renderer)
 	end
 
@@ -435,16 +441,20 @@ ViewElementGrid._update_grid_widgets = function (self, dt, t, input_service)
 			local widget = widgets[i]
 			local widget_type = widget.type
 			local template = content_blueprints[widget_type]
-			local update = template and template.update
 			local content = widget.content
+			local privious_visibility_state = content.visible
 			local visible = grid:is_widget_visible(widget, content.extra_margin or widget_visual_margin)
 			local render_icon = grid:is_widget_visible(widget, widget_icon_load_margin)
 			content.visible_last_frame = content.visible
 			content.visible = visible
 			content.render_icon = render_icon or visible
 
-			if update then
-				update(self, widget, input_service, dt, t, ui_renderer)
+			if visible or privious_visibility_state ~= visible then
+				local update = template and template.update
+
+				if update then
+					update(self, widget, input_service, dt, t, ui_renderer)
+				end
 			end
 		end
 	end
@@ -699,6 +709,7 @@ ViewElementGrid._on_present_grid_layout_changed = function (self, layout, conten
 	local widgets_by_name = self._widgets_by_name
 	local grid_scrollbar_widget_id = "grid_scrollbar"
 	local scrollbar_widget = widgets_by_name[grid_scrollbar_widget_id]
+	scrollbar_widget.content.enable_gamepad_scrolling = menu_settings.enable_gamepad_scrolling
 
 	grid:assign_scrollbar(scrollbar_widget, grid_pivot_scenegraph_id, grid_scenegraph_id)
 	grid:set_scrollbar_progress(0)
@@ -709,6 +720,10 @@ ViewElementGrid._on_present_grid_layout_changed = function (self, layout, conten
 	if #self._grid_widgets == 0 then
 		self:_show_empty_message()
 	end
+end
+
+ViewElementGrid.grid_scrollbar = function (self)
+	return self._widgets_by_name.grid_scrollbar
 end
 
 ViewElementGrid._show_empty_message = function (self)
@@ -891,6 +906,19 @@ ViewElementGrid.scroll_to_grid_widget = function (self, widget, instant_scroll, 
 	grid:set_scrollbar_progress(scroll_progress, not instant_scroll)
 end
 
+ViewElementGrid.scrollbar_progress = function (self)
+	local grid = self._grid
+
+	return grid:scrollbar_progress()
+end
+
+ViewElementGrid.set_scrollbar_progress = function (self, scroll_progress, instant_scroll)
+	local grid = self._grid
+	local current_scroll_progress = grid:scrollbar_progress()
+
+	grid:set_scrollbar_progress(scroll_progress, not instant_scroll)
+end
+
 ViewElementGrid._on_navigation_input_changed = function (self)
 	ViewElementGrid.super._on_navigation_input_changed(self)
 	self:_apply_sort_button_text()
@@ -1016,19 +1044,6 @@ ViewElementGrid.destroy = function (self, ui_renderer)
 		self._present_grid_layout = nil
 	end
 
-	local widget_background = self._widgets_by_name.grid_background
-	local widgets_destroyed_by_name = {}
-
-	if widget_background then
-		if self._resource_renderer_background then
-			UIWidget.destroy(self._ui_resource_renderer, widget_background)
-		else
-			UIWidget.destroy(ui_renderer, widget_background)
-		end
-
-		widgets_destroyed_by_name[widget_background.name] = true
-	end
-
 	for _, icon_reference_id in pairs(self._loaded_icon_id_cache) do
 		Managers.ui:unload_item_icon(icon_reference_id)
 	end
@@ -1046,24 +1061,13 @@ ViewElementGrid.destroy = function (self, ui_renderer)
 
 			if widget_name ~= "grid_background" then
 				UIWidget.destroy(ui_grid_renderer, widget)
-
-				widgets_destroyed_by_name[widget.name] = true
 			end
 		end
 	end
 
 	self:_destroy_grid_widgets()
-
-	for i = 1, #self._widgets do
-		local widget = self._widgets[i]
-
-		if widget and widgets_destroyed_by_name[widget.name] then
-			table.remove(self._widgets, i)
-		end
-	end
-
 	self:_destroy_grid_gui()
-	ViewElementGrid.super.destroy(self, ui_renderer)
+	ViewElementGrid.super.destroy(self)
 end
 
 ViewElementGrid.element_by_index = function (self, index)

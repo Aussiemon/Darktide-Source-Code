@@ -28,6 +28,7 @@ DoorExtension.init = function (self, extension_init_context, unit, extension_ini
 	self._self_closing_timer = 0
 	self._control_panel_units = {}
 	self._volume_added = false
+	self._last_state_change = -100
 	self._animation_extension = ScriptUnit.extension(unit, "animation_system")
 	local extension_manager = Managers.state.extension
 	local side_system = extension_manager:system("side_system")
@@ -128,7 +129,7 @@ DoorExtension._spawn_control_panels = function (self, control_panel_props, contr
 		local control_panel_unit, _ = unit_spawner_manager:spawn_network_unit(control_panel_unit_name, "level_prop", control_panel_position, control_panel_rotation, nil, props_settings)
 		local door_control_panel_extension = ScriptUnit.extension(control_panel_unit, "door_control_panel_system")
 
-		door_control_panel_extension:register_door(self)
+		door_control_panel_extension:register_door(unit)
 		door_control_panel_extension:set_active(control_panels_active)
 
 		self._control_panel_units[#self._control_panel_units + 1] = control_panel_unit
@@ -210,7 +211,13 @@ DoorExtension._should_nav_block = function (self)
 	local closed = current_state == STATES.closed
 	local anim_time = self:_normalized_anim_time()
 	local blocked_time = self._blocked_time
-	local should_nav_block = closed and blocked_time <= anim_time or not closed and anim_time < 1 - blocked_time
+	local should_nav_block = nil
+
+	if closed then
+		should_nav_block = blocked_time <= anim_time or anim_time == 0
+	else
+		should_nav_block = anim_time < 1 - blocked_time
+	end
 
 	return should_nav_block
 end
@@ -226,10 +233,14 @@ DoorExtension._update_nav_block = function (self, unit)
 	else
 		local should_nav_block = self:_should_nav_block()
 
-		if should_nav_block and not nav_blocked then
-			self:_set_nav_block(true)
-		elseif not should_nav_block and nav_blocked then
-			self:_set_nav_block(false)
+		if should_nav_block ~= nav_blocked then
+			if should_nav_block then
+				self:_set_nav_block(true)
+				Unit.flow_event(self._unit, "lua_door_nav_blocked")
+			elseif not should_nav_block then
+				self:_set_nav_block(false)
+				Unit.flow_event(self._unit, "lua_door_nav_opened")
+			end
 		end
 	end
 end
@@ -513,7 +524,12 @@ DoorExtension._is_dead = function (self, unit)
 end
 
 DoorExtension._set_current_state = function (self, state)
+	if state == self._current_state then
+		return
+	end
+
 	self._current_state = state
+	self._last_state_change = Managers.time:time("gameplay")
 
 	if self._interactee_extension then
 		local text = "loc_action_interaction_open"
@@ -570,6 +586,10 @@ DoorExtension._sync_server_state = function (self, peer_id, state)
 
 		game_session_manager:send_rpc_clients("rpc_sync_door_state", unit_level_index, state_lookup_id)
 	end
+end
+
+DoorExtension.get_last_state_change_time = function (self)
+	return self._last_state_change
 end
 
 DoorExtension.increment_num_attackers = function (self)

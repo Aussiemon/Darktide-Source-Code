@@ -22,7 +22,8 @@ local raw_inputs = {
 	"weapon_inspect_hold",
 	"weapon_extra_pressed",
 	"weapon_extra_hold",
-	"weapon_extra_release"
+	"weapon_extra_release",
+	"toggle_ads"
 }
 
 for i = 1, #wield_inputs do
@@ -85,6 +86,7 @@ ActionInputParser.init = function (self, unit, action_component_name, action_com
 
 	self._last_fixed_frame = 0
 	self._last_action_auto_completed = false
+	self._fixed_time_step = Managers.state.game_session.fixed_time_step
 end
 
 ActionInputParser._format_and_initialize_action_inputs = function (self, action_input_type, templates, sequences_ring_buffer, action_input_queue_ring_buffer, hierarchy_position_ring_buffer)
@@ -327,7 +329,7 @@ end
 
 ActionInputParser.pack_input_sequences_and_queue = function (self, input_sequences_is_running_table, input_sequences_current_element_index_table, input_sequences_element_start_t_table, input_queue_hierarchy_position_table, input_queue_produced_by_hierarchy_table, input_queue_action_input_table, input_queue_raw_input_table, hierarchy_position_table)
 	local ring_buffer_index = self._ring_buffer_index
-	local fixed_time_step = GameParameters.fixed_time_step
+	local fixed_time_step = self._fixed_time_step
 	local sequences = self._sequences[ring_buffer_index]
 	local type_info = NetworkConstants.fixed_frame_offset_small
 	local min_value = type_info.min
@@ -442,7 +444,7 @@ ActionInputParser.mispredict_happened = function (self, fixed_frame, input_seque
 	end
 
 	local action_input_network_lookups = self._ACTION_INPUT_NETWORK_LOOKUP[template_name]
-	local fixed_time_step = GameParameters.fixed_time_step
+	local fixed_time_step = self._fixed_time_step
 	local sequences = self._sequences[buffer_index]
 
 	for i = 1, self._MAX_ACTION_INPUT_SEQUENCES do
@@ -482,7 +484,7 @@ ActionInputParser.mispredict_happened = function (self, fixed_frame, input_seque
 		entry[RAW_INPUT] = raw_input
 	end
 
-	self._input_queue_first_entry_became_first_entry_t = (fixed_frame - 1) * GameParameters.fixed_time_step + input_queue_first_entry_became_first_entry_t
+	self._input_queue_first_entry_became_first_entry_t = (fixed_frame - 1) * self._fixed_time_step + input_queue_first_entry_became_first_entry_t
 	local sim_hierarchy_position = self._hierarchy_position[buffer_index]
 
 	for i = 1, MAX_HIERARCHY_DEPTH do
@@ -860,10 +862,17 @@ ActionInputParser._evaluate_element = function (self, element_config_or_nil, thi
 end
 
 ActionInputParser._evaluate_input = function (self, input_config, this_frames_input)
-	local inputs = input_config.inputs
+	local actual_input_config = input_config
+	local input_setting = input_config.input_setting
+
+	if input_setting and this_frames_input[input_setting.setting] == input_setting.setting_value then
+		actual_input_config = input_setting
+	end
+
+	local inputs = actual_input_config.inputs
 
 	if inputs then
-		if input_config.input_mode == "all" then
+		if actual_input_config.input_mode == "all" then
 			local all_true = true
 
 			for i = 1, #inputs do
@@ -893,8 +902,8 @@ ActionInputParser._evaluate_input = function (self, input_config, this_frames_in
 
 		return false
 	else
-		local input = input_config.input
-		local value = input_config.value
+		local input = actual_input_config.input
+		local value = actual_input_config.value
 
 		return this_frames_input[input] == value, input
 	end

@@ -312,8 +312,8 @@ BaseView.trigger_resolution_update = function (self)
 	self._update_scenegraph = nil
 end
 
-BaseView._set_scenegraph_position = function (self, id, x, y, z, horizontal_alignment, vertical_alignment)
-	local ui_scenegraph = self._ui_scenegraph
+BaseView._set_scenegraph_position = function (self, id, x, y, z, horizontal_alignment, vertical_alignment, optional_ui_scenegraph)
+	local ui_scenegraph = optional_ui_scenegraph or self._ui_scenegraph
 	local scenegraph = ui_scenegraph[id]
 	local position = scenegraph.position
 
@@ -342,8 +342,8 @@ BaseView.set_render_scale = function (self, scale)
 	self._render_scale = scale
 end
 
-BaseView._set_scenegraph_size = function (self, id, width, height)
-	local ui_scenegraph = self._ui_scenegraph
+BaseView._set_scenegraph_size = function (self, id, width, height, optional_ui_scenegraph)
+	local ui_scenegraph = optional_ui_scenegraph or self._ui_scenegraph
 	local scenegraph = ui_scenegraph[id]
 	local size = scenegraph.size
 
@@ -358,24 +358,24 @@ BaseView._set_scenegraph_size = function (self, id, width, height)
 	self._update_scenegraph = true
 end
 
-BaseView._scenegraph_size = function (self, id)
-	local ui_scenegraph = self._ui_scenegraph
+BaseView._scenegraph_size = function (self, id, optional_ui_scenegraph)
+	local ui_scenegraph = optional_ui_scenegraph or self._ui_scenegraph
 	local scenegraph = ui_scenegraph[id]
 	local size = scenegraph.size
 
 	return size[1], size[2]
 end
 
-BaseView._scenegraph_position = function (self, id)
-	local ui_scenegraph = self._ui_scenegraph
+BaseView._scenegraph_position = function (self, id, optional_ui_scenegraph)
+	local ui_scenegraph = optional_ui_scenegraph or self._ui_scenegraph
 	local scenegraph = ui_scenegraph[id]
 	local position = scenegraph.position
 
 	return position[1], position[2], position[3]
 end
 
-BaseView._scenegraph_world_position = function (self, id, scale)
-	local ui_scenegraph = self._ui_scenegraph
+BaseView._scenegraph_world_position = function (self, id, scale, optional_ui_scenegraph)
+	local ui_scenegraph = optional_ui_scenegraph or self._ui_scenegraph
 
 	return UIScenegraph.world_position(ui_scenegraph, id, scale)
 end
@@ -479,12 +479,15 @@ BaseView.draw = function (self, dt, t, input_service, layer)
 	render_settings.start_layer = layer
 	render_settings.scale = render_scale
 	render_settings.inverse_scale = render_scale and 1 / render_scale
+	local alpha_multiplier = render_settings.alpha_multiplier
 	local ui_scenegraph = self._ui_scenegraph
 
 	UIRenderer.begin_pass(ui_renderer, ui_scenegraph, input_service, dt, render_settings)
 	self:_draw_widgets(dt, t, input_service, ui_renderer, render_settings)
 	UIRenderer.end_pass(ui_renderer)
 	self:_draw_elements(dt, t, ui_renderer, render_settings, input_service)
+
+	render_settings.alpha_multiplier = alpha_multiplier
 end
 
 BaseView.set_local_player_id = function (self, local_player_id)
@@ -610,7 +613,7 @@ BaseView._remove_element = function (self, reference_name)
 		end
 	end
 
-	element:destroy(self._ui_renderer)
+	element:destroy()
 
 	elements[reference_name] = nil
 end

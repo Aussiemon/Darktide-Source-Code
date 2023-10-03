@@ -1,7 +1,9 @@
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local Breed = require("scripts/utilities/breed")
 local PlayerUnitVisualLoadout = require("scripts/extension_systems/visual_loadout/utilities/player_unit_visual_loadout")
 local CombatRangeUserBehaviorExtension = class("CombatRangeUserBehaviorExtension", "MinionBehaviorExtension")
+local buff_keywords = BuffSettings.keywords
 local _get_combat_range_switch_distance, _should_switch_combat_range = nil
 
 CombatRangeUserBehaviorExtension.init = function (self, extension_init_context, unit, extension_init_data, ...)
@@ -28,6 +30,11 @@ CombatRangeUserBehaviorExtension.init = function (self, extension_init_context, 
 		self._target_velocity_dot_reset = combat_range_data.target_velocity_dot_reset
 		self._target_velocity_dot_reset_timer = 0
 	end
+end
+
+CombatRangeUserBehaviorExtension.extensions_ready = function (self, world, unit)
+	local buff_extension = ScriptUnit.extension(unit, "buff_system")
+	self._buff_extension = buff_extension
 end
 
 local DEFAULT_SPAWN_INVENTORY_SLOT = "unarmed"
@@ -146,7 +153,8 @@ CombatRangeUserBehaviorExtension.update_combat_range = function (self, unit, bla
 				break
 			end
 
-			local should_switch_combat_range = _should_switch_combat_range(unit, blackboard, target_distance, config, target_unit, self._target_velocity_dot_duration)
+			local is_taunted = self._buff_extension:has_keyword(buff_keywords.taunted)
+			local should_switch_combat_range = _should_switch_combat_range(unit, blackboard, current_combat_range, target_distance, config, target_unit, self._target_velocity_dot_duration, is_taunted)
 
 			if should_switch_combat_range then
 				self:_switch_combat_range(unit, blackboard, config, weapon_switch_component, behavior_component, t)
@@ -255,7 +263,15 @@ function _get_combat_range_switch_distance(config, target_unit)
 	return config.distance
 end
 
-function _should_switch_combat_range(unit, blackboard, target_distance, config, target_unit, target_velocity_dot_duration)
+function _should_switch_combat_range(unit, blackboard, current_combat_range, target_distance, config, target_unit, target_velocity_dot_duration, is_taunted)
+	if is_taunted then
+		if current_combat_range == "melee" then
+			return false
+		elseif config.switch_combat_range == "melee" then
+			return true
+		end
+	end
+
 	local return_on_target_velocity_dot_inverted = target_velocity_dot_duration and config.target_velocity_dot_duration_inverted
 
 	if return_on_target_velocity_dot_inverted then

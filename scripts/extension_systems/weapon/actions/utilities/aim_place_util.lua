@@ -8,7 +8,7 @@ local AimPlaceUtil = {
 
 		if not hit then
 			local downward_raycast_position = look_position + look_direction * place_distance
-			_, position, _, normal, actor = PhysicsWorld.raycast(physics_world, downward_raycast_position, Vector3.down(), place_distance, "closest", "types", "both", "collision_filter", "filter_player_place_deployable")
+			hit, position, _, normal, actor = PhysicsWorld.raycast(physics_world, downward_raycast_position, Vector3.down(), place_distance, "closest", "types", "both", "collision_filter", "filter_player_place_deployable")
 		end
 
 		local can_place = false

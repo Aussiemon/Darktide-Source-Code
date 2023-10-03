@@ -1,11 +1,11 @@
 local Luggable = require("scripts/utilities/luggable")
+local ProjectileIntegration = require("scripts/extension_systems/locomotion/utilities/projectile_integration")
 local ProjectileIntegrationData = require("scripts/extension_systems/locomotion/utilities/projectile_integration_data")
+local ProjectileLinking = require("scripts/extension_systems/locomotion/utilities/projectile_linking")
 local ProjectileLocomotion = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion")
 local ProjectileLocomotionSettings = require("scripts/settings/projectile_locomotion/projectile_locomotion_settings")
-local ProjectileLocomotionUtility = require("scripts/extension_systems/locomotion/utilities/projectile_locomotion_utility")
-local ProjectileStickyLocomotion = require("scripts/extension_systems/locomotion/utilities/projectile_sticky_locomotion")
 local ProjectileTemplates = require("scripts/settings/projectile/projectile_templates")
-local TrueFlightProjectileLocomotion = require("scripts/extension_systems/locomotion/utilities/true_flight_projectile_locomotion")
+local TrueFlightProjectileIntegration = require("scripts/extension_systems/locomotion/utilities/true_flight_projectile_integration")
 local locomotion_states = ProjectileLocomotionSettings.states
 local moving_locomotion_states = ProjectileLocomotionSettings.moving_states
 local MAX_SYNCHRONIZE_COUNTER = ProjectileLocomotionSettings.MAX_SYNCHRONIZE_COUNTER
@@ -29,7 +29,6 @@ ProjectileUnitLocomotionExtension.init = function (self, extension_init_context,
 	self._fx_extension = ScriptUnit.has_extension(unit, "fx_system")
 	local projectile_template_name = extension_init_data.projectile_template_name
 	local projectile_template = ProjectileTemplates[projectile_template_name]
-	self.projetile_template = projectile_template
 	local projectile_locomotion_template = projectile_template.locomotion_template
 	self._projectile_locomotion_template = projectile_locomotion_template
 	local dynamic_actor_id = Unit.find_actor(unit, "dynamic")
@@ -114,6 +113,7 @@ ProjectileUnitLocomotionExtension.init = function (self, extension_init_context,
 		Vector3.to_elements(Managers.state.out_of_bounds:soft_cap_extents())
 	}
 	self._gameplay_safe_extents = gameplay_safe_extents
+	self._fixed_time_step = Managers.state.game_session.fixed_time_step
 
 	self:_hide_pin()
 end
@@ -124,8 +124,12 @@ ProjectileUnitLocomotionExtension.game_object_initialized = function (self, game
 	self._game_session = game_session
 end
 
-ProjectileUnitLocomotionExtension.has_been_marked_for_deletion = function (self)
-	return self._marked_for_deletion
+ProjectileUnitLocomotionExtension.mark_for_deletion = function (self)
+	if not self._marked_for_deletion then
+		Managers.state.unit_spawner:mark_for_deletion(self._projectile_unit)
+
+		self._marked_for_deletion = true
+	end
 end
 
 ProjectileUnitLocomotionExtension.pre_update = function (self, unit, dt, t)
@@ -200,7 +204,7 @@ ProjectileUnitLocomotionExtension.update = function (self, unit, dt, t)
 		local old_position = self._old_position:unbox()
 		local old_rotation = self._old_rotation:unbox()
 		local remainder_t = t - self._last_fixed_t
-		local t_value = remainder_t / GameParameters.fixed_time_step
+		local t_value = remainder_t / self._fixed_time_step
 		t_value = math.min(t_value, 1)
 		local simulated_position = Vector3.lerp(old_position, current_position, t_value)
 		local simulated_rotation = Quaternion.lerp(old_rotation, current_rotation, t_value)
@@ -244,22 +248,22 @@ end
 
 ProjectileUnitLocomotionExtension.switch_to_manual = function (self, position, rotation, direction, speed, angular_velocity)
 	self:_set_state(locomotion_states.manual_physics)
-	self:switch_to_manual_state_helper(position, rotation, direction, speed, angular_velocity)
+	self:_switch_to_manual_state_helper(position, rotation, direction, speed, angular_velocity)
 end
 
 ProjectileUnitLocomotionExtension.switch_to_true_flight = function (self, position, rotation, direction, speed, angular_velocity, target_unit, target_position)
 	self:_set_state(locomotion_states.true_flight)
-	self:switch_to_manual_state_helper(position, rotation, direction, speed, angular_velocity, target_unit, target_position)
+	self:_switch_to_manual_state_helper(position, rotation, direction, speed, angular_velocity, target_unit, target_position)
 end
 
-ProjectileUnitLocomotionExtension.switch_to_manual_state_helper = function (self, position, rotation, direction, speed, angular_velocity, target_unit, target_position)
+ProjectileUnitLocomotionExtension._switch_to_manual_state_helper = function (self, position, rotation, direction, speed, angular_velocity, target_unit, target_position)
 	local projectile_unit = self._projectile_unit
 	local dynamic_actor_id = self._dynamic_actor_id
 
 	if dynamic_actor_id then
 		local dynamic_actor = Unit.actor(projectile_unit, dynamic_actor_id)
 
-		ProjectileLocomotionUtility.set_kinematic(projectile_unit, dynamic_actor_id, true)
+		ProjectileLocomotion.set_kinematic(projectile_unit, dynamic_actor_id, true)
 	end
 
 	local projectile_locomotion_template = self._projectile_locomotion_template
@@ -281,7 +285,7 @@ ProjectileUnitLocomotionExtension._update_manual_physics = function (self, unit,
 	local old_collision_count = integration_data.hit_count
 	local is_server = true
 
-	ProjectileLocomotion.integrate(self._physics_world, integration_data, dt, t, is_server)
+	ProjectileIntegration.integrate(self._physics_world, integration_data, dt, t, is_server)
 
 	local integrate_this_frame = integration_data.integrate
 	local new_position = integration_data.position
@@ -320,7 +324,7 @@ ProjectileUnitLocomotionExtension._update_true_flight = function (self, unit, dt
 	local old_collision_count = integration_data.hit_count
 	local integrate_this_frame = integration_data.integrate
 
-	TrueFlightProjectileLocomotion.integrate(self._physics_world, integration_data, dt, t, true)
+	TrueFlightProjectileIntegration.integrate(self._physics_world, integration_data, dt, t, true)
 
 	local new_position = integration_data.position
 	local new_velocity = integration_data.velocity
@@ -343,7 +347,9 @@ ProjectileUnitLocomotionExtension._update_true_flight = function (self, unit, dt
 		self:switch_to_sleep(new_position, new_rotation)
 	end
 
-	if integration_data.time_without_target >= 2 and not self._marked_for_deletion then
+	local time_without_target = integration_data.time_without_target
+
+	if time_without_target >= 5 and not self._marked_for_deletion then
 		Managers.state.unit_spawner:mark_for_deletion(unit)
 
 		self._marked_for_deletion = true
@@ -357,7 +363,7 @@ ProjectileUnitLocomotionExtension.switch_to_engine = function (self, position, r
 	local dynamic_actor_id = self._dynamic_actor_id
 	local dynamic_actor = Unit.actor(projectile_unit, dynamic_actor_id)
 
-	ProjectileLocomotionUtility.set_kinematic(projectile_unit, dynamic_actor_id, false)
+	ProjectileLocomotion.set_kinematic(projectile_unit, dynamic_actor_id, false)
 
 	position = position or Unit.world_position(projectile_unit, 1)
 	rotation = rotation or Unit.world_rotation(projectile_unit, 1)
@@ -393,12 +399,15 @@ ProjectileUnitLocomotionExtension._update_engine_physics = function (self, unit)
 	end
 end
 
-ProjectileUnitLocomotionExtension.switch_to_sticky = function (self, sticking_to_unit, sticking_to_actor_index, world_position, world_rotation)
+ProjectileUnitLocomotionExtension.switch_to_sticky = function (self, sticking_to_unit, sticking_to_actor_index, world_position, world_rotation, hit_normal, hit_direction)
 	self:_set_state(locomotion_states.sticky)
-	ProjectileLocomotionUtility.set_kinematic(self._projectile_unit, self._dynamic_actor_id, true)
-	self:_apply_changes(locomotion_states.sticky, world_position, world_rotation, Vector3.zero(), Vector3.zero())
+	ProjectileLocomotion.set_kinematic(self._projectile_unit, self._dynamic_actor_id, true)
 
-	local local_position, local_rotation = ProjectileStickyLocomotion.calculate_sticky_position_and_rotation(sticking_to_unit, sticking_to_actor_index, world_position, world_rotation)
+	local zero_vector = Vector3.zero()
+
+	self:_apply_changes(locomotion_states.sticky, world_position, world_rotation, zero_vector, zero_vector)
+
+	local local_position, local_rotation = ProjectileLinking.link_position_and_rotation(sticking_to_unit, sticking_to_actor_index, world_position, world_rotation, hit_normal, hit_direction)
 	self._sticking_to_unit = sticking_to_unit
 	self._sticking_to_actor_index = sticking_to_actor_index
 	local world = self._world
@@ -418,7 +427,7 @@ ProjectileUnitLocomotionExtension._update_sticky = function (self, unit, dt, t)
 
 		local unit_id = Managers.state.unit_spawner:game_object_id(unit)
 
-		Log.warning("ProjectileUnitLocomotionExtension", "Unit %s was sticking to another unit that was not alvie was not released properly.", unit_id)
+		Log.warning("ProjectileUnitLocomotionExtension", "Unit %s was sticking to another unit that was not alive was not released properly.", unit_id)
 
 		return
 	end
@@ -477,7 +486,7 @@ end
 
 ProjectileUnitLocomotionExtension.switch_to_sleep = function (self, position, rotation)
 	self:_set_state(locomotion_states.sleep)
-	ProjectileLocomotionUtility.set_kinematic(self._projectile_unit, self._dynamic_actor_id, false)
+	ProjectileLocomotion.set_kinematic(self._projectile_unit, self._dynamic_actor_id, false)
 	self:_apply_changes(locomotion_states.sleep, position, rotation, Vector3.zero(), Vector3.zero())
 end
 
@@ -498,11 +507,11 @@ ProjectileUnitLocomotionExtension._set_state = function (self, new_state)
 		end
 
 		if new_state == locomotion_states.carried then
-			ProjectileLocomotionUtility.deactivate_physics(projectile_unit, self._dynamic_actor_id)
+			ProjectileLocomotion.deactivate_physics(projectile_unit, self._dynamic_actor_id)
 		elseif new_state == locomotion_states.socket_lock then
-			ProjectileLocomotionUtility.deactivate_physics(projectile_unit, self._dynamic_actor_id)
+			ProjectileLocomotion.deactivate_physics(projectile_unit, self._dynamic_actor_id)
 		elseif old_state == locomotion_states.carried then
-			ProjectileLocomotionUtility.activate_physics(projectile_unit)
+			ProjectileLocomotion.activate_physics(projectile_unit)
 		end
 
 		self._current_state = new_state

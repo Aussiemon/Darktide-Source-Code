@@ -11,13 +11,14 @@ local DIAGNOSTICS_UPDATE_FREQUENCY = 0.25
 local DIAGNOSTICS_SIZE = DIAGNOSTICS_BUFFER * DIAGNOSTICS_STRIDE
 local OFFSET_CORRECTION_INFO_NUM_FRAMES = 60
 
-AdaptiveClockHandlerClient.init = function (self, network_event_delegate)
+AdaptiveClockHandlerClient.init = function (self, network_event_delegate, fixed_time_step)
 	network_event_delegate:register_session_events(self, "rpc_sync_clock_offset")
 
 	self._network_event_delegate = network_event_delegate
 	self._frametime_buffer = Script.new_array(FRAMETIME_BUFFER_SIZE)
 	self._frametime_buffer_index = 0
-	self._max_frame_time = GameParameters.fixed_time_step
+	self._max_frame_time = fixed_time_step
+	self._fixed_time_step = fixed_time_step
 	self._time_since_last_sample = 1
 	self._time_per_sample = TIME_PER_SAMPLE
 	self._offset_correction = 0
@@ -75,7 +76,7 @@ AdaptiveClockHandlerClient._target_offset = function (self)
 end
 
 AdaptiveClockHandlerClient.frame_parsed = function (self, frame, remainder_time, frame_time)
-	local fixed_time_step = GameParameters.fixed_time_step
+	local fixed_time_step = self._fixed_time_step
 	local measured_time = frame * fixed_time_step + self:_frame_discrepancy_buffer() + remainder_time - frame_time
 	local server = Managers.connection:host()
 	local rtt = Network.ping(server)
@@ -100,7 +101,7 @@ AdaptiveClockHandlerClient.post_update = function (self, main_dt)
 	local target_offset = self:_target_offset()
 	local offset_change_required = target_offset - self._current_offset
 
-	if offset_change_required < 0 and offset_change_required > -GameParameters.fixed_time_step * 0.5 then
+	if offset_change_required < 0 and offset_change_required > -self._fixed_time_step * 0.5 then
 		self._time_scale = self._base_time_scale
 	elseif offset_change_required > 0 then
 		self._time_scale = math.min(self._base_time_scale + MAX_SPEED_UP, 1 + offset_change_required / main_dt)

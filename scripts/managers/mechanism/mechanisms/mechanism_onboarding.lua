@@ -77,6 +77,39 @@ MechanismOnboarding.wanted_transition = function (self)
 			self._init_scenario = nil
 		end
 
+		local party_immaterium = Managers.party_immaterium
+		local session_in_progress = party_immaterium and party_immaterium:game_session_in_progress()
+
+		if session_in_progress then
+			local game_session_id = party_immaterium:current_game_session_id()
+
+			if self._last_auto_joined_game_session_id ~= game_session_id then
+				self._last_auto_joined_game_session_id = game_session_id
+
+				self:_retry_join()
+			elseif not self._retry_popup_id then
+				self:_show_retry_popup()
+			end
+
+			return false
+		end
+
+		return false
+	elseif state == "joining_party_game_session" then
+		if self._joining_party_game_session:is_dead() then
+			self:_set_state("gameplay")
+
+			self._joining_party_game_session = nil
+
+			return false
+		end
+
+		if self._joining_party_game_session:is_booted() then
+			self:_set_state("joining_hub_server")
+
+			return false, StateLoading, {}
+		end
+
 		return false
 	elseif state == "game_mode_ended" then
 		local story_name = Managers.narrative.STORIES.onboarding
@@ -103,6 +136,46 @@ MechanismOnboarding.wanted_transition = function (self)
 	end
 end
 
+MechanismOnboarding._retry_join = function (self)
+	if self._state == "gameplay" and Managers.party_immaterium:game_session_in_progress() then
+		self._joining_party_game_session = Managers.party_immaterium:join_game_session()
+
+		self:_set_state("joining_party_game_session")
+	end
+end
+
+MechanismOnboarding._show_retry_popup = function (self)
+	local context = {
+		title_text = "loc_popup_header_reconnect_to_session",
+		description_text = "loc_popup_description_reconnect_to_session",
+		options = {
+			{
+				text = "loc_popup_reconnect_to_session_reconnect_button",
+				close_on_pressed = true,
+				callback = function ()
+					self._retry_popup_id = nil
+
+					self:_retry_join()
+				end
+			},
+			{
+				text = "loc_popup_reconnect_to_session_leave_button",
+				close_on_pressed = true,
+				hotkey = "back",
+				callback = function ()
+					self._retry_popup_id = nil
+
+					Managers.party_immaterium:leave_party()
+				end
+			}
+		}
+	}
+
+	Managers.event:trigger("event_show_ui_popup", context, function (id)
+		self._retry_popup_id = id
+	end)
+end
+
 MechanismOnboarding.is_allowed_to_reserve_slots = function (self, peer_ids)
 	return true
 end
@@ -116,7 +189,13 @@ MechanismOnboarding.peer_freed_slot = function (self, peer_id)
 end
 
 MechanismOnboarding.destroy = function (self)
-	return
+	self._joining_party_game_session = nil
+
+	if self._retry_popup_id then
+		Managers.event:trigger("event_remove_ui_popup", self._retry_popup_id)
+
+		self._retry_popup_id = nil
+	end
 end
 
 MechanismOnboarding.singleplay_type = function (self)

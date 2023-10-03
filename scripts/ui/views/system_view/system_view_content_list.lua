@@ -65,6 +65,20 @@ local main_menu_list = {
 		type = "spacing_vertical"
 	},
 	{
+		text = "loc_news_view_title",
+		required_dev_parameter = "ui_debug_news_screen",
+		type = "button",
+		icon = "content/ui/materials/icons/system/escape/news",
+		trigger_function = function ()
+			local context = {
+				can_exit = true
+			}
+			local view_name = "news_view"
+
+			Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
+		end
+	},
+	{
 		text = "loc_credits_view_title",
 		icon = "content/ui/materials/icons/system/escape/credits",
 		type = "button",
@@ -250,10 +264,12 @@ local default_list = {
 			local is_onboarding = game_mode_name == "prologue" or game_mode_name == "prologue_hub"
 			local is_hub = game_mode_name == "hub"
 			local is_training_grounds = game_mode_name == "training_grounds" or game_mode_name == "shooting_range"
-			local can_exit = is_onboarding or is_hub or is_training_grounds
+			local can_show = is_onboarding or is_hub or is_training_grounds
+			local is_leaving_game = game_mode_manager:game_mode_state() == "leaving_game"
 			local is_in_matchmaking = Managers.data_service.social:is_in_matchmaking()
+			local is_disabled = is_leaving_game or is_in_matchmaking
 
-			return can_exit, is_in_matchmaking
+			return can_show, is_disabled
 		end,
 		trigger_function = function ()
 			local context = {

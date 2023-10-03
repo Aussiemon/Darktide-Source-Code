@@ -78,12 +78,6 @@ local behavior_tree = {
 		condition = "is_staggered",
 		action_data = action_data.stagger
 	},
-	{
-		"BtSuppressedAction",
-		name = "suppressed",
-		condition = "is_suppressed",
-		action_data = action_data.suppressed
-	},
 	MELEE_COMBAT,
 	COMBAT,
 	{

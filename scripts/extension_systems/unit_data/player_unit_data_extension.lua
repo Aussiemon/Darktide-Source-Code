@@ -142,7 +142,7 @@ PlayerUnitDataExtension.init = function (self, extension_init_context, unit, ext
 	self._unit = unit
 	self._player = extension_init_data.player
 	self._player_peer = self._player:peer_id()
-	self._fixed_time_step = GameParameters.fixed_time_step
+	self._fixed_time_step = Managers.state.game_session.fixed_time_step
 	self.is_resimulating = false
 	local component_config = FORMATTED_CONFIG
 	local is_server = extension_init_context.is_server
@@ -177,7 +177,7 @@ PlayerUnitDataExtension.init = function (self, extension_init_context, unit, ext
 	self._component_index = i
 	self._last_component_index = i
 	self._last_fixed_frame = fixed_frame
-	self._last_fixed_t = fixed_frame * GameParameters.fixed_time_step
+	self._last_fixed_t = fixed_frame * self._fixed_time_step
 
 	if not is_server then
 		local game_object_id = nil_or_game_object_id

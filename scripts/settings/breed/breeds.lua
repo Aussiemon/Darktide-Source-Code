@@ -1,8 +1,23 @@
+local StaggerSettings = require("scripts/settings/damage/stagger_settings")
+local stagger_types = StaggerSettings.stagger_types
 local breeds = {}
 
 local function _create_breed_entry(path)
 	local breed_data = require(path)
 	local breed_name = breed_data.name
+
+	if breed_data.stagger_durations and breed_data.stagger_durations[stagger_types.sticky] then
+		breed_data.stagger_durations[stagger_types.electrocuted] = breed_data.stagger_durations[stagger_types.sticky]
+	end
+
+	if breed_data.stagger_immune_times and breed_data.stagger_immune_times[stagger_types.sticky] then
+		breed_data.stagger_immune_times[stagger_types.electrocuted] = breed_data.stagger_immune_times[stagger_types.sticky]
+	end
+
+	if breed_data.stagger_thresholds and breed_data.stagger_thresholds[stagger_types.sticky] then
+		breed_data.stagger_thresholds[stagger_types.electrocuted] = breed_data.stagger_thresholds[stagger_types.sticky]
+	end
+
 	breeds[breed_name] = breed_data
 end
 

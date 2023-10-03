@@ -30,6 +30,18 @@ WeatherVolume.editor_init = function (self, unit)
 	return
 end
 
+WeatherVolume.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if rawget(_G, "LevelEditor") and not Unit.has_volume(unit, "weather_volume") then
+		success = false
+		error_message = error_message .. "\nMissing volume 'weather_volume'"
+	end
+
+	return success, error_message
+end
+
 WeatherVolume.editor_destroy = function (self, unit)
 	return
 end

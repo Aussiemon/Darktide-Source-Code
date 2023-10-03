@@ -1,4 +1,6 @@
 local Promise = require("scripts/foundation/utilities/promise")
+local GRPCStream = require("scripts/managers/grpc/grpc_stream")
+local GRPCBatchedPresenceStream = require("scripts/managers/grpc/grpc_batched_presence_stream")
 local GRPCManager = class("GRPCManager")
 
 local function _info(...)
@@ -13,6 +15,7 @@ GRPCManager.init = function (self)
 	self._retry_count = {}
 	self._enabled = false
 	self._async_promises = {}
+	self._grpc_streams = {}
 	self._channel_state = gRPC.channel_state()
 end
 
@@ -79,6 +82,7 @@ GRPCManager.update = function (self, dt, t)
 		if operations then
 			for id, response in pairs(operations) do
 				local promise = self._async_promises[id]
+				local grpc_stream = self._grpc_streams[id]
 
 				if promise then
 					if response.ok then
@@ -88,8 +92,16 @@ GRPCManager.update = function (self, dt, t)
 					end
 
 					self._async_promises[id] = nil
+				elseif grpc_stream then
+					if response.ok then
+						grpc_stream:_end()
+					else
+						grpc_stream:_end(response.error)
+					end
+
+					self._grpc_streams[id] = nil
 				else
-					_info("warning, id=%s does not have a promise, response=%s", id, table.tostring(response, 3))
+					_info("warning, id=%s does not have a promise not grpc_stream, response=%s", id, table.tostring(response, 3))
 				end
 			end
 		end
@@ -132,21 +144,13 @@ GRPCManager._convert_presence_key_values = function (self, keyValues)
 end
 
 GRPCManager.start_presence = function (self, keyValues)
-	local promise = Promise:new()
 	local id = gRPC.start_presence(unpack(self:_convert_presence_key_values(keyValues)))
-	self._async_promises[id] = promise
+	local grpc_stream = GRPCStream:new(self, id, gRPC.get_push_messages, function (operation_id, keyValues)
+		gRPC.update_presence(operation_id, unpack(self:_convert_presence_key_values(keyValues)))
+	end)
+	self._grpc_streams[id] = grpc_stream
 
-	return promise, id
-end
-
-GRPCManager.update_presence = function (self, operation_id, keyValues)
-	gRPC.update_presence(operation_id, unpack(self:_convert_presence_key_values(keyValues)))
-end
-
-GRPCManager.get_push_messages = function (self, presence_operation_id)
-	if gRPC.get_push_messages then
-		return gRPC.get_push_messages(presence_operation_id)
-	end
+	return grpc_stream
 end
 
 GRPCManager.get_presence = function (self, ...)
@@ -157,42 +161,12 @@ GRPCManager.get_presence = function (self, ...)
 	return promise, id
 end
 
-GRPCManager.get_presence_stream = function (self, platform, platform_user_id)
-	local promise = Promise:new()
-	local id = gRPC.get_presence_stream(platform, platform_user_id)
-	self._async_promises[id] = promise
-
-	return promise, id
-end
-
-GRPCManager.get_latest_presence_from_stream = function (self, operation_id)
-	local presence = gRPC.get_latest_presence_from_stream(operation_id)
-
-	return presence
-end
-
 GRPCManager.get_batched_presence_stream = function (self)
-	local promise = Promise:new()
 	local id = gRPC.get_batched_presence_stream()
-	self._async_promises[id] = promise
+	local grpc_stream = GRPCBatchedPresenceStream:new(self, id, gRPC.request_presence_from_batched_stream, gRPC.abort_presence_from_batched_stream, gRPC.get_latest_presence_from_batched_stream)
+	self._grpc_streams[id] = grpc_stream
 
-	return promise, id
-end
-
-GRPCManager.request_presence_from_batched_stream = function (self, operation_id, platform, platform_user_id)
-	local request_id = gRPC.request_presence_from_batched_stream(operation_id, platform, platform_user_id)
-
-	return request_id
-end
-
-GRPCManager.abort_presence_from_batched_stream = function (self, operation_id, request_id)
-	gRPC.abort_presence_from_batched_stream(operation_id, request_id)
-end
-
-GRPCManager.get_latest_presence_from_batched_stream = function (self, operation_id, request_id)
-	local presence = gRPC.get_latest_presence_from_batched_stream(operation_id, request_id)
-
-	return presence
+	return grpc_stream
 end
 
 GRPCManager.get_party_events = function (self, party_operation_id)
@@ -207,12 +181,12 @@ GRPCManager.debug_get_parties = function (self, compatibility)
 	return promise, id
 end
 
-GRPCManager.join_party = function (self, party_id, context_account_id, invite_token, compatibility_string, optional_matchmaking_ticket)
-	local promise = Promise:new()
-	local id = gRPC.join_party(party_id, context_account_id, invite_token, compatibility_string, optional_matchmaking_ticket)
-	self._async_promises[id] = promise
+GRPCManager.join_party = function (self, party_id, context_account_id, invite_token, compatibility_string, optional_matchmaking_ticket, current_game_session_id)
+	local id = gRPC.join_party(party_id, context_account_id, invite_token, compatibility_string, optional_matchmaking_ticket, current_game_session_id)
+	local grpc_stream = GRPCStream:new(self, id, gRPC.get_party_events)
+	self._grpc_streams[id] = grpc_stream
 
-	return promise, id
+	return grpc_stream
 end
 
 GRPCManager.create_empty_party = function (self, compatibility)

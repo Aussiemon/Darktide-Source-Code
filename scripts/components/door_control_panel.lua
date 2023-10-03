@@ -19,6 +19,10 @@ DoorControlPanel.editor_init = function (self, unit)
 	return
 end
 
+DoorControlPanel.editor_validate = function (self, unit)
+	return true, ""
+end
+
 DoorControlPanel.enable = function (self, unit)
 	return
 end
@@ -29,12 +33,6 @@ end
 
 DoorControlPanel.destroy = function (self, unit)
 	return
-end
-
-DoorControlPanel.events.interaction_success = function (self, type, unit)
-	if self._door_control_panel_extension then
-		self._door_control_panel_extension:trigger_interlude()
-	end
 end
 
 DoorControlPanel.activate = function (self)

@@ -253,7 +253,9 @@ CraftingView.craft = function (self, recipe, ingredients, callback, done_callbac
 		return self._wallet_promise:next(function ()
 			return result
 		end)
-	end, function (message)
+	end):catch(function (crafting_error)
+		local message = crafting_error.message or crafting_error
+
 		Log.error("CraftingView", "Craft operation %q failed! Error:\n%s", recipe_name, message)
 		Managers.event:trigger("event_add_notification_message", "alert", {
 			text = Localize("loc_crafting_failure")

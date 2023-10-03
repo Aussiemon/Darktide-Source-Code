@@ -1,3 +1,4 @@
+local Component = require("scripts/utilities/component")
 local RoomsAndPortalsManager = class("RoomsAndPortalsManager")
 
 RoomsAndPortalsManager.init = function (self, world)
@@ -34,10 +35,13 @@ RoomsAndPortalsManager.update = function (self, dt, t)
 		end
 
 		for portal, _ in pairs(self._portals) do
-			local portal_id = WwiseWorld.add_portal_unit(self._wwise_world, portal:get_unit())
+			local portal_unit = portal:get_unit()
+			local portal_id = WwiseWorld.add_portal_unit(self._wwise_world, portal_unit)
 
 			if self:_check_portal_id(portal_id) then
 				self._portals[portal] = portal_id
+
+				Component.event(portal_unit, "portal_added")
 			else
 				self._portals[portal] = nil
 			end

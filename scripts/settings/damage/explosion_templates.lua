@@ -1,4 +1,5 @@
 local WeaponTweaks = require("scripts/utilities/weapon_tweaks")
+local extract_weapon_tweaks = WeaponTweaks.extract_weapon_tweaks
 local explosion_templates = {}
 local loaded_template_files = {}
 
@@ -12,17 +13,15 @@ end
 
 _add_template_entries("scripts/settings/damage/explosion_templates/minion_explosion_templates")
 _add_template_entries("scripts/settings/damage/explosion_templates/player_explosion_templates")
+_add_template_entries("scripts/settings/damage/explosion_templates/player_grenade_explosion_templates")
+_add_template_entries("scripts/settings/damage/explosion_templates/player_weapon_explosion_templates")
 _add_template_entries("scripts/settings/damage/explosion_templates/prop_explosion_templates")
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/force_staffs/settings_templates/force_staff_explosion_templates", explosion_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolters/settings_templates/bolter_explosion_templates", explosion_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/grenadier_gauntlets/settings_templates/grenadier_gauntlet_explosion_templates", explosion_templates, loaded_template_files)
-WeaponTweaks.extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/plasma_rifles/settings_templates/plasma_rifle_explosion_templates", explosion_templates, loaded_template_files)
+extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/bolters/settings_templates/bolter_explosion_templates", explosion_templates, loaded_template_files)
+extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/force_staffs/settings_templates/force_staff_explosion_templates", explosion_templates, loaded_template_files)
+extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/grenadier_gauntlets/settings_templates/grenadier_gauntlet_explosion_templates", explosion_templates, loaded_template_files)
+extract_weapon_tweaks("scripts/settings/equipment/weapon_templates/plasma_rifles/settings_templates/plasma_rifle_explosion_templates", explosion_templates, loaded_template_files)
 
 for name, template in pairs(explosion_templates) do
-	if template.min_radius then
-		-- Nothing
-	end
-
 	if template.close_radius then
 		-- Nothing
 	end

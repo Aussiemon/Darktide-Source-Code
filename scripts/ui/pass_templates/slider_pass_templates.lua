@@ -2,6 +2,7 @@ local UIFontSettings = require("scripts/managers/ui/ui_font_settings")
 local UIResolution = require("scripts/managers/ui/ui_resolution")
 local ListHeaderPassTemplates = require("scripts/ui/pass_templates/list_header_templates")
 local ColorUtilities = require("scripts/utilities/ui/colors")
+local InputUtils = require("scripts/managers/input/input_utils")
 local SliderPassTemplates = {}
 local SLIDER_TRACK_HEIGHT = 20
 local SLIDER_ENDPLATE_WIDTH = 4
@@ -40,8 +41,8 @@ SliderPassTemplates.settings_value_slider = function (width, height, settings_ar
 	return SliderPassTemplates._settings_slider(width, height, settings_area_width, use_is_focused, false)
 end
 
-SliderPassTemplates.value_slider = function (width, height, use_is_focused)
-	return SliderPassTemplates._slider(width, height, use_is_focused, false)
+SliderPassTemplates.value_slider = function (width, height, value_width, use_is_focused)
+	return SliderPassTemplates._slider(width, height, value_width, use_is_focused, false)
 end
 
 SliderPassTemplates._settings_slider = function (width, height, settings_area_width, use_is_focused, is_percent_slider)
@@ -81,7 +82,7 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 					settings_area_width,
 					SLIDER_TRACK_HEIGHT
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.terminal_corner_hover(255, true),
 				offset = {
 					0,
 					0,
@@ -100,9 +101,9 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 					SLIDER_ENDPLATE_WIDTH,
 					SLIDER_TRACK_HEIGHT
 				},
-				disabled_color = Color.ui_grey_light(255, true),
-				default_color = Color.ui_brown_light(255, true),
-				hover_color = Color.ui_terminal(255, true),
+				disabled_color = Color.terminal_text_body_dark(255, true),
+				default_color = Color.terminal_corner(255, true),
+				hover_color = Color.terminal_corner_hover(255, true),
 				offset = {
 					slider_horizontal_offset - SLIDER_ENDPLATE_WIDTH,
 					0,
@@ -122,9 +123,9 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 					SLIDER_ENDPLATE_WIDTH,
 					SLIDER_TRACK_HEIGHT
 				},
-				disabled_color = Color.ui_grey_light(255, true),
-				default_color = Color.ui_brown_light(255, true),
-				hover_color = Color.ui_terminal(255, true),
+				disabled_color = Color.terminal_text_body_dark(255, true),
+				default_color = Color.terminal_corner(255, true),
+				hover_color = Color.terminal_corner_hover(255, true),
 				offset = {
 					0,
 					0,
@@ -144,9 +145,9 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 					slider_area_width,
 					track_thickness
 				},
-				disabled_color = Color.ui_grey_light(255, true),
-				default_color = Color.ui_brown_light(255, true),
-				hover_color = Color.ui_terminal(255, true),
+				disabled_color = Color.terminal_text_body_dark(255, true),
+				default_color = Color.terminal_corner(255, true),
+				hover_color = Color.terminal_corner_hover(255, true),
 				offset = {
 					slider_horizontal_offset,
 					0,
@@ -157,6 +158,41 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 				style.size[1] = content.slider_value * slider_area_width + EXTRA_SLIDER_TRACK_SIZE
 
 				highlight_color_change_function(content, style)
+			end
+		},
+		{
+			style_id = "slider_action_gamepad",
+			pass_type = "text",
+			value = "",
+			value_id = "slider_action_gamepad",
+			style = {
+				vertical_alignment = "center",
+				text_vertical_alignment = "center",
+				horizontal_alignment = "right",
+				text_horizontal_alignment = "right",
+				text_color = {
+					255,
+					226,
+					199,
+					126
+				},
+				offset = {
+					30,
+					0,
+					2
+				}
+			},
+			change_function = function (content, style)
+				local gamepad_action = "confirm_pressed"
+				local service_type = "View"
+				local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
+				local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+				content.slider_action_gamepad = input_text
+			end,
+			visibility_function = function (content, style)
+				local is_highlighted = content.hotspot.is_selected or content.hotspot.is_focused
+
+				return content.is_gamepad_active and not content.exclusive_focus and is_highlighted
 			end
 		}
 	}
@@ -173,9 +209,9 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 					slider_area_width,
 					track_thickness
 				},
-				disabled_color = Color.ui_grey_light(255, true),
-				default_color = Color.ui_brown_light(255, true),
-				hover_color = Color.ui_terminal(255, true),
+				disabled_color = Color.terminal_text_body_dark(255, true),
+				default_color = Color.terminal_corner(255, true),
+				hover_color = Color.terminal_corner_hover(255, true),
 				offset = {
 					-SLIDER_ENDPLATE_WIDTH,
 					0,
@@ -354,9 +390,9 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 					SLIDER_THUMB_SIZE,
 					SLIDER_THUMB_SIZE
 				},
-				disabled_color = Color.ui_grey_light(255, true),
-				default_color = Color.ui_brown_light(255, true),
-				hover_color = Color.ui_terminal(255, true)
+				disabled_color = Color.terminal_text_body_dark(255, true),
+				default_color = Color.terminal_corner(255, true),
+				hover_color = Color.terminal_corner_hover(255, true)
 			},
 			change_function = function (content, style)
 				thumb_position_change_function(content, style)
@@ -398,7 +434,7 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 					SLIDER_THUMB_SIZE,
 					SLIDER_THUMB_SIZE
 				},
-				color = Color.ui_terminal(255, true)
+				color = Color.terminal_corner_hover(255, true)
 			},
 			visibility_function = function (content, style)
 				local highlight_progress = content.highlight_progress or 0
@@ -430,15 +466,16 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 	return passes
 end
 
-SliderPassTemplates._slider = function (width, height, use_is_focused, is_percent_slider)
+SliderPassTemplates._slider = function (width, height, value_width, use_is_focused, is_percent_slider)
 	local track_thickness = is_percent_slider and 10 or SLIDER_ENDPLATE_WIDTH
+	local label_width = value_width or LABEL_WIDTH
 	local thumb_highlight_expanded_size = THUMB_HIGHLIGHT_SIZE + ListHeaderPassTemplates.highlight_size_addition
-	local slider_horizontal_offset = LABEL_WIDTH + UIFontSettings.header_4.offset[1] + SLIDER_ENDPLATE_WIDTH
+	local slider_horizontal_offset = label_width + SLIDER_ENDPLATE_WIDTH
 	local settings_area_width = width - slider_horizontal_offset
 	local slider_area_width = settings_area_width - (SLIDER_ENDPLATE_WIDTH * 2 + SLIDER_THUMB_SIZE)
 	local value_font_style = table.clone(UIFontSettings.list_button)
 	value_font_style.size = {
-		LABEL_WIDTH,
+		label_width - SLIDER_ENDPLATE_WIDTH - 4,
 		height
 	}
 	value_font_style.offset = {
@@ -499,7 +536,7 @@ SliderPassTemplates._slider = function (width, height, use_is_focused, is_percen
 					settings_area_width,
 					SLIDER_TRACK_HEIGHT
 				},
-				color = Color.ui_terminal(255, true),
+				color = Color.terminal_corner_hover(255, true),
 				offset = {
 					0,
 					0,
@@ -518,7 +555,7 @@ SliderPassTemplates._slider = function (width, height, use_is_focused, is_percen
 					SLIDER_ENDPLATE_WIDTH,
 					SLIDER_TRACK_HEIGHT
 				},
-				color = Color.ui_brown_light(255, true),
+				color = Color.terminal_corner(255, true),
 				offset = {
 					slider_horizontal_offset - SLIDER_ENDPLATE_WIDTH,
 					0,
@@ -537,7 +574,7 @@ SliderPassTemplates._slider = function (width, height, use_is_focused, is_percen
 					SLIDER_ENDPLATE_WIDTH,
 					SLIDER_TRACK_HEIGHT
 				},
-				color = Color.ui_brown_light(255, true),
+				color = Color.terminal_corner(255, true),
 				offset = {
 					0,
 					0,
@@ -556,9 +593,9 @@ SliderPassTemplates._slider = function (width, height, use_is_focused, is_percen
 					settings_area_width,
 					track_thickness
 				},
-				disabled_color = Color.ui_grey_light(255, true),
-				default_color = Color.ui_brown_light(255, true),
-				hover_color = Color.ui_terminal(255, true),
+				disabled_color = Color.terminal_text_body_dark(255, true),
+				default_color = Color.terminal_corner(255, true),
+				hover_color = Color.terminal_corner_hover(255, true),
 				offset = {
 					slider_horizontal_offset,
 					0,
@@ -569,6 +606,41 @@ SliderPassTemplates._slider = function (width, height, use_is_focused, is_percen
 				style.size[1] = content.slider_value * slider_area_width
 
 				highlight_color_change_function(content, style)
+			end
+		},
+		{
+			style_id = "slider_action_gamepad",
+			pass_type = "text",
+			value = "",
+			value_id = "slider_action_gamepad",
+			style = {
+				vertical_alignment = "center",
+				text_vertical_alignment = "center",
+				horizontal_alignment = "right",
+				text_horizontal_alignment = "right",
+				text_color = {
+					255,
+					226,
+					199,
+					126
+				},
+				offset = {
+					30,
+					0,
+					2
+				}
+			},
+			change_function = function (content, style)
+				local gamepad_action = "confirm_pressed"
+				local service_type = "View"
+				local alias_key = Managers.ui:get_input_alias_key(gamepad_action, service_type)
+				local input_text = InputUtils.input_text_for_current_input_device(service_type, alias_key)
+				content.slider_action_gamepad = input_text
+			end,
+			visibility_function = function (content, style)
+				local is_highlighted = content.hotspot.is_selected or content.hotspot.is_focused
+
+				return content.is_gamepad_active and not content.exclusive_focus and is_highlighted
 			end
 		}
 	}
@@ -585,9 +657,9 @@ SliderPassTemplates._slider = function (width, height, use_is_focused, is_percen
 					slider_area_width,
 					track_thickness
 				},
-				disabled_color = Color.ui_grey_light(255, true),
-				default_color = Color.ui_brown_light(255, true),
-				hover_color = Color.ui_terminal(255, true),
+				disabled_color = Color.terminal_text_body_dark(255, true),
+				default_color = Color.terminal_corner(255, true),
+				hover_color = Color.terminal_corner_hover(255, true),
 				offset = {
 					-SLIDER_ENDPLATE_WIDTH,
 					0,
@@ -766,9 +838,9 @@ SliderPassTemplates._slider = function (width, height, use_is_focused, is_percen
 					SLIDER_THUMB_SIZE,
 					SLIDER_THUMB_SIZE
 				},
-				disabled_color = Color.ui_grey_light(255, true),
-				default_color = Color.ui_brown_light(255, true),
-				hover_color = Color.ui_terminal(255, true)
+				disabled_color = Color.terminal_text_body_dark(255, true),
+				default_color = Color.terminal_corner(255, true),
+				hover_color = Color.terminal_corner_hover(255, true)
 			},
 			change_function = function (content, style)
 				thumb_position_change_function(content, style)
@@ -810,7 +882,7 @@ SliderPassTemplates._slider = function (width, height, use_is_focused, is_percen
 					SLIDER_THUMB_SIZE,
 					SLIDER_THUMB_SIZE
 				},
-				color = Color.ui_terminal(255, true)
+				color = Color.terminal_corner_hover(255, true)
 			},
 			visibility_function = function (content, style)
 				local highlight_progress = content.highlight_progress or 0

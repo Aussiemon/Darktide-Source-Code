@@ -15,6 +15,9 @@ local mission_templates = {
 			},
 			cutscene_7 = {
 				"cs_07"
+			},
+			hub_location_intro_training_grounds = {
+				"hub_location_intro_training_grounds"
 			}
 		},
 		testify_flags = {

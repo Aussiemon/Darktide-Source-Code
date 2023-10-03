@@ -32,7 +32,8 @@ local templates = {
 		class_name = "buff",
 		predicted = false,
 		conditional_stat_buffs = {
-			[stat_buffs.stagger_burning_reduction_modifier] = 0.5
+			[stat_buffs.stagger_burning_reduction_modifier] = 0.5,
+			[stat_buffs.ranged_impact_modifier] = 0.5
 		},
 		valid_actions = {
 			action_shoot = true
@@ -59,7 +60,9 @@ local templates = {
 				keywords.burning
 			}
 		}
-	})
+	}),
+	weapon_trait_bespoke_flamer_p1_ammo_from_reserve_on_crit = table.clone(BaseWeaponTraitBuffTemplates.move_ammo_from_reserve_to_clip_on_crit),
+	weapon_trait_bespoke_flamer_p1_burned_targets_receive_rending_debuff = table.clone(BaseWeaponTraitBuffTemplates.burned_targets_receive_rending_debuff)
 }
 
 return templates

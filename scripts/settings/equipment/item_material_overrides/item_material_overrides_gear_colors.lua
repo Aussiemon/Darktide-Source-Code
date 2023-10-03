@@ -1208,6 +1208,19 @@ local material_overrides = {
 			}
 		}
 	},
+	color_3_colour_city_07 = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/3_colour_city_03"
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/3_colour_city_07"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/1_colour_beige_01"
+			}
+		}
+	},
 	color_3_colour_desert_01 = {
 		texture_overrides = {
 			color_gradient = {
@@ -1907,6 +1920,31 @@ local material_overrides = {
 			},
 			mat2_gradient = {
 				resource = "content/textures/colors/2_colour_mars_02"
+			}
+		}
+	},
+	color_debug = {
+		texture_overrides = {
+			color_gradient = {
+				resource = "content/textures/colors/debug_yellow_01"
+			},
+			mat1_gradient = {
+				resource = "content/textures/colors/debug_red_01"
+			},
+			mat2_gradient = {
+				resource = "content/textures/colors/debug_green_01"
+			},
+			oxid_mat1_bc = {
+				resource = "content/textures/colors/debug_blue_01"
+			},
+			oxid_mat1_orm = {
+				resource = "content/environment/materials/default_basic/default_texture_orm"
+			},
+			oxid_mat2_bc = {
+				resource = "content/textures/colors/debug_pink_01"
+			},
+			oxid_mat2_orm = {
+				resource = "content/environment/materials/default_basic/default_texture_orm"
 			}
 		}
 	}

@@ -60,7 +60,7 @@ MoodHandler.destroy = function (self)
 end
 
 MoodHandler.update_moods = function (self, blend_list, moods_data)
-	local added_moods, removing_moods, removed_moods = self:update_active_moods(moods_data)
+	local added_moods, removing_moods, removed_moods = self:_update_active_moods(moods_data)
 
 	self:_update_sounds(added_moods, removing_moods, removed_moods, moods_data)
 	self:_update_particles(added_moods, removing_moods, removed_moods, moods_data)
@@ -71,7 +71,7 @@ local _added_moods = {}
 local _removing_moods = {}
 local _removed_moods = {}
 
-MoodHandler.update_active_moods = function (self, mood_data)
+MoodHandler._update_active_moods = function (self, mood_data)
 	local current_moods_status = self._current_moods_status
 
 	table.clear(_added_moods)
@@ -127,21 +127,27 @@ MoodHandler._update_sounds = function (self, added_moods, removing_moods, remove
 				self._sfx_source_ids[added_mood][i][sound_event] = source_id
 			end
 		end
+
+		local wwise_state = added_mood_settings.wwise_state
+
+		if wwise_state then
+			Wwise.set_state(wwise_state.group, wwise_state.on_state)
+		end
 	end
 
-	for removed_mood, _ in pairs(removed_moods) do
-		local removed_mood_settings = moods[removed_mood]
-		local sound_stop_event = removed_mood_settings.sound_stop_event
+	for removing_mood, _ in pairs(removing_moods) do
+		local removing_mood_settings = moods[removing_mood]
+		local sound_stop_event = removing_mood_settings.sound_stop_event
 
 		if sound_stop_event then
-			local sound_stop_event_func = removed_mood_settings.sound_stop_event_func
+			local sound_stop_event_func = removing_mood_settings.sound_stop_event_func
 
 			if not sound_stop_event_func or sound_stop_event_func(player.player_unit) then
 				WwiseWorld.trigger_resource_event(wwise_world, sound_stop_event)
 			end
 		end
 
-		local looping_sound_stop_events = removed_mood_settings.looping_sound_stop_events
+		local looping_sound_stop_events = removing_mood_settings.looping_sound_stop_events
 
 		if looping_sound_stop_events then
 			for i = 1, #looping_sound_stop_events do
@@ -149,6 +155,12 @@ MoodHandler._update_sounds = function (self, added_moods, removing_moods, remove
 
 				WwiseWorld.trigger_resource_event(wwise_world, sound_event)
 			end
+		end
+
+		local wwise_state = removing_mood_settings.wwise_state
+
+		if wwise_state then
+			Wwise.set_state(wwise_state.group, wwise_state.off_state)
 		end
 	end
 

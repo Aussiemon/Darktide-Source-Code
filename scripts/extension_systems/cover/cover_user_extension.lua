@@ -10,17 +10,17 @@ CoverUserExtension.init = function (self, extension_init_context, unit, extensio
 	self._side_system = Managers.state.extension:system("side_system")
 	self._unit = unit
 	local blackboard = BLACKBOARDS[unit]
-
-	self:_init_blackboard_components(blackboard)
-
 	local breed = extension_init_data.breed
+
+	self:_init_blackboard_components(blackboard, breed)
+
 	self._cover_config = breed.cover_config
 	local side_id = extension_init_data.side_id
 	self._side_id = side_id
 	self._nav_world = extension_init_context.nav_world
 end
 
-CoverUserExtension._init_blackboard_components = function (self, blackboard)
+CoverUserExtension._init_blackboard_components = function (self, blackboard, breed)
 	local cover_component = Blackboard.write_component(blackboard, "cover")
 
 	cover_component.position:store(0, 0, 0)
@@ -35,7 +35,10 @@ CoverUserExtension._init_blackboard_components = function (self, blackboard)
 	self._behavior_component = blackboard.behavior
 	self._cover_component = cover_component
 	self._perception_component = blackboard.perception
-	self._suppression_component = blackboard.suppression
+
+	if breed.suppress_config then
+		self._suppression_component = blackboard.suppression
+	end
 end
 
 CoverUserExtension.extensions_ready = function (self, world, unit)
@@ -199,7 +202,7 @@ CoverUserExtension._find_cover_slot = function (self, unit, cover_config, target
 	local radius = nil
 	local suppressed_search_radius = cover_config.suppressed_search_radius
 	local suppression_component = self._suppression_component
-	local is_suppressed = suppression_component.is_suppressed
+	local is_suppressed = suppression_component and suppression_component.is_suppressed
 
 	if suppressed_search_radius and is_suppressed then
 		radius = suppressed_search_radius
@@ -261,7 +264,7 @@ CoverUserExtension._validate_cover_slot = function (self, cover_slot, cover_conf
 	end
 
 	local suppression_component = self._suppression_component
-	local is_suppressed = suppression_component.is_suppressed
+	local is_suppressed = suppression_component and suppression_component.is_suppressed
 	local perception_component = self._perception_component
 	local current_target_unit = perception_component.target_unit
 

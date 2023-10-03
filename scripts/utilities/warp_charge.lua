@@ -110,7 +110,8 @@ WarpCharge.increase_over_time = function (dt, t, charge_level, warp_charge_compo
 	local additional_charge_on_start = charge_configuration.start_warp_charge_percent
 
 	if first_charge and additional_charge_on_start then
-		current_percentage = SharedFunctions.add_immediate(charge_level, false, additional_charge_on_start, current_percentage, true)
+		local additional_add_percentage = buff_multiplier * additional_charge_on_start
+		current_percentage = SharedFunctions.add_immediate(charge_level, false, additional_add_percentage, current_percentage, true)
 	end
 
 	local new_charge = SharedFunctions.increase_over_time(dt, charge_level, add_percentage, extra_add_percentage, duration, current_percentage)
@@ -121,7 +122,7 @@ WarpCharge.increase_over_time = function (dt, t, charge_level, warp_charge_compo
 end
 
 WarpCharge.update_observer = function (dt, t, player, unit, first_person_unit, wwise_world, follow_unit)
-	local base_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
+	local base_warp_charge_template = WarpCharge.archetype_warp_charge_template(player)
 
 	if not base_warp_charge_template then
 		return
@@ -153,7 +154,7 @@ WarpCharge.update_observer = function (dt, t, player, unit, first_person_unit, w
 end
 
 WarpCharge.update = function (dt, t, warp_charge_component, player, unit, first_person_unit, is_local_unit, wwise_world)
-	local base_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
+	local base_warp_charge_template = WarpCharge.archetype_warp_charge_template(player)
 
 	if not base_warp_charge_template then
 		return
@@ -226,7 +227,7 @@ WarpCharge.can_vent = function (warp_charge_component, action_settings)
 end
 
 WarpCharge.start_venting = function (t, player, warp_charge_component)
-	local base_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
+	local base_warp_charge_template = WarpCharge.archetype_warp_charge_template(player)
 
 	if not base_warp_charge_template then
 		return
@@ -253,7 +254,7 @@ WarpCharge.update_venting = function (dt, t, player, warp_charge_component)
 		return false
 	end
 
-	local base_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
+	local base_warp_charge_template = WarpCharge.archetype_warp_charge_template(player)
 
 	if not base_warp_charge_template then
 		return
@@ -273,8 +274,9 @@ WarpCharge.update_venting = function (dt, t, player, warp_charge_component)
 	local vent_interval_modifier = weapon_warp_charge_template.vent_interval_modifier or 1
 	local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 	local stat_buffs = buff_extension:stat_buffs()
-	local vent_duration = base_vent_duration * vent_duration_modifier * new_ramping_modifier / stat_buffs.vent_warp_charge_speed
-	local vent_interval = base_vent_interval * vent_interval_modifier * new_ramping_modifier / stat_buffs.vent_warp_charge_speed
+	local buff_vent_speed = stat_buffs.vent_warp_charge_speed or 1
+	local vent_duration = base_vent_duration * vent_duration_modifier * new_ramping_modifier * buff_vent_speed
+	local vent_interval = base_vent_interval * vent_interval_modifier * new_ramping_modifier * buff_vent_speed
 	local multiplier = stat_buffs.vent_warp_charge_multiplier
 	local next_remove_t, new_percentage = SharedFunctions.update_venting(t, current_percentage, starting_percentage, vent_interval, vent_duration, multiplier)
 
@@ -311,12 +313,10 @@ WarpCharge.clear = function (warp_charge_component)
 	_set_current_percentage(warp_charge_component, 0)
 end
 
-WarpCharge.specialization_warp_charge_template = function (player)
+WarpCharge.archetype_warp_charge_template = function (player)
 	local profile = player:profile()
 	local archetype = profile.archetype
-	local specialization_name = profile.specialization
-	local specialization = archetype.specializations[specialization_name]
-	local warp_charge_template = specialization.warp_charge
+	local warp_charge_template = archetype.warp_charge
 
 	return warp_charge_template
 end
@@ -335,7 +335,7 @@ WarpCharge.wants_warp_charge_character_state = function (unit, unit_data_extensi
 end
 
 WarpCharge.thresholds = function (player, warp_charge_component)
-	local base_warp_charge_template = WarpCharge.specialization_warp_charge_template(player)
+	local base_warp_charge_template = WarpCharge.archetype_warp_charge_template(player)
 
 	if not base_warp_charge_template then
 		return 0, 0, 0

@@ -16,6 +16,20 @@ local material_overrides = {
 			}
 		}
 	},
+	pattern_camo_empty_01 = {
+		texture_overrides = {
+			mat1_pattern = {
+				resource = "content/textures/camo_patterns/primary"
+			}
+		}
+	},
+	pattern_camo_empty_02 = {
+		texture_overrides = {
+			mat2_pattern = {
+				resource = "content/textures/camo_patterns/primary"
+			}
+		}
+	},
 	pattern_camo_01_inv = {
 		texture_overrides = {
 			mat1_pattern = {

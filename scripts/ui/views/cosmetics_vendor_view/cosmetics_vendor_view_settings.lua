@@ -2,10 +2,10 @@ local cosmetics_vendor_view_settings = {
 	timer_name = "ui",
 	total_blur_duration = 0.5,
 	vo_event_vendor_greeting = {
-		"credit_store_servitor_hello"
+		"reject_npc_hub_interact_a"
 	},
 	vo_event_vendor_purchase = {
-		"credit_store_servitor_purchase"
+		"reject_npc_purchase_a"
 	},
 	gear_level_settings = {
 		viewport_layer = 1,

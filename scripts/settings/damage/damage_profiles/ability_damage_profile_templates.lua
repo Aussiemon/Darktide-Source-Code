@@ -9,7 +9,7 @@ local overrides = {}
 table.make_unique(damage_templates)
 table.make_unique(overrides)
 
-damage_templates.shout_stagger = {
+damage_templates.shout_stagger_veteran = {
 	stagger_duration_modifier = 1.5,
 	stagger_category = "melee",
 	suppression_value = 30,
@@ -32,59 +32,22 @@ damage_templates.shout_stagger = {
 			[armor_types.prop_armor] = 1
 		},
 		impact = {
-			[armor_types.unarmored] = 10,
-			[armor_types.armored] = 10,
-			[armor_types.resistant] = 10,
-			[armor_types.player] = 10,
-			[armor_types.berserker] = 10,
-			[armor_types.super_armor] = 10,
-			[armor_types.disgustingly_resilient] = 10,
-			[armor_types.void_shield] = 10,
-			[armor_types.prop_armor] = 10
+			[armor_types.unarmored] = 5,
+			[armor_types.armored] = 5,
+			[armor_types.resistant] = 5,
+			[armor_types.player] = 5,
+			[armor_types.berserker] = 5,
+			[armor_types.super_armor] = 5,
+			[armor_types.disgustingly_resilient] = 5,
+			[armor_types.void_shield] = 5,
+			[armor_types.prop_armor] = 5
 		}
 	},
 	targets = {
 		default_target = {}
 	}
 }
-damage_templates.shout_stagger_light = {
-	stagger_category = "melee",
-	gibbing_power = 0,
-	suppression_value = 10,
-	suppression_type = "ability",
-	power_distribution = {
-		attack = 0,
-		impact = 1
-	},
-	armor_damage_modifier = {
-		attack = {
-			[armor_types.unarmored] = 1,
-			[armor_types.armored] = 1,
-			[armor_types.resistant] = 1,
-			[armor_types.player] = 1,
-			[armor_types.berserker] = 0.5,
-			[armor_types.super_armor] = 0,
-			[armor_types.disgustingly_resilient] = 0,
-			[armor_types.void_shield] = 0,
-			[armor_types.prop_armor] = 1
-		},
-		impact = {
-			[armor_types.unarmored] = 10,
-			[armor_types.armored] = 10,
-			[armor_types.resistant] = 10,
-			[armor_types.player] = 10,
-			[armor_types.berserker] = 10,
-			[armor_types.super_armor] = 10,
-			[armor_types.disgustingly_resilient] = 10,
-			[armor_types.void_shield] = 10,
-			[armor_types.prop_armor] = 10
-		}
-	},
-	targets = {
-		default_target = {}
-	}
-}
-damage_templates.shout_stagger_taunt = {
+damage_templates.shout_stagger_ogryn_taunt = {
 	stagger_category = "melee",
 	gibbing_power = 0,
 	suppression_value = 10,
@@ -115,6 +78,85 @@ damage_templates.shout_stagger_taunt = {
 			[armor_types.disgustingly_resilient] = 0.1,
 			[armor_types.void_shield] = 0.1,
 			[armor_types.prop_armor] = 0.1
+		}
+	},
+	targets = {
+		default_target = {}
+	}
+}
+damage_templates.veteran_invisibility_suppression = {
+	gibbing_power = 0,
+	stagger_override = "killshot",
+	suppression_type = "ability",
+	stagger_duration_modifier = 1.5,
+	suppression_value = 200,
+	ignore_stagger_reduction = true,
+	stagger_category = "killshot",
+	power_distribution = {
+		attack = 0,
+		impact = 15
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 0.5,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+			[armor_types.prop_armor] = 1
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+			[armor_types.prop_armor] = 1
+		}
+	},
+	targets = {
+		default_target = {}
+	}
+}
+damage_templates.zealot_channel_stagger = {
+	no_stagger_breed_tag = "ogryn",
+	stagger_override = "light",
+	suppression_type = "ability",
+	suppression_value = 200,
+	ignore_stagger_reduction = true,
+	stagger_category = "melee",
+	power_distribution = {
+		attack = 0,
+		impact = 1
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 0.1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 0.5,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+			[armor_types.prop_armor] = 1
+		},
+		impact = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 1,
+			[armor_types.prop_armor] = 1
 		}
 	},
 	targets = {
@@ -197,6 +239,46 @@ damage_templates.psyker_biomancer_shout_damage = {
 		}
 	},
 	damage_type = damage_types.psyker_biomancer_discharge,
+	targets = {
+		default_target = {}
+	}
+}
+damage_templates.psyker_shield_stagger = {
+	suppression_value = 30,
+	ignore_shield = true,
+	suppression_type = "ability",
+	stagger_duration_modifier = 1,
+	ignore_stagger_reduction = true,
+	stagger_category = "melee",
+	power_distribution = {
+		attack = 0,
+		impact = 250
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 1,
+			[armor_types.armored] = 1,
+			[armor_types.resistant] = 1,
+			[armor_types.player] = 1,
+			[armor_types.berserker] = 1,
+			[armor_types.super_armor] = 1,
+			[armor_types.disgustingly_resilient] = 1,
+			[armor_types.void_shield] = 0,
+			[armor_types.prop_armor] = 1
+		},
+		impact = {
+			[armor_types.unarmored] = 5,
+			[armor_types.armored] = 5,
+			[armor_types.resistant] = 5,
+			[armor_types.player] = 5,
+			[armor_types.berserker] = 5,
+			[armor_types.super_armor] = 5,
+			[armor_types.disgustingly_resilient] = 5,
+			[armor_types.void_shield] = 5,
+			[armor_types.prop_armor] = 5
+		}
+	},
+	damage_type = damage_types.electrocution,
 	targets = {
 		default_target = {}
 	}
@@ -318,6 +400,82 @@ damage_templates.zealot_preacher_ability_close = {
 	power_distribution = {
 		attack = 75,
 		impact = 75
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	}
+}
+damage_templates.zealot_preacher_ability_far = {
+	damage_type = "kinetic",
+	ragdoll_push_force = 1000,
+	suppression_value = 10,
+	ignore_stagger_reduction = true,
+	stagger_category = "explosion",
+	cleave_distribution = {
+		attack = 0.15,
+		impact = 0.15
+	},
+	armor_damage_modifier_ranged = {
+		near = {
+			attack = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+				[armor_types.prop_armor] = 1
+			},
+			impact = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+				[armor_types.prop_armor] = 1
+			}
+		},
+		far = {
+			attack = {
+				[armor_types.unarmored] = 0.5,
+				[armor_types.armored] = 0.5,
+				[armor_types.resistant] = 0.5,
+				[armor_types.player] = 0.5,
+				[armor_types.berserker] = 0.5,
+				[armor_types.super_armor] = 0.5,
+				[armor_types.disgustingly_resilient] = 0.5,
+				[armor_types.void_shield] = 0.5,
+				[armor_types.prop_armor] = 0.5
+			},
+			impact = {
+				[armor_types.unarmored] = 1,
+				[armor_types.armored] = 1,
+				[armor_types.resistant] = 1,
+				[armor_types.player] = 1,
+				[armor_types.berserker] = 1,
+				[armor_types.super_armor] = 1,
+				[armor_types.disgustingly_resilient] = 1,
+				[armor_types.void_shield] = 1,
+				[armor_types.prop_armor] = 1
+			}
+		}
+	},
+	power_distribution_ranged = {
+		attack = {
+			far = 10,
+			near = 50
+		},
+		impact = {
+			far = 2,
+			near = 30
+		}
 	},
 	targets = {
 		default_target = {

@@ -68,6 +68,10 @@ LightController.editor_init = function (self, unit)
 	end
 end
 
+LightController.editor_validate = function (self, unit)
+	return true, ""
+end
+
 LightController.editor_apply_enabled = function (self, light_group_enabled)
 	local unit = self._unit
 	local start_enabled = self:get_data(unit, "start_enabled")

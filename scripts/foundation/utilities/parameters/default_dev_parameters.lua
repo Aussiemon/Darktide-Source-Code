@@ -12,16 +12,13 @@ local categories = {
 	"Breed",
 	"Buffs",
 	"Camera",
-	"Capture Zone",
 	"Chain Lightning",
 	"Chaos Hound",
 	"Chaos Spawn",
 	"Chat",
-	"Chests",
 	"Chunk Lod",
 	"Coherency",
 	"Combat Vector",
-	"Controller",
 	"Corruptors",
 	"Covers",
 	"Critical Strikes",
@@ -38,6 +35,7 @@ local categories = {
 	"Event",
 	"Feature Info",
 	"FGRL",
+	"Force Field",
 	"Framerate",
 	"Free Flight",
 	"Game Flow",
@@ -62,6 +60,7 @@ local categories = {
 	"Localization",
 	"Locomotion",
 	"Main Path",
+	"Master Data",
 	"Minigame",
 	"Minion Attack Selection",
 	"Minion Renegade Captain Custom Attack Selection",
@@ -75,7 +74,6 @@ local categories = {
 	"Navigation",
 	"Netgunner",
 	"Network",
-	"Networked Timer",
 	"Pacing",
 	"Party",
 	"Payload",
@@ -92,7 +90,6 @@ local categories = {
 	"Projectile",
 	"ProximitySystem",
 	"Push",
-	"QA",
 	"Respawn",
 	"Roamers",
 	"Rumble",
@@ -177,6 +174,14 @@ local params = {
 		value = 1,
 		category = "Input"
 	},
+	controller_look_scale_ranged = {
+		value = 1,
+		category = "Input"
+	},
+	controller_look_scale_ranged_alternate_fire = {
+		value = 1,
+		category = "Input"
+	},
 	controller_invert_look_y = {
 		value = false,
 		category = "Input"
@@ -189,6 +194,10 @@ local params = {
 		value = true,
 		category = "Input"
 	},
+	show_mouse_input_filter = {
+		value = false,
+		category = "Input"
+	},
 	show_gamepad_input_filter = {
 		value = false,
 		category = "Input"
@@ -198,6 +207,10 @@ local params = {
 		category = "Input"
 	},
 	debug_visualize_look_raw_controller = {
+		value = false,
+		category = "Input"
+	},
+	debug_input_filter_response_curves = {
 		value = false,
 		category = "Input"
 	}
@@ -483,6 +496,10 @@ params.debug_medkits = {
 	value = false,
 	category = "Pickups"
 }
+params.debug_projectile_aim = {
+	value = false,
+	category = "Projectile Locomotion"
+}
 params.projectile_aim_disable_aim_offset = {
 	value = false,
 	category = "Projectile Locomotion"
@@ -492,10 +509,6 @@ params.projectile_aim_disable_fx_spawner_offset = {
 	category = "Projectile Locomotion"
 }
 params.projectile_aim_disable_sway_recoil = {
-	value = false,
-	category = "Projectile Locomotion"
-}
-params.debug_projectile_aim = {
 	value = false,
 	category = "Projectile Locomotion"
 }
@@ -518,119 +531,6 @@ params.disable_projectile_collision = {
 params.debug_projectile_locomotion_aiming = {
 	value = false,
 	category = "Projectile Locomotion"
-}
-params.enable_projectile_locomotion_overrides = {
-	value = false,
-	category = "Projectile Locomotion",
-	on_value_set = function (old_value, new_value)
-		if new_value then
-			Debug:set_dev_parameter_if_on_client("enable_projectile_locomotion_overrides", false)
-		end
-	end
-}
-params.projectile_locomotion_use_actor_mass_radius = {
-	value = false,
-	category = "Projectile Locomotion"
-}
-params.projectile_locomotion_air_density_override = {
-	value = 1.29,
-	category = "Projectile Locomotion",
-	num_decimals = 2
-}
-params.projectile_locomotion_coefficient_of_restitution_override = {
-	value = 1,
-	category = "Projectile Locomotion",
-	num_decimals = 2
-}
-params.projectile_locomotion_drag_coefficient_override = {
-	value = 0.5,
-	category = "Projectile Locomotion",
-	num_decimals = 1
-}
-params.projectile_locomotion_gravity_override = {
-	value = -9.82,
-	category = "Projectile Locomotion",
-	num_decimals = 2
-}
-params.projectile_locomotion_mass_override = {
-	value = 5,
-	category = "Projectile Locomotion",
-	num_decimals = 3
-}
-params.projectile_locomotion_max_hit_count_override = {
-	value = 3,
-	category = "Projectile Locomotion",
-	num_decimals = 0
-}
-params.projectile_locomotion_max_iterations_override = {
-	value = 200,
-	category = "Projectile Locomotion",
-	num_decimals = 0
-}
-params.projectile_locomotion_offset_forward_override = {
-	value = 1,
-	category = "Projectile Locomotion",
-	num_decimals = 2
-}
-params.projectile_locomotion_offset_right_override = {
-	value = -0.2,
-	category = "Projectile Locomotion",
-	num_decimals = 2
-}
-params.projectile_locomotion_offset_rotation_charge_time_override = {
-	value = 1,
-	category = "Projectile Locomotion",
-	num_decimals = 1
-}
-params.projectile_locomotion_offset_rotation_x_initial_override = {
-	value = 0,
-	category = "Projectile Locomotion",
-	num_decimals = 0
-}
-params.projectile_locomotion_offset_rotation_x_maximal_override = {
-	value = 0,
-	category = "Projectile Locomotion",
-	num_decimals = 0
-}
-params.projectile_locomotion_offset_rotation_y_initial_override = {
-	value = 0,
-	category = "Projectile Locomotion",
-	num_decimals = 0
-}
-params.projectile_locomotion_offset_rotation_y_maximal_override = {
-	value = 0,
-	category = "Projectile Locomotion",
-	num_decimals = 0
-}
-params.projectile_locomotion_offset_rotation_z_initial_override = {
-	value = 0,
-	category = "Projectile Locomotion",
-	num_decimals = 0
-}
-params.projectile_locomotion_offset_rotation_z_maximal_override = {
-	value = 0,
-	category = "Projectile Locomotion",
-	num_decimals = 0
-}
-params.projectile_locomotion_radius_override = {
-	value = 0.5,
-	category = "Projectile Locomotion",
-	num_decimals = 4
-}
-params.projectile_locomotion_speed_charge_time_override = {
-	value = 1,
-	category = "Projectile Locomotion",
-	num_decimals = 1
-}
-params.projectile_locomotion_speed_initial_override = {
-	value = 10,
-	category = "Projectile Locomotion",
-	num_decimals = 1
-}
-params.projectile_locomotion_speed_maximal_override = {
-	value = 10,
-	category = "Projectile Locomotion",
-	num_decimals = 1
 }
 params.visualize_projectile_locomotion = {
 	value = false,
@@ -670,6 +570,7 @@ params.physics_debug_filter = {
 		"filter_ladder_climb_collision",
 		"filter_minion_line_of_sight_check",
 		"filter_minion_shooting_geometry",
+		"filter_minion_throwing",
 		"filter_minion_shooting_no_friendly_fire",
 		"filter_player_character_melee_sweep",
 		"filter_player_character_ballistic_raycast",
@@ -716,38 +617,107 @@ params.box_minion_collision = {
 	value = false,
 	category = "Player Character"
 }
-local force_local_profiles = false
 params.character_profile_selector_placeholder = {
+	value = false,
+	hidden = true,
+	category = "Player Character"
+}
+local _character_profile_selector_preview_value = nil
+params.character_profile_selector = {
 	category = "Player Character",
-	value = force_local_profiles,
+	value = false,
+	get_function = function (param_key)
+		local value = DevParameters[param_key]
+
+		if value == false then
+			return _character_profile_selector_preview_value or value
+		end
+
+		return value
+	end,
 	options_function = function ()
-		local options = {
-			[1.0] = false
-		}
+		local options = {}
+
+		if Managers.backend:authenticated() then
+			Managers.data_service.profiles:fetch_all_backend_profiles():next(function (profile_data)
+				local profiles = profile_data.profiles
+
+				if profiles then
+					for ii = 1, #profiles do
+						local profile = profiles[ii]
+
+						if profile then
+							local character_id = profile.character_id
+
+							table.insert(options, 1, character_id)
+						end
+					end
+				elseif not profiles or #profiles == 0 then
+					table.insert(options, 1, false)
+				end
+
+				if profile_data.selected_profile then
+					_character_profile_selector_preview_value = profile_data.selected_profile.character_id
+				end
+			end):catch(function ()
+				return
+			end)
+		else
+			table.insert(options, 1, false)
+		end
+
 		local ProfileUtils = require("scripts/utilities/profile_utils")
 		local MasterItems = require("scripts/backend/master_items")
-		local placeholder_profiles = ProfileUtils.placeholder_profiles(MasterItems.get_cached())
+		local local_profiles = ProfileUtils.local_profiles(MasterItems.get_cached())
 
-		for ii = 1, #placeholder_profiles do
+		for ii = 1, #local_profiles do
 			options[#options + 1] = ii
 		end
 
 		return options
 	end,
 	options_texts_function = function ()
-		local options_texts = {
-			[1.0] = "Backend profile"
-		}
-		local ProfileUtils = require("scripts/utilities/profile_utils")
 		local MasterItems = require("scripts/backend/master_items")
-		local placeholder_profiles = ProfileUtils.placeholder_profiles(MasterItems.get_cached())
-		local format_string = #placeholder_profiles >= 10 and "%-4s %s" or "%-3s %s"
+		local ProfileUtils = require("scripts/utilities/profile_utils")
+		local options_texts = {}
 
-		for ii = 1, #placeholder_profiles do
-			local profile = placeholder_profiles[ii]
+		if Managers.backend:authenticated() then
+			Managers.data_service.profiles:fetch_all_backend_profiles():next(function (profile_data)
+				local profiles = profile_data.profiles
+
+				if profiles then
+					for ii = 1, #profiles do
+						local profile = profiles[ii]
+
+						if profile then
+							local character_name = ProfileUtils.character_name(profile)
+							local archetype_name = profile.archetype.name
+							local archetype_name_pretty = archetype_name and string.gsub(archetype_name, "^%l", string.upper) or "no_archetype"
+							local option_text = string.format("%s - %s", archetype_name_pretty, character_name)
+
+							table.insert(options_texts, 1, option_text)
+						end
+					end
+				elseif not profiles or #profiles == 0 then
+					table.insert(options_texts, 1, "Backend profile")
+				end
+			end):catch(function ()
+				return
+			end)
+		else
+			table.insert(options_texts, 1, "Backend profile")
+		end
+
+		local local_profiles = ProfileUtils.local_profiles(MasterItems.get_cached())
+		local format_string = #local_profiles >= 10 and "%-4s %s %s%s" or "%-3s %s %s%s"
+
+		for ii = 1, #local_profiles do
+			local profile = local_profiles[ii]
 			local index = string.format("[%d]", ii)
-			local text = string.format(format_string, index, profile.description or "N/A")
-			options_texts[#options_texts + 1] = text
+			local archetype_name = profile.archetype.name
+			local archetype_name_pretty = archetype_name and string.gsub(archetype_name, "^%l", string.upper) or "no_archetype"
+			local option_text = string.format(format_string, index, archetype_name_pretty, profile.name_short or profile.name or "no_name", profile.description and string.format(" - %s", profile.description) or "")
+			options_texts[#options_texts + 1] = option_text
 		end
 
 		return options_texts
@@ -763,29 +733,53 @@ params.character_profile_selector_placeholder = {
 			return
 		end
 
-		local peer_id = local_player:peer_id()
-		local local_player_id = local_player:local_player_id()
 		local ProfileUtils = require("scripts/utilities/profile_utils")
 		local MasterItems = require("scripts/backend/master_items")
-		local placeholder_profiles = ProfileUtils.placeholder_profiles(MasterItems.get_cached())
-		local wanted_profile = placeholder_profiles[new_value]
-		local character_id = wanted_profile.character_id
+		local peer_id = local_player:peer_id()
+		local local_player_id = local_player:local_player_id()
+		local want_backend_profile = type(new_value) == "string"
 
-		Managers.narrative:load_character_narrative(character_id):next(function ()
-			if Managers.state.game_session then
-				local is_server = Managers.state.game_session:is_server()
+		if want_backend_profile then
+			ParameterResolver.set_dev_parameter("character_profile_selector", false)
 
-				if is_server then
-					local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
+			_character_profile_selector_preview_value = new_value
 
-					profile_synchronizer_host:profile_changed_debug_placeholder_character_profile(peer_id, local_player_id, new_value)
-				else
-					local channel = Managers.connection:host_channel()
+			Managers.data_service.account:set_selected_character_id(new_value):next(function (_)
+				Managers.narrative:load_character_narrative(new_value):next(function (_)
+					local is_server = Managers.state.game_session:is_server()
 
-					RPC.rpc_notify_profile_changed_debug_placeholder_character_profile(channel, peer_id, local_player_id, new_value)
+					if is_server then
+						local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
+
+						profile_synchronizer_host:debug_profile_changed(peer_id, local_player_id, new_value)
+					else
+						local channel = Managers.connection:host_channel()
+
+						RPC.rpc_notify_profile_changed_debug_backend_character_profile(channel, peer_id, local_player_id, new_value)
+					end
+				end)
+			end)
+		else
+			local local_profiles = ProfileUtils.local_profiles(MasterItems.get_cached())
+			local wanted_profile = local_profiles[new_value]
+			local character_id = wanted_profile.character_id
+
+			Managers.narrative:load_character_narrative(character_id):next(function ()
+				if Managers.state.game_session then
+					local is_server = Managers.state.game_session:is_server()
+
+					if is_server then
+						local profile_synchronizer_host = Managers.profile_synchronization:synchronizer_host()
+
+						profile_synchronizer_host:profile_changed_debug_local_character_profile(peer_id, local_player_id, new_value)
+					else
+						local channel = Managers.connection:host_channel()
+
+						RPC.rpc_notify_profile_changed_debug_local_character_profile(channel, peer_id, local_player_id, new_value)
+					end
 				end
-			end
-		end)
+			end)
+		end
 	end
 }
 params.debug_character_interpolated_fixed_frame_movement = {
@@ -1191,7 +1185,26 @@ params.no_ability_cooldowns = {
 		end
 	end
 }
+params.short_ability_cooldowns = {
+	value = false,
+	category = "Abilities",
+	on_value_set = function (new_value, old_value)
+		if not Managers.state or not Managers.state.game_session then
+			return
+		end
+
+		if not Managers.state.game_session:is_server() and DevParameters.allow_server_control_from_client then
+			local channel = Managers.connection:host_channel()
+
+			RPC.rpc_debug_client_request_short_ability_cooldowns(channel, new_value)
+		end
+	end
+}
 params.debug_smoke_fog = {
+	value = false,
+	category = "Abilities"
+}
+params.show_ability_cooldowns = {
 	value = false,
 	category = "Abilities"
 }
@@ -1493,10 +1506,6 @@ params.draw_minion_velocity = {
 	value = false,
 	category = "Locomotion"
 }
-params.draw_minion_speed = {
-	value = false,
-	category = "Locomotion"
-}
 params.draw_player_mover = {
 	value = false,
 	category = "Locomotion"
@@ -1791,6 +1800,14 @@ params.debug_print_action_combo = {
 	value = false,
 	category = "Action"
 }
+params.debug_draw_ballistic_raycast = {
+	value = false,
+	category = "Action"
+}
+params.debug_aim_placement_raycast = {
+	value = false,
+	category = "Action"
+}
 params.debug_action_input_parser = {
 	value = false,
 	category = "Action Input"
@@ -2077,6 +2094,10 @@ params.show_health_bars_on_all_minions = {
 	value = false,
 	category = "Minions"
 }
+params.show_health_bars_on_elite_and_specials = {
+	value = false,
+	category = "Minions"
+}
 params.minions_aggro_on_spawn = {
 	value = false,
 	category = "Minions"
@@ -2090,6 +2111,10 @@ params.enable_minion_auto_stagger = {
 	category = "Minions"
 }
 params.ignore_stuck_minions_warning = {
+	value = false,
+	category = "Minions"
+}
+params.ignore_special_failed_spawn_errors = {
 	value = false,
 	category = "Minions"
 }
@@ -2551,10 +2576,6 @@ params.simulate_color_blindness = {
 		end
 	end
 }
-params.show_placeholder_coherency_hud = {
-	value = false,
-	category = "Hud"
-}
 params.show_debug_charge_hud = {
 	value = false,
 	category = "Hud"
@@ -2719,6 +2740,14 @@ params.show_cinematic_active = {
 params.render_feature_info = {
 	category = "Feature Info",
 	value = SHOW_INFO
+}
+params.debug_draw_force_field_collision = {
+	value = false,
+	category = "Force Field"
+}
+params.show_force_field_life_and_health = {
+	value = false,
+	category = "Force Field"
 }
 params.override_burst_limit = {
 	value = false,
@@ -3088,6 +3117,10 @@ params.debug_render_target_atlas_generator = {
 	value = true,
 	category = "UI"
 }
+params.ui_always_show_tutorial_popup = {
+	value = false,
+	category = "UI"
+}
 params.override_stun_type = {
 	value = false,
 	category = "Damage",
@@ -3113,6 +3146,10 @@ params.show_selected_unit_health = {
 	category = "Damage"
 }
 params.show_debug_explosions = {
+	value = false,
+	category = "Damage"
+}
+params.debug_async_explosions = {
 	value = false,
 	category = "Damage"
 }
@@ -3390,6 +3427,10 @@ params.dialogue_override_short_story_tick_start_time_value = {
 		end
 	end
 }
+params.dialogue_force_load_all_player_vo = {
+	value = false,
+	category = "Dialogue"
+}
 params.debug_equipment_component = {
 	value = false,
 	category = "Equipment"
@@ -3492,10 +3533,6 @@ params.debug_projectile_husk_interpolation = {
 	value = false,
 	category = "Projectile"
 }
-params.debug_draw_ballistic_raycast = {
-	value = false,
-	category = "Projectile"
-}
 params.debug_push_attacks = {
 	value = false,
 	category = "Push"
@@ -3572,7 +3609,7 @@ params.debug_respawn_beacon = {
 	value = false,
 	category = "Respawn"
 }
-params.debug_player_spawn_manager = {
+params.debug_player_spawn = {
 	value = false,
 	category = "Respawn"
 }
@@ -3953,6 +3990,10 @@ params.use_localized_talent_names_in_debug_menu = {
 	value = false,
 	category = "Talents"
 }
+params.debug_skip_backend_talent_verification = {
+	value = false,
+	category = "Talents"
+}
 params.draw_chain_lightning_targeting = {
 	value = false,
 	category = "Chain Lightning"
@@ -4077,6 +4118,10 @@ params.debug_draw_damage_profile_ranges = {
 	value = false,
 	category = "Weapon"
 }
+params.debug_always_extra_grenade_throw_chance = {
+	value = false,
+	category = "Weapon"
+}
 params.debug_aim_assist = {
 	value = false,
 	category = "Weapon Aim Assist"
@@ -4105,6 +4150,10 @@ params.debug_chain_weapon_effects = {
 	value = false,
 	category = "Weapon Effects"
 }
+params.debug_charge_effects = {
+	value = false,
+	category = "Weapon Effects"
+}
 params.debug_force_weapon_effects = {
 	value = false,
 	category = "Weapon Effects"
@@ -4121,6 +4170,10 @@ params.debug_power_weapon_effects = {
 	value = false,
 	category = "Weapon Effects"
 }
+params.debug_psyker_throwing_knives_effects = {
+	value = false,
+	category = "Weapon Effects"
+}
 params.debug_sticky_effects = {
 	value = false,
 	category = "Weapon Effects"
@@ -4134,6 +4187,10 @@ params.debug_weapon_flashlight = {
 	category = "Weapon Effects"
 }
 params.debug_weapon_temperature_effects = {
+	value = false,
+	category = "Weapon Effects"
+}
+params.debug_zealot_relic_effects = {
 	value = false,
 	category = "Weapon Effects"
 }
@@ -4312,8 +4369,8 @@ params.surface_effect_material_override = {
 	value = false,
 	category = "Damage Interface",
 	options_function = function ()
-		local MaterialQuery = require("scripts/utilities/material_query")
-		local surface_materials = MaterialQuery.surface_materials
+		local MaterialQuerySettings = require("scripts/settings/material_query_settings")
+		local surface_materials = MaterialQuerySettings.surface_materials
 		local options = {
 			false
 		}
@@ -4688,15 +4745,13 @@ params.debug_join_hub_server = {
 params.debug_local_test_hub_server = {
 	value = false
 }
+params.longer_psyker_force_field_duration = {
+	value = false
+}
+params.show_equipped_items = {
+	value = false
+}
 params.debug_change_time_scale.value = false
-
-for param, config in pairs(params) do
-	local category = config.category
-
-	if category then
-		-- Nothing
-	end
-end
 
 return {
 	enable_filter_by_defaults = true,

@@ -18,6 +18,11 @@ local function _extract_cinematic_video_templates(path)
 end
 
 _extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/cs06")
+_extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_mission_board")
+_extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_crafting_station_underground")
+_extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_contracts")
+_extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_barbershop")
+_extract_cinematic_video_templates("scripts/settings/cinematic_video/templates/hli_gun_shop")
 
 VideoViewSettings.templates = cinematic_video_templates
 

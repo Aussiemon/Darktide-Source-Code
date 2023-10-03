@@ -40,6 +40,21 @@ PickupSpawner.editor_init = function (self, unit)
 	return
 end
 
+PickupSpawner.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+	local spawn_nodes = self:get_data(unit, "spawn_nodes")
+
+	for i = 1, #spawn_nodes do
+		if not Unit.has_node(unit, spawn_nodes[i]) then
+			success = false
+			error_message = error_message .. "\nMissing node '" .. spawn_nodes[i] .. "'"
+		end
+	end
+
+	return success, error_message
+end
+
 PickupSpawner.enable = function (self, unit)
 	return
 end

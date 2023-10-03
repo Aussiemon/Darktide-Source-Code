@@ -20,8 +20,8 @@ local DamageProfile = {
 
 		return target_settings
 	end,
-	power_distribution_from_power_level = function (power_level, power_type, damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, damage_profile_lerp_values, stat_buffs_or_nil, attack_type_or_nil)
-		local scaled_power_level = PowerLevel.scale_power_level_to_power_type_curve(power_level, power_type, stat_buffs_or_nil, attack_type_or_nil)
+	power_distribution_from_power_level = function (power_level, power_type, damage_profile, target_settings, is_critical_strike, dropoff_scalar, armor_type, damage_profile_lerp_values, stat_buffs_or_nil, attack_type_or_nil, weakspot_or_nil)
+		local scaled_power_level = PowerLevel.scale_power_level_to_power_type_curve(power_level, power_type, stat_buffs_or_nil, attack_type_or_nil, weakspot_or_nil)
 		local power_type_power = _distribute_power_level_to_power_type(power_type, scaled_power_level, damage_profile, target_settings, dropoff_scalar, damage_profile_lerp_values)
 
 		return power_type_power, scaled_power_level
@@ -49,7 +49,7 @@ local DamageProfile = {
 		local psyker_smite_max_hit_mass_impact_modifier = stat_buffs_or_nil and psyker_smite_increase and stat_buffs_or_nil.psyker_smite_max_hit_mass_impact_modifier or 1
 		impact_modifier = max_hit_mass_impact_modifier + psyker_smite_max_hit_mass_impact_modifier - 1
 		max_hit_mass_impact = max_hit_mass_impact * impact_modifier
-		local crit_infinite_cleave_keyword = buff_extension and buff_extension:has_keyword(buff_keywords.critical_hit_infinite_hit_mass)
+		local crit_infinite_cleave_keyword = buff_extension and buff_extension:has_keyword(buff_keywords.critical_hit_infinite_cleave)
 
 		if is_critical_strike and crit_infinite_cleave_keyword then
 			max_hit_mass_attack = math.huge

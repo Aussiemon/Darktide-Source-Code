@@ -44,22 +44,16 @@ SweepStickyness.num_damage_instances_this_frame = function (hit_stickyness_setti
 		return num_damage_instances, false
 	end
 
-	local fixed_time_step = GameParameters.fixed_time_step
+	local fixed_time_step = Managers.state.game_session.fixed_time_step
 	local duration = hit_stickyness_settings.duration
 	local end_t = start_t + duration
 	local next_t = math.min(t + fixed_time_step, end_t)
 	local damage_instances = damage.instances or 1
-	local time_between_instances = 0.9 * duration / damage_instances
-	local damage_timing_override = hit_stickyness_settings.damage_timing_override
-
-	if damage_timing_override and damage_instances == 1 then
-		time_between_instances = damage_timing_override
-	end
-
+	local time_between_instances = duration * 0.9 / damage_instances
 	local last_instance = false
 	local first_instance = false
-	local interval_start = t - start_t
-	local interval_end = next_t - start_t
+	local interval_start = math.round_with_precision(t - start_t, 4)
+	local interval_end = math.round_with_precision(next_t - start_t, 4)
 
 	for i = 1, damage_instances do
 		local damage_instance_t = time_between_instances * i

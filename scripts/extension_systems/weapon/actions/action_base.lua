@@ -91,4 +91,12 @@ ActionBase.rotation_contraints = function (self)
 	return rotation_contraints
 end
 
+ActionBase._use_ability_charge = function (self, optional_num_charges)
+	local action_settings = self._action_settings
+	local ability_type = action_settings.ability_type
+	local ability_extension = self._ability_extension
+
+	ability_extension:use_ability_charge(ability_type, optional_num_charges)
+end
+
 return ActionBase

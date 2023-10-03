@@ -187,7 +187,8 @@ PlayerUnitSpawnManager._spawn = function (self, player, position, rotation, pare
 	local breed_name = breed_name_optional or player:breed_name()
 	local breed = Breeds[breed_name]
 	local seed = self._seed
-	local player_unit = Managers.state.unit_spawner:spawn_network_unit(nil, "player_character", position, rotation, nil, player, breed, spawn_side_id, character_state_optional, player.input_handler, seed, optional_damage, optional_permanent_damage)
+	local unit_template_name = Managers.state.game_mode:player_unit_template_name()
+	local player_unit = Managers.state.unit_spawner:spawn_network_unit(nil, unit_template_name, position, rotation, nil, player, breed, spawn_side_id, character_state_optional, player.input_handler, seed, optional_damage, optional_permanent_damage)
 
 	if not player.remote then
 		local pitch = Quaternion.pitch(rotation)
@@ -417,17 +418,6 @@ PlayerUnitSpawnManager.remove_all_bots = function (self)
 		for local_player_id, _ in pairs(bot_ids) do
 			bot_synchronizer_host:remove_bot(local_player_id)
 		end
-	end
-end
-
-PlayerUnitSpawnManager._handle_bot_spawning = function (self)
-	if self._queued_bots_n > 0 then
-		local profile_id = math.random(1, 6)
-		local profile_name = "bot_" .. profile_id
-
-		BotSpawning.spawn_bot_character(profile_name)
-
-		self._queued_bots_n = self._queued_bots_n - 1
 	end
 end
 

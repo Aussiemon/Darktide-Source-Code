@@ -120,6 +120,10 @@ MinionSpawnerExtension.position = function (self)
 	return position
 end
 
+MinionSpawnerExtension.rotation = function (self)
+	return self._spawn_rotation:unbox()
+end
+
 MinionSpawnerExtension.add_spawns = function (self, breed_list, spawn_side_id, optional_target_side_id, optional_spawn_delay, optional_mission_objective_id, optional_group_id, optional_attack_selection_template_name, optional_aggro_state, optional_max_health_modifier)
 	local queue = self._spawn_queue
 	local spawn_delay = optional_spawn_delay or DEFAULT_SPAWN_DELAY

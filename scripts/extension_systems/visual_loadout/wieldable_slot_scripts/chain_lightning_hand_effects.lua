@@ -14,10 +14,19 @@ ChainLightningHandEffects.init = function (self, context, slot, weapon_template,
 	self._wwise_world = context.wwise_world
 	self._first_person_unit = context.first_person_unit
 	local weapon_chain_settings = weapon_template.chain_settings
-	local right_fx_source_name = weapon_chain_settings.right_fx_source_name
-	local left_fx_source_name = weapon_chain_settings.left_fx_source_name
-	self._right_fx_source_name = weapon_chain_settings.right_fx_source_name_is_base_unit and right_fx_source_name or fx_sources[right_fx_source_name]
-	self._left_fx_source_name = weapon_chain_settings.left_fx_source_name_is_base_unit and left_fx_source_name or fx_sources[left_fx_source_name]
+	local right_fx_source_name = fx_sources[weapon_chain_settings.right_fx_source_name]
+	local left_fx_source_name = fx_sources[weapon_chain_settings.left_fx_source_name]
+
+	if weapon_chain_settings.right_fx_source_name_base_unit then
+		right_fx_source_name = weapon_chain_settings.right_fx_source_name_base_unit
+	end
+
+	if weapon_chain_settings.left_fx_source_name_base_unit then
+		left_fx_source_name = weapon_chain_settings.left_fx_source_name_base_unit
+	end
+
+	self._right_fx_source_name = right_fx_source_name
+	self._left_fx_source_name = left_fx_source_name
 	self._is_in_first_person = nil
 	self._right_hand_particle_id = nil
 	self._left_hand_particle_id = nil

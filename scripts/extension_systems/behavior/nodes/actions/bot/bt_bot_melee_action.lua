@@ -49,8 +49,8 @@ BtBotMeleeAction.enter = function (self, unit, breed, blackboard, scratchpad, ac
 	scratchpad.action_input_extension = ScriptUnit.extension(unit, "action_input_system")
 	scratchpad.slot_extension = ScriptUnit.extension(unit, "slot_system")
 	scratchpad.random_dodge_check_t = 0
-	local specialization = unit_data_extension:specialization()
-	scratchpad.specialization_stamina_template = specialization.stamina
+	local archetype = unit_data_extension:archetype()
+	scratchpad.archetype_stamina_template = archetype.stamina
 	local attack_intensity_extension = ScriptUnit.extension(unit, "attack_intensity_system")
 	scratchpad.attack_intensity_extension = attack_intensity_extension
 end
@@ -450,7 +450,7 @@ end
 BtBotMeleeAction._should_push = function (self, defense_meta_data, scratchpad, in_melee_range, target_unit, target_breed, fixed_t)
 	local num_enemies = scratchpad.num_enemies_in_proximity
 	local stamina_component = scratchpad.stamina_component
-	local base_stamina_template = scratchpad.specialization_stamina_template
+	local base_stamina_template = scratchpad.archetype_stamina_template
 	local current_stamina, _ = Stamina.current_and_max_value(target_unit, stamina_component, base_stamina_template)
 	local push_type = defense_meta_data.push
 	local low_stamina = current_stamina <= 1

@@ -760,7 +760,7 @@ CharacterCreate.slot_item_options = function (self, slot_name)
 	local archetype_name = archetype.name
 	local breed = profile.breed
 	local gender = profile.gender
-	local items = self._item_categories[archetype_name][breed][gender][slot_name]
+	local items = self._item_categories[archetype_name] and self._item_categories[archetype_name][breed] and self._item_categories[archetype_name][breed][gender] and self._item_categories[archetype_name][breed][gender][slot_name]
 
 	return items
 end

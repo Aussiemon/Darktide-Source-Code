@@ -533,11 +533,11 @@ damage_templates.close_gauntlet_demolitions = {
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
-			[armor_types.armored] = damage_lerp_values.lerp_0_5,
+			[armor_types.armored] = damage_lerp_values.lerp_1_25,
 			[armor_types.resistant] = damage_lerp_values.lerp_0_3,
 			[armor_types.player] = damage_lerp_values.lerp_1,
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
-			[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 			[armor_types.void_shield] = damage_lerp_values.lerp_1,
 			[armor_types.prop_armor] = damage_lerp_values.lerp_0_8
@@ -556,8 +556,8 @@ damage_templates.close_gauntlet_demolitions = {
 	},
 	power_distribution = {
 		attack = {
-			150,
-			300
+			250,
+			450
 		},
 		impact = {
 			40,
@@ -591,8 +591,8 @@ damage_templates.close_special_gauntlet_demolitions = {
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
-			[armor_types.armored] = damage_lerp_values.lerp_0_75,
-			[armor_types.resistant] = damage_lerp_values.lerp_0_5,
+			[armor_types.armored] = damage_lerp_values.lerp_1_25,
+			[armor_types.resistant] = damage_lerp_values.lerp_1,
 			[armor_types.player] = damage_lerp_values.lerp_1,
 			[armor_types.berserker] = damage_lerp_values.lerp_1,
 			[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
@@ -614,8 +614,8 @@ damage_templates.close_special_gauntlet_demolitions = {
 	},
 	power_distribution = {
 		attack = {
-			400,
-			800
+			600,
+			1000
 		},
 		impact = {
 			30,

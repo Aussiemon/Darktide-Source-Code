@@ -24,7 +24,6 @@ local breed_data = {
 	spawn_inventory_slot = "slot_melee_weapon",
 	run_speed = 4.3,
 	use_bone_lod = true,
-	game_object_type = "minion_melee",
 	spawn_anim_state = "to_melee",
 	power_level_type = "horde_default_melee",
 	unit_template_name = "minion",
@@ -32,19 +31,20 @@ local breed_data = {
 	detection_radius = 15,
 	sub_faction_name = "chaos",
 	broadphase_radius = 1,
-	challenge_rating = 0.4,
+	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_newly_infected",
+	walk_speed = 2.4,
+	game_object_type = "minion_melee",
 	stagger_resistance = 0.5,
 	use_avoidance = true,
 	base_height = 1.7,
-	walk_speed = 2.4,
 	player_locomotion_constrain_radius = 0.3,
 	line_of_sight_collision_filter = "filter_minion_line_of_sight_check",
-	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_newly_infected",
 	use_wounds = true,
 	slot_template = "chaos_poxwalker",
 	activate_slot_system_on_spawn = true,
 	explosion_power_multiplier = 0.3,
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
+	challenge_rating = 0.4,
 	bone_lod_radius = 1,
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
@@ -56,14 +56,7 @@ local breed_data = {
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.unarmored,
-	hit_mass = {
-		0.75,
-		0.75,
-		0.75,
-		0.75,
-		0.75,
-		2
-	},
+	hit_mass = MinionDifficultySettings.hit_mass[breed_name],
 	gib_template = MinionGibbingTemplates.chaos_newly_infected,
 	stagger_durations = {
 		[stagger_types.light] = 0.6,
@@ -82,6 +75,14 @@ local breed_data = {
 		[stagger_types.killshot] = 0.5,
 		[stagger_types.explosion] = 4
 	},
+	stagger_thresholds = {
+		[stagger_types.light] = 1,
+		[stagger_types.medium] = 20,
+		[stagger_types.heavy] = 40,
+		[stagger_types.explosion] = 60,
+		[stagger_types.light_ranged] = 8,
+		[stagger_types.killshot] = 4
+	},
 	impact_anim_override = {
 		damaged = {
 			fwd = "hit_reaction_fwd",
@@ -98,7 +99,7 @@ local breed_data = {
 		"moving_attack_fwd_speed"
 	},
 	combat_range_data = BreedCombatRanges.chaos_poxwalker,
-	suppress_config = MinionDifficultySettings.suppression.cultist_assault,
+	suppress_config = MinionDifficultySettings.suppression.chaos_newly_infected,
 	attack_intensity_cooldowns = {
 		melee = {
 			0.5,

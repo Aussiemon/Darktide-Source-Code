@@ -25,7 +25,7 @@ VotingNotificationHandler._get_text = function (self, voting_id)
 	if text_cache then
 		if data.show_timer then
 			local t = notification.time_left
-			text_cache[2] = self:_format_time(t)
+			text_cache[#text_cache] = self:_format_time(t)
 		end
 
 		return text_cache
@@ -35,12 +35,12 @@ VotingNotificationHandler._get_text = function (self, voting_id)
 		data.title
 	}
 
+	table.append(texts, data.lines)
+
 	if data.show_timer then
 		local t = notification.time_left
 		texts[#texts + 1] = self:_format_time(t)
 	end
-
-	table.append(texts, data.lines)
 
 	notification.text_cache = texts
 
@@ -66,9 +66,13 @@ VotingNotificationHandler.create = function (self, voting_id, data)
 end
 
 VotingNotificationHandler.modify = function (self, voting_id, data, optional_clear_cache)
+	_verify_data(data)
+
 	local notification = self._notifications[voting_id]
 
-	_verify_data(data)
+	if not notification then
+		return
+	end
 
 	if optional_clear_cache ~= false then
 		notification.text_cache = nil

@@ -13,7 +13,7 @@ template.show_health_bar = true
 template.show_numbers = true
 template.show_armor_types = true
 template.show_dps = true
-template.skip_damage_from_others = true
+template.skip_damage_from_others = false
 template.fade_bar_on_death = false
 template.damage_number_type = damage_number_types.readable
 template.size = size
@@ -705,6 +705,7 @@ template.on_enter = function (widget, marker, template)
 	local breed = unit_data_extension:breed()
 	content.header_text = breed.name
 	content.breed = breed
+	content.unit_data_extension = unit_data_extension
 end
 
 local HEAD_NODE = "j_head"

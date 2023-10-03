@@ -45,7 +45,11 @@ local wallet_settings = {
 		backend_index = 1,
 		font_gradient_material_insufficient_funds = "content/ui/materials/font_gradients/slug_font_gradient_insufficient_funds",
 		show_in_character_menu = true,
-		notification_sound_event = UISoundEvents.notification_crafting_material_recieved_pasteel
+		notification_sound_event = UISoundEvents.notification_crafting_material_recieved_pasteel,
+		pickup_localization_by_size = {
+			small = "loc_pickup_small_metal",
+			large = "loc_pickup_large_metal"
+		}
 	},
 	diamantine = {
 		icon_texture_small = "content/ui/materials/icons/currencies/diamantine_small",
@@ -57,7 +61,11 @@ local wallet_settings = {
 		backend_index = 1,
 		font_gradient_material_insufficient_funds = "content/ui/materials/font_gradients/slug_font_gradient_insufficient_funds",
 		show_in_character_menu = true,
-		notification_sound_event = UISoundEvents.notification_crafting_material_recieved_diamantine
+		notification_sound_event = UISoundEvents.notification_crafting_material_recieved_diamantine,
+		pickup_localization_by_size = {
+			small = "loc_pickup_small_platinum",
+			large = "loc_pickup_large_platinum"
+		}
 	}
 }
 

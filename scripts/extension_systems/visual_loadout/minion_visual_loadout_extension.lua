@@ -1,5 +1,4 @@
 local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_templates")
-local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local MasterItems = require("scripts/backend/master_items")
 local MinionGibbing = require("scripts/managers/minion/minion_gibbing")
 local SideColor = require("scripts/utilities/side_color")
@@ -65,7 +64,7 @@ local function _create_slot_entry(unit, lod_group, lod_shadow_group, world, item
 			attach_settings_temp.spawn_with_extensions = nil
 		end
 
-		item_unit, attachments = VisualLoadoutCustomization.spawn_item(item_data, attach_settings_temp, unit, extract_attachment_units_bind_poses)
+		item_unit, attachments = VisualLoadoutCustomization.spawn_item(item_data, attach_settings_temp, unit, nil, extract_attachment_units_bind_poses, nil)
 	end
 
 	local drop_on_death = item_slot_data.drop_on_death
@@ -729,7 +728,7 @@ MinionVisualLoadoutExtension.gib = function (self, hit_zone_name_or_nil, attack_
 	local gibbing_enabled_locally = Application.user_setting("gore_settings", "gibbing_enabled")
 
 	if gibbing_enabled_locally == nil then
-		gibbing_enabled_locally = DefaultGameParameters.gibbing_enabled
+		gibbing_enabled_locally = GameParameters.gibbing_enabled
 	end
 
 	local spawned_gibs = nil

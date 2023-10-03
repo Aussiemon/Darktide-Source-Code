@@ -7,6 +7,10 @@ WeaponMaterialVariables.init = function (self, unit)
 	self._material_slot_name = self:get_data(unit, "material_slot_name")
 end
 
+WeaponMaterialVariables.editor_validate = function (self, unit)
+	return true, ""
+end
+
 WeaponMaterialVariables.enable = function (self, unit)
 	return
 end

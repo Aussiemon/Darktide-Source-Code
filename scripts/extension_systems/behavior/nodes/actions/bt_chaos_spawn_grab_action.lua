@@ -116,9 +116,9 @@ BtChaosSpawnGrabAction.run = function (self, unit, breed, blackboard, scratchpad
 
 		self:_update_grabbing(unit, scratchpad, action_data, t, dt)
 
-		if not scratchpad.grabbed_unit and scratchpad.grab_duration < t then
+		if not scratchpad.grabbed_unit and scratchpad.grab_duration_missed < t then
 			return "done"
-		elseif scratchpad.grab_duration < t then
+		elseif scratchpad.grabbed_unit and scratchpad.grab_duration < t then
 			self:_check_if_want_to_smash(unit, scratchpad, action_data, t)
 		end
 
@@ -166,6 +166,8 @@ BtChaosSpawnGrabAction._start_grabbing = function (self, unit, scratchpad, actio
 	scratchpad.total_grab_duration = t + total_grab_duration
 	local grab_duration = action_data.grab_durations[breed_name]
 	scratchpad.grab_duration = t + grab_duration
+	local grab_duration_missed = action_data.grab_durations_missed[breed_name]
+	scratchpad.grab_duration_missed = t + grab_duration_missed
 	local next_damage_t = action_data.damage_timings[breed_name][1]
 	scratchpad.next_damage_t = t + next_damage_t
 	scratchpad.damage_timing_index = 1
@@ -209,10 +211,18 @@ BtChaosSpawnGrabAction._update_grabbing = function (self, unit, scratchpad, acti
 			local grab_target_node = Unit.node(target_unit, grab_target_node_name)
 			local grab_target_position = Unit.world_position(target_unit, grab_target_node)
 			local distance = Vector3.distance(grab_position, grab_target_position)
-			local is_dodging = Dodge.is_dodging(target_unit)
+			local is_dodging = scratchpad.successful_dodge or Dodge.is_dodging(target_unit)
 			local check_radius = is_dodging and action_data.dodge_grab_check_radius or action_data.grab_check_radius
 
 			if check_radius < distance then
+				if is_dodging and not scratchpad.successful_dodge then
+					local breed = ScriptUnit.extension(unit, "unit_data_system"):breed()
+
+					Dodge.sucessful_dodge(target_unit, unit, attack_types.melee, nil, breed)
+
+					scratchpad.successful_dodge = true
+				end
+
 				return
 			end
 

@@ -92,7 +92,7 @@ Factory.add_to_group(HookStats, Factory.create_hook("hook_killed_disabler", {
 	"player_class"
 }))
 Factory.add_to_group(HookStats, Factory.create_hook("hook_toughness_regenerated", {
-	"starting_ammount",
+	"starting_amount",
 	"reason",
 	"player_class"
 }))

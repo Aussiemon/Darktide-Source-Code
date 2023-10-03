@@ -50,12 +50,21 @@ HudElementCrosshair.init = function (self, parent, draw_layer, start_scale, defi
 	local event_manager = Managers.event
 
 	event_manager:register(self, "event_crosshair_hit_report", "event_crosshair_hit_report")
+	event_manager:register(self, "event_update_forced_dot_crosshair", "event_update_forced_dot_crosshair")
+
+	local save_manager = Managers.save
+
+	if save_manager then
+		local account_data = save_manager:account_data()
+		self._forced_dot_crosshair = account_data.interface_settings.forced_dot_crosshair_enabled
+	end
 end
 
 HudElementCrosshair.destroy = function (self)
 	local event_manager = Managers.event
 
 	event_manager:unregister(self, "event_crosshair_hit_report")
+	event_manager:unregister(self, "event_update_forced_dot_crosshair")
 	HudElementCrosshair.super.destroy(self)
 end
 
@@ -79,6 +88,10 @@ HudElementCrosshair.event_crosshair_hit_report = function (self, hit_weakspot, a
 	hit_report_array[4] = did_damage
 	hit_report_array[5] = hit_world_position
 	hit_report_array[6] = new_prio
+end
+
+HudElementCrosshair.event_update_forced_dot_crosshair = function (self, value)
+	self._forced_dot_crosshair = value
 end
 
 local hit_indicator_colors = HudElementCrosshairSettings.hit_indicator_colors
@@ -234,6 +247,10 @@ HudElementCrosshair._get_current_crosshair_type = function (self)
 				crosshair_type = crosshair_type or weapon_cross_hair_type
 			end
 		end
+	end
+
+	if self._forced_dot_crosshair and (not crosshair_type or crosshair_type == "none") then
+		crosshair_type = "dot"
 	end
 
 	return crosshair_type or "none"

@@ -145,63 +145,63 @@ local templates = {
 		materials = {
 			default = {
 				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_stomp_default",
-				vfx = "content/fx/particles/enemies/plague_ogryn/stomp"
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
 			},
 			concrete = {
 				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_stomp_default",
-				vfx = "content/fx/particles/enemies/plague_ogryn/stomp"
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
 			},
 			metal_solid = {
 				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_stomp_default",
-				vfx = "content/fx/particles/enemies/plague_ogryn/stomp"
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
 			},
 			metal_sheet = {
 				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_stomp_metal",
-				vfx = "content/fx/particles/enemies/plague_ogryn/stomp"
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
 			},
 			metal_catwalk = {
 				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_stomp_metal",
-				vfx = "content/fx/particles/enemies/plague_ogryn/stomp"
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
 			},
 			wood = {
 				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_stomp_debris",
-				vfx = "content/fx/particles/enemies/plague_ogryn/stomp"
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
 			},
 			glass = {
 				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_stomp_debris",
-				vfx = "content/fx/particles/enemies/plague_ogryn/stomp"
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
 			},
 			dirt_sand = {
 				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_stomp_debris",
-				vfx = "content/fx/particles/enemies/plague_ogryn/stomp"
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
 			},
 			dirt_gravel = {
 				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_stomp_debris",
-				vfx = "content/fx/particles/enemies/plague_ogryn/stomp"
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
 			},
 			dirt_soil = {
 				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_stomp_debris",
-				vfx = "content/fx/particles/enemies/plague_ogryn/stomp"
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
 			},
 			dirt_trash = {
 				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_stomp_debris",
-				vfx = "content/fx/particles/enemies/plague_ogryn/stomp"
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
 			},
 			vegetation = {
 				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_stomp_debris",
-				vfx = "content/fx/particles/enemies/plague_ogryn/stomp"
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
 			},
 			flesh = {
 				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_stomp_wet",
-				vfx = "content/fx/particles/enemies/plague_ogryn/stomp"
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
 			},
 			water = {
 				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_stomp_wet",
-				vfx = "content/fx/particles/enemies/plague_ogryn/stomp"
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
 			},
 			dirt_mud = {
 				sfx = "wwise/events/minions/play_enemy_character_foley_plague_ogryn_stomp_wet",
-				vfx = "content/fx/particles/enemies/plague_ogryn/stomp"
+				vfx = "content/fx/particles/enemies/chaos_spawn/chaos_spawn_jump_landing"
 			}
 		}
 	},

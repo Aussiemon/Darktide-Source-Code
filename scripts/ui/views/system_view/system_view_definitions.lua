@@ -177,9 +177,15 @@ local widget_definitions = {
 local legend_inputs = {
 	{
 		input_action = "back",
-		on_pressed_callback = "cb_on_close_pressed",
 		display_name = "loc_settings_menu_close_menu",
-		alignment = "left_alignment"
+		alignment = "left_alignment",
+		on_pressed_callback = "cb_on_close_pressed",
+		extra_input_actions = {
+			gamepad = {
+				"hotkey_system"
+			},
+			keyboard = {}
+		}
 	}
 }
 

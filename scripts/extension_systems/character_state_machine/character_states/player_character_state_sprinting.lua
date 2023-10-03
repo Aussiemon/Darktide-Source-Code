@@ -40,9 +40,9 @@ PlayerCharacterStateSprinting.init = function (self, ...)
 	self._action_input_extension = ScriptUnit.extension(unit, "action_input_system")
 	local ledge_vault_tweak_values = self._breed.ledge_vault_tweak_values
 	self._ledge_vault_tweak_values = ledge_vault_tweak_values
-	local specialization = self._specialization
-	self._specialization_sprint_template = specialization.sprint
-	self._specialization_stamina_template = specialization.stamina
+	local archetype = self._archetype
+	self._archetype_sprint_template = archetype.sprint
+	self._archetype_stamina_template = archetype.stamina
 end
 
 PlayerCharacterStateSprinting.on_enter = function (self, unit, dt, t, previous_state, params)
@@ -58,7 +58,7 @@ PlayerCharacterStateSprinting.on_enter = function (self, unit, dt, t, previous_s
 
 	Interrupt.ability_and_action(t, unit, "started_sprint", nil, ignore_immunity)
 
-	local base_sprint_template = self._specialization_sprint_template
+	local base_sprint_template = self._archetype_sprint_template
 
 	AcceleratedLocalSpaceMovement.refresh_local_move_variables(base_sprint_template.sprint_move_speed, locomotion_steering, self._locomotion_component, self._first_person_component)
 	Stamina.set_regeneration_paused(self._stamina_component, true)
@@ -94,7 +94,7 @@ local WALK_MOVE_ANIM_THRESHOLD = 0.8
 PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_state_params, fixed_frame)
 	local locomotion = self._locomotion_component
 	local locomotion_steering = self._locomotion_steering_component
-	local base_sprint_template = self._specialization_sprint_template
+	local base_sprint_template = self._archetype_sprint_template
 	local constants = self._constants
 	local move_settings = self._movement_settings_component
 	local weapon_extension = self._weapon_extension
@@ -224,12 +224,12 @@ PlayerCharacterStateSprinting._check_transition = function (self, unit, t, next_
 		return climb_state
 	end
 
-	local wanted_ability_transition, ability_transition_params = self._ability_extension:wanted_character_state_transition()
+	local ability_transition, ability_transition_params = self:_poll_ability_state_transitions(unit, t)
 
-	if wanted_ability_transition then
+	if ability_transition then
 		table.merge(next_state_params, ability_transition_params)
 
-		return wanted_ability_transition
+		return ability_transition
 	end
 
 	local weapon_template = PlayerUnitVisualLoadout.wielded_weapon_template(self._visual_loadout_extension, self._inventory_component)
@@ -270,7 +270,7 @@ PlayerCharacterStateSprinting._wanted_movement = function (self, dt, sprint_char
 	local current_x = locomotion_steering.local_move_x
 	local current_y = locomotion_steering.local_move_y
 	local constants = self._constants
-	local base_sprint_template = self._specialization_sprint_template
+	local base_sprint_template = self._archetype_sprint_template
 	local weapon_sprint_template = weapon_extension:sprint_template()
 	local side_acc = weapon_sprint_template and weapon_sprint_template.sprint_sideway_acceleration or 1
 	local side_dec = weapon_sprint_template and weapon_sprint_template.sprint_sideway_deceleration or 1
@@ -295,7 +295,7 @@ PlayerCharacterStateSprinting._wanted_movement = function (self, dt, sprint_char
 	end
 
 	local max_move_speed = sprint_move_speed + weapon_sprint_speed_mod
-	local base_stamina_template = self._specialization_stamina_template
+	local base_stamina_template = self._archetype_stamina_template
 	local weapon_stamina_template = self._weapon_extension:stamina_template()
 	local base_cost_per_second = weapon_stamina_template and weapon_stamina_template.sprint_cost_per_second or math.huge
 	local buff_cost_multiplier = stat_buffs.sprinting_cost_multiplier

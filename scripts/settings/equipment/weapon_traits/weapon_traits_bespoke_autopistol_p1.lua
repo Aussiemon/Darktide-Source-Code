@@ -12,17 +12,17 @@ templates.weapon_trait_bespoke_autopistol_p1_stacking_crit_bonus_on_continuous_f
 	weapon_trait_bespoke_autopistol_p1_stacking_crit_bonus_on_continuous_fire = {
 		{
 			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.02
-			}
-		},
-		{
-			stat_buffs = {
-				[stat_buffs.critical_strike_chance] = 0.03
+				[stat_buffs.critical_strike_chance] = 0.035
 			}
 		},
 		{
 			stat_buffs = {
 				[stat_buffs.critical_strike_chance] = 0.04
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.critical_strike_chance] = 0.045
 			}
 		},
 		{
@@ -36,6 +36,15 @@ templates.weapon_trait_bespoke_autopistol_p1_toughness_on_continuous_fire = {
 	weapon_trait_bespoke_autopistol_p1_toughness_on_continuous_fire = {
 		{
 			toughness_fixed_percentage = 0.04
+		},
+		{
+			toughness_fixed_percentage = 0.04
+		},
+		{
+			toughness_fixed_percentage = 0.04
+		},
+		{
+			toughness_fixed_percentage = 0.04
 		}
 	}
 }
@@ -43,35 +52,46 @@ templates.weapon_trait_bespoke_autopistol_p1_power_bonus_on_continuous_fire = {
 	weapon_trait_bespoke_autopistol_p1_power_bonus_on_continuous_fire = {
 		{
 			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.1
+				[stat_buffs.power_level_modifier] = 0.08
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.power_level_modifier] = 0.08
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.power_level_modifier] = 0.08
+			}
+		},
+		{
+			stat_buffs = {
+				[stat_buffs.power_level_modifier] = 0.08
 			}
 		}
 	}
 }
 templates.weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide = {
-	weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide = {
+	weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide_parent = {
 		{
-			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.14
+				[stat_buffs.reload_speed] = 0.07
 			}
 		},
 		{
-			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.16
+				[stat_buffs.reload_speed] = 0.08
 			}
 		},
 		{
-			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.18
+				[stat_buffs.reload_speed] = 0.09
 			}
 		},
 		{
-			active_duration = 2,
 			stat_buffs = {
-				[stat_buffs.reload_speed] = 0.2
+				[stat_buffs.reload_speed] = 0.1
 			}
 		}
 	}
@@ -80,34 +100,34 @@ templates.weapon_trait_bespoke_autopistol_p1_suppression_on_close_kill = {
 	weapon_trait_bespoke_autopistol_p1_suppression_on_close_kill = {
 		{
 			suppression_settings = {
-				suppression_falloff = true,
+				suppression_falloff = false,
 				instant_aggro = true,
-				distance = 5,
-				suppression_value = 10
-			}
-		},
-		{
-			suppression_settings = {
-				suppression_falloff = true,
-				instant_aggro = true,
-				distance = 6,
+				distance = 12,
 				suppression_value = 15
 			}
 		},
 		{
 			suppression_settings = {
-				suppression_falloff = true,
+				suppression_falloff = false,
 				instant_aggro = true,
-				distance = 7,
+				distance = 12,
 				suppression_value = 20
 			}
 		},
 		{
 			suppression_settings = {
-				suppression_falloff = true,
+				suppression_falloff = false,
 				instant_aggro = true,
-				distance = 8,
+				distance = 12,
 				suppression_value = 25
+			}
+		},
+		{
+			suppression_settings = {
+				suppression_falloff = false,
+				instant_aggro = true,
+				distance = 12,
+				suppression_value = 30
 			}
 		}
 	}
@@ -116,22 +136,22 @@ templates.weapon_trait_bespoke_autopistol_p1_allow_flanking_and_increased_damage
 	weapon_trait_bespoke_autopistol_p1_allow_flanking_and_increased_damage_when_flanking = {
 		{
 			stat_buffs = {
-				[stat_buffs.flanking_damage] = 0.15
+				[stat_buffs.flanking_damage] = 0.325
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.flanking_damage] = 0.2
+				[stat_buffs.flanking_damage] = 0.35
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.flanking_damage] = 0.25
+				[stat_buffs.flanking_damage] = 0.375
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.flanking_damage] = 0.3
+				[stat_buffs.flanking_damage] = 0.4
 			}
 		}
 	}
@@ -140,22 +160,22 @@ templates.weapon_trait_bespoke_autopistol_p1_followup_shots_ranged_damage = {
 	weapon_trait_bespoke_autopistol_p1_followup_shots_ranged_damage = {
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.06
+				[stat_buffs.ranged_damage] = 0.14
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.09
+				[stat_buffs.ranged_damage] = 0.16
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.12
+				[stat_buffs.ranged_damage] = 0.18
 			}
 		},
 		{
 			conditional_stat_buffs = {
-				[stat_buffs.ranged_damage] = 0.15
+				[stat_buffs.ranged_damage] = 0.2
 			}
 		}
 	}
@@ -165,25 +185,37 @@ templates.weapon_trait_bespoke_autopistol_p1_recoil_reduction_and_suppression_in
 		{
 			proc_stat_buffs = {
 				[stat_buffs.recoil_modifier] = -0.05,
-				[stat_buffs.suppression_dealt] = 0.05
+				[stat_buffs.suppression_dealt] = 0.05,
+				[stat_buffs.recoil_modifier] = -0.28,
+				[stat_buffs.suppression_dealt] = 0.28,
+				[stat_buffs.damage_vs_suppressed] = 0.14
 			}
 		},
 		{
 			proc_stat_buffs = {
 				[stat_buffs.recoil_modifier] = -0.1,
-				[stat_buffs.suppression_dealt] = 0.1
+				[stat_buffs.suppression_dealt] = 0.1,
+				[stat_buffs.recoil_modifier] = -0.32,
+				[stat_buffs.suppression_dealt] = 0.32,
+				[stat_buffs.damage_vs_suppressed] = 0.16
 			}
 		},
 		{
 			proc_stat_buffs = {
 				[stat_buffs.recoil_modifier] = -0.15,
-				[stat_buffs.suppression_dealt] = 0.15
+				[stat_buffs.suppression_dealt] = 0.15,
+				[stat_buffs.recoil_modifier] = -0.36,
+				[stat_buffs.suppression_dealt] = 0.36,
+				[stat_buffs.damage_vs_suppressed] = 0.18
 			}
 		},
 		{
 			proc_stat_buffs = {
 				[stat_buffs.recoil_modifier] = -0.2,
-				[stat_buffs.suppression_dealt] = 0.2
+				[stat_buffs.suppression_dealt] = 0.2,
+				[stat_buffs.recoil_modifier] = -0.4,
+				[stat_buffs.suppression_dealt] = 0.4,
+				[stat_buffs.damage_vs_suppressed] = 0.2
 			}
 		}
 	}
@@ -193,25 +225,25 @@ templates.weapon_trait_bespoke_autopistol_p1_stacking_power_bonus_on_staggering_
 		{
 			max_stacks = 5,
 			stat_buffs = {
+				[stat_buffs.power_level_modifier] = 0.0425
+			}
+		},
+		{
+			max_stacks = 5,
+			stat_buffs = {
+				[stat_buffs.power_level_modifier] = 0.045
+			}
+		},
+		{
+			max_stacks = 5,
+			stat_buffs = {
+				[stat_buffs.power_level_modifier] = 0.0475
+			}
+		},
+		{
+			max_stacks = 5,
+			stat_buffs = {
 				[stat_buffs.power_level_modifier] = 0.05
-			}
-		},
-		{
-			max_stacks = 5,
-			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.1
-			}
-		},
-		{
-			max_stacks = 5,
-			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.15
-			}
-		},
-		{
-			max_stacks = 5,
-			stat_buffs = {
-				[stat_buffs.power_level_modifier] = 0.2
 			}
 		}
 	}

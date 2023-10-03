@@ -48,6 +48,19 @@ BtExitSpawnerAction.leave = function (self, unit, breed, blackboard, scratchpad,
 		scratchpad.locomotion_extension:set_anim_driven(false)
 		scratchpad.locomotion_extension:use_lerp_rotation(true)
 	end
+
+	local exit_position = scratchpad.exit_position:unbox()
+	local navigation_extension = ScriptUnit.extension(unit, "navigation_system")
+
+	navigation_extension:set_nav_bot_position(exit_position)
+	scratchpad.locomotion_extension:teleport_to(exit_position)
+
+	local slot_system = Managers.state.extension:system("slot_system")
+	local slot_extension = ScriptUnit.has_extension(unit, "slot_system")
+
+	if slot_extension then
+		slot_system:register_prioritized_user_unit_update(unit)
+	end
 end
 
 BtExitSpawnerAction.run = function (self, unit, breed, blackboard, scratchpad, action_data, dt, t)

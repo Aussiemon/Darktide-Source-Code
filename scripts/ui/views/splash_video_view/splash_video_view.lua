@@ -6,9 +6,13 @@ local SplashVideoView = class("SplashVideoView", "BaseView")
 
 SplashVideoView.init = function (self, settings, context)
 	self._context = context
-	self._current_subtitles = {}
-	self._time_until_next_subtitle = nil
-	self._active_subtitle_duration = nil
+	self._subtitles = nil
+	self._current_subtitle_index = 0
+	self._time_for_next_subtitle = nil
+	self._active_subtitle_end_time = nil
+	self._video_start_time = nil
+	self._wait_for_video = 0
+	self._second_update = true
 
 	SplashVideoView.super.init(self, Definitions, settings)
 end
@@ -23,17 +27,17 @@ SplashVideoView.on_enter = function (self)
 		local video_name = context.video_name
 
 		if video_name then
-			local loop_video = context.loop_video or false
-			local size = context.size or nil
-			local position = context.position or nil
+			self._video_name = video_name
+			self._loop_video = context.loop_video or false
+			self._size = context.size or nil
+			self._position = context.position or nil
 			local short_video_name = video_name:sub(16)
 			local subtitles = SplashVideoViewSettings[short_video_name .. "_subtitles"]
 
 			if subtitles then
-				self._current_subtitles = subtitles
+				self._subtitles = subtitles
+				self._current_subtitle_index = 1
 			end
-
-			self:_setup_video(video_name, loop_video, size, position)
 		end
 
 		local sound_name = context.sound_name
@@ -70,7 +74,7 @@ SplashVideoView.on_exit = function (self)
 	if self._entered then
 		self:_remove_subtitle()
 
-		self._current_subtitles = nil
+		self._subtitles = nil
 	end
 
 	SplashVideoView.super.on_exit(self)
@@ -80,10 +84,19 @@ SplashVideoView.on_exit = function (self)
 
 		self._world_spawner = nil
 	end
+
+	self:_remove_subtitles()
 end
 
 SplashVideoView.update = function (self, dt, t, input_service)
-	if self._current_subtitles[1] then
+	if self._wait_for_video < 3 then
+		self._wait_for_video = self._wait_for_video + 1
+	elseif self._wait_for_video == 3 then
+		self:_setup_video(self._video_name, self._loop_video, self._size, self._position)
+
+		self._wait_for_video = self._wait_for_video + 1
+		self._video_start_time = t
+	elseif self._subtitles and self._subtitles[1] then
 		self:_update_subtitles(dt, t)
 	end
 
@@ -137,35 +150,36 @@ SplashVideoView._setup_video = function (self, video_name, loop_video, size, pos
 end
 
 SplashVideoView._update_subtitles = function (self, dt, t)
-	local current_subtitle = self._current_subtitles[1]
-	local current_subtitle_start = current_subtitle.subtitle_start
+	local subtitles = self._subtitles
+	local subtitle_index = self._current_subtitle_index
+	local current_subtitle = subtitles and subtitles[subtitle_index]
 
-	if self._time_until_next_subtitle and self._time_until_next_subtitle <= 0 then
-		self:_add_subtitle(current_subtitle)
-
-		self._active_subtitle_duration = current_subtitle.subtitle_duration
-		self._time_until_next_subtitle = nil
-	elseif self._active_subtitle_duration and self._active_subtitle_duration > 0 then
-		self._active_subtitle_duration = self._active_subtitle_duration - dt
+	if not current_subtitle then
+		return
 	end
 
-	if self._active_subtitle_duration and self._active_subtitle_duration <= 0 then
-		self:_remove_subtitle()
-		table.remove(self._current_subtitles, 1)
+	local video_start_time = self._video_start_time
+	local time_for_next_subtitle = self._time_for_next_subtitle
+	local active_subtitle_end_time = self._active_subtitle_end_time
 
-		local next_subtitle = self._current_subtitles[1]
+	if time_for_next_subtitle and time_for_next_subtitle <= t then
+		local dialogue_system_subtitle = self:dialogue_system_subtitle()
 
-		if next_subtitle then
-			local next_subtitle_start = next_subtitle.subtitle_start
-			local current_subtitle_finish = current_subtitle_start + current_subtitle.subtitle_duration
-			self._time_until_next_subtitle = next_subtitle_start - current_subtitle_finish
-		end
-	end
+		dialogue_system_subtitle:add_audible_playing_localized_dialogue(current_subtitle)
 
-	if self._time_until_next_subtitle and self._time_until_next_subtitle > 0 then
-		self._time_until_next_subtitle = self._time_until_next_subtitle - dt
-	elseif not self._active_subtitle_duration then
-		self._time_until_next_subtitle = current_subtitle_start - dt
+		self._time_for_next_subtitle = nil
+		self._active_subtitle_end_time = t + current_subtitle.subtitle_duration
+	elseif active_subtitle_end_time and active_subtitle_end_time <= t then
+		local dialogue_system_subtitle = self:dialogue_system_subtitle()
+
+		dialogue_system_subtitle:remove_silent_localized_dialogue(current_subtitle)
+
+		subtitle_index = subtitle_index + 1
+		self._current_subtitle_index = subtitle_index
+		self._active_subtitle_end_time = nil
+	elseif not time_for_next_subtitle and not active_subtitle_end_time then
+		local current_subtitle_start = current_subtitle.subtitle_start
+		self._time_for_next_subtitle = video_start_time + current_subtitle_start
 	end
 end
 
@@ -200,6 +214,20 @@ SplashVideoView.dialogue_system = function (self)
 	return dialogue_system
 end
 
+SplashVideoView._remove_subtitles = function (self)
+	local subtitles = self._subtitles
+	local current_subtitle = subtitles and subtitles[self._current_subtitle_index]
+
+	if current_subtitle then
+		local dialogue_system_subtitle = self:dialogue_system_subtitle()
+
+		dialogue_system_subtitle:remove_silent_localized_dialogue(current_subtitle)
+	end
+
+	self._subtitles = nil
+	self._current_subtitle_index = 0
+end
+
 SplashVideoView._add_subtitle = function (self, subtitle)
 	local dialogue_system_subtitle = self:dialogue_system_subtitle()
 
@@ -208,7 +236,7 @@ end
 
 SplashVideoView._remove_subtitle = function (self)
 	local dialogue_system_subtitle = self:dialogue_system_subtitle()
-	local subtitle = self._current_subtitles[1]
+	local subtitle = self._subtitles and self._subtitles[1]
 
 	if subtitle then
 		dialogue_system_subtitle:remove_silent_localized_dialogue(subtitle)

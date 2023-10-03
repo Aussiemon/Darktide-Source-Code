@@ -191,7 +191,7 @@ HudElementTeamPanelHandler._add_panel = function (self, unique_id, ui_renderer, 
 	local host_type = Managers.connection:host_type()
 	local game_mode_name = Managers.state.game_mode and Managers.state.game_mode:game_mode_name()
 	local is_in_hub = host_type == "hub_server" or game_mode_name == "hub"
-	local is_in_training_grounds = game_mode_name == "shooting_range"
+	local is_in_training_grounds = game_mode_name == "shooting_range" or game_mode_name == "training_grounds"
 
 	if is_in_training_grounds then
 		if is_my_player then

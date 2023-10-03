@@ -919,6 +919,20 @@ MissionBoardViewStyles.play_team_button_legend = {
 		}
 	}
 }
+MissionBoardViewStyles.search_text_style = {
+	text = {
+		font_type = "proxima_nova_bold",
+		font_size = 42,
+		text_vertical_alignment = "center",
+		text_horizontal_alignment = "center",
+		text_color = MissionBoardViewSettings.color_main,
+		offset = {
+			0,
+			0,
+			2
+		}
+	}
+}
 MissionBoardViewStyles.mission_widget_style = {
 	background = {
 		color = MissionBoardViewSettings.color_background

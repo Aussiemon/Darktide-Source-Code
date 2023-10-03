@@ -278,10 +278,8 @@ CreditsGoodsVendorView._close_result_overlay = function (self)
 	end
 
 	local result_item = self._result_item
-	local gear_id = result_item.gear_id
-	local item_type = result_item.item_type
 
-	ItemUtils.mark_item_id_as_new(gear_id, item_type)
+	ItemUtils.mark_item_id_as_new(result_item)
 	Managers.event:trigger("event_vendor_view_purchased_item")
 end
 

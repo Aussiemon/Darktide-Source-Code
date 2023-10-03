@@ -4,6 +4,10 @@ MissionObjectiveZoneScannable.init = function (self, unit)
 	return
 end
 
+MissionObjectiveZoneScannable.editor_validate = function (self, unit)
+	return true, ""
+end
+
 MissionObjectiveZoneScannable.enable = function (self, unit)
 	return
 end

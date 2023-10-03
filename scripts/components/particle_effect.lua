@@ -20,6 +20,25 @@ ParticleEffect.init = function (self, unit)
 	end
 end
 
+ParticleEffect.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if self:get_data(unit, "particle") == "" then
+		success = false
+		error_message = error_message .. "\nMissing unit data 'particle' it can't be empty"
+	end
+
+	local particle_node_name = self:get_data(unit, "particle_node_name")
+
+	if particle_node_name ~= "" and not Unit.has_node(unit, particle_node_name) then
+		success = false
+		error_message = error_message .. "\nMissing unit node '" .. particle_node_name .. "'"
+	end
+
+	return success, error_message
+end
+
 ParticleEffect.enable = function (self, unit)
 	return
 end

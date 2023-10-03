@@ -32,6 +32,10 @@ DemolitionSynchronizer.editor_init = function (self, unit)
 	return
 end
 
+DemolitionSynchronizer.editor_validate = function (self, unit)
+	return true, ""
+end
+
 DemolitionSynchronizer.enable = function (self, unit)
 	return
 end

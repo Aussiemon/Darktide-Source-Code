@@ -16,7 +16,7 @@ end
 
 ActionAim.start = function (self, action_settings, t, ...)
 	ActionAim.super.start(self, action_settings, t, ...)
-	AlternateFire.start(self._alternate_fire_component, self._weapon_tweak_templates_component, self._spread_control_component, self._sway_control_component, self._sway_component, self._movement_state_component, self._first_person_extension, self._animation_extension, self._weapon_extension, self._weapon_template, self._player_unit, t)
+	AlternateFire.start(self._alternate_fire_component, self._weapon_tweak_templates_component, self._spread_control_component, self._sway_control_component, self._sway_component, self._movement_state_component, self._peeking_component, self._first_person_extension, self._animation_extension, self._weapon_extension, self._weapon_template, self._player_unit, t)
 end
 
 ActionAim.running_action_state = function (self, t, time_in_action)

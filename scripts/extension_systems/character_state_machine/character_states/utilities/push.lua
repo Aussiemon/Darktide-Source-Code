@@ -101,7 +101,7 @@ function _time_to_apply_push(unit, unit_data_extension, is_server)
 	local is_local_unit = unit_data_extension:is_local_unit()
 	local player = Managers.state.player_unit_spawn:owner(unit)
 	local lag_compensation = LagCompensation.rewind_ms(is_server, is_local_unit, player) + 0.05
-	local max_allowed_lag_compensation = NetworkConstants.fixed_frame_offset_end_t_4bit.max * GameParameters.fixed_time_step
+	local max_allowed_lag_compensation = NetworkConstants.fixed_frame_offset_end_t_4bit.max * Managers.state.game_session.fixed_time_step
 	local clamped_lag_compensation = math.min(lag_compensation, max_allowed_lag_compensation)
 
 	return current_fixed_t + clamped_lag_compensation

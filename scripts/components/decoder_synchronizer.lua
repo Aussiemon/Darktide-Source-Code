@@ -24,6 +24,10 @@ DecoderSynchronizer.editor_init = function (self, unit)
 	return
 end
 
+DecoderSynchronizer.editor_validate = function (self, unit)
+	return true, ""
+end
+
 DecoderSynchronizer.editor_update = function (self, unit, dt, t)
 	return
 end

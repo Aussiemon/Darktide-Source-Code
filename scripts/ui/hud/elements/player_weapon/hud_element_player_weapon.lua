@@ -176,12 +176,13 @@ HudElementPlayerWeapon.update = function (self, dt, t, ui_renderer, render_setti
 	if ability_type then
 		local ability_extension = self._ability_extension
 		local remaining_ability_charges = ability_extension:remaining_ability_charges(ability_type)
+		local max_ability_charges = ability_extension:max_ability_charges(ability_type)
 
 		if self._uses_ammo and self._total_ammo ~= remaining_ability_charges then
 			self._low_on_ammo = remaining_ability_charges <= 0
 
-			self:set_clip_amount(remaining_ability_charges)
-			self:set_ammo_amount(remaining_ability_charges)
+			self:set_clip_amount(remaining_ability_charges, max_ability_charges)
+			self:set_ammo_amount(remaining_ability_charges, max_ability_charges)
 
 			clip_information_updated = true
 		end
@@ -351,7 +352,8 @@ HudElementPlayerWeapon.set_wield_anim_progress = function (self, progress, ui_re
 			animate_color_value(pass_style.text_color, progress, wielded_color, secondary_color, include_alpha)
 
 			local index = pass_style.index
-			pass_style.offset[1] = -((3 - index) * animated_font_size * 0.55)
+			local max_ammo_digits = HudElementPlayerWeaponSettings.max_ammo_digits
+			pass_style.offset[1] = -((max_ammo_digits - index) * animated_font_size * 0.55)
 			local ammo_text = ammo_text_content[pass_name]
 			local ammo_text_height = self:_get_style_text_height(ammo_text, pass_style, ui_renderer)
 
@@ -405,17 +407,13 @@ end
 local temp_ammo_display_texts = {}
 local zero_numeral_default_color = Color.terminal_frame(255, true)
 
-local function convert_ammo_to_display_texts(amount, max_character, low_on_ammo, color_zero_values, ignore_coloring, is_weapon)
+local function convert_ammo_to_display_texts(amount, max_character, low_on_ammo, color_zero_values, ignore_coloring, is_weapon, is_spare)
 	local zero_numeral_color = low_on_ammo and UIHudSettings.color_tint_alert_3 or UIHudSettings.color_tint_main_3
 
 	table.clear(temp_ammo_display_texts)
 
-	if is_weapon then
-		max_character = math.min(max_character + 1, 3)
-	else
-		max_character = math.min(max_character, 3)
-	end
-
+	local max_ammo_digits = HudElementPlayerWeaponSettings.max_ammo_digits
+	max_character = math.min(max_character, max_ammo_digits)
 	local length = string.len(amount)
 	local num_adds = max_character - length
 	local zero_string = "0"
@@ -443,6 +441,7 @@ end
 HudElementPlayerWeapon.set_ammo_amount = function (self, amount, total_max_amount)
 	self._total_ammo = amount
 	local is_weapon = self._is_weapon
+	local max_ammo_digits = HudElementPlayerWeaponSettings.max_ammo_digits
 
 	if not self._infinite_ammo then
 		local widgets_by_name = self._widgets_by_name
@@ -453,24 +452,24 @@ HudElementPlayerWeapon.set_ammo_amount = function (self, amount, total_max_amoun
 		if self._ammo_current_rounds_amount then
 			local display_texts = convert_ammo_to_display_texts(self._ammo_current_rounds_amount, string.len(self._ammo_max_clip_rounds or amount), self._low_on_ammo, self._ammo_current_rounds_amount == 0, self._total_ammo == 0, is_weapon)
 
-			for i = 3, 1, -1 do
+			for i = max_ammo_digits, 1, -1 do
 				local key = "ammo_amount_" .. i
 				local text = table.remove(display_texts, #display_texts)
 				content[key] = text or ""
 				style[key].drop_shadow = text and true or false
 			end
 		else
-			for i = 3, 1, -1 do
+			for i = max_ammo_digits, 1, -1 do
 				content["ammo_amount_" .. i] = ""
 			end
 		end
 
-		local spare_clips = self._ammo_max_clip_rounds and self._total_ammo - self._ammo_current_rounds_amount
+		local spare_clips = is_weapon and self._ammo_max_clip_rounds and self._total_ammo - self._ammo_current_rounds_amount
 
 		if spare_clips then
-			local display_texts = convert_ammo_to_display_texts(spare_clips, string.len(self._ammo_max_clip_rounds), self._low_on_ammo, true, self._total_ammo == 0, is_weapon)
+			local display_texts = convert_ammo_to_display_texts(spare_clips, string.len(total_max_amount), self._low_on_ammo, true, self._total_ammo == 0, is_weapon, true)
 
-			for i = 3, 1, -1 do
+			for i = max_ammo_digits, 1, -1 do
 				local key = "ammo_spare_" .. i
 				local text = table.remove(display_texts, #display_texts)
 				content[key] = text or ""
@@ -481,7 +480,7 @@ HudElementPlayerWeapon.set_ammo_amount = function (self, amount, total_max_amoun
 			self._ammo_text_height_offset_default = 0
 			self._use_one_line_ammunition = false
 		else
-			for i = 3, 1, -1 do
+			for i = max_ammo_digits, 1, -1 do
 				content["ammo_spare_" .. i] = ""
 			end
 

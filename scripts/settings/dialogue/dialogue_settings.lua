@@ -16,7 +16,8 @@ local DialogueSettings = {
 		"event_vo_survive",
 		"event_vo_hacking",
 		"event_vo_scan",
-		"on_demand_vo"
+		"on_demand_vo",
+		"class_rework"
 	},
 	menu_vo_files = {
 		"conversations_hub"
@@ -36,7 +37,6 @@ local DialogueSettings = {
 		},
 		hub_ship = {
 			"cutscenes_vo",
-			"on_demand_vo",
 			"conversations_hub"
 		},
 		prologue = {
@@ -214,7 +214,7 @@ local DialogueSettings = {
 	decaying_tension_delay = 2,
 	npc_story_ticker_enabled = true,
 	npc_story_ticker_start_delay = 127,
-	npc_story_tick_time = 607,
+	npc_story_tick_time = 100,
 	store_npc_cooldown_time = 5,
 	mission_update_tick_time = 15,
 	ambush_delay = 4,

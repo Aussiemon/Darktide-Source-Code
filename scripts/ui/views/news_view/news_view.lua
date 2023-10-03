@@ -1,105 +1,34 @@
+local Promise = require("scripts/foundation/utilities/promise")
 local Definitions = require("scripts/ui/views/news_view/news_view_definitions")
 local UIWidgetGrid = require("scripts/ui/widget_logic/ui_widget_grid")
 local UIWidget = require("scripts/managers/ui/ui_widget")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
 local ScriptWorld = require("scripts/foundation/utilities/script_world")
 local WidgetSlideBlueprints = require("scripts/ui/views/news_view/news_view_blueprints")
+local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
+local ViewElementGrid = require("scripts/ui/view_elements/view_element_grid/view_element_grid")
+local NewsViewSettings = require("scripts/ui/views/news_view/news_view_settings")
 local NewsView = class("NewsView", "BaseView")
-local dummy_data = {
-	{
-		id = "id_1",
-		content = {
-			{
-				text = "slide 1",
-				type = "header"
-			},
-			{
-				type = "spacing_vertical"
-			},
-			{
-				type = "body",
-				text = Localize("loc_news_view_text_long")
-			},
-			{
-				texture = "content/ui/materials/title_screen_background",
-				type = "left_image"
-			}
-		}
-	},
-	{
-		id = "id_2",
-		content = {
-			{
-				text = "slide 2",
-				type = "header"
-			},
-			{
-				type = "spacing_vertical"
-			},
-			{
-				type = "body",
-				text = Localize("loc_news_view_text_short")
-			},
-			{
-				texture = "content/ui/materials/backgrounds/class_background_zealot",
-				type = "left_image"
-			}
-		}
-	},
-	{
-		id = "id_3",
-		content = {
-			{
-				text = "slide 3",
-				type = "header"
-			},
-			{
-				type = "spacing_vertical"
-			},
-			{
-				text = "this is but a test",
-				type = "body"
-			},
-			{
-				texture = "content/ui/materials/title_screen_background",
-				type = "left_image"
-			}
-		}
-	},
-	{
-		id = "id_4",
-		content = {
-			{
-				text = "slide 4",
-				type = "header"
-			},
-			{
-				type = "spacing_vertical"
-			},
-			{
-				type = "body",
-				text = Localize("loc_news_view_text_short")
-			},
-			{
-				texture = "content/ui/materials/backgrounds/class_background_zealot",
-				type = "left_image"
-			}
-		}
-	}
-}
 
 NewsView.init = function (self, settings, context)
 	self._slide_position = {}
+	self._initialized = false
+	self._url_textures = {}
 	local slide_data = context and context.slide_data
-	self._view_triggered_by_user = false
-	self._viewed_slides_id = slide_data.viewed_slides_id
-	self._starting_slide_index = slide_data.starting_slide_index
-	self._slides = slide_data.slides
-	self._offscreen_renderer = nil
-	self._grid_widgets = {}
+
+	if not slide_data then
+		self:_load_slides()
+	else
+		self:_initialize_slides(slide_data)
+	end
+
+	self._view_triggered_by_user = not context or not context.on_startup
 	self._grid = nil
+	self._offscreen_renderer = nil
 	self._slide_page_circles = {}
 	self._slide_left_image = nil
+	self._content_alpha_multiplier = 0
+	self._using_cursor_navigation = Managers.ui:using_cursor_navigation()
 
 	NewsView.super.init(self, Definitions, settings)
 
@@ -107,136 +36,139 @@ NewsView.init = function (self, settings, context)
 	self._pass_draw = false
 end
 
-NewsView._add_viewed_slide = function (self, slide_to_add)
-	for i = 1, #self._viewed_slides_id do
-		local viewed_slide = self._viewed_slides_id[i]
+local function to_news_view(news_item)
+	local content = {}
+	local backend_contents = news_item.contents
+	local image_url = nil
 
-		if viewed_slide == slide_to_add.id then
-			return
-		end
-	end
-
-	self._viewed_slides_id[#self._viewed_slides_id + 1] = slide_to_add.id
-end
-
-NewsView._save_viewed_slides = function (self)
-	local save_manager = Managers.save
-	local save_data = save_manager:account_data()
-	save_data.viewed_news_slides = self._viewed_slides_id
-
-	save_manager:queue_save()
-end
-
-NewsView.on_enter = function (self)
-	NewsView.super.on_enter(self)
-	self:_create_offscreen_renderer()
-	self:_create_slide_page_circles()
-	self:_setup_buttons_interactions()
-	self:_change_slide(self._starting_slide_index)
-end
-
-NewsView.on_exit = function (self)
-	self:_save_viewed_slides()
-	self:_destroy_renderer()
-	NewsView.super.on_exit(self)
-end
-
-NewsView._destroy_renderer = function (self)
-	if self._offscreen_renderer then
-		self._offscreen_renderer = nil
-	end
-
-	local world_data = self._offscreen_world
-
-	if world_data then
-		Managers.ui:destroy_renderer(world_data.renderer_name)
-		ScriptWorld.destroy_viewport(world_data.world, world_data.viewport_name)
-		Managers.ui:destroy_world(world_data.world)
-
-		world_data = nil
-	end
-end
-
-NewsView._create_offscreen_renderer = function (self)
-	local view_name = self.view_name
-	local world_layer = 10
-	local world_name = self.__class_name .. "_ui_offscreen_world"
-	local world = Managers.ui:create_world(world_name, world_layer, nil, view_name)
-	local viewport_name = "offscreen_viewport"
-	local viewport_type = "overlay_offscreen"
-	local viewport_layer = 1
-	local viewport = Managers.ui:create_viewport(world, viewport_name, viewport_type, viewport_layer)
-	local renderer_name = self.__class_name .. "offscreen_renderer"
-	self._offscreen_renderer = Managers.ui:create_renderer(renderer_name, world)
-	self._offscreen_world = {
-		name = world_name,
-		world = world,
-		viewport = viewport,
-		viewport_name = viewport_name,
-		renderer_name = renderer_name
-	}
-end
-
-NewsView._create_grid_widgets = function (self, content)
-	local grid_widgets = {}
-	local slide_left_image_widget = nil
-	local alignment_list = {}
-	local widget_content_scenegraph_id = "slide_content_grid_content"
-	local widget_background_scenegraph_id = "slide_content_left"
-
-	for i = 1, #content do
-		local entry = content[i]
-		local entry_type = entry.type
-
-		if entry_type == "left_image" then
-			local widget_blueprint = WidgetSlideBlueprints[entry_type]
-			local pass_template = widget_blueprint.pass_template
-			local widget_definition = UIWidget.create_definition(pass_template, widget_background_scenegraph_id)
-			slide_left_image_widget = self:_create_widget("entry_" .. i, widget_definition)
-
-			widget_blueprint.init(self, slide_left_image_widget, entry)
-		else
-			local widget_blueprint = WidgetSlideBlueprints[entry_type]
-			local size = widget_blueprint.size
-			local pass_template = widget_blueprint.pass_template
-
-			if pass_template then
-				local widget_definition = UIWidget.create_definition(pass_template, widget_content_scenegraph_id, nil, size)
-				local widget = self:_create_widget("entry_" .. i, widget_definition)
-
-				widget_blueprint.init(self, widget, entry)
-
-				grid_widgets[#grid_widgets + 1] = widget
-				alignment_list[#alignment_list + 1] = widget
-			else
-				alignment_list[#alignment_list + 1] = {
-					size = size
-				}
+	if backend_contents then
+		for _, content_item in ipairs(backend_contents) do
+			if content_item.type == "title" then
+				table.insert(content, {
+					widget_type = "header",
+					text = content_item.data or ""
+				})
+			elseif content_item.type == "subtitle" then
+				table.insert(content, {
+					widget_type = "sub_header",
+					text = content_item.data or ""
+				})
+			elseif content_item.type == "body" then
+				table.insert(content, {
+					widget_type = "body",
+					text = content_item.data or ""
+				})
+			elseif content_item.type == "br" then
+				table.insert(content, {
+					widget_type = "dynamic_spacing",
+					size = {
+						500,
+						20
+					}
+				})
+			elseif content_item.type == "image" then
+				image_url = content_item.data
 			end
 		end
 	end
 
-	return grid_widgets, alignment_list, slide_left_image_widget
+	return {
+		id = news_item.id,
+		content = content,
+		image_url = image_url,
+		backend_news = news_item
+	}
+end
+
+NewsView._initialize_slides = function (self, slide_data)
+	local slides = {}
+	local raw_news = slide_data.slides
+
+	for i = 1, #raw_news do
+		table.insert(slides, to_news_view(raw_news[i]))
+	end
+
+	self._starting_slide_index = slide_data.starting_slide_index
+	self._slides = slides
+	self._initialized = true
+end
+
+NewsView._load_slides = function (self)
+	self._initialized = false
+
+	Managers.data_service.news:get_news():next(function (raw_news)
+		local slide_data = {
+			starting_slide_index = 1,
+			slides = raw_news
+		}
+
+		self:_initialize_slides(slide_data)
+	end)
+end
+
+NewsView._add_viewed_slide = function (self, slide_to_add)
+	local backend_news = slide_to_add.backend_news
+
+	backend_news:mark_read()
+end
+
+NewsView.on_enter = function (self)
+	NewsView.super.on_enter(self)
+
+	local widgets_by_name = self._widgets_by_name
+	widgets_by_name.previous_button.content.visible = false
+	widgets_by_name.next_button.content.visible = false
+
+	self:_setup_grid()
+	Promise.until_value_is_true(function ()
+		return self._initialized
+	end):next(function ()
+		self._started = true
+		self._window_open_anim_id = self:_start_animation("on_enter", widgets_by_name)
+
+		self:_create_slide_page_circles()
+		self:_setup_buttons_interactions()
+
+		local ignore_animation = true
+
+		self:_change_slide(self._starting_slide_index, ignore_animation)
+	end)
+end
+
+NewsView.on_exit = function (self)
+	NewsView.super.on_exit(self)
+	self:_unload_url_textures()
 end
 
 NewsView._create_slide_page_circles = function (self)
 	local circle_widget_definition = Definitions.slide_circle_widget_definition
 	local circles = {}
-	local circle_size_width = circle_widget_definition.style.circ.size[1]
-	local circle_offset = 20
+	local circle_size_width = NewsViewSettings.slide_thumb_size[1]
+	local circle_offset = 10
+	local total_width = 0
+	local slides_amount = #self._slides
+	local offset_x = -(slides_amount * circle_size_width + (slides_amount - 1) * circle_offset - circle_size_width) * 0.5
+	local view_triggered_by_user = self._view_triggered_by_user
 
-	for i = 1, #self._slides do
+	for i = 1, slides_amount do
 		circles[i] = self:_create_widget("slide_circ_" .. i, circle_widget_definition)
-		circles[i].offset[1] = (i - 1) * circle_offset
-		circles[i].content.hotspot.pressed_callback = callback(self, "_animate_slide_out", i)
+		circles[i].offset[1] = offset_x
+		offset_x = offset_x + circle_size_width + circle_offset
+
+		if view_triggered_by_user then
+			circles[i].content.hotspot.pressed_callback = callback(self, "_animate_slide_out", i)
+		end
+
+		total_width = total_width + circle_size_width
+
+		if i < slides_amount then
+			total_width = total_width + circle_offset
+		end
 	end
 
 	self._slide_page_circles = circles
-	local page_indicator_width = circles[#circles].offset[1] + circle_size_width
-	self._ui_scenegraph.slide_page_indicator.size = {
-		page_indicator_width,
-		0
-	}
+
+	self:_set_scenegraph_size("slide_page_indicator", total_width)
 end
 
 NewsView._setup_grid = function (self, widgets, alignment_list)
@@ -247,114 +179,191 @@ NewsView._setup_grid = function (self, widgets, alignment_list)
 	return grid
 end
 
-NewsView._clean_current_slide = function (self)
-	local grid_widgets = self._grid_widgets
-	local slide_left_image = self._slide_left_image
+NewsView._change_slide = function (self, slide_index, ignore_animation)
+	local widgets_by_name = self._widgets_by_name
+	local num_slides = #self._slides
 
-	if grid_widgets then
-		for i = 1, #grid_widgets do
-			local widget = grid_widgets[i]
-			local widget_name = widget.name
+	if slide_index > num_slides or slide_index < 1 then
+		local prev_button_content = widgets_by_name.previous_button.content
+		prev_button_content.visible = true
+		prev_button_content.original_text = Localize("loc_news_view_close")
 
-			self:_unregister_widget_name(widget_name)
-		end
-	end
-
-	if slide_left_image then
-		local widget_name = slide_left_image.name
-
-		self:_unregister_widget_name(widget_name)
-	end
-
-	self._grid = nil
-end
-
-NewsView._change_slide = function (self, new_value)
-	if new_value > #self._slides or new_value < 1 then
 		return
 	end
 
-	local slide = self._slides[new_value]
+	local slide = self._slides[slide_index]
 
 	self:_add_viewed_slide(slide)
-	self:_clean_current_slide()
 
-	local widgets, alignment_list, slide_left_image_widget = self:_create_grid_widgets(slide.content)
-	local slide_grid = self:_setup_grid(widgets, alignment_list)
-	self._grid_widgets = widgets
-	self._grid = slide_grid
-	self._slide_left_image = slide_left_image_widget
+	local slide_content = slide.content
+	local layout = {
+		[#layout + 1] = {
+			widget_type = "dynamic_spacing",
+			size = {
+				500,
+				10
+			}
+		}
+	}
+
+	for index, entry in ipairs(slide_content) do
+		layout[#layout + 1] = entry
+	end
+
+	layout[#layout + 1] = {
+		widget_type = "dynamic_spacing",
+		size = {
+			500,
+			10
+		}
+	}
+	local image_element = widgets_by_name.window_image
+
+	self:load_texture(slide.image_url, image_element)
+
+	local grid = self._grid
+
+	grid:present_grid_layout(layout, WidgetSlideBlueprints)
+	grid:set_handle_grid_navigation(true)
+
 	self._slide_position.previous = self._slide_position.current
-	self._slide_position.current = new_value
+	self._slide_position.current = slide_index
 
-	if new_value == 1 then
-		self._widgets_by_name.previous_button.content.visible = false
+	if slide_index == 1 then
+		local target_position_width, target_position_height = nil
+
+		if num_slides == 1 then
+			target_position_width, target_position_height = self:_scenegraph_position("center_button")
+		else
+			target_position_width, target_position_height = self:_scenegraph_position("next_button")
+		end
+
+		self:_set_scenegraph_position("next_button", target_position_width, target_position_height)
+		self:_force_update_scenegraph()
+
+		if self._view_triggered_by_user and num_slides > 1 then
+			widgets_by_name.previous_button.content.visible = true
+		else
+			widgets_by_name.previous_button.content.visible = false
+
+			if not self._using_cursor_navigation then
+				widgets_by_name.previous_button.content.hotspot.is_selected = false
+				widgets_by_name.next_button.content.hotspot.is_selected = true
+			end
+		end
 	else
-		self._widgets_by_name.previous_button.content.visible = true
+		widgets_by_name.previous_button.content.visible = true
 	end
 
-	if new_value == #self._slides then
-		self._widgets_by_name.next_button.content.text = Localize("loc_news_view_close")
+	widgets_by_name.next_button.content.visible = true
+
+	if slide_index == num_slides then
+		widgets_by_name.next_button.content.original_text = Localize("loc_news_view_close")
+		widgets_by_name.previous_button.content.original_text = Localize("loc_news_view_previous")
 	else
-		self._widgets_by_name.next_button.content.text = Localize("loc_news_view_next")
+		if slide_index > 1 then
+			widgets_by_name.previous_button.content.original_text = Localize("loc_news_view_previous")
+		else
+			widgets_by_name.previous_button.content.original_text = Localize("loc_news_view_close")
+		end
+
+		widgets_by_name.next_button.content.original_text = Localize("loc_news_view_next")
 	end
 
-	local scrollbar_widget = self._widgets_by_name.slide_scrollbar
-	local grid_content_scenegraph_id = "slide_content_grid_content"
-	local interaction_scenegraph_id = "slide_content_grid_interaction"
-
-	slide_grid:assign_scrollbar(scrollbar_widget, grid_content_scenegraph_id, interaction_scenegraph_id)
-	slide_grid:set_scrollbar_progress(0)
 	self:_on_navigation_input_changed()
-	self:_set_slide_indicator_focus(new_value)
-	self:_animate_slide_in()
+
+	if self._using_cursor_navigation then
+		widgets_by_name.previous_button.content.hotspot.is_selected = false
+		widgets_by_name.next_button.content.hotspot.is_selected = false
+	elseif not widgets_by_name.previous_button.content.hotspot.is_selected or widgets_by_name.next_button.content.hotspot.is_selected then
+		widgets_by_name.previous_button.content.hotspot.is_selected = false
+		widgets_by_name.next_button.content.hotspot.is_selected = true
+	end
+
+	self:_set_slide_indicator_focus(slide_index)
+
+	if not ignore_animation then
+		self:_animate_slide_in()
+	end
+end
+
+NewsView.load_texture = function (self, image_url, image_element)
+	if image_url then
+		local style = image_element.style
+		style.texture.material_values.texture = nil
+		local url_textures = self._url_textures
+		local cached_texture = url_textures[image_url]
+
+		if cached_texture then
+			style.texture.material_values.texture = cached_texture.texture
+		else
+			Managers.url_loader:load_texture(image_url):next(function (data)
+				local racing_texture = url_textures[image_url]
+
+				if racing_texture then
+					data:destroy()
+
+					data = racing_texture
+				end
+
+				style.texture.material_values.texture = data.texture
+				url_textures[image_url] = data
+			end):catch(function (error)
+				local error_string = tostring(error)
+
+				Log.error("NewsService", "Error fetching news images", error_string)
+			end)
+		end
+	end
+end
+
+NewsView.draw = function (self, dt, t, input_service, layer)
+	if not self._started then
+		return
+	end
+
+	local content_alpha_multiplier = self._content_alpha_multiplier
+	local grid_widgets = self._grid:widgets()
+
+	if grid_widgets then
+		for _, widget in ipairs(grid_widgets) do
+			widget.alpha_multiplier = content_alpha_multiplier
+		end
+	end
+
+	return NewsView.super.draw(self, dt, t, input_service, layer)
 end
 
 NewsView._draw_widgets = function (self, dt, t, input_service, ui_renderer)
-	local slide_left_image = self._slide_left_image
 	local slide_page_circles = self._slide_page_circles
-
-	if slide_left_image then
-		UIWidget.draw(slide_left_image, self._ui_renderer)
-	end
 
 	if slide_page_circles then
 		for i = 1, #slide_page_circles do
-			local slide_page_circles = slide_page_circles[i]
-
-			UIWidget.draw(slide_page_circles, self._ui_renderer)
+			UIWidget.draw(slide_page_circles[i], self._ui_renderer)
 		end
 	end
 
 	return NewsView.super._draw_widgets(self, dt, t, input_service, ui_renderer)
 end
 
-NewsView.draw = function (self, dt, t, input_service, layer)
-	local offscreen_renderer = self._offscreen_renderer
-	local render_settings = self._render_settings
+NewsView.update = function (self, dt, t, input_service, layer)
+	if self._current_anim_id and self:_is_animation_completed(self._current_anim_id) then
+		self:_stop_animation(self._current_anim_id)
 
-	if offscreen_renderer then
-		UIRenderer.begin_pass(offscreen_renderer, self._ui_scenegraph, input_service, dt, render_settings)
-
-		local grid_widgets = self._grid_widgets
-		local grid = self._grid
-
-		for i = 1, #grid_widgets do
-			local widget = grid_widgets[i]
-
-			if grid:is_widget_visible(widget) then
-				UIWidget.draw(widget, offscreen_renderer)
-			end
-		end
-
-		UIRenderer.end_pass(offscreen_renderer)
+		self._current_anim_id = nil
 	end
 
-	return NewsView.super.draw(self, dt, t, input_service, layer)
-end
+	if self._window_open_anim_id and self:_is_animation_completed(self._window_open_anim_id) then
+		self:_stop_animation(self._window_open_anim_id)
 
-NewsView.update = function (self, dt, t, input_service, layer)
-	self._grid:update(dt, t, input_service)
+		self._window_open_anim_id = nil
+	end
+
+	if self._grid then
+		self._grid:update(dt, t, input_service)
+	end
+
+	self._pass_draw = not self._started
 
 	return NewsView.super.update(self, dt, t, input_service, layer)
 end
@@ -365,19 +374,47 @@ NewsView._setup_buttons_interactions = function (self)
 end
 
 NewsView._on_back_pressed = function (self)
-	local previous_slide = self._slide_position.current - 1
+	if self._current_anim_id or self._window_open_anim_id or self._window_exit_anim_id then
+		return
+	end
 
-	self:_animate_slide_out(previous_slide)
+	local current_slide = self._slide_position.current
+
+	if self._view_triggered_by_user and (current_slide == nil or current_slide == 1) then
+		self._window_exit_anim_id = self:_start_animation("on_exit", self._widgets_by_name, nil, callback(function ()
+			Managers.ui:close_view(self.view_name)
+		end))
+
+		self:_play_sound(UISoundEvents.news_popup_exit)
+
+		return
+	else
+		self:_play_sound(UISoundEvents.news_popup_slide_previous)
+
+		local previous_slide = current_slide - 1
+
+		self:_animate_slide_out(previous_slide)
+	end
 end
 
 NewsView._on_forward_pressed = function (self)
+	if self._current_anim_id or self._window_open_anim_id or self._window_exit_anim_id then
+		return
+	end
+
 	local current_slide = self._slide_position.current
 
 	if current_slide == #self._slides then
-		Managers.ui:close_view(self.view_name)
+		self._window_exit_anim_id = self:_start_animation("on_exit", self._widgets_by_name, nil, callback(function ()
+			Managers.ui:close_view(self.view_name)
+		end))
+
+		self:_play_sound(UISoundEvents.news_popup_exit)
 
 		return
 	end
+
+	self:_play_sound(UISoundEvents.news_popup_slide_next)
 
 	local next_slide = self._slide_position.current + 1
 
@@ -385,16 +422,16 @@ NewsView._on_forward_pressed = function (self)
 end
 
 NewsView._get_animation_widgets = function (self)
+	local window_image_widget = self._widgets_by_name.window_image
 	local widgets = {
-		scrollbar = self._widgets_by_name.slide_scrollbar
+		[window_image_widget.name] = window_image_widget
 	}
+	local slide_page_circles = self._slide_page_circles
 
-	for i = 1, #self._grid_widgets do
-		widgets[self._grid_widgets[i].name] = self._grid_widgets[i]
-	end
-
-	if self._slide_left_image then
-		widgets[#widgets + 1] = self._slide_left_image
+	if slide_page_circles then
+		for i = 1, #slide_page_circles do
+			widgets[#widgets + 1] = slide_page_circles[i]
+		end
 	end
 
 	return widgets
@@ -403,14 +440,25 @@ end
 NewsView._animate_slide_out = function (self, next_slide)
 	local widgets = self:_get_animation_widgets()
 
-	self:_enable_interactions(true)
-	self:_start_animation("on_exit", widgets, nil, callback(self, "_change_slide", next_slide))
+	if self._current_anim_id then
+		self:_stop_animation(self._current_anim_id)
+
+		self._current_anim_id = nil
+	end
+
+	self._current_anim_id = self:_start_animation("change_content_out", widgets, nil, callback(self, "_change_slide", next_slide))
 end
 
 NewsView._animate_slide_in = function (self)
 	local widgets = self:_get_animation_widgets()
 
-	self:_start_animation("on_enter", widgets, nil, callback(self, "_enable_interactions", false))
+	if self._current_anim_id then
+		self:_stop_animation(self._current_anim_id)
+
+		self._current_anim_id = nil
+	end
+
+	self._current_anim_id = self:_start_animation("change_content_in", widgets, nil)
 end
 
 NewsView._set_slide_indicator_focus = function (self, index)
@@ -422,52 +470,110 @@ NewsView._set_slide_indicator_focus = function (self, index)
 	end
 end
 
-NewsView._enable_interactions = function (self, is_disabled)
-	self._widgets_by_name.previous_button.content.hotspot.disabled = is_disabled
-	self._widgets_by_name.next_button.content.hotspot.disabled = is_disabled
-	local slide_page_circles = self._slide_page_circles
-
-	for i = 1, #slide_page_circles do
-		local widget = slide_page_circles[i]
-		widget.content.hotspot.disabled = is_disabled
-	end
-end
-
 NewsView._on_navigation_input_changed = function (self)
 	NewsView.super._on_navigation_input_changed(self)
 
-	local grid = self._grid
+	local widgets_by_name = self._widgets_by_name
 
-	if not grid then
-		return
+	if self._using_cursor_navigation then
+		widgets_by_name.previous_button.content.hotspot.is_selected = false
+		widgets_by_name.next_button.content.hotspot.is_selected = false
+	elseif not widgets_by_name.previous_button.content.hotspot.is_selected or widgets_by_name.next_button.content.hotspot.is_selected then
+		widgets_by_name.previous_button.content.hotspot.is_selected = false
+		widgets_by_name.next_button.content.hotspot.is_selected = true
 	end
+end
 
-	if not self._using_cursor_navigation then
-		if not grid:selected_grid_index() then
-			local focused_index = 1
+NewsView._handle_button_gamepad_navigation = function (self, input_service)
+	local widgets_by_name = self._widgets_by_name
 
-			if focused_index then
-				local scrollbar_progress = grid:get_scrollbar_percentage_by_index(focused_index)
+	if input_service:get("navigate_left_continuous") then
+		if not widgets_by_name.previous_button.content.hotspot.is_selected and widgets_by_name.previous_button.content.visible then
+			widgets_by_name.previous_button.content.hotspot.is_selected = true
+			widgets_by_name.next_button.content.hotspot.is_selected = false
 
-				grid:select_grid_index(focused_index, scrollbar_progress, true)
-			else
-				grid:select_first_index()
-			end
+			self:_play_sound(UISoundEvents.default_mouse_hover)
 		end
-	elseif grid:selected_grid_index() then
-		grid:select_grid_index(nil)
+	elseif input_service:get("navigate_right_continuous") and not widgets_by_name.next_button.content.hotspot.is_selected and widgets_by_name.next_button.content.visible then
+		widgets_by_name.previous_button.content.hotspot.is_selected = false
+		widgets_by_name.next_button.content.hotspot.is_selected = true
+
+		self:_play_sound(UISoundEvents.default_mouse_hover)
 	end
 end
 
 NewsView._handle_input = function (self, input_service, dt, t)
-	if input_service:get("close_view") and self._view_triggered_by_user then
-		Managers.ui:close_view(self.view_name)
-	elseif input_service:get("back") or input_service:get("navigate_secondary_left_pressed") then
-		if self._slide_position.current > 1 then
-			self:_on_back_pressed()
+	local widgets_by_name = self._widgets_by_name
+
+	if not self._tutorial_window_open_animation_id then
+		self:_handle_button_gamepad_navigation(input_service)
+
+		if input_service:get("back") then
+			local current_slide = self._slide_position.current
+
+			if self._view_triggered_by_user or current_slide ~= 1 then
+				self:_on_back_pressed()
+			end
+		elseif input_service:get("gamepad_confirm_pressed") then
+			if widgets_by_name.next_button.content.hotspot.is_selected then
+				self:_on_forward_pressed()
+			elseif widgets_by_name.previous_button.content.hotspot.is_selected then
+				self:_on_back_pressed()
+			end
 		end
-	elseif input_service:get("confirm_pressed") or input_service:get("navigate_secondary_right_pressed") then
-		self:_on_forward_pressed()
+	end
+
+	if self._tutorial_window_open_animation_id and self:_is_animation_completed(self._tutorial_window_open_animation_id) then
+		self._tutorial_window_open_animation_id = nil
+	end
+end
+
+NewsView._setup_grid = function (self)
+	local definitions = self._definitions
+
+	if not self._grid then
+		local grid_scenegraph_id = "slide_content_grid"
+		local scenegraph_definition = definitions.scenegraph_definition
+		local grid_scenegraph = scenegraph_definition[grid_scenegraph_id]
+		local grid_size = grid_scenegraph.size
+		local mask_padding_size = 0
+		local grid_settings = {
+			scrollbar_width = 7,
+			hide_dividers = true,
+			widget_icon_load_margin = 0,
+			enable_gamepad_scrolling = true,
+			title_height = 0,
+			scrollbar_horizontal_offset = 18,
+			hide_background = true,
+			grid_spacing = {
+				0,
+				0
+			},
+			grid_size = grid_size,
+			mask_size = {
+				grid_size[1] + 20,
+				grid_size[2] + mask_padding_size
+			}
+		}
+		local layer = (self._draw_layer or 0) + 10
+		self._grid = self:_add_element(ViewElementGrid, "slide_content_grid", layer, grid_settings, grid_scenegraph_id)
+
+		self:_update_element_position("slide_content_grid", self._grid)
+		self._grid:set_empty_message("")
+	end
+
+	self:_play_sound(UISoundEvents.news_popup_enter)
+end
+
+NewsView._unload_url_textures = function (self)
+	local url_textures = self._url_textures
+
+	if url_textures then
+		for url, texture_data in pairs(url_textures) do
+			texture_data:destroy()
+		end
+
+		self._url_textures = {}
 	end
 end
 

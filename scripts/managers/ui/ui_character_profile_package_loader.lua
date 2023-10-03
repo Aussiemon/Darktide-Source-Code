@@ -103,12 +103,16 @@ UICharacterProfilePackageLoader.load_slot_item = function (self, slot_id, item, 
 			item_name = item_name
 		}
 		local package_ids = {}
+		local use_resident_loading = true
+
+		if IS_XBS and Xbox.console_type() == Xbox.CONSOLE_TYPE_XBOX_SCARLETT_LOCKHEART then
+			use_resident_loading = false
+		end
 
 		for i = 1, num_packages_to_load do
 			local package_name = packages_to_load[i]
 			local on_loaded_callback = callback(self, "cb_on_slot_item_package_loaded", slot_id, item_name, package_name, complete_callback)
 			local prioritize = true
-			local use_resident_loading = true
 			package_ids[i] = package_manager:load(package_name, reference_name, on_loaded_callback, prioritize, use_resident_loading)
 		end
 

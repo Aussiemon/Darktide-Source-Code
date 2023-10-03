@@ -16,7 +16,7 @@ CharacterStateMachineExtension.init = function (self, extension_init_context, un
 	local ledge_finder_extension_or_nil = ScriptUnit.has_extension(unit, "ledge_finder_system")
 	local steering_component, move_state_component, ladder_character_state_component = self:_init_components(unit_data, extension_init_data)
 	local context = self:_create_init_context(unit, world, extension_init_context.physics_world, extension_init_context.wwise_world, extension_init_context.nav_world, is_server, extension_init_data, unit_data, ledge_finder_extension_or_nil, steering_component, move_state_component, ladder_character_state_component, game_object_data_or_game_session, game_object_id)
-	local dt = GameParameters.fixed_time_step
+	local dt = Managers.state.game_session.fixed_time_step
 	local t = extension_init_context.fixed_frame * dt
 
 	self:_create_state_machine(unit, is_server, extension_init_data.start_state, context, dt, t)

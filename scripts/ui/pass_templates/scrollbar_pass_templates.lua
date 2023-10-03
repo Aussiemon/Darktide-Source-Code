@@ -110,7 +110,7 @@ scrollbar_base[4] = {
 		return style.scenegraph_id
 	end,
 	value = function (pass, renderer, style, content, position, size)
-		if content.drag_active then
+		if content.drag_active and not content.enable_gamepad_scrolling then
 			return
 		end
 
@@ -124,8 +124,6 @@ scrollbar_base[4] = {
 		local input_service = renderer.input_service
 		local hotspot = content.hotspot
 		local axis = content.axis or 2
-		local scroll_action_negative = axis == 2 and "scroll_up_continuous" or "scroll_left_continuous"
-		local scroll_action_positive = axis == 2 and "scroll_down_continuous" or "scroll_right_continuous"
 		local is_hover = nil
 		local using_cursor_navigation = Managers.ui:using_cursor_navigation()
 
@@ -135,19 +133,15 @@ scrollbar_base[4] = {
 			local cursor_position = IS_XBS and cursor or UIResolution.inverse_scale_vector(cursor, inverse_scale)
 			is_hover = hotspot.is_hover or math.point_is_inside_2d_box(cursor_position, position, size)
 		else
-			is_hover = hotspot.is_selected or content.focused
-			scroll_action_negative = content.scroll_action_negative or scroll_action_negative
-			scroll_action_positive = content.scroll_action_positive or scroll_action_positive
+			is_hover = not content.using_custom_gamepad_navigation and (content.enable_gamepad_scrolling or hotspot.is_selected or hotspot.is_focused or content.focused or content.selected)
 		end
 
-		local scroll_axis_negative = input_service:get(scroll_action_negative)
-		local scroll_axis_positive = input_service:get(scroll_action_positive)
-		local axis_input = scroll_axis_negative and 1 or scroll_axis_positive and 1 or 0
-		local scroll_amount = content.scroll_amount or 0.1
+		local scroll_axis = input_service:get("scroll_axis")
+		local scroll_multiplier = math.abs(scroll_axis[axis]) * 0.8
+		local scroll_amount = (content.scroll_amount or 0.1) * scroll_multiplier
 
-		if axis_input ~= 0 and is_hover then
-			content.axis_input = axis_input
-			local current_scroll_direction = scroll_axis_negative and -1 or 1
+		if scroll_axis[axis] ~= 0 and is_hover then
+			local current_scroll_direction = scroll_axis[axis] > 0 and -1 or 1
 			local previous_scroll_add = content.scroll_add or 0
 
 			if content.current_scroll_direction and content.current_scroll_direction ~= current_scroll_direction then
@@ -155,7 +149,7 @@ scrollbar_base[4] = {
 			end
 
 			content.current_scroll_direction = current_scroll_direction
-			content.scroll_add = previous_scroll_add * 1.1 + scroll_amount
+			content.scroll_add = previous_scroll_add + scroll_amount
 		end
 
 		local scroll_add = content.scroll_add
@@ -165,7 +159,7 @@ scrollbar_base[4] = {
 			local step = scroll_add * dt * speed
 
 			if math.abs(scroll_add) > scroll_amount / 500 then
-				content.scroll_add = math.max(scroll_add - step, 0)
+				content.scroll_add = math.max(scroll_add - step * 1.5, 0)
 			else
 				content.scroll_add = nil
 			end

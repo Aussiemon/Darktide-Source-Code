@@ -61,8 +61,8 @@ local default_view_input_settings = {
 		},
 		hotkey_item_discard = {
 			"keyboard_x",
-			"xbox_controller_x",
-			"ps4_controller_square",
+			"xbox_controller_y",
+			"ps4_controller_triangle",
 			description = "loc_alias_view_hotkey_item_discard",
 			bindable = false
 		},
@@ -94,6 +94,13 @@ local default_view_input_settings = {
 			description = "loc_mission_board_toggle_solo_play",
 			bindable = false
 		},
+		next_hint = {
+			"keyboard_space",
+			"xbox_controller_a",
+			"ps4_controller_cross",
+			description = "",
+			bindable = false
+		},
 		hotkey_item_sort = {
 			"keyboard_o",
 			"xbox_controller_left_thumb",
@@ -103,8 +110,8 @@ local default_view_input_settings = {
 		},
 		hotkey_item_customize = {
 			"keyboard_c",
-			"xbox_controller_y",
-			"ps4_controller_triangle",
+			"xbox_controller_x",
+			"ps4_controller_square",
 			description = "loc_alias_view_hotkey_item_customize",
 			bindable = false
 		},
@@ -136,6 +143,18 @@ local default_view_input_settings = {
 			description = "loc_alias_view_secondary_action",
 			bindable = false
 		},
+		gamepad_confirm = {
+			"xbox_controller_a",
+			"ps4_controller_cross",
+			description = "",
+			bindable = false
+		},
+		gamepad_secondary = {
+			"xbox_controller_x",
+			"ps4_controller_square",
+			description = "",
+			bindable = false
+		},
 		left = {
 			"mouse_left",
 			description = "loc_alias_view_left",
@@ -144,6 +163,11 @@ local default_view_input_settings = {
 		right = {
 			"mouse_right",
 			description = "loc_alias_view_right",
+			bindable = false
+		},
+		middle = {
+			"mouse_middle",
+			description = "",
 			bindable = false
 		},
 		navigate_up = {
@@ -217,6 +241,13 @@ local default_view_input_settings = {
 			description = "loc_alias_view_show_chat",
 			bindable = true,
 			group = "input_group_interface"
+		},
+		talents_summery_overview = {
+			"keyboard_v",
+			"xbox_controller_left_thumb",
+			"ps4_controller_l3",
+			description = "",
+			bindable = false
 		},
 		hotkey_item_profile_preset_input_1 = {
 			"keyboard_x",
@@ -345,6 +376,13 @@ local default_view_input_settings = {
 			description = "",
 			bindable = false
 		},
+		accept_invite_notification = {
+			"keyboard_f10",
+			"xbox_controller_start",
+			"ps4_controller_options",
+			description = "",
+			bindable = false
+		},
 		notification_option_a = {
 			"keyboard_f9",
 			"xbox_controller_d_right+xbox_controller_left_trigger",
@@ -363,6 +401,13 @@ local default_view_input_settings = {
 			"keyboard_t",
 			"xbox_controller_y",
 			description = "loc_alias_view_toggle_filter",
+			bindable = false
+		},
+		character_create_randomize = {
+			"keyboard_c",
+			"xbox_controller_right_shoulder",
+			"ps4_controller_triangle",
+			description = "loc_alias_creator_randomize",
 			bindable = false
 		}
 	},
@@ -386,6 +431,10 @@ local default_view_input_settings = {
 		next_hold = {
 			key_alias = "next",
 			type = "held"
+		},
+		next_hint = {
+			key_alias = "next_hint",
+			type = "pressed"
 		},
 		hotkey_system = {
 			key_alias = "hotkey_system",
@@ -491,6 +540,42 @@ local default_view_input_settings = {
 			key_alias = "secondary_action",
 			type = "held"
 		},
+		gamepad_confirm_pressed = {
+			key_alias = "confirm",
+			type = "pressed"
+		},
+		gamepad_confirm_released = {
+			key_alias = "confirm",
+			type = "released"
+		},
+		gamepad_confirm_hold = {
+			key_alias = "confirm",
+			type = "held"
+		},
+		gamepad_secondary_action_pressed = {
+			key_alias = "secondary_action",
+			type = "pressed"
+		},
+		gamepad_secondary_action_released = {
+			key_alias = "secondary_action",
+			type = "released"
+		},
+		gamepad_secondary_action_hold = {
+			key_alias = "secondary_action",
+			type = "held"
+		},
+		talents_summery_overview_pressed = {
+			key_alias = "talents_summery_overview",
+			type = "pressed"
+		},
+		talents_summery_overview_released = {
+			key_alias = "talents_summery_overview",
+			type = "released"
+		},
+		talents_summery_overview_hold = {
+			key_alias = "talents_summery_overview",
+			type = "held"
+		},
 		left_pressed = {
 			key_alias = "left",
 			type = "pressed"
@@ -513,6 +598,18 @@ local default_view_input_settings = {
 		},
 		right_hold = {
 			key_alias = "right",
+			type = "held"
+		},
+		middle_pressed = {
+			key_alias = "middle",
+			type = "pressed"
+		},
+		middle_released = {
+			key_alias = "middle",
+			type = "released"
+		},
+		middle_hold = {
+			key_alias = "middle",
 			type = "held"
 		},
 		send_chat_message = {
@@ -747,6 +844,10 @@ local default_view_input_settings = {
 			key_alias = "cancel_matchmaking",
 			type = "pressed"
 		},
+		accept_invite_notification = {
+			key_alias = "accept_invite_notification",
+			type = "held"
+		},
 		notification_option_a = {
 			key_alias = "notification_option_a",
 			type = "pressed"
@@ -757,6 +858,10 @@ local default_view_input_settings = {
 		},
 		toggle_filter = {
 			key_alias = "toggle_filter",
+			type = "pressed"
+		},
+		character_create_randomize = {
+			key_alias = "character_create_randomize",
 			type = "pressed"
 		}
 	}

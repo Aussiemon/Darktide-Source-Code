@@ -419,7 +419,8 @@ Factory.add_to_group(AchievementStats, Factory.create_dynamic_reducer("rescued_p
 	"target_player_id"
 }, Activations.set(1)))
 Factory.add_to_group(AchievementStats, Factory.create_simple("different_players_rescued", AchievementStats.definitions.rescued_player_ids, Activations.increment))
-Factory.add_to_group(AchievementStats, Factory.create_simple("max_different_players_rescued", AchievementStats.definitions.different_players_rescued, Activations.max, {
+Factory.add_to_group(AchievementStats, Factory.create_simple("num_different_players_rescued", AchievementStats.definitions.different_players_rescued, Activations.max))
+Factory.add_to_group(AchievementStats, Factory.create_simple("max_different_players_rescued", Hooks.definitions.hook_mission, Activations.on_condition(Conditions.param_has_value(Hooks.definitions.hook_mission, "win", true), Activations.clamp(Activations.replace_trigger_value(Activations.max, Values.stat(Hooks.definitions.hook_mission, AchievementStats.definitions.num_different_players_rescued, {}, {})), 0, 3)), {
 	Flags.save_to_backend
 }))
 Factory.add_to_group(AchievementStats, Factory.create_simple("total_coherency_toughness", Hooks.definitions.hook_toughness_regenerated, Activations.on_condition(Conditions.param_has_value(Hooks.definitions.hook_toughness_regenerated, "reason", "coherency"), Activations.clamp(Activations.sum, 0, 2000)), {

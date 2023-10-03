@@ -716,7 +716,8 @@ UIPasses.text = {
 			new_retained_ids = {}
 		end
 
-		local text = ui_content[pass_data.value_id]
+		local value_id = pass_data.value_id
+		local text = ui_content[value_id]
 		local optional_material = ui_style.material
 
 		if optional_material then
@@ -958,15 +959,6 @@ UIPasses.hotspot = {
 			ui_content.on_hover_enter = not UIPasses.is_dragging_item
 			ui_content.is_hover = not UIPasses.is_dragging_item
 			ui_content.internal_is_hover = true
-			local on_hover_sound = ui_style.on_hover_sound or ui_content.on_hover_sound
-
-			if on_hover_sound then
-				local ui_manager = Managers.ui
-
-				if ui_manager then
-					ui_manager:play_2d_sound(on_hover_sound)
-				end
-			end
 		end
 
 		if was_hover and not is_hover then
@@ -990,6 +982,20 @@ UIPasses.hotspot = {
 		local force_input_pressed = ui_content.force_input_pressed
 		local pressed_last_frame = ui_content._input_pressed
 		local selected_last_frame = ui_content._is_selected
+		local focused_last_frame = ui_content._is_focused
+
+		if not gamepad_active and is_hover and not was_hover or gamepad_active and ui_content.is_focused and not focused_last_frame or gamepad_active and is_selected and not selected_last_frame then
+			local on_hover_sound = ui_style.on_hover_sound or ui_content.on_hover_sound
+
+			if on_hover_sound then
+				local ui_manager = Managers.ui
+
+				if ui_manager then
+					ui_manager:play_2d_sound(on_hover_sound)
+				end
+			end
+		end
+
 		local input_pressed, input_released, input_hold = nil
 
 		if force_input_pressed then
@@ -1091,6 +1097,7 @@ UIPasses.hotspot = {
 		end
 
 		ui_content._input_pressed = (is_hover or is_selected) and (input_pressed or input_hold)
+		ui_content._is_focused = ui_content.is_focused
 		ui_content._is_selected = is_selected
 		ui_content.is_held = is_held
 		ui_content.double_click_timer = double_click_timer

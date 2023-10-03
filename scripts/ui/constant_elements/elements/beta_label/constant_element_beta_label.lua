@@ -5,7 +5,7 @@ local ConstantElementBetaLabel = class("ConstantElementBetaLabel", "ConstantElem
 ConstantElementBetaLabel.init = function (self, parent, draw_layer, start_scale)
 	ConstantElementBetaLabel.super.init(self, parent, draw_layer, start_scale, Definitions)
 
-	self._description_text = DefaultGameParameters.beta_label_overlay_text
+	self._description_text = GameParameters.beta_label_overlay_text
 	self._widgets_by_name.label.content.text = self._description_text or ""
 end
 

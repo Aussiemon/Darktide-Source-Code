@@ -210,14 +210,14 @@ local templates = {
 		predicted = false,
 		class_name = "buff",
 		stat_buffs = {
-			[buff_stat_buffs.movement_speed] = 1.1
+			[buff_stat_buffs.movement_speed] = 0.1
 		}
 	},
 	weapon_trait_ranged_common_wield_increase_movement_speed_buff = {
 		predicted = false,
 		class_name = "buff",
 		conditional_stat_buffs = {
-			[buff_stat_buffs.movement_speed] = 1.15
+			[buff_stat_buffs.movement_speed] = 0.15
 		},
 		conditional_stat_buffs_func = ConditionalFunctions.is_item_slot_wielded
 	},

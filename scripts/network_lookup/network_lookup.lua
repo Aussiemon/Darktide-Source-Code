@@ -5,6 +5,7 @@ local AttackSettings = require("scripts/settings/damage/attack_settings")
 local BloodSettings = require("scripts/settings/blood/blood_settings")
 local BotCharacterProfiles = require("scripts/settings/bot_character_profiles")
 local Breeds = require("scripts/settings/breed/breeds")
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local BuffTemplates = require("scripts/settings/buff/buff_templates")
 local CameraEffectSettings = require("scripts/settings/camera/camera_effect_settings")
 local CinematicSceneSettings = require("scripts/settings/cinematic_scene/cinematic_scene_settings")
@@ -27,7 +28,7 @@ local LightControllerFlickerSettings = require("scripts/settings/components/ligh
 local LineEffects = require("scripts/settings/effects/line_effects")
 local LiquidAreaTemplates = require("scripts/settings/liquid_area/liquid_area_templates")
 local MatchmakingConstants = require("scripts/settings/network/matchmaking_constants")
-local MaterialQuery = require("scripts/utilities/material_query")
+local MaterialQuerySettings = require("scripts/settings/material_query_settings")
 local MinigameSettings = require("scripts/settings/minigame/minigame_settings")
 local MinionAttackSelectionTemplates = require("scripts/settings/minion_attack_selection/minion_attack_selection_templates")
 local MinionVisualLoadoutTemplates = require("scripts/settings/minion_visual_loadout/minion_visual_loadout_templates")
@@ -89,11 +90,9 @@ end
 NetworkLookup.archetype_specialization_names = _create_lookup({}, archetype_specialization_names)
 local archetype_talent_names = {}
 
-for _, archetype_talents_by_specialization in pairs(ArchetypeTalents) do
-	for _, archetype_talents in pairs(archetype_talents_by_specialization) do
-		for name, _ in pairs(archetype_talents) do
-			archetype_talent_names[name] = true
-		end
+for _, archetype_talents in pairs(ArchetypeTalents) do
+	for name, _ in pairs(archetype_talents) do
+		archetype_talent_names[name] = true
 	end
 end
 
@@ -110,6 +109,7 @@ NetworkLookup.bot_profile_names = _create_lookup({}, bot_profiles)
 NetworkLookup.breed_names = _create_lookup({}, Breeds)
 NetworkLookup.dialogue_breed_names = _create_lookup({}, DialogueBreedSettings)
 NetworkLookup.buff_templates = _create_lookup({}, BuffTemplates)
+NetworkLookup.synced_buff_keywords = _create_lookup({}, BuffSettings.network_synced_keywords)
 NetworkLookup.camera_shake_events = _create_lookup({}, CameraEffectSettings.shake)
 NetworkLookup.chest_states = {
 	"closed",
@@ -260,27 +260,27 @@ local player_character_sounds = {
 	["wwise/events/player/play_backstab_indicator_poxwalker"] = true,
 	["wwise/events/player/play_toughness_break"] = true,
 	["wwise/events/player/play_backstab_indicator_traitor_guard"] = true,
-	["wwise/events/ui/play_hud_heal_2d"] = true,
 	["wwise/events/player/stop_foley_fall_wind_2D"] = true,
 	["wwise/events/player/play_psyker_ability_shout"] = true,
+	["wwise/events/player/play_player_get_hit_light_2d"] = true,
 	["wwise/events/weapon/play_indicator_weakspot"] = true,
 	["wwise/events/player/play_pick_up_ammo_01"] = true,
 	["wwise/events/player/play_player_vomit_enter"] = true,
 	["wwise/events/weapon/play_shared_combat_weapon_bolter_bullet_flyby"] = true,
-	["wwise/events/player/play_player_get_hit_light_2d"] = true,
-	["wwise/events/minions/play_enemy_daemonhost_execute_player_impact"] = true,
+	["wwise/events/player/play_player_experience_fall_damage_2d"] = true,
+	["wwise/events/player/play_foley_fall_wind_2D"] = true,
 	["wwise/events/player/play_backstab_indicator_newly_infected"] = true,
 	["wwise/events/weapon/play_bullet_hits_gen_unarmored_death"] = true,
 	["wwise/events/weapon/play_weapon_lasgun_crack_beam_nearby"] = true,
 	["wwise/events/player/play_player_get_hit_sharp"] = true,
-	["wwise/events/player/play_foley_fall_wind_2D"] = true,
+	["wwise/events/ui/play_hud_heal_2d"] = true,
 	["wwise/events/player/play_player_get_hit_corruption_2d_tick"] = true,
 	["wwise/events/weapon/play_indicator_crit"] = true,
 	["wwise/events/player/play_backstab_indicator_ranged"] = true,
 	["wwise/events/weapon/play_enemy_netgunner_net_trapped"] = true,
 	["wwise/events/player/play_vault"] = true,
 	["wwise/events/ui/play_hud_coherency_off"] = true,
-	["wwise/events/player/play_player_experience_fall_damage_2d"] = true,
+	["wwise/events/minions/play_enemy_daemonhost_execute_player_impact"] = true,
 	["wwise/events/ui/play_hud_health_station_2d"] = true,
 	["wwise/events/player/play_player_get_hit_fire"] = true,
 	["wwise/events/ui/play_hud_coherency_on"] = true,
@@ -351,8 +351,11 @@ NetworkLookup.respawn_beacon_states = {
 	"spawning"
 }
 NetworkLookup.force_field_unit_names = {
-	"content/characters/player/human/attachments_combat/psyker_shield/shield",
-	"content/characters/player/human/attachments_combat/psyker_shield/shield_sphere"
+	"content/characters/player/human/attachments_combat/psyker_shield/psyker_shield_flat_functional",
+	"content/characters/player/human/attachments_combat/psyker_shield/shield_sphere_functional"
+}
+NetworkLookup.smoke_fog_unit = {
+	"content/characters/player/human/attachments_combat/smoke_fog/smoke_fog_volume"
 }
 NetworkLookup.smart_tag_replies = _create_lookup({}, SmartTagSettings.replies)
 NetworkLookup.smart_tag_templates = _create_lookup({}, SmartTagSettings.templates)
@@ -377,7 +380,8 @@ NetworkLookup.sound_switches = {
 }
 NetworkLookup.sound_switch_values = table.append({
 	"default"
-}, MaterialQuery.surface_materials)
+}, MaterialQuerySettings.surface_materials)
+NetworkLookup.surface_materials = table.append({}, MaterialQuerySettings.surface_materials)
 NetworkLookup.surface_hit_types = _create_lookup({}, SurfaceMaterialSettings.hit_types)
 NetworkLookup.timed_explosives = _create_lookup({}, TimedExplosivesSettings)
 NetworkLookup.vfx = _create_lookup({}, VfxNames)

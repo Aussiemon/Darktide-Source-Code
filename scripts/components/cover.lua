@@ -67,6 +67,10 @@ Cover.editor_destroy = function (self, unit)
 	self._world = nil
 end
 
+Cover.editor_validate = function (self, unit)
+	return true, ""
+end
+
 Cover.editor_update = function (self, unit)
 	if not rawget(_G, "LevelEditor") then
 		return

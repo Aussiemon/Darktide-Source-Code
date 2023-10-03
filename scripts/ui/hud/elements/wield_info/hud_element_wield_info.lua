@@ -18,6 +18,14 @@ HudElementWieldInfo.init = function (self, parent, draw_layer, start_scale)
 	HudElementWieldInfo.super.init(self, parent, draw_layer, start_scale, Definitions)
 	self:_register_event("event_on_active_input_changed", "event_on_input_changed")
 	self:_register_event("event_on_input_settings_changed", "event_on_input_changed")
+	self:_register_event("event_update_input_hints_enabled", "event_update_input_hints_enabled")
+
+	local save_manager = Managers.save
+
+	if save_manager then
+		local account_data = save_manager:account_data()
+		self._input_hints_enabled = account_data.interface_settings.input_hints_enabled
+	end
 end
 
 HudElementWieldInfo._draw_widgets = function (self, dt, t, input_service, ui_renderer, render_settings)
@@ -298,6 +306,18 @@ end
 
 HudElementWieldInfo.event_on_input_changed = function (self)
 	self:_reset_current_info()
+end
+
+HudElementWieldInfo.event_update_input_hints_enabled = function (self, value)
+	self._input_hints_enabled = value
+
+	if not value then
+		local active_wield_inputs = self._active_wield_inputs
+
+		for ii = #active_wield_inputs, 1, -1 do
+			self:_remove_entry(ii)
+		end
+	end
 end
 
 return HudElementWieldInfo

@@ -116,9 +116,6 @@ NavQueries.movement_check = function (nav_world, physics_world, position, veloci
 	end
 end
 
-local CHECKS_PER_DIRECTION = 5
-local ANGLE_INCREMENT = math.pi / (2 * CHECKS_PER_DIRECTION)
-local CHECK_DISTANCE = 5
 local RADIUS = PlayerCharacterConstants.respawn_hot_join_radius
 local HEIGHT = PlayerCharacterConstants.respawn_hot_join_height
 local MARGIN = PlayerCharacterConstants.respawn_hot_join_margin
@@ -128,6 +125,12 @@ function _check_space_empty(physics_world, position, capsule_rotation, capsule_s
 
 	return actor_count == 0
 end
+
+local CHECKS_PER_DIRECTION = 5
+local ANGLE_INCREMENT = math.pi / (2 * CHECKS_PER_DIRECTION)
+local CHECK_DISTANCE = 5
+local BACKUP_CHECK_DISTANCE = 1
+local BACKUP_ABOVE_CHECK_DISTANCE = 0.2
 
 NavQueries.empty_space_near_nav_position = function (nav_position, check_direction, nav_world, traverse_logic, physics_world)
 	local Quaternion_rotate = Quaternion.rotate
@@ -143,7 +146,7 @@ NavQueries.empty_space_near_nav_position = function (nav_position, check_directi
 	local angle_sign = 1
 
 	for i = 0, CHECKS_PER_DIRECTION do
-		local directions_to_check = i > 0 and 2 or 1
+		local directions_to_check = (i > 0 or i == CHECKS_PER_DIRECTION) and 2 or 1
 
 		for j = 1, directions_to_check do
 			local angle = angle_sign * ANGLE_INCREMENT * i
@@ -164,9 +167,28 @@ NavQueries.empty_space_near_nav_position = function (nav_position, check_directi
 					best_distance_sq = distance_sq
 					best_position = hit_position
 				end
-			elseif not last_position_success or success then
-				last_position = hit_position
-				last_position_success = success
+			else
+				local backup_position = hit_position + -new_direction * BACKUP_CHECK_DISTANCE
+				local backup_success, backup_hit_position = GwNavQueries_raycast(nav_world, hit_position, backup_position, traverse_logic)
+				local backup_empty = _check_space_empty(physics_world, backup_hit_position, capsule_rotation, capsule_size)
+
+				if backup_success then
+					if backup_empty then
+						return backup_hit_position
+					end
+
+					local backup_above_hit_position = backup_hit_position + Vector3.up() * BACKUP_ABOVE_CHECK_DISTANCE
+					local backup_above_empty = _check_space_empty(physics_world, backup_above_hit_position, capsule_rotation, capsule_size)
+
+					if backup_above_empty then
+						return backup_above_hit_position
+					end
+				end
+
+				if not last_position_success or success then
+					last_position = hit_position
+					last_position_success = success
+				end
 			end
 
 			angle_sign = -angle_sign

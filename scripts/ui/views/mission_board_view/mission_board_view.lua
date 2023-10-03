@@ -60,6 +60,7 @@ MissionBoardView.init = function (self, settings)
 
 	self._mission_widgets = {}
 	self.can_start_mission = false
+	self._promises = {}
 	self._backend_data_expiry_time = -1
 	self._has_queued_missions = false
 	self._queued_mission_show_time = math.huge
@@ -178,8 +179,15 @@ MissionBoardView.on_enter = function (self)
 		narrative_manager:complete_event(narrative_event_name)
 	end
 
+	self:_reset_selection()
 	self:_update_bonus_rewards():next(function ()
+		self._quickplay_initialized = true
+
 		self:_set_selected_quickplay(true)
+	end):catch(function (error)
+		self._quickplay_initialized = false
+
+		self:_reset_selection()
 	end)
 	self:_set_play_button_game_mode_text(self._solo_play, self._private_match)
 	self:fetch_regions()
@@ -582,7 +590,14 @@ MissionBoardView._generate_mission_type_selection = function (self)
 
 			local mission_type = mission_types[selected_index]
 			widget.content.level = PlayerProgressionUnlocks.mission_type_unlocks[mission_type]
+
+			if not first_run then
+				self:_telemetry_close()
+			end
+
 			self._selected_mission_type = mission_type
+
+			self:_telemetry_open()
 
 			if not first_run then
 				self:_callback_switch_mission_board(mission_type)
@@ -614,6 +629,12 @@ MissionBoardView._generate_mission_type_selection = function (self)
 end
 
 MissionBoardView.on_exit = function (self)
+	local promises = self._promises
+
+	for promise, _ in pairs(promises) do
+		promise:cancel()
+	end
+
 	local mission_board_save_data = self._mission_board_save_data
 
 	if mission_board_save_data and (self._quickplay_difficulty ~= mission_board_save_data.quickplay_difficulty or self._private_match ~= mission_board_save_data.private_matchmaking) then
@@ -621,6 +642,10 @@ MissionBoardView.on_exit = function (self)
 		mission_board_save_data.private_matchmaking = self._private_match
 
 		Managers.save:queue_save()
+	end
+
+	if self._selected_mission_type then
+		self:_telemetry_close()
 	end
 
 	if self._input_legend_element then
@@ -696,10 +721,12 @@ MissionBoardView._handle_input = function (self, input_service, dt, t)
 		end
 	end
 
-	local quickplay_widget = self._quickplay_widget
+	if self._quickplay_initialized then
+		local quickplay_widget = self._quickplay_widget
 
-	if quickplay_widget.content.hotspot.on_pressed then
-		self:_set_selected_quickplay(true)
+		if quickplay_widget.content.hotspot.on_pressed then
+			self:_set_selected_quickplay(true)
+		end
 	end
 
 	local flash_mission_widget = self._flash_mission_widget
@@ -760,8 +787,9 @@ MissionBoardView._handle_input = function (self, input_service, dt, t)
 
 		for i = -1, #mission_widgets do
 			local widget = mission_widgets[i]
+			local is_valid = widget and widget.visible and (not widget.content.is_quickplay or self._quickplay_initialized)
 
-			if widget and widget.visible then
+			if is_valid then
 				local widget_pos = Vector2(widget.offset[1], widget.offset[2])
 				local widget_size = Vector3.from_array_flat(scenegraph[widget.scenegraph_id].size)
 				local widget_center = widget_pos + 0.5 * widget_size
@@ -820,7 +848,10 @@ MissionBoardView._handle_input = function (self, input_service, dt, t)
 		local x, y = Vector3.to_elements(pos)
 
 		self:_set_scenegraph_position("gamepad_cursor_pivot", x, y)
-		self:_set_scenegraph_size("gamepad_cursor", Vector3.to_elements(math.lerp(wanted_size, cursor_size, settings.size_resize_rate^dt)))
+
+		local width, height = Vector3.to_elements(math.lerp(wanted_size, cursor_size, settings.size_resize_rate^dt))
+
+		self:_set_scenegraph_size("gamepad_cursor", width, height)
 
 		local arrow_style = gamepad_cursor.style.arrow
 		arrow_style.angle = math.radian_lerp(math.pi + math.atan2(tar_pos[2] - pos[2], pos[1] - tar_pos[1]), arrow_style.angle, settings.arrow_rotate_rate^dt)
@@ -901,6 +932,41 @@ MissionBoardView._set_gamepad_cursor = function (self, widget)
 	self._gamepad_cursor_current_pos[2] = y
 end
 
+MissionBoardView._reset_selection = function (self)
+	self._selected_mission = nil
+	local mission_widgets = self._mission_widgets
+
+	for i = 0, #mission_widgets do
+		local widget = mission_widgets[i]
+
+		if widget then
+			widget.content.hotspot.is_selected_mission_board = false
+		end
+	end
+
+	if self._bonus_widgets then
+		for i = 1, #self._bonus_widgets do
+			local widget = self._bonus_widgets[i]
+
+			self:_unregister_widget_name(widget.name)
+		end
+
+		self._bonus_widgets = nil
+	end
+
+	if self._quickplay_widget then
+		self._quickplay_widget.content.hotspot.is_selected_mission_board = false
+	end
+
+	self._widgets_by_name.detail.content.visible = false
+	self._widgets_by_name.objective_1.content.visible = false
+	self._widgets_by_name.objective_2.content.visible = false
+	self._widgets_by_name.difficulty_stepper.content.visible = false
+	self._widgets_by_name.difficulty_stepper_window.content.visible = false
+	self._widgets_by_name.play_team_button.content.visible = false
+	self._widgets_by_name.play_team_button_legend.content.visible = false
+end
+
 MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 	self._selected_mission = nil
 	local mission_widgets = self._mission_widgets
@@ -930,6 +996,7 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 	content.start_game_time = nil
 	content.circumstance_icon = nil
 	content.is_flash = false
+	content.visible = true
 	local location_image_material_values = widget.style.location_image.material_values
 	location_image_material_values.texture_map = "content/ui/textures/missions/quickplay"
 	location_image_material_values.show_static = 0
@@ -992,6 +1059,7 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 	content.speaker_text = Localize(speaker_settings.full_name)
 	content.xp = nil
 	content.credits = nil
+	content.visible = true
 	local description_style_options = UIFonts.get_font_options_by_style(style.body_text)
 	local margin = 20
 	local bottom_spacing = content.speaker_icon and 15 or 0
@@ -1015,9 +1083,11 @@ MissionBoardView._set_selected_quickplay = function (self, move_gamepad_cursor)
 	widget.offset[2] = self._ui_scenegraph.detail.size[2] + margin
 	self._widgets_by_name.difficulty_stepper_window.offset[2] = widget.offset[2] + widget.content.size[2] + margin
 	self._widgets_by_name.difficulty_stepper.offset[2] = widget.offset[2] + widget.content.size[2] + margin
-	self._widgets_by_name.objective_2.visible = false
-	self._widgets_by_name.difficulty_stepper.visible = true
-	self._widgets_by_name.difficulty_stepper_window.visible = true
+	self._widgets_by_name.objective_2.content.visible = false
+	self._widgets_by_name.difficulty_stepper.content.visible = true
+	self._widgets_by_name.difficulty_stepper_window.content.visible = true
+	self._widgets_by_name.play_team_button.content.visible = true
+	self._widgets_by_name.play_team_button_legend.content.visible = true
 end
 
 MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_cursor, is_flash)
@@ -1059,6 +1129,7 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 	content.start_game_time = mission.start_game_time
 	content.expiry_game_time = mission.expiry_game_time
 	content.is_flash = mission.flags.flash
+	content.visible = true
 	local circumstance = mission.circumstance
 
 	if circumstance ~= "default" then
@@ -1148,6 +1219,7 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 	content.speaker_text = Localize(speaker_settings.full_name)
 	content.xp = TextUtils.format_currency(xp)
 	content.credits = TextUtils.format_currency(credits)
+	content.visible = true
 	local description_style_options = UIFonts.get_font_options_by_style(style.body_text)
 	local margin = 20
 	local bottom_spacing = (content.speaker_icon or extraRewards) and 15 or 0
@@ -1172,9 +1244,9 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 	local side_mission_template = MissionObjectiveTemplates.side_mission.objectives[mission.sideMission]
 	local widget = self._widgets_by_name.objective_2
 	widget.dirty = true
-	widget.visible = mission.flags.side and side_mission_template
+	widget.content.visible = mission.flags.side and side_mission_template
 
-	if widget.visible then
+	if widget.content.visible then
 		local extraRewards = mission.extraRewards.sideMission
 		local content = widget.content
 		local style = widget.style
@@ -1210,8 +1282,10 @@ MissionBoardView._set_selected_mission = function (self, mission, move_gamepad_c
 		widget.offset[2] = self._widgets_by_name.objective_1.offset[2] + self._widgets_by_name.objective_1.content.size[2] + margin
 	end
 
-	self._widgets_by_name.difficulty_stepper.visible = false
-	self._widgets_by_name.difficulty_stepper_window.visible = false
+	self._widgets_by_name.difficulty_stepper.content.visible = false
+	self._widgets_by_name.difficulty_stepper_window.content.visible = false
+	self._widgets_by_name.play_team_button.content.visible = true
+	self._widgets_by_name.play_team_button_legend.content.visible = true
 end
 
 MissionBoardView.draw = function (self, dt, t, input_service, layer)
@@ -1238,7 +1312,9 @@ MissionBoardView.draw = function (self, dt, t, input_service, layer)
 		end
 	end
 
-	UIWidget.draw(self._quickplay_widget, ui_renderer)
+	if self._quickplay_initialized then
+		UIWidget.draw(self._quickplay_widget, ui_renderer)
+	end
 
 	if self._widgets_by_name.region then
 		UIWidget.draw(self._widgets_by_name.region, ui_renderer)
@@ -1596,15 +1672,17 @@ MissionBoardView._update_fetch_missions = function (self, t)
 	end
 
 	self._is_fetching_missions = true
-	local missions_future = Managers.data_service.mission_board:fetch(nil, 1)
+	local missions_future = self:_cancel_promise_on_exit(Managers.data_service.mission_board:fetch(nil, 1))
 
 	missions_future:next(function (mission_data)
-		local achievement_data_promise = Managers.data_service.account:pull_achievement_data()
+		local achievement_data_promise = self:_cancel_promise_on_exit(Managers.data_service.account:pull_achievement_data())
 
 		return achievement_data_promise:next(function (achievements_data)
 			self._achievements_data = achievements_data
 
 			return self:_update_bonus_rewards():next(function ()
+				self._widgets_by_name.search_text.content.visible = false
+
 				return Promise.resolved(mission_data)
 			end)
 		end)
@@ -1612,7 +1690,7 @@ MissionBoardView._update_fetch_missions = function (self, t)
 end
 
 MissionBoardView._update_bonus_rewards = function (self)
-	return Managers.data_service.mission_board:get_rewards():next(function (bonus_data)
+	return self:_cancel_promise_on_exit(Managers.data_service.mission_board:get_rewards()):next(function (bonus_data)
 		local filtered_bonus_data = {}
 
 		for mission_type, values in pairs(bonus_data) do
@@ -1866,7 +1944,13 @@ MissionBoardView._callback_switch_mission_board = function (self, mission_type)
 	self._widgets_by_name.difficulty_stepper.content.max_danger = MissionBoardViewSettings.stepper_difficulty[mission_type].max_danger
 
 	self:_generate_widgets_by_mission_type(mission_type)
-	self:_set_selected_quickplay(true)
+
+	if self._quickplay_initialized then
+		self:_set_selected_quickplay(true)
+	else
+		self:_reset_selection()
+	end
+
 	self:_join_mission_data()
 end
 
@@ -1919,6 +2003,7 @@ MissionBoardView._callback_start_selected_mission = function (self)
 		return
 	end
 
+	self:_play_sound(UISoundEvents.mission_board_start_mission)
 	Managers.ui:close_view(self.view_name)
 
 	if Managers.narrative:complete_event(Managers.narrative.EVENTS.mission_board) then
@@ -1987,7 +2072,11 @@ MissionBoardView._callback_mission_widget_exit_done = function (self, widget)
 	self:_destroy_mission_widget(widget)
 
 	if self._selected_mission == widget.content.mission then
-		self:_set_selected_quickplay()
+		if self._quickplay_initialized then
+			self:_set_selected_quickplay()
+		else
+			self:_reset_selection()
+		end
 	end
 
 	local mission_widgets = self._mission_widgets
@@ -2006,11 +2095,11 @@ end
 MissionBoardView.fetch_regions = function (self)
 	local region_promise = Managers.backend.interfaces.region_latency:get_region_latencies()
 
-	region_promise:next(function (regions_data)
+	self:_cancel_promise_on_exit(region_promise):next(function (regions_data)
 		local prefered_region_promise = nil
 
 		if BackendUtilities.prefered_mission_region == "" then
-			prefered_region_promise = Managers.backend.interfaces.region_latency:get_preferred_reef()
+			prefered_region_promise = self:_cancel_promise_on_exit(Managers.backend.interfaces.region_latency:get_preferred_reef())
 		else
 			prefered_region_promise = Promise.resolved()
 		end
@@ -2021,6 +2110,42 @@ MissionBoardView.fetch_regions = function (self)
 			self._regions_latency = regions_latency
 		end)
 	end)
+end
+
+MissionBoardView._cancel_promise_on_exit = function (self, promise)
+	local promises = self._promises
+
+	if promise:is_pending() and not promises[promise] then
+		promises[promise] = true
+
+		promise:next(function ()
+			self._promises[promise] = nil
+		end, function ()
+			self._promises[promise] = nil
+		end)
+	end
+
+	return promise
+end
+
+MissionBoardView._telemetry_open = function (self)
+	local telemetry_manager = Managers.telemetry_events
+
+	if telemetry_manager then
+		local name = string.format("%s_mission_board_view", self._selected_mission_type)
+
+		telemetry_manager:open_view(name)
+	end
+end
+
+MissionBoardView._telemetry_close = function (self)
+	local telemetry_manager = Managers.telemetry_events
+
+	if telemetry_manager then
+		local name = string.format("%s_mission_board_view", self._selected_mission_type)
+
+		telemetry_manager:close_view(name)
+	end
 end
 
 return MissionBoardView

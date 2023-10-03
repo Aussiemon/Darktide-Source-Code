@@ -747,6 +747,7 @@ local widget_definitions = {
 		}
 	}, "list_description"),
 	continue_button = UIWidget.create_definition(ButtonPassTemplates.default_button, "continue_button", {
+		gamepad_action = "confirm_pressed",
 		text = Localize("loc_character_creator_continue"),
 		hotspot = {
 			on_pressed_sound = UISoundEvents.character_appearence_confirm
@@ -1352,7 +1353,7 @@ local legend_inputs = {
 		alignment = "left_alignment"
 	},
 	{
-		input_action = "hotkey_menu_special_2",
+		input_action = "character_create_randomize",
 		display_name = "loc_randomize",
 		alignment = "right_alignment",
 		on_pressed_callback = "_randomize_character_appearance",
@@ -1369,21 +1370,21 @@ local legend_inputs = {
 		end
 	},
 	{
-		input_action = "navigate_primary_right_pressed",
+		input_action = "hotkey_menu_special_2",
 		display_name = "loc_zoom_in",
 		alignment = "right_alignment",
 		on_pressed_callback = "_zoom_camera",
 		visibility_function = function (parent)
-			return not parent._camera_zoomed and parent._is_character_showing and parent._active_page_name ~= "final" and not parent._disable_zoom and not parent._loading_overlay_visible
+			return not parent._camera_zoomed and parent._is_character_showing and parent._active_page_name == "appearance" and not parent._disable_zoom and not parent._loading_overlay_visible
 		end
 	},
 	{
-		input_action = "navigate_primary_right_pressed",
+		input_action = "hotkey_menu_special_2",
 		display_name = "loc_zoom_out",
 		alignment = "right_alignment",
 		on_pressed_callback = "_zoom_camera",
 		visibility_function = function (parent)
-			return parent._camera_zoomed and parent._is_character_showing and parent._active_page_name ~= "final" and not parent._disable_zoom and not parent._loading_overlay_visible
+			return parent._camera_zoomed and parent._is_character_showing and parent._active_page_name == "appearance" and not parent._disable_zoom and not parent._loading_overlay_visible
 		end
 	}
 }

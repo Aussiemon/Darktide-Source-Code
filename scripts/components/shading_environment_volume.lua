@@ -60,6 +60,23 @@ ShadingEnvironmentVolume.editor_init = function (self, unit)
 	end
 end
 
+ShadingEnvironmentVolume.editor_validate = function (self, unit)
+	local success = true
+	local error_message = ""
+
+	if self:get_data(unit, "shading_environment") == "" then
+		success = false
+		error_message = error_message .. "\nMissing unit data 'shading_environment' it can't be empty"
+	end
+
+	if rawget(_G, "LevelEditor") and not Unit.has_volume(unit, "env_volume") then
+		success = false
+		error_message = error_message .. "\nMissing volume 'env_volume'"
+	end
+
+	return success, error_message
+end
+
 ShadingEnvironmentVolume.enable_environment = function (self)
 	local extension = self._extension
 

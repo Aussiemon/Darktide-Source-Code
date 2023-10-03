@@ -24,6 +24,10 @@ local function get_neighbour_data_as_table(level, ...)
 	return data
 end
 
+LevelScriptdataTesterComponent.editor_validate = function (self, unit)
+	return true, ""
+end
+
 LevelScriptdataTesterComponent.enable = function (self, unit)
 	return
 end

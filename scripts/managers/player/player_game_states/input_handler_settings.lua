@@ -52,10 +52,14 @@ local input_handler_settings = {
 		"emote_5"
 	},
 	input_settings = {
+		"wield_previous_slot_after_grenade",
+		"weapon_switch_scroll_wrap",
 		"hold_to_sprint",
 		"hold_to_crouch",
 		"stationary_dodge",
-		"diagonal_forward_dodge"
+		"diagonal_forward_dodge",
+		"always_dodge",
+		"toggle_ads"
 	},
 	action_network_type = {
 		move_left = "float_input",

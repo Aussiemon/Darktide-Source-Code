@@ -1,7 +1,7 @@
 local MasterItems = require("scripts/backend/master_items")
 local RPCQueue = require("scripts/utilities/rpc_queue")
 local ProfileUtils = require("scripts/utilities/profile_utils")
-local TextUtilities = require("scripts/utilities/ui/text")
+local Text = require("scripts/utilities/ui/text")
 local RPCS = {
 	"rpc_player_profile_synced",
 	"rpc_notify_profile_changed"
@@ -14,7 +14,7 @@ ProfileSynchronizerHost.init = function (self, event_delegate)
 	self._rpc_queues = {}
 	self._event_delegate = event_delegate
 	self._connected_peers = {}
-	self._registred_channel_ids = {}
+	self._registered_channel_ids = {}
 	self._profile_sync_states = {}
 	self._profile_updates = {}
 	self._initial_syncs = {}
@@ -24,7 +24,7 @@ end
 ProfileSynchronizerHost.register_rpcs = function (self, channel_id)
 	self._event_delegate:register_connection_channel_events(self, channel_id, unpack(RPCS))
 
-	self._registred_channel_ids[channel_id] = true
+	self._registered_channel_ids[channel_id] = true
 	local rpc_queue_settings = {
 		max_rpcs = 1000,
 		time_between_sends = 0,
@@ -123,7 +123,7 @@ end
 ProfileSynchronizerHost.add_bot = function (self, local_player_id, profile)
 	local connected_peer_channel_ids = self._connected_peers
 	local generated_name = ProfileUtils.generate_random_name(profile)
-	generated_name = string.format("%s {#color(216,229,207,120)}[%s]{#reset()}", generated_name, TextUtilities.localize_to_upper("loc_bot_tag"))
+	generated_name = string.format("%s {#color(216,229,207,120)}[%s]{#reset()}", generated_name, Text.localize_to_upper("loc_bot_tag"))
 	profile.name = generated_name
 	local profile_json = ProfileUtils.pack_profile(profile)
 	local profile_chunks = {}
@@ -135,10 +135,9 @@ ProfileSynchronizerHost.add_bot = function (self, local_player_id, profile)
 	end
 end
 
-ProfileSynchronizerHost.profile_changed = function (self, peer_id, local_player_id)
+ProfileSynchronizerHost._profile_changed = function (self, local_player_id, peer_id, character_id)
 	local player = Managers.player:player(peer_id, local_player_id)
 	local account_id = player:account_id()
-	local character_id = player:character_id()
 	local connected_peer_channel_ids = self._connected_peers
 
 	Managers.backend.interfaces.characters:fetch_account_character(account_id, character_id, true, true):next(function (backend_profile_data)
@@ -163,6 +162,13 @@ ProfileSynchronizerHost.profile_changed = function (self, peer_id, local_player_
 	end):catch(function (error)
 		Log.error("ProfileSynchronizerHost", "Error when fetching profile: %s", error)
 	end)
+end
+
+ProfileSynchronizerHost.profile_changed = function (self, peer_id, local_player_id)
+	local player = Managers.player:player(peer_id, local_player_id)
+	local character_id = player:character_id()
+
+	self:_profile_changed(local_player_id, peer_id, character_id)
 end
 
 ProfileSynchronizerHost.override_slot = function (self, peer_id, local_player_id, slot_name, item_name)
@@ -272,7 +278,7 @@ ProfileSynchronizerHost.peer_disconnected = function (self, peer_id, channel_id)
 		RPC.rpc_profile_sync_peer_disconnected(other_channel_id, peer_id)
 	end
 
-	local registered_channel_ids = self._registred_channel_ids
+	local registered_channel_ids = self._registered_channel_ids
 
 	if registered_channel_ids[channel_id] then
 		self._event_delegate:unregister_channel_events(channel_id, unpack(RPCS))
@@ -291,7 +297,7 @@ ProfileSynchronizerHost.peer_disconnected = function (self, peer_id, channel_id)
 		end
 	end
 
-	self._registred_channel_ids[channel_id] = nil
+	self._registered_channel_ids[channel_id] = nil
 	self._initial_syncs[channel_id] = nil
 	self._connected_peers[peer_id] = nil
 	self._profile_updates[peer_id] = nil
@@ -353,12 +359,12 @@ end
 ProfileSynchronizerHost.destroy = function (self)
 	local network_event_delegate = self._event_delegate
 
-	for channel_id, _ in pairs(self._registred_channel_ids) do
+	for channel_id, _ in pairs(self._registered_channel_ids) do
 		network_event_delegate:unregister_channel_events(channel_id, unpack(RPCS))
 		self._rpc_queues[channel_id]:delete()
 	end
 
-	self._registred_channel_ids = nil
+	self._registered_channel_ids = nil
 	self._connected_peers = nil
 	self._rpc_queues = nil
 end

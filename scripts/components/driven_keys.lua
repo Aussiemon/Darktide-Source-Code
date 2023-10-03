@@ -205,6 +205,10 @@ DrivenKeys._quaternionToEulerAngles = function (self, q)
 	return euler_angles
 end
 
+DrivenKeys.editor_validate = function (self, unit)
+	return true, ""
+end
+
 DrivenKeys.component_config = {
 	disable_event_public = false,
 	enable_event_public = false,

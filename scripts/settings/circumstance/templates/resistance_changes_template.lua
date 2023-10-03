@@ -108,7 +108,8 @@ local circumstance_templates = {
 		},
 		mutators = {
 			"mutator_waves_of_specials",
-			"mutator_add_resistance"
+			"mutator_add_resistance",
+			"mutator_increase_terror_event_points"
 		}
 	},
 	waves_of_specials_less_resistance_01 = {
@@ -372,6 +373,28 @@ local circumstance_templates = {
 					}
 				}
 			}
+		}
+	},
+	more_captains_01 = {
+		theme_tag = "default",
+		mutators = {
+			"mutator_more_captains"
+		},
+		ui = {
+			description = "loc_circumstance_more_captains_description",
+			icon = "content/ui/materials/icons/circumstances/placeholder",
+			display_name = "loc_circumstance_more_captains_title"
+		}
+	},
+	more_boss_patrols_01 = {
+		theme_tag = "default",
+		mutators = {
+			"mutator_more_boss_patrols"
+		},
+		ui = {
+			description = "loc_circumstance_more_boss_patrols_description",
+			icon = "content/ui/materials/icons/circumstances/placeholder",
+			display_name = "loc_circumstance_more_boss_patrols_title"
 		}
 	}
 }

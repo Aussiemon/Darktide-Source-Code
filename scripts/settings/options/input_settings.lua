@@ -1,66 +1,7 @@
 local OptionsUtilities = require("scripts/utilities/ui/options")
 local SaveData = require("scripts/managers/save/save_data")
-local UISoundEvents = require("scripts/settings/ui/ui_sound_events")
-local DefaultViewInputSettings = require("scripts/settings/input/default_view_input_settings")
-local InputUtils = require("scripts/managers/input/input_utils")
-
-local function save_account_settings(location_name, settings_name, value)
-	local player = Managers.player:local_player(1)
-	local save_manager = Managers.save
-
-	if player and save_manager then
-		local account_data = save_manager:account_data()
-
-		if location_name then
-			account_data[location_name][settings_name] = value
-		else
-			account_data[settings_name] = value
-		end
-
-		save_manager:queue_save()
-
-		return true
-	end
-
-	return false
-end
-
-local function get_account_settings(location_name, settings_name)
-	local player = Managers.player:local_player(1)
-	local save_manager = Managers.save
-
-	if player and save_manager then
-		local account_data = save_manager:account_data()
-
-		if location_name then
-			return account_data[location_name][settings_name]
-		else
-			return account_data[settings_name]
-		end
-	end
-end
-
-local function _is_same(current, new)
-	if current == new then
-		return true
-	elseif type(current) == "table" and type(new) == "table" then
-		for k, v in pairs(current) do
-			if new[k] ~= v then
-				return false
-			end
-		end
-
-		for k, v in pairs(new) do
-			if current[k] ~= v then
-				return false
-			end
-		end
-
-		return true
-	else
-		return false
-	end
-end
+local SettingsUtilitiesFunction = require("scripts/settings/options/settings_utils")
+local SettingsUtilities = {}
 
 local function construct_interface_settings_boolean(template)
 	local entry = {
@@ -71,14 +12,15 @@ local function construct_interface_settings_boolean(template)
 		validation_function = template.validation_function,
 		tooltip_text = template.tooltip_text,
 		disable_rules = template.disable_rules,
-		id = template.id
+		id = template.id,
+		apply_on_startup = template.apply_on_startup
 	}
 	local id = template.id
 	local save_location = template.save_location
 	local default_value = template.default_value
 
 	entry.get_function = function ()
-		local old_value = get_account_settings(save_location, id)
+		local old_value = SettingsUtilities.get_account_settings(save_location, id)
 
 		if old_value == nil then
 			return default_value
@@ -88,14 +30,14 @@ local function construct_interface_settings_boolean(template)
 	end
 
 	entry.on_activated = function (new_value)
-		local current_value = get_account_settings(save_location, id)
+		local current_value = SettingsUtilities.get_account_settings(save_location, id)
 
 		if current_value == nil then
 			current_value = default_value
 		end
 
-		if not _is_same(current_value, new_value) then
-			save_account_settings(save_location, id, new_value)
+		if not SettingsUtilities.is_same(current_value, new_value) then
+			SettingsUtilities.save_account_settings(save_location, id, new_value)
 
 			if entry.on_value_changed then
 				entry.on_value_changed(new_value)
@@ -129,7 +71,7 @@ local function construct_interface_settings_percent_slider(template)
 	local function on_value_changed_function(percent_value)
 		local exploded_value = explode_value(percent_value)
 
-		save_account_settings(save_location, id, exploded_value)
+		SettingsUtilities.save_account_settings(save_location, id, exploded_value)
 
 		if on_value_changed then
 			on_value_changed(exploded_value)
@@ -137,7 +79,7 @@ local function construct_interface_settings_percent_slider(template)
 	end
 
 	local value_get_function = template.get_function or function ()
-		local exploded_value = get_account_settings(save_location, id)
+		local exploded_value = SettingsUtilities.get_account_settings(save_location, id)
 
 		if exploded_value == nil then
 			exploded_value = default_value
@@ -164,7 +106,8 @@ local function construct_interface_settings_percent_slider(template)
 		indentation_level = template.indentation_level,
 		validation_function = template.validation_function,
 		tooltip_text = template.tooltip_text,
-		disable_rules = template.disable_rules
+		disable_rules = template.disable_rules,
+		apply_on_startup = template.apply_on_startup
 	}
 
 	return OptionsUtilities.create_percent_slider_template(params)
@@ -181,7 +124,7 @@ local function construct_interface_settings_value_slider(template)
 	local save_location = template.save_location
 
 	local function on_value_changed_function(value)
-		save_account_settings(save_location, id, value)
+		SettingsUtilities.save_account_settings(save_location, id, value)
 
 		if on_value_changed then
 			on_value_changed(value)
@@ -189,7 +132,7 @@ local function construct_interface_settings_value_slider(template)
 	end
 
 	local function value_get_function()
-		return get_account_settings(save_location, id) or default_value
+		return SettingsUtilities.get_account_settings(save_location, id) or default_value
 	end
 
 	local params = {
@@ -206,7 +149,8 @@ local function construct_interface_settings_value_slider(template)
 		validation_function = template.validation_function,
 		id = template.id,
 		tooltip_text = template.tooltip_text,
-		disable_rules = template.disable_rules
+		disable_rules = template.disable_rules,
+		apply_on_startup = template.apply_on_startup
 	}
 
 	return OptionsUtilities.create_value_slider_template(params)
@@ -218,7 +162,7 @@ local function construct_interface_settings_dropdown(template)
 	local save_location = template.save_location
 
 	local function value_get_function()
-		return get_account_settings(save_location, id)
+		return SettingsUtilities.get_account_settings(save_location, id)
 	end
 
 	local options = {}
@@ -233,7 +177,7 @@ local function construct_interface_settings_dropdown(template)
 	end
 
 	local function on_activated(value, template)
-		save_account_settings(save_location, id, value)
+		SettingsUtilities.save_account_settings(save_location, id, value)
 
 		if on_value_changed then
 			on_value_changed(value)
@@ -249,7 +193,8 @@ local function construct_interface_settings_dropdown(template)
 		validation_function = template.validation_function,
 		id = template.id,
 		tooltip_text = template.tooltip_text,
-		disable_rules = template.disable_rules
+		disable_rules = template.disable_rules,
+		apply_on_startup = template.apply_on_startup
 	}
 
 	return params
@@ -280,32 +225,65 @@ end
 
 local settings_definitions = {
 	{
+		group_name = "gameplay_settings",
+		display_name = "loc_settings_menu_group_gameplay_settings",
+		widget_type = "group_header"
+	},
+	{
+		save_location = "input_settings",
+		display_name = "loc_setting_weapon_switch_scroll_wrap",
+		id = "weapon_switch_scroll_wrap",
+		tooltip_text = "loc_setting_weapon_switch_scroll_wrap_desc",
+		widget_type = "boolean",
+		validation_function = function ()
+			return IS_WINDOWS or IS_XBS and Managers.ui.using_cursor_navigation()
+		end
+	},
+	{
+		save_location = "input_settings",
+		display_name = "loc_setting_toggle_ads",
+		id = "toggle_ads",
+		tooltip_text = "loc_setting_toggle_ads_desc",
+		widget_type = "boolean"
+	},
+	{
 		group_name = "movement_settings",
 		display_name = "loc_settings_menu_group_movement_settings",
 		widget_type = "group_header"
 	},
 	{
-		id = "hold_to_crouch",
 		save_location = "input_settings",
 		display_name = "loc_setting_hold_to_crouch",
+		id = "hold_to_crouch",
+		tooltip_text = "loc_setting_hold_to_crouch_desc",
 		widget_type = "boolean"
 	},
 	{
-		id = "stationary_dodge",
-		save_location = "input_settings",
-		display_name = "loc_setting_stationary_dodge",
-		widget_type = "boolean"
-	},
-	{
-		id = "diagonal_forward_dodge",
-		save_location = "input_settings",
-		display_name = "loc_setting_diagonal_forward_dodge",
-		widget_type = "boolean"
-	},
-	{
-		id = "hold_to_sprint",
 		save_location = "input_settings",
 		display_name = "loc_setting_hold_to_sprint",
+		id = "hold_to_sprint",
+		tooltip_text = "loc_setting_hold_to_sprint_desc",
+		widget_type = "boolean"
+	},
+	{
+		save_location = "input_settings",
+		display_name = "loc_setting_stationary_dodge",
+		id = "stationary_dodge",
+		tooltip_text = "loc_setting_stationary_dodge_desc",
+		widget_type = "boolean"
+	},
+	{
+		save_location = "input_settings",
+		display_name = "loc_setting_diagonal_forward_dodge",
+		id = "diagonal_forward_dodge",
+		tooltip_text = "loc_setting_diagonal_forward_dodge_mouseover",
+		widget_type = "boolean"
+	},
+	{
+		save_location = "input_settings",
+		display_name = "loc_setting_always_dodge",
+		id = "always_dodge",
+		tooltip_text = "loc_setting_always_dodge_desc",
 		widget_type = "boolean"
 	},
 	{
@@ -313,20 +291,46 @@ local settings_definitions = {
 		display_name = "loc_settings_menu_group_mouse_settings",
 		widget_type = "group_header",
 		validation_function = function ()
-			return Managers.ui.using_cursor_navigation()
+			return IS_WINDOWS or IS_XBS and Managers.ui.using_cursor_navigation()
 		end
 	},
 	{
 		step_size_value = 0.1,
 		display_name = "loc_input_setting_mouse_sensitivity",
 		num_decimals = 1,
-		max_value = 2,
+		max_value = 10,
 		min_value = 0.1,
 		widget_type = "value_slider",
 		id = "mouse_look_scale",
 		save_location = "input_settings",
 		validation_function = function ()
-			return Managers.ui.using_cursor_navigation()
+			return IS_WINDOWS or IS_XBS and Managers.ui.using_cursor_navigation()
+		end
+	},
+	{
+		step_size_value = 0.1,
+		display_name = "loc_input_setting_mouse_sensitivity_ranged",
+		num_decimals = 1,
+		max_value = 10,
+		min_value = 0.1,
+		widget_type = "value_slider",
+		id = "mouse_look_scale_ranged",
+		save_location = "input_settings",
+		validation_function = function ()
+			return IS_WINDOWS or IS_XBS and Managers.ui.using_cursor_navigation()
+		end
+	},
+	{
+		step_size_value = 0.1,
+		display_name = "loc_input_setting_mouse_sensitivity_ranged_alternate_fire",
+		num_decimals = 1,
+		max_value = 10,
+		min_value = 0.1,
+		widget_type = "value_slider",
+		id = "mouse_look_scale_ranged_alternate_fire",
+		save_location = "input_settings",
+		validation_function = function ()
+			return IS_WINDOWS or IS_XBS and Managers.ui.using_cursor_navigation()
 		end
 	},
 	{
@@ -335,126 +339,24 @@ local settings_definitions = {
 		id = "mouse_invert_look_y",
 		widget_type = "boolean",
 		validation_function = function ()
-			return Managers.ui.using_cursor_navigation()
+			return IS_WINDOWS or IS_XBS and Managers.ui.using_cursor_navigation()
 		end
 	},
 	{
-		save_location = "input_settings",
+		group_name = "other_settings",
+		display_name = "loc_settings_menu_group_other_settings",
+		widget_type = "group_header"
+	},
+	{
 		step_size_value = 0.1,
 		display_name = "loc_input_com_wheel_delay",
 		num_decimals = 1,
+		max_value = 1,
+		min_value = 0,
+		widget_type = "value_slider",
 		id = "com_wheel_delay",
-		max_value = 1,
-		min_value = 0,
-		widget_type = "value_slider"
-	},
-	{
-		group_name = "controller_settings",
-		display_name = "loc_settings_menu_group_controller_settings",
-		widget_type = "group_header",
-		validation_function = function ()
-			return not Managers.ui.using_cursor_navigation()
-		end
-	},
-	{
-		display_name = "loc_xbox_controller_chat_button_description",
-		shrink_to_fit = true,
-		widget_type = "description",
-		display_params = {
-			input = "+"
-		},
-		validation_function = function ()
-			return IS_XBS and not Managers.ui.using_cursor_navigation()
-		end
-	},
-	{
-		step_size_value = 0.1,
-		display_name = "loc_setting_controller_look_scale",
-		num_decimals = 1,
-		max_value = 10,
-		min_value = 0,
-		widget_type = "value_slider",
-		id = "controller_look_scale",
-		save_location = "input_settings",
-		validation_function = function ()
-			return not Managers.ui.using_cursor_navigation()
-		end
-	},
-	{
-		step_size_value = 0.01,
-		apply_on_drag = true,
-		display_name = "loc_setting_controller_look_dead_zone",
-		num_decimals = 2,
-		max_value = 1,
-		min_value = 0,
-		widget_type = "value_slider",
-		id = "controller_look_dead_zone",
-		save_location = "input_settings",
-		validation_function = function ()
-			return not Managers.ui.using_cursor_navigation()
-		end
-	},
-	{
-		save_location = "input_settings",
-		display_name = "loc_setting_controller_invert_look_y",
-		id = "controller_invert_look_y",
-		widget_type = "boolean",
-		validation_function = function ()
-			return not Managers.ui.using_cursor_navigation()
-		end
-	},
-	{
-		save_location = "input_settings",
-		display_name = "loc_setting_controller_enable_acceleration",
-		id = "controller_enable_acceleration",
-		widget_type = "boolean",
-		validation_function = function ()
-			return not Managers.ui.using_cursor_navigation()
-		end
-	},
-	{
-		save_location = "input_settings",
-		display_name = "loc_setting_controller_layout",
-		id = "controller_layout",
-		widget_type = "dropdown",
-		options = Managers.input:get_input_layout_names(),
-		on_value_changed = function (value)
-			Managers.input:change_input_layout(value)
-		end,
-		validation_function = function ()
-			return not Managers.ui.using_cursor_navigation()
-		end
-	},
-	{
-		save_location = "input_settings",
-		display_name = "loc_setting_aim_assist",
-		id = "controller_aim_assist",
-		widget_type = "dropdown",
-		options = _aim_assist_options(),
-		tooltip_text = function ()
-			local assist_title_1 = Localize("loc_setting_aim_assist_new_full")
-			local assist_desc_1 = Localize("loc_setting_aim_assist_new_full_desc")
-			local assist_title_2 = Localize("loc_setting_aim_assist_new_slim")
-			local assist_desc_2 = Localize("loc_setting_aim_assist_new_slim_desc")
-			local assist_title_3 = Localize("loc_setting_aim_assist_old")
-			local assist_desc_3 = Localize("loc_setting_aim_assist_old_desc")
-			local assist_title_4 = Localize("loc_setting_aim_assist_off")
-			local assist_desc_4 = Localize("loc_setting_aim_assist_off_desc")
-
-			return Localize("loc_setting_aim_assist_mouseover_text_format", false, {
-				assist_title_1 = assist_title_1,
-				assist_desc_1 = assist_desc_1,
-				assist_title_2 = assist_title_2,
-				assist_desc_2 = assist_desc_2,
-				assist_title_3 = assist_title_3,
-				assist_desc_3 = assist_desc_3,
-				assist_title_4 = assist_title_4,
-				assist_desc_4 = assist_desc_4
-			})
-		end,
-		validation_function = function ()
-			return not Managers.ui.using_cursor_navigation()
-		end
+		tooltip_text = "loc_input_com_wheel_delay_desc",
+		save_location = "input_settings"
 	}
 }
 local template_functions = {
@@ -483,13 +385,18 @@ for i = 1, #settings_definitions do
 
 	if template_function then
 		settings[#settings + 1] = template_function(definition)
+		settings[#settings].id = definition.id
 	else
 		settings[#settings + 1] = definition
 	end
 end
 
+SettingsUtilities = SettingsUtilitiesFunction(settings)
+
 return {
 	icon = "content/ui/materials/icons/system/settings/category_gameplay",
 	display_name = "loc_settings_menu_category_input",
+	settings_utilities = SettingsUtilities,
+	settings_by_id = SettingsUtilities.settings_by_id,
 	settings = settings
 }

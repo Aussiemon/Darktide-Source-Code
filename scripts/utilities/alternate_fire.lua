@@ -1,9 +1,10 @@
 local BuffSettings = require("scripts/settings/buff/buff_settings")
+local PlayerUnitPeeking = require("scripts/utilities/player_unit_peeking")
 local Spread = require("scripts/utilities/spread")
 local Sway = require("scripts/utilities/sway")
 local proc_events = BuffSettings.proc_events
 local AlternateFire = {
-	start = function (alternate_fire_component, weapon_tweak_templates_component, spread_control_component, sway_control_component, sway_component, movement_state_component, first_person_extension, animation_extension, weapon_extension, weapon_template, player_unit, t)
+	start = function (alternate_fire_component, weapon_tweak_templates_component, spread_control_component, sway_control_component, sway_component, movement_state_component, peeking_component, first_person_extension, animation_extension, weapon_extension, weapon_template, player_unit, t)
 		local alternate_fire_settings = weapon_template.alternate_fire_settings
 		alternate_fire_component.is_active = true
 		alternate_fire_component.start_t = t
@@ -37,6 +38,10 @@ local AlternateFire = {
 			player.aim_assist_data.wants_lock_on = true
 		end
 
+		if alternate_fire_settings.peeking_mechanics and peeking_component.peeking_is_possible then
+			PlayerUnitPeeking.start(peeking_component, t)
+		end
+
 		local buff_extension = ScriptUnit.extension(player_unit, "buff_system")
 		local param_table = buff_extension:request_proc_event_param_table()
 
@@ -49,54 +54,61 @@ local AlternateFire = {
 		if Managers.stats.can_record_stats() then
 			Managers.stats:record_alternate_fire_start(player)
 		end
-	end,
-	stop = function (alternate_fire_component, weapon_tweak_templates_component, animation_extension, weapon_template, skip_stop_anim, player_unit)
-		alternate_fire_component.is_active = false
-		local spread_template_name = weapon_template.spread_template or "none"
-		local recoil_template_name = weapon_template.recoil_template or "none"
-		local sway_template_name = weapon_template.sway_template or "none"
-		local suppression_template_name = weapon_template.suppression_template or "none"
-		local toughness_template_name = weapon_template.toughness_template or "none"
-		weapon_tweak_templates_component.spread_template_name = spread_template_name
-		weapon_tweak_templates_component.recoil_template_name = recoil_template_name
-		weapon_tweak_templates_component.sway_template_name = sway_template_name
-		weapon_tweak_templates_component.suppression_template_name = suppression_template_name
-		weapon_tweak_templates_component.toughness_template_name = toughness_template_name
-		local alternate_fire_settings = weapon_template.alternate_fire_settings
-		local stop_anim_event = alternate_fire_settings.stop_anim_event
-		local stop_anim_event_3p = alternate_fire_settings.stop_anim_event_3p or stop_anim_event
-
-		if stop_anim_event and stop_anim_event_3p and not skip_stop_anim then
-			animation_extension:anim_event_1p(stop_anim_event)
-			animation_extension:anim_event(stop_anim_event_3p)
-		end
-
-		if Managers.stats.can_record_stats() then
-			local player = Managers.state.player_unit_spawn:owner(player_unit)
-
-			Managers.stats:record_alternate_fire_stop(player)
-		end
-	end,
-	check_exit = function (alternate_fire_component, weapon_template, input_extension, stunned_character_state_component, t)
-		if not alternate_fire_component.is_active then
-			return false
-		end
-
-		if stunned_character_state_component.stunned then
-			return false
-		end
-
-		if not weapon_template then
-			return true
-		end
-
-		local alternate_fire_settings = weapon_template.alternate_fire_settings
-
-		if not alternate_fire_settings then
-			return true
-		end
 	end
 }
+
+AlternateFire.stop = function (alternate_fire_component, peeking_component, first_person_extension, weapon_tweak_templates_component, animation_extension, weapon_template, skip_stop_anim, player_unit)
+	alternate_fire_component.is_active = false
+	local spread_template_name = weapon_template.spread_template or "none"
+	local recoil_template_name = weapon_template.recoil_template or "none"
+	local sway_template_name = weapon_template.sway_template or "none"
+	local suppression_template_name = weapon_template.suppression_template or "none"
+	local toughness_template_name = weapon_template.toughness_template or "none"
+	weapon_tweak_templates_component.spread_template_name = spread_template_name
+	weapon_tweak_templates_component.recoil_template_name = recoil_template_name
+	weapon_tweak_templates_component.sway_template_name = sway_template_name
+	weapon_tweak_templates_component.suppression_template_name = suppression_template_name
+	weapon_tweak_templates_component.toughness_template_name = toughness_template_name
+
+	if peeking_component.is_peeking then
+		PlayerUnitPeeking.stop(peeking_component, first_person_extension)
+	end
+
+	local alternate_fire_settings = weapon_template.alternate_fire_settings
+	local stop_anim_event = alternate_fire_settings.stop_anim_event
+	local stop_anim_event_3p = alternate_fire_settings.stop_anim_event_3p or stop_anim_event
+
+	if stop_anim_event and stop_anim_event_3p and not skip_stop_anim then
+		animation_extension:anim_event_1p(stop_anim_event)
+		animation_extension:anim_event(stop_anim_event_3p)
+	end
+
+	if Managers.stats.can_record_stats() then
+		local player = Managers.state.player_unit_spawn:owner(player_unit)
+
+		Managers.stats:record_alternate_fire_stop(player)
+	end
+end
+
+AlternateFire.check_exit = function (alternate_fire_component, weapon_template, input_extension, stunned_character_state_component, t)
+	if not alternate_fire_component.is_active then
+		return false
+	end
+
+	if stunned_character_state_component.stunned then
+		return false
+	end
+
+	if not weapon_template then
+		return true
+	end
+
+	local alternate_fire_settings = weapon_template.alternate_fire_settings
+
+	if not alternate_fire_settings then
+		return true
+	end
+end
 
 AlternateFire.movement_speed_modifier = function (alternate_fire_component, weapon_template, t, weapon_extension)
 	if not alternate_fire_component.is_active then

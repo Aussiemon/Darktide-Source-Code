@@ -164,7 +164,8 @@ local breed_data = {
 	default_stagger_result = stagger_results.no_stagger,
 	ledge_finder_tweak_data = {
 		player_width = 0.5,
-		player_height = 1.61
+		player_height = 1.61,
+		significant_obstacle_distance = 1.31
 	},
 	ledge_vault_tweak_values = {
 		inair_allowed_height_distance_max = 0.65,

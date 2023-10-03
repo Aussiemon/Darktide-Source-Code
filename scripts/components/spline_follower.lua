@@ -4,6 +4,10 @@ SplineFollower.init = function (self, unit)
 	return
 end
 
+SplineFollower.editor_validate = function (self, unit)
+	return true, ""
+end
+
 SplineFollower.enable = function (self, unit)
 	return
 end

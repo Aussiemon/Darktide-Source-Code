@@ -3,7 +3,7 @@ local DamageProfileTemplates = require("scripts/settings/damage/damage_profile_t
 local DamageSettings = require("scripts/settings/damage/damage_settings")
 local ExplosionTemplates = require("scripts/settings/damage/explosion_templates")
 local MoodSettings = require("scripts/settings/camera/mood/mood_settings")
-local TalentSettings = require("scripts/settings/talent/talent_settings")
+local TalentSettings = require("scripts/settings/talent/talent_settings_new")
 local armor_types = ArmorSettings.types
 local damage_types = DamageSettings.damage_types
 local talent_settings = TalentSettings.ogryn_2
@@ -53,7 +53,7 @@ local ogryn_lunge_templates = {
 		},
 		damage_settings = {
 			damage_profile = DamageProfileTemplates.ogryn_charge_impact,
-			damage_type = damage_types.ogryn_physical,
+			damage_type = damage_types.ogryn_lunge,
 			radius = talent_settings.combat_ability.radius
 		},
 		anim_settings = {
@@ -77,7 +77,7 @@ local ogryn_lunge_templates = {
 			armor_types.void_shield,
 			armor_types.resistant
 		},
-		mood = MoodSettings.mood_types.ogryn_bonebreaker_combat_ability
+		mood = MoodSettings.mood_types.ogryn_combat_ability_charge
 	}
 }
 ogryn_lunge_templates.ogryn_charge_increased_distance = table.clone(ogryn_lunge_templates.ogryn_charge)
@@ -93,7 +93,7 @@ ogryn_lunge_templates.ogryn_charge_damage = table.clone(ogryn_lunge_templates.og
 ogryn_lunge_templates.ogryn_charge_damage.damage_settings = {
 	radius = 2,
 	damage_profile = DamageProfileTemplates.ogryn_charge_impact_damage,
-	damage_type = damage_types.ogryn_physical
+	damage_type = damage_types.ogryn_lunge
 }
 ogryn_lunge_templates.ogryn_charge_damage.on_finish_explosion.explosion_template = ExplosionTemplates.ogryn_charge_impact_damage
 ogryn_lunge_templates.ogryn_charge_bleed = table.clone(ogryn_lunge_templates.ogryn_charge)

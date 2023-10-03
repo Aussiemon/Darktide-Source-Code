@@ -1,6 +1,7 @@
 local GameplayStateInterface = require("scripts/game_states/game/gameplay_sub_states/gameplay_state_interface")
 local MissionCleanupUtilies = require("scripts/game_states/game/gameplay_sub_states/utilities/mission_cleanup_utilities")
 local StateGameplayTestify = GameParameters.testify and require("scripts/game_states/game/state_gameplay_testify")
+local TaskbarFlash = require("scripts/utilities/taskbar_flash")
 local UnitSpawnerManager = require("scripts/foundation/managers/unit_spawner/unit_spawner_manager")
 local RUN_CLIENT_RPCS = {
 	"rpc_sync_clock"
@@ -34,6 +35,7 @@ GameplayStateRun.on_enter = function (self, parent, params)
 	}
 
 	Managers.telemetry_events:gameplay_started(telemetry_params)
+	TaskbarFlash.flash_window()
 end
 
 GameplayStateRun.on_exit = function (self)
@@ -88,7 +90,7 @@ GameplayStateRun.update = function (self, main_dt, main_t)
 
 	if gameplay_timer_registered then
 		extension_manager:pre_update(dt, t)
-		self:_fixed_update(extension_manager, player_manager, player_unit_spawn_manager, t)
+		self:_fixed_update(extension_manager, player_manager, player_unit_spawn_manager, t, dt)
 		Managers.state.nav_mesh:update(dt, t)
 		Managers.state.main_path:update(dt, t)
 		Managers.state.blood:update(dt, t)
@@ -203,11 +205,11 @@ GameplayStateRun._unregister_run_network_events = function (self, is_server)
 	end
 end
 
-GameplayStateRun._fixed_update = function (self, extension_manager, player_manager, player_unit_spawn_manager, t)
+GameplayStateRun._fixed_update = function (self, extension_manager, player_manager, player_unit_spawn_manager, t, dt)
 	local shared_state = self._shared_state
-	local fixed_frame_time = shared_state.fixed_frame_time
-	local last_frame = math.floor(t / fixed_frame_time)
-	local fixed_dt = fixed_frame_time
+	local fixed_time_step = shared_state.fixed_time_step
+	local last_frame = math.floor(t / fixed_time_step)
+	local fixed_dt = fixed_time_step
 	local keep_in_scope = true
 
 	for frame = self._fixed_frame_counter + 1, last_frame do
@@ -260,8 +262,8 @@ GameplayStateRun.rpc_sync_clock = function (self, channel_id, time, offset)
 		Network.set_max_transmit_rate(fixed_frame_transmit_rate)
 
 		local shared_state = self._shared_state
-		local fixed_frame_time = shared_state.fixed_frame_time
-		local last_frame = math.floor(time / fixed_frame_time)
+		local fixed_time_step = shared_state.fixed_time_step
+		local last_frame = math.floor(time / fixed_time_step)
 
 		shared_state.clock_handler_client:rpc_sync_clock(time + Managers.time:delta_time("main"), offset, last_frame)
 

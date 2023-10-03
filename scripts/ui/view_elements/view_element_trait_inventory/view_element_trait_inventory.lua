@@ -355,7 +355,7 @@ ViewElementTraitInventory._handle_input = function (self, dt, t, input_service)
 			new_rank = math.clamp(self._rank - 1, 1, RankSettings.max_trait_rank)
 		elseif input_service:get("navigate_secondary_right_pressed") then
 			new_rank = math.clamp(self._rank + 1, 1, RankSettings.max_trait_rank)
-		elseif input_service:get("next") then
+		elseif input_service:get("next") and type(self._parent.remove_next_ingredient) == "function" then
 			self._parent:remove_next_ingredient()
 		end
 

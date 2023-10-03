@@ -915,6 +915,211 @@ local horde_compositions = {
 				}
 			}
 		}
+	},
+	cultist_coordinated_ranged_horde = {
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						4,
+						5
+					}
+				},
+				{
+					name = "cultist_gunner",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						5,
+						6
+					}
+				},
+				{
+					name = "cultist_gunner",
+					amount = {
+						1,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						7,
+						8
+					}
+				},
+				{
+					name = "cultist_gunner",
+					amount = {
+						2,
+						3
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						9,
+						10
+					}
+				},
+				{
+					name = "cultist_gunner",
+					amount = {
+						2,
+						3
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "cultist_assault",
+					amount = {
+						10,
+						11
+					}
+				},
+				{
+					name = "cultist_gunner",
+					amount = {
+						3,
+						4
+					}
+				}
+			}
+		}
+	},
+	cultist_coordinated_melee_mix = {
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						8,
+						10
+					}
+				},
+				{
+					name = "cultist_melee",
+					amount = {
+						4,
+						5
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						10,
+						12
+					}
+				},
+				{
+					name = "cultist_melee",
+					amount = {
+						5,
+						6
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						12,
+						14
+					}
+				},
+				{
+					name = "cultist_melee",
+					amount = {
+						6,
+						7
+					}
+				},
+				{
+					name = "cultist_berzerker",
+					amount = {
+						1,
+						1
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						14,
+						16
+					}
+				},
+				{
+					name = "cultist_melee",
+					amount = {
+						8,
+						9
+					}
+				},
+				{
+					name = "cultist_berzerker",
+					amount = {
+						1,
+						2
+					}
+				}
+			}
+		},
+		{
+			breeds = {
+				{
+					name = "chaos_poxwalker",
+					amount = {
+						16,
+						18
+					}
+				},
+				{
+					name = "cultist_melee",
+					amount = {
+						9,
+						10
+					}
+				},
+				{
+					name = "cultist_berzerker",
+					amount = {
+						2,
+						3
+					}
+				}
+			}
+		}
 	}
 }
 

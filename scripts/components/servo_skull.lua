@@ -14,6 +14,10 @@ ServoSkull.editor_init = function (self, unit)
 	return
 end
 
+ServoSkull.editor_validate = function (self, unit)
+	return true, ""
+end
+
 ServoSkull.enable = function (self, unit)
 	return
 end
@@ -30,7 +34,7 @@ ServoSkull.component_data = {
 	pulse_interval = {
 		ui_type = "number",
 		value = 10,
-		ui_name = "Pulse interval (in sec)"
+		ui_name = "Pulse Interval"
 	},
 	extensions = {
 		"ServoSkullExtension"

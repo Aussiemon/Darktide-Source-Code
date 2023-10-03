@@ -4,16 +4,16 @@ local templates = {
 	weapon_trait_bespoke_ogryn_thumper_p2_toughness_on_elite_kills = {
 		weapon_trait_bespoke_ogryn_thumper_p2_toughness_on_elite_kills = {
 			{
-				toughness_fixed_percentage = 0.1
+				toughness_fixed_percentage = 0.2
 			},
 			{
-				toughness_fixed_percentage = 0.17
-			},
-			{
-				toughness_fixed_percentage = 0.24
+				toughness_fixed_percentage = 0.25
 			},
 			{
 				toughness_fixed_percentage = 0.3
+			},
+			{
+				toughness_fixed_percentage = 0.35
 			}
 		}
 	},
@@ -21,7 +21,22 @@ local templates = {
 		weapon_trait_bespoke_ogryn_thumper_p2_power_bonus_on_continuous_fire = {
 			{
 				stat_buffs = {
-					[stat_buffs.power_level_modifier] = 0.1
+					[stat_buffs.power_level_modifier] = 0.08
+				}
+			},
+			{
+				stat_buffs = {
+					[stat_buffs.power_level_modifier] = 0.08
+				}
+			},
+			{
+				stat_buffs = {
+					[stat_buffs.power_level_modifier] = 0.08
+				}
+			},
+			{
+				stat_buffs = {
+					[stat_buffs.power_level_modifier] = 0.08
 				}
 			}
 		}

@@ -111,7 +111,7 @@ GrimoireBuff._damage_player = function (self, power_level)
 	local target_index = 0
 	local is_critical_strike = false
 
-	Attack.execute(unit, damage_profile, "target_index", target_index, "power_level", power_level, "is_critical_strike", is_critical_strike, "attack_type", attack_types.buff, "damage_type", DamageSettings.damage_types.grimoire)
+	Attack.execute(unit, damage_profile, "target_index", target_index, "target_number", target_index, "power_level", power_level, "is_critical_strike", is_critical_strike, "attack_type", attack_types.buff, "damage_type", DamageSettings.damage_types.grimoire)
 end
 
 return GrimoireBuff

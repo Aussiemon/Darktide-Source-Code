@@ -42,7 +42,8 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				roamer_melee,
+				"chaos_ogryn_executor",
+				elite_berzerker,
 				roamer_melee,
 				roamer_melee,
 				roamer_melee
@@ -61,7 +62,7 @@ local roamer_packs = {
 		{
 			weight = 0.5,
 			breeds = {
-				"chaos_newly_infected",
+				"chaos_ogryn_bulwark",
 				"chaos_newly_infected",
 				"chaos_newly_infected",
 				roamer_melee,
@@ -71,6 +72,7 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
+				"chaos_ogryn_executor",
 				elite_berzerker,
 				roamer_melee,
 				"chaos_newly_infected",
@@ -80,7 +82,8 @@ local roamer_packs = {
 		{
 			weight = 2,
 			breeds = {
-				roamer_melee,
+				"chaos_ogryn_bulwark",
+				elite_berzerker,
 				roamer_melee,
 				roamer_melee
 			}
@@ -112,9 +115,9 @@ local roamer_packs = {
 				elite_berzerker,
 				elite_berzerker,
 				elite_berzerker,
-				roamer_melee,
-				roamer_melee,
-				roamer_melee,
+				elite_berzerker,
+				elite_berzerker,
+				elite_berzerker,
 				roamer_melee,
 				roamer_melee
 			}
@@ -122,8 +125,7 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				"chaos_ogryn_executor",
-				roamer_melee,
+				elite_berzerker,
 				roamer_melee,
 				roamer_melee,
 				roamer_melee
@@ -132,6 +134,7 @@ local roamer_packs = {
 		{
 			weight = 2,
 			breeds = {
+				"chaos_ogryn_bulwark",
 				elite_berzerker,
 				roamer_melee,
 				roamer_melee,
@@ -172,7 +175,7 @@ local roamer_packs = {
 			breeds = {
 				"chaos_ogryn_bulwark",
 				roamer_melee,
-				roamer_melee,
+				elite_berzerker,
 				elite_berzerker
 			}
 		},
@@ -181,7 +184,7 @@ local roamer_packs = {
 			breeds = {
 				"chaos_ogryn_bulwark",
 				roamer_melee,
-				roamer_melee,
+				elite_berzerker,
 				elite_berzerker
 			}
 		},
@@ -205,8 +208,9 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
+				"chaos_ogryn_executor",
 				elite_shocktrooper,
-				roamer_assault,
+				elite_shocktrooper,
 				roamer_assault,
 				roamer_assault
 			}
@@ -214,8 +218,9 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				elite_shocktrooper,
-				elite_shocktrooper,
+				roamer_assault,
+				roamer_assault,
+				roamer_assault,
 				roamer_assault,
 				roamer_assault
 			}
@@ -224,7 +229,7 @@ local roamer_packs = {
 			weight = 1,
 			breeds = {
 				elite_berzerker,
-				roamer_assault,
+				elite_shocktrooper,
 				roamer_assault,
 				roamer_assault
 			}
@@ -249,7 +254,7 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				elite_shocktrooper,
+				roamer_assault,
 				roamer_assault,
 				roamer_assault,
 				roamer_assault,
@@ -259,6 +264,7 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
+				"chaos_ogryn_bulwark",
 				elite_berzerker,
 				roamer_assault,
 				roamer_assault,
@@ -269,6 +275,7 @@ local roamer_packs = {
 		{
 			weight = 2,
 			breeds = {
+				"chaos_ogryn_executor",
 				elite_shocktrooper,
 				elite_shocktrooper,
 				roamer_assault,
@@ -279,8 +286,8 @@ local roamer_packs = {
 			weight = 1,
 			breeds = {
 				elite_shocktrooper,
-				roamer_assault,
-				roamer_assault,
+				elite_shocktrooper,
+				elite_shocktrooper,
 				roamer_assault,
 				roamer_assault
 			}
@@ -323,13 +330,16 @@ local roamer_packs = {
 				roamer_rifleman,
 				roamer_rifleman,
 				roamer_rifleman,
+				roamer_rifleman,
 				roamer_rifleman
 			}
 		},
 		{
 			weight = 1,
 			breeds = {
-				roamer_rifleman,
+				"chaos_ogryn_gunner",
+				elite_gunner,
+				elite_gunner,
 				roamer_rifleman,
 				roamer_rifleman,
 				roamer_rifleman,
@@ -339,6 +349,7 @@ local roamer_packs = {
 		{
 			weight = 2,
 			breeds = {
+				elite_gunner,
 				elite_gunner,
 				roamer_rifleman
 			}
@@ -352,6 +363,7 @@ local roamer_packs = {
 		{
 			weight = 0.5,
 			breeds = {
+				"chaos_ogryn_gunner",
 				roamer_rifleman,
 				roamer_rifleman,
 				elite_gunner
@@ -368,7 +380,8 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
-				elite_gunner,
+				roamer_rifleman,
+				roamer_rifleman,
 				roamer_rifleman,
 				roamer_rifleman,
 				roamer_rifleman,
@@ -389,6 +402,7 @@ local roamer_packs = {
 		{
 			weight = 1,
 			breeds = {
+				"chaos_ogryn_gunner",
 				elite_gunner,
 				elite_gunner,
 				roamer_rifleman,

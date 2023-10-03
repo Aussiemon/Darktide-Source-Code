@@ -6,7 +6,8 @@ require("scripts/extension_systems/moveable_platform/moveable_platform_extension
 local MoveablePlatformSystem = class("MoveablePlatformSystem", "ExtensionSystemBase")
 local CLIENT_RPCS = {
 	"rpc_moveable_platform_set_direction",
-	"rpc_moveable_platform_set_wall_collision"
+	"rpc_moveable_platform_set_wall_collision",
+	"rpc_moveable_platform_set_story"
 }
 
 MoveablePlatformSystem.init = function (self, context, ...)
@@ -42,6 +43,12 @@ MoveablePlatformSystem.hot_join_sync = function (self, sender, channel)
 		local wall_active = extension:wall_active()
 
 		RPC.rpc_moveable_platform_set_wall_collision(channel, level_unit_id, wall_active)
+
+		if extension:should_sync_story_name() then
+			local story_name = extension:get_story()
+
+			RPC.rpc_moveable_platform_set_story(channel, level_unit_id, story_name)
+		end
 	end
 end
 
@@ -60,6 +67,14 @@ MoveablePlatformSystem.rpc_moveable_platform_set_wall_collision = function (self
 	local extension = self._unit_to_extension_map[unit]
 
 	extension:set_wall_collision(active)
+end
+
+MoveablePlatformSystem.rpc_moveable_platform_set_story = function (self, channel_id, level_unit_id, story_name)
+	local is_level_unit = true
+	local unit = Managers.state.unit_spawner:unit(level_unit_id, is_level_unit)
+	local extension = self._unit_to_extension_map[unit]
+
+	extension:set_story(story_name)
 end
 
 MoveablePlatformSystem.update_level_props_broadphase = function (self)

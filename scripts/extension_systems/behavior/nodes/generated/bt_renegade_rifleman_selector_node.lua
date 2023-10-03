@@ -203,7 +203,18 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 		end
 	end
 
-	local node_melee_combat = children[8]
+	local node_suppressed = children[8]
+	local suppression_component = blackboard.suppression
+	local is_suppressed = suppression_component.is_suppressed
+	local condition_result = is_suppressed
+
+	if condition_result then
+		new_running_child_nodes[node_identifier] = node_suppressed
+
+		return node_suppressed
+	end
+
+	local node_melee_combat = children[9]
 	local tree_node = node_melee_combat.tree_node
 	local condition_args = tree_node.condition_args
 	local is_running = last_leaf_node_running and last_running_node == node_melee_combat
@@ -259,17 +270,6 @@ BtRenegadeRiflemanSelectorNode.evaluate = function (self, unit, blackboard, scra
 
 			return leaf_node
 		end
-	end
-
-	local node_suppressed = children[9]
-	local suppression_component = blackboard.suppression
-	local is_suppressed = suppression_component.is_suppressed
-	local condition_result = is_suppressed
-
-	if condition_result then
-		new_running_child_nodes[node_identifier] = node_suppressed
-
-		return node_suppressed
 	end
 
 	local node_far_combat = children[10]

@@ -15,6 +15,10 @@ PropShield.editor_init = function (self, unit)
 	return
 end
 
+PropShield.editor_validate = function (self, unit)
+	return true, ""
+end
+
 PropShield.enable = function (self, unit)
 	return
 end

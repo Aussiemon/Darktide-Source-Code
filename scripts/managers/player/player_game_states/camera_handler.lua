@@ -173,6 +173,8 @@ CameraHandler._switch_follow_target = function (self, new_unit)
 	else
 		Managers.wwise_game_sync:set_followed_player_unit(nil)
 	end
+
+	Managers.state.chunk_lod:reset_timer()
 end
 
 CameraHandler.post_update = function (self, dt, t, player_orientation)

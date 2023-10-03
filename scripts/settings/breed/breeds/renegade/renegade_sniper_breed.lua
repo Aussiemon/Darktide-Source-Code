@@ -22,7 +22,6 @@ local breed_name = "renegade_sniper"
 local breed_data = {
 	bone_lod_radius = 1.2,
 	walk_speed = 2.3,
-	base_height = 2,
 	use_bone_lod = true,
 	sub_faction_name = "renegade",
 	target_stickiness_distance = 30,
@@ -41,6 +40,7 @@ local breed_data = {
 	run_speed = 4.8,
 	can_be_used_for_all_factions = true,
 	faction_name = "chaos",
+	base_height = 2,
 	state_machine = "content/characters/enemy/chaos_traitor_guard/third_person/animations/chaos_traitor_guard_sniper",
 	spawn_aggro_state = "aggroed",
 	ranged = true,
@@ -48,7 +48,6 @@ local breed_data = {
 	player_locomotion_constrain_radius = 0.4,
 	smart_tag_target_type = "breed",
 	base_unit = "content/characters/enemy/chaos_traitor_guard/third_person/base",
-	hit_mass = 2,
 	has_direct_ragdoll_flow_event = true,
 	name = breed_name,
 	breed_type = breed_types.minion,
@@ -63,6 +62,7 @@ local breed_data = {
 	},
 	point_cost = BreedTerrorEventSettings[breed_name].point_cost,
 	armor_type = armor_types.unarmored,
+	hit_mass = MinionDifficultySettings.hit_mass[breed_name],
 	gib_template = MinionGibbingTemplates.renegade_sniper_gibbing,
 	stagger_durations = {
 		[stagger_types.light] = 0.75,
@@ -115,7 +115,6 @@ local breed_data = {
 			far = true
 		}
 	},
-	suppress_config = MinionDifficultySettings.suppression.renegade_rifleman,
 	attack_intensity_cooldowns = {
 		melee = {
 			0.7,

@@ -29,7 +29,7 @@ local tank_light_am_1 = {
 		[armor_types.armored] = damage_lerp_values.lerp_0_75,
 		[armor_types.resistant] = damage_lerp_values.lerp_2,
 		[armor_types.player] = damage_lerp_values.lerp_1,
-		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 		[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -53,7 +53,7 @@ local tank_light_am_default = {
 		[armor_types.armored] = damage_lerp_values.lerp_0_75,
 		[armor_types.resistant] = damage_lerp_values.lerp_1,
 		[armor_types.player] = damage_lerp_values.lerp_1,
-		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 		[armor_types.super_armor] = damage_lerp_values.no_damage,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 		[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -77,7 +77,7 @@ local tank_heavy_am_1 = {
 		[armor_types.armored] = damage_lerp_values.lerp_1,
 		[armor_types.resistant] = damage_lerp_values.lerp_3,
 		[armor_types.player] = damage_lerp_values.lerp_1,
-		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 		[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -101,7 +101,7 @@ local tank_heavy_am_default = {
 		[armor_types.armored] = damage_lerp_values.lerp_0_75,
 		[armor_types.resistant] = damage_lerp_values.lerp_1,
 		[armor_types.player] = damage_lerp_values.lerp_1,
-		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+		[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 		[armor_types.super_armor] = damage_lerp_values.no_damage,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 		[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -157,8 +157,8 @@ damage_templates.ogryn_shovel_light_tank = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					25,
-					50
+					40,
+					80
 				},
 				impact = {
 					6,
@@ -170,8 +170,34 @@ damage_templates.ogryn_shovel_light_tank = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
+					30,
+					60
+				},
+				impact = {
+					5,
+					10
+				}
+			}
+		},
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
+					25,
+					50
+				},
+				impact = {
+					5,
+					10
+				}
+			}
+		},
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
 					20,
-					30
+					40
 				},
 				impact = {
 					5,
@@ -184,8 +210,8 @@ damage_templates.ogryn_shovel_light_tank = {
 			armor_damage_modifier = tank_light_am_default,
 			power_distribution = {
 				attack = {
-					0,
-					0
+					10,
+					20
 				},
 				impact = {
 					3,
@@ -313,8 +339,34 @@ damage_templates.ogryn_shovel_heavy_tank = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
+					80,
+					160
+				},
+				impact = {
+					10,
+					25
+				}
+			}
+		},
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
 					60,
 					120
+				},
+				impact = {
+					10,
+					20
+				}
+			}
+		},
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
+					40,
+					80
 				},
 				impact = {
 					10,
@@ -327,7 +379,7 @@ damage_templates.ogryn_shovel_heavy_tank = {
 			power_distribution = {
 				attack = {
 					20,
-					30
+					40
 				},
 				impact = {
 					10,
@@ -340,8 +392,8 @@ damage_templates.ogryn_shovel_heavy_tank = {
 			armor_damage_modifier = tank_heavy_am_default,
 			power_distribution = {
 				attack = {
-					0,
-					0
+					10,
+					20
 				},
 				impact = {
 					5,
@@ -369,14 +421,14 @@ damage_templates.ogryn_shovel_light_smiter = {
 	},
 	targets = {
 		{
-			boost_curve_multiplier_finesse = 0.25,
+			boost_curve_multiplier_finesse = 0.5,
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
 					[armor_types.armored] = damage_lerp_values.lerp_1,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
@@ -387,7 +439,7 @@ damage_templates.ogryn_shovel_light_smiter = {
 					[armor_types.armored] = damage_lerp_values.lerp_1,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_75,
 					[armor_types.super_armor] = damage_lerp_values.lerp_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
@@ -396,8 +448,8 @@ damage_templates.ogryn_shovel_light_smiter = {
 			},
 			power_distribution = {
 				attack = {
-					100,
-					200
+					150,
+					300
 				},
 				impact = {
 					8,
@@ -508,7 +560,7 @@ damage_templates.ogryn_shovel_heavy_smiter = {
 					[armor_types.armored] = damage_lerp_values.lerp_1,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_75,
+					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_1,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,

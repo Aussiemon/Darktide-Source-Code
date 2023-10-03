@@ -7,15 +7,20 @@ local Promise = require("scripts/foundation/utilities/promise")
 local SigninLoader = require("scripts/loading/loaders/signin_loader")
 local StateMainMenu = require("scripts/game_states/game/state_main_menu")
 local SteamOfflineError = require("scripts/managers/error/errors/steam_offline_error")
+local TaskbarFlash = require("scripts/utilities/taskbar_flash")
 local StateTitle = class("StateTitle")
 local STATES = table.enum("idle", "account_signin", "signing_in", "loading_packages", "authenticating_eos", "legal_verification", "name_verification", "done", "error")
 
-local function _should_skip()
+local function _should_skip(skip_title_screen_on_invite)
 	if IS_XBS and BUILD == "release" then
 		return false
 	end
 
-	local skip_title = LEVEL_EDITOR_TEST or GameParameters.mission or Managers.data_service.social:has_invite() or not Managers.ui
+	if Managers.data_service.social:has_invite() and skip_title_screen_on_invite then
+		return true
+	end
+
+	local skip_title = LEVEL_EDITOR_TEST or GameParameters.mission or not Managers.ui
 
 	return skip_title
 end
@@ -54,6 +59,8 @@ StateTitle.on_enter = function (self, parent, params, creation_context)
 	self._next_state = StateMainMenu
 	self._next_state_params = params
 	self._is_booting = params.is_booting or false
+	local skip_title_screen_on_invite = params.skip_title_screen_on_invite
+	params.skip_title_screen_on_invite = nil
 	self._auth_queue_position = nil
 	self._queue_update_time = 0
 	self._queue_changed = false
@@ -69,7 +76,7 @@ StateTitle.on_enter = function (self, parent, params, creation_context)
 		Managers.save:reset()
 	end
 
-	if _should_skip() then
+	if _should_skip(skip_title_screen_on_invite) then
 		if IS_XBS or IS_GDK then
 			local raw_input_device = nil
 
@@ -90,6 +97,8 @@ StateTitle.on_enter = function (self, parent, params, creation_context)
 		Managers.ui:open_view(view_name, nil, nil, nil, nil, context)
 		Managers.event:register(self, "event_state_title_continue", "_continue_cb")
 	end
+
+	TaskbarFlash.flash_window()
 end
 
 StateTitle._set_state = function (self, state)
@@ -118,6 +127,12 @@ StateTitle._signin_profile = function (self, optional_input_device)
 end
 
 StateTitle.cb_profile_signed_in = function (self)
+	if IS_XBS then
+		local xuid = Managers.account:xuid()
+
+		Managers.data_service.social:xbox_profile_signed_in(xuid)
+	end
+
 	self:_signin()
 end
 

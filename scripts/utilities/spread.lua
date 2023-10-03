@@ -58,13 +58,13 @@ end
 local function _max_pitch_rotation(roll_rotation, pitch, yaw)
 	local x = yaw * math.cos(roll_rotation)
 	local y = pitch * math.sin(roll_rotation)
-	local length = Vector3.length(Vector3(x, y, 0))
+	local length = x * x + y * y
 
 	if length == 0 then
 		return 0
 	end
 
-	local max_pitch_rotation = pitch * yaw / length
+	local max_pitch_rotation = pitch * yaw / math.sqrt(length)
 
 	return math.degrees_to_radians(max_pitch_rotation)
 end

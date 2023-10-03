@@ -33,6 +33,12 @@ _extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/p
 _extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/path_of_trust_08")
 _extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/path_of_trust_09")
 _extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/traitor_captain_intro")
+_extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/hub_location_intro_barber")
+_extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/hub_location_intro_contracts")
+_extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/hub_location_intro_crafting")
+_extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/hub_location_intro_gun_shop")
+_extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/hub_location_intro_mission_board")
+_extract_cinematic_scene_templates("scripts/settings/cinematic_scene/templates/hub_location_intro_training_grounds")
 
 for name, cinematic_scene_data in pairs(cinematic_scene_templates) do
 	cinematic_scene_data.name = name

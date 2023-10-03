@@ -8,9 +8,11 @@ local renegade_flamer_settings = {
 	fx_source_name = "muzzle",
 	states = STATES,
 	vfx = {
-		flamer_particle = "content/fx/particles/enemies/renegade_flamer/renegade_flame_thrower",
+		ground_impact_velocity_variable_name = "velocity",
+		num_parabola_control_points = 4,
 		ground_impact_particle = "content/fx/particles/enemies/renegade_flamer/renegade_flame_thrower_hit",
-		num_parabola_control_points = 4
+		flamer_velocity_variable_name = "velocity",
+		flamer_particle = "content/fx/particles/enemies/renegade_flamer/renegade_flame_thrower"
 	},
 	sfx = {
 		looping_sfx_stop_event = "wwise/events/weapon/play_minion_flamethrower_stop",

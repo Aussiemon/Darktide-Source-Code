@@ -14,7 +14,7 @@ Luggable.init = function (self, context, slot, weapon_template, fx_sources)
 	self._is_local_unit = context.is_local_unit
 	self._visual_loadout_extension = context.visual_loadout_extension
 	local unit_data_extension = context.unit_data_extension
-	self._action_throw_component = unit_data_extension:read_component("action_throw")
+	self._action_throw_luggable_component = unit_data_extension:read_component("action_throw_luggable")
 	local mission_objective_target_extension = ScriptUnit.extension(item_unit_3p, "mission_objective_target_system")
 	local objective_name = mission_objective_target_extension:objective_name()
 	local mission_objective_system = Managers.state.extension:system("mission_objective_system")
@@ -38,7 +38,7 @@ end
 Luggable.update = function (self, unit, dt, t)
 	local slot = self._slot
 
-	if self._action_throw_component.thrown and self._luggable_locomotion_extension:current_state() ~= locomotion_states.carried then
+	if self._action_throw_luggable_component.thrown and self._luggable_locomotion_extension:current_state() ~= locomotion_states.carried then
 		if not slot.wants_hidden_by_gameplay_1p then
 			local hide_1p = true
 			local hide_3p = false

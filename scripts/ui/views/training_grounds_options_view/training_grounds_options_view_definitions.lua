@@ -39,7 +39,7 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			60,
+			40,
 			10
 		}
 	},
@@ -53,7 +53,21 @@ local scenegraph_definition = {
 		},
 		position = {
 			0,
-			95,
+			70,
+			10
+		}
+	},
+	header_separator = {
+		vertical_alignment = "top",
+		parent = "left_panel",
+		horizontal_alignment = "center",
+		size = {
+			600,
+			50
+		},
+		position = {
+			0,
+			125,
 			10
 		}
 	},
@@ -121,20 +135,6 @@ local scenegraph_definition = {
 			10
 		}
 	},
-	rewards_claimed = {
-		vertical_alignment = "bottom",
-		parent = "rewards_header",
-		horizontal_alignment = "center",
-		size = {
-			600,
-			50
-		},
-		position = {
-			0,
-			80,
-			11
-		}
-	},
 	play_button = {
 		vertical_alignment = "bottom",
 		parent = "left_panel",
@@ -154,7 +154,7 @@ local scenegraph_definition = {
 		parent = "separator",
 		horizontal_alignment = "center",
 		size = {
-			300,
+			600,
 			60
 		},
 		position = {
@@ -204,6 +204,28 @@ local widget_definitions = {
 			style = view_styles.sub_header_font_style
 		}
 	}, "header"),
+	header_separator = UIWidget.create_definition({
+		{
+			value_id = "divider",
+			style_id = "divider",
+			pass_type = "texture",
+			value = "content/ui/materials/dividers/skull_center_02",
+			style = {
+				vertical_alignment = "top",
+				horizontal_alignment = "center",
+				size = {
+					400,
+					18
+				},
+				offset = {
+					0,
+					-6,
+					1
+				},
+				color = Color.terminal_frame(255, true)
+			}
+		}
+	}, "header_separator"),
 	body = UIWidget.create_definition({
 		{
 			style_id = "body_text",
@@ -425,14 +447,6 @@ local widget_definitions = {
 			}
 		}
 	}, "left_panel"),
-	rewards_claimed_text = UIWidget.create_definition({
-		{
-			style_id = "text",
-			value_id = "text",
-			pass_type = "text",
-			style = view_styles.rewards_claimed_font_style
-		}
-	}, "rewards_claimed"),
 	select_difficulty_text = UIWidget.create_definition({
 		{
 			value_id = "text",

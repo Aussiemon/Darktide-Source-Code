@@ -1,4 +1,5 @@
 local Armor = require("scripts/utilities/attack/armor")
+local Breed = require("scripts/utilities/breed")
 local BuffSettings = require("scripts/settings/buff/buff_settings")
 local buff_keywords = BuffSettings.keywords
 local HitMass = {}
@@ -30,10 +31,17 @@ HitMass.target_hit_mass = function (attacker_unit, target_unit, hit_weakspot)
 	return hit_mass
 end
 
-HitMass.consume_hit_mass = function (attacker_unit, target_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot)
-	local target_hit_mass = HitMass.target_hit_mass(attacker_unit, target_unit, hit_weakspot)
-	local new_hit_mass_budget_attack = math.max(0, hit_mass_budget_attack - target_hit_mass)
-	local new_hit_mass_budget_impact = math.max(0, hit_mass_budget_impact - target_hit_mass)
+HitMass.consume_hit_mass = function (attacker_unit, target_unit, hit_mass_budget_attack, hit_mass_budget_impact, hit_weakspot, hit_mass_override)
+	local new_hit_mass_budget_attack, new_hit_mass_budget_impact = nil
+
+	if hit_mass_override then
+		new_hit_mass_budget_attack = math.max(0, hit_mass_budget_attack - hit_mass_override)
+		new_hit_mass_budget_impact = math.max(0, hit_mass_budget_impact - hit_mass_override)
+	else
+		local target_hit_mass = HitMass.target_hit_mass(attacker_unit, target_unit, hit_weakspot)
+		new_hit_mass_budget_attack = math.max(0, hit_mass_budget_attack - target_hit_mass)
+		new_hit_mass_budget_impact = math.max(0, hit_mass_budget_impact - target_hit_mass)
+	end
 
 	return new_hit_mass_budget_attack, new_hit_mass_budget_impact
 end
@@ -81,23 +89,25 @@ function _target_breed(unit)
 	return unit_data_ext:breed()
 end
 
+local REDUCED_HIT_MASS_MULTIPLIER = 0.25
+
 function _hit_mass_from_character(unit, breed, use_reduced_hit_mass)
 	if not HEALTH_ALIVE[unit] then
 		return 0
 	end
 
-	local hit_mass = use_reduced_hit_mass and breed.reduced_hit_mass or breed.hit_mass
+	local is_player_or_prop_character = Breed.is_player(breed) or Breed.is_prop(breed) or Breed.is_living_prop(breed)
+	local hit_mass = nil
 
-	if type(hit_mass) == "table" then
-		hit_mass = Managers.state.difficulty:get_table_entry_by_challenge(hit_mass)
-	end
+	if is_player_or_prop_character then
+		hit_mass = breed.hit_mass
+	else
+		local health_extension = ScriptUnit.extension(unit, "health_system")
+		hit_mass = health_extension:hit_mass()
 
-	local buff_extension = ScriptUnit.has_extension(unit, "buff_system")
-
-	if buff_extension then
-		local stat_buffs = buff_extension:stat_buffs()
-		local consumed_hit_mass_modifier = stat_buffs.consumed_hit_mass_modifier or 1
-		hit_mass = hit_mass * consumed_hit_mass_modifier
+		if use_reduced_hit_mass then
+			hit_mass = hit_mass * REDUCED_HIT_MASS_MULTIPLIER
+		end
 	end
 
 	return hit_mass

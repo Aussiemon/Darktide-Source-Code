@@ -575,8 +575,8 @@ damage_templates.heavy_powersword = {
 			},
 			power_distribution = {
 				attack = {
-					200,
-					400
+					150,
+					300
 				},
 				impact = {
 					6,

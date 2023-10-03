@@ -52,7 +52,17 @@ function _is_stun_immune_from_current_action(unit_data_extension, weapon_templat
 		return false
 	end
 
-	return action_settings and action_settings.uninterruptible or ability_action_settings and ability_action_settings.uninterruptible
+	if action_settings and action_settings.uninterruptible or ability_action_settings and ability_action_settings.uninterruptible then
+		return true
+	end
+
+	local action_sweep_component = unit_data_extension:read_component("action_sweep")
+
+	if action_sweep_component and action_sweep_component.is_sticky then
+		return true
+	end
+
+	return false
 end
 
 function _is_stun_immune_from_buff(unit)

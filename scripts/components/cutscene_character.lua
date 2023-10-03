@@ -31,6 +31,10 @@ CutsceneCharacter.editor_init = function (self, unit)
 	self:enable(unit)
 end
 
+CutsceneCharacter.editor_validate = function (self, unit)
+	return true, ""
+end
+
 CutsceneCharacter.enable = function (self, unit)
 	return
 end
@@ -105,7 +109,13 @@ CutsceneCharacter.component_data = {
 			"Path of Trust 07",
 			"Path of Trust 08",
 			"Path of Trust 09",
-			"Traitor Captain Intro"
+			"Traitor Captain Intro",
+			"Hub Location Intro Barber",
+			"Hub Location Intro Mission Board",
+			"Hub Location Intro Training Grounds",
+			"Hub Location Intro Contracts",
+			"Hub Location Intro Crafting",
+			"Hub Location Intro Gun Shop"
 		},
 		options_values = {
 			"none",
@@ -132,7 +142,13 @@ CutsceneCharacter.component_data = {
 			"path_of_trust_07",
 			"path_of_trust_08",
 			"path_of_trust_09",
-			"traitor_captain_intro"
+			"traitor_captain_intro",
+			"hub_location_intro_barber",
+			"hub_location_intro_mission_board",
+			"hub_location_intro_training_grounds",
+			"hub_location_intro_contracts",
+			"hub_location_intro_crafting",
+			"hub_location_intro_gun_shop"
 		}
 	},
 	character_type = {

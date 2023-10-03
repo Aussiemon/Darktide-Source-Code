@@ -45,9 +45,9 @@ local basic_cultist_melee_template = {
 			drop_on_death = true,
 			is_weapon = true,
 			items = {
-				"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_02",
+				"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_01",
 				"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_04",
-				"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_03"
+				"content/items/weapons/minions/melee/chaos_traitor_guard_melee_weapon_02"
 			}
 		},
 		slot_variation_gear = {

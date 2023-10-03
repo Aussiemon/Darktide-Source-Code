@@ -13,7 +13,7 @@ local action_handler_settings = {
 		"vent_overheat",
 		"vent_warp_charge",
 		"throw_grenade",
-		"throw",
+		"throw_luggable",
 		"aim_projectile",
 		"inspect"
 	},

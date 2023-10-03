@@ -27,6 +27,10 @@ ScannerLight.editor_init = function (self, unit)
 	self._should_debug_draw = false
 end
 
+ScannerLight.editor_validate = function (self, unit)
+	return true, ""
+end
+
 ScannerLight.enable = function (self, unit)
 	return
 end

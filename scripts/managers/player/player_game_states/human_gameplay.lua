@@ -170,6 +170,10 @@ end
 HumanGameplay.destroy = function (self)
 	local player = self._player
 
+	if self._spectated_player then
+		Managers.input:stop_suppress_wwise_rumble()
+	end
+
 	if self._has_own_hud then
 		self:_destroy_player_hud()
 	end
@@ -500,10 +504,14 @@ HumanGameplay.on_player_removed = function (self, player)
 end
 
 HumanGameplay._start_spectating = function (self, spectated_player)
+	Managers.input:start_suppress_wwise_rumble()
+
 	self._spectated_player = spectated_player
 end
 
 HumanGameplay._stop_spectating = function (self)
+	Managers.input:stop_suppress_wwise_rumble()
+
 	if self._has_spectator_hud then
 		self:_destroy_spectator_hud()
 	end

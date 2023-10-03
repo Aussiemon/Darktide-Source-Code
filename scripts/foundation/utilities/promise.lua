@@ -202,6 +202,12 @@ function run(promise)
 		return
 	end
 
+	if promise.state == State.CANCELED then
+		Log.warning("Promise", "Ran a canceled promise.")
+
+		return
+	end
+
 	do_async(function ()
 		local q = promise.queue
 		local i = 0
@@ -476,6 +482,12 @@ Promise.until_value_is_true = function (predicate)
 	})
 
 	return promise
+end
+
+Promise.reset = function ()
+	queue = {}
+	delayed = {}
+	predicates = {}
 end
 
 return Promise

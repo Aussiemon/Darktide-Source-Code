@@ -42,8 +42,8 @@ HudElementBlocking._update_shield_amount = function (self)
 
 		if unit_data_extension then
 			local stamina_component = unit_data_extension:read_component("stamina")
-			local specialization = unit_data_extension:specialization()
-			local base_stamina_template = specialization.stamina
+			local archetype = unit_data_extension:archetype()
+			local base_stamina_template = archetype.stamina
 
 			if stamina_component and base_stamina_template then
 				local player_unit = player_extensions.unit

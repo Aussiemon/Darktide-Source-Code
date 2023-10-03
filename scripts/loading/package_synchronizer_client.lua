@@ -1,3 +1,4 @@
+local CharacterSheet = require("scripts/utilities/character_sheet")
 local GameModeSettings = require("scripts/settings/game_mode/game_mode_settings")
 local ItemPackage = require("scripts/foundation/managers/package/utilities/item_package")
 local MasterItems = require("scripts/backend/master_items")
@@ -216,7 +217,7 @@ PackageSynchronizerClient.resolve_profile_packages = function (self, profile)
 
 	local specialization = profile.specialization
 	local talents = profile.talents
-	local ability_items = self:_resolve_ability_packages(archetype, specialization, talents, profile_packages, mission)
+	local ability_items = self:_resolve_ability_packages(archetype, specialization, talents, profile_packages, mission, game_mode_settings, profile)
 
 	for slot_name, item in pairs(ability_items) do
 		all_items[slot_name] = item
@@ -269,9 +270,24 @@ end
 
 local temp_abilities = {}
 local temp_abilities_items = {}
+local class_loadout_dest = {
+	ability = {},
+	blitz = {},
+	aura = {}
+}
 
-PackageSynchronizerClient._resolve_ability_packages = function (self, archetype, specialization_name, talents, profile_packages, mission)
-	local combat_ability, grenade_ability = PlayerSpecialization.from_selected_talents(archetype, specialization_name, talents)
+PackageSynchronizerClient._resolve_ability_packages = function (self, archetype, specialization_name, talents, profile_packages, mission, game_mode_settings, profile)
+	local combat_ability, grenade_ability = nil
+	local skip_selected_nodes = false
+
+	if game_mode_settings and game_mode_settings.force_base_talents then
+		skip_selected_nodes = true
+	end
+
+	CharacterSheet.class_loadout(profile, class_loadout_dest, skip_selected_nodes)
+
+	combat_ability = class_loadout_dest.combat_ability
+	grenade_ability = class_loadout_dest.grenade_ability
 
 	table.clear(temp_abilities)
 	table.clear(temp_abilities_items)
@@ -652,7 +668,7 @@ end
 PackageSynchronizerClient.peer_enabled = function (self, peer_id)
 	local peer_data = self._packages[peer_id]
 
-	return peer_data.enabled
+	return peer_data and peer_data.enabled
 end
 
 PackageSynchronizerClient.alias_loaded = function (self, peer_id, local_player_id, alias)

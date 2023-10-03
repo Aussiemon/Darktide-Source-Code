@@ -17,6 +17,10 @@ HazardProp.editor_init = function (self, unit)
 	return
 end
 
+HazardProp.editor_validate = function (self, unit)
+	return true, ""
+end
+
 HazardProp.enable = function (self, unit)
 	return
 end

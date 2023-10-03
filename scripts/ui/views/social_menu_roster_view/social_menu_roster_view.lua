@@ -93,17 +93,34 @@ local function _group_by_invite(player_info)
 	end
 end
 
+local function _mono_group()
+	return 1
+end
+
 local function _sort_by_name(a, b)
 	return a:user_display_name(true) < b:user_display_name(true)
 end
 
-local function _sort_by_grouping_function(grouping_function)
+local function _sort_by_latest_played_with(a, b)
+	local a_time = a:last_time_played_with()
+	local b_time = b:last_time_played_with()
+
+	if a_time == b_time then
+		return _sort_by_name(a, b)
+	end
+
+	return b_time < a_time
+end
+
+local function _sort_by_grouping_function(grouping_function, sorting_function)
+	sorting_function = sorting_function or _sort_by_name
+
 	return function (a, b)
 		local a_group_id = grouping_function(a)
 		local b_group_id = grouping_function(b)
 
 		if a_group_id == b_group_id then
-			return _sort_by_name(a, b)
+			return sorting_function(a, b)
 		end
 
 		return a_group_id < b_group_id
@@ -111,7 +128,7 @@ local function _sort_by_grouping_function(grouping_function)
 end
 
 local _sort_by_friend = _sort_by_grouping_function(_friend_group_selection_function)
-local _sort_by_default_group_selection = _sort_by_grouping_function(_default_group_selection_function)
+local _sort_by_recency = _sort_by_grouping_function(_default_group_selection_function, _sort_by_latest_played_with)
 local _sort_by_invite = _sort_by_grouping_function(_group_by_invite)
 local _groups_by_online_status = {
 	{
@@ -187,14 +204,12 @@ SocialMenuRosterView.init = function (self, settings, context)
 		},
 		[PREVIOUS_MISSION_COMPANIONS_LIST] = {
 			group_select_function = _default_group_selection_function,
-			primary_sort_function = _sort_by_default_group_selection,
+			primary_sort_function = _sort_by_recency,
 			groups = _groups_by_online_status,
 			sorted_list = {}
 		},
 		[HUB_PLAYERS_LIST] = {
-			group_select_function = function (player_info)
-				return 1
-			end,
+			group_select_function = _mono_group,
 			primary_sort_function = _sort_by_name,
 			groups = {
 				{
@@ -1440,7 +1455,7 @@ SocialMenuRosterView._get_roster_grid_first_visible_row = function (self)
 		local widget_hotspot = widget.content.hotspot
 
 		if widget_hotspot and roster_grid:is_widget_visible(widget, -half_row_height) then
-			return widget.content.row
+			return widget.content.row or 0
 		end
 	end
 
