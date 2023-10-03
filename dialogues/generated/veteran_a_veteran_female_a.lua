@@ -535,6 +535,61 @@ local veteran_a_veteran_female_a = {
 			[2.0] = 4.964604
 		},
 		randomize_indexes = {}
+	},
+	veteran_gang_metropolitan_aeldari_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_female_a__veteran_gang_metropolitan_aeldari_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.562292
+		},
+		randomize_indexes = {}
+	},
+	veteran_gang_metropolitan_long_way_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_female_a__veteran_gang_metropolitan_long_way_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.452271
+		},
+		randomize_indexes = {}
+	},
+	veteran_gang_metropolitan_long_way_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_female_a__veteran_gang_metropolitan_long_way_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 1.866396
+		},
+		randomize_indexes = {}
+	},
+	veteran_gang_metropolitan_serious_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_female_a__veteran_gang_metropolitan_serious_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 6.119333
+		},
+		randomize_indexes = {}
+	},
+	veteran_gang_metropolitan_serious_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_female_a__veteran_gang_metropolitan_serious_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.012208
+		},
+		randomize_indexes = {}
 	}
 }
 

@@ -436,6 +436,94 @@ local conversations_hub_contract_vendor_a = {
 		},
 		randomize_indexes = {}
 	},
+	hub_rumours_vox_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_contract_vendor_a__hub_rumours_vox_01_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 8.489875
+		},
+		randomize_indexes = {}
+	},
+	hub_rumours_vox_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_contract_vendor_a__hub_rumours_vox_02_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.329167
+		},
+		randomize_indexes = {}
+	},
+	hub_rumours_vox_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_contract_vendor_a__hub_rumours_vox_03_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 6.310958
+		},
+		randomize_indexes = {}
+	},
+	hub_rumours_vox_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_contract_vendor_a__hub_rumours_vox_04_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 8.547292
+		},
+		randomize_indexes = {}
+	},
+	hub_rumours_vox_08_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_contract_vendor_a__hub_rumours_vox_08_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 8.047604
+		},
+		randomize_indexes = {}
+	},
+	hub_rumours_vox_09_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_contract_vendor_a__hub_rumours_vox_09_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 8.262156
+		},
+		randomize_indexes = {}
+	},
+	hub_rumours_vox_10_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_contract_vendor_a__hub_rumours_vox_10_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.989156
+		},
+		randomize_indexes = {}
+	},
+	hub_rumours_vox_10_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_contract_vendor_a__hub_rumours_vox_10_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.529406
+		},
+		randomize_indexes = {}
+	},
 	npc_first_interaction_contract_vendor_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

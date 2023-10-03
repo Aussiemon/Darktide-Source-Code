@@ -337,7 +337,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -463,7 +463,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "players"
 		}
 	})
 	define_rule({

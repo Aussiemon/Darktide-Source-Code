@@ -668,6 +668,39 @@ local conversations_core_zealot_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_berserker_ext_03_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_male_b__enemy_kill_berserker_ext_03_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.612292
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_berserker_ext_03_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_male_b__enemy_kill_berserker_ext_03_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.323938
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_poxwalker_bomber_ext_04_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_male_b__enemy_kill_poxwalker_bomber_ext_04_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.151333
+		},
+		randomize_indexes = {}
+	},
 	graffiti_response = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

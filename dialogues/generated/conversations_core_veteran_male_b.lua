@@ -677,6 +677,83 @@ local conversations_core_veteran_male_b = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_berserker_ext_01_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_b__enemy_kill_berserker_ext_01_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 1.88326
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_berserker_ext_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_b__enemy_kill_berserker_ext_02_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.214396
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_berserker_ext_02_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_b__enemy_kill_berserker_ext_02_e_01"
+		},
+		sound_events_duration = {
+			[1.0] = 1.363052
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_berserker_ext_03_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_b__enemy_kill_berserker_ext_03_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.522583
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_berserker_ext_05_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_b__enemy_kill_berserker_ext_05_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.96825
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_poxwalker_bomber_ext_01_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_b__enemy_kill_poxwalker_bomber_ext_01_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.167865
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_poxwalker_bomber_ext_05_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_b__enemy_kill_poxwalker_bomber_ext_05_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.081292
+		},
+		randomize_indexes = {}
+	},
 	graffiti_response = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

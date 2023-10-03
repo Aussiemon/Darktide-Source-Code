@@ -2372,11 +2372,11 @@ local gameplay_vo_veteran_female_a = {
 			"loc_veteran_female_a__plasma_vent_a_05"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			2.104125,
+			2.134188,
+			2.595604,
+			3.200875,
+			2.765667
 		},
 		randomize_indexes = {}
 	},

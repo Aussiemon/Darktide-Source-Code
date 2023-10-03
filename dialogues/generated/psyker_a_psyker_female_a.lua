@@ -535,6 +535,72 @@ local psyker_a_psyker_female_a = {
 		},
 		randomize_indexes = {}
 	},
+	psyker_gang_metropolitan_quibble_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_a__psyker_gang_metropolitan_quibble_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.99325
+		},
+		randomize_indexes = {}
+	},
+	psyker_gang_metropolitan_quibble_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_a__psyker_gang_metropolitan_quibble_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.7905
+		},
+		randomize_indexes = {}
+	},
+	psyker_gang_metropolitan_weaponry_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_a__psyker_gang_metropolitan_weaponry_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 8.193625
+		},
+		randomize_indexes = {}
+	},
+	psyker_gang_metropolitan_weaponry_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_a__psyker_gang_metropolitan_weaponry_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.796458
+		},
+		randomize_indexes = {}
+	},
+	psyker_gang_metropolitan_worse_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_a__psyker_gang_metropolitan_worse_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.017042
+		},
+		randomize_indexes = {}
+	},
+	psyker_gang_metropolitan_worse_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_a__psyker_gang_metropolitan_worse_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.593333
+		},
+		randomize_indexes = {}
+	},
 	repeated_psykinetic_head_pop_a = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,

@@ -660,6 +660,28 @@ local conversations_core_psyker_female_c = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_berserker_ext_03_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_c__enemy_kill_berserker_ext_03_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.690833
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_poxwalker_bomber_ext_04_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_c__enemy_kill_poxwalker_bomber_ext_04_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.593094
+		},
+		randomize_indexes = {}
+	},
 	graffiti_response = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

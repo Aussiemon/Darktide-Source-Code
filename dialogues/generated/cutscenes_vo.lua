@@ -3048,6 +3048,126 @@ return function ()
 		on_done = {}
 	})
 	define_rule({
+		name = "player_first_intro_cinematic_a",
+		category = "cutscene",
+		wwise_route = 5,
+		response = "player_first_intro_cinematic_a",
+		database = "cutscenes_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"cutscene_vo_line"
+			},
+			{
+				"query_context",
+				"vo_line_id",
+				OP.EQ,
+				"player_first_intro_cinematic_a"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "player_first_intro_cinematic_b",
+		category = "cutscene",
+		wwise_route = 5,
+		response = "player_first_intro_cinematic_b",
+		database = "cutscenes_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"cutscene_vo_line"
+			},
+			{
+				"query_context",
+				"vo_line_id",
+				OP.EQ,
+				"player_first_intro_cinematic_b"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "player_first_intro_cinematic_c",
+		category = "cutscene",
+		wwise_route = 5,
+		response = "player_first_intro_cinematic_c",
+		database = "cutscenes_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"cutscene_vo_line"
+			},
+			{
+				"query_context",
+				"vo_line_id",
+				OP.EQ,
+				"player_first_intro_cinematic_c"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
+		name = "player_first_intro_cinematic_d",
+		category = "cutscene",
+		wwise_route = 5,
+		response = "player_first_intro_cinematic_d",
+		database = "cutscenes_vo",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"cutscene_vo_line"
+			},
+			{
+				"query_context",
+				"vo_line_id",
+				OP.EQ,
+				"player_first_intro_cinematic_d"
+			},
+			{
+				"user_context",
+				"class_name",
+				OP.SET_INCLUDES,
+				args = {
+					"training_ground_psyker"
+				}
+			}
+		},
+		on_done = {}
+	})
+	define_rule({
 		name = "prologue_gameplay_hub_a",
 		category = "cutscene",
 		wwise_route = 5,

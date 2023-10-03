@@ -88,7 +88,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "disabled"
 		}
 	})
 	define_rule({

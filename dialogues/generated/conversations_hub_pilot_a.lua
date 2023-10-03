@@ -38,6 +38,61 @@ local conversations_hub_pilot_a = {
 		},
 		randomize_indexes = {}
 	},
+	hub_idle_2nd_phase_conversation_eleven_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_pilot_a__hub_idle_2nd_phase_conversation_eleven_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.534
+		},
+		randomize_indexes = {}
+	},
+	hub_idle_2nd_phase_conversation_forty_one_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_pilot_a__hub_idle_2nd_phase_conversation_forty_one_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 7.076104
+		},
+		randomize_indexes = {}
+	},
+	hub_idle_2nd_phase_conversation_fortytwo_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_pilot_a__hub_idle_2nd_phase_conversation_fortytwo_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.430375
+		},
+		randomize_indexes = {}
+	},
+	hub_idle_2nd_phase_conversation_thirteen_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_pilot_a__hub_idle_2nd_phase_conversation_thirteen_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.191375
+		},
+		randomize_indexes = {}
+	},
+	hub_idle_2nd_phase_conversation_twelve_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_pilot_a__hub_idle_2nd_phase_conversation_twelve_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 8.218354
+		},
+		randomize_indexes = {}
+	},
 	hub_idle_conversation_fifteen_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

@@ -443,10 +443,10 @@ local mission_giver_vo_sergeant_a = {
 			"loc_sergeant_a__mission_archives_brief_a_04"
 		},
 		sound_events_duration = {
-			5.777146,
-			4.543042,
-			5.860958,
-			6.661438
+			5.977146,
+			4.743042,
+			6.060958,
+			6.861438
 		},
 		randomize_indexes = {}
 	},
@@ -459,9 +459,9 @@ local mission_giver_vo_sergeant_a = {
 			"loc_sergeant_a__mission_archives_brief_b_04"
 		},
 		sound_events_duration = {
-			5.64425,
-			5.451583,
-			5.755583
+			5.84425,
+			5.651583,
+			5.955583
 		},
 		randomize_indexes = {}
 	},
@@ -475,10 +475,10 @@ local mission_giver_vo_sergeant_a = {
 			"loc_sergeant_a__mission_archives_brief_c_04"
 		},
 		sound_events_duration = {
-			7.009958,
-			6.839625,
-			5.999396,
-			6.450938
+			7.209958,
+			7.039625,
+			6.199396,
+			6.650938
 		},
 		randomize_indexes = {}
 	},
@@ -657,10 +657,10 @@ local mission_giver_vo_sergeant_a = {
 			"loc_sergeant_a__mission_complex_brief_a_04"
 		},
 		sound_events_duration = {
-			5.611354,
-			6.089708,
-			5.48925,
-			6.999646
+			5.811354,
+			6.289708,
+			5.68925,
+			7.199646
 		},
 		randomize_indexes = {}
 	},
@@ -674,10 +674,10 @@ local mission_giver_vo_sergeant_a = {
 			"loc_sergeant_a__mission_complex_brief_b_04"
 		},
 		sound_events_duration = {
-			6.733333,
-			6.111083,
-			6.116563,
-			7.442854
+			6.933333,
+			6.311083,
+			6.316563,
+			7.642854
 		},
 		randomize_indexes = {}
 	},
@@ -691,10 +691,10 @@ local mission_giver_vo_sergeant_a = {
 			"loc_sergeant_a__mission_complex_brief_c_04"
 		},
 		sound_events_duration = {
-			6.896229,
-			6.204833,
-			5.801271,
-			7.522167
+			7.096229,
+			6.404833,
+			6.001271,
+			7.722167
 		},
 		randomize_indexes = {}
 	},
@@ -797,6 +797,12 @@ local mission_giver_vo_sergeant_a = {
 			5.872729,
 			7.675646,
 			6.319854
+		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
 		},
 		randomize_indexes = {}
 	},
@@ -975,10 +981,10 @@ local mission_giver_vo_sergeant_a = {
 			"loc_sergeant_a__mission_resurgence_brief_a_04"
 		},
 		sound_events_duration = {
-			6.825688,
-			5.549729,
-			6.887625,
-			5.540063
+			6.650688,
+			5.374729,
+			6.712625,
+			5.365063
 		},
 		randomize_indexes = {}
 	},
@@ -992,10 +998,10 @@ local mission_giver_vo_sergeant_a = {
 			"loc_sergeant_a__mission_resurgence_brief_b_04"
 		},
 		sound_events_duration = {
-			6.825,
-			4.94175,
-			5.713646,
-			4.771875
+			6.65,
+			4.76675,
+			5.538646,
+			4.596875
 		},
 		randomize_indexes = {}
 	},
@@ -1009,10 +1015,10 @@ local mission_giver_vo_sergeant_a = {
 			"loc_sergeant_a__mission_resurgence_brief_c_04"
 		},
 		sound_events_duration = {
-			6.878938,
-			6.466833,
-			5.408479,
-			7.486875
+			6.703938,
+			6.291833,
+			5.233479,
+			7.311875
 		},
 		randomize_indexes = {}
 	},
@@ -1026,10 +1032,10 @@ local mission_giver_vo_sergeant_a = {
 			"loc_sergeant_a__mission_rise_briefing_a_04"
 		},
 		sound_events_duration = {
-			6.857958,
-			6.572229,
-			5.944271,
-			6.972729
+			7.057958,
+			6.772229,
+			6.144271,
+			7.172729
 		},
 		randomize_indexes = {}
 	},
@@ -1043,10 +1049,10 @@ local mission_giver_vo_sergeant_a = {
 			"loc_sergeant_a__mission_rise_briefing_b_04"
 		},
 		sound_events_duration = {
-			7.298688,
-			6.013167,
-			7.454958,
-			6.765146
+			7.498688,
+			6.213167,
+			7.654958,
+			6.965146
 		},
 		randomize_indexes = {}
 	},
@@ -1060,10 +1066,10 @@ local mission_giver_vo_sergeant_a = {
 			"loc_sergeant_a__mission_rise_briefing_c_04"
 		},
 		sound_events_duration = {
-			6.036667,
-			5.942188,
-			6.534,
-			6.562542
+			6.236667,
+			6.142188,
+			6.734,
+			6.762542
 		},
 		randomize_indexes = {}
 	},
@@ -1169,12 +1175,6 @@ local mission_giver_vo_sergeant_a = {
 			7.981104,
 			7.276021
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	mission_station_briefing_c = {
@@ -1191,12 +1191,6 @@ local mission_giver_vo_sergeant_a = {
 			5.679438,
 			6.831563,
 			5.684438
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},

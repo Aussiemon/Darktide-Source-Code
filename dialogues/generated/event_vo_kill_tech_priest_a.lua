@@ -9,10 +9,10 @@ local event_vo_kill_tech_priest_a = {
 			"loc_tech_priest_a__event_kill_kill_the_target_04"
 		},
 		sound_events_duration = {
-			5.672125,
-			5.071042,
-			5.19925,
-			4.741917
+			5.669146,
+			5.068063,
+			5.196271,
+			4.738938
 		},
 		randomize_indexes = {}
 	},
@@ -26,10 +26,10 @@ local event_vo_kill_tech_priest_a = {
 			"loc_tech_priest_a__event_kill_target_destroyed_b_04"
 		},
 		sound_events_duration = {
-			3.99525,
-			5.118958,
-			6.793458,
-			5.630958
+			3.992271,
+			5.115979,
+			6.790479,
+			5.627979
 		},
 		randomize_indexes = {}
 	},
@@ -43,10 +43,10 @@ local event_vo_kill_tech_priest_a = {
 			"loc_tech_priest_a__event_kill_target_heavy_damage_b_04"
 		},
 		sound_events_duration = {
-			3.987812,
-			5.368625,
-			5.012833,
-			4.309542
+			3.984833,
+			5.365646,
+			5.009854,
+			4.306563
 		},
 		randomize_indexes = {}
 	}

@@ -9,10 +9,10 @@ local mission_vo_lm_cooling_tech_priest_a = {
 			"loc_tech_priest_a__cmd_mission_cooling_hacking_event_end_04"
 		},
 		sound_events_duration = {
-			6.621167,
-			7.432958,
-			8.566999,
-			10.67033
+			6.618188,
+			7.429979,
+			8.564021,
+			10.66735
 		},
 		randomize_indexes = {}
 	},
@@ -26,10 +26,10 @@ local mission_vo_lm_cooling_tech_priest_a = {
 			"loc_tech_priest_a__cmd_mission_cooling_hacking_event_start_04"
 		},
 		sound_events_duration = {
-			8.479562,
-			8.095333,
-			7.983021,
-			10.82888
+			8.476583,
+			8.092354,
+			7.980042,
+			10.8259
 		},
 		randomize_indexes = {}
 	},
@@ -43,10 +43,10 @@ local mission_vo_lm_cooling_tech_priest_a = {
 			"loc_tech_priest_a__cmd_mission_cooling_luggable_event_start_04"
 		},
 		sound_events_duration = {
-			4.6495,
-			6.196,
-			5.659103,
-			6.534917
+			4.646521,
+			6.193021,
+			5.656125,
+			6.531938
 		},
 		randomize_indexes = {}
 	},
@@ -60,10 +60,10 @@ local mission_vo_lm_cooling_tech_priest_a = {
 			"loc_tech_priest_a__info_mission_cooling_coolant_control_04"
 		},
 		sound_events_duration = {
-			6.031792,
-			6.139832,
-			7.490686,
-			7.673229
+			6.028813,
+			6.136854,
+			7.487708,
+			7.67025
 		},
 		randomize_indexes = {}
 	},
@@ -77,10 +77,10 @@ local mission_vo_lm_cooling_tech_priest_a = {
 			"loc_tech_priest_a__info_mission_cooling_demolish_04"
 		},
 		sound_events_duration = {
-			6.763646,
-			6.958083,
-			5.357646,
-			9.085938
+			6.760667,
+			6.955104,
+			5.354667,
+			9.082958
 		},
 		randomize_indexes = {}
 	},
@@ -94,10 +94,10 @@ local mission_vo_lm_cooling_tech_priest_a = {
 			"loc_tech_priest_a__info_mission_cooling_follow_conveyor_04"
 		},
 		sound_events_duration = {
-			8.251708,
-			7.418875,
-			7.974479,
-			5.135208
+			8.248729,
+			7.415896,
+			7.9715,
+			5.132229
 		},
 		randomize_indexes = {}
 	},
@@ -111,10 +111,10 @@ local mission_vo_lm_cooling_tech_priest_a = {
 			"loc_tech_priest_a__info_mission_cooling_maintenance_04"
 		},
 		sound_events_duration = {
-			10.36206,
-			7.421729,
-			9.948168,
-			7.909271
+			10.35908,
+			7.41875,
+			9.945189,
+			7.906292
 		},
 		randomize_indexes = {}
 	},
@@ -128,10 +128,10 @@ local mission_vo_lm_cooling_tech_priest_a = {
 			"loc_tech_priest_a__info_mission_cooling_vents_04"
 		},
 		sound_events_duration = {
-			4.607542,
-			6.548229,
-			8.834958,
-			4.930875
+			4.604563,
+			6.54525,
+			8.83198,
+			4.927896
 		},
 		randomize_indexes = {}
 	},
@@ -145,10 +145,10 @@ local mission_vo_lm_cooling_tech_priest_a = {
 			"loc_tech_priest_a__cmd_load_coolant_04"
 		},
 		sound_events_duration = {
-			4.466125,
-			5.268521,
-			4.298771,
-			8.776083
+			4.463146,
+			5.265542,
+			4.295792,
+			8.773104
 		},
 		sound_event_weights = {
 			0.25,
@@ -168,10 +168,10 @@ local mission_vo_lm_cooling_tech_priest_a = {
 			"loc_tech_priest_a__cmd_stabilise_04"
 		},
 		sound_events_duration = {
-			5.691833,
-			5.79775,
-			7.0435,
-			7.9615
+			5.688854,
+			5.794771,
+			7.040521,
+			7.958521
 		},
 		sound_event_weights = {
 			0.25,
@@ -191,10 +191,10 @@ local mission_vo_lm_cooling_tech_priest_a = {
 			"loc_tech_priest_a__mission_cooling_elevator_conversation_one_line_two_04"
 		},
 		sound_events_duration = {
-			8.459416,
-			6.307958,
-			6.714811,
-			7.949937
+			8.456438,
+			6.304979,
+			6.711833,
+			7.946958
 		},
 		randomize_indexes = {}
 	},
@@ -208,10 +208,10 @@ local mission_vo_lm_cooling_tech_priest_a = {
 			"loc_tech_priest_a__mission_cooling_elevator_conversation_three_line_two_04"
 		},
 		sound_events_duration = {
-			7.606562,
-			13.37215,
-			7.4615,
-			5.923061
+			7.603583,
+			13.36917,
+			7.458521,
+			5.920083
 		},
 		randomize_indexes = {}
 	},
@@ -225,10 +225,10 @@ local mission_vo_lm_cooling_tech_priest_a = {
 			"loc_tech_priest_a__mission_cooling_elevator_conversation_two_line_two_04"
 		},
 		sound_events_duration = {
-			9.671271,
-			8.032896,
-			10.67427,
-			13.06908
+			9.668292,
+			8.029917,
+			10.67129,
+			13.0661
 		},
 		randomize_indexes = {}
 	},
@@ -242,10 +242,10 @@ local mission_vo_lm_cooling_tech_priest_a = {
 			"loc_tech_priest_a__mission_cooling_first_objective_04"
 		},
 		sound_events_duration = {
-			7.501562,
-			4.563396,
-			6.392708,
-			8.301062
+			7.498583,
+			4.560417,
+			6.389729,
+			8.298083
 		},
 		randomize_indexes = {}
 	},
@@ -259,10 +259,10 @@ local mission_vo_lm_cooling_tech_priest_a = {
 			"loc_tech_priest_a__mission_cooling_heat_response_04"
 		},
 		sound_events_duration = {
-			6.661125,
-			6.924832,
-			7.165999,
-			4.789667
+			6.658146,
+			6.921854,
+			7.163021,
+			4.786688
 		},
 		randomize_indexes = {}
 	},
@@ -277,11 +277,11 @@ local mission_vo_lm_cooling_tech_priest_a = {
 			"loc_tech_priest_a__door_release_05"
 		},
 		sound_events_duration = {
-			4.739667,
-			5.142479,
-			4.958937,
-			6.919312,
-			6.937917
+			4.736688,
+			5.1395,
+			4.955958,
+			6.916333,
+			6.934938
 		},
 		sound_event_weights = {
 			0.2,
@@ -303,11 +303,11 @@ local mission_vo_lm_cooling_tech_priest_a = {
 			"loc_tech_priest_a__info_event_almost_done_05"
 		},
 		sound_events_duration = {
-			3.067292,
-			3.542417,
-			4.3385,
-			3.809667,
-			4.380771
+			3.064313,
+			3.539438,
+			4.335521,
+			3.806688,
+			4.377792
 		},
 		sound_event_weights = {
 			0.2,

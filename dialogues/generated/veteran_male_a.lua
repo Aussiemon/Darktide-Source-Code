@@ -1670,6 +1670,2062 @@ return function ()
 		}
 	})
 	define_rule({
+		name = "bonding_conversation_heavy_injury_01_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_01_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_heavy_injury_01_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			},
+			{
+				"user_memory",
+				"last_seen_veteran_losing_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				60
+			},
+			{
+				"user_memory",
+				"last_seen_veteran_losing_health",
+				OP.GT,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_heavy_injury_01_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_01_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_01_b",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_01_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_01_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"last_rapid_loosing_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				75
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_01_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_01_c",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_01_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_01_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_01_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_01_d",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_01_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_01_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_01_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_02_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_02_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_heavy_injury_02_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			},
+			{
+				"user_memory",
+				"last_seen_veteran_losing_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				60
+			},
+			{
+				"user_memory",
+				"last_seen_veteran_losing_health",
+				OP.GT,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_heavy_injury_02_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_02_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_02_b",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_02_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_02_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"last_rapid_loosing_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				75
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_02_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_02_c",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_02_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_02_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_02_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_02_d",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_02_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_02_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_02_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_03_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_03_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_heavy_injury_03_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			},
+			{
+				"user_memory",
+				"last_seen_veteran_losing_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				60
+			},
+			{
+				"user_memory",
+				"last_seen_veteran_losing_health",
+				OP.GT,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_heavy_injury_03_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_03_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_03_b",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_03_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_03_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"last_rapid_loosing_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				75
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_03_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_03_c",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_03_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_03_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_03_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_03_d",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_03_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_03_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_03_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_04_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_04_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_heavy_injury_04_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			},
+			{
+				"user_memory",
+				"last_seen_veteran_losing_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				60
+			},
+			{
+				"user_memory",
+				"last_seen_veteran_losing_health",
+				OP.GT,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_heavy_injury_04_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_04_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_04_b",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_04_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_04_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"last_rapid_loosing_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				75
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_04_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_04_c",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_04_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_04_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_04_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_04_d",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_04_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_04_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_04_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_09_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_09_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_male_b"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_heavy_injury_09_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			},
+			{
+				"user_memory",
+				"last_seen_veteran_losing_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				60
+			},
+			{
+				"user_memory",
+				"last_seen_veteran_losing_health",
+				OP.GT,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_heavy_injury_09_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_09_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_09_b",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_09_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_09_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_b"
+				}
+			},
+			{
+				"user_memory",
+				"last_rapid_loosing_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				75
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_09_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_09_c",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_09_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_09_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_09_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_09_d",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_09_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_09_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_b"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_09_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_10_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_10_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_male_b"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_heavy_injury_10_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			},
+			{
+				"user_memory",
+				"last_seen_veteran_losing_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				60
+			},
+			{
+				"user_memory",
+				"last_seen_veteran_losing_health",
+				OP.GT,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_heavy_injury_10_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_10_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_10_b",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_10_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_10_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_b"
+				}
+			},
+			{
+				"user_memory",
+				"last_rapid_loosing_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				75
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_10_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_10_c",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_10_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_10_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_10_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_10_d",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_10_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_10_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_b"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_10_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_11_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_11_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_male_b"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_heavy_injury_11_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			},
+			{
+				"user_memory",
+				"last_seen_veteran_losing_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				60
+			},
+			{
+				"user_memory",
+				"last_seen_veteran_losing_health",
+				OP.GT,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_heavy_injury_11_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_11_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_11_b",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_11_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_11_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_b"
+				}
+			},
+			{
+				"user_memory",
+				"last_rapid_loosing_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				75
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_11_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_11_c",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_11_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_11_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_11_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_11_d",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_11_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_11_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_b"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_11_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_12_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_12_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_male_b"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_heavy_injury_12_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			},
+			{
+				"user_memory",
+				"last_seen_veteran_losing_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				60
+			},
+			{
+				"user_memory",
+				"last_seen_veteran_losing_health",
+				OP.GT,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_heavy_injury_12_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_12_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_12_b",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_12_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_12_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_b"
+				}
+			},
+			{
+				"user_memory",
+				"last_rapid_loosing_health",
+				OP.TIMEDIFF,
+				OP.LT,
+				75
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_12_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_12_c",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_12_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_12_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_12_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_heavy_injury_12_d",
+		wwise_route = 0,
+		response = "bonding_conversation_heavy_injury_12_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_heavy_injury_12_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_b"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_heavy_injury_12_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
 		name = "bonding_conversation_killstreak_extension_vet_a_psy_b_c",
 		wwise_route = 0,
 		response = "bonding_conversation_killstreak_extension_vet_a_psy_b_c",
@@ -2578,6 +4634,4085 @@ return function ()
 			{
 				"user_memory",
 				"bonding_conversation_leman_russ_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_aiming_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_aiming_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"zealot_female_a"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_aiming_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			},
+			{
+				"faction_memory",
+				"last_armor_hit_tip",
+				OP.TIMEDIFF,
+				OP.LT,
+				30
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_aiming_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_aiming_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_aiming_b",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_aiming_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_aiming_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a"
+				}
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_aiming_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_aiming_c",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_aiming_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_aiming_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_aiming_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_aiming_d",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_aiming_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_aiming_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_aiming_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_another_day_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_another_day_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_female_b"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_another_day_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_another_day_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_another_day_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_another_day_b",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_another_day_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_another_day_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_b"
+				}
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_another_day_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_another_day_c",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_another_day_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_another_day_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_another_day_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_another_day_d",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_another_day_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_another_day_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_b"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_another_day_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_another_day_e",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_another_day_e",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_another_day_d"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_another_day_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_attitude_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_attitude_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_female_b"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_attitude_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_attitude_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_attitude_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_attitude_b",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_attitude_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_attitude_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_b"
+				}
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_attitude_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_attitude_c",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_attitude_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_attitude_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_attitude_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_attitude_d",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_attitude_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_attitude_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_b"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_attitude_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_bombs_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_bombs_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_bombs_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_bombs_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_bombs_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_bombs_b",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_bombs_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_bombs_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_bombs_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_bombs_c",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_bombs_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_bombs_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_bombs_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_bombs_d",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_bombs_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_bombs_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_bombs_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_challenges_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_challenges_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"zealot_female_a"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_challenges_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_challenges_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_challenges_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_challenges_b",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_challenges_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_challenges_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a"
+				}
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_challenges_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_challenges_c",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_challenges_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_challenges_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_challenges_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_challenges_d",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_challenges_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_challenges_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_challenges_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_challenges_e",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_challenges_e",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_challenges_d"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_challenges_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_challenges_f",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_challenges_f",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_challenges_e"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_challenges_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_comrades_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_comrades_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"zealot_female_a"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_comrades_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_comrades_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_comrades_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_comrades_b",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_comrades_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_comrades_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a"
+				}
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_comrades_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_comrades_c",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_comrades_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_comrades_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_comrades_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_comrades_d",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_comrades_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_comrades_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_comrades_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_destiny_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_destiny_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_female_b"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_destiny_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_destiny_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_destiny_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_destiny_b",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_destiny_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_destiny_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_b"
+				}
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_destiny_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_destiny_c",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_destiny_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_destiny_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_destiny_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_destiny_d",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_destiny_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_destiny_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_b"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_destiny_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_energy_vetm_a",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_energy_vetm_a",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_zealot_female_a__combat_pause_one_liner_01",
+					"loc_zealot_female_a__combat_pause_one_liner_03",
+					"loc_zealot_female_a__combat_pause_one_liner_04",
+					"loc_zealot_female_a__combat_pause_one_liner_09"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_energy_vetm_a",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_energy_vetm_a",
+				OP.ADD,
+				1
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_energy_vetm_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_energy_vetm_b",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_energy_vetm_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_energy_vetm_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a"
+				}
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_energy_vetm_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_energy_vetm_c",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_energy_vetm_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_energy_vetm_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_energy_vetm_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_energy_vetm_d",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_energy_vetm_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_energy_vetm_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_energy_vetm_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_energy_vetm_e",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_energy_vetm_e",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_energy_vetm_d"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_energy_vetm_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_energy_vetm_f",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_energy_vetm_f",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_energy_vetm_e"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_energy_vetm_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_faith_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_faith_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"zealot_female_a"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_faith_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_faith_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_faith_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_faith_b",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_faith_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_faith_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a"
+				}
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_faith_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_faith_c",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_faith_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_faith_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_faith_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_faith_d",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_faith_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_faith_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_faith_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_faith_e",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_faith_e",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_faith_d"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_faith_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_friendly_fire_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_friendly_fire_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_female_b"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_friendly_fire_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_friendly_fire_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_friendly_fire_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_friendly_fire_b",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_friendly_fire_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_friendly_fire_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_b"
+				}
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_friendly_fire_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_friendly_fire_c",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_friendly_fire_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_friendly_fire_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_friendly_fire_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_friendly_fire_d",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_friendly_fire_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_friendly_fire_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_b"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_friendly_fire_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_grenades_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_grenades_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_grenades_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			},
+			{
+				"user_memory",
+				"time_since_throw_item",
+				OP.TIMEDIFF,
+				OP.LT,
+				30
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_grenades_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_grenades_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_grenades_b",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_grenades_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_grenades_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_grenades_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_grenades_c",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_grenades_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_grenades_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_grenades_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_grenades_d",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_grenades_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_grenades_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_grenades_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_immortal_a",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_immortal_a",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"sound_event",
+				OP.SET_INCLUDES,
+				args = {
+					"loc_veteran_female_b__combat_pause_quirk_stealth_b_01",
+					"loc_veteran_female_b__combat_pause_quirk_accuracy_b_01",
+					"loc_veteran_female_b__combat_pause_quirk_discipline_b_01",
+					"loc_veteran_female_b__combat_pause_quirk_veteran_a_professional_b_02",
+					"loc_veteran_female_b__combat_pause_quirk_veteran_a_professional_b_01"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_immortal_a",
+				OP.EQ,
+				0
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_immortal_a",
+				OP.ADD,
+				1
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_immortal_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_immortal_b",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_immortal_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_immortal_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_b"
+				}
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_immortal_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_immortal_c",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_immortal_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_immortal_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_immortal_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_immortal_d",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_immortal_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_immortal_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_b"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_immortal_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_immortal_e",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_immortal_e",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_immortal_d"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_immortal_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_immortal_f",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_immortal_f",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_immortal_e"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_b"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_immortal_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_irony_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_irony_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_irony_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_irony_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_irony_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_irony_b",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_irony_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_irony_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_irony_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_irony_c",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_irony_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_irony_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_irony_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_irony_d",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_irony_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_irony_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_irony_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_optimism_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_optimism_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_female_b"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_optimism_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_optimism_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_optimism_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_optimism_b",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_optimism_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_optimism_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_b"
+				}
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_optimism_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_optimism_c",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_optimism_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_optimism_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_optimism_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_optimism_d",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_optimism_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_optimism_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_b"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_optimism_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_quarrel_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_quarrel_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"team_threat_level",
+				OP.SET_INCLUDES,
+				args = {
+					"low"
+				}
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_quarrel_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				220
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_quarrel_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_quarrel_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_quarrel_b",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_quarrel_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_quarrel_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_quarrel_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_quarrel_c",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_quarrel_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_quarrel_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_quarrel_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_quarrel_d",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_quarrel_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_quarrel_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_quarrel_b_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_rats_a",
+		category = "conversations_prio_1",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_rats_a",
+		database = "veteran_male_a",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_rats_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"bonding_conversation_metropolitan_rats_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_rats_a_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_rats_b",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_rats_b",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_rats_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			}
+		},
+		on_done = {
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_rats_b_user",
+				OP.ADD,
+				1
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_rats_c",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_rats_c",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_rats_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_male_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_rats_a_user",
+				OP.EQ,
+				1
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "bonding_conversation_metropolitan_rats_d",
+		wwise_route = 0,
+		response = "bonding_conversation_metropolitan_rats_d",
+		database = "veteran_male_a",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"bonding_conversation_metropolitan_rats_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"veteran_female_a"
+				}
+			},
+			{
+				"user_memory",
+				"bonding_conversation_metropolitan_rats_b_user",
 				OP.EQ,
 				1
 			}

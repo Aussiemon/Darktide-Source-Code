@@ -9,10 +9,10 @@ local mission_vo_dm_forge_tech_priest_a = {
 			"loc_tech_priest_a__mission_forge_assembly_line_04"
 		},
 		sound_events_duration = {
-			7.111896,
-			7.202917,
-			6.221812,
-			8.030083
+			7.108917,
+			7.199938,
+			6.218833,
+			8.027104
 		},
 		randomize_indexes = {}
 	},
@@ -26,10 +26,10 @@ local mission_vo_dm_forge_tech_priest_a = {
 			"loc_tech_priest_a__mission_forge_call_elevator_04"
 		},
 		sound_events_duration = {
-			5.974792,
-			5.254729,
-			6.921812,
-			7.646667
+			5.971813,
+			5.25175,
+			6.918833,
+			7.643688
 		},
 		randomize_indexes = {}
 	},
@@ -43,10 +43,10 @@ local mission_vo_dm_forge_tech_priest_a = {
 			"loc_tech_priest_a__mission_forge_elevator_conversation_one_b_04"
 		},
 		sound_events_duration = {
-			8.572542,
-			8.237291,
-			8.963854,
-			9.790147
+			8.569563,
+			8.234313,
+			8.960875,
+			9.787168
 		},
 		randomize_indexes = {}
 	},
@@ -60,10 +60,10 @@ local mission_vo_dm_forge_tech_priest_a = {
 			"loc_tech_priest_a__mission_forge_elevator_conversation_three_b_04"
 		},
 		sound_events_duration = {
-			9.447167,
-			5.570208,
-			7.653832,
-			12.82871
+			9.444188,
+			5.567229,
+			7.650854,
+			12.82573
 		},
 		randomize_indexes = {}
 	},
@@ -77,10 +77,10 @@ local mission_vo_dm_forge_tech_priest_a = {
 			"loc_tech_priest_a__mission_forge_elevator_conversation_two_b_04"
 		},
 		sound_events_duration = {
-			9.583293,
-			7.773146,
-			8.226666,
-			10.09865
+			9.580314,
+			7.770167,
+			8.223688,
+			10.09567
 		},
 		randomize_indexes = {}
 	},
@@ -94,10 +94,10 @@ local mission_vo_dm_forge_tech_priest_a = {
 			"loc_tech_priest_a__mission_forge_first_objective_04"
 		},
 		sound_events_duration = {
-			6.603979,
-			7.341062,
-			8.438624,
-			8.022812
+			6.601,
+			7.338083,
+			8.435646,
+			8.019833
 		},
 		randomize_indexes = {}
 	},
@@ -113,12 +113,12 @@ local mission_vo_dm_forge_tech_priest_a = {
 			"loc_tech_priest_a__mission_strain_job_done_01"
 		},
 		sound_events_duration = {
-			6.645479,
-			5.807562,
-			4.660062,
-			8.171291,
-			8.016292,
-			5.730395
+			6.6425,
+			5.804583,
+			4.657083,
+			8.168313,
+			8.013313,
+			5.727417
 		},
 		sound_event_weights = {
 			0.1666667,
@@ -140,10 +140,10 @@ local mission_vo_dm_forge_tech_priest_a = {
 			"loc_tech_priest_a__mission_forge_labour_oversight_04"
 		},
 		sound_events_duration = {
-			5.750542,
-			7.290936,
-			5.325417,
-			6.505896
+			5.747563,
+			7.287958,
+			5.322438,
+			6.502917
 		},
 		randomize_indexes = {}
 	},
@@ -157,10 +157,10 @@ local mission_vo_dm_forge_tech_priest_a = {
 			"loc_tech_priest_a__mission_forge_purge_infestation_04"
 		},
 		sound_events_duration = {
-			5.132646,
-			4.465854,
-			5.083937,
-			5.624875
+			5.129667,
+			4.462875,
+			5.080958,
+			5.621896
 		},
 		randomize_indexes = {}
 	},
@@ -174,10 +174,10 @@ local mission_vo_dm_forge_tech_priest_a = {
 			"loc_tech_priest_a__mission_forge_smelter_04"
 		},
 		sound_events_duration = {
-			5.176374,
-			4.900854,
-			3.823312,
-			4.990458
+			5.173396,
+			4.897875,
+			3.820333,
+			4.987479
 		},
 		randomize_indexes = {}
 	},
@@ -191,10 +191,10 @@ local mission_vo_dm_forge_tech_priest_a = {
 			"loc_tech_priest_a__mission_forge_smelter_working_04"
 		},
 		sound_events_duration = {
-			4.294417,
-			5.233083,
-			6.362937,
-			6.390187
+			4.291438,
+			5.230104,
+			6.359958,
+			6.387208
 		},
 		randomize_indexes = {}
 	},
@@ -208,10 +208,10 @@ local mission_vo_dm_forge_tech_priest_a = {
 			"loc_tech_priest_a__mission_forge_start_banter_b_04"
 		},
 		sound_events_duration = {
-			6.5475,
-			5.783417,
-			7.279333,
-			6.659396
+			6.544521,
+			5.780438,
+			7.276354,
+			6.656417
 		},
 		randomize_indexes = {}
 	},
@@ -225,10 +225,10 @@ local mission_vo_dm_forge_tech_priest_a = {
 			"loc_tech_priest_a__mission_forge_superstructure_04"
 		},
 		sound_events_duration = {
-			5.82725,
-			4.777082,
-			6.374187,
-			4.761187
+			5.824271,
+			4.774104,
+			6.371208,
+			4.758208
 		},
 		randomize_indexes = {}
 	},
@@ -241,9 +241,9 @@ local mission_vo_dm_forge_tech_priest_a = {
 			"loc_tech_priest_a__event_demolition_first_corruptor_destroyed_b_04"
 		},
 		sound_events_duration = {
-			4.732062,
-			4.561771,
-			4.749542
+			4.729083,
+			4.558792,
+			4.746563
 		},
 		sound_event_weights = {
 			0.3333333,
@@ -262,10 +262,10 @@ local mission_vo_dm_forge_tech_priest_a = {
 			"loc_tech_priest_a__mission_forge_purge_infestation_04"
 		},
 		sound_events_duration = {
-			5.132646,
-			4.465854,
-			5.083937,
-			5.624875
+			5.129667,
+			4.462875,
+			5.080958,
+			5.621896
 		},
 		sound_event_weights = {
 			0.25,
@@ -285,10 +285,10 @@ local mission_vo_dm_forge_tech_priest_a = {
 			"loc_tech_priest_a__mission_forge_use_elevator_04"
 		},
 		sound_events_duration = {
-			6.380125,
-			6.903687,
-			7.181958,
-			7.294792
+			6.377146,
+			6.900708,
+			7.178979,
+			7.291813
 		},
 		randomize_indexes = {}
 	}

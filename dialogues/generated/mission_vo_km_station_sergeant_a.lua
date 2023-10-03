@@ -14,6 +14,12 @@ local mission_vo_km_station_sergeant_a = {
 			5.745,
 			5.534833
 		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
 		randomize_indexes = {}
 	},
 	info_mission_station_second_objective = {

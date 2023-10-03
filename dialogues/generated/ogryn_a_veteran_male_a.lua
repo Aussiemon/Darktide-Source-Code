@@ -138,8 +138,8 @@ local ogryn_a_veteran_male_a = {
 			[2.0] = "loc_veteran_male_a__combat_pause_quirk_ogryn_a_elevator_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.283146,
-			[2.0] = 4.192292
+			[1.0] = 2.770167,
+			[2.0] = 2.679313
 		},
 		randomize_indexes = {}
 	},

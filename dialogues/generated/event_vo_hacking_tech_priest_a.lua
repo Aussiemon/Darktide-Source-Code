@@ -15,16 +15,16 @@ local event_vo_hacking_tech_priest_a = {
 			"loc_tech_priest_a__cmd_hacking_decode_resuming_10"
 		},
 		sound_events_duration = {
-			6.255979,
-			8.153957,
-			5.221958,
-			4.835979,
-			7.634542,
-			5.757957,
-			5.706958,
-			4.997979,
-			6.568979,
-			4.167646
+			6.253,
+			8.150979,
+			5.218979,
+			4.833,
+			7.631563,
+			5.754979,
+			5.703979,
+			4.995,
+			6.566,
+			4.164667
 		},
 		randomize_indexes = {}
 	},
@@ -38,10 +38,10 @@ local event_vo_hacking_tech_priest_a = {
 			"loc_tech_priest_a__cmd_hacking_find_another_04"
 		},
 		sound_events_duration = {
-			5.604812,
-			5.504042,
-			6.601791,
-			6.401999
+			5.601833,
+			5.501063,
+			6.598813,
+			6.399021
 		},
 		randomize_indexes = {}
 	},
@@ -61,16 +61,16 @@ local event_vo_hacking_tech_priest_a = {
 			"loc_tech_priest_a__cmd_hacking_fix_decode_10"
 		},
 		sound_events_duration = {
-			8.004021,
-			6.267729,
-			6.232875,
-			4.5785,
-			6.615354,
-			5.743479,
-			5.368312,
-			5.859521,
-			4.623542,
-			6.064958
+			8.001042,
+			6.26475,
+			6.229896,
+			4.575521,
+			6.612375,
+			5.7405,
+			5.365334,
+			5.856542,
+			4.620563,
+			6.061979
 		},
 		randomize_indexes = {}
 	},
@@ -85,11 +85,11 @@ local event_vo_hacking_tech_priest_a = {
 			"loc_tech_priest_a__cmd_hacking_fix_decode_response_15"
 		},
 		sound_events_duration = {
-			4.722542,
-			5.707417,
-			4.802958,
-			5.660396,
-			5.573999
+			4.719563,
+			5.704438,
+			4.799979,
+			5.657417,
+			5.571021
 		},
 		randomize_indexes = {}
 	},
@@ -103,10 +103,10 @@ local event_vo_hacking_tech_priest_a = {
 			"loc_tech_priest_a__cmd_hacking_place_device_04"
 		},
 		sound_events_duration = {
-			4.822542,
-			5.188667,
-			3.706167,
-			4.802521
+			4.819563,
+			5.185688,
+			3.703188,
+			4.799542
 		},
 		randomize_indexes = {}
 	},
@@ -120,10 +120,10 @@ local event_vo_hacking_tech_priest_a = {
 			"loc_tech_priest_a__info_hacking_decoding_in_progress_04"
 		},
 		sound_events_duration = {
-			4.1065,
-			3.497521,
-			4.093792,
-			4.942687
+			4.103521,
+			3.494542,
+			4.090813,
+			4.939708
 		},
 		randomize_indexes = {}
 	},
@@ -161,11 +161,11 @@ local event_vo_hacking_tech_priest_a = {
 			"loc_tech_priest_a__info_hacking_mission_almost_done_04"
 		},
 		sound_events_duration = {
-			3.067292,
-			3.542417,
-			4.380771,
-			3.690917,
-			4.136792
+			3.064313,
+			3.539438,
+			4.377792,
+			3.687938,
+			4.133813
 		},
 		sound_event_weights = {
 			0.2,
@@ -186,10 +186,10 @@ local event_vo_hacking_tech_priest_a = {
 			"loc_tech_priest_a__info_hacking_mission_complete_04"
 		},
 		sound_events_duration = {
-			3.6225,
-			3.477958,
-			3.938667,
-			6.251437
+			3.619521,
+			3.474979,
+			3.935688,
+			6.248458
 		},
 		randomize_indexes = {}
 	},
@@ -203,10 +203,10 @@ local event_vo_hacking_tech_priest_a = {
 			"loc_tech_priest_a__vox_introduction_tech_priest_04"
 		},
 		sound_events_duration = {
-			3.640979,
-			1.934979,
-			2.363979,
-			3.045979
+			3.638,
+			1.932,
+			2.361,
+			3.043
 		},
 		sound_event_weights = {
 			0.25,

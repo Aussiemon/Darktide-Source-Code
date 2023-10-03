@@ -655,6 +655,28 @@ local conversations_core_zealot_female_c = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_berserker_ext_01_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__enemy_kill_berserker_ext_01_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.333844
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_berserker_ext_05_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_female_c__enemy_kill_berserker_ext_05_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.455813
+		},
+		randomize_indexes = {}
+	},
 	graffiti_response = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

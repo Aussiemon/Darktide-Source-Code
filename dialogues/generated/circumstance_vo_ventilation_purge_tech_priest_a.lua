@@ -9,10 +9,10 @@ local circumstance_vo_ventilation_purge_tech_priest_a = {
 			"loc_tech_priest_a__vent_circumstance_start_a_04"
 		},
 		sound_events_duration = {
-			10.13946,
-			7.937812,
-			10.14238,
-			8.824271
+			10.13648,
+			7.934833,
+			10.1394,
+			8.821293
 		},
 		randomize_indexes = {}
 	},

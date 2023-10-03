@@ -1,27 +1,4 @@
 local enemy_vo_enemy_traitor_guard_smg_rusher_a = {
-	ranged_idle_player_low_on_health = {
-		randomize_indexes_n = 0,
-		sound_events_n = 4,
-		sound_events = {
-			"loc_enemy_traitor_guard_smg_rusher_a__ranged_idle_player_low_on_health_01",
-			"loc_enemy_traitor_guard_smg_rusher_a__ranged_idle_player_low_on_health_02",
-			"loc_enemy_traitor_guard_smg_rusher_a__ranged_idle_player_low_on_health_03",
-			"loc_enemy_traitor_guard_smg_rusher_a__ranged_idle_player_low_on_health_04"
-		},
-		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
-		randomize_indexes = {}
-	},
 	ranged_idle_player_out_of_ammo = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,

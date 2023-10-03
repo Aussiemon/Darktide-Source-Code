@@ -93,9 +93,9 @@ local mission_giver_vo_purser_a = {
 			"loc_purser_a__mission_resurgence_brief_a_03"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678
+			6.873313,
+			6.798208,
+			6.848083
 		},
 		randomize_indexes = {}
 	},
@@ -108,9 +108,9 @@ local mission_giver_vo_purser_a = {
 			"loc_purser_a__mission_resurgence_brief_b_03"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678
+			7.850813,
+			7.759083,
+			6.521854
 		},
 		randomize_indexes = {}
 	},
@@ -123,9 +123,9 @@ local mission_giver_vo_purser_a = {
 			"loc_purser_a__mission_resurgence_brief_c_03"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678
+			4.450813,
+			7.018271,
+			6.936396
 		},
 		randomize_indexes = {}
 	},
@@ -139,10 +139,10 @@ local mission_giver_vo_purser_a = {
 			"loc_purser_a__mission_rise_briefing_b_04"
 		},
 		sound_events_duration = {
-			6.149188,
-			6.332063,
-			4.760917,
-			4.968979
+			5.731604,
+			5.914469,
+			4.343333,
+			4.551385
 		},
 		randomize_indexes = {}
 	},
@@ -156,10 +156,10 @@ local mission_giver_vo_purser_a = {
 			"loc_purser_a__mission_rise_briefing_a_04"
 		},
 		sound_events_duration = {
-			5.981063,
-			6.080854,
-			5.550083,
-			5.136521
+			5.563469,
+			5.663271,
+			5.13249,
+			4.718927
 		},
 		randomize_indexes = {}
 	},
@@ -173,10 +173,10 @@ local mission_giver_vo_purser_a = {
 			"loc_purser_a__mission_rise_briefing_c_04"
 		},
 		sound_events_duration = {
-			5.381521,
-			5.615979,
-			4.610438,
-			5.617104
+			4.963938,
+			5.198396,
+			4.192844,
+			5.199521
 		},
 		randomize_indexes = {}
 	},
@@ -190,10 +190,10 @@ local mission_giver_vo_purser_a = {
 			"loc_purser_a__mission_rise_briefing_d_04"
 		},
 		sound_events_duration = {
-			7.068188,
-			7.360125,
-			6.115083,
-			7.021104
+			6.650604,
+			6.942531,
+			5.69749,
+			6.60351
 		},
 		randomize_indexes = {}
 	}

@@ -155,6 +155,61 @@ local psyker_b_psyker_female_a = {
 			[2.0] = 4.4485
 		},
 		randomize_indexes = {}
+	},
+	psyker_gang_metropolitan_beloved_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_a__psyker_gang_metropolitan_beloved_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.920063
+		},
+		randomize_indexes = {}
+	},
+	psyker_gang_metropolitan_beloved_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_a__psyker_gang_metropolitan_beloved_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 0.854125
+		},
+		randomize_indexes = {}
+	},
+	psyker_gang_metropolitan_macro_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_a__psyker_gang_metropolitan_macro_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.821604
+		},
+		randomize_indexes = {}
+	},
+	psyker_gang_metropolitan_macro_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_a__psyker_gang_metropolitan_macro_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.913146
+		},
+		randomize_indexes = {}
+	},
+	psyker_gang_metropolitan_small_brain_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_a__psyker_gang_metropolitan_small_brain_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 6.782729
+		},
+		randomize_indexes = {}
 	}
 }
 

@@ -14,6 +14,12 @@ local mission_vo_km_station_explicator_a = {
 			5.662438,
 			7.353521
 		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
 		randomize_indexes = {}
 	},
 	info_mission_station_second_objective = {

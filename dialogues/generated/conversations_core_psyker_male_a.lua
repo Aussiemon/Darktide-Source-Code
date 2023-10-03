@@ -647,6 +647,72 @@ local conversations_core_psyker_male_a = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_berserker_ext_01_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_a__enemy_kill_berserker_ext_01_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.223604
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_berserker_ext_02_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_a__enemy_kill_berserker_ext_02_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.79175
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_berserker_ext_05_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_a__enemy_kill_berserker_ext_05_e_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.221646
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_poxwalker_bomber_ext_02_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_a__enemy_kill_poxwalker_bomber_ext_02_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.015146
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_poxwalker_bomber_ext_02_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_a__enemy_kill_poxwalker_bomber_ext_02_e_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.651313
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_poxwalker_bomber_ext_04_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_a__enemy_kill_poxwalker_bomber_ext_04_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 6.866521
+		},
+		randomize_indexes = {}
+	},
 	graffiti_response = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

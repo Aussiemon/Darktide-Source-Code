@@ -195,6 +195,7 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
+					"ogryn_d",
 					"psyker_female_b",
 					"psyker_male_b",
 					"psyker_female_c",
@@ -273,6 +274,7 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
+					"ogryn_d",
 					"zealot_female_b",
 					"zealot_male_b",
 					"psyker_female_b",
@@ -630,6 +632,7 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
+					"ogryn_d",
 					"psyker_female_b",
 					"psyker_male_b",
 					"psyker_female_c",
@@ -708,6 +711,7 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
+					"ogryn_d",
 					"psyker_female_b",
 					"psyker_male_b",
 					"psyker_female_c",
@@ -1071,6 +1075,7 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
+					"ogryn_d",
 					"ogryn_a",
 					"psyker_female_a",
 					"psyker_male_a"
@@ -1146,6 +1151,7 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
+					"ogryn_d",
 					"ogryn_a",
 					"psyker_female_a",
 					"psyker_male_a"
@@ -1495,6 +1501,7 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
+					"ogryn_d",
 					"psyker_female_b",
 					"psyker_male_b",
 					"psyker_female_c",
@@ -1573,6 +1580,7 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
+					"ogryn_d",
 					"psyker_female_b",
 					"psyker_male_b",
 					"psyker_female_c",
@@ -2063,6 +2071,7 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -2141,6 +2150,7 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -2784,6 +2794,7 @@ return function ()
 				"player_voice_profiles",
 				OP.SET_INTERSECTS,
 				args = {
+					"ogryn_d",
 					"ogryn_a",
 					"psyker_female_b",
 					"psyker_male_b",
@@ -2861,6 +2872,7 @@ return function ()
 				"voice_template",
 				OP.SET_INCLUDES,
 				args = {
+					"ogryn_d",
 					"ogryn_a",
 					"psyker_female_b",
 					"psyker_male_b",
@@ -2930,6 +2942,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -3086,6 +3099,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -3233,6 +3247,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -3383,6 +3398,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -3533,6 +3549,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -3680,6 +3697,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -3827,6 +3845,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -3977,6 +3996,7 @@ return function ()
 					"ogryn_a",
 					"ogryn_b",
 					"ogryn_c",
+					"ogryn_d",
 					"psyker_female_a",
 					"psyker_male_a",
 					"psyker_female_b",
@@ -4131,6 +4151,768 @@ return function ()
 		},
 		heard_speak_routing = {
 			target = "disabled"
+		}
+	})
+	define_rule({
+		name = "zealot_gang_metropolitan_harbour_doubts_a",
+		wwise_route = 0,
+		response = "zealot_gang_metropolitan_harbour_doubts_a",
+		database = "zealot_b",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_b",
+					"zealot_male_b"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"zealot_female_a",
+					"zealot_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"zealot_female_c",
+					"zealot_male_c"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_NOT_INTERSECTS,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"ogryn_d",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c"
+				}
+			},
+			{
+				"faction_memory",
+				"zealot_gang_metropolitan_harbour_doubts_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"zealot_gang_metropolitan_harbour_doubts_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
+			}
+		}
+	})
+	define_rule({
+		name = "zealot_gang_metropolitan_harbour_doubts_b",
+		wwise_route = 0,
+		response = "zealot_gang_metropolitan_harbour_doubts_b",
+		database = "zealot_b",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_gang_metropolitan_harbour_doubts_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a",
+					"zealot_male_a"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "zealot_gang_metropolitan_harbour_doubts_c",
+		wwise_route = 0,
+		response = "zealot_gang_metropolitan_harbour_doubts_c",
+		database = "zealot_b",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_gang_metropolitan_harbour_doubts_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_c",
+					"zealot_male_c"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "zealot_gang_metropolitan_harbour_doubts_d",
+		wwise_route = 0,
+		response = "zealot_gang_metropolitan_harbour_doubts_d",
+		database = "zealot_b",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_gang_metropolitan_harbour_doubts_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a",
+					"zealot_male_a"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "zealot_gang_metropolitan_overmatch_a",
+		wwise_route = 0,
+		response = "zealot_gang_metropolitan_overmatch_a",
+		database = "zealot_b",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_b",
+					"zealot_male_b"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"zealot_female_a",
+					"zealot_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"zealot_female_c",
+					"zealot_male_c"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_NOT_INTERSECTS,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"ogryn_d",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c"
+				}
+			},
+			{
+				"faction_memory",
+				"zealot_gang_metropolitan_overmatch_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"zealot_gang_metropolitan_overmatch_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
+			}
+		}
+	})
+	define_rule({
+		name = "zealot_gang_metropolitan_overmatch_b",
+		wwise_route = 0,
+		response = "zealot_gang_metropolitan_overmatch_b",
+		database = "zealot_b",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_gang_metropolitan_overmatch_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a",
+					"zealot_male_a"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "zealot_gang_metropolitan_overmatch_c",
+		wwise_route = 0,
+		response = "zealot_gang_metropolitan_overmatch_c",
+		database = "zealot_b",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_gang_metropolitan_overmatch_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_c",
+					"zealot_male_c"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "zealot_gang_metropolitan_overmatch_d",
+		wwise_route = 0,
+		response = "zealot_gang_metropolitan_overmatch_d",
+		database = "zealot_b",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_gang_metropolitan_overmatch_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a",
+					"zealot_male_a"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "zealot_gang_metropolitan_unalloyed_a",
+		wwise_route = 0,
+		response = "zealot_gang_metropolitan_unalloyed_a",
+		database = "zealot_b",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"short_story_talk"
+			},
+			{
+				"user_context",
+				"friends_close",
+				OP.GT,
+				0
+			},
+			{
+				"user_context",
+				"enemies_close",
+				OP.LT,
+				1
+			},
+			{
+				"global_context",
+				"level_time",
+				OP.GT,
+				90
+			},
+			{
+				"global_context",
+				"is_decaying_tension",
+				OP.EQ,
+				"true"
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_b",
+					"zealot_male_b"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"zealot_female_a",
+					"zealot_male_a"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_INTERSECTS,
+				args = {
+					"zealot_female_c",
+					"zealot_male_c"
+				}
+			},
+			{
+				"global_context",
+				"player_voice_profiles",
+				OP.SET_NOT_INTERSECTS,
+				args = {
+					"ogryn_a",
+					"ogryn_b",
+					"ogryn_c",
+					"ogryn_d",
+					"veteran_female_a",
+					"veteran_female_b",
+					"veteran_female_c",
+					"veteran_male_a",
+					"veteran_male_b",
+					"veteran_male_c",
+					"psyker_female_a",
+					"psyker_female_b",
+					"psyker_female_c",
+					"psyker_male_a",
+					"psyker_male_b",
+					"psyker_male_c"
+				}
+			},
+			{
+				"faction_memory",
+				"zealot_gang_metropolitan_unalloyed_a",
+				OP.EQ,
+				0
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				140
+			},
+			{
+				"faction_memory",
+				"time_since_last_conversation",
+				OP.TIMEDIFF,
+				OP.GT,
+				20
+			}
+		},
+		on_done = {
+			{
+				"faction_memory",
+				"zealot_gang_metropolitan_unalloyed_a",
+				OP.ADD,
+				1
+			},
+			{
+				"faction_memory",
+				"time_since_last_short_conversation",
+				OP.TIMESET,
+				"0"
+			}
+		},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 1
+			}
+		}
+	})
+	define_rule({
+		name = "zealot_gang_metropolitan_unalloyed_b",
+		wwise_route = 0,
+		response = "zealot_gang_metropolitan_unalloyed_b",
+		database = "zealot_b",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_gang_metropolitan_unalloyed_a"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a",
+					"zealot_male_a"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "zealot_gang_metropolitan_unalloyed_c",
+		wwise_route = 0,
+		response = "zealot_gang_metropolitan_unalloyed_c",
+		database = "zealot_b",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_gang_metropolitan_unalloyed_b"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_c",
+					"zealot_male_c"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
+		}
+	})
+	define_rule({
+		name = "zealot_gang_metropolitan_unalloyed_d",
+		wwise_route = 0,
+		response = "zealot_gang_metropolitan_unalloyed_d",
+		database = "zealot_b",
+		category = "conversations_prio_1",
+		criterias = {
+			{
+				"query_context",
+				"concept",
+				OP.EQ,
+				"heard_speak"
+			},
+			{
+				"query_context",
+				"dialogue_name",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_gang_metropolitan_unalloyed_c"
+				}
+			},
+			{
+				"user_context",
+				"voice_template",
+				OP.SET_INCLUDES,
+				args = {
+					"zealot_female_a",
+					"zealot_male_a"
+				}
+			}
+		},
+		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
+		on_pre_rule_execution = {
+			delay_vo = {
+				duration = 0.2
+			}
 		}
 	})
 end

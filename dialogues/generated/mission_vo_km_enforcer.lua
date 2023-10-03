@@ -195,7 +195,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_givers"
 		}
 	})
 	define_rule({
@@ -277,7 +277,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_givers"
 		}
 	})
 	define_rule({
@@ -402,7 +402,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_givers"
 		}
 	})
 	define_rule({
@@ -435,38 +435,6 @@ return function ()
 				OP.SET_INCLUDES,
 				args = {
 					"explicator"
-				}
-			}
-		},
-		on_done = {},
-		heard_speak_routing = {
-			target = "players"
-		},
-		on_pre_rule_execution = {
-			delay_vo = {
-				duration = 0.2
-			}
-		}
-	})
-	define_rule({
-		name = "mission_enforcer_end_event_conversation_two_c",
-		wwise_route = 0,
-		response = "mission_enforcer_end_event_conversation_two_c",
-		database = "mission_vo_km_enforcer",
-		category = "conversations_prio_0",
-		criterias = {
-			{
-				"query_context",
-				"concept",
-				OP.EQ,
-				"heard_speak"
-			},
-			{
-				"query_context",
-				"dialogue_name",
-				OP.SET_INCLUDES,
-				args = {
-					"mission_enforcer_end_event_conversation_two_b"
 				}
 			}
 		},
@@ -947,7 +915,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -1084,7 +1052,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {

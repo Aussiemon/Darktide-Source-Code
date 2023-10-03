@@ -14,6 +14,12 @@ local mission_vo_km_station_pilot_a = {
 			4.813313,
 			5.104583
 		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
 		randomize_indexes = {}
 	},
 	info_mission_station_second_objective = {

@@ -1894,12 +1894,17 @@ return function ()
 			{
 				"query_context",
 				"dialogue_name",
-				OP.EQ,
-				"response_for_critical_health"
+				OP.SET_INCLUDES,
+				args = {
+					"response_for_ogryn_critical_health",
+					"response_for_psyker_critical_health",
+					"response_for_veteran_critical_health",
+					"response_for_zealot_critical_health"
+				}
 			},
 			{
 				"user_memory",
-				"last_replied_critical_health",
+				"ranged_idle_player_low_on_health",
 				OP.TIMEDIFF,
 				OP.GT,
 				30
@@ -1908,9 +1913,12 @@ return function ()
 		on_done = {
 			{
 				"user_memory",
-				"last_replied_critical_health",
+				"ranged_idle_player_low_on_health",
 				OP.TIMESET
 			}
+		},
+		heard_speak_routing = {
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -3598,7 +3606,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -3659,7 +3667,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "disabled"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -3696,7 +3704,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "disabled"
 		}
 	})
 	define_rule({

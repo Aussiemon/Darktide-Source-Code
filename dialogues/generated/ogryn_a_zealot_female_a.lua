@@ -127,8 +127,8 @@ local ogryn_a_zealot_female_a = {
 			[2.0] = "loc_zealot_female_a__combat_pause_quirk_ogryn_a_elevator_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 4.594479,
-			[2.0] = 3.620917
+			[1.0] = 3.0815,
+			[2.0] = 2.107938
 		},
 		randomize_indexes = {}
 	},

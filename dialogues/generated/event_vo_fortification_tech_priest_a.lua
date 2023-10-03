@@ -9,10 +9,10 @@ local event_vo_fortification_tech_priest_a = {
 			"loc_tech_priest_a__event_fortification_disable_the_skyfire_04"
 		},
 		sound_events_duration = {
-			5.244708,
-			4.963,
-			4.912062,
-			5.687042
+			5.241729,
+			4.960021,
+			4.909083,
+			5.684063
 		},
 		randomize_indexes = {}
 	},
@@ -26,10 +26,10 @@ local event_vo_fortification_tech_priest_a = {
 			"loc_tech_priest_a__event_fortification_fortification_survive_04"
 		},
 		sound_events_duration = {
-			6.471478,
-			7.594437,
-			8.211249,
-			6.212271
+			6.4685,
+			7.591458,
+			8.208271,
+			6.209292
 		},
 		randomize_indexes = {}
 	},
@@ -41,8 +41,8 @@ local event_vo_fortification_tech_priest_a = {
 			[2.0] = "loc_tech_priest_a__info_event_demolition_corruptors_almost_done_04"
 		},
 		sound_events_duration = {
-			[1.0] = 5.930875,
-			[2.0] = 4.937187
+			[1.0] = 5.927896,
+			[2.0] = 4.934208
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -60,10 +60,10 @@ local event_vo_fortification_tech_priest_a = {
 			"loc_tech_priest_a__event_fortification_power_up_gate_04"
 		},
 		sound_events_duration = {
-			4.991187,
-			5.504333,
-			6.302229,
-			5.722458
+			4.988208,
+			5.501354,
+			6.29925,
+			5.719479
 		},
 		randomize_indexes = {}
 	},
@@ -77,10 +77,10 @@ local event_vo_fortification_tech_priest_a = {
 			"loc_tech_priest_a__event_fortification_set_landing_beacon_04"
 		},
 		sound_events_duration = {
-			5.450375,
-			7.112833,
-			5.673812,
-			6.754666
+			5.447396,
+			7.109854,
+			5.670833,
+			6.751688
 		},
 		randomize_indexes = {}
 	}

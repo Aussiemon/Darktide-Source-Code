@@ -2409,11 +2409,11 @@ local gameplay_vo_veteran_male_b = {
 			"loc_veteran_male_b__plasma_vent_a_05"
 		},
 		sound_events_duration = {
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678,
-			3.45678
+			1.569667,
+			0.823438,
+			0.336729,
+			3.744313,
+			3.75475
 		},
 		randomize_indexes = {}
 	},

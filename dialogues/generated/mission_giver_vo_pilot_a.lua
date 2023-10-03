@@ -522,10 +522,10 @@ local mission_giver_vo_pilot_a = {
 			"loc_pilot_a__mission_archives_brief_a_04"
 		},
 		sound_events_duration = {
-			5.887271,
-			6.473042,
-			7.7935,
-			5.948854
+			6.087271,
+			6.673042,
+			7.9935,
+			6.148854
 		},
 		randomize_indexes = {}
 	},
@@ -539,10 +539,10 @@ local mission_giver_vo_pilot_a = {
 			"loc_pilot_a__mission_archives_brief_b_04"
 		},
 		sound_events_duration = {
-			6.537396,
-			5.953542,
-			5.412208,
-			6.942938
+			6.737396,
+			6.153542,
+			5.612208,
+			7.142938
 		},
 		randomize_indexes = {}
 	},
@@ -556,10 +556,10 @@ local mission_giver_vo_pilot_a = {
 			"loc_pilot_a__mission_archives_brief_c_04"
 		},
 		sound_events_duration = {
-			6.061188,
-			5.526896,
-			5.691229,
-			5.801438
+			6.261188,
+			5.726896,
+			5.891229,
+			6.001438
 		},
 		randomize_indexes = {}
 	},
@@ -624,10 +624,10 @@ local mission_giver_vo_pilot_a = {
 			"loc_pilot_a__mission_complex_brief_a_04"
 		},
 		sound_events_duration = {
-			6.501417,
-			6.252813,
-			6.923938,
-			7.263063
+			6.701417,
+			6.452813,
+			7.123938,
+			7.463063
 		},
 		randomize_indexes = {}
 	},
@@ -641,10 +641,10 @@ local mission_giver_vo_pilot_a = {
 			"loc_pilot_a__mission_complex_brief_b_04"
 		},
 		sound_events_duration = {
-			6.022542,
-			7.161,
-			7.041333,
-			6.984292
+			6.222542,
+			7.361,
+			7.241333,
+			7.184292
 		},
 		randomize_indexes = {}
 	},
@@ -658,10 +658,10 @@ local mission_giver_vo_pilot_a = {
 			"loc_pilot_a__mission_complex_brief_c_04"
 		},
 		sound_events_duration = {
-			5.779104,
-			5.623917,
-			6.070771,
-			5.906417
+			5.979104,
+			5.823917,
+			6.270771,
+			6.106417
 		},
 		randomize_indexes = {}
 	},
@@ -726,10 +726,10 @@ local mission_giver_vo_pilot_a = {
 			"loc_pilot_a__mission_resurgence_brief_a_04"
 		},
 		sound_events_duration = {
-			5.643854,
-			6.423792,
-			7.433125,
-			6.198083
+			5.468854,
+			6.248792,
+			7.258125,
+			6.023083
 		},
 		randomize_indexes = {}
 	},
@@ -743,10 +743,10 @@ local mission_giver_vo_pilot_a = {
 			"loc_pilot_a__mission_resurgence_brief_b_04"
 		},
 		sound_events_duration = {
-			5.818896,
-			6.649063,
-			6.008,
-			6.691979
+			5.643896,
+			6.474063,
+			5.833,
+			6.516979
 		},
 		randomize_indexes = {}
 	},
@@ -760,10 +760,10 @@ local mission_giver_vo_pilot_a = {
 			"loc_pilot_a__mission_resurgence_brief_c_04"
 		},
 		sound_events_duration = {
-			6.323104,
-			5.717458,
-			6.144958,
-			6.537042
+			6.148104,
+			5.542458,
+			5.969958,
+			6.362042
 		},
 		randomize_indexes = {}
 	},
@@ -869,12 +869,6 @@ local mission_giver_vo_pilot_a = {
 			8.478916,
 			7.036542
 		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
-		},
 		randomize_indexes = {}
 	},
 	mission_station_briefing_c = {
@@ -891,12 +885,6 @@ local mission_giver_vo_pilot_a = {
 			6.064146,
 			4.733854,
 			4.410354
-		},
-		sound_event_weights = {
-			0.25,
-			0.25,
-			0.25,
-			0.25
 		},
 		randomize_indexes = {}
 	},

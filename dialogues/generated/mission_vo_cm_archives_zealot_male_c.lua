@@ -102,7 +102,7 @@ local mission_vo_cm_archives_zealot_male_c = {
 		},
 		sound_events_duration = {
 			[1.0] = 5.026323,
-			[2.0] = 5.297344
+			[2.0] = 5.148698
 		},
 		randomize_indexes = {}
 	},

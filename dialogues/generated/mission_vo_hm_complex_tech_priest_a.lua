@@ -9,10 +9,10 @@ local mission_vo_hm_complex_tech_priest_a = {
 			"loc_tech_priest_a__access_elevator_04"
 		},
 		sound_events_duration = {
-			6.430708,
-			5.906125,
-			6.012833,
-			8.483645
+			6.427729,
+			5.903146,
+			6.009854,
+			8.480667
 		},
 		sound_event_weights = {
 			0.25,

@@ -10,11 +10,11 @@ local event_vo_scan_tech_priest_a = {
 			"loc_tech_priest_a__cmd_wandering_skull_05"
 		},
 		sound_events_duration = {
-			5.823978,
-			4.700125,
-			5.933208,
-			5.370062,
-			4.605417
+			5.821,
+			4.697146,
+			5.930229,
+			5.367084,
+			4.602438
 		},
 		sound_event_weights = {
 			0.2,
@@ -43,18 +43,18 @@ local event_vo_scan_tech_priest_a = {
 			"loc_tech_priest_a__event_scan_all_targets_scanned_12"
 		},
 		sound_events_duration = {
-			7.122582,
-			6.395854,
-			6.833667,
-			4.216021,
-			6.638937,
-			6.82752,
-			7.360291,
-			6.750875,
-			6.181333,
-			8.108396,
-			7.997603,
-			9.928542
+			7.119604,
+			6.392875,
+			6.830688,
+			4.213042,
+			6.635958,
+			6.824542,
+			7.357313,
+			6.747896,
+			6.178354,
+			8.105417,
+			7.994625,
+			9.925563
 		},
 		randomize_indexes = {}
 	},
@@ -68,10 +68,10 @@ local event_vo_scan_tech_priest_a = {
 			"loc_tech_priest_a__event_scan_find_targets_first_04"
 		},
 		sound_events_duration = {
-			7.905457,
-			8.947542,
-			7.924791,
-			11.3404
+			7.902479,
+			8.944563,
+			7.921813,
+			11.33742
 		},
 		randomize_indexes = {}
 	},
@@ -93,18 +93,18 @@ local event_vo_scan_tech_priest_a = {
 			"loc_tech_priest_a__event_scan_find_targets_more_12"
 		},
 		sound_events_duration = {
-			9.397417,
-			6.902917,
-			7.798417,
-			8.362291,
-			7.142687,
-			6.068042,
-			7.165936,
-			7.222625,
-			7.323771,
-			9.589667,
-			10.03954,
-			6.871604
+			9.394438,
+			6.899938,
+			7.795438,
+			8.359313,
+			7.139708,
+			6.065063,
+			7.162958,
+			7.219646,
+			7.320792,
+			9.586688,
+			10.03656,
+			6.868625
 		},
 		randomize_indexes = {}
 	},
@@ -124,16 +124,16 @@ local event_vo_scan_tech_priest_a = {
 			"loc_tech_priest_a__event_scan_more_data_10"
 		},
 		sound_events_duration = {
-			5.686458,
-			6.269667,
-			6.25452,
-			5.903853,
-			6.327667,
-			5.378333,
-			6.059312,
-			6.789417,
-			6.310311,
-			6.102917
+			5.683479,
+			6.266688,
+			6.251542,
+			5.900875,
+			6.324688,
+			5.375354,
+			6.056333,
+			6.786438,
+			6.307333,
+			6.099938
 		},
 		randomize_indexes = {}
 	},
@@ -147,10 +147,10 @@ local event_vo_scan_tech_priest_a = {
 			"loc_tech_priest_a__event_scan_skull_waiting_04"
 		},
 		sound_events_duration = {
-			4.457042,
-			6.191687,
-			5.456229,
-			4.913187
+			4.454063,
+			6.188708,
+			5.45325,
+			4.910208
 		},
 		randomize_indexes = {}
 	}

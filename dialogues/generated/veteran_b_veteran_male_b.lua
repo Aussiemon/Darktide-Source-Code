@@ -501,6 +501,83 @@ local veteran_b_veteran_male_b = {
 			[2.0] = 0.5
 		},
 		randomize_indexes = {}
+	},
+	veteran_gang_metropolitan_breather_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_b__veteran_gang_metropolitan_breather_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.473406
+		},
+		randomize_indexes = {}
+	},
+	veteran_gang_metropolitan_breather_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_b__veteran_gang_metropolitan_breather_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.412479
+		},
+		randomize_indexes = {}
+	},
+	veteran_gang_metropolitan_shooting_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_b__veteran_gang_metropolitan_shooting_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.556771
+		},
+		randomize_indexes = {}
+	},
+	veteran_gang_metropolitan_shooting_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_b__veteran_gang_metropolitan_shooting_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.885531
+		},
+		randomize_indexes = {}
+	},
+	veteran_gang_metropolitan_tontine_a = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_b__veteran_gang_metropolitan_tontine_a_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.708104
+		},
+		randomize_indexes = {}
+	},
+	veteran_gang_metropolitan_tontine_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_b__veteran_gang_metropolitan_tontine_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.795604
+		},
+		randomize_indexes = {}
+	},
+	veteran_gang_metropolitan_tontine_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_male_b__veteran_gang_metropolitan_tontine_e_01"
+		},
+		sound_events_duration = {
+			[1.0] = 1.455563
+		},
+		randomize_indexes = {}
 	}
 }
 

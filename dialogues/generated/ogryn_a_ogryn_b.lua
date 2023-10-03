@@ -166,8 +166,8 @@ local ogryn_a_ogryn_b = {
 			[2.0] = "loc_ogryn_b__combat_pause_quirk_ogryn_a_elevator_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.528687,
-			[2.0] = 3.29776
+			[1.0] = 2.015708,
+			[2.0] = 1.784781
 		},
 		randomize_indexes = {}
 	},

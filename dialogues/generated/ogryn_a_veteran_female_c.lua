@@ -149,8 +149,8 @@ local ogryn_a_veteran_female_c = {
 			[2.0] = "loc_veteran_female_c__combat_pause_quirk_ogryn_a_elevator_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.977146,
-			[2.0] = 5.456458
+			[1.0] = 2.464167,
+			[2.0] = 3.943479
 		},
 		randomize_indexes = {}
 	},

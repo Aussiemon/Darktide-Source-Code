@@ -9,10 +9,10 @@ local mission_vo_lm_scavenge_tech_priest_a = {
 			"loc_tech_priest_a__cmd_mission_scavenge_entering_ship_port_04"
 		},
 		sound_events_duration = {
-			5.372896,
-			4.612458,
-			7.397708,
-			6.093207
+			5.369917,
+			4.609479,
+			7.394729,
+			6.090229
 		},
 		randomize_indexes = {}
 	},
@@ -26,10 +26,10 @@ local mission_vo_lm_scavenge_tech_priest_a = {
 			"loc_tech_priest_a__cmd_mission_scavenge_hacking_event_end_04"
 		},
 		sound_events_duration = {
-			6.17627,
-			4.993146,
-			6.273645,
-			6.307646
+			6.173292,
+			4.990167,
+			6.270667,
+			6.304667
 		},
 		randomize_indexes = {}
 	},
@@ -43,10 +43,10 @@ local mission_vo_lm_scavenge_tech_priest_a = {
 			"loc_tech_priest_a__cmd_mission_scavenge_hacking_event_start_04"
 		},
 		sound_events_duration = {
-			8.16325,
-			7.751186,
-			8.835834,
-			9.129126
+			8.160271,
+			7.748208,
+			8.832854,
+			9.126146
 		},
 		randomize_indexes = {}
 	},
@@ -60,10 +60,10 @@ local mission_vo_lm_scavenge_tech_priest_a = {
 			"loc_tech_priest_a__cmd_mission_scavenge_luggable_event_end_04"
 		},
 		sound_events_duration = {
-			6.211875,
-			5.210312,
-			7.743187,
-			8.829854
+			6.208896,
+			5.207334,
+			7.740208,
+			8.826876
 		},
 		randomize_indexes = {}
 	},
@@ -77,10 +77,10 @@ local mission_vo_lm_scavenge_tech_priest_a = {
 			"loc_tech_priest_a__cmd_mission_scavenge_luggable_event_start_04"
 		},
 		sound_events_duration = {
-			6.040062,
-			5.514062,
-			7.183771,
-			5.253208
+			6.037083,
+			5.511083,
+			7.180792,
+			5.250229
 		},
 		randomize_indexes = {}
 	},
@@ -94,10 +94,10 @@ local mission_vo_lm_scavenge_tech_priest_a = {
 			"loc_tech_priest_a__cmd_mission_scavenge_vault_access_04"
 		},
 		sound_events_duration = {
-			4.548521,
-			3.935375,
-			5.545354,
-			5.869937
+			4.545542,
+			3.932396,
+			5.542375,
+			5.866958
 		},
 		randomize_indexes = {}
 	},
@@ -111,10 +111,10 @@ local mission_vo_lm_scavenge_tech_priest_a = {
 			"loc_tech_priest_a__info_mission_scavenge_hangar_guidance_one_04"
 		},
 		sound_events_duration = {
-			9.035062,
-			7.517687,
-			5.969853,
-			8.408583
+			9.032084,
+			7.514708,
+			5.966875,
+			8.405604
 		},
 		randomize_indexes = {}
 	},
@@ -128,10 +128,10 @@ local mission_vo_lm_scavenge_tech_priest_a = {
 			"loc_tech_priest_a__info_mission_scavenge_hangar_guidance_two_04"
 		},
 		sound_events_duration = {
-			5.338396,
-			6.170958,
-			6.269271,
-			8.020854
+			5.335417,
+			6.167979,
+			6.266292,
+			8.017875
 		},
 		randomize_indexes = {}
 	},
@@ -145,10 +145,10 @@ local mission_vo_lm_scavenge_tech_priest_a = {
 			"loc_tech_priest_a__info_mission_scavenge_ship_elevator_vista_04"
 		},
 		sound_events_duration = {
-			7.723646,
-			8.443083,
-			10.36981,
-			9.151229
+			7.720667,
+			8.440104,
+			10.36683,
+			9.148251
 		},
 		sound_event_weights = {
 			0.25,
@@ -168,10 +168,10 @@ local mission_vo_lm_scavenge_tech_priest_a = {
 			"loc_tech_priest_a__cmd_load_pneumatic_04"
 		},
 		sound_events_duration = {
-			4.681292,
-			5.782021,
-			5.329708,
-			7.745687
+			4.678313,
+			5.779042,
+			5.326729,
+			7.742708
 		},
 		sound_event_weights = {
 			0.25,
@@ -191,10 +191,10 @@ local mission_vo_lm_scavenge_tech_priest_a = {
 			"loc_tech_priest_a__mission_scavenge_daylight_response_04"
 		},
 		sound_events_duration = {
-			7.483874,
-			7.427062,
-			6.971457,
-			5.064187
+			7.480896,
+			7.424083,
+			6.968479,
+			5.061208
 		},
 		randomize_indexes = {}
 	},
@@ -208,10 +208,10 @@ local mission_vo_lm_scavenge_tech_priest_a = {
 			"loc_tech_priest_a__mission_scavenge_first_objective_04"
 		},
 		sound_events_duration = {
-			6.512708,
-			13.06569,
-			11.42927,
-			9.106438
+			6.509729,
+			13.06271,
+			11.42629,
+			9.103458
 		},
 		randomize_indexes = {}
 	},
@@ -225,10 +225,10 @@ local mission_vo_lm_scavenge_tech_priest_a = {
 			"loc_tech_priest_a__asset_pneumatic_press_04"
 		},
 		sound_events_duration = {
-			6.260917,
-			6.532042,
-			6.960042,
-			5.503396
+			6.257938,
+			6.529063,
+			6.957063,
+			5.500417
 		},
 		sound_event_weights = {
 			0.25,

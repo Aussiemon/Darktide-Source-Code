@@ -8,9 +8,9 @@ local conversations_core_tech_priest_a = {
 			"loc_tech_priest_a__conversation_40k_lore_one_02_03"
 		},
 		sound_events_duration = {
-			6.66325,
-			6.09477,
-			7.065353
+			6.660271,
+			6.091792,
+			7.062375
 		},
 		randomize_indexes = {}
 	},
@@ -25,11 +25,11 @@ local conversations_core_tech_priest_a = {
 			"loc_tech_priest_a__eavesdropping_tech_priest_05"
 		},
 		sound_events_duration = {
-			6.480979,
-			4.579958,
-			3.623687,
-			5.402979,
-			3.950979
+			6.478,
+			4.576979,
+			3.620708,
+			5.400001,
+			3.948
 		},
 		randomize_indexes = {}
 	},
@@ -43,10 +43,10 @@ local conversations_core_tech_priest_a = {
 			"loc_tech_priest_a__info_to_extraction_through_pipes_04"
 		},
 		sound_events_duration = {
-			4.1,
-			4.322312,
-			3.136375,
-			5.406146
+			4.097021,
+			4.319333,
+			3.133396,
+			5.403167
 		},
 		randomize_indexes = {}
 	}

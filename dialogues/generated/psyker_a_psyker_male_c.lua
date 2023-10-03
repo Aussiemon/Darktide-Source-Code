@@ -158,6 +158,50 @@ local psyker_a_psyker_male_c = {
 			[2.0] = 3.487844
 		},
 		randomize_indexes = {}
+	},
+	psyker_gang_metropolitan_quibble_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_c__psyker_gang_metropolitan_quibble_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.995885
+		},
+		randomize_indexes = {}
+	},
+	psyker_gang_metropolitan_weaponry_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_c__psyker_gang_metropolitan_weaponry_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.287167
+		},
+		randomize_indexes = {}
+	},
+	psyker_gang_metropolitan_worse_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_c__psyker_gang_metropolitan_worse_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.323917
+		},
+		randomize_indexes = {}
+	},
+	psyker_gang_metropolitan_worse_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_c__psyker_gang_metropolitan_worse_e_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.834698
+		},
+		randomize_indexes = {}
 	}
 }
 

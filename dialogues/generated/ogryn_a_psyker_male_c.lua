@@ -138,8 +138,8 @@ local ogryn_a_psyker_male_c = {
 			[2.0] = "loc_psyker_male_c__combat_pause_quirk_ogryn_a_elevator_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.23375,
-			[2.0] = 3.398687
+			[1.0] = 1.720771,
+			[2.0] = 1.885708
 		},
 		randomize_indexes = {}
 	},

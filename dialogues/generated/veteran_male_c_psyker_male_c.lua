@@ -76,6 +76,94 @@ local veteran_male_c_psyker_male_c = {
 		},
 		randomize_indexes = {}
 	},
+	bonding_conversation_metropolitan_eye_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_c__bonding_conversation_metropolitan_eye_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 1.899073
+		},
+		randomize_indexes = {}
+	},
+	bonding_conversation_metropolitan_eye_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_c__bonding_conversation_metropolitan_eye_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.864938
+		},
+		randomize_indexes = {}
+	},
+	bonding_conversation_metropolitan_never_over_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_c__bonding_conversation_metropolitan_never_over_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.918906
+		},
+		randomize_indexes = {}
+	},
+	bonding_conversation_metropolitan_never_over_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_c__bonding_conversation_metropolitan_never_over_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.77774
+		},
+		randomize_indexes = {}
+	},
+	bonding_conversation_metropolitan_nobles_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_c__bonding_conversation_metropolitan_nobles_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.997198
+		},
+		randomize_indexes = {}
+	},
+	bonding_conversation_metropolitan_nobles_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_c__bonding_conversation_metropolitan_nobles_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.092604
+		},
+		randomize_indexes = {}
+	},
+	bonding_conversation_metropolitan_soldier_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_c__bonding_conversation_metropolitan_soldier_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.125313
+		},
+		randomize_indexes = {}
+	},
+	bonding_conversation_metropolitan_soldier_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_male_c__bonding_conversation_metropolitan_soldier_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.392427
+		},
+		randomize_indexes = {}
+	},
 	bonding_conversation_never_trust_b = {
 		randomize_indexes_n = 0,
 		sound_events_n = 1,

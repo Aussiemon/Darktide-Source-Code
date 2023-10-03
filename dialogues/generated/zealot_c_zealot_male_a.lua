@@ -98,6 +98,39 @@ local zealot_c_zealot_male_a = {
 			[2.0] = 4.962313
 		},
 		randomize_indexes = {}
+	},
+	zealot_gang_metropolitan_unalloyed_two_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_male_a__zealot_gang_metropolitan_unalloyed_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.914021
+		},
+		randomize_indexes = {}
+	},
+	zealot_gang_metropolitan_vainglory_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_male_a__zealot_gang_metropolitan_vainglory_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.707479
+		},
+		randomize_indexes = {}
+	},
+	zealot_gang_metropolitan_well_said_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_male_a__zealot_gang_metropolitan_well_said_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.335396
+		},
+		randomize_indexes = {}
 	}
 }
 

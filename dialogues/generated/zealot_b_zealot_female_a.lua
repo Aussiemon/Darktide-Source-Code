@@ -168,6 +168,72 @@ local zealot_b_zealot_female_a = {
 			[2.0] = 2.841708
 		},
 		randomize_indexes = {}
+	},
+	zealot_gang_metropolitan_harbour_doubts_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_female_a__zealot_gang_metropolitan_harbour_doubts_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.224688
+		},
+		randomize_indexes = {}
+	},
+	zealot_gang_metropolitan_harbour_doubts_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_female_a__zealot_gang_metropolitan_harbour_doubts_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 6.659479
+		},
+		randomize_indexes = {}
+	},
+	zealot_gang_metropolitan_overmatch_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_female_a__zealot_gang_metropolitan_overmatch_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 7.863125
+		},
+		randomize_indexes = {}
+	},
+	zealot_gang_metropolitan_overmatch_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_female_a__zealot_gang_metropolitan_overmatch_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 1.792729
+		},
+		randomize_indexes = {}
+	},
+	zealot_gang_metropolitan_unalloyed_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_female_a__zealot_gang_metropolitan_unalloyed_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.599625
+		},
+		randomize_indexes = {}
+	},
+	zealot_gang_metropolitan_unalloyed_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_zealot_female_a__zealot_gang_metropolitan_unalloyed_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.173125
+		},
+		randomize_indexes = {}
 	}
 }
 

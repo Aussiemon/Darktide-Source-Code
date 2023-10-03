@@ -9,10 +9,10 @@ local circumstance_vo_hunting_grounds_tech_priest_a = {
 			"loc_tech_priest_a__hunting_circumstance_start_a_04"
 		},
 		sound_events_duration = {
-			10.10402,
-			9.50525,
-			8.724999,
-			12.27242
+			10.10104,
+			9.502272,
+			8.722021,
+			12.26944
 		},
 		sound_event_weights = {
 			0.25,

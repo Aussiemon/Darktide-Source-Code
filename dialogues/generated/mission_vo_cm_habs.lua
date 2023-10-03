@@ -330,7 +330,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_givers"
 		}
 	})
 	define_rule({
@@ -368,7 +368,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -425,7 +425,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -1324,7 +1324,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_givers"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {

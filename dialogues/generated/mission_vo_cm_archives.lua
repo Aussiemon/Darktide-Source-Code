@@ -564,7 +564,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_givers"
 		}
 	})
 	define_rule({
@@ -645,7 +645,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_givers"
 		}
 	})
 	define_rule({
@@ -726,7 +726,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_givers"
 		}
 	})
 	define_rule({
@@ -819,7 +819,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "mission_givers"
 		}
 	})
 	define_rule({

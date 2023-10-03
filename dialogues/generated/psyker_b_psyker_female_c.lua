@@ -144,6 +144,39 @@ local psyker_b_psyker_female_c = {
 			[2.0] = 2.332104
 		},
 		randomize_indexes = {}
+	},
+	psyker_gang_metropolitan_beloved_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_c__psyker_gang_metropolitan_beloved_e_01"
+		},
+		sound_events_duration = {
+			[1.0] = 6.477948
+		},
+		randomize_indexes = {}
+	},
+	psyker_gang_metropolitan_macro_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_c__psyker_gang_metropolitan_macro_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.914208
+		},
+		randomize_indexes = {}
+	},
+	psyker_gang_metropolitan_small_brain_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_psyker_female_c__psyker_gang_metropolitan_small_brain_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.023292
+		},
+		randomize_indexes = {}
 	}
 }
 

@@ -7,8 +7,8 @@ local circumstance_vo_hunting_grounds_veteran_female_a = {
 			[2.0] = "loc_veteran_female_a__combat_pause_circumstance_ogryn_c_meat_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678,
-			[2.0] = 3.45678
+			[1.0] = 2.758625,
+			[2.0] = 3.373875
 		},
 		randomize_indexes = {}
 	},
@@ -20,8 +20,8 @@ local circumstance_vo_hunting_grounds_veteran_female_a = {
 			[2.0] = "loc_veteran_female_a__combat_pause_circumstance_psyker_c_hound_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678,
-			[2.0] = 3.45678
+			[1.0] = 1.922938,
+			[2.0] = 2.189729
 		},
 		randomize_indexes = {}
 	},
@@ -33,8 +33,8 @@ local circumstance_vo_hunting_grounds_veteran_female_a = {
 			[2.0] = "loc_veteran_female_a__combat_pause_circumstance_veteran_a_hound_a_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678,
-			[2.0] = 3.45678
+			[1.0] = 4.177792,
+			[2.0] = 2.892604
 		},
 		randomize_indexes = {}
 	},
@@ -46,8 +46,8 @@ local circumstance_vo_hunting_grounds_veteran_female_a = {
 			[2.0] = "loc_veteran_female_a__combat_pause_circumstance_veteran_c_hunt_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678,
-			[2.0] = 3.45678
+			[1.0] = 3.449979,
+			[2.0] = 2.534354
 		},
 		randomize_indexes = {}
 	},
@@ -59,8 +59,8 @@ local circumstance_vo_hunting_grounds_veteran_female_a = {
 			[2.0] = "loc_veteran_female_a__combat_pause_circumstance_zealot_c_hound_b_02"
 		},
 		sound_events_duration = {
-			[1.0] = 3.45678,
-			[2.0] = 3.45678
+			[1.0] = 4.84875,
+			[2.0] = 3.050917
 		},
 		randomize_indexes = {}
 	},

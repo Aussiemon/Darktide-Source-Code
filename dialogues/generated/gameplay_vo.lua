@@ -348,6 +348,11 @@ return function ()
 				"faction_memory",
 				"last_friends_distant",
 				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"away_from_squad_user",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -674,7 +679,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "players"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -2407,7 +2412,7 @@ return function ()
 		},
 		on_done = {},
 		heard_speak_routing = {
-			target = "all"
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -3227,7 +3232,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "players"
 		}
 	})
 	define_rule({
@@ -5086,7 +5091,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -5983,8 +5988,12 @@ return function ()
 			{
 				"query_context",
 				"enemy_tag",
-				OP.EQ,
-				"chaos_plague_ogryn"
+				OP.SET_INCLUDES,
+				args = {
+					"chaos_plague_ogryn",
+					"chaos_beast_of_nurgle",
+					"chaos_spawn"
+				}
 			},
 			{
 				"faction_memory",
@@ -6002,7 +6011,7 @@ return function ()
 			}
 		},
 		heard_speak_routing = {
-			target = "all"
+			target = "disabled"
 		}
 	})
 	define_rule({
@@ -6150,6 +6159,11 @@ return function ()
 			{
 				"user_memory",
 				"last_seen_killstreak_user",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"ogryn_seen_killstreak_psyker_user",
 				OP.TIMESET
 			}
 		},
@@ -6917,6 +6931,11 @@ return function ()
 				"user_memory",
 				"last_seen_killstreak_user",
 				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_psyker_seen_killstreak_ogryn_user",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -7381,9 +7400,6 @@ return function ()
 				"reload_failed_out_of_ammo",
 				OP.TIMESET
 			}
-		},
-		heard_speak_routing = {
-			target = "all"
 		}
 	})
 	define_rule({
@@ -7648,10 +7664,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_critical_health",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_critical_health",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -7700,9 +7716,6 @@ return function ()
 				"rapid_loosing_health_response",
 				OP.TIMESET
 			}
-		},
-		heard_speak_routing = {
-			target = "all"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -8526,6 +8539,11 @@ return function ()
 				"user_memory",
 				"response_for_friendly_fire",
 				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_shot_psyker_user",
+				OP.TIMESET
 			}
 		},
 		heard_speak_routing = {
@@ -9165,10 +9183,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_ogryn_critical_health",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_ogryn_critical_health",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -9222,10 +9240,12 @@ return function ()
 				"user_memory",
 				"rapid_loosing_health_response",
 				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"rapid_loosing_health_response_ogryn",
+				OP.TIMESET
 			}
-		},
-		heard_speak_routing = {
-			target = "all"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -10387,10 +10407,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_psyker_critical_health",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_psyker_critical_health",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -10444,10 +10464,12 @@ return function ()
 				"user_memory",
 				"rapid_loosing_health_response",
 				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"rapid_loosing_health_response_psyker",
+				OP.TIMESET
 			}
-		},
-		heard_speak_routing = {
-			target = "all"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -11369,10 +11391,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_veteran_critical_health",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_veteran_critical_health",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -11426,10 +11448,12 @@ return function ()
 				"user_memory",
 				"rapid_loosing_health_response",
 				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_seen_veteran_losing_health",
+				OP.TIMESET
 			}
-		},
-		heard_speak_routing = {
-			target = "all"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -12078,10 +12102,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_veteran_start_revive_psyker",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_veteran_start_revive_psyker",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -12136,6 +12160,9 @@ return function ()
 			}
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -12342,10 +12369,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_zealot_critical_health",
+		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_zealot_critical_health",
 		database = "gameplay_vo",
-		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -12400,9 +12427,6 @@ return function ()
 				"rapid_loosing_health_response",
 				OP.TIMESET
 			}
-		},
-		heard_speak_routing = {
-			target = "all"
 		},
 		on_pre_rule_execution = {
 			delay_vo = {
@@ -13051,10 +13075,10 @@ return function ()
 	})
 	define_rule({
 		name = "response_for_zealot_start_revive_psyker",
-		category = "player_prio_1",
 		wwise_route = 0,
 		response = "response_for_zealot_start_revive_psyker",
 		database = "gameplay_vo",
+		category = "player_prio_1",
 		criterias = {
 			{
 				"query_context",
@@ -13109,6 +13133,9 @@ return function ()
 			}
 		},
 		on_done = {},
+		heard_speak_routing = {
+			target = "players"
+		},
 		on_pre_rule_execution = {
 			delay_vo = {
 				duration = 0.2
@@ -14671,8 +14698,10 @@ return function ()
 					"frag_grenade",
 					"krak_grenade",
 					"fire_grenade",
-					"ogryn_grenade",
-					"shock_grenade"
+					"ogryn_grenade_frag",
+					"shock_grenade",
+					"ogryn_grenade_box",
+					"smoke_grenade"
 				}
 			},
 			{
@@ -14939,6 +14968,11 @@ return function ()
 			{
 				"user_memory",
 				"last_seen_killstreak_user",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_veteran_seen_killstreak_zealot_user",
 				OP.TIMESET
 			}
 		},
@@ -15389,6 +15423,11 @@ return function ()
 			{
 				"user_memory",
 				"last_seen_killstreak_user",
+				OP.TIMESET
+			},
+			{
+				"user_memory",
+				"last_zealot_seen_killstreak_veteran_user",
 				OP.TIMESET
 			}
 		},

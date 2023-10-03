@@ -9,10 +9,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__access_elevator_04"
 		},
 		sound_events_duration = {
-			6.430708,
-			5.906125,
-			6.012833,
-			8.483645
+			6.427729,
+			5.903146,
+			6.009854,
+			8.480667
 		},
 		randomize_indexes = {}
 	},
@@ -27,11 +27,11 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__cmd_deploy_skull_05"
 		},
 		sound_events_duration = {
-			6.046625,
-			4.181917,
-			5.645646,
-			4.504,
-			8.189437
+			6.043646,
+			4.178938,
+			5.642667,
+			4.501021,
+			8.186458
 		},
 		randomize_indexes = {}
 	},
@@ -46,11 +46,11 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__door_release_05"
 		},
 		sound_events_duration = {
-			4.739667,
-			5.142479,
-			4.958937,
-			6.919312,
-			6.937917
+			4.736688,
+			5.1395,
+			4.955958,
+			6.916333,
+			6.934938
 		},
 		sound_event_weights = {
 			0.2,
@@ -72,11 +72,11 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__info_all_players_required_05"
 		},
 		sound_events_duration = {
-			7.251979,
-			3.881958,
-			6.189958,
-			4.920979,
-			3.654979
+			7.249,
+			3.878979,
+			6.186979,
+			4.918,
+			3.652
 		},
 		randomize_indexes = {}
 	},
@@ -91,11 +91,11 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__info_bypass_05"
 		},
 		sound_events_duration = {
-			4.862208,
-			4.78275,
-			4.235167,
-			6.013207,
-			6.923187
+			4.859229,
+			4.779771,
+			4.232188,
+			6.010229,
+			6.920208
 		},
 		randomize_indexes = {}
 	},
@@ -110,11 +110,11 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__info_bypass_pressure_05"
 		},
 		sound_events_duration = {
-			5.137,
-			4.9695,
-			4.573146,
-			4.700396,
-			5.661729
+			5.134021,
+			4.966521,
+			4.570167,
+			4.697417,
+			5.65875
 		},
 		randomize_indexes = {}
 	},
@@ -129,11 +129,11 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__info_call_abyss_05"
 		},
 		sound_events_duration = {
-			7.933208,
-			7.657979,
-			8.185687,
-			9.124333,
-			5.153917
+			7.930229,
+			7.655,
+			8.182708,
+			9.121354,
+			5.150938
 		},
 		randomize_indexes = {}
 	},
@@ -148,11 +148,11 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__info_call_extraction_05"
 		},
 		sound_events_duration = {
-			5.302896,
-			3.8525,
-			5.559,
-			5.594354,
-			5.239354
+			5.299917,
+			3.849521,
+			5.556021,
+			5.591375,
+			5.236375
 		},
 		randomize_indexes = {}
 	},
@@ -167,11 +167,11 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__info_event_almost_done_05"
 		},
 		sound_events_duration = {
-			3.067292,
-			3.542417,
-			4.3385,
-			3.809667,
-			4.380771
+			3.064313,
+			3.539438,
+			4.335521,
+			3.806688,
+			4.377792
 		},
 		randomize_indexes = {}
 	},
@@ -186,11 +186,11 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__info_event_one_down_05"
 		},
 		sound_events_duration = {
-			3.403729,
-			3.426687,
-			3.531292,
-			3.981062,
-			3.851458
+			3.40075,
+			3.423708,
+			3.528313,
+			3.978083,
+			3.848479
 		},
 		randomize_indexes = {}
 	},
@@ -210,16 +210,16 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__info_extraction_10"
 		},
 		sound_events_duration = {
-			4.999104,
-			3.685375,
-			4.658375,
-			5.329186,
-			4.622187,
-			4.212271,
-			2.799958,
-			6.272167,
-			5.082667,
-			5.527375
+			4.996125,
+			3.682396,
+			4.655396,
+			5.326208,
+			4.619208,
+			4.209292,
+			2.796979,
+			6.269188,
+			5.079688,
+			5.524396
 		},
 		randomize_indexes = {}
 	},
@@ -234,11 +234,11 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__info_first_bypass_05"
 		},
 		sound_events_duration = {
-			5.559,
-			5.920937,
-			4.647083,
-			5.744812,
-			8.164979
+			5.556021,
+			5.917958,
+			4.644104,
+			5.741833,
+			8.162
 		},
 		randomize_indexes = {}
 	},
@@ -258,16 +258,16 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__info_get_out_10"
 		},
 		sound_events_duration = {
-			4.164125,
-			5.327374,
-			5.098687,
-			6.645479,
-			5.807562,
-			4.660062,
-			5.782875,
-			8.171291,
-			8.016292,
-			6.084395
+			4.161146,
+			5.324396,
+			5.095708,
+			6.6425,
+			5.804583,
+			4.657083,
+			5.779896,
+			8.168313,
+			8.013313,
+			6.081417
 		},
 		randomize_indexes = {}
 	},
@@ -287,16 +287,16 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__info_get_out_10"
 		},
 		sound_events_duration = {
-			4.164125,
-			5.327374,
-			5.098687,
-			6.645479,
-			5.807562,
-			4.660062,
-			5.782875,
-			8.171291,
-			8.016292,
-			6.084395
+			4.161146,
+			5.324396,
+			5.095708,
+			6.6425,
+			5.804583,
+			4.657083,
+			5.779896,
+			8.168313,
+			8.013313,
+			6.081417
 		},
 		sound_event_weights = {
 			0.1,
@@ -328,16 +328,16 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__info_get_out_10"
 		},
 		sound_events_duration = {
-			4.164125,
-			5.327374,
-			5.098687,
-			6.645479,
-			5.807562,
-			4.660062,
-			5.782875,
-			8.171291,
-			8.016292,
-			6.084395
+			4.161146,
+			5.324396,
+			5.095708,
+			6.6425,
+			5.804583,
+			4.657083,
+			5.779896,
+			8.168313,
+			8.013313,
+			6.081417
 		},
 		sound_event_weights = {
 			0.1,
@@ -363,10 +363,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__info_get_out_simple_04"
 		},
 		sound_events_duration = {
-			3.075167,
-			4.141271,
-			2.927937,
-			3.3945
+			3.072188,
+			4.138292,
+			2.924958,
+			3.391521
 		},
 		randomize_indexes = {}
 	},
@@ -381,11 +381,11 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__info_scan_batch_done_05"
 		},
 		sound_events_duration = {
-			8.968583,
-			7.156667,
-			8.074458,
-			6.36577,
-			6.854812
+			8.965605,
+			7.153688,
+			8.071479,
+			6.362792,
+			6.851833
 		},
 		randomize_indexes = {}
 	},
@@ -399,10 +399,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__info_scan_completed_04"
 		},
 		sound_events_duration = {
-			5.389125,
-			4.80127,
-			6.484521,
-			4.464771
+			5.386147,
+			4.798292,
+			6.481542,
+			4.461792
 		},
 		randomize_indexes = {}
 	},
@@ -417,11 +417,11 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__info_scan_target_located_05"
 		},
 		sound_events_duration = {
-			6.754354,
-			6.823292,
-			3.436521,
-			5.257895,
-			9.117063
+			6.751375,
+			6.820313,
+			3.433542,
+			5.254917,
+			9.114083
 		},
 		randomize_indexes = {}
 	},
@@ -436,11 +436,11 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__info_servo_skull_deployed_05"
 		},
 		sound_events_duration = {
-			3.680812,
-			3.74275,
-			5.982041,
-			5.346042,
-			5.120208
+			3.677833,
+			3.739771,
+			5.979063,
+			5.343063,
+			5.117229
 		},
 		randomize_indexes = {}
 	},
@@ -480,10 +480,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__vox_introduction_tech_priest_04"
 		},
 		sound_events_duration = {
-			3.640979,
-			1.934979,
-			2.363979,
-			3.045979
+			3.638,
+			1.932,
+			2.361,
+			3.043
 		},
 		sound_event_weights = {
 			0.25,
@@ -502,9 +502,9 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_armoury_briefing_a_03"
 		},
 		sound_events_duration = {
-			11.05006,
-			8.796667,
-			11.0169
+			11.44708,
+			9.193688,
+			11.41392
 		},
 		randomize_indexes = {}
 	},
@@ -517,9 +517,9 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_armoury_briefing_b_03"
 		},
 		sound_events_duration = {
-			6.454792,
-			8.862062,
-			9.4735
+			6.851813,
+			9.259083,
+			9.870522
 		},
 		randomize_indexes = {}
 	},
@@ -532,9 +532,9 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_armoury_briefing_c_03"
 		},
 		sound_events_duration = {
-			13.62704,
-			12.50729,
-			11.91146
+			14.02406,
+			12.90431,
+			12.59542
 		},
 		randomize_indexes = {}
 	},
@@ -548,10 +548,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_brief_control_mission_one_04"
 		},
 		sound_events_duration = {
-			13.85798,
-			12.96431,
-			13.86544,
-			12.88033
+			13.855,
+			12.96133,
+			13.86246,
+			12.87735
 		},
 		randomize_indexes = {}
 	},
@@ -565,10 +565,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_brief_control_mission_three_04"
 		},
 		sound_events_duration = {
-			7.8325,
-			7.485291,
-			7.010146,
-			8.147396
+			7.829521,
+			7.482313,
+			7.007167,
+			8.144417
 		},
 		randomize_indexes = {}
 	},
@@ -582,10 +582,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_brief_control_mission_two_04"
 		},
 		sound_events_duration = {
-			10.34742,
-			11.98923,
-			11.89013,
-			10.9624
+			10.34444,
+			11.98625,
+			11.88715,
+			10.95942
 		},
 		randomize_indexes = {}
 	},
@@ -599,10 +599,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_cargo_briefing_a_04"
 		},
 		sound_events_duration = {
-			9.018084,
-			8.794875,
-			10.75196,
-			7.843729
+			9.015104,
+			8.791897,
+			10.74898,
+			7.84075
 		},
 		randomize_indexes = {}
 	},
@@ -616,10 +616,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_cargo_briefing_b_04"
 		},
 		sound_events_duration = {
-			7.242042,
-			6.044667,
-			6.950686,
-			7.731354
+			7.239063,
+			6.041688,
+			6.947708,
+			7.728375
 		},
 		sound_event_weights = {
 			0.25,
@@ -639,10 +639,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_cargo_briefing_c_04"
 		},
 		sound_events_duration = {
-			8.220437,
-			7.689187,
-			12.22198,
-			12.07383
+			8.217458,
+			7.686208,
+			12.219,
+			12.07085
 		},
 		sound_event_weights = {
 			0.25,
@@ -662,10 +662,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_cartel_brief_one_08"
 		},
 		sound_events_duration = {
-			7.541875,
-			11.02698,
-			7.996061,
-			8.062542
+			7.538896,
+			11.024,
+			7.993083,
+			8.059563
 		},
 		randomize_indexes = {}
 	},
@@ -679,10 +679,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_cartel_brief_three_04"
 		},
 		sound_events_duration = {
-			6.145667,
-			9.646272,
-			11.06621,
-			11.11983
+			6.142688,
+			9.643292,
+			11.06323,
+			11.11685
 		},
 		randomize_indexes = {}
 	},
@@ -696,10 +696,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_cartel_brief_two_04"
 		},
 		sound_events_duration = {
-			6.908146,
-			8.426979,
-			6.592187,
-			8.992854
+			6.905167,
+			8.424,
+			6.589208,
+			8.989876
 		},
 		randomize_indexes = {}
 	},
@@ -713,10 +713,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_cooling_briefing_one_04"
 		},
 		sound_events_duration = {
-			9.828668,
-			11.50971,
-			13.511,
-			11.56306
+			9.825688,
+			11.50673,
+			13.50802,
+			11.56008
 		},
 		randomize_indexes = {}
 	},
@@ -730,10 +730,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_cooling_briefing_three_04"
 		},
 		sound_events_duration = {
-			6.801687,
-			9.305646,
-			8.328354,
-			11.49496
+			6.798708,
+			9.302668,
+			8.325375,
+			11.49198
 		},
 		randomize_indexes = {}
 	},
@@ -747,10 +747,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_cooling_briefing_two_04"
 		},
 		sound_events_duration = {
-			9.727918,
-			9.090751,
-			8.198229,
-			8.165104
+			9.724938,
+			9.087771,
+			8.19525,
+			8.162125
 		},
 		randomize_indexes = {}
 	},
@@ -764,10 +764,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_enforcer_briefing_a_04"
 		},
 		sound_events_duration = {
-			8.509854,
-			6.869979,
-			9.252418,
-			9.271146
+			8.506875,
+			6.867,
+			9.249438,
+			9.268167
 		},
 		randomize_indexes = {}
 	},
@@ -803,6 +803,12 @@ local mission_giver_vo_tech_priest_a = {
 			6.786125,
 			8.816751
 		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
 		randomize_indexes = {}
 	},
 	mission_forge_briefing_a = {
@@ -815,10 +821,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_forge_briefing_a_04"
 		},
 		sound_events_duration = {
-			10.37938,
-			9.398625,
-			10.99827,
-			10.09554
+			10.3764,
+			9.395646,
+			10.99529,
+			10.09256
 		},
 		randomize_indexes = {}
 	},
@@ -832,10 +838,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_forge_briefing_b_04"
 		},
 		sound_events_duration = {
-			8.037457,
-			7.784604,
-			10.79508,
-			7.466416
+			8.034479,
+			7.781625,
+			10.7921,
+			7.463438
 		},
 		randomize_indexes = {}
 	},
@@ -849,10 +855,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_forge_briefing_c_04"
 		},
 		sound_events_duration = {
-			7.489292,
-			8.927751,
-			8.039436,
-			7.564375
+			7.486313,
+			8.924771,
+			8.036458,
+			7.561396
 		},
 		randomize_indexes = {}
 	},
@@ -866,10 +872,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_propaganda_briefing_a_04"
 		},
 		sound_events_duration = {
-			10.25194,
-			11.91831,
-			10.88902,
-			9.348979
+			10.24896,
+			11.91533,
+			10.88604,
+			9.346001
 		},
 		randomize_indexes = {}
 	},
@@ -883,10 +889,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_propaganda_briefing_b_04"
 		},
 		sound_events_duration = {
-			8.173125,
-			6.783333,
-			10.12135,
-			9.304979
+			8.170146,
+			6.780354,
+			10.11837,
+			9.302
 		},
 		randomize_indexes = {}
 	},
@@ -900,10 +906,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_propaganda_briefing_c_04"
 		},
 		sound_events_duration = {
-			7.838521,
-			7.898021,
-			8.127936,
-			6.365728
+			7.835542,
+			7.895042,
+			8.124958,
+			6.36275
 		},
 		randomize_indexes = {}
 	},
@@ -917,10 +923,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_rails_briefing_a_04"
 		},
 		sound_events_duration = {
-			6.770958,
-			7.255167,
-			9.199833,
-			7.795021
+			6.767979,
+			7.252188,
+			9.196854,
+			7.792042
 		},
 		randomize_indexes = {}
 	},
@@ -934,10 +940,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_rails_briefing_b_04"
 		},
 		sound_events_duration = {
-			7.485,
-			8.480458,
-			7.875583,
-			9.315646
+			7.482021,
+			8.477479,
+			7.872604,
+			9.312668
 		},
 		sound_event_weights = {
 			0.25,
@@ -957,10 +963,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_rails_briefing_c_04"
 		},
 		sound_events_duration = {
-			8.053708,
-			6.639333,
-			7.563229,
-			7.445395
+			8.050729,
+			6.636354,
+			7.56025,
+			7.442417
 		},
 		sound_event_weights = {
 			0.25,
@@ -980,10 +986,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_resurgence_brief_a_04"
 		},
 		sound_events_duration = {
-			10.64398,
-			7.921062,
-			9.073376,
-			10.27152
+			11.041,
+			8.318083,
+			9.470396,
+			10.66854
 		},
 		randomize_indexes = {}
 	},
@@ -997,10 +1003,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_resurgence_brief_b_04"
 		},
 		sound_events_duration = {
-			12.36923,
-			11.10325,
-			10.99179,
-			8.919708
+			12.76625,
+			11.50027,
+			11.38881,
+			9.316729
 		},
 		randomize_indexes = {}
 	},
@@ -1014,10 +1020,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_resurgence_brief_c_04"
 		},
 		sound_events_duration = {
-			9.109793,
-			11.08469,
-			10.247,
-			12.79863
+			9.506813,
+			11.48171,
+			10.64402,
+			13.19565
 		},
 		randomize_indexes = {}
 	},
@@ -1032,11 +1038,11 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_scan_new_target_05"
 		},
 		sound_events_duration = {
-			4.360187,
-			3.793542,
-			4.517375,
-			4.504354,
-			5.605021
+			4.357208,
+			3.790563,
+			4.514396,
+			4.501375,
+			5.602042
 		},
 		randomize_indexes = {}
 	},
@@ -1050,10 +1056,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_scavenge_briefing_one_06"
 		},
 		sound_events_duration = {
-			12.75538,
-			9.810625,
-			9.840251,
-			10.87392
+			12.7524,
+			9.807646,
+			9.837272,
+			10.87094
 		},
 		randomize_indexes = {}
 	},
@@ -1067,10 +1073,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_scavenge_briefing_three_04"
 		},
 		sound_events_duration = {
-			8.98323,
-			9.008292,
-			9.890271,
-			10.21229
+			8.98025,
+			9.005314,
+			9.887292,
+			10.20931
 		},
 		randomize_indexes = {}
 	},
@@ -1083,9 +1089,9 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_scavenge_briefing_two_04"
 		},
 		sound_events_duration = {
-			8.556561,
-			13.04067,
-			11.1871
+			8.553583,
+			13.03769,
+			11.18412
 		},
 		randomize_indexes = {}
 	},
@@ -1099,10 +1105,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_stockpile_briefing_a_04"
 		},
 		sound_events_duration = {
-			6.457479,
-			8.212021,
-			8.766209,
-			7.797062
+			6.4545,
+			8.209042,
+			8.763229,
+			7.794083
 		},
 		randomize_indexes = {}
 	},
@@ -1116,10 +1122,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_stockpile_briefing_b_04"
 		},
 		sound_events_duration = {
-			10.37106,
-			8.340771,
-			9.317458,
-			9.499854
+			10.36808,
+			8.337792,
+			9.31448,
+			9.496876
 		},
 		randomize_indexes = {}
 	},
@@ -1133,10 +1139,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_stockpile_briefing_c_04"
 		},
 		sound_events_duration = {
-			7.270875,
-			6.854333,
-			7.632895,
-			8.054104
+			7.267896,
+			6.851354,
+			7.629917,
+			8.051125
 		},
 		randomize_indexes = {}
 	},
@@ -1150,10 +1156,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_strain_briefing_a_05"
 		},
 		sound_events_duration = {
-			8.338562,
-			10.37056,
-			10.551,
-			6.843604
+			8.335583,
+			10.36758,
+			10.54802,
+			6.840625
 		},
 		randomize_indexes = {}
 	},
@@ -1167,10 +1173,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_strain_briefing_b_04"
 		},
 		sound_events_duration = {
-			10.77152,
-			9.662188,
-			9.732271,
-			12.90927
+			10.76854,
+			9.659208,
+			9.729292,
+			12.90629
 		},
 		randomize_indexes = {}
 	},
@@ -1184,10 +1190,10 @@ local mission_giver_vo_tech_priest_a = {
 			"loc_tech_priest_a__mission_strain_briefing_c_04"
 		},
 		sound_events_duration = {
-			6.78625,
-			5.740312,
-			8.878312,
-			10.91048
+			6.783271,
+			5.737333,
+			8.875334,
+			10.9075
 		},
 		randomize_indexes = {}
 	}

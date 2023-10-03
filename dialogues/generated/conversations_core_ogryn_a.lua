@@ -568,6 +568,83 @@ local conversations_core_ogryn_a = {
 		},
 		randomize_indexes = {}
 	},
+	enemy_kill_berserker_ext_01_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_ogryn_a__enemy_kill_berserker_ext_01_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 7.485865
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_berserker_ext_01_e = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_ogryn_a__enemy_kill_berserker_ext_01_e_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.970552
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_berserker_ext_04_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_ogryn_a__enemy_kill_berserker_ext_04_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.711927
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_berserker_ext_05_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_ogryn_a__enemy_kill_berserker_ext_05_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.812094
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_monster_ext_01_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_ogryn_a__enemy_kill_monster_ext_01_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 2.661302
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_poxwalker_bomber_ext_01_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_ogryn_a__enemy_kill_poxwalker_bomber_ext_01_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 4.38
+		},
+		randomize_indexes = {}
+	},
+	enemy_kill_poxwalker_bomber_ext_05_c = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_ogryn_a__enemy_kill_poxwalker_bomber_ext_05_c_01"
+		},
+		sound_events_duration = {
+			[1.0] = 5.796094
+		},
+		randomize_indexes = {}
+	},
 	graffiti_response = {
 		randomize_indexes_n = 0,
 		sound_events_n = 2,

@@ -4792,27 +4792,24 @@ local gameplay_vo_psyker_female_b = {
 	},
 	seen_enemy_traitor_heavy_gunner = {
 		randomize_indexes_n = 0,
-		sound_events_n = 5,
+		sound_events_n = 4,
 		sound_events = {
 			"loc_psyker_female_b__seen_enemy_heavy_gunner_01",
 			"loc_psyker_female_b__seen_enemy_heavy_gunner_02",
 			"loc_psyker_female_b__seen_enemy_heavy_gunner_03",
-			"loc_psyker_female_b__seen_enemy_heavy_gunner_04",
-			"loc_psyker_female_b__seen_enemy_heavy_gunner_05"
+			"loc_psyker_female_b__seen_enemy_heavy_gunner_04"
 		},
 		sound_events_duration = {
 			3.084021,
 			1.297917,
 			1.249771,
-			2.227083,
-			3.096521
+			2.227083
 		},
 		sound_event_weights = {
-			0.2,
-			0.2,
-			0.2,
-			0.2,
-			0.2
+			0.25,
+			0.25,
+			0.25,
+			0.25
 		},
 		randomize_indexes = {}
 	},

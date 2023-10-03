@@ -9,10 +9,10 @@ local asset_vo_tech_priest_a = {
 			"loc_tech_priest_a__asset_pneumatic_press_04"
 		},
 		sound_events_duration = {
-			6.260917,
-			6.532042,
-			6.960042,
-			5.503396
+			6.257938,
+			6.529063,
+			6.957063,
+			5.500417
 		},
 		randomize_indexes = {}
 	}

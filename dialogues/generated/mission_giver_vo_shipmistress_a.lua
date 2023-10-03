@@ -82,6 +82,12 @@ local mission_giver_vo_shipmistress_a = {
 			3.45678,
 			3.45678
 		},
+		sound_event_weights = {
+			0.25,
+			0.25,
+			0.25,
+			0.25
+		},
 		randomize_indexes = {}
 	}
 }

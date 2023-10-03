@@ -77,19 +77,6 @@ local mission_vo_km_enforcer_ogryn_c = {
 		},
 		randomize_indexes = {}
 	},
-	mission_enforcer_end_event_conversation_two_c = {
-		randomize_indexes_n = 0,
-		sound_events_n = 2,
-		sound_events = {
-			[1.0] = "loc_ogryn_c__mission_enforcer_end_event_conversation_two_c_01",
-			[2.0] = "loc_ogryn_c__mission_enforcer_end_event_conversation_two_c_02"
-		},
-		sound_events_duration = {
-			[1.0] = 5.100156,
-			[2.0] = 4.642469
-		},
-		randomize_indexes = {}
-	},
 	mission_enforcer_first_objective_response = {
 		randomize_indexes_n = 0,
 		sound_events_n = 10,

@@ -183,6 +183,39 @@ local veteran_b_veteran_female_c = {
 			[2.0] = 0.5
 		},
 		randomize_indexes = {}
+	},
+	veteran_gang_metropolitan_breather_b = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_female_c__veteran_gang_metropolitan_breather_b_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.45678
+		},
+		randomize_indexes = {}
+	},
+	veteran_gang_metropolitan_shooting_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_female_c__veteran_gang_metropolitan_shooting_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.45678
+		},
+		randomize_indexes = {}
+	},
+	veteran_gang_metropolitan_tontine_d = {
+		randomize_indexes_n = 0,
+		sound_events_n = 1,
+		sound_events = {
+			[1.0] = "loc_veteran_female_c__veteran_gang_metropolitan_tontine_d_01"
+		},
+		sound_events_duration = {
+			[1.0] = 3.45678
+		},
+		randomize_indexes = {}
 	}
 }
 

@@ -15,16 +15,16 @@ local mission_vo_cm_habs_tech_priest_a = {
 			"loc_tech_priest_a__info_get_out_10"
 		},
 		sound_events_duration = {
-			4.164125,
-			5.327374,
-			5.098687,
-			6.645479,
-			5.807562,
-			4.660062,
-			5.782875,
-			8.171291,
-			8.016292,
-			6.084395
+			4.161146,
+			5.324396,
+			5.095708,
+			6.6425,
+			5.804583,
+			4.657083,
+			5.779896,
+			8.168313,
+			8.013313,
+			6.081417
 		},
 		sound_event_weights = {
 			0.1,
@@ -51,11 +51,11 @@ local mission_vo_cm_habs_tech_priest_a = {
 			"loc_tech_priest_a__level_hab_block_b_05"
 		},
 		sound_events_duration = {
-			7.017375,
-			5.671332,
-			5.554667,
-			10.52619,
-			5.025146
+			7.014396,
+			5.668354,
+			5.551688,
+			10.52321,
+			5.022167
 		},
 		randomize_indexes = {}
 	},
@@ -70,11 +70,11 @@ local mission_vo_cm_habs_tech_priest_a = {
 			"loc_tech_priest_a__level_hab_block_b_response_a_05"
 		},
 		sound_events_duration = {
-			4.822812,
-			5.988811,
-			6.233271,
-			6.707811,
-			4.708333
+			4.819833,
+			5.985833,
+			6.230292,
+			6.704833,
+			4.705354
 		},
 		randomize_indexes = {}
 	},
@@ -89,11 +89,11 @@ local mission_vo_cm_habs_tech_priest_a = {
 			"loc_tech_priest_a__level_hab_block_corpse_response_05"
 		},
 		sound_events_duration = {
-			8.543208,
-			4.92977,
-			6.669062,
-			4.057333,
-			4.807917
+			8.540229,
+			4.926792,
+			6.666083,
+			4.054354,
+			4.804938
 		},
 		randomize_indexes = {}
 	},
@@ -107,10 +107,10 @@ local mission_vo_cm_habs_tech_priest_a = {
 			"loc_tech_priest_a__level_hab_block_entrance_04"
 		},
 		sound_events_duration = {
-			7.569604,
-			7.160354,
-			6.926646,
-			5.744228
+			7.566625,
+			7.157375,
+			6.923667,
+			5.74125
 		},
 		randomize_indexes = {}
 	},
@@ -129,15 +129,15 @@ local mission_vo_cm_habs_tech_priest_a = {
 			"loc_tech_priest_a__event_scan_find_targets_more_12"
 		},
 		sound_events_duration = {
-			7.924791,
-			11.3404,
-			9.397417,
-			7.142687,
-			6.068042,
-			7.165936,
-			9.589667,
-			10.03954,
-			6.871604
+			7.921813,
+			11.33742,
+			9.394438,
+			7.139708,
+			6.065063,
+			7.162958,
+			9.586688,
+			10.03656,
+			6.868625
 		},
 		sound_event_weights = {
 			0.1111111,
@@ -162,10 +162,10 @@ local mission_vo_cm_habs_tech_priest_a = {
 			"loc_tech_priest_a__level_hab_block_first_objective_04"
 		},
 		sound_events_duration = {
-			5.033562,
-			6.482458,
-			10.33196,
-			10.63275
+			5.030583,
+			6.479479,
+			10.32898,
+			10.62977
 		},
 		randomize_indexes = {}
 	},
@@ -180,11 +180,11 @@ local mission_vo_cm_habs_tech_priest_a = {
 			"loc_tech_priest_a__level_hab_block_market_05"
 		},
 		sound_events_duration = {
-			14.35492,
-			6.826937,
-			7.721728,
-			9.64773,
-			6.052646
+			14.35194,
+			6.823958,
+			7.71875,
+			9.644751,
+			6.049667
 		},
 		randomize_indexes = {}
 	},
@@ -198,10 +198,10 @@ local mission_vo_cm_habs_tech_priest_a = {
 			"loc_tech_priest_a__level_hab_block_quarantine_04"
 		},
 		sound_events_duration = {
-			4.453167,
-			7.320854,
-			6.133229,
-			7.558812
+			4.450188,
+			7.317875,
+			6.13025,
+			7.555833
 		},
 		randomize_indexes = {}
 	},
@@ -216,11 +216,11 @@ local mission_vo_cm_habs_tech_priest_a = {
 			"loc_tech_priest_a__level_hab_block_roof_05"
 		},
 		sound_events_duration = {
-			5.617,
-			7.425021,
-			5.942771,
-			9.685208,
-			7.005062
+			5.614021,
+			7.422042,
+			5.939792,
+			9.682229,
+			7.002083
 		},
 		randomize_indexes = {}
 	},
@@ -235,11 +235,11 @@ local mission_vo_cm_habs_tech_priest_a = {
 			"loc_tech_priest_a__level_hab_block_scan_complete_05"
 		},
 		sound_events_duration = {
-			5.67375,
-			6.233917,
-			5.85675,
-			6.639667,
-			8.049
+			5.670771,
+			6.230938,
+			5.853771,
+			6.636688,
+			8.046021
 		},
 		randomize_indexes = {}
 	},
@@ -253,10 +253,10 @@ local mission_vo_cm_habs_tech_priest_a = {
 			"loc_tech_priest_a__level_hab_block_void_response_04"
 		},
 		sound_events_duration = {
-			4.130146,
-			4.630292,
-			5.911292,
-			5.644396
+			4.127167,
+			4.627313,
+			5.908313,
+			5.641417
 		},
 		sound_event_weights = {
 			0.25,
@@ -274,8 +274,8 @@ local mission_vo_cm_habs_tech_priest_a = {
 			[2.0] = "loc_tech_priest_a__mission_enforcer_event_survive_02"
 		},
 		sound_events_duration = {
-			[1.0] = 5.640583,
-			[2.0] = 6.360021
+			[1.0] = 5.637604,
+			[2.0] = 6.357042
 		},
 		sound_event_weights = {
 			[1.0] = 0.5,
@@ -294,11 +294,11 @@ local mission_vo_cm_habs_tech_priest_a = {
 			"loc_tech_priest_a__level_hab_block_scan_complete_05"
 		},
 		sound_events_duration = {
-			5.67375,
-			6.233917,
-			5.85675,
-			6.639667,
-			8.049
+			5.670771,
+			6.230938,
+			5.853771,
+			6.636688,
+			8.046021
 		},
 		sound_event_weights = {
 			0.2,
@@ -320,11 +320,11 @@ local mission_vo_cm_habs_tech_priest_a = {
 			"loc_tech_priest_a__mission_scan_final_05"
 		},
 		sound_events_duration = {
-			4.39175,
-			5.147396,
-			5.326271,
-			5.680667,
-			6.014042
+			4.388771,
+			5.144417,
+			5.323292,
+			5.677688,
+			6.011063
 		},
 		randomize_indexes = {}
 	}

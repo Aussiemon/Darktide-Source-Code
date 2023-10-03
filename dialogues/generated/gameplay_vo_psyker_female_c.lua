@@ -2646,6 +2646,84 @@ local gameplay_vo_psyker_female_c = {
 		},
 		randomize_indexes = {}
 	},
+	psyker_seen_killstreak_ogryn = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_psyker_female_c__psyker_seen_killstreak_ogryn_01",
+			"loc_psyker_female_c__psyker_seen_killstreak_ogryn_02",
+			"loc_psyker_female_c__psyker_seen_killstreak_ogryn_03",
+			"loc_psyker_female_c__psyker_seen_killstreak_ogryn_04",
+			"loc_psyker_female_c__psyker_seen_killstreak_ogryn_05"
+		},
+		sound_events_duration = {
+			1.235188,
+			1.4065,
+			2.289354,
+			1.749458,
+			2.01399
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
+	psyker_seen_killstreak_psyker = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_psyker_female_c__psyker_seen_killstreak_psyker_01",
+			"loc_psyker_female_c__psyker_seen_killstreak_psyker_02",
+			"loc_psyker_female_c__psyker_seen_killstreak_psyker_03",
+			"loc_psyker_female_c__psyker_seen_killstreak_psyker_04",
+			"loc_psyker_female_c__psyker_seen_killstreak_psyker_05"
+		},
+		sound_events_duration = {
+			1.579417,
+			1.922854,
+			2.060083,
+			2.500375,
+			1.789313
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
+	psyker_seen_killstreak_veteran = {
+		randomize_indexes_n = 0,
+		sound_events_n = 5,
+		sound_events = {
+			"loc_psyker_female_c__psyker_seen_killstreak_veteran_01",
+			"loc_psyker_female_c__psyker_seen_killstreak_veteran_02",
+			"loc_psyker_female_c__psyker_seen_killstreak_veteran_03",
+			"loc_psyker_female_c__psyker_seen_killstreak_veteran_04",
+			"loc_psyker_female_c__psyker_seen_killstreak_veteran_05"
+		},
+		sound_events_duration = {
+			2.234708,
+			2.470167,
+			1.864719,
+			2.73201,
+			2.129885
+		},
+		sound_event_weights = {
+			0.2,
+			0.2,
+			0.2,
+			0.2,
+			0.2
+		},
+		randomize_indexes = {}
+	},
 	psyker_seen_killstreak_zealot = {
 		randomize_indexes_n = 0,
 		sound_events_n = 5,
