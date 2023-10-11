@@ -38,9 +38,6 @@ local view_element_player_popup_style = {
 	background = {}
 }
 local background_style = view_element_player_popup_style.background
-background_style.color = {
-	color = Color.black(160, true)
-}
 background_style.icon = {
 	horizontal_alignment = "center",
 	offset = {
@@ -48,7 +45,7 @@ background_style.icon = {
 		0,
 		2
 	},
-	color = Color.ui_brown_light(70, true),
+	color = Color.terminal_background(255, true),
 	uvs = {
 		{
 			0,
@@ -67,6 +64,31 @@ background_style.icon = {
 		1822,
 		430
 	}
+}
+background_style.terminal = {
+	vertical_alignment = "center",
+	scale_to_material = true,
+	horizontal_alignment = "center",
+	offset = {
+		0,
+		0,
+		1
+	},
+	size_addition = {
+		130,
+		25
+	},
+	uvs = {
+		{
+			0,
+			0
+		},
+		{
+			1,
+			1
+		}
+	},
+	color = Color.terminal_grid_background(255, true)
 }
 background_style.top_border = {
 	vertical_alignment = "top",
@@ -293,7 +315,7 @@ checkbox_button_style.hotspot = {
 	on_hover_sound = UISoundEvents.social_menu_popup_button_hovered
 }
 checkbox_button_style.background_selected = {
-	color = Color.ui_terminal(0, true),
+	color = Color.terminal_corner_hover(0, true),
 	offset = {
 		0,
 		0,
@@ -302,7 +324,7 @@ checkbox_button_style.background_selected = {
 }
 checkbox_button_style.highlight = {
 	hdr = true,
-	color = Color.ui_terminal(255, true),
+	color = Color.terminal_corner_hover(255, true),
 	offset = {
 		0,
 		0,
@@ -467,9 +489,9 @@ player_plaque_style.background = {
 		0,
 		0
 	},
-	color = Color.ui_terminal(120, true),
-	default_color = Color.ui_terminal(120, true),
-	hover_color = Color.ui_terminal(255, true)
+	color = Color.terminal_corner(120, true),
+	default_color = Color.terminal_corner(120, true),
+	hover_color = Color.terminal_corner_hover(255, true)
 }
 player_plaque_style.portrait = {
 	size = social_menu_roster_view_styles.portrait_size,
@@ -492,7 +514,7 @@ player_plaque_style.portrait_overlay = {
 		0,
 		5
 	},
-	color = Color.ui_terminal(255, true)
+	color = Color.terminal_corner_hover(255, true)
 }
 player_plaque_style.character_insignia = {
 	horizontal_alignment = "left",
@@ -551,7 +573,7 @@ party_membership_style.offset = {
 }
 player_plaque_style.highlight = {
 	highlight_size_addition = 10,
-	color = Color.ui_terminal(0, true),
+	color = Color.terminal_corner_hover(0, true),
 	size_addition = {
 		0,
 		0

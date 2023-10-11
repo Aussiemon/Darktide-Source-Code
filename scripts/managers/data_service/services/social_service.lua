@@ -92,11 +92,16 @@ SocialService.destroy = function (self)
 	Managers.event:unregister(self, "backend_friend_removed")
 end
 
+SocialService.reset = function (self)
+	self._platform_social:reset()
+end
+
 SocialService.update = function (self, dt, t)
 	if self._voting_id and not Managers.voting:voting_exists(self._voting_id) then
 		self._voting_id = nil
 	end
 
+	self._platform_social:update(dt, t)
 	self._invites:update()
 	self:_check_split_party()
 end

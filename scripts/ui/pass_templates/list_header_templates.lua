@@ -48,6 +48,11 @@ ListHeaderPassTemplates.list_header = function (header_width, height, use_is_foc
 		header_width,
 		height
 	}
+	header_font_style.size_addition = {
+		-60,
+		0,
+		1
+	}
 	header_font_style.default_color = Color.terminal_text_body(255, true)
 	header_font_style.text_color = Color.terminal_text_body(255, true)
 	header_font_style.hover_color = Color.terminal_text_header_selected(255, true)

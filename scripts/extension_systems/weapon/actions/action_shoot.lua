@@ -159,6 +159,7 @@ end
 ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 	local action_component = self._action_component
 	local action_settings = self._action_settings
+	self._has_shot_this_frame = false
 
 	if action_settings.ammunition_usage then
 		local buff_keywords = BuffSettings.keywords
@@ -203,12 +204,11 @@ ActionShoot.fixed_update = function (self, dt, t, time_in_action)
 
 		if not self._unit_data_extension.is_resimulating then
 			table.clear(self._shot_result)
-
-			action_component.fire_last_t = t
-
 			self:_shoot(position, rotation, DEFAULT_POWER_LEVEL, charge_level, t)
 		end
 
+		self._has_shot_this_frame = true
+		action_component.fire_last_t = t
 		local aim_assist_ramp_template = action_settings.aim_assist_ramp_template
 
 		if aim_assist_ramp_template and aim_assist_ramp_template.reset_on_attack then

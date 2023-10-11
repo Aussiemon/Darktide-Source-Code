@@ -9,6 +9,7 @@ local PresenceManager = class("PresenceManager")
 local PRESENCE_UPDATE_INTERVAL = 30
 local ACTIVITY_CHECK_INTERVAL = 0.5
 local CROSS_PLAY_CHECK_INTERVAL = 3
+local BATCHED_PRESENCE_STREAM_MAX_SIZE = 200
 
 local function _info(...)
 	Log.info("PresenceManager", ...)
@@ -52,6 +53,8 @@ PresenceManager.init = function (self)
 		self._loaded_xbox_gamertags = {}
 	end
 
+	self._batched_presence_streams = {}
+	self._entry_to_stream_id = {}
 	self._initialized = false
 end
 
@@ -67,7 +70,7 @@ PresenceManager.initialize = function (self)
 	self._initialized = true
 
 	self:_init_immaterium_presence()
-	self:_init_batched_get_presence()
+	self:_init_batched_get_presence(nil)
 end
 
 PresenceManager.reset = function (self)
@@ -83,11 +86,16 @@ PresenceManager.reset = function (self)
 		self._my_presence_stream = nil
 	end
 
-	if self._batched_presence_stream then
-		self._batched_presence_stream:abort()
+	local batched_presence_streams = self._batched_presence_streams
 
-		self._batched_presence_stream = nil
+	for i = 1, #batched_presence_streams do
+		local data = batched_presence_streams[i]
+
+		data.stream:abort()
 	end
+
+	table.clear(batched_presence_streams)
+	table.clear(self._entry_to_stream_id)
 
 	for id, presence in pairs(self._presences_by_account_id) do
 		presence:destroy()
@@ -103,7 +111,6 @@ PresenceManager.reset = function (self)
 		end
 	end
 
-	table.clear(self._batched_get_presence_request_id_to_entry)
 	self._myself:reset()
 end
 
@@ -199,43 +206,72 @@ PresenceManager._init_immaterium_presence = function (self)
 	self._my_presence_stream = Managers.grpc:start_presence(self._myself:create_key_values())
 end
 
-PresenceManager._init_batched_get_presence = function (self)
-	self._batched_presence_stream = Managers.grpc:get_batched_presence_stream()
-	self._batched_get_presence_request_id_to_entry = {}
+PresenceManager._init_batched_get_presence = function (self, stream_id)
+	local batched_presence_streams = self._batched_presence_streams
+
+	if stream_id then
+		if batched_presence_streams[stream_id] then
+			batched_presence_streams[stream_id].stream:abort()
+		end
+	else
+		stream_id = #batched_presence_streams + 1
+	end
+
+	batched_presence_streams[stream_id] = {
+		restarting = false,
+		stream = Managers.grpc:get_batched_presence_stream(),
+		entry_to_request_id = {}
+	}
+
+	return stream_id
 end
 
-PresenceManager._get_batched_presence = function (self, entry, platform, id)
-	local stream = self._batched_presence_stream
+PresenceManager._get_batched_presence = function (self, entry, platform, platform_user_id)
+	local stream_id = self._entry_to_stream_id[entry]
+	local batched_presence_streams = self._batched_presence_streams
 
-	if not stream then
-		return nil
+	if not stream_id then
+		for i = 1, #batched_presence_streams do
+			local data = batched_presence_streams[i]
+
+			if table.size(data.entry_to_request_id) < BATCHED_PRESENCE_STREAM_MAX_SIZE then
+				stream_id = i
+
+				break
+			end
+		end
+
+		stream_id = stream_id or self:_init_batched_get_presence(nil)
+		self._entry_to_stream_id[entry] = stream_id
 	end
 
-	local request_id = self._batched_get_presence_request_id_to_entry[entry]
+	local data = batched_presence_streams[stream_id]
+	local request_id = data.entry_to_request_id[entry]
 
 	if not request_id then
-		request_id = stream:request_presence(platform, id)
-		self._batched_get_presence_request_id_to_entry[entry] = request_id
+		request_id = data.stream:request_presence(platform, platform_user_id)
+		data.entry_to_request_id[entry] = request_id
 	end
 
-	return stream:get_presence(request_id)
+	return data.stream:get_presence(request_id)
 end
 
 PresenceManager._abort_batched_presence = function (self, entry)
-	local stream = self._batched_presence_stream
+	local stream_id = self._entry_to_stream_id[entry]
 
-	if not stream then
+	if not stream_id then
 		return
 	end
 
-	local request_id = self._batched_get_presence_request_id_to_entry[entry]
+	local data = self._batched_presence_streams[stream_id]
+	local request_id = data.entry_to_request_id[entry]
 
 	if request_id then
-		stream:abort_presence(request_id)
-
-		self._batched_get_presence_request_id_to_entry[entry] = nil
-		self._batched_get_presence_request_id_to_entry = remove_empty_values(self._batched_get_presence_request_id_to_entry)
+		data.stream:abort_presence(request_id)
 	end
+
+	data.entry_to_request_id[entry] = nil
+	self._entry_to_stream_id[entry] = nil
 end
 
 PresenceManager._update_immaterium = function (self)
@@ -330,21 +366,30 @@ PresenceManager.update = function (self, dt, t)
 		end
 	end
 
-	if self._batched_presence_stream and not self._batched_presence_stream:alive() then
-		local error = self._batched_presence_stream:error()
-		self._batched_presence_stream = nil
+	local batched_presence_streams = self._batched_presence_streams
 
-		if error then
-			if error.aborted then
-				_info("Aborted batched presence operation")
+	for i = 1, #batched_presence_streams do
+		local data = batched_presence_streams[i]
+		local stream = data.stream
+
+		if not stream:alive() and not data.restarting then
+			local error = stream:error()
+
+			if error then
+				if error.aborted then
+					_info("Aborted batched presence operation")
+				else
+					_info("Disconnected from batched get presence - %s", table.tostring(error, 3))
+
+					data.restarting = true
+
+					Managers.grpc:delay_with_jitter_and_backoff("batched_get_presence"):next(function ()
+						self:_init_batched_get_presence(i)
+					end)
+				end
 			else
-				_info("Disconnected from batched get presence - %s", table.tostring(error, 3))
-				Managers.grpc:delay_with_jitter_and_backoff("batched_get_presence"):next(function ()
-					self:_init_batched_get_presence()
-				end)
+				self:_init_batched_get_presence(i)
 			end
-		else
-			self:_init_batched_get_presence()
 		end
 	end
 

@@ -2510,6 +2510,10 @@ params.verbose_presence_log = {
 	value = false,
 	category = "Presence"
 }
+params.print_batched_presence_streams = {
+	value = false,
+	category = "Presence"
+}
 params.hide_hud = {
 	value = false,
 	category = "Hud"

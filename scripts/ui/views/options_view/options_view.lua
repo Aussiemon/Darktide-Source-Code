@@ -944,7 +944,7 @@ OptionsView._create_settings_widget_from_config = function (self, config, catego
 		size[2]
 	}
 	local pass_template_function = template.pass_template_function
-	local pass_template = pass_template_function and pass_template_function(self, config, size) or template.pass_template
+	local pass_template = pass_template_function and pass_template_function(self, config, new_size) or template.pass_template
 	local widget_definition = pass_template and UIWidget.create_definition(pass_template, scenegraph_id, nil, new_size)
 	local name = "widget_" .. suffix
 

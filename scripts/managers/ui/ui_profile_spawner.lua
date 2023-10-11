@@ -580,7 +580,9 @@ UIProfileSpawner._spawn_character_profile = function (self, profile, profile_loa
 	local ignored_slots = self._ignored_slots
 
 	for slot_id, config in pairs(slot_configuration) do
-		if not ignored_slots[slot_id] and not config.ignore_character_spawning then
+		local settings = ItemSlotSettings[slot_id]
+
+		if not ignored_slots[slot_id] and not settings.ignore_character_spawning then
 			gear_slots[slot_id] = config
 		end
 	end

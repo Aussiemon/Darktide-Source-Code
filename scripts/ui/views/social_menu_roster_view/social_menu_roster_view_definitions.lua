@@ -55,7 +55,7 @@ local roster_grid_mask_size = {
 	roster_panel_size[2]
 }
 local roster_scrollbar_size = {
-	ScrollbarPassTemplates.metal_scrollbar.default_width,
+	ScrollbarPassTemplates.terminal_scrollbar.default_width,
 	roster_grid_size[2]
 }
 local visible_area_size = {
@@ -241,7 +241,7 @@ local widget_definitions = {
 			scenegraph_id = "party_panel_top"
 		},
 		{
-			value = "content/ui/materials/frames/line_medium_vertical_shadow_filled",
+			value = "content/ui/materials/backgrounds/terminal_basic",
 			style_id = "background",
 			pass_type = "texture"
 		},
@@ -349,7 +349,7 @@ local widget_definitions = {
 			scenegraph_id = "roster_panel_bottom"
 		},
 		{
-			value = "content/ui/materials/frames/line_medium_vertical_shadow_filled",
+			value = "content/ui/materials/backgrounds/terminal_basic",
 			style_id = "background",
 			pass_type = "texture"
 		}
@@ -368,7 +368,7 @@ local widget_definitions = {
 			}
 		}
 	}, "roster_grid_mask"),
-	roster_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.metal_scrollbar, "roster_scrollbar"),
+	roster_scrollbar = UIWidget.create_definition(ScrollbarPassTemplates.terminal_scrollbar, "roster_scrollbar"),
 	roster_grid_interaction = UIWidget.create_definition({
 		{
 			pass_type = "hotspot",

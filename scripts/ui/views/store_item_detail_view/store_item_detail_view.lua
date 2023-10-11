@@ -1557,26 +1557,26 @@ StoreItemDetailView._handle_input = function (self, input_service)
 		if self._aquilas_showing then
 			local new_selection_index, new_selection_row = nil
 
-			if input_service:get("navigate_up_continuous") then
+			if input_service:get("navigate_up_continuous") and self._selected_aquila_row then
 				if self._selected_aquila_row > 1 then
 					new_selection_row = "up"
 				else
 					new_selection_row = false
 				end
-			elseif input_service:get("navigate_down_continuous") then
-				if self._selected_aquila_row < self._aquilas_navigation_data.num_rows then
+			elseif input_service:get("navigate_down_continuous") and self._selected_aquila_row then
+				if self._selected_aquila_row < (self._aquilas_navigation_data and self._aquilas_navigation_data.num_rows or self._selected_aquila_row) then
 					new_selection_row = "down"
 				else
 					new_selection_row = false
 				end
-			elseif input_service:get("navigate_left_continuous") then
+			elseif input_service:get("navigate_left_continuous") and self._selected_aquila_index then
 				if self._selected_aquila_index > 1 then
 					new_selection_index = self._selected_aquila_index - 1
 				else
 					new_selection_index = false
 				end
-			elseif input_service:get("navigate_right_continuous") then
-				new_selection_index = self._selected_aquila_index < self._aquilas_navigation_data.total_widgets and self._selected_aquila_index + 1
+			elseif input_service:get("navigate_right_continuous") and self._selected_aquila_index then
+				new_selection_index = self._selected_aquila_index < (self._aquilas_navigation_data and self._aquilas_navigation_data.total_widgets or self._selected_aquila_index) and self._selected_aquila_index + 1
 			end
 
 			if new_selection_index then

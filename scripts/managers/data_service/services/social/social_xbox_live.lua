@@ -3,6 +3,8 @@ local FriendXboxLive = require("scripts/managers/data_service/services/social/fr
 local PlayerManager = require("scripts/foundation/managers/player/player_manager")
 local Promise = require("scripts/foundation/utilities/promise")
 local XboxLiveUtils = require("scripts/foundation/utilities/xbox_live")
+local RECENT_PLAYERS_MAX_RETRIES = 10
+local RECENT_PLAYERS_RETRY_DELAY = 6
 local SocialXboxLive = class("SocialXboxLive")
 
 SocialXboxLive.init = function (self)
@@ -10,11 +12,27 @@ SocialXboxLive.init = function (self)
 	self._num_blocked = 0
 	self._friends_promise = nil
 	self._blocked_promise = nil
-	self._updated_recent_players = {}
+	self._recent_players_retry_time = nil
+	self._recent_players_retry_queue = {}
+	self._recent_players_num_retries = {}
+	self._recent_players_promises = {}
 end
 
 SocialXboxLive.destroy = function (self)
-	return
+	self:reset()
+end
+
+SocialXboxLive.reset = function (self)
+	self._recent_players_retry_time = nil
+
+	table.clear(self._recent_players_retry_queue)
+	table.clear(self._recent_players_num_retries)
+
+	for account_id, promise in pairs(self._recent_players_promises) do
+		promise:cancel()
+	end
+
+	table.clear(self._recent_players_promises)
 end
 
 SocialXboxLive.friends_list_has_changes = function (self)
@@ -138,13 +156,36 @@ SocialXboxLive.fetch_blocked_list_ids_forced = function (self)
 	return Managers.account:xbox_live_block_list()
 end
 
+SocialXboxLive.update = function (self, dt, t)
+	local queue = self._recent_players_retry_queue
+
+	if #queue > 0 and self._recent_players_retry_time <= t then
+		for i = 1, #queue do
+			local account_id = queue[i]
+
+			Log.info("SocialXboxLive", "[update_recent_players] Retrying %s", account_id)
+			self:_update_recent_player(account_id)
+		end
+
+		table.clear(queue)
+	end
+end
+
 SocialXboxLive.update_recent_players = function (self, account_id)
-	if self._updated_recent_players[account_id] then
+	if self._recent_players_promises[account_id] then
 		return
 	end
 
-	self._updated_recent_players[account_id] = true
+	if table.find(self._recent_players_retry_queue, account_id) then
+		return
+	end
+
+	self:_update_recent_player(account_id)
+end
+
+SocialXboxLive._update_recent_player = function (self, account_id)
 	local _, presence_promise = Managers.presence:get_presence(account_id)
+	self._recent_players_promises[account_id] = presence_promise
 
 	presence_promise:next(function (presence)
 		if not presence then
@@ -156,9 +197,9 @@ SocialXboxLive.update_recent_players = function (self, account_id)
 		local platform = presence:platform()
 
 		if platform ~= "xbox" then
-			return Promise.rejected({
-				string.format("Unexpected platform %s, expected 'xbox'", platform)
-			})
+			Log.info("SocialXboxLive", "[update_recent_players] Ignoring %s, platform %q ~= \"xbox\"", account_id, platform)
+
+			return nil
 		end
 
 		local xuid = presence:platform_user_id()
@@ -171,11 +212,26 @@ SocialXboxLive.update_recent_players = function (self, account_id)
 
 		Log.info("SocialXboxLive", "[update_recent_players] Updating... (account_id: %s, xuid: %s)", account_id, xuid)
 
-		return XboxLiveUtils.update_recent_player_teammate(xuid)
+		local update_promise = XboxLiveUtils.update_recent_player_teammate(xuid)
+		self._recent_players_promises[account_id] = update_promise
+
+		return update_promise
 	end):next(function ()
-		Log.info("SocialXboxLive", "[update_recent_players] Update Success (account_id: %s)", account_id)
+		self._recent_players_promises[account_id] = nil
+		self._recent_players_num_retries[account_id] = nil
 	end):catch(function (err)
-		Log.error("SocialXboxLive", "[update_recent_players] Update Failed (account_id: %s): %s", account_id, table.tostring(err, 5))
+		Log.error("SocialXboxLive", "[update_recent_players] Update Failed %s: %s", account_id, table.tostring(err, 5))
+
+		self._recent_players_promises[account_id] = nil
+		self._recent_players_retry_time = Managers.time:time("main") + RECENT_PLAYERS_RETRY_DELAY
+		local num_retries = self._recent_players_num_retries[account_id] or 0
+
+		if num_retries < RECENT_PLAYERS_MAX_RETRIES then
+			self._recent_players_num_retries[account_id] = num_retries + 1
+			self._recent_players_retry_queue[#self._recent_players_retry_queue + 1] = account_id
+		else
+			self._recent_players_num_retries[account_id] = nil
+		end
 	end)
 end
 

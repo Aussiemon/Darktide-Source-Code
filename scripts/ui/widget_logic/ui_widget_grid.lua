@@ -317,7 +317,7 @@ UIWidgetGrid._find_closest_neighbour_vertical = function (self, index, input_dir
 			local content = widget.content
 			local row = content.row
 
-			if closest_widget and closest_widget.content.row < row then
+			if row and closest_widget and closest_widget.content.row and closest_widget.content.row < row then
 				break
 			end
 
@@ -333,7 +333,7 @@ UIWidgetGrid._find_closest_neighbour_vertical = function (self, index, input_dir
 			local content = widget.content
 			local row = content.row
 
-			if closest_widget and row < closest_widget.content.row then
+			if row and closest_widget and closest_widget.content.row and row < closest_widget.content.row then
 				break
 			end
 

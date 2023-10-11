@@ -171,7 +171,11 @@ ViewElementPlayerSocialPopup.on_navigation_input_changed = function (self, using
 	local menu_grid = self._menu_grid
 
 	if not using_cursor_navigation then
-		menu_grid:select_first_index(true)
+		local current_selected_grid_index = menu_grid:selected_grid_index()
+
+		if not current_selected_grid_index or not menu_grid:widget_by_index(current_selected_grid_index) then
+			menu_grid:select_first_index(true)
+		end
 	elseif menu_grid:selected_grid_index() then
 		menu_grid:select_grid_index(nil, nil, nil, true)
 	end

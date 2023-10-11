@@ -473,7 +473,7 @@ SocialMenuRosterView.on_resolution_modified = function (self)
 	self:_position_tab_bar()
 end
 
-SocialMenuRosterView._on_navigation_input_changed = function (self)
+SocialMenuRosterView._on_navigation_input_changed = function (self, optional_starting_index)
 	SocialMenuRosterView.super._on_navigation_input_changed(self)
 
 	local is_using_cursor_navigation = self._using_cursor_navigation
@@ -483,23 +483,34 @@ SocialMenuRosterView._on_navigation_input_changed = function (self)
 		popup_menu:on_navigation_input_changed(is_using_cursor_navigation)
 	end
 
-	local focused_grid_id = not is_using_cursor_navigation and (self._focused_grid_id or PARTY_GRID_ID) or nil
+	local focused_grid_id = self._focused_grid_id or PARTY_GRID_ID or nil
 	local grids = self._grids
 
 	for i = #grids, 1, -1 do
 		local grid = grids[i]
 		local selected_grid_index = nil
-		local is_focused_grid = i == focused_grid_id
 
-		if is_focused_grid then
-			selected_grid_index = grid:selected_grid_index()
-			local selected_widget = grid:widget_by_index(selected_grid_index)
+		if is_using_cursor_navigation then
+			grid:focus_grid_index(nil)
+		else
+			local is_focused_grid = i == focused_grid_id
 
-			if not selected_widget then
-				selected_grid_index = grid:select_first_index()
+			if is_focused_grid then
+				selected_grid_index = grid:selected_grid_index()
+				local selected_widget = grid:widget_by_index(selected_grid_index)
 
-				if not selected_grid_index then
-					focused_grid_id = math.max(focused_grid_id - 1, 1)
+				if not selected_widget then
+					if optional_starting_index and grid:widget_by_index(optional_starting_index) then
+						grid:focus_grid_index(optional_starting_index)
+
+						selected_grid_index = optional_starting_index
+					else
+						selected_grid_index = grid:select_first_index()
+
+						if not selected_grid_index then
+							focused_grid_id = math.max(focused_grid_id - 1, 1)
+						end
+					end
 				end
 			end
 		end
@@ -518,7 +529,7 @@ SocialMenuRosterView._on_navigation_input_changed = function (self)
 		end
 	end
 
-	self._focused_grid_id = focused_grid_id
+	self._focused_grid_id = not is_using_cursor_navigation and focused_grid_id or nil
 end
 
 SocialMenuRosterView.set_next_roster_filter = function (self, list_index)
@@ -1259,7 +1270,7 @@ SocialMenuRosterView._unload_icons = function (self, force_unload)
 	end
 end
 
-SocialMenuRosterView._setup_roster_grid = function (self, widget_data)
+SocialMenuRosterView._setup_roster_grid = function (self, widget_data, optional_starting_index)
 	local widgets, widget_alignments = self:_create_roster_widgets(widget_data)
 	self._roster_widgets = widgets
 	self._roster_alignment_widgets = widget_alignments
@@ -1271,7 +1282,7 @@ SocialMenuRosterView._setup_roster_grid = function (self, widget_data)
 	self:_assign_roster_grid_scrollbar(roster_grid, widgets)
 
 	if not self._using_cursor_navigation then
-		self:_on_navigation_input_changed()
+		self:_on_navigation_input_changed(optional_starting_index)
 	end
 end
 
@@ -1394,7 +1405,7 @@ SocialMenuRosterView._handle_input = function (self, input_service, dt, t)
 
 			if input_service:get("navigate_left_continuous") and self._selected_roster_widget_column_last_frame == 1 then
 				local roster_grid_first_visible_row = self:_get_roster_grid_first_visible_row()
-				local visible_content_row = widget.content.row - (roster_grid_first_visible_row - 1)
+				local visible_content_row = widget.content.row and widget.content.row - (roster_grid_first_visible_row - 1) or 1
 				local party_selected_index = math.clamp(visible_content_row, 1, num_party_members)
 
 				party_grid:focus_grid_index(party_selected_index)
@@ -1416,7 +1427,7 @@ SocialMenuRosterView._handle_input = function (self, input_service, dt, t)
 			for i = #roster_widgets, 1, -1 do
 				local widget_content = roster_widgets[i].content
 
-				if widget_content.hotspot and widget_content.row <= desired_row and widget_content.column == 1 then
+				if widget_content.hotspot and widget_content.row and widget_content.row <= desired_row and widget_content.column == 1 then
 					party_grid:focus_grid_index(nil)
 					roster_grid:focus_grid_index(i)
 
@@ -1642,7 +1653,17 @@ SocialMenuRosterView._update_roster_list = function (self, list_index, new_list_
 		if lists_are_identical and self._grids[ROSTER_GRID_ID] then
 			self:_update_current_list_widgets(roster_list)
 		elseif not lists_are_identical then
-			self:_setup_roster_grid(roster_list)
+			local initial_selection_index = nil
+			local focused_grid_id = self._focused_grid_id
+
+			if focused_grid_id and focused_grid_id == ROSTER_GRID_ID then
+				local grids = self._grids
+				local grid = grids[focused_grid_id]
+				local grid_selected_index = grid:selected_grid_index()
+				initial_selection_index = grid_selected_index
+			end
+
+			self:_setup_roster_grid(roster_list, initial_selection_index)
 		end
 	end
 end

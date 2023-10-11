@@ -24,9 +24,32 @@ XboxLiveAchievement._get_progress = function (self, platform_id)
 end
 
 XboxLiveAchievement.init = function (self)
-	self._progress = {}
+	local progress = {}
+	self._progress = progress
 
-	return Promise.resolved()
+	return XboxLiveUtilities.get_all_achievements():next(function (achievements_data)
+		for i = 1, #achievements_data do
+			local achievement = achievements_data[i]
+			local id = tonumber(achievement.id)
+			local progress_state = achievement.progress_state
+
+			if progress_state == 1 then
+				progress[id] = 100
+			elseif progress_state == 2 then
+				progress[id] = 0
+			elseif progress_state == 3 then
+				local requirement = achievement.progression and achievement.progression.requirements and achievement.progression.requirements[1]
+				local progress_value = requirement and tonumber(requirement.current_progress_value)
+				progress[id] = progress_value
+			end
+		end
+
+		return nil
+	end):catch(function (err)
+		Log.error("XboxLiveAchievement", "Failed getting achievements progress from xbox live: %s", table.tostring(err))
+
+		return Promise.resolved()
+	end)
 end
 
 XboxLiveAchievement.unlock_achievement = function (self, achievement_id)

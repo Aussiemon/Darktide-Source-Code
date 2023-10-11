@@ -9,6 +9,7 @@ local TalentLayoutParser = require("scripts/ui/views/talent_builder_view/utiliti
 local TestifyCharacterProfiles = not EDITOR and DevParameters.use_testify_profiles and require("scripts/settings/testify_character_profiles")
 local UISettings = require("scripts/settings/ui/ui_settings")
 local ViewElementProfilePresetsSettings = require("scripts/ui/view_elements/view_element_profile_presets/view_element_profile_presets_settings")
+local SaveData = require("scripts/managers/save/save_data")
 local ProfileUtils = {
 	character_names = {
 		male_names_1 = {
@@ -792,7 +793,7 @@ ProfileUtils.save_item_id_for_profile_preset = function (profile_preset_id, slot
 	end
 
 	if not character_data.profile_presets then
-		character_data.profile_presets = {}
+		character_data.profile_presets = table.clone_instance(SaveData.default_character_data.profile_presets)
 	end
 
 	local profile_presets = character_data.profile_presets
@@ -822,7 +823,7 @@ ProfileUtils.save_talent_id_for_profile_preset = function (profile_preset_id, ta
 	end
 
 	if not character_data.profile_presets then
-		character_data.profile_presets = {}
+		character_data.profile_presets = table.clone_instance(SaveData.default_character_data.profile_presets)
 	end
 
 	local profile_presets = character_data.profile_presets
@@ -849,7 +850,7 @@ ProfileUtils.save_talent_nodes_for_profile_preset = function (profile_preset_id,
 	end
 
 	if not character_data.profile_presets then
-		character_data.profile_presets = {}
+		character_data.profile_presets = table.clone_instance(SaveData.default_character_data.profile_presets)
 
 		return
 	end
@@ -865,6 +866,8 @@ ProfileUtils.save_talent_nodes_for_profile_preset = function (profile_preset_id,
 	elseif profile_preset.talents ~= talent_nodes then
 		table.clear(profile_preset.talents)
 	end
+
+	Log.info("ProfileUtils", "Saving talent changes for profile preset: %s. Currently running preset version: %s", tostring(profile_preset_id), tostring(character_data.profile_presets and character_data.profile_presets.profile_presets_version))
 
 	local talents = profile_preset.talents
 
@@ -889,7 +892,7 @@ ProfileUtils.save_talent_node_for_profile_preset = function (profile_preset_id, 
 	end
 
 	if not character_data.profile_presets then
-		character_data.profile_presets = {}
+		character_data.profile_presets = table.clone_instance(SaveData.default_character_data.profile_presets)
 
 		return
 	end
@@ -918,7 +921,7 @@ ProfileUtils.clear_all_talent_nodes_for_profile_preset = function (profile_prese
 	end
 
 	if not character_data.profile_presets then
-		character_data.profile_presets = {}
+		character_data.profile_presets = table.clone_instance(SaveData.default_character_data.profile_presets)
 	end
 
 	local profile_presets = character_data.profile_presets
@@ -977,7 +980,7 @@ ProfileUtils.get_profile_presets = function ()
 	local profile_presets = character_data.profile_presets
 
 	if not profile_presets then
-		profile_presets = {}
+		profile_presets = table.clone_instance(SaveData.default_character_data.profile_presets)
 		character_data.profile_presets = profile_presets
 
 		Managers.save:queue_save()

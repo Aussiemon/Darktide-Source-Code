@@ -409,6 +409,13 @@ local default_view_input_settings = {
 			"ps4_controller_triangle",
 			description = "loc_alias_creator_randomize",
 			bindable = false
+		},
+		continue_end_view = {
+			"keyboard_space",
+			"xbox_controller_a",
+			"ps4_controller_cross",
+			description = "loc_alias_continue_end_view",
+			bindable = false
 		}
 	},
 	settings = {
@@ -862,6 +869,10 @@ local default_view_input_settings = {
 		},
 		character_create_randomize = {
 			key_alias = "character_create_randomize",
+			type = "pressed"
+		},
+		continue_end_view = {
+			key_alias = "continue_end_view",
 			type = "pressed"
 		}
 	}

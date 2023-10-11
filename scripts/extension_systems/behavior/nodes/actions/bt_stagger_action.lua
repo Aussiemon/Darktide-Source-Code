@@ -46,19 +46,22 @@ BtStaggerAction.enter = function (self, unit, breed, blackboard, scratchpad, act
 	local stagger_impact_comparison = StaggerSettings.stagger_impact_comparison
 	local current_stagger_type = stagger_component.type
 	local current_stagger_impact = stagger_impact_comparison[current_stagger_type]
-	local hit_mass_modifier = IMPACT_HIT_MASS_MODIFIERS[math.min(current_stagger_impact, #IMPACT_HIT_MASS_MODIFIERS)]
 
-	if not scratchpad.current_hit_mass_modifier then
-		local health_extension = ScriptUnit.extension(unit, "health_system")
-		local current_hit_mass = health_extension:hit_mass()
-		scratchpad.original_hit_mass = current_hit_mass
-		scratchpad.current_hit_mass_modifier = hit_mass_modifier
+	if current_stagger_impact then
+		local hit_mass_modifier = IMPACT_HIT_MASS_MODIFIERS[math.min(current_stagger_impact, #IMPACT_HIT_MASS_MODIFIERS)]
 
-		health_extension:set_hit_mass(current_hit_mass * hit_mass_modifier)
-	elseif hit_mass_modifier < scratchpad.current_hit_mass_modifier then
-		local health_extension = ScriptUnit.extension(unit, "health_system")
+		if not scratchpad.current_hit_mass_modifier then
+			local health_extension = ScriptUnit.extension(unit, "health_system")
+			local current_hit_mass = health_extension:hit_mass()
+			scratchpad.original_hit_mass = current_hit_mass
+			scratchpad.current_hit_mass_modifier = hit_mass_modifier
 
-		health_extension:set_hit_mass(scratchpad.original_hit_mass * hit_mass_modifier)
+			health_extension:set_hit_mass(current_hit_mass * hit_mass_modifier)
+		elseif hit_mass_modifier < scratchpad.current_hit_mass_modifier then
+			local health_extension = ScriptUnit.extension(unit, "health_system")
+
+			health_extension:set_hit_mass(scratchpad.original_hit_mass * hit_mass_modifier)
+		end
 	end
 
 	behavior_component.move_state = "stagger"

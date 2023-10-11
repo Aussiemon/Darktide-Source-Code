@@ -117,8 +117,9 @@ local widget_definitions = {
 			content_id = "hotspot"
 		},
 		{
-			pass_type = "rect",
-			style_id = "color"
+			value = "content/ui/materials/backgrounds/terminal_basic",
+			style_id = "terminal",
+			pass_type = "texture_uv"
 		},
 		{
 			value = "content/ui/materials/backgrounds/popups/screen_takeover_02",
@@ -229,6 +230,7 @@ local animations = {
 				ui_scenegraph.popup_area_background.size[2] = popup_height
 				local background_widget = widgets.background
 				local background_style = background_widget.style.icon
+				local background_terminal_style = background_widget.style.terminal
 				local background_full_height = background_style.full_size[2]
 				local v_start = params.v_start
 				local v_end = params.v_end_target
@@ -298,6 +300,7 @@ local animations = {
 				ui_scenegraph.popup_area_background.size[2] = popup_height
 				local background_widget = widgets.background
 				local background_style = background_widget.style.icon
+				local background_terminal_style = background_widget.style.terminal
 				local background_full_height = background_style.full_size[2]
 				local v_start = params.v_start
 				local v_end = params.v_end_target

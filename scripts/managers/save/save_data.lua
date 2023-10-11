@@ -58,13 +58,14 @@ SaveData.default_account_data = {
 	new_account_items_by_archetype = {}
 }
 SaveData.default_character_data = {
-	profile_presets_version = 3,
 	new_items = {},
 	new_items_by_type = {},
 	new_item_notifications = {},
 	new_completed_contracts = {},
 	new_unlocked_talent_groups = {},
-	profile_presets = {}
+	profile_presets = {
+		profile_presets_version = 1
+	}
 }
 
 SaveData.init = function (self)
@@ -77,6 +78,8 @@ SaveData.init = function (self)
 end
 
 SaveData.populate = function (self, save_data)
+	Log.info("SaveData", "Populating save data.")
+
 	if save_data then
 		local version_match = self.version == save_data.version
 
@@ -93,22 +96,23 @@ SaveData.populate = function (self, save_data)
 						local default_character_data = SaveData.default_character_data
 
 						for character_id, character_id_data in pairs(character_data) do
-							local incorrect_profile_presets_version = character_id_data.profile_presets_version ~= default_character_data.profile_presets_version
+							local profile_presets = character_id_data.profile_presets
+							local incorrect_profile_presets_version = not profile_presets or profile_presets.profile_presets_version ~= default_character_data.profile_presets.profile_presets_version
+
+							Log.info("SaveData", "Current saved profile preset version for character (%s) is: %s. Our default is: %s", tostring(character_id), tostring(profile_presets and profile_presets.profile_presets_version), tostring(default_character_data.profile_presets.profile_presets_version))
 
 							if incorrect_profile_presets_version then
-								character_id_data.profile_presets_version = default_character_data.profile_presets_version
-								character_id_data.active_profile_preset_id = nil
+								Log.info("SaveData", "Clearing out profile presets for for character (%s)", tostring(character_id))
 
-								if character_id_data.profile_presets then
-									table.clear(character_id_data.profile_presets)
-								else
-									character_id_data.profile_presets = {}
-								end
+								character_id_data.active_profile_preset_id = nil
+								character_id_data.profile_presets = table.clone_instance(default_character_data.profile_presets)
 							end
 						end
 					end
 				end
 			else
+				Log.info("SaveData", "Incorrect account data version is being used: %s. The new one is: %s ", tostring(save_data.account_data_version), tostring(self.account_data_version))
+
 				for account_id, account_data in pairs(data.account_data) do
 					local new_data = table.clone(SaveData.default_account_data)
 					local saved_input_settings = account_data.input_settings

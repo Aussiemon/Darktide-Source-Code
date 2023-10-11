@@ -2477,7 +2477,7 @@ ButtonPassTemplates.list_button = {
 		style_id = "background_selected",
 		value = "content/ui/materials/buttons/background_selected",
 		style = {
-			color = Color.ui_terminal(0, true),
+			color = Color.terminal_corner_hover(0, true),
 			offset = {
 				0,
 				0,
@@ -2498,7 +2498,7 @@ ButtonPassTemplates.list_button = {
 		style = {
 			hdr = true,
 			scale_to_material = true,
-			color = Color.ui_terminal(255, true),
+			color = Color.terminal_corner_hover(255, true),
 			offset = {
 				0,
 				0,

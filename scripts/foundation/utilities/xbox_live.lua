@@ -252,7 +252,12 @@ XboxLiveUtils.set_activity = function (connection_string, party_id, num_other_me
 	Log.info("XboxLive", "Setting activity... connection_string: %s, party_id %s, num_members %s", connection_string, party_id, num_members)
 	XboxLiveUtils.user_id():next(function (user_id)
 		local group_id = party_id
-		join_restriction = join_restriction or XblMultiplayerActivityJoinRestriction.JOIN_RESTRICTION_PUBLIC
+
+		if not join_restriction then
+			local max_num_members = XblMultiplayerActivityJoinRestriction.JOIN_RESTRICTION_PUBLIC
+		end
+
+		join_restriction = max_num_members
 		local max_num_members = 4
 		local allow_cross_platform_join = true
 		local async_block, error_code, error_message = XboxLiveMPA.set_activity(user_id, connection_string, group_id, join_restriction, num_members, max_num_members, allow_cross_platform_join)
@@ -537,24 +542,22 @@ XboxLiveUtils.get_entitlements = function ()
 				}
 			end
 
-			if result ~= nil then
-				if error_code == nil then
-					slot0, slot1, slot2 = ipairs(result)
+			if result ~= nil and error_code == nil then
+				slot0, slot1, slot2 = ipairs(result)
 
-					for _, v in slot0, slot1, slot2 do
-						result_by_id[v.storeId] = v
-					end
-
-					if async_job_next_page then
-						return false
-					end
-
-					slot0.data = result_by_id
-
-					return {
-						success = true
-					}
+				for _, v in slot0, slot1, slot2 do
+					result_by_id[v.storeId] = v
 				end
+
+				if async_job_next_page then
+					return false
+				end
+
+				slot0.data = result_by_id
+
+				return {
+					success = true
+				}
 			end
 
 			return false
@@ -605,22 +608,24 @@ XboxLiveUtils.get_associated_products = function ()
 				}
 			end
 
-			if result ~= nil and error_code == nil then
-				slot0, slot1, slot2 = ipairs(result)
+			if result ~= nil then
+				if error_code == nil then
+					slot0, slot1, slot2 = ipairs(result)
 
-				for _, v in slot0, slot1, slot2 do
-					result_by_id[v.storeId] = v
+					for _, v in slot0, slot1, slot2 do
+						result_by_id[v.storeId] = v
+					end
+
+					if async_job_next_page then
+						return false
+					end
+
+					slot0.data = result_by_id
+
+					return {
+						success = true
+					}
 				end
-
-				if async_job_next_page then
-					return false
-				end
-
-				slot0.data = result_by_id
-
-				return {
-					success = true
-				}
 			end
 
 			return false

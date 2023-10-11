@@ -225,6 +225,10 @@ DLCManager.cb_query_backend_result = function (self, data)
 	local reward_queue = self._reward_queue
 	local results = data.dlcUpdates
 
+	if #results == 0 then
+		Crashify.print_exception("DLCManager", "Got empty dlcUpdates from backend, can not parse dlc rewards")
+	end
+
 	for i = 1, #results do
 		local result_data = results[i]
 		reward_queue[#reward_queue + 1] = result_data

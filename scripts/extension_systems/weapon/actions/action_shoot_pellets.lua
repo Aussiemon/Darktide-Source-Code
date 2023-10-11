@@ -214,8 +214,23 @@ ActionShootPellets._shoot = function (self, position, rotation, power_level, cha
 		end
 	end
 
-	self._action_shoot_pellets_component.num_pellets_fired = num_pellets_fired
 	self._number_of_pellets_hit = number_of_pellets_hit
+end
+
+ActionShootPellets.fixed_update = function (self, dt, t, time_in_action)
+	ActionShootPellets.super.fixed_update(self, dt, t, time_in_action)
+
+	if self._has_shot_this_frame then
+		local action_settings = self._action_settings
+		local fire_config = action_settings.fire_configuration
+		local shotshell_template = _shotshell_template(fire_config, self._inventory_slot_component)
+		local num_pellets_fired = self._action_shoot_pellets_component.num_pellets_fired
+		local num_pellets_total = shotshell_template.num_pellets
+		local remaining_pellets = num_pellets_total - num_pellets_fired
+		local num_pellets_this_frame = math.min(shotshell_template.pellets_per_frame, remaining_pellets)
+		num_pellets_fired = num_pellets_fired + num_pellets_this_frame
+		self._action_shoot_pellets_component.num_pellets_fired = num_pellets_fired
+	end
 end
 
 local INDEX_POSITION = 1

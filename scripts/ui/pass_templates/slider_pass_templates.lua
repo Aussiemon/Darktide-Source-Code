@@ -8,7 +8,7 @@ local SLIDER_TRACK_HEIGHT = 20
 local SLIDER_ENDPLATE_WIDTH = 4
 local SLIDER_THUMB_SIZE = 38
 local THUMB_HIGHLIGHT_SIZE = 58
-local LABEL_WIDTH = 130
+local LABEL_WIDTH = 80
 local EXTRA_SLIDER_TRACK_SIZE = 5
 
 local function thumb_position_change_function(content, style)
@@ -62,7 +62,7 @@ SliderPassTemplates._settings_slider = function (width, height, settings_area_wi
 		8
 	}
 	value_font_style.text_horizontal_alignment = "right"
-	local passes = ListHeaderPassTemplates.list_header(header_width, height, use_is_focused)
+	local passes = ListHeaderPassTemplates.list_header(header_width - LABEL_WIDTH, height, use_is_focused)
 	local slider_passes = {
 		{
 			value_id = "value_text",

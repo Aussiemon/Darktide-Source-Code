@@ -10,6 +10,14 @@ SocialDummy.destroy = function (self)
 	return
 end
 
+SocialDummy.reset = function (self)
+	return
+end
+
+SocialDummy.update = function (self, dt, t)
+	return
+end
+
 SocialDummy.friends_list_has_changes = function (self)
 	return false
 end

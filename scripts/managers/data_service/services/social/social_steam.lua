@@ -13,6 +13,14 @@ SocialSteam.destroy = function (self)
 	return
 end
 
+SocialSteam.reset = function (self)
+	return
+end
+
+SocialSteam.update = function (self, dt, t)
+	return
+end
+
 SocialSteam.friends_list_has_changes = function (self)
 	local num_friends = Friends.num_friends(Friends.FRIEND_FLAG)
 

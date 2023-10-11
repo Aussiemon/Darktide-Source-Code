@@ -1794,11 +1794,11 @@ InventoryBackgroundView.on_exit = function (self)
 end
 
 InventoryBackgroundView._save_current_talents_to_profile_preset = function (self)
-	local active_layout = self._active_talent_loadout
-	local active_layout_version = active_layout.version
 	local active_profile_preset_id = ProfileUtils.get_active_profile_preset_id()
 
 	if active_profile_preset_id then
+		local active_layout = self._active_talent_loadout
+		local active_layout_version = active_layout.version
 		local current_profile_equipped_talents = self._current_profile_equipped_talents
 
 		ProfileUtils.save_talent_nodes_for_profile_preset(active_profile_preset_id, current_profile_equipped_talents, active_layout_version)
@@ -2951,10 +2951,10 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 	--- END OF BLOCK #64 ---
 
-	slot11 = if current_item then
+	slot12 = if current_item then
 	JUMP TO BLOCK #65
 	else
-	JUMP TO BLOCK #67
+	JUMP TO BLOCK #68
 	end
 
 
@@ -2986,7 +2986,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #67 251-251, warpins: 3 ---
+	--- BLOCK #67 251-251, warpins: 2 ---
 	local current_item_valid = current_item.always_owned
 	--- END OF BLOCK #67 ---
 
@@ -2995,7 +2995,7 @@ InventoryBackgroundView._validate_loadout = function (self, loadout, read_only)
 
 
 	-- Decompilation error in this vicinity:
-	--- BLOCK #68 252-257, warpins: 2 ---
+	--- BLOCK #68 252-257, warpins: 3 ---
 	local fallback_item = MasterItems.find_fallback_item(removed_slot_id)
 	--- END OF BLOCK #68 ---
 

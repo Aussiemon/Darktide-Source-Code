@@ -40,7 +40,17 @@ local flicker_max_time = 0.5
 social_menu_roster_view_styles.party_panel = {}
 local party_panel_style = social_menu_roster_view_styles.party_panel
 party_panel_style.background = {
-	color = Color.black(255, true)
+	scale_to_material = true,
+	color = Color.terminal_grid_background(255, true),
+	size_addition = {
+		18,
+		26
+	},
+	offset = {
+		-9,
+		-13,
+		0
+	}
 }
 party_panel_style.header = table.clone(UIFontSettings.header_3)
 party_panel_header_style = party_panel_style.header
@@ -102,12 +112,17 @@ party_window_4.content_key = 4
 social_menu_roster_view_styles.roster_panel = {}
 local roster_panel_style = social_menu_roster_view_styles.roster_panel
 roster_panel_style.background = {
+	scale_to_material = true,
 	offset = {
-		0,
-		0,
+		-9,
+		-13,
 		0
 	},
-	color = Color.black(255, true)
+	color = Color.terminal_grid_background(255, true),
+	size_addition = {
+		18,
+		26
+	}
 }
 social_menu_roster_view_styles.roster_grid = {
 	mask_expansion = {
@@ -127,9 +142,9 @@ player_plaque_style.background = {
 		0,
 		0
 	},
-	color = Color.ui_terminal(120, true),
-	default_color = Color.ui_terminal(120, true),
-	hover_color = Color.ui_terminal(255, true)
+	color = Color.terminal_corner_hover(120, true),
+	default_color = Color.terminal_corner_hover(120, true),
+	hover_color = Color.terminal_corner_hover(255, true)
 }
 player_plaque_style.portrait = {
 	size = social_menu_roster_view_styles.portrait_size,
@@ -152,7 +167,7 @@ player_plaque_style.portrait_overlay = {
 		0,
 		5
 	},
-	color = Color.ui_terminal(255, true)
+	color = Color.terminal_corner_hover(255, true)
 }
 player_plaque_style.character_insignia = {
 	horizontal_alignment = "left",
@@ -166,12 +181,12 @@ player_plaque_style.character_insignia = {
 }
 player_plaque_style.name_or_activity = table.clone(UIFontSettings.body)
 local player_name_style = player_plaque_style.name_or_activity
-player_name_style.default_color = Color.ui_grey_light(255, true)
+player_name_style.default_color = Color.terminal_text_header(255, true)
 player_name_style.not_in_party_color = Color.ui_grey_light(255, true)
 player_name_style.party_member_color = Color.ui_brown_light(255, true)
 player_name_style.own_player_color = Color.white(255, true)
 player_name_style.own_player_material = "content/ui/materials/font_gradients/slug_font_gradient_header"
-player_name_style.hover_color = Color.ui_brown_super_light(255, true)
+player_name_style.hover_color = Color.terminal_text_header_selected(255, true)
 player_name_style.font_size_default = player_name_style.font_size
 player_name_style.font_size_small = UIFontSettings.body_small.font_size
 player_name_style.offset = {
@@ -181,9 +196,9 @@ player_name_style.offset = {
 }
 player_plaque_style.account_name = table.clone(UIFontSettings.body_small)
 local account_name_style = player_plaque_style.account_name
-account_name_style.default_color_default = Color.ui_grey_medium(255, true)
-account_name_style.default_color_large = Color.ui_grey_light(255, true)
-account_name_style.hover_color = Color.ui_brown_super_light(255, true)
+account_name_style.default_color_default = Color.terminal_text_body_dark(255, true)
+account_name_style.default_color_large = Color.terminal_text_body(255, true)
+account_name_style.hover_color = Color.terminal_text_header_selected(255, true)
 account_name_style.font_size_default = account_name_style.font_size
 account_name_style.font_size_large = UIFontSettings.body.font_size
 account_name_style.offset = {
@@ -195,8 +210,8 @@ account_name_style.vertical_offset_default = 47
 account_name_style.vertical_offset_large = 40
 player_plaque_style.party_membership = table.clone(UIFontSettings.body)
 local party_membership_style = player_plaque_style.party_membership
-party_membership_style.default_color = Color.ui_grey_light(255, true)
-party_membership_style.hover_color = Color.ui_brown_super_light(255, true)
+party_membership_style.default_color = Color.terminal_text_header(255, true)
+party_membership_style.hover_color = Color.terminal_text_header_selected(255, true)
 party_membership_style.text_horizontal_alignment = "right"
 party_membership_style.offset = {
 	-16,
@@ -205,7 +220,7 @@ party_membership_style.offset = {
 }
 player_plaque_style.highlight = {
 	highlight_size_addition = 10,
-	color = Color.ui_terminal(0, true),
+	color = Color.terminal_corner_hover(0, true),
 	size_addition = {
 		0,
 		0
@@ -226,7 +241,7 @@ player_plaque_platform_online_style.background = {
 	},
 	color = Color.black(255, true),
 	default_color = Color.black(255, true),
-	hover_color = Color.ui_terminal(255, true)
+	hover_color = Color.terminal_frame_hover(255, true)
 }
 player_plaque_platform_online_style.portrait = {
 	size = social_menu_roster_view_styles.portrait_size,
@@ -246,8 +261,8 @@ player_plaque_platform_online_style.portrait_overlay = {
 }
 player_plaque_platform_online_style.account_name = table.clone(UIFontSettings.body)
 local platform_online_account_name_style = player_plaque_platform_online_style.account_name
-platform_online_account_name_style.default_color = Color.ui_grey_light(255, true)
-platform_online_account_name_style.hover_color = Color.ui_brown_super_light(255, true)
+platform_online_account_name_style.default_color = Color.terminal_text_header(255, true)
+platform_online_account_name_style.hover_color = Color.terminal_text_header_selected(255, true)
 platform_online_account_name_style.offset = {
 	85,
 	40,
@@ -255,8 +270,8 @@ platform_online_account_name_style.offset = {
 }
 player_plaque_platform_online_style.status = table.clone(UIFontSettings.body_small)
 local platform_online_status_style = player_plaque_platform_online_style.status
-platform_online_status_style.default_color = Color.ui_grey_light(255, true)
-platform_online_status_style.hover_color = Color.ui_brown_super_light(255, true)
+platform_online_status_style.default_color = Color.terminal_text_body_sub_header(255, true)
+platform_online_status_style.hover_color = Color.terminal_text_body(255, true)
 platform_online_status_style.offset = {
 	85,
 	14,
@@ -273,7 +288,7 @@ player_plaque_offline_style.background = {
 	},
 	color = Color.black(255, true),
 	default_color = Color.black(255, true),
-	hover_color = Color.ui_terminal(255, true)
+	hover_color = Color.terminal_corner_hover(255, true)
 }
 player_plaque_offline_style.icon_background = {
 	size = social_menu_roster_view_styles.portrait_size,
@@ -316,7 +331,7 @@ group_header_style.size = {
 }
 group_header_style.text = table.clone(UIFontSettings.body_small)
 local group_header_text_style = group_header_style.text
-group_header_text_style.text_color = Color.ui_grey_medium(255, true)
+group_header_text_style.text_color = Color.terminal_text_header(255, true)
 group_header_text_style.offset = {
 	0,
 	-5,
