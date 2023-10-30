@@ -1,40 +1,32 @@
 local class_rework_veteran_male_b = {
 	ability_shock_trooper = {
 		randomize_indexes_n = 0,
-		sound_events_n = 15,
+		sound_events_n = 11,
 		sound_events = {
 			"loc_veteran_male_b__ability_shock_trooper_01",
 			"loc_veteran_male_b__ability_shock_trooper_02",
 			"loc_veteran_male_b__ability_shock_trooper_03",
-			"loc_veteran_male_b__ability_shock_trooper_04",
 			"loc_veteran_male_b__ability_shock_trooper_05",
 			"loc_veteran_male_b__ability_shock_trooper_06",
-			"loc_veteran_male_b__ability_shock_trooper_07",
 			"loc_veteran_male_b__ability_shock_trooper_08",
-			"loc_veteran_male_b__ability_shock_trooper_09",
 			"loc_veteran_male_b__ability_shock_trooper_10",
 			"loc_veteran_male_b__ability_shock_trooper_11",
 			"loc_veteran_male_b__ability_shock_trooper_12",
 			"loc_veteran_male_b__ability_shock_trooper_13",
-			"loc_veteran_male_b__ability_shock_trooper_14",
-			"loc_veteran_male_b__ability_shock_trooper_15"
+			"loc_veteran_male_b__ability_shock_trooper_14"
 		},
 		sound_events_duration = {
 			4.052417,
 			2.862438,
 			3.206625,
-			3.343771,
 			4.428521,
 			3.916688,
-			3.275625,
 			1.955896,
-			3.183771,
 			3.579771,
 			2.706688,
 			2.655188,
 			3.087646,
-			1.542688,
-			3.12675
+			1.542688
 		},
 		randomize_indexes = {}
 	},
