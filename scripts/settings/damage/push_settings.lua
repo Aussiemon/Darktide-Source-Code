@@ -11,6 +11,12 @@ local push_settings = {
 		very_light = {
 			speed = 1.2
 		},
+		gunner_very_light = {
+			speed = 0.6
+		},
+		gunner_light = {
+			speed = 0.8
+		},
 		ogryn_very_light = {
 			speed = 0.25
 		},

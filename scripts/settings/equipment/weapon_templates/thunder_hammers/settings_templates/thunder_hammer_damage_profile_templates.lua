@@ -153,11 +153,11 @@ local hammer_tank_heavy_first_active_am = {
 local hammer_tank_heavy_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
-		[armor_types.armored] = damage_lerp_values.no_damage,
+		[armor_types.armored] = damage_lerp_values.lerp_0_5,
 		[armor_types.resistant] = damage_lerp_values.lerp_1,
 		[armor_types.player] = damage_lerp_values.no_damage,
 		[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-		[armor_types.super_armor] = damage_lerp_values.no_damage,
+		[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 		[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 		[armor_types.void_shield] = damage_lerp_values.lerp_1,
 		[armor_types.prop_armor] = damage_lerp_values.no_damage
@@ -218,8 +218,8 @@ damage_templates.thunderhammer_light = {
 			},
 			power_distribution = {
 				attack = {
-					100,
-					250
+					150,
+					300
 				},
 				impact = {
 					8,
@@ -466,7 +466,7 @@ damage_templates.thunderhammer_light_tank = {
 	ragdoll_push_force = 500,
 	ragdoll_only = true,
 	stagger_category = "melee",
-	cleave_distribution = medium_cleave,
+	cleave_distribution = large_cleave,
 	damage_type = damage_types.blunt_thunder,
 	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.crushing,
@@ -708,18 +708,8 @@ overrides.thunderhammer_pushfollow_active = {
 	}
 }
 overrides.thunderhammer_pushfollow = {
-	parent_template_name = "thunderhammer_light",
+	parent_template_name = "thunderhammer_light_tank",
 	overrides = {
-		{
-			"cleave_distribution",
-			"attack",
-			0.1
-		},
-		{
-			"cleave_distribution",
-			"impact",
-			0.1
-		},
 		{
 			"ragdoll_push_force",
 			250
@@ -987,6 +977,113 @@ overrides.thunderhammer_heavy_active_sweep = {
 			1250
 		}
 	}
+}
+damage_templates.thunderhammer_m2_heavy_active_strikedown = {
+	shield_override_stagger_strength = 500,
+	finesse_ability_damage_multiplier = 2,
+	weapon_special = true,
+	ignore_stagger_reduction = true,
+	ragdoll_push_force = 1000,
+	ragdoll_only = true,
+	gibbing_power = 0,
+	stagger_category = "melee",
+	armor_damage_modifier = hammer_tank_heavy_am,
+	cleave_distribution = {
+		attack = 0.01,
+		impact = 0.01
+	},
+	damage_type = damage_types.blunt_thunder,
+	gibbing_type = GibbingTypes.explosion,
+	melee_attack_strength = melee_attack_strengths.heavy,
+	wounds_template = WoundsTemplates.thunder_hammer_active,
+	targets = {
+		{
+			boost_curve_multiplier_finesse = 0.5,
+			armor_damage_modifier = hammer_tank_heavy_first_active_am,
+			power_distribution = {
+				attack = {
+					400,
+					800
+				},
+				impact = {
+					45,
+					55
+				}
+			},
+			power_level_multiplier = {
+				0.75,
+				1.25
+			}
+		},
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
+					35,
+					65
+				},
+				impact = {
+					25,
+					35
+				}
+			}
+		},
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
+					10,
+					40
+				},
+				impact = {
+					15,
+					25
+				}
+			}
+		},
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
+					0,
+					0
+				},
+				impact = {
+					10,
+					20
+				}
+			}
+		},
+		{
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
+					0,
+					0
+				},
+				impact = {
+					10,
+					20
+				}
+			}
+		},
+		default_target = {
+			boost_curve_multiplier_finesse = 0.25,
+			power_distribution = {
+				attack = {
+					0,
+					0
+				},
+				impact = {
+					5,
+					15
+				}
+			},
+			armor_damage_modifier = hammer_tank_heavy_am,
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	},
+	gib_push_force = GibbingSettings.gib_push_force.blunt_heavy
 }
 damage_templates.thunderhammer_heavy_smiter = {
 	finesse_ability_damage_multiplier = 1.5,

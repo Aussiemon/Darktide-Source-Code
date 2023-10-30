@@ -80,7 +80,7 @@ HordePacing._update_horde_pacing = function (self, t, dt, side_id, target_side_i
 	local traveled_this_frame = self._traveled_this_frame
 	local pacing_manager = Managers.state.pacing
 	local time_since_forward_travel_changed = self._time_since_forward_travel_changed
-	local ramp_up_timer_modifier = pacing_manager:_get_ramp_up_frequency_modifier("hordes")
+	local ramp_up_timer_modifier = pacing_manager:get_ramp_up_frequency_modifier("hordes")
 	local has_monster_active = pacing_manager:num_aggroed_monsters() > 0
 	local move_timer_override = TIME_SINCE_FORWARD_TRAVEL_CHANGE_MOVE_TIMER_OVERRIDE <= time_since_forward_travel_changed
 	local has_travel_distance_spawn_mutator = not move_timer_override and not has_monster_active and (template.travel_distance_spawning or Managers.state.mutator:mutator("mutator_travel_distance_spawning_hordes"))
@@ -262,12 +262,6 @@ HordePacing._start_coordinated_horde_strike = function (self, setting, target_si
 
 		local composition = setup.composition
 		local faction_composition = setup.faction_composition
-
-		if faction_composition then
-			local current_faction = Managers.state.pacing:current_faction()
-			composition = faction_composition[current_faction]
-		end
-
 		local time_to_next_wave = setup.time_to_first_wave
 
 		if type(time_to_next_wave) == "table" then
@@ -287,6 +281,7 @@ HordePacing._start_coordinated_horde_strike = function (self, setting, target_si
 				horde_type = horde_type,
 				num_waves = num_waves,
 				composition = composition,
+				faction_composition = faction_composition,
 				time_to_next_wave = time_to_next_wave,
 				prefered_direction = prefered_direction,
 				stinger = stinger,
@@ -300,6 +295,7 @@ HordePacing._start_coordinated_horde_strike = function (self, setting, target_si
 				horde_type = horde_type,
 				num_waves = num_waves,
 				composition = composition,
+				faction_composition = faction_composition,
 				time_between_waves = time_between_waves,
 				time_to_next_wave = time_to_next_wave,
 				prefered_direction = prefered_direction,
@@ -341,6 +337,14 @@ HordePacing._update_coordinated_horde_strike = function (self, t, dt, side_id, t
 				local horde_type = strike.horde_type
 				local horde_template = HordeTemplates[horde_type]
 				local composition = strike.composition
+				local faction_composition = strike.faction_composition
+
+				if faction_composition then
+					local current_faction = Managers.state.pacing:current_faction()
+					local compositions = faction_composition[current_faction]
+					composition = compositions[math.random(1, #compositions)]
+				end
+
 				local prefered_direction = strike.prefered_direction
 				local optional_target_unit = nil
 				local random_targets = strike.random_targets

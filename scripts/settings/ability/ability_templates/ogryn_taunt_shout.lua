@@ -65,11 +65,12 @@ local ability_template = {
 			sprint_ready_up_time = 0,
 			anim = "ability_shout",
 			uninterruptible = true,
-			recover_toughness_effect = "content/fx/particles/abilities/squad_leader_ability_toughness_buff",
-			toughness_replenish_percent = 1,
+			has_husk_sound = true,
 			allowed_during_sprint = true,
 			ability_type = "combat_ability",
 			special_rule_buff_enemy = "ogryn_taunt_increased_damage_taken_buff",
+			recover_toughness_effect = "content/fx/particles/abilities/squad_leader_ability_toughness_buff",
+			toughness_replenish_percent = 1,
 			use_charge_at_start = true,
 			vo_tag = "ability_bullgryn",
 			use_ability_charge = true,
@@ -77,7 +78,10 @@ local ability_template = {
 			power_level = 500,
 			total_time = 0.75,
 			radius = RADIUS,
-			damage_profile = DamageProfileTemplates.shout_stagger_ogryn_taunt
+			damage_profile = DamageProfileTemplates.shout_stagger_ogryn_taunt,
+			buff_ignored_breeds = {
+				chaos_daemonhost = true
+			}
 		}
 	},
 	fx_sources = {},

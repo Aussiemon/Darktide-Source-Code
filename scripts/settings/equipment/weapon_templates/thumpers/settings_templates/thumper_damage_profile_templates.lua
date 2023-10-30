@@ -177,7 +177,7 @@ damage_templates.default_ogryn_shotgun_assault = {
 	ragdoll_push_force = 100,
 	ignore_stagger_reduction = true,
 	cleave_distribution = {
-		attack = 2.5,
+		attack = 4,
 		impact = 2.5
 	},
 	ranges = {
@@ -194,12 +194,12 @@ damage_templates.default_ogryn_shotgun_assault = {
 		near = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
-				[armor_types.armored] = damage_lerp_values.lerp_0_65,
+				[armor_types.armored] = damage_lerp_values.lerp_0_75,
 				[armor_types.resistant] = damage_lerp_values.lerp_0_8,
 				[armor_types.player] = damage_lerp_values.no_damage,
-				[armor_types.berserker] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_1_25,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
-				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1_25,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_5,
 				[armor_types.prop_armor] = damage_lerp_values.lerp_0_65
 			},
@@ -217,13 +217,13 @@ damage_templates.default_ogryn_shotgun_assault = {
 		},
 		far = {
 			attack = {
-				[armor_types.unarmored] = damage_lerp_values.lerp_0_2,
-				[armor_types.armored] = damage_lerp_values.lerp_0_2,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_2,
+				[armor_types.unarmored] = damage_lerp_values.lerp_0_4,
+				[armor_types.armored] = damage_lerp_values.lerp_0_4,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_4,
 				[armor_types.player] = damage_lerp_values.lerp_0_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_0_2,
+				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
 				[armor_types.super_armor] = damage_lerp_values.no_damage,
-				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_2,
+				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
 				[armor_types.void_shield] = damage_lerp_values.lerp_0_2,
 				[armor_types.prop_armor] = damage_lerp_values.lerp_0_2
 			},
@@ -242,8 +242,8 @@ damage_templates.default_ogryn_shotgun_assault = {
 	},
 	power_distribution = {
 		attack = {
-			750,
-			1500
+			1000,
+			2000
 		},
 		impact = {
 			50,

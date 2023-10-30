@@ -199,7 +199,7 @@ weapon_template.actions = {
 		kind = "shoot_hit_scan",
 		start_input = "shoot_pressed",
 		sprint_requires_press_to_interrupt = true,
-		sprint_ready_up_time = 0.5,
+		sprint_ready_up_time = 0.25,
 		weapon_handling_template = "immediate_single_shot",
 		abort_sprint = true,
 		ammunition_usage = 3,
@@ -351,7 +351,7 @@ weapon_template.actions = {
 			},
 			zoom_shoot = {
 				action_name = "action_shoot_zoomed",
-				chain_time = 0.4
+				chain_time = 0.435
 			},
 			zoom_release = {
 				action_name = "action_unzoom",

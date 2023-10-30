@@ -72,7 +72,7 @@ DamageCalculation.calculate = function (damage_profile, damage_type, target_sett
 	end
 
 	damage = damage + finesse_boost_damage
-	local backstab_damage = _backstab_damage(damage, attack_type, attacker_stat_buffs, is_backstab)
+	local backstab_damage = _backstab_damage(damage, attack_type, attacker_stat_buffs, is_backstab, damage_profile)
 	local flanking_damage = _flanking_damage(damage, attacker_stat_buffs, is_flanking)
 	damage = damage + backstab_damage + flanking_damage
 	local hit_zone_damage_multiplier = _hit_zone_damage_multiplier(breed_or_nil, hit_zone_name, attack_type, damage_profile.ignore_hitzone_multiplier, damage_profile.ignore_roamer_hitzone_multipliers)
@@ -80,7 +80,7 @@ DamageCalculation.calculate = function (damage_profile, damage_type, target_sett
 	damage = _apply_armor_type_buffs_to_damage(damage, armor_type, attacker_stat_buffs, target_toughness_extension)
 	damage = _apply_armor_type_buffs_to_damage(damage, armor_type, target_stat_buffs, target_toughness_extension)
 	local is_push = damage_profile.is_push or armor_type ~= "super_armor" and armor_damage_modifier == 0
-	local damage_efficiency = is_push and "push" or hit_shield and damage <= 0 and damage_efficiencies.negated or armor_damage_modifier_to_damage_efficiency(armor_damage_modifier, armor_type)
+	local damage_efficiency = is_push and "push" or hit_shield and damage <= 0 and damage_efficiencies.negated or armor_damage_modifier_to_damage_efficiency(armor_damage_modifier, armor_type, rending_damage)
 
 	return damage, damage_efficiency, base_damage, base_buff_damage, rending_damage, finesse_boost_damage, backstab_damage, flanking_damage, armor_damage_modifier, hit_zone_damage_multiplier
 end
@@ -215,7 +215,7 @@ function _calculate_damage_buff(damage_profile, damage_type, target_settings, po
 	local fully_charged = charge_level == 1
 	local fully_charged_stat_buff = (fully_charged and attacker_stat_buffs.fully_charged_damage or 1) - 1
 	damage_stat_buffs = damage_stat_buffs + fully_charged_stat_buff
-	local stagger_count_stat_buff = ((attacker_stat_buffs.stagger_count_damage or 1) - 1) * stagger_count
+	local stagger_count_stat_buff = ((attacker_stat_buffs.stagger_count_damage or 1) - 1) * math.clamp(stagger_count, 0, 7)
 	damage_stat_buffs = damage_stat_buffs + stagger_count_stat_buff
 	local is_target_elite = attacked_breed_or_nil and attacked_breed_or_nil.tags and attacked_breed_or_nil.tags.elite
 	local vs_elites_damage_stat_buff = (is_target_elite and attacker_stat_buffs.damage_vs_elites or 1) - 1
@@ -491,9 +491,11 @@ function _hit_zone_damage_multiplier(breed_or_nil, hit_zone_name, attack_type, i
 	return hit_zone_damage_multiplier
 end
 
-function _backstab_damage(damage, attack_type, stat_buffs, is_backstab)
+function _backstab_damage(damage, attack_type, stat_buffs, is_backstab, damage_profile)
 	local backstab_damage_buff = is_backstab and stat_buffs.backstab_damage or 1
-	local backstab_damage = damage * (backstab_damage_buff - 1)
+	local backstab_bonus = is_backstab and damage_profile.backstab_bonus or 0
+	local multiplier = backstab_damage_buff + backstab_bonus
+	local backstab_damage = damage * (multiplier - 1)
 
 	return backstab_damage
 end

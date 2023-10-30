@@ -11,21 +11,25 @@ templates.weapon_trait_bespoke_stubrevolver_p1_hipfire_while_sprinting = {
 templates.weapon_trait_bespoke_stubrevolver_p1_reload_speed_on_slide = {
 	weapon_trait_bespoke_stubrevolver_p1_reload_speed_on_slide_parent = {
 		{
+			child_duration = 4,
 			stat_buffs = {
 				[stat_buffs.reload_speed] = 0.07
 			}
 		},
 		{
+			child_duration = 4,
 			stat_buffs = {
 				[stat_buffs.reload_speed] = 0.08
 			}
 		},
 		{
+			child_duration = 4,
 			stat_buffs = {
 				[stat_buffs.reload_speed] = 0.09
 			}
 		},
 		{
+			child_duration = 4,
 			stat_buffs = {
 				[stat_buffs.reload_speed] = 0.1
 			}

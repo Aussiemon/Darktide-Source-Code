@@ -914,7 +914,7 @@ weapon_template.actions = {
 		damage_profile = DamageProfileTemplates.light_sword_smiter,
 		damage_type = damage_types.metal_slashing_medium,
 		damage_type_special_active = damage_types.power_sword,
-		damage_profile_special_active = DamageProfileTemplates.light_powersword_smiter,
+		damage_profile_special_active = DamageProfileTemplates.light_powersword_smiter_push_follow_up_active,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed

@@ -1,3 +1,39 @@
+-- Decompilation Error: _run_step(_fix_loops, node)
+
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
+-- Decompilation Error: _run_step(_unwarp_expressions, node)
+
+-- Decompilation Error: _run_step(_unwarp_loops, node, repeat_until=True)
+
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
+-- Decompilation Error: _run_step(_unwarp_ifs, node)
+
+-- Decompilation Error: _run_step(_cleanup_ast, node)
+
+-- Decompilation Error: _glue_flows(node)
+
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
 local ObjectPenetration = {}
 local STEP_DISTANCE = 0.5
 

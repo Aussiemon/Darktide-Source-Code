@@ -199,7 +199,7 @@ weapon_template.actions = {
 		kind = "shoot_hit_scan",
 		start_input = "shoot_pressed",
 		sprint_requires_press_to_interrupt = true,
-		sprint_ready_up_time = 0.5,
+		sprint_ready_up_time = 0.1,
 		weapon_handling_template = "immediate_single_shot",
 		abort_sprint = true,
 		ammunition_usage = 2,
@@ -283,7 +283,7 @@ weapon_template.actions = {
 		}
 	},
 	action_shoot_zoomed = {
-		sprint_ready_up_time = 0.5,
+		sprint_ready_up_time = 0.1,
 		kind = "shoot_hit_scan",
 		weapon_handling_template = "immediate_single_shot",
 		allow_shots_with_less_than_required_ammo = true,

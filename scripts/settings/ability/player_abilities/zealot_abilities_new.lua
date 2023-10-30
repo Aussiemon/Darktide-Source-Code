@@ -77,6 +77,7 @@ local abilities = {
 		stat_buff = "extra_max_amount_of_grenades",
 		inventory_item_name = "content/items/weapons/player/grenade_shock",
 		icon = "content/ui/materials/icons/abilities/combat/default",
+		show_in_firendly_hud = true,
 		max_charges = maniac_talent_settings.grenade.max_charges,
 		archetypes = {
 			"zealot"
@@ -88,6 +89,7 @@ local abilities = {
 		stat_buff = "extra_max_amount_of_grenades",
 		inventory_item_name = "content/items/weapons/player/grenade_fire",
 		icon = "content/ui/materials/icons/abilities/combat/default",
+		show_in_firendly_hud = true,
 		max_charges = preacher_talent_settings.grenade.max_charges,
 		archetypes = {
 			"zealot"
@@ -99,6 +101,7 @@ local abilities = {
 		stat_buff = "extra_max_amount_of_grenades",
 		inventory_item_name = "content/items/weapons/player/zealot_throwing_knives",
 		icon = "content/ui/materials/icons/abilities/combat/default",
+		show_in_firendly_hud = false,
 		max_charges = 12,
 		archetypes = {
 			"zealot"

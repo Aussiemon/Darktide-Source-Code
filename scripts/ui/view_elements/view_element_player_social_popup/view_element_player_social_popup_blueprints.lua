@@ -6,234 +6,269 @@ local SocialMenuSettings = require("scripts/ui/views/social_menu_view/social_men
 local TextInputPassTemplates = require("scripts/ui/pass_templates/text_input_pass_templates")
 local ViewStyles = require("scripts/ui/views/social_menu_roster_view/social_menu_roster_view_styles")
 local UIRenderer = require("scripts/managers/ui/ui_renderer")
+local UIFonts = require("scripts/managers/ui/ui_fonts")
 local blueprint_styles = PopupStyles.blueprints
 local OnlineStatus = SocialConstants.OnlineStatus
-local view_element_player_popup_blueprints = {
-	button = {
-		size = {
-			PopupStyles.column_width,
-			ButtonPassTemplates.list_button_default_height
-		},
-		pass_template = ButtonPassTemplates.list_button,
-		init = function (parent, widget, context)
-			local widget_content = widget.content
-			widget_content.text = context.label
-			widget_content.show_background_with_hover = true
-			local hotspot = widget_content.hotspot
-			hotspot.disabled = context.is_disabled
-			hotspot.pressed_callback = context.callback
-			local on_pressed_sound = context.on_pressed_sound
+local view_element_player_popup_blueprints = {}
+local temp_text_size = {}
 
-			if on_pressed_sound then
-				widget.style.hotspot.on_pressed_sound = on_pressed_sound
-			end
-		end
-	},
-	disabled_button_with_explanation = {
-		size = {
-			PopupStyles.column_width,
-			ButtonPassTemplates.list_button_default_height
-		},
-		pass_template = ButtonPassTemplates.list_button_two_rows_with_icon,
-		style = blueprint_styles.disabled_button_with_explanation,
-		init = function (parent, widget, context)
-			local widget_content = widget.content
-			widget_content.text = context.label
-			widget_content.second_row = context.reason_for_disabled
-			widget_content.show_background_with_hover = true
-			widget_content.icon = "content/ui/materials/icons/list_buttons/block"
-			local hotspot = widget_content.hotspot
-			hotspot.disabled = true
-			local on_pressed_sound = context.on_pressed_sound
+local function get_style_text_size(text, style, ui_renderer)
+	local text_font_data = UIFonts.data_by_type(style.font_type)
+	local text_font = text_font_data.path
+	local text_size = style.size
+	local size_addition = style.size_addition
 
-			if on_pressed_sound then
-				widget.style.hotspot.on_pressed_sound = on_pressed_sound
-			end
+	if text_size then
+		temp_text_size[1] = text_size[1]
+		temp_text_size[2] = text_size[2]
+
+		if size_addition then
+			temp_text_size[1] = temp_text_size[1] + (size_addition[1] or 0)
+			temp_text_size[2] = temp_text_size[2] + (size_addition[2] or 0)
 		end
+	end
+
+	local use_max_extents = true
+	local text_options = UIFonts.get_font_options_by_style(style)
+	local text_width, text_height = UIRenderer.text_size(ui_renderer, text, style.font_type, style.font_size, text_size and temp_text_size, text_options, use_max_extents)
+
+	return text_width, text_height
+end
+
+view_element_player_popup_blueprints.button = {
+	size = {
+		PopupStyles.column_width,
+		ButtonPassTemplates.list_button_default_height
 	},
-	search_header = {
-		size = blueprint_styles.search_header.size,
-		pass_template = {
-			{
-				style_id = "search_text",
-				value_id = "text",
-				pass_type = "text"
+	pass_template = ButtonPassTemplates.list_button,
+	init = function (parent, widget, context, _, ui_renderer)
+		local widget_content = widget.content
+		widget_content.text = context.label
+		widget_content.show_background_with_hover = true
+		local widget_style = widget.style
+		widget_style.text.size_addition = {
+			-100,
+			0
+		}
+		local current_size = widget_content.size
+		local text_style = widget.style.text
+		text_style.size = current_size
+		local text_width, text_height = get_style_text_size(context.label, text_style, ui_renderer)
+		current_size[2] = math.max(current_size[2], text_height + 30)
+		local hotspot = widget_content.hotspot
+		hotspot.disabled = context.is_disabled
+		hotspot.pressed_callback = context.callback
+		local on_pressed_sound = context.on_pressed_sound
+
+		if on_pressed_sound then
+			widget.style.hotspot.on_pressed_sound = on_pressed_sound
+		end
+	end
+}
+view_element_player_popup_blueprints.disabled_button_with_explanation = {
+	size = {
+		PopupStyles.column_width,
+		ButtonPassTemplates.list_button_default_height
+	},
+	pass_template = ButtonPassTemplates.list_button_two_rows_with_icon,
+	style = blueprint_styles.disabled_button_with_explanation,
+	init = function (parent, widget, context)
+		local widget_content = widget.content
+		widget_content.text = context.label
+		widget_content.second_row = context.reason_for_disabled
+		widget_content.show_background_with_hover = true
+		widget_content.icon = "content/ui/materials/icons/list_buttons/block"
+		local hotspot = widget_content.hotspot
+		hotspot.disabled = true
+		local on_pressed_sound = context.on_pressed_sound
+
+		if on_pressed_sound then
+			widget.style.hotspot.on_pressed_sound = on_pressed_sound
+		end
+	end
+}
+view_element_player_popup_blueprints.search_header = {
+	size = blueprint_styles.search_header.size,
+	pass_template = {
+		{
+			style_id = "search_text",
+			value_id = "text",
+			pass_type = "text"
+		}
+	},
+	style = blueprint_styles.search_header,
+	init = function (parent, widget, context)
+		local widget_content = widget.content
+		widget_content.text = context.label
+		local style = widget.style.search_text
+		local text_width, text_height = UIRenderer.text_size(parent._ui_renderer, context.label, style.font_type, style.font_size, {
+			blueprint_styles.search_header.size[1],
+			math.huge
+		})
+		widget_content.size[1] = math.max(widget_content.size[1], text_width)
+		widget_content.size[2] = math.max(widget_content.size[2], text_height)
+	end
+}
+view_element_player_popup_blueprints.choice_header = {
+	size = blueprint_styles.choice_header.size,
+	pass_template = {
+		{
+			style_id = "text",
+			value_id = "text",
+			pass_type = "text"
+		}
+	},
+	style = blueprint_styles.choice_header,
+	init = function (parent, widget, context)
+		local widget_content = widget.content
+		widget_content.text = context.label
+	end
+}
+view_element_player_popup_blueprints.choice_button = {
+	size = {
+		PopupStyles.column_width,
+		ButtonPassTemplates.list_button_default_height
+	},
+	pass_template = ButtonPassTemplates.list_button_with_background_and_icon,
+	style = blueprint_styles.choice_button,
+	init = function (parent, widget, context)
+		local widget_content = widget.content
+		widget_content.text = context.label
+		local icon = context.icon
+
+		if icon then
+			widget_content.icon = icon
+		end
+
+		local hotspot = widget_content.hotspot
+		hotspot.disabled = context.is_disabled
+		hotspot.pressed_callback = context.callback
+		local on_pressed_sound = context.on_pressed_sound
+
+		if on_pressed_sound then
+			widget.style.hotspot.on_pressed_sound = on_pressed_sound
+		end
+	end
+}
+view_element_player_popup_blueprints.checkbox_button = {
+	size = {
+		PopupStyles.column_width,
+		ButtonPassTemplates.list_button_default_height
+	},
+	pass_template = {
+		{
+			style_id = "hotspot",
+			pass_type = "hotspot",
+			content_id = "hotspot",
+			content = {
+				use_is_focused = true
 			}
 		},
-		style = blueprint_styles.search_header,
-		init = function (parent, widget, context)
-			local widget_content = widget.content
-			widget_content.text = context.label
-			local style = widget.style.search_text
-			local text_width, text_height = UIRenderer.text_size(parent._ui_renderer, context.label, style.font_type, style.font_size, {
-				blueprint_styles.search_header.size[1],
-				math.huge
-			})
-			widget_content.size[1] = math.max(widget_content.size[1], text_width)
-			widget_content.size[2] = math.max(widget_content.size[2], text_height)
-		end
-	},
-	choice_header = {
-		size = blueprint_styles.choice_header.size,
-		pass_template = {
-			{
-				style_id = "text",
-				value_id = "text",
-				pass_type = "text"
-			}
+		{
+			style_id = "background_selected",
+			pass_type = "texture",
+			value = "content/ui/materials/buttons/background_selected",
+			change_function = function (content, style)
+				style.color[1] = 255 * content.hotspot.anim_select_progress
+			end,
+			visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
 		},
-		style = blueprint_styles.choice_header,
-		init = function (parent, widget, context)
-			local widget_content = widget.content
-			widget_content.text = context.label
-		end
-	},
-	choice_button = {
-		size = {
-			PopupStyles.column_width,
-			ButtonPassTemplates.list_button_default_height
+		{
+			style_id = "highlight",
+			pass_type = "texture",
+			value = "content/ui/materials/frames/hover",
+			change_function = ButtonPassTemplates.list_button_highlight_change_function,
+			visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
 		},
-		pass_template = ButtonPassTemplates.list_button_with_background_and_icon,
-		style = blueprint_styles.choice_button,
-		init = function (parent, widget, context)
-			local widget_content = widget.content
-			widget_content.text = context.label
-			local icon = context.icon
-
-			if icon then
-				widget_content.icon = icon
+		{
+			style_id = "checkbox_background",
+			pass_type = "texture",
+			value_id = "checkbox_background",
+			value = "content/ui/materials/icons/list_buttons/box",
+			change_function = ButtonPassTemplates.list_button_label_change_function
+		},
+		{
+			style_id = "check_mark",
+			pass_type = "texture",
+			value_id = "check_mark",
+			value = "content/ui/materials/icons/list_buttons/check",
+			change_function = ButtonPassTemplates.list_button_label_change_function,
+			visibility_function = function (content, style)
+				return content.checked
 			end
+		},
+		{
+			value_id = "text",
+			pass_type = "text",
+			style_id = "text",
+			change_function = ButtonPassTemplates.list_button_label_change_function
+		}
+	},
+	style = blueprint_styles.checkbox_button,
+	init = function (parent, widget, context)
+		local widget_content = widget.content
+		local widget_style = widget.style
+		local is_disabled = context.is_disabled
+		widget_content.text = context.label
+		widget_content.checked = context.is_checked or false
+		local hotspot = widget_content.hotspot
+		widget_content.pressed_callback = context.callback
 
-			local hotspot = widget_content.hotspot
-			hotspot.disabled = context.is_disabled
-			hotspot.pressed_callback = context.callback
-			local on_pressed_sound = context.on_pressed_sound
+		hotspot.pressed_callback = function ()
+			local content = widget_content
+			local pressed_callback = content.pressed_callback
+			content.checked = not content.checked
 
-			if on_pressed_sound then
-				widget.style.hotspot.on_pressed_sound = on_pressed_sound
-			end
+			pressed_callback(content.checked)
 		end
-	},
-	checkbox_button = {
-		size = {
-			PopupStyles.column_width,
-			ButtonPassTemplates.list_button_default_height
-		},
-		pass_template = {
-			{
-				style_id = "hotspot",
-				pass_type = "hotspot",
-				content_id = "hotspot",
-				content = {
-					use_is_focused = true
-				}
-			},
-			{
-				style_id = "background_selected",
-				pass_type = "texture",
-				value = "content/ui/materials/buttons/background_selected",
-				change_function = function (content, style)
-					style.color[1] = 255 * content.hotspot.anim_select_progress
-				end,
-				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
-			},
-			{
-				style_id = "highlight",
-				pass_type = "texture",
-				value = "content/ui/materials/frames/hover",
-				change_function = ButtonPassTemplates.list_button_highlight_change_function,
-				visibility_function = ButtonPassTemplates.list_button_focused_visibility_function
-			},
-			{
-				style_id = "checkbox_background",
-				pass_type = "texture",
-				value_id = "checkbox_background",
-				value = "content/ui/materials/icons/list_buttons/box",
-				change_function = ButtonPassTemplates.list_button_label_change_function
-			},
-			{
-				style_id = "check_mark",
-				pass_type = "texture",
-				value_id = "check_mark",
-				value = "content/ui/materials/icons/list_buttons/check",
-				change_function = ButtonPassTemplates.list_button_label_change_function,
-				visibility_function = function (content, style)
-					return content.checked
-				end
-			},
-			{
-				value_id = "text",
-				pass_type = "text",
-				style_id = "text",
-				change_function = ButtonPassTemplates.list_button_label_change_function
-			}
-		},
-		style = blueprint_styles.checkbox_button,
-		init = function (parent, widget, context)
-			local widget_content = widget.content
-			local widget_style = widget.style
-			local is_disabled = context.is_disabled
-			widget_content.text = context.label
-			widget_content.checked = context.is_checked or false
-			local hotspot = widget_content.hotspot
-			widget_content.pressed_callback = context.callback
 
-			hotspot.pressed_callback = function ()
-				local content = widget_content
-				local pressed_callback = content.pressed_callback
-				content.checked = not content.checked
+		hotspot.disabled = is_disabled
+		local on_pressed_sound = context.on_pressed_sound
 
-				pressed_callback(content.checked)
-			end
-
-			hotspot.disabled = is_disabled
-			local on_pressed_sound = context.on_pressed_sound
-
-			if on_pressed_sound then
-				widget_style.hotspot.on_pressed_sound = on_pressed_sound
-			end
+		if on_pressed_sound then
+			widget_style.hotspot.on_pressed_sound = on_pressed_sound
 		end
+	end
+}
+view_element_player_popup_blueprints.group_divider = {
+	size = blueprint_styles.group_divider.size,
+	pass_template = {
+		{
+			value = "content/ui/materials/dividers/skull_rendered_center_04",
+			style_id = "divider",
+			pass_type = "texture"
+		}
 	},
-	group_divider = {
-		size = blueprint_styles.group_divider.size,
-		pass_template = {
-			{
-				value = "content/ui/materials/dividers/skull_rendered_center_04",
-				style_id = "divider",
-				pass_type = "texture"
-			}
-		},
-		style = blueprint_styles.group_divider
+	style = blueprint_styles.group_divider
+}
+view_element_player_popup_blueprints.text_entry_field = {
+	size = {
+		PopupStyles.column_width,
+		ButtonPassTemplates.list_button_default_height
 	},
-	text_entry_field = {
-		size = {
-			PopupStyles.column_width,
-			ButtonPassTemplates.list_button_default_height
-		},
-		pass_template = TextInputPassTemplates.terminal_input_field,
-		init = function (parent, widget)
-			local content = widget.content
-			content.input_text = ""
-			content.max_length = 10
-			content.virtual_keyboard_title = Localize("loc_social_menu_find_player_virtual_keyboard_title")
+	pass_template = TextInputPassTemplates.terminal_input_field,
+	init = function (parent, widget)
+		local content = widget.content
+		content.input_text = ""
+		content.max_length = 10
+		content.virtual_keyboard_title = Localize("loc_social_menu_find_player_virtual_keyboard_title")
+		local hotspot = content.hotspot
+		hotspot.use_is_focused = true
+	end,
+	update = function (parent, widget)
+		local content = widget.content
+		local previous_fatshark_id = parent:previously_searched_fatshark_id()
+		local fatshark_id = widget.content.input_text
+
+		if type(fatshark_id) == "string" and string.len(fatshark_id) == 10 and fatshark_id ~= previous_fatshark_id then
+			parent:_search_for_player(fatshark_id)
+
 			local hotspot = content.hotspot
-			hotspot.use_is_focused = true
-		end,
-		update = function (parent, widget)
-			local content = widget.content
-			local previous_fatshark_id = parent:previously_searched_fatshark_id()
-			local fatshark_id = widget.content.input_text
-
-			if type(fatshark_id) == "string" and string.len(fatshark_id) == 10 and fatshark_id ~= previous_fatshark_id then
-				parent:_search_for_player(fatshark_id)
-
-				local hotspot = content.hotspot
-				hotspot.use_is_focused = false
-				hotspot.disabled = true
-				content.is_writing = false
-			end
+			hotspot.use_is_focused = false
+			hotspot.disabled = true
+			content.is_writing = false
 		end
-	}
+	end
 }
 local change_functions = ViewStyles.change_functions
 local _listbutton_label_change_function = ButtonPassTemplates.list_button_label_change_function

@@ -2,7 +2,7 @@ local DamageSettings = require("scripts/settings/damage/damage_settings")
 local talent_settings = {
 	veteran_1 = {
 		combat_ability = {
-			cooldown = 60
+			cooldown = 45
 		},
 		grenade = {
 			max_charges = 3
@@ -40,7 +40,7 @@ local talent_settings = {
 			ranged_damage = 0.25,
 			sway_modifier = 0.4,
 			recoil_modifier = -0.24,
-			cooldown = 25,
+			cooldown = 35,
 			fov_multiplier = 0.85,
 			push_speed_modifier = -0.5,
 			toughness = 0.6,
@@ -65,7 +65,7 @@ local talent_settings = {
 			ammo_replenishment_percent = 0.0075
 		},
 		passive_1 = {
-			weakspot_damage = 0.15
+			weakspot_damage = 0.3
 		},
 		passive_2 = {
 			ammo_reserve_capacity = 0.4
@@ -123,11 +123,11 @@ local talent_settings = {
 		},
 		offensive_2_2 = {
 			spread_modifier = -0.19,
-			stamina = 0.08,
 			critical_strike_chance = 0.25,
 			recoil_modifier = -0.12,
-			shot_stamina_percent = 0.04,
-			sway_modifier = 0.4
+			stamina_per_second = 0.75,
+			sway_modifier = 0.4,
+			shot_stamina = 0.25
 		},
 		offensive_2_3 = {
 			reload_speed = 0.3
@@ -146,7 +146,7 @@ local talent_settings = {
 			radius = 9,
 			cone_range = 30,
 			toughness_replenish_percent = 0.5,
-			cooldown = 45,
+			cooldown = 30,
 			power_level = 500,
 			max_charges = 1
 		},

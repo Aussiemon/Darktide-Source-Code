@@ -44,6 +44,16 @@ UIConstantElements.using_input = function (self)
 	return false
 end
 
+UIConstantElements.is_element_using_input = function (self, element_name)
+	local element = self._elements[element_name]
+
+	if element and element.using_input and element:using_input() then
+		return true
+	end
+
+	return false
+end
+
 UIConstantElements.chat_using_input = function (self)
 	local chat = self._elements.ConstantElementChat
 
@@ -159,6 +169,8 @@ UIConstantElements.update = function (self, dt, t, input_service)
 		render_settings.using_hud_scale = nil
 	end
 
+	local using_input = self:using_input()
+
 	for i = 1, #elements_array do
 		local element = elements_array[i]
 		local element_name = element.__class_name
@@ -174,7 +186,13 @@ UIConstantElements.update = function (self, dt, t, input_service)
 		end
 
 		if element:should_update() then
-			element:update(dt, t, ui_renderer, render_settings, input_service)
+			local handle_input = not using_input or element.using_input and element:using_input()
+
+			element:update(dt, t, ui_renderer, render_settings, handle_input and input_service or input_service:null_service())
+
+			if not using_input and element.using_input and element:using_input() then
+				using_input = true
+			end
 		end
 
 		if hud_scale_applied then
@@ -191,6 +209,7 @@ UIConstantElements.draw = function (self, dt, t, input_service)
 	local elements_hud_scale_lookup = self._elements_hud_scale_lookup
 	local alpha_multiplier = render_settings.alpha_multiplier
 	local hud_scale_applied = false
+	local using_input = self:using_input()
 
 	for i = 1, #elements_array do
 		local element = elements_array[i]
@@ -204,8 +223,13 @@ UIConstantElements.draw = function (self, dt, t, input_service)
 
 		if element:should_draw() then
 			render_settings.alpha_multiplier = 1
+			local handle_input = not using_input or element.using_input and element:using_input()
 
-			element:draw(dt, t, ui_renderer, render_settings, input_service)
+			element:draw(dt, t, ui_renderer, render_settings, handle_input and input_service or input_service:null_service())
+
+			if not using_input and element.using_input and element:using_input() then
+				using_input = true
+			end
 		end
 
 		if hud_scale_applied then

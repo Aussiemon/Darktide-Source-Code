@@ -75,21 +75,25 @@ templates.weapon_trait_bespoke_autopistol_p1_power_bonus_on_continuous_fire = {
 templates.weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide = {
 	weapon_trait_bespoke_autopistol_p1_reload_speed_on_slide_parent = {
 		{
+			child_duration = 2,
 			stat_buffs = {
 				[stat_buffs.reload_speed] = 0.07
 			}
 		},
 		{
+			child_duration = 2,
 			stat_buffs = {
 				[stat_buffs.reload_speed] = 0.08
 			}
 		},
 		{
+			child_duration = 2,
 			stat_buffs = {
 				[stat_buffs.reload_speed] = 0.09
 			}
 		},
 		{
+			child_duration = 2,
 			stat_buffs = {
 				[stat_buffs.reload_speed] = 0.1
 			}

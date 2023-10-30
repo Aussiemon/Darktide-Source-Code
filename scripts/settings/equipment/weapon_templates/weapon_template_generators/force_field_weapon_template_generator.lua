@@ -3,7 +3,7 @@ local PlayerCharacterConstants = require("scripts/settings/player_character/play
 local FootstepIntervalsTemplates = require("scripts/settings/equipment/footstep/footstep_intervals_templates")
 local wield_inputs = PlayerCharacterConstants.wield_inputs
 
-local function generate_base_template()
+local function generate_base_template(functional_unit, visual_unit, allow_rotation)
 	local base_template = {
 		action_inputs = {
 			combat_ability = {
@@ -27,6 +27,20 @@ local function generate_base_template()
 						time_window = math.huge
 					}
 				}
+			},
+			instant_aim_force_field = {
+				buffer_time = 0.1,
+				input_sequence = {
+					{
+						value = false,
+						input = "combat_ability_hold",
+						time_window = math.huge
+					}
+				}
+			},
+			instant_place_force_field = {
+				dont_queue = true,
+				buffer_time = 0
 			},
 			cancel = {
 				buffer_time = 0,
@@ -63,12 +77,18 @@ local function generate_base_template()
 		},
 		action_input_hierarchy = {
 			grenade_ability = "stay",
-			wield = "stay",
+			wield = "base",
 			cancel = "stay",
 			unwield_to_previous = "stay",
 			aim_force_field = {
 				place_force_field = "base",
 				wield = "base",
+				cancel = "base",
+				grenade_ability = "base"
+			},
+			instant_aim_force_field = {
+				wield = "base",
+				instant_place_force_field = "base",
 				cancel = "base",
 				grenade_ability = "base"
 			}
@@ -102,26 +122,30 @@ local function generate_base_template()
 					}
 				},
 				allowed_chain_actions = {
+					instant_aim_force_field = {
+						action_name = "action_instant_aim_force_field"
+					},
 					aim_force_field = {
-						action_name = "action_aim_force_field"
+						action_name = "action_aim_force_field",
+						chain_time = 0.1
 					}
 				}
 			},
 			action_aim_force_field = {
-				visual_unit = "content/characters/player/human/attachments_combat/psyker_shield/psyker_shield_flat_visual",
 				uninterruptible = true,
 				kind = "aim_force_field",
 				abort_sprint = true,
 				allowed_during_sprint = true,
 				prevent_sprint = true,
 				total_time = math.huge,
+				visual_unit = visual_unit,
 				place_configuration = {
 					rotation_steps = 4,
-					allow_rotation = true,
 					rotation_input = "action_one_pressed",
 					distance = 10,
 					rotate_sound_event = "wwise/events/player/play_ability_psyker_protectorate_shield_rotate",
 					anim_rotate_event = "ability_rotate_shield",
+					allow_rotation = allow_rotation,
 					sound_position_offset = Vector3Box(Vector3.up() * 1.5)
 				},
 				allowed_chain_actions = {
@@ -145,10 +169,39 @@ local function generate_base_template()
 					}
 				}
 			},
+			action_instant_aim_force_field = {
+				uninterruptible = true,
+				kind = "aim_force_field",
+				abort_sprint = true,
+				allowed_during_sprint = true,
+				prevent_sprint = true,
+				total_time = 0,
+				visual_unit = visual_unit,
+				place_configuration = {
+					allow_rotation = false,
+					distance = 10,
+					sound_position_offset = Vector3Box(Vector3.up() * 1.5)
+				},
+				conditional_state_to_action_input = {
+					auto_chain = {
+						input_name = "instant_place_force_field"
+					}
+				},
+				allowed_chain_actions = {
+					wield = {
+						action_name = "action_unwield"
+					},
+					instant_place_force_field = {
+						action_name = "action_instant_place_force_field"
+					},
+					cancel = {
+						action_name = "action_cancel"
+					}
+				}
+			},
 			action_place_force_field = {
 				use_ability_charge = true,
-				functional_unit = "content/characters/player/human/attachments_combat/psyker_shield/psyker_shield_flat_functional",
-				weapon_handling_template = "time_scale_1_1",
+				weapon_handling_template = "time_scale_1_4",
 				kind = "place_force_field",
 				unwield_slot = true,
 				allowed_during_sprint = true,
@@ -156,11 +209,12 @@ local function generate_base_template()
 				use_aim_data = true,
 				vo_tag = "ability_protectorate_start",
 				abort_sprint = true,
-				place_time = 0.2,
+				place_time = 0.05,
 				uninterruptible = true,
 				anim_event = "attack_shoot",
 				prevent_sprint = true,
-				total_time = 0.4,
+				total_time = 0.6,
+				functional_unit = functional_unit,
 				action_movement_curve = {
 					{
 						modifier = 0.4,
@@ -227,6 +281,10 @@ local function generate_base_template()
 			}
 		}
 	}
+	base_template.actions.action_instant_place_force_field = table.clone(base_template.actions.action_place_force_field)
+	base_template.actions.action_instant_place_force_field.total_time = 0.1
+	base_template.actions.action_instant_place_force_field.place_time = 0
+	base_template.actions.action_instant_place_force_field.anim_event = nil
 
 	table.add_missing(base_template.actions, BaseTemplateSettings.actions)
 

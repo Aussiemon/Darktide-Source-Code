@@ -1,9 +1,9 @@
 local Spread = require("scripts/utilities/spread")
 local Sway = require("scripts/utilities/sway")
 local Crouch = {
-	crouch_input = function (input_source, is_crouching, requires_press_to_interrupt)
+	crouch_input = function (input_source, is_crouching, requires_press_to_interrupt, force_hold_to_crouch)
 		local wants_crouch = nil
-		local hold_to_crouch = input_source:get("hold_to_crouch")
+		local hold_to_crouch = force_hold_to_crouch or input_source:get("hold_to_crouch")
 
 		if hold_to_crouch and (is_crouching or not requires_press_to_interrupt) then
 			wants_crouch = input_source:get("crouching")
@@ -20,9 +20,9 @@ local Crouch = {
 	end
 }
 
-Crouch.check = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, input_source, t)
+Crouch.check = function (unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, input_source, t, force_hold_to_crouch)
 	local is_crouching = movement_state_component.is_crouching
-	local has_crouch_input = Crouch.crouch_input(input_source, is_crouching, false)
+	local has_crouch_input = Crouch.crouch_input(input_source, is_crouching, false, force_hold_to_crouch)
 	local can_crouch = Crouch.can_crouch(unit, first_person_extension, animation_extension, weapon_extension, movement_state_component, sway_control_component, sway_component, spread_control_component, input_source, t)
 	local wants_crouch = has_crouch_input and can_crouch
 

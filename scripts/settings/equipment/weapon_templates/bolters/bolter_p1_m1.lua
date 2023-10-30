@@ -480,19 +480,24 @@ weapon_template.actions = {
 		}
 	},
 	action_push = {
-		push_radius = 2.4,
+		damage_window_start = 0.13333333333333333,
+		range_mod = 1.15,
 		start_input = "special_action",
-		block_duration = 0.5,
-		kind = "push",
+		weapon_handling_template = "time_scale_1_1",
+		kind = "sweep",
+		sprint_requires_press_to_interrupt = true,
+		allow_conditional_chain = true,
 		crosshair_type = "dot",
 		allowed_during_sprint = true,
-		damage_time = 0.122,
+		damage_window_end = 0.3,
+		abort_sprint = true,
 		unaim = true,
+		uninterruptible = true,
 		anim_event = "attack_push",
-		total_time = 1,
+		total_time = 1.1,
 		action_movement_curve = {
 			{
-				modifier = 1.4,
+				modifier = 0.3,
 				t = 0.1
 			},
 			{
@@ -501,13 +506,25 @@ weapon_template.actions = {
 			},
 			{
 				modifier = 0.5,
+				t = 0.3
+			},
+			{
+				modifier = 1.5,
+				t = 0.35
+			},
+			{
+				modifier = 1.5,
 				t = 0.4
 			},
 			{
-				modifier = 1,
+				modifier = 1.05,
+				t = 0.6
+			},
+			{
+				modifier = 0.75,
 				t = 1
 			},
-			start_modifier = 1.4
+			start_modifier = 0.8
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -541,12 +558,22 @@ weapon_template.actions = {
 				chain_time = 0.5
 			}
 		},
-		inner_push_rad = math.pi * 0.1,
-		outer_push_rad = math.pi * 0.2,
-		inner_damage_profile = DamageProfileTemplates.weapon_special_push,
-		inner_damage_type = damage_types.weapon_butt,
-		outer_damage_profile = DamageProfileTemplates.weapon_special_push_outer,
-		outer_damage_type = damage_types.weapon_butt
+		weapon_box = {
+			0.25,
+			1,
+			0.7
+		},
+		spline_settings = {
+			matrices_data_location = "content/characters/player/human/first_person/animations/shotgun_rifle/attack_left_diagonal_up_bash",
+			anchor_point_offset = {
+				0,
+				1.4,
+				-0.1
+			}
+		},
+		damage_type = damage_types.weapon_butt,
+		damage_profile = DamageProfileTemplates.autogun_weapon_special_bash,
+		herding_template = HerdingTemplates.stab
 	},
 	action_inspect = {
 		skip_3p_anims = false,

@@ -235,11 +235,11 @@ local widget_definitions = {
 				vertical_alignment = "center",
 				horizontal_alignment = "left",
 				size = {
-					16,
-					16
+					32,
+					32
 				},
 				offset = {
-					6,
+					-8,
 					0,
 					6
 				},

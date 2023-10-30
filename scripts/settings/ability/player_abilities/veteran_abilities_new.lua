@@ -19,16 +19,6 @@ local base_ability = {
 	},
 	pause_cooldown_settings = {
 		pause_fulfilled_func = function (context)
-			local buff_extension = context.buff_extension
-
-			if buff_extension:has_active_buff_with_buff_template("veteran_combat_ability_stance_master") then
-				return false
-			end
-
-			if buff_extension:has_buff_using_buff_template("veteran_combat_ability_outlines_effect") then
-				return false
-			end
-
 			return true
 		end
 	}
@@ -40,6 +30,7 @@ local abilities = {
 		stat_buff = "extra_max_amount_of_grenades",
 		inventory_item_name = "content/items/weapons/player/grenade_frag",
 		icon = "content/ui/materials/icons/abilities/combat/default",
+		show_in_firendly_hud = true,
 		max_charges = ranger_talent_settings.grenade.max_charges,
 		archetypes = {
 			"veteran"
@@ -51,6 +42,7 @@ local abilities = {
 		stat_buff = "extra_max_amount_of_grenades",
 		inventory_item_name = "content/items/weapons/player/grenade_smoke",
 		icon = "content/ui/materials/icons/abilities/combat/default",
+		show_in_firendly_hud = true,
 		max_charges = shock_trooper_talent_settings.grenade.max_charges,
 		archetypes = {
 			"veteran"
@@ -62,6 +54,7 @@ local abilities = {
 		stat_buff = "extra_max_amount_of_grenades",
 		inventory_item_name = "content/items/weapons/player/grenade_krak",
 		icon = "content/ui/materials/icons/abilities/combat/default",
+		show_in_firendly_hud = true,
 		max_charges = squad_leader_talent_settings.grenade.max_charges,
 		archetypes = {
 			"veteran"

@@ -253,6 +253,7 @@ function _impact_fx(damage_type, breed, did_damage, hit_weakspot, armor_type, at
 	local shield_blocked = attack_result == attack_results.shield_blocked
 	local blocked = attack_result == attack_results.blocked
 	local toughness_absorbed = attack_result == attack_results.toughness_absorbed
+	local toughness_absorbed_melee = attack_result == attack_results.toughness_absorbed_melee
 	local fiendly_fire = attack_result == attack_results.friendly_fire
 
 	if shield_blocked or fiendly_fire then
@@ -261,6 +262,8 @@ function _impact_fx(damage_type, breed, did_damage, hit_weakspot, armor_type, at
 		impact_fx = impact_fxs.blocked or impact_fxs.damage_negated
 	elseif toughness_absorbed then
 		impact_fx = impact_fxs.toughness_absorbed or impact_fxs.damage_negated
+	elseif toughness_absorbed_melee and not did_damage then
+		impact_fx = impact_fxs.toughness_absorbed_melee or impact_fxs.toughness_absorbed
 	elseif damaged and damage_efficiency == damage_efficiencies.push then
 		impact_fx = impact_fxs.shove
 	elseif damage_efficiency == damage_efficiencies.negated then

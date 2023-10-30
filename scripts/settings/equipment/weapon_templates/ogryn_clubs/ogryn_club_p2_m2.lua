@@ -253,7 +253,7 @@ weapon_template.actions = {
 		damage_window_start = 0.25,
 		hit_armor_anim = "attack_hit_shield",
 		kind = "sweep",
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_2",
 		first_person_hit_anim = "hit_left_down_shake",
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
@@ -304,7 +304,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.65
+				chain_time = 0.4
 			},
 			block = {
 				action_name = "action_block"
@@ -558,7 +558,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.55
+				chain_time = 0.5
 			},
 			block = {
 				action_name = "action_block",

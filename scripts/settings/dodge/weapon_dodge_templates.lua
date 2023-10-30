@@ -55,12 +55,12 @@ local weapon_dodge_templates = {
 			lerp_basic = 0.6
 		},
 		diminishing_return_start = {
-			lerp_basic = math.huge,
-			lerp_perfect = math.huge
+			lerp_perfect = 6,
+			lerp_basic = 3
 		},
 		diminishing_return_limit = {
-			lerp_perfect = 100,
-			lerp_basic = 100
+			lerp_perfect = 4,
+			lerp_basic = 2
 		},
 		speed_modifier = {
 			lerp_perfect = 1,
@@ -77,12 +77,12 @@ local weapon_dodge_templates = {
 			lerp_basic = 0.6
 		},
 		diminishing_return_start = {
-			lerp_basic = math.huge,
-			lerp_perfect = math.huge
+			lerp_perfect = 6,
+			lerp_basic = 3
 		},
 		diminishing_return_limit = {
-			lerp_perfect = 100,
-			lerp_basic = 100
+			lerp_perfect = 4,
+			lerp_basic = 2
 		},
 		speed_modifier = {
 			lerp_perfect = 1.1,
@@ -154,6 +154,29 @@ local weapon_dodge_templates = {
 		},
 		speed_modifier = {
 			lerp_perfect = 1.2,
+			lerp_basic = 1.1
+		}
+	},
+	hammer_2h = {
+		consecutive_dodges_reset = 0,
+		distance_scale = {
+			lerp_perfect = 1,
+			lerp_basic = 0.75
+		},
+		diminishing_return_distance_modifier = {
+			lerp_perfect = 0.2,
+			lerp_basic = 0.4
+		},
+		diminishing_return_start = {
+			lerp_perfect = 3,
+			lerp_basic = 3
+		},
+		diminishing_return_limit = {
+			lerp_perfect = 2,
+			lerp_basic = 2
+		},
+		speed_modifier = {
+			lerp_perfect = 1.3,
 			lerp_basic = 1.1
 		}
 	},
@@ -241,6 +264,28 @@ local weapon_dodge_templates = {
 		},
 		speed_modifier = {
 			lerp_perfect = 1.2,
+			lerp_basic = 1
+		}
+	},
+	shotgun = {
+		distance_scale = {
+			lerp_perfect = 0.9,
+			lerp_basic = 0.7
+		},
+		diminishing_return_distance_modifier = {
+			lerp_perfect = 0.3,
+			lerp_basic = 0.6
+		},
+		diminishing_return_start = {
+			lerp_perfect = 5,
+			lerp_basic = 3
+		},
+		diminishing_return_limit = {
+			lerp_perfect = 5,
+			lerp_basic = 3
+		},
+		speed_modifier = {
+			lerp_perfect = 1,
 			lerp_basic = 1
 		}
 	}

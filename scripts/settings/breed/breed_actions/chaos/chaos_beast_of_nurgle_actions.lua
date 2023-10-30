@@ -442,12 +442,12 @@ local action_data = {
 		}
 	},
 	consume_minion = {
-		tongue_out_anim = "attack_grab_start_minion",
-		tongue_in_anim = "attack_grab_eat_minion",
+		min_tongue_length = 4.5,
 		consumed_minion_anim = "death_bon_eaten",
 		max_tongue_length = 10,
+		tongue_out_anim = "attack_grab_start_minion",
 		tongue_length_variable_name = "tongue_length",
-		rotation_speed = 6,
+		tongue_in_anim = "attack_grab_eat_minion",
 		health_percent_threshold = 0.85,
 		num_nearby_units_threshold = 1,
 		tongue_out_durations = {
@@ -1090,5 +1090,6 @@ local action_data = {
 	}
 }
 action_data.weakspot_stagger = table.clone(action_data.stagger)
+action_data.weakspot_stagger.stagger_immune = true
 
 return action_data

@@ -98,7 +98,7 @@ local weapon_charge_templates = {
 	psyker_smite_charge = {
 		charge_duration = 3,
 		psyker_smite = true,
-		warp_charge_percent = 0.3,
+		warp_charge_percent = 0.2,
 		extra_warp_charge_percent = 0.09,
 		charge_on_action_start = true
 	},
@@ -209,8 +209,8 @@ local weapon_charge_templates = {
 	},
 	forcestaff_p4_m1_charged_projectile = {
 		warp_charge_percent = {
-			lerp_perfect = 0.03,
-			lerp_basic = 0.09
+			lerp_perfect = 0.05,
+			lerp_basic = 0.12
 		}
 	},
 	forcestaff_p4_m1_charge_projectile = {
@@ -249,32 +249,28 @@ local weapon_charge_templates = {
 		warp_charge_percent = 0.08
 	},
 	chain_lightning_ability_spread = {
-		warp_charge_percent = 0.0075,
-		extra_warp_charge_percent = 0.18,
-		psyker_smite = true,
 		charge_duration = 0.1,
-		charge_on_action_start = true
+		charge_on_action_start = true,
+		extra_warp_charge_percent = 0.18,
+		warp_charge_percent = 0.0075
 	},
 	chain_lightning_ability_activated = {
-		warp_charge_percent = 0.6,
-		extra_warp_charge_percent = 0.6,
-		psyker_smite = true,
 		charge_duration = 0.001,
-		charge_on_action_start = true
+		charge_on_action_start = true,
+		extra_warp_charge_percent = 0.6,
+		warp_charge_percent = 0.6
 	},
 	chain_lightning_charge_heavy = {
-		warp_charge_percent = 0.05,
 		charge_duration = 0.8,
-		psyker_smite = true,
+		charge_on_action_start = true,
 		extra_warp_charge_percent = 0.01,
-		charge_on_action_start = true
+		warp_charge_percent = 0.05
 	},
 	chain_lightning_attack_heavy = {
-		warp_charge_percent = 0.12,
-		start_warp_charge_percent = 0.05,
 		charge_duration = 0.5,
-		psyker_smite = true,
-		extra_warp_charge_percent = 0.01
+		start_warp_charge_percent = 0.05,
+		extra_warp_charge_percent = 0.01,
+		warp_charge_percent = 0.12
 	}
 }
 

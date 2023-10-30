@@ -1306,11 +1306,15 @@ ItemUtils.trait_description = function (item, rarity, lerp_value)
 end
 
 ItemUtils.perk_rating = function (perk_item, perk_rarity, perk_value)
-	return RankSettings[perk_rarity or 0].perk_rating
+	local rank_item_type_name = perk_item.item_type == "GADGET" and "gadget" or "weapon"
+
+	return RankSettings[perk_rarity or 0].perk_rating[rank_item_type_name]
 end
 
 ItemUtils.trait_rating = function (trait_item, trait_rarity, trait_value)
-	return RankSettings[trait_rarity or 0].trait_rating
+	local rank_item_type_name = trait_item.item_type == "GADGET" and "gadget" or "weapon"
+
+	return RankSettings[trait_rarity or 0].trait_rating[rank_item_type_name]
 end
 
 ItemUtils.item_perk_rating = function (item)
@@ -1320,7 +1324,8 @@ ItemUtils.item_perk_rating = function (item)
 
 	for i = 1, num_perks do
 		local perk = perks[i]
-		rating = rating + RankSettings[perk.rarity or 0].perk_rating
+		local rank_item_type_name = item.item_type == "GADGET" and "gadget" or "weapon"
+		rating = rating + RankSettings[perk.rarity or 0].perk_rating[rank_item_type_name]
 	end
 
 	return rating
@@ -1341,7 +1346,8 @@ ItemUtils.item_trait_rating = function (item)
 
 		for i = 1, num_traits do
 			local trait = traits[i]
-			rating = rating + RankSettings[trait.rarity or 0].trait_rating
+			local rank_item_type_name = item.item_type == "GADGET" and "gadget" or "weapon"
+			rating = rating + RankSettings[trait.rarity or 0].trait_rating[rank_item_type_name]
 
 			if trait.is_fake then
 				fake_perk_count = fake_perk_count + 1

@@ -28,6 +28,7 @@ local hit_zone_names = HitZone.hit_zone_names
 local minion_burning_buff_effects = BurningSettings.buff_effects.minions
 local attack_types = AttackSettings.attack_types
 local damage_types = DamageSettings.damage_types
+local buff_category = BuffSettings.buff_categories
 local keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
 local special_rules = SpecialRulesSetting.special_rules
@@ -1043,8 +1044,8 @@ templates.psyker_overcharge_stance_damage = {
 	duration = TalentSettings.overcharge_stance.post_stance_duration,
 	player_effects = {
 		on_screen_effect = "content/fx/particles/screenspace/screen_psyker_overcharge_stance_minor",
-		looping_wwise_start_event = "wwise/events/player/play_ability_gunslinger_on",
-		looping_wwise_stop_event = "wwise/events/player/play_ability_gunslinger_off",
+		looping_wwise_start_event = "wwise/events/player/play_ability_gunslinger_second_buff_on",
+		looping_wwise_stop_event = "wwise/events/player/play_ability_gunslinger_second_buff_off",
 		wwise_state = {
 			group = "player_ability",
 			on_state = "psyker_gunslinger_ability",
@@ -1165,7 +1166,7 @@ templates.psyker_aura_crit_chance_aura = {
 	max_stacks = 1,
 	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.critical_strike_chance] = 0.04
+		[stat_buffs.critical_strike_chance] = 0.05
 	}
 }
 templates.psyker_aura_crit_chance_aura_improved = {
@@ -1315,7 +1316,7 @@ templates.psyker_elite_kills_add_warpfire = {
 	predicted = false,
 	class_name = "proc_buff",
 	proc_events = {
-		[proc_events.on_hit] = 1
+		[proc_events.on_kill] = 1
 	},
 	start_func = function (template_data, template_context)
 		local broadphase_system = Managers.state.extension:system("broadphase_system")
@@ -1574,6 +1575,7 @@ templates.psyker_smite_on_hit = {
 	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_2_tier_5_name_3",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_blitz",
 	class_name = "proc_buff",
+	cooldown_duration = talent_settings_2.offensive_2_3.cooldown,
 	proc_events = {
 		[proc_events.on_hit] = talent_settings_2.offensive_2_3.smite_chance
 	},
@@ -1583,6 +1585,10 @@ templates.psyker_smite_on_hit = {
 		template_data.fx_extension = ScriptUnit.extension(unit, "fx_system")
 	end,
 	update_func = function (template_data, template_context, dt, t)
+		if not template_context.is_server then
+			return
+		end
+
 		local smite_target = template_data.smite_target
 
 		if not smite_target then
@@ -1606,7 +1612,6 @@ templates.psyker_smite_on_hit = {
 			return
 		end
 
-		template_data.next_allowed_t = t + talent_settings_2.offensive_2_3.cooldown
 		local hit_unit_pos = POSITION_LOOKUP[smite_target]
 		local player_pos = POSITION_LOOKUP[player_unit]
 		local attack_direction = Vector3.normalize(hit_unit_pos - player_pos)
@@ -1643,21 +1648,17 @@ templates.psyker_smite_on_hit = {
 
 		template_data.smite_target = nil
 	end,
-	proc_func = function (params, template_data, template_context, t)
-		if t < template_data.next_allowed_t then
-			return
-		end
-
+	check_proc_func = function (params, template_data, template_context, t)
 		local attack_type = params.attack_type
 
 		if not attack_type then
-			return
+			return false
 		end
 
 		local damage = params.damage
 
 		if damage == 0 then
-			return
+			return false
 		end
 
 		local attacked_unit = params.attacked_unit
@@ -1670,25 +1671,29 @@ templates.psyker_smite_on_hit = {
 		local breed = unit_data_extension:breed()
 
 		if not breed then
-			return
+			return false
 		end
 
 		local is_prop = Breed.is_prop(breed)
 
 		if is_prop then
-			return
+			return false
 		end
 
 		local is_living_prop = Breed.is_living_prop(breed)
 
 		if is_living_prop then
-			return
+			return false
 		end
 
 		if not HEALTH_ALIVE[attacked_unit] then
-			return
+			return false
 		end
 
+		return true
+	end,
+	proc_func = function (params, template_data, template_context, t)
+		local attacked_unit = params.attacked_unit
 		template_data.smite_target = attacked_unit
 	end
 }
@@ -1917,7 +1922,7 @@ templates.psyker_empowered_grenades_passive_visual_buff = {
 	},
 	stat_buffs = {
 		[stat_buffs.chain_lightning_damage] = talent_settings_3.passive_1.chain_lightning_damage,
-		[stat_buffs.chain_lightning_jump_time_multiplier] = 0.25,
+		[stat_buffs.chain_lightning_jump_time_multiplier] = 0.5,
 		[stat_buffs.psyker_smite_cost_multiplier] = talent_settings_3.passive_1.psyker_smite_cost_multiplier,
 		[stat_buffs.smite_attack_speed] = 0.5,
 		[stat_buffs.smite_damage] = 0.5
@@ -2045,6 +2050,7 @@ templates.psyker_boost_allies_in_sphere_buff = {
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	predicted = false,
 	class_name = "buff",
+	buff_category = buff_category.generic,
 	update_func = function (template_data, template_context, dt, t)
 		Toughness.replenish_percentage(template_context.unit, shield_toughness_ally * dt, false, "psyker_sphere")
 	end
@@ -2054,6 +2060,7 @@ templates.psyker_boost_allies_in_sphere_end_buff = {
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 	predicted = false,
 	class_name = "buff",
+	buff_category = buff_category.generic,
 	duration = talent_settings_3.combat_ability.toughness_duration,
 	stat_buffs = {
 		[stat_buffs.toughness_damage_taken_multiplier] = talent_settings_3.combat_ability.toughness_damage_reduction
@@ -2101,8 +2108,9 @@ templates.psyker_boost_allies_passing_through_force_field = {
 }
 templates.psyker_force_field_buff = {
 	predicted = true,
-	refresh_duration_on_stack = true,
 	class_name = "buff",
+	refresh_duration_on_stack = true,
+	buff_category = buff_category.generic,
 	duration = talent_settings_3.defensive_1.duration,
 	max_stacks = talent_settings_3.defensive_1.max_stacks,
 	stat_buffs = {
@@ -2373,9 +2381,6 @@ templates.psyker_dodge_after_crits = {
 	check_proc_func = CheckProcFunctions.on_crit
 }
 templates.psyker_crits_regen_toughness_movement_speed = {
-	hud_priority = 3,
-	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_1_tier_4_name_2",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_hit] = 1
@@ -2411,9 +2416,9 @@ templates.psyker_crits_regen_toughness_movement_speed = {
 	end
 }
 templates.psyker_stacking_movement_buff = {
-	refresh_duration_on_stack = true,
-	predicted = true,
 	hud_priority = 3,
+	predicted = true,
+	refresh_duration_on_stack = true,
 	hud_icon = "content/ui/textures/icons/buffs/hud/psyker/psyker_1_tier_4_name_2",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
 	max_stacks = 3,

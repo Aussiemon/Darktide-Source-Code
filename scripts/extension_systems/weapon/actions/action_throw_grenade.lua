@@ -62,16 +62,17 @@ ActionThrowGrenade._spawn_projectile = function (self)
 		local material = nil
 		local fire_config = action_settings.fire_configuration
 		local skip_aiming = fire_config and fire_config.skip_aiming
-		local position, rotation, direction, speed, momentum = nil
 		local first_person_component = self._first_person_component
+		local look_rotation = first_person_component.rotation
+		local look_position = first_person_component.position
+		local position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_current_aim(action_settings, look_position, look_rotation, locomotion_template)
 
-		if skip_aiming then
-			local look_rotation = first_person_component.rotation
-			local look_position = first_person_component.position
-			position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_current_aim(action_settings, look_position, look_rotation, locomotion_template)
-		else
-			local action_aim_projectile = self._action_aim_projectile_component
-			position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_aim_component(action_aim_projectile)
+		if not skip_aiming then
+			local aim_position = position
+			local aim_direction = direction
+			position, rotation, direction, speed, momentum = AimProjectile.get_spawn_parameters_from_aim_component(self._action_aim_projectile_component)
+			position = aim_position
+			direction = aim_direction
 		end
 
 		local spawn_node = action_settings.spawn_node

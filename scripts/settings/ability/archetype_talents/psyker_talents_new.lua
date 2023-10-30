@@ -89,6 +89,10 @@ local archetype_talents = {
 			display_name = "loc_talent_psyker_2_combat",
 			description = "loc_talent_psyker_shout_ability_description",
 			format_values = {
+				warpcharge_vent = {
+					format_type = "percentage",
+					value = talent_settings_2.combat_ability.warpcharge_vent_base
+				},
 				cooldown = {
 					format_type = "number",
 					value = talent_settings_2.combat_ability.cooldown
@@ -275,7 +279,7 @@ local archetype_talents = {
 			format_values = {
 				warpcharge_vent = {
 					format_type = "percentage",
-					value = talent_settings_2.combat_ability.warpcharge_vent
+					value = talent_settings_2.combat_ability.warpcharge_vent_improved
 				},
 				cooldown = {
 					format_type = "number",
@@ -287,8 +291,8 @@ local archetype_talents = {
 				}
 			},
 			special_rule = {
-				special_rule_name = "shout_drains_warp_charge",
-				identifier = "shout_drains_warp_charge"
+				special_rule_name = "shout_warp_charge_vent_improved",
+				identifier = "shout_warp_charge_vent_improved"
 			}
 		},
 		psyker_shout_damage_per_warp_charge = {

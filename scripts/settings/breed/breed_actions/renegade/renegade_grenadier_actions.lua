@@ -298,6 +298,12 @@ local action_data = {
 			attack_throw_long_02 = 3.2051282051282053,
 			attack_throw_long_01 = 3.1538461538461537
 		},
+		start_drop_grenade_timing = {
+			attack_throw_low_01 = 1.0769230769230769,
+			attack_throw_backhand_01 = 0.7435897435897436,
+			attack_throw_long_02 = 1.2820512820512822,
+			attack_throw_long_01 = 0.5128205128205128
+		},
 		throw_config = {
 			unit_node = "j_rightweaponattach",
 			item = "content/items/weapons/minions/ranged/renegade_grenade",
@@ -316,6 +322,9 @@ local action_data = {
 		},
 		action_durations = {
 			attack_throw_low_01 = 2.923076923076923
+		},
+		start_drop_grenade_timing = {
+			attack_throw_low_01 = 1.0769230769230769
 		},
 		effect_template = EffectTemplates.renegade_grenadier_grenade,
 		effect_template_timings = {

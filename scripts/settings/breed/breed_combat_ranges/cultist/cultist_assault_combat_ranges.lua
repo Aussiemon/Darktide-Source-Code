@@ -16,7 +16,7 @@ local combat_ranges = {
 				activate_slot_system = true,
 				require_line_of_sight = true,
 				target_weapon_type_distance = {
-					ranged = 2,
+					ranged = 5,
 					melee = 6
 				}
 			},
@@ -41,7 +41,7 @@ local combat_ranges = {
 				activate_slot_system = true,
 				require_line_of_sight = true,
 				target_weapon_type_distance = {
-					ranged = 2,
+					ranged = 5,
 					melee = 6
 				},
 				target_velocity_dot_duration_inverted = {
@@ -80,8 +80,8 @@ local combat_ranges = {
 				target_velocity_dot_distance = 6,
 				z_distance = 1.9,
 				target_weapon_type_distance = {
-					ranged = 3,
-					melee = 7
+					ranged = 6,
+					melee = 8
 				},
 				target_velocity_dot_duration = {
 					6,

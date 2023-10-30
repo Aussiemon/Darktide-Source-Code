@@ -108,6 +108,7 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 		},
 		ramp_modifiers = {
 			hordes = 1.25,
+			terror_events = 1.25,
 			specials = 2
 		}
 	},
@@ -121,32 +122,35 @@ local DEFAULT_RAMP_UP_FREQUENCY_MODIFIERS = {
 		},
 		ramp_modifiers = {
 			hordes = 1.25,
+			terror_events = 1.5,
 			specials = 2
 		}
 	},
 	{
 		travel_change_pause_time = 11,
 		ramp_duration = 300,
-		max_duration = 70,
-		ramp_up_states = {
-			build_up_tension = true,
-			build_up_tension_low = true
-		},
-		ramp_modifiers = {
-			hordes = 1.5,
-			specials = 2.5
-		}
-	},
-	{
-		travel_change_pause_time = 13,
-		ramp_duration = 200,
 		max_duration = 80,
 		ramp_up_states = {
 			build_up_tension = true,
 			build_up_tension_low = true
 		},
 		ramp_modifiers = {
+			hordes = 1.5,
+			terror_events = 1.75,
+			specials = 2.5
+		}
+	},
+	{
+		travel_change_pause_time = 13,
+		ramp_duration = 200,
+		max_duration = 100,
+		ramp_up_states = {
+			build_up_tension = true,
+			build_up_tension_low = true
+		},
+		ramp_modifiers = {
 			hordes = 1.75,
+			terror_events = 2,
 			specials = 3
 		}
 	}

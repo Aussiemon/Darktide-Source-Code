@@ -244,7 +244,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_attack_special",
-				chain_time = 0.47
+				chain_time = 0.34
 			},
 			grenade_ability = {
 				{
@@ -336,7 +336,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_attack_special",
-				chain_time = 0.52
+				chain_time = 0.24
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -507,7 +507,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_attack_special",
-				chain_time = 0.47
+				chain_time = 0.33
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -592,7 +592,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_attack_special",
-				chain_time = 0.52
+				chain_time = 0.3
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -754,7 +754,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_attack_special",
-				chain_time = 0.47
+				chain_time = 0.4
 			},
 			grenade_ability = {
 				{
@@ -1040,7 +1040,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_attack_special",
-				chain_time = 0.45
+				chain_time = 0.3
 			}
 		},
 		inner_push_rad = math.pi * 0.1,

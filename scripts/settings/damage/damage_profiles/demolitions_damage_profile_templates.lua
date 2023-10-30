@@ -579,6 +579,53 @@ damage_templates.plasma_demolition = {
 		}
 	}
 }
+damage_templates.smoke_grenade = {
+	shield_override_stagger_strength = 0,
+	suppression_value = 10,
+	damage_type = "grenade",
+	ragdoll_push_force = 250,
+	ignore_stagger_reduction = true,
+	stagger_category = "explosion",
+	cleave_distribution = {
+		attack = 0,
+		impact = 0.15
+	},
+	armor_damage_modifier = {
+		attack = {
+			[armor_types.unarmored] = 0,
+			[armor_types.armored] = 0,
+			[armor_types.resistant] = 0,
+			[armor_types.player] = 0,
+			[armor_types.berserker] = 0,
+			[armor_types.super_armor] = 0,
+			[armor_types.disgustingly_resilient] = 0,
+			[armor_types.void_shield] = 0,
+			[armor_types.prop_armor] = 0
+		},
+		impact = {
+			[armor_types.unarmored] = 0.1,
+			[armor_types.armored] = 0.1,
+			[armor_types.resistant] = 0.75,
+			[armor_types.player] = 0.1,
+			[armor_types.berserker] = 0.1,
+			[armor_types.super_armor] = 0.1,
+			[armor_types.disgustingly_resilient] = 0.1,
+			[armor_types.void_shield] = 0.1,
+			[armor_types.prop_armor] = 0.1
+		}
+	},
+	power_distribution = {
+		attack = 0,
+		impact = 100
+	},
+	targets = {
+		default_target = {
+			boost_curve = PowerLevelSettings.boost_curves.default
+		}
+	},
+	gibbing_type = GibbingTypes.explosion,
+	gibbing_power = GibbingPower.heavy
+}
 damage_templates.shock_grenade = {
 	shield_override_stagger_strength = 0,
 	suppression_value = 10,
@@ -814,8 +861,8 @@ ogryn_grenade.armor_damage_modifier_ranged.far.impact[armor_types.armored] = {
 	0.5
 }
 ogryn_grenade.armor_damage_modifier_ranged.near.attack[armor_types.super_armor] = {
-	0.6,
-	0.9
+	0.8,
+	1.2
 }
 ogryn_grenade.armor_damage_modifier_ranged.far.attack[armor_types.super_armor] = {
 	0.25,
@@ -830,12 +877,12 @@ ogryn_grenade.armor_damage_modifier_ranged.far.impact[armor_types.super_armor] =
 	0.5
 }
 ogryn_grenade.armor_damage_modifier_ranged.near.attack[armor_types.resistant] = {
-	1.5,
-	2.25
+	2,
+	3.25
 }
 ogryn_grenade.armor_damage_modifier_ranged.far.attack[armor_types.resistant] = {
 	1,
-	1
+	1.25
 }
 ogryn_grenade.armor_damage_modifier_ranged.near.impact[armor_types.resistant] = {
 	1.5,
@@ -862,14 +909,6 @@ close_ogryn_grenade.armor_damage_modifier.impact[armor_types.armored] = {
 	1,
 	1
 }
-close_ogryn_grenade.armor_damage_modifier.attack[armor_types.resistant] = {
-	1,
-	1.3
-}
-close_ogryn_grenade.armor_damage_modifier.attack[armor_types.resistant] = {
-	1,
-	1.3
-}
 close_ogryn_grenade.armor_damage_modifier.attack[armor_types.berserker] = {
 	1.35,
 	2
@@ -884,7 +923,7 @@ close_ogryn_grenade.armor_damage_modifier.impact[armor_types.super_armor] = {
 }
 close_ogryn_grenade.armor_damage_modifier.attack[armor_types.resistant] = {
 	2,
-	2
+	3.25
 }
 close_ogryn_grenade.armor_damage_modifier.impact[armor_types.resistant] = {
 	3,

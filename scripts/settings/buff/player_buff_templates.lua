@@ -940,27 +940,27 @@ templates.player_suppression_node_buff_low_1 = {
 	predicted = false,
 	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.suppression_dealt] = 0.05
+		[stat_buffs.suppression_dealt] = 0.25
 	},
 	specialization_overrides = {
 		{
 			stat_buffs = {
-				[stat_buffs.suppression_dealt] = 0.05
+				[stat_buffs.suppression_dealt] = 0.25
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.suppression_dealt] = 0.1
+				[stat_buffs.suppression_dealt] = 0.3
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.suppression_dealt] = 0.15
+				[stat_buffs.suppression_dealt] = 0.35
 			}
 		},
 		{
 			stat_buffs = {
-				[stat_buffs.suppression_dealt] = 0.2
+				[stat_buffs.suppression_dealt] = 0.4
 			}
 		}
 	}
@@ -1045,7 +1045,8 @@ templates.bot_medium_buff = {
 		keywords.stun_immune
 	},
 	stat_buffs = {
-		[stat_buffs.max_health_modifier] = 0.4,
+		[stat_buffs.max_health_modifier] = 0.5,
+		[stat_buffs.toughness] = 50,
 		[stat_buffs.extra_max_amount_of_wounds] = 1,
 		[buff_stat_buffs.toughness_regen_rate_modifier] = 0.15
 	}
@@ -1056,7 +1057,8 @@ templates.bot_high_buff = {
 		keywords.stun_immune
 	},
 	stat_buffs = {
-		[stat_buffs.max_health_modifier] = 0.6,
+		[stat_buffs.max_health_modifier] = 0.8,
+		[stat_buffs.toughness] = 100,
 		[stat_buffs.extra_max_amount_of_wounds] = 2,
 		[buff_stat_buffs.toughness_regen_rate_modifier] = 0.3
 	}

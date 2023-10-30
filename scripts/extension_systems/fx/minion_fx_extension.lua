@@ -13,6 +13,7 @@ MinionFxExtension.init = function (self, extension_init_context, unit, extension
 	self._is_server = is_server
 	self._world = extension_init_context.world
 	self._wwise_world = extension_init_context.wwise_world
+	self._unit = unit
 
 	if not is_server then
 		local network_event_delegate = extension_init_context.network_event_delegate
@@ -27,8 +28,13 @@ MinionFxExtension.extensions_ready = function (self, world, unit)
 	self._visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
 end
 
+local ALWAYS_TARGET_BREEDS = {
+	renegade_sniper = true
+}
+
 MinionFxExtension.game_object_initialized = function (self, game_session, game_object_id)
 	self._game_object_id = game_object_id
+	self._always_update_ranged_target = ALWAYS_TARGET_BREEDS[ScriptUnit.extension(self._unit, "unit_data_system"):breed().name]
 end
 
 MinionFxExtension.destroy = function (self)
@@ -63,7 +69,11 @@ MinionFxExtension._trigger_inventory_wwise_event = function (self, event_name, i
 	local auto_source_id = WwiseWorld.make_auto_source(wwise_world, attachment_unit, node)
 
 	if is_ranged_attack then
-		Effect.update_targeted_by_ranged_minion_wwise_parameters(optional_target_unit, wwise_world, auto_source_id)
+		if self._always_update_ranged_target then
+			Effect.update_targeted_by_ranged_minion_always_target_wwise_parameters(wwise_world, auto_source_id)
+		else
+			Effect.update_targeted_by_ranged_minion_wwise_parameters(optional_target_unit, wwise_world, auto_source_id)
+		end
 	end
 
 	WwiseWorld.trigger_resource_event(wwise_world, event_name, auto_source_id)

@@ -110,8 +110,8 @@ damage_templates.default_laspistol_killshot = {
 	},
 	power_distribution = {
 		attack = {
-			62.5,
-			125
+			75,
+			150
 		},
 		impact = {
 			4,

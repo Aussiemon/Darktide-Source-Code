@@ -108,6 +108,10 @@ local default_debug_input_settings = {
 			raw = "keyboard_left shift+keyboard_g",
 			type = "pressed"
 		},
+		regenerate_specials = {
+			raw = "keyboard_left shift+keyboard_s",
+			type = "pressed"
+		},
 		regenerate_toxic_fog = {
 			raw = "keyboard_left shift+keyboard_t",
 			type = "pressed"

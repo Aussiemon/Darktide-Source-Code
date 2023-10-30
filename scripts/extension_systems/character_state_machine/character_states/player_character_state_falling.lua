@@ -100,7 +100,7 @@ PlayerCharacterStateFalling.on_exit = function (self, unit, t, next_state)
 
 	local movement_state_component = self._movement_state_component
 	local was_crouching = movement_state_component.is_crouching
-	local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, self._input_extension, t)
+	local is_crouching = Crouch.check(unit, self._first_person_extension, self._animation_extension, self._weapon_extension, movement_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, self._input_extension, t, false)
 
 	if was_crouching and is_crouching then
 		animation_ext:anim_event("to_crouch")
@@ -284,7 +284,7 @@ PlayerCharacterStateFalling._check_transition = function (self, unit, t, next_st
 	local inair_state = self._inair_state_component
 
 	if inair_state.on_ground then
-		local wants_crouch = Crouch.crouch_input(input_source, self._movement_state_component.is_crouching, false)
+		local wants_crouch = Crouch.crouch_input(input_source, self._movement_state_component.is_crouching, false, true)
 		local locomotion_component = self._locomotion_component
 		local flat_speed_sq = Vector3.length_squared(Vector3.flat(locomotion_component.velocity_current))
 		local wants_slide = wants_crouch and self._constants.slide_move_speed_threshold_sq < flat_speed_sq

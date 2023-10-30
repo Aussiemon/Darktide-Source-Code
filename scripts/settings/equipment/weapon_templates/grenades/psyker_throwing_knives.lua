@@ -337,6 +337,7 @@ weapon_template.actions = {
 		},
 		spawn_offset = Vector3Box(0.1, -0.2, -0.22),
 		fx = {
+			crit_shoot_sfx_alias = "critical_shot_extra",
 			shoot_sfx_alias = "ranged_single_shot"
 		},
 		anim_event_func = _select_throw_anim,
@@ -403,6 +404,7 @@ weapon_template.actions = {
 			}
 		},
 		fx = {
+			crit_shoot_sfx_alias = "critical_shot_extra",
 			shoot_sfx_alias = "ranged_single_shot"
 		},
 		spawn_offset = Vector3Box(0.1, -0.5, -0.37),
@@ -465,6 +467,7 @@ weapon_template.actions = {
 			}
 		},
 		fx = {
+			crit_shoot_sfx_alias = "critical_shot_extra",
 			shoot_sfx_alias = "ranged_single_shot"
 		},
 		spawn_offset = Vector3Box(0.045, -0.3, 0.2),

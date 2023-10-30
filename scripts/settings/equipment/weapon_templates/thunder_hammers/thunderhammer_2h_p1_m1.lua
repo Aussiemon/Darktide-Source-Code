@@ -299,19 +299,19 @@ weapon_template.actions = {
 		total_time = 1.75,
 		action_movement_curve = {
 			{
-				modifier = 0.5,
+				modifier = 0.6,
 				t = 0.1
 			},
 			{
-				modifier = 1.15,
+				modifier = 1.25,
 				t = 0.15
 			},
 			{
-				modifier = 1.25,
+				modifier = 1.35,
 				t = 0.25
 			},
 			{
-				modifier = 1.3,
+				modifier = 1.5,
 				t = 0.35
 			},
 			{
@@ -338,7 +338,7 @@ weapon_template.actions = {
 				modifier = 1,
 				t = 1
 			},
-			start_modifier = 0.4
+			start_modifier = 0.5
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -676,19 +676,19 @@ weapon_template.actions = {
 		total_time = 1.75,
 		action_movement_curve = {
 			{
-				modifier = 0.5,
+				modifier = 0.6,
 				t = 0.1
 			},
 			{
-				modifier = 1.15,
+				modifier = 1.25,
 				t = 0.15
 			},
 			{
-				modifier = 1.25,
+				modifier = 1.35,
 				t = 0.25
 			},
 			{
-				modifier = 1.3,
+				modifier = 1.5,
 				t = 0.35
 			},
 			{
@@ -715,7 +715,7 @@ weapon_template.actions = {
 				modifier = 1,
 				t = 1
 			},
-			start_modifier = 0.4
+			start_modifier = 0.5
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -1164,15 +1164,15 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.55
+				chain_time = 0.325
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.5
+				chain_time = 0.325
 			},
 			special_action = {
 				action_name = "action_activate_special_right",
-				chain_time = 0.5
+				chain_time = 0.325
 			}
 		},
 		weapon_box = default_weapon_box,
@@ -1414,7 +1414,7 @@ weapon_template.keywords = {
 	"p1",
 	"activated"
 }
-weapon_template.dodge_template = "support"
+weapon_template.dodge_template = "hammer_2h"
 weapon_template.sprint_template = "support"
 weapon_template.stamina_template = "thunderhammer_2h_p1_m1"
 weapon_template.toughness_template = "default"

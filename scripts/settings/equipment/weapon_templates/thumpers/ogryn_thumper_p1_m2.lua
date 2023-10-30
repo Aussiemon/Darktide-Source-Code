@@ -392,7 +392,7 @@ weapon_template.actions = {
 		weapon_handling_template = "time_scale_1",
 		stop_alternate_fire = true,
 		start_input = "reload",
-		crosshair_type = "none",
+		crosshair_type = "projectile_drop",
 		uninterruptible = true,
 		total_time = 2.333,
 		reload_settings = {
@@ -532,10 +532,10 @@ weapon_template.actions = {
 			},
 			bash = {
 				action_name = "action_bash_right",
-				chain_time = 0.8
+				chain_time = 0.75
 			},
 			zoom = {
-				chain_time = 1.2,
+				chain_time = 0.9,
 				reset_combo = true,
 				action_name = "action_zoom"
 			}

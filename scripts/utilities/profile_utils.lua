@@ -225,7 +225,7 @@ end
 
 local _combine_item = nil
 
-function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair, mask_hair, mask_hair_override)
+function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair, mask_hair, mask_hair_override, mask_face)
 	for child_slot_name, child_entry in pairs(entry) do
 		if child_slot_name ~= "parent_slot_names" then
 			local child_attachments = {}
@@ -264,6 +264,10 @@ function _combine_item(slot_name, entry, attachments, visual_items, voice_fx_pre
 
 			if data.item.mask_hair_override then
 				mask_hair_override[1] = mask_hair_override[1] or data.item.mask_hair_override
+			end
+
+			if data.item.mask_face then
+				mask_face[1] = mask_face[1] or data.item.mask_face
 			end
 		end
 	end
@@ -324,8 +328,9 @@ local function _generate_visual_loadout(visual_items)
 			local mask_facial_hair = {}
 			local mask_hair = {}
 			local mask_hair_override = {}
+			local mask_face = {}
 
-			_combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair, mask_hair, mask_hair_override)
+			_combine_item(slot_name, entry, attachments, visual_items, voice_fx_presets, hide_facial_hair, stabilize_neck, mask_facial_hair, mask_hair, mask_hair_override, mask_face)
 
 			local data = visual_items[slot_name]
 			local gear = data.gear
@@ -385,6 +390,11 @@ local function _generate_visual_loadout(visual_items)
 			if mask_hair_override then
 				overrides = overrides or {}
 				overrides.mask_hair_override = mask_hair_override[1]
+			end
+
+			if mask_face then
+				overrides = overrides or {}
+				overrides.mask_face = mask_face[1]
 			end
 
 			gear.masterDataInstance.overrides = overrides

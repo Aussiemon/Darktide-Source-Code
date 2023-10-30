@@ -89,13 +89,13 @@ damage_templates.light_combat_knife_ninja_fencer = {
 			crit_boost = 0.75,
 			armor_damage_modifier = {
 				attack = {
-					[armor_types.unarmored] = damage_lerp_values.lerp_1,
+					[armor_types.unarmored] = damage_lerp_values.lerp_1_25,
 					[armor_types.armored] = damage_lerp_values.lerp_0_5,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
 					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
-					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 					[armor_types.prop_armor] = damage_lerp_values.lerp_0_5
 				},
@@ -184,13 +184,66 @@ damage_templates.light_combat_knife_ninja_fencer = {
 	},
 	gib_push_force = GibbingSettings.gib_push_force.sawing_light
 }
+overrides.light_combat_knife_ninja_fencer_stab = {
+	parent_template_name = "light_combat_knife_ninja_fencer",
+	overrides = {
+		{
+			"backstab_bonus",
+			0.25
+		},
+		{
+			"targets",
+			1,
+			"power_distribution",
+			"attack",
+			{
+				40,
+				80
+			}
+		},
+		{
+			"targets",
+			1,
+			"boost_curve_multiplier_finesse",
+			{
+				1.75,
+				3.5
+			}
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"armored",
+			damage_lerp_values.lerp_0_8
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"super_armor",
+			damage_lerp_values.lerp_0_6
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"berserker",
+			damage_lerp_values.lerp_0_8
+		}
+	}
+}
 damage_templates.medium_combat_knife_ninja_fencer = {
 	finesse_ability_damage_multiplier = 3,
+	backstab_bonus = 0.25,
 	ragdoll_push_force = 10,
 	stagger_category = "melee",
 	crit_mod = medium_ninja_fencer_crit_mod,
 	cleave_distribution = no_cleave,
-	damage_type = damage_types.metal_slashing_light,
+	damage_type = damage_types.metal_slashing_heavy,
 	gibbing_type = GibbingTypes.sawing,
 	gibbing_power = GibbingPower.always,
 	melee_attack_strength = melee_attack_strengths.heavy,
@@ -205,9 +258,9 @@ damage_templates.medium_combat_knife_ninja_fencer = {
 					[armor_types.armored] = damage_lerp_values.lerp_0_75,
 					[armor_types.resistant] = damage_lerp_values.lerp_1,
 					[armor_types.player] = damage_lerp_values.lerp_1,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
-					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_75,
+					[armor_types.berserker] = damage_lerp_values.lerp_1,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
+					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_0_9,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 					[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
 				},
@@ -240,8 +293,8 @@ damage_templates.medium_combat_knife_ninja_fencer = {
 			finesse_boost = PowerLevelSettings.ninjafencer_finesse_boost_amount,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			boost_curve_multiplier_finesse = {
-				1,
-				3
+				1.75,
+				3.5
 			},
 			power_level_multiplier = {
 				0.5,

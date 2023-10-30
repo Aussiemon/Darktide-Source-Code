@@ -82,7 +82,7 @@ CosmeticsVendorView._reset_mannequin = function (self)
 			end
 		end
 
-		local profile = self._presentation_profile
+		local profile = self._store_presentation_profile
 		local archetype = profile and profile.archetype
 		local breed_name = profile and archetype.breed or ""
 		local gender_name = profile and profile.gender or ""
@@ -460,13 +460,13 @@ CosmeticsVendorView._initialize_background_profile = function (self, optional_ar
 		self.can_preview_with_gear = false
 	end
 
-	self._presentation_profile = self._mannequin_profile
+	self._store_presentation_profile = self._mannequin_profile
 	self._spawned_profile = nil
 end
 
 CosmeticsVendorView.cb_on_preview_with_gear_toggled = function (self, id, input_pressed, instant)
 	self._previewed_with_gear = not self._previewed_with_gear
-	self._presentation_profile = self._previewed_with_gear and self._gear_profile or self._mannequin_profile
+	self._store_presentation_profile = self._previewed_with_gear and self._gear_profile or self._mannequin_profile
 	self._spawn_player = true
 	self._keep_current_rotation = true
 
@@ -495,7 +495,7 @@ CosmeticsVendorView.present_items = function (self, optional_context)
 	self:_clear_list()
 	self:_initialize_background_profile(optional_archetype_name)
 
-	local presentation_profile = self._presentation_profile
+	local presentation_profile = self._store_presentation_profile
 	self._active_archetype_name = presentation_profile.archetype.name
 	local ignore_focus_on_offer = true
 	local promises = {
@@ -742,7 +742,7 @@ end
 
 CosmeticsVendorView.update = function (self, dt, t, input_service)
 	if self._spawn_player and self._spawn_point_unit and self._breeds_default_camera_settings then
-		local profile = self._presentation_profile
+		local profile = self._store_presentation_profile
 		local initial_rotation = self._initial_rotation
 		local disable_rotation_input = self._disable_rotation_input
 		local keep_current_rotation = self._keep_current_rotation
@@ -1117,7 +1117,7 @@ CosmeticsVendorView._trigger_zoom_logic = function (self, instant, optional_slot
 
 	local func_ptr = math.easeCubic
 	local duration = instant and 0 or 1
-	local profile = self._presentation_profile
+	local profile = self._store_presentation_profile
 	local archetype = profile and profile.archetype
 	local breed_name = profile and archetype.breed or ""
 

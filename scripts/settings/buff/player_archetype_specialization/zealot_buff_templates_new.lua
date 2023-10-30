@@ -18,6 +18,7 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local attack_types = AttackSettings.attack_types
 local damage_efficiencies = AttackSettings.damage_efficiencies
 local damage_types = DamageSettings.damage_types
+local buff_category = BuffSettings.buff_categories
 local keywords = BuffSettings.keywords
 local proc_events = BuffSettings.proc_events
 local stat_buffs = BuffSettings.stat_buffs
@@ -45,27 +46,29 @@ local templates = {
 		end
 	},
 	zealot_channel_damage = {
-		hud_priority = 1,
-		predicted = false,
 		refresh_duration_on_stack = true,
+		predicted = false,
+		hud_priority = 1,
 		hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_channel_grants_damage",
 		hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 		max_stacks = 1,
 		duration = 10,
 		class_name = "buff",
+		buff_category = buff_category.generic,
 		stat_buffs = {
 			[stat_buffs.damage] = 0.15
 		}
 	},
 	zealot_channel_toughness_damage_reduction = {
-		hud_priority = 1,
-		predicted = false,
 		refresh_duration_on_stack = true,
+		predicted = false,
+		hud_priority = 1,
 		hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_channel_grants_toughness_damage_reduction",
 		hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 		max_stacks = 1,
 		duration = 10,
 		class_name = "buff",
+		buff_category = buff_category.generic,
 		stat_buffs = {
 			[stat_buffs.toughness_damage_taken_multiplier] = 0.75
 		},
@@ -74,13 +77,14 @@ local templates = {
 		}
 	},
 	zealot_channel_toughness_bonus = {
-		refresh_duration_on_stack = true,
 		predicted = false,
+		refresh_duration_on_stack = true,
 		hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_ability_bolstering_prayer",
 		hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_ability",
 		max_stacks = 5,
 		duration = 10,
 		class_name = "buff",
+		buff_category = buff_category.generic,
 		stat_buffs = {
 			[stat_buffs.toughness_bonus_flat] = 20
 		}
@@ -123,9 +127,6 @@ templates.zealot_quickness_passive = {
 		local specialization_extension = ScriptUnit.extension(unit, "specialization_system")
 		template_data.dodge_stacks = specialization_extension:has_special_rule(special_rules.zealot_quickness_dodge_stacks)
 		template_data.toughness_per_stack = specialization_extension:has_special_rule(special_rules.zealot_quickness_toughness_per_stack)
-		template_data.specialization_resource_component = unit_data_extension:write_component("specialization_resource")
-		template_data.specialization_resource_component.max_resource = quickness_max_stacks
-		template_data.specialization_resource_component.current_resource = 1
 		template_data.locomotion_component = unit_data_extension:read_component("locomotion")
 		template_data.sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
 		template_data.movement_counter = 0
@@ -133,6 +134,14 @@ templates.zealot_quickness_passive = {
 	end,
 	specific_check_proc_funcs = {
 		[proc_events.on_hit] = function (params, template_data, template_context, t)
+			local attack_type = params.attack_type
+			local is_melee = attack_type == attack_types.melee
+			local is_ranged = attack_type == attack_types.ranged
+
+			if not is_melee and not is_ranged then
+				return false
+			end
+
 			local buff_extension = template_context.buff_extension
 			local is_active_buff_active = buff_extension:has_buff_using_buff_template("zealot_quickness_active")
 
@@ -198,9 +207,9 @@ templates.zealot_quickness_active = {
 		[stat_buffs.melee_attack_speed] = 0.01,
 		[stat_buffs.ranged_attack_speed] = 0.01,
 		[stat_buffs.damage] = 0.01,
-		[stat_buffs.dodge_speed_multiplier] = 1.0075,
+		[stat_buffs.dodge_speed_multiplier] = 1.005,
 		[stat_buffs.dodge_distance_modifier] = 0.005,
-		[stat_buffs.dodge_cooldown_reset_modifier] = 0.03
+		[stat_buffs.dodge_cooldown_reset_modifier] = 0.01
 	}
 }
 templates.zealot_improved_weapon_handling_after_dodge = {
@@ -291,32 +300,25 @@ templates.zealot_improved_weapon_swapping_reload_speed_buff = {
 	},
 	start_func = function (template_data, template_context)
 		local unit = template_context.unit
-		template_data.buff_extension = ScriptUnit.extension(unit, "buff_system")
+		template_data.visual_loadout_extension = ScriptUnit.extension(unit, "visual_loadout_system")
+		local unit_data_extension = ScriptUnit.extension(template_context.unit, "unit_data_system")
+		template_data.weapon_action_component = unit_data_extension:read_component("weapon_action")
+		template_data.inventory_component = unit_data_extension:read_component("inventory")
 	end,
 	proc_func = function (params, template_data, template_context, t)
-		if params.shotgun then
-			local buff_extension = ScriptUnit.extension(template_context.unit, "buff_system")
-
-			buff_extension:add_internally_controlled_buff_with_stacks("zealot_improved_weapon_swapping_reload_speed_buff_shotgun", template_context.stack_count, t)
-		end
-
 		template_data.done = true
 	end,
 	conditional_exit_func = function (template_data, template_context)
-		return template_data.done
+		local inventory_component = template_data.inventory_component
+		local visual_loadout_extension = template_data.visual_loadout_extension
+		local wielded_slot_id = inventory_component.wielded_slot
+		local weapon_template = visual_loadout_extension:weapon_template_from_slot(wielded_slot_id)
+		local _, current_action = Action.current_action(template_data.weapon_action_component, weapon_template)
+		local action_kind = current_action and current_action.kind
+		local is_reloading = action_kind and (action_kind == "reload_shotgun" or action_kind == "reload_state" or action_kind == "ranged_load_special")
+
+		return template_data.done and not is_reloading
 	end
-}
-templates.zealot_improved_weapon_swapping_reload_speed_buff_shotgun = {
-	max_stacks = 10,
-	duration = 4,
-	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_increased_reload_speed_on_melee_kills",
-	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_default",
-	predicted = false,
-	hud_priority = 4,
-	class_name = "buff",
-	stat_buffs = {
-		[stat_buffs.reload_speed] = 0.03
-	}
 }
 templates.zealot_leaving_stealth_restores_toughness = {
 	predicted = false,
@@ -397,8 +399,9 @@ templates.zealot_toughness_on_ranged_kill = {
 	end
 }
 templates.zealot_toughness_on_dodge = {
+	cooldown_duration = 0.5,
 	predicted = false,
-	toughness_percentage = 0.1,
+	toughness_percentage = 0.15,
 	class_name = "proc_buff",
 	proc_events = {
 		[proc_events.on_successful_dodge] = 1
@@ -453,8 +456,9 @@ templates.zealot_preacher_ally_defensive = {
 	end
 }
 templates.zealot_preacher_ally_defensive_buff = {
-	class_name = "buff",
 	predicted = false,
+	class_name = "buff",
+	buff_category = buff_category.generic,
 	duration = talent_settings_3.coop_3.duration,
 	stat_buffs = {
 		[stat_buffs.damage_taken_multiplier] = talent_settings_3.coop_3.damage_taken_multiplier
@@ -577,16 +581,18 @@ templates.zealot_preacher_segment_breaking_half_damage = {
 	}
 }
 local max_dist = talent_settings_3.passive_1.max_dist
+local max_dist_sqaured = max_dist * max_dist
 local out_of_combat_time = talent_settings_3.passive_1.duration
 local buff_removal_interval_time = talent_settings_3.passive_1.buff_removal_time_modifier
 local toughness_on_max_stacks = talent_settings_3.passive_1.toughness_on_max_stacks
 local toughness_on_max_stacks_small = talent_settings_3.passive_1.toughness_on_max_stacks_small
 local _fanatic_rage_add_stack = nil
 templates.zealot_fanatic_rage = {
+	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_keystone_fanatic_rage",
 	predicted = false,
 	hud_priority = 1,
 	use_specialization_resource = true,
-	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_keystone_fanatic_rage",
+	hud_always_show_stacks = true,
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
 	class_name = "proc_buff",
 	always_show_in_hud = true,
@@ -622,7 +628,7 @@ templates.zealot_fanatic_rage = {
 			local dying_unit_pos = params.position and params.position:unbox() or unit_pos
 			local distance_sq = Vector3.distance_squared(unit_pos, dying_unit_pos)
 
-			if distance_sq > max_dist * max_dist then
+			if max_dist_sqaured < distance_sq then
 				return
 			end
 
@@ -651,11 +657,11 @@ templates.zealot_fanatic_rage = {
 	update_func = function (template_data, template_context, dt, t)
 		if template_data.remove_stack_t and template_data.remove_stack_t < t then
 			local current_resource = template_data.specialization_resource_component.current_resource
-			current_resource = math.max(current_resource - 1, 1)
+			current_resource = math.max(current_resource - 1, 0)
 			template_data.specialization_resource_component.current_resource = current_resource
 			local timer = math.abs(current_resource / 5 - 5) * buff_removal_interval_time
 
-			if current_resource > 1 then
+			if current_resource > 0 then
 				template_data.remove_stack_t = t + timer
 			else
 				template_data.remove_stack_t = nil
@@ -687,9 +693,10 @@ function _fanatic_rage_add_stack(template_data, template_context)
 end
 
 templates.zealot_fanatic_rage_buff = {
-	refresh_duration_on_stack = true,
 	predicted = false,
 	hud_priority = 1,
+	refresh_duration_on_stack = true,
+	always_active = true,
 	hud_icon = "content/ui/textures/icons/buffs/hud/zealot/zealot_keystone_fanatic_rage",
 	hud_icon_gradient_map = "content/ui/textures/color_ramps/talent_keystone",
 	max_stacks = 1,
@@ -2000,11 +2007,11 @@ templates.zealot_ability_cooldown_on_leaving_coherency_on_backstab = {
 templates.zealot_increase_ability_cooldown_increase_bonus = {
 	class_name = "buff",
 	stat_buffs = {
-		[stat_buffs.ability_cooldown_modifier] = 1
+		[stat_buffs.ability_cooldown_modifier] = 0.5
 	},
 	conditional_stat_buffs = {
-		[stat_buffs.finesse_ability_multiplier] = 1.5,
-		[stat_buffs.backstab_damage] = 1
+		[stat_buffs.finesse_modifier_bonus] = 0.5,
+		[stat_buffs.backstab_damage] = 0.5
 	},
 	conditional_stat_buffs_func = function (template_data, template_context)
 		local buff_extension = template_context.buff_extension

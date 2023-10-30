@@ -25,6 +25,7 @@ local double_cleave = DamageProfileSettings.double_cleave
 local light_cleave = DamageProfileSettings.light_cleave
 local medium_cleave = DamageProfileSettings.medium_cleave
 local large_cleave = DamageProfileSettings.large_cleave
+local big_cleave = DamageProfileSettings.big_cleave
 local cutting_am = {
 	attack = {
 		[armor_types.unarmored] = damage_lerp_values.lerp_1,
@@ -124,8 +125,8 @@ damage_templates.heavy_axe = {
 				}
 			},
 			boost_curve_multiplier_finesse = {
-				0.2,
-				0.8
+				0.7,
+				1.4
 			},
 			power_level_multiplier = {
 				0.5,
@@ -133,7 +134,7 @@ damage_templates.heavy_axe = {
 			}
 		},
 		{
-			boost_curve_multiplier_finesse = 0.25,
+			boost_curve_multiplier_finesse = 0.5,
 			power_distribution = {
 				attack = {
 					50,
@@ -181,9 +182,9 @@ damage_templates.heavy_axe_spike = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
 					[armor_types.armored] = damage_lerp_values.lerp_1,
-					[armor_types.resistant] = damage_lerp_values.lerp_0_5,
+					[armor_types.resistant] = damage_lerp_values.lerp_2,
 					[armor_types.player] = damage_lerp_values.lerp_1,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_6,
+					[armor_types.berserker] = damage_lerp_values.lerp_1,
 					[armor_types.super_armor] = damage_lerp_values.lerp_0_6,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -212,8 +213,8 @@ damage_templates.heavy_axe_spike = {
 				}
 			},
 			boost_curve_multiplier_finesse = {
-				0.4,
-				1
+				0.7,
+				1.4
 			},
 			power_level_multiplier = {
 				0.5,
@@ -221,7 +222,6 @@ damage_templates.heavy_axe_spike = {
 			}
 		},
 		{
-			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					125,
@@ -231,10 +231,13 @@ damage_templates.heavy_axe_spike = {
 					5,
 					10
 				}
+			},
+			boost_curve_multiplier_finesse = {
+				0.6,
+				1.2
 			}
 		},
 		default_target = {
-			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
 					10,
@@ -245,7 +248,11 @@ damage_templates.heavy_axe_spike = {
 					8
 				}
 			},
-			boost_curve = PowerLevelSettings.boost_curves.default
+			boost_curve = PowerLevelSettings.boost_curves.default,
+			boost_curve_multiplier_finesse = {
+				0.6,
+				1.2
+			}
 		}
 	}
 }
@@ -886,12 +893,13 @@ damage_templates.axe_uppercut = {
 	}
 }
 damage_templates.axe_stab = {
-	ragdoll_only = true,
-	weapon_special = true,
 	ignore_stagger_reduction = true,
+	weapon_special = true,
 	finesse_ability_damage_multiplier = 2,
-	ragdoll_push_force = 250,
+	ragdoll_only = true,
+	weakspot_stagger_resistance_modifier = 0.0001,
 	stagger_category = "uppercut",
+	ragdoll_push_force = 250,
 	cleave_distribution = single_cleave,
 	damage_type = damage_types.axe_light,
 	gibbing_power = GibbingPower.always,
@@ -938,8 +946,8 @@ damage_templates.axe_stab = {
 				}
 			},
 			boost_curve_multiplier_finesse = {
-				0.2,
-				1.5
+				1,
+				2
 			},
 			power_level_multiplier = {
 				0.5,
@@ -992,7 +1000,7 @@ damage_templates.default_light_hatchet = {
 	ragdoll_only = true,
 	gibbing_power = 0,
 	stagger_category = "melee",
-	cleave_distribution = single_cleave,
+	cleave_distribution = double_cleave,
 	damage_type = damage_types.axe_light,
 	gibbing_type = GibbingTypes.sawing,
 	melee_attack_strength = melee_attack_strengths.light,
@@ -1008,7 +1016,7 @@ damage_templates.default_light_hatchet = {
 					[armor_types.resistant] = damage_lerp_values.lerp_0_8,
 					[armor_types.player] = damage_lerp_values.lerp_1,
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_2,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_1,
 					[armor_types.prop_armor] = damage_lerp_values.lerp_0_75
@@ -1027,8 +1035,8 @@ damage_templates.default_light_hatchet = {
 			},
 			power_distribution = {
 				attack = {
-					50,
-					100
+					60,
+					120
 				},
 				impact = {
 					4,
@@ -1036,8 +1044,8 @@ damage_templates.default_light_hatchet = {
 				}
 			},
 			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5
+				1,
+				2
 			},
 			power_level_multiplier = {
 				0.5,
@@ -1048,8 +1056,8 @@ damage_templates.default_light_hatchet = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					35,
-					50
+					40,
+					80
 				},
 				impact = {
 					3,
@@ -1114,8 +1122,8 @@ damage_templates.default_light_hatchet_smiter = {
 			},
 			power_distribution = {
 				attack = {
-					50,
-					100
+					70,
+					140
 				},
 				impact = {
 					3,
@@ -1123,8 +1131,8 @@ damage_templates.default_light_hatchet_smiter = {
 				}
 			},
 			boost_curve_multiplier_finesse = {
-				0.75,
-				1.25
+				1,
+				2
 			},
 			power_level_multiplier = {
 				0.5,
@@ -1215,8 +1223,8 @@ damage_templates.medium_hatchet = {
 				}
 			},
 			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5
+				1,
+				2
 			},
 			power_level_multiplier = {
 				0.5,
@@ -1367,7 +1375,7 @@ damage_templates.heavy_shovel_tank = {
 	finesse_ability_damage_multiplier = 2,
 	ragdoll_push_force = 250,
 	stagger_category = "melee",
-	cleave_distribution = medium_cleave,
+	cleave_distribution = big_cleave,
 	damage_type = damage_types.shovel_medium,
 	gibbing_power = GibbingPower.always,
 	gibbing_type = GibbingTypes.default,
@@ -1382,11 +1390,11 @@ damage_templates.heavy_shovel_tank = {
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
-					[armor_types.armored] = damage_lerp_values.lerp_0_5,
+					[armor_types.armored] = damage_lerp_values.lerp_0_75,
 					[armor_types.resistant] = damage_lerp_values.lerp_0_75,
 					[armor_types.player] = damage_lerp_values.lerp_1,
-					[armor_types.berserker] = damage_lerp_values.lerp_0_5,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_1,
+					[armor_types.berserker] = damage_lerp_values.lerp_0_75,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_4,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_1,
 					[armor_types.prop_armor] = damage_lerp_values.lerp_1
@@ -1405,8 +1413,8 @@ damage_templates.heavy_shovel_tank = {
 			},
 			power_distribution = {
 				attack = {
-					75,
-					160
+					100,
+					200
 				},
 				impact = {
 					10,
@@ -1445,36 +1453,36 @@ damage_templates.heavy_shovel_tank = {
 		{
 			power_distribution = {
 				attack = {
-					25,
-					50
+					35,
+					70
 				},
 				impact = {
-					4,
-					8
+					5,
+					10
 				}
 			}
 		},
 		{
 			power_distribution = {
 				attack = {
-					20,
-					30
+					40,
+					80
 				},
 				impact = {
-					4,
-					8
+					5,
+					10
 				}
 			}
 		},
 		default_target = {
 			power_distribution = {
 				attack = {
-					10,
-					20
+					20,
+					40
 				},
 				impact = {
-					4,
-					8
+					5,
+					10
 				}
 			},
 			boost_curve = PowerLevelSettings.boost_curves.default
@@ -1569,8 +1577,8 @@ damage_templates.default_light_shovel = {
 			},
 			power_distribution = {
 				attack = {
-					50,
-					100
+					70,
+					140
 				},
 				impact = {
 					3,
@@ -1590,8 +1598,8 @@ damage_templates.default_light_shovel = {
 			boost_curve_multiplier_finesse = 0.25,
 			power_distribution = {
 				attack = {
-					40,
-					80
+					50,
+					100
 				},
 				impact = {
 					2.5,
@@ -1738,7 +1746,7 @@ damage_templates.light_shovel_linesman = {
 }
 damage_templates.default_light_shovel_smack = {
 	finesse_ability_damage_multiplier = 2,
-	ragdoll_push_force = 250,
+	ragdoll_push_force = 350,
 	stagger_category = "melee",
 	cleave_distribution = single_cleave,
 	gibbing_power = GibbingPower.light,
@@ -1776,8 +1784,8 @@ damage_templates.default_light_shovel_smack = {
 			},
 			power_distribution = {
 				attack = {
-					75,
-					150
+					100,
+					200
 				},
 				impact = {
 					4,
@@ -1785,8 +1793,8 @@ damage_templates.default_light_shovel_smack = {
 				}
 			},
 			boost_curve_multiplier_finesse = {
-				0.5,
-				1.5
+				1,
+				2
 			},
 			power_level_multiplier = {
 				0.5,

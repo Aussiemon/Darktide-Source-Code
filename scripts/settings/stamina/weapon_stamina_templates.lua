@@ -256,5 +256,17 @@ weapon_stamina_templates.bot_linesman = {
 		lerp_basic = 3
 	}
 }
+weapon_stamina_templates.powersword_p1_m2 = {
+	stamina_modifier = 3,
+	sprint_cost_per_second = {
+		lerp_perfect = 0.375,
+		lerp_basic = 1.125
+	},
+	block_cost_default = _block_cost_default,
+	push_cost = {
+		lerp_perfect = 1,
+		lerp_basic = 3
+	}
+}
 
 return settings("WeaponStaminaTemplates", weapon_stamina_templates)

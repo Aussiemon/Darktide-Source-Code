@@ -53,7 +53,8 @@ local talent_settings = {
 			shout_range = 30,
 			power_level = 500,
 			override_radius = 5,
-			warpcharge_vent = 0.5,
+			warpcharge_vent_base = 0.1,
+			warpcharge_vent_improved = 0.5,
 			max_radius = 8.75,
 			max_charges = 1
 		},
@@ -63,7 +64,7 @@ local talent_settings = {
 		},
 		coherency = {
 			max_stacks = 1,
-			damage_vs_elites = 0.1
+			damage_vs_elites = 0.05
 		},
 		passive_1 = {
 			soul_duration = 25,
@@ -85,7 +86,7 @@ local talent_settings = {
 			percent_toughness = 0.06
 		},
 		toughness_2 = {
-			percent_toughness = 0.15
+			percent_toughness = 0.075
 		},
 		toughness_3 = {
 			multiplier = 0.5
@@ -101,7 +102,7 @@ local talent_settings = {
 			warp_charge_capacity = 0.64
 		},
 		offensive_1_3 = {
-			num_stacks = 4,
+			num_stacks = 3,
 			distance = 4
 		},
 		coop_1 = {
@@ -152,15 +153,15 @@ local talent_settings = {
 	psyker_3 = {
 		combat_ability = {
 			damage_per_hit = 1,
-			health = 15,
+			health = 20,
 			toughness_damage_reduction = 0.5,
-			damage_cooldown = 0.25,
+			damage_cooldown = 0.33,
 			cooldown = 40,
-			sphere_health = 25,
+			sphere_duration = 25,
 			toughness_duration = 5,
 			toughness_for_allies = 0.1,
-			sphere_duration = 20,
-			duration = 15,
+			sphere_health = 20,
+			duration = 17.5,
 			max_charges = 1
 		},
 		grenade = {
@@ -194,7 +195,7 @@ local talent_settings = {
 		passive_1 = {
 			max_stacks = 1,
 			empowered_chain_lightning_chance = 0.075,
-			chain_lightning_damage = 0.3,
+			chain_lightning_damage = 1.25,
 			psyker_smite_cost_multiplier = 0
 		},
 		passive_2 = {},

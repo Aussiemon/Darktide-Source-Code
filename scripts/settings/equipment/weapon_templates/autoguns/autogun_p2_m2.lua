@@ -298,22 +298,18 @@ weapon_template.actions = {
 		total_time = math.huge,
 		action_movement_curve = {
 			{
-				modifier = 0.1,
-				t = 0.1
-			},
-			{
-				modifier = 0.7,
+				modifier = 0.95,
 				t = 0.2
 			},
 			{
-				modifier = 0.4,
+				modifier = 0.9,
 				t = 0.4
 			},
 			{
-				modifier = 0.5,
+				modifier = 0.8,
 				t = 1
 			},
-			start_modifier = 0.75
+			start_modifier = 0.95
 		},
 		fx = {
 			pre_loop_shoot_sfx_alias = "ranged_pre_loop_shot",
@@ -486,18 +482,24 @@ weapon_template.actions = {
 		}
 	},
 	action_push = {
-		range_mod = 1.15,
-		push_radius = 1.5,
+		damage_window_start = 0.13333333333333333,
+		hit_armor_anim = "attack_hit",
 		start_input = "special_action",
-		block_duration = 0.5,
-		kind = "push",
-		allow_conditional_chain = true,
+		sprint_requires_press_to_interrupt = true,
+		weapon_handling_template = "time_scale_1_1",
+		first_person_hit_anim = "hit_left_shake",
+		kind = "sweep",
+		anim_event = "attack_push",
 		crosshair_type = "dot",
-		stop_alternate_fire = true,
-		damage_time = 0.15,
+		range_mod = 1.15,
+		allowed_during_sprint = true,
+		first_person_hit_stop_anim = "attack_hit",
+		uninterruptible = true,
+		damage_window_end = 0.3,
+		abort_sprint = true,
 		unaim = true,
 		anim_event_3p = "attack_left_diagonal_up",
-		anim_event = "attack_push",
+		allow_conditional_chain = true,
 		total_time = 1.1,
 		action_movement_curve = {
 			{
@@ -545,29 +547,38 @@ weapon_template.actions = {
 			wield = {
 				action_name = "action_unwield"
 			},
-			special_action = {
-				action_name = "action_push",
-				chain_time = 0.9
-			},
 			reload = {
-				action_name = "action_reload",
-				chain_time = 0.4
+				action_name = "action_reload"
 			},
 			shoot = {
 				action_name = "action_shoot_hip",
-				chain_time = 0.9
+				chain_time = 0.5
 			},
-			zoom_release = {
-				action_name = "action_unzoom",
-				chain_time = 0.9
+			zoom = {
+				action_name = "action_zoom",
+				chain_time = 0.5
+			},
+			special_action = {
+				action_name = "action_push",
+				chain_time = 0.8
 			}
 		},
-		inner_push_rad = math.pi * 0.1,
-		outer_push_rad = math.pi * 0.2,
-		inner_damage_profile = DamageProfileTemplates.autogun_weapon_special_push,
-		inner_damage_type = damage_types.weapon_butt,
-		outer_damage_profile = DamageProfileTemplates.autogun_weapon_special_push,
-		outer_damage_type = damage_types.weapon_butt
+		weapon_box = {
+			0.25,
+			1,
+			0.7
+		},
+		spline_settings = {
+			matrices_data_location = "content/characters/player/human/first_person/animations/shotgun_rifle/attack_left_diagonal_up_bash",
+			anchor_point_offset = {
+				0,
+				1.4,
+				-0.1
+			}
+		},
+		damage_type = damage_types.weapon_butt,
+		damage_profile = DamageProfileTemplates.autogun_weapon_special_bash,
+		herding_template = HerdingTemplates.stab
 	},
 	action_inspect = {
 		skip_3p_anims = false,
@@ -631,23 +642,23 @@ weapon_template.alternate_fire_settings = {
 	look_delta_template = "autogun",
 	movement_speed_modifier = {
 		{
-			modifier = 0.775,
+			modifier = 0.95,
 			t = 0.35
 		},
 		{
-			modifier = 0.75,
+			modifier = 0.9,
 			t = 0.375
 		},
 		{
-			modifier = 0.59,
+			modifier = 0.875,
 			t = 0.55
 		},
 		{
-			modifier = 0.7,
+			modifier = 0.85,
 			t = 0.6
 		},
 		{
-			modifier = 0.8,
+			modifier = 0.85,
 			t = 2
 		}
 	}

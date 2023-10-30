@@ -129,10 +129,12 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 				if not shout_dot or shout_dot and shout_dot < dot then
 					local unit_data_extension = ScriptUnit.extension(enemy_unit, "unit_data_system")
 					local breed = unit_data_extension:breed()
+					local ignored_breeds = shout_settings.buff_ignored_breeds
 					local is_monster = breed.tags.monster
 					local buff_name = buff_to_add or not is_monster and buff_to_add_non_monster
+					local should_add = not ignored_breeds or not ignored_breeds[breed.name]
 
-					if buff_name then
+					if buff_name and should_add then
 						local buff_extension = ScriptUnit.extension(enemy_unit, "buff_system")
 
 						buff_extension:add_internally_controlled_buff(buff_name, t, "owner_unit", player_unit)
@@ -162,8 +164,13 @@ ShoutAbilityImplementation.execute = function (shout_settings, player_unit, t, l
 					local lerp_t = math.clamp01(1 - length_squared / (radius * radius), 0, 1)
 					local scaled_power_level = math.lerp(power_level * 0.1, power_level, lerp_t)
 					local hit_zone_name = "torso"
+					local _, _, _, stagger_result = Attack.execute(enemy_unit, damage_profile, "attack_direction", attack_direction, "power_level", scaled_power_level, "hit_zone_name", hit_zone_name, "damage_type", damage_type, "attacking_unit", player_unit)
 
-					Attack.execute(enemy_unit, damage_profile, "attack_direction", attack_direction, "power_level", scaled_power_level, "hit_zone_name", hit_zone_name, "damage_type", damage_type, "attacking_unit", player_unit)
+					if shout_settings.force_stagger_type_if_not_staggered and stagger_result and stagger_result == "no_stagger" then
+						local force_stagger_type_if_not_staggered_duration = shout_settings.force_stagger_type_if_not_staggered_duration
+
+						Stagger.force_stagger(enemy_unit, shout_settings.force_stagger_type_if_not_staggered, attack_direction, force_stagger_type_if_not_staggered_duration, 1, force_stagger_type_if_not_staggered_duration)
+					end
 
 					local force_stagger_type = shout_settings.force_stagger_type
 					local force_stagger_duration = shout_settings.force_stagger_duration

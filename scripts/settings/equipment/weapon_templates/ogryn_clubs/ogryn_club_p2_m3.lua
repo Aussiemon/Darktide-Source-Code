@@ -82,10 +82,11 @@ weapon_template.actions = {
 		}
 	},
 	action_melee_start_left = {
-		allowed_during_sprint = true,
-		anim_event_3p = "attack_swing_charge_up_left",
-		start_input = "start_attack",
 		kind = "windup",
+		allowed_during_sprint = true,
+		start_input = "start_attack",
+		weapon_handling_template = "time_scale_1_2",
+		anim_event_3p = "attack_swing_charge_up_left",
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
 		anim_event = "attack_swing_charge_left_up",
@@ -97,15 +98,15 @@ weapon_template.actions = {
 				t = 0.05
 			},
 			{
-				modifier = 0.25,
+				modifier = 0.45,
 				t = 0.1
 			},
 			{
-				modifier = 0.2,
+				modifier = 0.5,
 				t = 0.25
 			},
 			{
-				modifier = 0.35,
+				modifier = 0.6,
 				t = 0.4
 			},
 			{
@@ -124,14 +125,14 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
-				chain_time = 0.75
+				chain_time = 0.5
 			},
 			block = {
 				action_name = "action_block"
 			},
 			special_action = {
 				action_name = "action_weapon_special",
-				chain_time = 0.7
+				chain_time = 0.4
 			},
 			grenade_ability = {
 				{
@@ -152,7 +153,7 @@ weapon_template.actions = {
 		anim_event_3p = "attack_swing_heavy_down_right_slow",
 		kind = "sweep",
 		first_person_hit_anim = "hit_left_shake",
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_3",
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
 		damage_window_end = 0.5666666666666667,
@@ -172,7 +173,7 @@ weapon_template.actions = {
 				t = 0.4
 			},
 			{
-				modifier = 0.5,
+				modifier = 0.75,
 				t = 0.6
 			},
 			{
@@ -231,10 +232,11 @@ weapon_template.actions = {
 		herding_template = HerdingTemplates.smiter_down
 	},
 	action_melee_start_right = {
-		allowed_during_sprint = true,
+		weapon_handling_template = "time_scale_1_2",
 		chain_anim_event = "attack_swing_charge_down_right_pose",
 		anim_event_3p = "attack_swing_charge_down_right",
 		kind = "windup",
+		allowed_during_sprint = true,
 		chain_anim_event_3p = "attack_swing_charge_down_right",
 		anim_end_event = "attack_finished",
 		uninterruptible = true,
@@ -247,15 +249,15 @@ weapon_template.actions = {
 				t = 0.05
 			},
 			{
-				modifier = 0.25,
+				modifier = 0.45,
 				t = 0.1
 			},
 			{
-				modifier = 0.2,
+				modifier = 0.5,
 				t = 0.25
 			},
 			{
-				modifier = 0.35,
+				modifier = 0.6,
 				t = 0.4
 			},
 			{
@@ -273,7 +275,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_left_heavy",
-				chain_time = 0.75
+				chain_time = 0.5
 			},
 			block = {
 				action_name = "action_block"
@@ -301,7 +303,7 @@ weapon_template.actions = {
 		anim_event_3p = "attack_swing_right",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		weapon_handling_template = "time_scale_1_4",
+		weapon_handling_template = "time_scale_1_5",
 		first_person_hit_stop_anim = "attack_hit",
 		allowed_during_sprint = true,
 		damage_window_end = 0.6,
@@ -352,7 +354,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left_2",
-				chain_time = 0.62
+				chain_time = 0.6
 			},
 			block = {
 				action_name = "action_block",
@@ -479,6 +481,7 @@ weapon_template.actions = {
 		herding_template = HerdingTemplates.thunder_hammer_left_heavy
 	},
 	action_melee_start_left_2 = {
+		weapon_handling_template = "time_scale_1_2",
 		anim_end_event = "attack_finished",
 		kind = "windup",
 		uninterruptible = true,
@@ -491,15 +494,15 @@ weapon_template.actions = {
 				t = 0.05
 			},
 			{
-				modifier = 0.25,
+				modifier = 0.45,
 				t = 0.1
 			},
 			{
-				modifier = 0.2,
+				modifier = 0.5,
 				t = 0.25
 			},
 			{
-				modifier = 0.35,
+				modifier = 0.6,
 				t = 0.4
 			},
 			{
@@ -517,7 +520,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
-				chain_time = 0.72
+				chain_time = 0.5
 			},
 			block = {
 				action_name = "action_block"
@@ -543,7 +546,7 @@ weapon_template.actions = {
 		damage_window_start = 0.43333333333333335,
 		hit_armor_anim = "attack_hit_shield",
 		anim_event_3p = "attack_swing_left_slow",
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_1",
 		first_person_hit_anim = "hit_left_down_shake",
 		kind = "sweep",
 		first_person_hit_stop_anim = "attack_hit",
@@ -746,15 +749,15 @@ weapon_template.actions = {
 				t = 0.05
 			},
 			{
-				modifier = 0.25,
+				modifier = 0.45,
 				t = 0.1
 			},
 			{
-				modifier = 0.2,
+				modifier = 0.5,
 				t = 0.25
 			},
 			{
-				modifier = 0.35,
+				modifier = 0.6,
 				t = 0.4
 			},
 			{
@@ -850,7 +853,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.68
+				chain_time = 0.6
 			},
 			block = {
 				action_name = "action_block",
@@ -1383,8 +1386,9 @@ weapon_template.actions = {
 		}
 	},
 	action_push = {
-		push_radius = 2.5,
 		block_duration = 0.5,
+		push_radius = 2.5,
+		weapon_handling_template = "time_scale_1_3",
 		kind = "push",
 		anim_event = "attack_push",
 		total_time = 1,

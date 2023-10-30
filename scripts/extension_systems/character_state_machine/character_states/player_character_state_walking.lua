@@ -87,7 +87,7 @@ PlayerCharacterStateWalking.fixed_update = function (self, unit, dt, t, next_sta
 	weapon_extension:update_weapon_actions(fixed_frame)
 	self._ability_extension:update_ability_actions(fixed_frame)
 
-	local is_crouching = Crouch.check(unit, first_person_extension, anim_extension, weapon_extension, move_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t)
+	local is_crouching = Crouch.check(unit, first_person_extension, anim_extension, weapon_extension, move_state_component, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t, false)
 	local buff_extension = self._buff_extension
 
 	PlayerUnitPeeking.fixed_update(self._peeking_component, self._ledge_finder_extension, anim_extension, first_person_extension, self._specialization_extension, is_crouching, self._breed)

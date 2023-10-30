@@ -138,6 +138,8 @@ BtSniperShootAction.run = function (self, unit, breed, blackboard, scratchpad, a
 	return "running", should_reevaluate or scratchpad.should_reevaluate
 end
 
+local MAX_LAG_COMPENSATION = 0.5
+
 BtSniperShootAction._start_aiming = function (self, unit, t, scratchpad, action_data)
 	local aim_type = self:_calculate_aim_animation_type(unit, scratchpad, action_data)
 	local aim_anim_events = action_data.aim_anim_events[aim_type]
@@ -169,10 +171,14 @@ BtSniperShootAction._start_aiming = function (self, unit, t, scratchpad, action_
 		AttackIntensity.add_intensity(target_unit, action_data.attack_intensities)
 		AttackIntensity.set_attacked(target_unit)
 		Vo.player_enemy_alert_event(target_unit, "renegade_sniper", "sniper_aiming")
+
+		local ignore_attack_intensity = true
+		local wwise_event = action_data.backstab_event or default_backstab_ranged_event
+		local dot_threshold = action_data.backstab_dot or default_backstab_ranged_dot
+
+		MinionAttack.check_and_trigger_backstab_sound(unit, action_data, target_unit, wwise_event, dot_threshold, ignore_attack_intensity)
 	end
 end
-
-local MAX_LAG_COMPENSATION = 0.35
 
 BtSniperShootAction._update_aiming = function (self, unit, t, dt, scratchpad, action_data)
 	local target_is_in_sight, has_laser_on_target = self:_aim(unit, t, dt, scratchpad, action_data)
@@ -234,9 +240,17 @@ BtSniperShootAction._update_aiming = function (self, unit, t, dt, scratchpad, ac
 			local scope_reflection_timing_sfx = action_data.scope_reflection_timing_sfx
 
 			if scope_reflection_timing_sfx then
-				local is_ranged_attack = true
+				if player and player.remote then
+					local event_id = NetworkLookup.sound_events[scope_reflection_timing_sfx]
+					local channel_id = player:channel_id()
 
-				scratchpad.fx_extension:trigger_inventory_wwise_event(scope_reflection_timing_sfx, action_data.inventory_slot, fx_source_name, target_unit, is_ranged_attack)
+					RPC.rpc_trigger_wwise_event(channel_id, event_id, source_position)
+				elseif player and player:is_human_controlled() then
+					local wwise_world = Managers.state.extension:system("fx_system")._wwise_world
+					local source_id = WwiseWorld.make_auto_source(wwise_world, source_position)
+
+					WwiseWorld.trigger_resource_event(wwise_world, scope_reflection_timing_sfx, source_id)
+				end
 			end
 
 			MinionPerception.set_target_lock(unit, scratchpad.perception_component, true)
@@ -256,6 +270,14 @@ BtSniperShootAction._update_aiming = function (self, unit, t, dt, scratchpad, ac
 		scratchpad.target_is_in_sight_duration = 0
 	end
 end
+
+local DISALLOWED_CHARACTER_STATES = {
+	mutant_charged = true,
+	grabbed = true,
+	catapulted = true,
+	pounced = true,
+	consumed = true
+}
 
 BtSniperShootAction._aim = function (self, unit, t, dt, scratchpad, action_data)
 	local target_unit = scratchpad.perception_component.target_unit
@@ -310,10 +332,6 @@ BtSniperShootAction._aim = function (self, unit, t, dt, scratchpad, action_data)
 	local default_lerp_speed = action_data.default_lerp_speed
 	local lerp_speed = scratchpad.locked_to_target and lock_to_target_lerp_speed or default_lerp_speed
 	local aim_position = Vector3.lerp(current_aim_position, last_los_position, dt * lerp_speed)
-
-	scratchpad.current_aim_position:store(aim_position)
-	scratchpad.aim_component.controlled_aim_position:store(aim_position)
-
 	local from = unit_position
 	local to = unit_position + Vector3.normalize(aim_position - from)
 	local max_distance = action_data.max_distance
@@ -328,6 +346,10 @@ BtSniperShootAction._aim = function (self, unit, t, dt, scratchpad, action_data)
 	laser_aim_position[1] = math.clamp(laser_aim_position[1], network_min, network_max)
 	laser_aim_position[2] = math.clamp(laser_aim_position[2], network_min, network_max)
 	laser_aim_position[3] = math.clamp(laser_aim_position[3], network_min, network_max)
+
+	scratchpad.current_aim_position:store(laser_aim_position)
+	scratchpad.aim_component.controlled_aim_position:store(laser_aim_position)
+
 	local spawn_component = scratchpad.spawn_component
 	local game_session = spawn_component.game_session
 	local game_object_id = spawn_component.game_object_id
@@ -335,8 +357,25 @@ BtSniperShootAction._aim = function (self, unit, t, dt, scratchpad, action_data)
 	GameSession.set_game_object_field(game_session, game_object_id, "laser_aim_position", laser_aim_position)
 
 	local laser_aim_position_to_aim_distance = has_line_of_sight and Vector3.distance(shoot_node_position, laser_aim_position) or math.huge
-	local has_laser_on_target = laser_aim_position_to_aim_distance < 1
-	local target_is_in_sight = has_line_of_sight and (raycast_hit_target or locked_to_target)
+	local is_in_disallowed_state = false
+	local has_laser_on_target = false
+
+	if has_line_of_sight then
+		has_laser_on_target = laser_aim_position_to_aim_distance < 1
+		local player = Managers.state.player_unit_spawn:owner(target_unit)
+
+		if player then
+			local target_unit_data_extension = ScriptUnit.extension(target_unit, "unit_data_system")
+			local target_character_state_component = target_unit_data_extension:read_component("character_state")
+			local state_name = target_character_state_component.state_name
+
+			if DISALLOWED_CHARACTER_STATES[state_name] then
+				is_in_disallowed_state = true
+			end
+		end
+	end
+
+	local target_is_in_sight = not is_in_disallowed_state and has_line_of_sight and (raycast_hit_target or locked_to_target)
 
 	return target_is_in_sight, has_laser_on_target
 end

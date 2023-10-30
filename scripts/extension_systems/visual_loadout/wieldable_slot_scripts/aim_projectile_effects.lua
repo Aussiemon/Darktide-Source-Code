@@ -1,6 +1,5 @@
 local Action = require("scripts/utilities/weapon/action")
 local AimProjectile = require("scripts/utilities/aim_projectile")
-local DefaultGameParameters = require("scripts/foundation/utilities/parameters/default_game_parameters")
 local PlayerUnitStatus = require("scripts/utilities/attack/player_unit_status")
 local ProjectileIntegration = require("scripts/extension_systems/locomotion/utilities/projectile_integration")
 local ProjectileIntegrationData = require("scripts/extension_systems/locomotion/utilities/projectile_integration_data")
@@ -91,12 +90,15 @@ AimProjectileEffects._trajectory_settings = function (self, t)
 	local weapon_action_component = self._weapon_action_component
 	local action_settings = Action.current_action_settings_from_component(weapon_action_component, self._weapon_actions)
 	local is_aiming = action_settings and action_settings.kind == "aim_projectile"
+	local is_throwing = action_settings and action_settings.kind == "throw_grenade"
 	local action_start_time = weapon_action_component.start_t
 	local arc_draw_delay = action_settings and action_settings.arc_draw_delay or 0
 	local time_in_action = t - action_start_time
-	local is_timing_right = arc_draw_delay < time_in_action
+	local draw_aim_arc = is_aiming and arc_draw_delay < time_in_action
+	local spawn_at_time = action_settings and action_settings.spawn_at_time or 0
+	local draw_throw_arc = is_throwing and time_in_action < spawn_at_time
 
-	if not is_aiming or not is_timing_right then
+	if not draw_aim_arc and not draw_throw_arc then
 		return false, nil
 	end
 

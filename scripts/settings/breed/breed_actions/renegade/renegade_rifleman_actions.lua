@@ -639,6 +639,7 @@ local action_data = {
 			"idle_2",
 			"idle_3"
 		},
+		dodge_window = shooting_difficulty_settings.shoot_dodge_window,
 		shoot_cooldown = shooting_difficulty_settings.shoot_cooldown,
 		num_shots = shooting_difficulty_settings.num_shots,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
@@ -709,6 +710,7 @@ local action_data = {
 			"idle_2",
 			"idle_3"
 		},
+		dodge_window = shooting_difficulty_settings.shoot_dodge_window,
 		shoot_cooldown = shooting_difficulty_settings.shoot_cooldown,
 		num_shots = shooting_difficulty_settings.num_shots,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
@@ -752,6 +754,7 @@ local action_data = {
 		attack_intensities = {
 			ranged = 2
 		},
+		dodge_window = shooting_difficulty_settings.shoot_dodge_window,
 		num_shots = shooting_difficulty_settings.num_shots_cover,
 		time_per_shot = shooting_difficulty_settings.time_per_shot,
 		shoot_template = BreedShootTemplates.renegade_rifleman_default,

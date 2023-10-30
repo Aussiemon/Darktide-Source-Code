@@ -34,7 +34,7 @@ BtQuickGrenadeThrowAction.enter = function (self, unit, breed, blackboard, scrat
 end
 
 BtQuickGrenadeThrowAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
-	if scratchpad.throw_timing then
+	if scratchpad.throw_timing and scratchpad.start_drop_grenade_timing and scratchpad.start_drop_grenade_timing <= t then
 		local dt = Managers.time:delta_time("gameplay")
 		local throw_config = action_data.throw_config
 		local unit_node = Unit.node(unit, throw_config.unit_node)
@@ -44,6 +44,9 @@ BtQuickGrenadeThrowAction.leave = function (self, unit, breed, blackboard, scrat
 		local node_velocity = delta_position / dt
 
 		self:_throw_grenade(unit, action_data, "drop", throw_position, throw_direction, blackboard, t, node_velocity)
+	end
+
+	if scratchpad.global_effect_id then
 		self:_stop_effect_template(scratchpad)
 	end
 
@@ -100,6 +103,11 @@ BtQuickGrenadeThrowAction._start_throwing = function (self, unit, t, scratchpad,
 		local effect_template_timing = effect_template_timings[throw_event]
 		scratchpad.effect_template_timing = t + effect_template_timing
 		scratchpad.fx_system = Managers.state.extension:system("fx_system")
+	end
+
+	if action_data.start_drop_grenade_timing then
+		local start_drop_grenade_timing = action_data.start_drop_grenade_timing[throw_event]
+		scratchpad.start_drop_grenade_timing = t + start_drop_grenade_timing
 	end
 end
 

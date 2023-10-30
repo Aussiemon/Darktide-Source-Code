@@ -18,7 +18,7 @@ hitscan_templates.autogun_p1_m2_bullet = {
 	range = 100,
 	damage = {
 		impact = {
-			damage_profile = DamageProfileTemplates.default_autogun_assault
+			damage_profile = DamageProfileTemplates.autogun_p1_m2
 		}
 	}
 }

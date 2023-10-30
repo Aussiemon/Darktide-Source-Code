@@ -222,7 +222,7 @@ weapon_template.actions = {
 		weapon_handling_template = "autogun_full_auto",
 		start_input = "shoot",
 		sprint_requires_press_to_interrupt = true,
-		sprint_ready_up_time = 0.2,
+		sprint_ready_up_time = 0.1,
 		ammunition_usage = 1,
 		uninterruptible = true,
 		stop_input = "shoot_release",
@@ -664,7 +664,7 @@ weapon_template.keywords = {
 }
 weapon_template.can_use_while_vaulting = true
 weapon_template.dodge_template = "killshot"
-weapon_template.sprint_template = "killshot"
+weapon_template.sprint_template = "assault"
 weapon_template.stamina_template = "default"
 weapon_template.toughness_template = "default"
 weapon_template.movement_curve_modifier_template = "default"

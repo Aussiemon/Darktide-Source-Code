@@ -33,10 +33,10 @@ damage_templates.psyker_smite_kill = {
 		attack = {
 			[armor_types.unarmored] = damage_lerp_values.lerp_1,
 			[armor_types.armored] = damage_lerp_values.lerp_1,
-			[armor_types.resistant] = damage_lerp_values.lerp_1,
+			[armor_types.resistant] = damage_lerp_values.lerp_1_25,
 			[armor_types.player] = damage_lerp_values.lerp_1,
-			[armor_types.berserker] = damage_lerp_values.lerp_1,
-			[armor_types.super_armor] = damage_lerp_values.lerp_0_75,
+			[armor_types.berserker] = damage_lerp_values.lerp_1_5,
+			[armor_types.super_armor] = damage_lerp_values.lerp_1,
 			[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 			[armor_types.void_shield] = damage_lerp_values.lerp_1,
 			[armor_types.prop_armor] = damage_lerp_values.lerp_1
@@ -58,7 +58,7 @@ damage_templates.psyker_smite_kill = {
 		impact = 100
 	},
 	power_distribution = {
-		attack = 850,
+		attack = 900,
 		impact = 55
 	},
 	gibbing_power = GIBBING_POWER.heavy,
@@ -220,7 +220,7 @@ damage_templates.psyker_throwing_knives = {
 			boost_curve_multiplier_finesse = 1.5,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			power_distribution = {
-				attack = 250,
+				attack = 200,
 				impact = 25
 			},
 			finesse_boost = {
@@ -229,10 +229,10 @@ damage_templates.psyker_throwing_knives = {
 			}
 		},
 		{
-			boost_curve_multiplier_finesse = 1.25,
+			boost_curve_multiplier_finesse = 1,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			power_distribution = {
-				attack = 175,
+				attack = 150,
 				impact = 5
 			},
 			finesse_boost = {
@@ -244,7 +244,7 @@ damage_templates.psyker_throwing_knives = {
 			boost_curve_multiplier_finesse = 1,
 			boost_curve = PowerLevelSettings.boost_curves.default,
 			power_distribution = {
-				attack = 125,
+				attack = 100,
 				impact = 5
 			},
 			finesse_boost = {
@@ -263,14 +263,14 @@ damage_templates.psyker_throwing_knives = {
 	}
 }
 damage_templates.psyker_throwing_knives_aimed = table.clone(damage_templates.psyker_throwing_knives)
-damage_templates.psyker_throwing_knives_aimed.targets[1].power_distribution.attack = 250
+damage_templates.psyker_throwing_knives_aimed.targets[1].power_distribution.attack = 340
 damage_templates.psyker_throwing_knives_aimed.targets[2].power_distribution.attack = 200
 damage_templates.psyker_throwing_knives_aimed.targets[3].power_distribution.attack = 150
 damage_templates.psyker_throwing_knives_aimed_pierce = table.clone(damage_templates.psyker_throwing_knives)
 damage_templates.psyker_throwing_knives_aimed_pierce.cleave_distribution.attack = 4
 damage_templates.psyker_throwing_knives_aimed_pierce.cleave_distribution.impact = 4
 damage_templates.psyker_throwing_knives_aimed_pierce.power_distribution.attack = 150
-damage_templates.psyker_throwing_knives_aimed_pierce.targets[1].power_distribution.attack = 350
+damage_templates.psyker_throwing_knives_aimed_pierce.targets[1].power_distribution.attack = 400
 damage_templates.psyker_throwing_knives_aimed_pierce.targets[2].power_distribution.attack = 300
 damage_templates.psyker_throwing_knives_aimed_pierce.targets[3].power_distribution.attack = 250
 damage_templates.psyker_throwing_knives_pierce = table.clone(damage_templates.psyker_throwing_knives)

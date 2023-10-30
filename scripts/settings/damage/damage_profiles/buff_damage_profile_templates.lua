@@ -355,7 +355,7 @@ damage_templates.bleeding = {
 		impact = bleeding_adm
 	},
 	power_distribution = {
-		attack = 200,
+		attack = 175,
 		impact = 0
 	},
 	cleave_distribution = {

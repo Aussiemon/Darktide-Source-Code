@@ -890,7 +890,7 @@ weapon_template.keywords = {
 	"p1"
 }
 weapon_template.hit_marker_type = "center"
-weapon_template.dodge_template = "killshot"
+weapon_template.dodge_template = "shotgun"
 weapon_template.sprint_template = "killshot"
 weapon_template.stamina_template = "lasrifle"
 weapon_template.toughness_template = "default"

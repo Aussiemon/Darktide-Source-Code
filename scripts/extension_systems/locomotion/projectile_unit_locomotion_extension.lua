@@ -485,6 +485,10 @@ ProjectileUnitLocomotionExtension.switch_to_carried = function (self, carrier_un
 end
 
 ProjectileUnitLocomotionExtension.switch_to_sleep = function (self, position, rotation)
+	local projectile_unit = self._projectile_unit
+	position = position or Unit.world_position(projectile_unit, 1)
+	rotation = rotation or Unit.world_rotation(projectile_unit, 1)
+
 	self:_set_state(locomotion_states.sleep)
 	ProjectileLocomotion.set_kinematic(self._projectile_unit, self._dynamic_actor_id, false)
 	self:_apply_changes(locomotion_states.sleep, position, rotation, Vector3.zero(), Vector3.zero())

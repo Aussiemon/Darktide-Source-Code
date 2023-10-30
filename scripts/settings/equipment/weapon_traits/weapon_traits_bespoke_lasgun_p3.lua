@@ -50,21 +50,25 @@ templates.weapon_trait_bespoke_lasgun_p3_count_as_dodge_vs_ranged_on_close_kill 
 templates.weapon_trait_bespoke_lasgun_p3_reload_speed_on_slide = {
 	weapon_trait_bespoke_lasgun_p3_reload_speed_on_slide_parent = {
 		{
+			child_duration = 3,
 			stat_buffs = {
 				[stat_buffs.reload_speed] = 0.07
 			}
 		},
 		{
+			child_duration = 3,
 			stat_buffs = {
 				[stat_buffs.reload_speed] = 0.08
 			}
 		},
 		{
+			child_duration = 3,
 			stat_buffs = {
 				[stat_buffs.reload_speed] = 0.09
 			}
 		},
 		{
+			child_duration = 3,
 			stat_buffs = {
 				[stat_buffs.reload_speed] = 0.1
 			}
@@ -74,28 +78,16 @@ templates.weapon_trait_bespoke_lasgun_p3_reload_speed_on_slide = {
 templates.weapon_trait_bespoke_lasgun_p3_increased_sprint_speed = {
 	weapon_trait_bespoke_lasgun_p3_increased_sprint_speed = {
 		{
-			condtional_threshold = 0.8,
-			stat_buffs = {
-				[stat_buffs.sprint_movement_speed] = 0.15
-			}
+			condtional_threshold = 0.8
 		},
 		{
-			condtional_threshold = 0.7,
-			stat_buffs = {
-				[stat_buffs.sprint_movement_speed] = 0.15
-			}
+			condtional_threshold = 0.7
 		},
 		{
-			condtional_threshold = 0.6,
-			stat_buffs = {
-				[stat_buffs.sprint_movement_speed] = 0.15
-			}
+			condtional_threshold = 0.6
 		},
 		{
-			condtional_threshold = 0.5,
-			stat_buffs = {
-				[stat_buffs.sprint_movement_speed] = 0.15
-			}
+			condtional_threshold = 0.5
 		}
 	}
 }
@@ -203,14 +195,14 @@ templates.weapon_trait_bespoke_lasgun_p3_burninating_on_crit = {
 	weapon_trait_bespoke_lasgun_p3_burninating_on_crit = {
 		{
 			target_buff_data = {
-				max_stacks = 6,
-				num_stacks_on_proc = 1
+				max_stacks = 10,
+				num_stacks_on_proc = 2
 			}
 		},
 		[4] = {
 			target_buff_data = {
-				max_stacks = 9,
-				num_stacks_on_proc = 2
+				max_stacks = 12,
+				num_stacks_on_proc = 3
 			}
 		}
 	}

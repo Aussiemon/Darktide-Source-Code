@@ -176,7 +176,7 @@ end
 
 local FORCE_NEW_AIM_DISTANCE = 5
 
-MinionPerceptionExtension.cb_line_of_sight_hit = function (self, los_raycast_data, hit, hit_position)
+MinionPerceptionExtension.cb_line_of_sight_hit = function (self, hit, hit_position)
 	self._num_running_raycasts = self._num_running_raycasts - 1
 	local processing_line_of_sight_data = self._processing_line_of_sight_data
 	local current_offset_index = processing_line_of_sight_data.offset_index

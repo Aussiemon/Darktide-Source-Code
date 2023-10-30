@@ -428,30 +428,34 @@ local specials_pacing_template = {
 }
 local DEFAULT_MAX_OF_SAME = {
 	chaos_poxwalker_bomber = 2,
-	renegade_sniper = 2,
+	grenadier = 2,
 	renegade_grenadier = 2,
 	renegade_flamer = 2,
 	renegade_netgunner = 2,
+	renegade_sniper = 2,
 	chaos_plague_ogryn = 2,
-	chaos_spawn = 2,
 	cultist_grenadier = 1,
 	cultist_mutant = 3,
 	chaos_hound = 2,
 	chaos_beast_of_nurgle = 1,
+	flamer = 2,
+	chaos_spawn = 2,
 	cultist_flamer = 2
 }
 local HIGH_MAX_OF_SAME = {
 	chaos_poxwalker_bomber = 3,
-	renegade_sniper = 3,
+	grenadier = 3,
 	renegade_grenadier = 2,
 	renegade_flamer = 2,
 	renegade_netgunner = 2,
+	renegade_sniper = 3,
 	chaos_plague_ogryn = 2,
-	chaos_spawn = 2,
 	cultist_grenadier = 2,
 	cultist_mutant = 4,
 	chaos_hound = 2,
 	chaos_beast_of_nurgle = 1,
+	flamer = 2,
+	chaos_spawn = 2,
 	cultist_flamer = 2
 }
 local ALWAYS_UPDATE_AT_CHALLANGE_RATING_BREEDS = {
@@ -584,7 +588,7 @@ specials_pacing_template = {
 			destroy_special_distance = 100,
 			move_timer_when_challenge_rating_above = 30,
 			first_spawn_timer_modifer = 0.65,
-			speed_running_required_challenge_rating = 50,
+			speed_running_required_challenge_rating = 30,
 			speed_running_required_distance = 12,
 			rushing_distance = 50,
 			travel_distance_spawning = true,
@@ -650,11 +654,11 @@ specials_pacing_template = {
 			destroy_special_distance = 100,
 			move_timer_when_challenge_rating_above = 30,
 			first_spawn_timer_modifer = 0.6,
-			speed_running_required_challenge_rating = 40,
+			speed_running_required_challenge_rating = 10,
 			speed_running_required_distance = 10,
 			rushing_distance = 45,
 			travel_distance_spawning = true,
-			num_required_speed_running_checks = 4,
+			num_required_speed_running_checks = 2,
 			move_timer_when_challenge_rating_above_delay = 20,
 			coordinated_strike_challenge_rating = 5,
 			chance_for_coordinated_strike = 0.225,
@@ -704,11 +708,11 @@ specials_pacing_template = {
 			speed_running_prevention_breeds = DEFAULT_SPEED_RUNNING_PREVENTION_BREEDS,
 			speed_running_prevention_cooldown = {
 				10,
-				20
+				15
 			},
 			speed_running_prevention_failed_cooldown = {
-				5,
-				10
+				2,
+				8
 			}
 		},
 		{
@@ -716,11 +720,11 @@ specials_pacing_template = {
 			destroy_special_distance = 100,
 			move_timer_when_challenge_rating_above = 20,
 			first_spawn_timer_modifer = 0.6,
-			speed_running_required_challenge_rating = 40,
-			speed_running_required_distance = 12,
+			speed_running_required_challenge_rating = 8,
+			speed_running_required_distance = 10,
 			rushing_distance = 40,
 			travel_distance_spawning = true,
-			num_required_speed_running_checks = 4,
+			num_required_speed_running_checks = 2,
 			move_timer_when_challenge_rating_above_delay = 20,
 			coordinated_strike_challenge_rating = 5,
 			chance_for_coordinated_strike = 0.25,
@@ -773,8 +777,8 @@ specials_pacing_template = {
 				15
 			},
 			speed_running_prevention_failed_cooldown = {
-				5,
-				10
+				2,
+				8
 			}
 		}
 	}

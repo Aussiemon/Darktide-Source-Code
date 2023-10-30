@@ -84,7 +84,7 @@ local talent_settings = {
 		},
 		spec_passive_3 = {},
 		combat_ability_1 = {
-			num_stacks = 3
+			num_stacks = 2
 		},
 		combat_ability_2 = {
 			reduced_clip_visualizer = 2,
@@ -138,7 +138,7 @@ local talent_settings = {
 		},
 		offensive_2 = {},
 		offensive_3 = {
-			stacks = 6
+			stacks = 4
 		},
 		coop_1 = {
 			coherency_aura_size_increase = 0.5

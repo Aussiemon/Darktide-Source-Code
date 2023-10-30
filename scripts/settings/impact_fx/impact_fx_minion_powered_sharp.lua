@@ -106,6 +106,30 @@ local player = {
 				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
 				only_3p = true
 			}
+		},
+		damage_reduced = {
+			{
+				event = "wwise/events/player/play_player_get_hit_sword_captain",
+				hit_direction_interface = true
+			},
+			{
+				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
+				only_3p = true
+			}
+		},
+		toughness_absorbed_melee = {
+			{
+				event = "wwise/events/player/play_toughness_hits",
+				hit_direction_interface = true
+			},
+			{
+				event = "wwise/events/player/play_player_get_hit_sword_captain",
+				hit_direction_interface = true
+			},
+			{
+				event = "wwise/events/player/play_player_get_hit_sword_captain_husk",
+				only_3p = true
+			}
 		}
 	},
 	vfx = {

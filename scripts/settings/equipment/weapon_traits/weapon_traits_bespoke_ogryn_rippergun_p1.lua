@@ -42,25 +42,25 @@ local templates = {
 			{
 				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.ranged_attack_speed] = 0.07
+					[stat_buffs.damage_near] = 0.07
 				}
 			},
 			{
 				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.ranged_attack_speed] = 0.08
+					[stat_buffs.damage_near] = 0.08
 				}
 			},
 			{
 				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.ranged_attack_speed] = 0.09
+					[stat_buffs.damage_near] = 0.09
 				}
 			},
 			{
 				child_duration = 3.5,
 				stat_buffs = {
-					[stat_buffs.ranged_attack_speed] = 0.1
+					[stat_buffs.damage_near] = 0.1
 				}
 			}
 		}
@@ -85,22 +85,22 @@ local templates = {
 		weapon_trait_bespoke_ogryn_rippergun_p1_armor_rending_bayonette = {
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 5
+					num_stacks_on_proc = 10
 				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 6
+					num_stacks_on_proc = 12
 				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 7
+					num_stacks_on_proc = 14
 				}
 			},
 			{
 				target_buff_data = {
-					num_stacks_on_proc = 8
+					num_stacks_on_proc = 16
 				}
 			}
 		}

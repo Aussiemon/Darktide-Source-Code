@@ -225,7 +225,6 @@ projectile_templates.krak_grenade = {
 		}
 	},
 	split_settings = {
-		even_split = true,
 		split_angle = math.pi * 0.05
 	},
 	effects = {
@@ -586,7 +585,8 @@ projectile_templates.psyker_throwing_knives = {
 			vfx = {
 				orphaned_policy = "stop",
 				link = true,
-				particle_name = "content/fx/particles/abilities/psyker_throwing_knife_trail"
+				particle_name = "content/fx/particles/abilities/psyker_throwing_knife_trail",
+				particle_name_critical_strike = "content/fx/particles/abilities/psyker_throwing_knife_trail_critical_strike"
 			},
 			sfx = {
 				looping_event_name = "wwise/events/weapon/play_throw_knife_loop",
@@ -693,7 +693,7 @@ projectile_templates.smoke_grenade = {
 					in_fog_buff_template_name = "in_smoke_fog",
 					leaving_fog_buff_template_name = "left_smoke_fog",
 					block_line_of_sight = true,
-					duration = 10,
+					duration = 15,
 					inner_radius = 4.5
 				}
 			}

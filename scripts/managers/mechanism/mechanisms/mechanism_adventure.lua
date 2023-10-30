@@ -6,6 +6,7 @@ local StateLoading = require("scripts/game_states/game/state_loading")
 local HOST_TYPES = MatchmakingConstants.HOST_TYPES
 local MechanismAdventure = class("MechanismAdventure", "MechanismBase")
 local READY_FOR_SCORE_TIMEOUT = 400
+local ALLOWED_PROFILE_CHANGES_EXTRA_TIME = 5
 
 MechanismAdventure.init = function (self, ...)
 	MechanismAdventure.super.init(self, ...)
@@ -180,6 +181,14 @@ end
 MechanismAdventure.profile_changes_are_allowed = function (self)
 	if self._mission_ready_voting_id then
 		return true
+	elseif self._profiles_allowed_changes_end_time then
+		if Managers.time:time("main") < self._profiles_allowed_changes_end_time then
+			return true
+		end
+
+		self._profiles_allowed_changes_end_time = nil
+
+		return false
 	else
 		return false
 	end
@@ -192,6 +201,7 @@ MechanismAdventure._on_vote_finished = function (self)
 
 	self._mission_ready_voting_id = nil
 	self._mechanism_data.ready_voting_completed = true
+	self._profiles_allowed_changes_end_time = Managers.time:time("main") + ALLOWED_PROFILE_CHANGES_EXTRA_TIME
 end
 
 MechanismAdventure._check_state_change = function (self, state, data)

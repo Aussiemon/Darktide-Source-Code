@@ -90,14 +90,14 @@ local weapon_sprint_templates = {
 	},
 	assault = {
 		sprint_sideway_acceleration = 7,
-		sprint_forward_deceleration = 1.45,
+		sprint_forward_deceleration = 2.1,
 		sprint_sideway_deceleration = 7,
 		sprint_forward_acceleration = {
-			lerp_perfect = 0.4,
-			lerp_basic = 0.15
+			lerp_perfect = 0.8,
+			lerp_basic = 0.4
 		},
 		sprint_speed_mod = {
-			lerp_perfect = 0.75,
+			lerp_perfect = 0.85,
 			lerp_basic = -0.25
 		}
 	},

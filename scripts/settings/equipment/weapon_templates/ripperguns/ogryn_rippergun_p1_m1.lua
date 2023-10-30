@@ -483,7 +483,7 @@ weapon_template.actions = {
 		kind = "reload_state",
 		start_input = "brace_reload",
 		sprint_requires_press_to_interrupt = true,
-		weapon_handling_template = "time_scale_1_3",
+		weapon_handling_template = "time_scale_1_2",
 		uninterruptible = true,
 		abort_sprint = true,
 		crosshair_type = "none",
@@ -556,7 +556,7 @@ weapon_template.actions = {
 		kind = "reload_state",
 		start_input = "reload",
 		sprint_requires_press_to_interrupt = true,
-		weapon_handling_template = "time_scale_1_3",
+		weapon_handling_template = "time_scale_1_2",
 		stop_alternate_fire = true,
 		abort_sprint = true,
 		crosshair_type = "none",
@@ -703,7 +703,7 @@ weapon_template.actions = {
 			},
 			stab = {
 				action_name = "action_stab",
-				chain_time = 1.15
+				chain_time = 0.85
 			}
 		},
 		conditional_state_to_action_input = {

@@ -372,7 +372,7 @@ local legend_inputs = {
 		alignment = "left_alignment"
 	},
 	{
-		input_action = "hotkey_menu_special_2",
+		input_action = "hotkey_menu_special_1",
 		alignment = "right_alignment",
 		gear_toggle_option = true,
 		on_pressed_callback = "cb_on_preview_with_gear_toggled",

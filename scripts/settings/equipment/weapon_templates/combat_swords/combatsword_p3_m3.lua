@@ -244,7 +244,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_attack_special",
-				chain_time = 0.47
+				chain_time = 0.3
 			},
 			grenade_ability = {
 				{
@@ -329,13 +329,13 @@ weapon_template.actions = {
 				chain_time = 0.24
 			},
 			block = {
-				chain_time = 0.4,
+				chain_time = 0.2,
 				action_name = "action_block",
 				chain_until = 0.1
 			},
 			special_action = {
 				action_name = "action_attack_special",
-				chain_time = 0.52
+				chain_time = 0.24
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -418,7 +418,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
-				chain_time = 0.375
+				chain_time = 0.35
 			},
 			block = {
 				action_name = "action_block"
@@ -510,7 +510,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_attack_special",
-				chain_time = 0.47
+				chain_time = 0.2
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -587,13 +587,13 @@ weapon_template.actions = {
 				chain_time = 0.4
 			},
 			block = {
-				chain_time = 0.45,
+				chain_time = 0.3,
 				action_name = "action_block",
 				chain_until = 0.05
 			},
 			special_action = {
 				action_name = "action_attack_special",
-				chain_time = 0.52
+				chain_time = 0.2
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -686,7 +686,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_attack_special",
-				chain_time = 0.35
+				chain_time = 0.3
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -762,7 +762,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_attack_special",
-				chain_time = 0.47
+				chain_time = 0.4
 			},
 			grenade_ability = {
 				{
@@ -1059,7 +1059,7 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_attack_special",
-				chain_time = 0.45
+				chain_time = 0.4
 			}
 		},
 		inner_push_rad = math.pi * 0.1,

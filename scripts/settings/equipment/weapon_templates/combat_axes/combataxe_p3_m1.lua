@@ -325,11 +325,11 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.63
+				chain_time = 0.4
 			},
 			special_action = {
 				action_name = "action_special_uppercut",
-				chain_time = 0.5
+				chain_time = 0.4
 			},
 			block = {
 				action_name = "action_block",
@@ -421,7 +421,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
-				chain_time = 0.6
+				chain_time = 0.4
 			},
 			block = {
 				action_name = "action_block"
@@ -532,7 +532,7 @@ weapon_template.actions = {
 		kind = "sweep",
 		first_person_hit_anim = "hit_left_shake",
 		range_mod = 1.25,
-		weapon_handling_template = "time_scale_0_9",
+		weapon_handling_template = "time_scale_1_1",
 		num_frames_before_process = 0,
 		damage_window_end = 0.26666666666666666,
 		attack_direction_override = "right",
@@ -578,11 +578,11 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left_2",
-				chain_time = 0.5
+				chain_time = 0.4
 			},
 			special_action = {
 				action_name = "action_special_uppercut",
-				chain_time = 0.5
+				chain_time = 0.4
 			},
 			block = {
 				action_name = "action_block",
@@ -674,7 +674,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_left_heavy",
-				chain_time = 0.6
+				chain_time = 0.4
 			},
 			block = {
 				action_name = "action_block"
@@ -749,7 +749,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.8
+				chain_time = 0.6
 			},
 			special_action = {
 				action_name = "action_special_uppercut",

@@ -327,6 +327,10 @@ weapon_template.actions = {
 			shoot = {
 				action_name = "action_shoot_hip",
 				chain_time = 0.45
+			},
+			special_action_hold = {
+				action_name = "action_bash_start",
+				chain_time = 0.2
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -625,13 +629,14 @@ weapon_template.actions = {
 		damage_window_start = 0.13333333333333333,
 		hit_armor_anim = "attack_hit",
 		sprint_requires_press_to_interrupt = true,
-		kind = "sweep",
+		weapon_handling_template = "time_scale_1_2",
 		first_person_hit_anim = "hit_left_shake",
-		first_person_hit_stop_anim = "attack_hit",
 		allow_conditional_chain = true,
+		first_person_hit_stop_anim = "attack_hit",
 		crosshair_type = "dot",
-		range_mod = 1.15,
+		kind = "sweep",
 		allowed_during_sprint = true,
+		range_mod = 1.15,
 		damage_window_end = 0.3,
 		abort_sprint = true,
 		unaim = true,
@@ -689,11 +694,11 @@ weapon_template.actions = {
 			},
 			shoot = {
 				action_name = "action_shoot_hip",
-				chain_time = 0.6
+				chain_time = 0.5
 			},
 			zoom = {
 				action_name = "action_zoom",
-				chain_time = 0.8
+				chain_time = 0.5
 			},
 			special_action_hold = {
 				action_name = "action_bash_start",
@@ -701,15 +706,15 @@ weapon_template.actions = {
 			}
 		},
 		weapon_box = {
-			0.15,
+			0.25,
 			1,
-			0.15
+			0.7
 		},
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/shotgun_rifle/attack_left_diagonal_up_bash",
 			anchor_point_offset = {
 				0,
-				0.8,
+				1.4,
 				-0.1
 			}
 		},
@@ -723,12 +728,13 @@ weapon_template.actions = {
 		sprint_requires_press_to_interrupt = true,
 		kind = "sweep",
 		first_person_hit_anim = "attack_hit",
-		first_person_hit_stop_anim = "attack_hit",
-		allow_conditional_chain = true,
-		crosshair_type = "dot",
 		range_mod = 1.15,
+		first_person_hit_stop_anim = "attack_hit",
+		crosshair_type = "dot",
+		weapon_handling_template = "time_scale_1_3",
 		allowed_during_sprint = true,
-		damage_window_end = 0.26666666666666666,
+		allow_conditional_chain = true,
+		damage_window_end = 0.3,
 		abort_sprint = true,
 		unaim = true,
 		uninterruptible = true,
@@ -736,7 +742,7 @@ weapon_template.actions = {
 		total_time = 1.1,
 		action_movement_curve = {
 			{
-				modifier = 0.3,
+				modifier = 0.4,
 				t = 0.1
 			},
 			{
@@ -744,11 +750,11 @@ weapon_template.actions = {
 				t = 0.25
 			},
 			{
-				modifier = 0.5,
+				modifier = 0.8,
 				t = 0.3
 			},
 			{
-				modifier = 1.5,
+				modifier = 1.75,
 				t = 0.35
 			},
 			{
@@ -760,7 +766,7 @@ weapon_template.actions = {
 				t = 0.6
 			},
 			{
-				modifier = 0.75,
+				modifier = 0.85,
 				t = 1
 			},
 			start_modifier = 0.8
@@ -797,16 +803,16 @@ weapon_template.actions = {
 			}
 		},
 		weapon_box = {
-			0.15,
+			0.25,
 			1,
-			0.15
+			0.5
 		},
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/shotgun_rifle/attack_stab_bash",
 			anchor_point_offset = {
 				0,
-				1,
-				0
+				1.6,
+				0.25
 			}
 		},
 		damage_type = damage_types.weapon_butt,
@@ -864,7 +870,7 @@ weapon_template.crosshair_type = "cross"
 weapon_template.hit_marker_type = "center"
 weapon_template.alternate_fire_settings = {
 	peeking_mechanics = true,
-	sway_template = "fullauto_autogun_killshot",
+	sway_template = "fullauto_p3_autogun_killshot",
 	stop_anim_event = "to_unaim_ironsight",
 	start_anim_event_3p = "to_ironsight",
 	recoil_template = "ads_autogun_burst",

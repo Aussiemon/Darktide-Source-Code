@@ -296,7 +296,9 @@ TerrorEventNodes.spawn_by_points = {
 			end
 
 			local difficulty_scale = Managers.state.difficulty:get_table_entry_by_resistance(MinionDifficultySettings.terror_event_point_costs)
-			local points = math.min(node.points * difficulty_scale * Managers.state.terror_event:get_terror_event_point_modifier(), MAX_POINTS)
+			local ramp_up_timer_modifier = Managers.state.pacing:get_ramp_up_frequency_modifier("terror_events")
+			local scaled_points = node.points * difficulty_scale * Managers.state.terror_event:get_terror_event_point_modifier() * ramp_up_timer_modifier
+			local points = math.min(scaled_points, MAX_POINTS)
 			local spawner_group = node.spawner_group
 			local proximity_spawners = node.proximity_spawners
 			local limit_spawners = node.limit_spawners

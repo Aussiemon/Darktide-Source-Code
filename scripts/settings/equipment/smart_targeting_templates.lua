@@ -221,7 +221,7 @@ local smart_targeting_templates = {
 	},
 	force_sword_single_target = {
 		precision_target = {
-			max_range = 3,
+			max_range = 10,
 			min_range = 1,
 			min_angle = _degrees_to_radians(0.05),
 			max_angle = _degrees_to_radians(0.1),

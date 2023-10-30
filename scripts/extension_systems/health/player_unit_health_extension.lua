@@ -225,7 +225,14 @@ PlayerUnitHealthExtension.reduce_permanent_damage = function (self, amount)
 	local max_health = self:max_health()
 	local max_wounds = self:max_wounds()
 	local current_wounds = self:num_wounds()
-	local fixed_permanent_damage = math.floor(max_health * (1 - current_wounds / max_wounds) + 1)
+	local fixed_permanent_damage = nil
+
+	if current_wounds == max_wounds then
+		fixed_permanent_damage = math.floor(max_health * (1 - current_wounds / max_wounds))
+	else
+		fixed_permanent_damage = math.floor(max_health * (1 - current_wounds / max_wounds) + 1)
+	end
+
 	local new_permanent_damage = math.max(fixed_permanent_damage, permanent_damage_taken - amount)
 
 	self:_set_permanent_damage(new_permanent_damage)

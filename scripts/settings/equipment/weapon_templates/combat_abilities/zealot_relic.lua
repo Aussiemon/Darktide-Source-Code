@@ -45,12 +45,22 @@ local weapon_template = {
 					input = "grenade_ability_pressed"
 				}
 			}
+		},
+		cancel_channeling = {
+			buffer_time = 0.2,
+			input_sequence = {
+				{
+					value = true,
+					input = "action_two_pressed"
+				}
+			}
 		}
 	},
 	action_input_hierarchy = {
 		wield = "stay",
 		wield_previous = "stay",
 		channel = {
+			cancel_channeling = "base",
 			wield = "base",
 			wield_previous = "base",
 			grenade_ability = {
@@ -76,9 +86,6 @@ local weapon_template = {
 			anim_event = "equip_relic",
 			total_time = 0.5,
 			allowed_chain_actions = {
-				wield = {
-					action_name = "action_unwield"
-				},
 				channel = {
 					action_name = "action_zealot_channel"
 				},
@@ -120,7 +127,12 @@ local weapon_template = {
 			damage_profile = DamageProfileTemplates.zealot_channel_stagger,
 			allowed_chain_actions = {
 				wield = {
-					action_name = "action_unwield"
+					action_name = "action_unwield",
+					chain_time = 0.5
+				},
+				cancel_channeling = {
+					action_name = "action_unwield_to_previous",
+					chain_time = 0.5
 				},
 				wield_previous = {
 					action_name = "action_unwield_to_previous"

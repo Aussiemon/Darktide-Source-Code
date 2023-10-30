@@ -452,7 +452,7 @@ local events = {
 			"selected_voice"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			veteran_male_b = "wwise/events/player/play_veteran_male_b__vce_attack_long",
 			zealot_female_c = "wwise/events/player/play_zealot_female_c__vce_attack_long",
 			veteran_female_c = "wwise/events/player/play_veteran_female_c__vce_attack_long",
@@ -483,7 +483,7 @@ local events = {
 			"selected_voice"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			veteran_male_b = "wwise/events/player/play_veteran_male_b__vce_attack_short",
 			zealot_female_c = "wwise/events/player/play_zealot_female_c__vce_attack_short",
 			veteran_female_c = "wwise/events/player/play_veteran_female_c__vce_attack_short",
@@ -514,7 +514,7 @@ local events = {
 			"selected_voice"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			veteran_male_b = "wwise/events/player/play_veteran_male_b__vce_catapulted",
 			zealot_female_c = "wwise/events/player/play_zealot_female_c__vce_catapulted",
 			veteran_female_c = "wwise/events/player/play_veteran_female_c__vce_catapulted",
@@ -545,7 +545,7 @@ local events = {
 			"selected_voice"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			veteran_male_b = "wwise/events/player/play_veteran_male_b__vce_catapulted_land",
 			zealot_female_c = "wwise/events/player/play_zealot_female_c__vce_catapulted_land",
 			veteran_female_c = "wwise/events/player/play_veteran_female_c__vce_catapulted_land",
@@ -576,7 +576,7 @@ local events = {
 			"selected_voice"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			veteran_male_b = "wwise/events/player/play_veteran_male_b__vce_coughing",
 			zealot_female_c = "wwise/events/player/play_zealot_female_c__vce_coughing",
 			veteran_female_c = "wwise/events/player/play_veteran_female_b__vce_coughing",
@@ -607,7 +607,7 @@ local events = {
 			"selected_voice"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			veteran_male_b = "wwise/events/player/play_veteran_male_b__vce_coughing_ends",
 			zealot_female_c = "wwise/events/player/play_zealot_female_c__vce_coughing_ends",
 			veteran_female_c = "wwise/events/player/play_veteran_female_b__vce_coughing_ends",
@@ -638,7 +638,7 @@ local events = {
 			"selected_voice"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			veteran_male_b = "wwise/events/player/play_veteran_male_b__vce_getting_up",
 			zealot_female_c = "wwise/events/player/play_zealot_female_c__vce_getting_up",
 			veteran_female_c = "wwise/events/player/play_veteran_female_c__vce_getting_up",
@@ -669,7 +669,7 @@ local events = {
 			"selected_voice"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			veteran_male_b = "wwise/events/player/play_veteran_male_b__vce_grunt_short",
 			zealot_female_c = "wwise/events/player/play_zealot_female_c__vce_grunt_short",
 			veteran_female_c = "wwise/events/player/play_veteran_female_c__vce_grunt_short",
@@ -700,7 +700,7 @@ local events = {
 			"selected_voice"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			veteran_male_b = "wwise/events/player/play_veteran_male_b__vce_hurt_heavy",
 			zealot_female_c = "wwise/events/player/play_zealot_female_c__vce_hurt_heavy",
 			veteran_female_c = "wwise/events/player/play_veteran_female_c__vce_hurt_heavy",
@@ -731,7 +731,7 @@ local events = {
 			"selected_voice"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			veteran_male_b = "wwise/events/player/play_veteran_male_b__vce_hurt_light",
 			zealot_female_c = "wwise/events/player/play_zealot_female_c__vce_hurt_light",
 			veteran_female_c = "wwise/events/player/play_veteran_female_c__vce_hurt_light",
@@ -762,7 +762,7 @@ local events = {
 			"selected_voice"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			veteran_male_b = "wwise/events/player/play_veteran_male_b__vce_idle",
 			zealot_female_c = "wwise/events/player/play_zealot_female_c__vce_idle",
 			veteran_female_c = "wwise/events/player/play_veteran_female_c__vce_idle",
@@ -793,7 +793,7 @@ local events = {
 			"selected_voice"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			veteran_male_b = "wwise/events/player/play_veteran_male_b__vce_jump",
 			zealot_female_c = "wwise/events/player/play_zealot_female_c__vce_jump",
 			veteran_female_c = "wwise/events/player/play_veteran_female_c__vce_jump",
@@ -824,7 +824,7 @@ local events = {
 			"selected_voice"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			veteran_male_b = "wwise/events/player/play_veteran_male_b__vce_land_heavy",
 			zealot_female_c = "wwise/events/player/play_zealot_female_c__vce_land_heavy",
 			veteran_female_c = "wwise/events/player/play_veteran_female_c__vce_land_heavy",
@@ -855,7 +855,7 @@ local events = {
 			"selected_voice"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			veteran_male_b = "wwise/events/player/play_veteran_male_b__vce_lifting",
 			zealot_female_c = "wwise/events/player/play_zealot_female_c__vce_lifting",
 			veteran_female_c = "wwise/events/player/play_veteran_female_c__vce_lifting",
@@ -886,7 +886,7 @@ local events = {
 			"selected_voice"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			veteran_male_b = "wwise/events/player/play_veteran_male_b__vce_scream_long",
 			zealot_female_c = "wwise/events/player/play_zealot_female_c__vce_scream_long",
 			veteran_female_c = "wwise/events/player/play_veteran_female_c__vce_scream_long",
@@ -917,7 +917,7 @@ local events = {
 			"selected_voice"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			veteran_male_b = "wwise/events/player/play_veteran_male_b_vce_struggle_heavy",
 			zealot_female_c = "wwise/events/player/play_zealot_female_c_vce_struggle_heavy",
 			veteran_female_c = "wwise/events/player/play_veteran_female_c_vce_struggle_heavy",
@@ -948,7 +948,7 @@ local events = {
 			"selected_voice"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			veteran_male_b = "wwise/events/player/play_veteran_male_b_vce_struggle_heavy",
 			zealot_female_c = "wwise/events/player/play_zealot_female_c_vce_struggle_heavy",
 			veteran_female_c = "wwise/events/player/play_veteran_female_c_vce_struggle_heavy",
@@ -1794,7 +1794,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			lasgun_p3_m2 = "wwise/events/weapon/play_lasgun_p3_mag_button",
 			shotgun_p1_m1 = "wwise/events/weapon/play_shotgun_reload_insert_ammo_special",
 			lasgun_p3_m3 = "wwise/events/weapon/play_lasgun_p3_mag_button",
@@ -1810,7 +1810,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			plasmagun_p1_m1 = "wwise/events/weapon/play_reload_foley_plasma_flask_remove"
 		}
 	},
@@ -1820,7 +1820,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			plasmagun_p1_m1 = "wwise/events/weapon/play_reload_foley_plasma_flask_connect"
 		}
 	},
@@ -1830,7 +1830,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			plasmagun_p1_m1 = "wwise/events/weapon/play_reload_foley_plasma_button"
 		}
 	},
@@ -1840,7 +1840,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			plasmagun_p1_m1 = "wwise/events/weapon/play_reload_foley_plasma_flask_screw"
 		}
 	},
@@ -1850,7 +1850,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			plasmagun_p1_m1 = "wwise/events/weapon/play_reload_foley_plasma_flask_disconnect"
 		}
 	},
@@ -1860,7 +1860,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			plasmagun_p1_m1 = "wwise/events/weapon/play_reload_foley_plasma_flask_insert"
 		}
 	},
@@ -1870,7 +1870,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			ogryn_heavystubber_p1_m1 = "wwise/events/weapon/play_weapon_rippergun_handle_out",
 			stubrevolver_p1_m1 = "wwise/events/weapon/play_stub_revolver_eject_one",
 			ogryn_rippergun_p1_m1 = "wwise/events/weapon/play_weapon_rippergun_handle_out",
@@ -1886,7 +1886,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			ogryn_heavystubber_p1_m1 = "wwise/events/weapon/play_weapon_rippergun_handle_in",
 			ogryn_rippergun_p1_m1 = "wwise/events/weapon/play_weapon_rippergun_handle_in",
 			ogryn_heavystubber_p1_m3 = "wwise/events/weapon/play_weapon_rippergun_handle_in",
@@ -1901,7 +1901,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			stubrevolver_p1_m1 = "wwise/events/weapon/play_stub_revolver_open"
 		}
 	},
@@ -1911,7 +1911,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			stubrevolver_p1_m1 = "wwise/events/weapon/play_stub_revolver_cock"
 		}
 	},
@@ -1921,7 +1921,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			stubrevolver_p1_m1 = "wwise/events/weapon/play_stub_revolver_eject"
 		}
 	},
@@ -1931,7 +1931,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			shotgun_p1_m3 = "wwise/events/weapon/play_weapon_shotgun_human_reload_insert_ammo",
 			shotgun_p1_m1 = "wwise/events/weapon/play_weapon_shotgun_human_reload_insert_ammo",
 			shotgun_p1_m2 = "wwise/events/weapon/play_weapon_shotgun_human_reload_insert_ammo",
@@ -1944,7 +1944,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			stubrevolver_p1_m1 = "wwise/events/weapon/play_stub_revolver_cylinder_twist",
 			flamer_p1_m1 = "wwise/events/weapon/play_flamethrower_reload_screw"
 		}
@@ -1955,7 +1955,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			flamer_p1_m1 = "wwise/events/weapon/play_flamethrower_reload_unscrew"
 		}
 	},
@@ -2477,7 +2477,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			auspex_scanner = "wwise/events/player/play_device_auspex_scanner_minigame_progress"
 		}
 	},
@@ -2487,7 +2487,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			auspex_scanner = "wwise/events/player/play_device_auspex_scanner_minigame_progress_last"
 		}
 	},
@@ -2497,7 +2497,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			auspex_scanner = "wwise/events/player/play_device_auspex_scanner_minigame_fail"
 		}
 	},
@@ -2507,7 +2507,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			scanner_equip = "wwise/events/player/play_scanner_collect_success"
 		}
 	},
@@ -2517,7 +2517,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			autogun_p2_m2 = "wwise/events/weapon/play_autogun_p2_m2_first",
 			autogun_p1_m2 = "wwise/events/weapon/play_autogun_p1_m2_single",
 			ogryn_heavystubber_p1_m1 = "wwise/events/weapon/play_heavy_stubber_punch_first",
@@ -2540,7 +2540,7 @@ local events = {
 			"charge_level"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			bot_laspistol_killshot = "wwise/events/weapon/play_weapon_laspistol",
 			bot_zola_laspistol = "wwise/events/weapon/play_weapon_laspistol",
 			psyker_smite = "wwise/events/weapon/play_psyker_smite_fire",
@@ -2601,7 +2601,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			psyker_chain_lightning = "wwise/events/weapon/play_psyker_chain_lightning_grenade_jump",
 			shotgun_p1_m1 = "wwise/events/weapon/play_shotgun_punch_special",
 			shotgun_p1_m2 = "wwise/events/weapon/play_shotgun_p1_m2_special",
@@ -2614,7 +2614,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			autogun_p2_m2 = "wwise/events/weapon/play_player_wpn_refl_rifle",
 			bot_zola_laspistol = "wwise/events/weapon/play_player_wpn_refl_las_pistol",
 			bot_lasgun_killshot = "wwise/events/weapon/play_player_wpn_refl_las",
@@ -2773,6 +2773,7 @@ local events = {
 			autogun_p2_m1 = "wwise/events/weapon/play_indicator_crit_weak",
 			bot_laspistol_killshot = "wwise/events/weapon/play_indicator_crit_weak",
 			laspistol_p1_m1 = "wwise/events/weapon/play_indicator_crit_weak",
+			psyker_throwing_knives = "wwise/events/weapon/play_indicator_crit_psyker",
 			autogun_p3_m3 = "wwise/events/weapon/play_indicator_crit_weak"
 		}
 	},
@@ -2782,7 +2783,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			flamer_p1_m1 = "wwise/events/weapon/play_flamethrower_pre_fire"
 		}
 	},
@@ -2792,7 +2793,7 @@ local events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			flamer_p1_m1 = "wwise/events/weapon/play_flamethrower_interrupt"
 		}
 	},
@@ -2833,7 +2834,7 @@ local events = {
 		},
 		events = {
 			melee = "wwise/events/player/play_indicator_backstab_melee",
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			ranged = "wwise/events/player/play_indicator_backstab_ranged"
 		}
 	},
@@ -2856,7 +2857,7 @@ local events = {
 			"stinger_type"
 		},
 		events = {
-			default = "wwise/events/debug/play_debug_sound_short",
+			default = "wwise/events/weapon/play_weapon_silence",
 			warp_grabbed = "wwise/events/player/play_enemy_daemonhost_grab_stinger",
 			teammate_knocked_down = "wwise/events/player/play_teammate_knocked_down",
 			mutant_charge = "wwise/events/player/play_hud_player_states_mutant_charger_downed",
@@ -2976,7 +2977,7 @@ local looping_events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/%s_debug_sound_loop"
+			default = "wwise/events/weapon/%s_weapon_silence"
 		}
 	},
 	ability_target_activating = {
@@ -2986,7 +2987,7 @@ local looping_events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/%s_debug_sound_loop"
+			default = "wwise/events/weapon/%s_weapon_silence"
 		}
 	},
 	catapulted = {
@@ -3016,7 +3017,7 @@ local looping_events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/%s_debug_sound_loop"
+			default = "wwise/events/weapon/%s_weapon_silence"
 		}
 	},
 	melee_idling = {
@@ -3026,7 +3027,7 @@ local looping_events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/%s_debug_sound_loop",
+			default = "wwise/events/weapon/%s_weapon_silence",
 			chainsword_p1_m1 = "wwise/events/weapon/%s_combat_weapon_chainsword",
 			chainaxe_p1_m1 = "wwise/events/weapon/%s_chainaxe",
 			chainsword_2h_p1_m1 = "wwise/events/weapon/%s_2h_chainsword"
@@ -3039,7 +3040,7 @@ local looping_events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/%s_debug_sound_loop",
+			default = "wwise/events/weapon/%s_weapon_silence",
 			plasmagun_p1_m1 = "wwise/events/weapon/%s_plasmagun_charge",
 			psyker_smite = "wwise/events/weapon/%s_psyker_headpop_hands",
 			lasgun_p2_m2 = "wwise/events/weapon/%s_lasgun_p2_m2_charge",
@@ -3058,7 +3059,7 @@ local looping_events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/%s_debug_sound_loop",
+			default = "wwise/events/weapon/%s_weapon_silence",
 			plasmagun_p1_m1 = "wwise/events/weapon/%s_weapon_plasmagun_charge_fast",
 			lasgun_p2_m1 = "wwise/events/weapon/%s_lasgun_p2_charge",
 			lasgun_p2_m2 = "wwise/events/weapon/%s_lasgun_p2_charge",
@@ -3106,10 +3107,11 @@ local looping_events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/%s_debug_sound_loop",
+			default = "wwise/events/weapon/%s_weapon_silence",
 			autogun_p2_m2 = "wwise/events/weapon/%s_autogun_p2_m2_auto",
-			autogun_p2_m3 = "wwise/events/weapon/%s_autogun_p2_m3_auto",
+			psyker_chain_lightning = "wwise/events/weapon/%s_psyker_chain_lightning_grenade",
 			flamer_p1_m1 = "wwise/events/weapon/%s_flamethrower_fire_loop",
+			lasgun_p3_m1 = "wwise/events/weapon/%s_lasgun_p3_m1_fire_auto",
 			lasgun_p3_m3 = "wwise/events/weapon/%s_lasgun_p3_m3_fire_auto",
 			forcestaff_p2_m1 = "wwise/events/weapon/%s_forcestaff_warp_fire",
 			autogun_p2_m1 = "wwise/events/weapon/%s_autogun_p2_m1_auto",
@@ -3119,7 +3121,7 @@ local looping_events = {
 			lasgun_p3_m2 = "wwise/events/weapon/%s_lasgun_p3_m2_fire_auto",
 			autogun_p1_m2 = "wwise/events/weapon/%s_autogun_p1_m2_auto",
 			autopistol_p1_m1 = "wwise/events/weapon/%s_weapon_autopistol_auto",
-			lasgun_p3_m1 = "wwise/events/weapon/%s_lasgun_p3_m1_fire_auto",
+			autogun_p2_m3 = "wwise/events/weapon/%s_autogun_p2_m3_auto",
 			autogun_p1_m3 = "wwise/events/weapon/%s_autogun_p1_m3_auto",
 			ogryn_heavystubber_p1_m3 = "wwise/events/weapon/%s_heavy_stubber_p1_m3_auto",
 			forcestaff_p3_m1 = "wwise/events/weapon/%s_psyker_chain_lightning",
@@ -3133,9 +3135,9 @@ local looping_events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/%s_debug_sound_loop",
+			default = "wwise/events/weapon/%s_weapon_silence",
 			autogun_p2_m2 = "wwise/events/weapon/%s_autogun_p2_m2_auto",
-			psyker_chain_lightning = "wwise/events/weapon/%s_psyker_chain_lightning_grenade",
+			psyker_chain_lightning = "wwise/events/weapon/%s_psyker_chain_lightning_grenade_charged",
 			autogun_p2_m3 = "wwise/events/weapon/%s_autogun_p2_m3_auto",
 			lasgun_p3_m3 = "wwise/events/weapon/%s_lasgun_p3_m3_fire_auto",
 			forcestaff_p2_m1 = "wwise/events/weapon/%s_forcestaff_warp_fire",
@@ -3162,7 +3164,7 @@ local looping_events = {
 		events = {
 			chainsword_2h_p1_m1 = "wwise/events/weapon/%s_2h_chainsword_stuck_loop",
 			chainsword_p1_m1 = "wwise/events/weapon/%s_combat_weapon_chainsword_stuck_loop",
-			default = "wwise/events/debug/%s_debug_sound_loop",
+			default = "wwise/events/weapon/%s_weapon_silence",
 			forcesword_p1_m1 = "wwise/events/weapon/%s_force_sword_stuck",
 			forcesword_p1_m2 = "wwise/events/weapon/%s_force_sword_stuck",
 			chainaxe_p1_m1 = "wwise/events/weapon/%s_chainaxe_stuck_loop",
@@ -3175,7 +3177,7 @@ local looping_events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/%s_debug_sound_loop",
+			default = "wwise/events/weapon/%s_weapon_silence",
 			plasmagun_p1_m1 = "wwise/events/weapon/%s_weapon_plasma_mech_vent"
 		}
 	},
@@ -3194,7 +3196,7 @@ local looping_events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/%s_debug_sound_loop",
+			default = "wwise/events/weapon/%s_weapon_silence",
 			thunderhammer_2h_p1_m1 = "wwise/events/weapon/%s_thunder_hammer_powered_loop",
 			thunderhammer_2h_p1_m2 = "wwise/events/weapon/%s_thunder_hammer_powered_loop",
 			forcesword_p1_m1 = "wwise/events/weapon/%s_force_sword_loop",
@@ -3217,7 +3219,7 @@ local looping_events = {
 			"stage"
 		},
 		events = {
-			default = "wwise/events/debug/%s_debug_sound_loop",
+			default = "wwise/events/weapon/%s_weapon_silence",
 			plasmagun_p1_m1 = {
 				default = "wwise/events/weapon/%s_plasmagun_overheat",
 				critical = "wwise/events/weapon/%s_plasmagun_overheat_intensity_03"
@@ -3256,7 +3258,7 @@ local looping_events = {
 			"wielded_weapon_template"
 		},
 		events = {
-			default = "wwise/events/debug/%s_debug_sound_loop",
+			default = "wwise/events/weapon/%s_weapon_silence",
 			grimoire_pocketable = "wwise/events/player/%s_grimoire_loop",
 			zealot_relic = "wwise/events/player/%s_ability_zealot_bolstering_prayer_idle",
 			psyker_throwing_knives = "wwise/events/weapon/%s_psyker_throwing_knife_idle"
@@ -3269,7 +3271,7 @@ local looping_events = {
 			"loop_type"
 		},
 		events = {
-			default = "wwise/events/debug/%s_debug_sound_loop",
+			default = "wwise/events/weapon/%s_weapon_silence",
 			auspex_scanner = "wwise/events/player/%s_device_auspex_scanner_minigame_loop"
 		}
 	}

@@ -11,6 +11,7 @@ local SpecialRulesSetting = require("scripts/settings/ability/special_rules_sett
 local Toughness = require("scripts/utilities/toughness/toughness")
 local Vo = require("scripts/utilities/vo")
 local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
+local buff_proc_events = BuffSettings.proc_events
 local proc_events = BuffSettings.proc_events
 local reload_kinds = ReloadStates.reload_kinds
 local special_rules = SpecialRulesSetting.special_rules
@@ -108,6 +109,24 @@ ActionStanceChange.start = function (self, action_settings, t, time_scale, actio
 
 		if reload_template then
 			ReloadStates.reset(reload_template, inventory_slot_secondary_component)
+		end
+
+		local param_table_on_reload_start = self._buff_extension:request_proc_event_param_table()
+
+		if param_table_on_reload_start then
+			param_table_on_reload_start.weapon_template = weapon_template
+			param_table_on_reload_start.shotgun = false
+
+			self._buff_extension:add_proc_event(buff_proc_events.on_reload_start, param_table_on_reload_start)
+		end
+
+		local param_table_on_reload = self._buff_extension:request_proc_event_param_table()
+
+		if param_table_on_reload then
+			param_table_on_reload.weapon_template = weapon_template
+			param_table_on_reload.shotgun = false
+
+			self._buff_extension:add_proc_event(buff_proc_events.on_reload, param_table_on_reload)
 		end
 	end
 

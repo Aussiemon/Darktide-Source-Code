@@ -47,12 +47,12 @@ sway_templates.default_laspistol_killshot = {
 		visual_yaw_impact_mod = 3.3,
 		max_sway = {
 			pitch = {
-				lerp_perfect = 4,
-				lerp_basic = 4
+				lerp_perfect = 0.0002,
+				lerp_basic = 0.11
 			},
 			yaw = {
-				lerp_perfect = 4,
-				lerp_basic = 4
+				lerp_perfect = 0.0002,
+				lerp_basic = 0.11
 			}
 		},
 		decay = {
@@ -99,12 +99,12 @@ sway_templates.default_laspistol_killshot = {
 		},
 		continuous_sway = {
 			pitch = {
-				lerp_perfect = 0.075,
-				lerp_basic = 0.4
+				lerp_perfect = 0.02,
+				lerp_basic = 0.2
 			},
 			yaw = {
-				lerp_perfect = 0.075,
-				lerp_basic = 0.4
+				lerp_perfect = 0.02,
+				lerp_basic = 0.2
 			}
 		},
 		immediate_sway = {
@@ -113,12 +113,12 @@ sway_templates.default_laspistol_killshot = {
 				{
 					cap = true,
 					pitch = {
-						lerp_perfect = 0.25,
-						lerp_basic = 1
+						lerp_perfect = 0.025,
+						lerp_basic = 0.1
 					},
 					yaw = {
-						lerp_perfect = 0,
-						lerp_basic = 1
+						lerp_perfect = 0.025,
+						lerp_basic = 0.1
 					}
 				}
 			},
@@ -203,71 +203,71 @@ sway_templates.default_laspistol_killshot = {
 				{
 					pitch = {
 						lerp_perfect = 0,
-						lerp_basic = 0.01
+						lerp_basic = 0.001
 					},
 					yaw = {
 						lerp_perfect = 0,
-						lerp_basic = 0.01
-					}
-				},
-				{
-					pitch = {
-						lerp_perfect = 0,
-						lerp_basic = 0.01
-					},
-					yaw = {
-						lerp_perfect = 0,
-						lerp_basic = 0.01
+						lerp_basic = 0.001
 					}
 				},
 				{
 					pitch = {
 						lerp_perfect = 0,
-						lerp_basic = 0.01
+						lerp_basic = 0.001
 					},
 					yaw = {
 						lerp_perfect = 0,
-						lerp_basic = 0.01
+						lerp_basic = 0.001
 					}
 				},
 				{
 					pitch = {
-						lerp_perfect = 0.01,
-						lerp_basic = 0.02
+						lerp_perfect = 0,
+						lerp_basic = 0.001
 					},
 					yaw = {
-						lerp_perfect = 0.01,
-						lerp_basic = 0.02
+						lerp_perfect = 0,
+						lerp_basic = 0.001
 					}
 				},
 				{
 					pitch = {
-						lerp_perfect = 0.015,
-						lerp_basic = 0.03
+						lerp_perfect = 0.001,
+						lerp_basic = 0.002
 					},
 					yaw = {
-						lerp_perfect = 0.015,
-						lerp_basic = 0.03
+						lerp_perfect = 0.001,
+						lerp_basic = 0.002
 					}
 				},
 				{
 					pitch = {
-						lerp_perfect = 0.02,
-						lerp_basic = 0.04
+						lerp_perfect = 0.0015,
+						lerp_basic = 0.003
 					},
 					yaw = {
-						lerp_perfect = 0.02,
-						lerp_basic = 0.04
+						lerp_perfect = 0.0015,
+						lerp_basic = 0.003
 					}
 				},
 				{
 					pitch = {
-						lerp_perfect = 0.03,
-						lerp_basic = 0.06
+						lerp_perfect = 0.002,
+						lerp_basic = 0.004
 					},
 					yaw = {
-						lerp_perfect = 0.03,
-						lerp_basic = 0.06
+						lerp_perfect = 0.002,
+						lerp_basic = 0.004
+					}
+				},
+				{
+					pitch = {
+						lerp_perfect = 0.003,
+						lerp_basic = 0.006
+					},
+					yaw = {
+						lerp_perfect = 0.003,
+						lerp_basic = 0.006
 					}
 				}
 			}
@@ -339,12 +339,12 @@ sway_templates.default_laspistol_killshot = {
 		},
 		continuous_sway = {
 			pitch = {
-				lerp_perfect = 0.05,
-				lerp_basic = 0.25
+				lerp_perfect = 0.01,
+				lerp_basic = 0.1
 			},
 			yaw = {
-				lerp_perfect = 0.05,
-				lerp_basic = 0.25
+				lerp_perfect = 0.01,
+				lerp_basic = 0.1
 			}
 		},
 		decay = {
@@ -353,12 +353,12 @@ sway_templates.default_laspistol_killshot = {
 			enter_alternate_fire_grace_time = 0.3,
 			shooting = {
 				pitch = {
-					lerp_perfect = 0.1,
-					lerp_basic = 0.1
+					lerp_perfect = 0.001,
+					lerp_basic = 0.001
 				},
 				yaw = {
-					lerp_perfect = 0.1,
-					lerp_basic = 0.01
+					lerp_perfect = 0.001,
+					lerp_basic = 0.001
 				}
 			},
 			idle = {
@@ -395,12 +395,12 @@ sway_templates.default_laspistol_killshot = {
 		},
 		continuous_sway = {
 			pitch = {
-				lerp_perfect = 0.15,
-				lerp_basic = 0.5
+				lerp_perfect = 0.0125,
+				lerp_basic = 0.12
 			},
 			yaw = {
-				lerp_perfect = 0.15,
-				lerp_basic = 0.5
+				lerp_perfect = 0.0125,
+				lerp_basic = 0.12
 			}
 		},
 		decay = {

@@ -445,6 +445,36 @@ sway_templates.fullauto_autogun_killshot = {
 		sway_pattern = default_autogun_crouch_sway_pattern
 	}
 }
+overrides.fullauto_p3_autogun_killshot = {
+	parent_template_name = "fullauto_autogun_killshot",
+	overrides = {
+		{
+			"still",
+			"visual_yaw_impact_mod",
+			5
+		},
+		{
+			"still",
+			"visual_pitch_impact_mod",
+			5
+		}
+	}
+}
+overrides.fullauto_p3_m3_autogun_killshot = {
+	parent_template_name = "fullauto_autogun_killshot",
+	overrides = {
+		{
+			"still",
+			"visual_yaw_impact_mod",
+			5
+		},
+		{
+			"still",
+			"visual_pitch_impact_mod",
+			5
+		}
+	}
+}
 
 return {
 	base_templates = sway_templates,

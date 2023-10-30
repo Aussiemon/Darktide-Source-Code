@@ -308,19 +308,19 @@ weapon_template.actions = {
 		total_time = 1.75,
 		action_movement_curve = {
 			{
-				modifier = 0.5,
+				modifier = 0.6,
 				t = 0.1
 			},
 			{
-				modifier = 1.15,
+				modifier = 1.25,
 				t = 0.15
 			},
 			{
-				modifier = 1.25,
+				modifier = 1.35,
 				t = 0.25
 			},
 			{
-				modifier = 1.3,
+				modifier = 1.35,
 				t = 0.35
 			},
 			{
@@ -347,7 +347,7 @@ weapon_template.actions = {
 				modifier = 1,
 				t = 1
 			},
-			start_modifier = 0.4
+			start_modifier = 0.5
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -615,19 +615,19 @@ weapon_template.actions = {
 		total_time = 1.75,
 		action_movement_curve = {
 			{
-				modifier = 0.5,
+				modifier = 0.6,
 				t = 0.1
 			},
 			{
-				modifier = 1.15,
+				modifier = 1.25,
 				t = 0.15
 			},
 			{
-				modifier = 1.25,
+				modifier = 1.35,
 				t = 0.25
 			},
 			{
-				modifier = 1.3,
+				modifier = 1.35,
 				t = 0.35
 			},
 			{
@@ -654,7 +654,7 @@ weapon_template.actions = {
 				modifier = 1,
 				t = 1
 			},
-			start_modifier = 0.4
+			start_modifier = 0.5
 		},
 		allowed_chain_actions = {
 			combat_ability = {
@@ -793,6 +793,83 @@ weapon_template.actions = {
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end
 	},
+	action_melee_start_left_3 = {
+		anim_end_event = "attack_finished",
+		proc_time_interval = 0.2,
+		kind = "windup",
+		anim_event_3p = "attack_swing_charge_left_down",
+		anim_event = "attack_swing_charge_left_down_pose",
+		stop_input = "attack_cancel",
+		total_time = 3,
+		action_movement_curve = {
+			{
+				modifier = 1,
+				t = 0.05
+			},
+			{
+				modifier = 0.95,
+				t = 0.1
+			},
+			{
+				modifier = 0.68,
+				t = 0.25
+			},
+			{
+				modifier = 0.65,
+				t = 0.4
+			},
+			{
+				modifier = 0.65,
+				t = 0.5
+			},
+			{
+				modifier = 0.635,
+				t = 0.55
+			},
+			{
+				modifier = 0.3,
+				t = 1.2
+			},
+			{
+				modifier = 0.3,
+				t = 3
+			},
+			start_modifier = 1
+		},
+		allowed_chain_actions = {
+			combat_ability = {
+				action_name = "combat_ability"
+			},
+			grenade_ability = {
+				{
+					action_name = "grenade_ability"
+				},
+				{
+					action_name = "grenade_ability_quick_throw"
+				}
+			},
+			wield = {
+				action_name = "action_unwield"
+			},
+			light_attack = {
+				action_name = "action_right_down_light",
+				chain_time = 0.15
+			},
+			heavy_attack = {
+				action_name = "action_left_heavy_2",
+				chain_time = 0.6
+			},
+			block = {
+				action_name = "action_block"
+			},
+			special_action = {
+				action_name = "action_activate_special_left_2"
+			}
+		},
+		anim_end_event_condition_func = function (unit, data, end_reason)
+			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
+		end
+	},
 	action_left_heavy_2 = {
 		hit_armor_anim = "attack_hit",
 		weapon_handling_template = "time_scale_1_1",
@@ -867,7 +944,7 @@ weapon_template.actions = {
 		},
 		damage_profile = DamageProfileTemplates.thunderhammer_heavy_smiter,
 		damage_type = damage_types.blunt,
-		damage_profile_special_active = DamageProfileTemplates.thunderhammer_heavy_active_sweep,
+		damage_profile_special_active = DamageProfileTemplates.thunderhammer_m2_heavy_active_strikedown,
 		damage_profile_special_active_on_abort = DamageProfileTemplates.thunderhammer_m2_heavy_active,
 		damage_type_special_active = damage_types.blunt_thunder,
 		damage_type_special_active_on_abort = damage_types.blunt_thunder,
@@ -1001,7 +1078,7 @@ weapon_template.actions = {
 				action_name = "action_unwield"
 			},
 			start_attack = {
-				action_name = "action_melee_start_right",
+				action_name = "action_melee_start_left_3",
 				chain_time = 0.55
 			},
 			block = {
@@ -1258,7 +1335,7 @@ weapon_template.keywords = {
 	"p1",
 	"activated"
 }
-weapon_template.dodge_template = "support"
+weapon_template.dodge_template = "hammer_2h"
 weapon_template.sprint_template = "support"
 weapon_template.stamina_template = "thunderhammer_2h_p1_m1"
 weapon_template.toughness_template = "default"

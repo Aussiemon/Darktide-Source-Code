@@ -308,6 +308,9 @@ weapon_template.actions = {
 			block = {
 				action_name = "action_block"
 			},
+			vent = {
+				action_name = "action_vent"
+			},
 			special_action = {
 				action_name = "action_activate_special"
 			}
@@ -389,6 +392,10 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_activate_special",
+				chain_time = 0.33
+			},
+			vent = {
+				action_name = "action_vent",
 				chain_time = 0.33
 			}
 		},
@@ -480,6 +487,10 @@ weapon_template.actions = {
 			},
 			special_action = {
 				action_name = "action_activate_special"
+			},
+			vent = {
+				action_name = "action_vent",
+				chain_time = 0.3
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -575,6 +586,9 @@ weapon_template.actions = {
 			block = {
 				action_name = "action_block"
 			},
+			vent = {
+				action_name = "action_vent"
+			},
 			special_action = {
 				action_name = "action_activate_special"
 			}
@@ -652,6 +666,10 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
+				chain_time = 0.18
+			},
+			vent = {
+				action_name = "action_vent",
 				chain_time = 0.18
 			},
 			special_action = {
@@ -745,6 +763,10 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
+				chain_time = 0.2
+			},
+			vent = {
+				action_name = "action_vent",
 				chain_time = 0.2
 			},
 			special_action = {
@@ -849,6 +871,9 @@ weapon_template.actions = {
 			block = {
 				action_name = "action_block"
 			},
+			vent = {
+				action_name = "action_vent"
+			},
 			special_action = {
 				action_name = "action_activate_special"
 			}
@@ -926,6 +951,10 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
+				chain_time = 0.33
+			},
+			vent = {
+				action_name = "action_vent",
 				chain_time = 0.33
 			},
 			special_action = {
@@ -1074,6 +1103,10 @@ weapon_template.actions = {
 			},
 			block = {
 				action_name = "action_block",
+				chain_time = 0.4
+			},
+			vent = {
+				action_name = "action_vent",
 				chain_time = 0.4
 			},
 			special_action = {
@@ -1335,7 +1368,7 @@ weapon_template.keywords = {
 	"p1",
 	"activated"
 }
-weapon_template.smart_targeting_template = SmartTargetingTemplates.force_sword_single_target
+weapon_template.smart_targeting_template = SmartTargetingTemplates.default_melee
 weapon_template.dodge_template = "psyker"
 weapon_template.sprint_template = "default"
 weapon_template.stamina_template = "forcesword_p1_m1"

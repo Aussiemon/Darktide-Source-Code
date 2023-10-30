@@ -434,16 +434,26 @@ overrides.fire_grenade_impact = {
 	}
 }
 damage_templates.ogryn_friendly_rock_impact = {
-	shield_override_stagger_strength = 200,
-	gibbing_power = 0,
 	suppression_value = 4,
-	ignore_shield = true,
-	ragdoll_push_force = 2500,
-	ragdoll_only = true,
+	gibbing_power = 0,
 	ignore_stagger_reduction = true,
-	stagger_category = "ranged",
+	ignore_shield = true,
+	ragdoll_only = true,
+	weakspot_stagger_resistance_modifier = 0.001,
+	stagger_category = "explosion",
 	gibbing_type = 0,
-	cleave_distribution = medium_cleave,
+	ragdoll_push_force = 2500,
+	shield_override_stagger_strength = 200,
+	cleave_distribution = {
+		attack = {
+			8.5,
+			12.5
+		},
+		impact = {
+			8.5,
+			12.5
+		}
+	},
 	ranges = {
 		max = 35,
 		min = 12
@@ -455,7 +465,7 @@ damage_templates.ogryn_friendly_rock_impact = {
 				[armor_types.armored] = damage_lerp_values.lerp_1,
 				[armor_types.resistant] = damage_lerp_values.lerp_1,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_1_25,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 				[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -479,7 +489,7 @@ damage_templates.ogryn_friendly_rock_impact = {
 				[armor_types.armored] = damage_lerp_values.lerp_0_5,
 				[armor_types.resistant] = damage_lerp_values.lerp_0_75,
 				[armor_types.player] = damage_lerp_values.lerp_1,
-				[armor_types.berserker] = damage_lerp_values.lerp_1,
+				[armor_types.berserker] = damage_lerp_values.lerp_1_25,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
 				[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 				[armor_types.void_shield] = damage_lerp_values.lerp_1,
@@ -500,7 +510,7 @@ damage_templates.ogryn_friendly_rock_impact = {
 	},
 	power_distribution = {
 		attack = 1200,
-		impact = 80
+		impact = 50
 	},
 	on_kill_area_suppression = {
 		distance = 8,

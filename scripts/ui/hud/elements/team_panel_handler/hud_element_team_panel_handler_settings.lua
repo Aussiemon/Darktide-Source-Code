@@ -1,7 +1,7 @@
 local hud_element_team_panel_handler_settings = {
 	max_panels = 4,
 	panel_size = {
-		300,
+		380,
 		66
 	},
 	panel_offset = {

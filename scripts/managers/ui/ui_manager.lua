@@ -409,9 +409,9 @@ UIManager.destroy_player_hud = function (self)
 	end
 end
 
-UIManager.input_service = function (self)
+UIManager.input_service = function (self, optional_service_name)
 	local gamepad_active = false
-	local input_service_name = self._input_service_name
+	local input_service_name = optional_service_name or self._input_service_name
 	local input_manager = Managers.input
 	local input_service = input_manager:get_input_service(input_service_name)
 	local null_service = input_service:null_service()
@@ -694,12 +694,12 @@ UIManager.using_cursor_navigation = function (self)
 	return not InputDevice.gamepad_active
 end
 
-UIManager.using_input = function (self)
-	if self._ui_constant_elements and self._ui_constant_elements:using_input() then
+UIManager.using_input = function (self, ignore_hud, ignore_views, ignore_constant_elements)
+	if self._ui_constant_elements and self._ui_constant_elements:using_input() and not ignore_constant_elements then
 		return true
-	elseif self._view_handler:using_input() then
+	elseif self._view_handler:using_input() and not ignore_views then
 		return true
-	elseif self._hud then
+	elseif self._hud and not ignore_hud then
 		return self._hud:using_input()
 	end
 
@@ -929,7 +929,7 @@ UIManager.render = function (self, dt, t)
 	local spectator_hud = self._spectator_hud
 
 	if hud then
-		local input_service = spectator_hud and self:input_service():null_service() or self:input_service()
+		local input_service = (spectator_hud or self._ui_constant_elements:using_input()) and self:input_service():null_service() or self:input_service()
 
 		hud:draw(dt, t, input_service)
 	end
@@ -942,15 +942,18 @@ end
 UIManager.post_update = function (self, dt, t)
 	local hud = self._hud
 	local spectator_hud = self._spectator_hud
+	local constant_element_using_input = self._ui_constant_elements:using_input()
 
 	if hud then
-		local input_service = spectator_hud and self:input_service():null_service() or self:input_service()
+		local input_service = (spectator_hud or constant_element_using_input) and self:input_service():null_service() or self:input_service()
 
 		hud:update(dt, t, input_service)
 	end
 
 	if spectator_hud then
-		spectator_hud:update(dt, t, self:input_service())
+		local input_service = constant_element_using_input and self:input_service():null_service() or self:input_service()
+
+		spectator_hud:update(dt, t, input_service)
 	end
 
 	self._view_handler:post_update(dt, t)

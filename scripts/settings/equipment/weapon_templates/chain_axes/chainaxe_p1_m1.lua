@@ -272,10 +272,11 @@ weapon_template.actions = {
 		}
 	},
 	action_melee_start_left = {
-		anim_event_3p = "attack_swing_charge_down_left",
-		chain_anim_event = "heavy_charge_left_diagonal_down_pose",
 		start_input = "start_attack",
+		chain_anim_event = "heavy_charge_left_diagonal_down_pose",
+		proc_time_interval = 0.2,
 		kind = "windup",
+		anim_event_3p = "attack_swing_charge_down_left",
 		chain_anim_event_3p = "attack_swing_charge_down_left",
 		anim_end_event = "attack_finished",
 		allowed_during_sprint = true,
@@ -573,10 +574,11 @@ weapon_template.actions = {
 		}
 	},
 	action_melee_start_right = {
-		allowed_during_sprint = true,
-		anim_end_event = "attack_finished",
-		kind = "windup",
 		anim_event_3p = "attack_swing_charge_down_right",
+		anim_end_event = "attack_finished",
+		proc_time_interval = 0.2,
+		kind = "windup",
+		allowed_during_sprint = true,
 		anim_event = "heavy_charge_right_diagonal_down",
 		stop_input = "attack_cancel",
 		total_time = 3,
@@ -871,8 +873,9 @@ weapon_template.actions = {
 	action_melee_start_left_2 = {
 		chain_anim_event_3p = "attack_swing_charge_left",
 		chain_anim_event = "heavy_charge_left_diagonal_down_pose",
-		anim_end_event = "attack_finished",
+		proc_time_interval = 0.12,
 		kind = "windup",
+		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_charge_left",
 		anim_event = "heavy_charge_left_diagonal_down",
 		stop_input = "attack_cancel",
@@ -1065,6 +1068,7 @@ weapon_template.actions = {
 	},
 	action_melee_start_right_2 = {
 		anim_end_event = "attack_finished",
+		proc_time_interval = 0.2,
 		kind = "windup",
 		anim_event_3p = "attack_swing_charge_right",
 		anim_event = "heavy_charge_right_diagonal_down",

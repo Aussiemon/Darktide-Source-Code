@@ -365,7 +365,7 @@ PlayerUnitWeaponExtension.fixed_update = function (self, unit, dt, t, fixed_fram
 	local alternate_fire_component = self._alternate_fire_write_component
 
 	if AlternateFire.check_exit(alternate_fire_component, weapon_template, self._input_extension, self._stunned_character_state_component, t) then
-		AlternateFire.stop(alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, weapon_template, false, self._unit)
+		AlternateFire.stop(alternate_fire_component, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, weapon_template, false, self._unit, true)
 	end
 
 	self:_update_overheat(dt, t)
@@ -543,7 +543,7 @@ PlayerUnitWeaponExtension.on_slot_unwielded = function (self, slot_name, t)
 	local alternate_fire = self._alternate_fire_write_component
 
 	if alternate_fire.is_active then
-		AlternateFire.stop(alternate_fire, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, weapon_template, false, self._unit)
+		AlternateFire.stop(alternate_fire, self._peeking_component, self._first_person_extension, self._weapon_tweak_templates_component, self._animation_extension, weapon_template, false, self._unit, true)
 	end
 
 	self._weapon_recoil_system:snap_camera_and_reset_recoil()

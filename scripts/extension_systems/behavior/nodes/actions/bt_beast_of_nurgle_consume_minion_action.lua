@@ -1,36 +1,29 @@
 require("scripts/extension_systems/behavior/nodes/bt_node")
 
 local Blackboard = require("scripts/extension_systems/blackboard/utilities/blackboard")
-local Breed = require("scripts/utilities/breed")
 local Health = require("scripts/utilities/health")
 local MinionMovement = require("scripts/utilities/minion_movement")
 local BtBeastOfNurgleConsumeMinionAction = class("BtBeastOfNurgleConsumeMinionAction", "BtNode")
 
 BtBeastOfNurgleConsumeMinionAction.enter = function (self, unit, breed, blackboard, scratchpad, action_data, t)
 	local spawn_component = blackboard.spawn
-	scratchpad.physics_world = spawn_component.physics_world
 	scratchpad.world = spawn_component.world
-	scratchpad.perception_component = Blackboard.write_component(blackboard, "perception")
-	scratchpad.behavior_component = Blackboard.write_component(blackboard, "behavior")
-	scratchpad.behavior_component.move_state = "attacking"
-	local locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
+	local aim_component = Blackboard.write_component(blackboard, "aim")
+	local behavior_component = Blackboard.write_component(blackboard, "behavior")
+	scratchpad.aim_component = aim_component
+	scratchpad.behavior_component = behavior_component
+	scratchpad.spawn_component = spawn_component
 	scratchpad.animation_extension = ScriptUnit.extension(unit, "animation_system")
-	scratchpad.locomotion_extension = locomotion_extension
-	scratchpad.navigation_extension = ScriptUnit.extension(unit, "navigation_system")
-	scratchpad.nav_world = scratchpad.navigation_extension:nav_world()
-	scratchpad.broadphase_system = Managers.state.extension:system("broadphase_system")
-	scratchpad.side_system = Managers.state.extension:system("side_system")
+	scratchpad.locomotion_extension = ScriptUnit.extension(unit, "locomotion_system")
 	scratchpad.fx_system = Managers.state.extension:system("fx_system")
-	scratchpad.aim_component = Blackboard.write_component(blackboard, "aim")
-	scratchpad.aim_component.controlled_aiming = true
-	local original_rotation_speed = locomotion_extension:rotation_speed()
-	scratchpad.original_rotation_speed = original_rotation_speed
-	scratchpad.broadphase_config = breed.nearby_units_broadphase_config
-	local target_unit = self:_get_target(unit, scratchpad, action_data)
-	scratchpad.target_unit = target_unit
+	aim_component.controlled_aiming = true
+	local target_unit, target_distance, target_behavior_extension = self:_get_target(unit, breed)
 
 	if target_unit then
-		self:_start_tongue_out(unit, scratchpad, action_data, t)
+		self:_start_tongue_out(target_distance, scratchpad, action_data, t)
+
+		scratchpad.target_behavior_extension = target_behavior_extension
+		scratchpad.target_unit = target_unit
 	else
 		scratchpad.state = "invalid_target_unit"
 	end
@@ -43,21 +36,10 @@ end
 
 BtBeastOfNurgleConsumeMinionAction.leave = function (self, unit, breed, blackboard, scratchpad, action_data, t, reason, destroy)
 	scratchpad.behavior_component.consume_minion_cooldown = t + Managers.state.difficulty:get_table_entry_by_challenge(action_data.cooldown)
-	local aim_component = scratchpad.aim_component
-	aim_component.controlled_aiming = false
-
-	scratchpad.navigation_extension:set_enabled(false)
-
-	local locomotion_extension = scratchpad.locomotion_extension
-
-	locomotion_extension:set_rotation_speed(scratchpad.original_rotation_speed)
-
-	if scratchpad.is_anim_driven then
-		MinionMovement.set_anim_driven(scratchpad, false)
-	end
-
-	local game_session = Managers.state.game_session:game_session()
-	local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+	scratchpad.aim_component.controlled_aiming = false
+	local spawn_component = scratchpad.spawn_component
+	local game_session = spawn_component.game_session
+	local game_object_id = spawn_component.game_object_id
 
 	GameSession.set_game_object_field(game_session, game_object_id, "consumed_minion_unit_id", NetworkConstants.invalid_game_object_id)
 	self:_stop_effect_template(scratchpad)
@@ -77,7 +59,7 @@ BtBeastOfNurgleConsumeMinionAction.run = function (self, unit, breed, blackboard
 	elseif state == "tongue_in" then
 		self:_update_tongue_in(unit, scratchpad, action_data, t)
 	elseif state == "consuming" then
-		self:_update_consuming(unit, scratchpad, action_data, t)
+		self:_update_consuming(scratchpad, t)
 	elseif state == "done" or state == "invalid_target_unit" then
 		return "done"
 	end
@@ -86,19 +68,13 @@ BtBeastOfNurgleConsumeMinionAction.run = function (self, unit, breed, blackboard
 		self:_rotate_towards_target_unit(unit, scratchpad, action_data)
 	end
 
-	local variable_name = action_data.tongue_length_variable_name
-	local percentage = scratchpad.initial_distance_to_target / action_data.max_tongue_length
-	local variable_value = math.clamp(percentage, 0, 1)
-
-	scratchpad.animation_extension:set_variable(variable_name, variable_value)
-
 	return "running"
 end
 
 local BROADPHASE_RESULTS = {}
 
-BtBeastOfNurgleConsumeMinionAction._get_target = function (self, unit, scratchpad, action_data)
-	local broadphase_config = scratchpad.broadphase_config
+BtBeastOfNurgleConsumeMinionAction._get_target = function (self, unit, breed)
+	local broadphase_config = breed.nearby_units_broadphase_config
 	local broadphase_relation = broadphase_config.relation
 	local radius = broadphase_config.radius
 	local valid_breeds = broadphase_config.valid_breeds
@@ -111,7 +87,7 @@ BtBeastOfNurgleConsumeMinionAction._get_target = function (self, unit, scratchpa
 	local num_results = broadphase:query(from, radius, BROADPHASE_RESULTS, target_side_names)
 
 	if num_results < 1 then
-		return nil
+		return nil, nil
 	end
 
 	local angle = broadphase_config.angle
@@ -123,58 +99,72 @@ BtBeastOfNurgleConsumeMinionAction._get_target = function (self, unit, scratchpa
 
 		if hit_unit ~= unit then
 			local to = POSITION_LOOKUP[hit_unit]
-			local direction = Vector3.normalize(to - from)
-			local length_sq = Vector3.length_squared(direction)
+			local direction, length = Vector3.direction_length(to - from)
 
-			if length_sq ~= 0 then
+			if length > 0.001 then
 				local angle_to_target = Vector3.angle(direction, forward)
 
 				if angle_to_target < angle then
 					local unit_data_extension = ScriptUnit.extension(hit_unit, "unit_data_system")
-					local breed = unit_data_extension:breed()
+					local hit_breed_name = unit_data_extension:breed_name()
 
-					if Breed.is_minion(breed) and valid_breeds[breed.name] then
-						return hit_unit
+					if valid_breeds[hit_breed_name] then
+						local hit_unit_behavior_extension = ScriptUnit.extension(hit_unit, "behavior_system")
+						local hit_unit_brain = hit_unit_behavior_extension:brain()
+
+						if hit_unit_brain:active() then
+							return hit_unit, length, hit_unit_behavior_extension
+						end
 					end
 				end
 			end
 		end
 	end
 
-	return nil
+	return nil, nil
 end
 
-BtBeastOfNurgleConsumeMinionAction._start_tongue_out = function (self, unit, scratchpad, action_data, t)
-	local target_unit = scratchpad.target_unit
+BtBeastOfNurgleConsumeMinionAction._start_tongue_out = function (self, target_distance, scratchpad, action_data, t)
 	local tongue_out_anim = action_data.tongue_out_anim
+	local animation_extension = scratchpad.animation_extension
 
-	scratchpad.animation_extension:anim_event(tongue_out_anim)
+	animation_extension:anim_event(tongue_out_anim)
+
+	local variable_name = action_data.tongue_length_variable_name
+	local min_tongue_length = action_data.min_tongue_length
+	local max_tongue_length = action_data.max_tongue_length
+	local percentage = (target_distance - min_tongue_length) / (max_tongue_length - min_tongue_length)
+	local variable_value = math.clamp(percentage, 0, 1)
+
+	animation_extension:set_variable(variable_name, variable_value)
 
 	local tongue_out_durations = action_data.tongue_out_durations
 	local tongue_in_t = tongue_out_durations[tongue_out_anim]
 	scratchpad.tongue_in_t = t + tongue_in_t
-	local from = POSITION_LOOKUP[unit]
-	local to = POSITION_LOOKUP[target_unit]
-	scratchpad.initial_distance_to_target = Vector3.distance(from, to)
+	scratchpad.behavior_component.move_state = "attacking"
 	scratchpad.state = "tongue_out"
 end
 
 BtBeastOfNurgleConsumeMinionAction._update_tongue_out = function (self, unit, scratchpad, action_data, t)
 	if scratchpad.tongue_in_t < t then
-		self:_start_tongue_in(unit, scratchpad, action_data, t)
+		local target_behavior_extension = scratchpad.target_behavior_extension
+		local target_brain = target_behavior_extension:brain()
+
+		if target_brain:active() then
+			self:_start_tongue_in(unit, target_brain, scratchpad, action_data, t)
+		else
+			scratchpad.state = "invalid_target_unit"
+		end
 
 		scratchpad.tongue_in_t = nil
 	end
 end
 
-BtBeastOfNurgleConsumeMinionAction._start_tongue_in = function (self, unit, scratchpad, action_data, t)
-	local target_unit = scratchpad.target_unit
-	local target_behavior_extension = ScriptUnit.extension(target_unit, "behavior_system")
-	local target_brain = target_behavior_extension:brain()
-
+BtBeastOfNurgleConsumeMinionAction._start_tongue_in = function (self, unit, target_brain, scratchpad, action_data, t)
 	target_brain:shutdown_behavior_tree(t, true)
 	target_brain:set_active(false)
 
+	local target_unit = scratchpad.target_unit
 	local consumed_minion_anim = action_data.consumed_minion_anim
 	local target_animation_extension = ScriptUnit.extension(target_unit, "animation_system")
 
@@ -194,8 +184,9 @@ BtBeastOfNurgleConsumeMinionAction._start_tongue_in = function (self, unit, scra
 	scratchpad.consume_t = t + consume_duration
 	local heal_duration = action_data.heal_durations[tongue_in_anim]
 	scratchpad.heal_t = t + heal_duration
-	local game_session = Managers.state.game_session:game_session()
-	local game_object_id = Managers.state.unit_spawner:game_object_id(unit)
+	local spawn_component = scratchpad.spawn_component
+	local game_session = spawn_component.game_session
+	local game_object_id = spawn_component.game_object_id
 	local target_unit_id = Managers.state.unit_spawner:game_object_id(target_unit)
 
 	GameSession.set_game_object_field(game_session, game_object_id, "consumed_minion_unit_id", target_unit_id)
@@ -206,7 +197,7 @@ end
 
 BtBeastOfNurgleConsumeMinionAction._update_tongue_in = function (self, unit, scratchpad, action_data, t)
 	if scratchpad.consume_t < t then
-		self:_start_consuming(unit, scratchpad, action_data, t)
+		self:_start_consuming(scratchpad)
 
 		scratchpad.consume_t = nil
 	end
@@ -218,7 +209,7 @@ BtBeastOfNurgleConsumeMinionAction._update_tongue_in = function (self, unit, scr
 	end
 end
 
-BtBeastOfNurgleConsumeMinionAction._start_consuming = function (self, unit, scratchpad, action_data, t)
+BtBeastOfNurgleConsumeMinionAction._start_consuming = function (self, scratchpad)
 	local target_unit = scratchpad.target_unit
 	local reset_scene_graph = true
 
@@ -228,7 +219,7 @@ BtBeastOfNurgleConsumeMinionAction._start_consuming = function (self, unit, scra
 	scratchpad.state = "consuming"
 end
 
-BtBeastOfNurgleConsumeMinionAction._update_consuming = function (self, unit, scratchpad, action_data, t)
+BtBeastOfNurgleConsumeMinionAction._update_consuming = function (self, scratchpad, t)
 	if scratchpad.exit_t < t then
 		scratchpad.state = "done"
 
@@ -258,8 +249,7 @@ end
 
 BtBeastOfNurgleConsumeMinionAction._start_effect_template = function (self, unit, scratchpad, action_data)
 	local effect_template = action_data.effect_template
-	local fx_system = scratchpad.fx_system
-	local global_effect_id = fx_system:start_template_effect(effect_template, unit)
+	local global_effect_id = scratchpad.fx_system:start_template_effect(effect_template, unit)
 	scratchpad.global_effect_id = global_effect_id
 end
 
@@ -267,9 +257,7 @@ BtBeastOfNurgleConsumeMinionAction._stop_effect_template = function (self, scrat
 	local global_effect_id = scratchpad.global_effect_id
 
 	if global_effect_id then
-		local fx_system = scratchpad.fx_system
-
-		fx_system:stop_template_effect(global_effect_id)
+		scratchpad.fx_system:stop_template_effect(global_effect_id)
 
 		scratchpad.global_effect_id = nil
 	end

@@ -364,8 +364,8 @@ mood_settings.moods = {
 		}
 	},
 	[types.psyker_force_field_sphere] = {
-		blend_in_time = 0.03,
-		blend_out_time = 0.03,
+		blend_in_time = 0,
+		blend_out_time = 0.01,
 		looping_sound_start_events = {
 			"wwise/events/player/play_psyker_shield_dome_enter"
 		},

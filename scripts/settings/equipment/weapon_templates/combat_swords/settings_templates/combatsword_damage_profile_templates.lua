@@ -24,11 +24,12 @@ local double_cleave = DamageProfileSettings.double_cleave
 local light_cleave = DamageProfileSettings.light_cleave
 local medium_cleave = DamageProfileSettings.medium_cleave
 local large_cleave = DamageProfileSettings.large_cleave
+local big_cleave = DamageProfileSettings.big_cleave
 local ninjafencer_finesse_boost = PowerLevelSettings.ninjafencer_finesse_boost_amount
 local smiter_finesse_boost_amount = PowerLevelSettings.smiter_finesse_boost_amount
 local cutting_am = {
 	attack = {
-		[armor_types.unarmored] = damage_lerp_values.lerp_1_5,
+		[armor_types.unarmored] = damage_lerp_values.lerp_1_25,
 		[armor_types.armored] = damage_lerp_values.lerp_0_3,
 		[armor_types.resistant] = damage_lerp_values.lerp_0_75,
 		[armor_types.player] = damage_lerp_values.no_damage,
@@ -122,8 +123,8 @@ damage_templates.light_combatsword_linesman = {
 			},
 			power_distribution = {
 				attack = {
-					35,
-					75
+					40,
+					80
 				},
 				impact = {
 					4,
@@ -134,25 +135,33 @@ damage_templates.light_combatsword_linesman = {
 		{
 			power_distribution = {
 				attack = {
-					25,
-					60
+					35,
+					75
 				},
 				impact = {
 					3,
 					6
 				}
+			},
+			boost_curve_multiplier_finesse = {
+				0.75,
+				1.5
 			}
 		},
 		{
 			power_distribution = {
 				attack = {
-					15,
-					30
+					30,
+					60
 				},
 				impact = {
 					2,
 					4
 				}
+			},
+			boost_curve_multiplier_finesse = {
+				0.75,
+				1.5
 			}
 		},
 		default_target = {
@@ -371,7 +380,7 @@ damage_templates.light_combatsword_linesman_tank_p2 = {
 damage_templates.heavy_combatsword_p2_smiter = {
 	ragdoll_push_force = 200,
 	stagger_category = "melee",
-	cleave_distribution = single_cleave,
+	cleave_distribution = big_cleave,
 	damage_type = damage_types.metal_slashing_light,
 	critical_strike = {
 		gibbing_power = GibbingPower.light,
@@ -385,7 +394,6 @@ damage_templates.heavy_combatsword_p2_smiter = {
 	armor_damage_modifier = smiter_am,
 	targets = {
 		{
-			armor_damage_modifier = smiter_am,
 			boost_curve_multiplier_finesse = {
 				1,
 				2
@@ -403,19 +411,29 @@ damage_templates.heavy_combatsword_p2_smiter = {
 					6,
 					12
 				}
-			}
+			},
+			armor_damage_modifier = smiter_am
 		},
 		{
 			power_distribution = {
 				attack = {
-					75,
-					150
+					180,
+					360
 				},
 				impact = {
-					3,
-					6
+					6,
+					12
 				}
-			}
+			},
+			boost_curve_multiplier_finesse = {
+				1,
+				2
+			},
+			power_level_multiplier = {
+				0.5,
+				1.5
+			},
+			armor_damage_modifier = smiter_am
 		},
 		{
 			power_distribution = {
@@ -432,8 +450,8 @@ damage_templates.heavy_combatsword_p2_smiter = {
 		default_target = {
 			power_distribution = {
 				attack = {
-					10,
-					20
+					5,
+					10
 				},
 				impact = {
 					2,
@@ -447,7 +465,7 @@ damage_templates.heavy_combatsword_p2_smiter = {
 damage_templates.heavy_combatsword_p2_smiter_up = {
 	ragdoll_push_force = 600,
 	stagger_category = "melee",
-	cleave_distribution = light_cleave,
+	cleave_distribution = big_cleave,
 	damage_type = damage_types.metal_slashing_light,
 	critical_strike = {
 		gibbing_power = GibbingPower.heavy,
@@ -482,14 +500,23 @@ damage_templates.heavy_combatsword_p2_smiter_up = {
 			}
 		},
 		{
+			armor_damage_modifier = smiter_am,
+			boost_curve_multiplier_finesse = {
+				1,
+				2
+			},
+			power_level_multiplier = {
+				0.5,
+				1.5
+			},
 			power_distribution = {
 				attack = {
-					75,
-					150
+					180,
+					360
 				},
 				impact = {
-					3,
-					6
+					6,
+					12
 				}
 			}
 		},
@@ -508,8 +535,8 @@ damage_templates.heavy_combatsword_p2_smiter_up = {
 		default_target = {
 			power_distribution = {
 				attack = {
-					10,
-					20
+					5,
+					10
 				},
 				impact = {
 					2,
@@ -547,7 +574,7 @@ local p3_fencer_crit_mod = {
 damage_templates.light_combatsword_linesman_p3 = {
 	ragdoll_push_force = 100,
 	stagger_category = "melee",
-	cleave_distribution = double_cleave,
+	cleave_distribution = light_cleave,
 	damage_type = damage_types.metal_slashing_light,
 	critical_strike = {
 		gibbing_power = GibbingPower.light,
@@ -912,11 +939,11 @@ damage_templates.light_combatsword_smiter = {
 			armor_damage_modifier = {
 				attack = {
 					[armor_types.unarmored] = damage_lerp_values.lerp_1,
-					[armor_types.armored] = damage_lerp_values.lerp_0_75,
-					[armor_types.resistant] = damage_lerp_values.lerp_1,
+					[armor_types.armored] = damage_lerp_values.lerp_0_8,
+					[armor_types.resistant] = damage_lerp_values.lerp_1_25,
 					[armor_types.player] = damage_lerp_values.no_damage,
 					[armor_types.berserker] = damage_lerp_values.lerp_1,
-					[armor_types.super_armor] = damage_lerp_values.lerp_0_25,
+					[armor_types.super_armor] = damage_lerp_values.lerp_0_5,
 					[armor_types.disgustingly_resilient] = damage_lerp_values.lerp_1,
 					[armor_types.void_shield] = damage_lerp_values.lerp_0_75,
 					[armor_types.prop_armor] = damage_lerp_values.lerp_0_5
@@ -943,8 +970,8 @@ damage_templates.light_combatsword_smiter = {
 			},
 			power_distribution = {
 				attack = {
-					75,
-					150
+					100,
+					200
 				},
 				impact = {
 					6,
@@ -1137,7 +1164,7 @@ damage_templates.heavy_combatsword = {
 		{
 			armor_damage_modifier = {
 				attack = {
-					[armor_types.unarmored] = damage_lerp_values.lerp_1_5,
+					[armor_types.unarmored] = damage_lerp_values.lerp_1_25,
 					[armor_types.armored] = damage_lerp_values.lerp_0_75,
 					[armor_types.resistant] = damage_lerp_values.lerp_0_75,
 					[armor_types.player] = damage_lerp_values.no_damage,
@@ -1160,8 +1187,8 @@ damage_templates.heavy_combatsword = {
 				}
 			},
 			boost_curve_multiplier_finesse = {
-				1.5,
-				3
+				1.25,
+				2.5
 			},
 			power_level_multiplier = {
 				0.5,
@@ -1169,8 +1196,8 @@ damage_templates.heavy_combatsword = {
 			},
 			power_distribution = {
 				attack = {
-					100,
-					200
+					90,
+					180
 				},
 				impact = {
 					6,
@@ -1246,7 +1273,7 @@ overrides.heavy_combatsword_linesman_p3 = {
 	overrides = {
 		{
 			"cleave_distribution",
-			double_cleave
+			medium_cleave
 		},
 		{
 			"ragdoll_push_force",
@@ -1411,6 +1438,30 @@ overrides.heavy_combatsword_smiter_stab = {
 			}
 		},
 		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"resistant",
+			damage_lerp_values.lerp_1
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"armored",
+			damage_lerp_values.lerp_0_8
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"super_armor",
+			damage_lerp_values.lerp_0_6
+		},
+		{
 			"gibbing_power",
 			0
 		},
@@ -1446,6 +1497,14 @@ overrides.heavy_combatsword_p3_smiter = {
 				6,
 				12
 			}
+		},
+		{
+			"targets",
+			1,
+			"armor_damage_modifier",
+			"attack",
+			"resistant",
+			damage_lerp_values.lerp_1
 		},
 		{
 			"gibbing_power",

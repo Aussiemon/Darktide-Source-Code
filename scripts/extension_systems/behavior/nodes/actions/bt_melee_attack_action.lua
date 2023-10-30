@@ -19,6 +19,7 @@ local WeaponTemplate = require("scripts/utilities/weapon/weapon_template")
 local attack_types = AttackSettings.attack_types
 local default_backstab_melee_dot = MinionBackstabSettings.melee_backstab_dot
 local default_backstab_melee_event = MinionBackstabSettings.melee_backstab_event
+local default_elite_backstab_melee_event = MinionBackstabSettings.melee_elite_backstab_event
 local BtMeleeAttackAction = class("BtMeleeAttackAction", "BtNode")
 local DEFAULT_DODGE_WINDOW = 0.5
 
@@ -463,7 +464,8 @@ BtMeleeAttackAction.run = function (self, unit, breed, blackboard, scratchpad, a
 
 		if (not attack_timing or t < attack_timing) and not scratchpad.finished_attack then
 			local ignore_attack_intensity = true
-			local wwise_event = action_data.backstab_event or default_backstab_melee_event
+			local elite_event = breed.tags and breed.tags.elite
+			local wwise_event = action_data.backstab_event or elite_event and default_elite_backstab_melee_event or default_backstab_melee_event
 			local dot_threshold = action_data.backstab_dot or default_backstab_melee_dot
 			local triggered_backstab_sound = MinionAttack.check_and_trigger_backstab_sound(unit, action_data, target_unit, wwise_event, dot_threshold, ignore_attack_intensity)
 

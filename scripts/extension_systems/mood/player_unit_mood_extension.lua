@@ -119,8 +119,9 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	local warped_low_to_high = warped_low_threshold < current_warp_percentage
 	local warped_high_to_critical = warped_high_threshold < current_warp_percentage
 	local warped_critical = warped_critical_threshold < current_warp_percentage
-	local num_wounds = self._health_extension:num_wounds()
-	local max_wounds = self._health_extension:max_wounds()
+	local health_extension = self._health_extension
+	local num_wounds = health_extension:num_wounds()
+	local max_wounds = health_extension:max_wounds()
 	local last_wound = num_wounds == 1 and max_wounds > 1
 	local archetype_name = self._player:archetype_name()
 	local is_aiming_lunge = PlayerUnitStatus.is_aiming_lunge(self._combat_ability_action_read_component)
@@ -129,7 +130,7 @@ PlayerUnitMoodExtension._update_active_moods = function (self, t)
 	local is_in_stealth = archetype_name == "zealot" and buff_extension:has_keyword(buff_keywords.invisible)
 	local is_in_veteran_stealth = archetype_name == "veteran" and buff_extension:has_keyword(buff_keywords.invisible)
 	local is_in_veteran_stealth_and_stance = is_in_veteran_stealth and veteran_combat_ability_stance_active
-	local is_in_psyker_force_field, _, force_field_extension = self._force_field_system:is_object_inside_force_field(self._first_person_component.position, 0.1, true)
+	local is_in_psyker_force_field, _, force_field_extension = self._force_field_system:is_object_inside_force_field(self._first_person_component.position, 0.05, true)
 	local is_in_psyker_force_field_sphere = is_in_psyker_force_field and force_field_extension:is_sphere_shield()
 
 	if is_in_veteran_stealth_and_stance then

@@ -11,6 +11,7 @@ local Suppression = require("scripts/utilities/attack/suppression")
 local WarpCharge = require("scripts/utilities/warp_charge")
 local DEFAULT_POWER_LEVEL = PowerLevelSettings.default_power_level
 local proc_events = BuffSettings.proc_events
+local buff_keywords = BuffSettings.keywords
 local hit_zone_names = HitZone.hit_zone_names
 local ActionDamageTarget = class("ActionDamageTarget", "ActionWeaponBase")
 
@@ -38,8 +39,9 @@ ActionDamageTarget.start = function (self, action_settings, t, time_scale, start
 		local warp_charge_reduction = stat_buffs.warp_charge_amount or 1
 		local new_dif = dif * warp_charge_reduction
 		extreme_warp_charge_threshold = 1 - new_dif
+		local empowered_grenade = self._buff_extension:has_keyword(buff_keywords.psyker_empowered_grenade)
 
-		if last_action_warp_charge_percent < extreme_warp_charge_threshold then
+		if empowered_grenade or last_action_warp_charge_percent < extreme_warp_charge_threshold then
 			self._prevent_explosion = true
 		end
 	end

@@ -108,7 +108,7 @@ PlayerCharacterStateHubJog._update_move_state = function (self, hub_jog_characte
 
 		if Sprint.sprint_input(input_extension, is_sprinting, false) then
 			move_state = "sprint"
-		elseif Crouch.crouch_input(input_extension, is_walking, false) then
+		elseif Crouch.crouch_input(input_extension, is_walking, false, false) then
 			move_state = "walk"
 		elseif not wants_to_stop or current_movement_method == "idle" then
 			move_state = "jog"

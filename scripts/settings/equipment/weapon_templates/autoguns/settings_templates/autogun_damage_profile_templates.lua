@@ -450,7 +450,7 @@ damage_templates.autogun_p3_burst_shot = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_1,
 				[armor_types.armored] = damage_lerp_values.lerp_1,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_8,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_6,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_6,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
@@ -474,7 +474,7 @@ damage_templates.autogun_p3_burst_shot = {
 			attack = {
 				[armor_types.unarmored] = damage_lerp_values.lerp_0_8,
 				[armor_types.armored] = damage_lerp_values.lerp_0_8,
-				[armor_types.resistant] = damage_lerp_values.lerp_0_6,
+				[armor_types.resistant] = damage_lerp_values.lerp_0_5,
 				[armor_types.player] = damage_lerp_values.lerp_1,
 				[armor_types.berserker] = damage_lerp_values.lerp_0_5,
 				[armor_types.super_armor] = damage_lerp_values.lerp_0_05,
@@ -532,6 +532,74 @@ damage_templates.autogun_p3_burst_shot = {
 		}
 	}
 }
+overrides.autogun_p1_m2 = {
+	parent_template_name = "default_autogun_assault",
+	overrides = {
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			"unarmored",
+			damage_lerp_values.lerp_1_25
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			"resistant",
+			damage_lerp_values.lerp_1_25
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			"berserker",
+			damage_lerp_values.lerp_1_25
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			"armored",
+			damage_lerp_values.lerp_0_8
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"near",
+			"attack",
+			"disgustingly_resilient",
+			damage_lerp_values.lerp_1_25
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
+			"unarmored",
+			damage_lerp_values.lerp_0_6
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
+			"resistant",
+			damage_lerp_values.lerp_0_4
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
+			"berserker",
+			damage_lerp_values.lerp_0_75
+		},
+		{
+			"armor_damage_modifier_ranged",
+			"far",
+			"attack",
+			"armored",
+			damage_lerp_values.lerp_0_4
+		}
+	}
+}
 overrides.autogun_p2_m1 = {
 	parent_template_name = "default_autogun_snp",
 	overrides = {
@@ -546,8 +614,8 @@ overrides.autogun_p2_m1 = {
 			"power_distribution",
 			"attack",
 			{
-				70,
-				140
+				80,
+				160
 			}
 		},
 		{
@@ -672,8 +740,8 @@ overrides.autogun_p3_m1 = {
 			"default_target",
 			"boost_curve_multiplier_finesse",
 			{
-				1.5,
-				3
+				1.25,
+				2.5
 			}
 		}
 	}
@@ -689,8 +757,8 @@ overrides.autogun_p3_m2 = {
 			"power_distribution",
 			"attack",
 			{
-				100,
-				200
+				150,
+				300
 			}
 		},
 		{
@@ -801,9 +869,11 @@ damage_templates.autogun_weapon_special_push = {
 	}
 }
 damage_templates.autogun_weapon_special_bash = {
+	weakspot_stagger_resistance_modifier = 0.2,
 	is_push = true,
-	stagger_category = "melee",
 	ragdoll_push_force = 100,
+	ignore_stagger_reduction = true,
+	stagger_category = "melee",
 	armor_damage_modifier = {
 		attack = {
 			[armor_types.unarmored] = 0.8,
@@ -819,7 +889,7 @@ damage_templates.autogun_weapon_special_bash = {
 		impact = {
 			[armor_types.unarmored] = 1.25,
 			[armor_types.armored] = 1,
-			[armor_types.resistant] = 1,
+			[armor_types.resistant] = 0.25,
 			[armor_types.player] = 0,
 			[armor_types.berserker] = 0.5,
 			[armor_types.super_armor] = 0.5,
@@ -838,8 +908,8 @@ damage_templates.autogun_weapon_special_bash = {
 					75
 				},
 				impact = {
-					3,
-					7
+					5,
+					10
 				}
 			}
 		}
@@ -865,8 +935,12 @@ overrides.autogun_weapon_special_bash_heavy = {
 			"impact",
 			{
 				5,
-				15
+				10
 			}
+		},
+		{
+			"weakspot_stagger_resistance_modifier",
+			0.1
 		}
 	}
 }

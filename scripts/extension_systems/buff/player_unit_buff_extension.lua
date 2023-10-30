@@ -139,6 +139,22 @@ PlayerUnitBuffExtension.post_update = function (self, unit, dt, t)
 	end
 
 	GameSession.set_game_object_field(self._game_session, self._game_object_id, "buff_keywords", game_object_buff_keywords)
+
+	local player = self._player
+	local channel_id = player:channel_id()
+
+	if player.remote then
+		for index, buff_instance in pairs(self._buffs_by_index) do
+			if buff_instance:need_to_sync_start_time() then
+				local start_time = buff_instance:start_time()
+				local start_frame = start_time / self._fixed_time_step
+				local game_object_id = self._game_object_id
+
+				RPC.rpc_buff_set_start_time(channel_id, game_object_id, index, start_frame)
+				buff_instance:set_need_to_sync_start_time(false)
+			end
+		end
+	end
 end
 
 PlayerUnitBuffExtension.add_internally_controlled_buff = function (self, template_name, t, ...)
@@ -501,6 +517,19 @@ PlayerUnitBuffExtension._set_proc_active_start_time = function (self, index, act
 		if buff_instance and buff_instance.set_active_start_time then
 			buff_instance:set_active_start_time(activation_time)
 		end
+	end
+end
+
+PlayerUnitBuffExtension._set_start_time_from_rpc = function (self, index, start_time)
+	if self._is_server then
+		-- Nothing
+	end
+
+	local buffs_by_index = self._buffs_by_index
+	local buff_instance = buffs_by_index[index]
+
+	if buff_instance and buff_instance.set_start_time then
+		buff_instance:set_start_time(start_time)
 	end
 end
 

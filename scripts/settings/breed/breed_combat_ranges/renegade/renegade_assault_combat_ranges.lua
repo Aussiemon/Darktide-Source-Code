@@ -15,8 +15,8 @@ local combat_ranges = {
 				sticky_time = 0,
 				activate_slot_system = true,
 				target_weapon_type_distance = {
-					ranged = 1,
-					melee = 3
+					ranged = 4,
+					melee = 4.5
 				}
 			},
 			{
@@ -39,7 +39,7 @@ local combat_ranges = {
 				sticky_time = 1,
 				activate_slot_system = true,
 				target_weapon_type_distance = {
-					ranged = 1,
+					ranged = 4,
 					melee = 5.5
 				},
 				target_velocity_dot_duration_inverted = {
@@ -75,7 +75,7 @@ local combat_ranges = {
 				target_velocity_dot_distance = 6,
 				z_distance = 1.9,
 				target_weapon_type_distance = {
-					ranged = 1.25,
+					ranged = 6,
 					melee = 10
 				},
 				target_velocity_dot_duration = {

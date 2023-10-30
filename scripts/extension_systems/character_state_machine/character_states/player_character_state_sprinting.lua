@@ -139,7 +139,7 @@ PlayerCharacterStateSprinting.fixed_update = function (self, unit, dt, t, next_s
 	sprint_character_state_component.wants_sprint_camera = wants_sprint_camera
 	local animation_ext = self._animation_extension
 
-	Crouch.check(unit, self._first_person_extension, animation_ext, weapon_extension, movement_state, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t)
+	Crouch.check(unit, self._first_person_extension, animation_ext, weapon_extension, movement_state, self._sway_control_component, self._sway_component, self._spread_control_component, input_extension, t, false)
 
 	if old_method ~= new_method then
 		animation_ext:anim_event(new_method)

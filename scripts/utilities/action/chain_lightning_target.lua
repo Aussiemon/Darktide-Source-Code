@@ -72,6 +72,10 @@ ChainLightningTarget.transfer_child_to_node = function (self, moving_child_node,
 end
 
 ChainLightningTarget.remove_child = function (self, child, on_remove_func, func_context)
+	if not self._children[child] then
+		return
+	end
+
 	if on_remove_func then
 		on_remove_func(child, func_context)
 	end

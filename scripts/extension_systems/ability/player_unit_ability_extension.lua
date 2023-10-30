@@ -225,6 +225,7 @@ PlayerUnitAbilityExtension._equip_ability = function (self, ability_type, abilit
 	if not from_server_correction then
 		local component = self._ability_components[ability_type]
 		component.num_charges = self:max_ability_charges(ability_type)
+		component.cooldown_paused = false
 	end
 
 	if self._is_server then
@@ -469,8 +470,9 @@ PlayerUnitAbilityExtension._update_ability_cooldowns = function (self, t)
 
 			if in_cooldown and component.cooldown_paused then
 				local pause_cooldown_settings = ability.pause_cooldown_settings
+				local pause_fulfilled_func = pause_cooldown_settings and pause_cooldown_settings.pause_fulfilled_func
 
-				if pause_cooldown_settings.pause_fulfilled_func(pause_cooldown_context) then
+				if pause_fulfilled_func and pause_fulfilled_func(pause_cooldown_context) then
 					component.cooldown_paused = false
 				else
 					local ability_cooldown = max_ability_cooldown
@@ -743,9 +745,17 @@ PlayerUnitAbilityExtension.use_ability_charge = function (self, ability_type, op
 	local ability_name = equipped_abilities_component[ability_type]
 
 	if ability_type == "combat_ability" then
-		Managers.telemetry_reporters:reporter("combat_ability"):register_event(self._player, ability_name)
+		local reporter = Managers.telemetry_reporters:reporter("combat_ability")
+
+		if reporter then
+			reporter:register_event(self._player, ability_name)
+		end
 	elseif ability_type == "grenade_ability" then
-		Managers.telemetry_reporters:reporter("grenade_ability"):register_event(self._player, ability_name)
+		local reporter = Managers.telemetry_reporters:reporter("grenade_ability")
+
+		if reporter then
+			reporter:register_event(self._player, ability_name)
+		end
 	end
 
 	local num_charges_to_deduct = optional_num_charges or 1

@@ -696,6 +696,10 @@ overrides.light_chainsword_smiter = {
 				130,
 				260
 			}
+		},
+		{
+			"cleave_distribution",
+			single_cleave
 		}
 	}
 }
@@ -919,8 +923,8 @@ overrides.light_chainsword_sticky_last = {
 			"power_distribution",
 			"attack",
 			{
-				400,
-				800
+				300,
+				600
 			}
 		},
 		{
@@ -1000,15 +1004,18 @@ damage_templates.default_light_chainsword_stab = {
 			},
 			power_distribution = {
 				attack = {
-					100,
-					200
+					130,
+					260
 				},
 				impact = {
 					4,
 					8
 				}
 			},
-			boost_curve_multiplier_finesse = damage_lerp_values.lerp_1,
+			boost_curve_multiplier_finesse = {
+				1,
+				2
+			},
 			power_level_multiplier = {
 				0.6,
 				1.4
@@ -1269,8 +1276,8 @@ overrides.default_light_chainsword_stab_sticky_last = {
 			1,
 			"boost_curve_multiplier_finesse",
 			{
-				0.2,
-				0.6
+				0.5,
+				1
 			}
 		},
 		{
@@ -1981,8 +1988,8 @@ overrides.light_chainsword_sticky_last_2h = {
 			1,
 			"boost_curve_multiplier_finesse",
 			{
-				0.2,
-				0.6
+				0.4,
+				0.8
 			}
 		},
 		{
@@ -3503,8 +3510,8 @@ overrides.heavy_chainsword_sticky_last_2h = {
 			1,
 			"boost_curve_multiplier_finesse",
 			{
-				0.2,
-				0.6
+				0.4,
+				0.8
 			}
 		},
 		{
@@ -3939,8 +3946,8 @@ overrides.heavy_chainsword_smiter_sticky_last_2h = {
 			"power_distribution",
 			"attack",
 			{
-				300,
-				600
+				600,
+				1200
 			}
 		},
 		{
@@ -3967,8 +3974,8 @@ overrides.heavy_chainsword_smiter_sticky_last_2h = {
 			1,
 			"boost_curve_multiplier_finesse",
 			{
-				0.2,
-				0.6
+				0.4,
+				0.8
 			}
 		},
 		{

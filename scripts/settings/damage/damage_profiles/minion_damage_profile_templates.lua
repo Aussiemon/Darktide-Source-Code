@@ -1913,7 +1913,7 @@ damage_templates.gunner_aimed = {
 		impact = 0.5
 	},
 	force_look_function = ForcedLookSettings.look_functions.medium,
-	push_template = push_templates.light,
+	push_template = push_templates.gunner_light,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default
@@ -1985,7 +1985,7 @@ damage_templates.gunner_spray_n_pray = {
 		impact = 0.5
 	},
 	force_look_function = ForcedLookSettings.look_functions.medium,
-	push_template = push_templates.light,
+	push_template = push_templates.gunner_very_light,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default
@@ -2058,7 +2058,7 @@ damage_templates.gunner_sweep = {
 		impact = 0.5
 	},
 	force_look_function = ForcedLookSettings.look_functions.medium,
-	push_template = push_templates.light,
+	push_template = push_templates.gunner_very_light,
 	targets = {
 		default_target = {
 			boost_curve = PowerLevelSettings.boost_curves.default

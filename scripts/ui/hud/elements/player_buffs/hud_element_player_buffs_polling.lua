@@ -1,3 +1,6 @@
+-- WARNING: Error occurred during decompilation.
+--   Code may be incomplete or incorrect.
+local BuffSettings = require("scripts/settings/buff/buff_settings")
 local PlayerBuffDefinitions = require("scripts/ui/hud/elements/player_buffs/hud_element_player_buffs_definitions")
 local HudElementPlayerBuffsSettings = require("scripts/ui/hud/elements/player_buffs/hud_element_player_buffs_settings")
 local ColorUtilities = require("scripts/utilities/ui/colors")
@@ -18,7 +21,7 @@ HudElementPlayerBuffs.init = function (self, parent, draw_layer, start_scale, de
 	self._active_positive_buffs = 0
 	self._active_negative_buffs = 0
 
-	self:_update_buff_alignments(true)
+	self:_update_buff_alignments(true, 0)
 end
 
 HudElementPlayerBuffs.event_player_buff_proc_start = function (self, player, buff_instance)
@@ -265,6 +268,12 @@ HudElementPlayerBuffs._update_buffs = function (self, t, ui_renderer)
 
 			if buff_data.remove then
 				if widget then
+					buff_data.widget = nil
+					buff_data.icon = nil
+					buff_data.icon_gradient_map = nil
+					buff_data.stack_count = nil
+					buff_data.activated_time = math.huge
+
 					self:_return_widget(widget, ui_renderer)
 				end
 			else
@@ -437,7 +446,7 @@ HudElementPlayerBuffs.update = function (self, dt, t, ui_renderer, render_settin
 
 	if self._syncronized then
 		self:_update_buffs(t, ui_renderer)
-		self:_update_buff_alignments()
+		self:_update_buff_alignments(false, dt)
 
 		local active_buffs_data = self._active_buffs_data
 

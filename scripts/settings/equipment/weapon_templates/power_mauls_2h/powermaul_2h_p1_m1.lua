@@ -38,27 +38,37 @@ local weapon_template = {
 	action_inputs = table.clone(MeleeActionInputSetupSlow.action_inputs),
 	action_input_hierarchy = table.clone(MeleeActionInputSetupSlow.action_input_hierarchy)
 }
-local hit_zone_priority_torso = {
+local hit_zone_priority = {
 	[hit_zone_names.head] = 1,
 	[hit_zone_names.torso] = 2,
-	[hit_zone_names.weakspot] = 1,
 	[hit_zone_names.upper_left_arm] = 3,
 	[hit_zone_names.upper_right_arm] = 3,
 	[hit_zone_names.upper_left_leg] = 3,
 	[hit_zone_names.upper_right_leg] = 3
 }
 
-table.add_missing(hit_zone_priority_torso, default_hit_zone_priority)
+table.add_missing(hit_zone_priority, default_hit_zone_priority)
 
 local light_hitbox = {
 	0.2,
 	0.15,
-	1.15
+	1.35
 }
 local heavy_hitbox = {
 	0.4,
 	0.15,
-	1.15
+	1.4
+}
+weapon_template.action_inputs.push_follow_up = {
+	buffer_time = 0.2,
+	input_sequence = {
+		{
+			value = true,
+			duration = 0.2,
+			hold_input = "action_two_hold",
+			input = "action_one_hold"
+		}
+	}
 }
 weapon_template.actions = {
 	action_unwield = {
@@ -171,7 +181,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_left_heavy",
-				chain_time = 0.62
+				chain_time = 0.5
 			},
 			block = {
 				action_name = "action_block"
@@ -270,7 +280,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		hit_zone_priority = hit_zone_priority_torso,
+		hit_zone_priority = hit_zone_priority,
 		weapon_box = light_hitbox,
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/swing_left",
@@ -371,7 +381,7 @@ weapon_template.actions = {
 				chain_time = 0.68
 			},
 			block = {
-				chain_time = 0.68,
+				chain_time = 0.5,
 				action_name = "action_block",
 				chain_until = 0.2
 			},
@@ -395,6 +405,9 @@ weapon_template.actions = {
 		damage_profile = DamageProfileTemplates.powermaul_2h_heavy_smiter,
 		damage_type = damage_types.blunt,
 		damage_profile_special_active = DamageProfileTemplates.powermaul_2h_heavy_smiter_active,
+		weapon_special_tweak_data = {
+			explosion_template = ExplosionTemplates.human_heavy_powermaul_activated_impact
+		},
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
@@ -461,11 +474,11 @@ weapon_template.actions = {
 			},
 			light_attack = {
 				action_name = "action_right_down_light",
-				chain_time = 0.15
+				chain_time = 0.1
 			},
 			heavy_attack = {
 				action_name = "action_right_heavy",
-				chain_time = 0.6
+				chain_time = 0.35
 			},
 			block = {
 				action_name = "action_block"
@@ -484,7 +497,7 @@ weapon_template.actions = {
 		anim_end_event = "attack_finished",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_2",
 		range_mod = 1.15,
 		damage_window_end = 0.5,
 		special_active_hit_stop_anim = "attack_hit_power",
@@ -588,7 +601,7 @@ weapon_template.actions = {
 	action_right_heavy = {
 		damage_window_start = 0.35,
 		hit_armor_anim = "attack_hit",
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_2",
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
 		anim_end_event = "attack_finished",
@@ -676,7 +689,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		hit_zone_priority = hit_zone_priority_torso,
+		hit_zone_priority = hit_zone_priority,
 		weapon_box = heavy_hitbox,
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/heavy_swing_right",
@@ -689,6 +702,9 @@ weapon_template.actions = {
 		damage_profile = DamageProfileTemplates.powermaul_2h_heavy_tank,
 		damage_type = damage_types.blunt,
 		damage_profile_special_active = DamageProfileTemplates.powermaul_2h_heavy_tank_active,
+		weapon_special_tweak_data = {
+			explosion_template = ExplosionTemplates.human_heavy_powermaul_activated_impact
+		},
 		herding_template = HerdingTemplates.thunder_hammer_right_heavy,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
@@ -763,7 +779,7 @@ weapon_template.actions = {
 			},
 			heavy_attack = {
 				action_name = "action_left_heavy",
-				chain_time = 0.63
+				chain_time = 0.45
 			},
 			block = {
 				action_name = "action_block"
@@ -861,7 +877,7 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		hit_zone_priority = hit_zone_priority_torso,
+		hit_zone_priority = hit_zone_priority,
 		weapon_box = light_hitbox,
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/swing_left_diagonal",
@@ -964,7 +980,7 @@ weapon_template.actions = {
 		kind = "sweep",
 		first_person_hit_anim = "hit_right_shake",
 		anim_end_event = "attack_finished",
-		weapon_handling_template = "time_scale_1",
+		weapon_handling_template = "time_scale_1_2",
 		damage_window_end = 0.5,
 		special_active_hit_stop_anim = "attack_hit_power",
 		attack_direction_override = "right",
@@ -973,11 +989,11 @@ weapon_template.actions = {
 		total_time = 2,
 		action_movement_curve = {
 			{
-				modifier = 1.15,
+				modifier = 1.25,
 				t = 0.2
 			},
 			{
-				modifier = 1.05,
+				modifier = 1.15,
 				t = 0.35
 			},
 			{
@@ -1027,7 +1043,7 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.77
+				chain_time = 0.67
 			},
 			block = {
 				chain_time = 0.52,
@@ -1042,8 +1058,12 @@ weapon_template.actions = {
 		anim_end_event_condition_func = function (unit, data, end_reason)
 			return end_reason ~= "new_interrupting_action" and end_reason ~= "action_complete"
 		end,
-		hit_zone_priority = hit_zone_priority_torso,
-		weapon_box = light_hitbox,
+		hit_zone_priority = hit_zone_priority,
+		weapon_box = {
+			0.4,
+			0.15,
+			1.3
+		},
 		spline_settings = {
 			matrices_data_location = "content/characters/player/human/first_person/animations/2h_power_maul/swing_right",
 			anchor_point_offset = {
@@ -1130,14 +1150,13 @@ weapon_template.actions = {
 	action_left_light_pushfollow = {
 		damage_window_start = 0.2,
 		hit_armor_anim = "attack_hit",
-		weapon_handling_template = "time_scale_1_1",
-		anim_end_event = "attack_finished",
 		kind = "sweep",
 		first_person_hit_anim = "hit_left_shake",
 		range_mod = 1.25,
+		weapon_handling_template = "time_scale_1_1",
 		damage_window_end = 0.3,
 		special_active_hit_stop_anim = "attack_hit_power",
-		attack_direction_override = "up",
+		anim_end_event = "attack_finished",
 		anim_event_3p = "attack_swing_heavy_left_diagonal_up",
 		anim_event = "attack_swing_left_up",
 		hit_stop_anim = "attack_hit",
@@ -1182,15 +1201,15 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_right",
-				chain_time = 0.55
+				chain_time = 0.3
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.5
+				chain_time = 0.35
 			},
 			special_action = {
 				action_name = "action_weapon_special",
-				chain_time = 0.5
+				chain_time = 0.35
 			}
 		},
 		anim_end_event_condition_func = function (unit, data, end_reason)
@@ -1209,9 +1228,10 @@ weapon_template.actions = {
 				-0.2
 			}
 		},
-		damage_profile = DamageProfileTemplates.powermaul_2h_light_tank,
+		herding_template = HerdingTemplates.thunder_hammer_left_light,
+		damage_profile = DamageProfileTemplates.powermaul_2h_light_pushfollow,
 		damage_type = damage_types.blunt,
-		damage_profile_special_active = DamageProfileTemplates.powermaul_2h_light_tank_active,
+		damage_profile_special_active = DamageProfileTemplates.powermaul_2h_light_pushfollow_active,
 		time_scale_stat_buffs = {
 			buff_stat_buffs.attack_speed,
 			buff_stat_buffs.melee_attack_speed
@@ -1262,19 +1282,19 @@ weapon_template.actions = {
 			},
 			push_follow_up = {
 				action_name = "action_left_light_pushfollow",
-				chain_time = 0.4
+				chain_time = 0.3
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.4
+				chain_time = 0.3
 			},
 			special_action = {
 				action_name = "action_weapon_special",
-				chain_time = 0.4
+				chain_time = 0.3
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.45
+				chain_time = 0.35
 			}
 		},
 		inner_push_rad = math.pi * 0.35,
@@ -1294,28 +1314,28 @@ weapon_template.actions = {
 		total_time = 2.6,
 		action_movement_curve = {
 			{
-				modifier = 0.8,
+				modifier = 0.9,
 				t = 0.15
 			},
 			{
-				modifier = 0.5,
+				modifier = 0.8,
 				t = 0.2
 			},
 			{
-				modifier = 0.3,
+				modifier = 0.7,
 				t = 0.3
 			},
 			{
-				modifier = 0.1,
+				modifier = 0.5,
 				t = 0.6
 			},
 			{
-				modifier = 0.55,
-				t = 1.2
+				modifier = 0.75,
+				t = 1.1
 			},
 			{
-				modifier = 0.9,
-				t = 1.3
+				modifier = 1,
+				t = 1.2
 			},
 			start_modifier = 1
 		},
@@ -1336,11 +1356,11 @@ weapon_template.actions = {
 			},
 			start_attack = {
 				action_name = "action_melee_start_left",
-				chain_time = 0.75
+				chain_time = 0.7
 			},
 			block = {
 				action_name = "action_block",
-				chain_time = 0.75
+				chain_time = 0.6
 			}
 		}
 	},
@@ -1381,7 +1401,7 @@ weapon_template.keywords = {
 	"p1",
 	"activated"
 }
-weapon_template.dodge_template = "support"
+weapon_template.dodge_template = "hammer_2h"
 weapon_template.sprint_template = "support"
 weapon_template.stamina_template = "thunderhammer_2h_p1_m1"
 weapon_template.toughness_template = "default"
@@ -1399,7 +1419,7 @@ weapon_template.weapon_special_tweak_data = {
 	active_on_abort = true,
 	disorientation_type = "ogryn_powermaul_disorientation",
 	active_duration = 4,
-	explosion_template = ExplosionTemplates.powermaul_activated_impact
+	explosion_template = ExplosionTemplates.human_powermaul_activated_impact
 }
 weapon_template.overclocks = {
 	armor_pierce_up_dps_down = {
@@ -1633,7 +1653,7 @@ weapon_template.base_stats = {
 		explosion = {
 			action_left_down_light = {
 				overrides = {
-					powermaul_activated_impact = {
+					human_powermaul_activated_impact = {
 						explosion_trait_templates.default_explosion_size_stat,
 						display_data = {
 							damage_profile_path = {
@@ -1650,42 +1670,42 @@ weapon_template.base_stats = {
 			},
 			action_left_heavy = {
 				overrides = {
-					powermaul_activated_impact = {
+					human_heavy_powermaul_activated_impact = {
 						explosion_trait_templates.default_explosion_size_stat
 					}
 				}
 			},
 			action_right_down_light = {
 				overrides = {
-					powermaul_activated_impact = {
+					human_powermaul_activated_impact = {
 						explosion_trait_templates.default_explosion_size_stat
 					}
 				}
 			},
 			action_right_heavy = {
 				overrides = {
-					powermaul_activated_impact = {
+					human_heavy_powermaul_activated_impact = {
 						explosion_trait_templates.default_explosion_size_stat
 					}
 				}
 			},
 			action_left_light = {
 				overrides = {
-					powermaul_activated_impact = {
+					human_powermaul_activated_impact = {
 						explosion_trait_templates.default_explosion_size_stat
 					}
 				}
 			},
 			action_right_light = {
 				overrides = {
-					powermaul_activated_impact = {
+					human_powermaul_activated_impact = {
 						explosion_trait_templates.default_explosion_size_stat
 					}
 				}
 			},
 			action_left_light_pushfollow = {
 				overrides = {
-					powermaul_activated_impact = {
+					human_powermaul_activated_impact = {
 						explosion_trait_templates.default_explosion_size_stat
 					}
 				}

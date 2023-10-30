@@ -972,7 +972,7 @@ spread_templates.default_autogun_alternate_fire_killshot = {
 	},
 	moving = {
 		inherits = {
-			"default_autogun_killshot",
+			"default_autogun_alternate_fire_killshot",
 			"still"
 		},
 		continuous_spread = {
@@ -982,7 +982,7 @@ spread_templates.default_autogun_alternate_fire_killshot = {
 	},
 	crouch_still = {
 		inherits = {
-			"default_autogun_killshot",
+			"default_autogun_alternate_fire_killshot",
 			"still"
 		},
 		continuous_spread = {
@@ -992,7 +992,7 @@ spread_templates.default_autogun_alternate_fire_killshot = {
 	},
 	crouch_moving = {
 		inherits = {
-			"default_autogun_killshot",
+			"default_autogun_alternate_fire_killshot",
 			"still"
 		},
 		continuous_spread = {
@@ -2505,12 +2505,12 @@ spread_templates.autogun_p2_m3_ads = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_perfect = 1.8,
-				lerp_basic = 2.4
+				lerp_perfect = 1.2,
+				lerp_basic = 2
 			},
 			min_yaw = {
-				lerp_perfect = 1.8,
-				lerp_basic = 2.4
+				lerp_perfect = 1.2,
+				lerp_basic = 2
 			}
 		},
 		immediate_spread = {
@@ -2647,12 +2647,12 @@ spread_templates.autogun_p2_m3_ads = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_perfect = 1.44,
-				lerp_basic = 1.92
+				lerp_perfect = 1,
+				lerp_basic = 1.5
 			},
 			min_yaw = {
-				lerp_perfect = 1.44,
-				lerp_basic = 1.92
+				lerp_perfect = 1,
+				lerp_basic = 1.5
 			}
 		}
 	},
@@ -2663,12 +2663,12 @@ spread_templates.autogun_p2_m3_ads = {
 		},
 		continuous_spread = {
 			min_pitch = {
-				lerp_perfect = 2.7,
-				lerp_basic = 3.6
+				lerp_perfect = 1.86,
+				lerp_basic = 2.44
 			},
 			min_yaw = {
-				lerp_perfect = 2.7,
-				lerp_basic = 3.6
+				lerp_perfect = 1.86,
+				lerp_basic = 2.44
 			}
 		}
 	}

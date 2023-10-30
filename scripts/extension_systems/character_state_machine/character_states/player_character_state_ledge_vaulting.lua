@@ -149,7 +149,7 @@ PlayerCharacterStateLedgeVaulting.on_exit = function (self, unit, t, next_state)
 
 	self._locomotion_steering_component.calculate_fall_velocity = true
 	local movement_state_component = self._movement_state_component
-	local wants_crouch = Crouch.crouch_input(self._input_extension, false, false)
+	local wants_crouch = Crouch.crouch_input(self._input_extension, false, false, false)
 	local is_crouching = movement_state_component.is_crouching
 	local first_person_extension = self._first_person_extension
 
@@ -255,7 +255,7 @@ PlayerCharacterStateLedgeVaulting._check_transition = function (self, unit, t, n
 		if self._inair_state_component.on_ground then
 			local movement_state_component = self._movement_state_component
 			local input_extension = self._input_extension
-			local wants_crouch = Crouch.crouch_input(input_extension, false, false)
+			local wants_crouch = Crouch.crouch_input(input_extension, false, false, true)
 			local locomotion_component = self._locomotion_component
 			local velocity_current = locomotion_component.velocity_current
 			local look_rotation = self._first_person_component.rotation
